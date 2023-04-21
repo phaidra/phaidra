@@ -1,6 +1,3 @@
-#+OPTIONS: toc:nil ^:nil
-#+TOC: headlines 2
-
 * dockerizing phaidra
   What we want to achieve:
   #+begin_src dot :file construction.svg :exports results
@@ -14,14 +11,12 @@
              label = "docker-network";
              }
              }
-
   #+end_src
 
   #+RESULTS:
   [[file:construction.svg]]
 
-  + docker-compose.yml
-
+* Table of Contents                                               :TOC:QUOTE:
 * changes to the phaidra-api repo
   + removed symlinks
   + copied PhaidraAPI.json.example to PhaidraAPI.json
