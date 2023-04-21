@@ -16,7 +16,12 @@
   #+RESULTS:
   [[file:construction.svg]]
 
-* Table of Contents                                               :TOC:QUOTE:
+* Table of Contents                                               :TOC:
+- [[#dockerizing-phaidra][dockerizing phaidra]]
+- [[#changes-to-the-phaidra-api-repo][changes to the phaidra-api repo]]
+- [[#changes-on-the-toplevel][changes on the toplevel]]
+- [[#add-heading-to-try][add heading to try]]
+
 * changes to the phaidra-api repo
   + removed symlinks
   + copied PhaidraAPI.json.example to PhaidraAPI.json
@@ -28,3 +33,4 @@
   + changed directory_class from ~Phaidra::Directory::Univie~ to ~Phaidra::Directory::GenericLDAP~.
 * changes on the toplevel
   + create [[file:./phaidra.yml][phaidra.yml stub]]
+* add heading to try
