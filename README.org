@@ -7,24 +7,72 @@
 - [[#technical-sketch][Technical sketch]]
 - [[#changes-to-the-phaidra-api-repo][changes to the phaidra-api repo]]
 - [[#changes-on-the-toplevel][changes on the toplevel]]
-- [[#add-heading-to-try][add heading to try]]
 
 * Technical sketch
+  This is work in progress.
   #+NAME: technical-sketch
-  #+begin_src dot :file construction.svg :exports results
-    digraph G {
-        subgraph cluster0 {
-             node [style=filled,color=white];
-             style=filled;
-             color=lightgrey;
-             imageserver -> phaidra_api;
-             phaidra_api -> imageserver;
-             label = "docker-network";}
+  #+begin_src dot :file "./images/construction.svg" :exports results
+    graph G {
+        subgraph cluster_host {
+            label = "host";
+            color = red;
+            subgraph cluster_host_storage {
+                label = "host filesystem";
+                node [shape = folder, style = solid, color = blue]
+                color = blue;
+                a1 [label="fedora storage"];
+                a2 [label="mariadb storage"];
+                a3 [label="mongodb storage"];
+                a4 [label="imageserver storage"];
+                a5 [label="solr storage"];
+                a6 [label="ldap storage"];
+            }
+            subgraph cluster_docker_network_host {
+                label="docker network";
+                node [shape = component, style = solid, color = green]
+                color = green;
+                b1 [label="fedora (data and metadata store)"];
+                b2 [label="phaidra-api (general transmitter)"];
+                b3 [label="mariadb (general databases)"];
+                b4 [label="mongodb (databases for job-tracking)"];
+                b5 [label="phaidra-ui (user webinterface)"];
+                b6 [label="ldap"];
+                b7 [label="solr (site search engine)"];
+                b8 [label="imageserver (display large images)"];
+                b9 [label="webserver"];
+            }}
+
+        subgraph outside_world {
+            label="outside world";
+            node [shape = tripleoctagon, style = solid]
+            c1 [label="Phaidra User"]
+            }
+
+            b1 -- b2;
+            b2 -- b3;
+            b2 -- b4;
+            b2 -- b5;
+            b2 -- b6;
+            b7 -- b5;
+            b2 -- b9;
+            b5 -- b9;
+            b5 -- b1;
+            b1 -- b3;
+            b2 -- b8;
+
+            a1 -- b1;
+            a2 -- b3;
+            a3 -- b4;
+            a4 -- b8;
+            a5 -- b7;
+            a6 -- b6;
+
+            c1 -- b9;
     }
   #+end_src
 
   #+RESULTS: technical-sketch
-  [[file:construction.svg]]
+  [[file:./images/construction.svg]]
 
 * changes to the phaidra-api repo
   + removed symlinks
@@ -37,4 +85,3 @@
   + changed directory_class from ~Phaidra::Directory::Univie~ to ~Phaidra::Directory::GenericLDAP~.
 * changes on the toplevel
   + create [[file:./phaidra.yml][phaidra.yml stub]]
-* add heading to try
