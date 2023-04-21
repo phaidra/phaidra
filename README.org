@@ -1,3 +1,6 @@
+#+OPTIONS: toc:nil ^:nil
+#+TOC: headlines 2
+
 * dockerizing phaidra
   What we want to achieve:
   #+begin_src dot :file construction.svg :exports results
