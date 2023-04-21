@@ -1,4 +1,4 @@
-* dockerizing phaidra
+* dockerizing phaidra                                              :noexport:
   What we want to achieve:
   #+begin_src dot :file construction.svg :exports results
     digraph G {
@@ -17,7 +17,6 @@
   [[file:construction.svg]]
 
 * Table of Contents                                               :TOC:
-- [[#dockerizing-phaidra][dockerizing phaidra]]
 - [[#changes-to-the-phaidra-api-repo][changes to the phaidra-api repo]]
 - [[#changes-on-the-toplevel][changes on the toplevel]]
 - [[#add-heading-to-try][add heading to try]]
