@@ -1,5 +1,16 @@
-* dockerizing phaidra                                              :noexport:
-  What we want to achieve:
+* About this repository                                            :noexport:
+  We currently have an [[https://gitlab.phaidra.org/phaidra-dev/phaidra-demo][automated installer for phaidra]], which allows to set up an instance in about 15min.  However, setup is still bound to the underlying operating system (Ubuntu 22.04-LTS), which brings quite some complexity to the end-user.  Here we try to abstract the system further and allow for easier integration into CI/CD workflows using containerization via docker, and to achieve better portability to other platforms supporting this kind of containerization.
+
+  The end-goal of this project is to allow an interested person to run the command ~docker compose up~ from a clone of this repo and have phaidra running on his/her computer, without modifying the computer (and have things easily removed with ~docker compose down~ as well).
+
+* Table of Contents                                               :TOC:
+- [[#technical-sketch][Technical sketch]]
+- [[#changes-to-the-phaidra-api-repo][changes to the phaidra-api repo]]
+- [[#changes-on-the-toplevel][changes on the toplevel]]
+- [[#add-heading-to-try][add heading to try]]
+
+* Technical sketch
+  #+NAME: technical-sketch
   #+begin_src dot :file construction.svg :exports results
     digraph G {
         subgraph cluster0 {
@@ -8,18 +19,12 @@
              color=lightgrey;
              imageserver -> phaidra_api;
              phaidra_api -> imageserver;
-             label = "docker-network";
-             }
-             }
+             label = "docker-network";}
+    }
   #+end_src
 
-  #+RESULTS:
+  #+RESULTS: technical-sketch
   [[file:construction.svg]]
-
-* Table of Contents                                               :TOC:
-- [[#changes-to-the-phaidra-api-repo][changes to the phaidra-api repo]]
-- [[#changes-on-the-toplevel][changes on the toplevel]]
-- [[#add-heading-to-try][add heading to try]]
 
 * changes to the phaidra-api repo
   + removed symlinks
