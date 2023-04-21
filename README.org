@@ -1,5 +1,21 @@
 * dockerizing phaidra
-  
+  What we want to achieve:
+  #+begin_src dot :file construction.png :exports results
+    digraph G {
+        subgraph cluster0 {
+             node [style=filled,color=white];
+             style=filled;
+             color=lightgrey;
+             imageserver -> phaidra_api;
+             phaidra_api -> imageserver;
+             label = "docker-network";
+             }
+             }
+
+  #+end_src
+
+  #+RESULTS:
+  [[file:construction.png]]
 
   + docker-compose.yml
 
