@@ -1,6 +1,6 @@
 * dockerizing phaidra
   What we want to achieve:
-  #+begin_src dot :file construction.png :exports results
+  #+begin_src dot :file construction.svg :exports results
     digraph G {
         subgraph cluster0 {
              node [style=filled,color=white];
@@ -15,7 +15,7 @@
   #+end_src
 
   #+RESULTS:
-  [[file:construction.png]]
+  [[file:construction.svg]]
 
   + docker-compose.yml
 
