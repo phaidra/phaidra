@@ -1,0 +1,105 @@
+version: '2'
+
+networks:
+  my-network:
+    driver: bridge
+
+services:
+
+  imageserver:
+    build:
+      context: .
+      dockerfile: imageserver.dockerfile
+    ports:
+      - "8081:80"
+    networks:
+      - my-network
+      
+  solr:
+    image: solr:8.11.2
+    ports:
+      - "8983:8983"
+    networks:
+      - my-network
+      
+  mariadb:
+    image: mariadb:10.11.2-jammy
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: example
+    networks:
+      - my-network
+      
+  mongo:
+    image: mongo:5
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - my-network
+      
+  dbgate:
+    image: dbgate/dbgate:5.2.5
+    restart: always
+    ports:
+      - "9000:3000"
+    environment:
+      CONNECTIONS: con1,con2
+
+      LABEL_con1: MariaDB
+      SERVER_con1: mariadb
+      USER_con1: root
+      PASSWORD_con1: example
+      PORT_con1: 3306
+      ENGINE_con1: mariadb@dbgate-plugin-mysql
+
+      LABEL_con2: MongoDB
+      URL_con2: mongodb://root:example@mongo:27017
+      ENGINE_con2: mongo@dbgate-plugin-mongo
+    networks:
+      - my-network
+      
+  fedora:
+    image: fcrepo/fcrepo:6.4.0
+    restart: always
+    ports:
+      - "9090:8080"
+    networks:
+      - my-network
+      
+  lam:
+    image: ghcr.io/ldapaccountmanager/lam:8.3
+    restart: always
+    ports:
+      - "8080:80"
+    networks:
+      - my-network
+    environment:
+      - LDAP_DOMAIN=example.org
+      - LDAP_SERVER=ldap://openldap:1389
+      - LDAP_USER=cn=admin,dc=example,dc=org
+      - LDAP_USER_DN=ou=users,dc=example,dc=org
+      - LDAP_GROUPS_DN=cn=readers,ou=users,dc=example,dc=org
+      
+  openldap:
+    image: bitnami/openldap:2
+    environment:
+      - LDAP_ADMIN_USERNAME=admin
+      - LDAP_ADMIN_PASSWORD=adminpassword
+      - LDAP_USERS=user01,user02
+      - LDAP_PASSWORDS=password1,password2
+      - LDAP_USER_DC=users
+      - LDAP_GROUP=readers
+      - LDAP_PORT_NUMBER=1389
+      - LDAP_ROOT=dc=example,dc=org
+    networks:
+      - my-network
+      
+  phaidra-api:
+    build:
+      context: .
+      dockerfile: phaidra-api.dockerfile
+    networks:
+      - my-network
+

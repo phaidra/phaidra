@@ -1,0 +1,16 @@
+* dockerizing phaidra
+  
+
+  + docker-compose.yml
+
+* changes to the phaidra-api repo
+  + removed symlinks
+  + copied PhaidraAPI.json.example to PhaidraAPI.json
+  + run untabify on PhaidraAPI.json
+  + run whitespace-cleanup-region on wholly marked buffer
+  + removed colon in line 94
+  + added colon in line 202
+  + copied log4perl.conf from sandbox02
+  + changed directory_class from ~Phaidra::Directory::Univie~ to ~Phaidra::Directory::GenericLDAP~.
+* changes on the toplevel
+  + create [[file:./phaidra.yml][phaidra.yml stub]]

@@ -1,0 +1,19 @@
+single:
+  entry: 0
+
+ldap:
+  host: 'openldap'
+  port: '1389'
+  url: 'ldap://openldap:1389'
+  securityprincipal: 'cn=admin,dc=example,dc=org'
+  securitycredentials: 'adminpassword'
+  usersearchbase: "ou=users,dc=example,dc=org"
+  usersearchfilter: "(&(uid={0})(objectClass=inetOrgPerson))"
+  usersearchfilterescaped: "(&amp;(uid={0})(objectClass=inetOrgPerson))"
+  useridattribute: "uid"
+  userattributes: "cn"
+  groupsearchbase: "cn=readers,ou=group,dc=phaidra,dc=local"
+  groupsearchfilter: "(member=uid={0},ou=people,dc=phaidra,dc=local)"
+  groupattribute: "cn"
+  groupattributealias: "group"
+
