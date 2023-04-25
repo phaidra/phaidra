@@ -13,62 +13,64 @@
   #+NAME: technical-sketch
   #+begin_src dot :file "./images/construction.svg" :exports results
     graph G {
+        graph [rankdir="TB"]
         subgraph cluster_host {
             label = "host";
             color = red;
+            node [shape = component, style = solid, color = red]
+            a1 [label="webserver"];
             subgraph cluster_host_storage {
                 label = "host filesystem";
                 node [shape = folder, style = solid, color = blue]
                 color = blue;
-                a1 [label="fedora storage"];
-                a2 [label="mariadb storage"];
-                a3 [label="mongodb storage"];
-                a4 [label="imageserver storage"];
-                a5 [label="solr storage"];
-                a6 [label="ldap storage"];
+                b1 [label="fedora storage"];
+                b2 [label="mariadb storage"];
+                b3 [label="mongodb storage"];
+                b4 [label="imageserver storage"];
+                b5 [label="solr storage"];
+                b6 [label="ldap storage"];
             }
             subgraph cluster_docker_network_host {
                 label="docker network";
                 node [shape = component, style = solid, color = green]
                 color = green;
-                b1 [label="fedora (data and metadata store)"];
-                b2 [label="phaidra-api (general transmitter)"];
-                b3 [label="mariadb (general databases)"];
-                b4 [label="mongodb (databases for job-tracking)"];
-                b5 [label="phaidra-ui (user webinterface)"];
-                b6 [label="ldap"];
-                b7 [label="solr (site search engine)"];
-                b8 [label="imageserver (display large images)"];
-                b9 [label="webserver"];
+                c1 [label="fedora (data and metadata store)"];
+                c2 [label="phaidra-api (general transmitter)"];
+                c3 [label="mariadb (general databases)"];
+                c4 [label="mongodb (databases for job-tracking)"];
+                c5 [label="phaidra-ui (user webinterface)"];
+                c6 [label="ldap"];
+                c7 [label="solr (site search engine)"];
+                c8 [label="imageserver (display large images)"];
+                c9 [label="pixelgecko (imageserver fileformat conversion)"]
             }}
 
-        subgraph outside_world {
-            label="outside world";
-            node [shape = tripleoctagon, style = solid]
-            c1 [label="Phaidra User"]
-            }
+        d1 [label="Phaidra User", shape = tripleoctagon, style = solid]
 
-            b1 -- b2;
-            b2 -- b3;
-            b2 -- b4;
-            b2 -- b5;
-            b2 -- b6;
-            b7 -- b5;
-            b2 -- b9;
-            b5 -- b9;
-            b5 -- b1;
-            b1 -- b3;
-            b2 -- b8;
-            b2 -- b7;
+            c1 -- c2 [color="green"];
+            c2 -- c3 [color="green"];
+            c2 -- c4 [color="green"];
+            c2 -- c5 [color="green"];
+            c2 -- c6 [color="green"];
+            c7 -- c5 [color="green"];
+            c5 -- c1 [color="green"];
+            c1 -- c3 [color="green"];
+            c2 -- c8 [color="green"];
+            c2 -- c7 [color="green"];
+            c9 -- c8 [color="green"];
+            c9 -- c4 [color="green"];
 
-            a1 -- b1;
-            a2 -- b3;
-            a3 -- b4;
-            a4 -- b8;
-            a5 -- b7;
-            a6 -- b6;
+            b1 -- c1 [color="blue"];
+            b2 -- c3 [color="blue"];
+            b3 -- c4 [color="blue"];
+            b4 -- c8 [color="blue"];
+            b5 -- c7 [color="blue"];
+            b6 -- c6 [color="blue"];
 
-            c1 -- b9;
+            a1 -- d1 [color="red"];
+            c2 -- a1 [color="red"];
+            c5 -- a1 [color="red"];
+
     }
   #+end_src
 
