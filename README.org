@@ -23,26 +23,26 @@
                 label = "host filesystem";
                 node [shape = folder, style = solid, color = blue]
                 color = blue;
-                b1 [label="fedora storage"];
-                b2 [label="mariadb storage"];
-                b3 [label="mongodb storage"];
-                b4 [label="imageserver storage"];
-                b5 [label="solr storage"];
-                b6 [label="ldap storage"];
+                b1 [label="Fedora data"];
+                b2 [label="MariaDB data"];
+                b3 [label="MongoDB data"];
+                b4 [label="iipsrv data"];
+                b5 [label="Apache Solr data"];
+                b6 [label="OpenLDAP data"];
             }
             subgraph cluster_docker_network_host {
-                label="docker network";
+                label="PHAIDRA components";
                 node [shape = component, style = solid, color = green]
                 color = green;
-                c1 [label="fedora (data and metadata store)"];
-                c2 [label="phaidra-api (general transmitter)"];
-                c3 [label="mariadb (general databases)"];
-                c4 [label="mongodb (databases for job-tracking)"];
-                c5 [label="phaidra-ui (user webinterface)"];
-                c6 [label="ldap"];
-                c7 [label="solr (site search engine)"];
-                c8 [label="imageserver (display large images)"];
-                c9 [label="pixelgecko (imageserver fileformat conversion)"]
+                c1 [label="Fedora\n(object and metadata store)", URL="https://fedora.lyrasis.org/"];
+                c2 [label="phaidra-api\n(general transmitter)", URL="https://github.com/phaidra/phaidra-api"];
+                c3 [label="MariaDB\n(general databases)", URL="https://mariadb.org/"];
+                c4 [label="MongoDB\n(job-tracking)", URL="https://www.mongodb.com/"];
+                c5 [label="phaidra-ui\n(webinterface)", URL="https://github.com/phaidra/phaidra-ui"];
+                c6 [label="OpenLDAP\n(user management)", URL="https://www.openldap.org/"];
+                c7 [label="Apache Solr\n(object search engine)", URL="https://solr.apache.org/"];
+                c8 [label="iipsrv\n(display large images)", URL="https://github.com/ruven/iipsrv"];
+                c9 [label="pixelgecko\n(image conversion)"]
             }}
 
         d1 [label="Phaidra User", shape = tripleoctagon, style = solid]
