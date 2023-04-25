@@ -1,0 +1,1007 @@
+%!PS-Adobe-3.0
+%%Creator: graphviz version 2.43.0 (0)
+%%Title: G
+%%Pages: (atend)
+%%BoundingBox: (atend)
+%%EndComments
+save
+%%BeginProlog
+/DotDict 200 dict def
+DotDict begin
+
+/setupLatin1 {
+mark
+/EncodingVector 256 array def
+ EncodingVector 0
+
+ISOLatin1Encoding 0 255 getinterval putinterval
+EncodingVector 45 /hyphen put
+
+% Set up ISO Latin 1 character encoding
+/starnetISO {
+        dup dup findfont dup length dict begin
+        { 1 index /FID ne { def }{ pop pop } ifelse
+        } forall
+        /Encoding EncodingVector def
+        currentdict end definefont
+} def
+/Times-Roman starnetISO def
+/Times-Italic starnetISO def
+/Times-Bold starnetISO def
+/Times-BoldItalic starnetISO def
+/Helvetica starnetISO def
+/Helvetica-Oblique starnetISO def
+/Helvetica-Bold starnetISO def
+/Helvetica-BoldOblique starnetISO def
+/Courier starnetISO def
+/Courier-Oblique starnetISO def
+/Courier-Bold starnetISO def
+/Courier-BoldOblique starnetISO def
+cleartomark
+} bind def
+
+%%BeginResource: procset graphviz 0 0
+/coord-font-family /Times-Roman def
+/default-font-family /Times-Roman def
+/coordfont coord-font-family findfont 8 scalefont def
+
+/InvScaleFactor 1.0 def
+/set_scale {
+       dup 1 exch div /InvScaleFactor exch def
+       scale
+} bind def
+
+% styles
+/solid { [] 0 setdash } bind def
+/dashed { [9 InvScaleFactor mul dup ] 0 setdash } bind def
+/dotted { [1 InvScaleFactor mul 6 InvScaleFactor mul] 0 setdash } bind def
+/invis {/fill {newpath} def /stroke {newpath} def /show {pop newpath} def} bind def
+/bold { 2 setlinewidth } bind def
+/filled { } bind def
+/unfilled { } bind def
+/rounded { } bind def
+/diagonals { } bind def
+/tapered { } bind def
+
+% hooks for setting color 
+/nodecolor { sethsbcolor } bind def
+/edgecolor { sethsbcolor } bind def
+/graphcolor { sethsbcolor } bind def
+/nopcolor {pop pop pop} bind def
+
+/beginpage {	% i j npages
+	/npages exch def
+	/j exch def
+	/i exch def
+	/str 10 string def
+	npages 1 gt {
+		gsave
+			coordfont setfont
+			0 0 moveto
+			(\() show i str cvs show (,) show j str cvs show (\)) show
+		grestore
+	} if
+} bind def
+
+/set_font {
+	findfont exch
+	scalefont setfont
+} def
+
+% draw text fitted to its expected width
+/alignedtext {			% width text
+	/text exch def
+	/width exch def
+	gsave
+		width 0 gt {
+			[] 0 setdash
+			text stringwidth pop width exch sub text length div 0 text ashow
+		} if
+	grestore
+} def
+
+/boxprim {				% xcorner ycorner xsize ysize
+		4 2 roll
+		moveto
+		2 copy
+		exch 0 rlineto
+		0 exch rlineto
+		pop neg 0 rlineto
+		closepath
+} bind def
+
+/ellipse_path {
+	/ry exch def
+	/rx exch def
+	/y exch def
+	/x exch def
+	matrix currentmatrix
+	newpath
+	x y translate
+	rx ry scale
+	0 0 1 0 360 arc
+	setmatrix
+} bind def
+
+/endpage { showpage } bind def
+/showpage { } def
+
+/layercolorseq
+	[	% layer color sequence - darkest to lightest
+		[0 0 0]
+		[.2 .8 .8]
+		[.4 .8 .8]
+		[.6 .8 .8]
+		[.8 .8 .8]
+	]
+def
+
+/layerlen layercolorseq length def
+
+/setlayer {/maxlayer exch def /curlayer exch def
+	layercolorseq curlayer 1 sub layerlen mod get
+	aload pop sethsbcolor
+	/nodecolor {nopcolor} def
+	/edgecolor {nopcolor} def
+	/graphcolor {nopcolor} def
+} bind def
+
+/onlayer { curlayer ne {invis} if } def
+
+/onlayers {
+	/myupper exch def
+	/mylower exch def
+	curlayer mylower lt
+	curlayer myupper gt
+	or
+	{invis} if
+} def
+
+/curlayer 0 def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+14 default-font-family set_font
+% /arrowlength 10 def
+% /arrowwidth 5 def
+
+% make sure pdfmark is harmless for PS-interpreters other than Distiller
+/pdfmark where {pop} {userdict /pdfmark /cleartomark load put} ifelse
+% make '<<' and '>>' safe on PS Level 1 devices
+/languagelevel where {pop languagelevel}{1} ifelse
+2 lt {
+    userdict (<<) cvn ([) cvn load put
+    userdict (>>) cvn ([) cvn load put
+} if
+
+%%EndSetup
+setupLatin1
+%%Page: 1 1
+%%PageBoundingBox: 36 36 995 617
+%%PageOrientation: Portrait
+0 0 1 beginpage
+gsave
+36 36 959 581 boxprim clip newpath
+1 1 set_scale 0 rotate 40 40 translate
+% cluster_host
+gsave
+1 setlinewidth
+0 1 1 graphcolor
+newpath 8 80 moveto
+8 565 lineto
+943 565 lineto
+943 80 lineto
+closepath stroke
+0 0 0 graphcolor
+14 /Times-Roman set_font
+460 549.8 moveto 31 (host) alignedtext
+grestore
+% cluster_host_storage
+gsave
+1 setlinewidth
+0.66667 1 1 graphcolor
+newpath 120 459 moveto
+120 534 lineto
+929 534 lineto
+929 459 lineto
+closepath stroke
+0 0 0 graphcolor
+14 /Times-Roman set_font
+470 518.8 moveto 109 (host filesystem) alignedtext
+grestore
+% cluster_docker_network_host
+gsave
+1 setlinewidth
+0.33333 1 1 graphcolor
+newpath 28 152 moveto
+28 451 lineto
+935 451 lineto
+935 152 lineto
+closepath stroke
+0 0 0 graphcolor
+14 /Times-Roman set_font
+401.5 435.8 moveto 160 (PHAIDRA components) alignedtext
+grestore
+% a1
+gsave
+1 setlinewidth
+solid
+0 1 1 nodecolor
+newpath 196 124 moveto
+104 124 lineto
+104 120 lineto
+100 120 lineto
+100 116 lineto
+104 116 lineto
+104 96 lineto
+100 96 lineto
+100 92 lineto
+104 92 lineto
+104 88 lineto
+196 88 lineto
+closepath stroke
+1 setlinewidth
+solid
+0 1 1 nodecolor
+newpath 104 120 moveto
+108 120 lineto
+108 116 lineto
+104 116 lineto
+stroke
+1 setlinewidth
+solid
+0 1 1 nodecolor
+newpath 104 96 moveto
+108 96 lineto
+108 92 lineto
+104 92 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+112 102.3 moveto 76 (webserver) alignedtext
+grestore
+% d1
+gsave
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 228.1673 18.5442 moveto
+228.1673 33.4558 lineto
+182.3779 44 lineto
+117.6221 44 lineto
+71.8327 33.4558 lineto
+71.8327 18.5442 lineto
+117.6221 8 lineto
+182.3779 8 lineto
+closepath stroke
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 232.1713 15.3613 moveto
+232.1713 36.6387 lineto
+182.8335 48 lineto
+117.1665 48 lineto
+67.8287 36.6387 lineto
+67.8287 15.3613 lineto
+117.1665 4 lineto
+182.8335 4 lineto
+closepath stroke
+1 setlinewidth
+solid
+0 0 0 nodecolor
+newpath 236.1754 12.1784 moveto
+236.1754 39.8216 lineto
+183.289 52 lineto
+116.711 52 lineto
+63.8246 39.8216 lineto
+63.8246 12.1784 lineto
+116.711 0 lineto
+183.289 0 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+102.5 22.3 moveto 95 (Phaidra User) alignedtext
+grestore
+% a1--d1
+gsave
+1 setlinewidth
+0 1 1 edgecolor
+newpath 150 87.6893 moveto
+150 77.2767 150 63.8397 150 52.257 curveto
+stroke
+grestore
+% b1
+gsave
+1 setlinewidth
+solid
+0.66667 1 1 nodecolor
+newpath 230 503 moveto
+227 507 lineto
+206 507 lineto
+203 503 lineto
+128 503 lineto
+128 467 lineto
+230 467 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+136 481.3 moveto 86 (Fedora data) alignedtext
+grestore
+% c1
+gsave
+[ /Rect [ 135.5 382 350.5 420 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (https://fedora.lyrasis.org/) >>
+  /Subtype /Link
+/ANN pdfmark
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 350.5 420 moveto
+135.5 420 lineto
+135.5 416 lineto
+131.5 416 lineto
+131.5 412 lineto
+135.5 412 lineto
+135.5 390 lineto
+131.5 390 lineto
+131.5 386 lineto
+135.5 386 lineto
+135.5 382 lineto
+350.5 382 lineto
+closepath stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 135.5 416 moveto
+139.5 416 lineto
+139.5 412 lineto
+135.5 412 lineto
+stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 135.5 390 moveto
+139.5 390 lineto
+139.5 386 lineto
+135.5 386 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+218 404.8 moveto 50 (Fedora) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+143.5 389.8 moveto 199 (\(object and metadata store\)) alignedtext
+grestore
+% b1--c1
+gsave
+1 setlinewidth
+0.66667 1 1 edgecolor
+newpath 192.5728 466.6099 moveto
+203.2136 452.9763 217.9782 434.0591 228.7814 420.2175 curveto
+stroke
+grestore
+% b2
+gsave
+1 setlinewidth
+solid
+0.66667 1 1 nodecolor
+newpath 617 503 moveto
+614 507 lineto
+593 507 lineto
+590 503 lineto
+501 503 lineto
+501 467 lineto
+617 467 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+509 481.3 moveto 100 (MariaDB data) alignedtext
+grestore
+% c3
+gsave
+[ /Rect [ 401 234 559 272 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (https://mariadb.org/) >>
+  /Subtype /Link
+/ANN pdfmark
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 559 272 moveto
+401 272 lineto
+401 268 lineto
+397 268 lineto
+397 264 lineto
+401 264 lineto
+401 242 lineto
+397 242 lineto
+397 238 lineto
+401 238 lineto
+401 234 lineto
+559 234 lineto
+closepath stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 401 268 moveto
+405 268 lineto
+405 264 lineto
+401 264 lineto
+stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 401 242 moveto
+405 242 lineto
+405 238 lineto
+401 238 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+448 256.8 moveto 64 (MariaDB) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+409 241.8 moveto 142 (\(general databases\)) alignedtext
+grestore
+% b2--c3
+gsave
+1 setlinewidth
+0.66667 1 1 edgecolor
+newpath 553.0622 466.7126 moveto
+538.4935 424.2974 501.0884 315.3965 486.2248 272.1227 curveto
+stroke
+grestore
+% b3
+gsave
+1 setlinewidth
+solid
+0.66667 1 1 nodecolor
+newpath 482.5 503 moveto
+479.5 507 lineto
+458.5 507 lineto
+455.5 503 lineto
+359.5 503 lineto
+359.5 467 lineto
+482.5 467 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+367.5 481.3 moveto 107 (MongoDB data) alignedtext
+grestore
+% c4
+gsave
+[ /Rect [ 249.5 234 362.5 272 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (https://www.mongodb.com/) >>
+  /Subtype /Link
+/ANN pdfmark
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 362.5 272 moveto
+249.5 272 lineto
+249.5 268 lineto
+245.5 268 lineto
+245.5 264 lineto
+249.5 264 lineto
+249.5 242 lineto
+245.5 242 lineto
+245.5 238 lineto
+249.5 238 lineto
+249.5 234 lineto
+362.5 234 lineto
+closepath stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 249.5 268 moveto
+253.5 268 lineto
+253.5 264 lineto
+249.5 264 lineto
+stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 249.5 242 moveto
+253.5 242 lineto
+253.5 238 lineto
+249.5 238 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+270.5 256.8 moveto 71 (MongoDB) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+257.5 241.8 moveto 97 (\(job-tracking\)) alignedtext
+grestore
+% b3--c4
+gsave
+1 setlinewidth
+0.66667 1 1 edgecolor
+newpath 431.8059 466.7962 moveto
+434.3471 461.878 436.6941 456.3864 438 451 curveto
+452.9744 389.2337 473.4252 360.7671 438 308 curveto
+421.1627 282.9203 390.3947 269.4807 362.7976 262.2825 curveto
+stroke
+grestore
+% b4
+gsave
+1 setlinewidth
+solid
+0.66667 1 1 nodecolor
+newpath 341.5 503 moveto
+338.5 507 lineto
+317.5 507 lineto
+314.5 503 lineto
+248.5 503 lineto
+248.5 467 lineto
+341.5 467 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+256.5 481.3 moveto 77 (iipsrv data) alignedtext
+grestore
+% c8
+gsave
+[ /Rect [ 56.5 234 231.5 272 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (https://github.com/ruven/iipsrv) >>
+  /Subtype /Link
+/ANN pdfmark
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 231.5 272 moveto
+56.5 272 lineto
+56.5 268 lineto
+52.5 268 lineto
+52.5 264 lineto
+56.5 264 lineto
+56.5 242 lineto
+52.5 242 lineto
+52.5 238 lineto
+56.5 238 lineto
+56.5 234 lineto
+231.5 234 lineto
+closepath stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 56.5 268 moveto
+60.5 268 lineto
+60.5 264 lineto
+56.5 264 lineto
+stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 56.5 242 moveto
+60.5 242 lineto
+60.5 238 lineto
+56.5 238 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+123.5 256.8 moveto 41 (iipsrv) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+64.5 241.8 moveto 159 (\(display large images\)) alignedtext
+grestore
+% b4--c8
+gsave
+1 setlinewidth
+0.66667 1 1 edgecolor
+newpath 334.2607 466.8454 moveto
+345.4995 461.3433 355.8392 455.5126 360 451 curveto
+404.9875 402.2079 444.8662 359.4953 403 308 curveto
+400.193 304.5474 305.8377 285.4797 231.8223 270.9715 curveto
+stroke
+grestore
+% b5
+gsave
+1 setlinewidth
+solid
+0.66667 1 1 nodecolor
+newpath 773 503 moveto
+770 507 lineto
+749 507 lineto
+746 503 lineto
+635 503 lineto
+635 467 lineto
+773 467 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+643 481.3 moveto 122 (Apache Solr data) alignedtext
+grestore
+% c7
+gsave
+[ /Rect [ 577.5 234 752.5 272 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (https://solr.apache.org/) >>
+  /Subtype /Link
+/ANN pdfmark
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 752.5 272 moveto
+577.5 272 lineto
+577.5 268 lineto
+573.5 268 lineto
+573.5 264 lineto
+577.5 264 lineto
+577.5 242 lineto
+573.5 242 lineto
+573.5 238 lineto
+577.5 238 lineto
+577.5 234 lineto
+752.5 234 lineto
+closepath stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 577.5 268 moveto
+581.5 268 lineto
+581.5 264 lineto
+577.5 264 lineto
+stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 577.5 242 moveto
+581.5 242 lineto
+581.5 238 lineto
+577.5 238 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+622 256.8 moveto 86 (Apache Solr) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+585.5 241.8 moveto 159 (\(object search engine\)) alignedtext
+grestore
+% b5--c7
+gsave
+1 setlinewidth
+0.66667 1 1 edgecolor
+newpath 701.0687 466.7126 moveto
+693.8765 424.2974 675.4107 315.3965 668.073 272.1227 curveto
+stroke
+grestore
+% b6
+gsave
+1 setlinewidth
+solid
+0.66667 1 1 nodecolor
+newpath 921 503 moveto
+918 507 lineto
+897 507 lineto
+894 503 lineto
+791 503 lineto
+791 467 lineto
+921 467 lineto
+closepath stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+799 481.3 moveto 114 (OpenLDAP data) alignedtext
+grestore
+% c6
+gsave
+[ /Rect [ 771 234 927 272 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (https://www.openldap.org/) >>
+  /Subtype /Link
+/ANN pdfmark
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 927 272 moveto
+771 272 lineto
+771 268 lineto
+767 268 lineto
+767 264 lineto
+771 264 lineto
+771 242 lineto
+767 242 lineto
+767 238 lineto
+771 238 lineto
+771 234 lineto
+927 234 lineto
+closepath stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 771 268 moveto
+775 268 lineto
+775 264 lineto
+771 264 lineto
+stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 771 242 moveto
+775 242 lineto
+775 238 lineto
+771 238 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+810 256.8 moveto 78 (OpenLDAP) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+779 241.8 moveto 140 (\(user management\)) alignedtext
+grestore
+% b6--c6
+gsave
+1 setlinewidth
+0.66667 1 1 edgecolor
+newpath 855.4739 466.7126 moveto
+854.183 424.2974 850.8686 315.3965 849.5516 272.1227 curveto
+stroke
+grestore
+% c2
+gsave
+[ /Rect [ 226 308 394 346 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (https://github.com/phaidra/phaidra-api) >>
+  /Subtype /Link
+/ANN pdfmark
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 394 346 moveto
+226 346 lineto
+226 342 lineto
+222 342 lineto
+222 338 lineto
+226 338 lineto
+226 316 lineto
+222 316 lineto
+222 312 lineto
+226 312 lineto
+226 308 lineto
+394 308 lineto
+closepath stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 226 342 moveto
+230 342 lineto
+230 338 lineto
+226 338 lineto
+stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 226 316 moveto
+230 316 lineto
+230 312 lineto
+226 312 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+269 330.8 moveto 82 (phaidra-api) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+234 315.8 moveto 152 (\(general transmitter\)) alignedtext
+grestore
+% c1--c2
+gsave
+1 setlinewidth
+0.33333 1 1 edgecolor
+newpath 259.9069 381.8314 moveto
+269.9861 371 282.7463 357.2876 292.8654 346.4133 curveto
+stroke
+grestore
+% c1--c3
+gsave
+1 setlinewidth
+0.33333 1 1 edgecolor
+newpath 324.327 381.9577 moveto
+350.8681 373.6902 379.5247 362.0503 403 346 curveto
+431.8855 326.2507 456.0199 292.8013 469.1991 272.1384 curveto
+stroke
+grestore
+% c2--a1
+gsave
+1 setlinewidth
+0 1 1 edgecolor
+newpath 225.9679 309.3899 moveto
+149.5635 294.1911 48.4638 273.7948 47 272 curveto
+6.3428 222.1468 83.2307 155.1212 125.2373 124.0866 curveto
+stroke
+grestore
+% c2--c3
+gsave
+1 setlinewidth
+0.33333 1 1 edgecolor
+newpath 352.8982 307.8314 moveto
+378.7673 296.875 411.5968 282.9708 437.4103 272.038 curveto
+stroke
+grestore
+% c2--c4
+gsave
+1 setlinewidth
+0.33333 1 1 edgecolor
+newpath 308.9906 307.8314 moveto
+308.3889 297 307.6271 283.2876 307.023 272.4133 curveto
+stroke
+grestore
+% c5
+gsave
+[ /Rect [ 179 160 299 198 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (https://github.com/phaidra/phaidra-ui) >>
+  /Subtype /Link
+/ANN pdfmark
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 299 198 moveto
+179 198 lineto
+179 194 lineto
+175 194 lineto
+175 190 lineto
+179 190 lineto
+179 168 lineto
+175 168 lineto
+175 164 lineto
+179 164 lineto
+179 160 lineto
+299 160 lineto
+closepath stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 179 194 moveto
+183 194 lineto
+183 190 lineto
+179 190 lineto
+stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 179 168 moveto
+183 168 lineto
+183 164 lineto
+179 164 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+202.5 182.8 moveto 73 (phaidra-ui) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+187 167.8 moveto 104 (\(webinterface\)) alignedtext
+grestore
+% c2--c5
+gsave
+1 setlinewidth
+0.33333 1 1 edgecolor
+newpath 340.4958 307.7757 moveto
+352.6822 298.7056 365.3772 286.5508 372 272 curveto
+378.9964 256.6284 381.4322 248.0096 372 234 curveto
+355.6464 209.7101 326.2863 196.3416 299.3043 188.986 curveto
+stroke
+grestore
+% c2--c6
+gsave
+1 setlinewidth
+0.33333 1 1 edgecolor
+newpath 394.0223 318.122 moveto
+485.0096 309.0879 634.2712 292.8044 762 272 curveto
+764.8925 271.5289 767.8348 271.0285 770.8037 270.5059 curveto
+stroke
+grestore
+% c2--c7
+gsave
+1 setlinewidth
+0.33333 1 1 edgecolor
+newpath 394.13 308.937 moveto
+449.3872 297.7299 521.5211 283.0999 577.4554 271.7555 curveto
+stroke
+grestore
+% c2--c8
+gsave
+1 setlinewidth
+0.33333 1 1 edgecolor
+newpath 268.1112 307.8314 moveto
+242.8508 296.875 210.7937 282.9708 185.5876 272.038 curveto
+stroke
+grestore
+% c5--a1
+gsave
+1 setlinewidth
+0 1 1 edgecolor
+newpath 216.0803 159.7157 moveto
+202.2772 148.7043 184.8191 134.777 171.3142 124.0034 curveto
+stroke
+grestore
+% c5--c1
+gsave
+1 setlinewidth
+0.33333 1 1 edgecolor
+newpath 178.5354 188.9362 moveto
+128.4524 197.7208 62.9954 212.8853 47 234 curveto
+16.942 273.678 16.8364 306.4022 47 346 curveto
+58.7099 361.3724 96.2618 373.4738 135.4064 382.29 curveto
+stroke
+grestore
+% c7--c5
+gsave
+1 setlinewidth
+0.33333 1 1 edgecolor
+newpath 577.2459 235.6312 moveto
+574.1264 235.0762 571.0369 234.531 568 234 curveto
+474.2062 217.602 365.1058 199.981 299.0983 189.4796 curveto
+stroke
+grestore
+% c9
+gsave
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 208 346 moveto
+56 346 lineto
+56 342 lineto
+52 342 lineto
+52 338 lineto
+56 338 lineto
+56 316 lineto
+52 316 lineto
+52 312 lineto
+56 312 lineto
+56 308 lineto
+208 308 lineto
+closepath stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 56 342 moveto
+60 342 lineto
+60 338 lineto
+56 338 lineto
+stroke
+1 setlinewidth
+solid
+0.33333 1 1 nodecolor
+newpath 56 316 moveto
+60 316 lineto
+60 312 lineto
+56 312 lineto
+stroke
+0 0 0 nodecolor
+14 /Times-Roman set_font
+94 330.8 moveto 76 (pixelgecko) alignedtext
+0 0 0 nodecolor
+14 /Times-Roman set_font
+64 315.8 moveto 136 (\(image conversion\)) alignedtext
+grestore
+% c9--c4
+gsave
+1 setlinewidth
+0.33333 1 1 edgecolor
+newpath 175.9075 307.8314 moveto
+202.3853 296.875 235.9873 282.9708 262.4082 272.038 curveto
+stroke
+grestore
+% c9--c8
+gsave
+1 setlinewidth
+0.33333 1 1 edgecolor
+newpath 135.0281 307.8314 moveto
+136.8333 297 139.1187 283.2876 140.9311 272.4133 curveto
+stroke
+grestore
+endpage
+showpage
+grestore
+%%PageTrailer
+%%EndPage: 1
+%%Trailer
+%%Pages: 1
+%%BoundingBox: 36 36 995 617
+end
+restore
+%%EOF

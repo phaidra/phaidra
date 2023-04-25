@@ -11,7 +11,7 @@
 * Technical sketch
   This is work in progress.
   #+NAME: technical-sketch
-  #+begin_src dot :file "./images/construction.svg" :exports results
+  #+begin_src dot :file "./images/construction.ps" :exports results
     graph G {
         graph [rankdir="TB"]
         subgraph cluster_host {
@@ -75,7 +75,7 @@
   #+end_src
 
   #+RESULTS: technical-sketch
-  [[file:./images/construction.svg]]
+  [[file:./images/construction.ps]]
 
 * changes to the phaidra-api repo
   + removed symlinks
