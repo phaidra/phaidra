@@ -1,105 +1,178 @@
 version: '2'
 
-networks:
-  my-network:
-    driver: bridge
-
 services:
 
   imageserver:
     build:
-      context: .
+      context: Dockerfiles
       dockerfile: imageserver.dockerfile
     ports:
       - "8081:80"
-    networks:
-      - my-network
       
   solr:
     image: solr:8.11.2
     ports:
       - "8983:8983"
-    networks:
-      - my-network
-      
-  mariadb:
+
+  phaidradb:
     image: mariadb:10.11.2-jammy
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: example
-    networks:
-      - my-network
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${PHAIDRADB}
+      MARIADB_USER: ${MARIADB_PHAIDRA_USER}
+      MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
+
+  userdatadb:
+    image: mariadb:10.11.2-jammy
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${USERDATADB}
+      MARIADB_USER: ${MARIADB_PHAIDRA_USER}
+      MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
+
+  fedoradb:
+    image: mariadb:10.5
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${FEDORADB}
+      MARIADB_USER: ${MARIADB_PHAIDRA_USER}
+      MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
+    volumes:
+      - ${FEDORADB_DATA}:/var/lib/mysql
+
+  imagedb:
+    image: mariadb:10.11.2-jammy
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${IMAGEDB}
+      MARIADB_USER: ${MARIADB_PHAIDRA_USER}
+      MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
+
+  triplestoredb:
+    image: mariadb:10.11.2-jammy
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${TRIPLESTOREDB}
+      MARIADB_USER: ${MARIADB_PHAIDRA_USER}
+      MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
       
-  mongo:
+  mongophaidradb:
     image: mongo:5
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-    networks:
-      - my-network
-      
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_PHAIDRA_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PHAIDRA_PASSWORD}
+
+  mongophaidraapidb:
+    image: mongo:5
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_PHAIDRA_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PHAIDRA_PASSWORD}
+
+  mongogroupdb:
+    image: mongo:5
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_PHAIDRA_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PHAIDRA_PASSWORD}
+
   dbgate:
     image: dbgate/dbgate:5.2.5
     restart: always
     ports:
       - "9000:3000"
     environment:
-      CONNECTIONS: con1,con2
+      CONNECTIONS: con1,con2,con3,con4,con5,con6,con7,con8
 
-      LABEL_con1: MariaDB
-      SERVER_con1: mariadb
-      USER_con1: root
-      PASSWORD_con1: example
+      LABEL_con1: MariaDB-Phaidra
+      SERVER_con1: phaidradb
+      USER_con1: ${MARIADB_PHAIDRA_USER}
+      PASSWORD_con1: ${MARIADB_PHAIDRA_PASSWORD}
       PORT_con1: 3306
       ENGINE_con1: mariadb@dbgate-plugin-mysql
 
-      LABEL_con2: MongoDB
-      URL_con2: mongodb://root:example@mongo:27017
-      ENGINE_con2: mongo@dbgate-plugin-mongo
-    networks:
-      - my-network
+      LABEL_con2: MariaDB-Userdata
+      SERVER_con2: userdatadb
+      USER_con2: ${MARIADB_PHAIDRA_USER}
+      PASSWORD_con2: ${MARIADB_PHAIDRA_PASSWORD}
+      PORT_con2: 3306
+      ENGINE_con2: mariadb@dbgate-plugin-mysql
+
+      LABEL_con3: MariaDB-Fedora
+      SERVER_con3: fedoradb
+      USER_con3: ${MARIADB_PHAIDRA_USER}
+      PASSWORD_con3: ${MARIADB_PHAIDRA_PASSWORD}
+      PORT_con3: 3306
+      ENGINE_con3: mariadb@dbgate-plugin-mysql
+
+      LABEL_con4: MariaDB-Image
+      SERVER_con4: imagedb
+      USER_con4: ${MARIADB_PHAIDRA_USER}
+      PASSWORD_con4: ${MARIADB_PHAIDRA_PASSWORD}
+      PORT_con4: 3306
+      ENGINE_con4: mariadb@dbgate-plugin-mysql
+
+      LABEL_con5: MariaDB-Triplestore
+      SERVER_con5: triplestoredb
+      USER_con5: ${MARIADB_PHAIDRA_USER}
+      PASSWORD_con5: ${MARIADB_PHAIDRA_PASSWORD}
+      PORT_con5: 3306
+      ENGINE_con5: mariadb@dbgate-plugin-mysql
+      
+      LABEL_con6: MongoDB-Phaidra
+      URL_con6: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongophaidradb:27017
+      ENGINE_con6: mongo@dbgate-plugin-mongo
+
+      LABEL_con7: MongoDB-PhaidraAPI
+      URL_con7: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongophaidraapidb:27017
+      ENGINE_con7: mongo@dbgate-plugin-mongo
+
+      LABEL_con8: MongoDB-Group
+      URL_con8: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongogroupdb:27017
+      ENGINE_con8: mongo@dbgate-plugin-mongo
+    volumes:
+      - ${DBGATE_DATA}:/root/.dbgate
       
   fedora:
     image: fcrepo/fcrepo:6.4.0
     restart: always
     ports:
       - "9090:8080"
-    networks:
-      - my-network
+    environment:
+      - CATALINA_OPTS=${CATALINA_OPTS}
+    volumes:
+      - ${FEDORA_DATA}:/usr/local/tomcat/fcrepo-home
+    depends_on:
+      - fedoradb
       
   lam:
     image: ghcr.io/ldapaccountmanager/lam:8.3
     restart: always
     ports:
       - "8080:80"
-    networks:
-      - my-network
     environment:
-      - LDAP_DOMAIN=example.org
-      - LDAP_SERVER=ldap://openldap:1389
-      - LDAP_USER=cn=admin,dc=example,dc=org
-      - LDAP_USER_DN=ou=users,dc=example,dc=org
-      - LDAP_GROUPS_DN=cn=readers,ou=users,dc=example,dc=org
+      - LDAP_DOMAIN=${LDAP_DOMAIN}
+      - LDAP_SERVER=ldap://openldap:${LDAP_PORT_NUMBER}
+      - LDAP_USER=cn=${LDAP_ADMIN_USERNAME},${LDAP_ROOT}
+      - LDAP_USER_DN=ou=${LDAP_USER_DC},${LDAP_ROOT}
+      - LDAP_GROUPS_DN=cn=${LDAP_GROUP},ou=${LDAP_USER_DC},${LDAP_ROOT}
       
   openldap:
     image: bitnami/openldap:2
     environment:
-      - LDAP_ADMIN_USERNAME=admin
-      - LDAP_ADMIN_PASSWORD=adminpassword
-      - LDAP_USERS=user01,user02
-      - LDAP_PASSWORDS=password1,password2
-      - LDAP_USER_DC=users
-      - LDAP_GROUP=readers
-      - LDAP_PORT_NUMBER=1389
-      - LDAP_ROOT=dc=example,dc=org
-    networks:
-      - my-network
-      
-  phaidra-api:
-    build:
-      context: .
-      dockerfile: phaidra-api.dockerfile
-    networks:
-      - my-network
+      - LDAP_ADMIN_USERNAME=${LDAP_ADMIN_USERNAME}
+      - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
+      - LDAP_USERS=${LDAP_USERS}
+      - LDAP_PASSWORDS=${LDAP_PASSWORDS}
+      - LDAP_USER_DC=${LDAP_USER_DC}
+      - LDAP_GROUP=${LDAP_GROUP}
+      - LDAP_PORT_NUMBER=${LDAP_PORT_NUMBER}
+      - LDAP_ROOT=${LDAP_ROOT}
+
 
