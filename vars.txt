@@ -1,0 +1,36 @@
+# databases
+
+PHAIDRADB="phaidradb"
+USERDATADB="userdatadb"
+FEDORADB="fedoradb"
+IMAGEDB="imagedb"
+TRIPLESTOREDB="triplestoredb"
+
+MARIADB_ROOT_PASSWORD="example"
+MARIADB_PHAIDRA_USER="phaidra"
+MARIADB_PHAIDRA_PASSWORD="phaidra"
+
+MONGODB_PHAIDRA_USER="phaidra"
+MONGODB_PHAIDRA_PASSWORD="phaidra"
+
+# openldap configuration
+
+LDAP_ADMIN_USERNAME="admin"
+LDAP_ADMIN_PASSWORD="adminpassword"
+LDAP_USERS="user01,user02"
+LDAP_PASSWORDS="password1,password2"
+LDAP_USER_DC="users"
+LDAP_GROUP="readers"
+LDAP_PORT_NUMBER="1389"
+LDAP_ROOT="dc=example,dc=org"
+
+# lam configuration
+LDAP_DOMAIN="example.org"
+
+# fedora configuration
+CATALINA_OPTS="-Dfcrepo.db.url=jdbc:mariadb://fedoradb:3306/fedoradb -Dfcrepo.db.user=phaidra -Dfcrepo.db.password=phaidra"
+
+# host storage
+FEDORA_DATA="/home/daniel/phaidra_docker_data/fedora"
+FEDORADB_DATA="/home/daniel/phaidra_docker_data/fedoradb"
+DBGATE_DATA="/home/daniel/phaidra_docker_data/dbgate"
