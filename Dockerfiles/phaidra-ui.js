@@ -1,7 +1,7 @@
 export default {
-  defaultinstance: 'myinstance.example.com',
+  defaultinstance: 'phaidra-docker.example.com',
   global: {
-    title: 'phaidra-ui',
+    title: 'Phaidra Docker',
     showinstanceswitch: 0,
     enablelogin: 1,
     enabledelete: 1,
@@ -30,17 +30,17 @@ export default {
     }
   },
   instances: {
-    'myinstance.example.com': {
-      title: 'Phaidra - myinstance',
-      baseurl: 'myinstance.example.com',
+    'phaidra-docker.example.com': {
+      title: 'Phaidra - Docker',
+      baseurl: 'phaidra-docker.example.com',
       basepath: '',
-      irbaseurl: 'myirinstance.example.com',
-      fedora: 'https://fedora.myinstance.example.com/fedora',
-      api: 'https://services.myinstance.example.com/api',
-      solr: 'https://myinstance.example.com/search/solr/phaidra',
-      primary: '#000',
-      institution: 'My institution',
-      institutionurl: 'My institution URL',
+      irbaseurl: '',
+      fedora: 'http://fedora/fcrepo:8080',
+      api: 'http://phaidra-api:3000',
+      solr: 'http://solr/phaidra:8983',
+      primary: '#dd4814',
+      institution: 'University of Vienna',
+      institutionurl: 'https://univie.ac.at',
       address: 'My institution address',
       phone: '+00-0-000-0',
       email: 'support email'

@@ -10,7 +10,7 @@ apt-get install --yes --quiet --no-install-recommends \
     libsoap-lite-perl libdbd-mysql-perl libdata-messagepack-perl libdatetime-perl libdatetime-format-iso8601-perl \
     libclone-perl libmime-lite-perl libdbix-connector-perl libjson-perl libcgi-pm-perl libxml-libxslt-perl \
     libcache-fastmmap-perl liblocale-maketext-lexicon-perl libyaml-syck-perl libmongodb-perl libmojolicious-perl \
-    libmojolicious-plugin-i18n-perl libmojolicious-plugin-authentication-perl
+    libmojolicious-plugin-i18n-perl libmojolicious-plugin-authentication-perl git
 apt-get clean
 EOF
 RUN <<EOF
@@ -22,10 +22,18 @@ EOF
 RUN <<EOF
 yes | cpanm --uninstall Cpanel::JSON::XS
 EOF
-ARG CACHEBUST=1
+RUN <<EOF
+cpanm Mojo::IOLoop::Delay
+EOF
 RUN mkdir -pv /usr/local/phaidra
 RUN mkdir -pv /var/log/phaidra
 COPY phaidra.yml /etc/
-ADD phaidra-api /usr/local/phaidra/phaidra-api
-WORKDIR /usr/local/phaidra/phaidra-api
-CMD ["hypnotoad", "phaidra-api.cgi"]
+WORKDIR /usr/local/phaidra/
+RUN git clone https://github.com/phaidra/phaidra-api.git
+COPY PhaidraAPI.json /usr/local/phaidra/phaidra-api/
+RUN unlink /usr/local/phaidra/phaidra-api/log4perl.conf
+COPY log4perl.conf /usr/local/phaidra/phaidra-api/
+WORKDIR /usr/local/phaidra/phaidra-api/
+RUN git checkout ebf369e12cbd050e0a92778f0f0897e6fcc08e6c
+EXPOSE 3000
+ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]

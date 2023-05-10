@@ -51,15 +51,6 @@ services:
       MARIADB_DATABASE: ${IMAGEDB}
       MARIADB_USER: ${MARIADB_PHAIDRA_USER}
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
-
-  triplestoredb:
-    image: mariadb:10.11.2-jammy
-    restart: always
-    environment:
-      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
-      MARIADB_DATABASE: ${TRIPLESTOREDB}
-      MARIADB_USER: ${MARIADB_PHAIDRA_USER}
-      MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
       
   mongophaidradb:
     image: mongo:5
@@ -117,13 +108,6 @@ services:
       PASSWORD_con4: ${MARIADB_PHAIDRA_PASSWORD}
       PORT_con4: 3306
       ENGINE_con4: mariadb@dbgate-plugin-mysql
-
-      LABEL_con5: MariaDB-Triplestore
-      SERVER_con5: triplestoredb
-      USER_con5: ${MARIADB_PHAIDRA_USER}
-      PASSWORD_con5: ${MARIADB_PHAIDRA_PASSWORD}
-      PORT_con5: 3306
-      ENGINE_con5: mariadb@dbgate-plugin-mysql
       
       LABEL_con6: MongoDB-Phaidra
       URL_con6: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongophaidradb:27017

@@ -200,6 +200,7 @@
   + [[file:./vars.txt][environment variables for docker-compose.yml]]
 * startup services
   #+begin_example
+    daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ mkdir ~/phaidra-docker-data/{dbgate,fedora,fedoradb}
     daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ docker compose --env-file vars.txt up -d
   #+end_example
 * changes to the phaidra-api repo
