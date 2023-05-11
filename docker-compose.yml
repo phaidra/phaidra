@@ -8,11 +8,23 @@ services:
       dockerfile: imageserver.dockerfile
     ports:
       - "8081:80"
+
+  solr-permission-fixer:
+    image: alpine:3.18.0
+    restart: no
+    entrypoint: |
+      /bin/sh -c "chown 8983:8983 /solr"
+    volumes:
+      - /home/daniel/phaidra_docker_data/solrdata:/solr
       
   solr:
+    depends_on:
+      - solr-permission-fixer
     image: solr:8.11.2
     ports:
       - "8983:8983"
+    volumes:
+      - /home/daniel/phaidra_docker_data/solrdata:/var/solr
 
   phaidradb:
     image: mariadb:10.11.2-jammy
