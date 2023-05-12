@@ -5,7 +5,7 @@ services:
   imageserver:
     build:
       context: .
-      dockerfile: Dockerfiles/imageserver.dockerfile
+      dockerfile: dockerfiles/imageserver.dockerfile
     ports:
       - "8081:80"
 
@@ -29,14 +29,14 @@ services:
   phaidra-ui:
     build:
       context: .
-      dockerfile: Dockerfiles/phaidra-ui.dockerfile
+      dockerfile: dockerfiles/phaidra-ui.dockerfile
     ports:
       - "3001:3001"
 
   phaidra-api:
     build:
       context: .
-      dockerfile: Dockerfiles/phaidra-api.dockerfile
+      dockerfile: dockerfiles/phaidra-api.dockerfile
     ports:
       - "3000:3000"
 
