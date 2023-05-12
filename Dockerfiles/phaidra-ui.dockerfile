@@ -15,8 +15,8 @@ RUN git clone https://github.com/phaidra/phaidra-ui.git
 WORKDIR /phaidra-ui
 RUN mkdir -p components
 RUN mkdir -p assets
-ADD ui-components components/ext/
-ADD ui-assets assets/ext/
+ADD ./../component_configs/phaidra-ui/ui-components components/ext/
+ADD ./../component_configs/phaidra-ui/ui-assets assets/ext/
 RUN git checkout 738304b5516b2b78fba4ec935d4e1bc986fd49b9
 RUN <<EOF
 npm install
@@ -28,7 +28,7 @@ RUN <<EOF
 npm install /phaidra-vue-components
 EOF
 RUN unlink config/phaidra-ui.js
-ADD phaidra-ui.js config/
+COPY ./../component_configs/phaidra-ui/phaidra-ui.js config/
 RUN <<EOF
 sed -i "s|transpile: \['phaidra-vue-components', 'vuetify/lib'\]|\
 transpile: \['phaidra-vue-components', 'vuetify/lib'\]\n  },\n  router: {\n    base: '/ui/'|" \
