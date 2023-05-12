@@ -29,11 +29,12 @@ RUN mkdir -pv /usr/local/phaidra
 RUN mkdir -pv /var/log/phaidra
 COPY phaidra.yml /etc/
 WORKDIR /usr/local/phaidra/
+ARG CACHEBUST=1
 RUN git clone https://github.com/phaidra/phaidra-api.git
 COPY PhaidraAPI.json /usr/local/phaidra/phaidra-api/
 RUN unlink /usr/local/phaidra/phaidra-api/log4perl.conf
 COPY log4perl.conf /usr/local/phaidra/phaidra-api/
 WORKDIR /usr/local/phaidra/phaidra-api/
-RUN git checkout ebf369e12cbd050e0a92778f0f0897e6fcc08e6c
+RUN git checkout 1223fccbdd2c2f717f0d9d388a006cb194f21a31
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]

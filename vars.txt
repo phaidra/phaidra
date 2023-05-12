@@ -1,14 +1,17 @@
 # databases
 
+## mariadb
+
 PHAIDRADB="phaidradb"
 USERDATADB="userdatadb"
 FEDORADB="fedoradb"
 IMAGEDB="imagedb"
-TRIPLESTOREDB="triplestoredb"
 
 MARIADB_ROOT_PASSWORD="example"
 MARIADB_PHAIDRA_USER="phaidra"
 MARIADB_PHAIDRA_PASSWORD="phaidra"
+
+## mongodb
 
 MONGODB_PHAIDRA_USER="phaidra"
 MONGODB_PHAIDRA_PASSWORD="phaidra"
