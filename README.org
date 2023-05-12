@@ -1,7 +1,7 @@
 * About this repository                                            :noexport:
   We currently have an [[https://gitlab.phaidra.org/phaidra-dev/phaidra-demo][automated installer for phaidra]], which allows to set up an instance in about 15min.  However, setup is still bound to the underlying operating system (Ubuntu 22.04-LTS), which brings quite some complexity to the end-user.  Here we try to abstract the system further and allow for easier integration into CI/CD workflows using containerization via docker, and to achieve better portability to other platforms supporting this kind of containerization.
 
-  The end-goal of this project is to allow an interested person to run the command ~docker compose up~ from a clone of this repo and have phaidra running on his/her computer, without modifying the computer (and have things easily removed with ~docker compose down~ as well).
+  The end-goal of this project is to allow an interested person to run the command ~docker compose up -d~ from a clone of this repo and have phaidra running on his/her computer, without modifying the computer (and have things easily removed with ~docker compose down~ as well).
 
 * Table of Contents                                               :TOC:
 - [[#docker-notes][Docker notes]]
