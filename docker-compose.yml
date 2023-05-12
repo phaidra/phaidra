@@ -15,7 +15,7 @@ services:
     entrypoint: |
       /bin/sh -c "chown 8983:8983 /solr"
     volumes:
-      - /home/daniel/phaidra_docker_data/solrdata:/solr
+      - ${SOLR_DATA}:/solr
       
   solr:
     depends_on:
@@ -24,7 +24,7 @@ services:
     ports:
       - "9983:8983"
     volumes:
-      - /home/daniel/phaidra_docker_data/solrdata:/var/solr
+      - ${SOLR_DATA}:/var/solr
 
   phaidra-ui:
     build:
@@ -48,6 +48,8 @@ services:
       MARIADB_DATABASE: ${PHAIDRADB}
       MARIADB_USER: ${MARIADB_PHAIDRA_USER}
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
+    volumes:
+      - ${PHAIDRADB_DATA}:/var/lib/mysql
 
   userdatadb:
     image: mariadb:10.11.2-jammy
@@ -105,7 +107,7 @@ services:
     ports:
       - "9000:3000"
     environment:
-      CONNECTIONS: con1,con2,con3,con4,con5,con6,con7,con8
+      CONNECTIONS: con1,con2,con3,con4,con6,con7,con8
 
       LABEL_con1: MariaDB-Phaidra
       SERVER_con1: phaidradb

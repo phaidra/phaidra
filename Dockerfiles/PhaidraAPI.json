@@ -48,7 +48,7 @@
   
   "phaidra": {
     "baseurl": "phaidra-instance.univie.ac.at",
-    "fedorabaseurl": "",
+    "fedorabaseurl": "fedora",
     "staticbaseurl": "",
     "fedorastylesheeturl": "",
     "proaiRepositoryIdentifier": "",
@@ -58,7 +58,7 @@
     "intcallusername": "changeme",
     "intcallpassword": "changeme",
     "adminusername": "fedoraAdmin",
-    "adminpassword": "changeme"
+    "adminpassword": "fedoraAdmin"
   },
   
   "imageserver": {
@@ -81,10 +81,10 @@
   },
   
   "mongodb": {
-    "host": "host",
+    "host": "mongophaidradb",
     "port": "27017",
-    "username": "username",
-    "password": "password",
+    "username": "phaidra",
+    "password": "phaidra",
     "database": "database"
   },
   

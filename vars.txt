@@ -37,3 +37,5 @@ CATALINA_OPTS="-Dfcrepo.db.url=jdbc:mariadb://fedoradb:3306/fedoradb -Dfcrepo.db
 FEDORA_DATA="/home/daniel/phaidra_docker_data/fedora"
 FEDORADB_DATA="/home/daniel/phaidra_docker_data/fedoradb"
 DBGATE_DATA="/home/daniel/phaidra_docker_data/dbgate"
+PHAIDRADB_DATA="/home/daniel/phaidra_docker_data/phaidradb"
+SOLR_DATA="/home/daniel/phaidra_docker_data/solrdata"

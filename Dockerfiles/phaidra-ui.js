@@ -37,7 +37,7 @@ export default {
       irbaseurl: '',
       fedora: 'http://fedora:8080/fcrepo',
       api: 'http://localhost:3000',
-      solr: 'http://localhost:3000/search/select',
+      solr: 'http://localhost:3000/search',
       primary: '#dd4814',
       institution: 'University of Vienna',
       institutionurl: 'https://univie.ac.at',
