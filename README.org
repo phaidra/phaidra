@@ -201,7 +201,7 @@
   #+end_example
 * files
   + [[file:./docker-compose.yml][docker-compose.yml]]
-  + [[file:./vars.txt][environment variables for docker-compose.yml]]
+  + [[file:./.env][environment variables for docker-compose.yml]]
 * startup services
   #+begin_example
     daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ mkdir ~/phaidra-docker-data/{dbgate,fedora,fedoradb}
