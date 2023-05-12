@@ -158,8 +158,7 @@
                 c8 [label="iipsrv\n(display large images)", URL="https://github.com/ruven/iipsrv"];
                 c9 [label="pixelgecko\n(image conversion)"]
                 c10 [label="dbgate\n(webinterface for databases)"]
-                c11 [label="openldap\n(user management)"]
-                c12 [label="Ldap Account Manager\n(webinterface for openldap)"]
+                c11 [label="Ldap Account Manager\n(webinterface for openldap)"]
             }}
 
         d1 [label="Phaidra User", shape = tripleoctagon, style = solid]
@@ -169,18 +168,14 @@
             c2 -- c4 [color="green"];
             c2 -- c5 [color="green"];
             c2 -- c6 [color="green"];
-            c7 -- c5 [color="green"];
-            c5 -- c1 [color="green"];
+            c2 -- c7 [color="green"];
             c1 -- c3 [color="green"];
             c2 -- c8 [color="green"];
-            c2 -- c7 [color="green"];
             c9 -- c8 [color="green"];
             c9 -- c4 [color="green"];
             c10 -- c3 [color="green"];
             c10 -- c4 [color="green"];
-            c11 -- c12 [color="green"];
-            c11 -- c2 [color="green"];
-
+            c11 -- c6 [color="green"];
 
             b1 -- c1 [color="blue"];
             b2 -- c3 [color="blue"];
@@ -189,23 +184,10 @@
             b5 -- c7 [color="blue"];
             b6 -- c6 [color="blue"];
 
+            c2,c5,c10,c11 -- a1 [color="red"];
+            c2,c5,c10,c11 -- a2 [color="magenta"];
+
             a1 -- d1 [color="red"];
-
-
-            c2,c5 -- a1 [color="red"];
-
-            c10 -- a1 [color="red"];
-            c12 -- a1 [color="red"];
-
-            c2 -- a2 [color="magenta"];
-            c5 -- a2 [color="magenta"];
-            c10 -- a2 [color="magenta"];
-            c12 -- a2 [color="magenta"];
-
-
-
-
-
     }
   #+end_src
 
