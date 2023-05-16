@@ -20,11 +20,17 @@ services:
   solr:
     depends_on:
       - solr-permission-fixer
-    image: solr:9.2.1
+    build:
+      context: .
+      dockerfile: dockerfiles/solr.dockerfile
     ports:
       - "9983:8983"
     volumes:
       - ${SOLR_DATA}:/var/solr
+    command:
+      - solr-precreate
+      - phaidra
+      - /tmp/phaidra
 
   phaidra-ui:
     build:
