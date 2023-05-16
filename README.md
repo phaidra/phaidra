@@ -1,3 +1,5 @@
+[[_TOC_]]
+
 # About this repository
 
 We currently have an [automated installer for
