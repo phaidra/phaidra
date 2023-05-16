@@ -1,17 +1,8 @@
-* About this repository                                            :noexport:
+#+OPTIONS: toc:nil ^:nil
+* About this repository
   We currently have an [[https://gitlab.phaidra.org/phaidra-dev/phaidra-demo][automated installer for phaidra]], which allows to set up an instance in about 15min.  However, setup is still bound to the underlying operating system (Ubuntu 22.04-LTS), which brings quite some complexity to the end-user.  Here we try to abstract the system further and allow for easier integration into CI/CD workflows using containerization via docker, and to achieve better portability to other platforms supporting this kind of containerization.
 
-  The end-goal of this project is to allow an interested person to run the command ~docker compose up -d~ from a clone of this repo and have phaidra running on his/her computer, without modifying the computer (and have things easily removed with ~docker compose down~ as well).
-
-* Table of Contents                                               :TOC:
-- [[#docker-notes][Docker notes]]
-- [[#technical-sketch][Technical sketch]]
-- [[#persistance][persistance]]
-- [[#files][files]]
-- [[#startup-services][startup services]]
-- [[#changes-to-the-phaidra-api-repo][changes to the phaidra-api repo]]
-- [[#changes-on-the-toplevel][changes on the toplevel]]
-
+  The goal of this project is to allow an interested person to run the command ~docker compose up -d~ from a clone of this repo and have phaidra running on his/her computer, without modifying the computer (and have things easily removed with ~docker compose down~ as well).
 * Docker notes
   We run the docker services in rootless mode, to avoid uneccesary privileges for the services themselves.  On the downside this means that the reverse-proxy webserver-configuration has to be done on the host's admin level, as unpriviledged docker will not open priviledged ports like 80 and 443.  From a formerly priviledged docker one can do the following to change this:
   #+begin_example
@@ -218,3 +209,9 @@
   + changed directory_class from ~Phaidra::Directory::Univie~ to ~Phaidra::Directory::GenericLDAP~.
 * changes on the toplevel
   + create [[file:./phaidra.yml][phaidra.yml stub]]
+* export this file to markdown
+  #+begin_src bash
+pandoc README.org --to=gfm -o README.md
+  #+end_src
+
+  #+RESULTS:
