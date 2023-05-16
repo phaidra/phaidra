@@ -57,7 +57,6 @@
        
               <lib dir="./lib" />
     -->
-
   <!-- A 'dir' option by itself adds any files found in the directory 
        to the classpath, this is useful for including all jars in a
        directory.
@@ -1423,12 +1422,13 @@
     <str name="solr.resource.loader.enabled">${velocity.solr.resource.loader.enabled:true}</str>
     <str name="params.resource.loader.enabled">${velocity.params.resource.loader.enabled:false}</str>
   </queryResponseWriter>
-
+  
   <!-- XSLT response writer transforms the XML output by any xslt file found
        in Solr's conf/xslt directory.  Changes to xslt files are checked for
        every xsltCacheLifetimeSeconds.  
-    -->
-  <queryResponseWriter name="xslt" class="solr.XSLTResponseWriter">
+  -->
+  <lib dir="../../../../../opt/solr/modules/scripting/lib/" regex=".*\.jar" />
+  <queryResponseWriter name="xslt" class="solr.scripting.xslt.XSLTResponseWriter">
     <int name="xsltCacheLifetimeSeconds">5</int>
   </queryResponseWriter>
 
