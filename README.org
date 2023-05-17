@@ -3,6 +3,85 @@
   We currently have an [[https://gitlab.phaidra.org/phaidra-dev/phaidra-demo][automated installer for phaidra]], which allows to set up an instance in about 15min.  However, setup is still bound to the underlying operating system (Ubuntu 22.04-LTS), which brings quite some complexity to the end-user.  Here we try to abstract the system further and allow for easier integration into CI/CD workflows using containerization via docker, and to achieve better portability to other platforms supporting this kind of containerization.
 
   The goal of this project is to allow an interested person to run the command ~docker compose up -d~ from a clone of this repo and have phaidra running on his/her computer, without modifying the computer (and have things easily removed with ~docker compose down~ as well).
+* Technical sketch
+  This is work in progress.
+  #+NAME: technical-sketch
+  #+begin_src dot :file "./images/construction.svg" :exports results
+    graph G {
+        graph [rankdir="TB"]
+        subgraph cluster_host {
+            label = "localhost";
+            color = red;
+            node [shape = component, style = solid, color = red]
+            a1 [label="webserver"];
+            a2 [label="developer's browser", shape = doubleoctagon, color = magenta];
+            subgraph cluster_host_storage {
+                label = "host filesystem";
+                node [shape = folder, style = solid, color = blue]
+                color = blue;
+                b1 [label="Fedora data"];
+                b2 [label="MariaDB data"];
+                b3 [label="MongoDB data"];
+                b4 [label="iipsrv data"];
+                b5 [label="Apache Solr data"];
+                b6 [label="OpenLDAP data"];
+            }
+            subgraph cluster_docker_network_host {
+                label="PHAIDRA components";
+                node [shape = component, style = solid, color = green]
+                color = green;
+                c1 [label="Fedora\n(object and metadata store)", URL="https://fedora.lyrasis.org/"];
+                c2 [label="phaidra-api\n(general transmitter)", URL="https://github.com/phaidra/phaidra-api"];
+                c3 [label="MariaDB\n(general databases)", URL="https://mariadb.org/"];
+                c4 [label="MongoDB\n(job-tracking)", URL="https://www.mongodb.com/"];
+                c5 [label="phaidra-ui\n(webinterface)", URL="https://github.com/phaidra/phaidra-ui"];
+                c6 [label="OpenLDAP\n(user management)", URL="https://www.openldap.org/"];
+                c7 [label="Apache Solr\n(object search engine)", URL="https://solr.apache.org/"];
+                c8 [label="iipsrv\n(display large images)", URL="https://github.com/ruven/iipsrv"];
+                c9 [label="pixelgecko\n(image conversion)"]
+                c10 [label="dbgate\n(webinterface for databases)"]
+                c11 [label="Ldap Account Manager\n(webinterface for openldap)"]
+            }}
+
+        d1 [label="Phaidra User", shape = tripleoctagon, style = solid]
+
+            c1 -- c2 [color="green"];
+            c2 -- c3 [color="green"];
+            c2 -- c4 [color="green"];
+            c2 -- c5 [color="green"];
+            c2 -- c6 [color="green"];
+            c2 -- c7 [color="green"];
+            c1 -- c3 [color="green"];
+            c2 -- c8 [color="green"];
+            c9 -- c8 [color="green"];
+            c9 -- c4 [color="green"];
+            c10 -- c3 [color="green"];
+            c10 -- c4 [color="green"];
+            c11 -- c6 [color="green"];
+
+            b1 -- c1 [color="blue"];
+            b2 -- c3 [color="blue"];
+            b3 -- c4 [color="blue"];
+            b4 -- c8 [color="blue"];
+            b5 -- c7 [color="blue"];
+            b6 -- c6 [color="blue"];
+
+            c2,c5,c10,c11 -- a1 [color="red"];
+            c2,c5,c10,c11 -- a2 [color="magenta"];
+
+            a1 -- d1 [color="red"];
+    }
+  #+end_src
+
+  #+RESULTS: technical-sketch
+  [[file:./images/construction.svg]]
+
+* persistance
+  ~docker compose up -d~ will create a directory called ~phaidra_docker_data~ in your home directory for persistence.
+* startup services
+  #+begin_example
+    daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ docker compose up -d
+  #+end_example
 * Docker notes
   We run the docker services in rootless mode, to avoid uneccesary privileges for the services themselves.  On the downside this means that the reverse-proxy webserver-configuration has to be done on the host's admin level, as unpriviledged docker will not open priviledged ports like 80 and 443.  From a formerly priviledged docker one can do the following to change this:
   #+begin_example
@@ -112,92 +191,9 @@
     daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ source ~/.bashrc
   #+end_example
 
-* Technical sketch
-  This is work in progress.
-  #+NAME: technical-sketch
-  #+begin_src dot :file "./images/construction.svg" :exports results
-    graph G {
-        graph [rankdir="TB"]
-        subgraph cluster_host {
-            label = "localhost";
-            color = red;
-            node [shape = component, style = solid, color = red]
-            a1 [label="webserver"];
-            a2 [label="developer's browser", shape = doubleoctagon, color = magenta];
-            subgraph cluster_host_storage {
-                label = "host filesystem";
-                node [shape = folder, style = solid, color = blue]
-                color = blue;
-                b1 [label="Fedora data"];
-                b2 [label="MariaDB data"];
-                b3 [label="MongoDB data"];
-                b4 [label="iipsrv data"];
-                b5 [label="Apache Solr data"];
-                b6 [label="OpenLDAP data"];
-            }
-            subgraph cluster_docker_network_host {
-                label="PHAIDRA components";
-                node [shape = component, style = solid, color = green]
-                color = green;
-                c1 [label="Fedora\n(object and metadata store)", URL="https://fedora.lyrasis.org/"];
-                c2 [label="phaidra-api\n(general transmitter)", URL="https://github.com/phaidra/phaidra-api"];
-                c3 [label="MariaDB\n(general databases)", URL="https://mariadb.org/"];
-                c4 [label="MongoDB\n(job-tracking)", URL="https://www.mongodb.com/"];
-                c5 [label="phaidra-ui\n(webinterface)", URL="https://github.com/phaidra/phaidra-ui"];
-                c6 [label="OpenLDAP\n(user management)", URL="https://www.openldap.org/"];
-                c7 [label="Apache Solr\n(object search engine)", URL="https://solr.apache.org/"];
-                c8 [label="iipsrv\n(display large images)", URL="https://github.com/ruven/iipsrv"];
-                c9 [label="pixelgecko\n(image conversion)"]
-                c10 [label="dbgate\n(webinterface for databases)"]
-                c11 [label="Ldap Account Manager\n(webinterface for openldap)"]
-            }}
-
-        d1 [label="Phaidra User", shape = tripleoctagon, style = solid]
-
-            c1 -- c2 [color="green"];
-            c2 -- c3 [color="green"];
-            c2 -- c4 [color="green"];
-            c2 -- c5 [color="green"];
-            c2 -- c6 [color="green"];
-            c2 -- c7 [color="green"];
-            c1 -- c3 [color="green"];
-            c2 -- c8 [color="green"];
-            c9 -- c8 [color="green"];
-            c9 -- c4 [color="green"];
-            c10 -- c3 [color="green"];
-            c10 -- c4 [color="green"];
-            c11 -- c6 [color="green"];
-
-            b1 -- c1 [color="blue"];
-            b2 -- c3 [color="blue"];
-            b3 -- c4 [color="blue"];
-            b4 -- c8 [color="blue"];
-            b5 -- c7 [color="blue"];
-            b6 -- c6 [color="blue"];
-
-            c2,c5,c10,c11 -- a1 [color="red"];
-            c2,c5,c10,c11 -- a2 [color="magenta"];
-
-            a1 -- d1 [color="red"];
-    }
-  #+end_src
-
-  #+RESULTS: technical-sketch
-  [[file:./images/construction.svg]]
-
-* persistance
-  To have data persisted, we create at least the following directories:
-  #+begin_example
-    daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ mkdir -p ~/phaidra_docker_data/{fedoradb,dbgate,fedora}
-  #+end_example
 * files
   + [[file:./docker-compose.yml][docker-compose.yml]]
   + [[file:./.env][environment variables for docker-compose.yml]]
-* startup services
-  #+begin_example
-    daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ mkdir ~/phaidra-docker-data/{dbgate,fedora,fedoradb}
-    daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ docker compose up -d
-  #+end_example
 * changes to the phaidra-api repo
   + removed symlinks
   + copied PhaidraAPI.json.example to PhaidraAPI.json
