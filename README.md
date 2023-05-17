@@ -29,6 +29,17 @@ This is work in progress.
 
 # startup services
 
+At first run, this command will run for a few minutes, as some images
+will have to be downloaded and partly built as well. If one makes
+changes to files mentioned in the `dockerfiles` directory of this repo,
+make sure to remove the built images before running `docker compose up
+-d`. Otherwise you will keep on using the old images and notice not
+difference. E.g. if one does a change to
+`configs/phaidra-api/PhaidraAPI.json` one will also have to run `docker
+rmi phaidra-docker-phaidra-api` to have it rebuilt on a new startup.
+There are other techniques as well, but this seems to be a very
+'flagless' one.
+
 ``` example
 daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ docker compose up -d
 ```
@@ -170,7 +181,7 @@ daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ source ~/.bash
 
   - create [phaidra.yml stub](./phaidra.yml)
 
-# export this file to markdown
+# export org to markdown
 
 ``` bash
 pandoc README.org --to=gfm -o README.md
