@@ -40,6 +40,9 @@ services:
       - "3001:3001"
 
   phaidra-api:
+    depends_on:
+      - phaidradb
+      - userdatadb
     build:
       context: .
       dockerfile: dockerfiles/phaidra-api.dockerfile
@@ -55,6 +58,7 @@ services:
       MARIADB_USER: ${MARIADB_PHAIDRA_USER}
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
     volumes:
+      - ./configs/mariadb_phaidradb/phaidra.sql.gz:/docker-entrypoint-initdb.d/phaidra.sql.gz:ro
       - ${PHAIDRADB_DATA}:/var/lib/mysql
 
   userdatadb:
@@ -65,6 +69,9 @@ services:
       MARIADB_DATABASE: ${USERDATADB}
       MARIADB_USER: ${MARIADB_PHAIDRA_USER}
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
+    volumes:
+      - ./configs/mariadb_userdatadb/userdata.sql:/docker-entrypoint-initdb.d/userdata.sql:ro
+      - ${USERDATADB_DATA}:/var/lib/mysql
 
   fedoradb:
     image: mariadb:10.5
@@ -76,15 +83,6 @@ services:
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
     volumes:
       - ${FEDORADB_DATA}:/var/lib/mysql
-
-  imagedb:
-    image: mariadb:10.11.2-jammy
-    restart: always
-    environment:
-      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
-      MARIADB_DATABASE: ${IMAGEDB}
-      MARIADB_USER: ${MARIADB_PHAIDRA_USER}
-      MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
       
   mongophaidradb:
     image: mongo:5
@@ -113,7 +111,7 @@ services:
     ports:
       - "9000:3000"
     environment:
-      CONNECTIONS: con1,con2,con3,con4,con6,con7,con8
+      CONNECTIONS: con1,con2,con3,con4,con5,con6
 
       LABEL_con1: MariaDB-Phaidra
       SERVER_con1: phaidradb
@@ -135,25 +133,18 @@ services:
       PASSWORD_con3: ${MARIADB_PHAIDRA_PASSWORD}
       PORT_con3: 3306
       ENGINE_con3: mariadb@dbgate-plugin-mysql
-
-      LABEL_con4: MariaDB-Image
-      SERVER_con4: imagedb
-      USER_con4: ${MARIADB_PHAIDRA_USER}
-      PASSWORD_con4: ${MARIADB_PHAIDRA_PASSWORD}
-      PORT_con4: 3306
-      ENGINE_con4: mariadb@dbgate-plugin-mysql
       
-      LABEL_con6: MongoDB-Phaidra
-      URL_con6: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongophaidradb:27017
+      LABEL_con4: MongoDB-Phaidra
+      URL_con4: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongophaidradb:27017
+      ENGINE_con4: mongo@dbgate-plugin-mongo
+
+      LABEL_con5: MongoDB-PhaidraAPI
+      URL_con5: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongophaidraapidb:27017
+      ENGINE_con5: mongo@dbgate-plugin-mongo
+
+      LABEL_con6: MongoDB-Group
+      URL_con6: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongogroupdb:27017
       ENGINE_con6: mongo@dbgate-plugin-mongo
-
-      LABEL_con7: MongoDB-PhaidraAPI
-      URL_con7: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongophaidraapidb:27017
-      ENGINE_con7: mongo@dbgate-plugin-mongo
-
-      LABEL_con8: MongoDB-Group
-      URL_con8: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongogroupdb:27017
-      ENGINE_con8: mongo@dbgate-plugin-mongo
     volumes:
       - ${DBGATE_DATA}:/root/.dbgate
       

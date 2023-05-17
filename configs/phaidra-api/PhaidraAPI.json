@@ -7,7 +7,6 @@
     "inactivity_timeout": 0,
     "heartbeat_timeout": 600
   },
-  
   "mode": "production",
   "secret": "changeme",
   "enc_key": "changeme",
@@ -30,9 +29,7 @@
   "terms": {
     "search_results_limit": 50
   },
-  
   "directory_class": "Phaidra::Directory::GenericLDAP",
-  
   "directory": {
     "connect_string": "dbi:Oracle:DB",
     "username": "username",
@@ -45,7 +42,6 @@
       "de"
     ]
   },
-  
   "phaidra": {
     "baseurl": "phaidra-instance.univie.ac.at",
     "fedorabaseurl": "fedora",
@@ -60,11 +56,9 @@
     "adminusername": "fedoraAdmin",
     "adminpassword": "fedoraAdmin"
   },
-  
   "imageserver": {
     "hash_secret": "changeme"
   },
-
   "mongodb_group_manager": {
     "host": "host",
     "port": "27017",
@@ -73,13 +67,16 @@
     "database": "groups",
     "collection": "usergroups"
   },
-  
   "phaidra_db": {
     "dsn": "dbi:mysql:phaidradb:phaidradb",
     "username": "phaidra",
     "password": "phaidra"
   },
-  
+  "phaidra_user_db": {
+    "dsn": "dbi:mysql:userdatadb:userdatadb",
+    "username": "phaidra",
+    "password": "phaidra"
+  },
   "mongodb": {
     "host": "mongophaidradb",
     "port": "27017",
@@ -87,7 +84,6 @@
     "password": "phaidra",
     "database": "database"
   },
-  
   "instance_mongodb": {
     "host": "host",
     "port": "27017",
@@ -95,7 +91,6 @@
     "password": "password",
     "database": "database"
   },
-  
   "index_mongodb": {
     "host": "host",
     "port": "27017",
@@ -103,35 +98,33 @@
     "password": "password",
     "database": "database"
   },
-  
   "hooks": {
     "updatedc": 0,
     "updateindex": 1
   },
-  
   "authorization": {
     "canmodifyownerid": [
       "username1"
     ]
   },
-  
   "authentication": {
     "realm": "Phaidra",
     "token_header": "X-XSRF-TOKEN",
     "token_cookie": "XSRF-TOKEN",
     "Access-Control-Allow-Origin": "*",
     "ldap": {
-      "server": "",
-      "port": "",
-      "useridattribute": "",
-      "usersearchbase": "",
-      "usersearchfilter": "",
-      "userattributes": "",
+      "server": "openldap",
+      "port": "1389",
+      "useridattribute": "uid",
+      "usersearchbase": [
+        "dc=example,dc=org"
+      ],
+      "usersearchfilter": "(&(uid={0})(objectClass=inetOrgPerson))",
+      "userattributes": "cn",
       "securityprincipal": "",
       "securitycredentials": ""
     }
   },
-  
   "upstream": {
     "enabled": 1,
     "principalheader": "this is the principal header as in fedora UpstreamAuth config",
@@ -141,7 +134,6 @@
     "fedorausername": "fedora int call user",
     "fedorapassword": "secret"
   },
-  
   "solr": {
     "scheme": "http",
     "host": "solr",
