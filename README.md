@@ -160,27 +160,6 @@ daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ cat << 'EOF' >
 daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ source ~/.bashrc
 ```
 
-# files
-
-  - [docker-compose.yml](./docker-compose.yml)
-  - [environment variables for docker-compose.yml](./.env)
-
-# changes to the phaidra-api repo
-
-  - removed symlinks
-  - copied PhaidraAPI.json.example to PhaidraAPI.json
-  - run untabify on PhaidraAPI.json
-  - run whitespace-cleanup-region on wholly marked buffer
-  - removed colon in line 94
-  - added colon in line 202
-  - copied log4perl.conf from sandbox02
-  - changed directory\_class from `Phaidra::Directory::Univie` to
-    `Phaidra::Directory::GenericLDAP`.
-
-# changes on the toplevel
-
-  - create [phaidra.yml stub](./phaidra.yml)
-
 # export org to markdown
 
 ``` bash
