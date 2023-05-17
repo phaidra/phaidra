@@ -16,6 +16,23 @@ command `docker compose up -d` from a clone of this repo and have
 phaidra running on his/her computer, without modifying the computer (and
 have things easily removed with `docker compose down` as well).
 
+# Technical sketch
+
+This is work in progress.
+
+![](./images/construction.svg)
+
+# persistance
+
+`docker compose up -d` will create a directory called
+`phaidra_docker_data` in your home directory for persistence.
+
+# startup services
+
+``` example
+daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ docker compose up -d
+```
+
 # Docker notes
 
 We run the docker services in rootless mode, to avoid uneccesary
@@ -132,31 +149,10 @@ daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ cat << 'EOF' >
 daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ source ~/.bashrc
 ```
 
-# Technical sketch
-
-This is work in progress.
-
-![](./images/construction.svg)
-
-# persistance
-
-To have data persisted, we create at least the following directories:
-
-``` example
-daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ mkdir -p ~/phaidra_docker_data/{fedoradb,dbgate,fedora}
-```
-
 # files
 
   - [docker-compose.yml](./docker-compose.yml)
   - [environment variables for docker-compose.yml](./.env)
-
-# startup services
-
-``` example
-daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ mkdir ~/phaidra-docker-data/{dbgate,fedora,fedoradb}
-daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ docker compose up -d
-```
 
 # changes to the phaidra-api repo
 

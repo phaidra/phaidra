@@ -205,7 +205,7 @@
   + changed directory_class from ~Phaidra::Directory::Univie~ to ~Phaidra::Directory::GenericLDAP~.
 * changes on the toplevel
   + create [[file:./phaidra.yml][phaidra.yml stub]]
-* export this file to markdown
+* export org to markdown
   #+begin_src bash
 pandoc README.org --to=gfm -o README.md
   #+end_src
