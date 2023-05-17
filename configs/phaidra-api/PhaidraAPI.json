@@ -29,7 +29,7 @@
   "terms": {
     "search_results_limit": 50
   },
-  "directory_class": "Phaidra::Directory::GenericLDAP",
+
   "directory": {
     "connect_string": "dbi:Oracle:DB",
     "username": "username",
@@ -67,16 +67,6 @@
     "database": "groups",
     "collection": "usergroups"
   },
-  "phaidra_db": {
-    "dsn": "dbi:mysql:phaidradb:phaidradb",
-    "username": "phaidra",
-    "password": "phaidra"
-  },
-  "phaidra_user_db": {
-    "dsn": "dbi:mysql:userdatadb:userdatadb",
-    "username": "phaidra",
-    "password": "phaidra"
-  },
   "mongodb": {
     "host": "mongophaidradb",
     "port": "27017",
@@ -107,6 +97,27 @@
       "username1"
     ]
   },
+  "upstream": {
+    "enabled": 1,
+    "principalheader": "this is the principal header as in fedora UpstreamAuth config",
+    "affiliationheader": "this is the affiliation attribute as in fedora UpstreamAuth config",
+    "upstreamusername": "if someone is calling api with principial header, he has to use this credentials",
+    "upstreampassword": "secret",
+    "fedorausername": "fedora int call user",
+    "fedorapassword": "secret"
+  },
+
+  "directory_class": "Phaidra::Directory::GenericLDAP",
+  "phaidra_db": {
+    "dsn": "dbi:mysql:phaidradb:phaidradb",
+    "username": "phaidra",
+    "password": "phaidra"
+  },
+  "phaidra_user_db": {
+    "dsn": "dbi:mysql:userdatadb:userdatadb",
+    "username": "phaidra",
+    "password": "phaidra"
+  },
   "authentication": {
     "realm": "Phaidra",
     "token_header": "X-XSRF-TOKEN",
@@ -124,15 +135,6 @@
       "securityprincipal": "",
       "securitycredentials": ""
     }
-  },
-  "upstream": {
-    "enabled": 1,
-    "principalheader": "this is the principal header as in fedora UpstreamAuth config",
-    "affiliationheader": "this is the affiliation attribute as in fedora UpstreamAuth config",
-    "upstreamusername": "if someone is calling api with principial header, he has to use this credentials",
-    "upstreampassword": "secret",
-    "fedorausername": "fedora int call user",
-    "fedorapassword": "secret"
   },
   "solr": {
     "scheme": "http",
