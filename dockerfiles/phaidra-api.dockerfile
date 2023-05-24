@@ -37,4 +37,4 @@ COPY ./../configs/phaidra-api/log4perl.conf /usr/local/phaidra/phaidra-api/
 WORKDIR /usr/local/phaidra/phaidra-api/
 RUN git checkout 1223fccbdd2c2f717f0d9d388a006cb194f21a31
 EXPOSE 3000
-ENTRYPOINT ["hypnotoad", "phaidra-api.cgi"]
+ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]
