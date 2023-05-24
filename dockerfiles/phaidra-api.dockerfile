@@ -15,7 +15,7 @@ apt-get clean
 EOF
 RUN <<EOF
 cpanm Mojolicious::Plugin::Database Mojolicious::Plugin::Session Mojolicious::Plugin::CHI \
-      Mojolicious::Plugin::Log::Any Mojolicious::Plugin::Prometheus \
+      Mojolicious::Plugin::Log::Any Mojolicious::Plugin::Prometheus@1.3.1 \
       IO::Scalar Crypt::Rijndael MIME::Base64 File::MimeInfo::Magic \
       XML::SAX XML::Parser::PerlSAX File::Find::utf8  MIME::Lite::TT::HTML Storable UNIVERSAL::require
 EOF

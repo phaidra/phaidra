@@ -47,7 +47,7 @@ services:
       context: .
       dockerfile: dockerfiles/phaidra-api.dockerfile
     ports:
-      - "3000:3000"
+      - "3003:3000"
 
   phaidradb:
     image: mariadb:10.11.2-jammy
