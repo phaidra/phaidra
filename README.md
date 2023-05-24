@@ -1,3 +1,4 @@
+[[_TOC_]]
 # About this repository
 
 We currently have an [automated installer for
@@ -162,4 +163,7 @@ daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ source ~/.bash
 
 ``` bash
 pandoc README.org --to=gfm -o README.md
+printf "[[_TOC_]]
+$(cat README.md)
+" > README.md
 ```

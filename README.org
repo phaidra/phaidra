@@ -197,6 +197,7 @@
 * export org to markdown
   #+begin_src bash
 pandoc README.org --to=gfm -o README.md
+printf "[[_TOC_]]\n$(cat README.md)\n" > README.md
   #+end_src
 
   #+RESULTS:
