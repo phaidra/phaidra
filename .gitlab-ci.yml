@@ -1,0 +1,50 @@
+image: docker:24
+
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+
+stages:
+  - testing_builds
+
+services:
+  - docker:24-dind
+
+build-phaidra-api:
+  stage: testing_builds
+  before_script:
+    - apk update && apk add git
+  script:
+    - >
+      docker buildx build
+      -f dockerfiles/phaidra-api.dockerfile
+      .
+
+build-phaidra-ui:
+  stage: testing_builds
+  before_script:
+    - apk update && apk add git
+  script:
+    - >
+      docker buildx build
+      -f dockerfiles/phaidra-ui.dockerfile
+      .
+
+build-imageserver:
+  stage: testing_builds
+  before_script:
+    - apk update && apk add git
+  script:
+    - >
+      docker buildx build
+      -f dockerfiles/imageserver.dockerfile
+      .
+
+build-solr:
+  stage: testing_builds
+  before_script:
+    - apk update && apk add git
+  script:
+    - >
+      docker buildx build
+      -f dockerfiles/solr.dockerfile
+      .
