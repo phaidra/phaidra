@@ -81,10 +81,23 @@
 * persistance
   ~docker compose up -d~ will create a directory called ~phaidra_docker_data~ in your home directory for persistence.
 * startup services
-  At first run, this command will run for a few minutes, as some images will have to be downloaded and partly built as well.  If one makes changes to files mentioned in the ~dockerfiles~ directory of this repo, make sure to remove the built images before running ~docker compose up -d~.  Otherwise you will keep on using the old images and notice not difference.  E.g. if one does a change to ~configs/phaidra-api/PhaidraAPI.json~ one will also have to run ~docker rmi phaidra-docker-phaidra-api~ to have it rebuilt on a new startup.  There are other techniques as well, but this seems to be a very 'flagless' one.
+  At first run, this command will run for a few minutes, as some images will have to be downloaded and partly built as well.  If one makes changes to files mentioned in the ~dockerfiles~ directory of this repo, make sure to remove the built images before running ~docker compose up -d~.  Otherwise you will keep on using the old images and notice not difference.  E.g. if one does a change to ~components/phaidra-api/PhaidraAPI.json~ one will also have to run ~docker rmi phaidra-docker-phaidra-api~ to have it rebuilt on a new startup.  There are other techniques as well, but this seems to be a very 'flagless' one.
   #+begin_example
     daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ docker compose up -d
   #+end_example
+* complete cleanup
+  During the development things can become very cluttered.  A very complete cleanup (at the cost of an image rebuild) can be achieved by running the following commands:
+  #+begin_example
+    # shut down and remove running containers
+    docker compose down
+
+    # remove persisted data from previous runs
+    sudo rm ~/phaidra_docker_data
+
+    # cleanup docker matter
+    docker system prune --all
+  #+end_example
+
 * Docker notes
   We run the docker services in rootless mode, to avoid uneccesary privileges for the services themselves.  On the downside this means that the reverse-proxy webserver-configuration has to be done on the host's admin level, as unpriviledged docker will not open priviledged ports like 80 and 443.  From a formerly priviledged docker one can do the following to change this:
   #+begin_example
