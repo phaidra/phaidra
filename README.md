@@ -36,8 +36,7 @@ make sure to remove the built images before running `docker compose up
 difference. E.g. if one does a change to
 `components/phaidra-api/PhaidraAPI.json` one will also have to run
 `docker rmi phaidra-docker-phaidra-api` to have it rebuilt on a new
-startup. There are other techniques as well, but this seems to be a very
-'flagless' one.
+startup.
 
 ``` example
 daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ docker compose up -d
