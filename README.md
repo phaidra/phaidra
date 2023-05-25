@@ -54,7 +54,7 @@ following commands:
 docker compose down
 
 # remove persisted data from previous runs
-sudo rm ~/phaidra_docker_data
+sudo rm -r ~/phaidra_docker_data
 
 # cleanup docker matter
 docker system prune --all
