@@ -1,0 +1,14 @@
+%= include 'oai/header'
+<ListMetadataFormats>
+  <metadataFormat>
+    <metadataPrefix>oai_dc</metadataPrefix>
+    <schema>http://www.openarchives.org/OAI/2.0/oai_dc.xsd</schema>
+    <metadataNamespace>http://www.openarchives.org/OAI/2.0/oai_dc/</metadataNamespace>
+  </metadataFormat>
+  <metadataFormat>
+    <metadataPrefix>oai_openaire</metadataPrefix>
+    <schema>https://www.openaire.eu/schema/repo-lit/4.0/openaire.xsd</schema>
+    <metadataNamespace>http://namespace.openaire.eu/schema/oaire/</metadataNamespace>
+  </metadataFormat>
+</ListMetadataFormats>
+%= include 'oai/footer'

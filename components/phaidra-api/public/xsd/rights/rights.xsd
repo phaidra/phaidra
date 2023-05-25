@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://phaidra.univie.ac.at/XML/V1.0/rights" targetNamespace="http://phaidra.univie.ac.at/XML/V1.0/rights" elementFormDefault="qualified">
+
+<xs:element name="rights">
+<xs:complexType>
+<xs:sequence>
+	<xs:element name="allow" minOccurs="1" maxOccurs="1">
+	<xs:complexType>
+	<xs:sequence>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element ref="username" />
+			<xs:element ref="faculty" />
+			<xs:element ref="department" />
+			<xs:element ref="gruppe" />
+			<xs:element ref="spl" />
+			<xs:element ref="kennzahl" />
+			<xs:element ref="perfunk" />
+		</xs:choice>
+	</xs:sequence>
+	</xs:complexType>
+	</xs:element>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<!-- xs:dateTime validate ISO - 8601 -->
+
+<xs:element name="username">
+	<xs:complexType>
+	<xs:simpleContent>
+		<xs:extension base="xs:string">
+			<xs:attribute name="expires" type="xs:dateTime" />
+		</xs:extension>
+	</xs:simpleContent>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="faculty">
+        <xs:complexType>
+	<xs:simpleContent>
+		<xs:extension base="xs:string">
+			<xs:attribute name="expires" type="xs:dateTime" />
+		</xs:extension>
+	</xs:simpleContent>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="department">
+        <xs:complexType>
+	<xs:simpleContent>
+		<xs:extension base="xs:string">
+			<xs:attribute name="expires" type="xs:dateTime" />
+		</xs:extension>
+	</xs:simpleContent>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="gruppe">
+        <xs:complexType>
+	<xs:simpleContent>
+		<xs:extension base="xs:string">
+			<xs:attribute name="expires" type="xs:dateTime" />
+		</xs:extension>
+	</xs:simpleContent>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="spl">
+        <xs:complexType>
+	<xs:simpleContent>
+		<xs:extension base="xs:string">
+			<xs:attribute name="expires" type="xs:dateTime" />
+		</xs:extension>
+	</xs:simpleContent>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="kennzahl">
+        <xs:complexType>
+	<xs:simpleContent>
+		<xs:extension base="xs:string">
+			<xs:attribute name="expires" type="xs:dateTime" />
+		</xs:extension>
+	</xs:simpleContent>
+	</xs:complexType>
+</xs:element>
+
+<xs:element name="perfunk">
+        <xs:complexType>
+        <xs:simpleContent>
+                <xs:extension base="xs:string">
+                        <xs:attribute name="expires" type="xs:dateTime" />
+                </xs:extension>
+        </xs:simpleContent>
+        </xs:complexType>
+</xs:element>
+
+
+</xs:schema>

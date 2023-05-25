@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://phaidra.org/XML/V1.0/annotations" targetNamespace="http://phaidra.org/XML/V1.0/annotations" elementFormDefault="qualified">
+
+  <xs:element name="x">
+    <xs:simpleType>
+      <xs:restriction base="xs:decimal">
+        <xs:minInclusive value="0"/>
+        <xs:maxInclusive value="1"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="y">
+    <xs:simpleType>
+      <xs:restriction base="xs:decimal">
+        <xs:minInclusive value="0"/>
+        <xs:maxInclusive value="1"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="w">
+    <xs:simpleType>
+      <xs:restriction base="xs:decimal">
+        <xs:minInclusive value="0"/>
+        <xs:maxInclusive value="1"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="h">
+    <xs:simpleType>
+      <xs:restriction base="xs:decimal">
+        <xs:minInclusive value="0"/>
+        <xs:maxInclusive value="1"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="title" type="xs:string"/>
+  <xs:element name="category" type="xs:string"/>
+  <xs:element name="text" type="xs:string"/>
+
+  <xs:attribute name="id" type="xs:string"/>
+
+  <xs:element name="annotations">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="annotation" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:all>
+              <xs:element ref="x" minOccurs="1" maxOccurs="1"/>
+              <xs:element ref="y" minOccurs="1" maxOccurs="1"/>
+              <xs:element ref="w" minOccurs="1" maxOccurs="1"/>
+              <xs:element ref="h" minOccurs="1" maxOccurs="1"/>
+              <xs:element ref="title" minOccurs="0" maxOccurs="1"/>
+              <xs:element ref="category" minOccurs="1" maxOccurs="1"/>
+              <xs:element ref="text" minOccurs="1" maxOccurs="1"/>
+            </xs:all>
+            <xs:attribute ref="id" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element> 
+
+</xs:schema>

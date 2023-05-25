@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ </head>
+ <body>
+  <audio controls preload="metadata">
+    <source src="https://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get?trywebversion=1" type="<%= $mimetype %>">
+    Your browser does not support the audio element.
+  </audio>
+ </body>
+</html>

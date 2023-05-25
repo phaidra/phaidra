@@ -1,0 +1,12 @@
+%= include 'oai/header'
+<ListIdentifiers>
+<% for my $rec (@$records) { %>
+%= include 'oai/record_header', r => $rec->{r}
+<% } %>
+<% if (defined($resumption_token)) { %>
+<resumptionToken completeListSize="<%= $total %>"><%= $resumption_token %></resumptionToken>
+<% } else { %>
+<resumptionToken completeListSize="<%= $total %>"/>
+<% } %>
+</ListIdentifiers>
+%= include 'oai/footer'

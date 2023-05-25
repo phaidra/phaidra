@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    <link href="https://<%= $baseurl %>/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+    <title>bookviewer</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+  </head>
+  <body>
+    <div id="mirador" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;"></div>
+    <script type='text/javascript' src="https://<%= $baseurl %>/<%= $basepath %>/mirador/mirador.min.js"></script>
+    <script type="text/javascript">
+     var miradorInstance = Mirador.viewer({
+       id: 'mirador',
+       windows: [{
+         manifestId: 'https://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/iiifmanifest',
+         canvasId: 'https://<%= $baseurl %>/<%= $basepath %>/iiif/<%= $pid %>/canvas/<%= $page %>'
+       }],
+       window: {
+        allowClose: false,
+        allowMaximize: false,
+        allowFullscreen: true,
+        defaultSideBarPanel: 'info',
+        sideBarOpenByDefault: true,
+        defaultView: 'book',
+        views: [
+          { key: 'single', behaviors: ['individuals', 'paged'] },
+          { key: 'book', behaviors: ['individuals'] },
+          { key: 'scroll', behaviors: ['continuous'] },
+          { key: 'gallery' }
+        ]
+       },
+       workspace: {
+        showZoomControls: true,
+        type: 'mosaic'
+       },
+       workspaceControlPanel: {
+        enabled: false
+       }
+     });
+    </script>
+  </body>
+</html>

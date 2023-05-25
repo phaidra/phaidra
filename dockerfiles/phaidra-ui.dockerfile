@@ -4,39 +4,31 @@ apt-get update
 apt-get install git ca-certificates -y
 apt-get clean
 EOF
-RUN git clone https://github.com/phaidra/phaidra-vue-components.git
-WORKDIR /phaidra-vue-components
-RUN git checkout c08f9502633d217650103f11173b8fa911bd05c7
+ARG CACHEBUST=1
+RUN mkdir -p /usr/local/phaidra
+ADD ./../components/phaidra-ui /usr/local/phaidra/phaidra-ui
+ADD ./../components/phaidra-vue-components /usr/local/phaidra/phaidra-vue-components
+WORKDIR /usr/local/phaidra/phaidra-vue-components
 RUN <<EOF
 npm install
 EOF
-WORKDIR /
-RUN git clone https://github.com/phaidra/phaidra-ui.git
-WORKDIR /phaidra-ui
-RUN mkdir -p components
-RUN mkdir -p assets
-ADD ./../configs/phaidra-ui/ui-components components/ext/
-ADD ./../configs/phaidra-ui/ui-assets assets/ext/
-RUN git checkout 738304b5516b2b78fba4ec935d4e1bc986fd49b9
-RUN <<EOF
-npm install
-EOF
-RUN <<EOF
-npm install axios@0.24.0
-EOF
-RUN <<EOF
-npm install /phaidra-vue-components
-EOF
-RUN unlink config/phaidra-ui.js
+WORKDIR /usr/local/phaidra/phaidra-ui
 COPY ./../configs/phaidra-ui/phaidra-ui.js config/
-RUN <<EOF
-sed -i "s|transpile: \['phaidra-vue-components', 'vuetify/lib'\]|\
-transpile: \['phaidra-vue-components', 'vuetify/lib'\]\n  },\n  router: {\n    base: '/ui/'|" \
-nuxt.config.js
-EOF
+ADD ./../configs/phaidra-ui/ui-components components/ext
+ADD ./../configs/phaidra-ui/ui-assets assets/ext
 ENV HOST=0.0.0.0
 ENV NODE_OPTIONS=--openssl-legacy-provider
 ENV PORT=3001
 EXPOSE 3001
-RUN npm run build
-ENTRYPOINT ["npm", "run", "start"] 
+RUN <<EOF
+npm install
+npm install axios@0.24.0
+npm install /usr/local/phaidra/phaidra-vue-components
+sed -i "s|transpile: \['phaidra-vue-components', 'vuetify/lib'\]|\
+transpile: \['phaidra-vue-components', 'vuetify/lib'\]\n  },\n  router: {\n    base: '/ui/'|" \
+nuxt.config.js
+EOF
+RUN <<EOF
+npm run build
+EOF
+ENTRYPOINT ["npm", "run", "start"]

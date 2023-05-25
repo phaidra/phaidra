@@ -1,0 +1,7 @@
+<oai_dc:dc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+  <% for my $f (@{$metadata}) { %>
+    <% for my $val (@{$f->{values}}) { %>
+  <dc:<%= $f->{name} %><% if ($f->{lang}) { %> xml:lang="<%= $f->{lang} %>"<% } %>><%= $val %></dc:<%= $f->{name} %>>
+    <% } %>
+  <% } %>
+</oai_dc:dc>

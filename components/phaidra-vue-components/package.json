@@ -1,0 +1,95 @@
+{
+  "name": "phaidra-vue-components",
+  "version": "0.8.0",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "build-bundle": "vue-cli-service build --target lib --name phaidra-vue-components ./src/components/index.js",
+    "svg": "vsvg -s ./src/svg-icons -t ./src/compiled-icons"
+  },
+  "main": "./dist/phaidra-vue-components.common.js",
+  "files": [
+    "dist/*",
+    "src/*",
+    "public/*",
+    "*.json",
+    "*.js"
+  ],
+  "dependencies": {
+    "autolinker": "^3.14.3",
+    "axios": "^0.21.2",
+    "base-64": "^0.1.0",
+    "file-saver": "^2.0.5",
+    "leaflet-geosearch": "^3.0.6",
+    "moment": "^2.29.4",
+    "ms": "^2.1.3",
+    "vue": "^2.6.12",
+    "vue-i18n": "^8.18.2",
+    "vue-json-pretty": "^1.6.3",
+    "vue-router": "^3.1.3",
+    "vue-slicksort": "^1.1.3",
+    "vue-the-mask": "^0.11.1",
+    "vue2-leaflet": "^2.6.0",
+    "vue2-leaflet-geosearch": "^1.0.6",
+    "vuetify": "^2.6.10",
+    "vuex": "^3.4.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.16.7",
+    "@vue/cli-plugin-babel": "^3.12.1",
+    "@vue/cli-plugin-eslint": "^3.12.1",
+    "@vue/cli-service": "^3.12.1",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.2.3",
+    "eslint-plugin-vuetify": "^1.0.0-beta.7",
+    "sass": "^1.26.10",
+    "sass-loader": "^7.3.1",
+    "stylus": "^0.54.8",
+    "stylus-loader": "^3.0.2",
+    "vue-cli-plugin-vuetify": "^0.6.3",
+    "vue-svgicon": "^3.2.8",
+    "vue-template-compiler": "^2.6.12",
+    "vuetify-loader": "^1.6.0"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "standard"
+    ],
+    "plugins": [
+      "vuetify"
+    ],
+    "rules": {
+      "no-console": "off",
+      "vue/no-use-v-if-with-v-for": 0,
+      "vuetify/no-deprecated-classes": "error",
+      "vuetify/grid-unknown-attributes": "error",
+      "vuetify/no-legacy-grid": "error"
+    },
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/phaidra/phaidra-vue-components.git"
+  }
+}

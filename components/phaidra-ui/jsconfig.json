@@ -1,0 +1,15 @@
+{
+  "include": [
+    "./app/**/*",
+    "./components/**/*",
+    "./config/**/*",
+    "./layouts/**/*",
+    "./locales/**/*",
+    "./middleware/**/*",
+    "./mixins/**/*",
+    "./pages/**/*",
+    "./plugins/**/*",
+    "./server-middleware/**/*",
+    "./utils/**/*"
+  ]
+}

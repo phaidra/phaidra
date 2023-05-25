@@ -1,0 +1,24 @@
+%= include 'oai/header'
+<ListRecords>
+<% for my $rec (@$records) { %>
+<record>
+%= include 'oai/record_header', r => $rec->{r}
+<% unless ($rec->{r}->{deleted}) { %>
+<metadata>
+<% if ($metadataPrefix eq 'oai_dc') { %>
+%= include 'oai/oai_dc', r => $rec->{r}, metadata => $rec->{metadata}
+<% } %>
+<% if ($metadataPrefix eq 'oai_openaire') { %>
+%= include 'oai/oai_openaire', r => $rec->{r}, metadata => $rec->{metadata}
+<% } %>
+</metadata>
+<% } %>
+</record>
+<% } %>
+<% if (defined($resumption_token)) { %>
+<resumptionToken completeListSize="<%= $total %>"><%= $resumption_token %></resumptionToken>
+<% } else { %>
+<resumptionToken completeListSize="<%= $total %>"/>
+<% } %>
+</ListRecords>
+%= include 'oai/footer'

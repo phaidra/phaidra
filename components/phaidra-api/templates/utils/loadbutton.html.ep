@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ </head>
+ <body>
+  <button onClick="window.location.href=window.location.href+'?force=1'">Load preview</button>
+ </body>
+</html>

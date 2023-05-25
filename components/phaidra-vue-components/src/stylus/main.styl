@@ -1,0 +1,92 @@
+/** Stylus Styles */
+@require '~vuetify/src/styles/settings/_colors'
+@require './colors'
+
+$colors.blue = $phaidrablue
+$colors.grey = $phaidragrey
+
+$theme = {
+  primary: $phaidrablue.base
+  accent: $red.accent-2
+  secondary: $grey.lighten-1
+  info: $blue.lighten-1
+  warning: $amber.darken-2
+  error: $red.accent-4
+  success: $green.lighten-2
+}
+
+@require '~vuetify/src/styles/settings/_theme'
+
+$material-light.text.disabled = rgba(#000, .87)
+
+$headings = {
+  h1: { size: 26pt, weight: 300, line-height: 1.1, letter-spacing: normal }, // univie
+  h2: { size: 22pt, weight: 300, line-height: 1.1, letter-spacing: normal, padding: 8px }, // univie
+  h3: { size: 20px, weight: 300, line-height: 1.1, letter-spacing: normal }, // univie
+  h4: { size: 34px, weight: 400, line-height: 40px, letter-spacing: normal }
+  h5: { size: 24px, weight: 400, line-height: 32px, letter-spacing: normal },
+  h6: { size: 20px, weight: 500, line-height: 1, letter-spacing: .02em },
+  subheading: { size: 16px, weight: 400 },
+  body-2: { size: 14px, weight: 500 },
+  body-1: { size: 14px, weight: 400 },
+  caption: { size: 12px, weight: 400 },
+  button: { size: 14px, weight: 500 }
+}
+
+@import '~vuetify/src/styles/main'
+
+.pagination
+
+  &__item
+    elevation(0)
+    border-radius: 0px
+
+    &--active
+      elevation(0)
+
+   &__navigation
+    elevation(0)
+
+.pagination a
+  transition: none
+
+.pagination a:hover
+  box-shadow: none
+
+.application--light .pagination__item
+  color: $phaidragrey.base
+
+.application--light .pagination__item--active
+  color: #fff;
+
+.application--light .pagination__navigation .icon
+  color: $phaidragrey.base
+
+
+// phaidra-api returns 'danger', vuetify uses 'error'
+// .danger
+//  @extends .error
+
+.alert
+  font-weight: 400
+
+// SvgIcon
+.svg-icon
+  display inline-block
+  width 16px
+  height 16px
+  color inherit
+  vertical-align middle
+  fill none
+  stroke currentColor
+.svg-fill
+  fill currentColor
+  stroke none
+.svg-up
+  transform rotate(0deg)
+.svg-right
+  transform rotate(90deg)
+.svg-down
+  transform rotate(180deg)
+.svg-left
+  transform rotate(-90deg)

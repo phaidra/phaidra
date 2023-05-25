@@ -1,0 +1,7 @@
+Feedback [% context %]
+Firstname: [% firstname %]
+Lastname: [% lastname %]
+Email: [% email %]
+Logged in as: [% user.firstname %] [% user.lastname %] ([% user.username %]) [% user.email %]
+------------------------
+[% message %]

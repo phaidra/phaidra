@@ -1,0 +1,232 @@
+{
+	"hypnotoad": {
+
+        "listen": ["http://*:3000"],
+
+        "proxy": 1,
+
+        "inactivity_timeout": 0,
+        
+        "heartbeat_timeout": 600
+    },
+
+	"mode":"production",
+
+	"secret":"changeme",
+
+	"enc_key":"changeme",
+
+	"session_expiration":"7200",
+	
+	"session_ip_match": 1,
+
+    "inactivity_timeout":"7200",
+
+    "readonly": "0",
+
+    "allow_userdata_queries": "0",
+
+    "validate_uwmetadata":"/var/www/phaidra-api/public/xsd/uwmetadata/ns0.xsd",
+
+    "validate_mods":"/var/www/phaidra-api/public/xsd/mods/mods-3-5.xsd",
+
+		"validate_rights":"/var/www/phaidra-api/public/xsd/rights/rights.xsd",
+
+		"validate_geo":"/var/www/phaidra-api/public/xsd/geo/ogckml22.xsd",
+        
+        "validate_annotations": "/var/www/phaidra-api/public/xsd/annotations/annotations.xsd",
+
+    "local_uwmetadata_tree":"/var/www/phaidra-api/public/uwmetadata/tree.json",
+
+    "local_mods_tree":"/var/www/phaidra-api/public/mods/mods.json",
+
+		"licenses_file":"/var/www/phaidra-api/public/licenses/licenses.json",
+
+    "languages_file":"/var/www/phaidra-api/public/languages/languages.json",
+
+    "vocabulary_folder":"/var/www/phaidra-api/public/vocabulary",
+
+    "dcaffiliationcodes": 1,
+
+    "terms": {
+    	"search_results_limit": 50
+    },
+
+	"directory_class": "Phaidra::Directory::Univie",
+
+	"directory": {
+
+        "connect_string": "dbi:Oracle:DB",
+
+        "username": "username",
+
+        "password": "password",
+
+        "org_units_languages": ["en","de"],
+
+        "study_plans_languages": ["de"]
+	},
+
+    "phaidra": {
+
+    	"baseurl": "phaidra-instance.univie.ac.at",
+
+    	"fedorabaseurl": "",
+
+    	"staticbaseurl": "",
+
+    	"fedorastylesheeturl": "",
+
+    	"proaiRepositoryIdentifier": "",
+
+			"getuwmetadataurl": "https://fedora.phaidra-instance.univie.ac.at/fedora/get/{PID}/bdef:Asset/getUWMETADATA",
+
+    	"triplestore": "localMysqlMPTTriplestore",
+
+    	"defaultlabel": "Created by phaidra-api",
+
+    	"intcallusername": "changeme",
+
+    	"intcallpassword": "changeme",
+
+			"adminusername": "fedoraAdmin",
+
+			"adminpassword": "changeme"
+
+    },
+
+    "fedora": {
+      "version": "6.4",
+      "host": "localhost",
+      "port": "8080",
+      "path": "fcrepo/rest/",
+      "scheme": "http",
+      "adminuser": "fedoraAdmin",
+      "adminpass": "fedoraAdmin",
+      "pidnamespace": "o",
+      "fedora_db": {
+        "dsn": "dbi:mysql:db_name:db_host",
+        "username": "xxx",
+        "password": "xxx"
+      }
+    },
+
+    "imageserver": {
+      "hash_secret": "changeme" 
+    },
+
+    "frontends": [
+        {
+            "frontend_id": "phaidra_catalyst",
+            "stats": {
+                "type": "piwik",
+                "siteid": 123,
+                "db_piwik": {
+                    "dns": "xxx",
+                    "username": "xxx",
+                    "password": "xxx"
+                }
+            }
+        }
+    ],
+
+    "mongodb_group_manager": {
+       "host": "host",
+       "port": "27017",
+       "username": "user",
+       "password": "pass",
+       "database": "groups",
+       "collection": "usergroups"
+    },
+
+    "localMysqlMPTTriplestore": {
+    	"dsn":"dbi:mysql:db_name:db_host",
+
+    	"username":"changeme",
+
+    	"password":"changeme"
+    },
+
+    "phaidra_db": {
+
+    	"dsn":"dbi:mysql:db_name:db_host",
+
+    	"username":"changeme",
+
+    	"password":"changeme"
+    },
+
+    "mongodb": {
+        "host": "host",
+        "port": "27017",
+        "username": "username",
+        "password": "password",
+        "database": "database"
+    },
+
+   "instance_mongodb": {
+      "host" : "host",
+      "port" : "27017",
+      "username" : "username",
+      "password" : "password",
+      "database" : "database"
+   },
+
+   "index_mongodb": {
+      "host" : "host",
+      "port" : "27017",
+      "username" : "username",
+      "password" : "password",
+      "database" : "database"
+   },
+
+    "hooks": {
+        "updatedc": 0,
+        "updateindex": 1
+    },
+
+    "authorization": {
+        "canmodifyownerid": [ "username1" ]
+    },
+
+    "authentication": {
+
+    	"realm": "Phaidra",
+
+    	"token_header": "X-XSRF-TOKEN",
+
+    	"token_cookie": "XSRF-TOKEN",
+
+    	"Access-Control-Allow-Origin": "*",
+
+    	"ldap": {
+    		"server": "",
+
+    		"port": "",
+
+    		"useridattribute": "",
+
+    		"usersearchbase": "",
+
+        	"usersearchfilter": "",
+
+    		"userattributes": "",
+
+    		"securityprincipal": "",
+
+    		"securitycredentials": ""
+    	},
+
+        "upstream": {
+            "enabled": 1,
+            "principalheader": "this is the principal header as in fedora UpstreamAuth config",
+            "affiliationheader": "this is the affiliation attribute as in fedora UpstreamAuth config",
+            "upstreamusername": "if someone is calling api with principial header, he has to use this credentials",
+            "upstreampassword": "secret",
+            "fedorausername": "fedora int call user",
+            "fedorapassword": "secret"
+      }
+
+    }
+
+}

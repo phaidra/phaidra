@@ -1,0 +1,7 @@
+<header<% if ($r->{deleted}) { %> status="deleted"<% } %>>
+  <identifier><%= $ns.$r->{pid} %></identifier>
+  <datestamp><%= $r->{updated} %></datestamp>
+  <% for my $s (@{$r->{setSpec}}) { %>
+  <setSpec><%= $s %></setSpec>
+  <% } %>
+</header>

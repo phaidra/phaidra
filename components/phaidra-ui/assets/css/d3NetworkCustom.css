@@ -1,0 +1,12 @@
+#m-end path, #m-start{
+  fill: rgba(0, 98, 164, 0.8);
+}
+.node {
+  stroke: rgb(0, 98, 164);
+}
+.node-label {
+    fill: rgb(0, 98, 164)!important;
+}
+.link {
+    stroke: rgb(0, 98, 164 , 0.3)!important;
+}

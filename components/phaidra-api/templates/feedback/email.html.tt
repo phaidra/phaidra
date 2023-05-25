@@ -1,0 +1,12 @@
+<html>
+  <body>
+    <p>Feedback [% context %]</p>
+    <p>Firstname: [% firstname %]</p>
+    <p>Lastname: [% lastname %]</p>
+    <p>Email: <a href="mailto:[% email %]">[% email %]</a></p>
+    <p>Logged in as: [% user.firstname %] [% user.lastname %] ([% user.username %]) <a href="mailto:% user.email %]">[% user.email %]</a></p>
+    <p>------------------------</p>
+    <p>[% message %]</p>
+  </body>
+</html>
+ 

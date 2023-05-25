@@ -1,0 +1,26 @@
+[
+    {
+	"type": "foaf:Organization",
+	"de": "Meine Organisation",
+	"en": "My Organization",
+	"id": "https://example.com/my-organization/1234",
+	"oracle_id": "B-21",
+	"parent_oracle_id": -1
+    },
+    {
+	"de": "Management meiner Organisation",
+	"en": "My Organization's Management",
+	"id": "https://example.com/my-organization/5678",
+	"oracle_id": "4823",
+	"parent_oracle_id": "B-21",
+	"type": "aiiso:Division"
+    },
+    {
+	"de": "Rechtsabteilung meiner Organisation",
+	"en": "My Organization's Law Department",
+	"id": "https://example.com/my-organization/9101",
+	"oracle_id": "5673",
+	"parent_oracle_id": "B-21",
+	"type": "aiiso:Division"
+    }
+]

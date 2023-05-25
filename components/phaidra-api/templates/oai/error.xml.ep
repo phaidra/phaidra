@@ -1,0 +1,5 @@
+%= include 'oai/header'
+<% for my $error (@$errors) { %>
+<error code="<%= @$error[0] %>"><%== @$error[1] %></error>
+<% } %>
+%= include 'oai/footer'

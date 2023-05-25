@@ -1,0 +1,400 @@
+<template>
+  <v-app>
+    <v-container fluid>
+      <v-row no-gutters>
+        <v-col>
+          <ExtHeader></ExtHeader>
+          <v-row>
+            <v-col cols="12" md="10" offset-md="1" class="content">
+              <p-breadcrumbs :items="breadcrumbs"></p-breadcrumbs>
+
+              <template v-for="(alert, i) in alerts">
+                <v-snackbar
+                  :key="'altsnack' + i"
+                  class="font-weight-regular"
+                  top
+                  color="success"
+                  v-if="alert.type === 'success'"
+                  v-model="showSnackbar"
+                >
+                  {{ $t(alert.msg) }}
+                  <v-btn dark text @click.native="dismiss(alert)">OK</v-btn>
+                </v-snackbar>
+              </template>
+
+              <template v-if="showAlerts">
+                <v-row
+                  justify="center"
+                  v-for="(alert, i) in alerts"
+                  :key="'alert' + i"
+                >
+                  <v-col cols="12">
+                    <v-alert
+                      v-if="alert.type !== 'success'"
+                      :type="alert.type === 'error' ? 'error' : alert.type"
+                      :value="true"
+                      transition="slide-y-transition"
+                    >
+                      <v-row align="center">
+                        <v-col class="grow">{{ alert.msg }}</v-col>
+                        <v-col class="shrink">
+                          <v-btn icon @click.native="dismiss(alert)"
+                            ><v-icon>mdi-close</v-icon></v-btn
+                          >
+                        </v-col>
+                      </v-row>
+                    </v-alert>
+                  </v-col>
+                </v-row>
+              </template>
+
+              <transition name="fade" mode="out-in">
+                <keep-alive>
+                  <Nuxt/>
+                </keep-alive>
+              </transition>
+            </v-col>
+          </v-row>
+          <ExtFooter></ExtFooter>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-app>
+</template>
+
+<script>
+import "@/compiled-icons/material-social-person";
+import "@/compiled-icons/univie-right";
+import "@/compiled-icons/univie-sprache";
+import { config } from "../mixins/config";
+import { context } from "../mixins/context";
+import Vue from "vue";
+import moment from "moment";
+import "@/assets/css/material-icons.css";
+
+export default {
+  mixins: [config, context],
+  metaInfo() {
+    let metaInfo = {
+      title: this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+      meta: [
+      { charset: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { name: 'theme-color', content: this.instanceconfig.primary }
+      ]
+    };
+    return metaInfo;
+  },
+  methods: {
+    dismiss: function (alert) {
+      this.$store.commit("clearAlert", alert);
+    }
+  },
+  computed: {
+    showAlerts: function () {
+      if (this.$store.state.alerts.length > 0) {
+        let onlySuccess = true;
+        for (let a of this.$store.state.alerts) {
+          if (a.type !== "success") {
+            onlySuccess = false;
+          }
+        }
+        return !onlySuccess;
+      }
+      return false;
+    },
+    showSnackbar: {
+      get: function () {
+        return this.$store.state.snackbar;
+      },
+      set: function (newValue) {
+        if (!newValue) {
+          this.$store.commit("hideSnackbar");
+        }
+      },
+    },
+    breadcrumbs() {
+      return this.$store.state.breadcrumbs;
+    },
+    alerts() {
+      return this.$store.state.alerts;
+    },
+  },
+  created: function () {
+    Vue.filter("datetime", function (value) {
+      if (value) {
+        return moment(String(value)).format("DD.MM.YYYY hh:mm:ss");
+      }
+    });
+    Vue.filter("date", function (value) {
+      if (value) {
+        return moment(String(value)).format("DD.MM.YYYY");
+      }
+    });
+    Vue.filter("unixtime", function (value) {
+      if (value) {
+        return moment.unix(String(value)).format("DD.MM.YYYY hh:mm:ss");
+      }
+    });
+
+    Vue.filter("datetime", function (value) {
+      if (value) {
+        return moment(String(value)).format("DD.MM.YYYY hh:mm:ss");
+      }
+    });
+
+    Vue.filter("bytes", function (bytes, precision) {
+      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return "-";
+      if (typeof precision === "undefined") precision = 1;
+      var units = ["bytes", "kB", "MB", "GB", "TB", "PB"];
+      var number = Math.floor(Math.log(bytes) / Math.log(1024));
+      return (
+        (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +
+        " " +
+        units[number]
+      );
+    });
+
+    Vue.filter("truncate", function (text, length, clamp) {
+      clamp = clamp || "...";
+      length = length || 30;
+
+      if (text.length <= length) return text;
+
+      var tcText = text.slice(0, length - clamp.length);
+      var last = tcText.length - 1;
+
+      while (last > 0 && tcText[last] !== " " && tcText[last] !== clamp[0])
+        last -= 1;
+
+      // Fix for case when text does not have any space
+      last = last || length - clamp.length;
+
+      tcText = tcText.slice(0, last);
+
+      return tcText + clamp;
+    });
+  }
+};
+</script>
+<style lang="sass">
+@require '../stylus/main'
+</style>
+
+<style>
+.no-padding {
+  padding: 0px;
+}
+
+.svg-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  color: inherit;
+  vertical-align: middle;
+  fill: none;
+  stroke: currentColor;
+}
+
+.svg-fill {
+  fill: currentColor;
+  stroke: none;
+}
+
+.svg-up {
+  transform: rotate(0deg);
+}
+
+.svg-right {
+  transform: rotate(90deg);
+}
+
+.svg-down {
+  transform: rotate(180deg);
+}
+
+.svg-left {
+  transform: rotate(-90deg);
+}
+
+.ie-fixMinHeight {
+  display: flex;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+section {
+  overflow: auto;
+}
+
+#app {
+  font-family: "Roboto", sans-serif, Arial, Helvetica, sans-serif;
+  font-size: 11.5pt;
+  line-height: 1.42857143;
+  color: black;
+  background-color: white;
+  font-weight: 300;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  text-decoration: none;
+}
+
+.logo {
+  height: auto;
+  width: auto;
+  max-width: 250px;
+  max-height: 150px;
+}
+
+.header {
+  -webkit-box-shadow: 48px 0 0 0 white, -48px 0 0 0 white,
+    0 8px 40px -6px rgba(70, 70, 70, 0.4);
+  box-shadow: 48px 0 0 0 white, -48px 0 0 0 white,
+    0 8px 40px -6px rgba(70, 70, 70, 0.4);
+  background-color: white;
+  z-index: 1;
+}
+address {
+  font-style: normal;
+}
+
+.v-align-top {
+  vertical-align: top;
+}
+
+.theme--light.v-card > .v-card__text {
+  color: black;
+}
+
+.lang-icon {
+  margin-left: 5px;
+}
+
+.displayname {
+  vertical-align: top;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.ph-button {
+  color: white !important;
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  outline: 0;
+  border: 0;
+  border-radius: 0px;
+  display: inline-block;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 6px;
+  margin: 6px 1px 6px 0px;
+  height: 30px;
+  line-height: 30px;
+  min-height: 30px;
+  white-space: nowrap;
+  min-width: 88px;
+  text-align: center;
+  font-weight: 300;
+  font-size: 14px;
+  font-style: inherit;
+  font-variant: inherit;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+}
+
+.ph-button:hover {
+  background-color: #267ab3;
+  text-decoration: none;
+  color: white;
+  font-weight: 400;
+}
+
+#quicklinks-button {
+  background-color: #1a74b0;
+  text-decoration: none;
+  color: white;
+  margin-top: 0px;
+  width: 263px;
+}
+
+#quicklinks-button:hover {
+  color: white;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.1s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.select-instance {
+  max-width: 300px;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #bdbdbd;
+}
+
+.border-top {
+  border-top: 1px solid #bdbdbd;
+}
+
+.border-left {
+  border-left: 1px solid;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+#app .v-btn {
+  text-transform: none;
+}
+#app .v-tabs__div {
+  text-transform: none;
+  font-weight: 300;
+}
+
+.univie-grey {
+  color: #7b7b7b;
+}
+</style>
+
+<style scoped>
+.top-margin-lang {
+  margin-top: 0px;
+}
+
+.content {
+  min-height: 800px;
+}
+
+.container {
+  padding: 0px;
+}
+
+.no-height-inherit {
+  height: unset;
+}
+
+.personicon {
+  align-self: center;
+}
+
+.float-right {
+  float: right;
+}
+</style>

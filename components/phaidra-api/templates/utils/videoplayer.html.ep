@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ </head>
+ <body>
+  <video preload="metadata" width="100%" controls>
+    <source src="https://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get?trywebversion=1" type="<%= $mimetype %>">
+    Your browser does not support the video element.
+  </video>
+ </body>
+</html>

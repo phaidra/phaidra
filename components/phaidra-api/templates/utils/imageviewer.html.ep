@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <style type="text/css">
+    body{
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+    div#viewer{
+      height: 100%;
+      min-height: 100%;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 0;
+      padding: 0;
+    }	
+  </style>
+  <link rel="stylesheet" type="text/css" media="all" href="https://<%= $baseurl %>/<%= $basepath %>/iipmooviewer/iip.min.css" />
+  <script type="text/javascript" src="https://<%= $baseurl %>/<%= $basepath %>/iipmooviewer/mootools-core-1.6.0-compressed.js"></script>
+  <script type="text/javascript" src="https://<%= $baseurl %>/<%= $basepath %>/iipmooviewer/iipmooviewer-2.0-min.js"></script>
+  <% if ($annotations_json or ($rights eq 'rw')) { %>
+    <script type="text/javascript" src="https://<%= $baseurl %>/<%= $basepath %>/iipmooviewer/annotations.js"></script>
+  <% } %>
+  <% if ($rights eq 'rw') { %>
+    <script type="text/javascript" src="https://<%= $baseurl %>/<%= $basepath %>/iipmooviewer/annotations-edit.js"></script>
+  <% } %>
+  <script type="text/javascript">
+    var server = 'https://<%= $baseurl %>/<%= $basepath %>/imageserver';
+    var image = "<%= $pid %>.tif";
+    var credit = "<%= $license %>";
+    var annotations = {};
+    <% if ($annotations_json) { %>
+    annotations = <%== $annotations_json %>;
+    <% } %>
+    var prefix = '/api/iipmooviewer/';
+    var iipmooviewer =  new IIPMooViewer( "viewer", { server: server, image: image, prefix: prefix, credit: credit <% if ($annotations_json) { %>, showCoords: true, annotations: annotations <% } %> });
+
+    <% if ($rights eq 'rw') { %>
+      iipmooviewer.addEvent('annotationChange', function(action, annotation_id) {
+        var data = { metadata: { annotations: this.annotations } } ;
+        // `action` is either `updated` or `deleted`
+        if (action == 'deleted') {
+          delete data.metadata.annotations[annotation_id];
+        }
+        const formData = new FormData();
+        formData.append('metadata', JSON.encode(data));
+        const body = new URLSearchParams(formData);
+        var url = 'https://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/annotations';
+        fetch(url, {
+            method: 'post',
+            body: body
+          })
+          .then(response => {
+            if (response.status === 200) {
+              alert('Annotations updated successfully')
+            } else {
+              throw new Error('Error updating annotations');
+            }
+          }).catch(error => {
+            console.error(error);
+          });
+      });
+    <% } %>
+
+  </script>
+ </head>
+ <body>
+   <div id="viewer"><% if ($rights eq 'rw') { %><center><button type="button" onclick="iipmooviewer.newAnnotation()">Add annotation</button></center><% } %></div>
+ </body>
+</html>

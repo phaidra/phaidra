@@ -1,0 +1,421 @@
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:2
+msgid "helpmeta_1"
+msgstr ""
+"Permanent name of the object, which may be cited as such (&rarr; permalink)"
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:10
+msgid "helpmeta_10"
+msgstr ""
+"These figures relate to the digital object saved in Phaidra and explain the "
+"\"life cycle\" and the current \"status\" of the object (for example, which "
+"version it is)."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:59
+msgid "helpmeta_105"
+msgstr "Here you can enter an alternative title for your object."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:60
+msgid "helpmeta_106"
+msgstr ""
+"Please select the appropriate role. You have the option of entering an "
+"academic degree into the first field if you want it to appear in front of "
+"your name, and in the second field if you want it to appear after your name."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:61
+msgid "helpmeta_107"
+msgstr ""
+"Refers to objects before they were archived into Phaidra, e.g. name of the "
+"contractee of a film, author of text, etc."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:62
+msgid "helpmeta_115"
+msgstr ""
+"Here you have the option to insert additional information on the real object "
+"to which your digital object refers, such as building, statue, exhibit, etc."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:63
+msgid "helpmeta_116"
+msgstr "Here you can describe the period (e.g. Middle Ages)."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:64
+msgid "helpmeta_117"
+msgstr "This refers to the object before it was archived into Phaidra."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:65
+msgid "helpmeta_118"
+msgstr "This refers to the object before it was archived into Phaidra."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:66
+msgid "helpmeta_119"
+msgstr "You can enter additional information about the source if needed."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:11
+msgid "helpmeta_12"
+msgstr ""
+"Here you have the option to assign roles to persons involved in the "
+"digitization process. It is also possible to select more than one person who "
+"can have different roles, such as publisher, author or initiator. Please "
+"click on <img src=\"https://phaidra.univie.ac.at/static/img/icon_add.gif\" "
+"style=\"width:15px;height:15px\">."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:67
+msgid "helpmeta_120"
+msgstr ""
+"This refers to the location where the actual object is located (e.g. online "
+"catalog, URL, institutional repository, etc.)."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:68
+msgid "helpmeta_121"
+msgstr ""
+"What is the origin of this object that is now stored Phaidra? If the source "
+"is not available in the list, please contact <a href=”mailto:support."
+"phaidra@univie.ac.at”>support.phaidra@univie.ac.at</a>"
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:69
+msgid "helpmeta_122"
+msgstr "Here you can enter an alternative title for your object."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:12
+msgid "helpmeta_13"
+msgstr ""
+"Please enter your first and last name. In the \"Title\" field you can enter "
+"in the first field either your academic degrees or job titles, which will "
+"later appear in front of your name. Entries in the second field will be "
+"displayed after your name."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:70
+msgid "helpmeta_138"
+msgstr ""
+"The institutional repository archives the research output of the researchers "
+"conducting work at the University of Vienna."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:13
+msgid "helpmeta_16"
+msgstr ""
+"Please select the date on which you processed the object or when you made it "
+"available."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:14
+msgid "helpmeta_17"
+msgstr "This information explains the technical data of your object."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:15
+msgid "helpmeta_18"
+msgstr ""
+"This category is used for indicating educational features of the teaching "
+"resource. If your object consists of several individual objects, please "
+"click on <img src=\"https://phaidra.univie.ac.at/static/img/icon_add.gif\" "
+"style=\"width:15px;height:15px\">."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:16
+msgid "helpmeta_19"
+msgstr ""
+"This section contains information concerning rights and legal issues related "
+"to the object (e.g. licences)."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:3
+msgid "helpmeta_2"
+msgstr ""
+"Please enter the title of the object. If the object does not have a title, "
+"then enter one that most accurately describes the object. If you click on "
+"<img src=\"https://phaidra.univie.ac.at/static/img/icon_add.gif\" style="
+"\"width:15px;height:15px\">, you will have the option of also entering a "
+"title in another language."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:17
+msgid "helpmeta_22"
+msgstr "Here you can assign your object to a classification scheme."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:18
+msgid "helpmeta_23"
+msgstr ""
+"Please select the appropriate format for your object. If your object "
+"contains several different formats, such as a Flash animation embedded in an "
+"HTML page, then please provide all formats. Use <img src=\"https://phaidra."
+"univie.ac.at/static/img/icon_add.gif\" style=\"width:15px;height:15px\">."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:19
+msgid "helpmeta_24"
+msgstr ""
+"The size of the object is indicated in bytes (refers to the non-compressed "
+"size)."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:20
+msgid "helpmeta_25"
+msgstr "Permanent identifier of the object that can be cited as such."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:21
+msgid "helpmeta_26"
+msgstr ""
+"What hardware and software requirements must be met so that your object can "
+"be used optimally? Please click on this symbol <img src=\"https://phaidra."
+"univie.ac.at/static/img/icon_new.gif\" style=\"width:15px;height:15px\"> to "
+"make a selection. If all requirements need to be satisfied, the requests "
+"field must be used several times in order for you to be able to accurately "
+"enter different requirements. Please use <img src=\"https://phaidra.univie."
+"ac.at/static/img/icon_add.gif\" style=\"width:15px;height:15px\"> If, "
+"however, only one request of many must be satisfied, then the or-composite "
+"must be used multiple times."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:4
+msgid "helpmeta_3"
+msgstr ""
+"Please select one or more languages in which you will be searching for the "
+"object. If you want to select more than one language, then click on <img src="
+"\"https://phaidra.univie.ac.at/static/img/icon_add.gif\" style=\"width:15px;"
+"height:15px\"> and use the drop-down menu."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:22
+msgid "helpmeta_32"
+msgstr "Please indicate what is required to install your object."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:23
+msgid "helpmeta_33"
+msgstr "Please explain the requirements that are needed to use your object."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:24
+msgid "helpmeta_34"
+msgstr ""
+"What is the average play time for movies or audio files that should be "
+"expected?"
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:25
+msgid "helpmeta_35"
+msgstr "Will costs result for the users?"
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:26
+msgid "helpmeta_36"
+msgstr "Is your object legally protected?"
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:27
+msgid "helpmeta_37"
+msgstr ""
+"Please enter further indications of possible legal conditions. If none "
+"exist, please note that the object will be freely available"
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:28
+msgid "helpmeta_38"
+msgstr ""
+"Please enter your first and last name. In the \"Title\" field you can enter "
+"in the first field either your academic degrees or job titles, which will "
+"later appear in front of your name. Entries in the second field will be "
+"displayed after your name."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:5
+msgid "helpmeta_4"
+msgstr ""
+"Here you can enter a free text of the object (e.g. table of contents or "
+"summary)."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:29
+msgid "helpmeta_42"
+msgstr "Please also indicate the date on which the note was written."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:30
+msgid "helpmeta_43"
+msgstr ""
+"Description of the object, if possible with terms from a controlled "
+"vocabulary."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:31
+msgid "helpmeta_44"
+msgstr ""
+"Phaidra gives you the option to select terms for the systematization and "
+"classification of your objects. You can read a description of the proposed "
+"classification system in the help box \"hierarchical classification "
+"(classes, subclasses)\".<br /><br />First, choose a classification scheme, "
+"and then a term. When searching for terms, you can use the search support "
+"function.<br /><br />The ÖFOS classification scheme is compulsory for "
+"scientific objects. Only objects from the non-scientific field, for example, "
+"from senior management, can only be given a different classification. We ask "
+"that you adhere to the Code of Good Practice. The option that is important "
+"for finding objects when building categories can only function if a uniform "
+"category schema is used."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:32
+msgid "helpmeta_46"
+msgstr ""
+"Please select a classification scheme. You must select at least one term "
+"from the AFOS. Then you can assign your object to other classifications if "
+"required."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:33
+msgid "helpmeta_48"
+msgstr ""
+"Description of the object, if possible with terms from a controlled "
+"vocabulary."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:34
+msgid "helpmeta_49"
+msgstr ""
+"Here you have the option of describing your object in more detail, which is "
+"also useful for objects that fall into a multi-disciplinary context."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:6
+msgid "helpmeta_5"
+msgstr ""
+"Here you have the option to describe or explain your object in your own "
+"words. Please use as specific and precise terms as possible."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:35
+msgid "helpmeta_50"
+msgstr ""
+"Here you have the option under <img src=\"https://phaidra.univie.ac.at/"
+"static/img/icon_new.gif\" style=\"width:15px;height:15px\"> to describe your "
+"uploaded object in greater detail. Please also indicate the date when the "
+"annotation was generated. Under description, you can enter the type of "
+"application of the object, how the object is to be used, or a didactic "
+"comment. If your object is made up of several individual objects, you have "
+"the option of multiplying the comments field by clicking <img src=\"https://"
+"phaidra.univie.ac.at/static/img/icon_add.gif\" style=\"width:15px;height:15px"
+"\">."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:36
+msgid "helpmeta_51"
+msgstr ""
+"Diese Kategorie dient der Angabe bildungsbezogener und pädagogisch-"
+"didaktischer Merkmale der Lehr-/Lernressource. Besteht Ihr Objekt aus "
+"mehreren einzelnen Objekten, verwenden Sie bitte <img src=\"https://phaidra."
+"univie.ac.at/static/img/icon_add.gif\" style=\"width:15px;height:15px\">."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:37
+msgid "helpmeta_52"
+msgstr ""
+"This element specifies whether and in what form the teaching resource "
+"activities are required on the part of users."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:38
+msgid "helpmeta_53"
+msgstr ""
+"This element provides information on both forms of the application and the "
+"type of teaching resource."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:39
+msgid "helpmeta_54"
+msgstr ""
+"This element provides a benchmark for the degree of interaction between "
+"users and the teaching resource."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:40
+msgid "helpmeta_55"
+msgstr ""
+"The element describes the content-related amount of information that the "
+"object provides in proportion to its size or its duration."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:41
+msgid "helpmeta_56"
+msgstr "This relates to statements about the main users/target groups."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:42
+msgid "helpmeta_57"
+msgstr ""
+"This provides information on the phase of study or levels of training for "
+"which the teaching resource is suitable."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:43
+msgid "helpmeta_58"
+msgstr ""
+"The element includes the ages of the users and/or information on the level "
+"of academic study."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:44
+msgid "helpmeta_59"
+msgstr ""
+"The element contains information on the degree of difficulty in regard to "
+"the use of the object by the users."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:7
+msgid "helpmeta_6"
+msgstr ""
+"Here you can enter details on the spatial and temporal coverage of the "
+"object. You can also enter the relevant legal reference (for example, early "
+"medieval law or canon law)."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:45
+msgid "helpmeta_60"
+msgstr ""
+"If reasonably possible, this will give you an indication of the time that "
+"you will need to use the teaching resource."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:46
+msgid "helpmeta_61"
+msgstr ""
+"This element makes didactically relevant information available. It is "
+"intended to illustrate how the teaching resource can be used in mediation "
+"scenarios."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:47
+msgid "helpmeta_62"
+msgstr "This specifies the language of the users of the teaching resource."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:8
+msgid "helpmeta_7"
+msgstr ""
+"You can create multiple versions of an object. Phaidra displays all versions "
+"of the object after a search."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:48
+msgid "helpmeta_71"
+msgstr ""
+"Here you have the option to assign relations to your object (e.g. to an "
+"organizational unit of the University of Vienna)."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:9
+msgid "helpmeta_8"
+msgstr ""
+"Please choose either \"draft\", \"finished\" or \"unavailable.\" This "
+"information is relevant if there are multiple versions of your object. "
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:49
+msgid "helpmeta_81"
+msgstr "Please select the appropriate licence."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:50
+msgid "helpmeta_82"
+msgstr ""
+"Here you can enter information about the original physical object (building, "
+"statue, exhibit, etc.)"
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:51
+msgid "helpmeta_83"
+msgstr ""
+"Here you have the option to enter text that is on objects (plaques, "
+"tombstones, etc.), which enables you to search for them."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:52
+msgid "helpmeta_84"
+msgstr ""
+"Please select the entity (source), referred to by the following units. You "
+"can choose an object (e.g. a sculpture) or an image carrier (e.g. a "
+"photographic print). If possible, please indicate both."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:53
+msgid "helpmeta_89"
+msgstr ""
+"Please enter all numbers of objects and select the corresponding reference."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:54
+msgid "helpmeta_90"
+msgstr "Select the appropriate stamp. Please indicate all stamps."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:55
+msgid "helpmeta_91"
+msgstr ""
+"Here you have the option to describe more specific details of your image "
+"carrier (status, written notes, etc.)"
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:56
+msgid "helpmeta_95"
+msgstr "Enter the appropriate number here."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:57
+msgid "helpmeta_96"
+msgstr ""
+"Here you have the option of entering either degree values or decimal values, "
+"e.g. longitude 16.3597 (16°21’35’’E) or -16.3597 (16°21’35’’W). Please note "
+"that East/West must be indicated as E/W and North/South must be indicated as "
+"N/S."
+
+#: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:58
+msgid "helpmeta_98"
+msgstr "Here you can create a digital book."

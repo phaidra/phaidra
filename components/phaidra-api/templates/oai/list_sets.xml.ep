@@ -1,0 +1,13 @@
+%= include 'oai/header'
+<ListSets>
+<% for my $setSpec (keys %{$sets}) { %>
+  <set>
+    <setSpec><%= $sets->{$setSpec}->{setSpec} %></setSpec>
+    <setName><%= $sets->{$setSpec}->{setName} %></setName>
+    <setDescription>
+%= include 'oai/oai_dc', r => $sets->{$setSpec}->{setDescription}, metadata => $sets->{$setSpec}->{metadata}
+    </setDescription>
+  </set>
+<% } %>
+</ListSets>
+%= include 'oai/footer'
