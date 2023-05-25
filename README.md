@@ -1,4 +1,6 @@
 [[_TOC_]]
+<https://gitlab.phaidra.org/phaidra-dev/phaidra-docker/badges/main/pipeline.svg?ignore_skipped=true>
+
 # About this repository
 
 We currently have an [automated installer for
