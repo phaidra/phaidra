@@ -13,9 +13,6 @@ RUN <<EOF
 npm install
 EOF
 WORKDIR /usr/local/phaidra/phaidra-ui
-COPY ./../configs/phaidra-ui/phaidra-ui.js config/
-ADD ./../configs/phaidra-ui/ui-components components/ext
-ADD ./../configs/phaidra-ui/ui-assets assets/ext
 ENV HOST=0.0.0.0
 ENV NODE_OPTIONS=--openssl-legacy-provider
 ENV PORT=3001

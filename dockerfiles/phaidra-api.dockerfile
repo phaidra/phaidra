@@ -28,10 +28,8 @@ EOF
 ARG CACHEBUST=1
 RUN mkdir -pv /usr/local/phaidra
 RUN mkdir -pv /var/log/phaidra
-COPY ./../configs/phaidra-api/phaidra.yml /etc/
+COPY ./../extra_configs/phaidra-api/phaidra.yml /etc/
 ADD ./../components/phaidra-api /usr/local/phaidra/phaidra-api
-COPY ./../configs/phaidra-api/log4perl.conf /usr/local/phaidra/phaidra-api/
-COPY ./../configs/phaidra-api/PhaidraAPI.json /usr/local/phaidra/phaidra-api/
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]

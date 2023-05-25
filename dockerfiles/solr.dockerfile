@@ -1,2 +1,2 @@
 FROM solr:9.2.1
-ADD ./../configs/solr/phaidra_core /tmp/phaidra
+ADD ./../extra_configs/solr/phaidra_core /tmp/phaidra
