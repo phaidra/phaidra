@@ -48,6 +48,8 @@ services:
       dockerfile: dockerfiles/phaidra-api.dockerfile
     ports:
       - "3003:3000"
+    volumes:
+      - ${PHAIDRA_API_LOGS}:/var/log/phaidra
 
   phaidradb:
     image: mariadb:10.11.2-jammy
