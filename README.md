@@ -1,5 +1,7 @@
 ![](https://gitlab.phaidra.org/phaidra-dev/phaidra-docker/badges/main/pipeline.svg?ignore_skipped=true)
+
 [[_TOC_]]
+
 # About this repository
 
 We currently have an [automated installer for
@@ -376,9 +378,11 @@ removed directory '.git'
 ``` bash
 pandoc README.org --to=gfm -o README.md
 printf "[[_TOC_]]
+
 $(cat README.md)
 " > README.md
 printf "![](https://gitlab.phaidra.org/phaidra-dev/phaidra-docker/badges/main/pipeline.svg?ignore_skipped=true)
+
 $(cat README.md)
 " > README.md
 ```
