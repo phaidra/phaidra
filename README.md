@@ -1,6 +1,4 @@
 [[_TOC_]]
-<https://gitlab.phaidra.org/phaidra-dev/phaidra-docker/badges/main/pipeline.svg?ignore_skipped=true>
-
 # About this repository
 
 We currently have an [automated installer for
@@ -16,6 +14,15 @@ The goal of this project is to allow an interested person to run the
 command `docker compose up -d` from a clone of this repo and have
 phaidra running on his/her computer, without modifying the computer (and
 have things easily removed with `docker compose down` as well).
+
+## Build status
+
+We have a minimal CI activated – right now it only builds the docker
+images as defined in the `./dockerfiles` directory. This is for testing
+purposes and runs on every commit to this repo, as a semi-manual
+verification if any cpanm-modules break the api-build.
+
+<https://gitlab.phaidra.org/phaidra-dev/phaidra-docker/badges/main/pipeline.svg?ignore_skipped=true>
 
 # Technical sketch
 
