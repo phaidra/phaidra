@@ -122,7 +122,7 @@ export default {
     padding: 9px;
 }
 .content-box {
-    background-color: #b53e2c;
+    background-color: #008080;
     font-size: 10.8pt;
     color: white;
     display: table;
