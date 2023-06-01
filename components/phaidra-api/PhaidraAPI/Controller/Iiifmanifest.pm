@@ -5,9 +5,24 @@ use warnings;
 use v5.10;
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Iiifmanifest;
+use PhaidraAPI::Model::Object;
 use Mojo::ByteStream qw(b);
 use Mojo::JSON qw(encode_json decode_json);
 use Time::HiRes qw/tv_interval gettimeofday/;
+
+sub get_iiif_manifest {
+  my $self = shift;
+
+  my $pid = $self->stash('pid');
+
+  unless (defined($pid)) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}], status => 404}, status => 404);
+    return;
+  }
+
+  my $object_model = PhaidraAPI::Model::Object->new;
+  $object_model->proxy_datastream($self, $pid, 'IIIF-MANIFEST', $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password}, 1);
+}
 
 sub update_manifest_metadata {
   my $self = shift;

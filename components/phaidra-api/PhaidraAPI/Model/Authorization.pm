@@ -21,7 +21,16 @@ sub check_rights {
       $currentuser = $c->stash->{remote_user};
     }
 
-    # 0 - admin can do anything
+    unless ($currentuser) {
+      unless ($op eq 'r' or $op eq 'ro') {
+        $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] DENIED: no user");
+        $res->{alerts} = [{type => 'error', msg => 'Forbidden'}];
+        $res->{status} = 403;
+        return $res;
+      }
+    }
+
+    # admin can do anything
     if ($currentuser eq $c->app->{config}->{phaidra}->{adminusername}) {
       $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] GRANTED: admin");
       $res->{rights} = 'rw';
@@ -29,16 +38,14 @@ sub check_rights {
       return $res;
     }
 
-    my $userdata = $self->app->directory->get_user_data($c, $currentuser);
-    if ($userdata->{status} ne 200) {
+    my $userdata = $c->app->directory->get_user_data($c, $currentuser);
+    unless ($userdata) {
       $c->app->log->error("Authz op[$op] pid[$pid] currentuser[$currentuser] failed");
-      $c->app->log->error($userdata->{alerts});
-      push @{$res->{alerts}}, @{$userdata->{alerts}} if scalar @{$userdata->{alerts}} > 0;
       $res->{status} = 500;
       return $res;
     }
 
-    # 1 - superuserforallusers can do anything on any object
+    # superuserforallusers can do anything on any object
     if ($userdata->{superuserforallusers}) {
       $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] GRANTED: superuserforallusers");
       $res->{rights} = 'rw';
@@ -50,15 +57,16 @@ sub check_rights {
     my $fres         = $fedora_model->getObjectProperties($c, $pid);
     if ($fres->{status} ne 200) {
       $c->app->log->error("Authz op[$op] pid[$pid] currentuser[$currentuser] failed");
-      $c->app->log->error($fres->{alerts});
+      $c->app->log->error($c->app->dumper($fres->{alerts}));
       push @{$res->{alerts}}, @{$fres->{alerts}} if scalar @{$fres->{alerts}} > 0;
       $res->{status} = 500;
       return $res;
     }
 
     my $owner = $fres->{owner};
+    my $state = $fres->{state};
 
-    # 2 - user can do anything on owned object
+    # user can do anything on owned object
     if ($currentuser eq $owner) {
       $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] GRANTED: owner");
       $res->{rights} = 'rw';
@@ -66,15 +74,25 @@ sub check_rights {
       return $res;
     }
 
+    #######################################
     # no write rights pass this point
-    if ($op and ($op eq 'rw' or $op eq 'w')) {
+    if ($op eq 'rw' or $op eq 'w') {
       $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] DENIED: no write permission");
       $res->{alerts} = [{type => 'error', msg => 'Forbidden'}];
       $res->{status} = 403;
       return $res;
     }
+    #######################################
 
-    # 3 - if the object has non-empty RIGHTS, it's restricted.
+    # for non-writers only consider Active objects
+    if ($state ne 'Active') {
+      $c->app->log->info("Authz op[$op] pid[$pid] state[$state] currentuser[$currentuser] DENIED: object is not Active");
+      $res->{alerts} = [{type => 'error', msg => 'Forbidden'}];
+      $res->{status} = 403;
+      return $res;
+    }
+
+    # if the object has non-empty RIGHTS, it's restricted.
     # Only users/groups/orgunits in the list are allowed to READ
     my $rights_model = PhaidraAPI::Model::Rights->new;
     my $rightsres    = $rights_model->get_object_rights_json($c, $pid, $c->app->config->{phaidra}->{intcallusername}, $c->app->config->{phaidra}->{intcallpassword});
@@ -86,7 +104,7 @@ sub check_rights {
         return $res;
       }
       $c->app->log->error("Authz op[$op] pid[$pid] currentuser[$currentuser] failed");
-      $c->app->log->error($rightsres->{alerts});
+      $c->app->log->error("RIGHTS:\n".$c->app->dumper($rightsres->{alerts}));
       push @{$res->{alerts}}, @{$rightsres->{alerts}} if scalar @{$rightsres->{alerts}} > 0;
       $res->{status} = 500;
       return $res;
@@ -213,6 +231,9 @@ sub check_rights {
   else {
 
     my $username = $c->stash->{basic_auth_credentials}->{username};
+    if ($c->stash->{remote_user}) {
+      $username = $c->stash->{remote_user};
+    }
 
     my $ds;
     if ($op eq 'ro' or $op eq 'r') {

@@ -1057,6 +1057,7 @@ sub _get {
   $res->{index} = \%index;
 
   my %datastreams;
+  my %datastreamids;
 
   # get basic object properties and a list of datastreams
   if ($c->app->config->{fedora}->{version} >= 6) {
@@ -1148,6 +1149,7 @@ sub _get {
 
     for my $dsid (@{$fres->{contains}}) {
       if ($indexed_datastreams{$dsid}) {
+        $datastreamids{$dsid} = 1;
         if ($indexed_datastreams_xml{$dsid}) {
           my $getdsres = $fedora_model->getDatastream($c, $pid, $dsid);
           if ($getdsres->{status} != 200) {
@@ -1156,7 +1158,7 @@ sub _get {
 
           my $dom = Mojo::DOM->new();
           $dom->xml(1);
-          $dom->parse($getdsres->{$dsid});
+          $dom->parse('<foxml:xmlContent>'.$getdsres->{$dsid}.'</foxml:xmlContent>');
           $datastreams{$dsid} = $dom;
         }
         else {
@@ -1164,6 +1166,7 @@ sub _get {
         }
       }
     }
+    push @{$index{datastreams}}, keys %datastreamids;
   }
   else {
     $c->app->log->debug("indexing $pid: getting foxml");
@@ -1181,7 +1184,6 @@ sub _get {
     $c->app->log->debug("parsing foxml took " . tv_interval($tparsefoxml));
     $c->app->log->debug("indexing $pid: foxml parsed!");
 
-    my %datastreamids;
     for my $e ($dom->find('foxml\:datastream')->each) {
 
       my $dsid = $e->attr('ID');
@@ -1412,8 +1414,10 @@ sub _get {
     }
     else {
       my @expires;
+      my $isRestricted = 0;
       for my $id (keys %{$r_rights->{rights}}) {
         if (exists($r_rights->{rights}->{$id})) {
+          $isRestricted = 1;
           for my $rule (@{$r_rights->{rights}->{$id}}) {
             if (ref $rule eq ref {}) {
               if (exists($rule->{expires})) {
@@ -1427,6 +1431,11 @@ sub _get {
       if ($nrExpires > 0) {
         my @sorted_expires = sort @expires;
         $index{checkafter} = $sorted_expires[0];
+      }
+      if ($c->app->config->{fedora}->{version} >= 6) {
+        if ($isRestricted) {
+          push @{$index{datastreams}}, 'POLICY';
+        }
       }
     }
   }
@@ -1456,7 +1465,7 @@ sub _get {
   if ($c->app->config->{fedora}->{version} >= 6) {
 
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $dssres       = $fedora_model->getDatastreamSize($c, $pid, 'OCTETS');
+    my $dssres       = $fedora_model->getDatastreamAttributes($c, $pid, 'OCTETS');
     if ($dssres->{status} == 200) {
       $index{size} = $dssres->{size};
     }
@@ -2389,6 +2398,9 @@ sub _add_uwm_index {
             elsif ($reference eq 'http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_25/1557233') {    # unspecified grant number
               $index->{"uwm_funding"} = $number;
             }
+
+            # just index the rest, whatever that is
+            push @{$index->{"_text_"}}, $number;
           }
         }
       }

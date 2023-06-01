@@ -309,39 +309,81 @@ sub preview {
     return;
   }
 
-  my $object_model = PhaidraAPI::Model::Object->new;
-  my $r_oxml       = $object_model->get_foxml($self, $pid);
-  if ($r_oxml->{status} ne 200) {
-    $self->render(json => $r_oxml, status => $r_oxml->{status});
-    return;
-  }
-  my $foxmldom = Mojo::DOM->new();
-  $foxmldom->xml(1);
-  $foxmldom->parse($r_oxml->{foxml});
-
-  my $relsext;
-  for my $e ($foxmldom->find('foxml\:datastream[ID="RELS-EXT"]')->each) {
-    $relsext = $e->find('foxml\:datastreamVersion')->first;
-    for my $e1 ($e->find('foxml\:datastreamVersion')->each) {
-      if ($e1->attr('CREATED') gt $relsext->attr('CREATED')) {
-        $relsext = $e1;
-      }
-    }
-  }
-  my $cmodel = $relsext->find('foxml\:xmlContent')->first->find('hasModel')->first->attr('rdf:resource');
-  $cmodel =~ s/^info:fedora\/cmodel:(.*)$/$1/;
+  my $trywebversion = 0;
 
   # we need mimetype for the audio/viedo player and size (either octets or webversion) to know if to use load button
-  my $octets_model = PhaidraAPI::Model::Octets->new;
-  my ($filename, $mimetype, $size);
+  my ($filename, $mimetype, $size, $cmodel);
 
-  my $trywebversion = 0;
-  if ($foxmldom->find('foxml\:datastream[ID="WEBVERSION"]')->first) {
-    $trywebversion = 1;
-    ($filename, $mimetype, $size) = $octets_model->_get_ds_attributes($self, $pid, 'WEBVERSION', $foxmldom);
-  }
-  else {
-    ($filename, $mimetype, $size) = $octets_model->_get_ds_attributes($self, $pid, 'OCTETS', $foxmldom);
+  if ($self->app->config->{fedora}->{version} >= 6) {
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    
+    my $propres = $fedora_model->getObjectProperties($self, $pid);
+    if ($propres->{status} != 200) {
+      return $propres;
+    }
+    $cmodel = $propres->{cmodel};
+    if (exists($propres->{contains})) {
+      for my $contains (@{$propres->{contains}}) {
+        if ($contains eq 'WEBVERSION') {
+          $trywebversion = 1;
+          last;
+        }
+      }
+    }
+
+    my $dsAttr;
+    if ($trywebversion) {
+      $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'WEBVERSION');
+      if ($dsAttr->{status} ne 200) {
+        $self->render(json => $dsAttr, status => $dsAttr->{status});
+        return;
+      }
+      $filename = $dsAttr->{filename};
+      $mimetype = $dsAttr->{mimetype};
+      $size = $dsAttr->{size};
+    } else {
+      $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
+      if ($dsAttr->{status} ne 200) {
+        $self->render(json => $dsAttr, status => $dsAttr->{status});
+        return;
+      }
+      $filename = $dsAttr->{filename};
+      $mimetype = $dsAttr->{mimetype};
+      $size = $dsAttr->{size};
+    }
+  } else {
+
+    my $object_model = PhaidraAPI::Model::Object->new;
+    my $r_oxml       = $object_model->get_foxml($self, $pid);
+    if ($r_oxml->{status} ne 200) {
+      $self->render(json => $r_oxml, status => $r_oxml->{status});
+      return;
+    }
+    my $foxmldom = Mojo::DOM->new();
+    $foxmldom->xml(1);
+    $foxmldom->parse($r_oxml->{foxml});
+
+    my $relsext;
+    for my $e ($foxmldom->find('foxml\:datastream[ID="RELS-EXT"]')->each) {
+      $relsext = $e->find('foxml\:datastreamVersion')->first;
+      for my $e1 ($e->find('foxml\:datastreamVersion')->each) {
+        if ($e1->attr('CREATED') gt $relsext->attr('CREATED')) {
+          $relsext = $e1;
+        }
+      }
+    }
+    $cmodel = $relsext->find('foxml\:xmlContent')->first->find('hasModel')->first->attr('rdf:resource');
+    $cmodel =~ s/^info:fedora\/cmodel:(.*)$/$1/;
+
+    my $octets_model = PhaidraAPI::Model::Octets->new;
+
+    if ($foxmldom->find('foxml\:datastream[ID="WEBVERSION"]')->first) {
+      $trywebversion = 1;
+      ($filename, $mimetype, $size) = $octets_model->_get_ds_attributes($self, $pid, 'WEBVERSION', $foxmldom);
+    }
+    else {
+      ($filename, $mimetype, $size) = $octets_model->_get_ds_attributes($self, $pid, 'OCTETS', $foxmldom);
+    }
   }
 
   my $docres;
@@ -1163,6 +1205,15 @@ sub get_metadata {
     return $r;
   }
 
+  my $writerights = 0;
+  if ($self->app->config->{fedora}->{version} >= 6) {
+    my $authz = PhaidraAPI::Model::Authorization->new;
+    my $wr = $authz->check_rights($self, $pid, 'w');
+    if ($wr->{status} == 200) {
+      $writerights = 1;
+    }
+  }
+
   if ($r->{dshash}->{'JSON-LD'}) {
     my $jsonld_model = PhaidraAPI::Model::Jsonld->new;
     my $r_jsonld     = $jsonld_model->get_object_jsonld_parsed($self, $pid, $username, $password);
@@ -1176,20 +1227,22 @@ sub get_metadata {
   }
 
   if ($r->{dshash}->{'JSON-LD-PRIVATE'}) {
-    my $jsonldprivate_model = PhaidraAPI::Model::Jsonldprivate->new;
-    my $r_jsonldprivate     = $jsonldprivate_model->get_object_jsonldprivate_parsed($self, $pid, $username, $password);
-    if ($r_jsonldprivate->{status} ne 200) {
-      if (($r->{status} eq 401) || ($r->{status} eq 403)) {
+    if (($self->app->config->{fedora}->{version} < 6) || (($self->app->config->{fedora}->{version} >= 6) && $writerights)) {
+      my $jsonldprivate_model = PhaidraAPI::Model::Jsonldprivate->new;
+      my $r_jsonldprivate     = $jsonldprivate_model->get_object_jsonldprivate_parsed($self, $pid, $username, $password);
+      if ($r_jsonldprivate->{status} ne 200) {
+        if (($r->{status} eq 401) || ($r->{status} eq 403)) {
 
-        # unauthorized users should not see that JSON-LD-PRIVATE exists
+          # unauthorized users should not see that JSON-LD-PRIVATE exists
+        }
+        else {
+          push @{$res->{alerts}}, @{$r_jsonldprivate->{alerts}} if scalar @{$r_jsonldprivate->{alerts}} > 0;
+          push @{$res->{alerts}}, {type => 'error', msg => 'Error getting JSON-LD-PRIVATE'};
+        }
       }
       else {
-        push @{$res->{alerts}}, @{$r_jsonldprivate->{alerts}} if scalar @{$r_jsonldprivate->{alerts}} > 0;
-        push @{$res->{alerts}}, {type => 'error', msg => 'Error getting JSON-LD-PRIVATE'};
+        $res->{metadata}->{'JSON-LD-PRIVATE'} = $r_jsonldprivate->{'JSON-LD-PRIVATE'};
       }
-    }
-    else {
-      $res->{metadata}->{'JSON-LD-PRIVATE'} = $r_jsonldprivate->{'JSON-LD-PRIVATE'};
     }
   }
 
@@ -1230,20 +1283,22 @@ sub get_metadata {
   }
 
   if ($r->{dshash}->{'RIGHTS'}) {
-    my $rights_model = PhaidraAPI::Model::Rights->new;
-    my $r            = $rights_model->get_object_rights_json($self, $pid, $username, $password);
-    if ($r->{status} ne 200) {
-      if (($r->{status} eq 401) || ($r->{status} eq 403)) {
+    if (($self->app->config->{fedora}->{version} < 6) || (($self->app->config->{fedora}->{version} >= 6) && $writerights)) {
+      my $rights_model = PhaidraAPI::Model::Rights->new;
+      my $r            = $rights_model->get_object_rights_json($self, $pid, $username, $password);
+      if ($r->{status} ne 200) {
+        if (($r->{status} eq 401) || ($r->{status} eq 403)) {
 
-        # unauthorized users should not see that RIGHTS exists
+          # unauthorized users should not see that RIGHTS exists
+        }
+        else {
+          push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
+          push @{$res->{alerts}}, {type => 'error', msg => 'Error getting RIGHTS'};
+        }
       }
       else {
-        push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
-        push @{$res->{alerts}}, {type => 'error', msg => 'Error getting RIGHTS'};
+        $res->{metadata}->{rights} = $r->{rights};
       }
-    }
-    else {
-      $res->{metadata}->{rights} = $r->{rights};
     }
   }
 
@@ -1331,20 +1386,6 @@ sub metadata {
 
 }
 
-sub get_iiif_manifest {
-  my $self = shift;
-
-  my $pid = $self->stash('pid');
-
-  unless (defined($pid)) {
-    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}], status => 404}, status => 404);
-    return;
-  }
-
-  my $object_model = PhaidraAPI::Model::Object->new;
-  $object_model->proxy_datastream($self, $pid, 'IIIF-MANIFEST', $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password}, 1);
-}
-
 sub get_legacy_container_member {
   my $self = shift;
 
@@ -1371,30 +1412,48 @@ sub get_legacy_container_member {
     return;
   }
 
-  my $object_model = PhaidraAPI::Model::Object->new;
-  my $r_oxml       = $object_model->get_foxml($self, $pid);
-  if ($r_oxml->{status} ne 200) {
-    $self->render(json => $r_oxml, status => $r_oxml->{status});
-    return;
-  }
-  my $dom = Mojo::DOM->new();
-  $dom->xml(1);
-  $dom->parse($r_oxml->{foxml});
-
   my ($filename, $mimetype, $size, $path);
-  my $octets_model = PhaidraAPI::Model::Octets->new;
-  my $parthres     = $octets_model->_get_ds_path($self, $pid, $ds);
-  if ($parthres->{status} != 200) {
-    $res->{status} = $parthres->{status};
-    push @{$res->{alerts}}, @{$parthres->{alerts}} if scalar @{$parthres->{alerts}} > 0;
-    $self->render(json => $res, status => $res->{status});
-    return;
-  }
-  else {
-    $path = $parthres->{path};
-  }
-  ($filename, $mimetype, $size) = $octets_model->_get_ds_attributes($self, $pid, $ds, $dom);
 
+  if ($self->app->config->{fedora}->{version} >= 6) {
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    my $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
+    if ($dsAttr->{status} ne 200) {
+      $self->render(json => $dsAttr, status => $dsAttr->{status});
+      return;
+    }
+    $filename = $dsAttr->{filename};
+    $mimetype = $dsAttr->{mimetype};
+    $size = $dsAttr->{size};
+    $dsAttr = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
+    if ($dsAttr->{status} ne 200) {
+      $self->render(json => $dsAttr, status => $dsAttr->{status});
+      return;
+    }
+    $path = $dsAttr->{path};
+  } else {
+    my $object_model = PhaidraAPI::Model::Object->new;
+    my $r_oxml       = $object_model->get_foxml($self, $pid);
+    if ($r_oxml->{status} ne 200) {
+      $self->render(json => $r_oxml, status => $r_oxml->{status});
+      return;
+    }
+    my $dom = Mojo::DOM->new();
+    $dom->xml(1);
+    $dom->parse($r_oxml->{foxml});
+
+    my $octets_model = PhaidraAPI::Model::Octets->new;
+    my $parthres     = $octets_model->_get_ds_path($self, $pid, $ds);
+    if ($parthres->{status} != 200) {
+      $res->{status} = $parthres->{status};
+      push @{$res->{alerts}}, @{$parthres->{alerts}} if scalar @{$parthres->{alerts}} > 0;
+      $self->render(json => $res, status => $res->{status});
+      return;
+    }
+    else {
+      $path = $parthres->{path};
+    }
+    ($filename, $mimetype, $size) = $octets_model->_get_ds_attributes($self, $pid, $ds, $dom);
+  }
   $self->app->log->debug("operation[download_member] pid[$pid] path[$path] mimetype[$mimetype] filename[$filename] size[$size]");
 
   $self->res->headers->content_disposition("attachment;filename=\"$filename\"");

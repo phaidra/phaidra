@@ -4,6 +4,9 @@ use strict;
 use warnings;
 use v5.10;
 use utf8;
+use JSON;
+use Mojo::File;
+use Digest::SHA qw(sha256_hex);
 use base qw/Mojo::Base/;
 
 my %prefix2ns = (
@@ -325,7 +328,7 @@ sub getDatastream {
   return $res;
 }
 
-sub getDatastreamSize {
+sub getDatastreamAttributes {
   my ($self, $c, $pid, $dsid) = @_;
 
   my $res = {alerts => [], status => 200};
@@ -338,12 +341,61 @@ sub getDatastreamSize {
 
   if ($getres->is_success) {
     $res->{size} = $self->getJsonldValue($c, $getres->json, 'http://www.loc.gov/premis/rdf/v1#hasSize');
+    $res->{mimetype} = $self->getJsonldValue($c, $getres->json, 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasMimeType');
+    $res->{filename} = $self->getJsonldValue($c, $getres->json, 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#filename');
+    $res->{modified} = $self->getJsonldValue($c, $getres->json, 'http://fedora.info/definitions/v4/repository#lastModified');
+    $res->{created} = $self->getJsonldValue($c, $getres->json, 'http://fedora.info/definitions/v4/repository#created');
   }
   else {
     unshift @{$res->{alerts}}, {type => 'error', msg => $getres->message};
     $res->{status} = $getres->{code};
     return $res;
   }
+
+  return $res;
+}
+
+sub getDatastreamPath {
+  my ($self, $c, $pid, $dsid) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  my $resourceID = "info:fedora/$pid";
+  my $hash = sha256_hex($resourceID);
+
+  my $first   = substr($hash, 0, 3);
+  my $second  = substr($hash, 3, 3);
+  my $third  = substr($hash, 6, 3);
+
+  my $ocflroot = $c->app->config->{fedora}->{ocflroot};
+  my $objRootPath ="$ocflroot/$first/$second/$third/$hash";
+
+  my $inventoryFile = "$objRootPath/inventory.json";
+  my $bytes = Mojo::File->new($inventoryFile)->slurp;
+  my $inventory = decode_json($bytes);
+
+  # sanity check
+  unless ($inventory->{id} eq $resourceID) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => "Reading wrong inventory file resourceID[$resourceID] file[$inventoryFile]"};
+    $res->{status} = 500;
+    return $res;
+  }
+
+  my $head = $inventory->{head};
+  my $state = $inventory->{versions}->{$head}->{state};
+  my $dsLatestKey;
+  for my $key (keys %{$state}) {
+    if (@{$state->{$key}}[0] eq $dsid) {
+      $dsLatestKey = $key;
+      last;
+    }
+  }
+  my $pathArr = $inventory->{manifest}->{$dsLatestKey};
+
+  my $path = @{$pathArr}[0];
+  $res->{path} = "$objRootPath/$path";
+
+  $c->app->log->debug("pid[$pid] head[$head] dsid[$dsid] dspath[$path]");
 
   return $res;
 }
@@ -427,7 +479,7 @@ sub createEmpty {
 
   my $url = $c->app->fedoraurl->path($pid);
   $c->app->log->debug("PUT $url\n$body");
-  my $putres = $c->ua->put($url => {'Content-Type' => 'text/turtle'} => $body)->result;
+  my $putres = $c->ua->put($url => {'Content-Type' => 'text/turtle', 'Link' => '<http://fedora.info/definitions/v4/repository#ArchivalGroup>;rel="type"'} => $body)->result;
   unless ($putres->is_success) {
     $c->app->log->error("Cannot create fedora object pid[$pid]: code:" . $putres->{code} . " message:" . $putres->{message});
     unshift @{$res->{alerts}}, {type => 'error', msg => $putres->{message}};

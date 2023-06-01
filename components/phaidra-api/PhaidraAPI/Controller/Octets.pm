@@ -49,53 +49,91 @@ sub get {
     return;
   }
 
-  my $object_model = PhaidraAPI::Model::Object->new;
-  my $r_oxml       = $object_model->get_foxml($self, $pid);
-  if ($r_oxml->{status} ne 200) {
-    $self->render(json => $r_oxml, status => $r_oxml->{status});
-    return;
-  }
-  my $dom = Mojo::DOM->new();
-  $dom->xml(1);
-  $dom->parse($r_oxml->{foxml});
-
   my ($filename, $mimetype, $size, $path);
-  my $octets_model = PhaidraAPI::Model::Octets->new;
-
   my $trywebversion = $self->param('trywebversion');
-  if ($trywebversion) {
-    my $parthres = $octets_model->_get_ds_path($self, $pid, 'WEBVERSION');
-    if ($parthres->{status} == 200) {
-      $path = $parthres->{path};
-      ($filename, $mimetype, $size) = $octets_model->_get_ds_attributes($self, $pid, 'WEBVERSION', $dom);
-    }
-  }
 
-  unless ($path) {
-    my $parthres = $octets_model->_get_ds_path($self, $pid, 'OCTETS');
-    if ($parthres->{status} != 200) {
-      $res->{status} = $parthres->{status};
-      push @{$res->{alerts}}, @{$parthres->{alerts}} if scalar @{$parthres->{alerts}} > 0;
-      $self->render(json => $res, status => $res->{status});
+  if ($self->app->config->{fedora}->{version} >= 6) {
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    my $dsAttr;
+    if ($trywebversion) {
+      $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'WEBVERSION');
+      if ($dsAttr->{status} ne 200) {
+        $self->render(json => $dsAttr, status => $dsAttr->{status});
+        return;
+      }
+      $filename = $dsAttr->{filename};
+      $mimetype = $dsAttr->{mimetype};
+      $size = $dsAttr->{size};
+      $dsAttr = $fedora_model->getDatastreamPath($self, $pid, 'WEBVERSION');
+      if ($dsAttr->{status} ne 200) {
+        $self->render(json => $dsAttr, status => $dsAttr->{status});
+        return;
+      }
+      $path = $dsAttr->{path};
+    }
+    unless ($path) {
+      $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
+      if ($dsAttr->{status} ne 200) {
+        $self->render(json => $dsAttr, status => $dsAttr->{status});
+        return;
+      }
+      $filename = $dsAttr->{filename};
+      $mimetype = $dsAttr->{mimetype};
+      $size = $dsAttr->{size};
+      $dsAttr = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
+      if ($dsAttr->{status} ne 200) {
+        $self->render(json => $dsAttr, status => $dsAttr->{status});
+        return;
+      }
+      $path = $dsAttr->{path};
+    }
+  } else {
+    my $object_model = PhaidraAPI::Model::Object->new;
+    my $r_oxml       = $object_model->get_foxml($self, $pid);
+    if ($r_oxml->{status} ne 200) {
+      $self->render(json => $r_oxml, status => $r_oxml->{status});
       return;
     }
-    else {
-      $path = $parthres->{path};
-    }
-    ($filename, $mimetype, $size) = $octets_model->_get_ds_attributes($self, $pid, 'OCTETS', $dom);
-  }
+    my $dom = Mojo::DOM->new();
+    $dom->xml(1);
+    $dom->parse($r_oxml->{foxml});
 
-  my $docres;
-  my $index_model = PhaidraAPI::Model::Index->new;
-  if (!$size or $size == -1) {
-    $self->app->log->debug("pid[$pid] getting size from index");
-    $docres = $index_model->get_doc($self, $pid);
-    if ($docres->{status} ne 200) {
-      $self->app->log->error("pid[$pid] error searching for doc: " . $self->app->dumper($docres));
-      $self->reply->static('images/error.png');
-      return;
+    my $octets_model = PhaidraAPI::Model::Octets->new;
+
+    if ($trywebversion) {
+      my $parthres = $octets_model->_get_ds_path($self, $pid, 'WEBVERSION');
+      if ($parthres->{status} == 200) {
+        $path = $parthres->{path};
+        ($filename, $mimetype, $size) = $octets_model->_get_ds_attributes($self, $pid, 'WEBVERSION', $dom);
+      }
     }
-    $size = $docres->{doc}->{size};
+
+    unless ($path) {
+      my $parthres = $octets_model->_get_ds_path($self, $pid, 'OCTETS');
+      if ($parthres->{status} != 200) {
+        $res->{status} = $parthres->{status};
+        push @{$res->{alerts}}, @{$parthres->{alerts}} if scalar @{$parthres->{alerts}} > 0;
+        $self->render(json => $res, status => $res->{status});
+        return;
+      }
+      else {
+        $path = $parthres->{path};
+      }
+      ($filename, $mimetype, $size) = $octets_model->_get_ds_attributes($self, $pid, 'OCTETS', $dom);
+    }
+
+    my $docres;
+    my $index_model = PhaidraAPI::Model::Index->new;
+    if (!$size or $size == -1) {
+      $self->app->log->debug("pid[$pid] getting size from index");
+      $docres = $index_model->get_doc($self, $pid);
+      if ($docres->{status} ne 200) {
+        $self->app->log->error("pid[$pid] error searching for doc: " . $self->app->dumper($docres));
+        $self->reply->static('images/error.png');
+        return;
+      }
+      $size = $docres->{doc}->{size};
+    }
   }
 
   $self->app->log->debug("operation[$operation] trywebversion[".($trywebversion ? $trywebversion : 'undef') ."] pid[$pid] path[$path] mimetype[$mimetype] filename[$filename] size[$size]");

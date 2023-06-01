@@ -54,9 +54,17 @@ sub get_url {
     my $status_cacheval = $c->app->chi->get($cachekey);
     unless ($status_cacheval) {
       $c->app->log->debug("[cache miss] $cachekey");
-      my $object_model = PhaidraAPI::Model::Object->new;
-      my $rres         = $object_model->get_datastream($c, $pid, 'READONLY', $c->stash->{basic_auth_credentials}->{username}, $c->stash->{basic_auth_credentials}->{password});
-      $status_cacheval = $rres->{status};
+
+      if ($c->app->config->{fedora}->{version} >= 6) {
+        my $authz = PhaidraAPI::Model::Authorization->new;
+        my $rres = $authz->check_rights($c, $pid, 'r');
+        $status_cacheval = $rres->{status};
+      } else {
+        my $object_model = PhaidraAPI::Model::Object->new;
+        my $rres         = $object_model->get_datastream($c, $pid, 'READONLY', $c->stash->{basic_auth_credentials}->{username}, $c->stash->{basic_auth_credentials}->{password});
+        $status_cacheval = $rres->{status};
+      }
+
       $c->app->chi->set($cachekey, $status_cacheval, '1 day');
     }
     else {

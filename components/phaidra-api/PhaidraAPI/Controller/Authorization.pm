@@ -8,21 +8,6 @@ use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Authorization;
 
-our %createActions = (
-  'picture/create'        => 1,
-  'document/create'       => 1,
-  'video/create'          => 1,
-  'audio/create'          => 1,
-  'unknown/create'        => 1,
-  'resource/create'       => 1,
-  'page/create'           => 1,
-  'container/create'      => 1,
-  'collection/create'     => 1,
-  'ir/submit'             => 1,
-  'object/create'         => 1,
-  'object/create/:cmodel' => 1
-);
-
 sub authorize {
   my $self = shift;
 
@@ -31,39 +16,51 @@ sub authorize {
   my $op = $self->stash('op');
   unless ($op eq 'r' or $op eq 'w') {
     $self->app->log->error("Authz op[$op] failed - unknown op");
-    $res->{status} = 500;
-    return $res;
+    $res->{alerts} = [{type => 'error', msg => 'unknown op'}];
+    $res->{status} = 400;
+    $self->render(json => $res, status => $res->{status});
+    return 0;
   }
 
-  my $pid          = $self->stash('pid') ? $self->stash('pid') : "";
+  my $action;
+  my $pid;
+
+  if ($op eq 'w') {
+    # extract_credentials -> authorize -> action
+    $action = $self->match->stack->[3]{action};
+    $pid = $self->match->stack->[3]{pid};
+  } else {
+    # extract_credentials -> action
+    $action = $self->match->stack->[2]{action};
+    $pid = $self->match->stack->[2]{pid};
+  }
+
+  $self->app->log->debug("Authz action[$action] pid[$pid] op[$op]");
+
+  # imageserver is an exception
+  # -> the PID is in the query string
+  # -> pass this, we'll check rights in imageserver model where we parse the query
+  if ($action eq 'imageserver') {
+    return 1;
+  }
+
   my $pidNamespace = $self->app->config->{fedora}->{pidnamespace};
   unless ($pid =~ m/^$pidNamespace:\d+$/) {
-    if ($createActions{$self->stash('action')}) {
-      if ($op eq 'w') {
-
-        # authn already happened
-        $res->{status} = 200;
-        return $res;
-      }
-      else {
-        # nonsense
-        $self->app->log->error("Authz op[$op] pid[$pid] failed - non-write create");
-        $res->{status} = 500;
-        return $res;
-      }
-    }
-    else {
-      $self->app->log->error("Authz op[$op] pid[$pid] failed - wrong pid");
-      $res->{status} = 500;
-      return $res;
-    }
+    $self->app->log->error("Authz action[$action] pid[$pid] op[$op] failed - wrong pid");
+    $res->{alerts} = [{type => 'error', msg => 'wrong pid'}];
+    $res->{status} = 400;
+    $self->render(json => $res, status => $res->{status});
+    return 0;
   }
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
   $res         = $authz_model->check_rights($self, $pid, $op);
-
-  $self->render(json => {status => $res->{status}, alerts => $res->{alerts}}, status => $res->{status});
-
+  if ($res->{status} == 200) {
+    return 1;
+  } else {
+    $self->render(json => $res, status => $res->{status});
+    return 0;
+  }
 }
 
 sub check_rights {

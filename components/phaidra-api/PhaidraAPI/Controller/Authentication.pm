@@ -201,6 +201,36 @@ sub authenticate_admin {
   return 1;
 }
 
+sub authenticate_ir_admin {
+
+  my $self = shift;
+
+  if ($self->stash->{remote_user}) {
+    $self->app->log->info("Remote user " . $self->stash->{remote_user});
+    return 1;
+  }
+
+  my $username = $self->stash->{basic_auth_credentials}->{username};
+  my $password = $self->stash->{basic_auth_credentials}->{password};
+
+  $self->app->log->info("Authenticating user $username");
+
+  $self->directory->authenticate($self, $username, $password);
+  my $res = $self->stash('phaidra_auth_result');
+  unless (($res->{status} eq 200)) {
+    $self->app->log->info("User $username not authenticated");
+    $self->render(json => {status => $res->{status}, alerts => $res->{alerts}}, status => $res->{status});
+    return 0;
+  }
+  unless ($username eq $self->config->{ir}->{iraccount}) {
+    $self->app->log->info("Not IR admin");
+    $self->render(json => {status => 403, alerts => [{type => 'error', msg => "Not IR admin"}]}, status => 403);
+    return 0;
+  }
+  $self->app->log->info("User $username successfully authenticated");
+  return 1;
+}
+
 sub signin {
 
   my $self = shift;
