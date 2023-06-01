@@ -1,2 +1,0 @@
-# phaidra-ui-univie-components
-

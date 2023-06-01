@@ -1155,7 +1155,7 @@ export default {
   'Funder name': 'Fördergeber',
   'Funder identifier': 'Fördergeber Identifikator',
   'No data available': 'Keine Daten verfügbar',
-  'Phaidra is the repository for the permanent secure storage of digital assets at the University of Vienna': 'PHAIDRA ist das Repositorium zur dauerhaften Sicherung von digitalen Beständen an der Universität Wien',
+  'Phaidra is a repository for the permanent secure storage of digital assets': 'PHAIDRA ist ein Repositorium zur dauerhaften Sicherung von digitalen Beständen',
   'Rows per page': 'Zeilen pro Seite',
   All: 'Alles',
   Page: 'Seite',

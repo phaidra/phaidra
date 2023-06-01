@@ -6,11 +6,10 @@ export default {
     enablelogin: 1,
     enabledelete: 1,
     suggesters: {
-      gnd: 'https://ws.gbv.de/suggest/gnd/',
       geonames: 'https://ws.gbv.de/suggest/geonames/'
     },
     search: {
-      selectionlimit: 5000
+      selectionlimit: 100
     },
     apis: {
       doi: {
@@ -18,14 +17,35 @@ export default {
         accept: 'application/vnd.citationstyles.csl+json',
         citationstyles: 'https://citation.crosscite.org/styles/'
       },
+      lobid: {
+        baseurl: 'lobid.org'
+      },
+      ror: {
+        baseurl: 'api.ror.org'
+      },
       sherparomeo: {
-        url: 'https://v2.sherpa.ac.uk/cgi/retrieve',
-        key: 'xxx'
+        url: 'http://www.sherpa.ac.uk/romeo/api29.php',
+        key: 'V9cjsv6PTJE'
       },
       vocserver: {
         ns: 'https://vocab.phaidra.org/vocabulary/',
         url: 'https://vocab.phaidra.org/fuseki/',
         dataset: 'vocab'
+      },
+      geonames: {
+        search: 'https://secure.geonames.org/searchJSON',
+        username: 'phaidra',
+        maxRows: 50
+      },
+      dante: {
+        search: 'https://api.dante.gbv.de/search',
+        resolve: 'https://api.dante.gbv.de/data',
+        limit: 50
+      }
+    },
+    monitor: {
+      sentry: {
+        dsn: ''
       }
     }
   },
@@ -38,12 +58,21 @@ export default {
       fedora: 'http://fedora:8080/fcrepo',
       api: 'http://localhost:3003',
       solr: 'http://localhost:3003/search',
-      primary: '#dd4814',
-      institution: 'University of Vienna',
-      institutionurl: 'https://univie.ac.at',
-      address: 'My institution address',
+      since: '2023-01-01',
+      primary: '#008080',
+      institution: 'My institution',
+      institutionurl: 'https://phaidra.org',
+      address: 'My institution | address | here',
       phone: '+00-0-000-0',
-      email: 'support email'
+      email: 'support email',
+      ui: {
+        languages: ['eng', 'deu']
+      },
+      groups: true,
+      submit: {
+        validationmethod: 'validateNoOefosNoAssoc',
+        markmandatorymethod: 'markMandatoryNoOefosNoAssoc'
+      }
     }
   }
 }

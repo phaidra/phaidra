@@ -1,11 +1,6 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="12">
-        <quicklinks-footer></quicklinks-footer>
-      </v-col>
-    </v-row>
-    <v-row>
       <v-col cols="12" md="10" offset-md="1">
         <v-row class="my-5">
           <v-col cols="auto" class="text-left">
@@ -31,12 +26,8 @@
 
 <script>
 import { config } from "@/mixins/config";
-import QuicklinksFooter from "@/components/ext/QuicklinksFooter"
 
 export default {
-  components: {
-    QuicklinksFooter
-  },
   mixins: [config],
 };
 </script>

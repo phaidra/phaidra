@@ -1,14 +1,11 @@
 <template>
   <div>
-    <quicklinks
-        :showquicklinks="quicklinksenabled"
-    ></quicklinks>
     <v-row no-gutters class="mb-6">
         <v-col cols="12" md="10" offset-md="1" class="header">
         <v-row no-gutters class="mt-2" style="min-height: 125px">
             <v-col class="text-left" cols="12" md="3">
-            <a :href="instanceconfig.institutionweb" target="_blank">
-                <img src="../../assets/ext/Uni_Logo_2016.png" class="logo" alt="logo" />
+            <a :href="instanceconfig.institutionurl" target="_blank">
+                <img src="../../assets/ext/phaidralogo.png" class="logo mt-4" alt="logo" />
             </a>
             </v-col>
 
@@ -54,12 +51,6 @@
                     </v-list-item>
                 </v-list>
                 </v-menu>
-                <a
-                      id="quicklinks-button"
-                      class="ph-button mt-1"
-                      v-on:click="quicklinksenabled = !quicklinksenabled"
-                      >Quicklinks</a
-                    >
             </v-row>
 
             <v-row>
@@ -276,13 +267,9 @@
 <script>
 import { config } from "@/mixins/config";
 import { context } from "@/mixins/context";
-import Quicklinks from "@/components/ext/Quicklinks"
 
 export default {
   mixins: [config, context],
-  components: {
-    Quicklinks
-  },
   computed: {
     localeLabel: function () {
       if (this.instanceconfig.ui) {
@@ -321,12 +308,20 @@ export default {
     },
     changeLocale: function (lang) {
       this.$i18n.locale = lang;
-      this.$i18n.setLocaleCookie(lang);
+      // this.$i18n.setLocaleCookie(lang);
+      localStorage.setItem("locale", lang);
       this.$router.push(this.switchLocalePath(lang));
       this.$store.dispatch("vocabulary/sortRoles", this.$i18n.locale);
       this.$store.dispatch("vocabulary/sortFields", this.$i18n.locale);
       this.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
       this.$store.dispatch('info/sortFieldsOverview', this.$i18n.locale)
+    }
+  },
+  mounted() {
+    if (localStorage.getItem("locale")) {
+      this.$i18n.locale = localStorage.getItem("locale");
+    } else {
+      localStorage.setItem("locale", this.$i18n.locale);
     }
   }
 };
