@@ -373,6 +373,32 @@ removed '.git/description'
 removed directory '.git'
 ```
 
+## pixelgecko
+
+This is a checkout from
+<https://gitlab.phaidra.org/phaidra-dev/pixelgecko> at commit
+be0af173eaac297289fa51843b69327f7c95242c with git components stripped.
+
+``` example
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components$ git clone git@gitlab.phaidra.org:phaidra-dev/pixelgecko.git
+Cloning into 'pixelgecko'...
+remote: Enumerating objects: 131, done.
+remote: Counting objects: 100% (85/85), done.
+remote: Compressing objects: 100% (50/50), done.
+remote: Total 131 (delta 32), reused 85 (delta 32), pack-reused 46
+Receiving objects: 100% (131/131), 74.98 KiB | 18.75 MiB/s, done.
+Resolving deltas: 100% (52/52), done.
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components$ cd pixelgecko/
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ git log -n1
+commit be0af173eaac297289fa51843b69327f7c95242c (HEAD -> master, origin/master, origin/HEAD)
+Author: Daniel Herzig <daniel.herzig@univie.ac.at>
+Date:   Wed Feb 1 14:10:40 2023 +0100
+
+    indent properly
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ find . -type l
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ rm -rf .git .gitignore
+```
+
 # export org to markdown and add badge
 
 ``` bash
