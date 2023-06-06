@@ -362,6 +362,10 @@ sub authenticate() {
 sub get_name {
   my ($self, $c, $username) = @_;
 
+  if (($username eq $c->app->config->{phaidra}->{adminusername}) && ($password eq $c->app->config->{phaidra}->{adminpassword})) {
+    return 'fedoraAdmin';
+  }
+
   my $entry = $self->getLDAPEntryForUser($c, $username);
 
   my $fname;
@@ -391,6 +395,11 @@ sub get_email {
   my $self     = shift;
   my $c        = shift;
   my $username = shift;
+
+  if (($username eq $c->app->config->{phaidra}->{adminusername}) && ($password eq $c->app->config->{phaidra}->{adminpassword})) {
+    return 'admin.phaidra@univie.ac.at';
+  }
+
 
   my $entry = $self->getLDAPEntryForUser($c, $username);
 
@@ -585,6 +594,10 @@ sub get_user_data {
   my $self     = shift;
   my $c        = shift;
   my $username = shift;
+
+  if (($username eq $c->app->config->{phaidra}->{adminusername}) && ($password eq $c->app->config->{phaidra}->{adminpassword})) {
+    return {username => 'fedoraAdmin', firstname => 'fedora', lastname => 'Admin'};
+  }
 
   my $entry = $self->getLDAPEntryForUser($c, $username);
 
