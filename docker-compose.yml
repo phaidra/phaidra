@@ -50,6 +50,7 @@ services:
       - "3003:3000"
     volumes:
       - ${PHAIDRA_API_LOGS}:/var/log/phaidra
+      - ${FEDORA_DATA}/data/ocfl-root:/mnt/fedora_ocfl_root:ro
 
   phaidradb:
     image: mariadb:10.11.2-jammy

@@ -24,7 +24,7 @@ sub _init {
   # this is the app config
   my $self = shift;
   my $mojo = shift;
-  $config = YAML::Syck::LoadFile('/etc/phaidra.yml');
+#  $config = YAML::Syck::LoadFile('/etc/phaidra.yml');
   my $orgjsonfilepath = 'lib/phaidra_directory/Phaidra/Directory/organizational_units.json';
   if (-r $orgjsonfilepath) {
 
