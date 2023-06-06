@@ -54,7 +54,20 @@
     "intcallusername": "changeme",
     "intcallpassword": "changeme",
     "adminusername": "fedoraAdmin",
-    "adminpassword": "fedoraAdmin"
+    "adminpassword": "fedoraAdmin",
+    "nolegacyds": 1
+  },
+  "fedora": {
+    "version": "6.4",
+    "host": "fedora",
+    "port": "8080",
+    "path": "fcrepo/rest/",
+    "scheme": "http",
+    "ocflroot": "~/phaidra_docker_data/fedora/data/ocfl-root",
+    "adminuser": "fedoraAdmin",
+    "adminpass": "fedoraAdmin",
+    "pidnamespace": "o",
+    "fedoraadmins": []
   },
   "imageserver": {
     "hash_secret": "changeme"
