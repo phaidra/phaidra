@@ -291,7 +291,7 @@ sub authenticate() {
       return $username;
     }
   }
-  if (($username eq $c->config->{phaidra}->{adminusername}) && ($password eq $c->config->{phaidra}->{adminpassword})) {
+  if (($username eq $c->app->config->{phaidra}->{adminusername}) && ($password eq $c->app->config->{phaidra}->{adminpassword})) {
 
     # this account is (should be) local to fedora so we cannot authenticate it against LDAP
     $c->app->log->debug("auth: phaidraadmin login");
