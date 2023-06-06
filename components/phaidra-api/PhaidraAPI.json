@@ -73,32 +73,32 @@
     "hash_secret": "changeme"
   },
   "mongodb_group_manager": {
-    "host": "host",
+    "host": "mongogroupdb",
     "port": "27017",
-    "username": "user",
-    "password": "pass",
+    "username": "phaidra",
+    "password": "phaidra",
     "database": "groups",
     "collection": "usergroups"
   },
   "mongodb": {
+    "host": "mongophaidraapidb",
+    "port": "27017",
+    "username": "phaidra",
+    "password": "phaidra",
+    "database": "database"
+  },
+  "paf_mongodb": {
     "host": "mongophaidradb",
     "port": "27017",
     "username": "phaidra",
     "password": "phaidra",
     "database": "database"
   },
-  "instance_mongodb": {
-    "host": "host",
-    "port": "27017",
-    "username": "username",
-    "password": "password",
-    "database": "database"
-  },
   "index_mongodb": {
-    "host": "host",
+    "host": "mongophaidraapidb",
     "port": "27017",
-    "username": "username",
-    "password": "password",
+    "username": "phaidra",
+    "password": "phaidra",
     "database": "database"
   },
   "hooks": {
