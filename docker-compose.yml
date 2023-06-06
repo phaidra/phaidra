@@ -52,6 +52,11 @@ services:
       - ${PHAIDRA_API_LOGS}:/var/log/phaidra
       - ${FEDORA_DATA}/data/ocfl-root:/mnt/fedora_ocfl_root:ro
 
+  pixelgecko:
+    build:
+      context: .
+      dockerfile: dockerfiles/pixelgecko.dockerfile
+
   phaidradb:
     image: mariadb:10.11.2-jammy
     restart: always
@@ -86,13 +91,15 @@ services:
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
     volumes:
       - ${FEDORADB_DATA}:/var/lib/mysql
-      
+
   mongophaidradb:
     image: mongo:5
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_PHAIDRA_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PHAIDRA_PASSWORD}
+    volumes:
+      - ${MONGOPHAIDRADB_DATA}:/data/db
 
   mongophaidraapidb:
     image: mongo:5
@@ -100,6 +107,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_PHAIDRA_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PHAIDRA_PASSWORD}
+    volumes:
+      - ${MONGOPHAIDRAAPIDB_DATA}:/data/db
 
   mongogroupdb:
     image: mongo:5
@@ -107,6 +116,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_PHAIDRA_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PHAIDRA_PASSWORD}
+    volumes:
+      - ${MONGOGROUPDB_DATA}:/data/db
 
   dbgate:
     image: dbgate/dbgate:5.2.5

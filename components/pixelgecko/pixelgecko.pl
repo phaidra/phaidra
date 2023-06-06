@@ -2,7 +2,7 @@ use strict;
 
 use Data::Dumper;
 $Data::Dumper::Indent= 1;
-use lib qw(/home/phaidev/pixelgecko/perl_modules);
+use lib qw(/opt/pixelgecko/perl_modules);
 use PAF::JobQueue;
 use PAF::Activity;
 use YAML::Syck;
