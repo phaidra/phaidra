@@ -1,0 +1,12 @@
+
+
+
+h2. prerequistes
+
+h3. Perl packages
+
+libmongodb-perl
+libjson-perl
+libjson-pps-perl
+libjson-xs-perl
+
