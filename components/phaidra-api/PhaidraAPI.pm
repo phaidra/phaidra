@@ -239,7 +239,7 @@ sub startup {
         $url->host($config->{fedora}->{host});
         $url->port($config->{fedora}->{port}) if $config->{fedora}->{port};
         $url->path($config->{fedora}->{path});
-        $url->userinfo($config->{fedora}->{adminuser}.":".$config->{fedora}->{adminpass});
+        $url->userinfo($config->{fedora}->{adminuser} . ":" . $config->{fedora}->{adminpass});
         return $url;
       }
     );
@@ -568,6 +568,7 @@ sub startup {
     $ir_admin->get('ir/:pid/events')                                         ->to('ir#events');
     $ir_admin->get('ir/allowsubmit')                                         ->to('ir#allowsubmit');
     $ir_admin->get('ir/puresearch')                                          ->to('ir#puresearch');
+    $ir_admin->get('ir/pureimport/locks')                                    ->to('ir#pureimport_getlocks');
 
     unless($self->app->config->{readonly}){
 
@@ -639,6 +640,8 @@ sub startup {
       $ir_admin->post('ir/:pid/accept')                                      ->to('ir#accept');
       $ir_admin->post('ir/:pid/reject')                                      ->to('ir#reject');
       $ir_admin->post('ir/:pid/approve')                                     ->to('ir#approve');
+      $ir_admin->post('ir/pureimport/lock/:pureid/:lockname')                ->to('ir#pureimport_lock');
+      $ir_admin->post('ir/pureimport/unlock/:pureid/:lockname')              ->to('ir#pureimport_unlock');
       $admin->post('ir/embargocheck')                                        ->to('ir#embargocheck');
 
       $loggedin->post('feedback')                                            ->to('feedback#feedback');
@@ -703,6 +706,7 @@ sub startup {
     $check_auth->get('ir/:pid/events')                                          ->to('ir#events');
     $check_auth->get('ir/allowsubmit')                                          ->to('ir#allowsubmit');
     $check_auth->get('ir/puresearch')                                           ->to('ir#puresearch');
+    $check_auth->get('ir/pureimport/locks')                                     ->to('ir#pureimport_getlocks');
 
     $check_auth->get('termsofuse/getagreed')                                    ->to('termsofuse#getagreed');
 
@@ -783,6 +787,8 @@ sub startup {
       $check_auth->post('ir/:pid/accept')                                       ->to('ir#accept');
       $check_auth->post('ir/:pid/reject')                                       ->to('ir#reject');
       $check_auth->post('ir/:pid/approve')                                      ->to('ir#approve');
+      $check_auth->post('ir/pureimport/lock/:pureid/:lockname')                 ->to('ir#pureimport_lock');
+      $check_auth->post('ir/pureimport/unlock/:pureid/:lockname')               ->to('ir#pureimport_unlock');
 
       $check_auth->post('feedback')                                             ->to('feedback#feedback');
 
