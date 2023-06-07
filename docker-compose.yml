@@ -53,9 +53,16 @@ services:
       - ${FEDORA_DATA}/data/ocfl-root:/mnt/fedora_ocfl_root:ro
 
   pixelgecko:
+    depends_on:
+      - mongophaidradb
+    restart:
+      always
     build:
       context: .
       dockerfile: dockerfiles/pixelgecko.dockerfile
+    volumes:
+      - ${FEDORA_DATA}/data/ocfl-root:/mnt/fedora_ocfl_root:ro
+      - ${PIXELGECKO_CONVERTED}:/converted_images
 
   phaidradb:
     image: mariadb:10.11.2-jammy

@@ -17,3 +17,22 @@ ldap:
   groupattribute: "cn"
   groupattributealias: "group"
 
+fedora:
+  url:                     'fedora:8080'
+  scheme:                  'http'
+  intcalluser:             'some user'
+  intcallpass:             'some password'
+
+pixelgecko:
+  mongodb:
+    host:                  'mongophaidradb'
+    ## authentication database
+    db_name:               'admin'
+    database:              'database'
+    username:              'phaidra'
+    password:              'phaidra'
+    col:                   'jobs'
+    activity:              'activity'
+  store:                 '/converted_images'
+  temp_path:             '/temp_images'
+

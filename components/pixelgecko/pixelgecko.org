@@ -164,7 +164,7 @@
             $activity_record{e}=      time();
             $activity->save (%activity_record) if (defined ($activity));
 
-            my $rc= process_image ($job->{pid}, $job->{idhash}, $job->{ds}, $job->{cmodel});
+            my $rc= process_image ($job->{pid}, $job->{idhash}, $job->{ds}, $job->{cmodel}, $job->{path});
 
             if (!defined ($rc)) {
               $job->{'status'}= 'failed';
@@ -181,29 +181,24 @@
           }
       }
 
+
     sub process_image
       {
         my $pid= shift;
         my $idhash= shift;
         my $ds= shift;
         my $cmodel = shift;
+        my $path = shift;
 
         my $tmp_dir= $config->{pixelgecko}->{temp_path};
         system ('mkdir', '-p', $tmp_dir) unless (-d $tmp_dir);
 
-        my $url =
-          $config->{fedora}->{scheme}."://".
-          $config->{fedora}->{intcalluser}.":".
-          $config->{fedora}->{intcallpass}."@".
-          $config->{fedora}->{url}.
-          ((defined($ds))
-           ? "/fedora/objects/$pid/datastreams/$ds/content"
-           : "/fedora/objects/$pid/datastreams/OCTETS/content");
-
         my $img_fnm= $pid;
         $img_fnm = $img_fnm."_$ds" if defined $ds;
         $img_fnm=~ s#:#_#g;
-        my $out_img;
+        my $tmp_img= join ('/', $tmp_dir, $img_fnm);
+
+        my $out_img;    
         if (defined($idhash) && $idhash =~ /\b([a-f0-9]{40})\b/) {
           my $lvl1= substr($idhash, 0, 1);
           my $lvl2= substr($idhash, 1, 1);
@@ -214,29 +209,53 @@
           print scalar localtime(), " ", "idhash[$idhash] is not defined or is not a SHA-1 hash\n";
           $out_img= join ('/', $config->{pixelgecko}->{store}, $img_fnm.'.tif');
         }
-        my $tmp_img= join ('/', $tmp_dir, $img_fnm);
 
-        my @curl= (qw(curl -L), $url, '-o', $tmp_img);
-        print scalar localtime(), " ", "curl: [", join (' ', @curl), "]\n";
-        my $curl_txt= `@curl 2>&1`;
-        print scalar localtime(), " ", "curl_txt=[$curl_txt]\n";
-        my @curl_lines= x_lines ($curl_txt);
+        my @curl_lines;
+        my $original_img;
 
-        unless (-f $tmp_img)
-          {
-            print scalar localtime(), " ", "ATTN: could not retrieve [$url] and save to [$tmp_img]\n";
-            return undef;
+        if (defined $path && -f $path)
+          { $original_img = $path;
           }
-        my @tmp_st= stat(_);
+        else
+          {
+            my $url =
+              $config->{fedora}->{scheme}."://".
+              $config->{fedora}->{intcalluser}.":".
+              $config->{fedora}->{intcallpass}."@".
+              $config->{fedora}->{url}.
+              ((defined($ds))
+               ? "/fedora/objects/$pid/datastreams/$ds/content"
+               : "/fedora/objects/$pid/datastreams/OCTETS/content");
+            $original_img = $tmp_img;
+
+            my @curl= (qw(curl -L), $url, '-o', $tmp_img);
+            print scalar localtime(), " ", "curl: [", join (' ', @curl), "]\n";
+            my $curl_txt= `@curl 2>&1`;
+            print scalar localtime(), " ", "curl_txt=[$curl_txt]\n";
+            @curl_lines= x_lines ($curl_txt);
+
+            unless (-f $tmp_img)
+              {
+                print scalar localtime(), " ", "ATTN: could not retrieve [$url] and save to [$tmp_img]\n";
+                return undef;
+              }
+          }
+
+
+        # my @tmp_st= stat($tmp_img);
         # TODO: check ....
 
         my @tr_lines;
         my @cast_lines;
         my @vips_lines;
+
+        ############################################################
+        # if... PDF files, else... everything else                 #
+        ############################################################
         if ($cmodel && ($cmodel eq 'PDFDocument')) {
           # get the first page with white background
           my $cast_img = $tmp_img.'.jpg';
-          my @cast= (qw(/usr/bin/vips copy), $tmp_img, $cast_img . '[background=255]'); # https://github.com/libvips/libvips/issues/379#issuecomment-181773897
+          my @cast= (qw(/usr/bin/vips copy), $original_img, $cast_img . '[background=255]'); # https://github.com/libvips/libvips/issues/379#issuecomment-181773897
           my $cast= join (' ', @cast);
           print scalar localtime(), " ", "copy: [$cast]\n";
           my $cast_txt= `@cast 2>&1`;
@@ -250,7 +269,7 @@
             }
 
 
-          my @vips= (qw(/usr/bin/vips im_vips2tiff --vips-progress --vips-concurrency=4), $tmp_img.'.jpg',
+          my @vips= (qw(/usr/bin/vips im_vips2tiff --vips-progress --vips-concurrency=4), $cast_img,
                      $out_img.':jpeg:85,tile:256x256,pyramid');
           my $vips= join (' ', @vips);
           print scalar localtime(), " ", "vips: [$vips]\n";
@@ -267,12 +286,12 @@
           # TODO: check ....
 
           unlink ($cast_img);
-          unlink ($tmp_img);
+          unlink ($tmp_img) if (-f $tmp_img);
 
         } else {
           # transform color profile
           my $tr_img = $tmp_img.'.v';
-          my @tr= (qw(/usr/bin/vips icc_transform --input-profile=sRGB.icm --embedded=true), $tmp_img, $tr_img, 'sRGB.icm');
+          my @tr= (qw(/usr/bin/vips icc_transform --input-profile=sRGB.icm --embedded=true), $original_img, $tr_img, 'sRGB.icm');
           my $tr= join (' ', @tr);
           print scalar localtime(), " ", "tr: [$tr]\n";
           my $tr_txt= `@tr 2>&1`;
@@ -318,12 +337,14 @@
 
           unlink ($tr_img);
           unlink ($cast_img);
-          unlink ($tmp_img);
+          unlink ($tmp_img) if (-f $tmp_img);
         }
 
-        return { 'conversion' => 'ok', 'image' => $out_img,
-                 vips_lines => \@vips_lines, curl_lines => \@curl_lines,
-                 cast_lines => \@cast_lines, tr_lines => \@tr_lines };
+        my $result = { 'conversion' => 'ok', 'image' => $out_img,
+                  vips_lines => \@vips_lines, cast_lines => \@cast_lines, tr_lines => \@tr_lines };
+        $result->{curl_lines} = \@curl_lines if (@curl_lines);
+
+        return $result;
       }
 
     sub x_lines
