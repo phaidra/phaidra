@@ -12,6 +12,7 @@ use PhaidraAPI::Model::Dc;
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Search;
 use PhaidraAPI::Model::Index;
+use PhaidraAPI::Model::Fedora;
 use PhaidraAPI::Model::Iiifmanifest;
 
 sub add_or_modify_datastream_hooks {
@@ -224,7 +225,19 @@ sub _create_imageserver_job {
     if ($cmodel eq 'Picture' or $cmodel eq 'PDFDocument') {
       $c->app->log->info("Creating imageserver job pid[$pid] cm[$cmodel]");
       my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
-      $c->paf_mongo->get_collection('jobs')->insert_one({pid => $pid, cmodel => $cmodel, agent => "pige", status => "new", idhash => $hash, created => time});
+      my $path;
+      if ($self->app->config->{fedora}->{version} >= 6) {
+        my $fedora_model = PhaidraAPI::Model::Fedora->new;
+        my $dsAttr = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+        if ($dsAttr->{status} ne 200) {
+          $self->render(json => $dsAttr, status => $dsAttr->{status});
+          return;
+        }
+        $path = $dsAttr->{path};
+      }
+      my $job = {pid => $pid, cmodel => $cmodel, agent => "pige", status => "new", idhash => $hash, created => time};
+      $job->{path} = $path if $path;
+      $c->paf_mongo->get_collection('jobs')->insert_one($job);
     }
   }
 
