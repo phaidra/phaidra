@@ -1254,6 +1254,9 @@ sub puresearch {
   my $page     = $self->param('page');
   my $pageSize = $self->param('pageSize');
 
+  # $self->app->log->debug("XXXXXXXXXXXXXXXXXXXX : " . $self->app->config->{apis}->{pure}->{url} . '/research-outputs/search');
+
+  #my $urlget = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . '/research-outputs/search');
   my $urlget = Mojo::URL->new($self->app->config->{apis}->{pure}->{url});
   my $params = {apiKey => $self->app->config->{apis}->{pure}->{key}};
   if ($size) {
@@ -1280,7 +1283,104 @@ sub puresearch {
     return;
   }
 
+  # $self->app->log->debug("XXXXXXXXXXXXXXXXXXXX res: " . $self->app->dumper($res));
   $self->render(json => $res, status => $res->{status});
+}
+
+sub pureimport_lock {
+
+  my $self = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  my $username = $self->stash->{basic_auth_credentials}->{username};
+  my $password = $self->stash->{basic_auth_credentials}->{password};
+
+  if ($username ne $self->config->{ir}->{iraccount}) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Not authorized.'}]}, status => 403);
+    return;
+  }
+
+  my $pureid   = $self->stash->{pureid};
+  my $lockname = $self->stash->{lockname};
+
+  $self->app->log->debug("pureimport_lock pureid[$pureid] lockname[$lockname]");
+
+  my $ss  = qq/INSERT INTO pureimport_locks (pureId, lockName) VALUES (?,?)/;
+  my $sth = $self->app->db_ir->dbh->prepare($ss) or $self->app->log->error($self->app->db_ir->dbh->errstr);
+  $sth->execute($pureid, $lockname) or $self->app->log->error($self->app->db_ir->dbh->errstr);
+
+  $self->render(json => $res, status => $res->{status});
+}
+
+sub pureimport_unlock {
+
+  my $self = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  my $username = $self->stash->{basic_auth_credentials}->{username};
+  my $password = $self->stash->{basic_auth_credentials}->{password};
+
+  if ($username ne $self->config->{ir}->{iraccount}) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Not authorized.'}]}, status => 403);
+    return;
+  }
+
+  my $pureid   = $self->stash->{pureid};
+  my $lockname = $self->stash->{lockname};
+
+  $self->app->log->debug("pureimport_unlock pureid[$pureid] lockname[$lockname]");
+
+  my $ss  = qq/DELETE FROM pureimport_locks WHERE pureId = ?/;
+  my $sth = $self->app->db_ir->dbh->prepare($ss) or $self->app->log->error($self->app->db_ir->dbh->errstr);
+  $sth->execute($pureid) or $self->app->log->error($self->app->db_ir->dbh->errstr);
+
+  $self->render(json => $res, status => $res->{status});
+}
+
+sub pureimport_getlocks {
+
+  my $self = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  $self->_pureimport_expirelocks();
+
+  my $username = $self->stash->{basic_auth_credentials}->{username};
+  my $password = $self->stash->{basic_auth_credentials}->{password};
+
+  if ($username ne $self->config->{ir}->{iraccount}) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Not authorized.'}]}, status => 403);
+    return;
+  }
+
+  my @locks;
+  my $ss  = "SELECT pureId, lockName, created FROM pureimport_locks;";
+  my $sth = $self->app->db_ir->dbh->prepare($ss) or $self->app->log->error($self->app->db_ir->dbh->errstr);
+  $sth->execute() or $self->app->log->error($self->app->db_ir->dbh->errstr);
+  my ($pureId, $lockName, $created);
+  $sth->bind_columns(undef, \$pureId, \$lockName, \$created) or $self->app->log->error($self->app->db_ir->dbh->errstr);
+  while ($sth->fetch()) {
+    push @locks, {pureId => $pureId, lockName => $lockName, created => $created};
+  }
+
+  $res->{locks} = \@locks;
+
+  $self->render(json => $res, status => $res->{status});
+}
+
+sub _pureimport_expirelocks {
+  my ($self) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  eval {$self->app->db_ir->dbh->do('DELETE FROM pureimport_locks WHERE created + INTERVAL 2 HOUR < CURRENT_TIMESTAMP();');};
+  if ($@) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'error in pureimport locks cleanup: ' . $@};
+  }
+
+  return $res;
 }
 
 1;
