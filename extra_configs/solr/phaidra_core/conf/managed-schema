@@ -5,19 +5,19 @@
   <fieldType name="binary" class="solr.BinaryField"/>
   <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
   <fieldType name="booleans" class="solr.BoolField" sortMissingLast="true" multiValued="true"/>
-  <fieldType name="date" class="solr.TrieDateField" positionIncrementGap="0" docValues="true" precisionStep="0"/>
-  <fieldType name="dates" class="solr.TrieDateField" positionIncrementGap="0" docValues="true" multiValued="true" precisionStep="0"/>
-  <fieldType name="double" class="solr.TrieDoubleField" positionIncrementGap="0" docValues="true" precisionStep="0"/>
-  <fieldType name="doubles" class="solr.TrieDoubleField" positionIncrementGap="0" docValues="true" multiValued="true" precisionStep="0"/>
-  <fieldType name="float" class="solr.TrieFloatField" positionIncrementGap="0" docValues="true" precisionStep="0"/>
-  <fieldType name="floats" class="solr.TrieFloatField" positionIncrementGap="0" docValues="true" multiValued="true" precisionStep="0"/>
+  <fieldType name="date" class="solr.DatePointField" positionIncrementGap="0" docValues="true"/>
+  <fieldType name="dates" class="solr.DatePointField" positionIncrementGap="0" docValues="true" multiValued="true"/>
+  <fieldType name="double" class="solr.DoublePointField" positionIncrementGap="0" docValues="true"/>
+  <fieldType name="doubles" class="solr.DoublePointField" positionIncrementGap="0" docValues="true" multiValued="true"/>
+  <fieldType name="float" class="solr.FloatPointField" positionIncrementGap="0" docValues="true"/>
+  <fieldType name="floats" class="solr.FloatPointField" positionIncrementGap="0" docValues="true" multiValued="true"/>
   <fieldType name="ignored" class="solr.StrField" indexed="false" stored="false" docValues="false" multiValued="true"/>
-  <fieldType name="int" class="solr.TrieIntField" positionIncrementGap="0" docValues="true" precisionStep="0"/>
-  <fieldType name="ints" class="solr.TrieIntField" positionIncrementGap="0" docValues="true" multiValued="true" precisionStep="0"/>
+  <fieldType name="int" class="solr.IntPointField" positionIncrementGap="0" docValues="true"/>
+  <fieldType name="ints" class="solr.IntPointField" positionIncrementGap="0" docValues="true" multiValued="true"/>
   <fieldType name="location" class="solr.LatLonPointSpatialField"/>
-  <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" omitNorms="true" omitTermFreqAndPositions="true" maxDistErr="0.001" termOffsets="false" distErrPct="0.025" distanceUnits="kilometers" termPositions="false" omitPositions="true"/>
-  <fieldType name="long" class="solr.TrieLongField" positionIncrementGap="0" docValues="true" precisionStep="0"/>
-  <fieldType name="longs" class="solr.TrieLongField" positionIncrementGap="0" docValues="true" multiValued="true" precisionStep="0"/>
+  <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" maxDistErr="0.001" distErrPct="0.025" distanceUnits="kilometers"/>
+  <fieldType name="long" class="solr.LongPointField" positionIncrementGap="0" docValues="true"/>
+  <fieldType name="longs" class="solr.LongPointField" positionIncrementGap="0" docValues="true" multiValued="true"/>
   <fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
   <fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
   <fieldType name="pdouble" class="solr.DoublePointField" docValues="true"/>
@@ -28,10 +28,10 @@
   <fieldType name="random" class="solr.RandomSortField" indexed="true"/>
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
   <fieldType name="strings" class="solr.StrField" sortMissingLast="true" docValues="true" multiValued="true"/>
-  <fieldType name="tdate" class="solr.TrieDateField" positionIncrementGap="0" docValues="true" precisionStep="6"/>
-  <fieldType name="tdates" class="solr.TrieDateField" positionIncrementGap="0" docValues="true" multiValued="true" precisionStep="6"/>
-  <fieldType name="tdouble" class="solr.TrieDoubleField" positionIncrementGap="0" docValues="true" precisionStep="8"/>
-  <fieldType name="tdoubles" class="solr.TrieDoubleField" positionIncrementGap="0" docValues="true" multiValued="true" precisionStep="8"/>
+  <fieldType name="tdate" class="solr.DatePointField" positionIncrementGap="0" docValues="true"/>
+  <fieldType name="tdates" class="solr.DatePointField" positionIncrementGap="0" docValues="true" multiValued="true"/>
+  <fieldType name="tdouble" class="solr.DoublePointField" positionIncrementGap="0" docValues="true"/>
+  <fieldType name="tdoubles" class="solr.DoublePointField" positionIncrementGap="0" docValues="true" multiValued="true"/>
   <fieldType name="text_de" class="solr.TextField" positionIncrementGap="100">
     <analyzer>
       <tokenizer class="solr.StandardTokenizerFactory"/>
@@ -52,7 +52,6 @@
     </analyzer>
     <analyzer type="query">
       <tokenizer class="solr.StandardTokenizerFactory"/>
-      <filter class="solr.SynonymFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
       <filter class="solr.StopFilterFactory" words="lang/stopwords_en.txt" ignoreCase="true"/>
       <filter class="solr.LowerCaseFilterFactory"/>
       <filter class="solr.EnglishPossessiveFilterFactory"/>
@@ -72,7 +71,6 @@
       <tokenizer class="solr.StandardTokenizerFactory"/>
       <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
       <filter class="solr.GermanNormalizationFilterFactory"/>
-      <filter class="solr.SynonymFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
       <filter class="solr.LowerCaseFilterFactory"/>
       <filter class="solr.ASCIIFoldingFilterFactory" preserveOriginal="true"/>
     </analyzer>
@@ -97,12 +95,12 @@
       <tokenizer class="solr.WhitespaceTokenizerFactory"/>
     </analyzer>
   </fieldType>
-  <fieldType name="tfloat" class="solr.TrieFloatField" positionIncrementGap="0" docValues="true" precisionStep="8"/>
-  <fieldType name="tfloats" class="solr.TrieFloatField" positionIncrementGap="0" docValues="true" multiValued="true" precisionStep="8"/>
-  <fieldType name="tint" class="solr.TrieIntField" positionIncrementGap="0" docValues="true" precisionStep="8"/>
-  <fieldType name="tints" class="solr.TrieIntField" positionIncrementGap="0" docValues="true" multiValued="true" precisionStep="8"/>
-  <fieldType name="tlong" class="solr.TrieLongField" positionIncrementGap="0" docValues="true" precisionStep="8"/>
-  <fieldType name="tlongs" class="solr.TrieLongField" positionIncrementGap="0" docValues="true" multiValued="true" precisionStep="8"/>
+  <fieldType name="tfloat" class="solr.FloatPointField" positionIncrementGap="0" docValues="true"/>
+  <fieldType name="tfloats" class="solr.FloatPointField" positionIncrementGap="0" docValues="true" multiValued="true"/>
+  <fieldType name="tint" class="solr.IntPointField" positionIncrementGap="0" docValues="true"/>
+  <fieldType name="tints" class="solr.IntPointField" positionIncrementGap="0" docValues="true" multiValued="true"/>
+  <fieldType name="tlong" class="solr.LongPointField" positionIncrementGap="0" docValues="true"/>
+  <fieldType name="tlongs" class="solr.LongPointField" positionIncrementGap="0" docValues="true" multiValued="true"/>
   <field name="_id" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="_id._oid" type="strings"/>
   <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
