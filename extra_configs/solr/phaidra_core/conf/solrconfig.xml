@@ -35,7 +35,7 @@
        that you fully re-index after changing this setting as it can
        affect both how text is indexed and queried.
   -->
-  <luceneMatchVersion>6.1.0</luceneMatchVersion>
+  <luceneMatchVersion>9.2.1</luceneMatchVersion>
 
   <!-- <lib/> directives can be used to instruct Solr to load any Jars
        identified and use them to resolve any "plugins" specified in
@@ -71,17 +71,17 @@
        The examples below can be used to load some solr-contribs along 
        with their external dependencies.
     -->
-  <lib dir="${solr.install.dir:../../../..}/contrib/extraction/lib" regex=".*\.jar" />
-  <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-cell-\d.*\.jar" />
+  <!-- <lib dir="${solr.install.dir:../../../..}/contrib/extraction/lib" regex=".*\.jar" /> -->
+  <!-- <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-cell-\d.*\.jar" /> -->
 
-  <lib dir="${solr.install.dir:../../../..}/contrib/clustering/lib/" regex=".*\.jar" />
-  <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-clustering-\d.*\.jar" />
+  <!-- <lib dir="${solr.install.dir:../../../..}/contrib/clustering/lib/" regex=".*\.jar" /> -->
+  <!-- <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-clustering-\d.*\.jar" /> -->
 
-  <lib dir="${solr.install.dir:../../../..}/contrib/langid/lib/" regex=".*\.jar" />
-  <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-langid-\d.*\.jar" />
+  <!-- <lib dir="${solr.install.dir:../../../..}/contrib/langid/lib/" regex=".*\.jar" /> -->
+  <!-- <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-langid-\d.*\.jar" /> -->
 
-  <lib dir="${solr.install.dir:../../../..}/contrib/velocity/lib" regex=".*\.jar" />
-  <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-velocity-\d.*\.jar" />
+  <!-- <lib dir="${solr.install.dir:../../../..}/contrib/velocity/lib" regex=".*\.jar" /> -->
+  <!-- <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-velocity-\d.*\.jar" /> -->
   <!-- an exact 'path' can be used instead of a 'dir' to specify a 
        specific jar file.  This will cause a serious error to be logged 
        if it can't be loaded.
@@ -257,7 +257,7 @@
 
        For more details see http://wiki.apache.org/solr/SolrJmx
     -->
-  <jmx />
+  <!-- <jmx /> -->
   <!-- If you want to connect to a particular server, specify the
        agentId 
     -->
@@ -436,10 +436,10 @@
            autowarmCount - the number of entries to prepopulate from
                and old cache.
       -->
-    <filterCache class="solr.FastLRUCache"
-                 size="512"
-                 initialSize="512"
-                 autowarmCount="0"/>
+    <filterCache class="solr.CaffeineCache"
+                 size="1024"
+                 autowarmCount="0"
+                 async="true"/>
 
     <!-- Query Result Cache
          
@@ -449,10 +449,10 @@
             maxRamMB - the maximum amount of RAM (in MB) that this cache is allowed
                        to occupy
       -->
-    <queryResultCache class="solr.LRUCache"
+    <queryResultCache class="solr.CaffeineCache"
                       size="512"
                       initialSize="512"
-                      autowarmCount="0"/>
+                      autowarmCount="128"/>
 
     <!-- Document Cache
 
@@ -460,17 +460,17 @@
          document).  Since Lucene internal document ids are transient,
          this cache will not be autowarmed.
       -->
-    <documentCache class="solr.LRUCache"
+    <documentCache class="solr.CaffeineCache"
                    size="512"
                    initialSize="512"
                    autowarmCount="0"/>
 
     <!-- custom cache currently used by block join -->
     <cache name="perSegFilter"
-           class="solr.search.LRUCache"
-           size="10"
-           initialSize="0"
-           autowarmCount="10"
+           class="solr.CaffeineCache"
+           size="512"
+           initialSize="128"
+           autowarmCount="512"
            regenerator="solr.NoOpRegenerator" />
 
     <!-- Field Value Cache
