@@ -226,7 +226,7 @@ sub _create_imageserver_job {
       $c->app->log->info("Creating imageserver job pid[$pid] cm[$cmodel]");
       my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
       my $path;
-      if ($self->app->config->{fedora}->{version} >= 6) {
+      if ($c->app->config->{fedora}->{version} >= 6) {
         my $fedora_model = PhaidraAPI::Model::Fedora->new;
         my $dsAttr = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
         if ($dsAttr->{status} ne 200) {
