@@ -43,7 +43,7 @@
     ]
   },
   "phaidra": {
-    "baseurl": "phaidra-instance.univie.ac.at",
+    "baseurl": "phaidra-docker.example.com",
     "fedorabaseurl": "fedora",
     "staticbaseurl": "",
     "fedorastylesheeturl": "",
