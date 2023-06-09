@@ -70,7 +70,11 @@
     "fedoraadmins": []
   },
   "imageserver": {
-    "hash_secret": "changeme"
+      "hash_secret": "changeme",
+      "image_server_root": "/mnt/converted_images",
+      "scheme": "http",
+      "host": "imageserver",
+      "path": "/iipsrv/iipsrv.fcgi"
   },
   "mongodb_group_manager": {
     "host": "mongogroupdb",
