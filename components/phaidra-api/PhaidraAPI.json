@@ -8,6 +8,7 @@
     "heartbeat_timeout": 600
   },
   "mode": "production",
+  "baseurl": "localhost:3003",
   "secret": "changeme",
   "enc_key": "changeme",
   "session_expiration": "7200",
