@@ -48,3 +48,13 @@ build-solr:
       docker buildx build
       -f dockerfiles/solr.dockerfile
       .
+
+build-pixelgecko:
+  stage: testing_builds
+  before_script:
+    - apk update && apk add git
+  script:
+    - >
+      docker buildx build
+      -f dockerfiles/pixelgecko.dockerfile
+      .
