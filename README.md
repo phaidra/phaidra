@@ -25,6 +25,14 @@ images as defined in the `./dockerfiles` directory. This is for testing
 purposes and runs on every commit to this repo, as a semi-manual
 verification if any cpanm-modules break the api-build.
 
+# TODOs
+
+  - resolve ui dependence on reverse proxy redirecting requests to
+    /detail/$PID from API download.
+  - track down ui 'Other links' URL storage location (changing baseurl
+    in PhaidraAPI.json does not change behaviour, only clearing
+    persistent data does – 'other links' completely disappears then).
+
 # Technical sketch
 
 This is work in progress.
