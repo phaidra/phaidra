@@ -411,12 +411,8 @@ daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pi
 
 ``` bash
 pandoc README.org --to=gfm -o README.md
-printf "[[_TOC_]]
-
-$(cat README.md)
-" > README.md
-printf "![](https://gitlab.phaidra.org/phaidra-dev/phaidra-docker/badges/main/pipeline.svg?ignore_skipped=true)
-
-$(cat README.md)
-" > README.md
+REV_TMP=$(mktemp)
+tac README.md > $REV_TMP
+printf "\n%s\n\n\n%s" "![](https://gitlab.phaidra.org/phaidra-dev/phaidra-docker/badges/main/pipeline.svg?ignore_skipped=true)" "[[_TOC_]]">> $REV_TMP
+tac $REV_TMP > README.md
 ```

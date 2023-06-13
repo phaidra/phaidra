@@ -409,9 +409,14 @@
    #+end_example
 * export org to markdown and add badge
   #+begin_src bash
-pandoc README.org --to=gfm -o README.md
-printf "[[_TOC_]]\n\n$(cat README.md)\n" > README.md
-printf "![](https://gitlab.phaidra.org/phaidra-dev/phaidra-docker/badges/main/pipeline.svg?ignore_skipped=true)\n\n$(cat README.md)\n" > README.md
+    pandoc README.org --to=gfm -o README.md
+    REV_TMP=$(mktemp)
+    tac README.md > $REV_TMP
+    printf "\n%s\n\n\n%s" \
+           "[[_TOC_]]" \
+           "![](https://gitlab.phaidra.org/phaidra-dev/phaidra-docker/badges/main/pipeline.svg?ignore_skipped=true)" \
+           >> $REV_TMP
+    tac $REV_TMP > README.md
   #+end_src
 
   #+RESULTS:
