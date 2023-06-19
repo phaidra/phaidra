@@ -17,7 +17,7 @@
       <source src="//<%= $server_cd %>/media/<%= $streamingbasepath %>/<%= $video_key %>_hi.mp4/playlist.m3u8" type="application/x-mpegURL" />
       <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
       <% if ($trackpid) { %>
-        <track src="https://<%= $baseurl %>/<%= $basepath %>/object/<%= $trackpid %>/diss/Content/get" kind="subtitles" srclang="<%= $tracklanguage %>" label="<%= $tracklabel %>">
+        <track src="https://<%= $baseurl %>/<%= $basepath %>/object/<%= $trackpid %>/get" kind="subtitles" srclang="<%= $tracklanguage %>" label="<%= $tracklabel %>">
       <% } %>
     </video>
     <script>
