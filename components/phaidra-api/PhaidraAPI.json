@@ -9,6 +9,7 @@
   },
   "mode": "production",
   "baseurl": "localhost:3003",
+  "basepath": "api",
   "secret": "changeme",
   "enc_key": "changeme",
   "session_expiration": "7200",
