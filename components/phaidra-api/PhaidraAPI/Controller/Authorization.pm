@@ -37,10 +37,10 @@ sub authorize {
 
   $self->app->log->debug("Authz action[$action] pid[$pid] op[$op]");
 
-  # imageserver is an exception
+  # imageserverproxy is an exception
   # -> the PID is in the query string
   # -> pass this, we'll check rights in imageserver model where we parse the query
-  if ($action eq 'imageserver') {
+  if ($action eq 'imageserverproxy') {
     return 1;
   }
 

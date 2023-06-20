@@ -194,7 +194,7 @@ sub tmp_hash {
 
 }
 
-sub get {
+sub imageserverproxy {
   my $self = shift;
 
   my $isrv_model = PhaidraAPI::Model::Imageserver->new;

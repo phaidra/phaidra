@@ -544,7 +544,7 @@ sub startup {
     $reader->get('streaming/:pid')                                           ->to('utils#streamingplayer');
     $reader->get('streaming/:pid/key')                                       ->to('utils#streamingplayer_key');
 
-    $reader->get('imageserver')                                              ->to('imageserver#get');
+    $reader->get('imageserver')                                              ->to('imageserver#imageserverproxy');
     $reader->get('imageserver/:pid/status')                                  ->to('imageserver#status');
 
     $ext_creds->get('object/:pid/info')                                      ->to('object#info');
