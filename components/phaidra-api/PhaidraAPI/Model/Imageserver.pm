@@ -55,15 +55,9 @@ sub get_url {
     unless ($status_cacheval) {
       $c->app->log->debug("[cache miss] $cachekey");
 
-      if ($c->app->config->{fedora}->{version} >= 6) {
-        my $authz = PhaidraAPI::Model::Authorization->new;
-        my $rres = $authz->check_rights($c, $pid, 'r');
-        $status_cacheval = $rres->{status};
-      } else {
-        my $object_model = PhaidraAPI::Model::Object->new;
-        my $rres         = $object_model->get_datastream($c, $pid, 'READONLY', $c->stash->{basic_auth_credentials}->{username}, $c->stash->{basic_auth_credentials}->{password});
-        $status_cacheval = $rres->{status};
-      }
+      my $authz = PhaidraAPI::Model::Authorization->new;
+      my $rres  = $authz->check_rights($c, $pid, 'r');
+      $status_cacheval = $rres->{status};
 
       $c->app->chi->set($cachekey, $status_cacheval, '1 day');
     }
@@ -71,11 +65,11 @@ sub get_url {
       $c->app->log->debug("[cache hit] $cachekey");
     }
 
-    unless ($status_cacheval eq 404) {
-      $c->app->log->info("imageserver::get username[" . $c->stash->{basic_auth_credentials}->{username} . "] pid[$pid] forbidden");
+    unless ($status_cacheval eq 200) {
+      $c->app->log->info("imageserver::get_url username[" . $c->stash->{basic_auth_credentials}->{username} . "] pid[$pid] forbidden");
       unshift @{$res->{alerts}}, {type => 'error', msg => 'Forbidden'};
       $res->{status} = 403;
-      return;
+      return $res;
     }
   }
 

@@ -35,13 +35,16 @@ sub authorize {
     $pid = $self->match->stack->[2]{pid};
   }
 
-  $self->app->log->debug("Authz action[$action] pid[$pid] op[$op]");
+  
 
   # imageserverproxy is an exception
   # -> the PID is in the query string
   # -> pass this, we'll check rights in imageserver model where we parse the query
   if ($action eq 'imageserverproxy') {
+    $self->app->log->debug("Authz action[$action] op[$op]");
     return 1;
+  } else {
+    $self->app->log->debug("Authz action[$action] pid[$pid] op[$op]");
   }
 
   my $pidNamespace = $self->app->config->{fedora}->{pidnamespace};
