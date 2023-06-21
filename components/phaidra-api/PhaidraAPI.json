@@ -160,8 +160,7 @@
     "host": "solr",
     "path": "",
     "core": "phaidra",
-    "port": "8983",
-    "core": "phaidra"
+    "port": "8983"
   }
 }
 

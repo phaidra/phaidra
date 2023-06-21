@@ -23,7 +23,7 @@ sub check_rights {
 
     unless ($currentuser) {
       unless ($op eq 'r' or $op eq 'ro') {
-        $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] DENIED: no user");
+        $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] DENIED: no user"); # this gives an uninitialized warning
         $res->{alerts} = [{type => 'error', msg => 'Forbidden'}];
         $res->{status} = 403;
         return $res;
@@ -31,7 +31,7 @@ sub check_rights {
     }
 
     # admin can do anything
-    if ($currentuser eq $c->app->{config}->{phaidra}->{adminusername}) {
+    if ($currentuser eq $c->app->{config}->{phaidra}->{adminusername}) { # this gives an uninitialized warning
       $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] GRANTED: admin");
       $res->{rights} = 'rw';
       $res->{status} = 200;
@@ -67,7 +67,7 @@ sub check_rights {
     my $state = $fres->{state};
 
     # user can do anything on owned object
-    if ($currentuser eq $owner) {
+    if ($currentuser eq $owner) { # this gives an uninitialized warning
       $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] GRANTED: owner");
       $res->{rights} = 'rw';
       $res->{status} = 200;
@@ -98,7 +98,7 @@ sub check_rights {
     my $rightsres    = $rights_model->get_object_rights_json($c, $pid, $c->app->config->{phaidra}->{intcallusername}, $c->app->config->{phaidra}->{intcallpassword});
     if ($rightsres->{status} ne 200) {
       if ($rightsres->{status} eq 404) {
-        $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] GRANTED: no rights datastream");
+        $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] GRANTED: no rights datastream"); # this gives an uninitialized warning
         $res->{rights} = 'ro';
         $res->{status} = 200;
         return $res;

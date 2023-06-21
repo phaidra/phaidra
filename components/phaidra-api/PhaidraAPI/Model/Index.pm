@@ -485,7 +485,7 @@ sub getSolrUpdateUrl {
 
   my $updateurl = Mojo::URL->new;
   $updateurl->scheme($c->app->config->{solr}->{scheme});
-  $updateurl->userinfo($c->app->config->{solr}->{username} . ":" . $c->app->config->{solr}->{password});
+  $updateurl->userinfo($c->app->config->{solr}->{username} . ":" . $c->app->config->{solr}->{password}); # this gives an uninitialized warning
   $updateurl->host($c->app->config->{solr}->{host});
   $updateurl->port($c->app->config->{solr}->{port});
   if ($c->app->config->{solr}->{path}) {
