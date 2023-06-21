@@ -79,7 +79,7 @@
       "path": "/iipsrv/iipsrv.fcgi"
   },
   "mongodb_group_manager": {
-    "host": "mongogroupdb",
+    "host": "mongophaidradb",
     "port": "27017",
     "username": "phaidra",
     "password": "phaidra",
@@ -87,18 +87,18 @@
     "collection": "usergroups"
   },
   "mongodb": {
-    "host": "mongophaidraapidb",
+    "host": "mongophaidradb",
     "port": "27017",
     "username": "phaidra",
     "password": "phaidra",
-    "database": "database"
+    "database": "mongodb"
   },
   "paf_mongodb": {
     "host": "mongophaidradb",
     "port": "27017",
     "username": "phaidra",
     "password": "phaidra",
-    "database": "database"
+    "database": "paf_mongodb"
   },
   "index_mongodb": {
     "host": "mongophaidraapidb",

@@ -28,7 +28,7 @@ pixelgecko:
     host:                  'mongophaidradb'
     ## authentication database
     db_name:               'admin'
-    database:              'database'
+    database:              'paf_mongodb'
     username:              'phaidra'
     password:              'phaidra'
     col:                   'jobs'

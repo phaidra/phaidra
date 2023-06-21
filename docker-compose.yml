@@ -110,31 +110,13 @@ services:
     volumes:
       - ${MONGOPHAIDRADB_DATA}:/data/db
 
-  mongophaidraapidb:
-    image: mongo:5
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_PHAIDRA_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PHAIDRA_PASSWORD}
-    volumes:
-      - ${MONGOPHAIDRAAPIDB_DATA}:/data/db
-
-  mongogroupdb:
-    image: mongo:5
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_PHAIDRA_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PHAIDRA_PASSWORD}
-    volumes:
-      - ${MONGOGROUPDB_DATA}:/data/db
-
   dbgate:
     image: dbgate/dbgate:5.2.5
     restart: always
     ports:
       - "9000:3000"
     environment:
-      CONNECTIONS: con1,con2,con3,con4,con5,con6
+      CONNECTIONS: con1,con2,con3,con4
 
       LABEL_con1: MariaDB-Phaidra
       SERVER_con1: phaidradb
@@ -160,14 +142,6 @@ services:
       LABEL_con4: MongoDB-Phaidra
       URL_con4: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongophaidradb:27017
       ENGINE_con4: mongo@dbgate-plugin-mongo
-
-      LABEL_con5: MongoDB-PhaidraAPI
-      URL_con5: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongophaidraapidb:27017
-      ENGINE_con5: mongo@dbgate-plugin-mongo
-
-      LABEL_con6: MongoDB-Group
-      URL_con6: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongogroupdb:27017
-      ENGINE_con6: mongo@dbgate-plugin-mongo
     volumes:
       - ${DBGATE_DATA}:/root/.dbgate
       
