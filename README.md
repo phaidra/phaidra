@@ -27,6 +27,10 @@ verification if any cpanm-modules break the api-build.
 
 # TODOs
 
+-   When logged in, F5 from
+    `http://localhost:3001/ui/search?page=1&pagesize=10` throws
+    `GET http://localhost:3001/ui/search?page=1&pagesize=10 500 (RuntimeError)`.
+
 -   After uploading an image, api throws 500 with
     `GET http://localhost:3003/object/o:3/preview 500 (Internal Server Error)`
     (this cannot be there immediately, as pixelgecko needs to convert
