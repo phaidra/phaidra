@@ -27,11 +27,26 @@ verification if any cpanm-modules break the api-build.
 
 # TODOs
 
-  - resolve ui dependence on reverse proxy redirecting requests to
-    /detail/$PID from API download.
-  - track down ui 'Other links' URL storage location (changing baseurl
-    in PhaidraAPI.json does not change behaviour, only clearing
-    persistent data does – 'other links' completely disappears then).
+-   After uploading an image, api throws 500 with
+    `GET http://localhost:3003/object/o:3/preview 500 (Internal Server Error)`
+    (this cannot be there immediately, as pixelgecko needs to convert
+    the image first).
+
+-   Groups tab fails loading with
+
+    ``` example
+    TypeError: t.filter is not a function
+        at 2ff10fc.js:2:2451840
+        at f.customFilterWithColumns (2ff10fc.js:2:2451924)
+        at f.filteredItems (2ff10fc.js:2:1283336)
+        at t.get (ac66118.js:2:21353)
+        at t.evaluate (ac66118.js:2:22349)
+        at f.filteredItems (ac66118.js:2:34834)
+        at f.computedItems (2ff10fc.js:2:1283404)
+        at t.get (ac66118.js:2:21353)
+        at t.evaluate (ac66118.js:2:22349)
+        at f.computedItems (ac66118.js:2:34834)
+    ```
 
 # Technical sketch
 
@@ -49,9 +64,9 @@ This is work in progress.
 At first run, this command will run for a few minutes, as some images
 will have to be downloaded and partly built as well. If one makes
 changes to files mentioned in the `dockerfiles` directory of this repo,
-make sure to remove the built images before running `docker compose up
--d`. Otherwise you will keep on using the old images and notice not
-difference. E.g. if one does a change to
+make sure to remove the built images before running
+`docker compose up -d`. Otherwise you will keep on using the old images
+and notice not difference. E.g. if one does a change to
 `components/phaidra-api/PhaidraAPI.json` one will also have to run
 `docker rmi phaidra-docker-phaidra-api` to have it rebuilt on a new
 startup.
@@ -413,6 +428,9 @@ daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pi
 pandoc README.org --to=gfm -o README.md
 REV_TMP=$(mktemp)
 tac README.md > $REV_TMP
-printf "\n%s\n\n\n%s" "![](https://gitlab.phaidra.org/phaidra-dev/phaidra-docker/badges/main/pipeline.svg?ignore_skipped=true)" "[[_TOC_]]">> $REV_TMP
+printf "\n%s\n\n\n%s" \
+       "[[_TOC_]]" \
+       "![](https://gitlab.phaidra.org/phaidra-dev/phaidra-docker/badges/main/pipeline.svg?ignore_skipped=true)" \
+       >> $REV_TMP
 tac $REV_TMP > README.md
 ```

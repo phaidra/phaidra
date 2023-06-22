@@ -25,7 +25,7 @@ fedora:
 
 pixelgecko:
   mongodb:
-    host:                  'mongophaidradb'
+    host:                  'mongodb-phaidra'
     ## authentication database
     db_name:               'admin'
     database:              'paf_mongodb'

@@ -1,5 +1,7 @@
 version: '2'
 
+name: phaidra
+
 services:
 
   imageserver:
@@ -35,6 +37,8 @@ services:
       - /tmp/phaidra
 
   phaidra-ui:
+    depends_on:
+      - phaidra-api
     build:
       context: .
       dockerfile: dockerfiles/phaidra-ui.dockerfile
@@ -43,7 +47,8 @@ services:
 
   phaidra-api:
     depends_on:
-      - phaidradb
+      - mariadb-phaidra
+      - mariadb-fedora
     build:
       context: .
       dockerfile: dockerfiles/phaidra-api.dockerfile
@@ -55,7 +60,8 @@ services:
 
   pixelgecko:
     depends_on:
-      - mongophaidradb
+      - mongodb-phaidra
+      - phaidra-api
     restart:
       always
     build:
@@ -65,7 +71,7 @@ services:
       - ${FEDORA_DATA}/data/ocfl-root:/mnt/fedora_ocfl_root:ro
       - ${PIXELGECKO_CONVERTED}:/converted_images
 
-  phaidradb:
+  mariadb-phaidra:
     image: mariadb:11.0.2-jammy
     restart: always
     environment:
@@ -77,7 +83,7 @@ services:
       - ./mariadb_init/phaidradb.sql.gz:/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro
       - ${PHAIDRADB_DATA}:/var/lib/mysql
 
-  fedoradb:
+  mariadb-fedora:
     image: mariadb:10.5
     restart: always
     environment:
@@ -88,7 +94,7 @@ services:
     volumes:
       - ${FEDORADB_DATA}:/var/lib/mysql
 
-  mongophaidradb:
+  mongodb-phaidra:
     image: mongo:5
     restart: always
     environment:
@@ -106,24 +112,28 @@ services:
       CONNECTIONS: con1,con2,con3
 
       LABEL_con1: MariaDB-Phaidra
-      SERVER_con1: phaidradb
+      SERVER_con1: mariadb-phaidra
       USER_con1: ${MARIADB_PHAIDRA_USER}
       PASSWORD_con1: ${MARIADB_PHAIDRA_PASSWORD}
       PORT_con1: 3306
       ENGINE_con1: mariadb@dbgate-plugin-mysql
 
       LABEL_con2: MariaDB-Fedora
-      SERVER_con2: fedoradb
+      SERVER_con2: mariadb-fedora
       USER_con2: ${MARIADB_PHAIDRA_USER}
       PASSWORD_con2: ${MARIADB_PHAIDRA_PASSWORD}
       PORT_con2: 3306
       ENGINE_con2: mariadb@dbgate-plugin-mysql
       
       LABEL_con3: MongoDB-Phaidra
-      URL_con3: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongophaidradb:27017
+      URL_con3: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongodb-phaidra:27017
       ENGINE_con3: mongo@dbgate-plugin-mongo
     volumes:
       - ${DBGATE_DATA}:/root/.dbgate
+    depends_on:
+      - mariadb-phaidra
+      - mariadb-fedora
+      - mongodb-phaidra
       
   fedora:
     image: fcrepo/fcrepo:6.4.0
@@ -135,7 +145,7 @@ services:
     volumes:
       - ${FEDORA_DATA}:/usr/local/tomcat/fcrepo-home
     depends_on:
-      - fedoradb
+      - mariadb-fedora
       
   lam:
     image: ghcr.io/ldapaccountmanager/lam:8.3

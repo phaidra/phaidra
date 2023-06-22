@@ -87,25 +87,25 @@
     "collection": "usergroups"
   },
   "mongodb": {
-    "host": "mongophaidradb",
+    "host": "mongodb-phaidra",
     "port": "27017",
     "username": "phaidra",
     "password": "phaidra",
     "database": "mongodb"
   },
   "paf_mongodb": {
-    "host": "mongophaidradb",
+    "host": "mongodb-phaidra",
     "port": "27017",
     "username": "phaidra",
     "password": "phaidra",
     "database": "paf_mongodb"
   },
   "index_mongodb": {
-    "host": "mongophaidraapidb",
+    "host": "mongodb-phaidra",
     "port": "27017",
     "username": "phaidra",
     "password": "phaidra",
-    "database": "database"
+    "database": "index_mongodb"
   },
   "hooks": {
     "updatedc": 0,
@@ -129,12 +129,12 @@
   "directory_class": "Phaidra::Directory::GenericLDAP",
     
   "phaidra_db": {
-    "dsn": "dbi:mysql:phaidradb:phaidradb",
+    "dsn": "dbi:mysql:phaidradb:mariadb-phaidra",
     "username": "phaidra",
     "password": "phaidra"
   },
   "phaidra_user_db": {
-    "dsn": "dbi:mysql:phaidradb:phaidradb",
+    "dsn": "dbi:mysql:phaidradb:mariadb-phaidra",
     "username": "phaidra",
     "password": "phaidra"
   },

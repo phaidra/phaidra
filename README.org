@@ -11,8 +11,21 @@
    We have a minimal CI activated -- right now it only builds the docker images as defined in the ~./dockerfiles~ directory.  This is for testing purposes and runs on every commit to this repo, as a semi-manual verification if any cpanm-modules break the api-build.
 
 * TODOs
-  + resolve ui dependence on reverse proxy redirecting requests to /detail/$PID from API download.
-  + track down ui 'Other links' URL storage location (changing baseurl in PhaidraAPI.json does not change behaviour, only clearing persistent data does -- 'other links' completely disappears then).
+  + After uploading an image, api throws 500 with ~GET http://localhost:3003/object/o:3/preview 500 (Internal Server Error)~ (this cannot be there immediately, as pixelgecko needs to convert the image first).
+  + Groups tab fails loading with
+    #+begin_example
+      TypeError: t.filter is not a function
+          at 2ff10fc.js:2:2451840
+          at f.customFilterWithColumns (2ff10fc.js:2:2451924)
+          at f.filteredItems (2ff10fc.js:2:1283336)
+          at t.get (ac66118.js:2:21353)
+          at t.evaluate (ac66118.js:2:22349)
+          at f.filteredItems (ac66118.js:2:34834)
+          at f.computedItems (2ff10fc.js:2:1283404)
+          at t.get (ac66118.js:2:21353)
+          at t.evaluate (ac66118.js:2:22349)
+          at f.computedItems (ac66118.js:2:34834)
+    #+end_example
 
 * Technical sketch
   This is work in progress.
