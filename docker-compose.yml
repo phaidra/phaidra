@@ -66,7 +66,7 @@ services:
       - ${PIXELGECKO_CONVERTED}:/converted_images
 
   phaidradb:
-    image: mariadb:10.11.2-jammy
+    image: mariadb:11.0.2-jammy
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
