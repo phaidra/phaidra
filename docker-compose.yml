@@ -44,7 +44,6 @@ services:
   phaidra-api:
     depends_on:
       - phaidradb
-      - userdatadb
     build:
       context: .
       dockerfile: dockerfiles/phaidra-api.dockerfile
@@ -75,20 +74,8 @@ services:
       MARIADB_USER: ${MARIADB_PHAIDRA_USER}
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
     volumes:
-      - ./mariadb_init/phaidra.sql.gz:/docker-entrypoint-initdb.d/phaidra.sql.gz:ro
+      - ./mariadb_init/phaidradb.sql.gz:/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro
       - ${PHAIDRADB_DATA}:/var/lib/mysql
-
-  userdatadb:
-    image: mariadb:10.11.2-jammy
-    restart: always
-    environment:
-      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
-      MARIADB_DATABASE: ${USERDATADB}
-      MARIADB_USER: ${MARIADB_PHAIDRA_USER}
-      MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
-    volumes:
-      - ./mariadb_init/userdata.sql:/docker-entrypoint-initdb.d/userdata.sql:ro
-      - ${USERDATADB_DATA}:/var/lib/mysql
 
   fedoradb:
     image: mariadb:10.5
@@ -116,7 +103,7 @@ services:
     ports:
       - "9000:3000"
     environment:
-      CONNECTIONS: con1,con2,con3,con4
+      CONNECTIONS: con1,con2,con3
 
       LABEL_con1: MariaDB-Phaidra
       SERVER_con1: phaidradb
@@ -125,23 +112,16 @@ services:
       PORT_con1: 3306
       ENGINE_con1: mariadb@dbgate-plugin-mysql
 
-      LABEL_con2: MariaDB-Userdata
-      SERVER_con2: userdatadb
+      LABEL_con2: MariaDB-Fedora
+      SERVER_con2: fedoradb
       USER_con2: ${MARIADB_PHAIDRA_USER}
       PASSWORD_con2: ${MARIADB_PHAIDRA_PASSWORD}
       PORT_con2: 3306
       ENGINE_con2: mariadb@dbgate-plugin-mysql
-
-      LABEL_con3: MariaDB-Fedora
-      SERVER_con3: fedoradb
-      USER_con3: ${MARIADB_PHAIDRA_USER}
-      PASSWORD_con3: ${MARIADB_PHAIDRA_PASSWORD}
-      PORT_con3: 3306
-      ENGINE_con3: mariadb@dbgate-plugin-mysql
       
-      LABEL_con4: MongoDB-Phaidra
-      URL_con4: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongophaidradb:27017
-      ENGINE_con4: mongo@dbgate-plugin-mongo
+      LABEL_con3: MongoDB-Phaidra
+      URL_con3: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongophaidradb:27017
+      ENGINE_con3: mongo@dbgate-plugin-mongo
     volumes:
       - ${DBGATE_DATA}:/root/.dbgate
       

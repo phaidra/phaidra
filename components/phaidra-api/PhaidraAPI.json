@@ -127,13 +127,14 @@
   },
 
   "directory_class": "Phaidra::Directory::GenericLDAP",
+    
   "phaidra_db": {
     "dsn": "dbi:mysql:phaidradb:phaidradb",
     "username": "phaidra",
     "password": "phaidra"
   },
   "phaidra_user_db": {
-    "dsn": "dbi:mysql:userdatadb:userdatadb",
+    "dsn": "dbi:mysql:phaidradb:phaidradb",
     "username": "phaidra",
     "password": "phaidra"
   },
