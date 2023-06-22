@@ -229,7 +229,55 @@
     > EOF
     daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ source ~/.bashrc
   #+end_example
+** expose priviledged ports
+   Following https://docs.docker.com/engine/security/rootless/#exposing-privileged-ports we did the following changes to allow for the mentioned downside:
+   #+begin_example
+     daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker compose down
+     [+] Running 6/9
+      ⠹ Container phaidra-pixelgecko-1             Stopping                                                                                 8.3s 
+      ✔ Container phaidra-phaidra-ui-1             Removed                                                                                  0.9s 
+      ⠹ Container phaidra-dbgate-1                 Stopping                                                                                 8.3s 
+      ✔ Container phaidra-openldap-1               Removed                                                                                  0.3s 
+     [+] Running 14/14dra-fedora-1                 Removed                                                    ✔ Container phaidra-pixelgecko-1             Removed                                             10.3s 
+      ✔ Container phaidra-phaidra-ui-1             Removed                                              0.9s  ✔ Container phaidra-dbgate-1                 Removed                                             10.6s 
+      ✔ Container phaidra-openldap-1               Removed                                              0.3s  ✔ Container phaidra-fedora-1                 Removed                                              0.6s 
+      ✔ Container phaidra-lam-1                    Removed                                              0.4s  ✔ Container phaidra-solr-1                   Removed                                              0.8s 
+      ✔ Container phaidra-imageserver-1            Removed                                             10.4s  ✔ Container phaidra-solr-permission-fixer-1  Remov...                                             0.0s 
+      ✔ Container phaidra-phaidra-api-1            Removed                                              0.3s 
+      ✔ Container phaidra-mongodb-phaidra-1        Removed                                              0.2s 
+      ✔ Container phaidra-mariadb-fedora-1         Removed                                              0.5s 
+      ✔ Container phaidra-mariadb-phaidra-1        Removed                                              0.5s 
+      ✔ Network phaidra_default                    Removed                                              0.4s 
+     daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ sudo setcap cap_net_bind_service=ep $(which rootlesskit)
+     [sudo] password for daniel: 
+     daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ systemctl --user restart docker
+     daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ systemctl --user status docker
+     ● docker.service - Docker Application Container Engine (Rootless)
+          Loaded: loaded (/home/daniel/.config/systemd/user/docker.service; enabled; preset: enabled)
+          Active: active (running) since Thu 2023-06-22 17:02:17 CEST; 8s ago
+            Docs: https://docs.docker.com/go/rootless/
+        Main PID: 61431 (rootlesskit)
+           Tasks: 47
+          Memory: 75.8M
+             CPU: 489ms
+          CGroup: /user.slice/user-1000.slice/user@1000.service/app.slice/docker.service
+                  ├─61431 rootlesskit --net=slirp4netns --mtu=65520 --slirp4netns-sandbox=auto --slirp4netns>
+                  ├─61442 /proc/self/exe --net=slirp4netns --mtu=65520 --slirp4netns-sandbox=auto --slirp4ne>
+                  ├─61464 slirp4netns --mtu 65520 -r 3 --disable-host-loopback --enable-sandbox --enable-sec>
+                  ├─61471 dockerd
+                  └─61493 containerd --config /run/user/1000/docker/containerd/containerd.toml
 
+     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422753209+02:00" leve>
+     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422755962+02:00" leve>
+     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422758846+02:00" leve>
+     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422761419+02:00" leve>
+     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422764256+02:00" leve>
+     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422767706+02:00" leve>
+     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422779378+02:00" leve>
+     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422801247+02:00" leve>
+     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.600775920+02:00" leve>
+     Jun 22 17:02:17 pcherzigd64 systemd[1150]: Started docker.service - Docker Application Container Engine>
+   #+end_example
 * Phaidra Components
   In the folder ~./components~ one will find ~phaidra-api~, ~phaidra-ui~, and ~phaidra-vue-components~.  These are copies of the public github repos, adapted for use in the docker context here.  See the notes in the following subsections.
 ** phaidra-api
