@@ -30,6 +30,8 @@ verification if any cpanm-modules break the api-build.
 -   When logged in, F5 from
     `http://localhost:3001/ui/search?page=1&pagesize=10` throws
     `GET http://localhost:3001/ui/search?page=1&pagesize=10 500 (RuntimeError)`.
+    Clearing the browser-cookies from localhost:3001 remediates this,
+    but user will be logged out then.
 
 -   After uploading an image, api throws 500 with
     `GET http://localhost:3003/object/o:3/preview 500 (Internal Server Error)`
