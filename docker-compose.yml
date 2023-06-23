@@ -4,6 +4,13 @@ name: phaidra
 
 services:
 
+  apache:
+    build:
+      context: .
+      dockerfile: dockerfiles/apache.dockerfile
+    ports:
+      - "8080:80"
+
   imageserver:
     build:
       context: .
@@ -151,7 +158,7 @@ services:
     image: ghcr.io/ldapaccountmanager/lam:8.3
     restart: always
     ports:
-      - "8080:80"
+      - "8082:80"
     environment:
       - LDAP_DOMAIN=${LDAP_DOMAIN}
       - LDAP_SERVER=ldap://openldap:${LDAP_PORT_NUMBER}
