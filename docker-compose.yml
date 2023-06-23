@@ -43,22 +43,22 @@ services:
       - phaidra
       - /tmp/phaidra
 
-  phaidra-ui:
+  ui:
     depends_on:
-      - phaidra-api
+      - api
     build:
       context: .
-      dockerfile: dockerfiles/phaidra-ui.dockerfile
+      dockerfile: dockerfiles/ui.dockerfile
     ports:
       - "3001:3001"
 
-  phaidra-api:
+  api:
     depends_on:
       - mariadb-phaidra
       - mariadb-fedora
     build:
       context: .
-      dockerfile: dockerfiles/phaidra-api.dockerfile
+      dockerfile: dockerfiles/api.dockerfile
     ports:
       - "3003:3000"
     volumes:
@@ -68,7 +68,7 @@ services:
   pixelgecko:
     depends_on:
       - mongodb-phaidra
-      - phaidra-api
+      - api
     restart:
       always
     build:
