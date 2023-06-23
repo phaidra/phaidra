@@ -482,6 +482,16 @@ daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pi
 daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ rm -rf .git .gitignore
 ```
 
+# Apache image
+
+The original apache-server configuration file (to be found in
+`./image_configs/phaidra-httpd.conf`) has been acquired using the
+following command (taken from: <https://hub.docker.com/_/httpd/>):
+
+``` example
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker run --rm httpd:2.4.57-bookworm cat /usr/local/apache2/conf/httpd.conf > image_configs/phaidra-httpd.conf
+```
+
 # export org to markdown and add badge
 
 ``` bash

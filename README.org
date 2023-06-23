@@ -1,7 +1,7 @@
 # -*- truncate-lines: nil; -*-
 
 #+OPTIONS: toc:nil ^:nil
-
+#+STARTUP: overview
 
 * About this repository
   We currently have an [[https://gitlab.phaidra.org/phaidra-dev/phaidra-demo][automated installer for phaidra]], which allows to set up an instance in about 15min.  However, setup is still bound to the underlying operating system (Ubuntu 22.04-LTS), which brings quite some complexity to the end-user.  Here we try to abstract the system further and allow for easier integration into CI/CD workflows using containerization via docker, and to achieve better portability to other platforms supporting this kind of containerization.
@@ -469,6 +469,12 @@
      daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ find . -type l
      daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ rm -rf .git .gitignore
    #+end_example
+* Apache image
+  The original apache-server configuration file (to be found in ~./image_configs/phaidra-httpd.conf~) has been acquired using the following command (taken from: https://hub.docker.com/_/httpd/):
+  #+begin_example
+    daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker run --rm httpd:2.4.57-bookworm cat /usr/local/apache2/conf/httpd.conf > image_configs/phaidra-httpd.conf
+  #+end_example
+  
 * export org to markdown and add badge
   #+begin_src bash
     pandoc README.org --to=gfm -o README.md
