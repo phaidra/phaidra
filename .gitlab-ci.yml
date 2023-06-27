@@ -16,7 +16,7 @@ build-phaidra-api:
   script:
     - >
       docker buildx build
-      -f dockerfiles/phaidra-api.dockerfile
+      -f dockerfiles/api.dockerfile
       .
 
 build-phaidra-ui:
@@ -26,7 +26,7 @@ build-phaidra-ui:
   script:
     - >
       docker buildx build
-      -f dockerfiles/phaidra-ui.dockerfile
+      -f dockerfiles/ui.dockerfile
       .
 
 build-imageserver:
