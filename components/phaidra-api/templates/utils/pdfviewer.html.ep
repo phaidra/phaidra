@@ -29,14 +29,14 @@ See https://github.com/adobe-type-tools/cmap-resources
     <title>PDF.js viewer</title>
 
 
-    <link rel="stylesheet" href="http://<%= $baseurl %>/pdfjs/web/viewer.css">
+    <link rel="stylesheet" href="http://<%= $baseurl %>/<%= $basepath %>/pdfjs/web/viewer.css">
 
 
     <!-- This snippet is used in production (included from viewer.html) -->
-    <link rel="resource" type="application/l10n" href="http://<%= $baseurl %>/pdfjs/web/locale/locale.properties">
-    <script src="http://<%= $baseurl %>/pdfjs/build/pdf.js"></script>
-    <script src="http://<%= $baseurl %>/pdfjs/build/pdf.worker.js"></script>
-    <script src="http://<%= $baseurl %>/pdfjs/web/viewer.js"></script>
+    <link rel="resource" type="application/l10n" href="http://<%= $baseurl %>/<%= $basepath %>/pdfjs/web/locale/locale.properties">
+    <script src="http://<%= $baseurl %>/<%= $basepath %>/pdfjs/build/pdf.js"></script>
+    <script src="http://<%= $baseurl %>/<%= $basepath %>/pdfjs/build/pdf.worker.js"></script>
+    <script src="http://<%= $baseurl %>/<%= $basepath %>/pdfjs/web/viewer.js"></script>
 
   </head>
 
@@ -397,7 +397,7 @@ See https://github.com/adobe-type-tools/cmap-resources
         }
       }
       docReady(function() {
-        PDFViewerApplication.open("http://<%= $baseurl %>/object/<%= $pid %>/get")
+        PDFViewerApplication.open("http://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get")
       });
     </script>
   </body>

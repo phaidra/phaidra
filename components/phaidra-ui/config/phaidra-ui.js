@@ -1,5 +1,5 @@
 export default {
-  defaultinstance: 'phaidra-docker.example.com',
+  defaultinstance: 'localhost',
   global: {
     title: 'Phaidra Docker',
     showinstanceswitch: 0,
@@ -50,14 +50,14 @@ export default {
     }
   },
   instances: {
-    'phaidra-docker.example.com': {
+    'localhost': {
       title: 'Phaidra - Docker',
-      baseurl: 'phaidra-docker.example.com',
+      baseurl: 'localhost',
       basepath: '',
       irbaseurl: '',
-      fedora: 'http://fedora:8080/fcrepo',
-      api: 'http://localhost:3003',
-      solr: 'http://localhost:3003/search',
+        fedora: 'http://fedora:8080/fcrepo',
+        api: 'http://localhost/api',
+        solr: 'http://localhost/api/search',
       since: '2023-01-01',
       primary: '#008080',
       institution: 'My institution',

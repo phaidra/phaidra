@@ -4,12 +4,26 @@ name: phaidra
 
 services:
 
-  apache:
-    build:
-      context: .
-      dockerfile: dockerfiles/apache.dockerfile
+  # apache:
+  #   build:
+  #     context: .
+  #     dockerfile: dockerfiles/apache.dockerfile
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./container_configs/apache:/usr/local/apache2/conf/vhosts
+
+
+  nginx:
+    image: nginx:1.25.1-bookworm
     ports:
-      - "8080:80"
+      - "80:80"
+    volumes:
+      - ./container_configs/nginx:/etc/nginx/templates
+    depends_on:
+      - api
+      - ui
+
 
   imageserver:
     build:
@@ -18,7 +32,7 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - ${PIXELGECKO_CONVERTED}:/mnt/converted_images:ro      
+      - ${PIXELGECKO_CONVERTED}:/mnt/converted_images:ro
 
   solr-permission-fixer:
     image: alpine:3.18.0
@@ -27,7 +41,7 @@ services:
       /bin/sh -c "chown 8983:8983 /solr"
     volumes:
       - ${SOLR_DATA}:/solr
-      
+
   solr:
     depends_on:
       - solr-permission-fixer
@@ -49,18 +63,15 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/ui.dockerfile
-    ports:
-      - "3001:3001"
 
   api:
     depends_on:
       - mariadb-phaidra
-      - mariadb-fedora
+      - mongodb-phaidra
+      - fedora
     build:
       context: .
       dockerfile: dockerfiles/api.dockerfile
-    ports:
-      - "3003:3000"
     volumes:
       - ${PHAIDRA_API_LOGS}:/var/log/phaidra
       - ${FEDORA_DATA}/data/ocfl-root:/mnt/fedora_ocfl_root:ro
@@ -113,8 +124,6 @@ services:
   dbgate:
     image: dbgate/dbgate:5.2.5
     restart: always
-    ports:
-      - "9000:3000"
     environment:
       CONNECTIONS: con1,con2,con3
 
@@ -131,17 +140,20 @@ services:
       PASSWORD_con2: ${MARIADB_PHAIDRA_PASSWORD}
       PORT_con2: 3306
       ENGINE_con2: mariadb@dbgate-plugin-mysql
-      
+
       LABEL_con3: MongoDB-Phaidra
       URL_con3: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongodb-phaidra:27017
       ENGINE_con3: mongo@dbgate-plugin-mongo
+
+      WEB_ROOT: /dbgate
+
     volumes:
       - ${DBGATE_DATA}:/root/.dbgate
     depends_on:
       - mariadb-phaidra
       - mariadb-fedora
       - mongodb-phaidra
-      
+
   fedora:
     image: fcrepo/fcrepo:6.4.0
     restart: always
@@ -153,7 +165,7 @@ services:
       - ${FEDORA_DATA}:/usr/local/tomcat/fcrepo-home
     depends_on:
       - mariadb-fedora
-      
+
   lam:
     image: ghcr.io/ldapaccountmanager/lam:8.3
     restart: always
@@ -165,7 +177,7 @@ services:
       - LDAP_USER=cn=${LDAP_ADMIN_USERNAME},${LDAP_ROOT}
       - LDAP_USER_DN=ou=${LDAP_USER_DC},${LDAP_ROOT}
       - LDAP_GROUPS_DN=cn=${LDAP_GROUP},ou=${LDAP_USER_DC},${LDAP_ROOT}
-      
+
   openldap:
     image: bitnami/openldap:2
     environment:

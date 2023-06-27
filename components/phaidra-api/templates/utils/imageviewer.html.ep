@@ -18,24 +18,24 @@
       padding: 0;
     }	
   </style>
-  <link rel="stylesheet" type="text/css" media="all" href="http://<%= $baseurl %>/iipmooviewer/iip.min.css" />
-  <script type="text/javascript" src="http://<%= $baseurl %>/iipmooviewer/mootools-core-1.6.0-compressed.js"></script>
-  <script type="text/javascript" src="http://<%= $baseurl %>/iipmooviewer/iipmooviewer-2.0-min.js"></script>
+  <link rel="stylesheet" type="text/css" media="all" href="http://<%= $baseurl %>/<%= $basepath %>/iipmooviewer/iip.min.css" />
+  <script type="text/javascript" src="http://<%= $baseurl %>/<%= $basepath %>/iipmooviewer/mootools-core-1.6.0-compressed.js"></script>
+  <script type="text/javascript" src="http://<%= $baseurl %>/<%= $basepath %>/iipmooviewer/iipmooviewer-2.0-min.js"></script>
   <% if ($annotations_json or ($rights eq 'rw')) { %>
-    <script type="text/javascript" src="http://<%= $baseurl %>/iipmooviewer/annotations.js"></script>
+    <script type="text/javascript" src="http://<%= $baseurl %>/<%= $basepath %>/iipmooviewer/annotations.js"></script>
   <% } %>
   <% if ($rights eq 'rw') { %>
-    <script type="text/javascript" src="http://<%= $baseurl %>/iipmooviewer/annotations-edit.js"></script>
+    <script type="text/javascript" src="http://<%= $baseurl %>/<%= $basepath %>/iipmooviewer/annotations-edit.js"></script>
   <% } %>
   <script type="text/javascript">
-    var server = 'http://<%= $baseurl %>/imageserver';
+    var server = 'http://<%= $baseurl %>/<%= $basepath %>/imageserver';
     var image = "<%= $pid %>.tif";
     var credit = "<%= $license %>";
     var annotations = {};
     <% if ($annotations_json) { %>
     annotations = <%== $annotations_json %>;
     <% } %>
-    var prefix = '/iipmooviewer/';
+    var prefix = '/api/iipmooviewer/';
     var iipmooviewer =  new IIPMooViewer( "viewer", { server: server, image: image, prefix: prefix, credit: credit <% if ($annotations_json) { %>, showCoords: true, annotations: annotations <% } %> });
 
     <% if ($rights eq 'rw') { %>
@@ -48,7 +48,7 @@
         const formData = new FormData();
         formData.append('metadata', JSON.encode(data));
         const body = new URLSearchParams(formData);
-        var url = 'http://<%= $baseurl %>/object/<%= $pid %>/annotations';
+        var url = 'http://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/annotations';
         fetch(url, {
             method: 'post',
             body: body
