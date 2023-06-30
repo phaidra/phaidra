@@ -17,12 +17,13 @@ services:
   nginx:
     image: nginx:1.25.1-bookworm
     ports:
-      - "80:80"
+      - "8899:80"
     volumes:
       - ./container_configs/nginx:/etc/nginx/templates
     depends_on:
       - api
       - ui
+      - dbgate
 
 
   imageserver:
@@ -72,6 +73,8 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/api.dockerfile
+    ports:
+      - "3003:3000"
     volumes:
       - ${PHAIDRA_API_LOGS}:/var/log/phaidra
       - ${FEDORA_DATA}/data/ocfl-root:/mnt/fedora_ocfl_root:ro

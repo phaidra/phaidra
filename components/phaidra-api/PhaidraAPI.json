@@ -8,7 +8,7 @@
         "heartbeat_timeout": 600
     },
     "mode": "production",
-    "baseurl": "localhost",
+    "baseurl": "localhost:8899",
     "basepath": "api",
     "secret": "changeme",
     "enc_key": "changeme",
@@ -45,7 +45,7 @@
         ]
     },
     "phaidra": {
-        "baseurl": "localhost",
+        "baseurl": "localhost:8899",
         "fedorabaseurl": "fedora",
         "staticbaseurl": "",
         "fedorastylesheeturl": "",
