@@ -627,7 +627,7 @@ sub is_superuser {
   my $c        = shift;
   my $username = shift;
 
-  $c->app->log->error("This method is not implemented");
+  $c->app->log->error("GenericLDAP.pm -- this method is not implemented");
 }
 
 sub is_superuser_for_user {
@@ -636,7 +636,7 @@ sub is_superuser_for_user {
   my $username = shift;
 
   # \@users
-  $c->app->log->error("This method is not implemented");
+  $c->app->log->error("GenericLDAP.pm -- this method is not implemented");
 }
 
 =head2 searchUser

@@ -76,7 +76,7 @@ sub get_org_units {
   my $parent_id = shift;    # undef if none
   my $lang      = shift;
 
-  $c->app->log->error("This method is not implemented");
+  $c->app->log->error("JSON.pm -- this method is not implemented");
 }
 
 # getFacultyId
@@ -85,7 +85,7 @@ sub get_parent_org_unit_id {
   my $c        = shift;
   my $child_id = shift;
 
-  $c->app->log->error("This method is not implemented");
+  $c->app->log->error("JSON.pm -- this method is not implemented");
 }
 
 # getFacultyName
@@ -96,7 +96,7 @@ sub get_org_unit_name {
   my $unit_id = shift;
   my $lang    = shift;
 
-  $c->app->log->error("This method is not implemented");
+  $c->app->log->error("JSON.pm -- this method is not implemented");
 }
 
 # getAuthorInstitutionName
@@ -107,7 +107,7 @@ sub get_affiliation {
   my $unit_id = shift;
   my $lang    = shift;
 
-  $c->app->log->error("This method is not implemented");
+  $c->app->log->error("JSON.pm -- this method is not implemented");
 }
 
 # getInstitutionName
@@ -116,7 +116,7 @@ sub get_org_name {
   my $c    = shift;
   my $lang = shift;
 
-  $c->app->log->error("This method is not implemented");
+  $c->app->log->error("JSON.pm -- this method is not implemented");
 }
 
 # uni specific
@@ -125,7 +125,7 @@ sub get_study_plans {
   my $c    = shift;
   my $lang = shift;
 
-  $c->app->log->error("This method is not implemented");
+  $c->app->log->error("JSON.pm -- this method is not implemented");
 }
 
 # uni specific
@@ -136,7 +136,7 @@ sub get_study {
   my $index = shift;
   my $lang  = shift;
 
-  $c->app->log->error("This method is not implemented");
+  $c->app->log->error("JSON.pm -- this method is not implemented");
 }
 
 # uni specific
@@ -147,7 +147,7 @@ sub get_study_name {
   my $index = shift;
   my $lang  = shift;
 
-  $c->app->log->error("This method is not implemented");
+  $c->app->log->error("JSON.pm -- this method is not implemented");
 }
 
 # getPersFunk
@@ -156,7 +156,7 @@ sub get_pers_funktions {
   my $c    = shift;
   my $lang = shift;
 
-  $c->app->log->error("This method is not implemented");
+  $c->app->log->error("JSON.pm -- this method is not implemented");
 }
 
 # getPersFunkName
@@ -166,7 +166,7 @@ sub get_pers_funktion_name {
   my $id   = shift;
   my $lang = shift;
 
-  $c->app->log->error("This method is not implemented");
+  $c->app->log->error("JSON.pm -- this method is not implemented");
 }
 
 sub get_user_data {
@@ -184,7 +184,7 @@ sub is_superuser {
   my $c        = shift;
   my $username = shift;
 
-  $c->app->log->error("This method is not implemented");
+  $c->app->log->error("JSON.pm -- this method is not implemented");
 }
 
 sub is_superuser_for_user {
@@ -193,7 +193,7 @@ sub is_superuser_for_user {
   my $username = shift;
 
   # \@users
-  $c->app->log->error("This method is not implemented");
+  $c->app->log->error("JSON.pm -- this method is not implemented");
 }
 
 sub search_user {
@@ -203,7 +203,7 @@ sub search_user {
 
   # $person = { uid => $uid, name => $name };
   #return \@persons,$hits;
-  $c->app->log->error("This method is not implemented");
+  $c->app->log->error("JSON.pm -- this method is not implemented");
 }
 
 1;
