@@ -21,9 +21,6 @@ RUN <<EOF
 npm install
 npm install axios@0.24.0
 npm install /usr/local/phaidra/phaidra-vue-components
-# sed -i "s|transpile: \['phaidra-vue-components', 'vuetify/lib'\]|\
-# transpile: \['phaidra-vue-components', 'vuetify/lib'\]\n  },\n  router: {\n    base: '/ui/'|" \
-# nuxt.config.js
 EOF
 RUN <<EOF
 npm run build
