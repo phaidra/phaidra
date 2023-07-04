@@ -190,5 +190,5 @@ services:
     user: "root"
     volumes:
       - ${OPENLDAP_DATA}:/bitnami/openldap
-      - ./container_configs/openldap:/ldifs
+      - ./container_configs/openldap:/ldifs:ro
 
