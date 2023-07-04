@@ -170,27 +170,25 @@ services:
       - mariadb-fedora
 
   lam:
-    image: ghcr.io/ldapaccountmanager/lam:8.3
+    image: ghcr.io/ldapaccountmanager/lam:8.4
     restart: always
-    ports:
-      - "8082:80"
     environment:
       - LDAP_DOMAIN=${LDAP_DOMAIN}
       - LDAP_SERVER=ldap://openldap:${LDAP_PORT_NUMBER}
       - LDAP_USER=cn=${LDAP_ADMIN_USERNAME},${LDAP_ROOT}
-      - LDAP_USER_DN=ou=${LDAP_USER_DC},${LDAP_ROOT}
-      - LDAP_GROUPS_DN=cn=${LDAP_GROUP},ou=${LDAP_USER_DC},${LDAP_ROOT}
+      - LDAP_USER_DN=ou=people,${LDAP_ROOT}
+      - LDAP_GROUPS_DN=ou=groups,${LDAP_ROOT}
 
   openldap:
-    image: bitnami/openldap:2
+    image: bitnami/openldap:2.6.4-debian-11-r44
     environment:
       - LDAP_ADMIN_USERNAME=${LDAP_ADMIN_USERNAME}
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
-      - LDAP_USERS=${LDAP_USERS}
-      - LDAP_PASSWORDS=${LDAP_PASSWORDS}
-      - LDAP_USER_DC=${LDAP_USER_DC}
-      - LDAP_GROUP=${LDAP_GROUP}
       - LDAP_PORT_NUMBER=${LDAP_PORT_NUMBER}
       - LDAP_ROOT=${LDAP_ROOT}
-
+      - LDAP_CUSTOM_LDIF_DIR=/ldifs
+    user: "root"
+    volumes:
+      - ${OPENLDAP_DATA}:/bitnami/openldap
+      - ./container_configs/openldap:/ldifs
 
