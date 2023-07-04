@@ -474,6 +474,7 @@ sub get_doc_from_core {
 }
 
 sub getSolrUpdateUrl {
+  no warnings 'uninitialized';
   my ($self, $c, $cmodel, $core) = @_;
 
   unless ($core) {
@@ -485,7 +486,7 @@ sub getSolrUpdateUrl {
 
   my $updateurl = Mojo::URL->new;
   $updateurl->scheme($c->app->config->{solr}->{scheme});
-  $updateurl->userinfo($c->app->config->{solr}->{username} . ":" . $c->app->config->{solr}->{password}); # this gives an uninitialized warning
+  $updateurl->userinfo($c->app->config->{solr}->{username} . ":" . $c->app->config->{solr}->{password});
   $updateurl->host($c->app->config->{solr}->{host});
   $updateurl->port($c->app->config->{solr}->{port});
   if ($c->app->config->{solr}->{path}) {

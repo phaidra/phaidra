@@ -527,20 +527,29 @@ DataCite is unhappy about this (or the ordering)
         xmlname  => "creator",
         children => []
       };
-      push @{$ch->{children}}, {xmlname => "creatorName", value => $cr->{value}};
+      my $creatorName = {xmlname => "creatorName", value => $cr->{value}};
+      if ($cr->{type}) {
+        if ($cr->{type} eq 'personal') {
+          $creatorName->{attributes} = [
+            { xmlname => 'nameType',
+              value   => 'Personal'
+            }
+          ];
+        }
+        if ($cr->{type} eq 'corporate') {
+          $creatorName->{attributes} = [
+            { xmlname => 'nameType',
+              value   => 'Organizational'
+            }
+          ];
+        }
+      }
+      push @{$ch->{children}}, $creatorName;
       if ($cr->{firstname}) {
         push @{$ch->{children}}, {xmlname => "givenName", value => $cr->{firstname}};
       }
       if ($cr->{lastname}) {
         push @{$ch->{children}}, {xmlname => "familyName", value => $cr->{lastname}};
-      }
-      if ($cr->{type}) {
-        if ($cr->{type} eq 'personal') {
-          push @{$ch->{children}}, {xmlname => "nameType", value => 'Personal'};
-        }
-        if ($cr->{type} eq 'corporate') {
-          push @{$ch->{children}}, {xmlname => "nameType", value => 'Organizational'};
-        }
       }
       push @creators_children, $ch;
     }

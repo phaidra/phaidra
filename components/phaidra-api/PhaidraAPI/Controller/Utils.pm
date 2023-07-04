@@ -20,6 +20,13 @@ sub streamingplayer {
       $self->stash(server_rtmp => $self->config->{streaming}->{server_rtmp});
       $self->stash(server_cd   => $self->config->{streaming}->{server_cd});
       $self->stash(basepath    => $self->config->{streaming}->{basepath});
+
+      $self->stash(baseurl           => $self->config->{baseurl});
+      $self->stash(streamingbasepath => $self->config->{streaming}->{basepath});
+      $self->stash(trackpid          => "");
+      $self->stash(tracklabel        => "");
+      $self->stash(tracklanguage     => "");
+      
     }
     else {
       $self->app->log->error("Video key not available: " . $self->app->dumper($r));

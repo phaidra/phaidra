@@ -23,6 +23,83 @@ use MIME::Lite::TT::HTML;
 use DateTime;
 use DateTime::Format::ISO8601;
 
+our $ir2pureVersion = {
+
+  # AO
+  "https://pid.phaidra.org/vocabulary/TV31-080M" => "/dk/atira/pure/researchoutput/electronicversion/versiontype/authorsversion",
+
+  # SMUR
+  "https://pid.phaidra.org/vocabulary/JTD4-R26P" => "/dk/atira/pure/researchoutput/electronicversion/versiontype/preprint",
+
+  # AM
+  "https://pid.phaidra.org/vocabulary/PHXV-R6B3" => "/dk/atira/pure/researchoutput/electronicversion/versiontype/other",
+
+  # P
+  "https://pid.phaidra.org/vocabulary/83ZP-CPP2" => "/dk/atira/pure/researchoutput/electronicversion/versiontype/proof",
+
+  # VoR
+  "https://pid.phaidra.org/vocabulary/PMR8-3C8D" => "/dk/atira/pure/researchoutput/electronicversion/versiontype/publishersversion",
+
+  # CVoR
+  "https://pid.phaidra.org/vocabulary/MT1G-APSB" => "/dk/atira/pure/researchoutput/electronicversion/versiontype/other",
+
+  # EVoR
+  "https://pid.phaidra.org/vocabulary/SSQW-AP1S" => "/dk/atira/pure/researchoutput/electronicversion/versiontype/other",
+
+  # NA
+  "https://pid.phaidra.org/vocabulary/KZB5-0F5G" => "/dk/atira/pure/researchoutput/electronicversion/versiontype/other"
+};
+
+our $ir2pureAccess = {
+
+  # open
+  "https://pid.phaidra.org/vocabulary/QW5R-NG4J" => "/dk/atira/pure/core/openaccesspermission/open",
+
+  # embargoed
+  "https://pid.phaidra.org/vocabulary/AVFC-ZZSZ" => "/dk/atira/pure/core/openaccesspermission/embargoed",
+
+  # restricted
+  "https://pid.phaidra.org/vocabulary/KC3K-CCGM" => "/dk/atira/pure/core/openaccesspermission/restricted",
+
+  # metadata only
+  "https://pid.phaidra.org/vocabulary/QNGE-V02H" => "/dk/atira/pure/core/openaccesspermission/closed"
+};
+
+our $ir2pureLicense = {
+  "http://rightsstatements.org/vocab/InC/1.0/"           => "/dk/atira/pure/core/document/licenses/unspecified",
+  "http://creativecommons.org/licenses/by/4.0/"          => "/dk/atira/pure/core/document/licenses/cc_by",
+  "http://creativecommons.org/licenses/by-nc/4.0/"       => "/dk/atira/pure/core/document/licenses/cc_by_nc",
+  "http://creativecommons.org/licenses/by-nc-nd/4.0/"    => "/dk/atira/pure/core/document/licenses/cc_by_nc_nd",
+  "http://creativecommons.org/licenses/by-nc-sa/4.0/"    => "/dk/atira/pure/core/document/licenses/cc_by_nc_sa",
+  "http://creativecommons.org/licenses/by-nd/4.0/"       => "/dk/atira/pure/core/document/licenses/cc_by_nd",
+  "http://creativecommons.org/licenses/by-sa/4.0/"       => "/dk/atira/pure/core/document/licenses/cc_by_sa",
+  "http://creativecommons.org/publicdomain/mark/1.0/"    => "/dk/atira/pure/core/document/licenses/other",
+  "http://creativecommons.org/licenses/by/3.0/"          => "/dk/atira/pure/core/document/licenses/cc_by_3_0",
+  "http://creativecommons.org/licenses/by-nc/3.0/"       => "/dk/atira/pure/core/document/licenses/cc_by_nc_3_0",
+  "http://creativecommons.org/licenses/by-nc-nd/3.0/"    => "/dk/atira/pure/core/document/licenses/cc_by_nc_nd_3_0",
+  "http://creativecommons.org/licenses/by-nc-sa/3.0/"    => "/dk/atira/pure/core/document/licenses/cc_by_nc_sa_3_0",
+  "http://creativecommons.org/licenses/by-nd/3.0/"       => "/dk/atira/pure/core/document/licenses/cc_by_nd_3_0",
+  "http://creativecommons.org/licenses/by-sa/3.0/"       => "/dk/atira/pure/core/document/licenses/cc_by_sa_3_0",
+  "http://creativecommons.org/licenses/by/3.0/at/"       => "/dk/atira/pure/core/document/licenses/cc_by_3_0_at",
+  "http://creativecommons.org/licenses/by-nc/3.0/at/"    => "/dk/atira/pure/core/document/licenses/cc_by_nc_3_0_at",
+  "http://creativecommons.org/licenses/by-nc-nd/3.0/at/" => "/dk/atira/pure/core/document/licenses/cc_by_nc_nd_3_0_at",
+  "http://creativecommons.org/licenses/by-nc-sa/3.0/at/" => "/dk/atira/pure/core/document/licenses/cc_by_nc_sa_3_0_at",
+  "http://creativecommons.org/licenses/by-nd/3.0/at/"    => "/dk/atira/pure/core/document/licenses/cc_by_nd_3_0_at",
+  "http://creativecommons.org/licenses/by-sa/3.0/at/"    => "/dk/atira/pure/core/document/licenses/cc_by_sa_3_0_at",
+  "http://creativecommons.org/licenses/by/2.0/"          => "/dk/atira/pure/core/document/licenses/other",
+  "http://creativecommons.org/licenses/by-nc/2.0/"       => "/dk/atira/pure/core/document/licenses/other",
+  "http://creativecommons.org/licenses/by-nc-nd/2.0/"    => "/dk/atira/pure/core/document/licenses/other",
+  "http://creativecommons.org/licenses/by-nc-sa/2.0/"    => "/dk/atira/pure/core/document/licenses/other",
+  "http://creativecommons.org/licenses/by-nd/2.0/"       => "/dk/atira/pure/core/document/licenses/other",
+  "http://creativecommons.org/licenses/by-sa/2.0/"       => "/dk/atira/pure/core/document/licenses/other",
+  "http://creativecommons.org/licenses/by/2.0/at/"       => "/dk/atira/pure/core/document/licenses/other",
+  "http://creativecommons.org/licenses/by-nc/2.0/at/"    => "/dk/atira/pure/core/document/licenses/other",
+  "http://creativecommons.org/licenses/by-nc-nd/2.0/at/" => "/dk/atira/pure/core/document/licenses/other",
+  "http://creativecommons.org/licenses/by-nc-sa/2.0/at/" => "/dk/atira/pure/core/document/licenses/other",
+  "http://creativecommons.org/licenses/by-nd/2.0/at/"    => "/dk/atira/pure/core/document/licenses/other",
+  "http://creativecommons.org/licenses/by-sa/2.0/at/"    => "/dk/atira/pure/core/document/licenses/other"
+};
+
 sub notifications {
   my $self = shift;
 
@@ -750,6 +827,29 @@ sub submit {
     }
   }
 
+  if ($username eq $self->config->{ir}->{iraccount}) {
+    if ($self->app->config->{apis}->{pure}) {
+      my $uuid = $self->param('uuid');
+      $self->app->log->debug("pure import uuid[$uuid]");
+      if ($uuid) {
+        my $urlget = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . "/research-outputs/$uuid");
+        my $params = {apiKey => $self->app->config->{apis}->{pure}->{key}};
+
+        my $pureUpdate = $self->createPureUpdate($mainObjectPid, $metadata);
+        $self->app->log->debug("pure update:\n" . $self->app->dumper($pureUpdate));
+        my $getres = $self->ua->put($urlget => {Accept => 'application/json', 'api-key' => $self->app->config->{apis}->{pure}->{key}} => json => $pureUpdate)->result;
+        if ($getres->is_success) {
+          $res->{response} = $getres->json;
+          $self->app->log->debug("pure response:\n" . $self->app->dumper($getres->json));
+        }
+        else {
+          $self->render(json => {alerts => [{type => 'error', msg => 'error updating pure object ' . $getres->code . " " . $getres->message}]}, status => 500);
+          return;
+        }
+      }
+    }
+  }
+
   my @pids;
   push @pids, $mainObjectPid;
   for my $p (@alternativeFormatPids) {
@@ -761,6 +861,71 @@ sub submit {
   $res->{alternatives} = \@alternativeFormatPids;
 
   $self->render(json => $res, status => $res->{status});
+}
+
+sub createPureUpdate {
+
+  my ($self, $pid, $metadata) = @_;
+
+  my $version;
+  for my $e (@{$metadata->{metadata}->{'json-ld'}->{'oaire:version'}}) {
+    for my $id (@{$e->{'skos:exactMatch'}}) {
+      $version = $id;
+    }
+  }
+  my $crisVersion = $ir2pureVersion->{$version};
+
+  my $access;
+  for my $e (@{$metadata->{metadata}->{'json-ld'}->{'dcterms:accessRights'}}) {
+    for my $id (@{$e->{'skos:exactMatch'}}) {
+      $access = $id;
+    }
+  }
+  my $crisAccess = $ir2pureAccess->{$access};
+
+  my $license;
+  for my $e (@{$metadata->{metadata}->{'json-ld'}->{'edm:rights'}}) {
+    $license = $e;
+  }
+  my $crisLicense = $ir2pureLicense->{$license};
+
+  my $json = {
+    "electronicVersions" => [
+      { "typeDiscriminator"   => "LinkElectronicVersion",
+        "visibleOnPortalDate" => DateTime->now->ymd,
+        "link"                => "https://" . $self->app->config->{phaidra}->{baseurl} . "/$pid",
+        "accessType"          => {"uri" => $crisAccess},
+        "licenseType"         => {"uri" => $crisLicense},
+        "versionType"         => {"uri" => $crisVersion}
+      }
+    ],
+    "keywordGroups" => [
+      { "typeDiscriminator" => "ClassificationsKeywordGroup",
+        "logicalName"       => "/dk/atira/pure/keywords/ir_status",
+        "classifications"   => [{"uri" => "/dk/atira/pure/keywords/ir_status/ir_okay"}]
+      }
+    ]
+  };
+
+  for my $e (@{$metadata->{metadata}->{'json-ld'}->{'rdam:P30004'}}) {
+    if (($e->{'@type'} eq 'ids:hdl') or ($e->{'@type'} eq 'ids:urn') or ($e->{'@type'} eq 'ids:isbn') or ($e->{'@type'} eq 'ids:uri')) {
+      push @{$json->{electronicVersions}},
+        {
+        "typeDiscriminator"   => "LinkElectronicVersion",
+        "visibleOnPortalDate" => DateTime->now->ymd,
+        "link"                => $e->{'@value'},
+        "accessType"          => {"uri" => $crisAccess},
+        "licenseType"         => {"uri" => $crisLicense},
+        "versionType"         => {"uri" => $crisVersion}
+        };
+    }
+  }
+
+  if ($crisLicense eq "/dk/atira/pure/core/document/licenses/other") {
+    $json->{userDefinedLicense} = $license;
+  }
+
+  return $json;
 }
 
 sub sendAdminEmail {
@@ -1197,7 +1362,7 @@ sub embargocheck {
   else {
     $urlget->path("/solr/" . $self->app->config->{solr}->{core} . "/select");
   }
-  $urlget->query(q => "*:*", fq => "isinadminset:\"phaidra:ir.univie.ac.at\" AND dcterms_accessrights_id:\"https://pid.phaidra.org/vocabulary/AVFC-ZZSZ\"", rows => "10000", wt => "json");
+  $urlget->query(q => "*:*", fq => "isinadminset:\"" . $self->app->config->{ir}->{adminset} . "\" AND dcterms_accessrights_id:\"https://pid.phaidra.org/vocabulary/AVFC-ZZSZ\"", rows => "10000", wt => "json");
 
   my $ua     = Mojo::UserAgent->new;
   my $getres = $ua->get($urlget)->result;
@@ -1255,9 +1420,15 @@ sub puresearch {
   my $pageSize = $self->param('pageSize');
 
   # $self->app->log->debug("XXXXXXXXXXXXXXXXXXXX : " . $self->app->config->{apis}->{pure}->{url} . '/research-outputs/search');
+  # HACK:
+  my $urlget;
+  if ($self->app->config->{apis}->{pure}->{url} eq "https://ucris.univie.ac.at/ws/api/523/research-outputs") {
+    $urlget = Mojo::URL->new($self->app->config->{apis}->{pure}->{url});
+  }
+  else {
+    $urlget = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . '/research-outputs/search');
+  }
 
-  #my $urlget = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . '/research-outputs/search');
-  my $urlget = Mojo::URL->new($self->app->config->{apis}->{pure}->{url});
   my $params = {apiKey => $self->app->config->{apis}->{pure}->{key}};
   if ($size) {
     $params->{size} = $size;
@@ -1273,8 +1444,7 @@ sub puresearch {
   }
   $urlget->query($params);
 
-  my $ua     = Mojo::UserAgent->new;
-  my $getres = $ua->post($urlget => {Accept => 'application/json'} => json => {"keywordUris" => ["/dk/atira/pure/keywords/ir_status/$ir_status"]})->result;
+    my $getres = $self->ua->post($urlget => {Accept => 'application/json'} => json => {"keywordUris" => ["/dk/atira/pure/keywords/ir_status/$ir_status"]})->result;
   if ($getres->is_success) {
     $res->{response} = $getres->json;
   }
@@ -1380,6 +1550,35 @@ sub _pureimport_expirelocks {
     unshift @{$res->{alerts}}, {type => 'error', msg => 'error in pureimport locks cleanup: ' . $@};
   }
 
+  return $res;
+}
+
+sub pureimport_reject {
+  my ($self) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  my $username = $self->stash->{basic_auth_credentials}->{username};
+  my $password = $self->stash->{basic_auth_credentials}->{password};
+
+  if ($username ne $self->config->{ir}->{iraccount}) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Not authorized.'}]}, status => 403);
+    return;
+  }
+
+  my $uuid = $self->param('uuid');
+
+  my $urlget = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . "/research-outputs/$uuid");
+  my $params = {apiKey => $self->app->config->{apis}->{pure}->{key}};
+
+  my $getres = $self->ua->post($urlget => {Accept => 'application/json'} => json => {"keywordUris" => ["/dk/atira/pure/keywords/ir_status/ir_rejected"]})->result;
+  if ($getres->is_success) {
+    $res->{response} = $getres->json;
+  }
+  else {
+    $self->render(json => {alerts => [{type => 'error', msg => 'error updating Pure object ' . $getres->code . " " . $getres->message}]}, status => 500);
+    return;
+  }
   return $res;
 }
 

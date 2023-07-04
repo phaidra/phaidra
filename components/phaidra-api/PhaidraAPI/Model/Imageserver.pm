@@ -1,6 +1,5 @@
 package PhaidraAPI::Model::Imageserver;
 
-use Data::Dumper;
 use strict;
 use warnings;
 use v5.10;
@@ -26,10 +25,7 @@ sub get_url {
 
   my $p;
   my $p_name;
-  $c->app->log->error(Dumper($params_arg));
   my $params = $params_arg->to_hash;
-
-  
   for my $param_name ('FIF', 'IIIF', 'Zoomify', 'DeepZoom') {
     if (exists($params->{$param_name})) {
       $p      = $params->{$param_name};
@@ -41,8 +37,6 @@ sub get_url {
   unless ($p) {
     my $msg = 'Cannot find IIIF, Zoomify or DeepZoom parameter';
     $c->app->log->error($msg);
-    $c->app->log->error(Dumper($params_arg));
-    $c->app->log->error(Dumper($params));                        
     unshift @{$res->{alerts}}, {type => 'error', msg => $msg};
     $res->{status} = 400;
     return $res;
@@ -55,8 +49,8 @@ sub get_url {
 
   # check rights
   if ($rightscheck) {
-    my $usrnm = $c->stash->{basic_auth_credentials}->{username} ? $c->stash->{basic_auth_credentials}->{username} : '';
-    my $cachekey        = "img_rights_" .$usrnm. "_$pid";
+    my $usrnm           = $c->stash->{basic_auth_credentials}->{username} ? $c->stash->{basic_auth_credentials}->{username} : '';
+    my $cachekey        = "img_rights_" . $usrnm . "_$pid";
     my $status_cacheval = $c->app->chi->get($cachekey);
     unless ($status_cacheval) {
       $c->app->log->debug("[cache miss] $cachekey");
