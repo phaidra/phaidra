@@ -33,68 +33,132 @@
   #+NAME: technical-sketch
   #+begin_src dot :file "./images/construction.svg" :exports results
     graph G {
-        graph [rankdir="TB"]
-        subgraph cluster_host {
-            label = "localhost";
-            color = red;
-            node [shape = component, style = solid, color = red]
-            a1 [label="webserver"];
-            a2 [label="developer's browser", shape = doubleoctagon, color = magenta];
-            subgraph cluster_host_storage {
-                label = "host filesystem";
-                node [shape = folder, style = solid, color = blue]
-                color = blue;
-                b1 [label="Fedora data"];
-                b2 [label="MariaDB data"];
-                b3 [label="MongoDB data"];
-                b4 [label="iipsrv data"];
-                b5 [label="Apache Solr data"];
-                b6 [label="OpenLDAP data"];
+            graph [rankdir="TB"]
+
+            USER [label="PHAIDRA USER", shape = tripleoctagon];
+
+            subgraph cluster_host {
+                    ADMIN [label="Developer/Admin", shape = doubleoctagon, color = magenta];
+                    label = "PHAIDRA server firewall";
+                    color = red;
+                    node [shape = component, style = solid, color = red]
+
+
+                    subgraph cluster_host_storage {
+                            label = "PHAIDRA server mounted directories";
+                            color = blue;
+                            node [shape = folder, style = solid, color = blue]
+                            HS1 [label="${FEDORA_DATA}"];
+                            HS2 [label="./mariadb_init/phaidradb.sql.gz"];
+                            HS3 [label="${FEDORA_DATA}/data/ocfl-root"];
+                            HS4 [label="./mariadb_init/phaidradb.sql.gz"];
+                            HS5 [label="${PHAIDRADB_DATA}"];
+                            HS6 [label="${MONGOPHAIDRADB_DATA}"];
+                            HS7 [label="${OPENLDAP_DATA}"];
+                            HS8 [label="./container_configs/openldap"];
+                            HS9 [label="${SOLR_DATA}"];
+                            HS10 [label="${PIXELGECKO_CONVERTED}"];
+                            HS13 [label="${DBGATE_DATA}"];
+                            HS14 [label="./container_configs/nginx"];
+                            HS15 [label="${FEDORADB_DATA}"];
+                    }
+
+                    subgraph cluster_docker_network_host {
+                            label="PHAIDRA docker network";
+                            color = green;
+                            subgraph cluster_docker_phaidra_system {
+                                    label="PHAIDRA container system";
+                                    node [shape = component, style = solid, color = green]
+                                    DPS1 [label="fedora", URL="https://fedora.lyrasis.org/"];
+                                    DPS2 [label="api", URL="https://github.com/phaidra/phaidra-api"];
+                                    DPS3 [label="mariadb-phaidra", URL="https://mariadb.org/"];
+                                    DPS4 [label="mongodb-phaidra", URL="https://www.mongodb.com/"];
+                                    DPS5 [label="ui", URL="https://github.com/phaidra/phaidra-ui"];
+                                    DPS6 [label="openldap", URL="https://www.openldap.org/"];
+                                    DPS7 [label="solr", URL="https://solr.apache.org/"];
+                                    DPS8 [label="imageserver)", URL="https://github.com/ruven/iipsrv"];
+                                    DPS9 [label="pixelgecko"];
+                                    DPS10 [label="dbgate"];
+                                    DPS11 [label="lam"];
+                                    DPS12 [label="nginx"];
+                                    DPS13 [label="mariadb-fedora", URL="https://mariadb.org/"];
+                            }
+
+                            subgraph cluster_docker_network_volumes {
+                                    label="PHAIDRA container volumes";
+                                    node [shape = folder, style = solid, color = green]
+                                    DPV1 [label="/usr/local/tomcat/fcrepo-home"];
+                                    DPV2 [label="/var/log/phaidra"];
+                                    DPV3 [label="/mnt/fedora_ocfl_root:ro"];
+                                    DPV4 [label="/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro"];
+                                    DPV5 [label="/var/lib/mysql"];
+                                    DPV6 [label="/data/db"];
+                                    DPV7 [label="/bitnami/openldap"];
+                                    DPV8 [label="/ldifs:ro"];
+                                    DPV9 [label="/var/solr"];
+                                    DPV10 [label="/mnt/converted_images:ro"];
+                                    DPV11 [label="/mnt/fedora_ocfl_root:ro"];
+                                    DPV12 [label="/converted_images"];
+                                    DPV13 [label="/root/.dbgate"];
+                                    DPV14 [label="/etc/nginx/templates"];
+                                    DPV15 [label="/var/lib/mysql"];
+                            }
+                    }
             }
-            subgraph cluster_docker_network_host {
-                label="PHAIDRA components";
-                node [shape = component, style = solid, color = green]
-                color = green;
-                c1 [label="Fedora\n(object and metadata store)", URL="https://fedora.lyrasis.org/"];
-                c2 [label="phaidra-api\n(general transmitter)", URL="https://github.com/phaidra/phaidra-api"];
-                c3 [label="MariaDB\n(general databases)", URL="https://mariadb.org/"];
-                c4 [label="MongoDB\n(job-tracking)", URL="https://www.mongodb.com/"];
-                c5 [label="phaidra-ui\n(webinterface)", URL="https://github.com/phaidra/phaidra-ui"];
-                c6 [label="OpenLDAP\n(user management)", URL="https://www.openldap.org/"];
-                c7 [label="Apache Solr\n(object search engine)", URL="https://solr.apache.org/"];
-                c8 [label="iipsrv\n(display large images)", URL="https://github.com/ruven/iipsrv"];
-                c9 [label="pixelgecko\n(image conversion)"]
-                c10 [label="dbgate\n(webinterface for databases)"]
-                c11 [label="Ldap Account Manager\n(webinterface for openldap)"]
-            }}
 
-        d1 [label="Phaidra User", shape = tripleoctagon, style = solid]
+            // storage mapping
 
-            c1 -- c2 [color="green"];
-            c2 -- c3 [color="green"];
-            c2 -- c4 [color="green"];
-            c2 -- c5 [color="green"];
-            c2 -- c6 [color="green"];
-            c2 -- c7 [color="green"];
-            c1 -- c3 [color="green"];
-            c2 -- c8 [color="green"];
-            c9 -- c8 [color="green"];
-            c9 -- c4 [color="green"];
-            c10 -- c3 [color="green"];
-            c10 -- c4 [color="green"];
-            c11 -- c6 [color="green"];
+            DPV1 -- DPS1 [color="green"];
+            HS1 -- DPV1 [color="blue"];
 
-            b1 -- c1 [color="blue"];
-            b2 -- c3 [color="blue"];
-            b3 -- c4 [color="blue"];
-            b4 -- c8 [color="blue"];
-            b5 -- c7 [color="blue"];
-            b6 -- c6 [color="blue"];
+            DPV2,DPV3 -- DPS2 [color="green"];
+            HS2 -- DPV2 [color="blue"];
+            HS3 -- DPV3 [color="blue"];
 
-            c2,c5,c10,c11 -- a1 [color="red"];
-            c2,c5,c10,c11 -- a2 [color="magenta"];
+            DPV4,DPV5 -- DPS3 [color="green"];
+            HS4 -- DPV4 [color="blue"];
+            HS5 -- DPV5 [color="blue"];
 
-            a1 -- d1 [color="red"];
+            DPV6 -- DPS4 [color="green"];
+            HS6 --  DPV6 [color="blue"];
+
+            DPV7,DPV8 -- DPS6 [color="green"];
+            HS7 -- DPV7 [color="blue"];
+            HS8 -- DPV8 [color="blue"];
+
+            DPV9 -- DPS7 [color="green"];
+            HS9 -- DPV9 [color="blue"];
+
+            DPV10 -- DPS8 [color="green"];
+            HS10 -- DPV10 [color="blue"];
+
+            DPV11,DPV12 -- DPS9 [color="green"];
+            HS3 -- DPV11 [color="blue"];
+            HS10 -- DPV12 [color="blue"];
+
+            DPV13 -- DPS10 [color="green"];
+            HS13 -- DPV13 [color="blue"];
+
+            DPV14 -- DPS12 [color="green"];
+            HS14 -- DPV14 [color="blue"];
+
+            DPV15 -- DPS13 [color="green"];
+            HS15 -- DPV15 [color="blue"];
+
+            // system communication mapping
+
+            DPS1 -- DPS13 [color="orange"];
+            DPS2 -- DPS1,DPS3,DPS4,DPS5,DPS6,DPS7,DPS8,DPS12 [color="orange"];
+            DPS4 -- DPS9 [color="orange"];
+            DPS5 -- DPS12 [color="orange"];
+            DPS6 -- DPS11 [color="orange"];
+            DPS10 -- DPS3,DPS4,DPS13,DPS12 [color="orange"];            
+            DPS11 -- DPS12 [color="orange"];
+
+
+            // outside communication mapping
+
+            USER -- DPS12 [color="red"];
     }
   #+end_src
 

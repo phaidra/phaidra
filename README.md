@@ -492,6 +492,13 @@ following command (taken from: <https://hub.docker.com/_/httpd/>):
 daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker run --rm httpd:2.4.57-bookworm cat /usr/local/apache2/conf/httpd.conf > image_configs/phaidra-httpd.conf
 ```
 
+The original vhost-conf file has been acquired using the following
+command:
+
+``` example
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker run --rm httpd:2.4.57-bookworm cat /usr/local/apache2/conf/extra/httpd-vhosts.conf > container_configs/phaidra.conf
+```
+
 # export org to markdown and add badge
 
 ``` bash
