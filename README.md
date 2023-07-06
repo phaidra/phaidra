@@ -25,6 +25,12 @@ images as defined in the `./dockerfiles` directory. This is for testing
 purposes and runs on every commit to this repo, as a semi-manual
 verification if any cpanm-modules break the api-build.
 
+# System requirements
+
+We recommend using a dedicated machine for a Phaidra instance. To get
+started you will need a webserver (current testing takes place with
+nginx) and a recent Docker installed.
+
 # TODOs
 
 -   When logged in, F5 from
@@ -58,7 +64,7 @@ verification if any cpanm-modules break the api-build.
 
 This is work in progress.
 
-![](./images/construction.svg)
+![](./pictures/construction.svg)
 
 # persistance
 

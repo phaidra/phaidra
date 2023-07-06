@@ -10,6 +10,8 @@
 ** Build status
    We have a minimal CI activated -- right now it only builds the docker images as defined in the ~./dockerfiles~ directory.  This is for testing purposes and runs on every commit to this repo, as a semi-manual verification if any cpanm-modules break the api-build.
 
+* System requirements
+  We recommend using a dedicated machine for a Phaidra instance. To get started you will need a webserver (current testing takes place with nginx) and a recent Docker installed.
 * TODOs
   + When logged in, F5 from ~http://localhost:3001/ui/search?page=1&pagesize=10~ throws ~GET http://localhost:3001/ui/search?page=1&pagesize=10 500 (RuntimeError)~. Clearing the browser-cookies from localhost:3001 remediates this, but user will be logged out then.
   + After uploading an image, api throws 500 with ~GET http://localhost:3003/object/o:3/preview 500 (Internal Server Error)~ (this cannot be there immediately, as pixelgecko needs to convert the image first).
@@ -31,24 +33,24 @@
 * Technical sketch
   This is work in progress.
   #+NAME: technical-sketch
-  #+begin_src dot :file "./images/construction.svg" :exports results
+  #+begin_src dot :file "./pictures/construction.svg" :exports results
     graph G {
             graph [rankdir="TB"]
 
             USER [label="PHAIDRA USER", shape = tripleoctagon];
 
             subgraph cluster_host {
-                    ADMIN [label="Developer/Admin", shape = doubleoctagon, color = magenta];
+                    ADMIN [label="Developer/Admin", shape = doubleoctagon, color = black];
+                    WEBSERVER [label="Webserver", shape = component, color = magenta];
                     label = "PHAIDRA server firewall";
                     color = red;
                     node [shape = component, style = solid, color = red]
-
 
                     subgraph cluster_host_storage {
                             label = "PHAIDRA server mounted directories";
                             color = blue;
                             node [shape = folder, style = solid, color = blue]
-                            HS1 [label="${FEDORA_DATA}"];
+                            HS1 [label="${FEDORA_DATA}\n"];
                             HS2 [label="./mariadb_init/phaidradb.sql.gz"];
                             HS3 [label="${FEDORA_DATA}/data/ocfl-root"];
                             HS4 [label="./mariadb_init/phaidradb.sql.gz"];
@@ -59,7 +61,6 @@
                             HS9 [label="${SOLR_DATA}"];
                             HS10 [label="${PIXELGECKO_CONVERTED}"];
                             HS13 [label="${DBGATE_DATA}"];
-                            HS14 [label="./container_configs/nginx"];
                             HS15 [label="${FEDORADB_DATA}"];
                     }
 
@@ -80,7 +81,6 @@
                                     DPS9 [label="pixelgecko"];
                                     DPS10 [label="dbgate"];
                                     DPS11 [label="lam"];
-                                    DPS12 [label="nginx"];
                                     DPS13 [label="mariadb-fedora", URL="https://mariadb.org/"];
                             }
 
@@ -100,7 +100,6 @@
                                     DPV11 [label="/mnt/fedora_ocfl_root:ro"];
                                     DPV12 [label="/converted_images"];
                                     DPV13 [label="/root/.dbgate"];
-                                    DPV14 [label="/etc/nginx/templates"];
                                     DPV15 [label="/var/lib/mysql"];
                             }
                     }
@@ -139,31 +138,27 @@
             DPV13 -- DPS10 [color="green"];
             HS13 -- DPV13 [color="blue"];
 
-            DPV14 -- DPS12 [color="green"];
-            HS14 -- DPV14 [color="blue"];
-
             DPV15 -- DPS13 [color="green"];
             HS15 -- DPV15 [color="blue"];
 
             // system communication mapping
 
             DPS1 -- DPS13 [color="orange"];
-            DPS2 -- DPS1,DPS3,DPS4,DPS5,DPS6,DPS7,DPS8,DPS12 [color="orange"];
+            DPS2 -- DPS1,DPS3,DPS4,DPS5,DPS6,DPS7,DPS8 [color="orange"];
             DPS4 -- DPS9 [color="orange"];
-            DPS5 -- DPS12 [color="orange"];
             DPS6 -- DPS11 [color="orange"];
-            DPS10 -- DPS3,DPS4,DPS13,DPS12 [color="orange"];            
-            DPS11 -- DPS12 [color="orange"];
+            DPS10 -- DPS3,DPS4,DPS13 [color="orange"];            
+            WEBSERVER -- DPS1,DPS2,DPS5,DPS7,DPS10,DPS11 [color="magenta"];
 
 
             // outside communication mapping
 
-            USER -- DPS12 [color="red"];
+            USER -- WEBSERVER [color="red"];
     }
   #+end_src
 
   #+RESULTS: technical-sketch
-  [[file:./images/construction.svg]]
+  [[file:./pictures/construction.svg]]
 
 * persistance
   ~docker compose up -d~ will create a directory called ~phaidra_docker_data~ in your home directory for persistence.

@@ -148,9 +148,10 @@
             "port": "1389",
             "useridattribute": "uid",
             "usersearchbase": [
-                "dc=example,dc=org"
+                "ou=people,dc=example,dc=org"
             ],
             "usersearchfilter": "(&(uid={0})(objectClass=inetOrgPerson))",
+            "useridattribute": "uid",
             "userattributes": "cn",
             "securityprincipal": "",
             "securitycredentials": ""

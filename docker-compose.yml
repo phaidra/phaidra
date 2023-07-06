@@ -1,30 +1,8 @@
-version: '2'
+version: '3'
 
 name: phaidra
 
 services:
-
-  # apache:
-  #   build:
-  #     context: .
-  #     dockerfile: dockerfiles/apache.dockerfile
-  #   ports:
-  #     - "80:80"
-  #   volumes:
-  #     - ./container_configs/apache:/usr/local/apache2/conf/vhosts
-
-
-  nginx:
-    image: nginx:1.25.1-bookworm
-    ports:
-      - "8899:80"
-    volumes:
-      - ./container_configs/nginx:/etc/nginx/templates
-    depends_on:
-      - api
-      - ui
-      - dbgate
-
 
   imageserver:
     build:
@@ -49,14 +27,14 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/solr.dockerfile
-    ports:
-      - "9983:8983"
     volumes:
       - ${SOLR_DATA}:/var/solr
     command:
       - solr-precreate
       - phaidra
       - /tmp/phaidra
+    ports:
+      - "8983:8983"
 
   ui:
     depends_on:
@@ -64,6 +42,8 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/ui.dockerfile
+    ports:
+      - "3001:3001"
 
   api:
     depends_on:
@@ -73,11 +53,11 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/api.dockerfile
-    ports:
-      - "3003:3000"
     volumes:
       - ${PHAIDRA_API_LOGS}:/var/log/phaidra
       - ${FEDORA_DATA}/data/ocfl-root:/mnt/fedora_ocfl_root:ro
+    ports:
+      - "3000:3000"
 
   pixelgecko:
     depends_on:
@@ -101,7 +81,7 @@ services:
       MARIADB_USER: ${MARIADB_PHAIDRA_USER}
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
     volumes:
-      - ./mariadb_init/phaidradb.sql.gz:/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro
+      - ./container_configs/mariadb/phaidradb.sql.gz:/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro
       - ${PHAIDRADB_DATA}:/var/lib/mysql
 
   mariadb-fedora:
@@ -156,18 +136,20 @@ services:
       - mariadb-phaidra
       - mariadb-fedora
       - mongodb-phaidra
+    ports:
+      - "7777:3000"
 
   fedora:
     image: fcrepo/fcrepo:6.4.0
     restart: always
-    ports:
-      - "9090:8080"
     environment:
       - CATALINA_OPTS=${CATALINA_OPTS}
     volumes:
       - ${FEDORA_DATA}:/usr/local/tomcat/fcrepo-home
     depends_on:
       - mariadb-fedora
+    ports:
+      - "9999:8080"
 
   lam:
     image: ghcr.io/ldapaccountmanager/lam:8.4
@@ -178,6 +160,8 @@ services:
       - LDAP_USER=cn=${LDAP_ADMIN_USERNAME},${LDAP_ROOT}
       - LDAP_USER_DN=ou=people,${LDAP_ROOT}
       - LDAP_GROUPS_DN=ou=groups,${LDAP_ROOT}
+    ports:
+      - "8888:80"
 
   openldap:
     image: bitnami/openldap:2.6.4-debian-11-r44
@@ -191,4 +175,3 @@ services:
     volumes:
       - ${OPENLDAP_DATA}:/bitnami/openldap
       - ./container_configs/openldap:/ldifs:ro
-
