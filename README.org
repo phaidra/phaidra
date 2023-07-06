@@ -50,10 +50,10 @@
                             label = "PHAIDRA server mounted directories";
                             color = blue;
                             node [shape = folder, style = solid, color = blue]
-                            HS1 [label="${FEDORA_DATA}\n"];
-                            HS2 [label="./mariadb_init/phaidradb.sql.gz"];
+                            HS1 [label="${FEDORA_DATA}"];
+                            HS2 [label="${PHAIDRA_API_LOGS}"];
                             HS3 [label="${FEDORA_DATA}/data/ocfl-root"];
-                            HS4 [label="./mariadb_init/phaidradb.sql.gz"];
+                            HS4 [label="./container_configs/mariadb/phaidradb.sql.gz"];
                             HS5 [label="${PHAIDRADB_DATA}"];
                             HS6 [label="${MONGOPHAIDRADB_DATA}"];
                             HS7 [label="${OPENLDAP_DATA}"];
