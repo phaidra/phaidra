@@ -29,7 +29,11 @@ verification if any cpanm-modules break the api-build.
 
 We recommend using a dedicated machine for a Phaidra instance. To get
 started you will need a webserver (current testing takes place with
-nginx) and a recent Docker installed.
+nginx) and a recent Docker installed. There is [an nginx configuration
+file in this repo](./webserver_configs/nginx), that can be copied to
+`/etc/nginx/sites-available` and symlinked to
+`/etc/nginx/sites-enabled`. Unlink the default config and restart nginx,
+to have it ready for the dockerized phaidra system.
 
 # TODOs
 
