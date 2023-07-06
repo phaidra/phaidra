@@ -11,7 +11,7 @@
    We have a minimal CI activated -- right now it only builds the docker images as defined in the ~./dockerfiles~ directory.  This is for testing purposes and runs on every commit to this repo, as a semi-manual verification if any cpanm-modules break the api-build.
 
 * System requirements
-  We recommend using a dedicated machine for a Phaidra instance. To get started you will need a webserver (current testing takes place with nginx) and a recent Docker installed. There is [[file:./webserver_configs/nginx][an nginx configuration file in this repo]], that can be copied to ~/etc/nginx/sites-available~ and symlinked to ~/etc/nginx/sites-enabled~. Unlink the default config and restart nginx, to have it ready for the dockerized phaidra system.
+  We recommend using a dedicated machine for a Phaidra instance. To get started you will need a webserver (current testing takes place with nginx) and a recent Docker installed. There is [[file:./webserver_configs/nginx/phaidra.conf][an nginx configuration file in this repo]], that can be copied to ~/etc/nginx/sites-available~ and symlinked to ~/etc/nginx/sites-enabled~. Unlink the default config and restart nginx, to have it ready for the dockerized phaidra system.
 * TODOs
   + When logged in, F5 from ~http://localhost:3001/ui/search?page=1&pagesize=10~ throws ~GET http://localhost:3001/ui/search?page=1&pagesize=10 500 (RuntimeError)~. Clearing the browser-cookies from localhost:3001 remediates this, but user will be logged out then.
   + After uploading an image, api throws 500 with ~GET http://localhost:3003/object/o:3/preview 500 (Internal Server Error)~ (this cannot be there immediately, as pixelgecko needs to convert the image first).
