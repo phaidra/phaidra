@@ -158,7 +158,11 @@ daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ source ~/.bash
 
 Following
 <https://docs.docker.com/engine/security/rootless/#exposing-privileged-ports>
-we did the following changes to allow for the mentioned downside:
+we did the following changes to allow for the mentioned downside (we
+however still use dedicated webservers for now, as we could not find a
+proper solution to forward client IPs to containerized webservers, which
+is an issue when protecting resources. We focus on PHAIDRA itself for
+now):
 
 ``` example
 daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker compose down
