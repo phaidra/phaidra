@@ -36,7 +36,8 @@ This is work in progress.
 
 We recommend using a dedicated machine for a Phaidra instance. To get
 started you will need a webserver (current testing takes place with
-nginx) and a recent Docker installed.
+nginx) and a recent Docker installed, plus the package `uidmap` for
+running docker rootless.
 
 ## Docker notes
 
@@ -280,40 +281,132 @@ a0889d7dc75b   mariadb:11.0.2-jammy                   "docker-entrypoint.s…"  
 
 ## new folders on your system after startup
 
-Per default, `docker compose up -d` will create the directory
-`phaidra_docker_data` in your home directory to persist the data. After
-startup it should look like this:
+`docker compose up -d` will create directories in
+`$HOME/.local/share/docker/volumes` to store data created by PHAIDRA
+over system shutdowns, etc. After startup it should look like this:
 
 ``` example
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ ls ~/phaidra_docker_data/ -lah
-total 44K
-drwxr-xr-x 11 daniel daniel 4.0K Jul  5 13:46 .
-drwxr-xr-x 89 daniel daniel 4.0K Jul  7 08:53 ..
-drwxr-xr-x  7 daniel daniel 4.0K Jul  5 13:48 dbgate
-drwxr-xr-x  3 daniel daniel 4.0K Jul  5 13:46 fedora
-drwxr-xr-x  5 100998 100998 4.0K Jul  7 09:15 fedoradb
-drwxr-xr-x  4 100998 daniel 4.0K Jul  7 09:41 mongophaidradb
-drwxr-xr-x  4 daniel daniel 4.0K Jul  5 13:46 openldap
-drwxr-xr-x  2 daniel daniel 4.0K Jul  7 09:15 phaidra_api_logs
-drwxr-xr-x  6 100998 100998 4.0K Jul  7 09:15 phaidradb
-drwxr-xr-x  3 daniel daniel 4.0K Jul  6 14:03 pixelgecko
-drwxr-xr-x  4 108982 108982 4.0K Jul  5 13:46 solrdata
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker volume ls --filter label=com.docker.compose.project=phaidra
+DRIVER    VOLUME NAME
+local     phaidra_api_logs
+local     phaidra_dbgate
+local     phaidra_fedora
+local     phaidra_mariadb_fedora
+local     phaidra_mariadb_phaidra
+local     phaidra_mongodb_phaidra
+local     phaidra_openldap
+local     phaidra_pixelgecko
+local     phaidra_solr
+## sample volume inspection
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker volume inspect phaidra_api_logs 
+[
+    {
+        "CreatedAt": "2023-07-07T14:02:51+02:00",
+        "Driver": "local",
+        "Labels": {
+            "com.docker.compose.project": "phaidra",
+            "com.docker.compose.version": "2.18.1",
+            "com.docker.compose.volume": "api_logs"
+        },
+        "Mountpoint": "/home/daniel/.local/share/docker/volumes/phaidra_api_logs/_data",
+        "Name": "phaidra_api_logs",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+## listing the directories the 'standard way'
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ ls -lha ~/.local/share/docker/volumes/phaidra*
+/home/daniel/.local/share/docker/volumes/phaidra_api_logs:
+total 88K
+drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+drwxr-xr-x   2 daniel daniel 4.0K Jul  7 14:06 _data
+
+/home/daniel/.local/share/docker/volumes/phaidra_dbgate:
+total 88K
+drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+drwxr-xr-x   5 daniel daniel 4.0K Jul  7 14:02 _data
+
+/home/daniel/.local/share/docker/volumes/phaidra_fedora:
+total 88K
+drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+drwxr-xr-x   3 daniel daniel 4.0K Jul  7 14:03 _data
+
+/home/daniel/.local/share/docker/volumes/phaidra_mariadb_fedora:
+total 88K
+drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+drwxr-xr-x   5 100998 100998 4.0K Jul  7 14:06 _data
+
+/home/daniel/.local/share/docker/volumes/phaidra_mariadb_phaidra:
+total 88K
+drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+drwxr-xr-x   6 100998 100998 4.0K Jul  7 14:06 _data
+
+/home/daniel/.local/share/docker/volumes/phaidra_mongodb_phaidra:
+total 88K
+drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+drwxr-xr-x   4 100998 100998 4.0K Jul  7 14:06 _data
+
+/home/daniel/.local/share/docker/volumes/phaidra_openldap:
+total 88K
+drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+drwxr-xr-x   4 daniel daniel 4.0K Jul  7 14:02 _data
+
+/home/daniel/.local/share/docker/volumes/phaidra_pixelgecko:
+total 88K
+drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+drwxr-xr-x   2 daniel daniel 4.0K Jul  7 14:02 _data
+
+/home/daniel/.local/share/docker/volumes/phaidra_solr:
+total 88K
+drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+drwxrwx---   4 108982 daniel 4.0K Jul  7 14:02 _data
+## check volume sizes
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ sudo du -sh ~/.local/share/docker/volumes/phaidra_*
+[sudo] password for daniel: 
+16K    /home/daniel/.local/share/docker/volumes/phaidra_api_logs
+32K    /home/daniel/.local/share/docker/volumes/phaidra_dbgate
+320K   /home/daniel/.local/share/docker/volumes/phaidra_fedora
+138M   /home/daniel/.local/share/docker/volumes/phaidra_mariadb_fedora
+174M   /home/daniel/.local/share/docker/volumes/phaidra_mariadb_phaidra
+301M   /home/daniel/.local/share/docker/volumes/phaidra_mongodb_phaidra
+212K   /home/daniel/.local/share/docker/volumes/phaidra_openldap
+8.0K   /home/daniel/.local/share/docker/volumes/phaidra_pixelgecko
+440K   /home/daniel/.local/share/docker/volumes/phaidra_solr
 ```
+
+You might notice that inspecting the actual sizes of the directories
+requires `sudo` – this is due to the fact that solr, mariadb, and
+mongodb volumes make use of a separate user from within the container.
+The UIDs all come from the range your user is allowed to assign to using
+the `newuidmap` and `newgidmap` programs deriving from the `uidmap`
+package mentioned under system requirements. One can see this as a
+reminder to be careful when manipulating this kind of data (at least the
+databases can be manipulated from <http://localhost:8899/dbgate> without
+special permissions).
 
 # Complete cleanup
 
-During development things can become very cluttered. A very complete
+During development things can become very cluttered. A pretty complete
 cleanup (at the cost of an image rebuild) can be achieved by running the
 following commands:
 
 ``` example
-# shut down and remove running containers
+# shut down and remove running containers (from the repo directory)
 docker compose down
 
-# remove persisted data from previous runs
-sudo rm -r ~/phaidra_docker_data
+# remove persisted data from previous runs (from anywhere)
+docker volume rm $(docker volume ls --filter label=com.docker.compose.project=phaidra --quiet)
 
-# cleanup docker matter
+# cleanup docker matter (build caches, images..., from anywhere)
 docker system prune --all
 ```
 

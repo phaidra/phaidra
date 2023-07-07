@@ -28,19 +28,26 @@
                     subgraph cluster_host_storage {
                             label = "PHAIDRA server mounted directories";
                             color = blue;
-                            node [shape = folder, style = solid, color = blue]
-                            HS1 [label="${FEDORA_DATA}"];
-                            HS2 [label="${PHAIDRA_API_LOGS}"];
-                            HS3 [label="${FEDORA_DATA}/data/ocfl-root"];
-                            HS4 [label="./container_configs/mariadb/phaidradb.sql.gz"];
-                            HS5 [label="${PHAIDRADB_DATA}"];
-                            HS6 [label="${MONGOPHAIDRADB_DATA}"];
-                            HS7 [label="${OPENLDAP_DATA}"];
-                            HS8 [label="./container_configs/openldap"];
-                            HS9 [label="${SOLR_DATA}"];
-                            HS10 [label="${PIXELGECKO_CONVERTED}"];
-                            HS13 [label="${DBGATE_DATA}"];
-                            HS15 [label="${FEDORADB_DATA}"];
+                            subgraph cluster_named_volumes {
+                                    label = "Named volumes under $HOME/.local/share/docker/volumes/";
+                                    color = turquoise;
+                                    node [shape = folder, style = solid, color = turquoise]
+                                    HS1 [label="phaidra_fedora"];
+                                    HS2 [label="phaidra_api_logs"];
+                                    HS5 [label="phaidra_mariadb_phaidra"];
+                                    HS6 [label="phaidra_mongodb_phaidra"];
+                                    HS7 [label="phaidra_openldap"];
+                                    HS9 [label="phaidra_solr"];
+                                    HS10 [label="phaidra_pixelgecko"];
+                                    HS13 [label="phaidra_dbgate"];
+                                    HS15 [label="phaidra_mariadb_fedora"];
+                            }
+                            subgraph cluster_bind_mounts {
+                                    label = "Bind mounts under $PATH/phaidra-docker/container_configs/";
+                                    node [shape = folder, style = solid, color = blue]           
+                                    HS4 [label="mariadb/phaidradb.sql.gz"];
+                                    HS8 [label="openldap"];
+                            }
                     }
 
                     subgraph cluster_docker_network_host {
@@ -68,7 +75,7 @@
                                     node [shape = folder, style = solid, color = green]
                                     DPV1 [label="/usr/local/tomcat/fcrepo-home"];
                                     DPV2 [label="/var/log/phaidra"];
-                                    DPV3 [label="/mnt/fedora_ocfl_root:ro"];
+                                    DPV3 [label="/mnt/fedora:ro"];
                                     DPV4 [label="/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro"];
                                     DPV5 [label="/var/lib/mysql"];
                                     DPV6 [label="/data/db"];
@@ -76,8 +83,8 @@
                                     DPV8 [label="/ldifs:ro"];
                                     DPV9 [label="/var/solr"];
                                     DPV10 [label="/mnt/converted_images:ro"];
-                                    DPV11 [label="/mnt/fedora_ocfl_root:ro"];
-                                    DPV12 [label="/converted_images"];
+                                    DPV11 [label="/mnt/fedora:ro"];
+                                    DPV12 [label="/mnt/converted_images"];
                                     DPV13 [label="/root/.dbgate"];
                                     DPV15 [label="/var/lib/mysql"];
                             }
@@ -87,38 +94,38 @@
             // storage mapping
 
             DPV1 -- DPS1 [color="green"];
-            HS1 -- DPV1 [color="blue"];
+            HS1 -- DPV1 [color="turquoise"];
 
             DPV2,DPV3 -- DPS2 [color="green"];
-            HS2 -- DPV2 [color="blue"];
-            HS3 -- DPV3 [color="blue"];
+            HS2 -- DPV2 [color="turquoise"];
+            HS1 -- DPV3 [color="turquoise"];
 
             DPV4,DPV5 -- DPS3 [color="green"];
             HS4 -- DPV4 [color="blue"];
-            HS5 -- DPV5 [color="blue"];
+            HS5 -- DPV5 [color="turquoise"];
 
             DPV6 -- DPS4 [color="green"];
-            HS6 --  DPV6 [color="blue"];
+            HS6 --  DPV6 [color="turquoise"];
 
             DPV7,DPV8 -- DPS6 [color="green"];
-            HS7 -- DPV7 [color="blue"];
+            HS7 -- DPV7 [color="turquoise"];
             HS8 -- DPV8 [color="blue"];
 
             DPV9 -- DPS7 [color="green"];
-            HS9 -- DPV9 [color="blue"];
+            HS9 -- DPV9 [color="turquoise"];
 
             DPV10 -- DPS8 [color="green"];
-            HS10 -- DPV10 [color="blue"];
+            HS10 -- DPV10 [color="turquoise"];
 
             DPV11,DPV12 -- DPS9 [color="green"];
-            HS3 -- DPV11 [color="blue"];
-            HS10 -- DPV12 [color="blue"];
+            HS1 -- DPV11 [color="turquoise"];
+            HS10 -- DPV12 [color="turquoise"];
 
             DPV13 -- DPS10 [color="green"];
-            HS13 -- DPV13 [color="blue"];
+            HS13 -- DPV13 [color="turquoise"];
 
             DPV15 -- DPS13 [color="green"];
-            HS15 -- DPV15 [color="blue"];
+            HS15 -- DPV15 [color="turquoise"];
 
             // system communication mapping
 
@@ -140,7 +147,7 @@
   [[file:./pictures/construction.svg]]
 
 * System requirements
-  We recommend using a dedicated machine for a Phaidra instance. To get started you will need a webserver (current testing takes place with nginx) and a recent Docker installed.
+  We recommend using a dedicated machine for a Phaidra instance. To get started you will need a webserver (current testing takes place with nginx) and a recent Docker installed, plus the package ~uidmap~ for running docker rootless.
 ** Docker notes
   We run the docker services in rootless mode, to avoid uneccesary privileges for the services themselves.  On the downside this means that the reverse-proxy webserver-configuration has to be done on the host's admin level, as unpriviledged docker will not open priviledged ports like 80 and 443.  From a formerly priviledged docker one can do the following to change this:
   #+begin_example
@@ -333,33 +340,115 @@
    + Webinterface to Apache Solr at http://localhost:8899/solr (available on your computer only).
    + Webinterface to the underlying datastore at http://localhost:8899/fcrepo (available on your computer only, default credentials fedoraAdmin/fedoraAdmin).
 ** new folders on your system after startup
-   Per default, ~docker compose up -d~ will create the directory ~phaidra_docker_data~ in your home directory to persist the data.  After startup it should look like this:
+   ~docker compose up -d~ will create directories in ~$HOME/.local/share/docker/volumes~ to store data created by PHAIDRA over system shutdowns, etc.  After startup it should look like this:
    #+begin_example
-     daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ ls ~/phaidra_docker_data/ -lah
-     total 44K
-     drwxr-xr-x 11 daniel daniel 4.0K Jul  5 13:46 .
-     drwxr-xr-x 89 daniel daniel 4.0K Jul  7 08:53 ..
-     drwxr-xr-x  7 daniel daniel 4.0K Jul  5 13:48 dbgate
-     drwxr-xr-x  3 daniel daniel 4.0K Jul  5 13:46 fedora
-     drwxr-xr-x  5 100998 100998 4.0K Jul  7 09:15 fedoradb
-     drwxr-xr-x  4 100998 daniel 4.0K Jul  7 09:41 mongophaidradb
-     drwxr-xr-x  4 daniel daniel 4.0K Jul  5 13:46 openldap
-     drwxr-xr-x  2 daniel daniel 4.0K Jul  7 09:15 phaidra_api_logs
-     drwxr-xr-x  6 100998 100998 4.0K Jul  7 09:15 phaidradb
-     drwxr-xr-x  3 daniel daniel 4.0K Jul  6 14:03 pixelgecko
-     drwxr-xr-x  4 108982 108982 4.0K Jul  5 13:46 solrdata
+     daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker volume ls --filter label=com.docker.compose.project=phaidra
+     DRIVER    VOLUME NAME
+     local     phaidra_api_logs
+     local     phaidra_dbgate
+     local     phaidra_fedora
+     local     phaidra_mariadb_fedora
+     local     phaidra_mariadb_phaidra
+     local     phaidra_mongodb_phaidra
+     local     phaidra_openldap
+     local     phaidra_pixelgecko
+     local     phaidra_solr
+     ## sample volume inspection
+     daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker volume inspect phaidra_api_logs 
+     [
+         {
+             "CreatedAt": "2023-07-07T14:02:51+02:00",
+             "Driver": "local",
+             "Labels": {
+                 "com.docker.compose.project": "phaidra",
+                 "com.docker.compose.version": "2.18.1",
+                 "com.docker.compose.volume": "api_logs"
+             },
+             "Mountpoint": "/home/daniel/.local/share/docker/volumes/phaidra_api_logs/_data",
+             "Name": "phaidra_api_logs",
+             "Options": null,
+             "Scope": "local"
+         }
+     ]
+     ## listing the directories the 'standard way'
+     daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ ls -lha ~/.local/share/docker/volumes/phaidra*
+     /home/daniel/.local/share/docker/volumes/phaidra_api_logs:
+     total 88K
+     drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+     drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+     drwxr-xr-x   2 daniel daniel 4.0K Jul  7 14:06 _data
+
+     /home/daniel/.local/share/docker/volumes/phaidra_dbgate:
+     total 88K
+     drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+     drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+     drwxr-xr-x   5 daniel daniel 4.0K Jul  7 14:02 _data
+
+     /home/daniel/.local/share/docker/volumes/phaidra_fedora:
+     total 88K
+     drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+     drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+     drwxr-xr-x   3 daniel daniel 4.0K Jul  7 14:03 _data
+
+     /home/daniel/.local/share/docker/volumes/phaidra_mariadb_fedora:
+     total 88K
+     drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+     drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+     drwxr-xr-x   5 100998 100998 4.0K Jul  7 14:06 _data
+
+     /home/daniel/.local/share/docker/volumes/phaidra_mariadb_phaidra:
+     total 88K
+     drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+     drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+     drwxr-xr-x   6 100998 100998 4.0K Jul  7 14:06 _data
+
+     /home/daniel/.local/share/docker/volumes/phaidra_mongodb_phaidra:
+     total 88K
+     drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+     drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+     drwxr-xr-x   4 100998 100998 4.0K Jul  7 14:06 _data
+
+     /home/daniel/.local/share/docker/volumes/phaidra_openldap:
+     total 88K
+     drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+     drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+     drwxr-xr-x   4 daniel daniel 4.0K Jul  7 14:02 _data
+
+     /home/daniel/.local/share/docker/volumes/phaidra_pixelgecko:
+     total 88K
+     drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+     drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+     drwxr-xr-x   2 daniel daniel 4.0K Jul  7 14:02 _data
+
+     /home/daniel/.local/share/docker/volumes/phaidra_solr:
+     total 88K
+     drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
+     drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
+     drwxrwx---   4 108982 daniel 4.0K Jul  7 14:02 _data
+     ## check volume sizes
+     daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ sudo du -sh ~/.local/share/docker/volumes/phaidra_*
+     [sudo] password for daniel: 
+     16K	/home/daniel/.local/share/docker/volumes/phaidra_api_logs
+     32K	/home/daniel/.local/share/docker/volumes/phaidra_dbgate
+     320K	/home/daniel/.local/share/docker/volumes/phaidra_fedora
+     138M	/home/daniel/.local/share/docker/volumes/phaidra_mariadb_fedora
+     174M	/home/daniel/.local/share/docker/volumes/phaidra_mariadb_phaidra
+     301M	/home/daniel/.local/share/docker/volumes/phaidra_mongodb_phaidra
+     212K	/home/daniel/.local/share/docker/volumes/phaidra_openldap
+     8.0K	/home/daniel/.local/share/docker/volumes/phaidra_pixelgecko
+     440K	/home/daniel/.local/share/docker/volumes/phaidra_solr
    #+end_example
-   
+   You might notice that inspecting the actual sizes of the directories requires ~sudo~ -- this is due to the fact that solr, mariadb, and mongodb volumes make use of a separate user from within the container.  The UIDs all come from the range your user is allowed to assign to using the ~newuidmap~ and ~newgidmap~ programs deriving from the ~uidmap~ package mentioned under system requirements. One can see this as a reminder to be careful when manipulating this kind of data (at least the databases can be manipulated from http://localhost:8899/dbgate without special permissions).
 * Complete cleanup
-  During development things can become very cluttered.  A very complete cleanup (at the cost of an image rebuild) can be achieved by running the following commands:
+  During development things can become very cluttered.  A pretty complete cleanup (at the cost of an image rebuild) can be achieved by running the following commands:
   #+begin_example
-    # shut down and remove running containers
+    # shut down and remove running containers (from the repo directory)
     docker compose down
 
-    # remove persisted data from previous runs
-    sudo rm -r ~/phaidra_docker_data
+    # remove persisted data from previous runs (from anywhere)
+    docker volume rm $(docker volume ls --filter label=com.docker.compose.project=phaidra --quiet)
 
-    # cleanup docker matter
+    # cleanup docker matter (build caches, images..., from anywhere)
     docker system prune --all
   #+end_example
 
