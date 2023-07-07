@@ -29,26 +29,106 @@ verification if any cpanm-modules break the api-build.
 
 We recommend using a dedicated machine for a Phaidra instance. To get
 started you will need a webserver (current testing takes place with
-nginx) and a recent Docker installed. There is [an nginx configuration
-file in this repo](./webserver_configs/nginx/phaidra.conf), that can be
-copied to `/etc/nginx/sites-available` and symlinked to
-`/etc/nginx/sites-enabled`. Unlink the default config and restart nginx,
-to have it ready for the dockerized phaidra system.
+nginx) and a recent Docker installed.
 
-# TODOs
+# System startup
+
+There is [an nginx configuration file in this
+repo](./webserver_configs/nginx/phaidra.conf), that can be copied to
+`/etc/nginx/sites-available` and symlinked to
+`/etc/nginx/sites-enabled`. Unlink the default config to have it ready
+for the dockerized phaidra system.
+
+Once the configuration is in place, check if everything is right
+(`sudo nginx -t`) and restart the webserver to activate the new
+configuration (`sudo systemctl restart nginx.service`). If you visit
+<http://localhost:8899> you will get a `502 Bad Gateway`-Error in your
+browser. That is fine, PHAIDRA has not been started yet.
+
+Run `docker compose up -d` from this repo to start it up. At first run,
+this command will run for a few minutes, as some images will have to be
+downloaded and partly built as well.
+
+NOTE: If you make changes to files mentioned in the `dockerfiles`
+directory of this repo, make sure to remove the built images before
+running `docker compose up -d`. Otherwise you will keep on using the old
+images and notice not difference. E.g. if one does a change to
+`components/phaidra-api/PhaidraAPI.json` one will also have to run
+`docker rmi phaidra-docker-phaidra-api` to have it rebuilt on a new
+startup.
+
+## running containers after startup
+
+After starting the program you should see the following containers
+running:
+
+``` example
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker ps
+CONTAINER ID   IMAGE                                  COMMAND                  CREATED         STATUS                            PORTS                                       NAMES
+66000e95199e   phaidra-ui                             "npm run start"          4 seconds ago   Up 1 second                       0.0.0.0:3001->3001/tcp, :::3001->3001/tcp   phaidra-ui-1
+2b3a7bdfa4ee   phaidra-pixelgecko                     "perl pixelgecko.pl …"   4 seconds ago   Up 1 second                                                                   phaidra-pixelgecko-1
+500a9b42b8c9   phaidra-api                            "hypnotoad -f phaidr…"   4 seconds ago   Up 2 seconds                      0.0.0.0:3000->3000/tcp, :::3000->3000/tcp   phaidra-api-1
+6afdad0abd8c   dbgate/dbgate:5.2.5                    "docker-entrypoint.s…"   4 seconds ago   Up 2 seconds                      0.0.0.0:7777->3000/tcp, :::7777->3000/tcp   phaidra-dbgate-1
+ff1982420f09   phaidra-solr                           "docker-entrypoint.s…"   4 seconds ago   Up 2 seconds                      0.0.0.0:8983->8983/tcp, :::8983->8983/tcp   phaidra-solr-1
+7e5ba84114cc   fcrepo/fcrepo:6.4.0                    "catalina.sh run"        4 seconds ago   Up 2 seconds                      0.0.0.0:9999->8080/tcp, :::9999->8080/tcp   phaidra-fedora-1
+cd3ba700db29   mongo:5                                "docker-entrypoint.s…"   4 seconds ago   Up 3 seconds                      27017/tcp                                   phaidra-mongodb-phaidra-1
+4909c7ef8002   mariadb:10.5                           "docker-entrypoint.s…"   4 seconds ago   Up 3 seconds                      3306/tcp                                    phaidra-mariadb-fedora-1
+0a1466876040   ghcr.io/ldapaccountmanager/lam:8.4     "/usr/bin/dumb-init …"   4 seconds ago   Up 2 seconds (health: starting)   0.0.0.0:8888->80/tcp, :::8888->80/tcp       phaidra-lam-1
+a0889d7dc75b   mariadb:11.0.2-jammy                   "docker-entrypoint.s…"   4 seconds ago   Up 3 seconds                      3306/tcp                                    phaidra-mariadb-phaidra-1
+86e86def9f8d   phaidra-imageserver                    "/usr/sbin/apachectl…"   4 seconds ago   Up 3 seconds                      0.0.0.0:8081->80/tcp, :::8081->80/tcp       phaidra-imageserver-1
+5269bd16590a   bitnami/openldap:2.6.4-debian-11-r44   "/opt/bitnami/script…"   4 seconds ago   Up 3 seconds                      1389/tcp, 1636/tcp                          phaidra-openldap-1
+```
+
+## available webservices after startup
+
+-   PHAIDRA web-interface at <http://localhost:8899> (available in your
+    network).
+-   PHAIDRA API at <http://localhost:8899/api> (available in your
+    network).
+-   Webinterface to view, query (and if you for some reason need to –
+    manipulate) the databases at <http://localhost:8899/dbgate>
+    (available on your computer only).
+-   Webinterface to manage users at <http://localhost:8899/lam>
+    (available on your computer only, default credentials
+    admin/adminpassword).
+-   Webinterface to Apache Solr at <http://localhost:8899/solr>
+    (available on your computer only).
+-   Webinterface to the underlying datastore at
+    <http://localhost:8899/fcrepo> (available on your computer only,
+    default credentials fedoraAdmin/fedoraAdmin).
+
+## new folders on your system after startup
+
+Per default, `docker compose up -d` will create the directory
+`phaidra_docker_data` in your home directory to persist the data. After
+startup it should look like this:
+
+``` example
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ ls ~/phaidra_docker_data/ -lah
+total 44K
+drwxr-xr-x 11 daniel daniel 4.0K Jul  5 13:46 .
+drwxr-xr-x 89 daniel daniel 4.0K Jul  7 08:53 ..
+drwxr-xr-x  7 daniel daniel 4.0K Jul  5 13:48 dbgate
+drwxr-xr-x  3 daniel daniel 4.0K Jul  5 13:46 fedora
+drwxr-xr-x  5 100998 100998 4.0K Jul  7 09:15 fedoradb
+drwxr-xr-x  4 100998 daniel 4.0K Jul  7 09:41 mongophaidradb
+drwxr-xr-x  4 daniel daniel 4.0K Jul  5 13:46 openldap
+drwxr-xr-x  2 daniel daniel 4.0K Jul  7 09:15 phaidra_api_logs
+drwxr-xr-x  6 100998 100998 4.0K Jul  7 09:15 phaidradb
+drwxr-xr-x  3 daniel daniel 4.0K Jul  6 14:03 pixelgecko
+drwxr-xr-x  4 108982 108982 4.0K Jul  5 13:46 solrdata
+```
+
+# Known issues
 
 -   When logged in, F5 from
-    `http://localhost:3001/ui/search?page=1&pagesize=10` throws
-    `GET http://localhost:3001/ui/search?page=1&pagesize=10 500 (RuntimeError)`.
+    `http://localhost:8899/search?page=1&pagesize=10` throws
+    `GET http://localhost:8899/search?page=1&pagesize=10 500 (RuntimeError)`.
     Clearing the browser-cookies from localhost:3001 remediates this,
     but user will be logged out then.
 
--   After uploading an image, api throws 500 with
-    `GET http://localhost:3003/object/o:3/preview 500 (Internal Server Error)`
-    (this cannot be there immediately, as pixelgecko needs to convert
-    the image first).
-
--   Groups tab fails loading with
+-   Groups tab fails loading with (this will need work on GenericLDAP.pm
+    most likely).
 
     ``` example
     TypeError: t.filter is not a function
