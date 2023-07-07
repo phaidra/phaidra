@@ -11,24 +11,24 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - ${PIXELGECKO_CONVERTED}:/mnt/converted_images:ro
+      - pixelgecko:/mnt/converted_images:ro
 
-  solr-permission-fixer:
-    image: alpine:3.18.0
-    restart: no
-    entrypoint: |
-      /bin/sh -c "chown 8983:8983 /solr"
-    volumes:
-      - ${SOLR_DATA}:/solr
+  # solr-permission-fixer:
+  #   image: alpine:3.18.0
+  #   restart: no
+  #   entrypoint: |
+  #     /bin/sh -c "chown 8983:8983 /solr"
+  #   volumes:
+  #     - solr:/solr
 
   solr:
-    depends_on:
-      - solr-permission-fixer
+    # depends_on:
+    #   - solr-permission-fixer
     build:
       context: .
       dockerfile: dockerfiles/solr.dockerfile
     volumes:
-      - ${SOLR_DATA}:/var/solr
+      - solr:/var/solr
     command:
       - solr-precreate
       - phaidra
@@ -54,8 +54,8 @@ services:
       context: .
       dockerfile: dockerfiles/api.dockerfile
     volumes:
-      - ${PHAIDRA_API_LOGS}:/var/log/phaidra
-      - ${FEDORA_DATA}/data/ocfl-root:/mnt/fedora_ocfl_root:ro
+      - api_logs:/var/log/phaidra
+      - fedora:/mnt/fedora:ro
     ports:
       - "3000:3000"
 
@@ -69,8 +69,8 @@ services:
       context: .
       dockerfile: dockerfiles/pixelgecko.dockerfile
     volumes:
-      - ${FEDORA_DATA}/data/ocfl-root:/mnt/fedora_ocfl_root:ro
-      - ${PIXELGECKO_CONVERTED}:/converted_images
+      - fedora:/mnt/fedora:ro
+      - pixelgecko:/mnt/converted_images
 
   mariadb-phaidra:
     image: mariadb:11.0.2-jammy
@@ -82,7 +82,7 @@ services:
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
     volumes:
       - ./container_configs/mariadb/phaidradb.sql.gz:/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro
-      - ${PHAIDRADB_DATA}:/var/lib/mysql
+      - mariadb_phaidra:/var/lib/mysql
 
   mariadb-fedora:
     image: mariadb:10.5
@@ -93,7 +93,7 @@ services:
       MARIADB_USER: ${MARIADB_PHAIDRA_USER}
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
     volumes:
-      - ${FEDORADB_DATA}:/var/lib/mysql
+      - mariadb_fedora:/var/lib/mysql
 
   mongodb-phaidra:
     image: mongo:5
@@ -102,7 +102,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_PHAIDRA_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PHAIDRA_PASSWORD}
     volumes:
-      - ${MONGOPHAIDRADB_DATA}:/data/db
+      - mongodb_phaidra:/data/db
 
   dbgate:
     image: dbgate/dbgate:5.2.5
@@ -131,7 +131,7 @@ services:
       WEB_ROOT: /dbgate
 
     volumes:
-      - ${DBGATE_DATA}:/root/.dbgate
+      - dbgate:/root/.dbgate
     depends_on:
       - mariadb-phaidra
       - mariadb-fedora
@@ -145,7 +145,7 @@ services:
     environment:
       - CATALINA_OPTS=${CATALINA_OPTS}
     volumes:
-      - ${FEDORA_DATA}:/usr/local/tomcat/fcrepo-home
+      - fedora:/usr/local/tomcat/fcrepo-home
     depends_on:
       - mariadb-fedora
     ports:
@@ -171,7 +171,17 @@ services:
       - LDAP_PORT_NUMBER=${LDAP_PORT_NUMBER}
       - LDAP_ROOT=${LDAP_ROOT}
       - LDAP_CUSTOM_LDIF_DIR=/ldifs
-    user: "root"
     volumes:
-      - ${OPENLDAP_DATA}:/bitnami/openldap
+      - openldap:/bitnami/openldap
       - ./container_configs/openldap:/ldifs:ro
+
+volumes:
+  api_logs:
+  openldap:
+  fedora:
+  dbgate:
+  mongodb_phaidra:
+  mariadb_fedora:
+  mariadb_phaidra:
+  pixelgecko:
+  solr:

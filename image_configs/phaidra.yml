@@ -33,6 +33,6 @@ pixelgecko:
     password:              'phaidra'
     col:                   'jobs'
     activity:              'activity'
-  store:                 '/converted_images'
-  temp_path:             '/temp_images'
+  store:                 '/mnt/converted_images'
+  temp_path:             '/tmp'
 

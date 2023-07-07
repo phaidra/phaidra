@@ -11,7 +11,7 @@ EOF
 ADD ./../components/pixelgecko /opt/pixelgecko
 COPY ./../image_configs/phaidra.yml /etc/
 
-RUN mkdir /converted_images /temp_images
+RUN mkdir /converted_images
 
 WORKDIR /opt/pixelgecko
 ENTRYPOINT ["perl", "pixelgecko.pl", "--watch"]

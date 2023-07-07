@@ -28,7 +28,6 @@ EOF
 ARG CACHEBUST=1
 RUN mkdir -pv /usr/local/phaidra
 RUN mkdir -pv /var/log/phaidra
-RUN mkdir -v /mnt/fedora_ocfl_root
 ADD ./../components/phaidra-api /usr/local/phaidra/phaidra-api
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
