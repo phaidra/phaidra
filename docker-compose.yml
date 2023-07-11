@@ -13,17 +13,7 @@ services:
     volumes:
       - pixelgecko:/mnt/converted_images:ro
 
-  # solr-permission-fixer:
-  #   image: alpine:3.18.0
-  #   restart: no
-  #   entrypoint: |
-  #     /bin/sh -c "chown 8983:8983 /solr"
-  #   volumes:
-  #     - solr:/solr
-
   solr:
-    # depends_on:
-    #   - solr-permission-fixer
     build:
       context: .
       dockerfile: dockerfiles/solr.dockerfile
