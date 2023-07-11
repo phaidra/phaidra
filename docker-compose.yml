@@ -46,6 +46,7 @@ services:
     volumes:
       - api_logs:/var/log/phaidra
       - fedora:/mnt/fedora:ro
+      - ./container_configs/api/PhaidraAPI.json:/usr/local/phaidra/phaidra-api/PhaidraAPI.json
     ports:
       - "3000:3000"
 
