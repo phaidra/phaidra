@@ -8,6 +8,7 @@
         "heartbeat_timeout": 600
     },
     "mode": "production",
+    "scheme": "http",
     "baseurl": "localhost:8899",
     "basepath": "api",
     "secret": "changeme",
