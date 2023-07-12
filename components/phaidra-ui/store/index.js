@@ -470,6 +470,7 @@ export const mutations = {
     Vue.set(state.user, 'token', token)
   },
   setLoginData(state, logindata) {
+    console.log('setLoginData: ')
     const user = {
       username: logindata.username,
       firstname: logindata.firstname,
@@ -478,6 +479,7 @@ export const mutations = {
       org_units_l1: logindata.org_units_l1,
       org_units_l2: logindata.org_units_l2
     }
+    console.log(user)
     const data = {
       ...state.user,
       ...user
@@ -508,6 +510,7 @@ export const actions = {
 
   async nuxtServerInit({ commit, dispatch }, { req }) {
     const token = this.$cookies.get('XSRF-TOKEN')
+    console.log('nuxtServerInit setting token: ' + token)
     commit('setToken', token)
     if (token) {
       await dispatch('getLoginData')
@@ -598,6 +601,7 @@ export const actions = {
     }
   },
   async getLoginData({ commit, dispatch, state }) {
+    console.log('getLoginData token: ' + state.user.token)
     try {
       const response = await axios.get(state.instanceconfig.api + '/directory/user/data', {
         headers: {
@@ -614,6 +618,9 @@ export const actions = {
         commit('setToken', null)
         commit('setLoginData', { username: null, firstname: null, lastname: null, email: null, org_units_l1: null, org_units_l2: null })
         this.$cookies.remove('XSRF-TOKEN')
+      } else {
+        console.log('getLoginData error')
+        console.log(error)
       }
     }
   },
@@ -636,13 +643,16 @@ export const actions = {
           domain: state.instanceconfig.cookiedomain,
           path: '/',
           secure: true,
-          sameSite: 'strict'
+          sameSite: 'Strict'
         }
         )
+        console.log('setting token ' + response.data['XSRF-TOKEN'])
         commit('setToken', response.data['XSRF-TOKEN'])
         dispatch('getLoginData')
       }
     } catch (error) {
+      console.log('login error')
+      console.log(error)
     }
   },
   async logout({ commit, dispatch, state }) {
