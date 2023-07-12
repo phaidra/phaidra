@@ -154,8 +154,8 @@
             "usersearchfilter": "(&(uid={0})(objectClass=inetOrgPerson))",
             "useridattribute": "uid",
             "userattributes": "cn",
-            "securityprincipal": "",
-            "securitycredentials": ""
+            "securityprincipal": "cn=admin,dc=example,dc=org",
+            "securitycredentials": "adminpassword"
         }
     },
     "solr": {
