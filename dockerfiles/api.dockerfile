@@ -25,10 +25,9 @@ EOF
 RUN <<EOF
 cpanm Mojo::IOLoop::Delay
 EOF
-ARG CACHEBUST=1
 RUN mkdir -pv /usr/local/phaidra
 RUN mkdir -pv /var/log/phaidra
-ADD ./../components/phaidra-api /usr/local/phaidra/phaidra-api
+COPY ./../components/phaidra-api /usr/local/phaidra/phaidra-api
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]

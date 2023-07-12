@@ -46,7 +46,7 @@ services:
     volumes:
       - api_logs:/var/log/phaidra
       - fedora:/mnt/fedora:ro
-      - ./container_configs/api/PhaidraAPI.json:/usr/local/phaidra/phaidra-api/PhaidraAPI.json
+      - ./container_components/api/PhaidraAPI.json:/usr/local/phaidra/phaidra-api/PhaidraAPI.json:ro
     ports:
       - "3000:3000"
 
@@ -72,7 +72,7 @@ services:
       MARIADB_USER: ${MARIADB_PHAIDRA_USER}
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
     volumes:
-      - ./container_configs/mariadb/phaidradb.sql.gz:/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro
+      - ./container_components/mariadb/phaidradb.sql.gz:/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro
       - mariadb_phaidra:/var/lib/mysql
 
   mariadb-fedora:
@@ -164,7 +164,7 @@ services:
       - LDAP_CUSTOM_LDIF_DIR=/ldifs
     volumes:
       - openldap:/bitnami/openldap
-      - ./container_configs/openldap:/ldifs:ro
+      - ./container_components/openldap:/ldifs:ro
 
 volumes:
   api_logs:
