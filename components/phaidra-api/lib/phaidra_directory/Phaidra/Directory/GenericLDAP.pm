@@ -224,10 +224,13 @@ sub get_ldap {
   my $ldapMsg = $ldap->bind($secDN, password => $secPASS);
 
   if ($ldapMsg->is_error) {
+    $c->app->log->error("get_ldap error");
+    $c->app->log->error($ldapMsg->error);
     unshift @{$res->{alerts}}, {type => 'error', msg => $ldapMsg->error};
     return $res;
   }
 
+  $c->app->log->error("get_ldap OK");
   return $ldap;
 }
 
@@ -255,11 +258,12 @@ sub getLDAPEntryForUser {
       my $attrtype = $attr->{'type'};
       my @attvals  = @{$attr->{'vals'}};
       foreach my $val (@attvals) {
-	if ($attrtype eq 'uid') {
-	  if ($val eq $username) {
-	    return $ldapEntry;
-	  }
-	}
+        if ($attrtype eq 'uid') {
+          if ($val eq $username) {
+            $c->app->log->debug("getLDAPEntryForUser:\n".$c->app->dumper($ldapEntry));
+            return $ldapEntry;
+          }
+        }
       }
     }
   }
@@ -362,7 +366,7 @@ sub authenticate() {
 sub get_name {
   my ($self, $c, $username) = @_;
 
-  if (($username eq $c->app->config->{phaidra}->{adminusername}) && ($password eq $c->app->config->{phaidra}->{adminpassword})) {
+  if ($username eq $c->app->config->{phaidra}->{adminusername}) {
     return 'fedoraAdmin';
   }
 
@@ -396,10 +400,9 @@ sub get_email {
   my $c        = shift;
   my $username = shift;
 
-  if (($username eq $c->app->config->{phaidra}->{adminusername}) && ($password eq $c->app->config->{phaidra}->{adminpassword})) {
+  if ($username eq $c->app->config->{phaidra}->{adminusername}) {
     return 'admin.phaidra@univie.ac.at';
   }
-
 
   my $entry = $self->getLDAPEntryForUser($c, $username);
 
@@ -408,7 +411,7 @@ sub get_email {
     my @attvals  = @{$attr->{'vals'}};
     foreach my $val (@attvals) {
       if ($attrtype eq 'mail') {
-	return $val;
+        return $val;
       }
     }
   }
@@ -595,7 +598,7 @@ sub get_user_data {
   my $c        = shift;
   my $username = shift;
 
-  if (($username eq $c->app->config->{phaidra}->{adminusername}) && ($password eq $c->app->config->{phaidra}->{adminpassword})) {
+  if ($username eq $c->app->config->{phaidra}->{adminusername}) {
     return {username => 'fedoraAdmin', firstname => 'fedora', lastname => 'Admin'};
   }
 
@@ -627,7 +630,7 @@ sub is_superuser {
   my $c        = shift;
   my $username = shift;
 
-  $c->app->log->error("GenericLDAP.pm -- this method is not implemented");
+  return 0;
 }
 
 sub is_superuser_for_user {
@@ -635,8 +638,7 @@ sub is_superuser_for_user {
   my $c        = shift;
   my $username = shift;
 
-  # \@users
-  $c->app->log->error("GenericLDAP.pm -- this method is not implemented");
+  return [];
 }
 
 =head2 searchUser
