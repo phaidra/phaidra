@@ -1046,6 +1046,12 @@ sub get {
   return $self->_get($c, $pid, $dc_model, $search_model, $object_model, $ignorestatus);
 }
 
+sub removeInfoFedoraPrefix {
+  my ($self, $c, $pid) = @_;
+
+  return $pid =~ s/info:fedora\///r;
+}
+
 sub _get {
 
   my ($self, $c, $pid, $dc_model, $search_model, $object_model, $ignorestatus) = @_;
@@ -1094,32 +1100,32 @@ sub _get {
     }
     if (ref($fres->{references}) eq 'ARRAY') {
       for my $v (@{$fres->{references}}) {
-        push @{$index{references}}, $v;
+        push @{$index{references}}, $self->removeInfoFedoraPrefix($c, $v);
       }
     }
     if (ref($fres->{isbacksideof}) eq 'ARRAY') {
       for my $v (@{$fres->{isbacksideof}}) {
-        push @{$index{isbacksideof}}, $v;
+        push @{$index{isbacksideof}}, $self->removeInfoFedoraPrefix($c, $v);
       }
     }
     if (ref($fres->{isthumbnailfor}) eq 'ARRAY') {
       for my $v (@{$fres->{isthumbnailfor}}) {
-        push @{$index{isthumbnailfor}}, $v;
+        push @{$index{isthumbnailfor}}, $self->removeInfoFedoraPrefix($c, $v);
       }
     }
     if (ref($fres->{hassuccessor}) eq 'ARRAY') {
       for my $v (@{$fres->{hassuccessor}}) {
-        push @{$index{hassuccessor}}, $v;
+        push @{$index{hassuccessor}}, $self->removeInfoFedoraPrefix($c, $v);
       }
     }
     if (ref($fres->{isalternativeformatof}) eq 'ARRAY') {
       for my $v (@{$fres->{isalternativeformatof}}) {
-        push @{$index{isalternativeformatof}}, $v;
+        push @{$index{isalternativeformatof}}, $self->removeInfoFedoraPrefix($c, $v);
       }
     }
     if (ref($fres->{isalternativeversionof}) eq 'ARRAY') {
       for my $v (@{$fres->{isalternativeversionof}}) {
-        push @{$index{isalternativeversionof}}, $v;
+        push @{$index{isalternativeversionof}}, $self->removeInfoFedoraPrefix($c, $v);
       }
     }
     if (ref($fres->{isinadminset}) eq 'ARRAY') {
@@ -1129,17 +1135,17 @@ sub _get {
     }
     if (ref($fres->{haspart}) eq 'ARRAY') {
       for my $v (@{$fres->{haspart}}) {
-        push @{$index{haspart}}, $v;
+        push @{$index{haspart}}, $self->removeInfoFedoraPrefix($c, $v);
       }
     }
     if (ref($fres->{hasmember}) eq 'ARRAY') {
       for my $v (@{$fres->{hasmember}}) {
-        push @{$index{hasmember}}, $v;
+        push @{$index{hasmember}}, $self->removeInfoFedoraPrefix($c, $v);
       }
     }
     if (ref($fres->{hastrack}) eq 'ARRAY') {
       for my $v (@{$fres->{hastrack}}) {
-        push @{$index{hastrack}}, $v;
+        push @{$index{hastrack}}, $self->removeInfoFedoraPrefix($c, $v);
       }
     }
     if (ref($fres->{sameAs}) eq 'ARRAY') {

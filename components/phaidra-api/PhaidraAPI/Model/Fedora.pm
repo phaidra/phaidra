@@ -36,7 +36,7 @@ my %prefix2ns = (
   "http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#" => "ebucore"
 );
 
-sub getJsonldValue {
+sub getFirstJsonldValue {
   my ($self, $c, $jsonld, $p) = @_;
 
   for my $ob (@{$jsonld}) {
@@ -48,6 +48,23 @@ sub getJsonldValue {
       }
     }
   }
+}
+
+sub getJsonldValue {
+  my ($self, $c, $jsonld, $p) = @_;
+
+  my @a;
+  for my $ob (@{$jsonld}) {
+    if (exists($ob->{$p})) {
+      for my $ob1 (@{$ob->{$p}}) {
+        if (exists($ob1->{'@value'})) {
+          push @a, $ob1->{'@value'};
+        }
+      }
+      last;
+    }
+  }
+  return \@a;
 }
 
 sub _getObjectProperties {
@@ -83,19 +100,20 @@ sub getObjectProperties {
   my $props = $propres->{props};
 
   # cmodel
-  my $cmodel = $self->getJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#hasModel');
+  my $cmodel = $self->getFirstJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#hasModel');
   $cmodel =~ m/(info:fedora\/)(\w+):(\w+)/g;
   if ($2 eq 'cmodel' && defined($3) && ($3 ne '')) {
     $res->{cmodel} = $3;
   }
 
-  $res->{state}    = $self->getJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#state');
-  $res->{label}    = $self->getJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#label');
-  $res->{created}  = $self->getJsonldValue($c, $props, 'http://fedora.info/definitions/v4/repository#created');
-  $res->{modified} = $self->getJsonldValue($c, $props, 'http://fedora.info/definitions/v4/repository#lastModified');
+  $res->{state}    = $self->getFirstJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#state');
+  $res->{label}    = $self->getFirstJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#label');
+  $res->{created}  = $self->getFirstJsonldValue($c, $props, 'http://fedora.info/definitions/v4/repository#created');
+  $res->{modified} = $self->getFirstJsonldValue($c, $props, 'http://fedora.info/definitions/v4/repository#lastModified');
+
 
   # $res->{owner}                  = $self->getJsonldValue($c, $props, 'http://fedora.info/definitions/v4/repository#createdBy');
-  $res->{owner}                  = $self->getJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#ownerId');
+  $res->{owner}                  = $self->getFirstJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#ownerId');
   $res->{identifier}             = $self->getJsonldValue($c, $props, 'http://purl.org/dc/terms/identifier');
   $res->{references}             = $self->getJsonldValue($c, $props, 'http://purl.org/dc/terms/references');
   $res->{isbacksideof}           = $self->getJsonldValue($c, $props, 'http://phaidra.org/XML/V1.0/relations#isBackSideOf');
@@ -119,7 +137,7 @@ sub getObjectProperties {
       }
     }
   }
-  # $c->app->log->debug("XXXXXXXXXXXXXXX getObjectProperties:\n".$c->app->dumper($res));
+  $c->app->log->debug("XXXXXXXXXXXXXXX getObjectProperties:\n".$c->app->dumper($res));
   return $res;
 }
 
@@ -340,11 +358,13 @@ sub getDatastreamAttributes {
   my $getres = $c->ua->get($url => {'Accept' => 'application/ld+json'})->result;
 
   if ($getres->is_success) {
-    $res->{size} = $self->getJsonldValue($c, $getres->json, 'http://www.loc.gov/premis/rdf/v1#hasSize');
-    $res->{mimetype} = $self->getJsonldValue($c, $getres->json, 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasMimeType');
-    $res->{filename} = $self->getJsonldValue($c, $getres->json, 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#filename');
-    $res->{modified} = $self->getJsonldValue($c, $getres->json, 'http://fedora.info/definitions/v4/repository#lastModified');
-    $res->{created} = $self->getJsonldValue($c, $getres->json, 'http://fedora.info/definitions/v4/repository#created');
+    $res->{size} = $self->getFirstJsonldValue($c, $getres->json, 'http://www.loc.gov/premis/rdf/v1#hasSize');
+    $res->{mimetype} = $self->getFirstJsonldValue($c, $getres->json, 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasMimeType');
+    $res->{filename} = $self->getFirstJsonldValue($c, $getres->json, 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#filename');
+    $res->{modified} = $self->getFirstJsonldValue($c, $getres->json, 'http://fedora.info/definitions/v4/repository#lastModified');
+    $res->{created} = $self->getFirstJsonldValue($c, $getres->json, 'http://fedora.info/definitions/v4/repository#created');
+
+    
   }
   else {
     unshift @{$res->{alerts}}, {type => 'error', msg => $getres->message};
