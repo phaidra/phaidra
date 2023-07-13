@@ -1087,62 +1087,62 @@ sub _get {
     $index{cmodel}   = $fres->{cmodel};
     $index{created}  = $fres->{created};
     $index{modified} = $fres->{modified};
-    if ($fres->{identifier}) {
+    if (ref($fres->{identifier}) eq 'ARRAY') {
       for my $v (@{$fres->{identifier}}) {
         push @{$index{dc_identifier}}, $v;
       }
     }
-    if ($fres->{references}) {
+    if (ref($fres->{references}) eq 'ARRAY') {
       for my $v (@{$fres->{references}}) {
         push @{$index{references}}, $v;
       }
     }
-    if ($fres->{isbacksideof}) {
+    if (ref($fres->{isbacksideof}) eq 'ARRAY') {
       for my $v (@{$fres->{isbacksideof}}) {
         push @{$index{isbacksideof}}, $v;
       }
     }
-    if ($fres->{isthumbnailfor}) {
+    if (ref($fres->{isthumbnailfor}) eq 'ARRAY') {
       for my $v (@{$fres->{isthumbnailfor}}) {
         push @{$index{isthumbnailfor}}, $v;
       }
     }
-    if ($fres->{hassuccessor}) {
+    if (ref($fres->{hassuccessor}) eq 'ARRAY') {
       for my $v (@{$fres->{hassuccessor}}) {
         push @{$index{hassuccessor}}, $v;
       }
     }
-    if ($fres->{isalternativeformatof}) {
+    if (ref($fres->{isalternativeformatof}) eq 'ARRAY') {
       for my $v (@{$fres->{isalternativeformatof}}) {
         push @{$index{isalternativeformatof}}, $v;
       }
     }
-    if ($fres->{isalternativeversionof}) {
+    if (ref($fres->{isalternativeversionof}) eq 'ARRAY') {
       for my $v (@{$fres->{isalternativeversionof}}) {
         push @{$index{isalternativeversionof}}, $v;
       }
     }
-    if ($fres->{isinadminset}) {
+    if (ref($fres->{isinadminset}) eq 'ARRAY') {
       for my $v (@{$fres->{isinadminset}}) {
         push @{$index{isinadminset}}, $v;
       }
     }
-    if ($fres->{haspart}) {
+    if (ref($fres->{haspart}) eq 'ARRAY') {
       for my $v (@{$fres->{haspart}}) {
         push @{$index{haspart}}, $v;
       }
     }
-    if ($fres->{hasmember}) {
+    if (ref($fres->{hasmember}) eq 'ARRAY') {
       for my $v (@{$fres->{hasmember}}) {
         push @{$index{hasmember}}, $v;
       }
     }
-    if ($fres->{hastrack}) {
+    if (ref($fres->{hastrack}) eq 'ARRAY') {
       for my $v (@{$fres->{hastrack}}) {
         push @{$index{hastrack}}, $v;
       }
     }
-    if ($fres->{sameAs}) {
+    if (ref($fres->{sameAs}) eq 'ARRAY') {
       for my $v (@{$fres->{sameAs}}) {
         push @{$index{owl_sameas}}, $v;
       }
