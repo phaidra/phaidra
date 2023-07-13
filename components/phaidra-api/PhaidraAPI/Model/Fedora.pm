@@ -111,7 +111,6 @@ sub getObjectProperties {
   $res->{created}  = $self->getFirstJsonldValue($c, $props, 'http://fedora.info/definitions/v4/repository#created');
   $res->{modified} = $self->getFirstJsonldValue($c, $props, 'http://fedora.info/definitions/v4/repository#lastModified');
 
-
   # $res->{owner}                  = $self->getJsonldValue($c, $props, 'http://fedora.info/definitions/v4/repository#createdBy');
   $res->{owner}                  = $self->getFirstJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#ownerId');
   $res->{identifier}             = $self->getJsonldValue($c, $props, 'http://purl.org/dc/terms/identifier');
@@ -137,7 +136,7 @@ sub getObjectProperties {
       }
     }
   }
-  $c->app->log->debug("XXXXXXXXXXXXXXX getObjectProperties:\n".$c->app->dumper($res));
+  # $c->app->log->debug("XXXXXXXXXXXXXXX getObjectProperties:\n".$c->app->dumper($res));
   return $res;
 }
 
@@ -363,8 +362,6 @@ sub getDatastreamAttributes {
     $res->{filename} = $self->getFirstJsonldValue($c, $getres->json, 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#filename');
     $res->{modified} = $self->getFirstJsonldValue($c, $getres->json, 'http://fedora.info/definitions/v4/repository#lastModified');
     $res->{created} = $self->getFirstJsonldValue($c, $getres->json, 'http://fedora.info/definitions/v4/repository#created');
-
-    
   }
   else {
     unshift @{$res->{alerts}}, {type => 'error', msg => $getres->message};
