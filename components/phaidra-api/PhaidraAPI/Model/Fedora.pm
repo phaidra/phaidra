@@ -250,7 +250,7 @@ sub editTriples {
     # WHERE { }
     my ($pref, $prop) = $self->_getPrefProp($c, $p->{predicate});
     my $ns     = $prefix2ns{$pref};
-    my $curVal = $self->getJsonldValue($c, $currentValues, $p->{predicate});
+    my $curVal = $self->getFirstJsonldValue($c, $currentValues, $p->{predicate});
     my $newVal = $p->{object};
 
     $prefixes  .= "PREFIX " . $ns . ": <" . $pref . ">\n";
