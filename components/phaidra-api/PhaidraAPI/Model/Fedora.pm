@@ -119,7 +119,7 @@ sub getObjectProperties {
       }
     }
   }
-
+  # $c->app->log->debug("XXXXXXXXXXXXXXX getObjectProperties:\n".$c->app->dumper($res));
   return $res;
 }
 
@@ -181,12 +181,12 @@ sub _deleteOrInsertTriples {
     my $val = $p->{object};
 
     $prefixes .= "PREFIX " . $ns . ": <" . $pref . ">\n";
-    $values   .= "<> $ns:$prop \"$val\"\n";
+    $values   .= "<> $ns:$prop \"$val\".\n";
   }
   my $body = qq|
     $prefixes
     $action {
-      $values .
+      $values
     }
     WHERE { }
   |;
@@ -278,7 +278,7 @@ sub getDatastreamsHash {
 
   my $res = {alerts => [], status => 200};
 
-  my $propres = $self->_getObjectProperties($c, $pid);
+  my $propres = $self->getObjectProperties($c, $pid);
   if ($propres->{status} != 200) {
     return $propres;
   }
