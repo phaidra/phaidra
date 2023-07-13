@@ -51,8 +51,6 @@
         "staticbaseurl": "",
         "fedorastylesheeturl": "",
         "proaiRepositoryIdentifier": "",
-        "getuwmetadataurl": "https://fedora.phaidra-instance.univie.ac.at/fedora/get/{PID}/bdef:Asset/getUWMETADATA",
-        "triplestore": "localMysqlMPTTriplestore",
         "defaultlabel": "Created by phaidra-api",
         "intcallusername": "changeme",
         "intcallpassword": "changeme",
