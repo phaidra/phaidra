@@ -427,7 +427,7 @@ sub preview {
         my $hash = hmac_sha1_hex($pid, $self->app->config->{imageserver}->{hash_secret});
         $self->paf_mongo->get_collection('jobs')->insert_one({pid => $pid, cmodel => $cmodel, agent => "pige", status => "new", idhash => $hash, created => time});
         $self->app->log->info("Imageserver job queued: sleeping... pid[$pid] cm[$cmodel]");
-        Mojo::IOLoop->timer(8 => sub {}); Mojo::IOLoop->start;
+        Mojo::IOLoop->timer(8 => sub {}); Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
         $self->app->log->info("Imageserver job queued: waking up... pid[$pid] cm[$cmodel]");
         $imgsrvjobstatus = $self->imageserver_job_status($pid);
         $self->app->log->info("Imageserver job queued: job status [$imgsrvjobstatus] pid[$pid] cm[$cmodel]");
@@ -438,7 +438,7 @@ sub preview {
       }
       if ($imgsrvjobstatus eq 'new' or $imgsrvjobstatus eq 'in_progess') {
         $self->app->log->info("Imageserver job new/in_progess: sleeping... pid[$pid] cm[$cmodel]");
-        Mojo::IOLoop->timer(6 => sub {}); Mojo::IOLoop->start;
+        Mojo::IOLoop->timer(6 => sub {}); Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
         $self->app->log->info("Imageserver job new/in_progess: waking up... pid[$pid] cm[$cmodel]");
         $imgsrvjobstatus = $self->imageserver_job_status($pid);
         $self->app->log->info("Imageserver job new/in_progess: job status [$imgsrvjobstatus] pid[$pid] cm[$cmodel]");
