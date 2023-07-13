@@ -14,7 +14,7 @@
     "secret": "changeme",
     "enc_key": "changeme",
     "session_expiration": "7200",
-    "session_ip_match": 1,
+    "session_ip_match": 0,
     "inactivity_timeout": "7200",
     "readonly": "0",
     "allow_userdata_queries": "1",
