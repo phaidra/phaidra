@@ -437,28 +437,7 @@ docker system prune --all
 
 # Known issues
 
--   When logged in, F5 from
-    `http://localhost:8899/search?page=1&pagesize=10` throws
-    `GET http://localhost:8899/search?page=1&pagesize=10 500 (RuntimeError)`.
-    Clearing the browser-cookies from localhost:3001 remediates this,
-    but user will be logged out then.
-
--   Groups tab fails loading with (this will need work on GenericLDAP.pm
-    most likely).
-
-    ``` example
-    TypeError: t.filter is not a function
-        at 2ff10fc.js:2:2451840
-        at f.customFilterWithColumns (2ff10fc.js:2:2451924)
-        at f.filteredItems (2ff10fc.js:2:1283336)
-        at t.get (ac66118.js:2:21353)
-        at t.evaluate (ac66118.js:2:22349)
-        at f.filteredItems (ac66118.js:2:34834)
-        at f.computedItems (2ff10fc.js:2:1283404)
-        at t.get (ac66118.js:2:21353)
-        at t.evaluate (ac66118.js:2:22349)
-        at f.computedItems (ac66118.js:2:34834)
-    ```
+We keep searching.
 
 # Phaidra Components
 
