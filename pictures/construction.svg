@@ -16,18 +16,18 @@
 </g>
 <g id="clust2" class="cluster">
 <title>cluster_host_storage</title>
-<polygon fill="none" stroke="blue" points="431.86,-365 431.86,-479 2454.86,-479 2454.86,-365 431.86,-365"/>
-<text text-anchor="middle" x="1443.36" y="-463.8" font-family="Times,serif" font-size="14.00">PHAIDRA server mounted directories</text>
+<polygon fill="none" stroke="blue" points="431.86,-365 431.86,-479 2490.86,-479 2490.86,-365 431.86,-365"/>
+<text text-anchor="middle" x="1461.36" y="-463.8" font-family="Times,serif" font-size="14.00">PHAIDRA server mounted directories</text>
 </g>
 <g id="clust3" class="cluster">
 <title>cluster_named_volumes</title>
-<polygon fill="none" stroke="turquoise" points="899.86,-373 899.86,-448 2446.86,-448 2446.86,-373 899.86,-373"/>
-<text text-anchor="middle" x="1673.36" y="-432.8" font-family="Times,serif" font-size="14.00">Named volumes under $HOME/.local/share/docker/volumes/</text>
+<polygon fill="none" stroke="turquoise" points="935.86,-373 935.86,-448 2482.86,-448 2482.86,-373 935.86,-373"/>
+<text text-anchor="middle" x="1709.36" y="-432.8" font-family="Times,serif" font-size="14.00">Named volumes under $HOME/.local/share/docker/volumes/</text>
 </g>
 <g id="clust4" class="cluster">
 <title>cluster_bind_mounts</title>
-<polygon fill="none" stroke="blue" points="439.86,-373 439.86,-448 891.86,-448 891.86,-373 439.86,-373"/>
-<text text-anchor="middle" x="665.86" y="-432.8" font-family="Times,serif" font-size="14.00">Bind mounts under $PATH/phaidra&#45;docker/container_configs/</text>
+<polygon fill="none" stroke="blue" points="439.86,-373 439.86,-448 927.86,-448 927.86,-373 439.86,-373"/>
+<text text-anchor="middle" x="683.86" y="-432.8" font-family="Times,serif" font-size="14.00">Bind mounts under $PATH/phaidra&#45;docker/container_components/</text>
 </g>
 <g id="clust5" class="cluster">
 <title>cluster_docker_network_host</title>
@@ -165,8 +165,8 @@
 <!-- HS1 -->
 <g id="node4" class="node">
 <title>HS1</title>
-<polygon fill="none" stroke="turquoise" points="1455.86,-417 1452.86,-421 1431.86,-421 1428.86,-417 1331.86,-417 1331.86,-381 1455.86,-381 1455.86,-417"/>
-<text text-anchor="middle" x="1393.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_fedora</text>
+<polygon fill="none" stroke="turquoise" points="1491.86,-417 1488.86,-421 1467.86,-421 1464.86,-417 1367.86,-417 1367.86,-381 1491.86,-381 1491.86,-417"/>
+<text text-anchor="middle" x="1429.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_fedora</text>
 </g>
 <!-- DPV1 -->
 <g id="node27" class="node">
@@ -177,7 +177,7 @@
 <!-- HS1&#45;&#45;DPV1 -->
 <g id="edge2" class="edge">
 <title>HS1&#45;&#45;DPV1</title>
-<path fill="none" stroke="turquoise" d="M1364.08,-380.91C1351.73,-374.69 1337.01,-368.37 1322.86,-365 1270.74,-352.57 1133.05,-372.85 1081.86,-357 1040.9,-344.32 1000.3,-314.26 977.22,-295.09"/>
+<path fill="none" stroke="turquoise" d="M1400.09,-380.87C1387.74,-374.66 1373.02,-368.34 1358.86,-365 1298.93,-350.84 1140.73,-375.08 1081.86,-357 1040.87,-344.41 1000.28,-314.32 977.21,-295.12"/>
 </g>
 <!-- DPV3 -->
 <g id="node29" class="node">
@@ -188,7 +188,7 @@
 <!-- HS1&#45;&#45;DPV3 -->
 <g id="edge6" class="edge">
 <title>HS1&#45;&#45;DPV3</title>
-<path fill="none" stroke="turquoise" d="M1364.45,-380.96C1352.04,-374.67 1337.17,-368.29 1322.86,-365 1296.43,-358.93 859.45,-368.42 834.86,-357 807.11,-344.12 786.07,-314.12 774.88,-295.02"/>
+<path fill="none" stroke="turquoise" d="M1400.46,-380.95C1388.04,-374.66 1373.17,-368.28 1358.86,-365 1330.48,-358.5 861.28,-369.24 834.86,-357 807.11,-344.13 786.06,-314.13 774.88,-295.03"/>
 </g>
 <!-- DPV11 -->
 <g id="node37" class="node">
@@ -199,13 +199,13 @@
 <!-- HS1&#45;&#45;DPV11 -->
 <g id="edge23" class="edge">
 <title>HS1&#45;&#45;DPV11</title>
-<path fill="none" stroke="turquoise" d="M1423.27,-380.96C1435.68,-374.68 1450.55,-368.29 1464.86,-365 1490.04,-359.21 1906.43,-367.89 1929.86,-357 1957.6,-344.11 1978.65,-314.11 1989.84,-295.02"/>
+<path fill="none" stroke="turquoise" d="M1459.27,-380.98C1471.69,-374.69 1486.56,-368.3 1500.86,-365 1524.09,-359.64 1908.25,-367.06 1929.86,-357 1957.6,-344.09 1978.64,-314.1 1989.84,-295.01"/>
 </g>
 <!-- HS2 -->
 <g id="node5" class="node">
 <title>HS2</title>
-<polygon fill="none" stroke="turquoise" points="1189.86,-417 1186.86,-421 1165.86,-421 1162.86,-417 1053.86,-417 1053.86,-381 1189.86,-381 1189.86,-417"/>
-<text text-anchor="middle" x="1121.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_api_logs</text>
+<polygon fill="none" stroke="turquoise" points="1225.86,-417 1222.86,-421 1201.86,-421 1198.86,-417 1089.86,-417 1089.86,-381 1225.86,-381 1225.86,-417"/>
+<text text-anchor="middle" x="1157.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_api_logs</text>
 </g>
 <!-- DPV2 -->
 <g id="node28" class="node">
@@ -216,13 +216,13 @@
 <!-- HS2&#45;&#45;DPV2 -->
 <g id="edge5" class="edge">
 <title>HS2&#45;&#45;DPV2</title>
-<path fill="none" stroke="turquoise" d="M1089.81,-380.97C1076.32,-374.69 1060.22,-368.3 1044.86,-365 1020.85,-359.84 625.31,-366.97 602.86,-357 574.01,-344.18 551.16,-314.16 538.85,-295.04"/>
+<path fill="none" stroke="turquoise" d="M1125.81,-380.96C1112.33,-374.67 1096.22,-368.29 1080.86,-365 1054.89,-359.44 627.14,-367.77 602.86,-357 574,-344.2 551.15,-314.18 538.85,-295.05"/>
 </g>
 <!-- HS5 -->
 <g id="node6" class="node">
 <title>HS5</title>
-<polygon fill="none" stroke="turquoise" points="1897.36,-417 1894.36,-421 1873.36,-421 1870.36,-417 1698.36,-417 1698.36,-381 1897.36,-381 1897.36,-417"/>
-<text text-anchor="middle" x="1797.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_mariadb_phaidra</text>
+<polygon fill="none" stroke="turquoise" points="1933.36,-417 1930.36,-421 1909.36,-421 1906.36,-417 1734.36,-417 1734.36,-381 1933.36,-381 1933.36,-417"/>
+<text text-anchor="middle" x="1833.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_mariadb_phaidra</text>
 </g>
 <!-- DPV5 -->
 <g id="node31" class="node">
@@ -233,13 +233,13 @@
 <!-- HS5&#45;&#45;DPV5 -->
 <g id="edge10" class="edge">
 <title>HS5&#45;&#45;DPV5</title>
-<path fill="none" stroke="turquoise" d="M1783.82,-380.81C1765.19,-357.99 1732.49,-317.96 1713.88,-295.16"/>
+<path fill="none" stroke="turquoise" d="M1800.54,-380.88C1788.99,-374.19 1776.33,-365.97 1765.86,-357 1744.15,-338.39 1723.8,-312.18 1711.59,-295.14"/>
 </g>
 <!-- HS6 -->
 <g id="node7" class="node">
 <title>HS6</title>
-<polygon fill="none" stroke="turquoise" points="1679.86,-417 1676.86,-421 1655.86,-421 1652.86,-417 1473.86,-417 1473.86,-381 1679.86,-381 1679.86,-417"/>
-<text text-anchor="middle" x="1576.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_mongodb_phaidra</text>
+<polygon fill="none" stroke="turquoise" points="1715.86,-417 1712.86,-421 1691.86,-421 1688.86,-417 1509.86,-417 1509.86,-381 1715.86,-381 1715.86,-417"/>
+<text text-anchor="middle" x="1612.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_mongodb_phaidra</text>
 </g>
 <!-- DPV6 -->
 <g id="node32" class="node">
@@ -250,13 +250,13 @@
 <!-- HS6&#45;&#45;DPV6 -->
 <g id="edge12" class="edge">
 <title>HS6&#45;&#45;DPV6</title>
-<path fill="none" stroke="turquoise" d="M1562.66,-380.81C1556.92,-373.61 1550.36,-365.05 1544.86,-357 1530.72,-336.32 1516.25,-311.29 1507.17,-295.03"/>
+<path fill="none" stroke="turquoise" d="M1577.31,-380.97C1566.09,-374.5 1554.19,-366.39 1544.86,-357 1526.75,-338.78 1512.83,-312.23 1504.99,-295.04"/>
 </g>
 <!-- HS7 -->
 <g id="node8" class="node">
 <title>HS7</title>
-<polygon fill="none" stroke="turquoise" points="2058.36,-417 2055.36,-421 2034.36,-421 2031.36,-417 1915.36,-417 1915.36,-381 2058.36,-381 2058.36,-417"/>
-<text text-anchor="middle" x="1986.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_openldap</text>
+<polygon fill="none" stroke="turquoise" points="2094.36,-417 2091.36,-421 2070.36,-421 2067.36,-417 1951.36,-417 1951.36,-381 2094.36,-381 2094.36,-417"/>
+<text text-anchor="middle" x="2022.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_openldap</text>
 </g>
 <!-- DPV7 -->
 <g id="node33" class="node">
@@ -267,13 +267,13 @@
 <!-- HS7&#45;&#45;DPV7 -->
 <g id="edge15" class="edge">
 <title>HS7&#45;&#45;DPV7</title>
-<path fill="none" stroke="turquoise" d="M1962.08,-380.9C1952.16,-373.79 1940.75,-365.27 1930.86,-357 1906.75,-336.84 1880.78,-311.47 1864.44,-295"/>
+<path fill="none" stroke="turquoise" d="M1976.32,-380.92C1961.24,-374.44 1944.81,-366.34 1930.86,-357 1904.25,-339.18 1878.28,-312.53 1862.67,-295.2"/>
 </g>
 <!-- HS9 -->
 <g id="node9" class="node">
 <title>HS9</title>
-<polygon fill="none" stroke="turquoise" points="1313.36,-417 1310.36,-421 1289.36,-421 1286.36,-417 1208.36,-417 1208.36,-381 1313.36,-381 1313.36,-417"/>
-<text text-anchor="middle" x="1260.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_solr</text>
+<polygon fill="none" stroke="turquoise" points="1349.36,-417 1346.36,-421 1325.36,-421 1322.36,-417 1244.36,-417 1244.36,-381 1349.36,-381 1349.36,-417"/>
+<text text-anchor="middle" x="1296.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_solr</text>
 </g>
 <!-- DPV9 -->
 <g id="node35" class="node">
@@ -284,13 +284,13 @@
 <!-- HS9&#45;&#45;DPV9 -->
 <g id="edge18" class="edge">
 <title>HS9&#45;&#45;DPV9</title>
-<path fill="none" stroke="turquoise" d="M1235.44,-380.96C1224.64,-374.68 1211.61,-368.29 1198.86,-365 1171.91,-358.04 722.01,-370.84 697.86,-357 674.61,-343.67 661.27,-314.12 654.8,-295.17"/>
+<path fill="none" stroke="turquoise" d="M1271.44,-380.96C1260.64,-374.67 1247.61,-368.28 1234.86,-365 1205.97,-357.56 723.76,-371.82 697.86,-357 674.6,-343.69 661.26,-314.12 654.8,-295.18"/>
 </g>
 <!-- HS10 -->
 <g id="node10" class="node">
 <title>HS10</title>
-<polygon fill="none" stroke="turquoise" points="2438.86,-417 2435.86,-421 2414.86,-421 2411.86,-417 2284.86,-417 2284.86,-381 2438.86,-381 2438.86,-417"/>
-<text text-anchor="middle" x="2361.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_pixelgecko</text>
+<polygon fill="none" stroke="turquoise" points="2474.86,-417 2471.86,-421 2450.86,-421 2447.86,-417 2320.86,-417 2320.86,-381 2474.86,-381 2474.86,-417"/>
+<text text-anchor="middle" x="2397.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_pixelgecko</text>
 </g>
 <!-- DPV10 -->
 <g id="node36" class="node">
@@ -301,7 +301,7 @@
 <!-- HS10&#45;&#45;DPV10 -->
 <g id="edge20" class="edge">
 <title>HS10&#45;&#45;DPV10</title>
-<path fill="none" stroke="turquoise" d="M2354.55,-380.81C2344.86,-357.99 2327.84,-317.96 2318.15,-295.16"/>
+<path fill="none" stroke="turquoise" d="M2385.4,-380.81C2368.86,-357.99 2339.83,-317.96 2323.3,-295.16"/>
 </g>
 <!-- DPV12 -->
 <g id="node38" class="node">
@@ -312,13 +312,13 @@
 <!-- HS10&#45;&#45;DPV12 -->
 <g id="edge24" class="edge">
 <title>HS10&#45;&#45;DPV12</title>
-<path fill="none" stroke="turquoise" d="M2387.83,-380.83C2398.49,-373.63 2410.88,-365.07 2421.86,-357 2449.85,-336.42 2481.12,-311.37 2501.12,-295.07"/>
+<path fill="none" stroke="turquoise" d="M2415.63,-380.81C2439.2,-357.99 2480.57,-317.96 2504.13,-295.16"/>
 </g>
 <!-- HS13 -->
 <g id="node11" class="node">
 <title>HS13</title>
-<polygon fill="none" stroke="turquoise" points="1035.86,-417 1032.86,-421 1011.86,-421 1008.86,-417 907.86,-417 907.86,-381 1035.86,-381 1035.86,-417"/>
-<text text-anchor="middle" x="971.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_dbgate</text>
+<polygon fill="none" stroke="turquoise" points="1071.86,-417 1068.86,-421 1047.86,-421 1044.86,-417 943.86,-417 943.86,-381 1071.86,-381 1071.86,-417"/>
+<text text-anchor="middle" x="1007.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_dbgate</text>
 </g>
 <!-- DPV13 -->
 <g id="node39" class="node">
@@ -329,13 +329,13 @@
 <!-- HS13&#45;&#45;DPV13 -->
 <g id="edge26" class="edge">
 <title>HS13&#45;&#45;DPV13</title>
-<path fill="none" stroke="turquoise" d="M940.25,-380.97C926.94,-374.69 911.04,-368.3 895.86,-365 871.92,-359.8 476.88,-367.75 454.86,-357 428.37,-344.07 409.21,-314.39 399.08,-295.32"/>
+<path fill="none" stroke="turquoise" d="M976.25,-380.96C962.94,-374.67 947.04,-368.29 931.86,-365 905.96,-359.39 478.69,-368.61 454.86,-357 428.36,-344.09 409.2,-314.4 399.08,-295.32"/>
 </g>
 <!-- HS15 -->
 <g id="node12" class="node">
 <title>HS15</title>
-<polygon fill="none" stroke="turquoise" points="2266.86,-417 2263.86,-421 2242.86,-421 2239.86,-417 2076.86,-417 2076.86,-381 2266.86,-381 2266.86,-417"/>
-<text text-anchor="middle" x="2171.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_mariadb_fedora</text>
+<polygon fill="none" stroke="turquoise" points="2302.86,-417 2299.86,-421 2278.86,-421 2275.86,-417 2112.86,-417 2112.86,-381 2302.86,-381 2302.86,-417"/>
+<text text-anchor="middle" x="2207.86" y="-395.3" font-family="Times,serif" font-size="14.00">phaidra_mariadb_fedora</text>
 </g>
 <!-- DPV15 -->
 <g id="node40" class="node">
@@ -346,13 +346,13 @@
 <!-- HS15&#45;&#45;DPV15 -->
 <g id="edge28" class="edge">
 <title>HS15&#45;&#45;DPV15</title>
-<path fill="none" stroke="turquoise" d="M2166.42,-380.81C2159.19,-357.99 2146.51,-317.96 2139.3,-295.16"/>
+<path fill="none" stroke="turquoise" d="M2197.26,-380.81C2183.19,-357.99 2158.5,-317.96 2144.44,-295.16"/>
 </g>
 <!-- HS4 -->
 <g id="node13" class="node">
 <title>HS4</title>
-<polygon fill="none" stroke="blue" points="783.86,-417 780.86,-421 759.86,-421 756.86,-417 583.86,-417 583.86,-381 783.86,-381 783.86,-417"/>
-<text text-anchor="middle" x="683.86" y="-395.3" font-family="Times,serif" font-size="14.00">mariadb/phaidradb.sql.gz</text>
+<polygon fill="none" stroke="blue" points="819.86,-417 816.86,-421 795.86,-421 792.86,-417 619.86,-417 619.86,-381 819.86,-381 819.86,-417"/>
+<text text-anchor="middle" x="719.86" y="-395.3" font-family="Times,serif" font-size="14.00">mariadb/phaidradb.sql.gz</text>
 </g>
 <!-- DPV4 -->
 <g id="node30" class="node">
@@ -363,13 +363,13 @@
 <!-- HS4&#45;&#45;DPV4 -->
 <g id="edge9" class="edge">
 <title>HS4&#45;&#45;DPV4</title>
-<path fill="none" stroke="blue" d="M730.43,-380.92C749.51,-374.71 771.98,-368.39 792.86,-365 856.28,-354.71 1019.1,-370.75 1081.86,-357 1139.17,-344.45 1200.94,-314.35 1236.63,-295.14"/>
+<path fill="none" stroke="blue" d="M766.44,-380.96C785.52,-374.76 807.98,-368.43 828.86,-365 884.37,-355.88 1026.94,-369.14 1081.86,-357 1139.15,-344.33 1200.92,-314.27 1236.62,-295.1"/>
 </g>
 <!-- HS8 -->
 <g id="node14" class="node">
 <title>HS8</title>
-<polygon fill="none" stroke="blue" points="883.86,-417 880.86,-421 859.86,-421 856.86,-417 801.86,-417 801.86,-381 883.86,-381 883.86,-417"/>
-<text text-anchor="middle" x="842.86" y="-395.3" font-family="Times,serif" font-size="14.00">openldap</text>
+<polygon fill="none" stroke="blue" points="919.86,-417 916.86,-421 895.86,-421 892.86,-417 837.86,-417 837.86,-381 919.86,-381 919.86,-417"/>
+<text text-anchor="middle" x="878.86" y="-395.3" font-family="Times,serif" font-size="14.00">openldap</text>
 </g>
 <!-- DPV8 -->
 <g id="node34" class="node">
@@ -380,7 +380,7 @@
 <!-- HS8&#45;&#45;DPV8 -->
 <g id="edge16" class="edge">
 <title>HS8&#45;&#45;DPV8</title>
-<path fill="none" stroke="blue" d="M864.26,-380.96C873.44,-374.67 884.63,-368.29 895.86,-365 913.16,-359.94 1529.37,-366.23 1544.86,-357 1567.38,-343.58 1579.24,-314.05 1584.77,-295.14"/>
+<path fill="none" stroke="blue" d="M900.26,-380.96C909.44,-374.68 920.63,-368.29 931.86,-365 964.55,-355.43 1515.61,-374.45 1544.86,-357 1567.38,-343.57 1579.24,-314.04 1584.77,-295.14"/>
 </g>
 <!-- DPS13 -->
 <g id="node26" class="node">

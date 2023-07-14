@@ -43,7 +43,7 @@
                                     HS15 [label="phaidra_mariadb_fedora"];
                             }
                             subgraph cluster_bind_mounts {
-                                    label = "Bind mounts under $PATH/phaidra-docker/container_configs/";
+                                    label = "Bind mounts under $PATH/phaidra-docker/container_components/";
                                     node [shape = folder, style = solid, color = blue]           
                                     HS4 [label="mariadb/phaidradb.sql.gz"];
                                     HS8 [label="openldap"];
