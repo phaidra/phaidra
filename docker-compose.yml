@@ -62,6 +62,8 @@ services:
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
+    deploy:
+      replicas: 4
 
   mariadb-phaidra:
     image: mariadb:11.0.2-jammy

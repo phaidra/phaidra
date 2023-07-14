@@ -9,9 +9,7 @@ apt-get clean
 EOF
 
 ADD ./../components/pixelgecko /opt/pixelgecko
-COPY ./../image_components/phaidra.yml /etc/
-
-RUN mkdir /converted_images
+COPY ./../image_components/pixelgecko/pixelgecko.yml /etc/
 
 WORKDIR /opt/pixelgecko
 ENTRYPOINT ["perl", "pixelgecko.pl", "--watch"]

@@ -10,9 +10,9 @@ use FileHandle;
 autoflush STDOUT 1;
 autoflush STDERR 1;
 
-my $fnm_config= '/etc/phaidra.yml';
+my $fnm_config= '/etc/pixelgecko.yml';
 my $op_mode;
-my $sleep_time= 60;
+my $sleep_time= 3;
 
 my $agent_name= 'pige';
 
@@ -105,7 +105,7 @@ sub process_job_queue
             my $db = exists($config->{pixelgecko}->{mongodb}->{database}) ?
               $config->{pixelgecko}->{mongodb}->{database} :
               $config->{pixelgecko}->{mongodb}->{db_name};
-            print scalar localtime(), " ", "no new jobs found in ".
+              print scalar localtime(), " ", "no new jobs found in ".
               $config->{pixelgecko}->{mongodb}->{host}."/$db/".
               $config->{pixelgecko}->{mongodb}->{col}.", sleeping until ",
               scalar localtime(time()+ $sleep_time), "\n";

@@ -22,17 +22,3 @@ fedora:
   scheme:                  'http'
   intcalluser:             'some user'
   intcallpass:             'some password'
-
-pixelgecko:
-  mongodb:
-    host:                  'mongodb-phaidra'
-    ## authentication database
-    db_name:               'admin'
-    database:              'paf_mongodb'
-    username:              'phaidra'
-    password:              'phaidra'
-    col:                   'jobs'
-    activity:              'activity'
-  store:                 '/mnt/converted_images'
-  temp_path:             '/tmp'
-
