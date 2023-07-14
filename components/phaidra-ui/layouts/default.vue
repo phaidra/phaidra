@@ -121,8 +121,6 @@ export default {
     },
   },
   created: function () {
-    console.log('creating layout, signedin: ' + this.signedin)
-    console.log('creating layout, token: ' + this.$store.state.user.token)
     Vue.filter("datetime", function (value) {
       if (value) {
         return moment(String(value)).format("DD.MM.YYYY hh:mm:ss");

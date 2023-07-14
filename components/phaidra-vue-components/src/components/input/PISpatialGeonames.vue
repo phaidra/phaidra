@@ -222,9 +222,9 @@ export default {
         let uri = 'https://www.geonames.org/' + this.items[this.selected].geonameId
         this.$emit('input', uri)
         try {
-          let response = await this.$http.request({
+          let response = await this.$axios.request({
             method: 'GET',
-            url: this.$store.state.instanceconfig.api + '/resolve',
+            url: '/resolve',
             params: { uri, lang: this.alpha2locale }
           })
           // keep this next tick from showMap
@@ -266,7 +266,7 @@ export default {
         lang: this.alpha2locale
       }
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
           url: this.$store.state.appconfig.apis.geonames.search,
           params: params

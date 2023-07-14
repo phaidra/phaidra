@@ -134,9 +134,9 @@ export default {
       this.mimetype = "";
       this.form = [];
       try {
-        let response = await self.$http.request({
+        let response = await self.$axios.request({
           method: "GET",
-          url: self.instanceconfig.api + "/uwmetadata/tree",
+          url: "/uwmetadata/tree",
           params: {
             mode: "full",
           },
@@ -206,9 +206,9 @@ export default {
           httpFormData.append("mimetype", this.mimetype);
         }
         try {
-          let response = await this.$http.request({
+          let response = await this.$axios.request({
             method: "POST",
-            url: this.instanceconfig.api + "/" + this.objectType + "/create",
+            url: "/" + this.objectType + "/create",
             headers: {
               "Content-Type": "multipart/form-data",
               "X-XSRF-TOKEN": this.user.token,

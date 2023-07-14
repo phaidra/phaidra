@@ -14,7 +14,6 @@
 
 <script>
 import qs from 'qs'
-import axios from 'axios'
 import { context } from '../../mixins/context'
 import { config } from '../../mixins/config'
 
@@ -53,8 +52,8 @@ export default {
       }
 
       var query = qs.stringify(params, { encodeValuesOnly: true, indices: false })
-      var url = this.instanceconfig.solr + '/select?' + query
-      var promise = axios.get(url)
+      var url = '/search/select?' + query
+      var promise = self.$axios.get(url)
         .then(function (response) { return response.json() })
         .then(function (json) {
           if (json.response.numFound > 0) {
@@ -82,8 +81,8 @@ export default {
       }
 
       var query = qs.stringify(params, { encodeValuesOnly: true, indices: false })
-      var url = this.instanceconfig.solr + '/select?' + query
-      var promise = axios.get(url)
+      var url = '/search/select?' + query
+      var promise = self.$axios.get(url)
         .then(function (response) { return response.json() })
         .then(function (json) {
           if (json.response.numFound > 0) {

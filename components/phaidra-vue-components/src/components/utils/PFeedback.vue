@@ -108,9 +108,9 @@ export default {
         this.rightsArray = []
         this.rightsjson = {}
         try {
-          let response = await this.$http.request({
+          let response = await this.$axios.request({
             method: 'POST',
-            url: this.$store.state.instanceconfig.api + '/feedback',
+            url: '/feedback',
             data: httpFormData,
             headers: {
               'X-XSRF-TOKEN': this.$store.state.user.token,

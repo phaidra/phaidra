@@ -15,7 +15,6 @@
     "@nuxt/http": "^0.6.4",
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/sentry": "^5.1.7",
-    "axios": "^0.24.0",
     "chart.js": "^3.6.2",
     "chartjs-plugin-datalabels": "^2.0.0",
     "cookie-universal-nuxt": "^2.1.5",

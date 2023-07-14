@@ -95,7 +95,7 @@ export default {
         uri: item.uri
       }
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
           url: this.$store.state.appconfig.apis.dante.resolve,
           params: params
@@ -126,7 +126,7 @@ export default {
         uri: uri[0]
       }
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
           url: this.$store.state.appconfig.apis.dante.resolve,
           params: params

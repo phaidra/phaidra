@@ -98,7 +98,7 @@ export default {
       self.detailPageItems = []
       self.downloadItems = []
       try {
-        let response = await self.$http.get(self.instanceconfig.api + '/stats/' + self.routepid + '/chart',
+        let response = await self.$axios.get('/stats/' + self.routepid + '/chart',
           {
             headers: {
               'X-XSRF-TOKEN': self.user.token

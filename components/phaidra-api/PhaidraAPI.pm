@@ -267,6 +267,9 @@ sub startup {
   $self->hook(
     'before_dispatch' => sub {
       my $self    = shift;
+
+      $self->app->log->debug('===> '.$self->req->method .' '. $self->req->url);
+
       my $session = $self->stash('mojox-session');
       $session->load;
       if ($session->is_expired) {
@@ -283,6 +286,8 @@ sub startup {
   $self->hook(
     'after_dispatch' => sub {
       my $self = shift;
+
+      $self->app->log->debug('<=== '.$self->res->code.' '.$self->req->method .' '. $self->req->url );
 
       # CORS
       unless ($self->res->headers->header('Access-Control-Allow-Origin')) {

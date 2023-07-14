@@ -66,9 +66,9 @@ export default {
         httpFormData.append('dscontent', this.file)
         httpFormData.append('mimetype', this.mimetype)
         httpFormData.append('controlgroup', 'M')
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instanceconfig.api + '/object/' + this.parentpid + '/datastream/WEBVERSION',
+          url: '/object/' + this.parentpid + '/datastream/WEBVERSION',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token

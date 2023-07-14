@@ -4,7 +4,6 @@ import lang3to2map from '../../utils/lang3to2map'
 import orgunits from '../../utils/orgunits'
 import fieldsLib from '../../utils/fields'
 import oefos from '../../utils/oefos'
-import axios from 'axios'
 import i18n from '../../i18n/i18n'
 
 const lang2to3map = Object.keys(lang3to2map).reduce((ret, key) => {
@@ -1802,9 +1801,9 @@ const actions = {
   async loadOrgUnits ({ commit, rootState, state }, locale) {
     if (state.vocabularies['orgunits']['loaded'] === false) {
       try {
-        let response = await axios.request({
+        let response = await this.$axios.request({
           method: 'GET',
-          url: rootState.instanceconfig.api + '/directory/org_get_units'
+          url: '/directory/org_get_units'
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
           commit('setAlerts', response.data.alerts, { root: true })
@@ -1826,9 +1825,9 @@ const actions = {
   async loadOefos ({ commit, rootState, state }, locale) {
     if (state.vocabularies['oefos']['loaded'] === false) {
       try {
-        let response = await axios.request({
+        let response = await this.$axios.request({
           method: 'GET',
-          url: rootState.instanceconfig.api + '/vocabulary?uri=oefos2012'
+          url: '/vocabulary?uri=oefos2012'
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
           commit('setAlerts', response.data.alerts)
@@ -1855,7 +1854,7 @@ const actions = {
     }
     try {
       var raw = 'PREFIX v: <' + rootState.appconfig.apis.vocserver.ns + '> PREFIX : <' + rootState.appconfig.apis.vocserver.ns + 'schema#> PREFIX skos: <http://www.w3.org/2004/02/skos/core#> SELECT ?id ?label ?exp WHERE { graph ?g { ?id v:memberOf  v:' + vocabId + ' . ?id skos:prefLabel ?label . OPTIONAL { ?id :expires ?exp . } } }'
-      let response = await axios.request({
+      let response = await this.$axios.request({
         method: 'POST',
         url: rootState.appconfig.apis.vocserver.url + rootState.appconfig.apis.vocserver.dataset + '/query',
         headers: { 'Content-Type': 'application/sparql-query' },

@@ -86,11 +86,6 @@ export default {
     }
   },
 
-  computed: {
-    solr: function () { // TODO: pass in app settings
-      return this.$root.$store.state.instanceconfig.solr
-    }
-  },
   methods: {
     getClassName (part) {
       const { classes, className } = this
@@ -229,9 +224,9 @@ export default {
         'suggest.q': value
       }
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.solr + '/suggest',
+          url: '/search/suggest',
           data: qs.stringify(params, { arrayFormat: 'repeat' }),
           headers: {
             'content-type': 'application/x-www-form-urlencoded'

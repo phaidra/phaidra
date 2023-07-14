@@ -159,7 +159,7 @@ export default {
         query: this.q + '*'
       }
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
           url: this.$store.state.appconfig.apis.dante.search,
           params: params

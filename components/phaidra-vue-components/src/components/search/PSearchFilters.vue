@@ -344,7 +344,7 @@ export default {
       if (this.userSearchLoading) return
       this.userSearchLoading = true
       try {
-        let response = await this.$http.get(this.instance.api + '/directory/user/search', {
+        let response = await this.$axios.get('/directory/user/search', {
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           },
@@ -375,7 +375,7 @@ export default {
       if (this.usernameSearchLoading) return
       this.usernameSearchLoading = true
       try {
-        let response = await this.$http.get(this.instance.api + '/directory/user/search', {
+        let response = await this.$axios.get('/directory/user/search', {
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           },

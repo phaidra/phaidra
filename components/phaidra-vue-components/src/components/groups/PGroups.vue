@@ -189,9 +189,9 @@ export default {
         if (this.loadedGroup) {
           this.membersLoading = true
           try {
-            let response = await this.$http.request({
+            let response = await this.$axios.request({
               method: 'GET',
-              url: this.instance.api + '/group/' + this.loadedGroup.groupid,
+              url: '/group/' + this.loadedGroup.groupid,
               headers: {
                 'X-XSRF-TOKEN': this.$store.state.user.token
               }
@@ -221,7 +221,7 @@ export default {
       if (this.userSearchLoading) return
       this.userSearchLoading = true
       try {
-        let response = await this.$http.get(this.instance.api + '/directory/user/search', {
+        let response = await this.$axios.get('/directory/user/search', {
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           },
@@ -284,9 +284,9 @@ export default {
         this.groupsLoading = true
         var httpFormData = new FormData()
         httpFormData.append('name', this.newGroupName)
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.api + '/group/add',
+          url: '/group/add',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token
@@ -297,9 +297,9 @@ export default {
         if (response.data.alerts && response.data.alerts.length > 0) {
           this.$store.commit('setAlerts', response.data.alerts)
         }
-        response = await this.$http.request({
+        response = await this.$axios.request({
           method: 'GET',
-          url: this.instance.api + '/groups',
+          url: '/groups',
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }
@@ -319,9 +319,9 @@ export default {
       this.deleteDialog = false
       this.groupsLoading = true
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.api + '/group/' + this.groupToDelete.groupid + '/remove',
+          url: '/group/' + this.groupToDelete.groupid + '/remove',
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }
@@ -329,9 +329,9 @@ export default {
         if (response.data.alerts && response.data.alerts.length > 0) {
           this.$store.commit('setAlerts', response.data.alerts)
         }
-        response = await this.$http.request({
+        response = await this.$axios.request({
           method: 'GET',
-          url: this.instance.api + '/groups',
+          url: '/groups',
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }
@@ -350,9 +350,9 @@ export default {
         this.membersLoading = true
         var httpFormData = new FormData()
         httpFormData.append('members', JSON.stringify({ members: [ member ] }))
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.api + '/group/' + this.loadedGroup.groupid + '/members/remove',
+          url: '/group/' + this.loadedGroup.groupid + '/members/remove',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token
@@ -362,9 +362,9 @@ export default {
         if (response.data.alerts && response.data.alerts.length > 0) {
           this.$store.commit('setAlerts', response.data.alerts)
         }
-        response = await this.$http.request({
+        response = await this.$axios.request({
           method: 'GET',
-          url: this.instance.api + '/group/' + this.loadedGroup.groupid,
+          url: '/group/' + this.loadedGroup.groupid,
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }
@@ -385,9 +385,9 @@ export default {
         this.membersLoading = true
         var httpFormData = new FormData()
         httpFormData.append('members', JSON.stringify({ members: [ this.userSearchModel.uid ] }))
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.api + '/group/' + this.loadedGroup.groupid + '/members/add',
+          url: '/group/' + this.loadedGroup.groupid + '/members/add',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token
@@ -397,9 +397,9 @@ export default {
         if (response.data.alerts && response.data.alerts.length > 0) {
           this.$store.commit('setAlerts', response.data.alerts)
         }
-        response = await this.$http.request({
+        response = await this.$axios.request({
           method: 'GET',
-          url: this.instance.api + '/group/' + this.loadedGroup.groupid,
+          url: '/group/' + this.loadedGroup.groupid,
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }
@@ -418,9 +418,9 @@ export default {
     getGroups: async function () {
       this.groupsLoading = true
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
-          url: this.instance.api + '/groups',
+          url: '/groups',
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }
@@ -446,9 +446,9 @@ export default {
     next(async vm => {
       vm.groupsLoading = true
       try {
-        let response = await vm.$http.request({
+        let response = await vm.$axios.request({
           method: 'GET',
-          url: vm.instance.api + '/groups',
+          url: '/groups',
           headers: {
             'X-XSRF-TOKEN': vm.$store.state.user.token
           }

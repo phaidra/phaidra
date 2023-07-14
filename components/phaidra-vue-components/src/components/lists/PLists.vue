@@ -210,9 +210,9 @@ export default {
     refreshLoadedList: async function () {
       this.membersLoading = true
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
-          url: this.instance.api + '/list/' + this.loadedList.listid,
+          url: '/list/' + this.loadedList.listid,
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }
@@ -231,9 +231,9 @@ export default {
     createToken: async function (lid) {
       try {
         this.loading = true
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.api + '/list/' + lid + '/token/create',
+          url: '/list/' + lid + '/token/create',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token
@@ -254,9 +254,9 @@ export default {
     deleteToken: async function (lid) {
       try {
         this.loading = true
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.api + '/list/' + lid + '/token/delete',
+          url: '/list/' + lid + '/token/delete',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token
@@ -278,9 +278,9 @@ export default {
       try {
         var httpFormData = new FormData()
         httpFormData.append('metadata', JSON.stringify({ metadata: { members: this.members } }))
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.api + '/collection/' + collection.pid + '/members/add',
+          url: '/collection/' + collection.pid + '/members/add',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token
@@ -313,9 +313,9 @@ export default {
         this.listsLoading = true
         var httpFormData = new FormData()
         httpFormData.append('name', this.newListName)
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.api + '/list/add',
+          url: '/list/add',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token
@@ -338,9 +338,9 @@ export default {
       this.deleteDialog = false
       this.listsLoading = true
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.api + '/list/' + this.listToDelete.listid + '/remove',
+          url: '/list/' + this.listToDelete.listid + '/remove',
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }
@@ -362,9 +362,9 @@ export default {
         this.membersLoading = true
         var httpFormData = new FormData()
         httpFormData.append('members', JSON.stringify({ members: [ member ] }))
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.api + '/list/' + this.loadedList.listid + '/members/remove',
+          url: '/list/' + this.loadedList.listid + '/members/remove',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token
@@ -385,9 +385,9 @@ export default {
     getLists: async function () {
       this.listsLoading = true
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
-          url: this.instance.api + '/lists',
+          url: '/lists',
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }

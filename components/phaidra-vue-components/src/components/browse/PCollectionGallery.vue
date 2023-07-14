@@ -132,7 +132,7 @@ export default {
           start: 0,
           rows: 5000
         }
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
           url: this.$store.state.instanceconfig.solr + '/select',
           data: qs.stringify(params, { arrayFormat: 'repeat' }),
@@ -171,7 +171,7 @@ export default {
           start: 0,
           rows: 5000
         }
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
           url: this.$store.state.instanceconfig.solr + '/select',
           data: qs.stringify(params, { arrayFormat: 'repeat' }),

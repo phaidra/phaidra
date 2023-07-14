@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
 
@@ -33,9 +32,9 @@ export default {
       if (token) {
         this.$store.commit("setLoading", true);
         try {
-          let response = await axios.request({
+          let response = await this.$axios.request({
             method: "GET",
-            url: this.instanceconfig.api + "/list/token/" + token,
+            url: "/list/token/" + token,
             headers: {
               "X-XSRF-TOKEN": this.$store.state.user.token,
             },

@@ -16,7 +16,6 @@
 import VueJsonPretty from "vue-json-pretty";
 import "vue-json-pretty/lib/styles.css";
 import configjs from "../../../config/phaidra-ui";
-import axios from "axios";
 import { context } from "../../../mixins/context";
 import { config } from "../../../mixins/config";
 

@@ -6,7 +6,6 @@ import i18n from './i18n/i18n'
 import App from './App.vue'
 import moment from 'moment'
 import vuetify from './plugins/vuetify'
-import axios from 'axios'
 
 Vue.config.productionTip = false
 
@@ -79,8 +78,6 @@ const router = new VueRouter({
     }
   ]
 })
-
-Vue.prototype.$http = axios
 
 new Vue({
   store,

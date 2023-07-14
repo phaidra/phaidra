@@ -35,9 +35,9 @@ export default {
       }
       self.loading = true
       try {
-        let response = await self.$http.request({
+        let response = await self.$axios.request({
           method: 'GET',
-          url: self.instanceconfig.api + '/object/' + self.pid + '/rights',
+          url: '/object/' + self.pid + '/rights',
           headers: {
             'X-XSRF-TOKEN': self.$store.state.user.token
           }

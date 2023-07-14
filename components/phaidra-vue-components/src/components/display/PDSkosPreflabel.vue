@@ -44,7 +44,10 @@ export default {
   methods: {
     link: function (v) {
       if (typeof v === 'string') {
-        return Autolinker.link(v)
+        return Autolinker.link(v, {
+          stripPrefix: false,
+          stripTrailingSlash: false
+        })
       } else {
         return v
       }
@@ -53,14 +56,20 @@ export default {
   mounted: function () {
     this.$nextTick(function () {
       if (this.$refs && this.$refs.desc && this.$refs.desc.length) {
-        this.$refs.desc[0].innerHTML = Autolinker.link(this.$refs.desc[0].innerHTML)
+        this.$refs.desc[0].innerHTML = Autolinker.link(this.$refs.desc[0].innerHTML, {
+          stripPrefix: false,
+          stripTrailingSlash: false
+        })
       }
     })
   },
   updated: function () {
     this.$nextTick(function () {
       if (this.$refs && this.$refs.desc && this.$refs.desc.length) {
-        this.$refs.desc[0].innerHTML = Autolinker.link(this.$refs.desc[0].innerHTML)
+        this.$refs.desc[0].innerHTML = Autolinker.link(this.$refs.desc[0].innerHTML, {
+          stripPrefix: false,
+          stripTrailingSlash: false
+        })
       }
     })
   }

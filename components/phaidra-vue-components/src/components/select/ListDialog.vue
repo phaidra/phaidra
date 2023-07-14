@@ -85,9 +85,9 @@ export default {
       this.dialog = true
       this.loading = true
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
-          url: this.instance.api + '/lists',
+          url: '/lists',
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }

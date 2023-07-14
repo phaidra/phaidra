@@ -65,9 +65,9 @@ export default {
     loadUwmetadata: async function (self, pid) {
       self.loading = true
       try {
-        let response = await self.$http.request({
+        let response = await self.$axios.request({
           method: 'GET',
-          url: self.$store.state.instanceconfig.api + '/object/' + pid + '/metadata',
+          url: '/object/' + pid + '/metadata',
           params: {
             mode: 'full'
           }

@@ -1,13 +1,13 @@
-import axios from 'axios'
+
 import config from '../config/phaidra-ui'
 
-export default async ({ app, store }) => {
+export default async ({ app, $axios, store }) => {
   app.router.beforeEach(async (to, from, next) => {
     if (store.state.user.token) {
       try {
-        await axios.request({
+        await $axios.request({
           method: 'GET',
-          url: config.instances[config.defaultinstance].api + '/keepalive',
+          url: '/keepalive',
           headers: {
             'X-XSRF-TOKEN': store.state.user.token
           }

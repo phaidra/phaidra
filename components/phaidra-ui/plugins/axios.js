@@ -1,20 +1,13 @@
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
+export default function ({ store, $axios, $sentry }) {
+  $axios.onRequest(config => {
+    console.log('axios ' + config.method.toUpperCase() + ' ' + config.baseURL + $axios.getUri(config))
+  })
 
-export default ({ app, $sentry }) => {
-  axios.interceptors.response.use(
-    async response => {
-      return response
-    },
-    error => {
-      $sentry.captureException(error)
-      if (error.response?.data?.alerts?.length > 0) {
-        app.store.commit('setAlerts', error.response.data.alerts)
-      }
-      return Promise.reject(error)
+  $axios.onError(error => {
+    $sentry.captureException(error)
+    if (error.response?.data?.alerts?.length > 0) {
+      store.commit('setAlerts', error.response.data.alerts)
     }
-  )
+    return Promise.reject(error)
+  })
 }
-
-Vue.use(VueAxios, axios)

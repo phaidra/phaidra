@@ -59,7 +59,7 @@ export default {
       }
 
       var query = qs.stringify(params, { encodeValuesOnly: true, indices: false })
-      var url = this.instanceconfig.solr + '/select?' + query
+      var url = '/search/select?' + query
       var promise = fetch(url, {
         method: 'GET',
         mode: 'cors'
@@ -92,7 +92,7 @@ export default {
       }
 
       var query = qs.stringify(params, { encodeValuesOnly: true, indices: false })
-      var url = this.instanceconfig.solr + '/select?' + query
+      var url = '/search/select?' + query
       var promise = fetch(url, {
         method: 'GET',
         mode: 'cors'

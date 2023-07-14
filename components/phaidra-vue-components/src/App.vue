@@ -4142,7 +4142,7 @@ export default {
       }
 
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
           url: this.instance.solr + '/select',
           data: qs.stringify(params, { arrayFormat: 'repeat' }),
@@ -4174,7 +4174,7 @@ export default {
       }
 
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
           url: this.instance.solr + '/select?',
           params: params
@@ -4194,10 +4194,9 @@ export default {
       this.loadedMetadata = []
       this.loading = true
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
           url:
-            this.$store.state.instanceconfig.api +
             '/object/' +
             pid +
             '/metadata',
@@ -4221,10 +4220,9 @@ export default {
       this.loadedMetadata = []
       this.loading = true
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
           url:
-            this.$store.state.instanceconfig.api +
             '/object/' +
             pid +
             '/metadata',

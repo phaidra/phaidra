@@ -36,9 +36,9 @@ export default {
     loadTemplate: async function (self) {
       self.loading = true
       try {
-        let response = await self.$http.request({
+        let response = await self.$axios.request({
           method: 'GET',
-          url: self.instanceconfig.api + '/jsonld/template/' + self.$route.params.templateid,
+          url: '/jsonld/template/' + self.$route.params.templateid,
           headers: {
             'X-XSRF-TOKEN': self.user.token
           }

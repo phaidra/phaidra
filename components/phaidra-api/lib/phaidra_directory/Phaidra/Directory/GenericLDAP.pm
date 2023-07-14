@@ -230,7 +230,7 @@ sub get_ldap {
     return $res;
   }
 
-  $c->app->log->error("get_ldap OK");
+  # $c->app->log->error("get_ldap OK");
   return $ldap;
 }
 
@@ -260,7 +260,7 @@ sub getLDAPEntryForUser {
       foreach my $val (@attvals) {
         if ($attrtype eq 'uid') {
           if ($val eq $username) {
-            $c->app->log->debug("getLDAPEntryForUser:\n".$c->app->dumper($ldapEntry));
+            # $c->app->log->debug("getLDAPEntryForUser:\n".$c->app->dumper($ldapEntry));
             return $ldapEntry;
           }
         }
@@ -348,7 +348,7 @@ sub authenticate() {
   # bind the user
   my $ldapMsg = $ldap->bind($dn, password => $password);
 
-  $c->app->log->debug("Auth for user $dn:\n" . $c->app->dumper($ldapMsg) . "\nis error:" . $ldapMsg->is_error());
+  $c->app->log->debug("Auth for user $dn [is error: " . $ldapMsg->is_error()."]");
 
   if ($ldapMsg->is_error) {
     unshift @{$res->{alerts}}, {type => 'error', msg => $ldapMsg->error};

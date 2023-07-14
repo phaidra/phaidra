@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
 import vocabulary from './modules/vocabulary'
 
 Vue.use(Vuex)
@@ -99,9 +98,9 @@ export default new Vuex.Store({
     async login ({ commit, state }, credentials) {
       commit('initStore')
       try {
-        let response = await axios.request({
+        let response = await this.$axios.request({
           method: 'GET',
-          url: state.instanceconfig.api + '/signin',
+          url: '/signin',
           headers: {
             'Authorization': 'Basic ' + btoa(credentials.username + ':' + credentials.password)
           }
@@ -120,9 +119,9 @@ export default new Vuex.Store({
     },
     async logout ({ commit, state }) {
       try {
-        let response = await axios.request({
+        let response = await this.$axios.request({
           method: 'GET',
-          url: state.instanceconfig.api + '/signout',
+          url: '/signout',
           headers: {
             'X-XSRF-TOKEN': state.token
           }
@@ -140,7 +139,7 @@ export default new Vuex.Store({
     },
     async getLoginData ({ commit, dispatch, state }) {
       try {
-        let response = await axios.get(state.instanceconfig.api + '/directory/user/data', {
+        let response = await this.$axios.get('/directory/user/data', {
           headers: {
             'X-XSRF-TOKEN': state.user.token
           }

@@ -897,7 +897,7 @@ export default {
     importFromObject: async function (doc) {
       this.loading = true
       try {
-        let response = await fetch(this.$store.state.instanceconfig.api + '/object/' + doc.pid + '/jsonld', {
+        let response = await this.$axios.request('/object/' + doc.pid + '/jsonld', {
           method: 'GET',
           mode: 'cors'
         })
@@ -1043,9 +1043,9 @@ export default {
       httpFormData.append('name', this.templatename)
       httpFormData.append('form', JSON.stringify(this.form))
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.$store.state.instanceconfig.api + '/jsonld/template/add',
+          url: '/jsonld/template/add',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token
@@ -1134,9 +1134,9 @@ export default {
 
       let self = this
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.$store.state.instanceconfig.api + '/' + this.submittype + '/create',
+          url: '/' + this.submittype + '/create',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token
@@ -1171,9 +1171,9 @@ export default {
       var httpFormData = new FormData()
       httpFormData.append('metadata', JSON.stringify(this.getMetadata()))
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.$store.state.instanceconfig.api + '/object/' + this.targetpid + '/metadata',
+          url: '/object/' + this.targetpid + '/metadata',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token

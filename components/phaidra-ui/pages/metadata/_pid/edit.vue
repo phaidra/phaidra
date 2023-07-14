@@ -60,11 +60,9 @@ export default {
     loadJsonld: async function (self, pid) {
       self.loading = true;
       try {
-        let response = await self.$http.request({
+        let response = await self.$axios.request({
           method: "GET",
-          url:
-            self.$store.state.instanceconfig.api +
-            "/object/" +
+          url: "/object/" +
             pid +
             "/metadata",
           params: {

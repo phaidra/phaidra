@@ -402,9 +402,9 @@ export default {
     _getTermChildren: async function (uri) {
       this.clsLoading = true
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
-          url: this.$store.state.instanceconfig.api + '/terms/children',
+          url: '/terms/children',
           params: {
             uri: uri
           },
@@ -563,9 +563,9 @@ export default {
           hashId = hashId === '' ? kennzahl : hashId + '_' + kennzahl
         }
       }
-      let response = await this.$http.request({
+      let response = await this.$axios.request({
         method: 'GET',
-        url: this.$store.state.instanceconfig.api + '/directory/get_study_name',
+        url: '/directory/get_study_name',
         params: {
           spl: spl,
           ids: ids
@@ -581,9 +581,9 @@ export default {
       if (node.xmlname === 'faculty') {
         this.orgLoading = true
         try {
-          let response = await this.$http.request({
+          let response = await this.$axios.request({
             method: 'GET',
-            url: this.$store.state.instanceconfig.api + '/directory/get_org_units',
+            url: '/directory/get_org_units',
             params: {
               parent_id: node.ui_value.replace('http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_faculty/', ''),
               values_namespace: 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_department/'
@@ -605,9 +605,9 @@ export default {
         this.splLoading = true
         try {
           let spl = node.ui_value.replace('http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_spl/', '')
-          let response = await this.$http.request({
+          let response = await this.$axios.request({
             method: 'GET',
-            url: this.$store.state.instanceconfig.api + '/directory/get_study',
+            url: '/directory/get_study',
             params: {
               spl: spl,
               values_namespace: 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_kennzahl/'
@@ -650,9 +650,9 @@ export default {
           }
         }
         this.children.length = trimLength
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
-          url: this.$store.state.instanceconfig.api + '/directory/get_study',
+          url: '/directory/get_study',
           params: {
             spl: spl,
             ids: ids,

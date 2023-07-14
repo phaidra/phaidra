@@ -37,9 +37,9 @@ export default {
       self.loading = true
       self.relationships = {}
       try {
-        let response = await self.$http.request({
+        let response = await self.$axios.request({
           method: 'GET',
-          url: self.instanceconfig.api + '/object/' + self.pid + '/relationships',
+          url: '/object/' + self.pid + '/relationships',
           headers: {
             'X-XSRF-TOKEN': self.$store.state.user.token
           }

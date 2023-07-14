@@ -100,9 +100,9 @@ export default {
         fq: 'resourcetype:collection AND owner:' + this.$store.state.user.username
       }
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.solr + '/select',
+          url: '/search/select',
           data: qs.stringify(params, { arrayFormat: 'repeat' }),
           headers: {
             'content-type': 'application/x-www-form-urlencoded'

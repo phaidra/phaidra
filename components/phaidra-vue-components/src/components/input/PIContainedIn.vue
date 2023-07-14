@@ -540,7 +540,6 @@ import { vocabulary } from '../../mixins/vocabulary'
 import { validationrules } from '../../mixins/validationrules'
 import xmlUtils from '../../utils/xml'
 import qs from 'qs'
-import axios from 'axios'
 import OrgUnitsTreeDialog from '../select/OrgUnitsTreeDialog'
 var iconv = require('iconv-lite')
 
@@ -817,7 +816,7 @@ export default {
         var query = qs.stringify(params)
 
         try {
-          let response = await axios.request({
+          let response = await this.$axios.request({
             method: 'GET',
             url: this.appconfig.apis.sherparomeo.url + '?' + query,
             responseType: 'arraybuffer'

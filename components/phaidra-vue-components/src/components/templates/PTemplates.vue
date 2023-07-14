@@ -70,9 +70,9 @@ export default {
       }
       this.loading = true
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
-          url: this.$store.state.instanceconfig.api + '/jsonld/template/' + tid,
+          url: '/jsonld/template/' + tid,
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }
@@ -92,9 +92,9 @@ export default {
       if (confirm(this.$t('Are you sure you want to delete this template?'))) {
         this.loading = true
         try {
-          let response = await this.$http.request({
+          let response = await this.$axios.request({
             method: 'POST',
-            url: this.$store.state.instanceconfig.api + '/jsonld/template/' + tid + '/remove',
+            url: '/jsonld/template/' + tid + '/remove',
             headers: {
               'X-XSRF-TOKEN': this.$store.state.user.token
             }
@@ -115,9 +115,9 @@ export default {
     loadTemplates: async function () {
       this.loading = true
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
-          url: this.$store.state.instanceconfig.api + '/jsonld/templates' + ((this.tag && this.tag.length > 1) ? '?tag=' + this.tag : ''),
+          url: '/jsonld/templates' + ((this.tag && this.tag.length > 1) ? '?tag=' + this.tag : ''),
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }

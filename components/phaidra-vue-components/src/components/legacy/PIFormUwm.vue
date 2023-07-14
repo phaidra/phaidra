@@ -241,9 +241,9 @@ export default {
       httpFormData.append('mimetype', this.mimetype)
       httpFormData.append('metadata', JSON.stringify(this.getMetadata()))
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.$store.state.instanceconfig.api + '/object/' + this.targetpid + '/metadata',
+          url: '/object/' + this.targetpid + '/metadata',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token

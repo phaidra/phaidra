@@ -7,7 +7,6 @@
               :placeholder="$t('SEARCH_PLACEHOLDER')"
               name="autocomplete"
               :initValue="q"
-              :suggester="'titlesuggester'"
               :customParams="{ token: 'dev' }"
               :classes="{ input: 'form-control', wrapper: 'input-wrapper'}"
               :onSelect="handleSelect"
@@ -163,9 +162,9 @@ export default {
 
       try {
         this.$store.commit('setLoading', true)
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.solr + '/select',
+          url: '/search/select',
           data: qs.stringify(params, { arrayFormat: 'repeat' }),
           headers: {
             'content-type': 'application/x-www-form-urlencoded'
@@ -177,8 +176,8 @@ export default {
         params.fl = ['pid', 'dc_title', 'dc_creator', 'bib_published']
         params['fl.alias'] = ''
         const csvquery = qs.stringify(params, { encodeValuesOnly: true, indices: false })
-        fetch(this.instance.solr + '/select?' + csvquery, {
-          method: 'GET',
+        this.$axios.request('/search/select?' + csvquery, {
+          method: 'POST',
           mode: 'cors'
         })
           .then(function (response) { return response.text() })
@@ -229,9 +228,9 @@ export default {
 
       try {
         this.$store.commit('setLoading', true)
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.solr + '/select',
+          url: '/search/select',
           data: qs.stringify(params, { arrayFormat: 'repeat' }),
           headers: {
             'content-type': 'application/x-www-form-urlencoded'
@@ -266,9 +265,9 @@ export default {
         params.fl = [ 'pid', 'dc_title' ]
         try {
           this.$store.commit('setLoading', true)
-          let response = await this.$http.request({
+          let response = await this.$axios.request({
             method: 'POST',
-            url: this.instance.solr + '/select',
+            url: '/search/select',
             data: qs.stringify(params, { arrayFormat: 'repeat' }),
             headers: {
               'content-type': 'application/x-www-form-urlencoded'

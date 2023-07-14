@@ -170,7 +170,7 @@ export default {
         }
         let query = qs.stringify(params, { encodeValuesOnly: true, indices: false })
         try {
-          let response = await self.$http.get(self.instanceconfig.solr + '/select?' + query)
+          let response = await self.$axios.get('/search/select?' + query)
           if (response.data.facet_counts.facet_ranges.tcreated.counts) {
             let a = response.data.facet_counts.facet_ranges.tcreated.counts
             let stats = {}
@@ -205,7 +205,7 @@ export default {
         }
         let query = qs.stringify(params, { encodeValuesOnly: true, indices: false })
         try {
-          let response = await self.$http.get(self.instanceconfig.solr + '/select?' + query)
+          let response = await self.$axios.get('/search/select?' + query)
           if (response.data.facet_counts.facet_ranges.tcreated.counts) {
             let a = response.data.facet_counts.facet_ranges.tcreated.counts
             let stats = {}
@@ -240,7 +240,7 @@ export default {
         }
         let query = qs.stringify(params, { encodeValuesOnly: true, indices: false })
         try {
-          let response = await self.$http.get(self.instanceconfig.solr + '/select?' + query)
+          let response = await self.$axios.get('/search/select?' + query)
           if (response.data.facet_counts.facet_ranges.tcreated.counts) {
             let a = response.data.facet_counts.facet_ranges.tcreated.counts
             let stats = {}
@@ -275,7 +275,7 @@ export default {
         }
         let query = qs.stringify(params, { encodeValuesOnly: true, indices: false })
         try {
-          let response = await self.$http.get(self.instanceconfig.solr + '/select?' + query)
+          let response = await self.$axios.get('/search/select?' + query)
           if (response.data.facet_counts.facet_ranges.tcreated.counts) {
             let a = response.data.facet_counts.facet_ranges.tcreated.counts
             let stats = {}
@@ -290,7 +290,7 @@ export default {
         }
       }
       try {
-        let response = await this.$http.get(this.instanceconfig.api + '/stats/aggregates?detail=cm&time_scale=year')
+        let response = await this.$axios.get('/stats/aggregates?detail=cm&time_scale=year')
         if (response.data.alerts && response.data.alerts.length > 0) {
           this.$store.commit('setAlerts', response.data.alerts)
         }

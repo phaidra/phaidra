@@ -67,9 +67,9 @@ export default {
       try {
         var httpFormData = new FormData()
         httpFormData.append('metadata', JSON.stringify({ metadata: { members: colorder } }))
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.api + '/' + this.cmodel.toLowerCase() + '/' + this.pid + '/members/order',
+          url: '/' + this.cmodel.toLowerCase() + '/' + this.pid + '/members/order',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token

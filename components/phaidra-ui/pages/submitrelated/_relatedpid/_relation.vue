@@ -294,10 +294,9 @@ export default {
             try {
               let httpFormData = new FormData();
               httpFormData.append("metadata", JSON.stringify(removeMembers));
-              let response = await this.$http.request({
+              let response = await this.$axios.request({
                 method: "POST",
                 url:
-                  this.instanceconfig.api +
                   "/collection/" +
                   col.pid +
                   "/members/remove",
@@ -323,10 +322,9 @@ export default {
             try {
               let httpFormData = new FormData();
               httpFormData.append("metadata", JSON.stringify(addMembers));
-              let response = await this.$http.request({
+              let response = await this.$axios.request({
                 method: "POST",
                 url:
-                  this.instanceconfig.api +
                   "/collection/" +
                   col.pid +
                   "/members/add",
@@ -354,10 +352,9 @@ export default {
     importFromRelatedObject: async function (self) {
       self.loading = true;
       try {
-        let response = await self.$http.request({
+        let response = await self.$axios.request({
           method: "GET",
           url:
-            self.$store.state.instanceconfig.api +
             "/object/" +
             self.relatedpid +
             "/metadata",

@@ -200,7 +200,7 @@ export default {
       }
 
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
           url: this.$store.state.instanceconfig.solr + '/suggest',
           params: params

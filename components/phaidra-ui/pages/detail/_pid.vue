@@ -74,22 +74,7 @@
             </v-alert>
           </v-row>
           <v-row justify="center" v-if="showPreview">
-            <template v-if="(objectInfo.cmodel === 'Book') && (objectInfo.datastreams.includes('UWMETADATA'))">
-              <v-btn
-                large
-                raised
-                color="primary"
-                :href="
-                  instanceconfig.fedora +
-                  '/objects/' +
-                  objectInfo.pid +
-                  '/methods/bdef:Book/view'
-                "
-                target="_blank"
-                >{{ $t("Open in Bookviewer") }}</v-btn
-              >
-            </template>
-          <template v-else-if="(objectInfo.cmodel === 'Book') && (objectInfo.datastreams.includes('IIIF-MANIFEST'))">
+          <template v-if="(objectInfo.cmodel === 'Book')">
               <v-btn
                 large
                 raised
@@ -2004,8 +1989,8 @@ export default {
       self.stats.download = null;
       self.stats.detail = null;
       try {
-        let response = await self.$http.get(
-          self.instanceconfig.api + "/stats/" + pid
+        let response = await self.$axios.get(
+          "/stats/" + pid
         );
         if (response.data.stats) {
           self.stats.download = response.data.stats.downloads;
@@ -2017,8 +2002,8 @@ export default {
     },
     async fetchChecksums(self, pid) {
       try {
-        let response = await self.$http.get(
-          self.instanceconfig.api + "/object/" + pid + "/md5",
+        let response = await self.$axios.get(
+          "/object/" + pid + "/md5",
           {
             headers: {
               "X-XSRF-TOKEN": self.user.token,
@@ -2053,17 +2038,10 @@ export default {
         }
       }
     },
-    // getMemberDownloadUrl: function (member) {
-    //   if (member.cmodel === 'Asset' || member.cmodel === 'Video') {
-    //     return this.instanceconfig.fedora + '/objects/' + member.pid + '/methods/bdef:Content/download'
-    //   } else {
-    //     return this.instanceconfig.api + '/object/' + member.pid + '/diss/Content/download'
-    //   }
-    // },
     loadCitationStyles: async function () {
       this.citationStylesLoading = true;
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: "GET",
           url: this.appconfig.apis.doi.citationstyles,
         });
@@ -2084,7 +2062,7 @@ export default {
     getBibTex: async function () {
       this.doiCiteLoading = true;
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: "GET",
           url: "https://" + this.appconfig.apis.doi.baseurl + "/" + this.doi,
           headers: {
@@ -2108,7 +2086,7 @@ export default {
     getCitation: async function () {
       this.doiCiteLoading = true;
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: "GET",
           url: "https://" + this.appconfig.apis.doi.baseurl + "/" + this.doi,
           headers: {
@@ -2145,9 +2123,9 @@ export default {
         this.$store.commit('setLoading', true)
         var httpFormData = new FormData()
         httpFormData.append('metadata', JSON.stringify({ metadata: { members: [ { 'pid': this.objectInfo.pid } ] } }))
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instanceconfig.api + '/collection/' + collection.pid + '/members/add',
+          url: '/collection/' + collection.pid + '/members/add',
           headers: {
             'Content-Type': 'multipart/form-data',
             "X-XSRF-TOKEN": this.user.token,
@@ -2177,9 +2155,9 @@ export default {
         this.$store.commit('setLoading', true)
         var httpFormData = new FormData()
         httpFormData.append('metadata', JSON.stringify({ metadata: { members: [ { 'pid': this.collMemberToRemove } ] } }))
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instanceconfig.api + '/collection/' + this.objectInfo.pid + '/members/remove',
+          url: '/collection/' + this.objectInfo.pid + '/members/remove',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token

@@ -57,9 +57,9 @@ export default {
     deleteObject: async function (pid) {
       this.loading = true
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.$store.state.instanceconfig.api + '/object/' + pid + '/delete',
+          url: '/object/' + pid + '/delete',
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }

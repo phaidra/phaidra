@@ -83,7 +83,7 @@ export default {
       if (this.touCheckbox) {
         this.loading = true
         try {
-          let response = await this.$http.post(this.instanceconfig.api + '/termsofuse/agree/' + this.touVersion, undefined,
+          let response = await this.$axios.post('/termsofuse/agree/' + this.touVersion, undefined,
             {
               headers: {
                 'Authorization': 'Basic ' + btoa(this.credentials.username + ':' + this.credentials.password)
@@ -105,7 +105,7 @@ export default {
     async login () {
       this.loading = true
       try {
-        let response = await this.$http.get(this.instanceconfig.api + '/termsofuse/getagreed',
+        let response = await this.$axios.get('/termsofuse/getagreed',
           {
             headers: {
               'Authorization': 'Basic ' + btoa(this.credentials.username + ':' + this.credentials.password)
@@ -116,7 +116,7 @@ export default {
           this.$store.commit('setAlerts', response.data.alerts)
         }
         if (!response.data.agreed) {
-          let toures = await this.$http.get(this.instanceconfig.api + '/termsofuse')
+          let toures = await this.$axios.get('/termsofuse')
           if (toures.data.alerts && toures.data.alerts.length > 0) {
             this.$store.commit('setAlerts', toures.data.alerts)
           }

@@ -1,5 +1,4 @@
 import qs from 'qs'
-import axios from 'axios'
 import config from '../config/phaidra-ui'
 
 export default async (req, res, next) => {
@@ -7,9 +6,9 @@ export default async (req, res, next) => {
     let pid = req.url.replace('/', '')
     let params = { q: '*:*', defType: 'edismax', wt: 'json', start: 0, rows: 1, fq: 'pid:"' + pid + '"' }
     try {
-      let response = await axios.request({
+      let response = await this.$axios.request({
         method: 'POST',
-        url: config.instances[config.defaultinstance].solr + '/select',
+        url: '/search/select',
         data: qs.stringify(params, { arrayFormat: 'repeat' }),
         headers: {
           'content-type': 'application/x-www-form-urlencoded'
@@ -21,13 +20,8 @@ export default async (req, res, next) => {
         let doc = docs[0]
         if (doc['cmodel']) {
           if (doc['cmodel'] === 'Book') {
-            if (doc.datastreams.includes("UWMETADATA")) {
-              redirect(res, config.instances[config.defaultinstance].fedora + '/objects/' + pid + '/methods/bdef:Book/view')
-              return
-            } else {
-              redirect(res, config.instances[config.defaultinstance].api + '/object/' + pid + '/preview')
-              return
-            }
+            redirect(res, config.instances[config.defaultinstance].api + '/object/' + pid + '/preview')
+            return
           }
         }
         if (doc['isinadminset']) {

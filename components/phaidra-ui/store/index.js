@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import axios from 'axios'
 import qs from 'qs'
 import config from '../config/phaidra-ui'
 
@@ -510,18 +509,21 @@ export const actions = {
 
   async nuxtServerInit({ commit, dispatch }, { req }) {
     const token = this.$cookies.get('XSRF-TOKEN')
-    console.log('nuxtServerInit setting token: ' + token)
     commit('setToken', token)
     if (token) {
+      await dispatch('getLoginData')
+      // remove
       await dispatch('getLoginData')
     }
   },
 
   async fetchObjectInfo({ commit, state }, pid) {
+
+    console.log('fetching object info in store: ' + pid)
     try {
       let response
       if (state.user.token) {
-        response = await axios.get(state.instanceconfig.api + '/object/' + pid + '/info',
+        response = await this.$axios.get('/object/' + pid + '/info',
           {
             headers: {
               'X-XSRF-TOKEN': state.user.token
@@ -529,10 +531,12 @@ export const actions = {
           }
         )
       } else {
-        response = await axios.get(state.instanceconfig.api + '/object/' + pid + '/info')
+        response = await this.$axios.get('/object/' + pid + '/info')
       }
       commit('setObjectInfo', response.data.info)
     } catch (error) {
+      console.log('fetchObjectInfo error')
+      console.log(error)
     }
   },
   async fetchObjectMembers({ dispatch, commit, state }, parent) {
@@ -543,7 +547,7 @@ export const actions = {
         for (const doc of parent.members) {
           let memresponse
           if (state.user.token) {
-            memresponse = await axios.get(state.instanceconfig.api + '/object/' + doc.pid + '/info',
+            memresponse = await this.$axios.get('/object/' + doc.pid + '/info',
               {
                 headers: {
                   'X-XSRF-TOKEN': state.user.token
@@ -551,7 +555,7 @@ export const actions = {
               }
             )
           } else {
-            memresponse = await axios.get(state.instanceconfig.api + '/object/' + doc.pid + '/info')
+            memresponse = await this.$axios.get('/object/' + doc.pid + '/info')
           }
           members.push(memresponse.data.info)
         }
@@ -584,9 +588,9 @@ export const actions = {
     }
     try {
       commit('setLoading', true)
-      const response = await axios.request({
+      const response = await this.$axios.request({
         method: 'POST',
-        url: state.instanceconfig.solr + '/select',
+        url: '/search/select',
         data: qs.stringify(params, { arrayFormat: 'repeat' }),
         headers: {
           'content-type': 'application/x-www-form-urlencoded'
@@ -603,7 +607,7 @@ export const actions = {
   async getLoginData({ commit, dispatch, state }) {
     console.log('getLoginData token: ' + state.user.token)
     try {
-      const response = await axios.get(state.instanceconfig.api + '/directory/user/data', {
+      const response = await this.$axios.get('/directory/user/data', {
         headers: {
           'X-XSRF-TOKEN': state.user.token
         }
@@ -613,6 +617,8 @@ export const actions = {
       }
       commit('setLoginData', response.data.user_data)
     } catch (error) {
+      console.log('getLoginData error')
+      console.log(error)
       if (error.response.status === 401) {
         commit('setAlerts', [{ type: 'success', msg: 'You have been logged out' }])
         commit('setToken', null)
@@ -630,7 +636,7 @@ export const actions = {
     this.$cookies.remove('XSRF-TOKEN')
     commit('setUsername', credentials.username)
     try {
-      const response = await axios.get(state.instanceconfig.api + '/signin', {
+      const response = await this.$axios.get('/signin', {
         headers: {
           Authorization: 'Basic ' + btoa(credentials.username + ':' + credentials.password)
         }
@@ -659,7 +665,7 @@ export const actions = {
     commit('clearAlerts')
     this.$cookies.remove('XSRF-TOKEN')
     try {
-      const response = await axios.get(state.instanceconfig.api + '/signout', {
+      const response = await this.$axios.get('/signout', {
         headers: {
           'X-XSRF-TOKEN': state.user.token
         }
@@ -677,7 +683,7 @@ export const actions = {
   async getUserGroups({ commit, state }) {
     commit('clearAlerts')
     try {
-      const response = await axios.get(state.instanceconfig.api + '/groups', {
+      const response = await this.$axios.get('/groups', {
         headers: {
           'X-XSRF-TOKEN': state.user.token
         }

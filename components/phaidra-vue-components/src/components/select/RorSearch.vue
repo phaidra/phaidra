@@ -186,7 +186,7 @@ export default {
       }
 
       try {
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'GET',
           url: 'https://' + this.$store.state.appconfig.apis.ror.baseurl + '/organizations',
           params: params

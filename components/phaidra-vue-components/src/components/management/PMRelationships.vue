@@ -199,9 +199,9 @@ export default {
           start: 0,
           rows: 100
         }
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.solr + '/select',
+          url: '/search/select',
           data: qs.stringify(params, { arrayFormat: 'repeat' }),
           headers: {
             'content-type': 'application/x-www-form-urlencoded'
@@ -238,9 +238,9 @@ export default {
           start: 0,
           rows: 5000
         }
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.solr + '/select',
+          url: '/search/select',
           data: qs.stringify(params, { arrayFormat: 'repeat' }),
           headers: {
             'content-type': 'application/x-www-form-urlencoded'
@@ -264,9 +264,9 @@ export default {
             var httpFormData = new FormData()
             httpFormData.append('predicate', this.selectedRelationship)
             httpFormData.append('object', 'info:fedora/' + this.objectSearchModel.value)
-            let response = await this.$http.request({
+            let response = await this.$axios.request({
               method: 'POST',
-              url: this.instance.api + '/object/' + this.pid + '/relationship/add',
+              url: '/object/' + this.pid + '/relationship/add',
               headers: {
                 'Content-Type': 'multipart/form-data',
                 'X-XSRF-TOKEN': this.$store.state.user.token
@@ -299,9 +299,9 @@ export default {
           var httpFormData = new FormData()
           httpFormData.append('predicate', item.relation)
           httpFormData.append('object', 'info:fedora/' + item.object)
-          let response = await this.$http.request({
+          let response = await this.$axios.request({
             method: 'POST',
-            url: this.instance.api + '/object/' + this.pid + '/relationship/remove',
+            url: '/object/' + this.pid + '/relationship/remove',
             headers: {
               'Content-Type': 'multipart/form-data',
               'X-XSRF-TOKEN': this.$store.state.user.token

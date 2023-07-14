@@ -153,9 +153,9 @@ export default {
         this.$store.commit('setLoading', true)
         var httpFormData = new FormData()
         httpFormData.append('metadata', JSON.stringify({ metadata: { members: this.selection } }))
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.api + '/collection/' + collection.pid + '/members/add',
+          url: '/collection/' + collection.pid + '/members/add',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token
@@ -182,9 +182,9 @@ export default {
         this.$store.commit('setLoading', true)
         var httpFormData = new FormData()
         httpFormData.append('metadata', JSON.stringify({ metadata: { members: this.selection } }))
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.api + '/collection/' + collection.pid + '/members/remove',
+          url: '/collection/' + collection.pid + '/members/remove',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token
@@ -211,9 +211,9 @@ export default {
         this.$store.commit('setLoading', true)
         var httpFormData = new FormData()
         httpFormData.append('members', JSON.stringify({ members: this.selection }))
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.api + '/list/' + list.listid + '/members/add',
+          url: '/list/' + list.listid + '/members/add',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token
@@ -239,9 +239,9 @@ export default {
         this.$store.commit('setLoading', true)
         var httpFormData = new FormData()
         httpFormData.append('members', JSON.stringify({ members: this.selection }))
-        let response = await this.$http.request({
+        let response = await this.$axios.request({
           method: 'POST',
-          url: this.instance.api + '/list/' + list.listid + '/members/remove',
+          url: '/list/' + list.listid + '/members/remove',
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token
