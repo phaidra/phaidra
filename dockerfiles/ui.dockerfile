@@ -19,7 +19,6 @@ ENV PORT=3001
 EXPOSE 3001
 RUN <<EOF
 npm install
-npm install axios@0.24.0
 npm install /usr/local/phaidra/phaidra-vue-components
 EOF
 RUN <<EOF
