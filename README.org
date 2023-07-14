@@ -47,6 +47,7 @@
                                     node [shape = folder, style = solid, color = blue]           
                                     HS4 [label="mariadb/phaidradb.sql.gz"];
                                     HS8 [label="openldap"];
+                                    HS16 [label="api/PhaidraAPI.json"];
                             }
                     }
 
@@ -87,6 +88,7 @@
                                     DPV12 [label="/mnt/converted_images"];
                                     DPV13 [label="/root/.dbgate"];
                                     DPV15 [label="/var/lib/mysql"];
+                                    DPV16 [label="/usr/local/phaidra/phaidra-api/PhaidraAPI.json:ro"];
                             }
                     }
             }
@@ -96,9 +98,10 @@
             DPV1 -- DPS1 [color="green"];
             HS1 -- DPV1 [color="turquoise"];
 
-            DPV2,DPV3 -- DPS2 [color="green"];
+            DPV2,DPV3,DPV16 -- DPS2 [color="green"];
             HS2 -- DPV2 [color="turquoise"];
             HS1 -- DPV3 [color="turquoise"];
+            HS16 -- DPV16 [color="blue"];
 
             DPV4,DPV5 -- DPS3 [color="green"];
             HS4 -- DPV4 [color="blue"];
