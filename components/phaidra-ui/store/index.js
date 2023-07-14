@@ -619,14 +619,11 @@ export const actions = {
     } catch (error) {
       console.log('getLoginData error')
       console.log(error)
-      if (error.response.status === 401) {
+      if (error.response?.status === 401) {
         commit('setAlerts', [{ type: 'success', msg: 'You have been logged out' }])
         commit('setToken', null)
         commit('setLoginData', { username: null, firstname: null, lastname: null, email: null, org_units_l1: null, org_units_l2: null })
         this.$cookies.remove('XSRF-TOKEN')
-      } else {
-        console.log('getLoginData error')
-        console.log(error)
       }
     }
   },
