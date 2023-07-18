@@ -224,7 +224,7 @@ dockerized phaidra system. If you change stuff, or just want to verify
 run `sudo nginx -t` to debug the configuration.
 
 Also, you will find [an apache configuration file in this
-repo](./webserver_configs/nginx/phaidra-nginx.conf). Activation is
+repo](./webserver_configs/apache/phaidra-apache.conf). Activation is
 slightly more complicated than with nginx, but should be feasable, if
 one has worked with apache before (we need features not activated by
 default, but they're included with the standard modules). First, run
@@ -670,30 +670,6 @@ Date:   Wed Feb 1 14:10:40 2023 +0100
 daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ find . -type l
 daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ rm -rf .git .gitignore
 ```
-
-# Apache image
-
-The original apache-server configuration file (to be found in
-`./image_configs/phaidra-httpd.conf`) has been acquired using the
-following command (taken from: <https://hub.docker.com/_/httpd/>):
-
-``` example
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker run --rm httpd:2.4.57-bookworm cat /usr/local/apache2/conf/httpd.conf > image_configs/phaidra-httpd.conf
-```
-
-The original vhost-conf file has been acquired using the following
-command:
-
-``` example
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker run --rm httpd:2.4.57-bookworm cat /usr/local/apache2/conf/extra/httpd-vhosts.conf > container_configs/phaidra.conf
-```
-
-# Apache Notes
-
--   Apache needs some proxy modules to be enabled, one can activate it
-    by running `sudo a2enmod proxy proxy_http`.
--   Also, for development listening on port 8899 will need
-    `echo "Listen 8899" | sudo tee -a /etc/apache2/ports.conf`.
 
 # export org to markdown and add badge
 
