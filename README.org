@@ -309,9 +309,11 @@
      Jun 22 17:02:17 pcherzigd64 systemd[1150]: Started docker.service - Docker Application Container Engine>
    #+end_example
 * System startup
-  There is [[file:./webserver_configs/nginx/phaidra.conf][an nginx configuration file in this repo]], that can be copied to ~/etc/nginx/sites-available~ and symlinked to ~/etc/nginx/sites-enabled~. Unlink the default config to have it ready for the dockerized phaidra system.
+  There is [[file:./webserver_configs/nginx/phaidra-nginx.conf][an nginx configuration file in this repo]], that can be copied to ~/etc/nginx/sites-available~ and symlinked to ~/etc/nginx/sites-enabled~. Unlink the default config and restart nginx (~sudo systemctl restart nginx.service~) to have it ready for the dockerized phaidra system. If you change stuff, or just want to verify run ~sudo nginx -t~ to debug the configuration.
 
-  Once the configuration is in place, check if everything is right (~sudo nginx -t~) and restart the webserver to activate the new configuration (~sudo systemctl restart nginx.service~).  If you visit http://localhost:8899 you will get a ~502 Bad Gateway~-Error in your browser.  That is fine, PHAIDRA has not been started yet.
+  Also, you will find [[file:./webserver_configs/nginx/phaidra-nginx.conf][an apache configuration file in this repo]].  Activation is slightly more complicated than with nginx, but should be feasable, if one has worked with apache before (we need features not activated by default, but they're included with the standard modules).  First, run ~echo "Listen 8899" | sudo tee -a /etc/apache2/ports.conf~ to give apache the chance to listen on port 8899 (where our dev-version serves).  Then activate the necessary modules with ~sudo a2enmod proxy proxy_http~. As a last step copy the config file to ~/etc/apache2/sites-available~, disable the default configuration and run ~sudo a2ensite phaidra-apache.conf~ followed by ~sudo systemctl restart apache2.service~. If you change stuff, or just want to verify run ~sudo apachectl configtest~ to debug the configuration.
+
+  Once the configuration is in place, check if everything is right (~sudo nginx -t~) and restart the webserver to activate the new configuration (~sudo systemctl restart nginx.service~).  If you visit http://localhost:8899 you will get a ~502 Bad Gateway~-Error for nginx and a (slightly more comprehensive) ~Service unavailable~ for apache in your browser.  That is fine, PHAIDRA has not been started yet.
 
   Run ~docker compose up -d~ from this repo to start it up.  At first run, this command will run for a few minutes, as some images will have to be downloaded and partly built as well.
 
@@ -680,7 +682,9 @@
   #+begin_example
     daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker run --rm httpd:2.4.57-bookworm cat /usr/local/apache2/conf/extra/httpd-vhosts.conf > container_configs/phaidra.conf
   #+end_example
-  
+* Apache Notes
+  + Apache needs some proxy modules to be enabled, one can activate it by running ~sudo a2enmod proxy proxy_http~.
+  + Also, for development listening on port 8899 will need ~echo "Listen 8899" | sudo tee -a /etc/apache2/ports.conf~.
 * export org to markdown and add badge
   #+begin_src bash
     pandoc README.org --to=gfm -o README.md
