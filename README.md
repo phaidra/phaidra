@@ -238,12 +238,10 @@ run `sudo a2ensite phaidra-apache.conf` followed by
 want to verify run `sudo apachectl configtest` to debug the
 configuration.
 
-Once the configuration is in place, check if everything is right
-(`sudo nginx -t`) and restart the webserver to activate the new
-configuration (`sudo systemctl restart nginx.service`). If you visit
-<http://localhost:8899> you will get a `502 Bad Gateway`-Error for nginx
-and a (slightly more comprehensive) `Service unavailable` for apache in
-your browser. That is fine, PHAIDRA has not been started yet.
+If you visit <http://localhost:8899> you will get a
+`502 Bad Gateway`-Error for nginx and a (slightly more comprehensive)
+`Service unavailable` for apache in your browser. That is fine, PHAIDRA
+has not been started yet.
 
 Run `docker compose up -d` from this repo to start it up. At first run,
 this command will run for a few minutes, as some images will have to be
