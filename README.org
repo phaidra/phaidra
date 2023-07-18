@@ -150,7 +150,7 @@
   [[file:./pictures/construction.svg]]
 
 * System requirements
-  We recommend using a dedicated machine for a Phaidra instance. To get started you will need a webserver (current testing takes place with nginx) and a recent Docker installed, plus the package ~uidmap~ for running docker rootless.
+  We recommend using a dedicated machine for a Phaidra instance. To get started you will need a webserver (current testing takes place with nginx and apache) and a recent Docker installed, plus the package ~uidmap~ for running docker rootless.
 ** Docker notes
   We run the docker services in rootless mode, to avoid uneccesary privileges for the services themselves.  On the downside this means that the reverse-proxy webserver-configuration has to be done on the host's admin level, as unpriviledged docker will not open priviledged ports like 80 and 443.  From a formerly priviledged docker one can do the following to change this:
   #+begin_example

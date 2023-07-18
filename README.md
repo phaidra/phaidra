@@ -36,8 +36,8 @@ This is work in progress.
 
 We recommend using a dedicated machine for a Phaidra instance. To get
 started you will need a webserver (current testing takes place with
-nginx) and a recent Docker installed, plus the package `uidmap` for
-running docker rootless.
+nginx and apache) and a recent Docker installed, plus the package
+`uidmap` for running docker rootless.
 
 ## Docker notes
 
