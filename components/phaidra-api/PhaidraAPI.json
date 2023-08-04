@@ -8,8 +8,8 @@
         "heartbeat_timeout": 600
     },
     "mode": "production",
-    "scheme": "http",
-    "baseurl": "localhost:8899",
+    "scheme": "<OUTSIDE_HTTP_SCHEME>",
+    "baseurl": "<HOST_WITH_OR_WITHOUT_PORT>",
     "basepath": "api",
     "secret": "changeme",
     "enc_key": "changeme",
@@ -46,7 +46,7 @@
         ]
     },
     "phaidra": {
-        "baseurl": "localhost:8899",
+        "baseurl": "<HOST_WITH_OR_WITHOUT_PORT>",
         "fedorabaseurl": "fedora",
         "staticbaseurl": "",
         "fedorastylesheeturl": "",

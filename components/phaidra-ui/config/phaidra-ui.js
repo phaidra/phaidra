@@ -1,5 +1,5 @@
 export default {
-  defaultinstance: 'localhost:8899',
+  defaultinstance: '<HOST_WITH_OR_WITHOUT_PORT>',
   global: {
     title: 'Phaidra Docker',
     showinstanceswitch: 0,
@@ -50,12 +50,12 @@ export default {
     }
   },
   instances: {
-    'localhost:8899': {
+    '<HOST_WITH_OR_WITHOUT_PORT>': {
       title: 'Phaidra - Docker',
-      baseurl: 'localhost:8899',
+      baseurl: '<HOST_WITH_OR_WITHOUT_PORT>',
       basepath: '',
       irbaseurl: '',
-      api: 'http://localhost:8899/api',
+      api: '<OUTSIDE_HTTP_SCHEME>://<HOST_WITH_OR_WITHOUT_PORT>/api',
       since: '2023-01-01',
       primary: '#008080',
       institution: 'My institution',

@@ -61,7 +61,7 @@ export default {
   ],
   axios: {
     baseURL: 'http://api:3000',
-    browserBaseURL: 'http://localhost:8899/api'
+    browserBaseURL: '<OUTSIDE_HTTP_SCHEME>://<HOST_WITH_OR_WITHOUT_PORT>/api'
   },
   sentry: {
     dsn: config?.global?.monitor?.sentry?.dsn

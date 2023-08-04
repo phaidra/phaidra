@@ -28,25 +28,29 @@ cpanm-modules break the api-build.
 
 # Technical sketch
 
+## Standalone
+
+![](./pictures/construction_standalone.svg)
+
+## With external webserver
+
 This is work in progress.
 
-![](./pictures/construction.svg)
+![](./pictures/construction_external_webserver.svg)
 
 # System requirements
 
-We recommend using a dedicated machine for a Phaidra instance. To get
-started you will need a webserver (current testing takes place with
-nginx and apache) and a recent Docker installed, plus the package
-`uidmap` for running docker rootless.
+We recommend using a dedicated machine for a Phaidra instance. You will
+need a recent Docker installed, plus the package `uidmap` for running
+docker rootless.
 
 ## Docker notes
 
+### set up rootlesskit
+
 We run the docker services in rootless mode, to avoid uneccesary
-privileges for the services themselves. On the downside this means that
-the reverse-proxy webserver-configuration has to be done on the host's
-admin level, as unpriviledged docker will not open priviledged ports
-like 80 and 443. From a formerly priviledged docker one can do the
-following to change this:
+privileges for the services themselves. From a formerly priviledged
+docker one can do the following to change this:
 
 ``` example
 daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ docker --version
@@ -155,82 +159,76 @@ daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ cat << 'EOF' >
 daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ source ~/.bashrc
 ```
 
-### expose priviledged ports
+### change port forwarding mode for rootlesskit
 
-Following
-<https://docs.docker.com/engine/security/rootless/#exposing-privileged-ports>
-we did the following changes to allow for the mentioned downside (we
-however still use dedicated webservers for now, as we could not find a
-proper solution to forward client IPs to containerized webservers, which
-is an issue when protecting resources. We focus on PHAIDRA itself for
-now):
+To receive original client IPs into the webserver-containers (to be able
+to restrict access to parts of the website) we have to change the
+default rootlesskit-port-driver. If we don't, any access will seem to
+come from the docker host, which nulls the sense of logging the IP.
 
 ``` example
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker compose down
-[+] Running 6/9
- ⠹ Container phaidra-pixelgecko-1             Stopping                                                                                 8.3s 
- ✔ Container phaidra-phaidra-ui-1             Removed                                                                                  0.9s 
- ⠹ Container phaidra-dbgate-1                 Stopping                                                                                 8.3s 
- ✔ Container phaidra-openldap-1               Removed                                                                                  0.3s 
-[+] Running 14/14dra-fedora-1                 Removed                                                    ✔ Container phaidra-pixelgecko-1             Removed                                             10.3s 
- ✔ Container phaidra-phaidra-ui-1             Removed                                              0.9s  ✔ Container phaidra-dbgate-1                 Removed                                             10.6s 
- ✔ Container phaidra-openldap-1               Removed                                              0.3s  ✔ Container phaidra-fedora-1                 Removed                                              0.6s 
- ✔ Container phaidra-lam-1                    Removed                                              0.4s  ✔ Container phaidra-solr-1                   Removed                                              0.8s 
- ✔ Container phaidra-imageserver-1            Removed                                             10.4s  ✔ Container phaidra-solr-permission-fixer-1  Remov...                                             0.0s 
- ✔ Container phaidra-phaidra-api-1            Removed                                              0.3s 
- ✔ Container phaidra-mongodb-phaidra-1        Removed                                              0.2s 
- ✔ Container phaidra-mariadb-fedora-1         Removed                                              0.5s 
- ✔ Container phaidra-mariadb-phaidra-1        Removed                                              0.5s 
- ✔ Network phaidra_default                    Removed                                              0.4s 
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ sudo setcap cap_net_bind_service=ep $(which rootlesskit)
-[sudo] password for daniel: 
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ systemctl --user restart docker
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ systemctl --user status docker
-● docker.service - Docker Application Container Engine (Rootless)
-     Loaded: loaded (/home/daniel/.config/systemd/user/docker.service; enabled; preset: enabled)
-     Active: active (running) since Thu 2023-06-22 17:02:17 CEST; 8s ago
-       Docs: https://docs.docker.com/go/rootless/
-   Main PID: 61431 (rootlesskit)
-      Tasks: 47
-     Memory: 75.8M
-        CPU: 489ms
-     CGroup: /user.slice/user-1000.slice/user@1000.service/app.slice/docker.service
-             ├─61431 rootlesskit --net=slirp4netns --mtu=65520 --slirp4netns-sandbox=auto --slirp4netns>
-             ├─61442 /proc/self/exe --net=slirp4netns --mtu=65520 --slirp4netns-sandbox=auto --slirp4ne>
-             ├─61464 slirp4netns --mtu 65520 -r 3 --disable-host-loopback --enable-sandbox --enable-sec>
-             ├─61471 dockerd
-             └─61493 containerd --config /run/user/1000/docker/containerd/containerd.toml
+mkdir ~/.config/systemd/user/docker.service.d
+echo "[Service]" >> ~/.config/systemd/user/docker.service.d/override.conf
+echo 'Environment="DOCKERD_ROOTLESS_ROOTLESSKIT_PORT_DRIVER=slirp4netns"' >> ~/.config/systemd/user/docker.service.d/override.conf
+systemctl --user daemon-reload
+systemctl --user restart docker
+```
 
-Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422753209+02:00" leve>
-Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422755962+02:00" leve>
-Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422758846+02:00" leve>
-Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422761419+02:00" leve>
-Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422764256+02:00" leve>
-Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422767706+02:00" leve>
-Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422779378+02:00" leve>
-Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422801247+02:00" leve>
-Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.600775920+02:00" leve>
-Jun 22 17:02:17 pcherzigd64 systemd[1150]: Started docker.service - Docker Application Container Engine>
+### allow priviledged ports for slirp4netns
+
+To allow opening ports 80 and 443 for unpriviledged slirp4netns we need
+to dedicately allow it:
+
+``` example
+echo "net.ipv4.ip_unprivileged_port_start=0" | sudo tee /etc/sysctl.d/99-rootless.conf
+sudo sysctl --system
 ```
 
 # System startup
 
+## testing/dev
+
+To start up a local testinstance of phaidra, which will run on
+<http://localhost:8899> you need this repo on your computer and then run
+`docker compose up -d` from the base-directory of the repo. Depending on
+your internet connection and PC power, the set up will last about
+10-30min.
+
+## productive/ssl
+
+If you want to spin up a productive version of phaidra, you will
+additionaly need the following things:
+
+-   A DNS-entry for your host's IP.
+-   SSL-certificate and -key (put them into the certs-folder of this
+    repo and name them `privkey.pem` and `fullchain.pem`).
+-   firewall with port 80 and 443 open.
+
+Once you've got these prerequisites, change into the `prod` directory of
+this repo, put FQDN and IP into the lower section of the `.env` file (in
+the `prod` directory) and run `docker compose up -d` from there.
+
+## using an external webserver
+
+If you prefer to use your own webserver, that is already installed on
+your system, this is also possible:
+
 There is [an nginx configuration file in this
-repo](./webserver_configs/nginx/phaidra-nginx.conf), that can be copied
-to `/etc/nginx/sites-available` and symlinked to
-`/etc/nginx/sites-enabled`. Unlink the default config and restart nginx
+repo](./webserver_configs/nginx-external/phaidra-nginx.conf), that can
+be copied to `/etc/nginx/sites-available` and symlinked to
+`/etc/nginx/sites-enabled/`. Unlink the default config and restart nginx
 (`sudo systemctl restart nginx.service`) to have it ready for the
 dockerized phaidra system. If you change stuff, or just want to verify
 run `sudo nginx -t` to debug the configuration.
 
 Also, you will find [an apache configuration file in this
-repo](./webserver_configs/apache/phaidra-apache.conf). Activation is
-slightly more complicated than with nginx, but should be feasable, if
-one has worked with apache before (we need features not activated by
-default, but they're included with the standard modules). First, run
-`echo "Listen 8899" | sudo tee -a /etc/apache2/ports.conf` to give
-apache the chance to listen on port 8899 (where our dev-version serves).
-Then activate the necessary modules with
+repo](./webserver_configs/apache-external/phaidra-apache.conf).
+Activation is slightly more complicated than with nginx, but should be
+feasable, if one has worked with apache before (we need features not
+activated by default, but they're included with the standard modules).
+First, run `echo "Listen 8899" | sudo tee -a /etc/apache2/ports.conf` to
+give apache the chance to listen on port 8899 (where our dev-version
+serves). Then activate the necessary modules with
 `sudo a2enmod proxy proxy_http`. As a last step copy the config file to
 `/etc/apache2/sites-available`, disable the default configuration and
 run `sudo a2ensite phaidra-apache.conf` followed by
@@ -243,9 +241,10 @@ If you visit <http://localhost:8899> you will get a
 `Service unavailable` for apache in your browser. That is fine, PHAIDRA
 has not been started yet.
 
-Run `docker compose up -d` from this repo to start it up. At first run,
-this command will run for a few minutes, as some images will have to be
-downloaded and partly built as well.
+Change to the `external_webserver` directory in this repo and run
+`docker compose up -d` to start it up. At first run, this command will
+run for a few minutes, as some images will have to be downloaded and
+partly built as well.
 
 NOTE: If you make changes to files mentioned in the `dockerfiles`
 directory of this repo, make sure to remove the built images before

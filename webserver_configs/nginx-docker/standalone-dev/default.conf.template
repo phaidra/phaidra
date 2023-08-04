@@ -1,0 +1,87 @@
+upstream api {
+    server api:3000;
+}
+
+upstream ui {
+    server ui:3001;
+}
+
+upstream dbgate {
+    server dbgate:3000;
+}
+
+upstream lam {
+    server lam:80;
+}
+
+upstream solr {
+    server solr:8983;
+}
+
+upstream fedora {
+    server fedora:8080;
+}
+
+server {
+    listen 80;
+    server_name ${NGINX_HOSTNAME};
+
+    location ~ ^/api(.*) {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-XSRF-TOKEN $http_x_xsrf_token;
+        proxy_pass http://api$1$is_args$args;
+        client_max_body_size 20G;
+    }
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-XSRF-TOKEN $http_x_xsrf_token;
+        proxy_pass http://ui;        
+    }
+
+    location /dbgate {
+        allow ${NGINX_PRIVILEGED_IP};
+        deny all;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_pass http://dbgate;        
+    }
+
+    location /lam {
+        allow ${NGINX_PRIVILEGED_IP};
+        deny all;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_pass http://lam;
+    }
+
+    location /solr {
+        allow ${NGINX_PRIVILEGED_IP};
+        deny all;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_pass http://solr;
+    }
+
+    location /fcrepo {
+        allow ${NGINX_PRIVILEGED_IP};
+        deny all;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_pass http://fedora;        
+    }
+}

@@ -10,9 +10,150 @@
 ** Build status
    We have a minimal CI activated (see the status badge at the top of this readme) -- right now it only builds the docker images as defined in the ~./dockerfiles~ directory.  This is for testing purposes and runs on every commit to this repo, as a semi-manual verification if any cpanm-modules break the api-build.
 * Technical sketch
-  This is work in progress.
-  #+NAME: technical-sketch
-  #+begin_src dot :file "./pictures/construction.svg" :exports results
+** Standalone
+   #+NAME: technical-sketch-standalone
+   #+begin_src dot :file "./pictures/construction_standalone.svg" :exports results
+     graph G {
+             graph [rankdir="TB"]
+
+             USER [label="PHAIDRA USER", shape = tripleoctagon];
+
+             subgraph cluster_host {
+                     ADMIN [label="Developer/Admin", shape = doubleoctagon, color = black];
+                
+                     label = "PHAIDRA server firewall";
+                     color = red;
+                     node [shape = component, style = solid, color = red]
+
+                     subgraph cluster_host_storage {
+                             label = "PHAIDRA server mounted directories";
+                             color = blue;
+                             subgraph cluster_named_volumes {
+                                     label = "Named volumes under $HOME/.local/share/docker/volumes/";
+                                     color = turquoise;
+                                     node [shape = folder, style = solid, color = turquoise]
+                                     HS1 [label="phaidra_fedora"];
+                                     HS2 [label="phaidra_api_logs"];
+                                     HS5 [label="phaidra_mariadb_phaidra"];
+                                     HS6 [label="phaidra_mongodb_phaidra"];
+                                     HS7 [label="phaidra_openldap"];
+                                     HS9 [label="phaidra_solr"];
+                                     HS10 [label="phaidra_pixelgecko"];
+                                     HS13 [label="phaidra_dbgate"];
+                                     HS15 [label="phaidra_mariadb_fedora"];
+                             }
+                             subgraph cluster_bind_mounts {
+                                     label = "Bind mounts under $PATH/phaidra-docker/container_components/";
+                                     node [shape = folder, style = solid, color = blue]           
+                                     HS4 [label="mariadb/phaidradb.sql.gz"];
+                                     HS8 [label="openldap"];
+                                     HS16 [label="api/PhaidraAPI.json"];
+                             }
+                     }
+
+                     subgraph cluster_docker_network_host {
+                             label="PHAIDRA docker network";
+                             color = green;
+                             subgraph cluster_docker_phaidra_system {
+                                     label="PHAIDRA container system";
+                                     node [shape = component, style = solid, color = green]
+                                     DPS1 [label="fedora", URL="https://fedora.lyrasis.org/"];
+                                     DPS2 [label="api", URL="https://github.com/phaidra/phaidra-api"];
+                                     DPS3 [label="mariadb-phaidra", URL="https://mariadb.org/"];
+                                     DPS4 [label="mongodb-phaidra", URL="https://www.mongodb.com/"];
+                                     DPS5 [label="ui", URL="https://github.com/phaidra/phaidra-ui"];
+                                     DPS6 [label="openldap", URL="https://www.openldap.org/"];
+                                     DPS7 [label="solr", URL="https://solr.apache.org/"];
+                                     DPS8 [label="imageserver)", URL="https://github.com/ruven/iipsrv"];
+                                     DPS9 [label="pixelgecko"];
+                                     DPS10 [label="dbgate"];
+                                     DPS11 [label="lam"];
+                                     DPS13 [label="mariadb-fedora", URL="https://mariadb.org/"];
+                                     WEBSERVER [label="Webserver"];
+                             }
+
+                             subgraph cluster_docker_network_volumes {
+                                     label="PHAIDRA container volumes";
+                                     node [shape = folder, style = solid, color = green]
+                                     DPV1 [label="/usr/local/tomcat/fcrepo-home"];
+                                     DPV2 [label="/var/log/phaidra"];
+                                     DPV3 [label="/mnt/fedora:ro"];
+                                     DPV4 [label="/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro"];
+                                     DPV5 [label="/var/lib/mysql"];
+                                     DPV6 [label="/data/db"];
+                                     DPV7 [label="/bitnami/openldap"];
+                                     DPV8 [label="/ldifs:ro"];
+                                     DPV9 [label="/var/solr"];
+                                     DPV10 [label="/mnt/converted_images:ro"];
+                                     DPV11 [label="/mnt/fedora:ro"];
+                                     DPV12 [label="/mnt/converted_images"];
+                                     DPV13 [label="/root/.dbgate"];
+                                     DPV15 [label="/var/lib/mysql"];
+                                     DPV16 [label="/usr/local/phaidra/phaidra-api/PhaidraAPI.json:ro"];
+                             }
+                     }
+             }
+
+             // storage mapping
+
+             DPV1 -- DPS1 [color="green"];
+             HS1 -- DPV1 [color="turquoise"];
+
+             DPV2,DPV3,DPV16 -- DPS2 [color="green"];
+             HS2 -- DPV2 [color="turquoise"];
+             HS1 -- DPV3 [color="turquoise"];
+             HS16 -- DPV16 [color="blue"];
+
+             DPV4,DPV5 -- DPS3 [color="green"];
+             HS4 -- DPV4 [color="blue"];
+             HS5 -- DPV5 [color="turquoise"];
+
+             DPV6 -- DPS4 [color="green"];
+             HS6 --  DPV6 [color="turquoise"];
+
+             DPV7,DPV8 -- DPS6 [color="green"];
+             HS7 -- DPV7 [color="turquoise"];
+             HS8 -- DPV8 [color="blue"];
+
+             DPV9 -- DPS7 [color="green"];
+             HS9 -- DPV9 [color="turquoise"];
+
+             DPV10 -- DPS8 [color="green"];
+             HS10 -- DPV10 [color="turquoise"];
+
+             DPV11,DPV12 -- DPS9 [color="green"];
+             HS1 -- DPV11 [color="turquoise"];
+             HS10 -- DPV12 [color="turquoise"];
+
+             DPV13 -- DPS10 [color="green"];
+             HS13 -- DPV13 [color="turquoise"];
+
+             DPV15 -- DPS13 [color="green"];
+             HS15 -- DPV15 [color="turquoise"];
+
+             // system communication mapping
+
+             DPS1 -- DPS13 [color="orange"];
+             DPS2 -- DPS1,DPS3,DPS4,DPS5,DPS6,DPS7,DPS8 [color="orange"];
+             DPS4 -- DPS9 [color="orange"];
+             DPS6 -- DPS11 [color="orange"];
+             DPS10 -- DPS3,DPS4,DPS13 [color="orange"];            
+             WEBSERVER -- DPS1,DPS2,DPS5,DPS7,DPS10,DPS11 [color="magenta"];
+
+
+             // outside communication mapping
+
+             USER -- WEBSERVER [color="red"];
+     }
+  #+end_src
+
+  #+RESULTS: technical-sketch-standalone
+  [[file:./pictures/construction_standalone.svg]]
+   
+** With external webserver
+   This is work in progress.
+   #+NAME: technical-sketch-external-webserver
+   #+begin_src dot :file "./pictures/construction_external_webserver.svg" :exports results
     graph G {
             graph [rankdir="TB"]
 
@@ -146,13 +287,14 @@
     }
   #+end_src
 
-  #+RESULTS: technical-sketch
-  [[file:./pictures/construction.svg]]
+   #+RESULTS: technical-sketch-external-webserver
+   [[file:./pictures/construction_external_webserver.svg]]
 
 * System requirements
-  We recommend using a dedicated machine for a Phaidra instance. To get started you will need a webserver (current testing takes place with nginx and apache) and a recent Docker installed, plus the package ~uidmap~ for running docker rootless.
+  We recommend using a dedicated machine for a Phaidra instance. You will need a  recent Docker installed, plus the package ~uidmap~ for running docker rootless.
 ** Docker notes
-  We run the docker services in rootless mode, to avoid uneccesary privileges for the services themselves.  On the downside this means that the reverse-proxy webserver-configuration has to be done on the host's admin level, as unpriviledged docker will not open priviledged ports like 80 and 443.  From a formerly priviledged docker one can do the following to change this:
+*** set up rootlesskit
+  We run the docker services in rootless mode, to avoid uneccesary privileges for the services themselves.  From a formerly priviledged docker one can do the following to change this:
   #+begin_example
     daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ docker --version
     Docker version 23.0.4, build f480fb1
@@ -259,63 +401,42 @@
     > EOF
     daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ source ~/.bashrc
   #+end_example
-*** expose priviledged ports
-   Following https://docs.docker.com/engine/security/rootless/#exposing-privileged-ports we did the following changes to allow for the mentioned downside (we however still use dedicated webservers for now, as we could not find a proper solution to forward client IPs to containerized webservers, which is an issue when protecting resources. We focus on PHAIDRA itself for now):
-   #+begin_example
-     daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker compose down
-     [+] Running 6/9
-      ⠹ Container phaidra-pixelgecko-1             Stopping                                                                                 8.3s 
-      ✔ Container phaidra-phaidra-ui-1             Removed                                                                                  0.9s 
-      ⠹ Container phaidra-dbgate-1                 Stopping                                                                                 8.3s 
-      ✔ Container phaidra-openldap-1               Removed                                                                                  0.3s 
-     [+] Running 14/14dra-fedora-1                 Removed                                                    ✔ Container phaidra-pixelgecko-1             Removed                                             10.3s 
-      ✔ Container phaidra-phaidra-ui-1             Removed                                              0.9s  ✔ Container phaidra-dbgate-1                 Removed                                             10.6s 
-      ✔ Container phaidra-openldap-1               Removed                                              0.3s  ✔ Container phaidra-fedora-1                 Removed                                              0.6s 
-      ✔ Container phaidra-lam-1                    Removed                                              0.4s  ✔ Container phaidra-solr-1                   Removed                                              0.8s 
-      ✔ Container phaidra-imageserver-1            Removed                                             10.4s  ✔ Container phaidra-solr-permission-fixer-1  Remov...                                             0.0s 
-      ✔ Container phaidra-phaidra-api-1            Removed                                              0.3s 
-      ✔ Container phaidra-mongodb-phaidra-1        Removed                                              0.2s 
-      ✔ Container phaidra-mariadb-fedora-1         Removed                                              0.5s 
-      ✔ Container phaidra-mariadb-phaidra-1        Removed                                              0.5s 
-      ✔ Network phaidra_default                    Removed                                              0.4s 
-     daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ sudo setcap cap_net_bind_service=ep $(which rootlesskit)
-     [sudo] password for daniel: 
-     daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ systemctl --user restart docker
-     daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ systemctl --user status docker
-     ● docker.service - Docker Application Container Engine (Rootless)
-          Loaded: loaded (/home/daniel/.config/systemd/user/docker.service; enabled; preset: enabled)
-          Active: active (running) since Thu 2023-06-22 17:02:17 CEST; 8s ago
-            Docs: https://docs.docker.com/go/rootless/
-        Main PID: 61431 (rootlesskit)
-           Tasks: 47
-          Memory: 75.8M
-             CPU: 489ms
-          CGroup: /user.slice/user-1000.slice/user@1000.service/app.slice/docker.service
-                  ├─61431 rootlesskit --net=slirp4netns --mtu=65520 --slirp4netns-sandbox=auto --slirp4netns>
-                  ├─61442 /proc/self/exe --net=slirp4netns --mtu=65520 --slirp4netns-sandbox=auto --slirp4ne>
-                  ├─61464 slirp4netns --mtu 65520 -r 3 --disable-host-loopback --enable-sandbox --enable-sec>
-                  ├─61471 dockerd
-                  └─61493 containerd --config /run/user/1000/docker/containerd/containerd.toml
-
-     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422753209+02:00" leve>
-     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422755962+02:00" leve>
-     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422758846+02:00" leve>
-     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422761419+02:00" leve>
-     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422764256+02:00" leve>
-     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422767706+02:00" leve>
-     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422779378+02:00" leve>
-     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.422801247+02:00" leve>
-     Jun 22 17:02:17 pcherzigd64 dockerd-rootless.sh[61471]: time="2023-06-22T17:02:17.600775920+02:00" leve>
-     Jun 22 17:02:17 pcherzigd64 systemd[1150]: Started docker.service - Docker Application Container Engine>
-   #+end_example
+*** change port forwarding mode for rootlesskit
+    To receive original client IPs into the webserver-containers (to be able to restrict access to parts of the website) we have to change the default rootlesskit-port-driver.  If we don't, any access will seem to come from the docker host, which nulls the sense of logging the IP.
+#+begin_example
+mkdir ~/.config/systemd/user/docker.service.d
+echo "[Service]" >> ~/.config/systemd/user/docker.service.d/override.conf
+echo 'Environment="DOCKERD_ROOTLESS_ROOTLESSKIT_PORT_DRIVER=slirp4netns"' >> ~/.config/systemd/user/docker.service.d/override.conf
+systemctl --user daemon-reload
+systemctl --user restart docker
+#+end_example
+*** allow priviledged ports for slirp4netns
+    To allow opening ports 80 and 443 for unpriviledged slirp4netns we need to dedicately allow it:
+#+begin_example
+echo "net.ipv4.ip_unprivileged_port_start=0" | sudo tee /etc/sysctl.d/99-rootless.conf
+sudo sysctl --system
+#+end_example
 * System startup
-  There is [[file:./webserver_configs/nginx/phaidra-nginx.conf][an nginx configuration file in this repo]], that can be copied to ~/etc/nginx/sites-available~ and symlinked to ~/etc/nginx/sites-enabled~. Unlink the default config and restart nginx (~sudo systemctl restart nginx.service~) to have it ready for the dockerized phaidra system. If you change stuff, or just want to verify run ~sudo nginx -t~ to debug the configuration.
+** testing/dev
+  To start up a local testinstance of phaidra, which will run on http://localhost:8899 you need this repo on your computer and then run ~docker compose up -d~ from the base-directory of the repo.  Depending on your internet connection and PC power, the set up  will last about 10-30min.
+** productive/ssl
+  If you want to spin up a productive version of phaidra, you will additionaly need the following things:
+     + A DNS-entry for your host's IP.
+     + SSL-certificate and -key (put them into the certs-folder of this repo and  name them ~privkey.pem~ and ~fullchain.pem~).
+     + firewall with port 80 and 443 open.
 
-  Also, you will find [[file:./webserver_configs/apache/phaidra-apache.conf][an apache configuration file in this repo]].  Activation is slightly more complicated than with nginx, but should be feasable, if one has worked with apache before (we need features not activated by default, but they're included with the standard modules).  First, run ~echo "Listen 8899" | sudo tee -a /etc/apache2/ports.conf~ to give apache the chance to listen on port 8899 (where our dev-version serves).  Then activate the necessary modules with ~sudo a2enmod proxy proxy_http~. As a last step copy the config file to ~/etc/apache2/sites-available~, disable the default configuration and run ~sudo a2ensite phaidra-apache.conf~ followed by ~sudo systemctl restart apache2.service~. If you change stuff, or just want to verify run ~sudo apachectl configtest~ to debug the configuration.
+  Once you've got these prerequisites, change into the ~prod~ directory of this repo, put FQDN and IP into the lower section of the ~.env~ file (in the ~prod~ directory) and run ~docker compose up -d~ from there.
+
+** using an external webserver
+   If you prefer to use your own webserver, that is already installed on your system, this is also possible:
+   
+  There is [[file:./webserver_configs/nginx-external/phaidra-nginx.conf][an nginx configuration file in this repo]], that can be copied to ~/etc/nginx/sites-available~ and symlinked to ~/etc/nginx/sites-enabled/~. Unlink the default config and restart nginx (~sudo systemctl restart nginx.service~) to have it ready for the dockerized phaidra system. If you change stuff, or just want to verify run ~sudo nginx -t~ to debug the configuration.
+
+  Also, you will find [[file:./webserver_configs/apache-external/phaidra-apache.conf][an apache configuration file in this repo]].  Activation is slightly more complicated than with nginx, but should be feasable, if one has worked with apache before (we need features not activated by default, but they're included with the standard modules).  First, run ~echo "Listen 8899" | sudo tee -a /etc/apache2/ports.conf~ to give apache the chance to listen on port 8899 (where our dev-version serves).  Then activate the necessary modules with ~sudo a2enmod proxy proxy_http~. As a last step copy the config file to ~/etc/apache2/sites-available~, disable the default configuration and run ~sudo a2ensite phaidra-apache.conf~ followed by ~sudo systemctl restart apache2.service~. If you change stuff, or just want to verify run ~sudo apachectl configtest~ to debug the configuration.
 
 If you visit http://localhost:8899 you will get a ~502 Bad Gateway~-Error for nginx and a (slightly more comprehensive) ~Service unavailable~ for apache in your browser.  That is fine, PHAIDRA has not been started yet.
 
-  Run ~docker compose up -d~ from this repo to start it up.  At first run, this command will run for a few minutes, as some images will have to be downloaded and partly built as well.
+  Change to the ~external_webserver~ directory in this repo and run ~docker compose up -d~ to start it up.  At first run, this command will run for a few minutes, as some images will have to be downloaded and partly built as well.
 
   NOTE: If you make changes to files mentioned in the ~dockerfiles~ directory of this repo, make sure to remove the built images before running ~docker compose up -d~.  Otherwise you will keep on using the old images and notice not difference.  E.g. if one does a change to ~components/phaidra-api/PhaidraAPI.json~ one will also have to run ~docker rmi phaidra-docker-phaidra-api~ to have it rebuilt on a new startup.
 

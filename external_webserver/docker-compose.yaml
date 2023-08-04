@@ -1,12 +1,12 @@
 version: '3'
 
-name: phaidra
+name: phaidra-external-webserver
 
 services:
 
   imageserver:
     build:
-      context: .
+      context: ../.
       dockerfile: dockerfiles/imageserver.dockerfile
     ports:
       - "8081:80"
@@ -15,7 +15,7 @@ services:
 
   solr:
     build:
-      context: .
+      context: ../.
       dockerfile: dockerfiles/solr.dockerfile
     volumes:
       - solr:/var/solr
@@ -30,8 +30,13 @@ services:
     depends_on:
       - api
     build:
-      context: .
+      context: ../.
       dockerfile: dockerfiles/ui.dockerfile
+      args:
+        PHAIDRA_HOSTNAME: ${PHAIDRA_HOSTNAME}
+        PHAIDRA_PORTSTUB: ${PHAIDRA_PORTSTUB}
+        PHAIDRA_HOSTPORT: ${PHAIDRA_HOSTPORT}
+        OUTSIDE_HTTP_SCHEME: ${OUTSIDE_HTTP_SCHEME}
     ports:
       - "3001:3001"
 
@@ -41,12 +46,16 @@ services:
       - mongodb-phaidra
       - fedora
     build:
-      context: .
+      context: ../.
       dockerfile: dockerfiles/api.dockerfile
+      args:
+        PHAIDRA_HOSTNAME: ${PHAIDRA_HOSTNAME}
+        PHAIDRA_PORTSTUB: ${PHAIDRA_PORTSTUB}
+        PHAIDRA_HOSTPORT: ${PHAIDRA_HOSTPORT}
+        OUTSIDE_HTTP_SCHEME: ${OUTSIDE_HTTP_SCHEME}
     volumes:
       - api_logs:/var/log/phaidra
       - fedora:/mnt/fedora:ro
-      - ./container_components/api/PhaidraAPI.json:/usr/local/phaidra/phaidra-api/PhaidraAPI.json:ro
     ports:
       - "3000:3000"
 
@@ -57,13 +66,11 @@ services:
     restart:
       always
     build:
-      context: .
+      context: ../.
       dockerfile: dockerfiles/pixelgecko.dockerfile
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
-    deploy:
-      replicas: 4
 
   mariadb-phaidra:
     image: mariadb:11.0.2-jammy
@@ -74,7 +81,7 @@ services:
       MARIADB_USER: ${MARIADB_PHAIDRA_USER}
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
     volumes:
-      - ./container_components/mariadb/phaidradb.sql.gz:/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro
+      - .././container_components/mariadb/phaidradb.sql.gz:/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro
       - mariadb_phaidra:/var/lib/mysql
 
   mariadb-fedora:
@@ -102,27 +109,22 @@ services:
     restart: always
     environment:
       CONNECTIONS: con1,con2,con3
-
       LABEL_con1: MariaDB-Phaidra
       SERVER_con1: mariadb-phaidra
       USER_con1: ${MARIADB_PHAIDRA_USER}
       PASSWORD_con1: ${MARIADB_PHAIDRA_PASSWORD}
       PORT_con1: 3306
       ENGINE_con1: mariadb@dbgate-plugin-mysql
-
       LABEL_con2: MariaDB-Fedora
       SERVER_con2: mariadb-fedora
       USER_con2: ${MARIADB_PHAIDRA_USER}
       PASSWORD_con2: ${MARIADB_PHAIDRA_PASSWORD}
       PORT_con2: 3306
       ENGINE_con2: mariadb@dbgate-plugin-mysql
-
       LABEL_con3: MongoDB-Phaidra
       URL_con3: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongodb-phaidra:27017
       ENGINE_con3: mongo@dbgate-plugin-mongo
-
       WEB_ROOT: /dbgate
-
     volumes:
       - dbgate:/root/.dbgate
     depends_on:
@@ -166,7 +168,7 @@ services:
       - LDAP_CUSTOM_LDIF_DIR=/ldifs
     volumes:
       - openldap:/bitnami/openldap
-      - ./container_components/openldap:/ldifs:ro
+      - .././container_components/openldap:/ldifs:ro
 
 volumes:
   api_logs:

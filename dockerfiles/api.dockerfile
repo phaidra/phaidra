@@ -29,5 +29,15 @@ RUN mkdir -pv /usr/local/phaidra
 RUN mkdir -pv /var/log/phaidra
 COPY ./../components/phaidra-api /usr/local/phaidra/phaidra-api
 WORKDIR /usr/local/phaidra/phaidra-api/
+ARG PHAIDRA_HOSTNAME
+ARG PHAIDRA_PORTSTUB
+ARG PHAIDRA_HOSTPORT
+ARG OUTSIDE_HTTP_SCHEME
+RUN <<EOF
+sed -i "s|<HOST_WITH_OR_WITHOUT_PORT>|${PHAIDRA_HOSTNAME}${PHAIDRA_PORTSTUB}${PHAIDRA_HOSTPORT}|g" \
+    /usr/local/phaidra/phaidra-api/PhaidraAPI.json
+sed -i "s|<OUTSIDE_HTTP_SCHEME>|${OUTSIDE_HTTP_SCHEME}|" \
+    /usr/local/phaidra/phaidra-api/PhaidraAPI.json
+EOF
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]

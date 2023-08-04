@@ -605,7 +605,6 @@ sub preview {
               }
             }
           }
-
           $self->stash(baseurl           => $self->config->{baseurl});
           $self->stash(basepath          => $self->config->{basepath});
           $self->stash(video_key         => $r->{video_key});
@@ -628,6 +627,7 @@ sub preview {
           } else {
             $self->render(text => "Stream is not available. Reason: ".$r->{alerts}[0]->{msg}, status => $r->{status});
           }
+
           return;
         }
       }
@@ -636,6 +636,7 @@ sub preview {
           $self->render(template => 'utils/loadbutton', format => 'html');
           return;
         }
+        $self->stash(scheme   => $self->config->{scheme});
         $self->stash(baseurl       => $self->config->{baseurl});
         $self->stash(basepath      => $self->config->{basepath});
         $self->stash(trywebversion => $trywebversion);
@@ -657,6 +658,7 @@ sub preview {
         $self->render(template => 'utils/loadbutton', format => 'html');
         return;
       }
+      $self->stash(scheme        => $self->config->{scheme});
       $self->stash(baseurl       => $self->config->{baseurl});
       $self->stash(basepath      => $self->config->{basepath});
       $self->stash(trywebversion => $trywebversion);
