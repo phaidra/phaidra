@@ -399,6 +399,7 @@
     daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ cat << 'EOF' >> /home/daniel/.bashrc 
     > export DOCKER_HOST=unix:///run/user/1000/docker.sock
     > EOF
+    ## NOTE: some systems also need 'export XDG_RUNTIME_DIR=/run/user/$(id -u)' in .bashrc, read the hints of the docker-rootless-installer thouroughly!
     daniel@pcherzigd64:~/gitlab.phaidra.org/herzigd64/phaidra-docker$ source ~/.bashrc
   #+end_example
 *** change port forwarding mode for rootlesskit
