@@ -46,6 +46,16 @@ docker rootless.
 
 ## Docker notes
 
+Please use the Docker upstream documentation for setting up Docker – we
+are currently using [Ubuntu
+Jammy](https://docs.docker.com/engine/install/ubuntu/) and [Debian
+Bookworm](https://docs.docker.com/engine/install/debian/) for
+development. After the initial installation, we switch to docker
+rootless, to avoid unecessary privileges for Phaidra itself. There is
+extensive [upstream
+documentation](https://docs.docker.com/engine/security/rootless/) how to
+do this – below you find what works for us on Bullseye and Jammy.
+
 ### set up rootlesskit
 
 We run the docker services in rootless mode, to avoid uneccesary
@@ -451,9 +461,47 @@ docker volume rm $(docker volume ls --filter label=com.docker.compose.project=ph
 docker system prune --all
 ```
 
-# Known issues
+# <span class="todo TODO">TODO</span> Known issues
 
 We keep searching.
+
+There's hardcoded 'https' in the following occurences in the phaidra-ui
+components:
+
+``` example
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/server-middleware/redirect.js:              redirect(res, 'https://' + config.instances[config.defaultinstance].irbaseurl + '/' + pid)
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/server-middleware/redirect.js:      redirect(res, 'https://' + config.instances[config.defaultinstance].baseurl + '/detail/' + pid)
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/pages/upload-webversion/_pid.vue:                {{ $t('WEBVERSIONSUBMIT', { pid: 'https://' + instanceconfig.baseurl + '/' + parentpid }) }}
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/pages/detail/_pid.vue:        "https://" + this.instanceconfig.irbaseurl + "/" + this.objectInfo.pid
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/pages/detail/_pid.vue:          "https://" + this.instanceconfig.baseurl + "/" + this.objectInfo.pid,
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/pages/detail/_pid.vue:              "https://" +
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/pages/detail/_pid.vue:          url: "https://" + this.appconfig.apis.doi.baseurl + "/" + this.doi,
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/pages/detail/_pid.vue:          url: "https://" + this.appconfig.apis.doi.baseurl + "/" + this.doi,
+```
+
+This boils down to the three files:
+
+-   `components/phaidra-ui/pages/detail/_pid.vue`
+-   `components/phaidra-ui/pages/upload-webversion/_pid.vue`
+-   `components/phaidra-ui/server-middleware/redirect.js`
+
+In phaidra-vue-components we find:
+
+``` example
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/lists/PLists.vue:            <template v-if="token && token.length > 0"><a class="pl-2 white--text" target="_blank" :href="'/list/' + token">{{ 'https://' + instance.baseurl + '/list/' + token }}</a></template>
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/input/PISubjectGnd.vue:          url: 'https://' + this.$store.state.appconfig.apis.lobid.baseurl + '/gnd/search',
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/display/PDJsonld.vue:        <v-col :md="valueColMd" cols="12">https://{{ instance.baseurl }}/{{ pid }}</v-col>
+
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/search/PSearchResults.vue:                <span>https://{{ instance.baseurl }}/{{ doc.pid }}</span>
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/management/PMDelete.vue:      <div v-else>{{ $t('DELETE_OBJECT', { pid: 'https://' + instance.baseurl + '/' + pid }) }}</div>
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/management/PMDelete.vue:          <v-card-text>{{ $t('DELETE_OBJECT_CONFIRM', { pid: 'https://' + instance.baseurl + '/' +  pid })}}</v-card-text>
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/management/PMRelationships.vue:                <a target="_blank" :href="'https://' + instance.baseurl + '/' + item.object">{{ item.object }}</a>
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/select/RorSearch.vue:          url: 'https://' + this.$store.state.appconfig.apis.ror.baseurl + '/organizations',
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/browse/PCollectionGallery.vue:                   <v-img aspect-ratio="1" :src="'https://' + instanceconfig.baseurl + '/preview/' + doc.pid" @click="showDetailDialog(doc)"></v-img>
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/browse/PCollectionGallery.vue:                      <v-img class="grey lighten-2" aspect-ratio="1" :src="'https://' + instanceconfig.baseurl + '/preview/' + doc.pid"
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/browse/PCollectionGallery.vue:          <v-img aspect-ratio="1" :src="'https://' + instanceconfig.baseurl + '/preview/' + detailToShow.pid"></v-img>
+/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/browse/PCollectionGallery.vue:        //  alert('https://' + this.instanceconfig.baseurl + '/preview/' + doc.pid);
+```
 
 # Phaidra Components
 
