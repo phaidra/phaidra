@@ -1,0 +1,216 @@
+version: '3'
+
+name: phaidra-standalone-local
+
+networks:
+  phaidra-network:
+    ipam:
+      config:
+        - subnet: 172.29.0.0/16
+          ip_range: 172.29.7.0/24
+          gateway: 172.29.5.1
+
+services:
+
+  nginx:
+    image: nginx:1.25.1-alpine
+    ports:
+      - "${PHAIDRA_HOSTPORT}:80"
+    volumes:
+      - .././webserver_configs/nginx-docker/standalone-dev:/etc/nginx/templates:ro
+      - .././webserver_configs/nginx-docker/standalone-dev/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+      - ui
+    networks:
+      - phaidra-network
+    environment:
+      - NGINX_HOST=${PHAIDRA_HOSTNAME}
+      - NGINX_PRIVILEGED_IP=${ALLOWED_HOST}
+
+  imageserver:
+    build:
+      context: ../.
+      dockerfile: dockerfiles/imageserver.dockerfile
+    volumes:
+      - pixelgecko:/mnt/converted_images:ro
+    networks:
+      - phaidra-network
+
+  solr:
+    build:
+      context: ../.
+      dockerfile: dockerfiles/solr.dockerfile
+    volumes:
+      - solr:/var/solr
+    command:
+      - solr-precreate
+      - phaidra
+      - /tmp/phaidra
+    networks:
+      - phaidra-network
+
+  ui:
+    depends_on:
+      - api
+    build:
+      context: ../.
+      dockerfile: dockerfiles/ui.dockerfile
+      args:
+        PHAIDRA_HOSTNAME: ${PHAIDRA_HOSTNAME}
+        PHAIDRA_PORTSTUB: ${PHAIDRA_PORTSTUB}
+        PHAIDRA_HOSTPORT: ${PHAIDRA_HOSTPORT}
+        OUTSIDE_HTTP_SCHEME: ${OUTSIDE_HTTP_SCHEME}
+    networks:
+      - phaidra-network
+
+  api:
+    depends_on:
+      - mariadb-phaidra
+      - mongodb-phaidra
+      - fedora
+    build:
+      context: ../.
+      dockerfile: dockerfiles/api.dockerfile
+      args:
+        PHAIDRA_HOSTNAME: ${PHAIDRA_HOSTNAME}
+        PHAIDRA_PORTSTUB: ${PHAIDRA_PORTSTUB}
+        PHAIDRA_HOSTPORT: ${PHAIDRA_HOSTPORT}
+        OUTSIDE_HTTP_SCHEME: ${OUTSIDE_HTTP_SCHEME}
+    volumes:
+      - api_logs:/var/log/phaidra
+      - fedora:/mnt/fedora:ro
+    networks:
+      - phaidra-network
+
+  pixelgecko:
+    depends_on:
+      - mongodb-phaidra
+      - api
+    restart:
+      always
+    build:
+      context: ../.
+      dockerfile: dockerfiles/pixelgecko.dockerfile
+    volumes:
+      - fedora:/mnt/fedora:ro
+      - pixelgecko:/mnt/converted_images
+    networks:
+      - phaidra-network
+
+  mariadb-phaidra:
+    image: mariadb:11.0.2-jammy
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${PHAIDRADB}
+      MARIADB_USER: ${MARIADB_PHAIDRA_USER}
+      MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
+    volumes:
+      - .././container_components/mariadb/phaidradb.sql.gz:/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro
+      - mariadb_phaidra:/var/lib/mysql
+    networks:
+      - phaidra-network
+
+  mariadb-fedora:
+    image: mariadb:10.5
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${FEDORADB}
+      MARIADB_USER: ${MARIADB_PHAIDRA_USER}
+      MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
+    volumes:
+      - mariadb_fedora:/var/lib/mysql
+    networks:
+      - phaidra-network
+
+  mongodb-phaidra:
+    image: mongo:5
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_PHAIDRA_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PHAIDRA_PASSWORD}
+    volumes:
+      - mongodb_phaidra:/data/db
+    networks:
+      - phaidra-network
+
+  dbgate:
+    image: dbgate/dbgate:5.2.5
+    restart: always
+    environment:
+      CONNECTIONS: con1,con2,con3
+      LABEL_con1: MariaDB-Phaidra
+      SERVER_con1: mariadb-phaidra
+      USER_con1: ${MARIADB_PHAIDRA_USER}
+      PASSWORD_con1: ${MARIADB_PHAIDRA_PASSWORD}
+      PORT_con1: 3306
+      ENGINE_con1: mariadb@dbgate-plugin-mysql
+      LABEL_con2: MariaDB-Fedora
+      SERVER_con2: mariadb-fedora
+      USER_con2: ${MARIADB_PHAIDRA_USER}
+      PASSWORD_con2: ${MARIADB_PHAIDRA_PASSWORD}
+      PORT_con2: 3306
+      ENGINE_con2: mariadb@dbgate-plugin-mysql
+      LABEL_con3: MongoDB-Phaidra
+      URL_con3: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongodb-phaidra:27017
+      ENGINE_con3: mongo@dbgate-plugin-mongo
+      WEB_ROOT: /dbgate
+    volumes:
+      - dbgate:/root/.dbgate
+    depends_on:
+      - mariadb-phaidra
+      - mariadb-fedora
+      - mongodb-phaidra
+    networks:
+      - phaidra-network
+
+  fedora:
+    image: fcrepo/fcrepo:6.4.0
+    restart: always
+    environment:
+      - CATALINA_OPTS=${CATALINA_OPTS}
+    volumes:
+      - fedora:/usr/local/tomcat/fcrepo-home
+    depends_on:
+      - mariadb-fedora
+    networks:
+      - phaidra-network
+
+  lam:
+    image: ghcr.io/ldapaccountmanager/lam:8.4
+    restart: always
+    environment:
+      - LDAP_DOMAIN=${LDAP_DOMAIN}
+      - LDAP_SERVER=ldap://openldap:${LDAP_PORT_NUMBER}
+      - LDAP_USER=cn=${LDAP_ADMIN_USERNAME},${LDAP_ROOT}
+      - LDAP_USER_DN=ou=people,${LDAP_ROOT}
+      - LDAP_GROUPS_DN=ou=groups,${LDAP_ROOT}
+    networks:
+      - phaidra-network
+
+  openldap:
+    image: bitnami/openldap:2.6.4-debian-11-r44
+    environment:
+      - LDAP_ADMIN_USERNAME=${LDAP_ADMIN_USERNAME}
+      - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
+      - LDAP_PORT_NUMBER=${LDAP_PORT_NUMBER}
+      - LDAP_ROOT=${LDAP_ROOT}
+      - LDAP_CUSTOM_LDIF_DIR=/ldifs
+    volumes:
+      - openldap:/bitnami/openldap
+      - .././container_components/openldap:/ldifs:ro
+    networks:
+      - phaidra-network
+
+volumes:
+  api_logs:
+  openldap:
+  fedora:
+  dbgate:
+  mongodb_phaidra:
+  mariadb_fedora:
+  mariadb_phaidra:
+  pixelgecko:
+  solr:

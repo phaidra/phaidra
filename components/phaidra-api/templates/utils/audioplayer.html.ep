@@ -4,7 +4,7 @@
  </head>
  <body>
   <audio controls preload="metadata">
-    <source src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get" type="<%= $mimetype %>">
+    <source src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get?trywebversion=1" type="<%= $mimetype %>">
     Your browser does not support the audio element.
   </audio>
  </body>
