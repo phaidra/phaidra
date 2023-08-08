@@ -1,6 +1,6 @@
 version: '3'
 
-name: phaidra-standalone-prod
+name: phaidra-ssl-nginx
 
 networks:
   phaidra-network:
@@ -18,9 +18,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - .././webserver_configs/nginx-docker/standalone-ssl:/etc/nginx/templates:ro
-      - .././webserver_configs/nginx-docker/standalone-ssl/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./certs:/etc/nginx/certs:ro
+      - .././webserver_configs/nginx-docker/ssl:/etc/nginx/templates:ro
+      - .././webserver_configs/nginx-docker/ssl/nginx.conf:/etc/nginx/nginx.conf:ro
+      - .././certs:/etc/nginx/certs:ro
     depends_on:
       - api
       - ui

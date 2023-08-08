@@ -220,7 +220,7 @@ additionaly need the following things:
     repo and name them `privkey.pem` and `fullchain.pem`).
 -   firewall with port 80 and 443 open.
 
-Once you've got these prerequisites, change into the `prod_nginx`
+Once you've got these prerequisites, change into the `ssl_nginx`
 directory of this repo, put FQDN and IP into the lower section of the
 `.env` file (in the `prod_nginx` directory) and run
 `docker compose up -d` from there. We currently work on the same for

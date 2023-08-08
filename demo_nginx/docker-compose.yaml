@@ -17,8 +17,8 @@ services:
     ports:
       - "${PHAIDRA_HOSTPORT}:80"
     volumes:
-      - .././webserver_configs/nginx-docker/standalone-dev:/etc/nginx/templates:ro
-      - .././webserver_configs/nginx-docker/standalone-dev/nginx.conf:/etc/nginx/nginx.conf:ro
+      - .././webserver_configs/nginx-docker/demo:/etc/nginx/templates:ro
+      - .././webserver_configs/nginx-docker/demo/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - api
       - ui

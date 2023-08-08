@@ -428,7 +428,7 @@ sudo sysctl --system
      + SSL-certificate and -key (put them into the certs-folder of this repo and  name them ~privkey.pem~ and ~fullchain.pem~).
      + firewall with port 80 and 443 open.
 
-  Once you've got these prerequisites, change into the ~prod_nginx~ directory of this repo, put FQDN and IP into the lower section of the ~.env~ file (in the ~prod_nginx~ directory) and run ~docker compose up -d~ from there.  We currently work on the same for apache2.  Depending on your internet connection and PC power, the set up  will last about 10-30min.
+  Once you've got these prerequisites, change into the ~ssl_nginx~ directory of this repo, put FQDN and IP into the lower section of the ~.env~ file (in the ~prod_nginx~ directory) and run ~docker compose up -d~ from there.  We currently work on the same for apache2.  Depending on your internet connection and PC power, the set up  will last about 10-30min.
 
 ** using an external webserver
    If you prefer to use your own webserver, that is already installed on your system, this is also possible:
