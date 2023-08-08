@@ -197,13 +197,18 @@ sudo sysctl --system
 
 # System startup
 
+This repo holds four phaidra flavors at the moment. Three of them depend
+solely on docker (they include nginx and apache respectively, but depend
+on the same phaidra-code).
+
 ## testing/dev
 
 To start up a local testinstance of phaidra, which will run on
 <http://localhost:8899> you need this repo on your computer and then run
-`docker compose up -d` from the base-directory of the repo. Depending on
-your internet connection and PC power, the set up will last about
-10-30min.
+`docker compose up -d` from either the `demo_httpd` folder (starts
+phaidra with apache2 as webserver), or the `demo_nginx` folder (which,
+well uses nginx as webserver). Depending on your internet connection and
+PC power, the set up will last about 10-30min.
 
 ## productive/ssl
 
@@ -215,9 +220,12 @@ additionaly need the following things:
     repo and name them `privkey.pem` and `fullchain.pem`).
 -   firewall with port 80 and 443 open.
 
-Once you've got these prerequisites, change into the `prod` directory of
-this repo, put FQDN and IP into the lower section of the `.env` file (in
-the `prod` directory) and run `docker compose up -d` from there.
+Once you've got these prerequisites, change into the `prod_nginx`
+directory of this repo, put FQDN and IP into the lower section of the
+`.env` file (in the `prod_nginx` directory) and run
+`docker compose up -d` from there. We currently work on the same for
+apache2. Depending on your internet connection and PC power, the set up
+will last about 10-30min.
 
 ## using an external webserver
 

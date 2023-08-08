@@ -26,23 +26,6 @@ services:
     environment:
       - HTTPD_HOST=${PHAIDRA_HOSTNAME}
       - PRIVILEGED_IP=${ALLOWED_HOST}
-    
-
-  # nginx:
-  #   image: nginx:1.25.1-alpine
-  #   ports:
-  #     - "${PHAIDRA_HOSTPORT}:80"
-  #   volumes:
-  #     - .././webserver_configs/nginx-docker/standalone-dev:/etc/nginx/templates:ro
-  #     - .././webserver_configs/nginx-docker/standalone-dev/nginx.conf:/etc/nginx/nginx.conf:ro
-  #   depends_on:
-  #     - api
-  #     - ui
-  #   networks:
-  #     - phaidra-network
-  #   environment:
-  #     - NGINX_HOST=${PHAIDRA_HOSTNAME}
-  #     - NGINX_PRIVILEGED_IP=${ALLOWED_HOST}
 
   imageserver:
     build:
