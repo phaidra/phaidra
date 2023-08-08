@@ -322,26 +322,23 @@ sub preview {
       return $propres;
     }
     $cmodel = $propres->{cmodel};
+    my $dsAttr;
     if (exists($propres->{contains})) {
       for my $contains (@{$propres->{contains}}) {
         if ($contains eq 'WEBVERSION') {
           $trywebversion = 1;
+          $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'WEBVERSION');
+          if ($dsAttr->{status} eq 200) {
+            $filename = $dsAttr->{filename};
+            $mimetype = $dsAttr->{mimetype};
+            $size = $dsAttr->{size};
+          }
           last;
         }
       }
     }
 
-    my $dsAttr;
-    if ($trywebversion) {
-      $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'WEBVERSION');
-      if ($dsAttr->{status} ne 200) {
-        $self->render(json => $dsAttr, status => $dsAttr->{status});
-        return;
-      }
-      $filename = $dsAttr->{filename};
-      $mimetype = $dsAttr->{mimetype};
-      $size = $dsAttr->{size};
-    } else {
+    unless ($trywebversion) {      
       $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
       if ($dsAttr->{status} ne 200) {
         $self->render(json => $dsAttr, status => $dsAttr->{status});
