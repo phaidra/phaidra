@@ -10,135 +10,187 @@
 ** Build status
    We have a minimal CI activated (see the status badge at the top of this readme) -- right now it only builds the docker images as defined in the ~./dockerfiles~ directory.  This is for testing purposes and runs on every commit to this repo, as a semi-manual verification if any cpanm-modules break the api-build.
 * Technical sketch
-** Standalone
+** Nginx Demo
    #+NAME: technical-sketch-standalone
    #+begin_src dot :file "./pictures/construction_standalone.svg" :exports results
      graph G {
-             graph [rankdir="TB"]
+             rankdir="LR"
 
              USER [label="PHAIDRA USER", shape = tripleoctagon];
 
              subgraph cluster_host {
                      ADMIN [label="Developer/Admin", shape = doubleoctagon, color = black];
-                
+
                      label = "PHAIDRA server firewall";
                      color = red;
-                     node [shape = component, style = solid, color = red]
 
                      subgraph cluster_host_storage {
-                             label = "PHAIDRA server mounted directories";
+                             label = "PHAIDRA server filesystem";
                              color = blue;
                              subgraph cluster_named_volumes {
                                      label = "Named volumes under $HOME/.local/share/docker/volumes/";
                                      color = turquoise;
-                                     node [shape = folder, style = solid, color = turquoise]
-                                     HS1 [label="phaidra_fedora"];
-                                     HS2 [label="phaidra_api_logs"];
-                                     HS5 [label="phaidra_mariadb_phaidra"];
-                                     HS6 [label="phaidra_mongodb_phaidra"];
-                                     HS7 [label="phaidra_openldap"];
-                                     HS9 [label="phaidra_solr"];
-                                     HS10 [label="phaidra_pixelgecko"];
-                                     HS13 [label="phaidra_dbgate"];
-                                     HS15 [label="phaidra_mariadb_fedora"];
-                             }
+                                     node [shape = box, style = solid, color = turquoise]
+                                     HS_FEDORA [label=<
+                                                <table border="0">
+                                                <tr><td align="text">phaidra_fedora</td></tr>
+                                                <tr><td align="text">------------------------------------------------------------</td></tr>
+                                                <tr><td align="text">fedora-container: /usr/local/tomcat/fcrepo-home</td></tr>
+                                                <tr><td align="text">------------------------------------------------------------</td></tr>
+                                                <tr><td align="text">pixelgecko-container: /mnt/fedora:ro</td></tr>
+                                                <tr><td align="text">------------------------------------------------------------</td></tr>
+                                                <tr><td align="text">api-container: /mnt/fedora:ro</td></tr>                                           
+                                                </table>
+                                                >];
+                                     HS_API_LOGS [label=<
+                                                  <table border="0">
+                                                  <tr><td align="text">phaidra_api_logs</td></tr>
+                                                  <tr><td align="text">------------------------------------------------------------</td></tr>
+                                                  <tr><td align="text">api-container: /var/log/phaidra</td></tr>
+                                                  </table>
+                                                  >];
+                                     HS_MARIADB_PHAIDRA [label=<
+                                                         <table border="0">
+                                                         <tr><td align="text">phaidra_mariadb_phaidra</td></tr>
+                                                         <tr><td align="text">------------------------------------------------------------</td></tr>
+                                                         <tr><td align="text">mariadb-phaidra-container: /var/lib/mysql</td></tr>
+                                                         </table>
+                                                         >];
+                                     HS_MONGODB_PHAIDRA [label=<
+                                                         <table border="0">
+                                                         <tr><td align="text">phaidra_mongodb_phaidra</td></tr>
+                                                         <tr><td align="text">------------------------------------------------------------</td></tr>
+                                                         <tr><td align="text">phaidra-mongodb-container: /data/db</td></tr>
+                                                         </table>
+                                                         >];
+                                     HS_OPENLDAP [label=<
+                                                  <table border="0">
+                                                  <tr><td align="text">phaidra_openldap</td></tr>
+                                                  <tr><td align="text">------------------------------------------------------------</td></tr>
+                                                  <tr><td align="text">openldap-container: /bitnami/openldap</td></tr>
+                                                  </table>
+                                                  >];
+                                     HS_SOLR [label=<
+                                              <table border="0">
+                                              <tr><td align="text">phaidra_solr</td></tr>
+                                              <tr><td align="text">------------------------------------------------------------</td></tr>
+                                              <tr><td align="text">solr-container: /var/solr</td></tr>
+                                              </table>
+                                              >];
+                                     HS_PIXELGECKO [label=<
+                                              <table border="0">
+                                              <tr><td align="text">phaidra_pixelgecko</td></tr>
+                                              <tr><td align="text">------------------------------------------------------------</td></tr>
+                                              <tr><td align="text">pixelgecko-container: /mnt/converted_images</td></tr>
+                                              <tr><td align="text">------------------------------------------------------------</td></tr>
+                                              <tr><td align="text">imageserver-container: /mnt/converted_images:ro</td></tr>
+                                              </table>                                         
+                                              >];
+                                     HS_DBGATE [label=<
+                                              <table border="0">
+                                              <tr><td align="text">phaidra_dbgate</td></tr>
+                                              <tr><td align="text">------------------------------------------------------------</td></tr>
+                                              <tr><td align="text">solr-container: /root/.dbgate</td></tr>
+                                              </table>
+                                              >];
+                                     HS_MARIADB_FEDORA [label=<
+                                              <table border="0">
+                                              <tr><td align="text">phaidra_mariadb_fedora</td></tr>
+                                              <tr><td align="text">------------------------------------------------------------</td></tr>
+                                              <tr><td align="text">mariadb-fedora-container: /var/lib/mysql</td></tr>
+                                              </table>
+                                              >];
+                                      }
                              subgraph cluster_bind_mounts {
-                                     label = "Bind mounts under $PATH/phaidra-docker/container_components/";
-                                     node [shape = folder, style = solid, color = blue]           
-                                     HS4 [label="mariadb/phaidradb.sql.gz"];
-                                     HS8 [label="openldap"];
-                                     HS16 [label="api/PhaidraAPI.json"];
-                             }
-                     }
+                                     label = "Bind mounts under $PATH/phaidra-docker/";
+                                     node [shape = folder, style = solid, color = blue]
+                                     BIND_MARIADB_PHAIDRA_INIT[label=<
+                                                               <table border="0">
+                                                               <tr><td align="text">container_components/mariadb/phaidradb.sql.gz</td></tr>
+                                                               <tr><td align="text">------------------------------------------------------------</td></tr>
+                                                               <tr><td align="text">mariadb-phaidra-container: /docker-entrypoint-initdb.d/phaidradb.sql.gz:ro</td></tr>
+                                                               </table>
+                                                               >];
+                                     BIND_OPENLDAP_INIT [label=<
+                                                         <table border="0">
+                                                         <tr><td align="text">container_components/openldap</td></tr>
+                                                         <tr><td align="text">------------------------------------------------------------</td></tr>
+                                                         <tr><td align="text">openldap-container: /ldifs:ro</td></tr>
+                                                         </table>
+                                                         >];
+                                     BIND_NGINX_SITE_CONFIG [label=<
+                                                         <table border="0">
+                                                         <tr><td align="text">webserver_configs/nginx-docker/demo</td></tr>
+                                                         <tr><td align="text">------------------------------------------------------------</td></tr>
+                                                         <tr><td align="text">nginx-container: /etc/nginx/templates:ro</td></tr>
+                                                         </table>
+                                                         >];
+                                     BIND_NGINX_SERVER_CONFIG [label=<
+                                                               <table border="0">
+                                                               <tr><td align="text">webserver_configs/nginx-docker/demo/nginx.conf</td></tr>
+                                                               <tr><td align="text">------------------------------------------------------------</td></tr>
+                                                               <tr><td align="text">nginx-container: /etc/nginx/nginx.conf:ro</td></tr>
+                                                               </table>
+                                                               >];
+                                                       }
+                                               }
 
                      subgraph cluster_docker_network_host {
                              label="PHAIDRA docker network";
                              color = green;
-                             subgraph cluster_docker_phaidra_system {
-                                     label="PHAIDRA container system";
-                                     node [shape = component, style = solid, color = green]
-                                     DPS1 [label="fedora", URL="https://fedora.lyrasis.org/"];
-                                     DPS2 [label="api", URL="https://github.com/phaidra/phaidra-api"];
-                                     DPS3 [label="mariadb-phaidra", URL="https://mariadb.org/"];
-                                     DPS4 [label="mongodb-phaidra", URL="https://www.mongodb.com/"];
-                                     DPS5 [label="ui", URL="https://github.com/phaidra/phaidra-ui"];
-                                     DPS6 [label="openldap", URL="https://www.openldap.org/"];
-                                     DPS7 [label="solr", URL="https://solr.apache.org/"];
-                                     DPS8 [label="imageserver)", URL="https://github.com/ruven/iipsrv"];
-                                     DPS9 [label="pixelgecko"];
-                                     DPS10 [label="dbgate"];
-                                     DPS11 [label="lam"];
-                                     DPS13 [label="mariadb-fedora", URL="https://mariadb.org/"];
-                                     WEBSERVER [label="Webserver"];
-                             }
-
-                             subgraph cluster_docker_network_volumes {
-                                     label="PHAIDRA container volumes";
-                                     node [shape = folder, style = solid, color = green]
-                                     DPV1 [label="/usr/local/tomcat/fcrepo-home"];
-                                     DPV2 [label="/var/log/phaidra"];
-                                     DPV3 [label="/mnt/fedora:ro"];
-                                     DPV4 [label="/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro"];
-                                     DPV5 [label="/var/lib/mysql"];
-                                     DPV6 [label="/data/db"];
-                                     DPV7 [label="/bitnami/openldap"];
-                                     DPV8 [label="/ldifs:ro"];
-                                     DPV9 [label="/var/solr"];
-                                     DPV10 [label="/mnt/converted_images:ro"];
-                                     DPV11 [label="/mnt/fedora:ro"];
-                                     DPV12 [label="/mnt/converted_images"];
-                                     DPV13 [label="/root/.dbgate"];
-                                     DPV15 [label="/var/lib/mysql"];
-                                     DPV16 [label="/usr/local/phaidra/phaidra-api/PhaidraAPI.json:ro"];
-                             }
+                             node [shape = component, style = solid, color = green]
+                             C_FEDORA [label="fedora", URL="https://fedora.lyrasis.org/"];
+                             C_API [label="api", URL="https://github.com/phaidra/phaidra-api"];
+                             C_MARIADB_PHAIDRA [label="mariadb-phaidra", URL="https://mariadb.org/"];
+                             C_MONGODB_PHAIDRA [label="mongodb-phaidra", URL="https://www.mongodb.com/"];
+                             C_UI [label="ui", URL="https://github.com/phaidra/phaidra-ui"];
+                             C_OPENLDAP [label="openldap", URL="https://www.openldap.org/"];
+                             C_SOLR [label="solr", URL="https://solr.apache.org/"];
+                             C_IMAGESERVER [label="imageserver", URL="https://github.com/ruven/iipsrv"];
+                             C_PIXELGECKO [label="pixelgecko"];
+                             C_DBGATE [label="dbgate"];
+                             C_LAM [label="lam"];
+                             C_MARIADB_FEDORA [label="mariadb-fedora", URL="https://mariadb.org/"];
+                             WEBSERVER [label="Nginx"];
                      }
              }
 
              // storage mapping
 
-             DPV1 -- DPS1 [color="green"];
-             HS1 -- DPV1 [color="turquoise"];
+             HS_FEDORA -- C_FEDORA [color="turquoise"];
 
-             DPV2,DPV3,DPV16 -- DPS2 [color="green"];
-             HS2 -- DPV2 [color="turquoise"];
-             HS1 -- DPV3 [color="turquoise"];
-             HS16 -- DPV16 [color="blue"];
+             HS_API_LOGS-- C_API [color="turquoise"];
+             HS_FEDORA -- C_API [color="turquoise"];
 
-             DPV4,DPV5 -- DPS3 [color="green"];
-             HS4 -- DPV4 [color="blue"];
-             HS5 -- DPV5 [color="turquoise"];
+             BIND_MARIADB_PHAIDRA_INIT-- C_MARIADB_PHAIDRA [color="blue"];
+             HS_MARIADB_PHAIDRA -- C_MARIADB_PHAIDRA [color="turquoise"];
 
-             DPV6 -- DPS4 [color="green"];
-             HS6 --  DPV6 [color="turquoise"];
+             HS_MONGODB_PHAIDRA -- C_MONGODB_PHAIDRA [color="turquoise"];
 
-             DPV7,DPV8 -- DPS6 [color="green"];
-             HS7 -- DPV7 [color="turquoise"];
-             HS8 -- DPV8 [color="blue"];
+             HS_OPENLDAP -- C_OPENLDAP [color="turquoise"];
+             BIND_OPENLDAP_INIT -- C_OPENLDAP [color="blue"];
 
-             DPV9 -- DPS7 [color="green"];
-             HS9 -- DPV9 [color="turquoise"];
+             HS_SOLR -- C_SOLR [color="turquoise"];
 
-             DPV10 -- DPS8 [color="green"];
-             HS10 -- DPV10 [color="turquoise"];
+             HS_PIXELGECKO -- C_IMAGESERVER [color="turquoise"];
 
-             DPV11,DPV12 -- DPS9 [color="green"];
-             HS1 -- DPV11 [color="turquoise"];
-             HS10 -- DPV12 [color="turquoise"];
+             HS_FEDORA -- C_PIXELGECKO [color="turquoise"];
+             HS_PIXELGECKO -- C_PIXELGECKO [color="turquoise"];
 
-             DPV13 -- DPS10 [color="green"];
-             HS13 -- DPV13 [color="turquoise"];
+             HS_DBGATE -- C_DBGATE [color="turquoise"];
 
-             DPV15 -- DPS13 [color="green"];
-             HS15 -- DPV15 [color="turquoise"];
+             HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
+
+             WEBSERVER -- BIND_NGINX_SITE_CONFIG,BIND_NGINX_SERVER_CONFIG [color="blue"];
 
              // system communication mapping
 
-             DPS1 -- DPS13 [color="orange"];
-             DPS2 -- DPS1,DPS3,DPS4,DPS5,DPS6,DPS7,DPS8 [color="orange"];
-             DPS4 -- DPS9 [color="orange"];
-             DPS6 -- DPS11 [color="orange"];
-             DPS10 -- DPS3,DPS4,DPS13 [color="orange"];            
-             WEBSERVER -- DPS1,DPS2,DPS5,DPS7,DPS10,DPS11 [color="magenta"];
+             C_FEDORA -- C_MARIADB_FEDORA [color="orange"];
+             C_API -- C_FEDORA,C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_UI,C_OPENLDAP,C_SOLR,C_IMAGESERVER [color="orange"];
+             C_MONGODB_PHAIDRA -- C_PIXELGECKO [color="orange"];
+             C_OPENLDAP -- C_LAM [color="orange"];
+             C_DBGATE -- C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_MARIADB_FEDORA [color="orange"];
+             WEBSERVER -- C_FEDORA,C_API,C_UI,C_SOLR,C_DBGATE,C_LAM [color="magenta"];
 
 
              // outside communication mapping
@@ -418,6 +470,120 @@ systemctl --user restart docker
 echo "net.ipv4.ip_unprivileged_port_start=0" | sudo tee /etc/sysctl.d/99-rootless.conf
 sudo sysctl --system
 #+end_example
+*** add cpuset support
+    By default docker cpuset limitations are not enabled for rootless configurations. One can do the following to change this. (see: https://docs.docker.com/engine/security/rootless/#limiting-resources)
+    #+begin_example
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ cat /sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.controllers
+cpu memory pids
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ sudo su -
+root@pcherzigd64:~# mkdir -p /etc/systemd/system/user@.service.d
+root@pcherzigd64:~# cat > /etc/systemd/system/user@.service.d/delegate.conf << EOF
+> [Service]
+> Delegate=cpu cpuset io memory pids
+> EOF
+root@pcherzigd64:~# systemctl daemon-reload
+root@pcherzigd64:~# exit
+logout
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ cat /sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.controllers
+cpuset cpu io memory pids
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/demo_nginx$ systemctl --user restart docker
+## verify success
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/demo_nginx$ docker info
+Client: Docker Engine - Community
+ Version:    24.0.5
+ Context:    default
+ Debug Mode: false
+ Plugins:
+  buildx: Docker Buildx (Docker Inc.)
+    Version:  v0.11.2
+    Path:     /usr/libexec/docker/cli-plugins/docker-buildx
+  compose: Docker Compose (Docker Inc.)
+    Version:  v2.20.2
+    Path:     /usr/libexec/docker/cli-plugins/docker-compose
+
+Server:
+ Containers: 0
+  Running: 0
+  Paused: 0
+  Stopped: 0
+ Images: 34
+ Server Version: 24.0.5
+ Storage Driver: fuse-overlayfs
+ Logging Driver: json-file
+ Cgroup Driver: systemd
+ Cgroup Version: 2
+ Plugins:
+  Volume: local
+  Network: bridge host ipvlan macvlan null overlay
+  Log: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog
+ Swarm: inactive
+ Runtimes: io.containerd.runc.v2 runc
+ Default Runtime: runc
+ Init Binary: docker-init
+ containerd version: 8165feabfdfe38c65b599c4993d227328c231fca
+ runc version: v1.1.8-0-g82f18fe
+ init version: de40ad0
+ Security Options:
+  seccomp
+   Profile: builtin
+  rootless
+  cgroupns
+ Kernel Version: 6.1.0-10-amd64
+ Operating System: Debian GNU/Linux 12 (bookworm)
+ OSType: linux
+ Architecture: x86_64
+ CPUs: 8
+ Total Memory: 15.03GiB
+ Name: pcherzigd64
+ ID: 4d080886-f0a3-4478-bac7-ebadf0ccfd68
+ Docker Root Dir: /home/daniel/.local/share/docker
+ Debug Mode: false
+ Username: testuser34
+ Experimental: false
+ Insecure Registries:
+  127.0.0.0/8
+ Live Restore Enabled: false
+
+WARNING: bridge-nf-call-iptables is disabled
+WARNING: bridge-nf-call-ip6tables is disabled
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/demo_nginx$ docker version
+Client: Docker Engine - Community
+ Version:           24.0.5
+ API version:       1.43
+ Go version:        go1.20.6
+ Git commit:        ced0996
+ Built:             Fri Jul 21 20:35:45 2023
+ OS/Arch:           linux/amd64
+ Context:           default
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          24.0.5
+  API version:      1.43 (minimum version 1.12)
+  Go version:       go1.20.6
+  Git commit:       a61e2b4
+  Built:            Fri Jul 21 20:35:45 2023
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          1.6.22
+  GitCommit:        8165feabfdfe38c65b599c4993d227328c231fca
+ runc:
+  Version:          1.1.8
+  GitCommit:        v1.1.8-0-g82f18fe
+ docker-init:
+  Version:          0.19.0
+  GitCommit:        de40ad0
+ rootlesskit:
+  Version:          1.1.1
+  ApiVersion:       1.1.1
+  NetworkDriver:    slirp4netns
+  PortDriver:       slirp4netns
+  StateDir:         /tmp/rootlesskit1313455634
+ slirp4netns:
+  Version:          1.2.0
+  GitCommit:        656041d45cfca7a4176f6b7eed9e4fe6c11e8383
+    #+end_example
 * System startup
   This repo holds four phaidra flavors at the moment.  Three of them depend solely on docker (they include nginx and apache respectively, but depend on the same phaidra-code).
 ** testing/dev
@@ -568,6 +734,26 @@ If you visit http://localhost:8899 you will get a ~502 Bad Gateway~-Error for ng
      440K	/home/daniel/.local/share/docker/volumes/phaidra_solr
    #+end_example
    You might notice that inspecting the actual sizes of the directories requires ~sudo~ -- this is due to the fact that solr, mariadb, and mongodb volumes make use of a separate user from within the container.  The UIDs all come from the range your user is allowed to assign to using the ~newuidmap~ and ~newgidmap~ programs deriving from the ~uidmap~ package mentioned under system requirements. One can see this as a reminder to be careful when manipulating this kind of data (at least the databases can be manipulated from http://localhost:8899/dbgate without special permissions).
+** monitoring container system usage
+   One can use the following command to real-time monitor the system usage of phaidra over all containers (here from an instance started from ~demo_nginx~):
+   #+begin_example
+docker stats<<<$(docker ps -q)
+CONTAINER ID   NAME                                   CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
+ae0608348349   phaidra-demo-nginx-nginx-1             0.00%     8.188MiB / 15.03GiB   0.05%     142kB / 138kB     0B / 0B           9
+e3c61e4d2495   phaidra-demo-nginx-ui-1                0.00%     124.8MiB / 15.03GiB   0.81%     4.08kB / 118kB    0B / 0B           23
+6f60f3ef3a15   phaidra-demo-nginx-pixelgecko-1        0.00%     51.47MiB / 15.03GiB   0.33%     97.9kB / 209kB    0B / 0B           1
+b2bb3d0cda66   phaidra-demo-nginx-api-1               0.12%     233.6MiB / 15.03GiB   1.52%     19.7kB / 28.9kB   0B / 0B           5
+6be6bea11f85   phaidra-demo-nginx-dbgate-1            0.00%     24.93MiB / 15.03GiB   0.16%     1.73kB / 224B     0B / 4.1kB        12
+ca762fea79fe   phaidra-demo-nginx-fedora-1            0.47%     632.5MiB / 15.03GiB   4.11%     17.9kB / 15.2kB   0B / 860kB        55
+c0ca084bda76   phaidra-demo-nginx-solr-1              0.87%     732MiB / 15.03GiB     4.76%     2.94kB / 3.04kB   0B / 164kB        54
+ba967011b666   phaidra-demo-nginx-mariadb-phaidra-1   0.02%     110.7MiB / 15.03GiB   0.72%     1.85kB / 0B       14.5MB / 8.19kB   8
+b636bab73219   phaidra-demo-nginx-mongodb-phaidra-1   0.50%     172.2MiB / 15.03GiB   1.12%     221kB / 105kB     0B / 1.81MB       37
+96705e89810b   phaidra-demo-nginx-mariadb-fedora-1    0.02%     96.67MiB / 15.03GiB   0.63%     17kB / 16.5kB     0B / 8.19kB       18
+2806bbd31aeb   phaidra-demo-nginx-openldap-1          0.00%     20.63MiB / 15.03GiB   0.13%     3.17kB / 1.46kB   0B / 0B           4
+e0004d097ebb   phaidra-demo-nginx-imageserver-1       0.01%     23.73MiB / 15.03GiB   0.15%     1.78kB / 0B       0B / 0B           57
+343c3af188c1   phaidra-demo-nginx-lam-1               0.01%     25.56MiB / 15.03GiB   0.17%     1.62kB / 0B       0B / 0B           8
+   #+end_example
+
 * real time system usage logging
   To see which containers are using which amount of CPU and RAM and network I/O you can use the following command:
   #+begin_example
@@ -643,7 +829,6 @@ If you visit http://localhost:8899 you will get a ~502 Bad Gateway~-Error for ng
   #+end_example
 
   
-
 
 * Phaidra Components
 
