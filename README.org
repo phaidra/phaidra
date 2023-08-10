@@ -30,7 +30,7 @@
                              subgraph cluster_named_volumes {
                                      label = "Named volumes under $HOME/.local/share/docker/volumes/";
                                      color = turquoise;
-                                     node [shape = box, style = solid, color = turquoise]
+                                     node [shape = folder, style = solid, color = turquoise]
                                      HS_FEDORA [label=<
                                                 <table border="0">
                                                 <tr><td align="text">phaidra_fedora</td></tr>
@@ -90,7 +90,7 @@
                                               <table border="0">
                                               <tr><td align="text">phaidra_dbgate</td></tr>
                                               <tr><td align="text">------------------------------------------------------------</td></tr>
-                                              <tr><td align="text">solr-container: /root/.dbgate</td></tr>
+                                              <tr><td align="text">dbgate-container: /root/.dbgate</td></tr>
                                               </table>
                                               >];
                                      HS_MARIADB_FEDORA [label=<

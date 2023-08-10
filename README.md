@@ -28,7 +28,7 @@ cpanm-modules break the api-build.
 
 # Technical sketch
 
-## Standalone
+## Nginx Demo
 
 ![](./pictures/construction_standalone.svg)
 
@@ -193,6 +193,125 @@ to dedicately allow it:
 ``` example
 echo "net.ipv4.ip_unprivileged_port_start=0" | sudo tee /etc/sysctl.d/99-rootless.conf
 sudo sysctl --system
+```
+
+### add cpuset support
+
+By default docker cpuset limitations are not enabled for rootless
+configurations. One can do the following to change this. (see:
+<https://docs.docker.com/engine/security/rootless/#limiting-resources>)
+
+``` example
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ cat /sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.controllers
+cpu memory pids
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ sudo su -
+root@pcherzigd64:~# mkdir -p /etc/systemd/system/user@.service.d
+root@pcherzigd64:~# cat > /etc/systemd/system/user@.service.d/delegate.conf << EOF
+> [Service]
+> Delegate=cpu cpuset io memory pids
+> EOF
+root@pcherzigd64:~# systemctl daemon-reload
+root@pcherzigd64:~# exit
+logout
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ cat /sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.controllers
+cpuset cpu io memory pids
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/demo_nginx$ systemctl --user restart docker
+## verify success
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/demo_nginx$ docker info
+Client: Docker Engine - Community
+ Version:    24.0.5
+ Context:    default
+ Debug Mode: false
+ Plugins:
+  buildx: Docker Buildx (Docker Inc.)
+    Version:  v0.11.2
+    Path:     /usr/libexec/docker/cli-plugins/docker-buildx
+  compose: Docker Compose (Docker Inc.)
+    Version:  v2.20.2
+    Path:     /usr/libexec/docker/cli-plugins/docker-compose
+
+Server:
+ Containers: 0
+  Running: 0
+  Paused: 0
+  Stopped: 0
+ Images: 34
+ Server Version: 24.0.5
+ Storage Driver: fuse-overlayfs
+ Logging Driver: json-file
+ Cgroup Driver: systemd
+ Cgroup Version: 2
+ Plugins:
+  Volume: local
+  Network: bridge host ipvlan macvlan null overlay
+  Log: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog
+ Swarm: inactive
+ Runtimes: io.containerd.runc.v2 runc
+ Default Runtime: runc
+ Init Binary: docker-init
+ containerd version: 8165feabfdfe38c65b599c4993d227328c231fca
+ runc version: v1.1.8-0-g82f18fe
+ init version: de40ad0
+ Security Options:
+  seccomp
+   Profile: builtin
+  rootless
+  cgroupns
+ Kernel Version: 6.1.0-10-amd64
+ Operating System: Debian GNU/Linux 12 (bookworm)
+ OSType: linux
+ Architecture: x86_64
+ CPUs: 8
+ Total Memory: 15.03GiB
+ Name: pcherzigd64
+ ID: 4d080886-f0a3-4478-bac7-ebadf0ccfd68
+ Docker Root Dir: /home/daniel/.local/share/docker
+ Debug Mode: false
+ Username: testuser34
+ Experimental: false
+ Insecure Registries:
+  127.0.0.0/8
+ Live Restore Enabled: false
+
+WARNING: bridge-nf-call-iptables is disabled
+WARNING: bridge-nf-call-ip6tables is disabled
+daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/demo_nginx$ docker version
+Client: Docker Engine - Community
+ Version:           24.0.5
+ API version:       1.43
+ Go version:        go1.20.6
+ Git commit:        ced0996
+ Built:             Fri Jul 21 20:35:45 2023
+ OS/Arch:           linux/amd64
+ Context:           default
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          24.0.5
+  API version:      1.43 (minimum version 1.12)
+  Go version:       go1.20.6
+  Git commit:       a61e2b4
+  Built:            Fri Jul 21 20:35:45 2023
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          1.6.22
+  GitCommit:        8165feabfdfe38c65b599c4993d227328c231fca
+ runc:
+  Version:          1.1.8
+  GitCommit:        v1.1.8-0-g82f18fe
+ docker-init:
+  Version:          0.19.0
+  GitCommit:        de40ad0
+ rootlesskit:
+  Version:          1.1.1
+  ApiVersion:       1.1.1
+  NetworkDriver:    slirp4netns
+  PortDriver:       slirp4netns
+  StateDir:         /tmp/rootlesskit1313455634
+ slirp4netns:
+  Version:          1.2.0
+  GitCommit:        656041d45cfca7a4176f6b7eed9e4fe6c11e8383
 ```
 
 # System startup
@@ -426,6 +545,30 @@ package mentioned under system requirements. One can see this as a
 reminder to be careful when manipulating this kind of data (at least the
 databases can be manipulated from <http://localhost:8899/dbgate> without
 special permissions).
+
+## monitoring container system usage
+
+One can use the following command to real-time monitor the system usage
+of phaidra over all containers (here from an instance started from
+`demo_nginx`):
+
+``` example
+docker stats<<<$(docker ps -q)
+CONTAINER ID   NAME                                   CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
+ae0608348349   phaidra-demo-nginx-nginx-1             0.00%     8.188MiB / 15.03GiB   0.05%     142kB / 138kB     0B / 0B           9
+e3c61e4d2495   phaidra-demo-nginx-ui-1                0.00%     124.8MiB / 15.03GiB   0.81%     4.08kB / 118kB    0B / 0B           23
+6f60f3ef3a15   phaidra-demo-nginx-pixelgecko-1        0.00%     51.47MiB / 15.03GiB   0.33%     97.9kB / 209kB    0B / 0B           1
+b2bb3d0cda66   phaidra-demo-nginx-api-1               0.12%     233.6MiB / 15.03GiB   1.52%     19.7kB / 28.9kB   0B / 0B           5
+6be6bea11f85   phaidra-demo-nginx-dbgate-1            0.00%     24.93MiB / 15.03GiB   0.16%     1.73kB / 224B     0B / 4.1kB        12
+ca762fea79fe   phaidra-demo-nginx-fedora-1            0.47%     632.5MiB / 15.03GiB   4.11%     17.9kB / 15.2kB   0B / 860kB        55
+c0ca084bda76   phaidra-demo-nginx-solr-1              0.87%     732MiB / 15.03GiB     4.76%     2.94kB / 3.04kB   0B / 164kB        54
+ba967011b666   phaidra-demo-nginx-mariadb-phaidra-1   0.02%     110.7MiB / 15.03GiB   0.72%     1.85kB / 0B       14.5MB / 8.19kB   8
+b636bab73219   phaidra-demo-nginx-mongodb-phaidra-1   0.50%     172.2MiB / 15.03GiB   1.12%     221kB / 105kB     0B / 1.81MB       37
+96705e89810b   phaidra-demo-nginx-mariadb-fedora-1    0.02%     96.67MiB / 15.03GiB   0.63%     17kB / 16.5kB     0B / 8.19kB       18
+2806bbd31aeb   phaidra-demo-nginx-openldap-1          0.00%     20.63MiB / 15.03GiB   0.13%     3.17kB / 1.46kB   0B / 0B           4
+e0004d097ebb   phaidra-demo-nginx-imageserver-1       0.01%     23.73MiB / 15.03GiB   0.15%     1.78kB / 0B       0B / 0B           57
+343c3af188c1   phaidra-demo-nginx-lam-1               0.01%     25.56MiB / 15.03GiB   0.17%     1.62kB / 0B       0B / 0B           8
+```
 
 # real time system usage logging
 

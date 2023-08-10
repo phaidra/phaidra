@@ -65,7 +65,7 @@
 <!-- HS_FEDORA -->
 <g id="node3" class="node">
 <title>HS_FEDORA</title>
-<polygon fill="none" stroke="turquoise" points="940.2,-1385.76 576.2,-1385.76 576.2,-1228.76 940.2,-1228.76 940.2,-1385.76"/>
+<polygon fill="none" stroke="turquoise" points="940.2,-1385.76 937.2,-1389.76 916.2,-1389.76 913.2,-1385.76 576.2,-1385.76 576.2,-1228.76 940.2,-1228.76 940.2,-1385.76"/>
 <text text-anchor="start" x="704.2" y="-1366.06" font-family="Times,serif" font-size="14.00">phaidra_fedora</text>
 <text text-anchor="start" x="622.7" y="-1345.06" font-family="Times,serif" font-size="14.00">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</text>
 <text text-anchor="start" x="588.2" y="-1324.06" font-family="Times,serif" font-size="14.00">fedora&#45;container: /usr/local/tomcat/fcrepo&#45;home</text>
@@ -122,7 +122,7 @@
 <!-- HS_API_LOGS -->
 <g id="node4" class="node">
 <title>HS_API_LOGS</title>
-<polygon fill="none" stroke="turquoise" points="905.7,-1119.76 610.7,-1119.76 610.7,-1046.76 905.7,-1046.76 905.7,-1119.76"/>
+<polygon fill="none" stroke="turquoise" points="905.7,-1119.76 902.7,-1123.76 881.7,-1123.76 878.7,-1119.76 610.7,-1119.76 610.7,-1046.76 905.7,-1046.76 905.7,-1119.76"/>
 <text text-anchor="start" x="698.7" y="-1100.06" font-family="Times,serif" font-size="14.00">phaidra_api_logs</text>
 <text text-anchor="start" x="623.2" y="-1079.06" font-family="Times,serif" font-size="14.00">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</text>
 <text text-anchor="start" x="650.2" y="-1058.06" font-family="Times,serif" font-size="14.00">api&#45;container: /var/log/phaidra</text>
@@ -135,7 +135,7 @@
 <!-- HS_MARIADB_PHAIDRA -->
 <g id="node5" class="node">
 <title>HS_MARIADB_PHAIDRA</title>
-<polygon fill="none" stroke="turquoise" points="919.2,-1567.76 597.2,-1567.76 597.2,-1494.76 919.2,-1494.76 919.2,-1567.76"/>
+<polygon fill="none" stroke="turquoise" points="919.2,-1567.76 916.2,-1571.76 895.2,-1571.76 892.2,-1567.76 597.2,-1567.76 597.2,-1494.76 919.2,-1494.76 919.2,-1567.76"/>
 <text text-anchor="start" x="666.7" y="-1548.06" font-family="Times,serif" font-size="14.00">phaidra_mariadb_phaidra</text>
 <text text-anchor="start" x="622.7" y="-1527.06" font-family="Times,serif" font-size="14.00">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</text>
 <text text-anchor="start" x="609.2" y="-1506.06" font-family="Times,serif" font-size="14.00">mariadb&#45;phaidra&#45;container: /var/lib/mysql</text>
@@ -159,7 +159,7 @@
 <!-- HS_MONGODB_PHAIDRA -->
 <g id="node6" class="node">
 <title>HS_MONGODB_PHAIDRA</title>
-<polygon fill="none" stroke="turquoise" points="905.7,-1476.76 610.7,-1476.76 610.7,-1403.76 905.7,-1403.76 905.7,-1476.76"/>
+<polygon fill="none" stroke="turquoise" points="905.7,-1476.76 902.7,-1480.76 881.7,-1480.76 878.7,-1476.76 610.7,-1476.76 610.7,-1403.76 905.7,-1403.76 905.7,-1476.76"/>
 <text text-anchor="start" x="663.7" y="-1457.06" font-family="Times,serif" font-size="14.00">phaidra_mongodb_phaidra</text>
 <text text-anchor="start" x="623.2" y="-1436.06" font-family="Times,serif" font-size="14.00">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</text>
 <text text-anchor="start" x="626.2" y="-1415.06" font-family="Times,serif" font-size="14.00">phaidra&#45;mongodb&#45;container: /data/db</text>
@@ -183,7 +183,7 @@
 <!-- HS_OPENLDAP -->
 <g id="node7" class="node">
 <title>HS_OPENLDAP</title>
-<polygon fill="none" stroke="turquoise" points="908.2,-1658.76 608.2,-1658.76 608.2,-1585.76 908.2,-1585.76 908.2,-1658.76"/>
+<polygon fill="none" stroke="turquoise" points="908.2,-1658.76 905.2,-1662.76 884.2,-1662.76 881.2,-1658.76 608.2,-1658.76 608.2,-1585.76 908.2,-1585.76 908.2,-1658.76"/>
 <text text-anchor="start" x="694.7" y="-1639.06" font-family="Times,serif" font-size="14.00">phaidra_openldap</text>
 <text text-anchor="start" x="622.7" y="-1618.06" font-family="Times,serif" font-size="14.00">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</text>
 <text text-anchor="start" x="620.2" y="-1597.06" font-family="Times,serif" font-size="14.00">openldap&#45;container: /bitnami/openldap</text>
@@ -207,7 +207,7 @@
 <!-- HS_SOLR -->
 <g id="node8" class="node">
 <title>HS_SOLR</title>
-<polygon fill="none" stroke="turquoise" points="905.7,-1028.76 610.7,-1028.76 610.7,-955.76 905.7,-955.76 905.7,-1028.76"/>
+<polygon fill="none" stroke="turquoise" points="905.7,-1028.76 902.7,-1032.76 881.7,-1032.76 878.7,-1028.76 610.7,-1028.76 610.7,-955.76 905.7,-955.76 905.7,-1028.76"/>
 <text text-anchor="start" x="714.2" y="-1009.06" font-family="Times,serif" font-size="14.00">phaidra_solr</text>
 <text text-anchor="start" x="623.2" y="-988.06" font-family="Times,serif" font-size="14.00">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</text>
 <text text-anchor="start" x="674.7" y="-967.06" font-family="Times,serif" font-size="14.00">solr&#45;container: /var/solr</text>
@@ -231,7 +231,7 @@
 <!-- HS_PIXELGECKO -->
 <g id="node9" class="node">
 <title>HS_PIXELGECKO</title>
-<polygon fill="none" stroke="turquoise" points="948.7,-1882.76 567.7,-1882.76 567.7,-1767.76 948.7,-1767.76 948.7,-1882.76"/>
+<polygon fill="none" stroke="turquoise" points="948.7,-1882.76 945.7,-1886.76 924.7,-1886.76 921.7,-1882.76 567.7,-1882.76 567.7,-1767.76 948.7,-1767.76 948.7,-1882.76"/>
 <text text-anchor="start" x="689.7" y="-1863.06" font-family="Times,serif" font-size="14.00">phaidra_pixelgecko</text>
 <text text-anchor="start" x="623.2" y="-1842.06" font-family="Times,serif" font-size="14.00">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</text>
 <text text-anchor="start" x="596.7" y="-1821.06" font-family="Times,serif" font-size="14.00">pixelgecko&#45;container: /mnt/converted_images</text>
@@ -262,10 +262,10 @@
 <!-- HS_DBGATE -->
 <g id="node10" class="node">
 <title>HS_DBGATE</title>
-<polygon fill="none" stroke="turquoise" points="905.7,-1210.76 610.7,-1210.76 610.7,-1137.76 905.7,-1137.76 905.7,-1210.76"/>
+<polygon fill="none" stroke="turquoise" points="905.7,-1210.76 902.7,-1214.76 881.7,-1214.76 878.7,-1210.76 610.7,-1210.76 610.7,-1137.76 905.7,-1137.76 905.7,-1210.76"/>
 <text text-anchor="start" x="702.7" y="-1191.06" font-family="Times,serif" font-size="14.00">phaidra_dbgate</text>
 <text text-anchor="start" x="623.2" y="-1170.06" font-family="Times,serif" font-size="14.00">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</text>
-<text text-anchor="start" x="658.2" y="-1149.06" font-family="Times,serif" font-size="14.00">solr&#45;container: /root/.dbgate</text>
+<text text-anchor="start" x="647.2" y="-1149.06" font-family="Times,serif" font-size="14.00">dbgate&#45;container: /root/.dbgate</text>
 </g>
 <!-- C_DBGATE -->
 <g id="node25" class="node">
@@ -283,7 +283,7 @@
 <!-- HS_MARIADB_FEDORA -->
 <g id="node11" class="node">
 <title>HS_MARIADB_FEDORA</title>
-<polygon fill="none" stroke="turquoise" points="914.7,-1749.76 601.7,-1749.76 601.7,-1676.76 914.7,-1676.76 914.7,-1749.76"/>
+<polygon fill="none" stroke="turquoise" points="914.7,-1749.76 911.7,-1753.76 890.7,-1753.76 887.7,-1749.76 601.7,-1749.76 601.7,-1676.76 914.7,-1676.76 914.7,-1749.76"/>
 <text text-anchor="start" x="671.7" y="-1730.06" font-family="Times,serif" font-size="14.00">phaidra_mariadb_fedora</text>
 <text text-anchor="start" x="623.2" y="-1709.06" font-family="Times,serif" font-size="14.00">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</text>
 <text text-anchor="start" x="614.2" y="-1688.06" font-family="Times,serif" font-size="14.00">mariadb&#45;fedora&#45;container: /var/lib/mysql</text>
