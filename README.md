@@ -55,7 +55,7 @@ graph G {
                                            <table border="0">
                                            <tr>
                                            <td align="text"><b>host:</b><br align="left" /></td>
-                                           <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-nginx_fedora/_data<br align="left" /></td>
+                                           <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-httpd_fedora/_data<br align="left" /></td>
                                            </tr>
                                            <tr>
                                            <td align="text">fedora-container:<br align="left" /></td>
@@ -75,7 +75,7 @@ graph G {
                                              <table border="0">
                                              <tr>
                                              <td align="text"><b>host:</b><br align="left" /></td>
-                                             <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-nginx_api_logs/_data<br align="left" /></td>
+                                             <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-httpd_api_logs/_data<br align="left" /></td>
                                              </tr>
                                              <tr>
                                              <td align="text">api-container:<br align="left" /></td>
@@ -87,7 +87,7 @@ graph G {
                                                     <table border="0">
                                                     <tr>
                                                     <td align="text"><b>host:</b><br align="left" /></td>
-                                                    <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-nginx_mariadb_phaidra/_data<br align="left" /></td>
+                                                    <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-httpd_mariadb_phaidra/_data<br align="left" /></td>
                                                     </tr>
                                                     <tr>
                                                     <td align="text">mariadb-phaidra-container:<br align="left" /></td>
@@ -99,7 +99,7 @@ graph G {
                                                     <table border="0">
                                                     <tr>
                                                     <td align="text"><b>host:</b><br align="left" /></td>
-                                                    <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-nginx_mongodb_phaidra/_data<br align="left" /></td>
+                                                    <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-httpd_mongodb_phaidra/_data<br align="left" /></td>
                                                     </tr>
                                                     <tr>
                                                     <td align="text">phaidra-mongodb-container:<br align="left" /></td>
@@ -110,7 +110,7 @@ graph G {
                                              <table border="0">
                                              <tr>
                                              <td align="text"><b>host:</b><br align="left" /></td>
-                                             <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-nginx_openldap/_data<br align="left" /></td>
+                                             <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-httpd_openldap/_data<br align="left" /></td>
                                              </tr>
                                              <tr>
                                              <td align="text">openldap-container:<br align="left" /></td>
@@ -122,7 +122,7 @@ graph G {
                                          <table border="0">
                                          <tr>
                                          <td align="text"><b>host:</b><br align="left" /></td>
-                                         <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-nginx_solr/_data<br align="left" /></td>
+                                         <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-httpd_solr/_data<br align="left" /></td>
                                          </tr>
                                          <tr>
                                          <td align="text">solr-container:<br align="left" /></td>
@@ -134,7 +134,7 @@ graph G {
                                                <table border="0">
                                                <tr>
                                                <td align="text"><b>host:</b><br align="left" /></td>
-                                               <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-nginx_pixelgecko/_data<br align="left" /></td>
+                                               <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-httpd_pixelgecko/_data<br align="left" /></td>
                                                </tr>
                                                <tr>
                                                <td align="text">pixelgecko-container:<br align="left" /></td>
@@ -150,7 +150,7 @@ graph G {
                                            <table border="0">
                                            <tr>
                                            <td align="text"><b>host:</b><br align="left" /></td>
-                                           <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-nginx_dbgate/_data<br align="left" /></td>
+                                           <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-httpd_dbgate/_data<br align="left" /></td>
                                            </tr>
                                            <tr>
                                            <td align="text">dbgate-container:<br align="left" /></td>
@@ -162,7 +162,7 @@ graph G {
                                                    <table border="0">
                                                    <tr>
                                                    <td align="text"><b>host:</b><br align="left" /></td>
-                                                   <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-nginx_mariadb_fedora/_data<br align="left" /></td>
+                                                   <td align="text">$HOME/.local/share/docker/volumes/phaidra-demo-httpd_mariadb_fedora/_data<br align="left" /></td>
                                                    </tr>
                                                    <tr>
                                                    <td align="text">mariadb-fedora-container:<br align="left" /></td>
@@ -217,28 +217,28 @@ graph G {
                                                                      label="PHAIDRA docker containers";
                                                                      color = green;
                                                                      node [shape = component, style = solid, color = green]
-                                                                     C_FEDORA [label="phaidra-demo-nginx-fedora-1",
+                                                                     C_FEDORA [label="phaidra-demo-httpd-fedora-1",
                                                                                URL="https://fedora.lyrasis.org/"];
-                                                                     C_API [label="phaidra-demo-nginx-api-1",
+                                                                     C_API [label="phaidra-demo-httpd-api-1",
                                                                             URL="https://github.com/phaidra/phaidra-api"];
-                                                                     C_MARIADB_PHAIDRA [label="phaidra-demo-nginx-mariadb-phaidra-1",
+                                                                     C_MARIADB_PHAIDRA [label="phaidra-demo-httpd-mariadb-phaidra-1",
                                                                                         URL="https://mariadb.org/"];
-                                                                     C_MONGODB_PHAIDRA [label="phaidra-demo-nginx-mongodb-phaidra-1",
+                                                                     C_MONGODB_PHAIDRA [label="phaidra-demo-httpd-mongodb-phaidra-1",
                                                                                         URL="https://www.mongodb.com/"];
-                                                                     C_UI [label="phaidra-demo-nginx-ui-1",
+                                                                     C_UI [label="phaidra-demo-httpd-ui-1",
                                                                            URL="https://github.com/phaidra/phaidra-ui"];
-                                                                     C_OPENLDAP [label="phaidra-demo-nginx-openldap-1",
+                                                                     C_OPENLDAP [label="phaidra-demo-httpd-openldap-1",
                                                                                  URL="https://www.openldap.org/"];
-                                                                     C_SOLR [label="phaidra-demo-nginx-solr-1",
+                                                                     C_SOLR [label="phaidra-demo-httpd-solr-1",
                                                                              URL="https://solr.apache.org/"];
-                                                                     C_IMAGESERVER [label="phaidra-demo-nginx-imageserver-1",
+                                                                     C_IMAGESERVER [label="phaidra-demo-httpd-imageserver-1",
                                                                                     URL="https://github.com/ruven/iipsrv"];
-                                                                     C_PIXELGECKO [label="phaidra-demo-nginx-pixelgecko-1"];
-                                                                     C_DBGATE [label="phaidra-demo-nginx-dbgate-1"];
-                                                                     C_LAM [label="phaidra-demo-nginx-lam-1"];
-                                                                     C_MARIADB_FEDORA [label="phaidra-demo-nginx-mariadb-fedora-1",
+                                                                     C_PIXELGECKO [label="phaidra-demo-httpd-pixelgecko-1"];
+                                                                     C_DBGATE [label="phaidra-demo-httpd-dbgate-1"];
+                                                                     C_LAM [label="phaidra-demo-httpd-lam-1"];
+                                                                     C_MARIADB_FEDORA [label="phaidra-demo-httpd-mariadb-fedora-1",
                                                                                        URL="https://mariadb.org/"];
-                                                                     WEBSERVER [label="phaidra-demo-nginx-nginx-1"];
+                                                                     WEBSERVER [label="phaidra-demo-httpd-nginx-1"];
                                                              }
                                                      }
 
@@ -268,7 +268,7 @@ graph G {
 
                                                      HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
 
-                                                     WEBSERVER -- BIND_NGINX_SITE_CONFIG,BIND_NGINX_SERVER_CONFIG [color="blue"];
+                                                     WEBSERVER -- BIND_APACHE_SERVER_CONFIG [color="blue"];
 
                                                      // system communication mapping
 
@@ -286,6 +286,8 @@ graph G {
                                              }
 
 ```
+
+![](./pictures/construction_demo_apache.svg)
 
 ## With external webserver
 
