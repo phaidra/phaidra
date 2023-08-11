@@ -11,17 +11,15 @@
    We have a minimal CI activated (see the status badge at the top of this readme) -- right now it only builds the docker images as defined in the ~./dockerfiles~ directory.  This is for testing purposes and runs on every commit to this repo, as a semi-manual verification if any cpanm-modules break the api-build.
 * Graphical overview
 ** Nginx Demo
+   System when running ~docker compose up -d~ from directory ~./demo_nginx~ (Phaidra available on ~http://localhost:8899~.).
    #+NAME: construction-demo-nginx
    #+begin_src dot :file "./pictures/construction_demo_nginx.svg" :exports results
      graph G {
              rankdir="LR"
-
-             USER [label="PHAIDRA USER", shape = tripleoctagon];
-
              subgraph cluster_host {
                      label = "PHAIDRA server firewall";
                      color = red;
-
+                     USER [label="PHAIDRA USER", shape = tripleoctagon];
                      subgraph cluster_host_storage {
                              label = "PHAIDRA server filesystem";
                              color = blue;
@@ -276,10 +274,11 @@
                                                   }
   #+end_src
 
-  #+RESULTS: technical-sketch-standalone
+  #+RESULTS: construction-demo-nginx
   [[file:./pictures/construction_demo_nginx.svg]]
 
 ** Nginx SSL
+   System when running ~docker compose up -d~ from directory ~./ssl_nginx~ (Phaidra available on ~https://$YOUR_FQDN~, see section 'System startup' below for prerequisites).
    #+NAME: construction-ssl-nginx
    #+begin_src dot :file "./pictures/construction_ssl_nginx.svg" :exports results
      graph G {
@@ -563,17 +562,15 @@
    [[file:./pictures/construction_ssl_nginx.svg]]
 
 ** Apache Demo
+   System when running ~docker compose up -d~ from directory ~./demo_httpd~ (Phaidra available on ~http://localhost:8899~.).
    #+NAME: construction-demo-apache
    #+begin_src dot :file "./pictures/construction_demo_apache.svg" :exports results
      graph G {
              rankdir="LR"
-
-             USER [label="PHAIDRA USER", shape = tripleoctagon];
-
              subgraph cluster_host {
                      label = "PHAIDRA server firewall";
                      color = red;
-
+                     USER [label="PHAIDRA USER", shape = tripleoctagon];
                      subgraph cluster_host_storage {
                              label = "PHAIDRA server filesystem";
                              color = blue;
@@ -822,6 +819,7 @@
 
 
 ** External webserver
+   System when running ~docker compose up -d~ from directory ~./external_webserver~ (Phaidra available on ~http(s)://$YOUR_FQDN~, see section 'System startup' below for prerequisites).
    #+NAME: technical-sketch-external-webserver
    #+begin_src dot :file "./pictures/construction_external_webserver.svg" :exports results
      graph G {
