@@ -167,7 +167,9 @@ sub add_octets_hook {
     $c->app->paf_mongo->get_collection('foxml.ds')->delete_one({'pid' => $pid});
 
     # delete imagemanipulator record
-    $c->app->db_imagemanipulator->dbh->do('DELETE FROM image WHERE url = "' . $pid . '";') or $c->app->log->error("Error deleting from imagemanipulator db:" . $c->app->db_imagemanipulator->dbh->errstr);
+    if ($c->app->config->{imagemanipulator_db}) {
+      $c->app->db_imagemanipulator->dbh->do('DELETE FROM image WHERE url = "' . $pid . '";') or $c->app->log->error("Error deleting from imagemanipulator db:" . $c->app->db_imagemanipulator->dbh->errstr);
+    }
 
     my $imsr = $self->_create_imageserver_job($c, $pid);
     push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
