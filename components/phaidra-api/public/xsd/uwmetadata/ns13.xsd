@@ -1,0 +1,887 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://phaidra.univie.ac.at/XML/metadata/etheses/V1.0" targetNamespace="http://phaidra.univie.ac.at/XML/metadata/etheses/V1.0"  elementFormDefault="qualified">
+
+
+		<xs:element name="etheses">
+		<xs:complexType>
+		<xs:sequence>
+			<xs:element name="consent_form" minOccurs="0" maxOccurs="1" >
+				<xs:complexType>
+				<xs:simpleContent>
+					<xs:extension base="Boolean">
+					</xs:extension>
+				</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="title_page" minOccurs="0" maxOccurs="1" >
+				<xs:complexType>
+				<xs:simpleContent>
+					<xs:extension base="Boolean">
+					</xs:extension>
+				</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="title_page_identical" minOccurs="0" maxOccurs="1" >
+				<xs:complexType>
+				<xs:simpleContent>
+					<xs:extension base="Boolean">
+					</xs:extension>
+				</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="pdf_identical" minOccurs="0" maxOccurs="1" >
+				<xs:complexType>
+				<xs:simpleContent>
+					<xs:extension base="Boolean">
+					</xs:extension>
+				</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="show_abstract" minOccurs="0" maxOccurs="1" >
+				<xs:complexType>
+				<xs:simpleContent>
+					<xs:extension base="Boolean">
+					</xs:extension>
+				</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="note_1" minOccurs="0" maxOccurs="unbounded" >
+				<xs:complexType>
+				<xs:simpleContent>
+					<xs:extension base="LangString">
+						<xs:attribute name="language" type="Language" use="required" />
+					</xs:extension>
+				</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="note_2" minOccurs="0" maxOccurs="unbounded" >
+				<xs:complexType>
+				<xs:simpleContent>
+					<xs:extension base="LangString">
+						<xs:attribute name="language" type="Language" use="required" />
+					</xs:extension>
+				</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		</xs:complexType>
+		</xs:element>
+
+
+<!--UWMETADATA LANGUAGES -->
+
+<xs:simpleType name="Language">
+	<xs:restriction base="xs:string">
+			<xs:enumeration value="aa" />
+			<xs:enumeration value="ab" />
+			<xs:enumeration value="ae" />
+			<xs:enumeration value="af" />
+			<xs:enumeration value="ak" />
+			<xs:enumeration value="am" />
+			<xs:enumeration value="an" />
+			<xs:enumeration value="ar" />
+			<xs:enumeration value="as" />
+			<xs:enumeration value="av" />
+			<xs:enumeration value="ay" />
+			<xs:enumeration value="az" />
+			<xs:enumeration value="ba" />
+			<xs:enumeration value="be" />
+			<xs:enumeration value="bg" />
+			<xs:enumeration value="bh" />
+			<xs:enumeration value="bi" />
+			<xs:enumeration value="bm" />
+			<xs:enumeration value="bn" />
+			<xs:enumeration value="bo" />
+			<xs:enumeration value="br" />
+			<xs:enumeration value="bs" />
+			<xs:enumeration value="ca" />
+			<xs:enumeration value="ce" />
+			<xs:enumeration value="ch" />
+			<xs:enumeration value="co" />
+			<xs:enumeration value="cr" />
+			<xs:enumeration value="cs" />
+			<xs:enumeration value="cu" />
+			<xs:enumeration value="cv" />
+			<xs:enumeration value="cy" />
+			<xs:enumeration value="da" />
+			<xs:enumeration value="de" />
+			<xs:enumeration value="dv" />
+			<xs:enumeration value="dz" />
+			<xs:enumeration value="ee" />
+			<xs:enumeration value="el" />
+			<xs:enumeration value="en" />
+			<xs:enumeration value="eo" />
+			<xs:enumeration value="es" />
+			<xs:enumeration value="et" />
+			<xs:enumeration value="eu" />
+			<xs:enumeration value="fa" />
+			<xs:enumeration value="ff" />
+			<xs:enumeration value="fi" />
+			<xs:enumeration value="fj" />
+			<xs:enumeration value="fo" />
+			<xs:enumeration value="fr" />
+			<xs:enumeration value="fy" />
+			<xs:enumeration value="ga" />
+			<xs:enumeration value="gd" />
+			<xs:enumeration value="gl" />
+			<xs:enumeration value="gn" />
+			<xs:enumeration value="gu" />
+			<xs:enumeration value="gv" />
+			<xs:enumeration value="ha" />
+			<xs:enumeration value="he" />
+			<xs:enumeration value="hi" />
+			<xs:enumeration value="ho" />
+			<xs:enumeration value="hr" />
+			<xs:enumeration value="ht" />
+			<xs:enumeration value="hu" />
+			<xs:enumeration value="hy" />
+			<xs:enumeration value="hz" />
+			<xs:enumeration value="ia" />
+			<xs:enumeration value="id" />
+			<xs:enumeration value="ie" />
+			<xs:enumeration value="ig" />
+			<xs:enumeration value="ii" />
+			<xs:enumeration value="ik" />
+			<xs:enumeration value="in" />
+			<xs:enumeration value="io" />
+			<xs:enumeration value="is" />
+			<xs:enumeration value="it" />
+			<xs:enumeration value="iu" />
+			<xs:enumeration value="iw" />
+			<xs:enumeration value="ja" />
+			<xs:enumeration value="ji" />
+			<xs:enumeration value="jv" />
+			<xs:enumeration value="jw" />
+			<xs:enumeration value="ka" />
+			<xs:enumeration value="kg" />
+			<xs:enumeration value="ki" />
+			<xs:enumeration value="kj" />
+			<xs:enumeration value="kk" />
+			<xs:enumeration value="kl" />
+			<xs:enumeration value="km" />
+			<xs:enumeration value="kn" />
+			<xs:enumeration value="ko" />
+			<xs:enumeration value="kr" />
+			<xs:enumeration value="ks" />
+			<xs:enumeration value="ku" />
+			<xs:enumeration value="kv" />
+			<xs:enumeration value="kw" />
+			<xs:enumeration value="ky" />
+			<xs:enumeration value="la" />
+			<xs:enumeration value="lb" />
+			<xs:enumeration value="lg" />
+			<xs:enumeration value="li" />
+			<xs:enumeration value="ln" />
+			<xs:enumeration value="lo" />
+			<xs:enumeration value="lt" />
+			<xs:enumeration value="lu" />
+			<xs:enumeration value="lv" />
+			<xs:enumeration value="mg" />
+			<xs:enumeration value="mh" />
+			<xs:enumeration value="mi" />
+			<xs:enumeration value="mk" />
+			<xs:enumeration value="ml" />
+			<xs:enumeration value="mn" />
+			<xs:enumeration value="mo" />
+			<xs:enumeration value="mr" />
+			<xs:enumeration value="ms" />
+			<xs:enumeration value="mt" />
+			<xs:enumeration value="my" />
+			<xs:enumeration value="na" />
+			<xs:enumeration value="nb" />
+			<xs:enumeration value="nd" />
+			<xs:enumeration value="ne" />
+			<xs:enumeration value="ng" />
+			<xs:enumeration value="nl" />
+			<xs:enumeration value="nn" />
+			<xs:enumeration value="no" />
+			<xs:enumeration value="nr" />
+			<xs:enumeration value="nv" />
+			<xs:enumeration value="ny" />
+			<xs:enumeration value="oc" />
+			<xs:enumeration value="oj" />
+			<xs:enumeration value="om" />
+			<xs:enumeration value="or" />
+			<xs:enumeration value="os" />
+			<xs:enumeration value="pa" />
+			<xs:enumeration value="pi" />
+			<xs:enumeration value="pl" />
+			<xs:enumeration value="ps" />
+			<xs:enumeration value="pt" />
+			<xs:enumeration value="qu" />
+			<xs:enumeration value="rm" />
+			<xs:enumeration value="rn" />
+			<xs:enumeration value="ro" />
+			<xs:enumeration value="ru" />
+			<xs:enumeration value="rw" />
+			<xs:enumeration value="sa" />
+			<xs:enumeration value="sc" />
+			<xs:enumeration value="sd" />
+			<xs:enumeration value="se" />
+			<xs:enumeration value="sg" />
+			<xs:enumeration value="sh" />
+			<xs:enumeration value="si" />
+			<xs:enumeration value="sk" />
+			<xs:enumeration value="sl" />
+			<xs:enumeration value="sm" />
+			<xs:enumeration value="sn" />
+			<xs:enumeration value="so" />
+			<xs:enumeration value="sq" />
+			<xs:enumeration value="sr" />
+			<xs:enumeration value="ss" />
+			<xs:enumeration value="st" />
+			<xs:enumeration value="su" />
+			<xs:enumeration value="sv" />
+			<xs:enumeration value="sw" />
+			<xs:enumeration value="ta" />
+			<xs:enumeration value="te" />
+			<xs:enumeration value="tg" />
+			<xs:enumeration value="th" />
+			<xs:enumeration value="ti" />
+			<xs:enumeration value="tk" />
+			<xs:enumeration value="tl" />
+			<xs:enumeration value="tn" />
+			<xs:enumeration value="to" />
+			<xs:enumeration value="tr" />
+			<xs:enumeration value="ts" />
+			<xs:enumeration value="tt" />
+			<xs:enumeration value="tw" />
+			<xs:enumeration value="ty" />
+			<xs:enumeration value="ug" />
+			<xs:enumeration value="uk" />
+			<xs:enumeration value="ur" />
+			<xs:enumeration value="uz" />
+			<xs:enumeration value="vi" />
+			<xs:enumeration value="vo" />
+			<xs:enumeration value="wa" />
+			<xs:enumeration value="wo" />
+			<xs:enumeration value="xh" />
+			<xs:enumeration value="yi" />
+			<xs:enumeration value="yo" />
+			<xs:enumeration value="za" />
+			<xs:enumeration value="zh" />
+			<xs:enumeration value="zu" />
+			<xs:enumeration value="xx" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--UWMETADATA CLASSIFICATIONS -->
+
+<xs:simpleType name="ClassificationSource">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="1" />
+			<xs:enumeration value="2" />
+			<xs:enumeration value="3" />
+			<xs:enumeration value="4" />
+			<xs:enumeration value="5" />
+			<xs:enumeration value="6" />
+			<xs:enumeration value="7" />
+			<xs:enumeration value="8" />
+			<xs:enumeration value="9" />
+			<xs:enumeration value="10" />
+			<xs:enumeration value="11" />
+			<xs:enumeration value="12" />
+			<xs:enumeration value="13" />
+			<xs:enumeration value="14" />
+			<xs:enumeration value="15" />
+			<xs:enumeration value="16" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 124 -->
+
+<xs:simpleType name="VOC_124">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="1552099" />
+			<xs:enumeration value="1552100" />
+			<xs:enumeration value="1552101" />
+			<xs:enumeration value="1552102" />
+			<xs:enumeration value="1552103" />
+			<xs:enumeration value="1552104" />
+			<xs:enumeration value="1552105" />
+			<xs:enumeration value="1552151" />
+			<xs:enumeration value="1552255" />
+			<xs:enumeration value="1552256" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 8 -->
+
+<xs:simpleType name="VOC_8">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="43" />
+			<xs:enumeration value="44" />
+			<xs:enumeration value="45" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 12 -->
+
+<xs:simpleType name="VOC_12">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="46" />
+			<xs:enumeration value="47" />
+			<xs:enumeration value="49" />
+			<xs:enumeration value="51" />
+			<xs:enumeration value="52" />
+			<xs:enumeration value="53" />
+			<xs:enumeration value="54" />
+			<xs:enumeration value="55" />
+			<xs:enumeration value="56" />
+			<xs:enumeration value="58" />
+			<xs:enumeration value="59" />
+			<xs:enumeration value="60" />
+			<xs:enumeration value="61" />
+			<xs:enumeration value="63" />
+			<xs:enumeration value="10867" />
+			<xs:enumeration value="10868" />
+			<xs:enumeration value="10869" />
+			<xs:enumeration value="1552095" />
+			<xs:enumeration value="1552154" />
+			<xs:enumeration value="1552155" />
+			<xs:enumeration value="1552167" />
+			<xs:enumeration value="1552168" />
+			<xs:enumeration value="1557098" />
+			<xs:enumeration value="1557099" />
+			<xs:enumeration value="1557100" />
+			<xs:enumeration value="1557101" />
+			<xs:enumeration value="1557102" />
+			<xs:enumeration value="1557103" />
+			<xs:enumeration value="1557104" />
+			<xs:enumeration value="1557105" />
+			<xs:enumeration value="1557106" />
+			<xs:enumeration value="1557107" />
+			<xs:enumeration value="1557108" />
+			<xs:enumeration value="1557109" />
+			<xs:enumeration value="1557110" />
+			<xs:enumeration value="1557111" />
+			<xs:enumeration value="1557112" />
+			<xs:enumeration value="1557113" />
+			<xs:enumeration value="1557114" />
+			<xs:enumeration value="1557115" />
+			<xs:enumeration value="1557116" />
+			<xs:enumeration value="1557117" />
+			<xs:enumeration value="1557118" />
+			<xs:enumeration value="1557119" />
+			<xs:enumeration value="1557120" />
+			<xs:enumeration value="1557121" />
+			<xs:enumeration value="1557122" />
+			<xs:enumeration value="1557123" />
+			<xs:enumeration value="1557124" />
+			<xs:enumeration value="1557125" />
+			<xs:enumeration value="1557126" />
+			<xs:enumeration value="1557127" />
+			<xs:enumeration value="1557128" />
+			<xs:enumeration value="1557129" />
+			<xs:enumeration value="1557130" />
+			<xs:enumeration value="1557131" />
+			<xs:enumeration value="1557132" />
+			<xs:enumeration value="1557133" />
+			<xs:enumeration value="1557134" />
+			<xs:enumeration value="1557135" />
+			<xs:enumeration value="1557136" />
+			<xs:enumeration value="1557137" />
+			<xs:enumeration value="1557138" />
+			<xs:enumeration value="1557139" />
+			<xs:enumeration value="1557140" />
+			<xs:enumeration value="1557141" />
+			<xs:enumeration value="1557142" />
+			<xs:enumeration value="1557143" />
+			<xs:enumeration value="1557144" />
+			<xs:enumeration value="1557145" />
+			<xs:enumeration value="1557146" />
+			<xs:enumeration value="1561230" />
+			<xs:enumeration value="1561248" />
+			<xs:enumeration value="1562634" />
+			<xs:enumeration value="1562795" />
+			<xs:enumeration value="1562796" />
+			<xs:enumeration value="1562797" />
+			<xs:enumeration value="1562798" />
+			<xs:enumeration value="1562799" />
+			<xs:enumeration value="1562800" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 152 -->
+
+<xs:simpleType name="VOC_152">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="1556247" />
+			<xs:enumeration value="1556248" />
+			<xs:enumeration value="1556249" />
+			<xs:enumeration value="1556250" />
+			<xs:enumeration value="1556251" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 153 -->
+
+<xs:simpleType name="VOC_153">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="1557087" />
+			<xs:enumeration value="1557088" />
+			<xs:enumeration value="1557089" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 28 -->
+
+<xs:simpleType name="VOC_28">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="64" />
+			<xs:enumeration value="65" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 29 -->
+
+<xs:simpleType name="VOC_29">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="66" />
+			<xs:enumeration value="67" />
+			<xs:enumeration value="68" />
+			<xs:enumeration value="69" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 53 -->
+
+<xs:simpleType name="VOC_53">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="1688" />
+			<xs:enumeration value="1689" />
+			<xs:enumeration value="1690" />
+			<xs:enumeration value="1691" />
+			<xs:enumeration value="1692" />
+			<xs:enumeration value="1693" />
+			<xs:enumeration value="1694" />
+			<xs:enumeration value="1695" />
+			<xs:enumeration value="1696" />
+			<xs:enumeration value="1697" />
+			<xs:enumeration value="1698" />
+			<xs:enumeration value="1699" />
+			<xs:enumeration value="1700" />
+			<xs:enumeration value="1701" />
+			<xs:enumeration value="1702" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 52 -->
+
+<xs:simpleType name="VOC_52">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="1685" />
+			<xs:enumeration value="1686" />
+			<xs:enumeration value="1687" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 54 -->
+
+<xs:simpleType name="VOC_54">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="1703" />
+			<xs:enumeration value="1704" />
+			<xs:enumeration value="1705" />
+			<xs:enumeration value="1706" />
+			<xs:enumeration value="1707" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 56 -->
+
+<xs:simpleType name="VOC_56">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="1713" />
+			<xs:enumeration value="1715" />
+			<xs:enumeration value="1716" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 57 -->
+
+<xs:simpleType name="VOC_57">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="1717" />
+			<xs:enumeration value="1718" />
+			<xs:enumeration value="1719" />
+			<xs:enumeration value="1720" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 59 -->
+
+<xs:simpleType name="VOC_59">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="1721" />
+			<xs:enumeration value="1722" />
+			<xs:enumeration value="1723" />
+			<xs:enumeration value="1724" />
+			<xs:enumeration value="1725" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 81 -->
+
+<xs:simpleType name="VOC_81">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="1" />
+			<xs:enumeration value="2" />
+			<xs:enumeration value="3" />
+			<xs:enumeration value="4" />
+			<xs:enumeration value="5" />
+			<xs:enumeration value="6" />
+			<xs:enumeration value="7" />
+			<xs:enumeration value="8" />
+			<xs:enumeration value="9" />
+			<xs:enumeration value="10" />
+			<xs:enumeration value="11" />
+			<xs:enumeration value="12" />
+			<xs:enumeration value="13" />
+			<xs:enumeration value="14" />
+			<xs:enumeration value="15" />
+			<xs:enumeration value="16" />
+			<xs:enumeration value="17" />
+			<xs:enumeration value="18" />
+			<xs:enumeration value="19" />
+			<xs:enumeration value="20" />
+			<xs:enumeration value="21" />
+			<xs:enumeration value="22" />
+			<xs:enumeration value="23" />
+			<xs:enumeration value="24" />
+			<xs:enumeration value="25" />
+			<xs:enumeration value="26" />
+			<xs:enumeration value="27" />
+			<xs:enumeration value="28" />
+			<xs:enumeration value="29" />
+			<xs:enumeration value="30" />
+			<xs:enumeration value="31" />
+			<xs:enumeration value="32" />
+			<xs:enumeration value="33" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 150 -->
+
+<xs:simpleType name="VOC_150">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="1556224" />
+			<xs:enumeration value="1556225" />
+			<xs:enumeration value="1556226" />
+			<xs:enumeration value="1556227" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 44 -->
+
+<xs:simpleType name="VOC_44">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="70" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 72 -->
+
+<xs:simpleType name="VOC_72">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="1738" />
+			<xs:enumeration value="1739" />
+			<xs:enumeration value="1740" />
+			<xs:enumeration value="1741" />
+			<xs:enumeration value="1742" />
+			<xs:enumeration value="1743" />
+			<xs:enumeration value="1552253" />
+			<xs:enumeration value="1552257" />
+			<xs:enumeration value="1552258" />
+			<xs:enumeration value="1552259" />
+			<xs:enumeration value="1552260" />
+			<xs:enumeration value="1552261" />
+			<xs:enumeration value="1552262" />
+			<xs:enumeration value="1552263" />
+			<xs:enumeration value="1556235" />
+			<xs:enumeration value="1556236" />
+			<xs:enumeration value="1556237" />
+			<xs:enumeration value="1556239" />
+			<xs:enumeration value="1556240" />
+			<xs:enumeration value="1556241" />
+			<xs:enumeration value="1556242" />
+			<xs:enumeration value="1556244" />
+			<xs:enumeration value="1557090" />
+			<xs:enumeration value="1562801" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 93 -->
+
+<xs:simpleType name="VOC_93">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="10910" />
+			<xs:enumeration value="10911" />
+			<xs:enumeration value="1552077" />
+			<xs:enumeration value="1552149" />
+			<xs:enumeration value="1552150" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 88 -->
+
+<xs:simpleType name="VOC_88">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="10877" />
+			<xs:enumeration value="10878" />
+			<xs:enumeration value="10879" />
+			<xs:enumeration value="10880" />
+			<xs:enumeration value="10881" />
+			<xs:enumeration value="10882" />
+			<xs:enumeration value="10883" />
+			<xs:enumeration value="10884" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 94 -->
+
+<xs:simpleType name="VOC_94">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="10885" />
+			<xs:enumeration value="10914" />
+			<xs:enumeration value="10917" />
+			<xs:enumeration value="1552000" />
+			<xs:enumeration value="1552079" />
+			<xs:enumeration value="1552118" />
+			<xs:enumeration value="1552119" />
+			<xs:enumeration value="1552137" />
+			<xs:enumeration value="1552144" />
+			<xs:enumeration value="1552145" />
+			<xs:enumeration value="1552146" />
+			<xs:enumeration value="1552147" />
+			<xs:enumeration value="1552148" />
+			<xs:enumeration value="1556222" />
+			<xs:enumeration value="1557091" />
+			<xs:enumeration value="1557093" />
+			<xs:enumeration value="1557094" />
+			<xs:enumeration value="1557095" />
+			<xs:enumeration value="1557096" />
+			<xs:enumeration value="1557097" />
+			<xs:enumeration value="1557233" />
+			<xs:enumeration value="1562603" />
+			<xs:enumeration value="1562604" />
+			<xs:enumeration value="1562635" />
+			<xs:enumeration value="1562636" />
+			<xs:enumeration value="1562637" />
+			<xs:enumeration value="1562638" />
+			<xs:enumeration value="1562639" />
+			<xs:enumeration value="1562640" />
+			<xs:enumeration value="1562802" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 90 -->
+
+<xs:simpleType name="VOC_90">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="10888" />
+			<xs:enumeration value="10889" />
+			<xs:enumeration value="10891" />
+			<xs:enumeration value="10892" />
+			<xs:enumeration value="10893" />
+			<xs:enumeration value="10894" />
+			<xs:enumeration value="10895" />
+			<xs:enumeration value="10896" />
+			<xs:enumeration value="10897" />
+			<xs:enumeration value="10898" />
+			<xs:enumeration value="10899" />
+			<xs:enumeration value="10900" />
+			<xs:enumeration value="10901" />
+			<xs:enumeration value="10902" />
+			<xs:enumeration value="10903" />
+			<xs:enumeration value="10904" />
+			<xs:enumeration value="10905" />
+			<xs:enumeration value="10906" />
+			<xs:enumeration value="10907" />
+			<xs:enumeration value="10908" />
+			<xs:enumeration value="1552075" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 121 -->
+
+<xs:simpleType name="VOC_121">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="10910" />
+			<xs:enumeration value="10911" />
+			<xs:enumeration value="1552077" />
+			<xs:enumeration value="1552149" />
+			<xs:enumeration value="1552150" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 107 -->
+
+<xs:simpleType name="VOC_107">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="46" />
+			<xs:enumeration value="47" />
+			<xs:enumeration value="49" />
+			<xs:enumeration value="51" />
+			<xs:enumeration value="52" />
+			<xs:enumeration value="53" />
+			<xs:enumeration value="54" />
+			<xs:enumeration value="55" />
+			<xs:enumeration value="56" />
+			<xs:enumeration value="58" />
+			<xs:enumeration value="59" />
+			<xs:enumeration value="60" />
+			<xs:enumeration value="61" />
+			<xs:enumeration value="63" />
+			<xs:enumeration value="10867" />
+			<xs:enumeration value="10868" />
+			<xs:enumeration value="10869" />
+			<xs:enumeration value="1552095" />
+			<xs:enumeration value="1552154" />
+			<xs:enumeration value="1552155" />
+			<xs:enumeration value="1552167" />
+			<xs:enumeration value="1552168" />
+			<xs:enumeration value="1557098" />
+			<xs:enumeration value="1557099" />
+			<xs:enumeration value="1557100" />
+			<xs:enumeration value="1557101" />
+			<xs:enumeration value="1557102" />
+			<xs:enumeration value="1557103" />
+			<xs:enumeration value="1557104" />
+			<xs:enumeration value="1557105" />
+			<xs:enumeration value="1557106" />
+			<xs:enumeration value="1557107" />
+			<xs:enumeration value="1557108" />
+			<xs:enumeration value="1557109" />
+			<xs:enumeration value="1557110" />
+			<xs:enumeration value="1557111" />
+			<xs:enumeration value="1557112" />
+			<xs:enumeration value="1557113" />
+			<xs:enumeration value="1557114" />
+			<xs:enumeration value="1557115" />
+			<xs:enumeration value="1557116" />
+			<xs:enumeration value="1557117" />
+			<xs:enumeration value="1557118" />
+			<xs:enumeration value="1557119" />
+			<xs:enumeration value="1557120" />
+			<xs:enumeration value="1557121" />
+			<xs:enumeration value="1557122" />
+			<xs:enumeration value="1557123" />
+			<xs:enumeration value="1557124" />
+			<xs:enumeration value="1557125" />
+			<xs:enumeration value="1557126" />
+			<xs:enumeration value="1557127" />
+			<xs:enumeration value="1557128" />
+			<xs:enumeration value="1557129" />
+			<xs:enumeration value="1557130" />
+			<xs:enumeration value="1557131" />
+			<xs:enumeration value="1557132" />
+			<xs:enumeration value="1557133" />
+			<xs:enumeration value="1557134" />
+			<xs:enumeration value="1557135" />
+			<xs:enumeration value="1557136" />
+			<xs:enumeration value="1557137" />
+			<xs:enumeration value="1557138" />
+			<xs:enumeration value="1557139" />
+			<xs:enumeration value="1557140" />
+			<xs:enumeration value="1557141" />
+			<xs:enumeration value="1557142" />
+			<xs:enumeration value="1557143" />
+			<xs:enumeration value="1557144" />
+			<xs:enumeration value="1557145" />
+			<xs:enumeration value="1557146" />
+			<xs:enumeration value="1561230" />
+			<xs:enumeration value="1561248" />
+			<xs:enumeration value="1562634" />
+			<xs:enumeration value="1562795" />
+			<xs:enumeration value="1562796" />
+			<xs:enumeration value="1562797" />
+			<xs:enumeration value="1562798" />
+			<xs:enumeration value="1562799" />
+			<xs:enumeration value="1562800" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!--VOCABULARY MID 128 -->
+
+<xs:simpleType name="VOC_128">
+	<xs:restriction base="xs:int">
+			<xs:enumeration value="1552129" />
+			<xs:enumeration value="1552130" />
+			<xs:enumeration value="1552131" />
+	</xs:restriction>
+</xs:simpleType>
+
+<!-- Phaidra datatypes -->
+
+<xs:simpleType name="Duration">
+	<xs:restriction base="xs:token">
+		<xs:pattern value="PT(\d{1,2}H){0,1}(\d{1,2}M){0,1}(\d{1,2}S){0,1}" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="CharacterString">
+	<xs:restriction base="xs:string" />
+</xs:simpleType>
+
+<xs:simpleType name="LangString">
+        <xs:restriction base="xs:string" />
+</xs:simpleType>
+
+<xs:simpleType name="Vocabulary">
+	<xs:restriction base="xs:int" />
+</xs:simpleType>
+
+<xs:simpleType name="FileSize">
+	<xs:restriction base="xs:nonNegativeInteger" />
+</xs:simpleType>
+
+<xs:simpleType name="Node">
+	<xs:restriction base="xs:string" />
+</xs:simpleType>
+
+<xs:simpleType name="License">
+	<xs:restriction base="xs:nonNegativeInteger" />
+</xs:simpleType>
+
+<xs:simpleType name="DateTime">
+	<xs:restriction base="xs:token">
+		<xs:pattern value="-{0,1}\d{4}(-\d{2}){0,1}(-\d{2}){0,1}" />
+		<xs:pattern value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="GPS">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="\d{1,3}°\d{1,2}'\d{1,2}''[EW]{1}\|\d{1,2}°\d{1,2}'\d{1,2}''[NS]{1}" />
+		</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="Boolean">
+	<xs:restriction base="xs:string">
+		<xs:enumeration value="yes" />
+		<xs:enumeration value="no" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="Faculty">
+	<xs:restriction base="xs:string" />
+</xs:simpleType>
+
+<xs:simpleType name="Department">
+	<xs:restriction base="xs:string" />
+</xs:simpleType>
+
+<xs:simpleType name="SPL">
+	<xs:restriction base="xs:string" />
+</xs:simpleType>
+
+<xs:simpleType name="Curriculum">
+	<xs:restriction base="xs:string" />
+</xs:simpleType>
+
+<xs:simpleType name="Taxon">
+        <xs:restriction base="xs:int" />
+</xs:simpleType>
+
+</xs:schema>
