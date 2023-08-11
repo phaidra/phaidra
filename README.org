@@ -845,7 +845,7 @@
                                                 <table border="0">
                                                 <tr>
                                                 <td align="text"><b>host:</b><br align="left" /></td>
-                                                <td align="text">$HOME/.local/share/docker/volumes/phaidra-ssl-nginx_fedora/_data<br align="left" /></td>
+                                                <td align="text">$HOME/.local/share/docker/volumes/phaidra-external-webserver_fedora/_data<br align="left" /></td>
                                                 </tr>
                                                 <tr>
                                                 <td align="text">fedora-container:<br align="left" /></td>
@@ -865,7 +865,7 @@
                                                   <table border="0">
                                                   <tr>
                                                   <td align="text"><b>host:</b><br align="left" /></td>
-                                                  <td align="text">$HOME/.local/share/docker/volumes/phaidra-ssl-nginx_api_logs/_data<br align="left" /></td>
+                                                  <td align="text">$HOME/.local/share/docker/volumes/phaidra-external-webserver_api_logs/_data<br align="left" /></td>
                                                   </tr>
                                                   <tr>
                                                   <td align="text">api-container:<br align="left" /></td>
@@ -877,7 +877,7 @@
                                                          <table border="0">
                                                          <tr>
                                                          <td align="text"><b>host:</b><br align="left" /></td>
-                                                         <td align="text">$HOME/.local/share/docker/volumes/phaidra-ssl-nginx_mariadb_phaidra/_data<br align="left" /></td>
+                                                         <td align="text">$HOME/.local/share/docker/volumes/phaidra-external-webserver_mariadb_phaidra/_data<br align="left" /></td>
                                                          </tr>
                                                          <tr>
                                                          <td align="text">mariadb-phaidra-container:<br align="left" /></td>
@@ -889,7 +889,7 @@
                                                          <table border="0">
                                                          <tr>
                                                          <td align="text"><b>host:</b><br align="left" /></td>
-                                                         <td align="text">$HOME/.local/share/docker/volumes/phaidra-ssl-nginx_mongodb_phaidra/_data<br align="left" /></td>
+                                                         <td align="text">$HOME/.local/share/docker/volumes/phaidra-external-webserver_mongodb_phaidra/_data<br align="left" /></td>
                                                          </tr>
                                                          <tr>
                                                          <td align="text">phaidra-mongodb-container:<br align="left" /></td>
@@ -900,7 +900,7 @@
                                                   <table border="0">
                                                   <tr>
                                                   <td align="text"><b>host:</b><br align="left" /></td>
-                                                  <td align="text">$HOME/.local/share/docker/volumes/phaidra-ssl-nginx_openldap/_data<br align="left" /></td>
+                                                  <td align="text">$HOME/.local/share/docker/volumes/phaidra-external-webserver_openldap/_data<br align="left" /></td>
                                                   </tr>
                                                   <tr>
                                                   <td align="text">openldap-container:<br align="left" /></td>
@@ -912,7 +912,7 @@
                                               <table border="0">
                                               <tr>
                                               <td align="text"><b>host:</b><br align="left" /></td>
-                                              <td align="text">$HOME/.local/share/docker/volumes/phaidra-ssl-nginx_solr/_data<br align="left" /></td>
+                                              <td align="text">$HOME/.local/share/docker/volumes/phaidra-external-webserver_solr/_data<br align="left" /></td>
                                               </tr>
                                               <tr>
                                               <td align="text">solr-container:<br align="left" /></td>
@@ -924,7 +924,7 @@
                                                     <table border="0">
                                                     <tr>
                                                     <td align="text"><b>host:</b><br align="left" /></td>
-                                                    <td align="text">$HOME/.local/share/docker/volumes/phaidra-ssl-nginx_pixelgecko/_data<br align="left" /></td>
+                                                    <td align="text">$HOME/.local/share/docker/volumes/phaidra-external-webserver_pixelgecko/_data<br align="left" /></td>
                                                     </tr>
                                                     <tr>
                                                     <td align="text">pixelgecko-container:<br align="left" /></td>
@@ -940,7 +940,7 @@
                                                 <table border="0">
                                                 <tr>
                                                 <td align="text"><b>host:</b><br align="left" /></td>
-                                                <td align="text">$HOME/.local/share/docker/volumes/phaidra-ssl-nginx_dbgate/_data<br align="left" /></td>
+                                                <td align="text">$HOME/.local/share/docker/volumes/phaidra-external-webserver_dbgate/_data<br align="left" /></td>
                                                 </tr>
                                                 <tr>
                                                 <td align="text">dbgate-container:<br align="left" /></td>
@@ -952,7 +952,7 @@
                                                         <table border="0">
                                                         <tr>
                                                         <td align="text"><b>host:</b><br align="left" /></td>
-                                                        <td align="text">$HOME/.local/share/docker/volumes/phaidra-ssl-nginx_mariadb_fedora/_data<br align="left" /></td>
+                                                        <td align="text">$HOME/.local/share/docker/volumes/phaidra-external-webserver_mariadb_fedora/_data<br align="left" /></td>
                                                         </tr>
                                                         <tr>
                                                         <td align="text">mariadb-fedora-container:<br align="left" /></td>
@@ -995,26 +995,26 @@
                                                                           label="PHAIDRA docker containers";
                                                                           color = green;
                                                                           node [shape = component, style = solid, color = green]
-                                                                          C_FEDORA [label="phaidra-ssl-nginx-fedora-1",
+                                                                          C_FEDORA [label="phaidra-external-webserver-fedora-1",
                                                                                     URL="https://fedora.lyrasis.org/"];
-                                                                          C_API [label="phaidra-ssl-nginx-api-1",
+                                                                          C_API [label="phaidra-external-webserver-api-1",
                                                                                  URL="https://github.com/phaidra/phaidra-api"];
-                                                                          C_MARIADB_PHAIDRA [label="phaidra-ssl-nginx-mariadb-phaidra-1",
+                                                                          C_MARIADB_PHAIDRA [label="phaidra-external-webserver-mariadb-phaidra-1",
                                                                                              URL="https://mariadb.org/"];
-                                                                          C_MONGODB_PHAIDRA [label="phaidra-ssl-nginx-mongodb-phaidra-1",
+                                                                          C_MONGODB_PHAIDRA [label="phaidra-external-webserver-mongodb-phaidra-1",
                                                                                              URL="https://www.mongodb.com/"];
-                                                                          C_UI [label="phaidra-ssl-nginx-ui-1",
+                                                                          C_UI [label="phaidra-external-webserver-ui-1",
                                                                                 URL="https://github.com/phaidra/phaidra-ui"];
-                                                                          C_OPENLDAP [label="phaidra-ssl-nginx-openldap-1",
+                                                                          C_OPENLDAP [label="phaidra-external-webserver-openldap-1",
                                                                                       URL="https://www.openldap.org/"];
-                                                                          C_SOLR [label="phaidra-ssl-nginx-solr-1",
+                                                                          C_SOLR [label="phaidra-external-webserver-solr-1",
                                                                                   URL="https://solr.apache.org/"];
-                                                                          C_IMAGESERVER [label="phaidra-ssl-nginx-imageserver-1",
+                                                                          C_IMAGESERVER [label="phaidra-external-webserver-imageserver-1",
                                                                                          URL="https://github.com/ruven/iipsrv"];
-                                                                          C_PIXELGECKO [label="phaidra-ssl-nginx-pixelgecko-1"];
-                                                                          C_DBGATE [label="phaidra-ssl-nginx-dbgate-1"];
-                                                                          C_LAM [label="phaidra-ssl-nginx-lam-1"];
-                                                                          C_MARIADB_FEDORA [label="phaidra-ssl-nginx-mariadb-fedora-1",
+                                                                          C_PIXELGECKO [label="phaidra-external-webserver-pixelgecko-1"];
+                                                                          C_DBGATE [label="phaidra-external-webserver-dbgate-1"];
+                                                                          C_LAM [label="phaidra-external-webserver-lam-1"];
+                                                                          C_MARIADB_FEDORA [label="phaidra-external-webserver-mariadb-fedora-1",
                                                                                             URL="https://mariadb.org/"];
                                                                   }
                                                           }
