@@ -30,7 +30,7 @@ cpanm-modules break the api-build.
 
 ## Nginx Demo
 
-![](./pictures/construction_standalone.svg)
+![](./pictures/construction_demo_nginx.svg)
 
 ## With external webserver
 
