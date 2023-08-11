@@ -281,7 +281,7 @@
 
 ** Apache Demo
    #+NAME: construction-demo-apache
-   #+begin_src dot :file "./pictures/construction_demo_apache.svg" :export results
+   #+begin_src dot :file "./pictures/construction_demo_apache.svg" :exports results
      graph G {
              rankdir="LR"
 
