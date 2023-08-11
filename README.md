@@ -26,19 +26,21 @@ readme) – right now it only builds the docker images as defined in the
 every commit to this repo, as a semi-manual verification if any
 cpanm-modules break the api-build.
 
-# Construction
+# Graphical overview
 
 ## Nginx Demo
 
 ![](./pictures/construction_demo_nginx.svg)
 
+## Nginx SSL
+
+![](./pictures/construction_ssl_nginx.svg)
+
 ## Apache Demo
 
 ![](./pictures/construction_demo_apache.svg)
 
-## With external webserver
-
-This is work in progress.
+## External webserver
 
 ![](./pictures/construction_external_webserver.svg)
 
