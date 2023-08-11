@@ -832,11 +832,10 @@
              subgraph cluster_host {
                      label = "PHAIDRA server firewall";
                      color = red;
-
+                     WEBSERVER [shape = component, label="External Webserver"];
                      subgraph cluster_host_storage {
                              label = "PHAIDRA server filesystem";
                              color = blue;
-                             WEBSERVER [label="External Webserver"];
                              subgraph cluster_named_volumes {
                                      label = "Named volumes";
                                      color = turquoise;
