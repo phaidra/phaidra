@@ -231,7 +231,7 @@ sub info {
   $info->{writerights} = 0;
   if ($c->app->config->{fedora}->{version} >= 6) {
     my $authz = PhaidraAPI::Model::Authorization->new;
-    my $wr = $authz->check_rights($c, $pid, 'w');
+    my $wr    = $authz->check_rights($c, $pid, 'w');
     if ($wr->{status} == 200) {
       $info->{writerights} = 1;
     }
@@ -239,7 +239,8 @@ sub info {
     if ($rr->{status} == 200) {
       $info->{readrights} = 1;
     }
-  } else {
+  }
+  else {
     my $rores = $self->get_datastream($c, $pid, 'READONLY', $username, $password);
     if ($rores->{status} eq '404') {
       $info->{readrights} = 1;
@@ -302,7 +303,7 @@ sub add_legacy_container_members {
   my $containerinfo;
   if ($c->app->config->{fedora}->{version} >= 6) {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $getdsres = $fedora_model->getDatastream($c, $pid, 'CONTAINERINFO');
+    my $getdsres     = $fedora_model->getDatastream($c, $pid, 'CONTAINERINFO');
     if ($getdsres->{status} != 200) {
       return $getdsres;
     }
@@ -312,7 +313,8 @@ sub add_legacy_container_members {
     $dom->parse($getdsres->{'CONTAINERINFO'});
     $containerinfo = $dom;
 
-  } else {
+  }
+  else {
     my $r_oxml = $self->get_foxml($c, $pid);
     if ($r_oxml->{status} eq 200) {
       my $dom = Mojo::DOM->new();
@@ -332,6 +334,7 @@ sub add_legacy_container_members {
       }
     }
   }
+
   # <c:container xmlns:c="http://phaidra.univie.ac.at/XML/V1.0/container">
   #   <c:datastream default="yes" filename="blatt_mit_wassertropfen.jpg">COMP000001</c:datastream>
   #   <c:datastream default="no" filename="bild_test.zip">COMP000000</c:datastream>
@@ -433,12 +436,14 @@ sub delete {
     my $dc_model     = PhaidraAPI::Model::Dc->new;
     my $search_model = PhaidraAPI::Model::Search->new;
     my $index_model  = PhaidraAPI::Model::Index->new;
-    my $r = $index_model->update($c, $pid, $dc_model, $search_model, $self);
+    my $r            = $index_model->update($c, $pid, $dc_model, $search_model, $self);
     if ($r->{status} ne 200) {
+
       # just log but don't change status, this isn't fatal
       push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
     }
-  } else {
+  }
+  else {
 
     my $haswriterights = 0;
     $c->app->log->debug("[$pid] Changing object status to Deleted...");
@@ -692,7 +697,8 @@ sub get_state {
       return $fres;
     }
     $state = $fres->{state};
-  } else {
+  }
+  else {
     $c->app->log->debug("get_state $pid: getting foxml");
     my $r_oxml = $self->get_foxml($c, $pid);
     if ($r_oxml->{status} ne 200) {
