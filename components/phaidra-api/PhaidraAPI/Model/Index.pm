@@ -504,6 +504,8 @@ sub update {
   my ($self, $c, $pid, $dc_model, $search_model, $object_model, $ignorestatus, $norecursion, $core) = @_;
 
   my $res = {status => 200};
+  
+  my $ua = Mojo::UserAgent->new;
 
   if (exists($c->app->config->{solr})) {
 
@@ -511,12 +513,30 @@ sub update {
     my $cmodel_res = $search_model->get_cmodel($c, $pid);
     $c->app->log->debug("getting cmodel[" . $cmodel_res->{cmodel} . "] took " . tv_interval($tcm));
     if ($cmodel_res->{status} ne 200) {
+      if ($c->app->config->{fedora}->{version} >= 6) {
+        # object might have been deleted, check tombstone
+        my $fedora_model = PhaidraAPI::Model::Fedora->new;
+        if ($fedora_model->isDeleted($c, $pid)) {
+          if (exists($c->app->config->{solr})) {
+            my $post = $ua->post($self->getSolrUpdateUrl($c) => json => {delete => $pid})->result;
+            if ($post->is_success) {
+              $c->app->log->debug("[$pid] solr document deleted (object returns 410 Gone)");
+            }
+            else {
+              unshift @{$res->{alerts}}, {type => 'error', msg => "[$pid] Error deleting document from solr: " . $post->message};
+              $res->{status} = $post->code ? $post->code : 500;
+            }
+            $res->{status} = 200;
+            return $res;
+          }
+        } else {
+          return $cmodel_res;
+        }
+      }
       return $cmodel_res;
     }
 
     my $updateurl = $self->getSolrUpdateUrl($c, $cmodel_res->{cmodel}, $core);
-
-    my $ua = Mojo::UserAgent->new;
 
     if ($cmodel_res->{cmodel} eq '') {
 

@@ -715,21 +715,21 @@ sub startup {
 
     $check_auth->get('termsofuse/getagreed')                                    ->to('termsofuse#getagreed');
 
-    $admin->get('test/error')                                        ->to('utils#testerror');
+    $admin->get('test/error')                                                   ->to('utils#testerror');
 
     unless($self->app->config->{readonly}){
 
-      $admin->post('index')                                          ->to('index#update');
-      $admin->post('dc')                                             ->to('dc#update');
+      $admin->post('index')                                                     ->to('index#update');
+      $admin->post('dc')                                                        ->to('dc#update');
 
       $check_auth->post('settings')                                             ->to('settings#post_settings');
 
-      $admin->post('object/:pid/index')                              ->to('index#update');
-      $admin->post('object/:pid/dc')                                 ->to('dc#update');
+      $admin->post('object/:pid/index')                                         ->to('index#update');
+      $admin->post('object/:pid/dc')                                            ->to('dc#update');
 
-      $admin->post('ir/embargocheck')                                ->to('ir#embargocheck');
+      $admin->post('ir/embargocheck')                                           ->to('ir#embargocheck');
 
-      $admin->post('imageserver/process')                            ->to('imageserver#process_pids');
+      $admin->post('imageserver/process')                                       ->to('imageserver#process_pids');
 
       $proxyauth->post('imageserver/:pid/process')                              ->to('imageserver#process');
 

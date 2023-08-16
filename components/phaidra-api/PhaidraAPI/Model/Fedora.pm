@@ -509,6 +509,32 @@ sub createEmpty {
   return $res;
 }
 
+sub delete {
+  my ($self, $c, $pid) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  my $url = $c->app->fedoraurl->path($pid);
+  $c->app->log->debug("DELETE $url");
+  my $putres = $c->ua->delete($url)->result;
+  unless ($putres->is_success) {
+    $c->app->log->error("Cannot delete fedora object pid[$pid]: code:" . $putres->{code} . " message:" . $putres->{message});
+    unshift @{$res->{alerts}}, {type => 'error', msg => $putres->{message}};
+    $res->{status} = $putres->{code} ? $putres->{code} : 500;
+    return $res;
+  }
+  return $res;
+}
+
+sub isDeleted {
+  my ($self, $c, $pid) = @_;
+
+  my $url = $c->app->fedoraurl->path($pid);
+  $c->app->log->debug("GET $url");
+  my $getres = $c->ua->get($url)->result;
+  return $getres->{code} == 410;
+}
+
 sub mintPid {
   my ($self, $c) = @_;
 
