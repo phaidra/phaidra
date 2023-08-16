@@ -14,59 +14,58 @@ use base 'Phaidra::Directory';
 
 my $config = undef;
 
-my $orgunits = {
-  root => {
-    subunits => []
-  }
-};
+my $orgunits = {root => {subunits => []}};
 
 sub _init {
+
   # this is the app config
   my $self = shift;
   my $mojo = shift;
-#  $config = YAML::Syck::LoadFile('/etc/phaidra.yml');
+
+  #  $config = YAML::Syck::LoadFile('/etc/phaidra.yml');
   my $orgjsonfilepath = 'lib/phaidra_directory/Phaidra/Directory/organizational_units.json';
   if (-r $orgjsonfilepath) {
 
     my $json_text = do {
       open(my $json_fh, "<:encoding(UTF-8)", $orgjsonfilepath)
-      or $mojo->log->error("Can't open file[".$orgjsonfilepath."]: $!\n");
+        or $mojo->log->error("Can't open file[" . $orgjsonfilepath . "]: $!\n");
       local $/;
-      <$json_fh>
+      <$json_fh>;
     };
 
     my @orgunitsarr = @{decode_json($json_text)};
     for my $u (@orgunitsarr) {
       $orgunits->{$u->{id}} = {
-	subunits => [],
-	superunits => [],
-	oracle_id => $u->{oracle_id},
-	parent_oracle_id => $u->{parent_oracle_id},
-	rdf => {
-	  '@type' => $u->{type},
-	  'skos:prefLabel' => {
-	    'deu' => $u->{de},
-	    'eng' => $u->{en}
-	  },
-	  'skos:notation' => $u->{oracle_id},
-	  '@id' => $u->{id}
-	}
-      }
+        subunits         => [],
+        superunits       => [],
+        oracle_id        => $u->{oracle_id},
+        parent_oracle_id => $u->{parent_oracle_id},
+        rdf              => {
+          '@type'          => $u->{type},
+          'skos:prefLabel' => {
+            'deu' => $u->{de},
+            'eng' => $u->{en}
+          },
+          'skos:notation' => $u->{oracle_id},
+          '@id'           => $u->{id}
+        }
+      };
     }
     for my $unitid (keys %{$orgunits}) {
       if (exists($orgunits->{$unitid}->{parent_oracle_id}) && ($orgunits->{$unitid}->{parent_oracle_id} eq -1)) {
-	push @{$orgunits->{root}->{subunits}}, $orgunits->{$unitid}
+        push @{$orgunits->{root}->{subunits}}, $orgunits->{$unitid};
       }
       for my $unitid2 (keys %{$orgunits}) {
-	if (exists($orgunits->{$unitid2}->{parent_oracle_id}) && exists($orgunits->{$unitid}->{oracle_id}) && ($orgunits->{$unitid2}->{parent_oracle_id} eq $orgunits->{$unitid}->{oracle_id})) {
-	  push @{$orgunits->{$unitid}->{subunits}}, $orgunits->{$unitid2};
-	}
-	if (exists($orgunits->{$unitid2}->{oracle_id}) && exists($orgunits->{$unitid}->{parent_oracle_id}) && ($orgunits->{$unitid2}->{oracle_id} eq $orgunits->{$unitid}->{parent_oracle_id})) {
-	  push @{$orgunits->{$unitid}->{superunits}}, $orgunits->{$unitid2};
-	}
+        if (exists($orgunits->{$unitid2}->{parent_oracle_id}) && exists($orgunits->{$unitid}->{oracle_id}) && ($orgunits->{$unitid2}->{parent_oracle_id} eq $orgunits->{$unitid}->{oracle_id})) {
+          push @{$orgunits->{$unitid}->{subunits}}, $orgunits->{$unitid2};
+        }
+        if (exists($orgunits->{$unitid2}->{oracle_id}) && exists($orgunits->{$unitid}->{parent_oracle_id}) && ($orgunits->{$unitid2}->{oracle_id} eq $orgunits->{$unitid}->{parent_oracle_id})) {
+          push @{$orgunits->{$unitid}->{superunits}}, $orgunits->{$unitid2};
+        }
       }
     }
-  } else {
+  }
+  else {
     $mojo->log->error("univie.json [$orgjsonfilepath] not found");
   }
 
@@ -75,87 +74,93 @@ sub _init {
 
 # [begin] new org methods
 sub org_get_subunits {
-  my ($self, $c, $id)= @_;
+  my ($self, $c, $id) = @_;
 
-  my $res = { alerts => [], status => 200 };
+  my $res = {alerts => [], status => 200};
 
   $id = 'root' if $id == 'A-1';
 
   if (exists($orgunits->{$id})) {
     if (exists($orgunits->{$id}->{subunits})) {
       my @subunits;
-      for my $u (@{$orgunits->{$id}->{subunits}}){
-	push @subunits, $u->{rdf};
+      for my $u (@{$orgunits->{$id}->{subunits}}) {
+        push @subunits, $u->{rdf};
       }
       $res->{subunits} = \@subunits;
-    } else {
-      push @{$res->{alerts}}, { type => 'error', msg => "Internal error when requesting subunits of $id" };
+    }
+    else {
+      push @{$res->{alerts}}, {type => 'error', msg => "Internal error when requesting subunits of $id"};
       $res->{status} = 500;
     }
-  } else {
-    push @{$res->{alerts}}, { type => 'error', msg => "$id not found" };
+  }
+  else {
+    push @{$res->{alerts}}, {type => 'error', msg => "$id not found"};
     $res->{status} = 404;
   }
   return $res;
 }
 
 sub org_get_superunits {
-  my ($self, $c, $id)= @_;
+  my ($self, $c, $id) = @_;
 
-  my $res = { alerts => [], status => 200 };
+  my $res = {alerts => [], status => 200};
 
   if ($id) {
     if (exists($orgunits->{$id})) {
       if (exists($orgunits->{$id}->{superunits})) {
-	my @superunits;
-	for my $u (@{$orgunits->{$id}->{superunits}}){
-	  push @superunits, $u->{rdf};
-	}
-	$res->{superunits} = \@superunits;
-      } else {
-	push @{$res->{alerts}}, { type => 'error', msg => "Internal error when requesting superunits of $id" };
-	$res->{status} = 500;
+        my @superunits;
+        for my $u (@{$orgunits->{$id}->{superunits}}) {
+          push @superunits, $u->{rdf};
+        }
+        $res->{superunits} = \@superunits;
       }
-    } else {
-      push @{$res->{alerts}}, { type => 'error', msg => "$id not found" };
+      else {
+        push @{$res->{alerts}}, {type => 'error', msg => "Internal error when requesting superunits of $id"};
+        $res->{status} = 500;
+      }
+    }
+    else {
+      push @{$res->{alerts}}, {type => 'error', msg => "$id not found"};
       $res->{status} = 404;
     }
 
-  } else {
-    push @{$res->{alerts}}, { type => 'error', msg => "No id provided when requesting superunits" };
+  }
+  else {
+    push @{$res->{alerts}}, {type => 'error', msg => "No id provided when requesting superunits"};
     $res->{status} = 400;
   }
   return $res;
 }
 
 sub org_get_units {
-  my ($self, $c, $flat)= @_;
+  my ($self, $c, $flat) = @_;
 
   my $res;
 
   if ($flat) {
     my @orgunits;
     $self->_org_get_units_rec_flat($c, $orgunits->{root}->{subunits}, \@orgunits);
-    $res = { alerts => [], units => \@orgunits, status => 200 };
-  } else {
-    $res = { alerts => [], units => $self->_org_get_units_rec($c, $orgunits->{root}->{subunits}), status => 200 };
+    $res = {alerts => [], units => \@orgunits, status => 200};
+  }
+  else {
+    $res = {alerts => [], units => $self->_org_get_units_rec($c, $orgunits->{root}->{subunits}), status => 200};
   }
 
   return $res;
 }
 
 sub org_get_parentpath {
-  my ($self, $c, $id)= @_;
+  my ($self, $c, $id) = @_;
 
   my @parentpath;
   push @parentpath, $orgunits->{$id}->{rdf};
   $self->_org_get_parentpath_rec_flat($c, $orgunits->{$id}->{superunits}, \@parentpath);
 
-  return { alerts => [], parentpath => \@parentpath, status => 200 };
+  return {alerts => [], parentpath => \@parentpath, status => 200};
 }
 
 sub _org_get_units_rec {
-  my ($self, $c, $units)= @_;
+  my ($self, $c, $units) = @_;
 
   my @newarr;
 
@@ -165,7 +170,7 @@ sub _org_get_units_rec {
 
     if (exists($u->{subunits})) {
       if (scalar(@{$u->{subunits}}) > 0) {
-	$new_u->{subunits} = $self->_org_get_units_rec($c, $u->{subunits});
+        $new_u->{subunits} = $self->_org_get_units_rec($c, $u->{subunits});
       }
     }
 
@@ -176,31 +181,32 @@ sub _org_get_units_rec {
 }
 
 sub _org_get_units_rec_flat {
-  my ($self, $c, $units, $arr)= @_;
+  my ($self, $c, $units, $arr) = @_;
 
   for my $u (@{$units}) {
     push @{$arr}, $u->{rdf};
     if (exists($u->{subunits})) {
       if (scalar(@{$u->{subunits}}) > 0) {
-	$self->_org_get_units_rec_flat($c, $u->{subunits}, $arr);
+        $self->_org_get_units_rec_flat($c, $u->{subunits}, $arr);
       }
     }
   }
 }
 
 sub _org_get_parentpath_rec_flat {
-  my ($self, $c, $units, $arr)= @_;
+  my ($self, $c, $units, $arr) = @_;
 
   for my $u (@{$units}) {
     push @{$arr}, $u->{rdf};
     if (exists($u->{superunits})) {
       if (scalar(@{$u->{superunits}}) > 0) {
-	$self->_org_get_parentpath_rec_flat($c, $u->{superunits}, $arr);
+        $self->_org_get_parentpath_rec_flat($c, $u->{superunits}, $arr);
       }
     }
     last;
   }
 }
+
 # [end] new org methods
 
 sub get_ldap {
@@ -260,6 +266,7 @@ sub getLDAPEntryForUser {
       foreach my $val (@attvals) {
         if ($attrtype eq 'uid') {
           if ($val eq $username) {
+
             # $c->app->log->debug("getLDAPEntryForUser:\n".$c->app->dumper($ldapEntry));
             return $ldapEntry;
           }
@@ -348,7 +355,7 @@ sub authenticate() {
   # bind the user
   my $ldapMsg = $ldap->bind($dn, password => $password);
 
-  $c->app->log->debug("Auth for user $dn [is error: " . $ldapMsg->is_error()."]");
+  $c->app->log->debug("Auth for user $dn [is error: " . $ldapMsg->is_error() . "]");
 
   if ($ldapMsg->is_error) {
     unshift @{$res->{alerts}}, {type => 'error', msg => $ldapMsg->error};
@@ -382,10 +389,10 @@ sub get_name {
     my @attvals  = @{$attr->{'vals'}};
     foreach my $val (@attvals) {
       if ($attrtype eq 'givenName') {
-	$fname = $val;
+        $fname = $val;
       }
       if ($attrtype eq 'sn') {
-	$lname = $val;
+        $lname = $val;
       }
     }
 
@@ -427,11 +434,11 @@ sub get_org_units {
     if ($parentid ne '-1')    #fakcode A-1 == whole university => has no departments
     {
       for my $f (@{$config->{faculties}}) {
-	if ($f->{fakcode} eq $parentid) {
-	  for my $d (@{$f->{departments}}) {
-	    push @$values, {value => $d->{inum}, name => $d->{name}};
-	  }
-	}
+        if ($f->{fakcode} eq $parentid) {
+          for my $d (@{$f->{departments}}) {
+            push @$values, {value => $d->{inum}, name => $d->{name}};
+          }
+        }
       }
     }
   }
@@ -455,7 +462,7 @@ sub get_parent_org_unit_id {
   for my $f (@{$config->{faculties}}) {
     for my $d (@{$f->{departments}}) {
       if ($d->{inum} eq $inum) {
-	return $f->{fakcode};
+        return $f->{fakcode};
       }
     }
   }
@@ -473,7 +480,7 @@ sub get_org_unit_name {
     }
     for my $d (@{$f->{departments}}) {
       if ($d->{inum} eq $id) {
-	return $d->{name};
+        return $d->{name};
       }
     }
   }
@@ -612,10 +619,10 @@ sub get_user_data {
     my @attvals  = @{$attr->{'vals'}};
     foreach my $val (@attvals) {
       if ($attrtype eq 'givenName') {
-	$fname = $val;
+        $fname = $val;
       }
       if ($attrtype eq 'sn') {
-	$lname = $val;
+        $lname = $val;
       }
     }
 
@@ -649,20 +656,91 @@ TODO: remove old example users
 
 =cut
 
-sub search_user {
-  my ($self, $c, $searchstring) = @_;
+# sub search_user {
+#   my ($self, $c, $searchstring) = @_;
 
-  my @persons = ();
-  for my $user (@{$config->{users}}) {
-    push @persons,
-      {
-      uid   => $user->{username},
-      type  => '',
-      value => $user->{firstname} . ' ' . $user->{lastname},
-      };
-  }
-  my $hits = @persons;
+#   my @persons = ();
+#   for my $user (@{$config->{users}}) {
+#     push @persons,
+#       {
+#       uid   => $user->{username},
+#       type  => '',
+#       value => $user->{firstname} . ' ' . $user->{lastname},
+#       };
+#   }
+#   my $hits = @persons;
+#   return \@persons, $hits;
+# }
+
+sub search_user {
+  my ($self, $c, $searchstring, $superuser) = @_;
+
+  my @persons = $self->getLDAPEntriesForQuery($c, $searchstring);
+
+  my $hits = scalar @persons;
   return \@persons, $hits;
+}
+
+sub getLDAPEntriesForQuery {
+
+  my ($self, $c, $query) = @_;
+
+  my $ldap = $self->get_ldap($c);
+
+  my @user_search_bases = @{$c->app->config->{authentication}->{ldap}->{usersearchbase}};
+
+  my $filter = $c->app->config->{authentication}->{ldap}->{usersearchfilter};
+  $query = "*$query*";
+  $filter =~ s/\{0\}/$query/;
+
+  #$c->log->info("Search filter: $filter");
+
+  my @persons;
+  foreach my $user_search_base (@user_search_bases) {
+
+    $c->log->info("Searching searchbase $user_search_base.");
+
+    my $ldapSearch = $ldap->search(base => $user_search_base, filter => $filter);
+
+    die "There was an error during search:\n\t" . ldap_error_text($ldapSearch->code) if $ldapSearch->code;
+
+    while (my $ldapEntry = $ldapSearch->pop_entry()) {
+
+      #$c->log->info("entry:\n" . $c->app->dumper($ldapEntry));
+      my %person;
+      foreach my $attr (@{$ldapEntry->{'asn'}->{'attributes'}}) {
+        my $attrtype = $attr->{'type'};
+        my @attvals  = @{$attr->{'vals'}};
+
+        foreach my $val (@attvals) {
+          if ($attrtype eq 'cn') {
+            $person{'username'} = $val;
+          }
+          if ($attrtype eq 'uid') {
+            $person{'uid'} = $val;
+          }
+          if ($attrtype eq 'givenName') {
+            $person{'firstname'} = $val;
+          }
+          if ($attrtype eq 'sn') {
+            $person{'lastname'} = $val;
+          }
+          if ($attrtype eq 'fullName') {
+            $person{'value'} = $val;
+          }
+          if ($attrtype eq 'ou') {
+            $person{'type'} = $val;
+          }
+        }
+      }
+      $person{'value'} = $person{'firstname'} . ' ' . $person{'lastname'};
+      push @persons, \%person if $person{'uid'};
+    }
+  }
+
+  #$c->log->debug("Found persons:".Dumper(\@persons));
+  return @persons;
+
 }
 
 sub _connect_mongodb_group_manager() {
@@ -754,7 +832,7 @@ sub delete_group {
   my ($self, $c, $gid, $owner) = @_;
 
   my $groups = $self->_get_groups_col($c);
-  my $g      = $groups->remove_one({"groupid" => $gid, "owner" => $owner});
+  my $g      = $groups->delete_one({"groupid" => $gid, "owner" => $owner});
 
   return;
 }
