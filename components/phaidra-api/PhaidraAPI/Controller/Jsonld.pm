@@ -22,13 +22,13 @@ sub get {
     return;
   }
 
+  my $jsonld_model = PhaidraAPI::Model::Jsonld->new;
+  my $res          = $jsonld_model->get_object_jsonld_parsed($self, $pid);
+  if ($res->{status} ne 200) {
+    return $res;
+  }
+  my $jsonld = $res->{'JSON-LD'};
   if ($header) {
-    my $jsonld_model = PhaidraAPI::Model::Jsonld->new;
-    my $res          = $jsonld_model->get_object_jsonld_parsed($self, $pid);
-    if ($res->{status} ne 200) {
-      return $res;
-    }
-    my $jsonld = $res->{'JSON-LD'};
     my $context;
     for my $ns (keys %{$PhaidraAPI::Model::Jsonld::namespaces}) {
       $context->{$ns} = $PhaidraAPI::Model::Jsonld::namespaces->{$ns}->{IRI};
@@ -40,13 +40,8 @@ sub get {
         $jsonld->{'@context'}->{$pred} = {'@id' => 'http://id.loc.gov/vocabulary/relators', '@container' => '@list'};
       }
     }
-    $self->render(json => $jsonld, status => 200);
   }
-  else {
-    my $object_model = PhaidraAPI::Model::Object->new;
-    $object_model->proxy_datastream($self, $pid, 'JSON-LD', undef, undef, 1);
-    return;
-  }
+  $self->render(json => $jsonld, status => 200);
 }
 
 sub post {
