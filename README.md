@@ -26,15 +26,35 @@ readme) – right now it only builds the docker images as defined in the
 every commit to this repo, as a semi-manual verification if any
 cpanm-modules break the api-build.
 
-# Technical sketch
+# Graphical overview
 
 ## Nginx Demo
 
+System when running `docker compose up -d` from directory `./demo_nginx`
+(Phaidra available on `http://localhost:8899`.).
+
 ![](./pictures/construction_demo_nginx.svg)
 
-## With external webserver
+## Nginx SSL
 
-This is work in progress.
+System when running `docker compose up -d` from directory `./ssl_nginx`
+(Phaidra available on `https://$YOUR_FQDN`, see section 'System startup'
+below for prerequisites).
+
+![](./pictures/construction_ssl_nginx.svg)
+
+## Apache Demo
+
+System when running `docker compose up -d` from directory `./demo_httpd`
+(Phaidra available on `http://localhost:8899`.).
+
+![](./pictures/construction_demo_apache.svg)
+
+## External webserver
+
+System when running `docker compose up -d` from directory
+`./external_webserver` (Phaidra available on `http(s)://$YOUR_FQDN`, see
+section 'System startup' below for prerequisites).
 
 ![](./pictures/construction_external_webserver.svg)
 
