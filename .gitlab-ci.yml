@@ -8,6 +8,5 @@ build-pixelgecko:
     entrypoint: [""]
   script:
     - /kaniko/executor
-      --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/dockerfiles/pixelgecko_no_eofs.dockerfile"
       --no-push
