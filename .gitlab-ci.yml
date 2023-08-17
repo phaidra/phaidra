@@ -9,5 +9,5 @@ build-phaidra-api:
   script:
     - /kaniko/executor
       --context "${CI_PROJECT_DIR}"
-      --dockerfile "${CI_PROJECT_DIR}/dockerfiles/api.dockerfile"
+      --dockerfile "${CI_PROJECT_DIR}/dockerfiles/api_no_eofs.dockerfile"
       --no-push
