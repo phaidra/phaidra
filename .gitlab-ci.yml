@@ -1,7 +1,7 @@
 stages:
   - testing_builds
 
-build-phaidra-api:
+build-pixelgecko:
   stage: testing_builds
   image:
     name: gcr.io/kaniko-project/executor:v1.9.0-debug
@@ -9,5 +9,5 @@ build-phaidra-api:
   script:
     - /kaniko/executor
       --context "${CI_PROJECT_DIR}"
-      --dockerfile "${CI_PROJECT_DIR}/dockerfiles/api_no_eofs.dockerfile"
+      --dockerfile "${CI_PROJECT_DIR}/dockerfiles/pixelgecko_no_eofs.dockerfile"
       --no-push
