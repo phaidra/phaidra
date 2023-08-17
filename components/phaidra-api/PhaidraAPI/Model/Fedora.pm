@@ -136,6 +136,7 @@ sub getObjectProperties {
       }
     }
   }
+
   # $c->app->log->debug("XXXXXXXXXXXXXXX getObjectProperties:\n".$c->app->dumper($res));
   return $res;
 }
@@ -143,7 +144,7 @@ sub getObjectProperties {
 sub addRelationship {
   my ($self, $c, $pid, $predicate, $object, $skiphook) = @_;
 
-  return $self->addRelationships($c, $pid, ({predicate => $predicate, object => $object}), $skiphook);
+  return $self->addRelationships($c, $pid, [{predicate => $predicate, object => $object}], $skiphook);
 }
 
 sub addRelationships {
@@ -155,7 +156,7 @@ sub addRelationships {
 sub removeRelationship {
   my ($self, $c, $pid, $predicate, $object, $skiphook) = @_;
 
-  return $self->removeRelationships($c, $pid, ({predicate => $predicate, object => $object}), $skiphook);
+  return $self->removeRelationships($c, $pid, [{predicate => $predicate, object => $object}], $skiphook);
 }
 
 sub removeRelationships {
@@ -357,11 +358,11 @@ sub getDatastreamAttributes {
   my $getres = $c->ua->get($url => {'Accept' => 'application/ld+json'})->result;
 
   if ($getres->is_success) {
-    $res->{size} = $self->getFirstJsonldValue($c, $getres->json, 'http://www.loc.gov/premis/rdf/v1#hasSize');
+    $res->{size}     = $self->getFirstJsonldValue($c, $getres->json, 'http://www.loc.gov/premis/rdf/v1#hasSize');
     $res->{mimetype} = $self->getFirstJsonldValue($c, $getres->json, 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasMimeType');
     $res->{filename} = $self->getFirstJsonldValue($c, $getres->json, 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#filename');
     $res->{modified} = $self->getFirstJsonldValue($c, $getres->json, 'http://fedora.info/definitions/v4/repository#lastModified');
-    $res->{created} = $self->getFirstJsonldValue($c, $getres->json, 'http://fedora.info/definitions/v4/repository#created');
+    $res->{created}  = $self->getFirstJsonldValue($c, $getres->json, 'http://fedora.info/definitions/v4/repository#created');
   }
   else {
     unshift @{$res->{alerts}}, {type => 'error', msg => $getres->message};
@@ -378,18 +379,18 @@ sub getDatastreamPath {
   my $res = {alerts => [], status => 200};
 
   my $resourceID = "info:fedora/$pid";
-  my $hash = sha256_hex($resourceID);
+  my $hash       = sha256_hex($resourceID);
 
-  my $first   = substr($hash, 0, 3);
-  my $second  = substr($hash, 3, 3);
+  my $first  = substr($hash, 0, 3);
+  my $second = substr($hash, 3, 3);
   my $third  = substr($hash, 6, 3);
 
-  my $ocflroot = $c->app->config->{fedora}->{ocflroot};
-  my $objRootPath ="$ocflroot/$first/$second/$third/$hash";
+  my $ocflroot    = $c->app->config->{fedora}->{ocflroot};
+  my $objRootPath = "$ocflroot/$first/$second/$third/$hash";
 
   my $inventoryFile = "$objRootPath/inventory.json";
-  my $bytes = Mojo::File->new($inventoryFile)->slurp;
-  my $inventory = decode_json($bytes);
+  my $bytes         = Mojo::File->new($inventoryFile)->slurp;
+  my $inventory     = decode_json($bytes);
 
   # sanity check
   unless ($inventory->{id} eq $resourceID) {
@@ -398,7 +399,7 @@ sub getDatastreamPath {
     return $res;
   }
 
-  my $head = $inventory->{head};
+  my $head  = $inventory->{head};
   my $state = $inventory->{versions}->{$head}->{state};
   my $dsLatestKey;
   for my $key (keys %{$state}) {
