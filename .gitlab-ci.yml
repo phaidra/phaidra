@@ -10,3 +10,4 @@ build-phaidra-api:
     - /kaniko/executor
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/dockerfiles/api.dockerfile"
+      --no-push
