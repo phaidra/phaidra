@@ -1,60 +1,12 @@
-image: docker:24
-
-variables:
-  DOCKER_TLS_CERTDIR: "/certs"
-
 stages:
   - testing_builds
 
-services:
-  - docker:24-dind
-
 build-phaidra-api:
   stage: testing_builds
-  before_script:
-    - apk update && apk add git
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint: [""]
   script:
-    - >
-      docker buildx build
-      -f dockerfiles/api.dockerfile
-      .
-
-build-phaidra-ui:
-  stage: testing_builds
-  before_script:
-    - apk update && apk add git
-  script:
-    - >
-      docker buildx build
-      -f dockerfiles/ui.dockerfile
-      .
-
-build-imageserver:
-  stage: testing_builds
-  before_script:
-    - apk update && apk add git
-  script:
-    - >
-      docker buildx build
-      -f dockerfiles/imageserver.dockerfile
-      .
-
-build-solr:
-  stage: testing_builds
-  before_script:
-    - apk update && apk add git
-  script:
-    - >
-      docker buildx build
-      -f dockerfiles/solr.dockerfile
-      .
-
-build-pixelgecko:
-  stage: testing_builds
-  before_script:
-    - apk update && apk add git
-  script:
-    - >
-      docker buildx build
-      -f dockerfiles/pixelgecko.dockerfile
-      .
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/dockerfiles/api.dockerfile"
