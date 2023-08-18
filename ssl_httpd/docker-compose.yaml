@@ -13,7 +13,9 @@ networks:
 services:
 
   httpd:
-    image: httpd:2.4.57-bookworm
+    build:
+      context: ../.
+      dockerfile: dockerfiles/httpd.dockerfile
     ports:
       - "80:80"
       - "443:443"
@@ -22,6 +24,7 @@ services:
       - ui
     volumes:
       - .././webserver_configs/httpd-docker/ssl/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+      - .././webserver_configs/httpd-docker/ssl/httpd-ssl.conf:/usr/local/apache2/conf/extra/httpd-ssl.conf:ro
       - .././certs/privkey.pem:/usr/local/apache2/conf/server.key:ro
       - .././certs/fullchain.pem:/usr/local/apache2/conf/server.crt:ro
     networks:
