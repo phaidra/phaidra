@@ -50,6 +50,10 @@ System when running `docker compose up -d` from directory `./demo_httpd`
 
 ![](./pictures/construction_demo_apache.svg)
 
+## Apache SSL
+
+![](./pictures/construction_ssl_apache.svg)
+
 ## External webserver
 
 System when running `docker compose up -d` from directory
