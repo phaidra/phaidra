@@ -337,20 +337,20 @@
 <!-- BIND_NGINX_SITE_CONFIG -->
 <g id="node13" class="node">
 <title>BIND_NGINX_SITE_CONFIG</title>
-<polygon fill="none" stroke="blue" points="1105.22,-710.22 1102.22,-714.22 1081.22,-714.22 1078.22,-710.22 631.22,-710.22 631.22,-658.22 1105.22,-658.22 1105.22,-710.22"/>
-<text text-anchor="start" x="643.22" y="-692.02" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
-<text text-anchor="start" x="765.22" y="-691.02" font-family="Times,serif" font-size="14.00">$REPO/webserver_configs/nginx&#45;docker/demo</text>
-<text text-anchor="start" x="643.22" y="-670.02" font-family="Times,serif" font-size="14.00">nginx&#45;container:</text>
-<text text-anchor="start" x="765.22" y="-670.02" font-family="Times,serif" font-size="14.00">/etc/nginx/templates:ro</text>
+<polygon fill="none" stroke="blue" points="1095.72,-710.22 1092.72,-714.22 1071.72,-714.22 1068.72,-710.22 640.72,-710.22 640.72,-658.22 1095.72,-658.22 1095.72,-710.22"/>
+<text text-anchor="start" x="653.22" y="-692.02" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
+<text text-anchor="start" x="775.22" y="-691.02" font-family="Times,serif" font-size="14.00">$REPO/webserver_configs/nginx&#45;docker/ssl</text>
+<text text-anchor="start" x="653.22" y="-670.02" font-family="Times,serif" font-size="14.00">nginx&#45;container:</text>
+<text text-anchor="start" x="775.22" y="-670.02" font-family="Times,serif" font-size="14.00">/etc/nginx/templates:ro</text>
 </g>
 <!-- BIND_NGINX_SERVER_CONFIG -->
 <g id="node14" class="node">
 <title>BIND_NGINX_SERVER_CONFIG</title>
-<polygon fill="none" stroke="blue" points="1144.72,-640.22 1141.72,-644.22 1120.72,-644.22 1117.72,-640.22 591.72,-640.22 591.72,-588.22 1144.72,-588.22 1144.72,-640.22"/>
-<text text-anchor="start" x="604.22" y="-622.02" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
-<text text-anchor="start" x="726.22" y="-621.02" font-family="Times,serif" font-size="14.00">$REPO/webserver_configs/nginx&#45;docker/demo/nginx.conf</text>
-<text text-anchor="start" x="604.22" y="-600.02" font-family="Times,serif" font-size="14.00">nginx&#45;container:</text>
-<text text-anchor="start" x="726.22" y="-600.02" font-family="Times,serif" font-size="14.00">/etc/nginx/nginx.conf:ro</text>
+<polygon fill="none" stroke="blue" points="1135.22,-640.22 1132.22,-644.22 1111.22,-644.22 1108.22,-640.22 601.22,-640.22 601.22,-588.22 1135.22,-588.22 1135.22,-640.22"/>
+<text text-anchor="start" x="613.22" y="-622.02" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
+<text text-anchor="start" x="735.22" y="-621.02" font-family="Times,serif" font-size="14.00">$REPO/webserver_configs/nginx&#45;docker/ssl/nginx.conf</text>
+<text text-anchor="start" x="613.22" y="-600.02" font-family="Times,serif" font-size="14.00">nginx&#45;container:</text>
+<text text-anchor="start" x="735.22" y="-600.02" font-family="Times,serif" font-size="14.00">/etc/nginx/nginx.conf:ro</text>
 </g>
 <!-- BIND_NGINX_CERTS -->
 <g id="node15" class="node">
@@ -448,12 +448,12 @@
 <!-- WEBSERVER&#45;&#45;BIND_NGINX_SITE_CONFIG -->
 <g id="edge15" class="edge">
 <title>WEBSERVER&#45;&#45;BIND_NGINX_SITE_CONFIG</title>
-<path fill="none" stroke="blue" d="M337.34,-359.3C340.28,-413.67 357.13,-576.38 453.72,-649.22 504.05,-687.17 568.29,-703.27 631.04,-708.02"/>
+<path fill="none" stroke="blue" d="M337.34,-359.3C340.28,-413.67 357.13,-576.38 453.72,-649.22 506.64,-689.12 574.93,-704.87 640.71,-708.66"/>
 </g>
 <!-- WEBSERVER&#45;&#45;BIND_NGINX_SERVER_CONFIG -->
 <g id="edge16" class="edge">
 <title>WEBSERVER&#45;&#45;BIND_NGINX_SERVER_CONFIG</title>
-<path fill="none" stroke="blue" d="M339.52,-359.45C347.64,-405.39 375.78,-525.99 453.72,-579.22 494.25,-606.9 542.49,-622.32 591.47,-630.06"/>
+<path fill="none" stroke="blue" d="M339.52,-359.45C347.64,-405.39 375.78,-525.99 453.72,-579.22 496.93,-608.72 548.9,-624.31 601.19,-631.49"/>
 </g>
 <!-- WEBSERVER&#45;&#45;BIND_NGINX_CERTS -->
 <g id="edge17" class="edge">
