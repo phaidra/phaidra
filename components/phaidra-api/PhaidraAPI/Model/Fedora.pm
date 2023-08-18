@@ -80,6 +80,9 @@ sub _getObjectProperties {
     $res->{props} = $getres->json;
   }
   else {
+    if ($getres->{code} == 410) {
+      $res->{tombstone} = $getres->body;
+    }
     unshift @{$res->{alerts}}, {type => 'error', msg => $getres->message};
     $res->{status} = $getres->{code};
     return $res;

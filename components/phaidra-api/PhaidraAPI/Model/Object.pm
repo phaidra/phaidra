@@ -94,6 +94,18 @@ sub info {
     my $cmodelr      = $search_model->get_cmodel($c, $pid);
     if ($cmodelr->{status} ne 200) {
       $c->app->log->error("pid[$pid] could not get cmodel");
+      if ($cmodelr->{status} == 410) {
+        $res->{status} = 410;
+        $res->{info}   = {
+          tombstone => $cmodelr->{tombstone},
+          pid       => $pid
+        };
+        my $index_model = PhaidraAPI::Model::Index->new;
+        my $getrels     = $index_model->get_relationships($c, $pid);
+        $res->{info}->{relationships} = $getrels->{relationships};
+        $c->app->log->info("deleted object [$pid] " . $c->app->dumper($res));
+        return $res;
+      }
       return $cmodelr;
     }
     $info->{cmodel} = $cmodelr->{cmodel};
@@ -433,14 +445,10 @@ sub delete {
   if ($c->app->config->{fedora}->{version} >= 6) {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
     $fedora_model->delete($c, $pid);
-    my $dc_model     = PhaidraAPI::Model::Dc->new;
-    my $search_model = PhaidraAPI::Model::Search->new;
-    my $index_model  = PhaidraAPI::Model::Index->new;
-    my $r            = $index_model->update($c, $pid, $dc_model, $search_model, $self);
-    if ($r->{status} ne 200) {
-
-      # just log but don't change status, this isn't fatal
-      push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
+    my $index_model = PhaidraAPI::Model::Index->new;
+    my $ri          = $index_model->updateDoc($c, $pid);
+    if ($ri->{status} ne 200) {
+      push @{$res->{alerts}}, @{$ri->{alerts}} if scalar @{$ri->{alerts}} > 0;
     }
   }
   else {

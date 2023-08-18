@@ -2,7 +2,381 @@
   <v-container fluid>
     <template v-if="objectInfo">
       <v-row
-        v-if="objectInfo.ismemberof && objectInfo.ismemberof.length > 0"
+        v-if="objectInfo.tombstone"
+        justify="center"
+      >
+        <v-col cols="6">
+          <v-row justify="center" class="mt-8">
+            <v-alert type="info" color="primary">
+              <div>
+                {{
+                  $t("This object have been deleted.")
+                }}
+              </div>
+            </v-alert>
+          </v-row>
+          <v-row justify="center" class="mt-5">{{ objectInfo.tombstone }}</v-row>
+          <template v-if="objectInfo.relationships">
+            <v-row
+              v-if="objectInfo.relationships.ispartof && objectInfo.relationships.ispartof.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box title font-weight-light grey white--text"
+                    >{{ $t("This object is in collection") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships.ispartof" :key="'ispartof' + i"
+                    >
+                      <v-row align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <p-img
+                            :src="instanceconfig.api +
+                              '/object/' +
+                              rel.pid +
+                              '/thumbnail'
+                            "
+                            class="elevation-1 my-4"
+                          ></p-img>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.dc_title[0] }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'ispartofd' + i"
+                        v-if="
+                          i + 1 < objectInfo.relationships.ispartof.length
+                        "
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="objectInfo.relationships.isbacksideof && objectInfo.relationships.isbacksideof.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box title font-weight-light grey white--text"
+                    >{{ $t("This object is a back side of") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships
+                        .isbacksideof" :key="'isbacksideof' + i"
+                    >
+                      <v-row align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <p-img
+                            :src="instanceconfig.api +
+                              '/object/' +
+                              rel.pid +
+                              '/thumbnail'
+                            "
+                            class="elevation-1 my-4"
+                          ></p-img>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.dc_title[0] }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'isbacksideofd' + i"
+                        v-if="
+                          i + 1 < objectInfo.relationships.isbacksideof.length
+                        "
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="objectInfo.relationships.hasbackside && objectInfo.relationships.hasbackside.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box title font-weight-light grey white--text"
+                    >{{ $t("This object has a back side") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships.hasbackside" :key="'hasbackside' + i"
+                    >
+                      <v-row align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <p-img
+                            :src="instanceconfig.api +
+                              '/object/' +
+                              rel.pid +
+                              '/thumbnail'
+                            "
+                            class="elevation-1 my-4"
+                          ></p-img>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.dc_title[0] }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'hasbacksided' + i"
+                        v-if="
+                          i + 1 < objectInfo.relationships.hasbackside.length
+                        "
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="objectInfo.relationships.isthumbnailfor && objectInfo.relationships.isthumbnailfor.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box title font-weight-light grey white--text"
+                    >{{ $t("This object is thumbnail for") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships
+                        .isthumbnailfor" :key="'isthumbnailfor' + i"
+                    >
+                      <v-row align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <p-img
+                            :src="instanceconfig.api +
+                              '/object/' +
+                              rel.pid +
+                              '/thumbnail'
+                            "
+                            class="elevation-1 my-4"
+                          ></p-img>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.dc_title[0] }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'isthumbnailford' + i"
+                        v-if="
+                          i + 1 <
+                          objectInfo.relationships.isthumbnailfor.length
+                        "
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="objectInfo.relationships.hasthumbnail && objectInfo.relationships.hasthumbnail.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box title font-weight-light grey white--text"
+                    >{{ $t("This object has thumbnail") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships
+                        .hasthumbnail" :key="'hasthumbnail' + i"
+                    >
+                      <v-row align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <p-img
+                            :src="instanceconfig.api +
+                              '/object/' +
+                              rel.pid +
+                              '/thumbnail'
+                            "
+                            class="elevation-1 my-4"
+                          ></p-img>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.dc_title[0] }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'hasthumbnaild' + i"
+                        v-if="
+                          i + 1 < objectInfo.relationships.hasthumbnail.length
+                        "
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="objectInfo.relationships.references && objectInfo.relationships.references.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box title font-weight-light grey white--text"
+                    >{{ $t("This object references") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships.references" :key="'references' + i"
+                    >
+                      <v-row align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <p-img
+                            :src="instanceconfig.api +
+                              '/object/' +
+                              rel.pid +
+                              '/thumbnail'
+                            "
+                            class="elevation-1 my-4"
+                          ></p-img>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.dc_title[0] }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'referencesd' + i"
+                        v-if="
+                          i + 1 < objectInfo.relationships.references.length
+                        "
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="objectInfo.relationships.isreferencedby && objectInfo.relationships.isreferencedby.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box title font-weight-light grey white--text"
+                    >{{ $t("This object is referenced by") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships
+                        .isreferencedby" :key="'isreferencedby' + i"
+                    >
+                      <v-row align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <p-img
+                            :src="instanceconfig.api +
+                              '/object/' +
+                              rel.pid +
+                              '/thumbnail'
+                            "
+                            class="elevation-1 my-4"
+                          ></p-img>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.dc_title[0] }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'isreferencedbyd' + i"
+                        v-if="
+                          i + 1 <
+                          objectInfo.relationships.isreferencedby.length
+                        "
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </template>
+        </v-col>
+      </v-row>
+      <v-row
+        v-else-if="objectInfo.ismemberof && objectInfo.ismemberof.length > 0"
         justify="center"
       >
         <template v-if="objectInfo.ismemberof.length === 1">

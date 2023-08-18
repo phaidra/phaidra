@@ -500,11 +500,21 @@ sub getSolrUpdateUrl {
   return $updateurl;
 }
 
+sub updateDoc {
+  my ($self, $c, $pid) = @_;
+
+  my $dc_model     = PhaidraAPI::Model::Dc->new;
+  my $search_model = PhaidraAPI::Model::Search->new;
+  my $object_model = PhaidraAPI::Model::Object->new;
+
+  return $self->update($c, $pid, $dc_model, $search_model, $object_model);
+}
+
 sub update {
   my ($self, $c, $pid, $dc_model, $search_model, $object_model, $ignorestatus, $norecursion, $core) = @_;
 
   my $res = {status => 200};
-  
+
   my $ua = Mojo::UserAgent->new;
 
   if (exists($c->app->config->{solr})) {
@@ -514,7 +524,8 @@ sub update {
     $c->app->log->debug("getting cmodel[" . $cmodel_res->{cmodel} . "] took " . tv_interval($tcm));
     if ($cmodel_res->{status} ne 200) {
       if ($c->app->config->{fedora}->{version} >= 6) {
-        # object might have been deleted, check tombstone
+
+        # object might have been deleted
         my $fedora_model = PhaidraAPI::Model::Fedora->new;
         if ($fedora_model->isDeleted($c, $pid)) {
           if (exists($c->app->config->{solr})) {
@@ -529,7 +540,8 @@ sub update {
             $res->{status} = 200;
             return $res;
           }
-        } else {
+        }
+        else {
           return $cmodel_res;
         }
       }
@@ -1185,7 +1197,7 @@ sub _get {
 
           my $dom = Mojo::DOM->new();
           $dom->xml(1);
-          $dom->parse('<foxml:xmlContent>'.$getdsres->{$dsid}.'</foxml:xmlContent>');
+          $dom->parse('<foxml:xmlContent>' . $getdsres->{$dsid} . '</foxml:xmlContent>');
           $datastreams{$dsid} = $dom;
         }
         else {
@@ -1602,17 +1614,15 @@ sub _get {
   return $res;
 }
 
-=cut
-info:fedora/fedora-system:def/model#hasModel
-info:fedora/fedora-system:def/relations-external#hasCollectionMember
-http://pcdm.org/models#hasMember
-http://purl.org/dc/terms/references
-http://phaidra.org/XML/V1.0/relations#isBackSideOf
-http://phaidra.univie.ac.at/XML/V1.0/relations#hasSuccessor
-http://phaidra.org/XML/V1.0/relations#isAlternativeFormatOf
-http://phaidra.org/XML/V1.0/relations#isAlternativeVersionOf
-http://phaidra.org/ontology/isInAdminSet
-=cut
+# info:fedora/fedora-system:def/model#hasModel
+# info:fedora/fedora-system:def/relations-external#hasCollectionMember
+# http://pcdm.org/models#hasMember
+# http://purl.org/dc/terms/references
+# http://phaidra.org/XML/V1.0/relations#isBackSideOf
+# http://phaidra.univie.ac.at/XML/V1.0/relations#hasSuccessor
+# http://phaidra.org/XML/V1.0/relations#isAlternativeFormatOf
+# http://phaidra.org/XML/V1.0/relations#isAlternativeVersionOf
+# http://phaidra.org/ontology/isInAdminSet
 
 sub _index_relsext {
   my ($self, $c, $xml, $index) = @_;
@@ -2038,7 +2048,7 @@ sub _add_jsonld_index {
 
   if (exists($jsonld->{'frapo:isOutputOf'})) {
     for my $proj (@{$jsonld->{'frapo:isOutputOf'}}) {
-      if (defined ($proj->{'@type'})) {
+      if (defined($proj->{'@type'})) {
         if ($proj->{'@type'} eq 'foaf:Project') {
           if (exists($proj->{'skos:exactMatch'})) {
             for my $projId (@{$proj->{'skos:exactMatch'}}) {
@@ -2727,7 +2737,7 @@ sub get_relationships {
 
   # $c->app->log->debug("getting doc of $pid");
   my $idx = $self->get_doc_from_ua($c, $ua, $urlget, $pid);
-  return $res unless ($idx);
+  $idx = {} unless $idx;
 
   my $rels = {
 

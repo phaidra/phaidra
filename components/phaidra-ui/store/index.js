@@ -535,8 +535,14 @@ export const actions = {
       }
       commit('setObjectInfo', response.data.info)
     } catch (error) {
-      console.log('fetchObjectInfo error')
-      console.log(error)
+      if (error.response?.status === 410) {
+        console.log('deleted object data')
+        console.log(error.response.data.info)
+        commit('setObjectInfo', error.response.data.info)
+      } else {
+        console.log('fetchObjectInfo error')
+        console.log(error)
+      }
     }
   },
   async fetchObjectMembers({ dispatch, commit, state }, parent) {
