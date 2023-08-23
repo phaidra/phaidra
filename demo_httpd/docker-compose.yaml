@@ -136,7 +136,7 @@ services:
       - phaidra-network
 
   dbgate:
-    image: dbgate/dbgate:5.2.5
+    image: dbgate/dbgate:5.2.6
     restart: always
     environment:
       CONNECTIONS: con1,con2,con3

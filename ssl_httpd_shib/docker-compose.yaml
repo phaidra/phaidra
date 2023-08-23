@@ -1,17 +1,52 @@
 version: '3'
 
-name: phaidra-external-webserver
+name: phaidra-ssl-shib-httpd
+
+networks:
+  phaidra-network:
+    ipam:
+      config:
+        - subnet: 172.29.0.0/16
+          ip_range: 172.29.7.0/24
+          gateway: 172.29.5.1
 
 services:
+
+  httpd:
+    build:
+      context: ../.
+      dockerfile: dockerfiles/httpd_shib.dockerfile
+      args:
+        PHAIDRA_HOSTNAME: ${PHAIDRA_HOSTNAME}
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - api
+      - ui
+    volumes:
+      - .././webserver_configs/httpd-docker/ssl-shib/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+      - .././webserver_configs/httpd-docker/ssl-shib/httpd-ssl.conf:/usr/local/apache2/conf/extra/httpd-ssl.conf:ro
+      - .././certs/privkey.pem:/usr/local/apache2/conf/server.key:ro
+      - .././certs/fullchain.pem:/usr/local/apache2/conf/server.crt:ro
+      - .././certs/sp-signing-key.pem:/etc/shibboleth/sp-signing-key.pem:ro
+      - .././certs/sp-signing-cert.pem:/etc/shibboleth/sp-signing-cert.pem:ro
+      - .././certs/sp-encrypt-key.pem:/etc/shibboleth/sp-encrypt-key.pem:ro
+      - .././certs/sp-encrypt-cert.pem:/etc/shibboleth/sp-encrypt-cert.pem:ro
+    networks:
+      - phaidra-network
+    environment:
+      - HTTPD_HOST=${PHAIDRA_HOSTNAME}
+      - PRIVILEGED_IP=${ALLOWED_HOST}
 
   imageserver:
     build:
       context: ../.
       dockerfile: dockerfiles/imageserver.dockerfile
-    ports:
-      - "8081:80"
     volumes:
       - pixelgecko:/mnt/converted_images:ro
+    networks:
+      - phaidra-network
 
   solr:
     build:
@@ -23,8 +58,8 @@ services:
       - solr-precreate
       - phaidra
       - /tmp/phaidra
-    ports:
-      - "8983:8983"
+    networks:
+      - phaidra-network
 
   ui:
     depends_on:
@@ -37,8 +72,8 @@ services:
         PHAIDRA_PORTSTUB: ${PHAIDRA_PORTSTUB}
         PHAIDRA_HOSTPORT: ${PHAIDRA_HOSTPORT}
         OUTSIDE_HTTP_SCHEME: ${OUTSIDE_HTTP_SCHEME}
-    ports:
-      - "3001:3001"
+    networks:
+      - phaidra-network
 
   api:
     depends_on:
@@ -56,8 +91,8 @@ services:
     volumes:
       - api_logs:/var/log/phaidra
       - fedora:/mnt/fedora:ro
-    ports:
-      - "3000:3000"
+    networks:
+      - phaidra-network
 
   pixelgecko:
     depends_on:
@@ -71,6 +106,8 @@ services:
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
+    networks:
+      - phaidra-network
 
   mariadb-phaidra:
     image: mariadb:11.0.2-jammy
@@ -83,6 +120,8 @@ services:
     volumes:
       - .././container_components/mariadb/phaidradb.sql.gz:/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro
       - mariadb_phaidra:/var/lib/mysql
+    networks:
+      - phaidra-network
 
   mariadb-fedora:
     image: mariadb:10.5
@@ -94,6 +133,8 @@ services:
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
     volumes:
       - mariadb_fedora:/var/lib/mysql
+    networks:
+      - phaidra-network
 
   mongodb-phaidra:
     image: mongo:5
@@ -103,6 +144,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PHAIDRA_PASSWORD}
     volumes:
       - mongodb_phaidra:/data/db
+    networks:
+      - phaidra-network
 
   dbgate:
     image: dbgate/dbgate:5.2.6
@@ -131,8 +174,8 @@ services:
       - mariadb-phaidra
       - mariadb-fedora
       - mongodb-phaidra
-    ports:
-      - "7777:3000"
+    networks:
+      - phaidra-network
 
   fedora:
     image: fcrepo/fcrepo:6.4.0
@@ -143,8 +186,8 @@ services:
       - fedora:/usr/local/tomcat/fcrepo-home
     depends_on:
       - mariadb-fedora
-    ports:
-      - "9999:8080"
+    networks:
+      - phaidra-network
 
   lam:
     image: ghcr.io/ldapaccountmanager/lam:8.4
@@ -155,8 +198,8 @@ services:
       - LDAP_USER=cn=${LDAP_ADMIN_USERNAME},${LDAP_ROOT}
       - LDAP_USER_DN=ou=people,${LDAP_ROOT}
       - LDAP_GROUPS_DN=ou=groups,${LDAP_ROOT}
-    ports:
-      - "8888:80"
+    networks:
+      - phaidra-network
 
   openldap:
     image: bitnami/openldap:2.6.4-debian-11-r44
@@ -169,6 +212,8 @@ services:
     volumes:
       - openldap:/bitnami/openldap
       - .././container_components/openldap:/ldifs:ro
+    networks:
+      - phaidra-network
 
 volumes:
   api_logs:

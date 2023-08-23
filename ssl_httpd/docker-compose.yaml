@@ -13,9 +13,7 @@ networks:
 services:
 
   httpd:
-    build:
-      context: ../.
-      dockerfile: dockerfiles/httpd.dockerfile
+    image: httpd:2.4.57-bookworm
     ports:
       - "80:80"
       - "443:443"
@@ -142,7 +140,7 @@ services:
       - phaidra-network
 
   dbgate:
-    image: dbgate/dbgate:5.2.5
+    image: dbgate/dbgate:5.2.6
     restart: always
     environment:
       CONNECTIONS: con1,con2,con3
