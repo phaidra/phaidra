@@ -836,28 +836,28 @@
              label="PHAIDRA docker containers";
              color = green;
              node [shape = component, style = solid, color = green]
-             C_FEDORA [label="phaidra-ssl-httpd-fedora-1",
+             C_FEDORA [label="phaidra-ssl-shib-httpd-fedora-1",
                        URL="https://fedora.lyrasis.org/"];
-             C_API [label="phaidra-ssl-httpd-api-1",
+             C_API [label="phaidra-ssl-shib-httpd-api-1",
                     URL="https://github.com/phaidra/phaidra-api"];
-             C_MARIADB_PHAIDRA [label="phaidra-ssl-httpd-mariadb-phaidra-1",
+             C_MARIADB_PHAIDRA [label="phaidra-ssl-shib-httpd-mariadb-phaidra-1",
                                 URL="https://mariadb.org/"];
-             C_MONGODB_PHAIDRA [label="phaidra-ssl-httpd-mongodb-phaidra-1",
+             C_MONGODB_PHAIDRA [label="phaidra-ssl-shib-httpd-mongodb-phaidra-1",
                                 URL="https://www.mongodb.com/"];
-             C_UI [label="phaidra-ssl-httpd-ui-1",
+             C_UI [label="phaidra-ssl-shib-httpd-ui-1",
                    URL="https://github.com/phaidra/phaidra-ui"];
-             C_OPENLDAP [label="phaidra-ssl-httpd-openldap-1",
+             C_OPENLDAP [label="phaidra-ssl-shib-httpd-openldap-1",
                          URL="https://www.openldap.org/"];
-             C_SOLR [label="phaidra-ssl-httpd-solr-1",
+             C_SOLR [label="phaidra-ssl-shib-httpd-solr-1",
                      URL="https://solr.apache.org/"];
-             C_IMAGESERVER [label="phaidra-ssl-httpd-imageserver-1",
+             C_IMAGESERVER [label="phaidra-ssl-shib-httpd-imageserver-1",
                             URL="https://github.com/ruven/iipsrv"];
-             C_PIXELGECKO [label="phaidra-ssl-httpd-pixelgecko-1"];
-             C_DBGATE [label="phaidra-ssl-httpd-dbgate-1"];
-             C_LAM [label="phaidra-ssl-httpd-lam-1"];
-             C_MARIADB_FEDORA [label="phaidra-ssl-httpd-mariadb-fedora-1",
+             C_PIXELGECKO [label="phaidra-ssl-shib-httpd-pixelgecko-1"];
+             C_DBGATE [label="phaidra-ssl-shib-httpd-dbgate-1"];
+             C_LAM [label="phaidra-ssl-shib-httpd-lam-1"];
+             C_MARIADB_FEDORA [label="phaidra-ssl-shib-httpd-mariadb-fedora-1",
                                URL="https://mariadb.org/"];
-             WEBSERVER [label="phaidra-ssl-httpd-httpd-1"];
+             WEBSERVER [label="phaidra-ssl-shib-httpd-httpd-1"];
      }
      }
 
