@@ -355,11 +355,11 @@
 <!-- BIND_NGINX_CERTS -->
 <g id="node15" class="node">
 <title>BIND_NGINX_CERTS</title>
-<polygon fill="none" stroke="blue" points="1006.72,-570.22 1003.72,-574.22 982.72,-574.22 979.72,-570.22 729.72,-570.22 729.72,-518.22 1006.72,-518.22 1006.72,-570.22"/>
-<text text-anchor="start" x="742.22" y="-552.02" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
-<text text-anchor="start" x="864.22" y="-551.02" font-family="Times,serif" font-size="14.00">$REPO/certs</text>
-<text text-anchor="start" x="742.22" y="-530.02" font-family="Times,serif" font-size="14.00">nginx&#45;container:</text>
-<text text-anchor="start" x="864.22" y="-530.02" font-family="Times,serif" font-size="14.00">/etc/nginx/certs:ro</text>
+<polygon fill="none" stroke="blue" points="1047.22,-570.22 1044.22,-574.22 1023.22,-574.22 1020.22,-570.22 689.22,-570.22 689.22,-518.22 1047.22,-518.22 1047.22,-570.22"/>
+<text text-anchor="start" x="701.22" y="-552.02" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
+<text text-anchor="start" x="823.22" y="-551.02" font-family="Times,serif" font-size="14.00">$REPO/encryption/webserver</text>
+<text text-anchor="start" x="701.22" y="-530.02" font-family="Times,serif" font-size="14.00">nginx&#45;container:</text>
+<text text-anchor="start" x="823.22" y="-530.02" font-family="Times,serif" font-size="14.00">/etc/nginx/certs:ro</text>
 </g>
 <!-- C_FEDORA&#45;&#45;C_MARIADB_FEDORA -->
 <g id="edge18" class="edge">
@@ -458,7 +458,7 @@
 <!-- WEBSERVER&#45;&#45;BIND_NGINX_CERTS -->
 <g id="edge17" class="edge">
 <title>WEBSERVER&#45;&#45;BIND_NGINX_CERTS</title>
-<path fill="none" stroke="blue" d="M344.27,-359.4C359.4,-393.3 396.95,-465.67 453.72,-498.22 536.75,-545.82 644.6,-556.47 729.34,-555.66"/>
+<path fill="none" stroke="blue" d="M344.27,-359.4C359.4,-393.3 396.95,-465.67 453.72,-498.22 524.06,-538.54 612.22,-552.35 689.04,-555.14"/>
 </g>
 <!-- WEBSERVER&#45;&#45;C_FEDORA -->
 <g id="edge31" class="edge">

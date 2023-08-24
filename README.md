@@ -28,14 +28,14 @@ cpanm-modules break the api-build.
 
 # Graphical overview
 
-## Nginx Demo
+## Demo
 
 System when running `docker compose up -d` from directory `./demo_nginx`
 (Phaidra available on `http://localhost:8899`.).
 
 ![](./pictures/construction_demo_nginx.svg)
 
-## Nginx SSL
+## SSL
 
 System when running `docker compose up -d` from directory `./ssl_nginx`
 (Phaidra available on `https://$YOUR_FQDN`, see section 'System startup'
@@ -43,16 +43,9 @@ below for prerequisites).
 
 ![](./pictures/construction_ssl_nginx.svg)
 
-## Apache Demo
+## Shibboleth
 
-System when running `docker compose up -d` from directory `./demo_httpd`
-(Phaidra available on `http://localhost:8899`.).
-
-![](./pictures/construction_demo_apache.svg)
-
-## Apache SSL
-
-![](./pictures/construction_ssl_apache.svg)
+![](./pictures/construction_shib_apache.svg)
 
 ## External webserver
 
