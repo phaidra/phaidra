@@ -20,7 +20,7 @@ services:
     volumes:
       - .././webserver_configs/nginx-docker/ssl:/etc/nginx/templates:ro
       - .././webserver_configs/nginx-docker/ssl/nginx.conf:/etc/nginx/nginx.conf:ro
-      - .././certs:/etc/nginx/certs:ro
+      - .././encryption/webserver:/etc/nginx/certs:ro
     depends_on:
       - api
       - ui

@@ -23,8 +23,8 @@ services:
     volumes:
       - .././webserver_configs/httpd-docker/ssl/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
       - .././webserver_configs/httpd-docker/ssl/httpd-ssl.conf:/usr/local/apache2/conf/extra/httpd-ssl.conf:ro
-      - .././certs/privkey.pem:/usr/local/apache2/conf/server.key:ro
-      - .././certs/fullchain.pem:/usr/local/apache2/conf/server.crt:ro
+      - .././encryption/webserver/privkey.pem:/usr/local/apache2/conf/server.key:ro
+      - .././encryption/webserver/fullchain.pem:/usr/local/apache2/conf/server.crt:ro
     networks:
       - phaidra-network
     environment:
