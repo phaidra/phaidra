@@ -6,9 +6,6 @@ variables:
 stages:
   - testing_builds
 
-# services:
-#   - docker:24-dind
-
 build-phaidra-api:
   stage: testing_builds
   before_script:
