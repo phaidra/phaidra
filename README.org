@@ -1638,8 +1638,6 @@ e0004d097ebb   phaidra-demo-nginx-imageserver-1       0.01%     23.73MiB / 15.03
     /home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/browse/PCollectionGallery.vue:        //  alert('https://' + this.instanceconfig.baseurl + '/preview/' + doc.pid);
   #+end_example
 
-  
-
 * Phaidra Components
 
   In the folder ~./components~ one will find ~phaidra-api~, ~phaidra-ui~, and ~phaidra-vue-components~.  These are copies of the public github repos, adapted for use in the docker context here.  See the notes in the following subsections.
