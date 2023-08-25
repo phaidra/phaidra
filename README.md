@@ -614,9 +614,9 @@ e5445ae621c8   phaidra-lam-1               0.00%     25.67MiB / 15.03GiB   0.17%
 
 # Complete cleanup
 
-During development things can become very cluttered. A pretty complete
-cleanup (at the cost of an image rebuild) can be achieved by running the
-following commands:
+MATTER OF CHANGE. During development things can become very cluttered. A
+pretty complete cleanup (at the cost of an image rebuild) can be
+achieved by running the following commands:
 
 ``` example
 # shut down and remove running containers (from the repo directory)
