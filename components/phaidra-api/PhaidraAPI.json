@@ -32,7 +32,6 @@
     "terms": {
         "search_results_limit": 50
     },
-
     "directory": {
         "connect_string": "dbi:Oracle:DB",
         "username": "username",
@@ -106,6 +105,12 @@
         "password": "phaidra",
         "database": "index_mongodb"
     },
+    "apis": {
+        "geonames": {
+            "url": "https://secure.geonames.org/getJSON",
+            "username": "phaidra"
+        }
+    },
     "hooks": {
         "updatedc": 0,
         "updateindex": 1
@@ -124,9 +129,7 @@
         "fedorausername": "fedora int call user",
         "fedorapassword": "secret"
     },
-
     "directory_class": "Phaidra::Directory::GenericLDAP",
-    
     "phaidra_db": {
         "dsn": "dbi:mysql:phaidradb:mariadb-phaidra",
         "username": "phaidra",
@@ -164,4 +167,3 @@
         "port": "8983"
     }
 }
-
