@@ -300,6 +300,9 @@ sub signin_shib {
 
   $self->app->log->debug("[$username] shibboleth login");
 
+  $self->app->log->debug("[$username] headers:");
+  $self->app->log->debug($self->res->headers->to_string);
+
   my $firstname;
   my $lastname;
   my $email;
@@ -307,11 +310,15 @@ sub signin_shib {
   my $authorized;
 
   $firstname = $ENV{$self->app->config->{authentication}->{shibboleth}->{attributes}->{firstname}};
+  $firstname = $self->res->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{firstname}) unless $firstname;
   $lastname  = $ENV{$self->app->config->{authentication}->{shibboleth}->{attributes}->{lastname}};
+  $lastname = $self->res->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{lastname}) unless $lastname;
   $email     = $ENV{$self->app->config->{authentication}->{shibboleth}->{attributes}->{email}};
+  $email = $self->res->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{email}) unless $email;
 
   if ($self->app->config->{authentication}->{shibboleth}->{attributes}->{affiliation}) {
     $affiliation = $ENV{$self->app->config->{authentication}->{shibboleth}->{attributes}->{affiliation}};
+    $affiliation = $self->res->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{affiliation}) unless $affiliation;
 
     my @userAffs = split(';', $affiliation);
     for my $userAff (@userAffs) {
