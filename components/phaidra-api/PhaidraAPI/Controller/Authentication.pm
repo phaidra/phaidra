@@ -93,8 +93,16 @@ sub extract_credentials {
       # remote user in token - this is the case for shib
       if (defined($remote_user)) {
         $self->app->log->info("Remote user $remote_user, token authentication provided");
-        $self->stash->{remote_user}            = $remote_user;
-        $self->stash->{basic_auth_credentials} = {username => $self->app->config->{authentication}->{upstream}->{upstreamusername}, password => $self->app->config->{authentication}->{upstream}->{upstreampassword}};
+        $self->stash->{remote_user} = $remote_user;
+        if ($self->app->config->{fedora}->{version} >= 6) {
+
+          # TODO fix code to use BA creds OR remote_user if available (controllers currently pass BA username as username... -> becomes owner on create)
+          $self->stash->{basic_auth_credentials} = {username => $remote_user};
+        }
+        else {
+          # in fedora 3 we need to use it's upstream authentication feature
+          $self->stash->{basic_auth_credentials} = {username => $self->app->config->{authentication}->{upstream}->{upstreamusername}, password => $self->app->config->{authentication}->{upstream}->{upstreampassword}};
+        }
         return 1;
       }
     }
@@ -293,15 +301,20 @@ sub signin_shib {
   # $self->app->log->debug("XXXXXXXXXXXX shib XXXXXXXXXXX: " . $self->app->dumper(\%ENV));
 
   my $username = $ENV{$self->app->config->{authentication}->{shibboleth}->{attributes}->{username}};
+  $username = $self->req->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{username}) unless $username;
 
-  if ($username =~ m/(\w+)@*/g) {
-    $username =~ s/@([\w|\.]+)//g;
+  if (exists($self->app->config->{authentication}->{shibboleth}->{stripemaildomain})) {
+    if ($self->app->config->{authentication}->{shibboleth}->{stripemaildomain}) {
+      if ($username =~ m/(\w+)@*/g) {
+        $username =~ s/@([\w|\.]+)//g;
+      }
+    }
   }
 
   $self->app->log->debug("[$username] shibboleth login");
 
-  $self->app->log->debug("[$username] headers:");
-  $self->app->log->debug($self->res->headers->to_string);
+  # $self->app->log->debug("[$username] headers:");
+  # $self->app->log->debug($self->req->headers->to_string);
 
   my $firstname;
   my $lastname;
@@ -310,15 +323,15 @@ sub signin_shib {
   my $authorized;
 
   $firstname = $ENV{$self->app->config->{authentication}->{shibboleth}->{attributes}->{firstname}};
-  $firstname = $self->res->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{firstname}) unless $firstname;
+  $firstname = $self->req->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{firstname}) unless $firstname;
   $lastname  = $ENV{$self->app->config->{authentication}->{shibboleth}->{attributes}->{lastname}};
-  $lastname = $self->res->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{lastname}) unless $lastname;
+  $lastname  = $self->req->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{lastname}) unless $lastname;
   $email     = $ENV{$self->app->config->{authentication}->{shibboleth}->{attributes}->{email}};
-  $email = $self->res->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{email}) unless $email;
+  $email     = $self->req->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{email}) unless $email;
 
   if ($self->app->config->{authentication}->{shibboleth}->{attributes}->{affiliation}) {
     $affiliation = $ENV{$self->app->config->{authentication}->{shibboleth}->{attributes}->{affiliation}};
-    $affiliation = $self->res->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{affiliation}) unless $affiliation;
+    $affiliation = $self->req->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{affiliation}) unless $affiliation;
 
     my @userAffs = split(';', $affiliation);
     for my $userAff (@userAffs) {
@@ -333,6 +346,8 @@ sub signin_shib {
       }
     }
   }
+
+  $self->app->log->debug("[$username] attributes: firstname[$firstname] lastname[$lastname] email[$email] affiliation[$affiliation]");
 
   if ($username && $authorized) {
 
@@ -351,7 +366,8 @@ sub signin_shib {
     $cookie->path('/');
     if ($self->app->config->{authentication}->{cookie_domain}) {
       $cookie->domain($self->app->config->{authentication}->{cookie_domain});
-    } else {
+    }
+    else {
       $cookie->domain($self->app->config->{phaidra}->{baseurl});
     }
     $self->tx->res->cookies($cookie);
