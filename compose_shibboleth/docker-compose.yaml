@@ -18,7 +18,11 @@ services:
       dockerfile: dockerfiles/httpd_shib.dockerfile
       args:
         PHAIDRA_HOSTNAME: ${PHAIDRA_HOSTNAME}
-        DISCO_URL: ${DISCO_URL}
+        SHIB_ENTITY_ID: ${SHIB_ENTITY_ID}
+        SHIB_DISCO_URL: ${SHIB_DISCO_URL}
+        SHIB_METADATA: ${SHIB_METADATA}
+        SHIB_METADATA_FILE: ${SHIB_METADATA_FILE}
+        SHIB_METADATA_CERT: ${SHIB_METADATA_CERT}
     ports:
       - "80:80"
       - "443:443"

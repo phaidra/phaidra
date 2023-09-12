@@ -32,7 +32,7 @@
             entityID property and adjust discoveryURL to point to discovery service.
             You can also override entityID on /Login query string, or in RequestMap/htaccess.
             -->
-            <SSO entityID="https://eduid.at.md/aconet-registered.xml"
+            <SSO entityID="__ENTITY_ID__"
                  discoveryProtocol="SAMLDS" discoveryURL="__DISCO_URL__">
               SAML2
             </SSO>
@@ -95,10 +95,10 @@
 
         <!-- ACONET METADATA -->
 
-        <MetadataProvider type="XML" url="http://eduid.at/md/aconet-registered.xml"
-                          validate="true" backingFilePath="aconet-metadata.xml" reloadInterval="7200">
+        <MetadataProvider type="XML" url="__SHIB_METADATA__"
+                          validate="true" backingFilePath="__SHIB_METADATA_FILE__" reloadInterval="7200">
           <MetadataFilter type="RequireValidUntil" maxValidityInterval="2419200"/>
-          <MetadataFilter type="Signature" certificate="aconet-metadata-signing.crt" verifyBackup="false"/>
+          <MetadataFilter type="Signature" certificate="__SHIB_METADATA_CERT__" verifyBackup="false"/>
           <MetadataFilter type="EntityRole">
               <RetainedRole>md:IDPSSODescriptor</RetainedRole>
               <RetainedRole>md:AttributeAuthorityDescriptor</RetainedRole>
