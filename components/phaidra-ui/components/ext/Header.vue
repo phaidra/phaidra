@@ -169,12 +169,10 @@
                         >
                         <v-list-item
                             v-if="!signedin && appconfig.enablelogin"
-                            @click="
-                            $router.push(localeLocation({ path: '/login' }))
-                            "
-                            ><v-list-item-title>{{
-                            $t("Login")
-                            }}</v-list-item-title></v-list-item
+                            
+                            >
+<v-list-item-title><a :class="hover ? 'ph-button primary' : 'ph-button grey'" href="/login">{{ $t("Login")
+                          }}</a></v-list-item-title></v-list-item
                         >
                         <v-list-item v-if="signedin" @click="logout"
                             ><v-list-item-title>{{
@@ -239,11 +237,11 @@
                     >
                     </v-hover>
                     <v-hover v-slot:default="{ hover }">
-                    <nuxt-link
+                    <a
                         :class="hover ? 'ph-button primary' : 'ph-button grey'"
                         v-show="!signedin && appconfig.enablelogin"
                         :to="localePath('/login')"
-                        >{{ $t("Login") }}</nuxt-link
+                        >{{ $t("Login") }}</a
                     >
                     </v-hover>
                     <v-hover>
