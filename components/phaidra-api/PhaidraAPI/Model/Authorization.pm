@@ -104,7 +104,7 @@ sub check_rights {
         return $res;
       }
       $c->app->log->error("Authz op[$op] pid[$pid] currentuser[$currentuser] failed");
-      $c->app->log->error("RIGHTS:\n".$c->app->dumper($rightsres->{alerts}));
+      $c->app->log->error("RIGHTS:\n" . $c->app->dumper($rightsres->{alerts}));
       push @{$res->{alerts}}, @{$rightsres->{alerts}} if scalar @{$rightsres->{alerts}} > 0;
       $res->{status} = 500;
       return $res;
@@ -123,7 +123,7 @@ sub check_rights {
       $rightsAreEmpty = 0;
       for my $def (@{$rights->{'username'}}) {
         my $v;
-        if (exists($def->{value})) {
+        if (ref($def) eq 'HASH') {
           $v = $def->{value};
         }
         else {
