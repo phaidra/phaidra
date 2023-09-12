@@ -341,7 +341,7 @@ sub create {
   $metadata = $metadata->{metadata};
   my $members;
   unless (defined($metadata->{members})) {
-    push @{$res->{alerts}}, {type => 'warning', msg => 'No members sent'};
+    $self->app->log->debug('No members sent');
   }
   else {
     $members = $metadata->{members};
@@ -350,7 +350,7 @@ sub create {
   my $coll_model = PhaidraAPI::Model::Collection->new;
   my $r          = $coll_model->create($self, $metadata, $members, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
 
-  push @{$r->{alerts}}, $res->{alerts} if scalar @{$res->{alerts}} > 0;
+  push @{$r->{alerts}}, @{$res->{alerts}} if scalar @{$res->{alerts}} > 0;
 
   $self->render(json => $r, status => $r->{status});
 }

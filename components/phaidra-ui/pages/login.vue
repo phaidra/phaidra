@@ -28,6 +28,7 @@
                   filled
                   :placeholder="' '"
                   :autocomplete="'username'"
+                  @keydown.enter.prevent="login"
                 ></v-text-field>
                 <v-text-field
                   :disabled="loading"
@@ -40,6 +41,7 @@
                   @click:append="toggleVisibility"
                   :type="passVisibility ? 'password' : 'text'"
                   :autocomplete="'current-password'"
+                  @keydown.enter.prevent="login"
                 ></v-text-field>
               </v-col>
             </v-card-text>
