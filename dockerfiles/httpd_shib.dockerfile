@@ -13,6 +13,8 @@ apt-get clean
 EOF
 COPY ./shibboleth/aconet-metadata-signing.crt /etc/shibboleth/
 COPY ./shibboleth/shibboleth2.xml /etc/shibboleth/
+COPY ./shibboleth/attribute-map.xml /etc/shibboleth/
+COPY ./shibboleth/attribute-policy.xml /etc/shibboleth/
 RUN <<EOF
 sed -i "s|__PHAIDRA_HOSTNAME__|${PHAIDRA_HOSTNAME}|" \
 /etc/shibboleth/shibboleth2.xml

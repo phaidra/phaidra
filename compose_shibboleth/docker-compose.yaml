@@ -87,7 +87,7 @@ services:
       - fedora
     build:
       context: ../.
-      dockerfile: dockerfiles/api.dockerfile
+      dockerfile: dockerfiles/api_shib.dockerfile
       args:
         PHAIDRA_HOSTNAME: ${PHAIDRA_HOSTNAME}
         PHAIDRA_PORTSTUB: ${PHAIDRA_PORTSTUB}
