@@ -11,6 +11,8 @@ COPY ./shibboleth/shibboleth2.xml /etc/shibboleth/
 RUN <<EOF
 sed -i "s|__PHAIDRA_HOSTNAME__|${PHAIDRA_HOSTNAME}|" \
 /etc/shibboleth/shibboleth2.xml
+sed -i "s|__DISCO_URL__|${DISCO_URL}|" \
+/etc/shibboleth/shibboleth2.xml
 EOF
 COPY ./dockerfiles/httpd_shib_entrypoint.bash /
 ENTRYPOINT ["/bin/bash", "/httpd_shib_entrypoint.bash"]

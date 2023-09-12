@@ -33,7 +33,7 @@
             You can also override entityID on /Login query string, or in RequestMap/htaccess.
             -->
             <SSO entityID="https://eduid.at.md/aconet-registered.xml"
-                 discoveryProtocol="SAMLDS" discoveryURL="https://eduid.at/ds/wayf/">
+                 discoveryProtocol="SAMLDS" discoveryURL="__DISCO_URL__">
               SAML2
             </SSO>
 

@@ -18,6 +18,7 @@ services:
       dockerfile: dockerfiles/httpd_shib.dockerfile
       args:
         PHAIDRA_HOSTNAME: ${PHAIDRA_HOSTNAME}
+        DISCO_URL: ${DISCO_URL}
     ports:
       - "80:80"
       - "443:443"
