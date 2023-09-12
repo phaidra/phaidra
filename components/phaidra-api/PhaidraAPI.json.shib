@@ -150,25 +150,17 @@
             "fedorapassword": "xxx",
             "frontendloginurl": "https://pcherzigd64.cc.univie.ac.at/",
             "attributes": {
-                "email": "mail",
-                "firstname": "givenName",
-                "lastname": "sn",
-                "username": "uid",
-                "affiliation": "affiliation"
+                "email": "__SHIB_MAIL__",
+                "firstname": "__SHIB_GIVEN_NAME__",
+                "lastname": "__SHIB_SURNAME__",
+                "username": "__SHIB_USERNAME__",
+                "affiliation": "__SHIB_AFFILIATION__"
             },
             "requiredaffiliations": [
                 "staff@univie.ac.at",
                 "employee@univie.ac.at",
                 "member@univie.ac.at"
             ]
-        },
-        "upstream": {
-            "enabled": 1,
-            "principalheader": "uid",
-            "upstreamusername": "shibbolized",
-            "upstreampassword": "123",
-            "fedorausername": "fedoraIntCall",
-            "fedorapassword": "456"
         },
         "ldap": {
             "server": "openldap",

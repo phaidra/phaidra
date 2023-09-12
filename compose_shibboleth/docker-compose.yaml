@@ -43,6 +43,13 @@ services:
     environment:
       - HTTPD_HOST=${PHAIDRA_HOSTNAME}
       - PRIVILEGED_IP=${ALLOWED_HOST}
+      - SHIB_MAIL=${SHIB_MAIL}       
+      - SHIB_GIVEN_NAME=${SHIB_GIVEN_NAME} 
+      - SHIB_SURNAME=${SHIB_SURNAME}    
+      - SHIB_USERNAME=${SHIB_USERNAME}   
+      - SHIB_AFFILIATION=${SHIB_AFFILIATION}
+
+      
 
   imageserver:
     build:
@@ -93,6 +100,11 @@ services:
         PHAIDRA_PORTSTUB: ${PHAIDRA_PORTSTUB}
         PHAIDRA_HOSTPORT: ${PHAIDRA_HOSTPORT}
         OUTSIDE_HTTP_SCHEME: ${OUTSIDE_HTTP_SCHEME}
+        SHIB_MAIL: ${SHIB_MAIL}       
+        SHIB_GIVEN_NAME: ${SHIB_GIVEN_NAME} 
+        SHIB_SURNAME: ${SHIB_SURNAME}    
+        SHIB_USERNAME: ${SHIB_USERNAME}   
+        SHIB_AFFILIATION: ${SHIB_AFFILIATION}
     volumes:
       - api_logs:/var/log/phaidra
       - fedora:/mnt/fedora:ro
