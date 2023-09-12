@@ -169,6 +169,19 @@
             "upstreampassword": "123",
             "fedorausername": "fedoraIntCall",
             "fedorapassword": "456"
+        },
+        "ldap": {
+            "server": "openldap",
+            "port": "1389",
+            "useridattribute": "uid",
+            "usersearchbase": [
+                "ou=people,dc=example,dc=org"
+            ],
+            "usersearchfilter": "(&(uid={0})(objectClass=inetOrgPerson))",
+            "useridattribute": "uid",
+            "userattributes": "cn",
+            "securityprincipal": "cn=admin,dc=example,dc=org",
+            "securitycredentials": "adminpassword"
         }
     },
     "solr": {
