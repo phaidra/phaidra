@@ -647,14 +647,15 @@ export const actions = {
       if (response.data.alerts && response.data.alerts.length > 0) {
         commit('setAlerts', response.data.alerts)
       }
-      if (response.status === 200) {
-        this.$cookies.set('XSRF-TOKEN', response.data['XSRF-TOKEN'], {
-          domain: state.instanceconfig.cookiedomain,
-          path: '/',
-          secure: true,
-          sameSite: 'Strict'
-        }
-        )
+        if (response.status === 200) {
+            let cookieOptions = {
+                path: '/',
+                secure: true,
+                sameSite: 'Strict'
+            }
+            if (state.instanceconfig.cookiedomain) {
+                cookieOptions.domain = state.instanceconfig.cookiedomain}
+            this.$cookies.set('XSRF-TOKEN', response.data['XSRF-TOKEN'], cookieOptions)
         console.log('setting token ' + response.data['XSRF-TOKEN'])
         commit('setToken', response.data['XSRF-TOKEN'])
         dispatch('getLoginData')

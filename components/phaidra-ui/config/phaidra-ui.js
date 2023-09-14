@@ -63,6 +63,8 @@ export default {
       address: 'My institution | address | here',
       phone: '+00-0-000-0',
       email: 'support email',
+      // only uncomment for wildcard purposes
+      // cookiedomain: '<HOST_WITH_OR_WITHOUT_PORT>',
       ui: {
         languages: ['eng', 'deu']
       },

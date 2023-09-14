@@ -272,7 +272,9 @@ sub signin {
   $cookie->name($self->app->config->{authentication}->{token_cookie})->value($session->sid);
   $cookie->secure(1);
   $cookie->samesite('Strict');
-  $cookie->domain($self->app->config->{phaidra}->{baseurl});
+  if ($self->app->config->{authentication}->{cookie_domain}) {
+    $cookie->domain($self->app->config->{authentication}->{cookie_domain});
+  }
   $self->tx->res->cookies($cookie);
 
   $self->render(json => {status => $res->{status}, alerts => [], $self->app->config->{authentication}->{token_cookie} => $session->sid}, status => $res->{status});
@@ -366,9 +368,6 @@ sub signin_shib {
     $cookie->path('/');
     if ($self->app->config->{authentication}->{cookie_domain}) {
       $cookie->domain($self->app->config->{authentication}->{cookie_domain});
-    }
-    else {
-      $cookie->domain($self->app->config->{phaidra}->{baseurl});
     }
     $self->tx->res->cookies($cookie);
   }
