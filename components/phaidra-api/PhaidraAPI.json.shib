@@ -148,7 +148,7 @@
         "shibboleth": {
             "fedorausername": "fedoraIntCall",
             "fedorapassword": "xxx",
-            "frontendloginurl": "https://pcherzigd64.cc.univie.ac.at/",
+            "frontendloginurl": "<OUTSIDE_HTTP_SCHEME>://<HOST_WITH_OR_WITHOUT_PORT>/",
             "attributes": {
                 "email": "__SHIB_MAIL__",
                 "firstname": "__SHIB_GIVEN_NAME__",

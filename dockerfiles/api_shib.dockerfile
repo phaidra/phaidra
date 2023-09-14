@@ -42,7 +42,7 @@ RUN <<EOF
 mv /usr/local/phaidra/phaidra-api/PhaidraAPI.json.shib /usr/local/phaidra/phaidra-api/PhaidraAPI.json
 sed -i "s|<HOST_WITH_OR_WITHOUT_PORT>|${PHAIDRA_HOSTNAME}${PHAIDRA_PORTSTUB}${PHAIDRA_HOSTPORT}|g" \
     /usr/local/phaidra/phaidra-api/PhaidraAPI.json
-sed -i "s|<OUTSIDE_HTTP_SCHEME>|${OUTSIDE_HTTP_SCHEME}|" \
+sed -i "s|<OUTSIDE_HTTP_SCHEME>|${OUTSIDE_HTTP_SCHEME}|g" \
     /usr/local/phaidra/phaidra-api/PhaidraAPI.json
 sed -i "s|__SHIB_MAIL__|${SHIB_MAIL}|" \
     /usr/local/phaidra/phaidra-api/PhaidraAPI.json
