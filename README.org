@@ -4,6 +4,168 @@
 #+STARTUP: overview
 
 * About this repository
+  This repo hosts the source code and docker-compose files of the [[https://phaidra.org/][PHAIDRA]] (Permanent Hosting, Archiving and Indexing of Digital Resources and Assets) software, developed at the [[https://zid.univie.ac.at/en/][Vienna University Computer Center]].
+
+  The aim of this project is to provide a high-quality, easy-to-set-up web-based digital archiving system for academic institutions and other organizations that need to provide a solution for long-term-archiving of valuable data.
+
+  We provide various flavors for different use cases, from a demo version running on a local desktop computer for evaluation, to an SSO-enabled server version.
+
+* Software in use
+  [[https://phaidra.org/][PHAIDRA]] is based on the shoulders of the following great pieces of software (in alphabetical order):
+
+  + [[https://www.alpinelinux.org/][Alpine Linux]]
+  + [[https://apache.org/][Apache]]
+  + [[https://solr.apache.org/][Apache Solr]]
+  + [[https://dbgate.org/][DbGate]]
+  + [[https://www.debian.org/][Debian]]
+  + [[https://www.docker.com/][Docker]]
+  + [[https://www.ldap-account-manager.org/lamcms/][LDAP Account Manager]]        
+  + [[https://fedora.lyrasis.org/][Lyrasis Fedora]]
+  + [[https://mariadb.org/][MariaDB]]
+  + [[https://www.mongodb.com/][MongoDB]]
+  + [[https://nginx.org/][Nginx]]
+  + [[https://www.openldap.org/][OpenLDAP]]    
+  + [[https://www.perl.org/][Perl]]
+  + [[https://www.shibboleth.net/][Shibboleth]]
+  + [[https://ubuntu.com/][Ubuntu]]
+  + [[https://vuejs.org/][Vue.js]]
+
+* Setup
+** Prerequisites
+   For all versions you will need a recent [[https://docs.docker.com/engine/install/][Docker Installation]].  Below you see what we use at the time of writing (Fri Sep 15 01:18:31 PM CEST 2023):
+
+   #+NAME: docker-version
+   #+begin_src bash :results output :exports both
+     docker version
+   #+end_src
+
+   #+RESULTS: docker-version
+   #+begin_example
+   Client: Docker Engine - Community
+    Version:           24.0.6
+    API version:       1.43
+    Go version:        go1.20.7
+    Git commit:        ed223bc
+    Built:             Mon Sep  4 12:32:16 2023
+    OS/Arch:           linux/amd64
+    Context:           rootless
+
+   Server: Docker Engine - Community
+    Engine:
+     Version:          24.0.6
+     API version:      1.43 (minimum version 1.12)
+     Go version:       go1.20.7
+     Git commit:       1a79695
+     Built:            Mon Sep  4 12:32:16 2023
+     OS/Arch:          linux/amd64
+     Experimental:     false
+    containerd:
+     Version:          1.6.22
+     GitCommit:        8165feabfdfe38c65b599c4993d227328c231fca
+    runc:
+     Version:          1.1.8
+     GitCommit:        v1.1.8-0-g82f18fe
+    docker-init:
+     Version:          0.19.0
+     GitCommit:        de40ad0
+    rootlesskit:
+     Version:          1.1.1
+     ApiVersion:       1.1.1
+     NetworkDriver:    slirp4netns
+     PortDriver:       slirp4netns
+     StateDir:         /tmp/rootlesskit1559358571
+    slirp4netns:
+     Version:          1.2.0
+     GitCommit:        656041d45cfca7a4176f6b7eed9e4fe6c11e8383
+   #+end_example
+
+   #+NAME: docker-info
+   #+begin_src bash :results output :exports both
+     docker info
+   #+end_src
+
+   #+RESULTS: docker-info
+   #+begin_example
+   Client: Docker Engine - Community
+    Version:    24.0.6
+    Context:    rootless
+    Debug Mode: false
+    Plugins:
+     buildx: Docker Buildx (Docker Inc.)
+       Version:  v0.11.2
+       Path:     /usr/libexec/docker/cli-plugins/docker-buildx
+     compose: Docker Compose (Docker Inc.)
+       Version:  v2.21.0
+       Path:     /usr/libexec/docker/cli-plugins/docker-compose
+
+   Server:
+    Containers: 14
+     Running: 13
+     Paused: 0
+     Stopped: 1
+    Images: 20
+    Server Version: 24.0.6
+    Storage Driver: fuse-overlayfs
+    Logging Driver: json-file
+    Cgroup Driver: systemd
+    Cgroup Version: 2
+    Plugins:
+     Volume: local
+     Network: bridge host ipvlan macvlan null overlay
+     Log: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog
+    Swarm: inactive
+    Runtimes: io.containerd.runc.v2 runc
+    Default Runtime: runc
+    Init Binary: docker-init
+    containerd version: 8165feabfdfe38c65b599c4993d227328c231fca
+    runc version: v1.1.8-0-g82f18fe
+    init version: de40ad0
+    Security Options:
+     seccomp
+      Profile: builtin
+     rootless
+     cgroupns
+    Kernel Version: 6.1.0-12-amd64
+    Operating System: Debian GNU/Linux 12 (bookworm)
+    OSType: linux
+    Architecture: x86_64
+    CPUs: 8
+    Total Memory: 15.03GiB
+    Name: pcherzigd64
+    ID: 4d080886-f0a3-4478-bac7-ebadf0ccfd68
+    Docker Root Dir: /home/daniel/.local/share/docker
+    Debug Mode: false
+    Experimental: false
+    Insecure Registries:
+     127.0.0.0/8
+    Live Restore Enabled: false
+
+   #+end_example
+
+
+  #+begin_src bash :results output :exports results
+    tree -d -L 1
+  #+end_src
+
+  #+RESULTS:
+  #+begin_example
+  .
+  ├── components
+  ├── compose_demo
+  ├── compose_shibboleth
+  ├── compose_ssl
+  ├── compose_webserver_ext
+  ├── container_components
+  ├── dockerfiles
+  ├── encryption
+  ├── image_components
+  ├── pictures
+  ├── shibboleth
+  └── webserver_configs
+
+  13 directories
+  #+end_example
+
   We currently have an [[https://gitlab.phaidra.org/phaidra-dev/phaidra-demo][automated installer for phaidra]], which allows to set up an instance in about 15min.  However, setup is still bound to the underlying operating system (Ubuntu 22.04-LTS), which brings quite some complexity to the end-user.  Here we try to abstract the system further and allow for easier integration into CI/CD workflows using containerization via docker, and to achieve better portability to other platforms supporting this kind of containerization.
 
   The goal of this project is to allow an interested person to run the command ~docker compose up -d~ from a clone of this repo and have phaidra running on his/her computer, without modifying the computer (and have things easily removed with ~docker compose down~ as well).
