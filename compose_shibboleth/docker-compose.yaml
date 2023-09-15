@@ -105,6 +105,7 @@ services:
         SHIB_SURNAME: ${SHIB_SURNAME}    
         SHIB_USERNAME: ${SHIB_USERNAME}   
         SHIB_AFFILIATION: ${SHIB_AFFILIATION}
+        SHIB_REQUIRED_AFFILIATIONS: ${SHIB_REQUIRED_AFFILIATIONS}
     volumes:
       - api_logs:/var/log/phaidra
       - fedora:/mnt/fedora:ro

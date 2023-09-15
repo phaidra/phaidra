@@ -9,6 +9,7 @@ ARG SHIB_GIVEN_NAME
 ARG SHIB_SURNAME
 ARG SHIB_USERNAME
 ARG SHIB_AFFILIATION
+ARG SHIB_REQUIRED_AFFILIATIONS
 RUN <<EOF
 apt-get update
 apt-get install --yes --quiet --no-install-recommends \
@@ -53,6 +54,8 @@ sed -i "s|__SHIB_SURNAME__|${SHIB_SURNAME}|" \
 sed -i "s|__SHIB_USERNAME__|${SHIB_USERNAME}|" \
     /usr/local/phaidra/phaidra-api/PhaidraAPI.json
 sed -i "s|__SHIB_AFFILIATION__|${SHIB_AFFILIATION}|" \
+    /usr/local/phaidra/phaidra-api/PhaidraAPI.json
+sed -i "s|__SHIB_REQUIRED_AFFILIATIONS__|${SHIB_REQUIRED_AFFILIATIONS}|" \
     /usr/local/phaidra/phaidra-api/PhaidraAPI.json
 EOF
 EXPOSE 3000

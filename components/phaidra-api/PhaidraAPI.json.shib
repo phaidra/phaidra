@@ -157,9 +157,7 @@
                 "affiliation": "__SHIB_AFFILIATION__"
             },
             "requiredaffiliations": [
-                "staff@univie.ac.at",
-                "employee@univie.ac.at",
-                "member@univie.ac.at"
+                __SHIB_REQUIRED_AFFILIATIONS__
             ]
         },
         "ldap": {
