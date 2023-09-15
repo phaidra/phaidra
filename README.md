@@ -258,67 +258,91 @@ do that – below you find what we do for a typical installation.
     systemctl --user restart docker
     ```
 
-    ``` example
-    .
-    ├── components
-    ├── compose_demo
-    ├── compose_shibboleth
-    ├── compose_ssl
-    ├── compose_webserver_ext
-    ├── container_components
-    ├── dockerfiles
-    ├── encryption
-    ├── image_components
-    ├── pictures
-    ├── shibboleth
-    └── webserver_configs
+## Run it
 
-    13 directories
+To start up PHAIDRA, change to one of the `compose_*` folders (see
+directories listed below) from this repository and run
+`docker compose up -d`. See the notes below for the specific versions.
+
+``` example
+.
+├── components
+│   ├── phaidra-api
+│   ├── phaidra-ui
+│   ├── phaidra-vue-components
+│   └── pixelgecko
+├── compose_demo
+├── compose_shibboleth
+├── compose_ssl
+├── compose_webserver_ext
+├── container_components
+│   ├── mariadb
+│   └── openldap
+├── dockerfiles
+├── encryption
+│   ├── shibboleth
+│   └── webserver
+├── image_components
+│   ├── pixelgecko
+│   └── solr
+├── pictures
+├── shibboleth
+└── webserver_configs
+    ├── httpd-docker
+    ├── httpd-external
+    ├── nginx-docker
+    └── nginx-external
+
+27 directories
+```
+
+### Local Demo Version
+
+1.  Prerequisites
+
+    None, just make sure no other service is using port 8899 on your
+    computer.
+
+2.  Startup
+
+    After the following commands have finished, you will have a PHAIDRA
+    instance running on <http://localhost:8899>, that you can visit in
+    your browser.
+
+    ``` example
+    cd compose_demo
+    docker compose up -d
     ```
 
-    We currently have an [automated installer for
-    phaidra](https://gitlab.phaidra.org/phaidra-dev/phaidra-demo), which
-    allows to set up an instance in about 15min. However, setup is still
-    bound to the underlying operating system (Ubuntu 22.04-LTS), which
-    brings quite some complexity to the end-user. Here we try to
-    abstract the system further and allow for easier integration into
-    CI/CD workflows using containerization via docker, and to achieve
-    better portability to other platforms supporting this kind of
-    containerization.
+3.  Technical sketch
 
-    The goal of this project is to allow an interested person to run the
-    command `docker compose up -d` from a clone of this repo and have
-    phaidra running on his/her computer, without modifying the computer
-    (and have things easily removed with `docker compose down` as well).
+    System when running `docker compose up -d` from directory
+    `./demo_nginx` (Phaidra available on `http://localhost:8899`.).
+
+    ![](./pictures/construction_demo_nginx.svg)
+
+    1.  SSL
+
+        System when running `docker compose up -d` from directory
+        `./ssl_nginx` (Phaidra available on `https://$YOUR_FQDN`, see
+        section 'System startup' below for prerequisites).
+
+        ![](./pictures/construction_ssl_nginx.svg)
+
+    2.  Shibboleth
+
+        ![](./pictures/construction_shib_apache.svg)
+
+    3.  External webserver
+
+        System when running `docker compose up -d` from directory
+        `./external_webserver` (Phaidra available on
+        `http(s)://$YOUR_FQDN`, see section 'System startup' below for
+        prerequisites).
+
+        ![](./pictures/construction_external_webserver.svg)
 
 # Graphical overview
-
-## Demo
-
-System when running `docker compose up -d` from directory `./demo_nginx`
-(Phaidra available on `http://localhost:8899`.).
-
-![](./pictures/construction_demo_nginx.svg)
-
-## SSL
-
-System when running `docker compose up -d` from directory `./ssl_nginx`
-(Phaidra available on `https://$YOUR_FQDN`, see section 'System startup'
-below for prerequisites).
-
-![](./pictures/construction_ssl_nginx.svg)
-
-## Shibboleth
-
-![](./pictures/construction_shib_apache.svg)
-
-## External webserver
-
-System when running `docker compose up -d` from directory
-`./external_webserver` (Phaidra available on `http(s)://$YOUR_FQDN`, see
-section 'System startup' below for prerequisites).
-
-![](./pictures/construction_external_webserver.svg)
 
 # System startup
 
