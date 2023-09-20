@@ -53,7 +53,11 @@ export default {
   },
   computed: {
     terms: function () {
-      return this.resourceType ? this.$store.getters['vocabulary/getObjectTypeForResourceType'](this.resourceType, this.$i18n.locale) : this.vocabularies[this.vocabulary].terms
+      if (this.vocabulary === 'uniakobjecttypetheses') {
+        return this.vocabularies[this.vocabulary].terms
+      } else {
+        return this.resourceType ? this.$store.getters['vocabulary/getObjectTypeForResourceType'](this.resourceType, this.$i18n.locale) : this.vocabularies[this.vocabulary].terms
+      }
     }
   },
   data () {
@@ -62,7 +66,9 @@ export default {
     }
   },
   mounted: function () {
-    this.$store.getters['vocabulary/getObjectTypeForResourceType'](this.resourceType, this.$i18n.locale)
+    if(this.resourceType) {
+      this.$store.getters['vocabulary/getObjectTypeForResourceType'](this.resourceType, this.$i18n.locale)
+    }
   }
 }
 </script>

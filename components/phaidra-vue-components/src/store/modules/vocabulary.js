@@ -1385,6 +1385,16 @@ const vocabularies = {
     ],
     loaded: true
   },
+  'uniakobjecttypetheses': {
+    terms: [
+      { '@id': 'http://base.uni-ak.ac.at/vocabulary/diploma', 'skos:prefLabel': { 'eng': 'Diploma', 'deu': 'Diplomarbeit' } },
+      { '@id': 'http://base.uni-ak.ac.at/vocabulary/master', 'skos:prefLabel': { 'eng': 'Master', 'deu': 'Masterarbeit' } },
+      { '@id': 'http://base.uni-ak.ac.at/vocabulary/bachelor', 'skos:prefLabel': { 'eng': 'Bachelor', 'deu': 'Bachelorarbeit' } },
+      { '@id': 'http://base.uni-ak.ac.at/vocabulary/doctoral_programmes', 'skos:prefLabel': { 'eng': 'Doctoral programmes' } },
+      { '@id': 'http://base.uni-ak.ac.at/vocabulary/written_component_of_artistic_thesis', 'skos:prefLabel': { 'eng': 'Schriftlicher Teil der künstlerischen Abschlussarbeit', 'deu': 'Written component of artistic Thesis' } }
+    ],
+    loaded: true
+  },
   'accessright': {
     terms: [
       { '@id': ns + 'QW5R-NG4J', 'skos:prefLabel': { 'eng': 'open access' }, 'skos:definition': { 'eng': 'Open access refers to a resource that is immediately and permanently online, and free for all on the Web, without financial and technical barriers.The resource is either stored in the repository or referenced to an external journal or trustworthy archive.' } },
@@ -1627,7 +1637,7 @@ export const state = () => ({
 })
 
 const mutations = {
-  sortOrgUnits (state, locale) {
+  sortOrgUnits(state, locale) {
     if (state.vocabularies['orgunits'].sorted !== locale) {
       if (state.vocabularies['orgunits']['terms']) {
         if (state.vocabularies['orgunits']['terms'][0]) {
@@ -1673,14 +1683,14 @@ const mutations = {
       state.vocabularies['orgunits'].sorted = locale
     }
   },
-  setOrgUnits (state, data) {
+  setOrgUnits(state, data) {
     if (state.vocabularies['orgunits']['loaded'] === false) {
       state.vocabularies['orgunits']['tree'] = data.tree
       state.vocabularies['orgunits']['terms'] = data.terms
       state.vocabularies['orgunits']['loaded'] = true
     }
   },
-  sortRoles (state, locale) {
+  sortRoles(state, locale) {
     state.vocabularies['rolepredicate']['terms'].sort(function (a, b) {
       return a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale)
     })
@@ -1688,19 +1698,19 @@ const mutations = {
       return a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale)
     })
   },
-  sortObjectTypes (state, locale) {
+  sortObjectTypes(state, locale) {
     state.vocabularies['objecttype']['terms'].sort(function (a, b) {
       return a['skos:prefLabel'][locale] ? a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale) : 1
     })
   },
-  setOefos (state, data) {
+  setOefos(state, data) {
     if (state.vocabularies['oefos']['loaded'] === false) {
       state.vocabularies['oefos']['tree'] = data.tree
       state.vocabularies['oefos']['terms'] = data.terms
       state.vocabularies['oefos']['loaded'] = true
     }
   },
-  sortOefos (state, locale) {
+  sortOefos(state, locale) {
     if (state.vocabularies['oefos'].sorted !== locale) {
       if (state.vocabularies['oefos']['terms']) {
         if (state.vocabularies['oefos']['terms'][0]) {
@@ -1715,7 +1725,7 @@ const mutations = {
       state.vocabularies['oefos'].sorted = locale
     }
   },
-  sortFields (state, locale) {
+  sortFields(state, locale) {
     i18n.locale = locale
     if (state.fields) {
       state.fields.sort(function (a, b) {
@@ -1723,13 +1733,13 @@ const mutations = {
       })
     }
   },
-  setLangTerms (state, data) {
+  setLangTerms(state, data) {
     if (state.vocabularies['lang']['loaded'] === false) {
       state.vocabularies['lang']['terms'] = data
       state.vocabularies['lang']['loaded'] = true
     }
   },
-  disableVocabularyTerms (state, vocandterms) {
+  disableVocabularyTerms(state, vocandterms) {
     if (state.vocabularies[vocandterms.vocabulary]) {
       for (let t of state.vocabularies[vocandterms.vocabulary].terms) {
         for (let termid of vocandterms.termids) {
@@ -1740,14 +1750,14 @@ const mutations = {
       }
     }
   },
-  enableAllVocabularyTerms (state, vocabulary) {
+  enableAllVocabularyTerms(state, vocabulary) {
     if (state.vocabularies[vocabulary]) {
       for (let t of state.vocabularies[vocabulary].terms) {
         t.disabled = false
       }
     }
   },
-  loadVocabulary (state, payload) {
+  loadVocabulary(state, payload) {
     let id = payload.id
     let data = payload.data
 
@@ -1782,23 +1792,23 @@ const mutations = {
 }
 
 const actions = {
-  sortFields ({ commit }, locale) {
+  sortFields({ commit }, locale) {
     commit('sortFields', locale)
   },
-  sortRoles ({ commit }, locale) {
+  sortRoles({ commit }, locale) {
     commit('sortRoles', locale)
   },
-  sortObjectTypes ({ commit }, locale) {
+  sortObjectTypes({ commit }, locale) {
     commit('sortObjectTypes', locale)
   },
-  loadLanguages ({ commit, state }, locale) {
+  loadLanguages({ commit, state }, locale) {
     if (state.vocabularies['lang']['terms'].length < 1) {
       let langterms = languages.get_lang()
       langterms.sort((a, b) => a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale))
       commit('setLangTerms', langterms)
     }
   },
-  async loadOrgUnits ({ commit, rootState, state }, locale) {
+  async loadOrgUnits({ commit, rootState, state }, locale) {
     if (state.vocabularies['orgunits']['loaded'] === false) {
       try {
         let response = await this.$axios.request({
@@ -1822,7 +1832,7 @@ const actions = {
       }
     }
   },
-  async loadOefos ({ commit, rootState, state }, locale) {
+  async loadOefos({ commit, rootState, state }, locale) {
     if (state.vocabularies['oefos']['loaded'] === false) {
       try {
         let response = await this.$axios.request({
@@ -1846,7 +1856,7 @@ const actions = {
       }
     }
   },
-  async loadVocabulary ({ commit, state, rootState }, vocabId) {
+  async loadVocabulary({ commit, state, rootState }, vocabId) {
     if (state.vocabularies[vocabId]) {
       if (state.vocabularies[vocabId].loaded) {
         return

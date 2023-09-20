@@ -389,7 +389,9 @@ export default {
         }
         this.usernameSearchItems = response.data.accounts ? response.data.accounts : []
         if (this.init && this.owner) {
-          this.usernameSearchModel = this.usernameSearchItems[0]
+          if (this.usernameSearchItems[0]) {
+            this.usernameSearchModel = this.usernameSearchItems[0]
+          }
           this.init = false
         }
       } catch (error) {

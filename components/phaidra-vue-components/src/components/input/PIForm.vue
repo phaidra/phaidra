@@ -1549,10 +1549,14 @@ export default {
     },
     handleObjectTypeCheckboxesInput: function (f, event) {
       f.selectedTerms = []
+      let voc = 'objecttype'
+      if (f.vocabulary) {
+        voc = f.vocabulary
+      }
       if (event) {
         Object.entries(event).forEach(([otkey, ot]) => {
           if (ot) {
-            let term = this.$store.getters['vocabulary/getTerm']('objecttype', otkey)
+            let term = this.$store.getters['vocabulary/getTerm'](voc, otkey)
             let field = {
               value: term['@id']
             }
