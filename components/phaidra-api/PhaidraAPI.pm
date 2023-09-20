@@ -11,6 +11,7 @@ use Mojolicious::Plugin::Log::Any;
 use Mojo::Loader qw(load_class);
 use FindBin;
 use lib "$FindBin::Bin/lib/phaidra_directory";
+use change_refs;
 use MongoDB 1.8.3;
 use Sereal::Encoder qw(encode_sereal);
 use Sereal::Decoder qw(decode_sereal);
@@ -20,7 +21,7 @@ use Crypt::URandom          (qw/urandom/);
 use Digest::SHA             (qw/hmac_sha256/);
 use Math::Random::ISAAC::XS ();
 use DBIx::Connector;
-
+  
 BEGIN {
   # that's what we want:
   # use MIME::Base64 3.12 (qw/encode_base64url decode_base64url/);
@@ -56,6 +57,7 @@ $ENV{MOJO_HEARTBEAT_TIMEOUT}  = 1209600;
 sub startup {
   my $self   = shift;
   my $config = $self->plugin('JSONConfig' => {file => 'PhaidraAPI.json'});
+  change_refs::change_refs($config);
   $self->config($config);
   $self->mode($config->{mode});
   $self->secrets([$config->{secret}]);

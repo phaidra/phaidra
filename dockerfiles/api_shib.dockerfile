@@ -1,15 +1,5 @@
 FROM ubuntu:jammy
 ENV DEBIAN_FRONTEND noninteractive
-ARG PHAIDRA_HOSTNAME
-ARG PHAIDRA_PORTSTUB
-ARG PHAIDRA_HOSTPORT
-ARG OUTSIDE_HTTP_SCHEME
-ARG SHIB_MAIL
-ARG SHIB_GIVEN_NAME
-ARG SHIB_SURNAME
-ARG SHIB_USERNAME
-ARG SHIB_AFFILIATION
-ARG SHIB_REQUIRED_AFFILIATIONS
 RUN <<EOF
 apt-get update
 apt-get install --yes --quiet --no-install-recommends \
@@ -39,24 +29,6 @@ RUN mkdir -pv /usr/local/phaidra
 RUN mkdir -pv /var/log/phaidra
 COPY ./../components/phaidra-api /usr/local/phaidra/phaidra-api
 WORKDIR /usr/local/phaidra/phaidra-api/
-RUN <<EOF
-mv /usr/local/phaidra/phaidra-api/PhaidraAPI.json.shib /usr/local/phaidra/phaidra-api/PhaidraAPI.json
-sed -i "s|<HOST_WITH_OR_WITHOUT_PORT>|${PHAIDRA_HOSTNAME}${PHAIDRA_PORTSTUB}${PHAIDRA_HOSTPORT}|g" \
-    /usr/local/phaidra/phaidra-api/PhaidraAPI.json
-sed -i "s|<OUTSIDE_HTTP_SCHEME>|${OUTSIDE_HTTP_SCHEME}|g" \
-    /usr/local/phaidra/phaidra-api/PhaidraAPI.json
-sed -i "s|__SHIB_MAIL__|${SHIB_MAIL}|" \
-    /usr/local/phaidra/phaidra-api/PhaidraAPI.json
-sed -i "s|__SHIB_GIVEN_NAME__|${SHIB_GIVEN_NAME}|" \
-    /usr/local/phaidra/phaidra-api/PhaidraAPI.json
-sed -i "s|__SHIB_SURNAME__|${SHIB_SURNAME}|" \
-    /usr/local/phaidra/phaidra-api/PhaidraAPI.json
-sed -i "s|__SHIB_USERNAME__|${SHIB_USERNAME}|" \
-    /usr/local/phaidra/phaidra-api/PhaidraAPI.json
-sed -i "s|__SHIB_AFFILIATION__|${SHIB_AFFILIATION}|" \
-    /usr/local/phaidra/phaidra-api/PhaidraAPI.json
-sed -i "s|__SHIB_REQUIRED_AFFILIATIONS__|${SHIB_REQUIRED_AFFILIATIONS}|" \
-    /usr/local/phaidra/phaidra-api/PhaidraAPI.json
-EOF
+RUN mv /usr/local/phaidra/phaidra-api/PhaidraAPI.json.shib /usr/local/phaidra/phaidra-api/PhaidraAPI.json
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]

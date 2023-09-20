@@ -6,6 +6,7 @@ use v5.10;
 use Mojo::ByteStream qw(b);
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Object;
+use Data::Dumper;
 
 sub extract_credentials {
   my $self = shift;
@@ -339,7 +340,10 @@ sub signin_shib {
     for my $userAff (@userAffs) {
       last if $authorized;
       $self->app->log->debug("Checking if affiliation $userAff can login");
-      for my $configAff (@{$self->app->config->{authentication}->{shibboleth}->{requiredaffiliations}}) {
+      my @valid_affiliations = map { split(/,/) } @{$self->app->config->{authentication}->{shibboleth}->{requiredaffiliations}};
+      # $self->app->log->debug(Dumper(@valid_affiliations));
+      for my $configAff (@valid_affiliations) {
+        $self->app->log->debug("$configAff");
         if ($configAff eq $userAff) {
           $self->app->log->debug($configAff . " can login");
           $authorized = 1;

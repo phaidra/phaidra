@@ -43,13 +43,13 @@ services:
     environment:
       - HTTPD_HOST=${PHAIDRA_HOSTNAME}
       - PRIVILEGED_IP=${ALLOWED_HOST}
-      - SHIB_MAIL=${SHIB_MAIL}       
-      - SHIB_GIVEN_NAME=${SHIB_GIVEN_NAME} 
-      - SHIB_SURNAME=${SHIB_SURNAME}    
-      - SHIB_USERNAME=${SHIB_USERNAME}   
+      - SHIB_MAIL=${SHIB_MAIL}
+      - SHIB_GIVEN_NAME=${SHIB_GIVEN_NAME}
+      - SHIB_SURNAME=${SHIB_SURNAME}
+      - SHIB_USERNAME=${SHIB_USERNAME}
       - SHIB_AFFILIATION=${SHIB_AFFILIATION}
 
-      
+
 
   imageserver:
     build:
@@ -95,22 +95,31 @@ services:
     build:
       context: ../.
       dockerfile: dockerfiles/api_shib.dockerfile
-      args:
-        PHAIDRA_HOSTNAME: ${PHAIDRA_HOSTNAME}
-        PHAIDRA_PORTSTUB: ${PHAIDRA_PORTSTUB}
-        PHAIDRA_HOSTPORT: ${PHAIDRA_HOSTPORT}
-        OUTSIDE_HTTP_SCHEME: ${OUTSIDE_HTTP_SCHEME}
-        SHIB_MAIL: ${SHIB_MAIL}       
-        SHIB_GIVEN_NAME: ${SHIB_GIVEN_NAME} 
-        SHIB_SURNAME: ${SHIB_SURNAME}    
-        SHIB_USERNAME: ${SHIB_USERNAME}   
-        SHIB_AFFILIATION: ${SHIB_AFFILIATION}
-        SHIB_REQUIRED_AFFILIATIONS: ${SHIB_REQUIRED_AFFILIATIONS}
     volumes:
       - api_logs:/var/log/phaidra
       - fedora:/mnt/fedora:ro
     networks:
       - phaidra-network
+    environment:
+      - PHAIDRA_HOSTNAME=${PHAIDRA_HOSTNAME}
+      - PHAIDRA_PORTSTUB=${PHAIDRA_PORTSTUB}
+      - PHAIDRA_HOSTPORT=${PHAIDRA_HOSTPORT}
+      - OUTSIDE_HTTP_SCHEME=${OUTSIDE_HTTP_SCHEME}
+      - SHIB_MAIL=${SHIB_MAIL}
+      - SHIB_GIVEN_NAME=${SHIB_GIVEN_NAME}
+      - SHIB_SURNAME=${SHIB_SURNAME}
+      - SHIB_USERNAME=${SHIB_USERNAME}
+      - SHIB_AFFILIATION=${SHIB_AFFILIATION}
+      - SHIB_REQUIRED_AFFILIATIONS=${SHIB_REQUIRED_AFFILIATIONS}
+      - PHAIDRA_SECRET=${PHAIDRA_SECRET}
+      - PHAIDRA_ENCRYPTION_KEY=${PHAIDRA_ENCRYPTION_KEY}
+      - IMAGESERVER_HASH_SECRET=${IMAGESERVER_HASH_SECRET}
+      - PHAIDRA_ADMIN_USER=${PHAIDRA_ADMIN_USER}
+      - PHAIDRA_ADMIN_PASSWORD=${PHAIDRA_ADMIN_PASSWORD}
+      - FEDORA_ADMIN_USER=${FEDORA_ADMIN_USER}
+      - FEDORA_ADMIN_PASS=${FEDORA_ADMIN_PASS}
+
+
 
   pixelgecko:
     depends_on:
@@ -200,6 +209,8 @@ services:
     restart: always
     environment:
       - CATALINA_OPTS=${CATALINA_OPTS}
+      - FEDORA_ADMIN_USERNAME=${FEDORA_ADMIN_USER}
+      - FEDORA_ADMIN_PASSWORD=${FEDORA_ADMIN_PASS}
     volumes:
       - fedora:/usr/local/tomcat/fcrepo-home
     depends_on:
