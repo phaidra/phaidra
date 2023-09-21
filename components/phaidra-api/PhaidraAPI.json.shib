@@ -146,8 +146,6 @@
         "token_cookie": "XSRF-TOKEN",
         "Access-Control-Allow-Origin": "*",
         "shibboleth": {
-            "fedorausername": "fedoraIntCall",
-            "fedorapassword": "xxx",
             "frontendloginurl": "__OUTSIDE_HTTP_SCHEME__://__PHAIDRA_HOSTNAME____PHAIDRA_PORTSTUB____PHAIDRA_HOSTPORT__/",
             "attributes": {
                 "email": "__SHIB_MAIL__",
