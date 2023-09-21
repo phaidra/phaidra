@@ -9,7 +9,7 @@
     },
     "mode": "production",
     "scheme": "__OUTSIDE_HTTP_SCHEME__",
-    "baseurl": "__PHAIDRA_HOSTNAME__",
+    "baseurl": "__PHAIDRA_HOSTNAME____PHAIDRA_PORTSTUB____PHAIDRA_HOSTPORT__",
     "basepath": "api",
     "secret": "__PHAIDRA_SECRET__",
     "enc_key": "__PHAIDRA_ENCRYPTION_KEY__",
@@ -45,7 +45,7 @@
         ]
     },
     "phaidra": {
-        "baseurl": "__PHAIDRA_HOSTNAME__",
+        "baseurl": "__PHAIDRA_HOSTNAME____PHAIDRA_PORTSTUB____PHAIDRA_HOSTPORT__",
         "fedorabaseurl": "fedora",
         "staticbaseurl": "",
         "fedorastylesheeturl": "",
@@ -148,7 +148,7 @@
         "shibboleth": {
             "fedorausername": "fedoraIntCall",
             "fedorapassword": "xxx",
-            "frontendloginurl": "__OUTSIDE_HTTP_SCHEME__://__PHAIDRA_HOSTNAME__/",
+            "frontendloginurl": "__OUTSIDE_HTTP_SCHEME__://__PHAIDRA_HOSTNAME____PHAIDRA_PORTSTUB____PHAIDRA_HOSTPORT__/",
             "attributes": {
                 "email": "__SHIB_MAIL__",
                 "firstname": "__SHIB_GIVEN_NAME__",
