@@ -125,9 +125,7 @@
         "principalheader": "this is the principal header as in fedora UpstreamAuth config",
         "affiliationheader": "this is the affiliation attribute as in fedora UpstreamAuth config",
         "upstreamusername": "if someone is calling api with principial header, he has to use this credentials",
-        "upstreampassword": "secret",
-        "fedorausername": "fedora int call user",
-        "fedorapassword": "secret"
+        "upstreampassword": "secret"
     },
     "directory_class": "Phaidra::Directory::GenericLDAP",
     "phaidra_db": {
