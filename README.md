@@ -20,7 +20,7 @@ Indexing of Digital Resources and Assets) software, developed at the
 The aim of this project is to provide a high-quality, easy-to-set-up
 web-based digital archiving system for academic institutions and other
 organizations that need to provide a solution for long-term-archiving of
-valuable data.
+valuable data and metadata about the stored objects.
 
 We provide various flavors for different use cases, from a demo version
 running on a local desktop computer for evaluation, to an SSO-enabled
@@ -298,7 +298,7 @@ directories listed below) from this repository and run
 
 ### Local Demo Version
 
-1.  Prerequisites
+1.  Version-specific prerequisites
 
     None, just make sure no other service is using port 8899 on your
     computer.
@@ -317,73 +317,90 @@ directories listed below) from this repository and run
 3.  Technical sketch
 
     System when running `docker compose up -d` from directory
-    `./demo_nginx` (Phaidra available on `http://localhost:8899`.).
+    `./compose_demo` (Phaidra available on `http://localhost:8899`.).
 
     ![](./pictures/construction_demo_nginx.svg)
 
 ### SSL
 
-1.  Prerequisites
+1.  Version-specific prerequisites
+
+    -   A DNS-entry for your computer's IP-address.
+    -   SSL-certificate and -key (put them into the
+        `./encryption/webserver`-directory of this repo and name them
+        `privkey.pem` and `fullchain.pem`).
+    -   firewall with port 80 and 443 open on your computer.
 
 2.  Startup
+
+    Change to the folder `./compose_ssl` and run compose. After the
+    setup has finished you will PHAIDRA running on
+    \~<https://$YOUR-DNS-ENTRY>.
+
+    ``` example
+    cd compose_ssl
+    docker compose up -d
+    ```
 
 3.  Technical sketch
 
     System when running `docker compose up -d` from directory
-    `./ssl_nginx` (Phaidra available on `https://$YOUR_FQDN`, see
+    `./compose_ssl` (Phaidra available on `https://$YOUR_FQDN`, see
     section 'System startup' below for prerequisites).
 
     ![](./pictures/construction_ssl_nginx.svg)
 
 ### Shibboleth
 
-1.  Prerequisites
+1.  Version-specific prerequisites
+
+    -   A DNS-entry for your computer's IP-address.
+    -   SSL-certificate and -key (put them into the
+        `./encryption/webserver`-directory of this repo and name them
+        `privkey.pem` and `fullchain.pem`).
+    -   firewall with port 80 and 443 open on your computer.
+    -   encryption and signing keys/certs for Shibboleth (plus the
+        registration at your organization's IdP). You can create the
+        required key/cert-pairs with the following commands (put the
+        results into the `./encryption/shibboleth` folder of this repo):
+
+    ``` example
+    openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-encrypt-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-encrypt-cert.pem
+    openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-signing-cert.pem
+    ```
 
 2.  Startup
 
+    Change to the folder `./compose_shib` and run compose. After the
+    setup has finished you will PHAIDRA running on
+    `https://$YOUR-DNS-ENTRY`.
+
+    ``` example
+    cd compose_ssl
+    docker compose up -d
+    ```
+
 3.  Technical sketch
+
+    System when running `docker compose up -d` from directory
+    `./compose_shib` (Phaidra available on `http://localhost:8899`.).
 
     ![](./pictures/construction_shib_apache.svg)
 
 ### External webserver
 
-System when running `docker compose up -d` from directory
-`./external_webserver` (Phaidra available on `http(s)://$YOUR_FQDN`, see
-section 'System startup' below for prerequisites).
+NOTE: THIS IS CURRENTLY NOT ACTIVELY DEVELOPED. System when running
+`docker compose up -d` from directory `./compose_external_webserver`
+(Phaidra available on `http(s)://$YOUR_FQDN`, see section 'System
+startup' below for prerequisites).
 
 ![](./pictures/construction_external_webserver.svg)
 
-# System startup
+# PHAIDRA startup
 
 This repo holds four phaidra flavors at the moment. Three of them depend
 solely on docker (they include nginx and apache respectively, but depend
 on the same phaidra-code).
-
-## testing/dev
-
-To start up a local testinstance of phaidra, which will run on
-<http://localhost:8899> you need this repo on your computer and then run
-`docker compose up -d` from either the `demo_httpd` folder (starts
-phaidra with apache2 as webserver), or the `demo_nginx` folder (which,
-well uses nginx as webserver). Depending on your internet connection and
-PC power, the set up will last about 10-30min.
-
-## productive/ssl
-
-If you want to spin up a productive version of phaidra, you will
-additionaly need the following things:
-
--   A DNS-entry for your host's IP.
--   SSL-certificate and -key (put them into the certs-folder of this
-    repo and name them `privkey.pem` and `fullchain.pem`).
--   firewall with port 80 and 443 open.
-
-Once you've got these prerequisites, change into the `ssl_nginx`
-directory of this repo, put FQDN and IP into the lower section of the
-`.env` file (in the `prod_nginx` directory) and run
-`docker compose up -d` from there. We currently work on the same for
-apache2. Depending on your internet connection and PC power, the set up
-will last about 10-30min.
 
 ## using an external webserver
 
@@ -651,47 +668,9 @@ docker volume rm $(docker volume ls --filter label=com.docker.compose.project=ph
 docker system prune --all
 ```
 
-# <span class="todo TODO">TODO</span> Known issues
+# Known issues
 
 We keep searching.
-
-There's hardcoded 'https' in the following occurences in the phaidra-ui
-components:
-
-``` example
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/server-middleware/redirect.js:              redirect(res, 'https://' + config.instances[config.defaultinstance].irbaseurl + '/' + pid)
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/server-middleware/redirect.js:      redirect(res, 'https://' + config.instances[config.defaultinstance].baseurl + '/detail/' + pid)
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/pages/upload-webversion/_pid.vue:                {{ $t('WEBVERSIONSUBMIT', { pid: 'https://' + instanceconfig.baseurl + '/' + parentpid }) }}
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/pages/detail/_pid.vue:        "https://" + this.instanceconfig.irbaseurl + "/" + this.objectInfo.pid
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/pages/detail/_pid.vue:          "https://" + this.instanceconfig.baseurl + "/" + this.objectInfo.pid,
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/pages/detail/_pid.vue:              "https://" +
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/pages/detail/_pid.vue:          url: "https://" + this.appconfig.apis.doi.baseurl + "/" + this.doi,
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui/pages/detail/_pid.vue:          url: "https://" + this.appconfig.apis.doi.baseurl + "/" + this.doi,
-```
-
-This boils down to the three files:
-
--   `components/phaidra-ui/pages/detail/_pid.vue`
--   `components/phaidra-ui/pages/upload-webversion/_pid.vue`
--   `components/phaidra-ui/server-middleware/redirect.js`
-
-In phaidra-vue-components we find:
-
-``` example
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/lists/PLists.vue:            <template v-if="token && token.length > 0"><a class="pl-2 white--text" target="_blank" :href="'/list/' + token">{{ 'https://' + instance.baseurl + '/list/' + token }}</a></template>
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/input/PISubjectGnd.vue:          url: 'https://' + this.$store.state.appconfig.apis.lobid.baseurl + '/gnd/search',
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/display/PDJsonld.vue:        <v-col :md="valueColMd" cols="12">https://{{ instance.baseurl }}/{{ pid }}</v-col>
-
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/search/PSearchResults.vue:                <span>https://{{ instance.baseurl }}/{{ doc.pid }}</span>
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/management/PMDelete.vue:      <div v-else>{{ $t('DELETE_OBJECT', { pid: 'https://' + instance.baseurl + '/' + pid }) }}</div>
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/management/PMDelete.vue:          <v-card-text>{{ $t('DELETE_OBJECT_CONFIRM', { pid: 'https://' + instance.baseurl + '/' +  pid })}}</v-card-text>
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/management/PMRelationships.vue:                <a target="_blank" :href="'https://' + instance.baseurl + '/' + item.object">{{ item.object }}</a>
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/select/RorSearch.vue:          url: 'https://' + this.$store.state.appconfig.apis.ror.baseurl + '/organizations',
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/browse/PCollectionGallery.vue:                   <v-img aspect-ratio="1" :src="'https://' + instanceconfig.baseurl + '/preview/' + doc.pid" @click="showDetailDialog(doc)"></v-img>
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/browse/PCollectionGallery.vue:                      <v-img class="grey lighten-2" aspect-ratio="1" :src="'https://' + instanceconfig.baseurl + '/preview/' + doc.pid"
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/browse/PCollectionGallery.vue:          <v-img aspect-ratio="1" :src="'https://' + instanceconfig.baseurl + '/preview/' + detailToShow.pid"></v-img>
-/home/daniel/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components/src/components/browse/PCollectionGallery.vue:        //  alert('https://' + this.instanceconfig.baseurl + '/preview/' + doc.pid);
-```
 
 # Phaidra Components
 
