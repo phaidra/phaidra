@@ -94,10 +94,11 @@ services:
       - fedora
     build:
       context: ../.
-      dockerfile: dockerfiles/api_shib.dockerfile
+      dockerfile: dockerfiles/api.dockerfile
     volumes:
       - api_logs:/var/log/phaidra
       - fedora:/mnt/fedora:ro
+      - ../components/phaidra-api:/usr/local/phaidra/phaidra-api:ro
     networks:
       - phaidra-network
     environment:

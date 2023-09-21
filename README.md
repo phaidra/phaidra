@@ -321,28 +321,37 @@ directories listed below) from this repository and run
 
     ![](./pictures/construction_demo_nginx.svg)
 
-    1.  SSL
+### SSL
 
-        System when running `docker compose up -d` from directory
-        `./ssl_nginx` (Phaidra available on `https://$YOUR_FQDN`, see
-        section 'System startup' below for prerequisites).
+1.  Prerequisites
 
-        ![](./pictures/construction_ssl_nginx.svg)
+2.  Startup
 
-    2.  Shibboleth
+3.  Technical sketch
 
-        ![](./pictures/construction_shib_apache.svg)
+    System when running `docker compose up -d` from directory
+    `./ssl_nginx` (Phaidra available on `https://$YOUR_FQDN`, see
+    section 'System startup' below for prerequisites).
 
-    3.  External webserver
+    ![](./pictures/construction_ssl_nginx.svg)
 
-        System when running `docker compose up -d` from directory
-        `./external_webserver` (Phaidra available on
-        `http(s)://$YOUR_FQDN`, see section 'System startup' below for
-        prerequisites).
+### Shibboleth
 
-        ![](./pictures/construction_external_webserver.svg)
+1.  Prerequisites
 
-# Graphical overview
+2.  Startup
+
+3.  Technical sketch
+
+    ![](./pictures/construction_shib_apache.svg)
+
+### External webserver
+
+System when running `docker compose up -d` from directory
+`./external_webserver` (Phaidra available on `http(s)://$YOUR_FQDN`, see
+section 'System startup' below for prerequisites).
+
+![](./pictures/construction_external_webserver.svg)
 
 # System startup
 

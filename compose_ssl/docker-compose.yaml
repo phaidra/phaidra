@@ -77,6 +77,7 @@ services:
     volumes:
       - api_logs:/var/log/phaidra
       - fedora:/mnt/fedora:ro
+      - ../components/phaidra-api:/usr/local/phaidra/phaidra-api:ro
     networks:
       - phaidra-network
     environment:

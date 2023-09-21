@@ -5,7 +5,8 @@
         ],
         "proxy": 1,
         "inactivity_timeout": 0,
-        "heartbeat_timeout": 600
+        "heartbeat_timeout": 600,
+        "pid_file": "/tmp/hypnotoad.pid"
     },
     "mode": "production",
     "scheme": "__OUTSIDE_HTTP_SCHEME__",
@@ -143,6 +144,19 @@
         "token_header": "X-XSRF-TOKEN",
         "token_cookie": "XSRF-TOKEN",
         "Access-Control-Allow-Origin": "*",
+        "shibboleth": {
+            "frontendloginurl": "__OUTSIDE_HTTP_SCHEME__://__PHAIDRA_HOSTNAME____PHAIDRA_PORTSTUB____PHAIDRA_HOSTPORT__/",
+            "attributes": {
+                "email": "__SHIB_MAIL__",
+                "firstname": "__SHIB_GIVEN_NAME__",
+                "lastname": "__SHIB_SURNAME__",
+                "username": "__SHIB_USERNAME__",
+                "affiliation": "__SHIB_AFFILIATION__"
+            },
+            "requiredaffiliations": [
+                "__SHIB_REQUIRED_AFFILIATIONS__"
+            ]
+        },
         "ldap": {
             "server": "openldap",
             "port": "1389",
