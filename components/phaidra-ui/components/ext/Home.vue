@@ -55,8 +55,20 @@
 
       <v-col cols="12" lg="2" class="border-left mt-2">
         <v-row>
-          <v-col cols="12">
-            <v-row>
+            <v-col cols="12">
+                <v-row>
+                    <h2 class="md-headline title font-weight-light primary--text pa-2 mb-3" >{{ "Manage Phaidra" }}</h2>
+                </v-row>
+                <v-row class="pl-2 mb-6 mt-4">
+                    <ul>
+                        <li><a href="/lam/">Manage Users</a></li>
+                        <li><a href="/dbgate/">Inspect Databases</a></li>
+                        <li><a href="/fcrepo/rest/">Inspect Object Repository</a></li>
+                        <li><a href="/solr/">Inspect Search Engine</a></li>
+                    </ul>
+                </v-row>
+                <v-divider class="my-4"></v-divider>
+                <v-row>
               <h2 class="md-headline title font-weight-light primary--text pa-2 mb-3" ><icon width="27px" height="27px" name="univie-kartenkontakte" class="mr-2"></icon>{{ "Contact" }}</h2>
             </v-row>
             <v-divider class="my-4"></v-divider>

@@ -15,7 +15,7 @@ services:
   nginx:
     image: nginx:1.25.1-alpine
     ports:
-      - "${PHAIDRA_HOSTPORT}:80"
+      - "${PHAIDRA_HOSTPORT}:${PHAIDRA_HOSTPORT}"
     volumes:
       - .././webserver_configs/nginx-docker/demo:/etc/nginx/templates:ro
       - .././webserver_configs/nginx-docker/demo/nginx.conf:/etc/nginx/nginx.conf:ro
@@ -27,6 +27,7 @@ services:
     environment:
       - NGINX_HOST=${PHAIDRA_HOSTNAME}
       - NGINX_PRIVILEGED_IP=${ALLOWED_HOST}
+      - PHAIDRA_HOSTPORT=${PHAIDRA_HOSTPORT}
 
   imageserver:
     build:
