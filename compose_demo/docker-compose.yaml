@@ -1,6 +1,6 @@
 version: '3'
 
-name: phaidra-demo-nginx
+name: phaidra-demo
 
 networks:
   phaidra-network:
@@ -12,22 +12,21 @@ networks:
 
 services:
 
-  nginx:
-    image: nginx:1.25.1-alpine
+  httpd:
+    image: httpd:2.4.57-bookworm
     ports:
-      - "${PHAIDRA_HOSTPORT}:${PHAIDRA_HOSTPORT}"
+      - "${PHAIDRA_HOSTPORT}:80"
     volumes:
-      - .././webserver_configs/nginx-docker/demo:/etc/nginx/templates:ro
-      - .././webserver_configs/nginx-docker/demo/nginx.conf:/etc/nginx/nginx.conf:ro
+      - .././webserver_configs/phaidra-demo.conf:/usr/local/apache2/conf/httpd.conf:ro
     depends_on:
       - api
       - ui
     networks:
       - phaidra-network
     environment:
-      - NGINX_HOST=${PHAIDRA_HOSTNAME}
-      - NGINX_PRIVILEGED_IP=${ALLOWED_HOST}
+      - PHAIDRA_HOSTNAME=${PHAIDRA_HOSTNAME}
       - PHAIDRA_HOSTPORT=${PHAIDRA_HOSTPORT}
+      - PRIVILEGED_IP=${ALLOWED_HOST}
 
   imageserver:
     build:
