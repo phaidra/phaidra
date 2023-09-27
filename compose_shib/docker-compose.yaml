@@ -1,6 +1,6 @@
 version: '3'
 
-name: phaidra-ssl-shib-httpd
+name: phaidra-shib
 
 networks:
   phaidra-network:
@@ -30,8 +30,7 @@ services:
       - api
       - ui
     volumes:
-      - .././webserver_configs/httpd-docker/ssl-shib/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
-      - .././webserver_configs/httpd-docker/ssl-shib/httpd-ssl.conf:/usr/local/apache2/conf/extra/httpd-ssl.conf:ro
+      - .././webserver_configs/phaidra-shib.conf:/usr/local/apache2/conf/httpd.conf:ro
       - .././encryption/webserver/privkey.pem:/usr/local/apache2/conf/server.key:ro
       - .././encryption/webserver/fullchain.pem:/usr/local/apache2/conf/server.crt:ro
       - .././encryption/shibboleth/sp-signing-key.pem:/etc/shibboleth/sp-signing-key.pem:ro
@@ -41,7 +40,7 @@ services:
     networks:
       - phaidra-network
     environment:
-      - HTTPD_HOST=${PHAIDRA_HOSTNAME}
+      - PHAIDRA_HOSTNAME=${PHAIDRA_HOSTNAME}
       - PRIVILEGED_IP=${ALLOWED_HOST}
       - SHIB_MAIL=${SHIB_MAIL}
       - SHIB_GIVEN_NAME=${SHIB_GIVEN_NAME}

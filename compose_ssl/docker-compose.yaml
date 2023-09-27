@@ -1,6 +1,6 @@
 version: '3'
 
-name: phaidra-ssl-nginx
+name: phaidra-ssl
 
 networks:
   phaidra-network:
@@ -12,23 +12,23 @@ networks:
 
 services:
 
-  nginx:
-    image: nginx:1.25.1-alpine
+  httpd:
+    image: httpd:2.4.57-bookworm
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - .././webserver_configs/nginx-docker/ssl:/etc/nginx/templates:ro
-      - .././webserver_configs/nginx-docker/ssl/nginx.conf:/etc/nginx/nginx.conf:ro
-      - .././encryption/webserver:/etc/nginx/certs:ro
+      - .././webserver_configs/phaidra-ssl.conf:/usr/local/apache2/conf/httpd.conf:ro
+      - .././encryption/webserver/privkey.pem:/usr/local/apache2/conf/server.key:ro
+      - .././encryption/webserver/fullchain.pem:/usr/local/apache2/conf/server.crt:ro
     depends_on:
       - api
       - ui
     networks:
       - phaidra-network
     environment:
-      - NGINX_HOST=${PHAIDRA_HOSTNAME}
-      - ALLOWED_HOST=${ALLOWED_HOST}
+      - PHAIDRA_HOSTNAME=${PHAIDRA_HOSTNAME}
+      - PRIVILEGED_IP=${ALLOWED_HOST}
 
   imageserver:
     build:
