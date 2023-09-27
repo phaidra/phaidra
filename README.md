@@ -272,9 +272,8 @@ directories listed below) from this repository and run
 │   ├── phaidra-vue-components
 │   └── pixelgecko
 ├── compose_demo
-├── compose_shibboleth
+├── compose_shib
 ├── compose_ssl
-├── compose_webserver_ext
 ├── container_components
 │   ├── mariadb
 │   └── openldap
@@ -288,12 +287,8 @@ directories listed below) from this repository and run
 ├── pictures
 ├── shibboleth
 └── webserver_configs
-    ├── httpd-docker
-    ├── httpd-external
-    ├── nginx-docker
-    └── nginx-external
 
-27 directories
+22 directories
 ```
 
 ### Local Demo Version
@@ -319,7 +314,7 @@ directories listed below) from this repository and run
     System when running `docker compose up -d` from directory
     `./compose_demo` (Phaidra available on `http://localhost:8899`.).
 
-    ![](./pictures/construction_demo_nginx.svg)
+    ![](./pictures/construction_demo.svg)
 
 ### SSL
 
@@ -348,7 +343,7 @@ directories listed below) from this repository and run
     `./compose_ssl` (Phaidra available on `https://$YOUR_FQDN`, see
     section 'System startup' below for prerequisites).
 
-    ![](./pictures/construction_ssl_nginx.svg)
+    ![](./pictures/construction_ssl.svg)
 
 ### Shibboleth
 
@@ -385,16 +380,7 @@ directories listed below) from this repository and run
     System when running `docker compose up -d` from directory
     `./compose_shib` (Phaidra available on `http://localhost:8899`.).
 
-    ![](./pictures/construction_shib_apache.svg)
-
-### External webserver
-
-NOTE: THIS IS CURRENTLY NOT ACTIVELY DEVELOPED. System when running
-`docker compose up -d` from directory `./compose_external_webserver`
-(Phaidra available on `http(s)://$YOUR_FQDN`, see section 'System
-startup' below for prerequisites).
-
-![](./pictures/construction_external_webserver.svg)
+    ![](./pictures/construction_shib.svg)
 
 # PHAIDRA startup
 
