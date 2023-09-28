@@ -2,14 +2,6 @@
 
 [[_TOC_]]
 
-# Build status
-
-We have a minimal CI activated (see the status badge above) – right now
-it only builds the docker images as defined in the `./dockerfiles`
-directory. This is for testing purposes and runs on every commit to this
-repo, as a semi-manual verification if any cpanm-modules break the
-api-build.
-
 # About this repository
 
 This repo hosts the source code and docker-compose files of the
@@ -31,8 +23,7 @@ server version.
 [PHAIDRA](https://phaidra.org/) is based on the shoulders of the
 following great pieces of software (in alphabetical order):
 
--   [Alpine Linux](https://www.alpinelinux.org/)
--   [Apache](https://apache.org/)
+-   [Apache HTTP server](https://httpd.apache.org/)
 -   [Apache Solr](https://solr.apache.org/)
 -   [DbGate](https://dbgate.org/)
 -   [Debian](https://www.debian.org/)
@@ -41,7 +32,6 @@ following great pieces of software (in alphabetical order):
 -   [Lyrasis Fedora](https://fedora.lyrasis.org/)
 -   [MariaDB](https://mariadb.org/)
 -   [MongoDB](https://www.mongodb.com/)
--   [Nginx](https://nginx.org/)
 -   [OpenLDAP](https://www.openldap.org/)
 -   [Perl](https://www.perl.org/)
 -   [Shibboleth](https://www.shibboleth.net/)
@@ -383,57 +373,6 @@ directories listed below) from this repository and run
     ![](./pictures/construction_shib.svg)
 
 # PHAIDRA startup
-
-This repo holds four phaidra flavors at the moment. Three of them depend
-solely on docker (they include nginx and apache respectively, but depend
-on the same phaidra-code).
-
-## using an external webserver
-
-If you prefer to use your own webserver, that is already installed on
-your system, this is also possible:
-
-There is [an nginx configuration file in this
-repo](./webserver_configs/nginx-external/phaidra-nginx.conf), that can
-be copied to `/etc/nginx/sites-available` and symlinked to
-`/etc/nginx/sites-enabled/`. Unlink the default config and restart nginx
-(`sudo systemctl restart nginx.service`) to have it ready for the
-dockerized phaidra system. If you change stuff, or just want to verify
-run `sudo nginx -t` to debug the configuration.
-
-Also, you will find [an apache configuration file in this
-repo](./webserver_configs/apache-external/phaidra-apache.conf).
-Activation is slightly more complicated than with nginx, but should be
-feasable, if one has worked with apache before (we need features not
-activated by default, but they're included with the standard modules).
-First, run `echo "Listen 8899" | sudo tee -a /etc/apache2/ports.conf` to
-give apache the chance to listen on port 8899 (where our dev-version
-serves). Then activate the necessary modules with
-`sudo a2enmod proxy proxy_http`. As a last step copy the config file to
-`/etc/apache2/sites-available`, disable the default configuration and
-run `sudo a2ensite phaidra-apache.conf` followed by
-`sudo systemctl restart apache2.service`. If you change stuff, or just
-want to verify run `sudo apachectl configtest` to debug the
-configuration.
-
-If you visit <http://localhost:8899> you will get a
-`502 Bad Gateway`-Error for nginx and a (slightly more comprehensive)
-`Service unavailable` for apache in your browser. That is fine, PHAIDRA
-has not been started yet.
-
-Change to the `external_webserver` directory in this repo and run
-`docker compose up -d` to start it up. At first run, this command will
-run for a few minutes, as some images will have to be downloaded and
-partly built as well.
-
-NOTE: If you make changes to files mentioned in the `dockerfiles`
-directory of this repo, make sure to remove the built images before
-running `docker compose up -d`. Otherwise you will keep on using the old
-images and notice not difference. E.g. if one does a change to
-`components/phaidra-api/PhaidraAPI.json` one will also have to run
-`docker rmi phaidra-docker-phaidra-api` to have it rebuilt on a new
-startup.
-
 ## running containers after startup
 
 After starting the program you should see the following containers
@@ -872,15 +811,3 @@ daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pi
 daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ rm -rf .git .gitignore
 ```
 
-# export org to markdown and add badge
-
-``` bash
-pandoc README.org --to=gfm -o README.md
-REV_TMP=$(mktemp)
-tac README.md > $REV_TMP
-printf "\n%s\n\n\n%s" \
-       "[[_TOC_]]" \
-       "![](https://gitlab.phaidra.org/phaidra-dev/phaidra-docker/badges/main/pipeline.svg?ignore_skipped=true)" \
-       >> $REV_TMP
-tac $REV_TMP > README.md
-```
