@@ -4,6 +4,7 @@ ___
 ![alt text](./pictures/running_phaidra.png "Screenshot of PHAIDRA landing page")
 ___
 
+# Table of contents
 [[_TOC_]]
 
 # About this repository
