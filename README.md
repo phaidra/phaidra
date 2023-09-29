@@ -18,26 +18,6 @@ We provide various flavors for different use cases, from a demo version
 running on a local desktop computer for evaluation, to an SSO-enabled
 server version.
 
-# Software in use
-
-[PHAIDRA](https://phaidra.org/) is based on the shoulders of the
-following great pieces of software (in alphabetical order):
-
--   [Apache HTTP server](https://httpd.apache.org/)
--   [Apache Solr](https://solr.apache.org/)
--   [DbGate](https://dbgate.org/)
--   [Debian](https://www.debian.org/)
--   [Docker](https://www.docker.com/)
--   [LDAP Account Manager](https://www.ldap-account-manager.org/lamcms/)
--   [Lyrasis Fedora](https://fedora.lyrasis.org/)
--   [MariaDB](https://mariadb.org/)
--   [MongoDB](https://www.mongodb.com/)
--   [OpenLDAP](https://www.openldap.org/)
--   [Perl](https://www.perl.org/)
--   [Shibboleth](https://www.shibboleth.net/)
--   [Ubuntu](https://ubuntu.com/)
--   [Vue.js](https://vuejs.org/)
-
 # Setup
 For all versions you will need a recent [Docker
 Installation](https://docs.docker.com/engine/install/), ideally on a
@@ -114,7 +94,7 @@ directories listed below) from this repository and run
 
 ## SSL Version
 
-###  SSL-specific prerequisites
+###  SSL specific prerequisites
 
     -   A DNS-entry for your computer's IP-address.
     -   SSL-certificate and -key (put them into the
@@ -143,7 +123,7 @@ directories listed below) from this repository and run
 
 ## Shibboleth SSO Version
 
-###  Shibboleth-specific prerequisites
+###  Shibboleth specific prerequisites
 
     -   A DNS-entry for your computer's IP-address.
     -   SSL-certificate and -key (put them into the
@@ -399,10 +379,6 @@ docker volume rm $(docker volume ls --filter label=com.docker.compose.project=ph
 docker system prune --all
 ```
 
-# Known issues
-
-We keep searching.
-
 # Phaidra Components
 
 In the folder `./components` one will find `phaidra-api`, `phaidra-ui`,
@@ -617,7 +593,30 @@ daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pi
 daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ rm -rf .git .gitignore
 ```
 
-# Docker Notes
+
+# Technical Notes
+## Software in use
+
+[PHAIDRA](https://phaidra.org/) is based on the shoulders of the
+following great pieces of software (in alphabetical order):
+
+-   [Apache HTTP server](https://httpd.apache.org/)
+-   [Apache Solr](https://solr.apache.org/)
+-   [DbGate](https://dbgate.org/)
+-   [Debian](https://www.debian.org/)
+-   [Docker](https://www.docker.com/)
+-   [LDAP Account Manager](https://www.ldap-account-manager.org/lamcms/)
+-   [Lyrasis Fedora](https://fedora.lyrasis.org/)
+-   [MariaDB](https://mariadb.org/)
+-   [MongoDB](https://www.mongodb.com/)
+-   [OpenLDAP](https://www.openldap.org/)
+-   [Perl](https://www.perl.org/)
+-   [Shibboleth](https://www.shibboleth.net/)
+-   [Ubuntu](https://ubuntu.com/)
+-   [Vue.js](https://vuejs.org/)
+
+
+## Docker Notes
 Below you see what we use at the time of writing (Fri Sep 15 01:18:31 PM
 CEST 2023):
 
@@ -736,7 +735,7 @@ priviledged ports and (needed for http and https traffic on the
 SSL-enabled versions) and client-IP forwarding (needed for restricting
 access to parts of the system).
 
-## set up rootlesskit
+### set up rootlesskit
 Below you find what we do for a typical installation.
 
 1.  turn off running priviledged docker service
