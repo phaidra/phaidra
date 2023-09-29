@@ -138,145 +138,86 @@ abf37731a215   phaidra-demo-dbgate-1            0.00%     25.03MiB / 15.03GiB   
 9d8afe7f588a   phaidra-demo-openldap-1          0.00%     15.45MiB / 15.03GiB   0.10%     2.17kB / 0B       627kB / 4.1kB     2
 ```
 
-# new folders on your system after startup
+# Data persistance
 
 `docker compose up -d` will create directories in
-`$HOME/.local/share/docker/volumes` to store data created by PHAIDRA
-over system shutdowns, etc. After startup it should look like this:
+`$HOME/.local/share/docker/volumes` (`/var/lib/docker/volumes` in case you run rootful docker) to persist data created by PHAIDRA
+over docker restarts or whole system reboots.  These directories are the ones that need to be backupped to prevent data loss in case 
+of hardware failure.
+
+Depending on the PHAIDRA version you set up, the volumes will be prefixed differently (`phaidra-demo_*`, `phaidra-ssl`, `phaidra-shib`).
+
+See the section [Technical Sketches](#technical-sketches) for how these directories are connected to the containers.
+
+# Uninstalling
+
+If you want to uninstall PHAIDRA from your computer, this can be done very easy. See the commands below to reset your system
+to a 'clean slate' (shown for the demo version, replace `phaidra-demo` with `phaidra-ssl` or `phaidra-shib` respectively, in
+case you were using these versions).
 
 ``` example
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker volume ls --filter label=com.docker.compose.project=phaidra
-DRIVER    VOLUME NAME
-local     phaidra_api_logs
-local     phaidra_dbgate
-local     phaidra_fedora
-local     phaidra_mariadb_fedora
-local     phaidra_mariadb_phaidra
-local     phaidra_mongodb_phaidra
-local     phaidra_openldap
-local     phaidra_pixelgecko
-local     phaidra_solr
-## sample volume inspection
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker volume inspect phaidra_api_logs 
-[
-    {
-        "CreatedAt": "2023-07-07T14:02:51+02:00",
-        "Driver": "local",
-        "Labels": {
-            "com.docker.compose.project": "phaidra",
-            "com.docker.compose.version": "2.18.1",
-            "com.docker.compose.volume": "api_logs"
-        },
-        "Mountpoint": "/home/daniel/.local/share/docker/volumes/phaidra_api_logs/_data",
-        "Name": "phaidra_api_logs",
-        "Options": null,
-        "Scope": "local"
-    }
-]
-## listing the directories the 'standard way'
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ ls -lha ~/.local/share/docker/volumes/phaidra*
-/home/daniel/.local/share/docker/volumes/phaidra_api_logs:
-total 88K
-drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
-drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
-drwxr-xr-x   2 daniel daniel 4.0K Jul  7 14:06 _data
+# shut down and remove running containers (from the compose_demo directory):
+docker compose down
+[+] Running 14/14
+ ✔ Container phaidra-demo-httpd-1            Removed                 1.2s 
+ ✔ Container phaidra-demo-solr-1             Removed                 0.6s 
+ ✔ Container phaidra-demo-pixelgecko-1       Removed                10.4s 
+ ✔ Container phaidra-demo-lam-1              Removed                 0.3s 
+ ✔ Container phaidra-demo-openldap-1         Removed                 0.2s 
+ ✔ Container phaidra-demo-imageserver-1      Removed                10.3s 
+ ✔ Container phaidra-demo-dbgate-1           Removed                10.4s 
+ ✔ Container phaidra-demo-ui-1               Removed                 0.7s 
+ ✔ Container phaidra-demo-api-1              Removed                 0.2s 
+ ✔ Container phaidra-demo-fedora-1           Removed                 0.4s 
+ ✔ Container phaidra-demo-mongodb-phaidra-1  Removed                 0.3s 
+ ✔ Container phaidra-demo-mariadb-phaidra-1  Removed                 0.4s 
+ ✔ Container phaidra-demo-mariadb-fedora-1   Removed                 0.4s 
+ ✔ Network phaidra-demo_phaidra-network      Removed                 0.4s 
 
-/home/daniel/.local/share/docker/volumes/phaidra_dbgate:
-total 88K
-drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
-drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
-drwxr-xr-x   5 daniel daniel 4.0K Jul  7 14:02 _data
+# ATTENTION: remove persisted data from previous runs (this command can be run from anywhere)
+docker volume rm $(docker volume ls --filter label=com.docker.compose.project=phaidra-demo --quiet)
+phaidra-demo_api_logs
+phaidra-demo_dbgate
+phaidra-demo_fedora
+phaidra-demo_mariadb_fedora
+phaidra-demo_mariadb_phaidra
+phaidra-demo_mongodb_phaidra
+phaidra-demo_openldap
+phaidra-demo_pixelgecko
+phaidra-demo_solr
 
-/home/daniel/.local/share/docker/volumes/phaidra_fedora:
-total 88K
-drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
-drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
-drwxr-xr-x   3 daniel daniel 4.0K Jul  7 14:03 _data
-
-/home/daniel/.local/share/docker/volumes/phaidra_mariadb_fedora:
-total 88K
-drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
-drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
-drwxr-xr-x   5 100998 100998 4.0K Jul  7 14:06 _data
-
-/home/daniel/.local/share/docker/volumes/phaidra_mariadb_phaidra:
-total 88K
-drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
-drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
-drwxr-xr-x   6 100998 100998 4.0K Jul  7 14:06 _data
-
-/home/daniel/.local/share/docker/volumes/phaidra_mongodb_phaidra:
-total 88K
-drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
-drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
-drwxr-xr-x   4 100998 100998 4.0K Jul  7 14:06 _data
-
-/home/daniel/.local/share/docker/volumes/phaidra_openldap:
-total 88K
-drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
-drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
-drwxr-xr-x   4 daniel daniel 4.0K Jul  7 14:02 _data
-
-/home/daniel/.local/share/docker/volumes/phaidra_pixelgecko:
-total 88K
-drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
-drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
-drwxr-xr-x   2 daniel daniel 4.0K Jul  7 14:02 _data
-
-/home/daniel/.local/share/docker/volumes/phaidra_solr:
-total 88K
-drwx-----x   3 daniel daniel 4.0K Jul  7 14:02 .
-drwx-----x 710 daniel daniel  76K Jul  7 14:05 ..
-drwxrwx---   4 108982 daniel 4.0K Jul  7 14:02 _data
-## check volume sizes
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ sudo du -sh ~/.local/share/docker/volumes/phaidra_*
-[sudo] password for daniel: 
-16K    /home/daniel/.local/share/docker/volumes/phaidra_api_logs
-32K    /home/daniel/.local/share/docker/volumes/phaidra_dbgate
-320K   /home/daniel/.local/share/docker/volumes/phaidra_fedora
-138M   /home/daniel/.local/share/docker/volumes/phaidra_mariadb_fedora
-174M   /home/daniel/.local/share/docker/volumes/phaidra_mariadb_phaidra
-301M   /home/daniel/.local/share/docker/volumes/phaidra_mongodb_phaidra
-212K   /home/daniel/.local/share/docker/volumes/phaidra_openldap
-8.0K   /home/daniel/.local/share/docker/volumes/phaidra_pixelgecko
-440K   /home/daniel/.local/share/docker/volumes/phaidra_solr
+# remove docker images
+docker image rm $(docker image ls --filter label=com.docker.compose.project=phaidra-demo --quiet)
+Untagged: phaidra-demo-ui:latest
+Deleted: sha256:4d14c21b233f85992b0b501882401130a91a37dbdc8fc948d3bed8f230faa901
+Untagged: phaidra-demo-pixelgecko:latest
+Deleted: sha256:8753fbcc09cb17670999135a9c89b9e3001f3c857c4272cd00552484068fbb43
+Untagged: phaidra-demo-api:latest
+Deleted: sha256:24462e929eac99a33cd549ff05177e10d494501688f90e2a5834be854d03f24d
+Untagged: phaidra-demo-imageserver:latest
+Deleted: sha256:12288cc58edaaaecec3518cdf4c4ed71e241b1e4ad61bd1fe6fe123a045550db
+Untagged: phaidra-demo-solr:latest
+Deleted: sha256:fc9a0d7aa7aef3336404410ac9ce9acd94cd4eb59919a99d3111f05940455aff
 ```
 
-You might notice that inspecting the actual sizes of the directories
-requires `sudo` – this is due to the fact that solr, mariadb, and
-mongodb volumes make use of a separate user from within the container.
-The UIDs all come from the range your user is allowed to assign to using
-the `newuidmap` and `newgidmap` programs deriving from the `uidmap`
-package mentioned under system requirements. One can see this as a
-reminder to be careful when manipulating this kind of data (at least the
-databases can be manipulated from <http://localhost:8899/dbgate> without
-special permissions).
+In case you are developing and changing src-components, dockerfiles and docker-compose files, 
+things can become cluttered. To remove everything including build caches, you can run 
+ the following command (be warned, THIS WILL NOT ONLY AFFECT PHAIDRA COMPONENTS!):
 
-# Complete cleanup
-
-MATTER OF CHANGE. During development things can become very cluttered. A
-pretty complete cleanup (at the cost of an image rebuild) can be
-achieved by running the following commands:
-
-``` example
-# shut down and remove running containers (from the repo directory)
-docker compose down
-
-# remove persisted data from previous runs (from anywhere)
-docker volume rm $(docker volume ls --filter label=com.docker.compose.project=phaidra --quiet)
-
+```
 # cleanup docker matter (build caches, images..., from anywhere)
 docker system prune --all
 ```
 
-# Phaidra Components
+# Technical Notes
+## Phaidra Components
 
 In the folder `./components` one will find `phaidra-api`, `phaidra-ui`,
 and `phaidra-vue-components`. These are copies of the public github
 repos, adapted for use in the docker context here. See the notes in the
 following subsections.
 
-## phaidra-api
+### phaidra-api
 
 This is a checkout of commit c880c4159c5d68b25426451f4822f744a53ef680 of
 the repo at <https://github.com/phaidra/phaidra-api> with symlinks and
@@ -340,7 +281,7 @@ removed '.git/description'
 removed directory '.git'
 ```
 
-## phaidra-ui
+### phaidra-ui
 
 This is a checkout of commit 5c9455373d36f4756e9caa2af989fac4dbd28f9f of
 the repo at <https://github.com/phaidra/phaidra-ui> with symlinks and
@@ -399,7 +340,7 @@ removed '.git/description'
 removed directory '.git'
 ```
 
-## phaidra-vue-components
+### phaidra-vue-components
 
 This is a checkout of commit 64f8b9870a0bc66a6b4a58fec5dfe6c2431e72d7 of
 the repo at <https://github.com/phaidra/phaidra-vue-components.git> with
@@ -457,7 +398,7 @@ removed '.git/description'
 removed directory '.git'
 ```
 
-## pixelgecko
+### pixelgecko
 
 This is a checkout from
 <https://gitlab.phaidra.org/phaidra-dev/pixelgecko> at commit
@@ -482,9 +423,6 @@ Date:   Wed Feb 1 14:10:40 2023 +0100
 daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ find . -type l
 daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ rm -rf .git .gitignore
 ```
-
-
-# Technical Notes
 ## Directory structure of this repository
 
 ``` example
@@ -514,20 +452,21 @@ daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pi
 22 directories
 ```
 
-##  Demo Technical sketch
+## Technical Sketches
+###  Demo Technical sketch
 System when running `docker compose up -d` from directory
 `./compose_demo` (Phaidra available on `http://localhost:8899`.).
 
 ![](./pictures/construction_demo.svg)
 
-##  SSL Technical sketch
+###  SSL Technical sketch
 System when running `docker compose up -d` from directory
 `./compose_ssl` (Phaidra available on `https://$YOUR_FQDN`, see
 section 'System startup' below for prerequisites).
 
 ![](./pictures/construction_ssl.svg)
 
-##  Shibboleth Technical sketch
+###  Shibboleth Technical sketch
 System when running `docker compose up -d` from directory
 `./compose_shib` (Phaidra available on `http://localhost:8899`.).
 
