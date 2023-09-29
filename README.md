@@ -621,7 +621,7 @@ daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pi
 daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ rm -rf .git .gitignore
 ```
 
-# Docker Notes {#docker-notes}
+# Docker Notes
 Below you see what we use at the time of writing (Fri Sep 15 01:18:31 PM
 CEST 2023):
 
