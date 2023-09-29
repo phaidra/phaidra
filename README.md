@@ -1,7 +1,7 @@
 ![](https://gitlab.phaidra.org/phaidra-dev/phaidra-docker/badges/main/pipeline.svg?ignore_skipped=true)
 
 ___
-![alt text](./pictures/running_phaidra.png "Screenshot of PHAIDRA landing page")
+![alt text](./pictures/running_phaidra.png "Screenshot of PHAIDRA landing page")*Running PHAIDRA website*
 ___
 
 # Table of contents
