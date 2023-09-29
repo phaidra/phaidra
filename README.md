@@ -37,13 +37,11 @@ See section [Docker Notes](#docker-notes) below to see what we do on a typical i
 # Run it
 
 To start up PHAIDRA, change to one of the `compose_*` folders of this repository and run
-`docker compose up -d`. Here's what the homepage will look like:
+`docker compose up -d`.
 
-![](./pictures/running_phaidra.png)
+![Running Phaidra Instance](./pictures/running_phaidra.png){: shadow}*PHAIDRA landing page after startup*
 
 See sections below for version-specific prerequisites.
-
-
 
 ## Demo Version
 
