@@ -1,11 +1,10 @@
 ![](https://gitlab.phaidra.org/phaidra-dev/phaidra-docker/badges/main/pipeline.svg?ignore_skipped=true)
 
-[[_TOC_]]
-
-# Screenshot
 ___
 ![alt text](./pictures/running_phaidra.png "Screenshot of PHAIDRA landing page")
 ___
+
+[[_TOC_]]
 
 # About this repository
 
