@@ -51,11 +51,10 @@ After the following commands have finished, you will have a PHAIDRA
 instance running on <http://localhost:8899>, that you can visit in
 your browser.
 
-    ``` example
-    cd compose_demo
-    docker compose up -d
-    ```
-
+``` example
+cd compose_demo
+docker compose up -d
+```
 
 ## SSL Version
 
@@ -66,6 +65,7 @@ your browser.
     `./encryption/webserver`-directory of this repo and name them
     `privkey.pem` and `fullchain.pem`).
 -   firewall with port 80 and 443 open on your computer.
+-   properly set variables in `./compose_ssl/.env`.
 
 ###  SSL Startup
 
@@ -90,8 +90,9 @@ docker compose up -d
 -   firewall with port 80 and 443 open on your computer.
 -   encryption and signing keys/certs for Shibboleth (plus the
     registration at your organization's IdP). You can create the
-    required key/cert-pairs with the following commands (put the
-    results into the `./encryption/shibboleth` folder of this repo):
+    required key/cert-pairs with the commands below (put the
+    results into the `./encryption/shibboleth` folder of this repo).
+-   properly set variables in `./compose_ssl/.env`.
 
 ``` example
 openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-encrypt-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-encrypt-cert.pem
@@ -109,31 +110,31 @@ cd compose_ssl
 docker compose up -d
 ```
 
+# Monitoring PHAIDRA's system usage
 
-# PHAIDRA startup
-## running containers after startup
-
-After starting the program you should see the following containers
-running:
+One can use the following command to real-time monitor the system usage
+of PHAIDRA over all containers (here from an instance started from
+`./compose_demo`):
 
 ``` example
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker$ docker ps
-CONTAINER ID   IMAGE                                  COMMAND                  CREATED         STATUS                            PORTS                                       NAMES
-66000e95199e   phaidra-ui                             "npm run start"          4 seconds ago   Up 1 second                       0.0.0.0:3001->3001/tcp, :::3001->3001/tcp   phaidra-ui-1
-2b3a7bdfa4ee   phaidra-pixelgecko                     "perl pixelgecko.pl …"   4 seconds ago   Up 1 second                                                                   phaidra-pixelgecko-1
-500a9b42b8c9   phaidra-api                            "hypnotoad -f phaidr…"   4 seconds ago   Up 2 seconds                      0.0.0.0:3000->3000/tcp, :::3000->3000/tcp   phaidra-api-1
-6afdad0abd8c   dbgate/dbgate:5.2.5                    "docker-entrypoint.s…"   4 seconds ago   Up 2 seconds                      0.0.0.0:7777->3000/tcp, :::7777->3000/tcp   phaidra-dbgate-1
-ff1982420f09   phaidra-solr                           "docker-entrypoint.s…"   4 seconds ago   Up 2 seconds                      0.0.0.0:8983->8983/tcp, :::8983->8983/tcp   phaidra-solr-1
-7e5ba84114cc   fcrepo/fcrepo:6.4.0                    "catalina.sh run"        4 seconds ago   Up 2 seconds                      0.0.0.0:9999->8080/tcp, :::9999->8080/tcp   phaidra-fedora-1
-cd3ba700db29   mongo:5                                "docker-entrypoint.s…"   4 seconds ago   Up 3 seconds                      27017/tcp                                   phaidra-mongodb-phaidra-1
-4909c7ef8002   mariadb:10.5                           "docker-entrypoint.s…"   4 seconds ago   Up 3 seconds                      3306/tcp                                    phaidra-mariadb-fedora-1
-0a1466876040   ghcr.io/ldapaccountmanager/lam:8.4     "/usr/bin/dumb-init …"   4 seconds ago   Up 2 seconds (health: starting)   0.0.0.0:8888->80/tcp, :::8888->80/tcp       phaidra-lam-1
-a0889d7dc75b   mariadb:11.0.2-jammy                   "docker-entrypoint.s…"   4 seconds ago   Up 3 seconds                      3306/tcp                                    phaidra-mariadb-phaidra-1
-86e86def9f8d   phaidra-imageserver                    "/usr/sbin/apachectl…"   4 seconds ago   Up 3 seconds                      0.0.0.0:8081->80/tcp, :::8081->80/tcp       phaidra-imageserver-1
-5269bd16590a   bitnami/openldap:2.6.4-debian-11-r44   "/opt/bitnami/script…"   4 seconds ago   Up 3 seconds                      1389/tcp, 1636/tcp                          phaidra-openldap-1
+docker stats<<<$(docker ps -q)
+CONTAINER ID   NAME                             CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
+f80d2c7b7b54   phaidra-demo-httpd-1             0.01%     34.41MiB / 15.03GiB   0.22%     428kB / 415kB     73.7kB / 0B       109
+edc5844fd0db   phaidra-demo-ui-1                0.00%     124.4MiB / 15.03GiB   0.81%     8.87kB / 234kB    0B / 0B           23
+67d7d3fe22c4   phaidra-demo-pixelgecko-1        0.00%     51.5MiB / 15.03GiB    0.33%     1.71MB / 3.72MB   0B / 0B           1
+769d93d91d9a   phaidra-demo-api-1               0.02%     167.9MiB / 15.03GiB   1.09%     1.64kB / 0B       4.58MB / 4.1kB    5
+8e5e94391679   phaidra-demo-fedora-1            0.20%     710.3MiB / 15.03GiB   4.62%     35.6kB / 37.7kB   479kB / 31.1MB    56
+abf37731a215   phaidra-demo-dbgate-1            0.00%     25.03MiB / 15.03GiB   0.16%     1.97kB / 224B     49.2kB / 4.1kB    12
+7808741ab2a3   phaidra-demo-solr-1              0.72%     749.4MiB / 15.03GiB   4.87%     2.17kB / 0B       1.66MB / 160kB    54
+0c4cc2324595   phaidra-demo-lam-1               0.01%     41MiB / 15.03GiB      0.27%     9.81kB / 165kB    0B / 0B           11
+9f81141880f2   phaidra-demo-mariadb-fedora-1    0.02%     103.1MiB / 15.03GiB   0.67%     39.4kB / 34kB     26.4MB / 16.4kB   18
+9de25b27810b   phaidra-demo-mariadb-phaidra-1   0.02%     241.3MiB / 15.03GiB   1.57%     1.9kB / 0B        15.8MB / 8.19kB   8
+76039224bd68   phaidra-demo-mongodb-phaidra-1   0.49%     211.4MiB / 15.03GiB   1.37%     3.72MB / 1.71MB   1.66MB / 29.1MB   31
+264601b89504   phaidra-demo-imageserver-1       0.00%     25.7MiB / 15.03GiB    0.17%     2.17kB / 0B       0B / 0B           57
+9d8afe7f588a   phaidra-demo-openldap-1          0.00%     15.45MiB / 15.03GiB   0.10%     2.17kB / 0B       627kB / 4.1kB     2
 ```
 
-## available webservices after startup
+# available webservices after startup
 
 -   PHAIDRA web-interface at <http://localhost:8899> (available in your
     network).
@@ -151,7 +152,7 @@ a0889d7dc75b   mariadb:11.0.2-jammy                   "docker-entrypoint.s…"  
     <http://localhost:8899/fcrepo> (available on your computer only,
     default credentials fedoraAdmin/fedoraAdmin).
 
-## new folders on your system after startup
+# new folders on your system after startup
 
 `docker compose up -d` will create directories in
 `$HOME/.local/share/docker/volumes` to store data created by PHAIDRA
@@ -264,55 +265,6 @@ package mentioned under system requirements. One can see this as a
 reminder to be careful when manipulating this kind of data (at least the
 databases can be manipulated from <http://localhost:8899/dbgate> without
 special permissions).
-
-## monitoring container system usage
-
-One can use the following command to real-time monitor the system usage
-of phaidra over all containers (here from an instance started from
-`demo_nginx`):
-
-``` example
-docker stats<<<$(docker ps -q)
-CONTAINER ID   NAME                                   CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
-ae0608348349   phaidra-demo-nginx-nginx-1             0.00%     8.188MiB / 15.03GiB   0.05%     142kB / 138kB     0B / 0B           9
-e3c61e4d2495   phaidra-demo-nginx-ui-1                0.00%     124.8MiB / 15.03GiB   0.81%     4.08kB / 118kB    0B / 0B           23
-6f60f3ef3a15   phaidra-demo-nginx-pixelgecko-1        0.00%     51.47MiB / 15.03GiB   0.33%     97.9kB / 209kB    0B / 0B           1
-b2bb3d0cda66   phaidra-demo-nginx-api-1               0.12%     233.6MiB / 15.03GiB   1.52%     19.7kB / 28.9kB   0B / 0B           5
-6be6bea11f85   phaidra-demo-nginx-dbgate-1            0.00%     24.93MiB / 15.03GiB   0.16%     1.73kB / 224B     0B / 4.1kB        12
-ca762fea79fe   phaidra-demo-nginx-fedora-1            0.47%     632.5MiB / 15.03GiB   4.11%     17.9kB / 15.2kB   0B / 860kB        55
-c0ca084bda76   phaidra-demo-nginx-solr-1              0.87%     732MiB / 15.03GiB     4.76%     2.94kB / 3.04kB   0B / 164kB        54
-ba967011b666   phaidra-demo-nginx-mariadb-phaidra-1   0.02%     110.7MiB / 15.03GiB   0.72%     1.85kB / 0B       14.5MB / 8.19kB   8
-b636bab73219   phaidra-demo-nginx-mongodb-phaidra-1   0.50%     172.2MiB / 15.03GiB   1.12%     221kB / 105kB     0B / 1.81MB       37
-96705e89810b   phaidra-demo-nginx-mariadb-fedora-1    0.02%     96.67MiB / 15.03GiB   0.63%     17kB / 16.5kB     0B / 8.19kB       18
-2806bbd31aeb   phaidra-demo-nginx-openldap-1          0.00%     20.63MiB / 15.03GiB   0.13%     3.17kB / 1.46kB   0B / 0B           4
-e0004d097ebb   phaidra-demo-nginx-imageserver-1       0.01%     23.73MiB / 15.03GiB   0.15%     1.78kB / 0B       0B / 0B           57
-343c3af188c1   phaidra-demo-nginx-lam-1               0.01%     25.56MiB / 15.03GiB   0.17%     1.62kB / 0B       0B / 0B           8
-```
-
-# real time system usage logging
-
-To see which containers are using which amount of CPU and RAM and
-network I/O you can use the following command:
-
-``` example
-docker ps --quiet | xargs docker stats ## from anywhere
-CONTAINER ID   NAME                        CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O   PIDS
-455ad9777d42   phaidra-ui-1                0.00%     135MiB / 15.03GiB     0.88%     13.5kB / 125kB    0B / 0B     23
-025d5c342c1c   phaidra-pixelgecko-1        0.00%     78.43MiB / 15.03GiB   0.51%     186kB / 401kB     0B / 0B     1
-7346d39eb84d   phaidra-pixelgecko-3        0.00%     78.57MiB / 15.03GiB   0.51%     185kB / 399kB     0B / 0B     1
-4ee9c8cabda9   phaidra-pixelgecko-2        0.00%     51.49MiB / 15.03GiB   0.33%     185kB / 397kB     0B / 0B     1
-0941b6d5bb52   phaidra-pixelgecko-4        0.00%     78.62MiB / 15.03GiB   0.51%     186kB / 401kB     0B / 0B     1
-9fff2d288c4c   phaidra-api-1               0.01%     308.3MiB / 15.03GiB   2.00%     980kB / 1.24MB    0B / 0B     5
-bfa27c63e834   phaidra-dbgate-1            0.00%     24.83MiB / 15.03GiB   0.16%     2.08kB / 224B     0B / 0B     12
-8bd0ac73790f   phaidra-fedora-1            0.29%     732MiB / 15.03GiB     4.76%     412kB / 397kB     0B / 0B     61
-885a8d01ec2c   phaidra-solr-1              0.90%     741.2MiB / 15.03GiB   4.82%     29.2kB / 68.1kB   0B / 0B     54
-12228f49c27f   phaidra-mariadb-phaidra-1   0.02%     231.1MiB / 15.03GiB   1.50%     3.68kB / 1.22kB   0B / 0B     11
-e5445ae621c8   phaidra-lam-1               0.00%     25.67MiB / 15.03GiB   0.17%     2.01kB / 0B       0B / 0B     8
-9d4eb920bf7c   phaidra-mariadb-fedora-1    0.02%     92.2MiB / 15.03GiB    0.60%     156kB / 137kB     0B / 0B     18
-452ef909aedf   phaidra-openldap-1          0.00%     22.67MiB / 15.03GiB   0.15%     41.1kB / 44.3kB   0B / 0B     4
-3046ff568558   phaidra-mongodb-phaidra-1   0.50%     189.2MiB / 15.03GiB   1.23%     1.72MB / 828kB    0B / 0B     45
-6071bb9f8544   phaidra-imageserver-1       0.00%     32.39MiB / 15.03GiB   0.21%     14.4kB / 226kB    0B / 0B     65
-```
 
 # Complete cleanup
 
