@@ -2,6 +2,10 @@
 
 [[_TOC_]]
 
+---
+![alt text](./pictures/running_phaidra.png "Screenshot of PHAIDRA landing page")
+---
+
 # About this repository
 
 This repo hosts the source code and docker-compose files of the
@@ -38,13 +42,6 @@ See section [Docker Notes](#docker-notes) below to see what we do on a typical i
 
 To start up PHAIDRA, change to one of the `compose_*` folders of this repository and run
 `docker compose up -d`.  See sections below for version-specific prerequisites.
-
-Here's a screenshot of what to expect:
-
----
-![alt text](./pictures/running_phaidra.png "Screenshot of PHAIDRA landing page")
----
-
 
 ## Demo Version
 
