@@ -70,15 +70,14 @@ directories listed below) from this repository and run
 ## Demo Version
 
 ###  Demo specific prerequisites
-
-    None, just make sure no other service is using port 8899 on your
-    computer.
+None, just make sure no other service is using port 8899 on your
+computer.
 
 ###  Demo Startup
 
-    After the following commands have finished, you will have a PHAIDRA
-    instance running on <http://localhost:8899>, that you can visit in
-    your browser.
+After the following commands have finished, you will have a PHAIDRA
+instance running on <http://localhost:8899>, that you can visit in
+your browser.
 
     ``` example
     cd compose_demo
@@ -87,26 +86,26 @@ directories listed below) from this repository and run
 
 ###  Demo Technical sketch
 
-    System when running `docker compose up -d` from directory
-    `./compose_demo` (Phaidra available on `http://localhost:8899`.).
+System when running `docker compose up -d` from directory
+`./compose_demo` (Phaidra available on `http://localhost:8899`.).
 
-    ![](./pictures/construction_demo.svg)
+![](./pictures/construction_demo.svg)
 
 ## SSL Version
 
 ###  SSL specific prerequisites
 
-    -   A DNS-entry for your computer's IP-address.
-    -   SSL-certificate and -key (put them into the
-        `./encryption/webserver`-directory of this repo and name them
-        `privkey.pem` and `fullchain.pem`).
-    -   firewall with port 80 and 443 open on your computer.
+-   A DNS-entry for your computer's IP-address.
+-   SSL-certificate and -key (put them into the
+    `./encryption/webserver`-directory of this repo and name them
+    `privkey.pem` and `fullchain.pem`).
+-   firewall with port 80 and 443 open on your computer.
 
 ###  SSL Startup
 
-    Change to the folder `./compose_ssl` and run compose. After the
-    setup has finished you will PHAIDRA running on
-    https://$YOUR-DNS-ENTRY.
+Change to the folder `./compose_ssl` and run compose. After the
+setup has finished you will PHAIDRA running on
+https://$YOUR-DNS-ENTRY.
 
     ``` example
     cd compose_ssl
@@ -115,25 +114,25 @@ directories listed below) from this repository and run
 
 ###  SSL Technical sketch
 
-    System when running `docker compose up -d` from directory
-    `./compose_ssl` (Phaidra available on `https://$YOUR_FQDN`, see
-    section 'System startup' below for prerequisites).
+System when running `docker compose up -d` from directory
+`./compose_ssl` (Phaidra available on `https://$YOUR_FQDN`, see
+section 'System startup' below for prerequisites).
 
-    ![](./pictures/construction_ssl.svg)
+![](./pictures/construction_ssl.svg)
 
 ## Shibboleth SSO Version
 
 ###  Shibboleth specific prerequisites
 
-    -   A DNS-entry for your computer's IP-address.
-    -   SSL-certificate and -key (put them into the
-        `./encryption/webserver`-directory of this repo and name them
-        `privkey.pem` and `fullchain.pem`).
-    -   firewall with port 80 and 443 open on your computer.
-    -   encryption and signing keys/certs for Shibboleth (plus the
-        registration at your organization's IdP). You can create the
-        required key/cert-pairs with the following commands (put the
-        results into the `./encryption/shibboleth` folder of this repo):
+-   A DNS-entry for your computer's IP-address.
+-   SSL-certificate and -key (put them into the
+    `./encryption/webserver`-directory of this repo and name them
+    `privkey.pem` and `fullchain.pem`).
+-   firewall with port 80 and 443 open on your computer.
+-   encryption and signing keys/certs for Shibboleth (plus the
+    registration at your organization's IdP). You can create the
+    required key/cert-pairs with the following commands (put the
+    results into the `./encryption/shibboleth` folder of this repo):
 
     ``` example
     openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-encrypt-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-encrypt-cert.pem
@@ -142,9 +141,9 @@ directories listed below) from this repository and run
 
 ###  Shibboleth Startup
 
-    Change to the folder `./compose_shib` and run compose. After the
-    setup has finished you will PHAIDRA running on
-    `https://$YOUR-DNS-ENTRY`.
+Change to the folder `./compose_shib` and run compose. After the
+setup has finished you will PHAIDRA running on
+`https://$YOUR-DNS-ENTRY`.
 
     ``` example
     cd compose_ssl
@@ -153,10 +152,10 @@ directories listed below) from this repository and run
 
 ###  Shibboleth Technical sketch
 
-    System when running `docker compose up -d` from directory
-    `./compose_shib` (Phaidra available on `http://localhost:8899`.).
+System when running `docker compose up -d` from directory
+`./compose_shib` (Phaidra available on `http://localhost:8899`.).
 
-    ![](./pictures/construction_shib.svg)
+![](./pictures/construction_shib.svg)
 
 # PHAIDRA startup
 ## running containers after startup
@@ -736,7 +735,6 @@ SSL-enabled versions) and client-IP forwarding (needed for restricting
 access to parts of the system).
 
 ### set up rootlesskit
-Below you find what we do for a typical installation.
 
 1.  turn off running priviledged docker service
 
