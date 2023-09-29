@@ -36,36 +36,8 @@ See section [Docker Notes](#docker-notes) below to see what we do on a typical i
 
 # Run it
 
-To start up PHAIDRA, change to one of the `compose_*` folders (see
-directories listed below) from this repository and run
+To start up PHAIDRA, change to one of the `compose_*` folders of this repository and run
 `docker compose up -d`. See  below for the version-specific prerequisites.
-
-``` example
-.
-├── components
-│   ├── phaidra-api
-│   ├── phaidra-ui
-│   ├── phaidra-vue-components
-│   └── pixelgecko
-├── compose_demo
-├── compose_shib
-├── compose_ssl
-├── container_components
-│   ├── mariadb
-│   └── openldap
-├── dockerfiles
-├── encryption
-│   ├── shibboleth
-│   └── webserver
-├── image_components
-│   ├── pixelgecko
-│   └── solr
-├── pictures
-├── shibboleth
-└── webserver_configs
-
-22 directories
-```
 
 ## Demo Version
 
@@ -84,12 +56,6 @@ your browser.
     docker compose up -d
     ```
 
-###  Demo Technical sketch
-
-System when running `docker compose up -d` from directory
-`./compose_demo` (Phaidra available on `http://localhost:8899`.).
-
-![](./pictures/construction_demo.svg)
 
 ## SSL Version
 
@@ -105,20 +71,13 @@ System when running `docker compose up -d` from directory
 
 Change to the folder `./compose_ssl` and run compose. After the
 setup has finished you will PHAIDRA running on
-https://$YOUR-DNS-ENTRY.
+`https://$YOUR-DNS-ENTRY`.
 
-    ``` example
-    cd compose_ssl
-    docker compose up -d
-    ```
+``` example
+cd compose_ssl
+docker compose up -d
+```
 
-###  SSL Technical sketch
-
-System when running `docker compose up -d` from directory
-`./compose_ssl` (Phaidra available on `https://$YOUR_FQDN`, see
-section 'System startup' below for prerequisites).
-
-![](./pictures/construction_ssl.svg)
 
 ## Shibboleth SSO Version
 
@@ -150,12 +109,6 @@ cd compose_ssl
 docker compose up -d
 ```
 
-###  Shibboleth Technical sketch
-
-System when running `docker compose up -d` from directory
-`./compose_shib` (Phaidra available on `http://localhost:8899`.).
-
-![](./pictures/construction_shib.svg)
 
 # PHAIDRA startup
 ## running containers after startup
@@ -594,6 +547,54 @@ daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pi
 
 
 # Technical Notes
+## Directory structure of this repository
+
+``` example
+.
+├── components
+│   ├── phaidra-api
+│   ├── phaidra-ui
+│   ├── phaidra-vue-components
+│   └── pixelgecko
+├── compose_demo
+├── compose_shib
+├── compose_ssl
+├── container_components
+│   ├── mariadb
+│   └── openldap
+├── dockerfiles
+├── encryption
+│   ├── shibboleth
+│   └── webserver
+├── image_components
+│   ├── pixelgecko
+│   └── solr
+├── pictures
+├── shibboleth
+└── webserver_configs
+
+22 directories
+```
+
+##  Demo Technical sketch
+System when running `docker compose up -d` from directory
+`./compose_demo` (Phaidra available on `http://localhost:8899`.).
+
+![](./pictures/construction_demo.svg)
+
+##  SSL Technical sketch
+System when running `docker compose up -d` from directory
+`./compose_ssl` (Phaidra available on `https://$YOUR_FQDN`, see
+section 'System startup' below for prerequisites).
+
+![](./pictures/construction_ssl.svg)
+
+##  Shibboleth Technical sketch
+System when running `docker compose up -d` from directory
+`./compose_shib` (Phaidra available on `http://localhost:8899`.).
+
+![](./pictures/construction_shib.svg)
+
 ## Software in use
 
 [PHAIDRA](https://phaidra.org/) is based on the shoulders of the
