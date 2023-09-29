@@ -134,10 +134,10 @@ section 'System startup' below for prerequisites).
     required key/cert-pairs with the following commands (put the
     results into the `./encryption/shibboleth` folder of this repo):
 
-    ``` example
-    openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-encrypt-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-encrypt-cert.pem
-    openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-signing-cert.pem
-    ```
+``` example
+openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-encrypt-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-encrypt-cert.pem
+openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-signing-cert.pem
+```
 
 ###  Shibboleth Startup
 
@@ -145,10 +145,10 @@ Change to the folder `./compose_shib` and run compose. After the
 setup has finished you will PHAIDRA running on
 `https://$YOUR-DNS-ENTRY`.
 
-    ``` example
-    cd compose_ssl
-    docker compose up -d
-    ```
+``` example
+cd compose_ssl
+docker compose up -d
+```
 
 ###  Shibboleth Technical sketch
 
@@ -738,10 +738,10 @@ access to parts of the system).
 
 1.  turn off running priviledged docker service
 
-    ``` example
-    sudo systemctl disable --now docker.service docker.socket
-    sudo reboot
-    ```
+``` example
+sudo systemctl disable --now docker.service docker.socket
+sudo reboot
+```
 
 2.  install uidmap package
 
@@ -749,20 +749,20 @@ access to parts of the system).
     repositories and is needed for Docker's rootlesskit to properly
     function.
 
-    ``` example
-    sudo apt install uidmap
-    ```
+``` example
+sudo apt install uidmap
+```
 
 3.  install rootlesskit
 
-    ``` example
-    dockerd-rootless-setuptool.sh
-    # activate autostart of services
-    sudo loginctl enable-linger $USER
-    echo "export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock" >> ~/.bashrc
-    # needed at least on headless ubuntu systems
-    echo "export XDG_RUNTIME_DIR=/run/user/$(id -u)" >> ~/.bashrc
-    ```
+``` example
+dockerd-rootless-setuptool.sh
+# activate autostart of services
+sudo loginctl enable-linger $USER
+echo "export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock" >> ~/.bashrc
+# needed at least on headless ubuntu systems
+echo "export XDG_RUNTIME_DIR=/run/user/$(id -u)" >> ~/.bashrc
+```
 
 4.  change port-forwarding mode for rootlesskit to slirp4netns
 
@@ -772,23 +772,23 @@ access to parts of the system).
     network-bridge address, which does not allow for IP-filtering
     administrative parts of the system as a consequence).
 
-    ``` example
-    mkdir ~/.config/systemd/user/docker.service.d
-    echo "[Service]" >> ~/.config/systemd/user/docker.service.d/override.conf
-    echo 'Environment="DOCKERD_ROOTLESS_ROOTLESSKIT_PORT_DRIVER=slirp4netns"' >> ~/.config/systemd/user/docker.service.d/override.conf
-    systemctl --user daemon-reload
-    systemctl --user restart docker
-    ```
+``` example
+mkdir ~/.config/systemd/user/docker.service.d
+echo "[Service]" >> ~/.config/systemd/user/docker.service.d/override.conf
+echo 'Environment="DOCKERD_ROOTLESS_ROOTLESSKIT_PORT_DRIVER=slirp4netns"' >> ~/.config/systemd/user/docker.service.d/override.conf
+systemctl --user daemon-reload
+systemctl --user restart docker
+```
 
 5.  allow priviledged ports for slirp4netns
 
     To allow opening ports 80 and 443 for unpriviledged slirp4netns we
     need to dedicately allow it (setcap will not work for this):
 
-    ``` example
-    echo "net.ipv4.ip_unprivileged_port_start=0" | sudo tee /etc/sysctl.d/99-rootless.conf
-    sudo sysctl --system
-    ```
+``` example
+echo "net.ipv4.ip_unprivileged_port_start=0" | sudo tee /etc/sysctl.d/99-rootless.conf
+sudo sysctl --system
+```
 
 6.  add cpuset support
 
@@ -796,19 +796,19 @@ access to parts of the system).
     configurations. One can do the following to change this. (see:
     <https://docs.docker.com/engine/security/rootless/#limiting-resources>)
 
-    ``` example
-    cat /sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.controllers
-    cpu memory pids
-    sudo su -
-    mkdir -p /etc/systemd/system/user@.service.d
-    cat > /etc/systemd/system/user@.service.d/delegate.conf << EOF
-    > [Service]
-    > Delegate=cpu cpuset io memory pids
-    > EOF
-    systemctl daemon-reload
-    exit
-    cat /sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.controllers
-    cpuset cpu io memory pids
-    systemctl --user restart docker
-    ```
+``` example
+cat /sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.controllers
+cpu memory pids
+sudo su -
+mkdir -p /etc/systemd/system/user@.service.d
+cat > /etc/systemd/system/user@.service.d/delegate.conf << EOF
+> [Service]
+> Delegate=cpu cpuset io memory pids
+> EOF
+systemctl daemon-reload
+exit
+cat /sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.controllers
+cpuset cpu io memory pids
+systemctl --user restart docker
+```
 
