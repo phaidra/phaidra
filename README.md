@@ -39,214 +39,20 @@ following great pieces of software (in alphabetical order):
 -   [Vue.js](https://vuejs.org/)
 
 # Setup
-
-## Prerequisites
-
 For all versions you will need a recent [Docker
 Installation](https://docs.docker.com/engine/install/), ideally on a
 Linux distribution (PHAIDRA is mainly developed on Ubuntu and Debian).
-Below you see what we use at the time of writing (Fri Sep 15 01:18:31 PM
-CEST 2023):
 
-``` bash
-docker version
-```
-
-``` example
-Client: Docker Engine - Community
- Version:           24.0.6
- API version:       1.43
- Go version:        go1.20.7
- Git commit:        ed223bc
- Built:             Mon Sep  4 12:32:16 2023
- OS/Arch:           linux/amd64
- Context:           rootless
-
-Server: Docker Engine - Community
- Engine:
-  Version:          24.0.6
-  API version:      1.43 (minimum version 1.12)
-  Go version:       go1.20.7
-  Git commit:       1a79695
-  Built:            Mon Sep  4 12:32:16 2023
-  OS/Arch:          linux/amd64
-  Experimental:     false
- containerd:
-  Version:          1.6.22
-  GitCommit:        8165feabfdfe38c65b599c4993d227328c231fca
- runc:
-  Version:          1.1.8
-  GitCommit:        v1.1.8-0-g82f18fe
- docker-init:
-  Version:          0.19.0
-  GitCommit:        de40ad0
- rootlesskit:
-  Version:          1.1.1
-  ApiVersion:       1.1.1
-  NetworkDriver:    slirp4netns
-  PortDriver:       slirp4netns
-  StateDir:         /tmp/rootlesskit1559358571
- slirp4netns:
-  Version:          1.2.0
-  GitCommit:        656041d45cfca7a4176f6b7eed9e4fe6c11e8383
-```
-
-``` bash
-docker info
-```
-
-``` example
-Client: Docker Engine - Community
- Version:    24.0.6
- Context:    rootless
- Debug Mode: false
- Plugins:
-  buildx: Docker Buildx (Docker Inc.)
-    Version:  v0.11.2
-    Path:     /usr/libexec/docker/cli-plugins/docker-buildx
-  compose: Docker Compose (Docker Inc.)
-    Version:  v2.21.0
-    Path:     /usr/libexec/docker/cli-plugins/docker-compose
-
-Server:
- Containers: 14
-  Running: 13
-  Paused: 0
-  Stopped: 1
- Images: 20
- Server Version: 24.0.6
- Storage Driver: fuse-overlayfs
- Logging Driver: json-file
- Cgroup Driver: systemd
- Cgroup Version: 2
- Plugins:
-  Volume: local
-  Network: bridge host ipvlan macvlan null overlay
-  Log: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog
- Swarm: inactive
- Runtimes: io.containerd.runc.v2 runc
- Default Runtime: runc
- Init Binary: docker-init
- containerd version: 8165feabfdfe38c65b599c4993d227328c231fca
- runc version: v1.1.8-0-g82f18fe
- init version: de40ad0
- Security Options:
-  seccomp
-   Profile: builtin
-  rootless
-  cgroupns
- Kernel Version: 6.1.0-12-amd64
- Operating System: Debian GNU/Linux 12 (bookworm)
- OSType: linux
- Architecture: x86_64
- CPUs: 8
- Total Memory: 15.03GiB
- Name: pcherzigd64
- ID: 4d080886-f0a3-4478-bac7-ebadf0ccfd68
- Docker Root Dir: /home/daniel/.local/share/docker
- Debug Mode: false
- Experimental: false
- Insecure Registries:
-  127.0.0.0/8
- Live Restore Enabled: false
-
-```
-
-As one can see above, we are using Docker's rootlesskit, to avoid
-uneccessary privileges for the dockerized components. This also means,
-that the user starting up the program does not need root/admin
-privileges on the machine running PHAIDRA.
-
-Nevertheless, setting up Docker itself will need a system admin user.
-Below we describe the steps that we use for rootless Docker with
-priviledged ports and (needed for http and https traffic on the
-SSL-enabled versions) and client-IP forwarding (needed for restricting
-access to parts of the system).
-
-### set up rootlesskit
-
-Assuming you have a running standard Docker installation you can either
+Assuming you already have a running standard Docker installation you can either
 continue that way, as it should not interfere with the code of this
-repo. We however recommend using docker rootless to stay in sync with
+repo.
+
+However, we recommend using docker rootless to stay in sync with
 this repo's documentation. There is extensive official [upstream
 documentation](https://docs.docker.com/engine/security/rootless/) how to
-do that – below you find what we do for a typical installation.
+do that.
 
-1.  turn off running priviledged docker service
-
-    ``` example
-    sudo systemctl disable --now docker.service docker.socket
-    sudo reboot
-    ```
-
-2.  install uidmap package
-
-    The `uidmap` package is available in both ubuntu and Debian official
-    repositories and is needed for Docker's rootlesskit to properly
-    function.
-
-    ``` example
-    sudo apt install uidmap
-    ```
-
-3.  install rootlesskit
-
-    ``` example
-    dockerd-rootless-setuptool.sh
-    # activate autostart of services
-    sudo loginctl enable-linger $USER
-    echo "export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock" >> ~/.bashrc
-    # needed at least on headless ubuntu systems
-    echo "export XDG_RUNTIME_DIR=/run/user/$(id -u)" >> ~/.bashrc
-    ```
-
-4.  change port-forwarding mode for rootlesskit to slirp4netns
-
-    In order to receive the original client IPs accessing the webserver,
-    we change the port-forwarding mode of the rootlesskit (the default
-    one drops IPs and nginx/apache only receive the docker
-    network-bridge address, which does not allow for IP-filtering
-    administrative parts of the system as a consequence).
-
-    ``` example
-    mkdir ~/.config/systemd/user/docker.service.d
-    echo "[Service]" >> ~/.config/systemd/user/docker.service.d/override.conf
-    echo 'Environment="DOCKERD_ROOTLESS_ROOTLESSKIT_PORT_DRIVER=slirp4netns"' >> ~/.config/systemd/user/docker.service.d/override.conf
-    systemctl --user daemon-reload
-    systemctl --user restart docker
-    ```
-
-5.  allow priviledged ports for slirp4netns
-
-    To allow opening ports 80 and 443 for unpriviledged slirp4netns we
-    need to dedicately allow it (setcap will not work for this):
-
-    ``` example
-    echo "net.ipv4.ip_unprivileged_port_start=0" | sudo tee /etc/sysctl.d/99-rootless.conf
-    sudo sysctl --system
-    ```
-
-6.  add cpuset support
-
-    By default docker cpuset limitations are not enabled for rootless
-    configurations. One can do the following to change this. (see:
-    <https://docs.docker.com/engine/security/rootless/#limiting-resources>)
-
-    ``` example
-    cat /sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.controllers
-    cpu memory pids
-    sudo su -
-    mkdir -p /etc/systemd/system/user@.service.d
-    cat > /etc/systemd/system/user@.service.d/delegate.conf << EOF
-    > [Service]
-    > Delegate=cpu cpuset io memory pids
-    > EOF
-    systemctl daemon-reload
-    exit
-    cat /sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.controllers
-    cpuset cpu io memory pids
-    systemctl --user restart docker
-    ```
+See section [Docker Notes](#docker-notes) below to see what we do on a typical installation for running PHAIDRA on rootless containers.
 
 ## Run it
 
@@ -281,7 +87,7 @@ directories listed below) from this repository and run
 22 directories
 ```
 
-### Local Demo Version
+### Demo Version
 
 1.  Version-specific prerequisites
 
@@ -306,7 +112,7 @@ directories listed below) from this repository and run
 
     ![](./pictures/construction_demo.svg)
 
-### SSL
+### SSL Version
 
 1.  Version-specific prerequisites
 
@@ -335,7 +141,7 @@ directories listed below) from this repository and run
 
     ![](./pictures/construction_ssl.svg)
 
-### Shibboleth
+### Shibboleth SSO Version
 
 1.  Version-specific prerequisites
 
@@ -371,6 +177,10 @@ directories listed below) from this repository and run
     `./compose_shib` (Phaidra available on `http://localhost:8899`.).
 
     ![](./pictures/construction_shib.svg)
+
+
+
+
 
 # PHAIDRA startup
 ## running containers after startup
@@ -810,4 +620,202 @@ Date:   Wed Feb 1 14:10:40 2023 +0100
 daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ find . -type l
 daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ rm -rf .git .gitignore
 ```
+
+# Docker Notes {#docker-notes}
+Below you see what we use at the time of writing (Fri Sep 15 01:18:31 PM
+CEST 2023):
+
+``` bash
+docker version
+```
+
+``` example
+Client: Docker Engine - Community
+ Version:           24.0.6
+ API version:       1.43
+ Go version:        go1.20.7
+ Git commit:        ed223bc
+ Built:             Mon Sep  4 12:32:16 2023
+ OS/Arch:           linux/amd64
+ Context:           rootless
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          24.0.6
+  API version:      1.43 (minimum version 1.12)
+  Go version:       go1.20.7
+  Git commit:       1a79695
+  Built:            Mon Sep  4 12:32:16 2023
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          1.6.22
+  GitCommit:        8165feabfdfe38c65b599c4993d227328c231fca
+ runc:
+  Version:          1.1.8
+  GitCommit:        v1.1.8-0-g82f18fe
+ docker-init:
+  Version:          0.19.0
+  GitCommit:        de40ad0
+ rootlesskit:
+  Version:          1.1.1
+  ApiVersion:       1.1.1
+  NetworkDriver:    slirp4netns
+  PortDriver:       slirp4netns
+  StateDir:         /tmp/rootlesskit1559358571
+ slirp4netns:
+  Version:          1.2.0
+  GitCommit:        656041d45cfca7a4176f6b7eed9e4fe6c11e8383
+```
+
+``` bash
+docker info
+```
+
+``` example
+Client: Docker Engine - Community
+ Version:    24.0.6
+ Context:    rootless
+ Debug Mode: false
+ Plugins:
+  buildx: Docker Buildx (Docker Inc.)
+    Version:  v0.11.2
+    Path:     /usr/libexec/docker/cli-plugins/docker-buildx
+  compose: Docker Compose (Docker Inc.)
+    Version:  v2.21.0
+    Path:     /usr/libexec/docker/cli-plugins/docker-compose
+
+Server:
+ Containers: 14
+  Running: 13
+  Paused: 0
+  Stopped: 1
+ Images: 20
+ Server Version: 24.0.6
+ Storage Driver: fuse-overlayfs
+ Logging Driver: json-file
+ Cgroup Driver: systemd
+ Cgroup Version: 2
+ Plugins:
+  Volume: local
+  Network: bridge host ipvlan macvlan null overlay
+  Log: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog
+ Swarm: inactive
+ Runtimes: io.containerd.runc.v2 runc
+ Default Runtime: runc
+ Init Binary: docker-init
+ containerd version: 8165feabfdfe38c65b599c4993d227328c231fca
+ runc version: v1.1.8-0-g82f18fe
+ init version: de40ad0
+ Security Options:
+  seccomp
+   Profile: builtin
+  rootless
+  cgroupns
+ Kernel Version: 6.1.0-12-amd64
+ Operating System: Debian GNU/Linux 12 (bookworm)
+ OSType: linux
+ Architecture: x86_64
+ CPUs: 8
+ Total Memory: 15.03GiB
+ Name: pcherzigd64
+ ID: 4d080886-f0a3-4478-bac7-ebadf0ccfd68
+ Docker Root Dir: /home/daniel/.local/share/docker
+ Debug Mode: false
+ Experimental: false
+ Insecure Registries:
+  127.0.0.0/8
+ Live Restore Enabled: false
+
+```
+
+As one can see above, we are using Docker's rootlesskit, to avoid
+uneccessary privileges for the dockerized components. This also means,
+that the user starting up the program does not need root/admin
+privileges on the machine running PHAIDRA.
+
+Nevertheless, setting up Docker itself will need a system admin user.
+Below we describe the steps that we use for rootless Docker with
+priviledged ports and (needed for http and https traffic on the
+SSL-enabled versions) and client-IP forwarding (needed for restricting
+access to parts of the system).
+
+## set up rootlesskit
+Below you find what we do for a typical installation.
+
+1.  turn off running priviledged docker service
+
+    ``` example
+    sudo systemctl disable --now docker.service docker.socket
+    sudo reboot
+    ```
+
+2.  install uidmap package
+
+    The `uidmap` package is available in both ubuntu and Debian official
+    repositories and is needed for Docker's rootlesskit to properly
+    function.
+
+    ``` example
+    sudo apt install uidmap
+    ```
+
+3.  install rootlesskit
+
+    ``` example
+    dockerd-rootless-setuptool.sh
+    # activate autostart of services
+    sudo loginctl enable-linger $USER
+    echo "export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock" >> ~/.bashrc
+    # needed at least on headless ubuntu systems
+    echo "export XDG_RUNTIME_DIR=/run/user/$(id -u)" >> ~/.bashrc
+    ```
+
+4.  change port-forwarding mode for rootlesskit to slirp4netns
+
+    In order to receive the original client IPs accessing the webserver,
+    we change the port-forwarding mode of the rootlesskit (the default
+    one drops IPs and nginx/apache only receive the docker
+    network-bridge address, which does not allow for IP-filtering
+    administrative parts of the system as a consequence).
+
+    ``` example
+    mkdir ~/.config/systemd/user/docker.service.d
+    echo "[Service]" >> ~/.config/systemd/user/docker.service.d/override.conf
+    echo 'Environment="DOCKERD_ROOTLESS_ROOTLESSKIT_PORT_DRIVER=slirp4netns"' >> ~/.config/systemd/user/docker.service.d/override.conf
+    systemctl --user daemon-reload
+    systemctl --user restart docker
+    ```
+
+5.  allow priviledged ports for slirp4netns
+
+    To allow opening ports 80 and 443 for unpriviledged slirp4netns we
+    need to dedicately allow it (setcap will not work for this):
+
+    ``` example
+    echo "net.ipv4.ip_unprivileged_port_start=0" | sudo tee /etc/sysctl.d/99-rootless.conf
+    sudo sysctl --system
+    ```
+
+6.  add cpuset support
+
+    By default docker cpuset limitations are not enabled for rootless
+    configurations. One can do the following to change this. (see:
+    <https://docs.docker.com/engine/security/rootless/#limiting-resources>)
+
+    ``` example
+    cat /sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.controllers
+    cpu memory pids
+    sudo su -
+    mkdir -p /etc/systemd/system/user@.service.d
+    cat > /etc/systemd/system/user@.service.d/delegate.conf << EOF
+    > [Service]
+    > Delegate=cpu cpuset io memory pids
+    > EOF
+    systemctl daemon-reload
+    exit
+    cat /sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.controllers
+    cpuset cpu io memory pids
+    systemctl --user restart docker
+    ```
 
