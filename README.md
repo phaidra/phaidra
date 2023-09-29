@@ -37,7 +37,13 @@ See section [Docker Notes](#docker-notes) below to see what we do on a typical i
 # Run it
 
 To start up PHAIDRA, change to one of the `compose_*` folders of this repository and run
-`docker compose up -d`. See  below for the version-specific prerequisites.
+`docker compose up -d`. Here's what the homepage will look like:
+
+![](./pictures/running_phaidra.png)
+
+See sections below for version-specific prerequisites.
+
+
 
 ## Demo Version
 
@@ -48,8 +54,8 @@ computer.
 ###  Demo Startup
 
 After the following commands have finished, you will have a PHAIDRA
-instance running on <http://localhost:8899>, that you can visit in
-your browser.
+instance running on `http://localhost:8899`, that you can visit in
+your browser.  See the screenshot below for what you can expect.
 
 ``` example
 cd compose_demo
@@ -133,24 +139,6 @@ abf37731a215   phaidra-demo-dbgate-1            0.00%     25.03MiB / 15.03GiB   
 264601b89504   phaidra-demo-imageserver-1       0.00%     25.7MiB / 15.03GiB    0.17%     2.17kB / 0B       0B / 0B           57
 9d8afe7f588a   phaidra-demo-openldap-1          0.00%     15.45MiB / 15.03GiB   0.10%     2.17kB / 0B       627kB / 4.1kB     2
 ```
-
-# available webservices after startup
-
--   PHAIDRA web-interface at <http://localhost:8899> (available in your
-    network).
--   PHAIDRA API at <http://localhost:8899/api> (available in your
-    network).
--   Webinterface to view, query (and if you for some reason need to –
-    manipulate) the databases at <http://localhost:8899/dbgate>
-    (available on your computer only).
--   Webinterface to manage users at <http://localhost:8899/lam>
-    (available on your computer only, default credentials
-    admin/adminpassword).
--   Webinterface to Apache Solr at <http://localhost:8899/solr>
-    (available on your computer only).
--   Webinterface to the underlying datastore at
-    <http://localhost:8899/fcrepo> (available on your computer only,
-    default credentials fedoraAdmin/fedoraAdmin).
 
 # new folders on your system after startup
 
