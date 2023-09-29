@@ -40,8 +40,7 @@ See section [Docker Notes](#docker-notes) below to see what we do on a typical i
 
 # Run it
 
-To start up PHAIDRA, change to one of the `compose_*` folders of this repository and run
-`docker compose up -d`.  See sections below for version-specific prerequisites.
+See the sections below for version-specific instructions.
 
 ## Demo Version
 
@@ -213,216 +212,31 @@ docker system prune --all
 ## Phaidra Components
 
 In the folder `./components` one will find `phaidra-api`, `phaidra-ui`,
-and `phaidra-vue-components`. These are copies of the public github
-repos, adapted for use in the docker context here. See the notes in the
-following subsections.
+and `phaidra-vue-components`, and `pixelgecko`, the core components of PHAIDRA.
+See the notes in the following subsections for provenance.
 
 ### phaidra-api
 
-This is a checkout of commit c880c4159c5d68b25426451f4822f744a53ef680 of
-the repo at <https://github.com/phaidra/phaidra-api> with symlinks and
-git history stripped:
-
-``` example
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-api$ git log -n1
-commit c880c4159c5d68b25426451f4822f744a53ef680 (HEAD -> master, origin/master)
-Author: Rasta <hudak.rastislav@gmail.com>
-Date:   Mon May 22 16:08:59 2023 +0200
-
-    avoiding empty eq
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-api$ find . -type l
-./public/xsd/uwmetadata
-./log4perl.conf
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-api$ find . -type l -exec rm -v {} \;
-removed './public/xsd/uwmetadata'
-removed './log4perl.conf'
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-api$ rm -v .gitignore && rm -rv .git
-removed '.gitignore'
-removed directory '.git/refs/tags'
-removed '.git/refs/heads/master'
-removed directory '.git/refs/heads'
-removed directory '.git/refs/remotes'
-removed directory '.git/refs'
-removed '.git/info/exclude'
-removed directory '.git/info'
-removed '.git/HEAD'
-removed '.git/index'
-removed '.git/hooks/applypatch-msg.sample'
-removed '.git/hooks/pre-commit.sample'
-removed '.git/hooks/push-to-checkout.sample'
-removed '.git/hooks/post-update.sample'
-removed '.git/hooks/pre-merge-commit.sample'
-removed '.git/hooks/update.sample'
-removed '.git/hooks/commit-msg.sample'
-removed '.git/hooks/pre-push.sample'
-removed '.git/hooks/pre-applypatch.sample'
-removed '.git/hooks/pre-rebase.sample'
-removed '.git/hooks/pre-receive.sample'
-removed '.git/hooks/fsmonitor-watchman.sample'
-removed '.git/hooks/prepare-commit-msg.sample'
-removed directory '.git/hooks'
-removed '.git/config'
-rm: remove write-protected regular file '.git/objects/pack/pack-7e94ef195971c977ba26038f46db4d3026adbcc7.pack'? yes
-removed '.git/objects/pack/pack-7e94ef195971c977ba26038f46db4d3026adbcc7.pack'
-rm: remove write-protected regular file '.git/objects/pack/pack-7e94ef195971c977ba26038f46db4d3026adbcc7.idx'? yes
-removed '.git/objects/pack/pack-7e94ef195971c977ba26038f46db4d3026adbcc7.idx'
-removed directory '.git/objects/pack'
-removed directory '.git/objects/info'
-removed directory '.git/objects'
-removed directory '.git/branches'
-removed '.git/logs/refs/heads/master'
-removed directory '.git/logs/refs/heads'
-removed directory '.git/logs/refs/remotes'
-removed directory '.git/logs/refs'
-removed '.git/logs/HEAD'
-removed directory '.git/logs'
-removed '.git/packed-refs'
-removed '.git/description'
-removed directory '.git'
-```
+This directory derives from commit c880c4159c5d68b25426451f4822f744a53ef680 of
+the repo at <https://github.com/phaidra/phaidra-api> (symlinks and
+git history stripped).
 
 ### phaidra-ui
 
-This is a checkout of commit 5c9455373d36f4756e9caa2af989fac4dbd28f9f of
-the repo at <https://github.com/phaidra/phaidra-ui> with symlinks and
-git history stripped:
-
-``` example
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui$ git log -n1
-commit 5c9455373d36f4756e9caa2af989fac4dbd28f9f (HEAD -> master, origin/master)
-Merge: 63d4278 eca211f
-Author: Phaidra Devel (phaidra2) <phaidra.devel@univie.ac.at>
-Date:   Tue May 9 14:21:44 2023 +0200
-
-    Merge branch 'master' of github.com:phaidra/phaidra-ui
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui$ find . -type l -exec rm -v {} \;
-removed './config/phaidra-ui.js'
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui$ rm .gitignore 
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-ui$ rm -rfv .git
-removed directory '.git/refs/tags'
-removed '.git/refs/heads/master'
-removed directory '.git/refs/heads'
-removed directory '.git/refs/remotes'
-removed directory '.git/refs'
-removed '.git/info/exclude'
-removed directory '.git/info'
-removed '.git/HEAD'
-removed '.git/index'
-removed '.git/hooks/applypatch-msg.sample'
-removed '.git/hooks/pre-commit.sample'
-removed '.git/hooks/push-to-checkout.sample'
-removed '.git/hooks/post-update.sample'
-removed '.git/hooks/pre-merge-commit.sample'
-removed '.git/hooks/update.sample'
-removed '.git/hooks/commit-msg.sample'
-removed '.git/hooks/pre-push.sample'
-removed '.git/hooks/pre-applypatch.sample'
-removed '.git/hooks/pre-rebase.sample'
-removed '.git/hooks/pre-receive.sample'
-removed '.git/hooks/fsmonitor-watchman.sample'
-removed '.git/hooks/prepare-commit-msg.sample'
-removed directory '.git/hooks'
-removed '.git/config'
-removed '.git/objects/pack/pack-996b081fad6c6ca2800c42b1c291f1905f007de0.idx'
-removed '.git/objects/pack/pack-996b081fad6c6ca2800c42b1c291f1905f007de0.pack'
-removed directory '.git/objects/pack'
-removed directory '.git/objects/info'
-removed directory '.git/objects'
-removed directory '.git/branches'
-removed '.git/logs/refs/heads/master'
-removed directory '.git/logs/refs/heads'
-removed directory '.git/logs/refs/remotes'
-removed directory '.git/logs/refs'
-removed '.git/logs/HEAD'
-removed directory '.git/logs'
-removed '.git/packed-refs'
-removed '.git/description'
-removed directory '.git'
-```
+This directory derives from commit 5c9455373d36f4756e9caa2af989fac4dbd28f9f of
+the repo at <https://github.com/phaidra/phaidra-ui> (symlinks and
+git history stripped).
 
 ### phaidra-vue-components
 
-This is a checkout of commit 64f8b9870a0bc66a6b4a58fec5dfe6c2431e72d7 of
-the repo at <https://github.com/phaidra/phaidra-vue-components.git> with
-git history stripped:
-
-``` example
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components$ git log -n1
-commit 64f8b9870a0bc66a6b4a58fec5dfe6c2431e72d7 (HEAD -> master, origin/master)
-Author: rasta <hudak.rastislav@gmail.com>
-Date:   Tue May 23 12:21:06 2023 +0200
-
-    Update vocabulary.js
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components$ find . -type l -exec rm -v {} \;
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components$ rm -v .gitignore 
-removed '.gitignore'
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/phaidra-vue-components$ rm -rfv .git
-removed directory '.git/refs/tags'
-removed '.git/refs/heads/master'
-removed directory '.git/refs/heads'
-removed directory '.git/refs/remotes'
-removed directory '.git/refs'
-removed '.git/info/exclude'
-removed directory '.git/info'
-removed '.git/HEAD'
-removed '.git/index'
-removed '.git/hooks/applypatch-msg.sample'
-removed '.git/hooks/pre-commit.sample'
-removed '.git/hooks/push-to-checkout.sample'
-removed '.git/hooks/post-update.sample'
-removed '.git/hooks/pre-merge-commit.sample'
-removed '.git/hooks/update.sample'
-removed '.git/hooks/commit-msg.sample'
-removed '.git/hooks/pre-push.sample'
-removed '.git/hooks/pre-applypatch.sample'
-removed '.git/hooks/pre-rebase.sample'
-removed '.git/hooks/pre-receive.sample'
-removed '.git/hooks/fsmonitor-watchman.sample'
-removed '.git/hooks/prepare-commit-msg.sample'
-removed directory '.git/hooks'
-removed '.git/config'
-removed '.git/objects/pack/pack-320ae928aaa1c2aa92b1253da03d7a2ae4802ea1.idx'
-removed '.git/objects/pack/pack-320ae928aaa1c2aa92b1253da03d7a2ae4802ea1.pack'
-removed directory '.git/objects/pack'
-removed directory '.git/objects/info'
-removed directory '.git/objects'
-removed directory '.git/branches'
-removed '.git/logs/refs/heads/master'
-removed directory '.git/logs/refs/heads'
-removed directory '.git/logs/refs/remotes'
-removed directory '.git/logs/refs'
-removed '.git/logs/HEAD'
-removed directory '.git/logs'
-removed '.git/packed-refs'
-removed '.git/description'
-removed directory '.git'
-```
+This directory derives from commit 64f8b9870a0bc66a6b4a58fec5dfe6c2431e72d7 of
+the repo at <https://github.com/phaidra/phaidra-vue-components.git> (git history stripped).
 
 ### pixelgecko
 
-This is a checkout from
-<https://gitlab.phaidra.org/phaidra-dev/pixelgecko> at commit
-be0af173eaac297289fa51843b69327f7c95242c with git components stripped.
+This directory derives from commit be0af173eaac297289fa51843b69327f7c95242c of the repo at
+<https://gitlab.phaidra.org/phaidra-dev/pixelgecko> (git history stripped).
 
-``` example
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components$ git clone git@gitlab.phaidra.org:phaidra-dev/pixelgecko.git
-Cloning into 'pixelgecko'...
-remote: Enumerating objects: 131, done.
-remote: Counting objects: 100% (85/85), done.
-remote: Compressing objects: 100% (50/50), done.
-remote: Total 131 (delta 32), reused 85 (delta 32), pack-reused 46
-Receiving objects: 100% (131/131), 74.98 KiB | 18.75 MiB/s, done.
-Resolving deltas: 100% (52/52), done.
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components$ cd pixelgecko/
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ git log -n1
-commit be0af173eaac297289fa51843b69327f7c95242c (HEAD -> master, origin/master, origin/HEAD)
-Author: Daniel Herzig <daniel.herzig@univie.ac.at>
-Date:   Wed Feb 1 14:10:40 2023 +0100
-
-    indent properly
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ find . -type l
-daniel@pcherzigd64:~/gitlab.phaidra.org/phaidra-dev/phaidra-docker/components/pixelgecko$ rm -rf .git .gitignore
-```
 ## Directory structure of this repository
 
 ``` example
