@@ -2,9 +2,10 @@
 
 [[_TOC_]]
 
----
+# Screenshot
+___
 ![alt text](./pictures/running_phaidra.png "Screenshot of PHAIDRA landing page")
----
+___
 
 # About this repository
 
