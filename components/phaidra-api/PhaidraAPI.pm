@@ -21,7 +21,7 @@ use Crypt::URandom          (qw/urandom/);
 use Digest::SHA             (qw/hmac_sha256/);
 use Math::Random::ISAAC::XS ();
 use DBIx::Connector;
-  
+
 BEGIN {
   # that's what we want:
   # use MIME::Base64 3.12 (qw/encode_base64url decode_base64url/);
@@ -268,9 +268,9 @@ sub startup {
 
   $self->hook(
     'before_dispatch' => sub {
-      my $self    = shift;
+      my $self = shift;
 
-      $self->app->log->debug('===> '.$self->req->method .' '. $self->req->url);
+      $self->app->log->debug('===> ' . $self->req->method . ' ' . $self->req->url);
 
       my $session = $self->stash('mojox-session');
       $session->load;
@@ -289,7 +289,7 @@ sub startup {
     'after_dispatch' => sub {
       my $self = shift;
 
-      $self->app->log->debug('<=== '.$self->res->code.' '.$self->req->method .' '. $self->req->url );
+      $self->app->log->debug('<=== ' . $self->res->code . ' ' . $self->req->method . ' ' . $self->req->url);
 
       # CORS
       unless ($self->res->headers->header('Access-Control-Allow-Origin')) {
@@ -382,6 +382,7 @@ sub startup {
 
   #<<< perltidy ignore
   $r->get('')                                       ->to('authentication#signin_shib');
+  $r->get('openapi')                                ->to('utils#openapi');
   $r->get('languages')                              ->to('languages#get_languages');
   $r->get('licenses')                               ->to('licenses#get_licenses');
 

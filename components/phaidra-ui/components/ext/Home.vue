@@ -62,6 +62,7 @@
                 <v-row class="pl-2 mb-6 mt-4">
                     <ul>
                         <li><a href="/lam/">Manage Users</a></li>
+                        <li><a href="/api/openapi">Inspect API</a></li>
                         <li><a href="/dbgate/">Inspect Databases</a></li>
                         <li><a href="/fcrepo/rest/">Inspect Object Repository</a></li>
                         <li><a href="/solr/">Inspect Search Engine</a></li>
