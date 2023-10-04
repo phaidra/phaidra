@@ -3,6 +3,8 @@ package PhaidraAPI::Controller::Utils;
 use strict;
 use warnings;
 use v5.10;
+use Mojo::File;
+use Mojo::JSON qw(decode_json);
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Search;
 use PhaidraAPI::Model::Util;
@@ -105,6 +107,18 @@ sub openapi {
   $self->stash(scheme   => $self->config->{scheme});
   $self->stash(baseurl  => $self->config->{baseurl});
   $self->stash(basepath => $self->config->{basepath});
+}
+
+sub openapi_json {
+  my $self = shift;
+  my $file = Mojo::File->new('/usr/local/phaidra/phaidra-api/public/docs/openapi.json');
+  my $json = decode_json($file->slurp);
+  $json->{servers} = [
+    { "description" => "API endpoint",
+      "url"         => $self->config->{scheme} . '://' . $self->config->{baseurl} . '/' . $self->config->{basepath}
+    }
+  ];
+  $self->render(json => $json, status => 200);
 }
 
 1;

@@ -383,6 +383,7 @@ sub startup {
   #<<< perltidy ignore
   $r->get('')                                       ->to('authentication#signin_shib');
   $r->get('openapi')                                ->to('utils#openapi');
+  $r->get('openapi/json')                           ->to('utils#openapi_json');
   $r->get('languages')                              ->to('languages#get_languages');
   $r->get('licenses')                               ->to('licenses#get_licenses');
 
