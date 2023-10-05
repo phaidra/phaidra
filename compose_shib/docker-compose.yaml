@@ -37,6 +37,7 @@ services:
       - .././encryption/shibboleth/sp-signing-cert.pem:/etc/shibboleth/sp-signing-cert.pem:ro
       - .././encryption/shibboleth/sp-encrypt-key.pem:/etc/shibboleth/sp-encrypt-key.pem:ro
       - .././encryption/shibboleth/sp-encrypt-cert.pem:/etc/shibboleth/sp-encrypt-cert.pem:ro
+      - .././docs:/mnt/docs:ro
     networks:
       - phaidra-network
     environment:

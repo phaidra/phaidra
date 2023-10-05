@@ -13,7 +13,9 @@ networks:
 services:
 
   httpd:
-    image: httpd:2.4.57-bookworm
+    build:
+      context: ../.
+      dockerfile: dockerfiles/httpd.dockerfile
     ports:
       - "80:80"
       - "443:443"
@@ -21,6 +23,7 @@ services:
       - .././webserver_configs/phaidra-ssl.conf:/usr/local/apache2/conf/httpd.conf:ro
       - .././encryption/webserver/privkey.pem:/usr/local/apache2/conf/server.key:ro
       - .././encryption/webserver/fullchain.pem:/usr/local/apache2/conf/server.crt:ro
+      - .././docs:/mnt/docs:ro
     depends_on:
       - api
       - ui

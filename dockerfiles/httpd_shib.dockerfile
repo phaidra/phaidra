@@ -8,7 +8,7 @@ ARG SHIB_METADATA_CERT
 RUN <<EOF
 apt-get update
 apt-get install --yes --quiet --no-install-recommends \
-libapache2-mod-shib
+libapache2-mod-shib pandoc
 apt-get clean
 EOF
 COPY ./shibboleth/aconet-metadata-signing.crt /etc/shibboleth/
