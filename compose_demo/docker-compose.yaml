@@ -13,11 +13,14 @@ networks:
 services:
 
   httpd:
-    image: httpd:2.4.57-bookworm
+    build:
+      context: ../.
+      dockerfile: dockerfiles/httpd.dockerfile
     ports:
       - "${PHAIDRA_HOSTPORT}:80"
     volumes:
       - .././webserver_configs/phaidra-demo.conf:/usr/local/apache2/conf/httpd.conf:ro
+      - .././docs:/mnt/docs:ro
     depends_on:
       - api
       - ui

@@ -22,8 +22,6 @@ We provide various flavors for different use cases, from a demo version
 running on a local desktop computer for evaluation, to an SSO-enabled
 server version.
 
-Sample [doc](./docs/doc.md).
-
 # Setup
 For all versions you will need a recent [Docker
 Installation](https://docs.docker.com/engine/install/), ideally on a
