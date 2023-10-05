@@ -192,80 +192,93 @@ This file is used for generating the technical sketches included in the frontpag
                                                                     </tr>
                                                                     </table>
                                                                     >];
-                                                            }
-                                                    }
+                                                     BIND_DOCUMENTATION [label=<
+                                                                         <table border="0">
+                                                                         <tr>
+                                                                         <td align="text"><b>host:</b><br align="left" /></td>
+                                                                         <td align="text">$REPO/docs<br align="left" /></td>
+                                                                         </tr>
+                                                                         <tr>
+                                                                         <td align="text">httpd-container:<br align="left" /></td>
+                                                                         <td align="text">/mnt/docs:ro<br align="left" /></td>
+                                                                         </tr>
+                                                                         </table>
+                                                                         >];
+                                                   
+                                             }
+                                     }
 
-                                                    subgraph cluster_docker_network_host {
-                                                            label="PHAIDRA docker containers";
-                                                            color = green;
-                                                            node [shape = component, style = solid, color = green]
-                                                            C_FEDORA [label="phaidra-demo-fedora-1",
-                                                                      URL="https://fedora.lyrasis.org/"];
-                                                            C_API [label="phaidra-demo-api-1",
-                                                                   URL="https://github.com/phaidra/phaidra-api"];
-                                                            C_MARIADB_PHAIDRA [label="phaidra-demo-mariadb-phaidra-1",
-                                                                               URL="https://mariadb.org/"];
-                                                            C_MONGODB_PHAIDRA [label="phaidra-demo-mongodb-phaidra-1",
-                                                                               URL="https://www.mongodb.com/"];
-                                                            C_UI [label="phaidra-demo-ui-1",
-                                                                  URL="https://github.com/phaidra/phaidra-ui"];
-                                                            C_OPENLDAP [label="phaidra-demo-openldap-1",
-                                                                        URL="https://www.openldap.org/"];
-                                                            C_SOLR [label="phaidra-demo-solr-1",
-                                                                    URL="https://solr.apache.org/"];
-                                                            C_IMAGESERVER [label="phaidra-demo-imageserver-1",
-                                                                           URL="https://github.com/ruven/iipsrv"];
-                                                            C_PIXELGECKO [label="phaidra-demo-pixelgecko-1"];
-                                                            C_DBGATE [label="phaidra-demo-dbgate-1"];
-                                                            C_LAM [label="phaidra-demo-lam-1"];
-                                                            C_MARIADB_FEDORA [label="phaidra-demo-mariadb-fedora-1",
-                                                                              URL="https://mariadb.org/"];
-                                                            WEBSERVER [label="phaidra-demo-httpd-1"];
-                                                    }
-                                            }
+                                     subgraph cluster_docker_network_host {
+                                             label="PHAIDRA docker containers";
+                                             color = green;
+                                             node [shape = component, style = solid, color = green]
+                                             C_FEDORA [label="phaidra-demo-fedora-1",
+                                                       URL="https://fedora.lyrasis.org/"];
+                                             C_API [label="phaidra-demo-api-1",
+                                                    URL="https://github.com/phaidra/phaidra-api"];
+                                             C_MARIADB_PHAIDRA [label="phaidra-demo-mariadb-phaidra-1",
+                                                                URL="https://mariadb.org/"];
+                                             C_MONGODB_PHAIDRA [label="phaidra-demo-mongodb-phaidra-1",
+                                                                URL="https://www.mongodb.com/"];
+                                             C_UI [label="phaidra-demo-ui-1",
+                                                   URL="https://github.com/phaidra/phaidra-ui"];
+                                             C_OPENLDAP [label="phaidra-demo-openldap-1",
+                                                         URL="https://www.openldap.org/"];
+                                             C_SOLR [label="phaidra-demo-solr-1",
+                                                     URL="https://solr.apache.org/"];
+                                             C_IMAGESERVER [label="phaidra-demo-imageserver-1",
+                                                            URL="https://github.com/ruven/iipsrv"];
+                                             C_PIXELGECKO [label="phaidra-demo-pixelgecko-1"];
+                                             C_DBGATE [label="phaidra-demo-dbgate-1"];
+                                             C_LAM [label="phaidra-demo-lam-1"];
+                                             C_MARIADB_FEDORA [label="phaidra-demo-mariadb-fedora-1",
+                                                               URL="https://mariadb.org/"];
+                                             WEBSERVER [label="phaidra-demo-httpd-1"];
+                                     }
+                             }
 
-                                            // storage mapping
+                             // storage mapping
 
-                                            HS_FEDORA -- C_FEDORA [color="turquoise"];
+                             HS_FEDORA -- C_FEDORA [color="turquoise"];
 
-                                            HS_API_LOGS,HS_FEDORA -- C_API [color="turquoise"];
-                                            BIND_API_CODE -- C_API [color="blue"];
+                             HS_API_LOGS,HS_FEDORA -- C_API [color="turquoise"];
+                             BIND_API_CODE -- C_API [color="blue"];
 
-                                            BIND_MARIADB_PHAIDRA_INIT-- C_MARIADB_PHAIDRA [color="blue"];
-                                            HS_MARIADB_PHAIDRA -- C_MARIADB_PHAIDRA [color="turquoise"];
+                             BIND_MARIADB_PHAIDRA_INIT-- C_MARIADB_PHAIDRA [color="blue"];
+                             HS_MARIADB_PHAIDRA -- C_MARIADB_PHAIDRA [color="turquoise"];
 
-                                            HS_MONGODB_PHAIDRA -- C_MONGODB_PHAIDRA [color="turquoise"];
+                             HS_MONGODB_PHAIDRA -- C_MONGODB_PHAIDRA [color="turquoise"];
 
-                                            HS_OPENLDAP -- C_OPENLDAP [color="turquoise"];
-                                            BIND_OPENLDAP_INIT -- C_OPENLDAP [color="blue"];
+                             HS_OPENLDAP -- C_OPENLDAP [color="turquoise"];
+                             BIND_OPENLDAP_INIT -- C_OPENLDAP [color="blue"];
 
-                                            HS_SOLR -- C_SOLR [color="turquoise"];
+                             HS_SOLR -- C_SOLR [color="turquoise"];
 
-                                            HS_PIXELGECKO -- C_IMAGESERVER [color="turquoise"];
+                             HS_PIXELGECKO -- C_IMAGESERVER [color="turquoise"];
 
-                                            HS_FEDORA -- C_PIXELGECKO [color="turquoise"];
-                                            HS_PIXELGECKO -- C_PIXELGECKO [color="turquoise"];
+                             HS_FEDORA -- C_PIXELGECKO [color="turquoise"];
+                             HS_PIXELGECKO -- C_PIXELGECKO [color="turquoise"];
 
-                                            HS_DBGATE -- C_DBGATE [color="turquoise"];
+                             HS_DBGATE -- C_DBGATE [color="turquoise"];
 
-                                            HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
+                             HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
 
-                                            WEBSERVER -- BIND_HTTPD_CONFIG [color="blue"];
+                             WEBSERVER -- BIND_HTTPD_CONFIG,BIND_DOCUMENTATION [color="blue"];
 
-                                            // system communication mapping
+                             // system communication mapping
 
-                                            C_FEDORA -- C_MARIADB_FEDORA [color="orange"];
-                                            C_API -- C_FEDORA,C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_UI,C_OPENLDAP,C_SOLR,C_IMAGESERVER [color="orange"];
-                                            C_MONGODB_PHAIDRA -- C_PIXELGECKO [color="orange"];
-                                            C_OPENLDAP -- C_LAM [color="orange"];
-                                            C_DBGATE -- C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_MARIADB_FEDORA [color="orange"];
-                                            WEBSERVER -- C_FEDORA,C_API,C_UI,C_SOLR,C_DBGATE,C_LAM [color="magenta"];
+                             C_FEDORA -- C_MARIADB_FEDORA [color="orange"];
+                             C_API -- C_FEDORA,C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_UI,C_OPENLDAP,C_SOLR,C_IMAGESERVER [color="orange"];
+                             C_MONGODB_PHAIDRA -- C_PIXELGECKO [color="orange"];
+                             C_OPENLDAP -- C_LAM [color="orange"];
+                             C_DBGATE -- C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_MARIADB_FEDORA [color="orange"];
+                             WEBSERVER -- C_FEDORA,C_API,C_UI,C_SOLR,C_DBGATE,C_LAM [color="magenta"];
 
 
-                                            // outside communication mapping
+                             // outside communication mapping
 
-                                            USER -- WEBSERVER [color="red"];
-                                    }
+                             USER -- WEBSERVER [color="red"];
+                     }
 #+end_src
 
 #+RESULTS: construction-demo
@@ -485,82 +498,92 @@ This file is used for generating the technical sketches included in the frontpag
                                                                     </tr>
                                                                     </table>
                                                                     >];
+                                                     BIND_DOCUMENTATION [label=<
+                                                                         <table border="0">
+                                                                         <tr>
+                                                                         <td align="text"><b>host:</b><br align="left" /></td>
+                                                                         <td align="text">$REPO/docs<br align="left" /></td>
+                                                                         </tr>
+                                                                         <tr>
+                                                                         <td align="text">httpd-container:<br align="left" /></td>
+                                                                         <td align="text">/mnt/docs:ro<br align="left" /></td>
+                                                                         </tr>
+                                                                         </table>
+                                                                         >];
+                                                                 }
+                                                         }
+
+                                                         subgraph cluster_docker_network_host {
+                                                                 label="PHAIDRA docker containers";
+                                                                 color = green;
+                                                                 node [shape = component, style = solid, color = green]
+                                                                 C_FEDORA [label="phaidra-ssl-fedora-1",
+                                                                           URL="https://fedora.lyrasis.org/"];
+                                                                 C_API [label="phaidra-ssl-api-1",
+                                                                        URL="https://github.com/phaidra/phaidra-api"];
+                                                                 C_MARIADB_PHAIDRA [label="phaidra-ssl-mariadb-phaidra-1",
+                                                                                    URL="https://mariadb.org/"];
+                                                                 C_MONGODB_PHAIDRA [label="phaidra-ssl-mongodb-phaidra-1",
+                                                                                    URL="https://www.mongodb.com/"];
+                                                                 C_UI [label="phaidra-ssl-ui-1",
+                                                                       URL="https://github.com/phaidra/phaidra-ui"];
+                                                                 C_OPENLDAP [label="phaidra-ssl-openldap-1",
+                                                                             URL="https://www.openldap.org/"];
+                                                                 C_SOLR [label="phaidra-ssl-solr-1",
+                                                                         URL="https://solr.apache.org/"];
+                                                                 C_IMAGESERVER [label="phaidra-ssl-imageserver-1",
+                                                                                URL="https://github.com/ruven/iipsrv"];
+                                                                 C_PIXELGECKO [label="phaidra-ssl-pixelgecko-1"];
+                                                                 C_DBGATE [label="phaidra-ssl-dbgate-1"];
+                                                                 C_LAM [label="phaidra-ssl-lam-1"];
+                                                                 C_MARIADB_FEDORA [label="phaidra-ssl-mariadb-fedora-1",
+                                                                                   URL="https://mariadb.org/"];
+                                                                 WEBSERVER [label="phaidra-ssl-httpd-1"];
+                                                         }
+                                                 }
+
+                                                 // storage mapping
+
+                                                 HS_FEDORA -- C_FEDORA [color="turquoise"];
+
+                                                 HS_API_LOGS,HS_FEDORA -- C_API [color="turquoise"];
+                                                 BIND_API_CODE -- C_API [color="blue"];
+
+                                                 BIND_MARIADB_PHAIDRA_INIT-- C_MARIADB_PHAIDRA [color="blue"];
+                                                 HS_MARIADB_PHAIDRA -- C_MARIADB_PHAIDRA [color="turquoise"];
+
+                                                 HS_MONGODB_PHAIDRA -- C_MONGODB_PHAIDRA [color="turquoise"];
+
+                                                 HS_OPENLDAP -- C_OPENLDAP [color="turquoise"];
+                                                 BIND_OPENLDAP_INIT -- C_OPENLDAP [color="blue"];
+
+                                                 HS_SOLR -- C_SOLR [color="turquoise"];
+
+                                                 HS_PIXELGECKO -- C_IMAGESERVER [color="turquoise"];
+
+                                                 HS_FEDORA -- C_PIXELGECKO [color="turquoise"];
+                                                 HS_PIXELGECKO -- C_PIXELGECKO [color="turquoise"];
+
+                                                 HS_DBGATE -- C_DBGATE [color="turquoise"];
+
+                                                 HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
+
+                                                 WEBSERVER -- BIND_HTTPD_CONFIG,BIND_HTTPD_KEY,BIND_HTTPD_CERT,BIND_DOCUMENTATION [color="blue"];
+
+                                                 // system communication mapping
+
+                                                 C_FEDORA -- C_MARIADB_FEDORA [color="orange"];
+                                                 C_API -- C_FEDORA,C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_UI,C_OPENLDAP,C_SOLR,C_IMAGESERVER [color="orange"];
+                                                 C_MONGODB_PHAIDRA -- C_PIXELGECKO [color="orange"];
+                                                 C_OPENLDAP -- C_LAM [color="orange"];
+                                                 C_DBGATE -- C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_MARIADB_FEDORA [color="orange"];
+                                                 WEBSERVER -- C_FEDORA,C_API,C_UI,C_SOLR,C_DBGATE,C_LAM [color="magenta"];
 
 
-  }
-  }
+                                                 // outside communication mapping
 
-  subgraph cluster_docker_network_host {
-          label="PHAIDRA docker containers";
-          color = green;
-          node [shape = component, style = solid, color = green]
-          C_FEDORA [label="phaidra-ssl-fedora-1",
-                    URL="https://fedora.lyrasis.org/"];
-          C_API [label="phaidra-ssl-api-1",
-                 URL="https://github.com/phaidra/phaidra-api"];
-          C_MARIADB_PHAIDRA [label="phaidra-ssl-mariadb-phaidra-1",
-                             URL="https://mariadb.org/"];
-          C_MONGODB_PHAIDRA [label="phaidra-ssl-mongodb-phaidra-1",
-                             URL="https://www.mongodb.com/"];
-          C_UI [label="phaidra-ssl-ui-1",
-                URL="https://github.com/phaidra/phaidra-ui"];
-          C_OPENLDAP [label="phaidra-ssl-openldap-1",
-                      URL="https://www.openldap.org/"];
-          C_SOLR [label="phaidra-ssl-solr-1",
-                  URL="https://solr.apache.org/"];
-          C_IMAGESERVER [label="phaidra-ssl-imageserver-1",
-                         URL="https://github.com/ruven/iipsrv"];
-          C_PIXELGECKO [label="phaidra-ssl-pixelgecko-1"];
-          C_DBGATE [label="phaidra-ssl-dbgate-1"];
-          C_LAM [label="phaidra-ssl-lam-1"];
-          C_MARIADB_FEDORA [label="phaidra-ssl-mariadb-fedora-1",
-                            URL="https://mariadb.org/"];
-          WEBSERVER [label="phaidra-ssl-httpd-1"];
-  }
-  }
-
-  // storage mapping
-
-  HS_FEDORA -- C_FEDORA [color="turquoise"];
-
-  HS_API_LOGS,HS_FEDORA -- C_API [color="turquoise"];
-  BIND_API_CODE -- C_API [color="blue"];
-
-  BIND_MARIADB_PHAIDRA_INIT-- C_MARIADB_PHAIDRA [color="blue"];
-  HS_MARIADB_PHAIDRA -- C_MARIADB_PHAIDRA [color="turquoise"];
-
-  HS_MONGODB_PHAIDRA -- C_MONGODB_PHAIDRA [color="turquoise"];
-
-  HS_OPENLDAP -- C_OPENLDAP [color="turquoise"];
-  BIND_OPENLDAP_INIT -- C_OPENLDAP [color="blue"];
-
-  HS_SOLR -- C_SOLR [color="turquoise"];
-
-  HS_PIXELGECKO -- C_IMAGESERVER [color="turquoise"];
-
-  HS_FEDORA -- C_PIXELGECKO [color="turquoise"];
-  HS_PIXELGECKO -- C_PIXELGECKO [color="turquoise"];
-
-  HS_DBGATE -- C_DBGATE [color="turquoise"];
-
-  HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
-
-  WEBSERVER -- BIND_HTTPD_CONFIG,BIND_HTTPD_KEY,BIND_HTTPD_CERT [color="blue"];
-
-  // system communication mapping
-
-  C_FEDORA -- C_MARIADB_FEDORA [color="orange"];
-  C_API -- C_FEDORA,C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_UI,C_OPENLDAP,C_SOLR,C_IMAGESERVER [color="orange"];
-  C_MONGODB_PHAIDRA -- C_PIXELGECKO [color="orange"];
-  C_OPENLDAP -- C_LAM [color="orange"];
-  C_DBGATE -- C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_MARIADB_FEDORA [color="orange"];
-  WEBSERVER -- C_FEDORA,C_API,C_UI,C_SOLR,C_DBGATE,C_LAM [color="magenta"];
-
-
-  // outside communication mapping
-
-  USER -- WEBSERVER [color="red"];
-  }
+                                                 USER -- WEBSERVER [color="red"];
+                                         }
 
 #+end_src
 
@@ -835,82 +858,92 @@ This file is used for generating the technical sketches included in the frontpag
                                                                     </tr>
                                                                     </table>
                                                                     >];
+                                                     BIND_DOCUMENTATION [label=<
+                                                                         <table border="0">
+                                                                         <tr>
+                                                                         <td align="text"><b>host:</b><br align="left" /></td>
+                                                                         <td align="text">$REPO/docs<br align="left" /></td>
+                                                                         </tr>
+                                                                         <tr>
+                                                                         <td align="text">httpd-container:<br align="left" /></td>
+                                                                         <td align="text">/mnt/docs:ro<br align="left" /></td>
+                                                                         </tr>
+                                                                         </table>
+                                                                         >];
+                                                                 }
+                                                         }
+
+                                                         subgraph cluster_docker_network_host {
+                                                                 label="PHAIDRA docker containers";
+                                                                 color = green;
+                                                                 node [shape = component, style = solid, color = green]
+                                                                 C_FEDORA [label="phaidra-shib-fedora-1",
+                                                                           URL="https://fedora.lyrasis.org/"];
+                                                                 C_API [label="phaidra-shib-api-1",
+                                                                        URL="https://github.com/phaidra/phaidra-api"];
+                                                                 C_MARIADB_PHAIDRA [label="phaidra-shib-mariadb-phaidra-1",
+                                                                                    URL="https://mariadb.org/"];
+                                                                 C_MONGODB_PHAIDRA [label="phaidra-shib-mongodb-phaidra-1",
+                                                                                    URL="https://www.mongodb.com/"];
+                                                                 C_UI [label="phaidra-shib-ui-1",
+                                                                       URL="https://github.com/phaidra/phaidra-ui"];
+                                                                 C_OPENLDAP [label="phaidra-shib-openldap-1",
+                                                                             URL="https://www.openldap.org/"];
+                                                                 C_SOLR [label="phaidra-shib-solr-1",
+                                                                         URL="https://solr.apache.org/"];
+                                                                 C_IMAGESERVER [label="phaidra-shib-imageserver-1",
+                                                                                URL="https://github.com/ruven/iipsrv"];
+                                                                 C_PIXELGECKO [label="phaidra-shib-pixelgecko-1"];
+                                                                 C_DBGATE [label="phaidra-shib-dbgate-1"];
+                                                                 C_LAM [label="phaidra-shib-lam-1"];
+                                                                 C_MARIADB_FEDORA [label="phaidra-shib-mariadb-fedora-1",
+                                                                                   URL="https://mariadb.org/"];
+                                                                 WEBSERVER [label="phaidra-shib-httpd-1"];
+                                                         }
+                                                 }
+
+                                                 // storage mapping
+
+                                                 HS_FEDORA -- C_FEDORA [color="turquoise"];
+
+                                                 HS_API_LOGS, HS_FEDORA -- C_API [color="turquoise"];
+                                                 BIND_API_CODE -- C_API [color="blue"];
+
+                                                 BIND_MARIADB_PHAIDRA_INIT-- C_MARIADB_PHAIDRA [color="blue"];
+                                                 HS_MARIADB_PHAIDRA -- C_MARIADB_PHAIDRA [color="turquoise"];
+
+                                                 HS_MONGODB_PHAIDRA -- C_MONGODB_PHAIDRA [color="turquoise"];
+
+                                                 HS_OPENLDAP -- C_OPENLDAP [color="turquoise"];
+                                                 BIND_OPENLDAP_INIT -- C_OPENLDAP [color="blue"];
+
+                                                 HS_SOLR -- C_SOLR [color="turquoise"];
+
+                                                 HS_PIXELGECKO -- C_IMAGESERVER [color="turquoise"];
+
+                                                 HS_FEDORA -- C_PIXELGECKO [color="turquoise"];
+                                                 HS_PIXELGECKO -- C_PIXELGECKO [color="turquoise"];
+
+                                                 HS_DBGATE -- C_DBGATE [color="turquoise"];
+
+                                                 HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
+
+                                                 WEBSERVER -- BIND_HTTPD_CONFIG,BIND_HTTPD_CERT,BIND_HTTPD_KEY,BIND_SHIB_ENCRYPTION_KEY,BIND_SHIB_ENCRYPTION_CERT,BIND_SHIB_SIGNING_KEY,BIND_SHIB_SIGNING_CERT,BIND_DOCUMENTATION [color="blue"];
+
+                                                 // system communication mapping
+
+                                                 C_FEDORA -- C_MARIADB_FEDORA [color="orange"];
+                                                 C_API -- C_FEDORA,C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_UI,C_OPENLDAP,C_SOLR,C_IMAGESERVER [color="orange"];
+                                                 C_MONGODB_PHAIDRA -- C_PIXELGECKO [color="orange"];
+                                                 C_OPENLDAP -- C_LAM [color="orange"];
+                                                 C_DBGATE -- C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_MARIADB_FEDORA [color="orange"];
+                                                 WEBSERVER -- C_FEDORA,C_API,C_UI,C_SOLR,C_DBGATE,C_LAM [color="magenta"];
 
 
-  }
-  }
+                                                 // outside communication mapping
 
-  subgraph cluster_docker_network_host {
-          label="PHAIDRA docker containers";
-          color = green;
-          node [shape = component, style = solid, color = green]
-          C_FEDORA [label="phaidra-shib-fedora-1",
-                    URL="https://fedora.lyrasis.org/"];
-          C_API [label="phaidra-shib-api-1",
-                 URL="https://github.com/phaidra/phaidra-api"];
-          C_MARIADB_PHAIDRA [label="phaidra-shib-mariadb-phaidra-1",
-                             URL="https://mariadb.org/"];
-          C_MONGODB_PHAIDRA [label="phaidra-shib-mongodb-phaidra-1",
-                             URL="https://www.mongodb.com/"];
-          C_UI [label="phaidra-shib-ui-1",
-                URL="https://github.com/phaidra/phaidra-ui"];
-          C_OPENLDAP [label="phaidra-shib-openldap-1",
-                      URL="https://www.openldap.org/"];
-          C_SOLR [label="phaidra-shib-solr-1",
-                  URL="https://solr.apache.org/"];
-          C_IMAGESERVER [label="phaidra-shib-imageserver-1",
-                         URL="https://github.com/ruven/iipsrv"];
-          C_PIXELGECKO [label="phaidra-shib-pixelgecko-1"];
-          C_DBGATE [label="phaidra-shib-dbgate-1"];
-          C_LAM [label="phaidra-shib-lam-1"];
-          C_MARIADB_FEDORA [label="phaidra-shib-mariadb-fedora-1",
-                            URL="https://mariadb.org/"];
-          WEBSERVER [label="phaidra-shib-httpd-1"];
-  }
-  }
-
-  // storage mapping
-
-  HS_FEDORA -- C_FEDORA [color="turquoise"];
-
-  HS_API_LOGS, HS_FEDORA -- C_API [color="turquoise"];
-  BIND_API_CODE -- C_API [color="blue"];
-
-  BIND_MARIADB_PHAIDRA_INIT-- C_MARIADB_PHAIDRA [color="blue"];
-  HS_MARIADB_PHAIDRA -- C_MARIADB_PHAIDRA [color="turquoise"];
-
-  HS_MONGODB_PHAIDRA -- C_MONGODB_PHAIDRA [color="turquoise"];
-
-  HS_OPENLDAP -- C_OPENLDAP [color="turquoise"];
-  BIND_OPENLDAP_INIT -- C_OPENLDAP [color="blue"];
-
-  HS_SOLR -- C_SOLR [color="turquoise"];
-
-  HS_PIXELGECKO -- C_IMAGESERVER [color="turquoise"];
-
-  HS_FEDORA -- C_PIXELGECKO [color="turquoise"];
-  HS_PIXELGECKO -- C_PIXELGECKO [color="turquoise"];
-
-  HS_DBGATE -- C_DBGATE [color="turquoise"];
-
-  HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
-
-  WEBSERVER -- BIND_HTTPD_CONFIG,BIND_HTTPD_CERT,BIND_HTTPD_KEY,BIND_SHIB_ENCRYPTION_KEY,BIND_SHIB_ENCRYPTION_CERT,BIND_SHIB_SIGNING_KEY,BIND_SHIB_SIGNING_CERT [color="blue"];
-
-  // system communication mapping
-
-  C_FEDORA -- C_MARIADB_FEDORA [color="orange"];
-  C_API -- C_FEDORA,C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_UI,C_OPENLDAP,C_SOLR,C_IMAGESERVER [color="orange"];
-  C_MONGODB_PHAIDRA -- C_PIXELGECKO [color="orange"];
-  C_OPENLDAP -- C_LAM [color="orange"];
-  C_DBGATE -- C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_MARIADB_FEDORA [color="orange"];
-  WEBSERVER -- C_FEDORA,C_API,C_UI,C_SOLR,C_DBGATE,C_LAM [color="magenta"];
-
-
-  // outside communication mapping
-
-  USER -- WEBSERVER [color="red"];
-  }
+                                                 USER -- WEBSERVER [color="red"];
+                                         }
 
 
 #+end_src
