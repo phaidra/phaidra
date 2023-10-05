@@ -48,6 +48,8 @@ See the sections below for version-specific instructions.
 None, just make sure no other service is using port 8899 on your
 computer.
 
+*EXCEPTION*: if running on (not recommended) rootful  Docker (eg Docker Desktop on Win 11), set the `ALLOWED_HOST` variable in `compose-demo/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, etc otherwise.
+
 ###  Demo Startup
 
 After the following commands have finished, you will have a PHAIDRA
