@@ -118,96 +118,159 @@ sub stats {
         $fr = $f;
       }
     }
-  }
 
-  unless (defined($fr)) {
+    unless (defined($fr)) {
 
-    # return 200, this is just ok
-    return {alerts => [{type => 'info', msg => 'Site is not configured'}], status => 200};
-  }
-  unless ($fr->{site} eq 'phaidra') {
-
-    # return 200, this is just ok
-    return {alerts => [{type => 'info', msg => 'Site [' . $fr->{site} . '] is not supported'}], status => 200};
-  }
-  unless (defined($fr->{stats})) {
-
-    # return 200, this is just ok
-    return {alerts => [{type => 'info', msg => 'Statistics source is not configured'}], status => 200};
-  }
-
-  # only piwik now
-  unless ($fr->{stats}->{type} eq 'piwik') {
-
-    # return 200, this is just ok
-    return {alerts => [{type => 'info', msg => 'Statistics source [' . $fr->{stats}->{type} . '] is not supported.'}], status => 200};
-  }
-  unless ($siteid) {
-    unless (defined($fr->{stats}->{siteid})) {
-      return {alerts => [{type => 'info', msg => 'Piwik siteid is not configured'}], status => 500};
+      # return 200, this is just ok
+      return {alerts => [{type => 'info', msg => 'Site is not configured'}], status => 200};
     }
-    $siteid = $fr->{stats}->{siteid};
-  }
+    unless ($fr->{site} eq 'phaidra') {
 
-  if ($output eq 'chart') {
+      # return 200, this is just ok
+      return {alerts => [{type => 'info', msg => 'Site [' . $fr->{site} . '] is not supported'}], status => 200};
+    }
+    unless (defined($fr->{stats})) {
 
-    my $downloads;
-    my $sth = $c->app->db_stats_phaidra->dbh->prepare("SELECT DATE_FORMAT(server_time,'%Y-%m-%d'), location_country FROM downloads_$siteid WHERE pid = '$pid';")
-      or $c->app->log->error("Error querying piwik database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
-    $sth->execute() or $c->app->log->error("Error querying piwik database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
-    my $date;
-    my $country;
-    $sth->bind_columns(undef, \$date, \$country);
-    while ($sth->fetch) {
-      if ($downloads->{$country}) {
-        $downloads->{$country}->{$date}++;
+      # return 200, this is just ok
+      return {alerts => [{type => 'info', msg => 'Statistics source is not configured'}], status => 200};
+    }
+
+    # only piwik now
+    unless ($fr->{stats}->{type} eq 'piwik') {
+
+      # return 200, this is just ok
+      return {alerts => [{type => 'info', msg => 'Statistics source [' . $fr->{stats}->{type} . '] is not supported.'}], status => 200};
+    }
+    unless ($siteid) {
+      unless (defined($fr->{stats}->{siteid})) {
+        return {alerts => [{type => 'info', msg => 'Piwik siteid is not configured'}], status => 500};
+      }
+      $siteid = $fr->{stats}->{siteid};
+    }
+
+    if ($output eq 'chart') {
+
+      my $downloads;
+      my $sth = $c->app->db_stats_phaidra->dbh->prepare("SELECT DATE_FORMAT(server_time,'%Y-%m-%d'), location_country FROM downloads_$siteid WHERE pid = '$pid';")
+        or $c->app->log->error("Error querying piwik database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
+      $sth->execute() or $c->app->log->error("Error querying piwik database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
+      my $date;
+      my $country;
+      $sth->bind_columns(undef, \$date, \$country);
+      while ($sth->fetch) {
+        if ($downloads->{$country}) {
+          $downloads->{$country}->{$date}++;
+        }
+        else {
+          $downloads->{$country} = {$date => 1};
+        }
+      }
+
+      my $detail_page;
+      $sth = $c->app->db_stats_phaidra->dbh->prepare("SELECT DATE_FORMAT(server_time,'%Y-%m-%d'), location_country FROM views_$siteid WHERE pid = '$pid';") or $c->app->log->error("Error querying piwik database for detail stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
+      $sth->execute()                                                                                                                                       or $c->app->log->error("Error querying piwik database for detail stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
+      $sth->bind_columns(undef, \$date, \$country);
+      while ($sth->fetch) {
+        if ($detail_page->{$country}) {
+          $detail_page->{$country}->{$date}++;
+        }
+        else {
+          $detail_page->{$country} = {$date => 1};
+        }
+      }
+
+      if (defined($detail_page) || defined($downloads)) {
+        return {downloads => $downloads, detail_page => $detail_page, alerts => [], status => 200};
       }
       else {
-        $downloads->{$country} = {$date => 1};
+        my $msg = "No data has been fetched. DB msg:" . $c->app->db_stats_phaidra->dbh->errstr;
+        $c->app->log->warn($msg);
+        return {alerts => [{type => 'info', msg => $msg}], status => 200};
       }
-    }
-
-    my $detail_page;
-    $sth = $c->app->db_stats_phaidra->dbh->prepare("SELECT DATE_FORMAT(server_time,'%Y-%m-%d'), location_country FROM views_$siteid WHERE pid = '$pid';") or $c->app->log->error("Error querying piwik database for detail stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
-    $sth->execute()                                                                                                                                       or $c->app->log->error("Error querying piwik database for detail stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
-    $sth->bind_columns(undef, \$date, \$country);
-    while ($sth->fetch) {
-      if ($detail_page->{$country}) {
-        $detail_page->{$country}->{$date}++;
-      }
-      else {
-        $detail_page->{$country} = {$date => 1};
-      }
-    }
-
-    if (defined($detail_page) || defined($downloads)) {
-      return {downloads => $downloads, detail_page => $detail_page, alerts => [], status => 200};
     }
     else {
-      my $msg = "No data has been fetched. DB msg:" . $c->app->db_stats_phaidra->dbh->errstr;
-      $c->app->log->warn($msg);
-      return {alerts => [{type => 'info', msg => $msg}], status => 200};
+
+      my $downloads = $c->app->db_stats_phaidra->dbh->selectrow_array("SELECT count(*) FROM downloads_$siteid WHERE pid = '$pid';");
+      unless (defined($downloads)) {
+        $c->app->log->error("Error querying piwik database for download stats:" . $c->app->db_stats_phaidra->dbh->errstr);
+      }
+
+      my $detail_page = $c->app->db_stats_phaidra->dbh->selectrow_array("SELECT count(*) FROM views_$siteid WHERE pid = '$pid';");
+      unless (defined($detail_page)) {
+        $c->app->log->error("Error querying piwik database for detail stats:" . $c->app->db_stats_phaidra->dbh->errstr);
+      }
+
+      if (defined($detail_page)) {
+        return {downloads => $downloads, detail_page => $detail_page, alerts => [], status => 200};
+      }
+      else {
+        my $msg = "No data has been fetched. DB msg:" . $c->app->db_stats_phaidra->dbh->errstr;
+        $c->app->log->warn($msg);
+        return {alerts => [{type => 'info', msg => $msg}], status => 200};
+      }
     }
   }
   else {
+    if ($output eq 'chart') {
 
-    my $downloads = $c->app->db_stats_phaidra->dbh->selectrow_array("SELECT count(*) FROM downloads_$siteid WHERE pid = '$pid';");
-    unless (defined($downloads)) {
-      $c->app->log->error("Error querying piwik database for download stats:" . $c->app->db_stats_phaidra->dbh->errstr);
-    }
+      my $downloads;
+      my $sth = $c->app->db_metadata->dbh->prepare("SELECT DATE_FORMAT(created,'%Y-%m-%d'), location_country FROM usage_stats WHERE action = 'download' AND pid = '$pid';")
+        or $c->app->log->error("Error querying piwik database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
+      $sth->execute() or $c->app->log->error("Error querying piwik database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
+      my $date;
+      my $country;
+      $sth->bind_columns(undef, \$date, \$country);
+      while ($sth->fetch) {
+        if ($downloads->{$country}) {
+          $downloads->{$country}->{$date}++;
+        }
+        else {
+          $downloads->{$country} = {$date => 1};
+        }
+      }
 
-    my $detail_page = $c->app->db_stats_phaidra->dbh->selectrow_array("SELECT count(*) FROM views_$siteid WHERE pid = '$pid';");
-    unless (defined($detail_page)) {
-      $c->app->log->error("Error querying piwik database for detail stats:" . $c->app->db_stats_phaidra->dbh->errstr);
-    }
+      my $detail_page;
+      $sth = $c->app->db_metadata->dbh->prepare("SELECT DATE_FORMAT(created,'%Y-%m-%d'), location_country FROM usage_stats WHERE action = 'info' AND pid = '$pid';") or $c->app->log->error("Error querying piwik database for detail stats chart:" . $c->app->db_metadata->dbh->errstr);
+      $sth->execute()                                                                                                                                                or $c->app->log->error("Error querying piwik database for detail stats chart:" . $c->app->db_metadata->dbh->errstr);
+      $sth->bind_columns(undef, \$date, \$country);
+      while ($sth->fetch) {
+        if ($detail_page->{$country}) {
+          $detail_page->{$country}->{$date}++;
+        }
+        else {
+          $detail_page->{$country} = {$date => 1};
+        }
+      }
 
-    if (defined($detail_page)) {
-      return {downloads => $downloads, detail_page => $detail_page, alerts => [], status => 200};
+      if (defined($detail_page) || defined($downloads)) {
+        return {downloads => $downloads, detail_page => $detail_page, alerts => [], status => 200};
+      }
+      else {
+        my $msg = "No data has been fetched. DB msg:" . $c->app->db_metadata->dbh->errstr;
+        $c->app->log->warn($msg);
+        return {alerts => [{type => 'info', msg => $msg}], status => 200};
+      }
     }
     else {
-      my $msg = "No data has been fetched. DB msg:" . $c->app->db_stats_phaidra->dbh->errstr;
-      $c->app->log->warn($msg);
-      return {alerts => [{type => 'info', msg => $msg}], status => 200};
+
+      my $downloads = $c->app->db_metadata->dbh->selectrow_array("SELECT count(*) FROM usage_stats WHERE action = 'download' AND pid = '$pid';");
+      unless (defined($downloads)) {
+        $c->app->log->error("Error querying piwik database for download stats:" . $c->app->db_metadata->dbh->errstr);
+      }
+
+      my $detail_page = $c->app->db_metadata->dbh->selectrow_array("SELECT count(*) FROM usage_stats WHERE action = 'info' AND pid = '$pid';");
+      unless (defined($detail_page)) {
+        $c->app->log->error("Error querying piwik database for detail stats:" . $c->app->db_metadata->dbh->errstr);
+      }
+
+      if (defined($detail_page)) {
+        return {downloads => $downloads, detail_page => $detail_page, alerts => [], status => 200};
+      }
+      else {
+        my $msg = "No data has been fetched. DB msg:" . $c->app->db_metadata->dbh->errstr;
+        $c->app->log->warn($msg);
+        return {alerts => [{type => 'info', msg => $msg}], status => 200};
+      }
     }
   }
 }

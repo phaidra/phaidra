@@ -9,6 +9,7 @@ use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Octets;
 use PhaidraAPI::Model::Authorization;
 use PhaidraAPI::Model::Index;
+use PhaidraAPI::Model::Util;
 
 sub proxy {
   my $self = shift;
@@ -63,8 +64,8 @@ sub get {
       }
       $filename = $dsAttr->{filename};
       $mimetype = $dsAttr->{mimetype};
-      $size = $dsAttr->{size};
-      $dsAttr = $fedora_model->getDatastreamPath($self, $pid, 'WEBVERSION');
+      $size     = $dsAttr->{size};
+      $dsAttr   = $fedora_model->getDatastreamPath($self, $pid, 'WEBVERSION');
       if ($dsAttr->{status} ne 200) {
         $self->render(json => $dsAttr, status => $dsAttr->{status});
         return;
@@ -79,15 +80,16 @@ sub get {
       }
       $filename = $dsAttr->{filename};
       $mimetype = $dsAttr->{mimetype};
-      $size = $dsAttr->{size};
-      $dsAttr = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
+      $size     = $dsAttr->{size};
+      $dsAttr   = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
       if ($dsAttr->{status} ne 200) {
         $self->render(json => $dsAttr, status => $dsAttr->{status});
         return;
       }
       $path = $dsAttr->{path};
     }
-  } else {
+  }
+  else {
     my $object_model = PhaidraAPI::Model::Object->new;
     my $r_oxml       = $object_model->get_foxml($self, $pid);
     if ($r_oxml->{status} ne 200) {
@@ -136,7 +138,7 @@ sub get {
     }
   }
 
-  $self->app->log->debug("operation[$operation] trywebversion[".($trywebversion ? $trywebversion : 'undef') ."] pid[$pid] path[$path] mimetype[$mimetype] filename[$filename] size[$size]");
+  $self->app->log->debug("operation[$operation] trywebversion[" . ($trywebversion ? $trywebversion : 'undef') . "] pid[$pid] path[$path] mimetype[$mimetype] filename[$filename] size[$size]");
 
   if ($operation eq 'download') {
     $self->res->headers->content_disposition("attachment;filename=\"$filename\"");
@@ -183,6 +185,7 @@ sub get {
 
 sub track_download {
   my ($self, $pid, $op) = @_;
+
   # track download
   my $fr = undef;
   if (exists($self->app->config->{sites})) {
@@ -191,67 +194,78 @@ sub track_download {
         $fr = $f;
       }
     }
-  }
 
-  unless (defined($fr)) {
-    $self->app->log->debug("pid[$pid] Not tracking download: Site is not configured");
-    return;
-  }
-  unless ($fr->{site} eq 'phaidra') {
-    $self->app->log->error("pid[$pid] Error tracking download: Site [" . $fr->{site} . "] is not supported");
-    return;
-  }
-  unless (defined($fr->{stats})) {
-    $self->app->log->error("pid[$pid] Error tracking download: Statistics source is not configured");
-    return;
-  }
-  unless (defined($fr->{stats}->{serverbaseurl})) {
-    $self->app->log->error("pid[$pid] Error tracking download: serverbaseurl is not configured");
-    return;
-  }
-  unless (defined($fr->{stats}->{token})) {
-    $self->app->log->error("pid[$pid] Error tracking download: token is not configured");
-    return;
-  }
+    unless (defined($fr)) {
+      $self->app->log->debug("pid[$pid] Not tracking download: Site is not configured");
+      return;
+    }
+    unless ($fr->{site} eq 'phaidra') {
+      $self->app->log->error("pid[$pid] Error tracking download: Site [" . $fr->{site} . "] is not supported");
+      return;
+    }
+    unless (defined($fr->{stats})) {
+      $self->app->log->error("pid[$pid] Error tracking download: Statistics source is not configured");
+      return;
+    }
+    unless (defined($fr->{stats}->{serverbaseurl})) {
+      $self->app->log->error("pid[$pid] Error tracking download: serverbaseurl is not configured");
+      return;
+    }
+    unless (defined($fr->{stats}->{token})) {
+      $self->app->log->error("pid[$pid] Error tracking download: token is not configured");
+      return;
+    }
 
-  # only piwik now
-  unless ($fr->{stats}->{type} eq 'piwik') {
-    $self->app->log->error("pid[$pid] Error tracking download: Statistics source [" . $fr->{stats}->{type} . "] is not supported.");
-    return;
-  }
+    # only piwik now
+    unless ($fr->{stats}->{type} eq 'piwik') {
+      $self->app->log->error("pid[$pid] Error tracking download: Statistics source [" . $fr->{stats}->{type} . "] is not supported.");
+      return;
+    }
 
-  unless (defined($fr->{stats}->{siteid})) {
-    $self->app->log->error("pid[$pid] Error tracking download: Piwik siteid is not configured.");
-    return;
-  }
+    unless (defined($fr->{stats}->{siteid})) {
+      $self->app->log->error("pid[$pid] Error tracking download: Piwik siteid is not configured.");
+      return;
+    }
 
-  my $siteid = $fr->{stats}->{siteid};
-  my $matomoapi = "https://".$fr->{stats}->{serverbaseurl}."/matomo.php";
-  my $matomotoken = $fr->{stats}->{token};
-  my $actionname = url_escape("download/$pid");
+    my $siteid      = $fr->{stats}->{siteid};
+    my $matomoapi   = "https://" . $fr->{stats}->{serverbaseurl} . "/matomo.php";
+    my $matomotoken = $fr->{stats}->{token};
+    my $actionname  = url_escape("download/$pid");
 
-  my $trackurl = "https://".$self->app->config->{phaidra}->{baseurl}."/".($op eq 'get' ? 'open': $op)."/$pid";
-  my $url = url_escape($trackurl);
-  my $cip = url_escape($self->tx->remote_address);
-  my $tracklink = "?idsite=$siteid&rec=1&url=$url&action_name=$actionname&cip=$cip";
+    my $trackurl  = "https://" . $self->app->config->{phaidra}->{baseurl} . "/" . ($op eq 'get' ? 'open' : $op) . "/$pid";
+    my $url       = url_escape($trackurl);
+    my $cip       = url_escape($self->tx->remote_address);
+    my $tracklink = "?idsite=$siteid&rec=1&url=$url&action_name=$actionname&cip=$cip";
 
-  my $ua  = Mojo::UserAgent->new;
-  $ua->request_timeout(1);
+    my $ua = Mojo::UserAgent->new;
+    $ua->request_timeout(1);
 
-  $ua->post_p("$matomoapi"=> json => {
-      "token_auth" => "$matomotoken",
-      "requests" => [ $tracklink ]
-    })->then(sub {
-      my ($tx) = @_;
-      if($tx->result->is_success) {
-        $self->app->log->debug("pid[$pid] tracking download successful");
-      } else {
-        $self->app->log->error("pid[$pid] tracking download failed");
+    $ua->post_p(
+      "$matomoapi" => json => {
+        "token_auth" => "$matomotoken",
+        "requests"   => [$tracklink]
       }
-  })->catch(sub {
-    my $err = shift;
-    $self->app->log->error("pid[$pid] tracking download failed: $err");
-  })->wait;
+    )->then(
+      sub {
+        my ($tx) = @_;
+        if ($tx->result->is_success) {
+          $self->app->log->debug("pid[$pid] tracking download successful");
+        }
+        else {
+          $self->app->log->error("pid[$pid] tracking download failed");
+        }
+      }
+    )->catch(
+      sub {
+        my $err = shift;
+        $self->app->log->error("pid[$pid] tracking download failed: $err");
+      }
+    )->wait;
+  }
+  else {
+    my $u_model = PhaidraAPI::Model::Util->new;
+    $u_model->track_action($self, $pid, $op);
+  }
 }
 
 1;

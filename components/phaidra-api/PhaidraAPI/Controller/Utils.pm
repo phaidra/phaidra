@@ -95,6 +95,11 @@ sub get_all_pids {
 
 }
 
+sub state {
+  my $self = shift;
+  $self->render(text => "remote_address:" . $self->tx->remote_address, status => 200);
+}
+
 sub testerror {
   my $self = shift;
 
