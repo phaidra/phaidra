@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use v5.10;
 use XML::LibXML;
+use Net::IP qw(:PROC);
 use base qw/Mojo::Base/;
 
 sub validate_xml() {
@@ -116,6 +117,32 @@ sub get_video_key {
     push @{$res->{alerts}}, {type => ($res->{status} == 500 or $res->{status} == 404) ? 'error' : 'info', msg => $errormsg};
   }
   return $res;
+}
+
+sub anonymize_ip {
+
+  my $self      = shift;
+  my $c         = shift;
+  my $ipaddress = shift;
+
+  my $ip = new Net::IP($ipaddress);
+
+  unless ($ip) {
+    $c->app->log->error(Net::IP::Error());
+    return '0.0.0.0';
+  }
+
+  return ip_bintoip(substr($ip->binip(), 0, 24) . '0' x 8,  $ip->version()) if $ip->version() eq 4;
+  return ip_bintoip(substr($ip->binip(), 0, 48) . '0' x 80, $ip->version()) if $ip->version() eq 6;
+  return '0.0.0.0';
+}
+
+sub track_action {
+  my ($self, $c, $pid, $action) = @_;
+
+  my $ip  = $c->tx->remote_address;
+  my $ipa = $self->anonymize_ip($c, $ip);
+  $c->app->db_metadata->dbh->do("INSERT INTO usage_stats (action, pid, ip) VALUES ('$action', '$pid', '$ipa');") or $c->app->log->error($c->app->db_metadata->dbh->errstr);
 }
 
 1;

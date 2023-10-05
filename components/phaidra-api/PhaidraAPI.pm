@@ -386,6 +386,7 @@ sub startup {
   $r->get('openapi/json')                           ->to('utils#openapi_json');
   $r->get('languages')                              ->to('languages#get_languages');
   $r->get('licenses')                               ->to('licenses#get_licenses');
+  $r->get('state')                                  ->to('utils#state');
 
   $r->get('uwmetadata/tree')                        ->to('uwmetadata#tree');
   $r->post('uwmetadata/json2xml')                   ->to('uwmetadata#json2xml');

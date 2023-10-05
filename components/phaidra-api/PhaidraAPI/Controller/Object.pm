@@ -52,7 +52,7 @@ sub info {
   my $r            = $object_model->info($self, $pid, $mode, $username, $password);
 
   if ($r->{status} eq 200) {
-    $self->track_detail($pid);
+    $self->track_info($pid);
   }
 
   $self->render(json => $r, status => $r->{status});
@@ -107,10 +107,10 @@ sub setNoCacheHeaders {
   my $self = shift;
 
   $self->res->headers->add('Pragma-Directive' => 'no-cache');
-  $self->res->headers->add('Cache-Directive' => 'no-cache');
-  $self->res->headers->add('Cache-Control' => 'no-cache');
-  $self->res->headers->add('Pragma' => 'no-cache');
-  $self->res->headers->add('Expires' => 0);
+  $self->res->headers->add('Cache-Directive'  => 'no-cache');
+  $self->res->headers->add('Cache-Control'    => 'no-cache');
+  $self->res->headers->add('Pragma'           => 'no-cache');
+  $self->res->headers->add('Expires'          => 0);
 }
 
 sub thumbnail {
@@ -316,7 +316,7 @@ sub preview {
 
   if ($self->app->config->{fedora}->{version} >= 6) {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    
+
     my $propres = $fedora_model->getObjectProperties($self, $pid);
     if ($propres->{status} != 200) {
       return $propres;
@@ -327,18 +327,18 @@ sub preview {
       for my $contains (@{$propres->{contains}}) {
         if ($contains eq 'WEBVERSION') {
           $trywebversion = 1;
-          $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'WEBVERSION');
+          $dsAttr        = $fedora_model->getDatastreamAttributes($self, $pid, 'WEBVERSION');
           if ($dsAttr->{status} eq 200) {
             $filename = $dsAttr->{filename};
             $mimetype = $dsAttr->{mimetype};
-            $size = $dsAttr->{size};
+            $size     = $dsAttr->{size};
           }
           last;
         }
       }
     }
 
-    unless ($trywebversion) {      
+    unless ($trywebversion) {
       $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
       if ($dsAttr->{status} ne 200) {
         $self->render(json => $dsAttr, status => $dsAttr->{status});
@@ -346,9 +346,10 @@ sub preview {
       }
       $filename = $dsAttr->{filename};
       $mimetype = $dsAttr->{mimetype};
-      $size = $dsAttr->{size};
+      $size     = $dsAttr->{size};
     }
-  } else {
+  }
+  else {
 
     my $object_model = PhaidraAPI::Model::Object->new;
     my $r_oxml       = $object_model->get_foxml($self, $pid);
@@ -390,9 +391,11 @@ sub preview {
     $docres = $index_model->get_doc($self, $pid);
     if ($docres->{status} ne 200) {
       $self->app->log->error("pid[$pid] error searching for doc: " . $self->app->dumper($docres));
+
       #$self->reply->static('images/error.png');
       #return;
-    } else {
+    }
+    else {
       $size = $docres->{doc}->{size};
     }
   }
@@ -424,10 +427,12 @@ sub preview {
         my $hash = hmac_sha1_hex($pid, $self->app->config->{imageserver}->{hash_secret});
         $self->paf_mongo->get_collection('jobs')->insert_one({pid => $pid, cmodel => $cmodel, agent => "pige", status => "new", idhash => $hash, created => time});
         $self->app->log->info("Imageserver job queued: sleeping... pid[$pid] cm[$cmodel]");
-        Mojo::IOLoop->timer(8 => sub {}); Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
+        Mojo::IOLoop->timer(8 => sub { });
+        Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
         $self->app->log->info("Imageserver job queued: waking up... pid[$pid] cm[$cmodel]");
         $imgsrvjobstatus = $self->imageserver_job_status($pid);
         $self->app->log->info("Imageserver job queued: job status [$imgsrvjobstatus] pid[$pid] cm[$cmodel]");
+
         if ($imgsrvjobstatus ne 'finished') {
           $self->render(text => "Image processing status: queued. Please try again later.", status => 200);
           return;
@@ -435,7 +440,8 @@ sub preview {
       }
       if ($imgsrvjobstatus eq 'new' or $imgsrvjobstatus eq 'in_progess') {
         $self->app->log->info("Imageserver job new/in_progess: sleeping... pid[$pid] cm[$cmodel]");
-        Mojo::IOLoop->timer(6 => sub {}); Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
+        Mojo::IOLoop->timer(6 => sub { });
+        Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
         $self->app->log->info("Imageserver job new/in_progess: waking up... pid[$pid] cm[$cmodel]");
         $imgsrvjobstatus = $self->imageserver_job_status($pid);
         $self->app->log->info("Imageserver job new/in_progess: job status [$imgsrvjobstatus] pid[$pid] cm[$cmodel]");
@@ -445,15 +451,15 @@ sub preview {
         if (($cmodel eq 'Page') and ($self->app->config->{solr}->{core_pages})) {
           $docres = $index_model->get_page_doc($self, $pid);
         }
-    
-        if(!$docres or ($docres->{status} ne 200)) {
+
+        if (!$docres or ($docres->{status} ne 200)) {
           $docres = $index_model->get_doc($self, $pid);
         }
 
-        if(!$docres or ($docres->{status} ne 200)) {
+        if (!$docres or ($docres->{status} ne 200)) {
           $docres = $index_model->get($self, $pid);
         }
-   
+
         if ($docres->{status} ne 200) {
           $self->app->log->error("pid[$pid] error searching for doc: " . $self->app->dumper($docres));
           $self->reply->static('images/error.png');
@@ -485,6 +491,10 @@ sub preview {
         $self->stash(basepath => $self->config->{basepath});
         $self->stash(pid      => $pid);
         $self->stash(license  => $license);
+
+        my $u_model = PhaidraAPI::Model::Util->new;
+        $u_model->track_action($self, $pid, 'preview');
+
         $self->render(template => 'utils/imageviewer', format => 'html');
         return;
       }
@@ -510,6 +520,10 @@ sub preview {
       $self->stash(baseurl  => $self->config->{baseurl});
       $self->stash(basepath => $self->config->{basepath});
       $self->stash(pid      => $pid);
+
+      my $u_model = PhaidraAPI::Model::Util->new;
+      $u_model->track_action($self, $pid, 'preview');
+
       $self->render(template => 'utils/bookviewer', format => 'html');
       return;
     }
@@ -523,6 +537,10 @@ sub preview {
       $self->stash(basepath      => $self->config->{basepath});
       $self->stash(trywebversion => $trywebversion);
       $self->stash(pid           => $pid);
+
+      my $u_model = PhaidraAPI::Model::Util->new;
+      $u_model->track_action($self, $pid, 'preview');
+
       $self->render(template => 'utils/pdfviewer', format => 'html');
       return;
     }
@@ -553,6 +571,10 @@ sub preview {
         $self->stash(pid      => $pid);
         $self->stash(mType    => 'ply')   if $index_mime eq 'model/ply';
         $self->stash(mType    => 'nexus') if $index_mime eq 'model/nxz';
+
+        my $u_model = PhaidraAPI::Model::Util->new;
+        $u_model->track_action($self, $pid, 'preview');
+
         $self->render(template => 'utils/3dviewer', format => 'html');
         return;
       }
@@ -614,6 +636,9 @@ sub preview {
           $self->stash(tracklabel        => $tracklabel);
           $self->stash(tracklanguage     => $tracklanguage);
 
+          my $u_model = PhaidraAPI::Model::Util->new;
+          $u_model->track_action($self, $pid, 'preview');
+
           $self->render(template => 'utils/streamingplayer', format => 'html');
           return;
         }
@@ -621,8 +646,9 @@ sub preview {
           $self->app->log->error("Video key not available: " . $self->app->dumper($r));
           if ($r->{status} eq 404 or $r->{status} eq 503) {
             $self->render(text => "Stream is not available. Reason: Video is being prepared for streaming, please try again later.", status => $r->{status});
-          } else {
-            $self->render(text => "Stream is not available. Reason: ".$r->{alerts}[0]->{msg}, status => $r->{status});
+          }
+          else {
+            $self->render(text => "Stream is not available. Reason: " . $r->{alerts}[0]->{msg}, status => $r->{status});
           }
 
           return;
@@ -633,7 +659,7 @@ sub preview {
           $self->render(template => 'utils/loadbutton', format => 'html');
           return;
         }
-        $self->stash(scheme   => $self->config->{scheme});
+        $self->stash(scheme        => $self->config->{scheme});
         $self->stash(baseurl       => $self->config->{baseurl});
         $self->stash(basepath      => $self->config->{basepath});
         $self->stash(trywebversion => $trywebversion);
@@ -645,6 +671,10 @@ sub preview {
         if ($thumbPid) {
           $self->stash(thumbpid => $pid);
         }
+
+        my $u_model = PhaidraAPI::Model::Util->new;
+        $u_model->track_action($self, $pid, 'preview');
+
         $self->render(template => 'utils/videoplayer', format => 'html');
         return;
       }
@@ -662,9 +692,14 @@ sub preview {
       $self->stash(mimetype      => $mimetype);
       $self->stash(pid           => $pid);
       my $thumbPid = $self->get_is_thumbnail_for($pid);
+
       if ($thumbPid) {
         $self->stash(thumbpid => $pid);
       }
+
+      my $u_model = PhaidraAPI::Model::Util->new;
+      $u_model->track_action($self, $pid, 'preview');
+
       $self->render(template => 'utils/audioplayer', format => 'html');
       return;
     }
@@ -672,7 +707,7 @@ sub preview {
       my $thumbPid = $self->get_is_thumbnail_for($pid);
       if ($thumbPid) {
         if ($self->imageserver_job_status($thumbPid) eq 'finished') {
-          my $thsize       = "!480,480";
+          my $thsize     = "!480,480";
           my $isrv_model = PhaidraAPI::Model::Imageserver->new;
           my $resis      = $isrv_model->get_url($self, Mojo::Parameters->new(IIIF => "$thumbPid.tif/full/$thsize/0/default.jpg"), 0);
           if ($resis->{status} ne 200) {
@@ -1209,7 +1244,7 @@ sub get_metadata {
   my $writerights = 0;
   if ($self->app->config->{fedora}->{version} >= 6) {
     my $authz = PhaidraAPI::Model::Authorization->new;
-    my $wr = $authz->check_rights($self, $pid, 'w');
+    my $wr    = $authz->check_rights($self, $pid, 'w');
     if ($wr->{status} == 200) {
       $writerights = 1;
     }
@@ -1417,21 +1452,22 @@ sub get_legacy_container_member {
 
   if ($self->app->config->{fedora}->{version} >= 6) {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
+    my $dsAttr       = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
     if ($dsAttr->{status} ne 200) {
       $self->render(json => $dsAttr, status => $dsAttr->{status});
       return;
     }
     $filename = $dsAttr->{filename};
     $mimetype = $dsAttr->{mimetype};
-    $size = $dsAttr->{size};
-    $dsAttr = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
+    $size     = $dsAttr->{size};
+    $dsAttr   = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
     if ($dsAttr->{status} ne 200) {
       $self->render(json => $dsAttr, status => $dsAttr->{status});
       return;
     }
     $path = $dsAttr->{path};
-  } else {
+  }
+  else {
     my $object_model = PhaidraAPI::Model::Object->new;
     my $r_oxml       = $object_model->get_foxml($self, $pid);
     if ($r_oxml->{status} ne 200) {
@@ -1467,7 +1503,7 @@ sub get_legacy_container_member {
   $self->rendered($res->{status});
 }
 
-sub track_detail {
+sub track_info {
   my ($self, $pid) = @_;
 
   my $fr = undef;
@@ -1477,67 +1513,78 @@ sub track_detail {
         $fr = $f;
       }
     }
-  }
 
-  unless (defined($fr)) {
-    $self->app->log->debug("pid[$pid] Not tracking detail: Site is not configured");
-    return;
-  }
-  unless ($fr->{site} eq 'phaidra') {
-    $self->app->log->error("pid[$pid] Error tracking detail: Site [" . $fr->{site} . "] is not supported");
-    return;
-  }
-  unless (defined($fr->{stats})) {
-    $self->app->log->error("pid[$pid] Error tracking detail: Statistics source is not configured");
-    return;
-  }
-  unless (defined($fr->{stats}->{serverbaseurl})) {
-    $self->app->log->error("pid[$pid] Error tracking detail: serverbaseurl is not configured");
-    return;
-  }
-  unless (defined($fr->{stats}->{token})) {
-    $self->app->log->error("pid[$pid] Error tracking detail: token is not configured");
-    return;
-  }
+    unless (defined($fr)) {
+      $self->app->log->debug("pid[$pid] Not tracking detail: Site is not configured");
+      return;
+    }
+    unless ($fr->{site} eq 'phaidra') {
+      $self->app->log->error("pid[$pid] Error tracking detail: Site [" . $fr->{site} . "] is not supported");
+      return;
+    }
+    unless (defined($fr->{stats})) {
+      $self->app->log->error("pid[$pid] Error tracking detail: Statistics source is not configured");
+      return;
+    }
+    unless (defined($fr->{stats}->{serverbaseurl})) {
+      $self->app->log->error("pid[$pid] Error tracking detail: serverbaseurl is not configured");
+      return;
+    }
+    unless (defined($fr->{stats}->{token})) {
+      $self->app->log->error("pid[$pid] Error tracking detail: token is not configured");
+      return;
+    }
 
-  # only piwik now
-  unless ($fr->{stats}->{type} eq 'piwik') {
-    $self->app->log->error("pid[$pid] Error tracking detail: Statistics source [" . $fr->{stats}->{type} . "] is not supported.");
-    return;
-  }
+    # only piwik now
+    unless ($fr->{stats}->{type} eq 'piwik') {
+      $self->app->log->error("pid[$pid] Error tracking detail: Statistics source [" . $fr->{stats}->{type} . "] is not supported.");
+      return;
+    }
 
-  unless (defined($fr->{stats}->{siteid})) {
-    $self->app->log->error("pid[$pid] Error tracking detail: Piwik siteid is not configured.");
-    return;
-  }
+    unless (defined($fr->{stats}->{siteid})) {
+      $self->app->log->error("pid[$pid] Error tracking detail: Piwik siteid is not configured.");
+      return;
+    }
 
-  my $siteid = $fr->{stats}->{siteid};
-  my $matomoapi = "https://".$fr->{stats}->{serverbaseurl}."/matomo.php";
-  my $matomotoken = $fr->{stats}->{token};
-  my $actionname = url_escape("detail/$pid");
+    my $siteid      = $fr->{stats}->{siteid};
+    my $matomoapi   = "https://" . $fr->{stats}->{serverbaseurl} . "/matomo.php";
+    my $matomotoken = $fr->{stats}->{token};
+    my $actionname  = url_escape("detail/$pid");
 
-  my $trackurl = "https://".$self->app->config->{phaidra}->{baseurl}."/detail/$pid";
-  my $url = url_escape($trackurl);
-  my $cip = url_escape($self->tx->remote_address);
-  my $tracklink = "?idsite=$siteid&rec=1&url=$url&action_name=$actionname&cip=$cip";
+    my $trackurl  = "https://" . $self->app->config->{phaidra}->{baseurl} . "/detail/$pid";
+    my $url       = url_escape($trackurl);
+    my $cip       = url_escape($self->tx->remote_address);
+    my $tracklink = "?idsite=$siteid&rec=1&url=$url&action_name=$actionname&cip=$cip";
 
-  my $ua  = Mojo::UserAgent->new;
-  $ua->request_timeout(1);
+    my $ua = Mojo::UserAgent->new;
+    $ua->request_timeout(1);
 
-  $ua->post_p("$matomoapi"=> json => {
-      "token_auth" => "$matomotoken",
-      "requests" => [ $tracklink ]
-    })->then(sub {
-      my ($tx) = @_;
-      if($tx->result->is_success) {
-        $self->app->log->debug("pid[$pid] tracking detail successful");
-      } else {
-        $self->app->log->error("pid[$pid] tracking detail failed");
+    $ua->post_p(
+      "$matomoapi" => json => {
+        "token_auth" => "$matomotoken",
+        "requests"   => [$tracklink]
       }
-  })->catch(sub {
-    my $err = shift;
-    $self->app->log->error("pid[$pid] tracking detail failed: $err");
-  })->wait;
+    )->then(
+      sub {
+        my ($tx) = @_;
+        if ($tx->result->is_success) {
+          $self->app->log->debug("pid[$pid] tracking detail successful");
+        }
+        else {
+          $self->app->log->error("pid[$pid] tracking detail failed");
+        }
+      }
+    )->catch(
+      sub {
+        my $err = shift;
+        $self->app->log->error("pid[$pid] tracking detail failed: $err");
+      }
+    )->wait;
+  }
+  else {
+    my $u_model = PhaidraAPI::Model::Util->new;
+    $u_model->track_action($self, $pid, 'info');
+  }
 }
 
 # Diss method is for calling the disseminator which is api-a access, so it can also be called without credentials.
