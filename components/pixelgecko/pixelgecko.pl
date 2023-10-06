@@ -10,9 +10,11 @@ use FileHandle;
 autoflush STDOUT 1;
 autoflush STDERR 1;
 
-my $fnm_config= '/etc/pixelgecko.yml';
+my $fnm_config= './pixelgecko_conf.yml';
+my $config= YAML::Syck::LoadFile($fnm_config);
+
+my $sleep_time=$ENV{IMAGE_CONVERSION_INTERVAL};
 my $op_mode;
-my $sleep_time= 3;
 
 my $agent_name= 'pige';
 
@@ -39,7 +41,7 @@ while (defined (my $arg= shift (@ARGV))) {
   }
 }
 
-my $config= YAML::Syck::LoadFile($fnm_config);
+
 # print "config: ", Dumper ($config);
 
 if ($op_mode eq 'direct') {

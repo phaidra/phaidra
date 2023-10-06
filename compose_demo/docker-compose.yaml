@@ -103,12 +103,15 @@ services:
       always
     build:
       context: ../.
-      dockerfile: dockerfiles/pixelgecko.dockerfile
+      dockerfile: dockerfiles/pixelgecko_alt.dockerfile
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
+      - ./../components/pixelgecko:/opt/pixelgecko:ro
     networks:
       - phaidra-network
+    environment:
+      - IMAGE_CONVERSION_INTERVAL=${IMAGE_CONVERSION_INTERVAL}
 
   mariadb-phaidra:
     image: mariadb:11.0.2-jammy

@@ -8,8 +8,7 @@ libvips-tools libyaml-syck-perl libmongodb-perl
 apt-get clean
 EOF
 
-ADD ./../components/pixelgecko /opt/pixelgecko
-COPY ./../image_components/pixelgecko/pixelgecko.yml /etc/
-
+RUN mkdir -pv /opt/pixelgecko
 WORKDIR /opt/pixelgecko
+
 ENTRYPOINT ["perl", "pixelgecko.pl", "--watch"]
