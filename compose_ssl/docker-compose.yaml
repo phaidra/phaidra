@@ -222,6 +222,29 @@ services:
     networks:
       - phaidra-network
 
+  database-dumper:
+    build:
+      context: ../.
+      dockerfile: dockerfiles/database-dumper.dockerfile
+    volumes:
+      - database-dumps:/mnt/database-dumps
+      - .././container_components/database-dumper:/mnt/database-dumper:ro
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - PHAIDRADB=${PHAIDRADB}
+      - FEDORADB=${FEDORADB}
+      - MONGODB_PHAIDRA_USER=${MONGODB_PHAIDRA_USER}
+      - MONGODB_PHAIDRA_PASSWORD=${MONGODB_PHAIDRA_PASSWORD}
+    depends_on:
+      - mariadb-fedora
+      - mariadb-phaidra
+      - mongodb-phaidra
+    entrypoint:
+      - bash
+      - /mnt/database-dumper/database-dumper-entrypoint.bash
+    networks:
+      - phaidra-network
+      
 volumes:
   api_logs:
   openldap:
@@ -232,3 +255,4 @@ volumes:
   mariadb_phaidra:
   pixelgecko:
   solr:
+  database-dumps:
