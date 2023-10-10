@@ -1,0 +1,9 @@
+SHELL=/bin/bash
+BASH_ENV=/container.env
+
+# m h  dom mon dow   command
+0 * * * * bash /mnt/database-dumper/mariadb-phaidra.bash
+0 * * * * bash /mnt/database-dumper/mariadb-fedora.bash
+0 * * * * bash /mnt/database-dumper/mongodb-phaidra.bash
+30 * * * * bash /mnt/database-dumper/database-dump-cleaner.bash
+
