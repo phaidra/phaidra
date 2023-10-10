@@ -1,3 +1,3 @@
-find /mnt/database-dumps -type f -name "*${PHAIDRADB}*" | sort -r | tail -n+30 | xargs rm
-find /mnt/database-dumps -type f -name "*${FEDORADB}*" | sort -r | tail -n+30 | xargs rm
-find /mnt/database-dumps -type f -name "*mongodb*" | sort -r | tail -n+30 | xargs rm
+find /mnt/database-dumps -type f -name "*${PHAIDRADB}*" -ctime +30 -delete
+find /mnt/database-dumps -type f -name "*${FEDORADB}*" -ctime +30 -delete
+find /mnt/database-dumps -type f -name "*mongodb*" -ctime +30 -delete
