@@ -103,7 +103,7 @@ services:
       always
     build:
       context: ../.
-      dockerfile: dockerfiles/pixelgecko_alt.dockerfile
+      dockerfile: dockerfiles/pixelgecko.dockerfile
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
@@ -221,26 +221,31 @@ services:
     networks:
       - phaidra-network
 
-  database-dumper:
+  chronos:
     build:
       context: ../.
-      dockerfile: dockerfiles/database-dumper.dockerfile
+      dockerfile: dockerfiles/chronos.dockerfile
     volumes:
       - database-dumps:/mnt/database-dumps
-      - .././container_components/database-dumper:/mnt/database-dumper:ro
+      - sitemaps:/mnt/sitemaps
+      - .././container_components/chronos:/mnt/chronos:ro
     environment:
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
       - PHAIDRADB=${PHAIDRADB}
       - FEDORADB=${FEDORADB}
       - MONGODB_PHAIDRA_USER=${MONGODB_PHAIDRA_USER}
       - MONGODB_PHAIDRA_PASSWORD=${MONGODB_PHAIDRA_PASSWORD}
+      - PHAIDRA_HOSTNAME=${PHAIDRA_HOSTNAME}
+      - PHAIDRA_PORTSTUB=${PHAIDRA_PORTSTUB}
+      - PHAIDRA_HOSTPORT=${PHAIDRA_HOSTPORT}
+      - OUTSIDE_HTTP_SCHEME=${OUTSIDE_HTTP_SCHEME}
     depends_on:
       - mariadb-fedora
       - mariadb-phaidra
       - mongodb-phaidra
     entrypoint:
       - bash
-      - /mnt/database-dumper/database-dumper-entrypoint.bash
+      - /mnt/chronos/chronos-entrypoint.bash
     networks:
       - phaidra-network
       
@@ -255,3 +260,4 @@ volumes:
   pixelgecko:
   solr:
   database-dumps:
+  sitemaps:

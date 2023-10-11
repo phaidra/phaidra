@@ -1,0 +1,4 @@
+declare -p | grep -E 'MARIADB_ROOT_PASSWORD|PHAIDRADB|FEDORADB|MONGODB_PHAIDRA_USER|MONGODB_PHAIDRA_PASSWORD|PHAIDRA_HOSTNAME|PHAIDRA_PORTSTUB|PHAIDRA_HOSTPORT|OUTSIDE_HTTP_SCHEME' > /container.env
+crontab /mnt/chronos/chronos-crontab.txt
+service cron start
+tail -F anything

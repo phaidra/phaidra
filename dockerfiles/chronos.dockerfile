@@ -3,7 +3,8 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN <<EOF
 apt-get update
 apt-get install --yes --quiet --no-install-recommends\
-    mariadb-client cron
+    mariadb-client cron libtemplate-perl libmojolicious-perl liblog-log4perl-perl \
+    liblog-dispatch-filerotate-perl
 EOF
 COPY ./../third-parties/mongodb-database-tools-debian11-x86_64-100.8.0.tgz /
 RUN <<EOF
@@ -13,4 +14,3 @@ tar xf mongodb-database-tools-debian11-x86_64-100.8.0.tgz \
     mongodb-database-tools-debian11-x86_64-100.8.0/bin/mongodump
 rm mongodb-database-tools-debian11-x86_64-100.8.0.tgz
 EOF
-CMD ["/bin/bash"]

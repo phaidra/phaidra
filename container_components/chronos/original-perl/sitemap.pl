@@ -2,7 +2,6 @@
 
 use strict;
 use warnings;
-use YAML::Syck;
 use Data::Dumper;
 use Log::Log4perl;
 use Mojo::URL;
@@ -20,10 +19,10 @@ my $logconf = q(
 
   log4perl.appender.Logfile                          = Log::Dispatch::FileRotate
   log4perl.appender.Logfile.Threshold                = DEBUG
-  log4perl.appender.Logfile.filename                 = /var/log/phaidra/sitemap.log
+  log4perl.appender.Logfile.filename                 = /mnt/sitemaps/sitemap.log
   log4perl.appender.Logfile.max                      = 30
   log4perl.appender.Logfile.DatePattern              = yyyy-MM-dd
-  log4perl.appender.Logfile.TZ                       = CET
+  log4perl.appender.Logfile.SetDate                  = CET
   log4perl.appender.Logfile.layout                   = Log::Log4perl::Layout::PatternLayout
   log4perl.appender.Logfile.layout.ConversionPattern = [%d] [%p] [%P] %m%n
   log4perl.appender.Logfile.mode                     = append
@@ -40,39 +39,21 @@ my $logconf = q(
 Log::Log4perl::init( \$logconf );
 my $log = Log::Log4perl::get_logger("MyLogger");
 
-my $config;
-eval { $config = YAML::Syck::LoadFile('/etc/phaidra.yml'); };
-if($@)
-{
-  $log->error("ERR: $@\n");
-  exit(1);
-}
-
 $log->info("started");
 
-my $directory = $config->{phaidrapath}."/root";
-if (exists($config->{phaidraui})) {
-  if ($config->{phaidraui}->{enabled} eq '1') {
-    if (exists($config->{phaidraui}->{static})) {
-      $directory = $config->{phaidraui}->{static};
-    }
-  }
-}
+my $directory = "/mnt/sitemaps";
 
 my $tt = Template->new({INCLUDE_PATH => $Bin.'/templates/',});
 
 my $ua = Mojo::UserAgent->new;
 
 my $urlsolr = Mojo::URL->new;
-$urlsolr->scheme($config->{solr}->{scheme});
-$urlsolr->host($config->{solr}->{host});
-$urlsolr->port($config->{solr}->{port});
-if($config->{solr}->{path}){
-  $urlsolr->path("/".$config->{solr}->{path}."/solr/".$config->{solr}->{core}."/select");
-}else{
-  $urlsolr->path("/solr/".$config->{solr}->{core}."/select");
-}
+$urlsolr->scheme("http");
+$urlsolr->host("solr");
+$urlsolr->port(8983);
+$urlsolr->path("/solr/phaidra/select");
 $urlsolr->query(q => "*:*", fq => "-hassuccessor:* AND -ismemberof:[\"\" TO *] AND -isinadminset:*", fl => "pid", rows => 1, wt => "json");
+
 my $solrres = $ua->get($urlsolr)->result;
 unless ($solrres->is_success) {
   $log->error("error querying solr: ".$solrres->code." ".$solrres->message);
@@ -99,11 +80,11 @@ while ($start < $total) {
     $indexfilelastmod = @{$docs}[0]->{modified}; # ordered by modified
   }
   for my $o (@{$docs}){
-    push @urls, { loc => 'https://'.$config->{phaidrabaseurl}.'/detail/'.$o->{pid}, lastmod => $o->{modified} };
+    push @urls, { loc => $ENV{OUTSIDE_HTTP_SCHEME}.'://'.$ENV{PHAIDRA_HOSTNAME}.$ENV{PHAIDRA_PORTSTUB}.$ENV{PHAIDRA_HOSTPORT}.'/detail/'.$o->{pid}, lastmod => $o->{modified} };
   }
 
   
-  push @indexfiles, { loc => 'https://'.$config->{phaidrabaseurl}."/sitemap$indexfiles_cnt.xml", lastmod => $indexfilelastmod };
+  push @indexfiles, { loc => $ENV{OUTSIDE_HTTP_SCHEME}.'://'.$ENV{PHAIDRA_HOSTNAME}.$ENV{PHAIDRA_PORTSTUB}.$ENV{PHAIDRA_HOSTPORT}."/sitemap$indexfiles_cnt.xml", lastmod => $indexfilelastmod };
   my $FIELDS = { urls => \@urls };
   $log->info("Generating sitemap nr $indexfiles_cnt...");
   unless($tt->process('sitemap.xml.tt', $FIELDS, $directory."/sitemap$indexfiles_cnt.xml")) {
