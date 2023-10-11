@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+<xs:element name="classifications">
+<xs:complexType>
+<xs:sequence>
+	<xs:element name="classification" minOccurs="1" maxOccurs="unbounded">
+	<xs:complexType>
+	<xs:sequence>
+		<xs:element name="description" minOccurs="1" maxOccurs="unbounded">
+		<xs:complexType>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="isocode" type="xs:language" use="required" />
+			</xs:extension>
+		</xs:simpleContent>
+		</xs:complexType>
+		</xs:element>
+		<xs:element name="taxons" minOccurs="1" maxOccurs="unbounded" type="mytaxon" />
+	</xs:sequence>
+	<xs:attribute name="mandatory" type="BOOLEAN" use="required" />
+	<xs:attribute name="ID" type="xs:int" use="required" />
+	</xs:complexType>
+	</xs:element>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+
+<xs:complexType name="mytaxon">
+<xs:sequence>
+	<xs:element name="taxon" minOccurs="0" maxOccurs="unbounded">
+	<xs:complexType>
+	<xs:sequence>
+		<xs:element name="description" minOccurs="1" maxOccurs="unbounded">
+		<xs:complexType>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="isocode" type="xs:language" use="required" />
+			</xs:extension>
+		</xs:simpleContent>
+		</xs:complexType>
+		</xs:element>
+		<xs:element name="nonpreferred" minOccurs="0" maxOccurs="unbounded">
+		<xs:complexType>
+		<xs:sequence>
+			<xs:element name="description" minOccurs="1" maxOccurs="unbounded">
+			<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="isocode" type="xs:language" use="required" />
+				</xs:extension>
+			</xs:simpleContent>
+			</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		</xs:complexType>
+		</xs:element>
+		<xs:element name="taxons" minOccurs="0" maxOccurs="unbounded" type="mytaxon" />
+	</xs:sequence>
+	<xs:attribute name="upstream_identifier" type="xs:string" use="required" />
+	<xs:attribute name="ID" type="xs:int" use="required" />
+	</xs:complexType>
+	</xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:simpleType name="BOOLEAN">
+	<xs:restriction base="xs:string">
+		<xs:enumeration value="Y" />
+		<xs:enumeration value="N" />
+	</xs:restriction>
+</xs:simpleType>
+
+</xs:schema>
