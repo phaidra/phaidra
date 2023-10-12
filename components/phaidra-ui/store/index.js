@@ -584,13 +584,16 @@ export const actions = {
     commit('setCollectionMembersTotal', 0)
     const id = options.pid.replace(/[o:]/g, '')
     const params = {
-      q: '-hassuccessor:* AND -ismemberof:["" TO *]',
+      q: '-ismemberof:["" TO *]',
       defType: 'edismax',
       wt: 'json',
       fq: `owner:* AND ispartof:"${options.pid}"`,
       start: (options.page - 1) * options.pagesize,
       rows: options.pagesize,
       sort: `pos_in_o_${id} asc`
+    }
+    if (options.onlylatestversion) {
+      params.q = '-hassuccessor:* AND ' + params.q
     }
     try {
       commit('setLoading', true)
@@ -602,6 +605,7 @@ export const actions = {
           'content-type': 'application/x-www-form-urlencoded'
         }
       })
+      console.log('fetchCollectionMembers response:')
       commit('setCollectionMembers', response.data.response.docs)
       commit('setCollectionMembersTotal', response.data.response.numFound)
     } catch (error) {
@@ -647,15 +651,16 @@ export const actions = {
       if (response.data.alerts && response.data.alerts.length > 0) {
         commit('setAlerts', response.data.alerts)
       }
-        if (response.status === 200) {
-            let cookieOptions = {
-                path: '/',
-                secure: true,
-                sameSite: 'Strict'
-            }
-            if (state.instanceconfig.cookiedomain) {
-                cookieOptions.domain = state.instanceconfig.cookiedomain}
-            this.$cookies.set('XSRF-TOKEN', response.data['XSRF-TOKEN'], cookieOptions)
+      if (response.status === 200) {
+        let cookieOptions = {
+          path: '/',
+          secure: true,
+          sameSite: 'Strict'
+        }
+        if (state.instanceconfig.cookiedomain) {
+          cookieOptions.domain = state.instanceconfig.cookiedomain
+        }
+        this.$cookies.set('XSRF-TOKEN', response.data['XSRF-TOKEN'], cookieOptions)
         console.log('setting token ' + response.data['XSRF-TOKEN'])
         commit('setToken', response.data['XSRF-TOKEN'])
         dispatch('getLoginData')

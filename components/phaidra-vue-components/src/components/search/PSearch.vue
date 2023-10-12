@@ -180,7 +180,7 @@ export default {
           method: 'POST',
           mode: 'cors'
         })
-          .then(function (response) { return response.text() })
+          .then(function (response) { return response.data })
           .then(function (text) {
             var blob = new Blob([text], {
               type: 'text/csv;charset=utf-8'

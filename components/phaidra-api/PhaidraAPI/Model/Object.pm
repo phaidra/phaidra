@@ -1424,6 +1424,7 @@ sub save_metadata {
           }
           if ($rel->{'o'} eq "self") {
             $rel->{'o'} = "info:fedora/" . $pid;
+            $skiphook = 0;
           }
         }
         for my $rel (@{$metadata->{'relationships'}}) {

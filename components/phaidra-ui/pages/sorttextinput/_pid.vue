@@ -43,13 +43,13 @@ export default {
       await self.loadDoc(self, pid)
 
       let rel = 'ismemberof'
-      if (this.doc.cmodel === 'Collection') {
+      if (self.doc.cmodel === 'Collection') {
         rel = 'ispartof'
       }
       return self.loadMembers(self, pid, rel)
     },
     loadDoc: function (self, pid) {
-      this.members = []
+      self.members = []
 
       var params = {
         q: 'pid:"' + pid + '"',
@@ -60,11 +60,11 @@ export default {
 
       var query = qs.stringify(params, { encodeValuesOnly: true, indices: false })
       var url = '/search/select?' + query
-      var promise = fetch(url, {
-        method: 'GET',
-        mode: 'cors'
+      var promise = self.$axios.request({
+        method: 'POST',
+        url: url
       })
-        .then(function (response) { return response.json() })
+        .then(function (response) { return response.data })
         .then(function (json) {
           if (json.response.numFound > 0) {
             self.doc = json.response.docs[0]
@@ -90,11 +90,11 @@ export default {
 
       var query = qs.stringify(params, { encodeValuesOnly: true, indices: false })
       var url = '/search/select?' + query
-      var promise = fetch(url, {
-        method: 'GET',
-        mode: 'cors'
+      var promise = self.$axios.request({
+        method: 'POST',
+        url: url
       })
-        .then(function (response) { return response.json() })
+        .then(function (response) { return response.data })
         .then(function (json) {
           self.count = json.response.numFound
         })
@@ -104,7 +104,7 @@ export default {
 
       await promise
 
-      this.members = []
+      self.members = []
 
       var params = {
         q: rel + ':"' + pid + '"',
@@ -113,16 +113,16 @@ export default {
         qf: rel + '^5',
         fl: 'pid',
         sort: 'pos_in_' + pid.replace(':', '_') + ' asc',
-        rows: this.count
+        rows: self.count
       }
 
       var query = qs.stringify(params, { encodeValuesOnly: true, indices: false })
       var url = '/search/select?' + query
-      var promise = fetch(url, {
-        method: 'GET',
-        mode: 'cors'
+      var promise = self.$axios.request({
+        method: 'POST',
+        url: url
       })
-        .then(function (response) { return response.json() })
+        .then(function (response) { return response.data })
         .then(function (json) {
           if (json.response.numFound > 0) {
             self.members = json.response.docs

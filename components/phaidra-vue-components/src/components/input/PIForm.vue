@@ -901,7 +901,7 @@ export default {
           method: 'GET',
           mode: 'cors'
         })
-        let json = await response.json()
+        let json = await response.data
         let form = jsonLd.json2form(json)
         for (let s of form.sections) {
           let isFileSection = false

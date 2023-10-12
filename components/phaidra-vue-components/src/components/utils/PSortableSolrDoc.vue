@@ -1,6 +1,12 @@
 <template>
   <li class="list-item">
-    <img :src="'https://' + instance.baseurl + '/preview/' + item.pid + '///120'"  class="elevation-1"/>
+    <p-img :src="instance.api + '/object/' + item.pid + '/thumbnail'" class="elevation-1 mt-2 preview-maxwidth">
+      <template v-slot:placeholder>
+        <div class="fill-height ma-0" align="center" justify="center" >
+          <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+        </div>
+      </template>
+    </p-img>
     <div class="list-item-title">{{item.pid}} - {{item.cmodel}}<template v-if="'dc_title' in item"> - {{item.dc_title[0]}}</template></div>
   </li>
 </template>
@@ -44,4 +50,9 @@ export default {
 .list-item-title {
   padding-left: 20px;
 }
+.preview-maxwidth {
+  max-width: 120px;
+}
 </style>
+
+

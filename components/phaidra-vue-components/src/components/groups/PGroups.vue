@@ -213,11 +213,11 @@ export default {
       deep: true
     },
     userSearch: async function (val) {
-      if (val && (val.length < 4)) {
+      if (val && (val.length < 2)) {
         this.userSearchItems = []
         return
       }
-      if (this.userSearchItems.length > 0) return
+      // if (this.userSearchItems.length > 0) return
       if (this.userSearchLoading) return
       this.userSearchLoading = true
       try {
