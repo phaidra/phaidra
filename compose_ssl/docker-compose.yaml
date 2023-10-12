@@ -24,6 +24,7 @@ services:
       - .././encryption/webserver/privkey.pem:/usr/local/apache2/conf/server.key:ro
       - .././encryption/webserver/fullchain.pem:/usr/local/apache2/conf/server.crt:ro
       - .././docs:/mnt/docs:ro
+      - sitemaps:/mnt/sitemaps:ro
     depends_on:
       - api
       - ui

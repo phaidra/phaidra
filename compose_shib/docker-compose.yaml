@@ -38,6 +38,7 @@ services:
       - .././encryption/shibboleth/sp-encrypt-key.pem:/etc/shibboleth/sp-encrypt-key.pem:ro
       - .././encryption/shibboleth/sp-encrypt-cert.pem:/etc/shibboleth/sp-encrypt-cert.pem:ro
       - .././docs:/mnt/docs:ro
+      - sitemaps:/mnt/sitemaps:ro
     networks:
       - phaidra-network
     environment:
