@@ -21,6 +21,7 @@ services:
     volumes:
       - .././webserver_configs/phaidra-demo.conf:/usr/local/apache2/conf/httpd.conf:ro
       - .././docs:/mnt/docs:ro
+      - sitemaps:/mnt/sitemaps:ro
     depends_on:
       - api
       - ui
