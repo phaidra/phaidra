@@ -153,15 +153,16 @@ See the section [Technical Sketches](#technical-sketches) for how these director
 # Uninstalling
 
 If you want to uninstall PHAIDRA from your computer, this can be done very easy. See the commands below to reset your system
-to a 'clean slate' (shown for the demo version, replace `phaidra-demo` with `phaidra-ssl` or `phaidra-shib` respectively, in
-case you were using these versions).
+to a 'clean slate'.
 
 ## Shut down running PHAIDRA
-In case you have an instance running, make sure to shut it down using the following command (expected output given):
+In case you have an instance running, make sure to shut it down using the following command (from `./compose_demo`, `./compose_ssl`, or `compose_shib`, depending on your installation -- here shown from `./compose_demo`):
 
 ``` example
-# shut down and remove running containers (here from the ./compose_demo directory)
+# COMMAND:
 docker compose down
+# EXPECTED OUTPUT:
+
 [+] Running 15/15
  ✔ Container phaidra-demo-dbgate-1           Removed                                                                                                                                                         10.7s 
  ✔ Container phaidra-demo-pixelgecko-1       Removed                                                                                                                                                         10.5s 
@@ -181,11 +182,13 @@ docker compose down
 ```
 
 ## Remove persisted data
-The following command will remove the volumes (aka directories under `./local/share/volumes`) associated with your PHAIDRA installation.  As mentioned above, replace `phaidra-demo` with `phaidra-ssl` or `phaidra-shib`, depending on your installation.
+The following command will remove the volumes (aka directories under `./local/share/docker/volumes`) associated with your PHAIDRA installation.  As mentioned above, replace `phaidra-demo` with `phaidra-ssl` or `phaidra-shib`, depending on your installation. This command can be run from anywhere.
 
 ```
-# ATTENTION: remove persisted data from previous runs (this command can be run from anywhere)
+# COMMAND:
 docker volume rm $(docker volume ls --filter label=com.docker.compose.project=phaidra-demo --quiet)
+# EXPECTED OUTPUT:
+
 phaidra-demo_api_logs
 phaidra-demo_chronos-database-dumps
 phaidra-demo_chronos-oai-logs
@@ -204,11 +207,13 @@ phaidra-demo_solr
 ```
 
 ## Remove docker images
-The following command will remove the docker images associated with your PHAIDRA installation.  As mentioned above, replace `phaidra-demo` with `phaidra-ssl` or `phaidra-shib`, depending on your installation.
+The following command will remove the docker images associated with your PHAIDRA installation.  As mentioned above, replace `phaidra-demo` with `phaidra-ssl` or `phaidra-shib`, depending on your installation. This command can be run from anywhere.
 
 ```
-# remove docker images
+# COMMAND:
 docker image rm $(docker image ls --filter label=com.docker.compose.project=phaidra-demo --quiet)
+# EXPECTED OUTPUT (hashes are matter of change):
+
 Untagged: phaidra-demo-chronos:latest
 Deleted: sha256:43313fc1a91124996245a88e342f344bcce81d85ee2f9ebf684273ce5c5b66a5
 Untagged: phaidra-demo-ui:latest
@@ -226,13 +231,12 @@ Deleted: sha256:8e02d372cc4d839ba9119a8552f0a059be779d1656f430ee2b0111e7937ced28
 Untagged: phaidra-demo-solr:latest
 Deleted: sha256:837339a0dbe3759ebfcab2692b6c29d54502e5ec1e4a37df363b3ff23c677700
 ```
-## (Optional) Clean up all of docker
+## (Optional) Clean up Docker caches
 In case you are developing and changing  a lot of components, dockerfiles and docker-compose files, 
 things can become cluttered. To remove everything including build caches, you can run 
- the following command (be warned, THIS WILL NOT ONLY AFFECT PHAIDRA COMPONENTS!):
+ the following command (THIS WILL NOT ONLY AFFECT PHAIDRA):
 
 ```
-# cleanup docker matter (build caches, images..., from anywhere)
 docker system prune --all
 ```
 
