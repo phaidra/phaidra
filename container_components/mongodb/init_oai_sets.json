@@ -1,0 +1,167 @@
+[
+    {
+        "_id": "5ee34613489043817841c9b1",
+        "setSpec": "text",
+        "setName": "text resources",
+        "query": "resourcetype:text AND -hassuccessor:* AND -ismemberof:[\"\" TO *]",
+        "setDescription": {
+            "dc_creator": [
+                "demo"
+            ],
+            "dc_title": [
+                "text resources"
+            ]
+        },
+        "created": "2020-06-12T11:00:00Z"
+    },
+    {
+        "_id": "5ee3465a489043817841c9b7",
+        "setSpec": "video",
+        "setName": "video resources",
+        "query": "resourcetype:video AND -hassuccessor:* AND -ismemberof:[\"\" TO *]",
+        "setDescription": {
+            "dc_creator": [
+                "demo"
+            ],
+            "dc_title": [
+                "video resources"
+            ]
+        },
+        "created": "2020-06-12T11:00:00Z"
+    },
+    {
+        "_id": "5ee3466f489043817841c9b9",
+        "setSpec": "dataset",
+        "setName": "dataset resources",
+        "query": "resourcetype:dataset AND -hassuccessor:* AND -ismemberof:[\"\" TO *]",
+        "setDescription": {
+            "dc_creator": [
+                "demo"
+            ],
+            "dc_title": [
+                "dataset resources"
+            ]
+        },
+        "created": "2020-06-12T11:00:00Z"
+    },
+    {
+        "_id": "5ee34686489043817841c9bd",
+        "setSpec": "sound",
+        "setName": "sound resources",
+        "query": "resourcetype:sound AND -hassuccessor:* AND -ismemberof:[\"\" TO *]",
+        "setDescription": {
+            "dc_creator": [
+                "demo"
+            ],
+            "dc_title": [
+                "sound resources"
+            ]
+        },
+        "created": "2020-06-12T11:00:00Z"
+    },
+    {
+        "_id": "5ee346b0489043817841c9bf",
+        "setSpec": "interactiveresource",
+        "setName": "interactiveresource resources",
+        "query": "resourcetype:interactiveresource AND -hassuccessor:* AND -ismemberof:[\"\" TO *]",
+        "setDescription": {
+            "dc_creator": [
+                "demo"
+            ],
+            "dc_title": [
+                "interactiveresource resources"
+            ]
+        },
+        "created": "2020-06-12T11:00:00Z"
+    },
+    {
+        "_id": "5ee346fa489043817841c9cd",
+        "setSpec": "collection",
+        "setName": "collection resources",
+        "query": "resourcetype:collection AND -hassuccessor:* AND -ismemberof:[\"\" TO *]",
+        "setDescription": {
+            "dc_creator": [
+                "demo"
+            ],
+            "dc_title": [
+                "collection resources"
+            ]
+        },
+        "created": "2020-06-12T11:00:00Z"
+    },
+    {
+        "_id": "5ee3470c489043817841c9d0",
+        "setSpec": "image",
+        "setName": "image resources",
+        "query": "resourcetype:image AND -hassuccessor:* AND -ismemberof:[\"\" TO *]",
+        "setDescription": {
+            "dc_creator": [
+                "demo"
+            ],
+            "dc_title": [
+                "image resources"
+            ]
+        },
+        "created": "2020-06-12T11:00:00Z"
+    },
+    {
+        "_id": "5ee34727489043817841c9d1",
+        "setSpec": "journalarticle",
+        "setName": "journalarticle resources",
+        "query": "resourcetype:journalarticle AND -hassuccessor:* AND -ismemberof:[\"\" TO *]",
+        "setDescription": {
+            "dc_creator": [
+                "demo"
+            ],
+            "dc_title": [
+                "journalarticle resources"
+            ]
+        },
+        "created": "2020-06-12T11:00:00Z"
+    },
+    {
+        "_id": "5ee34737489043817841c9d2",
+        "setSpec": "map",
+        "setName": "map resources",
+        "query": "resourcetype:map AND -hassuccessor:* AND -ismemberof:[\"\" TO *]",
+        "setDescription": {
+            "dc_creator": [
+                "demo"
+            ],
+            "dc_title": [
+                "map resources"
+            ]
+        },
+        "created": "2020-06-12T11:00:00Z"
+    },
+    {
+        "_id": "5ee34758489043817841c9d6",
+        "setSpec": "other",
+        "setName": "other resources",
+        "query": "resourcetype:other AND -hassuccessor:* AND -ismemberof:[\"\" TO *]",
+        "setDescription": {
+            "dc_creator": [
+                "demo"
+            ],
+            "dc_title": [
+                "other resources"
+            ]
+        },
+        "created": "2020-06-12T11:00:00Z"
+    },
+    {
+        "_id": "5ee34f7a489043817841ca99",
+        "setSpec": "book",
+        "setName": "book resources",
+        "query": "resourcetype:book AND -hassuccessor:* AND -ismemberof:[\"\" TO *]",
+        "setDescription": {
+            "dc_creator": [
+                "demo"
+            ],
+            "dc_title": [
+                "book resources"
+            ]
+        },
+        "created": "2020-06-12T11:00:00Z"
+    }
+]

@@ -1,9 +1,10 @@
 SHELL=/bin/bash
 BASH_ENV=/container.env
 
-# m h  dom mon dow   command
-0 23 * * * bash /mnt/chronos/mariadb-phaidra.bash
-0 23 * * * bash /mnt/chronos/mariadb-fedora.bash
-0 23 * * * bash /mnt/chronos/mongodb-phaidra.bash
-0 0 1 * * bash /mnt/chronos/database-dump-cleaner.bash
-0 0 * * * perl /mnt/chronos/original-perl/sitemap.pl
+# m h  dom  mon  dow   command
+0  23  *    *    *     bash /mnt/chronos/mariadb-phaidra.bash
+0  23  *    *    *     bash /mnt/chronos/mariadb-fedora.bash
+0  23  *    *    *     bash /mnt/chronos/mongodb-phaidra.bash
+0   0  1    *    *     bash /mnt/chronos/database-dump-cleaner.bash
+5   0  *    *    *     perl /mnt/chronos/original-perl/sitemap.pl
+10  0  *    *    *     perl /mnt/chronos/original-perl/updateOai.pl

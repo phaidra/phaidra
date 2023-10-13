@@ -5,10 +5,9 @@ use warnings;
 use Mojo::URL;
 use Mojo::UserAgent;
 use Mojo::JSON qw(decode_json encode_json);
-use YAML::Syck;
 use Data::Dumper;
 use Log::Log4perl;
-use MongoDB 1.8.3;
+use MongoDB;
 use DateTime::Format::ISO8601;
 
 $ENV{MOJO_INACTIVITY_TIMEOUT} = 36000;
@@ -26,10 +25,10 @@ my $logconf = q(
  
   log4perl.appender.Logfile                          = Log::Dispatch::FileRotate
   log4perl.appender.Logfile.Threshold                = DEBUG
-  log4perl.appender.Logfile.filename                 = /var/log/phaidra/updateOai.log
+  log4perl.appender.Logfile.filename                 = /mnt/oai-logs/updateOai.log
   log4perl.appender.Logfile.max                      = 30
   log4perl.appender.Logfile.DatePattern              = yyyy-MM-dd
-  log4perl.appender.Logfile.TZ                       = CET
+  log4perl.appender.Logfile.SetDate                  = CET
   log4perl.appender.Logfile.layout                   = Log::Log4perl::Layout::PatternLayout
   log4perl.appender.Logfile.layout.ConversionPattern = [%d] [%p] [%P] %m%n
   log4perl.appender.Logfile.mode                     = append
@@ -428,28 +427,21 @@ sub blacklist {
 
 $log->info("started");
 
-my $config;
-eval { $config = YAML::Syck::LoadFile('/etc/phaidra.yml'); };
-if($@)
-{
-  $log->error("ERR: $@\n");
-  exit(1);
-}
-
 my $mdbcfg;
 my $mdbclient;
 my $mdb;
 my $setColl;
 my $recordsColl;
 my $recordsBlacklistColl;
-unless(exists($config->{phaidraapi}->{mongodb})) {
-  $log->error("$0: phaidra-api mongodb config missing");
-  exit(1);
-}
-$mdbcfg = $config->{phaidraapi}->{mongodb};
-my %connection_pars = map { $_ => $mdbcfg->{$_} } qw(host port username password);
-eval { $mdbclient= new MongoDB::MongoClient (%connection_pars); };
-### eval { $mdbclient = new MongoDB::Connection(%connection_pars); };
+
+eval {
+  $mdbclient=
+    MongoDB::MongoClient->new(host => 'mongodb-phaidra',
+                              port => 27017,
+                              username => $ENV{MONGODB_PHAIDRA_USER},
+                              password => $ENV{MONGODB_PHAIDRA_PASSWORD});
+};
+
 if ($@) {
   $log->error('MongoDB connection failed: '.$@);
   exit(1);
@@ -458,7 +450,7 @@ unless (defined ($mdbclient)) {
   $log->error('connection not established');
   exit(1);
 }
-eval { $mdb = $mdbclient->get_database($mdbcfg->{database}); };
+eval { $mdb = $mdbclient->get_database('mongodb'); };
 if ($@) {
   $log->error('MongoDB get_database failed: '.$@);
   exit(1);
@@ -500,20 +492,15 @@ unless (defined ($recordsBlacklistColl)) {
   exit(1);
 }
 
-
 my $ua = Mojo::UserAgent->new;
 
-my $urlapi = "https://".$config->{phaidraapi}->{baseurl}."/".$config->{phaidraapi}->{basepath};
+my $urlapi = "'$ENV{OUTSIDE_HTTP_SCHEME}'.$ENV{PHAIDRA_HOSTNAME}.$ENV{PHAIDRA_PORTSTUB}.$ENV{PHAIDRA_HOSTPORT}.'/api'";
 
 my $urlsolr = Mojo::URL->new;
-$urlsolr->scheme($config->{solr}->{scheme});
-$urlsolr->host($config->{solr}->{host});
-$urlsolr->port($config->{solr}->{port});
-if($config->{solr}->{path}){
-  $urlsolr->path("/".$config->{solr}->{path}."/solr/".$config->{solr}->{core}."/select");
-}else{
-  $urlsolr->path("/solr/".$config->{solr}->{core}."/select");
-}
+$urlsolr->scheme("http");
+$urlsolr->host("solr");
+$urlsolr->port(8983);
+$urlsolr->path("/solr/phaidra/select");
 
 $urlsolr->query(q => "*:*", rows => "1", wt => "json");
 my $solrres = $ua->get($urlsolr)->result;

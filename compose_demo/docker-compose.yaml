@@ -21,7 +21,7 @@ services:
     volumes:
       - .././webserver_configs/phaidra-demo.conf:/usr/local/apache2/conf/httpd.conf:ro
       - .././docs:/mnt/docs:ro
-      - sitemaps:/mnt/sitemaps:ro
+      - chronos-sitemaps:/mnt/sitemaps:ro
     depends_on:
       - api
       - ui
@@ -149,6 +149,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PHAIDRA_PASSWORD}
     volumes:
       - mongodb_phaidra:/data/db
+      - .././container_components/mongodb/init_oai_sets.json:/mnt/init_oai_sets.json:ro
+      - .././container_components/mongodb/mongodb-after-entry.sh:/docker-entrypoint-initdb.d/mongodb-after-entry.sh:ro
     networks:
       - phaidra-network
 
@@ -227,8 +229,9 @@ services:
       context: ../.
       dockerfile: dockerfiles/chronos.dockerfile
     volumes:
-      - database-dumps:/mnt/database-dumps
-      - sitemaps:/mnt/sitemaps
+      - chronos-database-dumps:/mnt/database-dumps
+      - chronos-sitemaps:/mnt/sitemaps
+      - chronos-oai-logs:/mnt/oai-logs
       - .././container_components/chronos:/mnt/chronos:ro
     environment:
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
@@ -260,5 +263,6 @@ volumes:
   mariadb_phaidra:
   pixelgecko:
   solr:
-  database-dumps:
-  sitemaps:
+  chronos-database-dumps:
+  chronos-sitemaps:
+  chronos-oai-logs:
