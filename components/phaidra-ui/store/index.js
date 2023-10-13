@@ -512,8 +512,6 @@ export const actions = {
     commit('setToken', token)
     if (token) {
       await dispatch('getLoginData')
-      // remove
-      await dispatch('getLoginData')
     }
   },
 

@@ -22,7 +22,6 @@
           v-on:load-form="form = $event"
           v-on:object-created="objectCreated($event)"
           v-on:add-phaidrasubject-section="addPhaidrasubjectSection($event)"
-          v-on:form-input-p-file="handleMimeSelect($event)"
           v-on:input-rights="rights = $event"
         ></p-i-form>
       </v-card-text>
@@ -114,75 +113,6 @@ export default {
           }
           if (f.descriptionLanguage === "eng") {
             f.descriptionLanguage = "deu";
-          }
-        }
-      }
-    },
-    getResourceTypeFromMimeType: function (mime) {
-      switch (mime) {
-        case "image/jpeg":
-        case "image/tiff":
-        case "image/gif":
-        case "image/png":
-        case "image/x-ms-bmp":
-          // picture
-          return "https://pid.phaidra.org/vocabulary/44TN-P1S0";
-
-        case "audio/wav":
-        case "audio/mpeg":
-        case "audio/flac":
-        case "audio/ogg":
-          // audio
-          return "https://pid.phaidra.org/vocabulary/8YB5-1M0J";
-
-        case "application/pdf":
-          // document
-          return "https://pid.phaidra.org/vocabulary/69ZZ-2KGX";
-
-        case "video/mpeg":
-        case "video/avi":
-        case "video/mp4":
-        case "video/quicktime":
-        case "video/x-matroska":
-          // video
-          return "https://pid.phaidra.org/vocabulary/B0Y6-GYT8";
-
-        // eg application/x-iso9660-image
-        default:
-          // data
-          return "https://pid.phaidra.org/vocabulary/7AVS-Y482";
-      }
-    },
-    handleMimeSelect: function (field) {
-      if (field.predicate === "ebucore:filename") {
-        for (let s of this.form.sections) {
-          if (s.fields) {
-            let isParentSection = false;
-            for (let f of s.fields) {
-              if (f.predicate === "ebucore:filename" && f.id === field.id) {
-                isParentSection = true;
-              }
-            }
-            if (isParentSection) {
-              for (let f of s.fields) {
-                if (f.predicate === "dcterms:type") {
-                  f.value = this.getResourceTypeFromMimeType(field.mimetype);
-                  f["skos:prefLabel"] = [];
-                  for (let rt of this.vocabularies.resourcetype.terms) {
-                    if (rt["@id"] === f.value) {
-                      Object.entries(rt["skos:prefLabel"]).forEach(
-                        ([key, value]) => {
-                          f["skos:prefLabel"].push({
-                            "@value": value,
-                            "@language": key,
-                          });
-                        }
-                      );
-                    }
-                  }
-                }
-              }
-            }
           }
         }
       }
@@ -292,9 +222,6 @@ export default {
         multiplicable: true,
         fields: [],
       };
-      var rt = fields.getField("resource-type");
-      rt.value = this.contentmodel;
-      this.form.sections[3].fields.push(rt);
       this.form.sections[3].fields.push(fields.getField("file"));
       this.form.sections[3].fields.push(fields.getField("title"));
       this.form.sections[3].fields.push(fields.getField("description"));

@@ -65,6 +65,7 @@ export default {
         var httpFormData = new FormData()
         httpFormData.append('dscontent', this.file)
         httpFormData.append('mimetype', this.mimetype)
+        httpFormData.append('dslabel', this.file.name)
         httpFormData.append('controlgroup', 'M')
         let response = await this.$axios.request({
           method: 'POST',

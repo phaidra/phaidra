@@ -20,8 +20,13 @@ export default async (req, res, next) => {
         let doc = docs[0]
         if (doc['cmodel']) {
           if (doc['cmodel'] === 'Book') {
-            redirect(res, config.instances[config.defaultinstance].api + '/object/' + pid + '/preview')
-            return
+            if (doc.datastreams.includes("UWMETADATA")) {
+              redirect(res, config.instances[config.defaultinstance].fedora + '/objects/' + pid + '/methods/bdef:Book/view')
+              return
+            } else {
+              redirect(res, config.instances[config.defaultinstance].api + '/object/' + pid + '/preview')
+              return
+            }
           }
         }
         if (doc['isinadminset']) {
