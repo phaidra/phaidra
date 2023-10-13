@@ -121,47 +121,47 @@
                             }
                         }
                     }
-                }
-            },
-            "responses": {
-                "200": {
-                    "description": "Picture object created",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "alerts": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "object",
-                                            "properties": {
-                                                "msg": {
-                                                    "type": "string"
-                                                },
-                                                "type": {
-                                                    "type": "string"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Picture object created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "alerts": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "msg": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    }
                                                 }
                                             }
+                                        },
+                                        "pid": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "number"
                                         }
-                                    },
-                                    "pid": {
-                                        "type": "string"
-                                    },
-                                    "status": {
-                                        "type": "number"
                                     }
                                 }
                             }
                         }
-                    }
-                },
-                "404": {
-                    "description": "error creating object",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object"
+                    },
+                    "404": {
+                        "description": "error creating object",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
                             }
                         }
                     }
@@ -1996,6 +1996,15 @@
                         }
                     }
                 }
+            },
+            "get": {
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
             }
         },
         "/directory/org_get_subunits": {
@@ -2838,9 +2847,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "pid"
                     }
                 ],
@@ -2902,9 +2911,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "collection pid"
                     }
                 ],
@@ -2957,9 +2966,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "pid"
                     }
                 ],
@@ -3045,9 +3054,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "collection pid"
                     }
                 ],
@@ -3133,9 +3142,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "collection pid"
                     }
                 ],
@@ -3222,27 +3231,27 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "collection pid"
                     },
                     {
                         "in": "path",
                         "name": "itempid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "member pid"
                     },
                     {
                         "in": "path",
                         "name": "position",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "position"
                     }
                 ],
@@ -3284,9 +3293,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "container pid"
                     }
                 ],
@@ -3373,27 +3382,27 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "container pid"
                     },
                     {
                         "in": "path",
                         "name": "itempid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "member pid"
                     },
                     {
                         "in": "path",
                         "name": "position",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "position"
                     }
                 ],
@@ -3431,9 +3440,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "the requested object id"
                     },
                     {
@@ -3585,9 +3594,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "the requested object id"
                     },
                     {
@@ -3683,9 +3692,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -3759,9 +3768,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "the requested object id"
                     },
                     {
@@ -3851,9 +3860,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -3917,9 +3926,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "the requested object id"
                     }
                 ],
@@ -3984,9 +3993,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -4059,9 +4068,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "the requested object id"
                     }
                 ],
@@ -4123,9 +4132,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "the requested object id"
                     }
                 ],
@@ -4190,9 +4199,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -4254,9 +4263,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "the requested object id"
                     }
                 ],
@@ -4315,9 +4324,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "the requested object id"
                     }
                 ],
@@ -4382,9 +4391,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -4448,9 +4457,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -4491,9 +4500,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -4573,9 +4582,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -4636,9 +4645,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -4700,9 +4709,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -4754,9 +4763,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -4808,9 +4817,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -4870,9 +4879,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "requested pid"
                     }
                 ],
@@ -4906,6 +4915,7 @@
                         "schema": {
                             "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -4978,9 +4988,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -5035,9 +5045,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -5079,9 +5089,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -5111,9 +5121,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -5143,9 +5153,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -5210,9 +5220,9 @@
                         "in": "path",
                         "name": "username",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "the user username"
                     }
                 ],
@@ -5250,9 +5260,9 @@
                         "in": "path",
                         "name": "username",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "the user's username"
                     }
                 ],
@@ -5290,9 +5300,9 @@
                         "in": "path",
                         "name": "username",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "the user username"
                     }
                 ],
@@ -5449,38 +5459,36 @@
                         "in": "path",
                         "name": "version",
                         "schema": {
-                            "type": "number",
-                            "required": true
+                            "type": "number"
                         },
+                        "required": true,
                         "description": "version of the terms of use"
                     }
                 ],
                 "responses": {
-                    "responses": {
-                        "200": {
-                            "description": "Terms of use",
-                            "content": {
-                                "application/json": {
-                                    "schema": {
-                                        "type": "object",
-                                        "properties": {
-                                            "alerts": {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "msg": {
-                                                            "type": "string"
-                                                        },
-                                                        "type": {
-                                                            "type": "string"
-                                                        }
+                    "200": {
+                        "description": "Terms of use",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "alerts": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "msg": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
                                                     }
                                                 }
-                                            },
-                                            "status": {
-                                                "type": "number"
                                             }
+                                        },
+                                        "status": {
+                                            "type": "number"
                                         }
                                     }
                                 }
@@ -5501,6 +5509,7 @@
                         "in": "path",
                         "name": "token",
                         "schema": {},
+                        "required": true,
                         "description": "the requested token no"
                     }
                 ],
@@ -5788,6 +5797,7 @@
                         "schema": {
                             "type": "string"
                         },
+                        "required": true,
                         "description": "gid - group id"
                     }
                 ],
@@ -5895,9 +5905,9 @@
                         "in": "path",
                         "name": "gid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "gid - group id"
                     }
                 ],
@@ -5950,9 +5960,9 @@
                         "in": "path",
                         "name": "gid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "gid - group id"
                     }
                 ],
@@ -6030,9 +6040,9 @@
                         "in": "path",
                         "name": "gid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "gid - group id"
                     }
                 ],
@@ -6153,9 +6163,9 @@
                         "in": "path",
                         "name": "lid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "lid - list id"
                     }
                 ],
@@ -6269,9 +6279,9 @@
                         "in": "path",
                         "name": "lid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "lid - list id"
                     }
                 ],
@@ -6327,9 +6337,9 @@
                         "in": "path",
                         "name": "lid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "lid - list id"
                     }
                 ],
@@ -6383,9 +6393,9 @@
                         "in": "path",
                         "name": "lid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "lid - list id"
                     }
                 ],
@@ -6435,9 +6445,9 @@
                         "in": "path",
                         "name": "lid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "lid - list id"
                     }
                 ],
@@ -6510,9 +6520,9 @@
                         "in": "path",
                         "name": "lid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "lid - list id"
                     }
                 ],
@@ -6706,9 +6716,9 @@
                         "in": "path",
                         "name": "tid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "template id"
                     }
                 ],
@@ -6761,9 +6771,9 @@
                         "in": "path",
                         "name": "tid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "template id"
                     }
                 ],
@@ -6817,9 +6827,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "pid - object id"
                     },
                     {
@@ -6830,9 +6840,9 @@
                             "enum": [
                                 "ro",
                                 "rw"
-                            ],
-                            "required": true
+                            ]
                         },
+                        "required": true,
                         "description": "rights for operation"
                     }
                 ],
@@ -6915,9 +6925,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": false
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "pid - object id"
                     }
                 ],
@@ -6950,31 +6960,31 @@
                                 }
                             }
                         }
-                    }
-                },
-                "503": {
-                    "description": "Service Unavailable",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "alerts": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "object",
-                                            "properties": {
-                                                "msg": {
-                                                    "type": "string"
-                                                },
-                                                "type": {
-                                                    "type": "string"
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "alerts": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "msg": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    }
                                                 }
                                             }
+                                        },
+                                        "status": {
+                                            "type": "number"
                                         }
-                                    },
-                                    "status": {
-                                        "type": "number"
                                     }
                                 }
                             }
@@ -7065,9 +7075,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7122,9 +7132,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7190,9 +7200,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7230,9 +7240,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7277,9 +7287,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7317,9 +7327,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7352,9 +7362,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7402,9 +7412,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7488,27 +7498,27 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object id"
                     },
                     {
                         "in": "path",
                         "name": "ignorestatus",
                         "schema": {
-                            "type": "boolean",
-                            "required": false
+                            "type": "boolean"
                         },
+                        "required": true,
                         "description": "ignore object status, ie: include inactive objects"
                     },
                     {
                         "in": "path",
                         "name": "norecursion",
                         "schema": {
-                            "type": "boolean",
-                            "required": false
+                            "type": "boolean"
                         },
+                        "required": true,
                         "description": "skip re-indexing of the parent object"
                     }
                 ],
@@ -7552,9 +7562,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "requested pid - object id"
                     },
                     {
@@ -7630,9 +7640,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7753,9 +7763,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -8040,9 +8050,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     },
                     {
@@ -8122,9 +8132,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -8233,9 +8243,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -8289,9 +8299,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object id"
                     },
                     {
@@ -8397,9 +8407,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "the requested object id"
                     },
                     {
@@ -8505,9 +8515,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "the requested object id"
                     }
                 ],
@@ -8561,22 +8571,22 @@
                                                     }
                                                 }
                                             }
+                                        },
+                                        "status": {
+                                            "type": "string"
                                         }
-                                    },
-                                    "status": {
-                                        "type": "string"
                                     }
                                 }
                             }
                         }
-                    }
-                },
-                "404": {
-                    "description": "Failed to fetch data",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object"
+                    },
+                    "404": {
+                        "description": "Failed to fetch data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
                             }
                         }
                     }
@@ -8599,9 +8609,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "the requested object id"
                     }
                 ],
@@ -8655,22 +8665,22 @@
                                                     }
                                                 }
                                             }
+                                        },
+                                        "status": {
+                                            "type": "string"
                                         }
-                                    },
-                                    "status": {
-                                        "type": "string"
                                     }
                                 }
                             }
                         }
-                    }
-                },
-                "404": {
-                    "description": "Failed to fetch data",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object"
+                    },
+                    "404": {
+                        "description": "Failed to fetch data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
                             }
                         }
                     }
@@ -8693,18 +8703,18 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "the requested object id"
                     },
                     {
                         "in": "path",
                         "name": "dsid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "example": "IIIF-MANIFEST",
                         "description": "datastream id"
                     }
@@ -8743,7 +8753,7 @@
                                             "R",
                                             "E"
                                         ],
-                                        "descriptrion": "One of X, M, R, or E (Inline XML, Managed Content, Redirect, or External Referenced)"
+                                        "description": "One of X, M, R, or E (Inline XML, Managed Content, Redirect, or External Referenced)"
                                     }
                                 }
                             }
@@ -8809,9 +8819,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string",
-                            "required": true
+                            "type": "string"
                         },
+                        "required": true,
                         "description": "object pid"
                     },
                     {
@@ -9253,7 +9263,6 @@
                         "name": "cmodel",
                         "schema": {
                             "type": "string",
-                            "required": true,
                             "enum": [
                                 "cmodel:Picture",
                                 "cmodel:PDFDocument",
@@ -9270,6 +9279,7 @@
                                 "cmodel:Page"
                             ]
                         },
+                        "required": true,
                         "description": "object cmodel"
                     }
                 ],
@@ -9380,24 +9390,16 @@
                     "languages": {
                         "type": "object"
                     }
-                }
-            },
-            "languagesExample": {
-                "type": "object",
-                "properties": {
-                    "alerts": {
-                        "type": "array",
-                        "items": {}
-                    },
+                },
+                "example": {
                     "languages": {
-                        "type": "object",
                         "ne": {
-                            "en": "Nepali",
-                            "de": "Nepalisch",
-                            "it": "Nepalese",
-                            "sr": "nepalski"
+                          "en": "Nepali",
+                          "de": "Nepalisch",
+                          "it": "Nepalese",
+                          "sr": "nepalski"
                         }
-                    }
+                      }
                 }
             },
             "licences": {
@@ -9446,11 +9448,14 @@
                                     "type": "string"
                                 },
                                 "labels": {
-                                    "en": {
-                                        "type": "string"
-                                    },
-                                    "de": {
-                                        "type": "string"
+                                    "type": "object",
+                                    "properties": {
+                                        "en": {
+                                            "type": "string"
+                                        },
+                                        "de": {
+                                            "type": "string"
+                                        }
                                     }
                                 }
                             }
@@ -9612,7 +9617,7 @@
                             "type": "string"
                         },
                         "input_type": {
-                            "type": "strIng"
+                            "type": "string"
                         },
                         "labels": {
                             "type": "object"
