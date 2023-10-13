@@ -107,7 +107,7 @@ openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days 
 ###  Shibboleth Startup
 
 Change to the folder `./compose_shib` and run compose. After the
-setup has finished you will PHAIDRA running on
+setup has finished you will have PHAIDRA running on
 `https://$YOUR-DNS-ENTRY`.
 
 ``` example
@@ -122,21 +122,21 @@ of PHAIDRA over all containers (here from an instance started from
 `./compose_demo`):
 
 ``` example
-docker stats<<<$(docker ps -q)
 CONTAINER ID   NAME                             CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
-f80d2c7b7b54   phaidra-demo-httpd-1             0.01%     34.41MiB / 15.03GiB   0.22%     428kB / 415kB     73.7kB / 0B       109
-edc5844fd0db   phaidra-demo-ui-1                0.00%     124.4MiB / 15.03GiB   0.81%     8.87kB / 234kB    0B / 0B           23
-67d7d3fe22c4   phaidra-demo-pixelgecko-1        0.00%     51.5MiB / 15.03GiB    0.33%     1.71MB / 3.72MB   0B / 0B           1
-769d93d91d9a   phaidra-demo-api-1               0.02%     167.9MiB / 15.03GiB   1.09%     1.64kB / 0B       4.58MB / 4.1kB    5
-8e5e94391679   phaidra-demo-fedora-1            0.20%     710.3MiB / 15.03GiB   4.62%     35.6kB / 37.7kB   479kB / 31.1MB    56
-abf37731a215   phaidra-demo-dbgate-1            0.00%     25.03MiB / 15.03GiB   0.16%     1.97kB / 224B     49.2kB / 4.1kB    12
-7808741ab2a3   phaidra-demo-solr-1              0.72%     749.4MiB / 15.03GiB   4.87%     2.17kB / 0B       1.66MB / 160kB    54
-0c4cc2324595   phaidra-demo-lam-1               0.01%     41MiB / 15.03GiB      0.27%     9.81kB / 165kB    0B / 0B           11
-9f81141880f2   phaidra-demo-mariadb-fedora-1    0.02%     103.1MiB / 15.03GiB   0.67%     39.4kB / 34kB     26.4MB / 16.4kB   18
-9de25b27810b   phaidra-demo-mariadb-phaidra-1   0.02%     241.3MiB / 15.03GiB   1.57%     1.9kB / 0B        15.8MB / 8.19kB   8
-76039224bd68   phaidra-demo-mongodb-phaidra-1   0.49%     211.4MiB / 15.03GiB   1.37%     3.72MB / 1.71MB   1.66MB / 29.1MB   31
-264601b89504   phaidra-demo-imageserver-1       0.00%     25.7MiB / 15.03GiB    0.17%     2.17kB / 0B       0B / 0B           57
-9d8afe7f588a   phaidra-demo-openldap-1          0.00%     15.45MiB / 15.03GiB   0.10%     2.17kB / 0B       627kB / 4.1kB     2
+46c84962b77f   phaidra-demo-httpd-1             0.07%     36.27MiB / 15.03GiB   0.24%     24.8kB / 26kB     0B / 0B           109
+697692e6879d   phaidra-demo-ui-1                0.09%     133.4MiB / 15.03GiB   0.87%     1.05kB / 0B       0B / 0B           23
+00c4dcd0e8d1   phaidra-demo-pixelgecko-1        0.00%     51.55MiB / 15.03GiB   0.33%     17.5kB / 27kB     0B / 0B           1
+b6921b6306b4   phaidra-demo-api-1               0.02%     164.7MiB / 15.03GiB   1.07%     1.16kB / 0B       0B / 0B           5
+2e363c1e67c8   phaidra-demo-fedora-1            0.29%     631.1MiB / 15.03GiB   4.10%     17.7kB / 15.2kB   0B / 86kB         62
+08725ab80a8e   phaidra-demo-dbgate-1            0.25%     98.86MiB / 15.03GiB   0.64%     80.3kB / 21kB     0B / 8.19kB       34
+c0b6202ec78a   phaidra-demo-chronos-1           0.01%     4.07MiB / 15.03GiB    0.03%     1.2kB / 0B        0B / 0B           3
+2e93c57df4f2   phaidra-demo-solr-1              1.00%     712.9MiB / 15.03GiB   4.63%     1.56kB / 0B       0B / 152kB        54
+7172f54ff33f   phaidra-demo-mariadb-fedora-1    0.02%     102.8MiB / 15.03GiB   0.67%     16.5kB / 16.5kB   0B / 8.19kB       35
+17fbe9a93f2d   phaidra-demo-mariadb-phaidra-1   0.02%     110.7MiB / 15.03GiB   0.72%     1.56kB / 0B       14.8MB / 8.19kB   16
+900f2392e903   phaidra-demo-lam-1               0.01%     22.29MiB / 15.03GiB   0.14%     1.31kB / 0B       0B / 0B           8
+6c8778ca9633   phaidra-demo-imageserver-1       0.01%     25.72MiB / 15.03GiB   0.17%     1.56kB / 0B       0B / 0B           57
+065c3de07d89   phaidra-demo-mongodb-phaidra-1   0.47%     169.4MiB / 15.03GiB   1.10%     38kB / 80.8kB     0B / 246kB        39
+d753906d815a   phaidra-demo-openldap-1          0.00%     12.37MiB / 15.03GiB   0.08%     1.56kB / 0B       0B / 0B           2
 ```
 
 # Data persistance
@@ -157,51 +157,65 @@ to a 'clean slate' (shown for the demo version, replace `phaidra-demo` with `pha
 case you were using these versions).
 
 ``` example
-# shut down and remove running containers (from the compose_demo directory):
+# shut down and remove running containers (here from the ./compose_demo directory, 
+# use the other compose_* directories depending on your use case):
 docker compose down
-[+] Running 14/14
- ✔ Container phaidra-demo-httpd-1            Removed                 1.2s 
- ✔ Container phaidra-demo-solr-1             Removed                 0.6s 
- ✔ Container phaidra-demo-pixelgecko-1       Removed                10.4s 
- ✔ Container phaidra-demo-lam-1              Removed                 0.3s 
- ✔ Container phaidra-demo-openldap-1         Removed                 0.2s 
- ✔ Container phaidra-demo-imageserver-1      Removed                10.3s 
- ✔ Container phaidra-demo-dbgate-1           Removed                10.4s 
- ✔ Container phaidra-demo-ui-1               Removed                 0.7s 
- ✔ Container phaidra-demo-api-1              Removed                 0.2s 
- ✔ Container phaidra-demo-fedora-1           Removed                 0.4s 
- ✔ Container phaidra-demo-mongodb-phaidra-1  Removed                 0.3s 
- ✔ Container phaidra-demo-mariadb-phaidra-1  Removed                 0.4s 
- ✔ Container phaidra-demo-mariadb-fedora-1   Removed                 0.4s 
- ✔ Network phaidra-demo_phaidra-network      Removed                 0.4s 
+[+] Running 15/15
+ ✔ Container phaidra-demo-dbgate-1           Removed                                                                                                                                                         10.7s 
+ ✔ Container phaidra-demo-pixelgecko-1       Removed                                                                                                                                                         10.5s 
+ ✔ Container phaidra-demo-openldap-1         Removed                                                                                                                                                          0.2s 
+ ✔ Container phaidra-demo-solr-1             Removed                                                                                                                                                          0.6s 
+ ✔ Container phaidra-demo-lam-1              Removed                                                                                                                                                          0.3s 
+ ✔ Container phaidra-demo-chronos-1          Removed                                                                                                                                                         10.6s 
+ ✔ Container phaidra-demo-imageserver-1      Removed                                                                                                                                                         10.4s 
+ ✔ Container phaidra-demo-httpd-1            Removed                                                                                                                                                         10.7s 
+ ✔ Container phaidra-demo-ui-1               Removed                                                                                                                                                          0.7s 
+ ✔ Container phaidra-demo-api-1              Removed                                                                                                                                                          0.2s 
+ ✔ Container phaidra-demo-mongodb-phaidra-1  Removed                                                                                                                                                          0.2s 
+ ✔ Container phaidra-demo-fedora-1           Removed                                                                                                                                                          0.3s 
+ ✔ Container phaidra-demo-mariadb-phaidra-1  Removed                                                                                                                                                          0.4s 
+ ✔ Container phaidra-demo-mariadb-fedora-1   Removed                                                                                                                                                          0.5s 
+ ✔ Network phaidra-demo_phaidra-network      Removed
 
 # ATTENTION: remove persisted data from previous runs (this command can be run from anywhere)
 docker volume rm $(docker volume ls --filter label=com.docker.compose.project=phaidra-demo --quiet)
 phaidra-demo_api_logs
+phaidra-demo_chronos-database-dumps
+phaidra-demo_chronos-oai-logs
+phaidra-demo_chronos-sitemaps
+phaidra-demo_database-dumps
 phaidra-demo_dbgate
 phaidra-demo_fedora
 phaidra-demo_mariadb_fedora
 phaidra-demo_mariadb_phaidra
 phaidra-demo_mongodb_phaidra
+phaidra-demo_oai-logs
 phaidra-demo_openldap
 phaidra-demo_pixelgecko
+phaidra-demo_sitemaps
 phaidra-demo_solr
 
 # remove docker images
 docker image rm $(docker image ls --filter label=com.docker.compose.project=phaidra-demo --quiet)
+Untagged: phaidra-demo-chronos:latest
+Deleted: sha256:43313fc1a91124996245a88e342f344bcce81d85ee2f9ebf684273ce5c5b66a5
 Untagged: phaidra-demo-ui:latest
-Deleted: sha256:4d14c21b233f85992b0b501882401130a91a37dbdc8fc948d3bed8f230faa901
+Deleted: sha256:22649036e80a8dd30b8d4b8f7fac772072d244d2e4abc381da8a2d45ff5060c4
+Untagged: phaidra-demo-database-dumper:latest
+Deleted: sha256:d9f08a657d77e4c1e799cc7d09385f90497bd03957b631f5d258ff9b6e590b54
 Untagged: phaidra-demo-pixelgecko:latest
-Deleted: sha256:8753fbcc09cb17670999135a9c89b9e3001f3c857c4272cd00552484068fbb43
+Deleted: sha256:ab2cfff669ddeeb35e9a9cf4359be95ff2ece736e4fe9235390a151f4df6e8db
+Untagged: phaidra-demo-httpd:latest
+Deleted: sha256:319c9a2564e3b03b162bff82240b2d531190a49aeaa519865c8ab6f3095cb7a6
 Untagged: phaidra-demo-api:latest
-Deleted: sha256:24462e929eac99a33cd549ff05177e10d494501688f90e2a5834be854d03f24d
+Deleted: sha256:4cb73d3845d2a4c695033e6484cba1e416084811329a08dafa3cf7a40b137438
 Untagged: phaidra-demo-imageserver:latest
-Deleted: sha256:12288cc58edaaaecec3518cdf4c4ed71e241b1e4ad61bd1fe6fe123a045550db
+Deleted: sha256:8e02d372cc4d839ba9119a8552f0a059be779d1656f430ee2b0111e7937ced28
 Untagged: phaidra-demo-solr:latest
-Deleted: sha256:fc9a0d7aa7aef3336404410ac9ce9acd94cd4eb59919a99d3111f05940455aff
+Deleted: sha256:837339a0dbe3759ebfcab2692b6c29d54502e5ec1e4a37df363b3ff23c677700
 ```
 
-In case you are developing and changing src-components, dockerfiles and docker-compose files, 
+In case you are developing and changing  a lot of components, dockerfiles and docker-compose files, 
 things can become cluttered. To remove everything including build caches, you can run 
  the following command (be warned, THIS WILL NOT ONLY AFFECT PHAIDRA COMPONENTS!):
 
@@ -252,20 +266,23 @@ This directory derives from commit be0af173eaac297289fa51843b69327f7c95242c of t
 ├── compose_shib
 ├── compose_ssl
 ├── container_components
+│   ├── chronos
 │   ├── mariadb
+│   ├── mongodb
 │   └── openldap
 ├── dockerfiles
+├── docs
 ├── encryption
 │   ├── shibboleth
 │   └── webserver
 ├── image_components
-│   ├── pixelgecko
 │   └── solr
 ├── pictures
 ├── shibboleth
+├── third-parties
 └── webserver_configs
 
-22 directories
+25 directories
 ```
 
 ## Technical Sketches
