@@ -9,7 +9,7 @@ export default async (req, res, next) => {
     try {
       let response = await axios.request({
         method: 'POST',
-        url: '/search/select',
+        url: config.instances[config.defaultinstance].solr + '/select',
         data: qs.stringify(params, { arrayFormat: 'repeat' }),
         headers: {
           'content-type': 'application/x-www-form-urlencoded'
@@ -42,6 +42,7 @@ export default async (req, res, next) => {
       redirect(res, 'https://' + config.instances[config.defaultinstance].baseurl + '/detail/' + pid)
       return
     } catch (error) {
+      console.log(error)
       next()
     } finally {
       next()
