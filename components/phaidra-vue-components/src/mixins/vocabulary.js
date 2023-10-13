@@ -68,6 +68,8 @@ export const vocabulary = {
           return 'https://doi.org/' + value
         case 'ids:handle':
           return 'https://hdl.handle.net/' + value
+        case 'ids:hdl':
+          return 'https://hdl.handle.net/' + value
         case 'phaidra:acnumber':
           return 'https://permalink.obvsg.at/' + value
         case 'ids:urn':
