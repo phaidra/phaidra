@@ -835,15 +835,16 @@ sub submit {
         my $urlget = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . "/research-outputs/$uuid");
         my $params = {apiKey => $self->app->config->{apis}->{pure}->{key}};
 
-        my $pureUpdate = $self->createPureUpdate($mainObjectPid, $metadata);
+        my $pureUpdate = $self->createPureUpdate($mainObjectPid, $uuid, $metadata);
         $self->app->log->debug("pure update:\n" . $self->app->dumper($pureUpdate));
-        my $getres = $self->ua->put($urlget => {Accept => 'application/json', 'api-key' => $self->app->config->{apis}->{pure}->{key}} => json => $pureUpdate)->result;
-        if ($getres->is_success) {
-          $res->{response} = $getres->json;
-          $self->app->log->debug("pure response:\n" . $self->app->dumper($getres->json));
+        my $putres = $self->ua->put($urlget => {Accept => 'application/json', 'api-key' => $self->app->config->{apis}->{pure}->{key}} => json => $pureUpdate)->result;
+        $self->app->log->debug("XXXXXXXXx pure update result:\n" . $self->app->dumper($putres));
+        if ($putres->is_success) {
+          $res->{response} = $putres->json;
+          $self->app->log->debug("pure response:\n" . $self->app->dumper($putres->json));
         }
         else {
-          $self->render(json => {alerts => [{type => 'error', msg => 'error updating pure object ' . $getres->code . " " . $getres->message}]}, status => 500);
+          $self->render(json => {alerts => [{type => 'error', msg => 'error updating pure object ' . $putres->code . " " . $putres->message}]}, status => 500);
           return;
         }
       }
@@ -861,71 +862,6 @@ sub submit {
   $res->{alternatives} = \@alternativeFormatPids;
 
   $self->render(json => $res, status => $res->{status});
-}
-
-sub createPureUpdate {
-
-  my ($self, $pid, $metadata) = @_;
-
-  my $version;
-  for my $e (@{$metadata->{metadata}->{'json-ld'}->{'oaire:version'}}) {
-    for my $id (@{$e->{'skos:exactMatch'}}) {
-      $version = $id;
-    }
-  }
-  my $crisVersion = $ir2pureVersion->{$version};
-
-  my $access;
-  for my $e (@{$metadata->{metadata}->{'json-ld'}->{'dcterms:accessRights'}}) {
-    for my $id (@{$e->{'skos:exactMatch'}}) {
-      $access = $id;
-    }
-  }
-  my $crisAccess = $ir2pureAccess->{$access};
-
-  my $license;
-  for my $e (@{$metadata->{metadata}->{'json-ld'}->{'edm:rights'}}) {
-    $license = $e;
-  }
-  my $crisLicense = $ir2pureLicense->{$license};
-
-  my $json = {
-    "electronicVersions" => [
-      { "typeDiscriminator"   => "LinkElectronicVersion",
-        "visibleOnPortalDate" => DateTime->now->ymd,
-        "link"                => "https://" . $self->app->config->{phaidra}->{baseurl} . "/$pid",
-        "accessType"          => {"uri" => $crisAccess},
-        "licenseType"         => {"uri" => $crisLicense},
-        "versionType"         => {"uri" => $crisVersion}
-      }
-    ],
-    "keywordGroups" => [
-      { "typeDiscriminator" => "ClassificationsKeywordGroup",
-        "logicalName"       => "/dk/atira/pure/keywords/ir_status",
-        "classifications"   => [{"uri" => "/dk/atira/pure/keywords/ir_status/ir_okay"}]
-      }
-    ]
-  };
-
-  for my $e (@{$metadata->{metadata}->{'json-ld'}->{'rdam:P30004'}}) {
-    if (($e->{'@type'} eq 'ids:hdl') or ($e->{'@type'} eq 'ids:urn') or ($e->{'@type'} eq 'ids:isbn') or ($e->{'@type'} eq 'ids:uri')) {
-      push @{$json->{electronicVersions}},
-        {
-        "typeDiscriminator"   => "LinkElectronicVersion",
-        "visibleOnPortalDate" => DateTime->now->ymd,
-        "link"                => $e->{'@value'},
-        "accessType"          => {"uri" => $crisAccess},
-        "licenseType"         => {"uri" => $crisLicense},
-        "versionType"         => {"uri" => $crisVersion}
-        };
-    }
-  }
-
-  if ($crisLicense eq "/dk/atira/pure/core/document/licenses/other") {
-    $json->{userDefinedLicense} = $license;
-  }
-
-  return $json;
 }
 
 sub sendAdminEmail {
@@ -1444,7 +1380,7 @@ sub puresearch {
   }
   $urlget->query($params);
 
-    my $getres = $self->ua->post($urlget => {Accept => 'application/json'} => json => {"keywordUris" => ["/dk/atira/pure/keywords/ir_status/$ir_status"]})->result;
+  my $getres = $self->ua->post($urlget => {Accept => 'application/json'} => json => {"keywordUris" => ["/dk/atira/pure/keywords/ir_status/$ir_status"]})->result;
   if ($getres->is_success) {
     $res->{response} = $getres->json;
   }
@@ -1568,18 +1504,160 @@ sub pureimport_reject {
 
   my $uuid = $self->param('uuid');
 
-  my $urlget = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . "/research-outputs/$uuid");
-  my $params = {apiKey => $self->app->config->{apis}->{pure}->{key}};
-
-  my $getres = $self->ua->post($urlget => {Accept => 'application/json'} => json => {"keywordUris" => ["/dk/atira/pure/keywords/ir_status/ir_rejected"]})->result;
+  # get pure metadata
+  my $puremetadata;
+  my $url    = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . "/research-outputs/$uuid");
+  my $getres = $self->ua->get($url => {Accept => 'application/json', 'api-key' => $self->app->config->{apis}->{pure}->{key}})->result;
   if ($getres->is_success) {
-    $res->{response} = $getres->json;
+    $puremetadata = $getres->json;
+    $self->app->log->debug("Pure metadata:\n" . $self->app->dumper($puremetadata));
   }
   else {
-    $self->render(json => {alerts => [{type => 'error', msg => 'error updating Pure object ' . $getres->code . " " . $getres->message}]}, status => 500);
+    $self->render(json => {alerts => [{type => 'error', msg => 'error getting Pure object ' . $getres->code . " " . $getres->message}]}, status => 500);
     return;
   }
-  return $res;
+
+  my $update = {};
+
+  $update->{keywordGroups} = $puremetadata->{keywordGroups};
+
+  for my $kwg (@{$update->{keywordGroups}}) {
+    if ($kwg->{logicalName} eq "/dk/atira/pure/keywords/ir_status") {
+      delete $kwg->{name};
+      $kwg->{classifications} = [{"uri" => "/dk/atira/pure/keywords/ir_status/ir_rejected"}];
+    }
+  }
+
+  my $putres = $self->ua->put($url => {Accept => 'application/json', 'api-key' => $self->app->config->{apis}->{pure}->{key}} => json => $update)->result;
+  if ($putres->is_success) {
+    $self->app->log->debug("Pure response:\n" . $self->app->dumper($res));
+  }
+  else {
+    $self->render(json => {alerts => [{type => 'error', msg => 'error updating Pure object ' . $putres->code . " " . $putres->message}]}, status => 500);
+    return;
+  }
+  $self->render(json => $res, status => $res->{status});
+}
+
+sub createPureUpdate {
+
+  my ($self, $pid, $uuid, $metadata) = @_;
+
+  my $version;
+  for my $e (@{$metadata->{metadata}->{'json-ld'}->{'oaire:version'}}) {
+    for my $id (@{$e->{'skos:exactMatch'}}) {
+      $version = $id;
+    }
+  }
+  my $crisVersion = $ir2pureVersion->{$version};
+
+  my $access;
+  for my $e (@{$metadata->{metadata}->{'json-ld'}->{'dcterms:accessRights'}}) {
+    for my $id (@{$e->{'skos:exactMatch'}}) {
+      $access = $id;
+    }
+  }
+  my $crisAccess = $ir2pureAccess->{$access};
+
+  my $license;
+  for my $e (@{$metadata->{metadata}->{'json-ld'}->{'edm:rights'}}) {
+    $license = $e;
+  }
+  my $crisLicense = $ir2pureLicense->{$license};
+
+  # get pure metadata
+  my $puremetadata;
+  my $url    = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . "/research-outputs/$uuid");
+  my $getres = $self->ua->get($url => {Accept => 'application/json', 'api-key' => $self->app->config->{apis}->{pure}->{key}})->result;
+  if ($getres->is_success) {
+    $puremetadata = $getres->json;
+    $self->app->log->debug("Pure metadata:\n" . $self->app->dumper($puremetadata));
+  }
+  else {
+    $self->render(json => {alerts => [{type => 'error', msg => 'error getting Pure object ' . $getres->code . " " . $getres->message}]}, status => 500);
+    return;
+  }
+
+  my $update = {};
+
+  if (exists($puremetadata->{electronicVersions})) {
+    $update->{electronicVersions} = $puremetadata->{electronicVersions};
+  }
+  else {
+    $update->{electronicVersions} = [];
+  }
+
+  $update->{keywordGroups} = $puremetadata->{keywordGroups};
+
+  push @{$update->{electronicVersions}},
+    {
+    "typeDiscriminator"   => "LinkElectronicVersion",
+    "visibleOnPortalDate" => DateTime->now->ymd,
+    "link"                => "https://" . $self->app->config->{phaidra}->{baseurl} . "/$pid",
+    "accessType"          => {"uri" => $crisAccess},
+    "licenseType"         => {"uri" => $crisLicense},
+    "versionType"         => {"uri" => $crisVersion}
+    };
+
+  my $doi;
+  for my $e (@{$metadata->{metadata}->{'json-ld'}->{'rdam:P30004'}}) {
+    if (($e->{'@type'} eq 'ids:hdl') or ($e->{'@type'} eq 'ids:urn') or ($e->{'@type'} eq 'ids:uri')) {
+      my $link_or_id = $e->{'@value'};
+      my $link       = $link_or_id;
+      if ($e->{'@type'} eq 'ids:hdl') {
+        $link = 'https://hdl.handle.net/' . $link_or_id unless $link_or_id =~ m/http/;
+      }
+      if ($e->{'@type'} eq 'ids:urn') {
+        $link = 'https://nbn-resolving.org/' . $link_or_id unless $link_or_id =~ m/http/;
+      }
+      push @{$update->{electronicVersions}},
+        {
+        "typeDiscriminator"   => "LinkElectronicVersion",
+        "visibleOnPortalDate" => DateTime->now->ymd,
+        "link"                => $link,
+        "accessType"          => {"uri" => $crisAccess},
+        "licenseType"         => {"uri" => $crisLicense},
+        "versionType"         => {"uri" => $crisVersion}
+        };
+    }
+    if ($e->{'@type'} eq 'ids:doi') {
+      $doi = $e->{'@value'};
+    }
+  }
+
+  if ($doi) {
+    my $pureHasDoi = 0;
+    for my $ev (@{$update->{electronicVersions}}) {
+      if ($ev->{typeDiscriminator} eq 'DoiElectronicVersion') {
+        $pureHasDoi = 1;
+        last;
+      }
+    }
+    unless ($pureHasDoi) {
+      push @{$update->{electronicVersions}},
+        {
+        "typeDiscriminator"   => "DoiElectronicVersion",
+        "visibleOnPortalDate" => DateTime->now->ymd,
+        "doi"                 => $doi,
+        "accessType"          => {"uri" => $crisAccess},
+        "licenseType"         => {"uri" => $crisLicense},
+        "versionType"         => {"uri" => $crisVersion}
+        };
+    }
+  }
+
+  for my $kwg (@{$update->{keywordGroups}}) {
+    if ($kwg->{logicalName} eq "/dk/atira/pure/keywords/ir_status") {
+      delete $kwg->{name};
+      $kwg->{classifications} = [{"uri" => "/dk/atira/pure/keywords/ir_status/ir_okay"}];
+    }
+  }
+
+  if ($crisLicense eq "/dk/atira/pure/core/document/licenses/other") {
+    $update->{userDefinedLicense} = $license;
+  }
+
+  return $update;
 }
 
 1;

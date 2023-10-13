@@ -199,7 +199,8 @@ our %iso639map = (
   'mo' => 'ron',
   'jw' => 'jav',
   'in' => 'ind',
-  'iw' => 'heb'
+  'iw' => 'heb',
+  'zz' => 'grc'
 );
 
 sub get_iso639map {

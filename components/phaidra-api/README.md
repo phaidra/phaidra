@@ -1,7 +1,7 @@
 phaidra-api 
 ===========
 
-See https://github.com/phaidra/phaidra-api/wiki/Documentation
+See [wiki](https://github.com/phaidra/phaidra-api/wiki)
 
 Starting/Hotreload
 --------

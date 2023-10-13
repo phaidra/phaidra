@@ -940,61 +940,66 @@ sub create_container {
 
   my $container_metadata;
 
-  if (exists($metadata->{metadata}->{'json-ld'}->{'container'})) {
-    for my $k (keys %{$metadata->{metadata}->{'json-ld'}}) {
-      $c->app->log->debug("Found key: [$k]");
-      if (($k ne 'container')) {
-        my $childupload = $c->req->upload($k);
-        unless (defined($childupload)) {
-          unshift @{$res->{alerts}}, {type => 'error', msg => "Missing container member file [$k]"};
-          $res->{status} = 400;
-          return $res;
-        }
-        my $size = $childupload->size;
-        my $name = $childupload->filename;
-        $c->app->log->debug("Found file: $name [$size B]");
-        my $childmetadata = $metadata->{metadata}->{'json-ld'}->{$k};
-        my $mt;
-        for my $mtam (@{$childmetadata->{'ebucore:hasMimeType'}}) {
-          $mt = $mtam;
-        }
-
-        my $childcmodel = $mime_to_cmodel{$mt};
-        unless ($childcmodel) {
-          $childcmodel = 'cmodel:Asset';
-        }
-        $c->app->log->debug("ebucore:hasMimeType[$mt] maps to cmodel[$childcmodel]");
-        if ($childcmodel) {
-          my $child_metadata = {metadata => {'json-ld' => $childmetadata}};
-          if (exists($metadata->{metadata}->{'rights'})) {
-            $child_metadata->{metadata}->{rights} = $metadata->{metadata}->{'rights'};
-          }
-          if (exists($metadata->{metadata}->{'ownerid'})) {
-            $child_metadata->{metadata}->{ownerid} = $metadata->{metadata}->{'ownerid'};
-          }
-
-          #$c->app->log->debug("Creating child with metadata:".$c->app->dumper($child_metadata));
-          my $r = $self->create_simple($c, $childcmodel, $child_metadata, $mt, $childupload, undef, undef, $username, $password);
-          if ($r->{status} ne 200) {
-            $res->{status} = 500;
-            unshift @{$res->{alerts}}, @{$r->{alerts}};
-            unshift @{$res->{alerts}}, {type => 'error', msg => 'Error creating child object'};
+  if (exists($metadata->{metadata}->{'json-ld'})) {
+    if (exists($metadata->{metadata}->{'json-ld'}->{'container'})) {
+      for my $k (keys %{$metadata->{metadata}->{'json-ld'}}) {
+        $c->app->log->debug("Found key: [$k]");
+        if (($k ne 'container')) {
+          my $childupload = $c->req->upload($k);
+          unless (defined($childupload)) {
+            unshift @{$res->{alerts}}, {type => 'error', msg => "Missing container member file [$k]"};
+            $res->{status} = 400;
             return $res;
           }
+          my $size = $childupload->size;
+          my $name = $childupload->filename;
+          $c->app->log->debug("Found file: $name [$size B]");
+          my $childmetadata = $metadata->{metadata}->{'json-ld'}->{$k};
+          my $mt;
+          for my $mtam (@{$childmetadata->{'ebucore:hasMimeType'}}) {
+            $mt = $mtam;
+          }
 
-          push @children, {pid => $r->{pid}, memberkey => $k};
+          my $childcmodel = $mime_to_cmodel{$mt};
+          unless ($childcmodel) {
+            $childcmodel = 'cmodel:Asset';
+          }
+          $c->app->log->debug("ebucore:hasMimeType[$mt] maps to cmodel[$childcmodel]");
+          if ($childcmodel) {
+            my $child_metadata = {metadata => {'json-ld' => $childmetadata}};
+            if (exists($metadata->{metadata}->{'rights'})) {
+              $child_metadata->{metadata}->{rights} = $metadata->{metadata}->{'rights'};
+            }
+            if (exists($metadata->{metadata}->{'ownerid'})) {
+              $child_metadata->{metadata}->{ownerid} = $metadata->{metadata}->{'ownerid'};
+            }
+
+            #$c->app->log->debug("Creating child with metadata:".$c->app->dumper($child_metadata));
+            my $r = $self->create_simple($c, $childcmodel, $child_metadata, $mt, $childupload, undef, undef, $username, $password);
+            if ($r->{status} ne 200) {
+              $res->{status} = 500;
+              unshift @{$res->{alerts}}, @{$r->{alerts}};
+              unshift @{$res->{alerts}}, {type => 'error', msg => 'Error creating child object'};
+              return $res;
+            }
+
+            push @children, {pid => $r->{pid}, memberkey => $k};
+          }
+        }
+      }
+      for my $mk (keys %{$metadata->{metadata}}) {
+        if ($mk eq 'json-ld') {
+          $container_metadata->{$mk} = $metadata->{metadata}->{'json-ld'}->{container};
+        }
+        else {
+          if (lc($mk) ne 'rights') {
+            $container_metadata->{$mk} = $metadata->{metadata}->{$mk};
+          }
         }
       }
     }
-    for my $mk (keys %{$metadata->{metadata}}) {
-      if ($mk eq 'json-ld') {
-        $container_metadata->{$mk} = $metadata->{metadata}->{'json-ld'}->{container};
-      }
-      else {
-        if (lc($mk) ne 'rights') {
-          $container_metadata->{$mk} = $metadata->{metadata}->{$mk};
-        }
-      }
+    else {
+      $container_metadata = $metadata->{metadata};
     }
   }
   else {

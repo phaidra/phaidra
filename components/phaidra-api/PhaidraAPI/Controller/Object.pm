@@ -624,6 +624,7 @@ sub preview {
               }
             }
           }
+
           $self->stash(baseurl           => $self->config->{baseurl});
           $self->stash(basepath          => $self->config->{basepath});
           $self->stash(video_key         => $r->{video_key});

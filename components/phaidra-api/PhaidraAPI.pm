@@ -478,7 +478,7 @@ sub startup {
   $r->get('object/:pid/members/order')              ->to('membersorder#get');
   $r->get('object/:pid/annotations')                ->to('annotations#get');
   $r->get('object/:pid/techinfo')                   ->to('techinfo#get');
-  $r->get('object/:pid/dc')                         ->to('dc#get', dsid => 'DC_P');
+  $r->get('object/:pid/dc')                         ->to('dc#get', dsid => 'DC');
   $r->get('object/:pid/oai_dc')                     ->to('dc#get', dsid => 'DC_OAI');
   $r->get('object/:pid/index')                      ->to('index#get');
   $r->get('object/:pid/index/dc')                   ->to('index#get_dc');
@@ -652,6 +652,7 @@ sub startup {
       $ir_admin->post('ir/:pid/approve')                                     ->to('ir#approve');
       $ir_admin->post('ir/pureimport/lock/:pureid/:lockname')                ->to('ir#pureimport_lock');
       $ir_admin->post('ir/pureimport/unlock/:pureid/:lockname')              ->to('ir#pureimport_unlock');
+      $ir_admin->post('ir/pureimport/reject/:uuid')                          ->to('ir#pureimport_reject');
       $admin->post('ir/embargocheck')                                        ->to('ir#embargocheck');
 
       $loggedin->post('feedback')                                            ->to('feedback#feedback');
@@ -692,7 +693,7 @@ sub startup {
     $proxyauth_optional->get('streaming/:pid')                                  ->to('utils#streamingplayer');
     $proxyauth_optional->get('streaming/:pid/key')                              ->to('utils#streamingplayer_key');
 
-    $proxyauth_optional->get('imageserver')                                     ->to('imageserver#get');
+    $proxyauth_optional->get('imageserver')                                     ->to('imageserver#imageserverproxy');
 
     $proxyauth_optional->get('object/:pid/diss/:bdef/:method')                  ->to('object#diss');
     $proxyauth_optional->get('object/:pid/fulltext')                            ->to('fulltext#get');
@@ -799,6 +800,7 @@ sub startup {
       $check_auth->post('ir/:pid/approve')                                      ->to('ir#approve');
       $check_auth->post('ir/pureimport/lock/:pureid/:lockname')                 ->to('ir#pureimport_lock');
       $check_auth->post('ir/pureimport/unlock/:pureid/:lockname')               ->to('ir#pureimport_unlock');
+      $check_auth->post('ir/pureimport/reject/:uuid')                           ->to('ir#pureimport_reject');
 
       $check_auth->post('feedback')                                             ->to('feedback#feedback');
 

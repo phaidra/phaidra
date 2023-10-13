@@ -215,8 +215,8 @@ sub stats {
 
       my $downloads;
       my $sth = $c->app->db_metadata->dbh->prepare("SELECT DATE_FORMAT(created,'%Y-%m-%d'), location_country FROM usage_stats WHERE action = 'download' AND pid = '$pid';")
-        or $c->app->log->error("Error querying piwik database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
-      $sth->execute() or $c->app->log->error("Error querying piwik database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
+        or $c->app->log->error("Error querying database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
+      $sth->execute() or $c->app->log->error("Error querying database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
       my $date;
       my $country;
       $sth->bind_columns(undef, \$date, \$country);
@@ -255,12 +255,12 @@ sub stats {
 
       my $downloads = $c->app->db_metadata->dbh->selectrow_array("SELECT count(*) FROM usage_stats WHERE action = 'download' AND pid = '$pid';");
       unless (defined($downloads)) {
-        $c->app->log->error("Error querying piwik database for download stats:" . $c->app->db_metadata->dbh->errstr);
+        $c->app->log->error("Error querying database for download stats:" . $c->app->db_metadata->dbh->errstr);
       }
 
       my $detail_page = $c->app->db_metadata->dbh->selectrow_array("SELECT count(*) FROM usage_stats WHERE action = 'info' AND pid = '$pid';");
       unless (defined($detail_page)) {
-        $c->app->log->error("Error querying piwik database for detail stats:" . $c->app->db_metadata->dbh->errstr);
+        $c->app->log->error("Error querying database for detail stats:" . $c->app->db_metadata->dbh->errstr);
       }
 
       if (defined($detail_page)) {

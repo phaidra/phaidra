@@ -6,7 +6,6 @@ use v5.10;
 use Mojo::ByteStream qw(b);
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Object;
-use Data::Dumper;
 
 sub extract_credentials {
   my $self = shift;
@@ -340,7 +339,8 @@ sub signin_shib {
     for my $userAff (@userAffs) {
       last if $authorized;
       $self->app->log->debug("Checking if affiliation $userAff can login");
-      my @valid_affiliations = map { split(/,/) } @{$self->app->config->{authentication}->{shibboleth}->{requiredaffiliations}};
+      my @valid_affiliations = map {split(/,/)} @{$self->app->config->{authentication}->{shibboleth}->{requiredaffiliations}};
+
       # $self->app->log->debug(Dumper(@valid_affiliations));
       for my $configAff (@valid_affiliations) {
         $self->app->log->debug("$configAff");
@@ -372,6 +372,9 @@ sub signin_shib {
     $cookie->path('/');
     if ($self->app->config->{authentication}->{cookie_domain}) {
       $cookie->domain($self->app->config->{authentication}->{cookie_domain});
+    }
+    else {
+      $cookie->domain($self->app->config->{phaidra}->{baseurl});
     }
     $self->tx->res->cookies($cookie);
   }

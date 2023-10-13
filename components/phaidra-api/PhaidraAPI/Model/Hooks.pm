@@ -230,7 +230,7 @@ sub _create_imageserver_job {
       my $path;
       if ($c->app->config->{fedora}->{version} >= 6) {
         my $fedora_model = PhaidraAPI::Model::Fedora->new;
-        my $dsAttr = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+        my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
         if ($dsAttr->{status} eq 200) {
           $c->app->log->error("imageserver job pid[$pid] cm[$cmodel]: could not get path");
           $path = $dsAttr->{path};
