@@ -1,4 +1,5 @@
 import qs from 'qs'
+import axios from 'axios'
 import config from '../config/phaidra-ui'
 
 export default async (req, res, next) => {
@@ -6,7 +7,7 @@ export default async (req, res, next) => {
     let pid = req.url.replace('/', '')
     let params = { q: '*:*', defType: 'edismax', wt: 'json', start: 0, rows: 1, fq: 'pid:"' + pid + '"' }
     try {
-      let response = await this.$axios.request({
+      let response = await axios.request({
         method: 'POST',
         url: '/search/select',
         data: qs.stringify(params, { arrayFormat: 'repeat' }),
