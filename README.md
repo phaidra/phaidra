@@ -182,7 +182,7 @@ docker compose down
 ```
 
 ## Remove persisted data
-The following command will remove the volumes (aka directories under `./local/share/docker/volumes`) associated with your PHAIDRA installation.  As mentioned above, replace `phaidra-demo` with `phaidra-ssl` or `phaidra-shib`, depending on your installation. This command can be run from anywhere.
+The following command will remove the volumes (aka directories under `$HOME/.local/share/docker/volumes`) associated with your PHAIDRA installation.  As mentioned above, replace `phaidra-demo` with `phaidra-ssl` or `phaidra-shib`, depending on your installation. This command can be run from anywhere.
 
 ```
 # COMMAND:
