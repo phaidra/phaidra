@@ -241,6 +241,26 @@ docker system prune --all
 ```
 
 # Technical Notes
+## Graphical System Overview
+###  PHAIDRA Demo
+System when running `docker compose up -d` from directory
+`./compose_demo` (Phaidra available on `http://localhost:8899`.).
+
+![](./pictures/construction_demo.svg)
+
+###  PHAIDRA SSL
+System when running `docker compose up -d` from directory
+`./compose_ssl` (Phaidra available on `https://$YOUR_FQDN`, see
+section 'System startup' below for prerequisites).
+
+![](./pictures/construction_ssl.svg)
+
+###  PHAIDRA Shibboleth
+System when running `docker compose up -d` from directory
+`./compose_shib` (Phaidra available on `http://localhost:8899`.).
+
+![](./pictures/construction_shib.svg)
+
 ## Phaidra Components
 
 In the folder `./components` one will find `phaidra-api`, `phaidra-ui`,
@@ -300,26 +320,6 @@ This directory derives from commit be0af173eaac297289fa51843b69327f7c95242c of t
 
 25 directories
 ```
-
-## Technical Sketches
-###  Demo Technical sketch
-System when running `docker compose up -d` from directory
-`./compose_demo` (Phaidra available on `http://localhost:8899`.).
-
-![](./pictures/construction_demo.svg)
-
-###  SSL Technical sketch
-System when running `docker compose up -d` from directory
-`./compose_ssl` (Phaidra available on `https://$YOUR_FQDN`, see
-section 'System startup' below for prerequisites).
-
-![](./pictures/construction_ssl.svg)
-
-###  Shibboleth Technical sketch
-System when running `docker compose up -d` from directory
-`./compose_shib` (Phaidra available on `http://localhost:8899`.).
-
-![](./pictures/construction_shib.svg)
 
 ## Software in use
 
