@@ -1,4 +1,4 @@
-FROM node:20.0-bullseye-slim
+FROM node:20.8.1-bookworm-slim
 RUN <<EOF
 apt-get update
 apt-get install git ca-certificates -y
