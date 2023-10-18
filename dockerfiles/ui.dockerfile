@@ -1,9 +1,4 @@
-FROM node:20.0-bullseye-slim
-RUN <<EOF
-apt-get update
-apt-get install git ca-certificates -y
-apt-get clean
-EOF
+FROM node:20.8.1-bookworm
 ARG CACHEBUST=1
 ARG PHAIDRA_HOSTNAME
 ARG PHAIDRA_PORTSTUB

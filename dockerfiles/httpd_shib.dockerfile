@@ -6,7 +6,7 @@ ARG SHIB_METADATA
 ARG SHIB_METADATA_FILE
 ARG SHIB_METADATA_CERT
 RUN <<EOF
-apt-get update
+apt-get --quiet update
 apt-get install --yes --quiet --no-install-recommends \
 libapache2-mod-shib pandoc
 apt-get clean
