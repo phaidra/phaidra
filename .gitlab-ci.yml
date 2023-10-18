@@ -14,22 +14,28 @@ build-demo:
   stage: testing_builds
   script:
     - cd compose_demo
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
     - docker compose up -d --quiet-pull --build
     - docker compose down
+    - docker logout
 
 build-ssl:
   stage: testing_builds
   script:
     - cd compose_ssl
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
     - docker compose up -d --quiet-pull --build
     - docker compose down
+    - docker logout
 
 build-shib:
   stage: testing_builds
   script:
     - cd compose_shib
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
     - docker compose up -d --quiet-pull --build
     - docker compose down
+    - docker logout
     
 release_job:
   stage: release
