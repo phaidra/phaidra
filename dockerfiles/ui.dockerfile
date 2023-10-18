@@ -1,9 +1,4 @@
 FROM node:20.8.1-bookworm
-RUN <<EOF
-apt-get update
-apt-get install git ca-certificates -y
-apt-get clean
-EOF
 ARG CACHEBUST=1
 ARG PHAIDRA_HOSTNAME
 ARG PHAIDRA_PORTSTUB
@@ -14,7 +9,7 @@ ADD ./../components/phaidra-ui /usr/local/phaidra/phaidra-ui
 ADD ./../components/phaidra-vue-components /usr/local/phaidra/phaidra-vue-components
 WORKDIR /usr/local/phaidra/phaidra-vue-components
 RUN <<EOF
-npm install
+npm ci
 EOF
 WORKDIR /usr/local/phaidra/phaidra-ui
 RUN <<EOF
@@ -32,7 +27,7 @@ ENV NODE_OPTIONS=--openssl-legacy-provider
 ENV PORT=3001
 EXPOSE 3001
 RUN <<EOF
-npm install
+npm ci
 npm install /usr/local/phaidra/phaidra-vue-components
 EOF
 RUN <<EOF
