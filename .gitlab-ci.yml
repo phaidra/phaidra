@@ -10,55 +10,62 @@ stages:
 services:
   - docker:24-dind
 
-build-phaidra-api:
+build-demo:
   stage: testing_builds
-  before_script:
-    - apk update && apk add git
   script:
-    - >
-      docker buildx build
-      -f dockerfiles/api.dockerfile
-      .
+    - cd compose_demo
+    - docker compose up -d
+    - docker compose down
+  
+# build-phaidra-api:
+#   stage: testing_builds
+#   before_script:
+#     - apk update && apk add git
+#   script:
+#     - >
+#       docker buildx build
+#       -f dockerfiles/api.dockerfile
+#       .
 
-build-phaidra-ui:
-  stage: testing_builds
-  before_script:
-    - apk update && apk add git
-  script:
-    - >
-      docker buildx build
-      -f dockerfiles/ui.dockerfile
-      .
+# build-phaidra-ui:
+#   stage: testing_builds
+#   before_script:
+#     - apk update && apk add git
+#   script:
+#     - >
+#       docker buildx build
+#       -f dockerfiles/ui.dockerfile
+#       .
 
-build-imageserver:
-  stage: testing_builds
-  before_script:
-    - apk update && apk add git
-  script:
-    - >
-      docker buildx build
-      -f dockerfiles/imageserver.dockerfile
-      .
+# build-imageserver:
+#   stage: testing_builds
+#   before_script:
+#     - apk update && apk add git
+#   script:
+#     - >
+#       docker buildx build
+#       -f dockerfiles/imageserver.dockerfile
+#       .
 
-build-solr:
-  stage: testing_builds
-  before_script:
-    - apk update && apk add git
-  script:
-    - >
-      docker buildx build
-      -f dockerfiles/solr.dockerfile
-      .
+# build-solr:
+#   stage: testing_builds
+#   before_script:
+#     - apk update && apk add git
+#   script:
+#     - >
+#       docker buildx build
+#       -f dockerfiles/solr.dockerfile
+#       .
 
-build-pixelgecko:
-  stage: testing_builds
-  before_script:
-    - apk update && apk add git
-  script:
-    - >
-      docker buildx build
-      -f dockerfiles/pixelgecko.dockerfile
-      .
+# build-pixelgecko:
+#   stage: testing_builds
+#   before_script:
+#     - apk update && apk add git
+#   script:
+#     - >
+#       docker buildx build
+#       -f dockerfiles/pixelgecko.dockerfile
+#       .
 
 release_job:
   stage: release
