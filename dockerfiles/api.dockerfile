@@ -10,7 +10,7 @@ apt-get install --yes --quiet --no-install-recommends \
     libsoap-lite-perl libdbd-mysql-perl libdata-messagepack-perl libdatetime-perl libdatetime-format-iso8601-perl \
     libclone-perl libmime-lite-perl libdbix-connector-perl libjson-perl libcgi-pm-perl libxml-libxslt-perl \
     libcache-fastmmap-perl liblocale-maketext-lexicon-perl libyaml-syck-perl libmongodb-perl libmojolicious-perl \
-    libmojolicious-plugin-i18n-perl libmojolicious-plugin-authentication-perl git libchi-perl libtemplate-perl
+    libmojolicious-plugin-i18n-perl libmojolicious-plugin-authentication-perl git
 apt-get clean
 EOF
 RUN <<EOF
@@ -18,6 +18,9 @@ cpanm Mojolicious::Plugin::Database Mojolicious::Plugin::Session Mojolicious::Pl
       Mojolicious::Plugin::Log::Any Mojolicious::Plugin::Prometheus@1.3.1 \
       IO::Scalar Crypt::Rijndael MIME::Base64 File::MimeInfo::Magic \
       XML::SAX XML::Parser::PerlSAX File::Find::utf8  MIME::Lite::TT::HTML Storable UNIVERSAL::require
+EOF
+RUN <<EOF
+yes | cpanm --uninstall Cpanel::JSON::XS
 EOF
 RUN <<EOF
 cpanm Mojo::IOLoop::Delay
