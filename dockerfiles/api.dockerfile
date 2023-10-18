@@ -1,7 +1,7 @@
 FROM ubuntu:jammy
 ENV DEBIAN_FRONTEND noninteractive
 RUN <<EOF
-apt-get --quiet update
+apt-get update
 apt-get install --yes --quiet --no-install-recommends \
     cpanminus build-essential \
     libnet-ldap-perl libio-socket-ssl-perl libsereal-perl libcrypt-cbc-perl libcrypt-urandom-perl \
