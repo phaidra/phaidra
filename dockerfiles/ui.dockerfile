@@ -1,4 +1,13 @@
+<<<<<<< HEAD
 FROM node:20.8.1-bookworm
+=======
+FROM node:20.0-bullseye-slim
+RUN <<EOF
+apt-get update
+apt-get install git ca-certificates -y
+apt-get clean
+EOF
+>>>>>>> parent of 4b85958 (resolve eslint conflict, update deps as nuxt2 and vue-svgicon allow.)
 ARG CACHEBUST=1
 ARG PHAIDRA_HOSTNAME
 ARG PHAIDRA_PORTSTUB

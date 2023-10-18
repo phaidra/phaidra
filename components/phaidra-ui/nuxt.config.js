@@ -52,7 +52,7 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    '@nuxtjs/i18n',
+    'nuxt-i18n',
     '@nuxtjs/axios',
     '@nuxt/http',
     ['cookie-universal-nuxt', { alias: 'cookies' }],
