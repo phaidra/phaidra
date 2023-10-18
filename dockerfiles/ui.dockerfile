@@ -1,4 +1,4 @@
-FROM node:20.8.1-bookworm-slim
+FROM node:20.8.1-bookworm
 RUN <<EOF
 apt-get update
 apt-get install git ca-certificates -y
