@@ -13,9 +13,7 @@ networks:
 services:
 
   httpd:
-    build:
-      context: ../.
-      dockerfile: dockerfiles/httpd.dockerfile
+    image: testuser34/httpd-base:latest
     ports:
       - "${PHAIDRA_HOSTPORT}:80"
     volumes:

@@ -49,9 +49,9 @@ build-httpd:
     -t $CI_REGISTRY_USER/httpd-base:latest
     -t $CI_REGISTRY_USER/httpd-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/httpd-base
-  # rules:
-  #   - changes:
-  #       - dockerfiles/httpd.dockerfile
+  rules:
+    - changes:
+        - dockerfiles/httpd.dockerfile
 
 # build-demo:
 #   stage: testing_builds
