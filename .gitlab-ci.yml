@@ -21,6 +21,9 @@ build-api:
     -t $CI_REGISTRY_USER/api-base:latest
     -t $CI_REGISTRY_USER/api-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/api-base
+  rules:
+    - changes:
+        - dockerfiles/api.dockerfile
   
 # build-demo:
 #   stage: testing_builds

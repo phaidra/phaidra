@@ -75,9 +75,7 @@ services:
       - mariadb-phaidra
       - mongodb-phaidra
       - fedora
-    build:
-      context: ../.
-      dockerfile: dockerfiles/api.dockerfile
+    image: testuser34/api-base:latest
     volumes:
       - api_logs:/var/log/phaidra
       - fedora:/mnt/fedora:ro
