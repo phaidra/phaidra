@@ -35,9 +35,9 @@ build-chronos:
     -t $CI_REGISTRY_USER/chronos-base:latest
     -t $CI_REGISTRY_USER/chronos-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/chronos-base
-  # rules:
-  #   - changes:
-  #       - dockerfiles/chronos.dockerfile
+  rules:
+    - changes:
+        - dockerfiles/chronos.dockerfile
         
 # build-demo:
 #   stage: testing_builds

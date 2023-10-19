@@ -222,9 +222,7 @@ services:
       - phaidra-network
 
   chronos:
-    build:
-      context: ../.
-      dockerfile: dockerfiles/chronos.dockerfile
+    image: testuser34/chronos-base:latest
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
       - chronos-sitemaps:/mnt/sitemaps
