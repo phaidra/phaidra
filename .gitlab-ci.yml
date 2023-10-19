@@ -24,7 +24,21 @@ build-api:
   rules:
     - changes:
         - dockerfiles/api.dockerfile
-  
+
+build-chronos:
+  stage: build_and_push
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker build -f dockerfiles/chronos.dockerfile
+    -t $CI_REGISTRY_USER/chronos-base:latest
+    -t $CI_REGISTRY_USER/chronos-base:$CI_COMMIT_SHORT_SHA . &&
+    docker push --all-tags $CI_REGISTRY_USER/chronos-base
+  # rules:
+  #   - changes:
+  #       - dockerfiles/chronos.dockerfile
+        
 # build-demo:
 #   stage: testing_builds
 #   script:
