@@ -53,9 +53,7 @@ services:
 
 
   imageserver:
-    build:
-      context: ../.
-      dockerfile: dockerfiles/imageserver.dockerfile
+    image: testuser34/imageserver-base:latest
     volumes:
       - pixelgecko:/mnt/converted_images:ro
     networks:

@@ -63,9 +63,9 @@ build-imageserver:
     -t $CI_REGISTRY_USER/imageserver-base:latest
     -t $CI_REGISTRY_USER/imageserver-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/imageserver-base
-  # rules:
-  #   - changes:
-  #       - dockerfiles/imageserver.dockerfile
+  rules:
+    - changes:
+        - dockerfiles/imageserver.dockerfile
 
 # build-demo:
 #   stage: testing_builds
