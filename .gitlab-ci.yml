@@ -54,10 +54,10 @@ build-httpd:
     -t $CI_REGISTRY_USER/httpd-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/httpd-base
   rules:
-    changes:
-      paths:
-        - dockerfiles/httpd.dockerfile
-      compare_to: 'refs/heads/main'
+    - changes:
+        paths:
+          - dockerfiles/httpd.dockerfile
+        compare_to: 'refs/heads/main'
 
 build-imageserver:
   stage: build_and_push
