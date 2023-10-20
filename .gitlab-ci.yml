@@ -67,6 +67,20 @@ build-imageserver:
     - changes:
         - dockerfiles/imageserver.dockerfile
 
+build-pixelgecko:
+  stage: build_and_push
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker build -f dockerfiles/pixelgecko.dockerfile
+    -t $CI_REGISTRY_USER/pixelgecko-base:latest
+    -t $CI_REGISTRY_USER/pixelgecko-base:$CI_COMMIT_SHORT_SHA . &&
+    docker push --all-tags $CI_REGISTRY_USER/pixelgecko-base
+  # rules:
+  #   - changes:
+  #       - dockerfiles/pixelgecko.dockerfile
+
 # build-demo:
 #   stage: testing_builds
 #   script:
