@@ -125,9 +125,7 @@ services:
       - api
     restart:
       always
-    build:
-      context: ../.
-      dockerfile: dockerfiles/pixelgecko.dockerfile
+    image: testuser34/pixelgecko-base:latest
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images

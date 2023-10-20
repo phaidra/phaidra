@@ -77,9 +77,9 @@ build-pixelgecko:
     -t $CI_REGISTRY_USER/pixelgecko-base:latest
     -t $CI_REGISTRY_USER/pixelgecko-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/pixelgecko-base
-  # rules:
-  #   - changes:
-  #       - dockerfiles/pixelgecko.dockerfile
+  rules:
+    - changes:
+        - dockerfiles/pixelgecko.dockerfile
 
 # build-demo:
 #   stage: testing_builds
