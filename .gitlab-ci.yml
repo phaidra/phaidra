@@ -100,25 +100,45 @@ compose-demo:
     - cd compose_demo
     - docker compose up -d --quiet-pull --build
     - docker compose down
+  rules:
+    - changes:
+        paths:
+          - compose_demo/docker-compose.yaml
+          - compose_demo/.env
+        compare_to: 'refs/heads/main'
 
-# build-ssl:
-#   stage: testing_builds
-#   script:
-#     - cd compose_ssl
-#     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
-#     - docker compose up -d --quiet-pull --build
-#     - docker compose down
-#     - docker logout
+compose-ssl:
+  stage: test
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script:
+    - cd compose_ssl
+    - docker compose up -d --quiet-pull --build
+    - docker compose down
+  rules:
+    - changes:
+        paths:
+          - compose_ssl/docker-compose.yaml
+          - compose_ssl/.env
+        compare_to: 'refs/heads/main'
 
-# build-shib:
-#   stage: testing_builds
-#   script:
-#     - cd compose_shib
-#     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
-#     - docker compose up -d --quiet-pull --build
-#     - docker compose down
-#     - docker logout
-    
+compose-shib:
+  stage: test
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script:
+    - cd compose_shib
+    - docker compose up -d --quiet-pull --build
+    - docker compose down
+  rules:
+    - changes:
+        paths:
+          - compose_shib/docker-compose.yaml
+          - compose_shib/.env
+        compare_to: 'refs/heads/main'
+
 release_job:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
