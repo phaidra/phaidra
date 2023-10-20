@@ -24,6 +24,7 @@ build-api:
   rules:
     - changes:
         - dockerfiles/api.dockerfile
+        compare_to: 'refs/heads/main'
 
 build-chronos:
   stage: build_and_push
@@ -38,6 +39,7 @@ build-chronos:
   rules:
     - changes:
         - dockerfiles/chronos.dockerfile
+        compare_to: 'refs/heads/main'
 
 build-httpd:
   stage: build_and_push
@@ -52,6 +54,7 @@ build-httpd:
   rules:
     - changes:
         - dockerfiles/httpd.dockerfile
+        compare_to: 'refs/heads/main'
 
 build-imageserver:
   stage: build_and_push
@@ -66,6 +69,7 @@ build-imageserver:
   rules:
     - changes:
         - dockerfiles/imageserver.dockerfile
+        compare_to: 'refs/heads/main'
 
 build-pixelgecko:
   stage: build_and_push
@@ -80,6 +84,7 @@ build-pixelgecko:
   rules:
     - changes:
         - dockerfiles/pixelgecko.dockerfile
+        compare_to: 'refs/heads/main'
 
 compose-demo:
   stage: testing_compose
