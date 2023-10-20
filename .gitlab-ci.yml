@@ -53,6 +53,20 @@ build-httpd:
     - changes:
         - dockerfiles/httpd.dockerfile
 
+build-imageserver:
+  stage: build_and_push
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker build -f dockerfiles/imageserver.dockerfile
+    -t $CI_REGISTRY_USER/imageserver-base:latest
+    -t $CI_REGISTRY_USER/imageserver-base:$CI_COMMIT_SHORT_SHA . &&
+    docker push --all-tags $CI_REGISTRY_USER/imageserver-base
+  # rules:
+  #   - changes:
+  #       - dockerfiles/imageserver.dockerfile
+
 # build-demo:
 #   stage: testing_builds
 #   script:
