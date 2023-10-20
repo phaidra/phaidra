@@ -224,7 +224,7 @@ services:
       - phaidra-network
 
   lam:
-    image: ghcr.io/ldapaccountmanager/lam:8.4
+    image: ghcr.io/ldapaccountmanager/lam:8.5
     restart: always
     environment:
       - LDAP_DOMAIN=${LDAP_DOMAIN}
@@ -236,7 +236,7 @@ services:
       - phaidra-network
 
   openldap:
-    image: bitnami/openldap:2.6.4-debian-11-r44
+    image: bitnami/openldap:2.6.6-debian-11-r59
     environment:
       - LDAP_ADMIN_USERNAME=${LDAP_ADMIN_USERNAME}
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
