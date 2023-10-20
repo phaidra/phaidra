@@ -100,13 +100,13 @@ compose-demo:
     - cd compose_demo
     - docker compose up -d --quiet-pull --build
     - docker compose down
-  # rules:
-  #   - changes:
-  #       paths:
-  #         - compose_demo/docker-compose.yaml
-  #         - compose_demo/.env
-  #         - components/phaidra-ui/**/*
-  #         - image_components/solr/**/*
+  rules:
+    - changes:
+        paths:
+          - compose_demo/docker-compose.yaml
+          - compose_demo/.env
+          - components/phaidra-ui/**/*
+          - image_components/solr/**/*
 
 compose-ssl:
   stage: test
@@ -117,13 +117,13 @@ compose-ssl:
     - cd compose_ssl
     - docker compose up -d --quiet-pull --build
     - docker compose down
-# rules:
-    # - changes:
-    #     paths:
-    #       - compose_ssl/docker-compose.yaml
-    #       - compose_ssl/.env
-    #       - components/phaidra-ui/**/*
-    #       - image_components/solr/**/*
+  rules:
+    - changes:
+        paths:
+          - compose_ssl/docker-compose.yaml
+          - compose_ssl/.env
+          - components/phaidra-ui/**/*
+          - image_components/solr/**/*
 
 compose-shib:
   stage: test
@@ -134,13 +134,13 @@ compose-shib:
     - cd compose_shib
     - docker compose up -d --quiet-pull --build
     - docker compose down
-  # rules:
-  #   - changes:
-  #       paths:
-  #         - compose_shib/docker-compose.yaml
-  #         - compose_shib/.env
-  #         - components/phaidra-ui/**/*
-  #         - image_components/solr/**/*
+  rules:
+    - changes:
+        paths:
+          - compose_shib/docker-compose.yaml
+          - compose_shib/.env
+          - components/phaidra-ui/**/*
+          - image_components/solr/**/*
 
 release_job:
   stage: release
