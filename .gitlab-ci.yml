@@ -4,15 +4,15 @@ variables:
   DOCKER_TLS_CERTDIR: "/certs"
 
 stages:
-  - build_and_push
-  - testing_compose
+  - build
+  - test
   - release
 
 services:
   - docker:24-dind
 
 build-api:
-  stage: build_and_push
+  stage: build
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -28,7 +28,7 @@ build-api:
         compare_to: 'refs/heads/main'
 
 build-chronos:
-  stage: build_and_push
+  stage: build
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -44,7 +44,7 @@ build-chronos:
         compare_to: 'refs/heads/main'
 
 build-httpd:
-  stage: build_and_push
+  stage: build
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -60,7 +60,7 @@ build-httpd:
         compare_to: 'refs/heads/main'
 
 build-imageserver:
-  stage: build_and_push
+  stage: build
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -76,7 +76,7 @@ build-imageserver:
         compare_to: 'refs/heads/main'
 
 build-pixelgecko:
-  stage: build_and_push
+  stage: build
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -92,7 +92,7 @@ build-pixelgecko:
         compare_to: 'refs/heads/main'
 
 compose-demo:
-  stage: testing_compose
+  stage: test
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
