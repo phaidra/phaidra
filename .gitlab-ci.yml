@@ -5,7 +5,7 @@ variables:
 
 stages:
   - build_and_push
-  - testing_builds
+  - testing_compose
   - release
 
 services:
@@ -81,14 +81,15 @@ build-pixelgecko:
     - changes:
         - dockerfiles/pixelgecko.dockerfile
 
-# build-demo:
-#   stage: testing_builds
-#   script:
-#     - cd compose_demo
-#     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
-#     - docker compose up -d --quiet-pull --build
-#     - docker compose down
-#     - docker logout
+compose-demo:
+  stage: testing_compose
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script:
+    - cd compose_demo
+    - docker compose up -d --quiet-pull --build
+    - docker compose down
 
 # build-ssl:
 #   stage: testing_builds
