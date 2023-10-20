@@ -107,7 +107,6 @@ compose-demo:
           - compose_demo/.env
           - components/phaidra-ui/**/*
           - image_components/solr/**/*
-        compare_to: 'refs/heads/main'
 
 compose-ssl:
   stage: test
@@ -125,7 +124,6 @@ compose-ssl:
           - compose_ssl/.env
           - components/phaidra-ui/**/*
           - image_components/solr/**/*
-        compare_to: 'refs/heads/main'
 
 compose-shib:
   stage: test
@@ -143,7 +141,6 @@ compose-shib:
           - compose_shib/.env
           - components/phaidra-ui/**/*
           - image_components/solr/**/*
-        compare_to: 'refs/heads/main'
 
 release_job:
   stage: release
