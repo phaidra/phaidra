@@ -54,6 +54,7 @@ services:
 
   imageserver:
     image: testuser34/imageserver-base:latest
+    pull_policy: always
     volumes:
       - pixelgecko:/mnt/converted_images:ro
     networks:
@@ -92,6 +93,7 @@ services:
       - mongodb-phaidra
       - fedora
     image: testuser34/api-base:latest
+    pull_policy: always
     volumes:
       - api_logs:/var/log/phaidra
       - fedora:/mnt/fedora:ro
@@ -126,6 +128,7 @@ services:
     restart:
       always
     image: testuser34/pixelgecko-base:latest
+    pull_policy: always
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
@@ -248,6 +251,7 @@ services:
 
   chronos:
     image: testuser34/chronos-base:latest
+    pull_policy: always
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
       - chronos-sitemaps:/mnt/sitemaps
