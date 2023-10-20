@@ -22,9 +22,10 @@ build-api:
     -t $CI_REGISTRY_USER/api-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/api-base
   rules:
-    - changes:
+    changes:
+      paths:
         - dockerfiles/api.dockerfile
-        compare_to: 'refs/heads/main'
+      compare_to: 'refs/heads/main'
 
 build-chronos:
   stage: build_and_push
@@ -37,9 +38,10 @@ build-chronos:
     -t $CI_REGISTRY_USER/chronos-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/chronos-base
   rules:
-    - changes:
+    changes:
+      paths:
         - dockerfiles/chronos.dockerfile
-        compare_to: 'refs/heads/main'
+      compare_to: 'refs/heads/main'
 
 build-httpd:
   stage: build_and_push
@@ -52,9 +54,10 @@ build-httpd:
     -t $CI_REGISTRY_USER/httpd-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/httpd-base
   rules:
-    - changes:
+    changes:
+      paths:
         - dockerfiles/httpd.dockerfile
-        compare_to: 'refs/heads/main'
+      compare_to: 'refs/heads/main'
 
 build-imageserver:
   stage: build_and_push
@@ -67,9 +70,10 @@ build-imageserver:
     -t $CI_REGISTRY_USER/imageserver-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/imageserver-base
   rules:
-    - changes:
+    changes:
+      paths:
         - dockerfiles/imageserver.dockerfile
-        compare_to: 'refs/heads/main'
+      compare_to: 'refs/heads/main'
 
 build-pixelgecko:
   stage: build_and_push
@@ -82,9 +86,10 @@ build-pixelgecko:
     -t $CI_REGISTRY_USER/pixelgecko-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/pixelgecko-base
   rules:
-    - changes:
+    changes:
+      paths:
         - dockerfiles/pixelgecko.dockerfile
-        compare_to: 'refs/heads/main'
+      compare_to: 'refs/heads/main'
 
 compose-demo:
   stage: testing_compose
