@@ -206,38 +206,68 @@ phaidra-demo_sitemaps
 phaidra-demo_solr
 ```
 
-## Remove docker images
+## Remove docker images built by compose
 The following command will remove the docker images associated with your PHAIDRA installation.  As mentioned above, replace `phaidra-demo` with `phaidra-ssl` or `phaidra-shib`, depending on your installation. This command can be run from anywhere.
 
 ```
 # COMMAND:
 docker image rm $(docker image ls --filter label=com.docker.compose.project=phaidra-demo --quiet)
 # EXPECTED OUTPUT (hashes are matter of change):
-
-Untagged: phaidra-demo-chronos:latest
-Deleted: sha256:43313fc1a91124996245a88e342f344bcce81d85ee2f9ebf684273ce5c5b66a5
 Untagged: phaidra-demo-ui:latest
-Deleted: sha256:22649036e80a8dd30b8d4b8f7fac772072d244d2e4abc381da8a2d45ff5060c4
-Untagged: phaidra-demo-database-dumper:latest
-Deleted: sha256:d9f08a657d77e4c1e799cc7d09385f90497bd03957b631f5d258ff9b6e590b54
-Untagged: phaidra-demo-pixelgecko:latest
-Deleted: sha256:ab2cfff669ddeeb35e9a9cf4359be95ff2ece736e4fe9235390a151f4df6e8db
-Untagged: phaidra-demo-httpd:latest
-Deleted: sha256:319c9a2564e3b03b162bff82240b2d531190a49aeaa519865c8ab6f3095cb7a6
-Untagged: phaidra-demo-api:latest
-Deleted: sha256:4cb73d3845d2a4c695033e6484cba1e416084811329a08dafa3cf7a40b137438
-Untagged: phaidra-demo-imageserver:latest
-Deleted: sha256:8e02d372cc4d839ba9119a8552f0a059be779d1656f430ee2b0111e7937ced28
+Deleted: sha256:6071a3baa9c2e4d8b181557801781212c25c9fad1511f15da531e7748360b5d3
 Untagged: phaidra-demo-solr:latest
-Deleted: sha256:837339a0dbe3759ebfcab2692b6c29d54502e5ec1e4a37df363b3ff23c677700
+Deleted: sha256:2975489637098e5e555f7fe6f99be6e96c116f8a0b63ed7c1d6ac16e7f38ebf0
 ```
-## (Optional) Clean up Docker caches
+## Clean up Docker caches
 In case you are developing and changing  a lot of components, dockerfiles and docker-compose files, 
 things can become cluttered. To remove everything including build caches, you can run 
- the following command (THIS WILL NOT ONLY AFFECT PHAIDRA):
-
+ the following command:
 ```
-docker system prune --all
+docker system prune --filter label=com.docker.compose.project=phaidra-demo
+WARNING! This will remove:
+  - all stopped containers
+  - all networks not used by at least one container
+  - all dangling images
+  - all dangling build cache
+
+  Items to be pruned will be filtered with:
+  - label=com.docker.compose.project=phaidra-demo
+
+Are you sure you want to continue? [y/N] y
+Deleted build cache objects:
+xczj0p7s24k06e46gf1j2erre
+7hvbx00keetcy78cwuxmogrtq
+7yaqz9fwihcttinfvkm3jo7sw
+y8l42trwfc1m6luvbq4hffhlv
+orbswhp6kv0lv4zlbu590fi1g
+rrxifv4eh0xy4pd8688enpv1w
+jm73gq3jua0thmzc7r7al2oke
+u82syn7ofl5y3au8h7gkwtsuu
+yse8a65tzo89h1g0barlp4d15
+za9zcux2sgu3rd695xev6rgij
+hxd9h6k65byqfjwomilr9oabm
+11sw2s0n9weyotr93t4xa05xc
+vdbpwk5jbi4wphdt79k9p15jv
+w8n6jx9j4cpxdwekxpnjhlbse
+zle1rpmgzdweow9jhpq0rbdjy
+93xn2q95t9erfvt91myi52mf4
+mpxry4ls7ds868npqafx5owna
+ylv5dzxwf77dyk1yde5atzbh3
+oy18p54dbcsudllhocii46len
+ru6co4z4v02feosk4fkkspaj7
+emrp8luuxtc3sawfei4hm01r0
+eb97e20eebu8md9wlrp9ulpnb
+tzaeqdcrwxceumd22ag831q36
+ws83b9c3f7h43hqig4amvm3b4
+45ppez7u3xy7q3jj7967h0jws
+r0koppb6yb810q6lht63v193p
+ss4tvd1zpkghyzcj2lmyx318s
+onoh6g4s90y1dun6qaekh0pwq
+nn8ue7n9yzwc5zuxe0tmla2f5
+l9xraqviis1mmelbtvbkpi0uh
+esbju1lnfu3jwhb17f5vbhyc7
+
+Total reclaimed space: 733.3MB
 ```
 
 # Technical Notes
