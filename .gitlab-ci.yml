@@ -85,11 +85,11 @@ build-pixelgecko:
     -t $CI_REGISTRY_USER/pixelgecko-base:latest
     -t $CI_REGISTRY_USER/pixelgecko-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/pixelgecko-base
-  # rules:
-  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-  #     changes:
-  #       paths:
-  #         - dockerfiles/pixelgecko.dockerfile
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/pixelgecko.dockerfile
 
 compose-demo:
   stage: test
@@ -134,13 +134,13 @@ compose-shib:
     - cd compose_shib
     - docker compose up -d --quiet-pull --build
     - docker compose down
-  rules:
-    - changes:
-        paths:
-          - compose_shib/docker-compose.yaml
-          - compose_shib/.env
-          - components/phaidra-ui/**/*
-          - container_components/solr/**/*
+  # rules:
+  #   - changes:
+  #       paths:
+  #         - compose_shib/docker-compose.yaml
+  #         - compose_shib/.env
+  #         - components/phaidra-ui/**/*
+  #         - container_components/solr/**/*
 
 release_job:
   stage: release
