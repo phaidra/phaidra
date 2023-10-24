@@ -98,7 +98,7 @@ compose-demo:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script:
     - cd compose_demo
-    - docker compose up -d --quiet-pull --build
+    - docker compose up -d --quiet-pull --build --wait
     - docker compose down
   rules:
     - changes:
@@ -106,7 +106,7 @@ compose-demo:
           - compose_demo/docker-compose.yaml
           - compose_demo/.env
           - components/phaidra-ui/**/*
-          - image_components/solr/**/*
+          - container_components/solr/**/*
 
 compose-ssl:
   stage: test
@@ -115,7 +115,7 @@ compose-ssl:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script:
     - cd compose_ssl
-    - docker compose up -d --quiet-pull --build
+    - docker compose up -d --quiet-pull --build --wait
     - docker compose down
   rules:
     - changes:
@@ -123,7 +123,7 @@ compose-ssl:
           - compose_ssl/docker-compose.yaml
           - compose_ssl/.env
           - components/phaidra-ui/**/*
-          - image_components/solr/**/*
+          - container_components/solr/**/*
 
 compose-shib:
   stage: test
@@ -132,7 +132,7 @@ compose-shib:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script:
     - cd compose_shib
-    - docker compose up -d --quiet-pull --build
+    - docker compose up -d --quiet-pull --build --wait
     - docker compose down
   rules:
     - changes:
@@ -140,7 +140,7 @@ compose-shib:
           - compose_shib/docker-compose.yaml
           - compose_shib/.env
           - components/phaidra-ui/**/*
-          - image_components/solr/**/*
+          - container_components/solr/**/*
 
 release_job:
   stage: release

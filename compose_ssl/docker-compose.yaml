@@ -42,11 +42,10 @@ services:
       - phaidra-network
 
   solr:
-    build:
-      context: ../.
-      dockerfile: dockerfiles/solr.dockerfile
+    image: solr:9.2.1    
     volumes:
       - solr:/var/solr
+      - ./../container_components/solr/phaidra_core:/tmp/phaidra:ro      
     command:
       - solr-precreate
       - phaidra
