@@ -22,7 +22,7 @@ build-api:
     -t $CI_REGISTRY_USER/api-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/api-base
   rules:
-    - if: $CI_COMMIT_BRANCH =~ $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
           - dockerfiles/api.dockerfile
@@ -38,7 +38,7 @@ build-chronos:
     -t $CI_REGISTRY_USER/chronos-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/chronos-base
   rules:
-    - if: $CI_COMMIT_BRANCH =~ $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
           - dockerfiles/chronos.dockerfile
@@ -54,7 +54,7 @@ build-httpd:
     -t $CI_REGISTRY_USER/httpd-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/httpd-base
   rules:
-    - if: $CI_COMMIT_BRANCH =~ $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
           - dockerfiles/httpd.dockerfile
@@ -70,7 +70,7 @@ build-imageserver:
     -t $CI_REGISTRY_USER/imageserver-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/imageserver-base
   rules:
-    - if: $CI_COMMIT_BRANCH =~ $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
           - dockerfiles/imageserver.dockerfile
@@ -86,7 +86,7 @@ build-pixelgecko:
     -t $CI_REGISTRY_USER/pixelgecko-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/pixelgecko-base
   rules:
-    - if: $CI_COMMIT_BRANCH =~ $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
           - dockerfiles/pixelgecko.dockerfile
