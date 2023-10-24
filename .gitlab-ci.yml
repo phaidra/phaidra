@@ -85,11 +85,11 @@ build-pixelgecko:
     -t $CI_REGISTRY_USER/pixelgecko-base:latest
     -t $CI_REGISTRY_USER/pixelgecko-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/pixelgecko-base
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
-        paths:
-          - dockerfiles/pixelgecko.dockerfile
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+  #     changes:
+  #       paths:
+  #         - dockerfiles/pixelgecko.dockerfile
 
 compose-demo:
   stage: test
@@ -100,13 +100,13 @@ compose-demo:
     - cd compose_demo
     - docker compose up -d --quiet-pull --build
     - docker compose down
-  rules:
-    - changes:
-        paths:
-          - compose_demo/docker-compose.yaml
-          - compose_demo/.env
-          - components/phaidra-ui/**/*
-          - container_components/solr/**/*
+  # rules:
+  #   - changes:
+  #       paths:
+  #         - compose_demo/docker-compose.yaml
+  #         - compose_demo/.env
+  #         - components/phaidra-ui/**/*
+  #         - container_components/solr/**/*
 
 compose-ssl:
   stage: test
@@ -117,13 +117,13 @@ compose-ssl:
     - cd compose_ssl
     - docker compose up -d --quiet-pull --build
     - docker compose down
-  rules:
-    - changes:
-        paths:
-          - compose_ssl/docker-compose.yaml
-          - compose_ssl/.env
-          - components/phaidra-ui/**/*
-          - container_components/solr/**/*
+  # rules:
+  #   - changes:
+  #       paths:
+  #         - compose_ssl/docker-compose.yaml
+  #         - compose_ssl/.env
+  #         - components/phaidra-ui/**/*
+  #         - container_components/solr/**/*
 
 compose-shib:
   stage: test
