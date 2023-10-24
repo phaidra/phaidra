@@ -22,10 +22,10 @@ build-api:
     -t $CI_REGISTRY_USER/api-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/api-base
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH =~ $CI_DEFAULT_BRANCH
+      changes:
         paths:
           - dockerfiles/api.dockerfile
-        compare_to: 'refs/heads/main'
 
 build-chronos:
   stage: build
