@@ -98,7 +98,7 @@ compose-demo:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script:
     - cd compose_demo
-    - docker compose up -d --quiet-pull --build --wait
+    - docker compose up -d --quiet-pull --build
     - docker compose down
   rules:
     - changes:
@@ -115,7 +115,7 @@ compose-ssl:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script:
     - cd compose_ssl
-    - docker compose up -d --quiet-pull --build --wait
+    - docker compose up -d --quiet-pull --build
     - docker compose down
   rules:
     - changes:
@@ -132,7 +132,7 @@ compose-shib:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script:
     - cd compose_shib
-    - docker compose up -d --quiet-pull --build --wait
+    - docker compose up -d --quiet-pull --build
     - docker compose down
   rules:
     - changes:
