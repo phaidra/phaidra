@@ -4,6 +4,7 @@ apt-get update
 apt-get install git ca-certificates -y
 apt-get clean
 EOF
+ARG CACHEBUST=1
 ARG PHAIDRA_HOSTNAME
 ARG PHAIDRA_PORTSTUB
 ARG PHAIDRA_HOSTPORT
