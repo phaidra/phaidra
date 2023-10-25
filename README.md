@@ -135,7 +135,7 @@ of PHAIDRA over all containers (here from an instance started from
 ``` example
 # COMMAND:
 docker stats<<<$(docker ps -q)
-# EXPECTED TERMINAL OUTPUT:
+# EXPECTED OUTPUT:
 CONTAINER ID   NAME                             CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
 46c84962b77f   phaidra-demo-httpd-1             0.07%     36.27MiB / 15.03GiB   0.24%     24.8kB / 26kB     0B / 0B           109
 697692e6879d   phaidra-demo-ui-1                0.09%     133.4MiB / 15.03GiB   0.87%     1.05kB / 0B       0B / 0B           23
@@ -207,16 +207,13 @@ phaidra-demo_api_logs
 phaidra-demo_chronos-database-dumps
 phaidra-demo_chronos-oai-logs
 phaidra-demo_chronos-sitemaps
-phaidra-demo_database-dumps
 phaidra-demo_dbgate
 phaidra-demo_fedora
 phaidra-demo_mariadb_fedora
 phaidra-demo_mariadb_phaidra
 phaidra-demo_mongodb_phaidra
-phaidra-demo_oai-logs
 phaidra-demo_openldap
 phaidra-demo_pixelgecko
-phaidra-demo_sitemaps
 phaidra-demo_solr
 ```
 
@@ -227,10 +224,10 @@ The following command will remove the docker images associated with your PHAIDRA
 # COMMAND:
 docker image rm $(docker image ls --filter label=com.docker.compose.project=phaidra-demo --quiet)
 # EXPECTED OUTPUT (hashes are matter of change):
+
+docker image rm $(docker image ls --filter label=com.docker.compose.project=phaidra-demo --quiet)
 Untagged: phaidra-demo-ui:latest
-Deleted: sha256:6071a3baa9c2e4d8b181557801781212c25c9fad1511f15da531e7748360b5d3
-Untagged: phaidra-demo-solr:latest
-Deleted: sha256:2975489637098e5e555f7fe6f99be6e96c116f8a0b63ed7c1d6ac16e7f38ebf0
+Deleted: sha256:473336b19091df7aec4e549ae0f41ba7cea0147a08e86e335cebe64e88f16812
 ```
 ## Clean up Docker caches
 In case you are developing and changing  a lot of components, dockerfiles and docker-compose files, 

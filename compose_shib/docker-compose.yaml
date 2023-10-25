@@ -229,7 +229,7 @@ services:
       - LDAP_DOMAIN=${LDAP_DOMAIN}
       - LDAP_SERVER=ldap://openldap:${LDAP_PORT_NUMBER}
       - LDAP_USER=cn=${LDAP_ADMIN_USERNAME},${LDAP_ROOT}
-      - LDAP_USER_DN=ou=people,${LDAP_ROOT}
+      - LDAP_USERS_DN=ou=people,${LDAP_ROOT}
       - LDAP_GROUPS_DN=ou=groups,${LDAP_ROOT}
     networks:
       - phaidra-network
