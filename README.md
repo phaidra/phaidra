@@ -302,6 +302,38 @@ System when running `docker compose up -d` from directory
 
 ![](./pictures/construction_shib.svg)
 
+## Directory structure of this repository
+
+``` example
+.
+├── components
+│   ├── phaidra-api
+│   ├── phaidra-ui
+│   ├── phaidra-vue-components
+│   └── pixelgecko
+├── compose_demo
+├── compose_shib
+├── compose_ssl
+├── container_components
+│   ├── chronos
+│   ├── mariadb
+│   ├── mongodb
+│   ├── openldap
+│   └── solr
+├── dockerfiles
+├── docs
+├── entrypoints
+├── image_components
+├── pictures
+├── third-parties
+└── webserver_configs
+    ├── phaidra-demo
+    ├── phaidra-shib
+    └── phaidra-ssl
+
+25 directories
+```
+
 ## Phaidra Components
 
 In the folder `./components` one will find `phaidra-api`, `phaidra-ui`,
@@ -329,38 +361,6 @@ the repo at <https://github.com/phaidra/phaidra-vue-components.git> (git history
 
 This directory derives from commit be0af173eaac297289fa51843b69327f7c95242c of the repo at
 <https://gitlab.phaidra.org/phaidra-dev/pixelgecko> (git history stripped).
-
-## Directory structure of this repository
-
-``` example
-.
-├── components
-│   ├── phaidra-api
-│   ├── phaidra-ui
-│   ├── phaidra-vue-components
-│   └── pixelgecko
-├── compose_demo
-├── compose_shib
-├── compose_ssl
-├── container_components
-│   ├── chronos
-│   ├── mariadb
-│   ├── mongodb
-│   └── openldap
-├── dockerfiles
-├── docs
-├── encryption
-│   ├── shibboleth
-│   └── webserver
-├── image_components
-│   └── solr
-├── pictures
-├── shibboleth
-├── third-parties
-└── webserver_configs
-
-25 directories
-```
 
 ## Software in use
 
