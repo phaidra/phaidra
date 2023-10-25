@@ -213,11 +213,11 @@ This file is used for generating the technical sketches included in the frontpag
                              <table border="0">
                              <tr>
                              <td align="text"><b>host:</b><br align="left" /></td>
-                             <td align="text">$REPO/webserver_configs/phaidra-demo.conf<br align="left" /></td>
+                             <td align="text">$REPO/webserver_configs/phaidra-demo<br align="left" /></td>
                              </tr>
                              <tr>
                              <td align="text">httpd-container:<br align="left" /></td>
-                             <td align="text">/usr/local/apache2/conf/httpd.conf:ro<br align="left" /></td>
+                             <td align="text">/mnt/startup:ro<br align="left" /></td>
                              </tr>
                              </table>
                              >];
@@ -281,6 +281,18 @@ This file is used for generating the technical sketches included in the frontpag
                              </tr>
                              </table>
                              >];
+          BIND_SOLR_INIT [label=<
+                             <table border="0">
+                             <tr>
+                             <td align="text"><b>host:</b><br align="left" /></td>
+                             <td align="text">$REPO/container_components/solr/phaidra_core<br align="left" /></td>
+                             </tr>
+                             <tr>
+                             <td align="text">solr-container:<br align="left" /></td>
+                             <td align="text">/tmp/phaidra:ro<br align="left" /></td>
+                             </tr>
+                             </table>
+                             >];
                      }
              }
 
@@ -331,6 +343,7 @@ This file is used for generating the technical sketches included in the frontpag
      BIND_OPENLDAP_INIT -- C_OPENLDAP [color="blue"];
 
      HS_SOLR -- C_SOLR [color="turquoise"];
+     BIND_SOLR_INIT -- C_SOLR [color="blue"];
 
      HS_PIXELGECKO -- C_IMAGESERVER [color="turquoise"];
 
@@ -577,38 +590,14 @@ This file is used for generating the technical sketches included in the frontpag
                                                                   <table border="0">
                                                                   <tr>
                                                                   <td align="text"><b>host:</b><br align="left" /></td>
-                                                                  <td align="text">$REPO/webserver_configs/phaidra-ssl.conf<br align="left" /></td>
+                                                                  <td align="text">$REPO/webserver_configs/phaidra-ssl<br align="left" /></td>
                                                                   </tr>
                                                                   <tr>
                                                                   <td align="text">httpd-container:<br align="left" /></td>
-                                                                  <td align="text">/usr/local/apache2/conf/httpd.conf:ro<br align="left" /></td>
+                                                                  <td align="text">/mnt/startup:ro<br align="left" /></td>
                                                                   </tr>
                                                                   </table>
                                                                   >];
-                                               BIND_HTTPD_KEY [label=<
-                                                               <table border="0">
-                                                               <tr>
-                                                               <td align="text"><b>host:</b><br align="left" /></td>
-                                                               <td align="text">$REPO/encryption/webserver/privkey.pem:ro<br align="left" /></td>
-                                                               </tr>
-                                                               <tr>
-                                                               <td align="text">httpd-container:<br align="left" /></td>
-                                                               <td align="text">/usr/local/apache2/conf/server.key:ro<br align="left" /></td>
-                                                               </tr>
-                                                               </table>
-                                                               >];
-                                               BIND_HTTPD_CERT [label=<
-                                                                <table border="0">
-                                                                <tr>
-                                                                <td align="text"><b>host:</b><br align="left" /></td>
-                                                                <td align="text">$REPO/encryption/webserver/fullchain.pem:ro<br align="left" /></td>
-                                                                </tr>
-                                                                <tr>
-                                                                <td align="text">httpd-container:<br align="left" /></td>
-                                                                <td align="text">/usr/local/apache2/conf/server.crt:ro<br align="left" /></td>
-                                                                </tr>
-                                                                </table>
-                                                                >];
                                                BIND_API_CODE [label=<
                                                               <table border="0">
                                                               <tr>
@@ -669,6 +658,19 @@ This file is used for generating the technical sketches included in the frontpag
                                                                   </tr>
                                                                   </table>
                                                                   >];
+                                               BIND_SOLR_INIT [label=<
+                                                               <table border="0">
+                                                               <tr>
+                                                               <td align="text"><b>host:</b><br align="left" /></td>
+                                                               <td align="text">$REPO/container_components/solr/phaidra_core<br align="left" /></td>
+                                                               </tr>
+                                                               <tr>
+                                                               <td align="text">solr-container:<br align="left" /></td>
+                                                               <td align="text">/tmp/phaidra:ro<br align="left" /></td>
+                                                               </tr>
+                                                               </table>
+                                                               >];
+
                                                           }
                                                   }
 
@@ -719,6 +721,7 @@ This file is used for generating the technical sketches included in the frontpag
                                           BIND_OPENLDAP_INIT -- C_OPENLDAP [color="blue"];
 
                                           HS_SOLR -- C_SOLR [color="turquoise"];
+                                          BIND_SOLR_INIT -- C_SOLR [color="blue"];
 
                                           HS_PIXELGECKO -- C_IMAGESERVER [color="turquoise"];
 
@@ -729,7 +732,7 @@ This file is used for generating the technical sketches included in the frontpag
 
                                           HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
 
-                                          WEBSERVER -- BIND_HTTPD_CONFIG,BIND_HTTPD_KEY,BIND_HTTPD_CERT,BIND_DOCUMENTATION [color="blue"];
+                                          WEBSERVER -- BIND_HTTPD_CONFIG, BIND_DOCUMENTATION [color="blue"];
                                           WEBSERVER -- HS_SITEMAPS [color="turquoise"];
 
                                           C_CHRONOS -- HS_DATABASE_DUMPS,HS_SITEMAPS,HS_OAI_LOGS [color="turquoise"];
@@ -764,6 +767,7 @@ This file is used for generating the technical sketches included in the frontpag
           rankdir="LR"
 
           USER [label="PHAIDRA USER", shape = tripleoctagon];
+          IDP [label="Shibboleth IdP", shape = signature];
 
           subgraph cluster_host {
                   label = "PHAIDRA server firewall";
@@ -967,91 +971,14 @@ This file is used for generating the technical sketches included in the frontpag
                                                                   <table border="0">
                                                                   <tr>
                                                                   <td align="text"><b>host:</b><br align="left" /></td>
-                                                                  <td align="text">$REPO/webserver_configs/phaidra-shib.conf:ro<br align="left" /></td>
+                                                                  <td align="text">$REPO/webserver_configs/phaidra-shib:ro<br align="left" /></td>
                                                                   </tr>
                                                                   <tr>
                                                                   <td align="text">httpd-container:<br align="left" /></td>
-                                                                  <td align="text">/usr/local/apache2/conf/httpd.conf:ro<br align="left" /></td>
+                                                                  <td align="text">/mnt/startup:ro<br align="left" /></td>
                                                                   </tr>
                                                                   </table>
                                                                   >];
-                                               BIND_HTTPD_CERT [label=<
-                                                                <table border="0">
-                                                                <tr>
-                                                                <td align="text"><b>host:</b><br align="left" /></td>
-                                                                <td align="text">$REPO/encryption/webserver/fullchain.pem<br align="left" /></td>
-                                                                </tr>
-                                                                <tr>
-                                                                <td align="text">httpd-container:<br align="left" /></td>
-                                                                <td align="text">/usr/local/apache2/conf/server.crt:ro<br align="left" /></td>
-                                                                </tr>
-                                                                </table>
-                                                                >];
-                                               BIND_HTTPD_KEY [label=<
-                                                               <table border="0">
-                                                               <tr>
-                                                               <td align="text"><b>host:</b><br align="left" /></td>
-                                                               <td align="text">$REPO/encryption/webserver/privkey.pem<br align="left" /></td>
-                                                               </tr>
-                                                               <tr>
-                                                               <td align="text">httpd-container:<br align="left" /></td>
-                                                               <td align="text">/usr/local/apache2/conf/server.key:ro<br align="left" /></td>
-                                                               </tr>
-                                                               </table>
-                                                               >];
-
-                                               BIND_SHIB_ENCRYPTION_KEY [label=<
-                                                                         <table border="0">
-                                                                         <tr>
-                                                                         <td align="text"><b>host:</b><br align="left" /></td>
-                                                                         <td align="text">$REPO/encryption/shibboleth/sp-encrypt-key.pem<br align="left" /></td>
-                                                                         </tr>
-                                                                         <tr>
-                                                                         <td align="text">httpd-container:<br align="left" /></td>
-                                                                         <td align="text">/etc/shibboleth/sp-encrypt-key.pem:ro<br align="left" /></td>
-                                                                         </tr>
-                                                                         </table>
-                                                                         >];
-
-
-                                               BIND_SHIB_ENCRYPTION_CERT [label=<
-                                                                          <table border="0">
-                                                                          <tr>
-                                                                          <td align="text"><b>host:</b><br align="left" /></td>
-                                                                          <td align="text">$REPO/encryption/shibboleth/sp-encrypt-cert.pem<br align="left" /></td>
-                                                                          </tr>
-                                                                          <tr>
-                                                                          <td align="text">httpd-container:<br align="left" /></td>
-                                                                          <td align="text">/etc/shibboleth/sp-encrypt-cert.pem:ro<br align="left" /></td>
-                                                                          </tr>
-                                                                          </table>
-                                                                          >];
-
-                                               BIND_SHIB_SIGNING_KEY [label=<
-                                                                      <table border="0">
-                                                                      <tr>
-                                                                      <td align="text"><b>host:</b><br align="left" /></td>
-                                                                      <td align="text">$REPO/encryption/shibboleth/sp-signing-key.pem<br align="left" /></td>
-                                                                      </tr>
-                                                                      <tr>
-                                                                      <td align="text">httpd-container:<br align="left" /></td>
-                                                                      <td align="text">/etc/shibboleth/sp-signing-key.pem:ro<br align="left" /></td>
-                                                                      </tr>
-                                                                      </table>
-                                                                      >];
-
-                                               BIND_SHIB_SIGNING_CERT [label=<
-                                                                       <table border="0">
-                                                                       <tr>
-                                                                       <td align="text"><b>host:</b><br align="left" /></td>
-                                                                       <td align="text">$REPO/encryption/shibboleth/sp-signing-cert.pem<br align="left" /></td>
-                                                                       </tr>
-                                                                       <tr>
-                                                                       <td align="text">httpd-container:<br align="left" /></td>
-                                                                       <td align="text">/etc/shibboleth/sp-signing-cert.pem:ro<br align="left" /></td>
-                                                                       </tr>
-                                                                       </table>
-                                                                       >];
                                                BIND_API_CODE [label=<
                                                               <table border="0">
                                                               <tr>
@@ -1112,6 +1039,18 @@ This file is used for generating the technical sketches included in the frontpag
                                                                   </tr>
                                                                   </table>
                                                                   >];
+                                               BIND_SOLR_INIT [label=<
+                                                               <table border="0">
+                                                               <tr>
+                                                               <td align="text"><b>host:</b><br align="left" /></td>
+                                                               <td align="text">$REPO/container_components/solr/phaidra_core<br align="left" /></td>
+                                                               </tr>
+                                                               <tr>
+                                                               <td align="text">solr-container:<br align="left" /></td>
+                                                               <td align="text">/tmp/phaidra:ro<br align="left" /></td>
+                                                               </tr>
+                                                               </table>
+                                                               >];
 
 
   }
@@ -1164,6 +1103,7 @@ This file is used for generating the technical sketches included in the frontpag
   BIND_OPENLDAP_INIT -- C_OPENLDAP [color="blue"];
 
   HS_SOLR -- C_SOLR [color="turquoise"];
+  BIND_SOLR_INIT [color="blue"];
 
   HS_PIXELGECKO -- C_IMAGESERVER [color="turquoise"];
 
@@ -1174,7 +1114,7 @@ This file is used for generating the technical sketches included in the frontpag
 
   HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
 
-  WEBSERVER -- BIND_HTTPD_CONFIG,BIND_HTTPD_CERT,BIND_HTTPD_KEY,BIND_SHIB_ENCRYPTION_KEY,BIND_SHIB_ENCRYPTION_CERT,BIND_SHIB_SIGNING_KEY,BIND_SHIB_SIGNING_CERT,BIND_DOCUMENTATION [color="blue"];
+  WEBSERVER -- BIND_HTTPD_CONFIG,BIND_DOCUMENTATION [color="blue"];
   WEBSERVER -- HS_SITEMAPS [color="turquoise"];
 
   C_CHRONOS -- HS_DATABASE_DUMPS,HS_SITEMAPS,HS_OAI_LOGS [color="turquoise"];
@@ -1194,6 +1134,7 @@ This file is used for generating the technical sketches included in the frontpag
   // outside communication mapping
 
   USER -- WEBSERVER [color="red"];
+  IDP -- WEBSERVER [color="red"];
   }
 
 

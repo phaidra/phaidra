@@ -67,12 +67,12 @@ docker compose up -d
 
 -   A DNS-entry for your computer's IP-address.
 -   SSL-certificate and -key (put them into the
-    `./encryption/webserver`-directory of this repo and name them
+    `./webserver_configs/phaidra-ssl/conf`-directory of this repo and name them
     `privkey.pem` and `fullchain.pem`).
 -   firewall with port 80 and 443 open on your computer.
 -   properly set variables in `./compose_ssl/.env`.
 
-*NOTE*: if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `ALLOWED_HOST` variable in `compose-demo/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, etc otherwise.
+*NOTE*: if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `ALLOWED_HOST` variable in `compose-ssl/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, etc otherwise.
 
 ###  SSL Startup
 
@@ -92,16 +92,16 @@ docker compose up -d
 
 -   A DNS-entry for your computer's IP-address.
 -   SSL-certificate and -key (put them into the
-    `./encryption/webserver`-directory of this repo and name them
+    `./webserver_configs/phaidra-shib/conf`-directory of this repo and name them
     `privkey.pem` and `fullchain.pem`).
 -   firewall with port 80 and 443 open on your computer.
 -   encryption and signing keys/certs for Shibboleth (plus the
     registration at your organization's IdP). You can create the
     required key/cert-pairs with the commands below (put the
-    results into the `./encryption/shibboleth` folder of this repo).
--   properly set variables in `./compose_ssl/.env`.
+    results into the `./webserver_configs/phaidra-shib/conf` folder of this repo).
+-   properly set variables in `./compose_shib/.env`.
 
-*NOTE*: if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `ALLOWED_HOST` variable in `compose-demo/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, etc otherwise.
+*NOTE*: if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `ALLOWED_HOST` variable in `compose-shib/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, etc otherwise.
 
 ``` example
 openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-encrypt-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-encrypt-cert.pem
