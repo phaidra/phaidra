@@ -18,7 +18,7 @@ services:
     ports:
       - "${PHAIDRA_HOSTPORT}:80"
     volumes:
-      - .././webserver_configs/phaidra-demo.conf:/usr/local/apache2/conf/httpd.conf:ro
+      - .././webserver_configs/phaidra-demo:/mnt/startup:ro
       - .././docs:/mnt/docs:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
     depends_on:
@@ -30,6 +30,9 @@ services:
       - PHAIDRA_HOSTNAME=${PHAIDRA_HOSTNAME}
       - PHAIDRA_HOSTPORT=${PHAIDRA_HOSTPORT}
       - PRIVILEGED_IP=${ALLOWED_HOST}
+    entrypoint:
+      - bash
+      - /mnt/startup/httpd-demo-startup.bash
 
   imageserver:
     image: testuser34/imageserver-base:latest

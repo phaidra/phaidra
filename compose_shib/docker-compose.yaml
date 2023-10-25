@@ -13,16 +13,7 @@ networks:
 services:
 
   httpd:
-    build:
-      context: ../.
-      dockerfile: dockerfiles/httpd_shib.dockerfile
-      args:
-        PHAIDRA_HOSTNAME: ${PHAIDRA_HOSTNAME}
-        SHIB_ENTITY_ID: ${SHIB_ENTITY_ID}
-        SHIB_DISCO_URL: ${SHIB_DISCO_URL}
-        SHIB_METADATA: ${SHIB_METADATA}
-        SHIB_METADATA_FILE: ${SHIB_METADATA_FILE}
-        SHIB_METADATA_CERT: ${SHIB_METADATA_CERT}
+    image: testuser34/httpd-base-shib:latest
     ports:
       - "80:80"
       - "443:443"
@@ -30,13 +21,7 @@ services:
       - api
       - ui
     volumes:
-      - .././webserver_configs/phaidra-shib.conf:/usr/local/apache2/conf/httpd.conf:ro
-      - .././encryption/webserver/privkey.pem:/usr/local/apache2/conf/server.key:ro
-      - .././encryption/webserver/fullchain.pem:/usr/local/apache2/conf/server.crt:ro
-      - .././encryption/shibboleth/sp-signing-key.pem:/etc/shibboleth/sp-signing-key.pem:ro
-      - .././encryption/shibboleth/sp-signing-cert.pem:/etc/shibboleth/sp-signing-cert.pem:ro
-      - .././encryption/shibboleth/sp-encrypt-key.pem:/etc/shibboleth/sp-encrypt-key.pem:ro
-      - .././encryption/shibboleth/sp-encrypt-cert.pem:/etc/shibboleth/sp-encrypt-cert.pem:ro
+      - .././webserver_configs/phaidra-shib:/mnt/startup:ro
       - .././docs:/mnt/docs:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
     networks:
@@ -49,8 +34,14 @@ services:
       - SHIB_SURNAME=${SHIB_SURNAME}
       - SHIB_USERNAME=${SHIB_USERNAME}
       - SHIB_AFFILIATION=${SHIB_AFFILIATION}
-
-
+      - SHIB_ENTITY_ID=${SHIB_ENTITY_ID}
+      - SHIB_DISCO_URL=${SHIB_DISCO_URL}
+      - SHIB_METADATA=${SHIB_METADATA}
+      - SHIB_METADATA_FILE=${SHIB_METADATA_FILE}
+      - SHIB_METADATA_CERT=${SHIB_METADATA_CERT}
+    entrypoint:
+      - bash
+      - /mnt/startup/httpd-shib-startup.bash
 
   imageserver:
     image: testuser34/imageserver-base:latest

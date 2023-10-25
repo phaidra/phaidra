@@ -19,9 +19,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - .././webserver_configs/phaidra-ssl.conf:/usr/local/apache2/conf/httpd.conf:ro
-      - .././encryption/webserver/privkey.pem:/usr/local/apache2/conf/server.key:ro
-      - .././encryption/webserver/fullchain.pem:/usr/local/apache2/conf/server.crt:ro
+      - .././webserver_configs/phaidra-ssl:/mnt/startup:ro
       - .././docs:/mnt/docs:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
     depends_on:
@@ -32,6 +30,9 @@ services:
     environment:
       - PHAIDRA_HOSTNAME=${PHAIDRA_HOSTNAME}
       - PRIVILEGED_IP=${ALLOWED_HOST}
+    entrypoint:
+      - bash
+      - /mnt/startup/httpd-ssl-startup.bash
 
   imageserver:
     image: testuser34/imageserver-base:latest
