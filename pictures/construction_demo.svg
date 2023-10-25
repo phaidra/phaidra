@@ -53,7 +53,7 @@
 <!-- USER&#45;&#45;WEBSERVER -->
 <g id="edge50" class="edge">
 <title>USER&#45;&#45;WEBSERVER</title>
-<path fill="none" stroke="red" d="M217.79,-294.29C232.52,-294.29 247.58,-294.29 261.97,-294.29"/>
+<path fill="none" stroke="green" d="M217.79,-294.29C232.52,-294.29 247.58,-294.29 261.97,-294.29"/>
 </g>
 <!-- HS_FEDORA -->
 <g id="node2" class="node">

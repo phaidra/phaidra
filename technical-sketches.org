@@ -373,7 +373,7 @@ This file is used for generating the technical sketches included in the frontpag
 
      // outside communication mapping
 
-     USER -- WEBSERVER [color="red"];
+     USER -- WEBSERVER [color="green"];
   }
 #+end_src
 
