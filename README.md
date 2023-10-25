@@ -162,7 +162,7 @@ of hardware failure.
 
 Depending on the PHAIDRA version you set up, the volumes will be prefixed differently (`phaidra-demo_*`, `phaidra-ssl`, `phaidra-shib`).
 
-See the section [Technical Sketches](#technical-sketches) for how these directories are connected to the containers.
+See the section [Graphical System overview](#graphical-system-overview) for how these directories are connected to the containers.
 
 # Uninstalling
 
