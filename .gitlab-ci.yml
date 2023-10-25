@@ -59,6 +59,22 @@ build-httpd:
         paths:
           - dockerfiles/httpd.dockerfile
 
+build-httpd-shib:
+  stage: build
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker build -f dockerfiles/httpd-shib.dockerfile
+    -t $CI_REGISTRY_USER/httpd-base-shib:latest
+    -t $CI_REGISTRY_USER/httpd-base-shib:$CI_COMMIT_SHORT_SHA . &&
+    docker push --all-tags $CI_REGISTRY_USER/httpd-base-shib
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/httpd-shib.dockerfile
+
 build-imageserver:
   stage: build
   before_script:
