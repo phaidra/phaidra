@@ -48,7 +48,7 @@ See the sections below for version-specific instructions.
 None, just make sure no other service is using port 8899 on your
 computer.
 
-*EXCEPTION*: if running on (not recommended) rootful  Docker (eg Docker Desktop on Win 11), set the `ALLOWED_HOST` variable in `compose-demo/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, etc otherwise.
+*NOTE*: if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `ALLOWED_HOST` variable in `compose-demo/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, etc otherwise.
 
 ###  Demo Startup
 
@@ -71,6 +71,8 @@ docker compose up -d
     `privkey.pem` and `fullchain.pem`).
 -   firewall with port 80 and 443 open on your computer.
 -   properly set variables in `./compose_ssl/.env`.
+
+*NOTE*: if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `ALLOWED_HOST` variable in `compose-demo/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, etc otherwise.
 
 ###  SSL Startup
 
@@ -99,6 +101,8 @@ docker compose up -d
     results into the `./encryption/shibboleth` folder of this repo).
 -   properly set variables in `./compose_ssl/.env`.
 
+*NOTE*: if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `ALLOWED_HOST` variable in `compose-demo/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, etc otherwise.
+
 ``` example
 openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-encrypt-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-encrypt-cert.pem
 openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-signing-cert.pem
@@ -115,6 +119,13 @@ cd compose_ssl
 docker compose up -d
 ```
 
+# Default credentials
+- There are three default users built in for testing purposes `pone`, `ptwo`, and `barchiver`.  They all share the same password '1234'. You'd likely want to delete these users, or at least change the default passwords after evaluating:
+- To make use of the built-in User-Management (from the Webinterface: Manage Phaidra -> Manage Users) use the password 'adminpassword'.  This password can be altered in the `.env` file located next to `docker-compose.yaml` through the `LDAP_ADMIN_PASSWORD` variable.
+  - *NOTE*: This place is reachable from the computer running Phaidra itself only.  If connecting remotely, use ssh-tunneling or similar.
+- To access the underlying repository system (from the Webinterface: Manage Phaidra -> Inspect Object Repository) use 'fedoraAdmin' as username and '1234' as password.  These credentials can be altered in the `.env` file as well (`FEDORA_ADMIN_USER` and `FEDORA_ADMIN_PASS`).
+  - *NOTE*: This place is reachable from the computer running Phaidra itself only.  If connecting remotely, use ssh-tunneling or similar.
+
 # Monitoring PHAIDRA's system usage
 
 One can use the following command to real-time monitor the system usage
@@ -122,6 +133,9 @@ of PHAIDRA over all containers (here from an instance started from
 `./compose_demo`):
 
 ``` example
+# COMMAND:
+docker stats<<<$(docker ps -q)
+# EXPECTED TERMINAL OUTPUT:
 CONTAINER ID   NAME                             CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
 46c84962b77f   phaidra-demo-httpd-1             0.07%     36.27MiB / 15.03GiB   0.24%     24.8kB / 26kB     0B / 0B           109
 697692e6879d   phaidra-demo-ui-1                0.09%     133.4MiB / 15.03GiB   0.87%     1.05kB / 0B       0B / 0B           23
