@@ -26,7 +26,7 @@
 </g>
 <g id="clust4" class="cluster">
 <title>cluster_bind_mounts</title>
-<polygon fill="none" stroke="blue" points="541.22,-513.29 541.22,-1164.29 1188.22,-1164.29 1188.22,-513.29 541.22,-513.29"/>
+<polygon fill="none" stroke="blue" points="572.22,-513.29 572.22,-1164.29 1157.22,-1164.29 1157.22,-513.29 572.22,-513.29"/>
 <text text-anchor="middle" x="864.72" y="-1149.09" font-family="Times,serif" font-size="14.00">Bind mounts</text>
 </g>
 <g id="clust5" class="cluster">
@@ -338,25 +338,25 @@
 <!-- BIND_MARIADB_PHAIDRA_INIT -->
 <g id="node14" class="node">
 <title>BIND_MARIADB_PHAIDRA_INIT</title>
-<polygon fill="none" stroke="blue" points="1179.72,-573.29 1176.72,-577.29 1155.72,-577.29 1152.72,-573.29 549.72,-573.29 549.72,-521.29 1179.72,-521.29 1179.72,-573.29"/>
-<text text-anchor="start" x="561.72" y="-555.09" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
-<text text-anchor="start" x="763.72" y="-554.09" font-family="Times,serif" font-size="14.00">$REPO/container_components/mariadb/phaidradb.sql.gz</text>
-<text text-anchor="start" x="561.72" y="-533.09" font-family="Times,serif" font-size="14.00">mariadb&#45;phaidra&#45;container:</text>
-<text text-anchor="start" x="763.72" y="-533.09" font-family="Times,serif" font-size="14.00">/docker&#45;entrypoint&#45;initdb.d/phaidradb.sql.gz:ro</text>
+<polygon fill="none" stroke="blue" points="1148.72,-573.29 1145.72,-577.29 1124.72,-577.29 1121.72,-573.29 580.72,-573.29 580.72,-521.29 1148.72,-521.29 1148.72,-573.29"/>
+<text text-anchor="start" x="592.72" y="-555.09" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
+<text text-anchor="start" x="794.72" y="-554.09" font-family="Times,serif" font-size="14.00">$REPO/container_init/mariadb/phaidradb.sql.gz</text>
+<text text-anchor="start" x="592.72" y="-533.09" font-family="Times,serif" font-size="14.00">mariadb&#45;phaidra&#45;container:</text>
+<text text-anchor="start" x="794.72" y="-533.09" font-family="Times,serif" font-size="14.00">/docker&#45;entrypoint&#45;initdb.d/phaidradb.sql.gz:ro</text>
 </g>
 <!-- BIND_MARIADB_PHAIDRA_INIT&#45;&#45;C_MARIADB_PHAIDRA -->
 <g id="edge5" class="edge">
 <title>BIND_MARIADB_PHAIDRA_INIT&#45;&#45;C_MARIADB_PHAIDRA</title>
-<path fill="none" stroke="blue" d="M1179.82,-555.1C1212.5,-543.83 1242.53,-526.63 1266.72,-501.29 1312.24,-453.59 1243.49,-255.06 1286.72,-205.29 1289.55,-202.03 1292.67,-199.11 1296.01,-196.49"/>
+<path fill="none" stroke="blue" d="M1148.76,-563.94C1193.31,-553.72 1235.03,-534.49 1266.72,-501.29 1312.24,-453.59 1243.49,-255.06 1286.72,-205.29 1289.55,-202.03 1292.67,-199.11 1296.01,-196.49"/>
 </g>
 <!-- BIND_OPENLDAP_INIT -->
 <g id="node15" class="node">
 <title>BIND_OPENLDAP_INIT</title>
-<polygon fill="none" stroke="blue" points="1093.72,-713.29 1090.72,-717.29 1069.72,-717.29 1066.72,-713.29 635.72,-713.29 635.72,-661.29 1093.72,-661.29 1093.72,-713.29"/>
-<text text-anchor="start" x="647.72" y="-695.09" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
-<text text-anchor="start" x="795.72" y="-694.09" font-family="Times,serif" font-size="14.00">$REPO/container_components/openldap</text>
-<text text-anchor="start" x="647.72" y="-673.09" font-family="Times,serif" font-size="14.00">openldap&#45;container:</text>
-<text text-anchor="start" x="795.72" y="-673.09" font-family="Times,serif" font-size="14.00">/ldifs:ro</text>
+<polygon fill="none" stroke="blue" points="1062.72,-713.29 1059.72,-717.29 1038.72,-717.29 1035.72,-713.29 666.72,-713.29 666.72,-661.29 1062.72,-661.29 1062.72,-713.29"/>
+<text text-anchor="start" x="678.72" y="-695.09" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
+<text text-anchor="start" x="826.72" y="-694.09" font-family="Times,serif" font-size="14.00">$REPO/container_init/openldap</text>
+<text text-anchor="start" x="678.72" y="-673.09" font-family="Times,serif" font-size="14.00">openldap&#45;container:</text>
+<text text-anchor="start" x="826.72" y="-673.09" font-family="Times,serif" font-size="14.00">/ldifs:ro</text>
 </g>
 <!-- BIND_OPENLDAP_INIT&#45;&#45;C_OPENLDAP -->
 <g id="edge11" class="edge">
@@ -377,7 +377,7 @@
 <title>BIND_API_CODE</title>
 <polygon fill="none" stroke="blue" points="1044.22,-923.29 1041.22,-927.29 1020.22,-927.29 1017.22,-923.29 685.22,-923.29 685.22,-871.29 1044.22,-871.29 1044.22,-923.29"/>
 <text text-anchor="start" x="697.72" y="-905.09" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
-<text text-anchor="start" x="802.72" y="-904.09" font-family="Times,serif" font-size="14.00">$REPO/components/phaidra&#45;api</text>
+<text text-anchor="start" x="802.72" y="-904.09" font-family="Times,serif" font-size="14.00">$REPO/src/phaidra&#45;api</text>
 <text text-anchor="start" x="697.72" y="-883.09" font-family="Times,serif" font-size="14.00">api&#45;container:</text>
 <text text-anchor="start" x="802.72" y="-883.09" font-family="Times,serif" font-size="14.00">/usr/local/phaidra/phaidra&#45;api:ro</text>
 </g>
@@ -398,20 +398,20 @@
 <!-- BIND_CHRONOS -->
 <g id="node19" class="node">
 <title>BIND_CHRONOS</title>
-<polygon fill="none" stroke="blue" points="1084.72,-993.29 1081.72,-997.29 1060.72,-997.29 1057.72,-993.29 644.72,-993.29 644.72,-941.29 1084.72,-941.29 1084.72,-993.29"/>
-<text text-anchor="start" x="656.72" y="-975.09" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
-<text text-anchor="start" x="795.72" y="-974.09" font-family="Times,serif" font-size="14.00">$REPO/container_components/chronos</text>
-<text text-anchor="start" x="656.72" y="-953.09" font-family="Times,serif" font-size="14.00">chronos&#45;container:</text>
-<text text-anchor="start" x="795.72" y="-953.09" font-family="Times,serif" font-size="14.00">/mnt/chronos:ro</text>
+<polygon fill="none" stroke="blue" points="1053.72,-993.29 1050.72,-997.29 1029.72,-997.29 1026.72,-993.29 675.72,-993.29 675.72,-941.29 1053.72,-941.29 1053.72,-993.29"/>
+<text text-anchor="start" x="687.72" y="-975.09" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
+<text text-anchor="start" x="826.72" y="-974.09" font-family="Times,serif" font-size="14.00">$REPO/container_init/chronos</text>
+<text text-anchor="start" x="687.72" y="-953.09" font-family="Times,serif" font-size="14.00">chronos&#45;container:</text>
+<text text-anchor="start" x="826.72" y="-953.09" font-family="Times,serif" font-size="14.00">/mnt/chronos:ro</text>
 </g>
 <!-- BIND_MONGODB_INIT_OAI -->
 <g id="node20" class="node">
 <title>BIND_MONGODB_INIT_OAI</title>
-<polygon fill="none" stroke="blue" points="1157.72,-1133.29 1154.72,-1137.29 1133.72,-1137.29 1130.72,-1133.29 571.72,-1133.29 571.72,-1081.29 1157.72,-1081.29 1157.72,-1133.29"/>
-<text text-anchor="start" x="583.72" y="-1115.09" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
-<text text-anchor="start" x="732.72" y="-1114.09" font-family="Times,serif" font-size="14.00">$REPO/container_components/mongodb/init_oai_sets.json</text>
-<text text-anchor="start" x="583.72" y="-1093.09" font-family="Times,serif" font-size="14.00">mongodb&#45;container:</text>
-<text text-anchor="start" x="732.72" y="-1093.09" font-family="Times,serif" font-size="14.00">/mnt/init_oai_sets.json:ro</text>
+<polygon fill="none" stroke="blue" points="1126.72,-1133.29 1123.72,-1137.29 1102.72,-1137.29 1099.72,-1133.29 602.72,-1133.29 602.72,-1081.29 1126.72,-1081.29 1126.72,-1133.29"/>
+<text text-anchor="start" x="614.72" y="-1115.09" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
+<text text-anchor="start" x="763.72" y="-1114.09" font-family="Times,serif" font-size="14.00">$REPO/container_init/mongodb/init_oai_sets.json</text>
+<text text-anchor="start" x="614.72" y="-1093.09" font-family="Times,serif" font-size="14.00">mongodb&#45;container:</text>
+<text text-anchor="start" x="763.72" y="-1093.09" font-family="Times,serif" font-size="14.00">/mnt/init_oai_sets.json:ro</text>
 </g>
 <!-- BIND_MONGODB_INIT_OAI&#45;&#45;C_MONGODB_PHAIDRA -->
 <g id="edge9" class="edge">
@@ -421,11 +421,11 @@
 <!-- BIND_MONGODB_INIT -->
 <g id="node21" class="node">
 <title>BIND_MONGODB_INIT</title>
-<polygon fill="none" stroke="blue" points="1180.22,-1063.29 1177.22,-1067.29 1156.22,-1067.29 1153.22,-1063.29 549.22,-1063.29 549.22,-1011.29 1180.22,-1011.29 1180.22,-1063.29"/>
-<text text-anchor="start" x="561.72" y="-1045.09" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
-<text text-anchor="start" x="710.72" y="-1044.09" font-family="Times,serif" font-size="14.00">$REPO/container_components/mongodb/mongodb&#45;after&#45;entry.sh</text>
-<text text-anchor="start" x="561.72" y="-1023.09" font-family="Times,serif" font-size="14.00">mongodb&#45;container:</text>
-<text text-anchor="start" x="710.72" y="-1023.09" font-family="Times,serif" font-size="14.00">/docker&#45;entrypoint&#45;initdb.d/mongodb&#45;after&#45;entry.sh:ro</text>
+<polygon fill="none" stroke="blue" points="1149.22,-1063.29 1146.22,-1067.29 1125.22,-1067.29 1122.22,-1063.29 580.22,-1063.29 580.22,-1011.29 1149.22,-1011.29 1149.22,-1063.29"/>
+<text text-anchor="start" x="592.72" y="-1045.09" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
+<text text-anchor="start" x="741.72" y="-1044.09" font-family="Times,serif" font-size="14.00">$REPO/container_init/mongodb/mongodb&#45;after&#45;entry.sh</text>
+<text text-anchor="start" x="592.72" y="-1023.09" font-family="Times,serif" font-size="14.00">mongodb&#45;container:</text>
+<text text-anchor="start" x="741.72" y="-1023.09" font-family="Times,serif" font-size="14.00">/docker&#45;entrypoint&#45;initdb.d/mongodb&#45;after&#45;entry.sh:ro</text>
 </g>
 <!-- BIND_MONGODB_INIT&#45;&#45;C_MONGODB_PHAIDRA -->
 <g id="edge8" class="edge">
@@ -435,11 +435,11 @@
 <!-- BIND_SOLR_INIT -->
 <g id="node22" class="node">
 <title>BIND_SOLR_INIT</title>
-<polygon fill="none" stroke="blue" points="1104.22,-643.29 1101.22,-647.29 1080.22,-647.29 1077.22,-643.29 625.22,-643.29 625.22,-591.29 1104.22,-591.29 1104.22,-643.29"/>
-<text text-anchor="start" x="637.72" y="-625.09" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
-<text text-anchor="start" x="747.72" y="-624.09" font-family="Times,serif" font-size="14.00">$REPO/container_components/solr/phaidra_core</text>
-<text text-anchor="start" x="637.72" y="-603.09" font-family="Times,serif" font-size="14.00">solr&#45;container:</text>
-<text text-anchor="start" x="747.72" y="-603.09" font-family="Times,serif" font-size="14.00">/tmp/phaidra:ro</text>
+<polygon fill="none" stroke="blue" points="1073.22,-643.29 1070.22,-647.29 1049.22,-647.29 1046.22,-643.29 656.22,-643.29 656.22,-591.29 1073.22,-591.29 1073.22,-643.29"/>
+<text text-anchor="start" x="668.72" y="-625.09" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
+<text text-anchor="start" x="778.72" y="-624.09" font-family="Times,serif" font-size="14.00">$REPO/container_init/solr/phaidra_core</text>
+<text text-anchor="start" x="668.72" y="-603.09" font-family="Times,serif" font-size="14.00">solr&#45;container:</text>
+<text text-anchor="start" x="778.72" y="-603.09" font-family="Times,serif" font-size="14.00">/tmp/phaidra:ro</text>
 </g>
 <!-- BIND_SOLR_INIT&#45;&#45;C_SOLR -->
 <g id="edge13" class="edge">

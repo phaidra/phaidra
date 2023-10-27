@@ -10,8 +10,8 @@ ARG PHAIDRA_PORTSTUB
 ARG PHAIDRA_HOSTPORT
 ARG OUTSIDE_HTTP_SCHEME
 RUN mkdir -p /usr/local/phaidra
-ADD ./../components/phaidra-ui /usr/local/phaidra/phaidra-ui
-ADD ./../components/phaidra-vue-components /usr/local/phaidra/phaidra-vue-components
+ADD ./../src/phaidra-ui /usr/local/phaidra/phaidra-ui
+ADD ./../src/phaidra-vue-components /usr/local/phaidra/phaidra-vue-components
 WORKDIR /usr/local/phaidra/phaidra-vue-components
 RUN <<EOF
 npm install

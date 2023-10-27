@@ -189,7 +189,7 @@ This file is used for generating the technical sketches included in the frontpag
                                     <table border="0">
                                     <tr>
                                     <td align="text"><b>host:</b><br align="left" /></td>
-                                    <td align="text">$REPO/container_components/mariadb/phaidradb.sql.gz<br align="left" /></td>
+                                    <td align="text">$REPO/container_init/mariadb/phaidradb.sql.gz<br align="left" /></td>
                                     </tr>
                                     <tr>
                                     <td align="text">mariadb-phaidra-container:<br align="left" /></td>
@@ -201,7 +201,7 @@ This file is used for generating the technical sketches included in the frontpag
                               <table border="0">
                               <tr>
                               <td align="text"><b>host:</b><br align="left" /></td>
-                              <td align="text">$REPO/container_components/openldap<br align="left" /></td>
+                              <td align="text">$REPO/container_init/openldap<br align="left" /></td>
                               </tr>
                               <tr>
                               <td align="text">openldap-container:<br align="left" /></td>
@@ -225,7 +225,7 @@ This file is used for generating the technical sketches included in the frontpag
                          <table border="0">
                          <tr>
                          <td align="text"><b>host:</b><br align="left" /></td>
-                         <td align="text">$REPO/components/phaidra-api<br align="left" /></td>
+                         <td align="text">$REPO/src/phaidra-api<br align="left" /></td>
                          </tr>
                          <tr>
                          <td align="text">api-container:<br align="left" /></td>
@@ -249,7 +249,7 @@ This file is used for generating the technical sketches included in the frontpag
                         <table border="0">
                         <tr>
                         <td align="text"><b>host:</b><br align="left" /></td>
-                        <td align="text">$REPO/container_components/chronos<br align="left" /></td>
+                        <td align="text">$REPO/container_init/chronos<br align="left" /></td>
                         </tr>
                         <tr>
                         <td align="text">chronos-container:<br align="left" /></td>
@@ -261,7 +261,7 @@ This file is used for generating the technical sketches included in the frontpag
                                  <table border="0">
                                  <tr>
                                  <td align="text"><b>host:</b><br align="left" /></td>
-                                 <td align="text">$REPO/container_components/mongodb/init_oai_sets.json<br align="left" /></td>
+                                 <td align="text">$REPO/container_init/mongodb/init_oai_sets.json<br align="left" /></td>
                                  </tr>
                                  <tr>
                                  <td align="text">mongodb-container:<br align="left" /></td>
@@ -273,7 +273,7 @@ This file is used for generating the technical sketches included in the frontpag
                              <table border="0">
                              <tr>
                              <td align="text"><b>host:</b><br align="left" /></td>
-                             <td align="text">$REPO/container_components/mongodb/mongodb-after-entry.sh<br align="left" /></td>
+                             <td align="text">$REPO/container_init/mongodb/mongodb-after-entry.sh<br align="left" /></td>
                              </tr>
                              <tr>
                              <td align="text">mongodb-container:<br align="left" /></td>
@@ -285,7 +285,7 @@ This file is used for generating the technical sketches included in the frontpag
                              <table border="0">
                              <tr>
                              <td align="text"><b>host:</b><br align="left" /></td>
-                             <td align="text">$REPO/container_components/solr/phaidra_core<br align="left" /></td>
+                             <td align="text">$REPO/container_init/solr/phaidra_core<br align="left" /></td>
                              </tr>
                              <tr>
                              <td align="text">solr-container:<br align="left" /></td>
@@ -566,7 +566,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                                          <table border="0">
                                                                          <tr>
                                                                          <td align="text"><b>host:</b><br align="left" /></td>
-                                                                         <td align="text">$REPO/container_components/mariadb/phaidradb.sql.gz<br align="left" /></td>
+                                                                         <td align="text">$REPO/container_init/mariadb/phaidradb.sql.gz<br align="left" /></td>
                                                                          </tr>
                                                                          <tr>
                                                                          <td align="text">mariadb-phaidra-container:<br align="left" /></td>
@@ -578,7 +578,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                                    <table border="0">
                                                                    <tr>
                                                                    <td align="text"><b>host:</b><br align="left" /></td>
-                                                                   <td align="text">$REPO/container_components/openldap<br align="left" /></td>
+                                                                   <td align="text">$REPO/container_init/openldap<br align="left" /></td>
                                                                    </tr>
                                                                    <tr>
                                                                    <td align="text">openldap-container:<br align="left" /></td>
@@ -602,7 +602,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                               <table border="0">
                                                               <tr>
                                                               <td align="text"><b>host:</b><br align="left" /></td>
-                                                              <td align="text">$REPO/components/phaidra-api<br align="left" /></td>
+                                                              <td align="text">$REPO/src/phaidra-api<br align="left" /></td>
                                                               </tr>
                                                               <tr>
                                                               <td align="text">api-container:<br align="left" /></td>
@@ -626,7 +626,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                              <table border="0">
                                                              <tr>
                                                              <td align="text"><b>host:</b><br align="left" /></td>
-                                                             <td align="text">$REPO/container_components/chronos<br align="left" /></td>
+                                                             <td align="text">$REPO/container_init/chronos<br align="left" /></td>
                                                              </tr>
                                                              <tr>
                                                              <td align="text">chronos-container:<br align="left" /></td>
@@ -638,7 +638,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                                       <table border="0">
                                                                       <tr>
                                                                       <td align="text"><b>host:</b><br align="left" /></td>
-                                                                      <td align="text">$REPO/container_components/mongodb/init_oai_sets.json<br align="left" /></td>
+                                                                      <td align="text">$REPO/container_init/mongodb/init_oai_sets.json<br align="left" /></td>
                                                                       </tr>
                                                                       <tr>
                                                                       <td align="text">mongodb-container:<br align="left" /></td>
@@ -650,7 +650,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                                   <table border="0">
                                                                   <tr>
                                                                   <td align="text"><b>host:</b><br align="left" /></td>
-                                                                  <td align="text">$REPO/container_components/mongodb/mongodb-after-entry.sh<br align="left" /></td>
+                                                                  <td align="text">$REPO/container_init/mongodb/mongodb-after-entry.sh<br align="left" /></td>
                                                                   </tr>
                                                                   <tr>
                                                                   <td align="text">mongodb-container:<br align="left" /></td>
@@ -662,7 +662,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                                <table border="0">
                                                                <tr>
                                                                <td align="text"><b>host:</b><br align="left" /></td>
-                                                               <td align="text">$REPO/container_components/solr/phaidra_core<br align="left" /></td>
+                                                               <td align="text">$REPO/container_init/solr/phaidra_core<br align="left" /></td>
                                                                </tr>
                                                                <tr>
                                                                <td align="text">solr-container:<br align="left" /></td>
@@ -946,7 +946,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                                          <table border="0">
                                                                          <tr>
                                                                          <td align="text"><b>host:</b><br align="left" /></td>
-                                                                         <td align="text">$REPO/container_components/mariadb/phaidradb.sql.gz<br align="left" /></td>
+                                                                         <td align="text">$REPO/container_init/mariadb/phaidradb.sql.gz<br align="left" /></td>
                                                                          </tr>
                                                                          <tr>
                                                                          <td align="text">mariadb-phaidra-container:<br align="left" /></td>
@@ -958,7 +958,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                                    <table border="0">
                                                                    <tr>
                                                                    <td align="text"><b>host:</b><br align="left" /></td>
-                                                                   <td align="text">$REPO/container_components/openldap<br align="left" /></td>
+                                                                   <td align="text">$REPO/container_init/openldap<br align="left" /></td>
                                                                    </tr>
                                                                    <tr>
                                                                    <td align="text">openldap-container:<br align="left" /></td>
@@ -982,7 +982,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                               <table border="0">
                                                               <tr>
                                                               <td align="text"><b>host:</b><br align="left" /></td>
-                                                              <td align="text">$REPO/components/phaidra-api<br align="left" /></td>
+                                                              <td align="text">$REPO/src/phaidra-api<br align="left" /></td>
                                                               </tr>
                                                               <tr>
                                                               <td align="text">api-container:<br align="left" /></td>
@@ -1006,7 +1006,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                              <table border="0">
                                                              <tr>
                                                              <td align="text"><b>host:</b><br align="left" /></td>
-                                                             <td align="text">$REPO/container_components/chronos<br align="left" /></td>
+                                                             <td align="text">$REPO/container_init/chronos<br align="left" /></td>
                                                              </tr>
                                                              <tr>
                                                              <td align="text">chronos-container:<br align="left" /></td>
@@ -1018,7 +1018,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                                       <table border="0">
                                                                       <tr>
                                                                       <td align="text"><b>host:</b><br align="left" /></td>
-                                                                      <td align="text">$REPO/container_components/mongodb/init_oai_sets.json<br align="left" /></td>
+                                                                      <td align="text">$REPO/container_init/mongodb/init_oai_sets.json<br align="left" /></td>
                                                                       </tr>
                                                                       <tr>
                                                                       <td align="text">mongodb-container:<br align="left" /></td>
@@ -1030,7 +1030,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                                   <table border="0">
                                                                   <tr>
                                                                   <td align="text"><b>host:</b><br align="left" /></td>
-                                                                  <td align="text">$REPO/container_components/mongodb/mongodb-after-entry.sh<br align="left" /></td>
+                                                                  <td align="text">$REPO/container_init/mongodb/mongodb-after-entry.sh<br align="left" /></td>
                                                                   </tr>
                                                                   <tr>
                                                                   <td align="text">mongodb-container:<br align="left" /></td>
@@ -1042,7 +1042,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                                <table border="0">
                                                                <tr>
                                                                <td align="text"><b>host:</b><br align="left" /></td>
-                                                               <td align="text">$REPO/container_components/solr/phaidra_core<br align="left" /></td>
+                                                               <td align="text">$REPO/container_init/solr/phaidra_core<br align="left" /></td>
                                                                </tr>
                                                                <tr>
                                                                <td align="text">solr-container:<br align="left" /></td>

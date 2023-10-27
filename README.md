@@ -325,7 +325,6 @@ System when running `docker compose up -d` from directory
 ├── dockerfiles
 ├── docs
 ├── entrypoints
-├── image_components
 ├── pictures
 ├── third-parties
 └── webserver_configs
@@ -333,7 +332,7 @@ System when running `docker compose up -d` from directory
     ├── phaidra-shib
     └── phaidra-ssl
 
-25 directories
+24 directories
 ```
 
 ## Phaidra Components

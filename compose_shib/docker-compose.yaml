@@ -55,7 +55,7 @@ services:
     image: solr:9.2.1
     volumes:
       - solr:/var/solr
-      - ./../container_components/solr/phaidra_core:/tmp/phaidra:ro      
+      - ./../container_init/solr/phaidra_core:/tmp/phaidra:ro      
     command:
       - solr-precreate
       - phaidra
@@ -87,7 +87,7 @@ services:
     volumes:
       - api_logs:/var/log/phaidra
       - fedora:/mnt/fedora:ro
-      - ../components/phaidra-api:/usr/local/phaidra/phaidra-api:ro
+      - ../src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
     networks:
       - phaidra-network
     environment:
@@ -122,7 +122,7 @@ services:
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
-      - ./../components/pixelgecko:/opt/pixelgecko:ro
+      - ./../src/pixelgecko:/opt/pixelgecko:ro
     networks:
       - phaidra-network
     environment:
@@ -138,7 +138,7 @@ services:
       MARIADB_USER: ${MARIADB_PHAIDRA_USER}
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
     volumes:
-      - .././container_components/mariadb/phaidradb.sql.gz:/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro
+      - .././container_init/mariadb/phaidradb.sql.gz:/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro
       - mariadb_phaidra:/var/lib/mysql
     networks:
       - phaidra-network
@@ -164,8 +164,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PHAIDRA_PASSWORD}
     volumes:
       - mongodb_phaidra:/data/db
-      - .././container_components/mongodb/init_oai_sets.json:/mnt/init_oai_sets.json:ro
-      - .././container_components/mongodb/mongodb-after-entry.sh:/docker-entrypoint-initdb.d/mongodb-after-entry.sh:ro
+      - .././container_init/mongodb/init_oai_sets.json:/mnt/init_oai_sets.json:ro
+      - .././container_init/mongodb/mongodb-after-entry.sh:/docker-entrypoint-initdb.d/mongodb-after-entry.sh:ro
     networks:
       - phaidra-network
 
@@ -235,7 +235,7 @@ services:
       - LDAP_CUSTOM_LDIF_DIR=/ldifs
     volumes:
       - openldap:/bitnami/openldap
-      - .././container_components/openldap:/ldifs:ro
+      - .././container_init/openldap:/ldifs:ro
     networks:
       - phaidra-network
 
@@ -246,7 +246,7 @@ services:
       - chronos-database-dumps:/mnt/database-dumps
       - chronos-sitemaps:/mnt/sitemaps
       - chronos-oai-logs:/mnt/oai-logs
-      - .././container_components/chronos:/mnt/chronos:ro
+      - .././container_init/chronos:/mnt/chronos:ro
     environment:
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
       - PHAIDRADB=${PHAIDRADB}
