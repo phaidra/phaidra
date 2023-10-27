@@ -390,29 +390,29 @@ docker version
 
 ``` example
 Client: Docker Engine - Community
- Version:           24.0.6
+ Version:           24.0.7
  API version:       1.43
- Go version:        go1.20.7
- Git commit:        ed223bc
- Built:             Mon Sep  4 12:32:16 2023
+ Go version:        go1.20.10
+ Git commit:        afdd53b
+ Built:             Thu Oct 26 09:08:17 2023
  OS/Arch:           linux/amd64
- Context:           rootless
+ Context:           default
 
 Server: Docker Engine - Community
  Engine:
-  Version:          24.0.6
+  Version:          24.0.7
   API version:      1.43 (minimum version 1.12)
-  Go version:       go1.20.7
-  Git commit:       1a79695
-  Built:            Mon Sep  4 12:32:16 2023
+  Go version:       go1.20.10
+  Git commit:       311b9ff
+  Built:            Thu Oct 26 09:08:17 2023
   OS/Arch:          linux/amd64
   Experimental:     false
  containerd:
-  Version:          1.6.22
-  GitCommit:        8165feabfdfe38c65b599c4993d227328c231fca
+  Version:          1.6.24
+  GitCommit:        61f9fd88f79f081d64d6fa3bb1a0dc71ec870523
  runc:
-  Version:          1.1.8
-  GitCommit:        v1.1.8-0-g82f18fe
+  Version:          1.1.9
+  GitCommit:        v1.1.9-0-gccaecfc
  docker-init:
   Version:          0.19.0
   GitCommit:        de40ad0
@@ -421,7 +421,7 @@ Server: Docker Engine - Community
   ApiVersion:       1.1.1
   NetworkDriver:    slirp4netns
   PortDriver:       slirp4netns
-  StateDir:         /tmp/rootlesskit1559358571
+  StateDir:         /tmp/rootlesskit1246533479
  slirp4netns:
   Version:          1.2.0
   GitCommit:        656041d45cfca7a4176f6b7eed9e4fe6c11e8383
@@ -433,8 +433,8 @@ docker info
 
 ``` example
 Client: Docker Engine - Community
- Version:    24.0.6
- Context:    rootless
+ Version:    24.0.7
+ Context:    default
  Debug Mode: false
  Plugins:
   buildx: Docker Buildx (Docker Inc.)
@@ -445,12 +445,12 @@ Client: Docker Engine - Community
     Path:     /usr/libexec/docker/cli-plugins/docker-compose
 
 Server:
- Containers: 14
-  Running: 13
+ Containers: 1
+  Running: 0
   Paused: 0
   Stopped: 1
- Images: 20
- Server Version: 24.0.6
+ Images: 26
+ Server Version: 24.0.7
  Storage Driver: fuse-overlayfs
  Logging Driver: json-file
  Cgroup Driver: systemd
@@ -463,15 +463,15 @@ Server:
  Runtimes: io.containerd.runc.v2 runc
  Default Runtime: runc
  Init Binary: docker-init
- containerd version: 8165feabfdfe38c65b599c4993d227328c231fca
- runc version: v1.1.8-0-g82f18fe
+ containerd version: 61f9fd88f79f081d64d6fa3bb1a0dc71ec870523
+ runc version: v1.1.9-0-gccaecfc
  init version: de40ad0
  Security Options:
   seccomp
    Profile: builtin
   rootless
   cgroupns
- Kernel Version: 6.1.0-12-amd64
+ Kernel Version: 6.1.0-13-amd64
  Operating System: Debian GNU/Linux 12 (bookworm)
  OSType: linux
  Architecture: x86_64
@@ -485,7 +485,6 @@ Server:
  Insecure Registries:
   127.0.0.0/8
  Live Restore Enabled: false
-
 ```
 
 As one can see above, we are using Docker's rootlesskit, to avoid
@@ -577,3 +576,11 @@ cpuset cpu io memory pids
 systemctl --user restart docker
 ```
 
+7.  activate br_netfilter kernel module
+    
+    You might run into the issue, that docker version warns about `WARNING: bridge-nf-call-iptables is disabled` and 
+    `WARNING: bridge-nf-call-ip6tables is disabled`. You can get rid of this warning by running `sudo modprobe br_netfilter`.
+    To make this change persistent on systemd-enabled systems (here tested on Debian-12), you can run the following command:
+    ```
+    echo "br_netfilter" | sudo tee -a /etc/modules-load.d/br_netfilter.conf
+    ```
