@@ -234,7 +234,9 @@ In case you are developing and changing  a lot of components, dockerfiles and do
 things can become cluttered. To remove everything including build caches, you can run 
  the following command:
 ```
+# COMMAND:
 docker system prune --filter label=com.docker.compose.project=phaidra-demo
+# EXPECTED OUTPUT (hashes are matter of change):
 WARNING! This will remove:
   - all stopped containers
   - all networks not used by at least one container

@@ -759,7 +759,6 @@ This file is used for generating the technical sketches included in the frontpag
 #+RESULTS: construction-ssl
 [[file:./pictures/construction_ssl.svg]]
 
-
 * Shibboleth version
 #+NAME: construction-shib
 #+begin_src dot :file "./pictures/construction_shib.svg"
