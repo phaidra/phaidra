@@ -366,11 +366,11 @@
 <!-- BIND_HTTPD_CONFIG -->
 <g id="node16" class="node">
 <title>BIND_HTTPD_CONFIG</title>
-<polygon fill="none" stroke="blue" points="1028.72,-782.85 1025.72,-786.85 1004.72,-786.85 1001.72,-782.85 610.72,-782.85 610.72,-730.85 1028.72,-730.85 1028.72,-782.85"/>
-<text text-anchor="start" x="622.72" y="-764.65" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
-<text text-anchor="start" x="744.72" y="-763.65" font-family="Times,serif" font-size="14.00">$REPO/webserver_configs/phaidra&#45;ssl</text>
-<text text-anchor="start" x="622.72" y="-742.65" font-family="Times,serif" font-size="14.00">httpd&#45;container:</text>
-<text text-anchor="start" x="744.72" y="-742.65" font-family="Times,serif" font-size="14.00">/mnt/startup:ro</text>
+<polygon fill="none" stroke="blue" points="1033.22,-782.85 1030.22,-786.85 1009.22,-786.85 1006.22,-782.85 606.22,-782.85 606.22,-730.85 1033.22,-730.85 1033.22,-782.85"/>
+<text text-anchor="start" x="618.72" y="-764.65" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
+<text text-anchor="start" x="740.72" y="-763.65" font-family="Times,serif" font-size="14.00">$REPO/container_init/httpd/phaidra&#45;ssl</text>
+<text text-anchor="start" x="618.72" y="-742.65" font-family="Times,serif" font-size="14.00">httpd&#45;container:</text>
+<text text-anchor="start" x="740.72" y="-742.65" font-family="Times,serif" font-size="14.00">/mnt/startup:ro</text>
 </g>
 <!-- BIND_API_CODE -->
 <g id="node17" class="node">

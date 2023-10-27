@@ -213,7 +213,7 @@ This file is used for generating the technical sketches included in the frontpag
                              <table border="0">
                              <tr>
                              <td align="text"><b>host:</b><br align="left" /></td>
-                             <td align="text">$REPO/webserver_configs/phaidra-demo<br align="left" /></td>
+                             <td align="text">$REPO/container_init/httpd/phaidra-demo<br align="left" /></td>
                              </tr>
                              <tr>
                              <td align="text">httpd-container:<br align="left" /></td>
@@ -590,7 +590,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                                   <table border="0">
                                                                   <tr>
                                                                   <td align="text"><b>host:</b><br align="left" /></td>
-                                                                  <td align="text">$REPO/webserver_configs/phaidra-ssl<br align="left" /></td>
+                                                                  <td align="text">$REPO/container_init/httpd/phaidra-ssl<br align="left" /></td>
                                                                   </tr>
                                                                   <tr>
                                                                   <td align="text">httpd-container:<br align="left" /></td>
@@ -970,7 +970,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                                   <table border="0">
                                                                   <tr>
                                                                   <td align="text"><b>host:</b><br align="left" /></td>
-                                                                  <td align="text">$REPO/webserver_configs/phaidra-shib:ro<br align="left" /></td>
+                                                                  <td align="text">$REPO/container_init/httpd/phaidra-shib:ro<br align="left" /></td>
                                                                   </tr>
                                                                   <tr>
                                                                   <td align="text">httpd-container:<br align="left" /></td>

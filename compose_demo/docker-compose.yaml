@@ -18,7 +18,7 @@ services:
     ports:
       - "${PHAIDRA_HOSTPORT}:80"
     volumes:
-      - .././webserver_configs/phaidra-demo:/mnt/startup:ro
+      - .././container_init/httpd/phaidra-demo:/mnt/startup:ro
       - .././docs:/mnt/docs:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
     depends_on:

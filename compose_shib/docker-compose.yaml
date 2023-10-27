@@ -21,7 +21,7 @@ services:
       - api
       - ui
     volumes:
-      - .././webserver_configs/phaidra-shib:/mnt/startup:ro
+      - .././container_init/httpd/phaidra-shib:/mnt/startup:ro
       - .././docs:/mnt/docs:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
     networks:
