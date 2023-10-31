@@ -1,5 +1,4 @@
 FROM ubuntu:jammy
-EXPOSE 3000
 ENV DEBIAN_FRONTEND noninteractive
 RUN <<EOF
 apt-get --quiet update
@@ -31,4 +30,5 @@ mkdir -pv /usr/local/phaidra/phaidra-api \
     /var/log/phaidra
 EOF
 WORKDIR /usr/local/phaidra/phaidra-api/
+EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]
