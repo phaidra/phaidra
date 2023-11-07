@@ -217,6 +217,7 @@ sub get_job
   my $c= $jq->connect ();
   # print __FILE__, ' ', __LINE__, " c: ", main::Dumper ($c);
   my %crit= %{$jq->{'in_progress'}};
+  $crit{$self_ref}= $agent_name;
   my $job= $c->find_one ( \%crit );
   print "searching in_progress job: crit: ", main::Dumper (\%crit);
   return $job if (defined ($job));

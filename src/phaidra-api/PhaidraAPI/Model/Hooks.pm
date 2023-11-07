@@ -21,6 +21,8 @@ sub add_or_modify_datastream_hooks {
 
   my $res = {alerts => [], status => 200};
 
+  my $search_model = PhaidraAPI::Model::Search->new;
+
   if (exists($c->app->config->{hooks})) {
     if (exists($c->app->config->{hooks}->{updatedc}) && $c->app->config->{hooks}->{updatedc}) {
       if ($dsid eq "UWMETADATA") {
@@ -35,7 +37,6 @@ sub add_or_modify_datastream_hooks {
 
     if (exists($c->app->config->{hooks}->{updateindex}) && $c->app->config->{hooks}->{updateindex}) {
       my $dc_model     = PhaidraAPI::Model::Dc->new;
-      my $search_model = PhaidraAPI::Model::Search->new;
       my $index_model  = PhaidraAPI::Model::Index->new;
       my $object_model = PhaidraAPI::Model::Object->new;
       my $r            = $index_model->update($c, $pid, $dc_model, $search_model, $object_model);
@@ -49,7 +50,7 @@ sub add_or_modify_datastream_hooks {
     if (exists($c->app->config->{hooks}->{iiifmanifest}) && $c->app->config->{hooks}->{iiifmanifest}) {
       if ($dsid eq "UWMETADATA" or $dsid eq "MODS" or $dsid eq "JSON-LD") {
         $c->app->log->debug("Updating IIIF-MANIFEST from $dsid");
-        my $search_model = PhaidraAPI::Model::Search->new;
+        
         my $rdshash      = $search_model->datastreams_hash($c, $pid);
         if ($rdshash->{status} ne 200) {
 
@@ -82,7 +83,20 @@ sub add_or_modify_datastream_hooks {
         # delete imagemanipulator record
         $c->app->db_imagemanipulator->dbh->do('DELETE FROM image WHERE url = "' . $pid . '";') or $c->app->log->error("Error deleting from imagemanipulator db:" . $c->app->db_imagemanipulator->dbh->errstr);
 
-        $self->_create_imageserver_job($c, $pid);
+        my $res_cmodel = $search_model->get_cmodel($c, $pid);
+        if ($res_cmodel->{status} eq 200) {
+          if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
+            my $imsr = $self->_create_imageserver_job($c, $pid, $res_cmodel->{cmodel});
+            push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
+          }
+          if ($res_cmodel->{cmodel} eq 'Video') {
+            my $vsr = $self->_create_streaming_job($c, $pid, $res_cmodel->{cmodel});
+            push @{$res->{alerts}}, @{$vsr->{alerts}} if scalar @{$vsr->{alerts}} > 0;
+          }
+        } else {
+          $c->app->log->error("Hooks: could not get cmodel, not creating imageserver/streaming job");
+        }
+
       }
     }
   }
@@ -148,10 +162,11 @@ sub add_octets_hook {
   my ($self, $c, $pid, $exists) = @_;
 
   my $res = {alerts => [], status => 200};
+  my $search_model = PhaidraAPI::Model::Search->new;
 
   unless (defined($exists)) {
-    my $search_model = PhaidraAPI::Model::Search->new;
-    my $sr           = $search_model->datastream_exists($c, $pid, 'OCTETS');
+    
+    my $sr = $search_model->datastream_exists($c, $pid, 'OCTETS');
     if ($sr->{status} ne 200) {
       unshift @{$res->{alerts}}, @{$sr->{alerts}};
       $res->{status} = $sr->{status};
@@ -171,8 +186,20 @@ sub add_octets_hook {
       $c->app->db_imagemanipulator->dbh->do('DELETE FROM image WHERE url = "' . $pid . '";') or $c->app->log->error("Error deleting from imagemanipulator db:" . $c->app->db_imagemanipulator->dbh->errstr);
     }
 
-    my $imsr = $self->_create_imageserver_job($c, $pid);
-    push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
+    my $res_cmodel = $search_model->get_cmodel($c, $pid);
+    if ($res_cmodel->{status} eq 200) {
+      if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
+        my $imsr = $self->_create_imageserver_job($c, $pid, $res_cmodel->{cmodel});
+        push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
+      }
+      if ($res_cmodel->{cmodel} eq 'Video') {
+        my $vsr = $self->_create_streaming_job($c, $pid, $res_cmodel->{cmodel});
+        push @{$res->{alerts}}, @{$vsr->{alerts}} if scalar @{$vsr->{alerts}} > 0;
+      }
+    } else {
+      $c->app->log->error("Hooks: could not get cmodel, not creating imageserver/streaming job");
+    }
+    
   }
 
   return $res;
@@ -182,7 +209,6 @@ sub modify_hook {
   my ($self, $c, $pid, $state) = @_;
 
   my $res = {alerts => [], status => 200};
-
   my $idxres = $self->_index($c, $pid);
   push @{$res->{alerts}}, @{$idxres->{alerts}} if scalar @{$idxres->{alerts}} > 0;
 
@@ -201,8 +227,14 @@ sub modify_hook {
           }
         }
       }
-      my $imsr = $self->_create_imageserver_job($c, $pid);
-      push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
+      if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
+        my $imsr = $self->_create_imageserver_job($c, $pid, $res_cmodel->{cmodel});
+        push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
+      }
+      if ($res_cmodel->{cmodel} eq 'Video') {
+        my $vsr = $self->_create_streaming_job($c, $pid, $res_cmodel->{cmodel});
+        push @{$res->{alerts}}, @{$vsr->{alerts}} if scalar @{$vsr->{alerts}} > 0;
+      }
     }
   }
 
@@ -210,38 +242,56 @@ sub modify_hook {
 }
 
 sub _create_imageserver_job {
-  my ($self, $c, $pid) = @_;
+  my ($self, $c, $pid, $cmodel) = @_;
 
   my $res = {alerts => [], status => 200};
 
-  my $search_model = PhaidraAPI::Model::Search->new;
-  my $res_cmodel   = $search_model->get_cmodel($c, $pid);
-  if ($res_cmodel->{status} ne 200) {
-    $c->app->log->error("_create_imageserver_job: could not get cmodel");
-    return $res_cmodel;
-  }
-  my $cmodel = $res_cmodel->{cmodel};
-
   my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid});
-  unless ($find->{pid}) {
-    if ($cmodel eq 'Picture' or $cmodel eq 'PDFDocument') {
-      $c->app->log->info("Creating imageserver job pid[$pid] cm[$cmodel]");
+  unless ($find->{pid}) {    
+    $c->app->log->info("Creating imageserver job pid[$pid] cm[$cmodel]");
+    my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
+    my $path;
+    if ($c->app->config->{fedora}->{version} >= 6) {
+      my $fedora_model = PhaidraAPI::Model::Fedora->new;
+      my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+      if ($dsAttr->{status} eq 200) {
+        $c->app->log->error("imageserver job pid[$pid] cm[$cmodel]: could not get path");
+        $path = $dsAttr->{path};
+      }
+    }
+    my $job = {pid => $pid, cmodel => $cmodel, agent => "pige", status => "new", idhash => $hash, created => time};
+    $job->{path} = $path if $path;
+    $c->paf_mongo->get_collection('jobs')->insert_one($job);
+  }
+
+  return $res;
+}
+
+sub _create_streaming_job {
+  my ($self, $c, $pid, $cmodel) = @_;
+
+  my $res = {alerts => [], status => 200};
+  if ($c->app->config->{streaming}) {
+    my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid});
+    unless ($find->{pid}) {    
+      $c->app->log->info("Creating streaming job pid[$pid] cm[$cmodel]");
       my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
       my $path;
       if ($c->app->config->{fedora}->{version} >= 6) {
         my $fedora_model = PhaidraAPI::Model::Fedora->new;
         my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
         if ($dsAttr->{status} eq 200) {
-          $c->app->log->error("imageserver job pid[$pid] cm[$cmodel]: could not get path");
+          $c->app->log->error("streaming job pid[$pid] cm[$cmodel]: could not get path");
           $path = $dsAttr->{path};
         }
+      } else {
+        # TODO fedora 3 OCTETS.X path
       }
-      my $job = {pid => $pid, cmodel => $cmodel, agent => "pige", status => "new", idhash => $hash, created => time};
+      my $job = {pid => $pid, cmodel => $cmodel, agent => "vige", status => "new", idhash => $hash, created => time};
       $job->{path} = $path if $path;
       $c->paf_mongo->get_collection('jobs')->insert_one($job);
     }
   }
-
   return $res;
 }
 

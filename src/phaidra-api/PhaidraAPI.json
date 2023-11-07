@@ -139,6 +139,7 @@
         "username": "phaidra",
         "password": "phaidra"
     },
+    "streaming": {},
     "authentication": {
         "realm": "Phaidra",
         "token_header": "X-XSRF-TOKEN",
