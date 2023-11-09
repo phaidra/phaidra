@@ -107,6 +107,17 @@ build-pixelgecko:
         paths:
           - dockerfiles/pixelgecko.dockerfile
 
+build-vige:
+  stage: build
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker build -f dockerfiles/vige.dockerfile
+    -t $CI_REGISTRY_USER/vige-base:latest
+    -t $CI_REGISTRY_USER/vige-base:$CI_COMMIT_SHORT_SHA . &&
+    docker push --all-tags $CI_REGISTRY_USER/vige-base
+
 compose-demo:
   stage: test
   before_script:
