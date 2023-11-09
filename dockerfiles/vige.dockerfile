@@ -11,3 +11,5 @@ RUN <<EOF
 dpkg -i mongodb-mongosh_2.0.2_amd64.deb
 rm mongodb-mongosh_2.0.2_amd64.deb
 EOF
+RUN mkdir /opt/vige
+WORKDIR /opt/vige
