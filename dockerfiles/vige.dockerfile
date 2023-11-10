@@ -3,12 +3,12 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN <<EOF
 apt-get --quiet update
 apt-get install --yes --quiet --no-install-recommends \
-jq libxml-xpath-perl html2text file
+jq libxml-xpath-perl html2text file gdebi
 apt-get clean
 EOF
 COPY ./../third-parties/mongodb-mongosh_2.0.2_amd64.deb /
 RUN <<EOF
-dpkg -i mongodb-mongosh_2.0.2_amd64.deb
+gdebi --quiet  mongodb-mongosh_2.0.2_amd64.deb
 rm mongodb-mongosh_2.0.2_amd64.deb
 EOF
 RUN mkdir /opt/vige
