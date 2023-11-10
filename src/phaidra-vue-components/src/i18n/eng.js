@@ -46,6 +46,7 @@ export default {
   'dcterms:dateCopyrighted': 'Date copyrighted',
   'dcterms:dateSubmitted': 'Date submitted',
   'rdau:P60071': 'Date of production',
+  'rdau:P60550': 'Extent',
   'phaidra:dateAccessioned': 'Date accessioned',
 
   'schema:pageStart': 'From page',
