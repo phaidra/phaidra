@@ -8,7 +8,7 @@ apt-get clean
 EOF
 COPY ./../third-parties/mongodb-mongosh_2.0.2_amd64.deb /
 RUN <<EOF
-gdebi --quiet  mongodb-mongosh_2.0.2_amd64.deb
+gdebi --quiet --non-interactive  mongodb-mongosh_2.0.2_amd64.deb
 rm mongodb-mongosh_2.0.2_amd64.deb
 EOF
 RUN mkdir /opt/vige
