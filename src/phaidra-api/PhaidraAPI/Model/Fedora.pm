@@ -429,7 +429,7 @@ sub addOrModifyDatastream {
   if ($location) {
     my $url = $c->app->fedoraurl->path("$pid/LINK");
     $c->app->log->debug("PUT $url Link $location");
-    my $putres = $c->ua->put($url => {'Link' => "$location; rel=\"http://fedora.info/definitions/fcrepo#ExternalContent\"; handling=\"redirect\"; type=\"text/plain\""})->result;
+    my $putres = $c->ua->put($url => {'Link' => "<$location>; rel=\"http://fedora.info/definitions/fcrepo#ExternalContent\"; handling=\"redirect\"; type=\"text/plain\""})->result;
     unless ($putres->is_success) {
       $c->app->log->error("pid[$pid] PUT Link $location error code:" . $putres->{code} . " message:" . $putres->{message});
       unshift @{$res->{alerts}}, {type => 'error', msg => $putres->{message}};
