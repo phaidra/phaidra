@@ -520,7 +520,7 @@ sudo apt install uidmap
 3.  install rootlesskit
 
 ``` example
-dockerd-rootless-setuptool.sh
+dockerd-rootless-setuptool.sh install
 # activate autostart of services
 sudo loginctl enable-linger $USER
 echo "export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock" >> ~/.bashrc
@@ -537,7 +537,7 @@ echo "export XDG_RUNTIME_DIR=/run/user/$(id -u)" >> ~/.bashrc
     administrative parts of the system as a consequence).
 
 ``` example
-mkdir ~/.config/systemd/user/docker.service.d
+mkdir -p ~/.config/systemd/user/docker.service.d
 echo "[Service]" >> ~/.config/systemd/user/docker.service.d/override.conf
 echo 'Environment="DOCKERD_ROOTLESS_ROOTLESSKIT_PORT_DRIVER=slirp4netns"' >> ~/.config/systemd/user/docker.service.d/override.conf
 systemctl --user daemon-reload
