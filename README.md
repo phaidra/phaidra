@@ -115,7 +115,7 @@ setup has finished you will have PHAIDRA running on
 `https://$YOUR-DNS-ENTRY`.
 
 ``` example
-cd compose_ssl
+cd compose_shib
 docker compose up -d
 ```
 
