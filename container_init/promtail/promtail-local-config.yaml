@@ -18,4 +18,9 @@ scrape_configs:
     relabel_configs:
       - source_labels: ['__meta_docker_container_name']
         regex: '/(.*)'
-        target_label: "${LOKI_LABEL}"
+        target_label: 'container'
+      - source_labels: ['__meta_docker_container_log_stream']
+        target_label: 'logstream'
+    pipeline_stages:
+      - static_labels:
+          host: "${PROMTAIL_HOST_LABEL}"

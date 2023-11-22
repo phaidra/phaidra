@@ -288,7 +288,7 @@ services:
   #     - vige
   #   environment:
   #     - GRAFANA_PUSH_URL=${GRAFANA_PUSH_URL}
-  #     - LOKI_LABEL=${LOKI_LABEL}
+  #     - PROMTAIL_HOST_LABEL=${PROMTAIL_HOST_LABEL}
 
 volumes:
   api_logs:
