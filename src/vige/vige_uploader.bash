@@ -1,5 +1,4 @@
 ACL_PUBLIC='[ { "allow": true, "role": "ROLE_ADMIN", "action": "read" }, { "allow": true, "role": "ROLE_ANONYMOUS", "action": "read" }, { "allow": true, "role": "ROLE_ADMIN", "action": "write" } ]'
-WORKFLOW="legacy-ustream-upload"
 
 # function definitions
 function get_new_jobs {
@@ -29,7 +28,7 @@ function get_path {
 function upload_file_get_mpid {
     curl \
         --silent \
-        --user "$OC_USER:$OC_PASS" "$OC_INGEST_URL/$WORKFLOW" \
+        --user "$OC_USER:$OC_PASS" "$OC_INGEST_URL/$OC_WORKFLOW" \
         --form creator="$OC_USER" \
         --form title="$1" \
         --form flavor="presentation/source" \

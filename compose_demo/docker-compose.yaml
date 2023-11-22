@@ -250,6 +250,47 @@ services:
       - /mnt/chronos/chronos-entrypoint.bash
     networks:
       - phaidra-network
+
+  # UNCOMMENT and fill .env values if you have access to an opencast instance
+  # vige:
+  #   image: testuser34/vige-base:latest
+  #   pull_policy: always
+  #   volumes:
+  #     - .././src/vige:/mnt/vige:ro
+  #     - vige:/opt/vige
+  #     - fedora:/mnt/fedora:ro
+  #     - vige-mongosh:/root/.mongodb
+  #   networks:
+  #     - phaidra-network
+  #   depends_on:
+  #     - mongodb-phaidra
+  #   environment:
+  #     OC_EVENTS_URL: ${OC_EVENTS_URL}
+  #     OC_INGEST_URL: ${OC_INGEST_URL}
+  #     OC_USER: ${OC_USER}
+  #     OC_PASS: ${OC_PASS}
+  #     OC_WORKFLOW: ${OC_WORKFLOW}
+  #     M_USER: ${MONGODB_PHAIDRA_USER}
+  #     M_PASS: ${MONGODB_PHAIDRA_PASSWORD}
+  #     M_AGENT_DB: ${MONGO_AGENT_DB}
+  #   command:
+  #     - bash
+  #     - /mnt/vige/vige_controller.bash
+
+  # UNCOMMENT and fill .env values, if you have an Grafana instance with loki.
+  # promtail:
+  #   image: grafana/promtail:2.9.2
+  #   volumes:
+  #     - .././container_init/promtail/promtail-local-config.yaml:/etc/promtail/config.yaml:ro
+  #     - /run/user/1000/docker.sock:/var/run/docker.sock
+  #   command: -config.file=/etc/promtail/config.yaml -config.expand-env=true
+  #   networks:
+  #     - phaidra-network
+  #   depends_on:
+  #     - vige
+  #   environment:
+  #     - GRAFANA_PUSH_URL=${GRAFANA_PUSH_URL}
+  #     - LOKI_LABEL=${LOKI_LABEL}
       
 volumes:
   api_logs:
@@ -264,3 +305,5 @@ volumes:
   chronos-database-dumps:
   chronos-sitemaps:
   chronos-oai-logs:
+  vige:
+  vige-mongosh:
