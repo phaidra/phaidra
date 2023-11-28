@@ -127,7 +127,8 @@ sub startup {
     };
   }
 
-  if ($config->{phaidra}->{triplestore} eq 'localMysqlMPTTriplestore') {
+  if ($config->{phaidra}->{triplestore} &&
+      $config->{phaidra}->{triplestore} eq 'localMysqlMPTTriplestore') {
     $databases{'db_triplestore'} = {
       dsn      => $config->{localMysqlMPTTriplestore}->{dsn},
       username => $config->{localMysqlMPTTriplestore}->{username},
