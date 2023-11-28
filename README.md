@@ -68,7 +68,7 @@ docker compose up -d
 -   A DNS-entry for your computer's IP-address.
 -   SSL-certificate and -key (put them into the
     `./container_init/httpd/phaidra-ssl/conf`-directory of this repo and name them
-    `privkey.pem` and `fullchain.pem`).
+    `privkey.pem` and `fullchain.pem`). *Make sure your user has read access on these files*.
 -   firewall with port 80 and 443 open on your computer.
 -   properly set variables in `./compose_ssl/.env`.
 
@@ -93,12 +93,13 @@ docker compose up -d
 -   A DNS-entry for your computer's IP-address.
 -   SSL-certificate and -key (put them into the
     `./container_init/httpd/phaidra-shib/conf`-directory of this repo and name them
-    `privkey.pem` and `fullchain.pem`).
+    `privkey.pem` and `fullchain.pem`). *Make sure your user has read access on these files*
 -   firewall with port 80 and 443 open on your computer.
 -   encryption and signing keys/certs for Shibboleth (plus the
     registration at your organization's IdP). You can create the
     required key/cert-pairs with the commands below (put the
-    results into the `./container_init/httpd/phaidra-shib/conf` folder of this repo).
+    results into the `./container_init/httpd/phaidra-shib/conf` folder of this repo -- 
+    *make sure your user has read access on these files*).
 -   properly set variables in `./compose_shib/.env`.
 
 *NOTE*: if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `ALLOWED_HOST` variable in `compose-shib/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, etc otherwise.
