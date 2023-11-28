@@ -16,7 +16,7 @@ use strict;
 sub subenv
 {
   my $s= shift;
-  print __LINE__, " s=[$s]\n";
+  # print __LINE__, " s=[$s]\n";
 
   if ($s =~ m#__([\w\d_\-]+)__#)
   {
