@@ -2375,8 +2375,8 @@ sub _add_uwm_index {
   # $c->app->log->debug("XXXXXXXXXXXX ".$c->app->dumper($contributions));
   $index->{"uwm_roles_json"} = to_json($contributions);
   for my $r (@{$roles}) {
-    push @{$index->{"bib_roles_pers_" . $r->{role}}}, trim $r->{name}   if $r->{name} ne '';
-    push @{$index->{"bib_roles_corp_" . $r->{role}}}, $r->{institution} if $r->{institution} ne '';
+    push @{$index->{"bib_roles_pers_" . $r->{role}}}, trim $r->{name}   if $r->{name} && ($r->{name} ne '');
+    push @{$index->{"bib_roles_corp_" . $r->{role}}}, $r->{institution} if $r->{institution} && ($r->{institution} ne '');
   }
 
   my $org = $self->_find_first_uwm_node_rec($c, "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0", "organization", $uwm);
