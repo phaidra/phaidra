@@ -520,12 +520,12 @@ sudo apt install uidmap
 3.  install rootlesskit
 
 ``` example
+echo "export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock" >> ~/.bashrc
+echo "export XDG_RUNTIME_DIR=/run/user/$(id -u)" >> ~/.bashrc
+source ~/.bashrc
 dockerd-rootless-setuptool.sh install
 # activate autostart of services
 sudo loginctl enable-linger $USER
-echo "export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock" >> ~/.bashrc
-# needed at least on headless ubuntu systems
-echo "export XDG_RUNTIME_DIR=/run/user/$(id -u)" >> ~/.bashrc
 ```
 
 4.  change port-forwarding mode for rootlesskit to slirp4netns
