@@ -66,6 +66,7 @@
                         <li><a href="/dbgate/">Inspect Databases</a></li>
                         <li><a href="/fcrepo/rest/">Inspect Object Repository</a></li>
                         <li><a href="/solr/">Inspect Search Engine</a></li>
+                        <li><a href="/grafana/">Inspect Running Services</a></li>
                         <li><a href="/docs/">Documentation</a></li>
                     </ul>
                 </v-row>
