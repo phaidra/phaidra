@@ -103,6 +103,9 @@
               <RetainedRole>md:IDPSSODescriptor</RetainedRole>
               <RetainedRole>md:AttributeAuthorityDescriptor</RetainedRole>
           </MetadataFilter>
+          <MetadataFilter type="Include">
+            <Include>__ENTITY_ID__</Include>
+          </MetadataFilter>
           
           <DiscoveryFilter type="Exclude" matcher="EntityAttributes" trimTags="true"
                            attributeName="http://macedir.org/entity-category"
