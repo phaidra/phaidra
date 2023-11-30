@@ -48,7 +48,9 @@ See the sections below for version-specific instructions.
 None, just make sure no other service is using port 8899 on your
 computer.
 
-**NOTE**: if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `ALLOWED_HOST` variable in `compose-demo/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, etc otherwise.
+**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to include your uid instead of the number 1000 (you can check with the command `id -u`) in the promtail-section of `compose_demo/docker-compose.yaml`.
+
+**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `ALLOWED_HOST` variable in `compose_demo/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.  Also, change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-section of `compose_demo/docker-compose.yaml`.
 
 ###  Demo Startup
 
