@@ -7,3 +7,4 @@ datasources:
     url: http://loki:3100
     editable: false
     isDefault: true
+    uid: phaidra_loki_default
