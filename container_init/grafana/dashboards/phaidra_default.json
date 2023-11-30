@@ -50,7 +50,7 @@
             "uid": "phaidra_loki_default"
           },
           "editorMode": "builder",
-          "expr": "{job=\"containerlogs\", logstream=\"stdout\"} != `\"ctx\":` != `/grafana/api` != `\"GET /lam/ HTTP/1.1\" 200 624 \"-\" \"Wget/1.21\"`",
+          "expr": "{job=\"containerlogs\", logstream=\"stdout\"} != `\"ctx\":` != `/grafana/api` != `\"GET /lam/ HTTP/1.1\" 200 624 \"-\" \"Wget/1.21\"` != `GET /grafana`",
           "queryType": "range",
           "refId": "A"
         }
@@ -67,7 +67,7 @@
         "h": 8,
         "w": 22,
         "x": 0,
-        "y": 9
+        "y": 8
       },
       "id": 1,
       "options": {
