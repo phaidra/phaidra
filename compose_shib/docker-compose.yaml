@@ -14,12 +14,19 @@ services:
 
   httpd:
     image: testuser34/httpd-base-shib:latest
+    pull_policy: always
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     ports:
       - "80:80"
       - "443:443"
     depends_on:
       - api
       - ui
+      - dbgate
+      - solr
+      - grafana
     volumes:
       - .././container_init/httpd/phaidra-shib:/mnt/startup:ro
       - .././docs:/mnt/docs:ro
@@ -46,6 +53,9 @@ services:
   imageserver:
     image: testuser34/imageserver-base:latest
     pull_policy: always
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     volumes:
       - pixelgecko:/mnt/converted_images:ro
     networks:
@@ -53,9 +63,12 @@ services:
 
   solr:
     image: solr:9.2.1
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     volumes:
       - solr:/var/solr
-      - ./../container_init/solr/phaidra_core:/tmp/phaidra:ro      
+      - ./../container_init/solr/phaidra_core:/tmp/phaidra:ro
     command:
       - solr-precreate
       - phaidra
@@ -66,6 +79,9 @@ services:
   ui:
     depends_on:
       - api
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     build:
       context: ../.
       dockerfile: dockerfiles/ui.dockerfile
@@ -83,11 +99,14 @@ services:
       - mongodb-phaidra
       - fedora
     image: testuser34/api-base:latest
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     pull_policy: always
     volumes:
-      - api_logs:/var/log/phaidra
       - fedora:/mnt/fedora:ro
       - ../src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
+      - ../container_init/api/api-entrypoint.bash:/mnt/api-entrypoint.bash
     networks:
       - phaidra-network
     environment:
@@ -108,13 +127,17 @@ services:
       - PHAIDRA_ADMIN_PASSWORD=${PHAIDRA_ADMIN_PASSWORD}
       - FEDORA_ADMIN_USER=${FEDORA_ADMIN_USER}
       - FEDORA_ADMIN_PASS=${FEDORA_ADMIN_PASS}
-
-
+    entrypoint:
+      - bash
+      - /mnt/api-entrypoint.bash
 
   pixelgecko:
     depends_on:
       - mongodb-phaidra
       - api
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     restart:
       always
     image: testuser34/pixelgecko-base:latest
@@ -128,10 +151,12 @@ services:
     environment:
       - IMAGE_CONVERSION_INTERVAL=${IMAGE_CONVERSION_INTERVAL}
 
-
   mariadb-phaidra:
     image: mariadb:11.0.2-jammy
     restart: always
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     environment:
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
       MARIADB_DATABASE: ${PHAIDRADB}
@@ -145,6 +170,9 @@ services:
 
   mariadb-fedora:
     image: mariadb:10.5
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
@@ -158,6 +186,9 @@ services:
 
   mongodb-phaidra:
     image: mongo:5
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_PHAIDRA_USER}
@@ -171,6 +202,9 @@ services:
 
   dbgate:
     image: dbgate/dbgate:5.2.6
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     restart: always
     environment:
       CONNECTIONS: con1,con2,con3
@@ -201,6 +235,9 @@ services:
 
   fedora:
     image: fcrepo/fcrepo:6.4.0
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     restart: always
     environment:
       - CATALINA_OPTS=${CATALINA_OPTS}
@@ -215,6 +252,9 @@ services:
 
   lam:
     image: ghcr.io/ldapaccountmanager/lam:8.5
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     restart: always
     environment:
       - LDAP_DOMAIN=${LDAP_DOMAIN}
@@ -227,6 +267,9 @@ services:
 
   openldap:
     image: bitnami/openldap:2.6.6-debian-11-r59
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     environment:
       - LDAP_ADMIN_USERNAME=${LDAP_ADMIN_USERNAME}
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
@@ -241,6 +284,9 @@ services:
 
   chronos:
     image: testuser34/chronos-base:latest
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     pull_policy: always
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
@@ -290,7 +336,9 @@ services:
   grafana:
     image: grafana/grafana:10.2.2
     volumes:
-      - .././container_init/grafana/ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml
+      - .././container_init/grafana/ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
+      - .././container_init/grafana/dd.yaml:/etc/grafana/provisioning/dashboards/dd.yaml:ro
+      - ../container_init/grafana/dashboards:/mnt/grafana/dashboards:ro
       - grafana:/var/lib/grafana
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
@@ -298,6 +346,7 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=true
       - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/mnt/grafana/dashboards/phaidra_default.json
     depends_on:
       - loki
     networks:
@@ -306,6 +355,9 @@ services:
   # UNCOMMENT and fill .env values if you have access to an opencast instance
   # vige:
   #   image: testuser34/vige-base:latest
+  #   labels:
+  #     logging: "promtail"
+  #     logging_jobname: "containerlogs"
   #   pull_policy: always
   #   volumes:
   #     - .././src/vige:/mnt/vige:ro
@@ -343,7 +395,6 @@ services:
   #     - PROMTAIL_HOST_LABEL=${PROMTAIL_HOST_LABEL}
 
 volumes:
-  api_logs:
   openldap:
   fedora:
   dbgate:
