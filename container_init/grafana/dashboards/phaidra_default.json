@@ -87,7 +87,7 @@
             "uid": "phaidra_loki_default"
           },
           "editorMode": "builder",
-          "expr": "{logstream=\"stderr\"} !~ `caller=[a-z_]*.go`",
+          "expr": "{job=\"containerlogs\", logstream=\"stderr\"} !~ `caller=[a-z_]*.go`",
           "queryType": "range",
           "refId": "A"
         }
