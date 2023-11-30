@@ -219,22 +219,22 @@ sub get_job
   my %crit= %{$jq->{'in_progress'}};
   $crit{$self_ref}= $agent_name;
   my $job= $c->find_one ( \%crit );
-  print "searching in_progress job: crit: ", main::Dumper (\%crit);
+  # print "searching in_progress job: crit: ", main::Dumper (\%crit);
   return $job if (defined ($job));
 
   foreach my $st (@{$jq->{'check_states'}})
   {
     $crit{'status'}= $st;
-    print "searching $st job ('$self_ref' => '$agent_name'): crit: ", main::Dumper (\%crit);
+    # print "searching $st job ('$self_ref' => '$agent_name'): crit: ", main::Dumper (\%crit);
     my $rc= $c->update ( \%crit, { '$set' => { 'status' => 'in_progress', $self_ref => $agent_name } } );
-    print "rc=[$rc]\n";
+    # print "rc=[$rc]\n";
     $job= $c->find_one ( { 'status' => 'in_progress', $self_ref => $agent_name });
-    print "job: ", main::Dumper ($job);
+    # print "job: ", main::Dumper ($job);
 
     return $job if (defined ($job));
   }
 
-  print "no job found\n";
+  # print "no job found\n";
 
   undef;
 }

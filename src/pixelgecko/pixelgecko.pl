@@ -107,10 +107,10 @@ sub process_job_queue
             my $db = exists($config->{pixelgecko}->{mongodb}->{database}) ?
               $config->{pixelgecko}->{mongodb}->{database} :
               $config->{pixelgecko}->{mongodb}->{db_name};
-              print scalar localtime(), " ", "no new jobs found in ".
-              $config->{pixelgecko}->{mongodb}->{host}."/$db/".
-              $config->{pixelgecko}->{mongodb}->{col}.", sleeping until ",
-              scalar localtime(time()+ $sleep_time), "\n";
+              # print scalar localtime(), " ", "no new jobs found in ".
+              # $config->{pixelgecko}->{mongodb}->{host}."/$db/".
+              # $config->{pixelgecko}->{mongodb}->{col}.", sleeping until ",
+              # scalar localtime(time()+ $sleep_time), "\n";
 
             if ($activity_record{e} + 600 < time () || $activity_record{status} ne 'idle') {
               $activity_record{status}= 'idle';
