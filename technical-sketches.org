@@ -971,7 +971,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                     C_MONGODB_PHAIDRA -- C_PIXELGECKO [color="orange"];
                                                     C_OPENLDAP -- C_LAM [color="orange"];
                                                     C_DBGATE -- C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_MARIADB_FEDORA [color="orange"];
-                                                    WEBSERVER -- C_FEDORA,C_API,C_UI,C_SOLR,C_DBGATE,C_LAM [color="magenta"];
+                                                    WEBSERVER -- C_FEDORA,C_API,C_UI,C_SOLR,C_DBGATE,C_LAM, C_GRAFANA [color="magenta"];
                                                     C_CHRONOS -- C_MONGODB_PHAIDRA,C_MARIADB_PHAIDRA,C_MARIADB_FEDORA,C_SOLR,C_API [color="orange"];
                                                     C_PROMTAIL_LOCAL -- C_MONGODB_PHAIDRA,C_MARIADB_PHAIDRA,C_MARIADB_FEDORA,C_SOLR,C_API,C_UI,C_IMAGESERVER,WEBSERVER,C_OPENLDAP,C_LAM,C_DBGATE,C_CHRONOS,C_PIXELGECKO, C_FEDORA [color="black"];
                                                     C_PROMTAIL_LOCAL -- C_LOKI [color="orange"];
@@ -1464,7 +1464,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                     C_MONGODB_PHAIDRA -- C_PIXELGECKO [color="orange"];
                                                     C_OPENLDAP -- C_LAM [color="orange"];
                                                     C_DBGATE -- C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_MARIADB_FEDORA [color="orange"];
-                                                    WEBSERVER -- C_FEDORA,C_API,C_UI,C_SOLR,C_DBGATE,C_LAM [color="magenta"];
+                                                    WEBSERVER -- C_FEDORA,C_API,C_UI,C_SOLR,C_DBGATE,C_LAM, C_GRAFANA [color="magenta"];
                                                     C_CHRONOS -- C_MONGODB_PHAIDRA,C_MARIADB_PHAIDRA,C_MARIADB_FEDORA,C_SOLR,C_API [color="orange"];
                                                     C_PROMTAIL_LOCAL -- C_MONGODB_PHAIDRA,C_MARIADB_PHAIDRA,C_MARIADB_FEDORA,C_SOLR,C_API,C_UI,C_IMAGESERVER,WEBSERVER,C_OPENLDAP,C_LAM,C_DBGATE,C_CHRONOS,C_PIXELGECKO, C_FEDORA [color="black"];
                                                     C_PROMTAIL_LOCAL -- C_LOKI [color="orange"];
