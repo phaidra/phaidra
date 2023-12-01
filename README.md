@@ -50,7 +50,7 @@ computer.
 
 **NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to include your uid instead of the number 1000 (you can check with the command `id -u`) in the promtail-section of `compose_demo/docker-compose.yaml`.
 
-**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `ALLOWED_HOST` variable in `compose_demo/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.  Also, change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-section of `compose_demo/docker-compose.yaml`.
+**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `LOCAL_ADMIN_IP` variable in `compose_demo/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.  Also, change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-section of `compose_demo/docker-compose.yaml`.
 
 ###  Demo Startup
 
@@ -72,16 +72,16 @@ docker compose up -d
     `./container_init/httpd/phaidra-ssl/conf`-directory of this repo and name them
     `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).
 -   firewall with port 80 and 443 open on your computer.
--   properly set variables in `./compose_ssl/.env`.
+-   properly set variables in `./compose_ssl/.env` (`PHAIDRA_HOSTNAME`, `PHAIDRA_HOST_IP`, [`REMOTE_ADMIN_IP`]).
 
 **NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to include your uid instead of the number 1000 (you can check with the command `id -u`) in the promtail-section of `compose_ssl/docker-compose.yaml`.
 
-**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `ALLOWED_HOST` variable in `compose_ssl/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.  Also, change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-section of `compose_ssl/docker-compose.yaml`.
+**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-section of `compose_ssl/docker-compose.yaml`.  In case you are evaluating and do access your FQDN via entries in `/etc/hosts` set `LOCAL_ADMIN_IP` variable in `compose_ssl/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.
 
 ###  SSL Startup
 
 Change to the folder `./compose_ssl` and run compose. After the
-setup has finished you will PHAIDRA running on
+setup has finished, PHAIDRA will run on
 `https://$YOUR-DNS-ENTRY`.
 
 ``` example
@@ -104,11 +104,11 @@ docker compose up -d
     required key/cert-pairs with the commands below (put the
     results into the `./container_init/httpd/phaidra-shib/conf` folder of this repo -- 
     **make sure your user has read access on these files**).
--   properly set variables in `./compose_shib/.env`.
+-   properly set variables in `./compose_shib/.env` (`PHAIDRA_HOSTNAME`, `PHAIDRA_HOST_IP`, [`REMOTE_ADMIN_IP`]).
 
 **NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to include your uid instead of the number 1000 (you can check with the command `id -u`) in the promtail-section of `compose_shib/docker-compose.yaml`.
 
-**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `ALLOWED_HOST` variable in `compose_shib/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.  Also, change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-section of `compose_shib/docker-compose.yaml`.
+**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-section of `compose_ssl/docker-compose.yaml`.  In case you are evaluating and do access your FQDN via entries in `/etc/hosts` set `LOCAL_ADMIN_IP` variable in `compose_ssl/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.
 
 ``` example
 openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-encrypt-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-encrypt-cert.pem
@@ -144,20 +144,23 @@ of PHAIDRA over all containers (here from an instance started from
 docker stats<<<$(docker ps -q)
 # EXPECTED OUTPUT:
 CONTAINER ID   NAME                             CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
-46c84962b77f   phaidra-demo-httpd-1             0.07%     36.27MiB / 15.03GiB   0.24%     24.8kB / 26kB     0B / 0B           109
-697692e6879d   phaidra-demo-ui-1                0.09%     133.4MiB / 15.03GiB   0.87%     1.05kB / 0B       0B / 0B           23
-00c4dcd0e8d1   phaidra-demo-pixelgecko-1        0.00%     51.55MiB / 15.03GiB   0.33%     17.5kB / 27kB     0B / 0B           1
-b6921b6306b4   phaidra-demo-api-1               0.02%     164.7MiB / 15.03GiB   1.07%     1.16kB / 0B       0B / 0B           5
-2e363c1e67c8   phaidra-demo-fedora-1            0.29%     631.1MiB / 15.03GiB   4.10%     17.7kB / 15.2kB   0B / 86kB         62
-08725ab80a8e   phaidra-demo-dbgate-1            0.25%     98.86MiB / 15.03GiB   0.64%     80.3kB / 21kB     0B / 8.19kB       34
-c0b6202ec78a   phaidra-demo-chronos-1           0.01%     4.07MiB / 15.03GiB    0.03%     1.2kB / 0B        0B / 0B           3
-2e93c57df4f2   phaidra-demo-solr-1              1.00%     712.9MiB / 15.03GiB   4.63%     1.56kB / 0B       0B / 152kB        54
-7172f54ff33f   phaidra-demo-mariadb-fedora-1    0.02%     102.8MiB / 15.03GiB   0.67%     16.5kB / 16.5kB   0B / 8.19kB       35
-17fbe9a93f2d   phaidra-demo-mariadb-phaidra-1   0.02%     110.7MiB / 15.03GiB   0.72%     1.56kB / 0B       14.8MB / 8.19kB   16
-900f2392e903   phaidra-demo-lam-1               0.01%     22.29MiB / 15.03GiB   0.14%     1.31kB / 0B       0B / 0B           8
-6c8778ca9633   phaidra-demo-imageserver-1       0.01%     25.72MiB / 15.03GiB   0.17%     1.56kB / 0B       0B / 0B           57
-065c3de07d89   phaidra-demo-mongodb-phaidra-1   0.47%     169.4MiB / 15.03GiB   1.10%     38kB / 80.8kB     0B / 246kB        39
-d753906d815a   phaidra-demo-openldap-1          0.00%     12.37MiB / 15.03GiB   0.08%     1.56kB / 0B       0B / 0B           2
+42e431a6ddeb   phaidra-demo-httpd-1             0.01%     25.23MiB / 15.03GiB   0.16%     894B / 0B         111kB / 0B        83
+9e7000df842a   phaidra-demo-ui-1                0.00%     97.8MiB / 15.03GiB    0.64%     894B / 0B         0B / 0B           23
+717a91389e9e   phaidra-demo-pixelgecko-1        0.00%     51.62MiB / 15.03GiB   0.34%     24.5kB / 38.9kB   184kB / 0B        1
+1d2c2a6fd937   phaidra-demo-api-1               0.02%     165.5MiB / 15.03GiB   1.08%     1kB / 0B          4.63MB / 0B       6
+7c7dce899fed   phaidra-demo-promtail-local-1    0.92%     38.8MiB / 15.03GiB    0.25%     2.94kB / 30.2kB   12.3kB / 0B       12
+8f033920819b   phaidra-demo-dbgate-1            0.00%     25.16MiB / 15.03GiB   0.16%     1.23kB / 224B     823kB / 4.1kB     12
+b8510d265692   phaidra-demo-chronos-1           0.01%     4.082MiB / 15.03GiB   0.03%     1.16kB / 0B       36.9kB / 0B       3
+3bd34fd44327   phaidra-demo-fedora-1            0.42%     672.2MiB / 15.03GiB   4.37%     17.7kB / 15.2kB   676kB / 307kB     58
+021a99a54ddf   phaidra-demo-lam-1               0.01%     22.34MiB / 15.03GiB   0.15%     1.27kB / 0B       197kB / 0B        8
+8e66e703a404   phaidra-demo-grafana-1           0.06%     104.9MiB / 15.03GiB   0.68%     12.1kB / 2.45kB   1.36MB / 557kB    20
+d19b5705afe7   phaidra-demo-solr-1              0.93%     737.5MiB / 15.03GiB   4.79%     1.46kB / 0B       3.5MB / 315kB     55
+e87185fdc693   phaidra-demo-mariadb-fedora-1    0.02%     97.69MiB / 15.03GiB   0.63%     16.4kB / 16.5kB   27.2MB / 16.4kB   34
+80baf957b513   phaidra-demo-mariadb-phaidra-1   0.02%     219.4MiB / 15.03GiB   1.43%     1.46kB / 0B       16.3MB / 8.19kB   15
+897777131d8a   phaidra-demo-mongodb-phaidra-1   1.03%     171.4MiB / 15.03GiB   1.11%     40.3kB / 23.6kB   2.84MB / 401kB    31
+4dd475d76756   phaidra-demo-openldap-1          0.00%     12.57MiB / 15.03GiB   0.08%     1.46kB / 0B       639kB / 4.1kB     2
+ad659dda1440   phaidra-demo-loki-1              0.40%     46.46MiB / 15.03GiB   0.30%     31.7kB / 1.94kB   4.84MB / 360kB    27
+1cef7ed849c3   phaidra-demo-imageserver-1       0.01%     25.73MiB / 15.03GiB   0.17%     1.27kB / 0B       0B / 0B           57
 ```
 
 # Data persistance
@@ -167,7 +170,7 @@ d753906d815a   phaidra-demo-openldap-1          0.00%     12.37MiB / 15.03GiB   
 over docker restarts or whole system reboots.  These directories are the ones that need to be backupped to prevent data loss in case 
 of hardware failure.
 
-Depending on the PHAIDRA version you set up, the volumes will be prefixed differently (`phaidra-demo_*`, `phaidra-ssl`, `phaidra-shib`).
+Depending on the PHAIDRA version you set up, the volumes will be prefixed differently (`phaidra-demo`, `phaidra-ssl`, `phaidra-shib`).
 
 See the section [Graphical System overview](#graphical-system-overview) for how these directories are connected to the containers.
 
@@ -183,22 +186,24 @@ In case you have an instance running, make sure to shut it down using the follow
 # COMMAND:
 docker compose down
 # EXPECTED OUTPUT:
-
-[+] Running 15/15
- ✔ Container phaidra-demo-dbgate-1           Removed                                                                                                                                                         10.7s 
+[+] Running 18/18
  ✔ Container phaidra-demo-pixelgecko-1       Removed                                                                                                                                                         10.5s 
- ✔ Container phaidra-demo-openldap-1         Removed                                                                                                                                                          0.2s 
- ✔ Container phaidra-demo-solr-1             Removed                                                                                                                                                          0.6s 
+ ✔ Container phaidra-demo-promtail-local-1   Removed                                                                                                                                                          0.2s 
  ✔ Container phaidra-demo-lam-1              Removed                                                                                                                                                          0.3s 
- ✔ Container phaidra-demo-chronos-1          Removed                                                                                                                                                         10.6s 
+ ✔ Container phaidra-demo-httpd-1            Removed                                                                                                                                                         10.4s 
  ✔ Container phaidra-demo-imageserver-1      Removed                                                                                                                                                         10.4s 
- ✔ Container phaidra-demo-httpd-1            Removed                                                                                                                                                         10.7s 
+ ✔ Container phaidra-demo-chronos-1          Removed                                                                                                                                                         10.3s 
+ ✔ Container phaidra-demo-openldap-1         Removed                                                                                                                                                          0.2s 
+ ✔ Container phaidra-demo-grafana-1          Removed                                                                                                                                                          0.2s 
+ ✔ Container phaidra-demo-solr-1             Removed                                                                                                                                                          0.7s 
+ ✔ Container phaidra-demo-dbgate-1           Removed                                                                                                                                                         10.2s 
  ✔ Container phaidra-demo-ui-1               Removed                                                                                                                                                          0.7s 
- ✔ Container phaidra-demo-api-1              Removed                                                                                                                                                          0.2s 
- ✔ Container phaidra-demo-mongodb-phaidra-1  Removed                                                                                                                                                          0.2s 
- ✔ Container phaidra-demo-fedora-1           Removed                                                                                                                                                          0.3s 
+ ✔ Container phaidra-demo-loki-1             Removed                                                                                                                                                          1.9s 
+ ✔ Container phaidra-demo-api-1              Removed                                                                                                                                                         10.2s 
  ✔ Container phaidra-demo-mariadb-phaidra-1  Removed                                                                                                                                                          0.4s 
- ✔ Container phaidra-demo-mariadb-fedora-1   Removed                                                                                                                                                          0.5s 
+ ✔ Container phaidra-demo-fedora-1           Removed                                                                                                                                                          0.4s 
+ ✔ Container phaidra-demo-mongodb-phaidra-1  Removed                                                                                                                                                          0.3s 
+ ✔ Container phaidra-demo-mariadb-fedora-1   Removed                                                                                                                                                          0.4s 
  ✔ Network phaidra-demo_phaidra-network      Removed
 ```
 
@@ -209,19 +214,22 @@ The following command will remove the volumes (aka directories under `$HOME/.loc
 # COMMAND:
 docker volume rm $(docker volume ls --filter label=com.docker.compose.project=phaidra-demo --quiet)
 # EXPECTED OUTPUT:
-
-phaidra-demo_api_logs
 phaidra-demo_chronos-database-dumps
 phaidra-demo_chronos-oai-logs
 phaidra-demo_chronos-sitemaps
 phaidra-demo_dbgate
 phaidra-demo_fedora
+phaidra-demo_grafana
+phaidra-demo_grafana-dashboards
+phaidra-demo_loki
 phaidra-demo_mariadb_fedora
 phaidra-demo_mariadb_phaidra
 phaidra-demo_mongodb_phaidra
 phaidra-demo_openldap
 phaidra-demo_pixelgecko
 phaidra-demo_solr
+phaidra-demo_vige
+phaidra-demo_vige-mongosh
 ```
 
 ## Remove docker images built by compose
@@ -319,12 +327,17 @@ System when running `docker compose up -d` from directory
 ├── compose_shib
 ├── compose_ssl
 ├── container_init
+│   ├── api
 │   ├── chronos
+│   ├── grafana
 │   ├── httpd
+│   ├── loki
 │   ├── mariadb
 │   ├── mongodb
 │   ├── openldap
-│   └── solr
+│   ├── promtail
+│   ├── solr
+│   └── vige
 ├── dockerfiles
 ├── docs
 ├── pictures
@@ -332,10 +345,11 @@ System when running `docker compose up -d` from directory
 │   ├── phaidra-api
 │   ├── phaidra-ui
 │   ├── phaidra-vue-components
-│   └── pixelgecko
+│   ├── pixelgecko
+│   └── vige
 └── third-parties
 
-20 directories
+26 directories
 ```
 
 ## Phaidra Components

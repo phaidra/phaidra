@@ -35,7 +35,9 @@ services:
       - phaidra-network
     environment:
       - PHAIDRA_HOSTNAME=${PHAIDRA_HOSTNAME}
-      - PRIVILEGED_IP=${ALLOWED_HOST}
+      - PHAIDRA_HOST_IP=${PHAIDRA_HOST_IP}
+      - LOCAL_ADMIN_IP=${LOCAL_ADMIN_IP}
+      - REMOTE_ADMIN_IP=${REMOTE_ADMIN_IP}
       - SHIB_MAIL=${SHIB_MAIL}
       - SHIB_GIVEN_NAME=${SHIB_GIVEN_NAME}
       - SHIB_SURNAME=${SHIB_SURNAME}
