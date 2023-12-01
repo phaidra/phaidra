@@ -302,20 +302,22 @@ Total reclaimed space: 733.3MB
 ## Graphical System Overview
 ###  PHAIDRA Demo
 System when running `docker compose up -d` from directory
-`./compose_demo` (Phaidra available on `http://localhost:8899`.).
+`./compose_demo` (Phaidra available on `http://localhost:8899`, see
+section [Demo specific prerequisites](#demo-specific-prerequisites)).
 
 ![](./pictures/construction_demo.svg)
 
 ###  PHAIDRA SSL
 System when running `docker compose up -d` from directory
 `./compose_ssl` (Phaidra available on `https://$YOUR_FQDN`, see
-section 'System startup' below for prerequisites).
+section [SSL specific prerequisites](#ssl-specific-prerequisites)).
 
 ![](./pictures/construction_ssl.svg)
 
 ###  PHAIDRA Shibboleth
 System when running `docker compose up -d` from directory
-`./compose_shib` (Phaidra available on `http://localhost:8899`.).
+`./compose_shib` (Phaidra available on `https://$YOUR_FQDN`, see
+section [Shibboleth specific prerequisites](#shibboleth-specific-prerequisites)).
 
 ![](./pictures/construction_shib.svg)
 
