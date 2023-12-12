@@ -1,4 +1,6 @@
 *~
-
+compose_demo/.env
+compose_ssl/.env
+compose_shib/.env
 components/phaidra-ui/.nuxt/
 components/phaidra-ui/node_modules/
