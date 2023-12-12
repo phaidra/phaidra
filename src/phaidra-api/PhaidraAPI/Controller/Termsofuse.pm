@@ -18,10 +18,12 @@ sub get {
     $self->render(json => {alerts => [{type => 'error', msg => 'Error getting terms of use, invalid language'}]}, status => 500);
     return;
   }
-
-  my $ss  = "SELECT terms, added, version FROM terms_of_use WHERE isocode = '$lang' ORDER BY version DESC;";
-  my $sth = $self->app->db_metadata->dbh->prepare($ss) or $self->app->log->error($self->app->db_metadata->dbh->errstr);
-  $sth->execute() or $self->app->log->error($self->app->db_metadata->dbh->errstr);
+my $ss;
+my $sth;
+  #my $ss  = "SELECT terms, added, version FROM terms_of_use WHERE isocode = '$lang' ORDER BY version DESC;";
+  #my $sth = $self->app->db_metadata->dbh->prepare($ss) or $self->app->log->error($self->app->db_metadata->dbh->errstr);
+  #$sth->execute() or $self->app->log->error($self->app->db_metadata->dbh->errstr);
+  $self->app->db_metadata->dbh->do("SET NAMES 'utf8'; SELECT terms, added, version FROM terms_of_use WHERE isocode = '$lang' ORDER BY version DESC;");
   my ($terms, $added, $version);
   $sth->bind_columns(undef, \$terms, \$added, \$version) or $self->app->log->error($self->app->db_metadata->dbh->errstr);
   $sth->fetch();

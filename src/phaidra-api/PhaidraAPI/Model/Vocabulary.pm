@@ -15,6 +15,10 @@ sub get_vocabulary {
     return $self->_get_oefos_vocabulary($c, $nocache);
   }
 
+  if ($uri eq 'thema') {
+    return $self->_get_thema_vocabulary($c, $nocache);
+  }
+
   my %vocab_router = ('http://id.loc.gov/vocabulary/iso639-2' => 'file://' . $c->app->config->{vocabulary_folder} . '/iso639-2.json');
 
   my $url = $vocab_router{$uri} || $uri;
@@ -96,6 +100,44 @@ sub _get_server_vocabulary {
   # TODO! - sparql to provided url
 }
 
+sub _get_thema_vocabulary {
+  my ($self, $c, $nocache) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  my $fileVoc = $self->_get_file_vocabulary($c, $c->app->config->{vocabulary_folder} . '/20230707_Thema_v1.5_en.json', $nocache);
+  my $themaEn = $fileVoc->{vocabulary};
+
+  my $json;
+  my $termsHash = {};
+
+  # CodeValue: "A",
+  # CodeDescription: "The Arts",
+  # CodeNotes: "Use all A* codes for: specialist and general adult titles, including both highly illustrated and more text-based works. For a hobby or recreational approach, prefer a WF* code as the main subject and supplement with A* code(s) where appropriate. Use all A* codes with: other subject categories and qualifiers as appropriate, in particular STYLE 6*, plus PLACE 1* and TIME PERIOD 3* Qualifiers",
+  # CodeParent: "",
+  # IssueNumber: 1,
+  # Modified: 1.4
+  for my $codeNode (@{$themaEn->{CodeList}->{ThemaCodes}->{Code}}) {
+    #$c->app->log->debug("code[".$codeNode->{CodeValue}."] title[".$codeNode->{CodeDescription}."]");
+    if ($codeNode->{CodeParent} eq "") {
+      push @$json, $self->_get_eng_term($c, $termsHash, 'thema', $codeNode->{CodeValue}, $codeNode->{CodeDescription}, $codeNode->{CodeNotes});
+    } else {
+      push @{$termsHash->{$codeNode->{CodeParent}}->{children}}, $self->_get_eng_term($c, $termsHash, 'thema', $codeNode->{CodeValue}, $codeNode->{CodeDescription}, $codeNode->{CodeNotes});
+    }
+  }
+
+  $fileVoc = $self->_get_file_vocabulary($c, $c->app->config->{vocabulary_folder} . '/20231031_Thema_v1.5_de.json', $nocache);
+  my $themaDe = $fileVoc->{vocabulary};
+  for my $codeNode (@{$themaDe->{CodeList}->{ThemaCodes}->{Code}}) {
+    # $c->app->log->debug("code[".$codeNode->{CodeValue}."] title[".$codeNode->{CodeDescription}."]");
+    $termsHash->{$codeNode->{CodeValue}}->{'skos:prefLabel'}->{'deu'} = $codeNode->{CodeDescription};
+    $termsHash->{$codeNode->{CodeValue}}->{'skos:definition'}->{'deu'} = $codeNode->{CodeNotes};
+  }
+
+  $res->{vocabulary} = $json;
+  return $res;
+}
+
 sub _get_oefos_vocabulary {
   my ($self, $c, $nocache) = @_;
 
@@ -164,19 +206,19 @@ sub _get_oefos_vocabulary_hash {
     #$c->app->log->debug("level[$level] code[$code] title[$title]");
 
     if ($level == 1) {
-      push @$json, $self->_get_oefos_term($c, $termsHash, $code, $title);
+      push @$json, $self->_get_eng_term($c, $termsHash, 'oefos2012', $code, $title);
     }
     if ($level == 2) {
       my $parent = substr($code, 0, 1);
-      push @{$termsHash->{$parent}->{children}}, $self->_get_oefos_term($c, $termsHash, $code, $title);
+      push @{$termsHash->{$parent}->{children}}, $self->_get_eng_term($c, $termsHash, 'oefos2012', $code, $title);
     }
     if ($level == 3) {
       my $parent = substr($code, 0, 3);
-      push @{$termsHash->{$parent}->{children}}, $self->_get_oefos_term($c, $termsHash, $code, $title);
+      push @{$termsHash->{$parent}->{children}}, $self->_get_eng_term($c, $termsHash, 'oefos2012', $code, $title);
     }
     if ($level == 4) {
       my $parent = substr($code, 0, 4);
-      push @{$termsHash->{$parent}->{children}}, $self->_get_oefos_term($c, $termsHash, $code, $title);
+      push @{$termsHash->{$parent}->{children}}, $self->_get_eng_term($c, $termsHash, 'oefos2012', $code, $title);
     }
   }
 
@@ -202,15 +244,16 @@ sub _get_oefos_vocabulary_hash {
   return $json;
 }
 
-sub _get_oefos_term {
-  my ($self, $c, $termsHash, $code, $title) = @_;
+sub _get_eng_term {
+  my ($self, $c, $termsHash, $ns, $code, $title, $def) = @_;
   my $n = {
-    '@id'            => "oefos2012:$code",
+    '@id'            => "$ns:$code",
     'skos:notation'  => [],
     'skos:prefLabel' => {'eng' => $title},
     'children'       => []
   };
   push @{$n->{'skos:notation'}}, $code;
+  $n->{'skos:definition'} = { 'eng' => $def } if $def;
   $termsHash->{$code} = $n;
   return $n;
 }
