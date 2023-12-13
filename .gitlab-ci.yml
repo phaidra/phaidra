@@ -19,7 +19,6 @@ build-api:
   script: >
     docker context create builder-context &&
     docker buildx create builder-context --name container --driver=docker-container
-    --platform=linux/amd64,linux/arm64 &&
     docker buildx build -f dockerfiles/api.dockerfile
     --builder=container
     --platform=linux/amd64,linux/arm64
