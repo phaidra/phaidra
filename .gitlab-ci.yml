@@ -19,7 +19,6 @@ build-api:
   script: >
     docker buildx build -f dockerfiles/api.dockerfile
     --platform=linux/amd64,linux/arm64
-    --builder=container
     -t $CI_REGISTRY_USER/api-base:latest
     -t $CI_REGISTRY_USER/api-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/api-base
