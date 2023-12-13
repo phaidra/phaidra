@@ -2,7 +2,7 @@ apiVersion: 1
 
 providers:
   - name: Default # A uniquely identifiable name for the provider
-    folder: Phaidra # The folder where to place the dashboards
+    folder: Presets # The folder where to place the dashboards
     type: file
     options:
       path:

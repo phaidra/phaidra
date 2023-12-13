@@ -354,6 +354,31 @@ services:
     networks:
       - phaidra-network
 
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    volumes:
+      - ../container_init/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
+      - prometheus:/prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - phaidra-network
+
+  node-exporter:
+    image: prom/node-exporter:v1.7.0
+    networks:
+      - phaidra-network
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    networks:
+      - phaidra-network
+    volumes:
+      - /:/rootfs:ro
+      - /sys:/sys:ro
+      - /run/user/1000/docker.sock:/var/run/docker.sock
+      - /home/daniel/.local/share/docker/:/var/lib/docker:ro
+
   # UNCOMMENT and fill .env values if you have access to an opencast instance
   # vige:
   #   image: testuser34/vige-base:latest
@@ -412,3 +437,4 @@ volumes:
   vige-mongosh:
   loki:
   grafana:
+  prometheus:

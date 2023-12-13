@@ -8,3 +8,9 @@ datasources:
     editable: false
     isDefault: true
     uid: phaidra_loki_default
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    editable: false
+    uid: phaidra_prometheus
