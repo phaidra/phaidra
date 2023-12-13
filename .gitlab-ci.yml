@@ -43,11 +43,11 @@ build-chronos:
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/chronos-base:latest
     -t $CI_REGISTRY_USER/chronos-base:$CI_COMMIT_SHORT_SHA --push .
-  # rules:
-  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-  #     changes:
-  #       paths:
-  #         - dockerfiles/chronos.dockerfile
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/chronos.dockerfile
 
 build-httpd:
   stage: build
@@ -62,11 +62,11 @@ build-httpd:
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/httpd-base:latest
     -t $CI_REGISTRY_USER/httpd-base:$CI_COMMIT_SHORT_SHA --push .
-  # rules:
-  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-  #     changes:
-  #       paths:
-  #         - dockerfiles/httpd.dockerfile
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/httpd.dockerfile
 
 build-httpd-shib:
   stage: build
@@ -81,11 +81,11 @@ build-httpd-shib:
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/httpd-base-shib:latest
     -t $CI_REGISTRY_USER/httpd-base-shib:$CI_COMMIT_SHORT_SHA --push .
-  # rules:
-  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-  #     changes:
-  #       paths:
-  #         - dockerfiles/httpd-shib.dockerfile
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/httpd-shib.dockerfile
 
 build-imageserver:
   stage: build
@@ -100,11 +100,11 @@ build-imageserver:
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/imageserver-base:latest
     -t $CI_REGISTRY_USER/imageserver-base:$CI_COMMIT_SHORT_SHA --push .
-  # rules:
-  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-  #     changes:
-  #       paths:
-  #         - dockerfiles/imageserver.dockerfile
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/imageserver.dockerfile
 
 build-pixelgecko:
   stage: build
@@ -119,11 +119,11 @@ build-pixelgecko:
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/pixelgecko-base:latest
     -t $CI_REGISTRY_USER/pixelgecko-base:$CI_COMMIT_SHORT_SHA --push .
-  # rules:
-  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-  #     changes:
-  #       paths:
-  #         - dockerfiles/pixelgecko.dockerfile
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/pixelgecko.dockerfile
 
 build-vige:
   stage: build
@@ -138,11 +138,11 @@ build-vige:
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/vige-base:latest
     -t $CI_REGISTRY_USER/vige-base:$CI_COMMIT_SHORT_SHA .
-  # rules:
-  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-  #     changes:
-  #       paths:
-  #         - dockerfiles/vige.dockerfile
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/vige.dockerfile
 
 compose-demo:
   stage: test
