@@ -18,8 +18,8 @@ build-api:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
     docker build -f dockerfiles/api.dockerfile
-    --platform linux/amd64,linux/arm64
-    --builder container
+    --platform=linux/amd64,linux/arm64
+    --builder=container
     -t $CI_REGISTRY_USER/api-base:latest
     -t $CI_REGISTRY_USER/api-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/api-base
@@ -36,8 +36,8 @@ build-chronos:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
     docker build -f dockerfiles/chronos.dockerfile
-    --platform linux/amd64,linux/arm64
-    --builder container
+    --platform=linux/amd64,linux/arm64
+    --builder=container
     -t $CI_REGISTRY_USER/chronos-base:latest
     -t $CI_REGISTRY_USER/chronos-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/chronos-base
@@ -54,8 +54,8 @@ build-httpd:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
     docker build -f dockerfiles/httpd.dockerfile
-    --platform linux/amd64,linux/arm64
-    --builder container
+    --platform=linux/amd64,linux/arm64
+    --builder=container
     -t $CI_REGISTRY_USER/httpd-base:latest
     -t $CI_REGISTRY_USER/httpd-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/httpd-base
@@ -72,8 +72,8 @@ build-httpd-shib:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
     docker build -f dockerfiles/httpd-shib.dockerfile
-    --platform linux/amd64,linux/arm64
-    --builder container
+    --platform=linux/amd64,linux/arm64
+    --builder=container
     -t $CI_REGISTRY_USER/httpd-base-shib:latest
     -t $CI_REGISTRY_USER/httpd-base-shib:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/httpd-base-shib
@@ -90,8 +90,8 @@ build-imageserver:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
     docker build -f dockerfiles/imageserver.dockerfile
-    --platform linux/amd64,linux/arm64
-    --builder container
+    --platform=linux/amd64,linux/arm64
+    --builder=container
     -t $CI_REGISTRY_USER/imageserver-base:latest
     -t $CI_REGISTRY_USER/imageserver-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/imageserver-base
@@ -108,8 +108,8 @@ build-pixelgecko:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
     docker build -f dockerfiles/pixelgecko.dockerfile
-    --platform linux/amd64,linux/arm64
-    --builder container
+    --platform=linux/amd64,linux/arm64
+    --builder=container
     -t $CI_REGISTRY_USER/pixelgecko-base:latest
     -t $CI_REGISTRY_USER/pixelgecko-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/pixelgecko-base
@@ -126,8 +126,8 @@ build-vige:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
     docker build -f dockerfiles/vige.dockerfile
-    --platform linux/amd64,linux/arm64
-    --builder container
+    --platform=linux/amd64,linux/arm64
+    --builder=container
     -t $CI_REGISTRY_USER/vige-base:latest
     -t $CI_REGISTRY_USER/vige-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/vige-base
