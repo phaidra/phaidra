@@ -60,6 +60,7 @@ your browser.  See the screenshot below for what you can expect.
 
 ``` example
 cd compose_demo
+cp ../.env.template .env
 docker compose up -d
 ```
 
@@ -86,6 +87,8 @@ setup has finished, PHAIDRA will run on
 
 ``` example
 cd compose_ssl
+cp ../.env.template .env
+# set proper values in '.env'
 docker compose up -d
 ```
 
@@ -123,6 +126,8 @@ setup has finished you will have PHAIDRA running on
 
 ``` example
 cd compose_shib
+cp ../.env.template .env
+# set proper values in '.env'
 docker compose up -d
 ```
 
@@ -141,7 +146,7 @@ of PHAIDRA over all containers (here from an instance started from
 
 ``` example
 # COMMAND:
-docker stats<<<$(docker ps -q)
+docker stats
 # EXPECTED OUTPUT:
 CONTAINER ID   NAME                             CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
 42e431a6ddeb   phaidra-demo-httpd-1             0.01%     25.23MiB / 15.03GiB   0.16%     894B / 0B         111kB / 0B        83
@@ -607,3 +612,26 @@ systemctl --user restart docker
     ```
     echo "br_netfilter" | sudo tee -a /etc/modules-load.d/br_netfilter.conf
     ```
+8. configure prometheus monitorability
+   
+   To activate the docker metrics endpoint, create the file `~/.config/docker/daemon.json` and add the following:
+   
+   ```
+   {
+     "metrics-addr": "0.0.0.0:9323"
+   }
+   ```
+   
+   Also, add the following line to `~/.config/systemd/user/docker.service.d/override.conf`:
+   
+   ```
+   Environment=DOCKERD_ROOTLESS_ROOTLESSKIT_FLAGS="-p 0.0.0.0:9323:9323/tcp"
+   ```
+   
+   Then, run the following, to apply the changes:
+   
+   ```
+   systemctl --user daemon-reload
+   systemctl --user restart docker.service
+   ```
+
