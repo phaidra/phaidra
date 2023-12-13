@@ -17,7 +17,8 @@ build-api:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
-    docker buildx create --name container --driver=docker-container &&
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/api.dockerfile
     --builder=container
     --platform=linux/amd64,linux/arm64
