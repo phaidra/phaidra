@@ -48,9 +48,9 @@ See the sections below for version-specific instructions.
 None, just make sure no other service is using port 8899 on your
 computer.
 
-**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to include your uid instead of the number 1000 (you can check with the command `id -u`) in the promtail-section of `compose_demo/docker-compose.yaml`.
+**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to include your uid instead of the number 1000 (you can check with the command `id -u`) in the promtail-, and cadvisor-sections of `compose_demo/docker-compose.yaml`.
 
-**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `LOCAL_ADMIN_IP` variable in `compose_demo/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.  Also, change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-section of `compose_demo/docker-compose.yaml`.
+**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `LOCAL_ADMIN_IP` variable in `compose_demo/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.  Also, change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-, and cadvisor-sections of `compose_demo/docker-compose.yaml`.
 
 ###  Demo Startup
 
@@ -75,9 +75,9 @@ docker compose up -d
 -   firewall with port 80 and 443 open on your computer.
 -   properly set variables in `./compose_ssl/.env` (`PHAIDRA_HOSTNAME`, `PHAIDRA_HOST_IP`, [`REMOTE_ADMIN_IP`]).
 
-**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to include your uid instead of the number 1000 (you can check with the command `id -u`) in the promtail-section of `compose_ssl/docker-compose.yaml`.
+**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to include your uid instead of the number 1000 (you can check with the command `id -u`) in the promtail-, and cadvisor-sections of `compose_ssl/docker-compose.yaml`.
 
-**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-section of `compose_ssl/docker-compose.yaml`.  In case you are evaluating and do access your FQDN via entries in `/etc/hosts` set `LOCAL_ADMIN_IP` variable in `compose_ssl/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.
+**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-, and cadvisor-sections of `compose_ssl/docker-compose.yaml`.  In case you are evaluating and do access your FQDN via entries in `/etc/hosts` set `LOCAL_ADMIN_IP` variable in `compose_ssl/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.
 
 ###  SSL Startup
 
@@ -109,9 +109,9 @@ docker compose up -d
     **make sure your user has read access on these files**).
 -   properly set variables in `./compose_shib/.env` (`PHAIDRA_HOSTNAME`, `PHAIDRA_HOST_IP`, [`REMOTE_ADMIN_IP`]).
 
-**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to include your uid instead of the number 1000 (you can check with the command `id -u`) in the promtail-section of `compose_shib/docker-compose.yaml`.
+**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to include your uid instead of the number 1000 (you can check with the command `id -u`) in the promtail-, and cadvisor-sections of `compose_shib/docker-compose.yaml`.
 
-**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-section of `compose_ssl/docker-compose.yaml`.  In case you are evaluating and do access your FQDN via entries in `/etc/hosts` set `LOCAL_ADMIN_IP` variable in `compose_ssl/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.
+**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-, and cadvisor-sections of `compose_ssl/docker-compose.yaml`.  In case you are evaluating and do access your FQDN via entries in `/etc/hosts` set `LOCAL_ADMIN_IP` variable in `compose_ssl/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.
 
 ``` example
 openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-encrypt-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-encrypt-cert.pem
