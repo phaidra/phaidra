@@ -18,14 +18,15 @@ build-api:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
     docker build -f dockerfiles/api.dockerfile
+    --platform linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/api-base:latest
     -t $CI_REGISTRY_USER/api-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/api-base
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
-        paths:
-          - dockerfiles/api.dockerfile
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+  #     changes:
+  #       paths:
+  #         - dockerfiles/api.dockerfile
 
 build-chronos:
   stage: build
@@ -34,14 +35,15 @@ build-chronos:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
     docker build -f dockerfiles/chronos.dockerfile
+    --platform linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/chronos-base:latest
     -t $CI_REGISTRY_USER/chronos-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/chronos-base
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
-        paths:
-          - dockerfiles/chronos.dockerfile
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+  #     changes:
+  #       paths:
+  #         - dockerfiles/chronos.dockerfile
 
 build-httpd:
   stage: build
@@ -50,14 +52,15 @@ build-httpd:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
     docker build -f dockerfiles/httpd.dockerfile
+    --platform linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/httpd-base:latest
     -t $CI_REGISTRY_USER/httpd-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/httpd-base
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
-        paths:
-          - dockerfiles/httpd.dockerfile
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+  #     changes:
+  #       paths:
+  #         - dockerfiles/httpd.dockerfile
 
 build-httpd-shib:
   stage: build
@@ -66,14 +69,15 @@ build-httpd-shib:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
     docker build -f dockerfiles/httpd-shib.dockerfile
+    --platform linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/httpd-base-shib:latest
     -t $CI_REGISTRY_USER/httpd-base-shib:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/httpd-base-shib
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
-        paths:
-          - dockerfiles/httpd-shib.dockerfile
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+  #     changes:
+  #       paths:
+  #         - dockerfiles/httpd-shib.dockerfile
 
 build-imageserver:
   stage: build
@@ -82,14 +86,15 @@ build-imageserver:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
     docker build -f dockerfiles/imageserver.dockerfile
+    --platform linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/imageserver-base:latest
     -t $CI_REGISTRY_USER/imageserver-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/imageserver-base
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
-        paths:
-          - dockerfiles/imageserver.dockerfile
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+  #     changes:
+  #       paths:
+  #         - dockerfiles/imageserver.dockerfile
 
 build-pixelgecko:
   stage: build
@@ -98,14 +103,15 @@ build-pixelgecko:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
     docker build -f dockerfiles/pixelgecko.dockerfile
+    --platform linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/pixelgecko-base:latest
     -t $CI_REGISTRY_USER/pixelgecko-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/pixelgecko-base
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
-        paths:
-          - dockerfiles/pixelgecko.dockerfile
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+  #     changes:
+  #       paths:
+  #         - dockerfiles/pixelgecko.dockerfile
 
 build-vige:
   stage: build
@@ -114,14 +120,15 @@ build-vige:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
     docker build -f dockerfiles/vige.dockerfile
+    --platform linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/vige-base:latest
     -t $CI_REGISTRY_USER/vige-base:$CI_COMMIT_SHORT_SHA . &&
     docker push --all-tags $CI_REGISTRY_USER/vige-base
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
-        paths:
-          - dockerfiles/vige.dockerfile
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+  #     changes:
+  #       paths:
+  #         - dockerfiles/vige.dockerfile
 
 compose-demo:
   stage: test
