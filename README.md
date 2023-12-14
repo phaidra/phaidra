@@ -48,19 +48,20 @@ See the sections below for version-specific instructions.
 None, just make sure no other service is using port 8899 on your
 computer.
 
-**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to include your uid instead of the number 1000 (you can check with the command `id -u`) in the promtail-, and cadvisor-sections of `compose_demo/docker-compose.yaml`.
-
-**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), set the `LOCAL_ADMIN_IP` variable in `compose_demo/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.  Also, change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-, and cadvisor-sections of `compose_demo/docker-compose.yaml`.
-
 ###  Demo Startup
 
 After the following commands have finished, you will have a PHAIDRA
 instance running on `http://localhost:8899`, that you can visit in
 your browser.  See the screenshot below for what you can expect.
 
+**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the environment variable `HOST_DOCKER_SOCKET` in the `.env` file to contain your actual (you can check with the command `id -u`).
+
+**NOTE for users running priviledged Docker:** if running rootful  Docker, please change the environment variable `LOCAL_ADMIN_IP` in the `.env` file to "172.29.5.1" and `HOST_DOCKER_SOCKET` to `/var/run/docker.sock`.
+
 ``` example
 cd compose_demo
 cp ../.env.template .env
+# adjust variables HOST_DOCKER_SOCKET and/or LOCAL_ADMIN_IP in .env, if uid !=1000 or on rootful Docker.
 docker compose up -d
 ```
 
