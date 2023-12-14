@@ -63,7 +63,7 @@ docker compose up -d
 
 **NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the environment variable `HOST_DOCKER_SOCKET` in the `.env` file to contain your actual (you can check with the command `id -u`).
 
-**NOTE for users running priviledged Docker:** if running rootful  Docker, please change the environment variable `LOCAL_ADMIN_IP` in the `.env` file to "172.29.5.1" and `HOST_DOCKER_SOCKET` to `/var/run/docker.sock`.
+**NOTE for users running priviledged Docker:** if running rootful  Docker, please change the environment variable `LOCAL_ADMIN_IP` in the `.env` file to "172.29.5.1" (Linux and Win11 Docker Desktop based on WSL), or "192.168.65.1" (Docker Desktop on OSX) and `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` (all of the mentioned ones).
 
 
 ## SSL Version
