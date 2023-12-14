@@ -77,10 +77,6 @@ docker compose up -d
 -   firewall with port 80 and 443 open on your computer.
 -   properly set variables in `./compose_ssl/.env` (`PHAIDRA_HOSTNAME`, `PHAIDRA_HOST_IP`, [`REMOTE_ADMIN_IP`]).
 
-**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to include your uid instead of the number 1000 (you can check with the command `id -u`) in the promtail-, and cadvisor-sections of `compose_ssl/docker-compose.yaml`.
-
-**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-, and cadvisor-sections of `compose_ssl/docker-compose.yaml`.  In case you are evaluating and do access your FQDN via entries in `/etc/hosts` set `LOCAL_ADMIN_IP` variable in `compose_ssl/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.
-
 ###  SSL Startup
 
 Change to the folder `./compose_ssl` and run compose. After the
@@ -90,9 +86,14 @@ setup has finished, PHAIDRA will run on
 ``` example
 cd compose_ssl
 cp ../.env.template .env
+# adjust variables  in .env if uid !=1000 or on rootful Docker -- see notes below.
 # set proper values in '.env'
 docker compose up -d
 ```
+
+**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the environment variable `HOST_DOCKER_SOCKET` in the `.env` file to contain your actual (you can check with the command `id -u`).
+
+**NOTE for users running priviledged Docker:** if running rootful  Docker, please change the environment variable `LOCAL_ADMIN_IP` in the `.env` file to "172.29.5.1" (Linux and Win11 Docker Desktop based on WSL), or "192.168.65.1" (Docker Desktop on OSX) and `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` (all of the mentioned ones).
 
 
 ## Shibboleth SSO Version
@@ -111,10 +112,6 @@ docker compose up -d
     **make sure your user has read access on these files**).
 -   properly set variables in `./compose_shib/.env` (`PHAIDRA_HOSTNAME`, `PHAIDRA_HOST_IP`, [`REMOTE_ADMIN_IP`]).
 
-**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to include your uid instead of the number 1000 (you can check with the command `id -u`) in the promtail-, and cadvisor-sections of `compose_shib/docker-compose.yaml`.
-
-**NOTE for users running priviledged Docker:** if running on rootful  Docker (eg Docker Desktop on Win 11 or Docker on OSX), change the line `- /run/user/1000/docker.sock:/var/run/docker.sock` to `- /var/run/docker.sock:/var/run/docker.sock` in the promtail-, and cadvisor-sections of `compose_ssl/docker-compose.yaml`.  In case you are evaluating and do access your FQDN via entries in `/etc/hosts` set `LOCAL_ADMIN_IP` variable in `compose_ssl/.env` to "172.29.5.1" (the docker internal gateway address).  The default value is set up for rootless docker, and you will not have access to restricted places like user-management, database inspection, grafana dashboard, etc otherwise.
-
 ``` example
 openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-encrypt-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-encrypt-cert.pem
 openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-signing-cert.pem
@@ -129,9 +126,13 @@ setup has finished you will have PHAIDRA running on
 ``` example
 cd compose_shib
 cp ../.env.template .env
+# adjust variables  in .env if uid !=1000 or on rootful Docker -- see notes below.
 # set proper values in '.env'
 docker compose up -d
 ```
+**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the environment variable `HOST_DOCKER_SOCKET` in the `.env` file to contain your actual (you can check with the command `id -u`).
+
+**NOTE for users running priviledged Docker:** if running rootful  Docker, please change the environment variable `LOCAL_ADMIN_IP` in the `.env` file to "172.29.5.1" (Linux and Win11 Docker Desktop based on WSL), or "192.168.65.1" (Docker Desktop on OSX) and `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` (all of the mentioned ones).
 
 # Default credentials
 - There are three default users built in for testing purposes `pone`, `ptwo`, and `barchiver`.  They all share the same password '1234'. You'd likely want to delete these users, or at least change the default passwords after evaluating:
