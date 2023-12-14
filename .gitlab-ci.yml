@@ -151,15 +151,16 @@ compose-demo:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script:
     - cd compose_demo
+    - cp ../.env.template .env
     - docker compose up -d --quiet-pull --build
     - docker compose down
-  rules:
-    - changes:
-        paths:
-          - compose_demo/docker-compose.yaml
-          - compose_demo/.env
-          - components/phaidra-ui/**/*
-          - container_components/solr/**/*
+  # rules:
+  #   - changes:
+  #       paths:
+  #         - compose_demo/docker-compose.yaml
+  #         - compose_demo/.env
+  #         - components/phaidra-ui/**/*
+  #         - container_components/solr/**/*
 
 compose-ssl:
   stage: test
@@ -168,15 +169,16 @@ compose-ssl:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script:
     - cd compose_ssl
+    - cp ../.env.template .env
     - docker compose up -d --quiet-pull --build
     - docker compose down
-  rules:
-    - changes:
-        paths:
-          - compose_ssl/docker-compose.yaml
-          - compose_ssl/.env
-          - components/phaidra-ui/**/*
-          - container_components/solr/**/*
+  # rules:
+  #   - changes:
+  #       paths:
+  #         - compose_ssl/docker-compose.yaml
+  #         - compose_ssl/.env
+  #         - components/phaidra-ui/**/*
+  #         - container_components/solr/**/*
 
 compose-shib:
   stage: test
@@ -185,15 +187,16 @@ compose-shib:
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script:
     - cd compose_shib
+    - cp ../.env.template .env
     - docker compose up -d --quiet-pull --build
     - docker compose down
-  rules:
-    - changes:
-        paths:
-          - compose_shib/docker-compose.yaml
-          - compose_shib/.env
-          - components/phaidra-ui/**/*
-          - container_components/solr/**/*
+  # rules:
+  #   - changes:
+  #       paths:
+  #         - compose_shib/docker-compose.yaml
+  #         - compose_shib/.env
+  #         - components/phaidra-ui/**/*
+  #         - container_components/solr/**/*
 
 release_job:
   stage: release
