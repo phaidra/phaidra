@@ -396,7 +396,7 @@ services:
   #   image: grafana/promtail:2.9.2
   #   volumes:
   #     - .././container_init/promtail/promtail-push-config.yaml:/etc/promtail/config.yaml:ro
-  #     - ${HOST_DOCKER_SOCKET}:/var/run/docker.sock
+  #     - ${HOST_DOCKER_SOCKET}:/var/run/docker.sock:ro
   #   command: -config.file=/etc/promtail/config.yaml -config.expand-env=true
   #   networks:
   #     - phaidra-network

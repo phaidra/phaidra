@@ -303,7 +303,7 @@ services:
     image: grafana/promtail:2.9.2
     volumes:
       - .././container_init/promtail/promtail-local-config.yaml:/etc/promtail/config.yaml:ro
-      - /run/user/1000/docker.sock:/var/run/docker.sock
+      - ${HOST_DOCKER_SOCKET}:/var/run/docker.sock
     command: -config.file=/etc/promtail/config.yaml -config.expand-env=true
     networks:
       - phaidra-network
@@ -341,7 +341,7 @@ services:
   prometheus:
     image: prom/prometheus:v2.48.0
     volumes:
-      - ../container_init/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
+      - ../container_init/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
       - prometheus:/prometheus
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -360,8 +360,7 @@ services:
     volumes:
       - /:/rootfs:ro
       - /sys:/sys:ro
-      - /run/user/1000/docker.sock:/var/run/docker.sock
-      - /home/daniel/.local/share/docker/:/var/lib/docker:ro
+      - ${HOST_DOCKER_SOCKET}:/var/run/docker.sock:ro
 
   # UNCOMMENT and fill .env values if you have access to an opencast instance
   # vige:
@@ -397,7 +396,7 @@ services:
   #   image: grafana/promtail:2.9.2
   #   volumes:
   #     - .././container_init/promtail/promtail-push-config.yaml:/etc/promtail/config.yaml:ro
-  #     - /run/user/1000/docker.sock:/var/run/docker.sock
+  #     - ${HOST_DOCKER_SOCKET}:/var/run/docker.sock:ro
   #   command: -config.file=/etc/promtail/config.yaml -config.expand-env=true
   #   networks:
   #     - phaidra-network
