@@ -54,16 +54,17 @@ After the following commands have finished, you will have a PHAIDRA
 instance running on `http://localhost:8899`, that you can visit in
 your browser.  See the screenshot below for what you can expect.
 
+``` example
+cd compose_demo
+cp ../.env.template .env
+# adjust variables  in .env if uid !=1000 or on rootful Docker -- see notes below.
+docker compose up -d
+```
+
 **NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the environment variable `HOST_DOCKER_SOCKET` in the `.env` file to contain your actual (you can check with the command `id -u`).
 
 **NOTE for users running priviledged Docker:** if running rootful  Docker, please change the environment variable `LOCAL_ADMIN_IP` in the `.env` file to "172.29.5.1" and `HOST_DOCKER_SOCKET` to `/var/run/docker.sock`.
 
-``` example
-cd compose_demo
-cp ../.env.template .env
-# adjust variables HOST_DOCKER_SOCKET and/or LOCAL_ADMIN_IP in .env, if uid !=1000 or on rootful Docker.
-docker compose up -d
-```
 
 ## SSL Version
 
