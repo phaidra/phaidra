@@ -1,4 +1,9 @@
-cp /mnt/solr/security.json /var/solr/data/security.json
+if [[ ! -d /var/solr/data ]]
+then
+    mkdir -p /var/solr/data
+fi
+cp /mnt/solr/log4j2.xml /var/solr/
+cp /mnt/solr/security.json /var/solr/data/
 SOLR_SALT="Yah4nee1iesuethaemaef7boh"
 SOLR_SALTED_HASH=$(printf ${SOLR_SALT}${SOLR_PASS} | openssl dgst -sha256 -binary | openssl dgst -sha256 -binary | base64)
 SOLR_ENCODED_SALT=$(printf ${SOLR_SALT} | base64)
