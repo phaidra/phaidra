@@ -215,25 +215,28 @@ In case you have an instance running, make sure to shut it down using the follow
 # COMMAND:
 docker compose down
 # EXPECTED OUTPUT:
-[+] Running 18/18
- ✔ Container phaidra-demo-pixelgecko-1       Removed                                                                                                                                                         10.5s 
- ✔ Container phaidra-demo-promtail-local-1   Removed                                                                                                                                                          0.2s 
- ✔ Container phaidra-demo-lam-1              Removed                                                                                                                                                          0.3s 
- ✔ Container phaidra-demo-httpd-1            Removed                                                                                                                                                         10.4s 
- ✔ Container phaidra-demo-imageserver-1      Removed                                                                                                                                                         10.4s 
+[+] Running 21/21
+ ✔ Container phaidra-demo-httpd-1            Removed                                                                                                                                                         10.5s 
+ ✔ Container phaidra-demo-promtail-local-1   Removed                                                                                                                                                          0.5s 
  ✔ Container phaidra-demo-chronos-1          Removed                                                                                                                                                         10.3s 
+ ✔ Container phaidra-demo-imageserver-1      Removed                                                                                                                                                         10.4s 
+ ✔ Container phaidra-demo-node-exporter-1    Removed                                                                                                                                                          0.4s 
+ ✔ Container phaidra-demo-pixelgecko-1       Removed                                                                                                                                                         10.3s 
+ ✔ Container phaidra-demo-lam-1              Removed                                                                                                                                                          0.5s 
+ ✔ Container phaidra-demo-prometheus-1       Removed                                                                                                                                                          0.6s 
+ ✔ Container phaidra-demo-cadvisor-1         Removed                                                                                                                                                          0.4s 
  ✔ Container phaidra-demo-openldap-1         Removed                                                                                                                                                          0.2s 
  ✔ Container phaidra-demo-grafana-1          Removed                                                                                                                                                          0.2s 
- ✔ Container phaidra-demo-solr-1             Removed                                                                                                                                                          0.7s 
- ✔ Container phaidra-demo-dbgate-1           Removed                                                                                                                                                         10.2s 
  ✔ Container phaidra-demo-ui-1               Removed                                                                                                                                                          0.7s 
- ✔ Container phaidra-demo-loki-1             Removed                                                                                                                                                          1.9s 
+ ✔ Container phaidra-demo-solr-1             Removed                                                                                                                                                         10.2s 
+ ✔ Container phaidra-demo-dbgate-1           Removed                                                                                                                                                          0.3s 
+ ✔ Container phaidra-demo-loki-1             Removed                                                                                                                                                          1.7s 
  ✔ Container phaidra-demo-api-1              Removed                                                                                                                                                         10.2s 
- ✔ Container phaidra-demo-mariadb-phaidra-1  Removed                                                                                                                                                          0.4s 
  ✔ Container phaidra-demo-fedora-1           Removed                                                                                                                                                          0.4s 
  ✔ Container phaidra-demo-mongodb-phaidra-1  Removed                                                                                                                                                          0.3s 
+ ✔ Container phaidra-demo-mariadb-phaidra-1  Removed                                                                                                                                                          0.4s 
  ✔ Container phaidra-demo-mariadb-fedora-1   Removed                                                                                                                                                          0.4s 
- ✔ Network phaidra-demo_phaidra-network      Removed
+ ✔ Network phaidra-demo_phaidra-network      Removed                                                                                                                                                          0.3s 
 ```
 
 ## Remove persisted data
@@ -249,16 +252,14 @@ phaidra-demo_chronos-sitemaps
 phaidra-demo_dbgate
 phaidra-demo_fedora
 phaidra-demo_grafana
-phaidra-demo_grafana-dashboards
 phaidra-demo_loki
 phaidra-demo_mariadb_fedora
 phaidra-demo_mariadb_phaidra
 phaidra-demo_mongodb_phaidra
 phaidra-demo_openldap
 phaidra-demo_pixelgecko
+phaidra-demo_prometheus
 phaidra-demo_solr
-phaidra-demo_vige
-phaidra-demo_vige-mongosh
 ```
 
 ## Remove docker images built by compose
@@ -292,39 +293,42 @@ WARNING! This will remove:
 
 Are you sure you want to continue? [y/N] y
 Deleted build cache objects:
-xczj0p7s24k06e46gf1j2erre
-7hvbx00keetcy78cwuxmogrtq
-7yaqz9fwihcttinfvkm3jo7sw
-y8l42trwfc1m6luvbq4hffhlv
-orbswhp6kv0lv4zlbu590fi1g
-rrxifv4eh0xy4pd8688enpv1w
-jm73gq3jua0thmzc7r7al2oke
-u82syn7ofl5y3au8h7gkwtsuu
-yse8a65tzo89h1g0barlp4d15
-za9zcux2sgu3rd695xev6rgij
-hxd9h6k65byqfjwomilr9oabm
-11sw2s0n9weyotr93t4xa05xc
-vdbpwk5jbi4wphdt79k9p15jv
-w8n6jx9j4cpxdwekxpnjhlbse
-zle1rpmgzdweow9jhpq0rbdjy
-93xn2q95t9erfvt91myi52mf4
-mpxry4ls7ds868npqafx5owna
-ylv5dzxwf77dyk1yde5atzbh3
-oy18p54dbcsudllhocii46len
-ru6co4z4v02feosk4fkkspaj7
-emrp8luuxtc3sawfei4hm01r0
-eb97e20eebu8md9wlrp9ulpnb
-tzaeqdcrwxceumd22ag831q36
-ws83b9c3f7h43hqig4amvm3b4
-45ppez7u3xy7q3jj7967h0jws
-r0koppb6yb810q6lht63v193p
-ss4tvd1zpkghyzcj2lmyx318s
-onoh6g4s90y1dun6qaekh0pwq
-nn8ue7n9yzwc5zuxe0tmla2f5
-l9xraqviis1mmelbtvbkpi0uh
-esbju1lnfu3jwhb17f5vbhyc7
+sdl2d1br7kafdbimje1mvnmcm
+0y4fc4chlvvlf9ympvbi3h37j
+lx580e9zlrrs6dzfw1247d7x4
+p81oaunxrw4de8mpp3oia27f3
+45oaxmp0r7pngo84iya3igpym
+hqtg1tvrqmjeuvdokuma5p1y4
+kszrbhbfsfvagcx54mekzw4j4
+nm2hc7xeptjojpek1256mwlvp
+xdvgebzum8wnrsbj0poyndj3v
+lzrhk1629jdlntkb4pvlw1clh
+5vkh6rj8yc31r5gne4mkc3wgu
+y5c1jjawslm4ssyhjdqf12ibu
+1uyu18l6pgkiqsyajaz6vqz2g
+1rnbo6rxc6wodh80sd68r93ld
+ne83pvp97gqd4oauva00yb66m
+s9dhiz747swweozuud6btaj9u
+uaud8ag4o9a8kawgwuk8pmpha
+v0euks58k48gzj6mrpv05ccbu
+mm5wynaaa2uisxf5wz07p5bgr
+zi08c1l51g875skbamva4apj1
+9v4skh7wvq8sykhmdrbfbcdwn
+rwxb4dfywim5ei5jakwbndxff
+20i064t10ggfwza36tpeaa3wx
+8ovjkuagpwkrf76rqfpsyfs4w
+u1k2n1xunxiuuan7prr0vcnka
+mfv3xb4m680254nhkjx9qdvbv
+87ct1aqauu50a1n6ez7sci4n7
+psboew29ukh1tlvl97k910v6j
+wswvaob7jw2m5nlm5ssafg0w0
+mqqwviao74tl6m8l36imbde38
+s0ffaz2qle584dvfruk3394mg
+rxk1j3outxlzl1stamnlcm7b7
+y6yvejbejixa1eiwb39ycd69y
+rzhy1frfe4sfo5u78t725zip5
 
-Total reclaimed space: 733.3MB
+Total reclaimed space: 1.878GB
 ```
 
 # Technical Notes
