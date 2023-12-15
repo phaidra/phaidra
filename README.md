@@ -138,23 +138,24 @@ docker compose up -d
 - **LDAP Account Manager** (from the Webinterface: Manage Phaidra -> Manage Users):
   - password: `adminpassword`.
   This password can be altered in the `.env` file located next through the `LDAP_ADMIN_PASSWORD` variable.
-    - There are three default users built in for testing purposes (logging into Phaidra, uploading, etc) `pone`, `ptwo`, and `barchiver`.  They all share the same password `1234`. These users can be altered/deleted from **LDAP account manager**.
+    - There are three default users built in for testing purposes (logging into Phaidra, uploading, etc) `pone`, `ptwo`, and `barchiver`.  They all share the same password `1234`.
+    - These users can be accessed/altered/deleted from **LDAP Account manager**.
 - **Fedora** (from the Webinterface: Manage Phaidra -> Inspect Object Repository):
   - username: `fedoraAdmin`
   - password: `1234`
-  These credentials can be altered in the `.env` file through the variables `FEDORA_ADMIN_USER` and `FEDORA_ADMIN_PASS`.
+  - These credentials can be altered in the `.env` file through the variables `FEDORA_ADMIN_USER` and `FEDORA_ADMIN_PASS`.
 - **Grafana** (Manage Phaidra -> Inspect Running Services):
   - username: `phaidra`
   - password: `phaidra`
-  These credentials can be altered in the `.env` file through the variables `GF_SECURITY_ADMIN_USER` and `GF_SECURITY_ADMIN_PASS`.
+  - These credentials can be altered in the `.env` file through the variables `GF_SECURITY_ADMIN_USER` and `GF_SECURITY_ADMIN_PASS`.
 - **DbGate** (Manage Phaidra -> Inspect Databases)
   - username: `phaidra`
   - password: `phaidra`
-  Here only the password can be modified in the `.env` file through the variable `DBGATE_PASS`.  If you want to change the username as well, please change it in the `docker-compose.yaml` file in the `dbgate:` section.  The corresponding variable is called `LOGINS`. You will have to put the username into the variable in the next line `LOGIN_PASSWORD_[username]` as well, that's why we can't centrally manage this from `.env` for now.
+  - Here only the password can be modified in the `.env` file through the variable `DBGATE_PASS`.  If you want to change the username as well, please change it in the `docker-compose.yaml` file in the `dbgate:` section.  The corresponding variable is called `LOGINS`. You will have to put the username into the variable in the next line `LOGIN_PASSWORD_[username]` as well, that's why we can't centrally manage this from `.env` for now.
 - **Solr** (Manage Phaidra -> Inspect Search Engine)
   - username: `phaidra`
   - password: `phaidra`
-  These credentials can be modified in the `.env` file through the variables `SOLR_USER` and `SOLR_PASS`.
+  - These credentials can be modified in the `.env` file through the variables `SOLR_USER` and `SOLR_PASS`.
 
 # Monitoring PHAIDRA's system usage
 
