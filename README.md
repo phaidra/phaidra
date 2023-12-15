@@ -157,10 +157,12 @@ docker compose up -d
   - password: `phaidra`
   - These credentials can be modified in the `.env` file through the variables `SOLR_USER` and `SOLR_PASS`.
 
-# Monitoring PHAIDRA's system usage
+# Monitoring PHAIDRA
 
-One can use the following command to real-time monitor the system usage
-of PHAIDRA over all containers (here from an instance started from
+There is a Grafana dashboard at `http://localhost:8899/grafana`, respectively `https://YOUR_FQDN/grafana`, that displays the containers' system usage and their logs.
+
+One can also use the following shell command to monitor the system usage
+of PHAIDRA over all containers from the machine where it is running (here from an instance started from
 `./compose_demo`):
 
 ``` example
@@ -168,23 +170,26 @@ of PHAIDRA over all containers (here from an instance started from
 docker stats
 # EXPECTED OUTPUT:
 CONTAINER ID   NAME                             CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
-42e431a6ddeb   phaidra-demo-httpd-1             0.01%     25.23MiB / 15.03GiB   0.16%     894B / 0B         111kB / 0B        83
-9e7000df842a   phaidra-demo-ui-1                0.00%     97.8MiB / 15.03GiB    0.64%     894B / 0B         0B / 0B           23
-717a91389e9e   phaidra-demo-pixelgecko-1        0.00%     51.62MiB / 15.03GiB   0.34%     24.5kB / 38.9kB   184kB / 0B        1
-1d2c2a6fd937   phaidra-demo-api-1               0.02%     165.5MiB / 15.03GiB   1.08%     1kB / 0B          4.63MB / 0B       6
-7c7dce899fed   phaidra-demo-promtail-local-1    0.92%     38.8MiB / 15.03GiB    0.25%     2.94kB / 30.2kB   12.3kB / 0B       12
-8f033920819b   phaidra-demo-dbgate-1            0.00%     25.16MiB / 15.03GiB   0.16%     1.23kB / 224B     823kB / 4.1kB     12
-b8510d265692   phaidra-demo-chronos-1           0.01%     4.082MiB / 15.03GiB   0.03%     1.16kB / 0B       36.9kB / 0B       3
-3bd34fd44327   phaidra-demo-fedora-1            0.42%     672.2MiB / 15.03GiB   4.37%     17.7kB / 15.2kB   676kB / 307kB     58
-021a99a54ddf   phaidra-demo-lam-1               0.01%     22.34MiB / 15.03GiB   0.15%     1.27kB / 0B       197kB / 0B        8
-8e66e703a404   phaidra-demo-grafana-1           0.06%     104.9MiB / 15.03GiB   0.68%     12.1kB / 2.45kB   1.36MB / 557kB    20
-d19b5705afe7   phaidra-demo-solr-1              0.93%     737.5MiB / 15.03GiB   4.79%     1.46kB / 0B       3.5MB / 315kB     55
-e87185fdc693   phaidra-demo-mariadb-fedora-1    0.02%     97.69MiB / 15.03GiB   0.63%     16.4kB / 16.5kB   27.2MB / 16.4kB   34
-80baf957b513   phaidra-demo-mariadb-phaidra-1   0.02%     219.4MiB / 15.03GiB   1.43%     1.46kB / 0B       16.3MB / 8.19kB   15
-897777131d8a   phaidra-demo-mongodb-phaidra-1   1.03%     171.4MiB / 15.03GiB   1.11%     40.3kB / 23.6kB   2.84MB / 401kB    31
-4dd475d76756   phaidra-demo-openldap-1          0.00%     12.57MiB / 15.03GiB   0.08%     1.46kB / 0B       639kB / 4.1kB     2
-ad659dda1440   phaidra-demo-loki-1              0.40%     46.46MiB / 15.03GiB   0.30%     31.7kB / 1.94kB   4.84MB / 360kB    27
-1cef7ed849c3   phaidra-demo-imageserver-1       0.01%     25.73MiB / 15.03GiB   0.17%     1.27kB / 0B       0B / 0B           57
+2bb9181196e3   phaidra-demo-httpd-1             0.01%     21.17MiB / 15.03GiB   0.14%     992B / 0B         86kB / 0B         83
+d5c8257aa717   phaidra-demo-ui-1                18.34%    99.45MiB / 15.03GiB   0.65%     293kB / 2.99kB    0B / 0B           23
+c299d72a9014   phaidra-demo-pixelgecko-1        0.00%     51.57MiB / 15.03GiB   0.34%     10.8kB / 16kB     0B / 0B           1
+e93244f3ba88   phaidra-demo-api-1               0.02%     165.1MiB / 15.03GiB   1.07%     1.1kB / 0B        0B / 0B           6
+27e17164d2fb   phaidra-demo-promtail-local-1    0.43%     35.2MiB / 15.03GiB    0.23%     2.35kB / 23.7kB   0B / 0B           13
+6f0be828c7fa   phaidra-demo-dbgate-1            0.00%     24.66MiB / 15.03GiB   0.16%     1.55kB / 224B     0B / 4.1kB        11
+7447d44812fd   phaidra-demo-chronos-1           0.01%     4.066MiB / 15.03GiB   0.03%     1.14kB / 0B       0B / 0B           3
+6ca74551692f   phaidra-demo-fedora-1            0.61%     663.8MiB / 15.03GiB   4.31%     17.9kB / 15.2kB   430kB / 53.2kB    61
+b90acb3c2ed4   phaidra-demo-grafana-1           0.12%     103.7MiB / 15.03GiB   0.67%     12.2kB / 2.29kB   1.2MB / 471kB     16
+2ab547cb9044   phaidra-demo-lam-1               0.00%     22.41MiB / 15.03GiB   0.15%     1.1kB / 0B        0B / 0B           8
+5327ab50d22d   phaidra-demo-mongodb-phaidra-1   0.33%     171.2MiB / 15.03GiB   1.11%     17.6kB / 9.73kB   1.79MB / 213kB    32
+98a46ef375a5   phaidra-demo-loki-1              0.35%     33.71MiB / 15.03GiB   0.22%     25.2kB / 1.29kB   3.77MB / 53.2kB   13
+53af68cacba3   phaidra-demo-mariadb-phaidra-1   0.01%     197.7MiB / 15.03GiB   1.28%     1.47kB / 0B       16.5MB / 8.19kB   25
+6330011bf5b3   phaidra-demo-solr-1              0.82%     724.3MiB / 15.03GiB   4.71%     1.36kB / 0B       1.41MB / 168kB    55
+684d95cc0ac4   phaidra-demo-mariadb-fedora-1    0.02%     100.1MiB / 15.03GiB   0.65%     16.7kB / 16.5kB   26.3MB / 8.19kB   36
+469f52362bf8   phaidra-demo-openldap-1          0.00%     12.5MiB / 15.03GiB    0.08%     1.36kB / 0B       614kB / 0B        2
+2fed9080a1a8   phaidra-demo-cadvisor-1          3.48%     47.25MiB / 15.03GiB   0.31%     5.48kB / 271kB    0B / 0B           15
+43c851042af1   phaidra-demo-prometheus-1        0.07%     225.4MiB / 15.03GiB   1.46%     291kB / 5.64kB    98.3MB / 29.2MB   14
+c186e3959156   phaidra-demo-imageserver-1       0.01%     25.73MiB / 15.03GiB   0.17%     1.56kB / 0B       0B / 0B           57
+e875a9d3e4e8   phaidra-demo-node-exporter-1     0.00%     8.68MiB / 15.03GiB    0.06%     2.12kB / 13.9kB   0B / 0B           6
 ```
 
 # Data persistance
