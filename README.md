@@ -134,12 +134,27 @@ docker compose up -d
 
 **NOTE for users running priviledged Docker:** if running rootful  Docker, please change the environment variable `LOCAL_ADMIN_IP` in the `.env` file to "172.29.5.1" (Linux and Win11 Docker Desktop based on WSL), or "192.168.65.1" (Docker Desktop on OSX) and `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` (all of the mentioned ones).
 
-# Default credentials
-- There are three default users built in for testing purposes `pone`, `ptwo`, and `barchiver`.  They all share the same password '1234'. You'd likely want to delete these users, or at least change the default passwords after evaluating:
-- To make use of the built-in User-Management (from the Webinterface: Manage Phaidra -> Manage Users) use the password 'adminpassword'.  This password can be altered in the `.env` file located next to `docker-compose.yaml` through the `LDAP_ADMIN_PASSWORD` variable.
-  - *NOTE*: This place is reachable from the computer running Phaidra itself only.  If connecting remotely, use ssh-tunneling or similar.
-- To access the underlying repository system (from the Webinterface: Manage Phaidra -> Inspect Object Repository) use 'fedoraAdmin' as username and '1234' as password.  These credentials can be altered in the `.env` file as well (`FEDORA_ADMIN_USER` and `FEDORA_ADMIN_PASS`).
-  - *NOTE*: This place is reachable from the computer running Phaidra itself only.  If connecting remotely, use ssh-tunneling or similar.
+# Default credentials on administration sites
+- **LDAP Account Manager** (from the Webinterface: Manage Phaidra -> Manage Users):
+  - password: `adminpassword`.
+  This password can be altered in the `.env` file located next through the `LDAP_ADMIN_PASSWORD` variable.
+    - There are three default users built in for testing purposes (logging into Phaidra, uploading, etc) `pone`, `ptwo`, and `barchiver`.  They all share the same password `1234`. These users can be altered/deleted from **LDAP account manager**.
+- **Fedora** (from the Webinterface: Manage Phaidra -> Inspect Object Repository):
+  - username: `fedoraAdmin`
+  - password: `1234`
+  These credentials can be altered in the `.env` file through the variables `FEDORA_ADMIN_USER` and `FEDORA_ADMIN_PASS`.
+- **Grafana** (Manage Phaidra -> Inspect Running Services):
+  - username: `phaidra`
+  - password: `phaidra`
+  These credentials can be altered in the `.env` file through the variables `GF_SECURITY_ADMIN_USER` and `GF_SECURITY_ADMIN_PASS`.
+- **DbGate** (Manage Phaidra -> Inspect Databases)
+  - username: `phaidra`
+  - password: `phaidra`
+  Here only the password can be modified in the `.env` file through the variable `DBGATE_PASS`.  If you want to change the username as well, please change it in the `docker-compose.yaml` file in the `dbgate:` section.  The corresponding variable is called `LOGINS`. You will have to put the username into the variable in the next line `LOGIN_PASSWORD_[username]` as well, that's why we can't centrally manage this from `.env` for now.
+- **Solr** (Manage Phaidra -> Inspect Search Engine)
+  - username: `phaidra`
+  - password: `phaidra`
+  These credentials can be modified in the `.env` file through the variables `SOLR_USER` and `SOLR_PASS`.
 
 # Monitoring PHAIDRA's system usage
 

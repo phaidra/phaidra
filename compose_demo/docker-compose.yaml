@@ -58,11 +58,13 @@ services:
       logging_jobname: "containerlogs"
     volumes:
       - solr:/var/solr
-      - ./../container_init/solr/phaidra_core:/tmp/phaidra:ro
-    command:
-      - solr-precreate
-      - phaidra
-      - /tmp/phaidra
+      - ../container_init/solr:/mnt/solr:ro
+    entrypoint:
+      - bash
+      - /mnt/solr/solr_entrypoint.bash
+    environment:
+      - SOLR_USER=${SOLR_USER}
+      - SOLR_PASS=${SOLR_PASS}
     networks:
       - phaidra-network
 
@@ -111,6 +113,8 @@ services:
       - PHAIDRA_ADMIN_PASSWORD=${PHAIDRA_ADMIN_PASSWORD}
       - FEDORA_ADMIN_USER=${FEDORA_ADMIN_USER}
       - FEDORA_ADMIN_PASS=${FEDORA_ADMIN_PASS}
+      - SOLR_USER=${SOLR_USER}
+      - SOLR_PASS=${SOLR_PASS}
     entrypoint:
       - bash
       - /mnt/api-entrypoint.bash
@@ -185,7 +189,7 @@ services:
       - phaidra-network
 
   dbgate:
-    image: dbgate/dbgate:5.2.6
+    image: dbgate/dbgate:5.2.7
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -208,6 +212,8 @@ services:
       URL_con3: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongodb-phaidra:27017
       ENGINE_con3: mongo@dbgate-plugin-mongo
       WEB_ROOT: /dbgate
+      LOGINS: phaidra
+      LOGIN_PASSWORD_phaidra: ${DBGATE_PASS}
     volumes:
       - dbgate:/root/.dbgate
     depends_on:
@@ -327,9 +333,8 @@ services:
       - ../container_init/grafana/dashboards:/mnt/grafana/dashboards:ro
       - grafana:/var/lib/grafana
     environment:
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
       - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
       - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/mnt/grafana/dashboards/phaidra_default.json

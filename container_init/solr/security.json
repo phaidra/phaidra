@@ -1,0 +1,31 @@
+{
+    "authentication":{
+        "blockUnknown": false,
+        "class":"solr.BasicAuthPlugin",
+        "credentials":{"__SOLR_USER__":"__SOLR_SALTED_HASH__ __SOLR_ENCODED_SALT__"},
+        "realm":"PHAIDRA",
+        "forwardCredentials": false
+    },
+    "authorization":{
+        "class":"solr.RuleBasedAuthorizationPlugin",
+        "permissions":[
+            {
+                "name":"security-edit",
+                "role":"admin",
+                "index": 1},
+            {
+                "name":"security-read",
+                "role":["admin"],
+                "index": 2},
+            {
+                "name":"read",
+                "role":null,
+                "index":3},
+            {
+                "name":"all",
+                "role":["admin"],
+                "index":4}
+        ],
+        "user-role":{"__SOLR_USER__":"admin"}
+    }
+}
