@@ -540,6 +540,7 @@ sub startup {
     $loggedin->get('directory/user/data')                                    ->to('directory#get_user_data');
 
     $loggedin->get('settings')                                               ->to('settings#get_settings');
+    $loggedin->get('app_settings')                                           ->to('settings#get_app_settings');
 
     $loggedin->get('groups')                                                 ->to('groups#get_users_groups');
     $loggedin->get('group/:gid')                                             ->to('groups#get_group');
@@ -582,6 +583,8 @@ sub startup {
     $ir_admin->get('ir/pureimport/locks')                                    ->to('ir#pureimport_getlocks');
 
     unless($self->app->config->{readonly}){
+
+      $admin->post('app_settings')                                           ->to('settings#post_app_settings');
 
       $admin->post('index')                                                  ->to('index#update');
       $admin->post('dc')                                                     ->to('dc#update');
@@ -679,6 +682,7 @@ sub startup {
     $check_auth->get('directory/user/data')                                     ->to('directory#get_user_data');
 
     $check_auth->get('settings')                                                ->to('settings#get_settings');
+    $check_auth->get('app_settings')                                            ->to('settings#get_app_settings');
 
     $check_auth->get('groups')                                                  ->to('groups#get_users_groups');
     $check_auth->get('group/:gid')                                              ->to('groups#get_group');
@@ -725,6 +729,8 @@ sub startup {
     $admin->get('test/error')                                                   ->to('utils#testerror');
 
     unless($self->app->config->{readonly}){
+
+      $admin->post('app_settings')                                              ->to('settings#post_app_settings');
 
       $admin->post('index')                                                     ->to('index#update');
       $admin->post('dc')                                                        ->to('dc#update');
