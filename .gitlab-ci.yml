@@ -137,12 +137,12 @@ build-vige:
     --builder=container
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/vige-base:latest
-    -t $CI_REGISTRY_USER/vige-base:$CI_COMMIT_SHORT_SHA .
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
-        paths:
-          - dockerfiles/vige.dockerfile
+    -t $CI_REGISTRY_USER/vige-base:$CI_COMMIT_SHORT_SHA --push .
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+  #     changes:
+  #       paths:
+  #         - dockerfiles/vige.dockerfile
 
 compose-demo:
   stage: test
