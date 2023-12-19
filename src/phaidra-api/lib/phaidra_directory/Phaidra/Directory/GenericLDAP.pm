@@ -246,6 +246,8 @@ sub getLDAPEntryForUser {
   my $c        = shift;
   my $username = shift;
 
+  return undef unless (defined($username));
+  
   my $ldap = $self->get_ldap($c);
 
   my $filter = $c->app->config->{authentication}->{ldap}->{usersearchfilter};
@@ -605,6 +607,8 @@ sub get_user_data {
   my $c        = shift;
   my $username = shift;
 
+  return {} unless (defined($username));
+  
   if ($username eq $c->app->config->{phaidra}->{adminusername}) {
     return {username => 'fedoraAdmin', firstname => 'fedora', lastname => 'Admin'};
   }
