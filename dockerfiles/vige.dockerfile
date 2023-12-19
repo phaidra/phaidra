@@ -1,15 +1,20 @@
-FROM debian:bookworm-20231030
+FROM ubuntu:jammy-20231211.1
 ENV DEBIAN_FRONTEND noninteractive
 RUN <<EOF
 apt-get --quiet update
 apt-get install --yes --quiet --no-install-recommends \
-jq libxml-xpath-perl html2text file gdebi curl parallel
+jq libxml-xpath-perl html2text file gdebi curl parallel \
+wget gnupg
 apt-get clean
 EOF
-COPY ./../third-parties/mongodb-mongosh_2.0.2_amd64.deb /
 RUN <<EOF
-gdebi --quiet --non-interactive  mongodb-mongosh_2.0.2_amd64.deb
-rm mongodb-mongosh_2.0.2_amd64.deb
+wget -qO- https://www.mongodb.org/static/pgp/server-7.0.asc | tee /etc/apt/trusted.gpg.d/server-7.0.asc
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | \
+tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+EOF
+RUN <<EOF
+apt-get --quiet update
+apt-get install --yes --quiet mongodb-mongosh
 EOF
 RUN mkdir /opt/vige
 WORKDIR /opt/vige
