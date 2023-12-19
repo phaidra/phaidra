@@ -311,6 +311,8 @@ services:
       - PHAIDRA_PORTSTUB=${PHAIDRA_PORTSTUB}
       - PHAIDRA_HOSTPORT=${PHAIDRA_HOSTPORT}
       - OUTSIDE_HTTP_SCHEME=${OUTSIDE_HTTP_SCHEME}
+      - PHAIDRA_ADMIN_USER=${PHAIDRA_ADMIN_USER}
+      - PHAIDRA_ADMIN_PASSWORD=${PHAIDRA_ADMIN_PASSWORD}
     depends_on:
       - mariadb-fedora
       - mariadb-phaidra
