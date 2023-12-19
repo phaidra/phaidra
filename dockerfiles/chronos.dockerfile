@@ -12,7 +12,7 @@ CURRENT_ARCHITECTURE=$(dpkg --print-architecture)
 if [ "$CURRENT_ARCHITECTURE" = "amd64" ]
 then
 wget -q https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2204-x86_64-100.9.4.deb
-apt-get install --yes mongodb-database-tools-ubuntu2204-x86_64-100.9.4.deb
+apt-get install --yes ./mongodb-database-tools-ubuntu2204-x86_64-100.9.4.deb
 rm mongodb-database-tools-ubuntu2204-x86_64-100.9.4.deb
 fi
 if [ "$CURRENT_ARCHITECTURE" = "arm64" ]
