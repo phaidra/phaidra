@@ -13,7 +13,7 @@ networks:
 services:
 
   httpd:
-    image: testuser34/httpd-base:latest
+    image: testuser34/httpd-base:cd745f58
     pull_policy: always
     labels:
       logging: "promtail"
@@ -41,7 +41,7 @@ services:
       - /mnt/startup/httpd-demo-startup.bash
 
   imageserver:
-    image: testuser34/imageserver-base:latest
+    image: testuser34/imageserver-base:979c59b3
     pull_policy: always
     labels:
       logging: "promtail"
@@ -90,7 +90,7 @@ services:
       - mariadb-phaidra
       - mongodb-phaidra
       - fedora
-    image: testuser34/api-base:latest
+    image: testuser34/api-base:895c6efb
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -128,7 +128,7 @@ services:
       logging_jobname: "containerlogs"
     restart:
       always
-    image: testuser34/pixelgecko-base:latest
+    image: testuser34/pixelgecko-base:46ffa6a6
     pull_policy: always
     volumes:
       - fedora:/mnt/fedora:ro
@@ -275,7 +275,7 @@ services:
       - phaidra-network
 
   chronos:
-    image: testuser34/chronos-base:latest
+    image: testuser34/chronos-base:48be51eb
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -371,7 +371,7 @@ services:
 
   # UNCOMMENT and fill .env values if you have access to an opencast instance
   # vige:
-  #   image: testuser34/vige-base:latest
+  #   image: testuser34/vige-base:f10c5205
   #   labels:
   #     logging: "promtail"
   #     logging_jobname: "containerlogs"
