@@ -33,6 +33,10 @@
             "description": "Requests for adding and removing object relationships"
         },
         {
+            "name": "search",
+            "description": ""
+        },
+        {
             "name": "datastream",
             "description": "Requests for transforming and validating datastreams"
         },
@@ -9343,7 +9347,7 @@
             "summary": "Search query",
             "description": "Solr query, for the query parameters see [Solr common query parameters](https://solr.apache.org/guide/solr/latest/query-guide/common-query-parameters.html)",
             "tags": [
-                "misc"
+                "search"
             ],
             "parameters": [
                 {
