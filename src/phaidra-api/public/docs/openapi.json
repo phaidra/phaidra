@@ -7426,8 +7426,17 @@
                                 "type": "object",
                                 "properties": {
                                     "metadata": {
-                                        "oneOf": {
-                                            "$ref": "#/components/schemas/json-ld"
+                                        "type": "object",
+                                        "description": "a structure containing metadata; refer to the [wiki](https://github.com/phaidra/phaidra-api/wiki/Creating-a-simple-object) for further details",
+                                        "properties": {
+                                            "metadata": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "json-ld": {
+                                                        "$ref": "#/components/schemas/json-ld"
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -9327,6 +9336,191 @@
                         }
                     }
                 }
+            }
+        },
+        "/search/select":{
+            "post": { 
+            "summary": "Search query",
+            "description": "Solr query",
+            "tags": [
+                "misc"
+            ],
+            "parameters": [
+                {
+                    "in": "query",
+                    "name": "q",
+                    "schema": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "description": "query string"
+                },
+                {
+                    "in": "query",
+                    "name": "start",
+                    "schema": {
+                        "type": "number",
+                        "required": false,
+                        "default": "0"
+                    },
+                    "description": "start"
+                },
+                {
+                    "in": "query",
+                    "name": "rows",
+                    "schema": {
+                        "type": "number",
+                        "required": false,
+                        "default": "10"
+                    },
+                    "description": "rows limit"
+                },
+                {
+                    "in": "query",
+                    "name": "sort",
+                    "schema": {
+                        "type": "string",
+                        "required": false
+                    },
+                    "description": "sort"
+                },
+                {
+                    "in": "query",
+                    "name": "facet",
+                    "schema": {
+                        "type": "boolean",
+                        "required": false,
+                        "default": "true"
+                    },
+                    "description": "facet search"
+                },
+                {
+                    "in": "query",
+                    "name": "facet.query",
+                    "schema": {
+                        "type": "string",
+                        "required": false
+                    },
+                    "description": "facet query, e.g. resourcetype:imag "
+                },
+                {
+                    "in": "query",
+                    "name": "q.op",
+                    "schema": {
+                        "type": "string",
+                        "required": false,
+                        "default": "AND"
+                    },
+                    "description": "query operation "
+                },
+                {
+                    "in": "query",
+                    "name": "wt",
+                    "schema": {
+                        "type": "string",
+                        "required": false,
+                        "default": "json"
+                    }
+                   
+                },
+                {
+                    "in": "query",
+                    "name": "qf",
+                    "schema": {
+                        "type": "string",
+                        "required": false
+                    }
+                   
+                }, {
+                    "in": "query",
+                    "name": "fq",
+                    "schema": {
+                        "type": "string",
+                        "required": false
+                    }
+                   
+                }
+
+            ],
+            "responses": {
+                "200": {
+                    "description": "search response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "responseHeader": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "status": {
+                                                    "type": "number"
+                                                },
+                                                "QTime": {
+                                                    "type": "number"
+                                                },
+                                                "params": {
+                                                    "type": "object"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "response": {
+                                        "type": "object",
+                                        "properties": {
+                                            "numFound": {
+                                                "type": "number"
+                                            },
+                                            "start": {
+                                                "type": "number"
+                                            },
+                                            "numFoundExact": {
+                                                "type": "boolean"
+                                            },
+                                            "docs": {
+                                                "type": "array"
+                                            }
+                                        }
+                                    },
+                                    "facet_counts": {
+                                        "type": "object",
+                                        "properties": {
+                                            "facet_querie": {
+                                                "type": "object"
+                                            },
+                                            "facet_fields": {
+                                                "type": "object"
+                                            },
+                                            "facet_ranges": {
+                                                "type": "object"
+                                            },
+                                            "facet_intervals": {
+                                                "type": "object"
+                                            },
+                                            "facet_heatmaps": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "404": {
+                    "description": "object has not been found",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            }
+          
             }
         }
     },
