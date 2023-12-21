@@ -9341,7 +9341,7 @@
         "/search/select":{
             "post": { 
             "summary": "Search query",
-            "description": "Solr query",
+            "description": "Solr query, for the query parameters see [Solr common query parameters](https://solr.apache.org/guide/solr/latest/query-guide/common-query-parameters.html)",
             "tags": [
                 "misc"
             ],
@@ -9354,91 +9354,6 @@
                         "required": true
                     },
                     "description": "query string"
-                },
-                {
-                    "in": "query",
-                    "name": "start",
-                    "schema": {
-                        "type": "number",
-                        "required": false,
-                        "default": "0"
-                    },
-                    "description": "start"
-                },
-                {
-                    "in": "query",
-                    "name": "rows",
-                    "schema": {
-                        "type": "number",
-                        "required": false,
-                        "default": "10"
-                    },
-                    "description": "rows limit"
-                },
-                {
-                    "in": "query",
-                    "name": "sort",
-                    "schema": {
-                        "type": "string",
-                        "required": false
-                    },
-                    "description": "sort"
-                },
-                {
-                    "in": "query",
-                    "name": "facet",
-                    "schema": {
-                        "type": "boolean",
-                        "required": false,
-                        "default": "true"
-                    },
-                    "description": "facet search"
-                },
-                {
-                    "in": "query",
-                    "name": "facet.query",
-                    "schema": {
-                        "type": "string",
-                        "required": false
-                    },
-                    "description": "facet query, e.g. resourcetype:imag "
-                },
-                {
-                    "in": "query",
-                    "name": "q.op",
-                    "schema": {
-                        "type": "string",
-                        "required": false,
-                        "default": "AND"
-                    },
-                    "description": "query operation "
-                },
-                {
-                    "in": "query",
-                    "name": "wt",
-                    "schema": {
-                        "type": "string",
-                        "required": false,
-                        "default": "json"
-                    }
-                   
-                },
-                {
-                    "in": "query",
-                    "name": "qf",
-                    "schema": {
-                        "type": "string",
-                        "required": false
-                    }
-                   
-                }, {
-                    "in": "query",
-                    "name": "fq",
-                    "schema": {
-                        "type": "string",
-                        "required": false
-                    }
-                   
                 }
 
             ],
