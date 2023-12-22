@@ -3,8 +3,13 @@
 ___
 ![alt text](./pictures/running_phaidra.png "Screenshot of PHAIDRA landing page")*Running PHAIDRA website*
 ___
+# Table of Contents
+1. [About this repository](#about-this-repository)
+2. [Setup](#setup)
+3. [Run it](#run-it)
+   1. [Demo Version](#demo-version)
 
-[[_TOC_]]
+
 
 # About this repository
 
