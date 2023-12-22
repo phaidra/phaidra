@@ -18,5 +18,6 @@ sed -i \
     -e "s|__SHIB_METADATA__|${SHIB_METADATA}|" \
     -e "s|__SHIB_METADATA_CERT__|${SHIB_METADATA_CERT}|" \
     /etc/shibboleth/shibboleth2.xml
+chown _shibd:_shibd /etc/shibboleth/sp-*
 /etc/init.d/shibd start
 httpd-foreground
