@@ -76,7 +76,7 @@ PHAIDRA objects can be access in multiple ways:
 
 - For 3D objects, 3DHOP viewer was integrated
 
-- Websites (wacz) can be displayed via replay.web viewer (work in progress).
+- Websites (wacz) can be displayed via replay.web viewer.
 
 # Architecture
 
