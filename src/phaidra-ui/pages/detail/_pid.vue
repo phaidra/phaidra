@@ -2081,7 +2081,9 @@ export default {
         (this.objectInfo.cmodel !== "Asset" ||
           (this.objectInfo.cmodel === "Asset" &&
             (this.mimetype === "model/nxz" ||
-              this.mimetype === "model/ply"))) &&
+              this.mimetype === "model/ply" ||
+              this.mimetype === "application/x-wacz")
+              )) &&
         this.objectInfo.cmodel !== "Container" &&
         this.objectInfo.readrights &&
         !(this.objectInfo.cmodel === "Video" && this.isRestricted)
