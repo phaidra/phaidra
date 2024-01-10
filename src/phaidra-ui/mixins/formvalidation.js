@@ -352,6 +352,7 @@ export const formvalidation = {
           if (f.predicate === 'dcterms:type') {
             missingResourceType = false
             if (f.value.length < 1) {
+              console.error('Missing dcterms:type')
               f.errorMessages.push(this.$t('Please select'))
               this.validationError = true
             }
@@ -360,11 +361,13 @@ export const formvalidation = {
             missingObjectType = false
             if (Object.prototype.hasOwnProperty.call(f, 'selectedTerms')) {
               if (f.selectedTerms.length < 1) {
+                console.error('Missing edm:hasType')
                 f.errorMessage = []
                 f.errorMessages.push(this.$t('Please select one or more object types'))
                 this.validationError = true
               }
             } else if (f.value.length < 1) {
+              console.error('Missing edm:hasType')
               f.errorMessage = []
               f.errorMessages.push(this.$t('Please select one or more object types'))
               this.validationError = true
@@ -374,6 +377,7 @@ export const formvalidation = {
             missingTitle = false
             f.titleErrorMessages = []
             if (f.title.length < 1) {
+              console.error('Missing dc:title')
               f.titleErrorMessages.push(this.$t('Missing title'))
               this.validationError = true
             }
@@ -382,6 +386,7 @@ export const formvalidation = {
             missingDescription = false
             f.errorMessages = []
             if (f.value.length < 1) {
+              console.error('Missing bf:note')
               f.errorMessages.push(this.$t('Missing description'))
               this.validationError = true
             }
@@ -390,6 +395,7 @@ export const formvalidation = {
             missingKeyword = false
             f.errorMessages = []
             if (f.value.length < 1) {
+              console.error('Missing dc:subject')
               f.errorMessages.push(this.$t('Missing keywords'))
               this.validationError = true
             }
@@ -404,15 +410,18 @@ export const formvalidation = {
             f.organizationErrorMessages = []
             f.organizationTextErrorMessages = []
             if (f.role.length < 1) {
+              console.error('Missing role')
               f.roleErrorMessages.push(this.$t('Missing role'))
               this.validationError = true
             }
             if (f.type === 'schema:Person') {
               if (f.firstname.length < 1) {
+                console.error('Missing firstname')
                 f.firstnameErrorMessages.push(this.$t('Missing firstname'))
                 this.validationError = true
               }
               if (f.lastname.length < 1) {
+                console.error('Missing lastname')
                 f.lastnameErrorMessages.push(this.$t('Missing lastname'))
                 this.validationError = true
               }
@@ -423,6 +432,7 @@ export const formvalidation = {
               f.errorMessages = []
               missingLicense = false
               if (f.value.length < 1) {
+                console.error('Missing edm:rights')
                 f.errorMessages.push(this.$t('Please select'))
                 this.validationError = true
               }
@@ -433,14 +443,19 @@ export const formvalidation = {
             f.fileErrorMessages = []
             f.mimetypeErrorMessages = []
             if (!f.file) {
+              console.error('Missing file')
               f.fileErrorMessages.push(this.$t('Please select'))
               this.validationError = true
             }
+            console.log('validation mimetype: ')
+            console.log(f.mimetype)
             if (f.mimetype.length < 1) {
+              console.error('Missing mimetype')
               f.mimetypeErrorMessages.push(this.$t('Please select'))
               this.validationError = true
             } else if (this.allowedMimetypes[resourceType]) {
               if (!this.allowedMimetypes[resourceType].includes(f.mimetype)) {
+                console.error('Wrong file format')
                 f.mimetypeErrorMessages.push(this.$t('This file type is not supported for the chosen resource type.'))
                 f.fileErrorMessages.push(this.$t('Wrong file format.'))
                 this.validationError = true

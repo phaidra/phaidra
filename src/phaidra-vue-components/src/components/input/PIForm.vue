@@ -1682,7 +1682,24 @@ export default {
     setFilename: function (f, event) {
       f.value = event.name
       f.file = event
-      this.setSelected(f, 'mimetype', { '@id': event.type })
+      console.log('browser mimetype:')
+      console.log(event.type)
+      if (event.type === '') {
+        // if browser does not provide mimetype
+        // try to match the extension with our vocabulary
+        let ext = event.name.split('.').pop()
+        console.log('no mimetype, using extension (' + ext + ') to search vocabulary')
+        for (let mt of this.vocabularies['mimetypes'].terms) {
+          for (let notation of mt['skos:notation']) {
+            if (ext === notation) {
+              console.log('found mimetype: ' + mt['@id'])
+              this.setSelected(f, 'mimetype', { '@id': mt['@id'] })
+            }
+          }
+        }
+      } else {
+        this.setSelected(f, 'mimetype', { '@id': event.type })
+      }
       this.$emit('form-input-' + f.component, f)
     },
     addFieldAutocompleteFilter: function (item, queryText) {
