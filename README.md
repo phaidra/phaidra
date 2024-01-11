@@ -157,6 +157,10 @@ docker compose up -d
 
 # Monitoring PHAIDRA
 
+___
+![alt text](./pictures/dashboard.png "Screenshot of PHAIDRA Grafana Dashboard")*Monitoring Dashboard*
+___
+
 There is a Grafana dashboard at `http://localhost:8899/grafana`, respectively `https://YOUR_FQDN/grafana`, that displays the containers' system usage and their logs.
 
 One can also use the following shell command to monitor the system usage
