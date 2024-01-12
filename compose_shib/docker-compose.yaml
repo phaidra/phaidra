@@ -242,7 +242,7 @@ services:
       - phaidra-network
 
   fedora:
-    image: fcrepo/fcrepo:6.4.0
+    image: fcrepo/fcrepo:6.4.1
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
