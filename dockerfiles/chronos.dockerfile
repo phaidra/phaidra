@@ -5,7 +5,7 @@ apt-get --quiet update
 apt-get install --yes --quiet --no-install-recommends \
     mariadb-client cron libtemplate-perl libmojolicious-perl liblog-log4perl-perl \
     liblog-dispatch-filerotate-perl libmongodb-perl libdatetime-format-iso8601-perl wget \
-    ca-certificates
+    ca-certificates curl
 EOF
 RUN <<EOF
 CURRENT_ARCHITECTURE=$(dpkg --print-architecture)
