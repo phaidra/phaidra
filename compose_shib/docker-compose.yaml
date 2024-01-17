@@ -291,7 +291,7 @@ services:
       - phaidra-network
 
   chronos:
-    image: testuser34/chronos-base:48be51eb
+    image: testuser34/chronos-base:73e15d1c
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
