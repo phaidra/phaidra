@@ -313,6 +313,8 @@ services:
       - OUTSIDE_HTTP_SCHEME=${OUTSIDE_HTTP_SCHEME}
       - PHAIDRA_ADMIN_USER=${PHAIDRA_ADMIN_USER}
       - PHAIDRA_ADMIN_PASSWORD=${PHAIDRA_ADMIN_PASSWORD}
+      - FEDORA_ADMIN_USER=${FEDORA_ADMIN_USER}
+      - FEDORA_ADMIN_PASS=${FEDORA_ADMIN_PASS}
     depends_on:
       - mariadb-fedora
       - mariadb-phaidra
