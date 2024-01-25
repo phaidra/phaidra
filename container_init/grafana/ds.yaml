@@ -14,3 +14,29 @@ datasources:
     url: http://prometheus:9090
     editable: false
     uid: phaidra_prometheus
+  - name: PhaidraDB
+    type: mysql
+    url: mariadb-phaidra:3306
+    user: grafana
+    jsonData:
+      database: phaidradb
+      maxOpenConns: 100 # Grafana v5.4+
+      maxIdleConns: 100 # Grafana v5.4+
+      maxIdleConnsAuto: true # Grafana v9.5.1+
+      connMaxLifetime: 14400 # Grafana v5.4+
+    secureJsonData:
+      password: grafana
+    uid: phaidra_mariadb_phaidra
+  - name: FedoraDB
+    type: mysql
+    url: mariadb-fedora:3306
+    user: grafana
+    jsonData:
+      database: fedoradb
+      maxOpenConns: 100 # Grafana v5.4+
+      maxIdleConns: 100 # Grafana v5.4+
+      maxIdleConnsAuto: true # Grafana v9.5.1+
+      connMaxLifetime: 14400 # Grafana v5.4+
+    secureJsonData:
+      password: grafana
+    uid: phaidra_mariadb_fedora

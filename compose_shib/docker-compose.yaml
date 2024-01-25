@@ -169,7 +169,7 @@ services:
       MARIADB_USER: ${MARIADB_PHAIDRA_USER}
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
     volumes:
-      - .././container_init/mariadb/phaidradb.sql.gz:/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro
+      - .././container_init/mariadb/phaidradb:/docker-entrypoint-initdb.d:ro
       - mariadb_phaidra:/var/lib/mysql
     networks:
       - phaidra-network
@@ -186,6 +186,7 @@ services:
       MARIADB_USER: ${MARIADB_PHAIDRA_USER}
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
     volumes:
+      - .././container_init/mariadb/fedoradb:/docker-entrypoint-initdb.d:ro
       - mariadb_fedora:/var/lib/mysql
     networks:
       - phaidra-network
