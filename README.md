@@ -195,12 +195,14 @@ c186e3959156   phaidra-demo-imageserver-1       0.01%     25.73MiB / 15.03GiB   
 e875a9d3e4e8   phaidra-demo-node-exporter-1     0.00%     8.68MiB / 15.03GiB    0.06%     2.12kB / 13.9kB   0B / 0B           6
 ```
 
-# Data persistance
-
+# Data persistance and integrity
 `docker compose up -d` will create directories in
 `$HOME/.local/share/docker/volumes` (`/var/lib/docker/volumes` in case you run rootful docker) to persist data created by PHAIDRA
 over docker restarts or whole system reboots.  These directories are the ones that need to be backupped to prevent data loss in case 
 of hardware failure.
+
+Objects loaded into PHAIDRA are automatically checksummed using the [SHA512-algorithm](https://en.wikipedia.org/wiki/SHA-2) by the underlying
+repository software [Fedora](https://fedora.lyrasis.org/).  By default, PHAIDRA triggers a recalculation of the checksums on every 2nd day of the month.  Results of these scans are visible on the built-in Grafana Dashboard for early hardware-failure detection.
 
 Depending on the PHAIDRA version you set up, the volumes will be prefixed differently (`phaidra-demo`, `phaidra-ssl`, `phaidra-shib`).
 
