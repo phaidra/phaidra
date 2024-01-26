@@ -1,3 +1,11 @@
+---
+name: Bug report 🐞
+about: Create a report to help us improve
+title: ''
+labels: bug
+assignees: ''
+---
+
 ## System Information
 
 <!-- Please tell us which OS and docker versions you are using -->
