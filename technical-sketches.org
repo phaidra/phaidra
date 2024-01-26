@@ -209,6 +209,18 @@ This file is used for generating the technical sketches included in the frontpag
                                     </tr>
                                     </table>
                                     >];
+          BIND_MARIADB_FEDORA_INIT[label=<
+                                    <table border="0">
+                                    <tr>
+                                    <td align="text"><b>host:</b><br align="left" /></td>
+                                    <td align="text">$REPO/container_init/mariadb/fedoradb<br align="left" /></td>
+                                    </tr>
+                                    <tr>
+                                    <td align="text">mariadb-fedora-container:<br align="left" /></td>
+                                    <td align="text">/docker-entrypoint-initdb.d:ro<br align="left" /></td>
+                                    </tr>
+                                    </table>
+                                    >];
           BIND_OPENLDAP_INIT [label=<
                               <table border="0">
                               <tr>
@@ -457,6 +469,7 @@ This file is used for generating the technical sketches included in the frontpag
   HS_DBGATE -- C_DBGATE [color="turquoise"];
 
   HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
+  BIND_MARIADB_FEDORA_INIT -- C_MARIADB_FEDORA [color="blue"];
 
   WEBSERVER -- BIND_HTTPD_CONFIG,BIND_DOCUMENTATION [color="blue"];
   WEBSERVER -- HS_SITEMAPS [color="turquoise"];
@@ -701,6 +714,18 @@ This file is used for generating the technical sketches included in the frontpag
                                                                      </tr>
                                                                      </table>
                                                                      >];
+                                           BIND_MARIADB_FEDORA_INIT[label=<
+                                                                    <table border="0">
+                                                                    <tr>
+                                                                    <td align="text"><b>host:</b><br align="left" /></td>
+                                                                    <td align="text">$REPO/container_init/mariadb/fedoradb<br align="left" /></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                    <td align="text">mariadb-fedora-container:<br align="left" /></td>
+                                                                    <td align="text">/docker-entrypoint-initdb.d:ro<br align="left" /></td>
+                                                                    </tr>
+                                                                    </table>
+                                                                    >];
                                            BIND_OPENLDAP_INIT [label=<
                                                                <table border="0">
                                                                <tr>
@@ -949,6 +974,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                     HS_DBGATE -- C_DBGATE [color="turquoise"];
 
                                                     HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
+                                                    BIND_MARIADB_FEDORA_INIT -- C_MARIADB_FEDORA [color="blue"];
 
                                                     WEBSERVER -- BIND_HTTPD_CONFIG, BIND_DOCUMENTATION [color="blue"];
                                                     WEBSERVER -- HS_SITEMAPS [color="turquoise"];
@@ -1195,6 +1221,18 @@ This file is used for generating the technical sketches included in the frontpag
                                                                      </tr>
                                                                      </table>
                                                                      >];
+                                           BIND_MARIADB_FEDORA_INIT[label=<
+                                                                    <table border="0">
+                                                                    <tr>
+                                                                    <td align="text"><b>host:</b><br align="left" /></td>
+                                                                    <td align="text">$REPO/container_init/mariadb/fedoradb<br align="left" /></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                    <td align="text">mariadb-fedora-container:<br align="left" /></td>
+                                                                    <td align="text">/docker-entrypoint-initdb.d:ro<br align="left" /></td>
+                                                                    </tr>
+                                                                    </table>
+                                                                    >];
                                            BIND_OPENLDAP_INIT [label=<
                                                                <table border="0">
                                                                <tr>
@@ -1442,6 +1480,7 @@ This file is used for generating the technical sketches included in the frontpag
                                                     HS_DBGATE -- C_DBGATE [color="turquoise"];
 
                                                     HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
+                                                    BIND_MARIADB_FEDORA_INIT -- C_MARIADB_FEDORA [color="blue"];
 
                                                     WEBSERVER -- BIND_HTTPD_CONFIG,BIND_DOCUMENTATION [color="blue"];
                                                     WEBSERVER -- HS_SITEMAPS [color="turquoise"];
