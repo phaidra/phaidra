@@ -201,11 +201,11 @@ This file is used for generating the technical sketches included in the frontpag
                                     <table border="0">
                                     <tr>
                                     <td align="text"><b>host:</b><br align="left" /></td>
-                                    <td align="text">$REPO/container_init/mariadb/phaidradb.sql.gz<br align="left" /></td>
+                                    <td align="text">$REPO/container_init/mariadb/phaidradb<br align="left" /></td>
                                     </tr>
                                     <tr>
                                     <td align="text">mariadb-phaidra-container:<br align="left" /></td>
-                                    <td align="text">/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro<br align="left" /></td>
+                                    <td align="text">/docker-entrypoint-initdb.d:ro<br align="left" /></td>
                                     </tr>
                                     </table>
                                     >];
@@ -693,11 +693,11 @@ This file is used for generating the technical sketches included in the frontpag
                                                                      <table border="0">
                                                                      <tr>
                                                                      <td align="text"><b>host:</b><br align="left" /></td>
-                                                                     <td align="text">$REPO/container_init/mariadb/phaidradb.sql.gz<br align="left" /></td>
+                                                                     <td align="text">$REPO/container_init/mariadb/phaidradb<br align="left" /></td>
                                                                      </tr>
                                                                      <tr>
                                                                      <td align="text">mariadb-phaidra-container:<br align="left" /></td>
-                                                                     <td align="text">/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro<br align="left" /></td>
+                                                                     <td align="text">/docker-entrypoint-initdb.d:ro<br align="left" /></td>
                                                                      </tr>
                                                                      </table>
                                                                      >];
@@ -1187,11 +1187,11 @@ This file is used for generating the technical sketches included in the frontpag
                                                                      <table border="0">
                                                                      <tr>
                                                                      <td align="text"><b>host:</b><br align="left" /></td>
-                                                                     <td align="text">$REPO/container_init/mariadb/phaidradb.sql.gz<br align="left" /></td>
+                                                                     <td align="text">$REPO/container_init/mariadb/phaidradb<br align="left" /></td>
                                                                      </tr>
                                                                      <tr>
                                                                      <td align="text">mariadb-phaidra-container:<br align="left" /></td>
-                                                                     <td align="text">/docker-entrypoint-initdb.d/phaidradb.sql.gz:ro<br align="left" /></td>
+                                                                     <td align="text">/docker-entrypoint-initdb.d:ro<br align="left" /></td>
                                                                      </tr>
                                                                      </table>
                                                                      >];

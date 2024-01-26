@@ -356,11 +356,11 @@
 <!-- BIND_MARIADB_PHAIDRA_INIT -->
 <g id="node16" class="node">
 <title>BIND_MARIADB_PHAIDRA_INIT</title>
-<polygon fill="none" stroke="blue" points="1181.5,-1972.26 1178.5,-1976.26 1157.5,-1976.26 1154.5,-1972.26 613.5,-1972.26 613.5,-1920.26 1181.5,-1920.26 1181.5,-1972.26"/>
-<text text-anchor="start" x="625.5" y="-1954.06" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
-<text text-anchor="start" x="827.5" y="-1953.06" font-family="Times,serif" font-size="14.00">$REPO/container_init/mariadb/phaidradb.sql.gz</text>
-<text text-anchor="start" x="625.5" y="-1932.06" font-family="Times,serif" font-size="14.00">mariadb&#45;phaidra&#45;container:</text>
-<text text-anchor="start" x="827.5" y="-1932.06" font-family="Times,serif" font-size="14.00">/docker&#45;entrypoint&#45;initdb.d/phaidradb.sql.gz:ro</text>
+<polygon fill="none" stroke="blue" points="1158,-1972.26 1155,-1976.26 1134,-1976.26 1131,-1972.26 637,-1972.26 637,-1920.26 1158,-1920.26 1158,-1972.26"/>
+<text text-anchor="start" x="649.5" y="-1954.06" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
+<text text-anchor="start" x="851.5" y="-1953.06" font-family="Times,serif" font-size="14.00">$REPO/container_init/mariadb/phaidradb</text>
+<text text-anchor="start" x="649.5" y="-1932.06" font-family="Times,serif" font-size="14.00">mariadb&#45;phaidra&#45;container:</text>
+<text text-anchor="start" x="851.5" y="-1932.06" font-family="Times,serif" font-size="14.00">/docker&#45;entrypoint&#45;initdb.d:ro</text>
 </g>
 <!-- BIND_MARIADB_PHAIDRA_INIT&#45;&#45;C_MARIADB_PHAIDRA -->
 <g id="edge5" class="edge">
