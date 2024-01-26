@@ -392,31 +392,29 @@ section [Shibboleth specific prerequisites](#shibboleth-specific-prerequisites))
 
 ## Phaidra Components
 
-In the folder `./components` one will find `phaidra-api`, `phaidra-ui`,
+In the folder `./src` one will find `phaidra-api`, `phaidra-ui`,
 and `phaidra-vue-components`, and `pixelgecko`, the core components of PHAIDRA.
 See the notes in the following subsections for provenance.
 
 ### phaidra-api
 
 This directory derives from commit c880c4159c5d68b25426451f4822f744a53ef680 of
-the repo at <https://github.com/phaidra/phaidra-api> (symlinks and
-git history stripped).
+the repo at <https://github.com/phaidra/phaidra-api>.
 
 ### phaidra-ui
 
 This directory derives from commit 5c9455373d36f4756e9caa2af989fac4dbd28f9f of
-the repo at <https://github.com/phaidra/phaidra-ui> (symlinks and
-git history stripped).
+the repo at <https://github.com/phaidra/phaidra-ui>.
 
 ### phaidra-vue-components
 
 This directory derives from commit 64f8b9870a0bc66a6b4a58fec5dfe6c2431e72d7 of
-the repo at <https://github.com/phaidra/phaidra-vue-components.git> (git history stripped).
+the repo at <https://github.com/phaidra/phaidra-vue-components.git>.
 
 ### pixelgecko
 
 This directory derives from commit be0af173eaac297289fa51843b69327f7c95242c of the repo at
-<https://gitlab.phaidra.org/phaidra-dev/pixelgecko> (git history stripped).
+<https://gitlab.phaidra.org/phaidra-dev/pixelgecko>.
 
 ## Software in use
 
