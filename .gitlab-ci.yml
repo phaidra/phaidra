@@ -158,7 +158,6 @@ compose-demo:
     - changes:
         paths:
           - compose_demo/docker-compose.yaml
-          - compose_demo/.env
           - components/phaidra-ui/**/*
           - container_components/solr/**/*
 
@@ -176,7 +175,6 @@ compose-ssl:
     - changes:
         paths:
           - compose_ssl/docker-compose.yaml
-          - compose_ssl/.env
           - components/phaidra-ui/**/*
           - container_components/solr/**/*
 
@@ -194,7 +192,6 @@ compose-shib:
     - changes:
         paths:
           - compose_shib/docker-compose.yaml
-          - compose_shib/.env
           - components/phaidra-ui/**/*
           - container_components/solr/**/*
 
