@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: A report to file functional or security-related problems.
+about: A report about a functional or security-related problem.
 title: ''
 labels: bug
 assignees: ''
