@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: A report to file functional or security-related problems.
 title: ''
 labels: bug
 assignees: ''
@@ -9,6 +9,10 @@ assignees: ''
 ## System Information
 
 <!-- Please tell us which OS and docker versions you are using -->
+
+## PHAIDRA Information
+
+<!-- Please tell us which version (commit, release tag) of PHAIDRA you are using  -->
 
 ## Expected behaviour
 
