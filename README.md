@@ -616,8 +616,7 @@ sudo sysctl --system
 6.  add cpuset support
 
     By default docker cpuset limitations are not enabled for rootless
-    configurations. One can do the following to change this. (see:
-    <https://docs.docker.com/engine/security/rootless/#limiting-resources>)
+    configurations (see [upstream documentation](https://docs.docker.com/engine/security/rootless/#limiting-resources)). One can do the following to change this:
 
 ``` example
 cat /sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.controllers
@@ -645,7 +644,7 @@ systemctl --user restart docker
     ```
 8. configure prometheus monitorability
    
-   To activate the docker metrics endpoint, create the file `~/.config/docker/daemon.json` and add the following:
+   To activate the docker metrics endpoint, create the file `~/.config/docker/daemon.json` and add the following (the code below is for a rootless setup, for priviledged docker see the [upstream documentation](https://docs.docker.com/config/daemon/prometheus/)):
    
    ```
    {
