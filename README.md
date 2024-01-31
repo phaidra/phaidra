@@ -449,38 +449,38 @@ docker version
 
 ``` example
 Client: Docker Engine - Community
- Version:           24.0.7
- API version:       1.43
- Go version:        go1.20.10
- Git commit:        afdd53b
- Built:             Thu Oct 26 09:08:17 2023
+ Version:           25.0.1
+ API version:       1.44
+ Go version:        go1.21.6
+ Git commit:        29cf629
+ Built:             Tue Jan 23 23:09:46 2024
  OS/Arch:           linux/amd64
  Context:           default
 
 Server: Docker Engine - Community
  Engine:
-  Version:          24.0.7
-  API version:      1.43 (minimum version 1.12)
-  Go version:       go1.20.10
-  Git commit:       311b9ff
-  Built:            Thu Oct 26 09:08:17 2023
+  Version:          25.0.1
+  API version:      1.44 (minimum version 1.24)
+  Go version:       go1.21.6
+  Git commit:       71fa3ab
+  Built:            Tue Jan 23 23:09:46 2024
   OS/Arch:          linux/amd64
   Experimental:     false
  containerd:
-  Version:          1.6.24
-  GitCommit:        61f9fd88f79f081d64d6fa3bb1a0dc71ec870523
+  Version:          1.6.27
+  GitCommit:        a1496014c916f9e62104b33d1bb5bd03b0858e59
  runc:
-  Version:          1.1.9
-  GitCommit:        v1.1.9-0-gccaecfc
+  Version:          1.1.11
+  GitCommit:        v1.1.11-0-g4bccb38
  docker-init:
   Version:          0.19.0
   GitCommit:        de40ad0
  rootlesskit:
-  Version:          1.1.1
+  Version:          2.0.0
   ApiVersion:       1.1.1
   NetworkDriver:    slirp4netns
   PortDriver:       slirp4netns
-  StateDir:         /tmp/rootlesskit1246533479
+  StateDir:         /run/user/1000/dockerd-rootless
  slirp4netns:
   Version:          1.2.0
   GitCommit:        656041d45cfca7a4176f6b7eed9e4fe6c11e8383
@@ -492,24 +492,24 @@ docker info
 
 ``` example
 Client: Docker Engine - Community
- Version:    24.0.7
+ Version:    25.0.1
  Context:    default
  Debug Mode: false
  Plugins:
   buildx: Docker Buildx (Docker Inc.)
-    Version:  v0.11.2
+    Version:  v0.12.1
     Path:     /usr/libexec/docker/cli-plugins/docker-buildx
   compose: Docker Compose (Docker Inc.)
-    Version:  v2.21.0
+    Version:  v2.24.2
     Path:     /usr/libexec/docker/cli-plugins/docker-compose
 
 Server:
- Containers: 1
-  Running: 0
+ Containers: 22
+  Running: 20
   Paused: 0
-  Stopped: 1
- Images: 26
- Server Version: 24.0.7
+  Stopped: 2
+ Images: 28
+ Server Version: 25.0.1
  Storage Driver: fuse-overlayfs
  Logging Driver: json-file
  Cgroup Driver: systemd
@@ -517,20 +517,20 @@ Server:
  Plugins:
   Volume: local
   Network: bridge host ipvlan macvlan null overlay
-  Log: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog
+  Log: awslogs fluentd gcplogs gelf journald json-file local splunk syslog
  Swarm: inactive
  Runtimes: io.containerd.runc.v2 runc
  Default Runtime: runc
  Init Binary: docker-init
- containerd version: 61f9fd88f79f081d64d6fa3bb1a0dc71ec870523
- runc version: v1.1.9-0-gccaecfc
+ containerd version: a1496014c916f9e62104b33d1bb5bd03b0858e59
+ runc version: v1.1.11-0-g4bccb38
  init version: de40ad0
  Security Options:
   seccomp
    Profile: builtin
   rootless
   cgroupns
- Kernel Version: 6.1.0-13-amd64
+ Kernel Version: 6.1.0-17-amd64
  Operating System: Debian GNU/Linux 12 (bookworm)
  OSType: linux
  Architecture: x86_64
