@@ -610,7 +610,7 @@ sub get_user_data {
   return {} unless (defined($username));
   
   if ($username eq $c->app->config->{phaidra}->{adminusername}) {
-    return {username => 'fedoraAdmin', firstname => 'fedora', lastname => 'Admin'};
+    return {username => $c->app->config->{phaidra}->{adminusername}, firstname => 'Phaidra', lastname => 'Admin', isadmin => 1};
   }
 
   my $entry = $self->getLDAPEntryForUser($c, $username);

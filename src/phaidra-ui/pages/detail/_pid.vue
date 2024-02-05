@@ -31,7 +31,7 @@
                     <div
                       v-for="(rel, i) in objectInfo.relationships.ispartof" :key="'ispartof' + i"
                     >
-                      <v-row align="center">
+                      <v-row v-if="rel" align="center">
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <p-img
                             :src="instanceconfig.api +
@@ -448,7 +448,22 @@
             </v-alert>
           </v-row>
           <v-row justify="center" v-if="showPreview">
-          <template v-if="(objectInfo.cmodel === 'Book')">
+            <template v-if="(objectInfo.cmodel === 'Book') && (objectInfo.datastreams.includes('UWMETADATA'))">
+              <v-btn
+                large
+                raised
+                color="primary"
+                :href="
+                  instanceconfig.fedora +
+                  '/objects/' +
+                  objectInfo.pid +
+                  '/methods/bdef:Book/view'
+                "
+                target="_blank"
+                >{{ $t("Open in Bookviewer") }}</v-btn
+              >
+            </template>
+          <template v-else-if="(objectInfo.cmodel === 'Book') && (objectInfo.datastreams.includes('IIIF-MANIFEST'))">
               <v-btn
                 large
                 raised
@@ -990,7 +1005,7 @@
                             instanceconfig.api +
                             '/object/' +
                             objectInfo.pid +
-                            '/diss/Content/downloadwebversion'
+                            '/download?trywebversion=1'
                           "
                           >{{ $t("Download web-optimized version") }}</a
                         >
@@ -1140,7 +1155,7 @@
                             <v-icon>mdi-eye-outline</v-icon
                             ><span class="ml-2">{{ stats.detail }}</span>
                           </v-col>
-                          <v-col v-if="(objectInfo.cmodel !== 'Resource') && (objectInfo.cmodel !== 'Container') && (objectInfo.cmodel !== 'Collection')">
+                          <v-col v-if="objectInfo.cmodel !== 'Resource'">
                             <v-icon>mdi-download</v-icon
                             ><span class="ml-2">{{ stats.download }}</span>
                           </v-col>
@@ -1241,7 +1256,7 @@
                         v-for="(rel, i) in objectInfo.alternativeformats" :key="'format' + i"
                       >
                         <v-row>
-                          <v-col cols="12" md="5">{{ rel.dc_format[0] }}</v-col>
+                          <v-col cols="12" md="5"><template v-if="rel.dc_format">{{ rel.dc_format[0] }}</template></v-col>
                           <v-col cols="12" md="7">
                             <nuxt-link
                               v-if="rel['dc_title']"
@@ -2134,10 +2149,17 @@ export default {
                 ids.persistent.push({ label: "Handle", value: 'https://hdl.handle.net/' + idvalue });
                 break;
               case "doi":
-                ids.persistent.push({ label: "DOI", value: 'https://doi.org/' + idvalue });
+                let doi = idvalue
+                if (!(doi.includes('https:') || doi.includes('http:'))) {
+                  doi = 'https://doi.org/' + idvalue
+                }
+                ids.persistent.push({ label: "DOI", value: doi });
                 break;
               case "urn":
                 ids.persistent.push({ label: "URN", value: 'https://nbn-resolving.org/' + idvalue });
+                break;
+              case "issn":
+                ids.persistent.push({ label: "ISSN", value: 'http://issn.org/resource/ISSN/' + idvalue });
                 break;
               case "isbn":
               case "ISBN":
@@ -2518,7 +2540,7 @@ export default {
           data: httpFormData
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfuly updated'), type: 'success' } ])
+          this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfully updated'), type: 'success' } ])
           await this.$store.dispatch(
             "fetchCollectionMembers",
             { pid: this.objectInfo.pid, page: this.collMembersCurrentPage, pagesize: this.collMembersPagesize }
@@ -2550,7 +2572,7 @@ export default {
           data: httpFormData
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfuly updated'), type: 'success' } ])
+          this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfully updated'), type: 'success' } ])
           await this.$store.dispatch(
             "fetchCollectionMembers",
             { pid: this.objectInfo.pid, page: this.collMembersCurrentPage, pagesize: this.collMembersPagesize }
@@ -2589,7 +2611,6 @@ export default {
         vm.resetData(vm);
         vm.$store.commit("setLoading", true);
         vm.$store.commit("setObjectInfo", null);
-        await vm.fetchAsyncData(vm, to.params.pid);
         vm.fetchChecksums(vm, to.params.pid);
         console.log("showtree:" + vm.showCollectionTree);
         vm.$store.commit("setLoading", false);
@@ -2602,7 +2623,6 @@ export default {
     this.resetData(this);
     this.$store.commit("setLoading", true);
     this.$store.commit("setObjectInfo", null);
-    await this.fetchAsyncData(this, to.params.pid);
     this.fetchChecksums(this, to.params.pid);
     console.log("showtree:" + this.showCollectionTree);
     this.$store.commit("setLoading", false);

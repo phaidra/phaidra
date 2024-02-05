@@ -657,7 +657,7 @@ DataCite is unhappy about this (or the ordering)
   }
 
   if (@publishers) {
-    push(@datacite, {xmlname => "publisher", value => $publishers[0]});    # there is only one publsher element?
+    push(@datacite, {xmlname => "publisher", value => $publishers[0]});    # there is only one publisher element?
     $c->app->log->debug("added default publisher: p=" . join(' ', @publishers));
   }
   else {

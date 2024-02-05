@@ -442,7 +442,7 @@ sub map_uwmetadata_2_dc_hash {
 
   my $ext = PhaidraAPI::Model::Uwmetadata::Extraction->new;
 
-  my %doc_uwns = {};
+  my %doc_uwns = ();
 
   my $dom;
   if (ref $xml eq 'Mojo::DOM') {

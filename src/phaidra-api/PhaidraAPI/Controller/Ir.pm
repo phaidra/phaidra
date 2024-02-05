@@ -805,7 +805,7 @@ sub submit {
     # continue, this isn't fatal
   }
 
-  for my $alternativeFromatPid (@alternativeFormatPids) {
+  for my $alternativeFormatPid (@alternativeFormatPids) {
 
     my @alternativeFormatsRelationships = (
       { predicate => "http://phaidra.org/XML/V1.0/relations#isAlternativeFormatOf",
@@ -816,12 +816,12 @@ sub submit {
       }
     );
 
-    $self->app->log->debug("Adding relationships[" . $self->app->dumper(\@alternativeFormatsRelationships) . "] to pid[$alternativeFromatPid]");
+    $self->app->log->debug("Adding relationships[" . $self->app->dumper(\@alternativeFormatsRelationships) . "] to pid[$alternativeFormatPid]");
 
-    my $r = $object_model->add_relationships($self, $alternativeFromatPid, \@alternativeFormatsRelationships, $username, $password);
+    my $r = $object_model->add_relationships($self, $alternativeFormatPid, \@alternativeFormatsRelationships, $username, $password);
     push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
     if ($r->{status} ne 200) {
-      $self->app->log->error("Error adding relationships[" . $self->app->dumper(\@alternativeFormatsRelationships) . "] pid[$alternativeFromatPid] res[" . $self->app->dumper($res) . "]");
+      $self->app->log->error("Error adding relationships[" . $self->app->dumper(\@alternativeFormatsRelationships) . "] pid[$alternativeFormatPid] res[" . $self->app->dumper($res) . "]");
 
       # continue, this isn't fatal
     }
@@ -1060,11 +1060,11 @@ sub stats_chart {
   }
 
   if (defined($key)) {
-    if ($key == 'downloads') {
+    if ($key eq 'downloads') {
       $self->render(text => $downloads, status => 200);
       return;
     }
-    if ($key == 'detail_page') {
+    if ($key eq 'detail_page') {
       $self->render(text => $detail_page, status => 200);
       return;
     }

@@ -77,7 +77,7 @@ export default {
           data: httpFormData
         })
         if (response.status === 200) {
-          this.$store.commit('setAlerts', [{ type: 'success', msg: 'Web-optimized version successfuly uploaded' }])
+          this.$store.commit('setAlerts', [{ type: 'success', msg: 'Web-optimized version successfully uploaded' }])
           this.$router.push(this.localeLocation({ path: `/detail/${this.parentpid}` }))
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {

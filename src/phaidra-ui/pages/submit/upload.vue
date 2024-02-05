@@ -380,6 +380,12 @@ export default {
       tech.multilingual = false
       self.form.sections[4].fields.push(tech);
 
+      self.form.sections[5].fields.push(fields.getField("alternate-identifier"))
+      let published = fields.getField("date-edtf")
+      published.type = 'dcterms:issued'
+      self.form.sections[5].fields.push(published)
+      self.form.sections[5].fields.push(fields.getField("volume"));
+      self.form.sections[5].fields.push(fields.getField("issue"));
       self.form.sections[5].fields.push(fields.getField("series"));
       let publ = fields.getField("bf-publication")
       self.form.sections[5].fields.push(publ);

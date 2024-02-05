@@ -835,7 +835,7 @@ sub resolve_if_id {
   }
   elsif ($datatype eq 'SPL') {
 
-    # || $datatype eq 'Curriculum' we'll ignore curriculum now, it's complicated, uni-specfic and rarely used
+    # || $datatype eq 'Curriculum' we'll ignore curriculum now, it's complicated, uni-specific and rarely used
 
     my $labels;
     my $langs = $c->app->config->{directory}->{study_plans_languages};

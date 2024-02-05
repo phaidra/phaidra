@@ -192,6 +192,15 @@
                             v-if="!signedin && appconfig.enablelogin"
                             ><v-list-item-title><a :class="hover ? 'ph-button primary' : 'ph-button grey'" href="/login">{{ $t("Login") }}</a></v-list-item-title></v-list-item
                         >
+                        <v-list-item
+                            v-if="user.isadmin"
+                            @click="
+                            $router.push(localeLocation({ path: '/admin' }))
+                            "
+                            ><v-list-item-title>{{
+                            $t("Admin")
+                            }}</v-list-item-title></v-list-item
+                        >
                         <v-list-item v-if="signedin" @click="logout"
                             ><v-list-item-title>{{
                             $t("Logout")
@@ -260,6 +269,14 @@
                         v-show="!signedin && appconfig.enablelogin"
                         :href="localePath('/login')"
                         >{{ $t("Login") }}</a
+                    >
+                    </v-hover>
+                    <v-hover v-slot:default="{ hover }">
+                    <nuxt-link
+                        v-show="user.isadmin"
+                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                        :to="localePath('/admin')"
+                        >{{ $t("Admin") }}</nuxt-link
                     >
                     </v-hover>
                     <v-hover>

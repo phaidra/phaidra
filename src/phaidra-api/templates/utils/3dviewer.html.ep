@@ -49,7 +49,7 @@
     // "https://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get"
     presenter.setScene({
       meshes: {
-        "Mesh1": { url: 'https://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get', mType: '<%= $mType %>' }
+        "Mesh1": { url: '<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get<% if ($trywebversion) { %>?trywebversion=1<% } %>', mType: '<%= $mType %>' }
       },
       modelInstances: {
         "Model1": { mesh: "Mesh1" }

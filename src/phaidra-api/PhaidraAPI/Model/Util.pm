@@ -110,7 +110,7 @@ sub get_video_key {
     }
   }
   else {
-    $errormsg = 'unavaliable';
+    $errormsg = 'unavailable';
     $res->{status} = 404;
   }
   if ($errormsg) {
@@ -140,9 +140,11 @@ sub anonymize_ip {
 sub track_action {
   my ($self, $c, $pid, $action) = @_;
 
-  my $ip  = $c->tx->remote_address;
-  my $ipa = $self->anonymize_ip($c, $ip);
-  $c->app->db_metadata->dbh->do("INSERT INTO usage_stats (action, pid, ip) VALUES ('$action', '$pid', '$ipa');") or $c->app->log->error($c->app->db_metadata->dbh->errstr);
+  unless (exists($c->app->config->{"sites"})) {
+    my $ip  = $c->tx->remote_address;
+    my $ipa = $self->anonymize_ip($c, $ip);
+    $c->app->db_metadata->dbh->do("INSERT INTO usage_stats (action, pid, ip) VALUES ('$action', '$pid', '$ipa');") or $c->app->log->error($c->app->db_metadata->dbh->errstr);
+  }
 }
 
 1;

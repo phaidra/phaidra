@@ -435,14 +435,9 @@ sub startup {
   $r->get('directory/org_get_parentpath')           ->to('directory#org_get_parentpath');
   $r->get('directory/org_get_units')                ->to('directory#org_get_units');
 
-  $r->get('search/owner/#username')                 ->to('search#owner');
-  $r->get('search/collections/owner/#username')     ->to('search#collections_owner');
   $r->get('search/triples')                         ->to('search#triples');
-  $r->get('search')                                 ->to('search#search');
   $r->get('search/select')                          ->to('search#search_solr');
   $r->post('search/select')                         ->to('search#search_solr');
-  $r->post('search/lucene')                         ->to('search#search_lucene');
-
   $r->post('search/get_pids')                       ->to('search#get_pids');
 
   $r->get('utils/get_all_pids')                     ->to('utils#get_all_pids');

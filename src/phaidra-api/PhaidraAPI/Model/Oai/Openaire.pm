@@ -834,7 +834,7 @@ sub get_metadata_openaire {
         $rightsURI = 'http://purl.org/coar/access_right/c_16ec';
       }
       case 'closedAccess' {
-        $rights    = 'metadata only accesss';
+        $rights    = 'metadata only access';
         $rightsURI = 'http://purl.org/coar/access_right/c_14cb';
       }
     }
@@ -854,7 +854,7 @@ sub get_metadata_openaire {
         $rightsURI = 'http://purl.org/coar/access_right/c_16ec';
       }
       case 'https://pid.phaidra.org/vocabulary/QNGE-V02H' {
-        $rights    = 'metadata only accesss';
+        $rights    = 'metadata only access';
         $rightsURI = 'http://purl.org/coar/access_right/c_14cb';
       }
     }

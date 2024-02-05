@@ -438,13 +438,13 @@ sub preview {
           return;
         }
       }
-      if ($imgsrvjobstatus eq 'new' or $imgsrvjobstatus eq 'in_progess') {
-        $self->app->log->info("Imageserver job new/in_progess: sleeping... pid[$pid] cm[$cmodel]");
+      if ($imgsrvjobstatus eq 'new' or $imgsrvjobstatus eq 'in_progress') {
+        $self->app->log->info("Imageserver job new/in_progress: sleeping... pid[$pid] cm[$cmodel]");
         Mojo::IOLoop->timer(6 => sub { });
         Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
-        $self->app->log->info("Imageserver job new/in_progess: waking up... pid[$pid] cm[$cmodel]");
+        $self->app->log->info("Imageserver job new/in_progress: waking up... pid[$pid] cm[$cmodel]");
         $imgsrvjobstatus = $self->imageserver_job_status($pid);
-        $self->app->log->info("Imageserver job new/in_progess: job status [$imgsrvjobstatus] pid[$pid] cm[$cmodel]");
+        $self->app->log->info("Imageserver job new/in_progress: job status [$imgsrvjobstatus] pid[$pid] cm[$cmodel]");
       }
       if ($imgsrvjobstatus eq 'finished') {
         my $license = '';
@@ -547,7 +547,7 @@ sub preview {
     case 'Asset' {
 
       unless ($docres) {
-         $docres = $index_model->get_doc($self, $pid);
+        $docres = $index_model->get_doc($self, $pid);
         if ($docres->{status} ne 200) {
           $self->app->log->error("pid[$pid] error searching for doc: " . $self->app->dumper($docres));
           $self->setNoCacheHeaders();
@@ -593,7 +593,9 @@ $self->stash(baseurl  => $self->config->{baseurl});
           return;
         }
         $self->stash(baseurl  => $self->config->{baseurl});
+        $self->stash(scheme   => $self->config->{scheme});
         $self->stash(basepath => $self->config->{basepath});
+        $self->stash(trywebversion => $trywebversion);
         $self->stash(pid      => $pid);
         $self->stash(mType    => 'ply')   if $index_mime eq 'model/ply';
         $self->stash(mType    => 'nexus') if $index_mime eq 'model/nxz';
@@ -692,7 +694,7 @@ $self->stash(baseurl  => $self->config->{baseurl});
         $self->stash(trywebversion => $trywebversion);
 
         # html tag won't work with video/quicktime
-        $self->stash(mimetype => $mimetype = 'video/quicktime' ? 'video/mp4' : $mimetype);
+        $self->stash(mimetype => $mimetype eq 'video/quicktime' ? 'video/mp4' : $mimetype);
         $self->stash(pid      => $pid);
         my $thumbPid = $self->get_is_thumbnail_for($pid);
         if ($thumbPid) {
@@ -935,9 +937,9 @@ sub create_simple {
           }
           if ($foundfile) {
             if (-r $pullupload) {
-              my $fileAssset = Mojo::Asset::File->new(path => $pullupload);
+              my $fileAsset = Mojo::Asset::File->new(path => $pullupload);
               $upload = Mojo::Upload->new;
-              $upload->asset($fileAssset);
+              $upload->asset($fileAsset);
               my $pulluploadPath = Mojo::Path->new($pullupload);
               my @parts          = @{$pulluploadPath->parts};
               my $filename       = $parts[-1];

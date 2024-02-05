@@ -5,8 +5,6 @@ use warnings;
 use v5.10;
 use XML::Parser::PerlSAX;
 use XML::XPath;
-use Mojo::IOLoop;
-use Mojo::IOLoop::Delay;
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Fedora;
 use base qw/Mojo::Base/;
@@ -220,7 +218,7 @@ sub related_objects_mptmysql() {
   my $staterel   = '<info:fedora/fedora-system:def/model#state>';
   my $statetable = 't' . $relmap{$staterel};
 
-  # if tripplestore does not know the relation or relation is no provided
+  # if triple store does not know the relation or relation is not provided
   # then there are no related objects
   if (defined($relation) && !(exists($relmap{"<$relation>"}))) {
     unshift @{$res->{alerts}}, {type => 'error', msg => "Unknown relation"};
@@ -248,7 +246,7 @@ sub related_objects_mptmysql() {
 		$reljoin
 		WHERE $statetable.o = ? AND $relwhere
 		GROUP BY subject
-		ORDER BY $statetable.s DESC
+		ORDER BY $statetable.s ASC
 		";
 
   if ($limit) {
@@ -326,7 +324,7 @@ sub related_objects_mptmysql() {
 
       my @titles = split($titsep, $titles);
       my @titles_out;
-      my $session_lang = 'eng';
+      my $session_lang = 'ita';
       my $pref_title   = '';
       my $en_title     = '';
       my $text         = '';
@@ -370,10 +368,10 @@ sub related_objects_mptmysql() {
       }
 
       foreach my $field (@{$fields}) {
-        if ($field == 'dc.description') {
+        if ($field eq 'dc.description') {
           my @descs = split($descsep, $descs);
           my @descs_out;
-          my $session_lang = 'eng';
+          my $session_lang = 'ita';
           my $pref_desc    = '';
           my $en_desc      = '';
           my $text         = '';
@@ -435,7 +433,7 @@ sub related_objects_mptmysql() {
 
 sub related {
 
-  my ($self, $c, $pid, $relation, $right, $from, $limit, $fields, $cb) = @_;
+  my ($self, $c, $pid, $relation, $right, $from, $limit, $fields) = @_;
 
   # on frontend the first item is 1, but in triplestore its 0
   if ($from > 0) {
@@ -516,7 +514,7 @@ sub related {
 
   }
 
-  $self->$cb($sr);
+  return $sr;
 }
 
 sub datastream_exists {
@@ -772,219 +770,6 @@ sub datastreams_hash {
   }
 
   $res->{dshash} = \%dsh;
-
-  return $res;
-}
-
-# org.apache.lucene.analysis.core.StopAnalyzer
-my @english_stopwords = ("a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if", "in", "into", "is", "it", "no", "not", "of", "on", "or", "such", "that", "the", "their", "then", "there", "these", "they", "this", "to", "was", "will", "with");
-
-my %english_stopwords_hash = map {$_ => 1} @english_stopwords;
-
-sub build_query {
-  my ($self, $c, $query) = @_;
-  my $q;
-
-  my @words = split(' ', $query);
-
-  # currently only title
-  $q = "(((uw.general.title:(";
-  foreach my $w (@words) {
-    next if (exists($english_stopwords_hash{$w}));
-    $w = $self->check_word($c, $w);
-    $q .= "+$w~0.8";
-  }
-  $q .= ")^4)))";
-
-  return $q;
-}
-
-sub check_word() {
-  my ($self, $c, $w) = @_;
-
-  $w =~ s/\\/\\\\/g;
-  $w =~ s/\:/\\\:/g;
-  $w =~ s/\"/\\\"/g;
-  $w =~ s/\+/\\\+/g;
-  $w =~ s/\-/\\\-/g;
-  $w =~ s/\&\&/\\\&\\\&/g;
-  $w =~ s/\|\|/\\\|\\\|/g;
-  $w =~ s/\!/\\\!/g;
-  $w =~ s/\(/\\\(/g;
-  $w =~ s/\)/\\\)/g;
-  $w =~ s/\{/\\\{/g;
-  $w =~ s/\}/\\\}/g;
-  $w =~ s/\[/\\\[/g;
-  $w =~ s/\]/\\\]/g;
-  $w =~ s/\^/\\\^/g;
-  $w =~ s/\~/\\\~/g;
-
-  # wildchards not allowed as first char
-  # see: http://lucene.apache.org/
-  $w =~ s/^\*|^\?//g;
-
-  # delete special chars
-  $w =~ s/\,|\.|\;|\_|\=|\!|\N{U+00B0}|\$|\%|\&|\/|\|\N{U+2032}|\N{U+00A7}/ /g;
-
-  return $w;
-}
-
-sub search {
-
-  my ($self, $c, $query, $from, $limit, $sort, $reverse, $fields, $cb) = @_;
-
-  # never reverse relevance
-  $reverse = 1 if (defined($sort) && $sort =~ m/SCORE/);
-
-  if ($sort) {
-    $sort = "$sort," . ($reverse ? 'true' : 'false');
-  }
-
-  my $hitPageStart   = $from eq 0 ? 1 : $from;
-  my $hitPageSize    = $limit;
-  my $snippetsMax    = 0;
-  my $fieldMaxLength = 200;
-  my $restXslt       = 'copyXml';
-  my $sortFields     = defined($sort) ? $sort : 'fgs.lastModifiedDate,STRING,false';
-
-  #$c->app->log->debug($c->app->dumper($fields));
-  if (!defined($fields) || ()) {
-    $fields = [
-      'PID', 'fgs.contentModel', 'fgs.createdDate', 'fgs.lastModifiedDate', 'uw.general.title', 'uw.general.title.de', 'uw.general.title.en', 'uw.general.description', 'uw.general.description.de', 'uw.general.description.en', 'uw.digitalbook.name_magazine',
-      'uw.digitalbook.from_page', 'uw.digitalbook.to_page', 'uw.digitalbook.volume', 'uw.digitalbook.edition', 'uw.digitalbook.releaseyear', 'uw.digitalbook.booklet', 'dc.creator',
-      'uw.lifecycle.contribute.entity.firstname',
-      'uw.lifecycle.contribute.entity.institution'
-    ];
-  }
-  if (scalar @{$fields} < 1) {
-    $fields = [
-      'PID', 'fgs.contentModel', 'fgs.createdDate', 'fgs.lastModifiedDate', 'uw.general.title', 'uw.general.title.de', 'uw.general.title.en', 'uw.general.description', 'uw.general.description.de', 'uw.general.description.en', 'uw.digitalbook.name_magazine',
-      'uw.digitalbook.from_page', 'uw.digitalbook.to_page', 'uw.digitalbook.volume', 'uw.digitalbook.edition', 'uw.digitalbook.releaseyear', 'uw.digitalbook.booklet', 'dc.creator',
-      'uw.lifecycle.contribute.entity.firstname',
-      'uw.lifecycle.contribute.entity.institution'
-    ];
-  }
-
-  if ($limit ne 0 && $limit < 50) {
-    return $self->$cb($self->search_call($c, 'gfindObjects', $query, $hitPageStart, $hitPageSize, 200, $fieldMaxLength, $restXslt, $sortFields, $fields));
-  }
-  else {
-    # read in chunks
-    my $sr;
-    my $res;
-    my $from     = 1;
-    my $pagesize = 50;    # default by gsearch anyway, so mostly it won't deliver more
-    my $total    = 0;
-    my $read     = 0;
-    my $done     = 0;
-    my $i        = 0;
-    my @objects;
-
-    while (!$done) {
-
-      $done = 1;          # we'll set this to 0 later if it seems we are not finished
-
-      $i++;
-
-      if ($i > 10000) {
-        $c->app->log->warn("search loop reached 10000 iterations, possibly infinite cycle");
-      }
-
-      #my $log;
-      #$log->{from} = $from;
-      #$log->{pagesize} = $pagesize;
-      #$log->{total} = $total;
-      #$log->{'read'} = $read;
-      #$log->{done} = $done;
-      #$log->{i} = $i;
-      #$log->{limit} = $limit;
-      #$c->app->log->debug($c->app->dumper($log));
-
-      if (($read + $pagesize) > $limit && $limit ne 0) {
-        $pagesize = $limit - $read;
-      }
-
-      $sr    = $self->search_call($c, 'gfindObjects', $query, $from, $pagesize, 200, $fieldMaxLength, $restXslt, $sortFields, $fields);
-      $total = $sr->{hits};
-
-      if ($sr->{status} eq 200) {
-        my $lenght = scalar @{$sr->{objects}};
-        $read += $lenght;
-        $from = $read + 1;
-
-        push @objects, @{$sr->{objects}};
-        if ($limit eq 0) {
-
-          # we read everything
-          if ($read < $total) {
-            $done = 0;
-          }
-        }
-        else {
-          # we read until limit or until total, if its lower
-          if (($read < $limit) && ($read < $total)) {
-            $done = 0;
-          }
-        }
-      }
-      else {
-        $done = 1;    # should be already anyway
-        unshift @{$res->{alerts}}, $sr->{alerts};
-      }
-    }
-    $res->{status}  = $sr->{status};
-    $res->{hits}    = $sr->{hits};
-    $res->{objects} = \@objects;
-
-    return $self->$cb($res);
-  }
-
-}
-
-sub search_call() {
-
-  my ($self, $c, $operation, $query, $hitPageStart, $hitPageSize, $snippetsMax, $fieldMaxLength, $restXslt, $sortFields, $fields) = @_;
-
-  my $res = {alerts => [], status => 200};
-
-  my $url = Mojo::URL->new;
-  $url->scheme($c->app->config->{fedora}->{scheme} ? $c->app->config->{fedora}->{scheme} : 'https');
-  $url->host($c->app->config->{phaidra}->{fedorabaseurl});
-  $url->path("/gsearch/rest/");
-  $url->query(
-    { operation      => $operation,
-      query          => $query,
-      hitPageStart   => $hitPageStart,
-      hitPageSize    => $hitPageSize,
-      snippetsMax    => $snippetsMax,
-      fieldMaxLength => $fieldMaxLength,
-      restXslt       => $restXslt,
-      sortFields     => $sortFields
-    }
-  );
-
-  my @result;
-
-  my $ua = Mojo::UserAgent->new;
-  my $tx = $ua->get($url)->result;
-
-  if ($tx->is_success) {
-    my $xml = $tx->body;
-
-    $xml =~ s/<\?xml version="1.0" encoding="UTF-16"\?>/<?xml version="1.0" encoding="UTF-8"?>/;
-
-    my $saxhandler = PhaidraAPI::Model::Search::GSearchSAXHandler->new($fields, \@result);
-    my $parser     = XML::Parser::PerlSAX->new(Handler => $saxhandler);
-
-    $parser->parse($xml);
-    $res->{hits}    = $saxhandler->get_hitTotal();
-    $res->{objects} = \@result;
-
-  }
-  else {
-    unshift @{$res->{alerts}}, {type => 'error', msg => $tx->message};
-    $res->{status} = $tx->code;
-  }
 
   return $res;
 }

@@ -252,12 +252,12 @@ sub check_rights {
     my $getres       = $object_model->get_datastream($c, $pid, $ds, $c->stash->{basic_auth_credentials}->{username}, $c->stash->{basic_auth_credentials}->{password});
 
     if ($getres->{status} eq 404) {
-      $c->app->log->info("Authz op[$op] pid[$pid] username[" . defined($username) ? $username : '' . "] successful");
+      $c->app->log->info("Authz op[$op] pid[$pid] username[" . (defined($username) ? $username : '') . "] successful");
       $res->{status} = 200;
       return $res;
     }
     else {
-      $c->app->log->info("Authz op[$op] pid[$pid] username[" . defined($username) ? $username : '' . "] failed");
+      $c->app->log->info("Authz op[$op] pid[$pid] username[" . (defined($username) ? $username : '') . "] failed");
       $res->{status} = 403;
       $res->{json}   = $getres;
       push @{$res->{alerts}}, @{$getres->{alerts}} if scalar @{$getres->{alerts}} > 0;

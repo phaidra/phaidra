@@ -473,11 +473,11 @@ sub _get_entities {
 
     # if this is an object from institutional repository
     # and there are only two entities in the contribution
-    # where the first has a name but no insitution
+    # where the first has a name but no institution
     # and the second has an institution but not a name
     # then the second institution-entity is the affiliation of the first entity
-    my $entities_lenght = scalar @entities;
-    if ( ($entities_lenght == 2)
+    my $entities_length = scalar @entities;
+    if ( ($entities_length == 2)
       && $irdata
       && ($entities[0]->{lastname} || $entities[0]->{firstname})
       && !($entities[0]->{institution})

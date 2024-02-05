@@ -36,7 +36,7 @@ sub streamingplayer {
     }
   }
   else {
-    $self->render(text => "stremaing not configured", status => 503);
+    $self->render(text => "Streaming not configured", status => 503);
   }
 }
 
@@ -55,7 +55,7 @@ sub streamingplayer_key {
     }
   }
   else {
-    $self->render(text => "stremaing not configured", status => 503);
+    $self->render(text => "Streaming not configured", status => 503);
   }
 }
 

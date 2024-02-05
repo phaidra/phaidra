@@ -914,7 +914,15 @@ sub _update_members {
 
   my $res = {status => 200};
 
-  $c->app->log->debug("[$pid] [" . (scalar @{$members}) . "] objects should have [$relation] relation to [$pid]");
+  my $numMem = scalar @{$members};
+
+  $c->app->log->debug("[$pid] [$numMem] objects should have [$relation] relation to [$pid]");
+
+  if ($numMem > 1000) {
+    $c->app->log->error("[$pid] skipping _update_members, too many members: [$numMem]");
+    unshift @{$res->{alerts}}, {type => 'warning', msg => "_update_members skipped, too many members: [$numMem]"};
+    return $res;
+  }
 
   #$c->app->log->debug("XXXXXXXXXXXX ".$c->app->dumper($members));
 
@@ -1820,7 +1828,7 @@ sub _add_mods_index {
           }
         }
       }
-      my $name = "$firstname $lastname";
+      my $name = (defined($firstname) ? $firstname : '') . " " . (defined($lastname) ? $lastname : '');
       push @{$index->{"bib_roles_pers_$role"}}, trim $name unless $name eq ' ';
       push @{$index->{"bib_roles_corp_$role"}}, $institution if defined $institution;
     }
@@ -2634,7 +2642,7 @@ sub _get_uwm_roles {
                 $entity{$l2->{xmlname}} = $l2->{ui_value} if $l2->{ui_value} ne '';
               }
             }
-            my $name = "$firstname $lastname";
+            my $name = (defined($firstname) ? $firstname : '') . " " . (defined($lastname) ? $lastname : '');
             $entity{name}        = $name unless $name eq ' ';
             $entity{institution} = $institution if defined($institution);
             $entity{role}        = $role;

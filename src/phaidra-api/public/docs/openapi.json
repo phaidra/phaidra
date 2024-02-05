@@ -42,7 +42,7 @@
         },
         {
             "name": "templates",
-            "description": "Requests for managing metadata teplates"
+            "description": "Requests for managing metadata templates"
         },
         {
             "name": "directory",
@@ -104,7 +104,7 @@
                                     "mimetype": {
                                         "type": "string",
                                         "example": "application/json",
-                                        "description": "mimetypee optional: if not provided, heuristics is used on server side",
+                                        "description": "mimetype is optional: if not provided, heuristics is used on server side",
                                         "required": false
                                     },
                                     "metadata": {
@@ -125,47 +125,47 @@
                             }
                         }
                     }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Picture object created",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "alerts": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "msg": {
-                                                        "type": "string"
-                                                    },
-                                                    "type": {
-                                                        "type": "string"
-                                                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Picture object created",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "alerts": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "msg": {
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "type": "string"
                                                 }
                                             }
-                                        },
-                                        "pid": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "number"
                                         }
+                                    },
+                                    "pid": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "number"
                                     }
                                 }
                             }
                         }
-                    },
-                    "404": {
-                        "description": "error creating object",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                }
+                    }
+                },
+                "404": {
+                    "description": "error creating object",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
                             }
                         }
                     }
@@ -551,7 +551,7 @@
         "/collection/create": {
             "post": {
                 "summary": "Creates a collection",
-                "description": "Use to create collection object. The process is the same as for other simple objects (eg picture/create), just don't provide any file parameter.",
+                "description": "Use to create collection object. The process is the same as for other simple objects (e.g. picture/create), just don't provide any file parameter.",
                 "tags": [
                     "object-basics"
                 ],
@@ -641,7 +641,7 @@
                         "multipart/form-data": {
                             "schema": {
                                 "type": "object",
-                                "description": "JSON metadata example(see [creating a container example](https://github.com/phaidra/phaidra-api/wiki/Creating-a-container)",
+                                "description": "JSON metadata example (see [creating a container example](https://github.com/phaidra/phaidra-api/wiki/Creating-a-container))",
                                 "properties": {
                                     "metadata": {
                                         "$ref": "#/components/schemas/container_with_members"
@@ -773,7 +773,7 @@
         "/uwmetadata/json2xml": {
             "post": {
                 "summary": "Transforms uwmetadata JSON to XML.",
-                "description": "Transforms uwmetadata structure from JSON to XML (See [examples of uwmetadata](https://github.com/phaidra/phaidra-api/wiki/Datastream-examples)).",
+                "description": "Transforms uwmetadata structure from JSON to XML (see [examples of uwmetadata](https://github.com/phaidra/phaidra-api/wiki/Datastream-examples)).",
                 "tags": [
                     "datastream"
                 ],
@@ -843,7 +843,7 @@
         "/uwmetadata/xml2json": {
             "post": {
                 "summary": "Transforms uwmetadata XML to JSON.",
-                "description": "Transforms the uwmetadata structure from XML to JSON (See [examples of uwmetadata](https://github.com/phaidra/phaidra-api/wiki/Datastream-examples)).",
+                "description": "Transforms the uwmetadata structure from XML to JSON (see [examples of uwmetadata](https://github.com/phaidra/phaidra-api/wiki/Datastream-examples)).",
                 "tags": [
                     "datastream"
                 ],
@@ -924,7 +924,7 @@
         "/uwmetadata/validate": {
             "post": {
                 "summary": "Validates uwmetadata XML.",
-                "description": "Validates the uwmetadata structure in XML (See an [example of uwmetadata XML](https://github.com/phaidra/phaidra-api/wiki/Article-uwmetadata-in-xml-format)). The XML has to be sent in the request body as raw data.",
+                "description": "Validates the uwmetadata structure in XML (see an [example of uwmetadata XML](https://github.com/phaidra/phaidra-api/wiki/Article-uwmetadata-in-xml-format)). The XML has to be sent in the request body as raw data.",
                 "tags": [
                     "datastream"
                 ],
@@ -1255,7 +1255,7 @@
         "/rights/json2xml": {
             "post": {
                 "summary": "Transforms rights JSON to XML.",
-                "description": "Transforms the rights structure from JSON to XML. (See [examples of rights structure](https://github.com/phaidra/phaidra-api/wiki/Example-of-rights))",
+                "description": "Transforms the rights structure from JSON to XML (see [examples of rights structure](https://github.com/phaidra/phaidra-api/wiki/Example-of-rights))",
                 "tags": [
                     "datastream"
                 ],
@@ -1325,7 +1325,7 @@
         "/rights/xml2json": {
             "post": {
                 "summary": "Transforms rights XML to JSON.",
-                "description": "Transforms the rights structure from XML to JSON (See [examples of rights structure](https://github.com/phaidra/phaidra-api/wiki/Example-of-rights)).",
+                "description": "Transforms the rights structure from XML to JSON (see [examples of rights structure](https://github.com/phaidra/phaidra-api/wiki/Example-of-rights)).",
                 "tags": [
                     "datastream"
                 ],
@@ -1429,7 +1429,7 @@
         "/rights/json2xml_validate": {
             "post": {
                 "summary": "Validates rights JSON.",
-                "description": "Transforms the rights structure from JSON to XML and validates it (See [examples of rights structure](https://github.com/phaidra/phaidra-api/wiki/Example-of-rights)).",
+                "description": "Transforms the rights structure from JSON to XML and validates it (see [examples of rights structure](https://github.com/phaidra/phaidra-api/wiki/Example-of-rights)).",
                 "tags": [
                     "datastream"
                 ],
@@ -1479,7 +1479,7 @@
         "/geo/json2xml": {
             "post": {
                 "summary": "Transforms the geo JSON to XML.",
-                "description": "Transforms the geo structure from JSON to XML (See [examples of geo datastream of a map object](https://github.com/phaidra/phaidra-api/wiki/GEO-datastream-of-a-map-object)).",
+                "description": "Transforms the geo structure from JSON to XML (see [examples of geo datastream of a map object](https://github.com/phaidra/phaidra-api/wiki/GEO-datastream-of-a-map-object)).",
                 "tags": [
                     "datastream"
                 ],
@@ -1545,7 +1545,7 @@
         "/geo/xml2json": {
             "post": {
                 "summary": "Transforms geo XML to JSON.",
-                "description": "Transforms the geo structure from XML to JSON (See [examples of geo datastream of a map object](https://github.com/phaidra/phaidra-api/wiki/GEO-datastream-of-a-map-object)).",
+                "description": "Transforms the geo structure from XML to JSON (see [examples of geo datastream of a map object](https://github.com/phaidra/phaidra-api/wiki/GEO-datastream-of-a-map-object)).",
                 "tags": [
                     "datastream"
                 ],
@@ -1605,7 +1605,7 @@
         "/geo/validate": {
             "post": {
                 "summary": "Validates the geo XML.",
-                "description": "Validates the geo structure in XM.",
+                "description": "Validates the geo structure in XML.",
                 "tags": [
                     "datastream"
                 ],
@@ -1646,7 +1646,7 @@
         "/geo/json2xml_validate": {
             "post": {
                 "summary": "Validates the geo JSON.",
-                "description": "Transforms the geo structure from JSON to XML and validates it. (See [examples of geo datastream of a map object](https://github.com/phaidra/phaidra-api/wiki/GEO-datastream-of-a-map-object)).",
+                "description": "Transforms the geo structure from JSON to XML and validates it. See [examples of geo datastream of a map object](https://github.com/phaidra/phaidra-api/wiki/GEO-datastream-of-a-map-object).",
                 "tags": [
                     "datastream"
                 ],
@@ -1798,7 +1798,7 @@
         "/annotations/json2xml": {
             "post": {
                 "summary": "Transforms annotations JSON to XML.",
-                "description": "Transforms the annotations JSON structure to XML (See an [example of annotation JSON structure](https://github.com/phaidra/phaidra-api/wiki/Annotations)).",
+                "description": "Transforms the annotations JSON structure to XML (see an [example of annotation JSON structure](https://github.com/phaidra/phaidra-api/wiki/Annotations)).",
                 "tags": [
                     "datastream"
                 ],
@@ -1945,7 +1945,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Annotations XML Validated.",
+                        "description": "Annotations XML validated.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1998,15 +1998,6 @@
                                 }
                             }
                         }
-                    }
-                }
-            },
-            "get": {
-                "description": "",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "OK"
                     }
                 }
             }
@@ -2653,7 +2644,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Depends on the covabulary",
+                        "description": "Depends on the vocabulary",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2851,9 +2842,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "pid"
                     }
                 ],
@@ -2915,9 +2906,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "collection pid"
                     }
                 ],
@@ -2970,9 +2961,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "pid"
                     }
                 ],
@@ -3058,9 +3049,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "collection pid"
                     }
                 ],
@@ -3146,9 +3137,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "collection pid"
                     }
                 ],
@@ -3235,27 +3226,27 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "collection pid"
                     },
                     {
                         "in": "path",
                         "name": "itempid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "member pid"
                     },
                     {
                         "in": "path",
                         "name": "position",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "position"
                     }
                 ],
@@ -3297,9 +3288,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "container pid"
                     }
                 ],
@@ -3386,27 +3377,27 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "container pid"
                     },
                     {
                         "in": "path",
                         "name": "itempid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "member pid"
                     },
                     {
                         "in": "path",
                         "name": "position",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "position"
                     }
                 ],
@@ -3444,9 +3435,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "the requested object id"
                     },
                     {
@@ -3497,7 +3488,7 @@
                                 1
                             ]
                         },
-                        "description": "searches for the relation in opposite direction (eg for `hasCollectionMember`: 0 will return a list of objects which are members of this object/collection, 1 will return a list of objects/collections where the object is a member)"
+                        "description": "searches for the relation in opposite direction (e.g. for `hasCollectionMember`: 0 will return a list of objects which are members of this object/collection, 1 will return a list of objects/collections where the object is a member)"
                     },
                     {
                         "in": "query",
@@ -3598,9 +3589,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "the requested object id"
                     },
                     {
@@ -3696,9 +3687,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -3772,9 +3763,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "the requested object id"
                     },
                     {
@@ -3864,9 +3855,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -3930,9 +3921,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "the requested object id"
                     }
                 ],
@@ -3983,7 +3974,7 @@
             },
             "post": {
                 "summary": "Saves JSON-LD.",
-                "description": "This method saves the metadata if you are using JSON-LD as a metadata structure. ",
+                "description": "This method saves the metadata if you are using JSON-LD as a metadata structure.",
                 "tags": [
                     "object-advanced"
                 ],
@@ -3997,9 +3988,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -4062,8 +4053,8 @@
         },
         "/object/{pid}/json-ld": {
             "get": {
-                "summary": "Get full JSON-LD,.",
-                "description": "Retrieve full object JSON-LD, with `@context` header etc.",
+                "summary": "Get full JSON-LD.",
+                "description": "Retrieve full object JSON-LD, with `@context` header, etc.",
                 "tags": [
                     "object-advanced"
                 ],
@@ -4072,9 +4063,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "the requested object id"
                     }
                 ],
@@ -4127,7 +4118,7 @@
         "/object/{pid}/geo": {
             "get": {
                 "summary": "Get geo.",
-                "description": "Retrieves geo datastream of object. ",
+                "description": "Retrieves geo datastream of object.",
                 "tags": [
                     "object-advanced"
                 ],
@@ -4136,9 +4127,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "the requested object id"
                     }
                 ],
@@ -4189,7 +4180,7 @@
             },
             "post": {
                 "summary": "Saves geo.",
-                "description": "This method saves information about the object's geolocation.  ",
+                "description": "This method saves information about the object's geolocation.",
                 "tags": [
                     "object-advanced"
                 ],
@@ -4203,9 +4194,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -4267,9 +4258,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "the requested object id"
                     }
                 ],
@@ -4328,9 +4319,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "the requested object id"
                     }
                 ],
@@ -4381,7 +4372,7 @@
             },
             "post": {
                 "summary": "Saves annotations.",
-                "description": "This method can save annotations to an object. The format chosen is taken from IIPMooViewer.  ",
+                "description": "This method can save annotations to an object. The format chosen is taken from IIPMooViewer.",
                 "tags": [
                     "object-advanced"
                 ],
@@ -4395,9 +4386,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -4452,7 +4443,7 @@
         "/object/{pid}/index/dc": {
             "get": {
                 "summary": "Get DC",
-                "description": "Get metadata exported (and signitficalntly reduced) in Dublin Core standard",
+                "description": "Get metadata exported (and significantly reduced) in Dublin Core standard",
                 "tags": [
                     "object-advanced"
                 ],
@@ -4461,9 +4452,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -4504,9 +4495,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -4586,9 +4577,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -4640,7 +4631,7 @@
         },
         "/object/{pid}/datacite": {
             "get": {
-                "summary": "<<check>> Transforms metadata to DataCite.",
+                "summary": "Transforms metadata to DataCite.",
                 "tags": [
                     "object-advanced"
                 ],
@@ -4649,9 +4640,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -4713,9 +4704,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -4767,9 +4758,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -4821,9 +4812,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -4883,9 +4874,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "requested pid"
                     }
                 ],
@@ -4917,9 +4908,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -4992,9 +4983,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -5049,9 +5040,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -5093,15 +5084,15 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object id"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Download count (integer). Useful eg for ajax content update without any response parsing necessary.",
+                        "description": "Download count (integer). Useful e.g. for ajax content update without any response parsing necessary.",
                         "content": {
                             "text/plain": {
                                 "schema": {
@@ -5125,9 +5116,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object id"
                     }
                 ],
@@ -5157,15 +5148,15 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object id"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "details on object... (download, detail_page,...)",
+                        "description": "details on object (download, detail_page, etc.)",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -5224,15 +5215,15 @@
                         "in": "path",
                         "name": "username",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "the user username"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "user's details (name, affiliation, etc)",
+                        "description": "user's details (name, affiliation, etc.)",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -5264,9 +5255,9 @@
                         "in": "path",
                         "name": "username",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "the user's username"
                     }
                 ],
@@ -5304,9 +5295,9 @@
                         "in": "path",
                         "name": "username",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "the user username"
                     }
                 ],
@@ -5463,9 +5454,9 @@
                         "in": "path",
                         "name": "version",
                         "schema": {
-                            "type": "number"
+                            "type": "number",
+                            "required": true
                         },
-                        "required": true,
                         "description": "version of the terms of use"
                     }
                 ],
@@ -5513,7 +5504,6 @@
                         "in": "path",
                         "name": "token",
                         "schema": {},
-                        "required": true,
                         "description": "the requested token no"
                     }
                 ],
@@ -5647,7 +5637,7 @@
         "/settings": {
             "post": {
                 "summary": "Save user's settings.",
-                "description": "Currently only used to set default metadata tempalte in some external UIs.",
+                "description": "Currently only used to set default metadata template in some external UIs.",
                 "tags": [
                     "misc"
                 ],
@@ -5693,7 +5683,7 @@
             },
             "get": {
                 "summary": "Get user's settings",
-                "description": "Currently only used to set default metadata tempalte in some external UIs.",
+                "description": "Currently only used to set default metadata template in some external UIs.",
                 "tags": [
                     "misc"
                 ],
@@ -5801,7 +5791,6 @@
                         "schema": {
                             "type": "string"
                         },
-                        "required": true,
                         "description": "gid - group id"
                     }
                 ],
@@ -5909,9 +5898,9 @@
                         "in": "path",
                         "name": "gid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "gid - group id"
                     }
                 ],
@@ -5964,9 +5953,9 @@
                         "in": "path",
                         "name": "gid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "gid - group id"
                     }
                 ],
@@ -6044,9 +6033,9 @@
                         "in": "path",
                         "name": "gid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "gid - group id"
                     }
                 ],
@@ -6167,9 +6156,9 @@
                         "in": "path",
                         "name": "lid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "lid - list id"
                     }
                 ],
@@ -6269,7 +6258,7 @@
         "/list/{lid}/token/create": {
             "post": {
                 "summary": "Create a list token",
-                "description": "The token can be used in the /list/token/{token} resuest to create a URL under which the list can be publicly displayed.",
+                "description": "The token can be used in the /list/token/{token} request to create a URL under which the list can be publicly displayed.",
                 "tags": [
                     "lists"
                 ],
@@ -6283,9 +6272,9 @@
                         "in": "path",
                         "name": "lid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "lid - list id"
                     }
                 ],
@@ -6341,9 +6330,9 @@
                         "in": "path",
                         "name": "lid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "lid - list id"
                     }
                 ],
@@ -6397,9 +6386,9 @@
                         "in": "path",
                         "name": "lid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "lid - list id"
                     }
                 ],
@@ -6449,9 +6438,9 @@
                         "in": "path",
                         "name": "lid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "lid - list id"
                     }
                 ],
@@ -6524,9 +6513,9 @@
                         "in": "path",
                         "name": "lid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "lid - list id"
                     }
                 ],
@@ -6720,9 +6709,9 @@
                         "in": "path",
                         "name": "tid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "template id"
                     }
                 ],
@@ -6775,9 +6764,9 @@
                         "in": "path",
                         "name": "tid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "template id"
                     }
                 ],
@@ -6831,9 +6820,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "pid - object id"
                     },
                     {
@@ -6844,9 +6833,9 @@
                             "enum": [
                                 "ro",
                                 "rw"
-                            ]
+                            ],
+                            "required": true
                         },
-                        "required": true,
                         "description": "rights for operation"
                     }
                 ],
@@ -6929,9 +6918,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": false
                         },
-                        "required": true,
                         "description": "pid - object id"
                     }
                 ],
@@ -6999,7 +6988,7 @@
         },
         "/imageserver": {
             "get": {
-                "summary": "Proxy for the imageserver. ",
+                "summary": "Proxy for the imageserver.",
                 "description": "Proxy for the [imageserver API](http://www.hexaplant.com/pixeldragon/3-access-images.html). This is necessary for the frontend. The images at the image server are hashed so that it's possible to restrict access to them. This method checks if the user (if credentials are provided) is authorized to access the image and if it is, it uses the configured secret to create the hash under which image server knows the image. It then accesses the image server proxying all the parameters and proxies back the response.",
                 "tags": [
                     "imageserver"
@@ -7013,7 +7002,7 @@
                             "required": false
                         },
                         "example": "o:440180.tif/full/256,256/0/default.jpg",
-                        "description": "IIF request"
+                        "description": "IIIF request"
                     }
                 ],
                 "responses": {
@@ -7079,9 +7068,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7122,7 +7111,7 @@
         "/object/{pid}/info": {
             "get": {
                 "summary": "Get object info",
-                "description": "This method returns metadata (UWMETADATA, MODS, JSON-LD, ... depending on the metadata datastream.), as well as indexed data about the object and it's related objects. It's the primary method of getting as much information about an object as possible.",
+                "description": "This method returns metadata (UWMETADATA, MODS, JSON-LD, etc., depending on the metadata datastream), as well as indexed data about the object and its related objects. It's the primary method of getting as much information about an object as possible.",
                 "tags": [
                     "object-basics"
                 ],
@@ -7136,9 +7125,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7204,9 +7193,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7230,7 +7219,7 @@
         "/object/{pid}/preview": {
             "get": {
                 "summary": "Get preview page",
-                "description": "Retrieves the preview page, for example for embedding in an iframe. Imageviewer for supported imageformats, PDF viewer for PDFs, audio/video player for media, etc.",
+                "description": "Retrieves the preview page, for example for embedding in an iframe. Image viewer for supported image formats, PDF viewer for PDFs, audio/video player for media, etc.",
                 "tags": [
                     "object-basics"
                 ],
@@ -7244,9 +7233,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7291,9 +7280,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7317,7 +7306,7 @@
         "/object/{pid}/get": {
             "get": {
                 "summary": "Get object's data",
-                "description": "Receive data as a stream. Use this link if you want to embed the data, eg in a player/viewer.",
+                "description": "Receive data as a stream. Use this link if you want to embed the data, e.g. in a player/viewer.",
                 "tags": [
                     "object-basics"
                 ],
@@ -7331,9 +7320,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7356,8 +7345,8 @@
         },
         "/object/{pid}/metadata": {
             "get": {
-                "summary": "Get object's metatada",
-                "description": "Retrieve the object metatada (UWMETADATA, MODS, JSON-LD, ... depending on the metadata datastream.)",
+                "summary": "Get object's metadata",
+                "description": "Retrieve the object metadata (UWMETADATA, MODS, JSON-LD, etc., depending on the metadata datastream).",
                 "tags": [
                     "object-advanced"
                 ],
@@ -7366,9 +7355,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7402,7 +7391,7 @@
             },
             "post": {
                 "summary": "Edit object's metadata",
-                "description": "Supported elements (in json format) are: json-ld, json-ld-private, mods, uwmetadata, rights, geo, members, membersorder and relationships.",
+                "description": "Supported elements (in JSON format) are: json-ld, json-ld-private, mods, uwmetadata, rights, geo, members, membersorder and relationships.",
                 "tags": [
                     "object-basics"
                 ],
@@ -7416,9 +7405,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7430,17 +7419,8 @@
                                 "type": "object",
                                 "properties": {
                                     "metadata": {
-                                        "type": "object",
-                                        "description": "a structure containing metadata; refer to the [wiki](https://github.com/phaidra/phaidra-api/wiki/Creating-a-simple-object) for further details",
-                                        "properties": {
-                                            "metadata": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "json-ld": {
-                                                        "$ref": "#/components/schemas/json-ld"
-                                                    }
-                                                }
-                                            }
+                                        "oneOf": {
+                                            "$ref": "#/components/schemas/json-ld"
                                         }
                                     }
                                 }
@@ -7497,7 +7477,7 @@
         "/object/{pid}/index": {
             "post": {
                 "summary": "Re-indexes object.",
-                "description": "Triggers the update of the object's index (Solr). Need admin authentification",
+                "description": "Triggers the update of the object's index (Solr). Need admin authentication",
                 "tags": [
                     "object-basics"
                 ],
@@ -7511,27 +7491,27 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object id"
                     },
                     {
                         "in": "path",
                         "name": "ignorestatus",
                         "schema": {
-                            "type": "boolean"
+                            "type": "boolean",
+                            "required": false
                         },
-                        "required": true,
-                        "description": "ignore object status, ie: include inactive objects"
+                        "description": "ignore object status, i.e. include inactive objects"
                     },
                     {
                         "in": "path",
                         "name": "norecursion",
                         "schema": {
-                            "type": "boolean"
+                            "type": "boolean",
+                            "required": false
                         },
-                        "required": true,
                         "description": "skip re-indexing of the parent object"
                     }
                 ],
@@ -7575,9 +7555,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "requested pid - object id"
                     },
                     {
@@ -7653,9 +7633,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -7776,9 +7756,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -8063,9 +8043,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     },
                     {
@@ -8145,9 +8125,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -8256,9 +8236,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     }
                 ],
@@ -8312,9 +8292,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object id"
                     },
                     {
@@ -8420,9 +8400,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "the requested object id"
                     },
                     {
@@ -8528,9 +8508,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "the requested object id"
                     }
                 ],
@@ -8622,9 +8602,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "the requested object id"
                     }
                 ],
@@ -8716,18 +8696,18 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "the requested object id"
                     },
                     {
                         "in": "path",
                         "name": "dsid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "example": "IIIF-MANIFEST",
                         "description": "datastream id"
                     }
@@ -8755,7 +8735,7 @@
                                     "dslabel": {
                                         "type": "string",
                                         "required": false,
-                                        "description": "For OCTETS datastream it should be the original filename (eg my_test.pdf). For other datastreams any string, it's not used by PHAIDRA."
+                                        "description": "For OCTETS datastream it should be the original filename (e.g. my_test.pdf). For other datastreams any string, it's not used by PHAIDRA."
                                     },
                                     "controlgroup": {
                                         "type": "string",
@@ -8832,9 +8812,9 @@
                         "in": "path",
                         "name": "pid",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "required": true
                         },
-                        "required": true,
                         "description": "object pid"
                     },
                     {
@@ -9276,6 +9256,7 @@
                         "name": "cmodel",
                         "schema": {
                             "type": "string",
+                            "required": true,
                             "enum": [
                                 "cmodel:Picture",
                                 "cmodel:PDFDocument",
@@ -9292,7 +9273,6 @@
                                 "cmodel:Page"
                             ]
                         },
-                        "required": true,
                         "description": "object cmodel"
                     }
                 ],
@@ -9503,16 +9483,24 @@
                     "languages": {
                         "type": "object"
                     }
-                },
-                "example": {
+                }
+            },
+            "languagesExample": {
+                "type": "object",
+                "properties": {
+                    "alerts": {
+                        "type": "array",
+                        "items": {}
+                    },
                     "languages": {
+                        "type": "object",
                         "ne": {
-                          "en": "Nepali",
-                          "de": "Nepalisch",
-                          "it": "Nepalese",
-                          "sr": "nepalski"
+                            "en": "Nepali",
+                            "de": "Nepalisch",
+                            "it": "Nepalese",
+                            "sr": "nepalski"
                         }
-                      }
+                    }
                 }
             },
             "licences": {

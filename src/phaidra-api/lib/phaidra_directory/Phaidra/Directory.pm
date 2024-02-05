@@ -47,7 +47,7 @@ sub validate_user() {
 
   # Mojolicious::Plugin::Authenticate requires that error returns undef and success uid
   if ($ret->{status} eq 200) {
-    $app->log->info("successfuly authenticated $username");
+    $app->log->info("successfully authenticated $username");
     return $username;
   }
   else {

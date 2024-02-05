@@ -316,8 +316,8 @@ sub _get_mods_titles {
                # each titleInfo will be a separate title
   for my $e ($dom->find('mods > titleInfo')->each) {
 
-    # there should be one title element, whatewer attribute is has
-    # like tranlsated, parallel and what not
+    # there should be one title element, whatever attribute is has
+    # like translated, parallel and what not
     # it will be simply added as a title in dc
     # if there is a subtitle, it will be added with ':' after the title
     my $tit    = $e->find('title')->map('text')->join(" ");

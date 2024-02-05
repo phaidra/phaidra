@@ -5,7 +5,7 @@
         <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
       </v-btn>
       <p-i-form :form="form" :targetpid="pid" :enablerights="false" :enablerelationships="false" :templating="false"
-        :importing="false" :addbutton="true" :help="false" :debug="false" :feedback="false" :validate="validate"
+        :importing="false" :addbutton="true" :help="false" :debug="false" :feedback="false" :validate="validationMethod"
         v-on:object-saved="objectSaved($event)" class="mt-4"></p-i-form>
     </div>
   </client-only>
@@ -13,12 +13,12 @@
 
 <script>
 import jsonLd from "phaidra-vue-components/src/utils/json-ld";
-// import { formvalidation } from '../mixins/formvalidation'
+import { formvalidation } from '../../../mixins/formvalidation'
 import { context } from "../../../mixins/context";
 import { config } from "../../../mixins/config";
 
 export default {
-  mixins: [context, config],
+  mixins: [context, config, formvalidation],
   data() {
     return {
       loading: false,
@@ -32,8 +32,11 @@ export default {
     },
   },
   methods: {
-    validate: function () {
-      return true;
+    validationMethod: function () {
+      if (this.instanceconfig.submit?.validationmethod) {
+        return this[this.instanceconfig.submit?.validationmethod]()
+      }
+      return this.validate()
     },
     objectSaved: async function (pid) {
       this.$store.commit("setAlerts", [
@@ -53,7 +56,9 @@ export default {
               f.disabled = true;
             }
           }
+          f.removable = true
         }
+        s.removable = true
       }
       self.form = form;
     },

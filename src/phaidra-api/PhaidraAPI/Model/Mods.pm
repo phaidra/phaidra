@@ -451,7 +451,7 @@ sub mods_fill_tree_rec {
     else {
       # this gives as an empty node to fill (it adds new one if needed)
       # it also keeps recursion in $mods/$children, which we read, in sync with $mods_tree, which we are writing to
-      my $current_mods_tree_node = $self->mods_get_emtpy_tree_node($c, $child_path, $mods_tree, '', $mods_nodes_hash);
+      my $current_mods_tree_node = $self->mods_get_empty_tree_node($c, $child_path, $mods_tree, '', $mods_nodes_hash);
 
       unless ($current_mods_tree_node->{xmlname}) {
         $c->app->log->error("ERROR, no node found for path $child_path (" . $current_mods_tree_node->{xmlname} . "):" . $current_mods_tree_node->{input_type} . "\n" . $c->app->dumper($n));
@@ -583,7 +583,7 @@ sub unset_used_node_flag {
   }
 }
 
-sub mods_get_emtpy_tree_node {
+sub mods_get_empty_tree_node {
   my ($self, $c, $search_path, $mods_tree, $mods_tree_path, $mods_nodes_hash) = @_;
 
   my $node;
@@ -609,7 +609,7 @@ sub mods_get_emtpy_tree_node {
 
     }
     elsif ($children_size > 0) {
-      $node = $self->mods_get_emtpy_tree_node($c, $search_path, $n->{children}, $curr_path, $mods_nodes_hash);
+      $node = $self->mods_get_empty_tree_node($c, $search_path, $n->{children}, $curr_path, $mods_nodes_hash);
     }
 
     $i++;

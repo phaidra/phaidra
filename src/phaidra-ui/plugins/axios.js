@@ -1,6 +1,10 @@
+import appconfig from '../config/phaidra-ui'
+
 export default function ({ store, $axios, $sentry }) {
+
   $axios.onRequest(config => {
-    console.log('axios ' + config.method.toUpperCase() + ' ' + config.baseURL + $axios.getUri(config))
+    config.baseURL = appconfig.instances[appconfig.defaultinstance].api
+    // console.log('axios ' + config.method.toUpperCase() + ' ' + config.baseURL + $axios.getUri(config))
   })
 
   $axios.onError(error => {
