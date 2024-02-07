@@ -1,4 +1,4 @@
-ACL_PUBLIC='[ { "allow": true, "role": "ROLE_ADMIN", "action": "read" }, { "allow": true, "role": "ROLE_ANONYMOUS", "action": "read" }, { "allow": true, "role": "ROLE_ADMIN", "action": "write" } ]'
+ACL_PUBLIC='{"acl":{"ace":[{"allow":true,"role":"ROLE_ADMIN","action":"read"},{"allow":true,"role":"ROLE_ADMIN","action":"write"},{"allow":true,"role":"ROLE_ANONYMOUS","action":"read"}]}}'
 
 # function definitions
 function get_new_jobs {
