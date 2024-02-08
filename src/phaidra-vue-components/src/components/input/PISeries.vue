@@ -203,7 +203,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col :cols="6" v-if="showIdentifierType && !hideIdentifier">
+            <v-col :cols="6" v-if="!hideIdentifierType && !hideIdentifier">
               <v-autocomplete
                 v-on:input="$emit('input-identifier-type', $event)"
                 :label="$t('Type of identifier')"
@@ -229,7 +229,7 @@
               </v-autocomplete>
             </v-col>
 
-            <v-col :cols="showIdentifierType ? 6 : 12" v-if="!hideIdentifier">
+            <v-col :cols="!hideIdentifierType ? 6 : 12" v-if="!hideIdentifier">
               <v-text-field
                 :value="identifier"
                 :label="$t('Identifier')"
@@ -307,9 +307,9 @@ export default {
     identifier: {
       type: String
     },
-    showIdentifierType: {
+    hideIdentifierType: {
       type: Boolean,
-      default: true
+      default: false
     },
     identifierVocabulary: {
       type: String,

@@ -30,6 +30,12 @@ export const vocabulary = {
       const query = queryText.toLowerCase()
       return lab.startsWith(query)
     },
+    autocompleteFilterWithNotation: function (item, queryText) {
+      const lab = item['skos:prefLabel'][this.$i18n.locale] ? item['skos:prefLabel'][this.$i18n.locale].toLowerCase() : item['skos:prefLabel']['eng'].toLowerCase()
+      const notation = item['skos:notation'] ? item['skos:notation'][0] : null
+      const query = queryText.toLowerCase()
+      return notation ? lab.startsWith(query) || notation.startsWith(query) : lab.startsWith(query)
+    },
     autocompleteFilterInfix: function (item, queryText) {
       const lab = item['skos:prefLabel'][this.$i18n.locale] ? item['skos:prefLabel'][this.$i18n.locale].toLowerCase() : item['skos:prefLabel']['eng'].toLowerCase()
       const query = queryText.toLowerCase()
@@ -118,6 +124,48 @@ export const vocabulary = {
               if (Array.isArray(t.children)) {
                 if (t.children.length > 0) {
                   if (this.getOefosPath(term, t.children, path)) {
+                    path.push(t)
+                    return true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    getThemaPath: function (term, children, path) {
+      if (term) {
+        for (let t of children) {
+          if (t['@id'] === term['@id']) {
+            path.push(t)
+            return true
+          } else {
+            if (t.hasOwnProperty('children')) {
+              if (Array.isArray(t.children)) {
+                if (t.children.length > 0) {
+                  if (this.getThemaPath(term, t.children, path)) {
+                    path.push(t)
+                    return true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    getBicPath: function (term, children, path) {
+      if (term) {
+        for (let t of children) {
+          if (t['@id'] === term['@id']) {
+            path.push(t)
+            return true
+          } else {
+            if (t.hasOwnProperty('children')) {
+              if (Array.isArray(t.children)) {
+                if (t.children.length > 0) {
+                  if (this.getBicPath(term, t.children, path)) {
                     path.push(t)
                     return true
                   }

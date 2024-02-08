@@ -390,22 +390,22 @@ export default {
       let publ = fields.getField("bf-publication")
       self.form.sections[5].fields.push(publ);
 
-      for (let s of this.form.sections) {
+      for (let s of self.form.sections) {
         for (let f of s.fields) {
           for (let prop of Object.keys(f)) {
             switch (prop) {
               case "language":
-                f.language = this.$i18n.locale;
+                f.language = self.$i18n.locale;
                 break;
               case "nameLanguage":
-                f.nameLanguage = this.$i18n.locale;
+                f.nameLanguage = self.$i18n.locale;
                 break;
             }
           }
         }
       }
 
-      this.markMandatoryMethod()
+      self.markMandatoryMethod()
     },
   },
   beforeRouteEnter: function (to, from, next) {

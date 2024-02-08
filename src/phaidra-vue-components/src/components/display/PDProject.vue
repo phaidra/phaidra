@@ -3,7 +3,7 @@
     <v-row>
       <template v-if="o['skos:exactMatch'] || o['skos:prefLabel'] || o['frapo:hasFundingAgency']">
         <v-col :md="labelColMd" cols="12" class="pdlabel primary--text text-md-right" :key="'idl'"><span v-show="!hideLabel && !o['rdfs:comment'] && !o['foaf:homepage']">{{ $t(p) }}</span></v-col>
-        <v-col :md="valueColMd" cols="12" :key="'idv'">{{ id }}</v-col>
+        <v-col :md="valueColMd" cols="12" :key="'idv'"><template v-if="projectLabel !== ''">{{ projectLabel }} – </template><template v-if="projectId !== ''"><template v-if="projectId.startsWith('http')"><a target="_blank" :href="projectId">{{ projectId }}</a></template><template v-else>{{ projectId }}</template></template><template v-if="fundersLabel !== ''"> – {{ fundersLabel }}</template></v-col>
       </template>
     </v-row>
     <v-row>
@@ -101,19 +101,6 @@ export default {
         }
       }
       return ids.join(', ')
-    },
-    id: function () {
-      let id = []
-      if (this.projectLabel !== '') {
-        id.push(this.projectLabel)
-      }
-      if (this.projectId !== '') {
-        id.push(this.projectId)
-      }
-      if (this.fundersLabel !== '') {
-        id.push(this.fundersLabel)
-      }
-      return id.join(' – ')
     }
   }
 }

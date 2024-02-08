@@ -45,7 +45,7 @@
         </template>
       </template>
       <template v-if="entity['@type'] === 'schema:Organization'">
-        <template v-if="entity['skos:exactMatch'] && entity['skos:exactMatch'][0].startsWith('https://pid.phaidra.org/univie-org')">
+        <template v-if="(typeof entity['skos:exactMatch'] === 'string') && entity['skos:exactMatch'][0].startsWith('https://pid.phaidra.org/univie-org')">
           {{ ' ' }}<a class="valuefield" :href="entity['skos:exactMatch'][0]" target="_blank">{{ getLocalizedValue(entity['schema:name']) }}</a>
         </template>
         <template v-else-if="entity['skos:exactMatch']">

@@ -208,6 +208,7 @@ export default {
       if (ch.children) {
         for (let chch of ch.children) {
           if (chch.xmlname === 'namePart') {
+            if (chch['attributes']) {
             for (let chchattr of chch.attributes) {
               if (chchattr.xmlname === 'type') {
                 if (chchattr.ui_value === 'family') {
@@ -218,6 +219,7 @@ export default {
                 }
               }
             }
+}
           }
         }
       }

@@ -214,12 +214,22 @@ export default {
   methods: {
     resolve: async function () {
       if (this.selected !== null) {
-        this.q = this.items[this.selected].name
-        this.locationMarker = [this.items[this.selected].lat, this.items[this.selected].lng]
-        this.center = this.locationMarker
-        this.loading = true
+        if (this.items[this.selected].name) {
+          this.q = this.items[this.selected].name
+        }
+        if (this.items[this.selected].lat) {
+          this.locationMarker = [this.items[this.selected].lat, this.items[this.selected].lng]
+          this.center = this.locationMarker
+          this.showMap = true
+        }
         this.showMap = true
-        let uri = 'https://www.geonames.org/' + this.items[this.selected].geonameId
+        this.loading = true
+        let uri = ''
+        if (this.items[this.selected].value) {
+          uri = this.items[this.selected].value
+        } else {
+          uri = 'https://www.geonames.org/' + this.items[this.selected].geonameId
+        }
         this.$emit('input', uri)
         try {
           let response = await this.$axios.request({
@@ -289,10 +299,11 @@ export default {
         this.$emit('input-place-type', this.getTerm('placetype', this.type))
       }
     })
+
     if (this.initquery) {
       this.items = [{ value: this.value, text: this.initquery }]
       this.model = { value: this.value, text: this.initquery }
-      this.resolve(this.value)
+      this.selected = 0
     }
   }
 }

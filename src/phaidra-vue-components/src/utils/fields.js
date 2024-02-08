@@ -31,7 +31,6 @@ const fields = [
     'skos:prefLabel': [],
     errorMessages: [],
     definition: 'The nature of the resource. Example: Image, Text, Sound'
-
   },
   {
     id: 'resource-type-buttongroup',
@@ -106,11 +105,11 @@ const fields = [
   },
   {
     id: 'access-right',
-    fieldname: 'Access rights',
+    fieldname: 'Access',
     predicate: 'dcterms:accessRights',
     component: 'p-select',
     vocabulary: 'accessright',
-    label: 'Access right',
+    label: 'Access',
     showValueDefinition: false,
     value: '',
     'skos:prefLabel': [],
@@ -460,6 +459,34 @@ const fields = [
     definition: 'The topic of the resource, represented using a controlled vocabulary.'
   },
   {
+    id: 'thema-subject',
+    fieldname: 'Subject (Thema)',
+    predicate: 'dcterms:subject',
+    type: 'skos:Concept',
+    component: 'p-subject-thema',
+    multiplicable: true,
+    label: 'Subject (Thema)',
+    value: '',
+    'rdfs:label': [],
+    'skos:prefLabel': [],
+    loadedpreflabel: '',
+    definition: 'The topic of the resource, represented using a controlled vocabulary.'
+  },
+  {
+    id: 'bic-subject',
+    fieldname: 'Subject (BIC)',
+    predicate: 'dcterms:subject',
+    type: 'skos:Concept',
+    component: 'p-subject-bic',
+    multiplicable: true,
+    label: 'Subject (BIC)',
+    value: '',
+    'rdfs:label': [],
+    'skos:prefLabel': [],
+    loadedpreflabel: '',
+    definition: 'The topic of the resource, represented using a controlled vocabulary.'
+  },
+  {
     id: 'sociocultural-category',
     fieldname: 'Soziokulturelle Kategorie',
     predicate: 'dcterms:subject',
@@ -590,7 +617,7 @@ const fields = [
     title: '',
     subtitle: '',
     titleLanguage: '',
-    indentifierType: '',
+    identifierType: '',
     identifierText: '',
     identifierLabel: null,
     identifierTypePlaceholder: '',
@@ -621,7 +648,7 @@ const fields = [
     name: '',
     nameLanguage: '',
     place: '',
-    indentifierType: '',
+    identifierType: '',
     identifier: '',
     identifierLabel: null,
     description: '',
@@ -705,6 +732,19 @@ const fields = [
     'skos:prefLabel': [],
     errorMessages: [],
     definition: 'Relates a resource to a categorization reflecting a format of a storage medium and housing of a carrier in combination with a type of intermediation device required to view, play, run, etc., the content of a resource.'
+  },
+  {
+    id: 'level-of-description',
+    fieldname: 'Level of description',
+    predicate: 'phaidra:levelOfDescription',
+    component: 'p-select',
+    vocabulary: 'levelofdescription',
+    multiplicable: false,
+    label: 'Level of description',
+    value: '',
+    'skos:prefLabel': [],
+    errorMessages: [],
+    definition: 'Can be used inside "Complex subject" to specify what the subject metadata are describing.'
   },
   {
     id: 'citation',
@@ -805,6 +845,24 @@ const fields = [
     label: 'Accession number',
     value: '',
     definition: 'Use for identification number assigned to a particular donation or acquisition.'
+  },
+  {
+    id: 'volume',
+    fieldname: 'Volume',
+    predicate: 'bibo:volume',
+    component: 'p-text-field',
+    label: 'Volume',
+    value: '',
+    definition: 'A volume number.'
+  },
+  {
+    id: 'issue',
+    fieldname: 'Issue',
+    predicate: 'bibo:issue',
+    component: 'p-text-field',
+    label: 'Issue',
+    value: '',
+    definition: 'An issue number.'
   },
   {
     id: 'extent',
@@ -1061,12 +1119,12 @@ const fields = [
   },
   {
     id: 'inscription',
-    fieldname: 'Inscription/Stamp',
+    fieldname: 'Inscription',
     predicate: 'vra:hasInscription',
     component: 'p-text-field',
     multiplicable: true,
     multilingual: true,
-    label: 'Inscription/Stamp',
+    label: 'Inscription',
     value: '',
     language: '',
     definition: 'All marks or written words added to the object at the time of production or in its subsequent history, including signatures, dates, dedications, texts, and colophons, as well as marks, such as the stamps of silversmiths, publishers, or printers.'
@@ -1316,6 +1374,7 @@ const fields = [
 ]
 
 const predicateOrder = [
+  'phaidra:levelOfDescription',
   'rdam:P30004',
 
   'dcterms:type',
@@ -1361,6 +1420,8 @@ const predicateOrder = [
   'vra:placeOfSite',
 
   'rdau:P60550',
+  'bibo:issue',
+  'bibo:volume',
   'schema:numberOfPages',
   'bf:soundCharacteristic',
   'bf:supplementaryContent',

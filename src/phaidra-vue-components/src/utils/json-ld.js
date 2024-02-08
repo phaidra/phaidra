@@ -207,6 +207,18 @@ export default {
                       newField.label = 'Subject (ÖFOS)'
                       components.push(newField)
                     }
+                    if (v.startsWith('thema')) {
+                      f.label = 'Subject (Thema)'
+                      newField = fields.getField('thema-subject')
+                      newField.label = 'Subject (Thema)'
+                      components.push(newField)
+                    }
+                    if (v.startsWith('bic')) {
+                      f.label = 'Subject (BIC)'
+                      newField = fields.getField('bic-subject')
+                      newField.label = 'Subject (BIC)'
+                      components.push(newField)
+                    }
                     if (v.startsWith('http://d-nb.info/gnd')) {
                       f.label = 'Subject (GND)'
                       newField = fields.getField('gnd-subject')
@@ -568,6 +580,15 @@ export default {
               components.push(f)
               break
 
+            // phaidra:levelOfDescription
+            case 'phaidra:levelOfDescription':
+              f = fields.getField('level-of-description')
+              for (let em of obj['skos:exactMatch']) {
+                f.value = em
+              }
+              components.push(f)
+              break
+
             // edm:rights
             case 'edm:rights':
               f = fields.getField('license')
@@ -635,6 +656,7 @@ export default {
             // citation
             case 'cito:cites':
             case 'cito:isCitedBy':
+            case 'cito:citesAsDataSource':
               f = fields.getField('citation')
               f.type = key
               for (let prefLabel of obj['skos:prefLabel']) {
@@ -985,6 +1007,20 @@ export default {
               f = fields.getField('extent')
               f.value = obj['@value']
               f.language = obj['@language'] ? obj['@language'] : 'eng'
+              components.push(f)
+              break
+
+            // bibo:issue
+            case 'bibo:issue':
+              f = fields.getField('issue')
+              f.value = obj['@value']
+              components.push(f)
+              break
+
+            // bibo:volume
+            case 'bibo:volume':
+              f = fields.getField('volume')
+              f.value = obj['@value']
               components.push(f)
               break
 
@@ -1382,7 +1418,7 @@ export default {
         var subjectFields = this.getOrderedComponents(levels.subject[i].components)
         form.sections.push(
           {
-            title: 'Subject',
+            title: 'SUBJECT_SECTION',
             type: 'phaidra:Subject',
             id: 'subject-' + i,
             fields: subjectFields
@@ -2306,6 +2342,7 @@ export default {
         case 'dcterms:accessRights':
         case 'rdau:P60059':
         case 'rdau:P60048':
+        case 'phaidra:levelOfDescription':
           if (f.value) {
             this.push_object(jsonld, f.predicate, this.get_json_object(f['skos:prefLabel'], null, 'skos:Concept', [f.value]))
           }
@@ -2344,6 +2381,8 @@ export default {
         case 'dce:rights':
         case 'dcterms:temporal':
         case 'rdau:P60550':
+        case 'bibo:issue':
+        case 'bibo:volume':
         case 'bf:physicalLocation':
           if (f.value) {
             this.push_value(jsonld, f.predicate, this.get_json_valueobject(f.value, f.language))

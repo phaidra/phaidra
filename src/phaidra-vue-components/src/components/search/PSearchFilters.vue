@@ -388,9 +388,12 @@ export default {
           this.$store.commit('setAlerts', response.data.alerts)
         }
         this.usernameSearchItems = response.data.accounts ? response.data.accounts : []
-        if (this.init && this.owner) {
-          if (this.usernameSearchItems[0]) {
-            this.usernameSearchModel = this.usernameSearchItems[0]
+        console.log('usernameSearchItems', this.usernameSearchItems)
+        if (this.usernameSearchItems.length > 0) {
+          for (let usr of this.usernameSearchItems) {
+            if (usr.uid === this.owner) {
+                this.usernameSearchModel = usr
+            }
           }
           this.init = false
         }

@@ -57,14 +57,18 @@
     <v-slide-y-transition hide-on-leave>
       <v-row no-gutters v-if="showValueDefinition" v-show="value && getLocalizedDefinition(vocabulary, value)" :class=" hint ? 'mt-2 mb-6' : 'mb-6'">
         <v-col cols="10">
-          <p v-html="getLocalizedDefinition(vocabulary, value)"></p>
+          <v-row class="px-4">
+            <p v-html="getLocalizedDefinition(vocabulary, value)"></p>
+          </v-row>
         </v-col>
       </v-row>
     </v-slide-y-transition>
     <v-slide-y-transition hide-on-leave>
       <v-row no-gutters v-show="isCCLicense" :class=" hint ? 'mt-2 mb-6' : 'mb-6'">
         <v-col cols="10">
-          <p v-html="$t('LICENSE_DISCLAIMER', { institution: $t($store.state.instanceconfig.institution) })"></p>
+          <v-row class="px-4">
+            <p v-html="$t('LICENSE_DISCLAIMER', { institution: $t($store.state.instanceconfig.institution) })"></p>
+          </v-row>
         </v-col>
       </v-row>
     </v-slide-y-transition>

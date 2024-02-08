@@ -169,7 +169,7 @@ const messages = {
   'Format': 'Format',
   'Reproduction note': 'Original/Kopie',
   'Condition': 'Zustand',
-  'Inscription/Stamp': 'Inschrift/Stempel',
+  'Inscription': 'Inschrift',
   'Production information': 'Entstehungsinformation',
   'Material description': 'Materialbeschreibung',
   'Digitizing information': 'Digitalisierungsinformation',
@@ -235,6 +235,8 @@ const messages = {
   'bf:shelfMark': 'Signatur',
   'dcterms:provenance': 'Provenienz',
 
+  'bibo:issue': 'Ausgabe',
+  'bibo:volume': 'Band',
   'schema:numberOfPages': 'Seitenanzahl',
   'bf:soundCharacteristic': 'Sound characteristic',
   'bf:supplementaryContent': 'Supplementary content',
@@ -339,6 +341,8 @@ const messages = {
   
   'dcterms:provenance': 'Provenance',
 
+  'bibo:issue': 'Issue',
+  'bibo:volume': 'Volume',
   'schema:numberOfPages': 'Number of pages',
   'bf:soundCharacteristic': 'Sound characteristic',
   'bf:supplementaryContent': 'Supplementary content',

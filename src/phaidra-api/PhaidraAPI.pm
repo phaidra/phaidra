@@ -566,6 +566,7 @@ sub startup {
     $reader->get('object/:pid/download')                                     ->to('octets#get', operation => 'download');
     $reader->get('object/:pid/get')                                          ->to('octets#get', operation => 'get');
     $reader->get('object/:pid/comp/:ds')                                     ->to('object#get_legacy_container_member');
+    $reader->get('object/:pid/datastream/:dsid')                             ->to('object#get_public_datastream');
 
     $writer->get('object/:pid/jsonldprivate')                                ->to('jsonldprivate#get');
     $writer->get('object/:pid/rights')                                       ->to('rights#get');

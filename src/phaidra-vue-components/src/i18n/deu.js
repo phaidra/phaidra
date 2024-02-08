@@ -719,7 +719,7 @@ export default {
   'Dimensions': 'Abmessungen',
   'Unit': 'Masseinheit',
   'Format': 'Format',
-  'Inscription/Stamp': 'Inschrift/Stempel',
+  'Inscription': 'Inschrift',
   'Production information': 'Entstehungsinformation',
   'Material description': 'Materialbeschreibung',
   'Digitizing information': 'Digitalisierungsinformation',
@@ -733,6 +733,7 @@ export default {
   'minutes': 'Minuten',
   'seconds': 'Sekunden',
 
+  'phaidra:levelOfDescription': 'Verzeichnungsstufe',
   'rdam:P30004': 'Alternativer Identifikator',
 
   'bf:Title': 'Titel',
@@ -780,8 +781,9 @@ export default {
   'frapo:hasFundingAgency': 'Funding',
   'rdax:P00009': 'Zuordnung',
   'bf:provisionActivity': 'Veröffentlichung',
-  'cito:cites': 'Referenz',
-  'cito:isCitedBy': 'Is cited by',
+  'cito:cites': 'Verweist auf',
+  'cito:citesAsDataSource': 'Verweist auf Dataset',
+  'cito:isCitedBy': 'Zitiert von',
   'rdfs:seeAlso': 'Siehe auch',
 
   'dce:subject': 'Stichwort',
@@ -795,6 +797,8 @@ export default {
   'dcterms:provenance': 'Provenienzvermerk',
 
   'rdau:P60550': 'Umfang',
+  'bibo:issue': 'Ausgabe',
+  'bibo:volume': 'Band',
   'schema:numberOfPages': 'Seitenanzahl',
   'bf:soundCharacteristic': 'Sound characteristic',
   'bf:supplementaryContent': 'Supplementary content',
@@ -844,6 +848,7 @@ export default {
   'Represented/depicted place': 'Abgebildeter Ort',
   'Association': 'Organisationseinheit',
   'System fields': 'Systemhinweis',
+  'Level of description': 'Verzeichnungsstufe',
 
   'Project Id': 'Projektnummer',
 
@@ -963,5 +968,6 @@ export default {
   'Manage members': 'Mitglieder verwalten',
   'An object type represents real-world entity. For example, an object type can represent a photography, an interview, a lecture or a letter.': 'Ein Objekttyp stellt eine reale Entität dar. Ein Objekttyp kann zum Beispiel eine Fotografie, ein Interview, einen Vortrag oder einen Brief darstellen',
   'Restricted access': 'eingeschränkter Zugang',
-  'LICENSE_DISCLAIMER': '<b>Haftungsausschluss</b><br/>Der Diensteanbieter (PHAIDRA, {institution}) und Creative Commons sind nicht Partei der hier auszuwählenden Lizenzverträge. Durch Ihr Angebot, Ihren Schutzgegenstand einer Creative Commons Lizenz zu unterstellen und die Annahme Ihres Angebots durch andere Nutzer kommt ein Vertragsverhältnis zwischen Ihnen und dem jeweiligen Nutzer zustande. Daran ist weder der Diensteanbieter noch Creative Commons beteiligt. Dem Diensteanbieter und Creative Commons erwachsen daraus keinerlei Rechte und Pflichten.<br/>Weder der Diensteanbieter ist eine Rechtsanwaltsgesellschaft noch Creative Commons. Sie leisten keine Rechtsberatung. Sie erbringen die hier stehenden Informationen ohne Gewähr und übernehmen keine Haftung für eventuelle Schäden, die sich aus ihrem Gebrauch ergeben.'
+  'LICENSE_DISCLAIMER': '<b>Haftungsausschluss</b><br/>Der Diensteanbieter (PHAIDRA, {institution}) und Creative Commons sind nicht Partei der hier auszuwählenden Lizenzverträge. Durch Ihr Angebot, Ihren Schutzgegenstand einer Creative Commons Lizenz zu unterstellen und die Annahme Ihres Angebots durch andere Nutzer kommt ein Vertragsverhältnis zwischen Ihnen und dem jeweiligen Nutzer zustande. Daran ist weder der Diensteanbieter noch Creative Commons beteiligt. Dem Diensteanbieter und Creative Commons erwachsen daraus keinerlei Rechte und Pflichten.<br/>Weder der Diensteanbieter ist eine Rechtsanwaltsgesellschaft noch Creative Commons. Sie leisten keine Rechtsberatung. Sie erbringen die hier stehenden Informationen ohne Gewähr und übernehmen keine Haftung für eventuelle Schäden, die sich aus ihrem Gebrauch ergeben.',
+  'Thema Subject Codes': 'Thema Klassifizierung'
 }

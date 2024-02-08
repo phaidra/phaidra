@@ -10,6 +10,7 @@ export default {
   'SEARCH_PLACEHOLDER': 'Search',
   'PHAIDRA_IS': 'Phaidra is the repository for the permanent secure storage of digital assets at the University of Vienna.',
 
+  'phaidra:levelOfDescription': 'Level of description',
   'rdam:P30004': 'Alternative identifier',
 
   'bf:Title': 'Title',
@@ -59,6 +60,7 @@ export default {
   'rdau:P60227': 'Is motion picture adaptation of',
   'bf:provisionActivity': 'Publication',
   'cito:cites': 'Cites',
+  'cito:citesAsDataSource': 'Cites as data source',
   'cito:isCitedBy': 'Is cited by',
   'rdfs:seeAlso': 'See also',
 
@@ -73,6 +75,8 @@ export default {
 
   'dcterms:provenance': 'Provenance',
 
+  'bibo:issue': 'Issue',
+  'bibo:volume': 'Volume',
   'schema:numberOfPages': 'Number of pages',
   'bf:soundCharacteristic': 'Sound characteristic',
   'bf:supplementaryContent': 'Supplementary content',

@@ -33,7 +33,7 @@
             <v-row>
               <template v-for="(issued, i) in o['dcterms:issued']">
                 <v-col :md="labelColMd" cols="12" class="pdlabel primary--text" :key="'idatel'+i">{{ $t('Issued') }}</v-col>
-                <v-col :md="valueColMd" cols="12" class="valuefield" :key="'idate'+i">{{ issued }}</v-col>
+                <v-col :md="valueColMd" cols="12" class="valuefield" :key="'idate'+i">{{ checkAndUpdateField(issued) }}</v-col>
               </template>
             </v-row>
             <v-row>
@@ -54,6 +54,7 @@
 <script>
 import { vocabulary } from '../../mixins/vocabulary'
 import { displayproperties } from '../../mixins/displayproperties'
+import PDateModifier from '../../utils/PDateModifier'
 
 export default {
   name: 'p-d-series',
@@ -66,6 +67,11 @@ export default {
     p: {
       type: String
     }
-  }
+  },
+  methods: {
+    checkAndUpdateField(val) {
+      return PDateModifier.dateModifierFn(val, this)
+    },
+  },
 }
 </script>

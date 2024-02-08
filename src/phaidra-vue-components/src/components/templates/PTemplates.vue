@@ -21,13 +21,26 @@
         </template>
         <span>{{ item.tid }}</span>
       </v-tooltip>
+      <v-chip
+        class="ma-2"
+        color="primary"
+        v-if="item.tid === selectedTemplateId"
+      >
+      Selected
+      </v-chip>
     </template>
     <template v-slot:item.created="{ item }">
       {{ item.created | unixtime }}
     </template>
     <template v-slot:item.load="{ item }">
-      <v-btn text color="primary" @click="loadTemplate(item.tid)">{{ $t('Load') }}</v-btn>
-      <v-btn text color="grey" @click="deleteTemplate(item.tid)">{{ $t('Delete') }}</v-btn>
+      <v-btn text color="primary" @click="loadTemplate('')" v-if="isDefaultSelect && item.tid === selectedTemplateId">
+        <span v-if="isDefaultSelect">{{ $t('Remove') }}</span>
+      </v-btn>
+      <v-btn text color="primary" @click="loadTemplate(item.tid)" v-else>
+        <span v-if="isDefaultSelect">{{ $t('Select') }}</span>
+        <span v-else-if="item.tid !== selectedTemplateId">{{ $t('Load') }}</span>
+      </v-btn>
+      <v-btn v-if="!isDefaultSelect" text color="grey" @click="deleteTemplate(item.tid)">{{ $t('Delete') }}</v-btn>
     </template>
   </v-data-table>
 
@@ -46,6 +59,14 @@ export default {
       default: 10
     },
     idOnly: {
+      type: Boolean,
+      default: false
+    },
+    selectedTemplateId: {
+      type: String,
+      default: ""
+    },
+    isDefaultSelect: {
       type: Boolean,
       default: false
     }

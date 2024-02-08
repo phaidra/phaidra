@@ -398,8 +398,51 @@ export const state = () => ({
           ]
         },
         {
+          title: 'Level of description',
+          predicate: 'phaidra:levelOfDescription',
+          open: false,
+          sections: [
+            {
+              id: 'description',
+              title: 'Description',
+              content: 'Can be used inside "Complex subject" to specify what the subject metadata are describing.'
+            },
+            {
+              id: 'usagenotes',
+              title: 'Usage notes',
+              content: {
+                level1:
+                  'Important in cases where the same metadata fields have to be used on different description levels (ie dimensions - of the photography vs dimensions of the instrument depicted on the photography -, creation date, etc).',
+                level2: '',
+                level3: ''
+              }
+            },
+            {
+              id: 'vocabulary',
+              title: 'Vocabulary',
+              content:
+                '<a href="https://vocab.phaidra.org/vocabulary/W2ZN-QEF6">Level of description</a>. Current values: <a href="https://vocab.phaidra.org/vocabulary/HQ7N-3Q2W">Digitized object</a> or <a href="https://vocab.phaidra.org/vocabulary/TG30-5EM3">Represented object</a>'
+            },
+            {
+              id: 'obligation',
+              title: 'Obligation',
+              content: ''
+            },
+            {
+              id: 'occurrence',
+              title: 'Occurrence',
+              content: ''
+            },
+            {
+              id: 'exampleHR',
+              title: 'Example',
+              content: ''
+            }
+          ]
+        },
+        {
           title: 'Citation',
-          predicate: 'cito:cites cito:isCitedBy', // there are 2 predicates here. I didn't know how to encode them
+          predicate: 'cito:cites cito:isCitedBy cito:citesAsDataSource', // there are 3 predicates here. I didn't know how to encode them
           open: false,
           sections: [
             {
@@ -1328,6 +1371,88 @@ export const state = () => ({
               title: 'Usage notes',
               content: {
                 level1: 'Enter the number of pages of the object.',
+                level2: '',
+                level3: ''
+              }
+            },
+            {
+              id: 'vocabulary',
+              title: 'Vocabulary',
+              content: 'None'
+            },
+            {
+              id: 'obligation',
+              title: 'Obligation',
+              content: ''
+            },
+            {
+              id: 'occurrence',
+              title: 'Occurrence',
+              content: ''
+            },
+            {
+              id: 'exampleHR',
+              title: 'Example',
+              content: ''
+            }
+          ]
+        },
+        {
+          title: 'Issue',
+          predicate: 'bibo:issue',
+          open: false,
+          sections: [
+            {
+              id: 'description',
+              title: 'Description',
+              content: 'An issue number.'
+            },
+            {
+              id: 'usagenotes',
+              title: 'Usage notes',
+              content: {
+                level1: 'Enter the issue number (e.g. of a journal).',
+                level2: '',
+                level3: ''
+              }
+            },
+            {
+              id: 'vocabulary',
+              title: 'Vocabulary',
+              content: 'None'
+            },
+            {
+              id: 'obligation',
+              title: 'Obligation',
+              content: ''
+            },
+            {
+              id: 'occurrence',
+              title: 'Occurrence',
+              content: ''
+            },
+            {
+              id: 'exampleHR',
+              title: 'Example',
+              content: ''
+            }
+          ]
+        },
+        {
+          title: 'Volume',
+          predicate: 'bibo:volume',
+          open: false,
+          sections: [
+            {
+              id: 'description',
+              title: 'Description',
+              content: 'A volume number.'
+            },
+            {
+              id: 'usagenotes',
+              title: 'Usage notes',
+              content: {
+                level1: 'Enter the volume number (e.g. of a journal).',
                 level2: '',
                 level3: ''
               }

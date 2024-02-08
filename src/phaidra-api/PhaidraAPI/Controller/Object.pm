@@ -1248,6 +1248,34 @@ sub add_or_modify_datastream {
   $self->render(json => $r, status => $r->{status});
 }
 
+sub get_public_datastream {
+
+  my $self = shift;
+
+  unless (defined($self->stash('pid'))) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
+    return;
+  }
+
+  unless (defined($self->stash('dsid'))) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined dsid'}]}, status => 400);
+    return;
+  }
+
+  my $dsid = $self->stash('dsid');
+  my $authz_model = PhaidraAPI::Model::Authorization->new;
+  if ($authz_model->is_private_ds($self, $dsid)) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Datastream '.$dsid.' is not public.'}]}, status => 400);
+    return;
+  }
+
+  my $object_model = PhaidraAPI::Model::Object->new;
+
+  my $r = $object_model->get_datastream($self, $self->stash('pid'), $dsid, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
+
+  $self->render(json => $r, status => $r->{status});
+}
+
 sub get_metadata {
   my $self = shift;
 

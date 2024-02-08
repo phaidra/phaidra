@@ -40,19 +40,23 @@ export default {
   methods: {
     localizedOrgUnit: function (orgUnit) {
       if (orgUnit['skos:exactMatch']) {
-        for (let name of orgUnit['schema:name']) {
-          if (name['@language'] === this.$i18n.locale) {
-            return {
-              value: name['@value'],
-              language: name['@language'],
-              id: orgUnit['skos:exactMatch']
+        if (orgUnit['skos:exactMatch'].length > 0) {
+          for (let name of orgUnit['schema:name']) {
+            if (name['@language'] === this.$i18n.locale) {
+              return {
+                value: name['@value'],
+                language: name['@language'],
+                id: orgUnit['skos:exactMatch']
+              }
             }
           }
-        }
-        return {
-          name: orgUnit['schema:name'][0]['@value'],
-          language: orgUnit['schema:name'][0]['@language'],
-          id: orgUnit['schema:name'][0]['skos:exactMatch']
+          if (orgUnit['schema:name'].length > 0) {
+            return {
+              name: orgUnit['schema:name'][0]['@value'],
+              language: orgUnit['schema:name'][0]['@language'],
+              id: orgUnit['skos:exactMatch'].length > 0 ? orgUnit['skos:exactMatch'][0] : null
+            }
+          }
         }
       }
       return null

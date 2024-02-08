@@ -4,6 +4,8 @@ import lang3to2map from '../../utils/lang3to2map'
 import orgunits from '../../utils/orgunits'
 import fieldsLib from '../../utils/fields'
 import oefos from '../../utils/oefos'
+import thema from '../../utils/thema'
+import bic from '../../utils/bic'
 import i18n from '../../i18n/i18n'
 
 const lang2to3map = Object.keys(lang3to2map).reduce((ret, key) => {
@@ -236,6 +238,7 @@ const vocabularies = {
       { '@id': 'ids:urn', 'skos:prefLabel': { 'eng': 'URN' }, 'skos:example': 'urn:nbn:at:at-ubw-21405.98566.193074-2' },
       { '@id': 'ids:uri', 'skos:prefLabel': { 'eng': 'URI' }, 'skos:example': 'https://example.com/path/resource.txt' },
       { '@id': 'ids:isbn', 'skos:prefLabel': { 'eng': 'ISBN' }, 'skos:example': '978-3-16-148410-0' },
+      { '@id': 'ids:issn', 'skos:prefLabel': { 'eng': 'ISSN' }, 'skos:example': '1544-9173' },
       { '@id': 'ids:gnd', 'skos:prefLabel': { 'eng': 'GND' }, 'skos:example': '118635808' },
       { '@id': 'phaidra:acnumber', 'skos:prefLabel': { 'eng': 'AC number', 'deu': 'AC Nummer' }, 'skos:example': 'AC13399179' }
     ],
@@ -275,6 +278,7 @@ const vocabularies = {
   'citationpredicate': {
     terms: [
       { '@id': 'cito:cites', 'skos:prefLabel': { 'eng': 'Cites', 'deu': 'Verweist auf' } },
+      { '@id': 'cito:citesAsDataSource', 'skos:prefLabel': { 'eng': 'Cites as data source', 'deu': 'Verweist auf Dataset' } },
       { '@id': 'cito:isCitedBy', 'skos:prefLabel': { 'eng': 'Is cited by', 'deu': 'Zitiert von' } }
     ],
     loaded: true
@@ -1148,6 +1152,13 @@ const vocabularies = {
     ],
     loaded: true
   },
+  'levelofdescription': {
+    terms: [
+      { '@id': ns + 'HQ7N-3Q2W', 'skos:prefLabel': { 'eng': 'Digitized object', 'deu': 'Digitalisiertes Objekt' } },
+      { '@id': ns + 'TG30-5EM3', 'skos:prefLabel': { 'eng': 'Represented object', 'deu': 'Repräsentiertes Objekt' } }
+    ],
+    loaded: true
+  },
   'carriertype': {
     terms: [
       { '@id': ns + '2FTX-ZPZV', 'skos:prefLabel': { 'eng': 'ADAT' } },
@@ -1396,6 +1407,37 @@ const vocabularies = {
     ],
     loaded: true
   },
+  'oerobjecttype': {
+    terms: [
+      { '@id': 'https://w3id.org/kim/hcrt/application', 'skos:prefLabel': { 'eng': 'Software Application', 'deu': 'Softwareanwendung' } },
+      { '@id': 'https://w3id.org/kim/hcrt/assessment', 'skos:prefLabel': { 'eng': 'Assessment', 'deu': 'Lernkontrolle' } },
+      { '@id': 'https://w3id.org/kim/hcrt/audio', 'skos:prefLabel': { 'eng': 'Audio Recording', 'deu': 'Audio' } },
+      { '@id': 'https://w3id.org/kim/hcrt/case_study', 'skos:prefLabel': { 'eng': 'Case Study', 'deu': 'Fallstudie' } },
+      { '@id': 'https://w3id.org/kim/hcrt/course', 'skos:prefLabel': { 'eng': 'Course', 'deu': 'Kurs' } },
+      { '@id': 'https://w3id.org/kim/hcrt/data', 'skos:prefLabel': { 'eng': 'Data', 'deu': 'Daten' } },
+      { '@id': 'https://w3id.org/kim/hcrt/diagram', 'skos:prefLabel': { 'eng': 'Diagram', 'deu': 'Grafik' } },
+      { '@id': 'https://w3id.org/kim/hcrt/drill_and_practice', 'skos:prefLabel': { 'eng': 'Drill and Practice', 'deu': 'Übung' } },
+      { '@id': 'https://w3id.org/kim/hcrt/educational_game', 'skos:prefLabel': { 'eng': 'Game', 'deu': 'Lernspiel' } },
+      { '@id': 'https://w3id.org/kim/hcrt/experiment', 'skos:prefLabel': { 'eng': 'Experiment', 'deu': 'Experiment' } },
+      { '@id': 'https://w3id.org/kim/hcrt/image', 'skos:prefLabel': { 'eng': 'Image', 'deu': 'Abbildung' } },
+      { '@id': 'https://w3id.org/kim/hcrt/index', 'skos:prefLabel': { 'eng': 'Reference Work', 'deu': 'Nachschlagewerk' } },
+      { '@id': 'https://w3id.org/kim/hcrt/lesson_plan', 'skos:prefLabel': { 'eng': 'Lesson Plan', 'deu': 'Unterrichtsplanung' } },
+      { '@id': 'https://w3id.org/kim/hcrt/map', 'skos:prefLabel': { 'eng': 'Map', 'deu': 'Karte' } },
+      { '@id': 'https://w3id.org/kim/hcrt/portal', 'skos:prefLabel': { 'eng': 'Web Portal', 'deu': 'Portal' } },
+      { '@id': 'https://w3id.org/kim/hcrt/questionnaire', 'skos:prefLabel': { 'eng': 'Questionnaire', 'deu': 'Fragebogen' } },
+      { '@id': 'https://w3id.org/kim/hcrt/script', 'skos:prefLabel': { 'eng': 'Script', 'deu': 'Skript' } },
+      { '@id': 'https://w3id.org/kim/hcrt/sheet_music', 'skos:prefLabel': { 'eng': 'Sheet Music', 'deu': 'Musiknoten' } },
+      { '@id': 'https://w3id.org/kim/hcrt/simulation', 'skos:prefLabel': { 'eng': 'Simulation', 'deu': 'Simulation' } },
+      { '@id': 'https://w3id.org/kim/hcrt/slide', 'skos:prefLabel': { 'eng': 'Presentation', 'deu': 'Präsentation' } },
+      { '@id': 'https://w3id.org/kim/hcrt/text', 'skos:prefLabel': { 'eng': 'Text', 'deu': 'Textdokument' } },
+      { '@id': 'https://w3id.org/kim/hcrt/textbook', 'skos:prefLabel': { 'eng': 'Textbook', 'deu': 'Lehrbuch' } },
+      { '@id': 'https://w3id.org/kim/hcrt/video', 'skos:prefLabel': { 'eng': 'Video', 'deu': 'Video' } },
+      { '@id': 'https://w3id.org/kim/hcrt/web_page', 'skos:prefLabel': { 'eng': 'Web Page', 'deu': 'Webseite' } },
+      { '@id': 'https://w3id.org/kim/hcrt/worksheet', 'skos:prefLabel': { 'eng': 'Worksheet', 'deu': 'Arbeitsmaterial' } },
+      { '@id': 'https://w3id.org/kim/hcrt/other', 'skos:prefLabel': { 'eng': 'Other', 'deu': 'Sonstiges' } },
+    ],
+    loaded: true
+  },
   'accessright': {
     terms: [
       { '@id': ns + 'QW5R-NG4J', 'skos:prefLabel': { 'eng': 'open access' }, 'skos:definition': { 'eng': 'Open access refers to a resource that is immediately and permanently online, and free for all on the Web, without financial and technical barriers.The resource is either stored in the repository or referenced to an external journal or trustworthy archive.' } },
@@ -1629,6 +1671,18 @@ const vocabularies = {
     tree: [],
     loaded: false,
     sorted: ''
+  },
+  'thema': {
+    terms: [],
+    tree: [],
+    loaded: false,
+    sorted: ''
+  },
+  'bic': {
+    terms: [],
+    tree: [],
+    loaded: false,
+    sorted: ''
   }
 }
 
@@ -1724,6 +1778,20 @@ const mutations = {
         oefos.sortOefosTree(state.vocabularies['oefos']['tree'], locale)
       }
       state.vocabularies['oefos'].sorted = locale
+    }
+  },
+  setThema(state, data) {
+    if (state.vocabularies['thema']['loaded'] === false) {
+      state.vocabularies['thema']['tree'] = data.tree
+      state.vocabularies['thema']['terms'] = data.terms
+      state.vocabularies['thema']['loaded'] = true
+    }
+  },
+  setBic(state, data) {
+    if (state.vocabularies['bic']['loaded'] === false) {
+      state.vocabularies['bic']['tree'] = data.tree
+      state.vocabularies['bic']['terms'] = data.terms
+      state.vocabularies['bic']['loaded'] = true
     }
   },
   sortFields(state, locale) {
@@ -1854,6 +1922,46 @@ const actions = {
     } else {
       if (state.vocabularies['oefos']['locale'] !== locale) {
         commit('sortOefos', locale)
+      }
+    }
+  },
+  async loadThema({ commit, rootState, state }, locale) {
+    if (state.vocabularies['thema']['loaded'] === false) {
+      try {
+        let response = await this.$axios.request({
+          method: 'GET',
+          url: '/vocabulary?uri=thema'
+        })
+        if (response.data.alerts && response.data.alerts.length > 0) {
+          commit('setAlerts', response.data.alerts)
+        }
+        let terms = []
+        thema.getThemaTerms(terms, response.data.vocabulary, null)
+        commit('setThema', { tree: response.data.vocabulary, terms: terms, locale: locale })
+        console.log(terms)
+      } catch (error) {
+        console.log(error)
+        commit('setAlerts', [{ type: 'danger', msg: 'Failed to fetch thema: ' + error }])
+      }
+    }
+  },
+  async loadBic({ commit, rootState, state }, locale) {
+    if (state.vocabularies['bic']['loaded'] === false) {
+      try {
+        let response = await this.$axios.request({
+          method: 'GET',
+          url: '/vocabulary?uri=bic'
+        })
+        if (response.data.alerts && response.data.alerts.length > 0) {
+          commit('setAlerts', response.data.alerts)
+        }
+        let terms = []
+        bic.getBicTerms(terms, response.data.vocabulary, null)
+        commit('setBic', { tree: response.data.vocabulary, terms: terms, locale: locale })
+        console.log(terms)
+      } catch (error) {
+        console.log(error)
+        commit('setAlerts', [{ type: 'danger', msg: 'Failed to fetch BIC: ' + error }])
       }
     }
   },

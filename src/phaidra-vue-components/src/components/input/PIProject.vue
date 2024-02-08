@@ -25,7 +25,7 @@
 
         <v-row>
           <v-col>
-            <v-row >
+            <v-row v-show="showName">
               <v-col :cols="multilingual ? 8 : 12">
                 <v-text-field
                   :value="name"
@@ -65,7 +65,7 @@
 
             </v-row>
 
-            <v-row>
+            <v-row v-show="showDescription">
               <v-col :cols="multilingual ? 8 : 12">
                 <v-text-field
                   :value="description"
@@ -104,7 +104,7 @@
               </v-col>
             </v-row>
 
-            <v-row>
+            <v-row v-show="showDates">
                 <v-col cols="12" :md="6">
                   <template>
                     <v-text-field
@@ -184,7 +184,7 @@
             </v-row>
 
             <v-row >
-              <v-col cols="4">
+              <v-col cols="4" v-show="showAcronym">
                 <v-text-field
                   :value="acronym"
                   :label="$t('Acronym')"
@@ -202,7 +202,7 @@
                   :outlined="inputStyle==='outlined'"
                 ></v-text-field>
               </v-col>
-              <v-col cols="4">
+              <v-col cols="4" v-show="showHomepage">
                 <v-text-field
                   :value="homepage"
                   :label="$t('Homepage')"
@@ -312,6 +312,26 @@ export default {
     showIds: {
       type: Boolean,
       default: false
+    },
+    showName: {
+      type: Boolean,
+      default: true
+    },
+    showDescription: {
+      type: Boolean,
+      default: true
+    },
+    showDates: {
+      type: Boolean,
+      default: true
+    },
+    showAcronym: {
+      type: Boolean,
+      default: true
+    },
+    showHomepage: {
+      type: Boolean,
+      default: true
     },
     multilingual: {
       type: Boolean,

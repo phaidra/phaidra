@@ -82,6 +82,7 @@
                               v-on:input-language="setSelected(f, 'language', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-text-field>
                           </template>
 
@@ -92,6 +93,7 @@
                               v-on:input-language="setSelected(f, 'language', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-text-field-suggest>
                           </template>
 
@@ -102,6 +104,7 @@
                               v-on:input-language="setSelected(f, 'language', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-keyword>
                           </template>
 
@@ -113,6 +116,7 @@
                               v-on:input-language="setSelected(f, 'language', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                               v-on:up="sortFieldUp(s.fields, f)"
                               v-on:down="sortFieldDown(s.fields, f)"
                             ></p-i-title>
@@ -120,6 +124,7 @@
 
                           <template v-else-if="f.component === 'p-resource-type-buttongroup'">
                             <p-i-resource-type
+                              v-on:configure="editFieldProps(f)"
                               v-bind.sync="f"
                               v-on:input="selectInput(f, $event)"
                             ></p-i-resource-type>
@@ -127,6 +132,7 @@
 
                           <template v-else-if="f.component === 'p-object-type-checkboxes'">
                             <p-i-object-type
+                              v-on:configure="editFieldProps(f)"
                               v-bind.sync="f"
                               v-on:input="handleObjectTypeCheckboxesInput(f, $event)"
                             ></p-i-object-type>
@@ -138,6 +144,7 @@
                               v-on:input="selectInput(f, $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-select>
                             <v-col cols="12" v-if="(f.predicate === 'edm:rights') && f.showValueDefinition && license">
                               <p-d-license-info :license="license"></p-d-license-info>
@@ -153,6 +160,7 @@
                               v-on:input-language="setSelected(f, 'language', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-select-text>
                           </template>
 
@@ -163,6 +171,7 @@
                               v-on:input-date-type="setSelected(f, 'type', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-date-edtf>
                           </template>
 
@@ -172,6 +181,7 @@
                               v-on:input="f.value=$event"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-duration>
                           </template>
 
@@ -191,6 +201,7 @@
                               v-on:input-page-end="f.pageEnd=$event"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-series>
                           </template>
 
@@ -203,6 +214,7 @@
                               v-on:input-identifier="f.identifier=$event"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-citation>
                           </template>
 
@@ -217,6 +229,7 @@
                               v-on:input-publishing-date="f.publishingDate=$event"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-bf-publication>
                           </template>
 
@@ -230,6 +243,7 @@
                               v-on:input-identifier="f.identifierText = $event"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-instance-of>
                           </template>
 
@@ -245,6 +259,7 @@
                               v-on:input-role="roleInput(f, $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-adaptation>
                           </template>
 
@@ -288,6 +303,7 @@
                               v-on:input-role="roleInput(f, $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                               v-on:up="sortFieldUp(s.fields, f)"
                               v-on:down="sortFieldDown(s.fields, f)"
                               v-on:extend="extendEntity(s.fields, f)"
@@ -315,6 +331,7 @@
                               v-on:add="addField(s.fields, f)"
                               v-on:add-clear="addEntityClear(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                               v-on:up="sortFieldUp(s.fields, f)"
                               v-on:down="sortFieldDown(s.fields, f)"
                             ></p-i-entity-extended>
@@ -327,6 +344,7 @@
                               v-on:resolve="updateSubject(f, $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-subject-gnd>
                           </template>
 
@@ -337,6 +355,7 @@
                               v-on:resolve="updateSubject(f, $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-subject-bk>
                           </template>
 
@@ -347,7 +366,29 @@
                               v-on:resolve="updateVocSubject(f, $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-subject-oefos>
+                          </template>
+
+                          <template v-else-if="f.component === 'p-subject-thema'">
+                            <p-i-subject-thema
+                              v-bind.sync="f"
+                              v-on:input="f.value=$event"
+                              v-on:resolve="updateVocSubject(f, $event)"
+                              v-on:add="addField(s.fields, f)"
+                              v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
+                            ></p-i-subject-thema>
+                          </template>
+
+                          <template v-else-if="f.component === 'p-subject-bic'">
+                            <p-i-subject-bic
+                              v-bind.sync="f"
+                              v-on:input="f.value=$event"
+                              v-on:resolve="updateVocSubject(f, $event)"
+                              v-on:add="addField(s.fields, f)"
+                              v-on:remove="removeField(s.fields, f)"
+                            ></p-i-subject-bic>
                           </template>
 
                           <template v-else-if="f.component === 'p-spatial-geonames'">
@@ -358,6 +399,7 @@
                               v-on:resolve="updatePlace(f, $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-spatial-geonames>
                           </template>
 
@@ -369,6 +411,7 @@
                               v-on:input-language="setSelected(f, 'language', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-spatial-text>
                           </template>
 
@@ -379,6 +422,7 @@
                               v-on:input-unit="setSelected(f, 'unitCode', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-dimension>
                           </template>
 
@@ -390,6 +434,7 @@
                               v-on:input-title-language="setSelected(f, 'titleLanguage', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-see-also>
                           </template>
 
@@ -399,6 +444,7 @@
                               v-on:input-value="f.value=$event"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-literal>
                           </template>
 
@@ -409,6 +455,7 @@
                               v-on:input-identifier-type="setSelected(f, 'type', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                               class="my-2"
                             ></p-i-alternate-identifier>
                           </template>
@@ -422,6 +469,7 @@
                               v-on:input-notation="f.notation=$event"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-study-plan>
                           </template>
 
@@ -439,6 +487,7 @@
                               v-on:input-place="f.place=$event"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-event>
                           </template>
 
@@ -459,6 +508,7 @@
                               v-on:input-date-to="f.dateTo=$event"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-project>
                           </template>
 
@@ -470,6 +520,7 @@
                               v-on:input-identifier="f.identifier=$event"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-funder>
                           </template>
 
@@ -479,6 +530,7 @@
                               v-on:input="selectInput(f, $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-association>
                           </template>
 
@@ -486,17 +538,19 @@
                             <p-i-filename
                               v-bind.sync="f"
                               v-on:input-value="f.value=$event"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-filename>
                           </template>
 
                           <template v-else-if="f.component === 'p-filename-readonly'">
-                            <p-i-filename-readonly v-bind.sync="f"></p-i-filename-readonly>
+                            <p-i-filename-readonly v-bind.sync="f" v-on:configure="editFieldProps(f)"></p-i-filename-readonly>
                           </template>
 
                           <template v-else-if="f.component === 'p-unknown'">
                             <p-i-unknown
                               v-bind.sync="f"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-unknown>
                           </template>
 
@@ -504,6 +558,7 @@
                             <p-i-vocab-ext-readonly
                               v-bind.sync="f"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-vocab-ext-readonly>
                           </template>
 
@@ -511,6 +566,7 @@
                             <p-i-spatial-readonly
                               v-bind.sync="f"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-spatial-readonly>
                           </template>
 
@@ -521,6 +577,7 @@
                               v-on:input-mimetype="setSelected(f, 'mimetype', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
                             ></p-i-file>
                           </template>
 
@@ -657,6 +714,33 @@
         <p-feedback :firstname="feedbackUser.firstname" :lastname="feedbackUser.lastname" :email="feedbackUser.email" :context="feedbackContext"></p-feedback>
       </v-tab-item>
     </v-tabs-items>
+    <v-dialog v-model="showEditFieldPopup" max-width="600px" scrollable>
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Field Settings</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row v-for="(fieldProp, index) in fieldPropForm" :key="index">
+              <v-col cols="12">
+                <v-text-field v-if="fieldProp.fieldType === 'text'" :label="fieldProp.fieldKey" v-model="fieldProp.fieldValue" ></v-text-field>
+                <v-checkbox v-if="fieldProp.fieldType === 'boolean'" :label="fieldProp.fieldKey" v-model="fieldProp.fieldValue"></v-checkbox>
+              </v-col>
+            </v-row>
+          </v-container>
+          <small>*indicates required field</small>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="showEditFieldPopup = false">
+            Close
+          </v-btn>
+          <v-btn color="primary" @click="saveFieldProp()">
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+</v-dialog>
 
   </v-container>
 
@@ -890,10 +974,43 @@ export default {
       metadatapreview: {},
       license: null,
       uploadProgress: 0,
-      jsonld: {}
+      jsonld: {},
+      showEditFieldPopup: false,
+      selectedFieldForEdit: null,
+      fieldPropForm: []
     }
   },
   methods: {
+    editFieldProps: function(fieldDet) {
+      this.fieldPropForm = []
+      this.selectedFieldForEdit = fieldDet
+      for (const fieldKey in this.selectedFieldForEdit) {
+        if (Object.hasOwnProperty.call(this.selectedFieldForEdit, fieldKey)) {
+          const value = this.selectedFieldForEdit[fieldKey];
+          if(typeof(value) === "string"){
+            this.fieldPropForm.push({
+              fieldType: 'text',
+              fieldKey,
+              fieldValue: value,
+            })
+          } 
+          else if(typeof(value) === "boolean"){
+            this.fieldPropForm.push({
+              fieldType: 'boolean',
+              fieldKey,
+              fieldValue: value,
+            })
+          }
+        }
+      }
+      this.showEditFieldPopup = true
+    },
+    saveFieldProp: function() {
+      this.showEditFieldPopup = false
+      this.fieldPropForm.forEach(element => {
+        this.selectedFieldForEdit[element.fieldKey] = element.fieldValue
+      });
+    },
     importFromObject: async function (doc) {
       this.loading = true
       try {
@@ -1634,16 +1751,16 @@ export default {
     containedInRoleInput: function (f, event) {
       for (let r of f.roles) {
         if (r.id === event.role.id) {
-          if (event.roleTerm) {
+          if (event.hasOwnProperty('roleTerm')) {
             r.role = event.roleTerm['@id']
           }
-          if (event.name) {
+          if (event.hasOwnProperty('name')) {
             r.name = event.name
           }
-          if (event.firstname) {
+          if (event.hasOwnProperty('firstname')) {
             r.firstname = event.firstname
           }
-          if (event.lastname) {
+          if (event.hasOwnProperty('lastname')) {
             r.lastname = event.lastname
           }
         }
@@ -1652,28 +1769,28 @@ export default {
     containedInSeriesInput: function (f, event) {
       for (let s of f.series) {
         if (s.id === event.series.id) {
-          if (event.seriesTitleLanguageTerm) {
+          if (event.hasOwnProperty('seriesTitleLanguageTerm')) {
             s.seriesTitleLanguage = event.seriesTitleLanguageTerm['@id']
           }
-          if (event.seriesTitle) {
+          if (event.hasOwnProperty('seriesTitle')) {
             s.seriesTitle = event.seriesTitle
           }
-          if (event.seriesVolume) {
+          if (event.hasOwnProperty('seriesVolume')) {
             s.seriesVolume = event.seriesVolume
           }
-          if (event.seriesIssue) {
+          if (event.hasOwnProperty('seriesIssue')) {
             s.seriesIssue = event.seriesIssue
           }
-          if (event.seriesIssued) {
+          if (event.hasOwnProperty('seriesIssued')) {
             s.seriesIssued = event.seriesIssued
           }
-          if (event.seriesIssn) {
+          if (event.hasOwnProperty('seriesIssn')) {
             s.seriesIssn = event.seriesIssn
           }
-          if (event.seriesIdentifier) {
+          if (event.hasOwnProperty('seriesIdentifier')) {
             s.seriesIdentifier = event.seriesIdentifier
           }
-          if (event.seriesIdentifierType) {
+          if (event.hasOwnProperty('seriesIdentifierType')) {
             s.seriesIdentifierType = event.seriesIdentifierType
           }
         }

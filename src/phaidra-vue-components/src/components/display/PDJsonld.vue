@@ -94,11 +94,11 @@
         </template>
 
         <template v-else-if="p==='dcterms:available'" slot="dcterms:available">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'available'+j" v-bind.sync="displayProperties"></p-d-value>
+          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'available'+j" v-bind.sync="displayProperties"></p-d-date>
         </template>
 
         <template v-else-if="p==='dcterms:issued'" slot="dcterms:issued">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'issued'+j" v-bind.sync="displayProperties"></p-d-value>
+          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'issued'+j" v-bind.sync="displayProperties"></p-d-date>
         </template>
 
         <template v-else-if="p==='dcterms:valid'" slot="dcterms:valid">
@@ -143,6 +143,10 @@
 
         <template v-else-if="p==='cito:cites'" slot="cito:cites">
           <p-d-citation :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'cites'+j" v-bind.sync="displayProperties"></p-d-citation>
+        </template>
+
+        <template v-else-if="p==='cito:citesAsDataSource'" slot="cito:citesAsDataSource">
+          <p-d-citation :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'citesAsDataSource'+j" v-bind.sync="displayProperties"></p-d-citation>
         </template>
 
         <template v-else-if="p==='cito:isCitedBy'" slot="cito:isCitedBy">
@@ -251,6 +255,10 @@
           <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'carriertype'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
         </template>
 
+        <template v-else-if="p==='phaidra:levelOfDescription'" slot="phaidra:levelOfDescription">
+          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'lvlofdesc'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        </template>
+
         <template v-else-if="p==='rdau:P60059'" slot="rdau:P60059">
           <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'regenc'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
         </template>
@@ -281,6 +289,14 @@
 
         <template v-else-if="p==='schema:numberOfPages'" slot="schema:numberOfPages">
           <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'numberOfPages'+j" v-bind.sync="displayProperties"></p-d-value>
+        </template>
+
+        <template v-else-if="p==='bibo:issue'" slot="bibo:issue">
+          <p-d-lang-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'issue'+j" v-bind.sync="displayProperties"></p-d-lang-value>
+        </template>
+
+        <template v-else-if="p==='bibo:volume'" slot="bibo:volume">
+          <p-d-lang-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'volume'+j" v-bind.sync="displayProperties"></p-d-lang-value>
         </template>
 
         <template v-else-if="p==='bf:soundCharacteristic'" slot="bf:soundCharacteristic">
@@ -370,6 +386,7 @@ import PDSkosPreflabel from './PDSkosPreflabel'
 import PDKeyword from './PDKeyword'
 import PDLangValue from './PDLangValue'
 import PDValue from './PDValue'
+import PDDate from './PDDate'
 import PDDimension from './PDDimension'
 import PDDuration from './PDDuration'
 import PDGeoreference from './PDGeoreference'
@@ -426,6 +443,7 @@ export default {
     PDLangValue,
     PDLicense,
     PDValue,
+    PDDate,
     PDDimension,
     PDDuration,
     PDGeoreference,
