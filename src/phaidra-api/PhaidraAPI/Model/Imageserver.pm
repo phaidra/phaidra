@@ -42,55 +42,81 @@ sub get_url {
     return $res;
   }
 
-  # get pid
-  $p =~ m/([a-z]+:[0-9]+)_?([A-Z]+)?\.tif/;
-  my $pid = $1;
-  my $ds  = $2;
+  my $root = $c->app->config->{imageserver}->{image_server_root};
+  # if this is a request using the image path
+  if($p =~ m/^\/?\Q$root/i) {
+    if ($rightscheck) {
+      # find the corresponding pid and check rights
+      if($p =~ m/.+\/([0-9A-F]{40})\.tif(.+)?$/i) {
+        my $idhash = $1;
+        my $cachekey = "idhash2pid_" . $idhash;
+        my $pid = $c->app->chi->get($cachekey);
+        unless ($pid) {
+          $c->app->log->debug("[cache miss] $cachekey");
 
-  # check rights
-  if ($rightscheck) {
-    my $usrnm           = $c->stash->{basic_auth_credentials}->{username} ? $c->stash->{basic_auth_credentials}->{username} : '';
-    my $cachekey        = "img_rights_" . $usrnm . "_$pid";
-    my $status_cacheval = $c->app->chi->get($cachekey);
-    unless ($status_cacheval) {
-      $c->app->log->debug("[cache miss] $cachekey");
+          my $res = $c->paf_mongo->get_collection('jobs')->find_one({idhash => $idhash}, {}, {"sort" => {"created" => -1}});
+          if ($res->{pid}) {
+            $pid = $res->{pid};
+            $c->app->chi->set($cachekey, $pid, '1 day');
+          }
+        }
+        else {
+          $c->app->log->debug("[cache hit] $cachekey");
+        }
 
-      my $authz = PhaidraAPI::Model::Authorization->new;
-      my $rres  = $authz->check_rights($c, $pid, 'r');
-      $status_cacheval = $rres->{status};
+        if ($pid) {
+          my $check_pid_rights = $self->check_pid_rights($c, $pid);
+          unless ($check_pid_rights eq 200) {
+            $c->app->log->info("imageserver::get_url username[" . (defined($c->stash->{basic_auth_credentials}->{username}) ? $c->stash->{basic_auth_credentials}->{username} : '' ) . "] idhash[$idhash] pid[$pid] forbidden");
+            unshift @{$res->{alerts}}, {type => 'error', msg => 'Forbidden'};
+            $res->{status} = 403;
+            return $res;
+          }
+        } else {
+          $self->render(json => {alerts => [{type => 'info', msg => "Could not find PID for idhash[$idhash]"}]}, status => 400);
+          return;
+        }
+      } else {
+        $self->render(json => {alerts => [{type => 'info', msg => "Seems like a request using image path but can't match the idhash"}]}, status => 400);
+        return;
+      }
+    }
+  } else {
 
-      $c->app->chi->set($cachekey, $status_cacheval, '1 day');
+    # if this is a request using the pid
+    $p =~ m/([a-z]+:[0-9]+)_?([A-Z]+)?\.tif/;
+    my $pid = $1;
+    my $ds  = $2;
+
+    if ($rightscheck) {
+      my $check_pid_rights = $self->check_pid_rights($c, $pid);
+      unless ($check_pid_rights eq 200) {
+        $c->app->log->info("imageserver::get_url username[" . (defined($c->stash->{basic_auth_credentials}->{username}) ? $c->stash->{basic_auth_credentials}->{username} : '' ) . "] pid[$pid] forbidden");
+        unshift @{$res->{alerts}}, {type => 'error', msg => 'Forbidden'};
+        $res->{status} = 403;
+        return $res;
+      }
+    }
+
+    # infer hash
+    my $hash;
+    if (defined($ds)) {
+      $hash = hmac_sha1_hex($pid . "_" . $ds, $c->app->config->{imageserver}->{hash_secret});
     }
     else {
-      $c->app->log->debug("[cache hit] $cachekey");
+      $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
     }
+    
+    my $first   = substr($hash, 0, 1);
+    my $second  = substr($hash, 1, 1);
+    my $imgpath = "$root/$first/$second/$hash.tif";
 
-    unless ($status_cacheval eq 200) {
-      $c->app->log->info("imageserver::get_url username[" . $c->stash->{basic_auth_credentials}->{username} . "] pid[$pid] forbidden");
-      unshift @{$res->{alerts}}, {type => 'error', msg => 'Forbidden'};
-      $res->{status} = 403;
-      return $res;
-    }
+    # add leading slash if missing
+    $p =~ s/^\/*/\//;
+
+    # replace pid with hash
+    $p =~ s/([a-z]+:[0-9]+)(_[A-Z]+)?\.tif/$imgpath/;
   }
-
-  # infer hash
-  my $hash;
-  if (defined($ds)) {
-    $hash = hmac_sha1_hex($pid . "_" . $ds, $c->app->config->{imageserver}->{hash_secret});
-  }
-  else {
-    $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
-  }
-  my $root    = $c->app->config->{imageserver}->{image_server_root};
-  my $first   = substr($hash, 0, 1);
-  my $second  = substr($hash, 1, 1);
-  my $imgpath = "$root/$first/$second/$hash.tif";
-
-  # add leading slash if missing
-  $p =~ s/^\/*/\//;
-
-  # replace pid with hash
-  $p =~ s/([a-z]+:[0-9]+)(_[A-Z]+)?\.tif/$imgpath/;
 
   # we have to put the imagepath param first, imageserver needs this order
   my $new_params = Mojo::Parameters->new;
@@ -107,6 +133,28 @@ sub get_url {
   }
   $res->{url} = $url->to_string . "?" . $self->param_to_string($c, $new_params->pairs);
   return $res;
+}
+
+sub check_pid_rights {
+  my ($self, $c, $pid) = @_;
+
+  my $usrnm           = $c->stash->{basic_auth_credentials}->{username} ? $c->stash->{basic_auth_credentials}->{username} : '';
+  my $cachekey        = "img_rights_" . $usrnm . "_$pid";
+  my $status_cacheval = $c->app->chi->get($cachekey);
+  unless ($status_cacheval) {
+    $c->app->log->debug("[cache miss] $cachekey");
+
+    my $authz = PhaidraAPI::Model::Authorization->new;
+    my $rres  = $authz->check_rights($c, $pid, 'r');
+    $status_cacheval = $rres->{status};
+
+    $c->app->chi->set($cachekey, $status_cacheval, '1 day');
+  }
+  else {
+    $c->app->log->debug("[cache hit] $cachekey");
+  }
+
+  return $status_cacheval;
 }
 
 # we cannot let mojo url-escape the values, imageserver won't take it
