@@ -115,6 +115,8 @@ services:
       - FEDORA_ADMIN_PASS=${FEDORA_ADMIN_PASS}
       - SOLR_USER=${SOLR_USER}
       - SOLR_PASS=${SOLR_PASS}
+      - LDAP_ADMIN_USERNAME=${LDAP_ADMIN_USERNAME}
+      - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
     entrypoint:
       - bash
       - /mnt/api-entrypoint.bash

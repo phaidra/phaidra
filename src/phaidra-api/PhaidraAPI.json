@@ -167,8 +167,8 @@
             "usersearchfilter": "(&(uid={0})(objectClass=inetOrgPerson))",
             "useridattribute": "uid",
             "userattributes": "cn",
-            "securityprincipal": "cn=admin,dc=example,dc=org",
-            "securitycredentials": "adminpassword"
+            "securityprincipal": "cn=__LDAP_ADMIN_USERNAME__,dc=example,dc=org",
+            "securitycredentials": "__LDAP_ADMIN_PASSWORD__"
         }
     },
     "solr": {
