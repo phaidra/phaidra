@@ -140,7 +140,7 @@ sub getObjectProperties {
     }
   }
 
-  $c->app->log->debug("XXXXXXXXXXXXXXX getObjectProperties:\n" . $c->app->dumper($res));
+  # $c->app->log->debug("XXXXXXXXXXXXXXX getObjectProperties:\n" . $c->app->dumper($res));
   return $res;
 }
 

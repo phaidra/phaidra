@@ -49,13 +49,13 @@ sub add_or_modify_datastream_hooks {
 
     if (exists($c->app->config->{hooks}->{iiifmanifest}) && $c->app->config->{hooks}->{iiifmanifest}) {
       if ($dsid eq "UWMETADATA" or $dsid eq "MODS" or $dsid eq "JSON-LD") {
-        $c->app->log->debug("Updating IIIF-MANIFEST from $dsid");
+        $c->app->log->debug("add_or_modify_datastream_hooks pid[$pid] Updating IIIF-MANIFEST from $dsid");
         
         my $rdshash      = $search_model->datastreams_hash($c, $pid);
         if ($rdshash->{status} ne 200) {
 
           # just log but don't change status, this isn't fatal
-          push @{$res->{alerts}}, {type => 'error', msg => 'Error getting datastreams_hash when updating IIIF-MANIFEST metadata'};
+          push @{$res->{alerts}}, {type => 'error', msg => "add_or_modify_datastream_hooks pid[$pid] Error getting datastreams_hash when updating IIIF-MANIFEST metadata"};
           push @{$res->{alerts}}, @{$rdshash->{alerts}} if scalar @{$rdshash->{alerts}} > 0;
           return $res;
         }
@@ -66,7 +66,7 @@ sub add_or_modify_datastream_hooks {
           if ($r->{status} ne 200) {
 
             # just log but don't change status, this isn't fatal
-            push @{$res->{alerts}}, {type => 'error', msg => 'Error updating IIIF-MANIFEST metadata'};
+            push @{$res->{alerts}}, {type => 'error', msg => "add_or_modify_datastream_hooks pid[$pid] Error updating IIIF-MANIFEST metadata"};
             push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
           }
         }
@@ -94,9 +94,55 @@ sub add_or_modify_datastream_hooks {
             push @{$res->{alerts}}, @{$vsr->{alerts}} if scalar @{$vsr->{alerts}} > 0;
           }
         } else {
-          $c->app->log->error("Hooks: could not get cmodel, not creating imageserver/streaming job");
+          $c->app->log->error("add_or_modify_datastream_hooks pid[$pid] Could not get cmodel, not creating imageserver/streaming job");
         }
 
+      }
+    }
+
+    if ($dsid eq "RIGHTS") {
+      my $res_cmodel = $search_model->get_cmodel($c, $pid);
+      if ($res_cmodel->{status} ne 200) {
+        push @{$res->{alerts}}, {type => 'error', msg => "add_or_modify_datastream_hooks pid[$pid] Error getting cmodel in add_or_modify_datastream_hooks"};
+        $res->{status} = 500;
+        return $res;
+      }
+      # currently only for videos, so we check the cmodel first
+      if ($res_cmodel->{cmodel} eq 'Video') {
+        my $rights_model = PhaidraAPI::Model::Rights->new;
+        my $res_rights = $rights_model->xml_2_json($c, $dscontent);
+        if ($res_rights->{status} eq 200) {
+          my $rights = $res_rights->{rights};
+          my $nrKeys = keys %{$rights};
+          if ($nrKeys != 0) {
+            my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid});
+            if ($find->{pid}) {
+              $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] Access restrictions have been added or modified: Current streaming job status[".$find->{status}."]");
+              if ($find->{status} eq "TO_DELETE" or $find->{status} eq "DEL_REQUESTED") {
+                $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] Delete already requested. Noop.");
+              } else {
+                if ($find->{status} =~ m/^OC_DELETED_/) {
+                  $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] Already deleted. Noop.");
+                } else {
+                  $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] Marking stream for delete.");
+                  $c->paf_mongo->get_collection('jobs')->update_one(
+                    { 'pid' => $pid, 'agent' => 'vige' },
+                    { '$set'     => { 'status' => 'TO_DELETE' }},
+                    { 'upsert'   => 0 }
+                  );
+                }
+              }
+            } else {
+              $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] Access restrictions have been added or modified, but streaming job wasn't found. Noop.");
+            }
+          } else {
+            $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] Access restrictions have been removed. Consider updating streaming jobs (manually).");
+          }
+        } else {
+          push @{$res->{alerts}}, {type => 'error', msg => 'Error reading RIGHTS'};
+          $res->{status} = 500;
+          return $res;
+        }
       }
     }
   }
@@ -290,6 +336,8 @@ sub _create_streaming_job {
       my $job = {pid => $pid, cmodel => $cmodel, agent => "vige", status => "new", idhash => $hash, created => time};
       $job->{path} = $path if $path;
       $c->paf_mongo->get_collection('jobs')->insert_one($job);
+    } else {
+      $c->app->log->info("NOT creating streaming job for pid[$pid] cm[$cmodel], job already exists status[".$find->{status}."]");
     }
   }
   return $res;
