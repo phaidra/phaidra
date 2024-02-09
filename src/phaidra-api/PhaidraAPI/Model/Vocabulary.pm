@@ -187,7 +187,7 @@ sub _get_oefos_vocabulary_hash {
   my $json;
   my $termsHash = {};
 
-  my $csvEn = $c->app->config->{vocabulary_folder} . '/OEFOS2012_EN_CTI_20211111_154228_utf8.csv';
+  my $csvEn = $c->app->config->{vocabulary_folder} . '/OEFOS2012_EN_CTI_utf8.csv';
   open my $data_1, '<:encoding(UTF-8)', $csvEn or $c->app->log->error("Can't open '" . $csvEn . "' for reading: $!");
   <$data_1>; # ignore csv header to reduce log warnings
   while (my $line = <$data_1>) {
@@ -222,7 +222,7 @@ sub _get_oefos_vocabulary_hash {
     }
   }
 
-  my $csvDe = $c->app->config->{vocabulary_folder} . '/OEFOS2012_DE_CTI_20211111_154218_utf8.csv';
+  my $csvDe = $c->app->config->{vocabulary_folder} . '/OEFOS2012_DE_CTI_utf8.csv';
   open my $data_2, '<:encoding(UTF-8)', $csvDe or $c->app->log->error("Can't open '" . $csvDe . "' for reading: $!");
   <$data_2>; # ignore csv header to reduce log warnings
   while (my $line = <$data_2>) {
