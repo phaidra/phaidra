@@ -2,8 +2,6 @@
 # Table of Contents
 1. [What is PHAIDRA?](#what-is-phaidra)
 2. [Features](#features)
-3. [Architecture](#architecture)
-4. [Docked Applications](#docked-applications)
 
 
 # What is PHAIDRA?
@@ -77,15 +75,3 @@ PHAIDRA objects can be access in multiple ways:
 - For 3D objects, 3DHOP viewer was integrated
 
 - Websites (wacz) can be displayed via replay.web viewer.
-
-# Architecture
-
-- TODO: ui > pvc > api > fedora + support services/modules
-
-# Docked Applications
-
-- phaidra-ir: An institutional repository frontend.
-
-- theke: a multimedia library frontend.
-
-TODO: add links
