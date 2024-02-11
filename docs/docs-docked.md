@@ -1,4 +1,4 @@
-# PHAIDRA architecture
+# Docked applications
 # Table of Contents
 1. [PHAIDRA IR](#phaidra-ir)
 2. [Media Library](#media-library)
@@ -7,7 +7,7 @@
 
 # Docked applications
 
-Throughout the 15 years of PHAIDRA's history, multiple systems have been integrated with it. There are at least 3 different systems for thesis submit, ingest workflows have been developed from systems like Goobi or Moodle, metadata have been mapped from various repositories, catalogues, etc. Some of the integrations make use of PHAIDRA API and some even PHAIDRA Vue Components. We call the latter "Docker applications". Here are some examples:
+Here are some examples for the so called "Docked applications". These are alternative frontends for PHAIDRA making use of PHAIDRA API and PHAIDRA Vue Components library.
 
 ## PHAIDRA IR
 

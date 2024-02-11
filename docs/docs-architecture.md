@@ -1,9 +1,24 @@
 # PHAIDRA architecture
 # Table of Contents
-1. [Components](#components)
-2. [Concepts](#concepts)
+1. [Overview](#overview)
+2. [OCFL](#ocfl)
+3. [Fedora Repository](#fedora-repository)
+4. [Fedora DB](#fedora-db)
+5. [Fixity](#fixity)
+6. [PHAIDRA API](#phaidra-api)
+7. [Phaidra DBs](#phaidra-dbs)
+8. [Solr](#solr)
+9. [IIIF Imageserver](#iiif-imageserver)
+10. [PHAIDRA Vue Components](#phaidra-vue-components)
+11. [PHAIDRA UI](#phaidra-ui)
+12. [Monitoring](#monitoring)
+13. [Cronjobs](#cronjobs)
+14. [Other services](#other-services)
+15. [Docked applications](#docked-applications)
+16. [Other components](#other-components)
+17. [Harversters](#harvesters)
 
-# Components
+# Overview
 
 Here is a basic overview of the components interacting in a typical PHAIDRA instance. The blue boxes are part of PHAIDRA repository.
 
@@ -47,6 +62,10 @@ The imageserver is used to generate thumbnails (for pictures and PDF documents) 
 
 Right from the early days of PHAIDRA there was a need for more than just one frontend for the repository. This led not only to PHAIDRA API implementing many features which would be typically left for frontend (i.e. providing various data viewers which the frontend merely embeds via iframe) but also to the creation of reusable frontend components. PHAIDRA Vue Componets is a library of Vue components and scripts which implement many common use cases: ingest, metadata editing, defining relationships and access rights, search, etc. It enables fast development of tailored frontends (see <a href="/docs/docs-docked.md">Docked Applications</a> for examples) while also keeping them thin, hence easier to maintain.
 
+Here is a little schematics which summarizes how the parts of PHAIDRA Vue Components work together:
+
+<img src="../pictures/pvc.png" height="800px"></img>
+
 ## PHAIDRA UI
 
 This is the general purpose frontend for PHAIDRA. It provides access to almost all features of the repository and mostly builds on PHAIDRA Vue Components. It's aim is to be intuitive, so that it can be used by users without expert knowledge of repositories or bibliographic or other metadata, and also agnostic to where the digital object is coming from, since objects can be ingested via many different frontends and systems.
@@ -81,22 +100,5 @@ As a central datahub, a repository often needs to be integrated with many other 
 
 ## Harvesters
 
-One of the primary missions of an open respository is dissemination. PHAIDRA users the OAI-PMH interface through whitch metadata can be harvested in oai_dc and oai_openaire metadata schemas.
+One of the primary missions of an open respository is dissemination. PHAIDRA uses the OAI-PMH interface through whitch metadata can be harvested in oai_dc and oai_openaire metadata schemas.
 
-# Concepts
-
-## The architecture of the digital object
-
-![](../pictures/digital_object.svg)
-
-## Metadata schema
-
-TODO
-
-## Authorization
-
-TODO
-
-## Repository structure
-
-TODO
