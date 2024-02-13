@@ -18,10 +18,29 @@ Often the authentication is tailored for a particular institution, e.g. using in
 
 ## Attributes
 
-User attributes are useful to display basic information about owner accounts (name, email) as well as for authorization (affiliation, groups). Information about organisational structure is also helpful, i.e. for restricting object access to particular org units (if coupled with retrieving user's affiliation upon login) or for association of objects to units. How the attributes and the organigram are fetched (if they are fetched) varies from institution to institution. There is a Perl interface class which implements basic methods like
+User attributes are useful to display basic information about owner accounts (name, email) as well as for authorization (affiliation, groups). Information about organisational structure is also helpful, i.e. for restricting object access to particular org units (if coupled with retrieving user's affiliation upon login) or for association of objects to units. How the attributes and the organigram are fetched (if they are fetched) varies from institution to institution. There interface to these methods is a Perl class (inherited from Phaidra::Directory) which should implement following methods
 
-* authenticate (unless Shibboleth is used)
-* get user data
-* get organisation units (and subunits)
-* get user's groups
-* search users (used when defining access restrictions and in PHAIDRA's search to filter objects of a particular owner)
+* authenticate - unless Shibboleth is used.
+* get_user_data - gets firstname, lastname, email and affiliation.
+* search_user - used when defining access restrictions and in PHAIDRA's search to filter objects of a particular owner.
+* org_get_units
+* org_get_subunits
+* org_get_superunits
+* org_get_parentpath
+* get_users_groups
+* get_group
+* create_group
+* delete_group
+* remove_group_member
+* add_group_member
+
+Once a class have been implemented and put to the `phaidra/src/phaidra-api/lib/phaidra_directory/Phaidra/Directory/` folder, it needs to be configured in PhaidraAPI.json in following stanza
+```
+"directory_class": "Phaidra::Directory::TheImplementationClass",
+```
+e.g.
+```
+"directory_class": "Phaidra::Directory::GenericLDAP",
+```
+
+An example of the implementation of this class is <a href="https://github.com/phaidra/phaidra/blob/main/src/phaidra-api/lib/phaidra_directory/Phaidra/Directory/GenericLDAP.pm" target="_blank">GenericLDAP.pm</a> which is used in the demo version.
