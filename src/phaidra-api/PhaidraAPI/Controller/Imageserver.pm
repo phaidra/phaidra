@@ -52,15 +52,8 @@ sub process {
   }
   my $cmodel = $cmodelr->{cmodel};
 
-  my $hash;
-  if (defined($ds)) {
-    $hash = hmac_sha1_hex($pid . "_" . $ds, $self->app->config->{imageserver}->{hash_secret});
-    $self->paf_mongo->get_collection('jobs')->insert_one({pid => $pid, ds => $ds, cmodel => $cmodel, agent => "pige", status => "new", idhash => $hash, created => time});
-  }
-  else {
-    $hash = hmac_sha1_hex($pid, $self->app->config->{imageserver}->{hash_secret});
-    $self->paf_mongo->get_collection('jobs')->insert_one({pid => $pid, cmodel => $cmodel, agent => "pige", status => "new", idhash => $hash, created => time});
-  }
+  my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
+  $imgsrv_model->create_imageserver_job($self, $pid, $cmodel, $ds);
 
   $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid}, {}, {"sort" => {"created" => -1}});
 
@@ -97,31 +90,29 @@ sub process_pids {
     return;
   }
 
+  my $search_model = PhaidraAPI::Model::Search->new;
+  my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
   my @results;
   for my $pid (@{$pids->{pids}}) {
 
     if ($skipexisting && ($skipexisting eq 1)) {
       my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid}, {}, {"sort" => {"created" => -1}});
-      next if $res1->{pid};
+      if ($res1->{pid}) {
+        $self->render(json => {alerts => [{type => 'info', msg => "Job for pid[$pid] already created"}], job => $res1}, status => 200);
+        next;
+      }
     }
 
-    my $search_model = PhaidraAPI::Model::Search->new;
-    my $cmodelr      = $search_model->get_cmodel($self, $pid);
+    my $cmodelr = $search_model->get_cmodel($self, $pid);
     if ($cmodelr->{status} ne 200) {
       $self->render(json => $cmodelr->{json}, status => $cmodelr->{status});
-      return;
+      next;
     }
     my $cmodel = $cmodelr->{cmodel};
 
-    # create new job to process image
-    my $hash = hmac_sha1_hex($pid, $self->app->config->{imageserver}->{hash_secret});
-    $self->paf_mongo->get_collection('jobs')->insert_one({pid => $pid, cmodel => $cmodel, agent => "pige", status => "new", idhash => $hash, created => time});
+    my $create_res = $imgsrv_model->create_imageserver_job($self, $pid, $cmodel);
 
-    # create a temporary hash for the image to hide the real hash in case we want to forbid access to the picture
-    my $tmp_hash = hmac_sha1_hex($hash, $self->app->config->{imageserver}->{tmp_hash_secret});
-    $self->mongo->get_collection('imgsrv.hashmap')->insert_one({pid => $pid, idhash => $hash, tmp_hash => $tmp_hash, created => time});
-
-    push @results, {pid => $pid, idhash => $hash, tmp_hash => $tmp_hash};
+    push @results, {pid => $pid, idhash => $create_res->{hash}};
   }
 
   $self->render(json => \@results, status => 200);

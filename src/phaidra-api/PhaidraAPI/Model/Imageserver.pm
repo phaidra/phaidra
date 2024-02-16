@@ -183,5 +183,35 @@ sub param_to_string {
   return join '&', @pairs;
 }
 
+sub create_imageserver_job {
+  my ($self, $c, $pid, $cmodel, $ds) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  $c->app->log->info("Creating imageserver job pid[$pid] cm[$cmodel] ds[".(defined($ds) ? $ds : '')."]");
+  my $hash;
+  if (defined($ds)) {
+    $hash = hmac_sha1_hex($pid . "_" . $ds, $self->app->config->{imageserver}->{hash_secret});
+  } else {
+    $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
+  }
+  $res->{hash} = $hash;
+  my $path;
+  if ($c->app->config->{fedora}->{version} >= 6) {
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+    if ($dsAttr->{status} eq 200) {
+      $c->app->log->error("imageserver job pid[$pid] cm[$cmodel]: could not get path");
+      $path = $dsAttr->{path};
+    }
+  }
+  my $job = {pid => $pid, cmodel => $cmodel, agent => "pige", status => "new", idhash => $hash, created => time};
+  $job->{path} = $path if $path;
+  $job->{ds} = $ds if $ds;
+  $c->paf_mongo->get_collection('jobs')->insert_one($job);
+  
+  return $res;
+}
+
 1;
 __END__

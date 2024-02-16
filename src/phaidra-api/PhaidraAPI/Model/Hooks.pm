@@ -14,6 +14,7 @@ use PhaidraAPI::Model::Search;
 use PhaidraAPI::Model::Index;
 use PhaidraAPI::Model::Fedora;
 use PhaidraAPI::Model::Iiifmanifest;
+use PhaidraAPI::Model::Imageserver;
 
 sub add_or_modify_datastream_hooks {
 
@@ -292,22 +293,10 @@ sub _create_imageserver_job {
 
   my $res = {alerts => [], status => 200};
 
+  my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
   my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid});
   unless ($find->{pid}) {    
-    $c->app->log->info("Creating imageserver job pid[$pid] cm[$cmodel]");
-    my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
-    my $path;
-    if ($c->app->config->{fedora}->{version} >= 6) {
-      my $fedora_model = PhaidraAPI::Model::Fedora->new;
-      my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
-      if ($dsAttr->{status} eq 200) {
-        $c->app->log->error("imageserver job pid[$pid] cm[$cmodel]: could not get path");
-        $path = $dsAttr->{path};
-      }
-    }
-    my $job = {pid => $pid, cmodel => $cmodel, agent => "pige", status => "new", idhash => $hash, created => time};
-    $job->{path} = $path if $path;
-    $c->paf_mongo->get_collection('jobs')->insert_one($job);
+    return $imgsrv_model->create_imageserver_job($c, $pid, $cmodel);
   }
 
   return $res;
