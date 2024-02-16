@@ -267,10 +267,11 @@ sub signin {
   $self->save_cred($username, $password);
   my $session = $self->stash('mojox-session');
 
-  # sent token cookie
+  # send token cookie
   my $cookie = Mojo::Cookie::Response->new;
   $cookie->name($self->app->config->{authentication}->{token_cookie})->value($session->sid);
   $cookie->secure(1);
+  $cookie->path('/');
   $cookie->samesite('Strict');
   if ($self->app->config->{authentication}->{cookie_domain}) {
     $cookie->domain($self->app->config->{authentication}->{cookie_domain});
@@ -289,6 +290,17 @@ sub signout {
   if ($session->sid) {
     $session->expire;
     $session->flush;
+    my $cookie = Mojo::Cookie::Response->new;
+    $cookie->name($self->app->config->{authentication}->{token_cookie})->value("");
+    $cookie->secure(1);
+    $cookie->path('/');
+    $cookie->expires(-1);
+    $cookie->samesite('Strict');
+    if ($self->app->config->{authentication}->{cookie_domain}) {
+      $cookie->domain($self->app->config->{authentication}->{cookie_domain});
+    }
+    $self->tx->res->cookies($cookie);
+    $self->app->log->info("signout: unsetting cookie ".$self->app->dumper($cookie));
     $self->render(json => {status => 200, alerts => [{type => 'success', msg => 'You have been signed out'}], sid => $session->sid}, status => 200);
   }
   else {

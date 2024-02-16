@@ -153,7 +153,7 @@ sub check_rights {
       $rightsAreEmpty = 0;
       for my $def (@{$rights->{'department'}}) {
         my $v;
-        if (exists($def->{value})) {
+        if (ref($def) eq 'HASH') {
           $v = $def->{value};
         }
         else {
@@ -174,7 +174,7 @@ sub check_rights {
       $rightsAreEmpty = 0;
       for my $def (@{$rights->{'faculty'}}) {
         my $v;
-        if (exists($def->{value})) {
+        if (ref($def) eq 'HASH') {
           $v = $def->{value};
         }
         else {
@@ -195,7 +195,7 @@ sub check_rights {
       $rightsAreEmpty = 0;
       for my $def (@{$rights->{'gruppe'}}) {
         my $v;
-        if (exists($def->{value})) {
+        if (ref($def) eq 'HASH') {
           $v = $def->{value};
         }
         else {
