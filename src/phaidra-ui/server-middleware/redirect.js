@@ -9,7 +9,7 @@ export default async (req, res, next) => {
     try {
       let response = await axios.request({
         method: 'POST',
-        url: config.instances[config.defaultinstance].solr + '/select',
+        url: config.instances[config.defaultinstance].api + '/search/select',
         data: qs.stringify(params, { arrayFormat: 'repeat' }),
         headers: {
           'content-type': 'application/x-www-form-urlencoded'
