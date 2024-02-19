@@ -8,11 +8,11 @@ PHAIDRA IR (as for Institutional Repository) is a PHAIDRA frontend focused on up
 
 Here is how a typical submit form and detail view in PHAIDRA IR look like
 
-<img src="../pictures/ir_submit_view.png" height="800px"></img>
+![](/assets/img/docs/ir_submit_view.png)
 
 The DOI metadata import feature
 
-<img src="../pictures/ir_doi_submit.png" height="800px"></img>
+![](/assets/img/docs/ir_doi_submit.png)
 
 ## Media library
 
@@ -20,11 +20,11 @@ The Media Library is focused on ingesting digitized movies (e.g. DVDs). The subm
 
 Here is how a typical submit form and detail view in the Media Library look like
 
-<img src="../pictures/theke_submit_view.png" height="800px"></img>
+![](/assets/img/docs/theke_submit_view.png)
 
 The TMDb metadata import feature
 
-<img src="../pictures/theke_moviedb_import.png" height="600px"></img>
+![](/assets/img/docs/theke_moviedb_import.png)
 
 ## Book Importer
 
@@ -32,11 +32,11 @@ The Book Importer was created to enable ingest of digital books. Digital books c
 
 Creating the Book structure:
 
-<img src="../pictures/bookimporter_structure.png" height="600px"></img>
+![](/assets/img/docs/bookimporter_structure.png)
 
 Defining bibliographic metadata (using PHAIDRA Vue Components library):
 
-<img src="../pictures/bookimporter_metadata.png" height="600px"></img>
+![](/assets/img/docs/bookimporter_metadata.png)
 
 ## In development
 
@@ -44,7 +44,7 @@ Defining bibliographic metadata (using PHAIDRA Vue Components library):
 
 A special frontend is being developed which is focused on digitized correspondence (composed of TEI files and scans). It also enables annotations.
 
-<img src="../pictures/correspondence.png" height="600px"></img>
+![](/assets/img/docs/correspondence.png)
 
 ### PHAIDRA OER
 

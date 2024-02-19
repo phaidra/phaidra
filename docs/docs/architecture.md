@@ -4,7 +4,7 @@
 
 Here is a basic overview of the components interacting in a typical PHAIDRA instance. The blue boxes are part of PHAIDRA repository.
 
-![](../pictures/architecture.svg)
+![](/assets/img/docs/architecture.svg)
 
 Now we'll try to explain the role these components play in the repository:
 
@@ -46,7 +46,7 @@ Right from the early days of PHAIDRA there was a need for more than just one fro
 
 Here is a little schematics which summarizes how the parts of PHAIDRA Vue Components work together:
 
-<img src="../pictures/pvc.png" height="800px"></img>
+![](/assets/img/docs/pvc.png)
 
 ## PHAIDRA UI
 
@@ -54,11 +54,11 @@ This is the general purpose frontend for PHAIDRA. It provides access to almost a
 
 Here is how a typical submit form looks like
 
-<img src="../pictures/phaidra_submit.png" height="800px"></img>
+![](/assets/img/docs/phaidra_submit.png)
 
 And this is the typical detail view
 
-<img src="../pictures/phaidra_view.png" height="800px"></img>
+![](/assets/img/docs/phaidra_view.png)
 
 ## Monitoring
 
