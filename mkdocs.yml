@@ -46,17 +46,20 @@ nav:
   - FAIR Data: fair-data/index.md
   - Documentation: # talks more to the technical people, developers, etc.
     - docs/overview.md
-    - Get Started: docs/get-started.md
+    - Setup:
+      - docs/get-started.md
+      - docs/features.md
+      - docs/customization.md
     - Technical Docs:
-      - docs/about.md
-      - docs/api.md
+      - docs/metadata.md
       - docs/architecture.md
+      - docs/digital-object.md
+      - Docked Applications: docs/docked.md
+    - API:
+      - docs/api.md
       - docs/authorization.md
       - docs/authentication.md
-      - docs/customization.md
-      - docs/digital-object.md
-      - docs/docked.md
-      - docs/metadata.md
+    - User Interface:
       - User Interface: docs/ui.md
   - Community: 
     - Overview: community/overview.md
@@ -101,3 +104,30 @@ plugins:
         # https://github.com/mkdocs/mkdocs-redirects
         'resources.md': 'index.md'
         'community/phaidra-partners.md': 'community/list-of-partners.md'
+
+# plugins:
+#   - redirects:
+#       redirect_maps:
+#         # redirects urls from old phaidra.org website to new pages
+#         # old: community/university-x
+#         # new: community/partners/university-x
+#         # the reasoning behind this is to enable folder structure for all the external pages within /partners
+#         # having folder structure with custom urls is not possible
+#         'community/anton-bruckner-private-university.md': 'community/partners/anton-bruckner-private-university.md'
+#         'community/st-poelten-university-of-applied-sciences.md': 'community/partners/st-poelten-university-of-applied-sciences.md'
+#         'community/austrian-science-fund-fwf.md': 'community/partners/austrian-science-fund-fwf.md'
+#         'community/council-of-austrian-university-libraries-ubifo.md': 'community/partners/council-of-austrian-university-libraries-ubifo.md'
+#         'community/university-of-arts-linz.md': 'community/partners/university-of-arts-linz.md'
+#         'community/university-of-applied-arts-vienna.md': 'community/partners/university-of-applied-arts-vienna.md'
+#         'community/university-of-music-and-performing-arts-graz.md': 'community/partners/university-of-music-and-performing-arts-graz.md'
+#         'community/university-of-vienna.md': 'community/partners/university-of-vienna.md'
+#         'community/university-for-continuing-education-krems.md': 'community/partners/university-for-continuing-education-krems.md'
+#         'community/university-of-veterinary-medicine-vienna.md': 'community/partners/university-of-veterinary-medicine-vienna.md'
+#         'community/vorarlberger-landesbibliothek.md': 'community/partners/vorarlberger-landesbibliothek.md'
+#         'community/univerzitet-u-banjoj-luci.md': 'community/partners/univerzitet-u-banjoj-luci.md'
+#         'community/universita-ca-foscari-venezia.md': 'community/partners/universita-ca-foscari-venezia.md'
+#         'community/universita-di-padova.md': 'community/partners/universita-di-padova.md'
+#         'community/univerzitet-crne-gore.md': 'community/partners/univerzitet-crne-gore.md'
+#         'community/univerzitet-u-beogradu.md': 'community/partners/univerzitet-u-beogradu.md'
+#         'community/univerzitet-u-kragujevcu.md': 'community/partners/univerzitet-u-kragujevcu.md'
+#         'community/univerzitet-u-nisu.md': 'community/partners/univerzitet-u-nisu.md'
