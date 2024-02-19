@@ -6,7 +6,7 @@ PHAIDRA API is a REST(ish) application interface implementing most of core PHAID
 
 The most frequent usage of PHAIDRA API from external developers is the ingest of object(s).
 
-You can refer to the <a target="_blank" href="https://github.com/phaidra/phaidra-api/blob/master/public/docs/openapi.json">OpenAPI documentation of PHAIDRA API</a> on your instance under the URL /api/openapi, e.g. https://localhost:8899/api/openapi.
+You can refer to the [OpenAPI documentation of PHAIDRA API](https://github.com/phaidra/phaidra-api/blob/master/public/docs/openapi.json) on your instance under the URL /api/openapi, e.g. http://localhost:8899/api/openapi.
 
 If you are developing a frontend or an upload script, consider [using PHAIDRA Vue Components](#using-phaidra-vue-components) (or rather the javascripts inside) to manipulate the metadata. See the example [here](#using-phaidra-vue-components).
 
@@ -16,7 +16,7 @@ Creating a digital object consists of multiple steps, but you can create a digit
 
 Here is an example for creating a picture. If you want to create another object type, you simply have to use the corresponding endpoint (possibilities are: picture, audio, video, document, unknown, collection, container, page), the parameters are the same.
 
-<a href="https://localhost:8899/api/openapi#/object-basics/post_picture_create">POST https://localhost:8899/api/picture/create</a>
+[POST http://localhost:8899/api/picture/create](http://localhost:8899/api/openapi#/object-basics/post_picture_create)
 
 | Param | Value |
 | ----- | ----- |
@@ -26,7 +26,7 @@ Here is an example for creating a picture. If you want to create another object 
 
 Request example:
 ```bash
-curl -X POST -u pone:1234 -F "file=@dashboard.png" -F metadata=@metadata.json https://localhost:8899/api/picture/create
+curl -X POST -u pone:1234 -F "file=@dashboard.png" -F metadata=@metadata.json http://localhost:8899/api/picture/create
 ```
 
 Response example:
@@ -136,7 +136,7 @@ JSON-LD example:
   }
 }
 ```
-For a description of the metadata format, see [Metadata](/docs/docs-about.md)
+For a description of the metadata format, see [Metadata](/docs/metadata/)
 
 Additionally, metadata hash can contain:
 
@@ -209,7 +209,7 @@ The object's ownership will be transferred to `ownerid` after the object was cre
 ### Creating an empty container
 
 ```bash
-curl -X POST -u pone:1234 "https://localhost:8899/api/container/create" -F "metadata=@cont_metadata.json"
+curl -X POST -u pone:1234 "http://localhost:8899/api/container/create" -F "metadata=@cont_metadata.json"
 
 {"alerts":[],"pid":"o:1","status":200}
 ```
@@ -267,7 +267,7 @@ Container metadata should be interpreted as parent metadata record for the membe
 ### Creating a member (see [Creating simple objects](creating-simple-objects))
 
 ```bash
-curl -X POST -u pone:1234 "https://localhost:8899/api/document/create" -F "metadata=@foo_metadata.json" -F "file=@test.wav" -F "mimetype=audio/wav"
+curl -X POST -u pone:1234 "http://localhost:8899/api/document/create" -F "metadata=@foo_metadata.json" -F "file=@test.wav" -F "mimetype=audio/wav"
 
 {"alerts":[],"pid":"o:2","status":200}
 ```
@@ -321,14 +321,14 @@ Member metadata example: foo_metadata.json
 
 ### Add container member to container
 ```bash
-curl -X POST -u pone:1234 "https://localhost:8899/api/object/o:1/relationship/add" -F "predicate=http://pcdm.org/models#hasMember" -F "object=info:fedora/o:2"
+curl -X POST -u pone:1234 "http://localhost:8899/api/object/o:1/relationship/add" -F "predicate=http://pcdm.org/models#hasMember" -F "object=info:fedora/o:2"
 
 {"alerts":[{"msg":"true","type":"success"}],"status":200}
 ```
 
 ### Creating a container with members
 ```bash
-curl -X POST -u pone:1234 "https://localhost:8899/api/container/create" -F "metadata=@cont_metadata.json" -F "member_foo=@test.wav" -F "member_bar=@test1.wav"
+curl -X POST -u pone:1234 "http://localhost:8899/api/container/create" -F "metadata=@cont_metadata.json" -F "member_foo=@test.wav" -F "member_bar=@test1.wav"
 ```
 
 In this case, the metadata do not have the structure 
@@ -489,11 +489,10 @@ The `http://pcdm.org/models#hasMember` relationship is added automatically for m
 
 
 ## Managing relationships
-
 The add or remove a relationship, you can use the following calls.
-See the <a href="/docs/docs-repository-structure.md">Repository structure</a> for types of relationships.
+See the [Digital Object](/docs/digital-object/) for types of relationships.
 
-<a href="https://localhost:8899/api/openapi#/relationships/post_object__pid__relationship_add">POST https://localhost:8899/api/{pid}/relationship/add</a>
+[POST http://localhost:8899/api/{pid}/relationship/add](http://localhost:8899/api/openapi#/relationships/post_object__pid__relationship_add)
 
 Adding some system relationships (like hasModel) might be restricted.
 
@@ -504,7 +503,7 @@ Adding some system relationships (like hasModel) might be restricted.
 
 Example
 ```bash
-curl -X POST -u pone:1234 "https://localhost:8899/api/object/o:2/relationship/add" -F "predicate=http://phaidra.org/XML/V1.0/relations#isBackSideOf" -F "object=info:fedora/o:1"
+curl -X POST -u pone:1234 "http://localhost:8899/api/object/o:2/relationship/add" -F "predicate=http://phaidra.org/XML/V1.0/relations#isBackSideOf" -F "object=info:fedora/o:1"
 ```
 
 Response
@@ -515,10 +514,10 @@ Response
 }
 ```
 
-<a href="https://localhost:8899/api/openapi#/relationships/post_object__pid__relationship_remove">POST https://localhost:8899/api/{pid}/relationship/remove</a>
+[POST http://localhost:8899/api/{pid}/relationship/remove](http://localhost:8899/api/openapi#/relationships/post_object__pid__relationship_remove)
 
 Removing some system relationships (like hasModel) might be restricted.
-See the <a href="/docs/docs-repository-structure.md">Repository structure</a> for types of relationships.
+See the [Digital Object](/docs/digital-object/) for types of relationships.
 
 | Param | Value |
 | ----- | ----- |
@@ -527,7 +526,7 @@ See the <a href="/docs/docs-repository-structure.md">Repository structure</a> fo
 
 Example
 ```bash
-curl -X POST -u pone:1234 "https://localhost:8899/api/object/o:2/relationship/remove" -F "predicate=http://phaidra.org/XML/V1.0/relations#isBackSideOf" -F "object=info:fedora/o:1"
+curl -X POST -u pone:1234 "http://localhost:8899/api/object/o:2/relationship/remove" -F "predicate=http://phaidra.org/XML/V1.0/relations#isBackSideOf" -F "object=info:fedora/o:1"
 ```
 
 Response
@@ -541,7 +540,7 @@ Response
 
 ## Changing object properties
 
-<a href="https://localhost:8899/api/openapi#/object-advanced/post_object__pid__modify">POST object/{pid}/modify</a>
+[POST object/{pid}/modify](http://localhost:8899/api/openapi#/object-advanced/post_object__pid__modify)
 
 Possible parameters (all are optional)
 
@@ -552,7 +551,7 @@ Possible parameters (all are optional)
 
 Example:
 ```bash
-curl -X POST -u pone:1234 https://localhost:8899/api/object/o:1/modify -F 'state=A'
+curl -X POST -u pone:1234 http://localhost:8899/api/object/o:1/modify -F 'state=A'
 ```
 
 Response
@@ -565,7 +564,7 @@ Response
 
 ## Search
 
-PHAIDRA users Solr as it's search engine. You can query Solr via the <a href="https://localhost:8899/api/openapi#/search/post_search_select">/solr/select endpoint</a>. The parameters are the same as for the /select endpoint of Solr, see <a target="_blank" href="https://solr.apache.org/guide/solr/latest/query-guide/common-query-parameters.html">Solr common query parameters</a> for more information.
+PHAIDRA users Solr as it's search engine. You can query Solr via the [/solr/select endpoint](http://localhost:8899/api/openapi#/search/post_search_select). The parameters are the same as for the /select endpoint of Solr, see [Solr common query parameters](https://solr.apache.org/guide/solr/latest/query-guide/common-query-parameters.html) for more information.
 
 The return value is directly proxied from Solr too.
 
@@ -573,32 +572,32 @@ Since the Solr query can be considerably large, the method is also available via
 
 Example:
 ```bash
-curl -X GET -u pone:1234 "https://localhost:8899/api/search/select?q=*:*"
+curl -X GET -u pone:1234 "http://localhost:8899/api/search/select?q=*:*"
 ```
 
 ## Retrieving metadata
 
-The most convenient way of retrieving metadata is by using the <a href="https://localhost:8899/api/openapi#/object-basics/get_object__pid__info">/object/{pid}/info endpoint</a>. This will deliver all the indexed data as well as the content of metadata datastreams (e.g. JSON-LD), plus all the related objects (e.g. previous versions, container members, etc) with their index data (with the exception of collection members - use "fq=ismemberof:'o:123'" search query to efficiently get collection members and their index data from search index).
+The most convenient way of retrieving metadata is by using the [/object/{pid}/info endpoint](http://localhost:8899/api/openapi#/object-basics/get_object__pid__info). This will deliver all the indexed data as well as the content of metadata datastreams (e.g. JSON-LD), plus all the related objects (e.g. previous versions, container members, etc) with their index data (with the exception of collection members - use "fq=ismemberof:'o:123'" search query to efficiently get collection members and their index data from search index).
 
 Example:
 ```bash
-curl -X GET -u pone:1234 "https://localhost:8899/api/object/o:1/info"
+curl -X GET -u pone:1234 "http://localhost:8899/api/object/o:1/info"
 ```
 
 ## Displaying objects
 
 PHAIDRA API takes care of providing a web-friendly display endpoint for the objects, where possible. Even if every type of object has a different view, the URL is the same for obtaining thumbnail as it is obtaining the viewer/player.
 
-For the thumbnail, you can use the <a href="https://localhost:8899/api/openapi#/object-basics/get_object__pid__thumbnail">/object/{pid}/thumbnail endpoint</a> and for the viewer/player the <a href="https://localhost:8899/api/openapi#/object-basics/get_object__pid__preview">/object/{pid}/preview endpoint</a>.
+For the thumbnail, you can use the [/object/{pid}/thumbnail endpoint](http://localhost:8899/api/openapi#/object-basics/get_object__pid__thumbnail) and for the viewer/player the [/object/{pid}/preview endpoint](http://localhost:8899/api/openapi#/object-basics/get_object__pid__preview).
 
 The preview endpoint will try to use the WEBVERSION, if any was provided and it will show a load button instead of the preview if the object size is beyond certain limit. This endpoint is meant to be easily embedded in iframes (in fact, PHAIDRA UI is using it too). If the object is restricted, the preview will not work without being logged into PHAIDRA or if the page with the iframe comes from a different domain (since PHAIDRA session cookies will not be passed).
 
-Example: https://localhost:8899/api/object/o:1/preview
+Example: http://localhost:8899/api/object/o:1/preview
 
 
 ## OAI-PMH
 
-The OAI-PMH endpoint is available at <a href="https://localhost:8899/api/openapi#/oai-pmh/get_oai">/oai</a> URL. See the <a target="_blank" href="https://www.openarchives.org/pmh/">OAI-PMH protocol</a> for parameters.
+The OAI-PMH endpoint is available at [/oai](http://localhost:8899/api/openapi#/oai-pmh/get_oai) URL. See the [OAI-PMH protocol](https://www.openarchives.org/pmh/) for parameters.
 
 For the objects to be available in the OAI interface, 
 
@@ -639,7 +638,7 @@ The setSpec field defines the name of the set under which the objects in the OAI
 
 Example:
 ```bash
-curl -X GET "https://localhost:8899/api/oai?verb=ListRecords&metadataPrefix=oai_dc"
+curl -X GET "http://localhost:8899/api/oai?verb=ListRecords&metadataPrefix=oai_dc"
 ```
 
 ## Using PHAIDRA Vue Components
@@ -679,7 +678,7 @@ Now we'll define the form which will contain the metadata fields.
   }
 ```
 
-Assuming we have read the necessary information from CSV, e.g. a title, let's add a title field to the form and set it's value. (See the <a href="https://github.com/phaidra/phaidra/blob/main/src/phaidra-vue-components/src/utils/fields.js" target="_blank">fields.js</a> for the list of possible fields)
+Assuming we have read the necessary information from CSV, e.g. a title, let's add a title field to the form and set it's value. (See the [fields.js](https://github.com/phaidra/phaidra/blob/main/src/phaidra-vue-components/src/utils/fields.js) for the list of possible fields)
 
 ```js
   let title = 'My value from CSV'

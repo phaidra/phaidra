@@ -42,7 +42,7 @@ The imageserver is used to generate thumbnails (for pictures and PDF documents) 
 
 ## PHAIDRA Vue Components
 
-Right from the early days of PHAIDRA there was a need for more than just one frontend for the repository. This led not only to PHAIDRA API implementing many features which would be typically left for frontend (i.e. providing various data viewers which the frontend merely embeds via iframe) but also to the creation of reusable frontend components. PHAIDRA Vue Componets is a library of Vue components and scripts which implement many common use cases: ingest, metadata editing, defining relationships and access rights, search, etc. It enables fast development of tailored frontends (see <a href="/docs/docs-docked.md">Docked Applications</a> for examples) while also keeping them thin, hence easier to maintain.
+Right from the early days of PHAIDRA there was a need for more than just one frontend for the repository. This led not only to PHAIDRA API implementing many features which would be typically left for frontend (i.e. providing various data viewers which the frontend merely embeds via iframe) but also to the creation of reusable frontend components. PHAIDRA Vue Componets is a library of Vue components and scripts which implement many common use cases: ingest, metadata editing, defining relationships and access rights, search, etc. It enables fast development of tailored frontends (see [Docked Applications](/docs/docked/) for examples) while also keeping them thin, hence easier to maintain.
 
 Here is a little schematics which summarizes how the parts of PHAIDRA Vue Components work together:
 
@@ -74,7 +74,7 @@ A productive repository instance needs services which are not, or cannot be part
 
 ## Docked applications
 
-Throughout the 15 years of PHAIDRA's history, multiple systems have been integrated with it. There are at least 3 different systems for thesis submit, ingest workflows have been developed from systems like Goobi or Moodle and metadata have been mapped from various repositories and catalogues. Some of the integrations make use of PHAIDRA API and some even PHAIDRA Vue Components. We call the latter "Docker applications". See <a href="/docs/docs-docked.md">Docked Applications</a> for some examples.
+Throughout the 15 years of PHAIDRA's history, multiple systems have been integrated with it. There are at least 3 different systems for thesis submit, ingest workflows have been developed from systems like Goobi or Moodle and metadata have been mapped from various repositories and catalogues. Some of the integrations make use of PHAIDRA API and some even PHAIDRA Vue Components. We call the latter "Docker applications". See [Docked Applications](/docs/docked/) for some examples.
 
 ## Other components
 
