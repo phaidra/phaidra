@@ -1,11 +1,4 @@
 # Digital object
-1. [Overview](#overview)
-2. [Preservation metadata](#preservation-metadata)
-3. [Datastreams](#datastreams)
-4. [Content models](#content-models)
-5. [Object states](#object-states)
-
-# Overview
 
 The fundamental building block of PHAIDRA repository is it's digital object model. Here's a simple conceptual diagram of it:
 
@@ -13,7 +6,7 @@ The fundamental building block of PHAIDRA repository is it's digital object mode
 
 The object is composed of two parts: preservation metadata and datastreams.
 
-# Preservation metadata
+## Preservation metadata
 
 In preservation metadata, the repository holds information about object's basic properties and it's components (i.e. which datastreams it has).
 
@@ -28,7 +21,7 @@ The basic properties are
 - ownerId - The PHAIDRA account, which created this object.
 - state - The state should be Active or Inactive. See [Object states](#object-states) for possible values.
 
-# Datastreams
+## Datastreams
 
 Many types of datasteams have been used in PHAIDRA throughout it's history. Currently, the most important are:
 
@@ -62,7 +55,7 @@ There are other datastreams in some PHAIDRA instances still in use, i.e.
 
 - THUMBNAIL, STYLESHEET, DC, DC_P, GEO... - many datastream have been used for various purposes in PHAIDRA which are no more part of the current application logic.
 
-# Content models
+## Content models
 
 Here are the current content models. The allowed types can vary on PHAIDRA instances as institution may follow different needs when archiving digital assets. The best practice is to restrict the allowed file types to formats which make long term preservation possible (i.e. are typically open, contain no patents, are well documented, etc).
 
@@ -84,7 +77,7 @@ Here are the current content models. The allowed types can vary on PHAIDRA insta
 
 - Website - Work in progress - This content model should represent website archives (saved as wacz files).
 
-# Object states
+## Object states
 
 An object can be in states:
 

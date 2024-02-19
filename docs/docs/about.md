@@ -1,9 +1,3 @@
-# About PHAIDRA
-# Table of Contents
-1. [What is PHAIDRA?](#what-is-phaidra)
-2. [Features](#features)
-
-
 # What is PHAIDRA?
 
 <a target="_blank" href="https://phaidra.org/">PHAIDRA</a> (an acronym for Permanent Hosting, Archiving and Indexing of Digital Resources and Assets) is an open source digital object repository, actively developed at the <a target="_blank" href="https://univie.ac.at/">University of Vienna</a> since 2007 and adopted by a number universities and organisations internationally.

@@ -1,11 +1,6 @@
 # Metadata
-# Table of Contents
-* [Overview](#Overview) 
-* [Fields](#fields) 
-* [Namespaces](#namespaces) 
-* [Resources](#resources) 
 
-## Intoduction
+## Introduction
 
 Here we describe the current bibliographic metadata scheme of PHAIDRA. It is a scheme based on RDF and the ideas of Linked-Data and it is saved in the JSON-LD format (for ease of use).
 

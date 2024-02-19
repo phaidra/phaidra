@@ -1,3 +1,3 @@
-# PHAIDRA UI usage guide
+# PHAIDRA UI Usage Guide
 
 TODO

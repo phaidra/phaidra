@@ -1,11 +1,4 @@
 # Docked applications
-# Table of Contents
-1. [PHAIDRA IR](#phaidra-ir)
-2. [Media Library](#media-library)
-3. [Book Importer](#book-importer)
-3. [In development](#in-development)
-
-# Docked applications
 
 Here are some examples for the so called "Docked applications". These are alternative frontends for PHAIDRA making use of PHAIDRA API and PHAIDRA Vue Components library.
 

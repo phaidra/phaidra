@@ -1,24 +1,6 @@
-# PHAIDRA architecture
-# Table of Contents
-1. [Overview](#overview)
-2. [OCFL](#ocfl)
-3. [Fedora Repository](#fedora-repository)
-4. [Fedora DB](#fedora-db)
-5. [Fixity](#fixity)
-6. [PHAIDRA API](#phaidra-api)
-7. [Phaidra DBs](#phaidra-dbs)
-8. [Solr](#solr)
-9. [IIIF Imageserver](#iiif-imageserver)
-10. [PHAIDRA Vue Components](#phaidra-vue-components)
-11. [PHAIDRA UI](#phaidra-ui)
-12. [Monitoring](#monitoring)
-13. [Cronjobs](#cronjobs)
-14. [Other services](#other-services)
-15. [Docked applications](#docked-applications)
-16. [Other components](#other-components)
-17. [Harversters](#harvesters)
+# Architecture
 
-# Overview
+## Overview
 
 Here is a basic overview of the components interacting in a typical PHAIDRA instance. The blue boxes are part of PHAIDRA repository.
 

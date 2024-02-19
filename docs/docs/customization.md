@@ -1,7 +1,4 @@
 # Customization
-# Table of Contents
-1. [Admin settings](#admin-settings)
-2. [Custom components](#custom-components)
 
 There are currently 2 methods for customizing the PHAIDRA UI frontend.
 

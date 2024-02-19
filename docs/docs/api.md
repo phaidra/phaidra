@@ -1,16 +1,4 @@
-# PHAIDRA API usage guide
-
-# Table of Contents
-1. [Introduction](#introduction)
-2. [Creating simple objects](#creating-simple-objects)
-3. [Creating container objects](#creating-container-objects)
-4. [Managing relationships](#managing-relationships)
-5. [Changing object properties](#changing-object-properties)
-6. [Search](#search)
-7. [Retrieving metadata](#retrieving-metadata)
-8. [Displaying objects](#displaying-objects)
-9. [OAI-PMH](#oai-pmh)
-10. [Using PHAIDRA Vue Components](#using-phaidra-vue-components)
+# API Usage Guide
 
 ## Introduction
 

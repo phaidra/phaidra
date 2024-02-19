@@ -1,6 +1,4 @@
-# Authorization
-1. [Overview](#overview)
-2. [Attributes](#attributes)
+# Authentication
 
 ## Overview
 
