@@ -47,10 +47,17 @@ nav:
   - Documentation: # talks more to the technical people, developers, etc.
     - docs/overview.md
     - Get Started: docs/get-started.md
-    - PHAIDRA Overview:
-      - docs/features.md
-    - PHAIDRA API:
+    - Technical Docs:
+      - docs/about.md
+      - docs/api.md
+      - docs/architecture.md
       - docs/authorization.md
+      - docs/authentication.md
+      - docs/customization.md
+      - docs/digital-object.md
+      - docs/docked.md
+      - docs/metadata.md
+      - User Interface: docs/ui.md
   - Community: 
     - Overview: community/overview.md
     - List of Partner Institutions: community/list-of-partners.md
