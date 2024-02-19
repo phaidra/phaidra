@@ -1,0 +1,79 @@
+/* 
+  NAV Adjustments for:
+*/
+
+/* 1. Nice relation of top Logo + Text to one another */
+.md-header__button.md-logo img,.md-header__button.md-logo svg {
+  height: 3.2rem;
+}
+
+.md-header__title {
+  font-size: 2rem;
+}
+
+/* set height for logo text (FF browser needs this as it does not apply height: auto */
+.md-header__title .md-header__topic img {
+  height: 1.3rem;
+}
+
+[dir=ltr] .md-header__title {
+  margin-left: .4rem;
+  margin-right: .4rem
+}
+
+/* 2. nav shadow -> is the same as on the main uni website */
+.md-header {
+  -webkit-box-shadow: 0 8px 40px -6px rgba(70,70,70,.4);
+  box-shadow: 0 8px 40px -6px rgba(70,70,70,.4)
+}
+
+/* Add margins to paragraphs - without this texts quickly become a long word salad */
+article p {
+  margin: 1rem 0;
+}
+
+/* Add padding-bottom for nicer cushion towards footer */
+article:last-child {
+  padding-bottom: 4rem;
+}
+
+/* 
+  Fill all svg icons with the currentColor - this is needed when including icons via mkdocs-material
+
+  you can add a tailwind class to the container element (eg: <span class="text-red-500">
+  and then the included icon will take over that color
+ */
+svg {
+  fill: currentColor;
+}
+
+/* somehow tailwind class did not get taken, so putting it in here */
+hr {
+  border: 1px solid #e5e7eb;
+  box-sizing: border-box;
+}
+
+/* Automatically add an external arrow icon ::after every outgoing link */
+main a[href^="http"]:not([href*="phaidra.org"]):not([href*="localhost"]):after {
+  background-image: url('/assets/external/icons/material/arrow-top-right.svg');
+  display: inline-block;
+  height: 15px;
+  width: 1rem;
+  content: "";
+  background-repeat: no-repeat;
+  background-position-y: 2px;
+  background-position-x: 2px;
+  background-size: 14px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* since color of the external icon has to be hardcoded into the svg we created a second one for the hover color */
+main a[href^="http"]:hover:not([href*="phaidra.org"]):not([href*="localhost"]):after {
+  background-image: url('/assets/external/icons/material/arrow-top-right.svg');
+}
+
+.md-social__link {
+  width: auto;
+  height: 1.6em;
+}

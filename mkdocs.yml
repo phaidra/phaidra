@@ -1,0 +1,96 @@
+site_name: PHAIDRA
+site_url: https://phaidra.org
+repo_url: https://github.com/phaidra/phaidra
+repo_name: phaidra/phaidra
+theme:
+  name: material
+  palette:
+    primary: white
+  logo: /assets/img/phaidra_logo.svg
+  logo_text: /assets/img/phaidra_logo_text.svg
+  favicon: /assets/img/phaidra_logo.svg
+  icon:
+    repo: fontawesome/brands/github
+  custom_dir: docs/overrides
+  features:
+    # - navigation.instant # this messed up the live verion for David with Brave, remove to quickfix, maybe reconsider in the future
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - navigation.tracking
+    - navigation.sections
+    - navigation.path
+
+markdown_extensions:
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+extra:
+  social:
+    - icon: fontawesome/brands/instagram
+      link: https://www.instagram.com/phaidraorg/
+      name: Follow on Instagram
+
+extra_css:
+  - assets/css/reset.css
+  - assets/external/css/tailwind.min.css
+  - assets/css/landing-page.css
+  - assets/css/tooltips.css
+  - assets/css/tweaks.css
+
+nav:
+  - Home: index.md
+  - About: about/index.md # talks more to the data steward or high level data manager
+  - FAIR Data: fair-data/index.md
+  - Documentation: # talks more to the technical people, developers, etc.
+    - docs/overview.md
+    - Get Started: docs/get-started.md
+    - PHAIDRA Overview:
+      - docs/features.md
+    - PHAIDRA API:
+      - docs/authorization.md
+  - Community: 
+    - Overview: community/overview.md
+    - List of Partner Institutions: community/list-of-partners.md
+    - All Partners:
+      - Austria:
+        - Academy of Fine Arts Vienna: community/academy-of-fine-arts-vienna.md
+        - Anton Bruckner Private University: community/anton-bruckner-private-university.md
+        - Carinthia University of Applied Sciences: https://www.fh-kaernten.at/en/
+        - Gustav Mahler Private University for Music: community/gustav-mahler-private-university-for-music.md
+        - University College of Christian Churches of Teacher Education Vienna/Krems: community/kph-vienna-krems.md
+        - St. Pölten University of Applied Sciences: community/st-poelten-university-of-applied-sciences.md
+        - Austrian Science Fund - FWF: community/austrian-science-fund-fwf.md
+        - Council of Austrian University Libraries (ubifo): community/council-of-austrian-university-libraries-ubifo.md
+        - University of Arts Linz: community/university-of-arts-linz.md
+        - University of Applied Arts Vienna: community/university-of-applied-arts-vienna.md
+        - University of Music and Performing Arts Graz: community/university-of-music-and-performing-arts-graz.md
+        - University of Vienna: community/university-of-vienna.md
+        - Danube University Krems - University for Continuing Education: community/university-for-continuing-education-krems.md
+        - University of Veterinary Medicine Vienna: community/university-of-veterinary-medicine-vienna.md
+        - Vorarlberger Landesbibliothek: community/vorarlberger-landesbibliothek.md
+      - Bosnia and Herzegovina:
+        - Univerzitet u Banjoj Luci: community/univerzitet-u-banjoj-luci.md
+        - Univerzitet u Sarajevu: https://www.unsa.ba/
+        - Univerzitet u Tuzli: https://www.untz.ba/
+      - Italy:
+        - Università Ca Foscari: community/universita-ca-foscari-venezia.md
+        - Università Iuav di Venezia: https://www.iuav.it/homepage/index.htm
+        - Università di Padova: community/universita-di-padova.md
+      - Montenegro:
+        - Univerzitet Crne Gore: community/univerzitet-crne-gore.md
+      - Serbia:
+        - Univerzitet u Beogradu: community/univerzitet-u-beogradu.md
+        - Univerzitet u Kragujevcu: community/univerzitet-u-kragujevcu.md
+        - Univerzitet u Nišu: community/univerzitet-u-nisu.md
+
+plugins:
+  - search
+  - privacy
+  - redirects:
+      redirect_maps:
+        # https://github.com/mkdocs/mkdocs-redirects
+        'resources.md': 'index.md'
+        'community/phaidra-partners.md': 'community/list-of-partners.md'

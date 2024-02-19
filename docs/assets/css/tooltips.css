@@ -1,0 +1,73 @@
+/* 
+  flowbite has a tooltip component based on JavaScript
+  this is a CSS based solution which then takes flowbite tooltip classes to follow the style 
+  it does _not_ implement the bottom triangle as that would become too complicated
+*/
+
+[tooltip] {
+  position: relative;
+}
+
+[tooltip]:hover {
+  cursor: help;
+}
+
+[tooltip]:after,[tooltip]:before {
+  --tw-translate-x: -50%;
+  --tw-translate-y: -0.5rem;
+  display: none;
+  left: 50%;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none
+}
+
+[tooltip]:after,[tooltip]:before {
+  position: absolute
+}
+
+[tooltip]:after {
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+  --tw-shadow: 0 1px 2px 0 #0000000d;
+  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+  background-color: rgb(17 24 39/var(--tw-bg-opacity));
+  border-radius: .5rem;
+  bottom: calc(100% + 5px);
+  box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);
+  color: rgb(255 255 255/var(--tw-text-opacity));
+  content: attr(tooltip);
+  display: inline-block;
+  font-size: .875rem;
+  font-weight: 500;
+  height: -moz-max-content;
+  height: max-content;
+  line-height: 1.25rem;
+  max-width: 300px;
+  padding: .5rem .75rem;
+  transition-duration: .3s;
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(.4,0,.2,1);
+  width: -moz-max-content;
+  width: max-content;
+  z-index: 10
+}
+
+[tooltip=""]:after,[tooltip=""]:before {
+  display: none!important
+}
+
+[tooltip]:hover:after,[tooltip]:hover:before {
+  animation: tooltips-vert .3s ease-out forwards;
+  display: block
+}
+
+@keyframes tooltips-vert {
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}

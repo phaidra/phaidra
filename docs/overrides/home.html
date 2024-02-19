@@ -1,0 +1,173 @@
+{% extends "main.html" %}
+{% block tabs %}
+  {{ super() }}
+  <section class="bg-white">
+    <div class="py-16 px-8 mx-auto max-w-screen-xl text-center md:py-24">
+      <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl lg:text-6xl">Manage Data & Assets<br> with <span class="underline underline-offset-3 decoration-8 decoration-blue-400">Confidence</span></h1>
+      <p class="mb-8 text-lg font-normal text-gray-800 lg:text-xl sm:px-16 lg:px-48">
+        Make sure your hard work is not for nothing. Upload your data&nbsp;&&nbsp;digital&nbsp;assets with PHAIDRA. Rest&nbsp;assured your work stays FAIR and relevant for future use.
+      </p>
+      <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
+        <a href="/about/" class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300">
+          Learn More About PHAIDRA
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <section class="bg-white">
+    <div class="gap-8 items-center py-8 px-4 mx-auto max-w-screen-xl xl:gap-16 md:grid md:grid-cols-2 lg:px-6">
+      <!-- show replacement icons when mobile -->
+      <div class="flex md:hidden justify-center items-center">
+        <span class="w-24 text-gray-600">
+          {% include ".icons/material/grave-stone.svg" %}
+        </span>
+        <span class="w-32 ml-8 text-gray-800">
+          {% include ".icons/material/run-fast.svg" %}
+        </span>
+      </div>
+      <div class="mt-4 md:mt-0">
+        <h2 class="mb-4 text-3xl tracking-tight font-extrabold" id="stop-the-graveyard">Leave the Data&#8209;Graveyard Go FAIR Instead</h2>
+        <p class="mb-6 font-light text-gray-800 text-lg">
+          Too often data and digital assets are only <i>stored</i> and then forgotten forever instead of following FAIR principles.
+        </p>
+        <p class="mb-6 font-light text-gray-800 text-lg">
+          PHAIDRA is built FAIR from the ground up, making it is easy to follow metadata standards such as Dublin Core.
+        </p>
+        <a href="/fair-data/" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+          Learn About FAIR
+        </a>
+      </div>
+      <!-- right oriented icons, hidden when mobile -->
+      <div class="hidden md:flex justify-around items-center">
+        <span class="w-1/3 text-gray-600">
+          {% include ".icons/material/grave-stone.svg" %}
+        </span>
+        <span class="w-1/2 text-gray-800">
+          {% include ".icons/material/run-fast.svg" %}
+        </span>
+      </div>
+    </div>
+    
+    <div class="gap-8 items-center py-8 px-4 mx-auto max-w-screen-xl xl:gap-16 md:grid md:grid-cols-2 lg:px-6">
+      <!-- left oriented icons, just adapt when mobile -->
+      <div class="flex justify-center items-center">
+        <span class="w-24 md:w-1/2 text-gray-800">
+          {% include ".icons/material/file-upload.svg" %}
+        </span>
+        <span class="w-12 md:w-1/6 text-green-700">
+          {% include ".icons/material/checkbox-marked-outline.svg" %}
+        </span>
+      </div>
+      <div class="mt-4 md:mt-0">
+        <h2 class="mb-4 text-3xl tracking-tight font-extrabold">Simplify Data Management with a Refined Solution</h2>
+        <p class="mb-6 font-light text-gray-800 text-lg">
+          Whether you need a solution for open access, dissemination or for long term preservation.
+        </p>
+        <p class="mb-6 font-light text-gray-800 text-lg">
+          PHAIDRA was built with a focus on publication & archiving. Make your institution's life easier.
+        </p>
+        <a href="/about/" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+          Explore PHAIDRA
+        </a>
+      </div>
+    </div>
+    
+    <div class="gap-8 items-center py-8 px-4 mx-auto max-w-screen-xl xl:gap-16 md:grid md:grid-cols-2 lg:px-6">
+      <!-- show replacement icons when mobile -->
+      <div class="flex md:hidden justify-center items-end">
+        <span class="w-16 text-gray-600">
+          {% include ".icons/material/cog.svg" %}
+        </span>
+        <span class="w-32 ml-4 text-gray-800">
+          {% include ".icons/material/diving-scuba.svg" %}
+        </span>
+      </div>
+      <div class="mt-4 md:mt-0">
+        <h2 class="mb-4 text-3xl tracking-tight font-extrabold" id="stop-the-graveyard">Dive Deep into the Open Tech</h2>
+        <p class="mb-6 font-light text-gray-800 text-lg">
+          As a project pushing for Open Academia, it only was natural to become Open Source. Learn about the tech stack, how to run an instance locally and how to contribute to the code and the project.
+        </p>
+        <a href="/docs/overview/" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+          Take the Plunge
+        </a>
+      </div>
+      <!-- right oriented icons, hidden when mobile -->
+      <div class="hidden md:flex justify-around items-end">
+        <span class="w-1/4 text-gray-600">
+          {% include ".icons/material/cog.svg" %}
+        </span>
+        <span class="w-1/2 text-gray-800">
+          {% include ".icons/material/diving-scuba.svg" %}
+        </span>
+      </div>
+    </div>
+  
+    <hr class="my-8"/>
+
+    <div class="gap-8 items-center mx-auto max-w-screen-xl xl:gap-16 md:grid md:grid-cols-2 py-8 px-4 lg:px-6">
+      <img alt="map of middle europe showing places where PHAIDRA is used (Austria, Bosnia and Herzogovina, Italy, Montenegro, Serbia)" src="/assets/img/phaidra_partners_map.jpeg">
+      <div class="mt-4 md:mt-0">
+        <h2 class="mb-4 text-3xl tracking-tight font-extrabold">Join the PHAIDRA Community</h2>
+        <p class="mb-6 font-light text-gray-800 text-lg">Take part in a connected community including dozens of public institutions, each with a diverse use case: from research data to historic pictures to museum art, everyone is welcome.</p>
+        <a href="/community/overview/" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+          Meet the Community
+        </a>
+      </div>
+    </div>
+  
+    <div class="py-4 lg:py-8 mx-auto max-w-screen-xl px-4">
+      <h3 class="flex mb-2 justify-center items-center text-center text-2xl font-extrabold tracking-tight">
+        Trusted by Over 20 Institutions
+      </h3>
+      <h3 class="flex justify-center items-center text-center tracking-tight leading-tight text-gray-900 text-xl">
+        with 500.000+ Objects Stored
+        <span class="ml-2 w-6 text-gray-700" tooltip="300.000+ Volare Vorarlberg 160.000+ Vienna University 58.000+ Università di Padova">
+          {% include ".icons/material/information-outline.svg" %}
+        </span>
+      </h3>
+      <div class="flex my-4 lg:my-8  gap-8 md:gap-16 justify-center items-center text-gray-800" id="partner-logos">
+        <a href="https://phaidra.univie.ac.at/" class="flex items-center">
+          <img src="/assets/external/img/logos/uni-vienna-blue.svg" alt="">
+        </a>
+        <a href="https://phaidra.kug.ac.at/" class="flex items-center">
+          <img alt="" src="/assets/external/img/logos/kug.svg">
+        </a>
+        <a href="https://door.donau-uni.ac.at/" class="flex items-center">
+          <img alt="" src="/assets/external/img/logos/uwk-dt-blue.svg">
+        </a>
+        <a href="https://phaidra.cab.unipd.it/" class="flex items-center">
+          <img alt="" src="/assets/external/img/logos/unipa.svg">
+        </a>
+      </div>
+        
+      <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0">
+        <a href="/community/list-of-partners/" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-base px-5 py-3 text-center me-2 mb-2">
+          View All Instances
+        </a>
+      </div>
+    </div>
+  
+    <hr class="my-8"/>
+
+    <div class="gap-8 items-center py-4 md:py-8 px-4 mx-auto max-w-screen-xl xl:gap-16 md:grid md:grid-cols-2 lg:px-6">
+      <!-- show top image when mobile - do not link image on mobile as there is a clear button below -->
+      <img alt="epistemicast logo" src="/assets/external/img/logos/epistemicast.png" class="block md:hidden pb-6">
+      <div>
+        <h2 class="mb-4 text-3xl tracking-tight font-extrabold">Join the Open Academia Movement</h2>
+        <p class="mb-6 font-light text-gray-800 text-lg">PHAIDRA is just one piece of the puzzle of today's big questions around Open&nbsp;Research, Open&nbsp;Access and Open&nbsp;Academia. Tune into the discussion on EpistemiCast with guests from around the globe.</p>
+        <a href="https://epistemicast.org" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+          Visit EpistemiCast 🎙️
+        </a>
+      </div>
+      <!-- right oriented, hide when mobile -->
+      <a href="https://epistemicast.org" class="hidden md:block">
+        <img alt="epistemicast logo" src="/assets/external/img/logos/epistemicast.png">
+      </a>
+    </div>
+  </section>
+{% endblock %}
+{% block content %}{% endblock %}
+{% block footer %}
+{{ super() }}
+{% endblock %}

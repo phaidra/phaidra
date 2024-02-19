@@ -11,7 +11,6 @@ networks:
           gateway: 172.29.5.1
 
 services:
-
   httpd:
     image: testuser34/httpd-base:cd745f58
     pull_policy: always
@@ -39,6 +38,23 @@ services:
     entrypoint:
       - bash
       - /mnt/startup/httpd-demo-startup.bash
+
+  # phaidra.org website
+  # - files located in /docs
+  # - integrated into phaidra/phaidra to easily write docs
+  # - visit http://localhost:8000 to view while developing
+  mkdocs:
+    image: squidfunk/mkdocs-material:latest
+    hostname: mkdocs
+    # use build to build static files locally (within /site dir) which then can be pushed to server
+    # command: "build"
+    command: "serve --dev-addr=0.0.0.0:8000"
+    volumes:
+      - ./../:/docs
+    ports:
+      - "8000:8000"
+    stdin_open: true
+    tty: true
 
   imageserver:
     image: testuser34/imageserver-base:979c59b3
