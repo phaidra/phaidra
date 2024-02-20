@@ -21,7 +21,6 @@ services:
       - "${PHAIDRA_HOSTPORT}:80"
     volumes:
       - .././container_init/httpd/phaidra-demo:/mnt/startup:ro
-      - .././docs:/mnt/docs:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
     depends_on:
       - api
@@ -55,6 +54,8 @@ services:
       - "8000:8000"
     stdin_open: true
     tty: true
+    networks:
+      - phaidra-network
 
   imageserver:
     image: testuser34/imageserver-base:979c59b3
