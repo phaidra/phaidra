@@ -49,11 +49,7 @@ services:
     # command: "build"
     command: "serve --dev-addr=0.0.0.0:8000"
     volumes:
-      - ./../website:/docs/docs
-      # imitate the /docs dir within docker in order to comply the enforced dir structure
-      # the whole discussion around that topic with the docker solution is referenced here:
-      # https://github.com/mkdocs/mkdocs/issues/1276#issuecomment-1337566375
-      - ./../website/mkdocs.yml:/docs/mkdocs.yml
+      - ./..:/docs
     ports:
       - "8000:8000"
     stdin_open: true

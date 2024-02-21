@@ -2,6 +2,7 @@ site_name: PHAIDRA
 site_url: https://phaidra.org
 repo_url: https://github.com/phaidra/phaidra
 repo_name: phaidra/phaidra
+docs_dir: website
 theme:
   name: material
   palette:
@@ -11,7 +12,7 @@ theme:
   favicon: assets/img/phaidra_logo.svg
   icon:
     repo: fontawesome/brands/github
-  custom_dir: docs/overrides
+  custom_dir: website/overrides
   features:
     # - navigation.instant # this messed up the live verion for David with Brave, remove to quickfix, maybe reconsider in the future
     - navigation.tabs
