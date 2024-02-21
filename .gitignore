@@ -8,8 +8,6 @@ components/phaidra-ui/node_modules/
 # generated files from mkdocs
 .cache/
 site/
-mkdocs/site/
-mkdocs/.cache/
 website/site/
 website/.cache/
 
