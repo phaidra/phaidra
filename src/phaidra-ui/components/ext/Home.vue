@@ -67,7 +67,7 @@
                         <li><a href="/fcrepo/rest/">Inspect Object Repository</a></li>
                         <li><a href="/solr/">Inspect Search Engine</a></li>
                         <li><a href="/grafana/">Inspect Running Services</a></li>
-                        <li><a href="/docs/">Documentation</a></li>
+                        <li><a href="https://phaidra.org/docs/overview/">Documentation</a></li>
                     </ul>
                 </v-row>
                 <v-divider class="my-4"></v-divider>

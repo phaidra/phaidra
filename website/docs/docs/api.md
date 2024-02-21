@@ -35,8 +35,9 @@ Response example:
 ```
 
 Possible content models
+
 | Content model | Content model internal | Method |
-| ----- | ----- | ----- |
+| ----- | ----- | ---- |
 | picture | cmodel:Picture | picture/create |
 | document | cmodel:PDFDocument | document/create |
 | video | cmodel:Video | video/create |
@@ -136,7 +137,7 @@ JSON-LD example:
   }
 }
 ```
-For a description of the metadata format, see [Metadata](/docs/metadata/)
+For a description of the metadata format, see [Metadata](../metadata/)
 
 Additionally, metadata hash can contain:
 
@@ -264,7 +265,7 @@ Container metadata example: cont_metadata.json
 ```
 Container metadata should be interpreted as parent metadata record for the members, ie. all container metadata apply for members too unless re-defined on member level.
 
-### Creating a member (see [Creating simple objects](creating-simple-objects))
+### Creating a member (see [Creating simple objects](#creating-simple-objects))
 
 ```bash
 curl -X POST -u pone:1234 "http://localhost:8899/api/document/create" -F "metadata=@foo_metadata.json" -F "file=@test.wav" -F "mimetype=audio/wav"
@@ -490,7 +491,7 @@ The `http://pcdm.org/models#hasMember` relationship is added automatically for m
 
 ## Managing relationships
 The add or remove a relationship, you can use the following calls.
-See the [Digital Object](/docs/digital-object/) for types of relationships.
+See the [Digital Object](../digital-object/) for types of relationships.
 
 [POST http://localhost:8899/api/{pid}/relationship/add](http://localhost:8899/api/openapi#/relationships/post_object__pid__relationship_add)
 
@@ -517,7 +518,7 @@ Response
 [POST http://localhost:8899/api/{pid}/relationship/remove](http://localhost:8899/api/openapi#/relationships/post_object__pid__relationship_remove)
 
 Removing some system relationships (like hasModel) might be restricted.
-See the [Digital Object](/docs/digital-object/) for types of relationships.
+See the [Digital Object](../digital-object/) for types of relationships.
 
 | Param | Value |
 | ----- | ----- |

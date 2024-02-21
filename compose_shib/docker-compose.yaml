@@ -29,7 +29,6 @@ services:
       - grafana
     volumes:
       - .././container_init/httpd/phaidra-shib:/mnt/startup:ro
-      - .././docs:/mnt/docs:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
     networks:
       - phaidra-network

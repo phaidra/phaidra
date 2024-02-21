@@ -22,7 +22,6 @@ services:
     volumes:
       - .././container_init/httpd/phaidra-demo:/mnt/startup:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
-      - .././mkdocs/site:/mnt/docs:ro 
     depends_on:
       - api
       - ui
@@ -48,19 +47,13 @@ services:
     hostname: mkdocs
     # use build to build static files locally (within /site dir) which then can be pushed to server
     # command: "build"
-    # command: "serve --dev-addr=0.0.0.0:8000"
+    command: "serve --dev-addr=0.0.0.0:8000"
     volumes:
-      - ./../mkdocs:/docs
-      - .././container_init/mkdocs/mkdocs_live.entrypoint:/mnt/mkdocs_live.entrypoint:ro
+      - ./../website:/docs
     ports:
       - "8000:8000"
     stdin_open: true
     tty: true
-    networks:
-      - phaidra-network
-    entrypoint:
-      - sh
-      - /mnt/mkdocs_live.entrypoint
 
   imageserver:
     image: testuser34/imageserver-base:979c59b3
