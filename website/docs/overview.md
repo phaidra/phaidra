@@ -1,5 +1,5 @@
 
-## Goal of PHAIDRA Documentation 1
+## Goal of PHAIDRA Documentation
 
 The aim of these docs is to give developers like yourself all the guidance you need to:
 
