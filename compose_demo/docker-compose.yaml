@@ -39,9 +39,9 @@ services:
       - /mnt/startup/httpd-demo-startup.bash
 
   # phaidra.org website
-  # - files located in /docs
+  # - files located in /website
   # - integrated into phaidra/phaidra to easily write docs
-  # - visit http://localhost:8000 to view while developing
+  # - visit http://localhost:8000 to view and change while developing
   mkdocs:
     image: squidfunk/mkdocs-material:latest
     hostname: mkdocs
@@ -49,13 +49,11 @@ services:
     # command: "build"
     command: "serve --dev-addr=0.0.0.0:8000"
     volumes:
-      - ./../:/docs
+      - ./..:/docs
     ports:
       - "8000:8000"
     stdin_open: true
     tty: true
-    networks:
-      - phaidra-network
 
   imageserver:
     image: testuser34/imageserver-base:979c59b3

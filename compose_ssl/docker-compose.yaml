@@ -23,7 +23,6 @@ services:
       - "443:443"
     volumes:
       - .././container_init/httpd/phaidra-ssl:/mnt/startup:ro
-      - .././docs:/mnt/docs:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
     depends_on:
       - api
