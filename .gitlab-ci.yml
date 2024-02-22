@@ -155,7 +155,8 @@ compose-demo:
     - docker compose up -d --quiet-pull --build
     - docker compose down
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
         paths:
           - compose_demo/docker-compose.yaml
           - components/phaidra-ui/**/*
@@ -172,7 +173,8 @@ compose-ssl:
     - docker compose up -d --quiet-pull --build
     - docker compose down
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
         paths:
           - compose_ssl/docker-compose.yaml
           - components/phaidra-ui/**/*
@@ -189,7 +191,8 @@ compose-shib:
     - docker compose up -d --quiet-pull --build
     - docker compose down
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
         paths:
           - compose_shib/docker-compose.yaml
           - components/phaidra-ui/**/*
@@ -208,6 +211,6 @@ release_job:
 
 build-website-nopush:
   stage: release
-  image: squidfunk/mkdocs-material:latest
   script:
-    - mkdocs -h
+    - pwd
+    - ls
