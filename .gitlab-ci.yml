@@ -212,7 +212,10 @@ release_job:
 build-website-nopush:
   stage: release
   script:
-    - pwd
-    - ls
     - docker run --rm -v ./:/docs squidfunk/mkdocs-material build
-    - ls
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
+        paths:
+          - website/**/*
+          - mkdocs.yml
