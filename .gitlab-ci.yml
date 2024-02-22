@@ -214,3 +214,5 @@ build-website-nopush:
   script:
     - pwd
     - ls
+    - docker run --rm -it -v ./:/docs squidfunk/mkdocs-material build
+    - ls
