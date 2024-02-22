@@ -210,5 +210,4 @@ build-website-nopush:
   stage: release
   image: squidfunk/mkdocs-material:latest
   script:
-    - pwd
-    - ls
+    - mkdocs -h
