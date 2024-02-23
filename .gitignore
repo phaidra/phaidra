@@ -2,6 +2,7 @@
 compose_demo/.env
 compose_ssl/.env
 compose_shib/.env
+compose_keycloak/.env
 components/phaidra-ui/.nuxt/
 components/phaidra-ui/node_modules/
 
