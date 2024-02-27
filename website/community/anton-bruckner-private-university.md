@@ -6,12 +6,12 @@ The [Anton Bruckner Private University](https://www.bruckneruni.at/) for music, 
 
 #### Contact
 
-Email: <phaidra@bruckneruni.at>
+Email: <phaidra@bruckneruni.at>  
+Tel: +43 732 701000
 
-ANTON BRUCKNER PRIVATE UNIVERSITY  
-Library  
-Hagenstraße 57  
-4040 Linz, Austria  
+Anton Bruckner Private University  
+Alice-Harnoncourt-Platz 1  
+4040 Linz, Austria
 
 [Local PHAIDRA Repository](https://phaidra.bruckneruni.at/)
 
