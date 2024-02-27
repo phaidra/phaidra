@@ -15,4 +15,6 @@ Austria
 
 Repository in progress
 
-![](/assets/external/img/banners/die-locke-albrecht-duerers-eva-schober-cc-by-4.0.jpg){.mt-8 .w-2/3 .md:w-1/2}
+![](/assets/external/img/banners/die-locke-albrecht-duerers-eva-schober-cc-by-4.0.jpg){.mt-8}
+Locke von Albrecht Dürer. Eva Schober, CC BY 4.0
+{.w-2/3 .md:w-1/2 .bg-gray-100 .text-xs}
