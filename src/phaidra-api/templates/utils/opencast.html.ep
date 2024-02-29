@@ -21,7 +21,7 @@
     </head>
     <body>
         <div class="container">
-            <iframe allowfullscreen class="responsive-iframe" src="<%= $player_url %>"</iframe>
+            <iframe allowfullscreen class="responsive-iframe" src="<%= $player_url %>" />
         </div>
     </body>
 </html>
