@@ -1597,19 +1597,24 @@ sub proxy_datastream {
 
   my $res = {alerts => [], status => 200};
 
-  my $url = Mojo::URL->new;
-  $url->scheme($c->app->config->{fedora}->{scheme} ? $c->app->config->{fedora}->{scheme} : 'https');
+  my $url;
+  if ($c->app->config->{fedora}->{version} >= 6) {
+    $url = $c->app->fedoraurl->path("$pid/$dsid");
+  } else {
+    $url = Mojo::URL->new;
+    $url->scheme($c->app->config->{fedora}->{scheme} ? $c->app->config->{fedora}->{scheme} : 'https');
 
-  if ($intcallauth) {
-    $url->userinfo($c->app->config->{phaidra}->{intcallusername} . ':' . $c->app->config->{phaidra}->{intcallpassword});
+    if ($intcallauth) {
+      $url->userinfo($c->app->config->{phaidra}->{intcallusername} . ':' . $c->app->config->{phaidra}->{intcallpassword});
+    }
+    elsif ($username) {
+      $url->userinfo("$username:$password");
+    }
+
+    $url->host($c->app->config->{phaidra}->{fedorabaseurl});
+    $url->path("/fedora/objects/$pid/datastreams/$dsid/content");
   }
-  elsif ($username) {
-    $url->userinfo("$username:$password");
-  }
-
-  $url->host($c->app->config->{phaidra}->{fedorabaseurl});
-  $url->path("/fedora/objects/$pid/datastreams/$dsid/content");
-
+  
   if (Mojo::IOLoop->is_running) {
     $c->render_later;
     $c->ua->get(

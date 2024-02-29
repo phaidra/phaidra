@@ -1270,10 +1270,7 @@ sub get_public_datastream {
   }
 
   my $object_model = PhaidraAPI::Model::Object->new;
-
-  my $r = $object_model->get_datastream($self, $self->stash('pid'), $dsid, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
-
-  $self->render(json => $r, status => $r->{status});
+  $object_model->proxy_datastream($self, $self->stash('pid'), $dsid, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
 }
 
 sub get_metadata {
