@@ -306,7 +306,7 @@ sub _create_streaming_job {
   my ($self, $c, $pid, $cmodel) = @_;
 
   my $res = {alerts => [], status => 200};
-  if ($c->app->config->{streaming}) {
+  if ($c->app->config->{streaming} || $c->app->config->{opencast}) {
     my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid});
     unless ($find->{pid}) {    
       $c->app->log->info("Creating streaming job pid[$pid] cm[$cmodel]");
