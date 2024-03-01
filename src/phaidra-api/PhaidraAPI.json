@@ -179,5 +179,10 @@
         "port": "8983",
         "username": "__SOLR_USER__",
         "password": "__SOLR_PASS__"
+    },
+    "external_services": {
+        "opencast": {
+            "mode": "__OC_EXTERNAL__"
+        }
     }
 }

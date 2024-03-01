@@ -612,23 +612,32 @@ $self->stash(baseurl  => $self->config->{baseurl});
       }
     }
     case 'Video' {
-      if ($self->config->{opencast}) {
+      if (defined $self->config
+          ->{external_services}->{opencast}->{mode} &&
+          $self->config->{external_services}->{opencast}->{mode}
+          eq "ACTIVATED")
+      {
         my $object_job_info = $self->paf_mongo->get_collection('jobs')->
           find_one({pid => $pid, agent => 'vige'});
-        my $job_status = $object_job_info->{'status'};
-        if ($job_status eq "SUCCEEDED") {
-          my $opencast_url = $object_job_info->{'oc_player_url'};
-          $self->stash(player_url => $opencast_url);
-          $self->render(template => 'utils/opencast', format => 'html');
+        if (defined $object_job_info) {
+          my $job_status = $object_job_info->{'status'};
+          if ($job_status eq "SUCCEEDED") {
+            my $opencast_url = $object_job_info->{'oc_player_url'};
+            $self->stash(player_url => $opencast_url);
+            $self->render(template => 'utils/opencast', format => 'html');
+          }
+          elsif ($job_status eq "new") {
+            $self->render(text => "please be patient, stream processing will start shortly.");
+          }
+          elsif ($job_status eq "sent") {
+            $self->render(text => "please be patient, video is being processed for streaming.");
+          }
+          elsif ($job_status eq "FAILED") {
+            $self->render(text => "stream preparation failed, please contact your admin.");
+          }
         }
-        elsif ($job_status eq "new") {
-          $self->render(text => "please be patient, stream processing will start shortly.");
-        }
-        elsif ($job_status eq "sent") {
-          $self->render(text => "please be patient, video is being processed for streaming.");
-        }
-        elsif ($job_status eq "FAILED") {
-          $self->render(text => "stream preparation failed, please contact your admin.");
+        else {
+          $self->render(text => "Did you recently migrate to a streaming service?  It looks like this video has not been not been processed!");
         }
         return;
       }

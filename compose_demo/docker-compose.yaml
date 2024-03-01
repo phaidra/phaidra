@@ -132,6 +132,7 @@ services:
       - SOLR_PASS=${SOLR_PASS}
       - LDAP_ADMIN_USERNAME=${LDAP_ADMIN_USERNAME}
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
+      - OC_EXTERNAL=${OC_EXTERNAL}
     entrypoint:
       - bash
       - /mnt/api-entrypoint.bash
