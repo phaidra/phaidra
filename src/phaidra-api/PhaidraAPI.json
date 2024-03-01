@@ -181,6 +181,8 @@
         "password": "__SOLR_PASS__"
     },
     "external_services": {
-        "opencast": "__OC_EXTERNAL__"
+        "opencast": {
+            "mode": "__OC_EXTERNAL__"
+        }
     }
 }

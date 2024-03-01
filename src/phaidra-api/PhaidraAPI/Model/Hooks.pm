@@ -307,7 +307,10 @@ sub _create_streaming_job {
 
   my $res = {alerts => [], status => 200};
   if ($c->app->config->{streaming} ||
-      $c->app->config->{external_services}->{opencast} eq "ENABLED") {
+      defined $c->app->config
+      ->{external_services}->{opencast}->{mode} &&
+      $c->app->config->{external_services}->{opencast}->{mode}
+      eq "ACTIVATED") {
     my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid});
     unless ($find->{pid}) {    
       $c->app->log->info("Creating streaming job pid[$pid] cm[$cmodel]");
