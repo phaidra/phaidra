@@ -612,7 +612,7 @@ $self->stash(baseurl  => $self->config->{baseurl});
       }
     }
     case 'Video' {
-      if ($self->config->{opencast}) {
+      if ($self->config->{external_services}->{opencast} eq "ENABLED") {
         my $object_job_info = $self->paf_mongo->get_collection('jobs')->
           find_one({pid => $pid, agent => 'vige'});
         my $job_status = $object_job_info->{'status'};
