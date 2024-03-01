@@ -8,7 +8,7 @@ Formally, the scheme should be described as a <a target="_blank" href="https://w
 
 For a user-friendlier overview of metadata fields, you can use the <a target="_blank" href="https://phaidra.univie.ac.at/metadata-fields-help">help page</a> directly in an PHAIDRA instance.
 
-If you are developing a frontend or an upload script, consider using PHAIDRA Vue Components (or rather the javascripts inside) to manipulate the metadata. See the <a href="/docs/docs-api.md">API usage guide</a> for examples.
+If you are developing a frontend or an upload script, consider using PHAIDRA Vue Components (or rather the javascripts inside) to manipulate the metadata. See the <a href="/docs/api/">API usage guide</a> for examples.
 
 Many fields are using controlled vocabularies. Most of the controlled vocabularies are defined in our <a target="_blank" href="https://vocab.phaidra.org/">vocabulary server</a>, but the lists of terms are also available in the vocabulary <a target="_blank" href="https://github.com/phaidra/phaidra/blob/main/src/phaidra-vue-components/src/store/modules/vocabulary.js">vuex store js file</a>.
 
