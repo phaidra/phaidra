@@ -52,9 +52,11 @@ nav:
       - docs/features.md
       - docs/customization.md
     - Technical Docs:
-      - docs/metadata.md
       - docs/architecture.md
       - docs/digital-object.md
+      - docs/metadata.md
+      - docs/vocabularies.md
+      - docs/index.md
       - Docked Applications: docs/docked.md
     - API:
       - docs/api.md

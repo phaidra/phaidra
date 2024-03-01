@@ -2,7 +2,7 @@
 
 The fundamental building block of PHAIDRA repository is it's digital object model. Here's a simple conceptual diagram of it:
 
-![](../pictures/digital_object.svg)
+![](/assets/img/docs/digital_object.svg)
 
 The object is composed of two parts: preservation metadata and datastreams.
 
@@ -86,3 +86,51 @@ An object can be in states:
 - Inactive - the object can only be accessed by the owner, is not indexed and is usually not part of any workflows.
 
 - Deleted - historically, Fedora Repository used this state to mark an object for purge. It is not used in instances based on Fedora Repository in version 6+.
+
+## Object relationships
+
+Currently, following relations are supported in PHAIDRA:
+
+### info:fedora/fedora-system:def/relations-external#hasCollectionMember
+
+Used to define collection members. In the Solr index, it's available as 'isPartOf' field.
+
+### http://pcdm.org/models#hasMember
+
+Used in a container to point to container members.
+
+### http://purl.org/dc/terms/references
+
+Used to connect two objects in a generic way.
+
+### http://phaidra.org/ontology/isInAdminSet
+
+This indicates this object is part of an administrative collection (eg institutional repository) which typically means the objects are managed by an external system or a different frontend.
+
+### http://phaidra.org/XML/V1.0/relations#isBackSideOf
+
+If a picture is scanned from both sides, you can use this relation on the object representing the backside of the picture to point to the 'front side' object.
+
+### http://phaidra.univie.ac.at/XML/V1.0/relations#hasSuccessor
+
+Used to point to the newer version of an object.
+
+### http://phaidra.org/XML/V1.0/relations#isAlternativeFormatOf
+
+Use to point to an object containing an alternative format of an object (eg to relate a PDF to its LaTeX source format).
+
+### http://phaidra.org/XML/V1.0/relations#isAlternativeVersionOf
+
+Use to point to an object containing an alternative version of an object (eg to relate a submitted version of an article to the accepted version).
+
+### http://phaidra.org/XML/V1.0/relations#isThumbnailFor
+
+Used to make this object's preview a preview for another object (eg says this container member should be used as the thumbnail for the whole container).
+
+### http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasTrack
+
+E.g. to associate an object containing WebVTT with a video object.
+
+***
+
+There are some system relationships which should not be edited, eg 'info:fedora/fedora-system:def/model#hasModel' or 'http://purl.org/dc/terms/identifier'.
