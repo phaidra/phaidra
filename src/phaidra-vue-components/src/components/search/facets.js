@@ -11,12 +11,12 @@ export const facetQueries = [
     queries: [
       {
         id: 'restricted',
-        query: 'datastreams:POLICY',
+        query: 'isrestricted:1',
         label: 'Restricted'
       },
       {
         id: 'unrestricted',
-        query: '-datastreams:POLICY',
+        query: '-isrestricted:1',
         label: 'Unrestricted'
       }
     ]

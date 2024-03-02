@@ -158,6 +158,7 @@
   <field name="ns" type="string" indexed="true" stored="true"/>
   <field name="object_type_id" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="oer" type="boolean" multiValued="false" indexed="true" stored="true"/>
+  <field name="isrestricted" type="boolean" multiValued="false" indexed="true" stored="true"/>
   <field name="owl_sameas" type="strings" indexed="true" stored="true"/>
   <field name="owner" type="string" indexed="true" stored="true"/>
   <field name="pid" type="string" indexed="true" required="true" stored="true"/>

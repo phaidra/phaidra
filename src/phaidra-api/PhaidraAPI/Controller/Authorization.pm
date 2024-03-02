@@ -35,8 +35,6 @@ sub authorize {
     $pid = $self->match->stack->[2]{pid};
   }
 
-  
-
   # imageserverproxy is an exception
   # -> the PID is in the query string
   # -> pass this, we'll check rights in imageserver model where we parse the query
@@ -61,8 +59,18 @@ sub authorize {
   if ($res->{status} == 200) {
     return 1;
   } else {
-    $self->render(json => $res, status => $res->{status});
-    return 0;
+    if ($action eq 'thumbnail' && $res->{status} == 403) {
+      $self->res->headers->add('Pragma-Directive' => 'no-cache');
+      $self->res->headers->add('Cache-Directive'  => 'no-cache');
+      $self->res->headers->add('Cache-Control'    => 'no-cache');
+      $self->res->headers->add('Pragma'           => 'no-cache');
+      $self->res->headers->add('Expires'          => 0);
+      $self->reply->static('images/locked.png');
+      return 0;
+    } else {
+      $self->render(json => $res, status => $res->{status});
+      return 0;
+    }
   }
 }
 

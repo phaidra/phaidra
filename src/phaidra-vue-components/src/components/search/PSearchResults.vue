@@ -37,10 +37,7 @@
         <v-divider inset vertical v-if="selectioncheck"></v-divider>
         <v-col :cols="selectioncheck ? 10 : 12">
           <v-row :key="'prev'+doc.pid">
-            <v-col cols="2" class="preview-maxwidth" v-if="doc.datastreams.includes('POLICY')">
-              <v-icon x-large class="pa-7 elevation-1">mdi-lock</v-icon>
-            </v-col>
-            <v-col cols="2" v-else class="preview-maxwidth">
+            <v-col cols="2" class="preview-maxwidth">
               <p-img :src="instance.api + '/object/' + doc.pid + '/thumbnail'" class="elevation-1 mt-2">
                 <template v-slot:placeholder>
                   <div class="fill-height ma-0" align="center" justify="center" >
@@ -81,7 +78,7 @@
           <v-row no-gutters class="my-4 mr-2" :key="'lic'+doc.pid">
             <v-col cols="2" class="preview-maxwidth"></v-col>
             <v-col>
-              <v-row no-gutters class="mb-4" v-if="doc.datastreams.includes('POLICY')"><v-chip label dark color="red lighten-1 font-weight-regular">{{ $t('Restricted access') }}</v-chip></v-row>
+              <v-row no-gutters class="mb-4" v-if="doc.isrestricted"><v-chip label dark color="red lighten-1 font-weight-regular">{{ $t('Restricted access') }}</v-chip></v-row>
               <v-row no-gutters>
                 <span>https://{{ instance.baseurl }}/{{ doc.pid }}</span>
                 <v-spacer></v-spacer>

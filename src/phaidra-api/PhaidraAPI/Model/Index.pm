@@ -1461,10 +1461,9 @@ sub _get {
     }
     else {
       my @expires;
-      my $isRestricted = 0;
       for my $id (keys %{$r_rights->{rights}}) {
         if (exists($r_rights->{rights}->{$id})) {
-          $isRestricted = 1;
+          $index{isrestricted} = '1';
           for my $rule (@{$r_rights->{rights}->{$id}}) {
             if (ref $rule eq ref {}) {
               if (exists($rule->{expires})) {
@@ -1478,11 +1477,6 @@ sub _get {
       if ($nrExpires > 0) {
         my @sorted_expires = sort @expires;
         $index{checkafter} = $sorted_expires[0];
-      }
-      if ($c->app->config->{fedora}->{version} >= 6) {
-        if ($isRestricted) {
-          push @{$index{datastreams}}, 'POLICY';
-        }
       }
     }
   }

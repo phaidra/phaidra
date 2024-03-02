@@ -892,7 +892,7 @@
             </v-col>
           </v-row>
 
-          <v-row justify="end" class="mb-8" no-gutters v-if="isRestricted"><v-chip label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></v-row>
+          <v-row justify="end" class="mb-8" no-gutters v-if="objectInfo.isrestricted"><v-chip label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></v-row>
           <v-row justify="end">
             <v-col cols="12" md="9">
               <v-row
@@ -2086,9 +2086,6 @@ export default {
     collMembersTotalPages: function () {
       return Math.ceil(this.$store.state.collectionMembersTotal / this.collMembersPagesize);
     },
-    isRestricted: function () {
-      return this.objectInfo.datastreams.includes("POLICY");
-    },
     showPreview: function () {
       return (
         this.objectInfo.cmodel !== "Resource" &&
@@ -2101,7 +2098,7 @@ export default {
               )) &&
         this.objectInfo.cmodel !== "Container" &&
         this.objectInfo.readrights &&
-        !(this.objectInfo.cmodel === "Video" && this.isRestricted)
+        !(this.objectInfo.cmodel === "Video" && this.objectInfo.isrestricted)
       );
     },
     uscholarlink: function () {
