@@ -1,6 +1,5 @@
 <template>
   <v-container fluid>
-    {{ instanceconfig }}
     <template v-if="objectInfo">
       <v-row
         v-if="objectInfo.tombstone"
