@@ -1,5 +1,6 @@
 <template>
   <v-container fluid>
+    {{ instanceconfig }}
     <template v-if="objectInfo">
       <v-row
         v-if="objectInfo.tombstone"
@@ -629,7 +630,9 @@
                           $t("Relationships")
                         }}</v-list-item-title>
                       </v-list-item>
-                      <v-list-item v-if="instanceconfig.enabledelete === 1" :to="localePath(`/delete/${member.pid}`)">
+                      <v-list-item>
+                      </v-list-item>
+                      <v-list-item v-if="(instanceconfig.enabledelete === 1) || (instanceconfig.enabledelete === true)" :to="localePath(`/delete/${member.pid}`)">
                         <v-list-item-title>{{
                           $t("Delete")
                         }}</v-list-item-title>
@@ -1067,7 +1070,7 @@
                           offset="1"
                           v-if="objectInfo.owner.firstname"
                         >
-                          <a :href="'mailto:' + objectInfo.owner.email"
+                          <a :href="'mailto:' + ownerEmail"
                             >{{ objectInfo.owner.firstname }}
                             {{ objectInfo.owner.lastname }}</a
                           >
@@ -1075,13 +1078,13 @@
                         <v-col v-else-if="objectInfo.owner.displayname" cols="8" offset="1">
                           <v-row>
                               <v-col>
-                                <a :href="'mailto:' + objectInfo.owner.email"
+                                <a :href="'mailto:' + ownerEmail"
                                   >{{ objectInfo.owner.displayname }}</a
                                 >
                               </v-col>
                           </v-row>
                         </v-col>
-                        <v-col v-else cols="8"  offset="1"><a :href="'mailto:' + objectInfo.owner.email"
+                        <v-col v-else cols="8"  offset="1"><a :href="'mailto:' + ownerEmail"
                             >{{ objectInfo.owner.username }}</a
                           ></v-col>
                       </v-row>
@@ -2022,7 +2025,7 @@
                       <v-row no-gutters class="pt-2">
                         <nuxt-link
                           class="mb-1"
-                          v-if="instanceconfig.enabledelete === 1"
+                          v-if="(instanceconfig.enabledelete === 1) || (instanceconfig.enabledelete === true)"
                           :to="localePath(`/delete/${objectInfo.pid}`)"
                           >{{ $t("Delete") }}</nuxt-link
                         >
@@ -2069,6 +2072,9 @@ export default {
     return this.detailsMetaInfo;
   },
   computed: {
+    ownerEmail: function () {
+      return this.instanceconfig.owneremailoverride ? this.instanceconfig.owneremailoverride : this.objectInfo.owner.email
+    },
     collMembersPage: {
       get() {
         return this.collMembersCurrentPage;
