@@ -57,11 +57,11 @@ function get_suffix {
 # algorithm
 while true
 do
-    if [[ -z "$(get_new_jobs $M_PASS $M_PASS)" ]]
+    if [[ -z "$(get_new_jobs)" ]]
     then
         sleep 10
     else
-        for PID in $(get_new_jobs $M_USER $M_PASS)
+        for PID in $(get_new_jobs)
         do
             printf "%s -- uploading.\n" $PID
             PID_UPLOAD=$(echo $PID | sed 's|:|_|')
