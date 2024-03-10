@@ -22,7 +22,14 @@ export const state = () => ({
 
 export const mutations = {
   setInstanceConfig(state, instanceconfig) {
-    state.instanceconfig = instanceconfig
+    let configurable = [
+      'title', 'institution', 'institutionurl', 'address', 'phone', 'email', 'languages', 'owneremailoverride', 'enabledelete', 'markmandatorymethod', 'validationmethod'
+    ] 
+    for (const p of configurable) {
+      if (instanceconfig.hasOwnProperty(p)) {
+        state.instanceconfig[p] = instanceconfig[p]
+      }
+    }
   },
   updateBreadcrumbs(state, transition) {
     state.breadcrumbs = [

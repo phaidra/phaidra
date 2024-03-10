@@ -9,6 +9,7 @@ ARG PHAIDRA_HOSTNAME
 ARG PHAIDRA_PORTSTUB
 ARG PHAIDRA_HOSTPORT
 ARG OUTSIDE_HTTP_SCHEME
+ARG PHAIDRA_PRIMARY_COLOR
 RUN mkdir -p /usr/local/phaidra
 ADD ./../src/phaidra-ui /usr/local/phaidra/phaidra-ui
 ADD ./../src/phaidra-vue-components /usr/local/phaidra/phaidra-vue-components
@@ -25,6 +26,8 @@ sed -i "s|<OUTSIDE_HTTP_SCHEME>|${OUTSIDE_HTTP_SCHEME}|" \
 sed -i "s|<OUTSIDE_HTTP_SCHEME>|${OUTSIDE_HTTP_SCHEME}|" \
     ./config/phaidra-ui.js
 sed -i "s|<HOST_WITH_OR_WITHOUT_PORT>|${PHAIDRA_HOSTNAME}${PHAIDRA_PORTSTUB}${PHAIDRA_HOSTPORT}|g" \
+    ./config/phaidra-ui.js
+sed -i "s|<PHAIDRA_PRIMARY_COLOR>|${PHAIDRA_PRIMARY_COLOR}|g" \
     ./config/phaidra-ui.js
 EOF
 ENV HOST=0.0.0.0

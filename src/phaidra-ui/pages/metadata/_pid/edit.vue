@@ -33,8 +33,8 @@ export default {
   },
   methods: {
     validationMethod: function () {
-      if (this.instanceconfig.submit?.validationmethod) {
-        return this[this.instanceconfig.submit?.validationmethod]()
+      if (this.instanceconfig?.validationmethod) {
+        return this[this.instanceconfig.validationmethod]()
       }
       return this.validate()
     },
