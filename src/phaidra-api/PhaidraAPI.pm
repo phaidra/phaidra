@@ -517,6 +517,7 @@ sub startup {
 
   $r->get('list/token/:token')                      ->to('lists#get_token_list');
 
+  $r->get('app_settings')                           ->to('settings#get_app_settings');
 
   if ($self->app->config->{fedora}->{version} >= 6) {
     my $ext_creds = $r->under('/')->to('authentication#extract_credentials', creds_must_be_present => 0);
@@ -536,7 +537,6 @@ sub startup {
     $loggedin->get('directory/user/data')                                    ->to('directory#get_user_data');
 
     $loggedin->get('settings')                                               ->to('settings#get_settings');
-    $loggedin->get('app_settings')                                           ->to('settings#get_app_settings');
 
     $loggedin->get('groups')                                                 ->to('groups#get_users_groups');
     $loggedin->get('group/:gid')                                             ->to('groups#get_group');
@@ -679,7 +679,6 @@ sub startup {
     $check_auth->get('directory/user/data')                                     ->to('directory#get_user_data');
 
     $check_auth->get('settings')                                                ->to('settings#get_settings');
-    $check_auth->get('app_settings')                                            ->to('settings#get_app_settings');
 
     $check_auth->get('groups')                                                  ->to('groups#get_users_groups');
     $check_auth->get('group/:gid')                                              ->to('groups#get_group');
