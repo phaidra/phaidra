@@ -358,6 +358,9 @@ sub map_jsonld_2_dc_hash {
   for my $rs (@$rights_sentences) {
     push @{$dc_p{rights}}, $rs;
   }
+  for my $d (@{$ext->_get_jsonld_objectlabels($c, $jsonld, 'dcterms:accessRights')}) {
+    push @{$dc_p{rights}}, $d;
+  }
 
   $dc_p{format} = $ext->_get_jsonld_values($c, $jsonld, 'ebucore:hasMimeType');
   unless ($indexing) {

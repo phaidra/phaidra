@@ -45,6 +45,9 @@ sub getFirstJsonldValue {
         if (exists($ob1->{'@value'})) {
           return $ob1->{'@value'};
         }
+        if (exists($ob1->{'@id'})) {
+          return $ob1->{'@id'};
+        }
       }
     }
   }
@@ -101,10 +104,11 @@ sub getObjectProperties {
   }
 
   my $props = $propres->{props};
-
+  # $c->app->log->debug("XXXXXXXXXXXXXXX props:\n" . $c->app->dumper($props));
   # cmodel
   my $cmodel = $self->getFirstJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#hasModel');
-  $cmodel =~ m/(info:fedora\/)(\w+):(\w+)/g;
+
+  $cmodel =~ m/(.+\/)(\w+):(\w+)/g;
   if ($2 eq 'cmodel' && defined($3) && ($3 ne '')) {
     $res->{cmodel} = $3;
   }
@@ -338,7 +342,7 @@ sub getDatastream {
   if ($getres->is_success) {
     $res->{$dsid} = $getres->body;
 
-    # $c->app->log->debug("getDatastream\n" . $getres->body);
+    # $c->app->log->debug("getDatastream\n" . $c->app->dumper($res->{$dsid}));
   }
   else {
     unshift @{$res->{alerts}}, {type => 'error', msg => $getres->message};
