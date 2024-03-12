@@ -57,7 +57,7 @@ export default {
       irbaseurl: '',
       api: '<OUTSIDE_HTTP_SCHEME>://<HOST_WITH_OR_WITHOUT_PORT>/api',
       since: '2023-01-01',
-      primary: '#008080',
+      primary: '<PHAIDRA_PRIMARY_COLOR>',
       institution: 'My institution',
       institutionurl: 'https://phaidra.org',
       address: 'My institution | address | here',
@@ -65,14 +65,9 @@ export default {
       email: 'support email',
       // only uncomment for wildcard purposes
       // cookiedomain: '<HOST_WITH_OR_WITHOUT_PORT>',
-      ui: {
-        languages: ['eng', 'deu']
-      },
-      groups: true,
-      submit: {
-        validationmethod: 'validateNoOefosNoAssoc',
-        markmandatorymethod: 'markMandatoryNoOefosNoAssoc'
-      }
+      languages: 'eng,deu',
+      validationmethod: 'validateNoOefosNoAssoc',
+      markmandatorymethod: 'markMandatoryNoOefosNoAssoc'
     }
   }
 }

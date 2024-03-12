@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-container fluid v-if="!isConfigLoading">
+    <v-container fluid v-if="!loading">
       <v-row no-gutters>
         <v-col>
           <ExtHeader></ExtHeader>
@@ -76,8 +76,7 @@ export default {
   mixins: [config, context],
   data() {
     return {
-      isConfigLoading: true,
-      sitePrimaryColor: ''
+      loading: true
     }
   },
   metaInfo() {
@@ -95,50 +94,27 @@ export default {
     dismiss: function (alert) {
       this.$store.commit("clearAlert", alert);
     },
-    loadInstanceConfigToStore: async function(type=null) {
-      this.isConfigLoading = true
+    loadInstanceConfigToStore: async function() {
+      this.loading = true
       try {
-        if(type === 'mounted') {
-          if(this.sitePrimaryColor){
-            await new Promise((resolve, reject) => {
-              setTimeout(() => {
-                resolve(null)
-              }, 500);
-            })
-            this.$vuetify.theme.themes.light.primary = this.sitePrimaryColor
-            this.$vuetify.theme.themes.dark.primary = this.sitePrimaryColor
-          }
-          this.isConfigLoading = false;
-          return true
-        }
         let settingResponse = await this.$axios.get("/app_settings", {
           headers: {
             "X-XSRF-TOKEN": this.$store.state.user.token,
           },
         });
         if(settingResponse?.data?.settings?.instanceConfig){
-          if(type !== 'mounted'){
-          }
-          if(settingResponse?.data?.settings?.instanceConfig?.primary){
-            this.sitePrimaryColor = settingResponse?.data?.settings?.instanceConfig?.primary
-            this.$vuetify.theme.themes.light.primary = settingResponse?.data?.settings?.instanceConfig?.primary
-            this.$vuetify.theme.themes.dark.primary = settingResponse?.data?.settings?.instanceConfig?.primary
-          }
-          if(settingResponse?.data?.settings?.instanceConfig?.api){
-            this.$axios.defaults.baseURL = settingResponse?.data?.settings?.instanceConfig?.api
-          }
           this.$store.commit("setInstanceConfig", settingResponse?.data?.settings?.instanceConfig);
         }
-        // this.isConfigLoading = false;
-      } catch (error) {}
-      if(type === 'mounted'){
-        this.isConfigLoading = false;
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.loading = false;
       }
       return true
     }
   },
   mounted() {
-    this.loadInstanceConfigToStore('mounted')
+    // this.loadInstanceConfigToStore()
   },
   async fetch() {
     await this.loadInstanceConfigToStore()

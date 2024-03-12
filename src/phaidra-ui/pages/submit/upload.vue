@@ -62,14 +62,14 @@ export default {
   },
   methods: {
     validationMethod: function () {
-      if (this.instanceconfig.submit?.validationmethod) {
-        return this[this.instanceconfig.submit?.validationmethod]()
+      if (this.instanceconfig?.validationmethod) {
+        return this[this.instanceconfig?.validationmethod]()
       }
       return this.validate()
     },
     markMandatoryMethod: function() {
-      if (this.instanceconfig.submit?.markmandatorymethod) {
-        return this[this.instanceconfig.submit?.markmandatorymethod]()
+      if (this.instanceconfig?.markmandatorymethod) {
+        return this[this.instanceconfig?.markmandatorymethod]()
       }
       return this.markMandatory()
     },
@@ -122,8 +122,8 @@ export default {
       }
     },
     markOefosMandatory: function () {
-      if (this.instanceconfig.submit?.markmandatorymethod) {
-        if (this.instanceconfig.submit?.markmandatorymethod === 'markMandatoryNoOefosNoAssoc') {
+      if (this.instanceconfig?.markmandatorymethod) {
+        if (this.instanceconfig?.markmandatorymethod === 'markMandatoryNoOefosNoAssoc') {
           return
         }
       }

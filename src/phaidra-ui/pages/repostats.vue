@@ -68,6 +68,7 @@
 import qs from "qs";
 import { context } from "../mixins/context";
 import { config } from "../mixins/config";
+import { vocabulary } from 'phaidra-vue-components/src/mixins/vocabulary'
 
 export default {
   mixins: [context, config],
@@ -142,10 +143,8 @@ export default {
     async fetchStats(self) {
       self.typeItems = [];
       self.cmodelItems = [];
-      let fromYear = parseInt(new Date().getFullYear());
-      if (self.instanceconfig.since) {
-        fromYear = self.instanceconfig.since.substring(0, 4);
-      }
+      // TODO: query min tcreated from solr
+      let fromYear = '2008'
       let toYear = new Date().getFullYear();
       for (let i = fromYear; i <= toYear; i++) {
         this.typeHeaders.push({ text: i.toString(), value: i.toString() });

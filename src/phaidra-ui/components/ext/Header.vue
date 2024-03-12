@@ -172,7 +172,7 @@
                             }}</v-list-item-title></v-list-item
                         >
                         <v-list-item
-                            v-if="signedin & instanceconfig.groups"
+                            v-if="signedin"
                             @click="
                             $router.push(localeLocation({ path: '/groups' }))
                             "
@@ -251,7 +251,7 @@
                     <v-hover v-slot:default="{ hover }">
                     <nuxt-link
                         :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                        v-show="signedin && instanceconfig.groups"
+                        v-show="signedin"
                         :to="localePath('/groups')"
                         >{{ $t("Groups") }}</nuxt-link
                     >
@@ -305,18 +305,6 @@ export default {
   mixins: [config, context],
   computed: {
     localeLabel: function () {
-      if (this.instanceconfig.ui) {
-        if (this.instanceconfig.ui.twoletterlang === 1) {
-          switch (this.$i18n.locale) {
-            case "eng":
-              return "eng";
-            case "deu":
-              return "deu";
-            default:
-              return "";
-          }
-        }
-      }
       return this.$i18n.locale;
     }
   },
@@ -332,9 +320,9 @@ export default {
       this.$router.push(this.localeLocation({ path: `/` }));
     },
     useLocale: function (lang) {
-      if (this.instanceconfig.ui) {
-        if (this.instanceconfig.ui.languages) {
-          return this.instanceconfig.ui.languages.includes(lang);
+      if (this.instanceconfig) {
+        if (this.instanceconfig.languages) {
+          return this.instanceconfig.languages.split(',').includes(lang);
         }
       }
       return false;
