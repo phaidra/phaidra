@@ -155,7 +155,6 @@
     <v-divider></v-divider>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn fixed bottom right raised :loading="loading" @click="reset()">{{ $t('Reset') }}</v-btn>
       <v-btn fixed bottom right raised color="primary" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
     </v-card-actions>
   </v-card>
