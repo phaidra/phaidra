@@ -26,32 +26,6 @@
           <v-row>
             <v-col>
               <v-text-field
-                label="API Endpoint"
-                readonly
-                disabled
-                v-model="parsedConfigData.api"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="6" class="mt-6"></v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <v-text-field
-                label="Primary Color"
-                v-model="parsedConfigData.primary"
-              ></v-text-field>
-              <!--<v-color-picker
-                dot-size="25"
-                v-model="parsedConfigData.primary"
-                hide-canvas
-                hide-inputs
-              ></v-color-picker>-->
-            </v-col>
-            <v-col cols="6"></v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <v-text-field
                 label="Institution"
                 v-model="parsedConfigData.institution"
               ></v-text-field>
@@ -149,14 +123,39 @@
             </v-col>
             <v-col cols="6" class="mt-4">{{ $t("If defined, this email is used as object's owner email on object's detail page. Useful if you want a service email to be contacted in case of enquiries, instead of the original owner.") }}</v-col>
           </v-row>
+          <v-row>
+            <v-col>
+              <v-text-field
+                label="Languages"
+                v-model="parsedConfigData.languages"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6" class="mt-4">{{ $t("Comma separated list of languages the language switcher should show") }}</v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-text-field
+                label="Validation method"
+                v-model="parsedConfigData.validationmethod"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6" class="mt-4">{{ $t("Which method shold be used to validate metadata forms") }}</v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-text-field
+                label="Mark mandatory method"
+                v-model="parsedConfigData.markmandatorymethod"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6" class="mt-4">{{ $t("Which method shold be used to makr fields as mandatory in submit form") }}</v-col>
+          </v-row>
         </v-container>
       </v-tab-item>
     </v-tabs>
-    <v-divider></v-divider>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn fixed bottom right raised color="primary" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
-    </v-card-actions>
+
+    <v-btn fixed bottom right raised color="primary" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
+
   </v-card>
 </v-container>
 
