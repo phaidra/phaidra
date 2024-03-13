@@ -7,7 +7,7 @@ use utf8;
 use Switch;
 use Time::HiRes qw/tv_interval gettimeofday/;
 use Mojo::ByteStream qw(b);
-use Mojo::Util qw(xml_escape encode decode trim);
+use Mojo::Util qw(encode decode trim);
 use Mojo::JSON qw(encode_json decode_json from_json to_json);
 use Mojo::URL;
 use Mojo::UserAgent;
@@ -1202,10 +1202,9 @@ sub _get {
           if ($getdsres->{status} != 200) {
             return $getdsres;
           }
-
           my $dom = Mojo::DOM->new();
           $dom->xml(1);
-          $dom->parse('<foxml:xmlContent>' . $getdsres->{$dsid} . '</foxml:xmlContent>');
+          $dom->parse('<foxml:xmlContent>' . decode('UTF-8', $getdsres->{$dsid}) . '</foxml:xmlContent>');
           $datastreams{$dsid} = $dom;
         }
         else {
@@ -1402,7 +1401,7 @@ sub _get {
   elsif (exists($datastreams{'UWMETADATA'})) {    # keep in else to avoid overwriting index fields for objects which have both JSON-LD and uwmetadata
     my $tadduwmindex = [gettimeofday];
     my $r_add_uwm    = $self->_add_uwm_index($c, $pid, $datastreams{'UWMETADATA'}->find('foxml\:xmlContent')->first, \%index);
-    $c->app->log->debug("_add_uwm_index took " . tv_interval($tadduwmindex));
+    # $c->app->log->debug("_add_uwm_index took " . tv_interval($tadduwmindex));
     if ($r_add_uwm->{status} ne 200) {
       push @{$res->{alerts}}, {type => 'error', msg => "Error adding UWMETADATA fields for $pid"};
       push @{$res->{alerts}}, @{$r_add_uwm->{alerts}} if scalar @{$r_add_uwm->{alerts}} > 0;
@@ -1412,7 +1411,7 @@ sub _get {
 
     my $tgetuwmtree = [gettimeofday];
     my $r0          = $uw_model->metadata_tree($c);
-    $c->app->log->debug("getting metadata_tree took " . tv_interval($tgetuwmtree));
+    # $c->app->log->debug("getting metadata_tree took " . tv_interval($tgetuwmtree));
 
     if ($r0->{status} ne 200) {
       push @{$res->{alerts}}, {type => 'error', msg => "Error getting UWMETADATA tree for $pid"};
@@ -1421,9 +1420,8 @@ sub _get {
     else {
       my $tmapuwmdc = [gettimeofday];
       my ($dc_p, $dc_oai) = $dc_model->map_uwmetadata_2_dc_hash($c, $pid, $index{cmodel}, $datastreams{'UWMETADATA'}->find('foxml\:xmlContent')->first, $r0->{metadata_tree}, $uw_model, 1);
-      $c->app->log->debug("mapping uwm to dc took " . tv_interval($tmapuwmdc));
+      # $c->app->log->debug("mapping uwm to dc took " . tv_interval($tmapuwmdc));
 
-      #$c->app->log->debug("XXXXXXXXXXXXXXXXX ".$c->app->dumper($dc_p));
       $self->_add_dc_index($c, $dc_p, \%index);
     }
   }
@@ -1610,7 +1608,7 @@ sub _get {
   # ts
   $index{_updated} = time;
 
-  #$c->app->log->debug("XXXXXXXXXXXXX index: " . $c->app->dumper(\%index));
+  # $c->app->log->debug("XXXXXXXXXXXXX index: " . $c->app->dumper(\%index));
 
   $c->app->log->debug("_get indexing took " . tv_interval($t0));
   return $res;
