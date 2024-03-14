@@ -204,9 +204,14 @@ sub _deleteOrInsertTriples {
     my ($pref, $prop) = $self->_getPrefProp($c, $p->{predicate});
     my $ns  = $prefix2ns{$pref};
     my $val = $p->{object};
+    if ($val =~ m/info\:fedora/) {
+      $val = '<'.$val.'>';
+    } else {
+      $val = '"'.$val.'"';
+    }
 
     $prefixes .= "PREFIX " . $ns . ": <" . $pref . ">\n";
-    $values   .= "<> $ns:$prop \"$val\".\n";
+    $values   .= "<> $ns:$prop $val.\n";
   }
   my $body = qq|
     $prefixes

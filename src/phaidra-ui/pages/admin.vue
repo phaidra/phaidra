@@ -153,7 +153,9 @@
         </v-container>
       </v-tab-item>
     </v-tabs>
+
     <v-btn fixed bottom right raised color="primary" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
+
   </v-card>
 </v-container>
 
