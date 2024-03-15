@@ -64,7 +64,7 @@
         "port": "8080",
         "path": "fcrepo/rest/",
         "scheme": "http",
-        "ocflroot": "/mnt/fedora/data/ocfl-root",
+        "ocflroot": "__FEDORA_OCFL_ROOT__",
         "adminuser": "__FEDORA_ADMIN_USER__",
         "adminpass": "__FEDORA_ADMIN_PASS__",
         "pidnamespace": "o",
