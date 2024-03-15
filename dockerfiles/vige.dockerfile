@@ -4,7 +4,8 @@ RUN <<EOF
 apt-get --quiet update
 apt-get install --yes --quiet --no-install-recommends \
 jq libxml-xpath-perl html2text file gdebi curl parallel \
-wget gnupg
+wget gnupg \
+s3fs
 apt-get clean
 EOF
 RUN <<EOF

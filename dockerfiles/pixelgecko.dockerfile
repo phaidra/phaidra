@@ -4,7 +4,8 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN <<EOF
 apt-get --quiet update
 apt-get install --yes --quiet --no-install-recommends \
-libvips-tools libyaml-syck-perl libmongodb-perl
+libvips-tools libyaml-syck-perl libmongodb-perl \
+s3fs
 apt-get clean
 EOF
 
