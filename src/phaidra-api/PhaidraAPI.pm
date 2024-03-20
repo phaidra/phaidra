@@ -645,6 +645,7 @@ sub startup {
 
       $loggedin->post('jsonld/template/add')                                 ->to('jsonld#add_template');
       $loggedin->post('jsonld/template/:tid/remove')                         ->to('jsonld#remove_template');
+      $loggedin->post('jsonld/template/:tid/edit')                           ->to('jsonld#edit_template');
 
       $loggedin->post('ir/submit')                                           ->to('ir#submit');
       $loggedin->post('ir/notifications')                                    ->to('ir#notifications');
@@ -795,6 +796,7 @@ sub startup {
 
       $check_auth->post('jsonld/template/add')                                  ->to('jsonld#add_template');
       $check_auth->post('jsonld/template/:tid/remove')                          ->to('jsonld#remove_template');
+      $check_auth->post('jsonld/template/:tid/edit')                            ->to('jsonld#edit_template');
 
       $proxyauth->post('ir/submit')                                             ->to('ir#submit');
       $check_auth->post('ir/notifications')                                     ->to('ir#notifications');

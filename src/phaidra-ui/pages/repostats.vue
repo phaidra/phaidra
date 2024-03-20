@@ -47,16 +47,6 @@
               class="elevation-1 my-8"
               :no-data-text="$t('No data available')"
             ></v-data-table>
-            <!-- <v-data-table
-              :headers="ownerHeaders"
-              :items="ownerItems"
-              :items-per-page="1000"
-              :sort-by="currentYear.toString()"
-              :sort-desc="true"
-              hide-default-footer
-              class="elevation-1 my-8"
-              :no-data-text="$t('No data available')"
-            ></v-data-table> -->
           </v-card-text>
         </v-card>
       </v-col>
@@ -238,7 +228,7 @@ export default {
                 hasValue = true;
               }
               stats.objectType = this.getLocalizedTermLabel(
-                "objecttypeuwm",
+                "objecttype",
                 term["@id"]
               );
               stats[a[j].substring(0, 4)] = a[j + 1];
@@ -303,6 +293,8 @@ export default {
         };
 
         for (let i = fromYear; i <= toYear; i++) {
+
+          try {
             let year = i
           
             let params = {
@@ -327,100 +319,14 @@ export default {
               stats.total += res.data.stats.stats_fields.size.sum
               stats[year] = gb > 0 ? this.tofixed(gb) : 0
             }
-
+          } catch (error) {
+            console.log(error);
+          }
             
         }
         stats.total = stats.total > 0 ? this.tofixed(stats.total/1000000000) : 0
         this.cmodelStorageItems.push(stats)
       }
-
-         
-
-      // for (let type of this.ownerTypes) {
-      //   let params = {
-      //     q: "*:*",
-      //     fq: "owner:" + type + "",
-      //     facet: "on",
-      //     rows: 0,
-      //     "facet.range": "tcreated",
-      //     "f.tcreated.facet.range.start": fromYear + "-01-01T00:00:00Z",
-      //     "f.tcreated.facet.range.end": "NOW",
-      //     "f.tcreated.facet.range.gap": "+1YEAR",
-      //     defType: "edismax",
-      //     wt: "json",
-      //   };
-      //   let query = qs.stringify(params, {
-      //     encodeValuesOnly: true,
-      //     indices: false,
-      //   });
-      //   try {
-      //     let response = await self.$axios.get(
-      //       "/search/select?" + query
-      //     );
-      //     if (response.data.facet_counts.facet_ranges.tcreated.counts) {
-      //       let a = response.data.facet_counts.facet_ranges.tcreated.counts;
-      //       let stats = {};
-      //       for (let j = 0; j < a.length; j = j + 2) {
-      //         stats.owner = type;
-      //         stats[a[j].substring(0, 4)] = a[j + 1];
-      //       }
-      //       this.ownerItems.push(stats);
-      //     }
-      //   } catch (error) {
-      //     console.log(error);
-      //   }
-      // }
-      // try {
-      //   let response = await this.$axios.get("/stats/aggregates?detail=cm&time_scale=year");
-      //   if (response.data.alerts && response.data.alerts.length > 0) {
-      //     this.$store.commit("setAlerts", response.data.alerts);
-      //   }
-      //   if (response.data.stats) {
-      //     let stats = {
-      //       total: {
-      //         cmodel: "total",
-      //         total: 0,
-      //       },
-      //     };
-      //     for (let s of response.data.stats) {
-      //       if (s.model !== "Container" && s.model !== "Collection") {
-      //         if (s.size > 0) {
-      //           if (!stats[s.model]) {
-      //             stats[s.model] = {
-      //               cmodel: s.model,
-      //               total: 0,
-      //             };
-      //           }
-      //           if (!stats["total"][s.upload_date]) {
-      //             stats["total"][s.upload_date] = 0;
-      //           }
-      //           stats[s.model][s.upload_date] = (
-      //             s.size / Math.pow(1024, Math.floor(3))
-      //           ).toFixed(3);
-      //           stats[s.model].total += s.size;
-      //           stats["total"][s.upload_date] += s.size;
-      //           stats["total"].total += s.size;
-      //         }
-      //       }
-      //     }
-      //     for (let i = fromYear; i <= toYear; i++) {
-      //       stats.total[i] = (
-      //         stats.total[i] / Math.pow(1024, Math.floor(3))
-      //       ).toFixed(3);
-      //     }
-      //     for (let cmodel of Object.keys(stats)) {
-      //       stats[cmodel].total = (
-      //         stats[cmodel].total / Math.pow(1024, Math.floor(3))
-      //       ).toFixed(3);
-      //       this.cmodelStorageItems.push(stats[cmodel]);
-      //     }
-      //   }
-      // } catch (error) {
-      //   console.log(error);
-      //   this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
-      // } finally {
-      //   this.loading = false;
-      // }
     },
     tofixed(x) {
       return Number.parseFloat(x).toFixed(3);
