@@ -235,4 +235,4 @@ build-website-print-rsync:
     - chmod 644 ~/.ssh/known_hosts
     - docker run --rm -v ./:/docs squidfunk/mkdocs-material build
     - rsync -rvz --delete-after ./site/ "$SSH_RUNNER_USER_DOCS"@"$DOCS_SERVER":"$DESTINATION_DIR_TESTING"/
-    - ls -lha "$DESTINATION_DIR_TESTING"
+
