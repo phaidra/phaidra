@@ -233,4 +233,4 @@ build-website-print-rsync:
     - chmod 600 ~/.ssh/id_ed25519
     - chmod 644 ~/.ssh/id_ed25519.pub
     - chmod 644 ~/.ssh/known_hosts
-    - rsync --version
+    - ssh "$SSH_RUNNER_USER_DOCS"@"$DOCS_SERVER" pwd
