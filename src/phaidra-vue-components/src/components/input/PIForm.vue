@@ -653,20 +653,21 @@
           <v-col cols="12">
             <v-dialog v-if="templating || savetemplatebtn" v-model="templatedialog" width="500">
               <template v-slot:activator="{ on }">
-                <v-btn class="mr-3 float-left" v-on="on" dark raised :loading="loading" :disabled="loading" color="grey"><span v-t="'Save as template'"></span></v-btn>
+                <v-btn class="mr-3 float-left" v-on="on" dark raised :loading="loading" :disabled="loading" color="grey"><span v-t="'Save as new template'"></span></v-btn>
               </template>
               <v-card>
-                <v-card-title class="title font-weight-light grey lighten-2" primary-title><span v-t="'Save as template'"></span></v-card-title>
+                <v-card-title class="title font-weight-light grey lighten-2" primary-title><span v-t="'Save as new template'"></span></v-card-title>
                 <v-card-text>
                   <v-text-field class="mt-4" hide-details filled single-line v-model="templatename" :label="$t('Template name')" ></v-text-field>
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn :loading="loading" :disabled="loading" color="grey" dark @click="templatedialog= false"><span v-t="'Cancel'"></span></v-btn>
-                  <v-btn :loading="loading" :disabled="loading" color="primary" @click="saveAsTemplate()"><span v-t="'Save'"></span></v-btn>
+                  <v-btn :loading="loading" :disabled="loading" color="primary" @click="saveAsNewTemplate()"><span v-t="'Save'"></span></v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
+            <v-btn v-if="templating" class="mr-3 float-left" v-on="on" dark raised :loading="loading" :disabled="loading" color="grey" @click="saveTemplate()"><span v-t="'Save template'"></span></v-btn>
             <v-spacer></v-spacer>
             <template v-if="!disablesave">
               <v-btn fixed bottom right v-if="targetpid && floatingsavebutton" raised :loading="loading" :disabled="loading" color="primary" @click="save()"><span v-t="'Save'"></span></v-btn>
@@ -1154,7 +1155,7 @@ export default {
       this.$emit('load-form', form)
       this.activetab = 0
     },
-    saveAsTemplate: async function () {
+    saveAsNewTemplate: async function () {
       var httpFormData = new FormData()
       this.loading = true
       httpFormData.append('name', this.templatename)
@@ -1171,6 +1172,33 @@ export default {
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
           this.$store.commit('setAlerts', response.data.alerts)
+        }
+      } catch (error) {
+        console.log(error)
+        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+      } finally {
+        this.loading = false
+        this.templatedialog = false
+      }
+    },
+    saveTemplate: async function () {
+      var httpFormData = new FormData()
+      this.loading = true
+      httpFormData.append('form', JSON.stringify(this.form))
+      try {
+        let response = await this.$axios.request({
+          method: 'POST',
+          url: '/jsonld/template/' + this.$route.params.templateid + '/edit',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-XSRF-TOKEN': this.$store.state.user.token
+          },
+          data: httpFormData
+        })
+        if (response.data.alerts && response.data.alerts.length > 0) {
+          this.$store.commit('setAlerts', response.data.alerts)
+        } else {
+          this.$store.commit('setAlerts', [{ type: 'success', msg: this.$t('Template saved') }])
         }
       } catch (error) {
         console.log(error)

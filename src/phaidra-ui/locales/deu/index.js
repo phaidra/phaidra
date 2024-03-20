@@ -853,7 +853,7 @@ export default {
   'Metadata preview': 'Metadatenansicht',
   Remove: 'Entfernen',
   Duplicate: 'Duplizieren',
-  'Save as template': 'Als Vorlage speichern',
+  'Save as new template': 'Als neue Vorlage speichern',
   'File to upload': 'Datei zum Hochladen',
   'File to upload *': 'Datei zum Hochladen *',
   'File type': 'Dateityp',
@@ -1202,5 +1202,6 @@ export default {
   'Other links': 'Weitere links',
   'Only latest versions': 'Nur letzte Versionen',
   'Thema Subject Codes': 'Thema Klassifizierung',
-  'Members': 'Mitglieder'
+  'Members': 'Mitglieder',
+  'Template saved': 'Vorlage gespeichert'
 }
