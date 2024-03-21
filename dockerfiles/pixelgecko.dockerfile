@@ -1,4 +1,4 @@
-FROM ubuntu:jammy-20231211.1
+FROM ubuntu:jammy-20240227
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN <<EOF
