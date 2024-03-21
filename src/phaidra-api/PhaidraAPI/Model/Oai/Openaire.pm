@@ -1021,7 +1021,18 @@ sub get_metadata_openaire {
   # File Location (MA)
   # oaire:file
   my $mime;
-  unless ($allRightReserved || $rec->{isrestricted}) {
+  my $restricted = 0;
+  if (exists($rec->{datastreams})) {
+    for my $ds (@{$rec->{datastreams}}) {
+      if ($ds eq 'POLICY') {
+        $restricted = 1;
+      }
+    }
+  }
+  if ($rec->{isrestricted}) {
+    $restricted = 1;
+  }
+  unless ($allRightReserved || $restricted) {
     my @attrs;
     if ($rightsURI) {
       push @attrs,
