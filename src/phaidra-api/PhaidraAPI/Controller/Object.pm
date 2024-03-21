@@ -113,6 +113,83 @@ sub setNoCacheHeaders {
   $self->res->headers->add('Expires'          => 0);
 }
 
+sub _proxy_thumbnail {
+  my $self = shift;
+  my $pid  = shift;
+  my $cmodel = shift;
+  my $size = shift;
+
+  if ($self->imageserver_job_status($pid) eq 'finished') {
+
+    # use imageserver
+    my $isrv_model = PhaidraAPI::Model::Imageserver->new;
+    my $res        = $isrv_model->get_url($self, Mojo::Parameters->new(IIIF => "$pid.tif/full/$size/0/default.jpg"), 0);
+    if ($res->{status} ne 200) {
+      $self->render(json => $res, status => $res->{status});
+      return;
+    }
+    if (Mojo::IOLoop->is_running) {
+      $self->render_later;
+      $self->ua->get(
+        $res->{url},
+        sub {
+          my ($c, $tx) = @_;
+          _proxy_tx($self, $tx);
+        }
+      );
+    }
+    else {
+      my $tx = $self->ua->get($res->{url});
+      _proxy_tx($self, $tx);
+    }
+
+    # $self->render_later;
+    # $self->ua->get($res->{url} => sub {my ($ua, $tx) = @_; $self->tx->res($tx->res); $self->rendered;});
+    return;
+  }
+  else {
+    switch ($cmodel) {
+      case 'Picture' {
+        $self->reply->static('images/image.png');
+        return;
+      }
+      case 'Page' {
+        $self->reply->static('images/document.png');
+        return;
+      }
+      case 'PDFDocument' {
+        $self->reply->static('images/document.png');
+        return;
+      }
+      case 'Audio' {
+      $self->reply->static('images/audio.png');
+      return;
+      }
+      case 'Container' {
+        $self->reply->static('images/container.png');
+        return;
+      }
+      case 'Collection' {
+        $self->reply->static('images/collection.png');
+        return;
+      }
+      case 'Resource' {
+        $self->reply->static('images/resource.png');
+        return;
+      }
+      case 'Asset' {
+        $self->reply->static('images/asset.png');
+        return;
+      }
+      case 'Book' {
+        $self->reply->static('images/book.png');
+        return;
+      }
+    }
+  }
+
+}
+
 sub thumbnail {
   my $self = shift;
 
@@ -128,6 +205,7 @@ sub thumbnail {
     $w = 120;
     $h = '';
   }
+  my $size = "!$w,$h";
 
   my $thumbPid = $self->get_is_thumbnail_for($pid);
   if ($thumbPid) {
@@ -153,51 +231,8 @@ sub thumbnail {
 
   switch ($cmodelr->{cmodel}) {
     case ['Picture', 'Page', 'PDFDocument'] {
-      if ($self->imageserver_job_status($pid) eq 'finished') {
 
-        # use imageserver
-        my $size       = "!$w,$h";
-        my $isrv_model = PhaidraAPI::Model::Imageserver->new;
-        my $res        = $isrv_model->get_url($self, Mojo::Parameters->new(IIIF => "$pid.tif/full/$size/0/default.jpg"), 0);
-        if ($res->{status} ne 200) {
-          $self->render(json => $res, status => $res->{status});
-          return;
-        }
-        if (Mojo::IOLoop->is_running) {
-          $self->render_later;
-          $self->ua->get(
-            $res->{url},
-            sub {
-              my ($c, $tx) = @_;
-              _proxy_tx($self, $tx);
-            }
-          );
-        }
-        else {
-          my $tx = $self->ua->get($res->{url});
-          _proxy_tx($self, $tx);
-        }
-
-        # $self->render_later;
-        # $self->ua->get($res->{url} => sub {my ($ua, $tx) = @_; $self->tx->res($tx->res); $self->rendered;});
-        return;
-      }
-      else {
-        switch ($cmodelr->{cmodel}) {
-          case 'Picture' {
-            $self->reply->static('images/image.png');
-            return;
-          }
-          case 'Page' {
-            $self->reply->static('images/document.png');
-            return;
-          }
-          case 'PDFDocument' {
-            $self->reply->static('images/document.png');
-            return;
-          }
-        }
-      }
+      return $self->_proxy_thumbnail($pid, $cmodelr->{cmodel}, $size);
     }
     case 'Book' {
       my $index_model = PhaidraAPI::Model::Index->new;
@@ -213,22 +248,7 @@ sub thumbnail {
         $firstpage = $docres->{doc}->{firstpage};
       }
       if ($firstpage) {
-        if ($self->imageserver_job_status($firstpage) eq 'finished') {
-          my $size       = "!$w,$h";
-          my $isrv_model = PhaidraAPI::Model::Imageserver->new;
-          my $res        = $isrv_model->get_url($self, Mojo::Parameters->new(IIIF => "$firstpage.tif/full/$size/0/default.jpg"), 0);
-          if ($res->{status} ne 200) {
-            $self->render(json => $res, status => $res->{status});
-            return;
-          }
-          $self->render_later;
-          $self->ua->get($res->{url} => sub {my ($ua, $tx) = @_; $self->tx->res($tx->res); $self->rendered;});
-          return;
-        }
-        else {
-          $self->reply->static('images/book.png');
-          return;
-        }
+        return $self->_proxy_thumbnail($firstpage, $cmodelr->{cmodel}, $size);
       }
       else {
         $self->reply->static('images/book.png');
@@ -272,8 +292,13 @@ sub thumbnail {
       return;
     }
     case 'Collection' {
-      $self->reply->static('images/collection.png');
-      return;
+      my $col_model = PhaidraAPI::Model::Collection->new;
+      my $r       = $col_model->get_oldest_member($self, $pid);
+      if ($res->{status} ne 200) {
+        $self->render(json => $res, status => $res->{status});
+        return;
+      }
+      return $self->_proxy_thumbnail($r->{oldest_member}, $cmodelr->{cmodel}, $size);
     }
     case 'Resource' {
       $self->reply->static('images/resource.png');
@@ -575,7 +600,7 @@ sub preview {
             }  
           
         $self->stash(website_url =>$website_url);
-$self->stash(baseurl  => $self->config->{baseurl});
+        $self->stash(baseurl  => $self->config->{baseurl});
         $self->stash(scheme   => $self->config->{scheme});
         $self->stash(basepath => $self->config->{basepath});
         $self->stash(baseurl       => $self->config->{baseurl});

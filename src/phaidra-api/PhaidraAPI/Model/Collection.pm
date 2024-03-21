@@ -257,5 +257,61 @@ sub get_members {
 
 }
 
+
+sub get_oldest_member {
+
+  my $self    = shift;
+  my $c       = shift;
+  my $pid     = shift;
+  my $nocache = shift;
+
+  my $res = {members => [], alerts => [], status => 200};
+
+  my $cachekey = "oldest_mem_$pid";
+  my $oldest_member;
+  $oldest_member = $c->app->chi->get($cachekey);
+
+  $nocache = $nocache ? $nocache : 0;
+  if ($oldest_member && ($nocache != 1)) {
+    # $c->app->log->debug("[cache hit] $cachekey");
+  }
+  else {
+    # $c->app->log->debug("[cache miss] $cachekey");
+  
+    my $urlget = Mojo::URL->new;
+    $urlget->scheme($c->app->config->{solr}->{scheme});
+    $urlget->host($c->app->config->{solr}->{host});
+    $urlget->port($c->app->config->{solr}->{port});
+    if ($c->app->config->{solr}->{path}) {
+      $urlget->path("/" . $c->app->config->{solr}->{path} . "/solr/" . $c->app->config->{solr}->{core} . "/select");
+    }
+    else {
+      $urlget->path("/solr/" . $c->app->config->{solr}->{core} . "/select");
+    }
+
+    my $root;
+    $urlget->query(q => "*:*", fq => "ispartof:\"$pid\"", sort => 'created asc', fl => 'pid', rows => "1", wt => "json");
+    my $getres = $c->ua->get($urlget)->result;
+    if ($getres->is_success) {
+      for my $d (@{$getres->json->{response}->{docs}}) {
+        $oldest_member = $d->{pid};
+        last;
+      }
+    }
+    else {
+      my $err = "[$pid] error getting doc from solr: " . $getres->code . " " . $getres->message;
+      $self->app->log->error($err);
+      unshift @{$res->{alerts}}, {type => 'error', msg => $err};
+      $res->{status} = $getres->code ? $getres->code : 500;
+      return $res;
+    }
+
+    $c->app->chi->set($cachekey, $oldest_member, '1 week');
+  }
+
+  $res->{oldest_member} = $oldest_member;
+  return $res;
+}
+
 1;
 __END__

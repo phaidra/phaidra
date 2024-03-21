@@ -104,7 +104,7 @@ sub getObjectProperties {
   }
 
   my $props = $propres->{props};
-  # $c->app->log->debug("XXXXXXXXXXXXXXX props:\n" . $c->app->dumper($props));
+
   # cmodel
   my $cmodel = $self->getFirstJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#hasModel');
 
@@ -341,8 +341,6 @@ sub getDatastream {
 
   if ($getres->is_success) {
     $res->{$dsid} = $getres->body;
-
-    # $c->app->log->debug("getDatastream\n" . $c->app->dumper($res->{$dsid}));
   }
   else {
     unshift @{$res->{alerts}}, {type => 'error', msg => $getres->message};

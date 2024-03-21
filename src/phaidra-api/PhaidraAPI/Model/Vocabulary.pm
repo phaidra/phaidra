@@ -19,6 +19,10 @@ sub get_vocabulary {
     return $self->_get_thema_vocabulary($c, $nocache);
   }
 
+  if ($uri eq 'bic') {
+    return $self->_get_bic_vocabulary($c, $nocache);
+  }
+
   my %vocab_router = ('http://id.loc.gov/vocabulary/iso639-2' => 'file://' . $c->app->config->{vocabulary_folder} . '/iso639-2.json');
 
   my $url = $vocab_router{$uri} || $uri;
@@ -98,6 +102,103 @@ sub _get_file_vocabulary {
 sub _get_server_vocabulary {
 
   # TODO! - sparql to provided url
+}
+
+
+sub _get_bic_vocabulary {
+  my ($self, $c, $nocache) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  if ($nocache) {
+    $c->app->log->debug("Reading bic (nocache request)");
+
+    my $json = $self->_get_bic_vocabulary_hash($c);
+
+    $res->{vocabulary} = $json;
+
+  }
+  else {
+
+    $c->app->log->debug("Reading bic (cache request)");
+
+    my $cachekey = 'bic_vocab';
+    my $cacheval = $c->app->chi->get($cachekey);
+
+    my $miss = 1;
+    if ($cacheval) {
+      $miss = 0;
+
+      #$c->app->log->debug("[cache hit] $cachekey");
+    }
+
+    if ($miss) {
+      $c->app->log->debug("[cache miss] $cachekey");
+
+      $cacheval = $self->_get_bic_vocabulary_hash($c);
+
+      $c->app->chi->set($cachekey, $cacheval, '1 day');
+      $cacheval = $c->app->chi->get($cachekey);
+
+      #$c->app->log->debug($c->app->dumper($cacheval));
+    }
+    $res->{vocabulary} = $cacheval;
+  }
+
+  return $res;
+}
+
+
+sub _get_bic_vocabulary_hash {
+  my ($self, $c) = @_;
+
+  my $json;
+  my $termsHash = {};
+
+  my $csvEn = $c->app->config->{vocabulary_folder} . '/101201-BIC2.1-Subj-only.csv';
+  open my $data_1, '<:encoding(UTF-8)', $csvEn or $c->app->log->error("Can't open '" . $csvEn . "' for reading: $!");
+  <$data_1>; # ignore csv header to reduce log warnings
+  while (my $line = <$data_1>) {
+    chomp $line;
+    my @fields = split ',', $line;
+    for my $field (@fields) {
+      $field =~ s/^"//;
+      $field =~ s/"$//;
+      $field =~ s/^\s+|\s+$//g;
+    }
+
+    my $code  = $fields[0];
+    my $heading = $fields[1];
+    my $level = length($code);
+
+    # $c->app->log->debug("level[$level] code[$code] title[$heading]");
+
+    if ($level == 1) {
+      push @$json, $self->_get_eng_term($c, $termsHash, 'bic', $code, $heading);
+    }
+    if ($level == 2) {
+      my $parent = substr($code, 0, 1);
+      push @{$termsHash->{$parent}->{children}}, $self->_get_eng_term($c, $termsHash, 'bic', $code, $heading);
+    }
+    if ($level == 3) {
+      my $parent = substr($code, 0, 2);
+      push @{$termsHash->{$parent}->{children}}, $self->_get_eng_term($c, $termsHash, 'bic', $code, $heading);
+    }
+    if ($level == 4) {
+      my $parent = substr($code, 0, 3);
+      push @{$termsHash->{$parent}->{children}}, $self->_get_eng_term($c, $termsHash, 'bic', $code, $heading);
+    }
+    if ($level == 5) {
+      my $parent = substr($code, 0, 4);
+      push @{$termsHash->{$parent}->{children}}, $self->_get_eng_term($c, $termsHash, 'bic', $code, $heading);
+    }
+    if ($level == 6) {
+      my $parent = substr($code, 0, 5);
+      push @{$termsHash->{$parent}->{children}}, $self->_get_eng_term($c, $termsHash, 'bic', $code, $heading);
+    }
+  }
+
+  return $json;
 }
 
 sub _get_thema_vocabulary {
