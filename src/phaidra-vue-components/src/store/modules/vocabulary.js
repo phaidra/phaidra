@@ -1127,6 +1127,67 @@ const vocabularies = {
     ],
     loaded: true
   },
+  'oerlicenses': {
+    terms: [
+      {
+        '@id': 'http://creativecommons.org/licenses/by/4.0/',
+        'skos:notation': [
+          '16'
+        ],
+        'skos:prefLabel': {
+          'eng': 'CC BY 4.0 International'
+        },
+        'img': 'cc-by.png',
+        'skos:definition': {
+          'eng': 'Attribution 4.0 International (CC BY 4.0)\n<br />\n<br />If you license your content under the terms of this license, you allow every licensee to copy and to redistribute the material in any medium or format, to remix, to transform, and build upon the material for any purpose, even commercially.\n<br />\n<br />You cannot revoke these freedoms as long as the licensee follows the license terms.\n<br />\n<br />The licensee must give appropriate credit, provide a link to the license, and indicate if changes were made. The licensee may do so in any reasonable manner, but not in any way that suggests the licensor endorses the licensee or his use.\n<br />\n<br />The licensee may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.<br/><br/>This is a human-readable summary of (and not a substitute for) the licence.<br/>The legal binding text of the licence is available here:<br/><a target="_blank" href="http://creativecommons.org/licenses/by/4.0/legalcode">Long version</a>',
+          'deu': 'Namensnennung 4.0 International\n<br />\n<br />Wenn Sie Ihren Schutzgegenstand unter den Bedingungen dieser Lizenz anbieten, gestatten Sie jedem Lizenznehmer, Ihren Schutzgegenstand in jedwedem Format oder Medium zu vervielfältigen und weiterzuverbreiten. Der Lizenznehmer darf ihren Schutzgegenstand remixen, verändern und darauf aufbauen und zwar für beliebige Zwecke, sogar kommerziell.\n<br />\n<br />Die hier eingeräumten Freiheiten dürfen nicht widerrufen werden, solange sich der Lizenznehmer an die Lizenzbedingungen hält.\n<br />\n<br />Der Lizenznehmer muss angemessene Urheber- und Rechteangaben machen, einen Link zur Lizenz beifügen und angeben, ob Änderungen vorgenommen wurden. Diese Angaben dürfen in jeder angemessenen Art und Weise gemacht werden, allerdings nicht so, dass der Eindruck entsteht, der Lizenzgeber unterstütze gerade den Lizenznehmer oder seine Nutzung besonders.\n<br />\n<br />Der Lizenznehmer darf keine zusätzlichen Klauseln oder technische Verfahren einsetzen, die anderen rechtlich irgendetwas untersagen, was die Lizenz erlaubt.<br/><br/>Dieser Text ist nicht der Text des Lizenzvertrages sondern nur eine unverbindliche Kurzfassung dessen.<br/>Die verbindliche Fassung der ausgewählten Lizenz finden Sie hier:<br/><a target="_blank" href="http://creativecommons.org/licenses/by/4.0/legalcode">Langversion</a>'
+        }
+      },
+      {
+        '@id': 'http://creativecommons.org/licenses/by-sa/4.0/',
+        'skos:notation': [
+          '21'
+        ],
+        'skos:prefLabel': {
+          'eng': 'CC BY-SA 4.0 International'
+        },
+        'img': 'cc-by-sa.png',
+        'skos:definition': {
+          'eng': 'Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)\n<br />\n<br />If you license your content under the terms of this license, you allow every licensee to copy and to redistribute the material in any medium or format, to remix, to transform, and build upon the material for any purpose, even commercially.\n<br />\n<br />You cannot revoke these freedoms as long as the licensee follows the license terms.\n<br />\n<br />The licensee must give appropriate credit, provide a link to the license, and indicate if changes were made. The licensee may do so in any reasonable manner, but not in any way that suggests the licensor endorses the licensee or his use.\n<br />\n<br />If the the licensee remixes, transforms, or builds upon the material, he must distribute your contributions under the same license as the original.\n<br />\n<br />The licensee may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.<br/><br/>This is a human-readable summary of (and not a substitute for) the licence.<br/>The legal binding text of the licence is available here:<br/><a target="_blank" href="http://creativecommons.org/licenses/by-sa/4.0/legalcode">Long version</a>',
+          'deu': 'Namensnennung - Weitergabe unter gleichen Bedingungen 4.0 International (CC BY-SA 4.0)\n<br />\n<br />Wenn Sie Ihren Schutzgegenstand unter den Bedingungen dieser Lizenz anbieten, gestatten Sie jedem Lizenznehmer, Ihren Schutzgegenstand in jedwedem Format oder Medium zu vervielfältigen und weiterzuverbreiten. Der Lizenznehmer darf ihren Schutzgegenstand remixen, verändern und darauf aufbauen und zwar für beliebige Zwecke, sogar kommerziell.\n<br />\n<br />Die hier eingeräumten Freiheiten dürfen nicht widerrufen werden, solange sich der Lizenznehmer an die Lizenzbedingungen hält.\n<br />\n<br />Der Lizenznehmer muss angemessene Urheber- und Rechteangaben machen, einen Link zur Lizenz beifügen und angeben, ob Änderungen vorgenommen wurden. Diese Angaben dürfen in jeder angemessenen Art und Weise gemacht werden, allerdings nicht so, dass der Eindruck entsteht, der Lizenzgeber unterstütze gerade den Lizenznehmer oder seine Nutzung besonders.\n<br />\n<br />Wenn der Lizenznehmer Ihren Schutzgegenstand remixt, verändert oder darauf anderweitig direkt aufbaut, darf Ihre Beiträge nur unter derselben Lizenz wie das Original verbreiten.\n<br />\n<br />Der Lizenznehmer darf keine zusätzlichen Klauseln oder technische Verfahren einsetzen, die anderen rechtlich irgendetwas untersagen, was die Lizenz erlaubt.<br/><br/>Dieser Text ist nicht der Text des Lizenzvertrages sondern nur eine unverbindliche Kurzfassung dessen.<br/>Die verbindliche Fassung der ausgewählten Lizenz finden Sie hier:<br/><a target="_blank" href="http://creativecommons.org/licenses/by-sa/4.0/legalcode">Langversion</a>'
+        }
+      },
+      {
+        '@id': 'http://creativecommons.org/licenses/by-nc/4.0/',
+        'skos:notation': [
+          '17'
+        ],
+        'skos:prefLabel': {
+          'eng': 'CC BY-NC 4.0 International'
+        },
+        'img': 'cc-by-nc.png',
+        'skos:definition': {
+          'eng': 'Attribution-NonCommercial 4.0 International (CC BY-NC 4.0 AT)\n<br />\n<br />If you license your content under the terms of this license, you allow every licensee to copy and to redistribute the material in any medium or format, to remix, to transform, and build upon the material.\n<br />\n<br />You cannot revoke these freedoms as long as the licensee follows the license terms.\n<br />\n<br />The licensee must give appropriate credit, provide a link to the license, and indicate if changes were made. The licensee may do so in any reasonable manner, but not in any way that suggests the licensor endorses the licensee or his use.\n<br />\n<br />The licensee may not use the material for commercial purposes.\n<br />\n<br />The licensee may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.<br/><br/>This is a human-readable summary of (and not a substitute for) the licence.<br/>The legal binding text of the licence is available here:<br/><a target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">Long version</a>',
+          'deu': 'Namensnennung - Nicht-kommerziell 4.0 International\n<br />\n<br />Wenn Sie Ihren Schutzgegenstand unter den Bedingungen dieser Lizenz anbieten, gestatten Sie jedem Lizenznehmer, Ihren Schutzgegenstand in jedwedem Format oder Medium zu vervielfältigen und weiterzuverbreiten. Der Lizenznehmer darf ihren Schutzgegenstand remixen, verändern und darauf aufbauen.\n<br />\n<br />Die hier eingeräumten Freiheiten dürfen nicht widerrufen werden, solange sich der Lizenznehmer an die Lizenzbedingungen hält.\n<br />\n<br />Der Lizenznehmer muss angemessene Urheber- und Rechteangaben machen, einen Link zur Lizenz beifügen und angeben, ob Änderungen vorgenommen wurden. Diese Angaben dürfen in jeder angemessenen Art und Weise gemacht werden, allerdings nicht so, dass der Eindruck entsteht, der Lizenzgeber unterstütze gerade den Lizenznehmer oder seine Nutzung besonders.\n<br />\n<br />Der Lizenznehmer darf Ihren Schutzgegenstand nicht für kommerzielle Zwecke nutzen.\n<br />\n<br />Der Lizenznehmer darf keine zusätzlichen Klauseln oder technische Verfahren einsetzen, die anderen rechtlich irgendetwas untersagen, was die Lizenz erlaubt.<br/><br/>Dieser Text ist nicht der Text des Lizenzvertrages sondern nur eine unverbindliche Kurzfassung dessen.<br/>Die verbindliche Fassung der ausgewählten Lizenz finden Sie hier:<br/><a target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">Langversion</a>'
+        }
+      },
+      {
+        '@id': 'http://creativecommons.org/licenses/by-nc-sa/4.0/',
+        'skos:notation': [
+          '19'
+        ],
+        'skos:prefLabel': {
+          'eng': 'CC BY-NC-SA 4.0 International'
+        },
+        'img': 'cc-by-nc-sa.png',
+        'skos:definition': {
+          'eng': 'Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)\n<br />\n<br />If you license your content under the terms of this license, you allow every licensee to copy and to redistribute the material in any medium or format, to remix, to transform, and build upon the material.\n<br />\n<br />You cannot revoke these freedoms as long as the licensee follows the license terms.\n<br />\n<br />The licensee must give appropriate credit, provide a link to the license, and indicate if changes were made. The licensee may do so in any reasonable manner, but not in any way that suggests the licensor endorses the licensee or his use.\n<br />\n<br />The licensee may not use the material for commercial purposes.\n<br />\n<br />If the licensee remixes, transforms, or builds upon the material, he must distribute your contributions under the same license as the original.\n<br />\n<br />The licensee may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.<br/><br/>This is a human-readable summary of (and not a substitute for) the licence.<br/>The legal binding text of the licence is available here:<br/><a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode">Long version</a>',
+          'deu': 'Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International (CC BY-NC-SA 4.0)\n<br />\n<br />Wenn Sie Ihren Schutzgegenstand unter den Bedingungen dieser Lizenz anbieten, gestatten Sie jedem Lizenznehmer, Ihren Schutzgegenstand in jedwedem Format oder Medium zu vervielfältigen und weiterzuverbreiten. Der Lizenznehmer darf ihren Schutzgegenstand remixen, verändern und darauf aufbauen.\n<br />\n<br />Die hier eingeräumten Freiheiten dürfen nicht widerrufen werden, solange sich der Lizenznehmer an die Lizenzbedingungen hält.\n<br />\n<br />Der Lizenznehmer muss angemessene Urheber- und Rechteangaben machen, einen Link zur Lizenz beifügen und angeben, ob Änderungen vorgenommen wurden. Diese Angaben dürfen in jeder angemessenen Art und Weise gemacht werden, allerdings nicht so, dass der Eindruck entsteht, der Lizenzgeber unterstütze gerade den Lizenznehmer oder seine Nutzung besonders.\n<br />\n<br />Der Lizenznehmer darf Ihren Schutzgegenstand nicht für kommerzielle Zwecke nutzen.\n<br />\n<br />Wenn der Lizenznehmer Ihren Schutzgegenstand remixt, verändert oder darauf anderweitig direkt aufbaut, darf Ihre Beiträge nur unter derselben Lizenz wie das Original verbreiten.\n<br />\n<br />Der Lizenznehmer darf keine zusätzlichen Klauseln oder technische Verfahren einsetzen, die anderen rechtlich irgendetwas untersagen, was die Lizenz erlaubt.<br/><br/>Dieser Text ist nicht der Text des Lizenzvertrages sondern nur eine unverbindliche Kurzfassung dessen.<br/>Die verbindliche Fassung der ausgewählten Lizenz finden Sie hier:<br/><a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode">Langversion</a>'
+        }
+      }
+    ],
+    loaded: true
+  },
   'uncefact': {
     terms: [
       { '@id': 'MTR', 'skos:prefLabel': { 'eng': 'm' } },

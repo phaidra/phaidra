@@ -51,7 +51,7 @@
                     <v-list-item :key="item.uri">
                       <template v-slot:default="{ active }">
                         <v-list-item-content>
-                          <v-list-item-title v-text="item.prefLabel.de"></v-list-item-title>
+                          <v-list-item-title v-text="item.prefLabel?.de"></v-list-item-title>
                           <v-list-item-subtitle v-for="(notation, idx) in item.notation" :key="'not'+idx" class="text--primary" v-text="notation"></v-list-item-subtitle>
                         </v-list-item-content>
                       </template>
@@ -171,13 +171,31 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    getTerm: async function (uri) {
+      try {
+        let response = await this.$axios.request({
+          method: 'GET',
+          url: this.$store.state.appconfig.apis.dante.resolve,
+          params: {
+            properties: 'notation,ancestors',
+            uri: uri
+          }
+        })
+        return response.data[0]
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.loading = false
+      }
     }
   },
-  mounted: function () {
+  mounted: async function () {
     if (this.initquery) {
-      this.items = [{ value: this.value, text: this.initquery }]
-      this.q = { value: this.value, text: this.initquery }
-      this.resolve(this.value)
+      //this.items = [{ value: this.value, text: this.initquery }]
+      //this.q = { value: this.value, text: this.initquery }
+      let term = await this.getTerm(this.value)
+      this.resolve(term)
     }
   }
 }
