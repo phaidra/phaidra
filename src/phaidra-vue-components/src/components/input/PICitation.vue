@@ -101,7 +101,7 @@
               dark
               v-if="yarmToken"
             >
-            YARM {{ $t('Logout') }}
+            {{ $t('Logout') }} (YARM)
             </v-btn></v-card-title>
         <v-card-text v-if="yarmToken">
           <v-text-field clearable :label="$t('Search...')" append-icon="mdi-magnify" v-model="searchInput"></v-text-field>
@@ -132,7 +132,7 @@
               dark
               v-on="on"
             >
-            YARM {{ $t('Login') }}
+            {{ $t('Login') }} (YARM)
             </v-btn>
           </div>
           <v-dialog
@@ -142,7 +142,7 @@
           >
             <v-card>
               <v-card-title>
-                <span class="text-h5">YARM {{ $t('Login') }}</span>
+                <span class="text-h5">{{ $t('Login') }} (YARM)</span>
               </v-card-title>
               <v-card-text>
                 <v-container>
