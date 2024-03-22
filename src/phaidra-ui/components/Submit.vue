@@ -5,7 +5,7 @@
         <v-btn
           large
           class="primary"
-          @click="onCreateNewObjectClick()"
+          @click="$router.push(localePath('/submit/upload'))"
         >
           <v-icon dark class="mr-4">mdi-plus-circle</v-icon> {{ $t("Create new object") }}
         </v-btn>
@@ -234,31 +234,12 @@ export default {
         this.localeLocation({ path: `/submit/custom/${templateid}` })
       );
       this.templateDialog = false;
-    },
-    getExistingSelectedDefaultTemplate: async function () {
-      let response = await this.$axios.get("/app_settings", {
-        headers: {
-          "X-XSRF-TOKEN": this.$store.state.user.token,
-        },
-      });
-      this.selectedTemplateId = response?.data?.settings?.defaultTemplateId
-    },
-    onCreateNewObjectClick: function () {
-      if(this.selectedTemplateId){
-        this.loadTemplate(this.selectedTemplateId)
-      } else {
-        this.$router.push(this.localeLocation({ path: '/submit/upload' }))
-      }
     }
   },
   data() {
     return {
-      templateDialog: false,
-      selectedTemplateId: null
+      templateDialog: false
     };
-  },
-  mounted() {
-    this.getExistingSelectedDefaultTemplate()
   },
 };
 </script>

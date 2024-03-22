@@ -1203,5 +1203,7 @@ export default {
   'Only latest versions': 'Nur letzte Versionen',
   'Thema Subject Codes': 'Thema Klassifizierung',
   'Members': 'Mitglieder',
-  'Template saved': 'Vorlage gespeichert'
+  'Template saved': 'Vorlage gespeichert',
+  'Select': 'Auswählen',
+  'Configure': 'Konfigurieren'
 }

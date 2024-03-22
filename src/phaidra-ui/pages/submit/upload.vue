@@ -222,176 +222,210 @@ export default {
       this.$router.push(this.localeLocation({ path: `/detail/${event}` }));
       this.$vuetify.goTo(0);
     },
-    createForm: function (self, index) {
-      this.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
+    createForm: async function (self, index) {
+      self.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
 
       self.validationError = false;
       self.fieldsMissing = [];
 
-      self.form = {
-        sections: [
-          {
-            title: null,
-            type: "digitalobject",
-            id: 1,
-            fields: [],
-          },
-          {
-            title: "Terminology services",
-            mode: "expansion",
-            addbutton: false,
-            disablemenu: true,
-            collapsed: true,
-            outlined: true,
-            id: 2,
-            fields: [],
-          },
-          {
-            title: "Coverage",
-            mode: "expansion",
-            addbutton: false,
-            disablemenu: true,
-            collapsed: true,
-            outlined: true,
-            id: 3,
-            fields: [],
-          },
-          {
-            title: "Project",
-            mode: "expansion",
-            addbutton: false,
-            disablemenu: true,
-            collapsed: true,
-            outlined: true,
-            id: 4,
-            fields: [],
-          },
-          {
-            title: "Represented object",
-            type: "phaidra:Subject",
-            mode: "expansion",
-            disablemenu: true,
-            collapsed: true,
-            outlined: true,
-            id: 5,
-            fields: [],
-          },
-          {
-            title: "Bibliographic metadata",
-            mode: "expansion",
-            addbutton: false,
-            disablemenu: true,
-            collapsed: true,
-            outlined: true,
-            id: 6,
-            fields: [],
-          },
-        ],
-      };
+      let settres = await self.$axios.get("/app_settings", {
+        headers: {
+          "X-XSRF-TOKEN": self.$store.state.user.token,
+        },
+      });
+      if (settres?.data?.settings?.defaultTemplateId) {
+        try {
+          let tmpres = await self.$axios.request({
+            method: 'GET',
+            url: '/jsonld/template/' + settres?.data?.settings?.defaultTemplateId,
+            headers: {
+              'X-XSRF-TOKEN': self.$store.state.user.token
+            }
+          })
+          if (tmpres.data.alerts && tmpres.data.alerts.length > 0) {
+            self.$store.commit('setAlerts', tmpres.data.alerts)
+          }
+          self.form = tmpres.data.template.form
+          // if (tmpres.data.template.hasOwnProperty('skipValidation')) {
+          //   self.skipValidation = tmpres.data.template.skipValidation
+          // }
+        } catch (error) {
+          console.log(error)
+          self.$store.commit('setAlerts', [{ type: 'error', msg: error }])
+        } finally {
+          self.loading = false
+        }
+      } else {
 
-      let defaultResourceType = "https://pid.phaidra.org/vocabulary/44TN-P1S0";
+        self.form = {
+          sections: [
+            {
+              title: null,
+              type: "digitalobject",
+              id: 1,
+              fields: [],
+            },
+            {
+              title: "Terminology services",
+              mode: "expansion",
+              addbutton: false,
+              disablemenu: true,
+              collapsed: true,
+              outlined: true,
+              id: 2,
+              fields: [],
+            },
+            {
+              title: "Coverage",
+              mode: "expansion",
+              addbutton: false,
+              disablemenu: true,
+              collapsed: true,
+              outlined: true,
+              id: 3,
+              fields: [],
+            },
+            {
+              title: "Project",
+              mode: "expansion",
+              addbutton: false,
+              disablemenu: true,
+              collapsed: true,
+              outlined: true,
+              id: 4,
+              fields: [],
+            },
+            {
+              title: "Represented object",
+              type: "phaidra:Subject",
+              mode: "expansion",
+              disablemenu: true,
+              collapsed: true,
+              outlined: true,
+              id: 5,
+              fields: [],
+            },
+            {
+              title: "Bibliographic metadata",
+              mode: "expansion",
+              addbutton: false,
+              disablemenu: true,
+              collapsed: true,
+              outlined: true,
+              id: 6,
+              fields: [],
+            },
+          ],
+        };
 
-      let rt = fields.getField("resource-type-buttongroup");
-      rt.vocabulary = "resourcetypenocontainer";
-      rt.value = defaultResourceType;
-      self.form.sections[0].fields.push(rt);
+        let defaultResourceType = "https://pid.phaidra.org/vocabulary/44TN-P1S0";
 
-      let file = fields.getField("file");
-      file.fileInputClass = "mb-2";
-      file.showMimetype = false;
-      file.backgroundColor = '#0063a620';
-      self.form.sections[0].fields.push(file);
+        let rt = fields.getField("resource-type-buttongroup");
+        rt.vocabulary = "resourcetypenocontainer";
+        rt.value = defaultResourceType;
+        self.form.sections[0].fields.push(rt);
 
-      let ot = fields.getField("object-type-checkboxes");
-      ot.resourceType = defaultResourceType;
-      ot.showLabel = true;
-      self.form.sections[0].fields.push(ot);
+        let file = fields.getField("file");
+        file.fileInputClass = "mb-2";
+        file.showMimetype = false;
+        file.backgroundColor = '#0063a620';
+        self.form.sections[0].fields.push(file);
 
-      let title = fields.getField("title")
-      title.multilingual = false
-      self.form.sections[0].fields.push(title);
+        let ot = fields.getField("object-type-checkboxes");
+        ot.resourceType = defaultResourceType;
+        ot.showLabel = true;
+        self.form.sections[0].fields.push(ot);
 
-      let description = fields.getField("description")
-      description.multilingual = false
-      self.form.sections[0].fields.push(description);
+        let title = fields.getField("title")
+        title.multilingual = false
+        self.form.sections[0].fields.push(title);
 
-      let lang = fields.getField("language");
-      lang.value = this.$i18n.locale;
-      lang.label = "Language of object";
-      self.form.sections[0].fields.push(lang);
+        let description = fields.getField("description")
+        description.multilingual = false
+        self.form.sections[0].fields.push(description);
 
-      let kw = fields.getField("keyword");
-      kw.multilingual = false;
-      kw.disableSuggest = true;
-      self.form.sections[0].fields.push(kw);
+        let lang = fields.getField("language");
+        lang.value = this.$i18n.locale;
+        lang.label = "Language of object";
+        self.form.sections[0].fields.push(lang);
 
-      let role = fields.getField("role");
-      role.ordergroup = "role";
-      role.roleVocabulary = "submitrolepredicate";
-      role.identifierType = "ids:orcid";
-      role.showIdentifier = true;
-      self.form.sections[0].fields.push(role);
+        let kw = fields.getField("keyword");
+        kw.multilingual = false;
+        kw.disableSuggest = true;
+        self.form.sections[0].fields.push(kw);
 
-      self.form.sections[0].fields.push(fields.getField("oefos-subject"));
-      self.form.sections[0].fields.push(fields.getField("association"));
+        let role = fields.getField("role");
+        role.ordergroup = "role";
+        role.roleVocabulary = "submitrolepredicate";
+        role.identifierType = "ids:orcid";
+        role.showIdentifier = true;
+        self.form.sections[0].fields.push(role);
 
-      let lic = fields.getField("license");
-      lic.showValueDefinition = true;
-      lic.vocabulary = "alllicenses";
-      self.form.sections[0].fields.push(lic);
+        self.form.sections[0].fields.push(fields.getField("oefos-subject"));
+        self.form.sections[0].fields.push(fields.getField("association"));
 
-      self.form.sections[1].fields.push(fields.getField("gnd-subject"));
-      self.form.sections[1].fields.push(fields.getField("bk-subject"));
+        let lic = fields.getField("license");
+        lic.showValueDefinition = true;
+        lic.vocabulary = "alllicenses";
+        self.form.sections[0].fields.push(lic);
 
-      let tempcov = fields.getField("temporal-coverage")
-      tempcov.multilingual = false;
-      self.form.sections[2].fields.push(tempcov);
-      let place = fields.getField("spatial-geonames");
-      place.showtype = false;
-      self.form.sections[2].fields.push(place);
+        self.form.sections[1].fields.push(fields.getField("gnd-subject"));
+        self.form.sections[1].fields.push(fields.getField("bk-subject"));
 
-      let proj = fields.getField("project")
-      proj.multilingual = false
-      self.form.sections[3].fields.push(proj);
+        let tempcov = fields.getField("temporal-coverage")
+        tempcov.multilingual = false;
+        self.form.sections[2].fields.push(tempcov);
+        let place = fields.getField("spatial-geonames");
+        place.showtype = false;
+        self.form.sections[2].fields.push(place);
 
-      self.form.sections[4].fields.push(fields.getField("date-edtf"));
-      let inscrip = fields.getField("inscription")
-      inscrip.multilingual = false
-      self.form.sections[4].fields.push(inscrip);
-      self.form.sections[4].fields.push(fields.getField("shelf-mark"));
-      self.form.sections[4].fields.push(fields.getField("accession-number"));
-      let prov = fields.getField("provenance")
-      prov.multilingual = false
-      self.form.sections[4].fields.push(prov);
-      self.form.sections[4].fields.push(fields.getField("production-company"));
-      self.form.sections[4].fields.push(fields.getField("production-place"));
-      let loc = fields.getField("physical-location")
-      loc.multilingual = false
-      self.form.sections[4].fields.push(loc);
-      let cond = fields.getField("condition-note")
-      cond.multilingual = false
-      self.form.sections[4].fields.push(cond);
-      self.form.sections[4].fields.push(fields.getField("height"));
-      self.form.sections[4].fields.push(fields.getField("width"));
-      let mat = fields.getField("material-text")
-      mat.multilingual = false
-      self.form.sections[4].fields.push(mat);
-      let tech = fields.getField("technique-text")
-      tech.multilingual = false
-      self.form.sections[4].fields.push(tech);
+        let proj = fields.getField("project")
+        proj.multilingual = false
+        self.form.sections[3].fields.push(proj);
 
-      self.form.sections[5].fields.push(fields.getField("alternate-identifier"))
-      let published = fields.getField("date-edtf")
-      published.type = 'dcterms:issued'
-      self.form.sections[5].fields.push(published)
-      self.form.sections[5].fields.push(fields.getField("volume"));
-      self.form.sections[5].fields.push(fields.getField("issue"));
-      self.form.sections[5].fields.push(fields.getField("series"));
-      let publ = fields.getField("bf-publication")
-      self.form.sections[5].fields.push(publ);
+        self.form.sections[4].fields.push(fields.getField("date-edtf"));
+        let inscrip = fields.getField("inscription")
+        inscrip.multilingual = false
+        self.form.sections[4].fields.push(inscrip);
+        self.form.sections[4].fields.push(fields.getField("shelf-mark"));
+        self.form.sections[4].fields.push(fields.getField("accession-number"));
+        let prov = fields.getField("provenance")
+        prov.multilingual = false
+        self.form.sections[4].fields.push(prov);
+        self.form.sections[4].fields.push(fields.getField("production-company"));
+        self.form.sections[4].fields.push(fields.getField("production-place"));
+        let loc = fields.getField("physical-location")
+        loc.multilingual = false
+        self.form.sections[4].fields.push(loc);
+        let cond = fields.getField("condition-note")
+        cond.multilingual = false
+        self.form.sections[4].fields.push(cond);
+        self.form.sections[4].fields.push(fields.getField("height"));
+        self.form.sections[4].fields.push(fields.getField("width"));
+        let mat = fields.getField("material-text")
+        mat.multilingual = false
+        self.form.sections[4].fields.push(mat);
+        let tech = fields.getField("technique-text")
+        tech.multilingual = false
+        self.form.sections[4].fields.push(tech);
+
+        self.form.sections[5].fields.push(fields.getField("alternate-identifier"))
+        let published = fields.getField("date-edtf")
+        published.type = 'dcterms:issued'
+        self.form.sections[5].fields.push(published)
+        self.form.sections[5].fields.push(fields.getField("volume"));
+        self.form.sections[5].fields.push(fields.getField("issue"));
+        self.form.sections[5].fields.push(fields.getField("series"));
+        let publ = fields.getField("bf-publication")
+        self.form.sections[5].fields.push(publ);
+
+        self.markMandatoryMethod()
+
+      }
 
       for (let s of self.form.sections) {
         for (let f of s.fields) {
+          f.configurable = false
           for (let prop of Object.keys(f)) {
             switch (prop) {
               case "language":
@@ -404,17 +438,16 @@ export default {
           }
         }
       }
-
-      self.markMandatoryMethod()
+      
     },
   },
-  beforeRouteEnter: function (to, from, next) {
-    next((vm) => {
-      vm.createForm(vm);
+  beforeRouteEnter: async function (to, from, next) {
+    next(async function (vm) {
+      await vm.createForm(vm);
     });
   },
-  beforeRouteUpdate: function (to, from, next) {
-    this.createForm(this);
+  beforeRouteUpdate: async function (to, from, next) {
+    await this.createForm(this);
     next();
   },
 };

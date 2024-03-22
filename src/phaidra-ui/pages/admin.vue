@@ -169,6 +169,7 @@ data() {
     jsonInput: "",
     parsedConfigData: {},
     loading: false,
+    activetab: null
   };
 },
 methods: {

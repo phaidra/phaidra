@@ -970,5 +970,7 @@ export default {
   'Restricted access': 'eingeschränkter Zugang',
   'LICENSE_DISCLAIMER': '<b>Haftungsausschluss</b><br/>Der Diensteanbieter (PHAIDRA, {institution}) und Creative Commons sind nicht Partei der hier auszuwählenden Lizenzverträge. Durch Ihr Angebot, Ihren Schutzgegenstand einer Creative Commons Lizenz zu unterstellen und die Annahme Ihres Angebots durch andere Nutzer kommt ein Vertragsverhältnis zwischen Ihnen und dem jeweiligen Nutzer zustande. Daran ist weder der Diensteanbieter noch Creative Commons beteiligt. Dem Diensteanbieter und Creative Commons erwachsen daraus keinerlei Rechte und Pflichten.<br/>Weder der Diensteanbieter ist eine Rechtsanwaltsgesellschaft noch Creative Commons. Sie leisten keine Rechtsberatung. Sie erbringen die hier stehenden Informationen ohne Gewähr und übernehmen keine Haftung für eventuelle Schäden, die sich aus ihrem Gebrauch ergeben.',
   'Thema Subject Codes': 'Thema Klassifizierung',
-  'Template saved': 'Vorlage gespeichert'
+  'Template saved': 'Vorlage gespeichert',
+  'Select': 'Auswählen',
+  'Configure': 'Konfigurieren'
 }

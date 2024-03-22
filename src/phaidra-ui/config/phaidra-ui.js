@@ -41,6 +41,9 @@ export default {
         search: 'https://api.dante.gbv.de/search',
         resolve: 'https://api.dante.gbv.de/data',
         limit: 50
+      },
+      yarm: {
+        baseurl: 'yarm.phaidra.org'
       }
     },
     monitor: {
