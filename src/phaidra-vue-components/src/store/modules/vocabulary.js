@@ -1815,6 +1815,11 @@ const mutations = {
       return a['skos:prefLabel'][locale] ? a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale) : 1
     })
   },
+  sortOERObjectTypes(state, locale) {
+    state.vocabularies['oerobjecttype']['terms'].sort(function (a, b) {
+      return a['skos:prefLabel'][locale] ? a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale) : 1
+    })
+  },
   setOefos(state, data) {
     if (state.vocabularies['oefos']['loaded'] === false) {
       state.vocabularies['oefos']['tree'] = data.tree
@@ -1926,6 +1931,7 @@ const actions = {
   },
   sortObjectTypes({ commit }, locale) {
     commit('sortObjectTypes', locale)
+    commit('sortOERObjectTypes', locale)
   },
   loadLanguages({ commit, state }, locale) {
     if (state.vocabularies['lang']['terms'].length < 1) {
