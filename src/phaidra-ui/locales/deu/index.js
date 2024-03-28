@@ -835,7 +835,6 @@ export default {
   'vra:hasInscription': 'Inschrift',
   'phaidra:systemTag': 'System tag',
   'bf:subtitle': 'Untertitel',
-  'phaidra:Remark': 'Notiz',
   'Condition note': 'Notiz zum Zustand',
   'Supplementary material': 'Ergänzendes Material',
   'Is motion picture adaptation of': 'Filmadaption von',
@@ -854,6 +853,7 @@ export default {
   Remove: 'Entfernen',
   Duplicate: 'Duplizieren',
   'Save as new template': 'Als neue Vorlage speichern',
+  'Save template': 'Vorlage speichern',
   'File to upload': 'Datei zum Hochladen',
   'File to upload *': 'Datei zum Hochladen *',
   'File type': 'Dateityp',
@@ -1205,5 +1205,6 @@ export default {
   'Members': 'Mitglieder',
   'Template saved': 'Vorlage gespeichert',
   'Select': 'Auswählen',
-  'Configure': 'Konfigurieren'
+  'Configure': 'Konfigurieren',
+  'Some required fields are not complete': 'Manche Pflichtfelder sind nicht vollständig'
 }

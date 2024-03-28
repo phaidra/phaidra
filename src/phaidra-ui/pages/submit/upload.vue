@@ -1,20 +1,5 @@
 <template>
   <v-container fluid>
-    <v-alert
-      :value="validationError"
-      dismissible
-      type="error"
-      transition="slide-y-transition"
-    >
-      <span>{{ $t("Please fill in the required fields") }}</span>
-      <template v-if="fieldsMissing.length > 0">
-        <br />
-        <span>{{ $t("Some required fields are missing") }}:</span>
-        <ul>
-          <li v-for="(f, i) in fieldsMissing" :key="'mfld' + i">{{ f }}</li>
-        </ul>
-      </template>
-    </v-alert>
     <v-row>
       <v-col cols="12">
         <p-i-form
@@ -32,7 +17,6 @@
           :feedback="true"
           :feedback-user="this.user"
           :feedback-context="'Upload'"
-          :validate="validationMethod"
           v-on:load-form="form = $event"
           v-on:object-created="objectCreated($event)"
           v-on:form-input-resource-type="handleInputResourceType($event)"
@@ -44,16 +28,15 @@
 </template>
 
 <script>
-import arrays from "phaidra-vue-components/src/utils/arrays";
-import fields from "phaidra-vue-components/src/utils/fields";
-import { context } from "../../mixins/context";
-import { config } from "../../mixins/config";
-import { formvalidation } from "../../mixins/formvalidation";
-import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
+import arrays from "phaidra-vue-components/src/utils/arrays"
+import fields from "phaidra-vue-components/src/utils/fields"
+import { context } from "../../mixins/context"
+import { config } from "../../mixins/config"
+import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
 
 export default {
   layout: "main",
-  mixins: [context, config, vocabulary, formvalidation],
+  mixins: [context, config, vocabulary],
   data() {
     return {
       form: { sections: [] },
@@ -61,18 +44,6 @@ export default {
     };
   },
   methods: {
-    validationMethod: function () {
-      if (this.instanceconfig.submit?.validationmethod) {
-        return this[this.instanceconfig.submit?.validationmethod]()
-      }
-      return this.validate()
-    },
-    markMandatoryMethod: function() {
-      if (this.instanceconfig.submit?.markmandatorymethod) {
-        return this[this.instanceconfig.submit?.markmandatorymethod]()
-      }
-      return this.markMandatory()
-    },
     addRemovedFieldsCol: function (rt) {
       let haslicense = false;
       for (let s of this.form.sections) {
@@ -85,6 +56,8 @@ export default {
       if (!haslicense) {
         let f = fields.getField("license")
         f.label = f.label + ' *'
+        f.showValueDefinition = true;
+        f.vocabulary = "alllicenses";
         this.form.sections[0].fields.push(f);
       }
       let hasfile = false;
@@ -96,7 +69,11 @@ export default {
         }
       }
       if (!hasfile) {
-        this.form.sections[0].fields.splice(1, 0, fields.getField("file"));
+        let file = fields.getField("file");
+        file.fileInputClass = "mb-2";
+        file.showMimetype = false;
+        file.backgroundColor = '#0063a620';
+        this.form.sections[0].fields.splice(1, 0, file);
       }
       let hasObjectType2 = false;
       for (let s of this.form.sections) {
@@ -118,19 +95,19 @@ export default {
           }
         }
         otf2.resourceType = rtv2;
+        otf2.showLabel = true;
         this.form.sections[0].fields.splice(2, 0, otf2);
       }
     },
     markOefosMandatory: function () {
-      if (this.instanceconfig.submit?.markmandatorymethod) {
-        if (this.instanceconfig.submit?.markmandatorymethod === 'markMandatoryNoOefosNoAssoc') {
-          return
-        }
-      }
-      for (const s of this.form.sections) {
-        for (const f of s.fields) {
-          if (f.component === 'p-subject-oefos') {
-            f.label = this.$t('Subject (ÖFOS)') + ' *'
+      if (this.instanceconfig.markmandatoryfnc) {
+        if (this.instanceconfig.markmandatoryfnc === 'markMandatoryWithOefosAndAssoc') {
+          for (const s of this.form.sections) {
+            for (const f of s.fields) {
+              if (f.component === 'p-subject-oefos') {
+                f.label = this.$t('Subject (ÖFOS)') + ' *'
+              }
+            }
           }
         }
       }
@@ -225,8 +202,10 @@ export default {
     createForm: async function (self, index) {
       self.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
 
+      // mixin
       self.validationError = false;
-      self.fieldsMissing = [];
+      self.mandatoryFieldsFound = {};
+      self.mandatoryFieldsFilled = {};
 
       let settres = await self.$axios.get("/app_settings", {
         headers: {
@@ -418,8 +397,6 @@ export default {
         self.form.sections[5].fields.push(fields.getField("series"));
         let publ = fields.getField("bf-publication")
         self.form.sections[5].fields.push(publ);
-
-        self.markMandatoryMethod()
 
       }
 

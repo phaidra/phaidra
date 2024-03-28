@@ -1,5 +1,28 @@
 <template>
   <v-container fluid v-if="form && form.sections" >
+    <v-alert
+      v-model="validationError"
+      dismissible
+      type="error"
+      transition="slide-y-transition"
+    >
+      <span>{{ $t("Please fill in the required fields") }}.</span>
+      <br />
+      <template v-if="fieldsAreMissing(mandatoryFieldsFound)">
+        <br />
+        <span>{{ $t("Some required fields are missing") }}:</span>
+        <ul>
+          <li v-for="field in mandatoryFieldsMissing" :key="'mfld' + field"><span>{{ $t(field) }}</span></li>
+        </ul>
+      </template>
+      <template v-if="fieldsNotValidated(mandatoryFieldsValidated)">
+        <br />
+        <span>{{ $t("Some required fields are not complete") }}:</span>
+        <ul>
+          <li v-for="field in mandatoryFieldsIncomplete" :key="'mfldf' + field"><span>{{ $t(field) }}</span></li>
+        </ul>
+      </template>
+    </v-alert>
     <v-tabs v-model="activetab" align-with-title>
       <v-tab class="title font-weight-light text-capitalize">{{ $t('Metadata') }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-tab>
       <v-tab v-if="debug" @click="metadatapreview = getMetadata()" class="title font-weight-light text-capitalize">{{ $t('JSON-LD') }}</v-tab>
@@ -749,6 +772,7 @@
 
 <script>
 import { vocabulary } from '../../mixins/vocabulary'
+import { formvalidation } from '../../mixins/formvalidation'
 import arrays from '../../utils/arrays'
 import jsonLd from '../../utils/json-ld'
 import fields from '../../utils/fields'
@@ -798,7 +822,7 @@ import PHelp from '../info/PHelp'
 
 export default {
   name: 'p-i-form',
-  mixins: [ vocabulary ],
+  mixins: [ vocabulary, formvalidation ],
   components: {
     PITextField,
     PITextFieldSuggest,
@@ -909,9 +933,8 @@ export default {
       type: Boolean,
       default: false
     },
-    validate: {
-      type: Function,
-      required: true
+    validationfnc: {
+      type: Function
     },
     help: {
       type: Boolean,
@@ -935,6 +958,10 @@ export default {
     form: {
       handler: function (val) {
         this.license = null
+        if (!this.initialized) {
+          this.initialize()
+          this.initialized = true
+        }
       },
       deep: true
     }
@@ -959,6 +986,9 @@ export default {
       } else {
         return this.$store.state.vocabulary.fields
       }
+    },
+    instanceconfig: function () {
+      return this.$root.$store.state.instanceconfig
     }
   },
   data () {
@@ -978,10 +1008,20 @@ export default {
       jsonld: {},
       showEditFieldPopup: false,
       selectedFieldForEdit: null,
-      fieldPropForm: []
+      fieldPropForm: [],
+      initonly: false
     }
   },
   methods: {
+    initialize: function () {
+      if (!this.$route.params.templateid) {
+        if (this.instanceconfig.markmandatoryfnc) {
+          this[this.instanceconfig.markmandatoryfnc]()
+        } else {
+          this.markMandatory()
+        }
+      }
+    },
     editFieldProps: function(fieldDet) {
       this.fieldPropForm = []
       this.selectedFieldForEdit = fieldDet
@@ -1155,11 +1195,25 @@ export default {
       this.$emit('load-form', form)
       this.activetab = 0
     },
+    prepareTemplateForSave: function (form) {
+      let clone = JSON.parse(JSON.stringify(form))
+      for (let s of clone.sections) {
+        for (let f of s.fields) {
+          if (f.predicate === 'ebucore:filename') {
+            f.value = null
+            f.file = null
+            f.mimetype = ''
+          }
+        }
+      }
+      return clone
+    },
     saveAsNewTemplate: async function () {
+      let template = this.prepareTemplateForSave(this.form)
       var httpFormData = new FormData()
       this.loading = true
       httpFormData.append('name', this.templatename)
-      httpFormData.append('form', JSON.stringify(this.form))
+      httpFormData.append('form', JSON.stringify(this.template))
       try {
         let response = await this.$axios.request({
           method: 'POST',
@@ -1182,9 +1236,10 @@ export default {
       }
     },
     saveTemplate: async function () {
+      let template = this.prepareTemplateForSave(this.form)
       var httpFormData = new FormData()
       this.loading = true
-      httpFormData.append('form', JSON.stringify(this.form))
+      httpFormData.append('form', JSON.stringify(template))
       try {
         let response = await this.$axios.request({
           method: 'POST',
@@ -1228,8 +1283,23 @@ export default {
           return 'unknown'
       }
     },
+    formIsValid: function () {
+      if (this.validationfnc instanceof Function) {
+        console.log('passed validationfnc')
+        return this.validationfnc()
+      } else {
+        if (this.instanceconfig.validationfnc) {
+          console.log('configured validation: ' + this.instanceconfig.validationfnc)
+          return this[this.instanceconfig.validationfnc]()
+        } else {
+          console.log('default validation')
+          return this.defaultValidation()
+        }
+      }
+    },
     submit: async function () {
-      if (!this.validate()) {
+      if (!this.formIsValid()) {
+        this.validationError = true
         return
       }
       this.loading = true
@@ -1309,7 +1379,8 @@ export default {
       }
     },
     save: async function () {
-      if (!this.validate()) {
+      if (!this.formIsValid()) {
+        this.validationError = true
         return
       }
       this.loading = true

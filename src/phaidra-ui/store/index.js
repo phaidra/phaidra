@@ -23,7 +23,7 @@ export const state = () => ({
 export const mutations = {
   setInstanceConfig(state, instanceconfig) {
     let configurable = [
-      'title', 'institution', 'institutionurl', 'address', 'phone', 'email', 'languages', 'owneremailoverride', 'enabledelete', 'markmandatorymethod', 'validationmethod'
+      'title', 'institution', 'institutionurl', 'address', 'phone', 'email', 'languages', 'owneremailoverride', 'enabledelete', 'markmandatoryfnc', 'validationfnc'
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {

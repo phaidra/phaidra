@@ -68,9 +68,7 @@ export default {
       email: 'support email',
       // only uncomment for wildcard purposes
       // cookiedomain: '<HOST_WITH_OR_WITHOUT_PORT>',
-      languages: 'eng,deu',
-      validationmethod: 'validateNoOefosNoAssoc',
-      markmandatorymethod: 'markMandatoryNoOefosNoAssoc'
+      languages: 'eng,deu'
     }
   }
 }

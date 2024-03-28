@@ -122,9 +122,9 @@ export default {
     }
   },
   mounted: function () {
-    this.$nextTick(function () {
+    this.$nextTick(async function () {
       if (!this.vocabularies['oefos'].loaded) {
-        this.$store.dispatch('vocabulary/loadOefos', this.$i18n.locale)
+        await this.$store.dispatch('vocabulary/loadOefos', this.$i18n.locale)
       }
       // emit input to set skos:prefLabel in parent
       if (this.value) {

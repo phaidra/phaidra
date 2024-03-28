@@ -114,29 +114,6 @@
           </span>
       </div>
     </v-row>
-    <v-divider class="my-2"></v-divider>
-    <v-row class="my-6" justify="start">
-      <div class="d-flex flex-row ml-6">
-        <v-btn
-          large
-          dark
-          color="grey white--text"
-          @click="$router.push(localePath({ path: '/submit/empty' }))"
-        >
-          <v-icon dark class="mr-4">mdi-script-outline</v-icon>
-          {{ $t("Create new template") }}
-        </v-btn>
-      </div>
-      <div class="d-flex flex-row pt-3 ml-6">
-        <span>
-            {{
-              $t(
-                "Compose your own upload form."
-              )
-            }}
-          </span>
-      </div>
-    </v-row>
     <template v-if="false">
       <v-row class="my-6" justify="start">
         <v-col cols="12">
@@ -165,48 +142,6 @@
             "
           >
             {{ $t("Collection") }}
-          </v-btn>
-        </v-col>
-      </v-row>
-    </template>
-    <template
-      v-if="
-        this.user.username === 'ethnograpp95' ||
-        this.user.username === 'ethnograps52' ||
-        this.user.username === 'bib-phaidra' || this.user.username === 'hudakr4'
-      "
-    >
-      <v-row class="my-6" justify="start">
-        <v-col cols="12">
-          <span class="title font-weight-light primary--text">{{
-            $t("Extra")
-          }}</span>
-          <v-divider></v-divider>
-        </v-col>
-      </v-row>
-      <v-row class="my-6" justify="start">
-        <v-col cols="12">
-          <v-btn
-            v-if="
-              this.user.username === 'ethnograpp95' ||
-              this.user.username === 'ethnograps52' || this.user.username === 'hudakr4'
-            "
-            large
-            dark
-            color="grey white--text mr-8"
-            @click="$router.push(localePath('/submit/ksa-eda'))"
-          >
-            <v-icon dark class="mr-4">mdi-file-star</v-icon> {{ $t("EDA") }}
-          </v-btn>
-          <v-btn
-            v-if="this.user.username === 'bib-phaidra'"
-            large
-            dark
-            color="grey white--text mr-8"
-            @click="$router.push(localePath('/submit/bruckneruni'))"
-          >
-            <v-icon dark class="mr-4">mdi-file-star</v-icon>
-            {{ $t("Bruckneruni") }}
           </v-btn>
         </v-col>
       </v-row>

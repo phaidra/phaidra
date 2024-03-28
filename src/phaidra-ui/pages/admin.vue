@@ -136,7 +136,7 @@
             <v-col>
               <v-text-field
                 label="Validation method"
-                v-model="parsedConfigData.validationmethod"
+                v-model="parsedConfigData.validationfnc"
               ></v-text-field>
             </v-col>
             <v-col cols="6" class="mt-4">{{ $t("Which method shold be used to validate metadata forms") }}</v-col>
@@ -145,7 +145,7 @@
             <v-col>
               <v-text-field
                 label="Mark mandatory method"
-                v-model="parsedConfigData.markmandatorymethod"
+                v-model="parsedConfigData.markmandatoryfnc"
               ></v-text-field>
             </v-col>
             <v-col cols="6" class="mt-4">{{ $t("Which method shold be used to makr fields as mandatory in submit form") }}</v-col>
