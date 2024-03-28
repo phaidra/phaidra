@@ -7,7 +7,7 @@
         },
         {
             "description": "PHAIDRA Sandbox",
-            "url": "https://services.phaidra-sandbox.univie.ac.at/api/"
+            "url": "https://sandbox.phaidra.org/api/"
         }
     ],
     "info": {
@@ -13413,7 +13413,7 @@
                         ]
                     },
                     "type": "Manifest",
-                    "id": "https://services.phaidra-sandbox.univie.ac.at/api/object/o:***/iiifmanifest",
+                    "id": "https://sandbox.phaidra.org/api/object/o:***/iiifmanifest",
                     "requiredStatement": {
                         "value": {
                             "none": [
@@ -13429,7 +13429,7 @@
                     "items": [
                         {
                             "width": 2100,
-                            "id": "https://services.phaidra-sandbox.univie.ac.at/api/iiif/o:***/canvas/1",
+                            "id": "https://sandbox.phaidra.org/api/iiif/o:***/canvas/1",
                             "type": "Canvas",
                             "label": {
                                 "none": [
@@ -13439,7 +13439,7 @@
                             "height": 2500,
                             "items": [
                                 {
-                                    "id": "https://services.phaidra-sandbox.univie.ac.at/api/iiif/o:***/page/p1/1",
+                                    "id": "https://sandbox.phaidra.org/api/iiif/o:***/page/p1/1",
                                     "type": "AnnotationPage",
                                     "items": [
                                         {
@@ -13447,18 +13447,18 @@
                                                 "width": 2500,
                                                 "format": "image/jpeg",
                                                 "type": "Image",
-                                                "id": "https://services.phaidra-sandbox.univie.ac.at/api/imageserver?IIIF=o:1069684.tif/full/full/0/default.jpg",
+                                                "id": "https://sandbox.phaidra.org/api/imageserver?IIIF=o:1069684.tif/full/full/0/default.jpg",
                                                 "height": 2000,
                                                 "service": [
                                                     {
                                                         "profile": "level2",
-                                                        "id": "https://services.phaidra-sandbox.univie.ac.at/api/imageserver?IIIF=o:1069684.tif",
+                                                        "id": "https://sandbox.phaidra.org/api/imageserver?IIIF=o:1069684.tif",
                                                         "type": "ImageService3"
                                                     }
                                                 ]
                                             },
-                                            "target": "https://services.phaidra-sandbox.univie.ac.at/api/iiif/o:***/canvas/1",
-                                            "id": "https://services.phaidra-sandbox.univie.ac.at/api/iiif/o:***/annotation/p1-image",
+                                            "target": "https://sandbox.phaidra.org/api/iiif/o:***/canvas/1",
+                                            "id": "https://sandbox.phaidra.org/api/iiif/o:***/annotation/p1-image",
                                             "type": "Annotation",
                                             "motivation": "painting"
                                         }
@@ -13468,7 +13468,7 @@
                         },
                         {
                             "width": 2100,
-                            "id": "https://services.phaidra-sandbox.univie.ac.at/api/iiif/o:***/canvas/2",
+                            "id": "https://sandbox.phaidra.org/api/iiif/o:***/canvas/2",
                             "type": "Canvas",
                             "label": {
                                 "none": [
@@ -13478,7 +13478,7 @@
                             "height": 2500,
                             "items": [
                                 {
-                                    "id": "https://services.phaidra-sandbox.univie.ac.at/api/iiif/o:***/page/p2/1",
+                                    "id": "https://sandbox.phaidra.org/api/iiif/o:***/page/p2/1",
                                     "type": "AnnotationPage",
                                     "items": [
                                         {
@@ -13486,18 +13486,18 @@
                                                 "width": 2500,
                                                 "format": "image/jpeg",
                                                 "type": "Image",
-                                                "id": "https://services.phaidra-sandbox.univie.ac.at/api/imageserver?IIIF=o:1069685.tif/full/full/0/default.jpg",
+                                                "id": "https://sandbox.phaidra.org/api/imageserver?IIIF=o:1069685.tif/full/full/0/default.jpg",
                                                 "height": 2000,
                                                 "service": [
                                                     {
                                                         "profile": "level2",
-                                                        "id": "https://services.phaidra-sandbox.univie.ac.at/api/imageserver?IIIF=o:1069685.tif",
+                                                        "id": "https://sandbox.phaidra.org/api/imageserver?IIIF=o:1069685.tif",
                                                         "type": "ImageService3"
                                                     }
                                                 ]
                                             },
-                                            "target": "https://services.phaidra-sandbox.univie.ac.at/api/iiif/o:***/canvas/2",
-                                            "id": "https://services.phaidra-sandbox.univie.ac.at/api/iiif/o:***/annotation/p2-image",
+                                            "target": "https://sandbox.phaidra.org/api/iiif/o:***/canvas/2",
+                                            "id": "https://sandbox.phaidra.org/api/iiif/o:***/annotation/p2-image",
                                             "type": "Annotation",
                                             "motivation": "painting"
                                         }
@@ -13507,7 +13507,7 @@
                         }
                     ],
                     "start": {
-                        "id": "https://services.phaidra-sandbox.univie.ac.at/api/iiif/o:***/canvas/1",
+                        "id": "https://sandbox.phaidra.org/api/iiif/o:***/canvas/1",
                         "type": "Canvas"
                     }
                 }
