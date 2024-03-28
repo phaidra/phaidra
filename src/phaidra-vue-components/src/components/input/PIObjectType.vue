@@ -10,7 +10,7 @@
       <v-card-text class="mt-4">
         <v-row no-gutters>
           <v-col cols="12" :md="terms.length <= 6 ? 12 : 6" v-for="(term, i) in terms" :key="'ot'+i">
-            <v-checkbox class="mt-0 check" v-model="checkboxes[term['@id']]" @click.capture="$emit('input', checkboxes)" :label="getLocalizedTermLabel(vocabulary, term['@id'])" :true-value="term['@id']"></v-checkbox>
+            <v-checkbox class="mt-0 check" v-model="checkboxes[term['@id']]" @click.capture="$emit('input', checkboxes)" :label="getLocalizedTermLabel(vocabulary, term['@id'])" :key="'chot'+i"></v-checkbox>
             <v-spacer></v-spacer>
           </v-col>
         </v-row>
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 
@@ -44,11 +45,15 @@ export default {
     },
     errorMessages: {
       type: Array
+    },
+    selectedTerms: {
+      type: Array
     }
   },
   watch: {
     resourceType (val) {
       this.checkboxes = {}
+      this.$emit('input', this.checkboxes)
     }
   },
   computed: {
@@ -62,13 +67,25 @@ export default {
   },
   data () {
     return {
-      checkboxes: {}
+      checkboxes: {},
+      key: 0
     }
   },
   mounted: function () {
     if(this.resourceType) {
       this.$store.getters['vocabulary/getObjectTypeForResourceType'](this.resourceType, this.$i18n.locale)
     }
+    this.$nextTick(function () {
+      // emit input to set skos:prefLabel in parent
+      if (this.selectedTerms) {
+        for (let term of this.selectedTerms) {
+          if (term.value) {
+            Vue.set(this.checkboxes, term.value, true)
+            this.$emit('input', this.checkboxes)
+          }
+        }
+      }
+    })
   }
 }
 </script>

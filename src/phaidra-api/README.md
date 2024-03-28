@@ -1,14 +1,14 @@
 phaidra-api 
 ===========
 
-See [wiki](https://github.com/phaidra/phaidra-api/wiki)
+See [Wiki](https://github.com/phaidra/phaidra-api/wiki).
 
-Starting/Hotreload
+Starting / Hot reload
 --------
 
-hypnotoad phaidra-api.cgi
+<code>hypnotoad phaidra-api.cgi</code>
 
 Stopping
 -------
 
-hypnotoad phaidra-api.cgi --stop
+<code>hypnotoad phaidra-api.cgi --stop</code>

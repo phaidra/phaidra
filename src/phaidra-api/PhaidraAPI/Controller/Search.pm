@@ -127,6 +127,9 @@ sub search_solr {
   $url->host($self->app->config->{solr}->{host});
   $url->port($self->app->config->{solr}->{port});
   my $core = $self->app->config->{solr}->{core};
+  if (defined($self->param('core'))) {
+    $core = $self->param('core');
+  }
   if ($self->app->config->{solr}->{path}) {
     $url->path("/" . $self->app->config->{solr}->{path} . "/solr/$core/select");
   }

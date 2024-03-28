@@ -151,8 +151,10 @@ export default {
             '@value': item.preferredName
           }
         ]
-        for (const vn of item.variantName) {
-          this.rdfslabel.push({ '@value': vn })
+        if (item.hasOwnProperty('variantName')) {
+          for (const vn of item.variantName) {
+            this.rdfslabel.push({ '@value': vn })
+          }
         }
         this.resolved = '<a href="' + item.id + '" target="_blank">' + item.preferredName + '</a>'
         this.$emit('resolve', { 'skos:prefLabel': this.preflabel, 'rdfs:label': this.rdfslabel })

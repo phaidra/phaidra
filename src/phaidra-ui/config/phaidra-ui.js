@@ -41,6 +41,9 @@ export default {
         search: 'https://api.dante.gbv.de/search',
         resolve: 'https://api.dante.gbv.de/data',
         limit: 50
+      },
+      yarm: {
+        baseurl: 'yarm.phaidra.org'
       }
     },
     monitor: {
@@ -65,9 +68,7 @@ export default {
       email: 'support email',
       // only uncomment for wildcard purposes
       // cookiedomain: '<HOST_WITH_OR_WITHOUT_PORT>',
-      languages: 'eng,deu',
-      validationmethod: 'validateNoOefosNoAssoc',
-      markmandatorymethod: 'markMandatoryNoOefosNoAssoc'
+      languages: 'eng,deu'
     }
   }
 }

@@ -181,6 +181,56 @@ sub add_template {
   $self->render(json => $res, status => $res->{status});
 }
 
+sub edit_template {
+  my $self = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  unless (defined($self->stash('tid'))) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined template id'}]}, status => 400);
+    return;
+  }
+  my $tid = $self->stash('tid');
+
+  my $form = $self->param('form');
+  unless (defined($form)) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'No form sent'}]}, status => 400);
+    return;
+  }
+
+  my $tag = $self->param('tag');
+
+  eval {
+    if (ref $form eq 'Mojo::Upload') {
+      $self->app->log->debug("form sent as file param");
+      $form = $form->asset->slurp;
+      $form = decode_json($form);
+    }
+    else {
+      $form = decode_json(b($form)->encode('UTF-8'));
+    }
+  };
+
+  if ($@) {
+    $self->app->log->error("Error: $@");
+    unshift @{$res->{alerts}}, {type => 'error', msg => $@};
+    $res->{status} = 400;
+    $self->render(json => $res, status => $res->{status});
+    return;
+  }
+
+  my $owner;
+  if ($self->stash('remote_user')) {
+    $owner = $self->stash('remote_user');
+  } else {
+    $owner = $self->stash->{basic_auth_credentials}->{username};
+  }
+
+  $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid}, { '$set' => { form => $form, updated => time}});
+
+  $self->render(json => $res, status => $res->{status});
+}
+
 sub get_template {
   my $self = shift;
 
@@ -198,6 +248,18 @@ sub get_template {
   } else {
     $owner = $self->stash->{basic_auth_credentials}->{username};
   }
+
+  my $sres = $self->mongo->get_collection('app_settings')->find_one({});
+  if ($sres->{defaultTemplateId}) {
+    if ($sres->{defaultTemplateId} eq $self->stash('tid')) {
+      # everybody can read the default template
+      my $tres = $self->mongo->get_collection('jsonldtemplates')->find_one({tid => $self->stash('tid')});
+      $res->{template} = $tres;
+      $self->render(json => $res, status => $res->{status});
+      return;
+    }
+  }
+
   my $tres = $self->mongo->get_collection('jsonldtemplates')->find_one({tid => $self->stash('tid'), owner => $owner});
 
   $res->{template} = $tres;

@@ -835,7 +835,6 @@ export default {
   'vra:hasInscription': 'Inschrift',
   'phaidra:systemTag': 'System tag',
   'bf:subtitle': 'Untertitel',
-  'phaidra:Remark': 'Notiz',
   'Condition note': 'Notiz zum Zustand',
   'Supplementary material': 'Ergänzendes Material',
   'Is motion picture adaptation of': 'Filmadaption von',
@@ -853,7 +852,8 @@ export default {
   'Metadata preview': 'Metadatenansicht',
   Remove: 'Entfernen',
   Duplicate: 'Duplizieren',
-  'Save as template': 'Als Vorlage speichern',
+  'Save as new template': 'Als neue Vorlage speichern',
+  'Save template': 'Vorlage speichern',
   'File to upload': 'Datei zum Hochladen',
   'File to upload *': 'Datei zum Hochladen *',
   'File type': 'Dateityp',
@@ -1202,5 +1202,9 @@ export default {
   'Other links': 'Weitere links',
   'Only latest versions': 'Nur letzte Versionen',
   'Thema Subject Codes': 'Thema Klassifizierung',
-  'Members': 'Mitglieder'
+  'Members': 'Mitglieder',
+  'Template saved': 'Vorlage gespeichert',
+  'Select': 'Auswählen',
+  'Configure': 'Konfigurieren',
+  'Some required fields are not complete': 'Manche Pflichtfelder sind nicht vollständig'
 }

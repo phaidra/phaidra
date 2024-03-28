@@ -11,7 +11,7 @@
               :headers="typeHeaders"
               :items="typeItems"
               :items-per-page="1000"
-              :sort-by="currentYear.toString()"
+              :sort-by="'total'"
               :sort-desc="true"
               hide-default-footer
               class="elevation-1 my-8"
@@ -21,7 +21,7 @@
               :headers="newTypeHeaders"
               :items="newTypeItems"
               :items-per-page="1000"
-              :sort-by="currentYear.toString()"
+              :sort-by="'total'"
               :sort-desc="true"
               hide-default-footer
               class="elevation-1 my-8"
@@ -31,7 +31,7 @@
               :headers="cmodelHeaders"
               :items="cmodelItems"
               :items-per-page="1000"
-              :sort-by="currentYear.toString()"
+              :sort-by="'total'"
               :sort-desc="true"
               hide-default-footer
               class="elevation-1 my-8"
@@ -41,17 +41,7 @@
               :headers="cmodelStorageHeaders"
               :items="cmodelStorageItems"
               :items-per-page="1000"
-              :sort-by="currentYear.toString()"
-              :sort-desc="true"
-              hide-default-footer
-              class="elevation-1 my-8"
-              :no-data-text="$t('No data available')"
-            ></v-data-table>
-            <v-data-table
-              :headers="ownerHeaders"
-              :items="ownerItems"
-              :items-per-page="1000"
-              :sort-by="currentYear.toString()"
+              :sort-by="'total'"
               :sort-desc="true"
               hide-default-footer
               class="elevation-1 my-8"
@@ -71,7 +61,7 @@ import { config } from "../mixins/config";
 import { vocabulary } from 'phaidra-vue-components/src/mixins/vocabulary'
 
 export default {
-  mixins: [context, config],
+  mixins: [context, config, vocabulary],
   computed: {
     routepid: function () {
       return this.$store.state.route.params.pid;
@@ -112,7 +102,7 @@ export default {
           align: "start",
           sortable: false,
           value: "cmodel",
-        },
+        }
       ],
       ownerHeaders: [
         {
@@ -128,7 +118,6 @@ export default {
       cmodelStorageItems: [],
       ownerItems: [],
       yearsTotal: [],
-      ownerTypes: ["u*", "s*", "p*", "x*"],
       newTypesFilter: {
         "https://pid.phaidra.org/vocabulary/9E94-E3F8": true,
         "https://pid.phaidra.org/vocabulary/P2YP-BMND": true,
@@ -140,11 +129,16 @@ export default {
     };
   },
   methods: {
+
+
     async fetchStats(self) {
       self.typeItems = [];
       self.cmodelItems = [];
-      // TODO: query min tcreated from solr
-      let fromYear = '2008'
+      self.cmodelStorageItems = [];
+      let fromYear = parseInt(new Date().getFullYear());
+      if (self.instanceconfig.since) {
+        fromYear = self.instanceconfig.since.substring(0, 4);
+      }
       let toYear = new Date().getFullYear();
       for (let i = fromYear; i <= toYear; i++) {
         this.typeHeaders.push({ text: i.toString(), value: i.toString() });
@@ -156,7 +150,10 @@ export default {
         });
         this.ownerHeaders.push({ text: i.toString(), value: i.toString() });
       }
-      this.cmodelStorageHeaders.push({ text: "total", value: "total" });
+      this.typeHeaders.push({ text: "Total", value: "total" });
+      this.newTypeHeaders.push({ text: "Total", value: "total" });
+      this.cmodelHeaders.push({ text: "Total", value: "total" });
+      this.cmodelStorageHeaders.push({ text: "Total", value: "total" });
       for (let term of this.$store.state.vocabulary.vocabularies["objecttypeuwm"].terms) {
         let params = {
           q: "*:*",
@@ -180,17 +177,18 @@ export default {
           );
           if (response.data.facet_counts.facet_ranges.tcreated.counts) {
             let a = response.data.facet_counts.facet_ranges.tcreated.counts;
-            let stats = {};
+            let stats = { total: 0 };
             let hasValue = false;
             for (let j = 0; j < a.length; j = j + 2) {
               if (a[j + 1] > 0) {
                 hasValue = true;
               }
-              stats.objectType = this.$store.getters.getLocalizedTermLabel(
+              stats.objectType = this.getLocalizedTermLabel(
                 "objecttypeuwm",
                 term["@id"]
               );
               stats[a[j].substring(0, 4)] = a[j + 1];
+              stats.total += a[j + 1]
             }
             if (hasValue) {
               this.typeItems.push(stats);
@@ -223,17 +221,18 @@ export default {
           );
           if (response.data.facet_counts.facet_ranges.tcreated.counts) {
             let a = response.data.facet_counts.facet_ranges.tcreated.counts;
-            let stats = {};
+            let stats = {total: 0};
             let hasValue = false;
             for (let j = 0; j < a.length; j = j + 2) {
               if (a[j + 1] > 0) {
                 hasValue = true;
               }
-              stats.objectType = this.$store.getters.getLocalizedTermLabel(
-                "objecttypeuwm",
+              stats.objectType = this.getLocalizedTermLabel(
+                "objecttype",
                 term["@id"]
               );
               stats[a[j].substring(0, 4)] = a[j + 1];
+              stats.total += a[j + 1]
             }
             if (hasValue) {
               this.newTypeItems.push(stats);
@@ -266,14 +265,15 @@ export default {
           );
           if (response.data.facet_counts.facet_ranges.tcreated.counts) {
             let a = response.data.facet_counts.facet_ranges.tcreated.counts;
-            let stats = {};
+            let stats = {total: 0};
             let hasValue = false;
             for (let j = 0; j < a.length; j = j + 2) {
               if (a[j + 1] > 0) {
                 hasValue = true;
               }
-              stats.cmodel = this.$store.getters.getLocalizedTermLabel("cmodels", term["@id"]);
+              stats.cmodel = this.getLocalizedTermLabel("cmodels", term["@id"]);
               stats[a[j].substring(0, 4)] = a[j + 1];
+              stats.total += a[j + 1]
             }
             if (hasValue) {
               this.cmodelItems.push(stats);
@@ -283,92 +283,54 @@ export default {
           console.log(error);
         }
       }
-      for (let type of this.ownerTypes) {
-        let params = {
-          q: "*:*",
-          fq: "owner:" + type + "",
-          facet: "on",
-          rows: 0,
-          "facet.range": "tcreated",
-          "f.tcreated.facet.range.start": fromYear + "-01-01T00:00:00Z",
-          "f.tcreated.facet.range.end": "NOW",
-          "f.tcreated.facet.range.gap": "+1YEAR",
-          defType: "edismax",
-          wt: "json",
+
+      for (let term of this.$store.state.vocabulary.vocabularies["cmodels"].terms) {
+            let cmodel = term["@id"]
+
+        let stats = {
+          cmodel,
+          total: 0
         };
-        let query = qs.stringify(params, {
-          encodeValuesOnly: true,
-          indices: false,
-        });
-        try {
-          let response = await self.$axios.get(
-            "/search/select?" + query
-          );
-          if (response.data.facet_counts.facet_ranges.tcreated.counts) {
-            let a = response.data.facet_counts.facet_ranges.tcreated.counts;
-            let stats = {};
-            for (let j = 0; j < a.length; j = j + 2) {
-              stats.owner = type;
-              stats[a[j].substring(0, 4)] = a[j + 1];
+
+        for (let i = fromYear; i <= toYear; i++) {
+
+          try {
+            let year = i
+          
+            let params = {
+              q: '*:*',
+              stats: true,
+              'stats.field': 'size',
+              fq: 'cmodel:' + cmodel + ' AND tcreated:[' + year + '-01-01T00:00:00Z TO ' + year + '-12-31T23:59:59Z]',//AND -ismemberof:["" TO *]
+              rows: 0
             }
-            this.ownerItems.push(stats);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      try {
-        let response = await this.$axios.get("/stats/aggregates?detail=cm&time_scale=year");
-        if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit("setAlerts", response.data.alerts);
-        }
-        if (response.data.stats) {
-          let stats = {
-            total: {
-              cmodel: "total",
-              total: 0,
-            },
-          };
-          for (let s of response.data.stats) {
-            if (s.model !== "Container" && s.model !== "Collection") {
-              if (s.size > 0) {
-                if (!stats[s.model]) {
-                  stats[s.model] = {
-                    cmodel: s.model,
-                    total: 0,
-                  };
-                }
-                if (!stats["total"][s.upload_date]) {
-                  stats["total"][s.upload_date] = 0;
-                }
-                stats[s.model][s.upload_date] = (
-                  s.size / Math.pow(1024, Math.floor(3))
-                ).toFixed(3);
-                stats[s.model].total += s.size;
-                stats["total"][s.upload_date] += s.size;
-                stats["total"].total += s.size;
-              }
+            if (cmodel === 'Page') {
+              params.core = 'phaidra_pages'
             }
+            let query = qs.stringify(params, {
+              encodeValuesOnly: true,
+              indices: false,
+            });
+            let res = await self.$axios.get(
+              "/search/select?" + query
+            );        
+            if (res.status == 200) {
+              let gb = res.data.stats.stats_fields.size.sum/1000000000
+              stats.total += res.data.stats.stats_fields.size.sum
+              stats[year] = gb > 0 ? this.tofixed(gb) : 0
+            }
+          } catch (error) {
+            console.log(error);
           }
-          for (let i = fromYear; i <= toYear; i++) {
-            stats.total[i] = (
-              stats.total[i] / Math.pow(1024, Math.floor(3))
-            ).toFixed(3);
-          }
-          for (let cmodel of Object.keys(stats)) {
-            stats[cmodel].total = (
-              stats[cmodel].total / Math.pow(1024, Math.floor(3))
-            ).toFixed(3);
-            this.cmodelStorageItems.push(stats[cmodel]);
-          }
+            
         }
-      } catch (error) {
-        console.log(error);
-        this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
-      } finally {
-        this.loading = false;
+        stats.total = stats.total > 0 ? this.tofixed(stats.total/1000000000) : 0
+        this.cmodelStorageItems.push(stats)
       }
     },
+    tofixed(x) {
+      return Number.parseFloat(x).toFixed(3);
+    }
   },
   beforeRouteEnter: async function (to, from, next) {
     next(async function (vm) {

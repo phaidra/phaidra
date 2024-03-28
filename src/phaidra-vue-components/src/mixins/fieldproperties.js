@@ -33,13 +33,15 @@ export const fieldproperties = {
     },
     configurable: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   computed: {
     actions: function () {
       var arr = []
-      arr.push({title: this.$t('Configure'), event: 'configure'})
+      if (this.configurable) {
+        arr.push({title: this.$t('Configure'), event: 'configure'})
+      }
       if (this.addOnly && this.multiplicable) {
         arr.push({ title: this.$t('Duplicate'), event: 'add' })
       } else {

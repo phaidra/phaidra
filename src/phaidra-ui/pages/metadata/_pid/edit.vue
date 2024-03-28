@@ -5,20 +5,19 @@
         <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
       </v-btn>
       <p-i-form :form="form" :targetpid="pid" :enablerights="false" :enablerelationships="false" :templating="false"
-        :importing="false" :addbutton="true" :help="false" :debug="false" :feedback="false" :validate="validationMethod"
+        :importing="false" :addbutton="true" :help="false" :debug="false" :feedback="false"
         v-on:object-saved="objectSaved($event)" class="mt-4"></p-i-form>
     </div>
   </client-only>
 </template>
 
 <script>
-import jsonLd from "phaidra-vue-components/src/utils/json-ld";
-import { formvalidation } from '../../../mixins/formvalidation'
-import { context } from "../../../mixins/context";
-import { config } from "../../../mixins/config";
+import jsonLd from "phaidra-vue-components/src/utils/json-ld"
+import { context } from "../../../mixins/context"
+import { config } from "../../../mixins/config"
 
 export default {
-  mixins: [context, config, formvalidation],
+  mixins: [context, config],
   data() {
     return {
       loading: false,
@@ -32,12 +31,6 @@ export default {
     },
   },
   methods: {
-    validationMethod: function () {
-      if (this.instanceconfig?.validationmethod) {
-        return this[this.instanceconfig.validationmethod]()
-      }
-      return this.validate()
-    },
     objectSaved: async function (pid) {
       this.$store.commit("setAlerts", [
         { type: "success", msg: "Metadata for object " + pid + " saved" },
