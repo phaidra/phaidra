@@ -1,0 +1,164 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use Data::Dumper;
+use Log::Log4perl;
+use Mojo::URL;
+use Mojo::UserAgent;
+use Mojo::JSON qw(decode_json encode_json);
+
+# Usage: ./indexObjects.pl --envFile=path-to-env-file from-date-iso until-date-iso
+# Eg: ./indexObjects.pl ../../compose_demo/.env 2019-05-16T14:33:10Z 2024-01-01T00:00:00Z
+
+$ENV{MOJO_INACTIVITY_TIMEOUT} = 36000;
+
+my $logconf = q(
+  log4perl.category.MyLogger         = INFO, Logfile, Screen
+
+  log4perl.appender.Logfile                          = Log::Dispatch::FileRotate
+  log4perl.appender.Logfile.Threshold                = DEBUG
+  log4perl.appender.Logfile.filename                 = indexObjects.log
+  log4perl.appender.Logfile.max                      = 30
+  log4perl.appender.Logfile.DatePattern              = yyyy-MM-dd
+  log4perl.appender.Logfile.TZ                       = CET
+  log4perl.appender.Logfile.layout                   = Log::Log4perl::Layout::PatternLayout
+  log4perl.appender.Logfile.layout.ConversionPattern = [%d] [%p] [%P] %m%n
+  log4perl.appender.Logfile.mode                     = append
+  log4perl.appender.Logfile.binmode                  = :encoding(UTF-8)
+  log4perl.appender.Logfile.utf8                     = 1
+
+  log4perl.appender.Screen         = Log::Log4perl::Appender::Screen
+  log4perl.appender.Screen.stderr  = 0
+  log4perl.appender.Screen.layout  = Log::Log4perl::Layout::PatternLayout
+  log4perl.appender.Screen.layout.ConversionPattern=%d %m%n
+  log4perl.appender.Screen.utf8   = 1
+);
+
+Log::Log4perl::init( \$logconf );
+my $log = Log::Log4perl::get_logger("MyLogger");
+
+my $ua = Mojo::UserAgent->new;
+
+my $envFile = shift (@ARGV);
+setEnv($envFile);
+
+my $from = _epochToIso(0);
+my $until = _epochToIso(time + 86400);
+my $fromParam = shift (@ARGV);
+my $untilParam = shift (@ARGV);
+$from = $fromParam if $fromParam;
+$until = $untilParam if $untilParam;
+# this is the maximum in fcrepo simple search
+my $pagesize = 100;
+my $page = 0;
+my $failed = 0;
+my $ok = 0;
+
+my $baseurl = $ENV{PHAIDRA_PORTSTUB} eq ':' ? $ENV{OUTSIDE_HTTP_SCHEME}.'://'.$ENV{PHAIDRA_HOSTNAME}.$ENV{PHAIDRA_PORTSTUB}.$ENV{PHAIDRA_HOSTPORT} : $ENV{OUTSIDE_HTTP_SCHEME}.'://'.$ENV{PHAIDRA_HOSTNAME};
+my $apibaseurl_with_creds = $ENV{PHAIDRA_PORTSTUB} eq ':' ? $ENV{OUTSIDE_HTTP_SCHEME}.'://'.$ENV{PHAIDRA_ADMIN_USER}.":".$ENV{PHAIDRA_ADMIN_PASSWORD}.'@'.$ENV{PHAIDRA_HOSTNAME}.$ENV{PHAIDRA_PORTSTUB}.$ENV{PHAIDRA_HOSTPORT}.'/api' : $ENV{OUTSIDE_HTTP_SCHEME}.'://'.$ENV{PHAIDRA_ADMIN_USER}.":".$ENV{PHAIDRA_ADMIN_PASSWORD}.'@'.$ENV{PHAIDRA_HOSTNAME}.'/api';
+my $fedorabaseurl = "$baseurl/fcrepo/rest";
+my $fedoraadmin_credentials = $ENV{FEDORA_ADMIN_USER}.":".$ENV{FEDORA_ADMIN_PASS};
+my $fedorasearchurl = Mojo::URL->new("$fedorabaseurl/fcr:search");
+$fedorasearchurl->userinfo($fedoraadmin_credentials);
+$fedorasearchurl->query(
+  fields => 'fedora_id,created',
+  order_by => 'created',
+  order => 'asc',
+  condition => 'fedora_id=o:*'
+);
+if ($from) {
+  $fedorasearchurl->query([ condition => "created>$from" ]);
+}
+if ($until) {
+  $fedorasearchurl->query([ condition => "created<$until" ]);
+}
+
+sub setEnv {
+  my ($envFile) = @_;
+  if (-e -f -r $envFile) {
+    open my $fh, $envFile or die "cannot open $envFile file: $!";
+    while(<$fh>)  { 
+      unless ( /#.*/ ) {
+        chomp;
+        s/^\s+//;
+        s/\s+$//;
+        next unless length;
+        # ATTN: this won't work for values containing =, like LDAP paths
+        my ($var, $value) = split(/=/,$_);
+        $value =~ s/^\"//;
+        $value =~ s/\"$//;
+        $ENV{$var} = $value if $var && $value;
+      }
+    }
+    close $fh;
+  } else {
+    $log->error("cannot read $envFile file");
+    exit(1);
+  }
+}
+
+sub indexObject {
+  my ($pid) = @_;
+
+  my $apires = $ua->post("$apibaseurl_with_creds/object/$pid/index")->result;
+  if ($apires->code != 200) {
+    if (exists($apires->json->{alerts})) {
+      for my $a (@{$apires->json->{alerts}}) {
+        $log->error("pid[$pid] index result code[".$apires->code."]:".$a->{msg});
+        return 0;
+      }
+    }
+  }
+  return 1;
+}
+
+sub _epochToIso {
+  my ($epoch) = @_;
+  my $sec = $epoch;
+  my ($s, $m, $h, $D, $M, $Y) = gmtime($sec);
+  $M++;
+  $Y += 1900;
+  return sprintf("%4d-%02d-%02dT%02d:%02d:%02dZ", $Y, $M, $D, $h, $m, $s);
+}
+
+sub processPage {
+  my ($page) = @_;
+
+  $fedorasearchurl->query({ offset => $page * $pagesize });
+  my $fedres = $ua->get($fedorasearchurl)->result;
+  unless ($fedres->is_success) {
+    $log->error("error querying fedora: ".$fedres->code." ".$fedres->message);
+    exit(1);
+  }
+
+  for my $item (@{$fedres->json->{items}}) {
+    my $id = $item->{fedora_id};
+    next unless $id =~ m/$fedorabaseurl\/(o\:\d+)$/;
+    my $pid = $1;
+    if (indexObject($pid)) {
+      $ok++;
+      $log->info("ok[$ok] failed[$failed] pid[$pid] created[".$item->{created}."] - ok");
+    } else {
+      $failed++;
+      $log->info("ok[$ok] failed[$failed] pid[$pid] created[".$item->{created}."] - failed");
+    }
+  }
+
+  # Dump($fedres->json->{items});
+
+  return scalar @{$fedres->json->{items}};
+}
+
+
+$log->info("started from[$from] until[$until]");
+
+while (processPage($page) == 100) {
+  $page++;
+}
+
+$log->info("ok[$ok] failed[$failed] done");
+
+__END__
+
+
