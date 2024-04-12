@@ -8,8 +8,9 @@ use Mojo::URL;
 use Mojo::UserAgent;
 use Mojo::JSON qw(decode_json encode_json);
 
-# Usage: ./indexObjects.pl --envFile=path-to-env-file from-date-iso until-date-iso
-# Eg: ./indexObjects.pl ../../compose_demo/.env 2019-05-16T14:33:10Z 2024-01-01T00:00:00Z
+# Usage: docker exec -it phaidra-VERSION-api-1 perl /usr/local/phaidra/phaidra-api/utils/indexObjects.pl from-date-iso until-date-iso
+#
+# iso format ~ 2008-01-01T00:00:00Z
 
 $ENV{MOJO_INACTIVITY_TIMEOUT} = 36000;
 
@@ -18,7 +19,7 @@ my $logconf = q(
 
   log4perl.appender.Logfile                          = Log::Dispatch::FileRotate
   log4perl.appender.Logfile.Threshold                = DEBUG
-  log4perl.appender.Logfile.filename                 = indexObjects.log
+  log4perl.appender.Logfile.filename                 = /var/log/phaidra/indexObjects.log
   log4perl.appender.Logfile.max                      = 30
   log4perl.appender.Logfile.DatePattern              = yyyy-MM-dd
   log4perl.appender.Logfile.TZ                       = CET
@@ -40,9 +41,6 @@ my $log = Log::Log4perl::get_logger("MyLogger");
 
 my $ua = Mojo::UserAgent->new;
 
-my $envFile = shift (@ARGV);
-setEnv($envFile);
-
 my $from = _epochToIso(0);
 my $until = _epochToIso(time + 86400);
 my $fromParam = shift (@ARGV);
@@ -55,9 +53,8 @@ my $page = 0;
 my $failed = 0;
 my $ok = 0;
 
-my $baseurl = $ENV{PHAIDRA_PORTSTUB} eq ':' ? $ENV{OUTSIDE_HTTP_SCHEME}.'://'.$ENV{PHAIDRA_HOSTNAME}.$ENV{PHAIDRA_PORTSTUB}.$ENV{PHAIDRA_HOSTPORT} : $ENV{OUTSIDE_HTTP_SCHEME}.'://'.$ENV{PHAIDRA_HOSTNAME};
-my $apibaseurl_with_creds = $ENV{PHAIDRA_PORTSTUB} eq ':' ? $ENV{OUTSIDE_HTTP_SCHEME}.'://'.$ENV{PHAIDRA_ADMIN_USER}.":".$ENV{PHAIDRA_ADMIN_PASSWORD}.'@'.$ENV{PHAIDRA_HOSTNAME}.$ENV{PHAIDRA_PORTSTUB}.$ENV{PHAIDRA_HOSTPORT}.'/api' : $ENV{OUTSIDE_HTTP_SCHEME}.'://'.$ENV{PHAIDRA_ADMIN_USER}.":".$ENV{PHAIDRA_ADMIN_PASSWORD}.'@'.$ENV{PHAIDRA_HOSTNAME}.'/api';
-my $fedorabaseurl = "$baseurl/fcrepo/rest";
+my $apibaseurl_with_creds = 'http://'.$ENV{PHAIDRA_ADMIN_USER}.":".$ENV{PHAIDRA_ADMIN_PASSWORD}.'@api:3000';
+my $fedorabaseurl = "http://fedora:8080/fcrepo/rest";
 my $fedoraadmin_credentials = $ENV{FEDORA_ADMIN_USER}.":".$ENV{FEDORA_ADMIN_PASS};
 my $fedorasearchurl = Mojo::URL->new("$fedorabaseurl/fcr:search");
 $fedorasearchurl->userinfo($fedoraadmin_credentials);
@@ -72,30 +69,6 @@ if ($from) {
 }
 if ($until) {
   $fedorasearchurl->query([ condition => "created<$until" ]);
-}
-
-sub setEnv {
-  my ($envFile) = @_;
-  if (-e -f -r $envFile) {
-    open my $fh, $envFile or die "cannot open $envFile file: $!";
-    while(<$fh>)  { 
-      unless ( /#.*/ ) {
-        chomp;
-        s/^\s+//;
-        s/\s+$//;
-        next unless length;
-        # ATTN: this won't work for values containing =, like LDAP paths
-        my ($var, $value) = split(/=/,$_);
-        $value =~ s/^\"//;
-        $value =~ s/\"$//;
-        $ENV{$var} = $value if $var && $value;
-      }
-    }
-    close $fh;
-  } else {
-    $log->error("cannot read $envFile file");
-    exit(1);
-  }
 }
 
 sub indexObject {
