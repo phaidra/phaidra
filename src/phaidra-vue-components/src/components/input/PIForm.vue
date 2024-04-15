@@ -1286,14 +1286,14 @@ export default {
     formIsValid: function () {
       if (this.validationfnc instanceof Function) {
         console.log('passed validationfnc')
-        return this.validationfnc()
+        return this.validationfnc(this.targetpid)
       } else {
         if (this.instanceconfig.validationfnc) {
           console.log('configured validation: ' + this.instanceconfig.validationfnc)
-          return this[this.instanceconfig.validationfnc]()
+          return this[this.instanceconfig.validationfnc](this.targetpid)
         } else {
           console.log('default validation')
-          return this.defaultValidation()
+          return this.defaultValidation(this.targetpid)
         }
       }
     },
