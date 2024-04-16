@@ -123,7 +123,7 @@ export const formvalidation = {
         }
       }
     },
-    validationWithOefosAndAssoc() {
+    validationWithOefosAndAssoc(targetpid) {
       this.validationError = false
       this.mandatoryFieldsFound = {
         'Title': false,
@@ -158,8 +158,12 @@ export const formvalidation = {
             resourceType = f.value
           }
           if (f.component === 'p-vocab-ext-readonly') {
-            if (f.value.startsWith('oefos2012')) {
-              hasReadonlyOefos = true
+            if (f['skos:exactMatch']) {
+              for (let v of f['skos:exactMatch']) {
+                if (v.startsWith('oefos2012')) {
+                  hasReadonlyOefos = true
+                }
+              }
             }
           }
         }
@@ -183,6 +187,10 @@ export const formvalidation = {
           this.mandatoryFieldsValidated['File'] = true
           this.mandatoryFieldsValidated['License'] = true
           break
+      }
+      if (targetpid) {
+        this.mandatoryFieldsFound['File'] = true
+        this.mandatoryFieldsValidated['File'] = true
       }
 
       for (const s of this.form.sections) {
@@ -249,7 +257,9 @@ export const formvalidation = {
           if (resourceType !== 'https://pid.phaidra.org/vocabulary/GXS7-ENXJ') {
             if (f.component === 'p-subject-oefos') {
               this.mandatoryFieldsFound['OEFOS Classification'] = true
-              if (!hasReadonlyOefos) {
+              if (hasReadonlyOefos) {
+                this.mandatoryFieldsValidated['OEFOS Classification'] = true
+              } else {
                 if (f.value.length > 0) {
                   this.mandatoryFieldsValidated['OEFOS Classification'] = true
                 }
@@ -315,7 +325,7 @@ export const formvalidation = {
       }
       return false
     },
-    defaultValidation() {
+    defaultValidation(targetpid) {
       this.validationError = false
       this.fieldsMissing = []
       this.mandatoryFieldsFound = {
@@ -339,17 +349,11 @@ export const formvalidation = {
         'File': false
       }
       let resourceType = null
-      let hasReadonlyOefos = false
       for (const s of this.form.sections) {
         for (const f of s.fields) {
           if (f.predicate === 'dcterms:type') {
             resourceType = f.value
             console.log('resourceType ' + f['skos:prefLabel'][0]['@value'])
-          }
-          if (f.component === 'p-vocab-ext-readonly') {
-            if (f.value.startsWith('oefos2012')) {
-              hasReadonlyOefos = true
-            }
           }
         }
       }
@@ -371,6 +375,10 @@ export const formvalidation = {
           this.mandatoryFieldsValidated['File'] = true
           this.mandatoryFieldsValidated['License'] = true
           break
+      }
+      if (targetpid) {
+        this.mandatoryFieldsFound['File'] = true
+        this.mandatoryFieldsValidated['File'] = true
       }
 
       for (const s of this.form.sections) {

@@ -825,6 +825,8 @@ export default {
   'vra:material': 'Material',
   'vra:hasInscription': 'Inschrift',
 
+  'schema:AdministrativeArea': 'Verwaltungseinheit',
+  
   'phaidra:systemTag': 'System tag',
   Event: 'Ereignis',
   'bf:subtitle': 'Untertitel',

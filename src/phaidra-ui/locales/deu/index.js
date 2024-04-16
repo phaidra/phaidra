@@ -833,6 +833,7 @@ export default {
   'dce:format': 'Format',
   'vra:material': 'Material',
   'vra:hasInscription': 'Inschrift',
+  'schema:AdministrativeArea': 'Verwaltungseinheit',
   'phaidra:systemTag': 'System tag',
   'bf:subtitle': 'Untertitel',
   'Condition note': 'Notiz zum Zustand',
