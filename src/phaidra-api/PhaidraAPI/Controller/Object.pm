@@ -553,15 +553,16 @@ sub preview {
       return;
     }
     case 'PDFDocument' {
-      if ($showloadbutton) {
-        $self->render(template => 'utils/loadbutton', format => 'html');
-        return;
-      }
       $self->stash(baseurl       => $self->config->{baseurl});
       $self->stash(scheme        => $self->config->{scheme});
       $self->stash(basepath      => $self->config->{basepath});
       $self->stash(trywebversion => $trywebversion);
       $self->stash(pid           => $pid);
+
+      if ($showloadbutton) {
+        $self->render(template => 'utils/loadbutton', format => 'html');
+        return;
+      }
 
       my $u_model = PhaidraAPI::Model::Util->new;
       $u_model->track_action($self, $pid, 'preview');
@@ -613,10 +614,6 @@ sub preview {
         return;
       }
       if (($index_mime eq 'model/ply') || ($index_mime eq 'model/nxz')) {
-        if ($showloadbutton) {
-          $self->render(template => 'utils/loadbutton', format => 'html');
-          return;
-        }
         $self->stash(baseurl  => $self->config->{baseurl});
         $self->stash(scheme   => $self->config->{scheme});
         $self->stash(basepath => $self->config->{basepath});
@@ -624,6 +621,11 @@ sub preview {
         $self->stash(pid      => $pid);
         $self->stash(mType    => 'ply')   if $index_mime eq 'model/ply';
         $self->stash(mType    => 'nexus') if $index_mime eq 'model/nxz';
+
+        if ($showloadbutton) {
+          $self->render(template => 'utils/loadbutton', format => 'html');
+          return;
+        }
 
         my $u_model = PhaidraAPI::Model::Util->new;
         $u_model->track_action($self, $pid, 'preview');
@@ -765,16 +767,17 @@ sub preview {
       return;
     }
     case 'Audio' {
-      if ($showloadbutton) {
-        $self->render(template => 'utils/loadbutton', format => 'html');
-        return;
-      }
       $self->stash(scheme        => $self->config->{scheme});
       $self->stash(baseurl       => $self->config->{baseurl});
       $self->stash(basepath      => $self->config->{basepath});
       $self->stash(trywebversion => $trywebversion);
       $self->stash(mimetype      => $mimetype);
       $self->stash(pid           => $pid);
+      if ($showloadbutton) {
+        $self->render(template => 'utils/loadbutton', format => 'html');
+        return;
+      }
+
       my $thumbPid = $self->get_is_thumbnail_for($pid);
 
       if ($thumbPid) {
