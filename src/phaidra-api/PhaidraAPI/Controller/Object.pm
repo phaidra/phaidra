@@ -738,18 +738,19 @@ sub preview {
         }
       }
       else {
-        if ($showloadbutton) {
-          $self->render(template => 'utils/loadbutton', format => 'html');
-          return;
-        }
         $self->stash(scheme        => $self->config->{scheme});
         $self->stash(baseurl       => $self->config->{baseurl});
         $self->stash(basepath      => $self->config->{basepath});
         $self->stash(trywebversion => $trywebversion);
-
         # html tag won't work with video/quicktime
         $self->stash(mimetype => $mimetype eq 'video/quicktime' ? 'video/mp4' : $mimetype);
         $self->stash(pid      => $pid);
+        
+        if ($showloadbutton) {
+          $self->render(template => 'utils/loadbutton', format => 'html');
+          return;
+        }
+
         my $thumbPid = $self->get_is_thumbnail_for($pid);
         if ($thumbPid) {
           $self->stash(thumbpid => $pid);
