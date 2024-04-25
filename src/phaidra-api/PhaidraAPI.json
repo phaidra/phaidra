@@ -161,13 +161,14 @@
             "server": "openldap",
             "port": "1389",
             "useridattribute": "uid",
+            "groupssearchbase": "ou=groups,__LDAP_ROOT__",
             "usersearchbase": [
-                "ou=people,dc=example,dc=org"
+                "ou=people,__LDAP_ROOT__"
             ],
             "usersearchfilter": "(&(uid={0})(objectClass=inetOrgPerson))",
             "useridattribute": "uid",
             "userattributes": "cn",
-            "securityprincipal": "cn=__LDAP_ADMIN_USERNAME__,dc=example,dc=org",
+            "securityprincipal": "cn=__LDAP_ADMIN_USERNAME__,__LDAP_ROOT__",
             "securitycredentials": "__LDAP_ADMIN_PASSWORD__"
         }
     },
