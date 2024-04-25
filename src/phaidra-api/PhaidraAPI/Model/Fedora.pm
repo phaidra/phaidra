@@ -36,6 +36,15 @@ my %prefix2ns = (
   "http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#" => "ebucore"
 );
 
+sub getFedoraUrlPrefix {
+  my ($self, $c) = @_;
+  if ($c->app->fedoraurl->{port}) {
+    return $c->app->fedoraurl->{scheme}.'://'.$c->app->fedoraurl->{host}.':'.$c->app->fedoraurl->{port}.'/'.$c->app->fedoraurl->{path};
+  } else {
+    return $c->app->fedoraurl->{scheme}.'://'.$c->app->fedoraurl->{host}.'/'.$c->app->fedoraurl->{path};
+  }
+}
+
 sub getFirstJsonldValue {
   my ($self, $c, $jsonld, $p) = @_;
 
@@ -46,6 +55,8 @@ sub getFirstJsonldValue {
           return $ob1->{'@value'};
         }
         if (exists($ob1->{'@id'})) {
+          my $fp = $self->getFedoraUrlPrefix($c);
+          $ob1->{'@id'} =~ s/$fp//g;
           return $ob1->{'@id'};
         }
       }
@@ -62,6 +73,13 @@ sub getJsonldValue {
       for my $ob1 (@{$ob->{$p}}) {
         if (exists($ob1->{'@value'})) {
           push @a, $ob1->{'@value'};
+        } else {
+          if (exists($ob1->{'@id'})) {
+            my $fp = $self->getFedoraUrlPrefix($c);
+            # $c->app->log->debug("XXXXXXXXXXX prefix $fp");
+            $ob1->{'@id'} =~ s/$fp//g;
+            push @a, $ob1->{'@id'};
+          }
         }
       }
       last;
@@ -104,13 +122,13 @@ sub getObjectProperties {
   }
 
   my $props = $propres->{props};
+  # $c->app->log->debug("XXXXXXXXXXXXXXX getObjectProperties propres:\n" . $c->app->dumper($props));
 
   # cmodel
   my $cmodel = $self->getFirstJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#hasModel');
-
-  $cmodel =~ m/(.+\/)(\w+):(\w+)/g;
-  if ($2 eq 'cmodel' && defined($3) && ($3 ne '')) {
-    $res->{cmodel} = $3;
+  $cmodel =~ m/(\w+):(\w+)/g;
+  if ($1 eq 'cmodel' && defined($2) && ($2 ne '')) {
+    $res->{cmodel} = $2;
   }
 
   $res->{state}    = $self->getFirstJsonldValue($c, $props, 'info:fedora/fedora-system:def/model#state');
@@ -268,7 +286,12 @@ sub editTriples {
 
     $prefixes  .= "PREFIX " . $ns . ": <" . $pref . ">\n";
     $oldValues .= "<> $ns:$prop \"$curVal\"\n";
-    $newValues .= "<> $ns:$prop \"$newVal\"\n";
+
+    if ($newVal =~ m/info\:fedora/) {
+      $newValues .= "<> $ns:$prop <$newVal>\n";
+    } else {
+      $newValues .= "<> $ns:$prop \"$newVal\"\n";
+    }
   }
   my $body = qq|
     $prefixes
