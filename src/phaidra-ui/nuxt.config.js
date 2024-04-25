@@ -38,10 +38,10 @@ export default {
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
-  components: {
-    global: true,
-    dirs: ['~/custom-components', '~/components'],
-  },
+  components: [
+    { path: '~/custom-components', level: 0 },
+    { path: '~/components', level: 1 },
+  ],
 
   middleware: ['auth'],
 

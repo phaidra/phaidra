@@ -444,11 +444,7 @@ export default {
         imported = await self.importFromRelatedObject(self);
       }
       if (!imported) {
-        let settres = await self.$axios.get("/app_settings", {
-          headers: {
-            "X-XSRF-TOKEN": self.$store.state.user.token,
-          },
-        });
+        let settres = await self.$axios.get("/app_settings");
         if (settres?.data?.settings?.defaultTemplateId) {
           try {
             let tmpres = await self.$axios.request({

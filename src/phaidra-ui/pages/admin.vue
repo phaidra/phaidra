@@ -153,9 +153,7 @@
         </v-container>
       </v-tab-item>
     </v-tabs>
-
     <v-btn fixed bottom right raised color="primary" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
-
   </v-card>
 </v-container>
 
@@ -244,11 +242,7 @@ methods: {
     this.loading = true
     let response = null;
     try {
-      response = await this.$axios.get("/app_settings", {
-        headers: {
-          "X-XSRF-TOKEN": this.$store.state.user.token,
-        },
-      });
+      response = await this.$axios.get("/app_settings");
     } catch (error) {
       console.error(error)
     }
