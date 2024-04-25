@@ -279,6 +279,45 @@ sub getLDAPEntryForUser {
 
 }
 
+sub getUsersLDAPGroups {
+
+  my $self     = shift;
+  my $c        = shift;
+  my $username = shift;
+
+  return undef unless (defined($username));
+  
+  my $ldap = $self->get_ldap($c);
+
+  my $filter = "(&(memberUid={0})(objectClass=posixGroup))";
+  $filter =~ s/\{0\}/$username/;
+
+  my $groups_search_base = $c->app->config->{authentication}->{ldap}->{groupssearchbase};
+
+  $c->app->log->info("Searching for groups of $username in searchbase $groups_search_base.");
+
+  my $ldapSearch = $ldap->search(base => $groups_search_base, filter => $filter);
+
+  die "There was an error during search:\n\t" . ldap_error_text($ldapSearch->code) if $ldapSearch->code;
+
+  my @groups;
+  while (my $ldapEntry = $ldapSearch->pop_entry()) {
+    #$c->app->log->info("found: ".$c->app->dumper($ldapEntry));
+    foreach my $attr (@{$ldapEntry->{'asn'}->{'attributes'}}) {
+      my $attrtype = $attr->{'type'};
+      my @attvals  = @{$attr->{'vals'}};
+      if ($attrtype eq 'cn') {
+        foreach my $val (@attvals) {
+          push @groups, $val;
+        }
+      }
+    }
+  }
+
+  return \@groups;
+
+}
+
 sub authenticate() {
 
   my $self      = shift;
@@ -617,6 +656,7 @@ sub get_user_data {
 
   my $fname;
   my $lname;
+  my $email;
 
   foreach my $attr (@{$entry->{'asn'}->{'attributes'}}) {
     my $attrtype = $attr->{'type'};
@@ -628,12 +668,19 @@ sub get_user_data {
       if ($attrtype eq 'sn') {
         $lname = $val;
       }
+      if ($attrtype eq 'mail') {
+        $email = $val;
+      }
     }
 
-    last if ($fname && $lname);
+    last if ($fname && $lname && $email);
   }
 
-  my $res = {username => $username, firstname => $fname, lastname => $lname};
+  my $groups = $self->getUsersLDAPGroups($c, $username);
+
+  $c->log->info("groups: ".$c->app->dumper($groups));
+
+  my $res = {username => $username, firstname => $fname, lastname => $lname, org_units_l2 => $groups, email => $email};
 }
 
 sub is_superuser {
