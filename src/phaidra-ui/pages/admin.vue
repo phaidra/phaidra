@@ -242,11 +242,7 @@ methods: {
     this.loading = true
     let response = null;
     try {
-      response = await this.$axios.get("/app_settings", {
-        headers: {
-          "X-XSRF-TOKEN": this.$store.state.user.token,
-        },
-      });
+      response = await this.$axios.get("/app_settings");
     } catch (error) {
       console.error(error)
     }

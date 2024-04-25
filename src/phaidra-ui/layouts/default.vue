@@ -97,11 +97,7 @@ export default {
     loadInstanceConfigToStore: async function() {
       this.loading = true
       try {
-        let settingResponse = await this.$axios.get("/app_settings", {
-          headers: {
-            "X-XSRF-TOKEN": this.$store.state.user.token,
-          },
-        });
+        let settingResponse = await this.$axios.get("/app_settings");
         if(settingResponse?.data?.settings?.instanceConfig){
           this.$store.commit("setInstanceConfig", settingResponse?.data?.settings?.instanceConfig);
         }
