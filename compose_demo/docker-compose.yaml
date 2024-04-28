@@ -92,14 +92,14 @@ services:
     build:
       context: ../.
       dockerfile: dockerfiles/ui.dockerfile
-      args:
-        PHAIDRA_HOSTNAME: ${PHAIDRA_HOSTNAME}
-        PHAIDRA_PORTSTUB: ${PHAIDRA_PORTSTUB}
-        PHAIDRA_HOSTPORT: ${PHAIDRA_HOSTPORT}
-        OUTSIDE_HTTP_SCHEME: ${OUTSIDE_HTTP_SCHEME}
-        PHAIDRA_PRIMARY_COLOR: ${PHAIDRA_PRIMARY_COLOR}
     networks:
       - phaidra-network
+    environment:
+      - PHAIDRA_HOSTNAME=${PHAIDRA_HOSTNAME}
+      - PHAIDRA_PORTSTUB=${PHAIDRA_PORTSTUB}
+      - PHAIDRA_HOSTPORT=${PHAIDRA_HOSTPORT}
+      - OUTSIDE_HTTP_SCHEME=${OUTSIDE_HTTP_SCHEME}
+      - PHAIDRA_PRIMARY_COLOR=${PHAIDRA_PRIMARY_COLOR}
 
   api:
     depends_on:

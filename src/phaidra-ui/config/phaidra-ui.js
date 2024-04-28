@@ -1,5 +1,5 @@
 export default {
-  defaultinstance: '<HOST_WITH_OR_WITHOUT_PORT>',
+  defaultinstance: 'default',
   global: {
     title: 'Phaidra Docker',
     showinstanceswitch: 0,
@@ -53,19 +53,14 @@ export default {
     }
   },
   instances: {
-    '<HOST_WITH_OR_WITHOUT_PORT>': {
+    'default': {
       title: 'Phaidra - Docker',
-      baseurl: '<HOST_WITH_OR_WITHOUT_PORT>',
-      basepath: '',
-      irbaseurl: '',
-      api: '<OUTSIDE_HTTP_SCHEME>://<HOST_WITH_OR_WITHOUT_PORT>/api',
-      since: '2023-01-01',
-      primary: '<PHAIDRA_PRIMARY_COLOR>',
       institution: 'My institution',
       institutionurl: 'https://phaidra.org',
       address: 'My institution | address | here',
       phone: '+00-0-000-0',
       email: 'support email',
+      since: '2023-01-01',
       // only uncomment for wildcard purposes
       // cookiedomain: '<HOST_WITH_OR_WITHOUT_PORT>',
       languages: 'eng,deu'
