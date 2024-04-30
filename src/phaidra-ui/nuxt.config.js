@@ -71,22 +71,11 @@ export default {
     apiBaseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT + '/api',
     axios: {
       browserBaseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT + '/api'
-    },
-    vuetify: {
-      customVariables: ['~/assets/variables.scss'],
-      theme: {
-        themes: {
-          light: {
-            primary: process.env.PHAIDRA_PRIMARY_COLOR,
-            error: '#dd4814'
-          },
-          dark: {
-            primary: process.env.PHAIDRA_PRIMARY_COLOR,
-            error: '#dd4814'
-          }
-        }
-      }
-    },
+    }
+  },
+  vuetify: {
+    customVariables: ['~/assets/variables.scss'],
+    optionsPath: './vuetify.options.js'
   },
   privateRuntimeConfig: {
     axios: {
