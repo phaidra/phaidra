@@ -26,7 +26,7 @@
                 {{ getLocalizedTermLabel('relations', item.relation) }}
               </template>
               <template v-slot:item.object="{ item }">
-                <a target="_blank" :href="'https://' + instance.baseurl + '/' + item.object">{{ item.object }}</a>
+                <a target="_blank" :href="instance.baseurl + '/' + item.object">{{ item.object }}</a>
               </template>
               <template v-slot:item.actions="{ item }">
                 <v-icon :disabled="loading" color="grey" class="mx-3" @click="removeRelationship(item)">mdi-delete</v-icon>

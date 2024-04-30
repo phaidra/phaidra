@@ -86,7 +86,7 @@
           <v-card-title class="title font-weight-light grey white--text">
             <span>{{ loadedList.name }}</span>
             <v-spacer></v-spacer>
-            <template v-if="token && token.length > 0"><a class="pl-2 white--text" target="_blank" :href="'/list/' + token">{{ 'https://' + instance.baseurl + '/list/' + token }}</a></template>
+            <template v-if="token && token.length > 0"><a class="pl-2 white--text" target="_blank" :href="'/list/' + token">{{ instance.baseurl + '/list/' + token }}</a></template>
           </v-card-title>
           <v-card-text>
             <v-data-table

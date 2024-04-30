@@ -80,7 +80,7 @@
             <v-col>
               <v-row no-gutters class="mb-4" v-if="doc.isrestricted"><v-chip label dark color="red lighten-1 font-weight-regular">{{ $t('Restricted access') }}</v-chip></v-row>
               <v-row no-gutters>
-                <span>https://{{ instance.baseurl }}/{{ doc.pid }}</span>
+                <span>{{ instance.baseurl }}/{{ doc.pid }}</span>
                 <v-spacer></v-spacer>
                 <p-d-license v-if="doc.dc_rights" :hideLabel="true" :o="doc.dc_rights[0]"></p-d-license>
               </v-row>

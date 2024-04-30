@@ -57,9 +57,9 @@ export default {
   instances: {
     'myinstance.example.com': {
       title: 'Phaidra - myinstance',
-      baseurl: 'myinstance.example.com',
+      baseurl: 'https://myinstance.example.com',
       basepath: '',
-      irbaseurl: 'myirinstance.example.com',
+      irbaseurl: 'https://myirinstance.example.com',
       api: 'https://services.myinstance.example.com/api',
       primary: '#000',
       institution: 'My institution',
