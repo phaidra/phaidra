@@ -97,7 +97,7 @@ services:
     #   dockerfile: dockerfiles/ui.dockerfile
     # comment out the image-definition, if you are doing local development.
     # (or point to the one you'd like to use)
-    image: testuser34/ui-base:7cd86fee
+    image: testuser34/ui-base:latest
     pull_policy: always
     networks:
       - phaidra-network
