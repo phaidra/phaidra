@@ -2108,9 +2108,7 @@ export default {
       );
     },
     uscholarlink: function () {
-      return (
-        "https://" + this.instanceconfig.irbaseurl + "/" + this.objectInfo.pid
-      );
+      return (this.instanceconfig.irbaseurl + "/" + this.objectInfo.pid);
     },
     doi: function () {
       for (let id of this.objectInfo.dc_identifier) {
@@ -2126,23 +2124,11 @@ export default {
       let ids = { persistent: [], other: [] };
       ids.persistent.push({
         label: "Persistent identifier",
-        value:
-          "https://" + this.instanceconfig.baseurl + "/" + this.objectInfo.pid,
+        value: this.instanceconfig.baseurl + "/" + this.objectInfo.pid,
       });
       if (this.objectInfo.dc_identifier) {
         for (let id of this.objectInfo.dc_identifier) {
-          if (
-            id ===
-              "https://" +
-                this.instanceconfig.baseurl +
-                "/" +
-                this.objectInfo.pid ||
-            id ===
-              "http://" +
-                this.instanceconfig.baseurl +
-                "/" +
-                this.objectInfo.pid
-          ) {
+          if (id === this.instanceconfig.baseurl + "/" + this.objectInfo.pid) {
             continue;
           } else {
             let type = id.substr(0, id.indexOf(":"));

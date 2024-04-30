@@ -12,7 +12,7 @@
           <v-row>
             <v-checkbox v-model="checkbox" color="primary" :error-messages="checkboxErrors">
               <template v-slot:label>
-                {{ $t('WEBVERSIONSUBMIT', { pid: 'https://' + instanceconfig.baseurl + '/' + parentpid }) }}
+                {{ $t('WEBVERSIONSUBMIT', { pid: instanceconfig.baseurl + '/' + parentpid }) }}
               </template>
             </v-checkbox>
           </v-row>

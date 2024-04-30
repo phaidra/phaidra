@@ -32,7 +32,7 @@
              <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <span v-on="on">
-                   <v-img aspect-ratio="1" :src="'https://' + instanceconfig.baseurl + '/preview/' + doc.pid" @click="showDetailDialog(doc)"></v-img>
+                   <v-img aspect-ratio="1" :src="instanceconfig.api + '/preview/' + doc.pid" @click="showDetailDialog(doc)"></v-img>
                 </span>
               </template>
               <span>{{doc.dc_title[0]}}</span>
@@ -48,7 +48,7 @@
                 <template v-slot:activator="{ on }">
                   <span v-on="on">
                     <v-card tile elevation="0" class="d-flex">
-                      <v-img class="grey lighten-2" aspect-ratio="1" :src="'https://' + instanceconfig.baseurl + '/preview/' + doc.pid"
+                      <v-img class="grey lighten-2" aspect-ratio="1" :src="instanceconfig.api + '/preview/' + doc.pid"
                         @click="showDetailDialog(doc)">
                         <template v-slot:placeholder>
                           <v-row class="fill-height ma-0" align="center" justify="center">
@@ -72,7 +72,7 @@
           {{ detailToShow.dc_title[0] }}
         </v-card-title>
         <v-card-text>
-          <v-img aspect-ratio="1" :src="'https://' + instanceconfig.baseurl + '/preview/' + detailToShow.pid"></v-img>
+          <v-img aspect-ratio="1" :src="instanceconfig.api + '/preview/' + detailToShow.pid"></v-img>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -188,9 +188,6 @@ export default {
 
         this.childrenOfActiveCollection = response.data.response.docs
 
-        // for (let doc of this.childrenOfActiveCollection) {
-        //  alert('https://' + this.instanceconfig.baseurl + '/preview/' + doc.pid);
-        // }
       } catch (error) {
         console.log(error)
         this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
