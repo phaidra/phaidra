@@ -45,6 +45,11 @@ build-ui:
     -t $CI_REGISTRY_USER/ui-base:$CI_COMMIT_SHORT_SHA --push .
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/ui.dockerfile
+          - src/phaidra-ui/**/*
+          - src/phaidra-vue-components/**/*
 
 build-chronos:
   stage: build
