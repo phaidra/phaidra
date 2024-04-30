@@ -194,9 +194,6 @@ methods: {
         this.$vuetify.theme.themes.light.primary = instanceConfData.primary
         this.$vuetify.theme.themes.dark.primary = instanceConfData.primary
       }
-      if(instanceConfData?.api){
-        this.$axios.defaults.baseURL = instanceConfData.api
-      }
       this.$store.commit('setInstanceConfig', instanceConfData)
     } catch (error) {
       console.error(error)

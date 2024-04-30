@@ -63,12 +63,39 @@ export default {
     'nuxt-helmet'
   ],
   axios: {
-    baseURL: 'http://api:3000',
-    browserBaseURL: '<OUTSIDE_HTTP_SCHEME>://<HOST_WITH_OR_WITHOUT_PORT>/api'
+    baseURL: 'http://api:3000', // Used as fallback if no runtime config is provided
   },
-  sentry: {
-    dsn: config?.global?.monitor?.sentry?.dsn
+  publicRuntimeConfig: {
+    primaryColor: process.env.PHAIDRA_PRIMARY_COLOR,
+    baseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT,
+    apiBaseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT + '/api',
+    axios: {
+      browserBaseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT + '/api'
+    },
+    vuetify: {
+      customVariables: ['~/assets/variables.scss'],
+      theme: {
+        themes: {
+          light: {
+            primary: process.env.PHAIDRA_PRIMARY_COLOR,
+            error: '#dd4814'
+          },
+          dark: {
+            primary: process.env.PHAIDRA_PRIMARY_COLOR,
+            error: '#dd4814'
+          }
+        }
+      }
+    },
   },
+  privateRuntimeConfig: {
+    axios: {
+      baseURL: 'http://api:3000'
+    }
+  },
+  // sentry: {
+  //   dsn: config?.global?.monitor?.sentry?.dsn
+  // },
   i18n: {
     langDir: 'locales/',
     locales: [
@@ -93,23 +120,6 @@ export default {
       silentFallbackWarn: true
     },
     detectBrowserLanguage: false
-  },
-
-  // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
-  vuetify: {
-    customVariables: ['~/assets/variables.scss'],
-    theme: {
-      themes: {
-        light: {
-          primary: config.instances[config.defaultinstance].primary,
-          error: '#dd4814'
-        },
-        dark: {
-          primary: config.instances[config.defaultinstance].primary,
-          error: '#dd4814'
-        }
-      }
-    }
   },
 
   alias: {

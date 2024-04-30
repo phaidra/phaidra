@@ -101,6 +101,8 @@ export default {
         if(settingResponse?.data?.settings?.instanceConfig){
           this.$store.commit("setInstanceConfig", settingResponse?.data?.settings?.instanceConfig);
         }
+        this.$store.commit("setInstanceConfigBaseUrl", this.$config.baseURL);
+        this.$store.commit("setInstanceConfigApiBaseUrl", this.$config.apiBaseURL);
       } catch (error) {
         console.error(error)
       } finally {

@@ -31,6 +31,12 @@ export const mutations = {
       }
     }
   },
+  setInstanceConfigBaseUrl(state, baseurl) {
+    Vue.set(state.instanceconfig, 'baseurl', baseurl)
+  },
+  setInstanceConfigApiBaseUrl(state, api) {
+    Vue.set(state.instanceconfig, 'api', api)
+  },
   updateBreadcrumbs(state, transition) {
     state.breadcrumbs = [
       {
