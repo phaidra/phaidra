@@ -49,6 +49,7 @@ build-ui:
         paths:
           - dockerfiles/ui.dockerfile
           - src/phaidra-ui/**/*
+          - src/phaidra-vue-components/**/*
 
 build-chronos:
   stage: build
