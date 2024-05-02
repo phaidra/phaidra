@@ -20,7 +20,7 @@ build-api:
   script: >
     docker context create builder-context &&
     docker buildx create builder-context --name container --driver=docker-container &&
-    docker buildx build -f dockerfiles/api.dockerfile
+    docker buildx build -f dockerfiles/api-base.dockerfile
     --builder=container
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/api-base:latest
@@ -29,7 +29,7 @@ build-api:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
-          - dockerfiles/api.dockerfile
+          - dockerfiles/api-base.dockerfile
 
 build-api-dist:
   stage: build-dist
@@ -49,6 +49,7 @@ build-api-dist:
       changes:
         paths:
           - dockerfiles/api-dist.dockerfile
+          - src/phaidra-api/**/*
 
 build-ui:
   stage: build-dist
