@@ -31,6 +31,7 @@ mkdir -pv /usr/local/phaidra/phaidra-api \
     /var/log/phaidra
 EOF
 ADD ../src/phaidra-api /usr/local/phaidra/phaidra-api
+RUN ln -sF /proc/1/fd/1 /var/log/phaidra/api.log
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]
