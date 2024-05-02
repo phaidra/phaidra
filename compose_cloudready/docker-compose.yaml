@@ -12,7 +12,7 @@ networks:
 
 services:
   httpd:
-    image: testuser34/httpd-base:cd745f58
+    image: testuser34/httpd-dist:latest
     pull_policy: always
     labels:
       logging: "promtail"
@@ -20,7 +20,6 @@ services:
     ports:
       - "${PHAIDRA_HOSTPORT}:80"
     volumes:
-      - .././container_init/httpd/phaidra-demo:/mnt/startup:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
     depends_on:
       - api
@@ -34,9 +33,6 @@ services:
       - PHAIDRA_HOSTNAME=${PHAIDRA_HOSTNAME}
       - PHAIDRA_HOSTPORT=${PHAIDRA_HOSTPORT}
       - LOCAL_ADMIN_IP=${LOCAL_ADMIN_IP}
-    entrypoint:
-      - bash
-      - /mnt/startup/httpd-demo-startup.bash
 
   imageserver:
     image: testuser34/imageserver-base:979c59b3
