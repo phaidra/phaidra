@@ -269,7 +269,7 @@ services:
       - phaidra-network
 
   chronos:
-    image: testuser34/chronos-base:73e15d1c
+    image: testuser34/chronos-dist:latest
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -278,7 +278,6 @@ services:
       - chronos-database-dumps:/mnt/database-dumps
       - chronos-sitemaps:/mnt/sitemaps
       - chronos-oai-logs:/mnt/oai-logs
-      - .././container_init/chronos:/mnt/chronos:ro
     environment:
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
       - PHAIDRADB=${PHAIDRADB}
@@ -297,9 +296,6 @@ services:
       - mariadb-fedora
       - mariadb-phaidra
       - mongodb-phaidra
-    entrypoint:
-      - bash
-      - /mnt/chronos/chronos-entrypoint.bash
     networks:
       - phaidra-network
 
