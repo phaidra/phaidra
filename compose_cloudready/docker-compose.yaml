@@ -253,7 +253,7 @@ services:
       - phaidra-network
 
   openldap:
-    image: bitnami/openldap:2.6.6-debian-11-r59
+    image: testuser34/openldap-dist:latest
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -265,7 +265,6 @@ services:
       - LDAP_CUSTOM_LDIF_DIR=/ldifs
     volumes:
       - openldap:/bitnami/openldap
-      - .././container_init/openldap:/ldifs:ro
     networks:
       - phaidra-network
 
