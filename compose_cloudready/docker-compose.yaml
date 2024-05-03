@@ -138,7 +138,7 @@ services:
       - IMAGE_CONVERSION_INTERVAL=${IMAGE_CONVERSION_INTERVAL}
 
   mariadb-phaidra:
-    image: mariadb:11.0.2-jammy
+    image: testuser34/mariadb-phaidra-dist:latest
     restart: always
     labels:
       logging: "promtail"
@@ -149,13 +149,12 @@ services:
       MARIADB_USER: ${MARIADB_PHAIDRA_USER}
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
     volumes:
-      - .././container_init/mariadb/phaidradb:/docker-entrypoint-initdb.d:ro
       - mariadb_phaidra:/var/lib/mysql
     networks:
       - phaidra-network
 
   mariadb-fedora:
-    image: mariadb:10.5
+    image: testuser34/mariadb-fedora-dist:latest
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -166,7 +165,6 @@ services:
       MARIADB_USER: ${MARIADB_PHAIDRA_USER}
       MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
     volumes:
-      - .././container_init/mariadb/fedoradb:/docker-entrypoint-initdb.d:ro
       - mariadb_fedora:/var/lib/mysql
     networks:
       - phaidra-network
