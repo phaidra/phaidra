@@ -11,6 +11,9 @@
       <v-tab :active-class="'primary'">
         <span>{{ $t('Functionality') }}</span>
       </v-tab>
+      <v-tab :active-class="'primary'">
+        <span>{{ $t('CMS') }}</span>
+      </v-tab>
 
       <v-tab-item class="pa-8">
         <v-container>
@@ -30,7 +33,7 @@
                 v-model="parsedConfigData.institution"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="mt-6">{{ $t('Used in breadcrumbs') }}</v-col>
+            <v-col cols="6" class="mt-6">{{ $t('Used eg. in breadcrumbs.') }}</v-col>
           </v-row>
           <v-row>
             <v-col>
@@ -39,7 +42,7 @@
                 v-model="parsedConfigData.institutionurl"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="mt-6">{{ $t('Used in breadcrumbs') }}</v-col>
+            <v-col cols="6" class="mt-6">{{ $t('Used eg. in breadcrumbs.') }}</v-col>
           </v-row>
           <v-row>
             <v-col>
@@ -48,7 +51,7 @@
                 v-model="parsedConfigData.address"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="mt-6">{{ $t('Used in footer') }}</v-col>
+            <v-col cols="6" class="mt-6">{{ $t('Used eg. in footer.') }}</v-col>
           </v-row>
           <v-row>
             <v-col>
@@ -57,7 +60,7 @@
                 v-model="parsedConfigData.phone"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="mt-6">{{ $t('Used in footer') }}</v-col>
+            <v-col cols="6" class="mt-6">{{ $t('Used eg. in footer.') }}</v-col>
           </v-row>
           <v-row>
             <v-col>
@@ -66,7 +69,7 @@
                 v-model="parsedConfigData.email"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="mt-6">{{ $t('Used in footer and as a contact address throughout the site') }}</v-col>
+            <v-col cols="6" class="mt-6">{{ $t('Used eg. in footer and as a contact address throughout the site.') }}</v-col>
           </v-row>
         </v-container>
       </v-tab-item>
@@ -130,7 +133,7 @@
                 v-model="parsedConfigData.languages"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="mt-4">{{ $t("Comma separated list of languages the language switcher should show") }}</v-col>
+            <v-col cols="6" class="mt-4">{{ $t("Comma separated list of languages the language switcher should show.") }}</v-col>
           </v-row>
           <v-row>
             <v-col>
@@ -139,7 +142,7 @@
                 v-model="parsedConfigData.validationfnc"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="mt-4">{{ $t("Which method shold be used to validate metadata forms") }}</v-col>
+            <v-col cols="6" class="mt-4">{{ $t("Which method shold be used to validate metadata forms.") }}</v-col>
           </v-row>
           <v-row>
             <v-col>
@@ -148,7 +151,48 @@
                 v-model="parsedConfigData.markmandatoryfnc"
               ></v-text-field>
             </v-col>
-            <v-col cols="6" class="mt-4">{{ $t("Which method shold be used to makr fields as mandatory in submit form") }}</v-col>
+            <v-col cols="6" class="mt-4">{{ $t("Which method shold be used to makr fields as mandatory in submit form.") }}</v-col>
+          </v-row>
+        </v-container>
+      </v-tab-item>
+
+      <v-tab-item class="pa-8">
+        <v-container>
+          <v-row>
+            <v-col>
+              <v-textarea
+                label="Header"
+                v-model="parsedConfigData.cms_header"
+              ></v-textarea>
+            </v-col>
+            <v-col cols="3" class="mt-4">{{ $t("Header component.") }}</v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-textarea
+                label="Footer"
+                v-model="parsedConfigData.cms_footer"
+              ></v-textarea>
+            </v-col>
+            <v-col cols="3" class="mt-4">{{ $t("Footer component.") }}</v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-textarea
+                label="Homepage"
+                v-model="parsedConfigData.cms_home"
+              ></v-textarea>
+            </v-col>
+            <v-col cols="3" class="mt-4">{{ $t("Homepage component.") }}</v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-textarea
+                label="Impressum"
+                v-model="parsedConfigData.cms_impressum"
+              ></v-textarea>
+            </v-col>
+            <v-col cols="3" class="mt-4">{{ $t("Impressum component.") }}</v-col>
           </v-row>
         </v-container>
       </v-tab-item>
@@ -193,6 +237,9 @@ methods: {
       if(instanceConfData?.primary){
         this.$vuetify.theme.themes.light.primary = instanceConfData.primary
         this.$vuetify.theme.themes.dark.primary = instanceConfData.primary
+      }
+      if(instanceConfData?.api){
+        this.$axios.defaults.baseURL = instanceConfData.api
       }
       this.$store.commit('setInstanceConfig', instanceConfData)
     } catch (error) {
@@ -239,7 +286,11 @@ methods: {
     this.loading = true
     let response = null;
     try {
-      response = await this.$axios.get("/app_settings");
+      response = await this.$axios.get("/app_settings", {
+        headers: {
+          "X-XSRF-TOKEN": this.$store.state.user.token,
+        },
+      });
     } catch (error) {
       console.error(error)
     }

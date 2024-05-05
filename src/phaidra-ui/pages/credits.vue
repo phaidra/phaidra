@@ -1,5 +1,5 @@
 <template>
-  <ExtCredits></ExtCredits>
+  <Credits></Credits>
 </template>
 
 <script>

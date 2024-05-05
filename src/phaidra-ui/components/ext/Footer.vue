@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div v-if="content">
+    <runtimetemplate :template="content" />
+  </div>
+  <div v-else>
     <v-row>
       <v-col cols="12" md="10" offset-md="1">
         <v-row class="my-5">
@@ -15,8 +18,6 @@
             <nuxt-link :to="localePath('impressum')">{{ $t('Impressum') }}</nuxt-link> |
             <nuxt-link :to="localePath('termsofuse')">{{ $t('Terms of Use') }}</nuxt-link> |
             <nuxt-link :to="localePath('credits')">{{ $t('Credits') }}</nuxt-link>
-            <!-- |
-            <nuxt-link :to="localePath('statistics')">{{ $t('Statistics') }}</nuxt-link>-->
           </v-col>
         </v-row>
       </v-col>
@@ -29,5 +30,16 @@ import { config } from "@/mixins/config";
 
 export default {
   mixins: [config],
+  data() {
+    return {
+      content:''
+    };
+  },
+  async fetch() {
+    let settingResponse = await this.$axios.get("/app_settings")
+    if (settingResponse?.data?.settings?.instanceConfig?.cms_footer) {
+      this.content = settingResponse?.data?.settings?.instanceConfig?.cms_footer
+    }
+  }
 };
 </script>

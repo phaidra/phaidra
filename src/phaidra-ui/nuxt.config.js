@@ -122,6 +122,7 @@ export default {
       config.node = {
         fs: 'empty'
       }
+      config.resolve.alias.vue = "vue/dist/vue.esm.js"
     },
     transpile: ['phaidra-vue-components', 'vuetify/lib']
   }
