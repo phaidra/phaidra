@@ -47,6 +47,9 @@ import { config } from "../../mixins/config";
 
 export default {
   mixins: [context, config],
+  props: {
+    length: Number,
+  },
   data: () => ({
     docs: []
   }),
@@ -54,7 +57,7 @@ export default {
     async fetchDocs(self) {
       let params = {
         q: "*:*",
-        rows: 2,
+        rows: this.length,
         fl: "pid,dc_title,created,owner,isrestricted,dc_rights",
         sort: "tcreated desc",
         defType: "edismax",

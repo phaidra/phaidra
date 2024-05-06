@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt-2 mx-auto">
     <v-data-table
       :headers="cmodelHeaders"
       :items="cmodelItems"

@@ -30,17 +30,12 @@
         <v-row class="mt-6">
           <v-col cols="6">
             <DashboardUploads></DashboardUploads>
-          </v-col>
-          <v-col>
-            <DashboardLatestuploads></DashboardLatestuploads>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12">
             <DashboardCmodels></DashboardCmodels>
           </v-col>
+          <v-col>
+            <DashboardLatestuploads :length="5"></DashboardLatestuploads>
+          </v-col>
         </v-row>
-
       </v-col>
 
       <v-col cols="12" lg="2" class="border-left mt-2">

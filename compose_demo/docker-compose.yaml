@@ -92,12 +92,12 @@ services:
     # uncomment if you are doing local development on:
     # + src/phaidra-ui
     # + src/phaidra-vue-components
-    # build:
-    #   context: ../.
-    #   dockerfile: dockerfiles/ui.dockerfile
+    build:
+      context: ../.
+      dockerfile: dockerfiles/ui.dockerfile
     # comment out the image-definition, if you are doing local development.
     # (or point to the one you'd like to use)
-    image: testuser34/ui-base:latest
+    # image: testuser34/ui-base:latest
     pull_policy: always
     networks:
       - phaidra-network
