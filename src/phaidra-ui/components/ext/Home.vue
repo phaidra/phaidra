@@ -1,7 +1,7 @@
 <template>
 
-  <div v-if="content">
-    <runtimetemplate :template="content" />
+  <div v-if="instanceconfig.cms_home">
+    <runtimetemplate :template="instanceconfig.cms_home" />
   </div>
   
   <div v-else>
@@ -105,26 +105,20 @@
 </template>
 
 <script>
+import { config } from "@/mixins/config";
 import '@/compiled-icons/univie-kartenkontakte'
 import '@/compiled-icons/univie-facebook'
 import '@/compiled-icons/univie-youtube'
 import '@/compiled-icons/univie-twitter'
 import '@/compiled-icons/univie-instagram'
 import '@/compiled-icons/univie-flickr'
-import Repostats from '../../pages/repostats.vue'
 
 export default {
   name: 'home',
+  mixins: [config],
   data() {
     return {
       q: '',
-      content: ''
-    }
-  },
-  async fetch() {
-    let settingResponse = await this.$axios.get("/app_settings")
-    if (settingResponse?.data?.settings?.instanceConfig?.cms_home) {
-      this.page = settingResponse?.data?.settings?.instanceConfig?.cms_home
     }
   }
 }

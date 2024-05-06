@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-2 mx-auto">
+  <div class="pt-4 mx-auto">
     <v-data-table
       :headers="cmodelHeaders"
       :items="cmodelItems"
@@ -9,7 +9,18 @@
       hide-default-footer
       class="elevation-1 my-8"
       :no-data-text="$t('No data available')"
-    ></v-data-table>
+      hide-default-header
+    >
+    <template v-slot:header="{ props: { headers } }">
+      <thead class="header-class white--text">
+        <tr>
+          <th v-for="h in headers">
+            <span class="white--text">{{h.text}}</span>
+          </th>
+        </tr>
+      </thead>
+  </template>
+  </v-data-table>
   </div>
 </template>
 
@@ -121,3 +132,9 @@ export default {
   }
 };
 </script>
+
+<style>
+.header-class {
+  background-color: #9e9e9e;
+}
+</style>

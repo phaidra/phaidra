@@ -2,7 +2,7 @@
   <v-card class="mt-2 mx-auto" flat>
     <v-card-title class="title font-weight-light primary--text">{{ $t('Objects uploaded last year') }}</v-card-title>
     <v-card-text>
-      <v-sheet class="mx-auto mt-4" color="grey" elevation="12" max-width="calc(100% - 32px)">
+      <v-sheet class="mx-auto mt-6" color="grey" elevation="12" max-width="calc(100% - 32px)">
         <v-sparkline :labels="labels" :value="value" color="white" line-width="2" padding="16"></v-sparkline>
       </v-sheet>
       <v-row class="title font-weight-light grey--text mt-8 ml-4">

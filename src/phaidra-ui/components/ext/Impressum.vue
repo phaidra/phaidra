@@ -1,6 +1,6 @@
 <template>
-  <div v-if="content">
-    <runtimetemplate :template="content" />
+  <div v-if="instanceconfig.cms_impressum">
+    <runtimetemplate :template="instanceconfig.cms_impressum" />
   </div>
   <div v-else class="ma-6">
       <p>Impressum...</p>
@@ -8,18 +8,10 @@
 </template>
 
 <script>
+import { config } from "@/mixins/config";
+
 export default {
   name: 'impressum',
-  data() {
-    return {
-      content:''
-    };
-  },
-  async fetch() {
-    let settingResponse = await this.$axios.get("/app_settings")
-    if (settingResponse?.data?.settings?.instanceConfig?.cms_impressum) {
-      this.content = settingResponse?.data?.settings?.instanceConfig?.cms_impressum
-    }
-  }
+  mixins: [config]
 }
 </script>

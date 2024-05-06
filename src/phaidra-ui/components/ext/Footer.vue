@@ -1,6 +1,6 @@
 <template>
-  <div v-if="content">
-    <runtimetemplate :template="content" />
+  <div v-if="instanceconfig.cms_footer">
+    <runtimetemplate :template="instanceconfig.cms_footer" />
   </div>
   <div v-else>
     <v-row>
@@ -29,17 +29,6 @@
 import { config } from "@/mixins/config";
 
 export default {
-  mixins: [config],
-  data() {
-    return {
-      content:''
-    };
-  },
-  async fetch() {
-    let settingResponse = await this.$axios.get("/app_settings")
-    if (settingResponse?.data?.settings?.instanceConfig?.cms_footer) {
-      this.content = settingResponse?.data?.settings?.instanceConfig?.cms_footer
-    }
-  }
+  mixins: [config]
 };
 </script>

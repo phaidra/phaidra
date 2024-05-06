@@ -1,6 +1,6 @@
 <template>
-    <div v-if="content">
-      <runtimetemplate :template="content" />
+    <div v-if="instanceconfig.cms_header">
+      <runtimetemplate :template="instanceconfig.cms_header" />
     </div>
     
     <div v-else>
@@ -555,18 +555,6 @@
     computed: {
       localeLabel: function () {
         return this.$i18n.locale;
-      }
-    },
-    data() {
-      return {
-        content:'',
-        hover: false
-      };
-    },
-    async fetch() {
-      let settingResponse = await this.$axios.get("/app_settings")
-      if (settingResponse?.data?.settings?.instanceConfig?.cms_header) {
-        this.content = settingResponse?.data?.settings?.instanceConfig?.cms_header
       }
     },
     methods: {
