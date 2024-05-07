@@ -1,11 +1,15 @@
 <template>
-  <div>
-    <v-row no-gutters class="mb-6">
-        <v-col cols="12" md="10" offset-md="1" class="header">
-        <v-row no-gutters class="mt-2" style="min-height: 125px">
-            <v-col class="text-left" cols="12" md="3">
-            <a :href="instanceconfig.institutionurl" target="_blank">
-<svg version="1.1" id="PHAIDRA_Logo_copy_xA0_Image_1_"
+    <div v-if="instanceconfig.cms_header">
+      <runtimetemplate :template="instanceconfig.cms_header" />
+    </div>
+    
+    <div v-else>
+      <v-row no-gutters class="mb-6">
+          <v-col cols="12" md="10" offset-md="1" class="header">
+          <v-row no-gutters class="mt-2" style="min-height: 125px">
+              <v-col class="text-left" cols="12" md="3">
+              <a :href="instanceconfig.institutionurl" target="_blank">
+                <svg version="1.1" id="PHAIDRA_Logo_copy_xA0_Image_1_"
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 435.6 134.88"
 	 style="enable-background:new 0 0 435.6 134.88; height:100px" xml:space="preserve">
 <style type="text/css">
@@ -271,325 +275,371 @@
 </g>
 </svg>
 
-            </a>
-            </v-col>
+  
+              </a>
+              </v-col>
+  
+              <v-col cols="9">
+              <v-row justify="start" justify-md="end" class="pl-3">
+                  <icon
+                  v-if="signedin"
+                  class="personicon mr-2 mt-1 univie-grey"
+                  name="material-social-person"
+                  width="24px"
+                  height="24px"
+                  ></icon>
+                  <span
+                  v-if="signedin"
+                  class="mr-2 mt-2 subheading displayname univie-grey"
+                  >{{ user.firstname }} {{ user.lastname }}</span
+                  >
+  
+                  <v-menu offset-y>
+                  <template v-slot:activator="{ on }">
+                      <v-btn text v-on="on" class="top-margin-lang">
+                      <span class="grey--text text--darken-1">{{
+                          localeLabel
+                      }}</span>
+                      <icon
+                          name="univie-sprache"
+                          class="lang-icon grey--text text--darken-1"
+                      ></icon>
+                      </v-btn>
+                  </template>
+                  <v-list>
+                      <v-list-item
+                      v-if="useLocale('eng')"
+                      @click="changeLocale('eng')"
+                      >
+                      <v-list-item-title>English</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item
+                      v-if="useLocale('deu')"
+                      @click="changeLocale('deu')"
+                      >
+                      <v-list-item-title>Deutsch</v-list-item-title>
+                      </v-list-item>
+                  </v-list>
+                  </v-menu>
+              </v-row>
+  
+              <v-row>
+                  <v-col
+                  v-if="appconfig.showinstanceswitch"
+                  cols="4"
+                  class="select-instance text-left"
+                  >
+                  <v-select
+                      :items="instances"
+                      @input="switchInstance"
+                      :value="instanceconfig.baseurl"
+                      item-text="baseurl"
+                      single-line
+                  ></v-select>
+                  </v-col>
+                  <v-col
+                  class="text-left"
+                  cols="10"
+                  offset="1"
+                  v-else-if="instanceconfig.title"
+                  >
+                  <icon
+                      left
+                      dark
+                      name="univie-right"
+                      color="#a4a4a4"
+                      width="14px"
+                      height="14px"
+                      class="mb-1"
+                  ></icon>
+                  <nuxt-link
+                      class="subheading primary--text mx-3"
+                      :to="localePath('/')"
+                      >{{ instanceconfig.title }}</nuxt-link
+                  >
+                  </v-col>
+              </v-row>
+  
+              <v-row>
+                  <v-toolbar flat color="white" dense>
+                    <client-only>
+                      <v-app-bar-nav-icon class="hidden-md-and-up">
+                      <v-menu offset-y>
+                          <template v-slot:activator="{ on }">
+                          <v-btn text icon color="grey lighten-1" v-on="on"
+                              ><icon
+                              name="material-navigation-menu"
+                              width="24px"
+                              height="24px"
+                              ></icon
+                          ></v-btn>
+                          </template>
+                          <v-list>
+                          <v-list-item
+                              @click="
+                              $router.push(
+                                  localeLocation({
+                                  path: '/search',
+                                  query: { reset: 1 },
+                                  })
+                              )
+                              "
+                              ><v-list-item-title>{{
+                              $t("Search")
+                              }}</v-list-item-title></v-list-item
+                          >
+                          <v-list-item
+                              v-if="signedin"
+                              @click="
+                              $router.push(localeLocation({ path: '/submit' }))
+                              "
+                              ><v-list-item-title>{{
+                              $t("Submit")
+                              }}</v-list-item-title></v-list-item
+                          >
+                          <v-list-item
+                              v-if="signedin"
+                              @click="
+                              $router.push(
+                                  localeLocation({
+                                  path: '/search',
+                                  query: { reset: 1, owner: user.username },
+                                  })
+                              )
+                              "
+                              ><v-list-item-title>{{
+                              $t("My objects")
+                              }}</v-list-item-title></v-list-item
+                          >
+                          <v-list-item
+                              v-if="signedin"
+                              @click="
+                              $router.push(localeLocation({ path: '/lists' }))
+                              "
+                              ><v-list-item-title>{{
+                              $t("Object lists")
+                              }}</v-list-item-title></v-list-item
+                          >
+                          <v-list-item
+                              v-if="signedin"
+                              @click="
+                              $router.push(localeLocation({ path: '/groups' }))
+                              "
+                              ><v-list-item-title>{{
+                              $t("Groups")
+                              }}</v-list-item-title></v-list-item
+                          >
+                          <v-list-item
+                              @click="
+                              $router.push(localeLocation({ path: '/help' }))
+                              "
+                              ><v-list-item-title>{{
+                              $t("Help")
+                              }}</v-list-item-title></v-list-item
+                          >
+                          <v-list-item
+                              v-if="!signedin && appconfig.enablelogin"
+                              ><v-list-item-title><a href="/login">{{ $t("Login") }}</a></v-list-item-title></v-list-item
+                          >
+                          <v-list-item
+                              v-if="user.isadmin"
+                              @click="
+                              $router.push(localeLocation({ path: '/admin' }))
+                              "
+                              ><v-list-item-title>{{
+                              $t("Admin")
+                              }}</v-list-item-title></v-list-item
+                          >
+                          <v-list-item v-if="signedin" @click="logout"
+                              ><v-list-item-title>{{
+                              $t("Logout")
+                              }}</v-list-item-title></v-list-item
+                          >
+                          </v-list>
+                      </v-menu>
+                      </v-app-bar-nav-icon>
+                  </client-only>
+                  <v-spacer></v-spacer>
+         
+                    <v-toolbar-items class="hidden-sm-and-down no-height-inherit">
 
-            <v-col cols="9">
-            <v-row justify="start" justify-md="end" class="pl-3">
-                <icon
-                v-if="signedin"
-                class="personicon mr-2 mt-1 univie-grey"
-                name="material-social-person"
-                width="24px"
-                height="24px"
-                ></icon>
-                <span
-                v-if="signedin"
-                class="mr-2 mt-2 subheading displayname univie-grey"
-                >{{ user.firstname }} {{ user.lastname }}</span
-                >
-
-                <v-menu offset-y>
-                <template v-slot:activator="{ on }">
-                    <v-btn text v-on="on" class="top-margin-lang">
-                    <span class="grey--text text--darken-1">{{
-                        localeLabel
-                    }}</span>
-                    <icon
-                        name="univie-sprache"
-                        class="lang-icon grey--text text--darken-1"
-                    ></icon>
-                    </v-btn>
-                </template>
-                <v-list>
-                    <v-list-item
-                    v-if="useLocale('eng')"
-                    @click="changeLocale('eng')"
-                    >
-                    <v-list-item-title>English</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item
-                    v-if="useLocale('deu')"
-                    @click="changeLocale('deu')"
-                    >
-                    <v-list-item-title>Deutsch</v-list-item-title>
-                    </v-list-item>
-                </v-list>
-                </v-menu>
-            </v-row>
-
-            <v-row>
-                <v-col
-                v-if="appconfig.showinstanceswitch"
-                cols="4"
-                class="select-instance text-left"
-                >
-                <v-select
-                    :items="instances"
-                    @input="switchInstance"
-                    :value="instanceconfig.baseurl"
-                    item-text="baseurl"
-                    single-line
-                ></v-select>
-                </v-col>
-                <v-col
-                class="text-left"
-                cols="10"
-                offset="1"
-                v-else-if="instanceconfig.title"
-                >
-                <icon
-                    left
-                    dark
-                    name="univie-right"
-                    color="#a4a4a4"
-                    width="14px"
-                    height="14px"
-                    class="mb-1"
-                ></icon>
-                <nuxt-link
-                    class="subheading primary--text mx-3"
-                    :to="localePath('/')"
-                    >{{ instanceconfig.title }}</nuxt-link
-                >
-                </v-col>
-            </v-row>
-
-            <v-row>
-                <v-toolbar flat color="white" dense>
-                <client-only>
-                    <v-app-bar-nav-icon class="hidden-md-and-up">
-                    <v-menu offset-y>
-                        <template v-slot:activator="{ on }">
-                        <v-btn text icon color="grey lighten-1" v-on="on"
-                            ><icon
-                            name="material-navigation-menu"
-                            width="24px"
-                            height="24px"
-                            ></icon
-                        ></v-btn>
-                        </template>
-                        <v-list>
-                        <v-list-item
-                            @click="
-                            $router.push(
-                                localeLocation({
-                                path: '/search',
-                                query: { reset: 1 },
-                                })
-                            )
-                            "
-                            ><v-list-item-title>{{
-                            $t("Search")
-                            }}</v-list-item-title></v-list-item
+                        <nuxt-link
+                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                            :to="localePath(`/search?reset=1`)"
+                            >{{ $t("Search") }}</nuxt-link
                         >
-                        <v-list-item
-                            v-if="signedin"
-                            @click="
-                            $router.push(localeLocation({ path: '/submit' }))
-                            "
-                            ><v-list-item-title>{{
-                            $t("Submit")
-                            }}</v-list-item-title></v-list-item
+
+
+                        <nuxt-link
+                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                            v-show="signedin"
+                            :to="localePath('/submit')"
+                            >{{ $t("Upload") }}</nuxt-link
                         >
-                        <v-list-item
-                            v-if="signedin"
-                            @click="
-                            $router.push(
-                                localeLocation({
+
+
+                        <nuxt-link
+                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                            v-show="signedin"
+                            :to="
+                            localePath({
                                 path: '/search',
                                 query: { reset: 1, owner: user.username },
-                                })
-                            )
+                            })
                             "
-                            ><v-list-item-title>{{
-                            $t("My objects")
-                            }}</v-list-item-title></v-list-item
+                            >{{ $t("My objects") }}</nuxt-link
                         >
-                        <v-list-item
-                            v-if="signedin"
-                            @click="
-                            $router.push(localeLocation({ path: '/lists' }))
-                            "
-                            ><v-list-item-title>{{
-                            $t("Object lists")
-                            }}</v-list-item-title></v-list-item
-                        >
-                        <v-list-item
-                            v-if="signedin"
-                            @click="
-                            $router.push(localeLocation({ path: '/groups' }))
-                            "
-                            ><v-list-item-title>{{
-                            $t("Groups")
-                            }}</v-list-item-title></v-list-item
-                        >
-                        <v-list-item
-                            @click="
-                            $router.push(localeLocation({ path: '/help' }))
-                            "
-                            ><v-list-item-title>{{
-                            $t("Help")
-                            }}</v-list-item-title></v-list-item
-                        >
-                        <v-list-item
-                            v-if="!signedin && appconfig.enablelogin"
-                            ><v-list-item-title><a :class="hover ? 'ph-button primary' : 'ph-button grey'" href="/login">{{ $t("Login") }}</a></v-list-item-title></v-list-item
-                        >
-                        <v-list-item
-                            v-if="user.isadmin"
-                            @click="
-                            $router.push(localeLocation({ path: '/admin' }))
-                            "
-                            ><v-list-item-title>{{
-                            $t("Admin")
-                            }}</v-list-item-title></v-list-item
-                        >
-                        <v-list-item v-if="signedin" @click="logout"
-                            ><v-list-item-title>{{
-                            $t("Logout")
-                            }}</v-list-item-title></v-list-item
-                        >
-                        </v-list>
-                    </v-menu>
-                    </v-app-bar-nav-icon>
-                </client-only>
-                <v-spacer></v-spacer>
-                <v-toolbar-items class="hidden-sm-and-down no-height-inherit">
-                    <v-hover v-slot:default="{ hover }">
-                    <nuxt-link
-                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                        :to="localePath(`/search?reset=1`)"
-                        >{{ $t("Search") }}</nuxt-link
-                    >
-                    </v-hover>
-                    <v-hover v-slot:default="{ hover }">
-                    <nuxt-link
-                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                        v-show="signedin"
-                        :to="localePath('/submit')"
-                        >{{ $t("Upload") }}</nuxt-link
-                    >
-                    </v-hover>
-                    <v-hover v-slot:default="{ hover }">
-                    <nuxt-link
-                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                        v-show="signedin"
-                        :to="
-                        localePath({
-                            path: '/search',
-                            query: { reset: 1, owner: user.username },
-                        })
-                        "
-                        >{{ $t("My objects") }}</nuxt-link
-                    >
-                    </v-hover>
-                    <v-hover v-slot:default="{ hover }">
-                    <nuxt-link
-                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                        v-show="signedin"
-                        :to="localePath('/lists')"
-                        >{{ $t("Object lists") }}</nuxt-link
-                    >
-                    </v-hover>
-                    <v-hover v-slot:default="{ hover }">
-                    <nuxt-link
-                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                        v-show="signedin"
-                        :to="localePath('/groups')"
-                        >{{ $t("Groups") }}</nuxt-link
-                    >
-                    </v-hover>
-                    <v-hover v-slot:default="{ hover }">
-                    <nuxt-link
-                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                        :to="localePath('/help')"
-                        >{{ $t("Help") }}</nuxt-link
-                    >
-                    </v-hover>
-                    <v-hover v-slot:default="{ hover }">
-                    <a
-                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                        v-show="!signedin && appconfig.enablelogin"
-                        :href="localePath('/login')"
-                        >{{ $t("Login") }}</a
-                    >
-                    </v-hover>
-                    <v-hover v-slot:default="{ hover }">
-                    <nuxt-link
-                        v-show="user.isadmin"
-                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                        :to="localePath('/admin')"
-                        >{{ $t("Admin") }}</nuxt-link
-                    >
-                    </v-hover>
-                    <v-hover>
-                    <a
-                        class="flat dark ph-button grey"
-                        v-show="signedin"
-                        @click="logout"
-                        >{{ $t("Logout") }}</a
-                    >
-                    </v-hover>
-                </v-toolbar-items>
-                </v-toolbar>
-            </v-row>
-            </v-col>
-        </v-row>
-        </v-col>
-    </v-row>
-  </div>
-</template>
 
-<script>
-import { config } from "@/mixins/config";
-import { context } from "@/mixins/context";
 
-export default {
-  mixins: [config, context],
-  computed: {
-    localeLabel: function () {
-      return this.$i18n.locale;
-    }
-  },
-  data() {
-    return {
-      quicklinksenabled: 0,
-    };
-  },
-  methods: {
-    logout: function () {
-      this.$store.dispatch("logout");
-      this.$store.commit("setLoading", false);
-      this.$router.push(this.localeLocation({ path: `/` }));
-    },
-    useLocale: function (lang) {
-      if (this.instanceconfig) {
-        if (this.instanceconfig.languages) {
-          return this.instanceconfig.languages.split(',').includes(lang);
-        }
+                        <nuxt-link
+                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                            v-show="signedin"
+                            :to="localePath('/lists')"
+                            >{{ $t("Object lists") }}</nuxt-link
+                        >
+
+
+                        <nuxt-link
+                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                            v-show="signedin"
+                            :to="localePath('/groups')"
+                            >{{ $t("Groups") }}</nuxt-link
+                        >
+
+
+                        <nuxt-link
+                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                            :to="localePath('/help')"
+                            >{{ $t("Help") }}</nuxt-link
+                        >
+
+
+                        <a
+                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                            v-show="!signedin && appconfig.enablelogin"
+                            :href="localePath('/login')"
+                            >{{ $t("Login") }}</a
+                        >
+
+
+                        <nuxt-link
+                            v-show="user.isadmin"
+                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                            :to="localePath('/admin')"
+                            >{{ $t("Admin") }}</nuxt-link
+                        >
+
+                        <a
+                            class="flat dark ph-button grey"
+                            v-show="signedin"
+                            @click="logout"
+                            >{{ $t("Logout") }}</a
+                        >
+
+                    </v-toolbar-items>
+                  </v-toolbar>
+              </v-row>
+              </v-col>
+          </v-row>
+          </v-col>
+      </v-row>
+    </div>
+  </template>
+  
+  <script>
+  import { config } from "@/mixins/config";
+  import { context } from "@/mixins/context";
+  
+  export default {
+    mixins: [config, context],
+    computed: {
+      localeLabel: function () {
+        return this.$i18n.locale;
       }
-      return false;
     },
-    changeLocale: function (lang) {
-      this.$i18n.locale = lang;
-      // this.$i18n.setLocaleCookie(lang);
-      localStorage.setItem("locale", lang);
-      this.$router.push(this.switchLocalePath(lang));
-      this.$store.dispatch("vocabulary/sortRoles", this.$i18n.locale);
-      this.$store.dispatch("vocabulary/sortFields", this.$i18n.locale);
-      this.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
-      this.$store.dispatch('info/sortFieldsOverview', this.$i18n.locale)
+    methods: {
+      logout: function () {
+        this.$store.dispatch("logout");
+        this.$store.commit("setLoading", false);
+        this.$router.push(this.localeLocation({ path: `/` }));
+      },
+      useLocale: function (lang) {
+        if (this.instanceconfig) {
+          if (this.instanceconfig.languages) {
+            return this.instanceconfig.languages.split(',').includes(lang);
+          }
+        }
+        return false;
+      },
+      changeLocale: function (lang) {
+        this.$i18n.locale = lang;
+        // this.$i18n.setLocaleCookie(lang);
+        localStorage.setItem("locale", lang);
+        this.$router.push(this.switchLocalePath(lang));
+        this.$store.dispatch("vocabulary/sortRoles", this.$i18n.locale);
+        this.$store.dispatch("vocabulary/sortFields", this.$i18n.locale);
+        this.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
+        this.$store.dispatch('info/sortFieldsOverview', this.$i18n.locale)
+      }
+    },
+    mounted() {
+      console.log('mounting header, signedin: ' + this.signedin)
+      console.log('mounting header, token: ' + this.$store.state.user.token)
+      if (localStorage.getItem("locale")) {
+        this.$i18n.locale = localStorage.getItem("locale");
+      } else {
+        localStorage.setItem("locale", this.$i18n.locale);
+      }
     }
-  },
-  mounted() {
-    console.log('mounting header, signedin: ' + this.signedin)
-    console.log('mounting header, token: ' + this.$store.state.user.token)
-    if (localStorage.getItem("locale")) {
-      this.$i18n.locale = localStorage.getItem("locale");
-    } else {
-      localStorage.setItem("locale", this.$i18n.locale);
-    }
-  }
-};
-</script>
+  };
+  </script>
+
+
+<style scoped>
+.toolbar__items a {
+  color: white !important;
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  outline: 0;
+  border: 0;
+  border-radius: 0px;
+  display: inline-block;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 6px;
+  margin: 6px 1px 6px 0px;
+  height: 30px;
+  line-height: 30px;
+  min-height: 30px;
+  white-space: nowrap;
+  min-width: 88px;
+  text-align: center;
+  font-weight: 300;
+  font-size: 14px;
+  font-style: inherit;
+  font-variant: inherit;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+}
+
+
+.toolbar__items a:hover {
+  background-color: #267ab3;
+  text-decoration: none;
+  color: white;
+  font-weight: 400;
+}
+
+</style>
+
+
+
+  
