@@ -65,14 +65,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
-    # uncomment if you are doing local development on:
-    # + src/phaidra-ui
-    # + src/phaidra-vue-components
-    # build:
-    #   context: ../.
-    #   dockerfile: dockerfiles/ui.dockerfile
-    # comment out the image-definition, if you are doing local development.
-    # (or point to the one you'd like to use)
+    # reference your custom image here, if you've created one from compose_dev and pushed to a registry.
     image: testuser34/ui-base:latest
     pull_policy: always
     networks:
@@ -299,67 +292,67 @@ services:
     networks:
       - phaidra-network
 
-  promtail-local:
-    image: grafana/promtail:2.9.2
-    volumes:
-      - .././container_init/promtail/promtail-local-config.yaml:/etc/promtail/config.yaml:ro
-      - ${HOST_DOCKER_SOCKET}:/var/run/docker.sock:ro
-    command: -config.file=/etc/promtail/config.yaml -config.expand-env=true
-    networks:
-      - phaidra-network
-    depends_on:
-      - grafana
+  # promtail-local:
+  #   image: grafana/promtail:2.9.2
+  #   volumes:
+  #     - .././container_init/promtail/promtail-local-config.yaml:/etc/promtail/config.yaml:ro
+  #     - ${HOST_DOCKER_SOCKET}:/var/run/docker.sock:ro
+  #   command: -config.file=/etc/promtail/config.yaml -config.expand-env=true
+  #   networks:
+  #     - phaidra-network
+  #   depends_on:
+  #     - grafana
 
-  loki:
-    image: grafana/loki:2.9.2
-    volumes:
-      - .././container_init/loki/loki-docker-config.yaml:/etc/loki/local-config.yaml:ro
-      - loki:/loki
-    command: -config.file=/etc/loki/local-config.yaml
-    networks:
-      - phaidra-network
+  # loki:
+  #   image: grafana/loki:2.9.2
+  #   volumes:
+  #     - .././container_init/loki/loki-docker-config.yaml:/etc/loki/local-config.yaml:ro
+  #     - loki:/loki
+  #   command: -config.file=/etc/loki/local-config.yaml
+  #   networks:
+  #     - phaidra-network
 
-  grafana:
-    image: grafana/grafana:10.2.2
-    volumes:
-      - .././container_init/grafana/ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
-      - .././container_init/grafana/dd.yaml:/etc/grafana/provisioning/dashboards/dd.yaml:ro
-      - ../container_init/grafana/dashboards:/mnt/grafana/dashboards:ro
-      - grafana:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
-      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
-      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana
-      - GF_SERVER_SERVE_FROM_SUB_PATH=true
-      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/mnt/grafana/dashboards/phaidra_default.json
-    depends_on:
-      - loki
-    networks:
-      - phaidra-network
+  # grafana:
+  #   image: grafana/grafana:10.2.2
+  #   volumes:
+  #     - .././container_init/grafana/ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
+  #     - .././container_init/grafana/dd.yaml:/etc/grafana/provisioning/dashboards/dd.yaml:ro
+  #     - ../container_init/grafana/dashboards:/mnt/grafana/dashboards:ro
+  #     - grafana:/var/lib/grafana
+  #   environment:
+  #     - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
+  #     - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+  #     - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana
+  #     - GF_SERVER_SERVE_FROM_SUB_PATH=true
+  #     - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/mnt/grafana/dashboards/phaidra_default.json
+  #   depends_on:
+  #     - loki
+  #   networks:
+  #     - phaidra-network
 
-  prometheus:
-    image: prom/prometheus:v2.48.0
-    volumes:
-      - ../container_init/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
-      - prometheus:/prometheus
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - phaidra-network
+  # prometheus:
+  #   image: prom/prometheus:v2.48.0
+  #   volumes:
+  #     - ../container_init/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+  #     - prometheus:/prometheus
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+  #   networks:
+  #     - phaidra-network
 
-  node-exporter:
-    image: prom/node-exporter:v1.7.0
-    networks:
-      - phaidra-network
+  # node-exporter:
+  #   image: prom/node-exporter:v1.7.0
+  #   networks:
+  #     - phaidra-network
 
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.47.2
-    networks:
-      - phaidra-network
-    volumes:
-      - /:/rootfs:ro
-      - /sys:/sys:ro
-      - ${HOST_DOCKER_SOCKET}:/var/run/docker.sock:ro
+  # cadvisor:
+  #   image: gcr.io/cadvisor/cadvisor:v0.47.2
+  #   networks:
+  #     - phaidra-network
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /sys:/sys:ro
+  #     - ${HOST_DOCKER_SOCKET}:/var/run/docker.sock:ro
 
   # UNCOMMENT and fill .env values if you have access to an opencast instance
   # vige:
