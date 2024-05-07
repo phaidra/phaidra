@@ -1,19 +1,19 @@
 version: '3'
 
-name: phaidra-cloudready
+# name: phaidra-cloudready
 
 networks:
   phaidra-network:
-    ipam:
-      config:
-        - subnet: 172.29.0.0/16
-          ip_range: 172.29.7.0/24
-          gateway: 172.29.5.1
+    # ipam:
+    #   config:
+    #     - subnet: 172.29.0.0/16
+    #       ip_range: 172.29.7.0/24
+    #       gateway: 172.29.5.1
 
 services:
   httpd:
     image: testuser34/httpd-dist:latest
-    pull_policy: always
+    # pull_policy: always
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -36,7 +36,7 @@ services:
 
   imageserver:
     image: testuser34/imageserver-base:979c59b3
-    pull_policy: always
+    # pull_policy: always
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -67,7 +67,7 @@ services:
       logging_jobname: "containerlogs"
     # reference your custom image here, if you've created one from compose_dev and pushed to a registry.
     image: testuser34/ui-base:latest
-    pull_policy: always
+    # pull_policy: always
     networks:
       - phaidra-network
     environment:
@@ -86,7 +86,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
-    pull_policy: always
+    # pull_policy: always
     volumes:
       - fedora:/mnt/fedora:ro
     networks:
@@ -121,7 +121,7 @@ services:
     restart:
       always
     image: testuser34/pixelgecko-dist:latest
-    pull_policy: always
+    # pull_policy: always
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
@@ -266,7 +266,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
-    pull_policy: always
+    # pull_policy: always
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
       - chronos-sitemaps:/mnt/sitemaps
