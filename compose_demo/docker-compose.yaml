@@ -38,23 +38,6 @@ services:
       - bash
       - /mnt/startup/httpd-demo-startup.bash
 
-  # phaidra.org website
-  # - files located in /website
-  # - integrated into phaidra/phaidra to easily write docs
-  # - visit http://localhost:8000 to view and change while developing
-  mkdocs:
-    image: squidfunk/mkdocs-material:latest
-    hostname: mkdocs
-    # use build to build static files locally (within /site dir) which then can be pushed to server
-    # command: "build"
-    command: "serve --dev-addr=0.0.0.0:8000"
-    volumes:
-      - ./..:/docs
-    ports:
-      - "8000:8000"
-    stdin_open: true
-    tty: true
-
   imageserver:
     image: testuser34/imageserver-base:979c59b3
     pull_policy: always
@@ -89,14 +72,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
-    # uncomment if you are doing local development on:
-    # + src/phaidra-ui
-    # + src/phaidra-vue-components
-    # build:
-    #   context: ../.
-    #   dockerfile: dockerfiles/ui.dockerfile
-    # comment out the image-definition, if you are doing local development.
-    # (or point to the one you'd like to use)
+    # reference your custom image here, if you've created one from compose_dev and pushed to a registry.
     image: testuser34/ui-base:latest
     pull_policy: always
     networks:

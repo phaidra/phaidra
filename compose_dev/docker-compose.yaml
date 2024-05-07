@@ -1,6 +1,6 @@
 version: '3'
 
-name: phaidra-shib
+name: phaidra-dev
 
 networks:
   phaidra-network:
@@ -11,45 +11,49 @@ networks:
           gateway: 172.29.5.1
 
 services:
-
   httpd:
-    image: testuser34/httpd-base-shib:cd745f58
+    image: testuser34/httpd-base:cd745f58
     pull_policy: always
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
     ports:
-      - "80:80"
-      - "443:443"
+      - "${PHAIDRA_HOSTPORT}:80"
+    volumes:
+      - .././container_init/httpd/phaidra-demo:/mnt/startup:ro
+      - chronos-sitemaps:/mnt/sitemaps:ro
     depends_on:
       - api
       - ui
       - dbgate
       - solr
       - grafana
-    volumes:
-      - .././container_init/httpd/phaidra-shib:/mnt/startup:ro
-      - chronos-sitemaps:/mnt/sitemaps:ro
     networks:
       - phaidra-network
     environment:
       - PHAIDRA_HOSTNAME=${PHAIDRA_HOSTNAME}
-      - PHAIDRA_HOST_IP=${PHAIDRA_HOST_IP}
+      - PHAIDRA_HOSTPORT=${PHAIDRA_HOSTPORT}
       - LOCAL_ADMIN_IP=${LOCAL_ADMIN_IP}
-      - REMOTE_ADMIN_IP=${REMOTE_ADMIN_IP}
-      - SHIB_MAIL=${SHIB_MAIL}
-      - SHIB_GIVEN_NAME=${SHIB_GIVEN_NAME}
-      - SHIB_SURNAME=${SHIB_SURNAME}
-      - SHIB_USERNAME=${SHIB_USERNAME}
-      - SHIB_AFFILIATION=${SHIB_AFFILIATION}
-      - SHIB_ENTITY_ID=${SHIB_ENTITY_ID}
-      - SHIB_DISCO_URL=${SHIB_DISCO_URL}
-      - SHIB_METADATA=${SHIB_METADATA}
-      - SHIB_METADATA_FILE=${SHIB_METADATA_FILE}
-      - SHIB_METADATA_CERT=${SHIB_METADATA_CERT}
     entrypoint:
       - bash
-      - /mnt/startup/httpd-shib-startup.bash
+      - /mnt/startup/httpd-demo-startup.bash
+
+  # phaidra.org website
+  # - files located in /website
+  # - integrated into phaidra/phaidra to easily write docs
+  # - visit http://localhost:8000 to view and change while developing
+  mkdocs:
+    image: squidfunk/mkdocs-material:latest
+    hostname: mkdocs
+    # use build to build static files locally (within /site dir) which then can be pushed to server
+    # command: "build"
+    command: "serve --dev-addr=0.0.0.0:8000"
+    volumes:
+      - ./..:/docs
+    ports:
+      - "8000:8000"
+    stdin_open: true
+    tty: true
 
   imageserver:
     image: testuser34/imageserver-base:979c59b3
@@ -85,9 +89,16 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
-    # reference your custom image here, if you've created one from compose_dev and pushed to a registry.
-    image: testuser34/ui-base:latest
-    pull_policy: always
+    # run 'docker image rm phaidra-dev-ui:latest' and
+    # 'docker system prune --filter label=com.docker.compose.project=phaidra-dev'
+    # to get a proper rebuild, if you do ui-development in the respective folders:
+    # + src/phaidra-ui
+    # + src/phaidra-vue-components
+    # Once you tag the build and push it to a registry, you can reference your image from in the
+    # docker-compose.yaml files from the compose_demo, compose_ssl, or compose_shib folders.
+    build:
+      context: ../.
+      dockerfile: dockerfiles/ui.dockerfile
     networks:
       - phaidra-network
     environment:
@@ -110,7 +121,7 @@ services:
     volumes:
       - fedora:/mnt/fedora:ro
       - ../src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
-      - ../container_init/api/api-entrypoint.bash:/mnt/api-entrypoint.bash
+      - ../container_init/api/api-entrypoint.bash:/mnt/api-entrypoint.bash:ro
     networks:
       - phaidra-network
     environment:
@@ -118,12 +129,6 @@ services:
       - PHAIDRA_PORTSTUB=${PHAIDRA_PORTSTUB}
       - PHAIDRA_HOSTPORT=${PHAIDRA_HOSTPORT}
       - OUTSIDE_HTTP_SCHEME=${OUTSIDE_HTTP_SCHEME}
-      - SHIB_MAIL=${SHIB_MAIL}
-      - SHIB_GIVEN_NAME=${SHIB_GIVEN_NAME}
-      - SHIB_SURNAME=${SHIB_SURNAME}
-      - SHIB_USERNAME=${SHIB_USERNAME}
-      - SHIB_AFFILIATION=${SHIB_AFFILIATION}
-      - SHIB_REQUIRED_AFFILIATIONS=${SHIB_REQUIRED_AFFILIATIONS}
       - PHAIDRA_SECRET=${PHAIDRA_SECRET}
       - PHAIDRA_ENCRYPTION_KEY=${PHAIDRA_ENCRYPTION_KEY}
       - IMAGESERVER_HASH_SECRET=${IMAGESERVER_HASH_SECRET}
@@ -276,6 +281,8 @@ services:
       - LDAP_USER=cn=${LDAP_ADMIN_USERNAME},${LDAP_ROOT}
       - LDAP_USERS_DN=ou=people,${LDAP_ROOT}
       - LDAP_GROUPS_DN=ou=groups,${LDAP_ROOT}
+    depends_on:
+      - openldap
     networks:
       - phaidra-network
 
