@@ -205,7 +205,25 @@ build-vige:
       changes:
         paths:
           - dockerfiles/vige.dockerfile  
-          
+
+compose-dev:
+  stage: test
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script:
+    - cd compose_dev
+    - cp ../.env.template .env
+    - docker compose up -d --quiet-pull --build
+    - docker compose down
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
+        paths:
+          - compose_dev/docker-compose.yaml
+          - components/phaidra-ui/**/*
+          - container_components/solr/**/*
+
 compose-demo:
   stage: test
   before_script:

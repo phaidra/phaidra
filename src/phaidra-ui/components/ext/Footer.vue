@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div v-if="instanceconfig.cms_footer">
+    <runtimetemplate :template="instanceconfig.cms_footer" />
+  </div>
+  <div v-else>
     <v-row>
       <v-col cols="12" md="10" offset-md="1">
         <v-row class="my-5">
@@ -15,8 +18,6 @@
             <nuxt-link :to="localePath('impressum')">{{ $t('Impressum') }}</nuxt-link> |
             <nuxt-link :to="localePath('termsofuse')">{{ $t('Terms of Use') }}</nuxt-link> |
             <nuxt-link :to="localePath('credits')">{{ $t('Credits') }}</nuxt-link>
-            <!-- |
-            <nuxt-link :to="localePath('statistics')">{{ $t('Statistics') }}</nuxt-link>-->
           </v-col>
         </v-row>
       </v-col>
@@ -28,6 +29,6 @@
 import { config } from "@/mixins/config";
 
 export default {
-  mixins: [config],
+  mixins: [config]
 };
 </script>

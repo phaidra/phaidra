@@ -75,14 +75,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
-    # uncomment if you are doing local development on:
-    # + src/phaidra-ui
-    # + src/phaidra-vue-components
-    # build:
-    #   context: ../.
-    #   dockerfile: dockerfiles/ui.dockerfile
-    # comment out the image-definition, if you are doing local development.
-    # (or point to the one you'd like to use)
+    # reference your custom image here, if you've created one from compose_dev and pushed to a registry.
     image: testuser34/ui-base:latest
     pull_policy: always
     networks:
