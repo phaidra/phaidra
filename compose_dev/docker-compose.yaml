@@ -91,7 +91,7 @@ services:
       logging_jobname: "containerlogs"
     # run 'docker image rm phaidra-dev-ui:latest' and
     # 'docker system prune --filter label=com.docker.compose.project=phaidra-dev'
-    # to get a proper rebuild, if you ui-development in the respective folders:
+    # to get a proper rebuild, if you do ui-development in the respective folders:
     # + src/phaidra-ui
     # + src/phaidra-vue-components
     # Once you tag the build and push it to a registry, you can reference your image from in the
