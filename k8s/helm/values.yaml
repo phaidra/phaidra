@@ -1,0 +1,76 @@
+# name of the mariadb database used by phaidra-api
+PHAIDRADB: "phaidradb"
+# name of the mariadb database used by fedora
+FEDORADB: "fedoradb"
+# root user password for the mariadb databases
+MARIADB_ROOT_PASSWORD: "example"
+# name of the mariadb database user
+MARIADB_PHAIDRA_USER: "phaidra"
+# password for the mariadb database user
+MARIADB_PHAIDRA_PASSWORD: "phaidra"
+# name of the mongodb database user
+MONGODB_PHAIDRA_USER: "phaidra"
+# password for the mongodb database user
+MONGODB_PHAIDRA_PASSWORD: "phaidra"
+# name of the mongodb database
+MONGO_AGENT_DB: "paf_mongodb"
+# openldap admin username
+LDAP_ADMIN_USERNAME: "admin"
+# openldap admin password
+LDAP_ADMIN_PASSWORD: "adminpassword"
+# openldap port number
+LDAP_PORT_NUMBER: "1389"
+# openldap root
+LDAP_ROOT: "dc=example,dc=org"
+# ldap domain for ldap account manager
+LDAP_DOMAIN: "example.org"
+# ldap user dn for ldap account manager
+LDAP_USERS_DN: "ou=people,dc=example,dc=org"
+# ldap group dn for ldap account manager
+LDAP_GROUPS_DN: "ou=groups,dc=example,dc=org"
+# ldap admin cn for ldap account manager
+LDAP_USER: "cn=admin,dc=example,dc=org"
+# ldap server adress for ldap account manager
+LDAP_SERVER: "ldap://openldap:1389"
+# fedora startup options (make sure credentials match above set database variables)
+CATALINA_OPTS: "-Dfcrepo.db.url=jdbc:mariadb://mariadb-fedora:3306/fedoradb -Dfcrepo.db.user=phaidra -Dfcrepo.db.password=phaidra"
+# fedora admin username
+FEDORA_ADMIN_USER: "fedoraAdmin"
+# fedora admin password
+FEDORA_ADMIN_PASS: "1234"
+# phaidra hostname
+PHAIDRA_HOSTNAME: "localhost"
+# set to IP that points to your FQDN, for access to phaidra admin pages.
+PHAIDRA_HOST_IP: ""
+# IP (list with no commas), for remote access to phaidra admin pages.
+REMOTE_ADMIN_IP: ""
+# set to empty quoted string on a production setup
+PHAIDRA_PORTSTUB: ":"
+# set to empty quoted string on a production setup
+PHAIDRA_HOSTPORT: "8899"
+# set to "https" on a production setup
+OUTSIDE_HTTP_SCHEME: "http"
+# phaidra secret
+PHAIDRA_SECRET: "changeme"
+# phaidra encryption key
+PHAIDRA_ENCRYPTION_KEY: "changeme"
+# imageserver hash secret
+IMAGESERVER_HASH_SECRET: "changeme"
+# phaidra admin user
+PHAIDRA_ADMIN_USER: "phaidraAdmin"
+# phaidra admin password
+PHAIDRA_ADMIN_PASSWORD: "12345"
+# pixelgecko image conversion interval in seconds
+IMAGE_CONVERSION_INTERVAL: "5"
+# dbgate credentials
+DBGATE_PASS: "phaidra"
+# solr encryption salt
+SOLR_SALT: "phaidra"
+# solr admin user
+SOLR_USER: "phaidra"
+# solr admin password
+SOLR_PASS: "phaidra"
+# phaidra primary color
+PHAIDRA_PRIMARY_COLOR: "#008080"
+# stub IP for httpd satisfaction
+LOCAL_ADMIN_IP: "10.0.2.2"

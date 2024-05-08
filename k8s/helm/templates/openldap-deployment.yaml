@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+    kompose.version: 1.26.0 (40646f47)
+    logging: promtail
+    logging_jobname: containerlogs
+  creationTimestamp: null
+  labels:
+    io.kompose.service: openldap
+  name: openldap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: openldap
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+        kompose.version: 1.26.0 (40646f47)
+        logging: promtail
+        logging_jobname: containerlogs
+      creationTimestamp: null
+      labels:
+        io.kompose.network/phaidra-network: "true"
+        io.kompose.service: openldap
+    spec:
+      containers:
+        - env:
+            - name: "LDAP_ADMIN_PASSWORD"
+              value: "{{ .Values.LDAP_ADMIN_PASSWORD }}"
+            - name: "LDAP_ADMIN_USERNAME"
+              value: "{{ .Values.LDAP_ADMIN_USERNAME }}"
+            - name: "LDAP_CUSTOM_LDIF_DIR"
+              value: "/ldifs"
+            - name: "LDAP_PORT_NUMBER"
+              value: "{{ .Values.LDAP_PORT_NUMBER }}"
+            - name: "LDAP_ROOT"
+              value: "{{ .Values.LDAP_ROOT }}"
+          image: testuser34/openldap-dist:latest
+          name: openldap
+          resources: {}
+          volumeMounts:
+            - mountPath: /bitnami/openldap
+              name: openldap
+      restartPolicy: Always
+      volumes:
+        - name: openldap
+          persistentVolumeClaim:
+            claimName: openldap
+status: {}

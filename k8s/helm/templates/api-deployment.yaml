@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+    kompose.version: 1.26.0 (40646f47)
+    logging: promtail
+    logging_jobname: containerlogs
+  creationTimestamp: null
+  labels:
+    io.kompose.service: api
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+        kompose.version: 1.26.0 (40646f47)
+        logging: promtail
+        logging_jobname: containerlogs
+      creationTimestamp: null
+      labels:
+        io.kompose.network/phaidra-network: "true"
+        io.kompose.service: api
+    spec:
+      containers:
+        - env:
+            - name: "FEDORA_ADMIN_PASS"
+              value: "{{ .Values.FEDORA_ADMIN_PASS }}"
+            - name: "FEDORA_ADMIN_USER"
+              value: "{{ .Values.FEDORA_ADMIN_USER }}"
+            - name: "FEDORA_OCFL_ROOT"
+              value: "{{ .Values.FEDORA_OCFL_ROOT }}"
+            - name: "IMAGESERVER_HASH_SECRET"
+              value: "{{ .Values.IMAGESERVER_HASH_SECRET }}"
+            - name: "LDAP_ADMIN_PASSWORD"
+              value: "{{ .Values.LDAP_ADMIN_PASSWORD }}"
+            - name: "LDAP_ADMIN_USERNAME"
+              value: "{{ .Values.LDAP_ADMIN_USERNAME }}"
+            - name: "LDAP_ROOT"
+              value: "{{ .Values.LDAP_ROOT }}"
+            - name: "OC_EXTERNAL"
+              value: "{{ .Values.OC_EXTERNAL }}"
+            - name: "OUTSIDE_HTTP_SCHEME"
+              value: "{{ .Values.OUTSIDE_HTTP_SCHEME }}"
+            - name: "PHAIDRA_ADMIN_PASSWORD"
+              value: "{{ .Values.PHAIDRA_ADMIN_PASSWORD }}"
+            - name: "PHAIDRA_ADMIN_USER"
+              value: "{{ .Values.PHAIDRA_ADMIN_USER }}"
+            - name: "PHAIDRA_ENCRYPTION_KEY"
+              value: "{{ .Values.PHAIDRA_ENCRYPTION_KEY }}"
+            - name: "PHAIDRA_HOSTNAME"
+              value: "{{ .Values.PHAIDRA_HOSTNAME }}"
+            - name: "PHAIDRA_HOSTPORT"
+              value: "{{ .Values.PHAIDRA_HOSTPORT }}"
+            - name: "PHAIDRA_PORTSTUB"
+              value: "{{ .Values.PHAIDRA_PORTSTUB }}"
+            - name: "PHAIDRA_SECRET"
+              value: "{{ .Values.PHAIDRA_SECRET }}"
+            - name: "SOLR_PASS"
+              value: "{{ .Values.SOLR_PASS }}"
+            - name: "SOLR_USER"
+              value: "{{ .Values.SOLR_USER }}"
+          image: testuser34/api-dist:latest
+          name: api
+          resources: {}
+          volumeMounts:
+            - mountPath: /mnt/fedora
+              name: fedora
+              readOnly: true
+      restartPolicy: Always
+      volumes:
+        - name: fedora
+          persistentVolumeClaim:
+            claimName: fedora
+            readOnly: true
+status: {}

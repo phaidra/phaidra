@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+    kompose.version: 1.26.0 (40646f47)
+    logging: promtail
+    logging_jobname: containerlogs
+  creationTimestamp: null
+  labels:
+    io.kompose.service: solr
+  name: solr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: solr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+        kompose.version: 1.26.0 (40646f47)
+        logging: promtail
+        logging_jobname: containerlogs
+      creationTimestamp: null
+      labels:
+        io.kompose.network/phaidra-network: "true"
+        io.kompose.service: solr
+    spec:
+      containers:
+        - env:
+            - name: "SOLR_PASS"
+              value: "{{ .Values.SOLR_PASS }}"
+            - name: "SOLR_SALT"
+              value: "{{ .Values.SOLR_SALT }}"
+            - name: "SOLR_USER"
+              value: "{{ .Values.SOLR_USER }}              "
+          image: testuser34/solr-dist:latest
+          name: solr
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/solr
+              name: solr
+      restartPolicy: Always
+      volumes:
+        - name: solr
+          persistentVolumeClaim:
+            claimName: solr
+status: {}

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+    kompose.version: 1.26.0 (40646f47)
+    logging: promtail
+    logging_jobname: containerlogs
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mongodb-phaidra
+  name: mongodb-phaidra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mongodb-phaidra
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+        kompose.version: 1.26.0 (40646f47)
+        logging: promtail
+        logging_jobname: containerlogs
+      creationTimestamp: null
+      labels:
+        io.kompose.network/phaidra-network: "true"
+        io.kompose.service: mongodb-phaidra
+    spec:
+      containers:
+        - env:
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: "{{ .Values.MONGODB_PHAIDRA_PASSWORD }}"
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
+          image: testuser34/mongodb-dist:latest
+          name: mongodb-phaidra
+          resources: {}
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodb-phaidra
+          # run as nobody because of container's chown sequence.
+          securityContext:
+            runAsUser: 65534
+      restartPolicy: Always
+      volumes:
+        - name: mongodb-phaidra
+          persistentVolumeClaim:
+            claimName: mongodb-phaidra
+status: {}

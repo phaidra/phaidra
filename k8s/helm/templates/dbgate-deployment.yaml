@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+    kompose.version: 1.26.0 (40646f47)
+    logging: promtail
+    logging_jobname: containerlogs
+  creationTimestamp: null
+  labels:
+    io.kompose.service: dbgate
+  name: dbgate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: dbgate
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+        kompose.version: 1.26.0 (40646f47)
+        logging: promtail
+        logging_jobname: containerlogs
+      creationTimestamp: null
+      labels:
+        io.kompose.network/phaidra-network: "true"
+        io.kompose.service: dbgate
+    spec:
+      containers:
+        - env:
+            - name: CONNECTIONS
+              value: con1,con2,con3
+            - name: ENGINE_con1
+              value: mariadb@dbgate-plugin-mysql
+            - name: ENGINE_con2
+              value: mariadb@dbgate-plugin-mysql
+            - name: ENGINE_con3
+              value: mongo@dbgate-plugin-mongo
+            - name: LABEL_con1
+              value: MariaDB-Phaidra
+            - name: LABEL_con2
+              value: MariaDB-Fedora
+            - name: LABEL_con3
+              value: MongoDB-Phaidra
+            - name: LOGINS
+              value: phaidra
+            - name: LOGIN_PASSWORD_phaidra
+            - name: PASSWORD_con1
+            - name: PASSWORD_con2
+            - name: PORT_con1
+              value: "3306"
+            - name: PORT_con2
+              value: "3306"
+            - name: SERVER_con1
+              value: mariadb-phaidra
+            - name: SERVER_con2
+              value: mariadb-fedora
+            - name: URL_con3
+              value: mongodb://:@mongodb-phaidra:27017
+            - name: USER_con1
+            - name: USER_con2
+            - name: WEB_ROOT
+              value: /dbgate
+          image: dbgate/dbgate:5.2.7
+          name: dbgate
+          resources: {}
+          volumeMounts:
+            - mountPath: /root/.dbgate
+              name: dbgate
+      restartPolicy: Always
+      volumes:
+        - name: dbgate
+          persistentVolumeClaim:
+            claimName: dbgate
+status: {}

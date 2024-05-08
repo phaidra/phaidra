@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+    kompose.version: 1.26.0 (40646f47)
+    logging: promtail
+    logging_jobname: containerlogs
+  creationTimestamp: null
+  labels:
+    io.kompose.service: lam
+  name: lam
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: lam
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+        kompose.version: 1.26.0 (40646f47)
+        logging: promtail
+        logging_jobname: containerlogs
+      creationTimestamp: null
+      labels:
+        io.kompose.network/phaidra-network: "true"
+        io.kompose.service: lam
+    spec:
+      containers:
+        - env:
+            - name: "LDAP_DOMAIN"
+              value: "{{ .Values.LDAP_DOMAIN }}"
+            - name: "LDAP_GROUPS_DN"
+              value: "{{ .Values.LDAP_GROUPS_DN }}"
+            - name: "LDAP_SERVER"
+              value: "{{ .Values.LDAP_SERVER }}"
+            - name: "LDAP_USER"
+              value: "{{ .Values.LDAP_USER }}"
+            - name: "LDAP_USERS_DN"
+              value: "{{ .Values.LDAP_USERS_DN }}"
+          image: ghcr.io/ldapaccountmanager/lam:8.5
+          name: lam
+          resources: {}
+      restartPolicy: Always
+status: {}

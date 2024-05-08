@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+    kompose.version: 1.26.0 (40646f47)
+    logging: promtail
+    logging_jobname: containerlogs
+  creationTimestamp: null
+  labels:
+    io.kompose.service: pixelgecko
+  name: pixelgecko
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: pixelgecko
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+        kompose.version: 1.26.0 (40646f47)
+        logging: promtail
+        logging_jobname: containerlogs
+      creationTimestamp: null
+      labels:
+        io.kompose.network/phaidra-network: "true"
+        io.kompose.service: pixelgecko
+    spec:
+      containers:
+        - env:
+            - name: IMAGE_CONVERSION_INTERVAL
+              value: "{{ .Values.IMAGE_CONVERSION_INTERVAL }}"
+          image: testuser34/pixelgecko-dist:latest
+          name: pixelgecko
+          resources: {}
+          volumeMounts:
+            - mountPath: /mnt/fedora
+              name: fedora
+              readOnly: true
+            - mountPath: /mnt/converted_images
+              name: pixelgecko
+      restartPolicy: Always
+      volumes:
+        - name: fedora
+          persistentVolumeClaim:
+            claimName: fedora
+            readOnly: true
+        - name: pixelgecko
+          persistentVolumeClaim:
+            claimName: pixelgecko
+status: {}

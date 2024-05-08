@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+    kompose.version: 1.26.0 (40646f47)
+    logging: promtail
+    logging_jobname: containerlogs
+  creationTimestamp: null
+  labels:
+    io.kompose.service: imageserver
+  name: imageserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: imageserver
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+        kompose.version: 1.26.0 (40646f47)
+        logging: promtail
+        logging_jobname: containerlogs
+      creationTimestamp: null
+      labels:
+        io.kompose.network/phaidra-network: "true"
+        io.kompose.service: imageserver
+    spec:
+      containers:
+        - image: testuser34/imageserver-base:979c59b3
+          name: imageserver
+          resources: {}
+          volumeMounts:
+            - mountPath: /mnt/converted_images
+              name: pixelgecko
+              readOnly: true
+      restartPolicy: Always
+      volumes:
+        - name: pixelgecko
+          persistentVolumeClaim:
+            claimName: pixelgecko
+            readOnly: true
+status: {}

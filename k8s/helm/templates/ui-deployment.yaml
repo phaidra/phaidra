@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+    kompose.version: 1.26.0 (40646f47)
+    logging: promtail
+    logging_jobname: containerlogs
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ui
+  name: ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ui
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
+        kompose.version: 1.26.0 (40646f47)
+        logging: promtail
+        logging_jobname: containerlogs
+      creationTimestamp: null
+      labels:
+        io.kompose.network/phaidra-network: "true"
+        io.kompose.service: ui
+    spec:
+      containers:
+        - env:
+            - name: "OUTSIDE_HTTP_SCHEME"
+              value: "{{ .Values.OUTSIDE_HTTP_SCHEME }}"
+            - name: "PHAIDRA_HOSTNAME"
+              value: "{{ .Values.PHAIDRA_HOSTNAME }}              "
+            - name: "PHAIDRA_HOSTPORT"
+              value: "{{ .Values.PHAIDRA_HOSTPORT }}"
+            - name: "PHAIDRA_PORTSTUB"
+              value: "{{ .Values.PHAIDRA_PORTSTUB }}"
+            - name: "PHAIDRA_PRIMARY_COLOR"
+              value: "{{ .Values.PHAIDRA_PRIMARY_COLOR }}"
+          image: testuser34/ui-base:latest
+          name: ui
+          resources: {}
+      restartPolicy: Always
+status: {}
