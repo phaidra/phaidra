@@ -5,6 +5,8 @@ metadata:
   labels:
     io.kompose.service: pixelgecko
   name: pixelgecko
+  annotations:
+    helm.sh/resource-policy: keep
 spec:
   accessModes:
     - ReadOnlyMany

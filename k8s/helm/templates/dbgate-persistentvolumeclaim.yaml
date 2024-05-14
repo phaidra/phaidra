@@ -5,6 +5,8 @@ metadata:
   labels:
     io.kompose.service: dbgate
   name: dbgate
+  annotations:
+    helm.sh/resource-policy: keep
 spec:
   accessModes:
     - ReadWriteOnce

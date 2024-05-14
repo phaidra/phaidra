@@ -5,6 +5,8 @@ metadata:
   labels:
     io.kompose.service: solr
   name: solr
+  annotations:
+    helm.sh/resource-policy: keep
 spec:
   accessModes:
     - ReadWriteOnce

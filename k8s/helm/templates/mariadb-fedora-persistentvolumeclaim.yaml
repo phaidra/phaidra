@@ -5,6 +5,8 @@ metadata:
   labels:
     io.kompose.service: mariadb-fedora
   name: mariadb-fedora
+  annotations:
+    helm.sh/resource-policy: keep
 spec:
   accessModes:
     - ReadWriteOnce
