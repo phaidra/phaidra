@@ -67,6 +67,8 @@ spec:
               value: "{{ .Values.SOLR_PASS }}"
             - name: "SOLR_USER"
               value: "{{ .Values.SOLR_USER }}"
+            - name: "SOLR_HOST"
+              value: "{{ .Values.SOLR_HOST }}"
           image: testuser34/api-dist:latest
           name: api
           resources: {}
