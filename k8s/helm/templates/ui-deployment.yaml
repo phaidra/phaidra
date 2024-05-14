@@ -33,7 +33,7 @@ spec:
             - name: "OUTSIDE_HTTP_SCHEME"
               value: "{{ .Values.OUTSIDE_HTTP_SCHEME }}"
             - name: "PHAIDRA_HOSTNAME"
-              value: "{{ .Values.PHAIDRA_HOSTNAME }}              "
+              value: "{{ .Values.PHAIDRA_HOSTNAME }}"
             - name: "PHAIDRA_HOSTPORT"
               value: "{{ .Values.PHAIDRA_HOSTPORT }}"
             - name: "PHAIDRA_PORTSTUB"

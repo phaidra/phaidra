@@ -36,7 +36,7 @@ spec:
             - name: "SOLR_SALT"
               value: "{{ .Values.SOLR_SALT }}"
             - name: "SOLR_USER"
-              value: "{{ .Values.SOLR_USER }}              "
+              value: "{{ .Values.SOLR_USER }}"
           image: testuser34/solr-dist:latest
           name: solr
           resources: {}
