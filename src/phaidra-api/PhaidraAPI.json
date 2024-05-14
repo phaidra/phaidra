@@ -174,7 +174,7 @@
     },
     "solr": {
         "scheme": "http",
-        "host": "solr",
+        "host": "__SOLR_HOST__",
         "path": "",
         "core": "phaidra",
         "port": "8983",
