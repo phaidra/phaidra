@@ -38,8 +38,10 @@ CATALINA_OPTS: "-Dfcrepo.db.url=jdbc:mariadb://mariadb-fedora:3306/fedoradb -Dfc
 FEDORA_ADMIN_USER: "fedoraAdmin"
 # fedora admin password
 FEDORA_ADMIN_PASS: "1234"
-# phaidra hostname
-PHAIDRA_HOSTNAME: "localhost"
+# api mountpoint of fedora data directory
+FEDORA_OCFL_ROOT: "/mnt/fedora/data/ocfl-root"
+# phaidra hostname -- set to the name (or IP address) you will be visiting PHAIDRA from your browser window
+PHAIDRA_HOSTNAME: "192.168.122.156"
 # set to IP that points to your FQDN, for access to phaidra admin pages.
 PHAIDRA_HOST_IP: ""
 # IP (list with no commas), for remote access to phaidra admin pages.
@@ -70,6 +72,8 @@ SOLR_SALT: "phaidra"
 SOLR_USER: "phaidra"
 # solr admin password
 SOLR_PASS: "phaidra"
+# solr host name
+SOLR_HOST: "solr-service"
 # phaidra primary color
 PHAIDRA_PRIMARY_COLOR: "#008080"
 # stub IP for httpd satisfaction
