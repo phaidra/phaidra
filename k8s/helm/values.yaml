@@ -1,5 +1,5 @@
 # phaidra hostname -- set to name (or IP address) that you use in your browser to access PHAIDRA
-PHAIDRA_HOSTNAME: "192.168.122.156"
+PHAIDRA_HOSTNAME: "192.168.122.170"
 # IP address, to access to phaidra admin pages (on eg a virtualized local k8s cluster)
 LOCAL_ADMIN_IP: "127.0.0.1"
 # set to IP that points to your FQDN, for access to phaidra admin pages.
@@ -49,9 +49,9 @@ FEDORA_ADMIN_PASS: "1234"
 # api mountpoint of fedora data directory
 FEDORA_OCFL_ROOT: "/mnt/fedora/data/ocfl-root"
 # set to empty quoted string on a production setup
-PHAIDRA_PORTSTUB: ":"
+PHAIDRA_PORTSTUB: ""
 # set to empty quoted string on a production setup
-PHAIDRA_HOSTPORT: "8899"
+PHAIDRA_HOSTPORT: ""
 # set to "https" on a production setup
 OUTSIDE_HTTP_SCHEME: "http"
 # phaidra secret
