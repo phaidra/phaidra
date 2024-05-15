@@ -22,7 +22,7 @@ spec:
         logging_jobname: containerlogs
       creationTimestamp: null
       labels:
-        io.kompose.network/phaidra-network: "true"
+        phaidra.network/phaidra-network: "backend"
         phaidra.app: solr
     spec:
       containers:
