@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: httpd-ingress
+  labels:
+    phaidra.app: httpd-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernets.io/use-forwarded-headers: "true"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: "/(.*)"
+        pathType: Prefix
+        backend:
+          service:
+            name: httpd
+            port:
+              number: 80
