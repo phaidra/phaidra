@@ -8,4 +8,4 @@ spec:
     port: 80
     targetPort: 80
   selector:
-    io.kompose.service: lam
+    phaidra.app: lam

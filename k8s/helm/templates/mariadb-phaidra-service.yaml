@@ -8,4 +8,4 @@ spec:
     port: 3306
     targetPort: 3306
   selector:
-    io.kompose.service: mariadb-phaidra
+    phaidra.app: mariadb-phaidra

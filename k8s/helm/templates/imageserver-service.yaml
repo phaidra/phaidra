@@ -8,4 +8,4 @@ spec:
     port: 80
     targetPort: 80
   selector:
-    io.kompose.service: imageserver
+    phaidra.app: imageserver

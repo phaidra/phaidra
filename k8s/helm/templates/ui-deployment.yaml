@@ -2,31 +2,27 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
-    kompose.version: 1.26.0 (40646f47)
     logging: promtail
     logging_jobname: containerlogs
   creationTimestamp: null
   labels:
-    io.kompose.service: ui
+    phaidra.app: ui
   name: ui
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: ui
+      phaidra.app: ui
   strategy: {}
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose --file ../../compose_cloudready/docker-compose.yaml convert
-        kompose.version: 1.26.0 (40646f47)
         logging: promtail
         logging_jobname: containerlogs
       creationTimestamp: null
       labels:
         io.kompose.network/phaidra-network: "true"
-        io.kompose.service: ui
+        phaidra.app: ui
     spec:
       containers:
         - env:

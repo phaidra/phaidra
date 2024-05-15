@@ -8,4 +8,4 @@ spec:
     port: 8983
     targetPort: 8983
   selector:
-    io.kompose.service: solr
+    phaidra.app: solr

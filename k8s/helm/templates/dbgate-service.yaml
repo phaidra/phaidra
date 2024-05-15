@@ -8,4 +8,4 @@ spec:
     port: 3000
     targetPort: 3000
   selector:
-    io.kompose.service: dbgate
+    phaidra.app: dbgate
