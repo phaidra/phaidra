@@ -1,3 +1,11 @@
+# phaidra hostname -- set to name (or IP address) that you use in your browser to access PHAIDRA
+PHAIDRA_HOSTNAME: "192.168.122.156"
+# IP address, to access to phaidra admin pages (on eg a virtualized local k8s cluster)
+LOCAL_ADMIN_IP: "127.0.0.1"
+# set to IP that points to your FQDN, for access to phaidra admin pages.
+PHAIDRA_HOST_IP: ""
+# IP (list with no commas), for remote access to phaidra admin pages.
+REMOTE_ADMIN_IP: ""
 # name of the mariadb database used by phaidra-api
 PHAIDRADB: "phaidradb"
 # name of the mariadb database used by fedora
@@ -40,12 +48,6 @@ FEDORA_ADMIN_USER: "fedoraAdmin"
 FEDORA_ADMIN_PASS: "1234"
 # api mountpoint of fedora data directory
 FEDORA_OCFL_ROOT: "/mnt/fedora/data/ocfl-root"
-# phaidra hostname -- set to the name (or IP address) you will be visiting PHAIDRA from your browser window
-PHAIDRA_HOSTNAME: "192.168.122.156"
-# set to IP that points to your FQDN, for access to phaidra admin pages.
-PHAIDRA_HOST_IP: ""
-# IP (list with no commas), for remote access to phaidra admin pages.
-REMOTE_ADMIN_IP: ""
 # set to empty quoted string on a production setup
 PHAIDRA_PORTSTUB: ":"
 # set to empty quoted string on a production setup
@@ -76,5 +78,3 @@ SOLR_PASS: "phaidra"
 SOLR_HOST: "solr-service"
 # phaidra primary color
 PHAIDRA_PRIMARY_COLOR: "#008080"
-# stub IP for httpd satisfaction
-LOCAL_ADMIN_IP: "10.0.2.2"
