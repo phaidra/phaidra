@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    phaidra.app: grafana
+  name: grafana-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      phaidra.app: grafana
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        phaidra.network/phaidra-network: "backend"
+        phaidra.app: grafana
+    spec:
+      containers:
+        - env:
+            - name: GF_SERVER_ROOT_URL
+              value: "%(protocol)s://%(domain)s:%(http_port)s/grafana"
+            - name: GF_SERVER_SERVE_FROM_SUB_PATH
+              value: "true"
+          name: grafana
+          image: grafana/grafana:10.2.2
+          resources: {}
+      restartPolicy: Always
+status: {}

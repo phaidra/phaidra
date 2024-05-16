@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    phaidra.app: loki
+  name: loki-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      phaidra.app: loki
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        phaidra.network/phaidra-network: "backend"
+        phaidra.app: loki
+    spec:
+      containers:
+        - name: loki
+          image: testuser34/loki-dist-k8s:latest
+          resources: {}
+          volumeMounts:
+            - mountPath: /loki
+              name: loki
+      restartPolicy: Always
+      volumes:
+        - name: loki
+          persistentVolumeClaim:
+            claimName: loki
+status: {}
