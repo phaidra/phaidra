@@ -33,6 +33,8 @@ spec:
               value: "{{ .Values.PHAIDRA_HOSTNAME }}"
             - name: PHAIDRA_HOSTPORT
               value: "{{ .Values.PHAIDRA_HOSTPORT }}"
+            - name: LOAD_BALANCER_IP
+              value: "{{ .Values.LOAD_BALANCER_IP }}"
           image: testuser34/httpd-dist:latest
           name: httpd
           ports:
