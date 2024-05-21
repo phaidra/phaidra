@@ -88,7 +88,7 @@ CHRONOS_OAI_LOGS_PVC_SIZE: "100Mi"
 CHRONOS_OAI_LOGS_PVC_TYPE: "nfs-csi"
 # chronos sitemaps pvc size & type
 CHRONOS_SITEMAPS_PVC_SIZE: "100Mi"
-CHRONOS_SITEMAPS_PVC_Type: "nfs-csi"
+CHRONOS_SITEMAPS_PVC_TYPE: "nfs-csi"
 # dbgate pvc size & type
 DBGATE_PVC_SIZE: "100Mi"
 DBGATE_PVC_TYPE: "nfs-csi"
@@ -97,7 +97,7 @@ FEDORA_PVC_SIZE: "100Mi"
 FEDORA_PVC_TYPE: "nfs-csi"
 # loki pvc size & type
 LOKI_PVC_SIZE: "100Mi"
-LOKI_PVC_SIZE: "nfs-csi"
+LOKI_PVC_TYPE: "nfs-csi"
 # mariadb-fedora pvc size & type
 MARIADB_FEDORA_PVC_SIZE: "100Mi"
 MARIADB_FEDORA_PVC_TYPE: "nfs-csi"
