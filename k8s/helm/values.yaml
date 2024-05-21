@@ -80,27 +80,39 @@ SOLR_PASS: "phaidra"
 SOLR_HOST: "solr-service"
 # phaidra primary color
 PHAIDRA_PRIMARY_COLOR: "#008080"
-# chronos database dumps pvc size
+# chronos database dumps pvc size & type
 CHRONOS_DB_DUMP_PVC_SIZE: "100Mi"
-# chronos oai logs pvc size
+CHRONOS_DB_DUMP_PVC_TYPE: "nfs-csi"
+# chronos oai logs pvc size & type
 CHRONOS_OAI_LOGS_PVC_SIZE: "100Mi"
-# chronos sitemaps pvc size
+CHRONOS_OAI_LOGS_PVC_TYPE: "nfs-csi"
+# chronos sitemaps pvc size & type
 CHRONOS_SITEMAPS_PVC_SIZE: "100Mi"
-# dbgate pvc size
+CHRONOS_SITEMAPS_PVC_Type: "nfs-csi"
+# dbgate pvc size & type
 DBGATE_PVC_SIZE: "100Mi"
-# fedora pvc size
+DBGATE_PVC_TYPE: "nfs-csi"
+# fedora pvc size & type
 FEDORA_PVC_SIZE: "100Mi"
-# loki pvc size
+FEDORA_PVC_TYPE: "nfs-csi"
+# loki pvc size & type
 LOKI_PVC_SIZE: "100Mi"
-# mariadb-fedora pvc size
+LOKI_PVC_SIZE: "nfs-csi"
+# mariadb-fedora pvc size & type
 MARIADB_FEDORA_PVC_SIZE: "100Mi"
-# mariadb-phaidra pvc size
+MARIADB_FEDORA_PVC_TYPE: "nfs-csi"
+# mariadb-phaidra pvc size & type
 MARIADB_PHAIDRA_PVC_SIZE: "100Mi"
-# mongodb-phaidra pvc size
+MARIADB_PHAIDRA_PVC_TYPE: "nfs-csi"
+# mongodb-phaidra pvc size & type
 MONGODB_PHAIDRA_PVC_SIZE: "100Mi"
-# openldap pvc size
+MONGODB_PHAIDRA_PVC_TYPE: "nfs-csi"
+# openldap pvc size & type
 OPENLDAP_PVC_SIZE: "100Mi"
-# pixelgecko pvc size
+OPENLDAP_PVC_TYPE: "nfs-csi"
+# pixelgecko pvc size & type
 PIXELGECKO_PVC_SIZE: "100Mi"
-# solr pvc size
+PIXELGECKO_PVC_TYPE: "nfs-csi"
+# solr pvc size & type
 SOLR_PVC_SIZE: "100Mi"
+SOLR_PVC_TYPE: "nfs-csi"

@@ -8,6 +8,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
 spec:
+  storageClassName: "{{ .Values.PIXELGECKO_PVC_TYPE }}"
   accessModes:
     - ReadOnlyMany
   resources:

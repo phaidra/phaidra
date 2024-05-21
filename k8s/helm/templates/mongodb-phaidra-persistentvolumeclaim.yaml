@@ -8,6 +8,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
 spec:
+  storageClassName: "{{ .Values.MONGODB_PHAIDRA_PVC_TYPE }}"
   accessModes:
     - ReadWriteOnce
   resources:
