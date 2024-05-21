@@ -42,8 +42,6 @@ LDAP_GROUPS_DN: "ou=groups,dc=example,dc=org"
 LDAP_USER: "cn=admin,dc=example,dc=org"
 # ldap server adress for ldap account manager
 LDAP_SERVER: "ldap://openldap:1389"
-# fedora startup options (make sure credentials match above set database variables)
-CATALINA_OPTS: "-Dfcrepo.db.url=jdbc:mariadb://mariadb-fedora:3306/fedoradb -Dfcrepo.db.user=phaidra -Dfcrepo.db.password=phaidra"
 # fedora admin username
 FEDORA_ADMIN_USER: "fedoraAdmin"
 # fedora admin password
