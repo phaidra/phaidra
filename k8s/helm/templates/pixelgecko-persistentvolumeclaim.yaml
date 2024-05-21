@@ -12,5 +12,5 @@ spec:
     - ReadOnlyMany
   resources:
     requests:
-      storage: 100Mi
+      storage: "{{ PIXELGECKO_PVC_SIZE }}"
 status: {}

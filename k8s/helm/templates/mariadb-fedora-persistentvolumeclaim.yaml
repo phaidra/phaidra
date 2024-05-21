@@ -12,5 +12,5 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Mi
+      storage: "{{ .Values.MARIADB_FEDORA_PVC_SIZE }}"
 status: {}

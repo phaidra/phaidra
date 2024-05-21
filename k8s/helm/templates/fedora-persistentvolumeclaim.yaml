@@ -12,5 +12,5 @@ spec:
     - ReadOnlyMany
   resources:
     requests:
-      storage: 100Mi
+      storage: "{{ .Values.FEDORA_PVC_SIZE }}"
 status: {}

@@ -12,5 +12,5 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Mi
+      storage: "{{ .Values.CHRONOS_DB_DUMP_PVC_SIZE }}"
 status: {}

@@ -80,3 +80,27 @@ SOLR_PASS: "phaidra"
 SOLR_HOST: "solr-service"
 # phaidra primary color
 PHAIDRA_PRIMARY_COLOR: "#008080"
+# chronos database dumps pvc size
+CHRONOS_DB_DUMP_PVC_SIZE: "100Mi"
+# chronos oai logs pvc size
+CHRONOS_OAI_LOGS_PVC_SIZE: "100Mi"
+# chronos sitemaps pvc size
+CHRONOS_SITEMAPS_PVC_SIZE: "100Mi"
+# dbgate pvc size
+DBGATE_PVC_SIZE: "100Mi"
+# fedora pvc size
+FEDORA_PVC_SIZE: "100Mi"
+# loki pvc size
+LOKI_PVC_SIZE: "100Mi"
+# mariadb-fedora pvc size
+MARIADB_FEDORA_PVC_SIZE: "100Mi"
+# mariadb-phaidra pvc size
+MARIADB_PHAIDRA_PVC_SIZE: "100Mi"
+# mongodb-phaidra pvc size
+MONGODB_PHAIDRA_PVC_SIZE: "100Mi"
+# openldap pvc size
+OPENLDAP_PVC_SIZE: "100Mi"
+# pixelgecko pvc size
+PIXELGECKO_PVC_SIZE: "100Mi"
+# solr pvc size
+SOLR_PVC_SIZE: "100Mi"
