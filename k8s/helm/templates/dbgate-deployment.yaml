@@ -58,6 +58,7 @@ spec:
             - name: SERVER_con2
               value: mariadb-fedora
             - name: URL_con3
+              value: "mongodb://{{ .Values.MONGODB_PHAIDRA_USER }}:{{ .Values.MONGODB_PHAIDRA_PASSWORD }}@mongodb-phaidra:27017"
             - name: USER_con1
               value: "{{ .Values.MARIADB_PHAIDRA_USER }}"
             - name: USER_con2
