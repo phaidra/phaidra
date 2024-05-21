@@ -35,7 +35,7 @@ spec:
               value: "{{ .Values.PHAIDRA_HOSTPORT }}"
             - name: LOAD_BALANCER_IP
               value: "{{ .Values.LOAD_BALANCER_IP }}"
-          image: testuser34/httpd-dist:20240521-init-v33
+          image: testuser34/httpd-dist:20240521-init-v34
           name: httpd
           ports:
             - containerPort: 80
