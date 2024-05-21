@@ -1,8 +1,8 @@
 # phaidra hostname -- set to name (or IP address) that you use in your browser to access PHAIDRA
 PHAIDRA_HOSTNAME: "192.168.122.156"
 # IP address, to access to phaidra admin pages (on eg a virtualized local k8s cluster)
-LOCAL_ADMIN_IP: "127.0.0.1"
-# IP address of your loadbalancer (needed for client IP detection), single IP or range
+LOCAL_ADMIN_IP: "192.168.122.1"
+# IP address of your loadbalancer pod (needed for client IP detection), single IP or range
 LOAD_BALANCER_IP: "10.1.141.0/24"
 # set to IP that points to your FQDN, for access to phaidra admin pages.
 PHAIDRA_HOST_IP: ""
