@@ -10,6 +10,8 @@ spec:
     metadata:
       labels:
         name: promtail
+    annotations:
+      checksum/config: {{ include (print $.Template.BasePath "/promtail-configmap.yaml") . | sha256sum }}
     spec:
       serviceAccount: promtail-serviceaccount
       containers:
