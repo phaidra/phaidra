@@ -40,21 +40,21 @@ data:
     LoadModule alias_module modules/mod_alias.so
 
     <IfModule unixd_module>
-    User www-data
-    Group www-data
+        User www-data
+        Group www-data
     </IfModule>
 
     <Directory />
-    AllowOverride none
-    Require all denied
+        AllowOverride none
+        Require all denied
     </Directory>
 
     <IfModule dir_module>
-    DirectoryIndex index.html
+        DirectoryIndex index.html
     </IfModule>
 
     <Files ".ht*">
-    Require all denied
+       Require all denied
     </Files>
 
     ErrorLog /proc/self/fd/2
