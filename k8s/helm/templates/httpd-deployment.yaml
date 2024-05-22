@@ -46,9 +46,8 @@ spec:
             - mountPath: /mnt/sitemaps
               name: chronos-sitemaps
               readOnly: true
-            - mountPath: /usr/local/apache2/conf/httpd.conf
+            - mountPath: /usr/local/apache2/conf
               name: httpd-config
-              subPath: httpd.conf
               readOnly: true
       restartPolicy: Always
       volumes:
@@ -59,4 +58,7 @@ spec:
         - name: httpd-config
           configMap:
             name: httpd-config
+            items:
+              - key: "httpd.conf"
+                path: "httpd.conf"
 status: {}
