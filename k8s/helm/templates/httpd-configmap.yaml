@@ -71,7 +71,6 @@ data:
     </IfModule>
 
     <IfModule headers_module>
-        #
         # Avoid passing HTTP_PROXY environment to CGI's on this or any proxied
         # backend servers which have lingering "httpoxy" defects.
         # 'Proxy' request header is undefined by the IETF, not listed by IANA
