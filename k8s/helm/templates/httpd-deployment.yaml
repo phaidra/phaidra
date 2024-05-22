@@ -35,7 +35,9 @@ spec:
               value: "{{ .Values.PHAIDRA_HOSTPORT }}"
             - name: LOAD_BALANCER_IP
               value: "{{ .Values.LOAD_BALANCER_IP }}"
-          image: testuser34/httpd-dist:20240521-init-v34
+            - name: PHAIDRA_ADMIN_EMAIL
+              value: "{{ .Values.PHAIDRA_ADMIN_EMAIL }}"
+          image: httpd:2.4.58-bookworm
           name: httpd
           ports:
             - containerPort: 80
@@ -44,10 +46,16 @@ spec:
             - mountPath: /mnt/sitemaps
               name: chronos-sitemaps
               readOnly: true
+            - mountPath: /usr/local/apache2/conf
+              name: httpd-config
+              readOnly: true
       restartPolicy: Always
       volumes:
         - name: chronos-sitemaps
           persistentVolumeClaim:
             claimName: chronos-sitemaps
             readOnly: true
+        - name: httpd-config
+          configMap:
+            name: httpd-config
 status: {}
