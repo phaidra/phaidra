@@ -20,6 +20,7 @@ spec:
       annotations:
         logging: promtail
         logging_jobname: containerlogs
+        checksum/config: {{ include (print $.Template.BasePath "/httpd-configmap.yaml") . | sha256sum }}
       creationTimestamp: null
       labels:
         phaidra.network/phaidra-network: "frontend"
