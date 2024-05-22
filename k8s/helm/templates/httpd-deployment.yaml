@@ -46,10 +46,11 @@ spec:
             - mountPath: /mnt/sitemaps
               name: chronos-sitemaps
               readOnly: true
-            - mountPath: /usr/local/apache2/conf/httpd.conf
-              subPath: httpd.conf
+            - mountPath: /config
               name: httpd-config
               readOnly: true
+          command: ["/bin/sh"]
+          args: [ "-c", "cp /config/httpd.conf /usr/local/apache2/conf/httpd.conf && httpd-foreground"]
       restartPolicy: Always
       volumes:
         - name: chronos-sitemaps
