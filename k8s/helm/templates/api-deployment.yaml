@@ -24,6 +24,8 @@ spec:
       labels:
         phaidra.network/phaidra-network: "backend"
         phaidra.app: api
+      annotations:
+        promtail.io/scrape: 'true'
     spec:
       containers:
         - env:

@@ -3,8 +3,6 @@ kind: Deployment
 metadata:
   annotations:
     promtail.io/scrape: 'true'
-    logging: promtail
-    logging_jobname: containerlogs
   creationTimestamp: null
   labels:
     phaidra.app: httpd
@@ -20,8 +18,6 @@ spec:
     metadata:
       annotations:
         promtail.io/scrape: 'true'
-        logging: promtail
-        logging_jobname: containerlogs
         checksum/config: {{ include (print $.Template.BasePath "/httpd-configmap.yaml") . | sha256sum }}
       creationTimestamp: null
       labels:
