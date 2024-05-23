@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    promtail.io/scrape: true
+    promtail.io/scrape: 'true'
     logging: promtail
     logging_jobname: containerlogs
   creationTimestamp: null
