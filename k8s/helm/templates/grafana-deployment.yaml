@@ -35,15 +35,15 @@ spec:
           image: grafana/grafana:10.2.2
           volumeMounts:
             - name: grafana-config
-              mountpath: /etc/grafana/provisioning/datasources
-              readonly: true
+              mountPath: /etc/grafana/provisioning/datasources
+              readOnly: true
           resources: {}
-        volumes:
-          - name: grafana-config
-            configMap:
-              name: grafana-config
-              items:
-                - key: "ds.yaml"
-                  path: "ds.yaml"
+      volumes:
+        - name: grafana-config
+          configMap:
+            name: grafana-config
+            items:
+              - key: "ds.yaml"
+                path: "ds.yaml"
       restartPolicy: Always
 status: {}
