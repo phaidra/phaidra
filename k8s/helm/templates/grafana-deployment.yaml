@@ -31,6 +31,8 @@ spec:
               value: "{{ .Values.GF_SECURITY_ADMIN_USER }}"
             - name: GF_SECURITY_ADMIN_PASSWORD
               value: "{{ .Values.GF_SECURITY_ADMIN_PASSWORD }}"
+            - name: GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH
+              value: "/mnt/grafana/dashboards/phaidra_default.json"
           name: grafana
           image: grafana/grafana:10.2.2
           volumeMounts:
