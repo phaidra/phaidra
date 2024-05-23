@@ -5,8 +5,6 @@ metadata:
   labels:
     phaidra.app: loki
   name: loki-deployment
-  annotations:
-    checksum/config: {{ include (print $.Template.BasePath "/loki-configmap.yaml") . | sha256sum }}
 spec:
   replicas: 1
   selector:
@@ -20,6 +18,8 @@ spec:
       labels:
         phaidra.network/phaidra-network: "backend"
         phaidra.app: loki
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/loki-configmap.yaml") . | sha256sum }}
     spec:
       containers:
         - name: loki
