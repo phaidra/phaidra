@@ -18,7 +18,8 @@ spec:
       labels:
         phaidra.network/phaidra-network: "backend"
         phaidra.app: grafana
-      annotations: checksum/config: {{ include (print $.Template.BasePath "/grafana-configmap.yaml") . | sha256sum }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/grafana-configmap.yaml") . | sha256sum }}
     spec:
       containers:
         - env:
