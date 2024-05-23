@@ -29,7 +29,7 @@ spec:
               value: "true"
             - name: GF_SECURITY_ADMIN_USER
               value: "{{ .Values.GF_SECURITY_ADMIN_USER }}"
-            - name: GC_SECURITY_ADMIN_PASSWORD
+            - name: GF_SECURITY_ADMIN_PASSWORD
               value: "{{ .Values.GF_SECURITY_ADMIN_PASSWORD }}"
           name: grafana
           image: grafana/grafana:10.2.2
