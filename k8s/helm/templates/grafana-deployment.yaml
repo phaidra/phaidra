@@ -37,6 +37,8 @@ spec:
             - name: grafana-config
               mountPath: /etc/grafana/provisioning/datasources
               readOnly: true
+            - name: grafana
+              mountPath: /var/lib/grafana
           resources: {}
       volumes:
         - name: grafana-config
@@ -45,5 +47,8 @@ spec:
             items:
               - key: "ds.yaml"
                 path: "ds.yaml"
+        - name: grafana
+          persistentVolumeClaim:
+            claimName: grafana
       restartPolicy: Always
 status: {}

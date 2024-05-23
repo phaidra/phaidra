@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    phaidra.app: grafana
+  name: grafana
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  storageClassName: "{{ .Values.GRAFANA_PVC_TYPE }}"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "{{ .Values.GRAFANA_PVC_SIZE }}"
+status: {}

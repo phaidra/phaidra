@@ -119,3 +119,6 @@ SOLR_PVC_TYPE: "nfs-csi"
 # grafana admin credentials
 GF_SECURITY_ADMIN_USER: "phaidra"
 GF_SECURITY_ADMIN_PASSWORD: "phaidra"
+# grafana pvc size & type
+GRAFANA_PVC_SIZE: "100Mi"
+GRAFANA_PVC_TYPE: "nfs-csi"
