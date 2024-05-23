@@ -38,7 +38,7 @@ spec:
               mountPath: /etc/grafana/provisioning/datasources
               readOnly: true
             - name: grafana-provisioned-dashboards-setting
-              mountPath: /etc/grafana/provisioning/dashboards/dd.yaml
+              mountPath: /etc/grafana/provisioning/dashboards
               readOnly: true
             - name: grafana-default-dashboard
               mountPath: /mnt/grafana/dashboards
