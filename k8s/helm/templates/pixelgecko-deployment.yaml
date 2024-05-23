@@ -1,9 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    logging: promtail
-    logging_jobname: containerlogs
   creationTimestamp: null
   labels:
     phaidra.app: pixelgecko
@@ -18,8 +15,7 @@ spec:
   template:
     metadata:
       annotations:
-        logging: promtail
-        logging_jobname: containerlogs
+        promtail.io/scrape: 'true'
       creationTimestamp: null
       labels:
         phaidra.network/phaidra-network: "backend"
