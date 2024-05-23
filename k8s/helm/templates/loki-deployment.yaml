@@ -42,5 +42,5 @@ spec:
             name: loki-config
             items:
               - key: "local-config.yaml"
-              - path: "local-config.yaml"
+                path: "local-config.yaml"
 status: {}
