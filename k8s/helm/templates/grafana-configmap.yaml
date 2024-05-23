@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-config
+data:
+  ds.yaml: |
+    apiVersion: 1
+    
+    datasources:
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://loki:3100
+        editable: false
+        isDefault: true
+        uid: phaidra_loki_default
+      - name: PhaidraDB
+        type: mysql
+        url: mariadb-phaidra:3306
+        user: grafana
+        jsonData:
+          database: phaidradb
+          maxOpenConns: 100 # Grafana v5.4+
+          maxIdleConns: 100 # Grafana v5.4+
+          maxIdleConnsAuto: true # Grafana v9.5.1+
+          connMaxLifetime: 14400 # Grafana v5.4+
+        secureJsonData:
+          password: grafana
+        uid: phaidra_mariadb_phaidra
+      - name: FedoraDB
+        type: mysql
+        url: mariadb-fedora:3306
+        user: grafana
+        jsonData:
+          database: fedoradb
+          maxOpenConns: 100 # Grafana v5.4+
+          maxIdleConns: 100 # Grafana v5.4+
+          maxIdleConnsAuto: true # Grafana v9.5.1+
+          connMaxLifetime: 14400 # Grafana v5.4+
+        secureJsonData:
+          password: grafana
+        uid: phaidra_mariadb_fedora
+    

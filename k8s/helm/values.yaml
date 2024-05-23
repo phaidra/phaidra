@@ -116,3 +116,6 @@ PIXELGECKO_PVC_TYPE: "nfs-csi"
 # solr pvc size & type
 SOLR_PVC_SIZE: "100Mi"
 SOLR_PVC_TYPE: "nfs-csi"
+# grafana admin credentials
+GF_SECURITY_ADMIN_USER: "phaidra"
+GF_SECURITY_ADMIN_PASSWORD: "phaidra"

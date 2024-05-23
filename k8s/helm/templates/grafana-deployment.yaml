@@ -18,6 +18,7 @@ spec:
       labels:
         phaidra.network/phaidra-network: "backend"
         phaidra.app: grafana
+      annotations: checksum/config: {{ include (print $.Template.BasePath "/grafana-configmap.yaml") . | sha256sum }}
     spec:
       containers:
         - env:
@@ -25,8 +26,23 @@ spec:
               value: "%(protocol)s://%(domain)s:%(http_port)s/grafana"
             - name: GF_SERVER_SERVE_FROM_SUB_PATH
               value: "true"
+            - name: GF_SECURITY_ADMIN_USER
+              value: "{{ .Values.GF_SECURITY_ADMIN_USER }}"
+            - name: GC_SECURITY_ADMIN_PASSWORD
+              value: "{{ .Values.GF_SECURITY_ADMIN_PASSWORD }}"
           name: grafana
           image: grafana/grafana:10.2.2
+          volumeMounts:
+            - name: grafana-config
+              mountpath: /etc/grafana/provisioning/datasources
+              readonly: true
           resources: {}
+        volumes:
+          - name: grafana-config
+            configMap:
+              name: grafana-config
+              items:
+                - key: "ds.yaml"
+                  path: "ds.yaml"
       restartPolicy: Always
 status: {}
