@@ -5,6 +5,8 @@ metadata:
   labels:
     phaidra.app: loki
   name: loki-deployment
+  annotations:
+    checksum/config: {{ include (print $.Template.BasePath "/loki-configmap.yaml") . | sha256sum }}
 spec:
   replicas: 1
   selector:
@@ -21,14 +23,24 @@ spec:
     spec:
       containers:
         - name: loki
-          image: testuser34/loki-dist-k8s:latest
+          image: grafana/loki:2.9.2
           resources: {}
           volumeMounts:
             - mountPath: /loki
               name: loki
+            - mountPath: /etc/loki
+              name: loki-config
+              readOnly: true
+          args: ["-config.file=/etc/loki/local-config.yaml"]
       restartPolicy: Always
       volumes:
         - name: loki
           persistentVolumeClaim:
             claimName: loki
+        - name: loki-config
+          configMap:
+            name: loki-config
+            items:
+              - key: "local-config.yaml"
+              - path: "local-config.yaml"
 status: {}
