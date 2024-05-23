@@ -31,7 +31,7 @@ spec:
             - mountPath: /etc/loki
               name: loki-config
               readOnly: true
-          args: ["-config.file=/etc/loki/local-config.yaml", "-config.expand-env=true"]
+          args: ["-config.file=/etc/loki/local-config.yaml"]
       restartPolicy: Always
       volumes:
         - name: loki
