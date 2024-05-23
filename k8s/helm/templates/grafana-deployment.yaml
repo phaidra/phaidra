@@ -34,20 +34,38 @@ spec:
           name: grafana
           image: grafana/grafana:10.2.2
           volumeMounts:
-            - name: grafana-config
+            - name: grafana-provisioned-datasources
               mountPath: /etc/grafana/provisioning/datasources
               readOnly: true
-            - name: grafana
+            - name: grafana-provisioned-dashboards-setting
+              mountPath: /etc/grafana/provisioning/dashboards/dd.yaml
+              readOnly: true
+            - name: grafana-default-dashboard
+              mountPath: /mnt/grafana/dashboards
+              readOnly: true
+            - name: grafana-data
               mountPath: /var/lib/grafana
           resources: {}
       volumes:
-        - name: grafana-config
+        - name: grafana-provisioned-datasources
           configMap:
             name: grafana-config
             items:
               - key: "ds.yaml"
                 path: "ds.yaml"
-        - name: grafana
+        - name: grafana-provisioned-dashboards-setting
+          configMap:
+            name: grafana-config
+            items:
+              - key: "dd.yaml"
+                path: "dd.yaml"
+        - name: grafana-default-dashboard
+          configMap:
+            name: grafana-config
+            items:
+              - key: "phaidra_default.json"
+                path: "phaidra_default.json"
+        - name: grafana-data
           persistentVolumeClaim:
             claimName: grafana
       restartPolicy: Always
