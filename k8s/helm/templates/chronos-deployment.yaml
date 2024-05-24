@@ -51,7 +51,7 @@ spec:
               value: "{{ .Values.PHAIDRA_PORTSTUB }}"
             - name: SOLR_HOST
               value: "{{ .Values.SOLR_HOST }}"
-          image: testuser34/chronos-dist:20240524-init-v2
+          image: testuser34/chronos-dist:20240524-init-v3
           name: chronos
           resources: {}
           volumeMounts:
