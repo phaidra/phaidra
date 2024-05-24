@@ -23,33 +23,35 @@ spec:
     spec:
       containers:
         - env:
-            - name: "FEDORADB"
+            - name: FEDORADB
               value: "{{ .Values.FEDORADB }}"
-            - name: "FEDORA_ADMIN_PASS"
+            - name: FEDORA_ADMIN_PASS
               value: "{{ .Values.FEDORA_ADMIN_PASS }}"
-            - name: "FEDORA_ADMIN_USER"
+            - name: FEDORA_ADMIN_USER
               value: "{{ .Values.FEDORA_ADMIN_USER }}"
-            - name: "MARIADB_ROOT_PASSWORD"
+            - name: MARIADB_ROOT_PASSWORD
               value: "{{ .Values.MARIADB_ROOT_PASSWORD }}"
-            - name: "MONGODB_PHAIDRA_PASSWORD"
+            - name: MONGODB_PHAIDRA_PASSWORD
               value: "{{ .Values.MONGODB_PHAIDRA_PASSWORD }}"
-            - name: "MONGODB_PHAIDRA_USER"
+            - name: MONGODB_PHAIDRA_USER
               value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
-            - name: "OUTSIDE_HTTP_SCHEME"
+            - name: OUTSIDE_HTTP_SCHEME
               value: "{{ .Values.OUTSIDE_HTTP_SCHEME }}"
-            - name: "PHAIDRADB"
+            - name: PHAIDRADB
               value: "{{ .Values.PHAIDRADB }}"
-            - name: "PHAIDRA_ADMIN_PASSWORD"
+            - name: PHAIDRA_ADMIN_PASSWORD
               value: "{{ .Values.PHAIDRA_ADMIN_PASSWORD }}"
-            - name: "PHAIDRA_ADMIN_USER"
+            - name: PHAIDRA_ADMIN_USER
               value: "{{ .Values.PHAIDRA_ADMIN_USER }}"
-            - name: "PHAIDRA_HOSTNAME"
+            - name: PHAIDRA_HOSTNAME
               value: "{{ .Values.PHAIDRA_HOSTNAME }}"
-            - name: "PHAIDRA_HOSTPORT"
+            - name: PHAIDRA_HOSTPORT
               value: "{{ .Values.PHAIDRA_HOSTPORT }}"
-            - name: "PHAIDRA_PORTSTUB"
+            - name: PHAIDRA_PORTSTUB
               value: "{{ .Values.PHAIDRA_PORTSTUB }}"
-          image: testuser34/chronos-dist:latest
+            - name: SOLR_HOST
+              value: "{{ .Values.SOLR_HOST }}"
+          image: testuser34/chronos-dist:20240524-init-v2
           name: chronos
           resources: {}
           volumeMounts:

@@ -321,6 +321,7 @@ services:
       - PHAIDRA_ADMIN_PASSWORD=${PHAIDRA_ADMIN_PASSWORD}
       - FEDORA_ADMIN_USER=${FEDORA_ADMIN_USER}
       - FEDORA_ADMIN_PASS=${FEDORA_ADMIN_PASS}
+      - SOLR_HOST=${SOLR_HOST}
     depends_on:
       - mariadb-fedora
       - mariadb-phaidra
