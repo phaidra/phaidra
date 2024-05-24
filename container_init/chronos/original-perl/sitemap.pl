@@ -49,7 +49,7 @@ my $ua = Mojo::UserAgent->new;
 
 my $urlsolr = Mojo::URL->new;
 $urlsolr->scheme("http");
-$urlsolr->host(%ENV{SOLR_HOST});
+$urlsolr->host($ENV{SOLR_HOST});
 $urlsolr->port(8983);
 $urlsolr->path("/solr/phaidra/select");
 $urlsolr->query(q => "*:*", fq => "-hassuccessor:* AND -ismemberof:[\"\" TO *] AND -isinadminset:*", fl => "pid", rows => 1, wt => "json");
