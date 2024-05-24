@@ -26,8 +26,8 @@ spec:
     spec:
       containers:
         - env:
-            - name: LOCAL_ADMIN_IP
-              value: "{{ .Values.LOCAL_ADMIN_IP }}"
+            - name: ADMIN_IP_LIST
+              value: "{{ .Values.ADMIN_IP_LIST }}"
             - name: PHAIDRA_HOSTNAME
               value: "{{ .Values.PHAIDRA_HOSTNAME }}"
             - name: PHAIDRA_HOSTPORT
