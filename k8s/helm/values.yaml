@@ -2,14 +2,10 @@
 PHAIDRA_HOSTNAME: "192.168.122.156"
 # phaidra server admin email address (for webserver configuration)
 PHAIDRA_ADMIN_EMAIL: "you@example.com"
-# IP address, to access to phaidra admin pages (on eg a virtualized local k8s cluster)
-LOCAL_ADMIN_IP: "192.168.122.1"
+# IP addresses/ranges separated by blank spaces, that are allowed to access to phaidra admin pages (user management, grafana, databases,...).
+ADMIN_IP_LIST: "192.168.122.1"
 # IP address of your loadbalancer pod (needed for client IP detection), single IP or range
 LOAD_BALANCER_IP: "10.1.141.0/24"
-# set to IP that points to your FQDN, for access to phaidra admin pages.
-PHAIDRA_HOST_IP: ""
-# IP (list with no commas), for remote access to phaidra admin pages.
-REMOTE_ADMIN_IP: ""
 # name of the mariadb database used by phaidra-api
 PHAIDRADB: "phaidradb"
 # name of the mariadb database used by fedora

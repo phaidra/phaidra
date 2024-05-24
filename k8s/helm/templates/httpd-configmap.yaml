@@ -103,31 +103,31 @@ data:
         </LocationMatch>
 
         <Location /dbgate>
-            Require ip ${LOCAL_ADMIN_IP}
+            Require ip ${ADMIN_IP_LIST}
             ProxyPass http://dbgate:3000/dbgate
             ProxyPassReverse http://dbgate:3000/dbgate
         </Location>
 
         <Location /lam>
-            Require ip ${LOCAL_ADMIN_IP}
+            Require ip ${ADMIN_IP_LIST}
             ProxyPass http://lam:80/lam
             ProxyPassReverse http://lam:80/lam
         </Location>
 
         <Location /fcrepo>
-            Require ip ${LOCAL_ADMIN_IP}
+            Require ip ${ADMIN_IP_LIST}
             ProxyPass http://fedora:8080/fcrepo
             ProxyPassReverse http://fedora:8080/fcrepo
         </Location>
 
         <Location /solr>
-            Require ip ${LOCAL_ADMIN_IP}
+            Require ip ${ADMIN_IP_LIST}
             ProxyPass http://solr-service:8983/solr
             ProxyPassReverse http://solr-service:8983/solr
         </Location>
 
         <Location /grafana>
-            Require ip ${LOCAL_ADMIN_IP}
+            Require ip ${ADMIN_IP_LIST}
             ProxyPass http://grafana:3000/grafana
             ProxyPassReverse http://grafana:3000/grafana
         </Location>
