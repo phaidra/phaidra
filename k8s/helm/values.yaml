@@ -6,6 +6,8 @@ PHAIDRA_ADMIN_EMAIL: "you@example.com"
 ADMIN_IP_LIST: "192.168.122.1"
 # IP address of your loadbalancer pod (needed for client IP detection), single IP or range
 LOAD_BALANCER_IP: "10.1.141.0/24"
+# Header to use for original client ip detection
+SOURCE_CLIENT_IP_HEADER: "X-Original-Forwarded-For"
 # name of the mariadb database used by phaidra-api
 PHAIDRADB: "phaidradb"
 # name of the mariadb database used by fedora

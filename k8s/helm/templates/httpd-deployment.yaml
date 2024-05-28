@@ -36,6 +36,8 @@ spec:
               value: "{{ .Values.LOAD_BALANCER_IP }}"
             - name: PHAIDRA_ADMIN_EMAIL
               value: "{{ .Values.PHAIDRA_ADMIN_EMAIL }}"
+            - name: SOURCE_CLIENT_IP_HEADER
+              value: "{{ .Values.SOURCE_CLIENT_IP_HEADER }}"
           image: httpd:2.4.58-bookworm
           name: httpd
           ports:
