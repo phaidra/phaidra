@@ -9,7 +9,7 @@ data:
     ServerAdmin ${PHAIDRA_ADMIN_EMAIL}
     ServerName ${PHAIDRA_HOSTNAME}
     RemoteIPHeader X-Forwarded-For
-    RemoteIPTrustedProxy ${LOAD_BALANCER_IP}
+    RemoteIPInternalProxy ${LOAD_BALANCER_IP}
 
     LoadModule mpm_event_module modules/mod_mpm_event.so
     LoadModule authn_file_module modules/mod_authn_file.so
