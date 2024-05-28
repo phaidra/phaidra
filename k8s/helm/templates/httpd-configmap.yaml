@@ -65,7 +65,7 @@ data:
         LogFormat "%h %l %u %t \"%r\" %>s %b" common
         <IfModule logio_module>
             # You need to enable mod_logio.c to use %I and %O
-            LogFormat "%a %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined
+            LogFormat "%I %a %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined
         </IfModule>
         CustomLog /proc/self/fd/1 combined
     </IfModule>
