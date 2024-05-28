@@ -8,7 +8,7 @@ data:
     ServerRoot "/usr/local/apache2"
     ServerAdmin ${PHAIDRA_ADMIN_EMAIL}
     ServerName ${PHAIDRA_HOSTNAME}
-    RemoteIPHeader X-Forwarded-For
+    RemoteIPHeader X-Original-Forwarded-For
     RemoteIPInternalProxy ${LOAD_BALANCER_IP}
 
     LoadModule mpm_event_module modules/mod_mpm_event.so
