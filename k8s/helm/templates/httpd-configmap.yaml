@@ -38,7 +38,6 @@ data:
     LoadModule autoindex_module modules/mod_autoindex.so
     LoadModule dir_module modules/mod_dir.so
     LoadModule alias_module modules/mod_alias.so
-    LoadModule log_forensic_module modules/mod_log_forensic.so
 
     <IfModule unixd_module>
         User www-data
@@ -62,17 +61,15 @@ data:
 
     LogLevel warn
 
-    # <IfModule log_config_module>
-    #     LogFormat "%h %l %u %t \"%r\" %>s %b" common
-    #     <IfModule logio_module>
-    #         # You need to enable mod_logio.c to use %I and %O
-    #         LogFormat "%a %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined
-    #     </IfModule>
-    #     CustomLog /proc/self/fd/1 combined
-    # </IfModule>
+    <IfModule log_config_module>
+        LogFormat "%h %l %u %t \"%r\" %>s %b" common
+        <IfModule logio_module>
+            # You need to enable mod_logio.c to use %I and %O
+            LogFormat "%a %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined
+        </IfModule>
+        CustomLog /proc/self/fd/1 combined
+    </IfModule>
 
-    ForensicLog /proc/self/fd/1
-    
     <IfModule headers_module>
         # Avoid passing HTTP_PROXY environment to CGI's on this or any proxied
         # backend servers which have lingering "httpoxy" defects.
