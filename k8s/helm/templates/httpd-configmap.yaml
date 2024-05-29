@@ -97,8 +97,8 @@ data:
 
         <LocationMatch "^/api/(.*)">
             Require all granted
-            ProxyPass http://api:3000/$1 timeout=360
-            ProxyPassReverse http://api:3000/$1
+            ProxyPass http://api-service:3000/$1 timeout=360
+            ProxyPassReverse http://api-service:3000/$1
             Proxy100Continue Off
         </LocationMatch>
 
@@ -116,8 +116,8 @@ data:
 
         <Location /fcrepo>
             Require ip ${ADMIN_IP_LIST}
-            ProxyPass http://fedora:8080/fcrepo
-            ProxyPassReverse http://fedora:8080/fcrepo
+            ProxyPass http://fedora-service:8080/fcrepo
+            ProxyPassReverse http://fedora-service:8080/fcrepo
         </Location>
 
         <Location /solr>

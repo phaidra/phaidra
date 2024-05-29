@@ -1,10 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     phaidra.app: api
-  name: api
+  name: api-deployment
 spec:
   replicas: 1
   selector:
@@ -16,9 +15,8 @@ spec:
     metadata:
       annotations:
         promtail.io/scrape: 'true'
-      creationTimestamp: null
+        checksum/config: {{ include (print $.Template.BasePath "/api-configmap.yaml") . | sha256sum }}
       labels:
-        phaidra.network/phaidra-network: "backend"
         phaidra.app: api
     spec:
       containers:
@@ -68,10 +66,21 @@ spec:
             - mountPath: /mnt/fedora
               name: fedora
               readOnly: true
+            - mountPath: /config
+              name: api-config
+              readOnly: true
+          command: ["/bin/sh"]
+          args: ["-c", "cp /config/PhaidraAPI.json /usr/local/phaidra/phaidra-api/PhaidraAPI.json && hypnotoad -f phaidra-api.cgi" ]
       restartPolicy: Always
       volumes:
         - name: fedora
           persistentVolumeClaim:
-            claimName: fedora
+            claimName: fedora-pvc
             readOnly: true
+        - name: api-config
+          ConfigMap:
+            name: api-config
+            items:
+              - key: "PhaidraAPI.json"
+                path: "PhaidraAPI.json"
 status: {}

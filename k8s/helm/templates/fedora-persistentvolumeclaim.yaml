@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     phaidra.app: fedora
-  name: fedora
+  name: fedora-pvc
   annotations:
     helm.sh/resource-policy: keep
 spec:

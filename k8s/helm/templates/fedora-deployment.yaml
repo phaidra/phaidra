@@ -1,10 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     phaidra.app: fedora
-  name: fedora
+  name: fedora-deployment
 spec:
   replicas: 1
   selector:
@@ -18,7 +17,6 @@ spec:
         promtail.io/scrape: 'true'
       creationTimestamp: null
       labels:
-        phaidra.network/phaidra-network: "backend"
         phaidra.app: fedora
     spec:
       containers:
@@ -39,5 +37,5 @@ spec:
       volumes:
         - name: fedora
           persistentVolumeClaim:
-            claimName: fedora
+            claimName: fedora-pvc
 status: {}
