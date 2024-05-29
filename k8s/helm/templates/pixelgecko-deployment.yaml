@@ -1,10 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     phaidra.app: pixelgecko
-  name: pixelgecko
+  name: pixelgecko-deployment
 spec:
   replicas: 1
   selector:
@@ -16,9 +15,7 @@ spec:
     metadata:
       annotations:
         promtail.io/scrape: 'true'
-      creationTimestamp: null
       labels:
-        phaidra.network/phaidra-network: "backend"
         phaidra.app: pixelgecko
     spec:
       containers:
@@ -38,9 +35,9 @@ spec:
       volumes:
         - name: fedora
           persistentVolumeClaim:
-            claimName: fedora
+            claimName: fedora-pvc
             readOnly: true
         - name: pixelgecko
           persistentVolumeClaim:
-            claimName: pixelgecko
+            claimName: pixelgecko-pvc
 status: {}

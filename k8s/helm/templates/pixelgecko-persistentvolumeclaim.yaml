@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     phaidra.app: pixelgecko
-  name: pixelgecko
+  name: pixelgecko-pvc
   annotations:
     helm.sh/resource-policy: keep
 spec:

@@ -80,7 +80,7 @@ data:
             "hash_secret": "__IMAGESERVER_HASH_SECRET__",
             "image_server_root": "/mnt/converted_images",
             "scheme": "http",
-            "host": "imageserver",
+            "host": "imageserver-service",
             "path": "/iipsrv/iipsrv.fcgi"
         },
         "mongodb_group_manager": {
