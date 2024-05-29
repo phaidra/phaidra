@@ -11,21 +11,45 @@
       min-height: 100%;
       width: 100%;
       position: absolute;
+      overflow-y: hidden; 
       top: 0;
       left: 0;
       margin: 0;
       padding: 0;
-    }	
+    }    
+     .banner {
+            background-color: #404040;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .banner h2 {
+            margin: 0;
+            font-size: 24px;
+            font-family: "Roboto", sans-serif;
+        }
  </style>
 </head>
 <body>
 
 <div id="replayweb">
-  <h2 style="padding-left: 20px;"><%= $baseurl %> Webarchive </h2>
+  <div class="banner">
+        <h2>PHAIDRA - Web Archive</h2>
+    </div>
     <hr>
 
- <!-- Embed the WACZ web archive with url if provided -->
-
+ 
+<script>
+        // Check if the parent window exists - if this page is embedded
+        if (window.parent !== window) {
+            
+             var banner = document.querySelector('.banner');
+    if (banner) {
+       
+        banner.style.display = 'none';
+    }
+        }
+    </script>
  <replay-web-page replayBase="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/replayweb/" source="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get" <% if ($website_url) { %>url="<%= $website_url %> " <%}%> >
  
     </replay-web-page>
