@@ -45,6 +45,6 @@ spec:
           configMap:
             name: ui-config
             items:
-              key: "nuxt.config.js"
-              path: "nuxt.config.js"
+              - key: "nuxt.config.js"
+                path: "nuxt.config.js"
 status: {}
