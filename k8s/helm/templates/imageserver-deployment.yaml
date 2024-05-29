@@ -32,6 +32,6 @@ spec:
       volumes:
         - name: pixelgecko
           persistentVolumeClaim:
-            claimName: pixelgecko
+            claimName: pixelgecko-pvc
             readOnly: true
 status: {}
