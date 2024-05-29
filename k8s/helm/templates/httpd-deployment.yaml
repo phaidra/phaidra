@@ -1,12 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    promtail.io/scrape: 'true'
-  creationTimestamp: null
   labels:
     phaidra.app: httpd
-  name: httpd
+  name: httpd-deployment
 spec:
   replicas: 1
   selector:
@@ -19,9 +16,7 @@ spec:
       annotations:
         promtail.io/scrape: 'true'
         checksum/config: {{ include (print $.Template.BasePath "/httpd-configmap.yaml") . | sha256sum }}
-      creationTimestamp: null
       labels:
-        phaidra.network/phaidra-network: "frontend"
         phaidra.app: httpd
     spec:
       containers:
@@ -56,7 +51,7 @@ spec:
       volumes:
         - name: chronos-sitemaps
           persistentVolumeClaim:
-            claimName: chronos-sitemaps
+            claimName: chronos-sitemaps-pvc
             readOnly: true
         - name: httpd-config
           configMap:

@@ -62,11 +62,11 @@ spec:
       volumes:
         - name: chronos-database-dumps
           persistentVolumeClaim:
-            claimName: chronos-database-dumps
+            claimName: chronos-database-dumps-pvc
         - name: chronos-sitemaps
           persistentVolumeClaim:
             claimName: chronos-sitemaps
         - name: chronos-oai-logs
           persistentVolumeClaim:
-            claimName: chronos-oai-logs
+            claimName: chronos-oai-logs-pvc
 status: {}

@@ -3,8 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    phaidra.app: chronos-sitemaps
-  name: chronos-sitemaps
+    phaidra.app: chronos
+  name: chronos-sitemaps-pvc
   annotations:
     helm.sh/resource-policy: keep
 spec:
