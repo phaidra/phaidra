@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: solr
+    phaidra.app: solr
   name: solr
   annotations:
     helm.sh/resource-policy: keep

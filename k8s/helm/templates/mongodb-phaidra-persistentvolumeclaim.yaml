@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: mongodb-phaidra
+    phaidra.app: mongodb-phaidra
   name: mongodb-phaidra
   annotations:
     helm.sh/resource-policy: keep

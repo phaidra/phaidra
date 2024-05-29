@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: chronos-oai-logs
+    phaidra.app: chronos-oai-logs
   name: chronos-oai-logs
   annotations:
     helm.sh/resource-policy: keep

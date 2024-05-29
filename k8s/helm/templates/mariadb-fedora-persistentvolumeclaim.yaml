@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: mariadb-fedora
+    phaidra.app: mariadb-fedora
   name: mariadb-fedora
   annotations:
     helm.sh/resource-policy: keep

@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: dbgate
+    phaidra.app: dbgate
   name: dbgate
   annotations:
     helm.sh/resource-policy: keep

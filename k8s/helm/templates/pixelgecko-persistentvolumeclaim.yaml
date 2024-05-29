@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: pixelgecko
+    phaidra.app: pixelgecko
   name: pixelgecko
   annotations:
     helm.sh/resource-policy: keep

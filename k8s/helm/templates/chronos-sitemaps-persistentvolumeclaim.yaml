@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: chronos-sitemaps
+    phaidra.app: chronos-sitemaps
   name: chronos-sitemaps
   annotations:
     helm.sh/resource-policy: keep
