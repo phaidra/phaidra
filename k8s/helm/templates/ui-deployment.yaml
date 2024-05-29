@@ -1,10 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     phaidra.app: ui
-  name: ui
+  name: ui-deployment
 spec:
   replicas: 1
   selector:
@@ -15,9 +14,8 @@ spec:
     metadata:
       annotations:
         promtail.io/scrape: 'true'
-      creationTimestamp: null
+        checksum/config: {{ include (print $.Template.BasePath "/ui-configmap.yaml") . | sha256sum }}
       labels:
-        phaidra.network/phaidra-network: "backend"
         phaidra.app: ui
     spec:
       containers:
@@ -34,6 +32,19 @@ spec:
               value: "{{ .Values.PHAIDRA_PRIMARY_COLOR }}"
           image: testuser34/ui-base:latest
           name: ui
+          volumeMounts:
+            - mountPath: /config
+              name: ui-config
+              readOnly: true
+          command: ["/bin/sh"]
+          args: ["-c", "cp /config/nuxt.config.js /usr/local/phaidra/phaidra-ui/nuxt.config.js && npm run start"]
           resources: {}
       restartPolicy: Always
+      volumes:
+        - name: ui-config
+          configMap:
+            name: ui-config
+            items:
+              key: "nuxt.config.js"
+              path: "nuxt.config.js"
 status: {}
