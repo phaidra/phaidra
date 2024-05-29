@@ -78,7 +78,7 @@ spec:
             claimName: fedora-pvc
             readOnly: true
         - name: api-config
-          ConfigMap:
+          configMap:
             name: api-config
             items:
               - key: "PhaidraAPI.json"
