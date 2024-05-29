@@ -3,8 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    phaidra.app:
-      - chronos
+    phaidra.app: chronos
   name: chronos-database-dumps
   annotations:
     helm.sh/resource-policy: keep
