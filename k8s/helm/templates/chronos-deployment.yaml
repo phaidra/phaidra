@@ -65,7 +65,7 @@ spec:
             claimName: chronos-database-dumps-pvc
         - name: chronos-sitemaps
           persistentVolumeClaim:
-            claimName: chronos-sitemaps
+            claimName: chronos-sitemaps-pvc
         - name: chronos-oai-logs
           persistentVolumeClaim:
             claimName: chronos-oai-logs-pvc
