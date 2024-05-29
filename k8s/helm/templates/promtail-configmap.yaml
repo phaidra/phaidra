@@ -21,7 +21,7 @@ data:
         - role: pod
           namespaces:
             names:
-              - phaidra-init
+              - ${PHAIDRA_K8S_NAMESPACE}
       pipeline_stages:
         - docker: {}
       relabel_configs:

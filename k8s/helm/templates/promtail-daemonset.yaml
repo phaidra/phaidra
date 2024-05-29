@@ -15,25 +15,28 @@ spec:
     spec:
       serviceAccount: promtail-serviceaccount
       containers:
-      - name: promtail-container
-        image: grafana/promtail:2.9.2
-        args:
-        - -config.file=/etc/promtail/promtail.yaml
-        - -config.expand-env=true
-        env: 
-        - name: 'HOSTNAME' # needed when using kubernetes_sd_configs
-          valueFrom:
-            fieldRef:
-              fieldPath: 'spec.nodeName'
-        volumeMounts:
-        - name: logs
-          mountPath: /var/log
-        - name: promtail-config
-          mountPath: /etc/promtail
-        - mountPath: /var/lib/docker/containers
-          name: varlibdockercontainers
-          readOnly: true
-      volumes:
+        - name: promtail-container
+          image: grafana/promtail:2.9.2
+          args:
+            - -config.file=/etc/promtail/promtail.yaml
+            - -config.expand-env=true
+          env:
+            - name: 'HOSTNAME' # needed when using kubernetes_sd_configs
+              valueFrom:
+                fieldRef:
+                  fieldPath: 'spec.nodeName'
+            - name: PHAIDRA_K8S_NAMESPACE
+              value: "{{ .Values.PHAIDRA_K8S_NAMESPACE }}"
+          volumeMounts:
+            - name: logs
+              mountPath: /var/log
+            - name: promtail-config
+              mountPath: /etc/promtail
+              readOnly: true
+            - mountPath: /var/lib/docker/containers
+              name: varlibdockercontainers
+              readOnly: true
+    volumes:
       - name: logs
         hostPath:
           path: /var/log
