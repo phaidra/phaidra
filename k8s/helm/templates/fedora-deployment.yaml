@@ -21,7 +21,7 @@ spec:
       containers:
         - env:
             - name: CATALINA_OPTS
-              value: "-Dfcrepo.db.url=jdbc:mariadb://mariadb-fedora:3306/{{ .Values.FEDORADB }} -Dfcrepo.db.user={{ .Values.MARIADB_PHAIDRA_USER }} -Dfcrepo.db.password={{ .Values.MARIADB_PHAIDRA_PASSWORD }}"
+              value: "-Dfcrepo.db.url=jdbc:mariadb://mariadb-fedora-service:3306/{{ .Values.FEDORADB }} -Dfcrepo.db.user={{ .Values.MARIADB_PHAIDRA_USER }} -Dfcrepo.db.password={{ .Values.MARIADB_PHAIDRA_PASSWORD }}"
             - name: FEDORA_ADMIN_PASSWORD
               value: "{{ .Values.FEDORA_ADMIN_PASS }}"
             - name: FEDORA_ADMIN_USERNAME
