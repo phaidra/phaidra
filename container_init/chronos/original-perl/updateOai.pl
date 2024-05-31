@@ -436,7 +436,7 @@ my $recordsBlacklistColl;
 
 eval {
   $mdbclient=
-    MongoDB::MongoClient->new(host => '$ENV{MONGODB_PHAIDRA_HOST}',
+    MongoDB::MongoClient->new(host => $ENV{MONGODB_PHAIDRA_HOST},
                               port => 27017,
                               username => $ENV{MONGODB_PHAIDRA_USER},
                               password => $ENV{MONGODB_PHAIDRA_PASSWORD});
