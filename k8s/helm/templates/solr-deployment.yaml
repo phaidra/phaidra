@@ -1,10 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     phaidra.app: solr
-  name: solr
+  name: solr-deployment
 spec:
   replicas: 1
   selector:
@@ -16,9 +15,7 @@ spec:
     metadata:
       annotations:
         promtail.io/scrape: 'true'
-      creationTimestamp: null
       labels:
-        phaidra.network/phaidra-network: "backend"
         phaidra.app: solr
     spec:
       containers:
@@ -39,5 +36,5 @@ spec:
       volumes:
         - name: solr
           persistentVolumeClaim:
-            claimName: solr
+            claimName: solr-pvc
 status: {}
