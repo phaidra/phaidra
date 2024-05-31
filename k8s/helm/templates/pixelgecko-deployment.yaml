@@ -31,6 +31,11 @@ spec:
               readOnly: true
             - mountPath: /mnt/converted_images
               name: pixelgecko
+            - mountPath: /config
+              name: pixelgecko-config
+              readOnly: true
+          command: ["/bin/sh"]
+          args: [ "-c", "cp /config/pixelgecko_conf.yml /opt/pixelgecko/pixelgecko.conf && perl pixelgecko.pl --watch"]
       restartPolicy: Always
       volumes:
         - name: fedora
@@ -40,4 +45,10 @@ spec:
         - name: pixelgecko
           persistentVolumeClaim:
             claimName: pixelgecko-pvc
+        - name: pixelgecko-config
+          configMap:
+            name: pixelgecko-config
+            items:
+              - key: "pixelgecko_conf.yml"
+                path: "pixelgecko_conf.yml"
 status: {}
