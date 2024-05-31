@@ -56,7 +56,7 @@ spec:
               value: "mongodb-phaidra-service"
             - name: FEDORA_HOST
               value: "fedora-service"
-          image: testuser34/chronos-dist:20240531-init-v8
+          image: testuser34/chronos-dist:20240531-init-v9
           name: chronos
           resources: {}
           volumeMounts:
