@@ -31,7 +31,7 @@ function get_ocfl_topdir {
 }
 
 function init_database {
-    mysql -h mariadb-phaidra \
+    mysql -h ${MARIADB_PHAIDRA_HOST} \
           -u root \
           -p${MARIADB_ROOT_PASSWORD} \
           $PHAIDRADB \
@@ -46,7 +46,7 @@ PRIMARY KEY (fedora_id))"
 }
 
 function update_database {
-    mysql -h mariadb-phaidra \
+    mysql -h ${MARIADB_PHAIDRA_HOST} \
           -u root \
           -p${MARIADB_ROOT_PASSWORD} \
           $PHAIDRADB \
