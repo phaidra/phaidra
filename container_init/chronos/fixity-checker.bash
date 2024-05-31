@@ -3,7 +3,7 @@
 function get_fedora_ids {
     curl --silent \
          --user "$FEDORA_ADMIN_USER:$FEDORA_ADMIN_PASS" \
-         http://fedora:8080/fcrepo/rest/fcr:search | \
+         http://${FEDORA_HOST}:8080/fcrepo/rest/fcr:search | \
         jq .items[].fedora_id | \
         tr -d '"'
 }

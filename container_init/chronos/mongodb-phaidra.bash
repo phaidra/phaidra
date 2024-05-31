@@ -2,7 +2,7 @@ printf "############################################################\n"
 printf "### dumping phaidra mongodb ################################\n"
 printf "############################################################\n"
 if /usr/bin/mongodump \
-       -h mongodb-phaidra \
+       -h ${MONGODB_PHAIDRA_HOST} \
        -u ${MONGODB_PHAIDRA_USER} \
        -p ${MONGODB_PHAIDRA_PASSWORD} \
        --gzip \

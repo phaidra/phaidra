@@ -2,7 +2,7 @@ printf "############################################################\n"
 printf "### check fedora mariadb integrity #########################\n"
 printf "############################################################\n"
 mysqlcheck \
-    -h mariadb-fedora \
+    -h ${MARIADB_FEDORA_HOST} \
     -u root \
     -p${MARIADB_ROOT_PASSWORD} \
     ${FEDORADB}
@@ -11,7 +11,7 @@ printf "### dump fedora mariadb ####################################\n"
 printf "############################################################\n"
 if mariadb-dump \
        --verbose \
-       -h mariadb-fedora \
+       -h ${MARIADB_FEDORA_HOST} \
        -u root \
        -p${MARIADB_ROOT_PASSWORD} \
        -x ${FEDORADB} | \

@@ -2,7 +2,7 @@ printf "############################################################\n"
 printf "### check phaidra mariadb integrity ########################\n"
 printf "############################################################\n"
 mysqlcheck \
-    -h mariadb-phaidra \
+    -h ${MARIADB_PHAIDRA_HOST} \
     -u root \
     -p${MARIADB_ROOT_PASSWORD} \
     ${PHAIDRADB}
@@ -11,7 +11,7 @@ printf "### dump phaidra mariadb ###################################\n"
 printf "############################################################\n"
 if mariadb-dump \
        --verbose \
-       -h mariadb-phaidra \
+       -h ${MARIADB_PHAIDRA_HOST} \
        -u root \
        -p${MARIADB_ROOT_PASSWORD} \
        -x ${PHAIDRADB} | \
