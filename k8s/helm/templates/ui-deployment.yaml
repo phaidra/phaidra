@@ -30,7 +30,7 @@ spec:
               value: "{{ .Values.PHAIDRA_PORTSTUB }}"
             - name: "PHAIDRA_PRIMARY_COLOR"
               value: "{{ .Values.PHAIDRA_PRIMARY_COLOR }}"
-          image: testuser34/ui-base:latest
+          image: testuser34/ui-base:e7d161cc
           name: ui
           volumeMounts:
             - mountPath: /config
