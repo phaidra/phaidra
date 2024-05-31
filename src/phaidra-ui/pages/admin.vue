@@ -203,6 +203,15 @@
             </v-col>
             <v-col cols="3" class="mt-4">{{ $t("Submit langing page component.") }}</v-col>
           </v-row>
+          <v-row>
+            <v-col>
+              <v-textarea
+                label="CSS"
+                v-model="parsedConfigData.cms_css"
+              ></v-textarea>
+            </v-col>
+            <v-col cols="3" class="mt-4">{{ $t("Custom CSS to add to header") }}</v-col>
+          </v-row>
         </v-container>
       </v-tab-item>
     </v-tabs>
