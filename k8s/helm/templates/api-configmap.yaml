@@ -164,7 +164,7 @@ data:
                 ]
             },
             "ldap": {
-                "server": "openldap",
+                "server": "openldap-service",
                 "port": "1389",
                 "useridattribute": "uid",
                 "groupssearchbase": "ou=groups,__LDAP_ROOT__",
