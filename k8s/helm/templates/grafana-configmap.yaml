@@ -16,7 +16,7 @@ data:
         uid: phaidra_loki_default
       - name: PhaidraDB
         type: mysql
-        url: mariadb-phaidra:3306
+        url: mariadb-phaidra-service:3306
         user: grafana
         jsonData:
           database: phaidradb
@@ -29,7 +29,7 @@ data:
         uid: phaidra_mariadb_phaidra
       - name: FedoraDB
         type: mysql
-        url: mariadb-fedora:3306
+        url: mariadb-fedora-service:3306
         user: grafana
         jsonData:
           database: fedoradb
