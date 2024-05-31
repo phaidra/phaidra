@@ -1,10 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     phaidra.app: dbgate
-  name: dbgate
+  name: dbgate-deployment
 spec:
   replicas: 1
   selector:
@@ -16,9 +15,7 @@ spec:
     metadata:
       annotations:
         promtail.io/scrape: 'true'
-      creationTimestamp: null
       labels:
-        phaidra.network/phaidra-network: "backend"
         phaidra.app: dbgate
     spec:
       containers:
@@ -50,11 +47,11 @@ spec:
             - name: PORT_con2
               value: "3306"
             - name: SERVER_con1
-              value: mariadb-phaidra
+              value: mariadb-phaidra-service
             - name: SERVER_con2
-              value: mariadb-fedora
+              value: mariadb-fedora-service
             - name: URL_con3
-              value: "mongodb://{{ .Values.MONGODB_PHAIDRA_USER }}:{{ .Values.MONGODB_PHAIDRA_PASSWORD }}@mongodb-phaidra:27017"
+              value: "mongodb://{{ .Values.MONGODB_PHAIDRA_USER }}:{{ .Values.MONGODB_PHAIDRA_PASSWORD }}@mongodb-phaidra-service:27017"
             - name: USER_con1
               value: "{{ .Values.MARIADB_PHAIDRA_USER }}"
             - name: USER_con2
@@ -71,5 +68,5 @@ spec:
       volumes:
         - name: dbgate
           persistentVolumeClaim:
-            claimName: dbgate
+            claimName: dbgate-pvc
 status: {}

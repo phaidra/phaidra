@@ -1,10 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     phaidra.app: mariadb-fedora
-  name: mariadb-fedora
+  name: mariadb-fedora-deployment
 spec:
   replicas: 1
   selector:
@@ -16,9 +15,7 @@ spec:
     metadata:
       annotations:
         promtail.io/scrape: 'true'
-      creationTimestamp: null
       labels:
-        phaidra.network/phaidra-network: "backend"
         phaidra.app: mariadb-fedora
     spec:
       containers:
@@ -47,5 +44,5 @@ spec:
       volumes:
         - name: mariadb-fedora
           persistentVolumeClaim:
-            claimName: mariadb-fedora
+            claimName: mariadb-fedora-pvc
 status: {}

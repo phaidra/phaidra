@@ -15,7 +15,6 @@ spec:
     metadata:
       annotations:
         promtail.io/scrape: 'true'
-      creationTimestamp: null
       labels:
         phaidra.app: fedora
     spec:

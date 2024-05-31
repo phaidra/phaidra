@@ -1,10 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     phaidra.app: mongodb-phaidra
-  name: mongodb-phaidra
+  name: mongodb-phaidra-deployment
 spec:
   replicas: 1
   selector:
@@ -16,9 +15,7 @@ spec:
     metadata:
       annotations:
         promtail.io/scrape: 'true'
-      creationTimestamp: null
       labels:
-        phaidra.network/phaidra-network: "backend"
         phaidra.app: mongodb-phaidra
     spec:
       containers:
@@ -40,5 +37,5 @@ spec:
       volumes:
         - name: mongodb-phaidra
           persistentVolumeClaim:
-            claimName: mongodb-phaidra
+            claimName: mongodb-phaidra-pvc
 status: {}

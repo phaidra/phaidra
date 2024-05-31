@@ -1,10 +1,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  creationTimestamp: null
   labels:
     phaidra.app: mariadb-phaidra
-  name: mariadb-phaidra
+  name: mariadb-phaidra-pvc
   annotations:
     helm.sh/resource-policy: keep
 spec:

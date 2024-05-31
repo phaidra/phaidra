@@ -1,10 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     phaidra.app: lam
-  name: lam
+  name: lam-deployment
 spec:
   replicas: 1
   selector:
@@ -15,9 +14,7 @@ spec:
     metadata:
       annotations:
         promtail.io/scrape: 'true'
-      creationTimestamp: null
       labels:
-        phaidra.network/phaidra-network: "backend"
         phaidra.app: lam
     spec:
       containers:

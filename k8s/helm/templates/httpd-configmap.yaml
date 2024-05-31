@@ -104,14 +104,14 @@ data:
 
         <Location /dbgate>
             Require ip ${ADMIN_IP_LIST}
-            ProxyPass http://dbgate:3000/dbgate
-            ProxyPassReverse http://dbgate:3000/dbgate
+            ProxyPass http://dbgate-service:3000/dbgate
+            ProxyPassReverse http://dbgate-service:3000/dbgate
         </Location>
 
         <Location /lam>
             Require ip ${ADMIN_IP_LIST}
-            ProxyPass http://lam:80/lam
-            ProxyPassReverse http://lam:80/lam
+            ProxyPass http://lam-service:80/lam
+            ProxyPassReverse http://lam-service:80/lam
         </Location>
 
         <Location /fcrepo>
@@ -128,8 +128,8 @@ data:
 
         <Location /grafana>
             Require ip ${ADMIN_IP_LIST}
-            ProxyPass http://grafana:3000/grafana
-            ProxyPassReverse http://grafana:3000/grafana
+            ProxyPass http://grafana-service:3000/grafana
+            ProxyPassReverse http://grafana-service:3000/grafana
         </Location>
 
         <LocationMatch "^/sitemap(.*\.xml)$">

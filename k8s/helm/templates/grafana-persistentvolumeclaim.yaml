@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     phaidra.app: grafana
-  name: grafana
+  name: grafana-pvc
   annotations:
     helm.sh/resource-policy: keep
 spec:

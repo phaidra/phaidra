@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongodb-phaidra
+  name: mongodb-phaidra-service
 spec:
   ports:
   - protocol: TCP

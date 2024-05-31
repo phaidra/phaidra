@@ -1,10 +1,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  creationTimestamp: null
   labels:
     phaidra.app: loki
-  name: loki
+  name: loki-pvc
   annotations:
     helm.sh/resource-policy: keep
 spec:

@@ -10,7 +10,7 @@ data:
       - name: Loki
         type: loki
         access: proxy
-        url: http://loki:3100
+        url: http://loki-service:3100
         editable: false
         isDefault: true
         uid: phaidra_loki_default

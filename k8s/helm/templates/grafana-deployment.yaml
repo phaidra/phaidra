@@ -69,6 +69,6 @@ spec:
                 path: "phaidra_default.json"
         - name: grafana-data
           persistentVolumeClaim:
-            claimName: grafana
+            claimName: grafana-pvc
       restartPolicy: Always
 status: {}

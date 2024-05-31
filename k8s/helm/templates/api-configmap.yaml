@@ -84,7 +84,7 @@ data:
             "path": "/iipsrv/iipsrv.fcgi"
         },
         "mongodb_group_manager": {
-            "host": "mongodb-phaidra",
+            "host": "mongodb-phaidra-service",
             "port": "27017",
             "username": "phaidra",
             "password": "phaidra",
@@ -92,21 +92,21 @@ data:
             "collection": "usergroups"
         },
         "mongodb": {
-            "host": "mongodb-phaidra",
+            "host": "mongodb-phaidra-service",
             "port": "27017",
             "username": "phaidra",
             "password": "phaidra",
             "database": "mongodb"
         },
         "paf_mongodb": {
-            "host": "mongodb-phaidra",
+            "host": "mongodb-phaidra-service",
             "port": "27017",
             "username": "phaidra",
             "password": "phaidra",
             "database": "paf_mongodb"
         },
         "index_mongodb": {
-            "host": "mongodb-phaidra",
+            "host": "mongodb-phaidra-service",
             "port": "27017",
             "username": "phaidra",
             "password": "phaidra",
@@ -136,12 +136,12 @@ data:
         },
         "directory_class": "Phaidra::Directory::GenericLDAP",
         "phaidra_db": {
-            "dsn": "dbi:mysql:phaidradb:mariadb-phaidra",
+            "dsn": "dbi:mysql:phaidradb:mariadb-phaidra-service",
             "username": "phaidra",
             "password": "phaidra"
         },
         "phaidra_user_db": {
-            "dsn": "dbi:mysql:phaidradb:mariadb-phaidra",
+            "dsn": "dbi:mysql:phaidradb:mariadb-phaidra-service",
             "username": "phaidra",
             "password": "phaidra"
         },
@@ -180,7 +180,7 @@ data:
         },
         "solr": {
             "scheme": "http",
-            "host": "__SOLR_HOST__",
+            "host": "solr-service",
             "path": "",
             "core": "phaidra",
             "port": "8983",

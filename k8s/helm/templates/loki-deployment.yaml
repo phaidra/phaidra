@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     phaidra.app: loki
   name: loki-deployment
@@ -14,9 +13,7 @@ spec:
     type: Recreate
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        phaidra.network/phaidra-network: "backend"
         phaidra.app: loki
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/loki-configmap.yaml") . | sha256sum }}
@@ -36,7 +33,7 @@ spec:
       volumes:
         - name: loki
           persistentVolumeClaim:
-            claimName: loki
+            claimName: loki-pvc
         - name: loki-config
           configMap:
             name: loki-config
