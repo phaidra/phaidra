@@ -231,7 +231,7 @@ export const formvalidation = {
               this.mandatoryFieldsValidated['Keyword'] = true
             }
           }
-          if ((f.component === 'p-entity') || (f.component === 'p-entity-extended')) {
+          if ((f.component === 'p-entity') || (f.component === 'p-entity-extended') || (f.component === 'p-entity-fixedrole-person')) {
             console.log('found role r[' + f.role + '] fn[' + f.firstname + '] ln[' + f.lastname + ']')
             if (f.role.length > 0) {
               this.mandatoryFieldsFound['Role'] = true
@@ -270,6 +270,184 @@ export const formvalidation = {
             this.mandatoryFieldsFound['Association'] = true
             if (f.value.length > 0) {
               this.mandatoryFieldsValidated['Association'] = true
+            }
+          }
+          if (f.component === 'p-file') {
+            this.mandatoryFieldsFound['File'] = true
+            if (f.file && (f.mimetype.length > 0) && (resourceType !== 'https://pid.phaidra.org/vocabulary/7AVS-Y482')) {
+              this.mandatoryFieldsValidated['File'] = true
+            }
+            if (this.allowedMimetypes[resourceType]) {
+              if (!this.allowedMimetypes[resourceType].includes(f.mimetype)) {
+                console.error('wrong file format')
+                f.mimetypeErrorMessages.push(this.$t('This file type is not supported for the chosen resource type.'))
+                f.fileErrorMessages.push(this.$t('Wrong file format.'))
+                this.validationError = true
+              }
+            }
+          }
+        }
+      }
+
+      for (const field in this.mandatoryFieldsFound) {
+        if (!this.mandatoryFieldsFound[field]) {
+          this.validationError = true
+          console.error('field ' + field + ' not found')
+        }
+      }
+
+      for (const field in this.mandatoryFieldsValidated) {
+        if (!this.mandatoryFieldsValidated[field]) {
+          this.validationError = true
+          console.error('field ' + field + ' incomplete')
+        }
+      }
+   
+      if (this.validationError) {
+        this.$vuetify.goTo(0)
+      }
+      console.log('validation error ' + this.validationError)
+      return !this.validationError
+    },
+    validationWithOefos(targetpid) {
+      this.validationError = false
+      this.mandatoryFieldsFound = {
+        'Title': false,
+        'Description': false,
+        'Keyword': false,
+        'Role': false,
+        'License': false,
+        'Resource type': false,
+        'Object type': false,
+        'OEFOS Classification': false,
+        'File': false
+      }
+      this.mandatoryFieldsValidated = {
+        'Resource type': false,
+        'Object type': false,
+        'Title': false,
+        'Description': false,
+        'Keyword': false,
+        'Role': false,
+        'License': false,
+        'OEFOS Classification': false,
+        'File': false
+      }
+      let resourceType = null
+      let hasReadonlyOefos = false
+      for (const s of this.form.sections) {
+        for (const f of s.fields) {
+          if (f.predicate === 'dcterms:type') {
+            console.log('resourceType ' + f['skos:prefLabel'][0]['@value'])
+            resourceType = f.value
+          }
+          if (f.component === 'p-vocab-ext-readonly') {
+            if (f['skos:exactMatch']) {
+              for (let v of f['skos:exactMatch']) {
+                if (v.startsWith('oefos2012')) {
+                  hasReadonlyOefos = true
+                }
+              }
+            }
+          }
+        }
+      }
+      switch (resourceType) {
+        case 'https://pid.phaidra.org/vocabulary/GXS7-ENXJ':
+          // collection
+          this.mandatoryFieldsFound['File'] = true
+          this.mandatoryFieldsFound['License'] = true
+          this.mandatoryFieldsFound['Object type'] = true
+          this.mandatoryFieldsFound['OEFOS Classification'] = true
+          this.mandatoryFieldsValidated['File'] = true
+          this.mandatoryFieldsValidated['License'] = true
+          this.mandatoryFieldsValidated['Object type'] = true
+          this.mandatoryFieldsValidated['OEFOS Classification'] = true
+          break
+        case 'https://pid.phaidra.org/vocabulary/T8GH-F4V8':
+          // resource
+          this.mandatoryFieldsFound['File'] = true
+          this.mandatoryFieldsFound['License'] = true
+          this.mandatoryFieldsValidated['File'] = true
+          this.mandatoryFieldsValidated['License'] = true
+          break
+      }
+      if (targetpid) {
+        this.mandatoryFieldsFound['File'] = true
+        this.mandatoryFieldsValidated['File'] = true
+      }
+
+      for (const s of this.form.sections) {
+        for (const f of s.fields) {
+          console.log('checking p[' + f.predicate + '] c[' + f.component + ']') 
+          if (f.predicate === 'dcterms:type') {
+            this.mandatoryFieldsFound['Resource type'] = true
+            if (f.value.length > 0) {
+              this.mandatoryFieldsValidated['Resource type'] = true
+            }
+          }
+          if (f.predicate === 'edm:hasType') {
+            this.mandatoryFieldsFound['Object type'] = true
+            if (Object.prototype.hasOwnProperty.call(f, 'selectedTerms')) {
+              if (f.selectedTerms.length > 0) {
+                this.mandatoryFieldsValidated['Object type'] = true
+              }
+            } else if (f.value.length > 0) {
+              this.mandatoryFieldsValidated['Object type'] = true
+            }
+          }
+          if (f.component === 'p-title') {
+            this.mandatoryFieldsFound['Title'] = true
+            f.titleErrorMessages = []
+            if (f.title.length > 0) {
+              this.mandatoryFieldsValidated['Title'] = true
+            }
+          }
+          if ((f.predicate === 'bf:note') && (f.type === 'bf:Note')) {
+            this.mandatoryFieldsFound['Description'] = true
+            if (f.value.length > 0) {
+              this.mandatoryFieldsValidated['Description'] = true
+            }
+          }
+          if (f.component === 'p-keyword') {
+            this.mandatoryFieldsFound['Keyword'] = true
+            if (f.value.length > 0) {
+              this.mandatoryFieldsValidated['Keyword'] = true
+            }
+          }
+          if ((f.component === 'p-entity') || (f.component === 'p-entity-extended') || (f.component === 'p-entity-fixedrole-person')) {
+            console.log('found role r[' + f.role + '] fn[' + f.firstname + '] ln[' + f.lastname + ']')
+            if (f.role.length > 0) {
+              this.mandatoryFieldsFound['Role'] = true
+            }
+            if (f.type === 'schema:Person') {
+              if (f.firstname.length > 0) {
+                this.mandatoryFieldsValidated['Role'] = true
+              }
+              if (f.lastname.length > 0) {
+                this.mandatoryFieldsValidated['Role'] = true
+
+              }
+            }
+          }
+          if (f.component === 'p-select') {
+            if (f.predicate === 'edm:rights') {
+              this.mandatoryFieldsFound['License'] = true
+              if (f.value.length > 0) {
+                this.mandatoryFieldsValidated['License'] = true
+              }
+            }
+          }
+          if (resourceType !== 'https://pid.phaidra.org/vocabulary/GXS7-ENXJ') {
+            if (f.component === 'p-subject-oefos') {
+              this.mandatoryFieldsFound['OEFOS Classification'] = true
+              if (hasReadonlyOefos) {
+                this.mandatoryFieldsValidated['OEFOS Classification'] = true
+              } else {
+                if (f.value.length > 0) {
+                  this.mandatoryFieldsValidated['OEFOS Classification'] = true
+                }
+              }
             }
           }
           if (f.component === 'p-file') {

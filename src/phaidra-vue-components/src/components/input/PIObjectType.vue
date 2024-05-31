@@ -5,7 +5,7 @@
     </v-alert>
     <v-card outlined class="mt-4 mb-8">
       <v-card-title v-if="showLabel" class="title font-weight-light ">
-      {{ $t('edm:hasType') }}&nbsp;*
+      {{ label }}
       </v-card-title>
       <v-card-text class="mt-4">
         <v-row no-gutters>
@@ -58,7 +58,7 @@ export default {
   },
   computed: {
     terms: function () {
-      if (this.vocabulary === 'uniakobjecttypetheses') {
+      if (this.vocabulary === 'uniakobjecttypetheses' || this.vocabulary === 'oerobjecttype') {
         return this.vocabularies[this.vocabulary].terms
       } else {
         return this.resourceType ? this.$store.getters['vocabulary/getObjectTypeForResourceType'](this.resourceType, this.$i18n.locale) : this.vocabularies[this.vocabulary].terms

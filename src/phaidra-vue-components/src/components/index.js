@@ -31,6 +31,7 @@ import PIDuration from './input/PIDuration.vue'
 import PIAlternateIdentifier from './input/PIAlternateIdentifier.vue'
 import PIEntity from './input/PIEntity.vue'
 import PIEntityExtended from './input/PIEntityExtended'
+import PIEntityFixedrolePerson from './input/PIEntityFixedrolePerson'
 import PIDateEdtf from './input/PIDateEdtf.vue'
 import PIFilenameReadonly from './input/PIFilenameReadonly.vue'
 import PIFilename from './input/PIFilename.vue'
@@ -66,6 +67,7 @@ import PIKeyword from './input/PIKeyword'
 import PIObjectType from './input/PIObjectType'
 import PIResourceType from './input/PIResourceType'
 import PISeeAlso from './input/PISeeAlso.vue'
+import PINoteCheckbox from './input/PINoteCheckbox.vue'
 import PSearch from './search/PSearch'
 import PMDelete from './management/PMDelete'
 import PMSort from './management/PMSort'
@@ -120,6 +122,7 @@ const Components = {
   PIAlternateIdentifier,
   PIEntity,
   PIEntityExtended,
+  PIEntityFixedrolePerson,
   PIDateEdtf,
   PIFilenameReadonly,
   PIFilename,
@@ -156,6 +159,7 @@ const Components = {
   PIResourceType,
   PIDuration,
   PISeeAlso,
+  PINoteCheckbox,
   PSearch,
   PMDelete,
   PMSort,

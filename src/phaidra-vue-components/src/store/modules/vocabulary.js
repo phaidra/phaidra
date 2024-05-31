@@ -1611,6 +1611,20 @@ const vocabularies = {
     ],
     loaded: true
   },
+  'oeraudience': {
+    terms: [
+      { '@id': ns + '7RSE-DD9C', 'skos:prefLabel': { 'eng': 'Primary School', 'deu': 'Primarstufe' } },
+      { '@id': ns + 'KNB1-BJBV', 'skos:prefLabel': { 'eng': 'Primary School Level I', 'deu': 'Primarstufe GS I' } },
+      { '@id': ns + 'PYJ6-HQ52', 'skos:prefLabel': { 'eng': 'Primary School Level II', 'deu': 'Primarstufe GS II' } },
+      { '@id': ns + 'N26X-38N8', 'skos:prefLabel': { 'eng': 'Secondary School', 'deu': 'Sekundarstufe' } },
+      { '@id': ns + 'G6X5-JRMG', 'skos:prefLabel': { 'eng': 'Secondary School lower sec.', 'deu': 'Sekundarstufe Sek I' } },
+      { '@id': ns + 'NTNX-9GPN', 'skos:prefLabel': { 'eng': 'Secondary School higher sec.', 'deu': 'Sekundarstufe Sek II' } },
+      { '@id': ns + '2W2J-XQNW', 'skos:prefLabel': { 'eng': 'Adult Education / Higher Education', 'deu': 'Erwachsenenbildung/Hochschule' } },
+      { '@id': ns + 'CGD1-16CQ', 'skos:prefLabel': { 'eng': 'general educational resource', 'deu': 'Allgemeine Bildungsressource' } },
+      { '@id': ns + 'GZWD-CGJ0', 'skos:prefLabel': { 'eng': 'miscellaneous', 'deu': 'Sonstige Bildungsressource' } }
+    ],
+    loaded: true
+  },
   'regionalencoding': {
     terms: [
       { '@id': ns + 'AR9M-B9J4', 'skos:prefLabel': { 'eng': '1' } },

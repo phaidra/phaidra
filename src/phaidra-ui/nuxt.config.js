@@ -2,7 +2,7 @@ import config from './config/phaidra-ui'
 const path = require('path')
 
 export default {
-  render: { csp: true },
+  // render: { csp: true },
   // Global page headers: https://go.nuxtjs.dev/config-head
   // head: {
   //   title: 'phaidra-ui-nuxt',

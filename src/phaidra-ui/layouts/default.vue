@@ -118,6 +118,9 @@ export default {
     await this.loadInstanceConfigToStore()
   },
   computed: {
+    prettyInstanceconfig: function () {
+      return JSON.stringify(this.instanceconfig, null, 2)
+    },
     showAlerts: function () {
       if (this.$store.state.alerts.length > 0) {
         let onlySuccess = true;
