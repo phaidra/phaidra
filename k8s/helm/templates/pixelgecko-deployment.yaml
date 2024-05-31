@@ -36,7 +36,7 @@ spec:
               name: pixelgecko-config
               readOnly: true
           command: ["/bin/sh"]
-          args: [ "-c", "cp /config/pixelgecko_conf.yml /opt/pixelgecko/pixelgecko.conf && perl pixelgecko.pl --watch"]
+          args: [ "-c", "cp /config/pixelgecko_conf.yml /opt/pixelgecko/pixelgecko_conf.yml && perl pixelgecko.pl --watch"]
       restartPolicy: Always
       volumes:
         - name: fedora
