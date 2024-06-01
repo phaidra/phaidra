@@ -1621,7 +1621,7 @@ const vocabularies = {
       { '@id': ns + 'NTNX-9GPN', 'skos:prefLabel': { 'eng': 'Secondary School higher sec.', 'deu': 'Sekundarstufe Sek II' } },
       { '@id': ns + '2W2J-XQNW', 'skos:prefLabel': { 'eng': 'Adult Education / Higher Education', 'deu': 'Erwachsenenbildung/Hochschule' } },
       { '@id': ns + 'CGD1-16CQ', 'skos:prefLabel': { 'eng': 'general educational resource', 'deu': 'Allgemeine Bildungsressource' } },
-      { '@id': ns + 'GZWD-CGJ0', 'skos:prefLabel': { 'eng': 'miscellaneous', 'deu': 'Sonstige Bildungsressource' } }
+      { '@id': ns + 'GZWD-CGJ0', 'skos:prefLabel': { 'eng': 'miscellaneous educational resource', 'deu': 'Sonstige Bildungsressource' } }
     ],
     loaded: true
   },

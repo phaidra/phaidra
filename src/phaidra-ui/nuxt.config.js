@@ -71,7 +71,8 @@ export default {
     apiBaseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT + '/api',
     axios: {
       browserBaseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT + '/api'
-    }
+    },
+    defaultLocale: process.env.PHAIDRA_DEFAULT_LANGUAGE
   },
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
