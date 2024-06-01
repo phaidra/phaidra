@@ -543,6 +543,7 @@
           </v-row>
           </v-col>
       </v-row>
+      <a ref="logoutlink" v-hide="true" href="/Shibboleth.sso/Logout"></a>
     </div>
   </template>
   
@@ -564,12 +565,27 @@
         this.$store.commit("setLoading", false);
         this.$router.push(this.localeLocation({ path: `/` }));
       },
-      ssologout: async function () {
+      ssologoutlink: async function () {
         console.log("local logout")
-        await this.$store.dispatch("logout");
-        console.log("sso logout")
+        try {
+          await this.$store.dispatch("logout");
+        } catch (error) {
+          console.log(error)
+        }
+        console.log("sso logout link")
         this.$store.commit("setLoading", false);
         this.$refs.logoutlink.click();
+      },
+      ssologout: async function () {
+        console.log("local logout")
+        try {
+          await this.$store.dispatch("logout");
+        } catch (error) {
+          console.log(error)
+        }
+        console.log("sso logout location.href")
+        this.$store.commit("setLoading", false);
+        window.location.href = '/Shibboleth.sso/Logout'
       },
       useLocale: function (lang) {
         if (this.instanceconfig) {
