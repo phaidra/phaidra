@@ -612,6 +612,10 @@
       if (localStorage.getItem("locale")) {
         this.$i18n.locale = localStorage.getItem("locale");
       } else {
+        console.log('default locale: ' + this.$config.defaultLocale)
+        if (this.$config.defaultLocale) {
+          this.$i18n.locale = this.$config.defaultLocale
+        }
         localStorage.setItem("locale", this.$i18n.locale);
       }
     }
