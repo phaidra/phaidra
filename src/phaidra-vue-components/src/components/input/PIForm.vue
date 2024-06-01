@@ -1282,7 +1282,7 @@ export default {
       var httpFormData = new FormData()
       this.loading = true
       httpFormData.append('name', this.templatename)
-      httpFormData.append('form', JSON.stringify(this.template))
+      httpFormData.append('form', JSON.stringify(template))
       try {
         let response = await this.$axios.request({
           method: 'POST',
