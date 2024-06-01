@@ -559,9 +559,17 @@
     },
     methods: {
       logout: function () {
+        console.log("local logout")
         this.$store.dispatch("logout");
         this.$store.commit("setLoading", false);
         this.$router.push(this.localeLocation({ path: `/` }));
+      },
+      ssologout: async function () {
+        console.log("local logout")
+        await this.$store.dispatch("logout");
+        console.log("sso logout")
+        this.$store.commit("setLoading", false);
+        this.$refs.logoutlink.click();
       },
       useLocale: function (lang) {
         if (this.instanceconfig) {
