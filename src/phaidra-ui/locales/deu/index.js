@@ -1207,5 +1207,7 @@ export default {
   'Template saved': 'Vorlage gespeichert',
   'Select': 'Auswählen',
   'Configure': 'Konfigurieren',
-  'Some required fields are not complete': 'Manche Pflichtfelder sind nicht vollständig'
+  'Some required fields are not complete': 'Manche Pflichtfelder sind nicht vollständig',
+  OER_ACCESSIBILITY_CHECK_LABEL: 'Grundsätze der {0} beachtet',
+  OER_ACCESSIBILITY_CHECK_LINK_LABEL: 'Barrierefreiheit'
 }
