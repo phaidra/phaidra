@@ -198,7 +198,9 @@ export default {
       role_uploader.showIdentifier = false;
       self.form.sections[0].fields.push(role_uploader);
 
-      self.form.sections[0].fields.push(fields.getField("oefos-subject"));
+      let oefos = fields.getField("oefos-subject")
+      oefos.label = 'Fachgebiete (ÖFOS)'
+      self.form.sections[0].fields.push(oefos);
 
       let audience = fields.getField("audience-vocab")
       audience.vocabulary = 'oeraudience'
