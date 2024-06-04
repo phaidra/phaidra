@@ -261,7 +261,6 @@ compose-demo:
       changes:
         paths:
           - compose_demo/docker-compose.yaml
-          - components/phaidra-ui/**/*
           - container_components/solr/**/*
 
 compose-ssl:
@@ -279,7 +278,6 @@ compose-ssl:
       changes:
         paths:
           - compose_ssl/docker-compose.yaml
-          - components/phaidra-ui/**/*
           - container_components/solr/**/*
 
 compose-shib:
@@ -297,7 +295,6 @@ compose-shib:
       changes:
         paths:
           - compose_shib/docker-compose.yaml
-          - components/phaidra-ui/**/*
           - container_components/solr/**/*
 
 compose-keycloak:
@@ -315,10 +312,8 @@ compose-keycloak:
       changes:
         paths:
           - compose_shib/docker-compose.yaml
-          - components/phaidra-ui/**/*
           - container_components/solr/**/*
 
-  
 release_job:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
