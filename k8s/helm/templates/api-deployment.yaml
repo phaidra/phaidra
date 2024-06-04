@@ -59,6 +59,16 @@ spec:
               value: "{{ .Values.SOLR_USER }}"
             - name: "SOLR_HOST"
               value: "{{ .Values.SOLR_HOST }}"
+            - name: MONGODB_PHAIDRA_USER
+              value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
+            - name: MONGODB_PHAIDRA_PASSWORD
+              value: "{{ .Values.MONGODB_PHAIDRA_PASSWORD }}"
+            - name: MONGO_AGENT_DB
+              value: "{{ .Values.MONGO_AGENT_DB }}"
+            - name: MARIADB_PHAIDRA_USER
+              value: "{{ .Values.MARIADB_PHAIDRA_USER }}"
+            - name: MARIADB_PHAIDRA_PASSWORD
+              value: "{{ .Values.MARIADB_PHAIDRA_PASSWORD }}"
           image: testuser34/api-dist:latest
           name: api
           resources: {}

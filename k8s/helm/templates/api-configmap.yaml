@@ -86,30 +86,30 @@ data:
         "mongodb_group_manager": {
             "host": "mongodb-phaidra-service",
             "port": "27017",
-            "username": "phaidra",
-            "password": "phaidra",
+            "username": "__MONGODB_PHAIDRA_USER__",
+            "password": "__MONGODB_PHAIDRA_PASSWORD__",
             "database": "groups",
             "collection": "usergroups"
         },
         "mongodb": {
             "host": "mongodb-phaidra-service",
             "port": "27017",
-            "username": "phaidra",
-            "password": "phaidra",
+            "username": "__MONGODB_PHAIDRA_USER__",
+            "password": "__MONGODB_PHAIDRA_PASSWORD__",
             "database": "mongodb"
         },
         "paf_mongodb": {
             "host": "mongodb-phaidra-service",
             "port": "27017",
-            "username": "phaidra",
-            "password": "phaidra",
-            "database": "paf_mongodb"
+            "username": "__MONGODB_PHAIDRA_USER__",
+            "password": "__MONGODB_PHAIDRA_PASSWORD__",
+            "database": "__MONGO_AGENT_DB__"
         },
         "index_mongodb": {
             "host": "mongodb-phaidra-service",
             "port": "27017",
-            "username": "phaidra",
-            "password": "phaidra",
+            "username": "__MONGODB_PHAIDRA_USER__",
+            "password": "__MONGODB_PHAIDRA_PASSWORD__",
             "database": "index_mongodb"
         },
         "apis": {
@@ -137,13 +137,13 @@ data:
         "directory_class": "Phaidra::Directory::GenericLDAP",
         "phaidra_db": {
             "dsn": "dbi:mysql:phaidradb:mariadb-phaidra-service",
-            "username": "phaidra",
-            "password": "phaidra"
+            "username": "__MARIADB_PHAIDRA_USER__",
+            "password": "__MARIADB_PHAIDRA_PASSWORD__"
         },
         "phaidra_user_db": {
             "dsn": "dbi:mysql:phaidradb:mariadb-phaidra-service",
-            "username": "phaidra",
-            "password": "phaidra"
+            "username": "__MARIADB_PHAIDRA_USER__",
+            "password": "__MARIADB_PHAIDRA_PASSWORD__"
         },
         "authentication": {
             "realm": "Phaidra",
