@@ -14,7 +14,6 @@ spec:
     metadata:
       annotations:
         promtail.io/scrape: 'true'
-        checksum/config: {{ include (print $.Template.BasePath "/ui-configmap.yaml") . | sha256sum }}
       labels:
         phaidra.app: ui
     spec:
