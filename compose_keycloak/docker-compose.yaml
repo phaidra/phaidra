@@ -119,6 +119,7 @@ services:
       - LDAP_ADMIN_USERNAME=${LDAP_ADMIN_USERNAME}
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
       - LDAP_ROOT=${LDAP_ROOT}
+      - SOLR_HOST=${SOLR_HOST}
     entrypoint:
       - bash
       - /mnt/api-entrypoint.bash

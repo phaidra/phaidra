@@ -145,6 +145,7 @@ services:
       - LDAP_ROOT=${LDAP_ROOT}
       - OC_EXTERNAL=${OC_EXTERNAL}
       - FEDORA_OCFL_ROOT=${FEDORA_OCFL_ROOT}
+      - SOLR_HOST=${SOLR_HOST}
     entrypoint:
       - bash
       - /mnt/api-entrypoint.bash
