@@ -43,7 +43,7 @@ LDAP_GROUPS_DN: "ou=groups,dc=example,dc=org"
 # ldap admin cn for ldap account manager
 LDAP_USER: "cn=admin,dc=example,dc=org"
 # ldap server adress for ldap account manager
-LDAP_SERVER: "ldap://openldap:1389"
+LDAP_SERVER: "ldap://openldap-service:1389"
 # fedora admin username
 FEDORA_ADMIN_USER: "fedoraAdmin"
 # fedora admin password
