@@ -91,6 +91,26 @@ build-chronos:
         paths:
           - dockerfiles/chronos.dockerfile
 
+build-chronos-dist:
+  stage: build-base
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/chronos-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/chronos-dist:latest
+    -t $CI_REGISTRY_USER/chronos-dist:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/chronos-dist.dockerfile
+          - container-init/chronos/**/*
+
 build-httpd:
   stage: build-base
   before_script:
@@ -148,6 +168,7 @@ build-imageserver:
         paths:
           - dockerfiles/imageserver.dockerfile
 
+
 build-pixelgecko-base:
   stage: build-base
   before_script:
@@ -167,6 +188,7 @@ build-pixelgecko-base:
         paths:
           - dockerfiles/pixelgecko.dockerfile
 
+         
 build-pixelgecko-dist:
   stage: build-dist
   before_script:
