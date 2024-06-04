@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    phaidra.app: mongodb-phaidra
+  name: mongodb-phaidra-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      phaidra.app: mongodb-phaidra
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        promtail.io/scrape: 'true'
+      labels:
+        phaidra.app: mongodb-phaidra
+    spec:
+      containers:
+        - env:
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: "{{ .Values.MONGODB_PHAIDRA_PASSWORD }}"
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
+          image: testuser34/mongodb-dist:latest
+          name: mongodb-phaidra
+          resources: {}
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodb-phaidra
+          # run as nobody because of container's chown sequence.
+          securityContext:
+            runAsUser: 65534
+      restartPolicy: Always
+      volumes:
+        - name: mongodb-phaidra
+          persistentVolumeClaim:
+            claimName: mongodb-phaidra-pvc
+status: {}

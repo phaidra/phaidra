@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    phaidra.app: grafana
+  name: grafana-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      phaidra.app: grafana
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        phaidra.network/phaidra-network: "backend"
+        phaidra.app: grafana
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/grafana-configmap.yaml") . | sha256sum }}
+    spec:
+      containers:
+        - env:
+            - name: GF_SERVER_ROOT_URL
+              value: "%(protocol)s://%(domain)s:%(http_port)s/grafana"
+            - name: GF_SERVER_SERVE_FROM_SUB_PATH
+              value: "true"
+            - name: GF_SECURITY_ADMIN_USER
+              value: "{{ .Values.GF_SECURITY_ADMIN_USER }}"
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              value: "{{ .Values.GF_SECURITY_ADMIN_PASSWORD }}"
+            - name: GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH
+              value: "/mnt/grafana/dashboards/phaidra_default.json"
+          name: grafana
+          image: grafana/grafana:11.0.0
+          volumeMounts:
+            - name: grafana-provisioned-datasources
+              mountPath: /etc/grafana/provisioning/datasources
+              readOnly: true
+            - name: grafana-provisioned-dashboards-setting
+              mountPath: /etc/grafana/provisioning/dashboards
+              readOnly: true
+            - name: grafana-default-dashboard
+              mountPath: /mnt/grafana/dashboards
+              readOnly: true
+            - name: grafana-data
+              mountPath: /var/lib/grafana
+          resources: {}
+      volumes:
+        - name: grafana-provisioned-datasources
+          configMap:
+            name: grafana-config
+            items:
+              - key: "ds.yaml"
+                path: "ds.yaml"
+        - name: grafana-provisioned-dashboards-setting
+          configMap:
+            name: grafana-config
+            items:
+              - key: "dd.yaml"
+                path: "dd.yaml"
+        - name: grafana-default-dashboard
+          configMap:
+            name: grafana-config
+            items:
+              - key: "phaidra_default.json"
+                path: "phaidra_default.json"
+        - name: grafana-data
+          persistentVolumeClaim:
+            claimName: grafana-pvc
+      restartPolicy: Always
+status: {}

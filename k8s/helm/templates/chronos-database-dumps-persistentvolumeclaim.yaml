@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    phaidra.app: chronos
+  name: chronos-database-dumps-pvc
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  storageClassName: "{{ .Values.CHRONOS_DB_DUMP_PVC_TYPE }}"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "{{ .Values.CHRONOS_DB_DUMP_PVC_SIZE }}"
+status: {}

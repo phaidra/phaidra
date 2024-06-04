@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    phaidra.app: mariadb-fedora
+  name: mariadb-fedora-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      phaidra.app: mariadb-fedora
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        promtail.io/scrape: 'true'
+      labels:
+        phaidra.app: mariadb-fedora
+    spec:
+      containers:
+        - env:
+            - name: MARIADB_DATABASE
+              value: "{{ .Values.FEDORADB }}"
+            - name: MARIADB_PASSWORD
+              value: "{{ .Values.MARIADB_PHAIDRA_PASSWORD }}"
+            - name: MARIADB_ROOT_PASSWORD
+              value: "{{ .Values.MARIADB_ROOT_PASSWORD }}"
+            - name: MARIADB_USER
+              value: "{{ .Values.MARIADB_PHAIDRA_USER }}"
+          image: testuser34/mariadb-fedora-dist:latest
+          name: mariadb-fedora
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mariadb-fedora
+          # run as nobody because of container's chown sequence.
+          securityContext:
+            runAsUser: 65534
+          # set port and set name to make it to kube-dns
+          ports:
+            - containerPort: 3306
+      restartPolicy: Always
+      volumes:
+        - name: mariadb-fedora
+          persistentVolumeClaim:
+            claimName: mariadb-fedora-pvc
+status: {}

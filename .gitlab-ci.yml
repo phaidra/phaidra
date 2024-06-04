@@ -4,22 +4,23 @@ variables:
   DOCKER_TLS_CERTDIR: "/certs"
 
 stages:
-  - build
+  - build-base
+  - build-dist
   - test
   - release
 
 services:
   - docker:24-dind
 
-build-api:
-  stage: build
+build-api-base:
+  stage: build-base
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
   script: >
     docker context create builder-context &&
     docker buildx create builder-context --name container --driver=docker-container &&
-    docker buildx build -f dockerfiles/api.dockerfile
+    docker buildx build -f dockerfiles/api-base.dockerfile
     --builder=container
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/api-base:latest
@@ -28,10 +29,30 @@ build-api:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
-          - dockerfiles/api.dockerfile
+          - dockerfiles/api-base.dockerfile
+
+build-api-dist:
+  stage: build-dist
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/api-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/api-dist:latest
+    -t $CI_REGISTRY_USER/api-dist:$CI_COMMIT_SHORT_SHA --push . 
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/api-dist.dockerfile
+          - src/phaidra-api/**/*
 
 build-ui:
-  stage: build
+  stage: build-dist
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -52,7 +73,7 @@ build-ui:
           - src/phaidra-vue-components/**/*
 
 build-chronos:
-  stage: build
+  stage: build-base
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -70,8 +91,28 @@ build-chronos:
         paths:
           - dockerfiles/chronos.dockerfile
 
+build-chronos-dist:
+  stage: build-base
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/chronos-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/chronos-dist:latest
+    -t $CI_REGISTRY_USER/chronos-dist:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/chronos-dist.dockerfile
+          - container-init/chronos/**/*
+
 build-httpd:
-  stage: build
+  stage: build-base
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -90,7 +131,7 @@ build-httpd:
           - dockerfiles/httpd.dockerfile
 
 build-httpd-shib:
-  stage: build
+  stage: build-base
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -109,7 +150,7 @@ build-httpd-shib:
           - dockerfiles/httpd-shib.dockerfile
 
 build-imageserver:
-  stage: build
+  stage: build-base
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -127,8 +168,9 @@ build-imageserver:
         paths:
           - dockerfiles/imageserver.dockerfile
 
-build-pixelgecko:
-  stage: build
+
+build-pixelgecko-base:
+  stage: build-base
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -146,8 +188,29 @@ build-pixelgecko:
         paths:
           - dockerfiles/pixelgecko.dockerfile
 
+         
+build-pixelgecko-dist:
+  stage: build-dist
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/pixelgecko-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/pixelgecko-dist:latest
+    -t $CI_REGISTRY_USER/pixelgecko-dist:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/pixelgecko-dist.dockerfile
+          - src/pixelgecko/**/*
+
 build-vige:
-  stage: build
+  stage: build-base
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json

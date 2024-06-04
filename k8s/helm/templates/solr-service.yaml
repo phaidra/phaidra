@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: solr-service
+spec:
+  ports:
+  - protocol: TCP
+    port: 8983
+    targetPort: 8983
+  selector:
+    phaidra.app: solr

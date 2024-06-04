@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-service
+spec:
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
+  selector:
+    phaidra.app: api

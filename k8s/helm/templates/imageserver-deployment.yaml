@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    phaidra.app: imageserver
+  name: imageserver-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      phaidra.app: imageserver
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        promtail.io/scrape: 'true'
+      creationTimestamp: null
+      labels:
+        phaidra.app: imageserver
+    spec:
+      containers:
+        - image: testuser34/imageserver-base:979c59b3
+          name: imageserver
+          resources: {}
+          volumeMounts:
+            - mountPath: /mnt/converted_images
+              name: pixelgecko
+              readOnly: true
+      restartPolicy: Always
+      volumes:
+        - name: pixelgecko
+          persistentVolumeClaim:
+            claimName: pixelgecko-pvc
+            readOnly: true
+status: {}

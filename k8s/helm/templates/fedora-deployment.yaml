@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    phaidra.app: fedora
+  name: fedora-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      phaidra.app: fedora
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        promtail.io/scrape: 'true'
+      labels:
+        phaidra.app: fedora
+    spec:
+      containers:
+        - env:
+            - name: CATALINA_OPTS
+              value: "-Dfcrepo.db.url=jdbc:mariadb://mariadb-fedora-service:3306/{{ .Values.FEDORADB }} -Dfcrepo.db.user={{ .Values.MARIADB_PHAIDRA_USER }} -Dfcrepo.db.password={{ .Values.MARIADB_PHAIDRA_PASSWORD }}"
+            - name: FEDORA_ADMIN_PASSWORD
+              value: "{{ .Values.FEDORA_ADMIN_PASS }}"
+            - name: FEDORA_ADMIN_USERNAME
+              value: "{{ .Values.FEDORA_ADMIN_USER }}"
+          image: fcrepo/fcrepo:6.4.1
+          name: fedora
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/local/tomcat/fcrepo-home
+              name: fedora
+      restartPolicy: Always
+      volumes:
+        - name: fedora
+          persistentVolumeClaim:
+            claimName: fedora-pvc
+status: {}

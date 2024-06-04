@@ -1,0 +1,126 @@
+# phaidra hostname -- set to name (or IP address) that you use in your browser to access PHAIDRA
+PHAIDRA_HOSTNAME: "192.168.122.156"
+# phaidra server admin email address (for webserver configuration)
+PHAIDRA_ADMIN_EMAIL: "you@example.com"
+# IP addresses/ranges separated by blank spaces, that are allowed to access to phaidra admin pages (user management, grafana, databases,...).
+ADMIN_IP_LIST: "192.168.122.1"
+# IP address of your loadbalancer pod (needed for client IP detection), single IP or range
+LOAD_BALANCER_IP: "10.1.141.0/24"
+# Header to use for original client ip detection
+SOURCE_CLIENT_IP_HEADER: "X-Original-Forwarded-For"
+# cluster namespace for deployment
+PHAIDRA_K8S_NAMESPACE: "phaidra-init"
+# name of the mariadb database used by phaidra-api
+PHAIDRADB: "phaidradb"
+# name of the mariadb database used by fedora
+FEDORADB: "fedoradb"
+# root user password for the mariadb databases
+MARIADB_ROOT_PASSWORD: "example"
+# name of the mariadb database user
+MARIADB_PHAIDRA_USER: "phaidra"
+# password for the mariadb database user
+MARIADB_PHAIDRA_PASSWORD: "phaidra"
+# name of the mongodb database user
+MONGODB_PHAIDRA_USER: "phaidra"
+# password for the mongodb database user
+MONGODB_PHAIDRA_PASSWORD: "phaidra"
+# name of the mongodb database
+MONGO_AGENT_DB: "paf_mongodb"
+# openldap admin username
+LDAP_ADMIN_USERNAME: "admin"
+# openldap admin password
+LDAP_ADMIN_PASSWORD: "adminpassword"
+# openldap port number
+LDAP_PORT_NUMBER: "1389"
+# openldap root
+LDAP_ROOT: "dc=example,dc=org"
+# ldap domain for ldap account manager
+LDAP_DOMAIN: "example.org"
+# ldap user dn for ldap account manager
+LDAP_USERS_DN: "ou=people,dc=example,dc=org"
+# ldap group dn for ldap account manager
+LDAP_GROUPS_DN: "ou=groups,dc=example,dc=org"
+# ldap admin cn for ldap account manager
+LDAP_USER: "cn=admin,dc=example,dc=org"
+# ldap server adress for ldap account manager
+LDAP_SERVER: "ldap://openldap-service:1389"
+# fedora admin username
+FEDORA_ADMIN_USER: "fedoraAdmin"
+# fedora admin password
+FEDORA_ADMIN_PASS: "1234"
+# api mountpoint of fedora data directory
+FEDORA_OCFL_ROOT: "/mnt/fedora/data/ocfl-root"
+# set to empty quoted string on a production setup
+PHAIDRA_PORTSTUB: ""
+# set to empty quoted string on a production setup
+PHAIDRA_HOSTPORT: ""
+# api host name for internal ui-api-communication
+PHAIDRA_API_HOST_INTERNAL: "api-service"
+# set to "https" on a production setup
+OUTSIDE_HTTP_SCHEME: "http"
+# phaidra secret
+PHAIDRA_SECRET: "changeme"
+# phaidra encryption key
+PHAIDRA_ENCRYPTION_KEY: "changeme"
+# imageserver hash secret
+IMAGESERVER_HASH_SECRET: "changeme"
+# phaidra admin user
+PHAIDRA_ADMIN_USER: "phaidraAdmin"
+# phaidra admin password
+PHAIDRA_ADMIN_PASSWORD: "12345"
+# pixelgecko image conversion interval in seconds
+IMAGE_CONVERSION_INTERVAL: "5"
+# dbgate credentials
+DBGATE_PASS: "phaidra"
+# solr encryption salt
+SOLR_SALT: "phaidra"
+# solr admin user
+SOLR_USER: "phaidra"
+# solr admin password
+SOLR_PASS: "phaidra"
+# solr host name
+SOLR_HOST: "solr-service"
+# phaidra primary color
+PHAIDRA_PRIMARY_COLOR: "#008080"
+# chronos database dumps pvc size & type
+CHRONOS_DB_DUMP_PVC_SIZE: "100Mi"
+CHRONOS_DB_DUMP_PVC_TYPE: "nfs-csi"
+# chronos oai logs pvc size & type
+CHRONOS_OAI_LOGS_PVC_SIZE: "100Mi"
+CHRONOS_OAI_LOGS_PVC_TYPE: "nfs-csi"
+# chronos sitemaps pvc size & type
+CHRONOS_SITEMAPS_PVC_SIZE: "100Mi"
+CHRONOS_SITEMAPS_PVC_TYPE: "nfs-csi"
+# dbgate pvc size & type
+DBGATE_PVC_SIZE: "100Mi"
+DBGATE_PVC_TYPE: "nfs-csi"
+# fedora pvc size & type
+FEDORA_PVC_SIZE: "100Mi"
+FEDORA_PVC_TYPE: "nfs-csi"
+# loki pvc size & type
+LOKI_PVC_SIZE: "100Mi"
+LOKI_PVC_TYPE: "nfs-csi"
+# mariadb-fedora pvc size & type
+MARIADB_FEDORA_PVC_SIZE: "100Mi"
+MARIADB_FEDORA_PVC_TYPE: "nfs-csi"
+# mariadb-phaidra pvc size & type
+MARIADB_PHAIDRA_PVC_SIZE: "100Mi"
+MARIADB_PHAIDRA_PVC_TYPE: "nfs-csi"
+# mongodb-phaidra pvc size & type
+MONGODB_PHAIDRA_PVC_SIZE: "100Mi"
+MONGODB_PHAIDRA_PVC_TYPE: "nfs-csi"
+# openldap pvc size & type
+OPENLDAP_PVC_SIZE: "100Mi"
+OPENLDAP_PVC_TYPE: "nfs-csi"
+# pixelgecko pvc size & type
+PIXELGECKO_PVC_SIZE: "100Mi"
+PIXELGECKO_PVC_TYPE: "nfs-csi"
+# solr pvc size & type
+SOLR_PVC_SIZE: "100Mi"
+SOLR_PVC_TYPE: "nfs-csi"
+# grafana admin credentials
+GF_SECURITY_ADMIN_USER: "phaidra"
+GF_SECURITY_ADMIN_PASSWORD: "phaidra"
+# grafana pvc size & type
+GRAFANA_PVC_SIZE: "100Mi"
+GRAFANA_PVC_TYPE: "nfs-csi"

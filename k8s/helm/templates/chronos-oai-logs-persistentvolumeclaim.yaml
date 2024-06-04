@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    phaidra.app: chronos
+  name: chronos-oai-logs-pvc
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  storageClassName: "{{ .Values.CHRONOS_OAI_LOGS_PVC_TYPE }}"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "{{ .Values.CHRONOS_OAI_LOGS_PVC_SIZE }}"
+status: {}

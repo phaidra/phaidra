@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    phaidra.app: chronos
+  name: chronos-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      phaidra.app: chronos
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        promtail.io/scrape: 'true'
+      labels:
+        phaidra.app: chronos
+    spec:
+      containers:
+        - env:
+            - name: FEDORADB
+              value: "{{ .Values.FEDORADB }}"
+            - name: FEDORA_ADMIN_PASS
+              value: "{{ .Values.FEDORA_ADMIN_PASS }}"
+            - name: FEDORA_ADMIN_USER
+              value: "{{ .Values.FEDORA_ADMIN_USER }}"
+            - name: MARIADB_ROOT_PASSWORD
+              value: "{{ .Values.MARIADB_ROOT_PASSWORD }}"
+            - name: MONGODB_PHAIDRA_PASSWORD
+              value: "{{ .Values.MONGODB_PHAIDRA_PASSWORD }}"
+            - name: MONGODB_PHAIDRA_USER
+              value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
+            - name: OUTSIDE_HTTP_SCHEME
+              value: "{{ .Values.OUTSIDE_HTTP_SCHEME }}"
+            - name: PHAIDRADB
+              value: "{{ .Values.PHAIDRADB }}"
+            - name: PHAIDRA_ADMIN_PASSWORD
+              value: "{{ .Values.PHAIDRA_ADMIN_PASSWORD }}"
+            - name: PHAIDRA_ADMIN_USER
+              value: "{{ .Values.PHAIDRA_ADMIN_USER }}"
+            - name: PHAIDRA_HOSTNAME
+              value: "{{ .Values.PHAIDRA_HOSTNAME }}"
+            - name: PHAIDRA_HOSTPORT
+              value: "{{ .Values.PHAIDRA_HOSTPORT }}"
+            - name: PHAIDRA_PORTSTUB
+              value: "{{ .Values.PHAIDRA_PORTSTUB }}"
+            - name: SOLR_HOST
+              value: "{{ .Values.SOLR_HOST }}"
+            - name: MARIADB_FEDORA_HOST
+              value: "mariadb-fedora-service"
+            - name: MARIADB_PHAIDRA_HOST
+              value: "mariadb-phaidra-service"
+            - name: MONGODB_PHAIDRA_HOST
+              value: "mongodb-phaidra-service"
+            - name: FEDORA_HOST
+              value: "fedora-service"
+          image: testuser34/chronos-dist:20240531-init-v11
+          name: chronos
+          resources: {}
+          volumeMounts:
+            - mountPath: /mnt/database-dumps
+              name: chronos-database-dumps
+            - mountPath: /mnt/sitemaps
+              name: chronos-sitemaps
+            - mountPath: /mnt/oai-logs
+              name: chronos-oai-logs
+      restartPolicy: Always
+      volumes:
+        - name: chronos-database-dumps
+          persistentVolumeClaim:
+            claimName: chronos-database-dumps-pvc
+        - name: chronos-sitemaps
+          persistentVolumeClaim:
+            claimName: chronos-sitemaps-pvc
+        - name: chronos-oai-logs
+          persistentVolumeClaim:
+            claimName: chronos-oai-logs-pvc
+status: {}

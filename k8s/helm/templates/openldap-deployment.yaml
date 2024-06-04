@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    phaidra.app: openldap
+  name: openldap-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      phaidra.app: openldap
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        promtail.io/scrape: 'true'
+      labels:
+        phaidra.app: openldap
+    spec:
+      containers:
+        - env:
+            - name: "LDAP_ADMIN_PASSWORD"
+              value: "{{ .Values.LDAP_ADMIN_PASSWORD }}"
+            - name: "LDAP_ADMIN_USERNAME"
+              value: "{{ .Values.LDAP_ADMIN_USERNAME }}"
+            - name: "LDAP_CUSTOM_LDIF_DIR"
+              value: "/ldifs"
+            - name: "LDAP_PORT_NUMBER"
+              value: "{{ .Values.LDAP_PORT_NUMBER }}"
+            - name: "LDAP_ROOT"
+              value: "{{ .Values.LDAP_ROOT }}"
+          image: testuser34/openldap-dist:latest
+          name: openldap
+          resources: {}
+          volumeMounts:
+            - mountPath: /bitnami/openldap
+              name: openldap
+      restartPolicy: Always
+      volumes:
+        - name: openldap
+          persistentVolumeClaim:
+            claimName: openldap-pvc
+status: {}

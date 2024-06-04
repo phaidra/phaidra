@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    phaidra.app: solr
+  name: solr-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      phaidra.app: solr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        promtail.io/scrape: 'true'
+      labels:
+        phaidra.app: solr
+    spec:
+      containers:
+        - env:
+            - name: "SOLR_PASS"
+              value: "{{ .Values.SOLR_PASS }}"
+            - name: "SOLR_SALT"
+              value: "{{ .Values.SOLR_SALT }}"
+            - name: "SOLR_USER"
+              value: "{{ .Values.SOLR_USER }}"
+          image: testuser34/solr-dist:latest
+          name: solr
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/solr
+              name: solr
+      restartPolicy: Always
+      volumes:
+        - name: solr
+          persistentVolumeClaim:
+            claimName: solr-pvc
+status: {}

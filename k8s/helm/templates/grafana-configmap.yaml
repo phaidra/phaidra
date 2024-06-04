@@ -1,0 +1,717 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-config
+data:
+  ds.yaml: |
+    apiVersion: 1
+    
+    datasources:
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://loki-service:3100
+        editable: false
+        isDefault: true
+        uid: phaidra_loki_default
+      - name: PhaidraDB
+        type: mysql
+        url: mariadb-phaidra-service:3306
+        user: grafana
+        jsonData:
+          database: phaidradb
+          maxOpenConns: 100 # Grafana v5.4+
+          maxIdleConns: 100 # Grafana v5.4+
+          maxIdleConnsAuto: true # Grafana v9.5.1+
+          connMaxLifetime: 14400 # Grafana v5.4+
+        secureJsonData:
+          password: grafana
+        uid: phaidra_mariadb_phaidra
+      - name: FedoraDB
+        type: mysql
+        url: mariadb-fedora-service:3306
+        user: grafana
+        jsonData:
+          database: fedoradb
+          maxOpenConns: 100 # Grafana v5.4+
+          maxIdleConns: 100 # Grafana v5.4+
+          maxIdleConnsAuto: true # Grafana v9.5.1+
+          connMaxLifetime: 14400 # Grafana v5.4+
+        secureJsonData:
+          password: grafana
+        uid: phaidra_mariadb_fedora
+
+  dd.yaml: |
+    apiVersion: 1
+    
+    providers:
+      - name: Default # A uniquely identifiable name for the provider
+        folder: Presets # The folder where to place the dashboards
+        type: file
+        options:
+          path:
+            /mnt/grafana/dashboards
+            # <path to dashboard definitions>
+            # Default path for Windows: C:/Program Files/GrafanaLabs/grafana/public/dashboards
+            # Default path for Linux is: /var/lib/grafana/dashboards
+
+  phaidra_default.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": {
+              "type": "grafana",
+              "uid": "-- Grafana --"
+            },
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+          }
+        ]
+      },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": 1,
+      "links": [],
+      "liveNow": false,
+      "panels": [
+        {
+          "collapsed": true,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          },
+          "id": 16,
+          "panels": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "phaidra_loki_default"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 1
+              },
+              "id": 1,
+              "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": false,
+                "sortOrder": "Descending",
+                "wrapLogMessage": false
+              },
+              "targets": [
+                {
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "phaidra_loki_default"
+                  },
+                  "editorMode": "builder",
+                  "expr": "{phaidra_app=\"api\"} |= ``",
+                  "queryType": "range",
+                  "refId": "A"
+                }
+              ],
+              "title": "api logs",
+              "type": "logs"
+            },
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "phaidra_loki_default"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 1
+              },
+              "id": 8,
+              "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": false,
+                "sortOrder": "Descending",
+                "wrapLogMessage": false
+              },
+              "targets": [
+                {
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "phaidra_loki_default"
+                  },
+                  "editorMode": "builder",
+                  "expr": "{container=\"ui\"} |= ``",
+                  "queryType": "range",
+                  "refId": "A"
+                }
+              ],
+              "title": "ui logs",
+              "type": "logs"
+            },
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "phaidra_loki_default"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 9
+              },
+              "id": 2,
+              "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": false,
+                "sortOrder": "Descending",
+                "wrapLogMessage": false
+              },
+              "targets": [
+                {
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "phaidra_loki_default"
+                  },
+                  "editorMode": "builder",
+                  "expr": "{container=\"chronos\", phaidra_app=\"chronos\"} |= ``",
+                  "queryType": "range",
+                  "refId": "A"
+                }
+              ],
+              "title": "chronos logs",
+              "type": "logs"
+            }
+          ],
+          "title": "api, ui & cron",
+          "type": "row"
+        },
+        {
+          "collapsed": true,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 1
+          },
+          "id": 19,
+          "panels": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "phaidra_loki_default"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 2
+              },
+              "id": 4,
+              "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": false,
+                "sortOrder": "Descending",
+                "wrapLogMessage": false
+              },
+              "targets": [
+                {
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "phaidra_loki_default"
+                  },
+                  "editorMode": "builder",
+                  "expr": "{container=\"fedora\"} |= ``",
+                  "queryType": "range",
+                  "refId": "A"
+                }
+              ],
+              "title": "fedora logs",
+              "type": "logs"
+            }
+          ],
+          "title": "object repository",
+          "type": "row"
+        },
+        {
+          "collapsed": true,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 2
+          },
+          "id": 17,
+          "panels": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "phaidra_loki_default"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 3
+              },
+              "id": 14,
+              "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": false,
+                "sortOrder": "Descending",
+                "wrapLogMessage": false
+              },
+              "targets": [
+                {
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "phaidra_loki_default"
+                  },
+                  "editorMode": "builder",
+                  "expr": "{container=\"solr\"} |= ``",
+                  "queryType": "range",
+                  "refId": "A"
+                }
+              ],
+              "title": "solr logs",
+              "type": "logs"
+            }
+          ],
+          "title": "search engine",
+          "type": "row"
+        },
+        {
+          "collapsed": true,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 3
+          },
+          "id": 15,
+          "panels": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "phaidra_loki_default"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 17
+              },
+              "id": 11,
+              "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": false,
+                "sortOrder": "Descending",
+                "wrapLogMessage": false
+              },
+              "targets": [
+                {
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "phaidra_loki_default"
+                  },
+                  "editorMode": "builder",
+                  "expr": "{container=\"mongodb-phaidra\"} |= ``",
+                  "queryType": "range",
+                  "refId": "A"
+                }
+              ],
+              "title": "mongodb-phaidra logs",
+              "type": "logs"
+            },
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "phaidra_loki_default"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 17
+              },
+              "id": 9,
+              "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": false,
+                "sortOrder": "Descending",
+                "wrapLogMessage": false
+              },
+              "targets": [
+                {
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "phaidra_loki_default"
+                  },
+                  "editorMode": "builder",
+                  "expr": "{container=\"mariadb-fedora\"} |= ``",
+                  "queryType": "range",
+                  "refId": "A"
+                }
+              ],
+              "title": "mariadb-fedora logs",
+              "type": "logs"
+            },
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "phaidra_loki_default"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 25
+              },
+              "id": 10,
+              "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": false,
+                "sortOrder": "Descending",
+                "wrapLogMessage": false
+              },
+              "targets": [
+                {
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "phaidra_loki_default"
+                  },
+                  "editorMode": "builder",
+                  "expr": "{container=\"mariadb-phaidra\"} |= ``",
+                  "queryType": "range",
+                  "refId": "A"
+                }
+              ],
+              "title": "mariadb-phaidra logs",
+              "type": "logs"
+            },
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "phaidra_loki_default"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 25
+              },
+              "id": 3,
+              "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": false,
+                "sortOrder": "Descending",
+                "wrapLogMessage": false
+              },
+              "targets": [
+                {
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "phaidra_loki_default"
+                  },
+                  "editorMode": "builder",
+                  "expr": "{container=\"dbgate\"} |= ``",
+                  "queryType": "range",
+                  "refId": "A"
+                }
+              ],
+              "title": "dbgate logs",
+              "type": "logs"
+            }
+          ],
+          "title": "databases",
+          "type": "row"
+        },
+        {
+          "collapsed": true,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 4
+          },
+          "id": 18,
+          "panels": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "phaidra_loki_default"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 12
+              },
+              "id": 13,
+              "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": false,
+                "sortOrder": "Descending",
+                "wrapLogMessage": false
+              },
+              "targets": [
+                {
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "phaidra_loki_default"
+                  },
+                  "editorMode": "builder",
+                  "expr": "{container=\"pixelgecko\"} |= ``",
+                  "queryType": "range",
+                  "refId": "A"
+                }
+              ],
+              "title": "pixelgecko logs",
+              "type": "logs"
+            },
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "phaidra_loki_default"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 12
+              },
+              "id": 7,
+              "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": false,
+                "sortOrder": "Descending",
+                "wrapLogMessage": false
+              },
+              "pluginVersion": "10.2.2",
+              "targets": [
+                {
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "phaidra_loki_default"
+                  },
+                  "editorMode": "builder",
+                  "expr": "{container=\"imageserver\"} |= ``",
+                  "queryType": "range",
+                  "refId": "A"
+                }
+              ],
+              "title": "imageserver logs",
+              "type": "logs"
+            }
+          ],
+          "title": "image engine",
+          "type": "row"
+        },
+        {
+          "collapsed": true,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 5
+          },
+          "id": 20,
+          "panels": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "phaidra_loki_default"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 6
+              },
+              "id": 12,
+              "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": false,
+                "sortOrder": "Descending",
+                "wrapLogMessage": false
+              },
+              "targets": [
+                {
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "phaidra_loki_default"
+                  },
+                  "editorMode": "builder",
+                  "expr": "{container=\"openldap\"} |= ``",
+                  "queryType": "range",
+                  "refId": "A"
+                }
+              ],
+              "title": "openldap logs",
+              "type": "logs"
+            },
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "phaidra_loki_default"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 6
+              },
+              "id": 22,
+              "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": false,
+                "sortOrder": "Descending",
+                "wrapLogMessage": false
+              },
+              "targets": [
+                {
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "phaidra_loki_default"
+                  },
+                  "editorMode": "builder",
+                  "expr": "{container=\"lam\"} |= ``",
+                  "queryType": "range",
+                  "refId": "A"
+                }
+              ],
+              "title": "lam logs",
+              "type": "logs"
+            }
+          ],
+          "title": "user management",
+          "type": "row"
+        },
+        {
+          "collapsed": true,
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 6
+          },
+          "id": 21,
+          "panels": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "phaidra_loki_default"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 15
+              },
+              "id": 6,
+              "options": {
+                "dedupStrategy": "none",
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": false,
+                "sortOrder": "Descending",
+                "wrapLogMessage": false
+              },
+              "targets": [
+                {
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "phaidra_loki_default"
+                  },
+                  "editorMode": "builder",
+                  "expr": "{container=\"httpd\", phaidra_app=\"httpd\"} |= ``",
+                  "queryType": "range",
+                  "refId": "A"
+                }
+              ],
+              "title": "httpd logs",
+              "type": "logs"
+            }
+          ],
+          "title": "webserver",
+          "type": "row"
+        }
+      ],
+      "refresh": "",
+      "schemaVersion": 38,
+      "tags": [],
+      "templating": {
+        "list": []
+      },
+      "time": {
+        "from": "now-6h",
+        "to": "now"
+      },
+      "timepicker": {},
+      "timezone": "",
+      "title": "Phaidra Overview",
+      "uid": "ad2edce1-c4e7-423d-9325-7896515fc5b9",
+      "version": 32,
+      "weekStart": ""
+    }

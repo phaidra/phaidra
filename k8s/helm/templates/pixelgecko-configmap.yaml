@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pixelgecko-config
+data:
+  pixelgecko_conf.yml: |
+    pixelgecko:
+      mongodb:
+        host:                  'mongodb-phaidra-service'
+        ## authentication database
+        db_name:               'admin'
+        ## active database
+        database:              'paf_mongodb'
+        username:              'phaidra'
+        password:              'phaidra'
+        col:                   'jobs'
+        activity:              'activity'
+      store:                 '/mnt/converted_images'
+      temp_path:             '/tmp'
+

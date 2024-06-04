@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    phaidra.app: pixelgecko
+  name: pixelgecko-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      phaidra.app: pixelgecko
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        promtail.io/scrape: 'true'
+        checksum/config: {{ include (print $.Template.BasePath "/pixelgecko-configmap.yaml") . | sha256sum }}
+      labels:
+        phaidra.app: pixelgecko
+    spec:
+      containers:
+        - env:
+            - name: IMAGE_CONVERSION_INTERVAL
+              value: "{{ .Values.IMAGE_CONVERSION_INTERVAL }}"
+          image: testuser34/pixelgecko-dist:latest
+          name: pixelgecko
+          resources: {}
+          volumeMounts:
+            - mountPath: /mnt/fedora
+              name: fedora
+              readOnly: true
+            - mountPath: /mnt/converted_images
+              name: pixelgecko
+            - mountPath: /config
+              name: pixelgecko-config
+              readOnly: true
+          command: ["/bin/sh"]
+          args: [ "-c", "cp /config/pixelgecko_conf.yml /opt/pixelgecko/pixelgecko_conf.yml && perl pixelgecko.pl --watch"]
+      restartPolicy: Always
+      volumes:
+        - name: fedora
+          persistentVolumeClaim:
+            claimName: fedora-pvc
+            readOnly: true
+        - name: pixelgecko
+          persistentVolumeClaim:
+            claimName: pixelgecko-pvc
+        - name: pixelgecko-config
+          configMap:
+            name: pixelgecko-config
+            items:
+              - key: "pixelgecko_conf.yml"
+                path: "pixelgecko_conf.yml"
+status: {}

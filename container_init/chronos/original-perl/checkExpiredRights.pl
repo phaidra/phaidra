@@ -102,7 +102,7 @@ sub updateRights {
 
 my $urlsolr = Mojo::URL->new;
 $urlsolr->scheme("http");
-$urlsolr->host("solr");
+$urlsolr->host($ENV{SOLR_HOST});
 $urlsolr->port(8983);
 $urlsolr->path("/solr/phaidra/select");
 
