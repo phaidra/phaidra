@@ -63,7 +63,7 @@ export default {
     'nuxt-helmet'
   ],
   axios: {
-    baseURL: 'http://api:3000', // Used as fallback if no runtime config is provided
+      baseURL: 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000', // Used as fallback if no runtime config is provided
   },
   publicRuntimeConfig: {
     primaryColor: process.env.PHAIDRA_PRIMARY_COLOR,
@@ -80,7 +80,7 @@ export default {
   },
   privateRuntimeConfig: {
     axios: {
-      baseURL: 'http://api:3000'
+      baseURL: 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000'
     }
   },
   // sentry: {

@@ -30,21 +30,9 @@ spec:
               value: "{{ .Values.PHAIDRA_PORTSTUB }}"
             - name: "PHAIDRA_PRIMARY_COLOR"
               value: "{{ .Values.PHAIDRA_PRIMARY_COLOR }}"
-          image: testuser34/ui-base:3a4a049c
-          name: ui
-          volumeMounts:
-            - mountPath: /config
-              name: ui-config
-              readOnly: true
-          command: ["/bin/sh"]
-          args: ["-c", "cp /config/nuxt.config.js /usr/local/phaidra/phaidra-ui/nuxt.config.js && npm run start"]
+            - name: PHAIDRA_API_HOST_INTERNAL
+              value: "{{ .Values.PHAIDRA_API_HOST_INTERNAL }}"
+          image: testuser34/staging:20240604-init-v11
           resources: {}
       restartPolicy: Always
-      volumes:
-        - name: ui-config
-          configMap:
-            name: ui-config
-            items:
-              - key: "nuxt.config.js"
-                path: "nuxt.config.js"
 status: {}

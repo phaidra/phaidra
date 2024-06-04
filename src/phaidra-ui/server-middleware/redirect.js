@@ -5,7 +5,7 @@ import config from '../config/phaidra-ui'
 export default async (req, res, next) => {
   if (/^\/o:\d+$/.test(req.url)) { 
     let baseURL = process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT
-    let apiBaseURL = 'http://api:3000'
+    let apiBaseURL = 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000'
     let pid = req.url.replace('/', '')
     let params = { q: '*:*', defType: 'edismax', wt: 'json', start: 0, rows: 1, fq: 'pid:"' + pid + '"' }
     try {

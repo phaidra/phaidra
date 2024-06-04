@@ -54,6 +54,8 @@ FEDORA_OCFL_ROOT: "/mnt/fedora/data/ocfl-root"
 PHAIDRA_PORTSTUB: ""
 # set to empty quoted string on a production setup
 PHAIDRA_HOSTPORT: ""
+# api host name for internal ui-api-communication
+PHAIDRA_API_HOST_INTERNAL: "api-service"
 # set to "https" on a production setup
 OUTSIDE_HTTP_SCHEME: "http"
 # phaidra secret
