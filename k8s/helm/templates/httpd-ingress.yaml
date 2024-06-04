@@ -10,7 +10,8 @@ metadata:
     nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
 spec:
   rules:
-  - http:
+  - host: "{{ .Values.PHAIDRA_HOSTNAME }}"
+    http:
       paths:
       - path: "/(.*)"
         pathType: Prefix
