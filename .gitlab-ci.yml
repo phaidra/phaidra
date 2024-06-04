@@ -92,7 +92,7 @@ build-chronos:
           - dockerfiles/chronos.dockerfile
 
 build-chronos-dist:
-  stage: build-base
+  stage: build-dist
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -256,13 +256,13 @@ compose-demo:
     - cp ../.env.template .env
     - docker compose up -d --quiet-pull --build
     - docker compose down
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      changes:
-        paths:
-          - compose_demo/docker-compose.yaml
-          - components/phaidra-ui/**/*
-          - container_components/solr/**/*
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  #     changes:
+  #       paths:
+  #         - compose_demo/docker-compose.yaml
+  #         - components/phaidra-ui/**/*
+  #         - container_components/solr/**/*
 
 compose-ssl:
   stage: test
@@ -274,13 +274,13 @@ compose-ssl:
     - cp ../.env.template .env
     - docker compose up -d --quiet-pull --build
     - docker compose down
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      changes:
-        paths:
-          - compose_ssl/docker-compose.yaml
-          - components/phaidra-ui/**/*
-          - container_components/solr/**/*
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  #     changes:
+  #       paths:
+  #         - compose_ssl/docker-compose.yaml
+  #         - components/phaidra-ui/**/*
+  #         - container_components/solr/**/*
 
 compose-shib:
   stage: test
@@ -292,14 +292,33 @@ compose-shib:
     - cp ../.env.template .env
     - docker compose up -d --quiet-pull --build
     - docker compose down
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      changes:
-        paths:
-          - compose_shib/docker-compose.yaml
-          - components/phaidra-ui/**/*
-          - container_components/solr/**/*
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  #     changes:
+  #       paths:
+  #         - compose_shib/docker-compose.yaml
+  #         - components/phaidra-ui/**/*
+  #         - container_components/solr/**/*
 
+compose-keycloak:
+  stage: test
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script:
+    - cd compose_keycloak
+    - cp ../.env.template .env
+    - docker compose up -d --quiet-pull --build
+    - docker compose down
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  #     changes:
+  #       paths:
+  #         - compose_shib/docker-compose.yaml
+  #         - components/phaidra-ui/**/*
+  #         - container_components/solr/**/*
+
+  
 release_job:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
