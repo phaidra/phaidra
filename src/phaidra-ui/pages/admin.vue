@@ -165,7 +165,7 @@
                 v-model="parsedConfigData.cms_header"
               ></v-textarea>
             </v-col>
-            <v-col cols="3" class="mt-4">{{ $t("Header component.") }}</v-col>
+            <v-col cols="3" class="mt-4">{{ $t("Header component. Enclose template in a div.") }}</v-col>
           </v-row>
           <v-row>
             <v-col>
@@ -174,7 +174,7 @@
                 v-model="parsedConfigData.cms_footer"
               ></v-textarea>
             </v-col>
-            <v-col cols="3" class="mt-4">{{ $t("Footer component.") }}</v-col>
+            <v-col cols="3" class="mt-4">{{ $t("Footer component. Enclose template in a div.") }}</v-col>
           </v-row>
           <v-row>
             <v-col>
@@ -183,7 +183,7 @@
                 v-model="parsedConfigData.cms_home"
               ></v-textarea>
             </v-col>
-            <v-col cols="3" class="mt-4">{{ $t("Homepage component.") }}</v-col>
+            <v-col cols="3" class="mt-4">{{ $t("Homepage component. Enclose template in a div.") }}</v-col>
           </v-row>
           <v-row>
             <v-col>
@@ -192,7 +192,7 @@
                 v-model="parsedConfigData.cms_impressum"
               ></v-textarea>
             </v-col>
-            <v-col cols="3" class="mt-4">{{ $t("Impressum component.") }}</v-col>
+            <v-col cols="3" class="mt-4">{{ $t("Impressum component. Enclose template in a div.") }}</v-col>
           </v-row>
           <v-row>
             <v-col>
@@ -201,7 +201,16 @@
                 v-model="parsedConfigData.cms_submit"
               ></v-textarea>
             </v-col>
-            <v-col cols="3" class="mt-4">{{ $t("Submit langing page component.") }}</v-col>
+            <v-col cols="3" class="mt-4">{{ $t("Submit langing page component. Enclose template in a div.") }}</v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-textarea
+                label="CSS"
+                v-model="parsedConfigData.cms_css"
+              ></v-textarea>
+            </v-col>
+            <v-col cols="3" class="mt-4">{{ $t("Custom CSS to add to header") }}</v-col>
           </v-row>
         </v-container>
       </v-tab-item>

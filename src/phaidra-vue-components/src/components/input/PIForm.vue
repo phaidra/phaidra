@@ -669,6 +669,15 @@
                             ></p-i-note-checkbox>
                           </template>
 
+                          <template v-if="f.component === 'p-note-checkbox-with-link'">
+                            <p-i-note-checkbox-with-link
+                              v-bind.sync="f"
+                              v-on:input="f.value=$event"
+                              v-on:configure="editFieldProps(f)"
+                              :configurable="enablefieldconfig || f.configurable"
+                            ></p-i-note-checkbox-with-link>
+                          </template>
+
                         </v-row>
                       </template>
                       <span>{{ $t(f.helptext ? f.helptext : f.definition)}}</span>
@@ -1282,7 +1291,7 @@ export default {
       var httpFormData = new FormData()
       this.loading = true
       httpFormData.append('name', this.templatename)
-      httpFormData.append('form', JSON.stringify(this.template))
+      httpFormData.append('form', JSON.stringify(template))
       try {
         let response = await this.$axios.request({
           method: 'POST',

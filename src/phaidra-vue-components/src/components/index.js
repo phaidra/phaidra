@@ -68,6 +68,7 @@ import PIObjectType from './input/PIObjectType'
 import PIResourceType from './input/PIResourceType'
 import PISeeAlso from './input/PISeeAlso.vue'
 import PINoteCheckbox from './input/PINoteCheckbox.vue'
+import PINoteCheckboxWithLink from './input/PINoteCheckboxWithLink.vue'
 import PSearch from './search/PSearch'
 import PMDelete from './management/PMDelete'
 import PMSort from './management/PMSort'
@@ -160,6 +161,7 @@ const Components = {
   PIDuration,
   PISeeAlso,
   PINoteCheckbox,
+  PINoteCheckboxWithLink,
   PSearch,
   PMDelete,
   PMSort,

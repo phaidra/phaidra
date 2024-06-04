@@ -123,6 +123,9 @@ export default {
 
   'LICENSE_DISCLAIMER': '<b>Disclaimer</b><br/>The service provider (PHAIDRA, {institution}) and Creative Commons are not party to the licence agreement. Your action to legally offer your protected object within a Creative Commons licence and the acceptance of said offer by third parties establishes a contractual relationship between you and the respective user. Neither the service provider nor the Creative Commons is party to this contractual relationship. No rights or obligations will originate such that would be deemed binding to either the service provider or Creative Commons.<br/>Neither the service provider nor Creative Commons is defined as a law practice, and cannot and will not furnish legal advice. Said parties provide the information found here without any assumed warranty and assume no liability for any damages that could arise from its use.',
 
+  'OER_ACCESSIBILITY_CHECK_LABEL': '{0} principles considered',
+  'OER_ACCESSIBILITY_CHECK_LINK_LABEL': 'Accessibility',
+
   uwm_etheses: 'E-Theses',
   uwm_etheses_note_2: 'Note 2',
   uwm_etheses_note_1: 'Note 1',

@@ -259,10 +259,21 @@ const fields = [
   },
   {
     id: 'note-checkbox',
-    fieldname: 'Note',
+    fieldname: 'Note (checkbox)',
     predicate: 'bf:note',
     type: 'phaidra:Remark',
     component: 'p-note-checkbox',
+    label: 'Note',
+    value: '',
+    language: '',
+    definition: 'Information, usually in textual form, on attributes of a resource or some aspect of a resource.'
+  },
+  {
+    id: 'note-checkbox-with-link',
+    fieldname: 'Note (checkbox with link)',
+    predicate: 'bf:note',
+    type: 'phaidra:Remark',
+    component: 'p-note-checkbox-with-link',
     label: 'Note',
     value: '',
     language: '',

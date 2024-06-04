@@ -198,7 +198,9 @@ export default {
       role_uploader.showIdentifier = false;
       self.form.sections[0].fields.push(role_uploader);
 
-      self.form.sections[0].fields.push(fields.getField("oefos-subject"));
+      let oefos = fields.getField("oefos-subject")
+      oefos.label = 'Fachgebiete (ÖFOS)'
+      self.form.sections[0].fields.push(oefos);
 
       let audience = fields.getField("audience-vocab")
       audience.vocabulary = 'oeraudience'
@@ -209,9 +211,11 @@ export default {
       lic.vocabulary = "alllicenses";
       self.form.sections[0].fields.push(lic);
 
-      let note = fields.getField("note-checkbox")
+      let note = fields.getField("note-checkbox-with-link")
       note.note = 'Grundsätze der Barrierefreiheit beachtet'
-      note.label = 'Grundsätze der Barrierefreiheit beachtet'
+      note.labelMessageId = 'OER_ACCESSIBILITY_CHECK_LABEL'
+      note.linkLabelMessageId = 'OER_ACCESSIBILITY_CHECK_LINK_LABEL'
+      note.link = 'https://phaidra.kphvie.ac.at/o:13'
       note.language = 'deu'
       self.form.sections[0].fields.push(note);
 

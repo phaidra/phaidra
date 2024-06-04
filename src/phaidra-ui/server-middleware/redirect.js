@@ -3,13 +3,15 @@ import axios from 'axios'
 import config from '../config/phaidra-ui'
 
 export default async (req, res, next) => {
-  if (/^\/o:\d+$/.test(req.url)) {
+  if (/^\/o:\d+$/.test(req.url)) { 
+    let baseURL = process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT
+    let apiBaseURL = 'http://api:3000'
     let pid = req.url.replace('/', '')
     let params = { q: '*:*', defType: 'edismax', wt: 'json', start: 0, rows: 1, fq: 'pid:"' + pid + '"' }
     try {
       let response = await axios.request({
         method: 'POST',
-        url: config.instances[config.defaultinstance].api + '/search/select',
+        url: apiBaseURL + '/search/select',
         data: qs.stringify(params, { arrayFormat: 'repeat' }),
         headers: {
           'content-type': 'application/x-www-form-urlencoded'
@@ -25,7 +27,7 @@ export default async (req, res, next) => {
               redirect(res, config.instances[config.defaultinstance].fedora + '/objects/' + pid + '/methods/bdef:Book/view')
               return
             } else {
-              redirect(res, config.instances[config.defaultinstance].api + '/object/' + pid + '/preview')
+              redirect(res, apiBaseURL + '/object/' + pid + '/preview')
               return
             }
           }
@@ -33,13 +35,13 @@ export default async (req, res, next) => {
         if (doc['isinadminset']) {
           for (let adminset of doc['isinadminset']) {
             if (adminset === 'phaidra:ir.univie.ac.at') {
-              redirect(res, config.instances[config.defaultinstance].irbaseurl + '/' + pid)
+              redirect(res, 'https://' + config.instances[config.defaultinstance].irbaseurl + '/' + pid)
               return
             }
           }
         }
       }
-      redirect(res, config.instances[config.defaultinstance].baseurl + '/detail/' + pid)
+      redirect(res, baseURL + '/detail/' + pid)
       return
     } catch (error) {
       console.log(error)

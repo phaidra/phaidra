@@ -88,6 +88,11 @@ export default {
       { name: 'theme-color', content: this.instanceconfig.primary }
       ]
     };
+    if (this.instanceconfig.cms_css && (this.instanceconfig.cms_css !== '')) {
+      metaInfo.style = [ 
+        { cssText: this.instanceconfig.cms_css, type: 'text/css' } 
+      ]
+    }
     return metaInfo;
   },
   methods: {

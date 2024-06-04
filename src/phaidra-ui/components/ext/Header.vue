@@ -543,6 +543,7 @@
           </v-row>
           </v-col>
       </v-row>
+      <a ref="logoutlink" v-hide="true" href="/Shibboleth.sso/Logout"></a>
     </div>
   </template>
   
@@ -559,9 +560,32 @@
     },
     methods: {
       logout: function () {
+        console.log("local logout")
         this.$store.dispatch("logout");
         this.$store.commit("setLoading", false);
         this.$router.push(this.localeLocation({ path: `/` }));
+      },
+      ssologoutlink: async function () {
+        console.log("local logout")
+        try {
+          await this.$store.dispatch("logout");
+        } catch (error) {
+          console.log(error)
+        }
+        console.log("sso logout link")
+        this.$store.commit("setLoading", false);
+        this.$refs.logoutlink.click();
+      },
+      ssologout: async function () {
+        console.log("local logout")
+        try {
+          await this.$store.dispatch("logout");
+        } catch (error) {
+          console.log(error)
+        }
+        console.log("sso logout location.href")
+        this.$store.commit("setLoading", false);
+        window.location.href = '/Shibboleth.sso/Logout'
       },
       useLocale: function (lang) {
         if (this.instanceconfig) {
@@ -588,6 +612,10 @@
       if (localStorage.getItem("locale")) {
         this.$i18n.locale = localStorage.getItem("locale");
       } else {
+        console.log('default locale: ' + this.$config.defaultLocale)
+        if (this.$config.defaultLocale) {
+          this.$i18n.locale = this.$config.defaultLocale
+        }
         localStorage.setItem("locale", this.$i18n.locale);
       }
     }
