@@ -12,7 +12,7 @@ networks:
 
 services:
   httpd:
-    image: testuser34/httpd-base:cd745f58
+    image: httpd:2.4.59-bookworm
     pull_policy: always
     labels:
       logging: "promtail"
