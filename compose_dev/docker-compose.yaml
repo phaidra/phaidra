@@ -367,7 +367,7 @@ services:
       - phaidra-network
 
   grafana:
-    image: grafana/grafana:10.2.2
+    image: grafana/grafana:11.0.0
     volumes:
       - .././container_init/grafana/ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
       - .././container_init/grafana/dd.yaml:/etc/grafana/provisioning/dashboards/dd.yaml:ro
