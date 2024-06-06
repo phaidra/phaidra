@@ -97,7 +97,7 @@ services:
       - OUTSIDE_HTTP_SCHEME=${OUTSIDE_HTTP_SCHEME}
       - PHAIDRA_PRIMARY_COLOR=${PHAIDRA_PRIMARY_COLOR}
       - PHAIDRA_DEFAULT_LANGUAGE=${PHAIDRA_DEFAULT_LANGUAGE}
-      - PHAIDRA_API_HOST_INTERNAL=${PHAIDRA_API_HOST_INTERNAL}
+      - PHAIDRA_API_HOST_INTERNAL=api
 
   api:
     depends_on:
@@ -140,7 +140,16 @@ services:
       - LDAP_ROOT=${LDAP_ROOT}
       - OC_EXTERNAL=${OC_EXTERNAL}
       - FEDORA_OCFL_ROOT=${FEDORA_OCFL_ROOT}
-      - SOLR_HOST=${SOLR_HOST}
+      - SOLR_HOST=solr
+      - FEDORA_HOST=fedora
+      - IMAGESERVER_HOST=imageserver
+      - OPENLDAP_HOST=openldap
+      - MONGODB_PHAIDRA_HOST=mongodb-phaidra
+      - MONGODB_PHAIDRA_USER=${MONGODB_PHAIDRA_USER}
+      - MONGODB_PHAIDRA_PASSWORD=${MONGODB_PHAIDRA_PASSWORD}
+      - MARIADB_PHAIDRA_HOST=mariadb-phaidra
+      - MARIADB_PHAIDRA_USER=${MARIADB_PHAIDRA_USER}
+      - MARIADB_PHAIDRA_PASSWORD=${MARIADB_PHAIDRA_PASSWORD}
     entrypoint:
       - bash
       - /mnt/api-entrypoint.bash
@@ -324,11 +333,11 @@ services:
       - PHAIDRA_ADMIN_PASSWORD=${PHAIDRA_ADMIN_PASSWORD}
       - FEDORA_ADMIN_USER=${FEDORA_ADMIN_USER}
       - FEDORA_ADMIN_PASS=${FEDORA_ADMIN_PASS}
-      - SOLR_HOST=${SOLR_HOST}
-      - MARIADB_FEDORA_HOST=${MARIADB_FEDORA_HOST}
-      - MARIADB_PHAIDRA_HOST=${MARIADB_PHAIDRA_HOST}
-      - MONGODB_PHAIDRA_HOST=${MONGODB_PHAIDRA_HOST}
-      - FEDORA_HOST=${FEDORA_HOST}
+      - SOLR_HOST=solr
+      - MARIADB_FEDORA_HOST=mariadb-fedora
+      - MARIADB_PHAIDRA_HOST=mariadb-phaidra
+      - MONGODB_PHAIDRA_HOST=mongodb-phaidra
+      - FEDORA_HOST=fedora
     depends_on:
       - mariadb-fedora
       - mariadb-phaidra
