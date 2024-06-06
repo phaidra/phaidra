@@ -78,8 +78,6 @@ SOLR_SALT: "phaidra"
 SOLR_USER: "phaidra"
 # solr admin password
 SOLR_PASS: "phaidra"
-# solr host name
-SOLR_HOST: "solr-service"
 # phaidra primary color
 PHAIDRA_PRIMARY_COLOR: "#008080"
 # chronos database dumps pvc size & type
