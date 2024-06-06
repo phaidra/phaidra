@@ -24,8 +24,6 @@ MARIADB_PHAIDRA_PASSWORD: "phaidra"
 MONGODB_PHAIDRA_USER: "phaidra"
 # password for the mongodb database user
 MONGODB_PHAIDRA_PASSWORD: "phaidra"
-# name of the mongodb database
-MONGO_AGENT_DB: "paf_mongodb"
 # openldap admin username
 LDAP_ADMIN_USERNAME: "admin"
 # openldap admin password
@@ -78,8 +76,6 @@ SOLR_SALT: "phaidra"
 SOLR_USER: "phaidra"
 # solr admin password
 SOLR_PASS: "phaidra"
-# solr host name
-SOLR_HOST: "solr-service"
 # phaidra primary color
 PHAIDRA_PRIMARY_COLOR: "#008080"
 # chronos database dumps pvc size & type

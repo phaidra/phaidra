@@ -47,7 +47,7 @@
     },
     "phaidra": {
         "baseurl": "__PHAIDRA_HOSTNAME____PHAIDRA_PORTSTUB____PHAIDRA_HOSTPORT__",
-        "fedorabaseurl": "fedora",
+        "fedorabaseurl": "__FEDORA_HOST__",
         "staticbaseurl": "",
         "fedorastylesheeturl": "",
         "proaiRepositoryIdentifier": "",
@@ -60,7 +60,7 @@
     },
     "fedora": {
         "version": "6.4",
-        "host": "fedora",
+        "host": "__FEDORA_HOST__",
         "port": "8080",
         "path": "fcrepo/rest/",
         "scheme": "http",
@@ -74,36 +74,36 @@
         "hash_secret": "__IMAGESERVER_HASH_SECRET__",
         "image_server_root": "/mnt/converted_images",
         "scheme": "http",
-        "host": "imageserver",
+        "host": "__IMAGESERVER_HOST__",
         "path": "/iipsrv/iipsrv.fcgi"
     },
     "mongodb_group_manager": {
-        "host": "mongodb-phaidra",
+        "host": "__MONGODB_PHAIDRA_HOST__",
         "port": "27017",
-        "username": "phaidra",
-        "password": "phaidra",
+        "username": "__MONGODB_PHAIDRA_USER__",
+        "password": "__MONGODB_PHAIDRA_PASSWORD__",
         "database": "groups",
         "collection": "usergroups"
     },
     "mongodb": {
-        "host": "mongodb-phaidra",
+        "host": "__MONGODB_PHAIDRA_HOST__",
         "port": "27017",
-        "username": "phaidra",
-        "password": "phaidra",
+        "username": "__MONGODB_PHAIDRA_USER__",
+        "password": "__MONGODB_PHAIDRA_PASSWORD__",
         "database": "mongodb"
     },
     "paf_mongodb": {
-        "host": "mongodb-phaidra",
+        "host": "__MONGODB_PHAIDRA_HOST__",
         "port": "27017",
-        "username": "phaidra",
-        "password": "phaidra",
+        "username": "__MONGODB_PHAIDRA_USER__",
+        "password": "__MONGODB_PHAIDRA_PASSWORD__",
         "database": "paf_mongodb"
     },
     "index_mongodb": {
-        "host": "mongodb-phaidra",
+        "host": "__MONGODB_PHAIDRA_HOST__",
         "port": "27017",
-        "username": "phaidra",
-        "password": "phaidra",
+        "username": "__MONGODB_PHAIDRA_USER__",
+        "password": "__MONGODB_PHAIDRA_PASSWORD__",
         "database": "index_mongodb"
     },
     "apis": {
@@ -130,14 +130,14 @@
     },
     "directory_class": "Phaidra::Directory::GenericLDAP",
     "phaidra_db": {
-        "dsn": "dbi:mysql:phaidradb:mariadb-phaidra",
-        "username": "phaidra",
-        "password": "phaidra"
+        "dsn": "dbi:mysql:phaidradb:__MARIADB_PHAIDRA_HOST__",
+        "username": "__MARIADB_PHAIDRA_USER__",
+        "password": "__MARIADB_PHAIDRA_PASSWORD__"
     },
     "phaidra_user_db": {
-        "dsn": "dbi:mysql:phaidradb:mariadb-phaidra",
-        "username": "phaidra",
-        "password": "phaidra"
+        "dsn": "dbi:mysql:phaidradb:__MARIADB_PHAIDRA_HOST__",
+        "username": "__MARIADB_PHAIDRA_USER__",
+        "password": "__MARIADB_PHAIDRA_PASSWORD__"
     },
     "authentication": {
         "realm": "Phaidra",
@@ -158,7 +158,7 @@
             ]
         },
         "ldap": {
-            "server": "openldap",
+            "server": "__OPENLDAP_HOST__",
             "port": "1389",
             "useridattribute": "uid",
             "groupssearchbase": "ou=groups,__LDAP_ROOT__",
