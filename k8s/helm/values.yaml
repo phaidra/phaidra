@@ -24,8 +24,6 @@ MARIADB_PHAIDRA_PASSWORD: "phaidra"
 MONGODB_PHAIDRA_USER: "phaidra"
 # password for the mongodb database user
 MONGODB_PHAIDRA_PASSWORD: "phaidra"
-# name of the mongodb database
-MONGO_AGENT_DB: "paf_mongodb"
 # openldap admin username
 LDAP_ADMIN_USERNAME: "admin"
 # openldap admin password

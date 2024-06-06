@@ -103,7 +103,7 @@ data:
             "port": "27017",
             "username": "__MONGODB_PHAIDRA_USER__",
             "password": "__MONGODB_PHAIDRA_PASSWORD__",
-            "database": "__MONGO_AGENT_DB__"
+            "database": "paf_mongodb"
         },
         "index_mongodb": {
             "host": "__MONGODB_PHAIDRA_HOST__",

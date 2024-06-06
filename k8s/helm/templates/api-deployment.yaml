@@ -65,8 +65,6 @@ spec:
               value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
             - name: MONGODB_PHAIDRA_PASSWORD
               value: "{{ .Values.MONGODB_PHAIDRA_PASSWORD }}"
-            - name: MONGO_AGENT_DB
-              value: "{{ .Values.MONGO_AGENT_DB }}"
             - name: MARIADB_PHAIDRA_HOST
               value: "mariadb-phaidra-service"
             - name: MARIADB_PHAIDRA_USER
