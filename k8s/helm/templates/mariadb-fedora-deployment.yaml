@@ -15,6 +15,7 @@ spec:
     metadata:
       annotations:
         promtail.io/scrape: 'true'
+        checksum/config: {{ include (print $.Template.BasePath "/mariadb-fedora-configmap.yaml") . | sha256sum }}
       labels:
         phaidra.app: mariadb-fedora
     spec:
@@ -28,13 +29,16 @@ spec:
               value: "{{ .Values.MARIADB_ROOT_PASSWORD }}"
             - name: MARIADB_USER
               value: "{{ .Values.MARIADB_PHAIDRA_USER }}"
-          image: testuser34/mariadb-fedora-dist:latest
+          image: mariadb:10.5
           name: mariadb-fedora
           resources: {}
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: mariadb-fedora
-          # run as nobody because of container's chown sequence.
+            - mountPath: /docker-entrypoint-initdb.d
+              name: mariadb-fedora-config
+              readonly: true
+          # run as nobody because of container's chown sequence on nfs.
           securityContext:
             runAsUser: 65534
           # set port and set name to make it to kube-dns
@@ -45,4 +49,10 @@ spec:
         - name: mariadb-fedora
           persistentVolumeClaim:
             claimName: mariadb-fedora-pvc
+        - name: mariadb-fedora-config
+          configMap:
+            name: mariadb-fedora-config
+            items:
+              - key: "fedoradb_grafana.sql"
+                name: "fedoradb_grafana.sql"
 status: {}
