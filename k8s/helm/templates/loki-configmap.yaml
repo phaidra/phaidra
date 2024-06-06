@@ -30,6 +30,13 @@ data:
           index:
             prefix: index_
             period: 24h
+        - from: 2024-06-05
+          store: tsdb
+          object_store: filesystem
+          schema: v13
+          index:
+            period: 24h
+            prefix: index_
     
     ruler:
       alertmanager_url: http://localhost:9093

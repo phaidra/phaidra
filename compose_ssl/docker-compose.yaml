@@ -324,7 +324,7 @@ services:
       - phaidra-network
 
   promtail-local:
-    image: grafana/promtail:2.9.2
+    image: grafana/promtail:3.0.0
     volumes:
       - .././container_init/promtail/promtail-local-config.yaml:/etc/promtail/config.yaml:ro
       - ${HOST_DOCKER_SOCKET}:/var/run/docker.sock:ro
@@ -335,7 +335,7 @@ services:
       - grafana
 
   loki:
-    image: grafana/loki:2.9.2
+    image: grafana/loki:3.0.0
     volumes:
       - .././container_init/loki/loki-docker-config.yaml:/etc/loki/local-config.yaml:ro
       - loki:/loki
@@ -344,7 +344,7 @@ services:
       - phaidra-network
 
   grafana:
-    image: grafana/grafana:10.2.2
+    image: grafana/grafana:11.0.0
     volumes:
       - .././container_init/grafana/ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
       - .././container_init/grafana/dd.yaml:/etc/grafana/provisioning/dashboards/dd.yaml:ro
@@ -362,7 +362,7 @@ services:
       - phaidra-network
 
   prometheus:
-    image: prom/prometheus:v2.48.0
+    image: prom/prometheus:v2.52.0
     volumes:
       - ../container_init/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
       - prometheus:/prometheus
@@ -372,17 +372,18 @@ services:
       - phaidra-network
 
   node-exporter:
-    image: prom/node-exporter:v1.7.0
+    image: prom/node-exporter:v1.8.1
     networks:
       - phaidra-network
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
     networks:
       - phaidra-network
     volumes:
       - /:/rootfs:ro
       - /sys:/sys:ro
+      - /etc/machine-id:/etc/machine-id:ro
       - ${HOST_DOCKER_SOCKET}:/var/run/docker.sock:ro
 
   # UNCOMMENT and fill .env values if you have access to an opencast instance
@@ -416,7 +417,7 @@ services:
 
   # UNCOMMENT and fill .env values, if you have a remote Grafana instance with loki.
   # promtail-push:
-  #   image: grafana/promtail:2.9.2
+  #   image: grafana/promtail:3.0.0
   #   volumes:
   #     - .././container_init/promtail/promtail-push-config.yaml:/etc/promtail/config.yaml:ro
   #     - ${HOST_DOCKER_SOCKET}:/var/run/docker.sock:ro
