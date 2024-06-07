@@ -203,12 +203,32 @@ build-mariadb-phaidra-dist:
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/mariadb-phaidra-dist:latest
     -t $CI_REGISTRY_USER/mariadb-phaidra-dist:$CI_COMMIT_SHORT_SHA --push .
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
-        paths:
-          - dockerfiles/mariadb-phaidra-dist.dockerfile
-          - container_init/mariadb/phaidradb/**/*
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+  #     changes:
+  #       paths:
+  #         - dockerfiles/mariadb-phaidra-dist.dockerfile
+  #         - container_init/mariadb/phaidradb/**/*
+
+build-mariadb-fedora-dist:
+  stage: build-dist
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/mariadb-fedora-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/mariadb-fedora-dist:latest
+    -t $CI_REGISTRY_USER/mariadb-fedora-dist:$CI_COMMIT_SHORT_SHA --push .
+  # rules:
+  #   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+  #     changes:
+  #       paths:
+  #         - dockerfiles/mariadb-fedora-dist.dockerfile
+  #         - container_init/mariadb/fedoradb/**/*
 
 build-vige:
   stage: build-base
