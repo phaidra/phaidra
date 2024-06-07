@@ -30,7 +30,7 @@ spec:
               value: "{{ .Values.LDAP_PORT_NUMBER }}"
             - name: "LDAP_ROOT"
               value: "{{ .Values.LDAP_ROOT }}"
-          image: testuser34/openldap-dist:latest
+          image: testuser34/openldap-dist:10a6b315
           name: openldap
           resources: {}
           volumeMounts:
