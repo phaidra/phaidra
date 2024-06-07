@@ -15,7 +15,6 @@ spec:
     metadata:
       annotations:
         promtail.io/scrape: 'true'
-        checksum/config: {{ include (print $.Template.BasePath "/api-configmap.yaml") . | sha256sum }}
       labels:
         phaidra.app: api
     spec:
@@ -77,28 +76,17 @@ spec:
               value: "imageserver-service"
             - name: OPENLDAP_HOST
               value: "openldap-service"
-          image: testuser34/api-dist:latest
+          image: testuser34/api-dist:92256d60
           name: api
           resources: {}
           volumeMounts:
             - mountPath: /mnt/fedora
               name: fedora
               readOnly: true
-            - mountPath: /config
-              name: api-config
-              readOnly: true
-          command: ["/bin/sh"]
-          args: ["-c", "cp /config/PhaidraAPI.json /usr/local/phaidra/phaidra-api/PhaidraAPI.json && hypnotoad -f phaidra-api.cgi" ]
       restartPolicy: Always
       volumes:
         - name: fedora
           persistentVolumeClaim:
             claimName: fedora-pvc
             readOnly: true
-        - name: api-config
-          configMap:
-            name: api-config
-            items:
-              - key: "PhaidraAPI.json"
-                path: "PhaidraAPI.json"
 status: {}

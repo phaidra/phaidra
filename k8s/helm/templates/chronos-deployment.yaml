@@ -47,7 +47,7 @@ spec:
             - name: PHAIDRA_PORTSTUB
               value: "{{ .Values.PHAIDRA_PORTSTUB }}"
             - name: SOLR_HOST
-              value: "{{ .Values.SOLR_HOST }}"
+              value: "solr-service"
             - name: MARIADB_FEDORA_HOST
               value: "mariadb-fedora-service"
             - name: MARIADB_PHAIDRA_HOST
@@ -56,7 +56,7 @@ spec:
               value: "mongodb-phaidra-service"
             - name: FEDORA_HOST
               value: "fedora-service"
-          image: testuser34/chronos-dist:20240531-init-v11
+          image: testuser34/chronos-dist:830a35df
           name: chronos
           resources: {}
           volumeMounts:
