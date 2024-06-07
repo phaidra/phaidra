@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: mariadb-fedora-config
-data:
-  create_grafana_user.sql: |
-    CREATE USER IF NOT EXISTS 'grafana' IDENTIFIED BY 'grafana';
-    GRANT SELECT ON fedoradb.* to 'grafana';
