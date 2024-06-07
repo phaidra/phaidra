@@ -35,7 +35,7 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: mariadb-fedora
-            - mountPath: /docker-entrypoint-initdb.d
+            - mountPath: /config
               name: mariadb-fedora-config
               readonly: true
           # run as nobody because of container's chown sequence on nfs.
@@ -44,6 +44,8 @@ spec:
           # set port and set name to make it to kube-dns
           ports:
             - containerPort: 3306
+          command: ["/bin/sh"]
+          args: [ "-c", "cp /config/create_grafana_user.sql /docker-entrypoint-initdb.d/create_grafana_user.sql && docker-entrypoint.sh mariadb" ]
       restartPolicy: Always
       volumes:
         - name: mariadb-fedora
@@ -53,6 +55,6 @@ spec:
           configMap:
             name: mariadb-fedora-config
             items:
-              - key: "fedoradb_grafana.sql"
-                name: "fedoradb_grafana.sql"
+              - key: "create_grafana_user.sql"
+                name: "create_grafana_user.sql"
 status: {}

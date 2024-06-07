@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   name: mariadb-fedora-config
 data:
-  fedoradb_grafana.sql: |
+  create_grafana_user.sql: |
     CREATE USER IF NOT EXISTS 'grafana' IDENTIFIED BY 'grafana';
     GRANT SELECT ON fedoradb.* to 'grafana';
