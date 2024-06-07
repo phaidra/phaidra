@@ -56,5 +56,5 @@ spec:
             name: mariadb-fedora-config
             items:
               - key: "create_grafana_user.sql"
-                name: "create_grafana_user.sql"
+                path: "create_grafana_user.sql"
 status: {}
