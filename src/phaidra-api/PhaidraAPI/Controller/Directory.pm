@@ -129,6 +129,7 @@ sub get_user_data {
   $self->app->log->debug("get user data username[$username]");
 
   my $user_data = $self->app->directory->get_user_data($self, $username);
+  $self->app->log->debug("user data 2: \n".$self->app->dumper($user_data));
   if ($self->stash('remote_user')) {
     $self->app->log->debug("remote_user[$username] 2");
     my $sessionData = $self->load_cred;
@@ -146,7 +147,7 @@ sub get_user_data {
       $user_data->{affiliation} = $sessionData->{affiliation};
     }
   }
-
+$self->app->log->debug("user data 2: \n".$self->app->dumper($user_data));
   $self->render(json => {status => 200, user_data => $user_data}, status => 200);
 }
 
