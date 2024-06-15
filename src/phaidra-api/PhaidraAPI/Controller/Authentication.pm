@@ -371,7 +371,7 @@ sub signin_shib {
 
   if ($username && $authorized) {
 
-    my $version = $self->stash('consentversion');
+    my $version = $self->param('consentversion');
     if ($version) {
       $self->app->log->debug("consentversion[$version] provided");
 
