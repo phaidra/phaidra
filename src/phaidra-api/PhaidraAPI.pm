@@ -330,7 +330,7 @@ sub startup {
       my $affiliation   = shift;
 
       my $ciphertext;
-
+$self->app->log->log("saving session ru[$ru] firstname[$firstname]");
       my $session = $self->stash('mojox-session');
       $session->load;
       unless ($session->sid) {

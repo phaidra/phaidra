@@ -399,7 +399,7 @@ sub signin_shib {
     $self->app->log->debug("remote user authorized: username[$username]");
     $self->save_cred(undef, undef, $username, $firstname, $lastname, $email, $affiliation);
     my $session = $self->stash('mojox-session');
-
+$self->app->log->log("saved session sid[".$session->sid."]");
     # send token cookie
     my $cookie = Mojo::Cookie::Response->new;
     $cookie->name($self->app->config->{authentication}->{token_cookie})->value($session->sid);
