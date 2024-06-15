@@ -13,7 +13,7 @@ __PACKAGE__->attr('log');
 sub get {
   my ($self) = @_;
 
-  $self->log->debug("Loading header=".$self->header_name.": ".$self->tx->req->headers->header($self->header_name));
+  # $self->log->debug("Loading header=".$self->header_name.": ".$self->tx->req->headers->header($self->header_name));
   my $token = $self->tx->req->headers->header($self->header_name);
   if ($token) {
 
@@ -24,7 +24,7 @@ sub get {
     for my $cookie (@{$cookies}) {
       if ($cookie->name eq $self->cookie_name) {
 
-        $self->log->debug("Found token in ".$self->name." cookie");
+        # $self->log->debug("Found token in ".$self->name." cookie");
         $token = $cookie->value;
       }
     }

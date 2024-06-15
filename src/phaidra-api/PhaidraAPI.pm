@@ -330,11 +330,10 @@ sub startup {
       my $affiliation   = shift;
 
       my $ciphertext;
-$self->app->log->debug("saving session ru[$ru] firstname[$firstname]");
+
       my $session = $self->stash('mojox-session');
       $session->load;
       unless ($session->sid) {
-        $self->app->log->debug("creating new session");
         $session->create;
       }
       my $ba;
@@ -354,7 +353,7 @@ $self->app->log->debug("saving session ru[$ru] firstname[$firstname]");
       $session->data(cred => $ciphertext, salt => $salt);
       $session->flush;
 
-      $self->app->log->debug("Created session: ".$session->sid);
+      # $self->app->log->debug("Created session: ".$session->sid);
     }
   );
 
