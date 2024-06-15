@@ -10,6 +10,7 @@ __PACKAGE__->attr('log');
 
 sub create {
   my ($self, $sid, $expires, $data) = @_;
+  # $self->log->debug("mongo: creating new session sid[$sid]");
   $self->mongo->get_collection('session')->update_one({_id => $sid}, {'$set' => {expires => $expires, data => $data}}, {upsert => 1});
   return 1;
 }
@@ -20,7 +21,7 @@ sub update {
 
 sub load {
   my ($self, $sid) = @_;
-
+  # $self->log->debug("mongo: loading session sid[$sid]");
   my $res     = $self->mongo->get_collection('session')->find_one({_id => $sid});
   my $expires = $res->{expires};
 

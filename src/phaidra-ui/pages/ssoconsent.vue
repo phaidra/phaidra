@@ -7,9 +7,9 @@
           <v-card-text style="max-height: 500px; white-space: pre-wrap;" class="overflow-y-auto">{{ tou }}</v-card-text>
           <v-divider class="mt-5"></v-divider>
           <v-card-actions>
-            <v-checkbox v-model="touCheckbox" @click="agree" :disabled="loading" :loading="loading" color="primary" :label="$t('I agree to the terms of use.')"></v-checkbox>
+            <v-btn @click="back" :disabled="loading" :loading="loading" color="primary" raised>{{ $t('Back') }}</v-btn>
             <v-spacer></v-spacer>
-            <v-btn @click="login" :disabled="loading || !touAgreed" :loading="loading" color="primary" raised>{{ $t('Continue') }}</v-btn>
+            <v-btn @click="login" :disabled="loading" :loading="loading" color="primary" raised>{{ $t('I agree to the terms of use.') }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -28,37 +28,15 @@ export default {
     return {
       loading: false,
       tou: '',
-      touCheckbox: false,
-      touAgreed: false,
       touVersion: 0
     }
   },
   methods: {
-    async agree () {
-      if (this.touCheckbox) {
-        this.loading = true
-        try {
-          let response = await this.$axios.post('/termsofuse/agree/' + this.touVersion, undefined,
-            {
-              headers: {
-                'Authorization': 'Basic ' + btoa(this.credentials.username + ':' + this.credentials.password)
-              }
-            }
-          )
-          if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
-          }
-          this.touAgreed = true
-        } catch (error) {
-          console.log(error)
-          this.$store.commit('setAlerts', [ { type: 'error', msg: error } ])
-        } finally {
-          this.loading = false
-        }
-      }
+    async back () {
+      window.location.href = '/'
     },
     async login () {
-      window.location.href = '/login'
+      window.location.href = '/login?consentversion=' + this.touVersion
     }
   },
   created: async function () {

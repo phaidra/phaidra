@@ -155,6 +155,11 @@ export default {
       file.backgroundColor = '#0063a620';
       self.form.sections[0].fields.push(file);
 
+      let phaidra_oer = fields.getField("object-type")
+      phaidra_oer.value = 'https://pid.phaidra.org/vocabulary/YA8R-1M0D'
+      phaidra_oer.hidden = true
+      self.form.sections[0].fields.push(phaidra_oer);
+
       let ot = fields.getField("object-type-checkboxes");
       ot.resourceType = defaultResourceType;
       ot.showLabel = true;

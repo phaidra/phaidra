@@ -119,7 +119,7 @@ sub get_user_data {
 
   unless ($username) {
     if ($self->stash('remote_user')) {
-      $username = $self->stash('remote_user')
+      $username = $self->stash('remote_user');
     } else {
       $username = $self->stash->{basic_auth_credentials}->{username};
     }
@@ -128,6 +128,22 @@ sub get_user_data {
   $self->app->log->debug("get user data username[$username]");
 
   my $user_data = $self->app->directory->get_user_data($self, $username);
+  if ($self->stash('remote_user')) {
+    # in case there is no user data api, use the attrs we saved on shib login
+    my $sessionData = $self->load_cred;
+    unless (exists($user_data->{firstname}) && ($user_data->{firstname} ne '')) {
+      $user_data->{firstname} = $sessionData->{firstname};
+    }
+    unless (exists($user_data->{lastname}) && ($user_data->{lastname} ne '')) {
+      $user_data->{lastname} = $sessionData->{lastname};
+    }
+    unless (exists($user_data->{email}) && ($user_data->{email} ne '')) {
+      $user_data->{email} = $sessionData->{email};
+    }
+    unless (exists($user_data->{affiliation}) && ($user_data->{affiliation} ne '')) {
+      $user_data->{affiliation} = $sessionData->{affiliation};
+    }
+  }
 
   $self->render(json => {status => 200, user_data => $user_data}, status => 200);
 }
