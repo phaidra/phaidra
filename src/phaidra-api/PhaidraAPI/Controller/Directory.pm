@@ -130,17 +130,17 @@ sub get_user_data {
   my $user_data = $self->app->directory->get_user_data($self, $username);
   if ($self->stash('remote_user')) {
     my $sessionData = $self->load_cred;
-    unless (exists($userdata->{firstname})) {
-      $userdata->{firstname} = $sessionData->{firstname};
+    unless (exists($user_data->{firstname})) {
+      $user_data->{firstname} = $sessionData->{firstname};
     }
-    unless (exists($userdata->{lastname})) {
-      $userdata->{lastname} = $sessionData->{lastname};
+    unless (exists($user_data->{lastname})) {
+      $user_data->{lastname} = $sessionData->{lastname};
     }
-    unless (exists($userdata->{email})) {
-      $userdata->{email} = $sessionData->{email};
+    unless (exists($user_data->{email})) {
+      $user_data->{email} = $sessionData->{email};
     }
-    unless (exists($userdata->{affiliation})) {
-      $userdata->{affiliation} = $sessionData->{affiliation};
+    unless (exists($user_data->{affiliation})) {
+      $user_data->{affiliation} = $sessionData->{affiliation};
     }
   }
 
