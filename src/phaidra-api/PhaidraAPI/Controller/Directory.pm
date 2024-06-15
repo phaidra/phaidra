@@ -119,7 +119,8 @@ sub get_user_data {
 
   unless ($username) {
     if ($self->stash('remote_user')) {
-      $username = $self->stash('remote_user')
+      $username = $self->stash('remote_user');
+      $self->app->log->debug("remote_user[$username]");
     } else {
       $username = $self->stash->{basic_auth_credentials}->{username};
     }
@@ -129,9 +130,10 @@ sub get_user_data {
 
   my $user_data = $self->app->directory->get_user_data($self, $username);
   if ($self->stash('remote_user')) {
+    $self->app->log->debug("remote_user[$username] 2");
     my $sessionData = $self->load_cred;
+    $self->app->log->debug("session data: \n".$self->app->dumper($sessionData));
     unless (exists($user_data->{firstname})) {
-      $self->app->log->debug("session data: \n".$self->app->dumper($sessionData));
       $user_data->{firstname} = $sessionData->{firstname};
     }
     unless (exists($user_data->{lastname})) {
