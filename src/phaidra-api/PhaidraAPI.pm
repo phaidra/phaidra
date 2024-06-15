@@ -324,6 +324,10 @@ sub startup {
       my $u    = shift;
       my $p    = shift;
       my $ru   = shift;
+      my $firstname   = shift;
+      my $lastname   = shift;
+      my $email   = shift;
+      my $affiliation   = shift;
 
       my $ciphertext;
 
@@ -337,8 +341,9 @@ sub startup {
         $ba = encode_sereal({username => $u, password => $p});
       }
       if (defined($ru)) {
-        $ba = encode_sereal({remote_user => $ru});
+        $ba = encode_sereal({remote_user => $ru, firstname => $firstname, lastname => $lastname, email => $email, affiliation => $affiliation});
       }
+      
       my $salt = Math::Random::ISAAC::XS->new(map {unpack("N", urandom(4))} 1 .. 256)->irand();
       my $key  = hmac_sha256($salt, $self->app->config->{enc_key});
       my $cbc  = Crypt::CBC->new(-key => $key, -pbkdf => 'pbkdf2');
