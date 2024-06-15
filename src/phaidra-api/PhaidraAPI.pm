@@ -334,6 +334,7 @@ $self->app->log->debug("saving session ru[$ru] firstname[$firstname]");
       my $session = $self->stash('mojox-session');
       $session->load;
       unless ($session->sid) {
+        $self->app->log->debug("creating new session");
         $session->create;
       }
       my $ba;
@@ -352,7 +353,7 @@ $self->app->log->debug("saving session ru[$ru] firstname[$firstname]");
       $self->app->log->error("Encoding error: $@") if $@;
       $session->data(cred => $ciphertext, salt => $salt);
 
-      #$self->app->log->debug("Created session: ".$session->sid);
+      $self->app->log->debug("Created session: ".$session->sid);
     }
   );
 

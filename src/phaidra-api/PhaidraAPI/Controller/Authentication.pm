@@ -394,8 +394,6 @@ sub signin_shib {
     }
 
     # init session, save credentials
-    # currently we only save remote_user
-    # TODO: save remote_affiliation and remote_groups
     $self->app->log->debug("remote user authorized: username[$username]");
     $self->save_cred(undef, undef, $username, $firstname, $lastname, $email, $affiliation);
     my $session = $self->stash('mojox-session');
