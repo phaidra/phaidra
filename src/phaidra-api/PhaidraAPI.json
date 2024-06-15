@@ -146,6 +146,7 @@
         "Access-Control-Allow-Origin": "*",
         "shibboleth": {
             "frontendloginurl": "__OUTSIDE_HTTP_SCHEME__://__PHAIDRA_HOSTNAME____PHAIDRA_PORTSTUB____PHAIDRA_HOSTPORT__/",
+            "frontendconsenturl": "__OUTSIDE_HTTP_SCHEME__://__PHAIDRA_HOSTNAME____PHAIDRA_PORTSTUB____PHAIDRA_HOSTPORT__/ssoconsent",
             "attributes": {
                 "email": "__SHIB_MAIL__",
                 "firstname": "__SHIB_GIVEN_NAME__",

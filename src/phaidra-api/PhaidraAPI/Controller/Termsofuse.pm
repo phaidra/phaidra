@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use v5.10;
 use Scalar::Util qw(looks_like_number);
+use PhaidraAPI::Model::Termsofuse;
 use Mojo::ByteStream qw(b);
 use base 'Mojolicious::Controller';
 
@@ -59,45 +60,12 @@ sub agree {
     return;
   }
 
-  my $ss  = "SELECT version FROM terms_of_use WHERE version = '$version';";
-  my $sth = $self->app->db_metadata->dbh->prepare($ss) or $self->app->log->error($self->app->db_metadata->dbh->errstr);
-  $sth->execute() or $self->app->log->error($self->app->db_metadata->dbh->errstr);
-  my $versionexists;
-  $sth->bind_columns(undef, \$versionexists) or $self->app->log->error($self->app->db_metadata->dbh->errstr);
-  $sth->fetch();
-  $sth->finish();
-  unless ($versionexists) {
-    $self->render(json => {alerts => [{type => 'error', msg => 'Unknown version provided'}]}, status => 400);
-    return;
-  }
-
   my $username = $self->stash->{basic_auth_credentials}->{username};
 
-  $ss  = "SELECT agreed FROM user_terms WHERE username = '$username' AND version = '$version';";
-  $sth = $self->app->db_user->dbh->prepare($ss) or $self->app->log->error($self->app->db_user->dbh->errstr);
-  $sth->execute() or $self->app->log->error($self->app->db_user->dbh->errstr);
-  my $agreed;
-  $sth->bind_columns(undef, \$agreed) or $self->app->log->error($self->app->db_user->dbh->errstr);
-  $sth->fetch();
-  $sth->finish();
-  if ($agreed) {
-    $self->render(json => {alerts => [{type => 'error', msg => "Already agreeded to this version $agreed"}]}, status => 400);
-    return;
-  }
+  my $termsofuse_model = PhaidraAPI::Model::Termsofuse->new;
+  my $res = $termsofuse_model->agree($self, $username, $version);
 
-  my @now = localtime();
-  my $now = sprintf("%04d-%02d-%02d %02d:%02d:%02d", $now[5] + 1900, $now[4] + 1, $now[3], $now[2], $now[1], $now[0]);
-
-  $ss  = "INSERT INTO user_terms (username, version, agreed) VALUES ('$username', '$version', '$now');";
-  $sth = $self->app->db_user->dbh->prepare($ss) or $self->app->log->error($self->app->db_user->dbh->errstr);
-  if ($sth->execute()) {
-    $self->render(json => {alerts => [], status => 200}, status => 200);
-  }
-  else {
-    my $msg = $self->app->db_user->dbh->errstr;
-    $self->app->log->error($msg);
-    $self->render(json => {alerts => [{type => 'error', msg => "Error agreeing to terms of use: $msg"}], status => 500}, status => 500);
-  }
+  $self->render(json => $res, status => $res->{status});
 }
 
 sub getagreed {
@@ -105,27 +73,10 @@ sub getagreed {
 
   my $username = $self->stash->{basic_auth_credentials}->{username};
 
-  my $ss  = "SELECT version FROM terms_of_use ORDER BY version DESC;";
-  my $sth = $self->app->db_metadata->dbh->prepare($ss) or $self->app->log->error($self->app->db_metadata->dbh->errstr);
-  $sth->execute() or $self->app->log->error($self->app->db_metadata->dbh->errstr);
-  my ($latestversion);
-  $sth->bind_columns(undef, \$latestversion) or $self->app->log->error($self->app->db_metadata->dbh->errstr);
-  $sth->fetch();
-  $sth->finish();
+  my $termsofuse_model = PhaidraAPI::Model::Termsofuse->new;
+  my $res = $termsofuse_model->getagreed($self, $username);
 
-  $ss  = "SELECT agreed FROM user_terms WHERE username = '$username' AND version = '$latestversion';";
-  $sth = $self->app->db_user->dbh->prepare($ss) or $self->app->log->error($self->app->db_user->dbh->errstr);
-  $sth->execute() or $self->app->log->error($self->app->db_user->dbh->errstr);
-  my $agreed;
-  $sth->bind_columns(undef, \$agreed) or $self->app->log->error($self->app->db_user->dbh->errstr);
-  $sth->fetch();
-  $sth->finish();
-  if ($agreed) {
-    $self->render(json => {alerts => [], status => 200, agreed => $agreed}, status => 200);
-  }
-  else {
-    $self->render(json => {alerts => [], status => 200, agreed => undef}, status => 200);
-  }
+  $self->render(json => $res, status => $res->{status});
 }
 
 1;

@@ -6,6 +6,7 @@ use v5.10;
 use Mojo::ByteStream qw(b);
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Object;
+use PhaidraAPI::Model::Termsofuse;
 
 sub extract_credentials {
   my $self = shift;
@@ -369,6 +370,14 @@ sub signin_shib {
 
   if ($username && $authorized) {
 
+    my $termsofuse_model = PhaidraAPI::Model::Termsofuse->new;
+    my $termsres = $termsofuse_model->getagreed($self, $username);
+    unless($termsres->{agreed}) {
+      $self->app->log->debug("redirecting to " . $self->app->config->{authentication}->{shibboleth}->{frontendconsenturl});
+      $self->redirect_to($self->app->config->{authentication}->{shibboleth}->{frontendconsenturl});
+      return;
+    }
+
     # init session, save credentials
     # currently we only save remote_user
     # TODO: save remote_affiliation and remote_groups
@@ -389,6 +398,7 @@ sub signin_shib {
       $cookie->domain($self->app->config->{phaidra}->{baseurl});
     }
     $self->tx->res->cookies($cookie);
+
   }
 
   $self->app->log->debug("redirecting to " . $self->app->config->{authentication}->{shibboleth}->{frontendloginurl});

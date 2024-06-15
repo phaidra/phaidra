@@ -118,7 +118,14 @@ export default {
           this.$store.commit('setAlerts', response.data.alerts)
         }
         if (!response.data.agreed) {
-          let toures = await this.$axios.get('/termsofuse')
+          let url = "/termsofuse";
+          if (this.$i18n.locale === 'deu') {
+            url = url + '?lang=de'
+          }
+          if (this.$i18n.locale === 'ita') {
+            url = url + '?lang=it'
+          }
+          let toures = await this.$axios.get(url)
           if (toures.data.alerts && toures.data.alerts.length > 0) {
             this.$store.commit('setAlerts', toures.data.alerts)
           }
