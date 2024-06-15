@@ -131,6 +131,7 @@ sub get_user_data {
   if ($self->stash('remote_user')) {
     my $sessionData = $self->load_cred;
     unless (exists($user_data->{firstname})) {
+      $self->app->log->debug("session data: \n".$self->app->dumper($sessionData));
       $user_data->{firstname} = $sessionData->{firstname};
     }
     unless (exists($user_data->{lastname})) {

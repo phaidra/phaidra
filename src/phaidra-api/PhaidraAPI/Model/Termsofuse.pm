@@ -43,7 +43,7 @@ sub agree {
   my $username  = shift;
   my $version = shift;
 
-  my $res = {alerts => [], status => 200, agreed => undef};
+  my $res = {alerts => [], status => 200};
 
   my $ss  = "SELECT version FROM terms_of_use WHERE version = '$version';";
   my $sth = $c->app->db_metadata->dbh->prepare($ss) or $c->app->log->error($c->app->db_metadata->dbh->errstr);
