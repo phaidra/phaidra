@@ -352,6 +352,7 @@ $self->app->log->debug("saving session ru[$ru] firstname[$firstname]");
       eval {$ciphertext = encode_base64url($cbc->encrypt($ba));};
       $self->app->log->error("Encoding error: $@") if $@;
       $session->data(cred => $ciphertext, salt => $salt);
+      $session->flush;
 
       $self->app->log->debug("Created session: ".$session->sid);
     }

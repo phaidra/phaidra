@@ -24,7 +24,7 @@ sub get {
     for my $cookie (@{$cookies}) {
       if ($cookie->name eq $self->cookie_name) {
 
-        # $self->log->debug("Found token in ".$self->name." cookie");
+        $self->log->debug("Found token in ".$self->name." cookie");
         $token = $cookie->value;
       }
     }
