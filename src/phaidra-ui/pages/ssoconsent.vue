@@ -58,7 +58,7 @@ export default {
       }
     },
     async login () {
-      window.location.href = '/login'
+      window.location.href = '/login&target=' + encodeURIComponent(instanceconfig.api + '&consentversion=' + this.touVersion)
     }
   },
   created: async function () {
