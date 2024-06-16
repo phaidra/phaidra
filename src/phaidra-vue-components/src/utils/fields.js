@@ -1404,6 +1404,18 @@ const fields = [
     label: 'System tag',
     value: '',
     definition: 'A tag for the purpose of identification or to give other information'
+  },
+  {
+    id: 'alert',
+    fieldname: 'Alert',
+    predicate: '',
+    component: 'p-alert',
+    contentperlocale: {
+      eng: '',
+      deu: '',
+      ita: ''
+    },
+    definition: 'Shows additional information in the submitform'
   }
 ]
 

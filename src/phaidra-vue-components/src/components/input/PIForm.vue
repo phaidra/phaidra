@@ -678,6 +678,12 @@
                             ></p-i-note-checkbox-with-link>
                           </template>
 
+                          <template v-if="f.component === 'p-alert'">
+                            <p-alert
+                              v-bind.sync="f"
+                            ></p-alert>
+                          </template>
+
                         </v-row>
                       </template>
                       <span>{{ $t(f.helptext ? f.helptext : f.definition)}}</span>

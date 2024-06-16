@@ -224,6 +224,13 @@ export default {
       note.language = 'deu'
       self.form.sections[0].fields.push(note);
 
+      let alert = fields.getField("alert")
+      alert.contentperlocale = {
+        eng: 'By uploading an OER object using this template, you agree to the <strong>worldwide publication</strong> of the material. After a review, the object will be included in the OER collection and can be accessed via <a href="https://www.oerhub.at/" target="_blank">OERhub.at</a> (search engine for open educational resources from the Austrian higher education sector). <strong>The necessary criteria for OER must be met.</strong> See <a target="_blank" href="https://static.uni-graz.at/fileadmin/digitales-lehren-und-lernen/Dokumente/OER-Leitfaden_V3_2022.pdf">criteria for OER material</a>.',
+        deu: 'Durch das Hochladen eines OER-Objekts mit dieser Vorlage stimmen Sie der <strong>weltweiten Veröffentlichung</strong> des Materials zu. Das Objekt wird nach einer Prüfung in die OER-Collection aufgenommen und ist über <a href="https://www.oerhub.at/" target="_blank">OERhub.at</a> (Suchmaschine für offene Bildungsressourcen aus dem österreichischen Hochschulraum) abrufbar. <strong>Notwenige Kriterien eines OERs sind unbedingt einzuhalten.</strong> Siehe Kriterien für <a target="_blank" href="https://static.uni-graz.at/fileadmin/digitales-lehren-und-lernen/Dokumente/OER-Leitfaden_V3_2022.pdf">OER-Tauglichkeit</a>.'
+      }
+      self.form.sections[0].fields.push(alert);
+
       for (let s of self.form.sections) {
         for (let f of s.fields) {
           f.configurable = false
