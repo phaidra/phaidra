@@ -679,9 +679,9 @@
                           </template>
 
                           <template v-if="f.component === 'p-alert'">
-                            <p-alert
+                            <p-i-alert
                               v-bind.sync="f"
-                            ></p-alert>
+                            ></p-i-alert>
                           </template>
 
                         </v-row>
@@ -897,6 +897,7 @@ import PMRights from '../management/PMRights'
 import PDLicenseInfo from '../utils/PDLicenseInfo'
 import PIObjectType from './PIObjectType'
 import PIResourceType from './PIResourceType'
+import PIAlert from './PIAlert'
 import PFeedback from '../utils/PFeedback'
 import PHelp from '../info/PHelp'
 
@@ -939,6 +940,7 @@ export default {
     PISpatialReadonly,
     PISeeAlso,
     PIUnknown,
+    PIAlert,
     PTemplates,
     ObjectFromSearch,
     PMRights,
