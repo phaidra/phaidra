@@ -143,6 +143,7 @@
         "realm": "Phaidra",
         "token_header": "X-XSRF-TOKEN",
         "token_cookie": "XSRF-TOKEN",
+        "cookie_domain": "__PHAIDRA_HOSTNAME____PHAIDRA_PORTSTUB____PHAIDRA_HOSTPORT__",
         "Access-Control-Allow-Origin": "*",
         "shibboleth": {
             "frontendloginurl": "__OUTSIDE_HTTP_SCHEME__://__PHAIDRA_HOSTNAME____PHAIDRA_PORTSTUB____PHAIDRA_HOSTPORT__/",
