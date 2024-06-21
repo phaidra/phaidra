@@ -602,7 +602,7 @@ export const formvalidation = {
               this.mandatoryFieldsValidated['Keyword'] = true
             }
           }
-          if ((f.component === 'p-entity') || (f.component === 'p-entity-extended')) {
+          if ((f.component === 'p-entity') || (f.component === 'p-entity-extended') || (f.component === 'p-entity-fixedrole-person')) {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] r[' + f.role + '] fn[' + f.firstname + '] ln[' + f.lastname + ']')
             if (f.role.length > 0) {
               this.mandatoryFieldsFound['Role'] = true
