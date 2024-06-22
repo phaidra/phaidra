@@ -1209,5 +1209,5 @@ export default {
   'Configure': 'Konfigurieren',
   'Some required fields are not complete': 'Manche Pflichtfelder sind nicht vollständig',
   OER_ACCESSIBILITY_CHECK_LABEL: 'Grundsätze der {0} beachtet',
-  OER_ACCESSIBILITY_CHECK_LINK_LABEL: 'Barrierefreiheit'
+  OER_ACCESSIBILITY_CHECK_LINK_LABEL: 'Barrierearmut'
 }
