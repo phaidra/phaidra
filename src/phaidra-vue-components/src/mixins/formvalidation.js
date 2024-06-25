@@ -274,7 +274,7 @@ export const formvalidation = {
           }
           if (f.component === 'p-file') {
             this.mandatoryFieldsFound['File'] = true
-            if (f.file && (f.mimetype.length > 0) && (resourceType !== 'https://pid.phaidra.org/vocabulary/7AVS-Y482')) {
+            if (f.file && (f.mimetype.length > 0)) {
               this.mandatoryFieldsValidated['File'] = true
             }
             if (this.allowedMimetypes[resourceType]) {
@@ -452,7 +452,7 @@ export const formvalidation = {
           }
           if (f.component === 'p-file') {
             this.mandatoryFieldsFound['File'] = true
-            if (f.file && (f.mimetype.length > 0) && (resourceType !== 'https://pid.phaidra.org/vocabulary/7AVS-Y482')) {
+            if (f.file && (f.mimetype.length > 0)) {
               this.mandatoryFieldsValidated['File'] = true
             }
             if (this.allowedMimetypes[resourceType]) {
@@ -629,7 +629,7 @@ export const formvalidation = {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] mimetype[' + f.mimetype + '] file[' + f.file + ']')
             console.log(f.file)
             this.mandatoryFieldsFound['File'] = true
-            if (f.file && (f.mimetype.length > 0) && (resourceType !== 'https://pid.phaidra.org/vocabulary/7AVS-Y482')) {
+            if (f.file && (f.mimetype.length > 0)) {
               this.mandatoryFieldsValidated['File'] = true
             }
             if (this.allowedMimetypes[resourceType]) {
