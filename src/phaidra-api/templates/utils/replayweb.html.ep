@@ -71,7 +71,7 @@
                 }
 
                         .info-text {
-                            display: none;/* Initially hide info text */
+                            display: none;/* by default no info text */
                         /* Initially hide info text */
                         font-size: 11.5pt;
                         font-weight: 300;
@@ -84,32 +84,59 @@
                         width: fit-content;
                         position: absolute;
                         left: 50%;
+                        font-weight: 300;
+￼    text-rendering: optimizeLegibility;
                         transform: translateX(-50%);
                         z-index: 1; /* Ensure info text appears above other content */
- background-color: #f0f0f0; /* Very light grey background */
-                           padding: 10px; 
-    border: 2px solid #ccc; 
+ background-color: #e0e0e0;
+                           
+   
     border-radius: 5px; /* Rounded corners */
-
                 }
+.info-text-main {
+                          display: none;/* by default no info text */
+                        font-size: 11.5pt;
+                        font-weight: 300;
+                        font-family: "Roboto", sans-serif, Arial, Helvetica, sans-serif;
+                        color: black;
+                        padding: 20px; 
+                        text-align: center;
+                        width: auto;
+                        position: relative;
+                        z-index: 1; /* Ensure info text appears above other content */
+ background-color: #e0e0e0; /* Very light grey background */
+      bottom: 0; /* Position at the bottom */
+                }
+.close-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
                     </style>
                 </head>
 
                 <body>
                     <div id="content">
                         <div class="banner">
-                            <h2>PHAIDRA - Web Archivesdd<span class="info-icon">&#8505;
+                            <h2>PHAIDRA - Web Archive<span class="info-icon">&#8505;
 
                             </span>
-                                <div class="info-text">This project is stored in Phaidra for long-term archiving. You can use the
-                                    archive in the same way as the original. However,
-                                    due to technical necessities some functionalities may not work as expected.</div>
+                                <div class="info-text">This project is stored in Phaidra for long-term archiving. You can use the archive in the same way as the original. However, due to technical necessities some functionalities may not work as expected.</div>
                             </h2>
                         </div>
                         <div id="replayweb"><replay-web-page deepLink
                             replayBase="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/replayweb/"
                             source="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get" <% if
                             ($website_url) { %> url="<%= $website_url %> " <% } %>></replay-web-page></div>
+<div id="info-text-main" class="info-text-main">This project is stored in Phaidra for long-term archiving. You can use the
+                                    archive in the same way as the original. However,
+                                    due to technical necessities some functionalities may not work as expected.  <button id="close-info-text" class="close-button">&times;</button></div>
+                            
                     <div>
 
                         <script> 
@@ -120,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Wait for the custom element to be defined
     customElements.whenDefined('replay-web-page').then(() => {
         const replayWebPageElement = document.querySelector('replay-web-page');
-        replayWebPageElement.style.maxWidth = '100%'; // or '100%' or any other value
+        replayWebPageElement.style.maxWidth = '100%'; 
         const shadowRoot = replayWebPageElement ? replayWebPageElement.shadowRoot : null;
         const observer = new MutationObserver(handleMutations);
         observer.observe(shadowRoot, { childList: true, subtree: true });
@@ -170,7 +197,17 @@ function changeBackground(iframe) {
                             if (banner) {
                                 banner.style.display = 'none';
                         }
-                    }
+                        var infotext = document.querySelector('.info-text-main ');
+                        if (infotext) {
+                            console.log("'.info-text-main '")
+                                infotext.style.display = 'block';
+                        }
+                    } 
+
+document.getElementById('close-info-text').addEventListener('click', function() {
+    document.getElementById('info-text-main').style.display = 'none';
+});
+
                         </script>
                 </body>
 
