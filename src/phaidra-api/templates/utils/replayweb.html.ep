@@ -1,59 +1,214 @@
 <!DOCTYPE html>
-<html>
-<head>
-<!-- Add the ReplayWebPage library -->
-<script type="text/javascript" src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/replayweb/ui.js"></script>
-  <meta charset="utf-8">
-   <title>replayweb</title>
-  <style type="text/css">
-    div#replayweb{
-      height: 100%;
-      min-height: 100%;
-      width: 100%;
-      position: absolute;
-      overflow-y: hidden; 
-      top: 0;
-      left: 0;
-      margin: 0;
-      padding: 0;
-    }    
-     .banner {
-            background-color: #404040;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        .banner h2 {
-            margin: 0;
-            font-size: 24px;
-            font-family: "Roboto", sans-serif;
-        }
- </style>
-</head>
-<body>
+    <html>
+        <head>
+            <script type="text/javascript"
+                src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/replayweb/ui.js"></script>
+            <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>replayweb</title>
+                    <style type="text/css">
+                        html,
+                        body {
+                            height: 100%;
+                        width: 100%;
+                        margin: 0;
+                        padding: 0;
+                       
+                }
 
-<div id="replayweb">
-  <div class="banner">
-        <h2>PHAIDRA - Web Archive</h2>
-    </div>
-    <hr>
+                        #content {
+                            display: flex;
+                        flex-direction: column;
+                        height: 100vh;
+                        margin: 0;
+                        padding: 0;
+                        max-width: 100%;
+                        overflow-x: hidden;
 
- 
-<script>
-        // Check if the parent window exists - if this page is embedded
-        if (window.parent !== window) {
-            
-             var banner = document.querySelector('.banner');
-    if (banner) {
+                }
+
+                        #replayweb {
+                            margin: 0;
+                        padding: 0;
+                        flex: 1;
+                        /* Take up remaining space
+                        
+                         max-width: 100%;
+                        overflow-x: hidden;
+                         box-sizing: border-box; */
+                }
+
+                        .banner {
+                        background-color: #404040;
+                        color: white;
+                        padding: 20px;
+                        text-align: center;
+                }
+
+                        .banner h2 {
+                            margin-bottom: 10px;
+                        display: inline-block;
+                        margin: 0;
+                        font-size: 24px;
+                        font-family: "Roboto", sans-serif;
+                         
+                }
+
+                        .info-icon {
+                            font-size: 16px;
+                        cursor: pointer;
+                        margin-left: 10px;
+                        vertical-align: super;
+
+
+                }
+
+                      
+
+                        .info-icon:hover+.info-text {
+                            display: block;
+                    /* Show info text when hovering over info icon */
+                }
+
+                        .info-text {
+                            display: none;/* by default no info text */
+                        /* Initially hide info text */
+                        font-size: 11.5pt;
+                        font-weight: 300;
+                        font-family: "Roboto", sans-serif, Arial, Helvetica, sans-serif;
+                        margin-top: 10px; /* Spacing between the icon and the info text */
+                        background-color: white;
+                        color: black;
+                        padding: 5px;
+                        text-align: center;
+                        width: fit-content;
+                        position: absolute;
+                        left: 50%;
+                        font-weight: 300;
+￼    text-rendering: optimizeLegibility;
+                        transform: translateX(-50%);
+                        z-index: 1; /* Ensure info text appears above other content */
+ background-color: #e0e0e0;
+                           
+   
+    border-radius: 5px; /* Rounded corners */
+                }
+.info-text-main {
+                          display: none;/* by default no info text */
+                        font-size: 11.5pt;
+                        font-weight: 300;
+                        font-family: "Roboto", sans-serif, Arial, Helvetica, sans-serif;
+                        color: black;
+                        padding: 20px; 
+                        text-align: center;
+                        width: auto;
+                        position: relative;
+                        z-index: 1; /* Ensure info text appears above other content */
+ background-color: #e0e0e0; /* Very light grey background */
+      bottom: 0; /* Position at the bottom */
+                }
+.close-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+                    </style>
+                </head>
+
+                <body>
+                    <div id="content">
+                        <div class="banner">
+                            <h2>PHAIDRA - Web Archive<span class="info-icon">&#8505;
+
+                            </span>
+                                <div class="info-text">This project is stored in PHAIDRA for long-term archiving. You can use the archive in the same way as the original. However, due to technical necessities some functionalities may not work as expected.</div>
+                            </h2>
+                        </div>
+                        <div id="replayweb"><replay-web-page deepLink
+                            replayBase="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/replayweb/"
+                            source="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get" <% if
+                            ($website_url) { %> url="<%= $website_url %> " <% } %>></replay-web-page></div>
+<div id="info-text-main" class="info-text-main">This project is stored in PHAIDRA for long-term archiving. You can use the
+                                    archive in the same way as the original. However,
+                                    due to technical necessities some functionalities may not work as expected.  <button id="close-info-text" class="close-button">&times;</button></div>
+                            
+                    <div>
+
+                        <script> 
+
+//look for the replay app element in the shadow dom so that the background color can be set to white (for fullscreen issue)
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Wait for the custom element to be defined
+    customElements.whenDefined('replay-web-page').then(() => {
+        const replayWebPageElement = document.querySelector('replay-web-page');
+        replayWebPageElement.style.maxWidth = '100%'; 
+        const shadowRoot = replayWebPageElement ? replayWebPageElement.shadowRoot : null;
+        const observer = new MutationObserver(handleMutations);
+        observer.observe(shadowRoot, { childList: true, subtree: true });
+    }).catch((error) => {
+        console.error('Error defining <replay-web-page> custom element:', error);
+    });
+});
+
+function handleMutations(mutations) {
+    mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
+            if (node.nodeType === Node.ELEMENT_NODE && node.tagName.toLowerCase() === 'iframe') {
+                changeBackground(node);
+            }
+        });
+    });
+}
+
+function changeBackground(iframe) {
+    iframe.addEventListener('load', () => {
+        const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+        const replayAppMainElement = iframeDocument.querySelector('replay-app-main');
+        if (replayAppMainElement) {
+             const shadowRoot = replayAppMainElement.shadowRoot;
+ if (shadowRoot) {
        
-        banner.style.display = 'none';
+        const wrItemElement = shadowRoot.querySelector('wr-item');
+        
+        if (wrItemElement) {
+            wrItemElement.style.backgroundColor = 'white';
+          
+        }
     }
         }
-    </script>
- <replay-web-page replayBase="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/replayweb/" source="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get" <% if ($website_url) { %>url="<%= $website_url %> " <%}%> >
- 
-    </replay-web-page>
+    });
+}
 
-</div>
-</body>
-</html>
+
+
+
+                           
+                           
+                           
+                            // Check if the parent window exists - if this page is embedded
+                            if (window.parent !== window) {
+                        var banner = document.querySelector('.banner');
+                            if (banner) {
+                                banner.style.display = 'none';
+                        }
+                        var infotext = document.querySelector('.info-text-main ');
+                        if (infotext) {
+                            console.log("'.info-text-main '")
+                                infotext.style.display = 'block';
+                        }
+                    } 
+
+document.getElementById('close-info-text').addEventListener('click', function() {
+    document.getElementById('info-text-main').style.display = 'none';
+});
+
+                        </script>
+                </body>
+
+            </html>

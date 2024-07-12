@@ -558,6 +558,12 @@
         return this.$i18n.locale;
       }
     },
+    data() {
+      return {
+        quicklinksenabled: 0,
+        isHovering: false
+      };
+    },
     methods: {
       logout: function () {
         console.log("local logout")
