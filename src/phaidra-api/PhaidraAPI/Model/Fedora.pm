@@ -8,6 +8,13 @@ use JSON;
 use Mojo::File;
 use Digest::SHA qw(sha256_hex);
 use base qw/Mojo::Base/;
+use Net::Amazon::S3;
+use Net::Amazon::S3::Authorization::Basic;
+
+# S3 credentials and bucketname
+my $aws_access_key_id = $ENV{S3_ACCESS_KEY};
+my $aws_secret_access_key = $ENV{S3_SECRET_KEY};
+my $bucketname = $ENV{S3_BUCKETNAME};
 
 my %prefix2ns = (
 
@@ -420,10 +427,33 @@ sub getDatastreamPath {
 
   my $ocflroot    = $c->app->config->{fedora}->{ocflroot};
   my $objRootPath = "$ocflroot/$first/$second/$third/$hash";
+  my $inventoryFile;
+  my $inventoryFileFromS3;
 
-  my $inventoryFile = "$objRootPath/inventory.json";
+  if ( $ENV{S3_ENABLED} eq "true" ) {
+    my $s3 = Net::Amazon::S3-> new(
+      authorization_context => Net::Amazon::S3::Authorization::Basic-> new (
+        aws_access_key_id => $aws_access_key_id,
+        aws_secret_access_key => $aws_secret_access_key,
+       ),
+      retry => 1,
+     );
+    my $bucket = $s3->bucket($bucketname);
+    $inventoryFileFromS3 = '/tmp/' . $pid . '_inventory.json';
+    my $response = $bucket->get_key_filename( "$first/$second/$third/$hash/inventory.json", 'GET', $inventoryFileFromS3 )
+      or die $s3->err . ": " . $s3->errstr;
+    $inventoryFile = $inventoryFileFromS3;
+  } else {
+    $inventoryFile = "$objRootPath/inventory.json";
+  }
+
   my $bytes         = Mojo::File->new($inventoryFile)->slurp;
   my $inventory     = decode_json($bytes);
+
+  # # clean up inventoryfile if downloaded from S3
+  # if (defined $inventoryFileFromS3) {
+  #   unlink $inventoryFileFromS3;
+  # }
 
   # sanity check
   unless ($inventory->{id} eq $resourceID) {

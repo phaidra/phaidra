@@ -7,8 +7,17 @@ use PAF::JobQueue;
 use PAF::Activity;
 use YAML::Syck;
 use FileHandle;
+use File::Fetch;
+use Net::Amazon::S3;
+use Net::Amazon::S3::Authorization::Basic;
+
 autoflush STDOUT 1;
 autoflush STDERR 1;
+
+# S3 credentials and bucketname
+my $aws_access_key_id = $ENV{S3_ACCESS_KEY};
+my $aws_secret_access_key = $ENV{S3_SECRET_KEY};
+my $bucketname = $ENV{S3_BUCKETNAME};
 
 my $fnm_config= './pixelgecko_conf.yml';
 my $config= YAML::Syck::LoadFile($fnm_config);
@@ -143,6 +152,21 @@ sub process_job_queue
           foreach my $an (keys %$rc) {
             $job->{$an}= $rc->{$an};
           }
+          if ( $ENV{S3_ENABLED} eq "true" ) {
+            my $s3 = Net::Amazon::S3-> new(
+              authorization_context => Net::Amazon::S3::Authorization::Basic-> new (
+                aws_access_key_id => $aws_access_key_id,
+                aws_secret_access_key => $aws_secret_access_key,
+               ),
+              retry => 1,
+             );
+            my $bucket = $s3->bucket($bucketname);
+            $bucket->add_key_filename( $rc->{'image'}, $rc->{'image'},
+                                       { content_type => 'image/tiff', },
+                                      ) or die $s3->err . ": " . $s3->errstr;
+            $job->{'s3_bucket'}=$bucketname;
+            unlink $rc->{'image'};
+          }
         }
 
         $jq->update_job ($job);
@@ -161,6 +185,8 @@ sub process_image
     my $path = shift;
 
     my $tmp_dir= $config->{pixelgecko}->{temp_path};
+    # directory for downloaded files
+    my $dl_tmp_dir;
     system ('mkdir', '-p', $tmp_dir) unless (-d $tmp_dir);
 
     my $img_fnm= $pid;
@@ -168,7 +194,7 @@ sub process_image
     $img_fnm=~ s#:#_#g;
     my $tmp_img= join ('/', $tmp_dir, $img_fnm);
 
-    my $out_img;    
+    my $out_img;
     if (defined($idhash) && $idhash =~ /\b([a-f0-9]{40})\b/) {
       my $lvl1= substr($idhash, 0, 1);
       my $lvl2= substr($idhash, 1, 1);
@@ -189,20 +215,18 @@ sub process_image
     else
       {
         my $url =
-          $config->{fedora}->{scheme}."://".
-          $config->{fedora}->{intcalluser}.":".
-          $config->{fedora}->{intcallpass}."@".
-          $config->{fedora}->{url}.
-          ((defined($ds))
-           ? "/fedora/objects/$pid/datastreams/$ds/content"
-           : "/fedora/objects/$pid/datastreams/OCTETS/content");
-        $original_img = $tmp_img;
+          "http://".
+          $ENV{FEDORA_ADMIN_USER}.":".
+          $ENV{FEDORA_ADMIN_PASS}."@".
+          "fedora:8080".
+          "/fcrepo/rest/$pid/OCTETS"
+          ;
 
-        my @curl= (qw(curl -L), $url, '-o', $tmp_img);
-        print scalar localtime(), " ", "curl: [", join (' ', @curl), "]\n";
-        my $curl_txt= `@curl 2>&1`;
-        print scalar localtime(), " ", "curl_txt=[$curl_txt]\n";
-        @curl_lines= x_lines ($curl_txt);
+        my $ff = File::Fetch->new(uri => $url);
+        my $pid_for_path = $pid =~ s/:/_/r;
+        $dl_tmp_dir = "$tmp_dir/$pid_for_path";
+        $tmp_img = $ff->fetch( to => $dl_tmp_dir);
+        $original_img = $tmp_img;
 
         unless (-f $tmp_img)
           {
@@ -257,7 +281,7 @@ sub process_image
 
       unlink ($cast_img);
       unlink ($tmp_img) if (-f $tmp_img);
-
+      rmdir ($dl_tmp_dir) if (defined ($dl_tmp_dir) && -d $dl_tmp_dir);
     } else {
       # transform color profile
       my $tr_img = $tmp_img.'.v';
@@ -308,6 +332,7 @@ sub process_image
       unlink ($tr_img);
       unlink ($cast_img);
       unlink ($tmp_img) if (-f $tmp_img);
+      rmdir ($dl_tmp_dir) if (defined ($dl_tmp_dir) && -d $dl_tmp_dir);
     }
 
     my $result = { 'conversion' => 'ok', 'image' => $out_img,
