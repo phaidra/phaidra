@@ -22,7 +22,7 @@ use PhaidraAPI::Model::Annotations;
 use PhaidraAPI::Model::Membersorder;
 use PhaidraAPI::Model::Octets;
 use PhaidraAPI::Model::Fedora;
-use Scalar::Util qw/reftype/;
+use Scalar::Util qw(reftype looks_like_number);
 
 our %indexed_datastreams_xml = (
   "UWMETADATA"      => 1,
@@ -1891,15 +1891,23 @@ sub _add_jsonld_index {
 
   if ($jsonld->{'dcterms:created'}) {
     for my $date (@{$jsonld->{'dcterms:created'}}) {
-      push @{$index->{"dcterms_created_year"}}, int(substr($date, 0, 4));
-      $index->{"dcterms_created_year_sort"} = int(substr($date, 0, 4));
+      my $dccreatedsub = substr($date, 0, 4);
+      if (looks_like_number($dccreatedsub)) {
+        my $dccreated = int($dccreatedsub);
+        push @{$index->{"dcterms_created_year"}}, $dccreated;
+        $index->{"dcterms_created_year_sort"} = $dccreated;
+      }
     }
   }
 
   if ($jsonld->{'rdau:P60071'}) {
     for my $date (@{$jsonld->{'rdau:P60071'}}) {
-      push @{$index->{"rdau_P60071_year"}}, int(substr($date, 0, 4));
-      $index->{"rdau_P60071_year_sort"} = int(substr($date, 0, 4));
+      my $rdauprodsub = substr($date, 0, 4);
+      if (looks_like_number($rdauprodsub)) {
+        my $rdauprod = int($rdauprodsub);
+        push @{$index->{"rdau_P60071_year"}}, $rdauprod;
+        $index->{"rdau_P60071_year_sort"} = $rdauprod;
+      }
     }
   }
 
