@@ -489,97 +489,16 @@ sub preview {
       if ($imgsrvjobstatus eq 'finished') {
         # cache file from pixelgecko's converted images bucket if stored on S3.
         if ( $ENV{S3_ENABLED} eq "true" ) {
-          my $cacheQuota = 1000000;
-          my $s3 = Net::Amazon::S3-> new(
-            authorization_context => Net::Amazon::S3::Authorization::Basic-> new (
-              aws_access_key_id => $aws_access_key_id,
-              aws_secret_access_key => $aws_secret_access_key,
-             ),
-            retry => 1,
-           );
-          my $bucket = $s3->bucket($bucketname);
-          # get key for file in bucket
+          my $paf_mongo = $self->paf_mongo;
+          my $s3_cache = PhaidraAPI::S3::Cache->new(paf_mongodb=>$paf_mongo,
+                                                    aws_access_key_id=>$aws_access_key_id,
+                                                    aws_secret_access_key=>$aws_secret_access_key,
+                                                    bucketname=>$bucketname,
+                                                    s3_cachesize=>$s3_cachesize);
           my $jobs_coll = $self->paf_mongo->get_collection('jobs');
           my $job_record = $jobs_coll->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
           my $FileToBeCached = $job_record->{image};
-          # get filesize from S3, force string to be int
-          my $s3_key = $bucket->get_key($FileToBeCached);
-          if (! defined $s3_key) {
-            $self->render(text => "S3 object for $pid not available please inform administrators of this site.", status => 200);
-            return
-          }
-          my $filesize = $s3_key->{'content_length'}+0;
-          # only start applying logic, if file is not on fs already
-          if (! -f $FileToBeCached) {
-            # check if filesize is feasable at all
-            if ( $filesize >= $cacheQuota ) {
-              $self->render(text => "Filesize exceeds caching space, please inform administrators of this site.", status => 200);
-              return;
-            } else {
-              # check/create s3_caching collection for entries
-              my $cache_coll = $self->paf_mongo->get_collection('s3_cache');
-              my $cachecount = $cache_coll->estimated_document_count();
-              if ( $cachecount > 0 ) {
-                my @totalfilesizecount = (
-                  { '$group' => {_id => 'null', total => { '$sum' => '$size' }}} );
-                # calculate filesize sum of files in cache
-                my $queryobject = $cache_coll->aggregate( \@totalfilesizecount );
-                # parse queryobject
-                my @docs = $queryobject->all;
-                my $current_cache = $docs[0]->{'total'};
-                my $free_space_needed = $filesize*1.2+$current_cache-$cacheQuota;
-                if ($free_space_needed > 0) {
-                  # decide what gets deleted from cache.
-                  my @sort_pipeline = (
-                    { '$sort' => Tie::IxHash->new( viewcounter => 1, lastview => -1 ) }
-                   );
-                  my $result = $cache_coll->aggregate( \@sort_pipeline );
-                  my @sorted_items = $result->all;
-                  print Dumper(@sorted_items);
-                  my $space_to_be_cleared = 0;
-                  my @items_to_be_deleted;
-                  my $arraycounter = 0;
-                  while ( ($space_to_be_cleared < $free_space_needed) && ($arraycounter <=  $#sorted_items) ) {
-                    push(@items_to_be_deleted, $sorted_items[$arraycounter]->{'pid'});
-                    $space_to_be_cleared += $sorted_items[$arraycounter]->{'size'};
-                    $arraycounter++;
-                  }
-                  # actually delete stuff from cache
-                  print Dumper(@items_to_be_deleted);
-                  foreach (@items_to_be_deleted) {
-                    my $item = $cache_coll->find_one({pid => $_})->{'file'};
-                    unlink $item;
-                    $cache_coll->delete_one({pid => $_});
-                  }
-                }
-              }
-              # make entry in database
-              $cache_coll->update_one({pid => $pid},
-                                      { '$set' => {size => $filesize,
-                                                   file => $FileToBeCached,
-                                                   lastview => time}, '$inc' => { viewcounter => 1 } },
-                                      { upsert => 1} );
-              # prepare caching path
-              my ($file, $basepath, $suffix) = fileparse($FileToBeCached);
-              if (! -d $basepath) {
-                File::Path::make_path($basepath);
-              }
-              # Get file from S3
-              $bucket->get_key_filename( $FileToBeCached, 'GET', $FileToBeCached );
-              if (! -f $FileToBeCached) {
-                $self->render(text => "Something went wrong fetching S3 object for $pid, please inform administrators of this site.", status => 200);
-                return;
-              }
-            }
-          } else {
-            # update object in caching collection
-            my $cache_coll = $self->paf_mongo->get_collection('s3_cache');
-            $cache_coll->update_one({pid => $pid},
-                                    { '$set' => {size => $filesize,
-                                                 file => $FileToBeCached,
-                                                 lastview => time}, '$inc' => { viewcounter => 1 } },
-                                    { upsert => 1} );
-          }
+          $s3_cache->cache_file($pid,$FileToBeCached);
         }
         my $license = '';
         if (($cmodel eq 'Page') and ($self->app->config->{solr}->{core_pages})) {
