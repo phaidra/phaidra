@@ -126,14 +126,14 @@
                             <h2>PHAIDRA - Web Archive<span class="info-icon">&#8505;
 
                             </span>
-                                <div class="info-text">This project is stored in Phaidra for long-term archiving. You can use the archive in the same way as the original. However, due to technical necessities some functionalities may not work as expected.</div>
+                                <div class="info-text">This project is stored in PHAIDRA for long-term archiving. You can use the archive in the same way as the original. However, due to technical necessities some functionalities may not work as expected.</div>
                             </h2>
                         </div>
                         <div id="replayweb"><replay-web-page deepLink
                             replayBase="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/replayweb/"
                             source="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get" <% if
                             ($website_url) { %> url="<%= $website_url %> " <% } %>></replay-web-page></div>
-<div id="info-text-main" class="info-text-main">This project is stored in Phaidra for long-term archiving. You can use the
+<div id="info-text-main" class="info-text-main">This project is stored in PHAIDRA for long-term archiving. You can use the
                                     archive in the same way as the original. However,
                                     due to technical necessities some functionalities may not work as expected.  <button id="close-info-text" class="close-button">&times;</button></div>
                             
