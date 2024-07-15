@@ -33,8 +33,6 @@ extra:
     - icon: fontawesome/brands/instagram
       link: https://www.instagram.com/phaidraorg/
       name: Follow on Instagram
-  analytics:
-    provider: plausible
 
 extra_css:
   - assets/css/reset.css
