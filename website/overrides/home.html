@@ -1,4 +1,10 @@
 {% extends "main.html" %}
+
+{% block extrahead %}
+  <!-- self hosted plausible analytics -->
+  <script defer="" data-domain="phaidra.org" src="https://plausible.phaidra.org/js/script.js"></script>
+{% endblock %}
+
 {% block tabs %}
   {{ super() }}
   <section class="bg-white">
