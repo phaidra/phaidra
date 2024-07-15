@@ -2,11 +2,21 @@
 
 {% block extrahead %}
   <!-- self hosted plausible analytics -->
-  <script defer="" data-domain="phaidra.org" src="https://plausible.phaidra.org/js/script.js"></script>
+  <!-- all our external sources are downloaded and self-hosted by mkdocs automatically -->
+  <!-- great overall, but this behavior broke our self-hosted plausible, so we had to workaround it   -->
+  <!-- more info: https://github.com/squidfunk/mkdocs-material/pull/6502 -->
+  <script>
+    var script = document.createElement("script");
+    script.setAttribute("defer", "");
+    script.setAttribute("data-domain", "phaidra.org");
+    script.setAttribute("src", "https://plausible.phaidra.org/js/script.js");
+    document.currentScript.insertAdjacentElement("afterend", script);
+  </script>
 {% endblock %}
 
 {% block tabs %}
   {{ super() }}
+
   <section class="bg-white">
     <div class="py-16 px-8 mx-auto max-w-screen-xl text-center md:py-24">
       <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl lg:text-6xl">Manage Data & Assets<br> with <span class="underline underline-offset-3 decoration-8 decoration-blue-400">Confidence</span></h1>
