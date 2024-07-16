@@ -3,9 +3,12 @@ package PhaidraAPI::S3::Cache;
 use strict;
 use warnings;
 
-use File::Path;
-use File::Basename;
 use FileHandle;
+
+use File::Basename;
+use File::Find;
+use File::Path;
+use File::Spec;
 
 use Net::Amazon::S3;
 use Net::Amazon::S3::Authorization::Basic;
@@ -40,29 +43,37 @@ sub get_content_length{
   my $bucket_connection = $self->get_bucket_connection();
   my $s3_key = $bucket_connection->get_key($FileToBeCached);
   my $filesize;
+  my $return_code = "OK";
   if (! defined $s3_key) {
-    print "S3 key not available.\n";
+    $return_code = "S3 key $FileToBeCached not available in remote object store.";
   } else {
     $filesize = $s3_key->{'content_length'}+0;
   }
-  return $filesize;
+  return ($filesize, $return_code);
 }
 
 sub download_object_to_cache{
   my $self = shift;
   my $FileToBeCached = shift;
   my $bucket_connection = $self->get_bucket_connection();
+  my $s3_cache_topdir = $self->{s3_cache_topdir};
   my ($file, $basepath, $suffix) = fileparse($FileToBeCached);
-  if (! -d $basepath) {
-    File::Path::make_path($basepath);
+  my $return_code = "OK";
+  # stub for catpath on UNIX
+  my $volume;
+  my $s3_cache_path = File::Spec->catpath($volume,$s3_cache_topdir,$basepath);
+  my $s3_cache_file = File::Spec->catpath($volume,$s3_cache_topdir,$FileToBeCached);
+  if (! -d $s3_cache_path) {
+    File::Path::make_path($s3_cache_path);
   }
-  $bucket_connection->get_key_filename( $FileToBeCached, 'GET', $FileToBeCached );
-  if (! -f $FileToBeCached) {
-    print "Something went wrong fetching S3 object.\n";
+  my $response = $bucket_connection->get_key_filename( $FileToBeCached, 'GET', $s3_cache_file );
+  if (! -f $s3_cache_file) {
+    $return_code = $response . $bucket_connection->err . ": " . $bucket_connection->errstr;
+    print $return_code,"\n";
   } else {
-    print "Object downloaded to $FileToBeCached\n";
+    print "Object downloaded to $s3_cache_file\n";
   }
-  return 0;
+  return $return_code;
 }
 
 sub get_current_cachesize{
@@ -84,7 +95,7 @@ sub check_cleanup_size{
   my $self = shift;
   my $FileToBeCached = shift;
   my $currently_used = $self->get_current_cachesize();
-  my $filesize = $self->get_content_length($FileToBeCached);
+  my ($filesize, $err) = $self->get_content_length($FileToBeCached);
   my $cachesize = $self->{'s3_cachesize'};
   my $free_space_needed = $filesize*1.2+$currently_used-$cachesize;
   return $free_space_needed;
@@ -116,6 +127,7 @@ sub get_items_to_be_cleared{
 sub clear_items{
   my $self = shift;
   my $FileToBeCached = shift;
+  my $s3_cache_topdir = $self->{s3_cache_topdir};
   my @items_to_be_cleared = $self->get_items_to_be_cleared($FileToBeCached);
   if (scalar @items_to_be_cleared > 0) {
     my $cache_coll = $self->{paf_mongodb}->get_collection('s3_cache');
@@ -127,18 +139,23 @@ sub clear_items{
       $cache_coll->delete_one({pid => $_});
     }
   }
+  # cleanup s3 cache directory tree
+  finddepth(sub{rmdir}, $s3_cache_topdir);
 }
-
 
 sub update_cache_db{
   my $self = shift;
   my $pid = shift;
   my $FileToBeCached = shift;
+  my $s3_cache_topdir = $self->{s3_cache_topdir};
+  # stub for catpath on UNIX
+  my $volume;
+  my $s3_cache_file = File::Spec->catpath($volume,$s3_cache_topdir,$FileToBeCached);
   my $cache_coll = $self->{paf_mongodb}->get_collection('s3_cache');
-  my $filesize = $self->get_content_length($FileToBeCached);
+  my ($filesize, $err) = $self->get_content_length($FileToBeCached);
   $cache_coll->update_one({pid => $pid},
                           { '$set' => {size => $filesize,
-                                       file => $FileToBeCached,
+                                       file => $s3_cache_file,
                                        lastview => time}, '$inc' => { viewcounter => 1 } },
                           { upsert => 1} );
 }
@@ -147,13 +164,25 @@ sub cache_file{
   my $self = shift;
   my $pid = shift;
   my $FileToBeCached = shift;
-  if (! -f $FileToBeCached) {
+  my $s3_cache_topdir = $self->{s3_cache_topdir};
+  my $cachesize = $self->{'s3_cachesize'};
+  # stub for catpath on UNIX
+  my $volume;
+  my $s3_cache_file = File::Spec->catpath($volume,$s3_cache_topdir,$FileToBeCached);
+  my ($filesize, $err) = $self->get_content_length($FileToBeCached);
+  return $err unless ( $err eq "OK" );
+  if ( $filesize > $cachesize ) {
+    return "File too big for cache. Filesize: $filesize B, Cachesize: $cachesize B. Pid: $pid."
+  }
+  my $return_code = "OK";
+  if (! -f $s3_cache_file) {
     $self->clear_items($FileToBeCached);
-    $self->download_object_to_cache($FileToBeCached);
+    $return_code = $self->download_object_to_cache($FileToBeCached);
   } else {
     print "file $FileToBeCached already in cache, doing nothing\n"
   }
   $self->update_cache_db($pid, $FileToBeCached);
+  return $return_code;
 }
 
 1;
