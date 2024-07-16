@@ -42,8 +42,9 @@ autoflush STDOUT 1;
 # S3 credentials and bucketname
 my $aws_access_key_id = $ENV{S3_ACCESS_KEY};
 my $aws_secret_access_key = $ENV{S3_SECRET_KEY};
-my $bucketname = $ENV{S3_PIXELGECKO_BUCKETNAME};
+my $bucketname = $ENV{S3_BUCKETNAME};
 my $s3_cachesize= 1000000;
+my $s3_cache_topdir = "/s3_cache";
 
 sub info {
   my $self = shift;
@@ -494,11 +495,16 @@ sub preview {
                                                     aws_access_key_id=>$aws_access_key_id,
                                                     aws_secret_access_key=>$aws_secret_access_key,
                                                     bucketname=>$bucketname,
-                                                    s3_cachesize=>$s3_cachesize);
+                                                    s3_cachesize=>$s3_cachesize,
+                                                    s3_cache_topdir=>$s3_cache_topdir);
           my $jobs_coll = $self->paf_mongo->get_collection('jobs');
           my $job_record = $jobs_coll->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
           my $FileToBeCached = $job_record->{image};
-          $s3_cache->cache_file($pid,$FileToBeCached);
+          my $s3_result = $s3_cache->cache_file($pid,$FileToBeCached);
+          unless ( $s3_result eq "OK" ) {
+            $self->render(text => $s3_result, status => 200);
+            return;
+          }
         }
         my $license = '';
         if (($cmodel eq 'Page') and ($self->app->config->{solr}->{core_pages})) {
