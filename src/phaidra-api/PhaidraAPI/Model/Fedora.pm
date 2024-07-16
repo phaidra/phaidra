@@ -440,7 +440,8 @@ sub getDatastreamPath {
      );
     my $bucket = $s3->bucket($bucketname);
     $inventoryFileFromS3 = '/tmp/' . $pid . '_inventory.json';
-    my $response = $bucket->get_key_filename( "$first/$second/$third/$hash/inventory.json", 'GET', $inventoryFileFromS3 )
+    my $bucket_prefix = "fedora";
+    my $response = $bucket->get_key_filename( "$bucket_prefix/$first/$second/$third/$hash/inventory.json", 'GET', $inventoryFileFromS3 )
       or die $s3->err . ": " . $s3->errstr;
     $inventoryFile = $inventoryFileFromS3;
   } else {
