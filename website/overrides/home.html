@@ -1,19 +1,5 @@
 {% extends "main.html" %}
 
-{% block extrahead %}
-  <!-- self hosted plausible analytics -->
-  <!-- all our external sources are downloaded and self-hosted by mkdocs automatically -->
-  <!-- great overall, but this behavior broke our self-hosted plausible, so we had to workaround it   -->
-  <!-- more info: https://github.com/squidfunk/mkdocs-material/pull/6502 -->
-  <script>
-    var script = document.createElement("script");
-    script.setAttribute("defer", "");
-    script.setAttribute("data-domain", "phaidra.org");
-    script.setAttribute("src", "https://plausible.phaidra.org/js/script.js");
-    document.currentScript.insertAdjacentElement("afterend", script);
-  </script>
-{% endblock %}
-
 {% block tabs %}
   {{ super() }}
 

@@ -1,0 +1,22 @@
+<!-- 
+  self hosted plausible analytics - a privacy friendly analytics service
+
+  why the script element building?
+  
+  all our external sources are downloaded and self-hosted by mkdocs automatically
+  great overall, but this behavior broke our self-hosted plausible, so we had to workaround it   
+  more info: https://github.com/squidfunk/mkdocs-material/pull/6502 
+
+  this file overwrites the original analytics.html file mkdocs-material:
+  https://github.com/squidfunk/mkdocs-material/blob/master/src/templates/partials/integrations/analytics.html
+  which is included in base.html:
+  https://github.com/squidfunk/mkdocs-material/blob/master/src/templates/base.html
+  it's cleaner to just overwrite analytics.html than to copy paste the full base.html and then only overwrite a small part
+-->
+<script>
+  var script = document.createElement("script");
+  script.setAttribute("defer", "");
+  script.setAttribute("data-domain", "phaidra.org");
+  script.setAttribute("src", "https://plausible.phaidra.org/js/script.js");
+  document.currentScript.insertAdjacentElement("afterend", script);
+</script>
