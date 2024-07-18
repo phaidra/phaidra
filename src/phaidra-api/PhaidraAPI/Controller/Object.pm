@@ -43,8 +43,8 @@ autoflush STDOUT 1;
 my $aws_access_key_id = $ENV{S3_ACCESS_KEY};
 my $aws_secret_access_key = $ENV{S3_SECRET_KEY};
 my $bucketname = $ENV{S3_BUCKETNAME};
-my $s3_cachesize= 1000000;
-my $s3_cache_topdir = "/s3_cache";
+my $s3_cachesize= $ENV{S3_CACHESIZE};
+my $s3_cache_topdir = $ENV{S3_CACHE_TOPDIR};
 
 sub info {
   my $self = shift;

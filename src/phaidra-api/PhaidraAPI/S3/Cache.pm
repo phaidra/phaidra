@@ -52,6 +52,24 @@ sub get_content_length{
   return ($filesize, $return_code);
 }
 
+sub get_upstream_timestamp{
+  my $self = shift;
+  my $FileToBeCached = shift;
+  my $bucket_connection = $self->get_bucket_connection();
+  my $s3_key = $bucket_connection->get_key($FileToBeCached);
+  my $return_code = "OK";
+  my $upstream_mtime_string;
+  my $upstream_mtime_unix;
+  if (! defined $s3_key) {
+    $return_code = "S3 key $FileToBeCached not available in remote object store.";
+  } else {
+    $upstream_mtime_string = $s3_key->{'last-modified'};
+    $upstream_mtime_unix = `date -d "$upstream_mtime_string" +%s`;
+  }
+  return ($upstream_mtime_unix, $return_code);
+}
+
+
 sub download_object_to_cache{
   my $self = shift;
   my $FileToBeCached = shift;
@@ -179,7 +197,15 @@ sub cache_file{
     $self->clear_items($FileToBeCached);
     $return_code = $self->download_object_to_cache($FileToBeCached);
   } else {
-    print "file $FileToBeCached already in cache, doing nothing\n"
+    # take care of side-triggered fileupdates via api.
+    my ($upstream_mtime,$err) = $self->get_upstream_timestamp($FileToBeCached);
+    my $cachefile_mtime = `date -r $s3_cache_file +%s`;
+    if ( $upstream_mtime > $cachefile_mtime ) {
+      print "detected upstream file updates, downloading anew.\n";
+      $return_code = $self->download_object_to_cache($FileToBeCached);
+    } else {
+      print "file $FileToBeCached already in cache, doing nothing\n"
+    }
   }
   $self->update_cache_db($pid, $FileToBeCached);
   return $return_code;
