@@ -247,7 +247,23 @@ sub thumbnail {
 
   switch ($cmodelr->{cmodel}) {
     case ['Picture', 'Page', 'PDFDocument'] {
-
+      if ( $ENV{S3_ENABLED} eq "true" ) {
+        my $paf_mongo = $self->paf_mongo;
+        my $s3_cache = PhaidraAPI::S3::Cache->new(paf_mongodb=>$paf_mongo,
+                                                  aws_access_key_id=>$aws_access_key_id,
+                                                  aws_secret_access_key=>$aws_secret_access_key,
+                                                  bucketname=>$bucketname,
+                                                  s3_cachesize=>$s3_cachesize,
+                                                  s3_cache_topdir=>$s3_cache_topdir);
+        my $jobs_coll = $self->paf_mongo->get_collection('jobs');
+        my $job_record = $jobs_coll->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
+        my $FileToBeCached = $job_record->{image};
+        my $s3_result = $s3_cache->cache_file($pid,$FileToBeCached);
+        unless ( $s3_result eq "OK" ) {
+          $self->render(text => $s3_result, status => 200);
+          return;
+        }
+      }
       return $self->_proxy_thumbnail($pid, $cmodelr->{cmodel}, $size);
     }
     case 'Book' {
