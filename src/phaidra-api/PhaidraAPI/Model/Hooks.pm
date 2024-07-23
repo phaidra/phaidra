@@ -87,7 +87,7 @@ sub add_or_modify_datastream_hooks {
         my $res_cmodel = $search_model->get_cmodel($c, $pid);
         if ($res_cmodel->{status} eq 200) {
           if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
-            my $imsr = $self->_create_imageserver_job($c, $pid, $res_cmodel->{cmodel});
+            my $imsr = $self->_create_imageserver_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
             push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
           }
           if ($res_cmodel->{cmodel} eq 'Video') {
@@ -236,7 +236,8 @@ sub add_octets_hook {
     my $res_cmodel = $search_model->get_cmodel($c, $pid);
     if ($res_cmodel->{status} eq 200) {
       if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
-        my $imsr = $self->_create_imageserver_job($c, $pid, $res_cmodel->{cmodel});
+        my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
+        my $imsr = $imgsrv_model->create_imageserver_job($c, $pid, $res_cmodel->{cmodel});
         push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
       }
       if ($res_cmodel->{cmodel} eq 'Video') {
@@ -275,7 +276,7 @@ sub modify_hook {
         }
       }
       if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
-        my $imsr = $self->_create_imageserver_job($c, $pid, $res_cmodel->{cmodel});
+        my $imsr = $self->_create_imageserver_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
         push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
       }
       if ($res_cmodel->{cmodel} eq 'Video') {
@@ -288,7 +289,7 @@ sub modify_hook {
   return $res;
 }
 
-sub _create_imageserver_job {
+sub _create_imageserver_job_if_not_exists {
   my ($self, $c, $pid, $cmodel) = @_;
 
   my $res = {alerts => [], status => 200};
