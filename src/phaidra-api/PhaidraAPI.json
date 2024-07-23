@@ -72,7 +72,7 @@
     },
     "imageserver": {
         "hash_secret": "__IMAGESERVER_HASH_SECRET__",
-        "image_server_root": "/mnt/converted_images",
+        "image_server_root": "/s3_cache/converted_images",
         "scheme": "http",
         "host": "__IMAGESERVER_HOST__",
         "path": "/iipsrv/iipsrv.fcgi"

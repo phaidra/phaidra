@@ -45,7 +45,7 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     volumes:
-      - pixelgecko:/mnt/converted_images:ro
+      - s3_cache:/s3_cache:ro
     networks:
       - phaidra-network
 
@@ -91,13 +91,14 @@ services:
       - mariadb-phaidra
       - mongodb-phaidra
       - fedora
-    image: testuser34/api-base:895c6efb
+    image: testuser34/api-base-s3:20240703-init-v1
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
     pull_policy: always
     volumes:
-      - fedora:/mnt/fedora:ro
+#      - /home/daniel/s3_fedora_mountpoint:/mnt/fedora/data/ocfl-root:ro
+      - s3_cache:/s3_cache
       - ../src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
       - ../container_init/api/api-entrypoint.bash:/mnt/api-entrypoint.bash:ro
     networks:
@@ -131,6 +132,12 @@ services:
       - MARIADB_PHAIDRA_HOST=mariadb-phaidra
       - MARIADB_PHAIDRA_USER=${MARIADB_PHAIDRA_USER}
       - MARIADB_PHAIDRA_PASSWORD=${MARIADB_PHAIDRA_PASSWORD}
+      - S3_ENABLED=true
+      - S3_ACCESS_KEY=AKIA2AFEX7CF5SJOIDI4
+      - S3_SECRET_KEY=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
+      - S3_BUCKETNAME=phaidratesting-buaz5ye7hqfmhxy4t5t3dzp3is9pqeun1a-s3alias
+      - S3_CACHE_TOPDIR=/s3_cache
+      - S3_CACHESIZE=1000000000
     entrypoint:
       - bash
       - /mnt/api-entrypoint.bash
@@ -144,16 +151,20 @@ services:
       logging_jobname: "containerlogs"
     restart:
       always
-    image: testuser34/pixelgecko-base:46ffa6a6
+    image: testuser34/pixelgecko-base-s3:20240702-init-v1
     pull_policy: always
     volumes:
-      - fedora:/mnt/fedora:ro
-      - pixelgecko:/mnt/converted_images
       - ./../src/pixelgecko:/opt/pixelgecko:ro
     networks:
       - phaidra-network
     environment:
       - IMAGE_CONVERSION_INTERVAL=${IMAGE_CONVERSION_INTERVAL}
+      - FEDORA_ADMIN_USER=${FEDORA_ADMIN_USER}
+      - FEDORA_ADMIN_PASS=${FEDORA_ADMIN_PASS}
+      - S3_ENABLED=true
+      - S3_ACCESS_KEY=AKIA2AFEX7CF5SJOIDI4
+      - S3_SECRET_KEY=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
+      - S3_BUCKETNAME=phaidratesting-buaz5ye7hqfmhxy4t5t3dzp3is9pqeun1a-s3alias
 
   mariadb-phaidra:
     image: mariadb:11.0.2-jammy
@@ -198,6 +209,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_PHAIDRA_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PHAIDRA_PASSWORD}
+    ports:
+      - 27017:27017
     volumes:
       - mongodb_phaidra:/data/db
       - .././container_init/mongodb/init_oai_sets.json:/mnt/init_oai_sets.json:ro
@@ -250,8 +263,6 @@ services:
       - CATALINA_OPTS=${CATALINA_OPTS}
       - FEDORA_ADMIN_USERNAME=${FEDORA_ADMIN_USER}
       - FEDORA_ADMIN_PASSWORD=${FEDORA_ADMIN_PASS}
-    volumes:
-      - fedora:/usr/local/tomcat/fcrepo-home
     depends_on:
       - mariadb-fedora
     networks:
@@ -438,7 +449,6 @@ services:
 
 volumes:
   openldap:
-  fedora:
   dbgate:
   mongodb_phaidra:
   mariadb_fedora:
@@ -453,3 +463,4 @@ volumes:
   loki:
   grafana:
   prometheus:
+  s3_cache:

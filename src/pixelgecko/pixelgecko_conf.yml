@@ -9,5 +9,5 @@ pixelgecko:
     password:              'phaidra'
     col:                   'jobs'
     activity:              'activity'
-  store:                 '/mnt/converted_images'
+  store:                 '/converted_images'
   temp_path:             '/tmp'
