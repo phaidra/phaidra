@@ -201,10 +201,10 @@ sub cache_file{
     my ($upstream_mtime,$err) = $self->get_upstream_timestamp($FileToBeCached);
     my $cachefile_mtime = `date -r $s3_cache_file +%s`;
     if ( $upstream_mtime > $cachefile_mtime ) {
-      print "detected upstream file updates, downloading anew.\n";
+      print "detected upstream file updates for $pid, downloading anew.\n";
       $return_code = $self->download_object_to_cache($FileToBeCached);
     } else {
-      print "file $FileToBeCached already in cache, doing nothing\n"
+      print "file $FileToBeCached ($pid) already in cache, doing nothing\n"
     }
   }
   $self->update_cache_db($pid, $FileToBeCached);
