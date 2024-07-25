@@ -272,11 +272,11 @@ services:
       logging_jobname: "containerlogs"
     restart: always
     environment:
-      - LDAP_DOMAIN=${LDAP_DOMAIN}
-      - LDAP_SERVER=ldap://openldap:${LDAP_PORT_NUMBER}
-      - LDAP_USER=cn=${LDAP_ADMIN_USERNAME},${LDAP_ROOT}
-      - LDAP_USERS_DN=ou=people,${LDAP_ROOT}
-      - LDAP_GROUPS_DN=ou=groups,${LDAP_ROOT}
+      LDAP_DOMAIN: "${LDAP_SLD:-example}.${LDAP_TLD:-org}"
+      LDAP_SERVER: "${LDAP_PROTOCOL:-ldap}://${LDAP_HOSTNAME:-openldap}:${LDAP_PORT_NUMBER:-1389}"
+      LDAP_USER: "cn=${LDAP_ADMIN_USERNAME:-admin},dc=${LDAP_SLD:-example},dc=${LDAP_TLD:-org}"
+      LDAP_USERS_DN: "ou=${LDAP_USERS_OU:-people},dc=${LDAP_SLD:-example},dc=${LDAP_TLD:-org}"
+      LDAP_GROUPS_DN: "ou=${LDAP_GROUPS_OU:-groups},dc=${LDAP_SLD:-example},dc=${LDAP_TLD:-org}"
     depends_on:
       - openldap
     networks:
@@ -288,11 +288,11 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     environment:
-      - LDAP_ADMIN_USERNAME=${LDAP_ADMIN_USERNAME}
-      - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
-      - LDAP_PORT_NUMBER=${LDAP_PORT_NUMBER}
-      - LDAP_ROOT=${LDAP_ROOT}
-      - LDAP_CUSTOM_LDIF_DIR=/ldifs
+      LDAP_ADMIN_USERNAME: "${LDAP_ADMIN_USERNAME:-admin}"
+      LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD:-adminpassword}"
+      LDAP_PORT_NUMBER: "${LDAP_PORT_NUMBER:-1389}"
+      LDAP_ROOT: "dc=${LDAP_SLD:-example},dc=${LDAP_TLD:-org}"
+      LDAP_CUSTOM_LDIF_DIR: "/ldifs"
     volumes:
       - openldap:/bitnami/openldap
       - .././container_init/openldap:/ldifs:ro
