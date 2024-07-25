@@ -230,23 +230,23 @@ services:
     environment:
       CONNECTIONS: con1,con2,con3
       LABEL_con1: MariaDB-Phaidra
-      SERVER_con1: mariadb-phaidra
-      USER_con1: ${MARIADB_PHAIDRA_USER}
-      PASSWORD_con1: ${MARIADB_PHAIDRA_PASSWORD}
+      SERVER_con1: "${MARIADB_PHAIDRA_HOST:-mariadb-phaidra}"
+      USER_con1: "${MARIADB_PHAIDRA_USER:-phaidra}"
+      PASSWORD_con1: "${MARIADB_PHAIDRA_PASSWORD:-phaidra}"
       PORT_con1: 3306
       ENGINE_con1: mariadb@dbgate-plugin-mysql
       LABEL_con2: MariaDB-Fedora
-      SERVER_con2: mariadb-fedora
-      USER_con2: ${MARIADB_PHAIDRA_USER}
-      PASSWORD_con2: ${MARIADB_PHAIDRA_PASSWORD}
+      SERVER_con2: "${MARIADB_FEDORA_HOST:-mariadb-fedora}"
+      USER_con2: "${MARIADB_FEDORA_USER:-phaidra}"
+      PASSWORD_con2: "${MARIADB_FEDORA_PASSWORD:-phaidra}"
       PORT_con2: 3306
       ENGINE_con2: mariadb@dbgate-plugin-mysql
       LABEL_con3: MongoDB-Phaidra
-      URL_con3: mongodb://${MONGODB_PHAIDRA_USER}:${MONGODB_PHAIDRA_PASSWORD}@mongodb-phaidra:27017
+      URL_con3: "mongodb://${MONGODB_PHAIDRA_USER:-phaidra}:${MONGODB_PHAIDRA_PASSWORD:-phaidra}@${MONGODB_PHAIDRA_HOST:-mongodb-phaidra}:27017"
       ENGINE_con3: mongo@dbgate-plugin-mongo
       WEB_ROOT: /dbgate
       LOGINS: phaidra
-      LOGIN_PASSWORD_phaidra: ${DBGATE_PASS}
+      LOGIN_PASSWORD_phaidra: "${DBGATE_PASS:-phaidra}"
     volumes:
       - dbgate:/root/.dbgate
     depends_on:
