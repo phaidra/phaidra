@@ -18,7 +18,7 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     ports:
-      - "${PHAIDRA_HOSTPORT}:80"
+      - "${PHAIDRA_HOSTPORT:-8899}:80"
     volumes:
       - .././container_init/httpd/phaidra-demo:/mnt/startup:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
@@ -31,9 +31,9 @@ services:
     networks:
       - phaidra-network
     environment:
-      - PHAIDRA_HOSTNAME=${PHAIDRA_HOSTNAME}
-      - PHAIDRA_HOSTPORT=${PHAIDRA_HOSTPORT}
-      - LOCAL_ADMIN_IP=${LOCAL_ADMIN_IP}
+      PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
+      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
+      LOCAL_ADMIN_IP: "${LOCAL_ADMIN_IP:-10.0.2.2}"
     entrypoint:
       - bash
       - /mnt/startup/httpd-demo-startup.bash
@@ -50,7 +50,7 @@ services:
       - phaidra-network
 
   solr:
-    image: solr:9.2.1
+    image: solr:9.6.1
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -61,8 +61,8 @@ services:
       - bash
       - /mnt/solr/solr_entrypoint.bash
     environment:
-      - SOLR_USER=${SOLR_USER}
-      - SOLR_PASS=${SOLR_PASS}
+      SOLR_USER: "${SOLR_USER:-phaidra}"
+      SOLR_PASS: "${SOLR_PASS:-phaidra}"
     networks:
       - phaidra-network
 
