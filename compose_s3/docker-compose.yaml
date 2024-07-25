@@ -103,40 +103,46 @@ services:
     networks:
       - phaidra-network
     environment:
-      - PHAIDRA_HOSTNAME=${PHAIDRA_HOSTNAME}
-      - PHAIDRA_PORTSTUB=${PHAIDRA_PORTSTUB}
-      - PHAIDRA_HOSTPORT=${PHAIDRA_HOSTPORT}
-      - OUTSIDE_HTTP_SCHEME=${OUTSIDE_HTTP_SCHEME}
-      - PHAIDRA_SECRET=${PHAIDRA_SECRET}
-      - PHAIDRA_ENCRYPTION_KEY=${PHAIDRA_ENCRYPTION_KEY}
-      - IMAGESERVER_HASH_SECRET=${IMAGESERVER_HASH_SECRET}
-      - PHAIDRA_ADMIN_USER=${PHAIDRA_ADMIN_USER}
-      - PHAIDRA_ADMIN_PASSWORD=${PHAIDRA_ADMIN_PASSWORD}
-      - FEDORA_ADMIN_USER=${FEDORA_ADMIN_USER}
-      - FEDORA_ADMIN_PASS=${FEDORA_ADMIN_PASS}
-      - SOLR_USER=${SOLR_USER}
-      - SOLR_PASS=${SOLR_PASS}
-      - LDAP_ADMIN_USERNAME=${LDAP_ADMIN_USERNAME}
-      - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
-      - LDAP_ROOT=${LDAP_ROOT}
-      - OC_EXTERNAL=${OC_EXTERNAL}
-      - FEDORA_OCFL_ROOT=${FEDORA_OCFL_ROOT}
-      - SOLR_HOST=solr
-      - FEDORA_HOST=fedora
-      - IMAGESERVER_HOST=imageserver
-      - OPENLDAP_HOST=openldap
-      - MONGODB_PHAIDRA_HOST=mongodb-phaidra
-      - MONGODB_PHAIDRA_USER=${MONGODB_PHAIDRA_USER}
-      - MONGODB_PHAIDRA_PASSWORD=${MONGODB_PHAIDRA_PASSWORD}
-      - MARIADB_PHAIDRA_HOST=mariadb-phaidra
-      - MARIADB_PHAIDRA_USER=${MARIADB_PHAIDRA_USER}
-      - MARIADB_PHAIDRA_PASSWORD=${MARIADB_PHAIDRA_PASSWORD}
-      - S3_ENABLED=${S3_ENABLED}
-      - S3_ACCESS_KEY=${S3_ACCESS_KEY}
-      - S3_SECRET_KEY=${S3_SECRET_KEY}
-      - S3_BUCKETNAME=${S3_BUCKETNAME}
-      - S3_CACHE_TOPDIR=${S3_CACHE_TOPDIR}
-      - S3_CACHESIZE=${S3_CACHESIZE}
+      PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
+      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB:-:}"
+      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
+      OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
+      PHAIDRA_SECRET: "${PHAIDRA_SECRET:-changeme}"
+      PHAIDRA_ENCRYPTION_KEY: "${PHAIDRA_ENCRYPTION_KEY:-changeme}"
+      IMAGESERVER_HASH_SECRET: "${IMAGESERVER_HASH_SECRET:-changeme}"
+      PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
+      PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
+      FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
+      FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
+      SOLR_USER: "${SOLR_USER:-phaidra}"
+      SOLR_PASS: "${SOLR_PASS:-phaidra}"
+      LDAP_ADMIN_USERNAME: "${LDAP_ADMIN_USERNAME:-admin}"
+      LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD:-adminpassword}"
+      LDAP_ROOT: "dc=${LDAP_SLD:-example},dc=${LDAP_TLD:-org}"
+      OC_EXTERNAL: "${OC_EXTERNAL:-false}"
+      FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
+      SOLR_HOST: "${SOLR_HOST:-solr}"
+      FEDORA_HOST: "${FEDORA_HOST:-fedora}"
+      IMAGESERVER_HOST: "${IMAGESERVER_HOST:-imageserver}"
+      OPENLDAP_HOST: "${OPENLDAP_HOST:-openldap}"
+      MONGODB_PHAIDRA_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra}"
+      MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
+      MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
+      MARIADB_PHAIDRA_HOST: "${MONGODB_PHAIDRA_HOST:-mariadb-phaidra}"
+      MARIADB_PHAIDRA_USER: "${MARIADB_PHAIDRA_USER:-phaidra}"
+      MARIADB_PHAIDRA_PASSWORD: "${MARIADB_PHAIDRA_PASSWORD:-phaidra}"
+      S3_ENABLED: "${S3_ENABLED:-false}"
+      S3_ACCESS_KEY: "${S3_ACCESS_KEY:-}"
+      S3_SECRET_KEY: "${S3_SECRET_KEY:-}"
+      S3_BUCKETNAME: "${S3_BUCKETNAME:-}"
+      S3_CACHE_TOPDIR: "${S3_CACHE_TOPDIR:-}"
+      S3_CACHESIZE: "${S3_CACHESIZE:-1000000}"
+      SHIB_USERNAME: "${SHIB_USERNAME:-}"
+      SHIB_SURNAME: "${SHIB_SURNAME:-}"
+      SHIB_GIVEN_NAME: "${SHIB_GIVEN_NAME:-}"
+      SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
+      SHIB_MAIL: "${SHIB_MAIL:-}"
+      SHIB_REQUIRED_AFFILIATIONS: "${SHIB_REQUIRED_AFFILIATIONS:-}"
     entrypoint:
       - bash
       - /mnt/api-entrypoint.bash
@@ -157,13 +163,13 @@ services:
     networks:
       - phaidra-network
     environment:
-      - IMAGE_CONVERSION_INTERVAL=${IMAGE_CONVERSION_INTERVAL}
-      - FEDORA_ADMIN_USER=${FEDORA_ADMIN_USER}
-      - FEDORA_ADMIN_PASS=${FEDORA_ADMIN_PASS}
-      - S3_ENABLED=${S3_ENABLED}
-      - S3_ACCESS_KEY=${S3_ACCESS_KEY}
-      - S3_SECRET_KEY=${S3_SECRET_KEY}
-      - S3_BUCKETNAME=${S3_BUCKETNAME}
+      IMAGE_CONVERSION_INTERVAL: "${IMAGE_CONVERSION_INTERVAL:-5}"
+      FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
+      FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
+      S3_ENABLED: "${S3_ENABLED:-false}"
+      S3_ACCESS_KEY: "${S3_ACCESS_KEY:-}"
+      S3_SECRET_KEY: "${S3_SECRET_KEY:-}"
+      S3_BUCKETNAME: "${S3_BUCKETNAME:-}"
 
   mariadb-phaidra:
     image: mariadb:11.0.2-jammy
@@ -172,10 +178,10 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     environment:
-      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
-      MARIADB_DATABASE: ${PHAIDRADB}
-      MARIADB_USER: ${MARIADB_PHAIDRA_USER}
-      MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
+      MARIADB_ROOT_PASSWORD: "${MARIADB_PHAIDRA_ROOT_PASSWORD:-example}"
+      MARIADB_DATABASE: "${PHAIDRADB:-phaidradb}"
+      MARIADB_USER: "${MARIADB_PHAIDRA_USER:-phaidra}"
+      MARIADB_PASSWORD: "${MARIADB_PHAIDRA_PASSWORD:-phaidra}"
     volumes:
       - .././container_init/mariadb/phaidradb:/docker-entrypoint-initdb.d:ro
       - mariadb_phaidra:/var/lib/mysql
@@ -189,10 +195,10 @@ services:
       logging_jobname: "containerlogs"
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
-      MARIADB_DATABASE: ${FEDORADB}
-      MARIADB_USER: ${MARIADB_PHAIDRA_USER}
-      MARIADB_PASSWORD: ${MARIADB_PHAIDRA_PASSWORD}
+      MARIADB_ROOT_PASSWORD: "${MARIADB_FEDORA_ROOT_PASSWORD:-example}"
+      MARIADB_DATABASE: "${FEDORADB:-fedoradb}"
+      MARIADB_USER: "${MARIADB_FEDORA_USER:-phaidra}"
+      MARIADB_PASSWORD: "${MARIADB_FEDORA_PASSWORD:-phaidra}"
     volumes:
       - .././container_init/mariadb/fedoradb:/docker-entrypoint-initdb.d:ro
       - mariadb_fedora:/var/lib/mysql
@@ -206,8 +212,8 @@ services:
       logging_jobname: "containerlogs"
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_PHAIDRA_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PHAIDRA_PASSWORD}
+      MONGO_INITDB_ROOT_USERNAME: "${MONGODB_PHAIDRA_USER:-phaidra}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
     volumes:
       - mongodb_phaidra:/data/db
       - .././container_init/mongodb/init_oai_sets.json:/mnt/init_oai_sets.json:ro
