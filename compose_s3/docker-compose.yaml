@@ -33,7 +33,7 @@ services:
     environment:
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
-      LOCAL_ADMIN_IP: "${LOCAL_ADMIN_IP:-10.0.2.2}"
+      ADMIN_IP_LIST: "${ADMIN_IP_LIST:-10.0.2.2}"
     entrypoint:
       - bash
       - /mnt/startup/httpd-demo-startup.bash
