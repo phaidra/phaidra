@@ -1,5 +1,3 @@
-version: '3'
-
 name: phaidra-s3
 
 networks:
