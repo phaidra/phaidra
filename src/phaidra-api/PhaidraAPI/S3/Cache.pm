@@ -106,13 +106,19 @@ sub get_current_cachesize{
     my @sum_result = $sum_query->all;
     $current_cache = $sum_result[0]->{'total'};
   }
-  return $current_cache;
+  # avoid uninitialized warning in logs if query does not return anything.
+  if (defined $current_cache) {
+    return $current_cache;
+  } else {
+    return 0;
+  }
 }
 
 sub check_cleanup_size{
   my $self = shift;
   my $FileToBeCached = shift;
   my $currently_used = $self->get_current_cachesize();
+  print "current cache usage: $currently_used B.\n";
   my ($filesize, $err) = $self->get_content_length($FileToBeCached);
   my $cachesize = $self->{'s3_cachesize'};
   my $free_space_needed = $filesize*1.2+$currently_used-$cachesize;
