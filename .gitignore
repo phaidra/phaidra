@@ -1,4 +1,5 @@
 *~
+.env
 compose_demo/.env
 compose_ssl/.env
 compose_shib/.env
