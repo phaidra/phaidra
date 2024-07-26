@@ -315,7 +315,8 @@ services:
       - chronos-oai-logs:/mnt/oai-logs
       - .././container_init/chronos:/mnt/chronos:ro
     environment:
-      MARIADB_ROOT_PASSWORD: "${MARIADB_ROOT_PASSWORD:-example}"
+      MARIADB_PHAIDRA_ROOT_PASSWORD: "${MARIADB_PHAIDRA_ROOT_PASSWORD:-example}"
+      MARIADB_FEDORA_ROOT_PASSWORD: "${MARIADB_FEDORA_ROOT_PASSWORD:-example}"
       PHAIDRADB: "${PHAIDRADB:-phaidradb}"
       FEDORADB: "${FEDORADB:-fedoradb}"
       MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"

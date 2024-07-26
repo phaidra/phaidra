@@ -33,7 +33,7 @@ function get_ocfl_topdir {
 function init_database {
     mysql -h ${MARIADB_PHAIDRA_HOST} \
           -u root \
-          -p${MARIADB_ROOT_PASSWORD} \
+          -p${MARIADB_PHAIDRA_ROOT_PASSWORD} \
           $PHAIDRADB \
           -e \
           "CREATE TABLE IF NOT EXISTS fixity_states
@@ -48,7 +48,7 @@ PRIMARY KEY (fedora_id))"
 function update_database {
     mysql -h ${MARIADB_PHAIDRA_HOST} \
           -u root \
-          -p${MARIADB_ROOT_PASSWORD} \
+          -p${MARIADB_PHAIDRA_ROOT_PASSWORD} \
           $PHAIDRADB \
           -e \
           "INSERT INTO fixity_states \
@@ -70,6 +70,7 @@ do
     if [[ "${FILE_OBJECT}" == *"JSON-LD"* || "${FILE_OBJECT}" == *"OCTETS"* || "${FILE_OBJECT}" == *"WEBVERSION"* || "${FILE_OBJECT}" == *"JSON-LD-PRIVATE"* || "${FILE_OBJECT}" == *"UWMETADATA"* || "${FILE_OBJECT}" == *"MODS"* || "${FILE_OBJECT}" == *"RIGHTS"* || "${FILE_OBJECT}" == *"COLLECTIONORDER"* || "${FILE_OBJECT}" == *"LINK"* || "${FILE_OBJECT}" == *"IIIF-MANIFEST"* || "${FILE_OBJECT}" == *"ANNOTATIONS"* ]]
     then
         RESULT=$(get_fixity_result $FILE_OBJECT)
+        printf "Fixity check for $FILE_OBJECT: $RESULT\n"
         SHA512SUM=$(get_sha512sum $FILE_OBJECT)
         OCFL_TOPDIR=$(get_ocfl_topdir $FILE_OBJECT)
         update_database $FILE_OBJECT $RESULT $SHA512SUM $OCFL_TOPDIR
