@@ -218,7 +218,7 @@ sub process_image
           "http://".
           $ENV{FEDORA_ADMIN_USER}.":".
           $ENV{FEDORA_ADMIN_PASS}."@".
-          "fedora:8080".
+          $ENV{FEDORA_HOST}.":8080".
           "/fcrepo/rest/$pid/OCTETS"
           ;
 
