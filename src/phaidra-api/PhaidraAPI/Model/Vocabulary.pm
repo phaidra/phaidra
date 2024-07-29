@@ -23,16 +23,18 @@ sub get_vocabulary {
     return $self->_get_bic_vocabulary($c, $nocache);
   }
 
-  my %vocab_router = ('http://id.loc.gov/vocabulary/iso639-2' => 'file://' . $c->app->config->{vocabulary_folder} . '/iso639-2.json');
+  my %vocab_router = (
+    'http://id.loc.gov/vocabulary/iso639-2' => $c->app->config->{vocabulary_folder} . '/iso639-2.json',
+    'roles' => $c->app->config->{vocabulary_folder} . '/roles.json'
+  );
 
-  my $url = $vocab_router{$uri} || $uri;
-
-  if ($url =~ /^(file:\/\/)(.+)/) {
-    return $self->_get_file_vocabulary($c, $2, $nocache);
-  }
-  else {
+  my $url;
+  if($vocab_router{$uri}) {
+    return $self->_get_file_vocabulary($c, $vocab_router{$uri}, $nocache);
+  } else {
     return $self->_get_server_vocabulary($c, $url, $nocache);
   }
+  
 }
 
 sub _get_file_vocabulary {
