@@ -61,7 +61,7 @@ services:
       UI_HOST: "${UI_HOST:-ui-s3}"
     profiles: ["demo-s3-data"]
 
-    
+
   imageserver-s3:
     image: testuser34/imageserver-base:979c59b3
     pull_policy: always
@@ -81,14 +81,13 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
-    restart:
-      always
+    restart: always
     volumes:
       - pixelgecko:/mnt/converted_images:ro
     networks:
       - phaidra-network
     profiles: ["demo-local-data"]
-    
+
   solr:
     image: testuser34/solr-dist:latest
     pull_policy: always
@@ -105,7 +104,7 @@ services:
     networks:
       - phaidra-network
     profiles: ["demo-local-data", "demo-s3-data"]
-    
+
   ui:
     depends_on: [api]
     labels:
@@ -148,7 +147,7 @@ services:
       PHAIDRA_API_HOST_INTERNAL: "${PHAIDRA_API_HOST:-api-s3}"
     profiles: ["demo-s3-data"]
 
-    
+
   api-s3:
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
     image: testuser34/api-dist:latest
@@ -170,6 +169,7 @@ services:
       PHAIDRA_SECRET: "${PHAIDRA_SECRET:-changeme}"
       PHAIDRA_ENCRYPTION_KEY: "${PHAIDRA_ENCRYPTION_KEY:-changeme}"
       IMAGESERVER_HASH_SECRET: "${IMAGESERVER_HASH_SECRET:-changeme}"
+      IMAGESERVER_ROOT_PATH: "s3_cache/converted_images"
       PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
       PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
       FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
@@ -222,8 +222,9 @@ services:
       FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora-local}"
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
+      IMAGESERVER_ROOT_PATH: "/mnt/converted_images"
       IMAGESERVER_HASH_SECRET: "${IMAGESERVER_HASH_SECRET:-changeme}"
-      IMAGESERVER_HOST: "${IMAGESERVER_HOST:-imageserver}"
+      IMAGESERVER_HOST: "${IMAGESERVER_HOST:-imageserver-local}"
       LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD:-adminpassword}"
       LDAP_ADMIN_USERNAME: "${LDAP_ADMIN_USERNAME:-admin}"
       LDAP_ROOT: "dc=${LDAP_SLD:-example},dc=${LDAP_TLD:-org}"
@@ -259,7 +260,7 @@ services:
       SOLR_PASS: "${SOLR_PASS:-phaidra}"
       SOLR_USER: "${SOLR_USER:-phaidra}"
     profiles: ["demo-local-data"]
-    
+
   pixelgecko-s3:
     depends_on: [mongodb-phaidra, api-s3]
     labels:
@@ -273,6 +274,7 @@ services:
     networks:
       - phaidra-network
     environment:
+      CONVERTED_IMAGES_PATH: "${CONVERTED_IMAGES_PATH:-/converted_images}"
       FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
       FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora-s3}"
@@ -298,12 +300,13 @@ services:
     networks:
       - phaidra-network
     environment:
+      CONVERTED_IMAGES_PATH: "${CONVERTED_IMAGES_PATH:-/mnt/converted_images}"
       FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
       FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora-local}"
       IMAGE_CONVERSION_INTERVAL: "${IMAGE_CONVERSION_INTERVAL:-5}"
     profiles: ["demo-local-data"]
-    
+
   mariadb-phaidra:
     image: mariadb:11.0.2-jammy
     restart: always
@@ -321,7 +324,7 @@ services:
     networks:
       - phaidra-network
     profiles: ["demo-local-data", "demo-s3-data"]
-    
+
   mariadb-fedora:
     image: mariadb:10.5
     labels:
@@ -339,7 +342,7 @@ services:
     networks:
       - phaidra-network
     profiles: ["demo-local-data", "demo-s3-data"]
-    
+
   mongodb-phaidra:
     image: mongo:5
     labels:
@@ -356,7 +359,7 @@ services:
     networks:
       - phaidra-network
     profiles: ["demo-local-data", "demo-s3-data"]
-    
+
   dbgate:
     image: dbgate/dbgate:5.2.7
     labels:
@@ -389,7 +392,7 @@ services:
     networks:
       - phaidra-network
     profiles: ["demo-local-data", "demo-s3-data"]
-      
+
   fedora-s3:
     image: fcrepo/fcrepo:6.4.1
     labels:
@@ -421,7 +424,7 @@ services:
     networks:
       - phaidra-network
     profiles: ["demo-local-data"]
-    
+
   lam:
     image: ghcr.io/ldapaccountmanager/lam:8.5
     labels:
@@ -438,7 +441,7 @@ services:
     networks:
       - phaidra-network
     profiles: ["demo-local-data", "demo-s3-data"]
-    
+
   openldap:
     image: bitnami/openldap:2.6.6-debian-11-r59
     labels:
@@ -457,7 +460,7 @@ services:
     networks:
       - phaidra-network
     profiles: ["demo-local-data", "demo-s3-data"]
-    
+
   chronos:
     image: testuser34/chronos-base:73e15d1c
     labels:
@@ -537,7 +540,7 @@ services:
     networks:
       - phaidra-network
     profiles: ["demo-s3-data"]
-    
+
   promtail-local:
     image: grafana/promtail:3.0.0
     restart: always
@@ -549,7 +552,7 @@ services:
       - phaidra-network
     depends_on: [grafana, loki]
     profiles: ["demo-local-data", "demo-s3-data"]
-    
+
   loki:
     image: grafana/loki:3.0.0
     restart: always
@@ -560,7 +563,7 @@ services:
     networks:
       - phaidra-network
     profiles: ["demo-local-data", "demo-s3-data"]
-    
+
   grafana:
     image: grafana/grafana:11.0.0
     restart: always
@@ -579,7 +582,7 @@ services:
     networks:
       - phaidra-network
     profiles: ["demo-local-data", "demo-s3-data"]
-    
+
   prometheus:
     image: prom/prometheus:v2.52.0
     restart: always
@@ -591,14 +594,14 @@ services:
     networks:
       - phaidra-network
     profiles: ["demo-local-data", "demo-s3-data"]
-    
+
   node-exporter:
     image: prom/node-exporter:v1.8.1
     restart: always
     networks:
       - phaidra-network
     profiles: ["demo-local-data", "demo-s3-data"]
-    
+
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.49.1
     restart: always
@@ -610,7 +613,7 @@ services:
       - /etc/machine-id:/etc/machine-id:ro
       - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
     profiles: ["demo-local-data", "demo-s3-data"]
-    
+
   # UNCOMMENT and fill .env values if you have access to an opencast instance
   # vige:
   #   image: testuser34/vige-base:f10c5205
@@ -643,7 +646,7 @@ services:
   # UNCOMMENT and fill .env values, if you have a remote Grafana instance with loki.
   # promtail-push:
   #   image: grafana/promtail:3.0.0
-  #   restart: always 
+  #   restart: always
   #   volumes:
   #     - ./container_init/promtail/promtail-push-config.yaml:/etc/promtail/config.yaml:ro
   #     - ${HOST_DOCKER_SOCKET}:/var/run/docker.sock:ro

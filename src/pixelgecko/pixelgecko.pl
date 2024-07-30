@@ -198,12 +198,12 @@ sub process_image
     if (defined($idhash) && $idhash =~ /\b([a-f0-9]{40})\b/) {
       my $lvl1= substr($idhash, 0, 1);
       my $lvl2= substr($idhash, 1, 1);
-      my $out_dir= join ('/', $config->{pixelgecko}->{store}, $lvl1, $lvl2);
+      my $out_dir= join ('/', $ENV{CONVERTED_IMAGES_PATH}, $lvl1, $lvl2);
       system ('mkdir', '-p', $out_dir) unless (-d $out_dir);
       $out_img= join ('/', $out_dir, $idhash.'.tif');
     } else {
       print scalar localtime(), " ", "idhash[$idhash] is not defined or is not a SHA-1 hash\n";
-      $out_img= join ('/', $config->{pixelgecko}->{store}, $img_fnm.'.tif');
+      $out_img= join ('/', $ENV{CONVERTED_IMAGES_PATH}, $img_fnm.'.tif');
     }
 
     my @curl_lines;
