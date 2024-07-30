@@ -130,6 +130,26 @@ build-httpd-shib:
         paths:
           - dockerfiles/httpd-shib.dockerfile
 
+build-httpd-demo-dist:
+  stage: build-dist
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/httpd-demo-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/httpd-demo-dist:latest
+    -t $CI_REGISTRY_USER/httpd-demo-dist:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - if:
+        changes:
+          paths:
+            - dockerfiles/httpd-demo-dist.dockerfile
+            - container_init/httpd/phaidra-demo/conf/phaidra-demo.conf
+          
 build-imageserver:
   stage: build-base
   before_script:
