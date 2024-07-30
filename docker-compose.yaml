@@ -90,18 +90,16 @@ services:
     profiles: ["demo-local-data"]
     
   solr:
-    image: solr:9.6.1
+    image: testuser34/solr-dist:latest
+    pull_policy: always
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
     volumes:
       - solr:/var/solr
-      - ./container_init/solr:/mnt/solr:ro
-    entrypoint:
-      - bash
-      - /mnt/solr/solr_entrypoint.bash
     environment:
+      SOLR_SALT: "${SOLR_SALT:-phaidra}"
       SOLR_USER: "${SOLR_USER:-phaidra}"
       SOLR_PASS: "${SOLR_PASS:-phaidra}"
     networks:
