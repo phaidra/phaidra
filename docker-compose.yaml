@@ -153,7 +153,7 @@ services:
     
   api-s3:
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: testuser34/api-base-s3:20240703-init-v1
+    image: testuser34/api-dist:latest
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -161,8 +161,6 @@ services:
     pull_policy: always
     volumes:
       - s3_cache:/s3_cache
-      - ./src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
-      - ./container_init/api/api-entrypoint.bash:/mnt/api-entrypoint.bash:ro
     networks:
       - phaidra-network
     environment:
@@ -206,14 +204,11 @@ services:
       SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
       SHIB_MAIL: "${SHIB_MAIL:-}"
       SHIB_REQUIRED_AFFILIATIONS: "${SHIB_REQUIRED_AFFILIATIONS:-}"
-    entrypoint:
-      - bash
-      - /mnt/api-entrypoint.bash
     profiles: ["demo-s3-data"]
 
   api:
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-local]
-    image: testuser34/api-base-s3:20240703-init-v1
+    image: testuser34/api-dist:latest
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -221,8 +216,6 @@ services:
     pull_policy: always
     volumes:
       - fedora:/mnt/fedora:ro
-      - ./src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
-      - ./container_init/api/api-entrypoint.bash:/mnt/api-entrypoint.bash:ro
     networks:
       - phaidra-network
     environment:
@@ -267,9 +260,6 @@ services:
       SOLR_HOST: "${SOLR_HOST:-solr}"
       SOLR_PASS: "${SOLR_PASS:-phaidra}"
       SOLR_USER: "${SOLR_USER:-phaidra}"
-    entrypoint:
-      - bash
-      - /mnt/api-entrypoint.bash
     profiles: ["demo-local-data"]
     
   pixelgecko-s3:
