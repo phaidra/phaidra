@@ -15,6 +15,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
     volumes:
@@ -44,6 +45,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
     volumes:
@@ -74,6 +76,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     volumes:
       - s3_cache:/s3_cache:ro
     networks:
@@ -86,6 +89,8 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart:
+      always
     volumes:
       - pixelgecko:/mnt/converted_images:ro
     networks:
@@ -97,6 +102,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     volumes:
       - solr:/var/solr
       - ./container_init/solr:/mnt/solr:ro
@@ -115,6 +121,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     # reference your custom image here, if you've created one from compose_dev and pushed to a registry.
     image: testuser34/ui-dist:latest
     pull_policy: always
@@ -135,6 +142,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     # reference your custom image here, if you've created one from compose_dev and pushed to a registry.
     image: testuser34/ui-dist:latest
     pull_policy: always
@@ -157,6 +165,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     pull_policy: always
     volumes:
       - s3_cache:/s3_cache
@@ -216,6 +225,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     pull_policy: always
     volumes:
       - fedora:/mnt/fedora:ro
@@ -275,8 +285,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
-    restart:
-      always
+    restart: always
     image: testuser34/pixelgecko-base-s3:20240702-init-v1
     pull_policy: always
     volumes:
@@ -299,8 +308,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
-    restart:
-      always
+    restart: always
     image: testuser34/pixelgecko-base-s3:20240702-init-v1
     pull_policy: always
     volumes:
@@ -454,6 +462,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     environment:
       LDAP_ADMIN_USERNAME: "${LDAP_ADMIN_USERNAME:-admin}"
       LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD:-adminpassword}"
@@ -472,6 +481,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     pull_policy: always
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
@@ -511,6 +521,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     pull_policy: always
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
@@ -547,6 +558,7 @@ services:
     
   promtail-local:
     image: grafana/promtail:3.0.0
+    restart: always
     volumes:
       - ./container_init/promtail/promtail-local-config.yaml:/etc/promtail/config.yaml:ro
       - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
@@ -558,6 +570,7 @@ services:
     
   loki:
     image: grafana/loki:3.0.0
+    restart: always
     volumes:
       - ./container_init/loki/loki-docker-config.yaml:/etc/loki/local-config.yaml:ro
       - loki:/loki
@@ -568,6 +581,7 @@ services:
     
   grafana:
     image: grafana/grafana:11.0.0
+    restart: always
     volumes:
       - ./container_init/grafana/ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
       - ./container_init/grafana/dd.yaml:/etc/grafana/provisioning/dashboards/dd.yaml:ro
@@ -586,6 +600,7 @@ services:
     
   prometheus:
     image: prom/prometheus:v2.52.0
+    restart: always
     volumes:
       - ./container_init/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
       - prometheus:/prometheus
@@ -597,12 +612,14 @@ services:
     
   node-exporter:
     image: prom/node-exporter:v1.8.1
+    restart: always
     networks:
       - phaidra-network
     profiles: ["demo-local-data", "demo-s3-data"]
     
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.49.1
+    restart: always
     networks:
       - phaidra-network
     volumes:
@@ -618,6 +635,7 @@ services:
   #   labels:
   #     logging: "promtail"
   #     logging_jobname: "containerlogs"
+  #   restart: always
   #   pull_policy: always
   #   volumes:
   #     - ./src/vige:/mnt/vige:ro
@@ -643,6 +661,7 @@ services:
   # UNCOMMENT and fill .env values, if you have a remote Grafana instance with loki.
   # promtail-push:
   #   image: grafana/promtail:3.0.0
+  #   restart: always 
   #   volumes:
   #     - ./container_init/promtail/promtail-push-config.yaml:/etc/promtail/config.yaml:ro
   #     - ${HOST_DOCKER_SOCKET}:/var/run/docker.sock:ro
