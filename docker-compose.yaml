@@ -26,7 +26,7 @@ services:
       ADMIN_IP_LIST: "${ADMIN_IP_LIST:-10.0.2.2}"
       API_HOST: "${API_HOST:-api}"
       DBGATE_HOST: "${DBGATE_HOST:-dbgate}"
-      FEDORA_HOST: "${FEDORA_HOST:-fedora}"
+      FEDORA_HOST: "${FEDORA_HOST:-fedora-local}"
       GRAFANA_HOST: "${GRAFANA_HOST:-grafana}"
       LAM_HOST: "${LAM_HOST:-lam}"
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
@@ -222,7 +222,7 @@ services:
       PHAIDRA_API_HOST: "${PHAIDRA_API_HOST:-api}"
       FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
       FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
-      FEDORA_HOST: "${FEDORA_HOST:-fedora}"
+      FEDORA_HOST: "${FEDORA_HOST:-fedora-local}"
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
       IMAGESERVER_HASH_SECRET: "${IMAGESERVER_HASH_SECRET:-changeme}"
       IMAGESERVER_HOST: "${IMAGESERVER_HOST:-imageserver}"
@@ -286,7 +286,7 @@ services:
     profiles: ["demo-s3-data"]
 
   pixelgecko-local:
-    depends_on: [mongodb-phaidra, api-local]
+    depends_on: [mongodb-phaidra, api]
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -300,7 +300,7 @@ services:
     networks:
       - phaidra-network
     environment:
-      FEDORA_HOST: "${FEDORA_HOST:-fedora}"
+      FEDORA_HOST: "${FEDORA_HOST:-fedora-local}"
       IMAGE_CONVERSION_INTERVAL: "${IMAGE_CONVERSION_INTERVAL:-5}"
     profiles: ["demo-local-data"]
     
