@@ -144,11 +144,10 @@ build-httpd-demo-dist:
     -t $CI_REGISTRY_USER/httpd-demo-dist:latest
     -t $CI_REGISTRY_USER/httpd-demo-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - if:
-        changes:
-          paths:
-            - dockerfiles/httpd-demo-dist.dockerfile
-            - container_init/httpd/phaidra-demo/conf/phaidra-demo.conf
+    - changes:
+        paths:
+          - dockerfiles/httpd-demo-dist.dockerfile
+          - container_init/httpd/phaidra-demo/conf/phaidra-demo.conf
           
 build-imageserver:
   stage: build-base
