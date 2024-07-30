@@ -10,7 +10,7 @@ networks:
 
 services:
   httpd-local:
-    image: httpd:2.4.59-bookworm
+    image: testuser34/httpd-demo-dist:latest
     pull_policy: always
     labels:
       logging: "promtail"
@@ -19,7 +19,6 @@ services:
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
     volumes:
-      - ./container_init/httpd/phaidra-demo:/mnt/startup:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
     networks:
       - phaidra-network
@@ -34,13 +33,10 @@ services:
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
       SOLR_HOST: "${SOLR_HOST:-solr}"
       UI_HOST: "${UI_HOST:-ui}"
-    entrypoint:
-      - bash
-      - /mnt/startup/httpd-demo-startup.bash
     profiles: ["demo-local-data"]
 
   httpd-local-s3:
-    image: httpd:2.4.59-bookworm
+    image: testuser34/httpd-demo-dist:latest
     pull_policy: always
     labels:
       logging: "promtail"
@@ -49,7 +45,6 @@ services:
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
     volumes:
-      - ./container_init/httpd/phaidra-demo:/mnt/startup:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
     networks:
       - phaidra-network
@@ -64,9 +59,6 @@ services:
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
       SOLR_HOST: "${SOLR_HOST:-solr}"
       UI_HOST: "${UI_HOST:-ui-s3}"
-    entrypoint:
-      - bash
-      - /mnt/startup/httpd-demo-startup.bash
     profiles: ["demo-s3-data"]
 
     
