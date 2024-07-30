@@ -1,4 +1,4 @@
-FROM ubuntu:jammy-20240227
+FROM ubuntu:noble-20240605
 ENV DEBIAN_FRONTEND noninteractive
 RUN <<EOF
 apt-get --quiet update
@@ -25,6 +25,11 @@ cpanm Mojolicious::Plugin::Database Mojolicious::Plugin::Session \
       Mojolicious::Plugin::Log::Any Mojolicious::Plugin::CHI \
       IO::Scalar Crypt::Rijndael MIME::Base64 File::MimeInfo::Magic \
       XML::SAX XML::Parser::PerlSAX File::Find::utf8  MIME::Lite::TT::HTML Storable UNIVERSAL::require Mojo::IOLoop::Delay
+EOF
+# add perl s3 packages
+RUN <<EOF
+apt-get install --yes --quiet --no-install-recommends libnet-amazon-s3-perl
+apt-get clean
 EOF
 RUN <<EOF
 mkdir -pv /usr/local/phaidra/phaidra-api \
