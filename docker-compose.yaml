@@ -300,6 +300,8 @@ services:
     networks:
       - phaidra-network
     environment:
+      FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
+      FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora-local}"
       IMAGE_CONVERSION_INTERVAL: "${IMAGE_CONVERSION_INTERVAL:-5}"
     profiles: ["demo-local-data"]
@@ -417,7 +419,7 @@ services:
       FEDORA_ADMIN_PASSWORD: "${FEDORA_ADMIN_PASS:-1234}"
     depends_on: [mariadb-fedora]
     volumes:
-      - fedora:/usr/local/tomcat/fedora-home
+      - fedora:/usr/local/tomcat/fcrepo-home
     networks:
       - phaidra-network
     profiles: ["demo-local-data"]
