@@ -458,7 +458,7 @@ services:
     profiles: ["demo-local-data", "demo-s3-data"]
 
   chronos:
-    image: testuser34/chronos-base:73e15d1c
+    image: testuser34/chronos-dist:latest
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -468,37 +468,33 @@ services:
       - chronos-database-dumps:/mnt/database-dumps
       - chronos-sitemaps:/mnt/sitemaps
       - chronos-oai-logs:/mnt/oai-logs
-      - ./container_init/chronos:/mnt/chronos:ro
     environment:
-      MARIADB_PHAIDRA_ROOT_PASSWORD: "${MARIADB_PHAIDRA_ROOT_PASSWORD:-example}"
-      MARIADB_FEDORA_ROOT_PASSWORD: "${MARIADB_FEDORA_ROOT_PASSWORD:-example}"
-      PHAIDRADB: "${PHAIDRADB:-phaidradb}"
       FEDORADB: "${FEDORADB:-fedoradb}"
-      MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
-      MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
-      PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
-      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB:-:}"
-      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
-      OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
-      PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
-      PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
-      FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
       FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
-      SOLR_HOST: "${SOLR_HOST:-solr}"
+      FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
+      FEDORA_HOST: "${FEDORA_HOST:-fedora-local}"
       MARIADB_FEDORA_HOST: "${MARIADB_FEDORA_HOST:-mariadb-fedora}"
+      MARIADB_FEDORA_ROOT_PASSWORD: "${MARIADB_FEDORA_ROOT_PASSWORD:-example}"
       MARIADB_PHAIDRA_HOST: "${MARIADB_PHAIDRA_HOST:-mariadb-phaidra}"
+      MARIADB_PHAIDRA_ROOT_PASSWORD: "${MARIADB_PHAIDRA_ROOT_PASSWORD:-example}"
       MONGODB_PHAIDRA_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra}"
-      FEDORA_HOST: "${FEDORA_HOST:-fedora}"
+      MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
+      MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
+      OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
+      PHAIDRADB: "${PHAIDRADB:-phaidradb}"
+      PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
+      PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
+      PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
+      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
+      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB:-:}"
+      SOLR_HOST: "${SOLR_HOST:-solr}"
     depends_on: [mariadb-fedora, mariadb-phaidra, mongodb-phaidra]
-    entrypoint:
-      - bash
-      - /mnt/chronos/chronos-entrypoint.bash
     networks:
       - phaidra-network
     profiles: ["demo-local-data"]
 
   chronos-s3:
-    image: testuser34/chronos-base:73e15d1c
+    image: testuser34/chronos-dist:latest
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -508,31 +504,27 @@ services:
       - chronos-database-dumps:/mnt/database-dumps
       - chronos-sitemaps:/mnt/sitemaps
       - chronos-oai-logs:/mnt/oai-logs
-      - ./container_init/chronos:/mnt/chronos:ro
     environment:
-      MARIADB_PHAIDRA_ROOT_PASSWORD: "${MARIADB_PHAIDRA_ROOT_PASSWORD:-example}"
-      MARIADB_FEDORA_ROOT_PASSWORD: "${MARIADB_FEDORA_ROOT_PASSWORD:-example}"
-      PHAIDRADB: "${PHAIDRADB:-phaidradb}"
       FEDORADB: "${FEDORADB:-fedoradb}"
-      MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
-      MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
-      PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
-      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB:-:}"
-      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
-      OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
-      PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
-      PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
-      FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
       FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
-      SOLR_HOST: "${SOLR_HOST:-solr}"
-      MARIADB_FEDORA_HOST: "${MARIADB_FEDORA_HOST:-mariadb-fedora}"
-      MARIADB_PHAIDRA_HOST: "${MARIADB_PHAIDRA_HOST:-mariadb-phaidra}"
-      MONGODB_PHAIDRA_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra}"
+      FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora-s3}"
+      MARIADB_FEDORA_HOST: "${MARIADB_FEDORA_HOST:-mariadb-fedora}"
+      MARIADB_FEDORA_ROOT_PASSWORD: "${MARIADB_FEDORA_ROOT_PASSWORD:-example}"
+      MARIADB_PHAIDRA_HOST: "${MARIADB_PHAIDRA_HOST:-mariadb-phaidra}"
+      MARIADB_PHAIDRA_ROOT_PASSWORD: "${MARIADB_PHAIDRA_ROOT_PASSWORD:-example}"
+      MONGODB_PHAIDRA_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra}"
+      MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
+      MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
+      OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
+      PHAIDRADB: "${PHAIDRADB:-phaidradb}"
+      PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
+      PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
+      PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
+      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
+      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB:-:}"
+      SOLR_HOST: "${SOLR_HOST:-solr}"
     depends_on: [mariadb-fedora, mariadb-phaidra, mongodb-phaidra]
-    entrypoint:
-      - bash
-      - /mnt/chronos/chronos-entrypoint.bash
     networks:
       - phaidra-network
     profiles: ["demo-s3-data"]
