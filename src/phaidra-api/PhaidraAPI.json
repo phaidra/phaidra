@@ -72,7 +72,7 @@
     },
     "imageserver": {
         "hash_secret": "__IMAGESERVER_HASH_SECRET__",
-        "image_server_root": "__IMAGE_SERVER_ROOT__",
+        "image_server_root": "__IMAGESERVER_ROOT_PATH__",
         "scheme": "http",
         "host": "__IMAGESERVER_HOST__",
         "path": "/iipsrv/iipsrv.fcgi"
