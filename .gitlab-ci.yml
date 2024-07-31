@@ -203,8 +203,8 @@ build-pixelgecko-dist:
   rules:
     - changes:
         paths:
-          - dockerfiles/pixelgecko-dist.dockerfile
           - dockerfiles/pixelgecko-base.dockerfile
+          - dockerfiles/pixelgecko-dist.dockerfile
           - src/pixelgecko/**/*
 
 build-mariadb-phaidra-dist:
