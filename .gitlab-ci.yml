@@ -168,7 +168,6 @@ build-imageserver:
         paths:
           - dockerfiles/imageserver.dockerfile
 
-
 build-pixelgecko-base:
   stage: build-base
   before_script:
@@ -305,26 +304,6 @@ build-openldap-dist:
         paths:
           - dockerfiles/openldap-dist.dockerfile
           - container_init/openldap/**/*
-
-build-pixelgecko-dist:
-  stage: build-dist
-  before_script:
-    - mkdir -p $HOME/.docker
-    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
-  script: >
-    docker context create builder-context &&
-    docker buildx create builder-context --name container --driver=docker-container &&
-    docker buildx build -f dockerfiles/pixelgecko-dist.dockerfile
-    --builder=container
-    --platform=linux/amd64,linux/arm64
-    -t $CI_REGISTRY_USER/pixelgecko-dist:latest
-    -t $CI_REGISTRY_USER/pixelgecko-dist:$CI_COMMIT_SHORT_SHA --push .
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
-        paths:
-          - dockerfiles/pixelgecko-dist.dockerfile
-          - src/pixelgecko/**/*
 
 build-vige:
   stage: build-base
