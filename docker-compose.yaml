@@ -614,6 +614,21 @@ services:
       - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
     profiles: ["demo-local-data", "demo-s3-data"]
 
+  mkdocs:
+    image: squidfunk/mkdocs-material:latest
+    hostname: mkdocs
+    pull_policy: always
+    # use build to build static files locally (within /site dir) which then can be pushed to server
+    # command: "build"
+    command: "serve --dev-addr=0.0.0.0:8000"
+    volumes:
+      - ./:/docs
+    ports:
+      - "8000:8000"
+    stdin_open: true
+    tty: true
+    profiles: ["website-only"]
+
   # UNCOMMENT and fill .env values if you have access to an opencast instance
   # vige:
   #   image: testuser34/vige-base:f10c5205
