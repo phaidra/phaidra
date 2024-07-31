@@ -177,16 +177,15 @@ build-pixelgecko-base:
   script: >
     docker context create builder-context &&
     docker buildx create builder-context --name container --driver=docker-container &&
-    docker buildx build -f dockerfiles/pixelgecko.dockerfile
+    docker buildx build -f dockerfiles/pixelgecko-base.dockerfile
     --builder=container
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/pixelgecko-base:latest
     -t $CI_REGISTRY_USER/pixelgecko-base:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
+    - changes:
         paths:
-          - dockerfiles/pixelgecko.dockerfile
+          - dockerfiles/pixelgecko-base.dockerfile
 
 
 build-pixelgecko-dist:
@@ -203,10 +202,10 @@ build-pixelgecko-dist:
     -t $CI_REGISTRY_USER/pixelgecko-dist:latest
     -t $CI_REGISTRY_USER/pixelgecko-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
+    - changes:
         paths:
           - dockerfiles/pixelgecko-dist.dockerfile
+          - dockerfiles/pixelgecko-base.dockerfile
           - src/pixelgecko/**/*
 
 build-mariadb-phaidra-dist:

@@ -1,11 +1,10 @@
-FROM ubuntu:jammy-20240227
-ENV DEBIAN_FRONTEND noninteractive
+FROM ubuntu:jammy-20240627.1
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN <<EOF
 apt-get --quiet update
 apt-get install --yes --quiet --no-install-recommends \
-libvips-tools libyaml-syck-perl libmongodb-perl \
-s3fs
+libvips-tools libyaml-syck-perl libmongodb-perl libnet-amazon-s3-perl
 apt-get clean
 EOF
 
