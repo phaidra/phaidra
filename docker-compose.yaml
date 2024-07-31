@@ -341,18 +341,17 @@ services:
     profiles: ["demo-local-data", "demo-s3-data"]
 
   mongodb-phaidra:
-    image: mongo:5
+    image: testuser34/mongodb-dist:latest
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
+    pull_policy: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: "${MONGODB_PHAIDRA_USER:-phaidra}"
       MONGO_INITDB_ROOT_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
     volumes:
       - mongodb_phaidra:/data/db
-      - ./container_init/mongodb/init_oai_sets.json:/mnt/init_oai_sets.json:ro
-      - ./container_init/mongodb/mongodb-after-entry.sh:/docker-entrypoint-initdb.d/mongodb-after-entry.sh:ro
     networks:
       - phaidra-network
     profiles: ["demo-local-data", "demo-s3-data"]
