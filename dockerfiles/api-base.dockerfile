@@ -1,5 +1,5 @@
-FROM ubuntu:jammy-20240227
-ENV DEBIAN_FRONTEND noninteractive
+FROM ubuntu:jammy-20240627.1
+ENV DEBIAN_FRONTEND=noninteractive
 RUN <<EOF
 apt-get --quiet update
 apt-get install --yes --quiet --no-install-recommends \
@@ -11,7 +11,7 @@ apt-get install --yes --quiet --no-install-recommends \
     libclone-perl libmime-lite-perl libdbix-connector-perl libjson-perl libcgi-pm-perl libxml-libxslt-perl \
     libcache-fastmmap-perl liblocale-maketext-lexicon-perl libyaml-syck-perl libmongodb-perl libmojolicious-perl \
     libmojolicious-plugin-i18n-perl libmojolicious-plugin-authentication-perl git libtemplate-perl libhtml-formattext-withlinks-perl libmodule-build-tiny-perl libdbd-sqlite3-perl libtest-needs-perl libtest-memory-cycle-perl libtest-output-perl libtest-exception-perl libtest-warn-perl libfile-mimeinfo-perl libdatetime-format-mail-perl libjson-xs-perl \
-    s3fs
+    libnet-ip-perl
 apt-get clean
 EOF
 # run after installation of libjson-xs-perl,
@@ -25,6 +25,11 @@ cpanm Mojolicious::Plugin::Database Mojolicious::Plugin::Session \
       Mojolicious::Plugin::Log::Any Mojolicious::Plugin::CHI \
       IO::Scalar Crypt::Rijndael MIME::Base64 File::MimeInfo::Magic \
       XML::SAX XML::Parser::PerlSAX File::Find::utf8  MIME::Lite::TT::HTML Storable UNIVERSAL::require Mojo::IOLoop::Delay
+EOF
+# add perl s3 packages
+RUN <<EOF
+apt-get install --yes --quiet --no-install-recommends libnet-amazon-s3-perl
+apt-get clean
 EOF
 RUN <<EOF
 mkdir -pv /usr/local/phaidra/phaidra-api \
