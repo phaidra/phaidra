@@ -267,10 +267,8 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    image: testuser34/pixelgecko-base-s3:20240702-init-v1
+    image: testuser34/pixelgecko-dist:latest
     pull_policy: always
-    volumes:
-      - ./src/pixelgecko:/opt/pixelgecko:ro
     networks:
       - phaidra-network
     environment:
@@ -291,12 +289,11 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    image: testuser34/pixelgecko-base-s3:20240702-init-v1
+    image: testuser34/pixelgecko-dist:latest
     pull_policy: always
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
-      - ./src/pixelgecko:/opt/pixelgecko:ro
     networks:
       - phaidra-network
     environment:
