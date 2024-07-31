@@ -305,8 +305,9 @@ services:
     profiles: ["demo-local-data"]
 
   mariadb-phaidra:
-    image: mariadb:11.0.2-jammy
+    image: testuser34/mariadb-phaidra-dist:latest
     restart: always
+    pull_policy: always
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -316,25 +317,24 @@ services:
       MARIADB_USER: "${MARIADB_PHAIDRA_USER:-phaidra}"
       MARIADB_PASSWORD: "${MARIADB_PHAIDRA_PASSWORD:-phaidra}"
     volumes:
-      - ./container_init/mariadb/phaidradb:/docker-entrypoint-initdb.d:ro
       - mariadb_phaidra:/var/lib/mysql
     networks:
       - phaidra-network
     profiles: ["demo-local-data", "demo-s3-data"]
 
   mariadb-fedora:
-    image: mariadb:10.5
+    image: testuser34/mariadb-fedora-dist:latest
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
+    pull_policy: always
     environment:
       MARIADB_ROOT_PASSWORD: "${MARIADB_FEDORA_ROOT_PASSWORD:-example}"
       MARIADB_DATABASE: "${FEDORADB:-fedoradb}"
       MARIADB_USER: "${MARIADB_FEDORA_USER:-phaidra}"
       MARIADB_PASSWORD: "${MARIADB_FEDORA_PASSWORD:-phaidra}"
     volumes:
-      - ./container_init/mariadb/fedoradb:/docker-entrypoint-initdb.d:ro
       - mariadb_fedora:/var/lib/mysql
     networks:
       - phaidra-network
