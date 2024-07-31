@@ -187,7 +187,6 @@ build-pixelgecko-base:
         paths:
           - dockerfiles/pixelgecko-base.dockerfile
 
-
 build-pixelgecko-dist:
   stage: build-dist
   before_script:
