@@ -439,11 +439,12 @@ services:
     profiles: ["demo-local-data", "demo-s3-data"]
 
   openldap:
-    image: bitnami/openldap:2.6.6-debian-11-r59
+    image: testuser34/openldap-dist:latest
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
+    pull_policy: always
     environment:
       LDAP_ADMIN_USERNAME: "${LDAP_ADMIN_USERNAME:-admin}"
       LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD:-adminpassword}"
@@ -452,7 +453,6 @@ services:
       LDAP_CUSTOM_LDIF_DIR: "/ldifs"
     volumes:
       - openldap:/bitnami/openldap
-      - ./container_init/openldap:/ldifs:ro
     networks:
       - phaidra-network
     profiles: ["demo-local-data", "demo-s3-data"]
