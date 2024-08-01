@@ -548,7 +548,7 @@ services:
     restart: always
     volumes:
       - ./container_init/promtail/promtail-local-config.yaml:/etc/promtail/config.yaml:ro
-      - ${HOST_DOCKER_SOCKET:-/run/uaser/1000/docker.sock}:/var/run/docker.sock:ro
+      - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
     command: -config.file=/etc/promtail/config.yaml -config.expand-env=true
     networks:
       - phaidra-network

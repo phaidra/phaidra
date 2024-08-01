@@ -323,6 +323,25 @@ build-vige:
         paths:
           - dockerfiles/vige.dockerfile
 
+build-promtail-dist:
+  stage: build-base
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/promtail-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/promtail-dist:latest
+    -t $CI_REGISTRY_USER/promtail-dist:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - changes:
+        paths:
+          - dockerfiles/promtail-dist.dockerfile
+          - container_init/promtail/promtail-local.config.yaml
+
 compose-dev:
   stage: test
   before_script:
