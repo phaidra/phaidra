@@ -544,10 +544,9 @@ services:
     profiles: ["demo-s3"]
     
   promtail-local:
-    image: grafana/promtail:3.0.0
+    image: testuser34/promtail-dist:latest
     restart: always
     volumes:
-      - ./container_init/promtail/promtail-local-config.yaml:/etc/promtail/config.yaml:ro
       - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
     command: -config.file=/etc/promtail/config.yaml -config.expand-env=true
     networks:
