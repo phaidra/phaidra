@@ -555,10 +555,9 @@ services:
     profiles: ["demo-local", "demo-s3"]
 
   loki:
-    image: grafana/loki:3.0.0
+    image: testuser34/loki-dist:latest
     restart: always
     volumes:
-      - ./container_init/loki/loki-docker-config.yaml:/etc/loki/local-config.yaml:ro
       - loki:/loki
     command: -config.file=/etc/loki/local-config.yaml
     networks:
