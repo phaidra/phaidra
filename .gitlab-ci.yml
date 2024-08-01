@@ -71,7 +71,7 @@ build-ui:
           - src/phaidra-ui/**/*
           - src/phaidra-vue-components/**/*
 
-build-chronos:
+build-chronos-base:
   stage: build-base
   before_script:
     - mkdir -p $HOME/.docker
