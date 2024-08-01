@@ -324,7 +324,7 @@ build-vige:
           - dockerfiles/vige.dockerfile
 
 build-promtail-dist:
-  stage: build-base
+  stage: build-dist
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
