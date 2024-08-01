@@ -10,5 +10,4 @@ EOF
 
 RUN mkdir -pv /opt/pixelgecko
 WORKDIR /opt/pixelgecko
-
 ENTRYPOINT ["perl", "pixelgecko.pl", "--watch"]
