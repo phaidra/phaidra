@@ -304,7 +304,7 @@ build-openldap-dist:
           - dockerfiles/openldap-dist.dockerfile
           - container_init/openldap/**/*
 
-build-vige:
+build-vige-base:
   stage: build-base
   before_script:
     - mkdir -p $HOME/.docker
@@ -312,17 +312,36 @@ build-vige:
   script: >
     docker context create builder-context &&
     docker buildx create builder-context --name container --driver=docker-container &&
-    docker buildx build -f dockerfiles/vige.dockerfile
+    docker buildx build -f dockerfiles/vige-base.dockerfile
     --builder=container
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/vige-base:latest
     -t $CI_REGISTRY_USER/vige-base:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
+    - changes:
         paths:
-          - dockerfiles/vige.dockerfile
+          - dockerfiles/vige-base.dockerfile
 
+build-vige-dist:
+  stage: build-dist
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/vige-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/vige-dist:latest
+    -t $CI_REGISTRY_USER/vige-dist:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - changes:
+        paths:
+          - dockerfiles/vige-base.dockerfile
+          - dockerfiles/vige-dist.dockerfile
+          - src/vige/**/*
+          
 build-promtail-dist:
   stage: build-dist
   before_script:

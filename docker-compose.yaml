@@ -581,10 +581,9 @@ services:
     profiles: ["demo-local", "demo-s3"]
 
   prometheus:
-    image: prom/prometheus:v2.52.0
+    image: testuser34/prometheus-dist:latest
     restart: always
     volumes:
-      - ./container_init/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
       - prometheus:/prometheus
     extra_hosts:
       - "host.docker.internal:host-gateway"
