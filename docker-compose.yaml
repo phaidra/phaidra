@@ -12,7 +12,7 @@ services:
   
   ############### httpd service for local profile ###############
   httpd-local:
-    image: testuser34/httpd-demo-dist:latest
+    image: phaidraorg/httpd-demo-dist:143a0b39
     pull_policy: always
     labels:
       logging: "promtail"
@@ -39,7 +39,7 @@ services:
 
   ############### httpd service for s3 profile ###############
   httpd-local-s3:
-    image: testuser34/httpd-demo-dist:latest
+    image: phaidraorg/httpd-demo-dist:143a0b39
     pull_policy: always
     labels:
       logging: "promtail"
@@ -94,7 +94,7 @@ services:
     profiles: ["demo-local"]
 
   solr:
-    image: testuser34/solr-dist:latest
+    image: phaidraorg/solr-dist:d06f04e3
     pull_policy: always
     labels:
       logging: "promtail"
@@ -118,7 +118,7 @@ services:
       logging_jobname: "containerlogs"
     restart: always
     # reference your custom image here, if you've created one from compose_dev and pushed to a registry.
-    image: testuser34/ui-dist:latest
+    image: phaidraorg/ui-dist:d2390468
     pull_policy: always
     networks:
       - phaidra-network
@@ -140,7 +140,7 @@ services:
       logging_jobname: "containerlogs"
     restart: always
     # reference your custom image here, if you've created one from compose_dev and pushed to a registry.
-    image: testuser34/ui-dist:latest
+    image: phaidraorg/ui-dist:d2390468
     pull_policy: always
     networks:
       - phaidra-network
@@ -157,7 +157,7 @@ services:
   ############### api service for s3 profile ###############
   api-s3:
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: testuser34/api-dist:latest
+    image: phaidraorg/api-dist:da3c9724
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -214,7 +214,7 @@ services:
   ############### api service for local profile ###############
   api:
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: testuser34/api-dist:latest
+    image: phaidraorg/api-dist:da3c9724
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -276,7 +276,7 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    image: testuser34/pixelgecko-dist:latest
+    image: phaidraorg/pixelgecko-dist:a286548f
     pull_policy: always
     networks:
       - phaidra-network
@@ -299,7 +299,7 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    image: testuser34/pixelgecko-dist:latest
+    image: phaidraorg/pixelgecko-dist:a286548f
     pull_policy: always
     volumes:
       - fedora:/mnt/fedora:ro
@@ -315,7 +315,7 @@ services:
     profiles: ["demo-local"]
 
   mariadb-phaidra:
-    image: testuser34/mariadb-phaidra-dist:latest
+    image: phaidraorg/mariadb-phaidra-dist:f21114b6
     restart: always
     pull_policy: always
     labels:
@@ -333,7 +333,7 @@ services:
     profiles: ["demo-local", "demo-s3"]
 
   mariadb-fedora:
-    image: testuser34/mariadb-fedora-dist:latest
+    image: phaidraorg/mariadb-fedora-dist:f21114b6
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -351,7 +351,7 @@ services:
     profiles: ["demo-local", "demo-s3"]
 
   mongodb-phaidra:
-    image: testuser34/mongodb-dist:latest
+    image: phaidraorg/mongodb-dist:10a6b315
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -451,7 +451,7 @@ services:
     profiles: ["demo-local", "demo-s3"]
 
   openldap:
-    image: testuser34/openldap-dist:latest
+    image: phaidraorg/openldap-dist:10a6b315
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -471,7 +471,7 @@ services:
 
   ############### chronos service for local profile ###############
   chronos:
-    image: testuser34/chronos-dist:latest
+    image: phaidraorg/chronos-dist:9df484ae
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -508,7 +508,7 @@ services:
 
   ############### chronos service for s3 profile ###############
   chronos-s3:
-    image: testuser34/chronos-dist:latest
+    image: phaidraorg/chronos-dist:9df484ae
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -544,7 +544,7 @@ services:
     profiles: ["demo-s3"]
     
   promtail-local:
-    image: testuser34/promtail-dist:latest
+    image: phaidraorg/promtail-dist:8e334db4
     restart: always
     volumes:
       - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
@@ -555,7 +555,7 @@ services:
     profiles: ["demo-local", "demo-s3"]
 
   loki:
-    image: testuser34/loki-dist:latest
+    image: phaidraorg/loki-dist:0b27f01e
     restart: always
     volumes:
       - loki:/loki
@@ -565,7 +565,7 @@ services:
     profiles: ["demo-local", "demo-s3"]
 
   grafana:
-    image: testuser34/grafana-dist:latest
+    image: phaidraorg/grafana-dist:24572216
     restart: always
     volumes:
       - grafana:/var/lib/grafana
@@ -581,7 +581,7 @@ services:
     profiles: ["demo-local", "demo-s3"]
 
   prometheus:
-    image: testuser34/prometheus-dist:latest
+    image: phaidraorg/prometheus-dist:343ee951
     restart: always
     volumes:
       - prometheus:/prometheus

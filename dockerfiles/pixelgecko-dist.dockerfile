@@ -1,2 +1,2 @@
-FROM testuser34/pixelgecko-base:latest
+FROM phaidraorg/pixelgecko-base:latest
 ADD ../src/pixelgecko /opt/pixelgecko
