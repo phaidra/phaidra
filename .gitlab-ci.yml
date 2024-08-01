@@ -342,6 +342,25 @@ build-promtail-dist:
           - dockerfiles/promtail-dist.dockerfile
           - container_init/promtail/promtail-local.config.yaml
 
+build-loki-dist:
+  stage: build-dist
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/loki-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/loki-dist:latest
+    -t $CI_REGISTRY_USER/loki-dist:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - changes:
+        paths:
+          - dockerfiles/loki-dist.dockerfile
+          - container_init/loki/loki-docker-config.yaml
+
 compose-dev:
   stage: test
   before_script:
