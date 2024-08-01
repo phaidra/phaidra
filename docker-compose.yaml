@@ -565,12 +565,9 @@ services:
     profiles: ["demo-local", "demo-s3"]
 
   grafana:
-    image: grafana/grafana:11.0.0
+    image: testuser34/grafana-dist:latest
     restart: always
     volumes:
-      - ./container_init/grafana/ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
-      - ./container_init/grafana/dd.yaml:/etc/grafana/provisioning/dashboards/dd.yaml:ro
-      - ./container_init/grafana/dashboards:/mnt/grafana/dashboards:ro
       - grafana:/var/lib/grafana
     environment:
       GF_SECURITY_ADMIN_USER: "${GF_SECURITY_ADMIN_USER:-phaidra}"

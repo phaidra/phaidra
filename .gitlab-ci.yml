@@ -379,6 +379,25 @@ build-grafana-dist:
         paths:
           - dockerfiles/grafana-dist.dockerfile
           - container_init/grafana/**/*
+
+build-prometheus-dist:
+  stage: build-dist
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/prometheus-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/prometheus-dist:latest
+    -t $CI_REGISTRY_USER/prometheus-dist:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - changes:
+        paths:
+          - dockerfiles/prometheus-dist.dockerfile
+          - container_init/prometheus/prometheus.yaml
           
 compose-dev:
   stage: test
