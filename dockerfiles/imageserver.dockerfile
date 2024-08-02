@@ -1,5 +1,5 @@
-FROM ubuntu:jammy-20240227
-ENV DEBIAN_FRONTEND noninteractive
+FROM ubuntu:jammy-20240627.1
+ENV DEBIAN_FRONTEND=noninteractive
 RUN touch /etc/default/iipsrv
 RUN <<EOF
 apt-get --quiet update
