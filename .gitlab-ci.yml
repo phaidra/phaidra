@@ -27,7 +27,8 @@ build-api-base:
     -t $CI_REGISTRY_USER/api-base:latest
     -t $CI_REGISTRY_USER/api-base:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/api-base.dockerfile
 
@@ -45,7 +46,8 @@ build-api-dist:
     -t $CI_REGISTRY_USER/api-dist:latest
     -t $CI_REGISTRY_USER/api-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/api-base.dockerfile
           - dockerfiles/api-dist.dockerfile
@@ -86,7 +88,8 @@ build-chronos-base:
     -t $CI_REGISTRY_USER/chronos-base:latest
     -t $CI_REGISTRY_USER/chronos-base:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/chronos-base.dockerfile
 
@@ -104,7 +107,8 @@ build-chronos-dist:
     -t $CI_REGISTRY_USER/chronos-dist:latest
     -t $CI_REGISTRY_USER/chronos-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/chronos-base.dockerfile
           - dockerfiles/chronos-dist.dockerfile
@@ -124,7 +128,8 @@ build-httpd-shib-base:
     -t $CI_REGISTRY_USER/httpd-shib-base:latest
     -t $CI_REGISTRY_USER/httpd-shib-base:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/httpd-shib-base.dockerfile
 
@@ -162,7 +167,8 @@ build-imageserver:
     -t $CI_REGISTRY_USER/imageserver:latest
     -t $CI_REGISTRY_USER/imageserver:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/imageserver.dockerfile
 
@@ -180,7 +186,8 @@ build-pixelgecko-base:
     -t $CI_REGISTRY_USER/pixelgecko-base:latest
     -t $CI_REGISTRY_USER/pixelgecko-base:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/pixelgecko-base.dockerfile
 
@@ -198,7 +205,8 @@ build-pixelgecko-dist:
     -t $CI_REGISTRY_USER/pixelgecko-dist:latest
     -t $CI_REGISTRY_USER/pixelgecko-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/pixelgecko-base.dockerfile
           - dockerfiles/pixelgecko-dist.dockerfile
@@ -278,7 +286,8 @@ build-solr-dist:
     -t $CI_REGISTRY_USER/solr-dist:latest
     -t $CI_REGISTRY_USER/solr-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/solr-dist.dockerfile
           - container_init/solr/**/*
@@ -317,7 +326,8 @@ build-vige-base:
     -t $CI_REGISTRY_USER/vige-base:latest
     -t $CI_REGISTRY_USER/vige-base:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/vige-base.dockerfile
 
@@ -335,7 +345,8 @@ build-vige-dist:
     -t $CI_REGISTRY_USER/vige-dist:latest
     -t $CI_REGISTRY_USER/vige-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/vige-base.dockerfile
           - dockerfiles/vige-dist.dockerfile
@@ -355,7 +366,8 @@ build-promtail-dist:
     -t $CI_REGISTRY_USER/promtail-dist:latest
     -t $CI_REGISTRY_USER/promtail-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/promtail-dist.dockerfile
           - container_init/promtail/promtail-local.config.yaml
@@ -374,7 +386,8 @@ build-loki-dist:
     -t $CI_REGISTRY_USER/loki-dist:latest
     -t $CI_REGISTRY_USER/loki-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/loki-dist.dockerfile
           - container_init/loki/loki-docker-config.yaml
@@ -393,7 +406,8 @@ build-grafana-dist:
     -t $CI_REGISTRY_USER/grafana-dist:latest
     -t $CI_REGISTRY_USER/grafana-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/grafana-dist.dockerfile
           - container_init/grafana/**/*
@@ -412,7 +426,8 @@ build-prometheus-dist:
     -t $CI_REGISTRY_USER/prometheus-dist:latest
     -t $CI_REGISTRY_USER/prometheus-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/prometheus-dist.dockerfile
           - container_init/prometheus/prometheus.yaml
