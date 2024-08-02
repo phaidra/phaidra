@@ -150,7 +150,7 @@ services:
   ############### api service for s3 profile ###############
   api-s3:
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:da3c9724
+    image: phaidraorg/api-dist:e5bea690
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -206,7 +206,7 @@ services:
   ############### api service for local profile ###############
   api:
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:da3c9724
+    image: phaidraorg/api-dist:e5bea690
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -267,7 +267,7 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    image: phaidraorg/pixelgecko-dist:a286548f
+    image: phaidraorg/pixelgecko-dist:e5bea690
     networks:
       - phaidra-network
     environment:
@@ -289,7 +289,7 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    image: phaidraorg/pixelgecko-dist:a286548f
+    image: phaidraorg/pixelgecko-dist:e5bea690
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
@@ -456,7 +456,7 @@ services:
 
   ############### chronos service for local profile ###############
   chronos:
-    image: phaidraorg/chronos-dist:9df484ae
+    image: phaidraorg/chronos-dist:e5bea690
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -492,7 +492,7 @@ services:
 
   ############### chronos service for s3 profile ###############
   chronos-s3:
-    image: phaidraorg/chronos-dist:9df484ae
+    image: phaidraorg/chronos-dist:e5bea690
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
