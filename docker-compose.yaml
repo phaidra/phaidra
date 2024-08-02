@@ -13,7 +13,6 @@ services:
   ############### httpd service for local profile ###############
   httpd-local:
     image: phaidraorg/httpd-demo-dist:143a0b39
-    pull_policy: always
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -40,7 +39,6 @@ services:
   ############### httpd service for s3 profile ###############
   httpd-local-s3:
     image: phaidraorg/httpd-demo-dist:143a0b39
-    pull_policy: always
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -67,8 +65,7 @@ services:
 
   ############### imageserver service for s3 profile ###############
   imageserver-s3:
-    image: testuser34/imageserver-base:979c59b3
-    pull_policy: always
+    image: phaidraorg/imageserver-base:258fc69c
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -81,8 +78,7 @@ services:
 
   ############### imageserver service for local profile ###############
   imageserver:
-    image: testuser34/imageserver-base:979c59b3
-    pull_policy: always
+    image: phaidraorg/imageserver-base:258fc69c
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -95,7 +91,6 @@ services:
 
   solr:
     image: phaidraorg/solr-dist:d06f04e3
-    pull_policy: always
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -119,7 +114,6 @@ services:
     restart: always
     # reference your custom image here, if you've created one from compose_dev and pushed to a registry.
     image: phaidraorg/ui-dist:d2390468
-    pull_policy: always
     networks:
       - phaidra-network
     environment:
@@ -141,7 +135,6 @@ services:
     restart: always
     # reference your custom image here, if you've created one from compose_dev and pushed to a registry.
     image: phaidraorg/ui-dist:d2390468
-    pull_policy: always
     networks:
       - phaidra-network
     environment:
@@ -162,7 +155,6 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    pull_policy: always
     volumes:
       - s3_cache:/s3_cache
     networks:
@@ -219,7 +211,6 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    pull_policy: always
     volumes:
       - fedora:/mnt/fedora:ro
     networks:
@@ -277,7 +268,6 @@ services:
       logging_jobname: "containerlogs"
     restart: always
     image: phaidraorg/pixelgecko-dist:a286548f
-    pull_policy: always
     networks:
       - phaidra-network
     environment:
@@ -300,7 +290,6 @@ services:
       logging_jobname: "containerlogs"
     restart: always
     image: phaidraorg/pixelgecko-dist:a286548f
-    pull_policy: always
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
@@ -317,7 +306,6 @@ services:
   mariadb-phaidra:
     image: phaidraorg/mariadb-phaidra-dist:f21114b6
     restart: always
-    pull_policy: always
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -338,7 +326,6 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    pull_policy: always
     environment:
       MARIADB_ROOT_PASSWORD: "${MARIADB_FEDORA_ROOT_PASSWORD:-example}"
       MARIADB_DATABASE: "${FEDORADB:-fedoradb}"
@@ -356,7 +343,6 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    pull_policy: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: "${MONGODB_PHAIDRA_USER:-phaidra}"
       MONGO_INITDB_ROOT_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
@@ -456,7 +442,6 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    pull_policy: always
     environment:
       LDAP_ADMIN_USERNAME: "${LDAP_ADMIN_USERNAME:-admin}"
       LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD:-adminpassword}"
@@ -476,7 +461,6 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    pull_policy: always
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
       - chronos-sitemaps:/mnt/sitemaps
@@ -513,7 +497,6 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    pull_policy: always
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
       - chronos-sitemaps:/mnt/sitemaps
@@ -627,12 +610,11 @@ services:
 
   # UNCOMMENT and fill .env values if you have access to an opencast instance
   # vige:
-  #   image: testuser34/vige-base:f10c5205
+  #   image: phaidraorg/vige-base:0f5822e7
   #   labels:
   #     logging: "promtail"
   #     logging_jobname: "containerlogs"
   #   restart: always
-  #   pull_policy: always
   #   volumes:
   #     - ./src/vige:/mnt/vige:ro
   #     - vige:/opt/vige
