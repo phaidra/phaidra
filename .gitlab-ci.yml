@@ -4,6 +4,7 @@ variables:
   DOCKER_TLS_CERTDIR: "/certs"
 
 stages:
+  - build-common
   - build-base
   - build-dist
   - test
@@ -51,7 +52,7 @@ build-api-dist:
           - src/phaidra-api/**/*
 
 build-ui:
-  stage: build-dist
+  stage: build-common
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -61,8 +62,8 @@ build-ui:
     docker buildx build -f dockerfiles/ui.dockerfile
     --builder=container
     --platform=linux/amd64,linux/arm64
-    -t $CI_REGISTRY_USER/ui-dist:latest
-    -t $CI_REGISTRY_USER/ui-dist:$CI_COMMIT_SHORT_SHA --push .
+    -t $CI_REGISTRY_USER/ui:latest
+    -t $CI_REGISTRY_USER/ui:$CI_COMMIT_SHORT_SHA --push .
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
@@ -148,7 +149,7 @@ build-httpd-demo-dist:
           - container_init/httpd/phaidra-demo/conf/phaidra-demo.conf
 
 build-imageserver:
-  stage: build-base
+  stage: build-common
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -158,8 +159,8 @@ build-imageserver:
     docker buildx build -f dockerfiles/imageserver.dockerfile
     --builder=container
     --platform=linux/amd64,linux/arm64
-    -t $CI_REGISTRY_USER/imageserver-base:latest
-    -t $CI_REGISTRY_USER/imageserver-base:$CI_COMMIT_SHORT_SHA --push .
+    -t $CI_REGISTRY_USER/imageserver:latest
+    -t $CI_REGISTRY_USER/imageserver:$CI_COMMIT_SHORT_SHA --push .
   rules:
     - changes:
         paths:

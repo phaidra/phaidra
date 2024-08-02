@@ -65,7 +65,7 @@ services:
 
   ############### imageserver service for s3 profile ###############
   imageserver-s3:
-    image: phaidraorg/imageserver-base:258fc69c
+    image: phaidraorg/imageserver:77403e3a
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -78,7 +78,7 @@ services:
 
   ############### imageserver service for local profile ###############
   imageserver:
-    image: phaidraorg/imageserver-base:258fc69c
+    image: phaidraorg/imageserver:77403e3a
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -112,8 +112,7 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    # reference your custom image here, if you've created one from compose_dev and pushed to a registry.
-    image: phaidraorg/ui-dist:d2390468
+    image: phaidraorg/ui:d2390468
     networks:
       - phaidra-network
     environment:
@@ -133,8 +132,7 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    # reference your custom image here, if you've created one from compose_dev and pushed to a registry.
-    image: phaidraorg/ui-dist:d2390468
+    image: phaidraorg/ui:d2390468
     networks:
       - phaidra-network
     environment:
