@@ -22,3 +22,4 @@ apt-get install --yes ./mongodb-database-tools-ubuntu2204-arm64-100.9.4.deb
 rm mongodb-database-tools-ubuntu2204-arm64-100.9.4.deb
 fi
 EOF
+ENTRYPOINT ["bash","/mnt/chronos/chronos-entrypoint.bash"]
