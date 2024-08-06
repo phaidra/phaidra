@@ -244,7 +244,7 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    image: phaidraorg/pixelgecko-dist:e5bea690
+    image: phaidraorg/pixelgecko-dist:88306e02
     networks:
       - phaidra-network
     environment:
@@ -252,10 +252,12 @@ services:
       FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
       FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora-s3}"
+      FEDORA_PORT: "{FEDORA_PORT:-8080}"
+      FEDORA_PROTOCOL: "${FEDORA_PROTOCOL:-http}"
       IMAGE_CONVERSION_INTERVAL: "${IMAGE_CONVERSION_INTERVAL:-5}"
       S3_ACCESS_KEY: "${S3_ACCESS_KEY:-}"
       S3_BUCKETNAME: "${S3_BUCKETNAME:-}"
-      S3_ENABLED: "${S3_ENABLED:-true}"
+      S3_ENABLED: "true"
       S3_SECRET_KEY: "${S3_SECRET_KEY:-}"
     profiles: ["demo-s3"]
 
@@ -266,7 +268,7 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    image: phaidraorg/pixelgecko-dist:e5bea690
+    image: phaidraorg/pixelgecko-dist:88306e02
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
@@ -277,7 +279,13 @@ services:
       FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
       FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora}"
+      FEDORA_PORT: "{FEDORA_PORT:-8080}"
+      FEDORA_PROTOCOL: "${FEDORA_PROTOCOL:-http}"
       IMAGE_CONVERSION_INTERVAL: "${IMAGE_CONVERSION_INTERVAL:-5}"
+      S3_ACCESS_KEY: "${S3_ACCESS_KEY:-}"
+      S3_BUCKETNAME: "${S3_BUCKETNAME:-}"
+      S3_ENABLED: "false"
+      S3_SECRET_KEY: "${S3_SECRET_KEY:-}"
     profiles: ["demo-local"]
 
   mariadb-phaidra:
