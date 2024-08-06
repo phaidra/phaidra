@@ -379,7 +379,7 @@ services:
 
   ############### chronos service for local profile ###############
   chronos:
-    image: phaidraorg/chronos-dist:e5bea690
+    image: phaidraorg/chronos-dist:dd52dc80
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -415,7 +415,7 @@ services:
 
   ############### chronos service for s3 profile ###############
   chronos-s3:
-    image: phaidraorg/chronos-dist:e5bea690
+    image: phaidraorg/chronos-dist:dd52dc80
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
