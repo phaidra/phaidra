@@ -1,11 +1,12 @@
 # functions
 
-function get_fedora_ids {
+function get_fedora_objects {
     curl --silent \
          --user "$FEDORA_ADMIN_USER:$FEDORA_ADMIN_PASS" \
          http://${FEDORA_HOST}:8080/fcrepo/rest/fcr:search | \
         jq .items[].fedora_id | \
-        tr -d '"'
+        tr -d '"' | \
+        grep -vE "fcr:metadata|[0-9]$"
 }
 
 function get_fixity_result {
@@ -64,9 +65,9 @@ last_check=NOW()"
 
 # algorithm
 init_database
-FEDORA_IDS=$(get_fedora_ids)
-printf 'Number of objects to check:  %d\n' $(wc -w <<< $FEDORA_IDS)
-for FILE_OBJECT in $FEDORA_IDS
+FEDORA_OBJECTS=$(get_fedora_objects)
+printf 'Number of objects to check:  %d\n' $(wc -w <<< $FEDORA_OBJECTS)
+for FILE_OBJECT in $FEDORA_OBJECTS
 do
     if [[ "${FILE_OBJECT}" == *"JSON-LD"* || "${FILE_OBJECT}" == *"OCTETS"* || "${FILE_OBJECT}" == *"WEBVERSION"* || "${FILE_OBJECT}" == *"JSON-LD-PRIVATE"* || "${FILE_OBJECT}" == *"UWMETADATA"* || "${FILE_OBJECT}" == *"MODS"* || "${FILE_OBJECT}" == *"RIGHTS"* || "${FILE_OBJECT}" == *"COLLECTIONORDER"* || "${FILE_OBJECT}" == *"LINK"* || "${FILE_OBJECT}" == *"IIIF-MANIFEST"* || "${FILE_OBJECT}" == *"ANNOTATIONS"* ]]
     then
