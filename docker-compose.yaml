@@ -918,15 +918,17 @@ services:
     profiles: ["dev-local"]
 
   chronos-dev:
-    image: phaidraorg/chronos-dist:e5bea690
+    image: phaidraorg/chronos-base:latest
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
+    pull_policy: always
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
       - chronos-sitemaps:/mnt/sitemaps
       - chronos-oai-logs:/mnt/oai-logs
+      - ./container_init/chronos:/mnt/chronos:ro
     environment:
       FEDORADB: "${FEDORADB:-fedoradb}"
       FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"

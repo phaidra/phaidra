@@ -65,6 +65,7 @@ last_check=NOW()"
 # algorithm
 init_database
 FEDORA_IDS=$(get_fedora_ids)
+printf 'Found %d objects in repository.\n' $(wc -w <<< $FEDORA_IDS)
 for FILE_OBJECT in $FEDORA_IDS
 do
     if [[ "${FILE_OBJECT}" == *"JSON-LD"* || "${FILE_OBJECT}" == *"OCTETS"* || "${FILE_OBJECT}" == *"WEBVERSION"* || "${FILE_OBJECT}" == *"JSON-LD-PRIVATE"* || "${FILE_OBJECT}" == *"UWMETADATA"* || "${FILE_OBJECT}" == *"MODS"* || "${FILE_OBJECT}" == *"RIGHTS"* || "${FILE_OBJECT}" == *"COLLECTIONORDER"* || "${FILE_OBJECT}" == *"LINK"* || "${FILE_OBJECT}" == *"IIIF-MANIFEST"* || "${FILE_OBJECT}" == *"ANNOTATIONS"* ]]
