@@ -15,7 +15,7 @@ services:
   ## + demo-local                                             ##
   ## + demo-s3                                                ##
   ##############################################################
-  
+
   ############### httpd service for local profile ###############
   httpd-local:
     image: phaidraorg/httpd-demo-dist:143a0b39
@@ -67,7 +67,7 @@ services:
       SOLR_HOST: "${SOLR_HOST:-solr}"
       UI_HOST: "${UI_HOST:-ui-s3}"
     profiles: ["demo-s3"]
-  
+
   solr:
     image: phaidraorg/solr-dist:d06f04e3
     labels:
@@ -83,7 +83,7 @@ services:
     networks:
       - phaidra-network
     profiles: ["demo-local", "demo-s3"]
-    
+
   ############### ui service for local profile ###############
   ui:
     depends_on: [api]
@@ -179,7 +179,7 @@ services:
       SOLR_PASS: "${SOLR_PASS:-phaidra}"
       SOLR_USER: "${SOLR_USER:-phaidra}"
     profiles: ["demo-s3"]
-    
+
   ############### api service for local profile ###############
   api:
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
@@ -434,7 +434,7 @@ services:
     networks:
       - phaidra-network
     profiles: ["demo-s3"]
-    
+
   promtail-local:
     image: phaidraorg/promtail-dist:8e334db4
     restart: always
@@ -543,7 +543,7 @@ services:
   #   environment:
   #     - LOKI_PUSH_URL=${LOKI_PUSH_URL}
   #     - PROMTAIL_HOST_LABEL=${PROMTAIL_HOST_LABEL}
-  
+
   ##############################################################
   ##### definitions for self-contained services            #####
   ##### used by profiles:                                  #####
@@ -665,7 +665,7 @@ services:
       - phaidra-network
     profiles: ["demo-local", "demo-s3", "dev-local"]
 
-  
+
   ##############################################################
   ##### definitions bindmounting repo code for development #####
   ##### profiles:                                          #####
@@ -776,7 +776,7 @@ services:
       S3_BUCKETNAME: "${S3_BUCKETNAME:-}"
       S3_CACHESIZE: "${S3_CACHESIZE:-1000000}"
       S3_CACHE_TOPDIR: "${S3_CACHE_TOPDIR:-}"
-      S3_ENABLED: "${S3_ENABLED:-false}"
+      S3_ENABLED: "false"
       S3_SECRET_KEY: "${S3_SECRET_KEY:-}"
       SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
       SHIB_GIVEN_NAME: "${SHIB_GIVEN_NAME:-}"
@@ -801,14 +801,20 @@ services:
     networks:
       - phaidra-network
     environment:
-      MONGODB_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra-dev}"
-      MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
-      MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"      
       CONVERTED_IMAGES_PATH: "${CONVERTED_IMAGES_PATH:-/mnt/converted_images}"
       FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
       FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora}"
+      FEDORA_PORT: "{FEDORA_PORT:-8080}"
+      FEDORA_PROTOCOL: "${FEDORA_PROTOCOL:-http}"
       IMAGE_CONVERSION_INTERVAL: "${IMAGE_CONVERSION_INTERVAL:-5}"
+      MONGODB_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra-dev}"
+      MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
+      MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
+      S3_ACCESS_KEY: "${S3_ACCESS_KEY:-}"
+      S3_BUCKETNAME: "${S3_BUCKETNAME:-}"
+      S3_ENABLED: "false"
+      S3_SECRET_KEY: "${S3_SECRET_KEY:-}"
     profiles: ["dev-local"]
 
   mariadb-phaidra-dev:
@@ -948,7 +954,7 @@ services:
       - phaidra-network
     entrypoint: ["bash", "/mnt/solr/solr_entrypoint.bash"]
     profiles: ["dev-local"]
-  
+
 volumes:
   chronos-database-dumps:
   chronos-oai-logs:

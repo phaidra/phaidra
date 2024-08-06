@@ -14,11 +14,6 @@ use Net::Amazon::S3::Authorization::Basic;
 autoflush STDOUT 1;
 autoflush STDERR 1;
 
-# S3 credentials and bucketname
-my $aws_access_key_id = $ENV{S3_ACCESS_KEY};
-my $aws_secret_access_key = $ENV{S3_SECRET_KEY};
-my $bucketname = $ENV{S3_BUCKETNAME};
-
 my $fnm_config= './pixelgecko_conf.yml';
 # my $config= YAML::Syck::LoadFile($fnm_config);
 
@@ -35,8 +30,21 @@ my $config = {
     },
     'store' => $ENV{CONVERTED_IMAGES_PATH},
     'temp_path' => '/tmp',
-    'sleep_time' => $ENV{IMAGE_CONVERSION_INTERVAL}
-  }
+    'sleep_time' => $ENV{IMAGE_CONVERSION_INTERVAL},
+  },
+  's3' => {
+    'use_s3' => $ENV{S3_ENABLED},
+    'aws_access_key_id' => $ENV{S3_ACCESS_KEY},
+    'aws_secret_access_key' => $ENV{S3_SECRET_KEY},
+    'bucketname' => $ENV{S3_BUCKETNAME}
+  },
+  'fedora' => {
+    'admin_user' => $ENV{FEDORA_ADMIN_USER},
+    'admin_pass' => $ENV{FEDORA_ADMIN_PASS},
+    'host' => $ENV{FEDORA_HOST},
+    'protocol' => $ENV{FEDORA_PROTOCOL},
+    'port' => $ENV{FEDORA_PORT}
+  },
 };
 
 my $op_mode;
@@ -155,19 +163,19 @@ sub process_job_queue
           foreach my $an (keys %$rc) {
             $job->{$an}= $rc->{$an};
           }
-          if ( $ENV{S3_ENABLED} eq "true" ) {
+          if ( $config->{pixelgecko}->{s3}->{use_s3}  eq "true" ) {
             my $s3 = Net::Amazon::S3-> new(
               authorization_context => Net::Amazon::S3::Authorization::Basic-> new (
-                aws_access_key_id => $aws_access_key_id,
-                aws_secret_access_key => $aws_secret_access_key,
+                aws_access_key_id => $config->{pixelgecko}->{s3}->{aws_access_key_id},
+                aws_secret_access_key => $config->{pixelgecko}->{s3}->{aws_secret_access_key},
                ),
               retry => 1,
              );
-            my $bucket = $s3->bucket($bucketname);
+            my $bucket = $s3->bucket($config->{pixelgecko}->{s3}->{bucketname});
             $bucket->add_key_filename( $rc->{'image'}, $rc->{'image'},
                                        { content_type => 'image/tiff', },
                                       ) or die $s3->err . ": " . $s3->errstr;
-            $job->{'s3_bucket'}=$bucketname;
+            $job->{'s3_bucket'}=$config->{pixelgecko}->{s3}->{bucketname};
             unlink $rc->{'image'};
           }
         }
@@ -218,10 +226,11 @@ sub process_image
     else
       {
         my $url =
-          "http://".
-          $ENV{FEDORA_ADMIN_USER}.":".
-          $ENV{FEDORA_ADMIN_PASS}."@".
-          $ENV{FEDORA_HOST}.":8080".
+          $config->{fedora}->{protocol}."://".
+          $config->{fedora}->{admin_user}.":".
+          $config->{fedora}->{admin_pass}."@".
+          $config->{fedora}->{host}.":".
+          $config->{fedora}->{port}.
           "/fcrepo/rest/$pid/OCTETS"
           ;
 
