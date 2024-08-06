@@ -164,19 +164,19 @@ sub process_job_queue
           foreach my $an (keys %$rc) {
             $job->{$an}= $rc->{$an};
           }
-          if ( $config->{pixelgecko}->{s3}->{use_s3}  eq "true" ) {
+          if ( $config->{s3}->{use_s3}  eq "true" ) {
             my $s3 = Net::Amazon::S3-> new(
               authorization_context => Net::Amazon::S3::Authorization::Basic-> new (
-                aws_access_key_id => $config->{pixelgecko}->{s3}->{aws_access_key_id},
-                aws_secret_access_key => $config->{pixelgecko}->{s3}->{aws_secret_access_key},
+                aws_access_key_id => $config->{s3}->{aws_access_key_id},
+                aws_secret_access_key => $config->{s3}->{aws_secret_access_key},
                ),
               retry => 1,
              );
-            my $bucket = $s3->bucket($config->{pixelgecko}->{s3}->{bucketname});
+            my $bucket = $s3->bucket($config->{s3}->{bucketname});
             $bucket->add_key_filename( $rc->{'image'}, $rc->{'image'},
                                        { content_type => 'image/tiff', },
                                       ) or die $s3->err . ": " . $s3->errstr;
-            $job->{'s3_bucket'}=$config->{pixelgecko}->{s3}->{bucketname};
+            $job->{'s3_bucket'}=$config->{s3}->{bucketname};
             unlink $rc->{'image'};
           }
         }
