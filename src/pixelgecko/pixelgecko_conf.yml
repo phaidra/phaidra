@@ -1,6 +1,6 @@
 pixelgecko:
   mongodb:
-    host:                  'mongodb-phaidra'
+    host:                  'mongodb-phaidra-dev'
     ## authentication database
     db_name:               'admin'
     ## active database

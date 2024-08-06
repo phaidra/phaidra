@@ -20,9 +20,25 @@ my $aws_secret_access_key = $ENV{S3_SECRET_KEY};
 my $bucketname = $ENV{S3_BUCKETNAME};
 
 my $fnm_config= './pixelgecko_conf.yml';
-my $config= YAML::Syck::LoadFile($fnm_config);
+# my $config= YAML::Syck::LoadFile($fnm_config);
 
-my $sleep_time=$ENV{IMAGE_CONVERSION_INTERVAL};
+my $config = {
+  'pixelgecko' => {
+    'mongodb' => {
+      'host' => $ENV{MONGODB_HOST},
+      'db_name' => 'admin',
+      'database' => 'paf_mongodb',
+      'username' => $ENV{MONGODB_PHAIDRA_USER},
+      'password' => $ENV{MONGODB_PHAIDRA_PASSWORD},
+      'col' => 'jobs',
+      'activity' => 'activity'
+    },
+    'store' => $ENV{CONVERTED_IMAGES_PATH},
+    'temp_path' => '/tmp',
+    'sleep_time' => $ENV{IMAGE_CONVERSION_INTERVAL}
+  }
+};
+
 my $op_mode;
 
 my $agent_name= 'pige';
@@ -50,9 +66,6 @@ while (defined (my $arg= shift (@ARGV))) {
   }
 }
 
-
-# print "config: ", Dumper ($config);
-
 if ($op_mode eq 'direct') {
   while (my $pid= shift (@JOBS)) {
     my $rc= process_image ($pid);
@@ -64,18 +77,12 @@ if ($op_mode eq 'direct') {
   exit(0);
 }
 
-my $jq= new PAF::JobQueue( mongodb => $config->{pixelgecko}->{mongodb} ); #, col => $config->{pixelgecko}->{job_queue} );
-
-# print __LINE__, " jq: ", Dumper ($jq);
-# my $x1= $jq->connect();
-# print __LINE__, " x1=[$x1]\n";
-
+my $jq= new PAF::JobQueue( mongodb => $config->{pixelgecko}->{mongodb} );
 my $mdb= $jq->get_database();
-# print __LINE__, " mdb: ", Dumper ($mdb);
 my $activity;
+
 if (exists ($config->{pixelgecko}->{mongodb}->{activity})) {
   $activity= new PAF::Activity ($mdb, $config->{pixelgecko}->{mongodb}->{activity}, $agent_name);
-  # print __LINE__, " activity: ", Dumper ($activity);
 }
 
 process_job_queue($jq, $activity);
@@ -116,10 +123,6 @@ sub process_job_queue
             my $db = exists($config->{pixelgecko}->{mongodb}->{database}) ?
               $config->{pixelgecko}->{mongodb}->{database} :
               $config->{pixelgecko}->{mongodb}->{db_name};
-              # print scalar localtime(), " ", "no new jobs found in ".
-              # $config->{pixelgecko}->{mongodb}->{host}."/$db/".
-              # $config->{pixelgecko}->{mongodb}->{col}.", sleeping until ",
-              # scalar localtime(time()+ $sleep_time), "\n";
 
             if ($activity_record{e} + 600 < time () || $activity_record{status} ne 'idle') {
               $activity_record{status}= 'idle';
@@ -132,7 +135,7 @@ sub process_job_queue
               $activity->save (%activity_record) if (defined ($activity));
             }
 
-            sleep($sleep_time);
+            sleep($config->{pixelgecko}->{sleep_time});
             next JOB;
           }
         print scalar localtime(), " ", "job: ", Dumper ($job);
@@ -198,12 +201,12 @@ sub process_image
     if (defined($idhash) && $idhash =~ /\b([a-f0-9]{40})\b/) {
       my $lvl1= substr($idhash, 0, 1);
       my $lvl2= substr($idhash, 1, 1);
-      my $out_dir= join ('/', $ENV{CONVERTED_IMAGES_PATH}, $lvl1, $lvl2);
+      my $out_dir= join ('/', $config->{pixelgecko}->{store}, $lvl1, $lvl2);
       system ('mkdir', '-p', $out_dir) unless (-d $out_dir);
       $out_img= join ('/', $out_dir, $idhash.'.tif');
     } else {
       print scalar localtime(), " ", "idhash[$idhash] is not defined or is not a SHA-1 hash\n";
-      $out_img= join ('/', $ENV{CONVERTED_IMAGES_PATH}, $img_fnm.'.tif');
+      $out_img= join ('/', $config->{pixelgecko}->{store}, $img_fnm.'.tif');
     }
 
     my @curl_lines;
