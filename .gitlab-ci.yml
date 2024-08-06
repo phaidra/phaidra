@@ -110,7 +110,7 @@ build-chronos-dist:
         paths:
           - dockerfiles/chronos-base.dockerfile
           - dockerfiles/chronos-dist.dockerfile
-          - container-init/chronos/**/*
+          - container_init/chronos/**/*
 
 build-httpd-shib-base:
   stage: build-base
