@@ -366,7 +366,8 @@ build-promtail-dist:
     -t $CI_REGISTRY_USER/promtail-dist:latest
     -t $CI_REGISTRY_USER/promtail-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/promtail-dist.dockerfile
           - container_init/promtail/promtail-local-config.yaml
@@ -405,7 +406,8 @@ build-grafana-dist:
     -t $CI_REGISTRY_USER/grafana-dist:latest
     -t $CI_REGISTRY_USER/grafana-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/grafana-dist.dockerfile
           - container_init/grafana/**/*
