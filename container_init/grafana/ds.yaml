@@ -4,19 +4,19 @@ datasources:
   - name: Loki
     type: loki
     access: proxy
-    url: http://loki:3100
+    url: http://${LOKI_HOST}:3100
     editable: false
     isDefault: true
     uid: phaidra_loki_default
   - name: Prometheus
     type: prometheus
     access: proxy
-    url: http://prometheus:9090
+    url: http://${PROMETHEUS_HOST}:9090
     editable: false
     uid: phaidra_prometheus
   - name: PhaidraDB
     type: mysql
-    url: mariadb-phaidra:3306
+    url: ${MARIADB_PHAIDRA_HOST}:3306
     user: grafana
     jsonData:
       database: phaidradb
@@ -29,7 +29,7 @@ datasources:
     uid: phaidra_mariadb_phaidra
   - name: FedoraDB
     type: mysql
-    url: mariadb-fedora:3306
+    url: ${MARIADB_FEDORA_HOST}:3306
     user: grafana
     jsonData:
       database: fedoradb
