@@ -449,7 +449,7 @@ services:
       - phaidra-network
     profiles: ["demo-s3"]
 
-  promtail-local:
+  promtail:
     image: phaidraorg/promtail-dist:17fb62e1
     restart: always
     volumes:
@@ -577,7 +577,7 @@ services:
       - s3_cache:/s3_cache:ro
     networks:
       - phaidra-network
-    profiles: ["demo-s3"]
+    profiles: ["demo-s3", "dev-s3"]
 
   ############## fedora service for local profile ###############
   fedora:
@@ -615,6 +615,23 @@ services:
       - phaidra-network
     profiles: ["dev-local"]
 
+  ############## fedora service for s3 dev profile ###############
+  fedora-s3-dev:
+    image: fcrepo/fcrepo:6.4.1
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    restart: always
+    environment:
+      CATALINA_OPTS: "-Dfcrepo.db.url=jdbc:mariadb://${MARIADB_FEDORA_HOST:-mariadb-fedora-dev}:3306/${FEDORADB:-fedoradb} -Dfcrepo.db.user=${MARIADB_FEDORA_USER:-phaidra} -Dfcrepo.db.password=${MARIADB_FEDORA_PASSWORD:-phaidra} -Dfcrepo.storage=ocfl-s3 -Dfcrepo.aws.region=${S3_REGION} -Dfcrepo.ocfl.s3.bucket=${S3_BUCKETNAME} -Dfcrepo.aws.access-key=${S3_ACCESS_KEY} -Dfcrepo.aws.secret-key=${S3_SECRET_KEY} -Dfcrepo.ocfl.s3.prefix=fedora"
+      FEDORA_ADMIN_USERNAME: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
+      FEDORA_ADMIN_PASSWORD: "${FEDORA_ADMIN_PASS:-1234}"
+    depends_on: [mariadb-fedora-dev]
+    networks:
+      - phaidra-network
+    profiles: ["dev-s3"]
+
+    
   ############### fedora service for s3 profiles ###############
   fedora-s3:
     image: fcrepo/fcrepo:6.4.1
@@ -646,7 +663,7 @@ services:
     depends_on: [openldap]
     networks:
       - phaidra-network
-    profiles: ["demo-local", "demo-s3", "dev-local"]
+    profiles: ["demo-local", "demo-s3", "dev-local", "dev-s3"]
 
   openldap:
     image: phaidraorg/openldap-dist:10a6b315
@@ -664,15 +681,17 @@ services:
       - openldap:/bitnami/openldap
     networks:
       - phaidra-network
-    profiles: ["demo-local", "demo-s3", "dev-local"]
+    profiles: ["demo-local", "demo-s3", "dev-local", "dev-s3"]
 
+  # receives host memory usage (scraped by prometheus)
   node-exporter:
     image: prom/node-exporter:v1.8.1
     restart: always
     networks:
       - phaidra-network
-    profiles: ["demo-local", "demo-s3", "dev-local"]
+    profiles: ["demo-local", "demo-s3", "dev-local", "dev-s3"]
 
+  # retrieves container metrics (scraped by prometheus)
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.49.1
     restart: always
@@ -683,7 +702,7 @@ services:
       - /sys:/sys:ro
       - /etc/machine-id:/etc/machine-id:ro
       - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
-    profiles: ["demo-local", "demo-s3", "dev-local"]
+    profiles: ["demo-local", "demo-s3", "dev-local", "dev-s3"]
 
   ##############################################################
   ##### definitions bindmounting repo code for development #####
@@ -723,7 +742,7 @@ services:
       API_HOST: "${API_HOST:-api-local-dev}"
       DBGATE_HOST: "${DBGATE_HOST:-dbgate-dev}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora-local-dev}"
-      GRAFANA_HOST: "${GRAFANA_HOST:-grafana-local-dev}"
+      GRAFANA_HOST: "${GRAFANA_HOST:-grafana-dev}"
       LAM_HOST: "${LAM_HOST:-lam}"
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
@@ -813,6 +832,9 @@ services:
     image: phaidraorg/pixelgecko-base:latest
     pull_policy: always
     restart: always
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
@@ -823,7 +845,7 @@ services:
       CONVERTED_IMAGES_PATH: "${CONVERTED_IMAGES_PATH:-/mnt/converted_images}"
       FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
       FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
-      FEDORA_HOST: "${FEDORA_HOST:-fedora}"
+      FEDORA_HOST: "${FEDORA_HOST:-fedora-local-dev}"
       FEDORA_PORT: "${FEDORA_PORT:-8080}"
       FEDORA_PROTOCOL: "${FEDORA_PROTOCOL:-http}"
       IMAGE_CONVERSION_INTERVAL: "${IMAGE_CONVERSION_INTERVAL:-5}"
@@ -852,7 +874,7 @@ services:
       - mariadb_phaidra:/var/lib/mysql
     networks:
       - phaidra-network
-    profiles: ["dev-local"]
+    profiles: ["dev-local", "dev-s3"]
 
   mariadb-fedora-dev:
     image: mariadb:10.5
@@ -870,7 +892,7 @@ services:
       - mariadb_fedora:/var/lib/mysql
     networks:
       - phaidra-network
-    profiles: ["dev-local"]
+    profiles: ["dev-local", "dev-s3"]
 
   mongodb-phaidra-dev:
     image: mongo:5
@@ -887,7 +909,7 @@ services:
       - .././container_init/mongodb/mongodb-after-entry.sh:/docker-entrypoint-initdb.d/mongodb-after-entry.sh:ro
     networks:
       - phaidra-network
-    profiles: ["dev-local"]
+    profiles: ["dev-local", "dev-s3"]
 
   dbgate-dev:
     image: dbgate/dbgate:5.2.7
@@ -920,7 +942,7 @@ services:
     depends_on: [mariadb-phaidra-dev, mariadb-fedora-dev, mongodb-phaidra-dev]
     networks:
       - phaidra-network
-    profiles: ["dev-local"]
+    profiles: ["dev-local", "dev-s3"]
 
   chronos-dev:
     image: phaidraorg/chronos-base:latest
@@ -974,9 +996,9 @@ services:
     networks:
       - phaidra-network
     entrypoint: ["bash", "/mnt/solr/solr_entrypoint.bash"]
-    profiles: ["dev-local"]
+    profiles: ["dev-local", "dev-s3"]
 
-  grafana-local-dev:
+  grafana-dev:
     image: grafana/grafana:11.0.0
     volumes:
       - ./container_init/grafana/ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
@@ -989,16 +1011,16 @@ services:
       GF_SERVER_ROOT_URL: "%(protocol)s://%(domain)s:%(http_port)s/grafana"
       GF_SERVER_SERVE_FROM_SUB_PATH: "true"
       GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/mnt/grafana/dashboards/phaidra_default.json"
-      LOKI_HOST: "loki-local-dev"
-      PROMETHEUS_HOST: "prometheus-local-dev"
+      LOKI_HOST: "loki-dev"
+      PROMETHEUS_HOST: "prometheus-dev"
       MARIADB_FEDORA_HOST: "${MARIADB_FEDORA_HOST:-mariadb-fedora-dev}"
       MARIADB_PHAIDRA_HOST: "${MARIADB_PHAIDRA_HOST:-mariadb-phaidra-dev}"
-    depends_on: [loki-local-dev]
+    depends_on: [loki-dev]
     networks:
       - phaidra-network
-    profiles: ["dev-local"]
+    profiles: ["dev-local", "dev-s3"]
 
-  loki-local-dev:
+  loki-dev:
     image: grafana/loki:3.0.0
     volumes:
       - ./container_init/loki/loki-docker-config.yaml:/etc/loki/local-config.yaml:ro
@@ -1006,21 +1028,21 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     networks:
       - phaidra-network
-    profiles: ["dev-local"]
+    profiles: ["dev-local", "dev-s3"]
 
-  promtail-local-dev:
+  promtail-dev:
     image: grafana/promtail:3.0.0
     volumes:
       - ./container_init/promtail/promtail-local-config.yaml:/etc/promtail/config.yaml:ro
       - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
     environment:
-      LOKI_HOST: "loki-local-dev"
+      LOKI_HOST: "loki-dev"
     command: -config.file=/etc/promtail/config.yaml -config.expand-env=true
     networks:
       - phaidra-network
-    profiles: ["dev-local"]
+    profiles: ["dev-local", "dev-s3"]
 
-  prometheus-local-dev:
+  prometheus-dev:
     image: prom/prometheus:v2.52.0
     volumes:
       - ./container_init/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
@@ -1029,8 +1051,180 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - phaidra-network
-    profiles: ["dev-local"]
+    profiles: ["dev-local", "dev-s3"]
+
+  #################### dev-s3 ####################
+  httpd-s3-dev:
+    image: httpd:2.4.62-bookworm
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    ports:
+      - "${PHAIDRA_HOSTPORT:-8899}:80"
+    volumes:
+      - ./container_init/httpd/phaidra-demo:/mnt/startup:ro
+      - chronos-sitemaps:/mnt/sitemaps:ro
+    networks:
+      - phaidra-network
+    environment:
+      ADMIN_IP_LIST: "${ADMIN_IP_LIST:-10.0.2.2}"
+      API_HOST: "${API_HOST:-api-s3-dev}"
+      DBGATE_HOST: "${DBGATE_HOST:-dbgate-dev}"
+      FEDORA_HOST: "${FEDORA_HOST:-fedora-s3-dev}"
+      GRAFANA_HOST: "${GRAFANA_HOST:-grafana-dev}"
+      LAM_HOST: "${LAM_HOST:-lam}"
+      PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
+      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
+      SOLR_HOST: "${SOLR_HOST:-solr-dev}"
+      UI_HOST: "${UI_HOST:-ui-s3-dev}"
+    entrypoint: [ "bash", "/mnt/startup/httpd-demo-startup.bash" ]
+    profiles: ["dev-s3"]
+
+  api-s3-dev:
+    image: phaidraorg/api-base:latest
+    pull_policy: always
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    volumes:
+      - s3_cache:/s3_cache
+      - ./src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
+      - ./container_init/api/api-entrypoint.bash:/mnt/api-entrypoint.bash:ro
+    networks:
+      - phaidra-network
+    environment:
+      FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
+      FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
+      FEDORA_HOST: "${FEDORA_HOST:-fedora-s3-dev}"
+      FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-}"
+      IMAGESERVER_HASH_SECRET: "${IMAGESERVER_HASH_SECRET:-changeme}"
+      IMAGESERVER_HOST: "${IMAGESERVER_HOST:-imageserver-s3}"
+      IMAGESERVER_ROOT_PATH: "s3_cache/converted_images"
+      LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD:-adminpassword}"
+      LDAP_ADMIN_USERNAME: "${LDAP_ADMIN_USERNAME:-admin}"
+      LDAP_ROOT: "dc=${LDAP_SLD:-example},dc=${LDAP_TLD:-org}"
+      MARIADB_PHAIDRA_HOST: "${MARIADB_PHAIDRA_HOST:-mariadb-phaidra-dev}"
+      MARIADB_PHAIDRA_PASSWORD: "${MARIADB_PHAIDRA_PASSWORD:-phaidra}"
+      MARIADB_PHAIDRA_USER: "${MARIADB_PHAIDRA_USER:-phaidra}"
+      MONGODB_PHAIDRA_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra-dev}"
+      MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
+      MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
+      OC_EXTERNAL: "${OC_EXTERNAL:-false}"
+      OPENLDAP_HOST: "${OPENLDAP_HOST:-openldap}"
+      OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
+      PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
+      PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
+      PHAIDRA_API_HOST: "${PHAIDRA_API_HOST:-api-s3-dev}"
+      PHAIDRA_ENCRYPTION_KEY: "${PHAIDRA_ENCRYPTION_KEY:-changeme}"
+      PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
+      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
+      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB:-:}"
+      PHAIDRA_SECRET: "${PHAIDRA_SECRET:-changeme}"
+      S3_ACCESS_KEY: "${S3_ACCESS_KEY:-}"
+      S3_BUCKETNAME: "${S3_BUCKETNAME:-}"
+      S3_CACHESIZE: "${S3_CACHESIZE:-1000000}"
+      S3_CACHE_TOPDIR: "${S3_CACHE_TOPDIR:-/s3_cache}"
+      S3_ENABLED: "true"
+      S3_SECRET_KEY: "${S3_SECRET_KEY:-}"
+      SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
+      SHIB_GIVEN_NAME: "${SHIB_GIVEN_NAME:-}"
+      SHIB_MAIL: "${SHIB_MAIL:-}"
+      SHIB_REQUIRED_AFFILIATIONS: "${SHIB_REQUIRED_AFFILIATIONS:-}"
+      SHIB_SURNAME: "${SHIB_SURNAME:-}"
+      SHIB_USERNAME: "${SHIB_USERNAME:-}"
+      SOLR_HOST: "${SOLR_HOST:-solr-dev}"
+      SOLR_PASS: "${SOLR_PASS:-phaidra}"
+      SOLR_USER: "${SOLR_USER:-phaidra}"
+    entrypoint: [ "bash", "/mnt/api-entrypoint.bash" ]
+    profiles: ["dev-s3"]
   
+  ui-s3-dev:
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    build:
+      context: .
+      dockerfile: dockerfiles/ui.dockerfile
+    networks:
+      - phaidra-network
+    environment:
+      PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
+      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB:-:}"
+      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
+      OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
+      PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#008080}"
+      PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
+      PHAIDRA_API_HOST_INTERNAL: "${PHAIDRA_API_HOST:-api-s3-dev}"
+    profiles: ["dev-s3"]
+  
+  chronos-s3-dev:
+    image: phaidraorg/chronos-base:latest
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    restart: always
+    pull_policy: always
+    volumes:
+      - chronos-database-dumps:/mnt/database-dumps
+      - chronos-sitemaps:/mnt/sitemaps
+      - chronos-oai-logs:/mnt/oai-logs
+      - ./container_init/chronos:/mnt/chronos:ro
+    environment:
+      FEDORADB: "${FEDORADB:-fedoradb}"
+      FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
+      FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
+      FEDORA_HOST: "${FEDORA_HOST:-fedora-s3-dev}"
+      MARIADB_FEDORA_HOST: "${MARIADB_FEDORA_HOST:-mariadb-fedora-dev}"
+      MARIADB_FEDORA_ROOT_PASSWORD: "${MARIADB_FEDORA_ROOT_PASSWORD:-example}"
+      MARIADB_PHAIDRA_HOST: "${MARIADB_PHAIDRA_HOST:-mariadb-phaidra-dev}"
+      MARIADB_PHAIDRA_ROOT_PASSWORD: "${MARIADB_PHAIDRA_ROOT_PASSWORD:-example}"
+      MONGODB_PHAIDRA_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra-dev}"
+      MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
+      MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
+      OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
+      PHAIDRADB: "${PHAIDRADB:-phaidradb}"
+      PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
+      PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
+      PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
+      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
+      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB:-:}"
+      SOLR_HOST: "${SOLR_HOST:-solr-dev}"
+    depends_on: [mariadb-fedora-dev, mariadb-phaidra-dev, mongodb-phaidra-dev, fedora-s3-dev]
+    networks:
+      - phaidra-network
+    profiles: ["dev-s3"]
+  
+  pixelgecko-s3-dev:
+    depends_on: [mongodb-phaidra-dev, api-s3-dev, fedora-s3-dev]
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    restart: always
+    image: phaidraorg/pixelgecko-base:latest
+    pull_policy: always
+    volumes:
+      - ./src/pixelgecko:/opt/pixelgecko:ro
+    networks:
+      - phaidra-network
+    environment:
+      CONVERTED_IMAGES_PATH: "${CONVERTED_IMAGES_PATH:-/converted_images}"
+      FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
+      FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
+      FEDORA_HOST: "${FEDORA_HOST:-fedora-s3-dev}"
+      FEDORA_PORT: "${FEDORA_PORT:-8080}"
+      FEDORA_PROTOCOL: "${FEDORA_PROTOCOL:-http}"
+      IMAGE_CONVERSION_INTERVAL: "${IMAGE_CONVERSION_INTERVAL:-5}"
+      MONGODB_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra-dev}"
+      MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
+      MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
+      S3_ACCESS_KEY: "${S3_ACCESS_KEY:-}"
+      S3_BUCKETNAME: "${S3_BUCKETNAME:-}"
+      S3_ENABLED: "true"
+      S3_SECRET_KEY: "${S3_SECRET_KEY:-}"
+    profiles: ["dev-s3"]
+
+
+
 
 
 volumes:
