@@ -369,7 +369,7 @@ build-promtail-dist:
     - changes:
         paths:
           - dockerfiles/promtail-dist.dockerfile
-          - container_init/promtail/promtail-local.config.yaml
+          - container_init/promtail/promtail-local-config.yaml
 
 build-loki-dist:
   stage: build-dist
