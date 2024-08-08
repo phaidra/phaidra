@@ -14,6 +14,8 @@ services:
   ## profiles:                                                ##
   ## + demo-local                                             ##
   ## + demo-s3                                                ##
+  ## + ssl-local                                              ##
+  ## + ssl-s3                                                 ##
   ##############################################################
 
   ############### httpd service for demo-local profile ###############
@@ -95,7 +97,34 @@ services:
       SOLR_HOST: "${SOLR_HOST:-solr}"
       UI_HOST: "${UI_HOST:-ui}"
     profiles: ["ssl-local"]
-  
+
+  #################### httpd service for ssl-s3 profile ####################
+  httpd-ssl-s3:
+    image: phaidraorg/httpd-ssl-dist:326004fd
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - chronos-sitemaps:/mnt/sitemaps:ro
+      - ./certs/httpd:/ssl:ro
+    networks:
+      - phaidra-network
+    environment:
+      ADMIN_IP_LIST: "${ADMIN_IP_LIST:-10.0.2.2}"
+      API_HOST: "${PHAIDRA_API_HOST:-api-s3}"
+      DBGATE_HOST: "${DBGATE_HOST:-dbgate}"
+      FEDORA_HOST: "${FEDORA_HOST:-fedora-s3}"
+      GRAFANA_HOST: "${GRAFANA_HOST:-grafana}"
+      LAM_HOST: "${LAM_HOST:-lam}"
+      PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
+      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
+      SOLR_HOST: "${SOLR_HOST:-solr}"
+      UI_HOST: "${UI_HOST:-ui-s3}"
+    profiles: ["ssl-s3"]
 
   solr:
     image: phaidraorg/solr-dist:d06f04e3
@@ -111,7 +140,7 @@ services:
       SOLR_PASS: "${SOLR_PASS:-phaidra}"
     networks:
       - phaidra-network
-    profiles: ["demo-local", "demo-s3", "ssl-local"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3"]
 
   ############### ui service for local profile ###############
   ui:
@@ -145,13 +174,13 @@ services:
       - phaidra-network
     environment:
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
-      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB:-:}"
-      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
+      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB-:}"
+      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT-8899}"
       OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
       PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#008080}"
       PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
       PHAIDRA_API_HOST_INTERNAL: "${PHAIDRA_API_HOST:-api-s3}"
-    profiles: ["demo-s3"]
+    profiles: ["demo-s3", "ssl-s3"]
 
   ############### api service for s3 profile ###############
   api-s3:
@@ -189,8 +218,8 @@ services:
       PHAIDRA_API_HOST: "${PHAIDRA_API_HOST:-api-s3}"
       PHAIDRA_ENCRYPTION_KEY: "${PHAIDRA_ENCRYPTION_KEY:-changeme}"
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
-      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
-      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB:-:}"
+      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT-8899}"
+      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB-:}"
       PHAIDRA_SECRET: "${PHAIDRA_SECRET:-changeme}"
       S3_ACCESS_KEY: "${S3_ACCESS_KEY:-}"
       S3_BUCKETNAME: "${S3_BUCKETNAME:-}"
@@ -207,7 +236,7 @@ services:
       SOLR_HOST: "${SOLR_HOST:-solr}"
       SOLR_PASS: "${SOLR_PASS:-phaidra}"
       SOLR_USER: "${SOLR_USER:-phaidra}"
-    profiles: ["demo-s3"]
+    profiles: ["demo-s3", "ssl-s3"]
 
   ############### api service for local profile ###############
   api:
@@ -291,7 +320,7 @@ services:
       S3_BUCKETNAME: "${S3_BUCKETNAME:-}"
       S3_ENABLED: "true"
       S3_SECRET_KEY: "${S3_SECRET_KEY:-}"
-    profiles: ["demo-s3"]
+    profiles: ["demo-s3", "ssl-s3"]
 
   ############### pixelgecko service for local profile ###############
   pixelgecko:
@@ -338,7 +367,7 @@ services:
       - mariadb_phaidra:/var/lib/mysql
     networks:
       - phaidra-network
-    profiles: ["demo-local", "ssl-local", "demo-s3"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3"]
 
   mariadb-fedora:
     image: phaidraorg/mariadb-fedora-dist:f21114b6
@@ -355,7 +384,7 @@ services:
       - mariadb_fedora:/var/lib/mysql
     networks:
       - phaidra-network
-    profiles: ["demo-local", "ssl-local", "demo-s3"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3"]
 
   mongodb-phaidra:
     image: phaidraorg/mongodb-dist:10a6b315
@@ -370,7 +399,7 @@ services:
       - mongodb_phaidra:/data/db
     networks:
       - phaidra-network
-    profiles: ["demo-local", "ssl-local", "demo-s3"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3"]
 
   dbgate:
     image: dbgate/dbgate:5.2.7
@@ -403,7 +432,7 @@ services:
     depends_on: [mariadb-phaidra, mariadb-fedora, mongodb-phaidra]
     networks:
       - phaidra-network
-    profiles: ["demo-local", "ssl-local", "demo-s3"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3"]
 
 
   ############### chronos service for local profile ###############
@@ -470,13 +499,13 @@ services:
       PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
       PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
-      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
-      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB:-:}"
+      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT-8899}"
+      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB-:}"
       SOLR_HOST: "${SOLR_HOST:-solr}"
     depends_on: [mariadb-fedora, mariadb-phaidra, mongodb-phaidra, fedora-s3]
     networks:
       - phaidra-network
-    profiles: ["demo-s3"]
+    profiles: ["demo-s3", "ssl-s3"]
 
   promtail:
     image: phaidraorg/promtail-dist:17fb62e1
@@ -489,7 +518,7 @@ services:
     environment:
       LOKI_HOST: "loki"
     depends_on: [grafana, loki]
-    profiles: ["demo-local", "ssl-local", "demo-s3"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3"]
 
   loki:
     image: phaidraorg/loki-dist:0b27f01e
@@ -499,7 +528,7 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     networks:
       - phaidra-network
-    profiles: ["demo-local", "ssl-local", "demo-s3"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3"]
 
   grafana:
     image: phaidraorg/grafana-dist:9dc4d7c9
@@ -519,7 +548,7 @@ services:
     depends_on: [loki]
     networks:
       - phaidra-network
-    profiles: ["demo-local", "ssl-local", "demo-s3"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3"]
 
   prometheus:
     image: phaidraorg/prometheus-dist:343ee951
@@ -530,7 +559,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - phaidra-network
-    profiles: ["demo-local", "ssl-local", "demo-s3"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3"]
 
   # UNCOMMENT and fill .env values if you have access to an opencast instance
   # vige:
@@ -607,7 +636,7 @@ services:
       - s3_cache:/s3_cache:ro
     networks:
       - phaidra-network
-    profiles: ["demo-s3", "demo-s3-dev", "ssl-s3-dev"]
+    profiles: ["demo-s3", "ssl-s3", "demo-s3-dev", "ssl-s3-dev"]
 
   ############## fedora service for local profile ###############
   fedora:
@@ -676,7 +705,7 @@ services:
     depends_on: [mariadb-fedora]
     networks:
       - phaidra-network
-    profiles: ["demo-s3"]
+    profiles: ["demo-s3", "ssl-s3"]
 
   lam:
     image: ghcr.io/ldapaccountmanager/lam:8.5
@@ -693,7 +722,7 @@ services:
     depends_on: [openldap]
     networks:
       - phaidra-network
-    profiles: ["demo-local", "demo-s3", "ssl-local", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
 
   openldap:
     image: phaidraorg/openldap-dist:10a6b315
@@ -711,7 +740,7 @@ services:
       - openldap:/bitnami/openldap
     networks:
       - phaidra-network
-    profiles: ["demo-local", "demo-s3", "ssl-local", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
 
   # receives host memory usage (scraped by prometheus)
   node-exporter:
@@ -719,7 +748,7 @@ services:
     restart: always
     networks:
       - phaidra-network
-    profiles: ["demo-local", "demo-s3", "ssl-local", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
 
   # retrieves container metrics (scraped by prometheus)
   cadvisor:
@@ -732,7 +761,7 @@ services:
       - /sys:/sys:ro
       - /etc/machine-id:/etc/machine-id:ro
       - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
-    profiles: ["demo-local", "demo-s3", "ssl-local", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
 
   ##############################################################
   ##### definitions bindmounting repo code for development #####
@@ -1312,6 +1341,7 @@ services:
       UI_HOST: "${UI_HOST:-ui-s3-dev}"
     entrypoint: [ "bash", "/httpd-ssl-entrypoint.bash" ]
     profiles: ["ssl-s3-dev"]
+  
   
     
 volumes:
