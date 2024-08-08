@@ -133,6 +133,29 @@ build-httpd-shib-base:
         paths:
           - dockerfiles/httpd-shib-base.dockerfile
 
+build-httpd-shib-dist:
+  stage: build-dist
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/httpd-shib-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/httpd-shib-dist:latest
+    -t $CI_REGISTRY_USER/httpd-shib-dist:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - changes:
+        paths:
+          - dockerfiles/httpd-shib-dist.dockerfile
+          - container_init/httpd/phaidra-shib/httpd-shib-entrypoint.bash
+          - container_init/httpd/phaidra-shib/conf/aconet-metadata-signing.crt
+          - container_init/httpd/phaidra-shib/conf/attribute-map.xml
+          - container_init/httpd/phaidra-shib/conf/attribute-policy.xml
+          - container_init/httpd/phaidra-shib/conf/shibboleth2.xml
+
 build-httpd-demo-dist:
   stage: build-dist
   before_script:
