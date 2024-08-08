@@ -153,6 +153,27 @@ build-httpd-demo-dist:
           - dockerfiles/httpd-demo-dist.dockerfile
           - container_init/httpd/phaidra-demo/conf/phaidra-demo.conf
 
+build-httpd-ssl-dist:
+  stage: build-dist
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/httpd-ssl-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/httpd-ssl-dist:latest
+    -t $CI_REGISTRY_USER/httpd-ssl-dist:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - changes:
+        paths:
+          - dockerfiles/httpd-ssl-dist.dockerfile
+          - container_init/httpd/phaidra-ssl/conf/phaidra-ssl.conf
+          - container_init/httpd/phaidra-ssl/httpd-ssl-entrypoint.bash
+
+          
 build-imageserver:
   stage: build-common
   before_script:
