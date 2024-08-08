@@ -609,7 +609,8 @@ services:
   ##### + demo-local                                       #####
   ##### + demo-s3                                          #####
   ##### + ssl-local                                        #####
-  ##### + demo-local-dev                                        #####
+  ##### + demo-local-dev                                   #####
+  ##### + shib-local-dev                                   #####    
   ##############################################################
 
   ############### imageserver service for local profiles ##############
@@ -623,7 +624,7 @@ services:
       - pixelgecko:/mnt/converted_images:ro
     networks:
       - phaidra-network
-    profiles: ["demo-local", "ssl-local", "demo-local-dev", "ssl-local-dev"]
+    profiles: ["demo-local", "ssl-local", "demo-local-dev", "ssl-local-dev", "shib-local-dev"]
 
   ############### imageserver service for s3 profiles #################
   imageserver-s3:
@@ -672,7 +673,7 @@ services:
       - fedora:/usr/local/tomcat/fcrepo-home
     networks:
       - phaidra-network
-    profiles: ["demo-local-dev", "ssl-local-dev"]
+    profiles: ["demo-local-dev", "ssl-local-dev", "shib-local-dev"]
 
   ############## fedora service for s3 dev profile ###############
   fedora-s3-dev:
@@ -722,7 +723,7 @@ services:
     depends_on: [openldap]
     networks:
       - phaidra-network
-    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev"]
 
   openldap:
     image: phaidraorg/openldap-dist:10a6b315
@@ -740,7 +741,7 @@ services:
       - openldap:/bitnami/openldap
     networks:
       - phaidra-network
-    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev"]
 
   # receives host memory usage (scraped by prometheus)
   node-exporter:
@@ -748,7 +749,7 @@ services:
     restart: always
     networks:
       - phaidra-network
-    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev"]
 
   # retrieves container metrics (scraped by prometheus)
   cadvisor:
@@ -761,7 +762,7 @@ services:
       - /sys:/sys:ro
       - /etc/machine-id:/etc/machine-id:ro
       - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
-    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev"]
 
   ##############################################################
   ##### definitions bindmounting repo code for development #####
@@ -827,7 +828,7 @@ services:
       PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#008080}"
       PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
       PHAIDRA_API_HOST_INTERNAL: "${PHAIDRA_API_HOST:-api-local-dev}"
-    profiles: ["demo-local-dev", "ssl-local-dev"]
+    profiles: ["demo-local-dev", "ssl-local-dev", "shib-local-dev"]
 
   api-local-dev:
     image: phaidraorg/api-base:latest
@@ -875,17 +876,17 @@ services:
       S3_CACHE_TOPDIR: "${S3_CACHE_TOPDIR:-}"
       S3_ENABLED: "false"
       S3_SECRET_KEY: "${S3_SECRET_KEY:-}"
-      SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
-      SHIB_GIVEN_NAME: "${SHIB_GIVEN_NAME:-}"
-      SHIB_MAIL: "${SHIB_MAIL:-}"
-      SHIB_REQUIRED_AFFILIATIONS: "${SHIB_REQUIRED_AFFILIATIONS:-}"
-      SHIB_SURNAME: "${SHIB_SURNAME:-}"
-      SHIB_USERNAME: "${SHIB_USERNAME:-}"
+      SHIB_AFFILIATION: "${SHIB_AFFILIATION:-affiliation}"
+      SHIB_GIVEN_NAME: "${SHIB_GIVEN_NAME:-givenName}"
+      SHIB_MAIL: "${SHIB_MAIL:-mail}"
+      SHIB_REQUIRED_AFFILIATIONS: "${SHIB_REQUIRED_AFFILIATIONS:-staff@univie.ac.at,employee@univie.ac.at,member@univie.ac.at}"
+      SHIB_SURNAME: "${SHIB_SURNAME:-sn}"
+      SHIB_USERNAME: "${SHIB_USERNAME:-uid}"
       SOLR_HOST: "${SOLR_HOST:-solr-dev}"
       SOLR_PASS: "${SOLR_PASS:-phaidra}"
       SOLR_USER: "${SOLR_USER:-phaidra}"
     entrypoint: [ "bash", "/mnt/api-entrypoint.bash" ]
-    profiles: ["demo-local-dev", "ssl-local-dev"]
+    profiles: ["demo-local-dev", "ssl-local-dev", "shib-local-dev"]
 
   pixelgecko-local-dev:
     image: phaidraorg/pixelgecko-base:latest
@@ -915,7 +916,7 @@ services:
       S3_BUCKETNAME: "${S3_BUCKETNAME:-}"
       S3_ENABLED: "false"
       S3_SECRET_KEY: "${S3_SECRET_KEY:-}"
-    profiles: ["demo-local-dev", "ssl-local-dev"]
+    profiles: ["demo-local-dev", "ssl-local-dev", "shib-local-dev"]
 
   mariadb-phaidra-dev:
     image: mariadb:11.0.2-jammy
@@ -933,7 +934,7 @@ services:
       - mariadb_phaidra:/var/lib/mysql
     networks:
       - phaidra-network
-    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev"]
 
   mariadb-fedora-dev:
     image: mariadb:10.5
@@ -951,7 +952,7 @@ services:
       - mariadb_fedora:/var/lib/mysql
     networks:
       - phaidra-network
-    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev"]
 
   mongodb-phaidra-dev:
     image: mongo:5
@@ -968,7 +969,7 @@ services:
       - .././container_init/mongodb/mongodb-after-entry.sh:/docker-entrypoint-initdb.d/mongodb-after-entry.sh:ro
     networks:
       - phaidra-network
-    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev"]
 
   dbgate-dev:
     image: dbgate/dbgate:5.2.7
@@ -1038,7 +1039,7 @@ services:
     depends_on: [mariadb-fedora-dev, mariadb-phaidra-dev, mongodb-phaidra-dev, fedora-local-dev]
     networks:
       - phaidra-network
-    profiles: ["demo-local-dev", "ssl-local-dev"]
+    profiles: ["demo-local-dev", "ssl-local-dev", "shib-local-dev", "shib-local-dev"]
 
   solr-dev:
     image: solr:9.6.1
@@ -1055,7 +1056,7 @@ services:
     networks:
       - phaidra-network
     entrypoint: ["bash", "/mnt/solr/solr_entrypoint.bash"]
-    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev"]
 
   grafana-dev:
     image: grafana/grafana:11.0.0
@@ -1077,7 +1078,7 @@ services:
     depends_on: [loki-dev]
     networks:
       - phaidra-network
-    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev"]
 
   loki-dev:
     image: grafana/loki:3.0.0
@@ -1087,7 +1088,7 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     networks:
       - phaidra-network
-    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev"]
 
   promtail-dev:
     image: grafana/promtail:3.0.0
@@ -1099,7 +1100,7 @@ services:
     command: -config.file=/etc/promtail/config.yaml -config.expand-env=true
     networks:
       - phaidra-network
-    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev"]
 
   prometheus-dev:
     image: prom/prometheus:v2.52.0
@@ -1110,7 +1111,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - phaidra-network
-    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev"]
+    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev"]
 
   #################### demo-s3-dev ####################
   httpd-s3-dev:
@@ -1341,6 +1342,47 @@ services:
       UI_HOST: "${UI_HOST:-ui-s3-dev}"
     entrypoint: [ "bash", "/httpd-ssl-entrypoint.bash" ]
     profiles: ["ssl-s3-dev"]
+
+  #################### shib-local-dev ####################
+  httpd-shib-local-dev:
+    image: phaidraorg/httpd-shib-base:latest
+    pull_policy: always
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./certs/httpd:/ssl:ro
+      - ./certs/shibboleth:/shibboleth-certs:ro
+      - ./container_init/httpd/phaidra-shib/conf:/shib-init:ro
+      - ./container_init/httpd/phaidra-shib/conf/phaidra-shib.conf:/usr/local/apache2/conf/httpd.conf:ro
+      - ./container_init/httpd/phaidra-shib/httpd-shib-entrypoint.bash:/httpd-shib-entrypoint.bash:ro
+    networks:
+      - phaidra-network
+    environment:
+      ADMIN_IP_LIST: "${ADMIN_IP_LIST:-10.0.2.2}"
+      API_HOST: "${PHAIDRA_API_HOST:-api-local-dev}"
+      DBGATE_HOST: "${DBGATE_HOST:-dbgate-dev}"
+      FEDORA_HOST: "${FEDORA_HOST:-fedora-local-dev}"
+      GRAFANA_HOST: "${GRAFANA_HOST:-grafana-dev}"
+      LAM_HOST: "${LAM_HOST:-lam}"
+      PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-}"
+      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-}"
+      SOLR_HOST: "${SOLR_HOST:-solr-dev}"
+      UI_HOST: "${UI_HOST:-ui-local-dev}"
+      SHIB_DISCO_URL: "${SHIB_DISCO_URL:-https://eduid.at/ds/wayf/}"
+      SHIB_METADATA_CERT: "${SHIB_METADATA_CERT:-aconet-metadata-signing.crt}"
+      SHIB_METADATA_FILE: "${SHIB_METADATA_FILE:-aconet-registered.xml}"
+      SHIB_METADATA: "${SHIB_METADATA:-https://eduid.at/md/aconet-registered.xml}"
+      SHIB_ENTITY_ID: "${SHIB_ENTITY_ID:-https://weblogin.univie.ac.at/shibboleth}"
+    entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
+    profiles: ["shib-local-dev"]
+    
+      
+    
+    
   
   
     
