@@ -149,6 +149,7 @@ build-httpd-shib-dist:
   rules:
     - changes:
         paths:
+          - dockerfiles/httpd-shib-base.dockerfile
           - dockerfiles/httpd-shib-dist.dockerfile
           - container_init/httpd/phaidra-shib/httpd-shib-entrypoint.bash
           - container_init/httpd/phaidra-shib/conf/aconet-metadata-signing.crt
