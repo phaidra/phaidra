@@ -207,7 +207,6 @@ services:
       SHIB_AFFILIATION: "${SHIB_AFFILIATION:-affiliation}"
     entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
     profiles: ["shib-s3"]
-
     
   solr:
     image: phaidraorg/solr-dist:d06f04e3
@@ -807,8 +806,25 @@ services:
     depends_on: [openldap]
     networks:
       - phaidra-network
-    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3"]
 
+  lam-dev:
+    image: ghcr.io/ldapaccountmanager/lam:8.5
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    restart: always
+    environment:
+      LDAP_DOMAIN: "${LDAP_SLD:-example}.${LDAP_TLD:-org}"
+      LDAP_SERVER: "${LDAP_PROTOCOL:-ldap}://${LDAP_HOSTNAME:-openldap-dev}:${LDAP_PORT_NUMBER:-1389}"
+      LDAP_USER: "cn=${LDAP_ADMIN_USERNAME:-admin},dc=${LDAP_SLD:-example},dc=${LDAP_TLD:-org}"
+      LDAP_USERS_DN: "ou=${LDAP_USERS_OU:-people},dc=${LDAP_SLD:-example},dc=${LDAP_TLD:-org}"
+      LDAP_GROUPS_DN: "ou=${LDAP_GROUPS_OU:-groups},dc=${LDAP_SLD:-example},dc=${LDAP_TLD:-org}"
+    depends_on: [openldap-dev]
+    networks:
+      - phaidra-network
+    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
+    
   openldap:
     image: phaidraorg/openldap-dist:10a6b315
     labels:
@@ -825,8 +841,28 @@ services:
       - openldap:/bitnami/openldap
     networks:
       - phaidra-network
-    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3"]
 
+  openldap-dev:
+    image: bitnami/openldap:2.6.6-debian-11-r59
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    restart: always
+    environment:
+      LDAP_ADMIN_USERNAME: "${LDAP_ADMIN_USERNAME:-admin}"
+      LDAP_ADMIN_PASSWORD: "${LDAP_ADMIN_PASSWORD:-adminpassword}"
+      LDAP_PORT_NUMBER: "${LDAP_PORT_NUMBER:-1389}"
+      LDAP_ROOT: "dc=${LDAP_SLD:-example},dc=${LDAP_TLD:-org}"
+      LDAP_CUSTOM_LDIF_DIR: "/ldifs"
+    volumes:
+      - openldap:/bitnami/openldap
+      - ./container_init/openldap/init.ldif:/ldifs/init.ldif:ro
+    networks:
+      - phaidra-network
+    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
+
+    
   # retrieves host memory usage (scraped by prometheus)
   node-exporter:
     image: prom/node-exporter:v1.8.1
@@ -888,7 +924,7 @@ services:
       DBGATE_HOST: "${DBGATE_HOST:-dbgate-dev}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora-local-dev}"
       GRAFANA_HOST: "${GRAFANA_HOST:-grafana-dev}"
-      LAM_HOST: "${LAM_HOST:-lam}"
+      LAM_HOST: "${LAM_HOST:-lam-dev}"
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
       SOLR_HOST: "${SOLR_HOST:-solr-dev}"
@@ -947,7 +983,7 @@ services:
       MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
       MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
       OC_EXTERNAL: "${OC_EXTERNAL:-false}"
-      OPENLDAP_HOST: "${OPENLDAP_HOST:-openldap}"
+      OPENLDAP_HOST: "${OPENLDAP_HOST:-openldap-dev}"
       OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
       PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
       PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
@@ -1225,7 +1261,7 @@ services:
       DBGATE_HOST: "${DBGATE_HOST:-dbgate-dev}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora-s3-dev}"
       GRAFANA_HOST: "${GRAFANA_HOST:-grafana-dev}"
-      LAM_HOST: "${LAM_HOST:-lam}"
+      LAM_HOST: "${LAM_HOST:-lam-dev}"
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-localhost}"
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-8899}"
       SOLR_HOST: "${SOLR_HOST:-solr-dev}"
@@ -1264,7 +1300,7 @@ services:
       MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
       MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
       OC_EXTERNAL: "${OC_EXTERNAL:-false}"
-      OPENLDAP_HOST: "${OPENLDAP_HOST:-openldap}"
+      OPENLDAP_HOST: "${OPENLDAP_HOST:-openldap-dev}"
       OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
       PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
       PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
@@ -1401,7 +1437,7 @@ services:
       DBGATE_HOST: "${DBGATE_HOST:-dbgate-dev}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora-local-dev}"
       GRAFANA_HOST: "${GRAFANA_HOST:-grafana-dev}"
-      LAM_HOST: "${LAM_HOST:-lam}"
+      LAM_HOST: "${LAM_HOST:-lam-dev}"
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-}"
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-}"
       SOLR_HOST: "${SOLR_HOST:-solr-dev}"
@@ -1432,7 +1468,7 @@ services:
       DBGATE_HOST: "${DBGATE_HOST:-dbgate-dev}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora-s3-dev}"
       GRAFANA_HOST: "${GRAFANA_HOST:-grafana-dev}"
-      LAM_HOST: "${LAM_HOST:-lam}"
+      LAM_HOST: "${LAM_HOST:-lam-dev}"
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-}"
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-}"
       SOLR_HOST: "${SOLR_HOST:-solr-dev}"
@@ -1466,7 +1502,7 @@ services:
       DBGATE_HOST: "${DBGATE_HOST:-dbgate-dev}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora-local-dev}"
       GRAFANA_HOST: "${GRAFANA_HOST:-grafana-dev}"
-      LAM_HOST: "${LAM_HOST:-lam}"
+      LAM_HOST: "${LAM_HOST:-lam-dev}"
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-}"
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-}"
       SOLR_HOST: "${SOLR_HOST:-solr-dev}"
@@ -1510,7 +1546,7 @@ services:
       DBGATE_HOST: "${DBGATE_HOST:-dbgate-dev}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora-s3-dev}"
       GRAFANA_HOST: "${GRAFANA_HOST:-grafana-dev}"
-      LAM_HOST: "${LAM_HOST:-lam}"
+      LAM_HOST: "${LAM_HOST:-lam-dev}"
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME:-}"
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-}"
       SOLR_HOST: "${SOLR_HOST:-solr-dev}"
