@@ -2247,18 +2247,5 @@ sub purge_relationships {
   return $res;
 }
 
-sub set_rights {
-  my $self     = shift;
-  my $c        = shift;
-  my $pid      = shift;
-  my $rights   = shift;
-  my $username = shift;
-  my $password = shift;
-
-  my $res = {alerts => [], status => 200};
-
-  return $res;
-}
-
 1;
 __END__

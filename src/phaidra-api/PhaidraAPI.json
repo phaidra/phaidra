@@ -109,7 +109,9 @@
     "apis": {
         "geonames": {
             "url": "https://secure.geonames.org/getJSON",
-            "username": "phaidra"
+            "search": "https://secure.geonames.org/searchJSON",
+            "username": "phaidra",
+            "maxRows": 50
         }
     },
     "hooks": {

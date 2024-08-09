@@ -457,15 +457,30 @@ sub addOrModifyDatastream {
   my $res = {alerts => [], status => 200};
 
   if ($location) {
-    my $url = $c->app->fedoraurl->path("$pid/LINK");
-    $c->app->log->debug("PUT $url Link $location");
-    my $putres = $c->ua->put($url => {'Link' => "<$location>; rel=\"http://fedora.info/definitions/fcrepo#ExternalContent\"; handling=\"redirect\"; type=\"text/plain\""})->result;
+    # we're not going to create 'external content' in fcrepo because the resource cmodel is not supposed
+    # to be pointing to binary data (normally it's just a link where user should be redirected)
+    # my $url = $c->app->fedoraurl->path("$pid/LINK");
+    # $c->app->log->debug("PUT $url Link $location");
+    # my $putres = $c->ua->put($url => {'Link' => "<$location>; rel=\"http://fedora.info/definitions/fcrepo#ExternalContent\"; handling=\"redirect\"; type=\"text/plain\""})->result;
+    # unless ($putres->is_success) {
+    #   $c->app->log->error("pid[$pid] PUT Link $location error code:" . $putres->{code} . " message:" . $putres->{message});
+    #   unshift @{$res->{alerts}}, {type => 'error', msg => $putres->{message}};
+    #   $res->{status} = $putres->{code} ? $putres->{code} : 500;
+    #   return $res;
+    # }
+
+    my $headers;
+    $headers->{'Content-Type'} = $mimetype;
+    my $url = $c->app->fedoraurl->path("$pid/$dsid");
+    $c->app->log->debug("PUT $url");
+    my $putres = $c->ua->put($url => $headers => $location)->result;
     unless ($putres->is_success) {
-      $c->app->log->error("pid[$pid] PUT Link $location error code:" . $putres->{code} . " message:" . $putres->{message});
+      $c->app->log->error("pid[$pid] dsid[$dsid] PUT error code:" . $putres->{code} . " message:" . $putres->{message});
       unshift @{$res->{alerts}}, {type => 'error', msg => $putres->{message}};
       $res->{status} = $putres->{code} ? $putres->{code} : 500;
       return $res;
     }
+
   }
 
   if ($dscontent) {

@@ -448,6 +448,8 @@ sub startup {
 
   $r->get('utils/get_all_pids')                     ->to('utils#get_all_pids');
 
+  $r->get('geonames/search')                        ->to('utils#geonames_search');
+
   $r->get('vocabulary')                             ->to('vocabulary#get_vocabulary');
 
   $r->get('terms/label')                   		      ->to('terms#label');
@@ -573,6 +575,8 @@ sub startup {
     $reader->get('object/:pid/get')                                          ->to('octets#get', operation => 'get');
     $reader->get('object/:pid/comp/:ds')                                     ->to('object#get_legacy_container_member');
     $reader->get('object/:pid/datastream/:dsid')                             ->to('object#get_public_datastream');
+    $reader->get('object/:pid/resourcelink/get')                             ->to('object#resourcelink', operation => 'get');
+    $reader->get('object/:pid/resourcelink/redirect')                        ->to('object#resourcelink', operation => 'redirect');
 
     $writer->get('object/:pid/jsonldprivate')                                ->to('jsonldprivate#get');
     $writer->get('object/:pid/rights')                                       ->to('rights#get');
@@ -714,6 +718,8 @@ sub startup {
     $proxyauth_optional->get('object/:pid/download')                            ->to('octets#get', operation => 'download');
     $proxyauth_optional->get('object/:pid/get')                                 ->to('octets#get', operation => 'get');
     $proxyauth_optional->get('object/:pid/comp/:ds')                            ->to('object#get_legacy_container_member');
+    $proxyauth_optional->get('object/:pid/resourcelink/get')                    ->to('object#resourcelink', operation => 'get');
+    $proxyauth_optional->get('object/:pid/resourcelink/redirect')               ->to('object#resourcelink', operation => 'redirect');
 
     $proxyauth_optional->get('imageserver/:pid/status')                         ->to('imageserver#status');
 

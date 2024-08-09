@@ -126,4 +126,62 @@ sub openapi_json {
   $self->render(json => $json, status => 200);
 }
 
+sub geonames_search {
+  my $self = shift;
+  my $uri  = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  my $q = $self->req->param('q');
+  my $lang = $self->req->param('lang');
+
+  unless ($q) {
+    my $err = "missing q param";
+    $self->app->log->error($err);
+    $self->render(json => {alerts => [{type => 'error', msg => $err}]}, status => 500);
+    return;
+  }
+
+  unless ($self->config->{apis}) {
+    my $err = "apis are not configured";
+    $self->app->log->error($err);
+    $self->render(json => {alerts => [{type => 'error', msg => $err}]}, status => 500);
+    return;
+  }
+
+  unless ($self->config->{apis}->{geonames}) {
+    my $err = "geonames api is not configured";
+    $self->app->log->error($err);
+    $self->render(json => {alerts => [{type => 'error', msg => $err}]}, status => 500);
+    return;
+  }
+
+  my $insecure = 0;
+  if (exists($self->config->{apis}->{geonames}->{insecure})) {
+    if ($self->config->{apis}->{geonames}->{insecure}) {
+      $insecure = 1;
+    }
+  }
+
+  my $params = { q => $q, lang => $lang };
+  $params->{maxRows} = $self->config->{apis}->{geonames}->{maxRows} || 50;
+  $params->{username} = $self->config->{apis}->{geonames}->{username} || 'phaidra';
+
+  my $url = Mojo::URL->new($self->config->{apis}->{geonames}->{search})->query($params);
+  my $get = $self->ua->insecure($insecure)->max_redirects(5)->get($url)->result;
+  if ($get->is_success) {
+    my $json = $get->json;
+    $self->render(json => $json, status => $get->code);
+    return;
+  }
+  else {
+    $self->app->log->error("[$url] error searching geonames " . $get->message);
+    unshift @{$res->{alerts}}, {type => 'error', msg => $get->message};
+    $res->{status} = $get->code ? $get->code : 500;
+    $self->render(json => $res, status => $res->{status});
+    return;
+  }
+
+}
+
 1;
