@@ -17,10 +17,11 @@ services:
   ## + ssl-local                                              ##
   ## + ssl-s3                                                 ##
   ## + shib-local                                             ##
+  ## + shib-s3                                                ##
   ##############################################################
 
   ############### httpd service for demo-local profile ###############
-  httpd-local:
+  httpd-demo-local:
     image: phaidraorg/httpd-demo-dist:143a0b39
     labels:
       logging: "promtail"
@@ -46,7 +47,7 @@ services:
     profiles: ["demo-local"]
 
   ############### httpd service for demo-s3 profile ###############
-  httpd-local-s3:
+  httpd-demo-s3:
     image: phaidraorg/httpd-demo-dist:143a0b39
     labels:
       logging: "promtail"
@@ -72,7 +73,7 @@ services:
     profiles: ["demo-s3"]
 
   #################### httpd service for ssl-local profile ####################
-  httpd-local-ssl:
+  httpd-ssl-local:
     image: phaidraorg/httpd-ssl-dist:326004fd
     labels:
       logging: "promtail"
@@ -280,6 +281,7 @@ services:
       FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
       FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
       FEDORA_HOST: "${FEDORA_HOST:-fedora-s3}"
+      FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-}"
       IMAGESERVER_HASH_SECRET: "${IMAGESERVER_HASH_SECRET:-changeme}"
       IMAGESERVER_HOST: "${IMAGESERVER_HOST:-imageserver-s3}"
       IMAGESERVER_ROOT_PATH: "s3_cache/converted_images"
@@ -867,7 +869,7 @@ services:
     tty: true
     profiles: ["website"]
 
-  httpd-local-dev:
+  httpd-demo-local-dev:
     image: httpd:2.4.62-bookworm
     labels:
       logging: "promtail"
@@ -1204,7 +1206,7 @@ services:
     profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
 
   #################### demo-s3-dev ####################
-  httpd-s3-dev:
+  httpd-demo-s3-dev:
     image: httpd:2.4.62-bookworm
     labels:
       logging: "promtail"
@@ -1377,7 +1379,7 @@ services:
     profiles: ["demo-s3-dev", "ssl-s3-dev", "shib-s3-dev"]
 
   #################### ssl-local-dev ####################
-  httpd-local-ssl-dev:
+  httpd-ssl-local-dev:
     image: httpd:2.4.62-bookworm
     labels:
       logging: "promtail"
@@ -1408,7 +1410,7 @@ services:
     profiles: ["ssl-local-dev"]
 
   #################### ssl-s3-dev ####################
-  httpd-s3-ssl-dev:
+  httpd-ssl-s3-dev:
     image: httpd:2.4.62-bookworm
     labels:
       logging: "promtail"
