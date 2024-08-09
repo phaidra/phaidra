@@ -92,7 +92,7 @@
               },
               "editorMode": "builder",
               "format": "table",
-              "rawSql": "SELECT COUNT(fedora_id) FROM fedoradb.simple_search WHERE (fedora_id LIKE '%JSON-LD%' OR fedora_id LIKE '%OCTETS%' OR fedora_id LIKE '%WEBVERSION%' OR fedora_id LIKE '%JSON-LD-PRIVATE%' OR fedora_id LIKE '%UWMETADATA%' OR fedora_id LIKE '%MODS%' OR fedora_id LIKE '%RIGHTS%' OR fedora_id LIKE '%COLLECTIONORDER%' OR fedora_id LIKE '%LINK%' OR fedora_id LIKE '%IIIF-MANIFEST%' OR fedora_id LIKE '%ANNOTATIONS%') LIMIT 50 ",
+              "rawSql": "SELECT COUNT(fedora_id) FROM fedoradb.simple_search WHERE (fedora_id LIKE '%JSON-LD' OR fedora_id LIKE '%OCTETS' OR fedora_id LIKE '%WEBVERSION' OR fedora_id LIKE '%JSON-LD-PRIVATE' OR fedora_id LIKE '%UWMETADATA' OR fedora_id LIKE '%MODS' OR fedora_id LIKE '%RIGHTS' OR fedora_id LIKE '%COLLECTIONORDER' OR fedora_id LIKE '%LINK' OR fedora_id LIKE '%IIIF-MANIFEST' OR fedora_id LIKE '%ANNOTATIONS') LIMIT 50 ",
               "refId": "A",
               "sql": {
                 "columns": [
