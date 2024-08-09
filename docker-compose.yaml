@@ -173,6 +173,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     ports:
       - "80:80"
       - "443:443"
@@ -871,6 +872,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
     volumes:
@@ -896,6 +898,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     build:
       context: .
       dockerfile: dockerfiles/ui.dockerfile
@@ -917,6 +920,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     volumes:
       - fedora:/mnt/fedora:ro
       - ./src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
@@ -1127,6 +1131,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     volumes:
       - solr:/var/solr
       - ./container_init/solr:/mnt/solr:ro
@@ -1141,6 +1146,7 @@ services:
 
   grafana-dev:
     image: grafana/grafana:11.0.0
+    restart: always
     volumes:
       - ./container_init/grafana/ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
       - ./container_init/grafana/dd.yaml:/etc/grafana/provisioning/dashboards/dd.yaml:ro
@@ -1163,6 +1169,7 @@ services:
 
   loki-dev:
     image: grafana/loki:3.0.0
+    restart: always
     volumes:
       - ./container_init/loki/loki-docker-config.yaml:/etc/loki/local-config.yaml:ro
       - loki:/loki
@@ -1173,6 +1180,7 @@ services:
 
   promtail-dev:
     image: grafana/promtail:3.0.0
+    restart: always
     volumes:
       - ./container_init/promtail/promtail-local-config.yaml:/etc/promtail/config.yaml:ro
       - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
@@ -1185,6 +1193,7 @@ services:
 
   prometheus-dev:
     image: prom/prometheus:v2.52.0
+    restart: always
     volumes:
       - ./container_init/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
       - prometheus:/prometheus
@@ -1200,6 +1209,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
     volumes:
@@ -1227,6 +1237,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     volumes:
       - s3_cache:/s3_cache
       - ./src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
@@ -1283,6 +1294,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     build:
       context: .
       dockerfile: dockerfiles/ui.dockerfile
@@ -1370,6 +1382,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     ports:
       - "80:80"
       - "443:443"
@@ -1400,6 +1413,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     ports:
       - "80:80"
       - "443:443"
@@ -1431,6 +1445,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     ports:
       - "80:80"
       - "443:443"
@@ -1474,6 +1489,7 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
+    restart: always
     ports:
       - "80:80"
       - "443:443"
