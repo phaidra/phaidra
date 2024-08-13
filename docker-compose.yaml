@@ -644,47 +644,57 @@ services:
       - phaidra-network
     profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3"]
 
-  # UNCOMMENT and fill .env values if you have access to an opencast instance
-  # vige:
-  #   image: phaidraorg/vige-base:0f5822e7
-  #   labels:
-  #     logging: "promtail"
-  #     logging_jobname: "containerlogs"
-  #   restart: always
-  #   volumes:
-  #     - ./src/vige:/mnt/vige:ro
-  #     - vige:/opt/vige
-  #     - fedora:/mnt/fedora:ro
-  #     - vige-mongosh:/root/.mongodb
-  #   networks:
-  #     - phaidra-network
-  #   depends_on: [mongodb-phaidra]
-  #   environment:
-  #     OC_EVENTS_URL: ${OC_EVENTS_URL}
-  #     OC_INGEST_URL: ${OC_INGEST_URL}
-  #     OC_USER: ${OC_USER}
-  #     OC_PASS: ${OC_PASS}
-  #     OC_WORKFLOW: ${OC_WORKFLOW}
-  #     M_USER: ${MONGODB_PHAIDRA_USER}
-  #     M_PASS: ${MONGODB_PHAIDRA_PASSWORD}
-  #     M_AGENT_DB: ${MONGO_AGENT_DB}
-  #   command:
-  #     - bash
-  #     - /mnt/vige/vige_controller.bash
+  vige:
+    image: phaidraorg/vige-dist:7ff7e7bf
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    restart: always
+    volumes:
+      - vige:/opt/vige
+      - fedora:/mnt/fedora:ro
+      - vige-mongosh:/root/.mongodb
+    networks:
+      - phaidra-network
+    depends_on: [mongodb-phaidra]
+    environment:
+      OC_EVENTS_URL: "${OC_EVENTS_URL:-}"
+      OC_INGEST_URL: "${OC_INGEST_URL:-}"
+      OC_USER: "${OC_USER:-}"
+      OC_PASS: "${OC_PASS:-}"
+      OC_WORKFLOW: "${OC_WORKFLOW:-}"
+      MONGODB_PHAIDRA_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra}"
+      M_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
+      M_PASS: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
+      M_AGENT_DB: "${MONGO_AGENT_DB:-paf_mongodb}"
+    profiles: ["external-opencast"]
 
-  # UNCOMMENT and fill .env values, if you have a remote Grafana instance with loki.
-  # promtail-push:
-  #   image: grafana/promtail:3.0.0
-  #   restart: always
-  #   volumes:
-  #     - ./container_init/promtail/promtail-push-config.yaml:/etc/promtail/config.yaml:ro
-  #     - ${HOST_DOCKER_SOCKET}:/var/run/docker.sock:ro
-  #   command: -config.file=/etc/promtail/config.yaml -config.expand-env=true
-  #   networks:
-  #     - phaidra-network
-  #   environment:
-  #     - LOKI_PUSH_URL=${LOKI_PUSH_URL}
-  #     - PROMTAIL_HOST_LABEL=${PROMTAIL_HOST_LABEL}
+  vige-dev:
+    image: phaidraorg/vige-base:latest
+    pull_policy: always
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    restart: always
+    volumes:
+      - ./src/vige:/mnt/vige:ro
+      - vige:/opt/vige
+      - fedora:/mnt/fedora:ro
+      - vige-mongosh:/root/.mongodb
+    networks:
+      - phaidra-network
+    depends_on: [mongodb-phaidra-dev]
+    environment:
+      OC_EVENTS_URL: "${OC_EVENTS_URL:-}"
+      OC_INGEST_URL: "${OC_INGEST_URL:-}"
+      OC_USER: "${OC_USER:-}"
+      OC_PASS: "${OC_PASS:-}"
+      OC_WORKFLOW: "${OC_WORKFLOW:-}"
+      MONGODB_PHAIDRA_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra-dev}"
+      M_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
+      M_PASS: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
+      M_AGENT_DB: "${MONGO_AGENT_DB:-paf_mongodb}"
+    profiles: ["external-opencast-dev"]
 
   ##############################################################
   ##### definitions for self-contained services            #####
