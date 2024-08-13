@@ -645,7 +645,7 @@ services:
     profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3"]
 
   vige:
-    image: phaidraorg/vige-dist:7ff7e7bf
+    image: phaidraorg/vige-dist:0fa040be
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
