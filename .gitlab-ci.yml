@@ -147,7 +147,8 @@ build-httpd-shib-dist:
     -t $CI_REGISTRY_USER/httpd-shib-dist:latest
     -t $CI_REGISTRY_USER/httpd-shib-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/httpd-shib-base.dockerfile
           - dockerfiles/httpd-shib-dist.dockerfile
@@ -191,7 +192,8 @@ build-httpd-ssl-dist:
     -t $CI_REGISTRY_USER/httpd-ssl-dist:latest
     -t $CI_REGISTRY_USER/httpd-ssl-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/httpd-ssl-dist.dockerfile
           - container_init/httpd/phaidra-ssl/conf/phaidra-ssl.conf
@@ -390,8 +392,7 @@ build-vige-dist:
     -t $CI_REGISTRY_USER/vige-dist:latest
     -t $CI_REGISTRY_USER/vige-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
+    - changes:
         paths:
           - dockerfiles/vige-base.dockerfile
           - dockerfiles/vige-dist.dockerfile
@@ -451,7 +452,8 @@ build-grafana-dist:
     -t $CI_REGISTRY_USER/grafana-dist:latest
     -t $CI_REGISTRY_USER/grafana-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - changes:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
         paths:
           - dockerfiles/grafana-dist.dockerfile
           - container_init/grafana/**/*
