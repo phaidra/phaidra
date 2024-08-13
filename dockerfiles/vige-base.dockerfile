@@ -18,4 +18,4 @@ apt-get install --yes --quiet mongodb-mongosh
 EOF
 RUN mkdir /opt/vige
 WORKDIR /opt/vige
-ENTRYPOINT ["bash", "/mnt/vige_controller.bash"]
+ENTRYPOINT ["bash", "/mnt/vige/vige_controller.bash"]
