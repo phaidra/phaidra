@@ -7,7 +7,7 @@ ___
 
 # About this repository
 
-This repo hosts the source code and docker-compose files of the
+This repo hosts the source code and the docker-compose startup file of the
 [PHAIDRA](https://phaidra.org/) (Permanent Hosting, Archiving and
 Indexing of Digital Resources and Assets) software, developed at the
 [Vienna University Computer Center](https://zid.univie.ac.at/en/).
@@ -18,7 +18,7 @@ organizations that need to provide a solution for long-term-archiving of
 valuable data and metadata about the stored objects.
 
 We provide various flavors for different use cases, from a demo version
-running on a local desktop computer for evaluation, to an SSO-enabled
+running on a local desktop computer for evaluation, to an shibboleth-enabled
 server version.
 
 # Setup
@@ -37,7 +37,39 @@ do that.
 
 See section [Docker Notes](#docker-notes) below to see what we do on a typical installation for running PHAIDRA on rootless containers.
 
+# Docker compose profiles
+
+We are using docker profiles to start up the relevant containers for the desired use case.
+
+## Profiles using versioned images including all code
+
++ `demo-local`: for an evaluation installation, serving PHAIDRA on `http://localhost:8899`, uses only local storage.
++ `demo-s3`: for an evaluation installation, serving PHAIDRA on `http://localhost:8899`, uses an S3-bucket for the object repository and images converted to the format supported by IIPImage.
++ `ssl-local`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`, uses only local storage.
++ `ssl-s3`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`, uses an S3-bucket for the object repository and images converted to the format supported by IIPImage.
++ `shib-local`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`, uses only local storage.  Uses an external shibboleth-idp for authentication.
++ `shib-s3`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`, uses an S3-bucket for the object repository and images converted to the format supported by IIPImage.  Uses an external shibboleth-idp for authentication.
+
+## Profiles bindmounting the repository's code
+
++ `demo-local-dev`: see above.
++ `demo-s3-dev`: see above.
++ `ssl-local`: see above.
++ `ssl-s3`: see above.
++ `shib-local`: see above.
++ `shib-s3`: see above.
+
+## Extra profiles
+### Standalone
++ `website`: For convenient development of our website at [www.phaidra.org](https://www.phaidra.org).
+### Add-On
++ `external-opencast`: can be added to any of the profiles that use local storage, if an external opencast-streaming-server is available to you. Uses a versioned image including all code.
++ `external-opencast-dev`: can be added to any of the dev-profiles that use local storage, if an external opencast-streaming-server is available to you. Uses bindmounted code from the repository.
+
+
 # Run it
+
+
 
 See the sections below for version-specific instructions.
 
