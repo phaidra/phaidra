@@ -41,23 +41,25 @@ See section [Docker Notes](#docker-notes) below to see what we do on a typical i
 
 We are using docker profiles to start up the relevant containers for the desired use case.
 
+We highly recommend to use the `--project-name $PROFILE_NAME_OF_YOUR_LIKING` flag to the `docker compose` command, as this will allow you to easily identify the persistant docker volumes which will be created to store your valuable data.
+
 ## Profiles using versioned images including all code
 
-+ `demo-local`: for an evaluation installation, serving PHAIDRA on `http://localhost:8899`, uses only local storage.
-+ `demo-s3`: for an evaluation installation, serving PHAIDRA on `http://localhost:8899`, uses an S3-bucket for the object repository and images converted to the format supported by IIPImage.
-+ `ssl-local`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`, uses only local storage.
-+ `ssl-s3`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`, uses an S3-bucket for the object repository and images converted to the format supported by IIPImage.
-+ `shib-local`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`, uses only local storage.  Uses an external shibboleth-idp for authentication.
-+ `shib-s3`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`, uses an S3-bucket for the object repository and images converted to the format supported by IIPImage.  Uses an external shibboleth-idp for authentication.
++ `demo-local`: for an evaluation installation, serving PHAIDRA on `http://localhost:8899`. Uses only local storage.
++ `demo-s3`: for an evaluation installation, serving PHAIDRA on `http://localhost:8899`. Uses an S3-bucket for the object repository and images converted to the format supported by IIPImage.
++ `ssl-local`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses only local storage.
++ `ssl-s3`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses an S3-bucket for the object repository and images converted to the format supported by IIPImage.
++ `shib-local`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses only local storage.  Uses an external shibboleth-idp for authentication.
++ `shib-s3`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses an S3-bucket for the object repository and images converted to the format supported by IIPImage.  Uses an external shibboleth-idp for authentication.
 
 ## Profiles bindmounting the repository's code
 
 + `demo-local-dev`: see above.
 + `demo-s3-dev`: see above.
-+ `ssl-local`: see above.
-+ `ssl-s3`: see above.
-+ `shib-local`: see above.
-+ `shib-s3`: see above.
++ `ssl-local-dev`: see above.
++ `ssl-s3-dev`: see above.
++ `shib-local-dev`: see above.
++ `shib-s3-dev`: see above.
 
 ## Extra profiles
 ### Standalone
@@ -68,63 +70,64 @@ We are using docker profiles to start up the relevant containers for the desired
 
 
 # Run it
+All default values assume that you are running docker rootless as the first non-root user with uid 1000 on your linux computer.  This is what we strongly recommend.  However, if this does not match your reality, please check the following options:
+## Linux user on docker rootless, but not uid 1000
++ Please set the variable `HOST_DOCKER_SOCKET` to `/run/user/$YOUR-UID/docker.sock` in an `.env` file.  You can get your uid quickly by running `id -u`.
+## Users running priviledged ('normal') docker (Linux and Windows Docker based on wsl2)
++ Please set the variable `ADMIN_IP_LIST` to `172.29.5.1` in an `.env` file for the demo/localhost version. This is to reach the admin area. For ssl/shib see below.
++ Please set the variable `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` in an `.env` file. This is to get proper service monitoring.
+## Users running priviledged ('normal') docker (OSX)
++ Please set the variable `ADMIN_IP_LIST` to `192.168.65.1` in an `.env` file for the demo/localhost version. This is to reach the admin area. For ssl/shib see below.
++ Please set the variable `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` in an `.env` file. This is to get proper service monitoring.
 
+## Demo/Localhost version with local storage
+###  Prerequisites
++ make sure no other service is using port 8899 on your computer.
 
+### Startup
+Run the following command to get PHAIDRA running on `http://localhost:8899`:
 
-See the sections below for version-specific instructions.
-
-## Demo Version
-
-###  Demo specific prerequisites
-None, just make sure no other service is using port 8899 on your
-computer.
-
-###  Demo Startup
-
-After the following commands have finished, you will have a PHAIDRA
-instance running on `http://localhost:8899`, that you can visit in
-your browser.  See the screenshot below for what you can expect.
-
-``` example
-cd compose_demo
-cp ../.env.template .env
-# adjust variables  in .env if uid !=1000 or on rootful Docker -- see notes below.
-docker compose up -d
+```
+docker compose --project-name $PROFILE_NAME_OF_YOUR_LIKING --profile demo-local up -d
 ```
 
-**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the environment variable `HOST_DOCKER_SOCKET` in the `.env` file to contain your actual (you can check with the command `id -u`).
+## Demo/Localhost version with S3 storage
+### Prerequisites
++ make sure no other service is using port 8899 on your computer.
++ set the following variables in your `.env` file:
+  + `S3_ACCESS_KEY`
+  + `S3_SECRET_KEY`
+  + `S3_BUCKETNAME`
+  + `S3_CACHESIZE`: in Bytes, defaults to 100000000 (100MB).
+  + `S3_REGION`
 
-**NOTE for users running priviledged Docker:** if running rootful  Docker, please change the environment variable `LOCAL_ADMIN_IP` in the `.env` file to "172.29.5.1" (Linux and Win11 Docker Desktop based on WSL), or "192.168.65.1" (Docker Desktop on OSX) and `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` (all of the mentioned ones).
+### Startup
+Run the following command to get PHAIDRA running on `http://localhost:8899`:
 
-
-## SSL Version
-
-###  SSL specific prerequisites
-
--   A DNS-entry for your computer's IP-address.
--   SSL-certificate and -key (put them into the
-    `./container_init/httpd/phaidra-ssl/conf`-directory of this repo and name them
-    `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).
--   firewall with port 80 and 443 open on your computer.
--   properly set variables in `./compose_ssl/.env` (`PHAIDRA_HOSTNAME`, `PHAIDRA_HOST_IP`, [`REMOTE_ADMIN_IP`]).
-
-###  SSL Startup
-
-Change to the folder `./compose_ssl` and run compose. After the
-setup has finished, PHAIDRA will run on
-`https://$YOUR-DNS-ENTRY`.
-
-``` example
-cd compose_ssl
-cp ../.env.template .env
-# adjust variables  in .env if uid !=1000 or on rootful Docker -- see notes below.
-# set proper values in '.env'
-docker compose up -d
+```
+docker compose --project-name $PROFILE_NAME_OF_YOUR_LIKING --profile demo-s3 up -d
 ```
 
-**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the environment variable `HOST_DOCKER_SOCKET` in the `.env` file to contain your actual (you can check with the command `id -u`).
+## SSL Version with local storage
+###  Prerequisites
++ make sure no other service is using ports 80 and 443 on your computer.
++ a DNS-entry pointing to your computer's IP-address.
++ SSL-certificate and -key (put them into the `certs/httpd` and name them `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).  Certificates acquired from the [certbot tool](https://certbot.eff.org/) should do the job as they contain the full chain of certificates.
++ firewall with port 80 and 443 open on your computer.
++ set the following variables in your `.env` file:
+  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer, if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts` you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for priviledged docker on Linux or Windows,  192.168.65.1 for priviledged docker on OSX).
+  + `OUTSIDE_HTTP_SCHEME="https"`
+  + `PHAIDRA_HOSTPORT=""`
+  + `PHAIDRA_PORTSTUB=""`
+  + `PHAIDRA_HOSTNAME="$YOUR-FQDN"`
 
-**NOTE for users running priviledged Docker:** if running rootful  Docker, please change the environment variable `LOCAL_ADMIN_IP` in the `.env` file to "172.29.5.1" (Linux and Win11 Docker Desktop based on WSL), or "192.168.65.1" (Docker Desktop on OSX) and `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` (all of the mentioned ones).
+###  Startup
+Run the following command to get PHAIDRA running on `https://$YOUR-FQDN`:
+
+```
+docker compose --project-name $PROFILE_NAME_OF_YOUR_LIKING --profile demo-s3 up -d
+```
+
 
 
 ## Shibboleth SSO Version
