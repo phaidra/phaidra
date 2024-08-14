@@ -41,7 +41,7 @@ See section [Docker Notes](#docker-notes) below to see what we do on a typical i
 
 We are using docker profiles to start up the relevant containers for the desired use case.
 
-We highly recommend to use the `--project-name $PROFILE_NAME_OF_YOUR_LIKING` flag to the `docker compose` command, as this will allow you to easily identify the persistant docker volumes which will be created to store your valuable data.
+We highly recommend to use the `--project-name $PROJECT_NAME_OF_YOUR_LIKING` flag to the `docker compose` command, as this will allow you to easily identify the persistant docker volumes which will be created to store your valuable data.
 
 ## Profiles using versioned images including all code
 
@@ -80,7 +80,7 @@ All default values assume that you are running docker rootless as the first non-
 + Please set the variable `ADMIN_IP_LIST` to `192.168.65.1` in an `.env` file for the demo/localhost version. This is to reach the admin area. For ssl/shib see below.
 + Please set the variable `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` in an `.env` file. This is to get proper service monitoring.
 
-## Demo/Localhost version with local storage
+## Demo version with local storage
 ###  Prerequisites
 + make sure no other service is using port 8899 on your computer.
 
@@ -88,10 +88,10 @@ All default values assume that you are running docker rootless as the first non-
 Run the following command to get PHAIDRA running on `http://localhost:8899`:
 
 ```
-docker compose --project-name $PROFILE_NAME_OF_YOUR_LIKING --profile demo-local up -d
+docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile demo-local up -d
 ```
 
-## Demo/Localhost version with S3 storage
+## Demo version with S3 storage
 ### Prerequisites
 + make sure no other service is using port 8899 on your computer.
 + set the following variables in your `.env` file:
@@ -105,10 +105,10 @@ docker compose --project-name $PROFILE_NAME_OF_YOUR_LIKING --profile demo-local 
 Run the following command to get PHAIDRA running on `http://localhost:8899`:
 
 ```
-docker compose --project-name $PROFILE_NAME_OF_YOUR_LIKING --profile demo-s3 up -d
+docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile demo-s3 up -d
 ```
 
-## SSL Version with local storage
+## SSL version with local storage
 ###  Prerequisites
 + make sure no other service is using ports 80 and 443 on your computer.
 + a DNS-entry pointing to your computer's IP-address.
@@ -125,48 +125,124 @@ docker compose --project-name $PROFILE_NAME_OF_YOUR_LIKING --profile demo-s3 up 
 Run the following command to get PHAIDRA running on `https://$YOUR-FQDN`:
 
 ```
-docker compose --project-name $PROFILE_NAME_OF_YOUR_LIKING --profile demo-s3 up -d
+docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile ssl-local up -d
 ```
 
+## SSL version with S3 storage
+###  Prerequisites
++ make sure no other service is using ports 80 and 443 on your computer.
++ a DNS-entry pointing to your computer's IP-address.
++ SSL-certificate and -key (put them into the `certs/httpd` and name them `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).  Certificates acquired from the [certbot tool](https://certbot.eff.org/) should do the job as they contain the full chain of certificates.
++ firewall with port 80 and 443 open on your computer.
++ set the following variables in your `.env` file:
+  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer, if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts` you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for priviledged docker on Linux or Windows,  192.168.65.1 for priviledged docker on OSX).
+  + `OUTSIDE_HTTP_SCHEME="https"`
+  + `PHAIDRA_HOSTPORT=""`
+  + `PHAIDRA_PORTSTUB=""`
+  + `PHAIDRA_HOSTNAME="$YOUR-FQDN"`
+  + `S3_ACCESS_KEY`
+  + `S3_SECRET_KEY`
+  + `S3_BUCKETNAME`
+  + `S3_CACHESIZE`: in Bytes, defaults to 100000000 (100MB).
+  + `S3_REGION`
 
+###  Startup
+Run the following command to get PHAIDRA running on `https://$YOUR-FQDN`:
 
-## Shibboleth SSO Version
+```
+docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile ssl-s3 up -d
+```
 
-###  Shibboleth specific prerequisites
-
--   A DNS-entry for your computer's IP-address.
--   SSL-certificate and -key (put them into the
-    `./container_init/httpd/phaidra-shib/conf`-directory of this repo and name them
-    `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).
--   firewall with port 80 and 443 open on your computer.
--   encryption and signing keys/certs for Shibboleth (plus the
-    registration at your organization's IdP). You can create the
-    required key/cert-pairs with the commands below (put the
-    results into the `./container_init/httpd/phaidra-shib/conf` folder of this repo -- 
-    **make sure your user has read access on these files**).
--   properly set variables in `./compose_shib/.env` (`PHAIDRA_HOSTNAME`, `PHAIDRA_HOST_IP`, [`REMOTE_ADMIN_IP`]).
-
-``` example
+## Shibboleth version with local storage
+NOTE: This profile is not as straight forward, as the built-in apache2 webserver will act as a Shibboleth-SP, which requires registration at your organization's Shibboleth IDP.  It's very likely that you need to modify a row of variables, depending on your organization.
+###  Prerequisites
++ make sure no other service is using ports 80 and 443 on your computer.
++ a DNS-entry pointing to your computer's IP-address.
++ SSL-certificate and -key (put them into the `certs/httpd` and name them `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).  Certificates acquired from the [certbot tool](https://certbot.eff.org/) should do the job as they contain the full chain of certificates.
++ generate certificates for communication with your idp by running the commands below and put them into `certs/shibboleth`:
+```
 openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-encrypt-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-encrypt-cert.pem
 openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-signing-cert.pem
 ```
++ firewall with port 80 and 443 open on your computer.
++ set the following variables in your `.env` file:
+  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer, if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts` you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for priviledged docker on Linux or Windows,  192.168.65.1 for priviledged docker on OSX).
+  + `OUTSIDE_HTTP_SCHEME="https"`
+  + `PHAIDRA_HOSTPORT=""`
+  + `PHAIDRA_PORTSTUB=""`
+  + `PHAIDRA_HOSTNAME="$YOUR-FQDN"`
+  + `SHIB_DISCO_URL`: shibboleth discovery URL. eg: `https://eduid.at/ds/wayf/` (default).
+  + `SHIB_METADATA_CERT`: shibboleth metadata signing certificate. eg: `aconet-metadata-signing.crt` (default)
+  + `SHIB_METADATA_FILE`: shibboleth metadata file. eg: `aconet-registered.xml` (default).
+  + `SHIB_METADATA`: shibboleth metadata file url. eg: `https://eduid.at/md/aconet-registered.xml` (default)
+  + `SHIB_ENTITY_ID`: shibboleth weblogin address. eg: `https://weblogin.univie.ac.at/shibboleth` (default)
+  + `SHIB_MAIL`: shibboleth mail attribute. eg: `mail` (default)
+  + `SHIB_GIVEN_NAME`: shibboleth given name attribute. eg: `givenName`(default)
+  + `SHIB_SURNAME`: shibboleth surname attribute. eg: `sn` (default)
+  + `SHIB_USERNAME`: shibboleth username attribute. eg: `uid` (default)
+  + `SHIB_AFFILIATION`: shibboleth affiliation attribute. eg: `affiliation` (default)
+  + `SHIB_REQUIRED_AFFILIATIONS`: comma-separated list of required attributes to log in to PHAIDRA. eg: `staff@univie.ac.at,employee@univie.ac.at,member@univie.ac.at` (default)
 
-###  Shibboleth Startup
+###  Startup
 
-Change to the folder `./compose_shib` and run compose. After the
-setup has finished you will have PHAIDRA running on
-`https://$YOUR-DNS-ENTRY`.
+Run the following command to get PHAIDRA running on `https://$YOUR-FQDN`:
 
-``` example
-cd compose_shib
-cp ../.env.template .env
-# adjust variables  in .env if uid !=1000 or on rootful Docker -- see notes below.
-# set proper values in '.env'
-docker compose up -d
 ```
-**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the environment variable `HOST_DOCKER_SOCKET` in the `.env` file to contain your actual (you can check with the command `id -u`).
+docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile shib-local up -d
+```
 
-**NOTE for users running priviledged Docker:** if running rootful  Docker, please change the environment variable `LOCAL_ADMIN_IP` in the `.env` file to "172.29.5.1" (Linux and Win11 Docker Desktop based on WSL), or "192.168.65.1" (Docker Desktop on OSX) and `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` (all of the mentioned ones).
+After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/Shibboleth.sso/Metadata`. You will have to hand this file to the IDP-manager of your organization and ask for registration.  After that, users matching the list in `SHIB_REQUIRED_AFFILIATIONS` should be able to log in and upload their files to your system.
+
+## Shibboleth version with S3 storage
+NOTE: This profile is not as straight forward, as the built-in apache2 webserver will act as a Shibboleth-SP, which requires registration at your organization's Shibboleth IDP.  It's very likely that you need to modify a row of variables, depending on your organization.
+###  Prerequisites
++ make sure no other service is using ports 80 and 443 on your computer.
++ a DNS-entry pointing to your computer's IP-address.
++ SSL-certificate and -key (put them into the `certs/httpd` and name them `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).  Certificates acquired from the [certbot tool](https://certbot.eff.org/) should do the job as they contain the full chain of certificates.
++ generate certificates for communication with your idp by running the commands below and put them into `certs/shibboleth`:
+```
+openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-encrypt-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-encrypt-cert.pem
+openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-signing-cert.pem
+```
++ firewall with port 80 and 443 open on your computer.
++ set the following variables in your `.env` file:
+  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer, if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts` you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for priviledged docker on Linux or Windows,  192.168.65.1 for priviledged docker on OSX).
+  + `OUTSIDE_HTTP_SCHEME="https"`
+  + `PHAIDRA_HOSTPORT=""`
+  + `PHAIDRA_PORTSTUB=""`
+  + `PHAIDRA_HOSTNAME="$YOUR-FQDN"`
+  + `SHIB_DISCO_URL`: shibboleth discovery URL. eg: `https://eduid.at/ds/wayf/` (default).
+  + `SHIB_METADATA_CERT`: shibboleth metadata signing certificate. eg: `aconet-metadata-signing.crt` (default)
+  + `SHIB_METADATA_FILE`: shibboleth metadata file. eg: `aconet-registered.xml` (default).
+  + `SHIB_METADATA`: shibboleth metadata file url. eg: `https://eduid.at/md/aconet-registered.xml` (default)
+  + `SHIB_ENTITY_ID`: shibboleth weblogin address. eg: `https://weblogin.univie.ac.at/shibboleth` (default)
+  + `SHIB_MAIL`: shibboleth mail attribute. eg: `mail` (default)
+  + `SHIB_GIVEN_NAME`: shibboleth given name attribute. eg: `givenName`(default)
+  + `SHIB_SURNAME`: shibboleth surname attribute. eg: `sn` (default)
+  + `SHIB_USERNAME`: shibboleth username attribute. eg: `uid` (default)
+  + `SHIB_AFFILIATION`: shibboleth affiliation attribute. eg: `affiliation` (default)
+  + `SHIB_REQUIRED_AFFILIATIONS`: comma-separated list of required attributes to log in to PHAIDRA. eg: `staff@univie.ac.at,employee@univie.ac.at,member@univie.ac.at` (default)
+  + `S3_ACCESS_KEY`
+  + `S3_SECRET_KEY`
+  + `S3_BUCKETNAME`
+  + `S3_CACHESIZE`: in Bytes, defaults to 100000000 (100MB).
+  + `S3_REGION`
+
+###  Startup
+
+Run the following command to get PHAIDRA running on `https://$YOUR-FQDN`:
+
+```
+docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile shib-s3 up -d
+```
+
+After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/Shibboleth.sso/Metadata`. You will have to hand this file to the IDP-manager of your organization and ask for registration.  After that, users matching the list in `SHIB_REQUIRED_AFFILIATIONS` should be able to log in and upload their files to your system.
+
+
+
+
+
+
 
 # Default credentials on administration sites
 - **LDAP Account Manager** (from the Webinterface: Manage Phaidra -> Manage Users):
