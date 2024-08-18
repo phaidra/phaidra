@@ -46,6 +46,15 @@ sub _getRecordUpdate {
   if ($doc) {
     $recUpdate = $doc;
 
+    for my $ds (@{$doc->{datastreams}}) {
+      if ($ds eq 'JSON-LD') {
+        my $apires = $ua->get($urlapi."/object/".$pid."/json-ld")->result;
+        if ($apires->code == 200) {
+          $recUpdate->{jsonld} = $apires->json;
+        }
+      }
+    }
+
     if (exists($doc->{ispartof})) {
       my @newIspartof;
       for my $colpid (@{$doc->{ispartof}}) {

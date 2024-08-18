@@ -117,6 +117,9 @@
             "baseurl": "lobid.org"
         }
     },
+    "oai": {
+        "dataprovider": "__PHAIDRA_HOSTNAME__"
+    },
     "hooks": {
         "updatedc": 0,
         "updateindex": 1

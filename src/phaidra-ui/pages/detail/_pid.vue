@@ -2723,7 +2723,7 @@ export default {
         this.doiRequestLoading = true;
         let response = await this.$axios.request({
           method: 'POST',
-          url: '/utils/' + this.pid + '/requestdoi',
+          url: '/utils/' + this.objectInfo.pid + '/requestdoi',
           headers: {
             'Content-Type': 'multipart/form-data',
             "X-XSRF-TOKEN": this.user.token,

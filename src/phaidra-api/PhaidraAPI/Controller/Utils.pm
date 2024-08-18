@@ -9,6 +9,7 @@ use base 'Mojolicious::Controller';
 use Scalar::Util qw(looks_like_number);
 use PhaidraAPI::Model::Search;
 use PhaidraAPI::Model::Util;
+use MIME::Lite::TT::HTML;
 
 sub streamingplayer {
   my $self = shift;
