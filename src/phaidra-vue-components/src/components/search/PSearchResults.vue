@@ -35,10 +35,10 @@
           </v-col>
         </v-slide-x-transition>
         <v-divider inset vertical v-if="selectioncheck"></v-divider>
-        <v-col :cols="selectioncheck ? 10 : 12">
+        <v-col :cols="selectioncheck ? 11 : 12">
           <v-row :key="'prev'+doc.pid">
-            <v-col cols="2" class="preview-maxwidth">
-              <p-img :src="instance.api + '/object/' + doc.pid + '/thumbnail'" class="elevation-1 mt-2">
+            <v-col cols="2" >
+              <p-img :src="instance.api + '/object/' + doc.pid + '/thumbnail'" class="preview-maxwidth elevation-1 mt-2">
                 <template v-slot:placeholder>
                   <div class="fill-height ma-0" align="center" justify="center" >
                     <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
@@ -47,16 +47,26 @@
               </p-img>
             </v-col>
             <v-col cols="10">
-              <v-row no-gutters class="mb-4">
-                <v-col cols="10">
+              <v-row >
+                <v-col cols="9">
                   <h3 class="title font-weight-light primary--text" @click.stop v-if="doc.dc_title">
                     <router-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ doc.dc_title[0] }}</router-link>
                   </h3>
                 </v-col>
-                <v-spacer></v-spacer>
-                <v-col cols="2" class="text-right"><span v-if="doc.created" class="grey--text">{{ doc.created | date }}</span></v-col>
+                <v-col cols="3" class="text-right">
+                  <v-chip v-if="doc.created" color="white" class="grey--text text--darken-4">{{ doc.created | date }}
+                    <v-icon v-if="doc.cmodel == 'Video'" class="mx-2" color="grey">mdi-video</v-icon>
+                    <v-icon v-else-if="doc.cmodel == 'Picture'" class="mx-2" color="grey">mdi-image</v-icon>
+                    <v-icon v-else-if="doc.cmodel == 'Audio'" class="mx-2" color="grey">mdi-volume-high</v-icon>
+                    <v-icon v-else-if="doc.cmodel == 'PDFDocument'" class="mx-2" color="grey">mdi-file-document</v-icon>
+                    <v-icon v-else-if="doc.cmodel == 'Asset'" class="mx-2" color="grey">mdi-file</v-icon>
+                    <v-icon v-else-if="doc.cmodel == 'Resource'" class="mx-2" color="grey">mdi-link</v-icon>
+                    <v-icon v-else-if="doc.cmodel == 'Collection'" class="mx-2" color="grey">mdi-folder-open</v-icon>
+                    <v-icon v-else-if="doc.cmodel == 'Container'" class="mx-2" color="grey">mdi-folder</v-icon>
+                  </v-chip>
+                </v-col>
               </v-row>
-              <v-row no-gutters class="my-4 mr-2">
+              <v-row class="my-4 mr-2">
                 <v-col>
                   <span class="grey--text text--darken-4">
                     <span v-for="(aut,i) in doc.bib_roles_pers_aut" :key="'pers'+i">
@@ -68,24 +78,28 @@
                   </span>
                 </v-col>
               </v-row>
-              <v-row no-gutters class="my-4 mr-2" v-if="doc.dc_description">
+              <v-row class="my-4 mr-2" v-if="doc.dc_description">
                 <v-col>
                   <span class="grey--text text--darken-4"><p-expand-text :text="doc.dc_description[0]" :moreStr="$t('read more')"/></span>
                 </v-col>
               </v-row>
-            </v-col>
-          </v-row>
-          <v-row no-gutters class="my-4 mr-2" :key="'lic'+doc.pid">
-            <v-col cols="2" class="preview-maxwidth"></v-col>
-            <v-col>
-              <v-row no-gutters class="mb-4" v-if="doc.isrestricted"><v-chip label dark color="red lighten-1 font-weight-regular">{{ $t('Restricted access') }}</v-chip></v-row>
-              <v-row no-gutters>
-                <span>{{ instance.baseurl }}/{{ doc.pid }}</span>
-                <v-spacer></v-spacer>
-                <p-d-license v-if="doc.dc_rights" :hideLabel="true" :o="doc.dc_rights[0]"></p-d-license>
+              <v-row v-if="doc.isrestricted">
+                <v-col>
+                  <v-chip label dark color="red lighten-1 font-weight-regular">{{ $t('Restricted access') }}</v-chip>
+                </v-col>
               </v-row>
+              <v-row >
+                <v-col cols="9">
+                  <span>{{ instance.baseurl }}/{{ doc.pid }}</span>
+                </v-col>
+                <v-col cols="3" class="text-right pr-5">
+                  <p-d-license v-if="doc.dc_rights" :hideLabel="true" :o="doc.dc_rights[0]"></p-d-license>
+                </v-col>
+              </v-row>
+              
             </v-col>
           </v-row>
+          
         </v-col>
       </v-row>
       <v-divider :key="'div'+doc.pid" class="mt-6 mb-4 mr-2"></v-divider>

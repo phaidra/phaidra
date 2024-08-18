@@ -66,31 +66,12 @@
               </v-text-field>
             </v-col>
             <v-col cols="12" md="2" v-if="multilingual">
-              <v-autocomplete
-                :value="getTerm('lang', titleLanguage)"
-                v-on:input="$emit('input-title-language', $event )"
-                :items="vocabularies['lang'].terms"
-                :item-value="'@id'"
-                :filter="autocompleteFilter"
-                hide-no-data
-                :label="$t('Language')"
-                :filled="inputStyle==='filled'"
-                :outlined="inputStyle==='outlined'"
-                return-object
-                clearable
-              >
-                <template slot="item" slot-scope="{ item }">
-                  <v-list-item-content two-line>
-                    <v-list-item-title  v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-                    <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-                  </v-list-item-content>
-                </template>
-                <template slot="selection" slot-scope="{ item }">
-                  <v-list-item-content>
-                    <v-list-item-title v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-                  </v-list-item-content>
-                </template>
-              </v-autocomplete>
+              <v-btn text @click="$refs.langdialog.open()">
+                <span class="grey--text text--darken-1">
+                  ({{ titleLanguage ? titleLanguage : '--' }})
+                </span>
+              </v-btn>
+              <select-language ref="langdialog" @language-selected="$emit('input-title-language', $event)"></select-language>
             </v-col>
 
           </v-row>
@@ -250,6 +231,7 @@
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { validationrules } from '../../mixins/validationrules'
+import SelectLanguage from '../select/SelectLanguage'
 import xmlUtils from '../../utils/xml'
 import qs from 'qs'
 var iconv = require('iconv-lite')
@@ -257,6 +239,9 @@ var iconv = require('iconv-lite')
 export default {
   name: 'p-i-series',
   mixins: [vocabulary, fieldproperties, validationrules],
+  components: {
+    SelectLanguage
+  },
   props: {
     label: {
       type: String

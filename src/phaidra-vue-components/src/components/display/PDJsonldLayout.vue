@@ -34,9 +34,6 @@
     <slot name="schema:numberOfPages"></slot>
     <slot name="schema:pageStart"></slot>
     <slot name="schema:pageEnd"></slot>
-    <slot name="cito:cites"></slot>
-    <slot name="cito:citesAsDataSource"></slot>
-    <slot name="cito:isCitedBy"></slot>
     <slot name="bf:provisionActivity"></slot>
     <slot name="bf:instanceOf"></slot>
     <slot name="rdau:P60227"></slot><!-- adaptation of -->
@@ -63,6 +60,12 @@
     <slot name="phaidra:dateAccessioned"></slot>
     <slot name="dcterms:temporal"></slot>
 
+    <!-- a11y -->
+    <slot name="schema:accessibilityControl"></slot>
+    <slot name="schema:accessMode"></slot>
+    <slot name="schema:accessibilityHazard"></slot>
+    <slot name="schema:accessibilityFeature"></slot>
+
     <!-- events -->
     <slot name="ebucore:hasRelatedEvent"></slot>
 
@@ -72,9 +75,6 @@
     <slot name="vra:placeOfRepository"></slot>
     <slot name="vra:placeOfSite"></slot>
     <slot name="bf:physicalLocation"></slot>
-
-    <!-- links -->
-    <slot name="rdfs:seeAlso"></slot>
 
     <!-- properties of physical object -->
     <slot name="vra:hasInscription"></slot>
@@ -108,12 +108,27 @@
     <!-- error message -->
     <slot name="unknown-predicate"></slot>
 
+    <v-card flat outlined class="pb-4 my-4" v-if="jsonld.hasOwnProperty('cito:cites') || jsonld.hasOwnProperty('cito:citesAsDataSource') || jsonld.hasOwnProperty('cito:isCitedBy') || jsonld.hasOwnProperty('rdfs:seeAlso')">
+      <v-card-title class="title font-weight-light grey white--text">{{ $t('Bibliography') }}</v-card-title>
+      <v-divider class="mb-4"></v-divider>
+      <slot name="cito:cites"></slot>
+      <slot name="cito:citesAsDataSource"></slot>
+      <slot name="cito:isCitedBy"></slot>
+      <slot name="rdfs:seeAlso"></slot>
+    </v-card>
+
     <!-- recursion starts here -->
     <slot name="phaidra:Subject"></slot><!-- dcterms:subject @type=phaidra:Subject -->
   </v-container>
 </template>
 <script>
 export default {
-  name: 'p-d-jsonld-layout'
+  name: 'p-d-jsonld-layout',
+  props: {
+    jsonld: {
+      type: Object,
+      default: null
+    }
+  }
 }
 </script>

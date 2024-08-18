@@ -1,6 +1,6 @@
 <template>
 
-  <p-d-jsonld-layout v-if="jsonld">
+  <p-d-jsonld-layout v-if="jsonld" :jsonld="jsonld">
 
     <template v-if="pid && !predicatesToHide.includes('pid')" slot="pid">
       <v-row>
@@ -43,6 +43,22 @@
           <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'genre'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
         </template>
 
+        <template v-else-if="p==='schema:accessMode'" slot="schema:accessMode">
+          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'accessMode'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        </template>
+
+        <template v-else-if="p==='schema:accessibilityFeature'" slot="schema:accessibilityFeature">
+          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'accessibilityFeature'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        </template>
+
+        <template v-else-if="p==='schema:accessibilityControl'" slot="schema:accessibilityControl">
+          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'accessibilityControl'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        </template>
+
+        <template v-else-if="p==='schema:accessibilityHazard'" slot="schema:accessibilityHazard">
+          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'accessibilityHazard'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        </template>
+
         <template v-else-if="p==='oaire:version'" slot="oaire:version">
           <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'oairev'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
         </template>
@@ -82,15 +98,15 @@
         </template>
 
         <template v-else-if="p==='dcterms:date'" slot="dcterms:date">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'date'+j" v-bind.sync="displayProperties"></p-d-value>
+          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'date'+j" v-bind.sync="displayProperties"></p-d-date>
         </template>
 
         <template v-else-if="p==='dcterms:created'" slot="dcterms:created">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'created'+j" v-bind.sync="displayProperties"></p-d-value>
+          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'created'+j" v-bind.sync="displayProperties"></p-d-date>
         </template>
 
         <template v-else-if="p==='dcterms:modified'" slot="dcterms:modified">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'modified'+j" v-bind.sync="displayProperties"></p-d-value>
+          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'modified'+j" v-bind.sync="displayProperties"></p-d-date>
         </template>
 
         <template v-else-if="p==='dcterms:available'" slot="dcterms:available">
@@ -102,27 +118,27 @@
         </template>
 
         <template v-else-if="p==='dcterms:valid'" slot="dcterms:valid">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'valid'+j" v-bind.sync="displayProperties"></p-d-value>
+          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'valid'+j" v-bind.sync="displayProperties"></p-d-date>
         </template>
 
         <template v-else-if="p==='dcterms:dateAccepted'" slot="dcterms:dateAccepted">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'dateAccepted'+j" v-bind.sync="displayProperties"></p-d-value>
+          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'dateAccepted'+j" v-bind.sync="displayProperties"></p-d-date>
         </template>
 
         <template v-else-if="p==='dcterms:dateCopyrighted'" slot="dcterms:dateCopyrighted">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'dateCopyrighted'+j" v-bind.sync="displayProperties"></p-d-value>
+          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'dateCopyrighted'+j" v-bind.sync="displayProperties"></p-d-date>
         </template>
 
         <template v-else-if="p==='dcterms:dateSubmitted'" slot="dcterms:dateSubmitted">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'dateSubmitted'+j" v-bind.sync="displayProperties"></p-d-value>
+          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'dateSubmitted'+j" v-bind.sync="displayProperties"></p-d-date>
         </template>
 
         <template v-else-if="p==='rdau:P60071'" slot="rdau:P60071">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'dateOfProduction'+j" v-bind.sync="displayProperties"></p-d-value>
+          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'dateOfProduction'+j" v-bind.sync="displayProperties"></p-d-date>
         </template>
 
         <template v-else-if="p==='phaidra:dateAccessioned'" slot="phaidra:dateAccessioned">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'phaidra:dateAccessioned'+j" v-bind.sync="displayProperties"></p-d-value>
+          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'phaidra:dateAccessioned'+j" v-bind.sync="displayProperties"></p-d-date>
         </template>
 
         <template v-else-if="p==='dcterms:temporal'" slot="dcterms:temporal">

@@ -25,7 +25,7 @@
           <v-row>
             <v-col>
               <v-row >
-                <v-col cols="8">
+                <v-col cols="10">
                   <v-text-field
                     :value="name"
                     :label="$t('Name')"
@@ -34,38 +34,19 @@
                     :outlined="inputStyle==='outlined'"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="3">
-                  <v-autocomplete
-                    :value="getTerm('lang', nameLanguage)"
-                    v-on:input="$emit('input-name-language', $event )"
-                    :items="vocabularies['lang'].terms"
-                    :item-value="'@id'"
-                    :filter="autocompleteFilter"
-                    hide-no-data
-                    :label="$t('Language')"
-                    :filled="inputStyle==='filled'"
-                    :outlined="inputStyle==='outlined'"
-                    return-object
-                    clearable
-                  >
-                    <template slot="item" slot-scope="{ item }">
-                      <v-list-item-content two-line>
-                        <v-list-item-title  v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-                        <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-                      </v-list-item-content>
-                    </template>
-                    <template slot="selection" slot-scope="{ item }">
-                      <v-list-item-content>
-                        <v-list-item-title v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-                      </v-list-item-content>
-                    </template>
-                  </v-autocomplete>
+                <v-col cols="2">
+                  <v-btn text @click="$refs.langdialogname.open()">
+                    <span class="grey--text text--darken-1">
+                      ({{ nameLanguage ? nameLanguage : '--' }})
+                    </span>
+                  </v-btn>
+                  <select-language ref="langdialogname" @language-selected="$emit('input-name-language', $event)"></select-language>
                 </v-col>
 
               </v-row>
 
               <v-row >
-                <v-col cols="8">
+                <v-col cols="10">
                   <v-text-field
                     :value="description"
                     :label="$t('Description')"
@@ -74,32 +55,13 @@
                     :outlined="inputStyle==='outlined'"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="3">
-                  <v-autocomplete
-                    :value="getTerm('lang', descriptionLanguage)"
-                    v-on:input="$emit('input-description-language', $event )"
-                    :items="vocabularies['lang'].terms"
-                    :item-value="'@id'"
-                    :filter="autocompleteFilter"
-                    hide-no-data
-                    :label="$t('Language')"
-                    :filled="inputStyle==='filled'"
-                    :outlined="inputStyle==='outlined'"
-                    return-object
-                    clearable
-                  >
-                    <template slot="item" slot-scope="{ item }">
-                      <v-list-item-content two-line>
-                        <v-list-item-title  v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-                        <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-                      </v-list-item-content>
-                    </template>
-                    <template slot="selection" slot-scope="{ item }">
-                      <v-list-item-content>
-                        <v-list-item-title v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-                      </v-list-item-content>
-                    </template>
-                  </v-autocomplete>
+                <v-col cols="2">
+                  <v-btn text @click="$refs.langdialogdescription.open()">
+                    <span class="grey--text text--darken-1">
+                      ({{ descriptionLanguage ? descriptionLanguage : '--' }})
+                    </span>
+                  </v-btn>
+                  <select-language ref="langdialogdescription" @language-selected="$emit('input-description-language', $event)"></select-language>
                 </v-col>
 
               </v-row>
@@ -241,10 +203,14 @@
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { validationrules } from '../../mixins/validationrules'
+import SelectLanguage from '../select/SelectLanguage'
 
 export default {
   name: 'p-i-event',
   mixins: [vocabulary, fieldproperties, validationrules],
+  components: {
+    SelectLanguage
+  },
   props: {
     name: String,
     nameLanguage: String,

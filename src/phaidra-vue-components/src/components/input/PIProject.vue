@@ -35,32 +35,13 @@
                   :outlined="inputStyle==='outlined'"
                 ></v-text-field>
               </v-col>
-              <v-col cols="3" v-if="multilingual">
-                <v-autocomplete
-                  :value="getTerm('lang', nameLanguage)"
-                  v-on:input="$emit('input-name-language', $event )"
-                  :items="vocabularies['lang'].terms"
-                  :item-value="'@id'"
-                  :filter="autocompleteFilter"
-                  hide-no-data
-                  :label="$t('Language')"
-                  :filled="inputStyle==='filled'"
-                  :outlined="inputStyle==='outlined'"
-                  return-object
-                  clearable
-                >
-                  <template slot="item" slot-scope="{ item }">
-                    <v-list-item-content two-line>
-                      <v-list-item-title  v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-                      <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-                    </v-list-item-content>
-                  </template>
-                  <template slot="selection" slot-scope="{ item }">
-                    <v-list-item-content>
-                      <v-list-item-title v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
-                  </template>
-                </v-autocomplete>
+              <v-col cols="1" v-if="multilingual">
+                <v-btn text @click="$refs.langdialogname.open()">
+                  <span class="grey--text text--darken-1">
+                    ({{ nameLanguage ? nameLanguage : '--' }})
+                  </span>
+                </v-btn>
+                <select-language ref="langdialogname" @language-selected="$emit('input-name-language', $event)"></select-language>
               </v-col>
 
             </v-row>
@@ -75,32 +56,13 @@
                   :outlined="inputStyle==='outlined'"
                 ></v-text-field>
               </v-col>
-              <v-col cols="3" v-if="multilingual">
-                <v-autocomplete
-                  :value="getTerm('lang', descriptionLanguage)"
-                  v-on:input="$emit('input-description-language', $event )"
-                  :items="vocabularies['lang'].terms"
-                  :item-value="'@id'"
-                  :filter="autocompleteFilter"
-                  hide-no-data
-                  :label="$t('Language')"
-                  :filled="inputStyle==='filled'"
-                  :outlined="inputStyle==='outlined'"
-                  return-object
-                  clearable
-                >
-                  <template slot="item" slot-scope="{ item }">
-                    <v-list-item-content two-line>
-                      <v-list-item-title  v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-                      <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-                    </v-list-item-content>
-                  </template>
-                  <template slot="selection" slot-scope="{ item }">
-                    <v-list-item-content>
-                      <v-list-item-title v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
-                  </template>
-                </v-autocomplete>
+              <v-col cols="1" v-if="multilingual">
+                <v-btn text @click="$refs.langdialogdesc.open()">
+                  <span class="grey--text text--darken-1">
+                    ({{ descriptionLanguage ? descriptionLanguage : '--' }})
+                  </span>
+                </v-btn>
+                <select-language ref="langdialogdesc" @language-selected="$emit('input-description-language', $event)"></select-language>
               </v-col>
             </v-row>
 
@@ -195,9 +157,9 @@
               </v-col>
               <v-col cols="4">
                 <v-text-field
-                  :value="identifier"
-                  :label="$t('Identifier')"
-                  v-on:blur="$emit('input-identifier',$event.target.value)"
+                  :value="code"
+                  :label="$t('Code / Identifier')"
+                  v-on:blur="$emit('input-code',$event.target.value)"
                   :filled="inputStyle==='filled'"
                   :outlined="inputStyle==='outlined'"
                 ></v-text-field>
@@ -207,6 +169,43 @@
                   :value="homepage"
                   :label="$t('Homepage')"
                   v-on:blur="$emit('input-homepage',$event.target.value)"
+                  :filled="inputStyle==='filled'"
+                  :outlined="inputStyle==='outlined'"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row >
+              <v-col :cols="6" v-if="!hideIdentifierType && !hideIdentifier">
+                <v-autocomplete
+                  v-on:input="$emit('input-identifier-type', $event)"
+                  :label="$t('Type of identifier')"
+                  :items="vocabularies[identifierVocabulary].terms"
+                  :item-value="'@id'"
+                  :value="getTerm(identifierVocabulary, identifierType)"
+                  :filter="autocompleteFilter"
+                  :filled="inputStyle==='filled'"
+                  :outlined="inputStyle==='outlined'"
+                  return-object
+                  clearable
+                >
+                  <template slot="item" slot-scope="{ item }">
+                    <v-list-item-content two-line>
+                      <v-list-item-title  v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+                  <template slot="selection" slot-scope="{ item }">
+                    <v-list-item-content>
+                      <v-list-item-title v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+                </v-autocomplete>
+              </v-col>
+              <v-col :cols="!hideIdentifierType ? 6 : 12" v-if="!hideIdentifier">
+                <v-text-field
+                  :value="identifier"
+                  :label="$t('Identifier')"
+                  v-on:blur="$emit('input-identifier',$event.target.value)"
                   :filled="inputStyle==='filled'"
                   :outlined="inputStyle==='outlined'"
                 ></v-text-field>
@@ -224,41 +223,51 @@
               :outlined="inputStyle==='outlined'"
             ></v-text-field>
           </v-col>
-          <v-col cols="2" v-if="multilingual">
-            <v-autocomplete
-              :value="getTerm('lang', funderNameLanguage)"
-              v-on:input="$emit('input-funder-name-language', $event )"
-              :items="vocabularies['lang'].terms"
-              :item-value="'@id'"
-              :filter="autocompleteFilter"
-              hide-no-data
-              :label="$t('Language')"
-              :filled="inputStyle==='filled'"
-              :outlined="inputStyle==='outlined'"
-              return-object
-              clearable
-            >
-              <template slot="item" slot-scope="{ item }">
-                <v-list-item-content two-line>
-                  <v-list-item-title  v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-                  <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-                </v-list-item-content>
-              </template>
-              <template slot="selection" slot-scope="{ item }">
-                <v-list-item-content>
-                  <v-list-item-title v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-                </v-list-item-content>
-              </template>
-            </v-autocomplete>
+          <v-col cols="1" v-if="multilingual">
+            <v-btn text @click="$refs.langdialogfunder.open()">
+              <span class="grey--text text--darken-1">
+                ({{ funderNameLanguage ? funderNameLanguage : '--' }})
+              </span>
+            </v-btn>
+            <select-language ref="langdialogfunder" @language-selected="$emit('input-funder-name-language', $event)"></select-language>
           </v-col>
           <v-col :cols="multilingual ? 4 : 6">
-            <v-text-field
-              :value="funderIdentifier"
-              :label="$t('Funder identifier')"
-              v-on:blur="$emit('input-funder-identifier',$event.target.value)"
-              :filled="inputStyle==='filled'"
-              :outlined="inputStyle==='outlined'"
-            ></v-text-field>
+            <v-row >
+              <v-col :cols="6" v-if="!hideIdentifierType && !hideIdentifier">
+                <v-autocomplete
+                  v-on:input="$emit('input-funder-identifier-type', $event)"
+                  :label="$t('Type of funder identifier')"
+                  :items="vocabularies[identifierVocabulary].terms"
+                  :item-value="'@id'"
+                  :value="getTerm(identifierVocabulary, funderIdentifierType)"
+                  :filter="autocompleteFilter"
+                  :filled="inputStyle==='filled'"
+                  :outlined="inputStyle==='outlined'"
+                  return-object
+                  clearable
+                >
+                  <template slot="item" slot-scope="{ item }">
+                    <v-list-item-content two-line>
+                      <v-list-item-title  v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+                  <template slot="selection" slot-scope="{ item }">
+                    <v-list-item-content>
+                      <v-list-item-title v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+                </v-autocomplete>
+              </v-col>
+              <v-col :cols="!hideIdentifierType ? 6 : 12" v-if="!hideIdentifier">
+                <v-text-field
+                  :value="funderIdentifier"
+                  :label="$t('Funder identifier')"
+                  v-on:blur="$emit('input-funder-identifier',$event.target.value)"
+                  :filled="inputStyle==='filled'"
+                  :outlined="inputStyle==='outlined'"
+                ></v-text-field>
+              </v-col>
+            </v-row>
           </v-col>
         </v-row>
         </v-card-text>
@@ -271,10 +280,14 @@
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { validationrules } from '../../mixins/validationrules'
+import SelectLanguage from '../select/SelectLanguage'
 
 export default {
   name: 'p-i-project',
   mixins: [vocabulary, fieldproperties, validationrules],
+  components: {
+    SelectLanguage
+  },
   props: {
     type: {
       type: String
@@ -294,11 +307,31 @@ export default {
     funderNameLanguage: {
       type: String
     },
+    code: {
+      type: String
+    },
+    identifierType: {
+      type: String
+    },
     identifier: {
+      type: String
+    },
+    funderIdentifierType: {
       type: String
     },
     funderIdentifier: {
       type: String
+    },
+    hideIdentifier: {
+      type: Boolean
+    },
+    hideIdentifierType: {
+      type: Boolean,
+      default: false
+    },
+    identifierVocabulary: {
+      type: String,
+      default: 'identifiertype'
     },
     description: {
       type: String

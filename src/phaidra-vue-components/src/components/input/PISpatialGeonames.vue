@@ -270,18 +270,17 @@ export default {
       this.items = []
       this.selected = null
       var params = {
-        maxRows: this.$store.state.appconfig.apis.geonames.maxRows,
-        username: this.$store.state.appconfig.apis.geonames.username,
         q: this.q,
         lang: this.alpha2locale
       }
       try {
         let response = await this.$axios.request({
           method: 'GET',
-          url: this.$store.state.appconfig.apis.geonames.search,
+          url: '/geonames/search',
           params: params
         })
         this.items = response.data.geonames
+        this.showItems = true
         this.showItems = true
       } catch (error) {
         console.log(error)

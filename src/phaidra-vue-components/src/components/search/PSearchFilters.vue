@@ -13,7 +13,7 @@
             <icon @click.native="showFacet(f)" v-if="!f.show" name="univie-checkbox-unchecked" class="primary--text"></icon>
             <span @click="showFacet(f)" class="facet-label primary--text" :class="{ active: f.show }">{{ $t(f.label) }}</span>
             <ul v-if="f.show">
-              <li v-for="(q, j) in f.queries" :key="j">
+              <li v-for="(q, j) in f.queries" :key="i+j">
                 <span @click="toggleFacet(q,f)">
                   <icon v-if="q.active" name="univie-stop2" class="primary--text"></icon>
                   <icon v-if="!q.active" name="univie-checkbox-unchecked" class="primary--text"></icon>
@@ -21,7 +21,7 @@
                   <span class="facet-count grey--text" v-if="q.count > 0">({{q.count}})</span>
                 </span>
                 <ul v-if="q.active && q.childFacet" >
-                  <li v-for="(q1, k) in q.childFacet.queries" :key="k">
+                  <li v-for="(q1, k) in q.childFacet.queries" :key="i+j+k">
                     <span @click="toggleFacet(q1,q.childFacet)">
                       <icon v-if="q1.active" name="univie-stop2" class="primary--text"></icon>
                       <icon v-if="!q1.active" name="univie-checkbox-unchecked" class="primary--text"></icon>
@@ -29,7 +29,7 @@
                       <span class="facet-count grey--text" v-if="q1.count > 0">({{q1.count}})</span>
                     </span>
                     <ul v-if="q1.active && q1.childFacet" >
-                      <li v-for="(q2, l) in q1.childFacet.queries" :key="l">
+                      <li v-for="(q2, l) in q1.childFacet.queries" :key="i+j+k+l">
                         <span @click="toggleFacet(q2,q1.childFacet)">
                           <icon v-if="q2.active" name="univie-stop2" class="primary--text"></icon>
                           <icon v-if="!q2.active" name="univie-checkbox-unchecked" class="primary--text"></icon>

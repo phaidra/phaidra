@@ -24,7 +24,7 @@
           <v-row>
             <v-col>
               <v-row >
-                <v-col cols="4">
+                <v-col cols="5">
                   <v-text-field
                     :value="title"
                     :label="$t('Title')"
@@ -33,7 +33,7 @@
                     :outlined="inputStyle==='outlined'"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="5">
                   <v-text-field
                     :value="subtitle"
                     :label="$t('Subtitle')"
@@ -42,32 +42,13 @@
                     :outlined="inputStyle==='outlined'"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="4">
-                  <v-autocomplete
-                    :value="getTerm('lang', titleLanguage)"
-                    v-on:input="$emit('input-title-language', $event)"
-                    :items="vocabularies['lang'].terms"
-                    :filter="autocompleteFilter"
-                    hide-no-data
-                    :label="$t('Language')"
-                    :filled="inputStyle==='filled'"
-                    :outlined="inputStyle==='outlined'"
-                    return-object
-                    clearable
-                    :item-value="'@id'"
-                  >
-                    <template slot="item" slot-scope="{ item }">
-                      <v-list-item-content two-line>
-                        <v-list-item-title  v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-                        <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-                      </v-list-item-content>
-                    </template>
-                    <template slot="selection" slot-scope="{ item }">
-                      <v-list-item-content>
-                        <v-list-item-title v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-                      </v-list-item-content>
-                    </template>
-                  </v-autocomplete>
+                <v-col cols="2">
+                  <v-btn text @click="$refs.langdialog.open()">
+                    <span class="grey--text text--darken-1">
+                      ({{ titleLanguage ? titleLanguage : '--'}})
+                    </span>
+                  </v-btn>
+                  <select-language ref="langdialog" @language-selected="$emit('input-title-language', $event)"></select-language>
                 </v-col>
               </v-row>
               <v-row>
@@ -141,10 +122,14 @@
 <script>
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
+import SelectLanguage from '../select/SelectLanguage'
 
 export default {
   name: 'p-i-adaptation',
   mixins: [vocabulary, fieldproperties],
+  components: {
+    SelectLanguage
+  },
   props: {
     type: {
       type: String

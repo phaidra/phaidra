@@ -2,7 +2,7 @@
   <v-row>
     <v-col :md="labelColMd" cols="12" class="pdlabel primary--text text-md-right">{{ $t(p) }}</v-col>
     <v-col :md="valueColMd" cols="12">
-      <v-card tile>
+      <v-card tile elevation="0">
         <v-card-text class="jsonld-border-left">
           <v-container fluid>
             <v-row>
@@ -157,3 +157,10 @@ export default {
   }
 }
 </script>
+
+<style>
+.jsonld-border-left {
+  border-left: 1px solid;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+</style>

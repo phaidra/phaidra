@@ -49,6 +49,16 @@ export const facetQueries = [
         label: 'Text'
       },
       {
+        id: 'educationalresource',
+        query: 'oer:true',
+        label: 'Educational resource'
+      },
+      {
+        id: 'openeducationalresource',
+        query: 'oer:true AND (dc_license:"CC BY 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by\\/4.0\\/ OR "CC BY-SA 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by-sa\\/4.0\\/ OR "CC BY-NC 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by-nc\\/4.0\\/ OR "CC BY-NC-SA 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by-nc-sa\\/4.0\\/)',
+        label: 'Open educational resource'
+      },
+      {
         id: 'collection',
         query: 'resourcetype:collection',
         label: 'Collection'
@@ -138,7 +148,7 @@ export const facetQueries = [
     queries: [
       {
         id: 'all-rights-reserved',
-        query: 'dc_license:"All rights reserved"',
+        query: '(dc_license:"All rights reserved" OR dc_license:http\\:\\/\\/rightsstatements.org\\/vocab\\/InC\\/1.0\\/)',
         label: 'All rights reserved'
       },
       {
@@ -148,37 +158,37 @@ export const facetQueries = [
       },
       {
         id: 'pdm',
-        query: 'dc_license:"Public Domain Mark"',
+        query: '(dc_license:"Public Domain Mark" OR dc_license:http\\:\\/\\/creativecommons.org\\/publicdomain\\/mark\\/1.0\\/)',
         label: 'Public Domain Mark'
       },
       {
         id: 'cc-by',
-        query: '(dc_license:"CC BY 2.0 AT" OR dc_license:"CC BY 2.0 Generic" OR dc_license:"CC BY 3.0 AT" OR dc_license:"CC BY 3.0 Unported" OR dc_license:"CC BY 4.0 International" OR dc_license:http\\://creativecommons.org/licenses/by/*)',
+        query: '(dc_license:"CC BY 2.0 AT" OR dc_license:"CC BY 2.0 Generic" OR dc_license:"CC BY 3.0 AT" OR dc_license:"CC BY 3.0 Unported" OR dc_license:"CC BY 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by\\/*)',
         label: 'CC BY'
       },
       {
         id: 'cc-by-sa',
-        query: '(dc_license:"CC BY-SA 2.0 AT" OR dc_license:"CC BY-SA 2.0 Generic" OR dc_license:"CC BY-SA 3.0 AT" OR dc_license:"CC BY-SA 3.0 Unported" OR dc_license:"CC BY-SA 4.0 International" OR dc_license:http\\://creativecommons.org/licenses/by-sa/*)',
+        query: '(dc_license:"CC BY-SA 2.0 AT" OR dc_license:"CC BY-SA 2.0 Generic" OR dc_license:"CC BY-SA 3.0 AT" OR dc_license:"CC BY-SA 3.0 Unported" OR dc_license:"CC BY-SA 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by-sa\\/*)',
         label: 'CC BY-SA'
       },
       {
         id: 'cc-by-nc',
-        query: '(dc_license:"CC BY-NC 2.0 AT" OR dc_license:"CC BY-NC 2.0 Generic" OR dc_license:"CC BY-NC 3.0 AT" OR dc_license:"CC BY-NC 3.0 Unported" OR dc_license:"CC BY-NC 4.0 International" OR dc_license:http\\://creativecommons.org/licenses/by/*)',
+        query: '(dc_license:"CC BY-NC 2.0 AT" OR dc_license:"CC BY-NC 2.0 Generic" OR dc_license:"CC BY-NC 3.0 AT" OR dc_license:"CC BY-NC 3.0 Unported" OR dc_license:"CC BY-NC 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by\\/*)',
         label: 'CC BY-NC'
       },
       {
         id: 'cc-by-nd',
-        query: '(dc_license:"CC BY-ND 2.0 AT" OR dc_license:"CC BY-ND 2.0 Generic" OR dc_license:"CC BY-ND 3.0 AT" OR dc_license:"CC BY-ND 3.0 Unported" OR dc_license:"CC BY-ND 4.0 International" OR dc_license:http\\://creativecommons.org/licenses/by-nd/*)',
+        query: '(dc_license:"CC BY-ND 2.0 AT" OR dc_license:"CC BY-ND 2.0 Generic" OR dc_license:"CC BY-ND 3.0 AT" OR dc_license:"CC BY-ND 3.0 Unported" OR dc_license:"CC BY-ND 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by-nd\\/*)',
         label: 'CC BY-ND'
       },
       {
         id: 'cc-by-nc-sa',
-        query: '(dc_license:"CC BY-NC-SA 2.0 AT" OR dc_license:"CC BY-NC-SA 2.0 Generic" OR dc_license:"CC BY-NC-SA 3.0 AT" OR dc_license:"CC BY-NC-SA 3.0 Unported" OR dc_license:"CC BY-NC-SA 4.0 International" OR dc_license:http\\://creativecommons.org/licenses/by-nc-sa/*)',
+        query: '(dc_license:"CC BY-NC-SA 2.0 AT" OR dc_license:"CC BY-NC-SA 2.0 Generic" OR dc_license:"CC BY-NC-SA 3.0 AT" OR dc_license:"CC BY-NC-SA 3.0 Unported" OR dc_license:"CC BY-NC-SA 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by-nc-sa\\/*)',
         label: 'CC BY-NC-SA'
       },
       {
         id: 'cc-by-nc-nd',
-        query: '(dc_license:"CC BY-NC-ND 2.0 AT" OR dc_license:"CC BY-NC-ND 2.0 Generic" OR dc_license:"CC BY-NC-ND 3.0 AT" OR dc_license:"CC BY-NC-ND 3.0 Unported" OR dc_license:"CC BY-NC-ND 4.0 International" OR dc_license:http\\://creativecommons.org/licenses/by-nc-nd/*)',
+        query: '(dc_license:"CC BY-NC-ND 2.0 AT" OR dc_license:"CC BY-NC-ND 2.0 Generic" OR dc_license:"CC BY-NC-ND 3.0 AT" OR dc_license:"CC BY-NC-ND 3.0 Unported" OR dc_license:"CC BY-NC-ND 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by-nc-nd\\/*)',
         label: 'CC BY-NC-ND'
       }
     ]

@@ -49,7 +49,7 @@
           {{ ' ' }}<a class="valuefield" :href="entity['skos:exactMatch'][0]" target="_blank">{{ getLocalizedValue(entity['schema:name']) }}</a>
         </template>
         <template v-else-if="entity['skos:exactMatch']">
-          {{ ' ' }}<a class="valuefield" :href="entity['skos:exactMatch'][0]" target="_blank">{{ entity['schema:name'][0]['@value'] }}</a>
+          {{ ' ' }}<a class="valuefield" :href="getIDResolverURL(entity['skos:exactMatch'][0])" target="_blank">{{ entity['schema:name'][0]['@value'] }}</a>
         </template>
         <template v-else>
           <template class="valuefield" v-for="(corpname) in entity['schema:name']">{{ corpname['@value'] }}</template>

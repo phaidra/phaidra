@@ -1,29 +1,55 @@
 <template>
-
-  <v-row v-if="!hidden">
-    <v-col cols="4">
+    <v-row v-if="!hidden">
+      <v-col cols="2" v-if="!hideType">
+        <v-autocomplete
+          v-on:input="$emit('input-date-type', $event)"
+          :label="$t('Type of date')"
+          :items="vocabularies['datepredicate'].terms"
+          :item-value="'@id'"
+          :value="getTerm('datepredicate', type)"
+          :filter="autocompleteFilter"
+          :filled="inputStyle==='filled'"
+          :outlined="inputStyle==='outlined'"
+          return-object
+          clearable
+          :error-messages="typeErrorMessages"
+        >
+          <template slot="item" slot-scope="{ item }">
+            <v-list-item-content two-line>
+              <v-list-item-title  v-html="`${getLocalizedTermLabel('datepredicate', item['@id'])}`"></v-list-item-title>
+              <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
+            </v-list-item-content>
+          </template>
+          <template slot="selection" slot-scope="{ item }">
+            <v-list-item-content>
+              <v-list-item-title v-html="`${getLocalizedTermLabel('datepredicate', item['@id'])}`"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+        </v-autocomplete>
+    </v-col>
+    <v-col cols="2">
       <v-text-field
-        :value="name"
-        :label="$t('Funder name')"
-        v-on:blur="$emit('input-name',$event.target.value)"
+        :value="value"
+        :label="$t('Date')"
+        v-on:blur="$emit('input-date', $event.target.value)"
         :filled="inputStyle==='filled'"
         :outlined="inputStyle==='outlined'"
       ></v-text-field>
     </v-col>
-    <v-col cols="2">
+    <v-col cols="1">
       <v-btn text @click="$refs.langdialog.open()">
         <span class="grey--text text--darken-1">
-          ({{ nameLanguage ? nameLanguage : '--' }})
+          ({{ language ? language : '--' }})
         </span>
       </v-btn>
-      <select-language ref="langdialog" @language-selected="$emit('input-name-language', $event)"></select-language>
+      <select-language ref="langdialog" @language-selected="$emit('input-language', $event)"></select-language>
     </v-col>
     <v-col cols="4">
       <v-row>
         <v-col :cols="6" v-if="!hideIdentifierType && !hideIdentifier">
           <v-autocomplete
             v-on:input="$emit('input-identifier-type', $event)"
-            :label="$t('Type of funder identifier')"
+            :label="$t('Type of identifier')"
             :items="vocabularies[identifierVocabulary].terms"
             :item-value="'@id'"
             :value="getTerm(identifierVocabulary, identifierType)"
@@ -48,7 +74,7 @@
         <v-col :cols="!hideIdentifierType ? 6 : 12" v-if="!hideIdentifier">
           <v-text-field
             :value="identifier"
-            :label="$t('Funder identifier')"
+            :label="$t('Identifier')"
             v-on:blur="$emit('input-identifier',$event.target.value)"
             :filled="inputStyle==='filled'"
             :outlined="inputStyle==='outlined'"
@@ -71,25 +97,48 @@
       </v-menu>
     </v-col>
   </v-row>
-
+  
 </template>
 
 <script>
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
+import { validationrules } from '../../mixins/validationrules'
 import SelectLanguage from '../select/SelectLanguage'
 
 export default {
-  name: 'p-i-funder',
-  mixins: [vocabulary, fieldproperties],
+  name: 'p-i-date-edmtimespan',
   components: {
     SelectLanguage
   },
+  mixins: [vocabulary, fieldproperties, validationrules],
   props: {
-    name: {
+    value: {
       type: String
     },
-    nameLanguage: {
+    dateLabel: {
+      type: String
+    },
+    type: {
+      type: String
+    },
+    hideType: {
+      type: Boolean
+    },
+    required: {
+      type: Boolean
+    },
+    valueErrorMessages: {
+      type: Array
+    },
+    typeErrorMessages: {
+      type: Array
+    },
+    showIds: {
+      type: Boolean,
+      default: false
+    },
+    language: {
       type: String
     },
     identifierType: {
@@ -108,11 +157,22 @@ export default {
     identifierVocabulary: {
       type: String,
       default: 'identifiertype'
-    },
-    showIds: {
-      type: Boolean,
-      default: false
     }
+  },
+  data () {
+    return {
+      pickerModel: new Date().toISOString().substr(0, 10),
+      dateMenu: false
+    }
+  },
+  mounted: function () {
+    this.$nextTick(function () {
+      this.loading = !this.vocabularies['datepredicate'].loaded
+      // emit input to set skos:prefLabel in parent
+      if (this.type) {
+        this.$emit('input-date-type', this.getTerm('datepredicate', this.type))
+      }
+    })
   }
 }
 </script>
@@ -120,8 +180,5 @@ export default {
 <style scoped>
 .v-btn {
   margin: 0;
-}
-.vertical-center {
- align-items: center;
 }
 </style>

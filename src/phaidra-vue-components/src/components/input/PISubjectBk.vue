@@ -1,71 +1,78 @@
 <template>
   <v-row v-if="!hidden">
     <v-col cols="12">
-      <v-card outlined class="mb-8">
-        <v-card-title class="title font-weight-light grey white--text">
-          <span>{{ $t(label) }}</span>
-          <v-spacer></v-spacer>
-          <v-menu open-on-hover bottom offset-y v-if="actions.length">
-            <template v-slot:activator="{ on }">
-              <v-btn v-on="on" icon dark>
-                <v-icon dark>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
-                <v-list-item-title>{{ action.title }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-card-title>
-        <v-divider></v-divider>
-        <v-card-text class="mt-4">
-          <v-row>
-            <v-col cols="9">
-              <v-text-field
-                v-model="q"
-                :loading="loading"
-                :label="$t(searchlabel)"
-                :filled="inputStyle==='filled'"
-                :outlined="inputStyle==='outlined'"
-                clearable
-                :messages="resolved"
-                append-icon="mdi-magnify"
-                @click:append="search()"
-                @keyup.enter="search()"
-              >
-              <template v-slot:message="{ key, message }">
-                <span v-html="`${message}`"></span>
-              </template>
-              <template v-slot:append-outer>
-                <v-icon @click="$refs.bktreedialog.open()">mdi-file-tree</v-icon>
-              </template>
-              </v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" md="9" v-show="showItems">
-              <v-list two-line style="max-height: 400px" class="overflow-y-auto">
-                <v-list-item-group v-model="selected" active-class="text--primary">
-                  <template v-for="(item, index) in items">
-                    <v-list-item :key="item.uri">
-                      <template v-slot:default="{ active }">
-                        <v-list-item-content>
-                          <v-list-item-title v-text="item.prefLabel?.de"></v-list-item-title>
-                          <v-list-item-subtitle v-for="(notation, idx) in item.notation" :key="'not'+idx" class="text--primary" v-text="notation"></v-list-item-subtitle>
-                        </v-list-item-content>
-                      </template>
-                    </v-list-item>
-                    <v-divider v-if="index < items.length - 1" :key="index"></v-divider>
+      <v-row>
+        <v-col cols="12">
+          <v-card outlined class="mb-8">
+            <v-card-title class="title font-weight-light grey white--text">
+              <span>{{ $t(label) }}</span>
+              <v-spacer></v-spacer>
+              <v-menu open-on-hover bottom offset-y v-if="actions.length">
+                <template v-slot:activator="{ on }">
+                  <v-btn v-on="on" icon dark>
+                    <v-icon dark>mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
+                    <v-list-item-title>{{ action.title }}</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text class="mt-4">
+              <v-row>
+                <v-col cols="9">
+                  <v-text-field
+                    v-model="q"
+                    :loading="loading"
+                    :label="$t(searchlabel)"
+                    :filled="inputStyle==='filled'"
+                    :outlined="inputStyle==='outlined'"
+                    clearable
+                    :messages="resolved"
+                    append-icon="mdi-magnify"
+                    @click:append="search()"
+                    @keyup.enter="search()"
+                  >
+                  <template v-slot:message="{ key, message }">
+                    <span v-html="`${message}`"></span>
                   </template>
-                </v-list-item-group>
-              </v-list>
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
+                  <template v-slot:append-outer>
+                    <v-icon @click="$refs.bktreedialog.open()">mdi-file-tree</v-icon>
+                  </template>
+                  </v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" md="9" v-show="showItems">
+                  <v-list two-line style="max-height: 400px" class="overflow-y-auto">
+                    <v-list-item-group v-model="selected" active-class="text--primary">
+                      <template v-for="(item, index) in items">
+                        <v-list-item :key="item.uri">
+                          <template v-slot:default="{ active }">
+                            <v-list-item-content>
+                              <v-list-item-title v-text="item.prefLabel ? item.prefLabel.de : item.prefLabel.en"></v-list-item-title>
+                              <v-list-item-subtitle v-for="(notation, idx) in item.notation" :key="'not'+idx" class="text--primary" v-text="notation"></v-list-item-subtitle>
+                            </v-list-item-content>
+                          </template>
+                        </v-list-item>
+                        <v-divider v-if="index < items.length - 1" :key="index"></v-divider>
+                      </template>
+                    </v-list-item-group>
+                  </v-list>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <bk-tree-dialog ref="bktreedialog" @item-selected="resolve($event)"></bk-tree-dialog>
+      </v-row>
+      <v-row>
+        <v-divider v-if="dividerbottom" class="mt-2 mb-6"></v-divider>
+      </v-row>
     </v-col>
-    <bk-tree-dialog ref="bktreedialog" @item-selected="resolve($event)"></bk-tree-dialog>
   </v-row>
 </template>
 
@@ -106,6 +113,10 @@ export default {
       type: Boolean
     },
     showIds: {
+      type: Boolean,
+      default: false
+    },
+    dividerbottom: {
       type: Boolean,
       default: false
     }
