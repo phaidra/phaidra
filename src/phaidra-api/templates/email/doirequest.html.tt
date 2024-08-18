@@ -1,0 +1,7 @@
+<html>
+  <body>	
+    <p><strong>Name:</strong> [% name %]</p>
+    <p><strong>Email sender:</strong> [% email %]</p>
+    <p><strong>URL of the object:</strong> http://[% baseurl %]/[% pid %]</p>
+  </body>
+</html>

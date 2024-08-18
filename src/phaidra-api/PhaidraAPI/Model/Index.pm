@@ -918,12 +918,6 @@ sub _update_members {
 
   $c->app->log->debug("[$pid] [$numMem] objects should have [$relation] relation to [$pid]");
 
-  if ($numMem > 1000) {
-    $c->app->log->error("[$pid] skipping _update_members, too many members: [$numMem]");
-    unshift @{$res->{alerts}}, {type => 'warning', msg => "_update_members skipped, too many members: [$numMem]"};
-    return $res;
-  }
-
   #$c->app->log->debug("XXXXXXXXXXXX ".$c->app->dumper($members));
 
   # get current members
@@ -988,7 +982,15 @@ sub _update_members {
 
   #$c->app->log->debug("XXXXXXXXXXXX ".$c->app->dumper(\@remove_from));
 
-  if (scalar @add_to > 0) {
+  my $addCnt = scalar @add_to;
+  my $removeCnt = scalar @remove_from;
+
+  if ($addCnt > 0) {
+    if ($addCnt > 1000) {
+      $c->app->log->error("[$pid] skipping _update_members add_to, too many members to add: [$addCnt]");
+      unshift @{$res->{alerts}}, {type => 'warning', msg => "[$pid] skipping _update_members add_to, too many members to add: [$addCnt]"};
+      return $res;
+    }
     my $r_add = $self->_update_relation($c, $pid, $relation, \@add_to, $updateurl, 'add');
     if ($r_add->{status} ne 200) {
       $res->{status} = $r_add->{status};
@@ -996,7 +998,12 @@ sub _update_members {
     }
   }
 
-  if (scalar @remove_from > 0) {
+  if ($removeCnt > 0) {
+    if ($removeCnt > 1000) {
+      $c->app->log->error("[$pid] skipping _update_members remove_from, too many members to remove: [$addCnt]");
+      unshift @{$res->{alerts}}, {type => 'warning', msg => "[$pid] skipping _update_members remove_from, too many members to remove: [$addCnt]"};
+      return $res;
+    }
     my $r_remove = $self->_update_relation($c, $pid, $relation, \@remove_from, $updateurl, 'remove');
     if ($r_remove->{status} ne 200) {
       $res->{status} = $r_remove->{status};

@@ -256,7 +256,24 @@ sub thumbnail {
       }
     }
     case 'Video' {
-      if ($self->config->{streaming}) {
+      if (defined $self->config
+          ->{external_services}->{opencast}->{mode} &&
+          $self->config->{external_services}->{opencast}->{mode}
+          eq "ACTIVATED")
+      {
+        my $strm_model = PhaidraAPI::Model::Streaming->new;
+        my $vsr = $strm_model->get_job($self, $pid);
+        if ($vsr->{status} eq 200 && ($vsr->{job}->{status} eq 'SUCCEEDED')) {
+          my $thumburl = $vsr->{job}->{oc_search_thumbnail};
+          $self->app->log->debug("pid[$pid] redirtecting to $thumburl");
+          $self->res->code(303);
+          $self->redirect_to($thumburl);
+          return;
+        } else {
+          $self->reply->static('images/video.png');
+          return;
+        }
+      } elsif ($self->config->{streaming}) {
         my $u_model = PhaidraAPI::Model::Util->new;
         my $r       = $u_model->get_video_key($self, $pid);
         if ($r->{status} eq 200) {
@@ -646,6 +663,7 @@ sub preview {
       {
         my $object_job_info = $self->paf_mongo->get_collection('jobs')->
           find_one({pid => $pid, agent => 'vige'});
+          $self->app->log->info("XXXXXXXXXXXXXXX MIGRATED pid[$pid]:\n".$self->app->dumper($object_job_info));
         if (defined $object_job_info) {
           my $job_status = $object_job_info->{'status'};
           if ($job_status eq "SUCCEEDED") {
@@ -658,11 +676,153 @@ sub preview {
           }
           elsif ($job_status eq "sent") {
             $self->render(text => "please be patient, video is being processed for streaming.");
-          }
-          elsif ($job_status eq "FAILED") {
-            $self->render(text => "stream preparation failed, please contact your admin.");
+          # }
+          # elsif ($job_status eq "FAILED") {
+          #   $self->render(text => "stream preparation failed, please contact your admin.");
+          } elsif ($self->config->{streaming}) {
+            # TODO: this is duplicate code, but we'll remove both old streaming paths after migration
+            my $u_model = PhaidraAPI::Model::Util->new;
+            my $r       = $u_model->get_video_key($self, $pid);
+            if ($r->{status} eq 200) {
+              my $trackpid;
+              my $tracklabel;
+              my $tracklanguage;
+
+              # check if there isn't a track object
+              unless ($docres) {
+                $docres = $index_model->get_doc($self, $pid);
+              }
+              if ($docres->{status} ne 200) {
+                $self->app->log->error("pid[$pid] error searching for doc: " . $self->app->dumper($docres));
+              }
+              else {
+                for my $tpid (@{$docres->{doc}->{hastrack}}) {
+                  $self->app->log->info("pid[$pid] found track object: $tpid");
+                  $trackpid = $tpid;
+                  my $trackdocres = $index_model->get_doc($self, $trackpid);
+                  if ($trackdocres->{status} ne 200) {
+                    $self->app->log->error("pid[$pid] error searching for doc trackpid[$trackpid]: " . $self->app->dumper($docres));
+                  }
+                  else {
+                    for my $ttit (@{$trackdocres->{doc}->{dc_title}}) {
+                      $tracklabel = $ttit;
+                      last;
+                    }
+
+                    # pretend you don't see this
+                    my $lang_model   = PhaidraAPI::Model::Languages->new;
+                    my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
+                    for my $lng3 (@{$trackdocres->{doc}->{dc_language}}) {
+                      $tracklanguage = exists($iso6393ToBCP{$lng3}) ? $iso6393ToBCP{$lng3} : $lng3;
+                      last;
+                    }
+                  }
+                }
+              }
+
+              $self->stash(baseurl           => $self->config->{baseurl});
+              $self->stash(basepath          => $self->config->{basepath});
+              $self->stash(video_key         => $r->{video_key});
+              $self->stash(errormsg          => $r->{errormsq});
+              $self->stash(server            => $self->config->{streaming}->{server});
+              $self->stash(server_rtmp       => $self->config->{streaming}->{server_rtmp});
+              $self->stash(server_cd         => $self->config->{streaming}->{server_cd});
+              $self->stash(streamingbasepath => $self->config->{streaming}->{basepath});
+              $self->stash(trackpid          => $trackpid);
+              $self->stash(tracklabel        => $tracklabel);
+              $self->stash(tracklanguage     => $tracklanguage);
+
+              my $u_model = PhaidraAPI::Model::Util->new;
+              $u_model->track_action($self, $pid, 'preview');
+
+              $self->render(template => 'utils/streamingplayer', format => 'html');
+              return;
+            } else {
+              $self->app->log->error("Video key not available: " . $self->app->dumper($r));
+              if ($r->{status} eq 404 or $r->{status} eq 503) {
+                $self->render(text => "Stream is not available. Reason: Video is being prepared for streaming, please try again later.", status => $r->{status});
+              }
+              else {
+                $self->render(text => "Stream is not available. Reason: " . $r->{alerts}[0]->{msg}, status => $r->{status});
+              }
+
+              return;
+            }
           }
         }
+        
+        # TODO: this is duplicate code, but we'll remove both old streaming paths after migration
+      elsif ($self->config->{streaming}) {
+$self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
+        my $u_model = PhaidraAPI::Model::Util->new;
+        my $r       = $u_model->get_video_key($self, $pid);
+        if ($r->{status} eq 200) {
+          my $trackpid;
+          my $tracklabel;
+          my $tracklanguage;
+
+          # check if there isn't a track object
+          unless ($docres) {
+            $docres = $index_model->get_doc($self, $pid);
+          }
+          if ($docres->{status} ne 200) {
+            $self->app->log->error("pid[$pid] error searching for doc: " . $self->app->dumper($docres));
+          }
+          else {
+            for my $tpid (@{$docres->{doc}->{hastrack}}) {
+              $self->app->log->info("pid[$pid] found track object: $tpid");
+              $trackpid = $tpid;
+              my $trackdocres = $index_model->get_doc($self, $trackpid);
+              if ($trackdocres->{status} ne 200) {
+                $self->app->log->error("pid[$pid] error searching for doc trackpid[$trackpid]: " . $self->app->dumper($docres));
+              }
+              else {
+                for my $ttit (@{$trackdocres->{doc}->{dc_title}}) {
+                  $tracklabel = $ttit;
+                  last;
+                }
+
+                # pretend you don't see this
+                my $lang_model   = PhaidraAPI::Model::Languages->new;
+                my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
+                for my $lng3 (@{$trackdocres->{doc}->{dc_language}}) {
+                  $tracklanguage = exists($iso6393ToBCP{$lng3}) ? $iso6393ToBCP{$lng3} : $lng3;
+                  last;
+                }
+              }
+            }
+          }
+
+          $self->stash(baseurl           => $self->config->{baseurl});
+          $self->stash(basepath          => $self->config->{basepath});
+          $self->stash(video_key         => $r->{video_key});
+          $self->stash(errormsg          => $r->{errormsq});
+          $self->stash(server            => $self->config->{streaming}->{server});
+          $self->stash(server_rtmp       => $self->config->{streaming}->{server_rtmp});
+          $self->stash(server_cd         => $self->config->{streaming}->{server_cd});
+          $self->stash(streamingbasepath => $self->config->{streaming}->{basepath});
+          $self->stash(trackpid          => $trackpid);
+          $self->stash(tracklabel        => $tracklabel);
+          $self->stash(tracklanguage     => $tracklanguage);
+
+          my $u_model = PhaidraAPI::Model::Util->new;
+          $u_model->track_action($self, $pid, 'preview');
+
+          $self->render(template => 'utils/streamingplayer', format => 'html');
+          return;
+        }
+        else {
+          $self->app->log->error("Video key not available: " . $self->app->dumper($r));
+          if ($r->{status} eq 404 or $r->{status} eq 503) {
+            $self->render(text => "Stream is not available. Reason: Video is being prepared for streaming, please try again later.", status => $r->{status});
+          }
+          else {
+            $self->render(text => "Stream is not available. Reason: " . $r->{alerts}[0]->{msg}, status => $r->{status});
+          }
+
+          return;
+        }
+      }
         else {
           $self->render(text => "Did you recently migrate to a streaming service?  It looks like this video has not been not been processed!");
         }
@@ -859,6 +1019,171 @@ sub modify {
   my $r            = $object_model->modify($self, $self->stash('pid'), $state, $label, $ownerid, $logmessage, $lastmodifieddate, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
 
   $self->render(json => $r, status => $r->{status});
+}
+
+sub modify_bulk {
+  my $self = shift;
+
+  my $currentowner = $self->stash('currentowner');
+  unless (defined($currentowner)) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined current owner'}]}, status => 400);
+    return;
+  }
+
+  my @objarr;
+  my $objects = $self->param('objects');
+
+  unless (defined($objects)) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'No objects sent'}]}, status => 400);
+    return;
+  }
+
+  eval {
+    if (ref $objects eq 'Mojo::Upload') {
+      $self->app->log->debug("Objects sent as file param");
+      $objects = $objects->asset->slurp;
+      $self->app->log->debug("parsing json");
+      $objects = decode_json($objects);
+    }
+    else {
+      $self->app->log->debug("parsing json");
+      $objects = decode_json(b($objects)->encode('UTF-8'));
+    }
+  };
+
+  if ($@) {
+    $self->app->log->error("Error: $@");
+    $self->render(json => {alerts => [{type => 'error', msg => $@}]}, status => 400);
+    return;
+  }
+
+  unless (defined($objects->{objects})) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'No pids found'}]}, status => 400);
+    return;
+  }
+
+  @objarr = @{$objects->{objects}};
+  
+  my $objcount = scalar @objarr;
+  my $i         = 0;
+  my @res;
+  my $status = 200;
+  for my $o (@objarr) {
+    my $pid = $o->{pid};
+
+    $i++;
+    $self->app->log->info("modify_bulk processing $pid [$i/$objcount]");
+
+    my $state = exists($o->{state}) ? $o->{state} : undef;
+    my $label = exists($o->{label}) ? $o->{label} : undef;
+    my $ownerid = exists($o->{ownerid}) ? $o->{ownerid} : undef;
+    my $logmessage = exists($o->{logmessage}) ? $o->{logmessage} : undef;
+    my $lastmodifieddate = exists($o->{lastmodifieddate}) ? $o->{lastmodifieddate} : undef;
+
+    my $search_model = PhaidraAPI::Model::Search->new;
+    my $owr          = $search_model->get_ownerid($self, $pid);
+    if ($owr->{status} ne 200) {
+      push @res, $owr;
+      $status = 500;
+      next;
+    }
+
+    my $objectowner = $owr->{ownerid};
+    $objectowner =~ s/"//g;
+
+    # Sanity check. Only allow bulk operations on objects which belong to single owner.
+    # The owner must be sent in currentowner param, and object's owner must match it.  
+    if ($objectowner ne $currentowner) {
+      push @res, {alerts => [{type => 'error', msg => "Object[$pid] owner[$objectowner] does not match currentowner[$currentowner]"}], status => 400};
+      $status = 500;
+      next;
+    }
+
+    my $object_model = PhaidraAPI::Model::Object->new;
+    my $r            = $object_model->modify($self, $pid, $state, $label, $ownerid, $logmessage, $lastmodifieddate, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
+
+    push @res, $r;
+    if ($r->{status} ne 200) {
+      $status = 500;
+    }
+  }
+
+  $self->render(json => {results => \@res}, status => $status);
+}
+
+sub delete_bulk {
+  my $self = shift;
+
+  my $currentowner = $self->stash('currentowner');
+  unless (defined($currentowner)) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined current owner'}]}, status => 400);
+    return;
+  }
+
+  my $pids = $self->param('pids');
+
+  unless (defined($pids)) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'No pids sent'}]}, status => 400);
+    return;
+  }
+
+  eval {
+    if (ref $pids eq 'Mojo::Upload') {
+      $self->app->log->debug("Pids sent as file param");
+      $pids = $pids->asset->slurp;
+      $self->app->log->debug("parsing json");
+      $pids = decode_json($pids);
+    }
+    else {
+      $self->app->log->debug("parsing json");
+      $pids = decode_json(b($pids)->encode('UTF-8'));
+    }
+  };
+
+  if ($@) {
+    $self->app->log->error("Error: $@");
+    $self->render(json => {alerts => [{type => 'error', msg => $@}]}, status => 400);
+    return;
+  }
+
+  my $pidscount = scalar @{$pids->{pids}};
+  my $i         = 0;
+  my @res;
+  my $status = 200;
+  for my $pid (@{$pids->{pids}}) {
+
+    $i++;
+    $self->app->log->info("delete_bulk processing $pid [$i/$pidscount]");
+
+    my $search_model = PhaidraAPI::Model::Search->new;
+    my $owr          = $search_model->get_ownerid($self, $pid);
+    if ($owr->{status} ne 200) {
+      push @res, $owr;
+      $status = 500;
+      next;
+    }
+
+    my $objectowner = $owr->{ownerid};
+    $objectowner =~ s/"//g;
+
+    # Sanity check. Only allow bulk operations on objects which belong to single owner.
+    # The owner must be sent in currentowner param, and object's owner must match it.  
+    if ($objectowner ne $currentowner) {
+      push @res, {alerts => [{type => 'error', msg => "Object[$pid] owner[$objectowner] does not match currentowner[$currentowner]"}], status => 400};
+      $status = 500;
+      next;
+    }
+
+    my $object_model = PhaidraAPI::Model::Object->new;
+    my $r            = $object_model->delete($self, $pid, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
+
+    push @res, $r;
+    if ($r->{status} ne 200) {
+      $status = 500;
+    }
+  }
+
+  $self->render(json => {results => \@res}, status => $status);
 }
 
 sub get_state {

@@ -157,7 +157,7 @@ sub update {
   for my $pid (@pidsarr) {
 
     $i++;
-    $self->app->log->info("Processing $pid [$i/$pidscount]");
+    $self->app->log->info("index processing $pid [$i/$pidscount]");
 
     eval {
 

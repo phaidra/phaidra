@@ -29,14 +29,14 @@ sub process {
 
   if ($skipexisting && ($skipexisting eq 1)) {
     if (defined($ds)) {
-      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, ds => $ds}, {}, {"sort" => {"created" => -1}});
+      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, ds => $ds, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
       if ($res1->{pid}) {
         $self->render(json => {alerts => [{type => 'info', msg => "Job for pid[$pid] and ds[$ds] already created"}], job => $res1}, status => 200);
         return;
       }
     }
     else {
-      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid}, {}, {"sort" => {"created" => -1}});
+      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
       if ($res1->{pid}) {
         $self->render(json => {alerts => [{type => 'info', msg => "Job for pid[$pid] already created"}], job => $res1}, status => 200);
         return;
@@ -55,7 +55,7 @@ sub process {
   my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
   $imgsrv_model->create_imageserver_job($self, $pid, $cmodel, $ds);
 
-  $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid}, {}, {"sort" => {"created" => -1}});
+  $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
 
   $self->render(json => $res, status => 200);
 }
@@ -96,7 +96,7 @@ sub process_pids {
   for my $pid (@{$pids->{pids}}) {
 
     if ($skipexisting && ($skipexisting eq 1)) {
-      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid}, {}, {"sort" => {"created" => -1}});
+      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
       if ($res1->{pid}) {
         $self->render(json => {alerts => [{type => 'info', msg => "Job for pid[$pid] already created"}], job => $res1}, status => 200);
         next;
@@ -132,7 +132,7 @@ sub status {
     return;
   }
 
-  $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid}, {}, {"sort" => {"created" => -1}});
+  $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
 
   $self->render(json => { conversion => $res->{conversion}, status => $res->{status} }, status => 200);
 
@@ -150,11 +150,11 @@ sub tmp_hash {
   if ($rres->{status} eq '404') {
 
     # it's ok
-    my $res = $self->mongo->get_collection('imgsrv.hashmap')->find_one({pid => $pid});
+    my $res = $self->mongo->get_collection('imgsrv.hashmap')->find_one({pid => $pid, agent => 'pige'});
     if (!defined($res) || !exists($res->{tmp_hash})) {
 
       # if we could not find the temp hash, look into the jobs if the image isn't there as processed
-      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid}, {}, {"sort" => {"created" => -1}});
+      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
       if (!defined($res1) || $res1->{status} ne 'finished') {
 
         # if it isn't then this image isn't known to imageserver

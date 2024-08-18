@@ -91,7 +91,7 @@ sub add_or_modify_datastream_hooks {
             push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
           }
           if ($res_cmodel->{cmodel} eq 'Video') {
-            my $vsr = $self->_create_streaming_job($c, $pid, $res_cmodel->{cmodel});
+            my $vsr = $self->_create_streaming_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
             push @{$res->{alerts}}, @{$vsr->{alerts}} if scalar @{$vsr->{alerts}} > 0;
           }
         } else {
@@ -236,12 +236,11 @@ sub add_octets_hook {
     my $res_cmodel = $search_model->get_cmodel($c, $pid);
     if ($res_cmodel->{status} eq 200) {
       if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
-        my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
-        my $imsr = $imgsrv_model->create_imageserver_job($c, $pid, $res_cmodel->{cmodel});
+        my $imsr = $self->_create_imageserver_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
         push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
       }
       if ($res_cmodel->{cmodel} eq 'Video') {
-        my $vsr = $self->_create_streaming_job($c, $pid, $res_cmodel->{cmodel});
+        my $vsr = $self->_create_streaming_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
         push @{$res->{alerts}}, @{$vsr->{alerts}} if scalar @{$vsr->{alerts}} > 0;
       }
     } else {
@@ -276,11 +275,13 @@ sub modify_hook {
         }
       }
       if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
-        my $imsr = $self->_create_imageserver_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
+        my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
+        my $imsr = $imgsrv_model->create_imageserver_job($c, $pid, $res_cmodel->{cmodel});
         push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
       }
       if ($res_cmodel->{cmodel} eq 'Video') {
-        my $vsr = $self->_create_streaming_job($c, $pid, $res_cmodel->{cmodel});
+        my $strm_model = PhaidraAPI::Model::Streaming->new;
+        my $vsr = $strm_model->create_streaming_job($c, $pid, $res_cmodel->{cmodel});
         push @{$res->{alerts}}, @{$vsr->{alerts}} if scalar @{$vsr->{alerts}} > 0;
       }
     }
@@ -295,7 +296,7 @@ sub _create_imageserver_job_if_not_exists {
   my $res = {alerts => [], status => 200};
 
   my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
-  my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid});
+  my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'pige'});
   unless ($find->{pid}) {    
     return $imgsrv_model->create_imageserver_job($c, $pid, $cmodel);
   }
@@ -303,37 +304,17 @@ sub _create_imageserver_job_if_not_exists {
   return $res;
 }
 
-sub _create_streaming_job {
+sub _create_streaming_job_if_not_exists {
   my ($self, $c, $pid, $cmodel) = @_;
 
   my $res = {alerts => [], status => 200};
-  if ($c->app->config->{streaming} ||
-      defined $c->app->config
-      ->{external_services}->{opencast}->{mode} &&
-      $c->app->config->{external_services}->{opencast}->{mode}
-      eq "ACTIVATED") {
-    my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid});
-    unless ($find->{pid}) {    
-      $c->app->log->info("Creating streaming job pid[$pid] cm[$cmodel]");
-      my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
-      my $path;
-      if ($c->app->config->{fedora}->{version} >= 6) {
-        my $fedora_model = PhaidraAPI::Model::Fedora->new;
-        my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
-        if ($dsAttr->{status} eq 200) {
-          $c->app->log->error("streaming job pid[$pid] cm[$cmodel]: could not get path");
-          $path = $dsAttr->{path};
-        }
-      } else {
-        # TODO fedora 3 OCTETS.X path
-      }
-      my $job = {pid => $pid, cmodel => $cmodel, agent => "vige", status => "new", idhash => $hash, created => time};
-      $job->{path} = $path if $path;
-      $c->paf_mongo->get_collection('jobs')->insert_one($job);
-    } else {
-      $c->app->log->info("NOT creating streaming job for pid[$pid] cm[$cmodel], job already exists status[".$find->{status}."]");
-    }
+
+  my $strm_model = PhaidraAPI::Model::Streaming->new;
+  my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'vige'});
+  unless ($find->{pid}) {    
+    return $strm_model->create_streaming_job($c, $pid, $cmodel);
   }
+
   return $res;
 }
 

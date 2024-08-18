@@ -138,6 +138,18 @@ sub get {
     }
   }
 
+  # get filename from metadata if there is JSON-LD
+  my $jsonld_model = PhaidraAPI::Model::Jsonld->new;
+  my $res          = $jsonld_model->get_object_jsonld_parsed($self, $pid);
+  if ($res->{status} eq 200) {
+    if (exists($res->{'JSON-LD'}->{'ebucore:filename'})) {
+      for my $v (@{$res->{'JSON-LD'}->{'ebucore:filename'}}) {
+        $filename = $v;
+        last;
+      }
+    }
+  }
+
   $self->app->log->debug("operation[$operation] trywebversion[" . ($trywebversion ? $trywebversion : 'undef') . "] pid[$pid] path[$path] mimetype[$mimetype] filename[$filename] size[$size]");
 
   if ($operation eq 'download') {

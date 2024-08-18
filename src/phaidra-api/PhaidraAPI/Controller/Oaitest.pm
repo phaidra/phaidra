@@ -15,7 +15,8 @@ use DateTime::Format::Strptime;
 use Clone qw(clone);
 use Mojo::JSON qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
-use PhaidraAPI::Model::Oai::Openaire;
+use PhaidraAPI::Model::Mappings::Openaire;
+use PhaidraAPI::Model::Vocabulary;
 
 my $DEFAULT_LIMIT = 100;
 
@@ -75,6 +76,10 @@ sub _get_metadata_dc {
   my @el          = qw/contributor coverage creator date description format identifier language publisher relation rights source subject title type/;
   my %valuesCheck = map {$_ => {}} @el;
   my @metadata;
+
+  my $voc_model = PhaidraAPI::Model::Vocabulary->new;
+  my $res = $voc_model->get_vocabulary($self, 'roles');
+  my $rolesvoc = $res->{vocabulary};
 
   # my $isirobject = 0;
   # if (exists($rec->{isinadminset})) {
@@ -137,10 +142,10 @@ sub _get_metadata_dc {
 
   if (($set eq 'phaidra4primo')) {
     if (exists($rec->{roles_json})) {
-      $self->_add_roles_with_id($rec, \@metadata);
+      $self->_add_roles_with_id($rolesvoc, $rec, \@metadata);
     } else {
       if (exists($rec->{uwm_roles_json})) {
-        $self->_add_uwm_roles_with_id($rec, \@metadata);
+        $self->_add_uwm_roles_with_id($rolesvoc, $rec, \@metadata);
       }
     }
   }
@@ -226,19 +231,44 @@ sub _already_present {
   return 0;
 }
 
+sub _get_role_label_de {
+  my $self     = shift;
+  my $c     = shift;
+  my $rolesvoc = shift;
+  my $rolecode = shift;
+
+  if ($rolecode eq 'datasupplier') {
+    return 'DatenlieferantIn';
+  }
+
+  for my $r (@{$rolesvoc}) {
+    if ($r->{'@id'} eq 'role:'.$rolecode) {
+      return $r->{'skos:prefLabel'}->{'deu'};
+    }
+  }
+}
+
 sub _add_uwm_roles_with_id {
   my $self     = shift;
+  my $rolesvoc = shift;
   my $rec      = shift;
   my $metadata = shift;
 
-  my @roles;
-  my %field;
-  $field{name}   = 'contributor';
-  $field{values} = [];
+  my @fields;
   my $arr     = decode_json(b($rec->{uwm_roles_json}[0])->encode('UTF-8'));
   my @contrib = sort {$a->{data_order} <=> $b->{data_order}} @{$arr};
   for my $con (@contrib) {
-    if ($con->{entities}) {
+    my $dcrole;
+    if ($PhaidraAPI::Model::Jsonld::Extraction::jsonld_creator_roles{$con->{role}}) {
+      $dcrole = 'creator';
+    } else {
+      $dcrole = 'contributor';
+    }
+
+    if ($dcrole && $con->{entities}) {
+      my %field;
+      $field{name}   = $dcrole;
+      $field{values} = [];
       my @entities = sort {$a->{data_order} <=> $b->{data_order}} @{$con->{entities}};
       for my $e (@entities) {
         my $name;
@@ -248,16 +278,16 @@ sub _add_uwm_roles_with_id {
           $id = 'orcid:'.$e->{orcid};
         }
         if ($e->{viaf}) {
-          $id = 'viaf:'.$e->{viaf};
+          $id = ($id ? "$id|" : '') .'viaf:'.$e->{viaf};
         }
         if ($e->{wdq}) {
-          $id = 'wdq:'.$e->{wdq};
+          $id = ($id ? "$id|" : ''). 'wdq:'.$e->{wdq};
         }
         if ($e->{gnd}) {
-          $id = 'gnd:'.$e->{gnd};
+          $id = ($id ? "$id|" : ''). 'gnd:'.$e->{gnd};
         }
         if ($e->{isni}) {
-          $id = 'isni:'.$e->{isni};
+          $id = ($id ? "$id|" : ''). 'isni:'.$e->{isni};
         }
 
         if ($e->{firstname} || $e->{lastname}) {
@@ -271,11 +301,39 @@ sub _add_uwm_roles_with_id {
           }
         }
 
+        unless ($name) {
+          # the person/corp is not saved as contribute->entity but it's parts are in multiple entity
+          # parts of the contribute node
+          # <ns1:contribute seq="0">
+          #   <ns1:role>46</ns1:role>
+          #   <ns1:entity seq="0">
+          #     <ns3:firstname>Firstname</ns3:firstname>
+          #     <ns3:lastname>Lastname</ns3:lastname>
+          #   </ns1:entity>
+          #   <ns1:entity seq="1">
+          #     <ns3:type>viaf</ns3:type>
+          #     <ns3:viaf>123456789</ns3:viaf>
+          #   </ns1:entity>
+          #   <ns1:entity seq="2">
+          #     <ns3:type>gnd</ns3:type>
+          #     <ns3:gnd>123456789</ns3:gnd>
+          #   </ns1:entity>
+          #   <ns1:entity seq="3">
+          #     <ns3:type>orcid</ns3:type>
+          #     <ns3:orcid>0000-0000-0000-0000</ns3:orcid>
+          #   </ns1:entity>
+          #   <ns1:date>2015-09-18</ns1:date>
+          # </ns1:contribute>
+          # we'll ignore the additional nodes, user would need to fix this in metadata
+          next;
+        }
+
         my $role = $name;
         if ($affiliation) {
           $role .= ' (' . $affiliation . ')';
         }
-        $role .= '|hide|[role:'.$con->{role}.']';
+        my $roleLabel = $self->_get_role_label_de($self, $rolesvoc, $con->{role}) || $con->{role};
+        $role .= "|hide|[role:$roleLabel]";
         if ($id) {
           $role .= '[' . $id . ']';
         }
@@ -283,66 +341,100 @@ sub _add_uwm_roles_with_id {
         #$self->app->log->debug('adding: ' . $self->app->dumper($role));
         push @{$field{values}}, $role;
       }
+      push @fields, \%field;
     }
   }
-  push @{$metadata}, \%field;
+
+  $self->app->log->debug('fields: ' . $self->app->dumper(@fields));
+
+  # merge duplicate roles
+  my $merging;
+  for my $f (@fields) {
+    unless (exists($merging->{$f->{name}})) {
+      $merging->{$f->{name}} = {
+        name => $f->{name},
+        values => ()
+      }
+    }
+    for my $v (@{$f->{values}}) {
+      push @{$merging->{$f->{name}}->{values}}, $v;
+    }
+  }
+
+  for my $name (keys %{$merging}) {
+    push @{$metadata}, $merging->{$name};
+  }
+
+  $self->app->log->debug('md after merging: ' . $self->app->dumper($metadata));
+
 }
 
 sub _add_roles_with_id {
   my $self     = shift;
+  my $rolesvoc = shift;
   my $rec      = shift;
   my $metadata = shift;
 
   my @roles;
-  my %field;
-  $field{name}   = 'contributor';
-  $field{values} = [];
   if ($rec->{roles_json}) {
     my $roles_json = decode_json(b($rec->{roles_json}[0])->encode('UTF-8'));
     for my $r (@{$roles_json}) {
       for my $pred (keys %{$r}) {
-        for my $contr (@{$r->{$pred}}) {
-          my $name;
-          my $affiliation;
-          my $id;
-          if ($contr->{'@type'} eq 'schema:Person') {
-            if ($contr->{'schema:givenName'} || $contr->{'schema:familyName'}) {
-              $name = $contr->{'schema:givenName'}[0]->{'@value'} . " " . $contr->{'schema:familyName'}[0]->{'@value'};
-            }
-            else {
-              $name = $contr->{'schema:name'}[0]->{'@value'};
-            }
-            if ($contr->{'schema:affiliation'}) {
-              for my $aff (@{$contr->{'schema:affiliation'}}) {
-                for my $affname (@{$aff->{'schema:name'}}) {
-                  $affiliation = $affname->{'@value'};
+        my $dcrole;
+        if ($PhaidraAPI::Model::Jsonld::Extraction::jsonld_creator_roles{substr($pred, 5)}) {
+          $dcrole = 'creator';
+        } else {
+          $dcrole = 'contributor';
+        }
+
+        if ($dcrole) {
+          my %field;
+          $field{name}   = $dcrole;
+          $field{values} = [];
+          for my $contr (@{$r->{$pred}}) {
+            my $name;
+            my $affiliation;
+            my $id;
+            if ($contr->{'@type'} eq 'schema:Person') {
+              if ($contr->{'schema:givenName'} || $contr->{'schema:familyName'}) {
+                $name = $contr->{'schema:givenName'}[0]->{'@value'} . " " . $contr->{'schema:familyName'}[0]->{'@value'};
+              }
+              else {
+                $name = $contr->{'schema:name'}[0]->{'@value'};
+              }
+              if ($contr->{'schema:affiliation'}) {
+                for my $aff (@{$contr->{'schema:affiliation'}}) {
+                  for my $affname (@{$aff->{'schema:name'}}) {
+                    $affiliation = $affname->{'@value'};
+                  }
                 }
               }
+              if ($contr->{'skos:exactMatch'}) {
+                $id = $PhaidraAPI::Model::Jsonld::Extraction::jsonld_identifiers{$contr->{'skos:exactMatch'}[0]->{'@type'}} . ':' . $contr->{'skos:exactMatch'}[0]->{'@value'};
+              }
             }
-            if ($contr->{'skos:exactMatch'}) {
-              $id = $PhaidraAPI::Model::Jsonld::Extraction::jsonld_identifiers{$contr->{'skos:exactMatch'}[0]->{'@type'}} . ':' . $contr->{'skos:exactMatch'}[0]->{'@value'};
+            elsif ($contr->{'@type'} eq 'schema:Organization') {
+              $name = $contr->{'schema:name'}[0]->{'@value'};
             }
-          }
-          elsif ($contr->{'@type'} eq 'schema:Organization') {
-            $name = $contr->{'schema:name'}[0]->{'@value'};
-          }
 
-          my $role = $name;
-          if ($affiliation) {
-            $role .= ' (' . $affiliation . ')';
-          }
-          $role .= '|hide|[role:'.substr($pred, 5).']';
-          if ($id) {
-            $role .= '[' . $id . ']';
-          }
+            my $role = $name;
+            if ($affiliation) {
+              $role .= ' (' . $affiliation . ')';
+            }
+            my $roleLabel = $self->_get_role_label_de($self, $rolesvoc, substr($pred, 5)) || substr($pred, 5);
+            $role .= "|hide|[role:$roleLabel]";
+            if ($id) {
+              $role .= '[' . $id . ']';
+            }
 
-          #$self->app->log->debug('adding: ' . $self->app->dumper($role));
-          push @{$field{values}}, $role;
+            #$self->app->log->debug('adding: ' . $self->app->dumper($role));
+            push @{$field{values}}, $role;
+          }
+          push @{$metadata}, \%field;
         }
       }
     }
   }
-  push @{$metadata}, \%field;
 }
 
 sub _map_dc_type {
@@ -512,7 +604,7 @@ sub _get_metadata {
       return $self->_get_metadata_dc($rec, $set);
     }
     case 'oai_openaire' {
-      my $oaire_model = PhaidraAPI::Model::Oai::Openaire->new;
+      my $oaire_model = PhaidraAPI::Model::Mappings::Openaire->new;
       return $oaire_model->get_metadata_openaire($self, $rec);
     }
   }
@@ -648,7 +740,7 @@ sub handler {
     my $earliestDatestampStr = '1970-01-01T00:00:01Z';
     my $rec                  = $self->mongo->get_collection('oai_records')->find()->sort({"updated" => 1})->next;
     if ($rec) {
-      $earliestDatestampStr = $self->_epochMsToIso($rec->{created});
+      $earliestDatestampStr = $self->_epochMsToIso($rec->{inserted});
     }
     $self->stash(earliest_datestamp => $earliestDatestampStr);
     $self->render(template => 'oai/identify', format => 'xml', handler => 'ep');
@@ -690,12 +782,16 @@ sub handler {
 
     my %filter;
 
+    if ($from or $until) {
+      $filter{"updated"} = {};
+    }
+
     if ($from) {
-      $filter{"updated"} = {'$gte' => DateTime::Format::ISO8601->parse_datetime($from)->epoch * 1000};
+      $filter{"updated"}->{'$gte'} = DateTime::Format::ISO8601->parse_datetime($from)->epoch * 1000;
     }
 
     if ($until) {
-      $filter{"updated"} = {'$lte' => DateTime::Format::ISO8601->parse_datetime($until)->epoch * 1000};
+      $filter{"updated"}->{'$lte'} = DateTime::Format::ISO8601->parse_datetime($until)->epoch * 1000;
     }
 
     if ($params->{set}) {

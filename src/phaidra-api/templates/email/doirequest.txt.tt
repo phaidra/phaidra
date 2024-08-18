@@ -1,0 +1,3 @@
+Name: [% name %]
+Email sender: [% email %]
+URL of the object: http://[% baseurl %]/[% pid %]

@@ -449,6 +449,7 @@ sub startup {
   $r->get('utils/get_all_pids')                     ->to('utils#get_all_pids');
 
   $r->get('geonames/search')                        ->to('utils#geonames_search');
+  $r->get('gnd/search')                             ->to('utils#gnd_search');
 
   $r->get('vocabulary')                             ->to('vocabulary#get_vocabulary');
 
@@ -490,6 +491,9 @@ sub startup {
   $r->get('object/:pid/index/relationships')        ->to('index#get_relationships');
   $r->get('object/:pid/index/members')              ->to('index#get_object_members');
   $r->get('object/:pid/datacite')                   ->to('datacite#get');
+  $r->get('object/:pid/lom')                        ->to('mappings#get', schema => 'lom');
+  $r->get('object/:pid/edm')                        ->to('mappings#get', schema => 'edm');
+  $r->get('object/:pid/openaire')                   ->to('mappings#get', schema => 'openaire');
   $r->get('object/:pid/state')                      ->to('object#get_state');
   $r->get('object/:pid/cmodel')                     ->to('object#get_cmodel');
   $r->get('object/:pid/relationships')              ->to('relationships#get');
@@ -557,7 +561,7 @@ sub startup {
 
     $loggedin->get('authz/check/:pid/:op')                                   ->to('authorization#check_rights');
 
-    $reader->get('streaming/:pid')                                           ->to('utils#streamingplayer');
+    $reader->get('streaming/:pid')                                           ->to('object#preview');
     $reader->get('streaming/:pid/key')                                       ->to('utils#streamingplayer_key');
 
     $reader->get('imageserver')                                              ->to('imageserver#imageserverproxy');
@@ -601,6 +605,8 @@ sub startup {
 
       $admin->post('imageserver/process')                                    ->to('imageserver#process_pids');
       $writer->post('imageserver/:pid/process')                              ->to('imageserver#process');
+      $admin->post('streaming/process')                                      ->to('streaming#process_pids');
+      $admin->post('streaming/:pid/process')                                 ->to('streaming#process');
 
       $writer->post('object/:pid/updateiiifmanifest')                        ->to('iiifmanifest#update_manifest_metadata');
       $writer->post('object/:pid/modify')                                    ->to('object#modify');
@@ -620,6 +626,9 @@ sub startup {
       $writer->post('object/:pid/id/remove')                                 ->to('object#add_or_remove_identifier', operation => 'remove');
       $writer->post('object/:pid/datastream/:dsid')                          ->to('object#add_or_modify_datastream');
       $writer->post('object/:pid/data')                                      ->to('object#add_octets');
+
+      $admin->post('objects/:currentowner/modify')                           ->to('object#modify_bulk');
+      $admin->post('objects/:currentowner/delete')                           ->to('object#delete_bulk');
 
       $loggedin->post('picture/create')                                      ->to('object#create_simple', cmodel => 'cmodel:Picture');
       $loggedin->post('document/create')                                     ->to('object#create_simple', cmodel => 'cmodel:PDFDocument');
@@ -672,6 +681,8 @@ sub startup {
       $loggedin->post('termsofuse/agree/:version')                           ->to('termsofuse#agree');
 
       $loggedin->post('settings')                                            ->to('settings#post_settings');
+
+      $loggedin->post('utils/:pid/requestdoi')                               ->to('utils#request_doi');
     }
   } else {
 
@@ -702,7 +713,7 @@ sub startup {
 
     $proxyauth_optional->get('authz/check/:pid/:op')                            ->to('authorization#check_rights');
 
-    $proxyauth_optional->get('streaming/:pid')                                  ->to('utils#streamingplayer');
+    $proxyauth_optional->get('streaming/:pid')                                  ->to('object#preview');
     $proxyauth_optional->get('streaming/:pid/key')                              ->to('utils#streamingplayer_key');
 
     $proxyauth_optional->get('imageserver')                                     ->to('imageserver#imageserverproxy');
@@ -755,6 +766,9 @@ sub startup {
 
       $proxyauth->post('imageserver/:pid/process')                              ->to('imageserver#process');
 
+      $admin->post('streaming/process')                                         ->to('streaming#process_pids');
+      $proxyauth->post('streaming/:pid/process')                                ->to('streaming#process');
+
       $proxyauth->post('object/:pid/updateiiifmanifest')                        ->to('iiifmanifest#update_manifest_metadata');
       $proxyauth->post('object/:pid/modify')                                    ->to('object#modify');
       $proxyauth->post('object/:pid/delete')                                    ->to('object#delete');
@@ -775,6 +789,9 @@ sub startup {
       $proxyauth->post('object/:pid/id/remove')                                 ->to('object#add_or_remove_identifier', operation => 'remove');
       $proxyauth->post('object/:pid/datastream/:dsid')                          ->to('object#add_or_modify_datastream');
       $proxyauth->post('object/:pid/data')                                      ->to('object#add_octets');
+
+      $admin->post('objects/:currentowner/modify')                              ->to('object#modify_bulk');
+      $admin->post('objects/:currentowner/delete')                              ->to('object#delete_bulk');
 
       $proxyauth->post('picture/create')                                        ->to('object#create_simple', cmodel => 'cmodel:Picture');
       $proxyauth->post('document/create')                                       ->to('object#create_simple', cmodel => 'cmodel:PDFDocument');
@@ -822,6 +839,8 @@ sub startup {
       $check_auth->post('feedback')                                             ->to('feedback#feedback');
 
       $check_auth->post('termsofuse/agree/:version')                            ->to('termsofuse#agree');
+
+      $check_auth->post('utils/:pid/requestdoi')                                ->to('utils#request_doi');
     }
   }
   #>>>

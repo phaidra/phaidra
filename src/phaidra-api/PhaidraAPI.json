@@ -112,6 +112,9 @@
             "search": "https://secure.geonames.org/searchJSON",
             "username": "phaidra",
             "maxRows": 50
+        },
+        "lobid": {
+            "baseurl": "lobid.org"
         }
     },
     "hooks": {
