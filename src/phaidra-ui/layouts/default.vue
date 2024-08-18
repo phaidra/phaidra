@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-container fluid v-if="!loading">
-      <v-row no-gutters>
+    <v-container class="px-4" fluid v-if="!loading">
+      <v-row>
         <v-col>
           <ExtHeader></ExtHeader>
           <v-row>
@@ -431,5 +431,10 @@ address {
 
 .float-right {
   float: right;
+}
+
+.jsonld-border-left {
+  border-left: 1px solid;
+  border-color: rgba(0, 0, 0, 0.12);
 }
 </style>

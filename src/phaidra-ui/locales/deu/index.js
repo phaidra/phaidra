@@ -827,6 +827,10 @@ export default {
   'schema:duration': 'Dauer',
   'vra:diameter': 'Durchmesser',
   'schema:genre': 'Genre',
+  'schema:accessMode': 'Barrierefreiheit: Betriebsart',
+  'schema:accessibilityControl': 'Barrierefreiheit: Steuerung',
+  'schema:accessibilityHazard': 'Barrierefreiheit: Störung',
+  'schema:accessibilityFeature': 'Barrierefreiheit: Merkmal',
   'bf:scale': 'Maßstab',
   'dcterms:temporal': 'Zeitliche Abdeckung',
   'vra:hasTechnique': 'Technik',
@@ -1209,5 +1213,16 @@ export default {
   'Configure': 'Konfigurieren',
   'Some required fields are not complete': 'Manche Pflichtfelder sind nicht vollständig',
   OER_ACCESSIBILITY_CHECK_LABEL: 'Grundsätze der {0} beachtet',
-  OER_ACCESSIBILITY_CHECK_LINK_LABEL: 'Barrierearmut'
+  OER_ACCESSIBILITY_CHECK_LINK_LABEL: 'Barrierearmut',
+  'Quick select': 'Schnellauswahl',
+  'Bibliography': 'Bibliographie',
+  'Code / Identifier': 'Kod / Identifikator',
+  'Open Educational Resources (OER) upload': 'Open Educational Resources (OER) hochladen',
+  'Publish your openly licensed teaching/learning materials here - videos, scripts, audios, quizzes, images, slide sets, Moodle elements, etc.': 'Publizieren Sie hier Ihre offen lizenzierten Lehr-/Lernmaterialien - Videos, Skripten, Audios, Quizzes, Bildmaterial, Foliensätze, Moodle-Elemente etc.',
+  'Accessibility': 'Barrierefreiheit',
+  'Access mode': 'Barrierefreiheit: Betriebsart',
+  'Accessibility control': 'Barrierefreiheit: Steuerung',
+  'Accessibility hazard': 'Barrierefreiheit: Störung',
+  'Accessibility feature': 'Barrierefreiheit: Merkmal',
+  'Export formats': 'Exportformate'
 }

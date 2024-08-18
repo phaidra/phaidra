@@ -23,12 +23,14 @@ export default async (req, res, next) => {
         let doc = docs[0]
         if (doc['cmodel']) {
           if (doc['cmodel'] === 'Book') {
-            if (doc.datastreams.includes("UWMETADATA")) {
-              redirect(res, config.instances[config.defaultinstance].fedora + '/objects/' + pid + '/methods/bdef:Book/view')
-              return
-            } else {
-              redirect(res, apiBaseURL + '/object/' + pid + '/preview')
-              return
+            if (!doc.datastreams.includes("POLICY") && !doc.isrestricted) {
+              if (doc.datastreams.includes("UWMETADATA")) {
+                redirect(res, config.instances[config.defaultinstance].fedora + '/objects/' + pid + '/methods/bdef:Book/view')
+                return
+              } else {
+                redirect(res, baseURL + '/api/object/' + pid + '/preview')
+                return
+              }
             }
           }
         }

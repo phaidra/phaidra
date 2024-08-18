@@ -32,7 +32,8 @@ export const mutations = {
       'languages', 
       'owneremailoverride', 
       'enabledelete',
-      'markmandatoryfnc', 
+      'markmandatoryfnc',
+      'requestdoiemail', 
       'validationfnc',
       'cms_header',
       'cms_footer',
@@ -520,6 +521,7 @@ export const mutations = {
   },
   clearUser(state) {
     state.user = {}
+    // on signout, this was already be deleted by API
     this.$cookies.remove('XSRF-TOKEN')
   },
   clearStore(state) {
@@ -528,6 +530,7 @@ export const mutations = {
     state.collectionMembers = []
     state.user = {}
     state.groups = []
+    // on signout, this was already be deleted by API
     this.$cookies.remove('XSRF-TOKEN')
   },
   setCharts(state, url) {

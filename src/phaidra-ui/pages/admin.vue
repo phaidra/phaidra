@@ -153,6 +153,15 @@
             </v-col>
             <v-col cols="6" class="mt-4">{{ $t("Which method shold be used to makr fields as mandatory in submit form.") }}</v-col>
           </v-row>
+          <v-row>
+            <v-col>
+              <v-text-field
+                label="Request DOI email"
+                v-model="parsedConfigData.requestdoiemail"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6" class="mt-4">{{ $t("Leave empty to disable the 'Request DOI' button.") }}</v-col>
+          </v-row>
         </v-container>
       </v-tab-item>
 

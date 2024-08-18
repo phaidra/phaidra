@@ -290,6 +290,16 @@ export default {
               id: 6,
               fields: [],
             },
+            {
+              title: "Accessibility",
+              mode: "expansion",
+              addbutton: false,
+              disablemenu: true,
+              collapsed: true,
+              outlined: true,
+              id: 7,
+              fields: [],
+            }
           ],
         };
 
@@ -311,13 +321,8 @@ export default {
         ot.showLabel = true;
         self.form.sections[0].fields.push(ot);
 
-        let title = fields.getField("title")
-        title.multilingual = false
-        self.form.sections[0].fields.push(title);
-
-        let description = fields.getField("description")
-        description.multilingual = false
-        self.form.sections[0].fields.push(description);
+        self.form.sections[0].fields.push(fields.getField("title"));
+        self.form.sections[0].fields.push(fields.getField("description"));
 
         let lang = fields.getField("language");
         lang.value = this.$i18n.locale;
@@ -325,7 +330,6 @@ export default {
         self.form.sections[0].fields.push(lang);
 
         let kw = fields.getField("keyword");
-        kw.multilingual = false;
         kw.disableSuggest = true;
         self.form.sections[0].fields.push(kw);
 
@@ -333,6 +337,7 @@ export default {
         role.ordergroup = "role";
         role.roleVocabulary = "submitrolepredicate";
         role.identifierType = "ids:orcid";
+        role.showDefinitions = true;
         role.showIdentifier = true;
         self.form.sections[0].fields.push(role);
 
@@ -347,42 +352,26 @@ export default {
         self.form.sections[1].fields.push(fields.getField("gnd-subject"));
         self.form.sections[1].fields.push(fields.getField("bk-subject"));
 
-        let tempcov = fields.getField("temporal-coverage")
-        tempcov.multilingual = false;
-        self.form.sections[2].fields.push(tempcov);
+        self.form.sections[2].fields.push(fields.getField("temporal-coverage"));
         let place = fields.getField("spatial-geonames");
         place.showtype = false;
         self.form.sections[2].fields.push(place);
 
-        let proj = fields.getField("project")
-        proj.multilingual = false
-        self.form.sections[3].fields.push(proj);
+        self.form.sections[3].fields.push(fields.getField("project"));
 
         self.form.sections[4].fields.push(fields.getField("date-edtf"));
-        let inscrip = fields.getField("inscription")
-        inscrip.multilingual = false
-        self.form.sections[4].fields.push(inscrip);
+        self.form.sections[4].fields.push(fields.getField("inscription"));
         self.form.sections[4].fields.push(fields.getField("shelf-mark"));
         self.form.sections[4].fields.push(fields.getField("accession-number"));
-        let prov = fields.getField("provenance")
-        prov.multilingual = false
-        self.form.sections[4].fields.push(prov);
+        self.form.sections[4].fields.push(fields.getField("provenance"));
         self.form.sections[4].fields.push(fields.getField("production-company"));
         self.form.sections[4].fields.push(fields.getField("production-place"));
-        let loc = fields.getField("physical-location")
-        loc.multilingual = false
-        self.form.sections[4].fields.push(loc);
-        let cond = fields.getField("condition-note")
-        cond.multilingual = false
-        self.form.sections[4].fields.push(cond);
+        self.form.sections[4].fields.push(fields.getField("physical-location"));
+        self.form.sections[4].fields.push(fields.getField("condition-note"));
         self.form.sections[4].fields.push(fields.getField("height"));
         self.form.sections[4].fields.push(fields.getField("width"));
-        let mat = fields.getField("material-text")
-        mat.multilingual = false
-        self.form.sections[4].fields.push(mat);
-        let tech = fields.getField("technique-text")
-        tech.multilingual = false
-        self.form.sections[4].fields.push(tech);
+        self.form.sections[4].fields.push(fields.getField("material-text"));
+        self.form.sections[4].fields.push(fields.getField("technique-text"));
 
         self.form.sections[5].fields.push(fields.getField("alternate-identifier"))
         let published = fields.getField("date-edtf")
@@ -394,11 +383,28 @@ export default {
         let publ = fields.getField("bf-publication")
         self.form.sections[5].fields.push(publ);
 
+        let ac1 = fields.getField("accessibility-control")
+        ac1.multiplicable = true
+        ac1.showValueDefinition = true;
+        self.form.sections[6].fields.push(ac1);
+        let ac2 = fields.getField("access-mode")
+        ac2.multiplicable = true
+        ac2.showValueDefinition = true;
+        self.form.sections[6].fields.push(ac2);
+        let ac3 = fields.getField("accessibility-hazard")
+        ac3.multiplicable = true
+        ac3.showValueDefinition = true;
+        self.form.sections[6].fields.push(ac3);
+        let ac4 = fields.getField("accessibility-feature")
+        ac4.multiplicable = true
+        ac4.showValueDefinition = true;
+        self.form.sections[6].fields.push(ac4);
       }
 
       for (let s of self.form.sections) {
         for (let f of s.fields) {
           f.configurable = false
+          f.multilingual = true
           for (let prop of Object.keys(f)) {
             switch (prop) {
               case "language":
@@ -406,6 +412,18 @@ export default {
                 break;
               case "nameLanguage":
                 f.nameLanguage = self.$i18n.locale;
+                break;
+              case "funderNameLanguage":
+                f.funderNameLanguage = self.$i18n.locale;
+                break;
+              case "descriptionLanguage":
+                f.descriptionLanguage = self.$i18n.locale;
+                break;
+              case "titleLanguage":
+                f.titleLanguage = self.$i18n.locale;
+                break;
+              case "citationLanguage":
+                f.citationLanguage = self.$i18n.locale;
                 break;
             }
           }

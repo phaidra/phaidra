@@ -1,4 +1,3 @@
-import config from './config/phaidra-ui'
 const path = require('path')
 
 export default {
@@ -60,8 +59,17 @@ export default {
     '@nuxt/http',
     ['cookie-universal-nuxt', { alias: 'cookies' }],
     '@nuxtjs/sentry',
-    'nuxt-helmet'
+    'nuxt-helmet',
+    '@nuxtjs/markdownit'
   ],
+
+  markdownit: {
+    preset: 'default',
+    linkify: true,
+    breaks: true,
+    runtime: true
+  },
+
   axios: {
       baseURL: 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000', // Used as fallback if no runtime config is provided
   },
@@ -124,6 +132,13 @@ export default {
         fs: 'empty'
       }
       config.resolve.alias.vue = "vue/dist/vue.esm.js"
+      config.module.rules.push(
+        {
+          test: /\.mjs$/,
+          include: /node_modules/,
+          type: "javascript/auto"
+        }
+      )
     },
     transpile: ['phaidra-vue-components', 'vuetify/lib']
   }
