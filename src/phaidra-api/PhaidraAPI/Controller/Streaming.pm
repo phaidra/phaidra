@@ -12,8 +12,35 @@ use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Authorization;
 use PhaidraAPI::Model::Streaming;
 
-sub process {
+sub key {
+  my $self = shift;
+  
+  unless (defined($self->stash('pid'))) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
+    return;
+  }
+  my $pid = $self->stash('pid');
+  unless ($pid =~ m/^o:\d+$/) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Invalid pid'}]}, status => 400);
+    return;
+  }
 
+  if (defined $self->config->{external_services}->{opencast}->{mode} && $self->config->{external_services}->{opencast}->{mode} eq "ACTIVATED") {
+    my $object_job_info = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'vige'});
+    if (defined $object_job_info) {
+      $self->render(text => $object_job_info->{oc_mpid}, status => 200);
+      return;
+    } else {
+      $self->render(json => {alerts => [{type => 'error', msg => 'Not found'}]}, status => 404);
+      return;
+    }
+  } else {
+   $self->render(json => {alerts => [{type => 'error', msg => 'Streaming is not configured'}]}, status => 400);
+   return;
+  }
+}
+
+sub process {
   my $self = shift;
 
   my $pid          = $self->stash('pid');

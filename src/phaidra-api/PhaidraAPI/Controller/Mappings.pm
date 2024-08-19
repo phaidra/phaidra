@@ -56,13 +56,13 @@ sub get {
 
 
   my $jsonld_model = PhaidraAPI::Model::Jsonld->new;
-  my $res          = $jsonld_model->get_object_jsonld_parsed($self, $pid);
-  if ($res->{status} ne 200) {
-    $self->render(json => {alerts => $res->{alerts}}, status => $res->{status});
+  my $jsonldres          = $jsonld_model->get_object_jsonld_parsed($self, $pid);
+  if ($jsonldres->{status} ne 200) {
+    $self->render(json => {alerts => $jsonldres->{alerts}}, status => $jsonldres->{status});
     return;
   }
 
-  $md->{jsonld} = $res->{'JSON-LD'};
+  $md->{jsonld} = $jsonldres->{'JSON-LD'};
 
   my $metadata;
   switch ($schema) {
