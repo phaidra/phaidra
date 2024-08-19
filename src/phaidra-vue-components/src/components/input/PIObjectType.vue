@@ -9,7 +9,7 @@
       </v-card-title>
       <v-card-text class="mt-4">
         <v-row no-gutters>
-          <v-col cols="12" :class="'order-' + (i+1)" :md="terms.length <= 6 ? 12 : 6" v-for="(term, i) in terms" :key="'ot'+i">
+          <v-col cols="12" :md="terms.length <= 6 ? 12 : 6" v-for="(term, i) in terms" :key="'ot'+i">
             <v-checkbox class="mt-0 check" v-model="checkboxes[term['@id']]" @click.capture="$emit('input', checkboxes)" :label="getLocalizedTermLabel(vocabulary, term['@id'])" :key="'chot'+i"></v-checkbox>
             <v-spacer></v-spacer>
           </v-col>

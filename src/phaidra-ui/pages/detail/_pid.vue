@@ -879,7 +879,7 @@
                                 </v-row>
                                 <v-row align="center" justify="center">
                                   <v-col cols="12">
-                                    <strong>{{ $t('Note') }}</strong>: {{ $t(' After the request, please wait for the DOI support to contact you via email.') }}
+                                    <strong>{{ $t('Note') }}</strong>: {{ $t('After the request, please wait for the DOI support to contact you via email.') }}
                                   </v-col>
                                 </v-row>
                               </v-container>

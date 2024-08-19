@@ -1224,5 +1224,8 @@ export default {
   'Accessibility control': 'Barrierefreiheit: Steuerung',
   'Accessibility hazard': 'Barrierefreiheit: Störung',
   'Accessibility feature': 'Barrierefreiheit: Merkmal',
-  'Export formats': 'Exportformate'
+  'Export formats': 'Exportformate',
+  'DOI successfully requested': 'DOI erfolgreich angefordert',
+  'After the request, please wait for the DOI support to contact you via email.': 'Bitte warten Sie nach der Anfrage, bis der DOI-Support Sie per E-Mail kontaktiert.',
+  'Request DOI': 'DOI anfordern'
 }
