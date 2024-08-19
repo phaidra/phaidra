@@ -432,6 +432,7 @@ export default {
     toggleFacet: function (q, f) {
       toggleFacet(q, f)
       this.search({ page: 1, facetQueries: this.facetQueries })
+      this.$forceUpdate()
     },
     toggleOwnerFilter: function () {
       this.showOwnerFilter = !this.showOwnerFilter

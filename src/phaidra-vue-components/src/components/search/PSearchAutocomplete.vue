@@ -61,8 +61,7 @@ export default {
     debounce: Number,
 
     suggester: {
-      type: String,
-      required: true
+      type: String
     },
 
     // minimum length
