@@ -88,7 +88,7 @@ sub get_metadata {
         children => [
           { 
             name => 'lom:langstring',
-            value =>  $pidUri,
+            value =>  $pid,
             attributes => [
               { 
                 name  => 'xml:lang',
