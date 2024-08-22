@@ -1,3 +1,8 @@
+# v3.1.0
+  + last release that makes use of compose_* directories in repo, we are moving towards docker profiles.
+  + various stability enhancements
+  + preparation for k8s
+
 # phaidra-3.0.0
 
   + phaidra-ui: added possibility to customize submit form via default template

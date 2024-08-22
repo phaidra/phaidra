@@ -43,7 +43,7 @@ function get_mpids {
         --authenticationDatabase admin \
         -u $M_USER \
         -p $M_PASS \
-        mongodb://mongodb-phaidra/$M_AGENT_DB \
+        mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
         --eval \
         'db.jobs.find({"oc_mpid": {$exists: true}, "agent": "vige", "status": "sent"}).forEach(r=>print(JSON.stringify(r)))' | \
         jq -r '.oc_mpid'
@@ -55,7 +55,7 @@ function get_pid {
         --authenticationDatabase admin \
         -u $M_USER \
         -p $M_PASS \
-        mongodb://mongodb-phaidra/$M_AGENT_DB \
+        mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
         --eval 'JSON.stringify(db.jobs.findOne({ oc_mpid: "'$1'"}))' | \
         jq -r '.pid'
 }
@@ -66,7 +66,7 @@ function set_status {
         --authenticationDatabase admin \
         -u $M_USER \
         -p $M_PASS \
-        mongodb://mongodb-phaidra/$M_AGENT_DB \
+        mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
         --eval 'db.jobs.findOneAndUpdate({ oc_mpid: "'$1'" }, { $set: { 'status': "'$2'" } })'
 }
     
@@ -80,7 +80,7 @@ function set_url {
         --authenticationDatabase admin \
         -u $M_USER \
         -p $M_PASS \
-        mongodb://mongodb-phaidra/$M_AGENT_DB \
+        mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
         --eval 'db.jobs.findOneAndUpdate({ pid: "'$1'" }, { $set: { "'$2'": "'$3'" } })'
 }
 

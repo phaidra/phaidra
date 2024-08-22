@@ -18,7 +18,6 @@ use MongoDB::OID;
 use MongoDB::MongoClient;
 use Util::ts;
 
-# my $self_ref= 'agent_name';
 my $self_ref= 'agent';
 
 sub new

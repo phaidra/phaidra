@@ -4,6 +4,7 @@ variables:
   DOCKER_TLS_CERTDIR: "/certs"
 
 stages:
+  - build-common
   - build-base
   - build-dist
   - test
@@ -24,7 +25,7 @@ build-api-base:
     --builder=container
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/api-base:latest
-    -t $CI_REGISTRY_USER/api-base:$CI_COMMIT_SHORT_SHA --push . 
+    -t $CI_REGISTRY_USER/api-base:$CI_COMMIT_SHORT_SHA --push .
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
@@ -43,16 +44,17 @@ build-api-dist:
     --builder=container
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/api-dist:latest
-    -t $CI_REGISTRY_USER/api-dist:$CI_COMMIT_SHORT_SHA --push . 
+    -t $CI_REGISTRY_USER/api-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
+          - dockerfiles/api-base.dockerfile
           - dockerfiles/api-dist.dockerfile
           - src/phaidra-api/**/*
 
 build-ui:
-  stage: build-dist
+  stage: build-common
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -62,8 +64,8 @@ build-ui:
     docker buildx build -f dockerfiles/ui.dockerfile
     --builder=container
     --platform=linux/amd64,linux/arm64
-    -t $CI_REGISTRY_USER/ui-dist:latest
-    -t $CI_REGISTRY_USER/ui-dist:$CI_COMMIT_SHORT_SHA --push .
+    -t $CI_REGISTRY_USER/ui:latest
+    -t $CI_REGISTRY_USER/ui:$CI_COMMIT_SHORT_SHA --push .
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
@@ -72,7 +74,7 @@ build-ui:
           - src/phaidra-ui/**/*
           - src/phaidra-vue-components/**/*
 
-build-chronos:
+build-chronos-base:
   stage: build-base
   before_script:
     - mkdir -p $HOME/.docker
@@ -80,7 +82,7 @@ build-chronos:
   script: >
     docker context create builder-context &&
     docker buildx create builder-context --name container --driver=docker-container &&
-    docker buildx build -f dockerfiles/chronos.dockerfile
+    docker buildx build -f dockerfiles/chronos-base.dockerfile
     --builder=container
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/chronos-base:latest
@@ -89,7 +91,7 @@ build-chronos:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
-          - dockerfiles/chronos.dockerfile
+          - dockerfiles/chronos-base.dockerfile
 
 build-chronos-dist:
   stage: build-dist
@@ -108,10 +110,11 @@ build-chronos-dist:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
+          - dockerfiles/chronos-base.dockerfile
           - dockerfiles/chronos-dist.dockerfile
-          - container-init/chronos/**/*
+          - container_init/chronos/**/*
 
-build-httpd-shib:
+build-httpd-shib-base:
   stage: build-base
   before_script:
     - mkdir -p $HOME/.docker
@@ -119,19 +122,86 @@ build-httpd-shib:
   script: >
     docker context create builder-context &&
     docker buildx create builder-context --name container --driver=docker-container &&
-    docker buildx build -f dockerfiles/httpd-shib.dockerfile
+    docker buildx build -f dockerfiles/httpd-shib-base.dockerfile
     --builder=container
     --platform=linux/amd64,linux/arm64
-    -t $CI_REGISTRY_USER/httpd-base-shib:latest
-    -t $CI_REGISTRY_USER/httpd-base-shib:$CI_COMMIT_SHORT_SHA --push .
+    -t $CI_REGISTRY_USER/httpd-shib-base:latest
+    -t $CI_REGISTRY_USER/httpd-shib-base:$CI_COMMIT_SHORT_SHA --push .
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
-          - dockerfiles/httpd-shib.dockerfile
+          - dockerfiles/httpd-shib-base.dockerfile
 
+build-httpd-shib-dist:
+  stage: build-dist
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/httpd-shib-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/httpd-shib-dist:latest
+    -t $CI_REGISTRY_USER/httpd-shib-dist:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/httpd-shib-base.dockerfile
+          - dockerfiles/httpd-shib-dist.dockerfile
+          - container_init/httpd/phaidra-shib/httpd-shib-entrypoint.bash
+          - container_init/httpd/phaidra-shib/conf/aconet-metadata-signing.crt
+          - container_init/httpd/phaidra-shib/conf/attribute-map.xml
+          - container_init/httpd/phaidra-shib/conf/attribute-policy.xml
+          - container_init/httpd/phaidra-shib/conf/shibboleth2.xml
+
+build-httpd-demo-dist:
+  stage: build-dist
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/httpd-demo-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/httpd-demo-dist:latest
+    -t $CI_REGISTRY_USER/httpd-demo-dist:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/httpd-demo-dist.dockerfile
+          - container_init/httpd/phaidra-demo/conf/phaidra-demo.conf
+
+build-httpd-ssl-dist:
+  stage: build-dist
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/httpd-ssl-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/httpd-ssl-dist:latest
+    -t $CI_REGISTRY_USER/httpd-ssl-dist:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/httpd-ssl-dist.dockerfile
+          - container_init/httpd/phaidra-ssl/conf/phaidra-ssl.conf
+          - container_init/httpd/phaidra-ssl/httpd-ssl-entrypoint.bash
+
+          
 build-imageserver:
-  stage: build-base
+  stage: build-common
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -141,14 +211,13 @@ build-imageserver:
     docker buildx build -f dockerfiles/imageserver.dockerfile
     --builder=container
     --platform=linux/amd64,linux/arm64
-    -t $CI_REGISTRY_USER/imageserver-base:latest
-    -t $CI_REGISTRY_USER/imageserver-base:$CI_COMMIT_SHORT_SHA --push .
+    -t $CI_REGISTRY_USER/imageserver:latest
+    -t $CI_REGISTRY_USER/imageserver:$CI_COMMIT_SHORT_SHA --push .
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
           - dockerfiles/imageserver.dockerfile
-
 
 build-pixelgecko-base:
   stage: build-base
@@ -158,7 +227,7 @@ build-pixelgecko-base:
   script: >
     docker context create builder-context &&
     docker buildx create builder-context --name container --driver=docker-container &&
-    docker buildx build -f dockerfiles/pixelgecko.dockerfile
+    docker buildx build -f dockerfiles/pixelgecko-base.dockerfile
     --builder=container
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/pixelgecko-base:latest
@@ -167,9 +236,8 @@ build-pixelgecko-base:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
-          - dockerfiles/pixelgecko.dockerfile
+          - dockerfiles/pixelgecko-base.dockerfile
 
-         
 build-pixelgecko-dist:
   stage: build-dist
   before_script:
@@ -187,6 +255,7 @@ build-pixelgecko-dist:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
+          - dockerfiles/pixelgecko-base.dockerfile
           - dockerfiles/pixelgecko-dist.dockerfile
           - src/pixelgecko/**/*
 
@@ -290,27 +359,7 @@ build-openldap-dist:
           - dockerfiles/openldap-dist.dockerfile
           - container_init/openldap/**/*
 
-build-pixelgecko-dist:
-  stage: build-dist
-  before_script:
-    - mkdir -p $HOME/.docker
-    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
-  script: >
-    docker context create builder-context &&
-    docker buildx create builder-context --name container --driver=docker-container &&
-    docker buildx build -f dockerfiles/pixelgecko-dist.dockerfile
-    --builder=container
-    --platform=linux/amd64,linux/arm64
-    -t $CI_REGISTRY_USER/pixelgecko-dist:latest
-    -t $CI_REGISTRY_USER/pixelgecko-dist:$CI_COMMIT_SHORT_SHA --push .
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
-      changes:
-        paths:
-          - dockerfiles/pixelgecko-dist.dockerfile
-          - src/pixelgecko/**/*
-
-build-vige:
+build-vige-base:
   stage: build-base
   before_script:
     - mkdir -p $HOME/.docker
@@ -318,7 +367,7 @@ build-vige:
   script: >
     docker context create builder-context &&
     docker buildx create builder-context --name container --driver=docker-container &&
-    docker buildx build -f dockerfiles/vige.dockerfile
+    docker buildx build -f dockerfiles/vige-base.dockerfile
     --builder=container
     --platform=linux/amd64,linux/arm64
     -t $CI_REGISTRY_USER/vige-base:latest
@@ -327,93 +376,108 @@ build-vige:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
-          - dockerfiles/vige.dockerfile  
+          - dockerfiles/vige-base.dockerfile
 
-compose-dev:
-  stage: test
+build-vige-dist:
+  stage: build-dist
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
-  script:
-    - cd compose_dev
-    - cp ../.env.template .env
-    - docker compose up -d --quiet-pull --build
-    - docker compose down
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/vige-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/vige-dist:latest
+    -t $CI_REGISTRY_USER/vige-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
-          - compose_dev/docker-compose.yaml
-          - components/phaidra-ui/**/*
-          - container_components/solr/**/*
-
-compose-demo:
-  stage: test
+          - dockerfiles/vige-base.dockerfile
+          - dockerfiles/vige-dist.dockerfile
+          - src/vige/**/*
+          
+build-promtail-dist:
+  stage: build-dist
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
-  script:
-    - cd compose_demo
-    - cp ../.env.template .env
-    - docker compose up -d --quiet-pull --build
-    - docker compose down
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/promtail-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/promtail-dist:latest
+    -t $CI_REGISTRY_USER/promtail-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
-          - compose_demo/docker-compose.yaml
-          - container_components/solr/**/*
+          - dockerfiles/promtail-dist.dockerfile
+          - container_init/promtail/promtail-local-config.yaml
 
-compose-ssl:
-  stage: test
+build-loki-dist:
+  stage: build-dist
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
-  script:
-    - cd compose_ssl
-    - cp ../.env.template .env
-    - docker compose up -d --quiet-pull --build
-    - docker compose down
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/loki-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/loki-dist:latest
+    -t $CI_REGISTRY_USER/loki-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
-          - compose_ssl/docker-compose.yaml
-          - container_components/solr/**/*
+          - dockerfiles/loki-dist.dockerfile
+          - container_init/loki/loki-docker-config.yaml
 
-compose-shib:
-  stage: test
+build-grafana-dist:
+  stage: build-dist
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
-  script:
-    - cd compose_shib
-    - cp ../.env.template .env
-    - docker compose up -d --quiet-pull --build
-    - docker compose down
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/grafana-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/grafana-dist:latest
+    -t $CI_REGISTRY_USER/grafana-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
-          - compose_shib/docker-compose.yaml
-          - container_components/solr/**/*
+          - dockerfiles/grafana-dist.dockerfile
+          - container_init/grafana/**/*
 
-compose-keycloak:
-  stage: test
+build-prometheus-dist:
+  stage: build-dist
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
-  script:
-    - cd compose_keycloak
-    - cp ../.env.template .env
-    - docker compose up -d --quiet-pull --build
-    - docker compose down
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/prometheus-dist.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/prometheus-dist:latest
+    -t $CI_REGISTRY_USER/prometheus-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:
         paths:
-          - compose_shib/docker-compose.yaml
-          - container_components/solr/**/*
+          - dockerfiles/prometheus-dist.dockerfile
+          - container_init/prometheus/prometheus.yaml
 
 release_job:
   stage: release

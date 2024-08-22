@@ -7,7 +7,7 @@ ___
 
 # About this repository
 
-This repo hosts the source code and docker-compose files of the
+This repo hosts the source code and the docker-compose startup file of the
 [PHAIDRA](https://phaidra.org/) (Permanent Hosting, Archiving and
 Indexing of Digital Resources and Assets) software, developed at the
 [Vienna University Computer Center](https://zid.univie.ac.at/en/).
@@ -18,7 +18,7 @@ organizations that need to provide a solution for long-term-archiving of
 valuable data and metadata about the stored objects.
 
 We provide various flavors for different use cases, from a demo version
-running on a local desktop computer for evaluation, to an SSO-enabled
+running on a local desktop computer for evaluation, to an shibboleth-enabled
 server version.
 
 # Setup
@@ -37,125 +37,234 @@ do that.
 
 See section [Docker Notes](#docker-notes) below to see what we do on a typical installation for running PHAIDRA on rootless containers.
 
+# Docker compose profiles
+
+We are using docker profiles to start up the relevant containers for the desired use case.
+
+We highly recommend to use the `--project-name $PROJECT_NAME_OF_YOUR_LIKING` flag to the `docker compose` command, as this will allow you to easily identify the persistant docker volumes which will be created to store your valuable data.
+
+## Profiles using versioned images including all code
+
++ `demo-local`: for an evaluation installation, serving PHAIDRA on `http://localhost:8899`. Uses only local storage.
++ `demo-s3`: for an evaluation installation, serving PHAIDRA on `http://localhost:8899`. Uses an S3-bucket for the object repository and images converted to the format supported by IIPImage.
++ `ssl-local`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses only local storage.
++ `ssl-s3`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses an S3-bucket for the object repository and images converted to the format supported by IIPImage.
++ `shib-local`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses only local storage.  Uses an external shibboleth-idp for authentication.
++ `shib-s3`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses an S3-bucket for the object repository and images converted to the format supported by IIPImage.  Uses an external shibboleth-idp for authentication.
+
+## Profiles bindmounting the repository's code
+
++ `demo-local-dev`: see above.
++ `demo-s3-dev`: see above.
++ `ssl-local-dev`: see above.
++ `ssl-s3-dev`: see above.
++ `shib-local-dev`: see above.
++ `shib-s3-dev`: see above.
+
+## Extra profiles
+### Standalone
++ `website`: For convenient development of our website at [www.phaidra.org](https://www.phaidra.org).
+### Add-On
++ `external-opencast`: can be added to any of the profiles that use local storage, if an external opencast-streaming-server is available to you. Uses a versioned image including all code.
++ `external-opencast-dev`: can be added to any of the dev-profiles that use local storage, if an external opencast-streaming-server is available to you. Uses bindmounted code from the repository.
+
+
 # Run it
+All default values assume that you are running docker rootless as the first non-root user with uid 1000 on your linux computer.  This is what we strongly recommend.  However, if this does not match your reality, please check the following options:
+## Linux user on docker rootless, but not uid 1000
++ Please set the variable `HOST_DOCKER_SOCKET` to `/run/user/$YOUR-UID/docker.sock` in an `.env` file.  You can get your uid quickly by running `id -u`.
+## Users running priviledged ('normal') docker (Linux and Windows Docker based on wsl2)
++ Please set the variable `ADMIN_IP_LIST` to `172.29.5.1` in an `.env` file for the demo/localhost version. This is to reach the admin area. For ssl/shib see below.
++ Please set the variable `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` in an `.env` file. This is to get proper service monitoring.
+## Users running priviledged ('normal') docker (OSX)
++ Please set the variable `ADMIN_IP_LIST` to `192.168.65.1` in an `.env` file for the demo/localhost version. This is to reach the admin area. For ssl/shib see below.
++ Please set the variable `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` in an `.env` file. This is to get proper service monitoring.
 
-See the sections below for version-specific instructions.
+## Demo version with local storage
+###  Prerequisites
++ make sure no other service is using port 8899 on your computer.
 
-## Demo Version
+### Startup
+Run the following command to get PHAIDRA running on `http://localhost:8899`:
 
-###  Demo specific prerequisites
-None, just make sure no other service is using port 8899 on your
-computer.
-
-###  Demo Startup
-
-After the following commands have finished, you will have a PHAIDRA
-instance running on `http://localhost:8899`, that you can visit in
-your browser.  See the screenshot below for what you can expect.
-
-``` example
-cd compose_demo
-cp ../.env.template .env
-# adjust variables  in .env if uid !=1000 or on rootful Docker -- see notes below.
-docker compose up -d
+```
+docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile demo-local up -d
 ```
 
-**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the environment variable `HOST_DOCKER_SOCKET` in the `.env` file to contain your actual (you can check with the command `id -u`).
+## Demo version with S3 storage
+### Prerequisites
++ make sure no other service is using port 8899 on your computer.
++ set the following variables in your `.env` file:
+  + `S3_ACCESS_KEY`
+  + `S3_SECRET_KEY`
+  + `S3_BUCKETNAME`
+  + `S3_CACHESIZE`: in Bytes, defaults to 100000000 (100MB).
+  + `S3_REGION`
 
-**NOTE for users running priviledged Docker:** if running rootful  Docker, please change the environment variable `LOCAL_ADMIN_IP` in the `.env` file to "172.29.5.1" (Linux and Win11 Docker Desktop based on WSL), or "192.168.65.1" (Docker Desktop on OSX) and `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` (all of the mentioned ones).
+### Startup
+Run the following command to get PHAIDRA running on `http://localhost:8899`:
 
-
-## SSL Version
-
-###  SSL specific prerequisites
-
--   A DNS-entry for your computer's IP-address.
--   SSL-certificate and -key (put them into the
-    `./container_init/httpd/phaidra-ssl/conf`-directory of this repo and name them
-    `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).
--   firewall with port 80 and 443 open on your computer.
--   properly set variables in `./compose_ssl/.env` (`PHAIDRA_HOSTNAME`, `PHAIDRA_HOST_IP`, [`REMOTE_ADMIN_IP`]).
-
-###  SSL Startup
-
-Change to the folder `./compose_ssl` and run compose. After the
-setup has finished, PHAIDRA will run on
-`https://$YOUR-DNS-ENTRY`.
-
-``` example
-cd compose_ssl
-cp ../.env.template .env
-# adjust variables  in .env if uid !=1000 or on rootful Docker -- see notes below.
-# set proper values in '.env'
-docker compose up -d
+```
+docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile demo-s3 up -d
 ```
 
-**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the environment variable `HOST_DOCKER_SOCKET` in the `.env` file to contain your actual (you can check with the command `id -u`).
+## SSL version with local storage
+###  Prerequisites
++ make sure no other service is using ports 80 and 443 on your computer.
++ a DNS-entry pointing to your computer's IP-address.
++ SSL-certificate and -key (put them into the `certs/httpd` and name them `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).  Certificates acquired from the [certbot tool](https://certbot.eff.org/) should do the job as they contain the full chain of certificates.
++ firewall with port 80 and 443 open on your computer.
++ set the following variables in your `.env` file:
+  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer, if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts` you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for priviledged docker on Linux or Windows,  192.168.65.1 for priviledged docker on OSX).
+  + `OUTSIDE_HTTP_SCHEME="https"`
+  + `PHAIDRA_HOSTPORT=""`
+  + `PHAIDRA_PORTSTUB=""`
+  + `PHAIDRA_HOSTNAME="$YOUR-FQDN"`
 
-**NOTE for users running priviledged Docker:** if running rootful  Docker, please change the environment variable `LOCAL_ADMIN_IP` in the `.env` file to "172.29.5.1" (Linux and Win11 Docker Desktop based on WSL), or "192.168.65.1" (Docker Desktop on OSX) and `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` (all of the mentioned ones).
+###  Startup
+Run the following command to get PHAIDRA running on `https://$YOUR-FQDN`:
 
+```
+docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile ssl-local up -d
+```
 
-## Shibboleth SSO Version
+## SSL version with S3 storage
+###  Prerequisites
++ make sure no other service is using ports 80 and 443 on your computer.
++ a DNS-entry pointing to your computer's IP-address.
++ SSL-certificate and -key (put them into the `certs/httpd` and name them `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).  Certificates acquired from the [certbot tool](https://certbot.eff.org/) should do the job as they contain the full chain of certificates.
++ firewall with port 80 and 443 open on your computer.
++ set the following variables in your `.env` file:
+  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer, if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts` you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for priviledged docker on Linux or Windows,  192.168.65.1 for priviledged docker on OSX).
+  + `OUTSIDE_HTTP_SCHEME="https"`
+  + `PHAIDRA_HOSTPORT=""`
+  + `PHAIDRA_PORTSTUB=""`
+  + `PHAIDRA_HOSTNAME="$YOUR-FQDN"`
+  + `S3_ACCESS_KEY`
+  + `S3_SECRET_KEY`
+  + `S3_BUCKETNAME`
+  + `S3_CACHESIZE`: in Bytes, defaults to 100000000 (100MB).
+  + `S3_REGION`
 
-###  Shibboleth specific prerequisites
+###  Startup
+Run the following command to get PHAIDRA running on `https://$YOUR-FQDN`:
 
--   A DNS-entry for your computer's IP-address.
--   SSL-certificate and -key (put them into the
-    `./container_init/httpd/phaidra-shib/conf`-directory of this repo and name them
-    `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).
--   firewall with port 80 and 443 open on your computer.
--   encryption and signing keys/certs for Shibboleth (plus the
-    registration at your organization's IdP). You can create the
-    required key/cert-pairs with the commands below (put the
-    results into the `./container_init/httpd/phaidra-shib/conf` folder of this repo -- 
-    **make sure your user has read access on these files**).
--   properly set variables in `./compose_shib/.env` (`PHAIDRA_HOSTNAME`, `PHAIDRA_HOST_IP`, [`REMOTE_ADMIN_IP`]).
+```
+docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile ssl-s3 up -d
+```
 
-``` example
+## Shibboleth version with local storage
+NOTE: This profile is not as straight forward, as the built-in apache2 webserver will act as a Shibboleth-SP, which requires registration at your organization's Shibboleth IDP.  It's very likely that you need to modify a row of variables, depending on your organization.
+###  Prerequisites
++ make sure no other service is using ports 80 and 443 on your computer.
++ a DNS-entry pointing to your computer's IP-address.
++ SSL-certificate and -key (put them into the `certs/httpd` and name them `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).  Certificates acquired from the [certbot tool](https://certbot.eff.org/) should do the job as they contain the full chain of certificates.
++ generate certificates for communication with your idp by running the commands below and put them into `certs/shibboleth`:
+```
 openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-encrypt-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-encrypt-cert.pem
 openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-signing-cert.pem
 ```
++ firewall with port 80 and 443 open on your computer.
++ set the following variables in your `.env` file:
+  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer, if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts` you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for priviledged docker on Linux or Windows,  192.168.65.1 for priviledged docker on OSX).
+  + `OUTSIDE_HTTP_SCHEME="https"`
+  + `PHAIDRA_HOSTPORT=""`
+  + `PHAIDRA_PORTSTUB=""`
+  + `PHAIDRA_HOSTNAME="$YOUR-FQDN"`
+  + `SHIB_DISCO_URL`: shibboleth discovery URL.
+  + `SHIB_METADATA_CERT`: shibboleth metadata signing certificate.
+  + `SHIB_METADATA_FILE`: shibboleth metadata file.
+  + `SHIB_METADATA`: shibboleth metadata file url.
+  + `SHIB_ENTITY_ID`: shibboleth weblogin address.
+  + `SHIB_MAIL`: shibboleth mail attribute.
+  + `SHIB_GIVEN_NAME`: shibboleth given name attribute.
+  + `SHIB_SURNAME`: shibboleth surname attribute.
+  + `SHIB_USERNAME`: shibboleth username attribute.
+  + `SHIB_AFFILIATION`: shibboleth affiliation attribute.
+  + `SHIB_REQUIRED_AFFILIATIONS`: comma-separated list of required attributes to log in to PHAIDRA.
 
-###  Shibboleth Startup
+###  Startup
 
-Change to the folder `./compose_shib` and run compose. After the
-setup has finished you will have PHAIDRA running on
-`https://$YOUR-DNS-ENTRY`.
+Run the following command to get PHAIDRA running on `https://$YOUR-FQDN`:
 
-``` example
-cd compose_shib
-cp ../.env.template .env
-# adjust variables  in .env if uid !=1000 or on rootful Docker -- see notes below.
-# set proper values in '.env'
-docker compose up -d
 ```
-**NOTE for users running unpriviledged Docker, but not with uid 1000:** Please change the environment variable `HOST_DOCKER_SOCKET` in the `.env` file to contain your actual (you can check with the command `id -u`).
+docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile shib-local up -d
+```
 
-**NOTE for users running priviledged Docker:** if running rootful  Docker, please change the environment variable `LOCAL_ADMIN_IP` in the `.env` file to "172.29.5.1" (Linux and Win11 Docker Desktop based on WSL), or "192.168.65.1" (Docker Desktop on OSX) and `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` (all of the mentioned ones).
+After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/Shibboleth.sso/Metadata`. You will have to hand this file to the IDP-manager of your organization and ask for registration.  After that, users matching the list in `SHIB_REQUIRED_AFFILIATIONS` should be able to log in and upload their files to your system.
+
+## Shibboleth version with S3 storage
+NOTE: This profile is not as straight forward, as the built-in apache2 webserver will act as a Shibboleth-SP, which requires registration at your organization's Shibboleth IDP.  It's very likely that you need to modify a row of variables, depending on your organization.
+###  Prerequisites
++ make sure no other service is using ports 80 and 443 on your computer.
++ a DNS-entry pointing to your computer's IP-address.
++ SSL-certificate and -key (put them into the `certs/httpd` and name them `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).  Certificates acquired from the [certbot tool](https://certbot.eff.org/) should do the job as they contain the full chain of certificates.
++ generate certificates for communication with your idp by running the commands below and put them into `certs/shibboleth`:
+```
+openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-encrypt-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-encrypt-cert.pem
+openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days $DESIRED_VALIDITY_TIME -subj '/CN=$YOUR_FQDN' -out sp-signing-cert.pem
+```
++ firewall with port 80 and 443 open on your computer.
++ set the following variables in your `.env` file:
+  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer, if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts` you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for priviledged docker on Linux or Windows,  192.168.65.1 for priviledged docker on OSX).
+  + `OUTSIDE_HTTP_SCHEME="https"`
+  + `PHAIDRA_HOSTPORT=""`
+  + `PHAIDRA_PORTSTUB=""`
+  + `PHAIDRA_HOSTNAME="$YOUR-FQDN"`
+  + `SHIB_DISCO_URL`: shibboleth discovery URL.
+  + `SHIB_METADATA_CERT`: shibboleth metadata signing certificate.
+  + `SHIB_METADATA_FILE`: shibboleth metadata file.
+  + `SHIB_METADATA`: shibboleth metadata file url.
+  + `SHIB_ENTITY_ID`: shibboleth weblogin address.
+  + `SHIB_MAIL`: shibboleth mail attribute.
+  + `SHIB_GIVEN_NAME`: shibboleth given name attribute.
+  + `SHIB_SURNAME`: shibboleth surname attribute.
+  + `SHIB_USERNAME`: shibboleth username attribute.
+  + `SHIB_AFFILIATION`: shibboleth affiliation attribute.
+  + `SHIB_REQUIRED_AFFILIATIONS`: comma-separated list of required attributes to log in to PHAIDRA.
+  + `S3_ACCESS_KEY`
+  + `S3_SECRET_KEY`
+  + `S3_BUCKETNAME`
+  + `S3_CACHESIZE`: in Bytes, defaults to 100000000 (100MB).
+  + `S3_REGION`
+
+###  Startup
+
+Run the following command to get PHAIDRA running on `https://$YOUR-FQDN`:
+
+```
+docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile shib-s3 up -d
+```
+
+After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/Shibboleth.sso/Metadata`. You will have to hand this file to the IDP-manager of your organization and ask for registration.  After that, users matching the list in `SHIB_REQUIRED_AFFILIATIONS` should be able to log in and upload their files to your system.
 
 # Default credentials on administration sites
 - **LDAP Account Manager** (from the Webinterface: Manage Phaidra -> Manage Users):
+  - user: `admin`
   - password: `adminpassword`.
-  This password can be altered in the `.env` file located next through the `LDAP_ADMIN_PASSWORD` variable.
+  These credentials can be altered at first startup through the variables `LDAP_ADMIN_USERNAME` and `LDAP_ADMIN_PASSWORD` at first startup in your `.env` file.
     - There are three default users built in for testing purposes (logging into Phaidra, uploading, etc) `pone`, `ptwo`, and `barchiver`.  They all share the same password `1234`.
     - These users can be accessed/altered/deleted from **LDAP Account manager**.
 - **Fedora** (from the Webinterface: Manage Phaidra -> Inspect Object Repository):
   - username: `fedoraAdmin`
   - password: `1234`
   - These credentials can be altered in the `.env` file through the variables `FEDORA_ADMIN_USER` and `FEDORA_ADMIN_PASS`.
-- **Grafana** (Manage Phaidra -> Inspect Running Services):
+- **Grafana** (from the Webinterface: Manage Phaidra -> Inspect Running Services):
   - username: `phaidra`
   - password: `phaidra`
-  - These credentials can be altered in the `.env` file through the variables `GF_SECURITY_ADMIN_USER` and `GF_SECURITY_ADMIN_PASS`.
-- **DbGate** (Manage Phaidra -> Inspect Databases)
+  - These credentials can be altered at first startup in the `.env` file through the variables `GF_SECURITY_ADMIN_USER` and `GF_SECURITY_ADMIN_PASS`.
+- **DbGate** (from the Webinterface: Manage Phaidra -> Inspect Databases)
   - username: `phaidra`
   - password: `phaidra`
   - Here only the password can be modified in the `.env` file through the variable `DBGATE_PASS`.  If you want to change the username as well, please change it in the `docker-compose.yaml` file in the `dbgate:` section.  The corresponding variable is called `LOGINS`. You will have to put the username into the variable in the next line `LOGIN_PASSWORD_[username]` as well, that's why we can't centrally manage this from `.env` for now.
-- **Solr** (Manage Phaidra -> Inspect Search Engine)
+- **Solr** (from the Webinterface: Manage Phaidra -> Inspect Search Engine)
   - username: `phaidra`
   - password: `phaidra`
-  - These credentials can be modified in the `.env` file through the variables `SOLR_USER` and `SOLR_PASS`.
-
+  - These credentials can be modified in the `.env` file through the variables `SOLR_USER` and `SOLR_PASS`. You might also want to change `SOLR_SALT` to some random string for a more random encryption of the credentials within solr.
+- the **api**
+  - username: `phaidraAdmin`
+  - password: `12345`
+  - These credentials can be modified in the `.env` file through the variables `PHAIDRA_ADMIN_USER` and `PHAIDRA_ADMIN_PASSWORD`.  You might also want to change `PHAIDRA_ENCRYPTION_KEY` and `PHAIDRA_SECRET` to enhance privacy.
 # Monitoring PHAIDRA
 
 ___
@@ -165,34 +274,35 @@ ___
 There is a Grafana dashboard at `http://localhost:8899/grafana`, respectively `https://YOUR_FQDN/grafana`, that displays the containers' system usage and their logs.
 
 One can also use the following shell command to monitor the system usage
-of PHAIDRA over all containers from the machine where it is running (here from an instance started from
-`./compose_demo`):
+of PHAIDRA over all containers from the machine where it is running (here from an instance started with
+`docker compose --project-name eval-shib-opencast-3 --profile shib-local --profile external-opencast up -d`):
 
 ``` example
 # COMMAND:
 docker stats
 # EXPECTED OUTPUT:
-CONTAINER ID   NAME                             CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
-2bb9181196e3   phaidra-demo-httpd-1             0.01%     21.17MiB / 15.03GiB   0.14%     992B / 0B         86kB / 0B         83
-d5c8257aa717   phaidra-demo-ui-1                18.34%    99.45MiB / 15.03GiB   0.65%     293kB / 2.99kB    0B / 0B           23
-c299d72a9014   phaidra-demo-pixelgecko-1        0.00%     51.57MiB / 15.03GiB   0.34%     10.8kB / 16kB     0B / 0B           1
-e93244f3ba88   phaidra-demo-api-1               0.02%     165.1MiB / 15.03GiB   1.07%     1.1kB / 0B        0B / 0B           6
-27e17164d2fb   phaidra-demo-promtail-local-1    0.43%     35.2MiB / 15.03GiB    0.23%     2.35kB / 23.7kB   0B / 0B           13
-6f0be828c7fa   phaidra-demo-dbgate-1            0.00%     24.66MiB / 15.03GiB   0.16%     1.55kB / 224B     0B / 4.1kB        11
-7447d44812fd   phaidra-demo-chronos-1           0.01%     4.066MiB / 15.03GiB   0.03%     1.14kB / 0B       0B / 0B           3
-6ca74551692f   phaidra-demo-fedora-1            0.61%     663.8MiB / 15.03GiB   4.31%     17.9kB / 15.2kB   430kB / 53.2kB    61
-b90acb3c2ed4   phaidra-demo-grafana-1           0.12%     103.7MiB / 15.03GiB   0.67%     12.2kB / 2.29kB   1.2MB / 471kB     16
-2ab547cb9044   phaidra-demo-lam-1               0.00%     22.41MiB / 15.03GiB   0.15%     1.1kB / 0B        0B / 0B           8
-5327ab50d22d   phaidra-demo-mongodb-phaidra-1   0.33%     171.2MiB / 15.03GiB   1.11%     17.6kB / 9.73kB   1.79MB / 213kB    32
-98a46ef375a5   phaidra-demo-loki-1              0.35%     33.71MiB / 15.03GiB   0.22%     25.2kB / 1.29kB   3.77MB / 53.2kB   13
-53af68cacba3   phaidra-demo-mariadb-phaidra-1   0.01%     197.7MiB / 15.03GiB   1.28%     1.47kB / 0B       16.5MB / 8.19kB   25
-6330011bf5b3   phaidra-demo-solr-1              0.82%     724.3MiB / 15.03GiB   4.71%     1.36kB / 0B       1.41MB / 168kB    55
-684d95cc0ac4   phaidra-demo-mariadb-fedora-1    0.02%     100.1MiB / 15.03GiB   0.65%     16.7kB / 16.5kB   26.3MB / 8.19kB   36
-469f52362bf8   phaidra-demo-openldap-1          0.00%     12.5MiB / 15.03GiB    0.08%     1.36kB / 0B       614kB / 0B        2
-2fed9080a1a8   phaidra-demo-cadvisor-1          3.48%     47.25MiB / 15.03GiB   0.31%     5.48kB / 271kB    0B / 0B           15
-43c851042af1   phaidra-demo-prometheus-1        0.07%     225.4MiB / 15.03GiB   1.46%     291kB / 5.64kB    98.3MB / 29.2MB   14
-c186e3959156   phaidra-demo-imageserver-1       0.01%     25.73MiB / 15.03GiB   0.17%     1.56kB / 0B       0B / 0B           57
-e875a9d3e4e8   phaidra-demo-node-exporter-1     0.00%     8.68MiB / 15.03GiB    0.06%     2.12kB / 13.9kB   0B / 0B           6
+CONTAINER ID   NAME                                      CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
+24943d669203   eval-shib-opencast-3-ui-1                 0.00%     168.6MiB / 15.03GiB   1.10%     348kB / 519kB     282MB / 2.26MB    23
+8cce9848c02b   eval-shib-opencast-3-pixelgecko-1         0.00%     132.8MiB / 15.03GiB   0.86%     245kB / 405kB     105MB / 6MB       1
+ac15e22ef241   eval-shib-opencast-3-api-1                0.02%     372.1MiB / 15.03GiB   2.42%     1.83MB / 2.06MB   100MB / 4.1kB     5
+784499d895b4   eval-shib-opencast-3-chronos-1            0.01%     5.281MiB / 15.03GiB   0.03%     4.16kB / 1.03kB   25.6MB / 28.7kB   3
+901bf54873ad   eval-shib-opencast-3-promtail-1           0.72%     46.36MiB / 15.03GiB   0.30%     41.8kB / 517kB    203MB / 532kB     13
+cdd6e92565ce   eval-shib-opencast-3-fedora-1             0.28%     768.1MiB / 15.03GiB   4.99%     1.23MB / 446kB    411MB / 6.55MB    61
+66a0cbf84a1f   eval-shib-opencast-3-dbgate-1             0.00%     27.15MiB / 15.03GiB   0.18%     2.52kB / 224B     129MB / 4.1kB     11
+ad395ac37d5b   eval-shib-opencast-3-vige-1               0.05%     109.1MiB / 15.03GiB   0.71%     1.24MB / 1.92MB   308MB / 811kB     8
+f101f8234c40   eval-shib-opencast-3-grafana-1            0.52%     70.17MiB / 15.03GiB   0.46%     31.4kB / 6.38kB   397MB / 47.4MB    19
+e1d172582a49   eval-shib-opencast-3-lam-1                0.01%     28.56MiB / 15.03GiB   0.19%     2.23kB / 0B       160MB / 86kB      8
+daf4baed79e5   eval-shib-opencast-3-mariadb-fedora-1     0.01%     118.3MiB / 15.03GiB   0.77%     202kB / 184kB     164MB / 88.9MB    18
+2860983af946   eval-shib-opencast-3-openldap-1           0.00%     24.69MiB / 15.03GiB   0.16%     67.6kB / 38.2kB   48.5MB / 729kB    4
+6d11aafaf265   eval-shib-opencast-3-httpd-shib-local-1   0.02%     116.2MiB / 15.03GiB   0.75%     4.26MB / 2.4MB    165MB / 1.87MB    126
+a91e94bdebfd   eval-shib-opencast-3-solr-1               0.85%     753.1MiB / 15.03GiB   4.89%     46.5kB / 112kB    282MB / 1.01MB    53
+c39b0dae4593   eval-shib-opencast-3-loki-1               0.62%     60.25MiB / 15.03GiB   0.39%     519kB / 39.8kB    176MB / 3.01MB    13
+aca9aed2d582   eval-shib-opencast-3-mongodb-phaidra-1    0.52%     265.7MiB / 15.03GiB   1.73%     1.68MB / 1.55MB   627MB / 7.82MB    39
+6e82b65d8b3a   eval-shib-opencast-3-mariadb-phaidra-1    0.02%     221.7MiB / 15.03GiB   1.44%     14.8kB / 8.59kB   216MB / 105MB     13
+d2880e7de5ff   eval-shib-opencast-3-imageserver-1        0.01%     29.06MiB / 15.03GiB   0.19%     7.22kB / 132kB    31.9MB / 24.6kB   65
+4715e3861ba8   eval-shib-opencast-3-cadvisor-1           5.59%     243.6MiB / 15.03GiB   1.58%     227kB / 16.3MB    89.1MB / 0B       16
+e5d2101e4c53   eval-shib-opencast-3-prometheus-1         0.00%     202.4MiB / 15.03GiB   1.32%     17.1MB / 273kB    185MB / 3.01MB    13
+e4a874e58527   eval-shib-opencast-3-node-exporter-1      0.00%     13.94MiB / 15.03GiB   0.09%     29.2kB / 597kB    40.6MB / 0B       6
 ```
 
 # Data persistance and integrity
@@ -204,7 +314,7 @@ of hardware failure.
 Objects loaded into PHAIDRA are automatically checksummed using the [SHA512-algorithm](https://en.wikipedia.org/wiki/SHA-2) by the underlying
 repository software [Fedora](https://fedora.lyrasis.org/).  By default, PHAIDRA triggers a recalculation of the checksums on every 2nd day of the month.  Results of these scans are visible on the built-in Grafana Dashboard for early hardware-failure detection.
 
-Depending on the PHAIDRA version you set up, the volumes will be prefixed differently (`phaidra-demo`, `phaidra-ssl`, `phaidra-shib`).
+Depending on `--project-name $PROJECT_NAME_OF_YOUR_LIKING` the volumes will be prefixed with `$PROJECT_NAME_OF_YOUR_LIKING`.
 
 See the section [Graphical System overview](#graphical-system-overview) for how these directories are connected to the containers.
 

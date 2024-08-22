@@ -4,7 +4,7 @@ printf "############################################################\n"
 mysqlcheck \
     -h ${MARIADB_FEDORA_HOST} \
     -u root \
-    -p${MARIADB_ROOT_PASSWORD} \
+    -p${MARIADB_FEDORA_ROOT_PASSWORD} \
     ${FEDORADB}
 printf "############################################################\n"
 printf "### dump fedora mariadb ####################################\n"
@@ -13,7 +13,7 @@ if mariadb-dump \
        --verbose \
        -h ${MARIADB_FEDORA_HOST} \
        -u root \
-       -p${MARIADB_ROOT_PASSWORD} \
+       -p${MARIADB_FEDORA_ROOT_PASSWORD} \
        -x ${FEDORADB} | \
         gzip > /mnt/database-dumps/$(date +%F-%H-%M-%S)-${FEDORADB}.sql.gz
 then
