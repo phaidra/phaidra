@@ -281,32 +281,32 @@ of PHAIDRA over all containers from the machine where it is running (here from a
 # COMMAND:
 docker stats
 # EXPECTED OUTPUT:
-CONTAINER ID   NAME                                      CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
-24943d669203   eval-shib-opencast-3-ui-1                 0.00%     168.6MiB / 15.03GiB   1.10%     348kB / 519kB     282MB / 2.26MB    23
-8cce9848c02b   eval-shib-opencast-3-pixelgecko-1         0.00%     132.8MiB / 15.03GiB   0.86%     245kB / 405kB     105MB / 6MB       1
-ac15e22ef241   eval-shib-opencast-3-api-1                0.02%     372.1MiB / 15.03GiB   2.42%     1.83MB / 2.06MB   100MB / 4.1kB     5
-784499d895b4   eval-shib-opencast-3-chronos-1            0.01%     5.281MiB / 15.03GiB   0.03%     4.16kB / 1.03kB   25.6MB / 28.7kB   3
-901bf54873ad   eval-shib-opencast-3-promtail-1           0.72%     46.36MiB / 15.03GiB   0.30%     41.8kB / 517kB    203MB / 532kB     13
-cdd6e92565ce   eval-shib-opencast-3-fedora-1             0.28%     768.1MiB / 15.03GiB   4.99%     1.23MB / 446kB    411MB / 6.55MB    61
-66a0cbf84a1f   eval-shib-opencast-3-dbgate-1             0.00%     27.15MiB / 15.03GiB   0.18%     2.52kB / 224B     129MB / 4.1kB     11
-ad395ac37d5b   eval-shib-opencast-3-vige-1               0.05%     109.1MiB / 15.03GiB   0.71%     1.24MB / 1.92MB   308MB / 811kB     8
-f101f8234c40   eval-shib-opencast-3-grafana-1            0.52%     70.17MiB / 15.03GiB   0.46%     31.4kB / 6.38kB   397MB / 47.4MB    19
-e1d172582a49   eval-shib-opencast-3-lam-1                0.01%     28.56MiB / 15.03GiB   0.19%     2.23kB / 0B       160MB / 86kB      8
-daf4baed79e5   eval-shib-opencast-3-mariadb-fedora-1     0.01%     118.3MiB / 15.03GiB   0.77%     202kB / 184kB     164MB / 88.9MB    18
-2860983af946   eval-shib-opencast-3-openldap-1           0.00%     24.69MiB / 15.03GiB   0.16%     67.6kB / 38.2kB   48.5MB / 729kB    4
-6d11aafaf265   eval-shib-opencast-3-httpd-shib-local-1   0.02%     116.2MiB / 15.03GiB   0.75%     4.26MB / 2.4MB    165MB / 1.87MB    126
-a91e94bdebfd   eval-shib-opencast-3-solr-1               0.85%     753.1MiB / 15.03GiB   4.89%     46.5kB / 112kB    282MB / 1.01MB    53
-c39b0dae4593   eval-shib-opencast-3-loki-1               0.62%     60.25MiB / 15.03GiB   0.39%     519kB / 39.8kB    176MB / 3.01MB    13
-aca9aed2d582   eval-shib-opencast-3-mongodb-phaidra-1    0.52%     265.7MiB / 15.03GiB   1.73%     1.68MB / 1.55MB   627MB / 7.82MB    39
-6e82b65d8b3a   eval-shib-opencast-3-mariadb-phaidra-1    0.02%     221.7MiB / 15.03GiB   1.44%     14.8kB / 8.59kB   216MB / 105MB     13
-d2880e7de5ff   eval-shib-opencast-3-imageserver-1        0.01%     29.06MiB / 15.03GiB   0.19%     7.22kB / 132kB    31.9MB / 24.6kB   65
-4715e3861ba8   eval-shib-opencast-3-cadvisor-1           5.59%     243.6MiB / 15.03GiB   1.58%     227kB / 16.3MB    89.1MB / 0B       16
-e5d2101e4c53   eval-shib-opencast-3-prometheus-1         0.00%     202.4MiB / 15.03GiB   1.32%     17.1MB / 273kB    185MB / 3.01MB    13
-e4a874e58527   eval-shib-opencast-3-node-exporter-1      0.00%     13.94MiB / 15.03GiB   0.09%     29.2kB / 597kB    40.6MB / 0B       6
+CONTAINER ID   NAME                                    CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
+d1eccd22d530   eval-shib-opencast-ui-1                 0.01%     127.8MiB / 15.03GiB   0.83%     297kB / 3.05kB    83MB / 2.26MB     23
+08cc62d6527d   eval-shib-opencast-pixelgecko-1         0.01%     113.3MiB / 15.03GiB   0.74%     49kB / 79.5kB     2.38MB / 0B       1
+ec1451f4a0ef   eval-shib-opencast-api-1                0.16%     211.6MiB / 15.03GiB   1.37%     1.33kB / 0B       40.4MB / 28.7kB   5
+1eaaca21a7b9   eval-shib-opencast-chronos-1            0.00%     1.379MiB / 15.03GiB   0.01%     1.33kB / 0B       578kB / 16.4kB    3
+5004acea700d   eval-shib-opencast-lam-1                0.00%     25.34MiB / 15.03GiB   0.16%     1.48kB / 0B       33MB / 86kB       8
+f59700d16a9e   eval-shib-opencast-fedora-1             0.12%     722.9MiB / 15.03GiB   4.70%     65.7kB / 58.7kB   191MB / 1.44MB    56
+3ea2f18b19be   eval-shib-opencast-dbgate-1             0.00%     27.3MiB / 15.03GiB    0.18%     1.81kB / 224B     17.9MB / 4.1kB    11
+ca9d4d4b0166   eval-shib-opencast-promtail-1           0.00%     60.62MiB / 15.03GiB   0.39%     9.89kB / 114kB    50.6MB / 90.1kB   14
+29ab1fe5f909   eval-shib-opencast-grafana-1            0.01%     102.6MiB / 15.03GiB   0.67%     25.9kB / 5.43kB   157MB / 47.3MB    20
+0988355560d0   eval-shib-opencast-vige-1               0.06%     26.11MiB / 15.03GiB   0.17%     184kB / 169kB     14.2MB / 160kB    8
+3df270ba0467   eval-shib-opencast-mariadb-phaidra-1    0.02%     103.6MiB / 15.03GiB   0.67%     1.59kB / 0B       93.5MB / 105MB    8
+b6904a855bce   eval-shib-opencast-httpd-shib-local-1   0.03%     16.56MiB / 15.03GiB   0.11%     1.59kB / 0B       40.7MB / 77.8kB   2
+0fa54d9f7f39   eval-shib-opencast-cadvisor-1           0.04%     168MiB / 15.03GiB     1.09%     39.4kB / 2.69MB   21.6MB / 0B       16
+aee35ee7906c   eval-shib-opencast-prometheus-1         0.00%     155.1MiB / 15.03GiB   1.01%     2.84MB / 46.7kB   80.9MB / 803kB    13
+abea0e1f41f6   eval-shib-opencast-mongodb-phaidra-1    0.02%     266MiB / 15.03GiB     1.73%     250kB / 230kB     440MB / 1.96MB    31
+f6970197ebdd   eval-shib-opencast-solr-1               0.09%     758.6MiB / 15.03GiB   4.93%     1.78kB / 0B       145MB / 475kB     51
+9acf0822c3c1   eval-shib-opencast-mariadb-fedora-1     0.01%     98.52MiB / 15.03GiB   0.64%     60.4kB / 64.2kB   50.9MB / 88.3MB   18
+79d1d1bb1ac4   eval-shib-opencast-loki-1               0.00%     51.65MiB / 15.03GiB   0.34%     116kB / 8.72kB    31.4MB / 393kB    13
+d1471b4d0494   eval-shib-opencast-openldap-1           0.00%     6.902MiB / 15.03GiB   0.04%     1.59kB / 0B       5.11MB / 696kB    2
+2865b566ca9d   eval-shib-opencast-node-exporter-1      0.00%     13.4MiB / 15.03GiB    0.09%     6.99kB / 112kB    4.47MB / 0B       6
+2566420dc22a   eval-shib-opencast-imageserver-1        0.00%     19.9MiB / 15.03GiB    0.13%     1.59kB / 0B       2.05MB / 28.7kB   57
 ```
 
 # Data persistance and integrity
-`docker compose up -d` will create directories in
+The startup command will create directories in
 `$HOME/.local/share/docker/volumes` (`/var/lib/docker/volumes` in case you run rootful docker) to persist data created by PHAIDRA
 over docker restarts or whole system reboots.  These directories are the ones that need to be backupped to prevent data loss in case 
 of hardware failure.
@@ -324,69 +324,70 @@ If you want to uninstall PHAIDRA from your computer, this can be done very easy.
 to a 'clean slate'.
 
 ## Shut down running PHAIDRA
-In case you have an instance running, make sure to shut it down using the following command (from `./compose_demo`, `./compose_ssl`, or `compose_shib`, depending on your installation -- here shown from `./compose_demo`):
+Make sure to shut down your running instance.:
 
 ``` example
 # COMMAND:
-docker compose down
+docker compose --project-name eval-shib-opencast-3 --profile shib-local --profile external-opencast down
 # EXPECTED OUTPUT:
-[+] Running 21/21
- ✔ Container phaidra-demo-httpd-1            Removed                                                                                                                                                         10.5s 
- ✔ Container phaidra-demo-promtail-local-1   Removed                                                                                                                                                          0.5s 
- ✔ Container phaidra-demo-chronos-1          Removed                                                                                                                                                         10.3s 
- ✔ Container phaidra-demo-imageserver-1      Removed                                                                                                                                                         10.4s 
- ✔ Container phaidra-demo-node-exporter-1    Removed                                                                                                                                                          0.4s 
- ✔ Container phaidra-demo-pixelgecko-1       Removed                                                                                                                                                         10.3s 
- ✔ Container phaidra-demo-lam-1              Removed                                                                                                                                                          0.5s 
- ✔ Container phaidra-demo-prometheus-1       Removed                                                                                                                                                          0.6s 
- ✔ Container phaidra-demo-cadvisor-1         Removed                                                                                                                                                          0.4s 
- ✔ Container phaidra-demo-openldap-1         Removed                                                                                                                                                          0.2s 
- ✔ Container phaidra-demo-grafana-1          Removed                                                                                                                                                          0.2s 
- ✔ Container phaidra-demo-ui-1               Removed                                                                                                                                                          0.7s 
- ✔ Container phaidra-demo-solr-1             Removed                                                                                                                                                         10.2s 
- ✔ Container phaidra-demo-dbgate-1           Removed                                                                                                                                                          0.3s 
- ✔ Container phaidra-demo-loki-1             Removed                                                                                                                                                          1.7s 
- ✔ Container phaidra-demo-api-1              Removed                                                                                                                                                         10.2s 
- ✔ Container phaidra-demo-fedora-1           Removed                                                                                                                                                          0.4s 
- ✔ Container phaidra-demo-mongodb-phaidra-1  Removed                                                                                                                                                          0.3s 
- ✔ Container phaidra-demo-mariadb-phaidra-1  Removed                                                                                                                                                          0.4s 
- ✔ Container phaidra-demo-mariadb-fedora-1   Removed                                                                                                                                                          0.4s 
- ✔ Network phaidra-demo_phaidra-network      Removed                                                                                                                                                          0.3s 
+[+] Running 22/22
+ ✔ Container eval-shib-opencast-httpd-shib-local-1  Removed                                                                           10.8s 
+ ✔ Container eval-shib-opencast-vige-1              Removed                                                                           10.7s 
+ ✔ Container eval-shib-opencast-ui-1                Removed                                                                            1.0s 
+ ✔ Container eval-shib-opencast-solr-1              Removed                                                                           10.5s 
+ ✔ Container eval-shib-opencast-prometheus-1        Removed                                                                            0.7s 
+ ✔ Container eval-shib-opencast-pixelgecko-1        Removed                                                                           10.6s 
+ ✔ Container eval-shib-opencast-cadvisor-1          Removed                                                                            0.8s 
+ ✔ Container eval-shib-opencast-chronos-1           Removed                                                                           10.4s 
+ ✔ Container eval-shib-opencast-promtail-1          Removed                                                                            0.6s 
+ ✔ Container eval-shib-opencast-dbgate-1            Removed                                                                            0.5s 
+ ✔ Container eval-shib-opencast-lam-1               Removed                                                                            0.7s 
+ ✔ Container eval-shib-opencast-node-exporter-1     Removed                                                                            0.4s 
+ ✔ Container eval-shib-opencast-imageserver-1       Removed                                                                           10.7s 
+ ✔ Container eval-shib-opencast-grafana-1           Removed                                                                            0.3s 
+ ✔ Container eval-shib-opencast-openldap-1          Removed                                                                            0.4s 
+ ✔ Container eval-shib-opencast-loki-1              Removed                                                                            2.2s 
+ ✔ Container eval-shib-opencast-api-1               Removed                                                                            0.3s 
+ ✔ Container eval-shib-opencast-mongodb-phaidra-1   Removed                                                                            0.3s 
+ ✔ Container eval-shib-opencast-mariadb-phaidra-1   Removed                                                                            0.4s 
+ ✔ Container eval-shib-opencast-fedora-1            Removed                                                                            0.4s 
+ ✔ Container eval-shib-opencast-mariadb-fedora-1    Removed                                                                            0.5s 
+ ✔ Network eval-shib-opencast_phaidra-network       Removed                                                                            0.4s  
 ```
 
 ## Remove persisted data
-The following command will remove the volumes (aka directories under `$HOME/.local/share/docker/volumes`) associated with your PHAIDRA installation.  As mentioned above, replace `phaidra-demo` with `phaidra-ssl` or `phaidra-shib`, depending on your installation. This command can be run from anywhere.
+The following command will remove the volumes (aka directories under `$HOME/.local/share/docker/volumes`) associated with your PHAIDRA installation. Set the project name filter according to you needs). This command can be run from anywhere.
 
 ```
 # COMMAND:
-docker volume rm $(docker volume ls --filter label=com.docker.compose.project=phaidra-demo --quiet)
+docker volume rm $(docker volume ls --filter label=com.docker.compose.project=eval-shib-opencast --quiet)
 # EXPECTED OUTPUT:
-phaidra-demo_chronos-database-dumps
-phaidra-demo_chronos-oai-logs
-phaidra-demo_chronos-sitemaps
-phaidra-demo_dbgate
-phaidra-demo_fedora
-phaidra-demo_grafana
-phaidra-demo_loki
-phaidra-demo_mariadb_fedora
-phaidra-demo_mariadb_phaidra
-phaidra-demo_mongodb_phaidra
-phaidra-demo_openldap
-phaidra-demo_pixelgecko
-phaidra-demo_prometheus
-phaidra-demo_solr
+eval-shib-opencast_chronos-database-dumps
+eval-shib-opencast_chronos-oai-logs
+eval-shib-opencast_chronos-sitemaps
+eval-shib-opencast_dbgate
+eval-shib-opencast_fedora
+eval-shib-opencast_grafana
+eval-shib-opencast_loki
+eval-shib-opencast_mariadb_fedora
+eval-shib-opencast_mariadb_phaidra
+eval-shib-opencast_mongodb_phaidra
+eval-shib-opencast_openldap
+eval-shib-opencast_pixelgecko
+eval-shib-opencast_prometheus
+eval-shib-opencast_solr
+eval-shib-opencast_vige
+eval-shib-opencast_vige-mongosh
 ```
 
 ## Remove docker images built by compose
-The following command will remove the docker images associated with your PHAIDRA installation.  As mentioned above, replace `phaidra-demo` with `phaidra-ssl` or `phaidra-shib`, depending on your installation. This command can be run from anywhere.
+NOTE: This command is only needed if you use one of the *-dev profiles, which will actually build the user-interface. This command can be run from anywhere.
 
 ```
 # COMMAND:
-docker image rm $(docker image ls --filter label=com.docker.compose.project=phaidra-demo --quiet)
+docker image rm $(docker image ls --filter label=com.docker.compose.project=$PROJECT_NAME_OF_YOUR_LIKING --quiet)
 # EXPECTED OUTPUT (hashes are matter of change):
-
-docker image rm $(docker image ls --filter label=com.docker.compose.project=phaidra-demo --quiet)
-Untagged: phaidra-demo-ui:latest
+Untagged: $PROJECT_NAME_OF_YOUR_LIKING-ui:latest
 Deleted: sha256:473336b19091df7aec4e549ae0f41ba7cea0147a08e86e335cebe64e88f16812
 ```
 ## Clean up Docker caches
@@ -395,7 +396,7 @@ things can become cluttered. To remove everything including build caches, you ca
  the following command:
 ```
 # COMMAND:
-docker system prune --filter label=com.docker.compose.project=phaidra-demo
+docker system prune --filter label=com.docker.compose.project=$PROJECT_NAME_OF_YOUR_LIKING
 # EXPECTED OUTPUT (hashes are matter of change):
 WARNING! This will remove:
   - all stopped containers
@@ -473,9 +474,9 @@ section [Shibboleth specific prerequisites](#shibboleth-specific-prerequisites))
 
 ``` example
 .
-├── compose_demo
-├── compose_shib
-├── compose_ssl
+├── certs
+│   ├── httpd
+│   └── shibboleth
 ├── container_init
 │   ├── api
 │   ├── chronos
@@ -485,11 +486,13 @@ section [Shibboleth specific prerequisites](#shibboleth-specific-prerequisites))
 │   ├── mariadb
 │   ├── mongodb
 │   ├── openldap
+│   ├── postgres
+│   ├── prometheus
 │   ├── promtail
-│   ├── solr
-│   └── vige
+│   └── solr
 ├── dockerfiles
-├── docs
+├── k8s
+│   └── helm
 ├── pictures
 ├── src
 │   ├── phaidra-api
@@ -497,9 +500,15 @@ section [Shibboleth specific prerequisites](#shibboleth-specific-prerequisites))
 │   ├── phaidra-vue-components
 │   ├── pixelgecko
 │   └── vige
-└── third-parties
+└── website
+    ├── about
+    ├── assets
+    ├── community
+    ├── docs
+    ├── fair-data
+    └── overrides
 
-26 directories
+34 directories
 ```
 
 ## Phaidra Components
@@ -559,34 +568,34 @@ docker version
 
 ``` example
 Client: Docker Engine - Community
- Version:           25.0.1
- API version:       1.44
- Go version:        go1.21.6
- Git commit:        29cf629
- Built:             Tue Jan 23 23:09:46 2024
+ Version:           27.1.1
+ API version:       1.46
+ Go version:        go1.21.12
+ Git commit:        6312585
+ Built:             Tue Jul 23 19:57:19 2024
  OS/Arch:           linux/amd64
  Context:           default
 
 Server: Docker Engine - Community
  Engine:
-  Version:          25.0.1
-  API version:      1.44 (minimum version 1.24)
-  Go version:       go1.21.6
-  Git commit:       71fa3ab
-  Built:            Tue Jan 23 23:09:46 2024
+  Version:          27.1.1
+  API version:      1.46 (minimum version 1.24)
+  Go version:       go1.21.12
+  Git commit:       cc13f95
+  Built:            Tue Jul 23 19:57:19 2024
   OS/Arch:          linux/amd64
   Experimental:     false
  containerd:
-  Version:          1.6.27
-  GitCommit:        a1496014c916f9e62104b33d1bb5bd03b0858e59
+  Version:          1.7.19
+  GitCommit:        2bf793ef6dc9a18e00cb12efb64355c2c9d5eb41
  runc:
-  Version:          1.1.11
-  GitCommit:        v1.1.11-0-g4bccb38
+  Version:          1.7.19
+  GitCommit:        v1.1.13-0-g58aa920
  docker-init:
   Version:          0.19.0
   GitCommit:        de40ad0
  rootlesskit:
-  Version:          2.0.0
+  Version:          2.0.2
   ApiVersion:       1.1.1
   NetworkDriver:    slirp4netns
   PortDriver:       slirp4netns
@@ -602,25 +611,30 @@ docker info
 
 ``` example
 Client: Docker Engine - Community
- Version:    25.0.1
+ Version:    27.1.1
  Context:    default
  Debug Mode: false
  Plugins:
   buildx: Docker Buildx (Docker Inc.)
-    Version:  v0.12.1
+    Version:  v0.16.1
     Path:     /usr/libexec/docker/cli-plugins/docker-buildx
   compose: Docker Compose (Docker Inc.)
-    Version:  v2.24.2
+    Version:  v2.29.1
     Path:     /usr/libexec/docker/cli-plugins/docker-compose
 
 Server:
- Containers: 22
-  Running: 20
+ Containers: 0
+  Running: 0
   Paused: 0
-  Stopped: 2
- Images: 28
- Server Version: 25.0.1
- Storage Driver: fuse-overlayfs
+  Stopped: 0
+ Images: 125
+ Server Version: 27.1.1
+ Storage Driver: overlay2
+  Backing Filesystem: extfs
+  Supports d_type: true
+  Using metacopy: false
+  Native Overlay Diff: true
+  userxattr: true
  Logging Driver: json-file
  Cgroup Driver: systemd
  Cgroup Version: 2
@@ -632,15 +646,15 @@ Server:
  Runtimes: io.containerd.runc.v2 runc
  Default Runtime: runc
  Init Binary: docker-init
- containerd version: a1496014c916f9e62104b33d1bb5bd03b0858e59
- runc version: v1.1.11-0-g4bccb38
+ containerd version: 2bf793ef6dc9a18e00cb12efb64355c2c9d5eb41
+ runc version: v1.1.13-0-g58aa920
  init version: de40ad0
  Security Options:
   seccomp
    Profile: builtin
   rootless
   cgroupns
- Kernel Version: 6.1.0-17-amd64
+ Kernel Version: 6.1.0-23-amd64
  Operating System: Debian GNU/Linux 12 (bookworm)
  OSType: linux
  Architecture: x86_64
@@ -650,6 +664,7 @@ Server:
  ID: 4d080886-f0a3-4478-bac7-ebadf0ccfd68
  Docker Root Dir: /home/daniel/.local/share/docker
  Debug Mode: false
+ Username: testuser34
  Experimental: false
  Insecure Registries:
   127.0.0.0/8
