@@ -529,7 +529,7 @@ sub startup {
 
   $r->get('list/token/:token')                      ->to('lists#get_token_list');
 
-  $r->get('app_settings')                           ->to('settings#get_app_settings');
+  $r->get('config/public')                          ->to('config#get_public_config');
 
   if ($self->app->config->{fedora}->{version} >= 6) {
     my $ext_creds = $r->under('/')->to('authentication#extract_credentials', creds_must_be_present => 0);
@@ -593,9 +593,12 @@ sub startup {
     $ir_admin->get('ir/puresearch')                                          ->to('ir#puresearch');
     $ir_admin->get('ir/pureimport/locks')                                    ->to('ir#pureimport_getlocks');
 
+    $admin->get('config/private')                                            ->to('config#get_private_config');
+
     unless($self->app->config->{readonly}){
 
-      $admin->post('app_settings')                                           ->to('settings#post_app_settings');
+      $admin->post('config/public')                                          ->to('config#post_public_config');
+      $admin->post('config/private')                                         ->to('config#post_private_config');
 
       $admin->post('index')                                                  ->to('index#update');
       $admin->post('dc')                                                     ->to('dc#update');
@@ -748,9 +751,12 @@ sub startup {
 
     $admin->get('test/error')                                                   ->to('utils#testerror');
 
+    $admin->get('config/private')                                               ->to('config#get_private_config');
+
     unless($self->app->config->{readonly}){
 
-      $admin->post('app_settings')                                              ->to('settings#post_app_settings');
+      $admin->post('config/public')                                             ->to('config#post_public_config');
+      $admin->post('config/private')                                            ->to('config#post_private_config');
 
       $admin->post('index')                                                     ->to('index#update');
       $admin->post('dc')                                                        ->to('dc#update');

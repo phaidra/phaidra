@@ -102,7 +102,7 @@ export default {
     loadInstanceConfigToStore: async function() {
       this.loading = true
       try {
-        let settingResponse = await this.$axios.get("/app_settings");
+        let settingResponse = await this.$axios.get("/config/public");
         if(settingResponse?.data?.settings?.instanceConfig){
           this.$store.commit("setInstanceConfig", settingResponse?.data?.settings?.instanceConfig);
         }

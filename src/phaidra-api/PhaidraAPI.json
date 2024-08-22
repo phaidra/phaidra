@@ -136,7 +136,7 @@
         "upstreamusername": "if someone is calling api with principial header, he has to use this credentials",
         "upstreampassword": "secret"
     },
-    "directory_class": "Phaidra::Directory::GenericLDAP",
+    "directory_class": "Phaidra::Directory::Default",
     "phaidra_db": {
         "dsn": "dbi:mysql:phaidradb:__MARIADB_PHAIDRA_HOST__",
         "username": "__MARIADB_PHAIDRA_USER__",

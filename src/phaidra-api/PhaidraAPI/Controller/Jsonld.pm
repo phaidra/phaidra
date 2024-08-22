@@ -249,7 +249,7 @@ sub get_template {
     $owner = $self->stash->{basic_auth_credentials}->{username};
   }
 
-  my $sres = $self->mongo->get_collection('app_settings')->find_one({});
+  my $sres = $self->mongo->get_collection('public_config')->find_one({});
   if ($sres->{defaultTemplateId}) {
     if ($sres->{defaultTemplateId} eq $self->stash('tid')) {
       # everybody can read the default template

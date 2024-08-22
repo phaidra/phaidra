@@ -546,7 +546,6 @@ export const formvalidation = {
           this.mandatoryFieldsValidated['File'] = true
           this.mandatoryFieldsValidated['License'] = true
           this.mandatoryFieldsValidated['Object type'] = true
-          this.mandatoryFieldsValidated['OEFOS Classification'] = true
           break
         case 'https://pid.phaidra.org/vocabulary/T8GH-F4V8':
           // resource

@@ -40,7 +40,8 @@ export const mutations = {
       'cms_home',
       'cms_impressum',
       'cms_submit',
-      'cms_css'
+      'cms_css',
+      'cms_help'
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
