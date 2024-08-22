@@ -238,12 +238,6 @@ docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile shib-s3 up 
 
 After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/Shibboleth.sso/Metadata`. You will have to hand this file to the IDP-manager of your organization and ask for registration.  After that, users matching the list in `SHIB_REQUIRED_AFFILIATIONS` should be able to log in and upload their files to your system.
 
-
-
-
-
-
-
 # Default credentials on administration sites
 - **LDAP Account Manager** (from the Webinterface: Manage Phaidra -> Manage Users):
   - user: `admin`
@@ -270,7 +264,7 @@ After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/
 - the **api**
   - username: `phaidraAdmin`
   - password: `12345`
-  - These credentials can be modified in the `.env` file through the variables `PHAIDRA_ADMIN_USER` and `PHAIDRA_ADMIN_PASSWORD`.  You might also want to change `PHAIDRA_ENCRYPTION_KEY` and `PHAIDRA_SECRET` to enhance privacy in PI logging and unpredictability of image paths.
+  - These credentials can be modified in the `.env` file through the variables `PHAIDRA_ADMIN_USER` and `PHAIDRA_ADMIN_PASSWORD`.  You might also want to change `PHAIDRA_ENCRYPTION_KEY` and `PHAIDRA_SECRET` to enhance privacy.
 # Monitoring PHAIDRA
 
 ___
@@ -280,34 +274,35 @@ ___
 There is a Grafana dashboard at `http://localhost:8899/grafana`, respectively `https://YOUR_FQDN/grafana`, that displays the containers' system usage and their logs.
 
 One can also use the following shell command to monitor the system usage
-of PHAIDRA over all containers from the machine where it is running (here from an instance started from
-`./compose_demo`):
+of PHAIDRA over all containers from the machine where it is running (here from an instance started with
+`docker compose --project-name eval-shib-opencast-3 --profile shib-local --profile external-opencast up -d`):
 
 ``` example
 # COMMAND:
 docker stats
 # EXPECTED OUTPUT:
-CONTAINER ID   NAME                             CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
-2bb9181196e3   phaidra-demo-httpd-1             0.01%     21.17MiB / 15.03GiB   0.14%     992B / 0B         86kB / 0B         83
-d5c8257aa717   phaidra-demo-ui-1                18.34%    99.45MiB / 15.03GiB   0.65%     293kB / 2.99kB    0B / 0B           23
-c299d72a9014   phaidra-demo-pixelgecko-1        0.00%     51.57MiB / 15.03GiB   0.34%     10.8kB / 16kB     0B / 0B           1
-e93244f3ba88   phaidra-demo-api-1               0.02%     165.1MiB / 15.03GiB   1.07%     1.1kB / 0B        0B / 0B           6
-27e17164d2fb   phaidra-demo-promtail-local-1    0.43%     35.2MiB / 15.03GiB    0.23%     2.35kB / 23.7kB   0B / 0B           13
-6f0be828c7fa   phaidra-demo-dbgate-1            0.00%     24.66MiB / 15.03GiB   0.16%     1.55kB / 224B     0B / 4.1kB        11
-7447d44812fd   phaidra-demo-chronos-1           0.01%     4.066MiB / 15.03GiB   0.03%     1.14kB / 0B       0B / 0B           3
-6ca74551692f   phaidra-demo-fedora-1            0.61%     663.8MiB / 15.03GiB   4.31%     17.9kB / 15.2kB   430kB / 53.2kB    61
-b90acb3c2ed4   phaidra-demo-grafana-1           0.12%     103.7MiB / 15.03GiB   0.67%     12.2kB / 2.29kB   1.2MB / 471kB     16
-2ab547cb9044   phaidra-demo-lam-1               0.00%     22.41MiB / 15.03GiB   0.15%     1.1kB / 0B        0B / 0B           8
-5327ab50d22d   phaidra-demo-mongodb-phaidra-1   0.33%     171.2MiB / 15.03GiB   1.11%     17.6kB / 9.73kB   1.79MB / 213kB    32
-98a46ef375a5   phaidra-demo-loki-1              0.35%     33.71MiB / 15.03GiB   0.22%     25.2kB / 1.29kB   3.77MB / 53.2kB   13
-53af68cacba3   phaidra-demo-mariadb-phaidra-1   0.01%     197.7MiB / 15.03GiB   1.28%     1.47kB / 0B       16.5MB / 8.19kB   25
-6330011bf5b3   phaidra-demo-solr-1              0.82%     724.3MiB / 15.03GiB   4.71%     1.36kB / 0B       1.41MB / 168kB    55
-684d95cc0ac4   phaidra-demo-mariadb-fedora-1    0.02%     100.1MiB / 15.03GiB   0.65%     16.7kB / 16.5kB   26.3MB / 8.19kB   36
-469f52362bf8   phaidra-demo-openldap-1          0.00%     12.5MiB / 15.03GiB    0.08%     1.36kB / 0B       614kB / 0B        2
-2fed9080a1a8   phaidra-demo-cadvisor-1          3.48%     47.25MiB / 15.03GiB   0.31%     5.48kB / 271kB    0B / 0B           15
-43c851042af1   phaidra-demo-prometheus-1        0.07%     225.4MiB / 15.03GiB   1.46%     291kB / 5.64kB    98.3MB / 29.2MB   14
-c186e3959156   phaidra-demo-imageserver-1       0.01%     25.73MiB / 15.03GiB   0.17%     1.56kB / 0B       0B / 0B           57
-e875a9d3e4e8   phaidra-demo-node-exporter-1     0.00%     8.68MiB / 15.03GiB    0.06%     2.12kB / 13.9kB   0B / 0B           6
+CONTAINER ID   NAME                                      CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
+24943d669203   eval-shib-opencast-3-ui-1                 0.00%     168.6MiB / 15.03GiB   1.10%     348kB / 519kB     282MB / 2.26MB    23
+8cce9848c02b   eval-shib-opencast-3-pixelgecko-1         0.00%     132.8MiB / 15.03GiB   0.86%     245kB / 405kB     105MB / 6MB       1
+ac15e22ef241   eval-shib-opencast-3-api-1                0.02%     372.1MiB / 15.03GiB   2.42%     1.83MB / 2.06MB   100MB / 4.1kB     5
+784499d895b4   eval-shib-opencast-3-chronos-1            0.01%     5.281MiB / 15.03GiB   0.03%     4.16kB / 1.03kB   25.6MB / 28.7kB   3
+901bf54873ad   eval-shib-opencast-3-promtail-1           0.72%     46.36MiB / 15.03GiB   0.30%     41.8kB / 517kB    203MB / 532kB     13
+cdd6e92565ce   eval-shib-opencast-3-fedora-1             0.28%     768.1MiB / 15.03GiB   4.99%     1.23MB / 446kB    411MB / 6.55MB    61
+66a0cbf84a1f   eval-shib-opencast-3-dbgate-1             0.00%     27.15MiB / 15.03GiB   0.18%     2.52kB / 224B     129MB / 4.1kB     11
+ad395ac37d5b   eval-shib-opencast-3-vige-1               0.05%     109.1MiB / 15.03GiB   0.71%     1.24MB / 1.92MB   308MB / 811kB     8
+f101f8234c40   eval-shib-opencast-3-grafana-1            0.52%     70.17MiB / 15.03GiB   0.46%     31.4kB / 6.38kB   397MB / 47.4MB    19
+e1d172582a49   eval-shib-opencast-3-lam-1                0.01%     28.56MiB / 15.03GiB   0.19%     2.23kB / 0B       160MB / 86kB      8
+daf4baed79e5   eval-shib-opencast-3-mariadb-fedora-1     0.01%     118.3MiB / 15.03GiB   0.77%     202kB / 184kB     164MB / 88.9MB    18
+2860983af946   eval-shib-opencast-3-openldap-1           0.00%     24.69MiB / 15.03GiB   0.16%     67.6kB / 38.2kB   48.5MB / 729kB    4
+6d11aafaf265   eval-shib-opencast-3-httpd-shib-local-1   0.02%     116.2MiB / 15.03GiB   0.75%     4.26MB / 2.4MB    165MB / 1.87MB    126
+a91e94bdebfd   eval-shib-opencast-3-solr-1               0.85%     753.1MiB / 15.03GiB   4.89%     46.5kB / 112kB    282MB / 1.01MB    53
+c39b0dae4593   eval-shib-opencast-3-loki-1               0.62%     60.25MiB / 15.03GiB   0.39%     519kB / 39.8kB    176MB / 3.01MB    13
+aca9aed2d582   eval-shib-opencast-3-mongodb-phaidra-1    0.52%     265.7MiB / 15.03GiB   1.73%     1.68MB / 1.55MB   627MB / 7.82MB    39
+6e82b65d8b3a   eval-shib-opencast-3-mariadb-phaidra-1    0.02%     221.7MiB / 15.03GiB   1.44%     14.8kB / 8.59kB   216MB / 105MB     13
+d2880e7de5ff   eval-shib-opencast-3-imageserver-1        0.01%     29.06MiB / 15.03GiB   0.19%     7.22kB / 132kB    31.9MB / 24.6kB   65
+4715e3861ba8   eval-shib-opencast-3-cadvisor-1           5.59%     243.6MiB / 15.03GiB   1.58%     227kB / 16.3MB    89.1MB / 0B       16
+e5d2101e4c53   eval-shib-opencast-3-prometheus-1         0.00%     202.4MiB / 15.03GiB   1.32%     17.1MB / 273kB    185MB / 3.01MB    13
+e4a874e58527   eval-shib-opencast-3-node-exporter-1      0.00%     13.94MiB / 15.03GiB   0.09%     29.2kB / 597kB    40.6MB / 0B       6
 ```
 
 # Data persistance and integrity
@@ -319,7 +314,7 @@ of hardware failure.
 Objects loaded into PHAIDRA are automatically checksummed using the [SHA512-algorithm](https://en.wikipedia.org/wiki/SHA-2) by the underlying
 repository software [Fedora](https://fedora.lyrasis.org/).  By default, PHAIDRA triggers a recalculation of the checksums on every 2nd day of the month.  Results of these scans are visible on the built-in Grafana Dashboard for early hardware-failure detection.
 
-Depending on the PHAIDRA version you set up, the volumes will be prefixed differently (`phaidra-demo`, `phaidra-ssl`, `phaidra-shib`).
+Depending on `--project-name $PROJECT_NAME_OF_YOUR_LIKING` the volumes will be prefixed with `$PROJECT_NAME_OF_YOUR_LIKING`.
 
 See the section [Graphical System overview](#graphical-system-overview) for how these directories are connected to the containers.
 
