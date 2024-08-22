@@ -171,17 +171,17 @@ openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days 
   + `PHAIDRA_HOSTPORT=""`
   + `PHAIDRA_PORTSTUB=""`
   + `PHAIDRA_HOSTNAME="$YOUR-FQDN"`
-  + `SHIB_DISCO_URL`: shibboleth discovery URL. eg: `https://eduid.at/ds/wayf/` (default).
-  + `SHIB_METADATA_CERT`: shibboleth metadata signing certificate. eg: `aconet-metadata-signing.crt` (default)
-  + `SHIB_METADATA_FILE`: shibboleth metadata file. eg: `aconet-registered.xml` (default).
-  + `SHIB_METADATA`: shibboleth metadata file url. eg: `https://eduid.at/md/aconet-registered.xml` (default)
-  + `SHIB_ENTITY_ID`: shibboleth weblogin address. eg: `https://weblogin.univie.ac.at/shibboleth` (default)
-  + `SHIB_MAIL`: shibboleth mail attribute. eg: `mail` (default)
-  + `SHIB_GIVEN_NAME`: shibboleth given name attribute. eg: `givenName`(default)
-  + `SHIB_SURNAME`: shibboleth surname attribute. eg: `sn` (default)
-  + `SHIB_USERNAME`: shibboleth username attribute. eg: `uid` (default)
-  + `SHIB_AFFILIATION`: shibboleth affiliation attribute. eg: `affiliation` (default)
-  + `SHIB_REQUIRED_AFFILIATIONS`: comma-separated list of required attributes to log in to PHAIDRA. eg: `staff@univie.ac.at,employee@univie.ac.at,member@univie.ac.at` (default)
+  + `SHIB_DISCO_URL`: shibboleth discovery URL.
+  + `SHIB_METADATA_CERT`: shibboleth metadata signing certificate.
+  + `SHIB_METADATA_FILE`: shibboleth metadata file.
+  + `SHIB_METADATA`: shibboleth metadata file url.
+  + `SHIB_ENTITY_ID`: shibboleth weblogin address.
+  + `SHIB_MAIL`: shibboleth mail attribute.
+  + `SHIB_GIVEN_NAME`: shibboleth given name attribute.
+  + `SHIB_SURNAME`: shibboleth surname attribute.
+  + `SHIB_USERNAME`: shibboleth username attribute.
+  + `SHIB_AFFILIATION`: shibboleth affiliation attribute.
+  + `SHIB_REQUIRED_AFFILIATIONS`: comma-separated list of required attributes to log in to PHAIDRA.
 
 ###  Startup
 
@@ -211,17 +211,17 @@ openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days 
   + `PHAIDRA_HOSTPORT=""`
   + `PHAIDRA_PORTSTUB=""`
   + `PHAIDRA_HOSTNAME="$YOUR-FQDN"`
-  + `SHIB_DISCO_URL`: shibboleth discovery URL. eg: `https://eduid.at/ds/wayf/` (default).
-  + `SHIB_METADATA_CERT`: shibboleth metadata signing certificate. eg: `aconet-metadata-signing.crt` (default)
-  + `SHIB_METADATA_FILE`: shibboleth metadata file. eg: `aconet-registered.xml` (default).
-  + `SHIB_METADATA`: shibboleth metadata file url. eg: `https://eduid.at/md/aconet-registered.xml` (default)
-  + `SHIB_ENTITY_ID`: shibboleth weblogin address. eg: `https://weblogin.univie.ac.at/shibboleth` (default)
-  + `SHIB_MAIL`: shibboleth mail attribute. eg: `mail` (default)
-  + `SHIB_GIVEN_NAME`: shibboleth given name attribute. eg: `givenName`(default)
-  + `SHIB_SURNAME`: shibboleth surname attribute. eg: `sn` (default)
-  + `SHIB_USERNAME`: shibboleth username attribute. eg: `uid` (default)
-  + `SHIB_AFFILIATION`: shibboleth affiliation attribute. eg: `affiliation` (default)
-  + `SHIB_REQUIRED_AFFILIATIONS`: comma-separated list of required attributes to log in to PHAIDRA. eg: `staff@univie.ac.at,employee@univie.ac.at,member@univie.ac.at` (default)
+  + `SHIB_DISCO_URL`: shibboleth discovery URL.
+  + `SHIB_METADATA_CERT`: shibboleth metadata signing certificate.
+  + `SHIB_METADATA_FILE`: shibboleth metadata file.
+  + `SHIB_METADATA`: shibboleth metadata file url.
+  + `SHIB_ENTITY_ID`: shibboleth weblogin address.
+  + `SHIB_MAIL`: shibboleth mail attribute.
+  + `SHIB_GIVEN_NAME`: shibboleth given name attribute.
+  + `SHIB_SURNAME`: shibboleth surname attribute.
+  + `SHIB_USERNAME`: shibboleth username attribute.
+  + `SHIB_AFFILIATION`: shibboleth affiliation attribute.
+  + `SHIB_REQUIRED_AFFILIATIONS`: comma-separated list of required attributes to log in to PHAIDRA.
   + `S3_ACCESS_KEY`
   + `S3_SECRET_KEY`
   + `S3_BUCKETNAME`
