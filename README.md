@@ -473,12 +473,17 @@ System when running `docker compose --project-name $PROJECT_NAME --profile ssl-l
   + magenta -- container-container-communication (proxy).
 
 
-###  PHAIDRA Shibboleth
-System when running `docker compose up -d` from directory
-`./compose_shib` (Phaidra available on `https://$YOUR_FQDN`, see
-section [Shibboleth specific prerequisites](#shibboleth-specific-prerequisites)).
+###  Shibboleth with local storage
+System when running `docker compose --project-name $PROJECT_NAME --profile shib-local up -d`.
 
-![](./pictures/construction_shib.svg)
+![](./pictures/shib-local.svg)
+
++ Color meanings:
+  + turquoise -- container-volume-mapping (named).
+  + blue -- container-volume-mapping (bind).
+  + yellow -- container-container-communication (active).
+  + black -- container-container-communication (passive/monitoring).
+  + magenta -- container-container-communication (proxy).
 
 ## Directory structure of this repository
 
