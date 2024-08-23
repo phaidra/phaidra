@@ -242,7 +242,9 @@ After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/
   + `OC_PASS`
   + `OC_EVENTS_URL`
   + `OC_INGEST_URL`
+
 It then can be started up with a command like: `docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile ssl-local --profile external-opencast up -d`.  An additional container (`vige`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
+
 + `external-opencast-dev`: can be added to any of the dev-profiles that use local storage, if an external opencast-streaming-server is available to you. Uses bindmounted code from the repository.
     The following variables will have to be set:
   + `OC_EXTERNAL="ACTIVATED"`
@@ -250,6 +252,7 @@ It then can be started up with a command like: `docker compose --project-name $P
   + `OC_PASS`
   + `OC_EVENTS_URL`
   + `OC_INGEST_URL`
+
 It then can be started up with a command like: `docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile ssl-local-dev --profile external-opencast-dev up -d`.  An additional container (`vige`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
 
 # Default credentials on administration sites
