@@ -449,7 +449,7 @@ Total reclaimed space: 1.878GB
 
 # Technical Notes
 ## Graphical System Overview
-###  PHAIDRA Demo with local storage
+###  Demo with local storage
 System when running `docker compose --project-name $PROJECT_NAME --profile demo-local up -d`.
 
 ![](./pictures/demo-local.svg)
@@ -460,12 +460,18 @@ System when running `docker compose --project-name $PROJECT_NAME --profile demo-
   + black -- container-container-communication (passive/monitoring).
   + magenta -- container-container-communication (proxy).
 
-###  PHAIDRA SSL
-System when running `docker compose up -d` from directory
-`./compose_ssl` (Phaidra available on `https://$YOUR_FQDN`, see
-section [SSL specific prerequisites](#ssl-specific-prerequisites)).
+###  SSL with local storage
+System when running `docker compose --project-name $PROJECT_NAME --profile ssl-local up -d`.
 
-![](./pictures/construction_ssl.svg)
+![](./pictures/ssl-local.svg)
+
++ Color meanings:
+  + turquoise -- container-volume-mapping (named).
+  + blue -- container-volume-mapping (bind).
+  + yellow -- container-container-communication (active).
+  + black -- container-container-communication (passive/monitoring).
+  + magenta -- container-container-communication (proxy).
+
 
 ###  PHAIDRA Shibboleth
 System when running `docker compose up -d` from directory
