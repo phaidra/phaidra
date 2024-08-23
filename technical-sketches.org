@@ -5,6 +5,291 @@
 
 * About
 This file is used for generating the technical sketches included in the frontpage of this repository (~README.md~).
+* demo-local profile
+#+NAME: demo-local
+#+begin_src dot :file "./pictures/demo-local.svg"
+  graph G {
+          rankdir="LR"
+          subgraph cluster_host {
+                  label = "PHAIDRA server firewall";
+                  color = red;
+                  USER [label="PHAIDRA USER", shape = tripleoctagon];
+                  subgraph cluster_host_storage {
+                          label = "PHAIDRA server filesystem";
+                          color = black;
+                          subgraph cluster_named_volumes {
+                                  label = "Named volumes";
+                                  color = turquoise;
+                                  node [shape = folder, style = solid, color = turquoise]
+                                  HS_FEDORA [label=<
+                                             <table border="0">
+                                             <tr>
+                                             <td align="text"><b>host:</b><br align="left" /></td>
+                                             <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_fedora/_data<br align="left" /></td>
+                                             </tr>
+                                             <tr>
+                                             <td align="text">fedora-container:<br align="left" /></td>
+                                             <td align="text">/usr/local/tomcat/fcrepo-home<br align="left" /></td>
+                                             </tr>
+                                             <tr>
+                                             <td align="text">pixelgecko-container:<br align="left" /></td>
+                                             <td align="text"> /mnt/fedora:ro<br align="left" /></td>
+                                             </tr>
+                                             <tr>
+                                             <td align="text">api-container:<br align="left" /></td>
+                                             <td align="text"> /mnt/fedora:ro<br align="left" /></td>
+                                             </tr>
+                                             </table>
+                                             >];
+                                  HS_MARIADB_PHAIDRA [label=<
+                                                      <table border="0">
+                                                      <tr>
+                                                      <td align="text"><b>host:</b><br align="left" /></td>
+                                                      <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_mariadb_phaidra/_data<br align="left" /></td>
+                                                      </tr>
+                                                      <tr>
+                                                      <td align="text">mariadb-phaidra-container:<br align="left" /></td>
+                                                      <td align="text">/var/lib/mysql<br align="left" /></td>
+                                                      </tr>
+                                                      </table>
+                                                      >];
+                                  HS_MONGODB_PHAIDRA [label=<
+                                                      <table border="0">
+                                                      <tr>
+                                                      <td align="text"><b>host:</b><br align="left" /></td>
+                                                      <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_mongodb_phaidra/_data<br align="left" /></td>
+                                                      </tr>
+                                                      <tr>
+                                                      <td align="text">phaidra-mongodb-container:<br align="left" /></td>
+                                                      <td align="text">/data/db<br align="left" /></td></tr>
+                                                      </table>
+                                                      >];
+                                  HS_OPENLDAP [label=<
+                                               <table border="0">
+                                               <tr>
+                                               <td align="text"><b>host:</b><br align="left" /></td>
+                                               <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_openldap/_data<br align="left" /></td>
+                                               </tr>
+                                               <tr>
+                                               <td align="text">openldap-container:<br align="left" /></td>
+                                               <td align="text">/bitnami/openldap<br align="left" /></td>
+                                               </tr>
+                                               </table>
+                                               >];
+                                  HS_SOLR [label=<
+                                           <table border="0">
+                                           <tr>
+                                           <td align="text"><b>host:</b><br align="left" /></td>
+                                           <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_solr/_data<br align="left" /></td>
+                                           </tr>
+                                           <tr>
+                                           <td align="text">solr-container:<br align="left" /></td>
+                                           <td align="text">/var/solr<br align="left" /></td>
+                                           </tr>
+                                           </table>
+                                           >];
+                                  HS_PIXELGECKO [label=<
+                                                 <table border="0">
+                                                 <tr>
+                                                 <td align="text"><b>host:</b><br align="left" /></td>
+                                                 <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_pixelgecko/_data<br align="left" /></td>
+                                                 </tr>
+                                                 <tr>
+                                                 <td align="text">pixelgecko-container:<br align="left" /></td>
+                                                 <td align="text">/mnt/converted_images<br align="left" /></td>
+                                                 </tr>
+                                                 <tr>
+                                                 <td align="text">imageserver-container:<br align="left" /></td>
+                                                 <td align="text">/mnt/converted_images:ro<br align="left" /></td>
+                                                 </tr>
+                                                 </table>
+                                                 >];
+                                  HS_DBGATE [label=<
+                                             <table border="0">
+                                             <tr>
+                                             <td align="text"><b>host:</b><br align="left" /></td>
+                                             <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_dbgate/_data<br align="left" /></td>
+                                             </tr>
+                                             <tr>
+                                             <td align="text">dbgate-container:<br align="left" /></td>
+                                             <td align="text">/root/.dbgate<br align="left" /></td>
+                                             </tr>
+                                             </table>
+                                             >];
+                                  HS_MARIADB_FEDORA [label=<
+                                                     <table border="0">
+                                                     <tr>
+                                                     <td align="text"><b>host:</b><br align="left" /></td>
+                                                     <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_mariadb_fedora/_data<br align="left" /></td>
+                                                     </tr>
+                                                     <tr>
+                                                     <td align="text">mariadb-fedora-container:<br align="left" /></td>
+                                                     <td align="text">/var/lib/mysql<br align="left" /></td>
+                                                     </tr>
+                                                     </table>
+                                                     >];
+                                  HS_DATABASE_DUMPS [label=<
+                                                     <table border="0">
+                                                     <tr>
+                                                     <td align="text"><b>host:</b><br align="left" /></td>
+                                                     <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_chronos_database_dumps/_data<br align="left" /></td>
+                                                     </tr>
+                                                     <tr>
+                                                     <td align="text">chronos-container:<br align="left" /></td>
+                                                     <td align="text">/mnt/database-dumps<br align="left" /></td>
+                                                     </tr>
+                                                     </table>
+                                                     >];
+                                  HS_SITEMAPS [label=<
+                                               <table border="0">
+                                               <tr>
+                                               <td align="text"><b>host:</b><br align="left" /></td>
+                                               <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_chronos_sitemaps/_data<br align="left" /></td>
+                                               </tr>
+                                               <tr>
+                                               <td align="text">chronos-container:<br align="left" /></td>
+                                               <td align="text">/mnt/sitemaps<br align="left" /></td>
+                                               </tr>
+                                               <tr>
+                                               <td align="text">httpd-container:<br align="left" /></td>
+                                               <td align="text">/mnt/sitemaps:ro<br align="left" /></td>
+                                               </tr>
+                                               </table>
+                                               >];
+                                  HS_OAI_LOGS [label=<
+                                               <table border="0">
+                                               <tr>
+                                               <td align="text"><b>host:</b><br align="left" /></td>
+                                               <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_chronos_oai_logs/_data<br align="left" /></td>
+                                               </tr>
+                                               <tr>
+                                               <td align="text">chronos-container:<br align="left" /></td>
+                                               <td align="text">/mnt/oai-logs<br align="left" /></td>
+                                               </tr>
+                                               </table>
+                                               >];
+                                  HS_GRAFANA [label=<
+                                              <table border="0">
+                                              <tr>
+                                              <td align="text"><b>host:</b><br align="left" /></td>
+                                              <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_grafana/_data<br align="left" /></td>
+                                              </tr>
+                                              <tr>
+                                              <td align="text">grafana-container:<br align="left" /></td>
+                                              <td align="text">/var/lib/grafana<br align="left" /></td>
+                                              </tr>
+                                              </table>
+                                              >];
+                                  HS_LOKI [label=<
+                                           <table border="0">
+                                           <tr>
+                                           <td align="text"><b>host:</b><br align="left" /></td>
+                                           <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_loki/_data<br align="left" /></td>
+                                           </tr>
+                                           <tr>
+                                           <td align="text">loki-container:<br align="left" /></td>
+                                           <td align="text">/loki<br align="left" /></td>
+                                           </tr>
+                                           </table>
+                                           >];
+                                  HS_PROMETHEUS [label=<
+                                                 <table border="0">
+                                                 <tr>
+                                                 <td align="text"><b>host:</b><br align="left" /></td>
+                                                 <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_prometheus/_data<br align="left" /></td>
+                                                 </tr>
+                                                 <tr>
+                                                 <td align="text">prometheus-container:<br align="left" /></td>
+                                                 <td align="text">/prometheus<br align="left" /></td>
+                                                 </tr>
+                                                 </table>
+                                                 >];
+                                         }
+                                 }
+                           subgraph cluster_docker_network_host {
+                                   label="PHAIDRA docker containers";
+                                   color = green;
+                                   node [shape = component, style = solid, color = green]
+                                   C_FEDORA [label="$PROJECT_NAME-fedora-1",
+                                             URL="https://fedora.lyrasis.org/"];
+                                   C_API [label="$PROJECT_NAME-api-1",
+                                          URL="https://github.com/phaidra/phaidra-api"];
+                                   C_MARIADB_PHAIDRA [label="$PROJECT_NAME-mariadb-phaidra-1",
+                                                      URL="https://mariadb.org/"];
+                                   C_MONGODB_PHAIDRA [label="$PROJECT_NAME-mongodb-phaidra-1",
+                                                      URL="https://www.mongodb.com/"];
+                                   C_UI [label="$PROJECT_NAME-ui-1",
+                                         URL="https://github.com/phaidra/phaidra-ui"];
+                                   C_OPENLDAP [label="$PROJECT_NAME-openldap-1",
+                                               URL="https://www.openldap.org/"];
+                                   C_SOLR [label="$PROJECT_NAME-solr-1",
+                                           URL="https://solr.apache.org/"];
+                                   C_IMAGESERVER [label="$PROJECT_NAME-imageserver-1",
+                                                  URL="https://github.com/ruven/iipsrv"];
+                                   C_PIXELGECKO [label="$PROJECT_NAME-pixelgecko-1"];
+                                   C_DBGATE [label="$PROJECT_NAME-dbgate-1"];
+                                   C_LAM [label="$PROJECT_NAME-lam-1"];
+                                   C_MARIADB_FEDORA [label="$PROJECT_NAME-mariadb-fedora-1",
+                                                     URL="https://mariadb.org/"];
+                                   C_CHRONOS [label="$PROJECT_NAME-chronos-1"];
+                                   C_HTTPD [label="$PROJECT_NAME-httpd-1"];
+                                   C_PROMTAIL_LOCAL [label="$PROJECT_NAME-promtail-local-1",
+                                                     URL="https://grafana.com/docs/loki/latest/send-data/promtail/"];
+                                   C_GRAFANA [label="$PROJECT_NAME-grafana-1",
+                                              URL="https://grafana.com/docs/grafana/latest/getting-started/"];
+                                   C_LOKI [label="$PROJECT_NAME-loki-1",
+                                           URL="https://grafana.com/docs/loki/latest/"];
+                                   C_NODE_EXPORTER [label="$PROJECT_NAME-node-exporter-1",
+                                                    URL="https://prometheus.io/docs/guides/node-exporter/"];
+                                   C_PROMETHEUS [label="$PROJECT_NAME-prometheus-1",
+                                                 URL="https://prometheus.io"];
+                                   C_CADVISOR [label="$PROJECT_NAME-cadvisor-1",
+                                               URL="https://github.com/google/cadvisor"];
+                                   }
+                           }
+
+                           // storage mapping
+
+                           HS_FEDORA -- C_FEDORA [color="turquoise"];
+                           HS_FEDORA -- C_API [color="turquoise"];
+                           HS_MARIADB_PHAIDRA -- C_MARIADB_PHAIDRA [color="turquoise"];
+                           HS_MONGODB_PHAIDRA -- C_MONGODB_PHAIDRA [color="turquoise"];
+                           HS_OPENLDAP -- C_OPENLDAP [color="turquoise"];
+                           HS_SOLR -- C_SOLR [color="turquoise"];
+                           HS_PIXELGECKO -- C_IMAGESERVER [color="turquoise"];
+                           HS_FEDORA -- C_PIXELGECKO [color="turquoise"];
+                           HS_PIXELGECKO -- C_PIXELGECKO [color="turquoise"];
+                           HS_DBGATE -- C_DBGATE [color="turquoise"];
+                           HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
+                           C_HTTPD -- HS_SITEMAPS [color="turquoise"];
+                           C_CHRONOS -- HS_DATABASE_DUMPS,HS_SITEMAPS,HS_OAI_LOGS [color="turquoise"];
+                           C_GRAFANA -- HS_GRAFANA [color="turquoise"];
+                           C_LOKI -- HS_LOKI [color="turquoise"];
+                           C_PROMETHEUS -- HS_PROMETHEUS [color="turquoise"];
+
+                           // system communication mapping
+
+                           C_FEDORA -- C_MARIADB_FEDORA [color="orange"];
+                           C_API -- C_FEDORA,C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_UI,C_OPENLDAP,C_SOLR,C_IMAGESERVER [color="orange"];
+                           C_MONGODB_PHAIDRA -- C_PIXELGECKO [color="orange"];
+                           C_OPENLDAP -- C_LAM [color="orange"];
+                           C_DBGATE -- C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_MARIADB_FEDORA [color="orange"];
+                           C_CHRONOS -- C_MONGODB_PHAIDRA,C_MARIADB_PHAIDRA,C_MARIADB_FEDORA,C_SOLR,C_API [color="orange"];
+                           C_PROMTAIL_LOCAL -- C_MONGODB_PHAIDRA,C_MARIADB_PHAIDRA,C_MARIADB_FEDORA,C_SOLR,C_API,C_UI,C_IMAGESERVER,C_HTTPD,C_OPENLDAP,C_LAM,C_DBGATE,C_CHRONOS,C_PIXELGECKO, C_FEDORA, C_LOKI [color="black"];
+                           C_GRAFANA -- C_LOKI, C_PROMETHEUS, C_MARIADB_FEDORA, C_MARIADB_PHAIDRA [color="black"];
+                           C_PROMETHEUS -- C_CADVISOR, C_NODE_EXPORTER [color="black"]
+                           C_HTTPD -- C_FEDORA,C_API,C_UI,C_SOLR,C_DBGATE,C_LAM, C_GRAFANA [color="magenta"];
+
+                           // outside communication mapping
+
+                           USER -- C_HTTPD [color="green"];
+                   }
+
+#+end_src
+
+#+RESULTS: demo-local
+[[file:./pictures/demo-local.svg]]
+
 * Demo version
 #+NAME: construction-demo
 #+begin_src dot :file "./pictures/construction_demo.svg"
