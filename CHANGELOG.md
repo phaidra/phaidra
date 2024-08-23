@@ -1,3 +1,8 @@
+# v3.2.0
+  + move to docker profiles.
+  + profiles make use of images including all code now (using commit tags), only *-dev profiles use code mounted from repo.
+  + initial S3 support with caching for imageserver images.
+
 # v3.1.0
   + last release that makes use of compose_* directories in repo, we are moving towards docker profiles.
   + various stability enhancements
