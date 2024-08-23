@@ -230,11 +230,11 @@ docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile shib-s3 up 
 
 After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/Shibboleth.sso/Metadata`. You will have to hand this file to the IDP-manager of your organization and ask for registration.  After that, users matching the list in `SHIB_REQUIRED_AFFILIATIONS` should be able to log in and upload their files to your system.
 
-## Extra profiles
-### Standalone
+# Extra profiles
+## Standalone
 + `website`: For convenient development of our website at [www.phaidra.org](https://www.phaidra.org).
    This profile can be activated by running `docker compose --profile website up -d`.  You will have a hot-reloading version of our website at `http://localhost:8000` which is controlled by `mkdocs.yaml` and renders the pages under `website`.
-### Add-On
+## Add-On
 + `external-opencast`: can be added to any of the profiles that use local storage, if an external opencast-streaming-server is available to you. Uses a versioned image including all code.
   The following variables will have to be set:
   + `OC_EXTERNAL="ACTIVATED"`
@@ -242,6 +242,7 @@ After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/
   + `OC_PASS`
   + `OC_EVENTS_URL`
   + `OC_INGEST_URL`
+  It then can be started up with a command like: `docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile ssl-local --profile external-opencast up -d`.  An additional container (`vige`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
 + `external-opencast-dev`: can be added to any of the dev-profiles that use local storage, if an external opencast-streaming-server is available to you. Uses bindmounted code from the repository.
     The following variables will have to be set:
   + `OC_EXTERNAL="ACTIVATED"`
@@ -249,6 +250,7 @@ After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/
   + `OC_PASS`
   + `OC_EVENTS_URL`
   + `OC_INGEST_URL`
+  It then can be started up with a command like: `docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile ssl-local-dev --profile external-opencast-dev up -d`.  An additional container (`vige`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
 
 # Default credentials on administration sites
 - **LDAP Account Manager** (from the Webinterface: Manage Phaidra -> Manage Users):
