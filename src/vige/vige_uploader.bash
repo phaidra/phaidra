@@ -7,7 +7,7 @@ function get_new_jobs {
         --authenticationDatabase admin \
         -u $M_USER \
         -p $M_PASS \
-        mongodb://mongodb-phaidra/$M_AGENT_DB \
+        mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
         --eval \
         'db.jobs.find({"agent": "vige", "status": "new"}).forEach(r=>print(JSON.stringify(r)))' | \
         jq -r '.pid'
@@ -19,7 +19,7 @@ function get_path {
             --authenticationDatabase admin \
             -u $M_USER \
             -p $M_PASS \
-            mongodb://mongodb-phaidra/$M_AGENT_DB \
+            mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
             --eval \
             'JSON.stringify(db.jobs.findOne({pid: "'$1'"}))' | \
             jq -r '.path'
@@ -45,7 +45,7 @@ function set_mpid_sent {
         --authenticationDatabase admin \
         -u $M_USER \
         -p $M_PASS \
-        mongodb://mongodb-phaidra/$M_AGENT_DB \
+        mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
         --eval \
         'db.jobs.findOneAndUpdate({ pid: "'$1'" }, { $set: { 'oc_mpid': "'$2'", 'status': "sent" } })'
 }

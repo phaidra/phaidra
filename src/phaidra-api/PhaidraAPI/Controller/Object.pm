@@ -26,9 +26,25 @@ use PhaidraAPI::Model::Util;
 use PhaidraAPI::Model::Authorization;
 use PhaidraAPI::Model::Languages;
 use PhaidraAPI::Model::Hooks;
+use PhaidraAPI::S3::Cache;
 use Digest::SHA qw(hmac_sha1_hex);
 use Time::HiRes qw/tv_interval gettimeofday/;
 use File::Find::utf8;
+use File::Path;
+use File::Basename;
+use FileHandle;
+use Data::Dumper;
+use Net::Amazon::S3;
+use Net::Amazon::S3::Authorization::Basic;
+autoflush STDOUT 1;
+
+
+# S3 credentials and bucketname
+my $aws_access_key_id = $ENV{S3_ACCESS_KEY};
+my $aws_secret_access_key = $ENV{S3_SECRET_KEY};
+my $bucketname = $ENV{S3_BUCKETNAME};
+my $s3_cachesize= $ENV{S3_CACHESIZE};
+my $s3_cache_topdir = $ENV{S3_CACHE_TOPDIR};
 
 sub info {
   my $self = shift;
@@ -231,7 +247,23 @@ sub thumbnail {
 
   switch ($cmodelr->{cmodel}) {
     case ['Picture', 'Page', 'PDFDocument'] {
-
+      if ( $ENV{S3_ENABLED} eq "true" ) {
+        my $paf_mongo = $self->paf_mongo;
+        my $s3_cache = PhaidraAPI::S3::Cache->new(paf_mongodb=>$paf_mongo,
+                                                  aws_access_key_id=>$aws_access_key_id,
+                                                  aws_secret_access_key=>$aws_secret_access_key,
+                                                  bucketname=>$bucketname,
+                                                  s3_cachesize=>$s3_cachesize,
+                                                  s3_cache_topdir=>$s3_cache_topdir);
+        my $jobs_coll = $self->paf_mongo->get_collection('jobs');
+        my $job_record = $jobs_coll->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
+        my $FileToBeCached = $job_record->{image};
+        my $s3_result = $s3_cache->cache_file($pid,$FileToBeCached);
+        unless ( $s3_result eq "OK" ) {
+          $self->render(text => $s3_result, status => 200);
+          return;
+        }
+      }
       return $self->_proxy_thumbnail($pid, $cmodelr->{cmodel}, $size);
     }
     case 'Book' {
@@ -353,7 +385,7 @@ sub preview {
 
   my $trywebversion = 0;
 
-  # we need mimetype for the audio/viedo player and size (either octets or webversion) to know if to use load button
+  # we need mimetype for the audio/video player and size (either octets or webversion) to know if to use load button
   my ($filename, $mimetype, $size, $cmodel);
 
   if ($self->app->config->{fedora}->{version} >= 6) {
@@ -489,6 +521,24 @@ sub preview {
         $self->app->log->info("Imageserver job new/in_progress: job status [$imgsrvjobstatus] pid[$pid] cm[$cmodel]");
       }
       if ($imgsrvjobstatus eq 'finished') {
+        # cache file from pixelgecko's converted images bucket if stored on S3.
+        if ( $ENV{S3_ENABLED} eq "true" ) {
+          my $paf_mongo = $self->paf_mongo;
+          my $s3_cache = PhaidraAPI::S3::Cache->new(paf_mongodb=>$paf_mongo,
+                                                    aws_access_key_id=>$aws_access_key_id,
+                                                    aws_secret_access_key=>$aws_secret_access_key,
+                                                    bucketname=>$bucketname,
+                                                    s3_cachesize=>$s3_cachesize,
+                                                    s3_cache_topdir=>$s3_cache_topdir);
+          my $jobs_coll = $self->paf_mongo->get_collection('jobs');
+          my $job_record = $jobs_coll->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
+          my $FileToBeCached = $job_record->{image};
+          my $s3_result = $s3_cache->cache_file($pid,$FileToBeCached);
+          unless ( $s3_result eq "OK" ) {
+            $self->render(text => $s3_result, status => 200);
+            return;
+          }
+        }
         my $license = '';
         if (($cmodel eq 'Page') and ($self->app->config->{solr}->{core_pages})) {
           $docres = $index_model->get_page_doc($self, $pid);

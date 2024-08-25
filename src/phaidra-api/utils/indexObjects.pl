@@ -53,8 +53,8 @@ my $page = 0;
 my $failed = 0;
 my $ok = 0;
 
-my $apibaseurl_with_creds = 'http://'.$ENV{PHAIDRA_ADMIN_USER}.":".$ENV{PHAIDRA_ADMIN_PASSWORD}.'@api:3000';
-my $fedorabaseurl = "http://fedora:8080/fcrepo/rest";
+my $apibaseurl_with_creds = 'http://'.$ENV{PHAIDRA_ADMIN_USER}.":".$ENV{PHAIDRA_ADMIN_PASSWORD}.'@'.$ENV{PHAIDRA_API_HOST}.':3000';
+my $fedorabaseurl = 'http://'.$ENV{FEDORA_HOST}.':8080/fcrepo/rest';
 my $fedoraadmin_credentials = $ENV{FEDORA_ADMIN_USER}.":".$ENV{FEDORA_ADMIN_PASS};
 my $fedorasearchurl = Mojo::URL->new("$fedorabaseurl/fcr:search");
 $fedorasearchurl->userinfo($fedoraadmin_credentials);

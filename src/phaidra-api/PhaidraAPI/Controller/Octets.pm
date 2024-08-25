@@ -56,37 +56,41 @@ sub get {
   if ($self->app->config->{fedora}->{version} >= 6) {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
     my $dsAttr;
-    if ($trywebversion) {
-      $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'WEBVERSION');
-      if ($dsAttr->{status} ne 200) {
-        $self->render(json => $dsAttr, status => $dsAttr->{status});
-        return;
+    if ( $ENV{S3_ENABLED} eq "true" ) {
+      return $self->proxy();
+    } else {
+      if ($trywebversion) {
+        $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'WEBVERSION');
+        if ($dsAttr->{status} ne 200) {
+          $self->render(json => $dsAttr, status => $dsAttr->{status});
+          return;
+        }
+        $filename = $dsAttr->{filename};
+        $mimetype = $dsAttr->{mimetype};
+        $size     = $dsAttr->{size};
+        $dsAttr   = $fedora_model->getDatastreamPath($self, $pid, 'WEBVERSION');
+        if ($dsAttr->{status} ne 200) {
+          $self->render(json => $dsAttr, status => $dsAttr->{status});
+          return;
+        }
+        $path = $dsAttr->{path};
       }
-      $filename = $dsAttr->{filename};
-      $mimetype = $dsAttr->{mimetype};
-      $size     = $dsAttr->{size};
-      $dsAttr   = $fedora_model->getDatastreamPath($self, $pid, 'WEBVERSION');
-      if ($dsAttr->{status} ne 200) {
-        $self->render(json => $dsAttr, status => $dsAttr->{status});
-        return;
+      unless ($path) {
+        $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
+        if ($dsAttr->{status} ne 200) {
+          $self->render(json => $dsAttr, status => $dsAttr->{status});
+          return;
+        }
+        $filename = $dsAttr->{filename};
+        $mimetype = $dsAttr->{mimetype};
+        $size     = $dsAttr->{size};
+        $dsAttr   = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
+        if ($dsAttr->{status} ne 200) {
+          $self->render(json => $dsAttr, status => $dsAttr->{status});
+          return;
+        }
+        $path = $dsAttr->{path};
       }
-      $path = $dsAttr->{path};
-    }
-    unless ($path) {
-      $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
-      if ($dsAttr->{status} ne 200) {
-        $self->render(json => $dsAttr, status => $dsAttr->{status});
-        return;
-      }
-      $filename = $dsAttr->{filename};
-      $mimetype = $dsAttr->{mimetype};
-      $size     = $dsAttr->{size};
-      $dsAttr   = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
-      if ($dsAttr->{status} ne 200) {
-        $self->render(json => $dsAttr, status => $dsAttr->{status});
-        return;
-      }
-      $path = $dsAttr->{path};
     }
   }
   else {

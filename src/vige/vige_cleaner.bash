@@ -6,7 +6,7 @@ function get_deletion_objects {
         --authenticationDatabase admin \
         -u $M_USER \
         -p $M_PASS \
-        mongodb://mongodb-phaidra/$M_AGENT_DB \
+        mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
         --eval \
         'db.jobs.find({"oc_mpid": {$exists: true}, "agent": "vige", "status": {"$in": ["TO_DELETE", "DEL_REQUESTED"]}}).forEach(r=>print(JSON.stringify(r)))' | \
         jq -r '.oc_mpid'
@@ -18,7 +18,7 @@ function get_pid {
         --authenticationDatabase admin \
         -u $M_USER \
         -p $M_PASS \
-        mongodb://mongodb-phaidra/$M_AGENT_DB \
+        mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
         --eval 'JSON.stringify(db.jobs.findOne({ oc_mpid: "'$1'"}))' | \
         jq -r '.pid'
 }
@@ -37,7 +37,7 @@ function get_mongo_status {
         --authenticationDatabase admin \
         -u $M_USER \
         -p $M_PASS \
-        mongodb://mongodb-phaidra/$M_AGENT_DB \
+        mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
         --eval 'JSON.stringify(db.jobs.findOne({ pid: "'$1'"}))' | \
         jq -r '.status'
 }
@@ -48,7 +48,7 @@ function set_mongo_status {
         --authenticationDatabase admin \
         -u $M_USER \
         -p $M_PASS \
-        mongodb://mongodb-phaidra/$M_AGENT_DB \
+        mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
         --eval 'db.jobs.findOneAndUpdate({ pid: "'$1'" }, { $set: { 'status': "'$2'" } })'
 }
 
@@ -67,7 +67,7 @@ function cleanup_mongo_entries {
         --authenticationDatabase admin \
         -u $M_USER \
         -p $M_PASS \
-        mongodb://mongodb-phaidra/$M_AGENT_DB \
+        mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
         --eval 'db.jobs.findOneAndUpdate({ pid: "'$1'" }, { $unset: { oc_api_video: "" , oc_engage_video: "", oc_mpid: "", oc_player_url: "", oc_admin_video: "" } })'
 }
 
