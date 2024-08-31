@@ -41,8 +41,16 @@ sub post_public_config {
   # $self->app->log->debug("XXXXXXXXXXXXXXX " . $self->app->dumper($public_config));
   for my $key (keys %{$public_config}) {
     if ($public_config->{$key}) {
-      $self->app->log->info("public_config $key = " . $public_config->{$key});
-      $self->mongo->get_collection('config')->update_one({ config_type => 'public' }, {'$set' => {$key => $public_config->{$key}}}, {upsert => 1});
+      if ($key ne '_id') {
+        if (rindex($key, 'data_', 0) == 0) {
+          my $data = decode_json(b($public_config->{$key})->encode('UTF-8'));
+          $self->app->log->info("public_config data $key = " . $self->app->dumper($data));
+          $self->mongo->get_collection('config')->update_one({ config_type => 'public' }, {'$set' => {$key => $data}}, {upsert => 1});
+        } else {
+          $self->app->log->info("public_config $key = " . $public_config->{$key});
+          $self->mongo->get_collection('config')->update_one({ config_type => 'public' }, {'$set' => {$key => $public_config->{$key}}}, {upsert => 1});
+        }
+      }
     }
     else {
       $self->mongo->get_collection('config')->update_one({ config_type => 'public' }, {'$unset' => {$key => ''}});
