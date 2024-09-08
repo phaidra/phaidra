@@ -76,7 +76,8 @@ export default {
   mixins: [config, context],
   data() {
     return {
-      loading: true
+      loading: true,
+      i18n_override: {}
     }
   },
   metaInfo() {
@@ -103,8 +104,12 @@ export default {
       this.loading = true
       try {
         let settingResponse = await this.$axios.get("/config/public");
-        if(settingResponse?.data?.settings?.instanceConfig){
-          this.$store.commit("setInstanceConfig", settingResponse?.data?.settings?.instanceConfig);
+        if(settingResponse?.data?.public_config){
+          this.$store.dispatch("setInstanceConfig", settingResponse?.data?.public_config);
+          this.$store.dispatch("vocabulary/setInstanceConfig", settingResponse?.data?.public_config);
+          if (settingResponse?.data?.public_config?.data_i18n) {
+            this.i18n_override = settingResponse?.data?.public_config?.data_i18n
+          }
         }
         this.$store.commit("setInstanceConfigBaseUrl", this.$config.baseURL);
         this.$store.commit("setInstanceConfigApiBaseUrl", this.$config.apiBaseURL);
@@ -117,7 +122,10 @@ export default {
     }
   },
   mounted() {
-    // this.loadInstanceConfigToStore()
+    Object.entries(this.i18n_override).forEach(([lang, messages]) => {
+        this.$i18n.mergeLocaleMessage(lang, messages)
+      }
+    )
   },
   async fetch() {
     await this.loadInstanceConfigToStore()

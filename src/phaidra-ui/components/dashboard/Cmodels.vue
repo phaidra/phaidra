@@ -127,7 +127,6 @@ export default {
     next();
   },
   async mounted() {
-    console.log('this.$store', this.$store)
     await this.fetchStats(this);
   }
 };

@@ -1,7 +1,8 @@
 import fields from './fields'
+import vocabularystore from '../store/modules/vocabulary'
 
 export default {
-  json2components: function (jsonld, options) {
+  json2components: function (jsonld, options, vocabularies) {
     var components = []
 
     // all dce:subjects in the same language are handled by 1 component
@@ -889,24 +890,55 @@ export default {
                 components.push(f)
               } else {
                 if (obj['@type'] === 'aaiso:Programme') {
-                  f = fields.getField('study-plan')
-                  if (obj['skos:prefLabel']) {
-                    for (let pl of obj['skos:prefLabel']) {
-                      f.name = pl['@value']
-                      f.nameLanguage = pl['@language'] ? pl['@language'] : 'eng'
-                    }
-                  }
-                  if (obj['skos:notation']) {
-                    for (let n of obj['skos:notation']) {
-                      f.notation = n
-                    }
-                  }
+                  let isSelect = false
+                  let id = ''
                   if (obj['skos:exactMatch']) {
-                    for (let n of obj['skos:exactMatch']) {
-                      f.identifier = n
+                    for (let em of obj['skos:exactMatch']) {
+                      id = em
+                      // preffer vocabulary passed via param, since when this runs in UI
+                      // the vocabularies might habe been updated dynamically from config
+                      if (!vocabularies) {
+                        // if not passed, use the static one imported from vocabulary store js file
+                        vocabularies = vocabularystore.state.vocabularies
+                      }
+                      if (vocabularies) {
+                        // if the identifier comes from a $store vocabulary, create selectbox
+                        Object.entries(vocabularies).forEach(([vocId, vocab]) => {
+                          if (vocId === 'studyplans') {
+                            for (let term of vocab.terms) {
+                              if (em === term['@id']) {
+                                isSelect = true
+                              }
+                            }
+                          }
+                        })
+                      }
                     }
                   }
-                  components.push(f)
+                  if (isSelect) {
+                    f = fields.getField('study-plan-select')
+                    f.value = id
+                    components.push(f)
+                  } else {
+                    f = fields.getField('study-plan')
+                    if (obj['skos:prefLabel']) {
+                      for (let pl of obj['skos:prefLabel']) {
+                        f.name = pl['@value']
+                        f.nameLanguage = pl['@language'] ? pl['@language'] : 'eng'
+                      }
+                    }
+                    if (obj['skos:notation']) {
+                      for (let n of obj['skos:notation']) {
+                        f.notation = n
+                      }
+                    }
+                    if (obj['skos:exactMatch']) {
+                      for (let n of obj['skos:exactMatch']) {
+                        f.identifier = n
+                      }
+                    }
+                    components.push(f)
+                  }
                 }
               }
               break
@@ -1447,21 +1479,21 @@ export default {
     }
     return ordered
   },
-  json2form: function (jsonld, options) {
+  json2form: function (jsonld, options, vocabularies) {
     var levels = {
       digital: {
         components: []
       }
     }
 
-    levels.digital.components = this.json2components(jsonld, options)
+    levels.digital.components = this.json2components(jsonld, options, vocabularies)
 
     Object.entries(jsonld).forEach(([key, value]) => {
       if (key === 'dcterms:subject') {
         levels['subject'] = []
         for (let v of value) {
           if (v['@type'] === 'phaidra:Subject') {
-            var subcomp = this.json2components(v, options)
+            var subcomp = this.json2components(v, options, vocabularies)
             if (subcomp.length > 0) {
               levels.subject.push({ components: subcomp })
             }
@@ -2562,9 +2594,13 @@ export default {
 
         case 'frapo:isOutputOf':
           if (f.type === 'aaiso:Programme') {
-            // study plan
-            if (f.name || f.notation || f['skos:prefLabel']) {
-              this.push_object(jsonld, f.predicate, this.get_json_study_plan(f.name, f.nameLanguage, f['skos:prefLabel'], [f.notation], [f.identifier]))
+            if (f.component === 'p-select' && f.value) {
+              this.push_object(jsonld, f.predicate, this.get_json_concept(f['skos:prefLabel'], f['rdfs:label'], 'aaiso:Programme', [f.value], f['skos:notation'] ? f['skos:notation'] : null))
+            } else {
+              // study plan
+              if (f.name || f.notation || f['skos:prefLabel']) {
+                this.push_object(jsonld, f.predicate, this.get_json_study_plan(f.name, f.nameLanguage, f['skos:prefLabel'], [f.notation], [f.identifier]))
+              }
             }
           } else {
             // project

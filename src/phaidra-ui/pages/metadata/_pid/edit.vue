@@ -15,9 +15,10 @@
 import jsonLd from "phaidra-vue-components/src/utils/json-ld"
 import { context } from "../../../mixins/context"
 import { config } from "../../../mixins/config"
+import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
 
 export default {
-  mixins: [context, config],
+  mixins: [context, config, vocabulary],
   data() {
     return {
       loading: false,
@@ -83,7 +84,7 @@ export default {
       }
     },
     json2form: function (jsonld) {
-      return jsonLd.json2form(jsonld);
+      return jsonLd.json2form(jsonld, null, this.vocabularies);
     },
   },
   beforeRouteEnter: function (to, from, next) {

@@ -18,6 +18,7 @@
           :feedback-user="this.user"
           :feedback-context="'Upload'"
           v-on:load-form="form = $event"
+          v-on:load-rights="rights = $event"
           v-on:object-created="objectCreated($event)"
           v-on:form-input-resource-type="handleInputResourceType($event)"
           v-on:input-rights="rights = $event"
@@ -207,7 +208,7 @@ export default {
       self.mandatoryFieldsFound = {};
       self.mandatoryFieldsFilled = {};
 
-      let settres = await self.$axios.get("/app_settings");
+      let settres = await self.$axios.get("/config/public");
       if (settres?.data?.settings?.defaultTemplateId) {
         try {
           let tmpres = await self.$axios.request({

@@ -4,8 +4,8 @@
       <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
     </v-btn>
     <v-row>
-      <v-col v-if="signedin">
-        <p-m-delete v-if="appconfig.enabledelete" :pid="pid" :cmodel="loadedcmodel" :members="members"
+      <v-col >
+        <p-m-delete v-if="instanceconfig.showdeletebutton || user.isadmin" :pid="pid" :cmodel="loadedcmodel" :members="members"
           @object-deleted="objectDeleted($event)"></p-m-delete>
       </v-col>
     </v-row>
@@ -35,13 +35,11 @@ export default {
     }
   },
   methods: {
-    loadData: function (self, pid) {
-      return self.loadDoc(self, pid)
-        .then(function (response) {
-          return self.loadMembers(self, pid)
-        })
+    loadData: async function (self, pid) {
+      await self.loadDoc(self, pid)
+      await self.loadMembers(self, pid)
     },
-    loadDoc: function (self, pid) {
+    loadDoc: async function (self, pid) {
       this.members = []
 
       var params = {
@@ -53,22 +51,28 @@ export default {
 
       var query = qs.stringify(params, { encodeValuesOnly: true, indices: false })
       var url = '/search/select?' + query
-      var promise = self.$axios.get(url)
-        .then(function (response) { return response.json() })
-        .then(function (json) {
-          if (json.response.numFound > 0) {
-            self.doc = json.response.docs[0]
-          } else {
-            self.doc = {}
-          }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
+      
+      try {
+        this.$store.commit('setLoading', true)
+        let response = await this.$axios.request({
+          method: "GET",
+          url: url,
+        });
+        
+        if (response.data.numFound > 0) {
+          self.doc = response.data.docs[0]
+        } else {
+          self.doc = {}
+        }
+      } catch (error) {
+        console.log(error);
+        this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
+      } finally {
+        this.$store.commit('setLoading', false)
+      }
 
-      return promise
     },
-    loadMembers(self, pid) {
+    loadMembers: async function (self, pid) {
       this.members = []
 
       var params = {
@@ -82,20 +86,26 @@ export default {
 
       var query = qs.stringify(params, { encodeValuesOnly: true, indices: false })
       var url = '/search/select?' + query
-      var promise = self.$axios.get(url)
-        .then(function (response) { return response.json() })
-        .then(function (json) {
-          if (json.response.numFound > 0) {
-            self.members = json.response.docs
-          } else {
-            self.members = []
-          }
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
 
-      return promise
+      try {
+        this.$store.commit('setLoading', true)
+        let response = await this.$axios.request({
+          method: "GET",
+          url: url,
+        });
+        
+        if (response.data.numFound > 0) {
+          self.members = response.data.docs
+        } else {
+          self.members = []
+        }
+      } catch (error) {
+        console.log(error);
+        this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
+      } finally {
+        this.$store.commit('setLoading', false)
+      }
+
     },
     objectDeleted: function (event) {
       this.$store.commit('setAlerts', [{ type: 'success', msg: 'Object' + this.pid + ' was successfully deleted.' }])

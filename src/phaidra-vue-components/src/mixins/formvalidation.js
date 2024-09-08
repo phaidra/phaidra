@@ -198,7 +198,7 @@ export const formvalidation = {
           console.log('checking p[' + f.predicate + '] c[' + f.component + ']') 
           if (f.predicate === 'dcterms:type') {
             this.mandatoryFieldsFound['Resource type'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Resource type'] = true
             }
           }
@@ -222,13 +222,13 @@ export const formvalidation = {
           }
           if ((f.predicate === 'bf:note') && (f.type === 'bf:Note')) {
             this.mandatoryFieldsFound['Description'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Description'] = true
             }
           }
           if (f.component === 'p-keyword') {
             this.mandatoryFieldsFound['Keyword'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Keyword'] = true
             }
           }
@@ -250,7 +250,7 @@ export const formvalidation = {
           if (f.component === 'p-select') {
             if (f.predicate === 'edm:rights') {
               this.mandatoryFieldsFound['License'] = true
-              if (f.value.length > 0) {
+              if (f.value?.length > 0) {
                 this.mandatoryFieldsValidated['License'] = true
               }
             }
@@ -261,7 +261,7 @@ export const formvalidation = {
               if (hasReadonlyOefos) {
                 this.mandatoryFieldsValidated['OEFOS Classification'] = true
               } else {
-                if (f.value.length > 0) {
+                if (f.value?.length > 0) {
                   this.mandatoryFieldsValidated['OEFOS Classification'] = true
                 }
               }
@@ -269,7 +269,7 @@ export const formvalidation = {
           }
           if (f.component === 'p-association') {
             this.mandatoryFieldsFound['Association'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Association'] = true
             }
           }
@@ -383,7 +383,7 @@ export const formvalidation = {
           console.log('checking p[' + f.predicate + '] c[' + f.component + ']') 
           if (f.predicate === 'dcterms:type') {
             this.mandatoryFieldsFound['Resource type'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Resource type'] = true
             }
           }
@@ -407,13 +407,13 @@ export const formvalidation = {
           }
           if ((f.predicate === 'bf:note') && (f.type === 'bf:Note')) {
             this.mandatoryFieldsFound['Description'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Description'] = true
             }
           }
           if (f.component === 'p-keyword') {
             this.mandatoryFieldsFound['Keyword'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Keyword'] = true
             }
           }
@@ -435,7 +435,7 @@ export const formvalidation = {
           if (f.component === 'p-select') {
             if (f.predicate === 'edm:rights') {
               this.mandatoryFieldsFound['License'] = true
-              if (f.value.length > 0) {
+              if (f.value?.length > 0) {
                 this.mandatoryFieldsValidated['License'] = true
               }
             }
@@ -446,7 +446,7 @@ export const formvalidation = {
               if (hasReadonlyOefos) {
                 this.mandatoryFieldsValidated['OEFOS Classification'] = true
               } else {
-                if (f.value.length > 0) {
+                if (f.value?.length > 0) {
                   this.mandatoryFieldsValidated['OEFOS Classification'] = true
                 }
               }
@@ -565,7 +565,7 @@ export const formvalidation = {
           if (f.predicate === 'dcterms:type') {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] v[' + f.value + ']') 
             this.mandatoryFieldsFound['Resource type'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Resource type'] = true
             }
           }
@@ -577,7 +577,7 @@ export const formvalidation = {
                 this.mandatoryFieldsValidated['Object type'] = true
               }
             } 
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Object type'] = true
             }
           }
@@ -592,14 +592,14 @@ export const formvalidation = {
           if ((f.predicate === 'bf:note') && (f.type === 'bf:Note')) {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] v[' + f.value + ']') 
             this.mandatoryFieldsFound['Description'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Description'] = true
             }
           }
           if (f.component === 'p-keyword') {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] v[' + f.value + ']') 
             this.mandatoryFieldsFound['Keyword'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Keyword'] = true
             }
           }
@@ -621,7 +621,7 @@ export const formvalidation = {
             if (f.predicate === 'edm:rights') {
               console.log('checking p[' + f.predicate + '] c[' + f.component + '] v[' + f.value + ']')
               this.mandatoryFieldsFound['License'] = true
-              if (f.value.length > 0) {
+              if (f.value?.length > 0) {
                 this.mandatoryFieldsValidated['License'] = true
               }
             }
@@ -645,7 +645,7 @@ export const formvalidation = {
           if ((f.component === 'p-filename-readonly') || f.component === 'p-filename') {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] v[' + f.value + ']')
             this.mandatoryFieldsFound['File'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['File'] = true
             }
           }

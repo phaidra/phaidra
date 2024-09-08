@@ -505,7 +505,7 @@
                   "
                   :style="
                     objectInfo.cmodel === 'Audio'
-                      ? 'height: 60px; width: 100%; border: 0px;'
+                      ? 'height: 220px; width: 100%; border: 0px;'
                       : objectInfo.cmodel === 'Container' ? 'height: 300px; width: 100%; border: 0px;' : 'height: 500px; width: 100%; border: 0px;'
                   "
                   scrolling="no"
@@ -633,7 +633,7 @@
                       </v-list-item>
                       <v-list-item>
                       </v-list-item>
-                      <v-list-item v-if="(instanceconfig.enabledelete === 1) || (instanceconfig.enabledelete === true)" :to="localePath(`/delete/${member.pid}`)">
+                      <v-list-item v-if="(instanceconfig.showdeletebutton === 1) || (instanceconfig.showdeletebutton === true)" :to="localePath(`/delete/${member.pid}`)">
                         <v-list-item-title>{{
                           $t("Delete")
                         }}</v-list-item-title>
@@ -891,7 +891,7 @@
                                 color="grey"
                                 :loading="doiRequestLoading"
                                 @click="doiRequestDialog = false"
-                                >{{ $t("Close") }}</v-btn
+                                >{{ $t("Cancel") }}</v-btn
                               >
                               <v-spacer></v-spacer>
                               <v-btn
@@ -2136,12 +2136,18 @@
                           >{{ $t("Relationships") }}</nuxt-link
                         >
                       </v-row>
-                      <v-row no-gutters class="pt-2">
+                      <v-row v-if="(instanceconfig.showdeletebutton === 1) || (instanceconfig.showdeletebutton === true) || (user.isadmin)" no-gutters class="pt-2">
                         <nuxt-link
                           class="mb-1"
-                          v-if="(instanceconfig.enabledelete === 1) || (instanceconfig.enabledelete === true)"
                           :to="localePath(`/delete/${objectInfo.pid}`)"
                           >{{ $t("Delete") }}</nuxt-link
+                        >
+                      </v-row>
+                      <v-row v-if="user.isadmin" no-gutters class="pt-2">
+                        <a
+                          class="mb-1"
+                          @click="datareplaceDialog = true"
+                          >{{ $t("Replace data") }}</a
                         >
                       </v-row>
                     </v-card-text>
@@ -2167,6 +2173,25 @@
           </v-row>
         </v-col>
       </v-row>
+      <v-dialog v-model="datareplaceDialog" max-width="1200px">
+      <v-card>
+        <v-card-title>
+          <h3 class="title font-weight-light primary--text">{{ $t('Upload new file to') }} {{objectInfo.pid}} ({{objectInfo.cmodel}})</h3>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-container @drop.prevent="addDropFile" @dragover.prevent>
+            <v-file-input v-model="datareplaceFile" :error-messages="datareplaceUploadErrors"></v-file-input>
+          </v-container>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click.stop="datareplaceDialog=false">Close</v-btn>
+          <v-btn color="primary" @click="datareplaceUpload()">Upload</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     </template>
   </v-container>
 </template>
@@ -2176,7 +2201,7 @@
 import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
-import qs from "qs";
+
 export default {
   mixins: [context, config, vocabulary],
   validate({ params }) {
@@ -2403,7 +2428,10 @@ export default {
       collMembersPagesize: 10,
       confirmColMemDeleteDlg: false,
       collMemberToRemove: null,
-      collOnlyLatestVersions: true
+      collOnlyLatestVersions: true,
+      datareplaceDialog: false,
+      datareplaceFile: null,
+      datareplaceUploadErrors: []
     };
   },
   async fetch() {
@@ -2642,6 +2670,39 @@ export default {
             );
           }
         }
+      }
+    },
+    openDatareplace: function () {
+      this.datareplaceDialog = true
+    },
+    datareplaceUpload: async function () {
+      if (!this.datareplaceFile) {
+        this.datareplaceUploadErrors.push(this.$t('Missing file'))
+        return
+      }
+      this.$store.commit('setLoading', true)
+      try {
+        var httpFormData = new FormData()
+        httpFormData.append('file', this.datareplaceFile)
+        let response = await this.$axios.post('/object/' + this.objectInfo.pid + '/data', httpFormData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-XSRF-TOKEN': this.$store.state.user.token
+          }
+        })
+        if (response.status === 200) {
+          this.$store.commit('setAlerts', [{ type: 'success', msg: 'File was sucessfully uploaded' }])
+        } else {
+          if (response.data.alerts && response.data.alerts.length > 0) {
+            this.$store.commit('setAlerts', response.data.alerts)
+          }
+        }
+      } catch (error) {
+        console.log(error)
+        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+      } finally {
+        this.datareplaceDialog = false
+        this.$store.commit('setLoading', false)
       }
     },
     loadCitationStyles: async function () {

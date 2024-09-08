@@ -16,6 +16,7 @@
           :debug="false"
           :feedback="false"
           v-on:load-form="form = $event"
+          v-on:load-rights="rights = $event"
           v-on:object-created="objectCreated($event)"
           v-on:form-input-resource-type="handleInputResourceType($event)"
           v-on:input-rights="rights = $event"

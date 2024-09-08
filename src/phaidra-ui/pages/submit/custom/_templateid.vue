@@ -10,6 +10,7 @@
         :templating="true"
         :validationfnc="skipValidation ? dontValidate : null" 
         v-on:load-form="form = $event" 
+        v-on:load-rights="rights = $event"
         v-on:object-created="objectCreated($event)"
         v-on:form-input-resource-type="handleInputResourceType($event)"
         v-on:input-rights="rights = $event"></p-i-form>
@@ -212,6 +213,9 @@ export default {
           for (let f of s.fields) {
             f.removable = true
           }
+        }
+        if (response.data.template.rights) {
+          self.rights = response.data.template.rights
         }
         if (response.data.template.hasOwnProperty('skipValidation')) {
           self.skipValidation = response.data.template.skipValidation

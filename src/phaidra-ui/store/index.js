@@ -29,9 +29,10 @@ export const mutations = {
       'address', 
       'phone', 
       'email', 
+      'oaidataprovider',
       'languages', 
       'owneremailoverride', 
-      'enabledelete',
+      'showdeletebutton',
       'markmandatoryfnc',
       'requestdoiemail', 
       'validationfnc',
@@ -41,7 +42,12 @@ export const mutations = {
       'cms_impressum',
       'cms_submit',
       'cms_css',
-      'cms_help'
+      'cms_help',
+      'accessrestrictions_showpersons',
+      'accessrestrictions_showaccounts',
+      'accessrestrictions_showedupersonaffiliation',
+      'accessrestrictions_showorgunits',
+      'accessrestrictions_showgroups'
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
@@ -543,6 +549,10 @@ export const mutations = {
 }
 
 export const actions = {
+
+  setInstanceConfig({ commit }, config) {
+    commit('setInstanceConfig', config)
+  },
 
   async nuxtServerInit({ commit, dispatch }, { req }) {
     const token = this.$cookies.get('XSRF-TOKEN')

@@ -14,6 +14,9 @@
         <v-tab :active-class="'primary'">
           <span>{{ $t('CMS') }}</span>
         </v-tab>
+        <v-tab :active-class="'primary'">
+          <span>{{ $t('Datastructures') }}</span>
+        </v-tab>
 
         <v-tab-item class="pa-8">
           <v-container>
@@ -71,6 +74,15 @@
               </v-col>
               <v-col cols="6" class="mt-6">{{ $t('Used eg. in footer and as a contact address throughout the site.') }}</v-col>
             </v-row>
+            <v-row>
+              <v-col>
+                <v-text-field
+                  label="OAI data provider"
+                  v-model="parsedPublicConfigData.oaidataprovider"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="6" class="mt-6">{{ $t('Used in the EDM schema in OAI-PMH.') }}</v-col>
+            </v-row>
           </v-container>
         </v-tab-item>
 
@@ -111,11 +123,11 @@
             <v-row>
               <v-col>
                 <v-checkbox
-                  label="Show delete button"
-                  v-model="parsedPublicConfigData.enabledelete"
+                  label="Show delete link"
+                  v-model="parsedPublicConfigData.showdeletebutton"
                 ></v-checkbox>
               </v-col>
-              <v-col cols="6" class="mt-6">{{ $t("Shows/Hides the delete button on object's detail page. Does NOT prevent delete via API.") }}</v-col>
+              <v-col cols="6" class="mt-6">{{ $t("Only shows/hides the delete button on object's detail page. Does NOT prevent delete via API, if enabledelete is true in private config!") }}</v-col>
             </v-row>
             <v-row>
               <v-col>
@@ -161,6 +173,51 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="6" class="mt-4">{{ $t("Leave empty to disable the 'Request DOI' button.") }}</v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-checkbox
+                  label="Access restrictions: show persons"
+                  v-model="parsedPublicConfigData.accessrestrictions_showpersons"
+                ></v-checkbox>
+              </v-col>
+              <v-col cols="6" class="mt-4">{{ $t("This only shows/hides the particular frontend components for rights management. Persons is effective the same as accounts, only we search in names instead of usernames.") }}</v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-checkbox
+                  label="Access restrictions: show accounts"
+                  v-model="parsedPublicConfigData.accessrestrictions_showaccounts"
+                ></v-checkbox>
+              </v-col>
+              <v-col cols="6" class="mt-4">{{ $t("This only shows/hides the particular frontend components for rights management.") }}</v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-checkbox
+                  label="Access restrictions: show eduPersonAffiliation"
+                  v-model="parsedPublicConfigData.accessrestrictions_showedupersonaffiliation"
+                ></v-checkbox>
+              </v-col>
+              <v-col cols="6" class="mt-4">{{ $t("This only shows/hides the particular frontend components for rights management.") }}</v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-checkbox
+                  label="Access restrictions: show org units"
+                  v-model="parsedPublicConfigData.accessrestrictions_showorgunits"
+                ></v-checkbox>
+              </v-col>
+              <v-col cols="6" class="mt-4">{{ $t("This only shows/hides the particular frontend components for rights management.") }}</v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-checkbox
+                  label="Access restrictions: show groups"
+                  v-model="parsedPublicConfigData.accessrestrictions_showgroups"
+                ></v-checkbox>
+              </v-col>
+              <v-col cols="6" class="mt-4">{{ $t("This only shows/hides the particular frontend components for rights management.") }}</v-col>
             </v-row>
           </v-container>
         </v-tab-item>
@@ -232,12 +289,46 @@
             </v-row>
           </v-container>
         </v-tab-item>
+        <v-tab-item class="pa-8">
+          <v-container>
+            <v-row>
+              <v-col>
+                <v-textarea
+                  label="Org units"
+                  v-model="data_orgunits_text"
+                ></v-textarea>
+              </v-col>
+              <v-col cols="3" class="mt-4">{{ $t("The organigram in json structure") }}</v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-textarea
+                  label="Vocabularies"
+                  v-model="data_vocabularies_text"
+                ></v-textarea>
+              </v-col>
+              <v-col cols="3" class="mt-4">{{ $t("Custom controlled vocabularies") }}</v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-textarea
+                  label="i18n overrrides"
+                  v-model="data_i18n_text"
+                ></v-textarea>
+              </v-col>
+              <v-col cols="3" class="mt-4">{{ $t("Override localisation values") }}</v-col>
+            </v-row>
+          </v-container>
+        </v-tab-item>
       </v-tabs>
       <v-btn fixed bottom right raised color="primary" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
     </v-card>
-    <v-card >
+
+
+
+    <v-card class="mt-8">
       <v-card-title class="font-weight-light grey white--text">{{ $t('PHAIDRA Private Config') }}</v-card-title>
-      <v-tabs slider-color="primary" slider-size="20px" dark background-color="grey" vertical v-model="activetab">
+      <v-tabs slider-color="primary" slider-size="20px" dark background-color="grey" vertical v-model="activetabprivate">
 
         <v-tab :active-class="'primary'">
           <span>{{ $t('Functionality') }}</span>
@@ -248,11 +339,11 @@
             <v-row>
               <v-col>
                 <v-checkbox
-                  label="Allow delete"
+                  label="Enable delete"
                   v-model="parsedPrivateConfigData.enabledelete"
                 ></v-checkbox>
               </v-col>
-              <v-col cols="6" class="mt-6">{{ $t("Allows delete for normal users.") }}</v-col>
+              <v-col cols="6" class="mt-6">{{ $t("Allows delete of owned objects for normal users. Admin can always delete any object.") }}</v-col>
             </v-row>
             
           </v-container>
@@ -276,8 +367,13 @@ export default {
       jsonInput: "",
       parsedPublicConfigData: {},
       parsedPrivateConfigData: {},
+      data_orgunits: [],
+      data_orgunits_text: '',
+      data_vocabularies: [],
+      data_vocabularies_text: '',
       loading: false,
-      activetab: null
+      activetab: null,
+      activetabprivate: null
     };
   },
   methods: {
@@ -287,10 +383,24 @@ export default {
 
         // public
         const instanceConfData = {...this.parsedPublicConfigData}
+
+        if (this.data_orgunits_text) {
+          this.data_orgunits = JSON.parse(this.data_orgunits_text)
+        }
+        instanceConfData['data_orgunits'] = this.data_orgunits
+
+        if (this.data_vocabularies_text) {
+          this.data_vocabularies = JSON.parse(this.data_vocabularies_text)
+        }
+        instanceConfData['data_vocabularies'] = this.data_vocabularies
+
+        if (this.data_i18n_text) {
+          this.data_i18n = JSON.parse(this.data_i18n_text)
+        }
+        instanceConfData['data_i18n'] = this.data_i18n
+
         var httpFormData = new FormData()
-        httpFormData.append('public_config', JSON.stringify({
-          public_config: instanceConfData
-        }))
+        httpFormData.append('public_config', JSON.stringify(instanceConfData))
         await this.$axios.request({
             method: 'POST',
             url: '/config/public',
@@ -312,9 +422,7 @@ export default {
         // private
         const privateConfData = {...this.parsedPrivateConfigData}
         var httpFormData = new FormData()
-        httpFormData.append('private_config', JSON.stringify({
-          private_config: privateConfData
-        }))
+        httpFormData.append('private_config', JSON.stringify(privateConfData))
         await this.$axios.request({
             method: 'POST',
             url: '/config/private',
@@ -371,8 +479,17 @@ export default {
         console.error(error)
       }
       this.selectedTemplateId = response?.data?.public_config?.defaultTemplateId
-      if(response?.data?.public_config?.instanceConfig){
-        this.parsedPublicConfigData = {...response?.data?.public_config?.instanceConfig}
+      if(response?.data?.public_config){
+        this.parsedPublicConfigData = {...response?.data?.public_config}
+
+        this.data_orgunits = response?.data?.public_config?.data_orgunits
+        this.data_orgunits_text = JSON.stringify(this.data_orgunits, null, 2)
+
+        this.data_vocabularies = response?.data?.public_config?.data_vocabularies
+        this.data_vocabularies_text = JSON.stringify(this.data_vocabularies, null, 2)
+
+        this.data_i18n = response?.data?.public_config?.data_i18n
+        this.data_i18n_text = JSON.stringify(this.data_i18n, null, 2)
       } else {
         if(this.$store?.state?.instanceconfig){
           this.parsedPublicConfigData = {...this.$store.state.instanceconfig}
@@ -390,8 +507,8 @@ export default {
         console.error(error)
       }
       
-      if(response?.data?.private_config?.instanceConfig){
-        this.parsedPrivateConfigData = {...response?.data?.private_config?.instanceConfig}
+      if(response?.data?.private_config){
+        this.parsedPrivateConfigData = {...response?.data?.private_config}
       }
       this.loading = false
     }

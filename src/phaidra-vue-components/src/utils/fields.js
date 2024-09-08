@@ -572,6 +572,22 @@ const fields = [
     definition: 'Study plan.'
   },
   {
+    id: 'study-plan-select',
+    fieldname: 'Study plan (select)',
+    predicate: 'frapo:isOutputOf',
+    type: 'aaiso:Programme',
+    component: 'p-select',
+    vocabulary: 'studyplans',
+    multiplicable: true,
+    multilingual: true,
+    'skos:prefLabel': [],
+    label: 'Study plan',
+    value: '',
+    showIds: true,
+    errorMessages: [],
+    definition: 'Study plan controlled vocabulary.'
+  },
+  {
     id: 'series',
     fieldname: 'Is in series',
     predicate: 'rdau:P60193',

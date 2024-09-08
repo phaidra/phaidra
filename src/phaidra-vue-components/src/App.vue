@@ -4252,7 +4252,7 @@ export default {
     loadEdit: function () {
       let self = this
       this.loadMetadata(self.pid).then(function (jsonld) {
-        self.editform = jsonLd.json2form(jsonld)
+        self.editform = jsonLd.json2form(jsonld, null, this.vocabularies)
       })
     },
     loadUwmetadataEdit: function () {
