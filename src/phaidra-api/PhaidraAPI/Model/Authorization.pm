@@ -149,6 +149,27 @@ sub check_rights {
       }
     }
 
+    if (exists($rights->{'edupersonaffiliation'})) {
+      $rightsAreEmpty = 0;
+      for my $def (@{$rights->{'edupersonaffiliation'}}) {
+        my $v;
+        if (ref($def) eq 'HASH') {
+          $v = $def->{value};
+        }
+        else {
+          $v = $def;
+        }
+        for my $aff (@{$userdata->{affiliation}}) {
+          if ($aff eq $v) {
+            $c->app->log->info("Authz op[$op] pid[$pid] username[$currentuser] GRANTED: rule edupersonaffiliation[$aff]");
+            $res->{rights} = 'ro';
+            $res->{status} = 200;
+            return $res;
+          }
+        }
+      }
+    }
+
     if (exists($rights->{'department'})) {
       $rightsAreEmpty = 0;
       for my $def (@{$rights->{'department'}}) {

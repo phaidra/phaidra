@@ -521,30 +521,23 @@ sub update {
 
     my $tcm        = [gettimeofday];
     my $cmodel_res = $search_model->get_cmodel($c, $pid);
-    $c->app->log->debug("getting cmodel[" . $cmodel_res->{cmodel} . "] took " . tv_interval($tcm));
-    if ($cmodel_res->{status} ne 200) {
-      if ($c->app->config->{fedora}->{version} >= 6) {
-
-        # object might have been deleted
-        my $fedora_model = PhaidraAPI::Model::Fedora->new;
-        if ($fedora_model->isDeleted($c, $pid)) {
-          if (exists($c->app->config->{solr})) {
-            my $post = $ua->post($self->getSolrUpdateUrl($c) => json => {delete => $pid})->result;
-            if ($post->is_success) {
-              $c->app->log->debug("[$pid] solr document deleted (object returns 410 Gone)");
-            }
-            else {
-              unshift @{$res->{alerts}}, {type => 'error', msg => "[$pid] Error deleting document from solr: " . $post->message};
-              $res->{status} = $post->code ? $post->code : 500;
-            }
-            $res->{status} = 200;
-            return $res;
-          }
-        }
-        else {
-          return $cmodel_res;
-        }
+    $c->app->log->debug("getting cmodel[" . ($cmodel_res->{cmodel} ? $cmodel_res->{cmodel} : '') . "] took " . tv_interval($tcm). " status[".$cmodel_res->{status}."]");
+    
+    if (($cmodel_res->{status} eq 410) && ($c->app->config->{fedora}->{version} >= 6)) {
+      # object was deleted
+      $c->app->log->debug("[$pid] object returns 410 Gone - deleting from index");
+      my $post = $ua->post($self->getSolrUpdateUrl($c) => json => {delete => $pid})->result;
+      if ($post->is_success) {
+        $c->app->log->debug("[$pid] solr document deleted");
       }
+      else {
+        unshift @{$res->{alerts}}, {type => 'error', msg => "[$pid] Error deleting document from solr: " . $post->message};
+        $res->{status} = $post->code ? $post->code : 500;
+      }
+      $res->{status} = 200;
+      return $res;
+    }
+    if ($cmodel_res->{status} ne 200) {
       return $cmodel_res;
     }
 

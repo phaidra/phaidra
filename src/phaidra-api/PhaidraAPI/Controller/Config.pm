@@ -6,6 +6,7 @@ use v5.10;
 use base 'Mojolicious::Controller';
 use Mojo::ByteStream qw(b);
 use Mojo::JSON qw(encode_json decode_json);
+use PhaidraAPI::Model::Config;
 
 sub post_public_config {
   my $self = shift;
@@ -38,18 +39,12 @@ sub post_public_config {
     return;
   }
 
-  # $self->app->log->debug("XXXXXXXXXXXXXXX " . $self->app->dumper($public_config));
+  #$self->app->log->debug("XXXXXXXXXXXXXXX " . $self->app->dumper($public_config));
   for my $key (keys %{$public_config}) {
     if ($public_config->{$key}) {
       if ($key ne '_id') {
-        if (rindex($key, 'data_', 0) == 0) {
-          my $data = decode_json(b($public_config->{$key})->encode('UTF-8'));
-          $self->app->log->info("public_config data $key = " . $self->app->dumper($data));
-          $self->mongo->get_collection('config')->update_one({ config_type => 'public' }, {'$set' => {$key => $data}}, {upsert => 1});
-        } else {
-          $self->app->log->info("public_config $key = " . $public_config->{$key});
-          $self->mongo->get_collection('config')->update_one({ config_type => 'public' }, {'$set' => {$key => $public_config->{$key}}}, {upsert => 1});
-        }
+        $self->app->log->info("public_config $key = " . $public_config->{$key});
+        $self->mongo->get_collection('config')->update_one({ config_type => 'public' }, {'$set' => {$key => $public_config->{$key}}}, {upsert => 1});
       }
     }
     else {
@@ -94,8 +89,10 @@ sub post_private_config {
   # $self->app->log->debug("XXXXXXXXXXXXXXX " . $self->app->dumper($private_config));
   for my $key (keys %{$private_config}) {
     if ($private_config->{$key}) {
-      $self->app->log->info("private_config $key = " . $private_config->{$key});
-      $self->mongo->get_collection('config')->update_one({ config_type => 'private' }, {'$set' => {$key => $private_config->{$key}}}, {upsert => 1});
+      if ($key ne '_id') {
+        $self->app->log->info("private_config $key = " . $private_config->{$key});
+        $self->mongo->get_collection('config')->update_one({ config_type => 'private' }, {'$set' => {$key => $private_config->{$key}}}, {upsert => 1});
+      }
     }
     else {
       $self->mongo->get_collection('config')->update_one({ config_type => 'private' }, {'$unset' => {$key => ''}});
@@ -111,10 +108,12 @@ sub get_public_config {
   my $res = {alerts => [], status => 200};
 
   $self->app->log->debug("reading public_config");
-  my $sres = $self->mongo->get_collection('config')->find_one({ config_type => 'public' });
 
-  # $self->app->log->debug("XXXXXXXXXXXXXXX " . $self->app->dumper($sres));
-  $res->{public_config} = $sres;
+  my $model = PhaidraAPI::Model::Config->new;
+  my $modelres = $model->get_public_config($self);
+
+  # $self->app->log->debug("XXXXXXXXXXXXXXX " . $self->app->dumper($modelres));
+  $res->{public_config} = $modelres;
 
   $self->render(json => $res, status => $res->{status});
 }
@@ -125,10 +124,12 @@ sub get_private_config {
   my $res = {alerts => [], status => 200};
 
   $self->app->log->debug("reading private_config");
-  my $sres = $self->mongo->get_collection('config')->find_one({ config_type => 'private' });
 
-  # $self->app->log->debug("XXXXXXXXXXXXXXX " . $self->app->dumper($sres));
-  $res->{private_config} = $sres;
+  my $model = PhaidraAPI::Model::Config->new;
+  my $modelres = $model->get_private_config($self);
+
+  # $self->app->log->debug("XXXXXXXXXXXXXXX " . $self->app->dumper($modelres));
+  $res->{private_config} = $modelres;
 
   $self->render(json => $res, status => $res->{status});
 }

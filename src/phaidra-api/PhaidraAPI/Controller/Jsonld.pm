@@ -142,6 +142,8 @@ sub add_template {
     return;
   }
 
+  my $rights = $self->param('rights');
+
   my $tag = $self->param('tag');
 
   eval {
@@ -174,7 +176,11 @@ sub add_template {
     $owner = $self->stash->{basic_auth_credentials}->{username};
   }
 
-  $self->mongo->get_collection('jsonldtemplates')->insert_one({tid => $tid, owner => $owner, name => $name, form => $form, tag => $tag, created => time});
+  my $doc = {tid => $tid, owner => $owner, name => $name, form => $form, tag => $tag, created => time};
+  if ($rights) {
+    $doc->{rights} = decode_json(b($rights)->encode('UTF-8'))
+  }
+  $self->mongo->get_collection('jsonldtemplates')->insert_one($doc);
 
   $res->{tid} = $tid;
 
@@ -197,6 +203,8 @@ sub edit_template {
     $self->render(json => {alerts => [{type => 'error', msg => 'No form sent'}]}, status => 400);
     return;
   }
+
+  my $rights = $self->param('rights');
 
   my $tag = $self->param('tag');
 
@@ -227,6 +235,9 @@ sub edit_template {
   }
 
   $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid}, { '$set' => { form => $form, updated => time}});
+  if ($rights) {
+    $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid}, { '$set' => { rights => decode_json(b($rights)->encode('UTF-8')), updated => time}});
+  }
 
   $self->render(json => $res, status => $res->{status});
 }

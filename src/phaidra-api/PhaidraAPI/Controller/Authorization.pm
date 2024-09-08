@@ -7,6 +7,7 @@ use Mojo::ByteStream qw(b);
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Authorization;
+use PhaidraAPI::Model::Config;
 
 sub authorize {
   my $self = shift;
@@ -22,15 +23,18 @@ sub authorize {
     return 0;
   }
 
+  my $controller;
   my $action;
   my $pid;
 
   if ($op eq 'w') {
     # extract_credentials -> authorize -> action
+    $controller = $self->match->stack->[3]{controller};
     $action = $self->match->stack->[3]{action};
     $pid = $self->match->stack->[3]{pid};
   } else {
     # extract_credentials -> action
+    $controller = $self->match->stack->[2]{controller};
     $action = $self->match->stack->[2]{action};
     $pid = $self->match->stack->[2]{pid};
   }
@@ -39,15 +43,27 @@ sub authorize {
   # -> the PID is in the query string
   # -> pass this, we'll check rights in imageserver model where we parse the query
   if ($action eq 'imageserverproxy') {
-    $self->app->log->debug("Authz action[$action] op[$op]");
+    $self->app->log->debug("Authz controller[$controller] action[$action] op[$op]");
     return 1;
   } else {
-    $self->app->log->debug("Authz action[$action] pid[$pid] op[$op]");
+    $self->app->log->debug("Authz controller[$controller] action[$action] pid[$pid] op[$op]");
+  }
+
+  if (($controller eq 'object') && ($action eq 'delete')) {
+    my $confmodel = PhaidraAPI::Model::Config->new;
+    my $privconfig = $confmodel->get_private_config($self);
+    unless ($privconfig->{enabledelete}) {
+      $self->app->log->error("Authz controller[$controller] action[$action] pid[$pid] op[$op] failed - delete is not enabled");
+      $res->{alerts} = [{type => 'error', msg => 'delete is not enabled'}];
+      $res->{status} = 403;
+      $self->render(json => $res, status => $res->{status});
+      return 0;
+    }
   }
 
   my $pidNamespace = $self->app->config->{fedora}->{pidnamespace};
   unless ($pid =~ m/^$pidNamespace:\d+$/) {
-    $self->app->log->error("Authz action[$action] pid[$pid] op[$op] failed - wrong pid");
+    $self->app->log->error("Authz controller[$controller] action[$action] pid[$pid] op[$op] failed - wrong pid");
     $res->{alerts} = [{type => 'error', msg => 'wrong pid'}];
     $res->{status} = 400;
     $self->render(json => $res, status => $res->{status});

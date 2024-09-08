@@ -9,6 +9,7 @@ use Mojo::JSON qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
 use base qw/Mojo::Base/;
 use PhaidraAPI::Model::Languages;
+use PhaidraAPI::Model::Config;
 
 sub get_metadata {
   my ($self, $c, $rec) = @_;
@@ -78,11 +79,20 @@ sub get_metadata {
   };
 
   # edm:dataProvider
-  if (exists($c->app->config->{oai}->{dataprovider})) { # should, it's mandatory
+  my $model = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $model->get_public_config($self);
+  if (exists($pubconfig->{oaidataprovider})) {
     push @{$oreAggregation->{children}}, {
       name       => 'edm:dataProvider',
-      value      => $c->app->config->{oai}->{dataprovider}
+      value      => $pubconfig->{oaidataprovider}
     };
+  } else {
+    if (exists($c->app->config->{oai}->{dataprovider})) {
+      push @{$oreAggregation->{children}}, {
+        name       => 'edm:dataProvider',
+        value      => $c->app->config->{oai}->{dataprovider}
+      };
+    }
   }
 
   # edm:isShownAt

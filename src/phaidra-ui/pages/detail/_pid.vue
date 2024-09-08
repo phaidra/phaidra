@@ -10,7 +10,7 @@
             <v-alert type="info" color="primary">
               <div>
                 {{
-                  $t("This object have been deleted.")
+                  $t("This object has been deleted.")
                 }}
               </div>
             </v-alert>
