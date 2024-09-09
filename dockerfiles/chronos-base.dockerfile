@@ -1,5 +1,5 @@
-FROM ubuntu:jammy-20240227
-ENV DEBIAN_FRONTEND noninteractive
+FROM ubuntu:jammy-20240627.1
+ENV DEBIAN_FRONTEND=noninteractive
 RUN <<EOF
 apt-get --quiet update
 apt-get install --yes --quiet --no-install-recommends \
@@ -22,3 +22,4 @@ apt-get install --yes ./mongodb-database-tools-ubuntu2204-arm64-100.9.4.deb
 rm mongodb-database-tools-ubuntu2204-arm64-100.9.4.deb
 fi
 EOF
+ENTRYPOINT ["bash","/mnt/chronos/chronos-entrypoint.bash"]

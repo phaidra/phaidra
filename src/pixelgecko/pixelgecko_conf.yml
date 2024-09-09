@@ -1,6 +1,6 @@
 pixelgecko:
   mongodb:
-    host:                  'mongodb-phaidra'
+    host:                  'mongodb-phaidra-dev'
     ## authentication database
     db_name:               'admin'
     ## active database
@@ -9,5 +9,5 @@ pixelgecko:
     password:              'phaidra'
     col:                   'jobs'
     activity:              'activity'
-  store:                 '/mnt/converted_images'
+  store:                 '/converted_images'
   temp_path:             '/tmp'

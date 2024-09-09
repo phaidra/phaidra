@@ -1,11 +1,10 @@
-FROM ubuntu:jammy-20240227
-ENV DEBIAN_FRONTEND noninteractive
+FROM ubuntu:jammy-20240627.1
+ENV DEBIAN_FRONTEND=noninteractive
 RUN <<EOF
 apt-get --quiet update
 apt-get install --yes --quiet --no-install-recommends \
 jq libxml-xpath-perl html2text file gdebi curl parallel \
-wget gnupg \
-s3fs
+wget gnupg 
 apt-get clean
 EOF
 RUN <<EOF
@@ -19,3 +18,4 @@ apt-get install --yes --quiet mongodb-mongosh
 EOF
 RUN mkdir /opt/vige
 WORKDIR /opt/vige
+ENTRYPOINT ["bash", "/mnt/vige/vige_controller.bash"]
