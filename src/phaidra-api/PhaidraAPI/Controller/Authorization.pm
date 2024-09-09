@@ -52,7 +52,11 @@ sub authorize {
   if (($controller eq 'object') && ($action eq 'delete')) {
     my $confmodel = PhaidraAPI::Model::Config->new;
     my $privconfig = $confmodel->get_private_config($self);
-    unless ($privconfig->{enabledelete}) {
+    my $currentuser = $self->stash->{basic_auth_credentials}->{username};
+    if ($self->stash->{remote_user}) {
+      $currentuser = $self->stash->{remote_user};
+    }
+    unless ($privconfig->{enabledelete} || ($currentuser eq $self->app->{config}->{phaidra}->{adminusername})) {
       $self->app->log->error("Authz controller[$controller] action[$action] pid[$pid] op[$op] failed - delete is not enabled");
       $res->{alerts} = [{type => 'error', msg => 'delete is not enabled'}];
       $res->{status} = 403;
