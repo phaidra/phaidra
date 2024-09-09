@@ -118,7 +118,7 @@ export default {
   mixins: [config],
   data() {
     return {
-      q: '',
+      q: ''
     }
   }
 }

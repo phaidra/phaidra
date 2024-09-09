@@ -280,99 +280,93 @@
               </v-col>
   
               <v-col cols="9">
-              <v-row justify="start" justify-md="end" class="pl-3">
-                  <icon
-                  v-if="signedin"
-                  class="personicon mr-2 mt-1 univie-grey"
-                  name="material-social-person"
-                  width="24px"
-                  height="24px"
-                  ></icon>
-                  <span
-                  v-if="signedin"
-                  class="mr-2 mt-2 subheading displayname univie-grey"
-                  >{{ user.firstname }} {{ user.lastname }}</span
-                  >
-  
-                  <v-menu offset-y>
-                  <template v-slot:activator="{ on }">
-                      <v-btn text v-on="on" class="top-margin-lang">
-                      <span class="grey--text text--darken-1">{{
-                          localeLabel
-                      }}</span>
-                      <icon
-                          name="univie-sprache"
-                          class="lang-icon grey--text text--darken-1"
-                      ></icon>
-                      </v-btn>
-                  </template>
-                  <v-list>
-                      <v-list-item
-                      v-if="useLocale('eng')"
-                      @click="changeLocale('eng')"
-                      >
-                      <v-list-item-title>English</v-list-item-title>
-                      </v-list-item>
-                      <v-list-item
-                      v-if="useLocale('deu')"
-                      @click="changeLocale('deu')"
-                      >
-                      <v-list-item-title>Deutsch</v-list-item-title>
-                      </v-list-item>
-                  </v-list>
-                  </v-menu>
-              </v-row>
-  
-              <v-row>
-                  <v-col
-                  v-if="appconfig.showinstanceswitch"
-                  cols="4"
-                  class="select-instance text-left"
-                  >
-                  <v-select
-                      :items="instances"
-                      @input="switchInstance"
-                      :value="instanceconfig.baseurl"
-                      item-text="baseurl"
-                      single-line
-                  ></v-select>
-                  </v-col>
-                  <v-col
-                  class="text-left"
-                  cols="10"
-                  offset="1"
-                  v-else-if="instanceconfig.title"
-                  >
-                  <icon
-                      left
-                      dark
-                      name="univie-right"
-                      color="#a4a4a4"
-                      width="14px"
-                      height="14px"
-                      class="mb-1"
-                  ></icon>
-                  <nuxt-link
-                      class="subheading primary--text mx-3"
-                      :to="localePath('/')"
-                      >{{ instanceconfig.title }}</nuxt-link
-                  >
-                  </v-col>
-              </v-row>
-  
-              <v-row>
-                  <v-toolbar flat color="white" dense>
-                    <client-only>
-                      <v-app-bar-nav-icon class="hidden-md-and-up">
-                      <v-menu offset-y>
+            <v-row justify="start" justify-md="end" class="pl-3">
+                <icon
+                v-if="signedin"
+                class="personicon mr-2 mt-1 univie-grey"
+                name="material-social-person"
+                width="24px"
+                height="24px"
+                ></icon>
+                <span
+                v-if="signedin"
+                class="mr-2 mt-2 subheading displayname univie-grey"
+                >{{ user.firstname }} {{ user.lastname }}</span
+                >
+
+                <v-menu offset-y>
+                <template v-slot:activator="{ on }">
+                    <v-btn text v-on="on" class="top-margin-lang">
+                    <span class="grey--text text--darken-1">{{
+                        localeLabel
+                    }}</span>
+                    <icon
+                        name="univie-sprache"
+                        class="lang-icon grey--text text--darken-1"
+                    ></icon>
+                    </v-btn>
+                </template>
+                <v-list>
+                    <v-list-item
+                    v-if="useLocale('eng')"
+                    @click="changeLocale('eng')"
+                    >
+                    <v-list-item-title>English</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item
+                    v-if="useLocale('deu')"
+                    @click="changeLocale('deu')"
+                    >
+                    <v-list-item-title>Deutsch</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+                </v-menu>
+            </v-row>
+
+            <v-row>
+                <v-col
+                v-if="appconfig.showinstanceswitch"
+                cols="4"
+                class="select-instance text-left"
+                >
+                <v-select
+                    :items="instances"
+                    @input="switchInstance"
+                    :value="instanceconfig.baseurl"
+                    item-text="baseurl"
+                    single-line
+                ></v-select>
+                </v-col>
+                <v-col
+                class="text-left"
+                cols="10"
+                offset="1"
+                v-else-if="instanceconfig.title"
+                >
+                <icon
+                    left
+                    dark
+                    name="univie-right"
+                    color="#a4a4a4"
+                    width="14px"
+                    height="14px"
+                    class="mb-1"
+                ></icon>
+                <nuxt-link
+                    class="subheading primary--text mx-3"
+                    :to="localePath('/')"
+                    >{{ instanceconfig.title }}</nuxt-link
+                >
+                </v-col>
+            </v-row>
+
+            <v-row>
+                <v-toolbar flat color="white" dense>
+                  <client-only>
+                      
+                        <v-menu offset-y>
                           <template v-slot:activator="{ on }">
-                          <v-btn text icon color="grey lighten-1" v-on="on"
-                              ><icon
-                              name="material-navigation-menu"
-                              width="24px"
-                              height="24px"
-                              ></icon
-                          ></v-btn>
+                          <v-btn class="ml-4 hidden-md-and-up" icon color="primary" v-on="on"><v-icon>mdi-menu</v-icon></v-btn>
                           </template>
                           <v-list>
                           <v-list-item
@@ -457,87 +451,87 @@
                           >
                           </v-list>
                       </v-menu>
-                      </v-app-bar-nav-icon>
+                      
                   </client-only>
                   <v-spacer></v-spacer>
-         
-                    <v-toolbar-items class="hidden-sm-and-down no-height-inherit">
-
-                        <nuxt-link
-                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                            :to="localePath(`/search?reset=1`)"
-                            >{{ $t("Search") }}</nuxt-link
-                        >
-
-
-                        <nuxt-link
-                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                            v-show="signedin"
-                            :to="localePath('/submit')"
-                            >{{ $t("Upload") }}</nuxt-link
-                        >
-
-
-                        <nuxt-link
-                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                            v-show="signedin"
-                            :to="
-                            localePath({
-                                path: '/search',
-                                query: { reset: 1, owner: user.username },
-                            })
-                            "
-                            >{{ $t("My objects") }}</nuxt-link
-                        >
-
-
-                        <nuxt-link
-                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                            v-show="signedin"
-                            :to="localePath('/lists')"
-                            >{{ $t("Object lists") }}</nuxt-link
-                        >
-
-
-                        <nuxt-link
-                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                            v-show="signedin"
-                            :to="localePath('/groups')"
-                            >{{ $t("Groups") }}</nuxt-link
-                        >
-
-
-                        <nuxt-link
-                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                            :to="localePath('/help')"
-                            >{{ $t("Help") }}</nuxt-link
-                        >
-
-
-                        <a
-                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                            v-show="!signedin && appconfig.enablelogin"
-                            :href="localePath('/login')"
-                            >{{ $t("Login") }}</a
-                        >
-
-
-                        <nuxt-link
-                            v-show="user.isadmin"
-                            :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                            :to="localePath('/admin')"
-                            >{{ $t("Admin") }}</nuxt-link
-                        >
-
-                        <a
-                            class="flat dark ph-button grey"
-                            v-show="signedin"
-                            @click="logout"
-                            >{{ $t("Logout") }}</a
-                        >
-
-                    </v-toolbar-items>
-                  </v-toolbar>
+                  <v-toolbar-items class="hidden-sm-and-down no-height-inherit">
+                    <v-hover v-slot:default="{ hover }">
+                    <nuxt-link
+                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                        :to="localePath(`/search?reset=1`)"
+                        >{{ $t("Search") }}</nuxt-link
+                    >
+                    </v-hover>
+                    <v-hover v-slot:default="{ hover }">
+                    <nuxt-link
+                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                        v-show="signedin"
+                        :to="localePath('/submit')"
+                        >{{ $t("Upload") }}</nuxt-link
+                    >
+                    </v-hover>
+                    <v-hover v-slot:default="{ hover }">
+                    <nuxt-link
+                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                        v-show="signedin"
+                        :to="
+                        localePath({
+                            path: '/search',
+                            query: { reset: 1, owner: user.username },
+                        })
+                        "
+                        >{{ $t("My objects") }}</nuxt-link
+                    >
+                    </v-hover>
+                    <v-hover v-slot:default="{ hover }">
+                    <nuxt-link
+                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                        v-show="signedin"
+                        :to="localePath('/lists')"
+                        >{{ $t("Object lists") }}</nuxt-link
+                    >
+                    </v-hover>
+                    <v-hover v-slot:default="{ hover }">
+                    <nuxt-link
+                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                        v-show="signedin"
+                        :to="localePath('/groups')"
+                        >{{ $t("Groups") }}</nuxt-link
+                    >
+                    </v-hover>
+                    <v-hover v-slot:default="{ hover }">
+                    <nuxt-link
+                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                        :to="localePath('/help')"
+                        >{{ $t("Help") }}</nuxt-link
+                    >
+                    </v-hover>
+                    <v-hover v-slot:default="{ hover }">
+                    <a
+                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                        v-show="!signedin && appconfig.enablelogin"
+                        :href="localePath('/login')"
+                        >{{ $t("Login") }}</a
+                    >
+                    </v-hover>
+                    <v-hover v-slot:default="{ hover }">
+                    <nuxt-link
+                        v-show="user.isadmin"
+                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                        :to="localePath('/admin')"
+                        >{{ $t("Admin") }}</nuxt-link
+                    >
+                    </v-hover>
+                    <v-hover>
+                    <a
+                        class="flat dark ph-button grey"
+                        v-show="signedin"
+                        @click="logout"
+                        >{{ $t("Logout") }}</a
+                    >
+                    </v-hover>
+                </v-toolbar-items>
+                </v-toolbar>
               </v-row>
               </v-col>
           </v-row>
@@ -557,12 +551,6 @@
       localeLabel: function () {
         return this.$i18n.locale;
       }
-    },
-    data() {
-      return {
-        quicklinksenabled: 0,
-        isHovering: false
-      };
     },
     methods: {
       logout: function () {
@@ -626,54 +614,4 @@
       }
     }
   };
-  </script>
-
-
-<style scoped>
-.toolbar__items a {
-  color: white !important;
-  box-sizing: border-box;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  outline: 0;
-  border: 0;
-  border-radius: 0px;
-  display: inline-block;
-  -ms-flex-align: center;
-  align-items: center;
-  padding: 0 6px;
-  margin: 6px 1px 6px 0px;
-  height: 30px;
-  line-height: 30px;
-  min-height: 30px;
-  white-space: nowrap;
-  min-width: 88px;
-  text-align: center;
-  font-weight: 300;
-  font-size: 14px;
-  font-style: inherit;
-  font-variant: inherit;
-  font-family: inherit;
-  text-decoration: none;
-  cursor: pointer;
-  overflow: hidden;
-  letter-spacing: 0.01em;
-  font-weight: 400;
-}
-
-
-.toolbar__items a:hover {
-  background-color: #267ab3;
-  text-decoration: none;
-  color: white;
-  font-weight: 400;
-}
-
-</style>
-
-
-
-  
+  </script>  

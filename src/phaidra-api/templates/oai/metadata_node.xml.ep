@@ -1,6 +1,6 @@
 <<%= $n->{name} %><% if ($n->{attributes}) { for my $a (@{$n->{attributes}}) { %> <%= $a->{name} %>="<%= $a->{value} %>"<% } } %>><% if ($n->{value}) { %><%= $n->{value} %><% } %><% if ($n->{children}) { %>
   <% for my $ch (@{$n->{children}}) { %>
-%= include 'oai/oai_openaire_node', n => $ch
+%= include 'oai/metadata_node', n => $ch
   <% } %>
 <% } %></<%= $n->{name} %>>
 

@@ -16,6 +16,7 @@
 			<xs:element ref="spl" />
 			<xs:element ref="kennzahl" />
 			<xs:element ref="perfunk" />
+			<xs:element ref="edupersonaffiliation" />
 		</xs:choice>
 	</xs:sequence>
 	</xs:complexType>
@@ -87,6 +88,16 @@
 </xs:element>
 
 <xs:element name="perfunk">
+        <xs:complexType>
+        <xs:simpleContent>
+                <xs:extension base="xs:string">
+                        <xs:attribute name="expires" type="xs:dateTime" />
+                </xs:extension>
+        </xs:simpleContent>
+        </xs:complexType>
+</xs:element>
+
+<xs:element name="edupersonaffiliation">
         <xs:complexType>
         <xs:simpleContent>
                 <xs:extension base="xs:string">

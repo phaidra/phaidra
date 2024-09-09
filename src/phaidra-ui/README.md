@@ -29,7 +29,7 @@ export default {
     title: 'phaidra-ui',
     showinstanceswitch: 0,
     enablelogin: 1,
-    enabledelete: 1,
+    showdeletebutton: 1,
     suggesters: {
       gnd: 'https://ws.gbv.de/suggest/gnd/',
       geonames: 'https://ws.gbv.de/suggest/geonames/'

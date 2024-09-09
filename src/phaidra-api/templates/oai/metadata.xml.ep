@@ -1,0 +1,3 @@
+<% for my $n (@{$metadata}) { %>
+%= include 'oai/metadata_node', n => $n
+<% } %>

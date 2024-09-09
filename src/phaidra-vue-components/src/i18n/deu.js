@@ -817,6 +817,10 @@ export default {
   'schema:duration': 'Dauer',
   'vra:diameter': 'Durchmesser',
   'schema:genre': 'Genre',
+  'schema:accessMode': 'Barrierefreiheit: Betriebsart',
+  'schema:accessibilityControl': 'Barrierefreiheit: Steuerung',
+  'schema:accessibilityHazard': 'Barrierefreiheit: Störung',
+  'schema:accessibilityFeature': 'Barrierefreiheit: Merkmal',
   'bf:scale': 'Maßstab',
   'dcterms:temporal': 'Zeitliche Abdeckung',
   'vra:hasTechnique': 'Technik',
@@ -978,5 +982,14 @@ export default {
   'Configure': 'Konfigurieren',
   'Some required fields are not complete': 'Manche Pflichtfelder sind nicht vollständig',
   'OER_ACCESSIBILITY_CHECK_LABEL': 'Grundsätze der {0} beachtet',
-  'OER_ACCESSIBILITY_CHECK_LINK_LABEL': 'Barrierearmut'
+  'OER_ACCESSIBILITY_CHECK_LINK_LABEL': 'Barrierearmut',
+  'Quick select': 'Schnellauswahl',
+  'Bibliography': 'Bibliographie',
+  'Date (text/concept)': 'Datum (Text/Konzept)',
+  'Code / Identifier': 'Kod / Identifikator',
+  Accessibility: 'Barrierefreiheit',
+  'Access mode': 'Barrierefreiheit: Betriebsart',
+  'Accessibility control': 'Barrierefreiheit: Steuerung',
+  'Accessibility hazard': 'Barrierefreiheit: Störung',
+  'Accessibility feature': 'Barrierefreiheit: Merkmal'
 }

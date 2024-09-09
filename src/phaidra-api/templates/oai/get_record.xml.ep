@@ -8,7 +8,13 @@
 %= include 'oai/oai_dc'
 <% } %>
 <% if ($metadataPrefix eq 'oai_openaire') { %>
-%= include 'oai/oai_openaire'
+%= include 'oai/metadata'
+<% } %>
+<% if ($metadataPrefix eq 'edm') { %>
+%= include 'oai/metadata'
+<% } %>
+<% if ($metadataPrefix eq 'lom') { %>
+%= include 'oai/metadata'
 <% } %>
     </metadata>
 <% } %>

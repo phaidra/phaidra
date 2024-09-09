@@ -448,6 +448,9 @@ sub startup {
 
   $r->get('utils/get_all_pids')                     ->to('utils#get_all_pids');
 
+  $r->get('geonames/search')                        ->to('utils#geonames_search');
+  $r->get('gnd/search')                             ->to('utils#gnd_search');
+
   $r->get('vocabulary')                             ->to('vocabulary#get_vocabulary');
 
   $r->get('terms/label')                   		      ->to('terms#label');
@@ -488,6 +491,9 @@ sub startup {
   $r->get('object/:pid/index/relationships')        ->to('index#get_relationships');
   $r->get('object/:pid/index/members')              ->to('index#get_object_members');
   $r->get('object/:pid/datacite')                   ->to('datacite#get');
+  $r->get('object/:pid/lom')                        ->to('mappings#get', schema => 'lom');
+  $r->get('object/:pid/edm')                        ->to('mappings#get', schema => 'edm');
+  $r->get('object/:pid/openaire')                   ->to('mappings#get', schema => 'openaire');
   $r->get('object/:pid/state')                      ->to('object#get_state');
   $r->get('object/:pid/cmodel')                     ->to('object#get_cmodel');
   $r->get('object/:pid/relationships')              ->to('relationships#get');
@@ -523,7 +529,7 @@ sub startup {
 
   $r->get('list/token/:token')                      ->to('lists#get_token_list');
 
-  $r->get('app_settings')                           ->to('settings#get_app_settings');
+  $r->get('config/public')                          ->to('config#get_public_config');
 
   if ($self->app->config->{fedora}->{version} >= 6) {
     my $ext_creds = $r->under('/')->to('authentication#extract_credentials', creds_must_be_present => 0);
@@ -555,8 +561,8 @@ sub startup {
 
     $loggedin->get('authz/check/:pid/:op')                                   ->to('authorization#check_rights');
 
-    $reader->get('streaming/:pid')                                           ->to('utils#streamingplayer');
-    $reader->get('streaming/:pid/key')                                       ->to('utils#streamingplayer_key');
+    $reader->get('streaming/:pid')                                           ->to('object#preview');
+    $reader->get('streaming/:pid/key')                                       ->to('streaming#key');
 
     $reader->get('imageserver')                                              ->to('imageserver#imageserverproxy');
     $reader->get('imageserver/:pid/status')                                  ->to('imageserver#status');
@@ -573,6 +579,8 @@ sub startup {
     $reader->get('object/:pid/get')                                          ->to('octets#get', operation => 'get');
     $reader->get('object/:pid/comp/:ds')                                     ->to('object#get_legacy_container_member');
     $reader->get('object/:pid/datastream/:dsid')                             ->to('object#get_public_datastream');
+    $reader->get('object/:pid/resourcelink/get')                             ->to('object#resourcelink', operation => 'get');
+    $reader->get('object/:pid/resourcelink/redirect')                        ->to('object#resourcelink', operation => 'redirect');
 
     $writer->get('object/:pid/jsonldprivate')                                ->to('jsonldprivate#get');
     $writer->get('object/:pid/rights')                                       ->to('rights#get');
@@ -585,9 +593,12 @@ sub startup {
     $ir_admin->get('ir/puresearch')                                          ->to('ir#puresearch');
     $ir_admin->get('ir/pureimport/locks')                                    ->to('ir#pureimport_getlocks');
 
+    $admin->get('config/private')                                            ->to('config#get_private_config');
+
     unless($self->app->config->{readonly}){
 
-      $admin->post('app_settings')                                           ->to('settings#post_app_settings');
+      $admin->post('config/public')                                          ->to('config#post_public_config');
+      $admin->post('config/private')                                         ->to('config#post_private_config');
 
       $admin->post('index')                                                  ->to('index#update');
       $admin->post('dc')                                                     ->to('dc#update');
@@ -597,6 +608,8 @@ sub startup {
 
       $admin->post('imageserver/process')                                    ->to('imageserver#process_pids');
       $writer->post('imageserver/:pid/process')                              ->to('imageserver#process');
+      $admin->post('streaming/process')                                      ->to('streaming#process_pids');
+      $admin->post('streaming/:pid/process')                                 ->to('streaming#process');
 
       $writer->post('object/:pid/updateiiifmanifest')                        ->to('iiifmanifest#update_manifest_metadata');
       $writer->post('object/:pid/modify')                                    ->to('object#modify');
@@ -616,6 +629,9 @@ sub startup {
       $writer->post('object/:pid/id/remove')                                 ->to('object#add_or_remove_identifier', operation => 'remove');
       $writer->post('object/:pid/datastream/:dsid')                          ->to('object#add_or_modify_datastream');
       $writer->post('object/:pid/data')                                      ->to('object#add_octets');
+
+      $admin->post('objects/:currentowner/modify')                           ->to('object#modify_bulk');
+      $admin->post('objects/:currentowner/delete')                           ->to('object#delete_bulk');
 
       $loggedin->post('picture/create')                                      ->to('object#create_simple', cmodel => 'cmodel:Picture');
       $loggedin->post('document/create')                                     ->to('object#create_simple', cmodel => 'cmodel:PDFDocument');
@@ -668,6 +684,8 @@ sub startup {
       $loggedin->post('termsofuse/agree/:version')                           ->to('termsofuse#agree');
 
       $loggedin->post('settings')                                            ->to('settings#post_settings');
+
+      $loggedin->post('utils/:pid/requestdoi')                               ->to('utils#request_doi');
     }
   } else {
 
@@ -698,8 +716,8 @@ sub startup {
 
     $proxyauth_optional->get('authz/check/:pid/:op')                            ->to('authorization#check_rights');
 
-    $proxyauth_optional->get('streaming/:pid')                                  ->to('utils#streamingplayer');
-    $proxyauth_optional->get('streaming/:pid/key')                              ->to('utils#streamingplayer_key');
+    $proxyauth_optional->get('streaming/:pid')                                  ->to('object#preview');
+    $proxyauth_optional->get('streaming/:pid/key')                              ->to('streaming#key');
 
     $proxyauth_optional->get('imageserver')                                     ->to('imageserver#imageserverproxy');
 
@@ -714,6 +732,8 @@ sub startup {
     $proxyauth_optional->get('object/:pid/download')                            ->to('octets#get', operation => 'download');
     $proxyauth_optional->get('object/:pid/get')                                 ->to('octets#get', operation => 'get');
     $proxyauth_optional->get('object/:pid/comp/:ds')                            ->to('object#get_legacy_container_member');
+    $proxyauth_optional->get('object/:pid/resourcelink/get')                    ->to('object#resourcelink', operation => 'get');
+    $proxyauth_optional->get('object/:pid/resourcelink/redirect')               ->to('object#resourcelink', operation => 'redirect');
 
     $proxyauth_optional->get('imageserver/:pid/status')                         ->to('imageserver#status');
 
@@ -731,9 +751,12 @@ sub startup {
 
     $admin->get('test/error')                                                   ->to('utils#testerror');
 
+    $admin->get('config/private')                                               ->to('config#get_private_config');
+
     unless($self->app->config->{readonly}){
 
-      $admin->post('app_settings')                                              ->to('settings#post_app_settings');
+      $admin->post('config/public')                                             ->to('config#post_public_config');
+      $admin->post('config/private')                                            ->to('config#post_private_config');
 
       $admin->post('index')                                                     ->to('index#update');
       $admin->post('dc')                                                        ->to('dc#update');
@@ -748,6 +771,9 @@ sub startup {
       $admin->post('imageserver/process')                                       ->to('imageserver#process_pids');
 
       $proxyauth->post('imageserver/:pid/process')                              ->to('imageserver#process');
+
+      $admin->post('streaming/process')                                         ->to('streaming#process_pids');
+      $proxyauth->post('streaming/:pid/process')                                ->to('streaming#process');
 
       $proxyauth->post('object/:pid/updateiiifmanifest')                        ->to('iiifmanifest#update_manifest_metadata');
       $proxyauth->post('object/:pid/modify')                                    ->to('object#modify');
@@ -769,6 +795,9 @@ sub startup {
       $proxyauth->post('object/:pid/id/remove')                                 ->to('object#add_or_remove_identifier', operation => 'remove');
       $proxyauth->post('object/:pid/datastream/:dsid')                          ->to('object#add_or_modify_datastream');
       $proxyauth->post('object/:pid/data')                                      ->to('object#add_octets');
+
+      $admin->post('objects/:currentowner/modify')                              ->to('object#modify_bulk');
+      $admin->post('objects/:currentowner/delete')                              ->to('object#delete_bulk');
 
       $proxyauth->post('picture/create')                                        ->to('object#create_simple', cmodel => 'cmodel:Picture');
       $proxyauth->post('document/create')                                       ->to('object#create_simple', cmodel => 'cmodel:PDFDocument');
@@ -816,6 +845,8 @@ sub startup {
       $check_auth->post('feedback')                                             ->to('feedback#feedback');
 
       $check_auth->post('termsofuse/agree/:version')                            ->to('termsofuse#agree');
+
+      $check_auth->post('utils/:pid/requestdoi')                                ->to('utils#request_doi');
     }
   }
   #>>>

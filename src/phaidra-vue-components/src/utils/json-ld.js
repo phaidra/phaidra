@@ -1,7 +1,8 @@
 import fields from './fields'
+import vocabularystore from '../store/modules/vocabulary'
 
 export default {
-  json2components: function (jsonld, options) {
+  json2components: function (jsonld, options, vocabularies) {
     var components = []
 
     // all dce:subjects in the same language are handled by 1 component
@@ -64,6 +65,38 @@ export default {
             // schema:genre
             case 'schema:genre':
               f = fields.getField('genre')
+              for (let em of obj['skos:exactMatch']) {
+                f.value = em
+              }
+              components.push(f)
+              break
+
+            case 'schema:accessMode':
+              f = fields.getField('access-mode')
+              for (let em of obj['skos:exactMatch']) {
+                f.value = em
+              }
+              components.push(f)
+              break
+
+            case 'schema:accessibilityFeature':
+              f = fields.getField('accessibility-feature')
+              for (let em of obj['skos:exactMatch']) {
+                f.value = em
+              }
+              components.push(f)
+              break
+
+            case 'schema:accessibilityControl':
+              f = fields.getField('accessibility-control')
+              for (let em of obj['skos:exactMatch']) {
+                f.value = em
+              }
+              components.push(f)
+              break
+
+            case 'schema:accessibilityHazard':
+              f = fields.getField('accessibility-hazard')
               for (let em of obj['skos:exactMatch']) {
                 f.value = em
               }
@@ -197,6 +230,7 @@ export default {
                   }
                 }
                 f.predicate = key
+                f.dividertop = true
                 components.push(f)
                 if (obj['skos:exactMatch']) {
                   for (let v of obj['skos:exactMatch']) {
@@ -204,30 +238,35 @@ export default {
                     if (v.startsWith('oefos2012')) {
                       f.label = 'Subject (ÖFOS)'
                       newField = fields.getField('oefos-subject')
+                      newField.dividerbottom = true
                       newField.label = 'Subject (ÖFOS)'
                       components.push(newField)
                     }
                     if (v.startsWith('thema')) {
                       f.label = 'Subject (Thema)'
                       newField = fields.getField('thema-subject')
+                      newField.dividerbottom = true
                       newField.label = 'Subject (Thema)'
                       components.push(newField)
                     }
                     if (v.startsWith('bic')) {
                       f.label = 'Subject (BIC)'
                       newField = fields.getField('bic-subject')
+                      newField.dividerbottom = true
                       newField.label = 'Subject (BIC)'
                       components.push(newField)
                     }
-                    if (v.startsWith('http://d-nb.info/gnd')) {
+                    if (v.startsWith('http://d-nb.info/gnd') || v.startsWith('https://d-nb.info/gnd')) {
                       f.label = 'Subject (GND)'
                       newField = fields.getField('gnd-subject')
+                      newField.dividerbottom = true
                       newField.label = 'Subject (GND)'
                       components.push(newField)
                     }
-                    if (v.startsWith('http://uri.gbv.de/terminology/bk')) {
+                    if (v.startsWith('http://uri.gbv.de/terminology/bk') || v.startsWith('https://uri.gbv.de/terminology/bk')) {
                       f.label = 'Basisklassifikation'
                       newField = fields.getField('bk-subject')
+                      newField.dividerbottom = true
                       newField.label = 'Basisklassifikation'
                       components.push(newField)
                     }
@@ -764,8 +803,13 @@ export default {
                   }
                 }
                 if (obj['skos:exactMatch']) {
-                  for (let em of obj['skos:exactMatch']) {
-                    f.identifier = em
+                  for (let v of obj['skos:exactMatch']) {
+                    if (v['@value']) {
+                      obj.identifierType = v['@type']
+                      obj.identifier = v['@value']
+                    } else {
+                      obj.identifier = v
+                    }
                   }
                 }
                 components.push(f)
@@ -793,9 +837,19 @@ export default {
                     f.descriptionLanguage = c['@language'] ? c['@language'] : 'eng'
                   }
                 }
+                if (obj['frapo:hasProjectIdentifier']) {
+                  for (let v of obj['frapo:hasProjectIdentifier']) {
+                    f.code = v
+                  }
+                }
                 if (obj['skos:exactMatch']) {
                   for (let v of obj['skos:exactMatch']) {
-                    f.identifier = v
+                    if (v['@value']) {
+                      f.identifierType = v['@type']
+                      f.identifier = v['@value']
+                    } else {
+                      f.identifier = v
+                    }
                   }
                 }
                 if (obj['foaf:homepage']) {
@@ -822,8 +876,13 @@ export default {
                       }
                     }
                     if (funder['skos:exactMatch']) {
-                      for (let em of funder['skos:exactMatch']) {
-                        f.funderIdentifier = em
+                      for (let v of funder['skos:exactMatch']) {
+                        if (v['@value']) {
+                          f.funderIdentifierType = v['@type']
+                          f.funderIdentifier = v['@value']
+                        } else {
+                          f.funderIdentifier = v
+                        }
                       }
                     }
                   }
@@ -831,24 +890,55 @@ export default {
                 components.push(f)
               } else {
                 if (obj['@type'] === 'aaiso:Programme') {
-                  f = fields.getField('study-plan')
-                  if (obj['skos:prefLabel']) {
-                    for (let pl of obj['skos:prefLabel']) {
-                      f.name = pl['@value']
-                      f.nameLanguage = pl['@language'] ? pl['@language'] : 'eng'
-                    }
-                  }
-                  if (obj['skos:notation']) {
-                    for (let n of obj['skos:notation']) {
-                      f.notation = n
-                    }
-                  }
+                  let isSelect = false
+                  let id = ''
                   if (obj['skos:exactMatch']) {
-                    for (let n of obj['skos:exactMatch']) {
-                      f.identifier = n
+                    for (let em of obj['skos:exactMatch']) {
+                      id = em
+                      // preffer vocabulary passed via param, since when this runs in UI
+                      // the vocabularies might habe been updated dynamically from config
+                      if (!vocabularies) {
+                        // if not passed, use the static one imported from vocabulary store js file
+                        vocabularies = vocabularystore.state.vocabularies
+                      }
+                      if (vocabularies) {
+                        // if the identifier comes from a $store vocabulary, create selectbox
+                        Object.entries(vocabularies).forEach(([vocId, vocab]) => {
+                          if (vocId === 'studyplans') {
+                            for (let term of vocab.terms) {
+                              if (em === term['@id']) {
+                                isSelect = true
+                              }
+                            }
+                          }
+                        })
+                      }
                     }
                   }
-                  components.push(f)
+                  if (isSelect) {
+                    f = fields.getField('study-plan-select')
+                    f.value = id
+                    components.push(f)
+                  } else {
+                    f = fields.getField('study-plan')
+                    if (obj['skos:prefLabel']) {
+                      for (let pl of obj['skos:prefLabel']) {
+                        f.name = pl['@value']
+                        f.nameLanguage = pl['@language'] ? pl['@language'] : 'eng'
+                      }
+                    }
+                    if (obj['skos:notation']) {
+                      for (let n of obj['skos:notation']) {
+                        f.notation = n
+                      }
+                    }
+                    if (obj['skos:exactMatch']) {
+                      for (let n of obj['skos:exactMatch']) {
+                        f.identifier = n
+                      }
+                    }
+                    components.push(f)
+                  }
                 }
               }
               break
@@ -1197,11 +1287,24 @@ export default {
             case 'dcterms:dateSubmitted':
             case 'rdau:P60071':
             case 'phaidra:dateAccessioned':
-              // only edtf now (later time can be edm:TimeSpan)
               if (typeof obj === 'string') {
                 f = fields.getField('date-edtf')
                 f.type = key
                 f.value = obj
+                components.push(f)
+              } else {
+                f = fields.getField('date-edmtimespan')
+                f.type = key
+                for (let pl of obj['skos:prefLabel']) {
+                  f.value = pl['@value']
+                  f.language = pl['@language'] ? pl['@language'] : ''
+                }
+                if (obj['skos:exactMatch']) {
+                  for (let id of obj['skos:exactMatch']) {
+                    f.identifierType = id['@type']
+                    f.identifier = id['@value']
+                  }
+                }
                 components.push(f)
               }
               break
@@ -1376,21 +1479,21 @@ export default {
     }
     return ordered
   },
-  json2form: function (jsonld, options) {
+  json2form: function (jsonld, options, vocabularies) {
     var levels = {
       digital: {
         components: []
       }
     }
 
-    levels.digital.components = this.json2components(jsonld, options)
+    levels.digital.components = this.json2components(jsonld, options, vocabularies)
 
     Object.entries(jsonld).forEach(([key, value]) => {
       if (key === 'dcterms:subject') {
         levels['subject'] = []
         for (let v of value) {
           if (v['@type'] === 'phaidra:Subject') {
-            var subcomp = this.json2components(v, options)
+            var subcomp = this.json2components(v, options, vocabularies)
             if (subcomp.length > 0) {
               levels.subject.push({ components: subcomp })
             }
@@ -1739,7 +1842,7 @@ export default {
     }
     return h
   },
-  get_json_project (name, acronym, nameLanguage, description, descriptionLanguage, identifiers, homepage, dateFrom, dateTo, funderObject) {
+  get_json_project (name, acronym, nameLanguage, description, descriptionLanguage, code, identifier, identifierType, homepage, dateFrom, dateTo, funderObject) {
     var h = {
       '@type': 'foaf:Project'
     }
@@ -1763,9 +1866,14 @@ export default {
         h['rdfs:comment'][0]['@language'] = descriptionLanguage
       }
     }
-    if (identifiers) {
-      if (identifiers.length > 0) {
-        h['skos:exactMatch'] = identifiers
+    if (code) {
+      h['frapo:hasProjectIdentifier'] = [ code ]
+    }
+    if (identifier) {
+      if (identifierType) {
+        h['skos:exactMatch'] = [ { '@type': identifierType, '@value': identifier } ]
+      } else {
+        h['skos:exactMatch'] = [ identifier ]
       }
     }
     if (dateFrom) {
@@ -2128,7 +2236,7 @@ export default {
     }
     return h
   },
-  get_json_funder (name, nameLanguage, identifiers) {
+  get_json_funder (name, nameLanguage, identifier, identifierType) {
     var h = {
       '@type': 'frapo:FundingAgency'
     }
@@ -2142,9 +2250,11 @@ export default {
         h['skos:prefLabel'][0]['@language'] = nameLanguage
       }
     }
-    if (identifiers) {
-      if (identifiers.length > 0) {
-        h['skos:exactMatch'] = identifiers
+    if (identifier) {
+      if (identifierType) {
+        h['skos:exactMatch'] = [ { '@type': identifierType, '@value': identifier } ]
+      } else {
+        h['skos:exactMatch'] = [ identifier ]
       }
     }
     return h
@@ -2165,6 +2275,29 @@ export default {
     }
     if (url) {
       h['schema:url'] = [ url ]
+    }
+    return h
+  },
+  get_json_edm_timespan (value, type, language, identifier, identifierType) {
+    var h = {
+      '@type': 'edm:TimeSpan'
+    }
+    if (value) {
+      h['skos:prefLabel'] = [
+        {
+          '@value': value
+        }
+      ]
+      if (language) {
+        h['skos:prefLabel'][0]['@language'] = language
+      }
+    }
+    if (identifier) {
+      if (identifierType) {
+        h['skos:exactMatch'] = [ { '@type': identifierType, '@value': identifier } ]
+      } else {
+        h['skos:exactMatch'] = [ identifier ]
+      }
     }
     return h
   },
@@ -2325,11 +2458,9 @@ export default {
           break
 
         case 'edm:hasType':
-          if (f.hasOwnProperty('selectedTerms')) {
-            if (Array.isArray(f.selectedTerms)) {
-              for (let t of f.selectedTerms) {
-                this.push_object(jsonld, f.predicate, this.get_json_object(t['skos:prefLabel'], null, 'skos:Concept', [t.value]))
-              }
+          if (f.hasOwnProperty('selectedTerms') && Array.isArray(f.selectedTerms) && (f.selectedTerms.length > 0)) {
+            for (let t of f.selectedTerms) {
+              this.push_object(jsonld, f.predicate, this.get_json_object(t['skos:prefLabel'], null, 'skos:Concept', [t.value]))
             }
           } else {
             this.push_object(jsonld, f.predicate, this.get_json_object(f['skos:prefLabel'], null, 'skos:Concept', [f.value]))
@@ -2338,6 +2469,10 @@ export default {
 
         case 'dcterms:type':
         case 'schema:genre':
+        case 'schema:accessMode':
+        case 'schema:accessibilityFeature':
+        case 'schema:accessibilityControl':
+        case 'schema:accessibilityHazard':
         case 'oaire:version':
         case 'dcterms:accessRights':
         case 'rdau:P60059':
@@ -2459,15 +2594,19 @@ export default {
 
         case 'frapo:isOutputOf':
           if (f.type === 'aaiso:Programme') {
-            // study plan
-            if (f.name || f.notation || f['skos:prefLabel']) {
-              this.push_object(jsonld, f.predicate, this.get_json_study_plan(f.name, f.nameLanguage, f['skos:prefLabel'], [f.notation], [f.identifier]))
+            if (f.component === 'p-select' && f.value) {
+              this.push_object(jsonld, f.predicate, this.get_json_concept(f['skos:prefLabel'], f['rdfs:label'], 'aaiso:Programme', [f.value], f['skos:notation'] ? f['skos:notation'] : null))
+            } else {
+              // study plan
+              if (f.name || f.notation || f['skos:prefLabel']) {
+                this.push_object(jsonld, f.predicate, this.get_json_study_plan(f.name, f.nameLanguage, f['skos:prefLabel'], [f.notation], [f.identifier]))
+              }
             }
           } else {
             // project
             if (f.type === 'foaf:Project') {
-              if (f.name || f.acronym || f.identifier || f.description || f.homepage || f.funderName || f.funderIdentifier) {
-                this.push_object(jsonld, f.predicate, this.get_json_project(f.name, f.acronym, f.nameLanguage, f.description, f.descriptionLanguage, f.identifier ? [f.identifier] : null, f.homepage, f.dateFrom, f.dateTo, this.get_json_funder(f.funderName, f.funderNameLanguage, f.funderIdentifier ? [f.funderIdentifier] : null)))
+              if (f.name || f.acronym || f.code || f.identifier || f.description || f.homepage || f.funderName || f.funderIdentifier) {
+                this.push_object(jsonld, f.predicate, this.get_json_project(f.name, f.acronym, f.nameLanguage, f.description, f.descriptionLanguage, f.code, f.identifier, f.identifierType, f.homepage, f.dateFrom, f.dateTo, this.get_json_funder(f.funderName, f.funderNameLanguage, f.funderIdentifier, f.funderIdentifierType)))
               }
             }
           }
@@ -2475,7 +2614,7 @@ export default {
 
         case 'frapo:hasFundingAgency':
           if (f.name || f.identifier) {
-            this.push_object(jsonld, f.predicate, this.get_json_funder(f.name, f.nameLanguage, f.identifier ? [f.identifier] : null))
+            this.push_object(jsonld, f.predicate, this.get_json_funder(f.name, f.nameLanguage, f.identifier, f.identifierType))
           }
           break
 
@@ -2565,8 +2704,12 @@ export default {
         case 'dcterms:dateCopyrighted':
         case 'dcterms:dateSubmitted':
         case 'phaidra:dateAccessioned':
-          if (f.value) {
-            this.push_literal(jsonld, f.type, f.value)
+          if (f.component === 'p-date-edmtimespan' && (f.value || f.identifier)) {
+            this.push_object(jsonld, f.type, this.get_json_edm_timespan(f.value, f.type, f.language, f.identifier, f.identifierType))
+          } else {
+            if (f.value) {
+              this.push_literal(jsonld, f.type, f.value)
+            }
           }
           break
 

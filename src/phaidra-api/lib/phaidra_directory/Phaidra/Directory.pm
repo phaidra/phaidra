@@ -29,6 +29,7 @@ sub update_info_data {
 }
 
 sub authenticate($$$$) {
+  my $self = shift;
   my $app       = shift;
   my $username  = shift;
   my $password  = shift;

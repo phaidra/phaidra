@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-container fluid v-if="!loading">
-      <v-row no-gutters>
+    <v-container class="px-4" fluid v-if="!loading">
+      <v-row>
         <v-col>
           <ExtHeader></ExtHeader>
           <v-row>
@@ -76,7 +76,8 @@ export default {
   mixins: [config, context],
   data() {
     return {
-      loading: true
+      loading: true,
+      i18n_override: {}
     }
   },
   metaInfo() {
@@ -102,9 +103,13 @@ export default {
     loadInstanceConfigToStore: async function() {
       this.loading = true
       try {
-        let settingResponse = await this.$axios.get("/app_settings");
-        if(settingResponse?.data?.settings?.instanceConfig){
-          this.$store.commit("setInstanceConfig", settingResponse?.data?.settings?.instanceConfig);
+        let settingResponse = await this.$axios.get("/config/public");
+        if(settingResponse?.data?.public_config){
+          this.$store.dispatch("setInstanceConfig", settingResponse?.data?.public_config);
+          this.$store.dispatch("vocabulary/setInstanceConfig", settingResponse?.data?.public_config);
+          if (settingResponse?.data?.public_config?.data_i18n) {
+            this.i18n_override = settingResponse?.data?.public_config?.data_i18n
+          }
         }
         this.$store.commit("setInstanceConfigBaseUrl", this.$config.baseURL);
         this.$store.commit("setInstanceConfigApiBaseUrl", this.$config.apiBaseURL);
@@ -117,7 +122,10 @@ export default {
     }
   },
   mounted() {
-    // this.loadInstanceConfigToStore()
+    Object.entries(this.i18n_override).forEach(([lang, messages]) => {
+        this.$i18n.mergeLocaleMessage(lang, messages)
+      }
+    )
   },
   async fetch() {
     await this.loadInstanceConfigToStore()
@@ -431,5 +439,10 @@ address {
 
 .float-right {
   float: right;
+}
+
+.jsonld-border-left {
+  border-left: 1px solid;
+  border-color: rgba(0, 0, 0, 0.12);
 }
 </style>

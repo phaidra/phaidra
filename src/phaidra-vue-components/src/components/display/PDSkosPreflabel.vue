@@ -6,20 +6,22 @@
       <v-col :md="valueColMd" cols="12" v-if="o['skos:exactMatch']">
         <span v-if="o['skos:exactMatch'][0].startsWith('oefos2012:')">ÖFOS 2012 -- {{ o['skos:notation'][0] }} -- {{ l['@value'] }}</span>
         <span v-else-if="o['skos:exactMatch'][0].startsWith('thema:')">{{ $t('Thema Subject Codes') }} -- {{ o['skos:notation'][0] }} -- {{ l['@value'] }}</span>
+        <span v-else-if="isA11y">{{ getLocalizedTermLabel(a11yVocab, o['skos:exactMatch'][0]) }}</span>
         <a v-else class="valuefield" :href="o['skos:exactMatch'][0]" target="_blank">{{ l['@value'] }}</a>
       </v-col>
-      <v-col class="valuefield" :md="valueColMd" cols="12" v-else ref="desc">{{ l['@value'] }}</v-col>
+      <v-col :md="valueColMd" cols="12" v-else-if="usedMarkdown" class="valuefield" v-html="$md.disable('image').render(l['@value'])"></v-col>
+      <v-col class="valuefield" :md="valueColMd" cols="12" v-else>{{ l['@value'] }}</v-col>
     </v-row>
   </span>
 </template>
 
 <script>
-import Autolinker from 'autolinker'
 import { displayproperties } from '../../mixins/displayproperties'
+import { vocabulary } from '../../mixins/vocabulary'
 
 export default {
   name: 'p-d-skos-preflabel',
-  mixins: [displayproperties],
+  mixins: [displayproperties, vocabulary],
   props: {
     o: {
       type: Object,
@@ -30,6 +32,25 @@ export default {
     }
   },
   computed: {
+    isA11y: function () {
+      return ((this.p === 'schema:accessMode') ||
+        (this.p === 'schema:accessibilityFeature') ||
+        (this.p === 'schema:accessibilityControl') ||
+        (this.p === 'schema:accessibilityHazard')
+      )
+    },
+    a11yVocab: function () {
+      switch (this.p) {
+        case 'schema:accessMode':
+          return 'accessMode'
+        case 'schema:accessibilityFeature':
+          return 'accessibilityFeature'
+        case 'schema:accessibilityControl':
+          return 'accessibilityControl'
+        case 'schema:accessibilityHazard':
+          return 'accessibilityHazard'
+      }
+    },
     displaylang: function () {
       let lang
       let somelang
@@ -40,39 +61,12 @@ export default {
         }
       }
       return lang || somelang
+    },
+    usedMarkdown: function () {
+      return (this.p === 'bf:TableOfContents') ||
+      (this.p === 'bf:note') ||
+      (this.p === 'dcterms:provenance')
     }
-  },
-  methods: {
-    link: function (v) {
-      if (typeof v === 'string') {
-        return Autolinker.link(v, {
-          stripPrefix: false,
-          stripTrailingSlash: false
-        })
-      } else {
-        return v
-      }
-    }
-  },
-  mounted: function () {
-    this.$nextTick(function () {
-      if (this.$refs && this.$refs.desc && this.$refs.desc.length) {
-        this.$refs.desc[0].innerHTML = Autolinker.link(this.$refs.desc[0].innerHTML, {
-          stripPrefix: false,
-          stripTrailingSlash: false
-        })
-      }
-    })
-  },
-  updated: function () {
-    this.$nextTick(function () {
-      if (this.$refs && this.$refs.desc && this.$refs.desc.length) {
-        this.$refs.desc[0].innerHTML = Autolinker.link(this.$refs.desc[0].innerHTML, {
-          stripPrefix: false,
-          stripTrailingSlash: false
-        })
-      }
-    })
   }
 }
 </script>

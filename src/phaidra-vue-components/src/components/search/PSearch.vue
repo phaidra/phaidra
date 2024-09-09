@@ -28,7 +28,7 @@
         <v-row class="hidden-md-and-up">
           <v-bottom-sheet v-model="filterdialog" scrollable>
             <template v-slot:activator="{ on }">
-              <v-btn class="ml-4" color="primary" v-on="on">Filters</v-btn>
+              <v-btn class="ml-4 mb-6" color="primary" v-on="on">Filters</v-btn>
             </template>
             <v-card height="400px">
               <v-card-title class="border-bottom">

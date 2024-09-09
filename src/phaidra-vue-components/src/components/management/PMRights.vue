@@ -44,6 +44,138 @@
         <v-row>
           <v-col cols="12">
             <v-card>
+              <v-card-title class="title font-weight-light grey white--text">{{ $t('Restrict access rights to the owner of the object') }}</v-card-title>
+              <v-divider></v-divider>
+              <v-card-text class="mt-4">
+                <v-container fluid>
+                  <v-row>
+                    <v-col cols="12" v-if="doc" >
+                      <v-btn class="primary" :disabled="loading || userSearchLoading" @click="addOwner()">
+                        <div v-if="doc.owner == $store.state.user.username">{{ $t('Restrict access to me') }} ({{ doc.owner }})</div>
+                        <div v-else>{{ $t('Restrict access to owner') }}</div>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row v-if="showPersons">
+          <v-col cols="12">
+            <v-card>
+              <v-card-title class="title font-weight-light grey white--text">{{ $t('Restrict access rights to particular persons') }}</v-card-title>
+              <v-divider></v-divider>
+              <v-card-text class="mt-4">
+                <v-container fluid>
+                  <v-row>
+                    <v-col cols="8">
+                      <v-autocomplete
+                        v-model="userSearchModel"
+                        :items="userSearchItems.length > 0 ? userSearchItems : []"
+                        :loading="userSearchLoading"
+                        :search-input.sync="userSearch"
+                        :label="$t('User search')"
+                        :placeholder="$t('Start typing to search')"
+                        item-value="uid"
+                        item-text="value"
+                        prepend-icon="mdi-database-search"
+                        hide-no-data
+                        hide-selected
+                        return-object
+                        clearable
+                        @click:clear="userSearchItems=[]"
+                      >
+                        <template slot="item" slot-scope="{ item }">
+                          <template v-if="item">
+                            <v-list-item-content two-line>
+                              <v-list-item-title>{{ item.value }}</v-list-item-title>
+                              <v-list-item-subtitle>{{ item.uid }}</v-list-item-subtitle>
+                            </v-list-item-content>
+                          </template>
+                        </template>
+                      </v-autocomplete>
+                    </v-col>
+                    <v-col cols="1" class="pt-6">
+                      <v-btn class="primary" :disabled="loading || userSearchLoading" @click="addUser()">{{ $t('Apply') }}</v-btn>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row v-if="showAccounts">
+          <v-col cols="12">
+            <v-card>
+              <v-card-title class="title font-weight-light grey white--text">{{ $t('Restrict access rights to particular account') }}</v-card-title>
+              <v-divider></v-divider>
+              <v-card-text class="mt-4">
+                <v-container fluid>
+                  <v-row>
+                    <v-col cols="8">
+                      <v-autocomplete
+                        v-model="userSearchExactModel"
+                        :items="userSearchExactItems.length > 0 ? userSearchExactItems : []"
+                        :loading="userSearchExactLoading"
+                        :search-input.sync="userSearchExact"
+                        :label="$t('Username search')"
+                        :placeholder="$t('Start typing to search')"
+                        item-value="uid"
+                        item-text="uid"
+                        prepend-icon="mdi-database-search"
+                        hide-no-data
+                        hide-selected
+                        return-object
+                        clearable
+                        @click:clear="userSearchExactItems=[]"
+                      >
+                        <template slot="item" slot-scope="{ item }">
+                          <template v-if="item">
+                            <v-list-item-content two-line>
+                              <v-list-item-title>{{ item.uid }}</v-list-item-title>
+                            </v-list-item-content>
+                          </template>
+                        </template>
+                      </v-autocomplete>
+                    </v-col>
+                    <v-col cols="1" class="pt-6">
+                      <v-btn class="primary" :disabled="loading || userSearchExactLoading" @click="addUserExact()">{{ $t('Apply') }}</v-btn>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row v-if="showEduPersonAffiliation">
+          <v-col cols="12">
+            <v-card>
+              <v-card-title class="title font-weight-light grey white--text">{{ $t('Restrict access rights to particular eduPersonAffiliation values') }}</v-card-title>
+              <v-divider></v-divider>
+              <v-card-text class="mt-4">
+                <v-container fluid>
+                  <v-row>
+                    <v-col cols="8">
+                      <v-select
+                        v-model="selectedEduPersonAffiliation"
+                        :items="eduPersonAffiliations"
+                        :label="$t('eduPersonAffiliation')"
+                        filled
+                      ></v-select>
+                    </v-col>
+                    <v-col cols="1" class="pt-6">
+                      <v-btn class="primary" :disabled="loading" @click="addEduPersonAffiliation()">{{ $t('Apply') }}</v-btn>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row v-if="showOrgUnits">
+          <v-col cols="12">
+            <v-card>
               <v-card-title class="title font-weight-light grey white--text">{{ $t('Restrict access rights to organisational units/subunits') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
@@ -89,94 +221,7 @@
             </v-card>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col cols="12">
-            <v-card>
-              <v-card-title class="title font-weight-light grey white--text">{{ $t('Restrict access rights to particular persons') }}</v-card-title>
-              <v-divider></v-divider>
-              <v-card-text class="mt-4">
-                <v-container fluid>
-                  <v-row>
-                    <v-col cols="8">
-                      <v-autocomplete
-                        v-model="userSearchModel"
-                        :items="userSearchItems.length > 0 ? userSearchItems : []"
-                        :loading="userSearchLoading"
-                        :search-input.sync="userSearch"
-                        :label="$t('User search')"
-                        :placeholder="$t('Start typing to search')"
-                        item-value="uid"
-                        item-text="value"
-                        prepend-icon="mdi-database-search"
-                        hide-no-data
-                        hide-selected
-                        return-object
-                        clearable
-                        @click:clear="userSearchItems=[]"
-                      >
-                        <template slot="item" slot-scope="{ item }">
-                          <template v-if="item">
-                            <v-list-item-content two-line>
-                              <v-list-item-title>{{ item.value }}</v-list-item-title>
-                              <v-list-item-subtitle>{{ item.uid }}</v-list-item-subtitle>
-                            </v-list-item-content>
-                          </template>
-                        </template>
-                      </v-autocomplete>
-                    </v-col>
-                    <v-col cols="1" class="pt-6">
-                      <v-btn class="primary" :disabled="loading || userSearchLoading" @click="addUser()">{{ $t('Apply') }}</v-btn>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12">
-            <v-card>
-              <v-card-title class="title font-weight-light grey white--text">{{ $t('Restrict access rights to particular u:account') }}</v-card-title>
-              <v-divider></v-divider>
-              <v-card-text class="mt-4">
-                <v-container fluid>
-                  <v-row>
-                    <v-col cols="8">
-                      <v-autocomplete
-                        v-model="userSearchExactModel"
-                        :items="userSearchExactItems.length > 0 ? userSearchExactItems : []"
-                        :loading="userSearchExactLoading"
-                        :search-input.sync="userSearchExact"
-                        :label="$t('Username search')"
-                        :placeholder="$t('Start typing to search')"
-                        item-value="uid"
-                        item-text="uid"
-                        prepend-icon="mdi-database-search"
-                        hide-no-data
-                        hide-selected
-                        return-object
-                        clearable
-                        @click:clear="userSearchExactItems=[]"
-                      >
-                        <template slot="item" slot-scope="{ item }">
-                          <template v-if="item">
-                            <v-list-item-content two-line>
-                              <v-list-item-title>{{ item.uid }}</v-list-item-title>
-                            </v-list-item-content>
-                          </template>
-                        </template>
-                      </v-autocomplete>
-                    </v-col>
-                    <v-col cols="1" class="pt-6">
-                      <v-btn class="primary" :disabled="loading || userSearchExactLoading" @click="addUserExact()">{{ $t('Apply') }}</v-btn>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-        <v-row v-if="enableGroups">
+        <v-row v-if="showGroups">
           <v-col cols="12">
             <v-card>
               <v-card-title class="title font-weight-light grey white--text">{{ $t('Restrict access rights to particular groups') }}</v-card-title>
@@ -225,6 +270,7 @@
 </template>
 
 <script>
+import qs from 'qs'
 import arrays from '../../utils/arrays'
 import { vocabulary } from '../../mixins/vocabulary'
 import OrgUnitsTreeDialog from '../select/OrgUnitsTreeDialog'
@@ -246,9 +292,25 @@ export default {
     title: {
       type: String
     },
-    enableGroups: {
+    showOrgUnits: {
       type: Boolean,
-      default: true
+      default: false
+    },
+    showGroups: {
+      type: Boolean,
+      default: false
+    },
+    showAccounts: {
+      type: Boolean,
+      default: false
+    },
+    showPersons: {
+      type: Boolean,
+      default: false
+    },
+    showEduPersonAffiliation: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -258,6 +320,7 @@ export default {
   },
   data () {
     return {
+      doc: {},
       loading: false,
       userSearchLoading: false,
       userSearchExactLoading: false,
@@ -279,12 +342,16 @@ export default {
       dateDialog: false,
       dateDialogItem: null,
       orgunit: null,
+      selectedEduPersonAffiliation: null,
       userSearch: null,
       userSearchModel: null,
       userSearchItems: [],
       userSearchExact: null,
       userSearchExactModel: null,
-      userSearchExactItems: []
+      userSearchExactItems: [],
+      eduPersonAffiliations: [
+        'faculty', 'student', 'staff', 'alum', 'member', 'affiliate', 'employee', 'library-walk-in'
+      ]
     }
   },
   watch: {
@@ -386,6 +453,18 @@ export default {
     removeRight: async function (item) {
       arrays.remove(this.rightsArray, item)
       this.saveRights()
+    },
+    addOwner: async function () {
+      if (this.doc) {
+        this.rightsArray.push({ type: 'username', notation: this.doc.owner, description: 'The owner of ' + this.pid, expires: null })
+        this.saveRights()
+      }
+    },
+    addEduPersonAffiliation: async function () {
+      if (this.selectedEduPersonAffiliation) {
+        this.rightsArray.push({ type: 'edupersonaffiliation', notation: this.selectedEduPersonAffiliation, description: this.selectedEduPersonAffiliation, expires: null })
+        this.saveRights()
+      }
     },
     addUser: function () {
       if (this.userSearchModel) {
@@ -530,6 +609,22 @@ export default {
           this.rightsArray.push({ type: 'username', notation: notation, description: name, expires: expires })
         }
       }
+      if (this.rightsjson['edupersonaffiliation']) {
+        for (let r of this.rightsjson['edupersonaffiliation']) {
+          let notation = ''
+          let name = ''
+          let expires = ''
+          if (r['value']) {
+            notation = r['value']
+            expires = r['expires']
+            name = r['value'] + ' affiliation'
+          } else {
+            notation = r
+            name = r + ' affiliation'
+          }
+          this.rightsArray.push({ type: 'edupersonaffiliation', notation: notation, description: name, expires: expires })
+        }
+      }
       if (this.rightsjson['department']) {
         for (let r of this.rightsjson['department']) {
           let notation = ''
@@ -613,14 +708,45 @@ export default {
       } finally {
         this.groupsLoading = false
       }
+    },
+    loadDoc: async function () {
+      var params = {
+        q: '*:*',
+        fq: 'pid:"' + this.pid + '"',
+        defType: 'edismax',
+        wt: 'json'
+      }
+
+      var query = qs.stringify(params, { encodeValuesOnly: true, indices: false })
+      var url = '/search/select?' + query
+      
+      try {
+        this.$store.commit('setLoading', true)
+        let response = await this.$axios.request({
+          method: "GET",
+          url: url,
+        });
+        
+        if (response.data.response.numFound > 0) {
+          this.doc = response.data.response.docs[0]
+        }
+      } catch (error) {
+        console.log(error);
+        this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
+      } finally {
+        this.$store.commit('setLoading', false)
+      }
     }
   },
   mounted: async function () {
-    this.$nextTick(function () {
+    await this.loadDoc()
+    this.$nextTick(async function () {
       if (!this.vocabularies['orgunits'].loaded) {
         this.$store.dispatch('vocabulary/loadOrgUnits', this.$i18n.locale)
       }
       this.loadGroups()
+      this.rightsjson = this.rights
+      this.rightsJsonToRightsArray()
     })
   }
 }

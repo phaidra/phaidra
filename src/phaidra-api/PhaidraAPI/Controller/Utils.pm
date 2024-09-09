@@ -6,58 +6,10 @@ use v5.10;
 use Mojo::File;
 use Mojo::JSON qw(decode_json);
 use base 'Mojolicious::Controller';
+use Scalar::Util qw(looks_like_number);
 use PhaidraAPI::Model::Search;
 use PhaidraAPI::Model::Util;
-
-sub streamingplayer {
-  my $self = shift;
-  my $pid  = $self->stash('pid');
-  if ($self->config->{streaming}) {
-    my $u_model = PhaidraAPI::Model::Util->new;
-    my $r       = $u_model->get_video_key($self, $pid);
-    if ($r->{status} eq 200) {
-      $self->stash(video_key   => $r->{video_key});
-      $self->stash(errormsg    => $r->{errormsq});
-      $self->stash(server      => $self->config->{streaming}->{server});
-      $self->stash(server_rtmp => $self->config->{streaming}->{server_rtmp});
-      $self->stash(server_cd   => $self->config->{streaming}->{server_cd});
-      $self->stash(basepath    => $self->config->{streaming}->{basepath});
-
-      $self->stash(baseurl           => $self->config->{baseurl});
-      $self->stash(streamingbasepath => $self->config->{streaming}->{basepath});
-      $self->stash(trackpid          => "");
-      $self->stash(tracklabel        => "");
-      $self->stash(tracklanguage     => "");
-
-    }
-    else {
-      $self->app->log->error("Video key not available: " . $self->app->dumper($r));
-      $self->render(text => $self->app->dumper($r), status => $r->{status});
-    }
-  }
-  else {
-    $self->render(text => "Streaming not configured", status => 503);
-  }
-}
-
-sub streamingplayer_key {
-  my $self = shift;
-  my $pid  = $self->stash('pid');
-  if ($self->config->{streaming}) {
-    my $u_model = PhaidraAPI::Model::Util->new;
-    my $r       = $u_model->get_video_key($self, $pid);
-    if ($r->{status} eq 200) {
-      $self->render(text => $r->{video_key}, status => 200);
-    }
-    else {
-      $self->app->log->error("Video key not available: " . $self->app->dumper($r));
-      $self->render(text => $self->app->dumper($r), status => $r->{status});
-    }
-  }
-  else {
-    $self->render(text => "Streaming not configured", status => 503);
-  }
-}
+use MIME::Lite::TT::HTML;
 
 sub get_all_pids {
 
@@ -124,6 +76,196 @@ sub openapi_json {
     }
   ];
   $self->render(json => $json, status => 200);
+}
+
+sub request_doi {
+  my $self = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  unless (defined($self->stash('pid'))) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
+    return;
+  }
+  my $pid = $self->stash('pid');
+  unless ($pid =~ m/^o:\d+$/) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Invalid pid'}]}, status => 400);
+    return;
+  }
+
+  $self->app->log->debug("DOI request received pid[$pid]");
+
+  my $settings = $self->mongo->get_collection('public_config')->find_one({});
+
+  my $to = $settings->{instanceConfig}->{requestdoiemail};
+  unless ($to) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Request DOI email is not configured'}]}, status => 500);
+    return;
+  }
+
+  my $currentuser = $self->stash->{basic_auth_credentials}->{username};
+  if ($self->stash->{remote_user}) {
+    $currentuser = $self->stash->{remote_user};
+  }
+
+  my $userdata = $self->app->directory->get_user_data($self, $currentuser);
+  unless ($userdata) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Could not fetch user data'}]}, status => 500);
+    return;
+  }
+
+  my %emaildata;
+  $emaildata{name}    = $userdata->{firstname}." ".$userdata->{lastname};
+  $emaildata{pid}     = $pid;
+  $emaildata{email}   = $userdata->{email};
+  $emaildata{baseurl} = $self->config->{baseurl};
+  $self->app->log->debug("Sending DOI request email pid[$pid] currentuser[$currentuser] name[".$userdata->{firstname}." ".$userdata->{lastname}."] from[".$userdata->{email}."] to[$to]");
+  my %options;
+  for my $p (@{$self->app->renderer->paths}) {
+    $options{INCLUDE_PATH} = $p;
+  }
+  eval {
+    my $msg = MIME::Lite::TT::HTML->new(
+      From        => $userdata->{email},
+      To          => $to,
+      Subject     => 'Subsequent DOI allocation',
+      Charset     => 'utf8',
+      Encoding    => 'quoted-printable',
+      Template    => {html => 'email/doirequest.html.tt', text => 'email/doirequest.txt.tt'},
+      TmplParams  => \%emaildata,
+      TmplOptions => \%options
+    );
+    $msg->send;
+  };
+  if ($@) {
+    my $err = "[$pid] sending DOI request email failed: " . $@;
+    $self->app->log->error($err);
+
+    $res->{status} = 500;
+    unshift @{$res->{alerts}}, {type => 'error', msg => $err};
+    $self->render(json => $res, status => $res->{status});
+    return;
+  }
+
+  $self->render(json => $res, status => $res->{status});
+}
+
+sub geonames_search {
+  my $self = shift;
+  my $uri  = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  my $q = $self->req->param('q');
+  my $lang = $self->req->param('lang');
+
+  unless ($q) {
+    my $err = "missing q param";
+    $self->app->log->error($err);
+    $self->render(json => {alerts => [{type => 'error', msg => $err}]}, status => 500);
+    return;
+  }
+
+  unless ($self->config->{apis}) {
+    my $err = "apis are not configured";
+    $self->app->log->error($err);
+    $self->render(json => {alerts => [{type => 'error', msg => $err}]}, status => 500);
+    return;
+  }
+
+  unless ($self->config->{apis}->{geonames}) {
+    my $err = "geonames api is not configured";
+    $self->app->log->error($err);
+    $self->render(json => {alerts => [{type => 'error', msg => $err}]}, status => 500);
+    return;
+  }
+
+  my $insecure = 0;
+  if (exists($self->config->{apis}->{geonames}->{insecure})) {
+    if ($self->config->{apis}->{geonames}->{insecure}) {
+      $insecure = 1;
+    }
+  }
+
+  my $params = { q => $q, lang => $lang };
+  $params->{maxRows} = $self->config->{apis}->{geonames}->{maxRows} || 50;
+  $params->{username} = $self->config->{apis}->{geonames}->{username} || 'phaidra';
+
+  my $url = Mojo::URL->new($self->config->{apis}->{geonames}->{search})->query($params);
+  my $get = $self->ua->insecure($insecure)->max_redirects(5)->get($url)->result;
+  if ($get->is_success) {
+    my $json = $get->json;
+    $self->render(json => $json, status => $get->code);
+    return;
+  }
+  else {
+    $self->app->log->error("[$url] error searching geonames " . $get->message);
+    unshift @{$res->{alerts}}, {type => 'error', msg => $get->message};
+    $res->{status} = $get->code ? $get->code : 500;
+    $self->render(json => $res, status => $res->{status});
+    return;
+  }
+
+}
+
+sub gnd_search {
+  my $self = shift;
+  my $uri  = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  my $q = $self->req->param('q');
+  my $from = $self->req->param('from');
+  my $size = $self->req->param('size');
+
+  unless ($q) {
+    my $err = "missing q param";
+    $self->app->log->error($err);
+    $self->render(json => {alerts => [{type => 'error', msg => $err}]}, status => 500);
+    return;
+  }
+
+  unless(looks_like_number($from)) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Invalid from param provided'}]}, status => 400);
+    return;
+  }
+
+  unless(looks_like_number($size)) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Invalid size param provided'}]}, status => 400);
+    return;
+  }
+
+  unless ($self->config->{apis}) {
+    my $err = "apis are not configured";
+    $self->app->log->error($err);
+    $self->render(json => {alerts => [{type => 'error', msg => $err}]}, status => 500);
+    return;
+  }
+
+  unless ($self->config->{apis}->{lobid}) {
+    my $err = "lobid api is not configured";
+    $self->app->log->error($err);
+    $self->render(json => {alerts => [{type => 'error', msg => $err}]}, status => 500);
+    return;
+  }
+
+  my $params = { q => $q, from => $from, size => $size, format => 'json' };
+
+  my $url = Mojo::URL->new('https://'.$self->config->{apis}->{lobid}->{baseurl}.'/gnd/search')->query($params);
+  my $get = $self->ua->max_redirects(5)->get($url)->result;
+  if ($get->is_success) {
+    my $json = $get->json;
+    $self->render(json => $json, status => $get->code);
+    return;
+  }
+  else {
+    $self->app->log->error("[$url] error searching lobid " . $get->message);
+    unshift @{$res->{alerts}}, {type => 'error', msg => $get->message};
+    $res->{status} = $get->code ? $get->code : 500;
+    $self->render(json => $res, status => $res->{status});
+    return;
+  }
+
 }
 
 1;

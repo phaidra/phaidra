@@ -11,40 +11,50 @@
       ></v-text-field>
     </v-col>
     <v-col cols="2">
-      <v-autocomplete
-        :value="getTerm('lang', nameLanguage)"
-        v-on:input="$emit('input-name-language', $event )"
-        :items="vocabularies['lang'].terms"
-        :item-value="'@id'"
-        :filter="autocompleteFilter"
-        hide-no-data
-        :label="$t('Language')"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
-        return-object
-        clearable
-      >
-        <template slot="item" slot-scope="{ item }">
-          <v-list-item-content two-line>
-            <v-list-item-title  v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-            <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-          </v-list-item-content>
-        </template>
-        <template slot="selection" slot-scope="{ item }">
-          <v-list-item-content>
-            <v-list-item-title v-html="`${getLocalizedTermLabel('lang', item['@id'])}`"></v-list-item-title>
-          </v-list-item-content>
-        </template>
-      </v-autocomplete>
+      <v-btn text @click="$refs.langdialog.open()">
+        <span class="grey--text text--darken-1">
+          ({{ nameLanguage ? nameLanguage : '--' }})
+        </span>
+      </v-btn>
+      <select-language ref="langdialog" @language-selected="$emit('input-name-language', $event)"></select-language>
     </v-col>
     <v-col cols="4">
-      <v-text-field
-        :value="identifier"
-        :label="'Funder identifier'"
-        v-on:blur="$emit('input-identifier',$event.target.value)"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
-      ></v-text-field>
+      <v-row>
+        <v-col :cols="6" v-if="!hideIdentifierType && !hideIdentifier">
+          <v-autocomplete
+            v-on:input="$emit('input-identifier-type', $event)"
+            :label="$t('Type of funder identifier')"
+            :items="vocabularies[identifierVocabulary].terms"
+            :item-value="'@id'"
+            :value="getTerm(identifierVocabulary, identifierType)"
+            :filter="autocompleteFilter"
+            :filled="inputStyle==='filled'"
+            :outlined="inputStyle==='outlined'"
+            return-object
+            clearable
+          >
+            <template slot="item" slot-scope="{ item }">
+              <v-list-item-content two-line>
+                <v-list-item-title  v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
+              </v-list-item-content>
+            </template>
+            <template slot="selection" slot-scope="{ item }">
+              <v-list-item-content>
+                <v-list-item-title v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
+              </v-list-item-content>
+            </template>
+          </v-autocomplete>
+        </v-col>
+        <v-col :cols="!hideIdentifierType ? 6 : 12" v-if="!hideIdentifier">
+          <v-text-field
+            :value="identifier"
+            :label="$t('Funder identifier')"
+            v-on:blur="$emit('input-identifier',$event.target.value)"
+            :filled="inputStyle==='filled'"
+            :outlined="inputStyle==='outlined'"
+          ></v-text-field>
+        </v-col>
+      </v-row>
     </v-col>
     <v-col cols="1" v-if="actions.length">
       <v-menu open-on-hover bottom offset-y>
@@ -67,10 +77,14 @@
 <script>
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
+import SelectLanguage from '../select/SelectLanguage'
 
 export default {
   name: 'p-i-funder',
   mixins: [vocabulary, fieldproperties],
+  components: {
+    SelectLanguage
+  },
   props: {
     name: {
       type: String
@@ -78,8 +92,22 @@ export default {
     nameLanguage: {
       type: String
     },
+    identifierType: {
+      type: String
+    },
     identifier: {
       type: String
+    },
+    hideIdentifier: {
+      type: Boolean
+    },
+    hideIdentifierType: {
+      type: Boolean,
+      default: false
+    },
+    identifierVocabulary: {
+      type: String,
+      default: 'identifiertype'
     },
     showIds: {
       type: Boolean,

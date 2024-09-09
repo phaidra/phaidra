@@ -207,6 +207,21 @@
                             ></p-i-date-edtf>
                           </template>
 
+                          <template v-else-if="f.component === 'p-date-edmtimespan'">
+                            <p-i-date-edmtimespan
+                              v-bind.sync="f"
+                              v-on:input-date="f.value=$event"
+                              v-on:input-date-type="setSelected(f, 'type', $event)"
+                              v-on:input-language="setSelected(f, 'language', $event)"
+                              v-on:input-identifier="f.identifier=$event"
+                              v-on:input-identifier-type="setSelected(f, 'identifierType', $event)"
+                              v-on:add="addField(s.fields, f)"
+                              v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
+                              :configurable="enablefieldconfig || f.configurable"
+                            ></p-i-date-edmtimespan>
+                          </template>
+
                           <template v-else-if="f.component === 'p-duration'">
                             <p-i-duration
                               v-bind.sync="f"
@@ -572,8 +587,11 @@
                               v-on:input-funder-name-language="setSelected(f, 'funderNameLanguage', $event)"
                               v-on:input-description="f.description=$event"
                               v-on:input-description-language="setSelected(f, 'descriptionLanguage', $event)"
+                              v-on:input-code="f.code=$event"
                               v-on:input-identifier="f.identifier=$event"
+                              v-on:input-identifier-type="setSelected(f, 'identifierType', $event)"
                               v-on:input-funder-identifier="f.funderIdentifier=$event"
+                              v-on:input-funder-identifier-type="setSelected(f, 'funderIdentifierType', $event)"
                               v-on:input-homepage="f.homepage=$event"
                               v-on:input-date-from="f.dateFrom=$event"
                               v-on:input-date-to="f.dateTo=$event"
@@ -590,6 +608,7 @@
                               v-on:input-name="f.name=$event"
                               v-on:input-name-language="setSelected(f, 'nameLanguage', $event)"
                               v-on:input-identifier="f.identifier=$event"
+                              v-on:input-identifier-type="setSelected(f, 'identifierType', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
                               v-on:configure="editFieldProps(f)"
@@ -770,7 +789,7 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
-            <v-btn v-if="templating" class="mr-3 float-left" v-on="on" dark raised :loading="loading" :disabled="loading" color="grey" @click="saveTemplate()"><span v-t="'Save template'"></span></v-btn>
+            <v-btn v-if="templating && $route.params.templateid" class="mr-3 float-left" dark raised :loading="loading" :disabled="loading" color="grey" @click="saveTemplate()"><span v-t="'Save template'"></span></v-btn>
             <v-spacer></v-spacer>
             <template v-if="!disablesave">
               <v-btn fixed bottom right v-if="targetpid && floatingsavebutton" raised :loading="loading" :disabled="loading" color="primary" @click="save()"><span v-t="'Save'"></span></v-btn>
@@ -940,8 +959,8 @@ export default {
     PISpatialReadonly,
     PISeeAlso,
     PIUnknown,
-    PIAlert,
     PTemplates,
+    PIAlert,
     ObjectFromSearch,
     PMRights,
     PDLicenseInfo,
@@ -1146,7 +1165,7 @@ export default {
           mode: 'cors'
         })
         let json = await response.data
-        let form = jsonLd.json2form(json)
+        let form = jsonLd.json2form(json, null, this.vocabularies)
         for (let s of form.sections) {
           let isFileSection = false
           for (let f of s.fields) {
@@ -1277,8 +1296,9 @@ export default {
         this.$refs.templates.loadTemplates()
       }
     },
-    loadTemplate: function (form) {
-      this.$emit('load-form', form)
+    loadTemplate: function (template) {
+      this.$emit('load-form', template.form)
+      this.$emit('load-rights', template.rights)
       this.activetab = 0
     },
     prepareTemplateForSave: function (form) {
@@ -1299,6 +1319,11 @@ export default {
       var httpFormData = new FormData()
       this.loading = true
       httpFormData.append('name', this.templatename)
+      if (this.rights) {
+        if (Object.keys(this.rights).length > 0) {
+          httpFormData.append('rights', JSON.stringify(this.rights))
+        }
+      }
       httpFormData.append('form', JSON.stringify(template))
       try {
         let response = await this.$axios.request({
@@ -1325,6 +1350,7 @@ export default {
       let template = this.prepareTemplateForSave(this.form)
       var httpFormData = new FormData()
       this.loading = true
+      httpFormData.append('rights', JSON.stringify(this.rights))
       httpFormData.append('form', JSON.stringify(template))
       try {
         let response = await this.$axios.request({

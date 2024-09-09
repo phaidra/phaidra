@@ -86,7 +86,6 @@ const fields = [
     'skos:prefLabel': [],
     errorMessages: [],
     definition: 'Genre of the creative work, broadcast channel or group. Example: Master thesis, Comedy, Late Renaissance'
-
   },
   {
     id: 'version-type',
@@ -203,6 +202,28 @@ const fields = [
     value: '',
     dateLabel: '',
     type: 'dcterms:created',
+    hideType: false,
+    valueErrorMessages: [],
+    typeErrorMessages: [],
+    definition: 'A point or period of time associated with an event in the lifecycle of the resource.'
+  },
+  {
+    id: 'date-edmtimespan',
+    fieldname: 'Date (text/concept)',
+    predicate: 'date',
+    component: 'p-date-edmtimespan',
+    multiplicable: true,
+    label: 'Date',
+    value: '',
+    dateLabel: '',
+    multilingual: true,
+    language: '',
+    type: 'dcterms:created',
+    idnetifierType: '',
+    identifier: '',
+    identifierVocabulary: 'identifiertype',
+    hideIdentifier: false,
+    hideIdentifierType: false,
     hideType: false,
     valueErrorMessages: [],
     typeErrorMessages: [],
@@ -399,9 +420,9 @@ const fields = [
     disableIdentifierType: false,
     identifierVocabulary: 'entityidentifiertype',
     firstname: '',
-    firstnameLabel: '',
+    firstnameLabel: 'Firstname',
     lastname: '',
-    lastnameLabel: '',
+    lastnameLabel: 'Lastname',
     name: '',
     nameLabel: 'Name',
     role: '',
@@ -549,6 +570,22 @@ const fields = [
     name: '',
     nameLanguage: '',
     definition: 'Study plan.'
+  },
+  {
+    id: 'study-plan-select',
+    fieldname: 'Study plan (select)',
+    predicate: 'frapo:isOutputOf',
+    type: 'aaiso:Programme',
+    component: 'p-select',
+    vocabulary: 'studyplans',
+    multiplicable: true,
+    multilingual: true,
+    'skos:prefLabel': [],
+    label: 'Study plan',
+    value: '',
+    showIds: true,
+    errorMessages: [],
+    definition: 'Study plan controlled vocabulary.'
   },
   {
     id: 'series',
@@ -705,6 +742,7 @@ const fields = [
     identifier: '',
     homepage: '',
     funderName: '',
+    funderNameLanguage: '',
     funderIdentifier: '',
     dateFrom: '',
     dateTo: '',
@@ -1397,6 +1435,54 @@ const fields = [
     definition: 'Readonly spatial object.'
   },
   {
+    id: 'accessibility-control',
+    fieldname: 'Accessibility control',
+    predicate: 'schema:accessibilityControl',
+    component: 'p-select',
+    vocabulary: 'accessibilityControl',
+    label: 'Accessibility control',
+    value: '',
+    'skos:prefLabel': [],
+    errorMessages: [],
+    definition: 'Identifies input methods that are sufficient to fully control the described resource. Values should be drawn from the approved vocabulary.'
+  },
+  {
+    id: 'accessibility-feature',
+    fieldname: 'Accessibility feature',
+    predicate: 'schema:accessibilityFeature',
+    component: 'p-select',
+    vocabulary: 'accessibilityFeature',
+    label: 'Accessibility feature',
+    value: '',
+    'skos:prefLabel': [],
+    errorMessages: [],
+    definition: 'Content features of the resource, such as accessible media, alternatives and supported enhancements for accessibility. Values should be drawn from the approved vocabulary.'
+  },
+  {
+    id: 'accessibility-hazard',
+    fieldname: 'Accessibility hazard',
+    predicate: 'schema:accessibilityHazard',
+    component: 'p-select',
+    vocabulary: 'accessibilityHazard',
+    label: 'Accessibility hazard',
+    value: '',
+    'skos:prefLabel': [],
+    errorMessages: [],
+    definition: 'A characteristic of the described resource that is physiologically dangerous to some users. Related to WCAG 2.0 guideline 2.3. Values should be drawn from the approved vocabulary.'
+  },
+  {
+    id: 'access-mode',
+    fieldname: 'Access mode',
+    predicate: 'schema:accessMode',
+    component: 'p-select',
+    vocabulary: 'accessMode',
+    label: 'Access mode',
+    value: '',
+    'skos:prefLabel': [],
+    errorMessages: [],
+    definition: 'The human sensory perceptual system or cognitive faculty through which a person may process or perceive information. Values should be drawn from the approved vocabulary.'
+  },
+  {
     id: 'system-tag',
     fieldname: 'System tag',
     predicate: 'phaidra:systemTag',
@@ -1451,6 +1537,11 @@ const predicateOrder = [
   'phaidra:dateAccessioned',
   'date',
   'dcterms:temporal',
+
+  'schema:accessibilityControl',
+  'schema:accessMode',
+  'schema:accessibilityHazard',
+  'schema:accessibilityFeature',
 
   'ebucore:hasRelatedEvent',
 

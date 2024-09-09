@@ -33,6 +33,7 @@ import PIEntity from './input/PIEntity.vue'
 import PIEntityExtended from './input/PIEntityExtended'
 import PIEntityFixedrolePerson from './input/PIEntityFixedrolePerson'
 import PIDateEdtf from './input/PIDateEdtf.vue'
+import PIDateEdmtimespan from './input/PIDateEdmtimespan.vue'
 import PIFilenameReadonly from './input/PIFilenameReadonly.vue'
 import PIFilename from './input/PIFilename.vue'
 import PIForm from './input/PIForm.vue'
@@ -126,6 +127,7 @@ const Components = {
   PIEntityExtended,
   PIEntityFixedrolePerson,
   PIDateEdtf,
+  PIDateEdmtimespan,
   PIFilenameReadonly,
   PIFilename,
   PIFile,

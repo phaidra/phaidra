@@ -1,33 +1,40 @@
 <template>
   <v-row v-if="!hidden">
-    <v-col cols="8">
-      <v-text-field
-        :value="prefLabel"
-        :persistent-hint="true"
-        :messages="messages"
-        :label="$t(label)"
-        readonly
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
-      >
-        <template v-slot:message="{ message, key }">
-          <span v-html="message"></span>
-        </template>
-      </v-text-field>
-    </v-col>
-    <v-col cols="1" v-if="actions.length">
-      <v-menu open-on-hover bottom offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn v-on="on" icon>
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
-            <v-list-item-title v-if="action.event === 'remove'">{{ action.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+    <v-col cols="12">
+      <v-row>
+        <v-divider v-if="dividertop" class="my-2"></v-divider>
+      </v-row>
+      <v-row>
+        <v-col cols="8">
+          <v-text-field
+            :value="prefLabel"
+            :persistent-hint="true"
+            :messages="messages"
+            :label="$t(label)"
+            readonly
+            :filled="inputStyle==='filled'"
+            :outlined="inputStyle==='outlined'"
+          >
+            <template v-slot:message="{ message, key }">
+              <span v-html="message"></span>
+            </template>
+          </v-text-field>
+        </v-col>
+        <v-col cols="1" v-if="actions.length">
+          <v-menu open-on-hover bottom offset-y>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" icon>
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
+                <v-list-item-title v-if="action.event === 'remove'">{{ action.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-col>
+      </v-row>
     </v-col>
   </v-row>
 </template>
@@ -106,6 +113,10 @@ export default {
       required: true
     },
     removable: {
+      type: Boolean,
+      default: true
+    },
+    dividertop: {
       type: Boolean,
       default: true
     }

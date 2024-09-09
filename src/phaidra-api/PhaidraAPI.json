@@ -109,8 +109,16 @@
     "apis": {
         "geonames": {
             "url": "https://secure.geonames.org/getJSON",
-            "username": "phaidra"
+            "search": "https://secure.geonames.org/searchJSON",
+            "username": "phaidra",
+            "maxRows": 50
+        },
+        "lobid": {
+            "baseurl": "lobid.org"
         }
+    },
+    "oai": {
+        "dataprovider": "__PHAIDRA_HOSTNAME__"
     },
     "hooks": {
         "updatedc": 0,
@@ -128,7 +136,7 @@
         "upstreamusername": "if someone is calling api with principial header, he has to use this credentials",
         "upstreampassword": "secret"
     },
-    "directory_class": "Phaidra::Directory::GenericLDAP",
+    "directory_class": "Phaidra::Directory::Default",
     "phaidra_db": {
         "dsn": "dbi:mysql:phaidradb:__MARIADB_PHAIDRA_HOST__",
         "username": "__MARIADB_PHAIDRA_USER__",

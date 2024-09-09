@@ -198,7 +198,7 @@ export const formvalidation = {
           console.log('checking p[' + f.predicate + '] c[' + f.component + ']') 
           if (f.predicate === 'dcterms:type') {
             this.mandatoryFieldsFound['Resource type'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Resource type'] = true
             }
           }
@@ -208,7 +208,8 @@ export const formvalidation = {
               if (f.selectedTerms.length > 0) {
                 this.mandatoryFieldsValidated['Object type'] = true
               }
-            } else if (f.value.length > 0) {
+            } 
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Object type'] = true
             }
           }
@@ -221,13 +222,13 @@ export const formvalidation = {
           }
           if ((f.predicate === 'bf:note') && (f.type === 'bf:Note')) {
             this.mandatoryFieldsFound['Description'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Description'] = true
             }
           }
           if (f.component === 'p-keyword') {
             this.mandatoryFieldsFound['Keyword'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Keyword'] = true
             }
           }
@@ -249,7 +250,7 @@ export const formvalidation = {
           if (f.component === 'p-select') {
             if (f.predicate === 'edm:rights') {
               this.mandatoryFieldsFound['License'] = true
-              if (f.value.length > 0) {
+              if (f.value?.length > 0) {
                 this.mandatoryFieldsValidated['License'] = true
               }
             }
@@ -260,7 +261,7 @@ export const formvalidation = {
               if (hasReadonlyOefos) {
                 this.mandatoryFieldsValidated['OEFOS Classification'] = true
               } else {
-                if (f.value.length > 0) {
+                if (f.value?.length > 0) {
                   this.mandatoryFieldsValidated['OEFOS Classification'] = true
                 }
               }
@@ -268,13 +269,13 @@ export const formvalidation = {
           }
           if (f.component === 'p-association') {
             this.mandatoryFieldsFound['Association'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Association'] = true
             }
           }
           if (f.component === 'p-file') {
             this.mandatoryFieldsFound['File'] = true
-            if (f.file && (f.mimetype.length > 0)) {
+            if (f.file && (f.mimetype.length > 0) && (resourceType !== 'https://pid.phaidra.org/vocabulary/7AVS-Y482')) {
               this.mandatoryFieldsValidated['File'] = true
             }
             if (this.allowedMimetypes[resourceType]) {
@@ -382,7 +383,7 @@ export const formvalidation = {
           console.log('checking p[' + f.predicate + '] c[' + f.component + ']') 
           if (f.predicate === 'dcterms:type') {
             this.mandatoryFieldsFound['Resource type'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Resource type'] = true
             }
           }
@@ -392,7 +393,8 @@ export const formvalidation = {
               if (f.selectedTerms.length > 0) {
                 this.mandatoryFieldsValidated['Object type'] = true
               }
-            } else if (f.value.length > 0) {
+            } 
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Object type'] = true
             }
           }
@@ -405,13 +407,13 @@ export const formvalidation = {
           }
           if ((f.predicate === 'bf:note') && (f.type === 'bf:Note')) {
             this.mandatoryFieldsFound['Description'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Description'] = true
             }
           }
           if (f.component === 'p-keyword') {
             this.mandatoryFieldsFound['Keyword'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Keyword'] = true
             }
           }
@@ -433,7 +435,7 @@ export const formvalidation = {
           if (f.component === 'p-select') {
             if (f.predicate === 'edm:rights') {
               this.mandatoryFieldsFound['License'] = true
-              if (f.value.length > 0) {
+              if (f.value?.length > 0) {
                 this.mandatoryFieldsValidated['License'] = true
               }
             }
@@ -444,7 +446,7 @@ export const formvalidation = {
               if (hasReadonlyOefos) {
                 this.mandatoryFieldsValidated['OEFOS Classification'] = true
               } else {
-                if (f.value.length > 0) {
+                if (f.value?.length > 0) {
                   this.mandatoryFieldsValidated['OEFOS Classification'] = true
                 }
               }
@@ -452,7 +454,7 @@ export const formvalidation = {
           }
           if (f.component === 'p-file') {
             this.mandatoryFieldsFound['File'] = true
-            if (f.file && (f.mimetype.length > 0)) {
+            if (f.file && (f.mimetype.length > 0) && (resourceType !== 'https://pid.phaidra.org/vocabulary/7AVS-Y482')) {
               this.mandatoryFieldsValidated['File'] = true
             }
             if (this.allowedMimetypes[resourceType]) {
@@ -544,7 +546,6 @@ export const formvalidation = {
           this.mandatoryFieldsValidated['File'] = true
           this.mandatoryFieldsValidated['License'] = true
           this.mandatoryFieldsValidated['Object type'] = true
-          this.mandatoryFieldsValidated['OEFOS Classification'] = true
           break
         case 'https://pid.phaidra.org/vocabulary/T8GH-F4V8':
           // resource
@@ -564,7 +565,7 @@ export const formvalidation = {
           if (f.predicate === 'dcterms:type') {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] v[' + f.value + ']') 
             this.mandatoryFieldsFound['Resource type'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Resource type'] = true
             }
           }
@@ -573,10 +574,10 @@ export const formvalidation = {
             this.mandatoryFieldsFound['Object type'] = true
             if (Object.prototype.hasOwnProperty.call(f, 'selectedTerms')) {
               if (f.selectedTerms.length > 0) {
-                console.log(f.selectedTerms)
                 this.mandatoryFieldsValidated['Object type'] = true
               }
-            } else if (f.value.length > 0) {
+            } 
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Object type'] = true
             }
           }
@@ -591,18 +592,18 @@ export const formvalidation = {
           if ((f.predicate === 'bf:note') && (f.type === 'bf:Note')) {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] v[' + f.value + ']') 
             this.mandatoryFieldsFound['Description'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Description'] = true
             }
           }
           if (f.component === 'p-keyword') {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] v[' + f.value + ']') 
             this.mandatoryFieldsFound['Keyword'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Keyword'] = true
             }
           }
-          if ((f.component === 'p-entity') || (f.component === 'p-entity-extended') || (f.component === 'p-entity-fixedrole-person')) {
+          if ((f.component === 'p-entity') || (f.component === 'p-entity-extended')) {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] r[' + f.role + '] fn[' + f.firstname + '] ln[' + f.lastname + ']')
             if (f.role.length > 0) {
               this.mandatoryFieldsFound['Role'] = true
@@ -620,7 +621,7 @@ export const formvalidation = {
             if (f.predicate === 'edm:rights') {
               console.log('checking p[' + f.predicate + '] c[' + f.component + '] v[' + f.value + ']')
               this.mandatoryFieldsFound['License'] = true
-              if (f.value.length > 0) {
+              if (f.value?.length > 0) {
                 this.mandatoryFieldsValidated['License'] = true
               }
             }
@@ -629,7 +630,7 @@ export const formvalidation = {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] mimetype[' + f.mimetype + '] file[' + f.file + ']')
             console.log(f.file)
             this.mandatoryFieldsFound['File'] = true
-            if (f.file && (f.mimetype.length > 0)) {
+            if (f.file && (f.mimetype.length > 0) && (resourceType !== 'https://pid.phaidra.org/vocabulary/7AVS-Y482')) {
               this.mandatoryFieldsValidated['File'] = true
             }
             if (this.allowedMimetypes[resourceType]) {
@@ -644,7 +645,7 @@ export const formvalidation = {
           if ((f.component === 'p-filename-readonly') || f.component === 'p-filename') {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] v[' + f.value + ']')
             this.mandatoryFieldsFound['File'] = true
-            if (f.value.length > 0) {
+            if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['File'] = true
             }
           }

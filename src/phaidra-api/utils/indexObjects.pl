@@ -131,6 +131,7 @@ while (processPage($page) == 100) {
 }
 
 $log->info("ok[$ok] failed[$failed] done");
+$log->info("=== If you are migrating a PHAIDRA instanz, update the 'pidGen' table in 'phaidra' mariadb to the current highest PID ===");
 
 __END__
 

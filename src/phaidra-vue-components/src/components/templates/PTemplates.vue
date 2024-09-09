@@ -101,7 +101,7 @@ export default {
         if (response.data.alerts && response.data.alerts.length > 0) {
           this.$store.commit('setAlerts', response.data.alerts)
         }
-        this.$emit('load-template', response.data.template.form)
+        this.$emit('load-template', response.data.template)
       } catch (error) {
         console.log(error)
         this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])

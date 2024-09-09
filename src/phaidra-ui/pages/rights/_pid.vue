@@ -5,7 +5,15 @@
     </v-btn>
     <v-row>
       <v-col v-if="signedin && pid">
-        <p-m-rights :pid="pid" :rights="rights" v-on:load-rights="loadRights()"></p-m-rights>
+        <p-m-rights 
+          :pid="pid" 
+          :rights="rights"
+          :show-persons="instanceconfig.accessrestrictions_showpersons"
+          :show-accounts="instanceconfig.accessrestrictions_showaccounts"
+          :show-edu-person-affiliation="instanceconfig.accessrestrictions_showedupersonaffiliation"
+          :show-org-units="instanceconfig.accessrestrictions_showorgunits"
+          :show-groups="instanceconfig.accessrestrictions_showgroups"
+          v-on:load-rights="loadRights()"></p-m-rights>
       </v-col>
     </v-row>
   </div>

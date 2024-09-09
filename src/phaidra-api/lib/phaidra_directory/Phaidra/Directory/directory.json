@@ -1,9 +1,0 @@
-{
-    "users": {
-    	"test": {    	
-    		"firstname": "Test",
-			"lastname": "User",
-			"email": "test@example.com"
-    	}   	        
-	}
-}

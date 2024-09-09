@@ -1,56 +1,63 @@
 <template>
   <v-row v-if="!hidden">
-    <v-col cols="10">
-      <v-autocomplete
-        :value="getTerm('thema', value)"
-        :required="required"
-        v-on:input="handleInput($event)"
-        :rules="required ? [ v => !!v || 'Required'] : []"
-        :items="vocabularies['thema'].terms"
-        :item-value="'@id'"
-        :loading="loading"
-        :filter="autocompleteFilter"
-        hide-no-data
-        :label="$t(label)"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
-        return-object
-        clearable
-        :disabled="disabled"
-        :messages="path"
-        :error-messages="errorMessages"
-      >
-        <template slot="item" slot-scope="{ item }">
-          <v-list-item-content two-line>
-            <v-list-item-title  v-html="`${getLocalizedTermLabel('thema', item['@id']) + ' - ' + item['skos:notation'][0]}`"></v-list-item-title>
-            <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-          </v-list-item-content>
-        </template>
-        <template slot="selection" slot-scope="{ item }">
-          <v-list-item-content>
-            <v-list-item-title v-html="`${getLocalizedTermLabel('thema', item['@id']) + ' - ' + item['skos:notation'][0]}`"></v-list-item-title>
-          </v-list-item-content>
-        </template>
-        <template v-slot:append-outer>
-          <v-icon @click="$refs.thematreedialog.open()">mdi-file-tree</v-icon>
-        </template>
-      </v-autocomplete>
+    <v-col cols="12">
+      <v-row>
+        <v-col cols="10">
+          <v-autocomplete
+            :value="getTerm('thema', value)"
+            :required="required"
+            v-on:input="handleInput($event)"
+            :rules="required ? [ v => !!v || 'Required'] : []"
+            :items="vocabularies['thema'].terms"
+            :item-value="'@id'"
+            :loading="loading"
+            :filter="autocompleteFilter"
+            hide-no-data
+            :label="$t(label)"
+            :filled="inputStyle==='filled'"
+            :outlined="inputStyle==='outlined'"
+            return-object
+            clearable
+            :disabled="disabled"
+            :messages="path"
+            :error-messages="errorMessages"
+          >
+            <template slot="item" slot-scope="{ item }">
+              <v-list-item-content two-line>
+                <v-list-item-title  v-html="`${getLocalizedTermLabel('thema', item['@id']) + ' - ' + item['skos:notation'][0]}`"></v-list-item-title>
+                <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+            <template slot="selection" slot-scope="{ item }">
+              <v-list-item-content>
+                <v-list-item-title v-html="`${getLocalizedTermLabel('thema', item['@id']) + ' - ' + item['skos:notation'][0]}`"></v-list-item-title>
+              </v-list-item-content>
+            </template>
+            <template v-slot:append-outer>
+              <v-icon @click="$refs.thematreedialog.open()">mdi-file-tree</v-icon>
+            </template>
+          </v-autocomplete>
+        </v-col>
+        <v-col cols="1" v-if="actions.length">
+          <v-menu open-on-hover bottom offset-y>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" icon>
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
+                <v-list-item-title>{{ action.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-col>
+        <thema-tree-dialog ref="thematreedialog" @term-selected="handleInput($event)"></thema-tree-dialog>
+      </v-row>
+      <v-row>
+        <v-divider v-if="dividerbottom" class="mt-2 mb-6"></v-divider>
+      </v-row>
     </v-col>
-    <v-col cols="1" v-if="actions.length">
-      <v-menu open-on-hover bottom offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn v-on="on" icon>
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
-            <v-list-item-title>{{ action.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </v-col>
-    <thema-tree-dialog ref="thematreedialog" @term-selected="handleInput($event)"></thema-tree-dialog>
   </v-row>
 </template>
 
@@ -111,6 +118,10 @@ export default {
       default: false
     },
     showIds: {
+      type: Boolean,
+      default: false
+    },
+    dividerbottom: {
       type: Boolean,
       default: false
     }

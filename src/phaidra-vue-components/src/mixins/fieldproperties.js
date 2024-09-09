@@ -33,7 +33,14 @@ export const fieldproperties = {
     },
     configurable: {
       type: Boolean,
-      default: true
+      default: false
+    }
+  },
+  data () {
+    return {
+      showMenuModel: false,
+      menux: 0,
+      menuy: 0
     }
   },
   computed: {
@@ -64,6 +71,17 @@ export const fieldproperties = {
         }
       }
       return arr
+    }
+  },
+  methods: {
+    showMenu (e) {
+      e.preventDefault()
+      this.showMenuModel = false
+      this.menux = e.clientX
+      this.menuy = e.clientY
+      this.$nextTick(() => {
+        this.showMenuModel = true
+      })
     }
   }
 }

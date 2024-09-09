@@ -8,16 +8,17 @@
           :enablerights="false"
           :enablerelationships="false"
           :enablepreview="true"
-          :templating="false"
-          :savetemplatebtn="false"
+          :templating="true"
           :importing="false"
-          :addbutton="false"
+          :addbutton="true"
           :mouseoverfielddef="true"
           :help="false"
           :debug="false"
           :feedback="false"
           v-on:load-form="form = $event"
+          v-on:load-rights="rights = $event"
           v-on:object-created="objectCreated($event)"
+          v-on:form-input-resource-type="handleInputResourceType($event)"
           v-on:input-rights="rights = $event"
         ></p-i-form>
       </v-col>
@@ -26,6 +27,7 @@
 </template>
 
 <script>
+import arrays from "phaidra-vue-components/src/utils/arrays"
 import fields from "phaidra-vue-components/src/utils/fields"
 import { context } from "../../mixins/context"
 import { config } from "../../mixins/config"
@@ -41,6 +43,157 @@ export default {
     };
   },
   methods: {
+    addRemovedFieldsCol: function (rt) {
+      let haslicense = false;
+      for (let s of this.form.sections) {
+        for (let f of s.fields) {
+          if (f.predicate === "edm:rights") {
+            haslicense = true;
+          }
+        }
+      }
+      if (!haslicense) {
+        let f = fields.getField("license")
+        f.label = f.label + ' *'
+        f.showValueDefinition = true;
+        f.vocabulary = "alllicenses";
+        this.form.sections[0].fields.push(f);
+      }
+      let hasfile = false;
+      for (let s of this.form.sections) {
+        for (let f of s.fields) {
+          if (f.component === "p-file") {
+            hasfile = true;
+          }
+        }
+      }
+      if (!hasfile) {
+        let file = fields.getField("file");
+        file.fileInputClass = "mb-2";
+        file.showMimetype = false;
+        file.backgroundColor = '#0063a620';
+        this.form.sections[0].fields.splice(1, 0, file);
+      }
+      let hasObjectType2 = false;
+      for (let s of this.form.sections) {
+        for (let f of s.fields) {
+          if (f.predicate === "edm:hasType") {
+            hasObjectType2 = true;
+            f.selectedTerms = [];
+          }
+        }
+      }
+      if (!hasObjectType2) {
+        let otf2 = fields.getField("object-type-checkboxes");
+        let rtv2;
+        for (let s of this.form.sections) {
+          for (let f of s.fields) {
+            if (f.predicate === "dcterms:type") {
+              rtv2 = f.value;
+            }
+          }
+        }
+        otf2.resourceType = rtv2;
+        otf2.showLabel = true;
+        this.form.sections[0].fields.splice(2, 0, otf2);
+      }
+    },
+    markOefosMandatory: function () {
+      if (this.instanceconfig.markmandatoryfnc) {
+        if (this.instanceconfig.markmandatoryfnc === 'markMandatoryWithOefosAndAssoc') {
+          for (const s of this.form.sections) {
+            for (const f of s.fields) {
+              if (f.component === 'p-subject-oefos') {
+                f.label = this.$t('Subject (ÖFOS)') + ' *'
+              }
+            }
+          }
+        }
+      }
+    },
+    unmarkOefosMandatory: function () {
+      for (const s of this.form.sections) {
+        for (const f of s.fields) {
+          if (f.component === 'p-subject-oefos') {
+            f.label = this.$t('Subject (ÖFOS)')
+          }
+        }
+      }
+    },
+    handleInputResourceType: function (rt) {
+      switch (rt) {
+        case "https://pid.phaidra.org/vocabulary/44TN-P1S0":
+          // add fields which were removed if switching from collection
+          this.addRemovedFieldsCol(rt);
+          // image => remove language
+          for (let s of this.form.sections) {
+            for (let f of s.fields) {
+              if (f.predicate === "dcterms:language") {
+                arrays.remove(s.fields, f);
+                break;
+              }
+            }
+          }
+          this.markOefosMandatory()
+          break;
+        case "https://pid.phaidra.org/vocabulary/GXS7-ENXJ":
+          // collection => remove file, language, license, oefos and object type field
+          for (let s of this.form.sections) {
+            for (let f of s.fields) {
+              if (f.component === "p-file") {
+                arrays.remove(s.fields, f);
+                break;
+              }
+            }
+          }
+          for (let s of this.form.sections) {
+            for (let f of s.fields) {
+              if (f.predicate === "dcterms:language") {
+                arrays.remove(s.fields, f);
+                break;
+              }
+            }
+          }
+          for (let s of this.form.sections) {
+            for (let f of s.fields) {
+              if (f.predicate === "edm:hasType") {
+                arrays.remove(s.fields, f);
+                break;
+              }
+            }
+          }
+          for (let s of this.form.sections) {
+            for (let f of s.fields) {
+              if (f.predicate === "edm:rights") {
+                arrays.remove(s.fields, f);
+                break;
+              }
+            }
+          }
+          this.unmarkOefosMandatory()
+          break;
+        default:
+          // add fields which were removed if switching from collection
+          this.addRemovedFieldsCol(rt);
+          // add language (removed if switching from picture or collection)
+          let hasLang = false;
+          for (let s of this.form.sections) {
+            for (let f of s.fields) {
+              if (f.predicate === "dcterms:language") {
+                hasLang = true;
+              }
+            }
+          }
+          if (!hasLang) {
+            let lang = fields.getField("language");
+            lang.value = this.$i18n.locale;
+            lang.label = "Language of object";
+            this.form.sections[0].fields.splice(5, 0, lang);
+          }
+          this.markOefosMandatory()
+          break;
+      }
+    },
     objectCreated: function (event) {
       this.$router.push(this.localeLocation({ path: `/detail/${event}` }));
       this.$vuetify.goTo(0);
@@ -60,7 +213,7 @@ export default {
             type: "digitalobject",
             id: 1,
             fields: [],
-          }
+          },
         ],
       };
 
@@ -68,15 +221,19 @@ export default {
 
       let rt = fields.getField("resource-type-buttongroup");
       rt.vocabulary = "resourcetypenocontainer";
-      rt.resourceTypes = [
-      'https://pid.phaidra.org/vocabulary/44TN-P1S0',
-      'https://pid.phaidra.org/vocabulary/8YB5-1M0J',
-      'https://pid.phaidra.org/vocabulary/B0Y6-GYT8',
-      'https://pid.phaidra.org/vocabulary/69ZZ-2KGX',
-      'https://pid.phaidra.org/vocabulary/7AVS-Y482'
-      ];
       rt.value = defaultResourceType;
       self.form.sections[0].fields.push(rt);
+
+      let otoer = fields.getField("object-type");
+      otoer.value = 'https://pid.phaidra.org/vocabulary/YA8R-1M0D'
+      otoer.hidden = true;
+      self.form.sections[0].fields.push(otoer);
+
+      let ot = fields.getField("object-type");
+      ot.label = 'Learning object type'
+      ot.showLabel = true
+      ot.vocabulary = 'oerobjecttype'
+      self.form.sections[0].fields.push(ot);
 
       let file = fields.getField("file");
       file.fileInputClass = "mb-2";
@@ -84,85 +241,41 @@ export default {
       file.backgroundColor = '#0063a620';
       self.form.sections[0].fields.push(file);
 
-      let phaidra_oer = fields.getField("object-type")
-      phaidra_oer.value = 'https://pid.phaidra.org/vocabulary/YA8R-1M0D'
-      phaidra_oer.hidden = true
-      self.form.sections[0].fields.push(phaidra_oer);
-
-      let ot = fields.getField("object-type-checkboxes");
-      ot.resourceType = defaultResourceType;
-      ot.showLabel = true;
-      ot.vocabulary = 'oerobjecttype';
-      ot.label = 'Materialtyp'
-      self.form.sections[0].fields.push(ot);
-
-      let title = fields.getField("title")
-      self.form.sections[0].fields.push(title);
+      self.form.sections[0].fields.push(fields.getField("title"));
 
       let lang = fields.getField("language");
       lang.value = this.$i18n.locale;
       lang.label = "Language of object";
       self.form.sections[0].fields.push(lang);
 
-      let description = fields.getField("description")
-      self.form.sections[0].fields.push(description);
+      self.form.sections[0].fields.push(fields.getField("description"));
 
       let kw = fields.getField("keyword");
       kw.disableSuggest = true;
-      kw.label = "Schlagworte";
       self.form.sections[0].fields.push(kw);
 
-      let role = fields.getField("fixedrole-person");
-      role.roleLabel = 'Autor:in *'
+      let role = fields.getField("role");
+      role.ordergroup = "role";
       role.role = 'role:aut'
-      role.ordergroup = "role_aut";
       role.roleVocabulary = "submitrolepredicate";
       role.identifierType = "ids:orcid";
-      role.showIdentifier = false;
+      role.showDefinitions = true;
+      role.showIdentifier = true;
       self.form.sections[0].fields.push(role);
 
-      let role_uploader = fields.getField("fixedrole-person");
-      role_uploader.roleLabel = 'Hochladende Person, falls nicht Autor:in/Autor:innen'
-      role_uploader.definition = 'Person, die das Objekt hochlädt und die Metadaten eingibt, aber das Objekt nicht erstellt hat'
-      role_uploader.ordergroup = "role_upl";
-      role_uploader.role = 'role:uploader'
-      role_uploader.multiplicable = false
-      role_uploader.roleVocabulary = "submitrolepredicate";
-      role_uploader.identifierType = "ids:orcid";
-      role_uploader.showIdentifier = false;
-      self.form.sections[0].fields.push(role_uploader);
+      self.form.sections[0].fields.push(fields.getField("oefos-subject"));
+      self.form.sections[0].fields.push(fields.getField("association"));
 
-      let oefos = fields.getField("oefos-subject")
-      oefos.label = 'Fachgebiete (ÖFOS)'
-      self.form.sections[0].fields.push(oefos);
-
-      let audience = fields.getField("audience-vocab")
-      audience.vocabulary = 'oeraudience'
-      self.form.sections[0].fields.push(audience);
+      self.form.sections[0].fields.push(fields.getField("audience"));
 
       let lic = fields.getField("license");
       lic.showValueDefinition = true;
-      lic.vocabulary = "alllicenses";
+      lic.vocabulary = "oerlicenses";
       self.form.sections[0].fields.push(lic);
-
-      let note = fields.getField("note-checkbox-with-link")
-      note.note = 'Grundsätze der Barrierearmut beachtet'
-      note.labelMessageId = 'OER_ACCESSIBILITY_CHECK_LABEL'
-      note.linkLabelMessageId = 'OER_ACCESSIBILITY_CHECK_LINK_LABEL'
-      note.link = 'https://phaidra.kphvie.ac.at/o:13'
-      note.language = 'deu'
-      self.form.sections[0].fields.push(note);
-
-      let alert = fields.getField("alert")
-      alert.contentperlocale = {
-        eng: 'By uploading an OER object using this template, you agree to the <strong>worldwide publication</strong> of the material. After a review, the object will be included in the OER collection and can be accessed via <a href="https://www.oerhub.at/" target="_blank">OERhub.at</a> (search engine for open educational resources from the Austrian higher education sector). <strong>The necessary criteria for OER must be met.</strong> See <a target="_blank" href="https://static.uni-graz.at/fileadmin/digitales-lehren-und-lernen/Dokumente/OER-Leitfaden_V3_2022.pdf">criteria for OER material</a>.',
-        deu: 'Durch das Hochladen eines OER-Objekts mit dieser Vorlage stimmen Sie der <strong>weltweiten Veröffentlichung</strong> des Materials zu. Das Objekt wird nach einer Prüfung in die OER-Collection aufgenommen und ist über <a href="https://www.oerhub.at/" target="_blank">OERhub.at</a> (Suchmaschine für offene Bildungsressourcen aus dem österreichischen Hochschulraum) abrufbar. <strong>Notwenige Kriterien eines OERs sind unbedingt einzuhalten.</strong> Siehe Kriterien für <a target="_blank" href="https://static.uni-graz.at/fileadmin/digitales-lehren-und-lernen/Dokumente/OER-Leitfaden_V3_2022.pdf">OER-Tauglichkeit</a>.'
-      }
-      self.form.sections[0].fields.push(alert);
 
       for (let s of self.form.sections) {
         for (let f of s.fields) {
-          f.configurable = false
+          f.multilingual = true
           for (let prop of Object.keys(f)) {
             switch (prop) {
               case "language":
@@ -170,6 +283,18 @@ export default {
                 break;
               case "nameLanguage":
                 f.nameLanguage = self.$i18n.locale;
+                break;
+              case "funderNameLanguage":
+                f.funderNameLanguage = self.$i18n.locale;
+                break;
+              case "descriptionLanguage":
+                f.descriptionLanguage = self.$i18n.locale;
+                break;
+              case "titleLanguage":
+                f.titleLanguage = self.$i18n.locale;
+                break;
+              case "citationLanguage":
+                f.citationLanguage = self.$i18n.locale;
                 break;
             }
           }

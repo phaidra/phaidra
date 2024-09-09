@@ -1,4 +1,4 @@
-package PhaidraAPI::Model::Oai::Openaire;
+package PhaidraAPI::Model::Mappings::Openaire;
 
 use strict;
 use warnings;
@@ -544,7 +544,7 @@ sub _bytes_string {
   return sprintf("%.2f %s", $bytes, shift @suffixes);
 }
 
-sub get_metadata_openaire {
+sub get_metadata {
   my ($self, $c, $rec) = @_;
 
   # pretend you don't see this
@@ -552,12 +552,39 @@ sub get_metadata_openaire {
   my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
 
   my @metadata;
+  my $openaire = {
+    name       => 'resource',
+    attributes => [
+      { name  => 'xmlns:rdf',
+        value => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+      },
+      { name  => 'xmlns:xsi',
+        value => 'http://www.w3.org/2001/XMLSchema-instance'
+      },
+      { name  => 'xmlns:dc',
+        value => 'http://purl.org/dc/elements/1.1/'
+      },
+      { name  => 'xmlns:dcterms',
+        value => 'http://purl.org/dc/terms/'
+      },
+      { name  => 'xmlns:datacite',
+        value => 'http://datacite.org/schema/kernel-4'
+      },
+      { name  => 'xmlns',
+        value => 'http://namespace.openaire.eu/schema/oaire/'
+      },
+      { name  => 'xsi:schemaLocation',
+        value => 'http://namespace.openaire.eu/schema/oaire/ https://www.openaire.eu/schema/repo-lit/4.0/openaire.xsd'
+      }
+    ],
+    children => []
+  };
 
   #### MANDATORY ####
 
   # Resource Identifier (M)
   # datacite:identifier
-  push @metadata,
+  push @{$openaire->{children}},
     {
     name       => 'datacite:identifier',
     value      => 'https://' . $c->app->config->{phaidra}->{baseurl} . '/' . $rec->{pid},
@@ -571,7 +598,7 @@ sub get_metadata_openaire {
   # Title (M)
   # datacite:title
   my $titles = $self->_get_dc_fields($c, \%iso6393ToBCP, $rec, 'title', 'datacite:title');
-  push @metadata,
+  push @{$openaire->{children}},
     {
     name     => 'datacite:titles',
     children => $titles
@@ -620,12 +647,12 @@ sub get_metadata_openaire {
     }
   }
 
-  push @metadata,
+  push @{$openaire->{children}},
     {
     name     => 'datacite:creators',
     children => $self->_rolesToNodes($c, 'creator', \@creators)
     } if (scalar @creators > 0);
-  push @metadata,
+  push @{$openaire->{children}},
     {
     name     => 'datacite:contributors',
     children => $self->_rolesToNodes($c, 'contributor', \@contributors)
@@ -636,7 +663,7 @@ sub get_metadata_openaire {
     # push bib_publisher
     if ($rec->{bib_publisher}) {
       for my $pub (@{$rec->{bib_publisher}}) {
-        push @metadata,
+        push @{$openaire->{children}},
           {
           name  => 'dc:publisher',
           value => $pub
@@ -646,7 +673,7 @@ sub get_metadata_openaire {
   }
   else {
     for my $pub (@publishers) {
-      push @metadata,
+      push @{$openaire->{children}},
         {
         name  => 'dc:publisher',
         value => $pub->{name}
@@ -797,7 +824,7 @@ sub get_metadata_openaire {
         last;
       }
     }
-    push @metadata,
+    push @{$openaire->{children}},
       {
       name       => 'resourceType',
       value      => $resourcetype,
@@ -859,7 +886,7 @@ sub get_metadata_openaire {
       }
     }
   }
-  push @metadata,
+  push @{$openaire->{children}},
     {
     name       => 'datacite:rights',
     value      => $rights,
@@ -945,7 +972,7 @@ sub get_metadata_openaire {
     push @refNodes, \%refNode;
   }
   if (scalar @refNodes > 0) {
-    push @metadata,
+    push @{$openaire->{children}},
       {
       name     => 'fundingReferences',
       children => \@refNodes
@@ -955,7 +982,7 @@ sub get_metadata_openaire {
   # Language (MA)
   # dc:language
   for my $lang (@{$rec->{dc_language}}) {
-    push @metadata,
+    push @{$openaire->{children}},
       {
       name  => 'dc:language',
       value => $lang
@@ -973,13 +1000,13 @@ sub get_metadata_openaire {
         }
       }
     }
-    push @metadata, $descNode;
+    push @{$openaire->{children}}, $descNode;
   }
 
   # Subject (MA)
   # datacite:subject
   my $subjects = $self->_get_dc_fields($c, \%iso6393ToBCP, $rec, 'subject', 'datacite:subject');
-  push @metadata,
+  push @{$openaire->{children}},
     {
     name     => 'datacite:subjects',
     children => $subjects
@@ -991,7 +1018,7 @@ sub get_metadata_openaire {
   if (exists($rec->{dc_license})) {
     for my $lic (@{$rec->{dc_license}}) {
       if ($lic =~ m/^http(s)?:\/\//) {
-        push @metadata,
+        push @{$openaire->{children}},
           {
           name       => 'licenseCondition',
           value      => $lic,
@@ -1004,7 +1031,7 @@ sub get_metadata_openaire {
       }
       if ($lic eq 'All rights reserved') {
         $allRightReserved = 1;
-        push @metadata,
+        push @{$openaire->{children}},
           {
           name       => 'licenseCondition',
           value      => $lic,
@@ -1071,7 +1098,7 @@ sub get_metadata_openaire {
       else {
         $downloadUrl = 'https://' . $c->app->config->{phaidra}->{fedorabaseurl} . '/fedora/objects/' . $rec->{pid} . '/methods/bdef:Content/download';
       }
-      push @metadata,
+      push @{$openaire->{children}},
         {
         name       => 'file',
         value      => $downloadUrl,
@@ -1138,7 +1165,7 @@ sub get_metadata_openaire {
       }
     }
     if (scalar @ids > 0) {
-      push @metadata,
+      push @{$openaire->{children}},
         {
         name     => 'datacite:alternateIdentifiers',
         children => \@ids
@@ -1169,7 +1196,7 @@ sub get_metadata_openaire {
     }
   }
   if (scalar @relatedIdsNodes > 0) {
-    push @metadata,
+    push @{$openaire->{children}},
       {
       name     => 'datacite:relatedIdentifiers',
       children => \@relatedIdsNodes
@@ -1179,7 +1206,7 @@ sub get_metadata_openaire {
   # Format (R)
   # dc:format
   if ($mime) {
-    push @metadata,
+    push @{$openaire->{children}},
       {
       name  => 'dc:format',
       value => $mime
@@ -1190,14 +1217,14 @@ sub get_metadata_openaire {
   # dc:source
   my $sourceNodes = $self->_get_dc_fields($c, \%iso6393ToBCP, $rec, 'source', 'dc:source');
   for my $sourceNode (@{$sourceNodes}) {
-    push @metadata, $sourceNode;
+    push @{$openaire->{children}}, $sourceNode;
   }
 
   # Coverage (R)
   # dc:coverage
   my $coverageNodes = $self->_get_dc_fields($c, \%iso6393ToBCP, $rec, 'coverage', 'dc:coverage');
   for my $coverageNode (@{$coverageNodes}) {
-    push @metadata, $coverageNode;
+    push @{$openaire->{children}}, $coverageNode;
   }
 
   # Resource Version (R)
@@ -1266,7 +1293,7 @@ sub get_metadata_openaire {
       }
     }
   }
-  push @metadata,
+  push @{$openaire->{children}},
     {
     name       => 'version',
     value      => $oaireversion,
@@ -1281,7 +1308,7 @@ sub get_metadata_openaire {
   # oaire:citationTitle
   if (exists($rec->{bib_journal})) {
     for my $journal (@{$rec->{bib_journal}}) {
-      push @metadata,
+      push @{$openaire->{children}},
         {
         name  => 'citationTitle',
         value => $journal
@@ -1294,7 +1321,7 @@ sub get_metadata_openaire {
   # oaire:citationVolume
   if (exists($rec->{bib_volume})) {
     for my $vol (@{$rec->{bib_volume}}) {
-      push @metadata,
+      push @{$openaire->{children}},
         {
         name  => 'citationVolume',
         value => $vol
@@ -1307,7 +1334,7 @@ sub get_metadata_openaire {
   # oaire:citationIssue
   if (exists($rec->{bib_issue})) {
     for my $iss (@{$rec->{bib_issue}}) {
-      push @metadata,
+      push @{$openaire->{children}},
         {
         name  => 'citationIssue',
         value => $iss
@@ -1320,7 +1347,7 @@ sub get_metadata_openaire {
   # oaire:citationStartPage
   if (exists($rec->{schema_pagestart})) {
     for my $p (@{$rec->{schema_pagestart}}) {
-      push @metadata,
+      push @{$openaire->{children}},
         {
         name  => 'citationStartPage',
         value => $p
@@ -1333,7 +1360,7 @@ sub get_metadata_openaire {
   # oaire:citationEndPage
   if (exists($rec->{schema_pageend})) {
     for my $p (@{$rec->{schema_pageend}}) {
-      push @metadata,
+      push @{$openaire->{children}},
         {
         name  => 'citationEndPage',
         value => $p
@@ -1346,7 +1373,7 @@ sub get_metadata_openaire {
   # oaire:citationEdition
   if (exists($rec->{bib_edition})) {
     for my $ed (@{$rec->{bib_edition}}) {
-      push @metadata,
+      push @{$openaire->{children}},
         {
         name  => 'citationEdition',
         value => $ed
@@ -1374,7 +1401,7 @@ sub get_metadata_openaire {
       };
   }
   if (scalar @sizes > 0) {
-    push @metadata,
+    push @{$openaire->{children}},
       {
       name     => 'datacite:sizes',
       children => \@sizes
@@ -1388,7 +1415,7 @@ sub get_metadata_openaire {
   # dcterms:audience
   if (exists($rec->{educational_context})) {
     for my $ed (@{$rec->{educational_context}}) {
-      push @metadata,
+      push @{$openaire->{children}},
         {
         name  => 'dcterms:audience',
         value => $ed
@@ -1398,7 +1425,7 @@ sub get_metadata_openaire {
   }
   if (exists($rec->{educational_enduserrole})) {
     for my $ed (@{$rec->{educational_enduserrole}}) {
-      push @metadata,
+      push @{$openaire->{children}},
         {
         name  => 'dcterms:audience',
         value => $ed
@@ -1407,11 +1434,13 @@ sub get_metadata_openaire {
     }
   }
 
-  push @metadata,
+  push @{$openaire->{children}},
     {
     name     => 'datacite:dates',
     children => \@dates
     };
+
+  push @metadata, $openaire;
 
   return \@metadata;
 }

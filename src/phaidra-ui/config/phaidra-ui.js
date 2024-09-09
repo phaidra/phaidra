@@ -17,9 +17,6 @@ export default {
         accept: 'application/vnd.citationstyles.csl+json',
         citationstyles: 'https://citation.crosscite.org/styles/'
       },
-      lobid: {
-        baseurl: 'lobid.org'
-      },
       ror: {
         baseurl: 'api.ror.org'
       },
@@ -31,11 +28,6 @@ export default {
         ns: 'https://vocab.phaidra.org/vocabulary/',
         url: 'https://vocab.phaidra.org/fuseki/',
         dataset: 'vocab'
-      },
-      geonames: {
-        search: 'https://secure.geonames.org/searchJSON',
-        username: 'phaidra',
-        maxRows: 50
       },
       dante: {
         search: 'https://api.dante.gbv.de/search',

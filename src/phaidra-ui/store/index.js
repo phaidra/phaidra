@@ -29,17 +29,25 @@ export const mutations = {
       'address', 
       'phone', 
       'email', 
+      'oaidataprovider',
       'languages', 
       'owneremailoverride', 
-      'enabledelete',
-      'markmandatoryfnc', 
+      'showdeletebutton',
+      'markmandatoryfnc',
+      'requestdoiemail', 
       'validationfnc',
       'cms_header',
       'cms_footer',
       'cms_home',
       'cms_impressum',
       'cms_submit',
-      'cms_css'
+      'cms_css',
+      'cms_help',
+      'accessrestrictions_showpersons',
+      'accessrestrictions_showaccounts',
+      'accessrestrictions_showedupersonaffiliation',
+      'accessrestrictions_showorgunits',
+      'accessrestrictions_showgroups'
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
@@ -520,6 +528,7 @@ export const mutations = {
   },
   clearUser(state) {
     state.user = {}
+    // on signout, this was already be deleted by API
     this.$cookies.remove('XSRF-TOKEN')
   },
   clearStore(state) {
@@ -528,6 +537,7 @@ export const mutations = {
     state.collectionMembers = []
     state.user = {}
     state.groups = []
+    // on signout, this was already be deleted by API
     this.$cookies.remove('XSRF-TOKEN')
   },
   setCharts(state, url) {
@@ -539,6 +549,10 @@ export const mutations = {
 }
 
 export const actions = {
+
+  setInstanceConfig({ commit }, config) {
+    commit('setInstanceConfig', config)
+  },
 
   async nuxtServerInit({ commit, dispatch }, { req }) {
     const token = this.$cookies.get('XSRF-TOKEN')

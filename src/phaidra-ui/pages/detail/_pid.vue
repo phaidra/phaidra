@@ -10,7 +10,7 @@
             <v-alert type="info" color="primary">
               <div>
                 {{
-                  $t("This object have been deleted.")
+                  $t("This object has been deleted.")
                 }}
               </div>
             </v-alert>
@@ -505,14 +505,16 @@
                   "
                   :style="
                     objectInfo.cmodel === 'Audio'
-                      ? 'height: 60px; width: 100%; border: 0px;'
+                      ? 'height: 220px; width: 100%; border: 0px;'
                       : objectInfo.cmodel === 'Container' ? 'height: 300px; width: 100%; border: 0px;' : 'height: 500px; width: 100%; border: 0px;'
                   "
                   scrolling="no"
                   frameborder="0"
                   >Content</iframe
                 >
-                <a
+                <v-btn
+                raised
+                color="primary"
                   class="mt-2 float-right"
                   :href="
                     instanceconfig.api +
@@ -521,7 +523,7 @@
                     '/preview'
                   "
                   target="_blank"
-                  >{{ $t("Open in new window") }}</a
+                  >{{ $t("Open in new window") }}</v-btn
                 >
               </v-col>
             </template>
@@ -631,7 +633,7 @@
                       </v-list-item>
                       <v-list-item>
                       </v-list-item>
-                      <v-list-item v-if="(instanceconfig.enabledelete === 1) || (instanceconfig.enabledelete === true)" :to="localePath(`/delete/${member.pid}`)">
+                      <v-list-item v-if="(instanceconfig.showdeletebutton === 1) || (instanceconfig.showdeletebutton === true)" :to="localePath(`/delete/${member.pid}`)">
                         <v-list-item-title>{{
                           $t("Delete")
                         }}</v-list-item-title>
@@ -834,6 +836,8 @@
                                 <v-card-actions>
                                   <v-spacer></v-spacer>
                                   <v-btn
+                                    dark
+                                    color="grey"
                                     :loading="doiCiteLoading"
                                     @click="doiCiteDialog = false"
                                     >{{ $t("Close") }}</v-btn
@@ -850,6 +854,56 @@
                             </span>
                           </p>
                         </v-col>
+                      </v-row>
+                      <v-row no-gutters justify="end" v-if="!doi">
+                        <v-dialog
+                          class="pb-4"
+                          v-model="doiRequestDialog"
+                          width="800px"
+                        >
+                          <template v-slot:activator="{ on }">
+                            <v-btn v-on="on" color="primary" @click="doiRequestDialog = true" :loading="doiRequestLoading">{{  $t('Request DOI') }}</v-btn>
+                          </template>
+                          <v-card>
+                            <v-card-title
+                              dark
+                              class="title font-weight-light grey white--text"
+                              >{{ $t("Request DOI") }}</v-card-title
+                            >
+                            <v-card-text>
+                              <v-container>
+                                <v-row class="mt-4">
+                                  <v-col cols="12">
+                                  {{ $t('Do you want to request a DOI for this object?') }}
+                                  </v-col>
+                                </v-row>
+                                <v-row align="center" justify="center">
+                                  <v-col cols="12">
+                                    <strong>{{ $t('Note') }}</strong>: {{ $t('After the request, please wait for the DOI support to contact you via email.') }}
+                                  </v-col>
+                                </v-row>
+                              </v-container>
+                            </v-card-text>
+                            <v-divider></v-divider>
+                            <v-card-actions>
+                              <v-btn
+                                dark
+                                color="grey"
+                                :loading="doiRequestLoading"
+                                @click="doiRequestDialog = false"
+                                >{{ $t("Cancel") }}</v-btn
+                              >
+                              <v-spacer></v-spacer>
+                              <v-btn
+                                color="primary"
+                                :loading="doiRequestLoading"
+                                @click="requestDOI()"
+                                >{{ $t("Request DOI") }}</v-btn
+                              >
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                        
                       </v-row>
                     </v-card-text>
                   </v-card>
@@ -944,7 +998,7 @@
                             instanceconfig.api +
                             '/object/' +
                             objectInfo.pid +
-                            '/diss/Resource/get'
+                            '/resourcelink/redirect'
                           "
                           color="primary"
                           >{{ $t("Open link") }}</v-btn
@@ -1158,7 +1212,7 @@
                             <v-icon>mdi-eye-outline</v-icon
                             ><span class="ml-2">{{ stats.detail }}</span>
                           </v-col>
-                          <v-col v-if="objectInfo.cmodel !== 'Resource'">
+                          <v-col v-if="downloadable">
                             <v-icon>mdi-download</v-icon
                             ><span class="ml-2">{{ stats.download }}</span>
                           </v-col>
@@ -1648,7 +1702,7 @@
                       >{{ $t("Metadata") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
-                      <v-row
+                      <!-- <v-row
                         no-gutters
                         class="pt-2"
                         v-if="objectInfo.dshash['JSON-LD']"
@@ -1657,7 +1711,7 @@
                           :to="localePath(`/metadata/${objectInfo.pid}`)"
                           >{{ $t("Metadata JSON") }}</nuxt-link
                         >
-                      </v-row>
+                      </v-row> -->
                       <v-row
                         no-gutters
                         class="pt-2"
@@ -1706,6 +1760,18 @@
                           >{{ $t("Metadata XML") }}</a
                         >
                       </v-row>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
+              <v-row class="my-6">
+                <v-col class="pt-0">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box title font-weight-light grey white--text"
+                      >{{ $t("Export formats") }}</v-card-title
+                    >
+                    <v-card-text class="mt-4">
                       <v-row no-gutters class="pt-2">
                         <a
                           :href="
@@ -1732,6 +1798,54 @@
                           "
                           target="_blank"
                           >{{ $t("Data Cite") }}</a
+                        >
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                      >
+                        <a
+                          class="mb-1"
+                          :href="
+                            instanceconfig.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/lom'
+                          "
+                          target="_blank"
+                          >{{ $t("LOM") }}</a
+                        >
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                      >
+                        <a
+                          class="mb-1"
+                          :href="
+                            instanceconfig.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/edm'
+                          "
+                          target="_blank"
+                          >{{ $t("EDM") }}</a
+                        >
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                      >
+                        <a
+                          class="mb-1"
+                          :href="
+                            instanceconfig.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/openaire'
+                          "
+                          target="_blank"
+                          >{{ $t("OpenAIRE") }}</a
                         >
                       </v-row>
                     </v-card-text>
@@ -1847,7 +1961,7 @@
                           >{{ $t("Sort members (text input)") }}</nuxt-link
                         >
                       </v-row>
-                      <v-row
+                      <!-- <v-row
                         no-gutters
                         class="pt-2"
                         v-if="
@@ -1865,7 +1979,7 @@
                           "
                           >{{ $t("Upload web-optimized version") }}</nuxt-link
                         >
-                      </v-row>
+                      </v-row> -->
                       <v-row
                         no-gutters
                         class="pt-2"
@@ -2022,12 +2136,18 @@
                           >{{ $t("Relationships") }}</nuxt-link
                         >
                       </v-row>
-                      <v-row no-gutters class="pt-2">
+                      <v-row v-if="(instanceconfig.showdeletebutton === 1) || (instanceconfig.showdeletebutton === true) || (user.isadmin)" no-gutters class="pt-2">
                         <nuxt-link
                           class="mb-1"
-                          v-if="(instanceconfig.enabledelete === 1) || (instanceconfig.enabledelete === true)"
                           :to="localePath(`/delete/${objectInfo.pid}`)"
                           >{{ $t("Delete") }}</nuxt-link
+                        >
+                      </v-row>
+                      <v-row v-if="user.isadmin" no-gutters class="pt-2">
+                        <a
+                          class="mb-1"
+                          @click="datareplaceDialog = true"
+                          >{{ $t("Replace data") }}</a
                         >
                       </v-row>
                     </v-card-text>
@@ -2053,6 +2173,25 @@
           </v-row>
         </v-col>
       </v-row>
+      <v-dialog v-model="datareplaceDialog" max-width="1200px">
+      <v-card>
+        <v-card-title>
+          <h3 class="title font-weight-light primary--text">{{ $t('Upload new file to') }} {{objectInfo.pid}} ({{objectInfo.cmodel}})</h3>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-container @drop.prevent="addDropFile" @dragover.prevent>
+            <v-file-input v-model="datareplaceFile" :error-messages="datareplaceUploadErrors"></v-file-input>
+          </v-container>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click.stop="datareplaceDialog=false">Close</v-btn>
+          <v-btn color="primary" @click="datareplaceUpload()">Upload</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     </template>
   </v-container>
 </template>
@@ -2062,7 +2201,7 @@
 import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
-import qs from "qs";
+
 export default {
   mixins: [context, config, vocabulary],
   validate({ params }) {
@@ -2251,10 +2390,22 @@ export default {
       }
       return "";
     },
+    license: function () {
+      if (this.objectInfo["dc_rights"]) {
+        for (let f of this.objectInfo["dc_rights"]) {
+          if (f.includes("http")) {
+            return f;
+          }
+        }
+      }
+      return "";
+    },
   },
   data() {
     return {
       relationDialog: false,
+      doiRequestDialog: false,
+      doiRequestLoading: false,
       doiCiteDialog: false,
       doiCiteLoading: false,
       citeResult: "",
@@ -2268,6 +2419,7 @@ export default {
         detail: "-",
       },
       checksums: [],
+      fullJsonLd: "",
       membersPage: 1,
       membersPageSize: 10,
       detailsMetaInfo: null,
@@ -2276,7 +2428,10 @@ export default {
       collMembersPagesize: 10,
       confirmColMemDeleteDlg: false,
       collMemberToRemove: null,
-      collOnlyLatestVersions: true
+      collOnlyLatestVersions: true,
+      datareplaceDialog: false,
+      datareplaceFile: null,
+      datareplaceUploadErrors: []
     };
   },
   async fetch() {
@@ -2349,7 +2504,79 @@ export default {
           }
         });
       }
+
+      // signposting
+      metaInfo.link = []
+      metaInfo.link.push({
+        rel: 'cite-as',
+        href: this.instanceconfig.baseurl + "/" + this.objectInfo.pid
+      });
+      if (this.objectInfo.isinadminset && this.objectInfo.edm_hastype_id) {
+        if ((this.objectInfo.isinadminset.includes('phaidra:ir.univie.ac.at')) && (this.objectInfo.edm_hastype_id.includes('https://pid.phaidra.org/vocabulary/VKA6-9XTY'))) {
+          metaInfo.link.push({
+            rel: 'type',
+            href: 'https://schema.org/ScholarlyArticle'
+          });
+        }
+      }
+      metaInfo.link.push({
+        rel: 'type',
+        href: 'https://schema.org/CreativeWork'
+      });
+      metaInfo.link.push({
+        rel: 'type',
+        href: 'https://schema.org/AboutPage'
+      });
+      metaInfo.link.push({
+        rel: 'license',
+        href: this.license
+      });
+      metaInfo.link.push({
+        rel: 'describedby',
+        type: 'application/xml',
+        href: this.instanceconfig.api + '/object/' + this.objectInfo.pid + '/index/dc'
+      });
+      metaInfo.link.push({
+        rel: 'describedby',
+        type: 'application/vnd.datacite.datacite+xml',
+        href: this.instanceconfig.api + '/object/' + this.objectInfo.pid + '/datacite?format=xml'
+      });
+      if (this.objectInfo.dshash['JSON-LD']) {
+        metaInfo.link.push({
+          rel: 'describedby',
+          type: 'application/ld+json',
+          href: this.instanceconfig.api + '/object/' + this.objectInfo.pid + '/json-ld'
+        });
+      }
+      if (this.downloadable) {
+        metaInfo.link.push({
+          rel: 'item',
+          type: this.mimetype,
+          href: this.instanceconfig.api + '/object/' + this.objectInfo.pid + '/download'
+        });
+      }
+      if (this.objectInfo.id_bib_roles_pers_aut) {
+        for (let aid of this.objectInfo.id_bib_roles_pers_aut) {
+          if (aid.startsWith('orcid:')) {
+            metaInfo.link.push({
+              rel: 'author',
+              href: 'https://orcid.org/' + aid.replace('orcid:', '')
+            });
+          }
+        }
+      }
     }
+
+    if (this.objectInfo.dshash['JSON-LD']) {
+      metaInfo.script = []
+      metaInfo.script.push(
+        { 
+          type: 'application/ld+json', 
+          content: JSON.stringify(this.fullJsonLd) 
+        }
+      )
+    }
+
     this.detailsMetaInfo = metaInfo
   },
   methods: {
@@ -2371,6 +2598,17 @@ export default {
           "fetchCollectionMembers",
           { pid: pid, page: self.collMembersCurrentPage, pagesize: self.collMembersPagesize, onlylatestversion: self.collOnlyLatestVersions }
         );
+      }
+
+      if (self.objectInfo.dshash['JSON-LD']) {
+        try {
+          let response = await self.$axios.get("/object/" + pid + "/json-ld");
+          if (response.data) {
+            self.fullJsonLd = response.data;
+          }
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
     async refreshCollectionMembers () {
@@ -2432,6 +2670,39 @@ export default {
             );
           }
         }
+      }
+    },
+    openDatareplace: function () {
+      this.datareplaceDialog = true
+    },
+    datareplaceUpload: async function () {
+      if (!this.datareplaceFile) {
+        this.datareplaceUploadErrors.push(this.$t('Missing file'))
+        return
+      }
+      this.$store.commit('setLoading', true)
+      try {
+        var httpFormData = new FormData()
+        httpFormData.append('file', this.datareplaceFile)
+        let response = await this.$axios.post('/object/' + this.objectInfo.pid + '/data', httpFormData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-XSRF-TOKEN': this.$store.state.user.token
+          }
+        })
+        if (response.status === 200) {
+          this.$store.commit('setAlerts', [{ type: 'success', msg: 'File was sucessfully uploaded' }])
+        } else {
+          if (response.data.alerts && response.data.alerts.length > 0) {
+            this.$store.commit('setAlerts', response.data.alerts)
+          }
+        }
+      } catch (error) {
+        console.log(error)
+        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+      } finally {
+        this.datareplaceDialog = false
+        this.$store.commit('setLoading', false)
       }
     },
     loadCitationStyles: async function () {
@@ -2505,6 +2776,32 @@ export default {
         this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
       } finally {
         this.doiCiteLoading = false;
+      }
+    },
+    requestDOI: async function (self) {
+      try {
+        this.doiRequestDialog = false;
+        this.doiRequestLoading = true;
+        let response = await this.$axios.request({
+          method: 'POST',
+          url: '/utils/' + this.objectInfo.pid + '/requestdoi',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            "X-XSRF-TOKEN": this.user.token,
+          }
+        })
+        if (response.data.status === 200) {
+          this.$store.commit('setAlerts', [ { msg: this.$t('DOI successfully requested'), type: 'success' } ])
+        } else {
+          if (response.data.alerts && response.data.alerts.length > 0) {
+            this.$store.commit('setAlerts', response.data.alerts)
+          }
+        }
+      } catch (error) {
+        console.log(error)
+        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+      } finally {
+        this.doiRequestLoading = false
       }
     },
     resetData: function (self) {

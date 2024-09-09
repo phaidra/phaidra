@@ -1,9 +1,10 @@
-package Phaidra::Directory::GenericLDAP;
+package Phaidra::Directory::Default;
 
+use utf8;
 use strict;
 use warnings;
 use Data::Dumper;
-use utf8;
+use Storable 'dclone';
 use MongoDB;
 use Data::UUID;
 use Net::LDAP;
@@ -14,86 +15,112 @@ use base 'Phaidra::Directory';
 
 my $config = undef;
 
-my $orgunits = {root => {subunits => []}};
+my $orgunitsDefault = [ 
+  {
+    '@id' => "https://example.com/my-organization/1234",
+    '@type' => "foaf:Organization",
+    "skos:notation" => "X1",
+    "skos:prefLabel" => {
+      "deu" => "Meine Organisation",
+      "eng" => "My Organization"
+    },
+    "subunits" => [
+      {
+        '@id' => "https://example.com/my-organization/5678",
+        '@type' => "aiiso:Division",
+        "skos:notation" => "X11",
+        "skos:prefLabel" => {
+          "deu" => "Management meiner Organisation",
+          "eng" => "My Organization's Management"
+        }
+      },
+      {
+        '@id' => "https://example.com/my-organization/5678",
+        '@type' => "aiiso:Division",
+        "skos:notation" => "X12",
+        "skos:prefLabel" => {
+          "deu" => "Rechtsabteilung meiner Organisation",
+          "eng" => "My Organization's Law Department"
+        }
+      }
+    ]
+  }
+];
 
 sub _init {
 
   # this is the app config
   my $self = shift;
-  my $mojo = shift;
+  my $c = shift;
 
-  #  $config = YAML::Syck::LoadFile('/etc/phaidra.yml');
-  my $orgjsonfilepath = 'lib/phaidra_directory/Phaidra/Directory/organizational_units.json';
-  if (-r $orgjsonfilepath) {
-
-    my $json_text = do {
-      open(my $json_fh, "<:encoding(UTF-8)", $orgjsonfilepath)
-        or $mojo->log->error("Can't open file[" . $orgjsonfilepath . "]: $!\n");
-      local $/;
-      <$json_fh>;
-    };
-
-    my @orgunitsarr = @{decode_json($json_text)};
-    for my $u (@orgunitsarr) {
-      $orgunits->{$u->{id}} = {
-        subunits         => [],
-        superunits       => [],
-        oracle_id        => $u->{oracle_id},
-        parent_oracle_id => $u->{parent_oracle_id},
-        rdf              => {
-          '@type'          => $u->{type},
-          'skos:prefLabel' => {
-            'deu' => $u->{de},
-            'eng' => $u->{en}
-          },
-          'skos:notation' => $u->{oracle_id},
-          '@id'           => $u->{id}
-        }
-      };
-    }
-    for my $unitid (keys %{$orgunits}) {
-      if (exists($orgunits->{$unitid}->{parent_oracle_id}) && ($orgunits->{$unitid}->{parent_oracle_id} eq -1)) {
-        push @{$orgunits->{root}->{subunits}}, $orgunits->{$unitid};
-      }
-      for my $unitid2 (keys %{$orgunits}) {
-        if (exists($orgunits->{$unitid2}->{parent_oracle_id}) && exists($orgunits->{$unitid}->{oracle_id}) && ($orgunits->{$unitid2}->{parent_oracle_id} eq $orgunits->{$unitid}->{oracle_id})) {
-          push @{$orgunits->{$unitid}->{subunits}}, $orgunits->{$unitid2};
-        }
-        if (exists($orgunits->{$unitid2}->{oracle_id}) && exists($orgunits->{$unitid}->{parent_oracle_id}) && ($orgunits->{$unitid2}->{oracle_id} eq $orgunits->{$unitid}->{parent_oracle_id})) {
-          push @{$orgunits->{$unitid}->{superunits}}, $orgunits->{$unitid2};
-        }
-      }
-    }
-  }
-  else {
-    $mojo->log->error("univie.json [$orgjsonfilepath] not found");
-  }
+  $c->app->log->info(__PACKAGE__.' loaded');
 
   return $self;
 }
 
-# [begin] new org methods
+sub _get_org_units {
+  my ($self, $c) = @_;
+
+  my $confcol = $self->_get_config_col($c);
+  my $publicConfig = $confcol->find_one({"config_type" => "public"});
+  if ($publicConfig && ($publicConfig->{data_orgunits}) && ($publicConfig->{data_orgunits} ne '')) {
+    # $c->app->log->info("orgunits public config found");
+    return $publicConfig->{data_orgunits};
+  } else {
+    $c->app->log->info("orgunits config not found in public config, using default");
+    return $orgunitsDefault;
+  }
+}
+
+sub _find_org_unit_rec {
+  my ($self, $c, $orgunits, $id) = @_;
+
+  my $unit;
+  for my $u (@{$orgunits}) {
+    if ($u->{'@id'} eq $id) {
+      $unit = $u;
+      last;
+    } else {
+      if (exists($u->{'subunits'})) {
+        $unit = $self->_find_org_unit_rec($c, $u->{'subunits'}, $id);
+        last if $unit;
+      }
+    }
+  }
+  return $unit;
+}
+
+sub _find_org_superunit_rec {
+  my ($self, $c, $parent, $children, $id) = @_;
+
+  my $unit;
+  for my $u (@{$children}) {
+    if ($u->{'@id'} eq $id) {
+      $unit = $parent;
+      last;
+    } else {
+      if (exists($u->{'subunits'})) {
+        $unit = $self->_find_org_superunit_rec($c, $u, $u->{'subunits'}, $id);
+        last if $unit;
+      }
+    }
+  }
+  return $unit;
+}
+
 sub org_get_subunits {
   my ($self, $c, $id) = @_;
 
   my $res = {alerts => [], status => 200};
 
-  $id = 'root' if $id == 'A-1';
-
-  if (exists($orgunits->{$id})) {
-    if (exists($orgunits->{$id}->{subunits})) {
-      my @subunits;
-      for my $u (@{$orgunits->{$id}->{subunits}}) {
-        push @subunits, $u->{rdf};
-      }
-      $res->{subunits} = \@subunits;
+  my $orgunits = $self->_get_org_units($c);
+  my $unit = $self->_find_org_unit_rec($c, $orgunits, $id);
+  if ($unit) {
+    for my $u (@{$unit->{subunits}}) {
+      delete $u->{subunits};
     }
-    else {
-      push @{$res->{alerts}}, {type => 'error', msg => "Internal error when requesting subunits of $id"};
-      $res->{status} = 500;
-    }
-  }
-  else {
+    $res->{subunits} = $unit->{subunits};
+  } else {
     push @{$res->{alerts}}, {type => 'error', msg => "$id not found"};
     $res->{status} = 404;
   }
@@ -105,30 +132,15 @@ sub org_get_superunits {
 
   my $res = {alerts => [], status => 200};
 
-  if ($id) {
-    if (exists($orgunits->{$id})) {
-      if (exists($orgunits->{$id}->{superunits})) {
-        my @superunits;
-        for my $u (@{$orgunits->{$id}->{superunits}}) {
-          push @superunits, $u->{rdf};
-        }
-        $res->{superunits} = \@superunits;
-      }
-      else {
-        push @{$res->{alerts}}, {type => 'error', msg => "Internal error when requesting superunits of $id"};
-        $res->{status} = 500;
-      }
-    }
-    else {
-      push @{$res->{alerts}}, {type => 'error', msg => "$id not found"};
-      $res->{status} = 404;
-    }
-
+  my $orgunits = $self->_get_org_units($c);
+  my $unit = $self->_find_org_superunit_rec($c, undef, $orgunits, $id);
+  if ($unit) {
+    delete $unit->{subunits};
+    $res->{superunits} = [ $unit ];
+  } else {
+    $res->{superunits} = [];
   }
-  else {
-    push @{$res->{alerts}}, {type => 'error', msg => "No id provided when requesting superunits"};
-    $res->{status} = 400;
-  }
+ 
   return $res;
 }
 
@@ -137,13 +149,14 @@ sub org_get_units {
 
   my $res;
 
+  my $orgunits = $self->_get_org_units($c);
   if ($flat) {
     my @orgunits;
-    $self->_org_get_units_rec_flat($c, $orgunits->{root}->{subunits}, \@orgunits);
+    $self->_org_get_units_rec_flat($c, $orgunits, \@orgunits);
     $res = {alerts => [], units => \@orgunits, status => 200};
   }
   else {
-    $res = {alerts => [], units => $self->_org_get_units_rec($c, $orgunits->{root}->{subunits}), status => 200};
+    $res = {alerts => [], units => $orgunits, status => 200};
   }
 
   return $res;
@@ -153,9 +166,19 @@ sub org_get_parentpath {
   my ($self, $c, $id) = @_;
 
   my @parentpath;
-  push @parentpath, $orgunits->{$id}->{rdf};
-  $self->_org_get_parentpath_rec_flat($c, $orgunits->{$id}->{superunits}, \@parentpath);
-
+  my $orgunits = $self->_get_org_units($c);
+  my $unit = $self->_find_org_unit_rec($c, $orgunits, $id);
+  if ($unit) {
+    delete $unit->{subunits};
+    push @parentpath, $unit;
+    my $superunit = $self->_find_org_superunit_rec($c, undef, $orgunits, $id);
+    while ($superunit) {
+      delete $superunit->{subunits};
+      push @parentpath, $superunit;
+      $superunit = $self->_find_org_superunit_rec($c, undef, $orgunits, $superunit->{'@id'});
+    }
+  }
+  
   return {alerts => [], parentpath => \@parentpath, status => 200};
 }
 
@@ -184,7 +207,9 @@ sub _org_get_units_rec_flat {
   my ($self, $c, $units, $arr) = @_;
 
   for my $u (@{$units}) {
-    push @{$arr}, $u->{rdf};
+    my $u_copy = dclone $u;
+    delete $u_copy->{subunits};
+    push @{$arr}, $u_copy;
     if (exists($u->{subunits})) {
       if (scalar(@{$u->{subunits}}) > 0) {
         $self->_org_get_units_rec_flat($c, $u->{subunits}, $arr);
@@ -192,22 +217,6 @@ sub _org_get_units_rec_flat {
     }
   }
 }
-
-sub _org_get_parentpath_rec_flat {
-  my ($self, $c, $units, $arr) = @_;
-
-  for my $u (@{$units}) {
-    push @{$arr}, $u->{rdf};
-    if (exists($u->{superunits})) {
-      if (scalar(@{$u->{superunits}}) > 0) {
-        $self->_org_get_parentpath_rec_flat($c, $u->{superunits}, $arr);
-      }
-    }
-    last;
-  }
-}
-
-# [end] new org methods
 
 sub get_ldap {
   my $self = shift;
@@ -465,82 +474,6 @@ sub get_email {
   }
 }
 
-#get all departments of a faculty
-sub get_org_units {
-  my ($self, $c, $parentid, $lang) = @_;
-
-  $parentid =~ s/A//g;
-  my $values;
-  if ($parentid) {
-    if ($parentid ne '-1')    #fakcode A-1 == whole university => has no departments
-    {
-      for my $f (@{$config->{faculties}}) {
-        if ($f->{fakcode} eq $parentid) {
-          for my $d (@{$f->{departments}}) {
-            push @$values, {value => $d->{inum}, name => $d->{name}};
-          }
-        }
-      }
-    }
-  }
-  else {
-    for my $f (@{$config->{faculties}}) {
-      push @$values, {value => $f->{fakcode}, name => $f->{name}};
-    }
-  }
-
-  my $res = {alerts => [], status => 200};
-  $res->{org_units} = $values;
-  return $res;
-}
-
-#get the id of a faculty
-sub get_parent_org_unit_id {
-  my ($self, $c, $inum) = @_;
-
-  die("Internal error: undefined inum") unless (defined($inum));
-
-  for my $f (@{$config->{faculties}}) {
-    for my $d (@{$f->{departments}}) {
-      if ($d->{inum} eq $inum) {
-        return $f->{fakcode};
-      }
-    }
-  }
-}
-
-#get the name of a faculty
-sub get_org_unit_name {
-  my ($self, $c, $id, $lang) = @_;
-
-  die("PHAIDRA get_org_unit_name ERROR: undefined id") unless (defined($id));
-  my $name;
-  for my $f (@{$config->{faculties}}) {
-    if ($f->{fakcode} eq $id) {
-      return $f->{name};
-    }
-    for my $d (@{$f->{departments}}) {
-      if ($d->{inum} eq $id) {
-        return $d->{name};
-      }
-    }
-  }
-  return $name;
-}
-
-#get the full name of the author's affiliation
-sub get_affiliation {
-  my ($self, $c, $inum, $lang) = @_;
-  return $self->get_org_unit_name($c, $inum);
-}
-
-sub get_org_name {
-  my $self = shift;
-  my $c    = shift;
-  my $lang = shift;
-  return $config->{institutionName};
-}
-
 #get all branch of studies
 sub get_study_plans {
   my ($self, $c, $lang) = @_;
@@ -618,29 +551,6 @@ sub get_study_name {
   return $name;
 }
 
-#all staff positions at the university
-sub get_pers_funktions {
-  my ($self, $c, $lang) = @_;
-
-  my $functions;
-  push @$functions, {code => 'func1', name => 'func1'};
-  push @$functions, {code => 'func2', name => 'func2'};
-  push @$functions, {code => 'func3', name => 'func3'};
-
-  return $functions;
-}
-
-#get the name of a staff position
-sub get_pers_funktion_name {
-  my ($self, $c, $code, $lang) = @_;
-
-  die("undefined code for perfsunk") unless (defined($code));
-
-  return 'func1' if ($code eq 'func1');
-  return 'func2' if ($code eq 'func2');
-  return 'func3' if ($code eq 'func3');
-}
-
 sub get_user_data {
   my $self     = shift;
   my $c        = shift;
@@ -698,30 +608,6 @@ sub is_superuser_for_user {
 
   return [];
 }
-
-=head2 searchUser
-
-search a user
-
-TODO: remove old example users
-
-=cut
-
-# sub search_user {
-#   my ($self, $c, $searchstring) = @_;
-
-#   my @persons = ();
-#   for my $user (@{$config->{users}}) {
-#     push @persons,
-#       {
-#       uid   => $user->{username},
-#       type  => '',
-#       value => $user->{firstname} . ' ' . $user->{lastname},
-#       };
-#   }
-#   my $hits = @persons;
-#   return \@persons, $hits;
-# }
 
 sub search_user {
   my ($self, $c, $searchstring, $superuser) = @_;
@@ -794,6 +680,30 @@ sub getLDAPEntriesForQuery {
 
 }
 
+sub _connect_mongodb() {
+  my $self = shift;
+  my $c    = shift;
+
+  my $client = MongoDB::MongoClient->new(
+    host     => $c->app->config->{mongodb}->{host},
+    port     => $c->app->config->{mongodb}->{port},
+    username => $c->app->config->{mongodb}->{username},
+    password => $c->app->config->{mongodb}->{password},
+    db_name  => $c->app->config->{mongodb}->{db_name}
+  );
+
+  return $client;
+}
+
+sub _get_config_col() {
+  my $self = shift;
+  my $c    = shift;
+
+  my $client = $self->_connect_mongodb($c);
+  my $db     = $client->get_database($c->app->config->{mongodb}->{database});
+  return $db->get_collection('config');
+}
+
 sub _connect_mongodb_group_manager() {
   my $self = shift;
   my $c    = shift;
@@ -808,6 +718,7 @@ sub _connect_mongodb_group_manager() {
 
   return $client;
 }
+
 
 sub _get_groups_col() {
   my $self = shift;
