@@ -855,7 +855,7 @@
                           </p>
                         </v-col>
                       </v-row>
-                      <v-row no-gutters justify="end" v-if="!doi">
+                      <v-row no-gutters justify="end" v-if="!doi && instanceconfig.requestdoiemail && (instanceconfig.requestdoiemail !== '')">
                         <v-dialog
                           class="pb-4"
                           v-model="doiRequestDialog"
