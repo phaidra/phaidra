@@ -732,13 +732,13 @@ sub _add_contribute {
                   children => [
                     {
                       name => 'lom:langstring',
-                      value => 'LOMv1.0'
-                    }
-                  ],
-                  attributes => [
-                    { 
-                      name  => 'xml:lang',
-                      value => 'x-none'
+                      value => 'LOMv1.0',
+                      attributes => [
+                       {
+                        name  => 'xml:lang',
+                        value => 'x-none'
+                       }
+                      ]
                     }
                   ]
                 },
@@ -747,15 +747,16 @@ sub _add_contribute {
                   children => [
                     {
                       name => 'lom:langstring',
-                      value => $role
+                      value => $role,
+                      attributes => [
+                      {
+                        name  => 'xml:lang',
+                        value => 'x-none'
+                      }
+                     ]
                     }
-                  ],
-                  attributes => [
-                    { 
-                      name  => 'xml:lang',
-                      value => 'x-none'
-                    }
-                  ]
+                   ]
+                  
                 }
               ]
             }
@@ -884,7 +885,7 @@ sub _get_uwm_roles {
     if ($con->{entities}) {
       my @entities = sort {$a->{data_order} <=> $b->{data_order}} @{$con->{entities}};
       for my $e (@entities) {
-        my $entity;
+        my $entity = {};
         my $roleCode = $con->{role};
         switch ($roleCode) {
           case 'aut' {
@@ -988,6 +989,7 @@ sub _get_license_uri {
   }
 
   $uri =~ s/\/$//;
+  $uri =~ s/http\:/https\:/;
 
   return $uri;
 }
