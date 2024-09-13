@@ -63,6 +63,34 @@ sub metadata_tree {
 
     # $c->app->log->debug("Reading uwmetadata tree from " . $c->app->config->{local_uwmetadata_tree} . " class");
     $res->{metadata_tree} = $PhaidraAPI::Model::Uwmetadata::Tree::tree{tree};
+
+    # "faculties" are different on every instance so we have to pull this from config and update the tree with it
+    my $facultyNode = $self->get_json_node($c, 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization', 'faculty', $res->{metadata_tree});
+    my %vocabulary;
+    $vocabulary{namespace} = 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_faculty/';
+    my $langs = $c->app->config->{directory}->{org_units_languages};
+    foreach my $lang (@$langs) {
+      my $resunits = $c->app->directory->org_get_units_uwm($c, undef, $lang);
+      if (exists($resunits->{alerts})) {
+        if ($resunits->{status} != 200) {
+          # there are only alerts
+          return {alerts => $resunits->{alerts}, status => $resunits->{status}};
+        }
+      }
+
+      my $org_units = $resunits->{org_units};
+      foreach my $u (@$org_units) {
+        $vocabulary{'terms'}->{$u->{value}}->{uri} = $vocabulary{namespace} . $u->{value};
+        $vocabulary{'terms'}->{$u->{value}}->{labels}->{$lang} = $u->{name};
+      }
+    }
+    my @termarray;
+    while (my ($key, $element) = each %{$vocabulary{'terms'}}) {
+      push @termarray, $element;
+    }
+    $vocabulary{'terms'} = \@termarray;
+    $facultyNode->{vocabularies} = [ \%vocabulary ];
+
     return $res;
   }
 
@@ -989,7 +1017,6 @@ sub get_org_units_terms {
   foreach my $lang (@$langs) {
 
     my $res = $c->app->directory->org_get_units_uwm($c, $parent_id, $lang);
-
     my $org_units = $res->{org_units};
 
     foreach my $u (@$org_units) {
