@@ -452,7 +452,7 @@ sub get_metadata_tree {
       my $langs = $c->app->config->{directory}->{org_units_languages};
       foreach my $lang (@$langs) {
 
-        my $res = $c->app->directory->get_org_units($c, undef, $lang);
+        my $res = $c->app->directory->org_get_units_uwm($c, undef, $lang);
         if (exists($res->{alerts})) {
           if ($res->{status} != 200) {
 
@@ -988,7 +988,7 @@ sub get_org_units_terms {
   my $langs = $c->app->config->{directory}->{org_units_languages};
   foreach my $lang (@$langs) {
 
-    my $res = $c->app->directory->get_org_units($c, $parent_id, $lang);
+    my $res = $c->app->directory->org_get_units_uwm($c, $parent_id, $lang);
 
     my $org_units = $res->{org_units};
 
