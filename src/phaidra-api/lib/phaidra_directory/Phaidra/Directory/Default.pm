@@ -214,7 +214,12 @@ sub org_get_subunits_for_notation {
   my $res = {alerts => [], status => 200};
 
   my $orgunits = $self->_get_org_units($c);
-  my $unit = $self->_find_org_unit_rec_for_notation($c, $orgunits, $notation);
+  my $unit;
+  if ($notatiopn) {
+    $unit = $self->_find_org_unit_rec_for_notation($c, $orgunits, $notation);
+  } else {
+    $unit = $orgunits[0];
+  }
   if ($unit) {
     for my $u (@{$unit->{subunits}}) {
       delete $u->{subunits};
@@ -270,7 +275,7 @@ sub org_get_units_uwm {
   if ($parent_id) {
     $unitsres = $self->org_get_subunits_for_notation($c, $parent_id);
   } else {
-    $unitsres = $self->org_get_subunits_for_notation($c, "A-1");
+    $unitsres = $self->org_get_subunits_for_notation($c);
   }
 
   if ($unitsres->{status} == 200) {
