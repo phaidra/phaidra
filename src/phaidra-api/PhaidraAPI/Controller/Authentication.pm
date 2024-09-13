@@ -274,6 +274,7 @@ sub signin {
   $cookie->name($self->app->config->{authentication}->{token_cookie})->value($session->sid);
   $cookie->secure(1);
   $cookie->path('/');
+  $cookie->httponly(1);
   $cookie->samesite('Strict');
   if ($self->app->config->{authentication}->{cookie_domain}) {
     $cookie->domain($self->app->config->{authentication}->{cookie_domain});
