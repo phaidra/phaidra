@@ -218,9 +218,19 @@ sub label {
       my $fac_or_dep = $1;
       my $unit_id    = $2;
 
-      for my $lang (@{$c->app->config->{directory}->{org_units_languages}}) {
-        my $name = $c->app->directory->get_org_unit_name($c, $unit_id, $lang);
-        $labels->{$lang} = $name;
+      # for my $lang (@{$c->app->config->{directory}->{org_units_languages}}) {
+      #   my $name = $c->app->directory->get_org_unit_name($c, $unit_id, $lang);
+      #   $labels->{$lang} = $name;
+      # }
+
+      my $unitres = $c->app->directory->org_get_unit($c, $unit_id);
+      if ($unitres->{status} == 200) {
+        my $unit = $unitres->{unit};
+        for my $lang (%{$unit->{'skos:prefLabel'}}) {
+          $labels->{$lang} = $unit->{'skos:prefLabel'}->{$lang};
+        }
+      } else {
+        return $unitres;
       }
 
     }

@@ -314,7 +314,7 @@ sub _get_roles {
               if ($affs{'eng'}) {
                 my $affiliation = $affs{'eng'};
                 if ($addInstitutionName) {
-                  my $institutionName = $c->app->directory->get_org_name($c, 'eng');
+                  my $institutionName = $c->app->directory->org_get_name($c, 'eng');
                   if ($institutionName) {
                     if ((index($affiliation, $institutionName) == -1)) {
                       $affiliation = "$institutionName. $affiliation";
@@ -329,7 +329,7 @@ sub _get_roles {
                 for my $affLang (keys %affs) {
                   $affiliation = $affs{$affLang};
                   if ($addInstitutionName) {
-                    my $institutionName = $c->app->directory->get_org_name($c, $affLang);
+                    my $institutionName = $c->app->directory->org_get_name($c, $affLang);
                     if ($institutionName) {
                       if ((index($affiliation, $institutionName) == -1)) {
                         $affiliation = "$institutionName. $affiliation";

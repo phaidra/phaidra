@@ -108,6 +108,68 @@ sub _find_org_superunit_rec {
   return $unit;
 }
 
+sub _find_org_unit_rec_for_notation {
+  my ($self, $c, $orgunits, $notation) = @_;
+
+  my $unit;
+  for my $u (@{$orgunits}) {
+    if ($u->{'skos:notation'} eq $notation) {
+      $unit = $u;
+      last;
+    } else {
+      if (exists($u->{'subunits'})) {
+        $unit = $self->_find_org_unit_rec_for_notation($c, $u->{'subunits'}, $notation);
+        last if $unit;
+      }
+    }
+  }
+  return $unit;
+}
+
+sub org_get_unit {
+  my ($self, $c, $id) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  my $orgunits = $self->_get_org_units($c);
+  my $unit = $self->_find_org_unit_rec($c, $orgunits, $id);
+  if ($unit) {
+    for my $u (@{$unit->{subunits}}) {
+      delete $u->{subunits};
+    }
+    $res->{unit} = $unit;
+  } else {
+    push @{$res->{alerts}}, {type => 'error', msg => "$id not found"};
+    $res->{status} = 404;
+  }
+  return $res;
+}
+
+sub org_get_name {
+  my ($self, $c, $lang) = @_;
+
+  my $confcol = $self->_get_config_col($c);
+  my $publicConfig = $confcol->find_one({"config_type" => "public"});
+  my $inst;
+  if ($publicConfig && ($publicConfig->{institution}) && ($publicConfig->{institution} ne '')) {
+    $inst = $publicConfig->{institution};
+  }
+  if ($inst) {
+    if (exists($publicConfig->{data_i18n})) {
+      for my $l (keys %{$publicConfig->{data_i18n}}) {
+        if ($l eq $lang) {
+          if (exists($publicConfig->{data_i18n}->{$l}->{$inst})) {
+            $inst = $publicConfig->{data_i18n}->{$l}->{$inst};
+          }
+        }
+      }
+    }
+    return $inst;
+  } else {
+    return '';
+  }
+}
+
 sub org_get_subunits {
   my ($self, $c, $id) = @_;
 
@@ -122,6 +184,25 @@ sub org_get_subunits {
     $res->{subunits} = $unit->{subunits};
   } else {
     push @{$res->{alerts}}, {type => 'error', msg => "$id not found"};
+    $res->{status} = 404;
+  }
+  return $res;
+}
+
+sub org_get_subunits_for_notation {
+  my ($self, $c, $notation) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  my $orgunits = $self->_get_org_units($c);
+  my $unit = $self->_find_org_unit_rec_for_notation($c, $orgunits, $notation);
+  if ($unit) {
+    for my $u (@{$unit->{subunits}}) {
+      delete $u->{subunits};
+    }
+    $res->{subunits} = $unit->{subunits};
+  } else {
+    push @{$res->{alerts}}, {type => 'error', msg => "$notation not found"};
     $res->{status} = 404;
   }
   return $res;
@@ -160,6 +241,38 @@ sub org_get_units {
   }
 
   return $res;
+}
+
+sub org_get_units_uwm {
+  my ($self, $c, $parent_id, $lang) = @_;
+
+  my $values = [];
+  my $unitsres;
+  if ($parent_id) {
+    $unitsres = $self->org_get_subunits_for_notation($c, $parent_id);
+  } else {
+    $unitsres = $self->org_get_subunits_for_notation($c, "A-1");
+  }
+
+  if ($unitsres->{status} == 200) {
+    for my $u (@{$unitsres->{subunits}}) {
+      my $name;
+      for my $l (keys %{$u->{'skos:prefLabel'}}) {
+        if ($l eq $lang) {
+          $name = $u->{'skos:prefLabel'}->{$l};
+        }
+      }
+      unless ($name) {
+        $name = $u->{'skos:prefLabel'}->{'eng'};
+      }
+      push @{$values}, {
+        value => $u->{'skos:notation'},
+        name => $u->{'skos:notation'}.": ".$name
+      };
+    }
+  }
+
+  return { org_units => $values };
 }
 
 sub org_get_parentpath {

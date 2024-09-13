@@ -2040,7 +2040,7 @@ sub _add_jsonld_index {
               }
             }
             if ($addInstitutionName) {
-              my $institutionName = $c->app->directory->get_org_name($c, 'eng');
+              my $institutionName = $c->app->directory->org_get_name($c, 'eng');
               if ($institutionName) {
                 if ((index($publisher, $institutionName) == -1)) {
                   $publisher = "$institutionName. $publisher";
