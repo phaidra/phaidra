@@ -139,7 +139,26 @@ sub org_get_unit {
     }
     $res->{unit} = $unit;
   } else {
-    push @{$res->{alerts}}, {type => 'error', msg => "$id not found"};
+    push @{$res->{alerts}}, {type => 'error', msg => "id[$id] not found"};
+    $res->{status} = 404;
+  }
+  return $res;
+}
+
+sub org_get_unit_for_notation {
+  my ($self, $c, $id) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  my $orgunits = $self->_get_org_units($c);
+  my $unit = $self->_find_org_unit_rec_for_notation($c, $orgunits, $id);
+  if ($unit) {
+    for my $u (@{$unit->{subunits}}) {
+      delete $u->{subunits};
+    }
+    $res->{unit} = $unit;
+  } else {
+    push @{$res->{alerts}}, {type => 'error', msg => "notation[$id] not found"};
     $res->{status} = 404;
   }
   return $res;

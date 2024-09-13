@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use v5.10;
 use base qw/Mojo::Base/;
+use PhaidraAPI::Model::Languages;
 
 our $classification_ns = "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification";
 our $organization_ns   = "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization";
@@ -223,11 +224,14 @@ sub label {
       #   $labels->{$lang} = $name;
       # }
 
-      my $unitres = $c->app->directory->org_get_unit($c, $unit_id);
+      my $unitres = $c->app->directory->org_get_unit_for_notation($c, $unit_id);
       if ($unitres->{status} == 200) {
         my $unit = $unitres->{unit};
+        my $lang_model   = PhaidraAPI::Model::Languages->new;
+        my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
         for my $lang (%{$unit->{'skos:prefLabel'}}) {
-          $labels->{$lang} = $unit->{'skos:prefLabel'}->{$lang};
+          my $alpha2lang = exists($iso6393ToBCP{$lang}) ? $iso6393ToBCP{$lang} : $lang;
+          $labels->{$alpha2lang} = $unit->{'skos:prefLabel'}->{$lang};
         }
       } else {
         return $unitres;
