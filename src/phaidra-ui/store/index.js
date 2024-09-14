@@ -36,6 +36,7 @@ export const mutations = {
       'markmandatoryfnc',
       'requestdoiemail', 
       'validationfnc',
+      'groups',
       'cms_header',
       'cms_footer',
       'cms_home',
@@ -64,7 +65,7 @@ export const mutations = {
   updateBreadcrumbs(state, transition) {
     state.breadcrumbs = [
       {
-        text: state.instanceconfig.institution,
+        text: this.$i18n.t(state.instanceconfig.institution),
         external: true,
         to: state.instanceconfig.institutionurl
       },

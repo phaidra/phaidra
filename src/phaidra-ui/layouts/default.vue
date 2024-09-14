@@ -187,12 +187,6 @@ export default {
       }
     });
 
-    Vue.filter("datetime", function (value) {
-      if (value) {
-        return moment(String(value)).format("DD.MM.YYYY hh:mm:ss");
-      }
-    });
-
     Vue.filter("bytes", function (bytes, precision) {
       if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return "-";
       if (typeof precision === "undefined") precision = 1;

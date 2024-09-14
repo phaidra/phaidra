@@ -12,37 +12,25 @@
                 </template>
               </template>
             </v-row>
-            <v-row>
-              <template v-for="(volume, i) in o['bibo:volume']">
-                <v-col :md="labelColMd" cols="12" class="pdlabel primary--text" :key="'vl'+i">{{ $t('Volume') }}</v-col>
-                <v-col :md="valueColMd" cols="12" class="valuefield" :key="'v'+i">{{ volume }}</v-col>
-              </template>
+            <v-row v-for="(volume, i) in o['bibo:volume']" :key="'volume'+i">
+              <v-col :md="labelColMd" cols="12" class="pdlabel primary--text">{{ $t('Volume') }}</v-col>
+              <v-col :md="valueColMd" cols="12" class="valuefield">{{ volume }}</v-col>
             </v-row>
-            <v-row>
-              <template v-for="(issue, i) in o['bibo:issue']">
-                <v-col :md="labelColMd" cols="12" class="pdlabel primary--text" :key="'il'+i">{{ $t('Issue') }}</v-col>
-                <v-col :md="valueColMd" cols="12" class="valuefield" :key="'i'+i">{{ issue }}</v-col>
-              </template>
+            <v-row v-for="(issue, i) in o['bibo:issue']" :key="'issue'+i">
+              <v-col :md="labelColMd" cols="12" class="pdlabel primary--text">{{ $t('Issue') }}</v-col>
+              <v-col :md="valueColMd" cols="12" class="valuefield">{{ issue }}</v-col>
             </v-row>
-            <v-row>
-              <template v-for="(issn, i) in o['ids:issn']">
-                <v-col :md="labelColMd" cols="12" class="pdlabel primary--text" :key="'isl'+i">{{ $t('ISSN') }}</v-col>
-                <v-col :md="valueColMd" cols="12" class="valuefield" :key="'is'+i">{{ issn }}</v-col>
-              </template>
+            <v-row v-for="(issn, i) in o['ids:issn']" :key="'issn'+i">
+              <v-col :md="labelColMd" cols="12" class="pdlabel primary--text">{{ $t('ISSN') }}</v-col>
+              <v-col :md="valueColMd" cols="12" class="valuefield">{{ issn }}</v-col>
             </v-row>
-            <v-row>
-              <template v-for="(issued, i) in o['dcterms:issued']">
-                <v-col :md="labelColMd" cols="12" class="pdlabel primary--text" :key="'idatel'+i">{{ $t('Issued') }}</v-col>
-                <v-col :md="valueColMd" cols="12" class="valuefield" :key="'idate'+i">{{ checkAndUpdateField(issued) }}</v-col>
-              </template>
+            <v-row v-for="(issued, i) in o['dcterms:issued']" :key="'issued'+i">
+              <v-col :md="labelColMd" cols="12" class="pdlabel primary--text" >{{ $t('Issued') }}</v-col>
+              <v-col :md="valueColMd" cols="12" class="valuefield">{{ checkAndUpdateField(issued) }}</v-col>
             </v-row>
-            <v-row>
-              <template v-for="(id, i) in o['skos:exactMatch']">
-                <v-col :md="labelColMd" cols="12" class="pdlabel primary--text" :key="'idserl'+i">{{ getLocalizedTermLabel('objectidentifiertype', id['@type']) }}</v-col>
-                <v-col :md="valueColMd" cols="12" v-if="getIDResolverURL(id)" :key="'idser'+i"><a :href="getIDResolverURL(id)" target="_blank">{{ id['@value'] }}</a></v-col>
-                <!-- <v-col :md="labelColMd" cols="12" class="pdlabel primary--text">{{ $t('Identifier') }}</v-col>
-                <v-col :md="valueColMd" cols="12" ><a :href="getIDResolverURL(id)" target="_blank">{{ id['@value'] }}</a></v-col> -->
-              </template>
+            <v-row v-for="(id, i) in o['skos:exactMatch']" :key="'seriesexactMatch'+i">
+              <v-col :md="labelColMd" cols="12" class="pdlabel primary--text">{{ getLocalizedTermLabel('objectidentifiertype', id['@type']) }}</v-col>
+              <v-col :md="valueColMd" cols="12" v-if="getIDResolverURL(id)"><a :href="getIDResolverURL(id)" target="_blank">{{ id['@value'] }}</a></v-col>
             </v-row>
         </v-card-text>
       </v-card>
