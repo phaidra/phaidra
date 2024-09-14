@@ -29,7 +29,7 @@
         </template>
         <template v-else-if="ch.datatype === 'DateTime'">
           <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}</v-col>
-          <v-col cols="12" md="10">{{ ch.ui_value | datetime }}</v-col>
+          <v-col cols="12" md="10">{{ dateModifierFn(ch.ui_value, this) }}</v-col>
         </template>
         <template v-else-if="ch.xmlname === 'description'">
           <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}<template v-if="getLangAttr(ch)"> ({{getLangAttr(ch)}})</template></v-col>
@@ -184,6 +184,7 @@ import '@/compiled-icons/orcid'
 import uwmlangs from '../../utils/uwmlangs'
 import lang3to2map from '../../utils/lang3to2map'
 import { validationrules } from '../../mixins/validationrules'
+import PDateModifier from '../../utils/PDateModifier'
 
 export default {
   name: 'p-d-uwm-rec',
@@ -232,6 +233,9 @@ export default {
     }
   },
   methods: {
+    dateModifierFn: function (v) {
+      return PDateModifier.dateModifierFn(v, this)
+    },
     link: function (v) {
       if (typeof v === 'string') {
         return Autolinker.link(v, {

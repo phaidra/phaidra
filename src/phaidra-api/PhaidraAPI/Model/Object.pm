@@ -568,14 +568,25 @@ sub modify {
     }
     if (scalar @properties) {
       my $eres = $fedora_model->editTriples($c, $pid, \@properties);
+      my $hooks_model = PhaidraAPI::Model::Hooks->new;
+      my $indexed = 0;
       if ($eres->{status} == 200) {
-        if ($state eq 'A') {
-          my $hooks_model = PhaidraAPI::Model::Hooks->new;
-          my $hr          = $hooks_model->modify_hook($c, $pid, 'A');
-          if ($hr->{status} ne 200) {
-            $c->app->log->error("pid[$pid] Error in modify_hook: " . $c->app->dumper($hr));
-            return $hr;
+        if (defined($state)) {
+          if ($state eq 'A') {
+            my $hr          = $hooks_model->modify_hook($c, $pid, 'A');
+            if ($hr->{status} ne 200) {
+              $c->app->log->error("pid[$pid] Error in modify_hook: " . $c->app->dumper($hr));
+              return $hr;
+            }
+            $indexed = 1;
           }
+        }
+      }
+      unless($indexed) {
+        my $hr          = $hooks_model->modify_hook($c, $pid);
+        if ($hr->{status} ne 200) {
+          $c->app->log->error("pid[$pid] Error in modify_hook: " . $c->app->dumper($hr));
+          return $hr;
         }
       }
     }

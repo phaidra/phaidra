@@ -5,9 +5,9 @@
       <v-col :md="valueColMd" cols="12">
         <v-card tile elevation="0">
           <v-card-text class="jsonld-border-left">
-            <v-row v-for="(t, i) in o['skos:prefLabel']">
-              <v-col :md="3" cols="12" class="pdlabel primary--text" :key="'v'+i">{{ $t('Titel') }}<template v-if="t['@language']"> ({{ t['@language'] }})</template></v-col>
-              <v-col :md="9" cols="12" class="valuefield" :key="'v'+i">{{ t['@value'] }}</v-col>
+            <v-row v-for="(t, i) in o['skos:prefLabel']"  :key="'projpreflab'+i">
+              <v-col :md="3" cols="12" class="pdlabel primary--text">{{ $t('Titel') }}<template v-if="t['@language']"> ({{ t['@language'] }})</template></v-col>
+              <v-col :md="9" cols="12" class="valuefield">{{ t['@value'] }}</v-col>
             </v-row>
             <v-row v-for="(d, i) in o['frapo:hasProjectIdentifier']" :key="'ddsl'+i">
               <v-col :md="3" cols="12" class="pdlabel primary--text" >{{ $t('Code / Identifier') }}</v-col>
@@ -30,19 +30,19 @@
               </template>
             </v-row>
             <template v-for="(funder, i) in o['frapo:hasFundingAgency']">
-              <v-row v-for="(ft, i) in funder['skos:prefLabel']">
-                <v-col :md="3" cols="12" class="pdlabel primary--text" :key="'v'+i">{{ $t('Funder') }}<template v-if="ft['@language']"> ({{ ft['@language'] }})</template></v-col>
+              <v-row v-for="(ft, j) in funder['skos:prefLabel']":key="'ft'+i+j">
+                <v-col :md="3" cols="12" class="pdlabel primary--text">{{ $t('Funder') }}<template v-if="ft['@language']"> ({{ ft['@language'] }})</template></v-col>
                 <template v-if="funder['skos:exactMatch']">
-                  <template v-for="(fid, i) in funder['skos:exactMatch']">
+                  <template v-for="(fid, k) in funder['skos:exactMatch']">
                     <template v-if="fid['@value']">
-                      <v-col :md="9" cols="12" :key="'idzf'+i"><a :href="getIDResolverURL(fid)" target="_blank">{{ ft['@value'] }}</a></v-col>
+                      <v-col :md="9" cols="12" :key="'idzf'+i+j+k"><a :href="getIDResolverURL(fid)" target="_blank">{{ ft['@value'] }}</a></v-col>
                     </template>
                     <template v-else>
-                      <v-col :md="9" cols="12" :key="'idzx'+i"><a :href="fid" target="_blank">{{ ft['@value'] }}</a></v-col>
+                      <v-col :md="9" cols="12" :key="'idzx'+i+j+k"><a :href="fid" target="_blank">{{ ft['@value'] }}</a></v-col>
                     </template>
                   </template>
                 </template>
-                <v-col v-else :md="9" cols="12" class="valuefield" :key="'v'+i">{{ ft['@value'] }}</v-col>
+                <v-col v-else :md="9" cols="12" class="valuefield">{{ ft['@value'] }}</v-col>
               </v-row>
             </template>
             <v-row v-for="(d, i) in o['rdfs:comment']" :key="'dl'+i">

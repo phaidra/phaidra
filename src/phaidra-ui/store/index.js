@@ -36,6 +36,7 @@ export const mutations = {
       'markmandatoryfnc',
       'requestdoiemail', 
       'validationfnc',
+      'groups',
       'cms_header',
       'cms_footer',
       'cms_home',
@@ -64,7 +65,7 @@ export const mutations = {
   updateBreadcrumbs(state, transition) {
     state.breadcrumbs = [
       {
-        text: state.instanceconfig.institution,
+        text: this.$i18n.t(state.instanceconfig.institution),
         external: true,
         to: state.instanceconfig.institutionurl
       },
@@ -507,6 +508,12 @@ export const mutations = {
   },
   setToken(state, token) {
     Vue.set(state.user, 'token', token)
+    if (process.browser && (state.instanceconfig.baseurl === 'http://localhost:8899')) {
+      // cookies are not set for localhost
+      // so iframes won't work for restricted objects
+      // but at least we can stay logged it
+      window.localStorage.setItem("XSRF-TOKEN", token)
+    }
   },
   setLoginData(state, logindata) {
     console.log('setLoginData: ')
