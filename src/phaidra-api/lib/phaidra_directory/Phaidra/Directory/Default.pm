@@ -218,7 +218,7 @@ sub org_get_subunits_for_notation {
   if ($notation) {
     $unit = $self->_find_org_unit_rec_for_notation($c, $orgunits, $notation);
   } else {
-    $unit = $orgunits[0];
+    $unit = @{$orgunits}[0];
   }
   if ($unit) {
     for my $u (@{$unit->{subunits}}) {
@@ -256,9 +256,9 @@ sub org_get_units {
 
   my $orgunits = $self->_get_org_units($c);
   if ($flat) {
-    my @orgunits;
-    $self->_org_get_units_rec_flat($c, $orgunits, \@orgunits);
-    $res = {alerts => [], units => \@orgunits, status => 200};
+    my @orgunitsArr;
+    $self->_org_get_units_rec_flat($c, $orgunits, \@orgunitsArr);
+    $res = {alerts => [], units => \@orgunitsArr, status => 200};
   }
   else {
     $res = {alerts => [], units => $orgunits, status => 200};
