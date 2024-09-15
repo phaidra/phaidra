@@ -215,7 +215,7 @@ sub org_get_subunits_for_notation {
 
   my $orgunits = $self->_get_org_units($c);
   my $unit;
-  if ($notatiopn) {
+  if ($notation) {
     $unit = $self->_find_org_unit_rec_for_notation($c, $orgunits, $notation);
   } else {
     $unit = $orgunits[0];
