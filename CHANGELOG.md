@@ -1,3 +1,20 @@
+# v3.3.1
+
+## phaidra-api
+
+  + changing eduPersonAffiliation to affiliation in RIGHTS because it was already used this way
+  + fixes in methods dealing with org units
+  + the session cookie is now httpOnly
+  + layout changes in replayweb template
+
+## phaidra-ui
+
+  + fixed display of "published date" in UWMETADATA
+  + fix publication field label
+  + using local storage for session token in case we're running on localhost to prevent logout on reload
+  + fix config for request DOI button
+  + adding convenient import/export to admin config
+
 # v3.3.0
 
 ## phaidra-api
