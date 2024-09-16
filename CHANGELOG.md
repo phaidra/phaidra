@@ -1,3 +1,9 @@
+# v3.3.2
+
+## phaidra-api
+
+  + minor fixes in directory class
+
 # v3.3.1
 
 ## phaidra-api
