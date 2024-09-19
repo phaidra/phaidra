@@ -340,6 +340,15 @@
                   </v-col>
                   <v-col cols="3" class="mt-4">{{ $t("Override localisation values") }}</v-col>
                 </v-row>
+                <v-row>
+                  <v-col>
+                    <v-textarea
+                      label="Facet queries"
+                      v-model="data_facetqueries_text"
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="3" class="mt-4">{{ $t("Override facet queries") }}</v-col>
+                </v-row>
               </v-container>
             </v-tab-item>
           </v-tabs>
@@ -395,7 +404,7 @@
                   <v-col>
                     <v-textarea label="Config as JSON" v-model="configAsJSON"></v-textarea>
                   </v-col>
-                  <v-col cols="3" class="mt-6">{{ $t("This is the whole config. You can copy it to back it up or to use the Import tab to import it on another 'instance'.") }}</v-col>
+                  <v-col cols="3" class="mt-6">{{ $t("This is the whole config. You can copy it to back it up or to use the Import tab to import it on another 'instance'. Don't forget to adapt API base URL.") }}</v-col>
                 </v-row>
               </v-container>
             </v-tab-item>
@@ -409,7 +418,7 @@
                   <v-col cols="3" class="mt-6">
                     <v-row>
                       <v-col>
-                        {{ $t("This is the whole config. You can copy it to back it up or to use the Import tab to import it on another instance.") }}
+                        {{ $t("Enter config here.") }}
                       </v-col>
                     </v-row>
                     <v-row>
@@ -471,6 +480,8 @@ export default {
       data_vocabularies_text: '',
       data_i18n: {},
       data_i18n_text: '',
+      data_facetqueries: {},
+      data_facetqueries_text: '',
       loading: false,
       activetabimpexp: null,
       activetab: null,
@@ -539,6 +550,11 @@ export default {
           this.data_i18n = JSON.parse(this.data_i18n_text)
         }
         instanceConfData['data_i18n'] = this.data_i18n
+
+        if (this.data_facetqueries_text) {
+          this.data_facetqueries = JSON.parse(this.data_facetqueries_text)
+        }
+        instanceConfData['data_facetqueries'] = this.data_facetqueries
 
         var httpFormData = new FormData()
         httpFormData.append('public_config', JSON.stringify(instanceConfData))
@@ -628,6 +644,9 @@ export default {
 
         this.data_i18n = response?.data?.public_config?.data_i18n
         this.data_i18n_text = JSON.stringify(this.data_i18n, null, 2)
+
+        this.data_facetqueries = response?.data?.public_config?.data_facetqueries
+        this.data_facetqueries_text = JSON.stringify(this.data_facetqueries, null, 2)
       } else {
         if(this.$store?.state?.instanceconfig){
           this.parsedPublicConfigData = {...this.$store.state.instanceconfig}

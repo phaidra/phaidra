@@ -105,7 +105,7 @@ import '@/compiled-icons/fontello-sort-number-down'
 import '@/compiled-icons/material-content-link'
 import '@/compiled-icons/material-action-bookmark'
 import '@/compiled-icons/material-toggle-check-box-outline-blank'
-import { facetQueries, updateFacetQueries, persAuthors, corpAuthors, deactivateFacetQueries } from './facets'
+import { buildDateFacet, updateFacetQueries, persAuthors, corpAuthors, deactivateFacetQueries } from './facets'
 import { buildParams, buildSearchDef, sortdef } from './utils'
 import { setSearchParams } from './location'
 import { saveAs } from 'file-saver'
@@ -240,7 +240,7 @@ export default {
         this.docs = response.data.response.docs
         this.total = response.data.response.numFound
         this.facet_counts = response.data.facet_counts
-        updateFacetQueries(response.data.facet_counts.facet_queries, facetQueries)
+        updateFacetQueries(response.data.facet_counts.facet_queries, this.facetQueries)
       } catch (error) {
         this.$store.commit('setLoading', false)
         console.log(error)
@@ -316,6 +316,7 @@ export default {
       this.roles = []
       this.currentPage = 1
       this.pagesize = 10
+      console.log(this.facetQueries)
       for (let fq of this.facetQueries) {
         // resetable might be set to false in case this search should
         // work only in limited scope (eg only in a particular collection)
@@ -330,14 +331,6 @@ export default {
     toggleSelection: function () {
       this.selectioncheck = !this.selectioncheck
     }
-  },
-  mounted: function () {
-    setSearchParams(this, this.$route.query)
-
-    // This call is delayed because at this point
-    // `setInstanceSolr` has not yet been executed and
-    // the solr url is missing.
-    setTimeout(() => { this.search() }, 100)
   },
   watch: {
     collection: function (col) {
@@ -385,7 +378,7 @@ export default {
       pagesize: 10,
       sortdef,
       lang: 'en',
-      facetQueries,
+      facetQueries: [],
 
       corpAuthors,
       persAuthors,
@@ -443,6 +436,17 @@ export default {
       }
       await vm.search()
     })
+  },
+  mounted: function () {
+    this.facetQueries = JSON.parse(JSON.stringify(this.$store.state.search.facetQueries));
+    this.facetQueries.push(buildDateFacet())
+    
+    setSearchParams(this, this.$route.query)
+
+    // This call is delayed because at this point
+    // `setInstanceSolr` has not yet been executed and
+    // the solr url is missing.
+    setTimeout(() => { this.search() }, 100)   
   }
 }
 </script>

@@ -17,7 +17,7 @@ use PhaidraAPI::Model::Util;
 		<uwr:spl>21</uwr:spl>
 		<uwr:perfunk>8129</uwr:perfunk>
 		<uwr:gruppe>3112</uwr:gruppe>
-    <uwr:edupersonaffiliation>staff</uwr:edupersonaffiliation>
+    <uwr:affiliation>staff</uwr:affiliation>
 	</uwr:allow>
 </uwr:rights>
 =cut
@@ -30,7 +30,7 @@ our %allowed_tags = (
   'spl'        => 1,
   'kennzahl'   => 1,
   'perfunk'    => 1,
-  'edupersonaffiliation'    => 1
+  'affiliation'    => 1
 );
 
 sub json_2_xml {
