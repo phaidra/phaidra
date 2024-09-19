@@ -110,6 +110,10 @@ export default {
           if (settingResponse?.data?.public_config?.data_i18n) {
             this.i18n_override = settingResponse?.data?.public_config?.data_i18n
           }
+          if (settingResponse?.data?.public_config?.data_facetqueries) {
+            console.log('commiting public config')
+            this.$store.commit("search/setFacetQueries", settingResponse?.data?.public_config?.data_facetqueries)
+          }
         }
         this.$store.commit("setInstanceConfigBaseUrl", this.$config.baseURL);
         this.$store.commit("setInstanceConfigApiBaseUrl", this.$config.apiBaseURL);

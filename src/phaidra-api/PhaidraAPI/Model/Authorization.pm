@@ -149,9 +149,9 @@ sub check_rights {
       }
     }
 
-    if (exists($rights->{'edupersonaffiliation'})) {
+    if (exists($rights->{'affiliation'})) {
       $rightsAreEmpty = 0;
-      for my $def (@{$rights->{'edupersonaffiliation'}}) {
+      for my $def (@{$rights->{'affiliation'}}) {
         my $v;
         if (ref($def) eq 'HASH') {
           $v = $def->{value};
@@ -161,7 +161,7 @@ sub check_rights {
         }
         for my $aff (@{$userdata->{affiliation}}) {
           if ($aff eq $v) {
-            $c->app->log->info("Authz op[$op] pid[$pid] username[$currentuser] GRANTED: rule edupersonaffiliation[$aff]");
+            $c->app->log->info("Authz op[$op] pid[$pid] username[$currentuser] GRANTED: rule affiliation[$aff]");
             $res->{rights} = 'ro';
             $res->{status} = 200;
             return $res;

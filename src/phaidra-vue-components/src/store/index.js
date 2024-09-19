@@ -159,7 +159,9 @@ export default new Vuex.Store({
     }
   },
   modules: {
-    vocabulary
+    vocabulary,
+    info,
+    search
   },
   strict: debug
 })

@@ -16,7 +16,7 @@
 			<xs:element ref="spl" />
 			<xs:element ref="kennzahl" />
 			<xs:element ref="perfunk" />
-			<xs:element ref="edupersonaffiliation" />
+			<xs:element ref="affiliation" />
 		</xs:choice>
 	</xs:sequence>
 	</xs:complexType>
@@ -97,7 +97,7 @@
         </xs:complexType>
 </xs:element>
 
-<xs:element name="edupersonaffiliation">
+<xs:element name="affiliation">
         <xs:complexType>
         <xs:simpleContent>
                 <xs:extension base="xs:string">

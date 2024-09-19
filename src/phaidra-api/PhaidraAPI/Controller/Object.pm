@@ -135,7 +135,8 @@ sub _proxy_thumbnail {
   my $cmodel = shift;
   my $size = shift;
 
-  if ($self->imageserver_job_status($pid) eq 'finished') {
+  my $jobstatus = $self->imageserver_job_status($pid);
+  if (defined($jobstatus) && ($jobstatus eq 'finished')) {
 
     # use imageserver
     my $isrv_model = PhaidraAPI::Model::Imageserver->new;
