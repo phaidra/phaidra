@@ -231,7 +231,7 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    image: phaidraorg/ui:5c483f87
+    image: phaidraorg/ui:597f3cf6
     networks:
       - phaidra-network
     environment:
@@ -251,7 +251,7 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    image: phaidraorg/ui:5c483f87
+    image: phaidraorg/ui:597f3cf6
     networks:
       - phaidra-network
     environment:
@@ -267,7 +267,7 @@ services:
   ############### api service for s3 profile ###############
   api-s3:
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:87d0c9db
+    image: phaidraorg/api-dist:597f3cf6
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -324,7 +324,7 @@ services:
   ############### api service for local profile ###############
   api:
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:87d0c9db
+    image: phaidraorg/api-dist:597f3cf6
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"

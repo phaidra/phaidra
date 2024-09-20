@@ -1,3 +1,14 @@
+# v3.3.4
+
+## phaidra-ui
+
+  + Facetqueries and Latestpreview components were added for more homepage customization possibilities
+  + facetQueries base structure can now be overridden via config
+
+## phaidra-api
+
+  + eduPersonAffiliation was changed (back) to affiliation for backwards compatibility 
+
 # v3.3.3
 
 ## phaidra-api
