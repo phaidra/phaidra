@@ -12,12 +12,12 @@ export const state = () => ({
       queries: [
         {
           id: 'restricted',
-          query: 'isrestricted:1 OR datastreams:POLICY',
+          query: '(isrestricted:1 OR datastreams:POLICY)',
           label: 'Restricted'
         },
         {
           id: 'unrestricted',
-          query: '-isrestricted:1 AND -datastreams:POLICY',
+          query: '(-isrestricted:1 AND -datastreams:POLICY)',
           label: 'Unrestricted'
         }
       ]

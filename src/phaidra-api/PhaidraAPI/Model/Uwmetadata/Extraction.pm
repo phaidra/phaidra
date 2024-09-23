@@ -646,7 +646,15 @@ sub _get_affiliation_cached {
   my $cachekey = 'affid_' . $code . '_' . $lang;
   unless ($inststr = $c->app->chi->get($cachekey)) {
     $c->app->log->debug("[cache miss] $cachekey");
-    $inststr = $c->app->directory->get_affiliation($c, $code, $lang);
+    #$inststr = $c->app->directory->get_affiliation($c, $code, $lang);
+    my $u = $c->app->directory->org_get_unit_for_notation($c, $code);
+    if ($u) {
+      for my $l (keys %{$u->{'skos:prefLabel'}}) {
+        if ($l eq $lang) {
+          $inststr = $u->{'skos:prefLabel'}->{$l};
+        }
+      }
+    }
     $c->app->chi->set($cachekey, $inststr, '1 day');
   }
   else {
