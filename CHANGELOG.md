@@ -1,3 +1,19 @@
+# v3.3.5
+
+## phaidra-api
+
+  + use ldapgroups and ou/departmentnumber for autz
+  + fix affiliation resolve in uwmetadata
+  + fix for migrated external content links
+
+## phaidra-ui
+
+  + fix access search facet
+
+## solr
+
+  + fix some missing schema fields
+  
 # v3.3.4
 
 ## phaidra-ui
