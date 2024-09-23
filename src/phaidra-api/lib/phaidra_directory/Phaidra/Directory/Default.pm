@@ -704,6 +704,8 @@ sub get_user_data {
   my $fname;
   my $lname;
   my $email;
+  my $orgul1;
+  my $orgul2;
 
   foreach my $attr (@{$entry->{'asn'}->{'attributes'}}) {
     my $attrtype = $attr->{'type'};
@@ -718,16 +720,22 @@ sub get_user_data {
       if ($attrtype eq 'mail') {
         $email = $val;
       }
+      if ($attrtype eq 'ou') {
+        $orgul1 = $val;
+      }
+      if ($attrtype eq 'departmentNumber') {
+        $orgul2 = $val;
+      }
     }
 
     last if ($fname && $lname && $email);
   }
 
-  my $groups = $self->getUsersLDAPGroups($c, $username);
+  my $ldapgroups = $self->getUsersLDAPGroups($c, $username);
 
-  $c->log->info("groups: ".$c->app->dumper($groups));
+  $c->log->info("ldapgroups: ".$c->app->dumper($ldapgroups));
 
-  my $res = {username => $username, firstname => $fname, lastname => $lname, org_units_l2 => $groups, email => $email};
+  my $res = {username => $username, firstname => $fname, lastname => $lname, ldapgroups => $ldapgroups, email => $email, org_units_l1 => $orgul1, org_units_l2 => $orgul2};
 }
 
 sub is_superuser {

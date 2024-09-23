@@ -374,13 +374,18 @@ sub getDatastream {
   $c->app->log->debug("GET $url");
   my $getres = $c->ua->get($url)->result;
 
-  if ($getres->is_success) {
-    $res->{$dsid} = $getres->body;
-  }
-  else {
-    unshift @{$res->{alerts}}, {type => 'error', msg => $getres->message};
-    $res->{status} = $getres->{code};
-    return $res;
+  if(($getres->{code} == 307) && ($dsid eq 'LINK') && $getres->headers->location) {
+    # if this was a LINK in fedora 3.x it was migrated as external content redirect
+    $res->{'LINK'} = $getres->headers->location;
+  } else {
+    if ($getres->is_success) {
+      $res->{$dsid} = $getres->body;
+    }
+    else {
+      unshift @{$res->{alerts}}, {type => 'error', msg => $getres->message};
+      $res->{status} = $getres->{code};
+      return $res;
+    }
   }
 
   return $res;

@@ -110,9 +110,11 @@
   <field name="_version_" type="plong" indexed="true" stored="false"/>
   <field name="altformats" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="altversions" type="strings" multiValued="true" indexed="true" stored="true"/>
+  <field name="annotations" type="strings"/>
   <field name="annotations_json" type="text_general" indexed="false" stored="true"/>
   <field name="association" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="association_id" type="strings" multiValued="true" indexed="true" stored="true"/>
+  <field name="bbox" type="strings"/>
   <field name="bf_paralleltitle_maintitle" type="strings" indexed="true" stored="true"/>
   <field name="bf_paralleltitle_subtitle" type="strings" indexed="true" stored="true"/>
   <field name="bf_physicallocation" type="strings"/>
@@ -137,6 +139,8 @@
   <field name="educational_enduserrole" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="educational_learningresourcetype" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="firstpagepid" type="string" indexed="true" stored="true"/>
+  <field name="frapo_hasfundingagency_json" type="strings"/>
+  <field name="frapo_isoutputof_json" type="strings"/>
   <field name="funder" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="funder_id" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="hasmember" type="strings"/>
@@ -150,15 +154,18 @@
   <field name="isinadminset" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="ismemberof" type="strings" multiValued="true" indexed="true" stored="false"/>
   <field name="ispartof" type="strings" multiValued="true" indexed="true" stored="false"/>
+  <field name="isrestricted" type="boolean" multiValued="false" indexed="true" stored="true"/>
   <field name="isthumbnailfor" type="strings" multiValued="true" indexed="true" stored="false"/>
   <field name="journal_title" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="keyword_suggest" type="text_suggest" multiValued="true" indexed="true" stored="true"/>
+  <field name="language" type="string" indexed="true" stored="true"/>
   <field name="latlon" type="location_rpt" indexed="true" stored="true"/>
+  <field name="members_metadata" type="strings"/>
   <field name="modified" type="date" indexed="true" stored="true"/>
   <field name="ns" type="string" indexed="true" stored="true"/>
+  <field name="oaire_version_id" type="strings"/>
   <field name="object_type_id" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="oer" type="boolean" multiValued="false" indexed="true" stored="true"/>
-  <field name="isrestricted" type="boolean" multiValued="false" indexed="true" stored="true"/>
   <field name="owl_sameas" type="strings" indexed="true" stored="true"/>
   <field name="owner" type="string" indexed="true" stored="true"/>
   <field name="pid" type="string" indexed="true" required="true" stored="true"/>
@@ -176,6 +183,8 @@
   <field name="roles_json" type="text_general" indexed="false" stored="true"/>
   <field name="schema_genre" type="strings"/>
   <field name="schema_genre_id" type="strings"/>
+  <field name="schema_pageend" type="strings"/>
+  <field name="schema_pagestart" type="strings"/>
   <field name="size" type="double" indexed="true" stored="true"/>
   <field name="sort_dc_title" type="string" indexed="true" stored="false"/>
   <field name="sort_deu_dc_title" type="string" indexed="true" stored="false"/>
