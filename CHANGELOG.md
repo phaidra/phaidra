@@ -1,3 +1,11 @@
+# v3.3.6
+
+## phaidra-ui
+
+  + fix linking IDs which are not URLs
+  + fix cc-by-nc facet
+  + fix dashboard component 
+
 # v3.3.5
 
 ## phaidra-api
