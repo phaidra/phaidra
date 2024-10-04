@@ -935,9 +935,8 @@
                               {{ $t(id.label) }}
                             </span>
                             <br />
-                            <span>
-                              <a :href="id.value">{{ id.value }}</a>
-                            </span>
+                            <a v-if="id.value.startsWith('http')" :href="id.value">{{ id.value }}</a>
+                            <span v-else>{{ id.value }}</span>
                           </p>
                         </v-col>
                       </v-row>
