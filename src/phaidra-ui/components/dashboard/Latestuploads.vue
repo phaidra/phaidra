@@ -7,13 +7,15 @@
         <v-col :cols="12">
           <v-row :key="'prev'+doc.pid">
             <v-col cols="2" class="preview-maxwidth">
-              <p-img :src="instanceconfig.api + '/object/' + doc.pid + '/thumbnail'" class="elevation-2 mt-2">
-                <template v-slot:placeholder>
-                  <div class="fill-height ma-0" align="center" justify="center" >
-                    <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                  </div>
-                </template>
-              </p-img>
+              <router-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">
+                <p-img :src="instanceconfig.api + '/object/' + doc.pid + '/thumbnail'" class="elevation-2 mt-2">
+                  <template v-slot:placeholder>
+                    <div class="fill-height ma-0" align="center" justify="center" >
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </div>
+                  </template>
+                </p-img>
+              </router-link>
             </v-col>
             <v-col cols="10">
               <v-row no-gutters class="mb-4">
@@ -24,7 +26,7 @@
                 </v-col>
                 <v-spacer></v-spacer>
               </v-row>
-              <v-row no-gutters class="my-4 mr-2">
+              <v-row no-gutters class="my-2 mr-2">
                 <span class="grey--text text--darken-4">
                   <span v-for="(aut,i) in doc.bib_roles_pers_aut" :key="'pers'+i">
                     {{aut}}<span v-if="(i+1) < doc.bib_roles_pers_aut.length">; </span>
@@ -36,7 +38,7 @@
           </v-row>
         </v-col>
       </v-row>
-      <v-divider :key="'div'+doc.pid" class="mt-6 mb-4 mr-2"></v-divider>
+      <v-divider :key="'div'+doc.pid" class="mt-4 mb-2 mr-2"></v-divider>
     </div>
     <div>
       <router-link :to="{ path: '/search?q='+fq }">{{ $t('More') }} ({{ total }})</router-link>
@@ -66,7 +68,7 @@ export default {
       let params = {
         q: "*:*",
         rows: this.length,
-        fl: "pid,dc_title,created,owner,isrestricted,dc_rights",
+        fl: "pid,dc_title,created,owner,isrestricted,dc_rights,bib_roles_pers_aut",
         sort: "tcreated desc",
         defType: "edismax",
         wt: "json",

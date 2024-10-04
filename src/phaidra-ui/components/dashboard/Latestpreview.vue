@@ -3,13 +3,15 @@
     <v-card-title class="title font-weight-light primary--text">{{ $t(label) }}</v-card-title>
     <v-card-text>
       <center>
-        <v-img max-width="200" :src="src" class="elevation-2 mt-2" :alt="alt">
-          <template v-slot:placeholder>
-            <div class="fill-height ma-0" align="center" justify="center" >
-              <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-            </div>
-          </template>
-        </v-img>
+        <router-link :to="{ path: `detail/${pid}`, params: { pid: pid } }">
+          <v-img max-width="200" :src="src" class="elevation-2 mt-2" :alt="alt" :title="alt">
+            <template v-slot:placeholder>
+              <div class="fill-height ma-0" align="center" justify="center" >
+                <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+              </div>
+            </template>
+          </v-img>
+        </router-link>
       </center>
       <p class="mt-4">{{ $t(text) }}</p>
       <div>
@@ -34,7 +36,7 @@ export default {
   computed: {
     src: function () {
       if (this.doc) {
-        return this.instanceconfig.api + '/object/' + this.doc.pid + '/thumbnail'
+        return this.instanceconfig.api + '/object/' + this.doc.pid + '/thumbnail?w=200'
       }
       return ''
     },
@@ -43,7 +45,13 @@ export default {
         return this.doc.dc_title[0]
       }
       return ''
-    }
+    },
+    pid:  function () {
+      if (this.doc) {
+        return this.doc.pid
+      }
+      return ''
+    },
   },
   data: () => ({
     doc: null,

@@ -1,3 +1,10 @@
+
+# v3.3.7
+
+## phaidra-ui
+
+  + small improvements in dashboard components
+
 # v3.3.6
 
 ## phaidra-ui
