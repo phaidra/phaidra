@@ -231,7 +231,7 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    image: phaidraorg/ui:0b293809
+    image: phaidraorg/ui:aa7edb95
     networks:
       - phaidra-network
     environment:
@@ -251,7 +251,7 @@ services:
       logging: "promtail"
       logging_jobname: "containerlogs"
     restart: always
-    image: phaidraorg/ui:0b293809
+    image: phaidraorg/ui:aa7edb95
     networks:
       - phaidra-network
     environment:
