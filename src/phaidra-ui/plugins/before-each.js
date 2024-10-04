@@ -1,6 +1,4 @@
 
-import config from '../config/phaidra-ui'
-
 export default async ({ app, $axios, store }) => {
   app.router.beforeEach(async (to, from, next) => {
     if (store.state.user.token) {

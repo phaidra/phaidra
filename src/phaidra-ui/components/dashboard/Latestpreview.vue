@@ -3,7 +3,7 @@
     <v-card-title class="title font-weight-light primary--text">{{ $t(label) }}</v-card-title>
     <v-card-text>
       <center>
-        <v-img max-width="200" :src="instanceconfig.api + '/object/' + doc.pid + '/thumbnail'" class="elevation-2 mt-2" :alt="doc.dc_title ? doc.dc_title[0] : ''">
+        <v-img max-width="200" :src="src" class="elevation-2 mt-2" :alt="alt">
           <template v-slot:placeholder>
             <div class="fill-height ma-0" align="center" justify="center" >
               <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
@@ -31,8 +31,22 @@ export default {
     text: String,
     fq: String,
   },
+  computed: {
+    src: function () {
+      if (this.doc) {
+        return this.instanceconfig.api + '/object/' + this.doc.pid + '/thumbnail'
+      }
+      return ''
+    },
+    alt: function () {
+      if (this.doc) {
+        return this.doc.dc_title[0]
+      }
+      return ''
+    }
+  },
   data: () => ({
-    doc: {},
+    doc: null,
     total: 0
   }),
   methods: {

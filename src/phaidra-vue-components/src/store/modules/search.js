@@ -174,7 +174,7 @@ export const state = () => ({
         },
         {
           id: 'cc-by-nc',
-          query: '(dc_license:"CC BY-NC 2.0 AT" OR dc_license:"CC BY-NC 2.0 Generic" OR dc_license:"CC BY-NC 3.0 AT" OR dc_license:"CC BY-NC 3.0 Unported" OR dc_license:"CC BY-NC 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by\\/*)',
+          query: '(dc_license:"CC BY-NC 2.0 AT" OR dc_license:"CC BY-NC 2.0 Generic" OR dc_license:"CC BY-NC 3.0 AT" OR dc_license:"CC BY-NC 3.0 Unported" OR dc_license:"CC BY-NC 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by-nc\\/*)',
           label: 'CC BY-NC'
         },
         {
