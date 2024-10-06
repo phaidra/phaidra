@@ -680,6 +680,14 @@ our %tree = (
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1552167"
                     },
                     { "labels" => {
+                        "de" => "BegutachterIn",
+                        "en" => "Assessor",
+                        "it" => "Assessor",
+                        "sr" => "Assessor"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1562799"
+                    },
+                    { "labels" => {
                         "de" => "AufbewahrerIn des Originals",
                         "en" => "Keeper of the original",
                         "it" => "Affidatario dell'originale",

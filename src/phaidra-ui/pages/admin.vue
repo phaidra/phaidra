@@ -123,13 +123,29 @@
                     </v-dialog>
                   </v-col>
                   <v-col cols="6" class="mt-3">
-                    <span>
-                      {{
-                        $t(
-                          "Select which template should be used as the submit form."
-                        )
-                      }}
-                    </span>
+                    <v-row>
+                      <span>
+                        {{
+                          $t(
+                            "Select which template should be used as the submit form."
+                          )
+                        }}
+                      </span>
+                    </v-row>
+                    <v-row v-if="selectedTemplateId">
+                      <span>
+                        {{ $t("Currently selected") }}: {{ this.selectedTemplateId }}
+                      </span>
+                    </v-row>
+                    <v-row v-else>
+                      <span>
+                        {{
+                          $t(
+                            "No template is currently selected. Default submit will be used."
+                          )
+                        }}
+                      </span>
+                    </v-row>
                   </v-col>
                 </v-row>
                 <v-divider class="my-8"></v-divider>
@@ -556,6 +572,8 @@ export default {
         }
         instanceConfData['data_facetqueries'] = this.data_facetqueries
 
+        instanceConfData['defaulttemplateid'] = this.selectedTemplateId
+
         var httpFormData = new FormData()
         httpFormData.append('public_config', JSON.stringify(instanceConfData))
         await this.$axios.request({
@@ -599,26 +617,6 @@ export default {
       this.onTemplateSelect("")
     },
     onTemplateSelect: async function (templateid) {
-      this.loading = true
-      var httpFormData = new FormData()
-      httpFormData.append('settings', JSON.stringify({
-        defaultTemplateId: templateid
-      }))
-      try {
-        await this.$axios.request({
-          method: 'POST',
-          url: '/config/public',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
-          },
-          data: httpFormData
-        })
-      } catch (error) {
-        console.error(error)
-      } finally {
-        this.loading = false
-      }
       this.selectedTemplateId = templateid
       this.templateDialog = false;
     },
@@ -632,7 +630,7 @@ export default {
       } catch (error) {
         console.error(error)
       }
-      this.selectedTemplateId = response?.data?.public_config?.defaultTemplateId
+      this.selectedTemplateId = response?.data?.public_config?.defaulttemplateid
       if(response?.data?.public_config){
         this.parsedPublicConfigData = {...response?.data?.public_config}
 

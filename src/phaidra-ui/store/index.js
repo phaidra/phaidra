@@ -37,6 +37,7 @@ export const mutations = {
       'requestdoiemail', 
       'validationfnc',
       'groups',
+      'defaulttemplateid',
       'cms_header',
       'cms_footer',
       'cms_home',
