@@ -1,3 +1,9 @@
+# v3.3.9
+
+## phaidra-ui
+
+  + fix missing dashboard component change
+
 # v3.3.8
 
 ## phaidra-api
