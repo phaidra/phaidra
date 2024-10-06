@@ -1,3 +1,16 @@
+# v3.3.8
+
+## phaidra-api
+
+  + fix missing assessor role
+
+## phaidra-ui
+
+  + new form validation variant: validationWithoutKeywords
+  + fix selecting defailt template
+  + fix some role labels
+  + fix object type field label not being translated
+  + fix marking mandatory fields
 
 # v3.3.7
 
