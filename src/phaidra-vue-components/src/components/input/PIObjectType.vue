@@ -5,7 +5,7 @@
     </v-alert>
     <v-card outlined class="mt-4 mb-8">
       <v-card-title v-if="showLabel" class="title font-weight-light ">
-      {{ label }}
+      {{ $t(label) }}
       </v-card-title>
       <v-card-text class="mt-4">
         <v-row no-gutters>

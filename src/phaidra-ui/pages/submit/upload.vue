@@ -82,6 +82,7 @@ export default {
           if (f.predicate === "edm:hasType") {
             hasObjectType2 = true;
             f.selectedTerms = [];
+            f.label = this.$t('Object type') + ' *'
           }
         }
       }
@@ -97,6 +98,7 @@ export default {
         }
         otf2.resourceType = rtv2;
         otf2.showLabel = true;
+        otf2.label = this.$t('Object type') + ' *';
         this.form.sections[0].fields.splice(2, 0, otf2);
       }
     },
@@ -208,12 +210,11 @@ export default {
       self.mandatoryFieldsFound = {};
       self.mandatoryFieldsFilled = {};
 
-      let settres = await self.$axios.get("/config/public");
-      if (settres?.data?.settings?.defaultTemplateId) {
+      if (this.instanceconfig.defaulttemplateid) {
         try {
           let tmpres = await self.$axios.request({
             method: 'GET',
-            url: '/jsonld/template/' + settres?.data?.settings?.defaultTemplateId,
+            url: '/jsonld/template/' + this.instanceconfig.defaulttemplateid,
             headers: {
               'X-XSRF-TOKEN': self.$store.state.user.token
             }
