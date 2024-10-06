@@ -13,7 +13,9 @@
           </v-img>
         </router-link>
       </center>
-      <p class="mt-4">{{ $t(text) }}</p>
+      <div class="my-6">
+        <slot></slot>
+      </div>
       <div>
         <router-link :to="{ path: '/search?q='+fq }">{{ $t('More') }} ({{ total }})</router-link>
       </div>
