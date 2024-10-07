@@ -1,3 +1,14 @@
+# v3.3.10
+
+## phaidra-api
+
+  + fix missing uwmetadata roles
+  + a little script to figure out OCFL dir path for a pid was added
+
+## phaidra-ui
+
+  + dashboard component title pre-wrap class
+
 # v3.3.9
 
 ## phaidra-ui
