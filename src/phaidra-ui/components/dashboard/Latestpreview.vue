@@ -1,6 +1,6 @@
 <template>
   <v-card class="mt-2 mx-auto" :elevation="0">
-    <v-card-title class="title font-weight-light primary--text">{{ $t(label) }}</v-card-title>
+    <v-card-title class="title font-weight-light primary--text" style="word-break: break-word;">{{ $t(label) }}</v-card-title>
     <v-card-text>
       <center>
         <router-link :to="{ path: `detail/${pid}`, params: { pid: pid } }">

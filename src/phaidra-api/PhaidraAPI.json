@@ -170,7 +170,6 @@
         "ldap": {
             "server": "__OPENLDAP_HOST__",
             "port": "1389",
-            "useridattribute": "uid",
             "groupssearchbase": "ou=groups,__LDAP_ROOT__",
             "usersearchbase": [
                 "ou=people,__LDAP_ROOT__"
