@@ -1172,7 +1172,7 @@ services:
     depends_on: [mariadb-fedora-dev, mariadb-phaidra-dev, mongodb-phaidra-dev, fedora-local-dev]
     networks:
       - phaidra-network
-    profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
+    profiles: ["demo-local-dev", "ssl-local-dev", "shib-local-dev"]
 
   solr-dev:
     image: solr:9.6.1
