@@ -15,6 +15,12 @@ common:
     kvstore:
       store: inmemory
 
+compactor:
+  retention_enabled: true
+
+limits_config:
+  retention_period: 365d
+
 schema_config:
   configs:
     - from: 2020-10-24
