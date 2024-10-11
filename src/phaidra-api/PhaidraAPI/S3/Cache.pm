@@ -11,6 +11,7 @@ use File::Path;
 use File::Spec;
 
 use Net::Amazon::S3;
+use Net::Amazon::S3::Vendor::Generic;
 use Net::Amazon::S3::Authorization::Basic;
 
 autoflush STDOUT 1;
@@ -31,7 +32,13 @@ sub get_bucket_connection{
     authorization_context => Net::Amazon::S3::Authorization::Basic-> new (
       aws_access_key_id => $self->{aws_access_key_id},
       aws_secret_access_key => $self->{aws_secret_access_key},
-     ),
+    ),
+    vendor => Net::Amazon::S3::Vendor::Generic->new(
+      host => $self->{s3_endpoint} =~ s/^https?:\/\///r,
+      use_virtual_host => 0,
+      use_https => !($self->{s3_endpoint} =~ qr/^http:\/\/.*/),
+      default_region => "eu-central-1",
+    ),
     retry => 1,
    );
   $s3->bucket($self->{bucketname});
