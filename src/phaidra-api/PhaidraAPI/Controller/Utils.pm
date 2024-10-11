@@ -95,7 +95,7 @@ sub request_doi {
 
   $self->app->log->debug("DOI request received pid[$pid]");
 
-  my $settings = $self->mongo->get_collection('public_config')->find_one({});
+  my $settings = $self->mongo->get_collection('config')->find_one({ config_type => 'public' });
 
   my $to = $settings->{instanceConfig}->{requestdoiemail};
   unless ($to) {

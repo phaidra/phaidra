@@ -260,10 +260,11 @@ sub get_template {
     $owner = $self->stash->{basic_auth_credentials}->{username};
   }
 
-  my $sres = $self->mongo->get_collection('public_config')->find_one({});
-  if ($sres->{defaultTemplateId}) {
-    if ($sres->{defaultTemplateId} eq $self->stash('tid')) {
+  my $sres = $self->mongo->get_collection('config')->find_one({ config_type => 'public' });
+  if ($sres->{defaulttemplateid}) {
+    if ($sres->{defaulttemplateid} eq $self->stash('tid')) {
       # everybody can read the default template
+      $self->app->log->debug("loading default template[".$self->stash('tid')."]");
       my $tres = $self->mongo->get_collection('jsonldtemplates')->find_one({tid => $self->stash('tid')});
       $res->{template} = $tres;
       $self->render(json => $res, status => $res->{status});

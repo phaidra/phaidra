@@ -132,7 +132,7 @@ export default {
       return []
     },
     isCCLicense: function () {
-      return this.value.startsWith('http://creativecommons.org/licenses')
+      return this.value?.startsWith('http://creativecommons.org/licenses')
     }
   },
   data () {
