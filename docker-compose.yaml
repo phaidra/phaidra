@@ -1070,8 +1070,8 @@ services:
       MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
     profiles: ["demo-s3-dev", "ssl-s3-dev", "shib-s3-dev"]
 
-  #################### ssl-local-dev ####################
-  httpd-ssl-local-dev:
+  #################### ssl-local-dev, ssl-s3-dev ####################
+  httpd-ssl-dev:
     hostname: "httpd"
     image: httpd:2.4.62-bookworm
     <<: [*common, *logs]
@@ -1087,26 +1087,7 @@ services:
       <<: [*api_common_env, *hosts]
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-}"
     entrypoint: [ "bash", "/httpd-ssl-entrypoint.bash" ]
-    profiles: ["ssl-local-dev"]
-
-  #################### ssl-s3-dev ####################
-  httpd-ssl-s3-dev:
-    hostname: "httpd"
-    image: httpd:2.4.62-bookworm
-    <<: [*common, *logs]
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./certs/httpd:/ssl:ro
-      - ./container_init/httpd/phaidra-ssl/conf/phaidra-ssl.conf:/usr/local/apache2/conf/httpd.conf:ro
-      - ./container_init/httpd/phaidra-ssl/httpd-ssl-entrypoint.bash:/httpd-ssl-entrypoint.bash:ro
-      - chronos-sitemaps:/mnt/sitemaps:ro
-    environment:
-      <<: [*api_common_env, *hosts]
-      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-}"
-    entrypoint: [ "bash", "/httpd-ssl-entrypoint.bash" ]
-    profiles: ["ssl-s3-dev"]
+    profiles: ["ssl-local-dev", "ssl-s3-dev"]
 
   #################### shib-local-dev ####################
   httpd-shib-local-dev:
