@@ -21,8 +21,6 @@ sub get_url {
   $url->host($c->app->config->{imageserver}->{host});
   $url->path($c->app->config->{imageserver}->{path});
 
-  my $isr = $c->app->config->{imageserver}->{image_server_root};
-
   my $p;
   my $p_name;
   my $params = $params_arg->to_hash;
