@@ -42,6 +42,7 @@ autoflush STDOUT 1;
 # S3 credentials and bucketname
 my $aws_access_key_id = $ENV{S3_ACCESS_KEY};
 my $aws_secret_access_key = $ENV{S3_SECRET_KEY};
+my $s3_endpoint = $ENV{S3_ENDPOINT};
 my $bucketname = $ENV{S3_BUCKETNAME};
 my $s3_cachesize= $ENV{S3_CACHESIZE};
 my $s3_cache_topdir = $ENV{S3_CACHE_TOPDIR};
@@ -253,6 +254,7 @@ sub thumbnail {
         my $s3_cache = PhaidraAPI::S3::Cache->new(paf_mongodb=>$paf_mongo,
                                                   aws_access_key_id=>$aws_access_key_id,
                                                   aws_secret_access_key=>$aws_secret_access_key,
+                                                  s3_endpoint=>$s3_endpoint,
                                                   bucketname=>$bucketname,
                                                   s3_cachesize=>$s3_cachesize,
                                                   s3_cache_topdir=>$s3_cache_topdir);
@@ -528,6 +530,7 @@ sub preview {
           my $s3_cache = PhaidraAPI::S3::Cache->new(paf_mongodb=>$paf_mongo,
                                                     aws_access_key_id=>$aws_access_key_id,
                                                     aws_secret_access_key=>$aws_secret_access_key,
+                                                    s3_endpoint=>$s3_endpoint,
                                                     bucketname=>$bucketname,
                                                     s3_cachesize=>$s3_cachesize,
                                                     s3_cache_topdir=>$s3_cache_topdir);

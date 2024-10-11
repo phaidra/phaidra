@@ -9,11 +9,13 @@ use Mojo::File;
 use Digest::SHA qw(sha256_hex);
 use base qw/Mojo::Base/;
 use Net::Amazon::S3;
+use Net::Amazon::S3::Vendor::Generic;
 use Net::Amazon::S3::Authorization::Basic;
 
 # S3 credentials and bucketname
 my $aws_access_key_id = $ENV{S3_ACCESS_KEY};
 my $aws_secret_access_key = $ENV{S3_SECRET_KEY};
+my $s3_endpoint = $ENV{S3_ENDPOINT};
 my $bucketname = $ENV{S3_BUCKETNAME};
 
 my %prefix2ns = (
@@ -440,8 +442,14 @@ sub getDatastreamPath {
       authorization_context => Net::Amazon::S3::Authorization::Basic-> new (
         aws_access_key_id => $aws_access_key_id,
         aws_secret_access_key => $aws_secret_access_key,
-       ),
+      ),
       retry => 1,
+      vendor => Net::Amazon::S3::Vendor::Generic->new(
+        host => $s3_endpoint,
+        use_virtual_host => 0,
+        use_https => 0,
+        default_region => "eu-central-1",
+      ),
      );
     my $bucket = $s3->bucket($bucketname);
     $inventoryFileFromS3 = '/tmp/' . $pid . '_inventory.json';

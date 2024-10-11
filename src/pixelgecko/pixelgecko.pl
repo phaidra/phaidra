@@ -9,6 +9,7 @@ use YAML::Syck;
 use FileHandle;
 use File::Fetch;
 use Net::Amazon::S3;
+use Net::Amazon::S3::Vendor::Generic;
 use Net::Amazon::S3::Authorization::Basic;
 
 autoflush STDOUT 1;
@@ -36,6 +37,7 @@ my $config = {
     'use_s3' => $ENV{S3_ENABLED},
     'aws_access_key_id' => $ENV{S3_ACCESS_KEY},
     'aws_secret_access_key' => $ENV{S3_SECRET_KEY},
+    's3_endpoint' => $ENV{S3_ENDPOINT},
     'bucketname' => $ENV{S3_BUCKETNAME}
   },
   'fedora' => {
@@ -171,6 +173,12 @@ sub process_job_queue
                 aws_secret_access_key => $config->{s3}->{aws_secret_access_key},
                ),
               retry => 1,
+              vendor => Net::Amazon::S3::Vendor::Generic->new(
+                host => $config->{s3}->{s3_endpoint},
+                use_virtual_host => 0,
+                use_https => 0,
+                default_region => "eu-central-1",
+              ),
              );
             my $bucket = $s3->bucket($config->{s3}->{bucketname});
             $bucket->add_key_filename( $rc->{'image'}, $rc->{'image'},
