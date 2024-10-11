@@ -1089,8 +1089,8 @@ services:
     entrypoint: [ "bash", "/httpd-ssl-entrypoint.bash" ]
     profiles: ["ssl-local-dev", "ssl-s3-dev"]
 
-  #################### shib-local-dev ####################
-  httpd-shib-local-dev:
+  #################### shib-local-dev, shib-s3-dev ####################
+  httpd-shib-dev:
     hostname: "httpd"
     image: phaidraorg/httpd-shib-base:latest
     pull_policy: always
@@ -1118,38 +1118,7 @@ services:
       SHIB_USERNAME: "${SHIB_USERNAME:-}"
       SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
     entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
-    profiles: ["shib-local-dev"]
-
-  #################### shib-s3-dev ####################
-  httpd-shib-s3-dev:
-    hostname: "httpd"
-    image: phaidraorg/httpd-shib-base:latest
-    pull_policy: always
-    <<: [*common, *logs]
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./certs/httpd:/ssl:ro
-      - ./certs/shibboleth:/shibboleth-certs:ro
-      - ./container_init/httpd/phaidra-shib/conf:/shib-init:ro
-      - ./container_init/httpd/phaidra-shib/conf/phaidra-shib.conf:/usr/local/apache2/conf/httpd.conf:ro
-      - ./container_init/httpd/phaidra-shib/httpd-shib-entrypoint.bash:/httpd-shib-entrypoint.bash:ro
-      - chronos-sitemaps:/mnt/sitemaps:ro
-    environment:
-      <<: [*api_common_env, *hosts]
-      SHIB_DISCO_URL: "${SHIB_DISCO_URL:-}"
-      SHIB_METADATA_CERT: "${SHIB_METADATA_CERT:-}"
-      SHIB_METADATA_FILE: "${SHIB_METADATA_FILE:-}"
-      SHIB_METADATA: "${SHIB_METADATA:-}"
-      SHIB_ENTITY_ID: "${SHIB_ENTITY_ID:-}"
-      SHIB_MAIL: "${SHIB_MAIL:-}"
-      SHIB_GIVEN_NAME: "${SHIB_GIVEN_NAME:-}"
-      SHIB_SURNAME: "${SHIB_SURNAME:-}"
-      SHIB_USERNAME: "${SHIB_USERNAME:-}"
-      SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
-    entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
-    profiles: ["shib-s3-dev"]
+    profiles: ["shib-local-dev", "shib-s3-dev"]
 
   minio-s3-dev:
     hostname: "minio"
