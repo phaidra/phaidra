@@ -34,9 +34,9 @@ sub get_bucket_connection{
       aws_secret_access_key => $self->{aws_secret_access_key},
     ),
     vendor => Net::Amazon::S3::Vendor::Generic->new(
-      host => $self->{s3_endpoint},
+      host => $self->{s3_endpoint} =~ s/^https?:\/\///r,
       use_virtual_host => 0,
-      use_https => 0,
+      use_https => !($self->{s3_endpoint} =~ qr/^http:\/\/.*/),
       default_region => "eu-central-1",
     ),
     retry => 1,

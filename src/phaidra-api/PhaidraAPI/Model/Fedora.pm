@@ -445,9 +445,9 @@ sub getDatastreamPath {
       ),
       retry => 1,
       vendor => Net::Amazon::S3::Vendor::Generic->new(
-        host => $s3_endpoint,
+        host => $s3_endpoint =~ s/^https?:\/\///r,
         use_virtual_host => 0,
-        use_https => 0,
+        use_https => !($s3_endpoint =~ qr/^http:\/\/.*/),
         default_region => "eu-central-1",
       ),
      );

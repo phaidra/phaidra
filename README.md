@@ -61,6 +61,9 @@ We highly recommend to use the `--project-name $PROJECT_NAME_OF_YOUR_LIKING` fla
 + `shib-local-dev`: see above.
 + `shib-s3-dev`: see above.
 
+## Extra profiles
++ `minio-s3-dev`: Minio S3 instance. Combine with \*-s3-\* profile if you don't have an S3 instance at hand. With default S3_\* ENV variables (i.e. none set), no further configuration is required. Do not use this in production! The admin UI is available under localhost:9001 with `$S3_ACCESS_KEY` and `$S3_SECRET_KEY` as username/password. Default to `phaidra` and `phaidraphaidra`.
+
 # Run it
 All default values assume that you are running docker rootless as the first non-root user with uid 1000 on your linux computer.  This is what we strongly recommend.  However, if this does not match your reality, please check the following options:
 ## Linux user on docker rootless, but not uid 1000
@@ -92,6 +95,7 @@ docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile demo-local 
   + `S3_BUCKETNAME`
   + `S3_CACHESIZE`: in Bytes, defaults to 100000000 (100MB).
   + `S3_REGION`
+  + `S3_ENDPOINT`: e.g. `https://s3.amazonaws.com` or `https://s3.mydomain.com:1234`. Defaults to `http://minio:9000` (the local minio s3 instance of --profile minio-s3-dev)
 
 ### Startup
 Run the following command to get PHAIDRA running on `http://localhost:8899`:

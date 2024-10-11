@@ -174,9 +174,9 @@ sub process_job_queue
                ),
               retry => 1,
               vendor => Net::Amazon::S3::Vendor::Generic->new(
-                host => $config->{s3}->{s3_endpoint},
+                host => $config->{s3}->{s3_endpoint} =~ s/^https?:\/\///r,
                 use_virtual_host => 0,
-                use_https => 0,
+                use_https => !($config->{s3}->{s3_endpoint} =~ qr/^http:\/\/.*/),
                 default_region => "eu-central-1",
               ),
              );
