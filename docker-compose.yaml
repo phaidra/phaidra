@@ -218,7 +218,6 @@ services:
     image: phaidraorg/ui:dbb2936a
     environment:
       <<: [*api_common_env, *hosts]
-      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB-:}"
       OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
       PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#008080}"
       PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
@@ -233,7 +232,6 @@ services:
     image: phaidraorg/ui:dbb2936a
     environment:
       <<: [*api_common_env, *hosts]
-      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB-:}"
       OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
       PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#008080}"
       PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
@@ -402,7 +400,6 @@ services:
       PHAIDRADB: "${PHAIDRADB:-phaidradb}"
       PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
       PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
-      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB:-:}"
     depends_on: [mariadb-fedora, mariadb-phaidra, mongodb-phaidra, fedora]
     profiles: ["demo-local", "ssl-local", "shib-local"]
 
@@ -424,11 +421,7 @@ services:
       MARIADB_PHAIDRA_ROOT_PASSWORD: "${MARIADB_PHAIDRA_ROOT_PASSWORD:-example}"
       MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
       MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
-      OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
       PHAIDRADB: "${PHAIDRADB:-phaidradb}"
-      PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
-      PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
-      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB-:}"
     depends_on: [mariadb-fedora, mariadb-phaidra, mongodb-phaidra, fedora-s3]
     profiles: ["demo-s3", "ssl-s3", "shib-s3"]
 
@@ -760,8 +753,6 @@ services:
       dockerfile: dockerfiles/ui.dockerfile
     environment:
       <<: [*api_common_env, *hosts]
-      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB-:}"
-      OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
       PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#008080}"
       PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
       PHAIDRA_API_HOST_INTERNAL: "${PHAIDRA_API_HOST:-api-local-dev}"
@@ -898,11 +889,7 @@ services:
       MARIADB_PHAIDRA_ROOT_PASSWORD: "${MARIADB_PHAIDRA_ROOT_PASSWORD:-example}"
       MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
       MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
-      OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
       PHAIDRADB: "${PHAIDRADB:-phaidradb}"
-      PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
-      PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
-      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB:-:}"
     depends_on: [mariadb-fedora-dev, mariadb-phaidra-dev, mongodb-phaidra-dev, fedora-local-dev]
     profiles: ["demo-local-dev", "ssl-local-dev", "shib-local-dev"]
 
@@ -1016,8 +1003,6 @@ services:
       dockerfile: dockerfiles/ui.dockerfile
     environment:
       <<: [*api_common_env, *hosts]
-      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB-:}"
-      OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
       PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#008080}"
       PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
       PHAIDRA_API_HOST_INTERNAL: "${PHAIDRA_API_HOST:-api-s3-dev}"
@@ -1042,11 +1027,7 @@ services:
       MARIADB_PHAIDRA_ROOT_PASSWORD: "${MARIADB_PHAIDRA_ROOT_PASSWORD:-example}"
       MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
       MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
-      OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
       PHAIDRADB: "${PHAIDRADB:-phaidradb}"
-      PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
-      PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
-      PHAIDRA_PORTSTUB: "${PHAIDRA_PORTSTUB:-:}"
     depends_on: [mariadb-fedora-dev, mariadb-phaidra-dev, mongodb-phaidra-dev, fedora-s3-dev]
     profiles: ["demo-s3-dev", "ssl-s3-dev", "shib-s3-dev"]
   
