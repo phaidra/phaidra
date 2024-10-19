@@ -1,3 +1,32 @@
+# v3.3.11
+
+## phaidra-api
+
+  + logStorageSize.pl script can be used to do daily storage stats (of it makes sense on the particular storage)
+  + scheme is now corrdctly added to PID when generating DC
+  + caching public/private config (helps a bit even if workers are spawned by Apache and don't share cache)
+  + fixed request DOI config
+  + fixed group owner when using shibboleth
+  + adding more data to session and passing more upstream auth headers (this is only needed in Fedora 3 instances)
+  + other small fixes
+
+## phaidra-ui
+
+  + cookie and local storage handling
+  + disabling emphasis in markdown for now because it conflict's with German gender-neutral text
+  + alternative display of project metadata
+  + role validation fix
+  + fixed accessibility vocabularies
+  + other small fixes
+
+## chronos
+
+  + fixed updateOai script and removed some files which are not needed
+
+## docker
+
+  + fixed default value syntax for PHAIDRA_HOSTPORT
+
 # v3.3.10
 
 ## phaidra-api
