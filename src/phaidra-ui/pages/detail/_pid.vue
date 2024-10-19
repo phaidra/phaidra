@@ -855,7 +855,7 @@
                           </p>
                         </v-col>
                       </v-row>
-                      <v-row no-gutters justify="end" v-if="!doi && instanceconfig.requestdoiemail && (instanceconfig.requestdoiemail !== '')">
+                      <v-row no-gutters justify="end" v-if="(objectInfo.writerights === 1) && !doi && instanceconfig.requestdoiemail && (instanceconfig.requestdoiemail !== '')">
                         <v-dialog
                           class="pb-4"
                           v-model="doiRequestDialog"
@@ -1092,7 +1092,7 @@
                           >u:scholar</a
                         >
                         <a
-                          v-if="adminset === 'phaidra:utheses.univie.ac.at'"
+                          v-else-if="adminset === 'phaidra:utheses.univie.ac.at'"
                           :href="utheseslink"
                           target="_blank"
                           >u:theses</a

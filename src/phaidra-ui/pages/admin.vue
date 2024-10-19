@@ -390,7 +390,7 @@
                       v-model="parsedPrivateConfigData.enabledelete"
                     ></v-checkbox>
                   </v-col>
-                  <v-col cols="6" class="mt-6">{{ $t("Allows delete of owned objects for normal users. Admin can always delete any object.") }}</v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("Allows delete of owned objects for normal users. Admin can always delete any object. (This setting only applies in Authorizatio/authorize which is currently only use on Fedora 6.x instances.)") }}</v-col>
                 </v-row>
                 
               </v-container>

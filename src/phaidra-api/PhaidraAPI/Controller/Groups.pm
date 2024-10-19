@@ -14,7 +14,12 @@ sub get_group {
 
   my $gid = $self->stash('gid');
 
-  my $g = $self->app->directory->get_group($self, $gid, $self->stash->{basic_auth_credentials}->{username});
+  my $currentuser = $self->stash->{basic_auth_credentials}->{username};
+  if ($self->stash->{remote_user}) {
+    $currentuser = $self->stash->{remote_user};
+  }
+
+  my $g = $self->app->directory->get_group($self, $gid, $currentuser);
 
   # there are only results
   $self->render(json => {alerts => [], group => $g}, status => 200);
@@ -23,7 +28,12 @@ sub get_group {
 sub get_users_groups {
   my $self = shift;
 
-  my $g = $self->app->directory->get_users_groups($self, $self->stash->{basic_auth_credentials}->{username});
+  my $currentuser = $self->stash->{basic_auth_credentials}->{username};
+  if ($self->stash->{remote_user}) {
+    $currentuser = $self->stash->{remote_user};
+  }
+
+  my $g = $self->app->directory->get_users_groups($self, $currentuser);
 
   # there are only results
   $self->render(json => {alerts => [], groups => $g}, status => 200);
@@ -34,7 +44,12 @@ sub add_group {
 
   my $name = $self->param('name');
 
-  my $g = $self->app->directory->create_group($self, $name, $self->stash->{basic_auth_credentials}->{username});
+  my $currentuser = $self->stash->{basic_auth_credentials}->{username};
+  if ($self->stash->{remote_user}) {
+    $currentuser = $self->stash->{remote_user};
+  }
+
+  my $g = $self->app->directory->create_group($self, $name, $currentuser);
 
   # there are only results
   $self->render(json => {alerts => [], group => $g}, status => 200);
@@ -45,7 +60,12 @@ sub remove_group {
 
   my $gid = $self->stash('gid');
 
-  my $g = $self->app->directory->delete_group($self, $gid, $self->stash->{basic_auth_credentials}->{username});
+  my $currentuser = $self->stash->{basic_auth_credentials}->{username};
+  if ($self->stash->{remote_user}) {
+    $currentuser = $self->stash->{remote_user};
+  }
+
+  my $g = $self->app->directory->delete_group($self, $gid, $currentuser);
 
   # there are only results
   $self->render(json => {alerts => []}, status => 200);
@@ -56,11 +76,16 @@ sub add_members {
 
   my $gid = $self->stash('gid');
 
+  my $currentuser = $self->stash->{basic_auth_credentials}->{username};
+  if ($self->stash->{remote_user}) {
+    $currentuser = $self->stash->{remote_user};
+  }
+
   my $members = $self->param('members');
   $members = decode_json(b($members)->encode('UTF-8'));
 
   for my $m (@{$members->{members}}) {
-    $self->app->directory->add_group_member($self, $gid, $m, $self->stash->{basic_auth_credentials}->{username});
+    $self->app->directory->add_group_member($self, $gid, $m, $currentuser);
   }
 
   $self->render(json => {alerts => []}, status => 200);
@@ -71,11 +96,16 @@ sub remove_members {
 
   my $gid = $self->stash('gid');
 
+  my $currentuser = $self->stash->{basic_auth_credentials}->{username};
+  if ($self->stash->{remote_user}) {
+    $currentuser = $self->stash->{remote_user};
+  }
+
   my $members = $self->param('members');
   $members = decode_json(b($members)->encode('UTF-8'));
 
   for my $m (@{$members->{members}}) {
-    $self->app->directory->remove_group_member($self, $gid, $m, $self->stash->{basic_auth_credentials}->{username});
+    $self->app->directory->remove_group_member($self, $gid, $m, $currentuser);
   }
 
   $self->render(json => {alerts => []}, status => 200);

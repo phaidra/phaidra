@@ -130,7 +130,7 @@ export default {
         this.$i18n.mergeLocaleMessage(lang, messages)
       }
     )
-    if (!this.signedin && (this.$config.baseURL === 'http://localhost:8899')) {
+    if (!this.signedin) {
       let token = window.localStorage.getItem("XSRF-TOKEN")
       if (token) {
         this.$store.commit('setToken', token)

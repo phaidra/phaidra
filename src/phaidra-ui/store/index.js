@@ -509,10 +509,7 @@ export const mutations = {
   },
   setToken(state, token) {
     Vue.set(state.user, 'token', token)
-    if (process.browser && (state.instanceconfig.baseurl === 'http://localhost:8899')) {
-      // cookies are not set for localhost
-      // so iframes won't work for restricted objects
-      // but at least we can stay logged it
+    if (process.browser) {
       window.localStorage.setItem("XSRF-TOKEN", token)
     }
   },
@@ -536,8 +533,16 @@ export const mutations = {
   },
   clearUser(state) {
     state.user = {}
-    // on signout, this was already be deleted by API
-    this.$cookies.remove('XSRF-TOKEN')
+    let cookieOptions = {
+      path: '/',
+      secure: true,
+      sameSite: 'Strict',
+      domain: state.instanceconfig.cookiedomain
+    }
+    this.$cookies.remove('XSRF-TOKEN', cookieOptions)
+    if (process.browser) {
+      window.localStorage.removeItem("XSRF-TOKEN")
+    }
   },
   clearStore(state) {
     state.objectInfo = null
@@ -545,8 +550,16 @@ export const mutations = {
     state.collectionMembers = []
     state.user = {}
     state.groups = []
-    // on signout, this was already be deleted by API
-    this.$cookies.remove('XSRF-TOKEN')
+    let cookieOptions = {
+      path: '/',
+      secure: true,
+      sameSite: 'Strict',
+      domain: state.instanceconfig.cookiedomain
+    }
+    this.$cookies.remove('XSRF-TOKEN', cookieOptions)
+    if (process.browser) {
+      window.localStorage.removeItem("XSRF-TOKEN")
+    }
   },
   setCharts(state, url) {
     state.chartsUrl.push(url)
@@ -702,6 +715,19 @@ export const actions = {
         commit('setAlerts', response.data.alerts)
       }
       if (response.status === 200) {
+        if (state.instanceconfig.cookiedomain) {
+          let cookieOptions = {
+            path: '/',
+            secure: true,
+            sameSite: 'Strict',
+            domain: state.instanceconfig.cookiedomain
+          }
+          // we need this because on instances where api runs under services.phaidra... the api
+          // cannot set the cookie
+          console.log('setting cookie ' + response.data['XSRF-TOKEN'])
+          console.log(cookieOptions)
+          this.$cookies.set('XSRF-TOKEN', response.data['XSRF-TOKEN'], cookieOptions)
+        }
         console.log('setting token ' + response.data['XSRF-TOKEN'])
         commit('setToken', response.data['XSRF-TOKEN'])
         dispatch('getLoginData')
