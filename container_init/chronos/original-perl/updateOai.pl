@@ -503,7 +503,7 @@ unless (defined ($recordsBlacklistColl)) {
 
 my $ua = Mojo::UserAgent->new;
 
-my $urlapi = "'$ENV{OUTSIDE_HTTP_SCHEME}'.$ENV{PHAIDRA_HOSTNAME}.$ENV{PHAIDRA_PORTSTUB}.$ENV{PHAIDRA_HOSTPORT}.'/api'";
+my $urlapi = "http://$ENV{PHAIDRA_API_HOST}:3000";
 
 my $urlsolr = Mojo::URL->new;
 $urlsolr->scheme("http");

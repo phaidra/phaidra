@@ -51,7 +51,7 @@ sub check_rights {
 
     my $userdata = $c->app->directory->get_user_data($c, $currentuser);
     unless ($userdata) {
-      $c->app->log->error("Authz op[$op] pid[$pid] currentuser[$currentuser] failed");
+      $c->app->log->error("Authz op[$op] pid[$pid] currentuser[$currentuser] get_user_data failed");
       $res->{status} = 500;
       return $res;
     }

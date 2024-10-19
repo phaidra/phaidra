@@ -240,5 +240,27 @@ sub remove_group_member {
   $c->app->log->error("Directory.pm - " . ((caller(0))[3]) . " - this method is not implemented");
 }
 
+sub _get_org_units {
+  my ($self, $c) = @_;
+
+  $c->app->log->error("Directory.pm - " . ((caller(0))[3]) . " - this method is not implemented");
+}
+
+sub org_get_subunits_for_notation {
+ my ($self, $c, $notation) = @_;
+$c->app->log->error("Directory.pm - " . ((caller(0))[3]) . " - this method is not implemented");
+}
+
+sub org_get_parentpath {
+   my ($self, $c, $id)= @_;
+$c->app->log->error("Directory.pm - " . ((caller(0))[3]) . " - this method is not implemented");
+}
+
+sub org_get_unit_for_notation {
+  my ($self, $c, $id) = @_;
+$c->app->log->error("Directory.pm - " . ((caller(0))[3]) . " - this method is not implemented");
+}
+
+
 1;
 __END__

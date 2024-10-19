@@ -80,7 +80,7 @@ sub get_metadata {
 
   # edm:dataProvider
   my $model = PhaidraAPI::Model::Config->new;
-  my $pubconfig = $model->get_public_config($self);
+  my $pubconfig = $model->get_public_config($c);
   if (exists($pubconfig->{oaidataprovider})) {
     push @{$oreAggregation->{children}}, {
       name       => 'edm:dataProvider',

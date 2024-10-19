@@ -285,6 +285,13 @@ const vocabularies = {
     ],
     loaded: true
   },
+  'irprojectid': {
+    terms: [
+      { '@id': 'ids:doi', 'skos:prefLabel': { 'eng': 'DOI' }, 'skos:example': '10.1629/uksg.419' },
+      { '@id': 'ids:uri', 'skos:prefLabel': { 'eng': 'URI/URL' }, 'skos:example': 'https://example.com/path/resource.txt' }
+    ],
+    loaded: true
+  },
   'entityidentifiertype': {
     terms: [
       { '@id': 'ids:orcid', 'skos:prefLabel': { 'eng': 'ORCID' }, 'skos:example': '0000-0002-1825-0097' },
@@ -1216,7 +1223,7 @@ const vocabularies = {
     ],
     loaded: true
   },
-  'accessibilityFeature': {
+  'accessMode': {
     terms: [
       { '@id': 'auditory', 'skos:prefLabel': { 'eng': 'auditory', 'deu': 'Akustisch' }, 'skos:definition': { 'eng': 'Indicates that the resource contains information encoded in auditory form.', 'deu': 'Zeigt an, dass die Ressource in akustischer Form kodierte Informationen enthält.' } },
       { '@id': 'chartOnVisual', 'skos:prefLabel': { 'eng': 'chartOnVisual', 'deu': 'Tabelle visuell kodiert' }, 'skos:definition': { 'eng': 'Indicates that the resource contains charts encoded in visual form.', 'deu': 'Zeigt an, dass die Ressource Tabellen enthält, die in visueller Form kodiert sind.' } },
@@ -1243,7 +1250,7 @@ const vocabularies = {
     ],
     loaded: true
   },
-  'accessMode': {
+  'accessibilityFeature': {
     terms: [
       { '@id': 'annotations', 'skos:prefLabel': { 'eng': 'annotations', 'deu': 'Anmerkungen' }, 'skos:definition': { 'eng': 'The resource includes annotations from the author, instructor and/or others.', 'deu': 'Die Ressource enthält Anmerkungen des/der Autors/Autorin, des Ausbilders und/oder anderer Personen.' } },
       { '@id': 'ARIA', 'skos:prefLabel': { 'eng': 'ARIA', 'deu': 'ARIA' }, 'skos:definition': { 'eng': 'Indicates the resource includes ARIA roles to organize and improve the structure and navigation.', 'deu': 'Zeigt an, dass die Ressource ARIA-Rollen zur Organisation und Verbesserung der Struktur und Navigation enthält.' } },

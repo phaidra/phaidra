@@ -328,6 +328,10 @@ sub startup {
       my $lastname   = shift;
       my $email   = shift;
       my $affiliation   = shift;
+      my $org_units_l1   = shift;
+      my $org_units_l2   = shift;
+      my $localgroups   = shift;
+      my $displayname = shift;
 
       my $ciphertext;
 
@@ -341,7 +345,19 @@ sub startup {
         $ba = encode_sereal({username => $u, password => $p});
       }
       if (defined($ru)) {
-        $ba = encode_sereal({remote_user => $ru, firstname => $firstname, lastname => $lastname, email => $email, affiliation => $affiliation});
+        $ba = encode_sereal(
+          {
+            remote_user => $ru, 
+            firstname => $firstname, 
+            lastname => $lastname, 
+            displayname => $displayname,
+            email => $email, 
+            affiliation => $affiliation, 
+            org_units_l1 => $org_units_l1, 
+            org_units_l2 => $org_units_l2, 
+            localgroups => $localgroups
+          }
+        );
       }
       
       my $salt = Math::Random::ISAAC::XS->new(map {unpack("N", urandom(4))} 1 .. 256)->irand();

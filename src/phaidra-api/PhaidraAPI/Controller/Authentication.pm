@@ -44,12 +44,12 @@ sub extract_credentials {
         $self->stash->{remote_user}            = $remoteuser;
         my $remoteaffiliation = $self->req->headers->header($self->app->config->{authentication}->{upstream}->{affiliationheader});
         if ($remoteaffiliation) {
-          $self->stash->{remote_affiliation} = $remoteaffiliation;
+          $self->stash->{affiliation} = $remoteaffiliation;
           $self->app->log->debug("remote affiliation: " . $remoteaffiliation);
         }
         my $remotegroups = $self->req->headers->header($self->app->config->{authentication}->{upstream}->{groupsheader});
         if ($remotegroups) {
-          $self->stash->{remote_groups} = $remotegroups;
+          $self->stash->{groups} = $remotegroups;
           $self->app->log->debug("remote groups: " . $remotegroups);
         }
         $upstream_auth_success = 1;
@@ -82,10 +82,15 @@ sub extract_credentials {
 
     # try to find token session
     $self->app->log->debug("Trying to extract token authentication");
-    my $cred = $self->load_cred;
-    $username = $cred->{username};
-    $password = $cred->{password};
-    my $remote_user = $cred->{remote_user};
+    my $sess = $self->load_cred;
+    $username = $sess->{username};
+    $password = $sess->{password};
+    my $remote_user = $sess->{remote_user};
+    my $remoteaffiliation = $sess->{affiliation};
+    my $remotegroups = $sess->{groups};
+    my $org_units_l1 = $sess->{org_units_l1};
+    my $org_units_l2 = $sess->{org_units_l2};
+    my $localgroups =  $sess->{localgroups};
     if (defined($username) && defined($password)) {
       $self->app->log->info("User $username, token authentication provided");
       $self->stash->{basic_auth_credentials} = {username => $username, password => $password};
@@ -96,6 +101,8 @@ sub extract_credentials {
       if (defined($remote_user)) {
         $self->app->log->info("Remote user $remote_user, token authentication provided");
         $self->stash->{remote_user} = $remote_user;
+        $self->stash->{affiliation} = $remoteaffiliation;
+        $self->stash->{groups} = $remotegroups;
         if ($self->app->config->{fedora}->{version} >= 6) {
 
           # TODO fix code to use BA creds OR remote_user if available (controllers currently pass BA username as username... -> becomes owner on create)
@@ -104,6 +111,9 @@ sub extract_credentials {
         else {
           # in fedora 3 we need to use it's upstream authentication feature
           $self->stash->{basic_auth_credentials} = {username => $self->app->config->{authentication}->{upstream}->{upstreamusername}, password => $self->app->config->{authentication}->{upstream}->{upstreampassword}};
+          $self->stash->{fakcode} = $org_units_l1;
+          $self->stash->{inum} = $org_units_l2;
+          $self->stash->{gruppe} = $localgroups;
         }
         return 1;
       }
@@ -350,21 +360,25 @@ sub signin_shib {
     $affiliation = $ENV{$self->app->config->{authentication}->{shibboleth}->{attributes}->{affiliation}};
     $affiliation = $self->req->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{affiliation}) unless $affiliation;
 
-    my @userAffs = split(';', $affiliation);
-    for my $userAff (@userAffs) {
-      last if $authorized;
-      $self->app->log->debug("Checking if affiliation $userAff can login");
-      my @valid_affiliations = map {split(/,/)} @{$self->app->config->{authentication}->{shibboleth}->{requiredaffiliations}};
+    if ($self->app->config->{authentication}->{shibboleth}->{requiredaffiliations}) {
+      my @userAffs = split(';', $affiliation);
+      for my $userAff (@userAffs) {
+        last if $authorized;
+        $self->app->log->debug("Checking if affiliation $userAff can login");
+        my @valid_affiliations = map {split(/,/)} @{$self->app->config->{authentication}->{shibboleth}->{requiredaffiliations}};
 
-      # $self->app->log->debug(Dumper(@valid_affiliations));
-      for my $configAff (@valid_affiliations) {
-        $self->app->log->debug("$configAff");
-        if ($configAff eq $userAff) {
-          $self->app->log->debug($configAff . " can login");
-          $authorized = 1;
-          last;
+        # $self->app->log->debug(Dumper(@valid_affiliations));
+        for my $configAff (@valid_affiliations) {
+          $self->app->log->debug("$configAff");
+          if ($configAff eq $userAff) {
+            $self->app->log->debug($configAff . " can login");
+            $authorized = 1;
+            last;
+          }
         }
       }
+    } else {
+      $authorized = 1;
     }
   }
 
@@ -395,8 +409,51 @@ sub signin_shib {
     }
 
     # init session, save credentials
-    $self->app->log->debug("remote user authorized: username[$username]");
-    $self->save_cred(undef, undef, $username, $firstname, $lastname, $email, $affiliation);
+    $self->app->log->debug("remote user authorized: username[$username] affiliation[$affiliation], getting user data...");
+
+    # we need to pass the attributes as upstream because the sec. filters (like DBFilterForAttributes) ignore remote user
+    my $userData = $self->app->directory->get_user_data($self, $username);
+    my $org_units_l1;
+    my $org_units_l2;
+    my $localgroups;
+    my $org1 = $userData->{org_units_l1};
+    if (scalar @{$org1} > 0) {
+      $org_units_l1 = join(',', @{$org1});
+    }
+    my $org2 = $userData->{org_units_l2};
+    if (scalar @{$org2} > 0) {
+      $org_units_l2 = join(',', @{$org2});
+    }
+    if ($self->app->config->{mongodb_group_manager}) {
+      my @memberGroupsArr;
+      my $groupsClient = MongoDB::MongoClient->new(
+          host => $self->app->config->{mongodb_group_manager}->{host}, 
+          port => $self->app->config->{mongodb_group_manager}->{port},
+          username => $self->app->config->{mongodb_group_manager}->{username},
+          password => $self->app->config->{mongodb_group_manager}->{password}
+      );
+      my $groupsDb = $groupsClient->get_database($self->app->config->{mongodb_group_manager}->{database});
+      my $memberGroups = $groupsDb->get_collection('usergroups')->find({"members" => $username});
+      while (my $doc = $memberGroups->next) {
+        push @memberGroupsArr, $doc->{groupid};
+      }
+      if (scalar @memberGroupsArr > 0) {
+        $localgroups = join(',', @memberGroupsArr);
+      }
+    }
+    unless ($firstname) {
+      $firstname = $userData->{firstname};
+    }
+    unless ($lastname) {
+      $lastname = $userData->{lastname};
+    }
+    my $displayname = $userData->{displayname};
+    unless ($email) {
+      $email = $userData->{email};
+    }
+
+    $self->save_cred(undef, undef, $username, $firstname, $lastname, $email, $affiliation, $org_units_l1, $org_units_l2, $localgroups, $displayname);
+    $self->app->log->debug("saving session: username[$username], firstname[$firstname], lastname[$lastname], displayname[$displayname], email[$email], affiliation[$affiliation], org_units_l1[$org_units_l1], org_units_l2[$org_units_l2], localgroups[$localgroups]");
     my $session = $self->stash('mojox-session');
 
     # send token cookie

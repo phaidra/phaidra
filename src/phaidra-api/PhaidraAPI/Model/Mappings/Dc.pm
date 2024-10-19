@@ -46,7 +46,7 @@ sub get_metadata {
   if (exists($rec->{ispartof})) {
     my @ispartofs;
     for my $v (@{$rec->{ispartof}}) {
-      my $val  = 'isPartOf:https://' . $c->app->config->{phaidra}->{baseurl} . '/' . $v;
+      my $val  = 'isPartOf:'.$c->app->config->{scheme}.'://' . $c->app->config->{phaidra}->{baseurl} . '/' . $v;
       my $upid = $v =~ s/:/_/r;
       if (exists($rec->{"title_of_$upid"})) {
         $val .= "[" . $rec->{"title_of_$upid"} . "]";

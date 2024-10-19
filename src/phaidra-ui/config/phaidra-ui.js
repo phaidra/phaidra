@@ -4,7 +4,7 @@ export default {
     title: 'Phaidra Docker',
     showinstanceswitch: 0,
     enablelogin: 1,
-    enabledelete: 1,
+    showdeletebutton: 1,
     suggesters: {
       geonames: 'https://ws.gbv.de/suggest/geonames/'
     },

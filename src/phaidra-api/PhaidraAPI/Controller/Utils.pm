@@ -97,7 +97,7 @@ sub request_doi {
 
   my $settings = $self->mongo->get_collection('config')->find_one({ config_type => 'public' });
 
-  my $to = $settings->{instanceConfig}->{requestdoiemail};
+  my $to = $settings->{requestdoiemail};
   unless ($to) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Request DOI email is not configured'}]}, status => 500);
     return;
@@ -118,7 +118,7 @@ sub request_doi {
   $emaildata{name}    = $userdata->{firstname}." ".$userdata->{lastname};
   $emaildata{pid}     = $pid;
   $emaildata{email}   = $userdata->{email};
-  $emaildata{baseurl} = $self->config->{baseurl};
+  $emaildata{baseurl} = $self->config->{phaidra}->{baseurl};
   $self->app->log->debug("Sending DOI request email pid[$pid] currentuser[$currentuser] name[".$userdata->{firstname}." ".$userdata->{lastname}."] from[".$userdata->{email}."] to[$to]");
   my %options;
   for my $p (@{$self->app->renderer->paths}) {

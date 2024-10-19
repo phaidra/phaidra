@@ -462,7 +462,7 @@ export default {
     },
     addEduPersonAffiliation: async function () {
       if (this.selectedEduPersonAffiliation) {
-        this.rightsArray.push({ type: 'edupersonaffiliation', notation: this.selectedEduPersonAffiliation, description: this.selectedEduPersonAffiliation, expires: null })
+        this.rightsArray.push({ type: 'affiliation', notation: this.selectedEduPersonAffiliation, description: this.selectedEduPersonAffiliation, expires: null })
         this.saveRights()
       }
     },
@@ -609,8 +609,8 @@ export default {
           this.rightsArray.push({ type: 'username', notation: notation, description: name, expires: expires })
         }
       }
-      if (this.rightsjson['edupersonaffiliation']) {
-        for (let r of this.rightsjson['edupersonaffiliation']) {
+      if (this.rightsjson['affiliation']) {
+        for (let r of this.rightsjson['affiliation']) {
           let notation = ''
           let name = ''
           let expires = ''
@@ -622,7 +622,7 @@ export default {
             notation = r
             name = r + ' affiliation'
           }
-          this.rightsArray.push({ type: 'edupersonaffiliation', notation: notation, description: name, expires: expires })
+          this.rightsArray.push({ type: 'affiliation', notation: notation, description: name, expires: expires })
         }
       }
       if (this.rightsjson['department']) {

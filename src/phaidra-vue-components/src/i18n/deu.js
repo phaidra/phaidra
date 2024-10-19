@@ -856,7 +856,7 @@ export default {
   'System fields': 'Systemhinweis',
   'Level of description': 'Verzeichnungsstufe',
 
-  'Project Id': 'Projektnummer',
+  'Project number': 'Projektnummer',
 
   'Metadata editor': 'Metadateneditor',
   'Metadata preview': 'Metadatenansicht',

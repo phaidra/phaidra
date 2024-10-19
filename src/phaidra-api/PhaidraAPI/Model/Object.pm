@@ -537,8 +537,15 @@ sub add_upstream_headers {
 
   if ($c->stash->{remote_user}) {
     $headers->{$c->app->config->{authentication}->{upstream}->{principalheader}}   = $c->stash->{remote_user};
-    $headers->{$c->app->config->{authentication}->{upstream}->{affiliationheader}} = $c->stash->{remote_affiliation} if $c->stash->{remote_affiliation};
-    $headers->{$c->app->config->{authentication}->{upstream}->{groupsheader}}      = $c->stash->{remote_groups}      if $c->stash->{remote_groups};
+    $headers->{$c->app->config->{authentication}->{upstream}->{affiliationheader}} = $c->stash->{affiliation} if $c->stash->{affiliation};
+    #$headers->{$c->app->config->{authentication}->{upstream}->{groupsheader}}      = $c->stash->{groups}      if $c->stash->{groups};
+    if ($c->app->config->{fedora}->{version} < 6) {
+      $headers->{fakcode} = $c->stash->{fakcode} if $c->stash->{fakcode};
+      $headers->{inum}    = $c->stash->{inum} if $c->stash->{inum};
+      $headers->{gruppe}  = $c->stash->{gruppe} if $c->stash->{gruppe};
+      $headers->{groups}  = $c->stash->{gruppe} if $c->stash->{gruppe};
+    }
+    $c->app->log->debug("setting upstream headers\n".$c->app->dumper($headers));
   }
 }
 
@@ -1536,10 +1543,11 @@ sub get_foxml {
   $url->host($c->app->config->{phaidra}->{fedorabaseurl});
   $url->path("/fedora/objects/$pid/objectXML");
 
-  my %headers;
-  $self->add_upstream_headers($c, \%headers);
+  #my %headers;
+  #$self->add_upstream_headers($c, \%headers);
 
-  my $get = Mojo::UserAgent->new->get($url => \%headers)->result;
+  #my $get = Mojo::UserAgent->new->get($url => \%headers)->result;
+  my $get = Mojo::UserAgent->new->get($url)->result;
 
   if ($get->is_success) {
     $res->{status} = 200;
@@ -2089,15 +2097,13 @@ sub add_relationship {
     my $ua = Mojo::UserAgent->new;
     my %headers;
     $self->add_upstream_headers($c, \%headers);
-    my $post = $ua->post($url => \%headers);
-    my $r    = $post->result;
+    my $r = $ua->post($url => \%headers)->result;
     if ($r->is_success) {
       unshift @{$res->{alerts}}, {type => 'success', msg => $r->body};
     }
     else {
-      my ($err, $code) = $post->error;
-      unshift @{$res->{alerts}}, {type => 'error', msg => $err};
-      $res->{status} = $code ? $code : 500;
+      unshift @{$res->{alerts}}, {type => 'error', msg => $r->message};
+      $res->{status} = $r->code ? $r->code : 500;
     }
   }
 
