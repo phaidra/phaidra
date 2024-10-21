@@ -58,6 +58,7 @@
     <slot name="dcterms:dateSubmitted"></slot>
     <slot name="rdau:P60071"></slot><!-- date of production -->
     <slot name="phaidra:dateAccessioned"></slot>
+    <slot name="phaidra:dateApprobation"></slot>
     <slot name="dcterms:temporal"></slot>
 
     <!-- a11y -->

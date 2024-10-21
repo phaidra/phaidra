@@ -1534,6 +1534,7 @@ const predicateOrder = [
   'dcterms:dateCopyrighted',
   'dcterms:dateSubmitted',
   'rdau:P60071',
+  'phaidra:dateApprobation',
   'phaidra:dateAccessioned',
   'date',
   'dcterms:temporal',

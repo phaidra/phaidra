@@ -240,6 +240,7 @@ export default {
   'dcterms:dateCopyrighted': 'Copyright Datum',
   'dcterms:dateSubmitted': 'Datum der Einreichung',
   'phaidra:dateAccessioned': 'Eingangsdatum',
+  'phaidra:dateApprobation': 'Approbationsdatum',
   'dce:rights': 'Rechte',
   'oaire:version': 'Versionstyp',
   'dcterms:accessRights': 'Zugriffsrechte',

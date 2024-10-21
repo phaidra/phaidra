@@ -206,6 +206,7 @@ export default {
   'dcterms:dateSubmitted': 'Date submitted',
   'rdau:P60071': 'Date of production',
   'phaidra:dateAccessioned': 'Date accessioned',
+  'phaidra:dateApprobation': 'Approbation date',
 
   'schema:pageStart': 'From page',
   'schema:pageEnd': 'To page',

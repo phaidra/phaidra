@@ -2,6 +2,7 @@
  
   <v-container class="mt-8" fluid>
 
+    <div class="mb-4"><strong>Note:</strong> Config is cached in each worker, don't forget to restart phaidra-api to apply changes.</div>
     <v-tabs slider-color="primary"  dark background-color="grey" vertical v-model="activetab">
       <v-tab :active-class="'primary'" >
         <span>{{ $t('Public') }}</span>
@@ -626,7 +627,7 @@ export default {
 
       // public
       try {
-        response = await this.$axios.get("/config/public");
+        response = await this.$axios.get("/config/public?nocache=1");
       } catch (error) {
         console.error(error)
       }
@@ -653,7 +654,7 @@ export default {
 
       // private
       try {
-        response = await this.$axios.get("/config/private", {
+        response = await this.$axios.get("/config/private?nocache=1", {
           headers: {
             "X-XSRF-TOKEN": this.$store.state.user.token,
           },

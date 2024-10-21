@@ -49,6 +49,7 @@ export default {
   'rdau:P60071': 'Date of production',
   'rdau:P60550': 'Extent',
   'phaidra:dateAccessioned': 'Date accessioned',
+  'phaidra:dateApprobation': 'Approbation date',
 
   'schema:pageStart': 'From page',
   'schema:pageEnd': 'To page',

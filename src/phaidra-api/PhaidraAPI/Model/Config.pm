@@ -9,9 +9,10 @@ use base qw/Mojo::Base/;
 sub get_public_config {
   my $self = shift;
   my $c = shift;
+  my $nocache = shift;
 
   my $cacheval = $c->app->chi->get('public_config');
-  if ($cacheval) {
+  if ($cacheval && !$nocache) {
     # $c->app->log->debug("[cache hit] public_config");
   } else {
     $c->app->log->debug("[cache miss] public_config");
@@ -26,9 +27,10 @@ sub get_public_config {
 sub get_private_config {
   my $self = shift;
   my $c = shift;
+  my $nocache = shift;
 
   my $cacheval = $c->app->chi->get('private_config');
-  if ($cacheval) {
+  if ($cacheval && !$nocache) {
     # $c->app->log->debug("[cache hit] private_config");
   } else {
     $c->app->log->debug("[cache miss] private_config");

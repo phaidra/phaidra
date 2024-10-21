@@ -1287,6 +1287,7 @@ export default {
             case 'dcterms:dateSubmitted':
             case 'rdau:P60071':
             case 'phaidra:dateAccessioned':
+            case 'phaidra:dateApprobation':
               if (typeof obj === 'string') {
                 f = fields.getField('date-edtf')
                 f.type = key
@@ -2704,6 +2705,7 @@ export default {
         case 'dcterms:dateCopyrighted':
         case 'dcterms:dateSubmitted':
         case 'phaidra:dateAccessioned':
+        case 'phaidra:dateApprobation':
           if (f.component === 'p-date-edmtimespan' && (f.value || f.identifier)) {
             this.push_object(jsonld, f.type, this.get_json_edm_timespan(f.value, f.type, f.language, f.identifier, f.identifierType))
           } else {
