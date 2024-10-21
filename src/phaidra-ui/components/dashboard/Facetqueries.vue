@@ -2,8 +2,8 @@
   <v-card class="mt-2 mx-auto" :elevation="0">
     <v-card-text>
       <ul class="main-ul">
-        <li v-for="(q, i) in facetqueries" :key="i">
-          <a :href="'/search?fq='+q.query.replace(':','_')"><span class="facet-label primary--text">{{ $t(q.label) }}</span><span class="facet-count grey--text" v-if="facet_queries[q.query] > 0">({{ facet_queries[q.query] }})</span></a>
+        <li v-for="(q, i) in facet.queries" :key="i">
+          <a :href="'/search?fq='+facet.id+'_'+q.id"><span class="facet-label primary--text">{{ $t(q.label) }}</span><span class="facet-count grey--text" v-if="facet_queries[q.query] > 0">({{ facet_queries[q.query] }})</span></a>
         </li>
       </ul>
     </v-card-text>
@@ -18,7 +18,7 @@ import { config } from "../../mixins/config";
 export default {
   mixins: [context, config],
   props: {
-    facetqueries: Array
+    facet: Object
   },
   data: () => ({
     facet_queries: {}
@@ -36,7 +36,7 @@ export default {
         wt: "json",
         'facet.query': []
       };
-      for (let q of this.facetqueries) {
+      for (let q of this.facet.queries) {
         params['facet.query'].push(q.query)
       }
       let query = qs.stringify(params, {

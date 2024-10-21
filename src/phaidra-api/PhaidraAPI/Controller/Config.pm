@@ -105,12 +105,14 @@ sub post_private_config {
 sub get_public_config {
   my $self = shift;
 
+  my $nocache = $self->param('nocache');
+
   my $res = {alerts => [], status => 200};
 
   $self->app->log->debug("reading public_config");
 
   my $model = PhaidraAPI::Model::Config->new;
-  my $modelres = $model->get_public_config($self);
+  my $modelres = $model->get_public_config($self, $nocache);
 
   # $self->app->log->debug("XXXXXXXXXXXXXXX " . $self->app->dumper($modelres));
   $res->{public_config} = $modelres;
@@ -121,12 +123,14 @@ sub get_public_config {
 sub get_private_config {
   my $self = shift;
 
+  my $nocache = $self->param('nocache');
+
   my $res = {alerts => [], status => 200};
 
   $self->app->log->debug("reading private_config");
 
   my $model = PhaidraAPI::Model::Config->new;
-  my $modelres = $model->get_private_config($self);
+  my $modelres = $model->get_private_config($self, $nocache);
 
   # $self->app->log->debug("XXXXXXXXXXXXXXX " . $self->app->dumper($modelres));
   $res->{private_config} = $modelres;

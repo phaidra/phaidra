@@ -758,6 +758,7 @@ export default {
   'dcterms:dateSubmitted': 'Date submitted',
   'rdau:P60071': 'Produktionsdatum',
   'phaidra:dateAccessioned': 'Date accessioned',
+  'phaidra:dateApprobation': 'Approbationsdatum',
   'edm:rights': 'Lizenz',
   'dce:rights': 'Rights statement',
   'oaire:version': 'Version Typ',

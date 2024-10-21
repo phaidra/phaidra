@@ -141,6 +141,10 @@
           <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'phaidra:dateAccessioned'+j" v-bind.sync="displayProperties"></p-d-date>
         </template>
 
+        <template v-else-if="p==='phaidra:dateApprobation'" slot="phaidra:dateApprobation">
+          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'phaidra:dateApprobation'+j" v-bind.sync="displayProperties"></p-d-date>
+        </template>
+
         <template v-else-if="p==='dcterms:temporal'" slot="dcterms:temporal">
           <p-d-lang-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'temporal'+j" v-bind.sync="displayProperties"></p-d-lang-value>
         </template>
