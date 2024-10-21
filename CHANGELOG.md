@@ -1,3 +1,14 @@
+# v3.3.12
+
+## phaidra-api
+
+  + added nocache for config requests, to avoid fetching cached value in admin
+
+## phaidra-ui
+
+  + dashboard component facetqueries fix
+  + added date of approbation field
+
 # v3.3.11
 
 ## phaidra-api
