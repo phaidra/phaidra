@@ -118,7 +118,10 @@
         }
     },
     "oai": {
-        "dataprovider": "__PHAIDRA_HOSTNAME__"
+        "oairepositoryidentifier": "__PHAIDRA_HOSTNAME__",
+        "repositoryname": "__PHAIDRA_HOSTNAME__",
+        "dataprovider": "__PHAIDRA_HOSTNAME__",
+        "pagesize": 500
     },
     "hooks": {
         "updatedc": 0,
