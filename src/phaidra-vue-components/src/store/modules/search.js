@@ -17,7 +17,7 @@ export const state = () => ({
         },
         {
           id: 'unrestricted',
-          query: '(-isrestricted:1 AND -datastreams:POLICY)',
+          query: '-isrestricted:1 AND -datastreams:POLICY',
           label: 'Unrestricted'
         }
       ]
