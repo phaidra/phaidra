@@ -31,7 +31,7 @@ spec:
               value: "{{ .Values.PHAIDRA_PRIMARY_COLOR }}"
             - name: PHAIDRA_API_HOST_INTERNAL
               value: "{{ .Values.PHAIDRA_API_HOST_INTERNAL }}"
-          image: testuser34/ui-dist:830a35df
+          image: phaidraorg/ui:abfeb01d
           name: ui
           resources: {}
       restartPolicy: Always

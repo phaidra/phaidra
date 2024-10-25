@@ -28,7 +28,7 @@ spec:
               value: "{{ .Values.MARIADB_ROOT_PASSWORD }}"
             - name: MARIADB_USER
               value: "{{ .Values.MARIADB_PHAIDRA_USER }}"
-          image: testuser34/mariadb-phaidra-dist:f21114b6
+          image: phaidraorg/mariadb-phaidra-dist:dbb2936a
           name: mariadb-phaidra
           resources: {}
           volumeMounts:

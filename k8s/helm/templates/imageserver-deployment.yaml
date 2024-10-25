@@ -20,7 +20,7 @@ spec:
         phaidra.app: imageserver
     spec:
       containers:
-        - image: testuser34/imageserver-base:979c59b3
+        - image: phaidraorg/imageserver:e4b5b6b1
           name: imageserver
           resources: {}
           volumeMounts:

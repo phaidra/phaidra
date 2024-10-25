@@ -23,7 +23,7 @@ spec:
         - env:
             - name: IMAGE_CONVERSION_INTERVAL
               value: "{{ .Values.IMAGE_CONVERSION_INTERVAL }}"
-          image: testuser34/pixelgecko-dist:10a6b315
+          image: phaidraorg/pixelgecko-dist:3ba40e2f
           name: pixelgecko
           resources: {}
           volumeMounts:

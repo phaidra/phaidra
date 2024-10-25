@@ -26,7 +26,7 @@ spec:
               value: "{{ .Values.SOLR_SALT }}"
             - name: "SOLR_USER"
               value: "{{ .Values.SOLR_USER }}"
-          image: testuser34/solr-dist:10a6b315
+          image: phaidraorg/solr-dist:b8c456f0
           name: solr
           resources: {}
           volumeMounts:

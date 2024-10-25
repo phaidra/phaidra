@@ -24,7 +24,7 @@ spec:
               value: "{{ .Values.MONGODB_PHAIDRA_PASSWORD }}"
             - name: MONGO_INITDB_ROOT_USERNAME
               value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
-          image: testuser34/mongodb-dist:10a6b315
+          image: phaidraorg/mongodb-dist:10a6b315
           name: mongodb-phaidra
           resources: {}
           volumeMounts:
