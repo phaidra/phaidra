@@ -21,8 +21,14 @@ spec:
     spec:
       containers:
         - env:
+            - name: MONGODB_HOST
+              value: mongodb-phaidra-service
             - name: IMAGE_CONVERSION_INTERVAL
               value: "{{ .Values.IMAGE_CONVERSION_INTERVAL }}"
+            - name: MONGODB_PHAIDRA_USER
+              value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
+            - name: MONGODB_PHAIDRA_PASSWORD
+              value: "{{ .Values.MONGODB_PHAIDRA_PASSWORD }}"
           image: phaidraorg/pixelgecko-dist:1aec19f1
           name: pixelgecko
           resources: {}
