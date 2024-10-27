@@ -183,7 +183,7 @@
 
         <template v-else-if="p==='frapo:isOutputOf'" slot="frapo:isOutputOf">
           <template v-for="(item, j) in o">
-            <template v-if="item['@type']==='aaiso:Programme'">
+            <template v-if="item['@type']==='aiiso:Programme'">
               <p-d-study-plan :p="p" :o="item" :key="componentid+'study-plan'+j" v-bind.sync="displayProperties"></p-d-study-plan>
             </template>
           </template>

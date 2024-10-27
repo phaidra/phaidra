@@ -889,7 +889,7 @@ export default {
                 }
                 components.push(f)
               } else {
-                if (obj['@type'] === 'aaiso:Programme') {
+                if (obj['@type'] === 'aiiso:Programme') {
                   let isSelect = false
                   let id = ''
                   if (obj['skos:exactMatch']) {
@@ -2204,7 +2204,7 @@ export default {
   },
   get_json_study_plan (name, nameLanguage, prefLabels, notations, identifiers) {
     var h = {
-      '@type': 'aaiso:Programme'
+      '@type': 'aiiso:Programme'
     }
     if (name) {
       h['skos:prefLabel'] = [
@@ -2594,9 +2594,9 @@ export default {
           break
 
         case 'frapo:isOutputOf':
-          if (f.type === 'aaiso:Programme') {
+          if (f.type === 'aiiso:Programme') {
             if (f.component === 'p-select' && f.value) {
-              this.push_object(jsonld, f.predicate, this.get_json_concept(f['skos:prefLabel'], f['rdfs:label'], 'aaiso:Programme', [f.value], f['skos:notation'] ? f['skos:notation'] : null))
+              this.push_object(jsonld, f.predicate, this.get_json_concept(f['skos:prefLabel'], f['rdfs:label'], 'aiiso:Programme', [f.value], f['skos:notation'] ? f['skos:notation'] : null))
             } else {
               // study plan
               if (f.name || f.notation || f['skos:prefLabel']) {
