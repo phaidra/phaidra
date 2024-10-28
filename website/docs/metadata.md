@@ -36,7 +36,7 @@ Many fields are using controlled vocabularies. Most of the controlled vocabulari
 | [Rights statement](#rights-statement) | dce:rights | |
 | [Funder](#funder) | frapo:hasFundingAgency |  |
 | [Project](#project) | frapo:isOutputOf | "@type":"foaf:Project" |
-| [Study plan](#study-plan) | frapo:isOutputOf | "@type":"aaiso:Programme" |
+| [Study plan](#study-plan) | frapo:isOutputOf | "@type":"aiiso:Programme" |
 | [Associated with](#associated-with) | rdax:P00009 |  |
 | [See also](#see-also) | rdfs:seeAlso |  |
 | [Is contained in](#is-contained-in) | rdau:P60101 |  |
@@ -1196,7 +1196,7 @@ Study plan that is associated with the resource.
 ```json
   "frapo:isOutputOf": [
     {
-      "@type": "aaiso:Programme",
+      "@type": "aiiso:Programme",
       "skos:prefLabel": [
         {
           "@value": "LA Musikerziehung LA Physik (ASVS)",
