@@ -29,6 +29,10 @@ spec:
               value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
             - name: MONGODB_PHAIDRA_PASSWORD
               value: "{{ .Values.MONGODB_PHAIDRA_PASSWORD }}"
+            - name: IMAGESERVER_ROOT_PATH
+              value: "/mnt/converted_images"
+            - name: CONVERTED_IMAGES_PATH
+              value: "/mnt/converted_images"
           image: phaidraorg/pixelgecko-dist:1aec19f1
           name: pixelgecko
           resources: {}

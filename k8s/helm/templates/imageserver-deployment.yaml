@@ -21,6 +21,11 @@ spec:
     spec:
       containers:
         - image: phaidraorg/imageserver:3f02aeec
+          env:
+            - name: IMAGESERVER_ROOT_PATH
+              value: "/mnt/converted_images"
+            - name: CONVERTED_IMAGES_PATH
+              value: "/mnt/converted_images"
           name: imageserver
           resources: {}
           volumeMounts:
