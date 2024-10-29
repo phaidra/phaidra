@@ -32,6 +32,13 @@ spec:
           volumeMounts:
             - mountPath: /usr/local/tomcat/fcrepo-home
               name: fedora
+      # if fedora starts along other pods, it fails to connect to mariadb-fedora and gets stuck
+      # with error message 'To prevent a memory leak, the JDBC Driver has been forcibly unregistered'
+      # therefore wait for database to be up first
+      initContainers:
+      - name: init-fedora
+        image: mysql
+        command: ['sh', '-c', "until mysql --connect-timeout 1 -h mariadb-fedora-service --user {{ .Values.MARIADB_PHAIDRA_USER }} -p{{ .Values.MARIADB_PHAIDRA_PASSWORD }} -e exit; do sleep 1; done"]
       restartPolicy: Always
       volumes:
         - name: fedora
