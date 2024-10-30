@@ -24,6 +24,15 @@ use PhaidraAPI::Model::Octets;
 use PhaidraAPI::Model::Fedora;
 use Scalar::Util qw(reftype looks_like_number);
 
+my %modifiedDateOverwriteDatastreams = (
+  'OCTETS' => 1,
+  'JSON-LD' => 1,
+  'UWMETADATA' => 1,
+  'MODS' => 1,
+  'RIGHTS' => 1,
+  'IIIF-MANIFEST' => 1
+);
+
 our %indexed_datastreams_xml = (
   "UWMETADATA"      => 1,
   "MODS"            => 1,
@@ -1195,6 +1204,16 @@ sub _get {
     }
 
     for my $dsid (@{$fres->{contains}}) {
+      if ($modifiedDateOverwriteDatastreams{$dsid}) {
+        # if metadata was modified later, we want that date in 'modified' date
+        my $propresDs = $fedora_model->_getObjectProperties($c, "$pid/$dsid/fcr:metadata");
+        if ($propresDs->{status} == 200) {
+          my $dsModified = $fedora_model->getFirstJsonldValue($c, $propresDs->{props}, 'http://fedora.info/definitions/v4/repository#lastModified');
+          if ($dsModified gt $index{modified}) {
+            $index{modified} = $dsModified;
+          }
+        }
+      }
       if ($indexed_datastreams{$dsid}) {
         $datastreamids{$dsid} = 1;
         if ($indexed_datastreams_xml{$dsid}) {
@@ -2069,7 +2088,7 @@ sub _add_jsonld_index {
             }
           }
         }
-        if ($proj->{'@type'} eq 'aaiso:Programme') {
+        if ($proj->{'@type'} eq 'aiiso:Programme') {
           if (exists($proj->{'skos:exactMatch'})) {
             for my $projId (@{$proj->{'skos:exactMatch'}}) {
               push @{$index->{"programme_id"}}, $projId;
