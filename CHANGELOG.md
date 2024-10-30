@@ -1,3 +1,16 @@
+# upcoming
+
+## phaidra-api
+
+  + fixed aaiso to aiiso
+  + now considering lastModifiedDate of datastreams when indexing sinde lastModifiedDate of object does not change on datastream edit in f6
+  + fixed oai config
+
+## phaidra-ui
+
+  + fixed aaiso to aiiso
+  + fixed access:open facet
+
 # v3.3.12
 
 ## phaidra-api
