@@ -10,6 +10,8 @@
 
   + fixed aaiso to aiiso
   + fixed access:open facet
+  + allow abstract to be validated as description
+  + allow field configuration in template
 
 # v3.3.12
 
