@@ -123,6 +123,38 @@ export const formvalidation = {
         }
       }
     },
+    markMandatoryWithoutKeywordsWithAbstract() {
+      for (const s of this.form.sections) {
+        for (const f of s.fields) {
+          if (f.predicate === 'dcterms:type') {
+            f.label = this.addAsterixIfNotPresent(f.label)
+          }
+          if (f.predicate === 'edm:hasType') {
+            f.label = this.addAsterixIfNotPresent(f.label)
+          }
+          if (f.component === 'p-title') {
+            f.titleLabel = f.titleLabel ? this.addAsterixIfNotPresent(f.titleLabel) : this.addAsterixIfNotPresent(f.type)
+          }
+          if ((f.predicate === 'bf:note') && (f.type === 'bf:Summary')) {
+            f.label = this.addAsterixIfNotPresent(f.label)
+          }
+          if ((f.component === 'p-entity') || (f.component === 'p-entity-extended')) {
+            f.label = this.addAsterixIfNotPresent(f.label)
+            f.roleLabel = this.addAsterixIfNotPresent(f.roleLabel)
+            f.firstnameLabel = this.addAsterixIfNotPresent(f.firstnameLabel)
+            f.lastnameLabel = this.addAsterixIfNotPresent(f.lastnameLabel)
+          }
+          if (f.component === 'p-select') {
+            if (f.predicate === 'edm:rights') {
+              f.label = this.addAsterixIfNotPresent(f.label)
+            }
+          }
+          if (f.component === 'p-file') {
+            f.label = this.addAsterixIfNotPresent(f.label)
+          }
+        }
+      }
+    },
     markMandatory() {
       for (const s of this.form.sections) {
         for (const f of s.fields) {
@@ -255,7 +287,7 @@ export const formvalidation = {
               this.mandatoryFieldsValidated['Title'] = true
             }
           }
-          if ((f.predicate === 'bf:note') && (f.type === 'bf:Note')) {
+          if ((f.predicate === 'bf:note') && ((f.type === 'bf:Note') || (f.type === 'bf:Summary'))) {
             this.mandatoryFieldsFound['Description'] = true
             if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Description'] = true
@@ -454,7 +486,7 @@ export const formvalidation = {
               this.mandatoryFieldsValidated['Title'] = true
             }
           }
-          if ((f.predicate === 'bf:note') && (f.type === 'bf:Note')) {
+          if ((f.predicate === 'bf:note') && ((f.type === 'bf:Note') || (f.type === 'bf:Summary'))) {
             this.mandatoryFieldsFound['Description'] = true
             if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Description'] = true
@@ -650,7 +682,7 @@ export const formvalidation = {
               this.mandatoryFieldsValidated['Title'] = true
             }
           }
-          if ((f.predicate === 'bf:note') && (f.type === 'bf:Note')) {
+          if ((f.predicate === 'bf:note') && ((f.type === 'bf:Note') || (f.type === 'bf:Summary'))) {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] v[' + f.value + ']') 
             this.mandatoryFieldsFound['Description'] = true
             if (f.value?.length > 0) {
@@ -825,7 +857,7 @@ export const formvalidation = {
               this.mandatoryFieldsValidated['Title'] = true
             }
           }
-          if ((f.predicate === 'bf:note') && (f.type === 'bf:Note')) {
+          if ((f.predicate === 'bf:note') && ((f.type === 'bf:Note') || (f.type === 'bf:Summary'))) {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] v[' + f.value + ']') 
             this.mandatoryFieldsFound['Description'] = true
             if (f.value?.length > 0) {
