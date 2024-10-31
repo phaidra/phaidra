@@ -212,6 +212,7 @@ export default {
         for (let s of self.form.sections) {
           for (let f of s.fields) {
             f.removable = true
+            f.configurable = true
           }
         }
         if (response.data.template.rights) {
