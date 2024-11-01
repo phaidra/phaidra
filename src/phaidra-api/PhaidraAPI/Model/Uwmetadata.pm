@@ -43,6 +43,57 @@ our %input_types_map = (
   "Node" => "node"
 );
 
+sub getSplTermArray {
+  my ($self, $c) = @_;
+
+  my @termarraySpl;
+
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($c);
+
+  if (exists($pubconfig->{data_vocabularies})) {
+    if (exists($pubconfig->{data_vocabularies}->{studyplansuwm})) {
+      if (exists($pubconfig->{data_vocabularies}->{studyplansuwm}->{terms})) {
+        my $lang_model = PhaidraAPI::Model::Languages->new;
+        my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
+        for my $t (@{$pubconfig->{data_vocabularies}->{studyplansuwm}->{terms}}) {
+          
+          # from
+          # {
+          #   "@type": "aiiso:Programme",
+          #   "skos:prefLabel": {
+          #     "deu": "textil•kunst•design"
+          #   },
+          #   "skos:notation": [
+          #     "785"
+          #   ],
+          #   "@id": "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_spl/33"
+          # }
+          
+          # to
+          # { 
+          #   "labels" => {"de" => "SPL 33: Ernahrungswissenschaften"},
+          #   "uri"    => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_spl/33"
+          # }
+          
+          my $labels;
+          for my $lang (keys %{$t->{'skos:prefLabel'}}) {
+            my $alpha2lang = exists($iso6393ToBCP{$lang}) ? $iso6393ToBCP{$lang} : $lang;
+            $labels->{$alpha2lang} = $t->{'skos:prefLabel'}->{$lang};
+          }
+
+          push @termarraySpl, {
+            "uri" => $t->{'@id'},
+            "labels" => $labels
+          };
+        }
+      }
+    }
+  }
+
+  return \@termarraySpl;
+}
+
 sub metadata_tree {
 
   my ($self, $c, $nocache) = @_;
@@ -90,6 +141,16 @@ sub metadata_tree {
     }
     $vocabulary{'terms'} = \@termarray;
     $facultyNode->{vocabularies} = [ \%vocabulary ];
+
+    # the same for "spl" (study plans)
+    my $splNode = $self->get_json_node($c, 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization', 'spl', $res->{metadata_tree});
+    my %vocabularySpl;
+    $vocabularySpl{namespace} = 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_spl/';
+    
+    my $termarraySpl = $self->getSplTermArray($c);
+    
+    $vocabularySpl{'terms'} = $termarraySpl;
+    $splNode->{vocabularies} = [ \%vocabularySpl ];
 
     return $res;
   }
@@ -516,31 +577,39 @@ sub get_metadata_tree {
     elsif ($element->{datatype} eq "SPL") {
 
       my %vocabulary;
-      my $terms_model = PhaidraAPI::Model::Terms->new;
       $vocabulary{namespace} = $element->{xmlns} . '/voc_' . $element->{xmlname} . '/';
-      my $langs = $c->app->config->{directory}->{study_plans_languages};
-      foreach my $lang (@$langs) {
 
-        my $spls = $terms_model->get_study_plans($c, $lang);
-        if (exists($spls->{alerts})) {
-          if ($spls->{status} != 200) {
+      my $termarraySpl = $self->getSplTermArray($c);
 
-            # there are only alerts
-            return {alerts => $spls->{alerts}, status => $spls->{status}};
+      unless ($termarraySpl) {
+        
+        my $terms_model = PhaidraAPI::Model::Terms->new;
+        my $langs = $c->app->config->{directory}->{study_plans_languages};
+        foreach my $lang (@$langs) {
+
+          my $spls = $terms_model->get_study_plans($c, $lang);
+          if (exists($spls->{alerts})) {
+            if ($spls->{status} != 200) {
+
+              # there are only alerts
+              return {alerts => $spls->{alerts}, status => $spls->{status}};
+            }
+          }
+          foreach my $sp (@{$spls->{study_plans}}) {
+            $vocabulary{'terms'}->{$sp->{value}}->{uri} = $vocabulary{namespace} . $sp->{value};
+            $vocabulary{'terms'}->{$sp->{value}}->{labels}->{$lang} = $sp->{name};
+
           }
         }
-        foreach my $sp (@{$spls->{study_plans}}) {
-          $vocabulary{'terms'}->{$sp->{value}}->{uri} = $vocabulary{namespace} . $sp->{value};
-          $vocabulary{'terms'}->{$sp->{value}}->{labels}->{$lang} = $sp->{name};
-
+        my @termarray;
+        while (my ($key, $element) = each %{$vocabulary{'terms'}}) {
+          push @termarray, $element;
         }
-      }
-      my @termarray;
-      while (my ($key, $element) = each %{$vocabulary{'terms'}}) {
-        push @termarray, $element;
-      }
-      $vocabulary{'terms'} = \@termarray;
 
+        $termarraySpl = \@termarray;
+      }
+
+      $vocabulary{'terms'} = $termarraySpl;
       push @{$element->{vocabularies}}, \%vocabulary;
 
     }
@@ -866,18 +935,29 @@ sub resolve_if_id {
     # || $datatype eq 'Curriculum' we'll ignore curriculum now, it's complicated, uni-specific and rarely used
 
     my $labels;
-    my $langs = $c->app->config->{directory}->{study_plans_languages};
-    foreach my $lang (@$langs) {
-      my $r = $terms_model->get_study_plans($c, $lang);
-      if ($r->{status} eq 200) {
-        for my $spl (@{$r->{study_plans}}) {
-          if ($spl->{value} eq $value) {
-            $labels->{$lang} = $spl->{name};
-            last;
+    my $termarraySpl = $self->getSplTermArray($c);
+
+    unless ($termarraySpl) {
+      my $langs = $c->app->config->{directory}->{study_plans_languages};
+      foreach my $lang (@$langs) {
+        my $r = $terms_model->get_study_plans($c, $lang);
+        if ($r->{status} eq 200) {
+          for my $spl (@{$r->{study_plans}}) {
+            if ($spl->{value} eq $value) {
+              $labels->{$lang} = $spl->{name};
+              last;
+            }
           }
         }
       }
     }
+
+    for my $t (@{$termarraySpl}) {
+      if ($t->{uri} eq "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_spl/$value") {
+        return $t->{labels};
+      }
+    }
+
     return $labels;
 
   }
@@ -1040,26 +1120,32 @@ sub get_study_terms {
   my $ids              = shift;
   my $values_namespace = shift;
 
-  my %vocabulary;
-  my $langs = $c->app->config->{directory}->{study_plans_languages};
+  my $termarraySpl = $self->getSplTermArray($c);
 
-  foreach my $lang (@$langs) {
-    my $res = $c->app->directory->get_study($c, $spl, $ids, $lang);
+  unless ($termarraySpl) {
+    my %vocabulary;
+    my $langs = $c->app->config->{directory}->{study_plans_languages};
 
-    my $study = $res->{'study'};
+    foreach my $lang (@$langs) {
+      my $res = $c->app->directory->get_study($c, $spl, $ids, $lang);
 
-    foreach my $s (@$study) {
-      $vocabulary{'terms'}->{$s->{value}}->{uri} = $values_namespace . $s->{value};
-      $vocabulary{'terms'}->{$s->{value}}->{labels}->{$lang} = $s->{name};
+      my $study = $res->{'study'};
+
+      foreach my $s (@$study) {
+        $vocabulary{'terms'}->{$s->{value}}->{uri} = $values_namespace . $s->{value};
+        $vocabulary{'terms'}->{$s->{value}}->{labels}->{$lang} = $s->{name};
+      }
     }
+
+    my @termarray;
+    while (my ($key, $element) = each %{$vocabulary{'terms'}}) {
+      push @termarray, $element;
+    }
+
+    $termarraySpl = \@termarray;
   }
 
-  my @termarray;
-  while (my ($key, $element) = each %{$vocabulary{'terms'}}) {
-    push @termarray, $element;
-  }
-
-  return \@termarray;
+  return $termarraySpl;
 }
 
 sub get_study_name {
@@ -1069,15 +1155,32 @@ sub get_study_name {
   my $spl  = shift;
   my $ids  = shift;
 
-  my $langs = $c->app->config->{directory}->{study_plans_languages};
+  my $termarraySpl = $self->getSplTermArray($c);
 
-  my %names;
-  foreach my $lang (@$langs) {
-    my $name = $c->app->directory->get_study_name($c, $spl, $ids, $lang);
-    $names{$lang} = $name;
+  unless ($termarraySpl) {
+    my $langs = $c->app->config->{directory}->{study_plans_languages};
+
+    my %names;
+    foreach my $lang (@$langs) {
+      my $name = $c->app->directory->get_study_name($c, $spl, $ids, $lang);
+      $names{$lang} = $name;
+    }
+    return \%names;
   }
-
-  return \%names;
+  
+  for my $t (@{$termarraySpl}) {
+    if ($t->{'@id'} eq $spl) {
+      my %names;
+      my $lang_model = PhaidraAPI::Model::Languages->new;
+      my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
+      for my $lang (keys %{$t->{'skos:prefLabel'}}) {
+        my $alpha2lang = exists($iso6393ToBCP{$lang}) ? $iso6393ToBCP{$lang} : $lang;
+        $names{$alpha2lang} = $t->{'skos:prefLabel'}->{$lang};
+      }
+      return \%names;
+    }
+  }
+  
 }
 
 sub fill_object_metadata {
