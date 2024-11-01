@@ -5,6 +5,7 @@
   + fixed aaiso to aiiso
   + now considering lastModifiedDate of datastreams when indexing sinde lastModifiedDate of object does not change on datastream edit in f6
   + fixed oai config
+  + fix handling SPL terms in uwmetadata
 
 ## phaidra-ui
 
