@@ -229,7 +229,7 @@ sub label {
         my $unit = $unitres->{unit};
         my $lang_model   = PhaidraAPI::Model::Languages->new;
         my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
-        for my $lang (%{$unit->{'skos:prefLabel'}}) {
+        for my $lang (keys %{$unit->{'skos:prefLabel'}}) {
           my $alpha2lang = exists($iso6393ToBCP{$lang}) ? $iso6393ToBCP{$lang} : $lang;
           $labels->{$alpha2lang} = $unit->{'skos:prefLabel'}->{$lang};
         }
