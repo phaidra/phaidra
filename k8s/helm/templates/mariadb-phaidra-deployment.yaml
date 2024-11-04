@@ -38,9 +38,8 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: mariadb-phaidra
-          # run as nobody because of container's chown sequence.
           securityContext:
-            runAsUser: 65534
+            allowPrivilegeEscalation: false
       restartPolicy: Always
       volumes:
         - name: mariadb-phaidra

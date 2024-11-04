@@ -34,9 +34,6 @@ spec:
           volumeMounts:
             - mountPath: /data/db
               name: mongodb-phaidra
-          # run as nobody because of container's chown sequence.
-          securityContext:
-            runAsUser: 65534
       restartPolicy: Always
       volumes:
         - name: mongodb-phaidra

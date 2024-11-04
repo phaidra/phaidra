@@ -38,9 +38,8 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: mariadb-fedora
-          # run as nobody because of container's chown sequence on nfs.
           securityContext:
-            runAsUser: 65534
+            allowPrivilegeEscalation: false
           # set port and set name to make it to kube-dns
           ports:
             - containerPort: 3306
