@@ -417,12 +417,16 @@ sub signin_shib {
     my $org_units_l2;
     my $localgroups;
     my $org1 = $userData->{org_units_l1};
-    if (scalar @{$org1} > 0) {
-      $org_units_l1 = join(',', @{$org1});
+    if ($org1) {
+      if (scalar @{$org1} > 0) {
+        $org_units_l1 = join(',', @{$org1});
+      }
     }
-    my $org2 = $userData->{org_units_l2};
-    if (scalar @{$org2} > 0) {
-      $org_units_l2 = join(',', @{$org2});
+    if ($org2) {
+      my $org2 = $userData->{org_units_l2};
+      if (scalar @{$org2} > 0) {
+        $org_units_l2 = join(',', @{$org2});
+      }
     }
     if ($self->app->config->{mongodb_group_manager}) {
       my @memberGroupsArr;
