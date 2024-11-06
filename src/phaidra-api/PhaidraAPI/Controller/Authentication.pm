@@ -422,8 +422,9 @@ sub signin_shib {
         $org_units_l1 = join(',', @{$org1});
       }
     }
+    
+    my $org2 = $userData->{org_units_l2};
     if ($org2) {
-      my $org2 = $userData->{org_units_l2};
       if (scalar @{$org2} > 0) {
         $org_units_l2 = join(',', @{$org2});
       }
