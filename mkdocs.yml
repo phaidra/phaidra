@@ -7,9 +7,9 @@ theme:
   name: material
   palette:
     primary: white
-  logo: assets/img/phaidra_logo.svg
-  logo_text: assets/img/phaidra_logo_text.svg
-  favicon: assets/img/phaidra_logo.svg
+  logo: assets/media/PHAIDRA/logo/icon-only/PHAIDRA-icon-black.svg
+  logo_text: assets/media/PHAIDRA/logo/text-only/PHAIDRA-logo-text-black.svg
+  favicon: assets/media/PHAIDRA/logo/icon-only/PHAIDRA-icon-black.svg
   icon:
     repo: fontawesome/brands/github
   custom_dir: website/overrides
