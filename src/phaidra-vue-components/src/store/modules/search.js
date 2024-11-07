@@ -199,8 +199,8 @@ export const state = () => ({
 
 const mutations = {
   setFacetQueries (state, facetQueries) {
-    console.log('setting facet queries')
-    console.log(facetQueries)
+    // console.log('setting facet queries')
+    // console.log(facetQueries)
     Vue.set(state, 'facetQueries', facetQueries)
   }
 }
