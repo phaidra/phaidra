@@ -581,7 +581,7 @@ export const actions = {
     if (req.headers['set-cookie']) {
       let arr = req.headers['set-cookie'].split(';')
       let arr2 = arr[0].split('=')
-      token = arr[1]
+      token = arr2[1]
     }
     commit('setToken', token)
     if (token) {
