@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # Deliver FAIR Data With PHAIDRA
 
 The [FAIR data principles](https://www.go-fair.org/fair-principles/) now form the established global standard for most research data management planning requirements. PHAIDRA has been designed from the ground-up to simplify the task of making data **F**indable, **A**ccessible, **I**nteroperable and **R**eusable.

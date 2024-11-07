@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # About PHAIDRA
 
 ## More Than Just a Data Store
