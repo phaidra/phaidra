@@ -223,7 +223,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:cb3398ec
+    image: phaidraorg/ui:39bc843e
     environment:
       <<: [*api_common_env, *hosts]
       OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
@@ -237,7 +237,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:cb3398ec
+    image: phaidraorg/ui:39bc843e
     environment:
       <<: [*api_common_env, *hosts]
       OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
