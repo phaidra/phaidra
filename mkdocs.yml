@@ -7,9 +7,9 @@ theme:
   name: material
   palette:
     primary: white
-  logo: assets/img/phaidra_logo.svg
-  logo_text: assets/img/phaidra_logo_text.svg
-  favicon: assets/img/phaidra_logo.svg
+  logo: assets/media/PHAIDRA/logo/icon-only/PHAIDRA-icon-black.svg
+  logo_text: assets/media/PHAIDRA/logo/text-only/PHAIDRA-logo-text-black.svg
+  favicon: assets/media/PHAIDRA/logo/icon-only/PHAIDRA-icon-black.svg
   icon:
     repo: fontawesome/brands/github
   custom_dir: website/overrides
@@ -39,6 +39,7 @@ extra_css:
   - assets/external/css/tailwind.min.css
   - assets/css/landing-page.css
   - assets/css/tooltips.css
+  - assets/css/media.css
   - assets/css/tweaks.css
 
 nav:
@@ -64,6 +65,7 @@ nav:
       - docs/authentication.md
     - User Interface:
       - User Interface: docs/ui.md
+  - Media: media/index.md
   - Community: 
     - Overview: community/overview.md
     - List of Partner Institutions: community/list-of-partners.md
