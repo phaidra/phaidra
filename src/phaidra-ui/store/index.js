@@ -584,7 +584,7 @@ export const actions = {
     cookies.forEach((cookie) => {
       const { name, value, ...options } = cookie
       console.log('inspecting header: ' + name)
-      if (name === 'set-cookie') {
+      if (name === 'XSRF-TOKEN') {
         token = value
       }
     })
