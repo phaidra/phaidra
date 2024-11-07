@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import qs from 'qs'
 import config from '../config/phaidra-ui'
-import SetCookieParser from 'set-cookie-parser'
 
 export const state = () => ({
   config,
@@ -578,16 +577,12 @@ export const actions = {
 
   async nuxtServerInit({ commit, dispatch }, { req }) {
     const token = this.$cookies.get('XSRF-TOKEN')
-
-    // on shib login api will redirect browser here with set-cookie
-    let cookies = SetCookieParser.parse(req)
-    cookies.forEach((cookie) => {
-      const { name, value, ...options } = cookie
-      console.log('inspecting header: ' + name)
-      if (name === 'XSRF-TOKEN') {
-        token = value
-      }
-    })
+    // XSRF-TOKEN=0fd0c2bc09f0d3028d7043c3904acb4a6eba8d76; domain=example.org; path=/; secure; SameSite=Strict
+    if (req.headers['set-cookie']) {
+      let arr = req.headers['set-cookie'].split(';')
+      let arr2 = arr[0].split('=')
+      token = arr[1]
+    }
     commit('setToken', token)
     if (token) {
       await dispatch('getLoginData')
