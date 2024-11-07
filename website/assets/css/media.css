@@ -1,0 +1,22 @@
+/* smoooth solution from https://stackoverflow.com/a/72287995 */
+.checkered {
+  --color-1: #555;
+  --color-2: #777;
+  --size: 7px;
+  
+  background-image: conic-gradient(
+    var(--color-1) 25%, 
+    var(--color-2) 25%, 
+    var(--color-2) 50%, 
+    var(--color-1) 50%, 
+    var(--color-1) 75%, 
+    var(--color-2) 75%
+  );
+  background-size: calc(var(--size)*2) calc(var(--size)*2);
+}
+
+.pdf-download {
+  span {
+    margin-right: 8px;
+  }
+}
