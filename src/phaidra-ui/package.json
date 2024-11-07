@@ -30,6 +30,7 @@
     "nuxt-i18n": "^6.28.1",
     "path": "^0.12.7",
     "quickchart-js": "^1.4.2",
+    "set-cookie-parser": "^2.7.1",
     "vue": "^2.7.8",
     "vue-axios": "^3.4.0",
     "vue-d3-network": "^0.1.28",
