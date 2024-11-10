@@ -816,7 +816,15 @@
       <v-tab-item v-if="enablerights && !targetpid">
         <v-row no-gutters>
           <v-col cols="12">
-            <p-m-rights v-on:input-rights="$emit('input-rights', $event)" :rights="rights" ></p-m-rights>
+            <p-m-rights 
+              :show-persons="instanceconfig.accessrestrictions_showpersons"
+              :show-accounts="instanceconfig.accessrestrictions_showaccounts"
+              :show-edu-person-affiliation="instanceconfig.accessrestrictions_showedupersonaffiliation"
+              :show-org-units="instanceconfig.accessrestrictions_showorgunits"
+              :show-groups="instanceconfig.accessrestrictions_showgroups"
+              v-on:input-rights="$emit('input-rights', $event)" 
+              :rights="rights"
+             ></p-m-rights>
           </v-col>
         </v-row>
       </v-tab-item>
