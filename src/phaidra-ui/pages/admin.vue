@@ -497,7 +497,7 @@ export default {
       data_vocabularies_text: '',
       data_i18n: {},
       data_i18n_text: '',
-      data_facetqueries: {},
+      data_facetqueries: [],
       data_facetqueries_text: '',
       loading: false,
       activetabimpexp: null,

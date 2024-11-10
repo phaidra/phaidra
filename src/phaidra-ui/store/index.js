@@ -577,12 +577,6 @@ export const actions = {
 
   async nuxtServerInit({ commit, dispatch }, { req }) {
     const token = this.$cookies.get('XSRF-TOKEN')
-    // XSRF-TOKEN=0fd0c2bc09f0d3028d7043c3904acb4a6eba8d76; domain=example.org; path=/; secure; SameSite=Strict
-    if (req.headers['set-cookie']) {
-      let arr = req.headers['set-cookie'].split(';')
-      let arr2 = arr[0].split('=')
-      token = arr2[1]
-    }
     commit('setToken', token)
     if (token) {
       await dispatch('getLoginData')

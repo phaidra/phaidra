@@ -2,7 +2,7 @@
   
     <v-row>
       <template v-if="funderAndProjIdOnly">
-        <v-col v-if="!hideLabel" :md="labelColMd" cols="12" class="pdlabel primary--text text-md-right">{{ $t('Funder') }}</v-col>
+        <v-col :md="labelColMd" cols="12" class="pdlabel primary--text text-md-right"><span v-if="!hideLabel">{{ $t('Funder') }}</span></v-col>
         <v-col :md="valueColMd" cols="12">
           <v-row v-for="(funder, i) in o['frapo:hasFundingAgency']">
             <span v-for="(ft, j) in funder['skos:prefLabel']" :key="'ft'+i+j">
@@ -19,7 +19,9 @@
               <span v-else class="valuefield">{{ ft['@value'] }}</span>
             </span>
             <span v-for="(id, i) in o['skos:exactMatch']" :key="'idprojxv'+i">
-              <span class="mx-4">—</span><span>{{ id }}</span>
+              <span class="mx-4">—</span>
+              <span v-if="id['@value']"><a :href="getIDResolverURL(id)" target="_blank">{{ id['@value'] }}</a></span>
+              <span v-else >{{ id }}</span>
             </span>
           </v-row>
         </v-col>
