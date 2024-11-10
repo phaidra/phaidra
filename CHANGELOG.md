@@ -6,6 +6,7 @@
   + now considering lastModifiedDate of datastreams when indexing sinde lastModifiedDate of object does not change on datastream edit in f6
   + fixed oai config
   + fix handling SPL terms in uwmetadata
+  + sending 200 and html redirect instead of 302 in shibboleth login so that the strict token cookie is sent
 
 ## phaidra-ui
 
@@ -13,6 +14,9 @@
   + fixed access:open facet
   + allow abstract to be validated as description
   + allow field configuration in template
+  + fixed facetQueries config
+  + disable markdown for now
+  + fix rights config in submit form
 
 # v3.3.12
 
