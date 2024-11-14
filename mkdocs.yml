@@ -66,7 +66,7 @@ nav:
     - User Interface:
       - User Interface: docs/ui.md
   - Media: media/index.md
-  - Community: 
+  - Partners: 
     - Overview: community/overview.md
     - List of Partner Institutions: community/list-of-partners.md
     - All Partners:
@@ -100,6 +100,7 @@ nav:
         - Univerzitet u Beogradu: community/univerzitet-u-beogradu.md
         - Univerzitet u Kragujevcu: community/univerzitet-u-kragujevcu.md
         - Univerzitet u Nišu: community/univerzitet-u-nisu.md
+  - Community: https://community.phaidra.org
 
 plugins:
   - search
