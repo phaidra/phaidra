@@ -704,6 +704,7 @@ sub get_user_data {
   my $fname;
   my $lname;
   my $email;
+  my @affiliation;
   my $orgul1;
   my $orgul2;
 
@@ -735,7 +736,24 @@ sub get_user_data {
 
   $c->log->info("ldapgroups: ".$c->app->dumper($ldapgroups));
 
-  my $res = {username => $username, firstname => $fname, lastname => $lname, ldapgroups => $ldapgroups, email => $email, org_units_l1 => $orgul1, org_units_l2 => $orgul2};
+  if ($c->stash('remote_user')) {
+    # in case there is no user data api, use the attrs we saved on shib login
+    my $sessionData = $c->load_cred;
+    unless ($fname) {
+      $fname = $sessionData->{firstname};
+    }
+    unless ($lname) {
+      $lname = $sessionData->{lastname};
+    }
+    unless ($email) {
+      $email = $sessionData->{email};
+    }
+    if ($sessionData->{affiliation}) {
+      @affiliation = split(';', $sessionData->{affiliation});
+    }
+  }
+
+  my $res = {username => $username, firstname => $fname, lastname => $lname, ldapgroups => $ldapgroups, email => $email, affiliation => \@affiliation, org_units_l1 => $orgul1, org_units_l2 => $orgul2};
 }
 
 sub is_superuser {

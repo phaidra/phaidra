@@ -366,6 +366,15 @@
                   </v-col>
                   <v-col cols="3" class="mt-4">{{ $t("Override facet queries") }}</v-col>
                 </v-row>
+                <v-row>
+                  <v-col>
+                    <v-textarea
+                      label="Affiliations"
+                      v-model="data_affiliations_text"
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="3" class="mt-4">{{ $t("Affiliations to use for defining access restrictions") }}</v-col>
+                </v-row>
               </v-container>
             </v-tab-item>
           </v-tabs>
@@ -393,7 +402,6 @@
                   </v-col>
                   <v-col cols="6" class="mt-6">{{ $t("Allows delete of owned objects for normal users. Admin can always delete any object. (This setting only applies in Authorizatio/authorize which is currently only use on Fedora 6.x instances.)") }}</v-col>
                 </v-row>
-                
               </v-container>
             </v-tab-item>
 
@@ -472,6 +480,7 @@ export default {
         publicConfig.data_orgunits = this.data_orgunits
         publicConfig.data_vocabularies = this.data_vocabularies
         publicConfig.data_i18n = this.data_i18n
+        publicConfig.data_affiliations = this.data_affiliations
 
         let privateConfig = {...this.parsedPrivateConfigData}
         delete privateConfig['_id']
@@ -499,6 +508,8 @@ export default {
       data_i18n_text: '',
       data_facetqueries: [],
       data_facetqueries_text: '',
+      data_affiliations: [],
+      data_affiliations_text: '',
       loading: false,
       activetabimpexp: null,
       activetab: null,
@@ -573,6 +584,11 @@ export default {
         }
         instanceConfData['data_facetqueries'] = this.data_facetqueries
 
+        if (this.data_affiliations_text) {
+          this.data_affiliations = JSON.parse(this.data_affiliations_text)
+        }
+        instanceConfData['data_affiliations'] = this.data_affiliations
+
         instanceConfData['defaulttemplateid'] = this.selectedTemplateId
 
         var httpFormData = new FormData()
@@ -646,6 +662,9 @@ export default {
 
         this.data_facetqueries = response?.data?.public_config?.data_facetqueries
         this.data_facetqueries_text = JSON.stringify(this.data_facetqueries, null, 2)
+
+        this.data_affiliations = response?.data?.public_config?.data_affiliations
+        this.data_affiliations_text = JSON.stringify(this.data_affiliations, null, 2)
       } else {
         if(this.$store?.state?.instanceconfig){
           this.parsedPublicConfigData = {...this.$store.state.instanceconfig}

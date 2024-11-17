@@ -159,7 +159,7 @@
                     <v-col cols="8">
                       <v-select
                         v-model="selectedEduPersonAffiliation"
-                        :items="eduPersonAffiliations"
+                        :items="instance.data_affiliations"
                         :label="$t('eduPersonAffiliation')"
                         filled
                       ></v-select>
@@ -348,10 +348,7 @@ export default {
       userSearchItems: [],
       userSearchExact: null,
       userSearchExactModel: null,
-      userSearchExactItems: [],
-      eduPersonAffiliations: [
-        'faculty', 'student', 'staff', 'alum', 'member', 'affiliate', 'employee', 'library-walk-in'
-      ]
+      userSearchExactItems: []
     }
   },
   watch: {
