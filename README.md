@@ -231,6 +231,14 @@ docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile shib-s3 up 
 
 After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/Shibboleth.sso/Metadata`. You will have to hand this file to the IDP-manager of your organization and ask for registration.  After that, users matching the list in `SHIB_REQUIRED_AFFILIATIONS` should be able to log in and upload their files to your system.
 
+# ACME
+Phaidra supports ACME in the \*ssl\* and \*shib\* profiles. To enable it, the following ENV variables need to be set:
++ `CA_ENDPOINT`: ACME endpoint you want to use. Defaults to LetsEncrypt staging, i.e. the certificates you get won't be production ready!
++ `MD_CERTIFICATE_AGREEMENT`: set to `agreed` if you accept the TOS of your CA.
++ `PHAIDRA_ADMIN_EMAIL`: Must be set to a valid email address. The ACME client uses this as contact address.
+
+In case you want to use an ACME endpoint requiring authentication ("External Account Binding"), you must set it manually in the docker config `configs/httpd_tls.conf`.
+
 # Extra profiles
 ## minio
 + `minio-s3-dev`: Local Minio S3 instance. Combine with \*-s3-\* profile if you don't have an S3 instance at hand. With default S3_\* ENV variables (i.e. none set), no further configuration is required. Do not use this in production! The admin UI is available under localhost:9001 with `$S3_ACCESS_KEY` and `$S3_SECRET_KEY` as username/password. Default to `phaidra` and `phaidraphaidra`.
