@@ -61,9 +61,6 @@ We highly recommend to use the `--project-name $PROJECT_NAME_OF_YOUR_LIKING` fla
 + `shib-local-dev`: see above.
 + `shib-s3-dev`: see above.
 
-## Extra profiles
-+ `minio-s3-dev`: Minio S3 instance. Combine with \*-s3-\* profile if you don't have an S3 instance at hand. With default S3_\* ENV variables (i.e. none set), no further configuration is required. Do not use this in production! The admin UI is available under localhost:9001 with `$S3_ACCESS_KEY` and `$S3_SECRET_KEY` as username/password. Default to `phaidra` and `phaidraphaidra`.
-
 # Run it
 All default values assume that you are running docker rootless as the first non-root user with uid 1000 on your linux computer.  This is what we strongly recommend.  However, if this does not match your reality, please check the following options:
 ## Linux user on docker rootless, but not uid 1000
@@ -235,6 +232,8 @@ docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile shib-s3 up 
 After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/Shibboleth.sso/Metadata`. You will have to hand this file to the IDP-manager of your organization and ask for registration.  After that, users matching the list in `SHIB_REQUIRED_AFFILIATIONS` should be able to log in and upload their files to your system.
 
 # Extra profiles
+## minio
++ `minio-s3-dev`: Local Minio S3 instance. Combine with \*-s3-\* profile if you don't have an S3 instance at hand. With default S3_\* ENV variables (i.e. none set), no further configuration is required. Do not use this in production! The admin UI is available under localhost:9001 with `$S3_ACCESS_KEY` and `$S3_SECRET_KEY` as username/password. Default to `phaidra` and `phaidraphaidra`.
 ## Standalone
 + `website`: For convenient development of our website at [www.phaidra.org](https://www.phaidra.org).
    This profile can be activated by running `docker compose --profile website up -d`.  You will have a hot-reloading version of our website at `http://localhost:8000` which is controlled by `mkdocs.yaml` and renders the pages under `website`.
