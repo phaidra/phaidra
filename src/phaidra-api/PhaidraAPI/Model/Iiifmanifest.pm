@@ -9,11 +9,72 @@ use JSON;
 use PhaidraAPI::Model::Index;
 use PhaidraAPI::Model::Object;
 
-sub update_manifest_metadata {
-
+sub generate_simple_manifest {
   my ($self, $c, $pid) = @_;
 
-  my $res = {alerts => [], status => 200};
+  my $res = {manifest => {}, alerts => [], status => 200};
+
+  my $apiBaseUrlPath = $c->app->config->{scheme} . '://' . $c->app->config->{baseurl}. ($c->app->config->{basepath} ? '/' . $c->app->config->{basepath} : '');
+
+  # get dimenstions from info.json
+  my $width;
+  my $height;
+  my $isrv_model = PhaidraAPI::Model::Imageserver->new;
+  my $urlres        = $isrv_model->get_url($c, Mojo::Parameters->new("IIIF=$pid.tif/info.json"), 1);
+  if ($urlres->{status} ne 200) {
+    return $urlres;
+  }
+  my $getres = $c->app->ua->get($urlres->{url})->result;
+  if ($getres->is_success) {
+    if ($getres->json->{width}) {
+      $width = $getres->json->{width};
+    }
+    if ($getres->json->{height}) {
+      $height = $getres->json->{height};
+    }
+  } else {
+    my $err = "generate_simple_manifest [$pid] error getting iiif info: " . $getres->code . " " . $getres->message;
+    $c->app->log->error($err);
+    unshift @{$res->{alerts}}, {type => 'error', msg => $err};
+    $res->{status} = $getres->code ? $getres->code : 500;
+    return $res;
+  }
+
+  my $manifest = {
+    "\@context" => "http://iiif.io/api/presentation/3/context.json",
+    "\@id" => "$apiBaseUrlPath/object/$pid/iiifmanifest",
+    "type" => "Manifest",
+    "label" => {},
+    "items" => [
+      {
+        "id" => "$apiBaseUrlPath/iiif/$pid/canvas/p1",
+        "type" => "Canvas",
+        "height" => $height,
+        "width" => $width,
+        "items" => [
+          {
+            "id" => "$apiBaseUrlPath/iiif/$pid/page/p1/1",
+            "type" => "AnnotationPage",
+            "target" => "$apiBaseUrlPath/iiif/$pid/canvas/p1",
+            "items" => [
+              {
+                "id" => "$apiBaseUrlPath/iiif/$pid/annotation/p0001-image",
+                "type" => "Annotation",
+                "motivation" => "painting",
+                "body" => {
+                  "id" => "$apiBaseUrlPath/imageserver?IIIF=$pid.tif/full/full/0/default.jpg",
+                  "type" => "Image",
+                  "format" => "image/jpg",
+                  "height" => $height,
+                  "width" => $width
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  };
 
   my $index_model = PhaidraAPI::Model::Index->new;
   my $r           = $index_model->get($c, $pid);
@@ -22,15 +83,16 @@ sub update_manifest_metadata {
   }
   my $index = $r->{index};
 
-  # $c->app->log->debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXX" . $c->app->dumper($index));
+  $self->_update_manifest_metadata($c, $pid, $index, $manifest);
 
-  my $object_model = PhaidraAPI::Model::Object->new;
-  $r = $object_model->get_datastream($c, $pid, 'IIIF-MANIFEST', $c->stash->{basic_auth_credentials}->{username}, $c->stash->{basic_auth_credentials}->{password});
-  if ($r->{status} ne 200) {
-    return $r;
-  }
+  $res->{manifest} = $manifest;
 
-  my $manifest = decode_json($r->{'IIIF-MANIFEST'});
+  return $res;
+}
+
+sub _update_manifest_metadata {
+  my ($self, $c, $pid, $index, $manifest) = @_;
+
   delete $manifest->{seeAlso};
   delete $manifest->{description};
   delete $manifest->{metadata};
@@ -141,6 +203,33 @@ sub update_manifest_metadata {
       value => {"none" => $statements}
     };
   }
+
+}
+
+sub update_manifest_metadata {
+
+  my ($self, $c, $pid) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  my $index_model = PhaidraAPI::Model::Index->new;
+  my $r           = $index_model->get($c, $pid);
+  if ($r->{status} ne 200) {
+    return $r;
+  }
+  my $index = $r->{index};
+
+  # $c->app->log->debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXX" . $c->app->dumper($index));
+
+  my $object_model = PhaidraAPI::Model::Object->new;
+  $r = $object_model->get_datastream($c, $pid, 'IIIF-MANIFEST', $c->stash->{basic_auth_credentials}->{username}, $c->stash->{basic_auth_credentials}->{password});
+  if ($r->{status} ne 200) {
+    return $r;
+  }
+
+  my $manifest = decode_json($r->{'IIIF-MANIFEST'});
+
+  $self->_update_manifest_metadata($c, $pid, $index, $manifest);
 
   # $c->app->log->debug("XXXXXXXXXXXXXXXXXXXX " . $c->app->dumper($manifest));
 
