@@ -34,7 +34,7 @@ export const mutations = {
       'owneremailoverride', 
       'showdeletebutton',
       'markmandatoryfnc',
-      'requestdoiemail', 
+      'requestdoiemail',
       'validationfnc',
       'groups',
       'defaulttemplateid',

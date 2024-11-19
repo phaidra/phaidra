@@ -1,3 +1,16 @@
+# upcoming
+
+## phaidra-api
+
+  + possibility to make templates public
+  + it can be configured that username scope (shib) will be removed
+  + IIIF manifests are now generated automatically for pictures
+  + fixed EDM mapping for object types
+
+## phaidra-ui
+
+  + fix book redirect
+
 # v3.3.14
 
 ## phaidra-api
