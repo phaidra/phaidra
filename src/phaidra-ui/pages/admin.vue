@@ -402,6 +402,15 @@
                   </v-col>
                   <v-col cols="6" class="mt-6">{{ $t("Allows delete of owned objects for normal users. Admin can always delete any object. (This setting only applies in Authorizatio/authorize which is currently only use on Fedora 6.x instances.)") }}</v-col>
                 </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      label="Username scope to trim"
+                      v-model="parsedPublicConfigData.userscopetotrim"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("I.e. 'example.com'. Then removes 'example.com' from '<user>@example.com'. Used for backward compatibility. Should be used with caution: Don't use on instances where users from multiple organisations can login!") }}</v-col>
+                </v-row>
               </v-container>
             </v-tab-item>
 
