@@ -20,7 +20,7 @@ sub get_metadata {
   my $pidUri       = 'https://' . $c->app->config->{phaidra}->{baseurl} . '/' . $pid;
   my $apiBaseUrlPath = $c->app->config->{baseurl}. ($c->app->config->{basepath} ? '/' . $c->app->config->{basepath} : '');
   my $getUrl       = "https://$apiBaseUrlPath/object/$pid/get";
-  my $iiifUri      = "https://$apiBaseUrlPath/imageserver?IIIF=$pid.tif/";
+  my $iiifUri      = "https://$apiBaseUrlPath/imageserver?IIIF=$pid.tif/info.json";
   my $iiifManifestUri = "https://$apiBaseUrlPath/object/$pid/iiifmanifest";
 
   my @metadata;
@@ -178,7 +178,7 @@ sub get_metadata {
   if ($rec->{cmodel} eq 'Audio') {
     push @{$edmProvidedCHO->{children}}, {
       name  => 'edm:type',
-      value => 'AUDIO'
+      value => 'SOUND'
     };
   }
   if ($rec->{cmodel} eq 'Video') {
@@ -187,7 +187,7 @@ sub get_metadata {
       value => 'VIDEO'
     };
   }
-  if ($rec->{cmodel} eq 'PDFDocuemt') {
+  if (($rec->{cmodel} eq 'PDFDocument') || ($rec->{cmodel} eq 'Book')) {
     push @{$edmProvidedCHO->{children}}, {
       name  => 'edm:type',
       value => 'TEXT'
@@ -461,8 +461,8 @@ sub get_metadata {
     };
   }
 
-  # dcterms:isReferencedBy  
-  if ($self->_has_iiifmanifest($c, $rec)) {
+  # svcs:has_service
+  if ($rec->{cmodel} eq 'Picture') {
     push @{$edmWebResource->{children}}, {
       name => 'dcterms:isReferencedBy',
       attributes => [
@@ -471,10 +471,6 @@ sub get_metadata {
         }
       ]
     };
-  }
-
-  # svcs:has_service
-  if ($rec->{cmodel} eq 'Picture') {
     push @{$edmWebResource->{children}}, {
       name => 'svcs:has_service',
       attributes => [
