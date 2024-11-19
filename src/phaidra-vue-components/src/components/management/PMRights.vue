@@ -51,8 +51,9 @@
                   <v-row>
                     <v-col cols="12" v-if="doc" >
                       <v-btn class="primary" :disabled="loading || userSearchLoading" @click="addOwner()">
-                        <div v-if="doc.owner == $store.state.user.username">{{ $t('Restrict access to me') }} ({{ doc.owner }})</div>
-                        <div v-else>{{ $t('Restrict access to owner') }}</div>
+                        <div v-if="doc.owner == $store.state.user.username">{{ $t('Restrict access to me') }}</div>
+                        <div v-else-if="doc.owner">{{ $t('Restrict access to owner') }} ({{ doc.owner }})</div>
+                        <div v-else>{{ $t('Restrict access to me') }}</div>
                       </v-btn>
                     </v-col>
                   </v-row>
@@ -452,8 +453,11 @@ export default {
       this.saveRights()
     },
     addOwner: async function () {
-      if (this.doc) {
-        this.rightsArray.push({ type: 'username', notation: this.doc.owner, description: 'The owner of ' + this.pid, expires: null })
+      if (this.doc['owner']) {
+        this.rightsArray.push({ type: 'username', notation: this.doc.owner, description: this.doc.owner + ' (owner of ' + this.pid + ')', expires : null })
+        this.saveRights()
+      } else {
+        this.rightsArray.push({ type: 'username', notation: this.$store.state.user.username, description: this.$store.state.user.username + ' (uploader)', expires: null })
         this.saveRights()
       }
     },
@@ -591,6 +595,7 @@ export default {
     rightsJsonToRightsArray: async function () {
       this.rightsArray = []
       // 'username' => 1, 'department' => 1, 'faculty' => 1, 'gruppe' => 1, 'spl' => 1, 'kennzahl' => 1, 'perfunk' => 1
+
       if (this.rightsjson['username']) {
         for (let r of this.rightsjson['username']) {
           let notation = ''
