@@ -10,6 +10,7 @@ use PhaidraAPI::Model::Jsonld;
 use PhaidraAPI::Model::Util;
 use Time::HiRes qw/tv_interval gettimeofday/;
 use Data::UUID;
+use boolean;
 
 sub get {
   my $self = shift;
@@ -272,7 +273,12 @@ sub get_template {
     }
   }
 
-  my $tres = $self->mongo->get_collection('jsonldtemplates')->find_one({tid => $self->stash('tid'), owner => $owner});
+  my $tres = $self->mongo->get_collection('jsonldtemplates')->find_one(
+    {
+      tid => $self->stash('tid'), 
+      '$or' => [{ owner => $owner }, { public => true }]
+    }
+  );
 
   $res->{template} = $tres;
 
