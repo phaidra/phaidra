@@ -8,6 +8,7 @@ use Scalar::Util qw(looks_like_number);
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Termsofuse;
+use PhaidraAPI::Model::Config;
 
 sub extract_credentials {
   my $self = shift;
@@ -330,10 +331,22 @@ sub signin_shib {
   my $username = $ENV{$self->app->config->{authentication}->{shibboleth}->{attributes}->{username}};
   $username = $self->req->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{username}) unless $username;
 
+  # old - should be removed after docker migration
   if (exists($self->app->config->{authentication}->{shibboleth}->{stripemaildomain})) {
     if ($self->app->config->{authentication}->{shibboleth}->{stripemaildomain}) {
       if ($username =~ m/(\w+)@*/g) {
         $username =~ s/@([\w|\.]+)//g;
+      }
+    }
+  }
+  # new
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $privconfig = $confmodel->get_private_config($self);
+  if (exists($privconfig->{userscopetotrim})) {
+    if ($privconfig->{userscopetotrim}) {
+      my $userscopetotrim = $privconfig->{userscopetotrim};
+      if ($username =~ m/(\w+)@*/g) {
+        $username =~ s/$userscopetotrim//g;
       }
     }
   }
