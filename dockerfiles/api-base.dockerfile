@@ -31,10 +31,6 @@ RUN <<EOF
 apt-get install --yes --quiet --no-install-recommends libnet-amazon-s3-perl
 apt-get clean
 EOF
-RUN <<EOF
-mkdir -pv /usr/local/phaidra/phaidra-api \
-    /var/log/phaidra
-EOF
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]

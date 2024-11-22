@@ -774,13 +774,11 @@ services:
     volumes:
       - fedora:/mnt/fedora:ro
       - ./src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
-      - ./container_init/api/api-entrypoint.bash:/mnt/api-entrypoint.bash:ro
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
       IMAGESERVER_ROOT_PATH: "/mnt/converted_images"
       SHIB_MAIL: "${SHIB_MAIL:-}"
-    entrypoint: [ "bash", "/mnt/api-entrypoint.bash" ]
     profiles: ["demo-local-dev", "ssl-local-dev", "shib-local-dev"]
 
   pixelgecko-local-dev:
