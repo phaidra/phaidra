@@ -11,6 +11,11 @@
 
   + fix book redirect
 
+## docker
+
+  + api log is now going to stdout
+  + fixed loki config
+
 # v3.3.14
 
 ## phaidra-api

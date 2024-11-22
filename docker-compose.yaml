@@ -250,7 +250,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:1b2f8266
+    image: phaidraorg/api-dist:5d14390a
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -265,7 +265,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:1b2f8266
+    image: phaidraorg/api-dist:5d14390a
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -448,7 +448,7 @@ services:
 
   loki:
     hostname: "loki"
-    image: phaidraorg/loki-dist:0b27f01e
+    image: phaidraorg/loki-dist:6d289ebf
     volumes:
       - loki:/loki
     command: -config.file=/etc/loki/local-config.yaml
