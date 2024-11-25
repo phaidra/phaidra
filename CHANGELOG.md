@@ -6,6 +6,7 @@
   + it can be configured that username scope (shib) will be removed
   + IIIF manifests are now generated automatically for pictures
   + fixed EDM mapping for object types
+  + fixed redirect after consent when returning from SSO
 
 ## phaidra-ui
 
