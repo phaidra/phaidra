@@ -3043,6 +3043,11 @@ sub add_indexed_and_reverse {
 
       # $c->app->log->debug("getting doc of $relpid ($relationfield of $pid)");
       my $d = $self->get_doc_from_ua($c, $ua, $urlget, $relpid);
+      unless ($d) {
+        # pages are usually not related in this fashion, so this case is rare: so I'd let it guess a second time
+        # instead of asking for cmodel first, which we'd then need to do for evey case/object
+        $d = $self->get_doc_from_ua($c, $ua, $self->_get_solrget_url($c, 'Page'), $relpid);
+      }
       push @{$rels->{$relationfield}}, $d if $d;
     }
   }

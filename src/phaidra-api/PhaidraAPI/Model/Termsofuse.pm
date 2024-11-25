@@ -80,10 +80,7 @@ sub agree {
 
   $ss  = "INSERT INTO user_terms (username, version, agreed) VALUES ('$username', '$version', '$now');";
   $sth = $c->app->db_user->dbh->prepare($ss) or $c->app->log->error($c->app->db_user->dbh->errstr);
-  if ($sth->execute()) {
-    $c->render(json => {alerts => [], status => 200}, status => 200);
-  }
-  else {
+  unless ($sth->execute()) {
     my $msg = $c->app->db_user->dbh->errstr;
     $c->app->log->error($msg);
     push @{$res->{alerts}}, {type => 'error', msg => $msg};
