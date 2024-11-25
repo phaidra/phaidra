@@ -28,7 +28,13 @@ spec:
               value: "{{ .Values.MARIADB_PHAIDRA_USER }}"
           image: phaidraorg/mariadb-fedora-dist:f21114b6
           name: mariadb-fedora
-          resources: {}
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "50M"
+            limits:
+              cpu: "150m"
+              memory: "150M"
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: mariadb-fedora

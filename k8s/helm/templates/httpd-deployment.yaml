@@ -36,7 +36,13 @@ spec:
           name: httpd
           ports:
             - containerPort: 80
-          resources: {}
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "25M"
+            limits:
+              cpu: "50m"
+              memory: "100M"
           volumeMounts:
             - mountPath: /mnt/sitemaps
               name: chronos-sitemaps

@@ -108,7 +108,13 @@ spec:
             {{- end }}
           image: phaidraorg/api-dist:5dbc8851
           name: api
-          resources: {}
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "300M"
+            limits:
+              cpu: "350m"
+              memory: "1G"
           volumeMounts:
             - mountPath: /mnt/fedora
               name: fedora

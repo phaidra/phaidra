@@ -28,7 +28,13 @@ spec:
               value: "{{ .Values.MARIADB_PHAIDRA_USER }}"
           image: phaidraorg/mariadb-phaidra-dist:ff704002
           name: mariadb-phaidra
-          resources: {}
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "50M"
+            limits:
+              cpu: "20m"
+              memory: "300M"
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: mariadb-phaidra

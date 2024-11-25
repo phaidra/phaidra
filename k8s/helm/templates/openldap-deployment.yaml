@@ -30,7 +30,13 @@ spec:
               value: "{{ .Values.LDAP_ROOT }}"
           image: phaidraorg/openldap-dist:deea3eb5
           name: openldap
-          resources: {}
+          resources:
+            requests:
+              cpu: "1m"
+              memory: "10M"
+            limits:
+              cpu: "10m"
+              memory: "50M"
           volumeMounts:
             - mountPath: /bitnami/openldap
               name: openldap

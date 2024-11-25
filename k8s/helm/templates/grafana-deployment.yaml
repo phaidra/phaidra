@@ -47,7 +47,13 @@ spec:
               readOnly: true
             - name: grafana-data
               mountPath: /var/lib/grafana
-          resources: {}
+          resources:
+            requests:
+              cpu: "5m"
+              memory: "30M"
+            limits:
+              cpu: "10m"
+              memory: "200M"
       volumes:
         - name: grafana-provisioned-datasources
           configMap:

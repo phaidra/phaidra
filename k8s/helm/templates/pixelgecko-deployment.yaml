@@ -66,7 +66,13 @@ spec:
             {{- end }}
           image: phaidraorg/pixelgecko-dist:1aec19f1
           name: pixelgecko
-          resources: {}
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "50M"
+            limits:
+              cpu: "150m"
+              memory: "500M"
           volumeMounts:
             - mountPath: /mnt/fedora
               name: fedora

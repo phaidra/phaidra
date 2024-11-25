@@ -21,7 +21,13 @@ spec:
       containers:
         - name: loki
           image: grafana/loki:3.4.3
-          resources: {}
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "50M"
+            limits:
+              cpu: "30m"
+              memory: "150M"
           volumeMounts:
             - mountPath: /loki
               name: loki

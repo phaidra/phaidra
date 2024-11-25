@@ -26,7 +26,13 @@ spec:
               value: "{{ .Values.SOLR_USER }}"
           image: phaidraorg/solr-dist:b8c456f0
           name: solr
-          resources: {}
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "200M"
+            limits:
+              cpu: "200m"
+              memory: "2G"
           volumeMounts:
             - mountPath: /var/solr
               name: solr

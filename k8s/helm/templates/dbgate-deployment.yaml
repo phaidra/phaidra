@@ -58,7 +58,13 @@ spec:
               value: /dbgate
           image: dbgate/dbgate:6.3.3
           name: dbgate
-          resources: {}
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "200M"
+            limits:
+              cpu: "50m"
+              memory: "600M"
           volumeMounts:
             - mountPath: /root/.dbgate
               name: dbgate

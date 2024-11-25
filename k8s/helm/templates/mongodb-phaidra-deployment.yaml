@@ -24,7 +24,13 @@ spec:
               value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
           image: phaidraorg/mongodb-dist:1aefbfbc
           name: mongodb-phaidra
-          resources: {}
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "250M"
+            limits:
+              cpu: "100m"
+              memory: "500M"
           volumeMounts:
             - mountPath: /data/db
               name: mongodb-phaidra

@@ -31,6 +31,12 @@ spec:
               value: "{{ .Values.PHAIDRA_API_HOST_INTERNAL }}"
           image: phaidraorg/ui:facc3228
           name: ui
-          resources: {}
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "150M"
+            limits:
+              cpu: "150m"
+              memory: "500M"
       restartPolicy: Always
 status: {}

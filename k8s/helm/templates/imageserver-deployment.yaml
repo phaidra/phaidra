@@ -25,7 +25,13 @@ spec:
             - name: CONVERTED_IMAGES_PATH
               value: "mnt/mnt/converted_images"
           name: imageserver
-          resources: {}
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "20M"
+            limits:
+              cpu: "100m"
+              memory: "100M"
           volumeMounts:
             - mountPath: /mnt
               name: pixelgecko

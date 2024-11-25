@@ -56,7 +56,13 @@ spec:
               value: "fedora-service"
           image: phaidraorg/chronos-dist:b7d75dda
           name: chronos
-          resources: {}
+          resources:
+            requests:
+              cpu: "1m"
+              memory: "10M"
+            limits:
+              cpu: "10m"
+              memory: "100M"
           volumeMounts:
             - mountPath: /mnt/database-dumps
               name: chronos-database-dumps

@@ -58,7 +58,13 @@ spec:
                   key: AWS_REGION
           image: fcrepo/fcrepo:6.5.1-tomcat9
           name: fedora
-          resources: {}
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "400M"
+            limits:
+              cpu: "250m"
+              memory: "800M"
           volumeMounts:
             - mountPath: /usr/local/tomcat/fcrepo-home
               name: fedora
@@ -69,6 +75,10 @@ spec:
       - name: init-fedora
         image: mysql
         command: ['sh', '-c', "until mysql --connect-timeout 1 -h mariadb-fedora-service --user {{ .Values.MARIADB_PHAIDRA_USER }} -p{{ .Values.MARIADB_PHAIDRA_PASSWORD }} -e exit; do sleep 1; done"]
+        resources:
+          limits:
+            cpu: "5m"
+            memory: "15M"
       restartPolicy: Always
       volumes:
         - name: fedora

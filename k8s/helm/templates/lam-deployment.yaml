@@ -29,6 +29,12 @@ spec:
               value: "{{ .Values.LDAP_USERS_DN }}"
           image: ghcr.io/ldapaccountmanager/lam:9.1
           name: lam
-          resources: {}
+          resources:
+            requests:
+              cpu: "1m"
+              memory: "20M"
+            limits:
+              cpu: "10m"
+              memory: "50M"
       restartPolicy: Always
 status: {}
