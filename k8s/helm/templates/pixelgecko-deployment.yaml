@@ -14,7 +14,6 @@ spec:
   template:
     metadata:
       annotations:
-        promtail.io/scrape: 'true'
         checksum/config: {{ include (print $.Template.BasePath "/pixelgecko-configmap.yaml") . | sha256sum }}
       labels:
         phaidra.app: pixelgecko

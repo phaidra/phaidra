@@ -13,8 +13,6 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        promtail.io/scrape: 'true'
       labels:
         phaidra.app: mariadb-fedora
     spec:
