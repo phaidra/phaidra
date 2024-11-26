@@ -40,6 +40,14 @@ spec:
           volumeMounts:
             - mountPath: /bitnami/openldap
               name: openldap
+          securityContext:
+            allowPrivilegeEscalation: false
+            #see https://github.com/bitnami/containers/issues/40841
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_BIND_SERVICE
       restartPolicy: Always
       volumes:
         - name: openldap
