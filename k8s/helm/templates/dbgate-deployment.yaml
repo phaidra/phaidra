@@ -57,6 +57,9 @@ spec:
             - name: WEB_ROOT
               value: /dbgate
           image: dbgate/dbgate:6.3.3
+          # the default command writes to /etc/hosts which is not possible or necessary in openshift
+          command: ["node"]
+          args: ["bundle.js", "--listen-api"]
           name: dbgate
           resources:
             requests:
