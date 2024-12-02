@@ -29,7 +29,7 @@ spec:
             - name: MONGODB_PHAIDRA_PASSWORD
               value: "{{ .Values.MONGODB_PHAIDRA_PASSWORD }}"
             - name: CONVERTED_IMAGES_PATH
-              value: "/"
+              value: "/mnt/converted_images"
             - name: FEDORA_ADMIN_PASS
               value: "{{ .Values.FEDORA_ADMIN_PASS }}"
             - name: FEDORA_ADMIN_USER

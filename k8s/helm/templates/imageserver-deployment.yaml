@@ -18,12 +18,18 @@ spec:
         phaidra.app: imageserver
     spec:
       containers:
-        - image: phaidraorg/imageserver:3f02aeec
+        - image: image-registry.openshift-image-registry.svc:5000/{{ .Release.Namespace }}/iipsrv-imagestream:latest
           env:
-            - name: IMAGESERVER_ROOT_PATH
-              value: "mnt/mnt/converted_images"
-            - name: CONVERTED_IMAGES_PATH
-              value: "mnt/mnt/converted_images"
+            - name: PORT
+              value: "9000"
+            - name: VERBOSITY
+              value: "10"
+            - name: FILESYSTEM_PREFIX
+              value: "/mnt/mnt/converted_images"
+            - name: BASE_URL
+              value: "{{ .Values.OUTSIDE_HTTP_SCHEME }}://{{ .Values.PHAIDRA_HOSTNAME }}{{ .Values.PHAIDRA_PORTSTUB }}{{ .Values.PHAIDRA_HOSTPORT }}/api/imageserver?IIIF="
+            - name: LIGHTTPD_PORT
+              value: "8000"
           name: imageserver
           resources:
             requests:

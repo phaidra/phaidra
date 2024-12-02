@@ -75,7 +75,7 @@ spec:
             - name: OPENLDAP_HOST
               value: "openldap-service"
             - name: IMAGESERVER_ROOT_PATH
-              value: "mnt/"
+              value: "/"
             - name: CONVERTED_IMAGES_PATH
               value: "mnt/"
             {{- if .Values.s3 }}
