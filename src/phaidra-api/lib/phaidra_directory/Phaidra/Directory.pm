@@ -240,6 +240,11 @@ sub remove_group_member {
   $c->app->log->error("Directory.pm - " . ((caller(0))[3]) . " - this method is not implemented");
 }
 
+sub get_member_groups {
+  my ($self, $c, $gid, $uid) = @_;
+  $c->app->log->error("Directory.pm - " . ((caller(0))[3]) . " - this method is not implemented");
+}
+
 sub _get_org_units {
   my ($self, $c) = @_;
 
