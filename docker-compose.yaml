@@ -207,7 +207,7 @@ services:
     profiles: ["shib-s3"]
     
   solr:
-    image: phaidraorg/solr-dist:c9f6512f
+    image: phaidraorg/solr-dist:b8c456f0
     <<: [*common, *logs]
     volumes:
       - solr:/var/solr
@@ -250,7 +250,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:7e7a2f60
+    image: phaidraorg/api-dist:b8c456f0
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -265,7 +265,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:7e7a2f60
+    image: phaidraorg/api-dist:b8c456f0
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro

@@ -7,6 +7,9 @@
   + IIIF manifests are now generated automatically for pictures
   + fixed EDM mapping for object types
   + fixed redirect after consent when returning from SSO
+  + fixed/optimized reindex script
+  + fixed owner name being falsly resolved from remote_user
+  + fixed groups authz
 
 ## phaidra-ui
 
@@ -16,6 +19,7 @@
 
   + api log is now going to stdout
   + fixed loki config
+  + updated to fedora 6.5.0
 
 # v3.3.14
 
