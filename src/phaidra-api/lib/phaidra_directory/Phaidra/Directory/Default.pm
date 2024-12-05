@@ -736,8 +736,8 @@ sub get_user_data {
 
   $c->log->info("ldapgroups: ".$c->app->dumper($ldapgroups));
 
-  if ($c->stash('remote_user')) {
-    # in case there is no user data api, use the attrs we saved on shib login
+  if ($c->stash('remote_user') eq $username) {
+    # in case there is no user data api, use the attrs we saved on shib login, if it's equal to the requested user param
     my $sessionData = $c->load_cred;
     unless ($fname) {
       $fname = $sessionData->{firstname};
@@ -753,7 +753,9 @@ sub get_user_data {
     }
   }
 
-  my $res = {username => $username, firstname => $fname, lastname => $lname, ldapgroups => $ldapgroups, email => $email, affiliation => \@affiliation, org_units_l1 => $orgul1, org_units_l2 => $orgul2};
+  my $groups = $self->get_member_groups($c, $username);
+
+  my $res = {username => $username, firstname => $fname, lastname => $lname, ldapgroups => $ldapgroups, groups => $groups, email => $email, affiliation => \@affiliation, org_units_l1 => $orgul1, org_units_l2 => $orgul2};
 }
 
 sub is_superuser {
@@ -900,6 +902,22 @@ sub get_users_groups {
   my $users_groups = $groups->find({"owner" => $owner});
   my @grps         = ();
   if ($users_groups) {
+    while (my $doc = $users_groups->next) {
+      push @grps, {groupid => $doc->{groupid}, name => $doc->{name}, created => $doc->{created}, updated => $doc->{updated}};
+    }
+  }
+
+  return \@grps;
+}
+
+sub get_member_groups {
+  my ($self, $c, $owner) = @_;
+
+  my $groups = $self->_get_groups_col($c);
+
+  my $members_groups = $groups->find({"members" => $owner});
+  my @grps         = ();
+  if ($members_groups) {
     while (my $doc = $users_groups->next) {
       push @grps, {groupid => $doc->{groupid}, name => $doc->{name}, created => $doc->{created}, updated => $doc->{updated}};
     }
