@@ -15,19 +15,7 @@ use Mojo::JSON qw(decode_json encode_json);
 $ENV{MOJO_INACTIVITY_TIMEOUT} = 36000;
 
 my $logconf = q(
-  log4perl.category.MyLogger         = INFO, Logfile, Screen
-
-  log4perl.appender.Logfile                          = Log::Dispatch::FileRotate
-  log4perl.appender.Logfile.Threshold                = DEBUG
-  log4perl.appender.Logfile.filename                 = /var/log/phaidra/indexObjects.log
-  log4perl.appender.Logfile.max                      = 30
-  log4perl.appender.Logfile.DatePattern              = yyyy-MM-dd
-  log4perl.appender.Logfile.SetDate                  = CET
-  log4perl.appender.Logfile.layout                   = Log::Log4perl::Layout::PatternLayout
-  log4perl.appender.Logfile.layout.ConversionPattern = [%d] [%p] [%P] %m%n
-  log4perl.appender.Logfile.mode                     = append
-  log4perl.appender.Logfile.binmode                  = :encoding(UTF-8)
-  log4perl.appender.Logfile.utf8                     = 1
+  log4perl.category.MyLogger         = INFO, Screen
 
   log4perl.appender.Screen         = Log::Log4perl::Appender::Screen
   log4perl.appender.Screen.stderr  = 0
@@ -62,7 +50,8 @@ $fedorasearchurl->query(
   fields => 'fedora_id,created',
   order_by => 'created',
   order => 'asc',
-  condition => 'fedora_id=o:*'
+  condition => 'fedora_id=o:*',
+  max_results => $pagesize
 );
 if ($from) {
   $fedorasearchurl->query([ condition => "created>$from" ]);
@@ -70,6 +59,7 @@ if ($from) {
 if ($until) {
   $fedorasearchurl->query([ condition => "created<$until" ]);
 }
+$fedorasearchurl->query([ condition => "rdf_type=http://fedora.info/definitions/v4/repository#ArchivalGroup" ]);
 
 sub indexObject {
   my ($pid) = @_;
@@ -80,7 +70,7 @@ sub indexObject {
       for my $a (@{$apires->json->{alerts}}) {
         $log->error("pid[$pid] index result code[".$apires->code."]:".$a->{msg});
         return 0;
-      }
+      }sq
     }
   }
   return 1;
@@ -126,7 +116,7 @@ sub processPage {
 
 $log->info("started from[$from] until[$until]");
 
-while (processPage($page) == 100) {
+while (processPage($page) == $pagesize) {
   $page++;
 }
 
