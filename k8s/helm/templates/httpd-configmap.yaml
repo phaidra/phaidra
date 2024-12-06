@@ -92,13 +92,15 @@ data:
         DocumentRoot /mnt/sitemaps
 
         <Location />
-            Require all granted
+            Require ip ${ADMIN_IP_LIST}
+            # Require all granted
             ProxyPass http://ui-service:3001/
             ProxyPassReverse http://ui-service:3001/
         </Location>
 
         <LocationMatch "^/api/(.*)">
-            Require all granted
+            Require ip ${ADMIN_IP_LIST}
+            # Require all granted
             ProxyPass http://api-service:3000/$1 timeout=360
             ProxyPassReverse http://api-service:3000/$1
             Proxy100Continue Off
