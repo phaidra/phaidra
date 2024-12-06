@@ -10,7 +10,7 @@ metadata:
 spec:
   storageClassName: "{{ .Values.CHRONOS_SITEMAPS_PVC_TYPE }}"
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: "{{ .Values.CHRONOS_SITEMAPS_PVC_SIZE }}"

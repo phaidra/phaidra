@@ -58,7 +58,6 @@ spec:
         - name: chronos-sitemaps
           persistentVolumeClaim:
             claimName: chronos-sitemaps-pvc
-            readOnly: true
         - name: httpd-config
           configMap:
             name: httpd-config
