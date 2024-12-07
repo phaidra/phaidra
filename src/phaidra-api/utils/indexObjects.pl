@@ -70,7 +70,7 @@ sub indexObject {
       for my $a (@{$apires->json->{alerts}}) {
         $log->error("pid[$pid] index result code[".$apires->code."]:".$a->{msg});
         return 0;
-      }sq
+      }
     }
   }
   return 1;
