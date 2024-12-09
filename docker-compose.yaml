@@ -686,7 +686,7 @@ services:
 
   openldap-dev:
     hostname: "openldap"
-    image: bitnami/openldap:2.6.6-debian-11-r59
+    image: bitnami/openldap:2.6.9-debian-12-r0
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
