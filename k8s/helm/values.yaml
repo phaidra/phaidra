@@ -80,43 +80,43 @@ SOLR_PASS: "phaidra"
 PHAIDRA_PRIMARY_COLOR: "#008080"
 # chronos database dumps pvc size & type
 CHRONOS_DB_DUMP_PVC_SIZE: "100Mi"
-CHRONOS_DB_DUMP_PVC_TYPE: "nfs-csi"
+CHRONOS_DB_DUMP_PVC_TYPE: "cephfs-fspool-cluster"
 # chronos oai logs pvc size & type
 CHRONOS_OAI_LOGS_PVC_SIZE: "100Mi"
-CHRONOS_OAI_LOGS_PVC_TYPE: "nfs-csi"
+CHRONOS_OAI_LOGS_PVC_TYPE: "cephfs-fspool-cluster"
 # chronos sitemaps pvc size & type
 CHRONOS_SITEMAPS_PVC_SIZE: "100Mi"
-CHRONOS_SITEMAPS_PVC_TYPE: "nfs-csi"
+CHRONOS_SITEMAPS_PVC_TYPE: "cephfs-fspool-cluster"
 # dbgate pvc size & type
 DBGATE_PVC_SIZE: "100Mi"
-DBGATE_PVC_TYPE: "nfs-csi"
+DBGATE_PVC_TYPE: "cephfs-fspool-cluster"
 # fedora pvc size & type
 FEDORA_PVC_SIZE: "100Mi"
-FEDORA_PVC_TYPE: "nfs-csi"
+FEDORA_PVC_TYPE: "cephfs-fspool-cluster"
 # loki pvc size & type
 LOKI_PVC_SIZE: "100Mi"
-LOKI_PVC_TYPE: "nfs-csi"
+LOKI_PVC_TYPE: "cephfs-fspool-cluster"
 # mariadb-fedora pvc size & type
 MARIADB_FEDORA_PVC_SIZE: "100Mi"
-MARIADB_FEDORA_PVC_TYPE: "nfs-csi"
+MARIADB_FEDORA_PVC_TYPE: "cephfs-fspool-cluster"
 # mariadb-phaidra pvc size & type
 MARIADB_PHAIDRA_PVC_SIZE: "100Mi"
-MARIADB_PHAIDRA_PVC_TYPE: "nfs-csi"
+MARIADB_PHAIDRA_PVC_TYPE: "cephfs-fspool-cluster"
 # mongodb-phaidra pvc size & type
 MONGODB_PHAIDRA_PVC_SIZE: "100Mi"
-MONGODB_PHAIDRA_PVC_TYPE: "nfs-csi"
+MONGODB_PHAIDRA_PVC_TYPE: "cephfs-fspool-cluster"
 # openldap pvc size & type
 OPENLDAP_PVC_SIZE: "100Mi"
-OPENLDAP_PVC_TYPE: "nfs-csi"
+OPENLDAP_PVC_TYPE: "cephfs-fspool-cluster"
 # pixelgecko pvc size & type
 PIXELGECKO_PVC_SIZE: "100Mi"
-PIXELGECKO_PVC_TYPE: "nfs-csi"
+PIXELGECKO_PVC_TYPE: "cephfs-fspool-cluster"
 # solr pvc size & type
 SOLR_PVC_SIZE: "100Mi"
-SOLR_PVC_TYPE: "nfs-csi"
+SOLR_PVC_TYPE: "cephfs-fspool-cluster"
 # grafana admin credentials
 GF_SECURITY_ADMIN_USER: "phaidra"
 GF_SECURITY_ADMIN_PASSWORD: "phaidra"
 # grafana pvc size & type
 GRAFANA_PVC_SIZE: "100Mi"
-GRAFANA_PVC_TYPE: "nfs-csi"
+GRAFANA_PVC_TYPE: "cephfs-fspool-cluster"
