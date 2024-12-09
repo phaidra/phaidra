@@ -316,7 +316,7 @@ services:
     profiles: ["demo-local", "ssl-local", "shib-local"]
 
   mariadb-phaidra:
-    hostname: "mariadb"
+    hostname: "mariadb-phaidra"
     image: phaidraorg/mariadb-phaidra-dist:dbb2936a
     <<: [*common, *logs]
     environment:
@@ -344,7 +344,7 @@ services:
     profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3"]
 
   mongodb-phaidra:
-    hostname: "mariadb-phaidra"
+    hostname: "mongodb-phaidra"
     image: phaidraorg/mongodb-dist:10a6b315
     <<: [*common, *logs]
     environment:
