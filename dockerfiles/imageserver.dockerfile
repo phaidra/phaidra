@@ -10,6 +10,5 @@ apt-get clean
 EOF
 
 EXPOSE 80
-ADD ../container_init/imageserver/imageserver-entrypoint.bash \
-    /imageserver-entrypoint.bash
+ADD ../container_init/imageserver/imageserver-entrypoint.bash /imageserver-entrypoint.bash
 ENTRYPOINT ["bash", "/imageserver-entrypoint.bash"]
