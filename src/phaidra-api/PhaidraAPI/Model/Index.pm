@@ -1947,6 +1947,8 @@ sub _add_jsonld_index {
       }
       else {
         push @{$index->{"dc_identifier"}}, $prefix . ":" . $id->{'@value'};
+        # index without prefix too, makes it easier to search
+        push @{$index->{"_text_"}}, $id->{'@value'};
       }
     }
   }
@@ -2079,7 +2081,11 @@ sub _add_jsonld_index {
         if ($proj->{'@type'} eq 'foaf:Project') {
           if (exists($proj->{'skos:exactMatch'})) {
             for my $projId (@{$proj->{'skos:exactMatch'}}) {
-              push @{$index->{"project_id"}}, $projId;
+              if (reftype $projId eq reftype {}) {
+                push @{$index->{"project_id"}}, $projId->{'@value'};
+              } else {
+                push @{$index->{"project_id"}}, $projId;
+              }
             }
           }
           if (exists($proj->{'skos:prefLabel'})) {
@@ -2091,7 +2097,11 @@ sub _add_jsonld_index {
         if ($proj->{'@type'} eq 'aiiso:Programme') {
           if (exists($proj->{'skos:exactMatch'})) {
             for my $projId (@{$proj->{'skos:exactMatch'}}) {
-              push @{$index->{"programme_id"}}, $projId;
+              if (reftype $projId eq reftype {}) {
+                push @{$index->{"programme_id"}}, $projId->{'@value'};
+              } else {
+                push @{$index->{"programme_id"}}, $projId;
+              }
             }
           }
           if (exists($proj->{'skos:prefLabel'})) {
@@ -2110,7 +2120,11 @@ sub _add_jsonld_index {
           }
           if (exists($funder->{'skos:exactMatch'})) {
             for my $id (@{$funder->{'skos:exactMatch'}}) {
-              push @{$index->{"funder_id"}}, $id;
+              if (reftype $id eq reftype {}) {
+                push @{$index->{"funder_id"}}, $id->{'@value'};
+              } else {
+                push @{$index->{"funder_id"}}, $id;
+              }
             }
           }
         }

@@ -541,8 +541,12 @@ services:
     hostname: "imageserver"
     image: phaidraorg/imageserver:77403e3a
     <<: [*common, *logs]
+    environment:
+      <<: [*api_common_env]
     volumes:
+      - ./container_init/imageserver:/mnt/startup:ro
       - pixelgecko:/mnt/converted_images:ro
+    entrypoint: [ "bash", "/mnt/startup/imageserver_entrypoint.bash" ]
     profiles: ["demo-local", "ssl-local", "shib-local", "demo-local-dev", "ssl-local-dev", "shib-local-dev"]
 
   ############### imageserver service for s3 profiles #################
@@ -550,8 +554,12 @@ services:
     hostname: "imageserver"
     image: phaidraorg/imageserver:77403e3a
     <<: [*common, *logs]
+    environment:
+      <<: [*api_common_env]
     volumes:
+      - ./container_init/imageserver:/mnt/startup:ro
       - s3_cache:/s3_cache:ro
+    entrypoint: [ "bash", "/mnt/startup/imageserver_entrypoint.bash" ]
     profiles: ["demo-s3", "ssl-s3", "shib-s3", "demo-s3-dev", "ssl-s3-dev", "shib-s3-dev"]
 
   ############## fedora service for local profile ###############

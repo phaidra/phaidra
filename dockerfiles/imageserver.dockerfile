@@ -10,4 +10,6 @@ apt-get clean
 EOF
 
 EXPOSE 80
-CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
+ADD ../container_init/imageserver/imageserver-entrypoint.bash \
+    /httpd-ssl-entrypoint.bash
+ENTRYPOINT ["bash", "/imageserver-entrypoint.bash"]

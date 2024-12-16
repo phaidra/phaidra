@@ -309,7 +309,7 @@ export default {
     },
     hidePages: {
       type: Boolean,
-      default: true
+      default: false
     },
     pageStartLabel: {
       type: String
