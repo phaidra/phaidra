@@ -11,5 +11,5 @@ EOF
 
 EXPOSE 80
 ADD ../container_init/imageserver/imageserver-entrypoint.bash \
-    /httpd-ssl-entrypoint.bash
+    /imageserver-entrypoint.bash
 ENTRYPOINT ["bash", "/imageserver-entrypoint.bash"]
