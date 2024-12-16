@@ -539,7 +539,7 @@ services:
   ############### imageserver service for local profiles ##############
   imageserver:
     hostname: "imageserver"
-    image: phaidraorg/imageserver:77403e3a
+    image: phaidraorg/imageserver:3f02aeec
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env]
@@ -552,7 +552,7 @@ services:
   ############### imageserver service for s3 profiles #################
   imageserver-s3:
     hostname: "imageserver"
-    image: phaidraorg/imageserver:77403e3a
+    image: phaidraorg/imageserver:3f02aeec
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env]
