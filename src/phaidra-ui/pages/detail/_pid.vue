@@ -1796,7 +1796,7 @@
                             '/datacite?format=xml'
                           "
                           target="_blank"
-                          >{{ $t("Data Cite") }}</a
+                          >{{ $t("DataCite") }}</a
                         >
                       </v-row>
                       <v-row
