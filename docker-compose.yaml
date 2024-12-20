@@ -134,6 +134,7 @@ services:
     volumes:
       - chronos-sitemaps:/mnt/sitemaps:ro
       - ./certs/httpd:/ssl:ro
+      - mdcerts:/mnt/mdcerts:rw
     environment:
       <<: [*api_common_env, *hosts]
     profiles: ["ssl-local"]
@@ -149,6 +150,7 @@ services:
     volumes:
       - chronos-sitemaps:/mnt/sitemaps:ro
       - ./certs/httpd:/ssl:ro
+      - mdcerts:/mnt/mdcerts:rw
     environment:
       <<: [*api_common_env, *hosts]
     profiles: ["ssl-s3"]
@@ -165,6 +167,7 @@ services:
       - chronos-sitemaps:/mnt/sitemaps:ro
       - ./certs/httpd:/ssl:ro
       - ./certs/shibboleth:/shibboleth-certs:ro
+      - mdcerts:/mnt/mdcerts:rw
     environment:
       <<: [*api_common_env, *hosts]
       SHIB_DISCO_URL: "${SHIB_DISCO_URL:-}"
@@ -192,6 +195,7 @@ services:
       - ./certs/httpd:/ssl:ro
       - ./certs/shibboleth:/shibboleth-certs:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
+      - mdcerts:/mnt/mdcerts:rw
     environment:
       <<: [*api_common_env, *hosts]
       SHIB_DISCO_URL: "${SHIB_DISCO_URL:-}"
@@ -1075,6 +1079,7 @@ services:
       - ./container_init/httpd/phaidra-ssl/conf/phaidra-ssl.conf:/usr/local/apache2/conf/httpd.conf:ro
       - ./container_init/httpd/phaidra-ssl/httpd-ssl-entrypoint.bash:/httpd-ssl-entrypoint.bash:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
+      - mdcerts:/mnt/mdcerts:rw
     environment:
       <<: [*api_common_env, *hosts]
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-}"
@@ -1097,6 +1102,7 @@ services:
       - ./container_init/httpd/phaidra-shib/conf/phaidra-shib.conf:/usr/local/apache2/conf/httpd.conf:ro
       - ./container_init/httpd/phaidra-shib/httpd-shib-entrypoint.bash:/httpd-shib-entrypoint.bash:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
+      - mdcerts:/mnt/mdcerts:rw
     environment:
       <<: [*api_common_env, *hosts]
       SHIB_DISCO_URL: "${SHIB_DISCO_URL:-}"
@@ -1137,6 +1143,7 @@ volumes:
   loki:
   mariadb_fedora:
   mariadb_phaidra:
+  mdcerts:
   minio:
   mongodb_phaidra:
   openldap:
