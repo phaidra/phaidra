@@ -355,6 +355,8 @@ export const formvalidation = {
             }
           }
           if (f.component === 'p-file') {
+            console.log('checking p[' + f.predicate + '] c[' + f.component + '] mimetype[' + f.mimetype + '] file[' + f.file + ']')
+            console.log(f.file)
             this.mandatoryFieldsFound['File'] = true
             if (f.file) {
               this.mandatoryFieldsValidated['File'] = true
@@ -366,6 +368,15 @@ export const formvalidation = {
                 f.fileErrorMessages.push(this.$t('Wrong file format.'))
                 this.validationError = true
               }
+            } else {
+              this.mandatoryFieldsValidated['File'] = true
+            }
+          }
+          if ((f.component === 'p-filename-readonly') || f.component === 'p-filename') {
+            console.log('checking p[' + f.predicate + '] c[' + f.component + '] v[' + f.value + ']')
+            this.mandatoryFieldsFound['File'] = true
+            if (f.value?.length > 0) {
+              this.mandatoryFieldsValidated['File'] = true
             }
           }
         }
@@ -548,6 +559,8 @@ export const formvalidation = {
             }
           }
           if (f.component === 'p-file') {
+            console.log('checking p[' + f.predicate + '] c[' + f.component + '] mimetype[' + f.mimetype + '] file[' + f.file + ']')
+            console.log(f.file)
             this.mandatoryFieldsFound['File'] = true
             if (f.file) {
               this.mandatoryFieldsValidated['File'] = true
@@ -559,6 +572,15 @@ export const formvalidation = {
                 f.fileErrorMessages.push(this.$t('Wrong file format.'))
                 this.validationError = true
               }
+            } else {
+              this.mandatoryFieldsValidated['File'] = true
+            }
+          }
+          if ((f.component === 'p-filename-readonly') || f.component === 'p-filename') {
+            console.log('checking p[' + f.predicate + '] c[' + f.component + '] v[' + f.value + ']')
+            this.mandatoryFieldsFound['File'] = true
+            if (f.value?.length > 0) {
+              this.mandatoryFieldsValidated['File'] = true
             }
           }
         }
@@ -731,7 +753,7 @@ export const formvalidation = {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] mimetype[' + f.mimetype + '] file[' + f.file + ']')
             console.log(f.file)
             this.mandatoryFieldsFound['File'] = true
-            if (f.file && (f.mimetype.length > 0) && (resourceType !== 'https://pid.phaidra.org/vocabulary/7AVS-Y482')) {
+            if (f.file) {
               this.mandatoryFieldsValidated['File'] = true
             }
             if (this.allowedMimetypes[resourceType]) {
@@ -741,6 +763,8 @@ export const formvalidation = {
                 f.fileErrorMessages.push(this.$t('Wrong file format.'))
                 this.validationError = true
               }
+            } else {
+              this.mandatoryFieldsValidated['File'] = true
             }
           }
           if ((f.component === 'p-filename-readonly') || f.component === 'p-filename') {
@@ -923,6 +947,8 @@ export const formvalidation = {
                 f.fileErrorMessages.push(this.$t('Wrong file format.'))
                 this.validationError = true
               }
+            } else {
+              this.mandatoryFieldsValidated['File'] = true
             }
           }
           if ((f.component === 'p-filename-readonly') || f.component === 'p-filename') {
