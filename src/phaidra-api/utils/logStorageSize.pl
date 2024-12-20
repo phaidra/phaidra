@@ -12,6 +12,10 @@ my $folders = {
   'ocflroot' => {
     'path' => $ENV{FEDORA_OCFL_ROOT},
     'size' => undef
+  },
+  'imageserver' => {
+    'path' => $ENV{IMAGESERVER_ROOT_PATH},
+    'size' => undef
   }
 };
 
