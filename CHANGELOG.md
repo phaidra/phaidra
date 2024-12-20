@@ -10,16 +10,20 @@
   + fixed/optimized reindex script
   + fixed owner name being falsly resolved from remote_user
   + fixed groups authz
+  + logStorageSize considers imageserver folder too
 
 ## phaidra-ui
 
   + fix book redirect
+  + fixed validation of file input if resource type is data
 
 ## docker
 
   + api log is now going to stdout
   + fixed loki config
   + updated to fedora 6.5.0
+  + imageserver now specifies FcgidInitialEnv BASE_URL so that info.json contains correct ID
+  + certbot certs are now persisted
 
 # v3.3.14
 

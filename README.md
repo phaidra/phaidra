@@ -236,6 +236,7 @@ Phaidra supports ACME in the \*ssl\* and \*shib\* profiles. To enable it, the fo
 + `CA_ENDPOINT`: ACME endpoint you want to use. Defaults to LetsEncrypt staging, i.e. the certificates you get won't be production ready!
 + `MD_CERTIFICATE_AGREEMENT`: set to `agreed` if you accept the TOS of your CA.
 + `PHAIDRA_ADMIN_EMAIL`: Must be set to a valid email address. The ACME client uses this as contact address.
+and uncomment the MDStoreDir and MDomain stanzas in `configs/httpd_tls.conf`.
 
 In case you want to use an ACME endpoint requiring authentication ("External Account Binding"), you must set it manually in the docker config `configs/httpd_tls.conf`.
 
