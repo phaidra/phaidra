@@ -126,7 +126,7 @@ services:
   #################### httpd service for ssl-local profile ####################
   httpd-ssl-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:326004fd
+    image: phaidraorg/httpd-ssl-dist:f06b18a1
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -142,7 +142,7 @@ services:
   #################### httpd service for ssl-s3 profile ####################
   httpd-ssl-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:326004fd
+    image: phaidraorg/httpd-ssl-dist:f06b18a1
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
