@@ -1564,9 +1564,9 @@ const vocabularies = {
   'uniakobjecttypetheses': {
     terms: [
       { '@id': 'http://base.uni-ak.ac.at/vocabulary/diploma', 'skos:prefLabel': { 'eng': 'Diploma', 'deu': 'Diplomarbeit' } },
-      { '@id': 'http://base.uni-ak.ac.at/vocabulary/master', 'skos:prefLabel': { 'eng': 'Master', 'deu': 'Masterarbeit' } },
-      { '@id': 'http://base.uni-ak.ac.at/vocabulary/bachelor', 'skos:prefLabel': { 'eng': 'Bachelor', 'deu': 'Bachelorarbeit' } },
-      { '@id': 'http://base.uni-ak.ac.at/vocabulary/doctoral_programmes', 'skos:prefLabel': { 'eng': 'Doctoral programmes' } },
+      { '@id': 'http://base.uni-ak.ac.at/vocabulary/master', 'skos:prefLabel': { 'eng': 'Master thesis', 'deu': 'Masterarbeit' } },
+      { '@id': 'http://base.uni-ak.ac.at/vocabulary/bachelor', 'skos:prefLabel': { 'eng': 'Bachelor thesis', 'deu': 'Bachelorarbeit' } },
+      { '@id': 'http://base.uni-ak.ac.at/vocabulary/doctoral_programmes', 'skos:prefLabel': { 'eng': 'Dissertation', 'deu': 'Dissertation' } },
       { '@id': 'http://base.uni-ak.ac.at/vocabulary/written_component_of_artistic_thesis', 'skos:prefLabel': { 'eng': 'Written component of artistic Thesis', 'deu': 'Schriftlicher Teil der künstlerischen Abschlussarbeit' } }
     ],
     loaded: true
