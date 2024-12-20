@@ -918,7 +918,7 @@ sub get_member_groups {
   my $members_groups = $groups->find({"members" => $owner});
   my @grps         = ();
   if ($members_groups) {
-    while (my $doc = $users_groups->next) {
+    while (my $doc = $members_groups->next) {
       push @grps, {groupid => $doc->{groupid}, name => $doc->{name}, created => $doc->{created}, updated => $doc->{updated}};
     }
   }
