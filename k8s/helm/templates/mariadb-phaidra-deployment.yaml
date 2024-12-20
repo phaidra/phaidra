@@ -21,9 +21,15 @@ spec:
             - name: MARIADB_DATABASE
               value: "{{ .Values.PHAIDRADB }}"
             - name: MARIADB_PASSWORD
-              value: "{{ .Values.MARIADB_PHAIDRA_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "MARIADB_PHAIDRA_PASSWORD"
             - name: MARIADB_ROOT_PASSWORD
-              value: "{{ .Values.MARIADB_ROOT_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "MARIADB_PHAIDRA_ROOT_PASSWORD"
             - name: MARIADB_USER
               value: "{{ .Values.MARIADB_PHAIDRA_USER }}"
           image: phaidraorg/mariadb-phaidra-dist:ff704002

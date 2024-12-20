@@ -99,11 +99,8 @@ GRAFANA_PVC_SIZE: "100Mi"
 GRAFANA_PVC_TYPE: "cephfs-fspool-cluster"
 
 s3:
-  S3_BUCKETNAME: "s3-phaidra-bucket"
   S3_CACHE_SIZE: 500000000
   S3_CACHE_TOPDIR: "/mnt/converted_images"
-  S3_ENDPOINT: "https://s3.example.com"
-  S3_REGION: "eu-central-1"
 
 # fedora for pixelgecko s3
 FEDORA_HOST: fedora-service

@@ -19,7 +19,10 @@ spec:
       containers:
         - env:
             - name: "LDAP_ADMIN_PASSWORD"
-              value: "{{ .Values.LDAP_ADMIN_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "LDAP_ADMIN_PASSWORD"
             - name: "LDAP_ADMIN_USERNAME"
               value: "{{ .Values.LDAP_ADMIN_USERNAME }}"
             - name: "LDAP_CUSTOM_LDIF_DIR"

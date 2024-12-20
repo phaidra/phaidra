@@ -18,33 +18,18 @@ spec:
     spec:
       containers:
         - env:
-            - name: CATALINA_OPTS
-              {{- if .Values.s3 }}
-              value: >-
-                -Dfcrepo.aws.region={{ .Values.s3.S3_REGION }}
-                -Dfcrepo.ocfl.s3.bucket={{ .Values.s3.S3_BUCKETNAME }}
-                -Dfcrepo.ocfl.s3.prefix=fedora
-                -Dfcrepo.s3.endpoint={{ .Values.s3.S3_ENDPOINT }}
-                -Dfcrepo.s3.path.style.access=true
-                -Dfcrepo.ocfl.s3.db.enabled=false
-                -Dfcrepo.storage=ocfl-s3
-                -Dfcrepo.db.password={{ .Values.MARIADB_PHAIDRA_PASSWORD }}
-                -Dfcrepo.db.url=jdbc:mariadb://mariadb-fedora-service:3306/{{ .Values.FEDORADB }}
-                -Dfcrepo.db.user={{ .Values.MARIADB_PHAIDRA_USER }}
-              {{- else }}
-              value: >-
-                -Dfcrepo.db.password={{ .Values.MARIADB_PHAIDRA_PASSWORD }}
-                -Dfcrepo.db.url=jdbc:mariadb://mariadb-fedora-service:3306/{{ .Values.FEDORADB }}
-                -Dfcrepo.db.user={{ .Values.MARIADB_PHAIDRA_USER }}
-              {{- end }}
             - name: FEDORA_ADMIN_PASSWORD
-              value: "{{ .Values.FEDORA_ADMIN_PASS }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "FEDORA_ADMIN_PASSWORD"
             - name: FEDORA_ADMIN_USERNAME
               value: "{{ .Values.FEDORA_ADMIN_USER }}"
             # on openshift, fcrepo can't access the default user file
             # to avoid spamming log with access errors and allow admin access, provide it in a separate directory
             - name: TOMCAT_USERS_FILE
               value: /tmp/tomcat-users.xml
+            ##### s3
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -60,6 +45,41 @@ spec:
                 secretKeyRef:
                   name: "phaidra-s3-access"
                   key: AWS_REGION
+            - name: S3_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-s3-access"
+                  key: BUCKET_NAME
+            - name: S3_ENDPOINT_URL
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-s3-access"
+                  key: ENDPOINT_URL
+            #####
+            - name: MARIADB_PHAIDRA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "MARIADB_PHAIDRA_PASSWORD"
+            - name: CATALINA_OPTS
+              {{- if .Values.s3 }}
+              value: >-
+                -Dfcrepo.aws.region=$(AWS_DEFAULT_REGION)
+                -Dfcrepo.ocfl.s3.bucket=$(S3_BUCKET_NAME)
+                -Dfcrepo.ocfl.s3.prefix=fedora
+                -Dfcrepo.s3.endpoint=$(S3_ENDPOINT_URL)
+                -Dfcrepo.s3.path.style.access=true
+                -Dfcrepo.ocfl.s3.db.enabled=false
+                -Dfcrepo.storage=ocfl-s3
+                -Dfcrepo.db.password=$(MARIADB_PHAIDRA_PASSWORD)
+                -Dfcrepo.db.url=jdbc:mariadb://mariadb-fedora-service:3306/{{ .Values.FEDORADB }}
+                -Dfcrepo.db.user={{ .Values.MARIADB_PHAIDRA_USER }}
+              {{- else }}
+              value: >-
+                -Dfcrepo.db.password=$(MARIADB_PHAIDRA_PASSWORD)
+                -Dfcrepo.db.url=jdbc:mariadb://mariadb-fedora-service:3306/{{ .Values.FEDORADB }}
+                -Dfcrepo.db.user={{ .Values.MARIADB_PHAIDRA_USER }}
+              {{- end }}
           image: fcrepo/fcrepo:6.5.1-tomcat9
           name: fedora
           resources:
@@ -80,7 +100,13 @@ spec:
       initContainers:
       - name: init-fedora
         image: mysql
-        command: ['sh', '-c', "until mysql --connect-timeout 1 -h mariadb-fedora-service --user {{ .Values.MARIADB_PHAIDRA_USER }} -p{{ .Values.MARIADB_PHAIDRA_PASSWORD }} -e exit; do sleep 1; done"]
+        env:
+          - name: MARIADB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: "phaidra-access"
+                key: "MARIADB_PHAIDRA_PASSWORD"
+        command: ['sh', '-c', "until mysql --connect-timeout 1 -h mariadb-fedora-service --user {{ .Values.MARIADB_PHAIDRA_USER }} -p'$(MARIADB_PASSWORD)' -e exit; do sleep 1; done"]
         resources:
           limits:
             cpu: "5m"

@@ -19,7 +19,10 @@ spec:
       containers:
         - env:
             - name: "SOLR_PASS"
-              value: "{{ .Values.SOLR_PASS }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "SOLR_PASS"
             - name: "SOLR_SALT"
               value: "{{ .Values.SOLR_SALT }}"
             - name: "SOLR_USER"

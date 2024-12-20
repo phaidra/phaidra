@@ -27,11 +27,17 @@ spec:
             - name: MONGODB_PHAIDRA_USER
               value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
             - name: MONGODB_PHAIDRA_PASSWORD
-              value: "{{ .Values.MONGODB_PHAIDRA_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "MONGODB_PHAIDRA_PASSWORD"
             - name: CONVERTED_IMAGES_PATH
               value: "/mnt/converted_images"
             - name: FEDORA_ADMIN_PASS
-              value: "{{ .Values.FEDORA_ADMIN_PASS }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "FEDORA_ADMIN_PASSWORD"
             - name: FEDORA_ADMIN_USER
               value: "{{ .Values.FEDORA_ADMIN_USER }}"
             - name: FEDORA_HOST
