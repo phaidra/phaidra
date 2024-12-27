@@ -56,11 +56,11 @@ spec:
                   name: "phaidra-s3-access"
                   key: ENDPOINT_URL
             #####
-            - name: MARIADB_PHAIDRA_PASSWORD
+            - name: MARIADB_FEDORA_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: "phaidra-access"
-                  key: "MARIADB_PHAIDRA_PASSWORD"
+                  key: "MARIADB_FEDORA_PASSWORD"
             - name: CATALINA_OPTS
               {{- if .Values.s3 }}
               value: >-
@@ -71,12 +71,12 @@ spec:
                 -Dfcrepo.s3.path.style.access=true
                 -Dfcrepo.ocfl.s3.db.enabled=false
                 -Dfcrepo.storage=ocfl-s3
-                -Dfcrepo.db.password=$(MARIADB_PHAIDRA_PASSWORD)
+                -Dfcrepo.db.password=$(MARIADB_FEDORA_PASSWORD)
                 -Dfcrepo.db.url=jdbc:mariadb://mariadb-fedora-service:3306/{{ .Values.FEDORADB }}
                 -Dfcrepo.db.user={{ .Values.MARIADB_PHAIDRA_USER }}
               {{- else }}
               value: >-
-                -Dfcrepo.db.password=$(MARIADB_PHAIDRA_PASSWORD)
+                -Dfcrepo.db.password=$(MARIADB_FEDORA_PASSWORD)
                 -Dfcrepo.db.url=jdbc:mariadb://mariadb-fedora-service:3306/{{ .Values.FEDORADB }}
                 -Dfcrepo.db.user={{ .Values.MARIADB_PHAIDRA_USER }}
               {{- end }}
@@ -105,7 +105,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: "phaidra-access"
-                key: "MARIADB_PHAIDRA_PASSWORD"
+                key: "MARIADB_FEDORA_PASSWORD"
         command: ['sh', '-c', "until mysql --connect-timeout 1 -h mariadb-fedora-service --user {{ .Values.MARIADB_PHAIDRA_USER }} -p'$(MARIADB_PASSWORD)' -e exit; do sleep 1; done"]
         resources:
           limits:
