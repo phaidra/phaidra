@@ -654,7 +654,7 @@ services:
 
   lam:
     hostname: "lam"
-    image: ghcr.io/ldapaccountmanager/lam:8.5
+    image: ghcr.io/ldapaccountmanager/lam:8.9
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
@@ -668,7 +668,7 @@ services:
 
   lam-dev:
     hostname: "lam"
-    image: ghcr.io/ldapaccountmanager/lam:8.5
+    image: ghcr.io/ldapaccountmanager/lam:8.9
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
