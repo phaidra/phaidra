@@ -8,7 +8,7 @@ apt-get install --yes --quiet --no-install-recommends \
     libmath-random-isaac-xs-perl libmime-lite-perl libswitch-perl liblog-log4perl-perl liblog-dispatch-filerotate-perl \
     liblwp-useragent-determined-perl libxml-writer-perl libxml-libxml-perl libxml-parser-perl libxml-xpath-perl \
     libsoap-lite-perl libdbd-mysql-perl libdata-messagepack-perl libdatetime-perl libdatetime-format-iso8601-perl \
-    libclone-perl libmime-lite-perl libdbix-connector-perl libjson-perl libcgi-pm-perl libxml-libxslt-perl \
+    libclone-perl libmime-lite-perl libdbix-connector-perl libjson-perl libjson-validator-perl libcgi-pm-perl libxml-libxslt-perl \
     libcache-fastmmap-perl liblocale-maketext-lexicon-perl libyaml-syck-perl libmongodb-perl libmojolicious-perl \
     libmojolicious-plugin-i18n-perl libmojolicious-plugin-authentication-perl git libtemplate-perl libhtml-formattext-withlinks-perl libmodule-build-tiny-perl libdbd-sqlite3-perl libtest-needs-perl libtest-memory-cycle-perl libtest-output-perl libtest-exception-perl libtest-warn-perl libfile-mimeinfo-perl libdatetime-format-mail-perl libjson-xs-perl \
     libnet-ip-perl
