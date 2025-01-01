@@ -637,6 +637,7 @@ The citations characterized may be either direct and explicit (as in the referen
 | :----- |
 | cito:cites |
 | cito:isCitedBy |
+| cito:citesAsDataSource |
 
 #### JSON-LD example
 
