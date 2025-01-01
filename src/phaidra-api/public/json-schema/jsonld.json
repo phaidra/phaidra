@@ -1,0 +1,1923 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "$ref": "#/$defs/metadata",
+  "$defs": {
+    "array-of-strings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "typed-identifiers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "@type": {
+            "type": "string",
+            "enum": [
+              "ids:orcid",
+              "ids:gnd",
+              "ids:viaf",
+              "ids:wikidata",
+              "ids:lcnaf",
+              "ids:isni",
+              "ids:uri",
+              "ids:doi",
+              "ids:hdl",
+              "ids:urn",
+              "ids:isbn",
+              "ids:issn",
+              "phaidra:acnumber"
+            ]
+          },
+          "@value": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "@type",
+          "@value"
+        ]
+      }
+    },
+    "language-code": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 3
+    },
+    "language-tagged-values": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "@language": {
+            "$ref": "#/$defs/language-code"
+          },
+          "@value": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "@value"
+        ]
+      }
+    },
+    "schema-quantitative-values": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "@type": {
+            "type": "string",
+            "const": "schema:QuantitativeValue"
+          },
+          "schema:unitCode": {
+            "type": "string"
+          },
+          "schema:value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "@type",
+          "schema:value"
+        ]
+      }
+    },
+    "edm-timespan": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "@type": {
+            "type": "string",
+            "const": "edm:TimeSpan"
+          },
+          "skos:exactMatch": {
+            "$ref": "#/$defs/skos-exact-match"
+          },
+          "skos:prefLabel": {
+            "$ref": "#/$defs/language-tagged-values"
+          }
+        },
+        "required": [
+          "@type",
+          "skos:prefLabel"
+        ]
+      }
+    },
+    "dates-or-datetimes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "type": "string",
+            "pattern": "^[+-]?\\d{4}(-[01]\\d(-[0-3]\\d(T[0-2]\\d:[0-5]\\d:?([0-5]\\d(\\.\\d+)?)?[+-][0-2]\\d:[0-5]\\dZ?)?)?)?$"
+          }
+        ]
+      }
+    },
+    "dates-or-date-concepts": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/dates-or-datetimes"
+        },
+        {
+          "$ref": "#/$defs/edm-timespan"
+        }
+      ]
+    },
+    "skos-exact-match": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/array-of-strings"
+        },
+        {
+          "$ref": "#/$defs/typed-identifiers"
+        }
+      ]
+    },
+    "skos-concept": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "skos:Concept"
+        },
+        "rdfs:label": {
+          "$ref": "#/$defs/language-tagged-values"
+        },
+        "skos:exactMatch": {
+          "$ref": "#/$defs/skos-exact-match"
+        },
+        "skos:notation": {
+          "$ref": "#/$defs/array-of-strings"
+        },
+        "skos:prefLabel": {
+          "$ref": "#/$defs/language-tagged-values"
+        }
+      },
+      "required": [
+        "@type",
+        "skos:exactMatch",
+        "skos:prefLabel"
+      ]
+    },
+    "skos-concepts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/skos-concept"
+      }
+    },
+    "org-units": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "@type": {
+            "type": "string",
+            "enum": [
+              "foaf:Organization",
+              "aiiso:Faculty",
+              "aiiso:Department",
+              "aiiso:Institute",
+              "aiiso:Division",
+              "aiiso:ResearchGroup"
+            ]
+          },
+          "rdfs:label": {
+            "$ref": "#/$defs/language-tagged-values"
+          },
+          "skos:exactMatch": {
+            "$ref": "#/$defs/skos-exact-match"
+          },
+          "skos:notation": {
+            "$ref": "#/$defs/array-of-strings"
+          },
+          "skos:prefLabel": {
+            "$ref": "#/$defs/language-tagged-values"
+          }
+        },
+        "required": [
+          "@type",
+          "skos:exactMatch",
+          "skos:prefLabel"
+        ]
+      }
+    },
+    "skos-concepts-no-id": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "@type": {
+            "type": "string",
+            "const": "skos:Concept"
+          },
+          "skos:prefLabel": {
+            "$ref": "#/$defs/language-tagged-values"
+          }
+        },
+        "required": [
+          "@type",
+          "skos:prefLabel"
+        ]
+      }
+    },
+    "dce-title": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "@type": {
+            "type": "string",
+            "enum": [
+              "bf:Title",
+              "bf:ParallelTitle"
+            ]
+          },
+          "bf:mainTitle": {
+            "$ref": "#/$defs/language-tagged-values"
+          },
+          "bf:subtitle": {
+            "$ref": "#/$defs/language-tagged-values"
+          }
+        },
+        "required": [
+          "@type",
+          "bf:mainTitle"
+        ]
+      }
+    },
+    "is-in-series": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "@type": {
+            "type": "string",
+            "const": "schema:CreativeWork"
+          },
+          "bibo:volume": {
+            "$ref": "#/$defs/array-of-strings"
+          },
+          "bibo:issue": {
+            "$ref": "#/$defs/array-of-strings"
+          },
+          "dce:title": {
+            "$ref": "#/$defs/dce-title"
+          },
+          "dcterms:issued": {
+            "$ref": "#/$defs/dates-or-datetimes"
+          },
+          "ids:issn": {
+            "$ref": "#/$defs/array-of-strings"
+          }
+        },
+        "required": [
+          "@type",
+          "dce:title"
+        ]
+      }
+    },
+    "provision-activity": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "@type": {
+            "type": "string",
+            "const": "bf:Publication"
+          },
+          "bf:agent": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "@type": {
+                  "type": "string",
+                  "const": "schema:Organization"
+                },
+                "schema:name": {
+                  "$ref": "#/$defs/language-tagged-values"
+                },
+                "skos:exactMatch": {
+                  "$ref": "#/$defs/skos-exact-match"
+                }
+              },
+              "required": [
+                "@type",
+                "schema:name"
+              ]
+            }
+          },
+          "bf:date": {
+            "$ref": "#/$defs/dates-or-datetimes"
+          },
+          "bf:place": {
+            "$ref": "#/$defs/spatial"
+          }
+        },
+        "required": [
+          "@type",
+          "bf:agent"
+        ]
+      }
+    },
+    "entities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "@type": {
+            "type": "string",
+            "enum": [
+              "schema:Person",
+              "schema:Organization"
+            ]
+          },
+          "schema:familyName": {
+            "$ref": "#/$defs/language-tagged-values"
+          },
+          "schema:givenName": {
+            "$ref": "#/$defs/language-tagged-values"
+          },
+          "schema:name": {
+            "$ref": "#/$defs/language-tagged-values"
+          },
+          "skos:exactMatch": {
+            "$ref": "#/$defs/skos-exact-match"
+          },
+          "schema:affiliation": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "@type": {
+                  "type": "string",
+                  "const": "schema:Organization"
+                },
+                "schema:name": {
+                  "$ref": "#/$defs/language-tagged-values"
+                },
+                "skos:exactMatch": {
+                  "$ref": "#/$defs/skos-exact-match"
+                }
+              },
+              "required": [
+                "@type",
+                "schema:name"
+              ]
+            }
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "schema:name"
+            ]
+          },
+          {
+            "required": [
+              "schema:givenName"
+            ]
+          },
+          {
+            "required": [
+              "schema:familyName"
+            ]
+          }
+        ]
+      }
+    },
+    "spatial": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "@type": {
+            "type": "string",
+            "enum": [
+              "schema:Place",
+              "schema:AdministrativeArea"
+            ]
+          },
+          "rdfs:label": {
+            "$ref": "#/$defs/language-tagged-values"
+          },
+          "schema:geo": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "@type": {
+                  "type": "string",
+                  "const": "schema:GeoCoordinates"
+                },
+                "schema:latitude": {
+                  "$ref": "#/$defs/array-of-strings"
+                },
+                "schema:longitude": {
+                  "$ref": "#/$defs/array-of-strings"
+                }
+              },
+              "required": [
+                "@type",
+                "schema:latitude",
+                "schema:longitude"
+              ]
+            }
+          },
+          "skos:exactMatch": {
+            "$ref": "#/$defs/skos-exact-match"
+          },
+          "skos:prefLabel": {
+            "$ref": "#/$defs/language-tagged-values"
+          }
+        },
+        "required": [
+          "@type",
+          "skos:prefLabel"
+        ]
+      }
+    },
+    "study-plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "aiiso:Programme"
+        },
+        "skos:prefLabel": {
+          "$ref": "#/$defs/language-tagged-values"
+        },
+        "skos:notation": {
+          "$ref": "#/$defs/array-of-strings"
+        }
+      },
+      "required": [
+        "@type",
+        "skos:prefLabel"
+      ]
+    },
+    "citations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "@type": {
+            "type": "string",
+            "const": "rdfs:Resource"
+          },
+          "skos:prefLabel": {
+            "$ref": "#/$defs/language-tagged-values"
+          },
+          "skos:exactMatch": {
+            "$ref": "#/$defs/skos-exact-match"
+          }
+        },
+        "required": [
+          "@type",
+          "skos:prefLabel"
+        ]
+      }
+    },
+    "funder": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "frapo:FundingAgency"
+        },
+        "skos:prefLabel": {
+          "$ref": "#/$defs/language-tagged-values"
+        },
+        "skos:exactMatch": {
+          "$ref": "#/$defs/skos-exact-match"
+        }
+      },
+      "required": [
+        "@type",
+        "skos:prefLabel"
+      ]
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "foaf:Project"
+        },
+        "skos:prefLabel": {
+          "$ref": "#/$defs/language-tagged-values"
+        },
+        "frapo:hasFundingAgency": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/funder"
+          }
+        },
+        "skos:exactMatch": {
+          "$ref": "#/$defs/skos-exact-match"
+        },
+        "rdfs:comment": {
+          "$ref": "#/$defs/language-tagged-values"
+        },
+        "foaf:homepage": {
+          "$ref": "#/$defs/array-of-strings"
+        }
+      },
+      "oneOf" : [
+        {
+          "required": [
+            "@type",
+            "skos:prefLabel"
+          ]
+        },
+        {
+          "required": [
+            "@type",
+            "skos:exactMatch"
+          ]
+        },
+        {
+          "required": [
+            "@type",
+            "frapo:hasFundingAgency"
+          ]
+        }
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bf:note": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "@type": {
+                "type": "string",
+                "enum": [
+                  "bf:Note",
+                  "bf:Summary",
+                  "phaidra:Remark",
+                  "arm:ConditionAssessment",
+                  "phaidra:ReproductionNote",
+                  "phaidra:DigitizationNote"
+                ]
+              },
+              "skos:prefLabel": {
+                "$ref": "#/$defs/language-tagged-values"
+              }
+            },
+            "required": [
+              "@type",
+              "skos:prefLabel"
+            ]
+          }
+        },
+        "dce:subject": {
+          "$ref": "#/$defs/skos-concepts-no-id"
+        },
+        "dce:title": {
+          "$ref": "#/$defs/dce-title"
+        },
+        "dcterms:language": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/language-code"
+          }
+        },
+        "dcterms:subject": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/skos-concept"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "@type": {
+                    "type": "string",
+                    "const": "phaidra:Subject"
+                  },
+                  "$ref": "#/$defs/metadata"
+                },
+                "required": [
+                  "@type"
+                ]
+              }
+            ]
+          }
+        },
+        "frapo:hasFundingAgency": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/funder"
+          }
+        },
+        "dcterms:type": {
+          "$ref": "#/$defs/skos-concepts"
+        },
+        "ebucore:filename": {
+          "$ref": "#/$defs/array-of-strings"
+        },
+        "ebucore:hasMimeType": {
+          "$ref": "#/$defs/array-of-strings"
+        },
+        "edm:hasType": {
+          "$ref": "#/$defs/skos-concepts"
+        },
+        "edm:rights": {
+          "$ref": "#/$defs/array-of-strings"
+        },
+        "rdax:P00009": {
+          "$ref": "#/$defs/org-units"
+        },
+        "role:oth": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:abr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:act": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:adp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rcp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:anl": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:anm": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ann": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:app": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:arc": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:arr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:acp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:adi": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:art": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ard": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:asg": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:asn": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:att": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:auc": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:aut": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:aqt": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:aft": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:aud": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:aui": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ato": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ant": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:bnd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:bdd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:blw": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:bkd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:bkp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:bjd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:bpd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:bsl": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:brl": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:brd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cll": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ctg": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cas": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cns": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:chr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cng": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cli": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cor": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:col": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:clt": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:clr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cmm": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cwt": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:com": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cmp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cmt": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ccp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cnd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:con": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:csl": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:csp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ctr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ctb": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cpc": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cph": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:crr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:crp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cst": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cov": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:cur": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dnc": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dtc": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dtm": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dte": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dto": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dgg": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dgs": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dln": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dpc": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dpt": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dsr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:drt": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dis": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dbp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dst": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dnr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:drm": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:dub": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:edt": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:edc": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:edm": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:elg": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:elt": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:enj": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:eng": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:egr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:etr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:exp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:fac": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:fld": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:fmd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:fds": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:flm": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:fmp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:fmk": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:fpy": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:frg": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:fmo": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:fon": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:fnd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:gis": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:hnr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:hst": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:his": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ilu": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ill": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ins": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:itr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ive": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ivr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:inv": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:isb": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:lbr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ldr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:lsa": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:led": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:len": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:lbt": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:lse": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:lso": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:lgd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ltg": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:lyr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:mfp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:mfr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:mrb": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:mrk": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:med": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:mdc": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:emt": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:mtk": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:mod": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:mon": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:mcp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:msd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:mus": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:nrt": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:osp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:opn": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:orm": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:org": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:own": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pan": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ppm": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pta": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pth": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pat": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:prf": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pma": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pht": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:plt": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pra": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pre": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:prt": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pop": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:prm": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:prc": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pro": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:prn": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:prp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:prs": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pmn": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:prd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:prg": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pdr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pfr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:prv": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pbl": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pbd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ppt": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rdd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rpc": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rce": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rcd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:red": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ren": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rpt": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rth": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rtm": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:res": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rsp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rst": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rse": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rpy": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rsg": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rsr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rev": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:rbr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:sce": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:sad": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:aus": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:scr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:scl": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:spy": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:sec": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:sll": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:std": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:stg": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:sgn": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:sng": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:sds": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:spk": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:spn": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:sgd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:stm": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:stn": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:str": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:stl": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:sht": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:srv": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:tch": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:tcd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:tld": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:tlp": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:ths": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:trc": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:trl": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:tyd": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:tyg": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:vdg": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:vac": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:wit": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:wde": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:wdc": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:wam": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:wac": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:wal": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:wat": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:win": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:wpr": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:wst": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:advisor": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:assessor": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:authorofsubtitles": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:coadvisor": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:copista": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:digitiser": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:domainexpert": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:evaluator": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:graphicdesigner": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:initiator": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:interpreter": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:keeperoftheoriginal": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:pedagogicexpert": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:technicalinspector": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:technicaltranslator": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:uploader": {
+          "$ref": "#/$defs/entities"
+        },
+        "role:textprocessor": {
+          "$ref": "#/$defs/entities"
+        },
+        "bf:provisionActivity": {
+          "$ref": "#/$defs/provision-activity"
+        },
+        "dce:rights": {
+          "$ref": "#/$defs/language-tagged-values"
+        },
+        "dcterms:accessRights": {
+          "$ref": "#/$defs/skos-concepts"
+        },
+        "dcterms:date": {
+          "$ref": "#/$defs/dates-or-datetimes"
+        },
+        "dcterms:created": {
+          "$ref": "#/$defs/dates-or-datetimes"
+        },
+        "dcterms:modified": {
+          "$ref": "#/$defs/dates-or-datetimes"
+        },
+        "dcterms:available": {
+          "$ref": "#/$defs/dates-or-datetimes"
+        },
+        "dcterms:issued": {
+          "$ref": "#/$defs/dates-or-datetimes"
+        },
+        "dcterms:valid": {
+          "$ref": "#/$defs/dates-or-datetimes"
+        },
+        "dcterms:dateAccepted": {
+          "$ref": "#/$defs/dates-or-datetimes"
+        },
+        "dcterms:dateCopyrighted": {
+          "$ref": "#/$defs/dates-or-datetimes"
+        },
+        "dcterms:dateSubmitted": {
+          "$ref": "#/$defs/dates-or-datetimes"
+        },
+        "rdau:P60071": {
+          "$ref": "#/$defs/dates-or-datetimes"
+        },
+        "phaidra:dateAccessioned": {
+          "$ref": "#/$defs/dates-or-datetimes"
+        },
+        "frapo:isOutputOf": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/project"
+              },
+              {
+                "$ref": "#/$defs/study-plan"
+              }
+            ]
+          }
+        },
+        "schema:genre": {
+          "$ref": "#/$defs/skos-concepts"
+        },
+        "cito:cites": {
+          "$ref": "#/$defs/citations"
+        },
+        "cito:isCitedBy": {
+          "$ref": "#/$defs/citations"
+        },
+        "cito:citesAsDataSource": {
+          "$ref": "#/$defs/citations"
+        },
+        "bf:tableOfContents": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "@type": {
+                "type": "string",
+                "const": "bf:TableOfContents"
+              },
+              "skos:prefLabel": {
+                "$ref": "#/$defs/language-tagged-values"
+              }
+            },
+            "required": [
+              "@type",
+              "skos:prefLabel"
+            ]
+          }
+        },
+        "bf:instanceOf": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "@type": {
+                "type": "string",
+                "const": "schema:CreativeWork"
+              },
+              "skos:prefLabel": {
+                "$ref": "#/$defs/language-tagged-values"
+              },
+              "skos:exactMatch": {
+                "$ref": "#/$defs/skos-exact-match"
+              }
+            },
+            "required": [
+              "@type",
+              "skos:prefLabel"
+            ]
+          }
+        },
+        "rdau:P60227": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "@type": {
+                "type": "string",
+                "const": "schema:CreativeWork"
+              },
+              "dce:title": {
+                "$ref": "#/$defs/dce-title"
+              },
+              "role:aut": {
+                "$ref": "#/$defs/entities"
+              },
+              "skos:exactMatch": {
+                "$ref": "#/$defs/skos-exact-match"
+              }
+            },
+            "required": [
+              "@type",
+              "skos:prefLabel"
+            ]
+          }
+        },
+        "bf:supplementaryContent": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "@type": {
+                "type": "string",
+                "const": "bf:SupplementaryContent"
+              },
+              "skos:prefLabel": {
+                "$ref": "#/$defs/language-tagged-values"
+              }
+            },
+            "required": [
+              "@type",
+              "skos:prefLabel"
+            ]
+          }
+        },
+        "rdfs:seeAlso": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "@type": {
+                "type": "string",
+                "const": "schema:URL"
+              },
+              "schema:url": {
+                "$ref": "#/$defs/array-of-strings"
+              },
+              "skos:prefLabel": {
+                "$ref": "#/$defs/language-tagged-values"
+              }
+            },
+            "required": [
+              "@type",
+              "schema:url",
+              "skos:prefLabel"
+            ]
+          }
+        },
+        "vra:hasInscription": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "@type": {
+                "type": "string",
+                "const": "vra:Inscription"
+              },
+              "skos:prefLabel": {
+                "$ref": "#/$defs/language-tagged-values"
+              }
+            },
+            "required": [
+              "@type",
+              "skos:prefLabel"
+            ]
+          }
+        },
+        "vra:material": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "@type": {
+                "type": "string",
+                "const": "vra:Material"
+              },
+              "skos:prefLabel": {
+                "$ref": "#/$defs/language-tagged-values"
+              },
+              "skos:exactMatch": {
+                "$ref": "#/$defs/skos-exact-match"
+              }
+            },
+            "required": [
+              "@type",
+              "skos:prefLabel"
+            ]
+          }
+        },
+        "vra:hasTechnique": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "@type": {
+                "type": "string",
+                "const": "vra:Technique"
+              },
+              "skos:prefLabel": {
+                "$ref": "#/$defs/language-tagged-values"
+              },
+              "skos:exactMatch": {
+                "$ref": "#/$defs/skos-exact-match"
+              }
+            },
+            "required": [
+              "@type",
+              "skos:prefLabel"
+            ]
+          }
+        },
+        "bf:scale": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "@type": {
+                "type": "string",
+                "const": "bf:Scale"
+              },
+              "skos:prefLabel": {
+                "$ref": "#/$defs/language-tagged-values"
+              }
+            },
+            "required": [
+              "@type",
+              "skos:prefLabel"
+            ]
+          }
+        },
+        "schema:availableLanguage": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/language-code"
+              },
+              {
+                "$ref": "#/$defs/skos-concept"
+              }
+            ]
+          }
+        },
+        "schema:subtitleLanguage": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/language-code"
+              },
+              {
+                "$ref": "#/$defs/skos-concept"
+              }
+            ]
+          }
+        },
+        "schema:width": {
+          "$ref": "#/$defs/schema-quantitative-values"
+        },
+        "schema:height": {
+          "$ref": "#/$defs/schema-quantitative-values"
+        },
+        "schema:depth": {
+          "$ref": "#/$defs/schema-quantitative-values"
+        },
+        "vra:diameter": {
+          "$ref": "#/$defs/schema-quantitative-values"
+        },
+        "schema:weight": {
+          "$ref": "#/$defs/schema-quantitative-values"
+        },
+        "schema:duration": {
+          "type": "string",
+          "pattern": "^P(\\d*Y)?(\\d*M)?(\\d*D)?T(\\d*H)?(\\d*M)?(\\d*S)?$"
+        },
+        "dce:format": {
+          "$ref": "#/$defs/skos-concepts"
+        },
+        "rdau:P60048": {
+          "$ref": "#/$defs/skos-concepts"
+        },
+        "bf:awards": {
+          "$ref": "#/$defs/skos-concepts"
+        },
+        "dcterms:audience": {
+          "$ref": "#/$defs/skos-concepts"
+        },
+        "rdau:P60059": {
+          "$ref": "#/$defs/skos-concepts"
+        },
+        "oaire:version": {
+          "$ref": "#/$defs/skos-concepts"
+        },
+        "opaque:cco_accessionNumber": {
+          "$ref": "#/$defs/array-of-strings"
+        },
+        "phaidra:systemTag": {
+          "$ref": "#/$defs/array-of-strings"
+        },
+        "rdam:P30004": {
+          "$ref": "#/$defs/typed-identifiers"
+        },
+        "rdau:P60193": {
+          "$ref": "#/$defs/is-in-series"
+        },
+        "rdau:P60101": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "@type": {
+                "type": "string",
+                "const": "schema:CreativeWork"
+              },
+              "dce:title": {
+                "$ref": "#/$defs/dce-title"
+              },
+              "role:aut": {
+                "$ref": "#/$defs/entities"
+              },
+              "role:edt": {
+                "$ref": "#/$defs/entities"
+              },
+              "role:edc": {
+                "$ref": "#/$defs/entities"
+              },
+              "ids:isbn": {
+                "$ref": "#/$defs/array-of-strings"
+              },
+              "rdau:P60193": {
+                "$ref": "#/$defs/is-in-series"
+              },
+              "bf:provisionActivity": {
+                "$ref": "#/$defs/provision-activity"
+              }
+            },
+            "required": [
+              "@type",
+              "dce:title"
+            ]
+          }
+        },
+        "schema:pageEnd": {
+          "$ref": "#/$defs/array-of-strings"
+        },
+        "schema:pageStart": {
+          "$ref": "#/$defs/array-of-strings"
+        },
+        "schema:numberOfPages": {
+          "$ref": "#/$defs/array-of-strings"
+        },
+        "rdau:P60550": {
+          "$ref": "#/$defs/language-tagged-values"
+        },
+        "bf:physicalLocation": {
+          "$ref": "#/$defs/language-tagged-values"
+        },
+        "bf:shelfMark": {
+          "$ref": "#/$defs/array-of-strings"
+        },
+        "dcterms:provenance": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "@type": {
+                "type": "string",
+                "const": "dcterms:ProvenanceStatement"
+              },
+              "skos:prefLabel": {
+                "$ref": "#/$defs/language-tagged-values"
+              }
+            },
+            "required": [
+              "@type",
+              "skos:prefLabel"
+            ]
+          }
+        },
+        "dcterms:spatial": {
+          "$ref": "#/$defs/spatial"
+        },
+        "vra:placeOfCreation": {
+          "$ref": "#/$defs/spatial"
+        },
+        "vra:placeOfRepository": {
+          "$ref": "#/$defs/spatial"
+        },
+        "vra:placeOfSite": {
+          "$ref": "#/$defs/spatial"
+        },
+        "dcterms:temporal": {
+          "$ref": "#/$defs/dates-or-date-concepts"
+        },
+        "phaidra:levelOfDescription": {
+          "$ref": "#/$defs/skos-concepts"
+        }
+      },
+      "anyOf" : [
+        {
+          "required": [
+            "dce:title"
+          ]
+        },
+        {
+          "required": [
+            "edm:rights"
+          ]
+        }
+      ]
+    }
+  }
+}
