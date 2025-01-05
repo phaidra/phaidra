@@ -466,6 +466,7 @@ sub startup {
 
   $r->get('geonames/search')                        ->to('utils#geonames_search');
   $r->get('gnd/search')                             ->to('utils#gnd_search');
+  $r->get('alma/search')                            ->to('utils#alma_search');
 
   $r->get('vocabulary')                             ->to('vocabulary#get_vocabulary');
 

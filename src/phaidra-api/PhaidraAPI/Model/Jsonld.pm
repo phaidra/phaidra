@@ -8,6 +8,7 @@ use Mojo::ByteStream qw(b);
 use JSON;
 use Mojo::Util qw(encode decode);
 use base qw/Mojo::Base/;
+use JSON::Validator;
 use XML::LibXML;
 use PhaidraAPI::Model::Object;
 
@@ -56,6 +57,39 @@ our %cm2rt = (
   'Container'     => {'@id' => 'https://pid.phaidra.org/vocabulary/8MY0-BQDQ', 'skos:prefLabel' => {'eng' => 'container'}},
   'Resource'      => {'@id' => 'https://pid.phaidra.org/vocabulary/T8GH-F4V8', 'skos:prefLabel' => {'eng' => 'resource'}}
 );
+
+sub get_schema_str {
+  my ($self, $c) = @_;
+
+  my $cachekey = 'jsonld-schema';
+  my $cacheval = $c->app->chi->get($cachekey);
+
+  unless ($cacheval) {
+    $c->app->log->debug("[cache miss] $cachekey");
+
+    my $content;
+    open my $fh, "<", $c->app->config->{validate_jsonld} or $c->app->log->error("Error reading jsonld schema, " . $!);
+    local $/;
+    $content = <$fh>;
+    close $fh;
+
+    unless (defined($content)) {
+      $c->app->log->error("Error reading jsonld schema, no content");
+      return undef;
+    }
+
+    $c->app->chi->set($cachekey, $content, '1 day');
+
+    # save and get the value. the serialization can change integers to strings so
+    # if we want to get the same structure for cache miss and cache hit we have to run it through
+    # the cache serialization process
+    $cacheval = $c->app->chi->get($cachekey);
+
+    #$c->app->log->debug($c->app->dumper($cacheval));
+  }
+
+  return $cacheval;
+}
 
 sub get_object_jsonld_parsed {
 
@@ -172,6 +206,31 @@ sub validate() {
         $res->{status} = 400;
         push @{$res->{alerts}}, {type => 'error', msg => "dcterms:type[$typeId] cmodel[$cmodel] mismatch"};
         return $res;
+      }
+    }
+  }
+
+  if (exists($c->app->config->{validate_jsonld})) {
+    my $schema_str = $self->get_schema_str($c);
+    my $schema = decode_json($schema_str);
+    unless (keys %{$schema}) {
+      $res->{status} = 500;
+      $c->app->log->error("Could not read json-ld schema");
+      push @{$res->{alerts}}, {type => 'error', msg => "Could not read json-ld schema"};
+      return $res;
+    }
+    my $jv = JSON::Validator->new;
+    $jv->schema($schema);
+    my @errors = $jv->validate($metadata);
+    if (@errors) {
+      $res->{status} = 400;
+      $c->app->log->error($c->app->dumper(\@errors));
+      for my $e (@errors) {
+        my $details = undef;
+        if (exists($e->{details})) {
+          $details = join(' / ', @{$e->{details}});
+        }
+        push @{$res->{alerts}}, {type => 'error', msg => ($e->{message} ? $e->{message}.' - ' : '').$e->{path}.($details ? ' - ' . $details : '')};
       }
     }
   }

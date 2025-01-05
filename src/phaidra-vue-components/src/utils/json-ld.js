@@ -1103,14 +1103,14 @@ export default {
             // bibo:issue
             case 'bibo:issue':
               f = fields.getField('issue')
-              f.value = obj['@value']
+              f.value = obj
               components.push(f)
               break
 
             // bibo:volume
             case 'bibo:volume':
               f = fields.getField('volume')
-              f.value = obj['@value']
+              f.value = obj
               components.push(f)
               break
 
@@ -2437,6 +2437,7 @@ export default {
         case 'bf:note':
         case 'bf:tableOfContents':
         case 'bf:scale':
+        case 'dcterms:temporal':
           if (f.value) {
             this.push_object(jsonld, f.predicate, this.get_json_object([{ '@value': f.value, '@language': f.language }], null, f.type))
           }
@@ -2509,16 +2510,15 @@ export default {
           break
 
         case 'edm:rights':
+        case 'bibo:issue':
+        case 'bibo:volume':
           if (f.value) {
             this.push_literal(jsonld, f.predicate, f.value)
           }
           break
 
         case 'dce:rights':
-        case 'dcterms:temporal':
         case 'rdau:P60550':
-        case 'bibo:issue':
-        case 'bibo:volume':
         case 'bf:physicalLocation':
           if (f.value) {
             this.push_value(jsonld, f.predicate, this.get_json_valueobject(f.value, f.language))
@@ -2642,17 +2642,21 @@ export default {
           break
 
         case 'vra:material':
-          if (f.value) {
-            this.push_object(jsonld, f.predicate, this.get_json_object(f['skos:prefLabel'], null, 'vra:Material', [f.value]))
+          if (f.component === 'p-select' && f.value) {
+            this.push_object(jsonld, f.predicate, this.get_json_object(f['skos:prefLabel'], null, 'vra:Material', [ f.value ]))
+          } else {
+            if (f.value) {
+              this.push_object(jsonld, f.predicate, this.get_json_object([{ '@value': f.value, '@language': f.language }], null, 'vra:Material'))
+            }
           }
           break
 
         case 'dce:format':
           if (f.component === 'p-select' && f.value) {
-            this.push_object(jsonld, f.predicate, this.get_json_object(f['skos:prefLabel'], null, 'dce:format', [ f.value ]))
+            this.push_object(jsonld, f.predicate, this.get_json_object(f['skos:prefLabel'], null, 'skos:Concept', [ f.value ]))
           } else {
             if (f.value) {
-              this.push_object(jsonld, f.predicate, this.get_json_object([{ '@value': f.value, '@language': f.language }], null, 'dce:format'))
+              this.push_object(jsonld, f.predicate, this.get_json_object([{ '@value': f.value, '@language': f.language }], null, 'skos:Concept'))
             }
           }
           break

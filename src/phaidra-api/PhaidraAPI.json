@@ -19,6 +19,7 @@
     "inactivity_timeout": "7200",
     "readonly": "0",
     "allow_userdata_queries": "1",
+    "validate_jsonld": "/usr/local/phaidra/phaidra-api/public/json-schema/jsonld.json",
     "validate_uwmetadata": "/usr/local/phaidra/phaidra-api/public/xsd/uwmetadata/ns0.xsd",
     "validate_mods": "/usr/local/phaidra/phaidra-api/public/xsd/mods/mods-3-5.xsd",
     "validate_rights": "/usr/local/phaidra/phaidra-api/public/xsd/rights/rights.xsd",

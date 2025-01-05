@@ -1627,7 +1627,7 @@ sub _get {
   # ts
   $index{_updated} = time;
 
-  # $c->app->log->debug("XXXXXXXXXXXXX index: " . $c->app->dumper(\%index));
+  #$c->app->log->debug("XXXXXXXXXXXXX index: " . $c->app->dumper(\%index));
 
   $c->app->log->debug("_get indexing took " . tv_interval($t0));
   return $res;
@@ -1947,6 +1947,8 @@ sub _add_jsonld_index {
       }
       else {
         push @{$index->{"dc_identifier"}}, $prefix . ":" . $id->{'@value'};
+        # index without prefix too, makes it easier to search
+        push @{$index->{"_text_"}}, $id->{'@value'};
         # index without prefix too, makes it easier to search
         push @{$index->{"_text_"}}, $id->{'@value'};
       }

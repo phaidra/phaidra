@@ -167,7 +167,8 @@ export default {
     },
     showtype: {
       type: Boolean,
-      required: true
+      required: true,
+      default: true
     },
     showIds: {
       type: Boolean,

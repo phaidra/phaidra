@@ -904,6 +904,7 @@ sub _get_relsext_identifiers {
   my @ids;
   my $search_model = PhaidraAPI::Model::Search->new;
 
+  # FIXME: fedora 6
   my $query = "<info:fedora/$pid> <http://purl.org/dc/terms/identifier> *";
   my $sr    = $search_model->triples($c, $query, 0);
   unless ($sr->{status} eq 200) {

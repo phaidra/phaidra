@@ -234,6 +234,7 @@
 
 <xs:simpleType name="VOC_124">
 	<xs:restriction base="xs:int">
+			<xs:enumeration value="1561316" />
 			<xs:enumeration value="1552099" />
 			<xs:enumeration value="1552100" />
 			<xs:enumeration value="1552101" />

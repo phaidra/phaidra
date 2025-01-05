@@ -5,8 +5,8 @@
         <v-col :md="labelColMd" cols="12" class="pdlabel primary--text text-md-right"><span v-if="!hideLabel">{{ $t('Funder') }}</span></v-col>
         <v-col :md="valueColMd" cols="12">
           <v-container>
-            <v-row v-for="(funder, i) in o['frapo:hasFundingAgency']">
-              <span v-for="(ft, j) in funder['skos:prefLabel']" :key="'ft'+i+j">
+            <v-row v-for="(funder, i) in o['frapo:hasFundingAgency']" :key="'ftx'+i">
+              <span v-for="(ft, j) in funder['skos:prefLabel']" :key="'ftx'+i+j">
                 <template v-if="funder['skos:exactMatch']">
                   <template v-for="(fid, k) in funder['skos:exactMatch']">
                     <template v-if="fid['@value']">
@@ -57,8 +57,8 @@
                   </template>
                 </template>
               </v-row>
-              <template v-for="(funder, i) in o['frapo:hasFundingAgency']">
-                <v-row v-for="(ft, j) in funder['skos:prefLabel']":key="'ft'+i+j">
+              <div v-for="(funder, i) in o['frapo:hasFundingAgency']" :key="'ft'+i">
+                <v-row v-for="(ft, j) in funder['skos:prefLabel']" :key="'ft'+i+j">
                   <v-col :md="3" cols="12" class="pdlabel primary--text">{{ $t('Funder') }}<template v-if="ft['@language']"> ({{ ft['@language'] }})</template></v-col>
                   <template v-if="funder['skos:exactMatch']">
                     <template v-for="(fid, k) in funder['skos:exactMatch']">
@@ -72,7 +72,7 @@
                   </template>
                   <v-col v-else :md="9" cols="12" class="valuefield">{{ ft['@value'] }}</v-col>
                 </v-row>
-              </template>
+              </div>
               <v-row v-for="(d, i) in o['rdfs:comment']" :key="'dl'+i">
                 <v-col :md="3" cols="12" class="pdlabel primary--text" >{{ $t('Project Description') }}<template v-if="d['@language']"> ({{ d['@language'] }})</template></v-col>
                 <v-col class="valuefield" :md="9" cols="12">{{ d['@value'] }}</v-col>
