@@ -15,6 +15,7 @@ use PhaidraAPI::Model::Index;
 use PhaidraAPI::Model::Fedora;
 use PhaidraAPI::Model::Iiifmanifest;
 use PhaidraAPI::Model::Imageserver;
+use PhaidraAPI::Model::Streaming;
 
 sub add_or_modify_datastream_hooks {
 

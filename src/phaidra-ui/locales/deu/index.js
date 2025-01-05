@@ -1231,5 +1231,6 @@ export default {
   'Request DOI': 'DOI anfordern',
   'Do you want to request a DOI for this object?': 'Möchten Sie einen DOI für dieses Objekt anfordern?',
   'Open in new window': 'In neuem Fenster öffnen',
-  'Learning object': 'Lernobjekt'
+  'Learning object': 'Lernobjekt',
+  'AC number': 'AC-Nummer'
 }

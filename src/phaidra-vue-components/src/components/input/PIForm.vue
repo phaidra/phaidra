@@ -1,6 +1,18 @@
 <template>
   <v-container fluid v-if="form && form.sections" >
     <v-alert
+      v-model="serverSubmitError"
+      dismissible
+      type="error"
+      transition="slide-y-transition"
+    >
+      <template>
+        <ul>
+          <li v-for="(error, i) in serverSubmitErrors" :key="'sve' + i"><span>{{ $t(error) }}</span></li>
+        </ul>
+      </template>
+    </v-alert>
+    <v-alert
       v-model="validationError"
       dismissible
       type="error"
@@ -1122,7 +1134,9 @@ export default {
       showEditFieldPopup: false,
       selectedFieldForEdit: null,
       fieldPropForm: [],
-      initonly: false
+      initonly: false,
+      serverSubmitError: false,
+      serverSubmitErrors: []
     }
   },
   methods: {
@@ -1348,7 +1362,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        this.$store.commit('setAlerts', [{ type: 'error', msg: error }])
       } finally {
         this.loading = false
         this.templatedialog = false
@@ -1377,7 +1391,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        this.$store.commit('setAlerts', [{ type: 'error', msg: error }])
       } finally {
         this.loading = false
         this.templatedialog = false
@@ -1418,6 +1432,8 @@ export default {
       }
     },
     submit: async function () {
+      this.serverSubmitError = false
+      this.serverSubmitErrors = []
       if (!this.formIsValid()) {
         this.validationError = true
         return
@@ -1491,7 +1507,17 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        if (error.response && error.response.data.alerts && error.response.data.alerts.length > 0) {
+          // amore readable formatting of server errors
+          this.serverSubmitError = true
+          for (let e of error.response.data.alerts) {
+            this.serverSubmitErrors.push(e.msg)
+          }
+          // remove the alerts eventually set in axios hook
+          this.$store.commit('setAlerts', [])
+        } else {
+          this.$store.commit('setAlerts', [{ type: 'error', msg: error }])
+        }
       } finally {
         this.$vuetify.goTo(0)
         this.loading = false
@@ -1518,7 +1544,7 @@ export default {
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
           if (response.data.status === 401) {
-            response.data.alerts.push({ type: 'danger', msg: 'Please log in' })
+            response.data.alerts.push({ type: 'error', msg: 'Please log in' })
           }
           this.$store.commit('setAlerts', response.data.alerts)
         }
@@ -1527,7 +1553,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        this.$store.commit('setAlerts', [{ type: 'error', msg: error }])
       } finally {
         this.$vuetify.goTo(0)
         this.loading = false

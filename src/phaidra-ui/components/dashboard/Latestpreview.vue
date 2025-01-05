@@ -1,6 +1,7 @@
 <template>
   <v-card class="mt-2 mx-auto" :elevation="0">
-    <v-card-title class="title font-weight-light primary--text" style="word-break: break-word;">{{ $t(label) }}</v-card-title>
+    <v-card-title v-if="centertitle" class=" font-weight-light" :class="titlecolor + '--text'" style="word-break: break-word;"><div style="width:100%"><center>{{ $t(label) }}</center></div></v-card-title>
+    <v-card-title v-else class=" font-weight-light" :class="titlecolor + '--text'" style="word-break: break-word;">{{ $t(label) }}</v-card-title>
     <v-card-text>
       <center>
         <router-link :to="{ path: `detail/${pid}`, params: { pid: pid } }">
@@ -17,7 +18,7 @@
         <slot></slot>
       </div>
       <div>
-        <router-link :to="{ path: '/search?q='+fq }">{{ $t('More') }} ({{ total }})</router-link>
+        <router-link :to="{ path: '/search?q='+fq }">{{ $t(linklabel)  }} ({{ total }})</router-link>
       </div>
     </v-card-text>
   </v-card>
@@ -34,6 +35,18 @@ export default {
     label: String,
     text: String,
     fq: String,
+    titlecolor: {
+      type: String,
+      default: 'primary'
+    },
+    linklabel: {
+      type: String,
+      default: 'More'
+    },
+    centertitle: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     src: function () {

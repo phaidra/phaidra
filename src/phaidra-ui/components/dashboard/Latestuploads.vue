@@ -1,6 +1,6 @@
 <template>
   <v-card class="mt-2 mx-auto" :elevation="0">
-    <v-card-title class="title font-weight-light primary--text">{{ $t(label) }}</v-card-title>
+    <v-card-title class="title font-weight-light" :class="titlecolor + '--text'">{{ $t(label) }}</v-card-title>
     <v-card-text>
       <div v-for="(doc, i) in this.docs" :key="'doc'+i" class="pa-4">
         <v-row>
@@ -41,7 +41,7 @@
         <v-divider :key="'div'+doc.pid" class="mt-4 mb-2 mr-2"></v-divider>
       </div>
       <div>
-        <router-link :to="{ path: '/search?q='+fq }">{{ $t('More') }} ({{ total }})</router-link>
+        <router-link :to="{ path: '/search?q='+fq }">{{ $t(linklabel) }} ({{ total }})</router-link>
       </div>
     </v-card-text>
   </v-card>
@@ -58,6 +58,14 @@ export default {
     label: String,
     fq: String,
     length: Number,
+    titlecolor: {
+      type: String,
+      default: 'primary'
+    },
+    linklabel: {
+      type: String,
+      default: 'More'
+    }
   },
   data: () => ({
     docs: [],

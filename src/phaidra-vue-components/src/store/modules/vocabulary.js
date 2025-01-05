@@ -585,6 +585,12 @@ const vocabularies = {
     ],
     loaded: true
   },
+  'authoronlyrolepredicate': {
+    terms: [
+      { '@id': 'role:aut', 'skos:prefLabel': { 'eng': 'Author', 'deu': 'Autor*in', 'ita': 'Author' } }
+    ],
+    loaded: true
+  },
   'submitrolepredicate': {
     terms: [
       { '@id': 'role:oth', 'skos:prefLabel': { 'eng': 'Other', 'deu': 'Andere', 'ita': 'Altro' }, 'skos:definition': { 'eng': 'A role that has no equivalent in the MARC list.', 'deu': 'Eine Rolle, die keine Entsprechung in der MARC-Liste hat.' } },
@@ -2133,7 +2139,7 @@ const actions = {
         let terms = []
         thema.getThemaTerms(terms, response.data.vocabulary, null)
         commit('setThema', { tree: response.data.vocabulary, terms: terms, locale: locale })
-        console.log(terms)
+        // console.log(terms)
       } catch (error) {
         console.log(error)
         commit('setAlerts', [{ type: 'danger', msg: 'Failed to fetch thema: ' + error }])
@@ -2153,7 +2159,7 @@ const actions = {
         let terms = []
         bic.getBicTerms(terms, response.data.vocabulary, null)
         commit('setBic', { tree: response.data.vocabulary, terms: terms, locale: locale })
-        console.log(terms)
+        // console.log(terms)
       } catch (error) {
         console.log(error)
         commit('setAlerts', [{ type: 'danger', msg: 'Failed to fetch BIC: ' + error }])

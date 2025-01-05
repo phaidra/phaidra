@@ -1,4 +1,4 @@
-# upcoming
+# v3.3.15
 
 ## phaidra-api
 
@@ -11,11 +11,13 @@
   + fixed owner name being falsly resolved from remote_user
   + fixed groups authz
   + logStorageSize considers imageserver folder too
+  + json-ld is now validated with schema json
 
 ## phaidra-ui
 
   + fix book redirect
   + fixed validation of file input if resource type is data
+  + various fixes of json-ld
 
 ## docker
 

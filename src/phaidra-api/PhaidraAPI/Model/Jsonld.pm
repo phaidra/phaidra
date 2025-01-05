@@ -210,22 +210,28 @@ sub validate() {
     }
   }
 
-  my $schema_str = $self->get_schema_str($c);
-  my $schema = decode_json($schema_str);
-  unless (keys %{$schema}) {
-    $res->{status} = 500;
-    $c->app->log->error("Could not read json-ld schema");
-    push @{$res->{alerts}}, {type => 'error', msg => "Could not read json-ld schema"};
-    return $res;
-  }
-  my $jv = JSON::Validator->new;
-  $jv->schema($schema);
-  my @errors = $jv->validate($metadata);
-  if (@errors) {
-    $res->{status} = 400;
-    $c->app->log->error($c->app->dumper(\@errors));
-    for my $e (@errors) {
-      push @{$res->{alerts}}, {type => 'error', msg => ($e->{message} ? $e->{message}.' - ' : '').$e->{path}};
+  if (exists($c->app->config->{validate_jsonld})) {
+    my $schema_str = $self->get_schema_str($c);
+    my $schema = decode_json($schema_str);
+    unless (keys %{$schema}) {
+      $res->{status} = 500;
+      $c->app->log->error("Could not read json-ld schema");
+      push @{$res->{alerts}}, {type => 'error', msg => "Could not read json-ld schema"};
+      return $res;
+    }
+    my $jv = JSON::Validator->new;
+    $jv->schema($schema);
+    my @errors = $jv->validate($metadata);
+    if (@errors) {
+      $res->{status} = 400;
+      $c->app->log->error($c->app->dumper(\@errors));
+      for my $e (@errors) {
+        my $details = undef;
+        if (exists($e->{details})) {
+          $details = join(' / ', @{$e->{details}});
+        }
+        push @{$res->{alerts}}, {type => 'error', msg => ($e->{message} ? $e->{message}.' - ' : '').$e->{path}.($details ? ' - ' . $details : '')};
+      }
     }
   }
 

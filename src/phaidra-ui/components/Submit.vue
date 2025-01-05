@@ -70,6 +70,29 @@
         </v-row>
         <v-divider class="my-2"></v-divider>
       </template>
+      <template v-if="user.cataloguploader">
+        <v-row class="my-6" justify="start">
+          <div class="d-flex flex-row ml-6">
+            <v-btn
+              large
+              class="primary"
+              @click="$router.push(localePath('/submit/catalogfetchupload'))"
+            >
+              <v-icon dark class="mr-4">mdi-plus-circle</v-icon> {{ $t("Catalog-fetch upload") }}
+            </v-btn>
+            </div>
+          <div class="d-flex flex-row pt-3 ml-6">
+            <span>
+            {{
+              $t(
+                "Upload objects by pulling metadata from catalogue."
+              )
+            }}
+            </span>
+          </div>
+        </v-row>
+        <v-divider class="my-2"></v-divider>
+      </template>
       <template v-if="instanceconfig.uwmsubmit">
         <v-row class="my-6" justify="start">
           <v-col cols="12">

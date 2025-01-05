@@ -644,6 +644,7 @@ const fields = [
     series: [
       {
         id: 'contained-in-series',
+        seriesType: 'schema:CreativeWork',
         seriesTitle: '',
         seriesTitleLanguage: '',
         seriesVolume: '',
@@ -657,7 +658,6 @@ const fields = [
         removable: false
       }
     ],
-    seriesType: 'schema:CreativeWork',
     seriesLabel: 'rdau:P60101_rdau:P60193',
     seriesCollapse: false,
     publisherLabel: 'Publisher',
@@ -847,6 +847,7 @@ const fields = [
     id: 'temporal-coverage',
     fieldname: 'Temporal coverage',
     predicate: 'dcterms:temporal',
+    type: 'skos:Concept',
     component: 'p-text-field',
     label: 'Temporal coverage',
     multilingual: true,
@@ -1213,6 +1214,7 @@ const fields = [
     value: '',
     type: 'schema:Place',
     disabletype: false,
+    showtype: true,
     'rdfs:label': [],
     'skos:prefLabel': [],
     definition: 'Depicted/Represented place.'
@@ -1611,6 +1613,7 @@ export default {
         case 'sociocultural-category':
         case 'physical-location-select-text-pool':
         case 'subject':
+        case 'fixedrole-person':
           break
         default:
           fieldsNew.push(f)
@@ -1628,6 +1631,7 @@ export default {
         case 'sociocultural-category':
         case 'physical-location-select-text-pool':
         case 'subject':
+        case 'fixedrole-person':
           break
         default:
           var field = JSON.parse(JSON.stringify(editable[i]))

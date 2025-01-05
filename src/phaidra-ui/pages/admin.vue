@@ -387,10 +387,26 @@
           
           <v-tabs slider-color="primary" slider-size="20px" dark background-color="grey" vertical v-model="activetabprivate">
 
+            <v-tab :active-class="'primary'" >
+              <span>{{ $t('General') }}</span>
+            </v-tab>
             <v-tab :active-class="'primary'">
               <span>{{ $t('Functionality') }}</span>
             </v-tab>
 
+            <v-tab-item class="pa-8">
+              <v-container>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      label="Alma SRU URL"
+                      v-model="parsedPrivateConfigData.almasruurl"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("Used to fetch metadata from catalogue.") }}</v-col>
+                </v-row>
+              </v-container>
+            </v-tab-item>
             <v-tab-item class="pa-8">
               <v-container>
                 <v-row>
@@ -409,7 +425,7 @@
                       v-model="parsedPublicConfigData.userscopetotrim"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6" class="mt-4">{{ $t("I.e. 'example.com'. Then removes 'example.com' from '<user>@example.com'. Used for backward compatibility. Should be used with caution: Don't use on instances where users from multiple organisations can login!") }}</v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("I.e. 'example.com'. Then removes 'example.com' from 'user@example.com'. Used for backward compatibility. Should be used with caution: Don't use on instances where users from multiple organisations can login!") }}</v-col>
                 </v-row>
               </v-container>
             </v-tab-item>
@@ -548,7 +564,6 @@ export default {
         this.$axios.defaults.baseURL = config.public.api
         this.$store.commit('setInstanceConfig', config.public)
 
-        const privateConfData = {...this.parsedPrivateConfigData}
         var httpFormData = new FormData()
         httpFormData.append('private_config', JSON.stringify(config.private))
         await this.$axios.request({

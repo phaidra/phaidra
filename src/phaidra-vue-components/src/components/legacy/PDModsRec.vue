@@ -21,7 +21,8 @@
         </template>
         <template v-else-if="ch.xmlname === 'accessCondition'">
           <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(getLabel(ch)) }}</v-col>
-          <v-col cols="12" md="10" class="wiv">{{ ch.ui_value }}</v-col>
+          <v-col v-if="ch.ui_value.startsWith('http')" cols="12" md="10" class="wiv"><a :href="ch.ui_value" target="_blank">{{ getLocalizedTermLabel('alllicenses', ch.ui_value) }}</a></v-col>
+          <v-col v-else cols="12" md="10" class="wiv">{{ ch.ui_value }}</v-col>
         </template>
         <template v-else>
           <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(getLabel(ch)) }}</v-col>
@@ -78,44 +79,30 @@ export default {
     orderedChildren: function () {
       let orderedChildren = []
       if (this.children) {
-        let tmpArr = []
-        let titleInfo
-        let name
-        let license
-        let recordInfo
+        let otherNodes = []
+        let titleInfos = []
+        let names = []
+        let licenses = []
+        let recordInfos = []
         for (let ch of this.children) {
           switch (ch.xmlname) {
             case 'titleInfo':
-              titleInfo = ch
+              titleInfos.push(ch)
               break
             case 'name':
-              name = ch
+              names.push(ch)
               break
             case 'license':
-              titleInfo = ch
+              licenses.push(ch)
               break
             case 'recordInfo':
-              recordInfo = ch
+              recordInfos.push(ch)
               break
             default:
-              tmpArr.push(ch)
+              otherNodes.push(ch)
           }
         }
-        if (titleInfo) {
-          orderedChildren.push(titleInfo)
-        }
-        if (name) {
-          orderedChildren.push(name)
-        }
-        for (let ch of tmpArr) {
-          orderedChildren.push(ch)
-        }
-        if (license) {
-          orderedChildren.push(license)
-        }
-        if (recordInfo) {
-          orderedChildren.push(recordInfo)
-        }
+        orderedChildren = titleInfos.concat(names).concat(otherNodes).concat(licenses).concat(recordInfos)
       }
       return orderedChildren
     }
@@ -209,17 +196,25 @@ export default {
         for (let chch of ch.children) {
           if (chch.xmlname === 'namePart') {
             if (chch['attributes']) {
-            for (let chchattr of chch.attributes) {
-              if (chchattr.xmlname === 'type') {
-                if (chchattr.ui_value === 'family') {
-                  family = chch.ui_value
+              let foundValue = false
+              for (let chchattr of chch.attributes) {
+                if (chchattr.xmlname === 'type') {
+                  if (chchattr.ui_value === 'family') {
+                    foundValue = true
+                    family = chch.ui_value
+                  }
+                  if (chchattr.ui_value === 'given') {
+                    foundValue = true
+                    given = chch.ui_value
+                  }
                 }
-                if (chchattr.ui_value === 'given') {
-                  given = chch.ui_value
+                if (!foundValue) {
+                  return chch.ui_value    
                 }
               }
+            } else {
+              return chch.ui_value
             }
-}
           }
         }
       }
