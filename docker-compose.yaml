@@ -228,7 +228,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:abfeb01d
+    image: phaidraorg/ui:25493cc0
     environment:
       <<: [*api_common_env, *hosts]
       OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
@@ -241,7 +241,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:abfeb01d
+    image: phaidraorg/ui:25493cc0
     environment:
       <<: [*api_common_env, *hosts]
       OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
@@ -253,7 +253,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:abfeb01d
+    image: phaidraorg/api-dist:25493cc0
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -268,7 +268,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:abfeb01d
+    image: phaidraorg/api-dist:25493cc0
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
