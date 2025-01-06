@@ -97,6 +97,8 @@
 
         <MetadataProvider type="XML" url="__SHIB_METADATA__"
                           validate="true" backingFilePath="__SHIB_METADATA_FILE__" reloadInterval="7200">
+          <!-- This must be commented out on KPH instance for full logout to work and the other don't seem to need it anyway -->
+          <!--
           <MetadataFilter type="RequireValidUntil" maxValidityInterval="2419200"/>
           <MetadataFilter type="Signature" certificate="__SHIB_METADATA_CERT__" verifyBackup="false"/>
           <MetadataFilter type="EntityRole">
@@ -111,6 +113,7 @@
                            attributeName="http://macedir.org/entity-category"
                            attributeNameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
                            attributeValue="http://refeds.org/category/hide-from-discovery" />
+          -->
         </MetadataProvider>
 
         <TrustEngine type="Chaining">
