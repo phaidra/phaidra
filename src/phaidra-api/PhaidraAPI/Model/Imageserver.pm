@@ -71,11 +71,11 @@ sub get_url {
             return $res;
           }
         } else {
-          $self->render(json => {alerts => [{type => 'info', msg => "Could not find PID for idhash[$idhash]"}]}, status => 400);
+          $c->render(json => {alerts => [{type => 'info', msg => "Could not find PID for idhash[$idhash]"}]}, status => 400);
           return;
         }
       } else {
-        $self->render(json => {alerts => [{type => 'info', msg => "Seems like a request using image path but can't match the idhash"}]}, status => 400);
+        $c->render(json => {alerts => [{type => 'info', msg => "Seems like a request using image path but can't match the idhash"}]}, status => 400);
         return;
       }
     }
