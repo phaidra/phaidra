@@ -235,9 +235,9 @@ sub edit_template {
     $owner = $self->stash->{basic_auth_credentials}->{username};
   }
 
-  $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid}, { '$set' => { form => $form, updated => time}});
+  $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid, owner => $owner}, { '$set' => { form => $form, updated => time}});
   if ($rights) {
-    $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid}, { '$set' => { rights => decode_json(b($rights)->encode('UTF-8')), updated => time}});
+    $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid, owner => $owner}, { '$set' => { rights => decode_json(b($rights)->encode('UTF-8')), updated => time}});
   }
 
   $self->render(json => $res, status => $res->{status});
