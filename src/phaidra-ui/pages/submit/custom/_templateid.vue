@@ -7,7 +7,7 @@
         :rights="rights" 
         :enablerights="true" 
         :addbutton="true" 
-        :templating="true"
+        :templating="templating"
         :validationfnc="skipValidation ? dontValidate : null" 
         v-on:load-form="form = $event" 
         v-on:load-rights="rights = $event"
@@ -33,7 +33,8 @@ export default {
     return {
       form: {},
       rights: {},
-      skipValidation: false
+      skipValidation: false,
+      templating: true
     }
   },
   methods: {
@@ -209,6 +210,9 @@ export default {
           self.$store.commit('setAlerts', response.data.alerts)
         }
         self.form = response.data.template.form
+        if (self.user.username !== response.data.template.owner) {
+          self.templating = false
+        }
         for (let s of self.form.sections) {
           for (let f of s.fields) {
             f.removable = true
