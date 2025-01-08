@@ -75,6 +75,9 @@ All default values assume that you are running docker rootless as the first non-
 ## Demo version with local storage
 ###  Prerequisites
 + make sure no other service is using port 8899 on your computer.
++ set the following variables in your `.env` file:
+  + `PHAIDRA_ADMIN_EMAIL`
+  + `MD_CERTIFICATE_AGREEMENT`
 
 ### Startup
 Run the following command to get PHAIDRA running on `http://localhost:8899`:
@@ -93,6 +96,8 @@ docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile demo-local 
   + `S3_CACHESIZE`: in Bytes, defaults to 100000000 (100MB).
   + `S3_REGION`
   + `S3_ENDPOINT`: e.g. `https://s3.amazonaws.com` or `https://s3.mydomain.com:1234`. Defaults to `http://minio:9000` (the local minio s3 instance of --profile minio-s3-dev)
+  + `PHAIDRA_ADMIN_EMAIL`
+  + `MD_CERTIFICATE_AGREEMENT`
 
 ### Startup
 Run the following command to get PHAIDRA running on `http://localhost:8899`:
@@ -113,6 +118,8 @@ docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile demo-s3 up 
   + `PHAIDRA_HOSTPORT=""`
   + `PHAIDRA_PORTSTUB=""`
   + `PHAIDRA_HOSTNAME="$YOUR-FQDN"`
+  + `PHAIDRA_ADMIN_EMAIL`
+  + `MD_CERTIFICATE_AGREEMENT`
 
 ###  Startup
 Run the following command to get PHAIDRA running on `https://$YOUR-FQDN`:
@@ -138,6 +145,8 @@ docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile ssl-local u
   + `S3_BUCKETNAME`
   + `S3_CACHESIZE`: in Bytes, defaults to 100000000 (100MB).
   + `S3_REGION`
+  + `PHAIDRA_ADMIN_EMAIL`
+  + `MD_CERTIFICATE_AGREEMENT`
 
 ###  Startup
 Run the following command to get PHAIDRA running on `https://$YOUR-FQDN`:
@@ -175,6 +184,8 @@ openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days 
   + `SHIB_USERNAME`: shibboleth username attribute.
   + `SHIB_AFFILIATION`: shibboleth affiliation attribute.
   + `SHIB_REQUIRED_AFFILIATIONS`: comma-separated list of required attributes to log in to PHAIDRA.
+  + `PHAIDRA_ADMIN_EMAIL`
+  + `MD_CERTIFICATE_AGREEMENT`
 
 ###  Startup
 
@@ -220,6 +231,8 @@ openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days 
   + `S3_BUCKETNAME`
   + `S3_CACHESIZE`: in Bytes, defaults to 100000000 (100MB).
   + `S3_REGION`
+  + `PHAIDRA_ADMIN_EMAIL`
+  + `MD_CERTIFICATE_AGREEMENT`
 
 ###  Startup
 
@@ -234,9 +247,10 @@ After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/
 # ACME
 Phaidra supports ACME in the \*ssl\* and \*shib\* profiles. To enable it, the following ENV variables need to be set:
 + `CA_ENDPOINT`: ACME endpoint you want to use. Defaults to LetsEncrypt staging, i.e. the certificates you get won't be production ready!
-+ `MD_CERTIFICATE_AGREEMENT`: set to `agreed` if you accept the TOS of your CA.
++ `MD_CERTIFICATE_AGREEMENT`: set to `accepted` if you accept the TOS of your CA.
 + `PHAIDRA_ADMIN_EMAIL`: Must be set to a valid email address. The ACME client uses this as contact address.
-and uncomment the MDStoreDir and MDomain stanzas in `configs/httpd_tls.conf`.
+
+Additionally the MDStoreDir and MDomain stanzas in `configs/httpd_tls.conf` must be uncommented.
 
 In case you want to use an ACME endpoint requiring authentication ("External Account Binding"), you must set it manually in the docker config `configs/httpd_tls.conf`.
 
