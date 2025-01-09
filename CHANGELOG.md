@@ -1,3 +1,9 @@
+# head
+
+## phaidra-api
+
+  + added object types to dc:type
+
 # v3.3.15
 
 ## phaidra-api

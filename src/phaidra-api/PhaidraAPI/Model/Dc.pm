@@ -255,6 +255,10 @@ sub map_jsonld_2_dc_hash {
 
   $dc_p{type} = $ext->_get_jsonld_objectlabels($c, $jsonld, 'dcterms:type');
 
+  for my $v (@{$ext->_get_jsonld_objectlabels($c, $jsonld, 'edm:hasType')}) {
+    push @{$dc_p{type}}, $v;
+  }
+
   $dc_p{title} = $ext->_get_jsonld_titles($c, $jsonld);
 
   $dc_p{source} = $ext->_get_jsonld_sources($c, $jsonld);
