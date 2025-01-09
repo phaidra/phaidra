@@ -14,13 +14,13 @@ stages:
 services:
   - docker:24-dind
 
-include:
-  - remote: https://gitlab.com/renovate-bot/renovate-runner/-/raw/v19.41.2/templates/renovate.gitlab-ci.yml
+# include:
+#   - remote: https://gitlab.com/renovate-bot/renovate-runner/-/raw/v19.41.2/templates/renovate.gitlab-ci.yml
 
-renovate:
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
-    - if: '$CI_PIPELINE_SOURCE == "push"'
+# renovate:
+#   rules:
+#     - if: '$CI_PIPELINE_SOURCE == "schedule"'
+#     - if: '$CI_PIPELINE_SOURCE == "push"'
 
 build-api-base:
   stage: build-base
