@@ -1,4 +1,3 @@
-
 export default {
   Search: 'Search',
   'Search...': 'Search...',
@@ -193,7 +192,7 @@ export default {
   'edm:rights': 'License',
   'dce:rights': 'Rights statement',
   'oaire:version': 'Version type',
-  'dcterms:accessRights': 'Zugangsberechtigungen',
+  'dcterms:accessRights': 'Access rights',
 
   'dcterms:date': 'Date',
   'dcterms:created': 'Date created',
