@@ -61,6 +61,10 @@ We highly recommend to use the `--project-name $PROJECT_NAME_OF_YOUR_LIKING` fla
 + `shib-local-dev`: see above.
 + `shib-s3-dev`: see above.
 
+Additionally to the bind mounted code, the ui components phaidra-ui and phaidra-vue-components directories will be watched and the Nuxt app will be started in hotreload. Changes to the source code should the be recompiled and applied on save. To start the container in watch mode you can use the --watch parameter.
+
+Note: Running the Nuxt application in hotreload requires a lot of memory and can occasionally lead to a crash when it reaches the heap limit.
+
 # Run it
 All default values assume that you are running docker rootless as the first non-root user with uid 1000 on your linux computer.  This is what we strongly recommend.  However, if this does not match your reality, please check the following options:
 ## Linux user on docker rootless, but not uid 1000

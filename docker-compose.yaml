@@ -785,6 +785,11 @@ services:
           target: /usr/local/phaidra/phaidra-ui
           ignore:
             - node_modules/
+        - action: sync
+          path: ./src/phaidra-vue-components
+          target: /usr/local/phaidra/phaidra-vue-components
+          ignore:
+            - node_modules/
         - action: rebuild
           path: ./src/phaidra-ui/package.json
 

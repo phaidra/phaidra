@@ -4,6 +4,10 @@
 
   + added object types to dc:type
 
+## docker
+
+  + ui-dev is now started in hotreload
+
 # v3.3.15
 
 ## phaidra-api
