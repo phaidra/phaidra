@@ -24,4 +24,3 @@ EOF
 RUN <<EOF
 npm run build
 EOF
-ENTRYPOINT ["npm", "run", "start"]

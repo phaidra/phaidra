@@ -229,6 +229,7 @@ services:
     depends_on: [api]
     <<: [*common, *logs]
     image: phaidraorg/ui:7628cc24
+    command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
       OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
@@ -242,6 +243,7 @@ services:
     depends_on: [api-s3]
     <<: [*common, *logs]
     image: phaidraorg/ui:7628cc24
+    command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
       OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
@@ -770,6 +772,7 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/ui-dev.dockerfile
+    command: "npm run dev"
     environment:
       <<: [*api_common_env, *hosts]
       PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#008080}"
@@ -1026,6 +1029,7 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/ui.dockerfile
+    command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
       PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#008080}"
