@@ -4,6 +4,10 @@
 
   + added object types to dc:type
 
+## phaidra-ui
+
+  + added italian to nuxt config
+
 ## docker
 
   + ui-dev is now started in hotreload
