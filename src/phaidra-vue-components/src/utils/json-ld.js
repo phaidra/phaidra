@@ -2595,8 +2595,10 @@ export default {
 
         case 'frapo:isOutputOf':
           if (f.type === 'aiiso:Programme') {
-            if (f.component === 'p-select' && f.value) {
-              this.push_object(jsonld, f.predicate, this.get_json_concept(f['skos:prefLabel'], f['rdfs:label'], 'aiiso:Programme', [f.value], f['skos:notation'] ? f['skos:notation'] : null))
+            if (f.component === 'p-select') {
+              if (f.value) {
+                this.push_object(jsonld, f.predicate, this.get_json_concept(f['skos:prefLabel'], f['rdfs:label'], 'aiiso:Programme', [f.value], f['skos:notation'] ? f['skos:notation'] : null))
+              }
             } else {
               // study plan
               if (f.name || f.notation || f['skos:prefLabel']) {
