@@ -319,6 +319,12 @@
                     >
                     <v-list-item-title>Deutsch</v-list-item-title>
                     </v-list-item>
+                    <v-list-item
+                      v-if="useLocale('ita')"
+                      @click="changeLocale('ita')"
+                      >
+                      <v-list-item-title>Italiano</v-list-item-title>
+                    </v-list-item>
                 </v-list>
                 </v-menu>
             </v-row>
