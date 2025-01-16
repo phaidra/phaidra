@@ -258,6 +258,8 @@ Additionally the MDStoreDir and MDomain stanzas in `configs/httpd_tls.conf` must
 
 In case you want to use an ACME endpoint requiring authentication ("External Account Binding"), you must set it manually in the docker config `configs/httpd_tls.conf`.
 
+After starting the containers, the mod_md will fetch the certificates, but a (graceful) restart is needed for apache to start using them. You can simply restart the httpd container using `docker restart <containe_id>`
+
 # Extra profiles
 ## minio
 + `minio-s3-dev`: Local Minio S3 instance. Combine with \*-s3-\* profile if you don't have an S3 instance at hand. With default S3_\* ENV variables (i.e. none set), no further configuration is required. Do not use this in production! The admin UI is available under localhost:9001 with `$S3_ACCESS_KEY` and `$S3_SECRET_KEY` as username/password. Default to `phaidra` and `phaidraphaidra`.
