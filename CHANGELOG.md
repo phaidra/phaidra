@@ -7,6 +7,7 @@
 ## phaidra-ui
 
   + added italian to nuxt config
+  + added validateThesis submit validation
 
 ## docker
 

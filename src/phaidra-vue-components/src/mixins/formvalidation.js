@@ -746,12 +746,36 @@ export const formvalidation = {
               }
             }
             if (f.role === 'role:aut') {
-              hasAut = true
-              this.mandatoryFieldsValidated['Author'] = true
+              if (f.type === 'schema:Person') {
+                if (f.firstname.length > 0) {
+                  hasAut = true
+                  this.mandatoryFieldsValidated['Author'] = true
+                }
+                if (f.lastname.length > 0) {
+                  hasAut = true
+                  this.mandatoryFieldsValidated['Author'] = true
+                }
+                if (f.name.length > 0) {
+                  hasAut = true
+                  this.mandatoryFieldsValidated['Author'] = true
+                }
+              }
             }
             if (f.role === 'role:advisor' || f.role === 'role:dgs') {
-              hasAdvisor = true
-              this.mandatoryFieldsValidated['Advisor'] = true
+              if (f.type === 'schema:Person') {
+                if (f.firstname.length > 0) {
+                  hasAdvisor = true
+                  this.mandatoryFieldsValidated['Advisor'] = true
+                }
+                if (f.lastname.length > 0) {
+                  hasAdvisor = true
+                  this.mandatoryFieldsValidated['Advisor'] = true
+                }
+                if (f.name.length > 0) {
+                  hasAdvisor = true
+                  this.mandatoryFieldsValidated['Advisor'] = true
+                }
+              }
             }
           }
           if (f.component === 'p-select') {
