@@ -1577,6 +1577,9 @@
         "dcterms:dateSubmitted": {
           "$ref": "#/$defs/dates-or-datetimes"
         },
+        "phaidra:dateApprobation": {
+          "$ref": "#/$defs/dates-or-datetimes"
+        },
         "rdau:P60071": {
           "$ref": "#/$defs/dates-or-datetimes"
         },
