@@ -18,7 +18,7 @@
         <template slot="item" slot-scope="{ item }">
           <v-list-item-content two-line>
             <v-list-item-title  v-html="`${getLocalizedTermLabel(roleVocabulary, item['@id'])}`"></v-list-item-title>
-            <v-list-item-subtitle v-if="showDefinitions" v-html="`${getLocalizedDefinition(roleVocabulary, item['@id'])}`"></v-list-item-subtitle>
+            <v-list-item-subtitle class="role-definition" v-if="showDefinitions" v-html="`${getLocalizedDefinition(roleVocabulary, item['@id'])}`"></v-list-item-subtitle>
           </v-list-item-content>
         </template>
         <template slot="selection" slot-scope="{ item }">
@@ -252,5 +252,8 @@ export default {
 <style scoped>
 .v-btn {
   margin: 0;
+}
+.role-definition {
+  white-space: unset;
 }
 </style>

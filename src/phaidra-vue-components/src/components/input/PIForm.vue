@@ -1594,6 +1594,7 @@ export default {
       newRole.firstname = f.firstname
       newRole.lastname = f.lastname
       newRole.role = f.role
+      newRole.showDefinitions = f.showDefinitions
       arr.splice(arr.indexOf(f), 1, newRole)
     },
     removeField: function (arr, f) {
