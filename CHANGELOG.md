@@ -1,8 +1,9 @@
-# head
+# v3.3.16
 
 ## phaidra-api
 
   + added object types to dc:type
+  + added visitor_id to usage_stats database, to be able to filter bots
 
 ## phaidra-ui
 
