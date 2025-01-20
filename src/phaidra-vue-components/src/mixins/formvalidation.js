@@ -305,14 +305,20 @@ export const formvalidation = {
               this.mandatoryFieldsFound['Role'] = true
             }
             if (f.type === 'schema:Person') {
-              if (f.firstname.length > 0) {
-                this.mandatoryFieldsValidated['Role'] = true
+              if (f.firstname) {
+                if (f.firstname.length > 0) {
+                  this.mandatoryFieldsValidated['Role'] = true
+                }
               }
-              if (f.lastname.length > 0) {
-                this.mandatoryFieldsValidated['Role'] = true
+              if (f.lastname) {
+                if (f.lastname.length > 0) {
+                  this.mandatoryFieldsValidated['Role'] = true
+                }
               }
-              if (f.name.length > 0) {
-                this.mandatoryFieldsValidated['Role'] = true
+              if (f.name) {
+                if (f.name.length > 0) {
+                  this.mandatoryFieldsValidated['Role'] = true
+                }
               }
             }
             if (f.type === 'schema:Organization') {
@@ -516,14 +522,20 @@ export const formvalidation = {
               this.mandatoryFieldsFound['Role'] = true
             }
             if (f.type === 'schema:Person') {
-              if (f.firstname.length > 0) {
-                this.mandatoryFieldsValidated['Role'] = true
+              if (f.firstname) {
+                if (f.firstname.length > 0) {
+                  this.mandatoryFieldsValidated['Role'] = true
+                }
               }
-              if (f.lastname.length > 0) {
-                this.mandatoryFieldsValidated['Role'] = true
+              if (f.lastname) {
+                if (f.lastname.length > 0) {
+                  this.mandatoryFieldsValidated['Role'] = true
+                }
               }
-              if (f.name.length > 0) {
-                this.mandatoryFieldsValidated['Role'] = true
+              if (f.name) {
+                if (f.name.length > 0) {
+                  this.mandatoryFieldsValidated['Role'] = true
+                }
               }
             }
             if (f.type === 'schema:Organization') {
@@ -723,14 +735,20 @@ export const formvalidation = {
               this.mandatoryFieldsFound['Role'] = true
             }
             if (f.type === 'schema:Person') {
-              if (f.firstname.length > 0) {
-                this.mandatoryFieldsValidated['Role'] = true
+              if (f.firstname) {
+                if (f.firstname.length > 0) {
+                  this.mandatoryFieldsValidated['Role'] = true
+                }
               }
-              if (f.lastname.length > 0) {
-                this.mandatoryFieldsValidated['Role'] = true
+              if (f.lastname) {
+                if (f.lastname.length > 0) {
+                  this.mandatoryFieldsValidated['Role'] = true
+                }
               }
-              if (f.name.length > 0) {
-                this.mandatoryFieldsValidated['Role'] = true
+              if (f.name) {
+                if (f.name.length > 0) {
+                  this.mandatoryFieldsValidated['Role'] = true
+                }
               }
             }
             if (f.type === 'schema:Organization') {
@@ -936,14 +954,20 @@ export const formvalidation = {
               this.mandatoryFieldsFound['Role'] = true
             }
             if (f.type === 'schema:Person') {
-              if (f.firstname.length > 0) {
-                this.mandatoryFieldsValidated['Role'] = true
+              if (f.firstname) {
+                if (f.firstname.length > 0) {
+                  this.mandatoryFieldsValidated['Role'] = true
+                }
               }
-              if (f.lastname.length > 0) {
-                this.mandatoryFieldsValidated['Role'] = true
+              if (f.lastname) {
+                if (f.lastname.length > 0) {
+                  this.mandatoryFieldsValidated['Role'] = true
+                }
               }
-              if (f.name.length > 0) {
-                this.mandatoryFieldsValidated['Role'] = true
+              if (f.name) {
+                if (f.name.length > 0) {
+                  this.mandatoryFieldsValidated['Role'] = true
+                }
               }
             }
             if (f.type === 'schema:Organization') {
@@ -1121,14 +1145,20 @@ export const formvalidation = {
               this.mandatoryFieldsFound['Role'] = true
             }
             if (f.type === 'schema:Person') {
-              if (f.firstname.length > 0) {
-                this.mandatoryFieldsValidated['Role'] = true
+              if (f.firstname) {
+                if (f.firstname.length > 0) {
+                  this.mandatoryFieldsValidated['Role'] = true
+                }
               }
-              if (f.lastname.length > 0) {
-                this.mandatoryFieldsValidated['Role'] = true
+              if (f.lastname) {
+                if (f.lastname.length > 0) {
+                  this.mandatoryFieldsValidated['Role'] = true
+                }
               }
-              if (f.name.length > 0) {
-                this.mandatoryFieldsValidated['Role'] = true
+              if (f.name) {
+                if (f.name.length > 0) {
+                  this.mandatoryFieldsValidated['Role'] = true
+                }
               }
             }
             if (f.type === 'schema:Organization') {
