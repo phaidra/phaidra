@@ -2,20 +2,8 @@
   <v-card class="mt-2 mx-auto" :elevation="0">
     <v-card-title v-if="centertitle" class="font-weight-light" :class="titleClass" style="word-break: break-word;">{{ $t(label) }}</v-card-title>
     <v-card-title v-else class="font-weight-light" :class="titleClass" style="word-break: break-word;">{{ $t(label) }}</v-card-title>
-    <v-card-text>
-        <router-link :to="{ path: `detail/${pid}`, params: { pid: pid } }">
-          <v-img max-width="200" :src="src" class="mx-auto elevation-2 mt-2" :alt="alt" :title="alt">
-            <template v-slot:placeholder>
-              <div class="fill-height ma-0">
-                <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-              </div>
-            </template>
-          </v-img>
-        </router-link>
-      <div class="my-6">
-        <slot></slot>
-      </div>
-      <div :class="textcenter ? 'text-center justify-center' : ''">
+    <v-card-text :class="textcenter ? 'text-center justify-center' : ''">
+      <div>
         <router-link :to="{ path: '/search?q='+fq }">{{ $t(linklabel)  }} ({{ total }})</router-link>
       </div>
     </v-card-text>
@@ -51,18 +39,6 @@ export default {
     }
   },
   computed: {
-    src: function () {
-      if (this.doc) {
-        return this.instanceconfig.api + '/object/' + this.doc.pid + '/thumbnail?w=300'
-      }
-      return ''
-    },
-    alt: function () {
-      if (this.doc) {
-        return this.doc.dc_title[0]
-      }
-      return ''
-    },
     pid:  function () {
       if (this.doc) {
         return this.doc.pid
