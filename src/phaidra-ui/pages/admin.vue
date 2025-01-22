@@ -184,7 +184,7 @@
                       v-model="parsedPublicConfigData.validationfnc"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6" class="mt-4">{{ $t("Which method shold be used to validate metadata forms.") }}</v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Which method should be used to validate metadata forms.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
@@ -193,7 +193,7 @@
                       v-model="parsedPublicConfigData.markmandatoryfnc"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6" class="mt-4">{{ $t("Which method shold be used to makr fields as mandatory in submit form.") }}</v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Which method should be used to mark fields as mandatory in submit form.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
@@ -211,7 +211,7 @@
                       v-model="parsedPublicConfigData.groups"
                     ></v-checkbox>
                   </v-col>
-                  <v-col cols="6" class="mt-4">{{ $t("Enable link to 'Groups' in navigation") }}</v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Enable link to 'Groups' in navigation.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
@@ -302,11 +302,11 @@
                 <v-row>
                   <v-col>
                     <v-textarea
-                      label="Submit langing page"
+                      label="Submit landing page"
                       v-model="parsedPublicConfigData.cms_submit"
                     ></v-textarea>
                   </v-col>
-                  <v-col cols="3" class="mt-4">{{ $t("Submit langing page component. Enclose template in a div.") }}</v-col>
+                  <v-col cols="3" class="mt-4">{{ $t("Submit landing page component. Enclose template in a div.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
@@ -416,7 +416,7 @@
                       v-model="parsedPrivateConfigData.enabledelete"
                     ></v-checkbox>
                   </v-col>
-                  <v-col cols="6" class="mt-6">{{ $t("Allows delete of owned objects for normal users. Admin can always delete any object. (This setting only applies in Authorizatio/authorize which is currently only use on Fedora 6.x instances.)") }}</v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("Allows delete of owned objects for normal users. Admin can always delete any object. (This setting only applies in Authorization/authorize which is currently only use on Fedora 6.x instances.)") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
