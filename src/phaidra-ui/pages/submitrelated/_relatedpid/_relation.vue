@@ -373,6 +373,10 @@ export default {
           for (let s of self.form.sections) {
             let isFileSection = false;
             for (let f of s.fields) {
+              if (f.fieldname === "Resource type") {
+                f.disabled = false
+                f.readonly = false
+              }
               if (f.predicate === "ebucore:filename") {
                 isFileSection = true;
                 break;
