@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use v5.10;
 use XML::LibXML;
+use Digest::SHA qw(sha256_hex);
+use POSIX qw(strftime);
 use Net::IP qw(:PROC);
 use base qw/Mojo::Base/;
 
@@ -137,13 +139,30 @@ sub anonymize_ip {
   return '0.0.0.0';
 }
 
+sub create_visitor_id {
+    my ($self, $c, $ipaddress) = @_;
+
+    my $hashed_ip = sha256_hex($ipaddress);
+    my $current_date = strftime('%Y-%m-%d', localtime);
+    my $visitor_id = sha256_hex($hashed_ip . $current_date);
+
+    return $visitor_id;
+}
+
 sub track_action {
   my ($self, $c, $pid, $action) = @_;
 
-  unless (exists($c->app->config->{"sites"})) {
-    my $ip  = $c->tx->remote_address;
-    my $ipa = $self->anonymize_ip($c, $ip);
-    $c->app->db_metadata->dbh->do("INSERT INTO usage_stats (action, pid, ip) VALUES ('$action', '$pid', '$ipa');") or $c->app->log->error($c->app->db_metadata->dbh->errstr);
+  eval {
+    unless (exists($c->app->config->{"sites"})) {
+      my $ip  = $c->tx->remote_address;
+      my $visitor_id = $self->create_visitor_id($c, $ip);
+      my $ipa = $self->anonymize_ip($c, $ip);
+      $c->app->db_metadata->dbh->do("INSERT INTO usage_stats (action, pid, ip, visitor_id) VALUES ('$action', '$pid', '$ipa', '$visitor_id');") or $c->app->log->error($c->app->db_metadata->dbh->errstr);
+    }
+  };
+
+  if ($@) {
+    $c->app->log->error("Error tracking action pid[$pid] action[$action]: $@");
   }
 }
 

@@ -31,7 +31,10 @@
               "ids:urn",
               "ids:isbn",
               "ids:issn",
-              "phaidra:acnumber"
+              "phaidra:acnumber",
+              "phaidra:akbildeyebaseid",
+              "phaidra:akbildcampusid",
+              "phaidra:akbildthesisid"
             ]
           },
           "@value": {

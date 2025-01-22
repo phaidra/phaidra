@@ -1,8 +1,17 @@
-# head
+# v3.3.16
+
+## upgrade
+
+  + to upgrade from previous version, please execute the migration script
+
+  ```
+  docker exec -it phaidra-api-1 perl migrations/v3.3.16.pl
+  ```
 
 ## phaidra-api
 
   + added object types to dc:type
+  + added visitor_id to usage_stats database, to be able to filter bots
 
 ## phaidra-ui
 

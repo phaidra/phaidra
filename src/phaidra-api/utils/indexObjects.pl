@@ -8,7 +8,7 @@ use Mojo::URL;
 use Mojo::UserAgent;
 use Mojo::JSON qw(decode_json encode_json);
 
-# Usage: docker exec -it phaidra-VERSION-api-1 perl /usr/local/phaidra/phaidra-api/utils/indexObjects.pl from-date-iso until-date-iso
+# Usage: docker exec -it phaidra-api-1 perl /usr/local/phaidra/phaidra-api/utils/indexObjects.pl from-date-iso until-date-iso
 #
 # iso format ~ 2008-01-01T00:00:00Z
 
