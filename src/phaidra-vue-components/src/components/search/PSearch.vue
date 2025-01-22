@@ -28,11 +28,11 @@
         <v-row class="hidden-md-and-up">
           <v-bottom-sheet v-model="filterdialog" scrollable>
             <template v-slot:activator="{ on }">
-              <v-btn class="ml-4 mb-6" color="primary" v-on="on">Filters</v-btn>
+              <v-btn class="ml-4 mb-6" color="primary" v-on="on">{{ $t('Filters') }}</v-btn>
             </template>
             <v-card height="400px">
               <v-card-title class="border-bottom">
-                <h3 class="title font-weight-light primary--text pa-2">Filters</h3>
+                <h3 class="title font-weight-light primary--text pa-2">{{ $t('Filters') }}</h3>
                 <v-spacer></v-spacer>
                 <v-icon @click="filterdialog = !filterdialog">mdi-close</v-icon>
               </v-card-title>
@@ -63,7 +63,7 @@
         </v-row>
       </v-col>
       <v-col cols="3" class="pa-2 hidden-sm-and-down">
-        <h3 class="title font-weight-light primary--text border-bottom pa-2">Filters</h3>
+        <h3 class="title font-weight-light primary--text border-bottom pa-2">{{ $t('Filters') }}</h3>
         <p-search-filters
           ref="searchFilters"
           :search="search"
