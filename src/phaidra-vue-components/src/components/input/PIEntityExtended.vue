@@ -45,6 +45,7 @@
                     <v-list-item-content two-line>
                       <v-list-item-title  v-html="`${getLocalizedTermLabel(roleVocabulary, item['@id'])}`"></v-list-item-title>
                       <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
+                      <v-list-item-subtitle class="role-definition" v-if="showDefinitions" v-html="`${getLocalizedDefinition(roleVocabulary, item['@id'])}`"></v-list-item-subtitle>
                     </v-list-item-content>
                   </template>
                   <template slot="selection" slot-scope="{ item }">
@@ -442,6 +443,10 @@ export default {
       type: String,
       default: 'rolepredicate'
     },
+    showDefinitions: {
+      type: Boolean,
+      default: false
+    },
     identifierVocabulary: {
       type: String,
       default: 'entityidentifiertype'
@@ -591,5 +596,8 @@ export default {
 <style scoped>
 .v-btn {
   margin: 0;
+}
+.role-definition {
+  white-space: unset;
 }
 </style>
