@@ -1,6 +1,7 @@
 package Phaidra::Directory::Default;
 
 use utf8;
+use Encode;
 use strict;
 use warnings;
 use Data::Dumper;
@@ -713,13 +714,13 @@ sub get_user_data {
     my @attvals  = @{$attr->{'vals'}};
     foreach my $val (@attvals) {
       if ($attrtype eq 'givenName') {
-        $fname = $val;
+        $fname = decode('UTF-8', $val);
       }
       if ($attrtype eq 'sn') {
-        $lname = $val;
+        $lname = decode('UTF-8', $val);
       }
       if ($attrtype eq 'mail') {
-        $email = $val;
+        $email = decode('UTF-8', $val);
       }
       if ($attrtype eq 'ou') {
         $orgul1 = $val;
