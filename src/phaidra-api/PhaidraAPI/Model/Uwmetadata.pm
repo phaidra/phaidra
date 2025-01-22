@@ -20,6 +20,7 @@ use PhaidraAPI::Model::Terms;
 use PhaidraAPI::Model::Util;
 use PhaidraAPI::Model::Licenses;
 use PhaidraAPI::Model::Uwmetadata::Tree;
+use PhaidraAPI::Model::Config;
 
 our %input_types_map = (
   "LangString"      => "input_text",
