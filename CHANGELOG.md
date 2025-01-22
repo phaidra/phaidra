@@ -1,3 +1,9 @@
+# head
+
+## phaidra-ui
+
+  + minor changes to dashboard components
+
 # v3.3.16
 
 ## upgrade
