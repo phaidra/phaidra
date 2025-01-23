@@ -162,11 +162,11 @@
           {{ $t('Delete group') }}
         </v-card-title>
         <v-card-text>
-          <p class="mt-6 title font-weight-light grey--text text--darken-3">{{ $t('Delete group') + groupToDelete.name + '?' }}</p>
+          <p class="mt-6 title font-weight-light grey--text text--darken-3">{{ $t('Delete group') + ' ' + groupToDelete.name + '?' }}</p>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn dark @click="createDialog = false" color="grey">{{ $t('Cancel') }}</v-btn>
+          <v-btn dark @click="deleteDialog = false" color="grey">{{ $t('Cancel') }}</v-btn>
           <v-btn @click="deleteGroup()" color="primary">{{ $t('Delete') }}</v-btn>
         </v-card-actions>
       </v-card>
