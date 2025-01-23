@@ -112,9 +112,13 @@ import '@/compiled-icons/univie-youtube'
 import '@/compiled-icons/univie-twitter'
 import '@/compiled-icons/univie-instagram'
 import '@/compiled-icons/univie-flickr'
+import VueHorizontal from 'vue-horizontal'
 
 export default {
   name: 'home',
+  components: {
+    VueHorizontal
+  },
   mixins: [config],
   data() {
     return {
@@ -139,4 +143,5 @@ h2.md-headline {
   top: -24px;
   position: relative;
 }
+
 </style>

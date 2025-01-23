@@ -33,6 +33,7 @@
     "vue": "^2.7.8",
     "vue-axios": "^3.4.0",
     "vue-d3-network": "^0.1.28",
+    "vue-horizontal": "^0.8.13",
     "vue-json-pretty": "^1.8.2",
     "vue-lodash": "^2.1.2",
     "vue-meta": "^2.4.0",
