@@ -228,7 +228,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:db54e9df
+    image: phaidraorg/ui:9ba1a142
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -243,7 +243,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:db54e9df
+    image: phaidraorg/ui:9ba1a142
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
