@@ -261,8 +261,8 @@
         >
           <v-date-picker v-model="dateModel" scrollable>
             <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="dateDialog = false">Cancel</v-btn>
-            <v-btn text color="primary" @click="setExpires()">OK</v-btn>
+            <v-btn dark color="grey" @click="dateDialog = false">{{ $t('Cancel') }}</v-btn>
+            <v-btn color="primary" @click="setExpires()">OK</v-btn>
           </v-date-picker>
         </v-dialog>
       </v-container>
@@ -327,7 +327,7 @@ export default {
       userSearchExactLoading: false,
       groupsLoading: false,
       groupsHeaders: [
-        { text: 'Name', align: 'left', value: 'description', sortable: false },
+        { text: this.$t('Name'), align: 'left', value: 'description', sortable: false },
         { text: '', align: 'right', value: 'actions', sortable: false }
       ],
       groups: [],
