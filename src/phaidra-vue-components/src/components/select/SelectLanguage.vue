@@ -17,6 +17,10 @@
           item-key="id"
           :search="langsearchinput"
           :items-per-page="5"
+          :footer-props="{                
+            itemsPerPageText: $t('Rows per page'),
+            itemsPerPageAllText: $t('All')
+          }"
         >
           <template v-slot:top>
             <v-text-field
@@ -65,11 +69,11 @@ export default {
           value: 'id'
         },
         {
-          text: 'Name',
+          text: this.$t('Name'),
           value: 'label'
         },
         {
-          text: 'Actions',
+          text: this.$t('Actions'),
           value: 'actions', 
           sortable: false
         }
