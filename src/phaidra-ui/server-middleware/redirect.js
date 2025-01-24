@@ -3,10 +3,20 @@ import axios from 'axios'
 import config from '../config/phaidra-ui'
 
 export default async (req, res, next) => {
+  let baseURL = process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT
+  
+  if (process.env.LEGACY_OPEN_REDIRECT === 'true') {
+    if (/^\/open\/o:\d+$/.test(req.url)) { 
+      let pid = req.url.replace('/open', '')
+      let redUrl = baseURL + '/' + pid
+      console.log(redUrl)
+      redirect(res, redUrl)
+      return
+    }
+  }
   if (/^\/o:\d+$/.test(req.url)) { 
-    let baseURL = process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT
-    let apiBaseURL = 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000'
     let pid = req.url.replace('/', '')
+    let apiBaseURL = 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000'
     let params = { q: '*:*', defType: 'edismax', wt: 'json', start: 0, rows: 1, fq: 'pid:"' + pid + '"' }
     try {
       let response = await axios.request({
