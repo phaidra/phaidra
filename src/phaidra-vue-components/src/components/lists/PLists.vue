@@ -34,11 +34,11 @@
                   <v-spacer></v-spacer>
                   <v-dialog v-model="createDialog" max-width="500px">
                     <template v-slot:activator="{ on }">
-                      <v-btn color="primary" dark class="mb-2" v-on="on">{{ $t('New list') }}</v-btn>
+                      <v-btn color="primary" dark class="mb-2" v-on="on">{{ $t('Create new object list') }}</v-btn>
                     </template>
                     <v-card>
                       <v-card-title class="title font-weight-light grey white--text">
-                        {{ $t('Create new object list') }}
+                        {{ $t('New object list') }}
                       </v-card-title>
                       <v-card-text>
                         <v-text-field
