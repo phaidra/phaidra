@@ -327,7 +327,7 @@ export default {
       userSearchExactLoading: false,
       groupsLoading: false,
       groupsHeaders: [
-        { text: 'Name', align: 'left', value: 'description', sortable: false },
+        { text: this.$t('Name'), align: 'left', value: 'description', sortable: false },
         { text: '', align: 'right', value: 'actions', sortable: false }
       ],
       groups: [],
