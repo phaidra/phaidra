@@ -1,3 +1,5 @@
+#one of the issuers defined in issuer-letsencrypt. currently letsencrypt-staging and letsencrypt-prod
+TLS_CERTIFICATE_ISSUER: "letsencrypt-staging"
 # phaidra hostname -- set to name (or IP address) that you use in your browser to access PHAIDRA
 PHAIDRA_HOSTNAME: "phaidra.example.com"
 # phaidra server admin email address (for webserver configuration)
