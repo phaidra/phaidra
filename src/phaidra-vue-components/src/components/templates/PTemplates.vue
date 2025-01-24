@@ -74,9 +74,9 @@ export default {
   data () {
     return {
       headers: [
-        { text: 'Name', align: 'left', value: 'name' },
-        { text: 'Created', align: 'right', value: 'created' },
-        { text: 'Actions', align: 'right', value: 'load', sortable: false }
+        { text: this.$t('Name'), align: 'left', value: 'name' },
+        { text: this.$t('Created'), align: 'right', value: 'created' },
+        { text: this.$t('Actions'), align: 'right', value: 'load', sortable: false }
       ],
       templates: [],
       deletetempconfirm: false,
