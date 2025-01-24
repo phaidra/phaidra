@@ -248,6 +248,13 @@ docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile shib-s3 up 
 
 After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/Shibboleth.sso/Metadata`. You will have to hand this file to the IDP-manager of your organization and ask for registration.  After that, users matching the list in `SHIB_REQUIRED_AFFILIATIONS` should be able to log in and upload their files to your system.
 
+# Version update
+If you have a previous version runnung, check CHANGELOG.pm for changes and update instructions. The normal procedure is:
+* comopse down
+* pull latest version of this repository
+* compose up
+Some versions might require the execution of a migration script, but this will be mentioned in the changelog.
+
 # ACME
 Phaidra supports ACME in the \*ssl\* and \*shib\* profiles. To enable it, the following ENV variables need to be set:
 + `CA_ENDPOINT`: ACME endpoint you want to use. Defaults to LetsEncrypt staging, i.e. the certificates you get won't be production ready!
