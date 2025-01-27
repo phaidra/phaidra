@@ -231,7 +231,6 @@
         },
         "required": [
           "@type",
-          "skos:exactMatch",
           "skos:prefLabel"
         ]
       }
