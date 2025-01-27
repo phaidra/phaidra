@@ -100,7 +100,7 @@ services:
   ############### httpd service for demo-local profile ###############
   httpd-demo-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-demo-dist:143a0b39
+    image: phaidraorg/httpd-demo-dist:19d13d9f
     <<: [*common, *logs]
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
@@ -114,7 +114,7 @@ services:
   ############### httpd service for demo-s3 profile ###############
   httpd-demo-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-demo-dist:143a0b39
+    image: phaidraorg/httpd-demo-dist:19d13d9f
     <<: [*common, *logs]
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
@@ -128,7 +128,7 @@ services:
   #################### httpd service for ssl-local profile ####################
   httpd-ssl-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:f06b18a1
+    image: phaidraorg/httpd-ssl-dist:19d13d9f
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -145,7 +145,7 @@ services:
   #################### httpd service for ssl-s3 profile ####################
   httpd-ssl-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:f06b18a1
+    image: phaidraorg/httpd-ssl-dist:19d13d9f
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -162,7 +162,7 @@ services:
   #################### httpd service for shib-local profile ####################
   httpd-shib-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:7d8be414
+    image: phaidraorg/httpd-shib-dist:03bf79b2
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -191,7 +191,7 @@ services:
   #################### httpd service for shib-s3 profile ####################
   httpd-shib-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:7d8be414
+    image: phaidraorg/httpd-shib-dist:03bf79b2
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"

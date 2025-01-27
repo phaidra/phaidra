@@ -4,6 +4,15 @@
 
   + minor changes to dashboard components
 
+## phaidra-api
+
+  + TMPDIR is set (along MOJO_TMP_DIR) for more transparency around perl/api tmp files
+  + json schema: provisionActivity does not have to define agent
+
+## docker
+
+  + the UI_REQUIRE env can be used to override the default 'Require all granted' in apache UI proxy config (if for running a 'headless' instance)
+
 # v3.3.16
 
 ## upgrade
