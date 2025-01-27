@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use v5.10;
 use base 'Mojolicious::Controller';
-use Mojo::Util qw(url_escape);
+use Mojo::Util qw(url_escape encode);
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Octets;
 use PhaidraAPI::Model::Authorization;
@@ -153,6 +153,8 @@ sub get {
       }
     }
   }
+
+  $filename = utf8::is_utf8($filename) ? encode('UTF-8', $filename) : $filename;
 
   $self->app->log->debug("operation[$operation] trywebversion[" . ($trywebversion ? $trywebversion : 'undef') . "] pid[$pid] path[$path] mimetype[$mimetype] filename[$filename] size[$size]");
 
