@@ -71,6 +71,7 @@ sub startup {
   if ($config->{tmpdir}) {
     $self->app->log->debug("Setting MOJO_TMPDIR: " . $config->{tmpdir});
     $ENV{MOJO_TMPDIR} = $config->{tmpdir};
+    $ENV{TMPDIR} = $config->{tmpdir};
   }
 
   if ($config->{ssl_ca_path}) {
