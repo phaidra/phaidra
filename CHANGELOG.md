@@ -8,6 +8,7 @@
 
   + TMPDIR is set (along MOJO_TMP_DIR) for more transparency around perl/api tmp files
   + json schema: provisionActivity does not have to define agent
+  + utf8 filenames are now correctly handled in upload and download of files
 
 ## docker
 
