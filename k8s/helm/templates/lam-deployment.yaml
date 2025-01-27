@@ -27,14 +27,39 @@ spec:
               value: "{{ .Values.LDAP_USER }}"
             - name: "LDAP_USERS_DN"
               value: "{{ .Values.LDAP_USERS_DN }}"
-          image: ghcr.io/ldapaccountmanager/lam:9.1
+          image: image-registry.openshift-image-registry.svc:5000/{{ .Release.Namespace }}/ldapaccountmanager-imagestream:latest
           name: lam
           resources:
             requests:
-              cpu: "1m"
-              memory: "20M"
-            limits:
-              cpu: "10m"
+              cpu: "25m"
               memory: "50M"
+            limits:
+              cpu: "50m"
+              memory: "100M"
+          volumeMounts:
+            - mountPath: /usr/share/ldap-account-manager/sess
+              name: tempfiles
+              subPath: sess
+            - mountPath: /usr/share/ldap-account-manager/tmp
+              name: tempfiles
+              subPath: tmp
+      # php in lam throws fatalError on login if /usr/share/ldap-account-manager/tmp/internal doesn't exist
+      # it our case it doesn't exist because of the mount, so create when starting
+      initContainers:
+      - name: init-ldap
+        image: busybox
+        command: ['mkdir', '-p', '/usr/share/ldap-account-manager/tmp/internal']
+        resources:
+          limits:
+            cpu: "5m"
+            memory: "15M"
+        volumeMounts:
+          - mountPath: /usr/share/ldap-account-manager/tmp
+            name: tempfiles
+            subPath: tmp
+      volumes:
+        - name: tempfiles
+          emptyDir:
+            sizeLimit: 64Mi
       restartPolicy: Always
 status: {}

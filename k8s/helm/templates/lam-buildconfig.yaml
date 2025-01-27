@@ -1,0 +1,33 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    name: ldapaccountmanager
+  name: ldapaccountmanager
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: ldapaccountmanager-imagestream:latest
+  postCommit: {}
+  resources:
+    requests:
+      cpu: 100m
+      memory: 250M
+    limits:
+      cpu: 150m
+      memory: 500M
+  runPolicy: Serial
+  source:
+    git:
+      uri: https://github.com/phaidra/phaidra.git
+    type: Git
+  strategy:
+    dockerStrategy:
+      dockerfilePath: dockerfiles/lam.dockerfile
+    type: Docker
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - type: ConfigChange
