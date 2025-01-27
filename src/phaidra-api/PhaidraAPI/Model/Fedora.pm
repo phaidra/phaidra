@@ -6,6 +6,7 @@ use v5.10;
 use utf8;
 use JSON;
 use Mojo::File;
+use Mojo::Util qw(encode);
 use Digest::SHA qw(sha256_hex);
 use base qw/Mojo::Base/;
 use Net::Amazon::S3;
@@ -547,12 +548,13 @@ sub addOrModifyDatastream {
   if ($upload) {
     my $headers;
     $headers->{'Content-Type'}        = $mimetype;
-    $headers->{'Content-Disposition'} = 'attachment; filename="' . $upload->filename . '"';
+    my $filename = utf8::is_utf8($upload->filename) ? encode('UTF-8', $upload->filename) : $upload->filename;
+    $headers->{'Content-Disposition'} = 'attachment; filename="' . $filename . '"';
     if ($checksumtype) {
       $headers->{digest} = "$checksumtype=$checksum";
     }
     my $url = $c->app->fedoraurl->path("$pid/$dsid");
-    $c->app->log->debug("PUT $url filename[" . $upload->filename . "] mimetype[$mimetype]");
+    $c->app->log->debug("PUT $url filename[" . $filename . "] mimetype[$mimetype]");
     my $tx = $c->ua->build_tx(PUT => $url => $headers);
     $tx->req->content->asset($upload->asset);
     my $putres = $c->ua->start($tx)->result;
