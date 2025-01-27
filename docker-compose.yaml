@@ -108,6 +108,7 @@ services:
       - chronos-sitemaps:/mnt/sitemaps:ro
     environment:
       <<: [*api_common_env, *hosts]
+      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
     profiles: ["demo-local"]
 
   ############### httpd service for demo-s3 profile ###############
@@ -121,6 +122,7 @@ services:
       - chronos-sitemaps:/mnt/sitemaps:ro
     environment:
       <<: [*api_common_env, *hosts]
+      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
     profiles: ["demo-s3"]
 
   #################### httpd service for ssl-local profile ####################
@@ -137,6 +139,7 @@ services:
       - mdcerts:/mnt/mdcerts:rw
     environment:
       <<: [*api_common_env, *hosts]
+      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
     profiles: ["ssl-local"]
 
   #################### httpd service for ssl-s3 profile ####################
@@ -153,6 +156,7 @@ services:
       - mdcerts:/mnt/mdcerts:rw
     environment:
       <<: [*api_common_env, *hosts]
+      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
     profiles: ["ssl-s3"]
 
   #################### httpd service for shib-local profile ####################
@@ -180,6 +184,7 @@ services:
       SHIB_SURNAME: "${SHIB_SURNAME:-}"
       SHIB_USERNAME: "${SHIB_USERNAME:-}"
       SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
+      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
     entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
     profiles: ["shib-local"]
 
@@ -208,6 +213,7 @@ services:
       SHIB_SURNAME: "${SHIB_SURNAME:-}"
       SHIB_USERNAME: "${SHIB_USERNAME:-}"
       SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
+      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
     entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
     profiles: ["shib-s3"]
     
@@ -765,6 +771,7 @@ services:
       - chronos-sitemaps:/mnt/sitemaps:ro
     environment:
       <<: [*api_common_env, *hosts]
+      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
     entrypoint: [ "bash", "/mnt/startup/httpd-demo-startup.bash" ]
     profiles: ["demo-local-dev"]
 
@@ -1011,6 +1018,7 @@ services:
       - chronos-sitemaps:/mnt/sitemaps:ro
     environment:
       <<: [*api_common_env, *hosts]
+      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
     entrypoint: [ "bash", "/mnt/startup/httpd-demo-startup.bash" ]
     profiles: ["demo-s3-dev"]
 
@@ -1105,6 +1113,7 @@ services:
     environment:
       <<: [*api_common_env, *hosts]
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-}"
+      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
     entrypoint: [ "bash", "/httpd-ssl-entrypoint.bash" ]
     profiles: ["ssl-local-dev", "ssl-s3-dev"]
 
@@ -1137,6 +1146,7 @@ services:
       SHIB_SURNAME: "${SHIB_SURNAME:-}"
       SHIB_USERNAME: "${SHIB_USERNAME:-}"
       SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
+      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
     entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
     profiles: ["shib-local-dev", "shib-s3-dev"]
 

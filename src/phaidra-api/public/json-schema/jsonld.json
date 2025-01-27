@@ -366,8 +366,24 @@
           }
         },
         "required": [
-          "@type",
-          "bf:agent"
+          "@type"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "bf:agent"
+            ]
+          },
+          {
+            "required": [
+              "bf:place"
+            ]
+          },
+          {
+            "required": [
+              "bf:date"
+            ]
+          }
         ]
       }
     },
