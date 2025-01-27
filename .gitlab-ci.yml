@@ -166,6 +166,7 @@ build-httpd-shib-dist:
           - container_init/httpd/phaidra-shib/conf/attribute-map.xml
           - container_init/httpd/phaidra-shib/conf/attribute-policy.xml
           - container_init/httpd/phaidra-shib/conf/shibboleth2.xml
+          - container_init/httpd/phaidra-shib/conf/phaidra-shib.conf
 
 build-httpd-demo-dist:
   stage: build-dist
