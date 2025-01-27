@@ -1059,7 +1059,7 @@ export default {
   'Storage per object type': 'Objekte verteilt nach Speicherbedarf',
   'Objects per discipline': 'Objekte verteilt nach Disziplinen',
   'Objects per faculty': 'Objekte verteilt nach Fakultäten',
-  'Add metadatafield': 'Metadatenfeld hinzufügen',
+  'Add metadata field': 'Metadatenfeld hinzufügen',
   'Terminology services': 'Terminologiedienste',
   Term: 'Begriff',
   Coverage: 'Geltungsbereich',

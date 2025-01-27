@@ -127,7 +127,7 @@
         <div class="d-flex flex-row ml-6">
           <v-dialog class="pb-4" v-model="templateDialog" width="700px">
             <template v-slot:activator="{ on }">
-              <v-btn v-on="on" large dark color="grey">
+              <v-btn v-on="on" large color="primary">
                 <v-icon dark class="mr-4">mdi-script</v-icon>
                 {{ $t("Open template") }}
               </v-btn>

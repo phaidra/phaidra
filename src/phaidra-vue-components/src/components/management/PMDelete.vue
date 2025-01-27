@@ -18,8 +18,8 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="red" class="white--text" :loading="loading" :disabled="loading" @click="deleteObject(pid)">{{ $t('Delete') }}</v-btn>
-            <v-btn :disabled="loading" @click="dialog = false">{{ $t('Cancel') }}</v-btn>
+            <v-btn dark color="grey" :disabled="loading" @click="dialog = false">{{ $t('Cancel') }}</v-btn>
+            <v-btn color="red" class="white--text" :loading="loading" :disabled="loading" @click="deleteObject(pid)">{{ $t('Delete') }}</v-btn>            
           </v-card-actions>
         </v-card>
       </v-dialog>
