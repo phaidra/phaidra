@@ -748,8 +748,8 @@
                 <v-divider></v-divider>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="red" class="white--text" :loading="$store.state.loading" :disabled="$store.state.loading" @click="removeFromCollection()">{{ $t('Remove') }}</v-btn>
-                  <v-btn :disabled="$store.state.loading" @click="collMemberToRemove = null; confirmColMemDeleteDlg = false">{{ $t('Cancel') }}</v-btn>
+                  <v-btn dark color="grey" :disabled="$store.state.loading" @click="collMemberToRemove = null; confirmColMemDeleteDlg = false">{{ $t('Cancel') }}</v-btn>
+                  <v-btn color="red" class="white--text" :loading="$store.state.loading" :disabled="$store.state.loading" @click="removeFromCollection()">{{ $t('Remove') }}</v-btn>                  
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -1922,8 +1922,7 @@
                             <v-card-actions>
                               <v-spacer></v-spacer>
                               <v-btn
-                                color="primary"
-                                text
+                                color="primary"                                
                                 @click="collectionHelpDialog = false"
                               >
                                 OK
@@ -2095,7 +2094,7 @@
                             </v-card-text>
                             <v-card-actions>
                               <v-spacer></v-spacer>
-                              <v-btn @click="relationDialog = false">{{
+                              <v-btn dark color="grey" @click="relationDialog = false">{{
                                 $t("Cancel")
                               }}</v-btn>
                               <v-btn

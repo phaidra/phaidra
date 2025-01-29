@@ -51,7 +51,7 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn @click.stop="linkdialog=false">{{ $t('Cancel') }}</v-btn>
+              <v-btn dark color="grey" @click.stop="linkdialog=false">{{ $t('Cancel') }}</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>

@@ -725,8 +725,8 @@
                     <v-col>
                       <v-dialog v-if="addbutton && (s.addbutton != false)" class="pb-4" v-model="s['adddialogue']" scrollable width="700px">
                         <template v-slot:activator="{ on }">
-                          <v-btn v-on="on" color="grey" dark large elevation="4" class="mb-4 font-weight-black">
-                            {{ $t('Add metadatafield') }}<v-icon class="ml-4" color="white" size="24" right dark>mdi-plus-circle</v-icon>
+                          <v-btn v-on="on" color="primary" large elevation="4" class="mb-4 font-weight-black">
+                            <v-icon class="mr-4" color="white" size="24" right dark>mdi-plus-circle</v-icon>{{ $t('Add metadata field') }}
                           </v-btn>
                         </template>
                         <v-card>
@@ -787,7 +787,7 @@
           <v-col cols="12">
             <v-dialog v-if="templating || savetemplatebtn" v-model="templatedialog" width="500">
               <template v-slot:activator="{ on }">
-                <v-btn class="mr-3 float-left" v-on="on" dark raised :loading="loading" :disabled="loading" color="grey"><span v-t="'Save as new template'"></span></v-btn>
+                <v-btn class="mr-3 float-left" v-on="on" large raised :loading="loading" :disabled="loading" color="primary"><span v-t="'Save as new template'"></span></v-btn>
               </template>
               <v-card>
                 <v-card-title class="title font-weight-light grey lighten-2" primary-title><span v-t="'Save as new template'"></span></v-card-title>
@@ -801,12 +801,12 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
-            <v-btn v-if="templating && $route.params.templateid" class="mr-3 float-left" dark raised :loading="loading" :disabled="loading" color="grey" @click="saveTemplate()"><span v-t="'Save template'"></span></v-btn>
+            <v-btn v-if="templating && $route.params.templateid" class="mr-3 float-left" large raised :loading="loading" :disabled="loading" color="primary" @click="saveTemplate()"><span v-t="'Save template'"></span></v-btn>
             <v-spacer></v-spacer>
             <template v-if="!disablesave">
-              <v-btn fixed bottom right v-if="targetpid && floatingsavebutton" raised :loading="loading" :disabled="loading" color="primary" @click="save()"><span v-t="'Save'"></span></v-btn>
-              <v-btn v-else-if="targetpid && !floatingsavebutton" raised :loading="loading" :disabled="loading" class="primary float-right" @click="save()"><span v-t="'Save'"></span></v-btn>
-              <v-btn v-else raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
+              <v-btn large fixed bottom right v-if="targetpid && floatingsavebutton" raised :loading="loading" :disabled="loading" color="primary" @click="save()"><span v-t="'Save'"></span></v-btn>
+              <v-btn v-else-if="targetpid && !floatingsavebutton" large raised :loading="loading" :disabled="loading" class="primary float-right" @click="save()"><span v-t="'Save'"></span></v-btn>
+              <v-btn v-else large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
             </template>
           </v-col>
         </v-row>
