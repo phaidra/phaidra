@@ -719,6 +719,10 @@ const vocabularies = {
         'skos:prefLabel': {
           'eng': 'All rights reserved',
           'deu': 'Alle Rechte vorbehalten'
+        },
+        'skos:definition': {
+          'eng': 'If you do not select a license, your protected item may only be used within the limitations of the copyright. In addition, you allow neither a commercial nor a non-commercial use, in particular for the reproduction, distribution, broadcasting, making available and processing of your item.\n<br />\n<br />\nThe selection of a Creative Commons licence promotes the dissemination of your work. For more info: <a href=\'http://creativecommons.at\' target=\'_blank\'>http://creativecommons.at</a>',
+          'deu': 'Wenn Sie keine Lizenz wählen, darf Ihr Schutzgegenstand lediglich im Rahmen der Schranken des Urheberrechts verwertet werden. Darüber hinaus gestatten Sie weder eine nicht kommerzielle noch eine kommerzielle Verwertung, insbesondere Vervielfältigung, Verbreitung, Sendung, Zurverfügungstellung und Bearbeitung Ihres Schutzgegenstandes.\n<br />\n<br />\nDie Wahl einer Creative Commons Lizenz fördert die Verbreitung Ihres Werkes. Für mehr Infos: <a href=\'http://creativecommons.at\' target=\'_blank\'>http://creativecommons.at</a>'
         }
       },
       {
