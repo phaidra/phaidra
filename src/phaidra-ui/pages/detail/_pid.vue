@@ -2185,7 +2185,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click.stop="datareplaceDialog=false">Close</v-btn>
+          <v-btn dark color="grey" @click.stop="datareplaceDialog=false">Close</v-btn>
           <v-btn color="primary" @click="datareplaceUpload()">Upload</v-btn>
         </v-card-actions>
       </v-card>
