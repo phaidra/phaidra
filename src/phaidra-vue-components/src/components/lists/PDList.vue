@@ -34,7 +34,7 @@
                 </v-toolbar> -->
               </template>
               <template v-slot:item.pid="{ item }">
-                <router-link :to="{ name: 'detail', params: { pid: item.pid } }">{{ item.pid }}</router-link>
+                <router-link :to="{ path: `detail/${item.pid}`, params: { pid: item.pid } }">{{ item.pid }}</router-link>
               </template>
               <template v-slot:item.title="{ item }">
                 {{ item.title | truncate(100) }}
