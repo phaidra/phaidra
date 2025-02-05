@@ -691,25 +691,27 @@
               <v-row class="my-4">
                 <v-col cols="1" >
                   <div class="preview-maxwidth">
-                    <p-img
-                      :src="
-                        instanceconfig.api + '/object/' + collMember.pid + '/thumbnail'
-                      "
-                      class="elevation-1 mt-2"
-                    >
-                      <template v-slot:placeholder>
-                        <div
-                          class="fill-height ma-0"
-                          align="center"
-                          justify="center"
-                        >
-                          <v-progress-circular
-                            indeterminate
-                            color="grey lighten-5"
-                          ></v-progress-circular>
-                        </div>
-                      </template>
-                    </p-img>
+                  <router-link :to="{ path: `${collMember.pid}`, params: { pid: collMember.pid } }">
+                      <p-img
+                        :src="
+                          instanceconfig.api + '/object/' + collMember.pid + '/thumbnail'
+                        "
+                        class="elevation-1 mt-2"
+                      >
+                        <template v-slot:placeholder>
+                          <div
+                            class="fill-height ma-0"
+                            align="center"
+                            justify="center"
+                          >
+                            <v-progress-circular
+                              indeterminate
+                              color="grey lighten-5"
+                            ></v-progress-circular>
+                          </div>
+                        </template>
+                      </p-img>
+                    </router-link>
                   </div>
                 </v-col>
                 <v-col cols="10">
@@ -2185,8 +2187,8 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click.stop="datareplaceDialog=false">Close</v-btn>
-          <v-btn color="primary" @click="datareplaceUpload()">Upload</v-btn>
+          <v-btn dark color="grey" @click.stop="datareplaceDialog=false">{{ $t("Cancel") }}</v-btn>
+          <v-btn color="primary" @click="datareplaceUpload()">{{ $t("Upload File") }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
