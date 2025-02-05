@@ -187,7 +187,7 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col v-if="(ch.cardinality !== 1) || (ch.xmlname === 'faculty') || (ch.xmlname === 'spl')" cols="2">
+        <v-col v-if="(ch.cardinality !== 1) || (ch.xmlname === 'spl')" cols="2">
           <v-row>
             <v-col>
               <v-btn icon @click="$emit('add-field', ch)">
