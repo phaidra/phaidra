@@ -6,6 +6,7 @@
         "proxy": 1,
         "inactivity_timeout": 0,
         "heartbeat_timeout": 600,
+        "workers": 16,
         "pid_file": "/tmp/hypnotoad.pid"
     },
     "mode": "production",
