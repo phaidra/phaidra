@@ -4210,7 +4210,7 @@ export default {
           'eng': 'Multiple languages',
           'deu': 'Mehrere Sprachen',
           'fra': 'multilingue',
-          'ita': 'Più lingue'
+          'ita': 'Multilingua'
         }
       },
       {
