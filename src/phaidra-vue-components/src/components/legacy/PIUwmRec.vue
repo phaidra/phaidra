@@ -29,6 +29,7 @@
             :error-messages="ch.errorMessages"
             @change="selectHandler(ch, $event)"
             outlined
+            clearable
           >
             <template v-slot:item="{ item, index }">
               <span>{{ item.labels[alpha2locale] }}</span>
@@ -49,6 +50,7 @@
             :error-messages="ch.errorMessages"
             @change="selectHandler(ch, $event)"
             outlined
+            clearable
           >
             <template v-slot:item="{ item, index }">
               <span>{{ item.labels[alpha2locale] }}</span>
@@ -103,6 +105,7 @@
                 :label="$t('Language')"
                 :error-messages="ch.langErrorMessages"
                 outlined
+                clearable
               ></v-select>
             </v-col>
           </v-row>
@@ -140,6 +143,7 @@
                 :error-messages="ch.langErrorMessages"
                 :label="$t('Language')"
                 outlined
+                clearable
               ></v-select>
             </v-col>
           </v-row>
@@ -171,6 +175,7 @@
                 :error-messages="ch.errorMessages"
                 @change="selectHandler(ch, $event)"
                 outlined
+                clearable
               >
                 <template v-slot:item="{ item, index }">
                   <span>{{ item.labels[alpha2locale] }}</span>
@@ -206,6 +211,7 @@
                   :error-messages="ch.errorMessages"
                   :label="ch.labels[alpha2locale]"
                   outlined
+                  clearable
                 >
                 </v-select>
               </v-col>
