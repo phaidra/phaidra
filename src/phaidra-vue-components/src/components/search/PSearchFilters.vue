@@ -56,7 +56,15 @@
             </v-row>
             
             <v-row no-gutters>
-              <v-btn @click="$refs.userSearchdialog.open()" v-if="showOwnerFilter">Search Users</v-btn>
+              <v-btn class="mb-4 mt-4 primary" @click="$refs.userSearchdialog.open()" v-if="showOwnerFilter">
+                Search Users
+                <v-icon
+                  right
+                  dark
+                >
+                  mdi-database-search
+                </v-icon>
+              </v-btn>
             </v-row>
           </li>
           <li>
