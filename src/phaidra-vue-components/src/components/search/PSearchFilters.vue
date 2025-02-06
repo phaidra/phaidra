@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row v-if="filtersActive">
       <v-col cols="12">
-        <v-btn class="my-1" dark color="grey" @click.native="resetFilters()">{{ $t('Remove filters') }}</v-btn>
+        <v-btn class="my-1" color="primary" @click.native="resetFilters()">{{ $t('Remove filters') }}</v-btn>
       </v-col>
     </v-row>
     <v-row>
@@ -52,7 +52,7 @@
               </v-col>
             </v-row>
             <v-row no-gutters>
-            <v-btn dark v-if="owner" class="mb-8 mt-4 grey">{{ owner }}<v-icon right @click.native="removeOwnerFilter()">mdi-close</v-icon></v-btn>
+            <v-btn v-if="owner" class="mb-8 mt-4" color="primary">{{ owner }}<v-icon right @click.native="removeOwnerFilter()">mdi-close</v-icon></v-btn>
             </v-row>
             <v-row no-gutters>
               <v-autocomplete
