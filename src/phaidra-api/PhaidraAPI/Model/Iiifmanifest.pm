@@ -55,10 +55,10 @@ sub generate_simple_manifest {
           {
             "id" => "$apiBaseUrlPath/iiif/$pid/page/p1/1",
             "type" => "AnnotationPage",
-            "target" => "$apiBaseUrlPath/iiif/$pid/canvas/p1",
             "items" => [
               {
                 "id" => "$apiBaseUrlPath/iiif/$pid/annotation/p0001-image",
+                "target" => "$apiBaseUrlPath/iiif/$pid/canvas/p1",
                 "type" => "Annotation",
                 "motivation" => "painting",
                 "body" => {

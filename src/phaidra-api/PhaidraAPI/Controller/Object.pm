@@ -136,7 +136,10 @@ sub _proxy_thumbnail {
   my $cmodel = shift;
   my $size = shift;
 
-  my $jobstatus = $self->imageserver_job_status($pid);
+  # let's assume the job is finished
+  # this can lead to a broken thumbnail until the job is finished
+  # but this is better than checking the job status forever after
+  my $jobstatus = 'finished';#$self->imageserver_job_status($pid);
   if (defined($jobstatus) && ($jobstatus eq 'finished')) {
 
     # use imageserver
