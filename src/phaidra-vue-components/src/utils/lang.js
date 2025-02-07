@@ -6,7 +6,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Austrian Sign Language',
           'deu': 'Österreichische Gebärdensprache',
-          'fra': 'Langue des signes autrichienne'
+          'fra': 'Langue des signes autrichienne',
+          'ita': 'Lingua dei segni austriaca'
         }
       },
       {
@@ -14,7 +15,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tai languages',
           'deu': 'Thaisprachen (Andere)',
-          'fra': 'tai, langues'
+          'fra': 'tai, langues',
+          'ita': 'Lingue tai'
         }
       },
       {
@@ -22,7 +24,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'No linguistic content | Not applicable',
           'deu': 'Kein linguistischer Inhalt',
-          'fra': 'pas de contenu linguistique | non applicable'
+          'fra': 'pas de contenu linguistique | non applicable',
+          'ita': 'Nessun contenuto linguistico | Non applicabile'
         }
       },
       {
@@ -30,7 +33,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Bantu languages',
           'deu': 'Bantusprachen (Andere)',
-          'fra': 'bantou, langues'
+          'fra': 'bantou, langues',
+          'ita': 'Lingue bantu'
         }
       },
       {
@@ -38,7 +42,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Bulgarian',
           'deu': 'Bulgarisch',
-          'fra': 'bulgare'
+          'fra': 'bulgare',
+          'ita': 'Bulgaro'
         }
       },
       {
@@ -46,7 +51,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Filipino | Pilipino',
           'deu': 'Pilipino',
-          'fra': 'filipino | pilipino'
+          'fra': 'filipino | pilipino',
+          'ita': 'Filippino | Pilipino'
         }
       },
       {
@@ -54,7 +60,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Chichewa | Chewa | Nyanja',
           'deu': 'Nyanja-Sprache',
-          'fra': 'chichewa | chewa | nyanja'
+          'fra': 'chichewa | chewa | nyanja',
+          'ita': 'Chichewa | Chewa | Nyanja'
         }
       },
       {
@@ -62,7 +69,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Scots',
           'deu': 'Schottisch',
-          'fra': 'écossais'
+          'fra': 'écossais',
+          'ita': 'Scozzese'
         }
       },
       {
@@ -70,7 +78,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Basque',
           'deu': 'Baskisch',
-          'fra': 'basque'
+          'fra': 'basque',
+          'ita': 'Basco'
         }
       },
       {
@@ -78,7 +87,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Manchu',
           'deu': 'Mandschurisch',
-          'fra': 'mandchou'
+          'fra': 'mandchou',
+          'ita': 'Manciù'
         }
       },
       {
@@ -86,7 +96,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Athapascan languages',
           'deu': 'Athapaskische Sprachen (Andere)',
-          'fra': 'athapascanes, langues'
+          'fra': 'athapascanes, langues',
+          'ita': 'Lingue athapascan'
         }
       },
       {
@@ -94,7 +105,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Nepal Bhasa | Newari',
           'deu': 'Newari',
-          'fra': 'nepal bhasa | newari'
+          'fra': 'nepal bhasa | newari',
+          'ita': 'Nepal Bhasa | Newari'
         }
       },
       {
@@ -102,7 +114,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Romanian | Moldavian | Moldovan',
           'deu': 'Rumänisch',
-          'fra': 'roumain | moldave'
+          'fra': 'roumain | moldave',
+          'ita': 'Rumeno | Moldavo'
         }
       },
       {
@@ -110,7 +123,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Icelandic',
           'deu': 'Isländisch',
-          'fra': 'islandais'
+          'fra': 'islandais',
+          'ita': 'Islandese'
         }
       },
       {
@@ -118,7 +132,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Erzya',
           'deu': 'Erza-Mordwinisch',
-          'fra': 'erza'
+          'fra': 'erza',
+          'ita': 'Erzya'
         }
       },
       {
@@ -126,7 +141,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Venda',
           'deu': 'Venda-Sprache',
-          'fra': 'venda'
+          'fra': 'venda',
+          'ita': 'Venda'
         }
       },
       {
@@ -134,7 +150,8 @@ export default {
         'skos:prefLabel': {
           'eng': "Mi'kmaq | Micmac",
           'deu': 'Micmac-Sprache',
-          'fra': "mi'kmaq | micmac"
+          'fra': "mi'kmaq | micmac",
+          'ita': "Mi'kmaq | Micmac"
         }
       },
       {
@@ -142,7 +159,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Munda languages',
           'deu': 'Mundasprachen (Andere)',
-          'fra': 'mounda, langues'
+          'fra': 'mounda, langues',
+          'ita': 'Lingue munda'
         }
       },
       {
@@ -150,7 +168,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Madurese',
           'deu': 'Maduresisch',
-          'fra': 'madourais'
+          'fra': 'madourais',
+          'ita': 'Madurese'
         }
       },
       {
@@ -158,7 +177,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Austronesian languages',
           'deu': 'Austronesische Sprachen (Andere)',
-          'fra': 'austronésiennes, langues'
+          'fra': 'austronésiennes, langues',
+          'ita': 'Lingue austronesiane'
         }
       },
       {
@@ -166,7 +186,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Salishan languages',
           'deu': 'Salish-Sprache',
-          'fra': 'salishennes, langues'
+          'fra': 'salishennes, langues',
+          'ita': 'Lingue salishan'
         }
       },
       {
@@ -174,7 +195,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sundanese',
           'deu': 'Sundanesisch',
-          'fra': 'soundanais'
+          'fra': 'soundanais',
+          'ita': 'Sundanese'
         }
       },
       {
@@ -182,7 +204,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Luo (Kenya and Tanzania)',
           'deu': 'Luo-Sprache',
-          'fra': 'luo (Kenya et Tanzanie)'
+          'fra': 'luo (Kenya et Tanzanie)',
+          'ita': 'Luo (Kenya e Tanzania)'
         }
       },
       {
@@ -190,7 +213,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Elamite',
           'deu': 'Elamisch',
-          'fra': 'élamite'
+          'fra': 'élamite',
+          'ita': 'Elamita'
         }
       },
       {
@@ -198,7 +222,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Papuan languages',
           'deu': 'Papuasprachen (Andere)',
-          'fra': 'papoues, langues'
+          'fra': 'papoues, langues',
+          'ita': 'Lingue papuane'
         }
       },
       {
@@ -206,7 +231,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sorbian languages',
           'deu': 'Sorbisch (Andere)',
-          'fra': 'sorabes, langues'
+          'fra': 'sorabes, langues',
+          'ita': 'Lingue sorabe'
         }
       },
       {
@@ -214,7 +240,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Zapotec',
           'deu': 'Zapotekisch',
-          'fra': 'zapotèque'
+          'fra': 'zapotèque',
+          'ita': 'Zapoteco'
         }
       },
       {
@@ -222,7 +249,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Bhojpuri',
-          'fra': 'bhojpuri'
+          'fra': 'bhojpuri',
+          'ita': 'Bhojpuri'
         }
       },
       {
@@ -230,7 +258,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Maltese',
           'deu': 'Maltesisch',
-          'fra': 'maltais'
+          'fra': 'maltais',
+          'ita': 'Maltese'
         }
       },
       {
@@ -238,7 +267,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Buriat',
           'deu': 'Burjatisch',
-          'fra': 'bouriate'
+          'fra': 'bouriate',
+          'ita': 'Buriat'
         }
       },
       {
@@ -246,7 +276,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Ewondo',
-          'fra': 'éwondo'
+          'fra': 'éwondo',
+          'ita': 'Ewondo'
         }
       },
       {
@@ -254,7 +285,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tsimshian',
           'deu': 'Tsimshian-Sprache',
-          'fra': 'tsimshian'
+          'fra': 'tsimshian',
+          'ita': 'Tsimshian'
         }
       },
       {
@@ -262,7 +294,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Fang',
           'deu': 'Pangwe-Sprache',
-          'fra': 'fang'
+          'fra': 'fang',
+          'ita': 'Fang'
         }
       },
       {
@@ -270,7 +303,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Maori',
           'deu': 'Maori-Sprache',
-          'fra': 'maori'
+          'fra': 'maori',
+          'ita': 'Maori'
         }
       },
       {
@@ -278,7 +312,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Skolt Sami',
           'deu': 'Skoltsaamisch',
-          'fra': 'sami skolt'
+          'fra': 'sami skolt',
+          'ita': 'Sami skolt'
         }
       },
       {
@@ -286,7 +321,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kutenai',
           'deu': 'Kutenai-Sprache',
-          'fra': 'kutenai'
+          'fra': 'kutenai',
+          'ita': 'Kutenai'
         }
       },
       {
@@ -294,7 +330,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Manobo languages',
           'deu': 'Manobo-Sprachen',
-          'fra': 'manobo, langues'
+          'fra': 'manobo, langues',
+          'ita': 'Lingue manobo'
         }
       },
       {
@@ -302,7 +339,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Lunda',
           'deu': 'Lunda-Sprache',
-          'fra': 'lunda'
+          'fra': 'lunda',
+          'ita': 'Lunda'
         }
       },
       {
@@ -310,7 +348,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Slave (Athapascan)',
           'deu': 'Slave-Sprache',
-          'fra': 'esclave (athapascan)'
+          'fra': 'esclave (athapascan)',
+          'ita': 'Slave (Athapascan)'
         }
       },
       {
@@ -318,7 +357,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sicilian',
           'deu': 'Sizilianisch',
-          'fra': 'sicilien'
+          'fra': 'sicilien',
+          'ita': 'Siciliano'
         }
       },
       {
@@ -326,7 +366,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tokelau',
           'deu': 'Tokelauanisch',
-          'fra': 'tokelau'
+          'fra': 'tokelau',
+          'ita': 'Tokelau'
         }
       },
       {
@@ -334,7 +375,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Prakrit languages',
           'deu': 'Prakrit',
-          'fra': 'prâkrit, langues'
+          'fra': 'prâkrit, langues',
+          'ita': 'Lingue prakrit'
         }
       },
       {
@@ -342,7 +384,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Gilbertese',
           'deu': 'Gilbertesisch',
-          'fra': 'kiribati'
+          'fra': 'kiribati',
+          'ita': 'Gilbertese'
         }
       },
       {
@@ -350,7 +393,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Braj',
           'deu': 'Braj-Bhakha',
-          'fra': 'braj'
+          'fra': 'braj',
+          'ita': 'Braj'
         }
       },
       {
@@ -358,7 +402,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Romany',
           'deu': 'Romani (Sprache)',
-          'fra': 'tsigane'
+          'fra': 'tsigane',
+          'ita': 'Romaní'
         }
       },
       {
@@ -366,7 +411,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Catalan | Valencian',
           'deu': 'Katalanisch',
-          'fra': 'catalan | valencien'
+          'fra': 'catalan | valencien',
+          'ita': 'Catalano | Valenciano'
         }
       },
       {
@@ -374,7 +420,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Songhai languages',
           'deu': 'Songhai-Sprache',
-          'fra': 'songhai, langues'
+          'fra': 'songhai, langues',
+          'ita': 'Lingue songhai'
         }
       },
       {
@@ -382,7 +429,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Altaic languages',
           'deu': 'Altaische Sprachen (Andere)',
-          'fra': 'altaïques, langues'
+          'fra': 'altaïques, langues',
+          'ita': 'Lingue altaiche'
         }
       },
       {
@@ -390,7 +438,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Arapaho',
           'deu': 'Arapaho-Sprache',
-          'fra': 'arapaho'
+          'fra': 'arapaho',
+          'ita': 'Arapaho'
         }
       },
       {
@@ -398,7 +447,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Votic',
           'deu': 'Wotisch',
-          'fra': 'vote'
+          'fra': 'vote',
+          'ita': 'Votico'
         }
       },
       {
@@ -406,7 +456,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Beja | Bedawiyet',
           'deu': 'Bedauye',
-          'fra': 'bedja'
+          'fra': 'bedja',
+          'ita': 'Beja | Bedawiyet'
         }
       },
       {
@@ -414,7 +465,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Swahili',
-          'fra': 'swahili'
+          'fra': 'swahili',
+          'ita': 'Swahili'
         }
       },
       {
@@ -422,7 +474,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Aleut',
           'deu': 'Aleutisch',
-          'fra': 'aléoute'
+          'fra': 'aléoute',
+          'ita': 'Aleut'
         }
       },
       {
@@ -430,7 +483,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Minangkabau',
           'deu': 'Minangkabau-Sprache',
-          'fra': 'minangkabau'
+          'fra': 'minangkabau',
+          'ita': 'Minangkabau'
         }
       },
       {
@@ -438,7 +492,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Pampanga | Kapampangan',
           'deu': 'Pampanggan-Sprache',
-          'fra': 'pampangan'
+          'fra': 'pampangan',
+          'ita': 'Pampanga | Kapampangan'
         }
       },
       {
@@ -446,7 +501,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Spanish | Castilian',
           'deu': 'Spanisch | Kastilisch',
-          'fra': 'espagnol | castillan'
+          'fra': 'espagnol | castillan',
+          'ita': 'Spagnolo | Castigliano'
         }
       },
       {
@@ -454,7 +510,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Sanskrit',
-          'fra': 'sanskrit'
+          'fra': 'sanskrit',
+          'ita': 'Sanscrito'
         }
       },
       {
@@ -462,7 +519,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kurdish',
           'deu': 'Kurdisch',
-          'fra': 'kurde'
+          'fra': 'kurde',
+          'ita': 'Curdo'
         }
       },
       {
@@ -470,7 +528,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Chagatai',
           'deu': 'Tschagataisch',
-          'fra': 'djaghataï'
+          'fra': 'djaghataï',
+          'ita': 'Chagatai'
         }
       },
       {
@@ -478,7 +537,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Bini | Edo',
           'deu': 'Edo-Sprache',
-          'fra': 'bini | edo'
+          'fra': 'bini | edo',
+          'ita': 'Bini | Edo'
         }
       },
       {
@@ -486,7 +546,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Oromo',
           'deu': 'Galla-Sprache',
-          'fra': 'galla'
+          'fra': 'galla',
+          'ita': 'Oromo'
         }
       },
       {
@@ -494,7 +555,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tuvinian',
           'deu': 'Tuwinisch',
-          'fra': 'touva'
+          'fra': 'touva',
+          'ita': 'Tuvinian'
         }
       },
       {
@@ -502,7 +564,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sindhi',
           'deu': 'Sindhi-Sprache',
-          'fra': 'sindhi'
+          'fra': 'sindhi',
+          'ita': 'Sindhi'
         }
       },
       {
@@ -510,7 +573,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Mongo',
           'deu': 'Mongo-Sprache',
-          'fra': 'mongo'
+          'fra': 'mongo',
+          'ita': 'Mongo'
         }
       },
       {
@@ -518,7 +582,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Mongolian',
           'deu': 'Mongolisch',
-          'fra': 'mongol'
+          'fra': 'mongol',
+          'ita': 'Mongolo'
         }
       },
       {
@@ -526,7 +591,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Vai',
           'deu': 'Vai-Sprache',
-          'fra': 'vaï'
+          'fra': 'vaï',
+          'ita': 'Vai'
         }
       },
       {
@@ -534,7 +600,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Gbaya',
           'deu': 'Gbaya-Sprache',
-          'fra': 'gbaya'
+          'fra': 'gbaya',
+          'ita': 'Gbaya'
         }
       },
       {
@@ -542,7 +609,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Macedonian',
           'deu': 'Makedonisch',
-          'fra': 'macédonien'
+          'fra': 'macédonien',
+          'ita': 'Macedone'
         }
       },
       {
@@ -550,7 +618,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Classical Newari | Old Newari | Classical Nepal Bhasa',
           'deu': 'Alt-Newari',
-          'fra': 'newari classique'
+          'fra': 'newari classique',
+          'ita': 'Newari classico | Vecchio Newari | Nepal Bhasa classico'
         }
       },
       {
@@ -558,7 +627,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Ndonga',
-          'fra': 'ndonga'
+          'fra': 'ndonga',
+          'ita': 'Ndonga'
         }
       },
       {
@@ -566,7 +636,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Central American Indian languages',
           'deu': 'Indianersprachen, Zentralamerika (Andere)',
-          'fra': "amérindiennes de l'Amérique centrale, langues"
+          'fra': "amérindiennes de l'Amérique centrale, langues",
+          'ita': 'Lingue indiane dell\'America centrale'
         }
       },
       {
@@ -574,7 +645,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Romance languages',
           'deu': 'Romanische Sprachen (Andere)',
-          'fra': 'romanes, langues'
+          'fra': 'romanes, langues',
+          'ita': 'Lingue romanze'
         }
       },
       {
@@ -582,7 +654,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Panjabi | Punjabi',
           'deu': 'Pandschabi-Sprache',
-          'fra': 'pendjabi'
+          'fra': 'pendjabi',
+          'ita': 'Panjabi | Punjabi'
         }
       },
       {
@@ -590,7 +663,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Coptic',
           'deu': 'Koptisch',
-          'fra': 'copte'
+          'fra': 'copte',
+          'ita': 'Copto'
         }
       },
       {
@@ -598,7 +672,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Luba-Lulua',
           'deu': 'Lulua-Sprache',
-          'fra': 'luba-lulua'
+          'fra': 'luba-lulua',
+          'ita': 'Luba-Lulua'
         }
       },
       {
@@ -606,7 +681,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kru languages',
           'deu': 'Kru-Sprachen (Andere)',
-          'fra': 'krou, langues'
+          'fra': 'krou, langues',
+          'ita': 'Lingue kru'
         }
       },
       {
@@ -614,7 +690,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Lingala',
-          'fra': 'lingala'
+          'fra': 'lingala',
+          'ita': 'Lingala'
         }
       },
       {
@@ -622,7 +699,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Banda languages',
           'deu': 'Banda-Sprachen (Ubangi-Sprachen)',
-          'fra': 'banda, langues'
+          'fra': 'banda, langues',
+          'ita': 'Lingue banda'
         }
       },
       {
@@ -630,7 +708,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Afrikaans',
-          'fra': 'afrikaans'
+          'fra': 'afrikaans',
+          'ita': 'Afrikaans'
         }
       },
       {
@@ -638,7 +717,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Apache languages',
           'deu': 'Apachen-Sprachen',
-          'fra': 'apaches, langues'
+          'fra': 'apaches, langues',
+          'ita': 'Lingue apache'
         }
       },
       {
@@ -646,7 +726,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Ingush',
           'deu': 'Inguschisch',
-          'fra': 'ingouche'
+          'fra': 'ingouche',
+          'ita': 'Ingush'
         }
       },
       {
@@ -654,7 +735,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Dravidian languages',
           'deu': 'Drawidische Sprachen (Andere)',
-          'fra': 'dravidiennes, langues'
+          'fra': 'dravidiennes, langues',
+          'ita': 'Lingue dravidiche'
         }
       },
       {
@@ -662,7 +744,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'South American Indian languages',
           'deu': 'Indianersprachen, Südamerika (Andere)',
-          'fra': 'sud-amérindiennes, langues'
+          'fra': 'sud-amérindiennes, langues',
+          'ita': 'Lingue indiane sudamericane'
         }
       },
       {
@@ -670,7 +753,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Provençal, Old (to 1500) | Occitan, Old (to 1500)',
           'deu': 'Altokzitanisch',
-          'fra': "provençal ancien (jusqu'à 1500) | occitan ancien (jusqu'à 1500)"
+          'fra': "provençal ancien (jusqu'à 1500) | occitan ancien (jusqu'à 1500)",
+          'ita': 'Provenzale antico (fino al 1500) | Occitano antico (fino al 1500)'
         }
       },
       {
@@ -678,7 +762,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Gujarati',
           'deu': 'Gujarati-Sprache',
-          'fra': 'goudjrati'
+          'fra': 'goudjrati',
+          'ita': 'Gujarati'
         }
       },
       {
@@ -686,7 +771,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Luba-Katanga',
           'deu': 'Luba-Katanga-Sprache',
-          'fra': 'luba-katanga'
+          'fra': 'luba-katanga',
+          'ita': 'Luba-Katanga'
         }
       },
       {
@@ -694,7 +780,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Central Khmer',
           'deu': 'Kambodschanisch',
-          'fra': 'khmer central'
+          'fra': 'khmer central',
+          'ita': 'Khmer centrale'
         }
       },
       {
@@ -702,7 +789,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Malagasy',
           'deu': 'Malagassi-Sprache',
-          'fra': 'malgache'
+          'fra': 'malgache',
+          'ita': 'Malagasy'
         }
       },
       {
@@ -710,7 +798,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Turkish',
           'deu': 'Türkisch',
-          'fra': 'turc'
+          'fra': 'turc',
+          'ita': 'Turco'
         }
       },
       {
@@ -718,7 +807,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Yoruba',
           'deu': 'Yoruba-Sprache',
-          'fra': 'yoruba'
+          'fra': 'yoruba',
+          'ita': 'Yoruba'
         }
       },
       {
@@ -726,7 +816,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Philippine languages',
           'deu': 'Philippinisch-Austronesisch (Andere)',
-          'fra': 'philippines, langues'
+          'fra': 'philippines, langues',
+          'ita': 'Lingue filippine'
         }
       },
       {
@@ -734,7 +825,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Estonian',
           'deu': 'Estnisch',
-          'fra': 'estonien'
+          'fra': 'estonien',
+          'ita': 'Estone'
         }
       },
       {
@@ -742,7 +834,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Limburgan | Limburger | Limburgish',
           'deu': 'Limburgisch',
-          'fra': 'limbourgeois'
+          'fra': 'limbourgeois',
+          'ita': 'Limburghese'
         }
       },
       {
@@ -750,7 +843,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Dzongkha',
-          'fra': 'dzongkha'
+          'fra': 'dzongkha',
+          'ita': 'Dzongkha'
         }
       },
       {
@@ -758,7 +852,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Caucasian languages',
           'deu': 'Kaukasische Sprachen (Andere)',
-          'fra': 'caucasiennes, langues'
+          'fra': 'caucasiennes, langues',
+          'ita': 'Lingue caucasiche'
         }
       },
       {
@@ -766,7 +861,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tamashek',
           'deu': 'Tamaeq',
-          'fra': 'tamacheq'
+          'fra': 'tamacheq',
+          'ita': 'Tamashek'
         }
       },
       {
@@ -774,7 +870,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Italian',
           'deu': 'Italienisch',
-          'fra': 'italien'
+          'fra': 'italien',
+          'ita': 'Italiano'
         }
       },
       {
@@ -782,7 +879,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Somali',
-          'fra': 'somali'
+          'fra': 'somali',
+          'ita': 'Somalo'
         }
       },
       {
@@ -790,7 +888,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Malay',
           'deu': 'Malaiisch',
-          'fra': 'malais'
+          'fra': 'malais',
+          'ita': 'Malese'
         }
       },
       {
@@ -798,7 +897,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Cherokee',
           'deu': 'Cherokee-Sprache',
-          'fra': 'cherokee'
+          'fra': 'cherokee',
+          'ita': 'Cherokee'
         }
       },
       {
@@ -806,7 +906,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sami languages',
           'deu': 'Saamisch',
-          'fra': 'sames, langues'
+          'fra': 'sames, langues',
+          'ita': 'Lingue sami'
         }
       },
       {
@@ -814,7 +915,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Neapolitan',
           'deu': 'Neapel / Mundart',
-          'fra': 'napolitain'
+          'fra': 'napolitain',
+          'ita': 'Napoletano'
         }
       },
       {
@@ -822,7 +924,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Croatian',
           'deu': 'Kroatisch',
-          'fra': 'croate'
+          'fra': 'croate',
+          'ita': 'Croato'
         }
       },
       {
@@ -830,7 +933,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Luxembourgish | Letzeburgesch',
           'deu': 'Luxemburgisch',
-          'fra': 'luxembourgeois'
+          'fra': 'luxembourgeois',
+          'ita': 'Lussemburghese'
         }
       },
       {
@@ -838,7 +942,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Rundi',
           'deu': 'Rundi-Sprache',
-          'fra': 'rundi'
+          'fra': 'rundi',
+          'ita': 'Rundi'
         }
       },
       {
@@ -846,7 +951,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Iranian languages',
           'deu': 'Iranische Sprachen (Andere)',
-          'fra': 'iraniennes, langues'
+          'fra': 'iraniennes, langues',
+          'ita': 'Lingue iraniane'
         }
       },
       {
@@ -854,7 +960,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Ido',
-          'fra': 'ido'
+          'fra': 'ido',
+          'ita': 'Ido'
         }
       },
       {
@@ -862,7 +969,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Samaritan Aramaic',
           'deu': 'Samaritanisch',
-          'fra': 'samaritain'
+          'fra': 'samaritain',
+          'ita': 'Aramaico samaritano'
         }
       },
       {
@@ -870,7 +978,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Konkani',
-          'fra': 'konkani'
+          'fra': 'konkani',
+          'ita': 'Konkani'
         }
       },
       {
@@ -878,7 +987,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Khasi',
           'deu': 'Khasi-Sprache',
-          'fra': 'khasi'
+          'fra': 'khasi',
+          'ita': 'Khasi'
         }
       },
       {
@@ -886,7 +996,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Mandingo',
           'deu': 'Malinke-Sprache',
-          'fra': 'mandingue'
+          'fra': 'mandingue',
+          'ita': 'Mandingo'
         }
       },
       {
@@ -894,7 +1005,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kimbundu',
           'deu': 'Kimbundu-Sprache',
-          'fra': 'kimbundu'
+          'fra': 'kimbundu',
+          'ita': 'Kimbundu'
         }
       },
       {
@@ -902,7 +1014,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Duala',
           'deu': 'Duala-Sprachen',
-          'fra': 'douala'
+          'fra': 'douala',
+          'ita': 'Duala'
         }
       },
       {
@@ -910,7 +1023,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Gondi',
           'deu': 'Gondi-Sprache',
-          'fra': 'gond'
+          'fra': 'gond',
+          'ita': 'Gondi'
         }
       },
       {
@@ -918,7 +1032,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Galician',
           'deu': 'Galizisch',
-          'fra': 'galicien'
+          'fra': 'galicien',
+          'ita': 'Galiziano'
         }
       },
       {
@@ -926,7 +1041,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Judeo-Persian',
           'deu': 'Jüdisch-Persisch',
-          'fra': 'judéo-persan'
+          'fra': 'judéo-persan',
+          'ita': 'Giudeo-persiano'
         }
       },
       {
@@ -934,7 +1050,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Cebuano',
-          'fra': 'cebuano'
+          'fra': 'cebuano',
+          'ita': 'Cebuano'
         }
       },
       {
@@ -942,7 +1059,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Indonesian',
           'deu': 'Bahasa Indonesia',
-          'fra': 'indonésien'
+          'fra': 'indonésien',
+          'ita': 'Indonesiano'
         }
       },
       {
@@ -950,7 +1068,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Ndebele, North | North Ndebele',
           'deu': 'Ndebele-Sprache (Simbabwe)',
-          'fra': 'ndébélé du Nord'
+          'fra': 'ndébélé du Nord',
+          'ita': 'Ndebele del Nord | Ndebele del Nord'
         }
       },
       {
@@ -958,7 +1077,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Baltic languages',
           'deu': 'Baltische Sprachen (Andere)',
-          'fra': 'baltes, langues'
+          'fra': 'baltes, langues',
+          'ita': 'Lingue baltiche'
         }
       },
       {
@@ -966,7 +1086,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Lahnda',
-          'fra': 'lahnda'
+          'fra': 'lahnda',
+          'ita': 'Lahnda'
         }
       },
       {
@@ -974,7 +1095,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Gaelic | Scottish Gaelic',
           'deu': 'Gälisch-Schottisch',
-          'fra': 'gaélique | gaélique écossais'
+          'fra': 'gaélique | gaélique écossais',
+          'ita': 'Gaelico | Gaelico scozzese'
         }
       },
       {
@@ -982,7 +1104,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Dargwa',
           'deu': 'Darginisch',
-          'fra': 'dargwa'
+          'fra': 'dargwa',
+          'ita': 'Dargwa'
         }
       },
       {
@@ -990,7 +1113,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Creoles and pidgins, Portuguese-based',
           'deu': 'Kreolisch-Portugiesisch (Andere)',
-          'fra': 'créoles et pidgins basés sur le portugais'
+          'fra': 'créoles et pidgins basés sur le portugais',
+          'ita': 'Creoli e pidgin basati sul portoghese'
         }
       },
       {
@@ -998,7 +1122,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Khotanese | Sakan',
           'deu': 'Sakisch',
-          'fra': 'khotanais | sakan'
+          'fra': 'khotanais | sakan',
+          'ita': 'Khotanese | Sakan'
         }
       },
       {
@@ -1006,7 +1131,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Artificial languages',
           'deu': 'Kunstsprachen (Andere)',
-          'fra': 'artificielles, langues'
+          'fra': 'artificielles, langues',
+          'ita': 'Lingue artificiali'
         }
       },
       {
@@ -1014,7 +1140,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Akkadian',
           'deu': 'Akkadisch',
-          'fra': 'akkadien'
+          'fra': 'akkadien',
+          'ita': 'Accadico'
         }
       },
       {
@@ -1022,7 +1149,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Occitan (post 1500)',
           'deu': 'Okzitanisch',
-          'fra': 'occitan (après 1500)'
+          'fra': 'occitan (après 1500)',
+          'ita': 'Occitano (dopo il 1500)'
         }
       },
       {
@@ -1030,7 +1158,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sukuma',
           'deu': 'Sukuma-Sprache',
-          'fra': 'sukuma'
+          'fra': 'sukuma',
+          'ita': 'Sukuma'
         }
       },
       {
@@ -1038,7 +1167,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sino-Tibetan languages',
           'deu': 'Sinotibetische Sprachen (Andere)',
-          'fra': 'sino-tibétaines, langues'
+          'fra': 'sino-tibétaines, langues',
+          'ita': 'Lingue sino-tibetane'
         }
       },
       {
@@ -1046,7 +1176,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Belarusian',
           'deu': 'Weißrussisch',
-          'fra': 'biélorusse'
+          'fra': 'biélorusse',
+          'ita': 'Bielorusso'
         }
       },
       {
@@ -1054,7 +1185,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Volapük',
-          'fra': 'volapük'
+          'fra': 'volapük',
+          'ita': 'Volapük'
         }
       },
       {
@@ -1062,7 +1194,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Norwegian',
           'deu': 'Norwegisch',
-          'fra': 'norvégien'
+          'fra': 'norvégien',
+          'ita': 'Norvegese'
         }
       },
       {
@@ -1070,7 +1203,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Algonquian languages',
           'deu': 'Algonkin-Sprachen (Andere)',
-          'fra': 'algonquines, langues'
+          'fra': 'algonquines, langues',
+          'ita': 'Lingue algonchine'
         }
       },
       {
@@ -1078,7 +1212,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Afar',
           'deu': 'Danakil-Sprache',
-          'fra': 'afar'
+          'fra': 'afar',
+          'ita': 'Afar'
         }
       },
       {
@@ -1086,7 +1221,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Fulah',
           'deu': 'Ful',
-          'fra': 'peul'
+          'fra': 'peul',
+          'ita': 'Fulah'
         }
       },
       {
@@ -1094,7 +1230,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Chuukese',
           'deu': 'Trukesisch',
-          'fra': 'chuuk'
+          'fra': 'chuuk',
+          'ita': 'Chuukese'
         }
       },
       {
@@ -1102,7 +1239,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Blissymbols | Blissymbolics | Bliss',
           'deu': 'Bliss-Symbol',
-          'fra': 'symboles Bliss | Bliss'
+          'fra': 'symboles Bliss | Bliss',
+          'ita': 'Blissymbols | Blissymbolics | Bliss'
         }
       },
       {
@@ -1110,7 +1248,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Portuguese',
           'deu': 'Portugiesisch',
-          'fra': 'portugais'
+          'fra': 'portugais',
+          'ita': 'Portoghese'
         }
       },
       {
@@ -1118,7 +1257,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Northern Frisian',
           'deu': 'Nordfriesisch',
-          'fra': 'frison septentrional'
+          'fra': 'frison septentrional',
+          'ita': 'Frisone settentrionale'
         }
       },
       {
@@ -1126,7 +1266,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Osage',
           'deu': 'Osage-Sprache',
-          'fra': 'osage'
+          'fra': 'osage',
+          'ita': 'Osage'
         }
       },
       {
@@ -1134,7 +1275,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tibetan',
           'deu': 'Tibetisch',
-          'fra': 'tibétain'
+          'fra': 'tibétain',
+          'ita': 'Tibetano'
         }
       },
       {
@@ -1142,7 +1284,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Afrihili',
-          'fra': 'afrihili'
+          'fra': 'afrihili',
+          'ita': 'Afrihili'
         }
       },
       {
@@ -1150,7 +1293,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Mossi',
           'deu': 'Mossi-Sprache',
-          'fra': 'moré'
+          'fra': 'moré',
+          'ita': 'Mossi'
         }
       },
       {
@@ -1158,7 +1302,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Hupa',
           'deu': 'Hupa-Sprache',
-          'fra': 'hupa'
+          'fra': 'hupa',
+          'ita': 'Hupa'
         }
       },
       {
@@ -1166,7 +1311,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Mohawk',
           'deu': 'Mohawk-Sprache',
-          'fra': 'mohawk'
+          'fra': 'mohawk',
+          'ita': 'Mohawk'
         }
       },
       {
@@ -1174,7 +1320,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Gayo',
           'deu': 'Gayo-Sprache',
-          'fra': 'gayo'
+          'fra': 'gayo',
+          'ita': 'Gayo'
         }
       },
       {
@@ -1182,7 +1329,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Bislama',
           'deu': 'Beach-la-mar',
-          'fra': 'bichlamar'
+          'fra': 'bichlamar',
+          'ita': 'Bislama'
         }
       },
       {
@@ -1190,7 +1338,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Lule Sami',
           'deu': 'Lulesaamisch',
-          'fra': 'sami de Lule'
+          'fra': 'sami de Lule',
+          'ita': 'Sami di Lule'
         }
       },
       {
@@ -1198,7 +1347,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Dutch | Flemish',
           'deu': 'Niederländisch | Flämisch',
-          'fra': 'néerlandais | flamand'
+          'fra': 'néerlandais | flamand',
+          'ita': 'Olandese | Fiammingo'
         }
       },
       {
@@ -1206,7 +1356,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Syriac',
           'deu': 'Neuostaramäisch',
-          'fra': 'syriaque'
+          'fra': 'syriaque',
+          'ita': 'Siriaco'
         }
       },
       {
@@ -1214,7 +1365,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Washo',
           'deu': 'Washo-Sprache',
-          'fra': 'washo'
+          'fra': 'washo',
+          'ita': 'Washo'
         }
       },
       {
@@ -1222,7 +1374,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Turkmen',
           'deu': 'Turkmenisch',
-          'fra': 'turkmène'
+          'fra': 'turkmène',
+          'ita': 'Turkmeno'
         }
       },
       {
@@ -1230,7 +1383,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Bamileke languages',
           'deu': 'Bamileke-Sprachen',
-          'fra': 'bamiléké, langues'
+          'fra': 'bamiléké, langues',
+          'ita': 'Lingue bamileke'
         }
       },
       {
@@ -1238,7 +1392,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Lithuanian',
           'deu': 'Litauisch',
-          'fra': 'lituanien'
+          'fra': 'lituanien',
+          'ita': 'Lituano'
         }
       },
       {
@@ -1246,7 +1401,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Mirandese',
           'deu': 'Mirandesisch',
-          'fra': 'mirandais'
+          'fra': 'mirandais',
+          'ita': 'Mirandese'
         }
       },
       {
@@ -1254,7 +1410,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'English',
           'deu': 'Englisch',
-          'fra': 'anglais'
+          'fra': 'anglais',
+          'ita': 'Inglese'
         }
       },
       {
@@ -1262,7 +1419,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Indic languages',
           'deu': 'Indoarische Sprachen (Andere)',
-          'fra': 'indo-aryennes, langues'
+          'fra': 'indo-aryennes, langues',
+          'ita': 'Lingue indiane'
         }
       },
       {
@@ -1270,7 +1428,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Hindi',
-          'fra': 'hindi'
+          'fra': 'hindi',
+          'ita': 'Hindi'
         }
       },
       {
@@ -1278,7 +1437,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Egyptian (Ancient)',
           'deu': 'Ägyptisch',
-          'fra': 'égyptien'
+          'fra': 'égyptien',
+          'ita': 'Egiziano (Antico)'
         }
       },
       {
@@ -1286,7 +1446,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Montenegrin',
           'deu': 'Montenegrinisch',
-          'fra': 'monténégrin'
+          'fra': 'monténégrin',
+          'ita': 'Montenegrino'
         }
       },
       {
@@ -1294,7 +1455,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Avaric',
           'deu': 'Awarisch',
-          'fra': 'avar'
+          'fra': 'avar',
+          'ita': 'Avarico'
         }
       },
       {
@@ -1302,7 +1464,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Ga',
           'deu': 'Ga-Sprache',
-          'fra': 'ga'
+          'fra': 'ga',
+          'ita': 'Ga'
         }
       },
       {
@@ -1310,7 +1473,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Tamil',
-          'fra': 'tamoul'
+          'fra': 'tamoul',
+          'ita': 'Tamil'
         }
       },
       {
@@ -1318,7 +1482,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Eastern Frisian',
           'deu': 'Ostfriesisch',
-          'fra': 'frison oriental'
+          'fra': 'frison oriental',
+          'ita': 'Frisone orientale'
         }
       },
       {
@@ -1326,7 +1491,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Celtic languages',
           'deu': 'Keltische Sprachen (Andere)',
-          'fra': 'celtiques, langues | celtes, langues'
+          'fra': 'celtiques, langues | celtes, langues',
+          'ita': 'Lingue celtiche'
         }
       },
       {
@@ -1334,7 +1500,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Papiamento',
-          'fra': 'papiamento'
+          'fra': 'papiamento',
+          'ita': 'Papiamento'
         }
       },
       {
@@ -1342,7 +1509,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kpelle',
           'deu': 'Kpelle-Sprache',
-          'fra': 'kpellé'
+          'fra': 'kpellé',
+          'ita': 'Kpelle'
         }
       },
       {
@@ -1350,7 +1518,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Bemba',
           'deu': 'Bemba-Sprache',
-          'fra': 'bemba'
+          'fra': 'bemba',
+          'ita': 'Bemba'
         }
       },
       {
@@ -1358,7 +1527,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Malayalam',
-          'fra': 'malayalam'
+          'fra': 'malayalam',
+          'ita': 'Malayalam'
         }
       },
       {
@@ -1366,7 +1536,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Santali',
-          'fra': 'santal'
+          'fra': 'santal',
+          'ita': 'Santali'
         }
       },
       {
@@ -1374,7 +1545,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Bihari languages',
           'deu': 'Bihari (Andere)',
-          'fra': 'langues biharis'
+          'fra': 'langues biharis',
+          'ita': 'Lingue bihari'
         }
       },
       {
@@ -1382,7 +1554,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Chuvash',
           'deu': 'Tschuwaschisch',
-          'fra': 'tchouvache'
+          'fra': 'tchouvache',
+          'ita': 'Chuvash'
         }
       },
       {
@@ -1390,7 +1563,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Nogai',
           'deu': 'Nogaisch',
-          'fra': 'nogaï | nogay'
+          'fra': 'nogaï | nogay',
+          'ita': 'Nogai'
         }
       },
       {
@@ -1398,7 +1572,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sumerian',
           'deu': 'Sumerisch',
-          'fra': 'sumérien'
+          'fra': 'sumérien',
+          'ita': 'Sumero'
         }
       },
       {
@@ -1406,7 +1581,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'German, Middle High (ca.1050-1500)',
           'deu': 'Mittelhochdeutsch',
-          'fra': 'allemand, moyen haut (ca. 1050-1500)'
+          'fra': 'allemand, moyen haut (ca. 1050-1500)',
+          'ita': 'Tedesco, medio alto (ca. 1050-1500)'
         }
       },
       {
@@ -1414,7 +1590,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Asturian | Bable | Leonese | Asturleonese',
           'deu': 'Asturisch',
-          'fra': 'asturien | bable | léonais | asturoléonais'
+          'fra': 'asturien | bable | léonais | asturoléonais',
+          'ita': 'Asturiano | Bable | Leonese | Asturleonese'
         }
       },
       {
@@ -1422,7 +1599,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Aragonese',
           'deu': 'Aragonesisch',
-          'fra': 'aragonais'
+          'fra': 'aragonais',
+          'ita': 'Aragonese'
         }
       },
       {
@@ -1430,7 +1608,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Irish, Old (to 900)',
           'deu': 'Altirisch',
-          'fra': "irlandais ancien (jusqu'à 900)"
+          'fra': "irlandais ancien (jusqu'à 900)",
+          'ita': 'Irlandese antico (fino al 900)'
         }
       },
       {
@@ -1438,7 +1617,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Southern Altai',
           'deu': 'Altaisch',
-          'fra': 'altai du Sud'
+          'fra': 'altai du Sud',
+          'ita': 'Altai meridionale'
         }
       },
       {
@@ -1446,7 +1626,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Zhuang | Chuang',
           'deu': 'Zhuang',
-          'fra': 'zhuang | chuang'
+          'fra': 'zhuang | chuang',
+          'ita': 'Zhuang | Chuang'
         }
       },
       {
@@ -1454,7 +1635,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Akan',
           'deu': 'Akan-Sprache',
-          'fra': 'akan'
+          'fra': 'akan',
+          'ita': 'Akan'
         }
       },
       {
@@ -1462,7 +1644,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Finnish',
           'deu': 'Finnisch',
-          'fra': 'finnois'
+          'fra': 'finnois',
+          'ita': 'Finlandese'
         }
       },
       {
@@ -1470,7 +1653,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Uzbek',
           'deu': 'Usbekisch',
-          'fra': 'ouszbek'
+          'fra': 'ouszbek',
+          'ita': 'Uzbeko'
         }
       },
       {
@@ -1478,7 +1662,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Fon',
           'deu': 'Fon-Sprache',
-          'fra': 'fon'
+          'fra': 'fon',
+          'ita': 'Fon'
         }
       },
       {
@@ -1486,7 +1671,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kosraean',
           'deu': 'Kosraeanisch',
-          'fra': 'kosrae'
+          'fra': 'kosrae',
+          'ita': 'Kosraean'
         }
       },
       {
@@ -1494,7 +1680,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Ewe',
           'deu': 'Ewe-Sprache',
-          'fra': 'éwé'
+          'fra': 'éwé',
+          'ita': 'Ewe'
         }
       },
       {
@@ -1502,7 +1689,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Nzima',
           'deu': 'Nzima-Sprache',
-          'fra': 'nzema'
+          'fra': 'nzema',
+          'ita': 'Nzima'
         }
       },
       {
@@ -1510,7 +1698,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Ndebele, South | South Ndebele',
           'deu': 'Ndebele-Sprache (Transvaal)',
-          'fra': 'ndébélé du Sud'
+          'fra': 'ndébélé du Sud',
+          'ita': 'Ndebele del Sud | Ndebele del Sud'
         }
       },
       {
@@ -1518,7 +1707,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Delaware',
           'deu': 'Delaware-Sprache',
-          'fra': 'delaware'
+          'fra': 'delaware',
+          'ita': 'Delaware'
         }
       },
       {
@@ -1526,7 +1716,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Nepali',
-          'fra': 'népalais'
+          'fra': 'népalais',
+          'ita': 'Nepalese'
         }
       },
       {
@@ -1534,7 +1725,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Hiligaynon',
           'deu': 'Hiligaynon-Sprache',
-          'fra': 'hiligaynon'
+          'fra': 'hiligaynon',
+          'ita': 'Hiligaynon'
         }
       },
       {
@@ -1542,7 +1734,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kashmiri',
           'deu': 'Kaschmiri',
-          'fra': 'kashmiri'
+          'fra': 'kashmiri',
+          'ita': 'Kashmiri'
         }
       },
       {
@@ -1550,7 +1743,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Corsican',
           'deu': 'Korsisch',
-          'fra': 'corse'
+          'fra': 'corse',
+          'ita': 'Corso'
         }
       },
       {
@@ -1558,7 +1752,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tereno',
           'deu': 'Tereno-Sprache',
-          'fra': 'tereno'
+          'fra': 'tereno',
+          'ita': 'Tereno'
         }
       },
       {
@@ -1566,7 +1761,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Karen languages',
           'deu': 'Karenisch',
-          'fra': 'karen, langues'
+          'fra': 'karen, langues',
+          'ita': 'Lingue karen'
         }
       },
       {
@@ -1574,7 +1770,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Azerbaijani',
           'deu': 'Aserbeidschanisch',
-          'fra': 'azéri'
+          'fra': 'azéri',
+          'ita': 'Azerbaigiano'
         }
       },
       {
@@ -1582,7 +1779,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Galibi Carib',
           'deu': 'Karibische Sprachen',
-          'fra': 'karib | galibi | carib'
+          'fra': 'karib | galibi | carib',
+          'ita': 'Caribe galibi'
         }
       },
       {
@@ -1590,7 +1788,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sranan Tongo',
           'deu': 'Sranantongo',
-          'fra': 'sranan tongo'
+          'fra': 'sranan tongo',
+          'ita': 'Sranan Tongo'
         }
       },
       {
@@ -1598,7 +1797,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Wolof',
           'deu': 'Wolof-Sprache',
-          'fra': 'wolof'
+          'fra': 'wolof',
+          'ita': 'Wolof'
         }
       },
       {
@@ -1606,7 +1806,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Waray',
-          'fra': 'waray'
+          'fra': 'waray',
+          'ita': 'Waray'
         }
       },
       {
@@ -1614,7 +1815,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Makasar',
           'deu': 'Makassarisch',
-          'fra': 'makassar'
+          'fra': 'makassar',
+          'ita': 'Makasar'
         }
       },
       {
@@ -1622,7 +1824,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tiv',
           'deu': 'Tiv-Sprache',
-          'fra': 'tiv'
+          'fra': 'tiv',
+          'ita': 'Tiv'
         }
       },
       {
@@ -1630,7 +1833,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tonga (Tonga Islands)',
           'deu': 'Tongaisch',
-          'fra': 'tongan (Îles Tonga)'
+          'fra': 'tongan (Îles Tonga)',
+          'ita': 'Tonga (Isole Tonga)'
         }
       },
       {
@@ -1638,7 +1842,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Indo-European languages',
           'deu': 'Indogermanische Sprachen (Andere)',
-          'fra': 'indo-européennes, langues'
+          'fra': 'indo-européennes, langues',
+          'ita': 'Lingue indoeuropee'
         }
       },
       {
@@ -1646,7 +1851,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Cornish',
           'deu': 'Kornisch',
-          'fra': 'cornique'
+          'fra': 'cornique',
+          'ita': 'Cornico'
         }
       },
       {
@@ -1654,7 +1860,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Church Slavic | Old Slavonic | Church Slavonic | Old Bulgarian | Old Church Slavonic',
           'deu': 'Kirchenslawisch',
-          'fra': "slavon d'église | vieux slave | slavon liturgique | vieux bulgare"
+          'fra': "slavon d'église | vieux slave | slavon liturgique | vieux bulgare",
+          'ita': 'Slavo ecclesiastico | Antico slavo | Slavo ecclesiastico | Antico bulgaro | Antico slavo ecclesiastico'
         }
       },
       {
@@ -1662,7 +1869,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Niuean',
           'deu': 'Niue-Sprache',
-          'fra': 'niué'
+          'fra': 'niué',
+          'ita': 'Niuean'
         }
       },
       {
@@ -1670,7 +1878,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Low German | Low Saxon | German, Low | Saxon, Low',
           'deu': 'Niederdeutsch',
-          'fra': 'bas allemand | bas saxon | allemand, bas | saxon, bas'
+          'fra': 'bas allemand | bas saxon | allemand, bas | saxon, bas',
+          'ita': 'Basso tedesco | Basso sassone | Tedesco, basso | Sassone, basso'
         }
       },
       {
@@ -1678,7 +1887,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Rajasthani',
-          'fra': 'rajasthani'
+          'fra': 'rajasthani',
+          'ita': 'Rajasthani'
         }
       },
       {
@@ -1686,7 +1896,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Bengali',
-          'fra': 'bengali'
+          'fra': 'bengali',
+          'ita': 'Bengalese'
         }
       },
       {
@@ -1694,7 +1905,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kikuyu | Gikuyu',
           'deu': 'Kikuyu-Sprache',
-          'fra': 'kikuyu'
+          'fra': 'kikuyu',
+          'ita': 'Kikuyu | Gikuyu'
         }
       },
       {
@@ -1702,7 +1914,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Himachali languages | Western Pahari languages',
           'deu': 'Himachali',
-          'fra': 'langues himachalis | langues paharis occidentales'
+          'fra': 'langues himachalis | langues paharis occidentales',
+          'ita': 'Lingue himachali | Lingue pahari occidentali'
         }
       },
       {
@@ -1710,7 +1923,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Basa',
           'deu': 'Basaa-Sprache',
-          'fra': 'basa'
+          'fra': 'basa',
+          'ita': 'Basa'
         }
       },
       {
@@ -1718,7 +1932,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Nubian languages',
           'deu': 'Nubische Sprachen',
-          'fra': 'nubiennes, langues'
+          'fra': 'nubiennes, langues',
+          'ita': 'Lingue nubiane'
         }
       },
       {
@@ -1726,7 +1941,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Faroese',
           'deu': 'Färöisch',
-          'fra': 'féroïen'
+          'fra': 'féroïen',
+          'ita': 'Faroese'
         }
       },
       {
@@ -1734,7 +1950,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Latin',
           'deu': 'Latein',
-          'fra': 'latin'
+          'fra': 'latin',
+          'ita': 'Latino'
         }
       },
       {
@@ -1742,7 +1959,8 @@ export default {
         'skos:prefLabel': {
           'eng': "Gwich'in",
           'deu': 'Kutchin-Sprache',
-          'fra': "gwich'in"
+          'fra': "gwich'in",
+          'ita': "Gwich'in"
         }
       },
       {
@@ -1750,7 +1968,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Chinese',
           'deu': 'Chinesisch',
-          'fra': 'chinois'
+          'fra': 'chinois',
+          'ita': 'Cinese'
         }
       },
       {
@@ -1758,7 +1977,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Thai',
           'deu': 'Thailändisch',
-          'fra': 'thaï'
+          'fra': 'thaï',
+          'ita': 'Tailandese'
         }
       },
       {
@@ -1766,7 +1986,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Soninke',
           'deu': 'Soninke-Sprache',
-          'fra': 'soninké'
+          'fra': 'soninké',
+          'ita': 'Soninke'
         }
       },
       {
@@ -1774,7 +1995,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kalmyk | Oirat',
           'deu': 'Kalmückisch',
-          'fra': 'kalmouk | oïrat'
+          'fra': 'kalmouk | oïrat',
+          'ita': 'Kalmyk | Oirat'
         }
       },
       {
@@ -1782,7 +2004,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Selkup',
           'deu': 'Selkupisch',
-          'fra': 'selkoupe'
+          'fra': 'selkoupe',
+          'ita': 'Selkup'
         }
       },
       {
@@ -1790,7 +2013,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Swati',
           'deu': 'Swasi-Sprache',
-          'fra': 'swati'
+          'fra': 'swati',
+          'ita': 'Swati'
         }
       },
       {
@@ -1798,7 +2022,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Pangasinan',
           'deu': 'Pangasinan-Sprache',
-          'fra': 'pangasinan'
+          'fra': 'pangasinan',
+          'ita': 'Pangasinan'
         }
       },
       {
@@ -1806,7 +2031,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Iban',
           'deu': 'Iban-Sprache',
-          'fra': 'iban'
+          'fra': 'iban',
+          'ita': 'Iban'
         }
       },
       {
@@ -1814,7 +2040,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Arawak',
           'deu': 'Arawak-Sprachen',
-          'fra': 'arawak'
+          'fra': 'arawak',
+          'ita': 'Arawak'
         }
       },
       {
@@ -1822,7 +2049,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Avestan',
           'deu': 'Avestisch',
-          'fra': 'avestique'
+          'fra': 'avestique',
+          'ita': 'Avestico'
         }
       },
       {
@@ -1830,7 +2058,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kashubian',
           'deu': 'Kaschubisch',
-          'fra': 'kachoube'
+          'fra': 'kachoube',
+          'ita': 'Kashubian'
         }
       },
       {
@@ -1838,7 +2067,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Acoli',
           'deu': 'Acholi-Sprache',
-          'fra': 'acoli'
+          'fra': 'acoli',
+          'ita': 'Acoli'
         }
       },
       {
@@ -1846,7 +2076,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Classical Syriac',
           'deu': 'Syrisch',
-          'fra': 'syriaque classique'
+          'fra': 'syriaque classique',
+          'ita': 'Siriaco classico'
         }
       },
       {
@@ -1854,7 +2085,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Bashkir',
           'deu': 'Baschkirisch',
-          'fra': 'bachkir'
+          'fra': 'bachkir',
+          'ita': 'Bashkir'
         }
       },
       {
@@ -1862,7 +2094,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Japanese',
           'deu': 'Japanisch',
-          'fra': 'japonais'
+          'fra': 'japonais',
+          'ita': 'Giapponese'
         }
       },
       {
@@ -1870,7 +2103,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Dogrib',
           'deu': 'Dogrib-Sprache',
-          'fra': 'dogrib'
+          'fra': 'dogrib',
+          'ita': 'Dogrib'
         }
       },
       {
@@ -1878,7 +2112,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tumbuka',
           'deu': 'Tumbuka-Sprache',
-          'fra': 'tumbuka'
+          'fra': 'tumbuka',
+          'ita': 'Tumbuka'
         }
       },
       {
@@ -1886,7 +2121,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Hungarian',
           'deu': 'Ungarisch',
-          'fra': 'hongrois'
+          'fra': 'hongrois',
+          'ita': 'Ungherese'
         }
       },
       {
@@ -1894,7 +2130,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Ugaritic',
           'deu': 'Ugaritisch',
-          'fra': 'ougaritique'
+          'fra': 'ougaritique',
+          'ita': 'Ugaritico'
         }
       },
       {
@@ -1902,7 +2139,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'North American Indian languages',
           'deu': 'Indianersprachen, Nordamerika (Andere)',
-          'fra': 'nord-amérindiennes, langues'
+          'fra': 'nord-amérindiennes, langues',
+          'ita': 'Lingue indiane nordamericane'
         }
       },
       {
@@ -1910,7 +2148,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'French, Old (842-ca.1400)',
           'deu': 'Altfranzösisch',
-          'fra': 'français ancien (842-ca.1400)'
+          'fra': 'français ancien (842-ca.1400)',
+          'ita': 'Francese antico (842-ca.1400)'
         }
       },
       {
@@ -1918,7 +2157,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Kawi',
-          'fra': 'kawi'
+          'fra': 'kawi',
+          'ita': 'Kawi'
         }
       },
       {
@@ -1926,7 +2166,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sign Languages',
           'deu': 'Zeichensprachen',
-          'fra': 'langues des signes'
+          'fra': 'langues des signes',
+          'ita': 'Lingue dei segni'
         }
       },
       {
@@ -1934,7 +2175,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Southern Sami',
           'deu': 'Südsaamisch',
-          'fra': 'sami du Sud'
+          'fra': 'sami du Sud',
+          'ita': 'Sami meridionale'
         }
       },
       {
@@ -1942,7 +2184,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kalaallisut | Greenlandic',
           'deu': 'Grönländisch',
-          'fra': 'groenlandais'
+          'fra': 'groenlandais',
+          'ita': 'Kalaallisut | Groenlandese'
         }
       },
       {
@@ -1950,7 +2193,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Fanti',
           'deu': 'Fante-Sprache',
-          'fra': 'fanti'
+          'fra': 'fanti',
+          'ita': 'Fanti'
         }
       },
       {
@@ -1958,7 +2202,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Nauru',
           'deu': 'Nauruanisch',
-          'fra': 'nauruan'
+          'fra': 'nauruan',
+          'ita': 'Nauru'
         }
       },
       {
@@ -1966,7 +2211,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Chinook jargon',
           'deu': 'Chinook-Jargon',
-          'fra': 'chinook, jargon'
+          'fra': 'chinook, jargon',
+          'ita': 'Chinook jargon'
         }
       },
       {
@@ -1974,7 +2220,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Luiseno',
           'deu': 'Luiseño-Sprache',
-          'fra': 'luiseno'
+          'fra': 'luiseno',
+          'ita': 'Luiseno'
         }
       },
       {
@@ -1982,7 +2229,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Chamic languages',
           'deu': 'Cham-Sprachen',
-          'fra': 'chames, langues'
+          'fra': 'chames, langues',
+          'ita': 'Lingue chamiche'
         }
       },
       {
@@ -1990,7 +2238,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Interlingua (International Auxiliary Language Association)',
           'deu': 'Interlingua',
-          'fra': 'interlingua (langue auxiliaire internationale)'
+          'fra': 'interlingua (langue auxiliaire internationale)',
+          'ita': 'Interlingua (Associazione Internazionale della Lingua Ausiliaria)'
         }
       },
       {
@@ -1998,7 +2247,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Burmese',
           'deu': 'Birmanisch',
-          'fra': 'birman'
+          'fra': 'birman',
+          'ita': 'Birmano'
         }
       },
       {
@@ -2006,7 +2256,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Romansh',
           'deu': 'Rätoromanisch',
-          'fra': 'romanche'
+          'fra': 'romanche',
+          'ita': 'Romancio'
         }
       },
       {
@@ -2014,7 +2265,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Greek, Modern (1453-)',
           'deu': 'Neugriechisch',
-          'fra': 'grec moderne (après 1453)'
+          'fra': 'grec moderne (après 1453)',
+          'ita': 'Greco moderno (1453-)'
         }
       },
       {
@@ -2022,7 +2274,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Geez',
           'deu': 'Altäthiopisch',
-          'fra': 'guèze'
+          'fra': 'guèze',
+          'ita': 'Geez'
         }
       },
       {
@@ -2030,7 +2283,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tok Pisin',
           'deu': 'Neumelanesisch',
-          'fra': 'tok pisin'
+          'fra': 'tok pisin',
+          'ita': 'Tok Pisin'
         }
       },
       {
@@ -2038,7 +2292,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Nilo-Saharan languages',
           'deu': 'Nilosaharanische Sprachen (Andere)',
-          'fra': 'nilo-sahariennes, langues'
+          'fra': 'nilo-sahariennes, langues',
+          'ita': 'Lingue nilo-sahariane'
         }
       },
       {
@@ -2046,7 +2301,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sardinian',
           'deu': 'Sardisch',
-          'fra': 'sarde'
+          'fra': 'sarde',
+          'ita': 'Sardo'
         }
       },
       {
@@ -2054,7 +2310,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Latvian',
           'deu': 'Lettisch',
-          'fra': 'letton'
+          'fra': 'letton',
+          'ita': 'Lettone'
         }
       },
       {
@@ -2062,7 +2319,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Zulu',
           'deu': 'Zulu-Sprache',
-          'fra': 'zoulou'
+          'fra': 'zoulou',
+          'ita': 'Zulu'
         }
       },
       {
@@ -2070,7 +2328,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Ukrainian',
           'deu': 'Ukrainisch',
-          'fra': 'ukrainien'
+          'fra': 'ukrainien',
+          'ita': 'Ucraino'
         }
       },
       {
@@ -2078,7 +2337,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Ojibwa',
           'deu': 'Ojibwa-Sprache',
-          'fra': 'ojibwa'
+          'fra': 'ojibwa',
+          'ita': 'Ojibwa'
         }
       },
       {
@@ -2086,7 +2346,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Karelian',
           'deu': 'Karelisch',
-          'fra': 'carélien'
+          'fra': 'carélien',
+          'ita': 'Careliano'
         }
       },
       {
@@ -2094,7 +2355,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Cheyenne',
           'deu': 'Cheyenne-Sprache',
-          'fra': 'cheyenne'
+          'fra': 'cheyenne',
+          'ita': 'Cheyenne'
         }
       },
       {
@@ -2102,7 +2364,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Iloko',
           'deu': 'Ilokano-Sprache',
-          'fra': 'ilocano'
+          'fra': 'ilocano',
+          'ita': 'Iloko'
         }
       },
       {
@@ -2110,7 +2373,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Buginese',
           'deu': 'Bugi-Sprache',
-          'fra': 'bugi'
+          'fra': 'bugi',
+          'ita': 'Buginese'
         }
       },
       {
@@ -2118,7 +2382,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Lojban',
-          'fra': 'lojban'
+          'fra': 'lojban',
+          'ita': 'Lojban'
         }
       },
       {
@@ -2126,7 +2391,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Dinka',
           'deu': 'Dinka-Sprache',
-          'fra': 'dinka'
+          'fra': 'dinka',
+          'ita': 'Dinka'
         }
       },
       {
@@ -2134,7 +2400,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Undetermined',
           'deu': 'Nicht zu entscheiden',
-          'fra': 'indéterminée'
+          'fra': 'indéterminée',
+          'ita': 'Indeterminato'
         }
       },
       {
@@ -2142,7 +2409,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sotho, Southern',
           'deu': 'Süd-Sotho-Sprache',
-          'fra': 'sotho du Sud'
+          'fra': 'sotho du Sud',
+          'ita': 'Sotho meridionale'
         }
       },
       {
@@ -2150,7 +2418,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Creek',
           'deu': 'Muskogisch',
-          'fra': 'muskogee'
+          'fra': 'muskogee',
+          'ita': 'Creek'
         }
       },
       {
@@ -2158,7 +2427,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Rarotongan | Cook Islands Maori',
           'deu': 'Rarotonganisch',
-          'fra': 'rarotonga | maori des îles Cook'
+          'fra': 'rarotonga | maori des îles Cook',
+          'ita': 'Rarotongan | Maori delle Isole Cook'
         }
       },
       {
@@ -2166,7 +2436,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Baluchi',
           'deu': 'Belutschisch',
-          'fra': 'baloutchi'
+          'fra': 'baloutchi',
+          'ita': 'Baluchi'
         }
       },
       {
@@ -2174,7 +2445,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Korean',
           'deu': 'Koreanisch',
-          'fra': 'coréen'
+          'fra': 'coréen',
+          'ita': 'Coreano'
         }
       },
       {
@@ -2182,7 +2454,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Welsh',
           'deu': 'Kymrisch',
-          'fra': 'gallois'
+          'fra': 'gallois',
+          'ita': 'Gallese'
         }
       },
       {
@@ -2190,7 +2463,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Manipuri',
           'deu': 'Meithei-Sprache',
-          'fra': 'manipuri'
+          'fra': 'manipuri',
+          'ita': 'Manipuri'
         }
       },
       {
@@ -2198,7 +2472,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Quechua',
           'deu': 'Quechua-Sprache',
-          'fra': 'quechua'
+          'fra': 'quechua',
+          'ita': 'Quechua'
         }
       },
       {
@@ -2206,7 +2481,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Efik',
-          'fra': 'efik'
+          'fra': 'efik',
+          'ita': 'Efik'
         }
       },
       {
@@ -2214,7 +2490,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Maithili',
-          'fra': 'maithili'
+          'fra': 'maithili',
+          'ita': 'Maithili'
         }
       },
       {
@@ -2222,7 +2499,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Chibcha',
           'deu': 'Chibcha-Sprachen',
-          'fra': 'chibcha'
+          'fra': 'chibcha',
+          'ita': 'Chibcha'
         }
       },
       {
@@ -2230,7 +2508,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tsonga',
           'deu': 'Tsonga-Sprache',
-          'fra': 'tsonga'
+          'fra': 'tsonga',
+          'ita': 'Tsonga'
         }
       },
       {
@@ -2238,7 +2517,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Pali',
-          'fra': 'pali'
+          'fra': 'pali',
+          'ita': 'Pali'
         }
       },
       {
@@ -2246,7 +2526,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Land Dayak languages',
           'deu': 'Dajakisch',
-          'fra': 'dayak, langues'
+          'fra': 'dayak, langues',
+          'ita': 'Lingue dayak'
         }
       },
       {
@@ -2254,7 +2535,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Dyula',
           'deu': 'Dyula-Sprache',
-          'fra': 'dioula'
+          'fra': 'dioula',
+          'ita': 'Dyula'
         }
       },
       {
@@ -2262,7 +2544,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Esperanto',
-          'fra': 'espéranto'
+          'fra': 'espéranto',
+          'ita': 'Esperanto'
         }
       },
       {
@@ -2270,7 +2553,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Slavic languages',
           'deu': 'Slawische Sprachen (Andere)',
-          'fra': 'slaves, langues'
+          'fra': 'slaves, langues',
+          'ita': 'Lingue slave'
         }
       },
       {
@@ -2278,7 +2562,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Persian',
           'deu': 'Persisch',
-          'fra': 'persan'
+          'fra': 'persan',
+          'ita': 'Persiano'
         }
       },
       {
@@ -2286,7 +2571,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Inupiaq',
           'deu': 'Inupik',
-          'fra': 'inupiaq'
+          'fra': 'inupiaq',
+          'ita': 'Inupiaq'
         }
       },
       {
@@ -2294,7 +2580,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Dogri',
-          'fra': 'dogri'
+          'fra': 'dogri',
+          'ita': 'Dogri'
         }
       },
       {
@@ -2302,7 +2589,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Lezghian',
           'deu': 'Lesgisch',
-          'fra': 'lezghien'
+          'fra': 'lezghien',
+          'ita': 'Lezghian'
         }
       },
       {
@@ -2310,7 +2598,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Navajo | Navaho',
           'deu': 'Navajo-Sprache',
-          'fra': 'navaho'
+          'fra': 'navaho',
+          'ita': 'Navajo | Navaho'
         }
       },
       {
@@ -2318,7 +2607,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Vietnamese',
           'deu': 'Vietnamesisch',
-          'fra': 'vietnamien'
+          'fra': 'vietnamien',
+          'ita': 'Vietnamita'
         }
       },
       {
@@ -2326,7 +2616,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Creoles and pidgins, French-based',
           'deu': 'Kreolisch-Französisch (Andere)',
-          'fra': 'créoles et pidgins basés sur le français'
+          'fra': 'créoles et pidgins basés sur le français',
+          'ita': 'Creoli e pidgin basati sul francese'
         }
       },
       {
@@ -2334,7 +2625,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Angika',
           'deu': 'Anga-Sprache',
-          'fra': 'angika'
+          'fra': 'angika',
+          'ita': 'Angika'
         }
       },
       {
@@ -2342,7 +2634,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Pohnpeian',
           'deu': 'Ponapeanisch',
-          'fra': 'pohnpei'
+          'fra': 'pohnpei',
+          'ita': 'Pohnpeian'
         }
       },
       {
@@ -2350,7 +2643,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Chamorro',
           'deu': 'Chamorro-Sprache',
-          'fra': 'chamorro'
+          'fra': 'chamorro',
+          'ita': 'Chamorro'
         }
       },
       {
@@ -2358,7 +2652,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kuanyama | Kwanyama',
           'deu': 'Kwanyama-Sprache',
-          'fra': 'kuanyama | kwanyama'
+          'fra': 'kuanyama | kwanyama',
+          'ita': 'Kuanyama | Kwanyama'
         }
       },
       {
@@ -2366,7 +2661,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Lushai',
           'deu': 'Lushai-Sprache',
-          'fra': 'lushai'
+          'fra': 'lushai',
+          'ita': 'Lushai'
         }
       },
       {
@@ -2374,7 +2670,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Serbian',
           'deu': 'Serbisch',
-          'fra': 'serbe'
+          'fra': 'serbe',
+          'ita': 'Serbo'
         }
       },
       {
@@ -2382,7 +2679,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Mari',
           'deu': 'Tscheremissisch',
-          'fra': 'mari'
+          'fra': 'mari',
+          'ita': 'Mari'
         }
       },
       {
@@ -2390,7 +2688,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tetum',
           'deu': 'Tetum-Sprache',
-          'fra': 'tetum'
+          'fra': 'tetum',
+          'ita': 'Tetum'
         }
       },
       {
@@ -2398,7 +2697,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Phoenician',
           'deu': 'Phönikisch',
-          'fra': 'phénicien'
+          'fra': 'phénicien',
+          'ita': 'Fenicio'
         }
       },
       {
@@ -2406,7 +2706,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tigrinya',
           'deu': 'Tigrinja-Sprache',
-          'fra': 'tigrigna'
+          'fra': 'tigrigna',
+          'ita': 'Tigrinya'
         }
       },
       {
@@ -2414,7 +2715,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Mende',
           'deu': 'Mende-Sprache',
-          'fra': 'mendé'
+          'fra': 'mendé',
+          'ita': 'Mende'
         }
       },
       {
@@ -2422,7 +2724,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Crimean Tatar | Crimean Turkish',
           'deu': 'Krimtatarisch',
-          'fra': 'tatar de Crimé'
+          'fra': 'tatar de Crimé',
+          'ita': 'Tataro di Crimea | Turco di Crimea'
         }
       },
       {
@@ -2430,7 +2733,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Semitic languages',
           'deu': 'Semitische Sprachen (Andere)',
-          'fra': 'sémitiques, langues'
+          'fra': 'sémitiques, langues',
+          'ita': 'Lingue semitiche'
         }
       },
       {
@@ -2438,7 +2742,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Inari Sami',
           'deu': 'Inarisaamisch',
-          'fra': "sami d'Inari"
+          'fra': "sami d'Inari",
+          'ita': 'Sami di Inari'
         }
       },
       {
@@ -2446,7 +2751,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Gothic',
           'deu': 'Gotisch',
-          'fra': 'gothique'
+          'fra': 'gothique',
+          'ita': 'Gotico'
         }
       },
       {
@@ -2454,7 +2760,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Mandar',
           'deu': 'Mandaresisch',
-          'fra': 'mandar'
+          'fra': 'mandar',
+          'ita': 'Mandar'
         }
       },
       {
@@ -2462,7 +2769,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kurukh',
           'deu': 'Oraon-Sprache',
-          'fra': 'kurukh'
+          'fra': 'kurukh',
+          'ita': 'Kurukh'
         }
       },
       {
@@ -2470,7 +2778,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Zande languages',
           'deu': 'Zande-Sprachen',
-          'fra': 'zandé, langues'
+          'fra': 'zandé, langues',
+          'ita': 'Lingue zande'
         }
       },
       {
@@ -2478,7 +2787,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Danish',
           'deu': 'Dänisch',
-          'fra': 'danois'
+          'fra': 'danois',
+          'ita': 'Danese'
         }
       },
       {
@@ -2486,7 +2796,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Otomian languages',
           'deu': 'Otomangue-Sprachen',
-          'fra': 'otomi, langues'
+          'fra': 'otomi, langues',
+          'ita': 'Lingue otomiane'
         }
       },
       {
@@ -2494,7 +2805,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Russian',
           'deu': 'Russisch',
-          'fra': 'russe'
+          'fra': 'russe',
+          'ita': 'Russo'
         }
       },
       {
@@ -2502,7 +2814,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Afro-Asiatic languages',
           'deu': 'Hamitosemitische Sprachen (Andere)',
-          'fra': 'afro-asiatiques, langues'
+          'fra': 'afro-asiatiques, langues',
+          'ita': 'Lingue afro-asiatiche'
         }
       },
       {
@@ -2510,7 +2823,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Uncoded languages',
           'deu': 'Einzelne andere Sprachen',
-          'fra': 'langues non codées'
+          'fra': 'langues non codées',
+          'ita': 'Lingue non codificate'
         }
       },
       {
@@ -2518,7 +2832,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Tagalog',
-          'fra': 'tagalog'
+          'fra': 'tagalog',
+          'ita': 'Tagalog'
         }
       },
       {
@@ -2526,7 +2841,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Cushitic languages',
           'deu': 'Kuschitische Sprachen (Andere)',
-          'fra': 'couchitiques, langues'
+          'fra': 'couchitiques, langues',
+          'ita': 'Lingue cuscitiche'
         }
       },
       {
@@ -2534,7 +2850,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kumyk',
           'deu': 'Kumükisch',
-          'fra': 'koumyk'
+          'fra': 'koumyk',
+          'ita': 'Kumyk'
         }
       },
       {
@@ -2542,7 +2859,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Batak languages',
           'deu': 'Batak-Sprache',
-          'fra': 'batak, langues'
+          'fra': 'batak, langues',
+          'ita': 'Lingue batak'
         }
       },
       {
@@ -2550,7 +2868,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Czech',
           'deu': 'Tschechisch',
-          'fra': 'tchèque'
+          'fra': 'tchèque',
+          'ita': 'Ceco'
         }
       },
       {
@@ -2558,7 +2877,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tigre',
           'deu': 'Tigre-Sprache',
-          'fra': 'tigré'
+          'fra': 'tigré',
+          'ita': 'Tigre'
         }
       },
       {
@@ -2566,7 +2886,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Walloon',
           'deu': 'Wallonisch',
-          'fra': 'wallon'
+          'fra': 'wallon',
+          'ita': 'Vallone'
         }
       },
       {
@@ -2574,7 +2895,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Interlingue | Occidental',
           'deu': 'Interlingue',
-          'fra': 'interlingue'
+          'fra': 'interlingue',
+          'ita': 'Interlingue | Occidentale'
         }
       },
       {
@@ -2582,7 +2904,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kanuri',
           'deu': 'Kanuri-Sprache',
-          'fra': 'kanouri'
+          'fra': 'kanouri',
+          'ita': 'Kanuri'
         }
       },
       {
@@ -2590,7 +2913,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Germanic languages',
           'deu': 'Germanische Sprachen (Andere)',
-          'fra': 'germaniques, langues'
+          'fra': 'germaniques, langues',
+          'ita': 'Lingue germaniche'
         }
       },
       {
@@ -2598,7 +2922,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Creoles and pidgins, English based',
           'deu': 'Kreolisch-Englisch (Andere)',
-          'fra': "créoles et pidgins basés sur l'anglais"
+          'fra': "créoles et pidgins basés sur l'anglais",
+          'ita': 'Creoli e pidgin basati sull\'inglese'
         }
       },
       {
@@ -2606,7 +2931,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Nias',
           'deu': 'Nias-Sprache',
-          'fra': 'nias'
+          'fra': 'nias',
+          'ita': 'Nias'
         }
       },
       {
@@ -2614,7 +2940,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Caddo',
           'deu': 'Caddo-Sprachen',
-          'fra': 'caddo'
+          'fra': 'caddo',
+          'ita': 'Caddo'
         }
       },
       {
@@ -2622,7 +2949,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Sasak',
-          'fra': 'sasak'
+          'fra': 'sasak',
+          'ita': 'Sasak'
         }
       },
       {
@@ -2630,7 +2958,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Herero',
           'deu': 'Herero-Sprache',
-          'fra': 'herero'
+          'fra': 'herero',
+          'ita': 'Herero'
         }
       },
       {
@@ -2638,7 +2967,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Moksha',
           'deu': 'Mokscha-Sprache',
-          'fra': 'moksa'
+          'fra': 'moksa',
+          'ita': 'Moksha'
         }
       },
       {
@@ -2646,7 +2976,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Marshallese',
           'deu': 'Marschallesisch',
-          'fra': 'marshall'
+          'fra': 'marshall',
+          'ita': 'Marshallese'
         }
       },
       {
@@ -2654,7 +2985,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tajik',
           'deu': 'Tadschikisch',
-          'fra': 'tadjik'
+          'fra': 'tadjik',
+          'ita': 'Tajik'
         }
       },
       {
@@ -2662,7 +2994,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Lower Sorbian',
           'deu': 'Niedersorbisch',
-          'fra': 'bas-sorabe'
+          'fra': 'bas-sorabe',
+          'ita': 'Basso sorabo'
         }
       },
       {
@@ -2670,7 +3003,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Swedish',
           'deu': 'Schwedisch',
-          'fra': 'suédois'
+          'fra': 'suédois',
+          'ita': 'Svedese'
         }
       },
       {
@@ -2678,7 +3012,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Hawaiian',
           'deu': 'Hawaiisch',
-          'fra': 'hawaïen'
+          'fra': 'hawaïen',
+          'ita': 'Hawaiano'
         }
       },
       {
@@ -2686,7 +3021,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Awadhi',
-          'fra': 'awadhi'
+          'fra': 'awadhi',
+          'ita': 'Awadhi'
         }
       },
       {
@@ -2694,7 +3030,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'German',
           'deu': 'Deutsch',
-          'fra': 'allemand'
+          'fra': 'allemand',
+          'ita': 'Tedesco'
         }
       },
       {
@@ -2702,7 +3039,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Pedi | Sepedi | Northern Sotho',
           'deu': 'Pedi-Sprache',
-          'fra': 'pedi | sepedi | sotho du Nord'
+          'fra': 'pedi | sepedi | sotho du Nord',
+          'ita': 'Pedi | Sepedi | Sotho del Nord'
         }
       },
       {
@@ -2710,7 +3048,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kabardian',
           'deu': 'Kabardinisch',
-          'fra': 'kabardien'
+          'fra': 'kabardien',
+          'ita': 'Kabardiano'
         }
       },
       {
@@ -2718,7 +3057,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kinyarwanda',
           'deu': 'Rwanda-Sprache',
-          'fra': 'rwanda'
+          'fra': 'rwanda',
+          'ita': 'Kinyarwanda'
         }
       },
       {
@@ -2726,7 +3066,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'German, Old High (ca.750-1050)',
           'deu': 'Althochdeutsch',
-          'fra': 'allemand, vieux haut (ca. 750-1050)'
+          'fra': 'allemand, vieux haut (ca. 750-1050)',
+          'ita': 'Tedesco, alto antico (ca. 750-1050)'
         }
       },
       {
@@ -2734,7 +3075,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Amharic',
           'deu': 'Amharisch',
-          'fra': 'amharique'
+          'fra': 'amharique',
+          'ita': 'Amarico'
         }
       },
       {
@@ -2742,7 +3084,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sandawe',
           'deu': 'Sandawe-Sprache',
-          'fra': 'sandawe'
+          'fra': 'sandawe',
+          'ita': 'Sandawe'
         }
       },
       {
@@ -2750,7 +3093,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Ganda',
           'deu': 'Ganda-Sprache',
-          'fra': 'ganda'
+          'fra': 'ganda',
+          'ita': 'Ganda'
         }
       },
       {
@@ -2758,7 +3102,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Udmurt',
           'deu': 'Udmurtisch',
-          'fra': 'oudmourte'
+          'fra': 'oudmourte',
+          'ita': 'Udmurt'
         }
       },
       {
@@ -2766,7 +3111,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Guarani',
           'deu': 'Guaraní-Sprache',
-          'fra': 'guarani'
+          'fra': 'guarani',
+          'ita': 'Guarani'
         }
       },
       {
@@ -2774,7 +3120,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Hiri Motu',
           'deu': 'Hiri-Motu',
-          'fra': 'hiri motu'
+          'fra': 'hiri motu',
+          'ita': 'Hiri Motu'
         }
       },
       {
@@ -2782,7 +3129,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sichuan Yi | Nuosu',
           'deu': 'Lalo-Sprache',
-          'fra': 'yi de Sichuan'
+          'fra': 'yi de Sichuan',
+          'ita': 'Sichuan Yi | Nuosu'
         }
       },
       {
@@ -2790,7 +3138,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Breton',
           'deu': 'Bretonisch',
-          'fra': 'breton'
+          'fra': 'breton',
+          'ita': 'Bretone'
         }
       },
       {
@@ -2798,7 +3147,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Twi',
           'deu': 'Twi-Sprache',
-          'fra': 'twi'
+          'fra': 'twi',
+          'ita': 'Twi'
         }
       },
       {
@@ -2806,7 +3156,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Achinese',
           'deu': 'Aceh-Sprache',
-          'fra': 'aceh'
+          'fra': 'aceh',
+          'ita': 'Achinese'
         }
       },
       {
@@ -2814,7 +3165,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sango',
           'deu': 'Sango-Sprache',
-          'fra': 'sango'
+          'fra': 'sango',
+          'ita': 'Sango'
         }
       },
       {
@@ -2822,7 +3174,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Urdu',
-          'fra': 'ourdou'
+          'fra': 'ourdou',
+          'ita': 'Urdu'
         }
       },
       {
@@ -2830,7 +3183,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tupi languages',
           'deu': 'Tupi-Sprache',
-          'fra': 'tupi, langues'
+          'fra': 'tupi, langues',
+          'ita': 'Lingue tupi'
         }
       },
       {
@@ -2838,7 +3192,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Slovak',
           'deu': 'Slowakisch',
-          'fra': 'slovaque'
+          'fra': 'slovaque',
+          'ita': 'Slovacco'
         }
       },
       {
@@ -2846,7 +3201,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Official Aramaic (700-300 BCE) | Imperial Aramaic (700-300 BCE)',
           'deu': 'Aramäisch',
-          'fra': "araméen d'empire (700-300 BCE)"
+          'fra': "araméen d'empire (700-300 BCE)",
+          'ita': 'Aramaico ufficiale (700-300 a.C.) | Aramaico imperiale (700-300 a.C.)'
         }
       },
       {
@@ -2854,7 +3210,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sogdian',
           'deu': 'Sogdisch',
-          'fra': 'sogdien'
+          'fra': 'sogdien',
+          'ita': 'Sogdian'
         }
       },
       {
@@ -2862,7 +3219,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kachin | Jingpho',
           'deu': 'Kachin-Sprache',
-          'fra': 'kachin | jingpho'
+          'fra': 'kachin | jingpho',
+          'ita': 'Kachin | Jingpho'
         }
       },
       {
@@ -2870,7 +3228,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Balinese',
           'deu': 'Balinesisch',
-          'fra': 'balinais'
+          'fra': 'balinais',
+          'ita': 'Balinese'
         }
       },
       {
@@ -2878,7 +3237,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Mapudungun | Mapuche',
           'deu': 'Arauka-Sprachen',
-          'fra': 'mapudungun | mapuche | mapuce'
+          'fra': 'mapudungun | mapuche | mapuce',
+          'ita': 'Mapudungun | Mapuche'
         }
       },
       {
@@ -2886,7 +3246,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Khoisan languages',
           'deu': 'Khoisan-Sprachen (Andere)',
-          'fra': 'khoïsan, langues'
+          'fra': 'khoïsan, langues',
+          'ita': 'Lingue khoisan'
         }
       },
       {
@@ -2894,7 +3255,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Finno-Ugrian languages',
           'deu': 'Finnougrische Sprachen (Andere)',
-          'fra': 'finno-ougriennes, langues'
+          'fra': 'finno-ougriennes, langues',
+          'ita': 'Lingue finno-ugriche'
         }
       },
       {
@@ -2902,7 +3264,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Greek, Ancient (to 1453)',
           'deu': 'Griechisch',
-          'fra': "grec ancien (jusqu'à 1453)"
+          'fra': "grec ancien (jusqu'à 1453)",
+          'ita': 'Greco antico (fino al 1453)'
         }
       },
       {
@@ -2910,7 +3273,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Reserved for local use',
           'deu': 'Reserviert für lokale Verwendung',
-          'fra': "réservée à l'usage local"
+          'fra': "réservée à l'usage local",
+          'ita': 'Riservato per uso locale'
         }
       },
       {
@@ -2918,7 +3282,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Samoan',
           'deu': 'Samoanisch',
-          'fra': 'samoan'
+          'fra': 'samoan',
+          'ita': 'Samoano'
         }
       },
       {
@@ -2926,7 +3291,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Magahi',
           'deu': 'Khotta',
-          'fra': 'magahi'
+          'fra': 'magahi',
+          'ita': 'Magahi'
         }
       },
       {
@@ -2934,7 +3300,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Berber languages',
           'deu': 'Berbersprachen (Andere)',
-          'fra': 'berbères, langues'
+          'fra': 'berbères, langues',
+          'ita': 'Lingue berbere'
         }
       },
       {
@@ -2942,7 +3309,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kazakh',
           'deu': 'Kasachisch',
-          'fra': 'kazakh'
+          'fra': 'kazakh',
+          'ita': 'Kazako'
         }
       },
       {
@@ -2950,7 +3318,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Uighur | Uyghur',
           'deu': 'Uigurisch',
-          'fra': 'ouïgour'
+          'fra': 'ouïgour',
+          'ita': 'Uighur | Uyghur'
         }
       },
       {
@@ -2958,7 +3327,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Zuni',
           'deu': 'Zuñi-Sprache',
-          'fra': 'zuni'
+          'fra': 'zuni',
+          'ita': 'Zuni'
         }
       },
       {
@@ -2966,7 +3336,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Timne',
           'deu': 'Temne-Sprache',
-          'fra': 'temne'
+          'fra': 'temne',
+          'ita': 'Timne'
         }
       },
       {
@@ -2974,7 +3345,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Nyoro',
           'deu': 'Nyoro-Sprache',
-          'fra': 'nyoro'
+          'fra': 'nyoro',
+          'ita': 'Nyoro'
         }
       },
       {
@@ -2982,7 +3354,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Umbundu',
           'deu': 'Mbundu-Sprache',
-          'fra': 'umbundu'
+          'fra': 'umbundu',
+          'ita': 'Umbundu'
         }
       },
       {
@@ -2990,7 +3363,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Dutch, Middle (ca.1050-1350)',
           'deu': 'Mittelniederländisch',
-          'fra': 'néerlandais moyen (ca. 1050-1350)'
+          'fra': 'néerlandais moyen (ca. 1050-1350)',
+          'ita': 'Olandese medio (ca. 1050-1350)'
         }
       },
       {
@@ -2998,7 +3372,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Masai',
           'deu': 'Massai-Sprache',
-          'fra': 'massaï'
+          'fra': 'massaï',
+          'ita': 'Masai'
         }
       },
       {
@@ -3006,7 +3381,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'French',
           'deu': 'Französisch',
-          'fra': 'français'
+          'fra': 'français',
+          'ita': 'Francese'
         }
       },
       {
@@ -3014,7 +3390,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Igbo',
           'deu': 'Ibo-Sprache',
-          'fra': 'igbo'
+          'fra': 'igbo',
+          'ita': 'Igbo'
         }
       },
       {
@@ -3022,7 +3399,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Rapanui',
           'deu': 'Osterinsel-Sprache',
-          'fra': 'rapanui'
+          'fra': 'rapanui',
+          'ita': 'Rapanui'
         }
       },
       {
@@ -3030,7 +3408,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Palauan',
           'deu': 'Palau-Sprache',
-          'fra': 'palau'
+          'fra': 'palau',
+          'ita': 'Palauan'
         }
       },
       {
@@ -3038,7 +3417,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kirghiz | Kyrgyz',
           'deu': 'Kirgisisch',
-          'fra': 'kirghiz'
+          'fra': 'kirghiz',
+          'ita': 'Kirghiz | Kyrgyz'
         }
       },
       {
@@ -3046,7 +3426,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Upper Sorbian',
           'deu': 'Obersorbisch',
-          'fra': 'haut-sorabe'
+          'fra': 'haut-sorabe',
+          'ita': 'Sorabo superiore'
         }
       },
       {
@@ -3054,7 +3435,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Polish',
           'deu': 'Polnisch',
-          'fra': 'polonais'
+          'fra': 'polonais',
+          'ita': 'Polacco'
         }
       },
       {
@@ -3062,7 +3444,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kabyle',
           'deu': 'Kabylisch',
-          'fra': 'kabyle'
+          'fra': 'kabyle',
+          'ita': 'Kabyle'
         }
       },
       {
@@ -3070,7 +3453,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Fijian',
           'deu': 'Fidschi-Sprache',
-          'fra': 'fidjien'
+          'fra': 'fidjien',
+          'ita': 'Fijiano'
         }
       },
       {
@@ -3078,7 +3462,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Shan',
           'deu': 'Schan-Sprache',
-          'fra': 'chan'
+          'fra': 'chan',
+          'ita': 'Shan'
         }
       },
       {
@@ -3086,7 +3471,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Yiddish',
           'deu': 'Jiddisch',
-          'fra': 'yiddish'
+          'fra': 'yiddish',
+          'ita': 'Yiddish'
         }
       },
       {
@@ -3094,7 +3480,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Haida',
           'deu': 'Haida-Sprache',
-          'fra': 'haida'
+          'fra': 'haida',
+          'ita': 'Haida'
         }
       },
       {
@@ -3102,7 +3489,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Lozi',
           'deu': 'Rotse-Sprache',
-          'fra': 'lozi'
+          'fra': 'lozi',
+          'ita': 'Lozi'
         }
       },
       {
@@ -3110,7 +3498,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Hebrew',
           'deu': 'Hebräisch',
-          'fra': 'hébreu'
+          'fra': 'hébreu',
+          'ita': 'Ebraico'
         }
       },
       {
@@ -3118,7 +3507,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Xhosa',
           'deu': 'Xhosa-Sprache',
-          'fra': 'xhosa'
+          'fra': 'xhosa',
+          'ita': 'Xhosa'
         }
       },
       {
@@ -3126,7 +3516,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Yakut',
           'deu': 'Jakutisch',
-          'fra': 'iakoute'
+          'fra': 'iakoute',
+          'ita': 'Yakut'
         }
       },
       {
@@ -3134,7 +3525,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Siouan languages',
           'deu': 'Sioux-Sprachen (Andere)',
-          'fra': 'sioux, langues'
+          'fra': 'sioux, langues',
+          'ita': 'Lingue siouan'
         }
       },
       {
@@ -3142,7 +3534,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Judeo-Arabic',
           'deu': 'Jüdisch-Arabisch',
-          'fra': 'judéo-arabe'
+          'fra': 'judéo-arabe',
+          'ita': 'Giudeo-arabo'
         }
       },
       {
@@ -3150,7 +3543,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Hmong | Mong',
           'deu': 'Miao-Sprachen',
-          'fra': 'hmong'
+          'fra': 'hmong',
+          'ita': 'Hmong | Mong'
         }
       },
       {
@@ -3158,7 +3552,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Friulian',
           'deu': 'Friulisch',
-          'fra': 'frioulan'
+          'fra': 'frioulan',
+          'ita': 'Friulano'
         }
       },
       {
@@ -3166,7 +3561,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Pushto | Pashto',
           'deu': 'Paschtu',
-          'fra': 'pachto'
+          'fra': 'pachto',
+          'ita': 'Pushto | Pashto'
         }
       },
       {
@@ -3174,7 +3570,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Adangme',
           'deu': 'Adangme-Sprache',
-          'fra': 'adangme'
+          'fra': 'adangme',
+          'ita': 'Adangme'
         }
       },
       {
@@ -3182,7 +3579,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Swiss German | Alemannic | Alsatian',
           'deu': 'Schweizerdeutsch',
-          'fra': 'suisse alémanique | alémanique | alsacien'
+          'fra': 'suisse alémanique | alémanique | alsacien',
+          'ita': 'Tedesco svizzero | Alemannico | Alsaziano'
         }
       },
       {
@@ -3190,7 +3588,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Lamba',
           'deu': 'Lamba-Sprache (Bantusprache)',
-          'fra': 'lamba'
+          'fra': 'lamba',
+          'ita': 'Lamba'
         }
       },
       {
@@ -3198,7 +3597,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tonga (Nyasa)',
           'deu': 'Tonga (Bantusprache, Sambia)',
-          'fra': 'tonga (Nyasa)'
+          'fra': 'tonga (Nyasa)',
+          'ita': 'Tonga (Nyasa)'
         }
       },
       {
@@ -3206,7 +3606,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Marwari',
-          'fra': 'marvari'
+          'fra': 'marvari',
+          'ita': 'Marwari'
         }
       },
       {
@@ -3214,7 +3615,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Marathi',
-          'fra': 'marathe'
+          'fra': 'marathe',
+          'ita': 'Marathi'
         }
       },
       {
@@ -3222,7 +3624,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Gorontalo',
           'deu': 'Gorontalesisch',
-          'fra': 'gorontalo'
+          'fra': 'gorontalo',
+          'ita': 'Gorontalo'
         }
       },
       {
@@ -3230,7 +3633,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Albanian',
           'deu': 'Albanisch',
-          'fra': 'albanais'
+          'fra': 'albanais',
+          'ita': 'Albanese'
         }
       },
       {
@@ -3238,7 +3642,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Serer',
           'deu': 'Serer-Sprache',
-          'fra': 'sérère'
+          'fra': 'sérère',
+          'ita': 'Serer'
         }
       },
       {
@@ -3246,7 +3651,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Klingon | tlhIngan-Hol',
           'deu': 'Klingonisch',
-          'fra': 'klingon'
+          'fra': 'klingon',
+          'ita': 'Klingon | tlhIngan-Hol'
         }
       },
       {
@@ -3254,7 +3660,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Hausa',
           'deu': 'Haussa-Sprache',
-          'fra': 'haoussa'
+          'fra': 'haoussa',
+          'ita': 'Hausa'
         }
       },
       {
@@ -3262,7 +3669,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'French, Middle (ca.1400-1600)',
           'deu': 'Mittelfranzösisch',
-          'fra': 'français moyen (1400-1600)'
+          'fra': 'français moyen (1400-1600)',
+          'ita': 'Francese medio (ca. 1400-1600)'
         }
       },
       {
@@ -3270,7 +3678,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Ijo languages',
           'deu': 'Ijo-Sprache',
-          'fra': 'ijo, langues'
+          'fra': 'ijo, langues',
+          'ita': 'Lingue ijo'
         }
       },
       {
@@ -3278,7 +3687,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Ekajuk',
-          'fra': 'ekajuk'
+          'fra': 'ekajuk',
+          'ita': 'Ekajuk'
         }
       },
       {
@@ -3286,7 +3696,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'English, Middle (1100-1500)',
           'deu': 'Mittelenglisch',
-          'fra': 'anglais moyen (1100-1500)'
+          'fra': 'anglais moyen (1100-1500)',
+          'ita': 'Inglese medio (1100-1500)'
         }
       },
       {
@@ -3294,7 +3705,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Norwegian Nynorsk | Nynorsk, Norwegian',
           'deu': 'Nynorsk',
-          'fra': 'norvégien nynorsk | nynorsk, norvégien'
+          'fra': 'norvégien nynorsk | nynorsk, norvégien',
+          'ita': 'Norvegese Nynorsk | Nynorsk, norvegese'
         }
       },
       {
@@ -3302,7 +3714,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Kannada',
-          'fra': 'kannada'
+          'fra': 'kannada',
+          'ita': 'Kannada'
         }
       },
       {
@@ -3310,7 +3723,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Chechen',
           'deu': 'Tschetschenisch',
-          'fra': 'tchétchène'
+          'fra': 'tchétchène',
+          'ita': 'Ceceno'
         }
       },
       {
@@ -3318,7 +3732,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Ainu',
           'deu': 'Ainu-Sprache',
-          'fra': 'aïnou'
+          'fra': 'aïnou',
+          'ita': 'Ainu'
         }
       },
       {
@@ -3326,7 +3741,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sidamo',
           'deu': 'Sidamo-Sprache',
-          'fra': 'sidamo'
+          'fra': 'sidamo',
+          'ita': 'Sidamo'
         }
       },
       {
@@ -3334,7 +3750,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Karachay-Balkar',
           'deu': 'Karatschaiisch-Balkarisch',
-          'fra': 'karatchai balkar'
+          'fra': 'karatchai balkar',
+          'ita': 'Karachay-Balkar'
         }
       },
       {
@@ -3342,7 +3759,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Hittite',
           'deu': 'Hethitisch',
-          'fra': 'hittite'
+          'fra': 'hittite',
+          'ita': 'Ittita'
         }
       },
       {
@@ -3350,7 +3768,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tlingit',
           'deu': 'Tlingit-Sprache',
-          'fra': 'tlingit'
+          'fra': 'tlingit',
+          'ita': 'Tlingit'
         }
       },
       {
@@ -3358,7 +3777,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Northern Sami',
           'deu': 'Nordsaamisch',
-          'fra': 'sami du Nord'
+          'fra': 'sami du Nord',
+          'ita': 'Sami settentrionale'
         }
       },
       {
@@ -3366,7 +3786,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': "N'Ko",
-          'fra': "n'ko"
+          'fra': "n'ko",
+          'ita': "N'Ko"
         }
       },
       {
@@ -3374,7 +3795,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Bokmål, Norwegian | Norwegian Bokmål',
           'deu': 'Bokmål',
-          'fra': 'norvégien bokmål'
+          'fra': 'norvégien bokmål',
+          'ita': 'Bokmål, norvegese | Norvegese Bokmål'
         }
       },
       {
@@ -3382,7 +3804,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Niger-Kordofanian languages',
           'deu': 'Nigerkordofanische Sprachen (Andere)',
-          'fra': 'nigéro-kordofaniennes, langues'
+          'fra': 'nigéro-kordofaniennes, langues',
+          'ita': 'Lingue niger-kordofaniane'
         }
       },
       {
@@ -3390,7 +3813,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Persian, Old (ca.600-400 B.C.)',
           'deu': 'Altpersisch',
-          'fra': 'perse, vieux (ca. 600-400 av. J.-C.)'
+          'fra': 'perse, vieux (ca. 600-400 av. J.-C.)',
+          'ita': 'Persiano antico (ca. 600-400 a.C.)'
         }
       },
       {
@@ -3398,7 +3822,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Abkhazian',
           'deu': 'Abchasisch',
-          'fra': 'abkhaze'
+          'fra': 'abkhaze',
+          'ita': 'Abkhaziano'
         }
       },
       {
@@ -3406,7 +3831,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Blin | Bilin',
           'deu': 'Bilin-Sprache',
-          'fra': 'blin | bilen'
+          'fra': 'blin | bilen',
+          'ita': 'Blin | Bilin'
         }
       },
       {
@@ -3414,7 +3840,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Lao',
           'deu': 'Laotisch',
-          'fra': 'lao'
+          'fra': 'lao',
+          'ita': 'Lao'
         }
       },
       {
@@ -3422,7 +3849,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Irish, Middle (900-1200)',
           'deu': 'Mittelirisch',
-          'fra': 'irlandais moyen (900-1200)'
+          'fra': 'irlandais moyen (900-1200)',
+          'ita': 'Irlandese medio (900-1200)'
         }
       },
       {
@@ -3430,7 +3858,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kamba',
           'deu': 'Kamba-Sprache',
-          'fra': 'kamba'
+          'fra': 'kamba',
+          'ita': 'Kamba'
         }
       },
       {
@@ -3438,7 +3867,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Western Frisian',
           'deu': 'Friesisch',
-          'fra': 'frison occidental'
+          'fra': 'frison occidental',
+          'ita': 'Frisone occidentale'
         }
       },
       {
@@ -3446,7 +3876,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Armenian',
           'deu': 'Armenisch',
-          'fra': 'arménien'
+          'fra': 'arménien',
+          'ita': 'Armeno'
         }
       },
       {
@@ -3454,7 +3885,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Chipewyan | Dene Suline',
           'deu': 'Chipewyan-Sprache',
-          'fra': 'chipewyan'
+          'fra': 'chipewyan',
+          'ita': 'Chipewyan | Dene Suline'
         }
       },
       {
@@ -3462,7 +3894,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tswana',
           'deu': 'Tswana-Sprache',
-          'fra': 'tswana'
+          'fra': 'tswana',
+          'ita': 'Tswana'
         }
       },
       {
@@ -3470,7 +3903,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Shona',
           'deu': 'Schona-Sprache',
-          'fra': 'shona'
+          'fra': 'shona',
+          'ita': 'Shona'
         }
       },
       {
@@ -3478,7 +3912,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Bikol',
           'deu': 'Bikol-Sprache',
-          'fra': 'bikol'
+          'fra': 'bikol',
+          'ita': 'Bikol'
         }
       },
       {
@@ -3486,7 +3921,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Nyankole',
           'deu': 'Nkole-Sprache',
-          'fra': 'nyankolé'
+          'fra': 'nyankolé',
+          'ita': 'Nyankole'
         }
       },
       {
@@ -3494,7 +3930,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tahitian',
           'deu': 'Tahitisch',
-          'fra': 'tahitien'
+          'fra': 'tahitien',
+          'ita': 'Tahitiano'
         }
       },
       {
@@ -3502,7 +3939,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tuvalu',
           'deu': 'Elliceanisch',
-          'fra': 'tuvalu'
+          'fra': 'tuvalu',
+          'ita': 'Tuvalu'
         }
       },
       {
@@ -3510,7 +3948,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Nahuatl languages',
           'deu': 'Nahuatl',
-          'fra': 'nahuatl, langues'
+          'fra': 'nahuatl, langues',
+          'ita': 'Lingue nahuatl'
         }
       },
       {
@@ -3518,7 +3957,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Cree',
           'deu': 'Cree-Sprache',
-          'fra': 'cree'
+          'fra': 'cree',
+          'ita': 'Cree'
         }
       },
       {
@@ -3526,7 +3966,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Arabic',
           'deu': 'Arabisch',
-          'fra': 'arabe'
+          'fra': 'arabe',
+          'ita': 'Arabo'
         }
       },
       {
@@ -3534,7 +3975,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Ladino',
           'deu': 'Judenspanisch',
-          'fra': 'judéo-espagnol'
+          'fra': 'judéo-espagnol',
+          'ita': 'Ladino'
         }
       },
       {
@@ -3542,7 +3984,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Irish',
           'deu': 'Irisch',
-          'fra': 'irlandais'
+          'fra': 'irlandais',
+          'ita': 'Irlandese'
         }
       },
       {
@@ -3550,7 +3993,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Wakashan languages',
           'deu': 'Wakash-Sprachen',
-          'fra': 'wakashanes, langues'
+          'fra': 'wakashanes, langues',
+          'ita': 'Lingue wakashan'
         }
       },
       {
@@ -3558,7 +4002,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Aromanian | Arumanian | Macedo-Romanian',
           'deu': 'Aromunisch',
-          'fra': 'aroumain | macédo-roumain'
+          'fra': 'aroumain | macédo-roumain',
+          'ita': 'Aromanian | Arumanian | Macedo-Romanian'
         }
       },
       {
@@ -3566,7 +4011,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Mon-Khmer languages',
           'deu': 'Mon-Khmer-Sprachen (Andere)',
-          'fra': 'môn-khmer, langues'
+          'fra': 'môn-khmer, langues',
+          'ita': 'Lingue mon-khmer'
         }
       },
       {
@@ -3574,7 +4020,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Yapese',
           'deu': 'Yapesisch',
-          'fra': 'yapois'
+          'fra': 'yapois',
+          'ita': 'Yapese'
         }
       },
       {
@@ -3582,7 +4029,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Manx',
-          'fra': 'manx | mannois'
+          'fra': 'manx | mannois',
+          'ita': 'Manx'
         }
       },
       {
@@ -3590,7 +4038,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Dakota',
           'deu': 'Dakota-Sprache',
-          'fra': 'dakota'
+          'fra': 'dakota',
+          'ita': 'Dakota'
         }
       },
       {
@@ -3598,7 +4047,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Georgian',
           'deu': 'Georgisch',
-          'fra': 'géorgien'
+          'fra': 'géorgien',
+          'ita': 'Georgiano'
         }
       },
       {
@@ -3606,7 +4056,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Komi',
           'deu': 'Komi-Sprache',
-          'fra': 'kom'
+          'fra': 'kom',
+          'ita': 'Komi'
         }
       },
       {
@@ -3614,7 +4065,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Grebo',
           'deu': 'Grebo-Sprache',
-          'fra': 'grebo'
+          'fra': 'grebo',
+          'ita': 'Grebo'
         }
       },
       {
@@ -3622,7 +4074,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Zenaga',
-          'fra': 'zenaga'
+          'fra': 'zenaga',
+          'ita': 'Zenaga'
         }
       },
       {
@@ -3630,7 +4083,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Yupik languages',
           'deu': 'Ypik-Sprachen',
-          'fra': 'yupik, langues'
+          'fra': 'yupik, langues',
+          'ita': 'Lingue yupik'
         }
       },
       {
@@ -3638,7 +4092,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Bambara',
           'deu': 'Bambara-Sprache',
-          'fra': 'bambara'
+          'fra': 'bambara',
+          'ita': 'Bambara'
         }
       },
       {
@@ -3646,7 +4101,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Choctaw',
           'deu': 'Choctaw-Sprache',
-          'fra': 'choctaw'
+          'fra': 'choctaw',
+          'ita': 'Choctaw'
         }
       },
       {
@@ -3654,7 +4110,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Haitian | Haitian Creole',
           'deu': 'Haïtien (Haiti-Kreolisch)',
-          'fra': 'haïtien | créole haïtien'
+          'fra': 'haïtien | créole haïtien',
+          'ita': 'Haitiano | Creolo haitiano'
         }
       },
       {
@@ -3662,7 +4119,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Norse, Old',
           'deu': 'Altnorwegisch',
-          'fra': 'norrois, vieux'
+          'fra': 'norrois, vieux',
+          'ita': 'Norreno, antico'
         }
       },
       {
@@ -3670,7 +4128,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Susu',
-          'fra': 'soussou'
+          'fra': 'soussou',
+          'ita': 'Susu'
         }
       },
       {
@@ -3678,7 +4137,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Australian languages',
           'deu': 'Australische Sprachen',
-          'fra': 'australiennes, langues'
+          'fra': 'australiennes, langues',
+          'ita': 'Lingue australiane'
         }
       },
       {
@@ -3686,7 +4146,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Oriya',
           'deu': 'Oriya-Sprache',
-          'fra': 'oriya'
+          'fra': 'oriya',
+          'ita': 'Oriya'
         }
       },
       {
@@ -3694,7 +4155,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Bosnian',
           'deu': 'Bosnisch',
-          'fra': 'bosniaque'
+          'fra': 'bosniaque',
+          'ita': 'Bosniaco'
         }
       },
       {
@@ -3702,7 +4164,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Wolaitta | Wolaytta',
           'deu': 'Walamo-Sprache',
-          'fra': 'wolaitta | wolaytta'
+          'fra': 'wolaitta | wolaytta',
+          'ita': 'Wolaitta | Wolaytta'
         }
       },
       {
@@ -3710,7 +4173,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Pahlavi',
           'deu': 'Mittelpersisch',
-          'fra': 'pahlavi'
+          'fra': 'pahlavi',
+          'ita': 'Pahlavi'
         }
       },
       {
@@ -3718,7 +4182,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Telugu',
           'deu': 'Telugu-Sprache',
-          'fra': 'télougou'
+          'fra': 'télougou',
+          'ita': 'Telugu'
         }
       },
       {
@@ -3726,7 +4191,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Tatar',
           'deu': 'Tatarisch',
-          'fra': 'tatar'
+          'fra': 'tatar',
+          'ita': 'Tataro'
         }
       },
       {
@@ -3734,7 +4200,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Standard Moroccan Tamazight',
           'deu': 'Standard Moroccan Tamazight',
-          'fra': 'amazighe standard marocain'
+          'fra': 'amazighe standard marocain',
+          'ita': 'Tamazight marocchino standard'
         }
       },
       {
@@ -3742,7 +4209,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Multiple languages',
           'deu': 'Mehrere Sprachen',
-          'fra': 'multilingue'
+          'fra': 'multilingue',
+          'ita': 'Multilingua'
         }
       },
       {
@@ -3750,7 +4218,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kara-Kalpak',
           'deu': 'Karakalpakisch',
-          'fra': 'karakalpak'
+          'fra': 'karakalpak',
+          'ita': 'Kara-Kalpak'
         }
       },
       {
@@ -3758,7 +4227,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Siksika',
           'deu': 'Blackfoot-Sprache',
-          'fra': 'blackfoot'
+          'fra': 'blackfoot',
+          'ita': 'Siksika'
         }
       },
       {
@@ -3766,7 +4236,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Kongo',
           'deu': 'Kongo-Sprache',
-          'fra': 'kongo'
+          'fra': 'kongo',
+          'ita': 'Kongo'
         }
       },
       {
@@ -3774,7 +4245,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Nyamwezi',
           'deu': 'Nyamwezi-Sprache',
-          'fra': 'nyamwezi'
+          'fra': 'nyamwezi',
+          'ita': 'Nyamwezi'
         }
       },
       {
@@ -3782,7 +4254,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Adyghe | Adygei',
           'deu': 'Adygisch',
-          'fra': 'adyghé'
+          'fra': 'adyghé',
+          'ita': 'Adyghe | Adygei'
         }
       },
       {
@@ -3790,7 +4263,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Yao',
           'deu': 'Yao-Sprache (Bantusprache)',
-          'fra': 'yao'
+          'fra': 'yao',
+          'ita': 'Yao'
         }
       },
       {
@@ -3798,7 +4272,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Slovenian',
           'deu': 'Slowenisch',
-          'fra': 'slovène'
+          'fra': 'slovène',
+          'ita': 'Sloveno'
         }
       },
       {
@@ -3806,7 +4281,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Ossetian | Ossetic',
           'deu': 'Ossetisch',
-          'fra': 'ossète'
+          'fra': 'ossète',
+          'ita': 'Ossetico'
         }
       },
       {
@@ -3814,7 +4290,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Divehi | Dhivehi | Maldivian',
           'deu': 'Maledivisch',
-          'fra': 'maldivien'
+          'fra': 'maldivien',
+          'ita': 'Divehi | Dhivehi | Maldiviano'
         }
       },
       {
@@ -3822,7 +4299,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Turkish, Ottoman (1500-1928)',
           'deu': 'Osmanisch',
-          'fra': 'turc ottoman (1500-1928)'
+          'fra': 'turc ottoman (1500-1928)',
+          'ita': 'Turco ottomano (1500-1928)'
         }
       },
       {
@@ -3830,7 +4308,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Mayan languages',
           'deu': 'Maya-Sprachen',
-          'fra': 'maya, langues'
+          'fra': 'maya, langues',
+          'ita': 'Lingue maya'
         }
       },
       {
@@ -3838,7 +4317,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Assamese',
           'deu': 'Assamesisch',
-          'fra': 'assamais'
+          'fra': 'assamais',
+          'ita': 'Assamese'
         }
       },
       {
@@ -3846,7 +4326,8 @@ export default {
         'skos:prefLabel': {
           'eng': '',
           'deu': 'Inuktitut',
-          'fra': 'inuktitut'
+          'fra': 'inuktitut',
+          'ita': 'Inuktitut'
         }
       },
       {
@@ -3854,7 +4335,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Aymara',
           'deu': 'Aymará-Sprache',
-          'fra': 'aymara'
+          'fra': 'aymara',
+          'ita': 'Aymara'
         }
       },
       {
@@ -3862,7 +4344,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Zaza | Dimili | Dimli | Kirdki | Kirmanjki | Zazaki',
           'deu': 'Zazaki',
-          'fra': 'zaza | dimili | dimli | kirdki | kirmanjki | zazaki'
+          'fra': 'zaza | dimili | dimli | kirdki | kirmanjki | zazaki',
+          'ita': 'Zaza | Dimili | Dimli | Kirdki | Kirmanjki | Zazaki'
         }
       },
       {
@@ -3870,7 +4353,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Creoles and pidgins',
           'deu': 'Kreolische Sprachen | Pidginsprachen (Andere)',
-          'fra': 'créoles et pidgins'
+          'fra': 'créoles et pidgins',
+          'ita': 'Creoli e pidgin'
         }
       },
       {
@@ -3878,7 +4362,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Iroquoian languages',
           'deu': 'Irokesische Sprachen',
-          'fra': 'iroquoises, langues'
+          'fra': 'iroquoises, langues',
+          'ita': 'Lingue irochesi'
         }
       },
       {
@@ -3886,7 +4371,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'English, Old (ca.450-1100)',
           'deu': 'Altenglisch',
-          'fra': 'anglo-saxon (ca.450-1100)'
+          'fra': 'anglo-saxon (ca.450-1100)',
+          'ita': 'Inglese antico (ca. 450-1100)'
         }
       },
       {
@@ -3894,7 +4380,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Sinhala | Sinhalese',
           'deu': 'Singhalesisch',
-          'fra': 'singhalais'
+          'fra': 'singhalais',
+          'ita': 'Sinhala | Singalese'
         }
       },
       {
@@ -3902,7 +4389,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Javanese',
           'deu': 'Javanisch',
-          'fra': 'javanais'
+          'fra': 'javanais',
+          'ita': 'Giavanese'
         }
       },
       {
@@ -3910,7 +4398,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Ladin',
           'deu': 'Ladinisch',
-          'fra': 'ladin'
+          'fra': 'ladin',
+          'ita': 'Ladino'
         }
       },
       {
@@ -3918,7 +4407,8 @@ export default {
         'skos:prefLabel': {
           'eng': 'Venetic',
           'deu': 'Venetisch',
-          'fra': 'vénète'
+          'fra': 'vénète',
+          'ita': 'Venetico'
         }
       }
     ]
