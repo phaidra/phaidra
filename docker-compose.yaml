@@ -84,6 +84,7 @@ x-custom:
     PROMETHEUS_HOST: "prometheus"
     SOLR_HOST: "${SOLR_HOST:-solr}"
     UI_HOST: "${UI_HOST:-ui}"
+    VARNISH_HOST: "${VARNISH_HOST:-varnish}"
 
 services:
   ##############################################################
@@ -96,6 +97,21 @@ services:
   ## + shib-local                                             ##
   ## + shib-s3                                                ##
   ##############################################################
+
+  ############### varnish cache server ###############
+  varnish:
+    <<: [*common, *logs]
+    hostname: varnish
+    image: varnish
+    tmpfs:
+      - "/var/lib/varnish/varnishd:exec"
+    configs:
+      - source: varnish_config
+        target: /etc/varnish/default.vcl
+    environment:
+      <<: [*api_common_env, *hosts]
+      VARNISH_SIZE: 5G
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
 
   ############### httpd service for demo-local profile ###############
   httpd-demo-local:
@@ -1190,3 +1206,5 @@ volumes:
 configs:
   httpd_tls_config:
     file: ./configs/httpd_tls.conf
+  varnish_config:
+    file: ./configs/varnish.vcl
