@@ -572,6 +572,7 @@
                 :key="'member_' + member.pid"
               >
                 <iframe
+                  v-if="!member.isrestricted"
                   :src="
                     instanceconfig.api + '/object/' + member.pid + '/preview'
                   "
@@ -584,6 +585,11 @@
                   frameborder="0"
                   >Content</iframe
                 >
+                <v-row v-else>
+                <v-col class="text-right mr-3">
+                  <v-chip label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
+                </v-col>
+              </v-row>
                 <v-card-text class="ma-2">
                   <p-d-jsonld
                     :jsonld="member.metadata['JSON-LD']"
