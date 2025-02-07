@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN <<EOF
 apt-get --quiet update
 apt-get install --yes --quiet --no-install-recommends \
-libvips-tools libyaml-syck-perl libmongodb-perl libnet-amazon-s3-perl
+imagemagick libvips-tools libyaml-syck-perl libmongodb-perl libnet-amazon-s3-perl
 apt-get clean
 EOF
 
