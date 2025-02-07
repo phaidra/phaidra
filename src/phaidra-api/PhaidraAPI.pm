@@ -412,6 +412,8 @@ sub startup {
   $r->get('licenses')                               ->to('licenses#get_licenses');
   $r->get('state')                                  ->to('utils#state');
 
+  $r->get('users/search')                           ->to('utils#search_users');
+
   $r->get('uwmetadata/tree')                        ->to('uwmetadata#tree');
   $r->post('uwmetadata/json2xml')                   ->to('uwmetadata#json2xml');
   $r->post('uwmetadata/xml2json')                   ->to('uwmetadata#xml2json');
@@ -604,6 +606,7 @@ sub startup {
     $writer->get('object/:pid/rights')                                       ->to('rights#get');
 
     $loggedin->get('termsofuse/getagreed')                                   ->to('termsofuse#getagreed');
+    $loggedin->get('users/search')                                           ->to('utils#search_users');
 
     $ir_admin->post('ir/adminlistdata')                                      ->to('ir#adminlistdata');
     $ir_admin->get('ir/:pid/events')                                         ->to('ir#events');
