@@ -524,7 +524,7 @@ export default {
       if (this.jsonld) {
         Object.entries(this.jsonld).forEach(([p, o]) => {
           if (p.startsWith('role:')) {
-            roles.push({ p, o, ord: objectType === 'book' ? order.bookTypeOrder[p] : order.roles[p] })
+            roles.push({ p, o, ord: objectType && objectType['@id'].includes("47QB-8QF1") ? order.bookTypeOrder[p] : order.roles[p] })
           }
         })
       }
@@ -546,7 +546,7 @@ export default {
   methods: {
     getObjectType: function() {
       if(this.jsonld && this.jsonld['edm:hasType'] && this.jsonld['edm:hasType'].length) {
-        const localTerm = this.getLocalizedTermLabel('objecttype', this.jsonld['edm:hasType'][0]['skos:exactMatch'][0])
+        const localTerm = this.getTerm('objecttype', this.jsonld['edm:hasType'][0]['skos:exactMatch'][0])
         return localTerm
       }
       return null
