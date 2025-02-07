@@ -294,7 +294,7 @@ services:
     hostname: "pixelgecko"
     depends_on: [mongodb-phaidra, api-s3, fedora-s3]
     <<: [*common, *logs]
-    image: phaidraorg/pixelgecko-dist:359ae61c
+    image: phaidraorg/pixelgecko-dist:1aec19f1
     environment:
       <<: [*api_common_env, *hosts, *s3]
       CONVERTED_IMAGES_PATH: "${CONVERTED_IMAGES_PATH:-/converted_images}"
@@ -312,7 +312,7 @@ services:
     hostname: "pixelgecko"
     depends_on: [mongodb-phaidra, api]
     <<: [*common, *logs]
-    image: phaidraorg/pixelgecko-dist:359ae61c
+    image: phaidraorg/pixelgecko-dist:1aec19f1
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
