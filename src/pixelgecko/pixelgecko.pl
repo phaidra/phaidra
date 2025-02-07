@@ -231,6 +231,9 @@ sub process_image
 
     if (defined $path && -f $path)
       { $original_img = $path;
+        `cp $path $tmp_img`;
+        $original_img = $tmp_img;
+        print scalar localtime(), " path: ", "$original_img\n";
       }
     else
       {
@@ -254,6 +257,8 @@ sub process_image
             print scalar localtime(), " ", "ATTN: could not retrieve [$url] and save to [$tmp_img]\n";
             return undef;
           }
+
+        print scalar localtime(), " retrieved: ", "$tmp_img\n";
       }
 
 
@@ -304,19 +309,26 @@ sub process_image
       unlink ($tmp_img) if (-f $tmp_img);
       rmdir ($dl_tmp_dir) if (defined ($dl_tmp_dir) && -d $dl_tmp_dir);
     } else {
-      # transform color profile
-      my $tr_img = $tmp_img.'.v';
-      my @tr= (qw(/usr/bin/vips icc_transform --input-profile=sRGB.icm --embedded=true), $original_img, $tr_img, 'sRGB.icm');
-      my $tr= join (' ', @tr);
-      print scalar localtime(), " ", "tr: [$tr]\n";
-      my $tr_txt= `@tr 2>&1`;
-      print scalar localtime(), " ", "tr_txt=[$tr_txt]\n";
-      @tr_lines= x_lines ($tr_txt);
-      unless (-f $tr_img)
-        {
-          print scalar localtime(), " ", "ATTN: could not save [$tr_img] using tr=[$tr]\n";
-          return undef;
-        }
+
+      my $tr_img = $tmp_img;
+      my $test_icc= `identify -quiet -format "%r" "$tr_img"`;
+      $test_icc =~ s/^\s+|\s+$//g;
+      print scalar localtime(), " ", "Color profile [$test_icc]\n";
+      if ($test_icc eq "DirectClass sRGB") {
+        # transform color profile
+        $tr_img = $tmp_img.'.v';
+        my @tr= (qw(/usr/bin/vips icc_transform --input-profile=sRGB.icm --embedded=true), $tmp_img, $tr_img, 'sRGB.icm');
+        my $tr= join (' ', @tr);
+        print scalar localtime(), " ", "tr: [$tr]\n";
+        my $tr_txt= `@tr 2>&1`;
+        print scalar localtime(), " ", "tr_txt=[$tr_txt]\n";
+        @tr_lines= x_lines ($tr_txt);
+        unless (-f $tr_img)
+          {
+            print scalar localtime(), " ", "ATTN: could not save [$tr_img] using tr=[$tr]\n";
+            return undef;
+          }
+      }
 
       # we have to cast 16bit to 8bit when using jpeg compression
       my $cast_img = $tr_img.'.v'; # vips format, see https://github.com/jcupitt/libvips/issues/8#issuecomment-12292039
