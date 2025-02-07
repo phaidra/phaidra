@@ -263,7 +263,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:d96fd541
+    image: phaidraorg/api-dist:33b273b9
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -278,7 +278,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:d96fd541
+    image: phaidraorg/api-dist:33b273b9
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -557,6 +557,7 @@ services:
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env]
+      MAX_IMAGE_CACHE_SIZE: 7000
     volumes:
       - ./container_init/imageserver:/mnt/startup:ro
       - pixelgecko:/mnt/converted_images:ro
