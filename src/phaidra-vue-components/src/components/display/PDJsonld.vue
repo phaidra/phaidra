@@ -524,7 +524,7 @@ export default {
       if (this.jsonld) {
         Object.entries(this.jsonld).forEach(([p, o]) => {
           if (p.startsWith('role:')) {
-            roles.push({ p, o, ord: objectType && objectType['@id'].includes("47QB-8QF1") ? order.bookTypeOrder[p] : order.roles[p] })
+            roles.push({ p, o, ord: objectType && objectType['@id'] === 'https://pid.phaidra.org/vocabulary/47QB-8QF1' ? order.bookTypeOrder[p] : order.roles[p] })
           }
         })
       }
