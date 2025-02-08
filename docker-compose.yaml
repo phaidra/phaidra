@@ -234,7 +234,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:9ba1a142
+    image: phaidraorg/ui:a5bed905
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -249,7 +249,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:9ba1a142
+    image: phaidraorg/ui:a5bed905
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -263,7 +263,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:24717ac9
+    image: phaidraorg/api-dist:33b273b9
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -278,7 +278,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:24717ac9
+    image: phaidraorg/api-dist:33b273b9
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -294,7 +294,7 @@ services:
     hostname: "pixelgecko"
     depends_on: [mongodb-phaidra, api-s3, fedora-s3]
     <<: [*common, *logs]
-    image: phaidraorg/pixelgecko-dist:359ae61c
+    image: phaidraorg/pixelgecko-dist:1aec19f1
     environment:
       <<: [*api_common_env, *hosts, *s3]
       CONVERTED_IMAGES_PATH: "${CONVERTED_IMAGES_PATH:-/converted_images}"
@@ -312,7 +312,7 @@ services:
     hostname: "pixelgecko"
     depends_on: [mongodb-phaidra, api]
     <<: [*common, *logs]
-    image: phaidraorg/pixelgecko-dist:359ae61c
+    image: phaidraorg/pixelgecko-dist:1aec19f1
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
@@ -557,6 +557,7 @@ services:
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env]
+      MAX_IMAGE_CACHE_SIZE: 7000
     volumes:
       - ./container_init/imageserver:/mnt/startup:ro
       - pixelgecko:/mnt/converted_images:ro

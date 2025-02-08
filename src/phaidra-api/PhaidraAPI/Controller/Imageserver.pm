@@ -11,6 +11,7 @@ use Digest::SHA qw(hmac_sha1_hex);
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Authorization;
 use PhaidraAPI::Model::Imageserver;
+use Time::HiRes qw/tv_interval gettimeofday/;
 
 sub process {
 
@@ -189,7 +190,9 @@ sub imageserverproxy {
   my $self = shift;
 
   my $isrv_model = PhaidraAPI::Model::Imageserver->new;
+  my $t0 = [gettimeofday];
   my $res        = $isrv_model->get_url($self, $self->req->params, 1);
+  $self->app->log->debug($self->req->params." imageserverproxy get_url took " . tv_interval($t0));
   if ($res->{status} ne 200) {
     $self->render(json => $res, status => $res->{status});
     return;

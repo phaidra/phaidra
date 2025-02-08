@@ -38,13 +38,15 @@
         <v-col :cols="selectioncheck ? 11 : 12">
           <v-row :key="'prev'+doc.pid">
             <v-col cols="2" >
-              <p-img :src="instance.api + '/object/' + doc.pid + '/thumbnail'" class="preview-maxwidth elevation-1 mt-2">
-                <template v-slot:placeholder>
-                  <div class="fill-height ma-0" align="center" justify="center" >
-                    <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                  </div>
-                </template>
-              </p-img>
+              <router-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">
+                <p-img :src="instance.api + '/object/' + doc.pid + '/thumbnail'" class="preview-maxwidth elevation-1 mt-2">
+                  <template v-slot:placeholder>
+                    <div class="fill-height ma-0" align="center" justify="center" >
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </div>
+                  </template>
+                </p-img>
+              </router-link>
             </v-col>
             <v-col cols="10">
               <v-row >

@@ -155,7 +155,7 @@ sub get_metadata {
     name => 'dc:identifier',
     attributes => [
       { name  => 'rdf:resource',
-        value => $getUrl,
+        value => $pidUri,
       }
     ]
   };
