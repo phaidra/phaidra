@@ -147,7 +147,7 @@
 { "@id": "role:mrk", "skos:prefLabel": { "eng": "Markup editor", "deu": "Markup-Editor*in", "ita": "Markup editor" } },
 { "@id": "role:med", "skos:prefLabel": { "eng": "Medium", "deu": "Medium", "ita": "Medium" } },
 { "@id": "role:mdc", "skos:prefLabel": { "eng": "Metadata contact", "deu": "Metadaten-Editor*in", "ita": "Metadata contact" } },
-{ "@id": "role:emt", "skos:prefLabel": { "eng": "Metal-engraver", "deu": "Metallstecher*in", "ita": "Calcografo" } },
+{ "@id": "role:mte", "skos:prefLabel": { "eng": "Metal-engraver", "deu": "Metallstecher*in", "ita": "Calcografo" } },
 { "@id": "role:mtk", "skos:prefLabel": { "eng": "Minute taker", "deu": "Protokollführer*in", "ita": "Minute taker" } },
 { "@id": "role:mod", "skos:prefLabel": { "eng": "Moderator", "deu": "Diskussionsleiter*in", "ita": "Moderator" } },
 { "@id": "role:mon", "skos:prefLabel": { "eng": "Monitor", "deu": "Vertragsprüfer*in", "ita": "Monitor" } },
