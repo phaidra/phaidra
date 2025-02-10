@@ -1260,6 +1260,8 @@ export default {
   'General metadata': 'Allgemeine Metadaten',
   'Resource type': 'Ressourcentyp',
   'Object type': 'Objekttyp',
-  'Contribution *': 'Beitragender *'
+  'Contribution *': 'Beitragender *',
+  'ORCID': 'ORCID-iD',
+  'Research data policy': 'Forschungsdatenpolicy'
 
 }

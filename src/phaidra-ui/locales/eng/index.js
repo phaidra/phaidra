@@ -451,10 +451,12 @@ export default {
   uwm_general_title: 'Title',
   uwm_general_identifier: 'Identifier',
 
+  'ORCID': 'ORCID-iD',
   Firstname: 'First name',
   'Firstname *': 'First name *',
   Lastname: 'Last name',
   'Lastname *': 'Last name *',
+  'Research data policy': 'Research data policy',
 
   lang_aa: 'Afar',
   lang_ab: 'Abkhazian',
