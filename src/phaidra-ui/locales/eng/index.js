@@ -451,6 +451,11 @@ export default {
   uwm_general_title: 'Title',
   uwm_general_identifier: 'Identifier',
 
+  Firstname: 'First name',
+  'Firstname *': 'First name *',
+  Lastname: 'Last name',
+  'Lastname *': 'Last name *',
+
   lang_aa: 'Afar',
   lang_ab: 'Abkhazian',
   lang_ae: 'Avestan',
