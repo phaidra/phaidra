@@ -543,7 +543,7 @@
           </v-row>
           </v-col>
       </v-row>
-      <a ref="logoutlink" v-hide="true" href="/Shibboleth.sso/Logout"></a>
+      <a ref="logoutlink" href="/Shibboleth.sso/Logout"></a>
     </div>
   </template>
   
