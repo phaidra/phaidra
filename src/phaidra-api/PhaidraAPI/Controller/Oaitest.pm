@@ -15,7 +15,7 @@ use DateTime::Format::Strptime;
 use Clone qw(clone);
 use Mojo::JSON qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
-use PhaidraAPI::Model::Mappings::Openaire;
+use PhaidraAPI::Model::Mappings::Export::Openaire;
 use PhaidraAPI::Model::Vocabulary;
 
 my $DEFAULT_LIMIT = 100;
@@ -604,7 +604,7 @@ sub _get_metadata {
       return $self->_get_metadata_dc($rec, $set);
     }
     case 'oai_openaire' {
-      my $oaire_model = PhaidraAPI::Model::Mappings::Openaire->new;
+      my $oaire_model = PhaidraAPI::Model::Mappings::Export::Openaire->new;
       return $oaire_model->get_metadata_openaire($self, $rec);
     }
   }
