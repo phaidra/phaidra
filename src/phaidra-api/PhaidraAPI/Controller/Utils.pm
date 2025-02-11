@@ -151,6 +151,54 @@ sub request_doi {
   $self->render(json => $res, status => $res->{status});
 }
 
+sub search_users {
+    my $self = shift;
+
+    my $username = $self->param('q');  # Get search query parameter
+    my $res = { alerts => [], status => 200, users => [] };
+
+    unless ($username) {
+        $res->{status} = 400;
+        push @{$res->{alerts}}, "Missing required parameter: q";
+        return $self->render(json => $res, status => 400);
+    }
+
+    my $dbh = $self->app->db_user->dbh;
+    my $latestversion = '1';
+
+    # Secure query to get all fields for matching users
+    my $ss = "SELECT * FROM user_terms WHERE username LIKE ? AND version = ?";
+    my $sth = $dbh->prepare($ss);
+
+    unless ($sth) {
+        $self->app->log->error("Database prepare error: " . $dbh->errstr);
+        $res->{status} = 500;
+        push @{$res->{alerts}}, "Database error: " . $dbh->errstr;
+        return $self->render(json => $res, status => 500);
+    }
+
+    # Use a wildcard search to match usernames
+    unless ($sth->execute("%$username%", $latestversion)) {
+        $self->app->log->error("Database execution error: " . $dbh->errstr);
+        $res->{status} = 500;
+        push @{$res->{alerts}}, "Database execution error: " . $dbh->errstr;
+        return $self->render(json => $res, status => 500);
+    }
+
+    # Fetch all rows and store them in an array of hashes
+    my $users = $sth->fetchall_arrayref({});
+    $sth->finish();
+
+    if (@$users) {
+        $res->{users} = $users;
+    } else {
+        $res->{status} = 404;
+        push @{$res->{alerts}}, "No users found";
+    }
+
+    return $self->render(json => $res, status => $res->{status});
+}
+
 sub geonames_search {
   my $self = shift;
   my $uri  = shift;
