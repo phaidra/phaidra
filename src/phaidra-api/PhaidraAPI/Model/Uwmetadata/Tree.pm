@@ -197,7 +197,7 @@ our %tree = (
           "labels"      => {
             "de" => "Geltungsbereich",
             "en" => "Coverage",
-            "it" => "Copertura (temporale \x{96} geografica \x{96} amministrativa)",
+            "it" => "Copertura (temporale – geografica – amministrativa)",
             "sr" => "obseg"
           },
           "loaded" => 0,
@@ -890,7 +890,7 @@ our %tree = (
                     { "labels" => {
                         "de" => "KapellmeisterIn",
                         "en" => "Conductor",
-                        "it" => "Direttore d\x{92}orchestra"
+                        "it" => "Direttore d'orchestra"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1557116"
                     },
@@ -2282,7 +2282,7 @@ our %tree = (
               "labels"      => {
                 "de" => "Form der Interaktivit\x{e4}t",
                 "en" => "Interactivity Type",
-                "it" => "Tipo di interattivit\x{e0}",
+                "it" => "Tipo di interattività",
                 "sr" => "vrsta interaktivnosti"
               },
               "loaded" => 0,
@@ -2338,7 +2338,7 @@ our %tree = (
               "labels"      => {
                 "de" => "Grad der Interaktivit\x{e4}t",
                 "en" => "Interactivity Level",
-                "it" => "Livello di interattivit\x{e0}",
+                "it" => "Livello di interattività",
                 "sr" => "nivo interaktivnosti"
               },
               "loaded" => 0,
@@ -2530,7 +2530,7 @@ our %tree = (
               "labels"      => {
                 "de" => "Durchnittliches Alter der Zielgruppe",
                 "en" => "Typical Age Range",
-                "it" => "Fascia d'et\x{e0} pi\x{f9} comune",
+                "it" => "Fascia d'età più comune",
                 "sr" => "uobi?ajeni raspon godina"
               },
               "loaded" => 0,
@@ -2555,7 +2555,7 @@ our %tree = (
               "labels"      => {
                 "de" => "Schwierigkeitsgrad",
                 "en" => "Difficulty Level",
-                "it" => "Livello di difficolt\x{e0}",
+                "it" => "Livello di difficoltà",
                 "sr" => "nivo te\x{9e}ine"
               },
               "loaded" => 0,
@@ -3945,7 +3945,7 @@ our %tree = (
               "labels"      => {
                 "de" => "Fakultaet",
                 "en" => "Faculty",
-                "it" => "Facolt\x{e0}",
+                "it" => "Facoltà",
                 "sr" => "fakultet"
               },
               "loaded" => 0,
@@ -4557,7 +4557,7 @@ our %tree = (
               "labels"      => {
                 "de" => "Ma\x{df}einheit",
                 "en" => "Measuring Unit",
-                "it" => "Unit\x{e0} di misura",
+                "it" => "Unità di misura",
                 "sr" => "jedinica mere"
               },
               "loaded" => 0,
@@ -5718,7 +5718,7 @@ our %tree = (
                     { "labels" => {
                         "de" => "KapellmeisterIn",
                         "en" => "Conductor",
-                        "it" => "Direttore d\x{92}orchestra"
+                        "it" => "Direttore d'orchestra"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1557116"
                     },
