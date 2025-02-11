@@ -73,15 +73,23 @@ export default {
   },
   data () {
     return {
-      headers: [
-        { text: this.$t('Name'), align: 'left', value: 'name' },
-        { text: this.$t('Created'), align: 'right', value: 'created' },
-        { text: this.$t('Actions'), align: 'right', value: 'load', sortable: false }
-      ],
+      headers: [],
       templates: [],
       deletetempconfirm: false,
       loading: false
     }
+  },
+  watch: {
+     '$i18n.locale': {
+        immediate: true, // Ensure it's set on load
+        handler() {
+          this.headers = [
+            { text: this.$t('Name'), align: 'left', value: 'name' },
+            { text: this.$t('Created'), align: 'right', value: 'created' },
+            { text: this.$t('Actions'), align: 'right', value: 'load', sortable: false }
+          ];
+        }
+     }
   },
   methods: {
     loadTemplate: async function (tid) {

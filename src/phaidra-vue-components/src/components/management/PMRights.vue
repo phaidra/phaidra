@@ -334,11 +334,7 @@ export default {
       rightsjson: {},
       path: '',
       rightsArray: [],
-      rightsHeaders: [
-        { text: this.$t('Rule'), align: 'left', value: 'description', sortable: false },
-        { text: this.$t('Expires'), align: 'left', value: 'expires', sortable: false },
-        { text: '', align: 'right', value: 'actions', sortable: false }
-      ],
+      rightsHeaders: [],
       dateModel: new Date().toISOString().substr(0, 10),
       dateDialog: false,
       dateDialogItem: null,
@@ -353,6 +349,16 @@ export default {
     }
   },
   watch: {
+    '$i18n.locale': {
+      immediate: true, // Ensure it's set on load
+      handler() {
+        this.rightsHeaders = [
+          { text: this.$t('Rule'), align: 'left', value: 'description', sortable: false },
+          { text: this.$t('Expires'), align: 'left', value: 'expires', sortable: false },
+          { text: '', align: 'right', value: 'actions', sortable: false }
+        ];
+      }
+    },
     rights: {
       handler: async function (val) {
         this.rightsjson = val
