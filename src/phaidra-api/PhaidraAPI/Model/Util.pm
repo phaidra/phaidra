@@ -49,6 +49,66 @@ sub validate_xml() {
   return $res;
 }
 
+sub xml_to_hash {
+  my $self = shift;
+  my $c = shift;
+  my $node = shift;
+
+  return $self->_xml_to_hash($c, $node);
+}
+
+sub _xml_to_hash {
+  my ($self, $c, $node) = @_;
+    my %hash;
+
+    # Handle attributes if present
+    if ($node->hasAttributes) {
+        foreach my $attr ($node->attributes) {
+            $hash{'@' . $attr->nodeName} = $attr->value;
+        }
+    }
+
+    # Handle child nodes
+    foreach my $child ($node->childNodes) {
+        my $name = $child->nodeName;
+        
+        # Skip processing instructions and comments
+        next if $child->nodeType == XML::LibXML::XML_PI_NODE 
+             || $child->nodeType == XML::LibXML::XML_COMMENT_NODE;
+
+        # Handle text content
+        if ($child->nodeType == XML::LibXML::XML_TEXT_NODE) {
+            my $content = $child->textContent;
+            $content =~ s/^\s+|\s+$//g;  # trim whitespace
+            if ($content ne '') {
+                $hash{'#text'} = $content;
+            }
+            next;
+        }
+
+        my $value;
+        if ($child->hasChildNodes) {
+            # Recursive call for nested elements
+            $value = $self->_xml_to_hash($c, $child);
+        } else {
+            $value = $child->textContent;
+        }
+
+        # Handle multiple elements with same name
+        if (exists $hash{$name}) {
+            if (ref($hash{$name}) eq 'ARRAY') {
+                push @{$hash{$name}}, $value;
+            } else {
+                $hash{$name} = [$hash{$name}, $value];
+            }
+        } else {
+            $hash{$name} = $value;
+        }
+    }
+
+    return \%hash;
+}
+
 sub get_video_key {
   my $self = shift;
   my $c    = shift;

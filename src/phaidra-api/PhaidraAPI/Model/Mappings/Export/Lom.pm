@@ -1,4 +1,4 @@
-package PhaidraAPI::Model::Mappings::Lom;
+package PhaidraAPI::Model::Mappings::Export::Lom;
 
 use strict;
 use warnings;

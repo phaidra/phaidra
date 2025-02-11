@@ -9,7 +9,7 @@
       </v-col>
       <v-col cols="3">
         <v-autocomplete
-        
+          :value = "getTerm('alllicenses', 'http://rightsstatements.org/vocab/InC/1.0/')"
           v-on:input="setLicense($event)"
           :items="this.vocabularies['alllicenses'].terms"
           :item-value="'@id'"
@@ -26,7 +26,7 @@
           <template slot="item" slot-scope="{ attr, item }">
             <v-list-item-content two-line>
               <v-list-item-title v-html="`${getLocalizedTermLabel('alllicenses', item['@id'])}`"></v-list-item-title>
-              <v-list-item-subtitle v-html="`${item['@id']}`"></v-list-item-subtitle>
+              <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
             </v-list-item-content>
           </template>
           <template slot="selection" slot-scope="{ item }">
@@ -48,17 +48,17 @@
         <v-btn class="primary mr-4" @click="upload()" :disabled="!uploadEnabled">{{  'Upload ' + (createmethod === 'unknown' ? 'data' : createmethod) }}</v-btn>
       </v-col>
     </v-row>
-    <!-- <v-row>{{ licensefield }}</v-row>  -->
+     <!--<v-row>{{ mods }}</v-row>
+    <v-row>{{ modsjson }}</v-row> -->
     <v-row>
       <v-col cols="12">
         <v-card>
           <v-card-title class="title font-weight-light grey white--text">{{ $t('Metadata preview') }}</v-card-title>
           <v-card-text>
             <v-container class="mt-6">
-              <p-d-jsonld
-                :jsonld="jsonld"
-                :key="JSON.stringify(jsonld)"
-              ></p-d-jsonld>
+              <p-d-mods-rec
+                :children="modsjson"
+              ></p-d-mods-rec>
             </v-container>
           </v-card-text>
           <v-card-actions>
@@ -90,23 +90,18 @@ import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
 export default {
   layout: "main",
   mixins: [context, config, vocabulary],
-  computed: {
-    uploadEnabled() {
-      return this.licensefield.value !== '' && 
-      this.filefield.value !== '' && 
-      this.acnumber !== '' && 
-      Object.keys(this.jsonld).length > 3
-    }
-  },
   data() {
     return {
-      jsonld: {},
+      uploadEnabled: false,
+      mods: '',
+      modsjson: [],
       rights: {},
-      acnumber: 'AC17300907',
+      license: { '@id': 'http://rightsstatements.org/vocab/InC/1.0/' },
+      acnumber: '',
       createmethod: 'unknown',
       uploadBtnLabel: 'Upload data',
       uploadProgress: 0,
-      licenseDisabled: false,
+      licenseDisabled: true,
       filefield: {
         id: 'file',
         fieldname: 'File',
@@ -129,7 +124,7 @@ export default {
         component: 'p-select',
         vocabulary: 'alllicenses',
         label: 'License',
-        value: '',
+        value: 'http://rightsstatements.org/vocab/InC/1.0/',
         'skos:prefLabel': [],
         errorMessages: [],
         definition: 'The value will indicate the copyright, usage and access rights that apply to this digital representation.'
@@ -138,29 +133,75 @@ export default {
   },
   methods: {
     setLicense: async function ($event) {
-      this.licensefield.value = $event['@id']
-      this.mergeFormFieldsToJsonld()
-      
-    },
-    mergeFormFieldsToJsonld: function () {
-      this.jsonld['edm:rights'] = [ this.licensefield.value ]
-      this.jsonld['ebucore:filename'] = [ this.filefield.value ]
-      this.jsonld['ebucore:hasMimeType'] = [ this.filefield.mimetype ]
+      this.license = $event
+      this.fetchMetadata()
     },
     fetchMetadata: async function () {
+      
+      this.$store.commit('clearAlerts')
+      if (this.license === null) {
+        this.$store.commit('setAlerts', [{ type: 'error', msg: 'Missing license' }])
+        this.uploadEnabled = false
+        return
+      }
+      if (!this.acnumber) {
+        this.$store.commit('setAlerts', [{ type: 'error', msg: 'Missing AC number' }])
+        this.uploadEnabled = false
+        return
+      }
 
       this.$store.commit('setLoading', true)
       try {
         let response = await this.$axios.request({
           method: 'GET',
-          url: '/alma/' + this.acnumber + '/jsonld'
+          url: '/alma/search',
+          params: {
+            version: '1.2',
+            operation: 'searchRetrieve',
+            recordSchema: 'mods',
+            maximumRecords: 10,
+            startRecord: 1,
+            query: 'local_control_field_009=' + this.acnumber
+          }
         })
         if (response.data) {
-          this.jsonld = response.data.jsonld
-          if (this.jsonld['edm:rights']) {
-            this.licensefield.value = this.jsonld['edm:rights'][0]
+          let xml = response.data
+          console.log(xml)
+          const parser = new DOMParser()
+          const doc = parser.parseFromString(xml, 'application/xml')
+          
+          let ac = doc.createElementNS('http://www.loc.gov/mods/v3','identifier')
+          ac.setAttribute('type', 'acnumber')
+          ac.innerHTML = this.acnumber
+
+          let ri = doc.querySelector('mods recordInfo')
+          ri.before(ac)
+
+          let existingLic = doc.querySelector("mods accessCondition[type='use and reproduction']")
+          if (existingLic) {
+            this.licenseDisabled = true
+          } else {
+            this.licenseDisabled = false
+            let lic = doc.createElementNS('http://www.loc.gov/mods/v3','accessCondition')
+            lic.setAttribute('type', 'use and reproduction')
+            lic.innerHTML = this.license['@id']
+            ac.after(lic)
           }
-          this.mergeFormFieldsToJsonld()
+
+          this.mods = doc.querySelector('mods').outerHTML
+
+          this.$store.commit('setLoading', true)
+          try {
+            let response = await this.$axios.post('mods/xml2json', this.mods, { headers: { 'Content-Type': 'text/xml'} } )
+            if (response.data) {
+              this.modsjson = response.data.metadata.mods
+            }
+            this.uploadEnabled = true
+          } catch (error) {
+            console.log(error)
+          } finally {
+            this.$store.commit('setLoading', false)
+          }
         }
       } catch (error) {
         console.log(error)
@@ -169,18 +210,6 @@ export default {
       }
     },
     upload: async function () {
-
-      this.$store.commit('clearAlerts')
-      if (this.licensefield.value === '') {
-        this.$store.commit('setAlerts', [{ type: 'error', msg: 'Missing license' }])
-        return
-      }
-
-      if (!this.acnumber) {
-        this.$store.commit('setAlerts', [{ type: 'error', msg: 'Missing AC number' }])
-        return
-      }
-
       this.$store.commit('clearAlerts')
       if (!this.filefield.file) {
         this.$store.commit('setAlerts', [{ type: 'error', msg: 'Missing file' }])
@@ -191,7 +220,7 @@ export default {
       var httpFormData = new FormData()
       httpFormData.append('file', this.filefield.file)
       httpFormData.append('mimetype', this.filefield.mimetype)
-      httpFormData.append('metadata', JSON.stringify({ 'metadata': { 'json-ld': this.jsonld } }))
+      httpFormData.append('metadata', JSON.stringify({ 'metadata': { 'mods': this.modsjson } }))
       
       let self = this
       this.$store.commit('setLoading', true)
@@ -287,8 +316,6 @@ export default {
           this.createmethod = 'unknown'
           break
       }
-
-      this.mergeFormFieldsToJsonld()
     }
   }
 };
