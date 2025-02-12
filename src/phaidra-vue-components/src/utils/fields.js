@@ -1611,6 +1611,7 @@ export default {
     for (let f of fields) {
       switch (f.id) {
         case 'sociocultural-category':
+        case 'physical-location-select-text':
         case 'physical-location-select-text-pool':
         case 'subject':
         case 'fixedrole-person':
@@ -1629,6 +1630,7 @@ export default {
     for (var i = 0; i < editable.length; i++) {
       switch (editable[i].id) {
         case 'sociocultural-category':
+        case 'physical-location-select-text':
         case 'physical-location-select-text-pool':
         case 'subject':
         case 'fixedrole-person':
