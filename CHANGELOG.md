@@ -13,6 +13,13 @@
 
   + the UI_REQUIRE env can be used to override the default 'Require all granted' in apache UI proxy config (if for running a 'headless' instance)
 
+## upgrade
+
+  + to upgrade from previous version, please execute the migration script
+
+  ```
+  docker exec -it phaidra-api-1 perl migrations/v3.3.17.pl
+
 # v3.3.16
 
 ## upgrade
