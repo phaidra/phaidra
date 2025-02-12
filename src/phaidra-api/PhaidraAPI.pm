@@ -412,8 +412,6 @@ sub startup {
   $r->get('licenses')                               ->to('licenses#get_licenses');
   $r->get('state')                                  ->to('utils#state');
 
-  $r->get('users/search')                           ->to('utils#search_users');
-
   $r->get('uwmetadata/tree')                        ->to('uwmetadata#tree');
   $r->post('uwmetadata/json2xml')                   ->to('uwmetadata#json2xml');
   $r->post('uwmetadata/xml2json')                   ->to('uwmetadata#xml2json');
