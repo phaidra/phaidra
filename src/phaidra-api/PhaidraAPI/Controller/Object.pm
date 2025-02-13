@@ -252,7 +252,7 @@ sub thumbnail {
 
   switch ($cmodelr->{cmodel}) {
     case ['Picture', 'Page', 'PDFDocument'] {
-      if ( $ENV{S3_ENABLED} eq "true" ) {
+      if ( defined $ENV{S3_ENABLED} and $ENV{S3_ENABLED} eq "true" ) {
         my $paf_mongo = $self->paf_mongo;
         my $s3_cache = PhaidraAPI::S3::Cache->new(paf_mongodb=>$paf_mongo,
                                                   aws_access_key_id=>$aws_access_key_id,
