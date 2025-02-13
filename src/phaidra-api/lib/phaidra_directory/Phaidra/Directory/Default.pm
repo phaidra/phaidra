@@ -735,9 +735,9 @@ sub get_user_data {
 
   my $ldapgroups = $self->getUsersLDAPGroups($c, $username);
 
-  $c->log->info("ldapgroups: ".$c->app->dumper($ldapgroups));
+  $c->app->log->info("ldapgroups: ".$c->app->dumper($ldapgroups));
 
-  if ($c->stash('remote_user') eq $username) {
+  if ($c->stash('remote_user') && $c->stash('remote_user') eq $username) {
     # in case there is no user data api, use the attrs we saved on shib login, if it's equal to the requested user param
     my $sessionData = $c->load_cred;
     unless ($fname) {
