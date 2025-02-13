@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://phaidra.univie.ac.at/XML/metadata/V1.0" targetNamespace="http://phaidra.univie.ac.at/XML/metadata/V1.0"  xmlns:ns12="http://phaidra.univie.ac.at/XML/metadata/digitalbook/V1.0"  xmlns:ns10="http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0"  xmlns:ns9="http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0"  xmlns:ns13="http://phaidra.univie.ac.at/XML/metadata/etheses/V1.0"  xmlns:ns1="http://phaidra.univie.ac.at/XML/metadata/lom/V1.0"  elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://phaidra.univie.ac.at/XML/metadata/V1.0" targetNamespace="http://phaidra.univie.ac.at/XML/metadata/V1.0"  xmlns:ns13="http://phaidra.univie.ac.at/XML/metadata/etheses/V1.0"  xmlns:ns12="http://phaidra.univie.ac.at/XML/metadata/digitalbook/V1.0"  xmlns:ns1="http://phaidra.univie.ac.at/XML/metadata/lom/V1.0"  xmlns:ns10="http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0"  xmlns:ns9="http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0"  elementFormDefault="qualified">
 
+<xs:import schemaLocation="ns13.xsd" namespace="http://phaidra.univie.ac.at/XML/metadata/etheses/V1.0" />
 <xs:import schemaLocation="ns12.xsd" namespace="http://phaidra.univie.ac.at/XML/metadata/digitalbook/V1.0" />
+<xs:import schemaLocation="ns1.xsd" namespace="http://phaidra.univie.ac.at/XML/metadata/lom/V1.0" />
 <xs:import schemaLocation="ns10.xsd" namespace="http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0" />
 <xs:import schemaLocation="ns9.xsd" namespace="http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0" />
-<xs:import schemaLocation="ns13.xsd" namespace="http://phaidra.univie.ac.at/XML/metadata/etheses/V1.0" />
-<xs:import schemaLocation="ns1.xsd" namespace="http://phaidra.univie.ac.at/XML/metadata/lom/V1.0" />
 
 	<xs:element name="uwmetadata">
 	<xs:complexType>
@@ -351,7 +351,14 @@
 			<xs:enumeration value="1557145" />
 			<xs:enumeration value="1557146" />
 			<xs:enumeration value="1561230" />
+			<xs:enumeration value="1561102" />
+			<xs:enumeration value="1561147" />
+			<xs:enumeration value="1561168" />
 			<xs:enumeration value="1561248" />
+			<xs:enumeration value="1561258" />
+			<xs:enumeration value="1561303" />
+			<xs:enumeration value="1562629" />
+			<xs:enumeration value="1562631" />
 			<xs:enumeration value="1562634" />
 			<xs:enumeration value="1562795" />
 			<xs:enumeration value="1562796" />
@@ -518,6 +525,7 @@
 			<xs:enumeration value="31" />
 			<xs:enumeration value="32" />
 			<xs:enumeration value="33" />
+			<xs:enumeration value="34" />
 	</xs:restriction>
 </xs:simpleType>
 
@@ -580,6 +588,29 @@
 			<xs:enumeration value="1552077" />
 			<xs:enumeration value="1552149" />
 			<xs:enumeration value="1552150" />
+			<xs:enumeration value="1557151" />
+			<xs:enumeration value="1557152" />
+			<xs:enumeration value="1557153" />
+			<xs:enumeration value="1557154" />
+			<xs:enumeration value="1557155" />
+			<xs:enumeration value="1557156" />
+			<xs:enumeration value="1557157" />
+			<xs:enumeration value="1557158" />
+			<xs:enumeration value="1557162" />
+			<xs:enumeration value="1557163" />
+			<xs:enumeration value="1557174" />
+			<xs:enumeration value="1557175" />
+			<xs:enumeration value="1557178" />
+			<xs:enumeration value="1557185" />
+			<xs:enumeration value="1557190" />
+			<xs:enumeration value="1557192" />
+			<xs:enumeration value="1557193" />
+			<xs:enumeration value="1557194" />
+			<xs:enumeration value="1557195" />
+			<xs:enumeration value="1557196" />
+			<xs:enumeration value="1557206" />
+			<xs:enumeration value="1562632" />
+			<xs:enumeration value="1562633" />
 	</xs:restriction>
 </xs:simpleType>
 
@@ -672,6 +703,29 @@
 			<xs:enumeration value="1552077" />
 			<xs:enumeration value="1552149" />
 			<xs:enumeration value="1552150" />
+			<xs:enumeration value="1557151" />
+			<xs:enumeration value="1557152" />
+			<xs:enumeration value="1557153" />
+			<xs:enumeration value="1557154" />
+			<xs:enumeration value="1557155" />
+			<xs:enumeration value="1557156" />
+			<xs:enumeration value="1557157" />
+			<xs:enumeration value="1557158" />
+			<xs:enumeration value="1557162" />
+			<xs:enumeration value="1557163" />
+			<xs:enumeration value="1557174" />
+			<xs:enumeration value="1557175" />
+			<xs:enumeration value="1557178" />
+			<xs:enumeration value="1557185" />
+			<xs:enumeration value="1557190" />
+			<xs:enumeration value="1557192" />
+			<xs:enumeration value="1557193" />
+			<xs:enumeration value="1557194" />
+			<xs:enumeration value="1557195" />
+			<xs:enumeration value="1557196" />
+			<xs:enumeration value="1557206" />
+			<xs:enumeration value="1562632" />
+			<xs:enumeration value="1562633" />
 	</xs:restriction>
 </xs:simpleType>
 
@@ -751,7 +805,14 @@
 			<xs:enumeration value="1557145" />
 			<xs:enumeration value="1557146" />
 			<xs:enumeration value="1561230" />
+			<xs:enumeration value="1561102" />
+			<xs:enumeration value="1561147" />
+			<xs:enumeration value="1561168" />
 			<xs:enumeration value="1561248" />
+			<xs:enumeration value="1561258" />
+			<xs:enumeration value="1561303" />
+			<xs:enumeration value="1562629" />
+			<xs:enumeration value="1562631" />
 			<xs:enumeration value="1562634" />
 			<xs:enumeration value="1562795" />
 			<xs:enumeration value="1562796" />
