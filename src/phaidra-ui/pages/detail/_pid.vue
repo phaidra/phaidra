@@ -2150,7 +2150,7 @@
                           >{{ $t("Delete") }}</nuxt-link
                         >
                       </v-row>
-                      <v-row v-if="user.isadmin" no-gutters class="pt-2">
+                      <v-row v-if="user.isadmin && objectInfo.cmodel !== 'Collection'" no-gutters class="pt-2">
                         <a
                           class="mb-1"
                           @click="datareplaceDialog = true"
