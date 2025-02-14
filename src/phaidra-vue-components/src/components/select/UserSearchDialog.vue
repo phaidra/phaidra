@@ -83,6 +83,9 @@ export default {
         let response = await this.$axios.request({
           method: 'get',
           url: `/users/search?q=${this.userSearchInp}`,
+          headers: {
+            'X-XSRF-TOKEN': this.$store.state.user.token
+          }
         })
         console.log('user response', response)
         this.users = response.data.users
