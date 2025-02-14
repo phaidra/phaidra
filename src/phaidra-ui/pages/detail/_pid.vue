@@ -994,6 +994,7 @@
                               query: { collection: objectInfo.pid, reset: 1 },
                             })
                           "
+                          :disabled="collMembers.length === 0"
                           color="primary"
                           >{{ $t("Show members") }} ({{
                             objectInfo.haspartsize
@@ -1944,7 +1945,7 @@
                         class="pt-2"
                         v-if="
                           ((objectInfo.cmodel === 'Container') && (objectInfo.members.length <= 500 )) ||
-                          ((objectInfo.cmodel === 'Collection') && ($store.state.collectionMembersTotal <= 500 ))
+                          ((objectInfo.cmodel === 'Collection') && ($store.state.collectionMembersTotal >= 1 && $store.state.collectionMembersTotal <= 500))
                         "
                       >
                         <nuxt-link
@@ -1958,7 +1959,7 @@
                         class="pt-2"
                         v-if="
                           objectInfo.cmodel === 'Container' ||
-                          objectInfo.cmodel === 'Collection'
+                          ((objectInfo.cmodel === 'Collection') && ($store.state.collectionMembersTotal >= 1))
                         "
                       >
                         <nuxt-link
