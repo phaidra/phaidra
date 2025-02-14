@@ -41,7 +41,7 @@ See section [Docker Notes](#docker-notes) below to see what we do on a typical i
 
 We are using docker profiles to start up the relevant containers for the desired use case.
 
-We highly recommend using the `--project-name $PROJECT_NAME_OF_YOUR_LIKING` flag to the `docker compose` command, as this will allow you to easily identify the persistant docker volumes which will be created to store your valuable data.
+You can use the `--project-name $PROJECT_NAME_OF_YOUR_LIKING` flag to the `docker compose` command, if you want to change the default project-name `phaidra`. The name will be used in the folder name of your volumes.
 
 ## Profiles using versioned images including all code
 
@@ -87,7 +87,7 @@ All default values assume that you are running docker rootless as the first non-
 Run the following command to get PHAIDRA running on `http://localhost:8899`:
 
 ```
-docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile demo-local up -d
+docker compose --profile demo-local up -d
 ```
 
 ## Demo version with S3 storage
@@ -107,7 +107,7 @@ docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile demo-local 
 Run the following command to get PHAIDRA running on `http://localhost:8899`:
 
 ```
-docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile demo-s3 up -d
+docker compose --profile demo-s3 up -d
 ```
 
 ## SSL version with local storage
@@ -129,7 +129,7 @@ docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile demo-s3 up 
 Run the following command to get PHAIDRA running on `https://$YOUR-FQDN`:
 
 ```
-docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile ssl-local up -d
+docker compose --profile ssl-local up -d
 ```
 
 ## SSL version with S3 storage
@@ -156,7 +156,7 @@ docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile ssl-local u
 Run the following command to get PHAIDRA running on `https://$YOUR-FQDN`:
 
 ```
-docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile ssl-s3 up -d
+docker compose --profile ssl-s3 up -d
 ```
 
 ## Shibboleth version with local storage
@@ -196,7 +196,7 @@ openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days 
 Run the following command to get PHAIDRA running on `https://$YOUR-FQDN`:
 
 ```
-docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile shib-local up -d
+docker compose --profile shib-local up -d
 ```
 
 After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/Shibboleth.sso/Metadata`. You will have to hand this file to the IDP-manager of your organization and ask for registration.  After that, users matching the list in `SHIB_REQUIRED_AFFILIATIONS` should be able to log in and upload their files to your system.
@@ -243,7 +243,7 @@ openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days 
 Run the following command to get PHAIDRA running on `https://$YOUR-FQDN`:
 
 ```
-docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile shib-s3 up -d
+docker compose --profile shib-s3 up -d
 ```
 
 After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/Shibboleth.sso/Metadata`. You will have to hand this file to the IDP-manager of your organization and ask for registration. After that, users matching the list in `SHIB_REQUIRED_AFFILIATIONS` should be able to log in and upload their files to your system.
@@ -274,7 +274,7 @@ After starting the containers, the mod_md will fetch the certificates, but a (gr
 + `website`: For convenient development of our website at [www.phaidra.org](https://www.phaidra.org).
    This profile can be activated by running `docker compose --profile website up -d`.  You will have a hot-reloading version of our website at `http://localhost:8000` which is controlled by `mkdocs.yaml` and renders the pages under `website`.
 ## Add-On
-+ `external-opencast`: can be added to any of the profiles that use local storage, if an external opencast-streaming-server is available to you. Uses a versioned image including all code. It can be started up with a command like: `docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile ssl-local --profile external-opencast up -d`.  An additional container (`vige`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
++ `external-opencast`: can be added to any of the profiles that use local storage, if an external opencast-streaming-server is available to you. Uses a versioned image including all code. It can be started up with a command like: `docker compose --profile ssl-local --profile external-opencast up -d`.  An additional container (`vige`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
 
   The following variables will have to be set:
   + `OC_EXTERNAL="ACTIVATED"`
@@ -283,7 +283,7 @@ After starting the containers, the mod_md will fetch the certificates, but a (gr
   + `OC_EVENTS_URL`
   + `OC_INGEST_URL`
 
-+ `external-opencast-dev`: can be added to any of the dev-profiles that use local storage, if an external opencast-streaming-server is available to you. Uses bindmounted code from the repository. It can be started up with a command like: `docker compose --project-name $PROJECT_NAME_OF_YOUR_LIKING --profile ssl-local-dev --profile external-opencast-dev up -d`.  An additional container (`vige`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
++ `external-opencast-dev`: can be added to any of the dev-profiles that use local storage, if an external opencast-streaming-server is available to you. Uses bindmounted code from the repository. It can be started up with a command like: `docker compose --profile ssl-local-dev --profile external-opencast-dev up -d`.  An additional container (`vige`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
     The following variables will have to be set:
   + `OC_EXTERNAL="ACTIVATED"`
   + `OC_USER`
@@ -367,8 +367,6 @@ of hardware failure.
 
 Objects loaded into PHAIDRA are automatically checksummed using the [SHA512-algorithm](https://en.wikipedia.org/wiki/SHA-2) by the underlying
 repository software [Fedora](https://fedora.lyrasis.org/). By default, PHAIDRA triggers a recalculation of the checksums on every 2nd day of the month.  Results of these scans are visible on the built-in Grafana Dashboard for early hardware failure detection.
-
-Depending on `--project-name $PROJECT_NAME_OF_YOUR_LIKING` the volumes will be prefixed with `$PROJECT_NAME_OF_YOUR_LIKING`.
 
 See the section [Graphical System overview](#graphical-system-overview) for how these directories are connected to the containers.
 
