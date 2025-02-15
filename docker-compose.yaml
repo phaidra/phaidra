@@ -279,7 +279,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:ff704002
+    image: phaidraorg/api-dist:2f173bb2
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -294,10 +294,11 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:ff704002
+    image: phaidraorg/api-dist:2f173bb2
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
+      - pixelgecko:/mnt/converted_images:ro
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
