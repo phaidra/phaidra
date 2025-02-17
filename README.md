@@ -41,7 +41,7 @@ See section [Docker Notes](#docker-notes) below to see what we do on a typical i
 
 We are using docker profiles to start up the relevant containers for the desired use case.
 
-You can use the `--project-name $PROJECT_NAME_OF_YOUR_LIKING` flag to the `docker compose` command, if you want to change the default project-name `phaidra`. The name will be used in the folder name of your volumes.
+You can set `COMPOSE_PROJECT_NAME="PROJECT_NAME_OF_YOUR_LIKING"` in your `.env` or use the `--project-name $PROJECT_NAME_OF_YOUR_LIKING` flag to the `docker compose` command, if you want to change the default project-name `phaidra`. The name will be used in the folder name of your volumes.
 
 ## Profiles using versioned images including all code
 
