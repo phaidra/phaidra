@@ -442,6 +442,7 @@ docker image rm $(docker image ls --filter label=com.docker.compose.project=$PRO
 Untagged: $PROJECT_NAME_OF_YOUR_LIKING-ui:latest
 Deleted: sha256:473336b19091df7aec4e549ae0f41ba7cea0147a08e86e335cebe64e88f16812
 ```
+
 ## Clean up Docker caches
 In case you are developing and changing a lot of components, dockerfiles and docker-compose files, 
 things can become cluttered. To remove everything including build caches, you can run 
@@ -498,6 +499,29 @@ rzhy1frfe4sfo5u78t725zip5
 
 Total reclaimed space: 1.878GB
 ```
+
+
+## Reset a project
+
+To reset (remove volumes and containers) a project:
+
+```bash
+# get the variables, imply that `COMPOSE_PROJECT_NAME` is set in .env
+source .env
+
+# stop project containers
+ docker compose stop
+# delete containers, volumes cannot be deleted otherwise
+ docker rm -vf $(docker ps -a -q --filter label=com.docker.compose.project=$COMPOSE_PROJECT_NAME)
+# delete volumes
+ docker volume rm $(docker volume ls -q --filter label=com.docker.compose.project=$COMPOSE_PROJECT_NAME)
+# Compose the project
+ docker compose --profile <your profile> up -d
+# Restart the http container if the certificate is managed by MD
+ sleep 60
+ docker container restart $COMPOSE_PROJECT_NAME-httpd-ssl-local-1 
+```
+
 
 # Technical Notes
 ## Graphical System Overview
