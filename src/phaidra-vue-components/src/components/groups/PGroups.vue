@@ -73,7 +73,7 @@
               </template>
               <template v-slot:item.actions="{ item }">
                 <v-icon color="grey" class="mx-3" @click="loadedGroup = item">mdi-pencil</v-icon>
-                <v-icon color="grey" class="mx-3" @click="deleteGroupDialog(item)">mdi-delete</v-icon>
+                <v-icon color="red lighten-1" class="mx-3" @click="deleteGroupDialog(item)">mdi-delete</v-icon>
               </template>
             </v-data-table>
           </v-card-text>
