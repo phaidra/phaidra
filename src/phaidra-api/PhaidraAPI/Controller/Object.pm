@@ -144,18 +144,22 @@ sub _proxy_thumbnail {
 
     # use imageserver
     my $isrv_model = PhaidraAPI::Model::Imageserver->new;
+    my $t0 = [gettimeofday];
     my $res        = $isrv_model->get_url($self, Mojo::Parameters->new(IIIF => "$pid.tif/full/$size/0/default.jpg"), 0);
+    $self->app->log->debug($self->req->params." _proxy_thumbnail get_url took " . tv_interval($t0));
     if ($res->{status} ne 200) {
       $self->render(json => $res, status => $res->{status});
       return;
     }
     if (Mojo::IOLoop->is_running) {
+      my $t1 = [gettimeofday];
       $self->render_later;
       $self->ua->get(
         $res->{url},
         sub {
           my ($c, $tx) = @_;
           _proxy_tx($self, $tx);
+          $self->app->log->debug($self->req->params." _proxy_thumbnail call_url took " . tv_interval($t1));
         }
       );
     }

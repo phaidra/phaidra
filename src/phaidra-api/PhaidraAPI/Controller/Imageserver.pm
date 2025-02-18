@@ -199,12 +199,14 @@ sub imageserverproxy {
   }
 
   if (Mojo::IOLoop->is_running) {
+    my $t1 = [gettimeofday];
     $self->render_later;
     $self->ua->get(
       $res->{url},
       sub {
         my ($c, $tx) = @_;
         _proxy_tx($self, $tx);
+        $self->app->log->debug($self->req->params." imageserverproxy call_url took " . tv_interval($t1));
       }
     );
   }
