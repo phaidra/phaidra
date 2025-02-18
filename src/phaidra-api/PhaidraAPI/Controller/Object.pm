@@ -146,7 +146,7 @@ sub _proxy_thumbnail {
     my $isrv_model = PhaidraAPI::Model::Imageserver->new;
     my $t0 = [gettimeofday];
     my $res        = $isrv_model->get_url($self, Mojo::Parameters->new(IIIF => "$pid.tif/full/$size/0/default.jpg"), 0);
-    $self->app->log->debug($res->{url} . " " . $self->req->params." _proxy_thumbnail get_url took " . tv_interval($t0));
+    $self->app->log->debug($pid . " " . $self->req->params." _proxy_thumbnail get_url took " . tv_interval($t0));
     if ($res->{status} ne 200) {
       $self->render(json => $res, status => $res->{status});
       return;
@@ -159,7 +159,7 @@ sub _proxy_thumbnail {
         sub {
           my ($c, $tx) = @_;
           _proxy_tx($self, $tx);
-          $self->app->log->debug($res->{url} . " " . $self->req->params." _proxy_thumbnail call_url took " . tv_interval($t1));
+          $self->app->log->debug($pid . " " . $self->req->params." _proxy_thumbnail call_url took " . tv_interval($t1));
         }
       );
     }
