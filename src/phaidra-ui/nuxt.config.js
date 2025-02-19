@@ -69,19 +69,30 @@ export default {
     breaks: true,
     runtime: true
   },
-
   axios: {
-      baseURL: 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000', // Used as fallback if no runtime config is provided
+    baseURL: 'http://' + "139.59.63.160" + ':3000', // Used as fallback if no runtime config is provided
   },
   publicRuntimeConfig: {
     primaryColor: process.env.PHAIDRA_PRIMARY_COLOR,
     baseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT,
-    apiBaseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT + '/api',
+    apiBaseURL: 'http://' + "139.59.63.160" + ':3000',
     axios: {
-      browserBaseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT + '/api'
+      browserBaseURL: 'http://' + "139.59.63.160" + ':3000'
     },
     defaultLocale: process.env.PHAIDRA_DEFAULT_LANGUAGE
   },
+  // axios: {
+  //     baseURL: 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000', // Used as fallback if no runtime config is provided
+  // },
+  // publicRuntimeConfig: {
+  //   primaryColor: process.env.PHAIDRA_PRIMARY_COLOR,
+  //   baseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT,
+  //   apiBaseURL: 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000',
+  //   axios: {
+  //     browserBaseURL: 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000'
+  //   },
+  //   defaultLocale: process.env.PHAIDRA_DEFAULT_LANGUAGE
+  // },
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     optionsPath: './vuetify.options.js'
@@ -101,19 +112,19 @@ export default {
         name: 'English',
         code: 'eng',
         iso: 'en', // keep 2-letters, used for browser language detection
-        file: 'eng'
+        file: 'eng.json'
       },
       {
         name: 'Deutsch',
         code: 'deu',
         iso: 'de',
-        file: 'deu'
+        file: 'deu.json'
       },
       {
         name: 'Italiano',
         code: 'ita',
         iso: 'it',
-        file: 'ita'
+        file: 'ita.json'
       }
     ],
     strategy: 'no_prefix',
