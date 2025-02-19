@@ -73,7 +73,7 @@
               </template>
               <template v-slot:item.actions="{ item }">
                 <v-icon color="grey" class="mx-3" @click="loadedGroup = item">mdi-pencil</v-icon>
-                <v-icon color="grey" class="mx-3" @click="deleteGroupDialog(item)">mdi-delete</v-icon>
+                <v-icon color="red lighten-1" class="mx-3" @click="deleteGroupDialog(item)">mdi-delete</v-icon>
               </template>
             </v-data-table>
           </v-card-text>
@@ -124,32 +124,15 @@
               </template>
             </v-data-table>
             <v-card-actions>
-              <v-autocomplete
-                v-model="userSearchModel"
-                :items="userSearchItems.length > 0 ? userSearchItems : []"
-                :loading="userSearchLoading"
-                :search-input.sync="userSearch"
-                :label="$t('User search')"
-                :placeholder="$t('Start typing to search')"
-                item-value="uid"
-                item-text="value"
-                prepend-icon="mdi-database-search"
-                hide-no-data
-                hide-selected
-                return-object
-                clearable
-                @click:clear="userSearchItems=[]"
-              >
-                <template slot="item" slot-scope="{ item }">
-                  <template v-if="item">
-                    <v-list-item-content two-line>
-                      <v-list-item-title>{{ item.value }}</v-list-item-title>
-                      <v-list-item-subtitle>{{ item.uid }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </template>
-                </template>
-              </v-autocomplete>
-              <v-btn class="primary ml-2" :disabled="userSearchLoading" @click="addMember()">{{ $t('Apply') }}</v-btn>
+              <v-btn class="mb-4 mt-4 primary" @click="$refs.userSearchdialog.open()">
+                Search Users
+                <v-icon
+                  right
+                  dark
+                >
+                  mdi-database-search
+                </v-icon>
+              </v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card-text>
@@ -171,13 +154,18 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <user-search-dialog ref="userSearchdialog" @user-selected="searchUserSelected($event)"></user-search-dialog>
   </v-container>
 </template>
 
 <script>
+import UserSearchDialog from '../select/UserSearchDialog'
 
 export default {
   name: 'p-groups',
+  components: {
+    UserSearchDialog
+  },
   computed: {
     instance: function () {
       return this.$store.state.instanceconfig
@@ -274,6 +262,12 @@ export default {
     }
   },
   methods: {
+    searchUserSelected: function(selectedUser) {
+      this.userSearchModel = {
+        uid: selectedUser.username
+      }
+      this.addMember()
+    },
     deleteGroupDialog: function (group) {
       this.groupToDelete = group
       this.deleteDialog = true

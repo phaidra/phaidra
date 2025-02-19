@@ -519,11 +519,12 @@ export default {
       return hash
     },
     roles: function () {
+      let objectType = this.getObjectType()
       let roles = []
       if (this.jsonld) {
         Object.entries(this.jsonld).forEach(([p, o]) => {
           if (p.startsWith('role:')) {
-            roles.push({ p, o, ord: order.roles[p] })
+            roles.push({ p, o, ord: objectType && objectType['@id'] === 'https://pid.phaidra.org/vocabulary/47QB-8QF1' ? order.bookTypeOrder[p] : order.roles[p] })
           }
         })
       }
@@ -543,6 +544,13 @@ export default {
     }
   },
   methods: {
+    getObjectType: function() {
+      if(this.jsonld && this.jsonld['edm:hasType'] && this.jsonld['edm:hasType'].length) {
+        const localTerm = this.getTerm('objecttype', this.jsonld['edm:hasType'][0]['skos:exactMatch'][0])
+        return localTerm
+      }
+      return null
+    },
     getProjectIds: function () {
       if (this.jsonld) {
         const projectIds = []

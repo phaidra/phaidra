@@ -432,7 +432,14 @@
 			<xs:enumeration value="1557145" />
 			<xs:enumeration value="1557146" />
 			<xs:enumeration value="1561230" />
+			<xs:enumeration value="1561102" />
+			<xs:enumeration value="1561147" />
+			<xs:enumeration value="1561168" />
 			<xs:enumeration value="1561248" />
+			<xs:enumeration value="1561258" />
+			<xs:enumeration value="1561303" />
+			<xs:enumeration value="1562629" />
+			<xs:enumeration value="1562631" />
 			<xs:enumeration value="1562634" />
 			<xs:enumeration value="1562795" />
 			<xs:enumeration value="1562796" />
@@ -599,6 +606,7 @@
 			<xs:enumeration value="31" />
 			<xs:enumeration value="32" />
 			<xs:enumeration value="33" />
+			<xs:enumeration value="34" />
 	</xs:restriction>
 </xs:simpleType>
 
@@ -661,6 +669,29 @@
 			<xs:enumeration value="1552077" />
 			<xs:enumeration value="1552149" />
 			<xs:enumeration value="1552150" />
+			<xs:enumeration value="1557151" />
+			<xs:enumeration value="1557152" />
+			<xs:enumeration value="1557153" />
+			<xs:enumeration value="1557154" />
+			<xs:enumeration value="1557155" />
+			<xs:enumeration value="1557156" />
+			<xs:enumeration value="1557157" />
+			<xs:enumeration value="1557158" />
+			<xs:enumeration value="1557162" />
+			<xs:enumeration value="1557163" />
+			<xs:enumeration value="1557174" />
+			<xs:enumeration value="1557175" />
+			<xs:enumeration value="1557178" />
+			<xs:enumeration value="1557185" />
+			<xs:enumeration value="1557190" />
+			<xs:enumeration value="1557192" />
+			<xs:enumeration value="1557193" />
+			<xs:enumeration value="1557194" />
+			<xs:enumeration value="1557195" />
+			<xs:enumeration value="1557196" />
+			<xs:enumeration value="1557206" />
+			<xs:enumeration value="1562632" />
+			<xs:enumeration value="1562633" />
 	</xs:restriction>
 </xs:simpleType>
 
@@ -753,6 +784,29 @@
 			<xs:enumeration value="1552077" />
 			<xs:enumeration value="1552149" />
 			<xs:enumeration value="1552150" />
+			<xs:enumeration value="1557151" />
+			<xs:enumeration value="1557152" />
+			<xs:enumeration value="1557153" />
+			<xs:enumeration value="1557154" />
+			<xs:enumeration value="1557155" />
+			<xs:enumeration value="1557156" />
+			<xs:enumeration value="1557157" />
+			<xs:enumeration value="1557158" />
+			<xs:enumeration value="1557162" />
+			<xs:enumeration value="1557163" />
+			<xs:enumeration value="1557174" />
+			<xs:enumeration value="1557175" />
+			<xs:enumeration value="1557178" />
+			<xs:enumeration value="1557185" />
+			<xs:enumeration value="1557190" />
+			<xs:enumeration value="1557192" />
+			<xs:enumeration value="1557193" />
+			<xs:enumeration value="1557194" />
+			<xs:enumeration value="1557195" />
+			<xs:enumeration value="1557196" />
+			<xs:enumeration value="1557206" />
+			<xs:enumeration value="1562632" />
+			<xs:enumeration value="1562633" />
 	</xs:restriction>
 </xs:simpleType>
 
@@ -832,7 +886,14 @@
 			<xs:enumeration value="1557145" />
 			<xs:enumeration value="1557146" />
 			<xs:enumeration value="1561230" />
+			<xs:enumeration value="1561102" />
+			<xs:enumeration value="1561147" />
+			<xs:enumeration value="1561168" />
 			<xs:enumeration value="1561248" />
+			<xs:enumeration value="1561258" />
+			<xs:enumeration value="1561303" />
+			<xs:enumeration value="1562629" />
+			<xs:enumeration value="1562631" />
 			<xs:enumeration value="1562634" />
 			<xs:enumeration value="1562795" />
 			<xs:enumeration value="1562796" />

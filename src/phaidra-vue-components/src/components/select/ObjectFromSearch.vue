@@ -133,7 +133,8 @@ export default {
           url: '/search/select',
           data: qs.stringify(params, { arrayFormat: 'repeat' }),
           headers: {
-            'content-type': 'application/x-www-form-urlencoded'
+            'content-type': 'application/x-www-form-urlencoded',
+            'X-XSRF-TOKEN': this.$store.state.user.token
           }
         })
         this.objects = response.data.response.docs

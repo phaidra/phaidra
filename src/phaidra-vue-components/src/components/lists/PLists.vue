@@ -72,8 +72,8 @@
                 {{ item.updated | unixtime }}
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-btn text class="mx-3" @click="loadedList = item">{{$t('Select')}}</v-btn>
-                <v-icon color="grey" class="mx-3" @click="deleteListDialog(item)">mdi-delete</v-icon>
+                <v-icon color="grey" class="mx-3" @click="loadedList = item">mdi-pencil</v-icon>
+                <v-icon color="red lighten-1" class="mx-3" @click="deleteListDialog(item)">mdi-delete</v-icon>
               </template>
             </v-data-table>
           </v-card-text>
@@ -120,7 +120,7 @@
                 </v-toolbar>
               </template>
               <template v-slot:item.pid="{ item }">
-                <router-link :to="{ name: 'detail', params: { pid: item.pid } }">{{ item.pid }}</router-link>
+                <router-link :to="{ path: `detail/${item.pid}`, params: { pid: item.pid } }">{{ item.pid }}</router-link>
               </template>
               <template v-slot:item.title="{ item }">
                 {{ item.title | truncate(100) }}

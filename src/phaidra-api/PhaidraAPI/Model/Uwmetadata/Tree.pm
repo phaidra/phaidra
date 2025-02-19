@@ -197,7 +197,7 @@ our %tree = (
           "labels"      => {
             "de" => "Geltungsbereich",
             "en" => "Coverage",
-            "it" => "Copertura (temporale \x{96} geografica \x{96} amministrativa)",
+            "it" => "Copertura (temporale – geografica – amministrativa)",
             "sr" => "obseg"
           },
           "loaded" => 0,
@@ -644,7 +644,7 @@ our %tree = (
                     { "labels" => {
                         "de" => "MetallstecherIn",
                         "en" => "Metal-engraver",
-                        "it" => "Calcografo"
+                        "it" => "Incisore su metallo"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1557105"
                     },
@@ -682,7 +682,7 @@ our %tree = (
                     { "labels" => {
                         "de" => "BegutachterIn",
                         "en" => "Assessor",
-                        "it" => "Assessor",
+                        "it" => "Valutatore della tesi",
                         "sr" => "Assessor"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1562799"
@@ -690,7 +690,7 @@ our %tree = (
                     { "labels" => {
                         "de" => "MitbetreuerIn",
                         "en" => "Co-advisor",
-                        "it" => "Co-advisor",
+                        "it" => "Correlatore",
                         "sr" => "Co-advisor"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1562800"
@@ -877,8 +877,11 @@ our %tree = (
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1557145"
                     },
-                    { "labels" => {"en" => "Performer"},
-                      "uri"    => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1557130"
+                    { "labels" => {
+                        "en" => "Performer",
+                        "it" => "Interprete"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1557130"
                     },
                     { "labels" => {
                         "de" => "VorbesitzerIn",
@@ -890,7 +893,7 @@ our %tree = (
                     { "labels" => {
                         "de" => "KapellmeisterIn",
                         "en" => "Conductor",
-                        "it" => "Direttore d\x{92}orchestra"
+                        "it" => "Direttore d'orchestra"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1557116"
                     },
@@ -993,7 +996,8 @@ our %tree = (
                     },
                     { "labels" => {
                         "de" => "Gr\x{c3}\x{bc}nderIn",
-                        "en" => "Founder"
+                        "en" => "Founder",
+                        "it" => "Fondatore"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1562634"
                     },
@@ -1134,6 +1138,55 @@ our %tree = (
                         "it" => "Relatore"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1557136"
+                    },
+                    { "labels" => {
+                        "de" => "AdressatIn",
+                        "en" => "Addressee",
+                        "it" => "Destinatario"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1561102"
+                    },
+                    { "labels" => {
+                        "de" => "AdressatIn",
+                        "en" => "KonservatorIn",
+                        "it" => "Conservatore"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1561147"
+                    },
+                    { "labels" => {
+                        "de" => "Data contributor",
+                        "en" => "DatenlieferantIn",
+                        "it" => "Fornitore dei dati"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1561168"
+                    },
+                    { "labels" => {
+                        "de" => "PrjektleiterIn",
+                        "en" => "Project director",
+                        "it" => "Direttore del progetto"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1561258"
+                    },
+                    { "labels" => {
+                        "de" => "Transcriber",
+                        "en" => "Transcriber",
+                        "it" => "Trascrittore"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1561303"
+                    },
+                    { "labels" => {
+                        "de" => "Copista",
+                        "en" => "Copista",
+                        "it" => "Copista"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1562629"
+                    },
+                    { "labels" => {
+                        "de" => "Herausgeber*in eines Sammelwerks",
+                        "en" => "Editor of compilation",
+                        "it" => "Curatore della collezione"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1562631"
                     }
                   ]
                 }
@@ -2282,7 +2335,7 @@ our %tree = (
               "labels"      => {
                 "de" => "Form der Interaktivit\x{e4}t",
                 "en" => "Interactivity Type",
-                "it" => "Tipo di interattivit\x{e0}",
+                "it" => "Tipo di interattività",
                 "sr" => "vrsta interaktivnosti"
               },
               "loaded" => 0,
@@ -2338,7 +2391,7 @@ our %tree = (
               "labels"      => {
                 "de" => "Grad der Interaktivit\x{e4}t",
                 "en" => "Interactivity Level",
-                "it" => "Livello di interattivit\x{e0}",
+                "it" => "Livello di interattività",
                 "sr" => "nivo interaktivnosti"
               },
               "loaded" => 0,
@@ -2530,7 +2583,7 @@ our %tree = (
               "labels"      => {
                 "de" => "Durchnittliches Alter der Zielgruppe",
                 "en" => "Typical Age Range",
-                "it" => "Fascia d'et\x{e0} pi\x{f9} comune",
+                "it" => "Fascia d'età più comune",
                 "sr" => "uobi?ajeni raspon godina"
               },
               "loaded" => 0,
@@ -2555,7 +2608,7 @@ our %tree = (
               "labels"      => {
                 "de" => "Schwierigkeitsgrad",
                 "en" => "Difficulty Level",
-                "it" => "Livello di difficolt\x{e0}",
+                "it" => "Livello di difficoltà",
                 "sr" => "nivo te\x{9e}ine"
               },
               "loaded" => 0,
@@ -3945,7 +3998,7 @@ our %tree = (
               "labels"      => {
                 "de" => "Fakultaet",
                 "en" => "Faculty",
-                "it" => "Facolt\x{e0}",
+                "it" => "Facoltà",
                 "sr" => "fakultet"
               },
               "loaded" => 0,
@@ -4538,6 +4591,167 @@ our %tree = (
                         "sr" => "nosilac slike"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/10911"
+                    },
+                    { "labels" => {
+                        "de" => "Wandkarte",
+                        "en" => "wallchart",
+                        "it" => "carta murale"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557151"
+                    },
+                    { "labels" => {
+                        "de" => "Postkarte",
+                        "en" => "postcard",
+                        "it" => "cartolina"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557152"
+                    },
+                    { "labels" => {
+                        "de" => "Malerei",
+                        "en" => "painting",
+                        "it" => "dipinto"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557153"
+                    },
+                    { "labels" => {
+                        "de" => "Zeichnung",
+                        "en" => "drawing",
+                        "it" => "disegno"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557154"
+                    },
+                    { "labels" => {
+                        "de" => "Foto",
+                        "en" => "photograph",
+                        "it" => "fotografia"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557155"
+                    },
+                    { "labels" => {
+                        "de" => "Bild",
+                        "en" => "picture",
+                        "it" => "immagine"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557156"
+                    },
+                    { "labels" => {
+                        "de" => "Plakat",
+                        "en" => "poster",
+                        "it" => "manifesto"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557157"
+                    },
+                    { "labels" => {
+                        "de" => "drucken, Drucke",
+                        "en" => "print",
+                        "it" => "stampa"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557158"
+                    },
+                    { "labels" => {
+                        "de" => "Dia",
+                        "en" => "slide",
+                        "it" => "diapositiva"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557162"
+                    },
+                    { "labels" => {
+                        "de" => "Negativ",
+                        "en" => "negative",
+                        "it" => "negativo"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557163"
+                    },
+                    { "labels" => {
+                        "de" => "Atlas",
+                        "en" => "atlas",
+                        "it" => "atlante"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557174"
+                    },
+                    { "labels" => {
+                        "de" => "Karte",
+                        "en" => "map",
+                        "it" => "carta geografica"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557175"
+                    },
+                    { "labels" => {
+                        "de" => "Fernerkundungsbild",
+                        "en" => "remote sensing image",
+                        "it" => "immagine di telerilevamento"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557178"
+                    },
+                    { "labels" => {
+                        "de" => "Partitur",
+                        "en" => "score",
+                        "it" => "partitura"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557185"
+                    },
+                    { "labels" => {
+                        "de" => "Singstimmen",
+                        "en" => "vocal score",
+                        "it" => "spartito"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557190"
+                    },
+                    { "labels" => {
+                        "de" => "Artikel in Zeitschrift",
+                        "en" => "article of periodical",
+                        "it" => "articolo di periodico"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557192"
+                    },
+                    { "labels" => {
+                        "de" => "Buch Teil",
+                        "en" => "book part",
+                        "it" => "parte di libro"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557193"
+                    },
+                    { "labels" => {
+                        "de" => "Buch",
+                        "en" => "book",
+                        "it" => "libro"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557194"
+                    },
+                    { "labels" => {
+                        "de" => "Manuskript",
+                        "en" => "manuscript",
+                        "it" => "manoscritto"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557195"
+                    },
+                    { "labels" => {
+                        "de" => "Zeitschrift",
+                        "en" => "periodical",
+                        "it" => "periodico"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557196"
+                    },
+                    { "labels" => {
+                        "de" => "Andere",
+                        "en" => "other",
+                        "it" => "altro"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557206"
+                    },
+                    { "labels" => {
+                        "de" => "Brief",
+                        "en" => "letter",
+                        "it" => "lettera"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1562632"
+                    },
+                    { "labels" => {
+                        "de" => "sound recording",
+                        "en" => "sound recording",
+                        "it" => "documento sonoro"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1562633"
                     }
                   ]
                 }
@@ -4557,7 +4771,7 @@ our %tree = (
               "labels"      => {
                 "de" => "Ma\x{df}einheit",
                 "en" => "Measuring Unit",
-                "it" => "Unit\x{e0} di misura",
+                "it" => "Unità di misura",
                 "sr" => "jedinica mere"
               },
               "loaded" => 0,
@@ -5383,6 +5597,167 @@ our %tree = (
                         "sr" => "nosilac slike"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/10911"
+                    },
+                    { "labels" => {
+                        "de" => "Wandkarte",
+                        "en" => "wallchart",
+                        "it" => "carta murale"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557151"
+                    },
+                    { "labels" => {
+                        "de" => "Postkarte",
+                        "en" => "postcard",
+                        "it" => "cartolina"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557152"
+                    },
+                    { "labels" => {
+                        "de" => "Malerei",
+                        "en" => "painting",
+                        "it" => "dipinto"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557153"
+                    },
+                    { "labels" => {
+                        "de" => "Zeichnung",
+                        "en" => "drawing",
+                        "it" => "disegno"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557154"
+                    },
+                    { "labels" => {
+                        "de" => "Foto",
+                        "en" => "photograph",
+                        "it" => "fotografia"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557155"
+                    },
+                    { "labels" => {
+                        "de" => "Bild",
+                        "en" => "picture",
+                        "it" => "immagine"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557156"
+                    },
+                    { "labels" => {
+                        "de" => "Plakat",
+                        "en" => "poster",
+                        "it" => "manifesto"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557157"
+                    },
+                    { "labels" => {
+                        "de" => "drucken, Drucke",
+                        "en" => "print",
+                        "it" => "stampa"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557158"
+                    },
+                    { "labels" => {
+                        "de" => "Dia",
+                        "en" => "slide",
+                        "it" => "diapositiva"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557162"
+                    },
+                    { "labels" => {
+                        "de" => "Negativ",
+                        "en" => "negative",
+                        "it" => "negativo"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557163"
+                    },
+                    { "labels" => {
+                        "de" => "Atlas",
+                        "en" => "atlas",
+                        "it" => "atlante"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557174"
+                    },
+                    { "labels" => {
+                        "de" => "Karte",
+                        "en" => "map",
+                        "it" => "carta geografica"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557175"
+                    },
+                    { "labels" => {
+                        "de" => "Fernerkundungsbild",
+                        "en" => "remote sensing image",
+                        "it" => "immagine di telerilevamento"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557178"
+                    },
+                    { "labels" => {
+                        "de" => "Partitur",
+                        "en" => "score",
+                        "it" => "partitura"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557185"
+                    },
+                    { "labels" => {
+                        "de" => "Singstimmen",
+                        "en" => "vocal score",
+                        "it" => "spartito"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557190"
+                    },
+                    { "labels" => {
+                        "de" => "Artikel in Zeitschrift",
+                        "en" => "article of periodical",
+                        "it" => "articolo di periodico"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557192"
+                    },
+                    { "labels" => {
+                        "de" => "Buch Teil",
+                        "en" => "book part",
+                        "it" => "parte di libro"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557193"
+                    },
+                    { "labels" => {
+                        "de" => "Buch",
+                        "en" => "book",
+                        "it" => "libro"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557194"
+                    },
+                    { "labels" => {
+                        "de" => "Manuskript",
+                        "en" => "manuscript",
+                        "it" => "manoscritto"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557195"
+                    },
+                    { "labels" => {
+                        "de" => "Zeitschrift",
+                        "en" => "periodical",
+                        "it" => "periodico"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557196"
+                    },
+                    { "labels" => {
+                        "de" => "Andere",
+                        "en" => "other",
+                        "it" => "altro"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557206"
+                    },
+                    { "labels" => {
+                        "de" => "Brief",
+                        "en" => "letter",
+                        "it" => "lettera"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1562632"
+                    },
+                    { "labels" => {
+                        "de" => "sound recording",
+                        "en" => "sound recording",
+                        "it" => "documento sonoro"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1562633"
                     }
                   ]
                 }
@@ -5577,7 +5952,7 @@ our %tree = (
                     { "labels" => {
                         "de" => "DissertantIn",
                         "en" => "Dissertant",
-                        "it" => "Tesista"
+                        "it" => "Autore della dissertazione"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1557143"
                     },
@@ -5705,7 +6080,10 @@ our %tree = (
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1557145"
                     },
-                    { "labels" => {"en" => "Performer"},
+                    { "labels" => {
+                      "en" => "Performer",
+                      "it" => "Interprete"
+                      },
                       "uri"    => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1557130"
                     },
                     { "labels" => {
@@ -5718,7 +6096,7 @@ our %tree = (
                     { "labels" => {
                         "de" => "KapellmeisterIn",
                         "en" => "Conductor",
-                        "it" => "Direttore d\x{92}orchestra"
+                        "it" => "Direttore d'orchestra"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1557116"
                     },
@@ -5821,7 +6199,8 @@ our %tree = (
                     },
                     { "labels" => {
                         "de" => "Gr\x{c3}\x{bc}nderIn",
-                        "en" => "Founder"
+                        "en" => "Founder",
+                        "it" => "Fondatore"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1562634"
                     },
@@ -5962,6 +6341,55 @@ our %tree = (
                         "it" => "Relatore"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1557136"
+                    },
+                    { "labels" => {
+                        "de" => "AdressatIn",
+                        "en" => "Addressee",
+                        "it" => "Destinatario"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1561102"
+                    },
+                    { "labels" => {
+                        "de" => "AdressatIn",
+                        "en" => "KonservatorIn",
+                        "it" => "Conservatore"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1561147"
+                    },
+                    { "labels" => {
+                        "de" => "Data contributor",
+                        "en" => "DatenlieferantIn",
+                        "it" => "Fornitore dei dati"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1561168"
+                    },
+                    { "labels" => {
+                        "de" => "PrjektleiterIn",
+                        "en" => "Project director",
+                        "it" => "Direttore del progetto"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1561258"
+                    },
+                    { "labels" => {
+                        "de" => "Transcriber",
+                        "en" => "Transcriber",
+                        "it" => "Trascrittore"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1561303"
+                    },
+                    { "labels" => {
+                        "de" => "Copista",
+                        "en" => "Copista",
+                        "it" => "Copista"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1562629"
+                    },
+                    { "labels" => {
+                        "de" => "Herausgeber*in eines Sammelwerks",
+                        "en" => "Editor of compilation",
+                        "it" => "Curatore della collezione"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1562631"
                     }
                   ]
                 }

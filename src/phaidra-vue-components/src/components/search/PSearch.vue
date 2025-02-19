@@ -51,7 +51,7 @@
           </v-bottom-sheet>
         </v-row>
         <v-row no-gutters>
-          <v-btn dark v-if="inCollection" class="mb-8 grey">{{ $t('Members of') }}<router-link class="ml-2 white--text" :to="localePath(`/detail/${inCollection}`)">{{ inCollection }}</router-link> <v-icon right @click.native="removeCollectionFilter()">mdi-close</v-icon></v-btn>
+          <v-btn v-if="inCollection" class="mb-8" color="primary">{{ $t('Members of') }}<router-link class="ml-1 white--text" :to="localePath(`/detail/${inCollection}`)">{{ inCollection }}</router-link><v-icon right @click.native="removeCollectionFilter()">mdi-close</v-icon></v-btn>
           <v-pagination v-if="total>pagesize" v-bind:length="totalPages" justify="center" total-visible="10" v-model="page" class="mb-8" />
           <p-search-results
             :docs="docs"
@@ -240,7 +240,10 @@ export default {
         this.docs = response.data.response.docs
         this.total = response.data.response.numFound
         this.facet_counts = response.data.facet_counts
-        updateFacetQueries(response.data.facet_counts.facet_queries, this.facetQueries)
+        if(!this.isFacetCountUpdated){
+          updateFacetQueries(response.data.facet_counts.facet_queries, this.facetQueries)
+          this.isFacetCountUpdated = true
+        }
       } catch (error) {
         this.$store.commit('setLoading', false)
         console.log(error)
@@ -368,6 +371,7 @@ export default {
   data () {
     return {
       link: '',
+      isFacetCountUpdated: false,
       limitdialog: false,
       linkdialog: false,
       selectioncheck: false,

@@ -106,6 +106,10 @@ sub map_uwmetadata_2_datacite {
 
   my ($self, $c, $pid, $cmodel, $xml) = @_;
 
+  my $index_model = PhaidraAPI::Model::Index->new;
+  my $r           = $index_model->get($c, $pid);
+  my $index       = $r->{index};
+
   my $metadata_model = PhaidraAPI::Model::Uwmetadata->new;
 
   my $r0 = $metadata_model->metadata_tree($c);
@@ -174,7 +178,7 @@ sub map_uwmetadata_2_datacite {
   $data{uploaddates}     = $ext->_get_uwm_element_values($c, $dom, $doc_uwns{'lom'} . '\:upload_date');
   $data{embargodates}    = $ext->_get_uwm_element_values($c, $dom, $doc_uwns{'extended'} . '\:infoeurepoembargo');
   $data{formats}         = $ext->_get_formats($c, $pid, $cmodel, $dom, \%doc_uwns);
-  $data{filesizes}       = $self->_get_filesize($c, $pid, $cmodel);
+  push @{$data{filesizes}}, {value => $index->{size}};
   $data{publishers}      = $ext->_get_publishers($c, $dom, \%doc_uwns);
   $data{publicationYear} = $ext->_get_releaseyear($c, $dom, \%doc_uwns);
   $data{contributors}    = $ext->_get_contributors($c, $dom, \%doc_uwns);
@@ -202,6 +206,11 @@ sub map_uwmetadata_2_datacite {
 sub map_mods_2_datacite {
 
   my ($self, $c, $pid, $cmodel, $xml) = @_;
+
+
+  my $index_model = PhaidraAPI::Model::Index->new;
+  my $r           = $index_model->get($c, $pid);
+  my $index       = $r->{index};
 
   my $dom = Mojo::DOM->new();
   $dom->xml(1);
@@ -266,7 +275,7 @@ sub map_mods_2_datacite {
   $data{descriptions} = $ext->_get_mods_element_values($c, $dom, 'mods > note');
   $data{publishers}   = $ext->_get_mods_element_values($c, $dom, 'mods > originInfo > publisher');
   $data{rights}       = $ext->_get_mods_element_values($c, $dom, 'mods > accessCondition[type="use and reproduction"]');
-  $data{filesizes}    = $self->_get_filesize($c, $pid, $cmodel);
+  push @{$data{filesizes}}, {value => $index->{size}};
 
   return $self->data_2_datacite($c, $cmodel, \%data);
 }
@@ -406,7 +415,7 @@ sub map_jsonld_2_datacite {
   $data{creators}     = $creators;
   $data{subjects}     = $subjects;
   $data{formats}      = $formats;
-  $data{filesizes}    = $self->_get_filesize($c, $pid, $cmodel);
+  push @{$data{filesizes}}, {value => $index->{size}};
   $data{publishers}   = $publishers;
   $data{contributors} = $contributors;
   push @{$data{uploaddates}}, {value => $index->{created}};
@@ -902,9 +911,23 @@ sub _get_relsext_identifiers {
   my ($self, $c, $pid) = @_;
 
   my @ids;
+  if ($c->app->config->{fedora}->{version} >= 6) {
+
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    my $fres         = $fedora_model->getObjectProperties($c, $pid);
+    if ($fres->{status} ne 200) {
+      $c->app->log->debug("STATUS NOT 200");
+      return $fres;
+    }
+
+    if (exists $fres->{identifier} && ref $fres->{identifier} eq 'ARRAY') {
+        @ids = @{$fres->{identifier}};
+    }
+    $c->app->log->debug("Identifiers: " . Dumper(\@ids));
+    return \@ids;
+  }
   my $search_model = PhaidraAPI::Model::Search->new;
 
-  # FIXME: fedora 6
   my $query = "<info:fedora/$pid> <http://purl.org/dc/terms/identifier> *";
   my $sr    = $search_model->triples($c, $query, 0);
   unless ($sr->{status} eq 200) {

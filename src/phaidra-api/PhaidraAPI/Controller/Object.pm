@@ -136,23 +136,30 @@ sub _proxy_thumbnail {
   my $cmodel = shift;
   my $size = shift;
 
-  my $jobstatus = $self->imageserver_job_status($pid);
+  # let's assume the job is finished
+  # this can lead to a broken thumbnail until the job is finished
+  # but this is better than checking the job status forever after
+  my $jobstatus = 'finished';#$self->imageserver_job_status($pid);
   if (defined($jobstatus) && ($jobstatus eq 'finished')) {
 
     # use imageserver
     my $isrv_model = PhaidraAPI::Model::Imageserver->new;
+    my $t0 = [gettimeofday];
     my $res        = $isrv_model->get_url($self, Mojo::Parameters->new(IIIF => "$pid.tif/full/$size/0/default.jpg"), 0);
+    $self->app->log->debug($pid . " " . $self->req->params." _proxy_thumbnail get_url took " . tv_interval($t0));
     if ($res->{status} ne 200) {
       $self->render(json => $res, status => $res->{status});
       return;
     }
     if (Mojo::IOLoop->is_running) {
+      my $t1 = [gettimeofday];
       $self->render_later;
       $self->ua->get(
         $res->{url},
         sub {
           my ($c, $tx) = @_;
           _proxy_tx($self, $tx);
+          $self->app->log->debug($pid . " " . $self->req->params." _proxy_thumbnail call_url took " . tv_interval($t1));
         }
       );
     }
@@ -249,7 +256,7 @@ sub thumbnail {
 
   switch ($cmodelr->{cmodel}) {
     case ['Picture', 'Page', 'PDFDocument'] {
-      if ( $ENV{S3_ENABLED} eq "true" ) {
+      if ( defined $ENV{S3_ENABLED} and $ENV{S3_ENABLED} eq "true" ) {
         my $paf_mongo = $self->paf_mongo;
         my $s3_cache = PhaidraAPI::S3::Cache->new(paf_mongodb=>$paf_mongo,
                                                   aws_access_key_id=>$aws_access_key_id,

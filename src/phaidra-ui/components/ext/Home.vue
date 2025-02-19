@@ -58,7 +58,7 @@
             <v-divider class="my-4"></v-divider>
             <v-row>
               <h2 class="md-headline title font-weight-light primary--text pa-2 mb-3">
-                <icon width="27px" height="27px" name="univie-kartenkontakte" class="mr-2"></icon>{{ "Contact" }}
+                <icon width="27px" height="27px" name="univie-kartenkontakte" class="mr-2"></icon>{{  $t("Contact") }}
               </h2>
             </v-row>
             <v-divider class="my-4"></v-divider>

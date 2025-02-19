@@ -84,6 +84,7 @@ x-custom:
     PROMETHEUS_HOST: "prometheus"
     SOLR_HOST: "${SOLR_HOST:-solr}"
     UI_HOST: "${UI_HOST:-ui}"
+    VARNISH_HOST: "${VARNISH_HOST:-varnish}"
 
 services:
   ##############################################################
@@ -97,10 +98,25 @@ services:
   ## + shib-s3                                                ##
   ##############################################################
 
+  ############### varnish cache server ###############
+  varnish:
+    <<: [*common, *logs]
+    hostname: varnish
+    image: varnish
+    tmpfs:
+      - "/var/lib/varnish/varnishd:exec"
+    configs:
+      - source: varnish_config
+        target: /etc/varnish/default.vcl
+    environment:
+      <<: [*api_common_env, *hosts]
+      VARNISH_SIZE: 5G
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
+
   ############### httpd service for demo-local profile ###############
   httpd-demo-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-demo-dist:19d13d9f
+    image: phaidraorg/httpd-demo-dist:5afb1695
     <<: [*common, *logs]
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
@@ -114,7 +130,7 @@ services:
   ############### httpd service for demo-s3 profile ###############
   httpd-demo-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-demo-dist:19d13d9f
+    image: phaidraorg/httpd-demo-dist:5afb1695
     <<: [*common, *logs]
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
@@ -128,7 +144,7 @@ services:
   #################### httpd service for ssl-local profile ####################
   httpd-ssl-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:19d13d9f
+    image: phaidraorg/httpd-ssl-dist:5afb1695
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -145,7 +161,7 @@ services:
   #################### httpd service for ssl-s3 profile ####################
   httpd-ssl-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:19d13d9f
+    image: phaidraorg/httpd-ssl-dist:5afb1695
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -162,7 +178,7 @@ services:
   #################### httpd service for shib-local profile ####################
   httpd-shib-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:03bf79b2
+    image: phaidraorg/httpd-shib-dist:5afb1695
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -191,7 +207,7 @@ services:
   #################### httpd service for shib-s3 profile ####################
   httpd-shib-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:03bf79b2
+    image: phaidraorg/httpd-shib-dist:5afb1695
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -234,7 +250,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:9ba1a142
+    image: phaidraorg/ui:eaadb0b9
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -249,7 +265,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:9ba1a142
+    image: phaidraorg/ui:eaadb0b9
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -263,7 +279,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:24717ac9
+    image: phaidraorg/api-dist:26e18f85
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -278,10 +294,11 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:24717ac9
+    image: phaidraorg/api-dist:26e18f85
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
+      - pixelgecko:/mnt/converted_images:ro
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
@@ -294,7 +311,7 @@ services:
     hostname: "pixelgecko"
     depends_on: [mongodb-phaidra, api-s3, fedora-s3]
     <<: [*common, *logs]
-    image: phaidraorg/pixelgecko-dist:359ae61c
+    image: phaidraorg/pixelgecko-dist:1aec19f1
     environment:
       <<: [*api_common_env, *hosts, *s3]
       CONVERTED_IMAGES_PATH: "${CONVERTED_IMAGES_PATH:-/converted_images}"
@@ -312,7 +329,7 @@ services:
     hostname: "pixelgecko"
     depends_on: [mongodb-phaidra, api]
     <<: [*common, *logs]
-    image: phaidraorg/pixelgecko-dist:359ae61c
+    image: phaidraorg/pixelgecko-dist:1aec19f1
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images
@@ -330,7 +347,7 @@ services:
 
   mariadb-phaidra:
     hostname: "mariadb-phaidra"
-    image: phaidraorg/mariadb-phaidra-dist:8aa0a9ef
+    image: phaidraorg/mariadb-phaidra-dist:ff704002
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
@@ -557,6 +574,7 @@ services:
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env]
+      MAX_IMAGE_CACHE_SIZE: 7000
     volumes:
       - ./container_init/imageserver:/mnt/startup:ro
       - pixelgecko:/mnt/converted_images:ro
@@ -1189,3 +1207,5 @@ volumes:
 configs:
   httpd_tls_config:
     file: ./configs/httpd_tls.conf
+  varnish_config:
+    file: ./configs/varnish.vcl

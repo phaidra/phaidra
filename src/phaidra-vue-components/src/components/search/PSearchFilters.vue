@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row v-if="filtersActive">
       <v-col cols="12">
-        <v-btn class="my-1" dark color="grey" @click.native="resetFilters()">{{ $t('Remove filters') }}</v-btn>
+        <v-btn class="my-1" color="primary" @click.native="resetFilters()">{{ $t('Remove filters') }}</v-btn>
       </v-col>
     </v-row>
     <v-row>
@@ -52,63 +52,19 @@
               </v-col>
             </v-row>
             <v-row no-gutters>
-            <v-btn dark v-if="owner" class="mb-8 mt-4 grey">{{ owner }}<v-icon right @click.native="removeOwnerFilter()">mdi-close</v-icon></v-btn>
+            <v-btn v-if="owner" class="mb-8 mt-4" color="primary">{{ owner }}<v-icon right @click.native="removeOwnerFilter()">mdi-close</v-icon></v-btn>
             </v-row>
+            
             <v-row no-gutters>
-              <v-autocomplete
-                class="mt-2"
-                v-if="showOwnerFilter"
-                v-model="usernameSearchModel"
-                :items="usernameSearchItems.length > 0 ? usernameSearchItems : []"
-                :loading="usernameSearchLoading"
-                :search-input.sync="usernameSearch"
-                :label="$t('Username search')"
-                :placeholder="$t('Start typing to search')"
-                item-value="uid"
-                item-text="uid"
-                prepend-icon="mdi-database-search"
-                hide-no-data
-                return-object
-                clearable
-                @click:clear="usernameSearchItems=[]"
-              >
-                <template slot="item" slot-scope="{ item }">
-                  <template v-if="item">
-                    <v-list-item-content two-line>
-                      <v-list-item-title>{{ item.uid }}</v-list-item-title>
-                      <v-list-item-subtitle>{{ item.value }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </template>
-                </template>
-              </v-autocomplete>
-            </v-row>
-            <v-row no-gutters>
-              <v-autocomplete
-                class="mt-2"
-                v-if="showOwnerFilter"
-                v-model="userSearchModel"
-                :items="userSearchItems.length > 0 ? userSearchItems : []"
-                :loading="userSearchLoading"
-                :search-input.sync="userSearch"
-                :label="$t('User search')"
-                :placeholder="$t('Start typing to search')"
-                item-value="uid"
-                item-text="value"
-                prepend-icon="mdi-database-search"
-                hide-no-data
-                return-object
-                clearable
-                @click:clear="userSearchItems=[]"
-              >
-                <template slot="item" slot-scope="{ item }">
-                  <template v-if="item">
-                    <v-list-item-content two-line>
-                      <v-list-item-title>{{ item.value }}</v-list-item-title>
-                      <v-list-item-subtitle>{{ item.uid }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </template>
-                </template>
-              </v-autocomplete>
+              <v-btn class="mb-4 mt-4 primary" @click="$refs.userSearchdialog.open()" v-if="showOwnerFilter">
+                Search Users
+                <v-icon
+                  right
+                  dark
+                >
+                  mdi-database-search
+                </v-icon>
+              </v-btn>
             </v-row>
           </li>
           <li>
@@ -216,6 +172,7 @@
         </ul>
       </v-col>
     </v-row>
+    <user-search-dialog ref="userSearchdialog" @user-selected="searchUserSelected($event)"></user-search-dialog>
   </v-container>
 </template>
 
@@ -228,9 +185,13 @@ import '@/compiled-icons/material-social-person'
 import '@/compiled-icons/material-navigation-close'
 import { marcRoles } from './filters'
 import { toggleFacet, showFacet } from './facets'
+import UserSearchDialog from '../select/UserSearchDialog'
 
 export default {
   name: 'p-search-filters',
+  components: {
+    UserSearchDialog
+  },
   props: {
     search: {
       type: Function,
@@ -422,6 +383,10 @@ export default {
     }
   },
   methods: {
+    searchUserSelected: function (val) {
+      this.owner = val.username;
+      this.search({ owner: this.owner })
+    },
     resetInit: function () {
       this.init = true
     },

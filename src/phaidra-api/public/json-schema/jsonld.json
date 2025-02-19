@@ -1202,7 +1202,7 @@
         "role:mdc": {
           "$ref": "#/$defs/entities"
         },
-        "role:emt": {
+        "role:mte": {
           "$ref": "#/$defs/entities"
         },
         "role:mtk": {

@@ -467,7 +467,10 @@ sub startup {
 
   $r->get('geonames/search')                        ->to('utils#geonames_search');
   $r->get('gnd/search')                             ->to('utils#gnd_search');
-  $r->get('alma/search')                            ->to('utils#alma_search');
+  
+  $r->get('alma/search')                            ->to('alma#search');
+  $r->get('alma/:acnumber/jsonld')                  ->to('alma#get_record_jsonld');
+  $r->get('alma/:acnumber/json')                    ->to('alma#get_record_json');
 
   $r->get('vocabulary')                             ->to('vocabulary#get_vocabulary');
 
@@ -604,6 +607,7 @@ sub startup {
     $writer->get('object/:pid/rights')                                       ->to('rights#get');
 
     $loggedin->get('termsofuse/getagreed')                                   ->to('termsofuse#getagreed');
+    $loggedin->get('users/search')                                           ->to('utils#search_users');
 
     $ir_admin->post('ir/adminlistdata')                                      ->to('ir#adminlistdata');
     $ir_admin->get('ir/:pid/events')                                         ->to('ir#events');

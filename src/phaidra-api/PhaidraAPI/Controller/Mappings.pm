@@ -6,9 +6,9 @@ use v5.10;
 use Switch;
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Jsonld;
-use PhaidraAPI::Model::Mappings::Edm;
-use PhaidraAPI::Model::Mappings::Lom;
-use PhaidraAPI::Model::Mappings::Openaire;
+use PhaidraAPI::Model::Mappings::Export::Edm;
+use PhaidraAPI::Model::Mappings::Export::Lom;
+use PhaidraAPI::Model::Mappings::Export::Openaire;
 use Mojo::JSON qw(encode_json decode_json);
 
 sub get {
@@ -67,15 +67,15 @@ sub get {
   my $metadata;
   switch ($schema) {
     case 'openaire' {
-      my $oaire_model = PhaidraAPI::Model::Mappings::Openaire->new;
+      my $oaire_model = PhaidraAPI::Model::Mappings::Export::Openaire->new;
       $metadata = $oaire_model->get_metadata($self, $md);
     }
     case 'edm' {
-      my $edm_model = PhaidraAPI::Model::Mappings::Edm->new;
+      my $edm_model = PhaidraAPI::Model::Mappings::Export::Edm->new;
       $metadata = $edm_model->get_metadata($self, $md);
     }
     case 'lom' {
-      my $lom_model = PhaidraAPI::Model::Mappings::Lom->new;
+      my $lom_model = PhaidraAPI::Model::Mappings::Export::Lom->new;
       $metadata = $lom_model->get_metadata($self, $md);
     }
   }

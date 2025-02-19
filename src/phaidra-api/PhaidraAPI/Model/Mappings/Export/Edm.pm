@@ -1,4 +1,4 @@
-package PhaidraAPI::Model::Mappings::Edm;
+package PhaidraAPI::Model::Mappings::Export::Edm;
 
 use strict;
 use warnings;
@@ -155,7 +155,7 @@ sub get_metadata {
     name => 'dc:identifier',
     attributes => [
       { name  => 'rdf:resource',
-        value => $getUrl,
+        value => $pidUri,
       }
     ]
   };

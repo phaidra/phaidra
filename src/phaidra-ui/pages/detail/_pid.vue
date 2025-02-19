@@ -572,6 +572,7 @@
                 :key="'member_' + member.pid"
               >
                 <iframe
+                  v-if="!member.isrestricted"
                   :src="
                     instanceconfig.api + '/object/' + member.pid + '/preview'
                   "
@@ -584,6 +585,11 @@
                   frameborder="0"
                   >Content</iframe
                 >
+                <v-row v-else>
+                <v-col class="text-right mr-3">
+                  <v-chip label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
+                </v-col>
+              </v-row>
                 <v-card-text class="ma-2">
                   <p-d-jsonld
                     :jsonld="member.metadata['JSON-LD']"
@@ -691,25 +697,27 @@
               <v-row class="my-4">
                 <v-col cols="1" >
                   <div class="preview-maxwidth">
-                    <p-img
-                      :src="
-                        instanceconfig.api + '/object/' + collMember.pid + '/thumbnail'
-                      "
-                      class="elevation-1 mt-2"
-                    >
-                      <template v-slot:placeholder>
-                        <div
-                          class="fill-height ma-0"
-                          align="center"
-                          justify="center"
-                        >
-                          <v-progress-circular
-                            indeterminate
-                            color="grey lighten-5"
-                          ></v-progress-circular>
-                        </div>
-                      </template>
-                    </p-img>
+                  <router-link :to="{ path: `${collMember.pid}`, params: { pid: collMember.pid } }">
+                      <p-img
+                        :src="
+                          instanceconfig.api + '/object/' + collMember.pid + '/thumbnail'
+                        "
+                        class="elevation-1 mt-2"
+                      >
+                        <template v-slot:placeholder>
+                          <div
+                            class="fill-height ma-0"
+                            align="center"
+                            justify="center"
+                          >
+                            <v-progress-circular
+                              indeterminate
+                              color="grey lighten-5"
+                            ></v-progress-circular>
+                          </div>
+                        </template>
+                      </p-img>
+                    </router-link>
                   </div>
                 </v-col>
                 <v-col cols="10">
@@ -986,6 +994,7 @@
                               query: { collection: objectInfo.pid, reset: 1 },
                             })
                           "
+                          :disabled="collMembers.length === 0"
                           color="primary"
                           >{{ $t("Show members") }} ({{
                             objectInfo.haspartsize
@@ -1936,7 +1945,7 @@
                         class="pt-2"
                         v-if="
                           ((objectInfo.cmodel === 'Container') && (objectInfo.members.length <= 500 )) ||
-                          ((objectInfo.cmodel === 'Collection') && ($store.state.collectionMembersTotal <= 500 ))
+                          ((objectInfo.cmodel === 'Collection') && ($store.state.collectionMembersTotal >= 1 && $store.state.collectionMembersTotal <= 500))
                         "
                       >
                         <nuxt-link
@@ -1950,7 +1959,7 @@
                         class="pt-2"
                         v-if="
                           objectInfo.cmodel === 'Container' ||
-                          objectInfo.cmodel === 'Collection'
+                          ((objectInfo.cmodel === 'Collection') && ($store.state.collectionMembersTotal >= 1))
                         "
                       >
                         <nuxt-link
@@ -2141,7 +2150,7 @@
                           >{{ $t("Delete") }}</nuxt-link
                         >
                       </v-row>
-                      <v-row v-if="user.isadmin" no-gutters class="pt-2">
+                      <v-row v-if="user.isadmin && objectInfo.cmodel !== 'Collection'" no-gutters class="pt-2">
                         <a
                           class="mb-1"
                           @click="datareplaceDialog = true"
@@ -2185,8 +2194,8 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click.stop="datareplaceDialog=false">Close</v-btn>
-          <v-btn color="primary" @click="datareplaceUpload()">Upload</v-btn>
+          <v-btn dark color="grey" @click.stop="datareplaceDialog=false">{{ $t("Cancel") }}</v-btn>
+          <v-btn color="primary" @click="datareplaceUpload()">{{ $t("Upload File") }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
