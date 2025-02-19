@@ -1615,6 +1615,9 @@ export default {
         case 'physical-location-select-text-pool':
         case 'subject':
         case 'fixedrole-person':
+        case 'alert':
+        case 'note-checkbox':
+        case 'note-checkbox-with-link':
           break
         default:
           fieldsNew.push(f)
@@ -1634,6 +1637,9 @@ export default {
         case 'physical-location-select-text-pool':
         case 'subject':
         case 'fixedrole-person':
+        case 'alert':
+        case 'note-checkbox':
+        case 'note-checkbox-with-link':
           break
         default:
           var field = JSON.parse(JSON.stringify(editable[i]))
