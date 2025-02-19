@@ -604,7 +604,7 @@ const fields = [
     issn: '',
     idnetifierType: '',
     identifier: '',
-    hidePages: true,
+    hidePages: false,
     pageStart: '',
     pageEnd: '',
     pageStartLabel: 'Page start',
