@@ -750,7 +750,7 @@
                             <v-container fluid>
                               <v-row>
                                 <v-col v-if="addfieldselection.length > 0">
-                                  <span v-t="$t('Selected fields:')" class="mr-2"></span> <v-chip class="mx-1" :key="'addflds'+index" v-for="(ch, index) in addfieldselection" close @click:close="removeField(addfieldselection, ch)">{{ ch.fieldname }}</v-chip>
+                                  <span v-t="$t('Selected fields:')" class="mr-2"></span> <v-chip class="mx-1" :key="'addflds'+index" v-for="(ch, index) in addfieldselection" close @click:close="removeField(addfieldselection, ch)">{{ $t(ch.fieldname) }}</v-chip>
                                 </v-col>
                                 <v-col v-else><span v-t="'Please select metadata fields from the list'"></span></v-col>
                               </v-row>
