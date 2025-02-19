@@ -57,7 +57,7 @@
             
             <v-row no-gutters>
               <v-btn class="mb-4 mt-4 primary" @click="$refs.userSearchdialog.open()" v-if="showOwnerFilter">
-                Search Users
+                {{ $t('Search users') }}
                 <v-icon
                   right
                   dark
