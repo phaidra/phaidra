@@ -1,6 +1,6 @@
 <template>
   <v-dialog width="600px" v-model="dialog">
-    <v-card height="520px">
+    <v-card>
       <v-card-actions>
         <v-container fluid>
           <v-row justify="start">
@@ -34,6 +34,11 @@
           </template>
         </v-data-table>
       </v-card-text>
+      <v-divider></v-divider>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn dark color="grey" @click="dialog = false">{{ $t('Cancel') }}</v-btn>             
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
