@@ -701,6 +701,7 @@ sub get_user_data {
   }
 
   my $entry = $self->getLDAPEntryForUser($c, $username);
+  $c->log->debug("ldap data: ".Dumper($entry));
 
   my $fname;
   my $lname;
@@ -708,6 +709,7 @@ sub get_user_data {
   my @affiliation;
   my $orgul1;
   my $orgul2;
+  my $description;
 
   foreach my $attr (@{$entry->{'asn'}->{'attributes'}}) {
     my $attrtype = $attr->{'type'};
@@ -727,6 +729,9 @@ sub get_user_data {
       }
       if ($attrtype eq 'departmentNumber') {
         $orgul2 = $val;
+      }
+      if ($attrtype eq 'description') {
+        $description = $val;
       }
     }
 
@@ -756,7 +761,7 @@ sub get_user_data {
 
   my $groups = $self->get_member_groups($c, $username);
 
-  my $res = {username => $username, firstname => $fname, lastname => $lname, ldapgroups => $ldapgroups, groups => $groups, email => $email, affiliation => \@affiliation, org_units_l1 => $orgul1, org_units_l2 => $orgul2};
+  my $res = {username => $username, firstname => $fname, lastname => $lname, ldapgroups => $ldapgroups, groups => $groups, email => $email, affiliation => \@affiliation, org_units_l1 => $orgul1, org_units_l2 => $orgul2, displayname => $description};
 }
 
 sub is_superuser {
