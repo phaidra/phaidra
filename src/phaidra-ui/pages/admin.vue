@@ -13,6 +13,9 @@
       <v-tab :active-class="'primary'" >
         <span>{{ $t('Import/Export') }}</span>
       </v-tab>
+      <v-tab :active-class="'primary'" >
+        <span>{{ $t('Manage Phaidra') }}</span>
+      </v-tab>
 
       <v-tab-item>
         <v-card tile>
@@ -483,6 +486,30 @@
 
           </v-tabs>
           <v-btn fixed bottom right raised color="primary" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
+        </v-card>
+      </v-tab-item>
+      <v-tab-item>
+        <v-card tile>
+          <v-container>
+            <v-row>
+              <v-col>
+                <v-row>
+                  <h2 class="md-headline title font-weight-light primary--text pa-2 mb-3">{{ "Manage Phaidra" }}</h2>
+                </v-row>
+                <v-row class="pl-2 mb-6 mt-4">
+                  <ul>
+                    <li><a href="/lam/">Manage Users</a></li>
+                    <li><a href="/api/openapi">Inspect API</a></li>
+                    <li><a href="/dbgate/">Inspect Databases</a></li>
+                    <li><a href="/fcrepo/rest/">Inspect Object Repository</a></li>
+                    <li><a href="/solr/">Inspect Search Engine</a></li>
+                    <li><a href="/grafana/">Inspect Running Services</a></li>
+                    <li><a href="https://phaidra.org/docs/overview/">Documentation</a></li>
+                  </ul>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-container>          
         </v-card>
       </v-tab-item>
 
