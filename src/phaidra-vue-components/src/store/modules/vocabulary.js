@@ -1176,7 +1176,7 @@ const vocabularies = {
         }
       },
       {
-        '@id': 'https://spdx.org/licenses/MIT/',
+        '@id': 'https://opensource.org/license/mit/',
         'skos:notation': [
           '22'
         ],
@@ -1185,8 +1185,8 @@ const vocabularies = {
         },
         'img': 'mit-license-icon.png',
         'skos:definition': {
-          'eng': "The service provider (PHAIDRA, University of Vienna) is not party to the licence agreement. Your action to legally offer your protected object within an MIT licence and the acceptance of said offer by third parties establishes a contractual relationship between you and the respective user. The service provider is not party to this contractual relationship. No rights or obligations will originate such that would be deemed binding to the service provider. The service provider is not a law practice and does not provide legal advice. It provides the information found here without any assumed warranty and assumes no liability for any damages that may arise from its use.",
-          'deu': "Der Diensteanbieter (PHAIDRA, Universität Wien) ist nicht Partei der hier auszuwählenden Lizenzverträge. Durch Ihr Angebot, Ihren Schutzgegenstand einer MIT Lizenz zu unterstellen und die Annahme Ihres Angebots durch andere Nutzer kommt ein Vertragsverhältnis zwischen Ihnen und dem jeweiligen Nutzer zustande. Daran ist der Diensteanbieter nicht beteiligt. Dem Diensteanbieter erwachsen daraus keinerlei Rechte und Pflichten.Der Diensteanbieter ist keine Rechtsanwaltsgesellschaft und leistet keine Rechtsberatung. Er erbringt die hier stehenden Informationen ohne Gewähr und übernimmt keine Haftung für eventuelle Schäden, die sich aus ihrem Gebrauch ergeben."
+          'eng': 'The MIT License is a permissive open-source license that grants broad freedom to use, copy, modify, merge, publish, distribute, sublicense, and sell the software with minimal restrictions. It requires that the original license and copyright notice be included in all copies or substantial portions of the software. Additionally, the software is provided "as is," without any warranty or liability for damages, making it simple and widely favored for fostering collaboration and innovation.<br/><br/>This is a human-readable summary of (and not a substitute for) the licence.<br/>The legal binding text of the licence is available here:<br/><a target="_blank" href="https://opensource.org/license/mit/">Long version</a>',
+          'deu': 'The MIT License is a permissive open-source license that grants broad freedom to use, copy, modify, merge, publish, distribute, sublicense, and sell the software with minimal restrictions. It requires that the original license and copyright notice be included in all copies or substantial portions of the software. Additionally, the software is provided "as is," without any warranty or liability for damages, making it simple and widely favored for fostering collaboration and innovation.<br/><br/>This is a human-readable summary of (and not a substitute for) the licence.<br/>The legal binding text of the licence is available here:<br/><a target="_blank" href="https://opensource.org/license/mit/">Long version</a>',
         }
       },
     ],
