@@ -116,7 +116,7 @@
                   <v-row>
                     <v-col>
                       <v-btn class="mb-4 mt-4 primary" @click="$refs.userSearchdialog.open()">
-                        Search Users
+                        {{ $t('Username search') }}
                         <v-icon
                           right
                           dark
