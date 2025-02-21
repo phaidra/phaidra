@@ -125,7 +125,7 @@
             </v-data-table>
             <v-card-actions>
               <v-btn class="mb-4 mt-4 primary" @click="$refs.userSearchdialog.open()">
-                {{ $t('Search users') }}
+                Search Users
                 <v-icon
                   right
                   dark
