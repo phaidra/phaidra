@@ -1132,10 +1132,8 @@
                           offset="1"
                           v-if="objectInfo.owner.firstname"
                         >
-                          <a :href="'mailto:' + ownerEmail"
-                            >{{ objectInfo.owner.firstname }}
-                            {{ objectInfo.owner.lastname }}</a
-                          >
+                            {{ objectInfo.owner.firstname }}
+                            {{ objectInfo.owner.lastname }}
                         </v-col>
                         <v-col v-else-if="objectInfo.owner.displayname" cols="8" offset="1">
                           <v-row>
