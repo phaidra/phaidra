@@ -56,7 +56,10 @@ export default {
   mixins: [context, config],
   props: {
     label: String,
-    fq: String,
+    fq: {
+      type: String,
+      default: '*:*'
+    },
     length: Number,
     titlecolor: {
       type: String,
