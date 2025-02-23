@@ -705,7 +705,8 @@ const vocabularies = {
       { '@id': 'http://creativecommons.org/licenses/by-nc-nd/4.0/', 'skos:notation': ['18'], 'skos:prefLabel': { 'eng': 'CC BY-NC-ND 4.0 International' }, 'img': 'cc-by-nc-nd.png' },
       { '@id': 'http://creativecommons.org/licenses/by-nc-sa/4.0/', 'skos:notation': ['19'], 'skos:prefLabel': { 'eng': 'CC BY-NC-SA 4.0 International' }, 'img': 'cc-by-nc-sa.png' },
       { '@id': 'http://creativecommons.org/licenses/by-nd/4.0/', 'skos:notation': ['20'], 'skos:prefLabel': { 'eng': 'CC BY-ND 4.0 International' }, 'img': 'cc-by-nd.png' },
-      { '@id': 'http://creativecommons.org/licenses/by-sa/4.0/', 'skos:notation': ['21'], 'skos:prefLabel': { 'eng': 'CC BY-SA 4.0 International' }, 'img': 'cc-by-sa.png' }
+      { '@id': 'http://creativecommons.org/licenses/by-sa/4.0/', 'skos:notation': ['21'], 'skos:prefLabel': { 'eng': 'CC BY-SA 4.0 International' }, 'img': 'cc-by-sa.png' },
+      { '@id': 'https://spdx.org/licenses/MIT/', 'skos:notation': ['22'], 'skos:prefLabel': { 'eng': 'MIT License' }, 'img': 'mit-license-icon.png' }
     ],
     loaded: true
   },
@@ -1173,7 +1174,21 @@ const vocabularies = {
           'eng': "You are free:<br />to copy, distribute, display, and perform the work<br />to make derivative works<br /><br />Under the following conditions:<br /><b>Attribution</b>. You must give the original author credit.<br /><b>Share Alike</b>. If you alter, transform, or build upon this work, you may distribute the resulting work only under a licence identical to this one.<br /><br />- For any reuse or distribution, you must make clear to others the licence terms of this work.<br />- Any of these conditions can be waived if you get permission from the copyright holder.<br />- Nothing in this licence impairs or restricts the author's moral rights. <br/><br/>This is a human-readable summary of (and not a substitute for) the licence.<br/>The legal binding text of the licence is available here:<br/><a target=\"_blank\" href=\"http://creativecommons.org/licenses/by-sa/2.0/at/legalcode\">Long version</a>",
           'deu': 'Namensnennung- -Weitergabe unter gleichen Bedingungen 2.0 Österreich<br /><br />Attribution-Share Alike 2.0 Austria(by-sa)<br /><br />Wenn Sie Ihren Schutzgegenstand unter den Bedingungen dieser Lizenz anbieten, gestatten Sie jedem Lizenznehmer, Ihren Schutzgegenstand in körperlicher oder unkörperlicher  Form zu verwerten, insbesondere<br />- zu vervielfältigen, zu verbreiten, vorzuführen, zu senden und der Öffentlichkeit zur Verfügung zu stellen;<br />- zu bearbeiten und die Bearbeitungen zu verwerten.<br /><br />Der Lizenznehmer muss Ihren Namen in Verbindung mit Ihrem Schutzgegenstand stets in der von Ihnen festgelegten Weise nennen.<br />Wenn der Lizenznehmer Ihren Schutzgegenstand bearbeitet oder in anderer Weise umgestaltet, verändert oder als Grundlage für ein anderes Werk verwendet, darf er das neu entstandene Werk nur unter Verwendung von Lizenzbedingungen weitergeben, die mit denen dieses Lizenzvertrages identisch oder vergleichbar sind.<br /><br />Im Falle einer Verbreitung muss der Lizenznehmer anderen die Lizenzbedingungen, unter welche dieser Schutzgegenstand fällt, mitteilen.<br />Jede der vorgenannten Bedingungen kann aufgehoben werden, sofern Sie als Rechteinhaber die Einwilligung dazu erteilen.<br />Diese Lizenz lässt die Urheberpersönlichkeitsrechte unberührt.<br/><br/>Dieser Text ist nicht der Text des Lizenzvertrages sondern nur eine unverbindliche Kurzfassung dessen.<br/>Die verbindliche Fassung der ausgewählten Lizenz finden Sie hier:<br/><a target="_blank" href="http://creativecommons.org/licenses/by-sa/2.0/at/legalcode">Langversion</a>'
         }
-      }
+      },
+      {
+        '@id': 'https://opensource.org/license/mit/',
+        'skos:notation': [
+          '22'
+        ],
+        'skos:prefLabel': {
+          'eng': 'MIT License'
+        },
+        'img': 'mit-license-icon.png',
+        'skos:definition': {
+          'eng': 'The MIT License is a permissive open-source license that grants broad freedom to use, copy, modify, merge, publish, distribute, sublicense, and sell the software with minimal restrictions. It requires that the original license and copyright notice be included in all copies or substantial portions of the software. Additionally, the software is provided "as is," without any warranty or liability for damages, making it simple and widely favored for fostering collaboration and innovation.<br/><br/>This is a human-readable summary of (and not a substitute for) the licence.<br/>The legal binding text of the licence is available here:<br/><a target="_blank" href="https://opensource.org/license/mit/">Long version</a>',
+          'deu': 'Die MIT-Lizenz ist eine permissive Open-Source-Lizenz, die weitreichende Freiheiten gewährt, die Software zu nutzen, zu kopieren, zu modifizieren, zusammenzuführen, zu veröffentlichen, zu vertreiben, unterzulizenzieren und zu verkaufen – und das bei minimalen Einschränkungen. Sie erfordert, dass die ursprüngliche Lizenz und der Copyright-Hinweis in allen Kopien oder wesentlichen Teilen der Software enthalten sind. Zusätzlich wird die Software „as is“ bereitgestellt, ohne jegliche Gewährleistung oder Haftung für Schäden. Diese Eigenschaften machen die MIT-Lizenz aufgrund ihrer Einfachheit und der umfangreichen Freiheiten zu einer weit verbreiteten Wahl, um Zusammenarbeit und Innovation zu fördern.<br/><br/>Dieser Text ist nicht der Text des Lizenzvertrages sondern nur eine unverbindliche Kurzfassung dessen.<br/>Die verbindliche Fassung der ausgewählten Lizenz finden Sie hier:<br/><a target="_blank" href="https://opensource.org/license/mit/">Langversion</a>',
+        }
+      },
     ],
     loaded: true
   },
