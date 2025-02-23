@@ -100,8 +100,13 @@ export default {
       this.dialog = true
       this.fetchUser()
     },
+    resetList: function () {
+      this.users = []
+      this.userSearchInp = ""
+    },
     selectUser: function (item) {
       this.$emit('user-selected', item)
+      this.resetList()
       this.dialog = false
     }
   }
