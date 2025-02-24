@@ -41,7 +41,8 @@
         "password": "password",
         "org_units_languages": [
             "en",
-            "de"
+            "de",
+            "it"
         ],
         "study_plans_languages": [
             "de"
