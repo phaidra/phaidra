@@ -116,6 +116,10 @@ export default {
     dividerbottom: {
       type: Boolean,
       default: false
+    },
+    prefLabel: {
+      type: Array,
+      default: false
     }
   },
   watch: {
@@ -127,6 +131,12 @@ export default {
     },
     selected (item) {
       (item !== null) && this.resolve(item)
+    }
+  },
+  mounted() {
+    if(this.prefLabel?.length){
+      this.resolved = '<a href="' + this.value + '" target="_blank">' + this.prefLabel[0]['@value'] + '</a>'
+      this.q = this.prefLabel[0]['@value']
     }
   },
   data () {

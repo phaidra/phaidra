@@ -430,6 +430,7 @@
                               v-on:remove="removeField(s.fields, f)"
                               v-on:configure="editFieldProps(f)"
                               :configurable="enablefieldconfig || f.configurable"
+                              :prefLabel="f['skos:prefLabel']"
                             ></p-i-subject-gnd>
                           </template>
 
