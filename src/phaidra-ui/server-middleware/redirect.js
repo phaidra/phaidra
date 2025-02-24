@@ -4,7 +4,19 @@ import config from '../config/phaidra-ui'
 
 export default async (req, res, next) => {
   let baseURL = process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT
+
+  // Check for pdf download start
   
+  const regex = /^\/detail\/([^\/]+)\.pdf$/;
+  const match = req.url.match(regex)
+  if(match) {
+    let pid = match[1].replace('.pdf', '')
+    redirect(res, baseURL + '/api/object/' + pid + '/download')
+    return
+  }
+  
+  // Check for pdf download end
+
   if (process.env.LEGACY_OPEN_REDIRECT === 'true') {
     if (/^\/open\/o:\d+$/.test(req.url)) { 
       let pid = req.url.replace('/open', '')

@@ -114,34 +114,16 @@
               <v-card-text class="mt-4">
                 <v-container fluid>
                   <v-row>
-                    <v-col cols="8">
-                      <v-autocomplete
-                        v-model="userSearchExactModel"
-                        :items="userSearchExactItems.length > 0 ? userSearchExactItems : []"
-                        :loading="userSearchExactLoading"
-                        :search-input.sync="userSearchExact"
-                        :label="$t('Username search')"
-                        :placeholder="$t('Start typing to search')"
-                        item-value="uid"
-                        item-text="uid"
-                        prepend-icon="mdi-database-search"
-                        hide-no-data
-                        hide-selected
-                        return-object
-                        clearable
-                        @click:clear="userSearchExactItems=[]"
-                      >
-                        <template slot="item" slot-scope="{ item }">
-                          <template v-if="item">
-                            <v-list-item-content two-line>
-                              <v-list-item-title>{{ item.uid }}</v-list-item-title>
-                            </v-list-item-content>
-                          </template>
-                        </template>
-                      </v-autocomplete>
-                    </v-col>
-                    <v-col cols="1" class="pt-6">
-                      <v-btn class="primary" :disabled="loading || userSearchExactLoading" @click="addUserExact()">{{ $t('Apply') }}</v-btn>
+                    <v-col>
+                      <v-btn class="mb-4 mt-4 primary" @click="$refs.userSearchdialog.open()">
+                        {{ $t('Username search') }}
+                        <v-icon
+                          right
+                          dark
+                        >
+                          mdi-database-search
+                        </v-icon>
+                      </v-btn>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -265,6 +247,7 @@
             <v-btn color="primary" @click="setExpires()">OK</v-btn>
           </v-date-picker>
         </v-dialog>
+         <user-search-dialog ref="userSearchdialog" @user-selected="searchUserSelected($event)"></user-search-dialog>
       </v-container>
     </v-card-text>
   </v-card>
@@ -275,12 +258,14 @@ import qs from 'qs'
 import arrays from '../../utils/arrays'
 import { vocabulary } from '../../mixins/vocabulary'
 import OrgUnitsTreeDialog from '../select/OrgUnitsTreeDialog'
+import UserSearchDialog from '../select/UserSearchDialog'
 
 export default {
   name: 'p-m-rights',
   mixins: [vocabulary],
   components: {
-    OrgUnitsTreeDialog
+    OrgUnitsTreeDialog,
+    UserSearchDialog
   },
   props: {
     pid: {
@@ -476,6 +461,12 @@ export default {
     addUser: function () {
       if (this.userSearchModel) {
         this.rightsArray.push({ type: 'username', notation: this.userSearchModel.uid, description: this.userSearchModel.value, expires: null })
+        this.saveRights()
+      }
+    },
+    searchUserSelected: function(selectedUser) {
+      if(selectedUser) {
+        this.rightsArray.push({ type: 'username', notation: selectedUser.username, expires: null })
         this.saveRights()
       }
     },
