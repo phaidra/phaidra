@@ -120,7 +120,7 @@
                 [{{ item.username }}]
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-icon color="grey" class="mx-3" @click="removeMember(item.username)">mdi-delete</v-icon>
+                <v-icon color="red lighten-1" class="mx-3" @click="removeMember(item.username)">mdi-delete</v-icon>
               </template>
             </v-data-table>
             <v-card-actions>
