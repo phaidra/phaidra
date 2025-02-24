@@ -1,11 +1,15 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import eng from './eng'
-import deu from './deu'
-import ita from './ita'
+
+// Load JSON translations
+import eng from './eng.json'
+import deu from './deu.json'
+import ita from './ita.json'
 
 Vue.use(VueI18n)
-const messages = { eng: eng, deu: deu, ita: ita }
+
+const messages = { eng, deu, ita }
+
 export default new VueI18n({
   locale: 'deu',
   fallbackLocale: 'eng',
