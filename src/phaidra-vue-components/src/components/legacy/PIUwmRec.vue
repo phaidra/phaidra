@@ -239,7 +239,7 @@
                 :disabled="disabled"
                 :label="ch.labels[alpha2locale]"
                 :error-messages="ch.errorMessages"
-                :hint="'Format YYYY-MM-DD'"
+                :hint="$t('Format YYYY-MM-DD')"
                 :rules="[validationrules.date]"
                 outlined
               ></v-text-field>
