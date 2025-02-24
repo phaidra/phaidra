@@ -70,14 +70,14 @@ export default {
     runtime: true
   },
   axios: {
-    baseURL: 'http://' + "139.59.63.160" + ':3000', // Used as fallback if no runtime config is provided
+    baseURL: 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000', // Used as fallback if no runtime config is provided
   },
   publicRuntimeConfig: {
     primaryColor: process.env.PHAIDRA_PRIMARY_COLOR,
     baseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT,
-    apiBaseURL: 'http://' + "139.59.63.160" + ':3000',
+    apiBaseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT + '/api',
     axios: {
-      browserBaseURL: 'http://' + "139.59.63.160" + ':3000'
+      browserBaseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT + '/api'
     },
     defaultLocale: process.env.PHAIDRA_DEFAULT_LANGUAGE
   },
