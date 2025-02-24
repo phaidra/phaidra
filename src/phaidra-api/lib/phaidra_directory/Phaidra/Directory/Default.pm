@@ -292,7 +292,7 @@ sub org_get_units_uwm {
       }
       push @{$values}, {
         value => $u->{'skos:notation'},
-        name => $u->{'skos:notation'}.": ".$name
+        name => $name
       };
     }
   }
