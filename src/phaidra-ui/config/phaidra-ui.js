@@ -15,7 +15,7 @@ export default {
       doi: {
         baseurl: 'doi.org',
         accept: 'application/vnd.citationstyles.csl+json',
-        citationstyles: 'https://citation.crosscite.org/styles/'
+        citationstyles: 'https://citation.doi.org/styles/'
       },
       ror: {
         baseurl: 'api.ror.org'
