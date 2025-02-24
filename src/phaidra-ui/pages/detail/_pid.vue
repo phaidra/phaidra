@@ -1132,19 +1132,21 @@
                           offset="1"
                           v-if="objectInfo.owner.firstname"
                         >
-                            {{ objectInfo.owner.firstname }}
-                            {{ objectInfo.owner.lastname }}
+                        <a :href="ownerEmail ? 'mailto:' + ownerEmail : null" :class="{ 'no-link': !ownerEmail }">
+                          {{ objectInfo.owner.firstname }} {{ objectInfo.owner.lastname }}
+                        </a>
+
                         </v-col>
                         <v-col v-else-if="objectInfo.owner.displayname" cols="8" offset="1">
                           <v-row>
                               <v-col>
-                                <a :href="'mailto:' + ownerEmail"
+                                <a :href="ownerEmail ? 'mailto:' + ownerEmail : null" :class="{ 'no-link': !ownerEmail }"
                                   >{{ objectInfo.owner.displayname }}</a
                                 >
                               </v-col>
                           </v-row>
                         </v-col>
-                        <v-col v-else cols="8"  offset="1"><a :href="'mailto:' + ownerEmail"
+                        <v-col v-else cols="8"  offset="1"><a :href="ownerEmail ? 'mailto:' + ownerEmail : null" :class="{ 'no-link': !ownerEmail }"
                             >{{ objectInfo.owner.username }}</a
                           ></v-col>
                       </v-row>
@@ -2931,6 +2933,12 @@ h3 {
 </style>
 
 <style scoped>
+.no-link {
+  color: inherit; /* Inherit text color from parent */
+  cursor: default; /* Remove pointer cursor */
+  text-decoration: none; /* Remove underline */
+}
+
 .preview-maxwidth {
   max-width: 80px;
 }
