@@ -136,6 +136,7 @@ export default {
   mounted() {
     if(this.prefLabel?.length){
       this.resolved = '<a href="' + this.value + '" target="_blank">' + this.prefLabel[0]['@value'] + '</a>'
+      this.q = this.prefLabel[0]['@value']
     }
   },
   data () {
