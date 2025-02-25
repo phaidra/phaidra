@@ -1182,8 +1182,6 @@ services:
     entrypoint: bash
     command: ["-c", 'mkdir /data/${S3_BUCKETNAME:-phaidra-bucket}; /usr/bin/minio server /data --console-address :9001']
     profiles: ["minio-s3-dev"]
-
-
     
 volumes:
   chronos-database-dumps:
