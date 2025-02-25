@@ -314,7 +314,7 @@ export default {
         case 'eng': return 'en-GB'
         case 'deu': return 'de-AT'
         case 'ita': return 'it-IT'
-        default: return 'en_GB'
+        default: return 'en-GB'
       }
     }
   },
