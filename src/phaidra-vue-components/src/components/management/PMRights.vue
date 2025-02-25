@@ -241,7 +241,13 @@
           persistent
           width="290px"
         >
-          <v-date-picker v-model="dateModel" scrollable>
+          <v-date-picker
+            color="primary"
+            v-model="dateModel"
+            :first-day-of-week="1"
+            :locale="alpha2bcp47"              
+            scrollable
+          >
             <v-spacer></v-spacer>
             <v-btn dark color="grey" @click="dateDialog = false">{{ $t('Cancel') }}</v-btn>
             <v-btn color="primary" @click="setExpires()">OK</v-btn>
@@ -302,6 +308,14 @@ export default {
   computed: {
     instance: function () {
       return this.$store.state.instanceconfig
+    },
+    alpha2bcp47: function () {
+      switch (this.$i18n.locale) {
+        case 'eng': return 'en-GB'
+        case 'deu': return 'de-AT'
+        case 'ita': return 'it-IT'
+        default: return 'en_GB'
+      }
     }
   },
   data () {
