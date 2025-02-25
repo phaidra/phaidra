@@ -1165,8 +1165,14 @@ Describes the project that is associated with the resource.
       "foaf:homepage": [
         "http://meketre.org/"
       ],
-      "skos:exactMatch": [
+      "frapo:hasProjectIdentifier": [
         "P25958"
+      ],
+      "skos:exactMatch": [
+        {
+           "@type": "ids:doi",
+           "@value": "10.xxxxx/xxxxxxxxx"
+        }
       ],
       "frapo:hasFundingAgency": [
         {
