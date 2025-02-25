@@ -6,7 +6,7 @@ use MongoDB;
 use Time::HiRes qw(sleep);
 use Env;
 
-# $| = 1;  # Disable output buffering
+$| = 1;  # Disable output buffering
 
 # MongoDB Connection
 my $mongo = MongoDB::MongoClient->new(
@@ -22,14 +22,12 @@ my $mongo = MongoDB::MongoClient->new(
 # Confirm connection
 print "Connected to MongoDB successfully!\n";
 
-while (1) {
-    print "Checking for expired sessions...\n";
+print "Checking for expired sessions...\n";
     
-    my $current_time = int(time());
-    print "Checking for expired sessions..." . $current_time . "\n";
-    my $delete_result = $mongo->get_collection('session')->delete_many({ expires => { '$lt' => $current_time } });
+my $current_time = int(time());
+print "Checking for expired sessions..." . $current_time . "\n";
+my $delete_result = $mongo->get_collection('session')->delete_many({ expires => { '$lt' => $current_time } });
 
-    print "Deleted " . $delete_result->deleted_count . " expired sessions.\n";
+print "Deleted " . $delete_result->deleted_count . " expired sessions.\n";
 
-    sleep(3600);  # Run every hour
-}
+__END__
