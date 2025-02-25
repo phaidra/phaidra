@@ -140,7 +140,7 @@
                   :value="issued"
                   v-on:blur="$emit('input-issued',$event.target.value)"
                   :label="$t(issuedDateLabel ? issuedDateLabel : 'Issued')"
-                  :hint="dateFormatHint"
+                  :hint="$t(dateFormatHint)"
                   :rules="[validationrules.date]"
                   :filled="inputStyle==='filled'"
                   :outlined="inputStyle==='outlined'"

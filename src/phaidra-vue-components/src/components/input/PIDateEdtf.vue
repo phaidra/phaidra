@@ -74,7 +74,7 @@
           :background-color="backgroundColor ? backgroundColor : undefined"
           :label="$t(dateLabel ? dateLabel : 'Date')"
           :required="required"
-          :hint="dateFormatHint"
+          :hint="$t(dateFormatHint)"
           :rules="[validationrules.date]"
           :filled="inputStyle==='filled'"
           :outlined="inputStyle==='outlined'"
