@@ -1182,6 +1182,22 @@ services:
     entrypoint: bash
     command: ["-c", 'mkdir /data/${S3_BUCKETNAME:-phaidra-bucket}; /usr/bin/minio server /data --console-address :9001']
     profiles: ["minio-s3-dev"]
+
+  session-cleaner:
+    hostname: session-cleaner
+    <<: [*common, *logs]
+    build:
+      context: .
+      dockerfile: dockerfiles/session-cleaner.dockerfile
+    depends_on:
+      - mongodb-phaidra
+    environment:
+      <<: [*api_common_env, *hosts]
+    volumes:
+      - ./container_init/mongodb/session_cleanup.pl:/session_cleanup.pl:ro
+    command: ["perl", "/session_cleanup.pl"]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev"]
+
     
 volumes:
   chronos-database-dumps:
