@@ -808,7 +808,7 @@
                                 >
                                 <v-card-text>
                                   <v-container>
-                                    <v-row align="center" justify="center">
+                                    <v-row class="mt-4" align="center" justify="center">
                                       <v-btn
                                         color="primary"
                                         class="mx-3"
