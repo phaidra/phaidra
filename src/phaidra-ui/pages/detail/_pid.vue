@@ -894,14 +894,14 @@
                             </v-card-text>
                             <v-divider></v-divider>
                             <v-card-actions>
+                              <v-spacer></v-spacer>
                               <v-btn
                                 dark
                                 color="grey"
                                 :loading="doiRequestLoading"
                                 @click="doiRequestDialog = false"
                                 >{{ $t("Cancel") }}</v-btn
-                              >
-                              <v-spacer></v-spacer>
+                              >                              
                               <v-btn
                                 color="primary"
                                 :loading="doiRequestLoading"
