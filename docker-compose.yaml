@@ -425,6 +425,7 @@ services:
       - chronos-database-dumps:/mnt/database-dumps
       - chronos-sitemaps:/mnt/sitemaps
       - chronos-oai-logs:/mnt/oai-logs
+      - pixelgecko:/mnt/converted_images
     environment:
       <<: [*api_common_env, *hosts]
       FEDORADB: "${FEDORADB:-fedoradb}"
@@ -450,6 +451,7 @@ services:
       - chronos-database-dumps:/mnt/database-dumps
       - chronos-sitemaps:/mnt/sitemaps
       - chronos-oai-logs:/mnt/oai-logs
+      - pixelgecko:/mnt/converted_images
     environment:
       <<: [*api_common_env, *hosts]
       FEDORADB: "${FEDORADB:-fedoradb}"
@@ -940,6 +942,7 @@ services:
       - chronos-database-dumps:/mnt/database-dumps
       - chronos-sitemaps:/mnt/sitemaps
       - chronos-oai-logs:/mnt/oai-logs
+      - pixelgecko:/mnt/converted_images
       - ./container_init/chronos:/mnt/chronos:ro
     environment:
       <<: [*api_common_env, *hosts]
@@ -1080,6 +1083,7 @@ services:
       - chronos-database-dumps:/mnt/database-dumps
       - chronos-sitemaps:/mnt/sitemaps
       - chronos-oai-logs:/mnt/oai-logs
+      - pixelgecko:/mnt/converted_images
       - ./container_init/chronos:/mnt/chronos:ro
     environment:
       <<: [*api_common_env, *hosts]

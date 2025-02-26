@@ -526,6 +526,11 @@ sub delete {
       $res->{status} = $deleteres->code;
     }
   }
+  
+  my $hooks_model = PhaidraAPI::Model::Hooks->new;
+  my $hr          = $hooks_model->delete_hook($c, $pid);
+  push @{$res->{alerts}}, @{$hr->{alerts}} if scalar @{$hr->{alerts}} > 0;
+  $res->{status} = $hr->{status};
 
   return $res;
 }
