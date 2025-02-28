@@ -1276,7 +1276,7 @@
   "A characteristic of the described resource that is physiologically dangerous to some users. Related to WCAG 2.0 guideline 2.3. Values should be drawn from the approved vocabulary.": "Una caratteristica della risorsa descritta che è fisiologicamente pericolosa per alcuni utenti. È in relazione alla linea guida 2.3 delle WCAG 2.0. I valori vanno attinti dal vocabolario controllato.",
   "Sound characteristic": "Caratteristiche del suono",
   "Can be used inside 'Complex subject' to specify what the subject metadata are describing.": "Può essere usato all'interno di un \"Soggetto complesso\" per specificare cosa descrivono i metadati del soggetto.",
-  "Basisklassifikation": "Classificazione di base (Basisklassifikation)",
+  "Basisklassifikation": "Soggetto (BIC)",
   "Persistent identifier": "Identificatore",
   "Search users": "Cerca utenti",
   "Select a user": "Seleziona utente",
