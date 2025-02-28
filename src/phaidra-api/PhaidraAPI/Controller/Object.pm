@@ -381,6 +381,7 @@ sub preview {
     $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
     return;
   }
+  my $load_btn_text = $self->param('loadBtnText');
   my $pid = $self->stash('pid');
 
   my $force = $self->param('force');
@@ -638,7 +639,7 @@ sub preview {
       $self->stash(pid           => $pid);
 
       if ($showloadbutton) {
-        $self->render(template => 'utils/loadbutton', format => 'html');
+        $self->render(template => 'utils/loadbutton', format => 'html', load_btn_text => $load_btn_text);
         return;
       }
 
@@ -701,7 +702,7 @@ sub preview {
         $self->stash(mType    => 'nexus') if $index_mime eq 'model/nxz';
 
         if ($showloadbutton) {
-          $self->render(template => 'utils/loadbutton', format => 'html');
+          $self->render(template => 'utils/loadbutton', format => 'html', load_btn_text => $load_btn_text);
           return;
         }
 
@@ -970,7 +971,8 @@ $self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
         $self->stash(pid      => $pid);
         
         if ($showloadbutton) {
-          $self->render(template => 'utils/loadbutton', format => 'html');
+          
+          $self->render(template => 'utils/loadbutton', format => 'html', load_btn_text => $load_btn_text);
           return;
         }
 
@@ -995,7 +997,7 @@ $self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
       $self->stash(mimetype      => $mimetype);
       $self->stash(pid           => $pid);
       if ($showloadbutton) {
-        $self->render(template => 'utils/loadbutton', format => 'html');
+        $self->render(template => 'utils/loadbutton', format => 'html', load_btn_text => $load_btn_text);
         return;
       }
 

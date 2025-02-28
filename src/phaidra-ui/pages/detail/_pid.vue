@@ -472,7 +472,7 @@
                   instanceconfig.api +
                     '/object/' +
                     objectInfo.pid +
-                    '/preview'
+                    '/preview'  + '?loadBtnText=' + $t('Open')
                 "
                 target="_blank"
                 >{{ $t("Open in Bookviewer") }}</v-btn
@@ -486,7 +486,7 @@
                       instanceconfig.api +
                       '/object/' +
                       objectInfo.pid +
-                      '/preview'
+                      '/preview' + '?loadBtnText=' + $t('Open')
                     "
                     width="100%"
                     frameborder="0"
@@ -501,7 +501,7 @@
                     instanceconfig.api +
                     '/object/' +
                     objectInfo.pid +
-                    '/preview'
+                    '/preview' + '?loadBtnText=' + $t('Open')
                   "
                   :style="
                     objectInfo.cmodel === 'Audio'
@@ -520,7 +520,7 @@
                     instanceconfig.api +
                     '/object/' +
                     objectInfo.pid +
-                    '/preview'
+                    '/preview'  + '?loadBtnText=' + $t('Open')
                   "
                   target="_blank"
                   >{{ $t("Open in new window") }}</v-btn
@@ -574,7 +574,7 @@
                 <iframe
                   v-if="!member.isrestricted"
                   :src="
-                    instanceconfig.api + '/object/' + member.pid + '/preview'
+                    instanceconfig.api + '/object/' + member.pid + '/preview'  + '?loadBtnText=' + $t('Open')
                   "
                   :style="
                     member.cmodel === 'Audio'
