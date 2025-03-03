@@ -140,6 +140,15 @@ sub _proxy_thumbnail {
   # this can lead to a broken thumbnail until the job is finished
   # but this is better than checking the job status forever after
   my $jobstatus = 'finished';#$self->imageserver_job_status($pid);
+
+  my $authz_model = PhaidraAPI::Model::Authorization->new;
+  my $res         = $authz_model->check_rights($self, $pid, 'ro');
+  unless ($res->{status} eq '200') {
+    $self->setNoCacheHeaders();
+    $self->reply->static('images/locked.png');
+    return;
+  }
+
   if (defined($jobstatus) && ($jobstatus eq 'finished')) {
 
     # use imageserver
