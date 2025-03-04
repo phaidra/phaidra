@@ -1,7 +1,7 @@
 <template>
    <div class="pt-4">
       <div v-if="error.statusCode === 404">
-        <h1>{{$t('This page does not exist')}}...</h1>
+        <h1>{{$t('This page does not exist...')}}</h1>
         <p>{{$t('We apologise for the inconvenience, the page you are trying to access does not exist at this address.')}}</p>
         <p v-if="instanceconfig.email">{{$t('If you are sure you entered the correct address but still get an error, please contact')}} <a :href="'mailto:' + instanceconfig.email">{{ instanceconfig.email }}</a></p>
       </div>
