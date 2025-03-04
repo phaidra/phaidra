@@ -6,7 +6,7 @@
         <p v-if="instanceconfig.email">{{$t('If you are sure you entered the correct address but still get an error, please contact')}} <a :href="'mailto:' + instanceconfig.email">{{ instanceconfig.email }}</a></p>
       </div>
       <h1 v-else>An error occurred</h1>
-      <p>{{$t('Return to')}} <NuxtLink to="/">Home page</NuxtLink></p>
+      <p>{{$t('Return to')}} <NuxtLink to="/">home page</NuxtLink>.</p>
   </div>
 </template>
 
