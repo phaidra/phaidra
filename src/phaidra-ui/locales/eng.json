@@ -458,6 +458,11 @@
     "Lastname *": "Last name *",
     "Research data policy": "Research data policy",
 
+    "mode": "Mode",
+    "control": "Control",
+    "hazard": "Hazard",
+    "feature": "Feature",
+
     "lang_aa": "Afar",
     "lang_ab": "Abkhazian",
     "lang_ae": "Avestan",

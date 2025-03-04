@@ -46,6 +46,10 @@
         <template v-else-if="p==='schema:accessMode'" slot="schema:accessMode">
           <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'accessMode'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
         </template>
+        
+        <template v-else-if="p==='overallAccessibility'" slot="overallAccessibility">
+          <p-d-accessibility :p="p" :o="o" :key="componentid+'overallAccessibility'" v-bind.sync="displayProperties"></p-d-accessibility>
+        </template>
 
         <template v-else-if="p==='schema:accessibilityFeature'" slot="schema:accessibilityFeature">
           <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'accessibilityFeature'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
@@ -400,6 +404,7 @@
 <script>
 import order from '../../utils/order'
 import Vue from 'vue'
+import PDAccessibility from './PDAccessibility'
 import PDLicense from './PDLicense'
 import PDTitle from './PDTitle'
 import PDSkosPreflabel from './PDSkosPreflabel'
@@ -462,6 +467,7 @@ export default {
     PDKeyword,
     PDLangValue,
     PDLicense,
+    PDAccessibility,
     PDValue,
     PDDate,
     PDDimension,
@@ -604,6 +610,13 @@ export default {
   mounted: function () {
     this.$store.dispatch('vocabulary/loadLanguages', this.$i18n.locale)
     this.getProjectIds()
+    let overallAccessibility = {
+      control: this.jsonld['schema:accessibilityControl'] || [],
+      feature: this.jsonld['schema:accessibilityFeature'] || [],
+      hazard: this.jsonld['schema:accessibilityHazard'] || [],
+      mode: this.jsonld['schema:accessMode'] || [],
+    }
+    this.jsonld['overallAccessibility'] = overallAccessibility
   }
 }
 </script>

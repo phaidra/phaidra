@@ -62,10 +62,7 @@
     <slot name="dcterms:temporal"></slot>
 
     <!-- a11y -->
-    <slot name="schema:accessibilityControl"></slot>
-    <slot name="schema:accessMode"></slot>
-    <slot name="schema:accessibilityHazard"></slot>
-    <slot name="schema:accessibilityFeature"></slot>
+    <slot name="overallAccessibility"></slot>
 
     <!-- events -->
     <slot name="ebucore:hasRelatedEvent"></slot>
