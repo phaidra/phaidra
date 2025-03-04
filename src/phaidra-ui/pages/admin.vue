@@ -48,6 +48,15 @@
                 </v-row>
                 <v-row>
                   <v-col>
+                    <v-textarea
+                      :label="$t('Favicon SVG (Text)')"
+                      v-model="parsedPublicConfigData.faviconText"
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="6" class="mt-6"></v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
                     <v-text-field
                       label="Institution"
                       v-model="parsedPublicConfigData.institution"
@@ -519,7 +528,9 @@
 </template>
 <script>
 
+import FaviconMixin from '../mixins/favicon'
 export default {
+  mixins: [FaviconMixin],
   middleware: "auth",
   computed: {
     configAsJSON: {
@@ -650,6 +661,10 @@ export default {
             },
             data: httpFormData
           })
+        if(instanceConfData.faviconText){
+          const base64Svg = Buffer.from(instanceConfData.faviconText).toString('base64')
+          this.updateFavicon(`data:image/svg+xml;base64,${base64Svg}`)
+        }
 
         if(instanceConfData?.api){
           this.$axios.defaults.baseURL = instanceConfData.api
