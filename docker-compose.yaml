@@ -250,7 +250,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:e647ccce
+    image: phaidraorg/ui:1c754e07
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -265,7 +265,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:e647ccce
+    image: phaidraorg/ui:1c754e07
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -279,7 +279,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:1db06b46
+    image: phaidraorg/api-dist:1c754e07
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -294,7 +294,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:1db06b46
+    image: phaidraorg/api-dist:1c754e07
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -419,7 +419,7 @@ services:
   ############### chronos service for local profile ###############
   chronos:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:d7bd4903
+    image: phaidraorg/chronos-dist:b7d75dda
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
