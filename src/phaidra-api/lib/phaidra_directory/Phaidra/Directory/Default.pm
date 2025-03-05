@@ -702,7 +702,7 @@ sub get_user_data {
   }
 
   my $entry = $self->getLDAPEntryForUser($c, $username);
-  $c->log->debug("ldap data: ".Dumper($entry));
+  # $c->log->debug("ldap data: ".Dumper($entry));
 
   my $fname;
   my $lname;
