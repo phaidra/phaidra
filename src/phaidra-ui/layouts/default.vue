@@ -68,16 +68,18 @@ import "@/compiled-icons/univie-right";
 import "@/compiled-icons/univie-sprache";
 import { config } from "../mixins/config";
 import { context } from "../mixins/context";
+import FaviconMixin from '../mixins/favicon'
 import Vue from "vue";
 import moment from "moment";
 import "@/assets/css/material-icons.css";
 
 export default {
-  mixins: [config, context],
+  mixins: [config, context, FaviconMixin],
   data() {
     return {
       loading: true,
-      i18n_override: {}
+      i18n_override: {},
+      faviconUrl: ``
     }
   },
   metaInfo() {
@@ -96,6 +98,11 @@ export default {
     }
     return metaInfo;
   },
+  watch: {
+    faviconUrl(val) {
+      this.updateFavicon(val)
+    }
+  },
   methods: {
     dismiss: function (alert) {
       this.$store.commit("clearAlert", alert);
@@ -105,6 +112,9 @@ export default {
       try {
         let settingResponse = await this.$axios.get("/config/public");
         if(settingResponse?.data?.public_config){
+          if(settingResponse?.data?.public_config?.faviconText){
+            this.setFavIconText(settingResponse?.data?.public_config?.faviconText)
+          }
           this.$store.dispatch("setInstanceConfig", settingResponse?.data?.public_config);
           this.$store.dispatch("vocabulary/setInstanceConfig", settingResponse?.data?.public_config);
           if (settingResponse?.data?.public_config?.data_i18n) {
@@ -126,6 +136,10 @@ export default {
         this.loading = false;
       }
       return true
+    },
+    setFavIconText(svgText) {
+      const base64Svg = Buffer.from(svgText).toString('base64')
+      this.faviconUrl = `data:image/svg+xml;base64,${base64Svg}`
     }
   },
   mounted() {
