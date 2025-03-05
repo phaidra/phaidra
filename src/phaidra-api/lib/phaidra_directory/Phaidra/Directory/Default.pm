@@ -280,10 +280,11 @@ sub org_get_units_uwm {
   }
 
   if ($unitsres->{status} == 200) {
+    my $lang6393 = $PhaidraAPI::Model::Languages::iso639map{$lang};
     for my $u (@{$unitsres->{subunits}}) {
       my $name;
       for my $l (keys %{$u->{'skos:prefLabel'}}) {
-        if ($l eq $lang) {
+        if ($l eq $lang6393) {
           $name = $u->{'skos:prefLabel'}->{$l};
         }
       }
@@ -731,7 +732,7 @@ sub get_user_data {
         $orgul2 = $val;
       }
       if ($attrtype eq 'description') {
-        $description = $val;
+        $description = decode('UTF-8', $val);
       }
     }
 

@@ -472,7 +472,7 @@
                   instanceconfig.api +
                     '/object/' +
                     objectInfo.pid +
-                    '/preview'
+                    '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
                 "
                 target="_blank"
                 >{{ $t("Open in Bookviewer") }}</v-btn
@@ -486,7 +486,7 @@
                       instanceconfig.api +
                       '/object/' +
                       objectInfo.pid +
-                      '/preview'
+                      '/preview' + '?lang=' + $i18n.locale.substring(0, 2)
                     "
                     width="100%"
                     frameborder="0"
@@ -501,7 +501,7 @@
                     instanceconfig.api +
                     '/object/' +
                     objectInfo.pid +
-                    '/preview'
+                    '/preview' + '?lang=' + $i18n.locale.substring(0, 2)
                   "
                   :style="
                     objectInfo.cmodel === 'Audio'
@@ -520,7 +520,7 @@
                     instanceconfig.api +
                     '/object/' +
                     objectInfo.pid +
-                    '/preview'
+                    '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
                   "
                   target="_blank"
                   >{{ $t("Open in new window") }}</v-btn
@@ -574,7 +574,7 @@
                 <iframe
                   v-if="!member.isrestricted"
                   :src="
-                    instanceconfig.api + '/object/' + member.pid + '/preview'
+                    instanceconfig.api + '/object/' + member.pid + '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
                   "
                   :style="
                     member.cmodel === 'Audio'
@@ -808,7 +808,7 @@
                                 >
                                 <v-card-text>
                                   <v-container>
-                                    <v-row align="center" justify="center">
+                                    <v-row class="mt-4" align="center" justify="center">
                                       <v-btn
                                         color="primary"
                                         class="mx-3"
@@ -894,14 +894,14 @@
                             </v-card-text>
                             <v-divider></v-divider>
                             <v-card-actions>
+                              <v-spacer></v-spacer>
                               <v-btn
                                 dark
                                 color="grey"
                                 :loading="doiRequestLoading"
                                 @click="doiRequestDialog = false"
                                 >{{ $t("Cancel") }}</v-btn
-                              >
-                              <v-spacer></v-spacer>
+                              >                              
                               <v-btn
                                 color="primary"
                                 :loading="doiRequestLoading"

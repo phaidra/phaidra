@@ -421,7 +421,7 @@
                               }}</v-list-item-title></v-list-item
                           >
                           <v-list-item
-                              v-if="signedin"
+                              v-if="signedin  && instanceconfig.groups"
                               @click="
                               $router.push(localeLocation({ path: '/groups' }))
                               "
@@ -500,7 +500,7 @@
                     <v-hover v-slot:default="{ hover }">
                     <nuxt-link
                         :class="hover ? 'ph-button primary' : 'ph-button grey'"
-                        v-show="signedin"
+                        v-show="signedin && instanceconfig.groups"
                         :to="localePath('/groups')"
                         >{{ $t("Groups") }}</nuxt-link
                     >
