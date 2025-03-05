@@ -304,6 +304,47 @@ sub _create_imageserver_job_if_not_exists {
 
   return $res;
 }
+sub delete_hook {
+  my ($self, $c, $pid) = @_;
+  my $res = { alerts => [], status => 200 };
+
+  my $search_model = PhaidraAPI::Model::Search->new;
+  my $res_cmodel = $search_model->get_cmodel($c, $pid);
+  $c->app->log->debug("res_cmodel\n" . $c->app->dumper($res_cmodel));
+
+  my %valid_models = (
+    'Picture'      => 'pige',
+    'PDFDocument'  => 'pige',
+    'Video'        => 'vige'
+  );
+
+  if (defined $res_cmodel->{cmodel} && exists $valid_models{ $res_cmodel->{cmodel} }) {
+    my $agent = $valid_models{ $res_cmodel->{cmodel} };
+    my $find = $c->paf_mongo->get_collection('jobs')->find_one({ pid => $pid });
+
+    if ($find && defined $find->{status}) {
+      $c->app->log->info("delete object hook for cmodel $res_cmodel->{cmodel} pid[$pid] : Current streaming job status[$find->{status}]");
+
+      if ($find->{status} eq "TO_DELETE" or $find->{status} eq "DEL_REQUESTED") {
+        $c->app->log->info("Delete already requested. Noop.");
+      } elsif ($find->{status} =~ m/^OC_DELETED_/) {
+        $c->app->log->info("Already deleted. Noop.");
+      } else {
+        $c->app->log->info("Marking stream for delete.");
+        $c->paf_mongo->get_collection('jobs')->update_one(
+          { 'pid' => $pid, 'agent' => $agent },
+          { '$set' => { 'status' => 'TO_DELETE' } },
+          { 'upsert' => 0 }
+        );
+      }
+    } else {
+      $c->app->log->info("Streaming job wasn't found. Noop.");
+    }
+  }
+
+  return $res;
+}
+
 
 sub _create_streaming_job_if_not_exists {
   my ($self, $c, $pid, $cmodel) = @_;

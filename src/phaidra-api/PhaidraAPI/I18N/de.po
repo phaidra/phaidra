@@ -1,3 +1,6 @@
+msgid "Open"
+msgstr "Offen"
+
 msgid "University of Vienna"
 msgstr "Universität Wien"
 

@@ -1513,7 +1513,8 @@ export default {
       {
         title: 'General metadata',
         id: 1,
-        fields: digitalFields
+        fields: digitalFields,
+        disablemenu: true
       }
     )
 
