@@ -732,7 +732,7 @@ sub get_user_data {
         $orgul2 = $val;
       }
       if ($attrtype eq 'description') {
-        $description = $val;
+        $description = decode('UTF-8', $val);
       }
     }
 
