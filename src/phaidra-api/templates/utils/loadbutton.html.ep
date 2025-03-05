@@ -17,7 +17,7 @@
  <body>
    <center>
     <div><img onClick="window.location.href=window.location.href+'?force=1'" src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/thumbnail?h=400" /></div>
-    <div><button class="button" onClick="window.location.href=window.location.href+'?force=1'"><%= $load_btn_text || 'Open' %></button></div>
+    <div><button class="button" onClick="window.location.href=window.location.href+'?force=1'"><%== l('Open') %></button></div>
    </center>
  </body>
 </html>
