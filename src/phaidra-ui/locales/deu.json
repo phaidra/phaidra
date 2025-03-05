@@ -1259,5 +1259,9 @@
     "Contribution *": "Beitragender *",
     "ORCID": "ORCID-iD",
     "Research data policy": "Forschungsdatenpolicy",
-    "Open": "Offen"
+    "mode": "Betriebsart",
+    "control": "Steuerung",
+    "hazard": "Störung",
+    "feature": "Merkmal"
+  
   }
