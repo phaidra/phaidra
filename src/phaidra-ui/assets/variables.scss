@@ -2,3 +2,18 @@
 //
 // The variables you want to modify
 // $font-size-root: 20px;
+
+// Globals
+// $font-family-root: 'Roboto', Arial, Helvetica, sans-serif;
+// $font-size-root: 11.5pt;
+// $line-height-root: 1.42857143;
+
+$material-light: (
+  background: #fff
+);
+$material-dark: (
+  background: #1F2C39,
+  surface: #2C3E50,
+  cards: #2C3E50,
+  chips: #2C3E50
+);

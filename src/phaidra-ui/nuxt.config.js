@@ -95,6 +95,7 @@ export default {
   // },
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
+    treeShake: true,
     optionsPath: './vuetify.options.js'
   },
   privateRuntimeConfig: {
