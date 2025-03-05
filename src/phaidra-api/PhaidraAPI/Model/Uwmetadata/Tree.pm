@@ -4458,9 +4458,9 @@ our %tree = (
           "input_regex" => "^.*\$",
           "input_type"  => "input_text",
           "labels"      => {
-            "de" => "weitere Zuordnung",
-            "en" => "additional allocation",
-            "it" => "ulteriore assegnazione"
+            "de" => "Weitere Zuordnung",
+            "en" => "Additional allocation",
+            "it" => "Ulteriore assegnazione"
           },
           "loaded" => 0,
 
@@ -5009,7 +5009,8 @@ our %tree = (
                   "terms"       => [
                     { "labels" => {
                         "de" => "F\x{f6}rderungsnummer",
-                        "en" => "Grant Number"
+                        "en" => "Grant Number",
+                        "it" => "Grant Number"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_25/1557233"
                     },
@@ -6863,7 +6864,7 @@ our %tree = (
           "labels"      => {
             "de" => "von Seite",
             "en" => "From Page",
-            "it" => "da pagina",
+            "it" => "Da pagina",
             "sr" => "od stranice"
           },
           "loaded" => 0,
@@ -6888,7 +6889,7 @@ our %tree = (
           "labels"      => {
             "de" => "bis Seite",
             "en" => "To Page",
-            "it" => "a pagina",
+            "it" => "A pagina",
             "sr" => "do stranice"
           },
           "loaded" => 0,
