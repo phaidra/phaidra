@@ -381,6 +381,9 @@ sub preview {
     $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
     return;
   }
+  my $lang = $self->param('lang') || 'en';  # Default to English
+  $self->languages($lang);
+
   my $pid = $self->stash('pid');
 
   my $force = $self->param('force');
@@ -970,6 +973,7 @@ $self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
         $self->stash(pid      => $pid);
         
         if ($showloadbutton) {
+          
           $self->render(template => 'utils/loadbutton', format => 'html');
           return;
         }
