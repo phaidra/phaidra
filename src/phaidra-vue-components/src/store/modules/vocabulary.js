@@ -700,13 +700,14 @@ const vocabularies = {
   'licenses': {
     terms: [
       { '@id': 'http://rightsstatements.org/vocab/InC/1.0/', 'skos:notation': ['1'], 'skos:prefLabel': { 'eng': 'All rights reserved', 'deu': 'Alle Rechte vorbehalten', 'ita': 'Tutti i diritti riservati' } },
-      { '@id': 'http://creativecommons.org/licenses/by/4.0/', 'skos:notation': ['16'], 'skos:prefLabel': { 'eng': 'CC BY 4.0 International' }, 'img': 'cc-by.png' },
-      { '@id': 'http://creativecommons.org/licenses/by-nc/4.0/', 'skos:notation': ['17'], 'skos:prefLabel': { 'eng': 'CC BY-NC 4.0 International' }, 'img': 'cc-by-nc.png' },
-      { '@id': 'http://creativecommons.org/licenses/by-nc-nd/4.0/', 'skos:notation': ['18'], 'skos:prefLabel': { 'eng': 'CC BY-NC-ND 4.0 International' }, 'img': 'cc-by-nc-nd.png' },
-      { '@id': 'http://creativecommons.org/licenses/by-nc-sa/4.0/', 'skos:notation': ['19'], 'skos:prefLabel': { 'eng': 'CC BY-NC-SA 4.0 International' }, 'img': 'cc-by-nc-sa.png' },
-      { '@id': 'http://creativecommons.org/licenses/by-nd/4.0/', 'skos:notation': ['20'], 'skos:prefLabel': { 'eng': 'CC BY-ND 4.0 International' }, 'img': 'cc-by-nd.png' },
-      { '@id': 'http://creativecommons.org/licenses/by-sa/4.0/', 'skos:notation': ['21'], 'skos:prefLabel': { 'eng': 'CC BY-SA 4.0 International' }, 'img': 'cc-by-sa.png' },
-      { '@id': 'https://spdx.org/licenses/MIT/', 'skos:notation': ['22'], 'skos:prefLabel': { 'eng': 'MIT License' }, 'img': 'mit-license-icon.png' }
+      { '@id': 'http://creativecommons.org/publicdomain/mark/1.0/', 'skos:notation': ['9'], 'skos:prefLabel': { 'eng': 'Public Domain Mark 1.0', 'ita': 'Marchio di Pubblico Dominio 1.0' }, 'img': 'pdm.png' },
+      { '@id': 'http://creativecommons.org/licenses/by/4.0/', 'skos:notation': ['16'], 'skos:prefLabel': { 'eng': 'CC BY 4.0 International', 'ita': 'CC BY 4.0 Internazionale' }, 'img': 'cc-by.png' },
+      { '@id': 'http://creativecommons.org/licenses/by-nc/4.0/', 'skos:notation': ['17'], 'skos:prefLabel': { 'eng': 'CC BY-NC 4.0 International', 'ita': 'CC BY-NC 4.0 Internazionale' }, 'img': 'cc-by-nc.png' },
+      { '@id': 'http://creativecommons.org/licenses/by-nc-nd/4.0/', 'skos:notation': ['18'], 'skos:prefLabel': { 'eng': 'CC BY-NC-ND 4.0 International', 'ita': 'CC BY-NC-ND 4.0 Internazionale' }, 'img': 'cc-by-nc-nd.png' },
+      { '@id': 'http://creativecommons.org/licenses/by-nc-sa/4.0/', 'skos:notation': ['19'], 'skos:prefLabel': { 'eng': 'CC BY-NC-SA 4.0 International', 'ita': 'CC BY-NC-SA 4.0 Internazionale' }, 'img': 'cc-by-nc-sa.png' },
+      { '@id': 'http://creativecommons.org/licenses/by-nd/4.0/', 'skos:notation': ['20'], 'skos:prefLabel': { 'eng': 'CC BY-ND 4.0 International', 'ita': 'CC BY-ND 4.0 Internazionale' }, 'img': 'cc-by-nd.png' },
+      { '@id': 'http://creativecommons.org/licenses/by-sa/4.0/', 'skos:notation': ['21'], 'skos:prefLabel': { 'eng': 'CC BY-SA 4.0 International', 'ita': 'CC BY-SA 4.0 Internazionale' }, 'img': 'cc-by-sa.png' },      
+      { '@id': 'https://spdx.org/licenses/MIT/', 'skos:notation': ['22'], 'skos:prefLabel': { 'eng': 'MIT License', 'ita': 'Licenza MIT' }, 'img': 'mit-license-icon.png' }
     ],
     loaded: true
   },
