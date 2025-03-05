@@ -295,16 +295,6 @@ section {
   overflow: auto;
 }
 
-#app {
-  font-family: "Roboto", sans-serif, Arial, Helvetica, sans-serif;
-  font-size: 11.5pt;
-  line-height: 1.42857143;
-  color: black;
-  background-color: white;
-  font-weight: 300;
-  text-rendering: optimizeLegibility;
-}
-
 a {
   text-decoration: none;
 }
@@ -334,6 +324,10 @@ address {
 
 .theme--light.v-card > .v-card__text {
   color: black;
+}
+
+.theme--dark.v-card > .v-card__text {
+  color: white;
 }
 
 .lang-icon {
