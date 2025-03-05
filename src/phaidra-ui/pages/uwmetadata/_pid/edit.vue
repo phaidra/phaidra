@@ -1,12 +1,17 @@
 <template>
   <client-only>
-    <p-i-form-uwm
-      title="Metadata"
-      :form="editform"
-      :targetpid="this.pid"
-      v-on:object-saved="objectSaved($event)"
-      v-on:load-form="editform = $event"
-    ></p-i-form-uwm>
+    <div>
+      <v-btn class="mt-4" :to="{ path: `/detail/${pid}`, params: { pid: pid } }">
+        <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
+      </v-btn>
+      <p-i-form-uwm
+        title="Metadata"
+        :form="editform"
+        :targetpid="this.pid"
+        v-on:object-saved="objectSaved($event)"
+        v-on:load-form="editform = $event"
+      ></p-i-form-uwm>
+    </div>
   </client-only>
 </template>
 
