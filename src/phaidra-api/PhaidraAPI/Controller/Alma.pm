@@ -68,7 +68,7 @@ sub get_record_jsonld {
     my $marcjson = $r->{json};
 
     my $mappings_model = PhaidraAPI::Model::Mappings::Import::Marc->new;
-    my $mappingresult = $mappings_model->get_jsonld($marcjson);
+    my $mappingresult = $mappings_model->get_jsonld($self, $marcjson);
 
     $self->render(json => $mappingresult, status => $mappingresult->{status}); 
 }

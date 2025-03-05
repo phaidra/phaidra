@@ -8,6 +8,8 @@ use Switch;
 use base qw/Mojo::Base/;
 use XML::LibXML;
 use Scalar::Util qw/looks_like_number/;
+use PhaidraAPI::Model::Config;
+use PhaidraAPI::Model::Util;
 
 sub alma_get_record_json {
   my $self = shift;

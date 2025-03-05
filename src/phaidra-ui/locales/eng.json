@@ -229,7 +229,7 @@
     "rdax:P00009": "Association",
 
     "dcterms:provenance": "Provenance",
-
+    "rdau:P60550": "Extent",
     "bibo:issue": "Issue",
     "bibo:volume": "Volume",
     "schema:numberOfPages": "Number of pages",

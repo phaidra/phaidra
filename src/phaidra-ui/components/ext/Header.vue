@@ -327,6 +327,25 @@
                     </v-list-item>
                 </v-list>
                 </v-menu>
+
+                <v-tooltip v-if="!$vuetify.theme.dark" bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-btn v-on="on" text @click="darkMode" class="top-margin-lang grey--text text--darken-1">
+                      <v-icon>mdi-moon-waxing-crescent</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Dark Mode On</span>
+                </v-tooltip>
+
+                <v-tooltip v-else bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-btn v-on="on" text @click="darkMode" class="top-margin-lang grey--text text--darken-1">
+                      <v-icon>mdi-white-balance-sunny</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Dark Mode Off</span>
+                </v-tooltip>
+
             </v-row>
 
             <v-row>
@@ -559,6 +578,9 @@
       }
     },
     methods: {
+      darkMode() {
+        this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      },
       logout: function () {
         console.log("local logout")
         this.$store.dispatch("logout");
