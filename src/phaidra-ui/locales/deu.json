@@ -1266,5 +1266,7 @@
     "mode": "Betriebsart",
     "control": "Steuerung",
     "hazard": "Störung",
-    "feature": "Merkmal"
+    "feature": "Merkmal",
+    "Show Groups link": "Gruppenverwaltung",
+    "Show link to 'Groups' in navigation.": "Ziegt den Link zur Gruppenverwaltung in Navigation."
   }
