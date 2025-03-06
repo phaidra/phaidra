@@ -34,7 +34,7 @@
                 </v-toolbar> -->
               </template>
               <template v-slot:item.pid="{ item }">
-                <router-link :to="{ path: `detail/${item.pid}`, params: { pid: item.pid } }">{{ item.pid }}</router-link>
+                <a :href="`${instance.baseurl}/${item.pid}`">{{ item.pid }}</a>
               </template>
               <template v-slot:item.title="{ item }">
                 {{ item.title | truncate(100) }}
@@ -53,6 +53,11 @@ export default {
   props: {
     list: {
       type: Object
+    }
+  },
+  computed: {
+    instance: function () {
+      return this.$store.state.instanceconfig
     }
   },
   data () {
