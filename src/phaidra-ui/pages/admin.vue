@@ -228,7 +228,7 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
-                      label="Enable feedback"
+                      :label="$t('Enable feedback')"
                       v-model="parsedPublicConfigData.feedback"
                     ></v-checkbox>
                   </v-col>

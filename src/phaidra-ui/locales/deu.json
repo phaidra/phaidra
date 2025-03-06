@@ -1266,5 +1266,7 @@
     "mode": "Betriebsart",
     "control": "Steuerung",
     "hazard": "Störung",
-    "feature": "Merkmal"
+    "feature": "Merkmal",
+    "Enable feedback": "Submit Feedback",
+    "Enable tab for 'Feedback' in Upload form.": "Feedbackreiter im Submitform aktivieren."
   }
