@@ -228,6 +228,15 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
+                      label="Enable feedback"
+                      v-model="parsedPublicConfigData.feedback"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Enable tab for 'Feedback' in Upload form.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-checkbox
                       label="Access restrictions: show persons"
                       v-model="parsedPublicConfigData.accessrestrictions_showpersons"
                     ></v-checkbox>
