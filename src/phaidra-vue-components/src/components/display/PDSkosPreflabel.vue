@@ -10,12 +10,13 @@
         <a v-else class="valuefield" :href="o['skos:exactMatch'][0]" target="_blank">{{ l['@value'] }}</a>
       </v-col>
       <!--<v-col :md="valueColMd" cols="12" v-else-if="usedMarkdown" class="valuefield" v-html="$md.disable(['image','emphasis']).render(l['@value'])"></v-col>-->
-      <v-col class="valuefield" :md="valueColMd" cols="12" v-else>{{ l['@value'] }}</v-col>
+      <v-col class="valuefield" :md="valueColMd" cols="12" v-else ><span v-html="autolinkerCheck(l['@value'])"></span></v-col>
     </v-row>
   </span>
 </template>
 
 <script>
+import Autolinker from 'autolinker';
 import { displayproperties } from '../../mixins/displayproperties'
 import { vocabulary } from '../../mixins/vocabulary'
 
@@ -67,6 +68,12 @@ export default {
       (this.p === 'bf:note') ||
       (this.p === 'dcterms:provenance')
     }
-  }
+  },
+  methods: {
+    autolinkerCheck(val) {
+      return Autolinker.link(val);
+
+    }
+  },
 }
 </script>
