@@ -150,7 +150,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn dark @click="deleteDialog = false" color="grey">{{ $t('Cancel') }}</v-btn>
-          <v-btn @click="deleteGroup()" color="primary">{{ $t('Delete') }}</v-btn>
+          <v-btn dark @click="deleteGroup()" color="red lighten-1">{{ $t('Delete') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
