@@ -37,8 +37,12 @@ sub get {
     $jsonld->{'@context'} = $context;
     $jsonld->{'@id'}      = 'https://' . $self->config->{phaidra}->{baseurl} . '/' . $pid;
     for my $pred (keys %{$jsonld}) {
-      if ($pred =~ m/role:(\w+)/g) {
-        $jsonld->{'@context'}->{$pred} = {'@id' => 'http://id.loc.gov/vocabulary/relators', '@container' => '@list'};
+      if ($pred =~ m/^role:(\w+)$/) {
+          my $role_name = $1;
+          $jsonld->{'@context'}->{'role'}->{'@context'}->{$role_name} = {
+              '@id' => "http://id.loc.gov/vocabulary/relators/$role_name",
+              '@container' => '@list'
+          };
       }
     }
   }
