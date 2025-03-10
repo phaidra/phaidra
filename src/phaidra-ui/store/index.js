@@ -50,7 +50,8 @@ export const mutations = {
       'accessrestrictions_showedupersonaffiliation',
       'accessrestrictions_showorgunits',
       'accessrestrictions_showgroups',
-      'data_affiliations'
+      'data_affiliations',
+      'feedback'
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
