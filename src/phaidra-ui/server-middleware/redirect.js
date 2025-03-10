@@ -25,6 +25,13 @@ export default async (req, res, next) => {
       redirect(res, redUrl)
       return
     }
+    if (/^\/view\/o:\d+$/.test(req.url)) { 
+      let pid = req.url.replace('/view', '')
+      let redUrl = baseURL + '/' + pid
+      console.log(redUrl)
+      redirect(res, redUrl)
+      return
+    }
   }
   if (/^\/o:\d+$/.test(req.url)) { 
     let pid = req.url.replace('/', '')
