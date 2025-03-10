@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-btn class="mt-4" :to="{ path: `/detail/${routepid}`, params: { pid: routepid } }">
+    <v-btn color="primary" class="mt-4" :to="{ path: `/detail/${routepid}`, params: { pid: routepid } }">
       <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
     </v-btn>
     <v-card class="mt-8" v-if="objectInfo && objectInfo.metadata['JSON-LD']">
