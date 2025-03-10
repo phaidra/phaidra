@@ -198,6 +198,28 @@ sub edit_template {
     return;
   }
   my $tid = $self->stash('tid');
+  my $type = $self->param('type');
+
+  my $owner;
+  if ($self->stash('remote_user')) {
+    $owner = $self->stash('remote_user');
+  } else {
+    $owner = $self->stash->{basic_auth_credentials}->{username};
+  }
+
+  if($type eq 'navtemplate') {
+    $self->app->log->debug("param public " . $self->param('public'));
+    my $public = ($self->param('public') eq 'true') ? true : false;
+    my $validationfnc = $self->param('validationfnc');
+    my $query = {tid => $tid, owner => $owner};
+    # admin can edit any templates
+    if ($owner eq $self->app->{config}->{phaidra}->{adminusername}) {
+      $query = {tid => $tid};
+    }
+    $self->mongo->get_collection('jsonldtemplates')->update_one($query, { '$set' => { public => $public, validationfnc => $validationfnc, updated => time}});
+    $self->render(json => $res, status => $res->{status});
+    return
+  }
 
   my $form = $self->param('form');
   unless (defined($form)) {
@@ -228,12 +250,6 @@ sub edit_template {
     return;
   }
 
-  my $owner;
-  if ($self->stash('remote_user')) {
-    $owner = $self->stash('remote_user');
-  } else {
-    $owner = $self->stash->{basic_auth_credentials}->{username};
-  }
 
   $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid, owner => $owner}, { '$set' => { form => $form, updated => time}});
   if ($rights) {
@@ -273,12 +289,16 @@ sub get_template {
     }
   }
 
-  my $tres = $self->mongo->get_collection('jsonldtemplates')->find_one(
-    {
-      tid => $self->stash('tid'), 
-      '$or' => [{ owner => $owner }, { public => true }]
-    }
-  );
+  my $query = {
+    tid => $self->stash('tid'), 
+    '$or' => [{ owner => $owner }, { public => true }]
+  };
+  # admin can get any templates
+  if ($owner eq $self->app->{config}->{phaidra}->{adminusername}) {
+    $query = {tid => $self->stash('tid')};
+  }
+
+  my $tres = $self->mongo->get_collection('jsonldtemplates')->find_one($query);
 
   $res->{template} = $tres;
 
@@ -300,6 +320,10 @@ sub get_users_templates {
   }
 
   my $find = {'owner' => $owner};
+  # admin can get all templates
+  if ($owner eq $self->app->{config}->{phaidra}->{adminusername}) {
+    $find = {};
+  }
   if ($tag) {
     $find->{'tag'} = $tag;
   }
@@ -307,7 +331,7 @@ sub get_users_templates {
   my $users_templates = $self->mongo->get_collection('jsonldtemplates')->find($find)->sort({'created' => -1});
   my @tmplts          = ();
   while (my $doc = $users_templates->next) {
-    push @tmplts, {tid => $doc->{tid}, name => $doc->{name}, created => $doc->{created}};
+    push @tmplts, {tid => $doc->{tid}, name => $doc->{name}, created => $doc->{created}, public => $doc->{public}, validationfnc => $doc->{validationfnc}};
   }
 
   $res->{templates} = \@tmplts;
@@ -332,7 +356,13 @@ sub remove_template {
     $owner = $self->stash->{basic_auth_credentials}->{username};
   }
 
-  $self->mongo->get_collection('jsonldtemplates')->delete_one({tid => $self->stash('tid'), owner => $owner});
+   my $query = {tid => $self->stash('tid'), owner => $owner};
+   # admin can remove any templates
+   if ($owner eq $self->app->{config}->{phaidra}->{adminusername}) {
+     $query = {tid => $self->stash('tid')};
+   }
+
+  $self->mongo->get_collection('jsonldtemplates')->delete_one($query);
 
   $self->render(json => $res, status => $res->{status});
 }

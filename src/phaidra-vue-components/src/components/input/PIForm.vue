@@ -1060,7 +1060,7 @@ export default {
       default: false
     },
     validationfnc: {
-      type: Function
+      type: [Function, String]
     },
     help: {
       type: Boolean,
@@ -1422,7 +1422,10 @@ export default {
       if (this.validationfnc instanceof Function) {
         console.log('passed validationfnc')
         return this.validationfnc(this.targetpid)
-      } else {
+      } else if (typeof(this.validationfnc) === 'string') {
+        return this[this.validationfnc](this.targetpid)
+      }
+      else {
         if (this.instanceconfig.validationfnc) {
           console.log('configured validation: ' + this.instanceconfig.validationfnc)
           return this[this.instanceconfig.validationfnc](this.targetpid)

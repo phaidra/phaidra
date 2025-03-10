@@ -8,7 +8,7 @@
         :enablerights="true" 
         :addbutton="true" 
         :templating="templating"
-        :validationfnc="skipValidation ? dontValidate : null" 
+        :validationfnc="validationfnc ? validationfnc : null" 
         v-on:load-form="form = $event" 
         v-on:load-rights="rights = $event"
         v-on:object-created="objectCreated($event)"
@@ -34,6 +34,7 @@ export default {
       form: {},
       rights: {},
       skipValidation: false,
+      validationfnc: null,
       templating: true
     }
   },
@@ -224,6 +225,9 @@ export default {
         }
         if (response.data.template.hasOwnProperty('skipValidation')) {
           self.skipValidation = response.data.template.skipValidation
+        }
+        if (response.data.template.hasOwnProperty('validationfnc')) {
+          self.validationfnc = response.data.template.validationfnc
         }
       } catch (error) {
         console.log(error)
