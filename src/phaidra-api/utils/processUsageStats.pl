@@ -33,10 +33,30 @@ print "connecting to database\n";
 my $dbh = DBI->connect($dsn, $username, $password, { RaiseError => 1, AutoCommit => 1 })
     or die $DBI::errstr;
 
+my $sth;
+
+# Identify the visitor IDs exceeding the threshold:
+$sth = $dbh->prepare("
+    SELECT `visitor_id`, `ip`, COUNT(*)
+    FROM `usage_stats`
+    GROUP BY `visitor_id`
+    HAVING COUNT(*) > $botTreshold
+");
+$sth->execute();
+
+# Delete the records for those visitor IDs
+my $delete_sth = $dbh->prepare("DELETE FROM `usage_stats` WHERE `visitor_id` = ?");
+my $i = 0;
+while (my ($visitor_id, $ip, $count) = $sth->fetchrow_array) {
+    $i++;
+    print "$i deleting $ip $count\n";
+    $delete_sth->execute($visitor_id);
+}
+
 # Select all distinct IPs from usage_stats for processing
 # Taking 3 day window to allow for some overlap... and won't repeatedly try if it does not work
 # though if everything works well, only the one from last day should be NULL anyway
-my $sth = $dbh->prepare("
+$sth = $dbh->prepare("
     SELECT DISTINCT `ip` 
     FROM `usage_stats` 
     WHERE `location_country` IS NULL 
@@ -62,24 +82,6 @@ while (my $row = $sth->fetchrow_hashref()) {
     # Update the usage_stats table with the resolved country code
     my $update_sth = $dbh->prepare("UPDATE `usage_stats` SET `location_country` = ? WHERE `ip` = ? AND `created` >= NOW() - INTERVAL 4 DAY");
     $update_sth->execute($country_code, $ip_address);
-}
-
-# Next, identify the visitor IDs exceeding the threshold:
-$sth = $dbh->prepare("
-    SELECT `visitor_id`, `ip`, COUNT(*)
-    FROM `usage_stats`
-    GROUP BY `visitor_id`
-    HAVING COUNT(*) > $botTreshold
-");
-$sth->execute();
-
-# Delete the records for those visitor IDs
-my $delete_sth = $dbh->prepare("DELETE FROM `usage_stats` WHERE `visitor_id` = ?");
-my $i = 0;
-while (my ($visitor_id, $ip, $count) = $sth->fetchrow_array) {
-    $i++;
-    print "$i deleting $ip $count\n";
-    $delete_sth->execute($visitor_id);
 }
 
 print "done\n";
