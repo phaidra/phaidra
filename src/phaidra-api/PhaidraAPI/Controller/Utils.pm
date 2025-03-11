@@ -164,10 +164,9 @@ sub search_users {
     }
 
     my $dbh = $self->app->db_user->dbh;
-    my $latestversion = '1';
 
     # Secure query to get all fields for matching users
-    my $ss = "SELECT * FROM user_terms WHERE username LIKE ? AND version = ?";
+    my $ss = "SELECT * FROM user_terms WHERE username LIKE ?";
     my $sth = $dbh->prepare($ss);
 
     unless ($sth) {
@@ -178,7 +177,7 @@ sub search_users {
     }
 
     # Use a wildcard search to match usernames
-    unless ($sth->execute("%$username%", $latestversion)) {
+    unless ($sth->execute("%$username%")) {
         $self->app->log->error("Database execution error: " . $dbh->errstr);
         $res->{status} = 500;
         push @{$res->{alerts}}, "Database execution error: " . $dbh->errstr;
