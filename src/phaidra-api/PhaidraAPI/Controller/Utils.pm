@@ -166,7 +166,7 @@ sub search_users {
     my $dbh = $self->app->db_user->dbh;
 
     # Secure query to get all fields for matching users
-    my $ss = "SELECT * FROM user_terms WHERE username LIKE ?";
+    my $ss = "SELECT DISTINCT(username) FROM user_terms WHERE username LIKE ?";
     my $sth = $dbh->prepare($ss);
 
     unless ($sth) {
