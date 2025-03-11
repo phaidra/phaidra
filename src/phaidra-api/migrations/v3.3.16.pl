@@ -30,6 +30,8 @@ $cntr->mode('ping');
 
 # will fail if the column already exists
 $cntr->dbh->do("ALTER TABLE usage_stats ADD COLUMN visitor_id CHAR(64) DEFAULT NULL;");
+$cntr->dbh->do("CREATE INDEX `idx_created` ON `usage_stats` (`created`);");
+$cntr->dbh->do("CREATE INDEX `idx_visitor` ON `usage_stats` (`visitor_id`);");
 
 $log->info("finished migration to v3.3.16");
 
