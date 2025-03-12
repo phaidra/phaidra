@@ -42,7 +42,7 @@
       {{ item.created | unixtime }}
     </template>
     <template v-slot:item.load="{ item }">
-      <v-btn text color="primary" @click="editValidation(item)" v-if="type === 'navtemplate'">
+      <v-btn text color="primary" @click="editValidation(item)" v-if="type === 'navtemplate' && $store.state.user.isadmin">
         <span>{{ $t('Edit Validation') }}</span>
       </v-btn>
       <v-btn text color="primary" @click="loadTemplate('')" v-if="isDefaultSelect && item.tid === selectedTemplateId">
@@ -105,6 +105,8 @@ export default {
           ];
           if(this.type === 'navtemplate') {
             this.headers.unshift({ text: this.$t('Public'), align: 'left', value: 'public' })
+          }
+          if(this.$store.state.user.isadmin) {
             this.headers.push({ text: this.$t('Validation'), align: 'left', value: 'validationfnc' })
           }
           this.headers.push({ text: this.$t('Actions'), align: 'right', value: 'load', sortable: false })

@@ -1,37 +1,31 @@
 <template>  
   <div>
     <v-container fluid>
-        <v-card-text>
-            <p-templates
-                class="mt-4"
-                ref="templatesRef"
-                :items-per-page="5"
-                :id-only="true"
-                type="navtemplate"
-                v-on:load-template="loadTemplate($event)"
-                v-on:edit-validation="editValidation($event)"
-                v-on:public-toggle="publicToggle($event)"
-            ></p-templates>
-        </v-card-text>
+        <v-card>
+          <v-card-text>
+              <p-templates
+                  class="mt-4"
+                  ref="templatesRef"
+                  :items-per-page="5"
+                  :id-only="true"
+                  type="navtemplate"
+                  v-on:load-template="loadTemplate($event)"
+                  v-on:edit-validation="editValidation($event)"
+                  v-on:public-toggle="publicToggle($event)"
+              ></p-templates>
+          </v-card-text>
+        </v-card>
         <v-dialog  v-model="validationEdit" width="500">
               <v-card>
                 <v-card-title class="title font-weight-light grey lighten-2" primary-title><span v-t="'Edit Template Validation'"></span></v-card-title>
                 <v-card-text>
-                  <v-alert
-                    v-model="validationError"
-                    dismissible
-                    type="error"
-                    transition="slide-y-transition"
-                  >
-                    <span>{{ $t("Please fill the validation with following options") }}.</span>
-                    <br />
-                    <template>
-                      <ul>
-                        <li v-for="field in availableValidationOptions" :key="'mfld' + field"><span>{{ $t(field) }}</span></li>
-                      </ul>
-                    </template>
-                  </v-alert>
-                  <v-text-field class="mt-4" hide-details filled single-line v-model="validationName" :label="$t('Validation name')" ></v-text-field>
+                   <v-select
+                    class="mt-5"
+                    v-model="validationName"
+                    :items="availableValidationOptions"
+                    filled
+                    :label="$t('Validation name')"
+                  ></v-select>
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
@@ -60,7 +54,7 @@ export default {
       let response = await this.$axios.request({
           method: 'POST',
           data: httpFormData,
-          url: `/jsonld/template/${value.tid}/edit?type=navtemplate`,
+          url: `/jsonld/template/${value.tid}/edit_property`,
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }
@@ -81,16 +75,11 @@ export default {
       this.templateDialog = false;
     },
     editValidation: async function (templateItem) {
-      this.validationError = false
       this.selectedTemplate = templateItem;
       this.validationName = templateItem.validationfnc || ''
       this.validationEdit = true;
     },
     saveValidation: async function() {
-     if(!this.availableValidationOptions.includes(this.validationName)) {
-      this.validationError = true
-      return
-     }
      this.validationSaveLoading = true
       await this.updateTemplateProp({
         tid: this.selectedTemplate.tid,
@@ -109,7 +98,6 @@ export default {
       validationName: '',
       selectedTemplate: null,
       validationSaveLoading: false,
-      validationError: false,
       availableValidationOptions: [
         'noValidation',
         'defaultValidation',

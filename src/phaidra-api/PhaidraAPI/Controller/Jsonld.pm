@@ -192,6 +192,23 @@ sub add_template {
   $self->render(json => $res, status => $res->{status});
 }
 
+sub edit_template_property {
+  my $self = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  unless (defined($self->stash('tid'))) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined template id'}]}, status => 400);
+    return;
+  }
+  my $tid = $self->stash('tid');
+
+  my $public = ($self->param('public') eq 'true') ? true : false;
+  my $validationfnc = $self->param('validationfnc');
+  $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid}, { '$set' => { public => $public, validationfnc => $validationfnc, updated => time}});
+  $self->render(json => $res, status => $res->{status});
+}
+
 sub edit_template {
   my $self = shift;
 
@@ -202,28 +219,6 @@ sub edit_template {
     return;
   }
   my $tid = $self->stash('tid');
-  my $type = $self->param('type');
-
-  my $owner;
-  if ($self->stash('remote_user')) {
-    $owner = $self->stash('remote_user');
-  } else {
-    $owner = $self->stash->{basic_auth_credentials}->{username};
-  }
-
-  if($type eq 'navtemplate') {
-    $self->app->log->debug("param public " . $self->param('public'));
-    my $public = ($self->param('public') eq 'true') ? true : false;
-    my $validationfnc = $self->param('validationfnc');
-    my $query = {tid => $tid, owner => $owner};
-    # admin can edit any templates
-    if ($owner eq $self->app->{config}->{phaidra}->{adminusername}) {
-      $query = {tid => $tid};
-    }
-    $self->mongo->get_collection('jsonldtemplates')->update_one($query, { '$set' => { public => $public, validationfnc => $validationfnc, updated => time}});
-    $self->render(json => $res, status => $res->{status});
-    return
-  }
 
   my $form = $self->param('form');
   unless (defined($form)) {
@@ -254,6 +249,12 @@ sub edit_template {
     return;
   }
 
+  my $owner;
+  if ($self->stash('remote_user')) {
+    $owner = $self->stash('remote_user');
+  } else {
+    $owner = $self->stash->{basic_auth_credentials}->{username};
+  }
 
   $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid, owner => $owner}, { '$set' => { form => $form, updated => time}});
   if ($rights) {
@@ -335,7 +336,16 @@ sub get_users_templates {
   my $users_templates = $self->mongo->get_collection('jsonldtemplates')->find($find)->sort({'created' => -1});
   my @tmplts          = ();
   while (my $doc = $users_templates->next) {
-    push @tmplts, {tid => $doc->{tid}, name => $doc->{name}, created => $doc->{created}, public => $doc->{public}, validationfnc => $doc->{validationfnc}};
+    my $template = { 
+        tid     => $doc->{tid}, 
+        name    => $doc->{name}, 
+        created => $doc->{created}, 
+        public  => $doc->{public} 
+    };
+    if ($owner eq $self->app->{config}->{phaidra}->{adminusername}) {
+        $template->{validationfnc} = $doc->{validationfnc};
+    }
+    push @tmplts, $template;
   }
 
   $res->{templates} = \@tmplts;

@@ -690,6 +690,8 @@ sub startup {
       $loggedin->post('jsonld/template/add')                                 ->to('jsonld#add_template');
       $loggedin->post('jsonld/template/:tid/remove')                         ->to('jsonld#remove_template');
       $loggedin->post('jsonld/template/:tid/edit')                           ->to('jsonld#edit_template');
+      
+      $admin->post('jsonld/template/:tid/edit_property')                     ->to('jsonld#edit_template_property');
 
       $loggedin->post('ir/submit')                                           ->to('ir#submit');
       $loggedin->post('ir/notifications')                                    ->to('ir#notifications');
@@ -776,6 +778,8 @@ sub startup {
     $admin->get('config/private')                                               ->to('config#get_private_config');
 
     unless($self->app->config->{readonly}){
+
+      $admin->post('jsonld/template/:tid/edit_property')                        ->to('jsonld#edit_template_property');
 
       $admin->post('config/public')                                             ->to('config#post_public_config');
       $admin->post('config/private')                                            ->to('config#post_private_config');
