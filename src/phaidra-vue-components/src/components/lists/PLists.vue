@@ -24,13 +24,13 @@
             >
               <template v-slot:top>
                 <v-toolbar flat>
-                  <!-- <v-text-field
+                  <v-text-field
                     v-model="listsSearch"
                     append-icon="mdi-magnify"
                     :label="$t('Search...')"
                     single-line
                     hide-details
-                  ></v-text-field> -->
+                  ></v-text-field>
                   <v-spacer></v-spacer>
                   <v-dialog v-model="createDialog" max-width="500px">
                     <template v-slot:activator="{ on }">
