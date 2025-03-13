@@ -406,6 +406,7 @@ export default {
   },
   methods: {
     _getTermChildren: async function (uri) {
+      if(!uri) return;
       this.clsLoading = true
       try {
         let response = await this.$axios.request({
