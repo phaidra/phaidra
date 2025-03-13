@@ -1268,5 +1268,6 @@
     "hazard": "Störung",
     "feature": "Merkmal",
     "Enable feedback": "Submit Feedback",
-    "Enable tab for 'Feedback' in Upload form.": "Feedbackreiter im Submitform aktivieren."
+    "Enable tab for 'Feedback' in Upload form.": "Feedbackreiter im Submitform aktivieren.",
+    "Persistent identifier": "Persistent Identifier"
   }
