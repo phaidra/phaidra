@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <span class="youarehere primary--text">{{ $t("You are here") }}:</span>
-      <template v-for="(item, index) in items">
+      <template v-for="(item, index) in translatedArray">
         <icon
           :key="'icon' + index"
           left
@@ -50,6 +50,19 @@ export default {
   props: {
     items: Array,
   },
+   computed: {
+    translatedArray() {
+      if (!this.items) return []
+      return JSON.parse(JSON.stringify(this.items)).map((item) => {
+        if(item.text.includes(" o:")){
+          const [staticText, dynamicPart] = item.text.split(" o:");
+          const translatedText = this.$t(staticText.trim());
+          item.text = `${translatedText} o:${dynamicPart}`;
+        }
+        return item
+      });
+    }
+  }
 };
 </script>
 
