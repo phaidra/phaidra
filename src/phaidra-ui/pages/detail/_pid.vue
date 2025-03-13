@@ -2386,6 +2386,22 @@ export default {
       }
       return false;
     },
+    latestVersion: function () {
+      let latestVersion = null;
+      let latestDate = this.$store.state.objectInfo.created;
+      if (this.$store.state.objectInfo.versions) {
+        if (Array.isArray(this.$store.state.objectInfo.versions)) {
+          for (let v of this.$store.state.objectInfo.versions) {
+            let currentCreated = v.created;
+            if (currentCreated > latestDate) {
+              latestDate = currentCreated;
+              latestVersion = v;
+            }
+          }
+        }
+      }
+      return latestVersion;
+    },
     citationLocale: function () {
       switch (this.$i18n.locale) {
         case "eng":
