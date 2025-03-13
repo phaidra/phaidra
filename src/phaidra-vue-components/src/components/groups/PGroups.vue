@@ -8,7 +8,6 @@
           </v-card-title>
           <v-card-text>
             <v-data-table
-              hide-default-header
               :headers="groupsHeaders"
               :items="groups"
               :search="groupsSearch"
@@ -238,12 +237,7 @@ export default {
       groupsLoading: false,
       groupsSearch: '',
       deleteGroupConfirm: false,
-      groupsHeaders: [
-        { text: 'Name', align: 'left', value: 'name' },
-        { text: 'Created', align: 'right', value: 'created' },
-        { text: 'Updated', align: 'right', value: 'updated' },
-        { text: 'Actions', align: 'right', value: 'actions', sortable: false }
-      ],
+      groupsHeaders: [],
       groups: [],
       loadedGroup: null,
       membersLoading: false,
@@ -260,6 +254,19 @@ export default {
       userSearchItems: [],
       userSearchLoading: false
     }
+  },
+  watch: {
+     '$i18n.locale': {
+        immediate: true, // Ensure it's set on load
+        handler() {
+          this.groupsHeaders = [
+              { text: this.$t('Group'), align: 'left', value: 'name' },
+              { text: this.$t('Created'), align: 'right', value: 'created' },
+              { text: this.$t('Modified'), align: 'right', value: 'updated' },
+              { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+            ];
+        }
+     }
   },
   methods: {
     searchUserSelected: function(selectedUser) {

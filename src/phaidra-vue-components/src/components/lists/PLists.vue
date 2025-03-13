@@ -8,7 +8,6 @@
           </v-card-title>
           <v-card-text>
             <v-data-table
-              hide-default-header
               :headers="listsHeaders"
               :items="lists"
               :search="listsSearch"
@@ -186,12 +185,7 @@ export default {
       listsLoading: false,
       listsSearch: '',
       deleteListConfirm: false,
-      listsHeaders: [
-        { text: 'Name', align: 'left', value: 'name' },
-        { text: 'Created', align: 'right', value: 'created' },
-        { text: 'Updated', align: 'right', value: 'updated' },
-        { text: 'Actions', align: 'right', value: 'actions', sortable: false }
-      ],
+      listsHeaders: [],
       lists: [],
       loadedList: null,
       membersLoading: false,
@@ -205,6 +199,19 @@ export default {
       members: [],
       token: null
     }
+  },
+  watch: {
+     '$i18n.locale': {
+        immediate: true, // Ensure it's set on load
+        handler() {
+          this.listsHeaders = [
+            { text: this.$t('List'), align: 'left', value: 'name' },
+            { text: this.$t('Created'), align: 'right', value: 'created' },
+            { text: this.$t('Modified'), align: 'right', value: 'updated' },
+            { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+          ];
+        }
+     }
   },
   methods: {
     refreshLoadedList: async function () {
