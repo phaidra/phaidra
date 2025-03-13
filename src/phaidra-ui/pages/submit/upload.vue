@@ -14,7 +14,7 @@
           :mouseoverfielddef="true"
           :help="false"
           :debug="false"
-          :feedback="true"
+          :feedback="instanceconfig.feedback"
           :feedback-user="this.user"
           :feedback-context="'Upload'"
           v-on:load-form="form = $event"

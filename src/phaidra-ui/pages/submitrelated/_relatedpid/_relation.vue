@@ -1,6 +1,6 @@
 <template>
   <v-col>
-    <v-btn class="my-4" :to="{ path: `/detail/${relatedpid}`, params: { pid: relatedpid } }">
+    <v-btn color="primary" class="my-4" :to="{ path: `/detail/${relatedpid}`, params: { pid: relatedpid } }">
       <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
     </v-btn>
     <v-alert v-if="

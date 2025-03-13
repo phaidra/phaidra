@@ -214,7 +214,7 @@ sub stats {
     if ($output eq 'chart') {
 
       my $downloads;
-      my $sth = $c->app->db_metadata->dbh->prepare("SELECT DATE_FORMAT(created,'%Y-%m-%d'), location_country FROM usage_stats WHERE action = 'download' AND pid = '$pid';")
+      my $sth = $c->app->db_metadata->dbh->prepare("SELECT DATE_FORMAT(created,'%Y-%m-%d'), location_country FROM usage_stats WHERE action = 'download' AND pid = '$pid' AND `created` <= NOW() - INTERVAL 1 DAY;")
         or $c->app->log->error("Error querying database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
       $sth->execute() or $c->app->log->error("Error querying database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
       my $date;
@@ -230,7 +230,7 @@ sub stats {
       }
 
       my $detail_page;
-      $sth = $c->app->db_metadata->dbh->prepare("SELECT DATE_FORMAT(created,'%Y-%m-%d'), location_country FROM usage_stats WHERE action = 'info' AND pid = '$pid';") or $c->app->log->error("Error querying piwik database for detail stats chart:" . $c->app->db_metadata->dbh->errstr);
+      $sth = $c->app->db_metadata->dbh->prepare("SELECT DATE_FORMAT(created,'%Y-%m-%d'), location_country FROM usage_stats WHERE action = 'info' AND pid = '$pid' AND `created` <= NOW() - INTERVAL 1 DAY;") or $c->app->log->error("Error querying piwik database for detail stats chart:" . $c->app->db_metadata->dbh->errstr);
       $sth->execute()                                                                                                                                                or $c->app->log->error("Error querying piwik database for detail stats chart:" . $c->app->db_metadata->dbh->errstr);
       $sth->bind_columns(undef, \$date, \$country);
       while ($sth->fetch) {
@@ -253,12 +253,12 @@ sub stats {
     }
     else {
 
-      my $downloads = $c->app->db_metadata->dbh->selectrow_array("SELECT count(*) FROM usage_stats WHERE action = 'download' AND pid = '$pid';");
+      my $downloads = $c->app->db_metadata->dbh->selectrow_array("SELECT count(*) FROM usage_stats WHERE action = 'download' AND pid = '$pid' AND `created` <= NOW() - INTERVAL 1 DAY;");
       unless (defined($downloads)) {
         $c->app->log->error("Error querying database for download stats:" . $c->app->db_metadata->dbh->errstr);
       }
 
-      my $detail_page = $c->app->db_metadata->dbh->selectrow_array("SELECT count(*) FROM usage_stats WHERE action = 'info' AND pid = '$pid';");
+      my $detail_page = $c->app->db_metadata->dbh->selectrow_array("SELECT count(*) FROM usage_stats WHERE action = 'info' AND pid = '$pid' AND `created` <= NOW() - INTERVAL 1 DAY;");
       unless (defined($detail_page)) {
         $c->app->log->error("Error querying database for detail stats:" . $c->app->db_metadata->dbh->errstr);
       }

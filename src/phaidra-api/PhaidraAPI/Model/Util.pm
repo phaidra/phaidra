@@ -215,6 +215,10 @@ sub track_action {
   eval {
     unless (exists($c->app->config->{"sites"})) {
       my $ip  = $c->tx->remote_address;
+      my $x_forwarded_for = $c->req->headers->header('X-Forwarded-For');
+      if ($x_forwarded_for) {
+        ($ip) = $x_forwarded_for =~ /^([^,]+)/;
+      }
       my $visitor_id = $self->create_visitor_id($c, $ip);
       my $ipa = $self->anonymize_ip($c, $ip);
       $c->app->db_metadata->dbh->do("INSERT INTO usage_stats (action, pid, ip, visitor_id) VALUES ('$action', '$pid', '$ipa', '$visitor_id');") or $c->app->log->error($c->app->db_metadata->dbh->errstr);

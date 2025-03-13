@@ -1,7 +1,7 @@
 <template>
   <client-only>
     <div>
-      <v-btn class="mt-4" :to="{ path: `/detail/${pid}`, params: { pid: pid } }">
+      <v-btn color="primary" class="mt-4" :to="{ path: `/detail/${pid}`, params: { pid: pid } }">
         <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
       </v-btn>
       <p-i-form-uwm
