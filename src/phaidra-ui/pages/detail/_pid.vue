@@ -447,6 +447,17 @@
               </div>
             </v-alert>
           </v-row>
+          <v-row justify="center" v-if="latestVersion">
+            <v-col cols="12">
+              <v-btn
+                raised
+                color="primary"
+                class="mt-2 float-right"
+                :to="localePath({ path: `/detail/${latestVersion.pid}` })"
+                >{{ $t("Go to latest version") }}</v-btn
+              >
+            </v-col>
+          </v-row>
           <v-row justify="center" v-if="showPreview">
             <template v-if="(objectInfo.cmodel === 'Book') && (objectInfo.datastreams.includes('UWMETADATA'))">
               <v-btn
