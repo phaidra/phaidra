@@ -1268,6 +1268,8 @@
     "control": "Steuerung",
     "hazard": "Störung",
     "feature": "Merkmal",
+    "Show Groups link": "Gruppenverwaltung",
+    "Show link to 'Groups' in navigation.": "Ziegt den Link zur Gruppenverwaltung in Navigation.",
     "Enable feedback": "Submit Feedback",
     "Enable tab for 'Feedback' in Upload form.": "Feedbackreiter im Submitform aktivieren.",
     "Persistent identifier": "Persistent Identifier"

@@ -219,11 +219,11 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
-                      label="Enable groups"
+                      :label="$t('Show Groups link')"
                       v-model="parsedPublicConfigData.groups"
                     ></v-checkbox>
                   </v-col>
-                  <v-col cols="6" class="mt-4">{{ $t("Enable link to 'Groups' in navigation.") }}</v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Show link to 'Groups' in navigation.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
