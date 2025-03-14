@@ -10,5 +10,15 @@
     <schema>https://www.openaire.eu/schema/repo-lit/4.0/openaire.xsd</schema>
     <metadataNamespace>http://namespace.openaire.eu/schema/oaire/</metadataNamespace>
   </metadataFormat>
+  <metadataFormat>
+    <metadataPrefix>edm</metadataPrefix>
+    <schema>https://www.europeana.eu/schemas/edm/EDM.xsd</schema>
+    <metadataNamespace>http://www.europeana.eu/schemas/edm/</metadataNamespace>
+  </metadataFormat>
+  <metadataFormat>
+    <metadataPrefix>lom</metadataPrefix>
+    <schema>https://oer-repo.uibk.ac.at/lom/latest/schemas/lom-uibk.xsd</schema>
+    <metadataNamespace>https://oer-repo.uibk.ac.at/lom</metadataNamespace>
+  </metadataFormat>
 </ListMetadataFormats>
 %= include 'oai/footer'
