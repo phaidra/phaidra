@@ -5,6 +5,32 @@ import config from '../config/phaidra-ui'
 export default async (req, res, next) => {
   let baseURL = process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT
 
+  if(req.url.includes('/latest')) {
+    try {
+      
+      const match = req.url.match(/\/detail\/o:(\d+)\/latest/);
+      let apiBaseURL = 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000'
+      let response = await axios.request({
+        method: 'GET',
+        url: apiBaseURL + '/object/o:' + match[1] + '/info',
+      })
+      const versionsData = response.data.info.versions
+      if(versionsData.length){
+        const latestVersionIndex = versionsData.reduce((maxIdx, item, index, arr) => 
+            new Date(item.created) > new Date(arr[maxIdx].created) ? index : maxIdx, 0
+        );
+        if(new Date(response.data.info.created) < new Date(versionsData[latestVersionIndex].created)){
+          redirect(res, baseURL + '/detail/' + versionsData[latestVersionIndex]['pid'])
+          return
+        }
+      }
+      next()
+    } catch (error) {
+      console.log('error',error)
+      next()
+    }
+  }
+  
   // Check for pdf download start
   
   const regex = /^\/detail\/([^\/]+)\.pdf$/;
