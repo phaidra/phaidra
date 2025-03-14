@@ -13,7 +13,7 @@ export default {
   mixins: [displayproperties],
   props: {
     o: {
-      type: Object,
+      type: [Object, String],
       required: true
     },
     p: {
