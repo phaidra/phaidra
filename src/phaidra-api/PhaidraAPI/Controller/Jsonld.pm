@@ -192,7 +192,7 @@ sub add_template {
   $self->render(json => $res, status => $res->{status});
 }
 
-sub edit_template_property {
+sub edit_template_admin {
   my $self = shift;
 
   my $res = {alerts => [], status => 200};
@@ -294,16 +294,12 @@ sub get_template {
     }
   }
 
-  my $query = {
-    tid => $self->stash('tid'), 
-    '$or' => [{ owner => $owner }, { public => true }]
-  };
-  # admin can get any templates
-  if ($owner eq $self->app->{config}->{phaidra}->{adminusername}) {
-    $query = {tid => $self->stash('tid')};
-  }
-
-  my $tres = $self->mongo->get_collection('jsonldtemplates')->find_one($query);
+  my $tres = $self->mongo->get_collection('jsonldtemplates')->find_one(
+    {
+      tid => $self->stash('tid'), 
+      '$or' => [{ owner => $owner }, { public => true }]
+    }
+  );
 
   $res->{template} = $tres;
 
@@ -325,10 +321,6 @@ sub get_users_templates {
   }
 
   my $find = {'owner' => $owner};
-  # admin can get all templates
-  if ($owner eq $self->app->{config}->{phaidra}->{adminusername}) {
-    $find = {};
-  }
   if ($tag) {
     $find->{'tag'} = $tag;
   }
@@ -336,16 +328,30 @@ sub get_users_templates {
   my $users_templates = $self->mongo->get_collection('jsonldtemplates')->find($find)->sort({'created' => -1});
   my @tmplts          = ();
   while (my $doc = $users_templates->next) {
-    my $template = { 
-        tid     => $doc->{tid}, 
-        name    => $doc->{name}, 
-        created => $doc->{created}, 
-        public  => $doc->{public} 
-    };
-    if ($owner eq $self->app->{config}->{phaidra}->{adminusername}) {
-        $template->{validationfnc} = $doc->{validationfnc};
-    }
-    push @tmplts, $template;
+    push @tmplts, {tid => $doc->{tid}, name => $doc->{name}, created => $doc->{created}};
+  }
+
+  $res->{templates} = \@tmplts;
+
+  $self->render(json => $res, status => $res->{status});
+}
+
+sub get_templates_admin {
+  my $self = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  my $tag = $self->param('tag');
+
+  my $find = {};
+  if ($tag) {
+    $find->{'tag'} = $tag;
+  }
+
+  my $users_templates = $self->mongo->get_collection('jsonldtemplates')->find($find)->sort({'created' => -1});
+  my @tmplts          = ();
+  while (my $doc = $users_templates->next) {
+    push @tmplts, {tid => $doc->{tid}, name => $doc->{name}, created => $doc->{created}, public => $doc->{public}, validationfnc => $doc->{validationfnc}};
   }
 
   $res->{templates} = \@tmplts;
@@ -370,13 +376,23 @@ sub remove_template {
     $owner = $self->stash->{basic_auth_credentials}->{username};
   }
 
-   my $query = {tid => $self->stash('tid'), owner => $owner};
-   # admin can remove any templates
-   if ($owner eq $self->app->{config}->{phaidra}->{adminusername}) {
-     $query = {tid => $self->stash('tid')};
-   }
+  $self->mongo->get_collection('jsonldtemplates')->delete_one({tid => $self->stash('tid'), owner => $owner});
 
-  $self->mongo->get_collection('jsonldtemplates')->delete_one($query);
+  $self->render(json => $res, status => $res->{status});
+}
+
+
+sub remove_template_admin {
+  my $self = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  unless (defined($self->stash('tid'))) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined template id'}]}, status => 400);
+    return;
+  }
+
+  $self->mongo->get_collection('jsonldtemplates')->delete_one({tid => $self->stash('tid')});
 
   $self->render(json => $res, status => $res->{status});
 }

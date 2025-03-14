@@ -32,7 +32,7 @@
     <template v-slot:item.created="{ item }">
       {{ item.created | unixtime }}
     </template>
-    <template v-if="type === 'navtemplate'" v-slot:item.public="{ item }">
+    <template v-if="type === 'navtemplate' && $store.state.user.isadmin" v-slot:item.public="{ item }">
       <v-checkbox v-model="item.public" @change="onPublicValChange(item)"></v-checkbox>
     </template>
     <template v-if="type === 'navtemplate'" v-slot:item.validationfnc="{ item }">
@@ -103,7 +103,7 @@ export default {
             { text: this.$t('Name'), align: 'left', value: 'name' },
             { text: this.$t('Created'), align: 'right', value: 'created' },
           ];
-          if(this.type === 'navtemplate') {
+          if(this.type === 'navtemplate' && this.$store.state.user.isadmin) {
             this.headers.unshift({ text: this.$t('Public'), align: 'left', value: 'public' })
           }
           if(this.$store.state.user.isadmin) {
@@ -151,7 +151,7 @@ export default {
         try {
           let response = await this.$axios.request({
             method: 'POST',
-            url: '/jsonld/template/' + tid + '/remove',
+            url: '/jsonld/template/' + (this.$store.state.user.isadmin ? 'admin/' : '')  + tid + '/remove',
             headers: {
               'X-XSRF-TOKEN': this.$store.state.user.token
             }
@@ -174,7 +174,7 @@ export default {
       try {
         let response = await this.$axios.request({
           method: 'GET',
-          url: '/jsonld/templates' + ((this.tag && this.tag.length > 1) ? '?tag=' + this.tag : ''),
+          url: '/jsonld/templates' + (this.$store.state.user.isadmin ? '/admin' : '')  + ((this.tag && this.tag.length > 1) ? '?tag=' + this.tag : ''),
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }

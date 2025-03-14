@@ -54,7 +54,7 @@ export default {
       let response = await this.$axios.request({
           method: 'POST',
           data: httpFormData,
-          url: `/jsonld/template/${value.tid}/edit_property`,
+          url: `/jsonld/template/admin/${value.tid}/edit`,
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }
