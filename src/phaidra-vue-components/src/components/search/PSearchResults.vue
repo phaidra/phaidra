@@ -56,7 +56,7 @@
                   </h3>
                 </v-col>
                 <v-col cols="3" class="text-right">
-                  <v-chip v-if="doc.created" color="white" class="grey--text text--darken-4">{{ doc.created | date }}
+                  <v-chip v-if="doc.created" color="transparent">{{ doc.created | date }}
                     <v-icon v-if="doc.cmodel == 'Video'" class="mx-2" color="grey">mdi-video</v-icon>
                     <v-icon v-else-if="doc.cmodel == 'Picture'" class="mx-2" color="grey">mdi-image</v-icon>
                     <v-icon v-else-if="doc.cmodel == 'Audio'" class="mx-2" color="grey">mdi-volume-high</v-icon>
@@ -70,7 +70,7 @@
               </v-row>
               <v-row class="my-4 mr-2">
                 <v-col>
-                  <span class="grey--text text--darken-4">
+                  <span>
                     <span v-for="(aut,i) in doc.bib_roles_pers_aut" :key="'pers'+i">
                       {{aut}}<span v-if="(i+1) < doc.bib_roles_pers_aut.length">; </span>
                     </span>
@@ -82,7 +82,7 @@
               </v-row>
               <v-row class="my-4 mr-2" v-if="doc.dc_description">
                 <v-col>
-                  <span class="grey--text text--darken-4"><p-expand-text :text="doc.dc_description[0]" :moreStr="$t('read more')"/></span>
+                  <p-expand-text :text="doc.dc_description[0]" :moreStr="$t('read more')"/>
                 </v-col>
               </v-row>
               <v-row v-if="doc.isrestricted">
