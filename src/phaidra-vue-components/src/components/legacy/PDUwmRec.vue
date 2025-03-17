@@ -410,6 +410,9 @@ export default {
               break
             } else {
               isEmpty = this.isEmpty(ch)
+              if (!isEmpty) {
+                break;
+              }
             }
           }
         }
