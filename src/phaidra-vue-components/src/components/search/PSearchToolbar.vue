@@ -4,7 +4,7 @@
       <v-col>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn icon @click="setSort('title asc')" :color="sortIsActive('title asc') == 'primary' : ''" v-on="on">
+            <v-btn icon @click="setSort('title asc')" :color="sortIsActive('title asc') ? 'primary' : ''" v-on="on">
               <icon width="16px" height="16px" name="fontello-sort-name-up"></icon>
             </v-btn>
           </template>
@@ -24,7 +24,7 @@
       <v-col>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn icon @click="setSort('created asc')" :color="sortIsActive('created asc') ? 'primary' : '" v-on="on">
+            <v-btn icon @click="setSort('created asc')" :color="sortIsActive('created asc') ? 'primary' : ''" v-on="on">
               <icon width="16px" height="16px" name="fontello-sort-number-up"></icon>
             </v-btn>
           </template>
