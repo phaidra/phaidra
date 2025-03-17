@@ -8,7 +8,7 @@ export default async (req, res, next) => {
   if(req.url.includes('/latest')) {
     try {
       
-      const match = req.url.match(/\/detail\/o:(\d+)\/latest/);
+      const match = req.url.match(/\/o:(\d+)\/latest/);
       let apiBaseURL = 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000'
       let response = await axios.request({
         method: 'GET',
