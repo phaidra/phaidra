@@ -5,6 +5,46 @@ import config from '../config/phaidra-ui'
 export default async (req, res, next) => {
   let baseURL = process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT
 
+  const redirectEvaluator = async (pid) => {
+      let apiBaseURL = 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000'
+      let params = { q: '*:*', defType: 'edismax', wt: 'json', start: 0, rows: 1, fq: 'pid:"' + pid + '"' }
+      let response = await axios.request({
+        method: 'POST',
+        url: apiBaseURL + '/search/select',
+        data: qs.stringify(params, { arrayFormat: 'repeat' }),
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+        params: params
+      })
+      let docs = response.data.response.docs
+      if (docs.length >= 1) {
+        let doc = docs[0]
+        if (doc['cmodel']) {
+          if (doc['cmodel'] === 'Book') {
+            if (!doc.datastreams.includes("POLICY") && !doc.isrestricted) {
+              if (doc.datastreams.includes("UWMETADATA")) {
+                redirect(res, config.instances[config.defaultinstance].fedora + '/objects/' + pid + '/methods/bdef:Book/view')
+                return
+              } else {
+                redirect(res, apiBaseURL + '/object/' + pid + '/preview')
+                return
+              }
+            }
+          }
+        }
+        if (doc['isinadminset']) {
+          for (let adminset of doc['isinadminset']) {
+            if (adminset === 'phaidra:ir.univie.ac.at') {
+              redirect(res, 'https://' + config.instances[config.defaultinstance].irbaseurl + '/' + pid)
+              return
+            }
+          }
+        }
+      }
+      redirect(res, baseURL + '/detail/' + pid)
+  }
+
   if(req.url.includes('/latest')) {
     try {
       
@@ -20,7 +60,7 @@ export default async (req, res, next) => {
             new Date(item.created) > new Date(arr[maxIdx].created) ? index : maxIdx, 0
         );
         if(new Date(response.data.info.created) < new Date(versionsData[latestVersionIndex].created)){
-          redirect(res, baseURL + '/detail/' + versionsData[latestVersionIndex]['pid'])
+          await redirectEvaluator(versionsData[latestVersionIndex]['pid'])
           return
         }
       }
@@ -61,44 +101,8 @@ export default async (req, res, next) => {
   }
   if (/^\/o:\d+$/.test(req.url)) { 
     let pid = req.url.replace('/', '')
-    let apiBaseURL = 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000'
-    let params = { q: '*:*', defType: 'edismax', wt: 'json', start: 0, rows: 1, fq: 'pid:"' + pid + '"' }
     try {
-      let response = await axios.request({
-        method: 'POST',
-        url: apiBaseURL + '/search/select',
-        data: qs.stringify(params, { arrayFormat: 'repeat' }),
-        headers: {
-          'content-type': 'application/x-www-form-urlencoded'
-        },
-        params: params
-      })
-      let docs = response.data.response.docs
-      if (docs.length >= 1) {
-        let doc = docs[0]
-        if (doc['cmodel']) {
-          if (doc['cmodel'] === 'Book') {
-            if (!doc.datastreams.includes("POLICY") && !doc.isrestricted) {
-              if (doc.datastreams.includes("UWMETADATA")) {
-                redirect(res, config.instances[config.defaultinstance].fedora + '/objects/' + pid + '/methods/bdef:Book/view')
-                return
-              } else {
-                redirect(res, apiBaseURL + '/object/' + pid + '/preview')
-                return
-              }
-            }
-          }
-        }
-        if (doc['isinadminset']) {
-          for (let adminset of doc['isinadminset']) {
-            if (adminset === 'phaidra:ir.univie.ac.at') {
-              redirect(res, 'https://' + config.instances[config.defaultinstance].irbaseurl + '/' + pid)
-              return
-            }
-          }
-        }
-      }
-      redirect(res, baseURL + '/detail/' + pid)
+      await redirectEvaluator(pid)
       return
     } catch (error) {
       console.log(error)
