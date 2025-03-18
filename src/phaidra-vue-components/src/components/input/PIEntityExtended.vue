@@ -129,7 +129,7 @@
                 <template>
                   <v-col cols="12" md="6">
                     <v-text-field
-                      :value="birthDate"
+                      :value="birthdate"
                       :label="$t(birthDateLabel ? birthDateLabel : 'Birth Date')"
                       v-on:blur="$emit('input-birthdate',$event.target.value)"
                       :filled="inputStyle==='filled'"
@@ -142,7 +142,7 @@
                   </v-col>
                   <v-col cols="12" md="6">
                     <v-text-field
-                      :value="deathDate"
+                      :value="deathdate"
                       :label="$t(deathDateLabel ? deathDateLabel : 'Death Date')"
                       v-on:blur="$emit('input-deathdate',$event.target.value)"
                       :filled="inputStyle==='filled'"
@@ -366,10 +366,10 @@ export default {
     lastname: {
       type: String
     },
-    birthDate: {
+    birthdate: {
       type: String
     },
-    deathDate: {
+    deathdate: {
       type: String
     },
     name: {

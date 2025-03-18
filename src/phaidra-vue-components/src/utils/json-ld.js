@@ -405,6 +405,16 @@ export default {
                         entity.firstname = firstname['@value']
                       }
                     }
+                    if (role['schema:birthDate']) {
+                      for (let birthDate of role['schema:birthDate']) {
+                        entity.birthdate = birthDate
+                      }
+                    }
+                    if (role['schema:deathDate']) {
+                      for (let deathDate of role['schema:deathDate']) {
+                        entity.deathdate = deathDate
+                      }
+                    }
                     f.roles.push(entity)
                   }
                 }
@@ -783,6 +793,16 @@ export default {
                       if (role['schema:givenName']) {
                         for (let firstname of role['schema:givenName']) {
                           f.firstname = firstname['@value']
+                        }
+                      }
+                      if (role['schema:birthDate']) {
+                        for (let birthDate of role['schema:birthDate']) {
+                          f.birthdate = birthDate
+                        }
+                      }
+                      if (role['schema:deathDate']) {
+                        for (let deathDate of role['schema:deathDate']) {
+                          f.deathdate = deathDate
                         }
                       }
                     }
@@ -1357,6 +1377,16 @@ export default {
                   if (role['schema:givenName']) {
                     for (let firstname of role['schema:givenName']) {
                       f.firstname = firstname['@value']
+                    }
+                  }
+                  if (role['schema:birthDate']) {
+                    for (let birthDate of role['schema:birthDate']) {
+                      f.birthdate = birthDate
+                    }
+                  }
+                  if (role['schema:deathDate']) {
+                    for (let deathDate of role['schema:deathDate']) {
+                      f.deathdate = deathDate
                     }
                   }
                   if (role['skos:exactMatch']) {
