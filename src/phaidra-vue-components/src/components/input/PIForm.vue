@@ -383,6 +383,8 @@
                               v-bind.sync="f"
                               v-on:change-type="f.type = $event"
                               v-on:input-firstname="f.firstname = $event"
+                              v-on:input-birthdate="f.birthdate = $event"
+                              v-on:input-deathdate="f.deathdate = $event"
                               v-on:input-lastname="f.lastname = $event"
                               v-on:input-name="f.name = $event"
                               v-on:input-identifier-type="setSelected(f, 'identifierType', $event)"

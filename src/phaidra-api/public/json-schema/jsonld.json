@@ -406,6 +406,12 @@
           "schema:givenName": {
             "$ref": "#/$defs/language-tagged-values"
           },
+          "schema:birthDate": {
+            "$ref": "#/$defs/dates-or-date-concepts"
+          },
+          "schema:deathDate": {
+            "$ref": "#/$defs/dates-or-date-concepts"
+          },
           "schema:name": {
             "$ref": "#/$defs/language-tagged-values"
           },

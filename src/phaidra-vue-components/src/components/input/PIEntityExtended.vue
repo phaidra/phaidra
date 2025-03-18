@@ -126,6 +126,34 @@
                     ></v-text-field>
                   </v-col>
                 </template>
+                <template>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      :value="birthdate"
+                      :label="$t(birthDateLabel ? birthDateLabel : 'Birth Date')"
+                      v-on:blur="$emit('input-birthdate',$event.target.value)"
+                      :filled="inputStyle==='filled'"
+                      :outlined="inputStyle==='outlined'"
+                      :rules="[validationrules.date]"
+                      :hint="$t('Format YYYY-MM-DD')"
+                      :background-color="birthDateBackgroundColor ? birthDateBackgroundColor : undefined"
+                      :error-messages="birthDateErrorMessages"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      :value="deathdate"
+                      :label="$t(deathDateLabel ? deathDateLabel : 'Death Date')"
+                      v-on:blur="$emit('input-deathdate',$event.target.value)"
+                      :filled="inputStyle==='filled'"
+                      :outlined="inputStyle==='outlined'"
+                      :rules="[validationrules.date]"
+                      :hint="$t('Format YYYY-MM-DD')"
+                      :background-color="deathDateBackgroundColor ? deathDateBackgroundColor : undefined"
+                      :error-messages="deathDateErrorMessages"
+                    ></v-text-field>
+                  </v-col>
+                </template>
               </v-row>
               <v-row v-if="showIdentifier && showIdentifierType">
                 <v-col cols="12" md="6">
@@ -338,6 +366,12 @@ export default {
     lastname: {
       type: String
     },
+    birthdate: {
+      type: String
+    },
+    deathdate: {
+      type: String
+    },
     name: {
       type: String
     },
@@ -348,6 +382,12 @@ export default {
       type: String
     },
     lastnameLabel: {
+      type: String
+    },
+    birthDateLabel: {
+      type: String
+    },
+    deathDateLabel: {
       type: String
     },
     nameLabel: {
@@ -420,6 +460,12 @@ export default {
     lastnameErrorMessages: {
       type: Array
     },
+    birthDateErrorMessages: {
+      type: Array
+    },
+    deathDateErrorMessages: {
+      type: Array
+    },
     roleErrorMessages: {
       type: Array
     },
@@ -476,6 +522,14 @@ export default {
       default: undefined
     },
     firstnameBackgroundColor: {
+      type: String,
+      default: undefined
+    },
+    birthDateBackgroundColor: {
+      type: String,
+      default: undefined
+    },
+    deathDateBackgroundColor: {
       type: String,
       default: undefined
     },

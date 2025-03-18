@@ -405,6 +405,16 @@ export default {
                         entity.firstname = firstname['@value']
                       }
                     }
+                    if (role['schema:birthDate']) {
+                      for (let birthDate of role['schema:birthDate']) {
+                        entity.birthdate = birthDate
+                      }
+                    }
+                    if (role['schema:deathDate']) {
+                      for (let deathDate of role['schema:deathDate']) {
+                        entity.deathdate = deathDate
+                      }
+                    }
                     f.roles.push(entity)
                   }
                 }
@@ -783,6 +793,16 @@ export default {
                       if (role['schema:givenName']) {
                         for (let firstname of role['schema:givenName']) {
                           f.firstname = firstname['@value']
+                        }
+                      }
+                      if (role['schema:birthDate']) {
+                        for (let birthDate of role['schema:birthDate']) {
+                          f.birthdate = birthDate
+                        }
+                      }
+                      if (role['schema:deathDate']) {
+                        for (let deathDate of role['schema:deathDate']) {
+                          f.deathdate = deathDate
                         }
                       }
                     }
@@ -1359,6 +1379,16 @@ export default {
                       f.firstname = firstname['@value']
                     }
                   }
+                  if (role['schema:birthDate']) {
+                    for (let birthDate of role['schema:birthDate']) {
+                      f.birthdate = birthDate
+                    }
+                  }
+                  if (role['schema:deathDate']) {
+                    for (let deathDate of role['schema:deathDate']) {
+                      f.deathdate = deathDate
+                    }
+                  }
                   if (role['skos:exactMatch']) {
                     for (let id of role['skos:exactMatch']) {
                       f.identifierType = id['@type']
@@ -1715,6 +1745,12 @@ export default {
           }
         ]
       }
+      if (f.birthdate) {
+        h['schema:birthDate'] = [f.birthdate]
+      }
+      if (f.deathdate) {
+        h['schema:deathDate'] = [f.deathdate]
+      }
       if (f.lastname) {
         h['schema:familyName'] = [
           {
@@ -1989,6 +2025,12 @@ export default {
                   '@value': role.firstname
                 }
               ]
+            }
+            if (role.birthdate) {
+              entity['schema:birthDate'] = [role.birthdate]
+            }
+            if (role.deathdate) {
+              entity['schema:deathDate'] = [role.deathdate]
             }
             if (role.lastname) {
               entity['schema:familyName'] = [
