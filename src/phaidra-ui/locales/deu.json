@@ -1141,6 +1141,7 @@
     "PHAIDRA is using following free services": "Folgende frei verfügbare Schnittstellen sind in PHAIDRA integriert",
     "Open in Bookviewer": "Im Bookviewer öffnen",
     "There is a more recent version of this object available": "Dieses Objekt hat eine spätere Version",
+    "Go to latest version": "zur aktuellen Version",
     "Go to container": "zum Container",
     "Go to book": "zum Buch",
     "This object is a member of multiple containers. Please choose a container to view": "Dieses Objekt ist ein Mitglied in mehreren Containern. Bitte wählen Sie einen Container zum Öffnen aus",
@@ -1267,9 +1268,14 @@
     "control": "Steuerung",
     "hazard": "Störung",
     "feature": "Merkmal",
+    "Show Groups link": "Gruppenverwaltung",
+    "Show link to 'Groups' in navigation.": "Ziegt den Link zur Gruppenverwaltung in Navigation.",
     "Enable feedback": "Submit Feedback",
     "Enable tab for 'Feedback' in Upload form.": "Feedbackreiter im Submitform aktivieren.",
     "Persistent identifier": "Persistent Identifier",
     "Birth Date": "Geburtsdatum",
-    "Death Date": "Sterbedatum"
+    "Death Date": "Sterbedatum",
+    "List": "Liste",
+    "Modified": "Geändert",
+    "Group": "Gruppe"
   }

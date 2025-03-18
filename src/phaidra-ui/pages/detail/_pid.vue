@@ -447,6 +447,17 @@
               </div>
             </v-alert>
           </v-row>
+          <v-row justify="center" v-if="latestVersion">
+            <v-col cols="12">
+              <v-btn
+                raised
+                color="primary"
+                class="mt-2 float-right"
+                :to="localePath({ path: `/detail/${latestVersion.pid}` })"
+                >{{ $t("Go to latest version") }}</v-btn
+              >
+            </v-col>
+          </v-row>
           <v-row justify="center" v-if="showPreview">
             <template v-if="(objectInfo.cmodel === 'Book') && (objectInfo.datastreams.includes('UWMETADATA'))">
               <v-btn
@@ -2374,6 +2385,22 @@ export default {
         }
       }
       return false;
+    },
+    latestVersion: function () {
+      let latestVersion = null;
+      let latestDate = this.$store.state.objectInfo.created;
+      if (this.$store.state.objectInfo.versions) {
+        if (Array.isArray(this.$store.state.objectInfo.versions)) {
+          for (let v of this.$store.state.objectInfo.versions) {
+            let currentCreated = v.created;
+            if (currentCreated > latestDate) {
+              latestDate = currentCreated;
+              latestVersion = v;
+            }
+          }
+        }
+      }
+      return latestVersion;
     },
     citationLocale: function () {
       switch (this.$i18n.locale) {
