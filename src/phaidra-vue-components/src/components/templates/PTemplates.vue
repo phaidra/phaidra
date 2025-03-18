@@ -32,7 +32,19 @@
     <template v-slot:item.created="{ item }">
       {{ item.created | unixtime }}
     </template>
+    <template v-if="type === 'navtemplate' && $store.state.user.isadmin" v-slot:item.public="{ item }">
+      <v-checkbox v-model="item.public" @change="onPublicValChange(item)"></v-checkbox>
+    </template>
+    <template v-if="type === 'navtemplate'" v-slot:item.validationfnc="{ item }">
+      {{ item.validationfnc || '' }}
+    </template>
+    <template v-if="type === 'navtemplate'" v-slot:item.created="{ item }">
+      {{ item.created | unixtime }}
+    </template>
     <template v-slot:item.load="{ item }">
+      <v-btn text color="primary" @click="editValidation(item)" v-if="type === 'navtemplate' && $store.state.user.isadmin">
+        <span>{{ $t('Edit Validation') }}</span>
+      </v-btn>
       <v-btn text color="primary" @click="loadTemplate('')" v-if="isDefaultSelect && item.tid === selectedTemplateId">
         <span v-if="isDefaultSelect">{{ $t('Remove') }}</span>
       </v-btn>
@@ -53,6 +65,10 @@ export default {
   props: {
     tag: {
       type: String
+    },
+    type: {
+      type: String,
+      default: 'popup'
     },
     itemsPerPage: {
       type: Number,
@@ -86,12 +102,24 @@ export default {
           this.headers = [
             { text: this.$t('Name'), align: 'left', value: 'name' },
             { text: this.$t('Created'), align: 'right', value: 'created' },
-            { text: this.$t('Actions'), align: 'right', value: 'load', sortable: false }
           ];
+          if(this.type === 'navtemplate' && this.$store.state.user.isadmin) {
+            this.headers.unshift({ text: this.$t('Public'), align: 'left', value: 'public' })
+          }
+          if(this.$store.state.user.isadmin) {
+            this.headers.push({ text: this.$t('Validation'), align: 'left', value: 'validationfnc' })
+          }
+          this.headers.push({ text: this.$t('Actions'), align: 'right', value: 'load', sortable: false })
         }
      }
   },
   methods: {
+     async onPublicValChange(item) {
+       this.$emit('public-toggle', item)
+    },
+    editValidation: async function (item) {
+       this.$emit('edit-validation', item)
+    },
     loadTemplate: async function (tid) {
       if (this.idOnly) {
         this.$emit('load-template', tid)
@@ -123,7 +151,7 @@ export default {
         try {
           let response = await this.$axios.request({
             method: 'POST',
-            url: '/jsonld/template/' + tid + '/remove',
+            url: '/jsonld/template/' + (this.$store.state.user.isadmin ? 'admin/' : '')  + tid + '/remove',
             headers: {
               'X-XSRF-TOKEN': this.$store.state.user.token
             }
@@ -146,7 +174,7 @@ export default {
       try {
         let response = await this.$axios.request({
           method: 'GET',
-          url: '/jsonld/templates' + ((this.tag && this.tag.length > 1) ? '?tag=' + this.tag : ''),
+          url: '/jsonld/templates' + (this.$store.state.user.isadmin ? '/admin' : '')  + ((this.tag && this.tag.length > 1) ? '?tag=' + this.tag : ''),
           headers: {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }

@@ -449,6 +449,15 @@
                               }}</v-list-item-title></v-list-item
                           >
                           <v-list-item
+                              v-if="signedin"
+                              @click="
+                              $router.push(localeLocation({ path: '/templates' }))
+                              "
+                              ><v-list-item-title>{{
+                              $t("Templates")
+                              }}</v-list-item-title></v-list-item
+                          >
+                          <v-list-item
                               @click="
                               $router.push(localeLocation({ path: '/help' }))
                               "
@@ -522,6 +531,14 @@
                         v-show="signedin && instanceconfig.groups"
                         :to="localePath('/groups')"
                         >{{ $t("Groups") }}</nuxt-link
+                    >
+                    </v-hover>
+                    <v-hover v-slot:default="{ hover }">
+                    <nuxt-link
+                        v-show="signedin"
+                        :class="hover ? 'ph-button primary' : 'ph-button grey'"
+                        :to="localePath('/templates')"
+                        >{{ $t("Templates") }}</nuxt-link
                     >
                     </v-hover>
                     <v-hover v-slot:default="{ hover }">
