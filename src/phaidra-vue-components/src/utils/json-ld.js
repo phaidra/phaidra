@@ -1715,6 +1715,12 @@ export default {
           }
         ]
       }
+      if (f.birthdate) {
+        h['schema:birthDate'] = [f.birthdate]
+      }
+      if (f.deathdate) {
+        h['schema:deathDate'] = [f.deathdate]
+      }
       if (f.lastname) {
         h['schema:familyName'] = [
           {
@@ -1989,6 +1995,12 @@ export default {
                   '@value': role.firstname
                 }
               ]
+            }
+            if (role.birthdate) {
+              entity['schema:birthDate'] = [role.birthdate]
+            }
+            if (role.deathdate) {
+              entity['schema:deathDate'] = [role.deathdate]
             }
             if (role.lastname) {
               entity['schema:familyName'] = [
