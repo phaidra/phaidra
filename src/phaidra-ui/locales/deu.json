@@ -564,6 +564,10 @@
     "uwm_general_subtitle": "Untertitel",
     "uwm_general_title": "Titel",
     "uwm_general_identifier": "Persistente Signatur",
+
+    "order_saved_for_object": "Bestellung für Objekt {event} gespeichert",
+
+
     "lang_aa": "Afar",
     "lang_ab": "Abchasisch",
     "lang_ae": "Avestisch",

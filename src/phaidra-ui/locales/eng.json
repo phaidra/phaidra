@@ -458,6 +458,8 @@
     "Lastname *": "Last name *",
     "Research data policy": "Research data policy",
 
+    "order_saved_for_object": "Order for object {event} saved",
+
     "mode": "Mode",
     "control": "Control",
     "hazard": "Hazard",
