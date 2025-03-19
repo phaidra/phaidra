@@ -24,7 +24,20 @@
     </v-col>
     <v-col cols="12" md="2" v-if="multilingual || actions.length">
       <v-row>
-        <v-col v-if="multilingual" cols="6">
+        <v-col v-if="multilingual" cols="6" style="position: relative;">
+            <v-btn
+            @click="$emit('input-language', '')"
+            v-if="allowLanguageCancel && language" 
+            style="width: 20px;height: 20px; top: 0"
+            color="red"
+            fab
+            dark
+            small
+            absolute
+            right
+            >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
           <v-btn text @click="$refs.langdialog.open()">
             <span class="grey--text text--darken-1">
               ({{ language ? language : '--' }})
@@ -87,6 +100,10 @@ export default {
       type: Boolean
     },
     showIds: {
+      type: Boolean,
+      default: false
+    },
+    allowLanguageCancel: {
       type: Boolean,
       default: false
     }

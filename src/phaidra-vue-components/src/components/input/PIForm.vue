@@ -1846,9 +1846,7 @@ export default {
       }
     },
     setSelected: function (f, property, event) {
-      if (event) {
-        this.$set(f, property, event['@id'])
-      }
+      this.$set(f, property, event['@id'])
       this.$emit('form-input-' + f.component, f)
       // eg on
       // v-on:input-identifier-type="setSelected(f, 'identifierType', $event)"
