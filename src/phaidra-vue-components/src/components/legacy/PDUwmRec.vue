@@ -105,7 +105,7 @@
               </v-row>
               <v-row v-if="getChildValue(ch, 'comment')">
                 <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t('uwm_provenience_contribute_comment') }}<template v-if="getLangAttr(getChild(ch, 'comment'))"> ({{getLangAttr(getChild(ch, 'comment'))}})</template></v-col>
-                <v-col cols="12" md="10">{{ getChildValue(ch, 'comment') }}</v-col>
+                <v-col cols="12" md="10"><span v-html="link(getChildValue(ch, 'comment'))"></span></v-col>
               </v-row>
               <v-row v-if="getChildValue(ch, 'comment')">
                 <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ getChildLabel(ch, 'role') }}</v-col>
