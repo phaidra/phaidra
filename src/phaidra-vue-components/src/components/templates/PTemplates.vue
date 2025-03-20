@@ -38,7 +38,7 @@
     <template v-if="type === 'navtemplate'" v-slot:item.validationfnc="{ item }">
       {{ item.validationfnc || '' }}
     </template>
-    <template v-if="type === 'navtemplate'" v-slot:item.created="{ item }">
+    <template v-slot:item.created="{ item }">
       {{ item.created | unixtime }}
     </template>
     <template v-slot:item.load="{ item }">
