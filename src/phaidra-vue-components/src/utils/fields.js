@@ -926,7 +926,8 @@ const fields = [
     component: 'p-text-field',
     label: 'Volume',
     value: '',
-    definition: 'A volume number.'
+    definition: 'A volume number.',
+    allowLanguageCancel: true
   },
   {
     id: 'issue',
@@ -935,7 +936,8 @@ const fields = [
     component: 'p-text-field',
     label: 'Issue',
     value: '',
-    definition: 'An issue number.'
+    definition: 'An issue number.',
+    allowLanguageCancel: true
   },
   {
     id: 'extent',
