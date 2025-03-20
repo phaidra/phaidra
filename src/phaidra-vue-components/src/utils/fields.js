@@ -9,7 +9,7 @@ const fields = [
     type: 'ids:doi',
     showType: true,
     disableType: false,
-    multiplicable: false,
+    multiplicable: true,
     identifierLabel: 'Identifier',
     valueErrorMessages: [],
     value: '',
