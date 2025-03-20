@@ -355,6 +355,7 @@
                               v-on:up-role="sortContainedInRoleUp(f.roles, $event)"
                               v-on:down-role="sortContainedInRoleDown(f.roles, $event)"
                               v-on:configure="editFieldProps(f)"
+                              v-on:remove="removeField(s.fields, f)"
                               :configurable="enablefieldconfig || f.configurable"
                             ></p-i-contained-in>
                           </template>
