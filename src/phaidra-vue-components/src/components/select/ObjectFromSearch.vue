@@ -21,7 +21,6 @@
         v-on:blur="search()"
       ></v-text-field>
       <v-data-table
-        hide-default-header
         :headers="objectsHeaders"
         :items="objects"
         :loading="loading"
@@ -86,17 +85,23 @@ export default {
         // mustSort: boolean
       },
       objectsSearch: '',
-      objectsHeaders: [
-        { text: 'Pid', align: 'left', value: 'pid' },
-        { text: 'Title', align: 'left', value: 'title' },
-        { text: 'Created', align: 'right', value: 'created' },
-        { text: 'Actions', align: 'right', value: 'actions', sortable: false }
-      ],
+      objectsHeaders: [],
       objects: [],
       totalObjects: 0
     }
   },
   watch: {
+    '$i18n.locale': {
+      immediate: true, // Ensure it's set on load
+      handler() {
+        this.objectsHeaders = [
+        { text: this.$t('Pid'), align: 'left', value: 'pid' },
+        { text: this.$t('Title'), align: 'left', value: 'title' },
+        { text: this.$t('Created'), align: 'right', value: 'created' },
+        { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+      ];
+      }
+    },
     options: {
       handler () {
         this.search()
