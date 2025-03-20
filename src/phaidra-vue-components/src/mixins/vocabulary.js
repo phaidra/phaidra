@@ -79,7 +79,7 @@ export const vocabulary = {
         case 'phaidra:acnumber':
           return 'https://permalink.obvsg.at/' + value
         case 'ids:urn':
-          return 'https://nbn-resolving.org/' + value
+          return value.includes('nbn:at:') ? 'https://resolver.obvsg.at/' + value : 'https://nbn-resolving.org/' + value
         case 'ids:orcid':
           return 'https://orcid.org/' + value
         case 'ids:gnd':

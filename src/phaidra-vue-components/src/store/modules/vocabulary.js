@@ -1280,7 +1280,7 @@ const vocabularies = {
       // { '@id': 'textOnVisual', 'skos:prefLabel': { 'eng': 'textOnVisual', 'deu': 'Text in visueller Form kodiert' }, 'skos:definition': { 'eng': 'Indicates that the resource contains text encoded in visual form.', 'deu': 'Zeigt an, dass die Ressource in visueller Form kodierten Text enthält.' } },
       { '@id': 'textual', 'skos:prefLabel': { 'eng': 'textual', 'deu': 'Informationen in Textform kodiert' }, 'skos:definition': { 'eng': 'Indicates that the resource contains information encoded in textual form.', 'deu': 'Zeigt an, dass die Ressource Informationen enthält, die in Textform kodiert sind.' } },
       { '@id': 'visual', 'skos:prefLabel': { 'eng': 'visual', 'deu': 'Informationen visuell kodiert' }, 'skos:definition': { 'eng': 'Indicates that the resource contains information encoded in visual form.', 'deu': 'Zeigt an, dass die Ressource in visueller Form kodierte Informationen enthält.' } },
-      { '@id': 'none', 'skos:prefLabel': { 'eng': 'none', 'deu': 'Keine' }, 'skos:definition': { 'eng': 'Indicates that the resource does not contain any accessibility features. The none value must not be set with any other feature value.', 'deu': 'Die Ressource enthält keine Zugänglichkeitsmerkmale. Der Wert "Keine" darf nicht zusammen mit einem anderen Merkmalswert gesetzt werden.' } }
+      // { '@id': 'none', 'skos:prefLabel': { 'eng': 'none', 'deu': 'Keine' }, 'skos:definition': { 'eng': 'Indicates that the resource does not contain any accessibility features. The none value must not be set with any other feature value.', 'deu': 'Die Ressource enthält keine Zugänglichkeitsmerkmale. Der Wert "Keine" darf nicht zusammen mit einem anderen Merkmalswert gesetzt werden.' } }
     ],
     loaded: true
   },
