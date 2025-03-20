@@ -5,7 +5,10 @@
         <v-container fluid>
           <v-row justify="start">
             <v-col cols="3">{{ $t('Quick select') }}:</v-col>
-            <v-col><v-btn v-for="lang in this.$i18n.localeCodes" :key="lang" class="mx-1" color="primary" @click="selectLang(lang)">{{ getLocalizedTermLabel('lang', lang) }}</v-btn></v-col>
+            <v-col>
+              <v-btn v-for="lang in this.$i18n.localeCodes" :key="lang" class="mx-1" color="primary" @click="selectLang(lang)">{{ getLocalizedTermLabel('lang', lang) }}</v-btn>
+              <v-btn v-if="showReset" class="mx-1 white--text" color="red lighten-1" @click="resetLang()">{{ $t('Reset') }}</v-btn>
+            </v-col>
           </v-row>
         </v-container>
       </v-card-actions>
@@ -49,6 +52,12 @@ import { vocabulary } from '../../mixins/vocabulary'
 export default {
   name: 'select-language',
   mixins: [vocabulary],
+  props: {
+    showReset: {
+      type: Boolean,
+      default: false
+    }
+  },
   computed: {
     languagesTable () {
       let tab = []
@@ -88,6 +97,10 @@ export default {
   methods: {
     open: async function () {
       this.dialog = true
+    },
+    resetLang: function () {
+      this.$emit('language-selected', '')
+      this.dialog = false
     },
     selectLang: function (id) {
       this.$emit('language-selected', this.getTerm('lang', id))

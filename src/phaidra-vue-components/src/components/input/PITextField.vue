@@ -24,20 +24,7 @@
     </v-col>
     <v-col cols="12" md="2" v-if="multilingual || actions.length">
       <v-row>
-        <v-col v-if="multilingual" cols="6" style="position: relative;">
-            <v-btn
-            @click="$emit('input-language', '')"
-            v-if="allowLanguageCancel && language" 
-            style="width: 20px;height: 20px; top: 0"
-            color="red"
-            fab
-            dark
-            small
-            absolute
-            right
-            >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
+        <v-col v-if="multilingual" cols="6">
           <v-btn text @click="$refs.langdialog.open()">
             <span class="grey--text text--darken-1">
               ({{ language ? language : '--' }})
@@ -59,7 +46,7 @@
         </v-list>
       </v-menu>
 
-      <select-language ref="langdialog" @language-selected="$emit('input-language', $event)"></select-language>
+      <select-language ref="langdialog" :showReset="allowLanguageCancel && language ? true : false" @language-selected="$emit('input-language', $event)"></select-language>
     </v-col>
   </v-row>
 </template>
