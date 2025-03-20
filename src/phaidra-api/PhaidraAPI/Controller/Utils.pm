@@ -190,9 +190,6 @@ sub search_users {
 
     if (@$users) {
         $res->{users} = $users;
-    } else {
-        $res->{status} = 404;
-        push @{$res->{alerts}}, "No users found";
     }
 
     return $self->render(json => $res, status => $res->{status});
