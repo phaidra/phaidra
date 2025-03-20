@@ -51,6 +51,9 @@ export default {
             }
           }
           f.removable = true
+          if (f.id.includes("resource-type")) {
+            f.removable = false
+          }
         }
         s.removable = true
       }
