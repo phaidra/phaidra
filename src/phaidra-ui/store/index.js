@@ -122,6 +122,15 @@ export const mutations = {
         }
       )
     }
+    if (transition.to.path.includes('/templates')) {
+      state.breadcrumbs.push(
+        {
+          text: 'Templates',
+          to: transition.to.path,
+          disabled: true
+        }
+      )
+    }
     if (transition.to.path.includes('lists')) {
       state.breadcrumbs.push(
         {
