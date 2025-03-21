@@ -6,6 +6,7 @@
       </v-btn>
       <p-i-form :form="form" :targetpid="pid" :enablerights="false" :enablerelationships="false" :templating="false"
         :importing="false" :addbutton="true" :help="false" :debug="false" :feedback="false"
+        :enableLicenseAdd="false"
         v-on:object-saved="objectSaved($event)" class="mt-4"></p-i-form>
     </div>
   </client-only>
@@ -53,6 +54,10 @@ export default {
           f.removable = true
           if (f.id.includes("resource-type")) {
             f.removable = false
+          }
+          if (f.id.includes("license") && f.value !== "http://rightsstatements.org/vocab/InC/1.0/") {
+            f.removable = false
+            f.readonly = true
           }
         }
         s.removable = true
