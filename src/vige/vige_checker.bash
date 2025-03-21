@@ -81,7 +81,7 @@ function set_url {
         -u $M_USER \
         -p $M_PASS \
         mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
-        --eval 'db.jobs.findOneAndUpdate({ pid: "'$1'" }, { $set: { "'$2'": "'$3'" } })'
+        --eval 'db.jobs.findOneAndUpdate({ pid: "'$1'", "agent": "vige" }, { $set: { "'$2'": "'$3'" } }, { sort: { created: -1 } })'
 }
 
     

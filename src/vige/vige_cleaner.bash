@@ -38,7 +38,7 @@ function get_mongo_status {
         -u $M_USER \
         -p $M_PASS \
         mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
-        --eval 'JSON.stringify(db.jobs.findOne({ pid: "'$1'"}))' | \
+        --eval 'JSON.stringify(db.jobs.findOne({ pid: "'$1'", "agent": "vige" }, {}, { sort: { created: -1 } }}))' | \
         jq -r '.status'
 }
 
@@ -49,7 +49,7 @@ function set_mongo_status {
         -u $M_USER \
         -p $M_PASS \
         mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
-        --eval 'db.jobs.findOneAndUpdate({ pid: "'$1'" }, { $set: { 'status': "'$2'" } })'
+        --eval 'db.jobs.findOneAndUpdate({ pid: "'$1'", "agent": "vige" }, { $set: { 'status': "'$2'" } }, { sort: { created: -1 } })'
 }
 
 
@@ -68,7 +68,7 @@ function cleanup_mongo_entries {
         -u $M_USER \
         -p $M_PASS \
         mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
-        --eval 'db.jobs.findOneAndUpdate({ pid: "'$1'" }, { $unset: { oc_api_video: "" , oc_engage_video: "", oc_mpid: "", oc_player_url: "", oc_admin_video: "" } })'
+        --eval 'db.jobs.findOneAndUpdate({ pid: "'$1'", "agent": "vige" }, { $unset: { oc_api_video: "" , oc_engage_video: "", oc_mpid: "", oc_player_url: "", oc_admin_video: "" } }, { sort: { created: -1 } })'
 }
 
 # algorithm
