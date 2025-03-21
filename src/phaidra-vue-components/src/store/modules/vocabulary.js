@@ -2020,11 +2020,11 @@ const mutations = {
       state.vocabularies['bic']['loaded'] = true
     }
   },
-  sortFields(state, locale) {
+  sortFields(state, {locale, i18nInstance}) {
     i18n.locale = locale
     if (state.fields) {
       state.fields.sort(function (a, b) {
-        return i18n.t(a.fieldname).localeCompare(i18n.t(b.fieldname), locale)
+        return i18nInstance.t(a.fieldname).localeCompare(i18nInstance.t(b.fieldname), locale)
       })
     }
   },
@@ -2098,8 +2098,8 @@ const actions = {
   setInstanceConfig({ commit }, config) {
     commit('setInstanceConfig', config)
   },
-  sortFields({ commit }, locale) {
-    commit('sortFields', locale)
+  sortFields({ commit }, {locale, i18nInstance}) {
+    commit('sortFields', {locale, i18nInstance})
   },
   sortRoles({ commit }, locale) {
     commit('sortRoles', locale)
