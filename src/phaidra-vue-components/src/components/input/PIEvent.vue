@@ -105,7 +105,7 @@
                               :value="dateFrom"
                               :show-current="false"
                               v-model="pickerFromModel"
-                              :locale="$i18n.locale === 'deu' ? 'de-AT' : 'en-GB' "
+                              :locale="alpha2bcp47"
                               v-on:input="dateFromMenu = false; $emit('input-date-from', $event)"
                             ></v-date-picker>
                           </v-menu>
@@ -143,7 +143,7 @@
                               :value="dateTo"
                               :show-current="false"
                               v-model="pickerToModel"
-                              :locale="$i18n.locale === 'deu' ? 'de-AT' : 'en-GB' "
+                              :locale="alpha2bcp47"
                               v-on:input="dateToMenu = false; $emit('input-date-to', $event)"
                             ></v-date-picker>
                           </v-menu>
@@ -235,6 +235,14 @@ export default {
     }
   },
   computed: {
+    alpha2bcp47: function () {
+      switch (this.$i18n.locale) {
+        case 'eng': return 'en-GB'
+        case 'deu': return 'de-AT'
+        case 'ita': return 'it-IT'
+        default: return 'en-GB'
+      }
+    },
     identifierTypePlaceholder: function () {
       for (let i of this.vocabularies[this.identifierVocabulary].terms) {
         if (i['@id'] === this.identifierType) {

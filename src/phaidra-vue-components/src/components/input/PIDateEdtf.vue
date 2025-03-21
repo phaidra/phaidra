@@ -59,7 +59,7 @@
                   :value="value"
                   :show-current="false"
                   v-model="pickerModel"
-                  :locale="$i18n.locale === 'deu' ? 'de-AT' : 'en-GB' "
+                  :locale="alpha2bcp47"
                   v-on:input="dateMenu = false; $emit('input-date', $event)"
                 ></v-date-picker>
               </v-menu>
@@ -145,6 +145,16 @@ export default {
     return {
       pickerModel: new Date().toISOString().substr(0, 10),
       dateMenu: false
+    }
+  },
+  computed: {
+    alpha2bcp47: function () {
+      switch (this.$i18n.locale) {
+        case 'eng': return 'en-GB'
+        case 'deu': return 'de-AT'
+        case 'ita': return 'it-IT'
+        default: return 'en-GB'
+      }
     }
   },
   mounted: function () {

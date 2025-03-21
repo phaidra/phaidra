@@ -157,7 +157,7 @@
                           :value="publishingDate"
                           :show-current="false"
                           v-model="pickerModel"
-                          :locale="$i18n.locale === 'deu' ? 'de-AT' : 'en-GB' "
+                          :locale="alpha2bcp47"
                           v-on:input="dateMenu = false; $emit('input-publishing-date', $event)"
                         ></v-date-picker>
                       </v-menu>
@@ -289,6 +289,14 @@ export default {
     },
     appconfig: function () {
       return this.$root.$store.state.appconfig
+    },
+    alpha2bcp47: function () {
+      switch (this.$i18n.locale) {
+        case 'eng': return 'en-GB'
+        case 'deu': return 'de-AT'
+        case 'ita': return 'it-IT'
+        default: return 'en-GB'
+      }
     }
   },
   watch: {
