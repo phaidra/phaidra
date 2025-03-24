@@ -137,7 +137,7 @@ export default {
       return promise
     },
     orderSaved: function (event) {
-      this.$store.commit('setAlerts', [{ type: 'success', msg: 'Order for object ' + event + ' saved' }])
+      this.$store.commit('setAlerts', [{ type: 'success', key: 'order_saved_for_object', params: { o: event }}])
     }
   },
   beforeRouteEnter: function (to, from, next) {

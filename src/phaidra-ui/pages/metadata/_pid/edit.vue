@@ -33,9 +33,7 @@ export default {
   },
   methods: {
     objectSaved: async function (pid) {
-      this.$store.commit("setAlerts", [
-        { type: "success", msg: "Metadata for object " + pid + " saved" },
-      ]);
+      this.$store.commit('setAlerts', [{ type: 'success', key: 'object_metadata_saved_success', params: { o: pid }}])
       // to save unnecessary loadings, fetchObjectInfo is skipped in Detail.vue if we return to the same pid
       // but it must be done after metadata edit, so re-load it here
       await this.$store.dispatch("fetchObjectInfo", pid);

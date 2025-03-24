@@ -586,7 +586,7 @@ export default {
             }
           })
           if (response.status === 200) {
-            this.$store.commit('setAlerts', [{ type: 'success', msg: 'Rights for object ' + this.pid + ' saved' }])
+            this.$store.commit('setAlerts', [{ type: 'success', key: 'object_rights_saved_success', params: { o: this.pid }}])
           } else {
             if (response.data.alerts && response.data.alerts.length > 0) {
               this.$store.commit('setAlerts', response.data.alerts)
