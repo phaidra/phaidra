@@ -46,7 +46,7 @@
         </v-list>
       </v-menu>
 
-      <select-language ref="langdialog" @language-selected="$emit('input-language', $event)"></select-language>
+      <select-language ref="langdialog" :showReset="allowLanguageCancel && language ? true : false" @language-selected="$emit('input-language', $event)"></select-language>
     </v-col>
   </v-row>
 </template>
@@ -87,6 +87,10 @@ export default {
       type: Boolean
     },
     showIds: {
+      type: Boolean,
+      default: false
+    },
+    allowLanguageCancel: {
       type: Boolean,
       default: false
     }

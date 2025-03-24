@@ -2,6 +2,9 @@
   <div>
     <v-container fluid>
         <v-card>
+        <v-card-title class="title font-weight-light grey white--text">
+            {{ $t('Manage templates') }}
+          </v-card-title>
           <v-card-text>
               <p-templates
                   class="mt-4"

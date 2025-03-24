@@ -2,10 +2,11 @@
 
   <v-data-table
     :headers="headers"
+    :search="templateSearch"
     :items="templates"
     :loading="loading"
     :items-per-page="itemsPerPage"
-    class="elevation-1"
+    :class="{'elevation-1': type !== 'navtemplate'}"
     :no-data-text="$t('No data available')"
     :footer-props="{
       pageText: $t('Page'),
@@ -14,6 +15,17 @@
     }"
     :no-results-text="$t('There were no search results')"
   >
+    <template v-slot:top>
+      <v-toolbar flat>
+        <v-text-field
+          v-model="templateSearch"
+          append-icon="mdi-magnify"
+          :label="$t('Search...')"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-toolbar>
+    </template>
     <template v-slot:item.name="{ item }">
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
@@ -38,7 +50,7 @@
     <template v-if="type === 'navtemplate'" v-slot:item.validationfnc="{ item }">
       {{ item.validationfnc || '' }}
     </template>
-    <template v-if="type === 'navtemplate'" v-slot:item.created="{ item }">
+    <template v-slot:item.created="{ item }">
       {{ item.created | unixtime }}
     </template>
     <template v-slot:item.load="{ item }">
@@ -92,7 +104,8 @@ export default {
       headers: [],
       templates: [],
       deletetempconfirm: false,
-      loading: false
+      loading: false,
+      templateSearch: '',
     }
   },
   watch: {

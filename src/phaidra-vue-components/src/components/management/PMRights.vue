@@ -33,8 +33,8 @@
                   </template>
                   <template v-slot:item.actions="{ item }">
                     <v-btn text color="primary" @click="openDateDialog(item)">{{ $t('Edit expiration date') }}</v-btn>
-                    <v-btn v-if="item.expires" text color="primary" @click="removeExpires(item)">{{ $t('Remove expiration date') }}</v-btn>
-                    <v-btn text color="error" @click="removeRight(item)">{{ $t('Remove right') }}</v-btn>
+                    <v-btn v-if="item.expires" text color="red lighten-1" @click="removeExpires(item)">{{ $t('Remove expiration date') }}</v-btn>
+                    <v-btn text color="red lighten-1" @click="removeRight(item)">{{ $t('Remove right') }}</v-btn>
                   </template>
                 </v-data-table>
               </v-card-text>

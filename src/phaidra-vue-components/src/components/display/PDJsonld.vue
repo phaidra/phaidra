@@ -24,6 +24,9 @@
       <p-d-keyword :p="'dce:subject'" :language="language === 'xxx' ? null : language" :keywords="keywords" v-for="(keywords, language) in langKeywords" :key="componentid+'kw'+language" v-bind.sync="displayProperties"></p-d-keyword>
     </template>
 
+    <template slot="overallAccessibility" v-if="overallAccessibility">
+        <p-d-accessibility :p="'overallAccessibility'" :o="overallAccessibility" v-bind.sync="displayProperties"></p-d-accessibility>
+    </template>
     <template v-for="(o, p) in jsonld">
 
       <template v-if="!predicatesToHide.includes(p)">
@@ -47,10 +50,6 @@
           <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'accessMode'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
         </template>
         
-        <template v-else-if="p==='overallAccessibility'" slot="overallAccessibility">
-          <p-d-accessibility :p="p" :o="o" :key="componentid+'overallAccessibility'" v-bind.sync="displayProperties"></p-d-accessibility>
-        </template>
-
         <template v-else-if="p==='schema:accessibilityFeature'" slot="schema:accessibilityFeature">
           <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'accessibilityFeature'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
         </template>
@@ -546,7 +545,8 @@ export default {
       showAllEntities: {},
       entitiesLimited: {},
       projectIds: [],
-      shownAllProjectIds: true
+      shownAllProjectIds: true,
+      overallAccessibility: null,
     }
   },
   methods: {
@@ -610,13 +610,12 @@ export default {
   mounted: function () {
     this.$store.dispatch('vocabulary/loadLanguages', this.$i18n.locale)
     this.getProjectIds()
-    let overallAccessibility = {
+    this.overallAccessibility = {
       control: this.jsonld['schema:accessibilityControl'] || [],
       feature: this.jsonld['schema:accessibilityFeature'] || [],
       hazard: this.jsonld['schema:accessibilityHazard'] || [],
       mode: this.jsonld['schema:accessMode'] || [],
     }
-    this.jsonld['overallAccessibility'] = overallAccessibility
   }
 }
 </script>

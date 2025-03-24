@@ -113,7 +113,7 @@
                     single-line
                     hide-details
                   ></v-text-field> -->
-                  <v-btn v-if="token && token.length > 0" color="primary" dark class="mb-2 ml-2"  @click="deleteToken(loadedList.listid)">{{ $t('Remove public link') }}</v-btn>
+                  <v-btn v-if="token && token.length > 0" color="red lighten-1" dark class="mb-2 ml-2"  @click="deleteToken(loadedList.listid)">{{ $t('Remove public link') }}</v-btn>
                   <v-btn v-else color="primary" dark class="mb-2 ml-2"  @click="createToken(loadedList.listid)">{{ $t('Create public link') }}</v-btn>
                   <v-btn v-if="members.length > 0" color="primary" dark class="mb-2 ml-2"  @click="$refs.collectiondialog.open()">{{ $t('Add objects to collection') }}</v-btn>
                 </v-toolbar>

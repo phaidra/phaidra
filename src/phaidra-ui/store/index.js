@@ -122,6 +122,15 @@ export const mutations = {
         }
       )
     }
+    if (transition.to.path.includes('/templates')) {
+      state.breadcrumbs.push(
+        {
+          text: 'Templates',
+          to: transition.to.path,
+          disabled: true
+        }
+      )
+    }
     if (transition.to.path.includes('lists')) {
       state.breadcrumbs.push(
         {
@@ -140,6 +149,24 @@ export const mutations = {
           }
         )
       }
+    }
+    if (transition.to.path.includes('/help')) {
+      state.breadcrumbs.push(
+        {
+          text: 'Help',
+          to: transition.to.path,
+          disabled: true
+        }
+      )
+    }
+    if (transition.to.path.includes('/groups')) {
+      state.breadcrumbs.push(
+        {
+          text: 'Groups',
+          to: transition.to.path,
+          disabled: true
+        }
+      )
     }
     if (transition.to.path.includes('detail')) {
       if (transition.from.path.includes('/search')) {

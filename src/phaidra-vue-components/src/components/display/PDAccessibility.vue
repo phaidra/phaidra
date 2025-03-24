@@ -1,5 +1,5 @@
 <template>
- <v-row>
+ <v-row v-if="maxRowLen()">
   <v-col :md="labelColMd" cols="12" class="pdlabel primary--text text-md-right">{{$t('Accessibility')}}</v-col>
   <v-col class="valuefield" :md="valueColMd" cols="12">
     <table border="1">

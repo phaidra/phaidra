@@ -6,6 +6,7 @@
       <v-col :md="valueColMd" cols="12" v-if="o['skos:exactMatch']">
         <span v-if="o['skos:exactMatch'][0].startsWith('oefos2012:')">ÖFOS 2012 -- {{ o['skos:notation'][0] }} -- {{ l['@value'] }}</span>
         <span v-else-if="o['skos:exactMatch'][0].startsWith('thema:')">{{ $t('Thema Subject Codes') }} -- {{ o['skos:notation'][0] }} -- {{ l['@value'] }}</span>
+        <span v-else-if="o['skos:exactMatch'][0].startsWith('bic:')">{{ l['@value'] }}</span>
         <span v-else-if="isA11y">{{ getLocalizedTermLabel(a11yVocab, o['skos:exactMatch'][0]) }}</span>
         <a v-else class="valuefield" :href="o['skos:exactMatch'][0]" target="_blank">{{ l['@value'] }}</a>
       </v-col>

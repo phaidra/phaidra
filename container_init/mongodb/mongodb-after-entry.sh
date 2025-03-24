@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CHECK=$(mongosh --quiet --authenticationDatabase admin -u ${MONGO_INITDB_ROOT_USERNAME} -p ${MONGO_INITDB_ROOT_PASSWORD} mongodb --eval 'db.oai_sets.exists()')
+CHECK=$(mongo --quiet --authenticationDatabase admin -u ${MONGO_INITDB_ROOT_USERNAME} -p ${MONGO_INITDB_ROOT_PASSWORD} mongodb --eval 'db.oai_sets.exists()')
 
 if [[ "null" == "$CHECK" ]]
 then
@@ -16,3 +16,16 @@ else
     echo "OAI sets exist, not importing default values."
 fi
 
+# Ensure indexes exist for oai_records collection
+
+echo "Creating oai_records collection and indexes (if not present)..."
+mongo --quiet --authenticationDatabase admin -u ${MONGO_INITDB_ROOT_USERNAME} -p ${MONGO_INITDB_ROOT_PASSWORD} mongodb --eval "
+db = db.getSiblingDB('mongodb');
+if (db.oai_records.countDocuments({}) === 0) db.oai_records.insertOne({ _temp: true });
+db.oai_records.createIndex({ pid: 1 });
+db.oai_records.createIndex({ created: -1 });
+db.oai_records.createIndex({ updated: -1 });
+db.oai_records.deleteOne({ _temp: true });
+"
+
+echo "Indexes created (if they did not already exist)."
