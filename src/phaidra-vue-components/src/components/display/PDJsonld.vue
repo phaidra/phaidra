@@ -149,7 +149,7 @@
         </template>
 
         <template v-else-if="p==='dcterms:temporal'" slot="dcterms:temporal">
-          <p-d-lang-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'temporal'+j" v-bind.sync="displayProperties"></p-d-lang-value>
+          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'temporal'+j" v-bind.sync="displayProperties"></p-d-date>
         </template>
 
         <template v-else-if="p==='rdau:P60193'" slot="rdau:P60193">

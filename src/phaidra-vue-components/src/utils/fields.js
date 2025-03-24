@@ -847,7 +847,7 @@ const fields = [
     id: 'temporal-coverage',
     fieldname: 'Temporal coverage',
     predicate: 'dcterms:temporal',
-    type: 'skos:Concept',
+    type: 'edm:TimeSpan',
     component: 'p-text-field',
     label: 'Temporal coverage',
     multilingual: true,
