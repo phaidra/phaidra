@@ -178,7 +178,7 @@ services:
   #################### httpd service for shib-local profile ####################
   httpd-shib-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:5afb1695
+    image: phaidraorg/httpd-shib-dist:039d8f23
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -207,7 +207,7 @@ services:
   #################### httpd service for shib-s3 profile ####################
   httpd-shib-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:5afb1695
+    image: phaidraorg/httpd-shib-dist:039d8f23
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
