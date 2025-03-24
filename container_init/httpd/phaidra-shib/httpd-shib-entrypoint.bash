@@ -7,6 +7,7 @@ cp /shibboleth-certs/sp-signing-key.pem \
    /shib-init/aconet-metadata-signing.crt \
    /shib-init/attribute-map.xml \
    /shib-init/attribute-policy.xml \
+   /shib-init/security-policy.xml \
    /shib-init/shibboleth2.xml \
    /etc/shibboleth/
 sed -i \

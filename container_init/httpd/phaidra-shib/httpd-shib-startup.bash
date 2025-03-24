@@ -8,6 +8,7 @@ cp /mnt/startup/conf/sp-signing-key.pem \
    /mnt/startup/conf/aconet-metadata-signing.crt \
    /mnt/startup/conf/attribute-map.xml \
    /mnt/startup/conf/attribute-policy.xml \
+   /mnt/startup/conf/security-policy.xml \
    /mnt/startup/conf/shibboleth2.xml \
    /etc/shibboleth/
 sed -i \
