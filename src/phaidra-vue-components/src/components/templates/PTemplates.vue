@@ -16,7 +16,7 @@
     :no-results-text="$t('There were no search results')"
   >
     <template v-slot:top>
-      <v-toolbar flat>
+      <v-toolbar flat color="transparent">
         <v-text-field
           v-model="templateSearch"
           append-icon="mdi-magnify"

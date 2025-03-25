@@ -22,7 +22,7 @@
               :no-results-text="$t('There were no search results')"
             >
               <template v-slot:top>
-                <v-toolbar flat>
+                <v-toolbar flat color="transparent">
                   <v-text-field
                     v-model="groupsSearch"
                     append-icon="mdi-magnify"
@@ -71,7 +71,7 @@
                 {{ item.updated | unixtime }}
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-icon color="grey" class="mx-3" @click="loadedGroup = item">mdi-pencil</v-icon>
+                <v-icon color="primary" class="mx-3" @click="loadedGroup = item">mdi-pencil</v-icon>
                 <v-icon color="red lighten-1" class="mx-3" @click="deleteGroupDialog(item)">mdi-delete</v-icon>
               </template>
             </v-data-table>
