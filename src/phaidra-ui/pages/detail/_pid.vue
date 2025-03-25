@@ -767,7 +767,7 @@
                 <v-divider></v-divider>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn dark color="grey" :disabled="$store.state.loading" @click="collMemberToRemove = null; confirmColMemDeleteDlg = false">{{ $t('Cancel') }}</v-btn>
+                  <v-btn outlined :disabled="$store.state.loading" @click="collMemberToRemove = null; confirmColMemDeleteDlg = false">{{ $t('Cancel') }}</v-btn>
                   <v-btn color="red" class="white--text" :loading="$store.state.loading" :disabled="$store.state.loading" @click="removeFromCollection()">{{ $t('Remove') }}</v-btn>                  
                 </v-card-actions>
               </v-card>
@@ -906,8 +906,7 @@
                             <v-card-actions>
                               <v-spacer></v-spacer>
                               <v-btn
-                                dark
-                                color="grey"
+                                outlined
                                 :loading="doiRequestLoading"
                                 @click="doiRequestDialog = false"
                                 >{{ $t("Cancel") }}</v-btn
@@ -2113,7 +2112,7 @@
                             </v-card-text>
                             <v-card-actions>
                               <v-spacer></v-spacer>
-                              <v-btn dark color="grey" @click="relationDialog = false">{{
+                              <v-btn outlined @click="relationDialog = false">{{
                                 $t("Cancel")
                               }}</v-btn>
                               <v-btn
@@ -2204,7 +2203,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn dark color="grey" @click.stop="datareplaceDialog=false">{{ $t("Cancel") }}</v-btn>
+          <v-btn outlined @click.stop="datareplaceDialog=false">{{ $t("Cancel") }}</v-btn>
           <v-btn color="primary" @click="datareplaceUpload()">{{ $t("Upload File") }}</v-btn>
         </v-card-actions>
       </v-card>

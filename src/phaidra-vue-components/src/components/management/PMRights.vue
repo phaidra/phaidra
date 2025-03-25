@@ -249,7 +249,7 @@
             scrollable
           >
             <v-spacer></v-spacer>
-            <v-btn dark color="grey" @click="dateDialog = false">{{ $t('Cancel') }}</v-btn>
+            <v-btn outlined @click="dateDialog = false">{{ $t('Cancel') }}</v-btn>
             <v-btn color="primary" @click="setExpires()">OK</v-btn>
           </v-date-picker>
         </v-dialog>

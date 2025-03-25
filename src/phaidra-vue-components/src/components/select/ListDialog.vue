@@ -50,7 +50,7 @@
       <v-card-actions>
         <v-container fluid>
           <v-row justify="end" class="px-4">
-            <v-btn color="grey" dark @click="dialog = false">{{ $t('Cancel') }}</v-btn>
+            <v-btn outlined @click="dialog = false">{{ $t('Cancel') }}</v-btn>
           </v-row>
         </v-container>
       </v-card-actions>

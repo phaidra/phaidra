@@ -130,7 +130,7 @@
                             :selectedTemplateId="selectedTemplateId" v-on:load-template="onTemplateSelect($event)"></p-templates>
                         </v-card-text>
                         <v-card-actions>
-                          <v-spacer></v-spacer><v-btn dark color="grey" @click="templateDialog = false">{{ $t("Cancel") }}</v-btn>
+                          <v-spacer></v-spacer><v-btn outlined @click="templateDialog = false">{{ $t("Cancel") }}</v-btn>
                         </v-card-actions>
                       </v-card>
                     </v-dialog>

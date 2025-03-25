@@ -758,7 +758,7 @@
                                 <v-col v-else><span v-t="'Please select metadata fields from the list'"></span></v-col>
                               </v-row>
                               <v-row justify="end">
-                                <v-btn class="mx-1" color="grey" dark @click="addfieldselection = []; s['adddialogue'] = false"><span v-t="'Cancel'"></span></v-btn>
+                                <v-btn class="mx-1" outlined @click="addfieldselection = []; s['adddialogue'] = false"><span v-t="'Cancel'"></span></v-btn>
                                 <v-btn class="mx-1" color="primary" @click="addFields(s)"><span v-t="'Add'"></span></v-btn>
                               </v-row>
                             </v-container>
@@ -799,7 +799,7 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn :loading="loading" :disabled="loading" color="grey" dark @click="templatedialog= false"><span v-t="'Cancel'"></span></v-btn>
+                  <v-btn :loading="loading" :disabled="loading" outlined @click="templatedialog= false"><span v-t="'Cancel'"></span></v-btn>
                   <v-btn :loading="loading" :disabled="loading" color="primary" @click="saveAsNewTemplate()"><span v-t="'Save'"></span></v-btn>
                 </v-card-actions>
               </v-card>
