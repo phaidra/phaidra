@@ -1034,6 +1034,10 @@ export default {
       type: Boolean,
       default: true
     },
+    enableLicenseAdd: {
+      type: Boolean,
+      default: true
+    },
     debug: {
       type: Boolean,
       default: false
@@ -1111,9 +1115,9 @@ export default {
     },
     filteredMetadatafields () {
       if (this.searchfieldsinput) {
-        return this.$store.state.vocabulary.fields.filter(f => (this.$t(f.fieldname).toLowerCase().includes(this.searchfieldsinput.toLowerCase()) || (this.$t(f.definition).toLowerCase().includes(this.searchfieldsinput.toLowerCase()))))
+        return this.$store.state.vocabulary.fields.filter(f => this.enableLicenseAdd || f.id !== "license").filter(f => (this.$t(f.fieldname).toLowerCase().includes(this.searchfieldsinput.toLowerCase()) || (this.$t(f.definition).toLowerCase().includes(this.searchfieldsinput.toLowerCase()))))
       } else {
-        return this.$store.state.vocabulary.fields
+        return this.$store.state.vocabulary.fields.filter(f => this.enableLicenseAdd || f.id !== "license")
       }
     },
     instanceconfig: function () {
