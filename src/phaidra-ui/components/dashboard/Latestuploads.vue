@@ -1,6 +1,6 @@
 <template>
   <v-card class="mt-2 mx-auto" :elevation="0">
-    <v-card-title class="title font-weight-light" :class="titlecolor + '--text'">{{ $t(label) }}</v-card-title>
+    <v-card-title class="title font-weight-light transparent" :class="titlecolor + '--text'">{{ $t(label) }}</v-card-title>
     <v-card-text>
       <div v-for="(doc, i) in this.docs" :key="'doc'+i" class="pa-4">
         <v-row>
@@ -55,7 +55,10 @@ import { config } from "../../mixins/config";
 export default {
   mixins: [context, config],
   props: {
-    label: String,
+    label: {
+      type: String,
+      default: 'Latest uploads'
+    },
     fq: {
       type: String,
       default: '*:*'
