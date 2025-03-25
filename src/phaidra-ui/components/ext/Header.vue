@@ -640,7 +640,7 @@
         localStorage.setItem("locale", lang);
         this.$router.push(this.switchLocalePath(lang));
         this.$store.dispatch("vocabulary/sortRoles", this.$i18n.locale);
-        this.$store.dispatch("vocabulary/sortFields", this.$i18n.locale);
+        this.$store.dispatch("vocabulary/sortFields", {locale: this.$i18n.locale, i18nInstance: this.$i18n});
         this.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
         this.$store.dispatch('info/sortFieldsOverview', this.$i18n.locale)
       }
