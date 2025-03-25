@@ -862,8 +862,8 @@
     </v-tabs-items>
     <v-dialog v-model="showEditFieldPopup" max-width="600px" scrollable>
       <v-card>
-        <v-card-title>
-          <span class="text-h5">Field Settings</span>
+        <v-card-title class="title font-weight-light grey white--text">
+          {{ $t("Field Settings") }}
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -878,11 +878,11 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="showEditFieldPopup = false">
-            Close
+          <v-btn outlined @click="showEditFieldPopup = false">
+            {{ $t("Close") }}
           </v-btn>
           <v-btn color="primary" @click="saveFieldProp()">
-            Save
+            {{ $t("Save") }}
           </v-btn>
         </v-card-actions>
       </v-card>
