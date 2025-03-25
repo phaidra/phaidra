@@ -21,7 +21,7 @@ function get_path {
             -p $M_PASS \
             mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
             --eval \
-            'JSON.stringify(db.jobs.findOne({pid: "'$1'"}))' | \
+            'JSON.stringify(db.jobs.findOne({pid: "'$1'", "agent": "vige"}))' | \
             jq -r '.path'
 }
 
@@ -47,7 +47,7 @@ function set_mpid_sent {
         -p $M_PASS \
         mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
         --eval \
-        'db.jobs.findOneAndUpdate({ pid: "'$1'" }, { $set: { 'oc_mpid': "'$2'", 'status': "sent" } })'
+        'db.jobs.findOneAndUpdate({ pid: "'$1'", "agent": "vige" }, { $set: { 'oc_mpid': "'$2'", 'status': "sent" } }, { sort: { created: -1 } })'
 }
 
 function get_suffix {
