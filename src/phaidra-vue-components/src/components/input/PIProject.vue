@@ -96,7 +96,8 @@
                               :value="dateFrom"
                               :show-current="false"
                               v-model="pickerFromModel"
-                              :locale="$i18n.locale === 'deu' ? 'de-AT' : 'en-GB' "
+                              :first-day-of-week="1"
+                              :locale="alpha2bcp47($i18n.locale)"
                               v-on:input="dateFromMenu = false; $emit('input-date-from', $event)"
                             ></v-date-picker>
                           </v-menu>
@@ -134,7 +135,8 @@
                               :value="dateTo"
                               :show-current="false"
                               v-model="pickerToModel"
-                              :locale="$i18n.locale === 'deu' ? 'de-AT' : 'en-GB' "
+                              :first-day-of-week="1"
+                              :locale="alpha2bcp47($i18n.locale)"
                               v-on:input="dateToMenu = false; $emit('input-date-to', $event)"
                             ></v-date-picker>
                           </v-menu>
@@ -278,13 +280,14 @@
 
 <script>
 import { vocabulary } from '../../mixins/vocabulary'
+import datepickerproperties from '../../mixins/datepickerproperties'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { validationrules } from '../../mixins/validationrules'
 import SelectLanguage from '../select/SelectLanguage'
 
 export default {
   name: 'p-i-project',
-  mixins: [vocabulary, fieldproperties, validationrules],
+  mixins: [vocabulary, fieldproperties, validationrules, datepickerproperties],
   components: {
     SelectLanguage
   },

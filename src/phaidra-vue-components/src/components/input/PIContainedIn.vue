@@ -477,7 +477,8 @@
                                   :value="publishingDate"
                                   :show-current="false"
                                   v-model="publisherPickerModel"
-                                  :locale="$i18n.locale === 'deu' ? 'de-AT' : 'en-GB' "
+                                  :first-day-of-week="1"
+                                  :locale="alpha2bcp47($i18n.locale)"
                                   v-on:input="publisherDateMenu = false; $emit('input-publishing-date', $event)"
                                 ></v-date-picker>
                               </v-menu>
@@ -510,6 +511,7 @@
 </template>
 
 <script>
+import datepickerproperties from '../../mixins/datepickerproperties'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { vocabulary } from '../../mixins/vocabulary'
 import { validationrules } from '../../mixins/validationrules'
@@ -521,7 +523,7 @@ var iconv = require('iconv-lite')
 
 export default {
   name: 'p-i-contained-in',
-  mixins: [fieldproperties, vocabulary, validationrules],
+  mixins: [fieldproperties, vocabulary, validationrules, datepickerproperties],
   components: {
     OrgUnitsTreeDialog,
     SelectLanguage

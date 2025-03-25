@@ -245,7 +245,7 @@
             color="primary"
             v-model="dateModel"
             :first-day-of-week="1"
-            :locale="alpha2bcp47"              
+            :locale="alpha2bcp47($i18n.locale)"              
             scrollable
           >
             <v-spacer></v-spacer>
@@ -262,13 +262,14 @@
 <script>
 import qs from 'qs'
 import arrays from '../../utils/arrays'
+import datepickerproperties from '../../mixins/datepickerproperties'
 import { vocabulary } from '../../mixins/vocabulary'
 import OrgUnitsTreeDialog from '../select/OrgUnitsTreeDialog'
 import UserSearchDialog from '../select/UserSearchDialog'
 
 export default {
   name: 'p-m-rights',
-  mixins: [vocabulary],
+  mixins: [vocabulary, datepickerproperties],
   components: {
     OrgUnitsTreeDialog,
     UserSearchDialog
@@ -308,14 +309,6 @@ export default {
   computed: {
     instance: function () {
       return this.$store.state.instanceconfig
-    },
-    alpha2bcp47: function () {
-      switch (this.$i18n.locale) {
-        case 'eng': return 'en-GB'
-        case 'deu': return 'de-AT'
-        case 'ita': return 'it-IT'
-        default: return 'en-GB'
-      }
     }
   },
   data () {

@@ -59,7 +59,8 @@
                   :value="value"
                   :show-current="false"
                   v-model="pickerModel"
-                  :locale="$i18n.locale === 'deu' ? 'de-AT' : 'en-GB' "
+                  :first-day-of-week="1"
+                  :locale="alpha2bcp47($i18n.locale)"
                   v-on:input="dateMenu = false; $emit('input-date', $event)"
                 ></v-date-picker>
               </v-menu>
@@ -100,13 +101,14 @@
 </template>
 
 <script>
+import datepickerproperties from '../../mixins/datepickerproperties'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { validationrules } from '../../mixins/validationrules'
 
 export default {
   name: 'p-i-date-edtf',
-  mixins: [vocabulary, fieldproperties, validationrules],
+  mixins: [vocabulary, fieldproperties, validationrules, datepickerproperties],
   props: {
     value: {
       type: String

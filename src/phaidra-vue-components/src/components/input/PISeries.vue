@@ -127,7 +127,8 @@
                           :value="issued"
                           :show-current="false"
                           v-model="pickerModel"
-                          :locale="$i18n.locale === 'deu' ? 'de-AT' : 'en-GB' "
+                          :first-day-of-week="1"
+                          :locale="alpha2bcp47($i18n.locale)"
                           v-on:input="dateMenu = false; $emit('input-issued', $event)"
                         ></v-date-picker>
                       </v-menu>
@@ -229,6 +230,7 @@
 
 <script>
 import { vocabulary } from '../../mixins/vocabulary'
+import datepickerproperties from '../../mixins/datepickerproperties'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { validationrules } from '../../mixins/validationrules'
 import SelectLanguage from '../select/SelectLanguage'
@@ -238,7 +240,7 @@ var iconv = require('iconv-lite')
 
 export default {
   name: 'p-i-series',
-  mixins: [vocabulary, fieldproperties, validationrules],
+  mixins: [vocabulary, fieldproperties, validationrules, datepickerproperties],
   components: {
     SelectLanguage
   },
