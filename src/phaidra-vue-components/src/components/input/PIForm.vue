@@ -879,7 +879,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn outlined @click="showEditFieldPopup = false">
-            {{ $t("Close") }}
+            {{ $t("Cancel") }}
           </v-btn>
           <v-btn color="primary" @click="saveFieldProp()">
             {{ $t("Save") }}
