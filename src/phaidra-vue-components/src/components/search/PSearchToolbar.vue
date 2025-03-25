@@ -51,13 +51,13 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn dark color="grey" @click.stop="linkdialog=false">{{ $t('Close') }}</v-btn>
+              <v-btn outlined @click.stop="linkdialog=false">{{ $t("Close") }}</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn icon @click="linkdialog=true" :color="'grey darken-1'" v-on="on">
+            <v-btn icon @click="linkdialog=true" v-on="on">
               <icon width="18px" height="18px" name="material-content-link"></icon>
             </v-btn>
           </template>
@@ -77,7 +77,7 @@
       <v-col>
         <v-tooltip top>
           <template v-slot:activator="{ on }">
-            <v-btn icon :color="'grey darken-1'" v-on="on" @click.native="csvExport()">
+            <v-btn icon v-on="on" @click.native="csvExport()">
               <v-icon>mdi-download</v-icon>
             </v-btn>
           </template>
