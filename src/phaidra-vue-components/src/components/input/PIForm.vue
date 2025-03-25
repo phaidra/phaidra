@@ -734,7 +734,7 @@
                           </v-btn>
                         </template>
                         <v-card>
-                          <v-card-title class="grey white--text"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn target='_blank' :to="'/metadata-fields-help'">{{ $t('Help') }}</v-btn></v-card-title>
+                          <v-card-title class="grey white--text"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn light target='_blank' :to="'/metadata-fields-help'">{{ $t('Help') }}</v-btn></v-card-title>
                           <v-card-text>
                             <v-list three-line >
                               <v-text-field clearable :label="$t('Search...')" append-icon="mdi-magnify" v-model="searchfieldsinput"></v-text-field>
@@ -759,7 +759,7 @@
                                 <v-col v-else><span v-t="'Please select metadata fields from the list'"></span></v-col>
                               </v-row>
                               <v-row justify="end">
-                                <v-btn class="mx-1" color="grey" dark @click="addfieldselection = []; s['adddialogue'] = false"><span v-t="'Cancel'"></span></v-btn>
+                                <v-btn class="mx-1" outlined @click="addfieldselection = []; s['adddialogue'] = false"><span v-t="'Cancel'"></span></v-btn>
                                 <v-btn class="mx-1" color="primary" @click="addFields(s)"><span v-t="'Add'"></span></v-btn>
                               </v-row>
                             </v-container>
@@ -800,7 +800,7 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn :loading="loading" :disabled="loading" color="grey" dark @click="templatedialog= false"><span v-t="'Cancel'"></span></v-btn>
+                  <v-btn :loading="loading" :disabled="loading" outlined @click="templatedialog= false"><span v-t="'Cancel'"></span></v-btn>
                   <v-btn :loading="loading" :disabled="loading" color="primary" @click="saveAsNewTemplate()"><span v-t="'Save'"></span></v-btn>
                 </v-card-actions>
               </v-card>
@@ -863,8 +863,8 @@
     </v-tabs-items>
     <v-dialog v-model="showEditFieldPopup" max-width="600px" scrollable>
       <v-card>
-        <v-card-title>
-          <span class="text-h5">Field Settings</span>
+        <v-card-title class="title font-weight-light grey white--text">
+          {{ $t("Field Settings") }}
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -879,11 +879,11 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="showEditFieldPopup = false">
-            Close
+          <v-btn outlined @click="showEditFieldPopup = false">
+            {{ $t("Cancel") }}
           </v-btn>
           <v-btn color="primary" @click="saveFieldProp()">
-            Save
+            {{ $t("Save") }}
           </v-btn>
         </v-card-actions>
       </v-card>

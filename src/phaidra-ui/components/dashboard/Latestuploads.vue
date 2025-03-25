@@ -1,6 +1,6 @@
 <template>
   <v-card class="mt-2 mx-auto" :elevation="0">
-    <v-card-title class="title font-weight-light" :class="titlecolor + '--text'">{{ $t(label) }}</v-card-title>
+    <v-card-title class="title font-weight-light transparent" :class="titlecolor + '--text'">{{ $t(label) }}</v-card-title>
     <v-card-text>
       <div v-for="(doc, i) in this.docs" :key="'doc'+i" class="pa-4">
         <v-row>
@@ -27,10 +27,8 @@
                   <v-spacer></v-spacer>
                 </v-row>
                 <v-row no-gutters class="my-2 mr-2">
-                  <span class="grey--text text--darken-4">
-                    <span v-for="(aut,i) in doc.bib_roles_pers_aut" :key="'pers'+i">
-                      {{aut}}<span v-if="(i+1) < doc.bib_roles_pers_aut.length">; </span>
-                    </span>
+                  <span v-for="(aut,i) in doc.bib_roles_pers_aut" :key="'pers'+i">
+                    {{aut}}<span v-if="(i+1) < doc.bib_roles_pers_aut.length">; </span>
                   </span>
                   <v-spacer></v-spacer>
                 </v-row>
@@ -55,7 +53,10 @@ import { config } from "../../mixins/config";
 export default {
   mixins: [context, config],
   props: {
-    label: String,
+    label: {
+      type: String,
+      default: 'Latest uploads'
+    },
     fq: {
       type: String,
       default: '*:*'
