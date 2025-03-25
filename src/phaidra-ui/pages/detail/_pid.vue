@@ -855,8 +855,7 @@
                                 <v-card-actions>
                                   <v-spacer></v-spacer>
                                   <v-btn
-                                    dark
-                                    color="grey"
+                                    outlined
                                     :loading="doiCiteLoading"
                                     @click="doiCiteDialog = false"
                                     >{{ $t("Close") }}</v-btn

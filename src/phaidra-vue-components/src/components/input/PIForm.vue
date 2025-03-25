@@ -733,7 +733,7 @@
                           </v-btn>
                         </template>
                         <v-card>
-                          <v-card-title class="grey white--text"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn target='_blank' :to="'/metadata-fields-help'">{{ $t('Help') }}</v-btn></v-card-title>
+                          <v-card-title class="grey white--text"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn light target='_blank' :to="'/metadata-fields-help'">{{ $t('Help') }}</v-btn></v-card-title>
                           <v-card-text>
                             <v-list three-line >
                               <v-text-field clearable :label="$t('Search...')" append-icon="mdi-magnify" v-model="searchfieldsinput"></v-text-field>
