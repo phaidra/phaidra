@@ -1027,6 +1027,13 @@ services:
     <<: *common
     profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
 
+  apache-exporter:
+    hostname: "apache-exporter"
+    image: lusotycoon/apache-exporter:v1.0.10
+    command: --scrape_uri="http://httpd/server-status/?auto"
+    <<: [*common, *logs]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
+
   #################### demo-s3-dev ####################
   httpd-demo-s3-dev:
     hostname: "httpd"
