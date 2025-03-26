@@ -8,7 +8,7 @@
           <li v-for="(e, i) in this.validationErrors" :key="'valEre'+i">{{ e }}</li>
         </ul>
       </v-alert>
-      <v-tabs slider-color="primary" slider-size="20px" dark background-color="grey darken-2" vertical v-model="activetab">
+      <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-2" vertical v-model="activetab">
         <template v-for="(s, i) in this.form">
           <v-tab class="white--text" :active-class="'primary'" v-if="(s.xmlname !== 'annotation') && (s.xmlname !== 'etheses')" :key="'tab'+i">
             <span v-t="s.labels[alpha2locale]"></span>
