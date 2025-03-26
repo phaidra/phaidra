@@ -3,35 +3,35 @@
   <v-container class="mt-8" fluid>
 
     <div class="mb-4"><strong>Note:</strong> Config is cached in each worker, don't forget to restart phaidra-api to apply changes.</div>
-    <v-tabs slider-color="primary"  dark background-color="grey" vertical v-model="activetab">
-      <v-tab :active-class="'primary'" >
+    <v-tabs slider-color="primary" background-color="grey darken-1" vertical v-model="activetab">
+      <v-tab class="white--text" :active-class="'primary'" >
         <span>{{ $t('Public') }}</span>
       </v-tab>
-      <v-tab :active-class="'primary'" >
+      <v-tab class="white--text" :active-class="'primary'" >
         <span>{{ $t('Private') }}</span>
       </v-tab>
-      <v-tab :active-class="'primary'" >
+      <v-tab class="white--text" :active-class="'primary'" >
         <span>{{ $t('Import/Export') }}</span>
       </v-tab>
-      <v-tab :active-class="'primary'" >
+      <v-tab class="white--text" :active-class="'primary'" >
         <span>{{ $t('Manage Phaidra') }}</span>
       </v-tab>
 
       <v-tab-item>
         <v-card tile>
           
-          <v-tabs slider-color="primary" dark background-color="grey" vertical v-model="activetab2">
+          <v-tabs slider-color="primary" background-color="grey darken-2" vertical v-model="activetab2">
 
-            <v-tab :active-class="'primary'" >
+            <v-tab class="white--text" :active-class="'primary'" >
               <span>{{ $t('General') }}</span>
             </v-tab>
-            <v-tab :active-class="'primary'">
+            <v-tab class="white--text" :active-class="'primary'">
               <span>{{ $t('Functionality') }}</span>
             </v-tab>
-            <v-tab :active-class="'primary'">
+            <v-tab class="white--text" :active-class="'primary'">
               <span>{{ $t('CMS') }}</span>
             </v-tab>
-            <v-tab :active-class="'primary'">
+            <v-tab class="white--text" :active-class="'primary'">
               <span>{{ $t('Datastructures') }}</span>
             </v-tab>
 
@@ -406,12 +406,12 @@
       <v-tab-item>
         <v-card tile>
           
-          <v-tabs slider-color="primary" slider-size="20px" dark background-color="grey" vertical v-model="activetabprivate">
+          <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-2" vertical v-model="activetabprivate">
 
-            <v-tab :active-class="'primary'" >
+            <v-tab class="white--text" :active-class="'primary'" >
               <span>{{ $t('General') }}</span>
             </v-tab>
-            <v-tab :active-class="'primary'">
+            <v-tab class="white--text" :active-class="'primary'">
               <span>{{ $t('Functionality') }}</span>
             </v-tab>
 
@@ -460,12 +460,12 @@
       <v-tab-item>
         <v-card tile>
           
-          <v-tabs slider-color="primary" slider-size="20px" dark background-color="grey" vertical v-model="activetabimpexp">
+          <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-2" vertical v-model="activetabimpexp">
 
-            <v-tab :active-class="'primary'">
+            <v-tab class="white--text" :active-class="'primary'">
               <span>{{ $t('Export') }}</span>
             </v-tab>
-            <v-tab :active-class="'primary'">
+            <v-tab class="white--text" :active-class="'primary'">
               <span>{{ $t('Import') }}</span>
             </v-tab>
 
