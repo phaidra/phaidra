@@ -1307,6 +1307,11 @@
   "object_metadata_saved_success": "Metadati dell'oggetto {o} salvati.",
   "object_rights_saved_success": "Diritti di accesso dell'oggetto {o} salvati.",
   "Field Settings": "Configurazione del campo",
+  "Public": "Pubblico",
   "Validation": "Validazione",
-  "You have been logged out": "Ti sei disconnesso."
+  "Edit Validation": "Modifica validazione",
+  "Edit Template Validation": "Modifica validazione del modello",
+  "Validation name": "Denominazione validazione",
+  "You have been logged out": "Ti sei disconnesso.",
+  "Upload new file to": "Carica nuovo file per"
 }
