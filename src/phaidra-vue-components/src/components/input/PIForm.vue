@@ -810,6 +810,7 @@
             <template v-if="!disablesave">
               <v-btn large fixed bottom right v-if="targetpid && floatingsavebutton" raised :loading="loading" :disabled="loading" color="primary" @click="save()"><span v-t="'Save'"></span></v-btn>
               <v-btn v-else-if="targetpid && !floatingsavebutton" large raised :loading="loading" :disabled="loading" class="primary float-right" @click="save()"><span v-t="'Save'"></span></v-btn>
+              <v-btn v-else-if="forcePreview" large raised :loading="loading" :disabled="loading" class="primary float-right" @click="showForcePreview()"><span v-t="'Show a preview'"></span></v-btn>
               <v-btn v-else large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
             </template>
           </v-col>
@@ -853,6 +854,7 @@
       </v-tab-item>
       <v-tab-item v-if="(submittype !== 'container') && enablepreview" class="pa-3">
         <p-d-jsonld :jsonld="jsonld"></p-d-jsonld>
+        <v-btn large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
       </v-tab-item>
       <v-tab-item v-if="help" class="pa-3">
         <p-help></p-help>
@@ -1018,6 +1020,10 @@ export default {
       type: Boolean,
       default: true
     },
+    forcePreview: {
+      type: Boolean,
+      default: false
+    },
     mouseoverfielddef: {
       type: Boolean,
       default: false
@@ -1156,6 +1162,12 @@ export default {
           this.markMandatory()
         }
       }
+    },
+    showForcePreview: function() {
+      this.validationError = false
+      this.updateJsonld()
+      this.activetab = 2
+      window.scrollTo(0,0);
     },
     editFieldProps: function(fieldDet) {
       this.fieldPropForm = []
@@ -1447,6 +1459,9 @@ export default {
       this.serverSubmitErrors = []
       if (!this.formIsValid()) {
         this.validationError = true
+        if(this.forcePreview){
+          this.activetab = 0
+        }
         return
       }
       this.loading = true
