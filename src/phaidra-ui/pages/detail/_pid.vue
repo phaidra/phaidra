@@ -1174,10 +1174,10 @@
                         <v-col
                           class="caption font-weight-bold"
                           cols="3"
-                          >{{ $t("Object type") }}</v-col
+                          >{{ $t("Resource type") }}</v-col
                         >
                         <v-col cols="8" offset="1">{{
-                          objectInfo.cmodel
+                          $t(objectInfo.cmodel)
                         }}</v-col>
                       </v-row>
                       <v-row
