@@ -12,7 +12,7 @@
       hide-default-header
     >
     <template v-slot:header="{ props: { headers } }">
-      <thead class="header-class white--text">
+      <thead class="white--text grey">
         <tr>
           <th v-for="h in headers">
             <span class="white--text">{{h.text}}</span>
@@ -131,9 +131,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.header-class {
-  background-color: #9e9e9e;
-}
-</style>

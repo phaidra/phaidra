@@ -20,7 +20,7 @@
         </v-card>
         <v-dialog  v-model="validationEdit" width="500">
               <v-card>
-                <v-card-title class="title font-weight-light grey lighten-2" primary-title><span v-t="'Edit Template Validation'"></span></v-card-title>
+                <v-card-title class="title font-weight-light grey white--text"><span v-t="'Edit Template Validation'"></span></v-card-title>
                 <v-card-text>
                    <v-select
                     class="mt-5"

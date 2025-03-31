@@ -13,7 +13,7 @@
           <v-btn dark color="red lighten-1" v-on="on" :disabled="(members.length > 0) || !pid || !cmodel">{{ $t('Delete') }}</v-btn>
         </template>
         <v-card>
-          <v-card-title class="title font-weight-light grey lighten-2">{{ $t('Delete') }}</v-card-title>
+          <v-card-title class="title font-weight-light grey white--text">{{ $t('Delete') }}</v-card-title>
           <v-card-text class="mt-4">{{ $t('DELETE_OBJECT_CONFIRM', { pid: instance.baseurl + '/' +  pid })}}</v-card-text>
           <v-divider></v-divider>
           <v-card-actions>

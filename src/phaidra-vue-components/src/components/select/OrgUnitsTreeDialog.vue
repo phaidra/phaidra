@@ -1,8 +1,8 @@
 <template>
   <v-dialog v-model="dialog" width="700px">
     <v-card :loading="loading">
-      <v-card-title class="grey white--text">{{ $t('Select an organizational unit') }}</v-card-title>
-      <v-card-text>
+      <v-card-title class="title font-weight-light grey white--text">{{ $t('Select an organizational unit') }}</v-card-title>
+      <v-card-text class="mt-4">
         <v-treeview :items="orgunits" item-children="subunits" item-key="@id" hoverable activatable @update:active="selectUnit($event)"></v-treeview>
       </v-card-text>
       <v-divider></v-divider>

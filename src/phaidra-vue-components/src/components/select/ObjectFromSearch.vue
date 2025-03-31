@@ -1,7 +1,7 @@
 <template>
   <v-card>
-    <v-card-title class="grey white--text">
-      <span class="title font-weight-light">{{ title ? title : $t('Select an object') }}</span>
+    <v-card-title class="title font-weight-light grey white--text">
+      {{ title ? title : $t('Select an object') }}
       <v-spacer></v-spacer>
       <v-switch
         dark

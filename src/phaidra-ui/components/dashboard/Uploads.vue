@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mt-2 mx-auto" flat>
+  <v-card class="mt-2 mx-auto" flat color="transparent">
     <v-card-title class="title font-weight-light primary--text transparent">{{ $t('Objects uploaded last year') }}</v-card-title>
     <v-card-text>
       <v-sheet class="mx-auto mt-6" color="grey" elevation="12" max-width="calc(100% - 32px)">

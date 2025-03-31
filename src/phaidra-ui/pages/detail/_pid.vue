@@ -762,7 +762,7 @@
             </div>
             <v-dialog v-model="confirmColMemDeleteDlg" width="500" >
               <v-card>
-                <v-card-title class="title font-weight-light grey lighten-2">{{ $t('Remove') }}</v-card-title>
+                <v-card-title class="title font-weight-light grey white--text">{{ $t('Remove') }}</v-card-title>
                 <v-card-text class="my-4">{{ $t('REMOVE_COLLECTION_MEMBER', { oldpid: collMemberToRemove, collection: objectInfo.pid })}}</v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
