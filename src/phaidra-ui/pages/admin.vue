@@ -533,9 +533,7 @@
           <v-row>
             <v-col>
               <v-row class="pl-2 mb-6 mt-4">
-                <ul>
-                  <li><a href="/repostats/">Repository statistics</a></li>
-                </ul>
+                <PRepostat></PRepostat>
               </v-row>
             </v-col>
           </v-row>
@@ -552,8 +550,10 @@
 <script>
 
 import FaviconMixin from '../mixins/favicon'
+import PRepostat from '../components/Repostat.vue';
 export default {
   mixins: [FaviconMixin],
+  components: {PRepostat},
   middleware: "auth",
   computed: {
     configAsJSON: {
