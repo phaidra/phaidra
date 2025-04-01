@@ -91,11 +91,6 @@ export default {
       { name: 'theme-color', content: this.instanceconfig.primary }
       ]
     };
-    if (this.instanceconfig.cms_css && (this.instanceconfig.cms_css !== '')) {
-      metaInfo.style = [ 
-        { cssText: this.instanceconfig.cms_css, type: 'text/css' } 
-      ]
-    }
     return metaInfo;
   },
   watch: {
@@ -143,6 +138,13 @@ export default {
     }
   },
   mounted() {
+    if (this.instanceconfig.cms_css && this.instanceconfig.cms_css !== '') {
+      const style = document.createElement('style');
+      style.type = 'text/css';
+      style.innerHTML = this.instanceconfig.cms_css;
+      document.head.appendChild(style);
+    }
+
     Object.entries(this.i18n_override).forEach(([lang, messages]) => {
         this.$i18n.mergeLocaleMessage(lang, messages)
       }
