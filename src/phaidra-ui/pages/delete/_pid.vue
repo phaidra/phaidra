@@ -108,7 +108,7 @@ export default {
 
     },
     objectDeleted: function (event) {
-      this.$store.commit('setAlerts', [{ type: 'success', msg: 'Object ' + this.pid + ' was successfully deleted.' }])
+      this.$store.commit('setAlerts', [{ type: 'success', key: 'object_deleted_success', params: { o: this.pid }}])
       if (this.pid === this.parentpid) {
         this.$router.push(this.localeLocation({ path: '/search' }))
       } else {

@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     objectSaved: function (event) {
-      this.$store.commit('setAlerts', [{ type: 'success', msg: 'Metadata for object ' + event + ' saved' }])
+      this.$store.commit('setAlerts', [{ type: 'success', key: 'object_metadata_saved_success', params: { o: event }}])
       this.$router.push(this.localeLocation({ path: `/detail/${event}`}))
       this.$vuetify.goTo(0)
     },

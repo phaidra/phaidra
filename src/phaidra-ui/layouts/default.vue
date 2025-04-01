@@ -17,7 +17,8 @@
                   v-if="alert.type === 'success'"
                   v-model="showSnackbar"
                 >
-                  {{ $t(alert.msg) }}
+                  <span v-if="alert.key && alert.params">{{ $t(alert.key, alert.params) }}</span>
+                  <span v-else>{{ $t(alert.msg) }}</span>
                   <v-btn dark text @click.native="dismiss(alert)">OK</v-btn>
                 </v-snackbar>
               </template>
