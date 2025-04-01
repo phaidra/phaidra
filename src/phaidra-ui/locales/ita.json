@@ -121,7 +121,7 @@
   "Page end": "Pagina finale",
   "The page on which the work ends.": "La pagina in cui il lavoro termina.",
   "Enter the page end of the object.": "Inserire la pagina finale dell'oggetto.",
-  "Page start": "Inizio della pagina",
+  "Page start": "Pagina iniziale",
   "The page on which the work starts.": "La pagina in cui l'opera inizia.",
   "Enter the page start of the object.": "Inserire la pagina di inizio della risorsa descritta.",
   "Parallel title": "Titolo parallelo",
@@ -894,7 +894,7 @@
   "Login failed": "Autenticazione fallita",
   "Content": "Contenuto",
   "Download": "Scarica",
-  "Created": "Creato",
+  "Created": "Data e ora di creazione",
   "Usage statistics": "Statistiche di utilizzo",
   "Metadata": "Metadati",
   "Metadata XML": "Metadati XML",
@@ -1313,5 +1313,9 @@
   "Edit Template Validation": "Modifica validazione del modello",
   "Validation name": "Denominazione validazione",
   "You have been logged out": "Ti sei disconnesso.",
-  "Upload new file to": "Carica nuovo file per"
+  "Upload new file to": "Carica nuovo file per",
+  "Project description": "Descrizione del progetto",
+  "Start date": "Data di inizio",
+  "End date": "Data di fine",
+  "Project homepage": "Homepage del progetto"
 }
