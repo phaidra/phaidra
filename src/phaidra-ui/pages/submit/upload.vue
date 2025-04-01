@@ -9,6 +9,7 @@
           :enablerelationships="false"
           :enablepreview="true"
           :templating="false"
+          :forcePreview="instanceconfig.forcePreview"
           :importing="false"
           :addbutton="true"
           :mouseoverfielddef="true"

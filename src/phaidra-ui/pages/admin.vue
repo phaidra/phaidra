@@ -228,6 +228,15 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
+                      :label="$t('Upload preview')"
+                      v-model="parsedPublicConfigData.forcePreview"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Move upload button to preview tab in submit form.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-checkbox
                       :label="$t('Enable feedback')"
                       v-model="parsedPublicConfigData.feedback"
                     ></v-checkbox>

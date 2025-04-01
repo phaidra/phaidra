@@ -51,7 +51,8 @@ export const mutations = {
       'accessrestrictions_showorgunits',
       'accessrestrictions_showgroups',
       'data_affiliations',
-      'feedback'
+      'feedback',
+      'forcePreview',
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
