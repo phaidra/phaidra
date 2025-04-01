@@ -18,7 +18,7 @@
                   <icon v-if="q.active" name="univie-stop2" class="primary--text"></icon>
                   <icon v-if="!q.active" name="univie-checkbox-unchecked" class="primary--text"></icon>
                   <span :class="{ active: q.active }" class="facet-label primary--text">{{ $t(q.label) }}</span>
-                  <span class="facet-count font-weight-medium" v-if="q.count > 0">({{q.count}})</span>
+                  <span class="facet-count secondary--text font-weight-medium" v-if="q.count > 0">({{q.count}})</span>
                 </span>
                 <ul v-if="q.active && q.childFacet" >
                   <li v-for="(q1, k) in q.childFacet.queries" :key="i+j+k">
@@ -26,7 +26,7 @@
                       <icon v-if="q1.active" name="univie-stop2" class="primary--text"></icon>
                       <icon v-if="!q1.active" name="univie-checkbox-unchecked" class="primary--text"></icon>
                       <span :class="{ active: q1.active }" class="facet-label primary--text">{{ $t(q1.label) }}</span>
-                      <span class="facet-count font-weight-medium" v-if="q1.count > 0">({{q1.count}})</span>
+                      <span class="facet-count secondary--text font-weight-medium" v-if="q1.count > 0">({{q1.count}})</span>
                     </span>
                     <ul v-if="q1.active && q1.childFacet" >
                       <li v-for="(q2, l) in q1.childFacet.queries" :key="i+j+k+l">
@@ -34,7 +34,7 @@
                           <icon v-if="q2.active" name="univie-stop2" class="primary--text"></icon>
                           <icon v-if="!q2.active" name="univie-checkbox-unchecked" class="primary--text"></icon>
                           <span :class="{ active: q2.active }" class="facet-label primary--text">{{ $t(q2.label) }}</span>
-                          <span class="facet-count font-weight-medium" v-if="q2.count>0">({{q2.count}})</span>
+                          <span class="facet-count secondary--text font-weight-medium" v-if="q2.count>0">({{q2.count}})</span>
                         </span>
                       </li>
                     </ul>
