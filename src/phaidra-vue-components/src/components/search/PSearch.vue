@@ -219,7 +219,10 @@ export default {
       let params = buildParams(this, ands)
       if (this.inCollection) {
         const pid = this.inCollection.replace(/[o:]/g, '')
-        params.sort = `pos_in_o_${pid} asc`
+        const activeSortLength = this.sortdef.filter(x => x.active).length
+        if(!activeSortLength){
+          params.sort = `pos_in_o_${pid} asc`
+        }
       }
       if (process.browser) {
         this.link = location.protocol + '//' + location.host + location.pathname + '?' + searchdefarr.join('&')
