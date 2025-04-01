@@ -151,6 +151,42 @@ export const mutations = {
         )
       }
     }
+    if (transition.to.path.includes('/credits')) {
+      state.breadcrumbs.push(
+        {
+          text: 'Credits',
+          to: transition.to.path,
+          disabled: true
+        }
+      )
+    }
+    if (transition.to.path.includes('/admin')) {
+      state.breadcrumbs.push(
+        {
+          text: 'Admin',
+          to: transition.to.path,
+          disabled: true
+        }
+      )
+    }
+    if (transition.to.path.includes('/termsofuse')) {
+      state.breadcrumbs.push(
+        {
+          text: 'Terms of use',
+          to: transition.to.path,
+          disabled: true
+        }
+      )
+    }
+    if (transition.to.path.includes('/login')) {
+      state.breadcrumbs.push(
+        {
+          text: 'Login',
+          to: transition.to.path,
+          disabled: true
+        }
+      )
+    }
     if (transition.to.path.includes('/help')) {
       state.breadcrumbs.push(
         {
