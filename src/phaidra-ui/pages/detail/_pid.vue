@@ -813,7 +813,6 @@
                               </template>
                               <v-card>
                                 <v-card-title
-                                  dark
                                   class="title font-weight-light grey white--text"
                                   >{{ $t("Cite") }}</v-card-title
                                 >
@@ -884,7 +883,6 @@
                           </template>
                           <v-card>
                             <v-card-title
-                              dark
                               class="title font-weight-light grey white--text"
                               >{{ $t("Request DOI") }}</v-card-title
                             >
@@ -1132,7 +1130,7 @@
                     <v-card-text class="mt-4">
                       <v-row no-gutters class="pt-2">
                         <v-col
-                          class="caption grey--text text--darken-2"
+                          class="caption"
                           cols="3"
                           >{{ $t("Uploader") }}</v-col
                         >
@@ -1161,7 +1159,7 @@
                       </v-row>
                       <v-row no-gutters class="pt-2">
                         <v-col
-                          class="caption grey--text text--darken-2"
+                          class="caption"
                           cols="3"
                           >{{ $t("Object type") }}</v-col
                         >
@@ -1175,7 +1173,7 @@
                         class="pt-2"
                       >
                         <v-col
-                          class="caption grey--text text--darken-2"
+                          class="caption"
                           cols="3"
                           >{{ $t("Format") }}</v-col
                         >
@@ -1196,7 +1194,7 @@
                       </v-row>
                       <v-row no-gutters class="pt-2">
                         <v-col
-                          class="caption grey--text text--darken-2"
+                          class="caption"
                           cols="3"
                           >{{ $t("Created") }}</v-col
                         >
@@ -2013,7 +2011,6 @@
                           </template>
                           <v-card>
                             <v-card-title
-                              dark
                               class="title font-weight-light grey white--text"
                               >{{ $t("Choose relation") }}</v-card-title
                             >
@@ -2191,11 +2188,11 @@
       </v-row>
       <v-dialog v-model="datareplaceDialog" max-width="1200px">
       <v-card>
-        <v-card-title>
-          <h3 class="title font-weight-light primary--text">{{ $t('Upload new file to') }} {{objectInfo.pid}} ({{objectInfo.cmodel}})</h3>
+        <v-card-title class="title font-weight-light grey white--text">
+          {{ $t('Upload new file to') }} {{objectInfo.pid}} ({{objectInfo.cmodel}})
         </v-card-title>
         <v-divider></v-divider>
-        <v-card-text>
+        <v-card-text class="mt-4">
           <v-container @drop.prevent="addDropFile" @dragover.prevent>
             <v-file-input v-model="datareplaceFile" :error-messages="datareplaceUploadErrors"></v-file-input>
           </v-container>
