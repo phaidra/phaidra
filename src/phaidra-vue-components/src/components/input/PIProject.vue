@@ -37,7 +37,7 @@
               </v-col>
               <v-col cols="1" v-if="multilingual">
                 <v-btn text @click="$refs.langdialogname.open()">
-                  <span class="grey--text text--darken-1">
+                  <span>
                     ({{ nameLanguage ? nameLanguage : '--' }})
                   </span>
                 </v-btn>
@@ -58,7 +58,7 @@
               </v-col>
               <v-col cols="1" v-if="multilingual">
                 <v-btn text @click="$refs.langdialogdesc.open()">
-                  <span class="grey--text text--darken-1">
+                  <span>
                     ({{ descriptionLanguage ? descriptionLanguage : '--' }})
                   </span>
                 </v-btn>
@@ -227,7 +227,7 @@
           </v-col>
           <v-col cols="1" v-if="multilingual">
             <v-btn text @click="$refs.langdialogfunder.open()">
-              <span class="grey--text text--darken-1">
+              <span>
                 ({{ funderNameLanguage ? funderNameLanguage : '--' }})
               </span>
             </v-btn>

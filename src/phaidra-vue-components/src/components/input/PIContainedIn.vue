@@ -46,7 +46,7 @@
                 </v-col>
                 <v-col cols="1" v-if="multilingual">
                   <v-btn text @click="$refs.langdialogtitle.open()">
-                    <span class="grey--text text--darken-1">
+                    <span>
                       ({{ titleLanguage ? titleLanguage : '--' }})
                     </span>
                   </v-btn>
@@ -232,7 +232,7 @@
                       </v-col>
                       <v-col cols="12" md="2" v-if="multilingual">
                         <v-btn text @click="$refs['langdialogtitleseries' + s.id].open()">
-                          <span class="grey--text text--darken-1">
+                          <span>
                             ({{ s.seriesTitleLanguage ? s.seriesTitleLanguage : '--' }})
                           </span>
                         </v-btn>

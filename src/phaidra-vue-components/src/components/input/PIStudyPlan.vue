@@ -35,7 +35,7 @@
             </v-col>
             <v-col cols="4" v-if="multilingual">
               <v-btn text @click="$refs.langdialog.open()">
-                <span class="grey--text text--darken-1">
+                <span>
                   ({{ nameLanguage ? nameLanguage : '--' }})
                 </span>
               </v-btn>
