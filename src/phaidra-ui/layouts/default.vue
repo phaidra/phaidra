@@ -333,6 +333,11 @@ address {
   color: white;
 }
 
+.theme--light.v-card > .v-card__title,
+.theme--dark.v-card > .v-card__title {
+  background-color: var(--v-cardtitlebg-base);
+}
+
 .lang-icon {
   margin-left: 5px;
 }
