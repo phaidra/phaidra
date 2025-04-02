@@ -3,70 +3,70 @@
     <v-row v-for="(ch, i) in children" :key="ch.xmlname+i" class="my-1">
       <template v-if="skip(ch) || isEmpty(ch)"></template>
       <template v-else-if="ch.input_type === 'static'">
-        <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}</v-col>
+        <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
         <v-col cols="12" md="10">{{ ch.ui_value }}</v-col>
       </template>
       <template v-else-if="ch.input_type === 'input_text'">
         <template v-if="nodePath(ch) === 'uwm_general_title'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
           <v-col cols="12" md="10" class="wiv">{{ ch.ui_value }}</v-col>
         </template>
         <template v-else-if="nodePath(ch) === 'uwm_lifecycle_upload_date'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
           <v-col cols="12" md="10">{{ ch.ui_value | datetimeutc }} UTC</v-col>
         </template>
         <template v-else-if="ch.datatype === 'ClassificationSource'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
           <v-col cols="12" md="10">{{ ch.ui_value }}</v-col>
         </template>
         <template v-else-if="ch.datatype === 'FileSize'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
           <v-col cols="12" md="10">{{ ch.ui_value | bytes }}</v-col>
         </template>
         <template v-else-if="ch.datatype === 'Taxon'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
           <v-col cols="12" md="10">{{ ch.ui_value }}</v-col>
         </template>
         <template v-else-if="ch.datatype === 'DateTime'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
           <v-col cols="12" md="10">{{ dateModifierFn(ch.ui_value, this) }}</v-col>
         </template>
         <template v-else-if="ch.xmlname === 'description'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}<template v-if="getLangAttr(ch)"> ({{getLangAttr(ch)}})</template></v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}<template v-if="getLangAttr(ch)"> ({{getLangAttr(ch)}})</template></v-col>
           <v-col cols="12" md="10" class="valuefield" ref="autolink">{{ ch.ui_value }}</v-col>
         </template>
         <template v-else-if="ch.xmlname === 'alephurl'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}<template v-if="getLangAttr(ch)"> ({{getLangAttr(ch)}})</template></v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}<template v-if="getLangAttr(ch)"> ({{getLangAttr(ch)}})</template></v-col>
           <v-col cols="12" md="10" class="valuefield" ref="autolink">{{ ch.ui_value }}</v-col>
         </template>
         <template v-else>
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}<template v-if="getLangAttr(ch)"> ({{getLangAttr(ch)}})</template></v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}<template v-if="getLangAttr(ch)"> ({{getLangAttr(ch)}})</template></v-col>
           <v-col cols="12" md="10" class="valuefield">{{ ch.ui_value }}</v-col>
         </template>
       </template>
       <template v-else-if="ch.input_type === 'select'">
         <template v-if="ch.xmlname === 'language'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
           <v-col cols="12" md="10">{{ getLangLabel(ch.ui_value) }}</v-col>
         </template>
         <template v-else-if="ch.xmlname === 'license'">
           <template v-if="(cmodel !== 'Collection') && (cmodel !== 'Resource')">
-            <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}</v-col>
+            <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
             <v-col cols="12" md="10" class="wiv">{{ ch.labels[alpha2locale] }}</v-col>
           </template>
         </template>
         <template v-else>
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
           <v-col cols="12" md="10" v-if="ch.labels">{{ ch.labels[alpha2locale] }}</v-col>
         </template>
       </template>
       <template v-else-if="ch.input_type === 'node'">
         <template v-if="ch.xmlname === 'identifiers'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ getChildLabel(ch, 'resource') }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getChildLabel(ch, 'resource') }}</v-col>
           <v-col cols="12" md="10">{{ getChildValue(ch, 'identifier') }}</v-col>
         </template>
         <template v-else-if="nodePath(ch) === 'uwm_lifecycle_contribute'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ getChildLabel(ch, 'role') }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getChildLabel(ch, 'role') }}</v-col>
           <v-col cols="12" md="10">
             <v-row no-gutters v-for="(entity, i) in getEntities(ch)" :key="'en'+i">
               <v-col :cols="getChildValue(entity, 'date') ? 10 : 12">
@@ -81,7 +81,7 @@
                   <span v-if="getChildValue(entity, 'firstname')" class="wiv">{{ getChildValue(entity, 'firstname') }}</span>
                   <span v-if="getChildValue(entity, 'lastname')" class="wiv"><template v-if="getChildValue(entity, 'firstname')">&nbsp;</template>{{ getChildValue(entity, 'lastname') }}</span>
                 </span>
-                <span v-if="getChildValue(entity, 'institution') && (getChildValue(entity, 'firstname') || getChildValue(entity, 'lastname'))" class="grey--text text--darken-3">&nbsp;({{ getChildValue(entity, 'institution') }})</span>
+                <span v-if="getChildValue(entity, 'institution') && (getChildValue(entity, 'firstname') || getChildValue(entity, 'lastname'))" class="secondary--text">&nbsp;({{ getChildValue(entity, 'institution') }})</span>
                 <span v-else-if="getChildValue(entity, 'institution')">{{ getChildValue(entity, 'institution') }}</span>
                 <span v-if="getChildValue(entity, 'viaf')"> VIAF: <a :href="'https://viaf.org/viaf/' + getChildValue(entity, 'viaf')" target="_blank">{{ getChildValue(entity, 'viaf') }}</a></span>
                 <span v-if="getChildValue(entity, 'wdq')"> Wikidata: <a :href="'https://www.wikidata.org/wiki/' + getChildValue(entity, 'wdq')" target="_blank">{{ getChildValue(entity, 'wdq') }}</a></span>
@@ -100,21 +100,21 @@
             <v-card-text>
               <div class="overline mb-4">{{ $t(nodePath(ch)) }}</div>
               <v-row v-if="getChildLabel(ch, 'resource')">
-                <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t('uwm_provenience_contribute_resource') }}</v-col>
+                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_resource') }}</v-col>
                 <v-col cols="12" md="10">{{ getChildLabel(ch, 'resource') }}</v-col>
               </v-row>
               <v-row v-if="getChildValue(ch, 'comment')">
-                <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t('uwm_provenience_contribute_comment') }}<template v-if="getLangAttr(getChild(ch, 'comment'))"> ({{getLangAttr(getChild(ch, 'comment'))}})</template></v-col>
+                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_comment') }}<template v-if="getLangAttr(getChild(ch, 'comment'))"> ({{getLangAttr(getChild(ch, 'comment'))}})</template></v-col>
                 <v-col cols="12" md="10"><span v-html="link(getChildValue(ch, 'comment'))"></span></v-col>
               </v-row>
               <v-row v-if="getChildValue(ch, 'comment')">
-                <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ getChildLabel(ch, 'role') }}</v-col>
+                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getChildLabel(ch, 'role') }}</v-col>
                 <v-col cols="12" md="10">
                   <v-row no-gutters v-for="(entity, i) in getEntities(ch)" :key="'en'+i">
                     <v-col :cols="getChildValue(entity, 'date') ? 10 : 12">
                       <span v-if="getChildValue(entity, 'firstname')" class="wiv">{{ getChildValue(entity, 'firstname') }}</span>
                       <span v-if="getChildValue(entity, 'lastname')" class="wiv"><template v-if="getChildValue(entity, 'firstname')">&nbsp;</template>{{ getChildValue(entity, 'lastname') }}</span>
-                      <span v-if="getChildValue(entity, 'institution') && (getChildValue(entity, 'firstname') || getChildValue(entity, 'lastname'))" class="grey--text text--darken-3">&nbsp;({{ getChildValue(entity, 'institution') }})</span>
+                      <span v-if="getChildValue(entity, 'institution') && (getChildValue(entity, 'firstname') || getChildValue(entity, 'lastname'))" class="secondary--text">&nbsp;({{ getChildValue(entity, 'institution') }})</span>
                       <span v-else-if="getChildValue(entity, 'institution')">{{ getChildValue(entity, 'institution') }}</span>
                       <span v-if="getChildValue(entity, 'orcid')"> ORCID: <a :href="'https://orcid.org/' + getChildValue(entity, 'orcid')" target="_blank">{{ getChildValue(entity, 'orcid') }}</a></span>
                       <span v-if="getChildValue(entity, 'viaf')"> VIAF: <a :href="'https://viaf.org/viaf/' + getChildValue(entity, 'viaf')" target="_blank">{{ getChildValue(entity, 'viaf') }}</a></span>
@@ -127,39 +127,39 @@
                 </v-col>
               </v-row>
               <v-row v-if="getChildValue(ch, 'chronological')">
-                <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t('uwm_provenience_contribute_chronological') }}<template v-if="getLangAttr(getChild(ch, 'comment'))"> ({{getLangAttr(getChild(ch, 'comment'))}})</template></v-col>
+                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_chronological') }}<template v-if="getLangAttr(getChild(ch, 'comment'))"> ({{getLangAttr(getChild(ch, 'comment'))}})</template></v-col>
                 <v-col cols="12" md="10">{{ getChildValue(ch, 'chronological') }}</v-col>
               </v-row>
               <v-row  v-if="getChildValue(ch, 'location')">
-                <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t('uwm_provenience_contribute_location') }}<template v-if="getLangAttr(getChild(ch, 'comment'))"> ({{getLangAttr(getChild(ch, 'comment'))}})</template></v-col>
+                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_location') }}<template v-if="getLangAttr(getChild(ch, 'comment'))"> ({{getLangAttr(getChild(ch, 'comment'))}})</template></v-col>
                 <v-col cols="12" md="10">{{ getChildValue(ch, 'location') }}</v-col>
               </v-row>
             </v-card-text>
           </v-card>
         </template>
         <template v-else-if="ch.xmlname === 'taxonpath'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ getChildLabel(ch, 'source') }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getChildLabel(ch, 'source') }}</v-col>
           <v-col cols="12" md="10">{{ getLastChildLabel(ch, 'taxon') }}</v-col>
         </template>
         <template v-else-if="ch.xmlname === 'orgassignment'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
           <v-col cols="12" md="10">{{ getOrgAssignment(ch) }}</v-col>
         </template>
         <template v-else-if="ch.xmlname === 'curriculum'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
           <v-col cols="12" md="10">{{ getStudy(ch) }}</v-col>
         </template>
         <template v-else-if="ch.xmlname === 'reference_number'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ getChildLabel(ch, 'reference') }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getChildLabel(ch, 'reference') }}</v-col>
           <v-col cols="12" md="10">{{ getChildValue(ch, 'number') }}</v-col>
         </template>
         <template v-else-if="ch.xmlname === 'dimensions'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(nodePath(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
           <v-col cols="12" md="10">
             <template v-for="(d, i) in ch.children">
-              <span v-if="d.xmlname === 'resource'" :key="i+'dima'"><span class="primary--text">{{ $t(nodePath(ch)+'_resource') }}</span>: {{ getLabel(d) }}</span>
-              <span v-else-if="d.xmlname === 'dimension_unit'" :key="i+'dimb'"><span class="primary--text ml-4">{{ $t(nodePath(ch)+'_dimension_unit') }}</span>: {{ getLabel(d) }}</span>
-              <span v-else :key="i+'dimc'"><span class="primary--text ml-4">{{ $t(nodePath(ch) + '_' + d.xmlname) }}</span>: {{ d.ui_value }}</span>
+              <span v-if="d.xmlname === 'resource'" :key="i+'dima'"><span class="secondary--text font-weight-bold">{{ $t(nodePath(ch)+'_resource') }}</span>: {{ getLabel(d) }}</span>
+              <span v-else-if="d.xmlname === 'dimension_unit'" :key="i+'dimb'"><span class="secondary--text font-weight-bold ml-4">{{ $t(nodePath(ch)+'_dimension_unit') }}</span>: {{ getLabel(d) }}</span>
+              <span v-else :key="i+'dimc'"><span class="secondary--text font-weight-bold ml-4">{{ $t(nodePath(ch) + '_' + d.xmlname) }}</span>: {{ d.ui_value }}</span>
             </template>
           </v-col>
         </template>
