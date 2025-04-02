@@ -48,7 +48,7 @@
               <v-row>
                 <template v-for="(id, i) in o['skos:exactMatch']">
                   <template v-if="id['@value']">
-                    <v-col :md="3" cols="12" class="pdlabel primary--text" :key="'idproj'+i">{{ $t('Project') }} {{ getLocalizedTermLabel('objectidentifiertype', id['@type']) }}</v-col>
+                    <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold" :key="'idproj'+i">{{ $t('Project') }} {{ getLocalizedTermLabel('objectidentifiertype', id['@type']) }}</v-col>
                     <v-col :md="9" cols="12" :key="'idprojv'+i"><a :href="getIDResolverURL(id)" target="_blank">{{ id['@value'] }}</a></v-col>
                   </template>
                   <template v-else>
