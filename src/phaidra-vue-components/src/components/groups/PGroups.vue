@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light grey white--text">
+          <v-card-title class="title font-weight-light white--text">
             {{ $t('Manage user groups') }}
           </v-card-title>
           <v-card-text>
@@ -36,7 +36,7 @@
                       <v-btn color="primary" dark class="mb-2" v-on="on">{{ $t('Create new group') }}</v-btn>
                     </template>
                     <v-card>
-                      <v-card-title class="title font-weight-light grey white--text">
+                      <v-card-title class="title font-weight-light white--text">
                         {{ $t('New group') }}
                       </v-card-title>
                       <v-card-text>
@@ -82,7 +82,7 @@
     <v-row v-if="loadedGroup">
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light grey white--text">
+          <v-card-title class="title font-weight-light white--text">
             {{ loadedGroup.name }}
           </v-card-title>
           <v-card-text>
@@ -140,7 +140,7 @@
     </v-row>
     <v-dialog v-model="deleteDialog" max-width="500px" v-if="groupToDelete">
       <v-card>
-        <v-card-title class="title font-weight-light grey white--text">
+        <v-card-title class="title font-weight-light white--text">
           {{ $t('Delete group') }}
         </v-card-title>
         <v-card-text class="mt-4">

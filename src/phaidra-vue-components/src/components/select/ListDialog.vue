@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" width="700px">
     <v-card>
-      <v-card-title class="title font-weight-light grey white--text">{{ $t('Select a list') }}</v-card-title>
+      <v-card-title class="title font-weight-light white--text">{{ $t('Select a list') }}</v-card-title>
       <v-card-text class="mt-4">
         <!-- <v-text-field
           v-model="listsSearch"

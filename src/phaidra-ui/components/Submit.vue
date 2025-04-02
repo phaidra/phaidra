@@ -133,9 +133,8 @@
               </v-btn>
             </template>
             <v-card>
-              <v-card-title
-                dark
-                class="title font-weight-light grey white--text"
+              <v-card-title                
+                class="title font-weight-light white--text"
                 >{{ $t("Open template") }}</v-card-title
               >
               <v-card-text>

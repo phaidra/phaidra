@@ -68,7 +68,7 @@
     </v-row>
     <v-dialog v-model="detailDialog" max-width="500px" v-if="detailToShow">
       <v-card>
-        <v-card-title class="title font-weight-light grey white--text">
+        <v-card-title class="title font-weight-light white--text">
           {{ detailToShow.dc_title[0] }}
         </v-card-title>
         <v-card-text>

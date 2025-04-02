@@ -2,7 +2,7 @@
     <v-row justify="center">
         <v-col>
         <v-card tile>
-            <v-card-title class="title font-weight-light grey white--text">{{
+            <v-card-title class="title font-weight-light white--text">{{
             $t("Repository statistics")
             }}</v-card-title>
             <v-card-text>

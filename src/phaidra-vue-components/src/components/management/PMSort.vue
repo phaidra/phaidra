@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title class="title font-weight-light grey white--text">{{ $t('Sort') }}</v-card-title>
+    <v-card-title class="title font-weight-light white--text">{{ $t('Sort') }}</v-card-title>
     <v-divider></v-divider>
     <v-card-text class="mt-4" v-if="members.length > 0">
       <div>{{ $t('Here you can sort members of this object (drag & drop).') }}</div>

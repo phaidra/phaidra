@@ -4,7 +4,7 @@
       <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
     </v-btn>
     <v-card>
-      <v-card-title class="title font-weight-light grey white--text">{{ $t('Upload web-optimized version of') }} {{
+      <v-card-title class="title font-weight-light white--text">{{ $t('Upload web-optimized version of') }} {{
           parentpid
       }}</v-card-title>
       <v-card-text>

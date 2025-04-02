@@ -1,6 +1,6 @@
 <template>
   <v-card :flat="!title">
-    <v-card-title v-if="title" class="title font-weight-light grey white--text">{{ title }}</v-card-title>
+    <v-card-title v-if="title" class="title font-weight-light white--text">{{ title }}</v-card-title>
     <v-divider v-if="title"></v-divider>
     <v-card-text class="mt-4">
       <v-container fluid>
@@ -37,7 +37,7 @@
         <v-row>
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light grey white--text">{{ $t('Add new relationship of object') + ' ' + pid }}</v-card-title>
+              <v-card-title class="title font-weight-light white--text">{{ $t('Add new relationship of object') + ' ' + pid }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
                 <v-container fluid>

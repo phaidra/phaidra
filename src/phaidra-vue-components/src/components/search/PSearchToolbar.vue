@@ -44,7 +44,7 @@
       <v-col>
         <v-dialog v-model="linkdialog" max-width="800px">
           <v-card>
-            <v-card-title class="title font-weight-light grey white--text mb-6">
+            <v-card-title class="title font-weight-light white--text mb-6">
               {{ $t('Link to search results') }}
             </v-card-title>
             <v-card-text>{{ link }} <v-btn class="ml-4" icon @click="copyToClipboard()"><v-icon>mdi-content-copy</v-icon></v-btn></v-card-text>

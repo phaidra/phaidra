@@ -76,7 +76,7 @@
       </v-col>
       <v-dialog v-model="limitdialog" width="500">
         <v-card>
-          <v-card-title class="title font-weight-light grey white--text">{{ $t('Selection limit' ) }}</v-card-title>
+          <v-card-title class="title font-weight-light white--text">{{ $t('Selection limit' ) }}</v-card-title>
           <v-card-text class="mt-4">
             {{ $t('SELECTION_LIMIT', { limit: appconfig.search.selectionlimit }) }}
           </v-card-text>

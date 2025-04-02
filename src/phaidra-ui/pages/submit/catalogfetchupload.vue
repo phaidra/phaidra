@@ -73,7 +73,7 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light grey white--text">{{ $t('Metadata preview') }}</v-card-title>
+          <v-card-title class="title font-weight-light white--text">{{ $t('Metadata preview') }}</v-card-title>
           <v-card-text>
             <v-container class="mt-6">
               <p-d-jsonld

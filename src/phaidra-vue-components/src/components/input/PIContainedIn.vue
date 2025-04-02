@@ -3,7 +3,7 @@
   <v-row v-if="!hidden">
     <v-col cols="12">
       <v-card class="mb-8">
-        <v-card-title class="title font-weight-light grey white--text">
+        <v-card-title class="title font-weight-light white--text">
           <span>{{ $t(label) }}</span>
           <v-spacer></v-spacer>
           <v-menu open-on-hover bottom offset-y v-if="actions.length">
@@ -201,7 +201,7 @@
           <v-row v-for="(s,i) in series" :key="'series'+i">
             <v-col cols="12">
               <v-card class="mb-8">
-                <v-card-title class="title font-weight-light grey white--text">
+                <v-card-title class="title font-weight-light white--text">
                   <span>{{ $t(seriesLabel) }}</span>
                   <v-spacer></v-spacer>
                   <v-btn v-if="s.multiplicable" icon dark @click="$emit('add-series', s)">
@@ -337,7 +337,7 @@
           <v-row>
             <v-col cols="12">
               <v-card class="mb-8">
-                <v-card-title class="title font-weight-light grey white--text">
+                <v-card-title class="title font-weight-light white--text">
                   <span>{{ $t(publisherLabel) }}</span>
                   <v-spacer></v-spacer>
                   <span>

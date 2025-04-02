@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light grey white--text">
+          <v-card-title class="title font-weight-light white--text">
             {{ $t('Manage object lists') }}
           </v-card-title>
           <v-card-text>
@@ -36,7 +36,7 @@
                       <v-btn color="primary" dark class="mb-2" v-on="on">{{ $t('Create new object list') }}</v-btn>
                     </template>
                     <v-card>
-                      <v-card-title class="title font-weight-light grey white--text">
+                      <v-card-title class="title font-weight-light white--text">
                         {{ $t('New object list') }}
                       </v-card-title>
                       <v-card-text>
@@ -82,7 +82,7 @@
     <v-row v-if="loadedList">
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light grey white--text">
+          <v-card-title class="title font-weight-light white--text">
             <span>{{ loadedList.name }}</span>
             <v-spacer></v-spacer>
             <template v-if="token && token.length > 0"><a class="pl-2 white--text" target="_blank" :href="'/list/' + token">{{ instance.baseurl + '/list/' + token }}</a></template>
@@ -134,7 +134,7 @@
     </v-row>
     <v-dialog v-model="deleteDialog" max-width="500px" v-if="listToDelete">
       <v-card>
-        <v-card-title class="title font-weight-light grey white--text">
+        <v-card-title class="title font-weight-light white--text">
           {{ $t('Delete object list') }}
         </v-card-title>
         <v-card-text class="mt-4">

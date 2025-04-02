@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title class="title font-weight-light grey white--text">{{ $t('Define order') }}</v-card-title>
+    <v-card-title class="title font-weight-light white--text">{{ $t('Define order') }}</v-card-title>
     <v-divider></v-divider>
     <v-card-text class="mt-4" v-if="members.length > 0">
       <div>{{ $t('Please provide the order of the members by ordering the PIDs') }}</div>

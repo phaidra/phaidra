@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title class="title font-weight-light grey white--text">
+    <v-card-title class="title font-weight-light white--text">
       {{ title ? title : $t('Select an object') }}
       <v-spacer></v-spacer>
       <v-switch

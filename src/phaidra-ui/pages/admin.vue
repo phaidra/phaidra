@@ -127,7 +127,7 @@
                         </v-btn>
                       </template>
                       <v-card>
-                        <v-card-title dark class="title font-weight-light grey white--text">{{ $t("Select submit template") }}</v-card-title>
+                        <v-card-title dark class="title font-weight-light white--text">{{ $t("Select submit template") }}</v-card-title>
                         <v-card-text>
                           <p-templates class="mt-4" ref="templates" :items-per-page="5" :id-only="true" :isDefaultSelect="true"
                             :selectedTemplateId="selectedTemplateId" v-on:load-template="onTemplateSelect($event)"></p-templates>
