@@ -13,7 +13,7 @@ export default function ({ app }) {
           primary: app.$config.primaryColor,
           secondary: '#e2e2e2',
           error: '#dd4814',
-          cardtitlebg: '000'
+          cardtitlebg: '#000'
         }
       }
     }
