@@ -1317,5 +1317,7 @@
   "Project description": "Descrizione del progetto",
   "Start date": "Data di inizio",
   "End date": "Data di fine",
-  "Project homepage": "Homepage del progetto"
+  "Project homepage": "Homepage del progetto",
+  "Event description": "Descrizione dell'evento",
+  "Location": "Luogo"
 }
