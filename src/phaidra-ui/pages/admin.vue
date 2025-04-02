@@ -16,7 +16,7 @@
       <v-tab class="white--text" :active-class="'primary'" >
         <span>{{ $t('Manage Phaidra') }}</span>
       </v-tab>
-      <v-tab :active-class="'primary'" >
+      <v-tab class="white--text" :active-class="'primary'" >
         <span>{{ $t('Statistics') }}</span>
       </v-tab>
 
