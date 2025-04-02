@@ -137,8 +137,8 @@
         <v-card-title class="title font-weight-light grey white--text">
           {{ $t('Delete object list') }}
         </v-card-title>
-        <v-card-text>
-          <p class="mt-6 title font-weight-light grey--text text--darken-3">{{ $t('Delete object list') + ' ' + listToDelete.name + '?' }}</p>
+        <v-card-text class="mt-4">
+          <p class="title font-weight-light">{{ $t('Delete object list') + ' ' + listToDelete.name + '?' }}</p>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>

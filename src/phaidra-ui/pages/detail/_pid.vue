@@ -744,11 +744,11 @@
                           >{{ collMember.dc_title[0] }}</router-link
                         >
                       </h3>
-                      <p class="grey--text">{{ collMember.pid }}</p>
+                      <p>{{ collMember.pid }}</p>
                     </v-col>
                     <v-spacer></v-spacer>
                     <v-col cols="1" class="text-right"
-                      ><span v-if="collMember.created" class="grey--text">{{
+                      ><span v-if="collMember.created">{{
                         collMember.created | date
                       }}</span></v-col
                     >

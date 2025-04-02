@@ -143,8 +143,8 @@
         <v-card-title class="title font-weight-light grey white--text">
           {{ $t('Delete group') }}
         </v-card-title>
-        <v-card-text>
-          <p class="mt-6 title font-weight-light grey--text text--darken-3">{{ $t('Delete group') + ' ' + groupToDelete.name + '?' }}</p>
+        <v-card-text class="mt-4">
+          <p class="title font-weight-light">{{ $t('Delete group') + ' ' + groupToDelete.name + '?' }}</p>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
