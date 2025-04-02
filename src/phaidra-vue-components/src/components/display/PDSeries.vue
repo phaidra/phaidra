@@ -2,7 +2,7 @@
   <v-row>
     <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(p) }}</v-col>
     <v-col :md="valueColMd" cols="12" >
-      <v-card tile elevation="0">
+      <v-card tile elevation="0" color="transparent">
         <v-card-text class="jsonld-border-left">
             <v-row>
               <template v-for="(title, j) in o['dce:title']">

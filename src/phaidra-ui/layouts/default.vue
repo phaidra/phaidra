@@ -430,6 +430,16 @@ address {
 .univie-grey {
   color: #7b7b7b;
 }
+
+.jsonld-border-left {
+  border-left: 1px solid;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.theme--dark .jsonld-border-left {
+  border-left: 1px solid;
+  border-color: rgba(255, 255, 255, 0.25);
+}
 </style>
 
 <style scoped>
@@ -455,10 +465,5 @@ address {
 
 .float-right {
   float: right;
-}
-
-.jsonld-border-left {
-  border-left: 1px solid;
-  border-color: rgba(0, 0, 0, 0.12);
 }
 </style>

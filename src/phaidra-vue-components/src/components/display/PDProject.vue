@@ -128,10 +128,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.jsonld-border-left {
-  border-left: 1px solid;
-  border-color: rgba(0, 0, 0, 0.12);
-}
-</style>
