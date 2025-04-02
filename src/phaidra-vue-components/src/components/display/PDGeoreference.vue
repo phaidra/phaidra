@@ -7,7 +7,7 @@
           <template v-else>{{ l['@value'] }}</template>
         </v-row>
         <template v-if="o['rdfs:label']">
-          <v-row no-gutters class="grey--text valuefield" v-for="(l, i) in o['rdfs:label']" :key="'gl'+i">[{{ l['@value'] }}]</v-row>
+          <v-row no-gutters class="secondary--text valuefield" v-for="(l, i) in o['rdfs:label']" :key="'gl'+i">[{{ l['@value'] }}]</v-row>
         </template>
     </v-col>
   </v-row>

@@ -25,7 +25,7 @@
           <template v-for="(fn) in entity['schema:familyName']"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }"> {{ fn['@value'] }}</span></template>
           <template v-for="(n) in entity['schema:name']"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }">{{ n['@value'] }}</span></template>
         </template>
-        <template v-if="entity['schema:affiliation']" class="grey--text">
+        <template v-if="entity['schema:affiliation']" class="secondary--text">
           <br/>
           <div>
             <template v-for="(af, i) in entity['schema:affiliation']">

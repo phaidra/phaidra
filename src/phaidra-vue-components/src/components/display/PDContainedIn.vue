@@ -34,7 +34,7 @@
                     <template class="valuefield" v-for="(gn) in n['schema:givenName']">{{ gn['@value'] }}</template>
                     <template class="valuefield" v-for="(fn) in n['schema:familyName']"> {{ fn['@value'] }}</template>
                     <template class="valuefield" v-for="(fn) in n['schema:name']"> {{ fn['@value'] }}</template>
-                    <template v-if="n['schema:affiliation']" class="grey--text">
+                    <template v-if="n['schema:affiliation']" class="secondary--text">
                       <template v-for="(af) in n['schema:affiliation']">
                         <template class="valuefield" v-for="(afn) in af"> {{ afn['@value'] }}</template>
                       </template>

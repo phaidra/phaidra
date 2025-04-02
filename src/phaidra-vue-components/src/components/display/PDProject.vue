@@ -31,7 +31,7 @@
       <template v-else>
         <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('Project') }}</v-col>
         <v-col :md="valueColMd" cols="12">
-          <v-card tile elevation="0">
+          <v-card tile elevation="0" color="transparent">
             <v-card-text class="jsonld-border-left">
               <v-row v-for="(t, i) in o['skos:prefLabel']"  :key="'projpreflab'+i">
                 <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold">{{ $t('Titel') }}<template v-if="t['@language']"> ({{ t['@language'] }})</template></v-col>
