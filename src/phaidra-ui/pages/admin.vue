@@ -3,35 +3,38 @@
   <v-container class="mt-8" fluid>
 
     <div class="mb-4"><strong>Note:</strong> Config is cached in each worker, don't forget to restart phaidra-api to apply changes.</div>
-    <v-tabs slider-color="primary"  dark background-color="grey" vertical v-model="activetab">
-      <v-tab :active-class="'primary'" >
+    <v-tabs slider-color="primary" background-color="grey darken-1" vertical v-model="activetab">
+      <v-tab class="white--text" :active-class="'primary'" >
         <span>{{ $t('Public') }}</span>
       </v-tab>
-      <v-tab :active-class="'primary'" >
+      <v-tab class="white--text" :active-class="'primary'" >
         <span>{{ $t('Private') }}</span>
       </v-tab>
-      <v-tab :active-class="'primary'" >
+      <v-tab class="white--text" :active-class="'primary'" >
         <span>{{ $t('Import/Export') }}</span>
       </v-tab>
-      <v-tab :active-class="'primary'" >
+      <v-tab class="white--text" :active-class="'primary'" >
         <span>{{ $t('Manage Phaidra') }}</span>
+      </v-tab>
+      <v-tab :active-class="'primary'" >
+        <span>{{ $t('Statistics') }}</span>
       </v-tab>
 
       <v-tab-item>
         <v-card tile>
           
-          <v-tabs slider-color="primary" dark background-color="grey" vertical v-model="activetab2">
+          <v-tabs slider-color="primary" background-color="grey darken-2" vertical v-model="activetab2">
 
-            <v-tab :active-class="'primary'" >
+            <v-tab class="white--text" :active-class="'primary'" >
               <span>{{ $t('General') }}</span>
             </v-tab>
-            <v-tab :active-class="'primary'">
+            <v-tab class="white--text" :active-class="'primary'">
               <span>{{ $t('Functionality') }}</span>
             </v-tab>
-            <v-tab :active-class="'primary'">
+            <v-tab class="white--text" :active-class="'primary'">
               <span>{{ $t('CMS') }}</span>
             </v-tab>
-            <v-tab :active-class="'primary'">
+            <v-tab class="white--text" :active-class="'primary'">
               <span>{{ $t('Datastructures') }}</span>
             </v-tab>
 
@@ -228,6 +231,15 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
+                      :label="$t('Upload preview')"
+                      v-model="parsedPublicConfigData.forcePreview"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Move upload button to preview tab in submit form.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-checkbox
                       :label="$t('Enable feedback')"
                       v-model="parsedPublicConfigData.feedback"
                     ></v-checkbox>
@@ -406,12 +418,12 @@
       <v-tab-item>
         <v-card tile>
           
-          <v-tabs slider-color="primary" slider-size="20px" dark background-color="grey" vertical v-model="activetabprivate">
+          <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-2" vertical v-model="activetabprivate">
 
-            <v-tab :active-class="'primary'" >
+            <v-tab class="white--text" :active-class="'primary'" >
               <span>{{ $t('General') }}</span>
             </v-tab>
-            <v-tab :active-class="'primary'">
+            <v-tab class="white--text" :active-class="'primary'">
               <span>{{ $t('Functionality') }}</span>
             </v-tab>
 
@@ -460,12 +472,12 @@
       <v-tab-item>
         <v-card tile>
           
-          <v-tabs slider-color="primary" slider-size="20px" dark background-color="grey" vertical v-model="activetabimpexp">
+          <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-2" vertical v-model="activetabimpexp">
 
-            <v-tab :active-class="'primary'">
+            <v-tab class="white--text" :active-class="'primary'">
               <span>{{ $t('Export') }}</span>
             </v-tab>
-            <v-tab :active-class="'primary'">
+            <v-tab class="white--text" :active-class="'primary'">
               <span>{{ $t('Import') }}</span>
             </v-tab>
 
@@ -507,25 +519,34 @@
         </v-card>
       </v-tab-item>
       <v-tab-item>
-        <v-card tile>
-          <v-container>
-            <v-row>
-              <v-col>
-                <v-row class="pl-2 mb-6 mt-4">
-                  <ul>
-                    <li><a href="/lam/">Local LDAP</a></li>
-                    <li><a href="/dbgate/">DbGate</a></li>
-                    <li><a href="/fcrepo/rest/">Fedora</a></li>
-                    <li><a href="/solr/">Solr</a></li>
-                    <li><a href="/grafana/">Grafana</a></li>
-                    <li><a href="/api/openapi">API documentation</a></li>
-                    <li><a href="https://phaidra.org/docs/overview/">Documentation</a></li>
-                  </ul>
-                </v-row>
-              </v-col>
-            </v-row>
-          </v-container>          
-        </v-card>
+        <v-container>
+          <v-row>
+            <v-col>
+              <v-row class="pl-2 mb-6 mt-4">
+                <ul>
+                  <li><a href="/lam/">Local LDAP</a></li>
+                  <li><a href="/dbgate/">DbGate</a></li>
+                  <li><a href="/fcrepo/rest/">Fedora</a></li>
+                  <li><a href="/solr/">Solr</a></li>
+                  <li><a href="/grafana/">Grafana</a></li>
+                  <li><a href="/api/openapi">API documentation</a></li>
+                  <li><a href="https://phaidra.org/docs/overview/">Documentation</a></li>
+                </ul>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-tab-item>
+      <v-tab-item>
+        <v-container>
+          <v-row>
+            <v-col>
+              <v-row class="pl-2 mb-6 mt-4">
+                <PRepostat></PRepostat>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-tab-item>
 
 
@@ -538,8 +559,10 @@
 <script>
 
 import FaviconMixin from '../mixins/favicon'
+import PRepostat from '../components/Repostat.vue';
 export default {
   mixins: [FaviconMixin],
+  components: {PRepostat},
   middleware: "auth",
   computed: {
     configAsJSON: {

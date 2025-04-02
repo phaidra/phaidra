@@ -48,8 +48,8 @@
               <v-row>
                 <template v-for="(id, i) in o['skos:exactMatch']">
                   <template v-if="id['@value']">
-                    <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold" :key="'idproj'+i">{{ $t('Project') }} {{ getLocalizedTermLabel('objectidentifiertype', id['@type']) }}</v-col>
-                    <v-col :md="9" cols="12" :key="'idproj'+i"><a :href="getIDResolverURL(id)" target="_blank">{{ id['@value'] }}</a></v-col>
+                    <v-col :md="3" cols="12" class="pdlabel primary--text" :key="'idproj'+i">{{ $t('Project') }} {{ getLocalizedTermLabel('objectidentifiertype', id['@type']) }}</v-col>
+                    <v-col :md="9" cols="12" :key="'idprojv'+i"><a :href="getIDResolverURL(id)" target="_blank">{{ id['@value'] }}</a></v-col>
                   </template>
                   <template v-else>
                     <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold" :key="'idprojxl'+i">{{ $t('Project identifier') }}</v-col>
@@ -118,12 +118,13 @@ export default {
   },
   computed: {
     funderAndProjIdOnly: function () {
+      let found
       Object.keys(this.o).forEach(name => {   
-        if ((name !== 'frapo:hasFundingAgency') && (name !== 'skos:exactMatch')) {
-          return false
+        if ((name !== 'frapo:hasFundingAgency') && (name !== 'skos:exactMatch') && (name !== '@type')) {
+          found = true
         }
       })
-      return true
+      return !found
     }
   }
 }

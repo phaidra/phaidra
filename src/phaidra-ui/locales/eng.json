@@ -458,6 +458,11 @@
     "Lastname *": "Last name *",
     "Research data policy": "Research data policy",
 
+    "order_saved_for_object": "Order for object {o} saved",
+    "object_deleted_success": "Object {o} was successfully deleted.",
+    "object_metadata_saved_success": "Metadata for object {o} saved",
+    "object_rights_saved_success": "Rights for object {o} saved",
+
     "mode": "Mode",
     "control": "Control",
     "hazard": "Hazard",

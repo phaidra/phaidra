@@ -17,7 +17,8 @@
                   v-if="alert.type === 'success'"
                   v-model="showSnackbar"
                 >
-                  {{ $t(alert.msg) }}
+                  <span v-if="alert.key && alert.params">{{ $t(alert.key, alert.params) }}</span>
+                  <span v-else>{{ $t(alert.msg) }}</span>
                   <v-btn dark text @click.native="dismiss(alert)">OK</v-btn>
                 </v-snackbar>
               </template>
@@ -36,7 +37,7 @@
                       transition="slide-y-transition"
                     >
                       <v-row align="center">
-                        <v-col class="grow">{{ alert.msg }}</v-col>
+                        <v-col class="grow">{{ $t(alert.msg) }}</v-col>
                         <v-col class="shrink">
                           <v-btn icon @click.native="dismiss(alert)"
                             ><v-icon>mdi-close</v-icon></v-btn
@@ -91,11 +92,6 @@ export default {
       { name: 'theme-color', content: this.instanceconfig.primary }
       ]
     };
-    if (this.instanceconfig.cms_css && (this.instanceconfig.cms_css !== '')) {
-      metaInfo.style = [ 
-        { cssText: this.instanceconfig.cms_css, type: 'text/css' } 
-      ]
-    }
     return metaInfo;
   },
   watch: {
@@ -143,6 +139,13 @@ export default {
     }
   },
   mounted() {
+    if (this.instanceconfig.cms_css && this.instanceconfig.cms_css !== '') {
+      const style = document.createElement('style');
+      style.type = 'text/css';
+      style.innerHTML = this.instanceconfig.cms_css;
+      document.head.appendChild(style);
+    }
+
     Object.entries(this.i18n_override).forEach(([lang, messages]) => {
         this.$i18n.mergeLocaleMessage(lang, messages)
       }

@@ -564,6 +564,13 @@
     "uwm_general_subtitle": "Untertitel",
     "uwm_general_title": "Titel",
     "uwm_general_identifier": "Persistente Signatur",
+
+    "order_saved_for_object": "Reihenfolge für Objekt {o} gespeichert",
+    "object_deleted_success": "Objekt {o} wurde erfolgreich gelöscht.",
+    "object_metadata_saved_success": "Metadaten für Objekt {o} gespeichert",
+    "object_rights_saved_success": "Zugangsberechtigungen für Objekt {o} gespeichert",
+
+
     "lang_aa": "Afar",
     "lang_ab": "Abchasisch",
     "lang_ae": "Avestisch",
@@ -1277,5 +1284,7 @@
     "Death Date": "Sterbedatum",
     "List": "Liste",
     "Modified": "Geändert",
-    "Group": "Gruppe"
+    "Group": "Gruppe",
+    "Upload preview": "Vorschau beim Hochladen",
+    "Move upload button to preview tab in submit form.": "Verschiebe die Upload-Taste auf den Vorschaureiter im Uploadformular."
   }

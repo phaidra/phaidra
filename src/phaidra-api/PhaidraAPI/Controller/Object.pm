@@ -72,6 +72,14 @@ sub info {
     $self->track_info($pid);
   }
 
+  if (defined $self->config->{external_services}->{opencast}->{mode} && $self->config->{external_services}->{opencast}->{mode} eq "ACTIVATED") {
+      my $object_job_info = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'vige'});
+      if ($object_job_info && exists $r->{info}) {
+        my $oc_mpid = $object_job_info->{'oc_mpid'};
+        $r->{info}->{oc_mpid} = $oc_mpid;
+      }
+  }
+
   $self->render(json => $r, status => $r->{status});
 }
 

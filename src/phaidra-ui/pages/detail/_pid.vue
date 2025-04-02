@@ -2182,6 +2182,14 @@
                   </template>
                 </v-col>
               </v-row>
+              <v-row v-if="objectInfo.oc_mpid" justify="end" class="mb-2">
+                <v-col cols="12" class="pt-0">
+                    <p class="text-right">
+                      <span class="caption text--secondary">{{ $t('Media Package Identifier') }}</span
+                      ><br /><span>{{ objectInfo.oc_mpid }}</span>
+                    </p>
+                </v-col>
+              </v-row>
             </v-col>
           </v-row>
         </v-col>

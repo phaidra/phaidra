@@ -116,7 +116,7 @@ services:
   ############### httpd service for demo-local profile ###############
   httpd-demo-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-demo-dist:740acb28
+    image: phaidraorg/httpd-demo-dist:67c3791b
     <<: [*common, *logs]
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
@@ -130,7 +130,7 @@ services:
   ############### httpd service for demo-s3 profile ###############
   httpd-demo-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-demo-dist:740acb28
+    image: phaidraorg/httpd-demo-dist:67c3791b
     <<: [*common, *logs]
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
@@ -144,7 +144,7 @@ services:
   #################### httpd service for ssl-local profile ####################
   httpd-ssl-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:740acb28
+    image: phaidraorg/httpd-ssl-dist:67c3791b
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -161,7 +161,7 @@ services:
   #################### httpd service for ssl-s3 profile ####################
   httpd-ssl-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:740acb28
+    image: phaidraorg/httpd-ssl-dist:67c3791b
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -178,7 +178,7 @@ services:
   #################### httpd service for shib-local profile ####################
   httpd-shib-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:740acb28
+    image: phaidraorg/httpd-shib-dist:67c3791b
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -207,7 +207,7 @@ services:
   #################### httpd service for shib-s3 profile ####################
   httpd-shib-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:740acb28
+    image: phaidraorg/httpd-shib-dist:67c3791b
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -250,7 +250,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:2f0133cf
+    image: phaidraorg/ui:a8b041bf
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -265,7 +265,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:2f0133cf
+    image: phaidraorg/ui:a8b041bf
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -279,7 +279,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:440263e3
+    image: phaidraorg/api-dist:a8b041bf
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -294,7 +294,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:440263e3
+    image: phaidraorg/api-dist:a8b041bf
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -1030,7 +1030,7 @@ services:
   apache-exporter:
     hostname: "apache-exporter"
     image: lusotycoon/apache-exporter:v1.0.10
-    command: --scrape_uri="http://httpd/server-status/?auto"
+    command: --scrape_uri="http://httpd:8081/?auto"
     <<: [*common, *logs]
     profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
 
