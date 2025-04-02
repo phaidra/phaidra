@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col class="primary--text" cols="3">{{ label }}</v-col>
+    <v-col class="secondary--text font-weight-bold" cols="3">{{ label }}</v-col>
     {{jsonld}}
   </v-row>
 </template>

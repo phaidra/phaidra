@@ -1,8 +1,8 @@
 <template>
   <span>
     <v-row v-for="(l, i) in o['skos:prefLabel']" v-if="l['@language'] === displaylang" :key="'prl'+i">
-      <v-col :md="labelColMd" cols="12" v-if="p==='bf:note'" class="pdlabel primary--text text-md-right" >{{ $t(o['@type']) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
-      <v-col :md="labelColMd" cols="12" v-else class="pdlabel primary--text text-md-right">{{ $t(p) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
+      <v-col :md="labelColMd" cols="12" v-if="p==='bf:note'" class="pdlabel secondary--text font-weight-bold text-md-right" >{{ $t(o['@type']) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
+      <v-col :md="labelColMd" cols="12" v-else class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(p) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
       <v-col :md="valueColMd" cols="12" v-if="o['skos:exactMatch']">
         <span v-if="o['skos:exactMatch'][0].startsWith('oefos2012:')">ÖFOS 2012 -- {{ o['skos:notation'][0] }} -- {{ l['@value'] }}</span>
         <span v-else-if="o['skos:exactMatch'][0].startsWith('thema:')">{{ $t('Thema Subject Codes') }} -- {{ o['skos:notation'][0] }} -- {{ l['@value'] }}</span>
