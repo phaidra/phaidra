@@ -564,7 +564,7 @@
           </v-row>
 
           <template v-if="(objectInfo.cmodel === 'Container') && !objectInfo.datastreams.includes('CONTAINERINFO')">
-            <v-toolbar class="my-10 grey white--text" elevation="1">
+            <v-toolbar class="my-10 white--text" elevation="1">
               <v-toolbar-title>
                 {{ $t("Members") }} ({{ objectInfo.members.length }})
               </v-toolbar-title>
@@ -662,7 +662,7 @@
             </v-row>
           </template>
           <template v-if="objectInfo.readrights && (objectInfo.cmodel === 'Container') && objectInfo.datastreams.includes('CONTAINERINFO')">
-            <v-toolbar class="my-10 grey white--text" elevation="1">
+            <v-toolbar class="my-10 white--text" elevation="1">
               <v-toolbar-title>
                 {{ $t("Members") }} ({{ objectInfo.legacy_container_members.length }})
               </v-toolbar-title>
@@ -691,7 +691,7 @@
           </div>
           </template>
           <template v-if="objectInfo.cmodel === 'Collection' && collMembers.length">
-            <v-toolbar class="my-10 grey white--text" elevation="1">
+            <v-toolbar class="my-10 white--text" elevation="1">
               <v-toolbar-title>
                 {{ $t("Members") }} ({{ $store.state.collectionMembersTotal /* leave it like this, computed property wasn't working on first access */ }})
               </v-toolbar-title>

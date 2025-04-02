@@ -9,7 +9,8 @@
 // $line-height-root: 1.42857143;
 
 $material-light: (
-  background: #fff
+  toolbar: #757575 // grey darken-1
 );
-// $material-dark: (
-// );
+$material-dark: (
+  toolbar: #000,
+ );
