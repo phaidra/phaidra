@@ -7,12 +7,10 @@
       <v-col cols="12" md="10" offset-md="1">
         <v-row class="my-5">
           <v-col cols="auto" class="text-left">
-            <span class="grey--text text--darken-2">
-              <address>
-                {{ instanceconfig.address }} | <abbr title="Telefon">T</abbr>
-                {{ instanceconfig.phone }}
-              </address>
-            </span>
+            <address>
+              {{ instanceconfig.address }} | <abbr title="Telefon">T</abbr>
+              {{ instanceconfig.phone }}
+            </address>
           </v-col>
           <v-col class="text-right">
             <nuxt-link :to="localePath('impressum')">{{ $t('Impressum') }}</nuxt-link> |

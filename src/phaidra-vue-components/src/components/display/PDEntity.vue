@@ -1,6 +1,6 @@
 <template>
   <v-row v-if="entity">
-    <v-col :md="labelColMd" cols="12" class="pdlabel primary--text text-md-right"><span v-show="!hideLabel">{{ getLocalizedTermLabel(this.role) }}</span></v-col>
+    <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold text-md-right"><span v-show="!hideLabel">{{ getLocalizedTermLabel(this.role) }}</span></v-col>
     <v-col :md="valueColMd" cols="12">
       <template v-if="entity['@type'] === 'schema:Person'">
         <template v-if="entity['skos:exactMatch']">
@@ -25,7 +25,7 @@
           <template v-for="(fn) in entity['schema:familyName']"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }"> {{ fn['@value'] }}</span></template>
           <template v-for="(n) in entity['schema:name']"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }">{{ n['@value'] }}</span></template>
         </template>
-        <template v-if="entity['schema:affiliation']" class="grey--text">
+        <template v-if="entity['schema:affiliation']" class="secondary--text">
           <br/>
           <div>
             <template v-for="(af, i) in entity['schema:affiliation']">

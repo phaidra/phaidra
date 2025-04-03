@@ -3,7 +3,7 @@
   <v-row v-if="!hidden">
     <v-col cols="12">
       <v-card class="mb-8">
-        <v-card-title class="title font-weight-light grey white--text">
+        <v-card-title class="title font-weight-light white--text">
             <span>{{ $t(label) }}</span>
             <v-spacer></v-spacer>
             <v-menu open-on-hover bottom offset-y v-if="actions.length">
@@ -44,7 +44,7 @@
                 </v-col>
                 <v-col cols="2">
                   <v-btn text @click="$refs.langdialog.open()">
-                    <span class="grey--text text--darken-1">
+                    <span>
                       ({{ titleLanguage ? titleLanguage : '--' }})
                     </span>
                   </v-btn>

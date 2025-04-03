@@ -24,9 +24,7 @@
       <span class="ml-4" v-else-if="formats.supported">{{ $t('Other supported formats') }}: <a v-for="(f, i) in formats.supported" :key="'fs' + i" :href="f.url" target="_blank">{{f.label}}<span v-if="i < (formats.supported.length - 1)">, </span></a></span>
       <template v-else-if="formats.info">
       <v-col cols="10" class="pa-0">
-        <v-alert dense outlined color="grey darken-2" type="info" icon="mdi-information-outline">
-
-      {{ $t(formats.info) }}</v-alert>
+        <v-alert dense outlined type="info" icon="mdi-information-outline">{{ $t(formats.info) }}</v-alert>
     </v-col>
       </template>
     </v-row>

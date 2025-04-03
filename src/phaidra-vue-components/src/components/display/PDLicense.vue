@@ -4,7 +4,7 @@
     <template v-else>{{ $t(o) }}</template>
   </span>
   <v-row v-else>
-    <v-col :md="labelColMd" cols="12" class="pdlabel primary--text text-md-right">{{ $t(p) }}</v-col>
+    <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(p) }}</v-col>
     <v-col :md="valueColMd" cols="12" :class="{ 'font-weight-regular': boldLabelFields.includes('edm:rights') }">
       <a :href="o" target="_blank">{{ getLocalizedTermLabel('alllicenses', o) }}</a>
       <!--

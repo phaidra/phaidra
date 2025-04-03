@@ -9,11 +9,8 @@
 // $line-height-root: 1.42857143;
 
 $material-light: (
-  background: #fff
+  toolbar: #757575 // grey darken-1
 );
-// $material-dark: (
-  // background: #1F2C39,
-  // surface: #2C3E50,
-  // cards: #2C3E50,
-  // chips: #2C3E50
-// );
+$material-dark: (
+  toolbar: #000,
+ );

@@ -76,14 +76,14 @@
       </v-col>
       <v-dialog v-model="limitdialog" width="500">
         <v-card>
-          <v-card-title class="grey white--text">{{ $t('Selection limit' ) }}</v-card-title>
-          <v-card-text>
-            <p class="mt-6 title font-weight-light grey--text text--darken-3">{{ $t('SELECTION_LIMIT', { limit: appconfig.search.selectionlimit }) }}</p>
+          <v-card-title class="title font-weight-light white--text">{{ $t('Selection limit' ) }}</v-card-title>
+          <v-card-text class="mt-4">
+            {{ $t('SELECTION_LIMIT', { limit: appconfig.search.selectionlimit }) }}
           </v-card-text>
           <v-card-actions>
             <v-container fluid>
               <v-row justify="end" class="px-4">
-                <v-btn color="grey" dark @click="limitdialog = false">{{ $t('Ok') }}</v-btn>
+                <v-btn outlined @click="limitdialog = false">{{ $t("Close") }}</v-btn>
               </v-row>
             </v-container>
           </v-card-actions>

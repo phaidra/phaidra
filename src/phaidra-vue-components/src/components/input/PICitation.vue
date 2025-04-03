@@ -42,7 +42,7 @@
     </v-col>
     <v-col cols="2">
       <v-btn text @click="$refs.langdialog.open()">
-        <span class="grey--text text--darken-1">
+        <span>
           ({{ citationLanguage ? citationLanguage : '--' }})
         </span>
       </v-btn>

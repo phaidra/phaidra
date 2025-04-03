@@ -24,7 +24,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box title font-weight-light grey white--text"
+                    class="ph-box title font-weight-light white--text"
                     >{{ $t("This object is in collection") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -74,7 +74,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box title font-weight-light grey white--text"
+                    class="ph-box title font-weight-light white--text"
                     >{{ $t("This object is a back side of") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -125,7 +125,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box title font-weight-light grey white--text"
+                    class="ph-box title font-weight-light white--text"
                     >{{ $t("This object has a back side") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -175,7 +175,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box title font-weight-light grey white--text"
+                    class="ph-box title font-weight-light white--text"
                     >{{ $t("This object is thumbnail for") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -227,7 +227,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box title font-weight-light grey white--text"
+                    class="ph-box title font-weight-light white--text"
                     >{{ $t("This object has thumbnail") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -278,7 +278,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box title font-weight-light grey white--text"
+                    class="ph-box title font-weight-light white--text"
                     >{{ $t("This object references") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -328,7 +328,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box title font-weight-light grey white--text"
+                    class="ph-box title font-weight-light white--text"
                     >{{ $t("This object is referenced by") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -564,7 +564,7 @@
           </v-row>
 
           <template v-if="(objectInfo.cmodel === 'Container') && !objectInfo.datastreams.includes('CONTAINERINFO')">
-            <v-toolbar class="my-10 grey white--text" elevation="1">
+            <v-toolbar class="my-10 white--text" elevation="1">
               <v-toolbar-title>
                 {{ $t("Members") }} ({{ objectInfo.members.length }})
               </v-toolbar-title>
@@ -662,7 +662,7 @@
             </v-row>
           </template>
           <template v-if="objectInfo.readrights && (objectInfo.cmodel === 'Container') && objectInfo.datastreams.includes('CONTAINERINFO')">
-            <v-toolbar class="my-10 grey white--text" elevation="1">
+            <v-toolbar class="my-10 white--text" elevation="1">
               <v-toolbar-title>
                 {{ $t("Members") }} ({{ objectInfo.legacy_container_members.length }})
               </v-toolbar-title>
@@ -691,7 +691,7 @@
           </div>
           </template>
           <template v-if="objectInfo.cmodel === 'Collection' && collMembers.length">
-            <v-toolbar class="my-10 grey white--text" elevation="1">
+            <v-toolbar class="my-10 white--text" elevation="1">
               <v-toolbar-title>
                 {{ $t("Members") }} ({{ $store.state.collectionMembersTotal /* leave it like this, computed property wasn't working on first access */ }})
               </v-toolbar-title>
@@ -744,11 +744,11 @@
                           >{{ collMember.dc_title[0] }}</router-link
                         >
                       </h3>
-                      <p class="grey--text">{{ collMember.pid }}</p>
+                      <p>{{ collMember.pid }}</p>
                     </v-col>
                     <v-spacer></v-spacer>
                     <v-col cols="1" class="text-right"
-                      ><span v-if="collMember.created" class="grey--text">{{
+                      ><span v-if="collMember.created">{{
                         collMember.created | date
                       }}</span></v-col
                     >
@@ -762,7 +762,7 @@
             </div>
             <v-dialog v-model="confirmColMemDeleteDlg" width="500" >
               <v-card>
-                <v-card-title class="title font-weight-light grey lighten-2">{{ $t('Remove') }}</v-card-title>
+                <v-card-title class="title font-weight-light white--text">{{ $t('Remove') }}</v-card-title>
                 <v-card-text class="my-4">{{ $t('REMOVE_COLLECTION_MEMBER', { oldpid: collMemberToRemove, collection: objectInfo.pid })}}</v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
@@ -784,7 +784,7 @@
                 <v-col class="pt-0">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light grey white--text"
+                      class="ph-box title font-weight-light white--text"
                       >{{ $t('Citable links') }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -813,8 +813,7 @@
                               </template>
                               <v-card>
                                 <v-card-title
-                                  dark
-                                  class="title font-weight-light grey white--text"
+                                  class="title font-weight-light white--text"
                                   >{{ $t("Cite") }}</v-card-title
                                 >
                                 <v-card-text>
@@ -884,8 +883,7 @@
                           </template>
                           <v-card>
                             <v-card-title
-                              dark
-                              class="title font-weight-light grey white--text"
+                              class="title font-weight-light white--text"
                               >{{ $t("Request DOI") }}</v-card-title
                             >
                             <v-card-text>
@@ -937,7 +935,7 @@
                 <v-col class="pt-0">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light grey white--text"
+                      class="ph-box title font-weight-light white--text"
                       >{{ $t('Other links') }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -978,7 +976,7 @@
                 <v-col class="pt-0">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light grey white--text"
+                      class="ph-box title font-weight-light white--text"
                       >{{ $t("Content") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1092,7 +1090,7 @@
                 <v-col class="pt-0">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light grey white--text"
+                      class="ph-box title font-weight-light white--text"
                       >{{ $t("Managed by") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1126,13 +1124,13 @@
                 <v-col class="pt-0">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light grey white--text"
+                      class="ph-box title font-weight-light white--text"
                       >{{ $t("Details") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
                       <v-row no-gutters class="pt-2">
                         <v-col
-                          class="caption grey--text text--darken-2"
+                          class="caption"
                           cols="3"
                           >{{ $t("Uploader") }}</v-col
                         >
@@ -1161,7 +1159,7 @@
                       </v-row>
                       <v-row no-gutters class="pt-2">
                         <v-col
-                          class="caption grey--text text--darken-2"
+                          class="caption"
                           cols="3"
                           >{{ $t("Object type") }}</v-col
                         >
@@ -1175,7 +1173,7 @@
                         class="pt-2"
                       >
                         <v-col
-                          class="caption grey--text text--darken-2"
+                          class="caption"
                           cols="3"
                           >{{ $t("Format") }}</v-col
                         >
@@ -1196,7 +1194,7 @@
                       </v-row>
                       <v-row no-gutters class="pt-2">
                         <v-col
-                          class="caption grey--text text--darken-2"
+                          class="caption"
                           cols="3"
                           >{{ $t("Created") }}</v-col
                         >
@@ -1214,7 +1212,7 @@
                   <v-col class="pt-0">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box title font-weight-light grey white--text"
+                        class="ph-box title font-weight-light white--text"
                       >
                         <nuxt-link
                           class="white--text"
@@ -1245,7 +1243,7 @@
                 <v-col class="pt-0">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light grey white--text"
+                      class="ph-box title font-weight-light white--text"
                       >{{ $t("Versions") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1284,7 +1282,7 @@
                 <v-col class="pt-0">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light grey white--text"
+                      class="ph-box title font-weight-light white--text"
                       >{{ $t("Alternative versions") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1322,7 +1320,7 @@
                 <v-col class="pt-0">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light grey white--text"
+                      class="ph-box title font-weight-light white--text"
                       >{{ $t("Alternative formats") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1362,7 +1360,7 @@
                   <v-col class="pt-0">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box title font-weight-light grey white--text"
+                        class="ph-box title font-weight-light white--text"
                         >{{ $t("This object is in collection") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1412,7 +1410,7 @@
                   <v-col class="pt-0">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box title font-weight-light grey white--text"
+                        class="ph-box title font-weight-light white--text"
                         >{{ $t("This object is a back side of") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1463,7 +1461,7 @@
                   <v-col class="pt-0">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box title font-weight-light grey white--text"
+                        class="ph-box title font-weight-light white--text"
                         >{{ $t("This object has a back side") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1513,7 +1511,7 @@
                   <v-col class="pt-0">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box title font-weight-light grey white--text"
+                        class="ph-box title font-weight-light white--text"
                         >{{ $t("This object is thumbnail for") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1565,7 +1563,7 @@
                   <v-col class="pt-0">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box title font-weight-light grey white--text"
+                        class="ph-box title font-weight-light white--text"
                         >{{ $t("This object has thumbnail") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1616,7 +1614,7 @@
                   <v-col class="pt-0">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box title font-weight-light grey white--text"
+                        class="ph-box title font-weight-light white--text"
                         >{{ $t("This object references") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1666,7 +1664,7 @@
                   <v-col class="pt-0">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box title font-weight-light grey white--text"
+                        class="ph-box title font-weight-light white--text"
                         >{{ $t("This object is referenced by") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1715,7 +1713,7 @@
                 <v-col class="pt-0">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light grey white--text"
+                      class="ph-box title font-weight-light white--text"
                       >{{ $t("Metadata") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1785,7 +1783,7 @@
                 <v-col class="pt-0">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light grey white--text"
+                      class="ph-box title font-weight-light white--text"
                       >{{ $t("Export formats") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1874,7 +1872,7 @@
                 <v-col class="pt-0">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light grey white--text"
+                      class="ph-box title font-weight-light white--text"
                       >{{ $t("Edit") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1927,7 +1925,7 @@
                             >
                           </template>
                           <v-card>
-                            <v-card-title class="text-h5 grey lighten-2">
+                            <v-card-title class="text-h5 lighten-2">
                               {{ $t("Manage members") }}
                             </v-card-title>
 
@@ -2013,8 +2011,7 @@
                           </template>
                           <v-card>
                             <v-card-title
-                              dark
-                              class="title font-weight-light grey white--text"
+                              class="title font-weight-light white--text"
                               >{{ $t("Choose relation") }}</v-card-title
                             >
                             <v-card-text>
@@ -2199,11 +2196,11 @@
       </v-row>
       <v-dialog v-model="datareplaceDialog" max-width="1200px">
       <v-card>
-        <v-card-title>
-          <h3 class="title font-weight-light primary--text">{{ $t('Upload new file to') }} {{objectInfo.pid}} ({{objectInfo.cmodel}})</h3>
+        <v-card-title class="title font-weight-light white--text">
+          {{ $t('Upload new file to') }} {{objectInfo.pid}} ({{objectInfo.cmodel}})
         </v-card-title>
         <v-divider></v-divider>
-        <v-card-text>
+        <v-card-text class="mt-4">
           <v-container @drop.prevent="addDropFile" @dragover.prevent>
             <v-file-input v-model="datareplaceFile" :error-messages="datareplaceUploadErrors"></v-file-input>
           </v-container>

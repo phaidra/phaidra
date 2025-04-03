@@ -3,38 +3,38 @@
     <v-row v-for="(ch, i) in orderedChildren" :key="ch.xmlname+i">
       <template v-if="isEmpty(ch)"></template>
       <template v-else-if="ch.xmlname === 'name'">
-        <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ getNameRole(ch) }}</v-col>
+        <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getNameRole(ch) }}</v-col>
         <v-col cols="12" md="10" class="wiv">{{ getNameName(ch) }}</v-col>
       </template>
       <template v-else-if="ch.xmlname === 'originInfo'">
-        <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t('PUBLISHER_VERLAG') }}</v-col>
+        <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('PUBLISHER_VERLAG') }}</v-col>
         <v-col cols="12" md="10">{{ getOriginInfoPublisher(ch) }}<span v-if="getOriginInfoPublisher(ch) && (getOriginInfoPlace(ch) || getOriginInfoDate(ch))">,&nbsp;</span>{{ getOriginInfoPlace(ch) }}<span v-if="(getOriginInfoPublisher(ch) || getOriginInfoPlace(ch)) && getOriginInfoPlace(ch)">,&nbsp;</span>{{ getOriginInfoDate(ch) }}</v-col>
       </template>
       <template v-else-if="ch.input_type === 'input_text'">
         <template v-if="ch.xmlname === 'languageTerm'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(getLabel(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(getLabel(ch)) }}</v-col>
           <v-col cols="12" md="10">{{ getLanguageLabel(ch) }}</v-col>
         </template>
         <template v-else-if="ch.xmlname === 'title'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(getLabel(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(getLabel(ch)) }}</v-col>
           <v-col cols="12" md="10" class="wiv">{{ ch.ui_value }}</v-col>
         </template>
         <template v-else-if="ch.xmlname === 'accessCondition'">
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(getLabel(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(getLabel(ch)) }}</v-col>
           <v-col v-if="ch.ui_value.startsWith('http')" cols="12" md="10" class="wiv"><a :href="ch.ui_value" target="_blank">{{ getLocalizedTermLabel('alllicenses', ch.ui_value) }}</a></v-col>
           <v-col v-else cols="12" md="10" class="wiv">{{ ch.ui_value }}</v-col>
         </template>
         <template v-else>
-          <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(getLabel(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(getLabel(ch)) }}</v-col>
           <v-col cols="12" md="10">{{ ch.ui_value }}</v-col>
         </template>
       </template>
       <template v-else-if="ch.input_type === 'select'">
-        <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(getLabel(ch)) }}</v-col>
+        <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(getLabel(ch)) }}</v-col>
         <v-col cols="12" md="10">{{ ch.ui_value }}</v-col>
       </template>
       <template v-else-if="ch.input_type === 'input_datetime'">
-        <v-col cols="12" md="2" class="pdlabel primary--text text-md-right">{{ $t(getLabel(ch)) }}</v-col>
+        <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(getLabel(ch)) }}</v-col>
         <v-col cols="12" md="10">{{ ch.ui_value }}</v-col>
       </template>
       <template v-else-if="ch.input_type === 'node'">

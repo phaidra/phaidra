@@ -2,7 +2,7 @@
   
     <v-row>
       <template v-if="funderAndProjIdOnly">
-        <v-col :md="labelColMd" cols="12" class="pdlabel primary--text text-md-right"><span v-if="!hideLabel">{{ $t('Funder') }}</span></v-col>
+        <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold text-md-right"><span v-if="!hideLabel">{{ $t('Funder') }}</span></v-col>
         <v-col :md="valueColMd" cols="12">
           <v-container>
             <v-row v-for="(funder, i) in o['frapo:hasFundingAgency']" :key="'ftx'+i">
@@ -29,37 +29,37 @@
         </v-col>
       </template>
       <template v-else>
-        <v-col :md="labelColMd" cols="12" class="pdlabel primary--text text-md-right">{{ $t('Project') }}</v-col>
+        <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('Project') }}</v-col>
         <v-col :md="valueColMd" cols="12">
-          <v-card tile elevation="0">
+          <v-card tile elevation="0" color="transparent">
             <v-card-text class="jsonld-border-left">
               <v-row v-for="(t, i) in o['skos:prefLabel']"  :key="'projpreflab'+i">
-                <v-col :md="3" cols="12" class="pdlabel primary--text">{{ $t('Titel') }}<template v-if="t['@language']"> ({{ t['@language'] }})</template></v-col>
+                <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold">{{ $t('Titel') }}<template v-if="t['@language']"> ({{ t['@language'] }})</template></v-col>
                 <v-col :md="9" cols="12" class="valuefield">{{ t['@value'] }}</v-col>
               </v-row>
               <v-row v-for="(d, i) in o['frapo:hasProjectIdentifier']" :key="'ddsl'+i">
-                <v-col :md="3" cols="12" class="pdlabel primary--text" >{{ $t('Code / Identifier') }}</v-col>
+                <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold" >{{ $t('Code / Identifier') }}</v-col>
                 <v-col :md="9" cols="12" class="valuefield">{{ d }}</v-col>
               </v-row>
               <v-row v-for="(ac, i) in o['frapo:hasAcronym']" :key="'ac'+i">
-                <v-col :md="3" cols="12" class="pdlabel primary--text" >{{ $t('Acronym') }}</v-col>
+                <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold" >{{ $t('Acronym') }}</v-col>
                 <v-col :md="9" cols="12">{{ ac }}</v-col>
               </v-row>
               <v-row>
                 <template v-for="(id, i) in o['skos:exactMatch']">
                   <template v-if="id['@value']">
-                    <v-col :md="3" cols="12" class="pdlabel primary--text" :key="'idproj'+i">{{ $t('Project') }} {{ getLocalizedTermLabel('objectidentifiertype', id['@type']) }}</v-col>
+                    <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold" :key="'idproj'+i">{{ $t('Project') }} {{ getLocalizedTermLabel('objectidentifiertype', id['@type']) }}</v-col>
                     <v-col :md="9" cols="12" :key="'idprojv'+i"><a :href="getIDResolverURL(id)" target="_blank">{{ id['@value'] }}</a></v-col>
                   </template>
                   <template v-else>
-                    <v-col :md="3" cols="12" class="pdlabel primary--text" :key="'idprojxl'+i">{{ $t('Project identifier') }}</v-col>
+                    <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold" :key="'idprojxl'+i">{{ $t('Project identifier') }}</v-col>
                     <v-col :md="9" cols="12" :key="'idprojxv'+i">{{ id }}</v-col>
                   </template>
                 </template>
               </v-row>
               <div v-for="(funder, i) in o['frapo:hasFundingAgency']" :key="'ft'+i">
                 <v-row v-for="(ft, j) in funder['skos:prefLabel']" :key="'ft'+i+j">
-                  <v-col :md="3" cols="12" class="pdlabel primary--text">{{ $t('Funder') }}<template v-if="ft['@language']"> ({{ ft['@language'] }})</template></v-col>
+                  <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold">{{ $t('Funder') }}<template v-if="ft['@language']"> ({{ ft['@language'] }})</template></v-col>
                   <template v-if="funder['skos:exactMatch']">
                     <template v-for="(fid, k) in funder['skos:exactMatch']">
                       <template v-if="fid['@value']">
@@ -74,19 +74,19 @@
                 </v-row>
               </div>
               <v-row v-for="(d, i) in o['rdfs:comment']" :key="'dl'+i">
-                <v-col :md="3" cols="12" class="pdlabel primary--text" >{{ $t('Project Description') }}<template v-if="d['@language']"> ({{ d['@language'] }})</template></v-col>
+                <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold" >{{ $t('Project description') }}<template v-if="d['@language']"> ({{ d['@language'] }})</template></v-col>
                 <v-col class="valuefield" :md="9" cols="12">{{ d['@value'] }}</v-col>
               </v-row>
               <v-row v-for="(sd, i) in o['frapo:hasStartDate']" :key="'dfl'+i">
-                <v-col :md="3" cols="12" class="pdlabel primary--text" >{{ $t('Start date') }}</v-col>
+                <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold" >{{ $t('Start date') }}</v-col>
                 <v-col class="valuefield" :md="9" cols="12">{{ sd }}</v-col>
               </v-row>
               <v-row v-for="(ed, i) in o['frapo:hasEndDate']" :key="'dtl'+i">
-                <v-col :md="3" cols="12" class="pdlabel primary--text" >{{ $t('End date') }}</v-col>
+                <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold" >{{ $t('End date') }}</v-col>
                 <v-col class="valuefield" :md="9" cols="12">{{ ed }}</v-col>
               </v-row>
               <v-row v-for="(hp, i) in o['foaf:homepage']" :key="'hpl'+i">
-                <v-col :md="3" cols="12" class="pdlabel primary--text" >{{ $t('Project Homepage') }}</v-col>
+                <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold" >{{ $t('Project homepage') }}</v-col>
                 <v-col :md="9" cols="12"><a :href="hp">{{ hp }}</a></v-col>
               </v-row>
             </v-card-text>
@@ -129,10 +129,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.jsonld-border-left {
-  border-left: 1px solid;
-  border-color: rgba(0, 0, 0, 0.12);
-}
-</style>

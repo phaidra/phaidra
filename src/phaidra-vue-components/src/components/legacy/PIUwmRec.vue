@@ -317,7 +317,7 @@
       </template>
       <template v-else-if="ch.input_type === 'node'">
         <v-card class="ma-3" :width="'100%'">
-          <v-card-title class="font-weight-light grey white--text">
+          <v-card-title class="font-weight-light white--text">
             <span>{{ ch.labels[alpha2locale] }}</span>
             <v-spacer></v-spacer>
             <template v-if="ch.cardinality !== 1">

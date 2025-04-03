@@ -53,7 +53,7 @@
         <v-row v-for="(s) in this.form.sections" :key="s.id" class="ma-3">
 
           <v-card v-if="s.type === 'resourcelink'" width="100%" class="mb-6">
-            <v-card-title class="title font-weight-light grey white--text">
+            <v-card-title class="title font-weight-light white--text">
               <span>{{s.title}}</span>
               <v-spacer></v-spacer>
             </v-card-title>
@@ -794,7 +794,7 @@
                 <v-btn class="mr-3 float-left" v-on="on" large raised :loading="loading" :disabled="loading" color="primary"><span v-t="'Save as new template'"></span></v-btn>
               </template>
               <v-card>
-                <v-card-title class="title font-weight-light grey lighten-2" primary-title><span v-t="'Save as new template'"></span></v-card-title>
+                <v-card-title class="title font-weight-light lighten-2" primary-title><span v-t="'Save as new template'"></span></v-card-title>
                 <v-card-text>
                   <v-text-field class="mt-4" hide-details filled single-line v-model="templatename" :label="$t('Template name')" ></v-text-field>
                 </v-card-text>
@@ -865,7 +865,7 @@
     </v-tabs-items>
     <v-dialog v-model="showEditFieldPopup" max-width="600px" scrollable>
       <v-card>
-        <v-card-title class="title font-weight-light grey white--text">
+        <v-card-title class="title font-weight-light white--text">
           {{ $t("Field Settings") }}
         </v-card-title>
         <v-card-text>

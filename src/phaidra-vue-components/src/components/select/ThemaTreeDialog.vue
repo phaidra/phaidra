@@ -1,8 +1,8 @@
 <template>
   <v-dialog v-model="dialog" width="700px">
     <v-card :loading="loading">
-      <v-card-title class="grey white--text">{{ $t('Select a term') }}</v-card-title>
-      <v-card-text>
+      <v-card-title class="title font-weight-light white--text">{{ $t('Select a term') }}</v-card-title>
+      <v-card-text class="mt-4">
         <v-treeview item-key="name" :items="items" hoverable>
           <template v-slot:label="{ item }"><div @click="selectTerm(item)">{{ item['skos:prefLabel'][$i18n.locale] + ' - ' + item['skos:notation'][0]}}</div></template>
         </v-treeview>
