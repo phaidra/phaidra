@@ -489,25 +489,43 @@
                 >{{ $t("Open in Bookviewer") }}</v-btn
               >
             </template>
+            <template v-else-if="objectInfo.cmodel === 'Video'">
+              <div class="iframe-container">
+                <iframe
+                  :src="
+                    instanceconfig.api +
+                    '/object/' +
+                    objectInfo.pid +
+                    '/preview' + '?lang=' + $i18n.locale.substring(0, 2)
+                  "
+                  width="100%"
+                  frameborder="0"
+                  scrolling="no"
+                  allowfullscreen="yes"
+                  class="responsive-iframe"
+                  >Content</iframe
+                >
+              </div>
+            </template>
+            <template v-else-if="objectInfo.cmodel === 'Asset'">
+              <v-col cols="12">
+                <template>
+                  <threed-viewer
+                    v-if="(modelContent && typeof modelContent !== 'string')"
+                    :model-url="instanceconfig.api + '/3d/' + objectInfo.pid"
+                  ></threed-viewer>
+                  <p
+                    v-else
+                    class="mt-4"
+                  >
+                    {{ modelContent }}
+                  </p>
+                </template>
+              </v-col>
+            </template>
             <template v-else>
               <v-col cols="12">
-                <div class="iframe-container" v-if="objectInfo.cmodel === 'Video'">
-                  <iframe
-                    :src="
-                      instanceconfig.api +
-                      '/object/' +
-                      objectInfo.pid +
-                      '/preview' + '?lang=' + $i18n.locale.substring(0, 2)
-                    "
-                    width="100%"
-                    frameborder="0"
-                    scrolling="no"
-                    allowfullscreen="yes"
-                    class="responsive-iframe"
-                    >Content</iframe>
-                </div>
                 <iframe
-                v-else
                   :src="
                     instanceconfig.api +
                     '/object/' +
@@ -2222,8 +2240,12 @@
 import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
+import ThreedViewer from "../../components/ThreedViewer.vue";
 
 export default {
+  components: {
+    ThreedViewer
+  },
   mixins: [context, config, vocabulary],
   validate({ params }) {
     return /^o:\d+$/.test(params.pid);
@@ -2256,12 +2278,6 @@ export default {
       return (
         this.objectInfo.cmodel !== "Resource" &&
         this.objectInfo.cmodel !== "Collection" &&
-        (this.objectInfo.cmodel !== "Asset" ||
-          (this.objectInfo.cmodel === "Asset" &&
-            (this.mimetype === "model/nxz" ||
-              this.mimetype === "model/ply" ||
-              this.mimetype === "application/x-wacz")
-              )) &&
         this.objectInfo.cmodel !== "Container" &&
         this.objectInfo.readrights &&
         !(this.objectInfo.cmodel === "Video" && this.objectInfo.isrestricted)
@@ -2468,7 +2484,8 @@ export default {
       collOnlyLatestVersions: true,
       datareplaceDialog: false,
       datareplaceFile: null,
-      datareplaceUploadErrors: []
+      datareplaceUploadErrors: [],
+      modelContent: null
     };
   },
   async fetch() {
@@ -2912,6 +2929,26 @@ export default {
       } finally {
         this.collMemberToRemove = null
         this.$store.commit('setLoading', false)
+      }
+    },
+    async checkModelStatus() {
+      if (this.objectInfo.cmodel === 'Asset') {
+        try {
+          const response = await this.$axios.get(`${this.instanceconfig.api}/3d/${this.objectInfo.pid}`);
+          this.modelContent = response.data;
+        } catch (error) {
+          if (error.response && error.response.status === 202) {
+            this.modelContent = error.response.data;
+          }
+        }
+      }
+    }
+  },
+  watch: {
+    'objectInfo.pid': {
+      immediate: true,
+      handler() {
+        this.checkModelStatus();
       }
     }
   },
