@@ -286,8 +286,30 @@ sub modify_hook {
         push @{$res->{alerts}}, @{$vsr->{alerts}} if scalar @{$vsr->{alerts}} > 0;
       }
       if ($res_cmodel->{cmodel} eq 'Asset') {
-        my $threedr = $self->_create_3d_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
-        push @{$res->{alerts}}, @{$threedr->{alerts}} if scalar @{$threedr->{alerts}} > 0;
+        my $mimetype;
+
+        if ($c->app->config->{fedora}->{version} >= 6) {
+          my $fedora_model = PhaidraAPI::Model::Fedora->new;
+          my $dsAttr = $fedora_model->getDatastreamAttributes($c, $pid, 'OCTETS');
+          if ($dsAttr->{status} eq 200) {
+            $mimetype = $dsAttr->{mimetype};
+          }
+        }
+        else {
+          my $object_model = PhaidraAPI::Model::Object->new;
+          my $r_oxml = $object_model->get_foxml($c, $pid);
+          if ($r_oxml->{status} eq 200) {
+            my $foxmldom = Mojo::DOM->new();
+            $foxmldom->xml(1);
+            $foxmldom->parse($r_oxml->{foxml});
+            my $octets_model = PhaidraAPI::Model::Octets->new;
+            (undef, $mimetype, undef) = $octets_model->_get_ds_attributes($c, $pid, 'OCTETS', $foxmldom);
+          }
+        }
+        if ($mimetype eq 'model/obj') {
+          my $threedr = $self->_create_3d_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
+          push @{$res->{alerts}}, @{$threedr->{alerts}} if scalar @{$threedr->{alerts}} > 0;
+        }
       }
     }
   }

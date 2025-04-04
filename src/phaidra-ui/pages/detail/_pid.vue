@@ -507,22 +507,6 @@
                 >
               </div>
             </template>
-            <template v-else-if="objectInfo.cmodel === 'Asset'">
-              <v-col cols="12">
-                <template>
-                  <threed-viewer
-                    v-if="(modelContent && typeof modelContent !== 'string')"
-                    :model-url="instanceconfig.api + '/3d/' + objectInfo.pid"
-                  ></threed-viewer>
-                  <p
-                    v-else
-                    class="mt-4"
-                  >
-                    {{ modelContent }}
-                  </p>
-                </template>
-              </v-col>
-            </template>
             <template v-else>
               <v-col cols="12">
                 <iframe
@@ -2240,12 +2224,8 @@
 import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
-import ThreedViewer from "../../components/ThreedViewer.vue";
 
 export default {
-  components: {
-    ThreedViewer
-  },
   mixins: [context, config, vocabulary],
   validate({ params }) {
     return /^o:\d+$/.test(params.pid);
