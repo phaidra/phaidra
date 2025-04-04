@@ -325,14 +325,6 @@ address {
   vertical-align: top;
 }
 
-.theme--light.v-card > .v-card__text {
-  color: black;
-}
-
-.theme--dark.v-card > .v-card__text {
-  color: white;
-}
-
 .theme--light.v-card > .v-card__title,
 .theme--dark.v-card > .v-card__title {
   background-color: var(--v-cardtitlebg-base);
