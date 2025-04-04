@@ -1,9 +1,9 @@
 <template>
   <v-card class="mt-2 mx-auto" flat color="transparent">
-    <v-card-title class="title font-weight-light primary--text transparent">{{ $t('Objects uploaded last year') }}</v-card-title>
+    <v-card-title class="title font-weight-light transparent">{{ $t('Objects uploaded last year') }}</v-card-title>
     <v-card-text>
-      <v-sheet class="mx-auto mt-6" color="grey" elevation="12" max-width="calc(100% - 32px)">
-        <v-sparkline :labels="labels" :value="value" color="white" line-width="2" padding="16"></v-sparkline>
+      <v-sheet class="mx-auto mt-6" elevation="6" max-width="calc(100% - 32px)">
+        <v-sparkline :labels="labels" :value="value" color="grey darken-1" line-width="2" padding="16"></v-sparkline>
       </v-sheet>
       <v-row class="title font-weight-light mt-8 ml-4">
         <span>Total objects: {{total}}</span>
