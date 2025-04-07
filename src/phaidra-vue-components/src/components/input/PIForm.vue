@@ -69,12 +69,12 @@
           </v-card>
 
           <v-card :outlined="s.outlined" :flat="(!s.title || (s.mode === 'expansion' && s.collapsed) || s.flat)" v-else-if="(s.type !== 'accessrights')" width="100%">
-            <v-card-title v-if="s.title" class="title font-weight-light" :class="{ 'grey white--text': (s.mode !== 'expansion' || !s.collapsed) }">
+            <v-card-title v-if="s.title" class="title font-weight-light white--text">
               <span v-t="s.title"></span>
               <v-spacer></v-spacer>
               <v-checkbox dark color="white" v-if="s.type === 'member'" v-model="previewMember" :label="$t('Container thumbnail')" :value="s.id"></v-checkbox>
               <v-spacer></v-spacer>
-              <v-btn :dark="!s.collapsed" icon @click="s.collapsed = !s.collapsed">
+              <v-btn dark icon @click="s.collapsed = !s.collapsed">
                 <v-icon>{{ s.collapsed ? 'mdi-chevron-down' : 'mdi-chevron-up' }}</v-icon>
               </v-btn>
               <v-menu open-on-hover bottom offset-y v-if="!s.disablemenu">
@@ -734,7 +734,7 @@
                           </v-btn>
                         </template>
                         <v-card>
-                          <v-card-title class="grey white--text"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn light target='_blank' :to="'/metadata-fields-help'">{{ $t('Help') }}</v-btn></v-card-title>
+                          <v-card-title class="title font-weight-light white--text"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn light target='_blank' :to="'/metadata-fields-help'">{{ $t('Help') }}</v-btn></v-card-title>
                           <v-card-text>
                             <v-list three-line >
                               <v-text-field clearable :label="$t('Search...')" append-icon="mdi-magnify" v-model="searchfieldsinput"></v-text-field>
@@ -794,7 +794,7 @@
                 <v-btn class="mr-3 float-left" v-on="on" large raised :loading="loading" :disabled="loading" color="primary"><span v-t="'Save as new template'"></span></v-btn>
               </template>
               <v-card>
-                <v-card-title class="title font-weight-light lighten-2" primary-title><span v-t="'Save as new template'"></span></v-card-title>
+                <v-card-title class="title font-weight-light white--text"><span v-t="'Save as new template'"></span></v-card-title>
                 <v-card-text>
                   <v-text-field class="mt-4" hide-details filled single-line v-model="templatename" :label="$t('Template name')" ></v-text-field>
                 </v-card-text>
