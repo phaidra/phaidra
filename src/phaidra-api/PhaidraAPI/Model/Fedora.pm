@@ -438,7 +438,7 @@ sub getDatastreamPath {
   my $inventoryFile;
   my $inventoryFileFromS3;
 
-  if ( $ENV{S3_ENABLED} eq "true" ) {
+  if ( defined $ENV{S3_ENABLED} and $ENV{S3_ENABLED} eq "true" ) {
     my $s3 = Net::Amazon::S3-> new(
       authorization_context => Net::Amazon::S3::Authorization::Basic-> new (
         aws_access_key_id => $aws_access_key_id,

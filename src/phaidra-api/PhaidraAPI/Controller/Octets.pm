@@ -56,7 +56,7 @@ sub get {
   if ($self->app->config->{fedora}->{version} >= 6) {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
     my $dsAttr;
-    if ( $ENV{S3_ENABLED} eq "true" ) {
+    if ( defined $ENV{S3_ENABLED} and $ENV{S3_ENABLED} eq "true" ) {
       return $self->proxy();
     } else {
       if ($trywebversion) {
