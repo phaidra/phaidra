@@ -11,7 +11,7 @@
               <a :href="instanceconfig.institutionurl" target="_blank">
                 <svg version="1.1" id="PHAIDRA_Logo_copy_xA0_Image_1_"
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 435.6 134.88"
-	 style="enable-background:new 0 0 435.6 134.88; height:100px" xml:space="preserve">
+	 style="enable-background:new 0 0 435.6 134.88; height:100px" xml:space="preserve" alt="University of Vienna - to the homepage">
 <style type="text/css">
 	.st0{fill:#212121;}
 	.st1{fill:none;stroke:#212121;stroke-width:35;stroke-miterlimit:10;}
@@ -296,7 +296,7 @@
 
                 <v-menu offset-y>
                 <template v-slot:activator="{ on }">
-                    <v-btn text v-on="on" class="top-margin-lang">
+                    <v-btn text v-on="on" class="top-margin-lang" aria-hidden="true">
                     <span class="grey--text text--darken-1">{{
                         localeLabel
                     }}</span>
