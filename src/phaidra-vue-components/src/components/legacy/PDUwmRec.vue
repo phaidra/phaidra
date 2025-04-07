@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper col">
     <v-row v-for="(ch, i) in children" :key="ch.xmlname+i" class="my-1">
       <template v-if="skip(ch) || isEmpty(ch)"></template>
       <template v-else-if="ch.input_type === 'static'">
