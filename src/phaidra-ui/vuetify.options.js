@@ -10,7 +10,7 @@ export default function ({ app }) {
           cardtitlebg: '#757575' // grey darken-1
         },
         dark: {
-          primary: app.$config.primaryColor,
+          primary: app.$config.darkPrimaryColor || app.$config.primaryColor,
           secondary: '#e2e2e2',
           error: '#dd4814',
           cardtitlebg: '#000'
