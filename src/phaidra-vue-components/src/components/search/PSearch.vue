@@ -31,10 +31,10 @@
               <v-btn class="ml-4 mb-6" color="primary" v-on="on">{{ $t('Filters') }}</v-btn>
             </template>
             <v-card height="400px">
-              <v-card-title class="border-bottom">
-                <h3 class="title font-weight-light primary--text pa-2">{{ $t('Filters') }}</h3>
+              <v-card-title class="title font-weight-light white--text">
+                <h3>{{ $t('Filters') }}</h3>
                 <v-spacer></v-spacer>
-                <v-icon @click="filterdialog = !filterdialog">mdi-close</v-icon>
+                <v-icon dark @click="filterdialog = !filterdialog">mdi-close</v-icon>
               </v-card-title>
               <v-card-text>
                 <p-search-filters
@@ -63,7 +63,7 @@
         </v-row>
       </v-col>
       <v-col cols="3" class="pa-2 hidden-sm-and-down">
-        <h3 class="title font-weight-light primary--text border-bottom pa-2">{{ $t('Filters') }}</h3>
+        <h3 class="title font-weight-light border-bottom pa-2">{{ $t('Filters') }}</h3>
         <p-search-filters
           ref="searchFilters"
           :search="search"
