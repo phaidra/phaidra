@@ -34,7 +34,7 @@
           <v-card tile elevation="0" color="transparent">
             <v-card-text class="jsonld-border-left">
               <v-row v-for="(t, i) in o['skos:prefLabel']"  :key="'projpreflab'+i">
-                <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold">{{ $t('Titel') }}<template v-if="t['@language']"> ({{ t['@language'] }})</template></v-col>
+                <v-col :md="3" cols="12" class="pdlabel secondary--text font-weight-bold">{{ $t('Title') }}<template v-if="t['@language']"> ({{ t['@language'] }})</template></v-col>
                 <v-col :md="9" cols="12" class="valuefield">{{ t['@value'] }}</v-col>
               </v-row>
               <v-row v-for="(d, i) in o['frapo:hasProjectIdentifier']" :key="'ddsl'+i">
