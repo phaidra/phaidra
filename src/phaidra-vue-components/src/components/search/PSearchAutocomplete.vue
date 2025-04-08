@@ -1,7 +1,6 @@
 <template>
   <div :class="`${getClassName('wrapper')} autocomplete-wrapper`">
     <v-text-field
-      light
       ref="input"
       :id="id"
       :class="`${getClassName('input')} autocomplete-input`"
