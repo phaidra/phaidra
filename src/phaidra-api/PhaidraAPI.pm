@@ -587,7 +587,6 @@ sub startup {
 
     $reader->get('imageserver')                                              ->to('imageserver#imageserverproxy');
     $reader->get('imageserver/:pid/status')                                  ->to('imageserver#status');
-    $reader->get('3d/:pid')                                                  ->to('threed#get_model');
 
     $ext_creds->get('object/:pid/info')                                      ->to('object#info');
     $ext_creds->get('object/:pid/metadata')                                  ->to('object#get_metadata');
