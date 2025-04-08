@@ -1,7 +1,7 @@
 <template>
   <v-dialog class="pb-4" v-model="showYarmDialog" scrollable width="1000px">
     <v-card>
-      <v-card-title class="grey white--text"><span v-t="'YARM'"></span><v-spacer></v-spacer><v-btn @click="yarmLogout()"
+      <v-card-title class="title font-weight-light white--text"><span v-t="'YARM'"></span><v-spacer></v-spacer><v-btn @click="yarmLogout()"
           color="primary" dark v-if="yarmToken">
           {{ $t('Logout') }} (YARM)
         </v-btn></v-card-title>

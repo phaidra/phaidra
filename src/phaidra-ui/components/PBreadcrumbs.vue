@@ -1,7 +1,7 @@
 <template>
   <v-row>
     <v-col>
-      <span class="youarehere primary--text">{{ $t("You are here") }}:</span>
+      <span class="youarehere secondary--text">{{ $t("You are here") }}:</span>
       <template v-for="(item, index) in translatedArray">
         <icon
           :key="'icon' + index"
@@ -21,14 +21,14 @@
             :key="'iconex' + index"
             v-if="item.external"
             :href="item.to"
-            class="text primary--text"
+            class="text"
             >{{ $t(item.text) }}</a
           >
           <nuxt-link
             :key="'link' + index"
             v-else
             :to="item.to"
-            class="text primary--text"
+            class="text"
             >{{ $t(item.text) }}</nuxt-link
           >
         </template>

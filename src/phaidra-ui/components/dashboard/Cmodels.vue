@@ -12,10 +12,10 @@
       hide-default-header
     >
     <template v-slot:header="{ props: { headers } }">
-      <thead class="white--text grey">
+      <thead>
         <tr>
           <th v-for="h in headers">
-            <span class="white--text">{{h.text}}</span>
+            <span>{{h.text}}</span>
           </th>
         </tr>
       </thead>

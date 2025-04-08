@@ -3,60 +3,66 @@
     <v-container class="px-4" fluid v-if="!loading">
       <v-row>
         <v-col>
-          <ExtHeader></ExtHeader>
-          <v-row>
-            <v-col cols="12" md="10" offset-md="1" class="content">
-              <p-breadcrumbs :items="breadcrumbs"></p-breadcrumbs>
+          <header>
+            <ExtHeader></ExtHeader>
+          </header>
+          <main>
+            <v-row>
+              <v-col cols="12" md="10" offset-md="1" class="content">
+                <p-breadcrumbs :items="breadcrumbs"></p-breadcrumbs>
 
-              <template v-for="(alert, i) in alerts">
-                <v-snackbar
-                  :key="'altsnack' + i"
-                  class="font-weight-regular"
-                  top
-                  color="success"
-                  v-if="alert.type === 'success'"
-                  v-model="showSnackbar"
-                >
-                  <span v-if="alert.key && alert.params">{{ $t(alert.key, alert.params) }}</span>
-                  <span v-else>{{ $t(alert.msg) }}</span>
-                  <v-btn dark text @click.native="dismiss(alert)">OK</v-btn>
-                </v-snackbar>
-              </template>
+                <template v-for="(alert, i) in alerts">
+                  <v-snackbar
+                    :key="'altsnack' + i"
+                    class="font-weight-regular"
+                    top
+                    color="success"
+                    v-if="alert.type === 'success'"
+                    v-model="showSnackbar"
+                  >
+                    <span v-if="alert.key && alert.params">{{ $t(alert.key, alert.params) }}</span>
+                    <span v-else>{{ $t(alert.msg) }}</span>
+                    <v-btn dark text @click.native="dismiss(alert)">OK</v-btn>
+                  </v-snackbar>
+                </template>
 
-              <template v-if="showAlerts">
-                <v-row
-                  justify="center"
-                  v-for="(alert, i) in alerts"
-                  :key="'alert' + i"
-                >
-                  <v-col cols="12">
-                    <v-alert
-                      v-if="alert.type !== 'success'"
-                      :type="alert.type"
-                      :value="true"
-                      transition="slide-y-transition"
-                    >
-                      <v-row align="center">
-                        <v-col class="grow">{{ $t(alert.msg) }}</v-col>
-                        <v-col class="shrink">
-                          <v-btn icon @click.native="dismiss(alert)"
-                            ><v-icon>mdi-close</v-icon></v-btn
-                          >
-                        </v-col>
-                      </v-row>
-                    </v-alert>
-                  </v-col>
-                </v-row>
-              </template>
+                <template v-if="showAlerts">
+                  <v-row
+                    justify="center"
+                    v-for="(alert, i) in alerts"
+                    :key="'alert' + i"
+                  >
+                    <v-col cols="12">
+                      <v-alert
+                        v-if="alert.type !== 'success'"
+                        :type="alert.type"
+                        :value="true"
+                        transition="slide-y-transition"
+                      >
+                        <v-row align="center">
+                          <v-col class="grow">{{ $t(alert.msg) }}</v-col>
+                          <v-col class="shrink">
+                            <v-btn icon @click.native="dismiss(alert)"
+                              ><v-icon>mdi-close</v-icon></v-btn
+                            >
+                          </v-col>
+                        </v-row>
+                      </v-alert>
+                    </v-col>
+                  </v-row>
+                </template>
 
-              <transition name="fade" mode="out-in">
-                <keep-alive>
-                  <Nuxt/>
-                </keep-alive>
-              </transition>
-            </v-col>
-          </v-row>
-          <ExtFooter></ExtFooter>
+                <transition name="fade" mode="out-in">
+                  <keep-alive>
+                    <Nuxt/>
+                  </keep-alive>
+                </transition>
+              </v-col>
+            </v-row>
+          </main>
+          <footer>
+            <ExtFooter></ExtFooter>
+          </footer>
         </v-col>
       </v-row>
     </v-container>
@@ -323,14 +329,6 @@ address {
 
 .v-align-top {
   vertical-align: top;
-}
-
-.theme--light.v-card > .v-card__text {
-  color: black;
-}
-
-.theme--dark.v-card > .v-card__text {
-  color: white;
 }
 
 .theme--light.v-card > .v-card__title,

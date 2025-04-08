@@ -624,13 +624,6 @@ export default {
 .valuefield {
   white-space: pre-wrap;
 }
-
-.theme--light.v-card > .v-card__text {
-  color: black;
-}
-.theme--dark.v-card > .v-card__text {
-  color: white;
-}
 </style>
 
 <style scoped>

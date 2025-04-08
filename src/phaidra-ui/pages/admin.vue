@@ -3,7 +3,7 @@
   <v-container class="mt-8" fluid>
 
     <div class="mb-4"><strong>Note:</strong> Config is cached in each worker, don't forget to restart phaidra-api to apply changes.</div>
-    <v-tabs slider-color="primary" background-color="grey darken-1" vertical v-model="activetab">
+    <v-tabs slider-color="primary" background-color="grey darken-2" vertical v-model="activetab">
       <v-tab class="white--text" :active-class="'primary'" >
         <span>{{ $t('Public') }}</span>
       </v-tab>
@@ -23,7 +23,7 @@
       <v-tab-item>
         <v-card tile>
           
-          <v-tabs slider-color="primary" background-color="grey darken-2" vertical v-model="activetab2">
+          <v-tabs slider-color="primary" background-color="grey darken-1" vertical v-model="activetab2">
 
             <v-tab class="white--text" :active-class="'primary'" >
               <span>{{ $t('General') }}</span>
@@ -418,7 +418,7 @@
       <v-tab-item>
         <v-card tile>
           
-          <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-2" vertical v-model="activetabprivate">
+          <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-1" vertical v-model="activetabprivate">
 
             <v-tab class="white--text" :active-class="'primary'" >
               <span>{{ $t('General') }}</span>
@@ -472,7 +472,7 @@
       <v-tab-item>
         <v-card tile>
           
-          <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-2" vertical v-model="activetabimpexp">
+          <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-1" vertical v-model="activetabimpexp">
 
             <v-tab class="white--text" :active-class="'primary'">
               <span>{{ $t('Export') }}</span>

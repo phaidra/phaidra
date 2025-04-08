@@ -88,6 +88,10 @@ export const vocabulary = {
           return 'https://viaf.org/viaf/' + value
         case 'ids:wikidata':
           return 'https://wikidata.org/wiki/' + value
+        case 'ids:lcnaf':
+          return 'https://lccn.loc.gov/' + value
+        case 'ids:isni':
+          return 'https://isni.org/isni/' + value
         case 'ids:uri':
           return value
       }
