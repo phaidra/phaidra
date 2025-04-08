@@ -1,6 +1,9 @@
 <template>
 <client-only>
-  <p-groups></p-groups>
+  <div>
+    <h1 class="sr-only">Groups</h1>
+    <p-groups></p-groups>
+  </div>
 </client-only>
 </template>
 <script>

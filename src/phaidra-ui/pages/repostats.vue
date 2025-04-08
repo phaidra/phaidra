@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <h1 class="sr-only">Repository statistics</h1>
     <PRepostat></PRepostat>
   </v-container>
 </template>

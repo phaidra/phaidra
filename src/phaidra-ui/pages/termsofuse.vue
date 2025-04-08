@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <h1 class="sr-only">Terms of use</h1>
     <v-row justify="center">
       <v-col>
         <v-card tile>
