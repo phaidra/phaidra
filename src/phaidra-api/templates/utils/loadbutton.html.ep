@@ -2,15 +2,18 @@
 <html>
  <head>
  <style>
- .button {
+ .api-loadbutton {
   background-color: #404040;
   border: none;
+  border-radius: 4px;
   color: white;
-  padding: 15px 32px;
+  padding: 16px 32px;
+  margin-top: 16px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
+  cursor: pointer;
 }
  </style>
  </head>
@@ -19,7 +22,7 @@
     <div><img onClick="let url = window.location.href;
      let separator = url.includes('?') ? '&' : '?';
       window.location.href = url + separator + 'force=1';" src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/thumbnail?h=400" /></div>
-    <div><button class="button" onClick="let url = window.location.href;
+    <div><button class="api-loadbutton" onClick="let url = window.location.href;
      let separator = url.includes('?') ? '&' : '?';
       window.location.href = url + separator + 'force=1';"><%== l('Open') %></button></div>
    </center>

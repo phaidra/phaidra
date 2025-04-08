@@ -1925,7 +1925,7 @@
                             >
                           </template>
                           <v-card>
-                            <v-card-title class="text-h5 lighten-2">
+                            <v-card-title class="title font-weight-light white--text">
                               {{ $t("Manage members") }}
                             </v-card-title>
 
@@ -1938,10 +1938,10 @@
                             <v-card-actions>
                               <v-spacer></v-spacer>
                               <v-btn
-                                color="primary"                                
+                                outlined
                                 @click="collectionHelpDialog = false"
                               >
-                                OK
+                                {{ $t("Close") }}
                               </v-btn>
                             </v-card-actions>
                           </v-card>
