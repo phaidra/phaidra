@@ -1,13 +1,14 @@
 <template>
   <v-container v-if="form && (form.length > 0)">
     <v-card :outlined="!title">
-      <v-card-title v-if="title" class="font-weight-light white--text">{{ $t(title) }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-card-title>
+      <v-card-title v-if="title" class="title font-weight-light white--text">{{ $t(title) }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-card-title>
       <v-alert dismissible :type="'error'" :value="!valid" transition="fade-transition">
         <span>{{ $t('Metadata validation failed') }}</span>
         <ul v-if="validationErrors.length > 0">
           <li v-for="(e, i) in this.validationErrors" :key="'valEre'+i">{{ e }}</li>
         </ul>
       </v-alert>
+      <v-divider></v-divider>
       <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-2" vertical v-model="activetab">
         <template v-for="(s, i) in this.form">
           <v-tab class="white--text" :active-class="'primary'" v-if="(s.xmlname !== 'annotation') && (s.xmlname !== 'etheses')" :key="'tab'+i">
