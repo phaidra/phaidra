@@ -1494,9 +1494,6 @@ export default {
                 if (field.component === 'p-file') {
                   if (field.file !== '') {
                     httpFormData.append('file', field.file)
-                    if (field.file.name) {
-                      ext = field.file.name.split('.').pop()
-                    }
                   }
                   if (field.mimetype) {
                     mime = field.mimetype
@@ -1511,10 +1508,6 @@ export default {
       httpFormData.append('metadata', JSON.stringify(this.getMetadata()))
       if (mime) {
         httpFormData.append('mimetype', mime)
-      } else {
-        if (ext === 'obj') {
-          httpFormData.append('mimetype', 'model/obj')
-        }
       }
 
       let self = this

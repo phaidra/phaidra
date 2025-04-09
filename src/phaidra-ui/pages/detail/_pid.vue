@@ -489,27 +489,25 @@
                 >{{ $t("Open in Bookviewer") }}</v-btn
               >
             </template>
-            <template v-else-if="objectInfo.cmodel === 'Video'">
-              <div class="iframe-container">
-                <iframe
-                  :src="
-                    instanceconfig.api +
-                    '/object/' +
-                    objectInfo.pid +
-                    '/preview' + '?lang=' + $i18n.locale.substring(0, 2)
-                  "
-                  width="100%"
-                  frameborder="0"
-                  scrolling="no"
-                  allowfullscreen="yes"
-                  class="responsive-iframe"
-                  >Content</iframe
-                >
-              </div>
-            </template>
             <template v-else>
               <v-col cols="12">
+                <div class="iframe-container" v-if="objectInfo.cmodel === 'Video'">
+                  <iframe
+                    :src="
+                      instanceconfig.api +
+                      '/object/' +
+                      objectInfo.pid +
+                      '/preview' + '?lang=' + $i18n.locale.substring(0, 2)
+                    "
+                    width="100%"
+                    frameborder="0"
+                    scrolling="no"
+                    allowfullscreen="yes"
+                    class="responsive-iframe"
+                    >Content</iframe>
+                </div>
                 <iframe
+                v-else
                   :src="
                     instanceconfig.api +
                     '/object/' +
@@ -2258,6 +2256,13 @@ export default {
       return (
         this.objectInfo.cmodel !== "Resource" &&
         this.objectInfo.cmodel !== "Collection" &&
+        (this.objectInfo.cmodel !== "Asset" ||
+          (this.objectInfo.cmodel === "Asset" &&
+            (this.mimetype === "model/nxz" ||
+              this.mimetype === "model/obj" ||
+              this.mimetype === "model/ply" ||
+              this.mimetype === "application/x-wacz")
+              )) &&
         this.objectInfo.cmodel !== "Container" &&
         this.objectInfo.readrights &&
         !(this.objectInfo.cmodel === "Video" && this.objectInfo.isrestricted)
