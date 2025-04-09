@@ -1214,12 +1214,23 @@
                       <v-card-title
                         class="ph-box title font-weight-light white--text"
                       >
+                        {{ $t("Usage statistics") }}
                         <nuxt-link
                           class="white--text"
                           :to="localePath(`/stats/${objectInfo.pid}`)"
                         >
-                          {{ $t("Usage statistics") }}</nuxt-link
-                        >
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                              <v-icon
+                                  class="white--text ml-2"                
+                                  v-on="on"
+                              >
+                                mdi-information-outline
+                              </v-icon>
+                            </template>
+                            <span>{{ $t('Show more') }}</span>
+                          </v-tooltip>
+                        </nuxt-link>
                       </v-card-title>
                       <v-card-text class="mt-4">
                         <v-row>
