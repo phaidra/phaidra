@@ -2464,8 +2464,7 @@ export default {
       collOnlyLatestVersions: true,
       datareplaceDialog: false,
       datareplaceFile: null,
-      datareplaceUploadErrors: [],
-      modelContent: null
+      datareplaceUploadErrors: []
     };
   },
   async fetch() {
@@ -2909,26 +2908,6 @@ export default {
       } finally {
         this.collMemberToRemove = null
         this.$store.commit('setLoading', false)
-      }
-    },
-    async checkModelStatus() {
-      if (this.objectInfo.cmodel === 'Asset') {
-        try {
-          const response = await this.$axios.get(`${this.instanceconfig.api}/3d/${this.objectInfo.pid}`);
-          this.modelContent = response.data;
-        } catch (error) {
-          if (error.response && error.response.status === 202) {
-            this.modelContent = error.response.data;
-          }
-        }
-      }
-    }
-  },
-  watch: {
-    'objectInfo.pid': {
-      immediate: true,
-      handler() {
-        this.checkModelStatus();
       }
     }
   },

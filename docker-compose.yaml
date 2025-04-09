@@ -299,6 +299,7 @@ services:
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images:ro
+      - converted_3d:/mnt/converted_3d:ro
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
@@ -584,7 +585,7 @@ services:
     profiles: ["demo-local", "ssl-local", "shib-local", "demo-local-dev", "ssl-local-dev", "shib-local-dev"]
 
 
-  3d-converter-dev:
+  3d-converter:
     hostname: "3d-converter"
     build:
       context: .
