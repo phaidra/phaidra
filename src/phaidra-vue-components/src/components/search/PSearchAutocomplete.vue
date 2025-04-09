@@ -3,7 +3,7 @@
     <v-text-field
       ref="input"
       :id="id"
-      :class="`${getClassName('input')} autocomplete-input`"
+      :class="`${getClassName('input')} autocomplete-input searchBox`"
       :placeholder="placeholder"
       :name="name"
       v-model="type"
