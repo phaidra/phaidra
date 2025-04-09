@@ -1468,7 +1468,6 @@ export default {
       var httpFormData = new FormData()
 
       let mime = null
-      let ext = null
       switch (this.submittype) {
         case 'container':
           for (let s of this.form.sections) {
