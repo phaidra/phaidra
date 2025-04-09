@@ -1,6 +1,7 @@
 export default function ({ app }) {
   return {
     theme: {
+      dark: app.$config.defaultThemeColor === 'dark',
       options: { customProperties: true },
       themes: {
         light: {
