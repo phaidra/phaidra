@@ -92,7 +92,7 @@ export default {
   metaInfo() {
     let metaInfo = {
       htmlAttrs: {
-        lang: this.$i18n.locale === 'deu' ? 'de' : 'en'
+        lang: this.$i18n.locale === 'deu' ? 'de' : this.$i18n.locale === 'ita' ? 'it' : 'en'
       },
       title: this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
       meta: [
