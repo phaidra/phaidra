@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span class="prewrap" v-html="formattedString"></span>
+    <span class="prewrap" v-html="formattedString" :lang="lang"></span>
     <span v-show="text.length > maxChars">
       <a :href="link" id="readmore" v-show="!isReadMore" v-on:click="triggerReadMore($event, true)">{{ moreStr }}</a>
       <a :href="link" id="readmore" v-show="isReadMore" v-on:click="triggerReadMore($event, false)">{{ lessStr }}</a>
@@ -19,6 +19,10 @@ export default {
     lessStr: {
       type: String,
       default: ''
+    },
+    lang: {
+      type: String,
+      default: 'en'
     },
     text: {
       type: String,

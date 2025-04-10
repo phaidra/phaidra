@@ -82,7 +82,7 @@
               </v-row>
               <v-row class="my-4 mr-2" v-if="doc.dc_description">
                 <v-col>
-                  <p-expand-text :text="doc.dc_description[0]" :moreStr="$t('read more')"/>
+                  <p-expand-text :text="doc.dc_description[0]" :moreStr="$t('read more')" :lang="doc.dc_language && doc.dc_language.includes('deu') ? 'de' : 'en'" />
                 </v-col>
               </v-row>
               <v-row v-if="doc.isrestricted">
