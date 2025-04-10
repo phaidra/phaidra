@@ -91,6 +91,9 @@ export default {
   },
   metaInfo() {
     let metaInfo = {
+      htmlAttrs: {
+        lang: this.$i18n.locale === 'deu' ? 'de' : 'en'
+      },
       title: this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
       meta: [
       { charset: 'utf-8' },
