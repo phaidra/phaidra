@@ -1220,10 +1220,11 @@
                           :to="localePath(`/stats/${objectInfo.pid}`)"
                         >
                           <v-tooltip bottom>
-                            <template v-slot:activator="{ on }">
+                            <template v-slot:activator="{ on, attrs }">
                               <v-icon
                                   class="white--text ml-2"                
                                   v-on="on"
+                                  v-bind="attrs"
                               >
                                 mdi-information-outline
                               </v-icon>
