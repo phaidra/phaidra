@@ -1229,7 +1229,7 @@
                                 mdi-information-outline
                               </v-icon>
                             </template>
-                            <span>{{ $t('Show more') }}</span>
+                            <span>{{ $t('Show details') }}</span>
                           </v-tooltip>
                         </nuxt-link>
                       </v-card-title>
