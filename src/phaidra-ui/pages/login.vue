@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1 class="d-sr-only">Login</h1>
+    <h1 class="d-sr-only">{{$t('Login')}}</h1>
     <v-row v-show="showtou" justify="center">
       <v-col>
         <v-card tile>
