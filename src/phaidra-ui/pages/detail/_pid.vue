@@ -991,7 +991,7 @@
                             '/download'
                           "
                           color="primary"
-                          >{{ $t("Download") }}</v-btn
+                          ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }}</v-btn
                         >
                         <v-btn
                           v-if="objectInfo.cmodel === 'Collection'"
