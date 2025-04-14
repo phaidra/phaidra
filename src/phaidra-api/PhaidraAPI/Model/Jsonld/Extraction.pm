@@ -18,7 +18,8 @@ our %jsonld_creator_roles = (
   'drm' => 1,
   'ctg' => 1,
   'ltg' => 1,
-  'egr' => 1
+  'egr' => 1,
+  'cmp ' => 1
 );
 
 our %jsonld_identifiers = (
