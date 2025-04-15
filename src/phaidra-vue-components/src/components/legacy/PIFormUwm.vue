@@ -26,7 +26,7 @@
       <v-divider v-if="targetpid"></v-divider>
       <v-card-actions v-if="targetpid">
         <v-spacer></v-spacer>
-        <v-btn @click="save()" :loading="loading" :disabled="loading" color="primary">{{ $t('Save') }}</v-btn>
+        <v-btn large @click="save()" :loading="loading" :disabled="loading" color="primary">{{ $t('Save') }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
