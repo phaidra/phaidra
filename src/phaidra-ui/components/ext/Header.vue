@@ -597,6 +597,11 @@
     methods: {
       darkMode() {
         this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+        localStorage.setItem("theme", this.$vuetify.theme.dark ? "dark" : "light");
+        this.$cookies.set('theme', this.$vuetify.theme.dark ? "dark" : "light", {
+          path: '/',
+          maxAge: 60 * 60 * 24 * 365 // 1 year
+        });
       },
       logout: function () {
         console.log("local logout")
