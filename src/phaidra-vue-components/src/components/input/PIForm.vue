@@ -108,8 +108,8 @@
 
                   <div v-for="(f) in s.fields" :key="'dv'+f.id">
                     <v-tooltip :disabled="!mouseoverfielddef" open-delay="1700" bottom >
-                      <template v-slot:activator="{ on }">
-                        <v-row v-on="on" no-gutters>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-row v-on="on" v-bind="attrs" no-gutters>
                           <template v-if="f.component === 'p-text-field'">
                             <p-i-text-field
                               v-bind.sync="f"

@@ -30,8 +30,8 @@
         <v-carousel hide-delimiters height="100%">
           <v-carousel-item v-for="(doc, i) in childrenOfActiveCollection" :key="'cha1'+i">
              <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <span v-on="on">
+              <template v-slot:activator="{ on, attrs }">
+                <span v-on="on" v-bind="attrs">
                    <v-img aspect-ratio="1" :src="instanceconfig.api + '/preview/' + doc.pid" @click="showDetailDialog(doc)"></v-img>
                 </span>
               </template>
@@ -45,8 +45,8 @@
           <v-row>
             <v-col class="d-flex child-flex" cols="4" v-for="(doc, i) in childrenOfActiveCollection" :key="'cha2'+i">
               <v-tooltip bottom>
-                <template v-slot:activator="{ on }">
-                  <span v-on="on">
+                <template v-slot:activator="{ on, attrs }">
+                  <span v-on="on" v-bind="attrs">
                     <v-card tile elevation="0" class="d-flex">
                       <v-img class="grey lighten-2" aspect-ratio="1" :src="instanceconfig.api + '/preview/' + doc.pid"
                         @click="showDetailDialog(doc)">
