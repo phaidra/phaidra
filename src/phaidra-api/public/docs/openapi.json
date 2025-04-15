@@ -11805,7 +11805,7 @@
                                     }
                                 ],
                                 "schema:duration": [
-                                    "PT1M30S"
+                                    "PTOH1M30S"
                                 ],
                                 "ebucore:filename": [
                                     "test.wav"
@@ -11844,7 +11844,7 @@
                                     }
                                 ],
                                 "schema:duration": [
-                                    "PT1M30S"
+                                    "PTOH1M30S"
                                 ],
                                 "ebucore:filename": [
                                     "test2.wav"
