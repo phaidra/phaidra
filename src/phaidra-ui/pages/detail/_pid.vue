@@ -648,8 +648,6 @@
                           $t("Relationships")
                         }}</v-list-item-title>
                       </v-list-item>
-                      <v-list-item>
-                      </v-list-item>
                       <v-list-item v-if="(instanceconfig.showdeletebutton === 1) || (instanceconfig.showdeletebutton === true)" :to="localePath(`/delete/${member.pid}`)">
                         <v-list-item-title>{{
                           $t("Delete")
