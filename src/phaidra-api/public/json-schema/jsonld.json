@@ -141,8 +141,19 @@
       "type": "array",
       "minItems": 1,
       "items": {
-        "$ref": "#/$defs/date-or-datetime"
+        "oneOf": [
+          {
+            "$ref": "#/$defs/date-or-datetime"
+          },
+          {
+            "$ref": "#/$defs/edtf-date-pattern"
+          }
+        ]
       }
+    },
+    "edtf-date-pattern": {
+      "type": "string",
+      "pattern": "^(\\d{4})$|^(\\d{4})~$|^(\\d{4})\\/(\\d{4})$|^(\\d{4})-\\d{2}$|^(\\d{4})-\\d{2}-\\d{2}$|^(\\d{4})-\\d{2}-\\d{2}~\\d{2}$|^(\\d{4})-\\d{2}~\\d{2}$|^(\\d{4})~$|^(\\d{4})\\?$|^(\\d{4})-\\d{2}\\?$|^(\\d{4})-\\d{2}-\\d{2}\\?$"
     },
     "dates-or-date-concepts": {
       "type": "array",
@@ -154,6 +165,9 @@
           },
           {
             "$ref": "#/$defs/edm-timespan"
+          },
+          {
+            "$ref": "#/$defs/edtf-date-pattern"
           }
         ]
       }
@@ -1582,7 +1596,7 @@
           "$ref": "#/$defs/dates-or-date-concepts"
         },
         "dcterms:created": {
-          "$ref": "#/$defs/array-of-strings"
+          "$ref": "#/$defs/dates-or-date-concepts"
         },
         "dcterms:modified": {
           "$ref": "#/$defs/dates-or-date-concepts"
