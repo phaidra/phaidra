@@ -413,7 +413,7 @@
                               $router.push(localeLocation({ path: '/submit' }))
                               "
                               ><v-list-item-title>{{
-                              $t("Submit")
+                              $t("Upload")
                               }}</v-list-item-title></v-list-item
                           >
                           <v-list-item
