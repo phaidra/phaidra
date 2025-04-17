@@ -1582,7 +1582,7 @@
           "$ref": "#/$defs/dates-or-date-concepts"
         },
         "dcterms:created": {
-          "$ref": "#/$defs/dates-or-date-concepts"
+          "$ref": "#/$defs/array-of-strings"
         },
         "dcterms:modified": {
           "$ref": "#/$defs/dates-or-date-concepts"
