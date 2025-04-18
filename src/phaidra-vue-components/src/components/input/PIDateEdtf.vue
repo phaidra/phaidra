@@ -51,8 +51,8 @@
                 max-width="290px"
                 min-width="290px"
               >
-                <template v-slot:activator="{ on }">
-                  <v-icon v-on="on">mdi-calendar</v-icon>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon v-on="on" v-bind="attrs">mdi-calendar</v-icon>
                 </template>
                 <v-date-picker
                   color="primary"
@@ -85,8 +85,8 @@
     </v-col>
     <v-col cols="2" v-if="actions.length">
       <v-menu open-on-hover bottom offset-y>
-        <template v-slot:activator="{ on }">
-          <v-btn v-on="on" icon>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn v-on="on" v-bind="attrs" icon>
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>

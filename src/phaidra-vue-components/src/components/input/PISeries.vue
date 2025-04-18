@@ -119,8 +119,8 @@
                         max-width="290px"
                         min-width="290px"
                       >
-                        <template v-slot:activator="{ on }">
-                          <v-icon v-on="on">mdi-calendar</v-icon>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-icon v-on="on" v-bind="attrs">mdi-calendar</v-icon>
                         </template>
                         <v-date-picker
                           color="primary"
