@@ -296,11 +296,12 @@
 
                 <v-menu offset-y>
                 <template v-slot:activator="{ on }">
-                    <v-btn text v-on="on" class="top-margin-lang" aria-hidden="true">
+                    <v-btn text v-on="on" class="top-margin-lang">
                     <span class="grey--text text--darken-1">{{
                         localeLabel
                     }}</span>
                     <icon
+                        aria-hidden="true"
                         name="univie-sprache"
                         class="lang-icon grey--text text--darken-1"
                     ></icon>
