@@ -34,6 +34,7 @@ spec:
             # ERR! previous versions of npm which has since been addressed"
             - name: "npm_config_cache"
               value: "/tmp/.npm"
+          command: ["npm", "run", "start"]
           image: phaidraorg/ui:facc3228
           name: ui
           resources:
