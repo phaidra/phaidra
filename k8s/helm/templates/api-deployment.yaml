@@ -76,7 +76,7 @@ spec:
               value: "imageserver-service"
             - name: OPENLDAP_HOST
               value: "openldap-service"
-          image: phaidraorg/api-dist:d367ef72
+          image: phaidraorg/api-dist:5dbc8851
           name: api
           resources: {}
           volumeMounts:
