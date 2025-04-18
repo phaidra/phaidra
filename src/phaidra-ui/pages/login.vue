@@ -81,6 +81,13 @@ export default {
       touVersion: 0
     }
   },
+  watch: {
+    '$i18n.locale': {
+      handler() {
+        this.getTermsOfUse()
+      }
+    }
+  },
   methods: {
     async agree () {
       if (this.touCheckbox) {
@@ -105,6 +112,22 @@ export default {
         }
       }
     },
+    async getTermsOfUse () {
+      let url = "/termsofuse";
+      if (this.$i18n.locale === 'deu') {
+        url = url + '?lang=de'
+      }
+      if (this.$i18n.locale === 'ita') {
+        url = url + '?lang=it'
+      }
+      let toures = await this.$axios.get(url)
+      if (toures.data.alerts && toures.data.alerts.length > 0) {
+        this.$store.commit('setAlerts', toures.data.alerts)
+      }
+      this.tou = toures.data.terms
+      this.touVersion = toures.data.version
+      this.showtou = true
+    },
     async login () {
       this.loading = true
       try {
@@ -119,20 +142,7 @@ export default {
           this.$store.commit('setAlerts', response.data.alerts)
         }
         if (!response.data.agreed) {
-          let url = "/termsofuse";
-          if (this.$i18n.locale === 'deu') {
-            url = url + '?lang=de'
-          }
-          if (this.$i18n.locale === 'ita') {
-            url = url + '?lang=it'
-          }
-          let toures = await this.$axios.get(url)
-          if (toures.data.alerts && toures.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', toures.data.alerts)
-          }
-          this.tou = toures.data.terms
-          this.touVersion = toures.data.version
-          this.showtou = true
+          await this.getTermsOfUse()
           return
         } else {
           await this.$store.dispatch('login', this.credentials)
