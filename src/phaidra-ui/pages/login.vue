@@ -78,8 +78,7 @@ export default {
       tou: '',
       touCheckbox: false,
       touAgreed: false,
-      touVersion: 0,
-      loginClicked: false
+      touVersion: 0
     }
   },
   watch: {
@@ -114,7 +113,6 @@ export default {
       }
     },
     async getTermsOfUse () {
-      if(!this.loginClicked) return;
       let url = "/termsofuse";
       if (this.$i18n.locale === 'deu') {
         url = url + '?lang=de'
@@ -128,7 +126,6 @@ export default {
       }
       this.tou = toures.data.terms
       this.touVersion = toures.data.version
-      this.showtou = true
     },
     async login () {
       this.loading = true
@@ -144,8 +141,8 @@ export default {
           this.$store.commit('setAlerts', response.data.alerts)
         }
         if (!response.data.agreed) {
-          this.loginClicked = true
           await this.getTermsOfUse()
+          this.showtou = true
           return
         } else {
           await this.$store.dispatch('login', this.credentials)
