@@ -602,7 +602,13 @@ services:
       MONGO_AGENT_DB: "${MONGO_AGENT_DB:-paf_mongodb}"
       CONVERTED_3D_PATH: "/mnt/converted_3d"
       IMAGE_CONVERSION_INTERVAL: "${IMAGE_CONVERSION_INTERVAL:-5}"
-    depends_on: [mongodb-phaidra]
+    depends_on:
+      mongodb-phaidra:
+        condition: "service_started"
+        required: false
+      mongodb-phaidra-dev:
+        condition: "service_started"
+        required: false
     profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
 
   ############### imageserver service for s3 profiles #################
