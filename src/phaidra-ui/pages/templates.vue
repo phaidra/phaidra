@@ -1,5 +1,6 @@
 <template>  
   <div>
+    <h1 class="d-sr-only">{{$t('Manage templates')}}</h1>
     <v-container fluid>
         <v-card>
         <v-card-title class="title font-weight-light white--text">

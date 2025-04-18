@@ -1,5 +1,6 @@
 <template>
   <v-container fluid>
+    <h1 class="d-sr-only">{{ $t('Manage object lists') }}</h1>
     <v-row>
       <v-col cols="12">
         <v-card>

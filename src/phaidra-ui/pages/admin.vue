@@ -1,7 +1,7 @@
 <template>
  
   <v-container class="mt-8" fluid>
-
+    <h1 class="d-sr-only">{{$t('Admin')}}</h1>
     <div class="mb-4"><strong>Note:</strong> Config is cached in each worker, don't forget to restart phaidra-api to apply changes.</div>
     <v-tabs slider-color="primary" background-color="grey darken-2" vertical v-model="activetab">
       <v-tab class="white--text" :active-class="'primary'" >

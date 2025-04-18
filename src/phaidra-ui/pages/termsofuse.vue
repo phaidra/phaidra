@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <h1 class="d-sr-only">{{$t('Terms of use')}}</h1>
     <v-row justify="center">
       <v-col>
         <v-card tile>
