@@ -40,10 +40,7 @@
       >
       Selected
       </v-chip>
-    </template>
-    <template v-slot:item.created="{ item }">
-      {{ item.created | unixtime }}
-    </template>
+    </template>    
     <template v-if="type === 'navtemplate' && $store.state.user.isadmin" v-slot:item.public="{ item }">
       <v-checkbox v-model="item.public" @change="onPublicValChange(item)"></v-checkbox>
     </template>

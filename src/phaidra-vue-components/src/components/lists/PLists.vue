@@ -1,5 +1,6 @@
 <template>
   <v-container fluid>
+    <h1 class="d-sr-only">{{ $t('Manage object lists') }}</h1>
     <v-row>
       <v-col cols="12">
         <v-card>
@@ -205,7 +206,7 @@ export default {
         immediate: true, // Ensure it's set on load
         handler() {
           this.listsHeaders = [
-            { text: this.$t('List'), align: 'left', value: 'name' },
+            { text: this.$t('Name'), align: 'left', value: 'name' },
             { text: this.$t('Created'), align: 'right', value: 'created' },
             { text: this.$t('Modified'), align: 'right', value: 'updated' },
             { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }

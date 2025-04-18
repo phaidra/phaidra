@@ -580,6 +580,8 @@ sub modify {
     }
     if (scalar @properties) {
       my $eres = $fedora_model->editTriples($c, $pid, \@properties);
+      # save transaction if any
+      $fedora_model->commitTransaction($c);
       my $hooks_model = PhaidraAPI::Model::Hooks->new;
       my $indexed = 0;
       if ($eres->{status} == 200) {
@@ -809,6 +811,11 @@ sub create_simple {
   my $pid = '';
   my $r;
   unless (exists($metadata->{'target-pid'})) {
+
+    # use transactions only for new objects. TODO: move 'useTransaction' in 'create' function to use transactions also for collections and containers
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    my $transaction_url = $fedora_model->useTransaction($c);
+    $c->stash(transaction_url => $transaction_url->{transaction_id});
 
     # create object
     $r = $self->create($c, $cmodel, $username, $password);
