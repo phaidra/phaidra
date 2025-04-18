@@ -59,8 +59,8 @@
               </template>
               <template v-slot:item.name="{ item }">
                 <v-tooltip bottom>
-                  <template v-slot:activator="{ on }">
-                    <span v-on="on">{{ item.name }}</span>
+                  <template v-slot:activator="{ on, attrs }">
+                    <span v-on="on" v-bind="attrs">{{ item.name }}</span>
                   </template>
                   <span>{{ item.listid }}</span>
                 </v-tooltip>

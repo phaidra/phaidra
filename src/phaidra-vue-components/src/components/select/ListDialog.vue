@@ -29,8 +29,8 @@
         >
           <template v-slot:item.name="{ item }">
             <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <span v-on="on">{{ item.name | truncate(50) }}</span>
+              <template v-slot:activator="{ on, attrs }">
+                <span v-on="on" v-bind="attrs">{{ item.name | truncate(50) }}</span>
               </template>
               <span>{{ item.listid }}</span>
             </v-tooltip>
