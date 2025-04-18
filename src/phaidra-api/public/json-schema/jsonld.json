@@ -149,7 +149,7 @@
       "type": "array",
       "minItems": 1,
       "items": {
-        "oneOf": [
+        "anyOf": [
           {
             "$ref": "#/$defs/date-or-datetime"
           },
