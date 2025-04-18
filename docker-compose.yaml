@@ -299,6 +299,7 @@ services:
     volumes:
       - fedora:/mnt/fedora:ro
       - pixelgecko:/mnt/converted_images:ro
+      - converted_3d:/mnt/converted_3d:ro
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
@@ -583,6 +584,27 @@ services:
     entrypoint: [ "bash", "/mnt/startup/imageserver-entrypoint.bash" ]
     profiles: ["demo-local", "ssl-local", "shib-local", "demo-local-dev", "ssl-local-dev", "shib-local-dev"]
 
+
+  3d-converter:
+    hostname: "3d-converter"
+    build:
+      context: .
+      dockerfile: dockerfiles/3d.dockerfile
+    <<: [*common, *logs]
+    volumes:
+      - fedora:/mnt/fedora:ro
+      - converted_3d:/mnt/converted_3d
+    environment:
+      <<: [*api_common_env, *hosts]
+      MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
+      MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
+      MONGODB_PHAIDRA_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra}"
+      MONGO_AGENT_DB: "${MONGO_AGENT_DB:-paf_mongodb}"
+      CONVERTED_3D_PATH: "/mnt/converted_3d"
+      IMAGE_CONVERSION_INTERVAL: "${IMAGE_CONVERSION_INTERVAL:-5}"
+    depends_on: [mongodb-phaidra]
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
+
   ############### imageserver service for s3 profiles #################
   imageserver-s3:
     hostname: "imageserver"
@@ -831,6 +853,7 @@ services:
     volumes:
       - fedora:/mnt/fedora:ro
       - ./src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
+      - converted_3d:/mnt/converted_3d:ro
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
@@ -1209,6 +1232,7 @@ volumes:
   mongodb_phaidra:
   openldap:
   pixelgecko:
+  converted_3d:
   prometheus:
   s3_cache:
   solr:

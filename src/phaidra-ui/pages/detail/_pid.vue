@@ -2269,6 +2269,7 @@ export default {
         (this.objectInfo.cmodel !== "Asset" ||
           (this.objectInfo.cmodel === "Asset" &&
             (this.mimetype === "model/nxz" ||
+              this.mimetype === "model/obj" ||
               this.mimetype === "model/ply" ||
               this.mimetype === "application/x-wacz")
               )) &&

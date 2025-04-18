@@ -21,6 +21,7 @@ use PhaidraAPI::Model::Octets;
 use PhaidraAPI::Model::Uwmetadata;
 use PhaidraAPI::Model::Geo;
 use PhaidraAPI::Model::Mods;
+use PhaidraAPI::Model::Threed;
 use PhaidraAPI::Model::Imageserver;
 use PhaidraAPI::Model::Util;
 use PhaidraAPI::Model::Authorization;
@@ -686,6 +687,28 @@ sub preview {
         $index_mime = $mt if $mt =~ m/\//g;
       }
       $self->app->log->info("preview pid[$pid] metadata mimetype[$index_mime]");
+
+      if (($mimetype eq 'model/obj')) {
+        my $threed_model = PhaidraAPI::Model::Threed->new;
+        my $model_path = $threed_model->get_model_path($self, $pid);
+        
+        if ($model_path eq 'processing') {
+          $self->render('threed/processing');
+          return;
+        }
+        
+        if ($model_path) {
+          $self->stash(model_path => $model_path);
+          $self->stash(baseurl       => $self->config->{baseurl});
+          $self->stash(scheme        => $self->config->{scheme});
+          $self->stash(basepath      => $self->config->{basepath});
+          $self->stash(trywebversion => $trywebversion);
+          $self->stash(pid           => $pid);
+          $self->render('threed/viewer');
+          return;
+        }
+      }
+
        if (($index_mime eq 'application/x-wacz')) {
         
        my $object_model = PhaidraAPI::Model::Object->new;
