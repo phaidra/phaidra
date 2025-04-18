@@ -126,7 +126,6 @@ export default {
       }
       this.tou = toures.data.terms
       this.touVersion = toures.data.version
-      this.showtou = true
     },
     async login () {
       this.loading = true
@@ -143,6 +142,7 @@ export default {
         }
         if (!response.data.agreed) {
           await this.getTermsOfUse()
+          this.showtou = true
           return
         } else {
           await this.$store.dispatch('login', this.credentials)

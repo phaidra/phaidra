@@ -3,7 +3,7 @@ export default function ({ app }) {
   if (process.server) {
     theme = app.$config.defaultThemeColor === 'dark' ? 'dark' : 'light';
     let ssrCookie = app?.context?.ssrContext?.req?.headers?.cookie
-    let cookieTheme = ssrCookie && ssrCookie.split('; ').find(row => row.startsWith('theme=')).split('=')[1]
+    let cookieTheme = ssrCookie && ssrCookie.split('; ').find(row => row.startsWith('theme='))?.split('=')[1]
     theme = cookieTheme || theme
   }
   if(process.client) {
