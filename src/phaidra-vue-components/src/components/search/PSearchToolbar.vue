@@ -4,7 +4,7 @@
       <v-col>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn icon @click="setSort('title asc')" :color="sortIsActive('title asc') ? 'primary' : ''" v-on="on">
+            <v-btn icon @click="setSort('title asc')" :color="sortIsActive('title asc') ? 'primary' : ''" v-on="on" :aria-label="$t('Title ascending')">
               <icon width="16px" height="16px" name="fontello-sort-name-up"></icon>
             </v-btn>
           </template>
@@ -14,7 +14,7 @@
       <v-col>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn icon @click="setSort('title desc')" :color="sortIsActive('title desc') ? 'primary' : ''" v-on="on">
+            <v-btn icon @click="setSort('title desc')" :color="sortIsActive('title desc') ? 'primary' : ''" v-on="on" :aria-label="$t('Title descending')">
               <icon width="16px" height="16px" name="fontello-sort-name-down"></icon>
             </v-btn>
           </template>
@@ -24,7 +24,7 @@
       <v-col>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn icon @click="setSort('created asc')" :color="sortIsActive('created asc') ? 'primary' : ''" v-on="on">
+            <v-btn icon @click="setSort('created asc')" :color="sortIsActive('created asc') ? 'primary' : ''" v-on="on" :aria-label="$t('Upload date ascending')">
               <icon width="16px" height="16px" name="fontello-sort-number-up"></icon>
             </v-btn>
           </template>
@@ -34,7 +34,7 @@
       <v-col>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn icon @click="setSort('created desc')" :color="sortIsActive('created desc') ? 'primary' : ''" v-on="on">
+            <v-btn icon @click="setSort('created desc')" :color="sortIsActive('created desc') ? 'primary' : ''" v-on="on" :aria-label="$t('Upload date descending')">
               <icon width="16px" height="16px" name="fontello-sort-number-down"></icon>
             </v-btn>
           </template>
@@ -57,7 +57,7 @@
         </v-dialog>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn icon @click="linkdialog=true" v-on="on">
+            <v-btn icon @click="linkdialog=true" v-on="on" :aria-label="$t('Link to search results')">
               <icon width="18px" height="18px" name="material-content-link"></icon>
             </v-btn>
           </template>
@@ -77,7 +77,7 @@
       <v-col>
         <v-tooltip top>
           <template v-slot:activator="{ on }">
-            <v-btn icon v-on="on" @click.native="csvExport()">
+            <v-btn icon v-on="on" @click.native="csvExport()" :aria-label="$t('Download search results as a CSV file')">
               <v-icon>mdi-download</v-icon>
             </v-btn>
           </template>
