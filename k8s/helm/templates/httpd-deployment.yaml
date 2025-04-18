@@ -33,7 +33,7 @@ spec:
               value: "{{ .Values.PHAIDRA_ADMIN_EMAIL }}"
             - name: SOURCE_CLIENT_IP_HEADER
               value: "{{ .Values.SOURCE_CLIENT_IP_HEADER }}"
-          image: httpd:2.4.59-bookworm
+          image: httpd:2.4.63-bookworm
           name: httpd
           ports:
             - containerPort: 80

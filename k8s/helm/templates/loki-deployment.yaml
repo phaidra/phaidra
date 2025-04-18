@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: loki
-          image: grafana/loki:3.0.0
+          image: grafana/loki:3.4.3
           resources: {}
           volumeMounts:
             - mountPath: /loki

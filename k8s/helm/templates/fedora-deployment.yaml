@@ -26,7 +26,7 @@ spec:
               value: "{{ .Values.FEDORA_ADMIN_PASS }}"
             - name: FEDORA_ADMIN_USERNAME
               value: "{{ .Values.FEDORA_ADMIN_USER }}"
-          image: fcrepo/fcrepo:6.4.1
+          image: fcrepo/fcrepo:6.5.1-tomcat9
           name: fedora
           resources: {}
           volumeMounts:

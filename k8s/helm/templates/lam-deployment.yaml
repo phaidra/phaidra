@@ -29,7 +29,7 @@ spec:
               value: "{{ .Values.LDAP_USER }}"
             - name: "LDAP_USERS_DN"
               value: "{{ .Values.LDAP_USERS_DN }}"
-          image: ghcr.io/ldapaccountmanager/lam:8.7
+          image: ghcr.io/ldapaccountmanager/lam:9.1
           name: lam
           resources: {}
       restartPolicy: Always

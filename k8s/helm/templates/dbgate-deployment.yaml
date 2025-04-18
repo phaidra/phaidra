@@ -58,7 +58,7 @@ spec:
               value: "{{ .Values.MARIADB_PHAIDRA_USER }}"
             - name: WEB_ROOT
               value: /dbgate
-          image: dbgate/dbgate:5.2.9
+          image: dbgate/dbgate:6.3.3
           name: dbgate
           resources: {}
           volumeMounts:
