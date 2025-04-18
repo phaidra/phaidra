@@ -648,8 +648,6 @@
                           $t("Relationships")
                         }}</v-list-item-title>
                       </v-list-item>
-                      <v-list-item>
-                      </v-list-item>
                       <v-list-item v-if="(instanceconfig.showdeletebutton === 1) || (instanceconfig.showdeletebutton === true)" :to="localePath(`/delete/${member.pid}`)">
                         <v-list-item-title>{{
                           $t("Delete")
@@ -991,7 +989,7 @@
                             '/download'
                           "
                           color="primary"
-                          >{{ $t("Download") }}</v-btn
+                          ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }}</v-btn
                         >
                         <v-btn
                           v-if="objectInfo.cmodel === 'Collection'"
@@ -1925,7 +1923,7 @@
                             >
                           </template>
                           <v-card>
-                            <v-card-title class="text-h5 lighten-2">
+                            <v-card-title class="title font-weight-light white--text">
                               {{ $t("Manage members") }}
                             </v-card-title>
 
@@ -1938,10 +1936,10 @@
                             <v-card-actions>
                               <v-spacer></v-spacer>
                               <v-btn
-                                color="primary"                                
+                                outlined
                                 @click="collectionHelpDialog = false"
                               >
-                                OK
+                                {{ $t("Close") }}
                               </v-btn>
                             </v-card-actions>
                           </v-card>
@@ -2156,7 +2154,7 @@
                           >{{ $t("Delete") }}</nuxt-link
                         >
                       </v-row>
-                      <v-row v-if="user.isadmin && objectInfo.cmodel !== 'Collection'" no-gutters class="pt-2">
+                      <v-row v-if="user.isadmin && objectInfo.cmodel !== 'Collection' && objectInfo.cmodel !== 'Container'" no-gutters class="pt-2">
                         <a
                           class="mb-1"
                           @click="datareplaceDialog = true"

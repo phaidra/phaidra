@@ -205,7 +205,7 @@ export default {
         immediate: true, // Ensure it's set on load
         handler() {
           this.listsHeaders = [
-            { text: this.$t('List'), align: 'left', value: 'name' },
+            { text: this.$t('Name'), align: 'left', value: 'name' },
             { text: this.$t('Created'), align: 'right', value: 'created' },
             { text: this.$t('Modified'), align: 'right', value: 'updated' },
             { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }

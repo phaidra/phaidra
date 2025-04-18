@@ -25,7 +25,7 @@
               :csvExport="csvExport" />
           </v-col>
         </v-row>
-        <v-row class="hidden-md-and-up">
+        <v-row class="hidden-md-and-up searchFilters">
           <v-bottom-sheet v-model="filterdialog" scrollable>
             <template v-slot:activator="{ on }">
               <v-btn class="ml-4 mb-6" color="primary" v-on="on">{{ $t('Filters') }}</v-btn>
@@ -62,7 +62,7 @@
           <v-pagination v-if="total>pagesize" v-bind:length="totalPages" total-visible="10" v-model="page" class="mb-3" />
         </v-row>
       </v-col>
-      <v-col cols="3" class="pa-2 hidden-sm-and-down">
+      <v-col cols="3" class="pa-2 hidden-sm-and-down searchFilters">
         <h3 class="title font-weight-light border-bottom pa-2">{{ $t('Filters') }}</h3>
         <p-search-filters
           ref="searchFilters"

@@ -193,11 +193,11 @@ const vocabularies = {
     terms: [
       { '@id': 'http://purl.org/dc/terms/references', 'skos:prefLabel': { 'eng': 'References', 'deu': 'bezieht sich auf', 'ita': 'Si riferisce a' }, 'skos:notation': ['references'] },
       { '@id': 'http://phaidra.org/XML/V1.0/relations#isBackSideOf', 'skos:prefLabel': { 'eng': 'Is back side of', 'deu': 'ist Rückseite von', 'ita': 'È verso di' }, 'skos:notation': ['isBackSideOf'] },
-      { '@id': 'http://phaidra.org/XML/V1.0/relations#isThumbnailFor', 'skos:prefLabel': { 'eng': 'Is thumbnail for', 'deu': 'ist Vorschaubild von', 'ita': 'È l\'anteprima di' }, 'skos:notation': ['isThumbnailFor'] },
+      { '@id': 'http://phaidra.org/XML/V1.0/relations#isThumbnailFor', 'skos:prefLabel': { 'eng': 'Is thumbnail for', 'deu': 'ist Vorschaubild von', 'ita': 'È anteprima di' }, 'skos:notation': ['isThumbnailFor'] },
       { '@id': 'http://phaidra.univie.ac.at/XML/V1.0/relations#hasSuccessor', 'skos:prefLabel': { 'eng': 'Is older version of', 'deu': 'ist ältere Version von', 'ita': 'È versione precedente di' }, 'skos:notation': ['hasSuccessor'] },
       { '@id': 'http://phaidra.org/XML/V1.0/relations#isAlternativeFormatOf', 'skos:prefLabel': { 'eng': 'Is alternative format of', 'deu': 'ist alternatives Format von', 'ita': 'È formato alternativo di' }, 'skos:notation': ['isAlternativeFormatOf'] },
       { '@id': 'http://phaidra.org/XML/V1.0/relations#isAlternativeVersionOf', 'skos:prefLabel': { 'eng': 'Is alternative version of', 'deu': 'ist alternative Version von', 'ita': 'È versione alternativa di' }, 'skos:notation': ['isAlternativeVersionOf'] },
-      { '@id': 'info:fedora/fedora-system:def/relations-external#hasCollectionMember', 'skos:prefLabel': { 'eng': 'Has part', 'deu': 'hat Collection Mitglieder', 'ita': 'È membro' }, 'skos:notation': ['hasCollectionMember'] },
+      { '@id': 'info:fedora/fedora-system:def/relations-external#hasCollectionMember', 'skos:prefLabel': { 'eng': 'Has part', 'deu': 'hat Collection Mitglieder', 'ita': 'È membro di' }, 'skos:notation': ['hasCollectionMember'] },
       { '@id': 'http://pcdm.org/models#hasMember', 'skos:prefLabel': { 'eng': 'Has member', 'deu': 'hat Mitglieder', 'ita': 'Ha membro' }, 'skos:notation': ['hasMember'] },
       { '@id': 'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasTrack', 'skos:prefLabel': { 'eng': 'Has track', 'deu': 'hat Track (zb. Untertitel)', 'ita': 'Ha traccia (es. sottotitoli)' }, 'skos:notation': ['hasTrack'] }
     ],
