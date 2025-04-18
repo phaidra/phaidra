@@ -78,7 +78,8 @@ export default {
       tou: '',
       touCheckbox: false,
       touAgreed: false,
-      touVersion: 0
+      touVersion: 0,
+      loginClicked: false
     }
   },
   watch: {
@@ -113,6 +114,7 @@ export default {
       }
     },
     async getTermsOfUse () {
+      if(!this.loginClicked) return;
       let url = "/termsofuse";
       if (this.$i18n.locale === 'deu') {
         url = url + '?lang=de'
@@ -142,6 +144,7 @@ export default {
           this.$store.commit('setAlerts', response.data.alerts)
         }
         if (!response.data.agreed) {
+          this.loginClicked = true
           await this.getTermsOfUse()
           return
         } else {
