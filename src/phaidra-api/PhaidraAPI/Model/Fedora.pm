@@ -105,7 +105,7 @@ sub _getObjectProperties {
 
   my $url = $c->app->fedoraurl->path($pid);
   $c->app->log->debug("GET $url");
-  my $getres = $c->ua->get($url => {'Accept' => 'application/ld+json'})->result;
+  my $getres = $c->ua->get($url => $self->wrapAtomic($c, {'Accept' => 'application/ld+json'}))->result;
 
   if ($getres->is_success) {
     $res->{props} = $getres->json;
@@ -325,7 +325,7 @@ sub _sparqlPatch {
   my $url = $c->app->fedoraurl->path($pid);
   $c->app->log->debug("PATCH $url\n$body");
 
-  my $patchres = $c->ua->patch($url => {'Content-Type' => 'application/sparql-update'} => $body)->result;
+  my $patchres = $c->ua->patch($url => $self->wrapAtomic($c, {'Content-Type' => 'application/sparql-update'}) => $body)->result;
   unless ($patchres->is_success) {
     $c->app->log->error("Cannot update triples for pid[$pid]: code:" . $patchres->{code} . " message:" . $patchres->{message});
     unshift @{$res->{alerts}}, {type => 'error', msg => $patchres->{message}};
@@ -518,7 +518,7 @@ sub addOrModifyDatastream {
     $headers->{'Content-Type'} = $mimetype;
     my $url = $c->app->fedoraurl->path("$pid/$dsid");
     $c->app->log->debug("PUT $url");
-    my $putres = $c->ua->put($url => $headers => $location)->result;
+    my $putres = $c->ua->put($url => $self->wrapAtomic($c, $headers) => $location)->result;
     unless ($putres->is_success) {
       $c->app->log->error("pid[$pid] dsid[$dsid] PUT error code:" . $putres->{code} . " message:" . $putres->{message});
       unshift @{$res->{alerts}}, {type => 'error', msg => $putres->{message}};
@@ -536,7 +536,7 @@ sub addOrModifyDatastream {
     }
     my $url = $c->app->fedoraurl->path("$pid/$dsid");
     $c->app->log->debug("PUT $url");
-    my $putres = $c->ua->put($url => $headers => $dscontent)->result;
+    my $putres = $c->ua->put($url => $self->wrapAtomic($c, $headers) => $dscontent)->result;
     unless ($putres->is_success) {
       $c->app->log->error("pid[$pid] dsid[$dsid] PUT error code:" . $putres->{code} . " message:" . $putres->{message});
       unshift @{$res->{alerts}}, {type => 'error', msg => $putres->{message}};
@@ -555,7 +555,7 @@ sub addOrModifyDatastream {
     }
     my $url = $c->app->fedoraurl->path("$pid/$dsid");
     $c->app->log->debug("PUT $url filename[" . $filename . "] mimetype[$mimetype]");
-    my $tx = $c->ua->build_tx(PUT => $url => $headers);
+    my $tx = $c->ua->build_tx(PUT => $url => $self->wrapAtomic($c, $headers));
     $tx->req->content->asset($upload->asset);
     my $putres = $c->ua->start($tx)->result;
 
@@ -570,6 +570,68 @@ sub addOrModifyDatastream {
 
   return $res;
 }
+
+sub useTransaction {
+  my ($self, $c) = @_;
+
+  my $res = {alerts => [], status => 200};
+  # return the transaction is available
+  if ($c->stash->{transaction_url}) {
+    $res->{transaction_id} = $c->stash->{transaction_url};
+    return $res;
+  }
+  my $url = $c->app->fedoraurl->path("fcr:tx");
+  my $postres = $c->ua->post($url)->result;
+  unless ($postres->is_success) {
+    $c->app->log->error("Cannot create transaction: code:" . $postres->{code} . " message:" . $postres->{message});
+    unshift @{$res->{alerts}}, {type => 'error', msg => $postres->{message}};
+    $res->{status} = $postres->{code} ? $postres->{code} : 500;
+    return $res;
+  }
+
+  $res->{transaction_id} = $postres->headers->location;
+  $c->app->log->debug("Created transaction: ".$res->{transaction_id});
+
+  return $res;
+}
+
+sub commitTransaction {
+  my ($self, $c) = @_;
+
+  my $res = {alerts => [], status => 200};
+  my $atomic_id;
+  if ($c->stash->{transaction_url}) {
+    $atomic_id = $c->stash->{transaction_url};
+    $c->app->log->debug("Save transaction: ".$atomic_id);
+    my $putres = $c->ua->put($atomic_id)->result;
+    # $c->app->log->debug($c->app->dumper($putres));
+    unless ($putres->is_success) {
+      $c->app->log->error("Cannot save transaction: code:" . $putres->{code} . " message:" . $putres->{message});
+      unshift @{$res->{alerts}}, {type => 'error', msg => $putres->{message}};
+      $res->{status} = $putres->{code} ? $putres->{code} : 500;
+     return $res;
+    }
+    else {
+      # delete the transaction for the hook/update flow
+      delete $c->stash->{transaction_url};
+    }
+  }
+
+  
+  return $res;
+}
+
+
+sub wrapAtomic {
+  my ($self, $c, $wheaders) = @_;
+  my $atomic_id;
+  if ($c->stash->{transaction_url}) {
+    $atomic_id = $c->stash->{transaction_url};
+    $wheaders->{'Atomic-ID'} = $atomic_id;
+  }
+
+  return $wheaders;
+  }
 
 sub createEmpty {
   my ($self, $c, $username) = @_;
@@ -591,7 +653,10 @@ sub createEmpty {
 
   my $url = $c->app->fedoraurl->path($pid);
   $c->app->log->debug("PUT $url\n$body");
-  my $putres = $c->ua->put($url => {'Content-Type' => 'text/turtle', 'Link' => '<http://fedora.info/definitions/v4/repository#ArchivalGroup>;rel="type"'} => $body)->result;
+  my $ceheaders = $self->wrapAtomic($c, {'Content-Type' => 'text/turtle', 'Link' => '<http://fedora.info/definitions/v4/repository#ArchivalGroup>;rel="type"'});
+  # $c->app->log->debug($c->app->dumper($ceheaders));
+  my $putres = $c->ua->put($url => $ceheaders => $body)->result;
+  # $c->app->log->debug("Atomic:" . $c->app->dumper($putres));
   unless ($putres->is_success) {
     $c->app->log->error("Cannot create fedora object pid[$pid]: code:" . $putres->{code} . " message:" . $putres->{message});
     unshift @{$res->{alerts}}, {type => 'error', msg => $putres->{message}};

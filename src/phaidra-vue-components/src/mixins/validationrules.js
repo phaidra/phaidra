@@ -108,44 +108,66 @@ export const validationrules = {
       return moment.duration(durationString).isValid()
     },
     isValidDate: function (dateString) {
-      // First check for the pattern
-      var regexDate = /^(\d{4})(-\d{1,2})?(-\d{1,2})?$/
+      // Check for EDTF patterns first
+      var edtfPatterns = [
+        /^(\d{4})$/,                    // Simple year (e.g. "2023")
+        /^(\d{4})~$/,                   // Approximate year (e.g. "2023~")
+        /^(\d{4})\/(\d{4})$/,          // Year range (e.g. "2020/2023")
+        /^(\d{4})-\d{2}$/,             // Year with month (e.g. "2023-02")
+        /^(\d{4})-\d{2}-\d{2}$/,       // Full date (e.g. "2023-02-03")
+        /^(\d{4})-\d{2}-\d{2}~\d{2}$/, // Approximate date (e.g. "2023-02-03~02")
+        /^(\d{4})-\d{2}~\d{2}$/,       // Approximate month (e.g. "2023-02~02")
+        /^(\d{4})~$/,                   // Approximate year (e.g. "2023~")
+        /^(\d{4})\?$/,                  // Uncertain year (e.g. "2023?")
+        /^(\d{4})-\d{2}\?$/,           // Uncertain month (e.g. "2023-02?")
+        /^(\d{4})-\d{2}-\d{2}\?$/      // Uncertain date (e.g. "2023-02-03?")
+      ];
 
-      if (!regexDate.test(dateString)) {
-        return false
+      // Check if it matches any EDTF pattern
+      for (var i = 0; i < edtfPatterns.length; i++) {
+        if (edtfPatterns[i].test(dateString)) {
+          return true;
+        }
       }
 
-      var m = dateString.match(regexDate)
+      // If not EDTF, check for standard ISO date pattern
+      var regexDate = /^(\d{4})(-\d{1,2})?(-\d{1,2})?$/;
 
-      var year = parseInt(m[1], 10)
+      if (!regexDate.test(dateString)) {
+        return false;
+      }
+
+      var m = dateString.match(regexDate);
+
+      var year = parseInt(m[1], 10);
 
       if (m[2]) {
-        var month = parseInt(m[2].substring(1), 10)
+        var month = parseInt(m[2].substring(1), 10);
         // Check the ranges of month
         if (month) {
           if (month === 0 || month > 12) {
-            return false
+            return false;
           }
         }
       }
 
       if (m[3]) {
-        var day = parseInt(m[3].substring(1), 10)
+        var day = parseInt(m[3].substring(1), 10);
 
         if (day) {
-          var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ]
+          var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
 
           // Adjust for leap years
           if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) {
-            monthLength[1] = 29
+            monthLength[1] = 29;
           }
 
           // Check the range of the day
-          return day > 0 && day <= monthLength[month - 1]
+          return day > 0 && day <= monthLength[month - 1];
         }
       }
 
-      return true
+      return true;
     }
   },
   data () {

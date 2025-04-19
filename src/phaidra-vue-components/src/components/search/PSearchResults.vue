@@ -50,12 +50,12 @@
             </v-col>
             <v-col cols="10">
               <v-row >
-                <v-col cols="9">
+                <v-col cols="12" md="9">
                   <h3 class="title font-weight-light primary--text" @click.stop v-if="doc.dc_title">
                     <router-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ doc.dc_title[0] }}</router-link>
                   </h3>
                 </v-col>
-                <v-col cols="3" class="text-right">
+                <v-col cols="12" md="3" class="text-right">
                   <v-chip v-if="doc.created" color="transparent">{{ doc.created | date }}
                     <v-icon v-if="doc.cmodel == 'Video'" class="mx-2" color="grey">mdi-video</v-icon>
                     <v-icon v-else-if="doc.cmodel == 'Picture'" class="mx-2" color="grey">mdi-image</v-icon>
@@ -91,10 +91,10 @@
                 </v-col>
               </v-row>
               <v-row >
-                <v-col cols="9">
+                <v-col cols="12" md="9">
                   <span>{{ instance.baseurl }}/{{ doc.pid }}</span>
                 </v-col>
-                <v-col cols="3" class="text-right pr-5">
+                <v-col cols="12" md="3" class="text-right pr-5">
                   <p-d-license v-if="doc.dc_rights" :hideLabel="true" :o="doc.dc_rights[0]"></p-d-license>
                 </v-col>
               </v-row>

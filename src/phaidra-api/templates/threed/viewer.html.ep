@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3D Model Viewer</title>
+    <style>
+        body { margin: 0; }
+        canvas { width: 100%; height: 100%; }
+        #info {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            pointer-events: none;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">3D Model Viewer - Use mouse to rotate, right-click to pan, scroll to zoom</div>
+    <script src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/threejs/build/three.min.js"></script>
+    <script src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/threejs/build/OrbitControls.js"></script>
+    <script src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/threejs/build/GLTFLoader.js"></script>
+    <script>
+        // Initialize scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 0);
+        document.body.appendChild(renderer.domElement);
+
+        // Add lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(0, 1, 0);
+        scene.add(directionalLight);
+
+        // Add controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // Set camera position
+        camera.position.z = 5;
+
+        // Load the GLTF model
+        const loader = new THREE.GLTFLoader();
+        const modelContent = '<%= $model_path %>';
+        
+        try {
+            // Decode base64 content
+            const binaryString = atob(modelContent);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            
+            // Create a blob from the decoded content
+            const blob = new Blob([bytes], { type: 'model/gltf+json' });
+            const url = URL.createObjectURL(blob);
+            
+            loader.load(url, function(gltf) {
+                const model = gltf.scene;
+                scene.add(model);
+
+                // Center and scale the model
+                const box = new THREE.Box3().setFromObject(model);
+                const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const scale = 2 / maxDim;
+                model.scale.setScalar(scale);
+                model.position.sub(center.multiplyScalar(scale));
+
+                // Adjust camera to fit model
+                const distance = Math.max(size.x, size.y, size.z) * 1.5;
+                camera.position.z = distance;
+                controls.target.copy(center);
+                controls.update();
+                
+                // Clean up the blob URL
+                URL.revokeObjectURL(url);
+            }, undefined, function(error) {
+                console.error('Error loading model:', error);
+                document.getElementById('info').innerHTML = 'Error loading 3D model';
+            });
+        } catch (error) {
+            console.error('Error processing model:', error);
+            document.getElementById('info').innerHTML = 'Error processing 3D model';
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', onWindowResize, false);
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+</html> 
