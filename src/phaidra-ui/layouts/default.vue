@@ -6,7 +6,7 @@
           <header>
             <ExtHeader></ExtHeader>
           </header>
-          <main>
+          <v-main>
             <v-row>
               <v-col cols="12" md="10" offset-md="1" class="content">
                 <p-breadcrumbs :items="breadcrumbs"></p-breadcrumbs>
@@ -59,10 +59,10 @@
                 </transition>
               </v-col>
             </v-row>
-          </main>
-          <footer>
+          </v-main>
+          <v-footer>
             <ExtFooter></ExtFooter>
-          </footer>
+          </v-footer>
         </v-col>
       </v-row>
     </v-container>
