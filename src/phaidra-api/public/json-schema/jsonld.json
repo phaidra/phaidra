@@ -561,8 +561,19 @@
         }
       },
       "required": [
-        "@type",
-        "skos:prefLabel"
+        "@type"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "skos:prefLabel"
+          ]
+        },
+        {
+          "required": [
+            "skos:notation"
+          ]
+        }
       ]
     },
     "citations": {
