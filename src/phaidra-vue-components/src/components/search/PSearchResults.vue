@@ -154,13 +154,18 @@ export default {
   },
   methods: {
     getDescriptionLanguage: function (item) {
-      if(item.descriptions_json && item.descriptions_json[0] && item.descriptions_json[0]){
-        let parsedDescriptionJson = JSON.parse(item.descriptions_json)
-        if(parsedDescriptionJson[0]['skos:prefLabel'] && parsedDescriptionJson[0]['skos:prefLabel'][0] && parsedDescriptionJson[0]['skos:prefLabel'][0]['@language']){
-          return parsedDescriptionJson[0]['skos:prefLabel'][0]['@language'].substring(0,2)
-        }
-        return 'en'
+      let description = item.dc_description[0];
+      let lang = 'en';
+      for (const key in item) {
+          if (key.startsWith('dc_description_')) {
+              const element = item[key];
+              if(element && element[0] && element[0] && element[0] === description && key.substr(15,2) !== 'en'){
+                lang = key.substr(15,2);
+                break;
+              }
+          }
       }
+      return lang;
     },
     selectionIncludes: function (doc) {
       for (let s of this.selection) {
