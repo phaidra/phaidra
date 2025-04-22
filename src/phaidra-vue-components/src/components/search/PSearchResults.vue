@@ -82,7 +82,7 @@
               </v-row>
               <v-row class="my-4 mr-2" v-if="doc.dc_description">
                 <v-col>
-                  <p-expand-text :text="doc.dc_description[0]" :moreStr="$t('read more')" :lang="doc.dc_language && doc.dc_language.includes('deu') ? 'de' : 'en'" />
+                  <p-expand-text :text="doc.dc_description[0]" :moreStr="$t('read more')" :lang="getDescriptionLanguage(doc)" />
                 </v-col>
               </v-row>
               <v-row v-if="doc.isrestricted">
@@ -153,6 +153,15 @@ export default {
     }
   },
   methods: {
+    getDescriptionLanguage: function (item) {
+      if(item.descriptions_json && item.descriptions_json[0] && item.descriptions_json[0]){
+        let parsedDescriptionJson = JSON.parse(item.descriptions_json)
+        if(parsedDescriptionJson[0]['skos:prefLabel'] && parsedDescriptionJson[0]['skos:prefLabel'][0] && parsedDescriptionJson[0]['skos:prefLabel'][0]['@language']){
+          return parsedDescriptionJson[0]['skos:prefLabel'][0]['@language'].substring(0,2)
+        }
+        return 'en'
+      }
+    },
     selectionIncludes: function (doc) {
       for (let s of this.selection) {
         if (s.pid === doc.pid) {
