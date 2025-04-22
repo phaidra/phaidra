@@ -1320,5 +1320,11 @@
   "Event description": "Descrizione dell'evento",
   "Location": "Luogo",
   "Versions": "Versioni",
-  "Go to latest version": "Vai alla versione più recente"
+  "Go to latest version": "Vai alla versione più recente",
+  "Downloads": "Scaricamenti",
+  "Views": "Visite",
+  "Filter by country code": "Filtra per codice paese",
+  "Downloads of object": "Scaricamenti dell'oggetto",
+  "Views of object": "Visite dell'oggetto",
+  "Show details": "Mostra dettagli"
 }
