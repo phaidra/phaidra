@@ -1,0 +1,10 @@
+{
+  "name": "3d-converter",
+  "version": "1.0.0",
+  "description": "3D model converter service for Phaidra",
+  "main": "index.js",
+  "dependencies": {
+    "mongodb": "^6.3.0",
+    "obj2gltf": "^3.1.5"
+  }
+}

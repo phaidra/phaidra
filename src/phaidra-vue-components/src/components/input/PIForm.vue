@@ -108,8 +108,8 @@
 
                   <div v-for="(f) in s.fields" :key="'dv'+f.id">
                     <v-tooltip :disabled="!mouseoverfielddef" open-delay="1700" bottom >
-                      <template v-slot:activator="{ on }">
-                        <v-row v-on="on" no-gutters>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-row v-on="on" v-bind="attrs" no-gutters>
                           <template v-if="f.component === 'p-text-field'">
                             <p-i-text-field
                               v-bind.sync="f"
@@ -734,7 +734,7 @@
                           </v-btn>
                         </template>
                         <v-card>
-                          <v-card-title class="title font-weight-light white--text"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn light target='_blank' :to="'/metadata-fields-help'">{{ $t('Help') }}</v-btn></v-card-title>
+                          <v-card-title class="title font-weight-light white--text"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn class="grey--text text--darken-2" color="white" target='_blank' :to="'/metadata-fields-help'"><v-icon class="mr-2" aria-hidden="true">mdi-help-circle-outline</v-icon>{{ $t('Help') }}</v-btn></v-card-title>
                           <v-card-text>
                             <v-list three-line >
                               <v-text-field clearable :label="$t('Search...')" append-icon="mdi-magnify" v-model="searchfieldsinput"></v-text-field>

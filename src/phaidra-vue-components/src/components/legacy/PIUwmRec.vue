@@ -10,7 +10,7 @@
                 v-model="ch.ui_value"
                 :label="ch.labels[alpha2locale]"
                 :readonly="true"
-                outlined
+                filled
                 :disabled="disabled"
               ></v-text-field>
             </v-col>
@@ -28,7 +28,7 @@
             :label="ch.labels[alpha2locale]"
             :error-messages="ch.errorMessages"
             @change="selectHandler(ch, $event)"
-            outlined
+            filled
             clearable
           >
             <template v-slot:item="{ item, index }">
@@ -49,7 +49,7 @@
             :label="ch.labels[alpha2locale]"
             :error-messages="ch.errorMessages"
             @change="selectHandler(ch, $event)"
-            outlined
+            filled
             clearable
           >
             <template v-slot:item="{ item, index }">
@@ -69,7 +69,7 @@
                   :disabled="disabled"
                   :label="ch.labels[alpha2locale]"
                   :error-messages="ch.errorMessages"
-                  outlined
+                  filled
                   :readonly="readOnly(ch)"
                 ></v-text-field>
               </v-col>
@@ -94,7 +94,7 @@
                 :disabled="disabled"
                 :label="ch.labels[alpha2locale]"
                 :error-messages="ch.errorMessages"
-                outlined
+                filled
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="2">
@@ -104,7 +104,7 @@
                 :items="languages"
                 :label="$t('Language')"
                 :error-messages="ch.langErrorMessages"
-                outlined
+                filled
                 clearable
               ></v-select>
             </v-col>
@@ -132,7 +132,7 @@
                 :disabled="disabled"
                 :label="ch.labels[alpha2locale]"
                 :error-messages="ch.errorMessages"
-                outlined
+                filled
               ></v-textarea>
             </v-col>
             <v-col cols="12" md="2">
@@ -142,7 +142,7 @@
                 :items="languages"
                 :error-messages="ch.langErrorMessages"
                 :label="$t('Language')"
-                outlined
+                filled
                 clearable
               ></v-select>
             </v-col>
@@ -174,7 +174,7 @@
                 :label="ch.labels[alpha2locale]"
                 :error-messages="ch.errorMessages"
                 @change="selectHandler(ch, $event)"
-                outlined
+                filled
                 clearable
               >
                 <template v-slot:item="{ item, index }">
@@ -210,7 +210,7 @@
                   :items="languages"
                   :error-messages="ch.errorMessages"
                   :label="ch.labels[alpha2locale]"
-                  outlined
+                  filled
                   clearable
                 >
                 </v-select>
@@ -241,7 +241,7 @@
                 :error-messages="ch.errorMessages"
                 :hint="$t('Format YYYY-MM-DD')"
                 :rules="[validationrules.date]"
-                outlined
+                filled
               ></v-text-field>
             </v-col>
           </v-row>
@@ -269,7 +269,7 @@
                 v-on:input="ch.ui_value=$event"
                 :label="ch.labels[alpha2locale]"
                 :error-messages="ch.errorMessages"
-                :input-style="'outlined'"
+                :input-style="'filled'"
               ></p-i-duration>
             </v-col>
           </v-row>

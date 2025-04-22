@@ -28,8 +28,8 @@
     </template>
     <template v-slot:item.name="{ item }">
       <v-tooltip bottom>
-        <template v-slot:activator="{ on }">
-          <span v-on="on">{{ item.name }}</span>
+        <template v-slot:activator="{ on, attrs }">
+          <span v-on="on" v-bind="attrs">{{ item.name }}</span>
         </template>
         <span>{{ item.tid }}</span>
       </v-tooltip>
@@ -40,10 +40,7 @@
       >
       Selected
       </v-chip>
-    </template>
-    <template v-slot:item.created="{ item }">
-      {{ item.created | unixtime }}
-    </template>
+    </template>    
     <template v-if="type === 'navtemplate' && $store.state.user.isadmin" v-slot:item.public="{ item }">
       <v-checkbox v-model="item.public" @change="onPublicValChange(item)"></v-checkbox>
     </template>

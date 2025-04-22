@@ -229,6 +229,25 @@ build-imageserver:
         paths:
           - dockerfiles/imageserver.dockerfile
 
+build-3d-converter:
+  stage: build-common
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/3d.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/3d-converter:latest
+    -t $CI_REGISTRY_USER/3d-converter:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/3d.dockerfile
+
 build-pixelgecko-base:
   stage: build-base
   before_script:

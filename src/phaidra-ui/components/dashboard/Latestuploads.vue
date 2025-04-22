@@ -20,7 +20,7 @@
               <v-col cols="10">
                 <v-row no-gutters class="mb-4">
                   <v-col cols="10">
-                    <span class="font-weight-light primary--text" @click.stop v-if="doc.dc_title">
+                    <span class="primary--text" @click.stop v-if="doc.dc_title">
                       <router-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ doc.dc_title[0] }}</router-link>
                     </span>
                   </v-col>
