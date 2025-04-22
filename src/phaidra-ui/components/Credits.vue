@@ -1,7 +1,7 @@
 <template>
   <div class="ma-6">
 
-    <h3 class="title font-weight-light mb-4">{{ $t('PHAIDRA is using following free services') }}:</h3>
+    <h3 class="title font-weight-light mb-4">{{ $t('PHAIDRA uses the following ressources') }}:</h3>
 
     <v-container>
       <v-row>
