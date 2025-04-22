@@ -159,7 +159,7 @@ export default {
       for (const key in item) {
           if (key.startsWith('dc_description_')) {
               const element = item[key];
-              if(element && element[0] && element[0] && element[0] === description && key.substr(15,2) !== 'en'){
+              if(element && element[0] && element[0] === description && key.substr(15,2) !== 'en'){
                 lang = key.substr(15,2);
                 break;
               }
