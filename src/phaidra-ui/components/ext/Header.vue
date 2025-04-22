@@ -668,3 +668,9 @@
     }
   };
   </script>  
+
+<style scoped>
+.ph-button:focus {
+    background-color: var(--v-primary-base) !important;
+}
+</style>
