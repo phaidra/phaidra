@@ -2966,17 +2966,9 @@ export default {
 };
 </script>
 
-<style lang="stylus" scoped>
-@require '../../stylus/colors';
-
-h3 {
-  color: $phaidragrey.darken-4;
-}
-</style>
-
 <style scoped>
 .no-link {
-  color: inherit; /* Inherit text color from parent */
+  color: inherit !important; /* Inherit text color from parent */
   cursor: default; /* Remove pointer cursor */
   text-decoration: none; /* Remove underline */
 }
