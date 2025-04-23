@@ -5,7 +5,7 @@ metadata:
   annotations:
     "helm.sh/resource-policy": "keep"
 type: Opaque
-immutable: true
+# immutable: true
 data:
 # dont modify secret if it exists
 {{- $existing := (lookup "v1" "Secret" (default .Values.K8S_Namespace .Release.Namespace) "phaidra-access").data }}
