@@ -1,6 +1,6 @@
 <template>
     <v-row no-gutters>
-      <v-col md="9" cols="12" class="border-right pr-2" >
+      <v-col md="9" cols="12" class="pr-2 mt-3">
         <v-row align="start" class="my-2">
           <v-col md="6" cols="9">
             <p-search-autocomplete
@@ -25,14 +25,14 @@
               :csvExport="csvExport" />
           </v-col>
         </v-row>
-        <v-row class="hidden-md-and-up searchFilters">
+        <v-row class="hidden-md-and-up">
           <v-bottom-sheet v-model="filterdialog" scrollable>
             <template v-slot:activator="{ on }">
               <v-btn class="ml-4 mb-6" color="primary" v-on="on">{{ $t('Filters') }}</v-btn>
             </template>
             <v-card height="400px">
-              <v-card-title class="title font-weight-light white--text">
-                <h3>{{ $t('Filters') }}</h3>
+              <v-card-title>
+                <h3 class="title font-weight-light white--text">{{ $t('Filters') }}</h3>
                 <v-spacer></v-spacer>
                 <v-icon dark @click="filterdialog = !filterdialog">mdi-close</v-icon>
               </v-card-title>
@@ -62,8 +62,10 @@
           <v-pagination v-if="total>pagesize" v-bind:length="totalPages" total-visible="10" v-model="page" class="mb-3" />
         </v-row>
       </v-col>
-      <v-col cols="3" class="pa-2 hidden-sm-and-down searchFilters">
-        <h3 class="title font-weight-light border-bottom pa-2">{{ $t('Filters') }}</h3>
+      <v-divider vertical class="divider hidden-sm-and-down mt-3"></v-divider>
+      <v-col cols="3" class="pa-3 hidden-sm-and-down">
+        <h3 class="title font-weight-light pt-2">{{ $t('Filters') }}</h3>
+        <v-divider class="mt-3 divider"></v-divider>
         <p-search-filters
           ref="searchFilters"
           :search="search"
@@ -459,12 +461,8 @@ export default {
 </script>
 
 <style scoped>
-.border-right {
-  border-right: 1px solid #bdbdbd;
-}
-
-.border-bottom {
-  border-bottom: 1px solid #bdbdbd;
+.divider {
+  border-color: #bdbdbd;
 }
 
 svg {
