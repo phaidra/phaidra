@@ -1298,7 +1298,7 @@
   "Birth Date": "Data di nascita",
   "Death Date": "Data di morte",
   "Modified": "Modificato",
-  "Manage templates": "Gestisci modelli",
+  "Manage templates": "Gestisci Modelli",
   "Repository statistics": "Statistiche del repository",
   "Organization": "Ente",
   "order_saved_for_object": "Ordinamento dell'oggetto {o} salvato.",
@@ -1326,5 +1326,7 @@
   "Filter by country code": "Filtra per codice paese",
   "Downloads of object": "Scaricamenti dell'oggetto",
   "Views of object": "Visite dell'oggetto",
-  "Show details": "Mostra dettagli"
+  "Show details": "Mostra dettagli",
+  "An error occurred.": "Si è verificato un errore.",
+  "Skip to main content": "Vai al contenuto"
 }
