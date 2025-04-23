@@ -4,7 +4,7 @@
       <v-row>
         <v-col>
           <header>
-            <a href="#main-content" class="skip-link">{{ $t("Skip to main content") }}</a>
+            <a href="#main-content" class="skip-link d-sr-only-focusable">{{ $t("Skip to main content") }}</a>
             <ExtHeader></ExtHeader>
           </header>
           <main id="main-content">
@@ -480,14 +480,5 @@ address {
   position: absolute;
   top: -40px;
   left: 0;
-  background: #000;
-  color: white;
-  padding: 8px;
-  z-index: 100;
-  transition: top 0.2s ease-in-out;
-}
-
-.skip-link:focus {
-  top: 0;
 }
 </style>
