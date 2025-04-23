@@ -580,7 +580,7 @@
           </v-row>
           </v-col>
       </v-row>
-      <a ref="logoutlink" href="/Shibboleth.sso/Logout"></a>
+      <a ref="logoutlink" href="/Shibboleth.sso/Logout" aria-hidden="true" role="presentation" tabindex="-1"></a>
     </div>
   </template>
   
