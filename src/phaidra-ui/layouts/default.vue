@@ -4,9 +4,10 @@
       <v-row>
         <v-col>
           <header>
+            <a href="#main-content" class="skip-link">{{ $t("Skip to main content") }}</a>
             <ExtHeader></ExtHeader>
           </header>
-          <main>
+          <main id="main-content">
             <v-row>
               <v-col cols="12" md="10" offset-md="1" class="content">
                 <p-breadcrumbs :items="breadcrumbs"></p-breadcrumbs>
@@ -474,5 +475,19 @@ address {
 
 .float-right {
   float: right;
+}
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: white;
+  padding: 8px;
+  z-index: 100;
+  transition: top 0.2s ease-in-out;
+}
+
+.skip-link:focus {
+  top: 0;
 }
 </style>
