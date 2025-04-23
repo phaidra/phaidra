@@ -80,7 +80,16 @@
           :filled="inputStyle==='filled'"
           :outlined="inputStyle==='outlined'"
           :error-messages="valueErrorMessages"
-        ></v-text-field>
+        >
+          <template v-slot:append-outer>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-icon v-on="on">mdi-help-circle-outline</v-icon>
+              </template>
+              <span>{{ $t('EDTF Examples: 1984~ (approximately 1984), 1964/2008 (range), 2001-21 (Spring 2001), 156u (1560s), 1984-03-12~ (uncertain date in 1984)') }}</span>
+            </v-tooltip>
+          </template>
+        </v-text-field>
       </template>
     </v-col>
     <v-col cols="2" v-if="actions.length">
@@ -140,7 +149,7 @@ export default {
     },
     dateFormatHint: {
       type: String,
-      default: 'Format YYYY-MM-DD'
+      default: 'Format: YYYY-MM-DD or EDTF (e.g. 1984~, 1964/2008, 2001-21)'
     }
   },
   data () {

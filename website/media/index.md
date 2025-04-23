@@ -12,6 +12,11 @@ hide:
 - [:fontawesome-solid-download: About PHAIDRA (PDF)](/assets/media/PHAIDRA/pdf/PHAIDRA-brochure.pdf){.pdf-download}
 - [:fontawesome-solid-download: About PHAIDRA - bleed version (PDF)](/assets/media/PHAIDRA/pdf/PHAIDRA-brochure-bleed-version.pdf){.pdf-download}
 
+### Articles
+
+- [:fontawesome-solid-download: 16 Years of PHAIDRA at the University of Vienna](/assets/media/PHAIDRA/pdf/Report-Blumesberger-et-al-16-years-PHAIDRA.pdf){.pdf-download}
+
+
 ### Logo
 
 **Full Logo**

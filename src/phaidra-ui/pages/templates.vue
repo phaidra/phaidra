@@ -1,5 +1,6 @@
 <template>  
   <div>
+    <h1 class="d-sr-only">{{$t('Manage templates')}}</h1>
     <v-container fluid>
         <v-card>
         <v-card-title class="title font-weight-light white--text">
@@ -32,7 +33,7 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn :loading="validationSaveLoading" :disabled="validationSaveLoading" color="grey" dark @click="validationEdit= false"><span v-t="'Cancel'"></span></v-btn>
+                  <v-btn :loading="validationSaveLoading" :disabled="validationSaveLoading" outlined @click="validationEdit= false"><span v-t="'Cancel'"></span></v-btn>
                   <v-btn :loading="validationSaveLoading" :disabled="validationSaveLoading" color="primary" @click="saveValidation()"><span v-t="'Save'"></span></v-btn>
                 </v-card-actions>
               </v-card>
