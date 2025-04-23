@@ -338,10 +338,6 @@ address {
 .theme--dark.v-card > .v-card__title {
   background-color: var(--v-cardtitlebg-base);
 }
-.v-application .grey {
-  background-color: var(--v-cardtitlebg-base)!important;
-  border-color: var(--v-cardtitlebg-base)!important;
-}
 
 .lang-icon {
   margin-left: 5px;
