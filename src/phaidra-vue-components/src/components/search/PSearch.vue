@@ -34,7 +34,9 @@
               <v-card-title>
                 <h3 class="title font-weight-light white--text">{{ $t('Filters') }}</h3>
                 <v-spacer></v-spacer>
-                <v-icon dark @click="filterdialog = !filterdialog">mdi-close</v-icon>
+                <v-btn icon dark @click="filterdialog = !filterdialog" :aria-label="$t('Close')">
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
               </v-card-title>
               <v-card-text>
                 <p-search-filters
