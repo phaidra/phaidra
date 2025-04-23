@@ -391,10 +391,11 @@
                   <client-only>
                       
                         <v-menu offset-y>
-                          <template v-slot:activator="{ on }">
-                          <v-btn class="ml-4 hidden-md-and-up" icon color="primary" v-on="on"><v-icon>mdi-menu</v-icon></v-btn>
+                      <template v-slot:activator="{ on, attrs }">
+                      <v-btn class="ml-4 hidden-md-and-up" icon color="primary" aria-controls="mobile-menu" aria-label="Main navigation menu"
+                      v-bind="attrs" v-on="on"><v-icon>mdi-menu</v-icon></v-btn>
                           </template>
-                          <v-list>
+                          <v-list id="mobile-menu">
                           <v-list-item
                               @click="
                               $router.push(
