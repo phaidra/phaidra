@@ -390,9 +390,9 @@
                 <v-toolbar flat color="white" dense>
                   <client-only>
                       
-                        <v-menu offset-y>
+                        <v-menu attach="#mobile-menu-btn" offset-y :disable-keys="true" min-width="150px">
                           <template v-slot:activator="{ on }">
-                          <v-btn class="ml-4 hidden-md-and-up" icon color="primary" v-on="on"><v-icon>mdi-menu</v-icon></v-btn>
+                          <v-btn id="mobile-menu-btn" class="ml-4 hidden-md-and-up" icon color="primary" v-on="on"><v-icon>mdi-menu</v-icon></v-btn>
                           </template>
                           <v-list>
                           <v-list-item
