@@ -16,8 +16,11 @@
               class="facet-label primary--text"
               hide-details
               dense
+              :aria-expanded="f.show"
+              :aria-controls="'facet-content-' + i"
+              :id="'facet-control-' + i"
             ></v-checkbox>
-            <ul v-if="f.show">
+            <ul v-if="f.show" :id="'facet-content-' + i" role="region" :aria-labelledby="'facet-control-' + i">
               <li v-for="(q, j) in f.queries" :key="i+j">
                 <v-checkbox
                   v-model="q.active"
@@ -26,13 +29,16 @@
                   class="facet-label primary--text"
                   hide-details
                   dense
+                  :aria-expanded="q.active && q.childFacet"
+                  :aria-controls="q.childFacet ? 'facet-subcontent-' + i + '-' + j : null"
+                  :id="'facet-subcontrol-' + i + '-' + j"
                 >
                   <template v-slot:label>
-                    <span class="facet-label primary--text">{{ $t(q.label) }}</span>
+                    <span class="facet-label primary--text">{{ $t(q.label ? q.label.toString() : '') }}</span>
                     <span class="facet-count secondary--text font-weight-medium" v-if="q.count > 0">({{q.count}})</span>
                   </template>
                 </v-checkbox>
-                <ul v-if="q.active && q.childFacet" >
+                <ul v-if="q.active && q.childFacet" :id="'facet-subcontent-' + i + '-' + j" role="region" :aria-labelledby="'facet-subcontrol-' + i + '-' + j">
                   <li v-for="(q1, k) in q.childFacet.queries" :key="i+j+k">
                     <v-checkbox
                       v-model="q1.active"
@@ -41,13 +47,16 @@
                       class="facet-label primary--text"
                       hide-details
                       dense
+                      :aria-expanded="q1.active && q1.childFacet"
+                      :aria-controls="q1.childFacet ? 'facet-subsubcontent-' + i + '-' + j + '-' + k : null"
+                      :id="'facet-subsubcontrol-' + i + '-' + j + '-' + k"
                     >
                       <template v-slot:label>
-                        <span class="facet-label primary--text">{{ $t(q1.label) }}</span>
+                        <span class="facet-label primary--text">{{ $t(q1.label ? q1.label.toString() : '') }}</span>
                         <span class="facet-count secondary--text font-weight-medium" v-if="q1.count > 0">({{q1.count}})</span>
                       </template>
                     </v-checkbox>
-                    <ul v-if="q1.active && q1.childFacet" >
+                    <ul v-if="q1.active && q1.childFacet" :id="'facet-subsubcontent-' + i + '-' + j + '-' + k" role="region" :aria-labelledby="'facet-subsubcontrol-' + i + '-' + j + '-' + k">
                       <li v-for="(q2, l) in q1.childFacet.queries" :key="i+j+k+l">
                         <v-checkbox
                           v-model="q2.active"
@@ -56,9 +65,10 @@
                           class="facet-label primary--text"
                           hide-details
                           dense
+                          :id="'facet-item-' + i + '-' + j + '-' + k + '-' + l"
                         >
                           <template v-slot:label>
-                            <span class="facet-label primary--text">{{ $t(q2.label) }}</span>
+                            <span class="facet-label primary--text">{{ $t(q2.label ? q2.label.toString() : '') }}</span>
                             <span class="facet-count secondary--text font-weight-medium" v-if="q2.count>0">({{q2.count}})</span>
                           </template>
                         </v-checkbox>
@@ -79,10 +89,13 @@
                   class="facet-label primary--text"
                   hide-details
                   dense
+                  :aria-expanded="showOwnerFilter"
+                  :aria-controls="'owner-content'"
+                  id="owner-control"
                 ></v-checkbox>
               </v-col>
             </v-row>
-            <v-row no-gutters>
+            <v-row no-gutters v-if="showOwnerFilter" id="owner-content" role="region" aria-labelledby="owner-control">
             <v-btn v-if="owner" class="mb-8 mt-4" color="primary">{{ owner }}<v-icon right @click.native="removeOwnerFilter()">mdi-close</v-icon></v-btn>
             </v-row>
             
@@ -108,10 +121,13 @@
                   class="facet-label primary--text"
                   hide-details
                   dense
+                  :aria-expanded="showAuthorFilter"
+                  :aria-controls="'author-content'"
+                  id="author-control"
                 ></v-checkbox>
               </v-col>
             </v-row>
-            <v-row no-gutters v-if="showAuthorFilter">
+            <v-row no-gutters v-if="showAuthorFilter" id="author-content" role="region" aria-labelledby="author-control">
               <v-col cols="12">
                 <v-combobox
                   class="mt-4"
@@ -156,10 +172,13 @@
                   class="facet-label primary--text"
                   hide-details
                   dense
+                  :aria-expanded="showRoleFilter"
+                  :aria-controls="'role-content'"
+                  id="role-control"
                 ></v-checkbox>
               </v-col>
             </v-row>
-            <v-row no-gutters v-if="showRoleFilter">
+            <v-row no-gutters v-if="showRoleFilter" id="role-content" role="region" aria-labelledby="role-control">
               <v-select
                 class="mt-4"
                 :placeholder="$t('Add role') + '...'"
