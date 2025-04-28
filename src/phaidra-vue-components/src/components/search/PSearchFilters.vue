@@ -538,7 +538,9 @@ export default {
       for (const fq of this.facetQueries) {
         if (fq.resetable) {
           for (const q of fq.queries) {
-            Vue.set(q, 'active', false)
+            if(q.active) {
+              Vue.set(q, 'active', false)              
+            }
           }
           if (fq.exclusive) {
             Vue.set(fq, 'selectedRadioValue', null)
