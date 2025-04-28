@@ -21,7 +21,31 @@
               :id="'facet-control-' + i"
             ></v-checkbox>
             <ul v-if="f.show" :id="'facet-content-' + i" role="region" :aria-labelledby="'facet-control-' + i">
-              <li v-for="(q, j) in f.queries" :key="i+j">
+              <template v-if="f.exclusive">
+                  <v-radio-group
+                    hide-details
+                    v-model="f.selectedRadioValue"
+                    class="facet-radio-group mt-0"
+                  >
+                    <v-radio
+                      @change="handleRadioChange(q, f)"
+                      v-for="(q, j) in f.queries" :key="i+j"
+                      :value="q.id"
+                      :label="$t(q.label ? q.label.toString() : '')"
+                      class="facet-label primary--text"
+                      
+                      :aria-expanded="q.active && q.childFacet"
+                      :aria-controls="q.childFacet ? 'facet-subcontent-' + i + '-' + j : null"
+                      :id="'facet-subcontrol-' + i + '-' + j"
+                    >
+                      <template v-slot:label>
+                        <span class="facet-label primary--text">{{ $t(q.label ? q.label.toString() : '') }}</span>
+                        <span class="facet-count secondary--text font-weight-medium" v-if="q.count > 0">({{q.count}})</span>
+                      </template>
+                    </v-radio>
+                  </v-radio-group>
+                </template>
+              <li v-for="(q, j) in f.queries" :key="i+j" v-else>
                 <v-checkbox
                   v-model="q.active"
                   @change="toggleFacet(q,f)"
@@ -40,38 +64,38 @@
                 </v-checkbox>
                 <ul v-if="q.active && q.childFacet" :id="'facet-subcontent-' + i + '-' + j" role="region" :aria-labelledby="'facet-subcontrol-' + i + '-' + j">
                   <li v-for="(q1, k) in q.childFacet.queries" :key="i+j+k">
-                    <v-checkbox
-                      v-model="q1.active"
-                      @change="toggleFacet(q1,q.childFacet)"
-                      :label="$t(q1.label ? q1.label.toString() : '')"
-                      class="facet-label primary--text"
-                      hide-details
-                      dense
-                      :aria-expanded="q1.active && q1.childFacet"
-                      :aria-controls="q1.childFacet ? 'facet-subsubcontent-' + i + '-' + j + '-' + k : null"
-                      :id="'facet-subsubcontrol-' + i + '-' + j + '-' + k"
-                    >
-                      <template v-slot:label>
-                        <span class="facet-label primary--text">{{ $t(q1.label ? q1.label.toString() : '') }}</span>
-                        <span class="facet-count secondary--text font-weight-medium" v-if="q1.count > 0">({{q1.count}})</span>
-                      </template>
-                    </v-checkbox>
+                      <v-checkbox
+                        v-model="q1.active"
+                        @change="toggleFacet(q1,q.childFacet)"
+                        :label="$t(q1.label ? q1.label.toString() : '')"
+                        class="facet-label primary--text"
+                        hide-details
+                        dense
+                        :aria-expanded="q1.active && q1.childFacet"
+                        :aria-controls="q1.childFacet ? 'facet-subsubcontent-' + i + '-' + j + '-' + k : null"
+                        :id="'facet-subsubcontrol-' + i + '-' + j + '-' + k"
+                      >
+                        <template v-slot:label>
+                          <span class="facet-label primary--text">{{ $t(q1.label ? q1.label.toString() : '') }}</span>
+                          <span class="facet-count secondary--text font-weight-medium" v-if="q1.count > 0">({{q1.count}})</span>
+                        </template>
+                      </v-checkbox>
                     <ul v-if="q1.active && q1.childFacet" :id="'facet-subsubcontent-' + i + '-' + j + '-' + k" role="region" :aria-labelledby="'facet-subsubcontrol-' + i + '-' + j + '-' + k">
                       <li v-for="(q2, l) in q1.childFacet.queries" :key="i+j+k+l">
-                        <v-checkbox
-                          v-model="q2.active"
-                          @change="toggleFacet(q2,q1.childFacet)"
-                          :label="$t(q2.label ? q2.label.toString() : '')"
-                          class="facet-label primary--text"
-                          hide-details
-                          dense
-                          :id="'facet-item-' + i + '-' + j + '-' + k + '-' + l"
-                        >
-                          <template v-slot:label>
-                            <span class="facet-label primary--text">{{ $t(q2.label ? q2.label.toString() : '') }}</span>
-                            <span class="facet-count secondary--text font-weight-medium" v-if="q2.count>0">({{q2.count}})</span>
-                          </template>
-                        </v-checkbox>
+                          <v-checkbox
+                            v-model="q2.active"
+                            @change="toggleFacet(q2,q1.childFacet)"
+                            :label="$t(q2.label ? q2.label.toString() : '')"
+                            class="facet-label primary--text"
+                            hide-details
+                            dense
+                            :id="'facet-item-' + i + '-' + j + '-' + k + '-' + l"
+                          >
+                            <template v-slot:label>
+                              <span class="facet-label primary--text">{{ $t(q2.label ? q2.label.toString() : '') }}</span>
+                              <span class="facet-count secondary--text font-weight-medium" v-if="q2.count>0">({{q2.count}})</span>
+                            </template>
+                          </v-checkbox>
                       </li>
                     </ul>
                   </li>
@@ -516,9 +540,19 @@ export default {
           for (const q of fq.queries) {
             Vue.set(q, 'active', false)
           }
+          if (fq.exclusive) {
+            Vue.set(fq, 'selectedRadioValue', null)
+          }
         }
       }
       this.search({ page: 1, facetQueries: this.facetQueries })
+    },
+    handleRadioChange: function (q, f) {
+      // Deactivate all other queries in this facet
+      f.queries.forEach(query => {
+        query.active = (query.id === q.id);
+      });
+      this.toggleFacet(q, f);
     }
   },
   mounted () {
