@@ -60,7 +60,7 @@
               </v-col>
             </v-row>
           </v-main>
-          <v-footer>
+          <v-footer :padless="true" color="transparent">
             <ExtFooter></ExtFooter>
           </v-footer>
         </v-col>
