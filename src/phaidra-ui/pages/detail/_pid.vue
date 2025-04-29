@@ -622,8 +622,8 @@
                     >{{ $t("Download") }}</v-btn
                   >
                   <v-menu offset-y v-if="objectInfo.writerights === 1">
-                    <template v-slot:activator="{ on }">
-                      <v-btn class="ml-2" raised color="primary" dark v-on="on"
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn class="ml-2" raised color="primary" dark v-on="on" v-bind="attrs"
                         >{{ $t("Edit")
                         }}<v-icon right dark>arrow_drop_down</v-icon></v-btn
                       >

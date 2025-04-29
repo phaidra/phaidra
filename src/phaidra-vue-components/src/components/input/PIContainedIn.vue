@@ -7,8 +7,8 @@
           <span>{{ $t(label) }}</span>
           <v-spacer></v-spacer>
           <v-menu open-on-hover bottom offset-y v-if="actions.length">
-            <template v-slot:activator="{ on }">
-              <v-btn v-on="on" icon dark>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn v-on="on" v-bind="attrs" icon dark>
                 <v-icon dark>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
@@ -114,8 +114,8 @@
                 </template>
                 <v-col cols="1" v-if="roleActions.length">
                   <v-menu open-on-hover bottom offset-y>
-                    <template v-slot:activator="{ on }">
-                      <v-btn v-on="on" icon>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn v-on="on" v-bind="attrs" icon>
                         <v-icon>mdi-dots-vertical</v-icon>
                       </v-btn>
                     </template>
@@ -469,8 +469,8 @@
                                 max-width="290px"
                                 min-width="290px"
                               >
-                                <template v-slot:activator="{ on }">
-                                  <v-icon v-on="on">mdi-calendar</v-icon>
+                                <template v-slot:activator="{ on, attrs }">
+                                  <v-icon v-on="on" v-bind="attrs">mdi-calendar</v-icon>
                                 </template>
                                 <v-date-picker
                                   color="primary"

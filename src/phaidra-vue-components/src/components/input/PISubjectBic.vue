@@ -40,8 +40,8 @@
         </v-col>
         <v-col cols="1" v-if="actions.length">
           <v-menu open-on-hover bottom offset-y>
-            <template v-slot:activator="{ on }">
-              <v-btn v-on="on" icon>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn v-on="on" v-bind="attrs" icon>
                 <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
