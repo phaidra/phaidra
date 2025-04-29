@@ -60,10 +60,10 @@
                 </transition>
               </v-col>
             </v-row>
-          </main>
-          <footer>
+          </v-main>
+          <v-footer>
             <ExtFooter></ExtFooter>
-          </footer>
+          </v-footer>
         </v-col>
       </v-row>
     </v-container>
@@ -99,7 +99,7 @@ export default {
       meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { name: 'theme-color', content: this.instanceconfig.primary }
+      { name: 'theme-color', content: this.$vuetify.theme.dark ? this.$config.darkPrimaryColor : this.$config.primaryColor }
       ]
     };
     return metaInfo;
@@ -416,17 +416,14 @@ address {
   max-width: 300px;
 }
 
-.border-bottom {
-  border-bottom: 1px solid #bdbdbd;
-}
-
-.border-top {
-  border-top: 1px solid #bdbdbd;
-}
-
 .border-left {
   border-left: 1px solid;
   border-color: rgba(0, 0, 0, 0.12);
+}
+
+.theme--dark .border-left {
+  border-left: 1px solid;
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 #app .v-btn {
