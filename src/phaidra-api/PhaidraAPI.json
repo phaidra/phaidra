@@ -9,6 +9,7 @@
         "workers": 16,
         "pid_file": "/tmp/hypnotoad.pid"
     },
+    "adminemail": "__PHAIDRA_ADMIN_EMAIL__",
     "mode": "production",
     "scheme": "__OUTSIDE_HTTP_SCHEME__",
     "baseurl": "__PHAIDRA_HOSTNAME____PHAIDRA_PORTSTUB____PHAIDRA_HOSTPORT__",

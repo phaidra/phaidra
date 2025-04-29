@@ -75,7 +75,7 @@
         </v-tooltip>
       </v-col>
       <v-col>
-        <v-tooltip top>
+        <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-btn icon class="toolbar-btn" v-on="on" v-bind="attrs" @click.native="csvExport()" :aria-label="$t('Download search results as a CSV file')">
               <v-icon>mdi-download</v-icon>

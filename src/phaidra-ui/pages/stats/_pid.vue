@@ -4,17 +4,17 @@
       <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
     </v-btn>
     <v-tabs>
-      <v-tab v-if="downloadItems.length > 0">Downloads</v-tab>
-      <v-tab v-if="detailPageItems.length > 0">Views</v-tab>
+      <v-tab v-if="downloadItems.length > 0">{{ $t("Downloads") }}</v-tab>
+      <v-tab v-if="detailPageItems.length > 0">{{ $t("Views") }}</v-tab>
       <v-tab-item v-if="downloadItems.length > 0">
         <v-data-iterator :items="downloadItems" :search="searchDownloads" :item-key="'country'" :sort-by="'total'"
           :sort-desc="true" hide-default-footer>
           <template v-slot:header>
             <v-toolbar flat class="mb-1">
-              <v-toolbar-title class="font-weight-light white--text">Downloads of object {{ routepid }}</v-toolbar-title>
+              <v-toolbar-title class="font-weight-light white--text">{{ $t("Downloads of object") }} {{ routepid }}</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-text-field v-model="searchDownloads" clearable flat solo hide-details
-                prepend-inner-icon="mdi-map-marker" label="Filter by country code"></v-text-field>
+                prepend-inner-icon="mdi-magnify" :label="$t('Filter by country code')"></v-text-field>
             </v-toolbar>
           </template>
           <template v-slot:default="props">
@@ -43,10 +43,10 @@
           :sort-desc="true" hide-default-footer>
           <template v-slot:header>
             <v-toolbar flat class="mb-1">
-              <v-toolbar-title class="font-weight-light white--text">Views of object {{ routepid }}</v-toolbar-title>
+              <v-toolbar-title class="font-weight-light white--text">{{ $t("Views of object") }} {{ routepid }}</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-text-field v-model="searchViews" clearable flat solo hide-details
-                prepend-inner-icon="mdi-magnify" label="Filter by country code"></v-text-field>
+                prepend-inner-icon="mdi-magnify" :label="$t('Filter by country code')"></v-text-field>
             </v-toolbar>
           </template>
           <template v-slot:default="props">

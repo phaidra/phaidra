@@ -6,8 +6,8 @@
         <span class="mt-2"><a @click="selectPage()">{{ $t('Select this page') }}</a><span class="mx-2">/</span><a @click="unselectPage()">{{ $t('Unselect this page') }}</a><span class="mx-2">/</span><a @click="selectAllResults()">{{ $t('Select all results') }}</a><span class="mx-2">/</span><a @click="selection = []">{{ $t('Clear selection') }}</a></span>
         <v-spacer></v-spacer>
         <v-menu offset-y>
-          <template v-slot:activator="{ on: menu }">
-            <v-btn v-on="{ ...menu }" text outlined color="primary" class="mx-4" :disabled="!selection.length">{{ $t('Selected results') }} ({{ selection.length }})</v-btn>
+          <template v-slot:activator="{ on: menu, attrs }">
+            <v-btn v-on="{ ...menu }" v-bind="attrs" text outlined color="primary" class="mx-4" :disabled="!selection.length">{{ $t('Selected results') }} ({{ selection.length }})</v-btn>
           </template>
           <v-list>
             <v-list-item @click="$refs.addlistdialog.open()">
@@ -82,7 +82,7 @@
               </v-row>
               <v-row class="my-4 mr-2" v-if="doc.dc_description">
                 <v-col>
-                  <p-expand-text :text="doc.dc_description[0]" :moreStr="$t('read more')"/>
+                  <p-expand-text :text="doc.dc_description[0]" :moreStr="$t('read more')" :lang="getDescriptionLanguage(doc)" />
                 </v-col>
               </v-row>
               <v-row v-if="doc.isrestricted">
@@ -153,6 +153,20 @@ export default {
     }
   },
   methods: {
+    getDescriptionLanguage: function (item) {
+      let description = item.dc_description[0];
+      let lang = 'en';
+      for (const key in item) {
+          if (key.startsWith('dc_description_')) {
+              const element = item[key];
+              if(element && element[0] && element[0] === description && key.substr(15,2) !== 'en'){
+                lang = key.substr(15,2);
+                break;
+              }
+          }
+      }
+      return lang;
+    },
     selectionIncludes: function (doc) {
       for (let s of this.selection) {
         if (s.pid === doc.pid) {
