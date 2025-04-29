@@ -110,7 +110,6 @@ export function updateFacetQueries (facetQueriesSolr, facetQueries) {
 }
 
 export function toggleFacet (q, f) {
-  Vue.set(q, 'active', !q.active)
 
   if (f.exclusive) {
     for (let i = 0; i < f.queries.length; i++) {
@@ -140,7 +139,6 @@ export function deactivateFacetQueries (f) {
 }
 
 export function showFacet (f) {
-  Vue.set(f, 'show', !f.show)
 
   if (!f.show) {
     // when hiding facet, remove it's filters
