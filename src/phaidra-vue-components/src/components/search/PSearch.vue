@@ -86,7 +86,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn outlined @click.stop="limitdialog = false">{{ $t("Close") }}</v-btn>
+            <v-btn outlined @click="limitdialog = false">{{ $t("Close") }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
