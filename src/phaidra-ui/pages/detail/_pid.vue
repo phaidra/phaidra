@@ -619,7 +619,7 @@
                       instanceconfig.api + '/object/' + member.pid + '/download'
                     "
                     color="primary"
-                    >{{ $t("Download") }}</v-btn
+                    ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }}</v-btn
                   >
                   <v-menu offset-y v-if="objectInfo.writerights === 1">
                     <template v-slot:activator="{ on, attrs }">
@@ -681,7 +681,7 @@
                     legacyCMember.ds
                   "
                   color="primary"
-                  >{{ $t("Download") }}</v-btn
+                  ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }}</v-btn
                 >
               </v-col>
             </v-row>
@@ -1216,6 +1216,7 @@
                         <nuxt-link
                           class="white--text"
                           :to="localePath(`/stats/${objectInfo.pid}`)"
+                          :aria-label="$t('Show details')"
                         >
                           <v-tooltip bottom>
                             <template v-slot:activator="{ on, attrs }">
@@ -2965,17 +2966,9 @@ export default {
 };
 </script>
 
-<style lang="stylus" scoped>
-@require '../../stylus/colors';
-
-h3 {
-  color: $phaidragrey.darken-4;
-}
-</style>
-
 <style scoped>
 .no-link {
-  color: inherit; /* Inherit text color from parent */
+  color: inherit !important; /* Inherit text color from parent */
   cursor: default; /* Remove pointer cursor */
   text-decoration: none; /* Remove underline */
 }
