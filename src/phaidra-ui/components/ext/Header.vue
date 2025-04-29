@@ -8,10 +8,11 @@
           <v-col cols="12" md="10" offset-md="1" class="header">
           <v-row no-gutters class="mt-2" style="min-height: 125px">
               <v-col class="text-left" cols="12" md="3">
-              <a :href="instanceconfig.institutionurl" target="_blank">
+              <a :href="instanceconfig.institutionurl" target="_blank" aria-label="PHAIDRA - to the homepage">
                 <svg version="1.1" id="PHAIDRA_Logo_copy_xA0_Image_1_"
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 435.6 134.88"
-	 style="enable-background:new 0 0 435.6 134.88; height:100px" xml:space="preserve" alt="PHAIDRA - to the homepage">
+	 style="enable-background:new 0 0 435.6 134.88; height:100px" xml:space="preserve" aria-labelledby="titleID">
+   <title id="titleID">PHAIDRA</title>
 <style type="text/css">
 	.st0{fill:#212121;}
 	.st1{fill:none;stroke:#212121;stroke-width:35;stroke-miterlimit:10;}
