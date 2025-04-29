@@ -8,10 +8,11 @@
           <v-col cols="12" md="10" offset-md="1" class="header">
           <v-row no-gutters class="mt-2" style="min-height: 125px">
               <v-col class="text-left" cols="12" md="3">
-              <a :href="instanceconfig.institutionurl" target="_blank">
+              <a :href="instanceconfig.institutionurl" target="_blank" aria-label="PHAIDRA - to the homepage">
                 <svg version="1.1" id="PHAIDRA_Logo_copy_xA0_Image_1_"
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 435.6 134.88"
-	 style="enable-background:new 0 0 435.6 134.88; height:100px" xml:space="preserve" alt="PHAIDRA - to the homepage">
+	 style="enable-background:new 0 0 435.6 134.88; height:100px" xml:space="preserve" aria-labelledby="titleID">
+   <title id="titleID">PHAIDRA</title>
 <style type="text/css">
 	.st0{fill:#212121;}
 	.st1{fill:none;stroke:#212121;stroke-width:35;stroke-miterlimit:10;}
@@ -295,8 +296,8 @@
                 >
 
                 <v-menu offset-y>
-                <template v-slot:activator="{ on }">
-                    <v-btn text v-on="on" class="top-margin-lang">
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn text v-on="on" v-bind="attrs" aria-controls="locale-menu" class="top-margin-lang">
                     <span class="grey--text text--darken-1">{{
                         localeLabel
                     }}</span>
@@ -307,7 +308,7 @@
                     ></icon>
                     </v-btn>
                 </template>
-                <v-list>
+                <v-list id="locale-menu">
                     <v-list-item
                     v-if="useLocale('eng')"
                     @click="changeLocale('eng')"
@@ -331,20 +332,20 @@
 
                 <v-tooltip v-if="!$vuetify.theme.dark" bottom>
                   <template v-slot:activator="{ on, attrs }">
-                    <v-btn v-on="on" v-bind="attrs" icon @click="darkMode" class="top-margin-lang grey--text text--darken-1">
+                    <v-btn v-on="on" v-bind="attrs" icon @click="darkMode" class="top-margin-lang grey--text text--darken-1" :aria-label="$t('Dark Mode On')">
                       <v-icon>mdi-moon-waxing-crescent</v-icon>
                     </v-btn>
                   </template>
-                  <span>Dark Mode On</span>
+                  <span>{{ $t("Dark Mode On") }}</span>
                 </v-tooltip>
 
                 <v-tooltip v-else bottom>
                   <template v-slot:activator="{ on, attrs }">
-                    <v-btn v-on="on" v-bind="attrs" icon @click="darkMode" class="top-margin-lang grey--text text--darken-1">
+                    <v-btn v-on="on" v-bind="attrs" icon @click="darkMode" class="top-margin-lang grey--text text--darken-1" :aria-label="$t('Dark Mode Off')">
                       <v-icon>mdi-white-balance-sunny</v-icon>
                     </v-btn>
                   </template>
-                  <span>Dark Mode Off</span>
+                  <span>{{ $t("Dark Mode Off") }}</span>
                 </v-tooltip>
 
             </v-row>
@@ -391,10 +392,11 @@
                   <client-only>
                       
                         <v-menu attach="#mobile-menu-btn" offset-y :disable-keys="true" min-width="150px">
-                          <template v-slot:activator="{ on }">
-                          <v-btn id="mobile-menu-btn" class="ml-4 hidden-md-and-up" icon color="primary" v-on="on"><v-icon>mdi-menu</v-icon></v-btn>
+                      <template v-slot:activator="{ on, attrs }">
+                      <v-btn id="mobile-menu-btn" class="ml-4 hidden-md-and-up" icon color="primary" aria-controls="mobile-menu" aria-label="Main navigation menu"
+                      v-bind="attrs" v-on="on"><v-icon>mdi-menu</v-icon></v-btn>
                           </template>
-                          <v-list>
+                          <v-list id="mobile-menu">
                           <v-list-item
                               @click="
                               $router.push(
@@ -580,7 +582,7 @@
           </v-row>
           </v-col>
       </v-row>
-      <a ref="logoutlink" href="/Shibboleth.sso/Logout"></a>
+      <a ref="logoutlink" href="/Shibboleth.sso/Logout" aria-hidden="true" role="presentation" tabindex="-1"></a>
     </div>
   </template>
   
@@ -668,3 +670,9 @@
     }
   };
   </script>  
+  <style scoped>
+    .ph-button {
+      background-color: var(--v-cardtitlebg-base)!important;
+      border-color: var(--v-cardtitlebg-base)!important;
+    }
+  </style>  

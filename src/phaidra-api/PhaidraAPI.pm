@@ -491,6 +491,7 @@ sub startup {
 
   $r->get('collection/:pid/members')                ->to('collection#get_collection_members');
   $r->get('collection/:pid/descendants')            ->to('collection#descendants');
+  $r->get('collection/:pid/rss')                    ->to('collection#rss');
 
   # does not show inactive objects, not specific to collection (but does ordering)
   $r->get('object/:pid/related')                    ->to('search#related');
