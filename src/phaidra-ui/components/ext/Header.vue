@@ -668,3 +668,9 @@
     }
   };
   </script>  
+  <style scoped>
+    .ph-button {
+      background-color: var(--v-cardtitlebg-base)!important;
+      border-color: var(--v-cardtitlebg-base)!important;
+    }
+  </style>  
