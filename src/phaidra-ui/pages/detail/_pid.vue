@@ -1005,6 +1005,29 @@
                             objectInfo.haspartsize
                           }})</v-btn
                         >
+                        <v-tooltip bottom>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              v-on="on"
+                              v-bind="attrs"
+                              class="ml-2"
+                              v-if="objectInfo.cmodel === 'Collection'"
+                              icon
+                              color="primary"
+                              target="_blank"
+                              :href="
+                                instanceconfig.api +
+                                '/collection/' +
+                                objectInfo.pid +
+                                '/rss'
+                              "
+                            >
+                            <v-icon>mdi-rss</v-icon>
+                          </v-btn>
+                          </template>
+                          <span>{{ $t('RSS feed') }}</span>
+                        </v-tooltip>
+                        
                         <v-btn
                           v-if="objectInfo.cmodel === 'Resource'"
                           :href="
