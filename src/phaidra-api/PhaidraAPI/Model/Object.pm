@@ -1071,7 +1071,7 @@ sub create_container {
   my $r;
   unless (exists($container_metadata->{'target-pid'})) {
 
-    # use transactions only for single object creation. TODO: use a container transaction for all the children and the container
+    # use transactions only for single object creation. TODO: use a single transaction for all containers and children. This way, if one child fails to be created, the entire load fails, and no partial loads occur.  
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
     my $transaction_url = $fedora_model->useTransaction($c);
     $c->stash(transaction_url => $transaction_url->{transaction_id});
