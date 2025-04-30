@@ -801,12 +801,13 @@
                               width="800px"
                             >
                               <template v-slot:activator="{ on }">
-                                <v-chip
+                                <v-btn
                                   v-on="on"
+                                  depressed
                                   x-small
-                                  class="mr-2 font-weight-regular"
                                   color="primary"
-                                  >{{ $t("Cite") }}</v-chip
+                                  class="mr-2"
+                                  >{{ $t("Cite") }}</v-btn
                                 >
                               </template>
                               <v-card>
