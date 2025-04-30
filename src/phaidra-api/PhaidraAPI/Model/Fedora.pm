@@ -575,7 +575,7 @@ sub useTransaction {
   my ($self, $c) = @_;
 
   my $res = {alerts => [], status => 200};
-  # return the transaction is available
+  # return the transaction if available
   if ($c->stash->{transaction_url}) {
     $res->{transaction_id} = $c->stash->{transaction_url};
     return $res;

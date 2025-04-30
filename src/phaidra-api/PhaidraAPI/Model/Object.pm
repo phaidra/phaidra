@@ -820,7 +820,7 @@ sub create_simple {
   my $r;
   unless (exists($metadata->{'target-pid'})) {
 
-    # use transactions only for new objects. TODO: move 'useTransaction' in 'create' function to use transactions also for collections and containers
+    # use transactions only for object creation
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
     my $transaction_url = $fedora_model->useTransaction($c);
     $c->stash(transaction_url => $transaction_url->{transaction_id});
@@ -1070,6 +1070,11 @@ sub create_container {
   my $pid = '';
   my $r;
   unless (exists($container_metadata->{'target-pid'})) {
+
+    # use transactions only for single object creation. TODO: use a container transaction for all the children and the container
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    my $transaction_url = $fedora_model->useTransaction($c);
+    $c->stash(transaction_url => $transaction_url->{transaction_id});
 
     # create parent object
     $r = $self->create($c, 'cmodel:Container', $username, $password);
