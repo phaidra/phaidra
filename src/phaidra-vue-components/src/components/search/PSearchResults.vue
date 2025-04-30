@@ -87,7 +87,10 @@
               </v-row>
               <v-row v-if="doc.isrestricted">
                 <v-col>
-                  <v-chip label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
+                  <v-sheet rounded color="red lighten-1" dark class="pa-1 d-inline-flex align-center text-body-2">
+                    <v-icon small class="mr-1">mdi-lock</v-icon>
+                    {{ $t('Restricted access') }}
+                  </v-sheet>
                 </v-col>
               </v-row>
               <v-row >
