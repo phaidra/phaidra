@@ -622,8 +622,8 @@
                     ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }}</v-btn
                   >
                   <v-menu offset-y v-if="objectInfo.writerights === 1">
-                    <template v-slot:activator="{ on }">
-                      <v-btn class="ml-2" raised color="primary" dark v-on="on"
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn class="ml-2" raised color="primary" dark v-on="on" v-bind="attrs"
                         >{{ $t("Edit")
                         }}<v-icon right dark>arrow_drop_down</v-icon></v-btn
                       >
@@ -1005,6 +1005,29 @@
                             objectInfo.haspartsize
                           }})</v-btn
                         >
+                        <v-tooltip bottom>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              v-on="on"
+                              v-bind="attrs"
+                              class="ml-2"
+                              v-if="objectInfo.cmodel === 'Collection'"
+                              icon
+                              color="primary"
+                              target="_blank"
+                              :href="
+                                instanceconfig.api +
+                                '/collection/' +
+                                objectInfo.pid +
+                                '/rss'
+                              "
+                            >
+                            <v-icon>mdi-rss</v-icon>
+                          </v-btn>
+                          </template>
+                          <span>{{ $t('RSS feed') }}</span>
+                        </v-tooltip>
+                        
                         <v-btn
                           v-if="objectInfo.cmodel === 'Resource'"
                           :href="
