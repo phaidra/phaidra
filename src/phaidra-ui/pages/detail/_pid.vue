@@ -598,10 +598,7 @@
                 >
                 <v-row v-else>
                 <v-col class="text-right mr-3">
-                  <v-sheet rounded color="red lighten-1" dark class="pa-2 d-inline-flex align-center text-body-2">
-                    <v-icon small class="mr-1">mdi-lock</v-icon>
-                    {{ $t('Restricted access') }}
-                  </v-sheet>
+                  <v-chip style="pointer-events: none;" label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
                 </v-col>
               </v-row>
                 <v-card-text class="ma-2">
@@ -625,8 +622,8 @@
                     ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }}</v-btn
                   >
                   <v-menu offset-y v-if="objectInfo.writerights === 1">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn class="ml-2" raised color="primary" dark v-on="on" v-bind="attrs"
+                    <template v-slot:activator="{ on }">
+                      <v-btn class="ml-2" raised color="primary" dark v-on="on"
                         >{{ $t("Edit")
                         }}<v-icon right dark>arrow_drop_down</v-icon></v-btn
                       >
@@ -963,12 +960,7 @@
             </v-col>
           </v-row>
 
-          <v-row justify="end" class="mb-8" no-gutters v-if="objectInfo.isrestricted">
-            <v-sheet rounded color="red lighten-1" dark class="pa-2 d-inline-flex align-center text-body-2">
-              <v-icon small class="mr-1">mdi-lock</v-icon>
-              {{ $t('Restricted access') }}
-            </v-sheet>
-          </v-row>
+          <v-row justify="end" class="mb-8" no-gutters v-if="objectInfo.isrestricted"><v-chip style="pointer-events: none;" label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></v-row>
           <v-row justify="end">
             <v-col cols="12" md="9">
               <v-row
@@ -1013,29 +1005,6 @@
                             objectInfo.haspartsize
                           }})</v-btn
                         >
-                        <v-tooltip bottom>
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-btn
-                              v-on="on"
-                              v-bind="attrs"
-                              class="ml-2"
-                              v-if="objectInfo.cmodel === 'Collection'"
-                              icon
-                              color="primary"
-                              target="_blank"
-                              :href="
-                                instanceconfig.api +
-                                '/collection/' +
-                                objectInfo.pid +
-                                '/rss'
-                              "
-                            >
-                            <v-icon>mdi-rss</v-icon>
-                          </v-btn>
-                          </template>
-                          <span>{{ $t('RSS feed') }}</span>
-                        </v-tooltip>
-                        
                         <v-btn
                           v-if="objectInfo.cmodel === 'Resource'"
                           :href="
