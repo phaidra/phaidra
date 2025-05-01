@@ -42,6 +42,12 @@ export default {
       rights: {},
     };
   },
+  metaInfo() {
+    let metaInfo = {
+      title: this.$t('Upload') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+    };
+    return metaInfo;
+  },
   methods: {
     addRemovedFieldsCol: function (rt) {
       let haslicense = false;

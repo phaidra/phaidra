@@ -14,7 +14,7 @@ export default {
   mixins: [config],
   metaInfo() {
     let metaInfo = {
-      title: this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution) + ' - ' + this.$t('Search'),
+      title: this.$t('Search') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
     };
     return metaInfo;
   },
