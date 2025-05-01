@@ -307,6 +307,16 @@ section {
   overflow: auto;
 }
 
+.v-main a {
+  text-decoration: underline;
+}
+.v-main .breadcrumbs-container a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
 a {
   text-decoration: none;
 }
