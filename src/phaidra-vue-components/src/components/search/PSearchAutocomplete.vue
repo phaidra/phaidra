@@ -19,7 +19,18 @@
       append-icon="mdi-magnify"
       @click:append="onSelect({ term: type })"
       :messages="messages"
-    />
+    >
+    <template #append>
+      <v-btn 
+        icon
+        :aria-label="$t('Search Button')"
+        tabindex="-1"
+        @click="onSelect({ term: type })"
+      >
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
+    </template>
+    </v-text-field>
     <div :class="`${getClassName('list')} autocomplete autocomplete-list elevation-2`" v-show="showList && suggestions && suggestions.length">
       <v-list>
         <v-list-item v-for="(data, i) in suggestions" :class="activeClass(i)" :key="i" @click.prevent="selectList(data)">
