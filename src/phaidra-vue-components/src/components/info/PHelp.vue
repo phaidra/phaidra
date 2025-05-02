@@ -3,7 +3,7 @@
     <v-card-title class="title font-weight-light white--text">{{ $t('Help') }}</v-card-title>
     <v-card-text class="mt-4">
       <div v-if="$i18n.locale === 'deu'">
-        <p><router-link :to="'/metadata-fields-help'" target="_blank">Beschreibung aller vorhandenen Metadatenfelder</router-link></p>
+        <p><nuxt-link :to="'/metadata-fields-help'" target="_blank">Beschreibung aller vorhandenen Metadatenfelder</nuxt-link></p>
         <template v-if="instanceconfig.baseurl.includes('univie.ac.at')">
           <p>Weiterführende Links:</p>
           <p><a href="https://datamanagement.univie.ac.at/ueber-phaidra-services/downloads-und-anleitungen/" target="_blank">PHAIDRA User Guide und Anleitungen</a></p>
@@ -12,7 +12,7 @@
         </template>
       </div>
       <div v-else>
-        <p><router-link :to="'/metadata-fields-help'" target="_blank">Description of all existing metadata fields</router-link></p>
+        <p><nuxt-link :to="'/metadata-fields-help'" target="_blank">Description of all existing metadata fields</nuxt-link></p>
         <template v-if="instanceconfig.baseurl.includes('univie.ac.at')">
           <p>Related Links:</p>
           <p><a href="https://datamanagement.univie.ac.at/en/about-phaidra/downloads/" target="_blank">PHAIDRA User Guide and Manuals</a></p>

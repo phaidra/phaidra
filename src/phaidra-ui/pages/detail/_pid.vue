@@ -706,7 +706,7 @@
               <v-row class="my-4">
                 <v-col cols="1" >
                   <div class="preview-maxwidth">
-                  <router-link :to="{ path: `${collMember.pid}`, params: { pid: collMember.pid } }">
+                  <nuxt-link :to="{ path: `${collMember.pid}`, params: { pid: collMember.pid } }">
                       <p-img
                         :src="
                           instanceconfig.api + '/object/' + collMember.pid + '/thumbnail'
@@ -726,7 +726,7 @@
                           </div>
                         </template>
                       </p-img>
-                    </router-link>
+                    </nuxt-link>
                   </div>
                 </v-col>
                 <v-col cols="10">
@@ -737,9 +737,9 @@
                         @click.stop
                         v-if="collMember.dc_title"
                       >
-                        <router-link
+                        <nuxt-link
                           :to="{ path: `${collMember.pid}`, params: { pid: collMember.pid } }"
-                          >{{ collMember.dc_title[0] }}</router-link
+                          >{{ collMember.dc_title[0] }}</nuxt-link
                         >
                       </h3>
                       <p>{{ collMember.pid }}</p>

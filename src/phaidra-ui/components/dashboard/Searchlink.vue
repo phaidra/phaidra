@@ -4,7 +4,7 @@
     <v-card-title v-else class="font-weight-light" :class="titleClass" style="word-break: break-word;">{{ $t(label) }}</v-card-title>
     <v-card-text :class="textcenter ? 'text-center justify-center' : ''">
       <div>
-        <router-link :to="{ path: '/search?q='+fq }">{{ $t(linklabel)  }} ({{ total }})</router-link>
+        <nuxt-link :to="{ path: '/search?q='+fq }">{{ $t(linklabel)  }} ({{ total }})</nuxt-link>
       </div>
     </v-card-text>
   </v-card>

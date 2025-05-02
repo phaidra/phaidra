@@ -7,7 +7,7 @@
           <v-col :cols="12">
             <v-row :key="'prev'+doc.pid">
               <v-col cols="2" class="preview-maxwidth">
-                <router-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">
+                <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">
                   <p-img :src="instanceconfig.api + '/object/' + doc.pid + '/thumbnail'" class="elevation-2 mt-2">
                     <template v-slot:placeholder>
                       <div class="fill-height ma-0" align="center" justify="center" >
@@ -15,13 +15,13 @@
                       </div>
                     </template>
                   </p-img>
-                </router-link>
+                </nuxt-link>
               </v-col>
               <v-col cols="10">
                 <v-row no-gutters class="mb-4">
                   <v-col cols="10">
                     <span class="primary--text" @click.stop v-if="doc.dc_title">
-                      <router-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ doc.dc_title[0] }}</router-link>
+                      <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ doc.dc_title[0] }}</nuxt-link>
                     </span>
                   </v-col>
                   <v-spacer></v-spacer>
@@ -39,7 +39,7 @@
         <v-divider :key="'div'+doc.pid" class="mt-4 mb-2 mr-2"></v-divider>
       </div>
       <div>
-        <router-link :to="{ path: '/search?q='+fq }">{{ $t(linklabel) }} ({{ total }})</router-link>
+        <nuxt-link :to="{ path: '/search?q='+fq }">{{ $t(linklabel) }} ({{ total }})</nuxt-link>
       </div>
     </v-card-text>
   </v-card>

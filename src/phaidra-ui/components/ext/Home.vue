@@ -75,7 +75,7 @@
                 in repositories</a>
             </v-row>
             <v-row class="pl-2 mb-6 mt-6">
-              <router-link :to="localePath('termsofuse')">{{ $t('Terms of Use')}}</router-link>
+              <nuxt-link :to="localePath('termsofuse')">{{ $t('Terms of Use')}}</nuxt-link>
             </v-row>
             <v-divider class="my-4"></v-divider>
             <v-row>
