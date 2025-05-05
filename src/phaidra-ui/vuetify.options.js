@@ -19,13 +19,15 @@ export default function ({ app }) {
           primary: app.$config.primaryColor,
           secondary: '#616161', // grey darken-2
           error: '#dd4814',
-          cardtitlebg: '#757575' // grey darken-1
+          cardtitlebg: '#757575', // grey darken-1
+          btnred: '#E91916'
         },
         dark: {
           primary: app.$config.darkPrimaryColor || app.$config.primaryColor,
           secondary: '#e2e2e2',
           error: '#dd4814',
-          cardtitlebg: '#000'
+          cardtitlebg: '#000',
+          btnred: '#E91916'
         }
       }
     }

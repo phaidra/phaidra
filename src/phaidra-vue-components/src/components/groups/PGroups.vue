@@ -72,7 +72,7 @@
               </template>
               <template v-slot:item.actions="{ item }">
                 <v-icon color="primary" class="mx-3" @click="loadedGroup = item">mdi-pencil</v-icon>
-                <v-icon color="red lighten-1" class="mx-3" @click="deleteGroupDialog(item)">mdi-delete</v-icon>
+                <v-icon color="btnred" class="mx-3" @click="deleteGroupDialog(item)">mdi-delete</v-icon>
               </template>
             </v-data-table>
           </v-card-text>
@@ -119,7 +119,7 @@
                 [{{ item.username }}]
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-icon color="red lighten-1" class="mx-3" @click="removeMember(item.username)">mdi-delete</v-icon>
+                <v-icon color="btnred" class="mx-3" @click="removeMember(item.username)">mdi-delete</v-icon>
               </template>
             </v-data-table>
             <v-card-actions>
@@ -149,7 +149,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn outlined @click="deleteDialog = false">{{ $t('Cancel') }}</v-btn>
-          <v-btn dark @click="deleteGroup()" color="red lighten-1">{{ $t('Delete') }}</v-btn>
+          <v-btn dark @click="deleteGroup()" color="btnred">{{ $t('Delete') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

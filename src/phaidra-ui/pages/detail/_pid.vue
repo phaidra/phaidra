@@ -598,7 +598,7 @@
                 >
                 <v-row v-else>
                 <v-col class="text-right mr-3">
-                  <v-chip label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
+                  <v-chip label dark color="btnred font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
                 </v-col>
               </v-row>
                 <v-card-text class="ma-2">
@@ -753,7 +753,7 @@
                   </v-row>
                 </v-col>
                 <v-col cols="1" v-if="objectInfo.writerights === 1" justify="center">
-                  <v-btn icon class="mt-4" @click="collMemberToRemove = collMember.pid; confirmColMemDeleteDlg = true"><v-icon color="red lighten-1">mdi-delete</v-icon></v-btn>
+                  <v-btn icon class="mt-4" @click="collMemberToRemove = collMember.pid; confirmColMemDeleteDlg = true"><v-icon color="btnred">mdi-delete</v-icon></v-btn>
                 </v-col>
               </v-row>
               <v-divider></v-divider>
@@ -766,7 +766,7 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn outlined :disabled="$store.state.loading" @click="collMemberToRemove = null; confirmColMemDeleteDlg = false">{{ $t('Cancel') }}</v-btn>
-                  <v-btn color="red" class="white--text" :loading="$store.state.loading" :disabled="$store.state.loading" @click="removeFromCollection()">{{ $t('Remove') }}</v-btn>                  
+                  <v-btn color="btnred" class="white--text" :loading="$store.state.loading" :disabled="$store.state.loading" @click="removeFromCollection()">{{ $t('Remove') }}</v-btn>                  
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -960,7 +960,7 @@
             </v-col>
           </v-row>
 
-          <v-row justify="end" class="mb-8" no-gutters v-if="objectInfo.isrestricted"><v-chip label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></v-row>
+          <v-row justify="end" class="mb-8" no-gutters v-if="objectInfo.isrestricted"><v-chip label dark color="btnred font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></v-row>
           <v-row justify="end">
             <v-col cols="12" md="9">
               <v-row
