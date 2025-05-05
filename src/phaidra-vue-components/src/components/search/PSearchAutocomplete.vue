@@ -23,7 +23,7 @@
     <template #append>
       <v-btn 
         icon
-        :aria-label="$t('Search Button')"
+        :aria-label="$t('Search')"
         tabindex="-1"
         @click="onSelect({ term: type })"
       >
