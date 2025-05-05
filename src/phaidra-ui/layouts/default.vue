@@ -446,6 +446,9 @@ address {
   border-left: 1px solid;
   border-color: rgba(255, 255, 255, 0.25);
 }
+.v-application .pointer-disabled {
+  pointer-events: none;
+}
 </style>
 
 <style scoped>
