@@ -10,6 +10,12 @@ networks:
 
 # see https://docs.docker.com/reference/compose-file/extension/
 x-custom:
+  imageserver_env: &imageserver_env
+    MAX_IMAGE_CACHE_SIZE: 1000 #1G image cache. probably want to reduce this when using varnish
+    VERBOSITY: "10"
+    LIGHTTPD_PORT: 80
+    BASE_URL: "${OUTSIDE_HTTP_SCHEME}://${PHAIDRA_HOSTNAME}${PHAIDRA_PORTSTUB}${PHAIDRA_HOSTPORT}/api/imageserver?IIIF="
+    FILESYSTEM_PREFIX: "/"
   common: &common
     restart: always
     networks:
@@ -612,7 +618,7 @@ services:
       - ./container_init/imageserver:/mnt/startup:ro
       - pixelgecko:/mnt/converted_images:ro
     entrypoint: [ "bash", "/mnt/startup/imageserver-entrypoint.bash" ]
-    profiles: ["demo-local", "ssl-local", "shib-local", "demo-local-dev", "ssl-local-dev", "shib-local-dev"]
+    profiles: ["demo-local", "ssl-local", "shib-local"]
 
   3d-converter:
     hostname: "3d-converter"
@@ -683,6 +689,18 @@ services:
         required: false
     profiles:
       - handle
+
+  imageserver-local-dev:
+    hostname: "imageserver"
+    build:
+      context: .
+      dockerfile: dockerfiles/imageserver.dockerfile
+    <<: [*common, *logs]
+    environment:
+      <<: [*api_common_env, *imageserver_env]
+    volumes:
+      - pixelgecko:/mnt/converted_images:ro
+    profiles: ["demo-local-dev", "ssl-local-dev", "shib-local-dev"]
 
   ############### imageserver service for s3 profiles #################
   imageserver-s3:
