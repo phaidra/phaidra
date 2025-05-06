@@ -310,7 +310,7 @@ section {
 a {
   text-underline-offset: .25rem;
   text-decoration-skip-ink: none;
-  text-decoration-thickness: 1px;
+  text-decoration-thickness: 1px !important;
 }
 
 .v-main a {
