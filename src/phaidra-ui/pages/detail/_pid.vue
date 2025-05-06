@@ -493,6 +493,7 @@
               <v-col cols="12">
                 <div class="iframe-container" v-if="objectInfo.cmodel === 'Video'">
                   <iframe
+                    :title="$t('Video preview')"
                     :src="
                       instanceconfig.api +
                       '/object/' +
@@ -508,6 +509,7 @@
                 </div>
                 <iframe
                 v-else
+                  :title="$t('Preview')"
                   :src="
                     instanceconfig.api +
                     '/object/' +
@@ -583,6 +585,7 @@
                 :key="'member_' + member.pid"
               >
                 <iframe
+                  :title="$t('Preview')"
                   v-if="!member.isrestricted"
                   :src="
                     instanceconfig.api + '/object/' + member.pid + '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
