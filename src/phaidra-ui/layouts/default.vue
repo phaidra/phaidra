@@ -307,6 +307,12 @@ section {
   overflow: auto;
 }
 
+a {
+  text-underline-offset: .25rem;
+  text-decoration-skip-ink: none;
+  text-decoration-thickness: 1px;
+}
+
 .v-main a {
   text-decoration: underline;
 }
@@ -317,7 +323,7 @@ a:hover {
   text-decoration: underline;
 }
 
-a {
+a.v-btn, a {
   text-decoration: none;
 }
 
