@@ -572,6 +572,10 @@
               </v-toolbar-title>
               <v-spacer></v-spacer>
               <v-pagination
+              :page-aria-label="$t('page')"
+              :previous-aria-label="$t('previous')"
+              :next-aria-label="$t('next')"
+              :current-page-aria-label="$t('currentPage')" 
                 v-if="objectInfo.members.length > membersPageSize"
                 v-model="membersPage"
                 :length="Math.ceil(objectInfo.members.length/membersPageSize)"
@@ -699,6 +703,10 @@
               <v-switch @click="refreshCollectionMembers()" class="mx-2" dark hide-details :label="$t('Only latest versions')" v-model="collOnlyLatestVersions"></v-switch>
               <v-spacer></v-spacer>
               <v-pagination
+                :page-aria-label="$t('page')"
+                :previous-aria-label="$t('previous')"
+                :next-aria-label="$t('next')"
+                :current-page-aria-label="$t('currentPage')" 
                 v-if="$store.state.collectionMembersTotal > collMembersPagesize"
                 v-bind:length="collMembersTotalPages"
                 total-visible="10"
