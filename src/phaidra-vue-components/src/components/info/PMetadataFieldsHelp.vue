@@ -22,7 +22,7 @@
       <v-col cols="9">
         <template v-if="selectedField">
           <div class="display-1 my-8">
-            <span class="font-weight-light mr-2">{{ $t(selectedField.title) }}</span> <v-chip class="ma-2" label >{{ selectedField.predicate }}</v-chip>
+            <span class="font-weight-light mr-2">{{ $t(selectedField.title) }}</span> <v-chip class="ma-2 pointer-disabled" label >{{ selectedField.predicate }}</v-chip>
           </div>
           <div v-for="(section, i) in selectedField.sections" :key="i" :id="'sec' + i">
             <template v-if="(section.content !== '') && (section.id !== 'obligation') && !(section.id === 'vocabulary' && section.content === 'None')">
