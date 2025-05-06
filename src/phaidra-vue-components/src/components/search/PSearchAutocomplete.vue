@@ -269,4 +269,12 @@ export default {
   margin-top: 2px;
 }
 
+.v-text-field >>> .v-input__append-inner .v-icon:focus::before {
+  opacity: 0.5 !important;
+}
+
+.v-text-field >>> .v-input__append-inner .v-icon:focus::after {
+  opacity: 0.5 !important;
+  outline-style: auto;
+}
 </style>

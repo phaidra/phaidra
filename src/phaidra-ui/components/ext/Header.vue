@@ -670,9 +670,13 @@
     }
   };
   </script>  
-  <style scoped>
-    .ph-button {
-      background-color: var(--v-cardtitlebg-base)!important;
-      border-color: var(--v-cardtitlebg-base)!important;
-    }
-  </style>  
+
+<style scoped>
+  .ph-button:focus {
+      background-color: var(--v-primary-base) !important;
+  }
+  .ph-button {
+    background-color: var(--v-cardtitlebg-base)!important;
+    border-color: var(--v-cardtitlebg-base)!important;
+  }
+</style>  
