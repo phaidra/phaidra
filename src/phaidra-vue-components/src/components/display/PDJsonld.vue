@@ -624,6 +624,9 @@ export default {
 .valuefield {
   white-space: pre-wrap;
 }
+.pdlabel {
+  word-wrap: break-word;
+}
 </style>
 
 <style scoped>
