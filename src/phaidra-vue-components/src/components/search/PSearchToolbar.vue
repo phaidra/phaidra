@@ -135,6 +135,7 @@ export default {
 
 .toolbar-btn.theme--light.v-btn:focus::before {
     opacity: 0.5;
+    outline-style: auto;
 }
 
 .v-icon:focus::before {

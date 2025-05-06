@@ -275,5 +275,6 @@ export default {
 
 .v-text-field >>> .v-input__append-inner .v-icon:focus::after {
   opacity: 0.5 !important;
+  outline-style: auto;
 }
 </style>
