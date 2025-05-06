@@ -774,12 +774,11 @@
         </v-col>
 
         <v-col cols="12" md="4" class="mt-4">
+          <v-row justify="end" class="mb-8" no-gutters v-if="objectInfo.isrestricted"><v-chip label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></v-row>
           <v-row justify="end">
             <v-col cols="12" md="9">
-              <v-row
-                class="mb-6"
-              >
-                <v-col class="pt-0">
+              <ul class="mb-6 pl-0 side-list">
+                <li class="mb-6">
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
@@ -920,17 +919,8 @@
                       </v-row>
                     </v-card-text>
                   </v-card>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-
-          <v-row justify="end" v-if="identifiers.other.length > 0">
-            <v-col cols="12" md="9">
-              <v-row
-                class="mb-6"
-              >
-                <v-col class="pt-0">
+                </li>
+                <li class="mb-6" v-if="identifiers.other.length > 0">
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
@@ -955,15 +945,7 @@
                       </v-row>
                     </v-card-text>
                   </v-card>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-
-          <v-row justify="end" class="mb-8" no-gutters v-if="objectInfo.isrestricted"><v-chip label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></v-row>
-          <v-row justify="end">
-            <v-col cols="12" md="9" class="py-0">
-              <ul class="mb-6 pl-0" style="list-style-type: none;">
+                </li>
                 <li class="mb-6" v-if="
                   (downloadable && objectInfo.readrights) ||
                   objectInfo.cmodel === 'Collection' ||
@@ -2925,4 +2907,9 @@ export default {
     height: 100%;
 
 }
+
+.side-list {
+  list-style-type: none;
+}
+
 </style>
