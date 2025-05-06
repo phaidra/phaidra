@@ -309,6 +309,22 @@ section {
 }
 
 a {
+  text-underline-offset: .25rem;
+  text-decoration-skip-ink: none;
+  text-decoration-thickness: 1px !important;
+}
+
+.v-main a {
+  text-decoration: underline;
+}
+.v-main .breadcrumbs-container a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+a.v-btn, a {
   text-decoration: none;
 }
 

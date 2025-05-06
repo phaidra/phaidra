@@ -394,8 +394,5 @@ export default {
   padding: 0;
 }
 
-.v-application a {
-  text-decoration: none;
-}
 
 </style>
