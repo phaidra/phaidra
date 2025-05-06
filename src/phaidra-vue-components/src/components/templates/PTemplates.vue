@@ -34,11 +34,11 @@
         <span>{{ item.tid }}</span>
       </v-tooltip>
       <v-chip
-        class="ma-2"
+        class="ma-2 pointer-disabled"
         color="primary"
         v-if="item.tid === selectedTemplateId"
       >
-      Selected
+      {{ $t('Selected') }}
       </v-chip>
     </template>    
     <template v-if="type === 'navtemplate' && $store.state.user.isadmin" v-slot:item.public="{ item }">

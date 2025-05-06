@@ -56,7 +56,7 @@
                   </h3>
                 </v-col>
                 <v-col cols="12" md="3" class="text-right">
-                  <v-chip v-if="doc.created" color="transparent">{{ doc.created | date }}
+                  <v-chip class="pointer-disabled" v-if="doc.created" color="transparent">{{ doc.created | date }}
                     <v-icon v-if="doc.cmodel == 'Video'" class="mx-2" color="grey">mdi-video</v-icon>
                     <v-icon v-else-if="doc.cmodel == 'Picture'" class="mx-2" color="grey">mdi-image</v-icon>
                     <v-icon v-else-if="doc.cmodel == 'Audio'" class="mx-2" color="grey">mdi-volume-high</v-icon>
@@ -87,12 +87,12 @@
               </v-row>
               <v-row v-if="doc.isrestricted">
                 <v-col>
-                  <v-chip label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
+                  <v-chip class="pointer-disabled" label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
                 </v-col>
               </v-row>
               <v-row >
                 <v-col cols="12" md="9">
-                  <span>{{ instance.baseurl }}/{{ doc.pid }}</span>
+                  <a :href="`${instance.baseurl}/${doc.pid}`">{{ instance.baseurl }}/{{ doc.pid }}</a>
                 </v-col>
                 <v-col cols="12" md="3" class="text-right pr-5">
                   <p-d-license v-if="doc.dc_rights" :hideLabel="true" :o="doc.dc_rights[0]"></p-d-license>
@@ -394,8 +394,5 @@ export default {
   padding: 0;
 }
 
-.v-application a {
-  text-decoration: none;
-}
 
 </style>

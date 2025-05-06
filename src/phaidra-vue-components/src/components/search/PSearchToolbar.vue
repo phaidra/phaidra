@@ -4,7 +4,7 @@
       <v-col>
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon @click="setSort('title asc')" :color="sortIsActive('title asc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Title ascending')">
+            <v-btn icon class="toolbar-btn" @click="setSort('title asc')" :color="sortIsActive('title asc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Title ascending')">
               <icon width="16px" height="16px" name="fontello-sort-name-up"></icon>
             </v-btn>
           </template>
@@ -14,7 +14,7 @@
       <v-col>
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon @click="setSort('title desc')" :color="sortIsActive('title desc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Title descending')">
+            <v-btn icon class="toolbar-btn" @click="setSort('title desc')" :color="sortIsActive('title desc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Title descending')">
               <icon width="16px" height="16px" name="fontello-sort-name-down"></icon>
             </v-btn>
           </template>
@@ -24,7 +24,7 @@
       <v-col>
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon @click="setSort('created asc')" :color="sortIsActive('created asc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Upload date ascending')">
+            <v-btn icon class="toolbar-btn" @click="setSort('created asc')" :color="sortIsActive('created asc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Upload date ascending')">
               <icon width="16px" height="16px" name="fontello-sort-number-up"></icon>
             </v-btn>
           </template>
@@ -34,7 +34,7 @@
       <v-col>
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon @click="setSort('created desc')" :color="sortIsActive('created desc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Upload date descending')">
+            <v-btn icon class="toolbar-btn" @click="setSort('created desc')" :color="sortIsActive('created desc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Upload date descending')">
               <icon width="16px" height="16px" name="fontello-sort-number-down"></icon>
             </v-btn>
           </template>
@@ -57,7 +57,7 @@
         </v-dialog>
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon @click="linkdialog=true" v-on="on" v-bind="attrs" :aria-label="$t('Link to search results')">
+            <v-btn icon class="toolbar-btn" @click="linkdialog=true" v-on="on" v-bind="attrs" :aria-label="$t('Link to search results')">
               <icon width="18px" height="18px" name="material-content-link"></icon>
             </v-btn>
           </template>
@@ -68,7 +68,7 @@
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
             <div v-on="on" v-bind="attrs" style="width:35px"><!-- div: vuetify tooltip vs checkbox fix -->
-              <v-checkbox hide-details class="mr-2 mt-1" color="primary" @click.stop="toggleSelection()" v-model="selectioncheck" v-on="on">            </v-checkbox>
+              <v-checkbox :aria-label="$t('Select results')" hide-details class="mr-2 mt-1" color="primary" @click.stop="toggleSelection()" v-model="selectioncheck" v-on="on">            </v-checkbox>
             </div>
           </template>
           <span>{{ $t('Select results')}}</span>
@@ -77,7 +77,7 @@
       <v-col>
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-on="on" v-bind="attrs" @click.native="csvExport()" :aria-label="$t('Download search results as a CSV file')">
+            <v-btn icon class="toolbar-btn" v-on="on" v-bind="attrs" @click.native="csvExport()" :aria-label="$t('Download search results as a CSV file')">
               <v-icon>mdi-download</v-icon>
             </v-btn>
           </template>
@@ -132,4 +132,18 @@ export default {
 .container .toolbar {
   padding: 0px;
 }
+
+.toolbar-btn.theme--light.v-btn:focus::before {
+    opacity: 0.5;
+    outline-style: auto;
+}
+
+.v-icon:focus::before {
+  opacity: 0.7 !important;
+}
+
+.v-icon:focus::after {
+  opacity: 0.7 !important;
+}
+
 </style>

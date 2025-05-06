@@ -493,6 +493,7 @@
               <v-col cols="12">
                 <div class="iframe-container" v-if="objectInfo.cmodel === 'Video'">
                   <iframe
+                    :title="$t('Video preview')"
                     :src="
                       instanceconfig.api +
                       '/object/' +
@@ -508,6 +509,7 @@
                 </div>
                 <iframe
                 v-else
+                  :title="$t('Preview')"
                   :src="
                     instanceconfig.api +
                     '/object/' +
@@ -570,6 +572,10 @@
               </v-toolbar-title>
               <v-spacer></v-spacer>
               <v-pagination
+              :page-aria-label="$t('page')"
+              :previous-aria-label="$t('previous')"
+              :next-aria-label="$t('next')"
+              :current-page-aria-label="$t('currentPage')" 
                 v-if="objectInfo.members.length > membersPageSize"
                 v-model="membersPage"
                 :length="Math.ceil(objectInfo.members.length/membersPageSize)"
@@ -583,6 +589,7 @@
                 :key="'member_' + member.pid"
               >
                 <iframe
+                  :title="$t('Preview')"
                   v-if="!member.isrestricted"
                   :src="
                     instanceconfig.api + '/object/' + member.pid + '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
@@ -598,7 +605,7 @@
                 >
                 <v-row v-else>
                 <v-col class="text-right mr-3">
-                  <v-chip label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
+                  <v-chip class="pointer-disabled" label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
                 </v-col>
               </v-row>
                 <v-card-text class="ma-2">
@@ -696,6 +703,10 @@
               <v-switch @click="refreshCollectionMembers()" class="mx-2" dark hide-details :label="$t('Only latest versions')" v-model="collOnlyLatestVersions"></v-switch>
               <v-spacer></v-spacer>
               <v-pagination
+                :page-aria-label="$t('page')"
+                :previous-aria-label="$t('previous')"
+                :next-aria-label="$t('next')"
+                :current-page-aria-label="$t('currentPage')" 
                 v-if="$store.state.collectionMembersTotal > collMembersPagesize"
                 v-bind:length="collMembersTotalPages"
                 total-visible="10"
@@ -801,12 +812,13 @@
                               width="800px"
                             >
                               <template v-slot:activator="{ on }">
-                                <v-chip
+                                <v-btn
                                   v-on="on"
+                                  depressed
                                   x-small
-                                  class="mr-2 font-weight-regular"
                                   color="primary"
-                                  >{{ $t("Cite") }}</v-chip
+                                  class="mr-2"
+                                  >{{ $t("Cite") }}</v-btn
                                 >
                               </template>
                               <v-card>
@@ -960,7 +972,7 @@
             </v-col>
           </v-row>
 
-          <v-row justify="end" class="mb-8" no-gutters v-if="objectInfo.isrestricted"><v-chip label dark color="red lighten-1 font-weight-regular"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></v-row>
+          <v-row justify="end" class="mb-8" no-gutters v-if="objectInfo.isrestricted"><v-chip label dark color="red lighten-1 font-weight-regular" class="pointer-disabled"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></v-row>
           <v-row justify="end">
             <v-col cols="12" md="9">
               <v-row

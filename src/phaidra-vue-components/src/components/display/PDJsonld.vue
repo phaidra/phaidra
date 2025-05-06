@@ -5,7 +5,7 @@
     <template v-if="pid && !predicatesToHide.includes('pid')" slot="pid">
       <v-row>
         <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('Persistent identifier') }}</v-col>
-        <v-col :md="valueColMd" cols="12">{{ instance.baseurl }}/{{ pid }}</v-col>
+        <v-col :md="valueColMd" cols="12"><a :href="`${instance.baseurl}/${pid}`">{{ instance.baseurl }}/{{ pid }}</a></v-col>
       </v-row>
     </template>
 
@@ -623,6 +623,9 @@ export default {
 <style>
 .valuefield {
   white-space: pre-wrap;
+}
+.pdlabel {
+  word-wrap: break-word;
 }
 </style>
 

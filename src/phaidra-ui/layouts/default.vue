@@ -4,9 +4,10 @@
       <v-row>
         <v-col>
           <header>
+            <a href="#main-content" class="skip-link d-sr-only-focusable">{{ $t("Skip to main content") }}</a>
             <ExtHeader></ExtHeader>
           </header>
-          <v-main>
+          <main id="main-content">
             <v-row>
               <v-col cols="12" md="10" offset-md="1" class="content">
                 <p-breadcrumbs :items="breadcrumbs"></p-breadcrumbs>
@@ -60,7 +61,7 @@
               </v-col>
             </v-row>
           </v-main>
-          <v-footer>
+          <v-footer :padless="true" color="transparent">
             <ExtFooter></ExtFooter>
           </v-footer>
         </v-col>
@@ -308,6 +309,22 @@ section {
 }
 
 a {
+  text-underline-offset: .25rem;
+  text-decoration-skip-ink: none;
+  text-decoration-thickness: 1px !important;
+}
+
+.v-main a {
+  text-decoration: underline;
+}
+.v-main .breadcrumbs-container a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+a.v-btn, a {
   text-decoration: none;
 }
 
@@ -446,6 +463,9 @@ address {
   border-left: 1px solid;
   border-color: rgba(255, 255, 255, 0.25);
 }
+.v-application .pointer-disabled {
+  pointer-events: none;
+}
 </style>
 
 <style scoped>
@@ -471,5 +491,10 @@ address {
 
 .float-right {
   float: right;
+}
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
 }
 </style>
