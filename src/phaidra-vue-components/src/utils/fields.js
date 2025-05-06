@@ -62,6 +62,20 @@ const fields = [
     helptext: 'An object type represents real-world entity. For example, an object type can represent a photography, an interview, a lecture or a letter.'
   },
   {
+    id: 'object-type-oer',
+    fieldname: 'OER Object type (Higher Education Resource Types)',
+    predicate: 'edm:hasType',
+    component: 'p-select',
+    vocabulary: 'oerobjecttype',
+    multiplicable: true,
+    label: 'Object type',
+    value: '',
+    'skos:prefLabel': [],
+    errorMessages: [],
+    definition: 'This property relates a resource with the concepts it belongs to. It does not capture aboutness. Example: Photography',
+    helptext: 'An object type represents real-world entity. For example, an object type can represent a photography, an interview, a lecture or a letter.'
+  },
+  {
     id: 'object-type-checkboxes',
     fieldname: 'Object type (checkboxes)',
     predicate: 'edm:hasType',
