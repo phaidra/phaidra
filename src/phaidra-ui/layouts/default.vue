@@ -7,7 +7,7 @@
             <a href="#main-content" class="skip-link d-sr-only-focusable">{{ $t("Skip to main content") }}</a>
             <ExtHeader></ExtHeader>
           </header>
-          <main id="main-content">
+          <v-main id="main-content">
             <v-row>
               <v-col cols="12" md="10" offset-md="1" class="content">
                 <p-breadcrumbs :items="breadcrumbs"></p-breadcrumbs>
