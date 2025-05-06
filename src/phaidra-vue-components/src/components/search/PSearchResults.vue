@@ -38,7 +38,7 @@
         <v-col :cols="selectioncheck ? 11 : 12">
           <v-row :key="'prev'+doc.pid">
             <v-col cols="2" >
-              <router-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">
+              <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">
                 <p-img :src="instance.api + '/object/' + doc.pid + '/thumbnail'" class="preview-maxwidth elevation-1 mt-2">
                   <template v-slot:placeholder>
                     <div class="fill-height ma-0" align="center" justify="center" >
@@ -46,13 +46,13 @@
                     </div>
                   </template>
                 </p-img>
-              </router-link>
+              </nuxt-link>
             </v-col>
             <v-col cols="10">
               <v-row >
                 <v-col cols="12" md="9">
                   <h3 class="title font-weight-light primary--text" @click.stop v-if="doc.dc_title">
-                    <router-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ doc.dc_title[0] }}</router-link>
+                    <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ doc.dc_title[0] }}</nuxt-link>
                   </h3>
                 </v-col>
                 <v-col cols="12" md="3" class="text-right">
