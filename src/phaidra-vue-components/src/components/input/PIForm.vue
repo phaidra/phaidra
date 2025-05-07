@@ -813,6 +813,7 @@
               <v-btn v-else-if="forcePreview" large raised :loading="loading" :disabled="loading" class="primary float-right" @click="showForcePreview()"><span v-t="'Preview'"></span></v-btn>
               <v-btn v-else large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
             </template>
+            <v-switch :hide-details="true" class="float-right mt-1 mx-2" v-if="$store.state.user.isadmin" v-model="skipValidation" :label="$t('Skip validation')"></v-switch>
           </v-col>
         </v-row>
 
@@ -1132,6 +1133,7 @@ export default {
   },
   data () {
     return {
+      skipValidation: false,
       activetab: null,
       loadedMetadata: [],
       loading: false,
@@ -1457,7 +1459,7 @@ export default {
     submit: async function () {
       this.serverSubmitError = false
       this.serverSubmitErrors = []
-      if (!this.formIsValid()) {
+      if (!this.skipValidation && !this.formIsValid()) {
         this.validationError = true
         if(this.forcePreview){
           this.activetab = 0
