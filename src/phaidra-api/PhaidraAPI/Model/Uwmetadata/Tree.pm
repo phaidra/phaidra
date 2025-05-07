@@ -311,14 +311,6 @@ our %tree = (
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/extended/V1.0/voc_31/1552104"
                     },
                     { "labels" => {
-                        "de" => "VLB-Systemnummer",
-                        "en" => "VLB-Systemnummer",
-                        "it" => "VLB-Systemnummer",
-                        "sr" => "VLB-Systemnummer"
-                      },
-                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/extended/V1.0/voc_31/1561531"
-                    },
-                    { "labels" => {
                         "de" => "ISSN",
                         "en" => "ISSN",
                         "it" => "ISSN",
