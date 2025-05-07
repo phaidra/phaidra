@@ -53,15 +53,25 @@
           </v-bottom-sheet>
         </v-row>
         <v-row no-gutters>
-          <v-btn v-if="inCollection" class="mb-8" color="primary">{{ $t('Members of') }}<router-link class="ml-1 white--text" :to="localePath(`/detail/${inCollection}`)">{{ inCollection }}</router-link><v-icon right @click.native="removeCollectionFilter()">mdi-close</v-icon></v-btn>
-          <v-pagination v-if="total>pagesize" v-bind:length="totalPages" justify="center" total-visible="10" v-model="page" class="mb-8" />
+          <v-btn v-if="inCollection" class="mb-8" color="primary">{{ $t('Members of') }}<nuxt-link class="ml-1 white--text" :to="localePath(`/detail/${inCollection}`)">{{ inCollection }}</nuxt-link><v-icon right @click.native="removeCollectionFilter()">mdi-close</v-icon></v-btn>
+          <v-pagination
+          :page-aria-label="$t('page')"
+          :previous-aria-label="$t('previous')"
+          :next-aria-label="$t('next')"
+          :current-page-aria-label="$t('currentPage')" 
+          v-if="total>pagesize" v-bind:length="totalPages" justify="center" total-visible="10" v-model="page" class="mb-8" />
           <p-search-results
             :docs="docs"
             :total="total"
             :selectioncheck="selectioncheck"
             :getallresults="getAllResults">
           </p-search-results>
-          <v-pagination v-if="total>pagesize" v-bind:length="totalPages" total-visible="10" v-model="page" class="mb-3" />
+          <v-pagination
+          :page-aria-label="$t('page')"
+          :previous-aria-label="$t('previous')"
+          :next-aria-label="$t('next')"
+          :current-page-aria-label="$t('currentPage')"
+          v-if="total>pagesize" v-bind:length="totalPages" total-visible="10" v-model="page" class="mb-3" />
         </v-row>
       </v-col>
       <v-divider vertical class="divider hidden-sm-and-down mt-3"></v-divider>
@@ -80,16 +90,13 @@
       </v-col>
       <v-dialog v-model="limitdialog" width="500">
         <v-card>
-          <v-card-title class="title font-weight-light white--text">{{ $t('Selection limit' ) }}</v-card-title>
+          <v-card-title class="title font-weight-light white--text">{{ $t('Selection limit') }}</v-card-title>
           <v-card-text class="mt-4">
             {{ $t('SELECTION_LIMIT', { limit: appconfig.search.selectionlimit }) }}
           </v-card-text>
           <v-card-actions>
-            <v-container fluid>
-              <v-row justify="end" class="px-4">
-                <v-btn outlined @click="limitdialog = false">{{ $t("Close") }}</v-btn>
-              </v-row>
-            </v-container>
+            <v-spacer></v-spacer>
+            <v-btn outlined @click="limitdialog = false">{{ $t("Close") }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

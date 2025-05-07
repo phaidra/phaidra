@@ -3,7 +3,7 @@
     <v-card-title v-if="centertitle" class="font-weight-light" :class="titleClass" style="word-break: break-word;">{{ $t(label) }}</v-card-title>
     <v-card-title v-else class="font-weight-light" :class="titleClass" style="word-break: break-word;">{{ $t(label) }}</v-card-title>
     <v-card-text>
-        <router-link :to="{ path: `detail/${pid}`, params: { pid: pid } }">
+        <nuxt-link :to="{ path: `detail/${pid}`, params: { pid: pid } }">
           <v-img max-width="200" :src="src" class="mx-auto elevation-2 mt-2" :alt="alt" :title="alt">
             <template v-slot:placeholder>
               <div class="fill-height ma-0">
@@ -11,12 +11,12 @@
               </div>
             </template>
           </v-img>
-        </router-link>
+        </nuxt-link>
       <div class="my-6">
         <slot></slot>
       </div>
       <div :class="textcenter ? 'text-center justify-center' : ''">
-        <router-link :to="{ path: '/search?q='+fq }">{{ $t(linklabel)  }} ({{ total }})</router-link>
+        <nuxt-link :to="{ path: '/search?q='+fq }">{{ $t(linklabel)  }} ({{ total }})</nuxt-link>
       </div>
     </v-card-text>
   </v-card>

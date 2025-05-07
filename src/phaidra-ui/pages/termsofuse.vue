@@ -19,6 +19,12 @@ import { config } from "../mixins/config";
 
 export default {
   mixins: [config],
+  metaInfo() {
+    let metaInfo = {
+      title: this.$t('Terms of use') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+    };
+    return metaInfo;
+  },
   data() {
     return {
       loading: false,

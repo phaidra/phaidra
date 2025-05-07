@@ -6,5 +6,15 @@
 </template>
 
 <script>
-export default {};
+import { config } from "../mixins/config";
+
+export default {
+  mixins: [config],
+  metaInfo() {
+    let metaInfo = {
+      title: this.$t('Credits') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+    };
+    return metaInfo;
+  },
+}
 </script>

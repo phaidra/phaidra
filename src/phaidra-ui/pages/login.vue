@@ -65,6 +65,12 @@ import { config } from '../mixins/config'
 
 export default {
   mixins: [ context, config ],
+  metaInfo() {
+    let metaInfo = {
+      title: this.$t('Login') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+    };
+    return metaInfo;
+  },
   data () {
     return {
       passVisibility: true,
