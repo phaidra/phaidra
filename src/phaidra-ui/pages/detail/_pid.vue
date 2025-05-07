@@ -876,9 +876,7 @@
                               {{ $t(id.label) }}
                             </span>
                             <br />
-                            <span :class="id.label == 'Persistent identifier' ? 'font-weight-medium primary--text' : ''">
-                              <a :href="id.value">{{ id.value }}</a>
-                            </span>
+                            <a :href="id.value">{{ id.value }}</a>
                           </p>
                         </v-col>
                       </v-row>
