@@ -67,6 +67,10 @@ export default {
   text-decoration: none;
 }
 
+.v-application a:hover, .v-application a:focus {
+  text-decoration: underline;
+}
+
 .prewrap {
   white-space: pre-wrap;
 }
