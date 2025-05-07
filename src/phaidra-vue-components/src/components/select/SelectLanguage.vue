@@ -7,7 +7,7 @@
             <v-col cols="3">{{ $t('Quick select') }}:</v-col>
             <v-col>
               <v-btn v-for="lang in this.$i18n.localeCodes" :key="lang" class="mx-1" color="primary" @click="selectLang(lang)">{{ getLocalizedTermLabel('lang', lang) }}</v-btn>
-              <v-btn v-if="showReset" class="mx-1 white--text" color="red lighten-1" @click="resetLang()">{{ $t('Reset') }}</v-btn>
+              <v-btn v-if="showReset" class="mx-1 white--text" color="btnred" @click="resetLang()">{{ $t('Reset') }}</v-btn>
             </v-col>
           </v-row>
         </v-container>

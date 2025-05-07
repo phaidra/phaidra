@@ -73,7 +73,7 @@
               </template>
               <template v-slot:item.actions="{ item }">
                 <v-icon color="primary" class="mx-3" @click="loadedList = item">mdi-pencil</v-icon>
-                <v-icon color="red lighten-1" class="mx-3" @click="deleteListDialog(item)">mdi-delete</v-icon>
+                <v-icon color="btnred" class="mx-3" @click="deleteListDialog(item)">mdi-delete</v-icon>
               </template>
             </v-data-table>
           </v-card-text>
@@ -114,7 +114,7 @@
                     single-line
                     hide-details
                   ></v-text-field> -->
-                  <v-btn v-if="token && token.length > 0" color="red lighten-1" dark class="mb-2 ml-2"  @click="deleteToken(loadedList.listid)">{{ $t('Remove public link') }}</v-btn>
+                  <v-btn v-if="token && token.length > 0" color="btnred" dark class="mb-2 ml-2"  @click="deleteToken(loadedList.listid)">{{ $t('Remove public link') }}</v-btn>
                   <v-btn v-else color="primary" dark class="mb-2 ml-2"  @click="createToken(loadedList.listid)">{{ $t('Create public link') }}</v-btn>
                   <v-btn v-if="members.length > 0" color="primary" dark class="mb-2 ml-2"  @click="$refs.collectiondialog.open()">{{ $t('Add objects to collection') }}</v-btn>
                 </v-toolbar>
@@ -126,7 +126,7 @@
                 {{ item.title | truncate(100) }}
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-icon color="red lighten-1" class="mx-3" @click="removeMember(item.pid)">mdi-delete</v-icon>
+                <v-icon color="btnred" class="mx-3" @click="removeMember(item.pid)">mdi-delete</v-icon>
               </template>
             </v-data-table>
           </v-card-text>
@@ -144,7 +144,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn outlined @click="deleteDialog = false">{{ $t('Cancel') }}</v-btn>
-          <v-btn dark @click="deleteList()" color="red lighten-1">{{ $t('Delete') }}</v-btn>
+          <v-btn dark @click="deleteList()" color="btnred">{{ $t('Delete') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
