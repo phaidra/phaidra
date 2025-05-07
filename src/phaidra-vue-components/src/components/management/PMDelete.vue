@@ -10,7 +10,7 @@
       <v-spacer></v-spacer>
       <v-dialog v-model="dialog" width="500" >
         <template v-slot:activator="{ on }">
-          <v-btn dark color="red lighten-1" v-on="on" :disabled="(members.length > 0) || !pid || !cmodel">{{ $t('Delete') }}</v-btn>
+          <v-btn dark color="btnred" v-on="on" :disabled="(members.length > 0) || !pid || !cmodel">{{ $t('Delete') }}</v-btn>
         </template>
         <v-card>
           <v-card-title class="title font-weight-light white--text">{{ $t('Delete') }}</v-card-title>
@@ -19,7 +19,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn outlined :disabled="loading" @click="dialog = false">{{ $t('Cancel') }}</v-btn>
-            <v-btn dark color="red lighten-1" :loading="loading" :disabled="loading" @click="deleteObject(pid)">{{ $t('Delete') }}</v-btn>            
+            <v-btn dark color="btnred" :loading="loading" :disabled="loading" @click="deleteObject(pid)">{{ $t('Delete') }}</v-btn>            
           </v-card-actions>
         </v-card>
       </v-dialog>
