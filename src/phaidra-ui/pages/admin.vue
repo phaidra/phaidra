@@ -560,10 +560,18 @@
 
 import FaviconMixin from '../mixins/favicon'
 import PRepostat from '../components/Repostat.vue';
+import { config } from "../mixins/config";
+
 export default {
-  mixins: [FaviconMixin],
+  mixins: [FaviconMixin, config],
   components: {PRepostat},
   middleware: "auth",
+  metaInfo() {
+    let metaInfo = {
+      title: this.$t('Admin') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+    };
+    return metaInfo;
+  },
   computed: {
     configAsJSON: {
       get: function () {

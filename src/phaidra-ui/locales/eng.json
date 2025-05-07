@@ -656,6 +656,10 @@
     "lang_yo": "Yoruba",
     "lang_za": "Zhuang",
     "lang_zh": "Chinese",
-    "lang_zu": "Zulu"
+    "lang_zu": "Zulu",
+    "next": "Next page",
+    "previous": "Previous page",
+    "page": "Go to Page {0}",
+    "currentPage": "Current Page, Page {0}"
   }
   

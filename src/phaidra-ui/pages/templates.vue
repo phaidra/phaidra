@@ -44,10 +44,17 @@
 
 <script>
 import { context } from "../mixins/context";
+import { config } from "../mixins/config";
 
 export default {
-  mixins: [],
+  mixins: [context, config],
   middleware: "auth",
+  metaInfo() {
+    let metaInfo = {
+      title: this.$t('Manage templates') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+    };
+    return metaInfo;
+  },
   watch: {
   },
   methods: {
