@@ -57,6 +57,9 @@ export default {
             f.removable = false
             f.readonly = true
           }
+          if (f.id.includes("mime-type")) {
+            f.removable = false
+          }
         }
         s.removable = true
       }

@@ -1346,6 +1346,8 @@ const fields = [
     value: '',
     'skos:prefLabel': [],
     errorMessages: [],
+    removable: false,
+    multiplicable: false,
     definition: 'The definition of the container if available as a MIME type.'
   },
   {
@@ -1634,6 +1636,7 @@ export default {
         case 'alert':
         case 'note-checkbox':
         case 'note-checkbox-with-link':
+        case 'mime-type':
           break
         default:
           fieldsNew.push(f)
@@ -1656,6 +1659,7 @@ export default {
         case 'alert':
         case 'note-checkbox':
         case 'note-checkbox-with-link':
+        case 'mime-type':
           break
         default:
           var field = JSON.parse(JSON.stringify(editable[i]))
