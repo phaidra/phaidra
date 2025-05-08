@@ -39,7 +39,15 @@
           <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}<template v-if="getLangAttr(ch)"> ({{getLangAttr(ch)}})</template></v-col>
           <v-col cols="12" md="10" class="valuefield" ref="autolink">{{ ch.ui_value }}</v-col>
         </template>
-        <template v-else>
+        <template v-else-if="ch.xmlname === 'keyword' && i === firstKeywordIndex">
+          <template v-for="(keywords, language) in langKeywords">
+            <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }} <template v-if="language"> ({{language}})</template></v-col>
+            <v-col cols="12" md="10" class="valuefield" ref="autolink">
+                <v-chip :key="'kw' + language + i" v-for="(kw, i) in keywords" class="mr-2 mb-2 pointer-disabled">{{kw}}</v-chip>
+            </v-col>
+          </template>
+        </template>
+        <template v-else-if="ch.xmlname !== 'keyword'">
           <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}<template v-if="getLangAttr(ch)"> ({{getLangAttr(ch)}})</template></v-col>
           <v-col cols="12" md="10" class="valuefield">{{ ch.ui_value }}</v-col>
         </template>
@@ -221,7 +229,26 @@ export default {
         }
       }
       return arr
-    }
+    },
+    langKeywords: function () {
+      let hash = {}
+      this.children.forEach(ch => {
+        if (ch && ch.xmlname === 'keyword') {
+          let lang = null
+          if(ch.attributes && ch.attributes.length) {
+            lang = ch.attributes[0].ui_value
+            if (!hash[lang]) {
+              hash[lang] = []
+            }
+            hash[lang].push(ch.ui_value)
+          }
+        }
+      });
+      return hash
+    },
+    firstKeywordIndex() {
+      return this.children.findIndex(ch => ch.xmlname === 'keyword');
+    },
   },
   data () {
     return {
