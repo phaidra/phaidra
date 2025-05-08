@@ -247,6 +247,7 @@ build-3d-converter:
       changes:
         paths:
           - dockerfiles/3d.dockerfile
+          - src/3d/**/*
 
 build-pixelgecko-base:
   stage: build-base
