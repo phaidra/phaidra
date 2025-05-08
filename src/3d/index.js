@@ -3,7 +3,7 @@ const obj2gltf = require('obj2gltf');
 const fs = require('fs').promises;
 const path = require('path');
 
-// Configuration
+// Service configuration
 const config = {
   mongodb: {
     url: `mongodb://${process.env.MONGODB_PHAIDRA_USER}:${process.env.MONGODB_PHAIDRA_PASSWORD}@${process.env.MONGODB_PHAIDRA_HOST}/admin`,
