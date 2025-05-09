@@ -317,7 +317,7 @@ a {
 .v-main a {
   text-decoration: underline;
 }
-.v-main .breadcrumbs-container a {
+.v-main .breadcrumbs-container a:not(:hover) {
   text-decoration: none;
 }
 a:hover {
