@@ -1010,11 +1010,12 @@
                                 objectInfo.pid +
                                 '/rss'
                               "
+                              :aria-label="$t('RSS Feed')"
                             >
                             <v-icon>mdi-rss</v-icon>
                           </v-btn>
                           </template>
-                          <span>{{ $t('RSS feed') }}</span>
+                          <span>{{ $t('RSS Feed') }}</span>
                         </v-tooltip>
                         
                         <v-btn
