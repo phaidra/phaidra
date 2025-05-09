@@ -296,11 +296,14 @@ sub get_oldest_member {
     }
 
     my $root;
-    $urlget->query(q => "*:*", fq => "ispartof:\"$pid\"", sort => 'created asc', fl => 'pid', rows => "1", wt => "json");
+    $urlget->query(q => "*:*", fq => "ispartof:\"$pid\"", sort => 'created asc', fl => 'pid,cmodel', rows => "1", wt => "json");
     my $getres = $c->ua->get($urlget)->result;
     if ($getres->is_success) {
       for my $d (@{$getres->json->{response}->{docs}}) {
-        $oldest_member = $d->{pid};
+        $oldest_member = {
+          pid => $d->{pid},
+          cmodel => $d->{cmodel}
+        };
         last;
       }
     }
