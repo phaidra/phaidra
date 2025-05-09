@@ -411,7 +411,6 @@
               </v-container>
             </v-tab-item>
           </v-tabs>
-          <v-btn fixed bottom right raised color="primary" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
         </v-card>
       </v-tab-item>
 
@@ -464,7 +463,6 @@
             </v-tab-item>
 
           </v-tabs>
-          <v-btn fixed bottom right raised color="primary" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
         </v-card>
 
       </v-tab-item>
@@ -515,7 +513,6 @@
             </v-tab-item>
 
           </v-tabs>
-          <v-btn fixed bottom right raised color="primary" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
         </v-card>
       </v-tab-item>
       <v-tab-item>
@@ -551,7 +548,11 @@
 
 
     </v-tabs>
-
+    <v-row class="my-2">
+      <v-col>
+        <v-btn large raised color="primary" class="float-right" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
+      </v-col>
+    </v-row>
     
   </v-container>
 
