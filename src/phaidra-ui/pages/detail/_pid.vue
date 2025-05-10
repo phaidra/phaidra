@@ -1665,7 +1665,7 @@
                       >{{ $t("Metadata") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
-                      <v-row no-gutters class="pt-2">
+                      <v-row no-gutters class="pt-2" v-if="objectInfo.dshash['JSON-LD']">
                         <a
                           :href="
                             instanceconfig.api +
