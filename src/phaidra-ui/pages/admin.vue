@@ -438,6 +438,43 @@
                   </v-col>
                   <v-col cols="6" class="mt-6">{{ $t("Used to fetch metadata from catalogue.") }}</v-col>
                 </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      label="SMTP server"
+                      v-model="parsedPrivateConfigData.smtpserver"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("Used when PHAIDRA sends emails.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      label="SMTP port"
+                      v-model="parsedPrivateConfigData.smtpport"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("Used when PHAIDRA sends emails ") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      label="SMTP user"
+                      v-model="parsedPrivateConfigData.smtpuser"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("Used when PHAIDRA sends emails ") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      label="SMTP password"
+                      v-model="parsedPrivateConfigData.smtppassword"
+                      type="password"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("Used when PHAIDRA sends emails.") }}</v-col>
+                </v-row>
               </v-container>
             </v-tab-item>
             <v-tab-item class="pa-8">

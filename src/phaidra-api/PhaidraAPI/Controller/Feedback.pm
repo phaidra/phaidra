@@ -19,6 +19,9 @@ sub feedback {
   my $message   = $self->param('message');
 
   my $user = $self->app->directory->get_user_data($self, $self->stash->{basic_auth_credentials}->{username});
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+  my $privconfig = $confmodel->get_private_config($self);
 
   my %emaildata;
   $emaildata{context}   = $context;
@@ -32,8 +35,8 @@ sub feedback {
   $options{INCLUDE_PATH} = $self->config->{home} . '/templates/feedback';
   eval {
     my $msg = MIME::Lite::TT::HTML->new(
-      From        => $self->config->{phaidra}->{supportemail},
-      To          => $self->config->{phaidra}->{supportemail},
+      From        => $pubconfig->{email},
+      To          => $pubconfig->{email},
       Subject     => 'Phaidra feedback',
       Charset     => 'iso-8859-15',
       Encoding    => 'quoted-printable',
@@ -41,7 +44,7 @@ sub feedback {
       TmplParams  => \%emaildata,
       TmplOptions => \%options
     );
-    $msg->send;
+    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => 1);
   };
   if ($@) {
     my $err = "Error sending feedback email: " . $@;

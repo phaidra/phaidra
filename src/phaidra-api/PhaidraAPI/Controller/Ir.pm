@@ -376,6 +376,10 @@ sub approve {
   my $from = $supportEmail;
   $from = substr($supportEmail, 0, index($supportEmail, ',')) if index($supportEmail, ',') != -1;
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+  my $privconfig = $confmodel->get_private_config($self);
+
   my %options;
   $options{INCLUDE_PATH} = $templatefolder;
   eval {
@@ -389,7 +393,7 @@ sub approve {
       TmplParams  => \%emaildata,
       TmplOptions => \%options
     );
-    $msg->send;
+    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => 1);
   };
   if ($@) {
     $self->addEvent('approval_notification_failed', \@pids, $username);
@@ -874,6 +878,10 @@ sub sendAdminEmail {
   my $phaidrabaseurl = $self->config->{phaidra}->{baseurl};
   my $irbaseur       = $self->config->{ir}->{baseurl};
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+  my $privconfig = $confmodel->get_private_config($self);
+
   my $email = "
   <html>
     <body>
@@ -900,7 +908,7 @@ sub sendAdminEmail {
     Data    => encode('UTF-8', $email)
   );
 
-  $msg->send;
+  $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => 1);
 }
 
 sub stats {
@@ -1213,6 +1221,10 @@ sub sendEmbargoendEmail {
   my $supportEmail = $self->config->{ir}->{supportemail};
   my $from = substr($supportEmail, 0, index($supportEmail, ','));
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+  my $privconfig = $confmodel->get_private_config($self);
+
   my %options;
   $options{INCLUDE_PATH} = $templatefolder;
   eval {
@@ -1226,7 +1238,7 @@ sub sendEmbargoendEmail {
       TmplParams  => \%emaildata,
       TmplOptions => \%options
     );
-    $msg->send;
+    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => 1);
   };
   if ($@) {
     my @pids;

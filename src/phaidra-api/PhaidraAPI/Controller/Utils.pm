@@ -96,9 +96,11 @@ sub request_doi {
 
   $self->app->log->debug("DOI request received pid[$pid]");
 
-  my $settings = $self->mongo->get_collection('config')->find_one({ config_type => 'public' });
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+  my $privconfig = $confmodel->get_private_config($self);
 
-  my $to = $settings->{requestdoiemail};
+  my $to = $pubconfig->{requestdoiemail};
   unless ($to) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Request DOI email is not configured'}]}, status => 500);
     return;
@@ -136,7 +138,7 @@ sub request_doi {
       TmplParams  => \%emaildata,
       TmplOptions => \%options
     );
-    $msg->send;
+    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => 1);
   };
   if ($@) {
     my $err = "[$pid] sending DOI request email failed: " . $@;
