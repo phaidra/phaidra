@@ -19,10 +19,20 @@
                 </template>
                 <span v-else class="valuefield">{{ ft['@value'] }}</span>
               </span>
-              <span v-for="(id, i) in o['skos:exactMatch']" :key="'idprojxv'+i">
-                <span class="mx-4">—</span>
-                <span v-if="id['@value']"><a :href="getIDResolverURL(id)" target="_blank">{{ id['@value'] }}</a></span>
-                <span v-else >{{ id }}</span>
+              <span v-if="o['skos:exactMatch']">
+                <span v-for="(id, i) in o['skos:exactMatch']" :key="'idprojxv'+i">
+                  <span class="mx-4">—</span>
+                  <span v-if="id['@value']"><a :href="getIDResolverURL(id)" target="_blank">{{ id['@value'] }}</a></span>
+                  <span v-else >{{ id }}</span>
+                </span>
+              </span>
+              <span v-else>
+                <span v-if="o['frapo:hasProjectIdentifier']">
+                  <span v-for="(id, i) in o['frapo:hasProjectIdentifier']" :key="'idprojxvfr'+i">
+                  <span class="mx-4">—</span>
+                  <span>{{ id }}</span>
+                </span>
+                </span>
               </span>
             </v-row>
           </v-container>
