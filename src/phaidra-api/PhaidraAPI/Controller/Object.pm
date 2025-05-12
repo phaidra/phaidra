@@ -367,7 +367,17 @@ sub thumbnail {
         $self->render(json => $res, status => $res->{status});
         return;
       }
-      return $self->_proxy_thumbnail($r->{oldest_member}, $cmodelr->{cmodel}, $size);
+      if ($r->{oldest_member} && $r->{oldest_member}->{pid}) {
+        if ($r->{oldest_member}->{cmodel} eq 'Collection') {
+          $self->reply->static('images/collection.png');
+          return;
+        } else {
+          return $self->_proxy_thumbnail($r->{oldest_member}->{pid}, $r->{oldest_member}->{cmodel}, $size);
+        }
+      } else {
+        $self->reply->static('images/collection.png');
+        return;
+      }
     }
     case 'Resource' {
       $self->reply->static('images/resource.png');
