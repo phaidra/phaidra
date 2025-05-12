@@ -1631,7 +1631,6 @@ export default {
         case 'sociocultural-category':
         case 'physical-location-select-text':
         case 'physical-location-select-text-pool':
-        case 'subject':
         case 'fixedrole-person':
         case 'alert':
         case 'note-checkbox':
@@ -1654,7 +1653,6 @@ export default {
         case 'sociocultural-category':
         case 'physical-location-select-text':
         case 'physical-location-select-text-pool':
-        case 'subject':
         case 'fixedrole-person':
         case 'alert':
         case 'note-checkbox':
