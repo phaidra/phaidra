@@ -1761,16 +1761,6 @@
                       >{{ $t("Metadata") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
-                      <!-- <v-row
-                        no-gutters
-                        class="pt-2"
-                        v-if="objectInfo.dshash['JSON-LD']"
-                      >
-                        <nuxt-link
-                          :to="localePath(`/metadata/${objectInfo.pid}`)"
-                          >{{ $t("Metadata JSON") }}</nuxt-link
-                        >
-                      </v-row> -->
                       <v-row
                         no-gutters
                         class="pt-2"
@@ -2019,25 +2009,6 @@
                           >{{ $t("Sort members (text input)") }}</nuxt-link
                         >
                       </v-row>
-                      <!-- <v-row
-                        no-gutters
-                        class="pt-2"
-                        v-if="
-                          objectInfo.cmodel !== 'Container' &&
-                          objectInfo.cmodel !== 'Collection' &&
-                          objectInfo.cmodel !== 'Resource' &&
-                          objectInfo.cmodel !== 'Book' &&
-                          objectInfo.cmodel !== 'Page'
-                        "
-                      >
-                        <nuxt-link
-                          class="mb-1"
-                          :to="
-                            localePath(`/upload-webversion/${objectInfo.pid}`)
-                          "
-                          >{{ $t("Upload web-optimized version") }}</nuxt-link
-                        >
-                      </v-row> -->
                       <v-row
                         no-gutters
                         class="pt-2"
