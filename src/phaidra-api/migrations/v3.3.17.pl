@@ -802,6 +802,32 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561314', 'it', 'Writer of preface', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561315', 'it', 'Writer of supplementary textual content', '3');
 
+  INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (92,'it','ÖFOS',9);
+
+  INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (10936,'en','Physics and Astronomy Classification Scheme',45);
+  INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (10936,'de','Physics and Astronomy Classification Scheme',45);
+  INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (10936,'it','Physics and Astronomy Classification Scheme',45);
+
+
+  INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (1552001,'it','University of Vienna',30);
+
+
+  INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (1552264,'it','Basisklassifikation',30);
+
+  INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (1554398,'it','OSNO - Opšta sistematizacija naučnih oblasti',35);
+
+  INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (1557234,'de','Conferences',41);
+  INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (1557234,'it','Conferences',41);
+
+  INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (1559939,'de','BIC Standard Subject Qualifiers',43);
+  INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (1559939,'it','BIC Standard Subject Qualifiers',43);
+
+
+  INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (1557244,'de','BIC Standard Subject Categories',42);
+  INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (1557244,'it','BIC Standard Subject Categories',42);
+
+  INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (1562584,'it','ÖFOS 2012',44);
+
 
   ");
 $log->info("finished migration to v3.3.17");
