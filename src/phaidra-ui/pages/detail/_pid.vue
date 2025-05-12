@@ -756,11 +756,18 @@
                       <p>{{ collMember.pid }}</p>
                     </v-col>
                     <v-spacer></v-spacer>
-                    <v-col cols="1" class="text-right"
+                    <v-col cols="2" class="text-right"
                       ><span v-if="collMember.created">{{
                         collMember.created | date
-                      }}</span></v-col
-                    >
+                      }}</span>
+                      <v-icon v-if="collMember.cmodel == 'Video'" class="mx-2" color="grey">mdi-video</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Picture'" class="mx-2" color="grey">mdi-image</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Audio'" class="mx-2" color="grey">mdi-volume-high</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'PDFDocument'" class="mx-2" color="grey">mdi-file-document</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Asset'" class="mx-2" color="grey">mdi-file</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Resource'" class="mx-2" color="grey">mdi-link</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Collection'" class="mx-2" color="grey">mdi-folder-open</v-icon>
+                      </v-col>
                   </v-row>
                 </v-col>
                 <v-col cols="1" v-if="objectInfo.writerights === 1" justify="center">
