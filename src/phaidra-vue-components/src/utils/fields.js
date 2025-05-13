@@ -794,6 +794,20 @@ const fields = [
     definition: 'Relates an object to a corporate body who is associated with an object.'
   },
   {
+    id: 'association-text',
+    fieldname: 'Association (Text)',
+    predicate: 'rdax:P00009',
+    type: 'foaf:Organization',
+    component: 'p-association-text',
+    showtype: true,
+    multiplicable: true,
+    multilingual: true,
+    label: 'Association',
+    value: '',
+    'skos:prefLabel': [],
+    definition: 'Relates an object to a corporate body who is associated with an object.'
+  },
+  {
     id: 'bf-publication',
     fieldname: 'Publication',
     predicate: 'bf:provisionActivity',

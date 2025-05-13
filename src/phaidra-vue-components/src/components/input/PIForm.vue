@@ -643,6 +643,19 @@
                             ></p-i-association>
                           </template>
 
+                          <template v-else-if="f.component === 'p-association-text'">
+                            <p-i-association-text
+                              v-bind.sync="f"
+                              v-on:input="f.value=$event"
+                              v-on:input-association-type="setSelected(f, 'type', $event)"
+                              v-on:input-language="setSelected(f, 'language', $event)"
+                              v-on:add="addField(s.fields, f)"
+                              v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
+                              :configurable="enablefieldconfig || f.configurable"
+                            ></p-i-association-text>
+                          </template>
+
                           <template v-else-if="f.component === 'p-filename'">
                             <p-i-filename
                               v-bind.sync="f"
@@ -921,6 +934,7 @@ import PIProject from './PIProject'
 import PIEvent from './PIEvent'
 import PIFunder from './PIFunder'
 import PIAssociation from './PIAssociation'
+import PIAssociationText from './PIAssociationText'
 import PISeries from './PISeries'
 import PIContainedIn from './PIContainedIn'
 import PICitation from './PICitation'
@@ -971,6 +985,7 @@ export default {
     PIEvent,
     PIFunder,
     PIAssociation,
+    PIAssociationText,
     PISeries,
     PIContainedIn,
     PICitation,
