@@ -64,9 +64,16 @@ sub generate_simple_manifest {
                 "body" => {
                   "id" => "$apiBaseUrlPath/imageserver?IIIF=$pid.tif/full/full/0/default.jpg",
                   "type" => "Image",
-                  "format" => "image/jpg",
+                  "format" => "image/jpeg",
                   "height" => $height,
-                  "width" => $width
+                  "width" => $width,
+                   "service" => [
+                     {
+                       "id" => "$apiBaseUrlPath/imageserver?IIIF=$pid.tif",
+                       "type" => "ImageService2",
+                       "profile" => "http://iiif.io/api/image/2/level1.json"
+                      }
+                    ]
                 }
               }
             ]
