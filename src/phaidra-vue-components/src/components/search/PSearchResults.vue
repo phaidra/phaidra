@@ -65,6 +65,7 @@
                     <v-icon v-else-if="doc.cmodel == 'Resource'" class="mx-2" color="grey">mdi-link</v-icon>
                     <v-icon v-else-if="doc.cmodel == 'Collection'" class="mx-2" color="grey">mdi-folder-open</v-icon>
                     <v-icon v-else-if="doc.cmodel == 'Container'" class="mx-2" color="grey">mdi-folder</v-icon>
+                    <v-icon v-else-if="doc.cmodel == 'Book'" class="mx-2" color="grey">mdi-book-open-variant</v-icon>
                   </v-chip>
                 </v-col>
               </v-row>

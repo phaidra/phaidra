@@ -767,6 +767,8 @@
                       <v-icon v-else-if="collMember.cmodel == 'Asset'" class="mx-2" color="grey">mdi-file</v-icon>
                       <v-icon v-else-if="collMember.cmodel == 'Resource'" class="mx-2" color="grey">mdi-link</v-icon>
                       <v-icon v-else-if="collMember.cmodel == 'Collection'" class="mx-2" color="grey">mdi-folder-open</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Container'" class="mx-2" color="grey">mdi-folder</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Book'" class="mx-2" color="grey">mdi-book-open-variant</v-icon>
                       </v-col>
                   </v-row>
                 </v-col>
