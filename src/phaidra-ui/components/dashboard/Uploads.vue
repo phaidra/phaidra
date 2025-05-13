@@ -1,6 +1,6 @@
 <template>
   <v-card class="mt-2 mx-auto" flat color="transparent">
-    <v-card-title class="title font-weight-light transparent">{{ $t('Objects uploaded last year') }}</v-card-title>
+    <div class="title font-weight-light transparent text-h6">{{ $t('Objects uploaded last year') }}</div>
     <v-card-text>
       <v-sheet class="mx-auto mt-6" color="transparent" max-width="calc(100% - 32px)">
         <v-sparkline :labels="labels" :value="value" color="secondary" line-width="2" padding="16"></v-sparkline>
