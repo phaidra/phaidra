@@ -1010,9 +1010,18 @@ export default {
 
             // rdax:P00009
             case 'rdax:P00009':
-              f = fields.getField('association')
-              for (let em of obj['skos:exactMatch']) {
-                f.value = em
+              if (obj['skos:exactMatch']) {
+                f = fields.getField('association')
+                for (let em of obj['skos:exactMatch']) {
+                  f.value = em
+                }
+              } else {
+                f = fields.getField('association-text')
+                f.type = obj['@type']
+                for (let pl of obj['skos:prefLabel']) {
+                  f.value = pl['@value']
+                  f.language = pl['@language'] ? pl['@language'] : 'eng'
+                }
               }
               components.push(f)
               break
@@ -2353,7 +2362,7 @@ export default {
   },
   validate_object (object) {
     if (!object['@type']) {
-      // console.error('JSON-LD validation: missing @type attribute', object)
+      console.log('Object validation: missing @type attribute', object)
       return false
     }
     return true
@@ -2463,7 +2472,8 @@ export default {
   fields2json (jsonld, formData) {
     for (var j = 0; j < formData.fields.length; j++) {
       var f = formData.fields[j]
-
+      console.log(f.predicate)
+      console.log(f)
       switch (f.predicate) {
         case 'rdam:P30004':
           if (f.value) {
@@ -2529,8 +2539,12 @@ export default {
           break
 
         case 'rdax:P00009':
-          if (f.value) {
+          if (f.value.startsWith('https://')) {
             this.push_object(jsonld, f.predicate, this.get_json_object(f['skos:prefLabel'], null, f.type, [f.value]))
+          } else {
+            if (f.value) {
+              this.push_object(jsonld, f.predicate, this.get_json_object([{ '@value': f.value, '@language': f.language }], null, f.type))
+            }
           }
           break
 
