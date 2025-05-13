@@ -2104,7 +2104,11 @@ export default {
       for (var i = 0; i < this.addfieldselection.length; i++) {
         let f = fields.getField(this.addfieldselection[i].id)
         f.removable = true
-        section.fields.push(f)
+        if(f.id.includes("phaidra:Subject")) {
+          this.form.sections.push(f)
+        } else {
+          section.fields.push(f)
+        }
       }
       this.addfieldselection = []
       section['adddialogue'] = false

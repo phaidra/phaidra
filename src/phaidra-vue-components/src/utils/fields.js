@@ -743,6 +743,16 @@ const fields = [
     definition: 'Events, all real or fictional.'
   },
   {
+    title: 'SUBJECT_SECTION',
+    type: 'phaidra:Subject',
+    id: 'phaidra:Subject',
+    removable: true,
+    multiplicable: true,
+    fields: [],
+    fieldname: 'SUBJECT_SECTION',
+    definition: 'An administrative entity that enabled an endeavour such as a research investigation.'
+  },
+  {
     id: 'project',
     fieldname: 'Project',
     predicate: 'frapo:isOutputOf',
@@ -1631,6 +1641,7 @@ export default {
         case 'sociocultural-category':
         case 'physical-location-select-text':
         case 'physical-location-select-text-pool':
+        case 'subject':
         case 'fixedrole-person':
         case 'alert':
         case 'note-checkbox':
@@ -1653,6 +1664,7 @@ export default {
         case 'sociocultural-category':
         case 'physical-location-select-text':
         case 'physical-location-select-text-pool':
+        case 'subject':
         case 'fixedrole-person':
         case 'alert':
         case 'note-checkbox':
