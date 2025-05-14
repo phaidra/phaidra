@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container class="text-break" fluid>
     <v-divider v-if="selectioncheck"></v-divider>
     <v-slide-y-transition hide-on-leave>
       <v-row v-if="selectioncheck" no-gutters class="my-4">
