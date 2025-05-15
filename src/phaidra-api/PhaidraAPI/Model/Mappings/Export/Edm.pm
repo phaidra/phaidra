@@ -20,6 +20,7 @@ sub get_metadata {
   my $pidUri       = 'https://' . $c->app->config->{phaidra}->{baseurl} . '/' . $pid;
   my $apiBaseUrlPath = $c->app->config->{baseurl}. ($c->app->config->{basepath} ? '/' . $c->app->config->{basepath} : '');
   my $getUrl       = "https://$apiBaseUrlPath/object/$pid/get";
+  my $previewUrl   = "https://$apiBaseUrlPath/object/$pid/preview";
   my $iiifUri      = "https://$apiBaseUrlPath/imageserver?IIIF=$pid.tif/info.json";
   my $iiifManifestUri = "https://$apiBaseUrlPath/object/$pid/iiifmanifest";
 
@@ -110,7 +111,7 @@ sub get_metadata {
     name => 'edm:isShownBy',
     attributes => [
       { name  => 'rdf:resource',
-        value => $getUrl,
+        value => ($rec->{cmodel} eq 'Video') ? $previewUrl : $getUrl,
       }
     ]
   };
@@ -446,7 +447,7 @@ sub get_metadata {
     name       => 'edm:WebResource',
     attributes => [
       { name  => 'rdf:about',
-        value => $getUrl
+        value => ($rec->{cmodel} eq 'Video') ? $previewUrl : $getUrl
       }
     ],
     children => []
