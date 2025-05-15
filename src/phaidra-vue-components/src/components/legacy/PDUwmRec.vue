@@ -8,7 +8,7 @@
       </template>
       <template v-else-if="ch.input_type === 'input_text'">
         <template v-if="nodePath(ch) === 'uwm_general_title'">
-          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}<template v-if="getLangAttr(ch)"> ({{getLangAttr(ch)}})</template></v-col>
           <v-col cols="12" md="10" class="wiv">{{ ch.ui_value }}</v-col>
         </template>
         <template v-else-if="nodePath(ch) === 'uwm_lifecycle_upload_date'">
