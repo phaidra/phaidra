@@ -2208,7 +2208,7 @@
                 <v-col cols="12" class="pt-0">
                     <p class="text-right">
                       <span class="caption text--secondary">{{ $t('Media Package Identifier') }}</span
-                      ><br /><span>{{ objectInfo.oc_mpid }}</span>
+                      ><br /><span>id={{ objectInfo.oc_mpid }}<v-btn icon @click="copyToClipboard(objectInfo.oc_mpid)"><v-icon>mdi-content-copy</v-icon></v-btn></span>
                     </p>
                 </v-col>
               </v-row>
@@ -2640,6 +2640,9 @@ export default {
     this.detailsMetaInfo = metaInfo
   },
   methods: {
+    copyToClipboard(text) {
+      navigator.clipboard.writeText(text);
+    },
     async fetchAsyncData(self, pid) {
       console.log('fetching object info ' + pid);
       await self.$store.dispatch("fetchObjectInfo", pid);
