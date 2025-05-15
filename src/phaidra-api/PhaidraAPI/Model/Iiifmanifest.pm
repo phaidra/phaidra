@@ -42,7 +42,7 @@ sub generate_simple_manifest {
 
   my $manifest = {
     "\@context" => "http://iiif.io/api/presentation/3/context.json",
-    "\@id" => "$apiBaseUrlPath/object/$pid/iiifmanifest",
+    "id" => "$apiBaseUrlPath/object/$pid/iiifmanifest",
     "type" => "Manifest",
     "label" => {},
     "items" => [

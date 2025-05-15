@@ -776,6 +776,7 @@ sub startup {
     $check_auth->get('ir/pureimport/locks')                                     ->to('ir#pureimport_getlocks');
 
     $check_auth->get('termsofuse/getagreed')                                    ->to('termsofuse#getagreed');
+    $check_auth->get('users/search')                                            ->to('utils#search_users');
 
     $admin->get('test/error')                                                   ->to('utils#testerror');
 

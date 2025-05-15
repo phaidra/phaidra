@@ -25,10 +25,12 @@ sub create {
   # create object
   my $pid;
 
-  # use transactions only for single object creation. TODO: use only one transactions also for membership relation when adding members
-  my $fedora_model = PhaidraAPI::Model::Fedora->new;
-  my $transaction_url = $fedora_model->useTransaction($c);
-  $c->stash(transaction_url => $transaction_url->{transaction_id});
+  if ($c->app->config->{fedora}->{version} >= 6) {
+    # use transactions only for single object creation. TODO: use only one transactions also for membership relation when adding members
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    my $transaction_url = $fedora_model->useTransaction($c);
+    $c->stash(transaction_url => $transaction_url->{transaction_id});
+  }
   my $object_model = PhaidraAPI::Model::Object->new;
   my $res_create   = $object_model->create($c, 'cmodel:Collection', $username, $password);
   if ($res_create->{status} ne 200) {
