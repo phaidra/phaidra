@@ -1259,6 +1259,7 @@
                           class="white--text"
                           :to="localePath(`/stats/${objectInfo.pid}`)"
                           :aria-label="$t('Show details')"
+                          v-if="(stats.detail > 0) || (stats.download > 0)"
                         >
                           <v-tooltip bottom>
                             <template v-slot:activator="{ on, attrs }">
