@@ -82,12 +82,12 @@
                   <a :href="'https://orcid.org/' + getChildValue(entity, 'orcid').replace('https://orcid.org/','')" target="_blank">
                     <icon width="16px" height="16px" class="mr-1 mb-1" name="orcid"></icon>
                     <span v-if="getChildValue(entity, 'firstname')" class="wiv">{{ getChildValue(entity, 'firstname') }}</span>
-                    <span v-if="getChildValue(entity, 'lastname')" class="wiv"><template v-if="getChildValue(entity, 'firstname')">&nbsp;</template>{{ getChildValue(entity, 'lastname') }}</span>
+                    <span v-if="getChildValue(entity, 'lastname')" class="wiv">{{ getChildValue(entity, 'lastname') }}</span>
                   </a>
                 </span>
                 <span v-else>
                   <span v-if="getChildValue(entity, 'firstname')" class="wiv">{{ getChildValue(entity, 'firstname') }}</span>
-                  <span v-if="getChildValue(entity, 'lastname')" class="wiv"><template v-if="getChildValue(entity, 'firstname')">&nbsp;</template>{{ getChildValue(entity, 'lastname') }}</span>
+                  <span v-if="getChildValue(entity, 'lastname')" class="wiv">{{ getChildValue(entity, 'lastname') }}</span>
                 </span>
                 <span v-if="getChildValue(entity, 'institution') && (getChildValue(entity, 'firstname') || getChildValue(entity, 'lastname'))" class="secondary--text">&nbsp;({{ getChildValue(entity, 'institution') }})</span>
                 <span v-else-if="getChildValue(entity, 'institution')">{{ getChildValue(entity, 'institution') }}</span>
@@ -121,7 +121,7 @@
                   <v-row no-gutters v-for="(entity, i) in getEntities(ch)" :key="'en'+i">
                     <v-col>
                       <span v-if="getChildValue(entity, 'firstname')" class="wiv">{{ getChildValue(entity, 'firstname') }}</span>
-                      <span v-if="getChildValue(entity, 'lastname')" class="wiv"><template v-if="getChildValue(entity, 'firstname')">&nbsp;</template>{{ getChildValue(entity, 'lastname') }}</span>
+                      <span v-if="getChildValue(entity, 'lastname')" class="wiv">{{ getChildValue(entity, 'lastname') }}</span>
                       <span v-if="getChildValue(entity, 'institution') && (getChildValue(entity, 'firstname') || getChildValue(entity, 'lastname'))" class="secondary--text">&nbsp;({{ getChildValue(entity, 'institution') }})</span>
                       <span v-else-if="getChildValue(entity, 'institution')">{{ getChildValue(entity, 'institution') }}</span>                      
                     </v-col>
