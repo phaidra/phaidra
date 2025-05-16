@@ -1,5 +1,5 @@
 <template>
-  <div v-if="instanceconfig.cms_footer">
+  <div v-if="instanceconfig.cms_footer" style="width:100%;">
     <runtimetemplate :template="instanceconfig.cms_footer" />
   </div>
   <v-row v-else>
