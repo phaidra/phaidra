@@ -514,7 +514,7 @@
                     instanceconfig.api +
                     '/object/' +
                     objectInfo.pid +
-                    '/preview' + '?lang=' + $i18n.locale.substring(0, 2)
+                    '/preview' + '?lang=' + $i18n.locale.substring(0, 2) + `${instanceconfig.addannotation ? `&addannotation=${instanceconfig.addannotation}` : ''}`
                   "
                   :style="
                     objectInfo.cmodel === 'Audio'

@@ -404,6 +404,8 @@ sub preview {
   my $lang = $self->param('lang') || 'en';  # Default to English
   $self->languages($lang);
 
+  my $addannotation = $self->param('addannotation');
+
   my $pid = $self->stash('pid');
 
   my $force = $self->param('force');
@@ -621,7 +623,7 @@ sub preview {
         my $u_model = PhaidraAPI::Model::Util->new;
         $u_model->track_action($self, $pid, 'preview');
 
-        $self->render(template => 'utils/imageviewer', format => 'html');
+        $self->render(template => 'utils/imageviewer', format => 'html', addannotation => $addannotation);
         return;
       }
       else {
