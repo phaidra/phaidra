@@ -55,11 +55,23 @@ export default {
 
             // edm:hasType
             case 'edm:hasType':
-              f = fields.getField('object-type')
-              for (let em of obj['skos:exactMatch']) {
-                f.value = em
+              if (obj['skos:exactMatch']) {
+                for (let v of obj['skos:exactMatch']) {
+                  if (v.startsWith('https://w3id.org/kim/hcrt')) {
+                    f = fields.getField('object-type-oer')
+                    for (let em of obj['skos:exactMatch']) {
+                      f.value = em
+                    }
+                    components.push(f)
+                  } else {
+                    f = fields.getField('object-type')
+                    for (let em of obj['skos:exactMatch']) {
+                      f.value = em
+                    }
+                    components.push(f)
+                  }
+                }
               }
-              components.push(f)
               break
 
             // schema:genre
