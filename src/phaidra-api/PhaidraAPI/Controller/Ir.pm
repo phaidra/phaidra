@@ -393,7 +393,7 @@ sub approve {
       TmplParams  => \%emaildata,
       TmplOptions => \%options
     );
-    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => 1);
+    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => $privconfig->{smtpport} eq '465' ? 1 : 0);
   };
   if ($@) {
     $self->addEvent('approval_notification_failed', \@pids, $username);
@@ -908,7 +908,7 @@ sub sendAdminEmail {
     Data    => encode('UTF-8', $email)
   );
 
-  $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => 1);
+  $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => $privconfig->{smtpport} eq '465' ? 1 : 0);
 }
 
 sub stats {
@@ -1238,7 +1238,7 @@ sub sendEmbargoendEmail {
       TmplParams  => \%emaildata,
       TmplOptions => \%options
     );
-    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => 1);
+    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => $privconfig->{smtpport} eq '465' ? 1 : 0);
   };
   if ($@) {
     my @pids;
