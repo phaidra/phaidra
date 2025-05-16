@@ -2022,7 +2022,13 @@ sub _add_jsonld_index {
     }
   }
 
-  $index->{"roles_json"} = b(encode_json(\@roles))->decode('UTF-8');
+  unless (exists($jsonld->{'@type'}) && ($jsonld->{'@type'} eq 'phaidra:Subject')) {
+    # If it was phaidra:Subject (=represented object section), then roles
+    # array would overwrite the digital object roles array.
+    # Merge would not be easy (could create dups), so let's just skip adding
+    # the represented object roles to array.
+    $index->{"roles_json"} = b(encode_json(\@roles))->decode('UTF-8');
+  }
 
   if (scalar @descriptions) {
     $index->{"descriptions_json"} = b(encode_json(\@descriptions))->decode('UTF-8');

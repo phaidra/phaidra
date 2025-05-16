@@ -151,8 +151,10 @@ sub _already_present {
   my $arr  = shift;
 
   for my $f (@{$arr}) {
-    if ($f->{name} eq $fl->{name} and $f->{lang} eq $fl->{lang}) {
-      return 1;
+    unless ($f->{name} eq 'creator' or $f->{name} eq 'contributor') {
+      if ($f->{name} eq $fl->{name} and $f->{lang} eq $fl->{lang}) {
+        return 1;
+      }
     }
   }
   return 0;
@@ -197,7 +199,7 @@ sub _add_roles_with_id {
             my $id;
             if ($contr->{'@type'} eq 'schema:Person') {
               if ($contr->{'schema:givenName'} || $contr->{'schema:familyName'}) {
-                $name = $contr->{'schema:givenName'}[0]->{'@value'} . " " . $contr->{'schema:familyName'}[0]->{'@value'};
+                $name = $contr->{'schema:familyName'}[0]->{'@value'}.', '.$contr->{'schema:givenName'}[0]->{'@value'};
               }
               else {
                 $name = $contr->{'schema:name'}[0]->{'@value'};
@@ -277,7 +279,7 @@ sub _add_uwm_roles_with_id {
 
         if ($e->{firstname} || $e->{lastname}) {
           $name = $e->{lastname};
-          $name = $e->{firstname}.' '.$name if $e->{firstname};
+          $name = $name . ', ' . $e->{firstname} if $e->{firstname};
           $affiliation = $e->{institution} if $e->{institution};
         }
         else {
