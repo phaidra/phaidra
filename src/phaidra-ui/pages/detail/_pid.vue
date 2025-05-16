@@ -420,7 +420,7 @@
           </v-col>
         </template>
       </v-row>
-      <v-row v-else>
+      <v-row class="text-break" v-else>
         <v-col cols="12" md="8" class="mt-8">
           <v-row v-if="objectInfo.cmodel === 'Page'" justify="center">
             <v-col cols="6">
