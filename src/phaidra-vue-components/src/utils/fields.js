@@ -750,7 +750,7 @@ const fields = [
     multiplicable: true,
     fields: [],
     fieldname: 'SUBJECT_SECTION',
-    definition: 'An administrative entity that enabled an endeavour such as a research investigation.'
+    definition: "A metadata level describing the represented object. You can use 'Level of description' field to indicate the level."
   },
   {
     id: 'project',

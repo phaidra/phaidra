@@ -1106,6 +1106,7 @@
     "Work the Instance described instantiates or manifests. For use to connect Instances to Works.": "Teil, der die beschriebene Instanz angibt oder manifestiert. Zur Verwendung, um Instanzen mit Teilen zu verbinden.",
     "Relates a resource to a resource that is adapted as a motion picture.": "Verknüpft eine Ressource mit einer Ressource, die verfilmt ist.",
     "Events, all real or fictional.": "Ereignisse, alle real oder fiktiv.",
+    "A metadata level describing the represented object. You can use 'Level of description' field to indicate the level.": "Eine Metadatenebene, die das dargestellte Objekt beschreibt. Sie können das Feld 'Verzeichnungsstufe' verwenden, um die Stufe anzugeben.",
     "An administrative entity that enabled an endeavour such as a research investigation.": "Eine Verwaltungseinheit, die eine Unternehmung wie eine Forschungsuntersuchung ermöglicht.",
     "A funding agency that provided funding for the resource.": "Eine Finanzierungseinrichtung, die die Ressource finanziert hat.",
     "Relates an object to a corporate body who is associated with an object.": "Verknüpft ein Objekt mit einer juristischen Person.",
