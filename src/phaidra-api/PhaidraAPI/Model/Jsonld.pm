@@ -45,8 +45,8 @@ our $namespaces = {
 
 our %cm2rt = (
   'Picture'       => {'@id' => 'https://pid.phaidra.org/vocabulary/44TN-P1S0', 'skos:prefLabel' => {'eng' => 'image'}},
-  'Page'          => {'@id' => 'https://pid.phaidra.org/vocabulary/44TN-P1S0', 'skos:prefLabel' => {'eng' => 'image'}},
-  'Book'          => {'@id' => 'https://pid.phaidra.org/vocabulary/47QB-8QF1', 'skos:prefLabel' => {'eng' => 'book'}},
+  'Page'          => {'@id' => 'https://pid.phaidra.org/vocabulary/6V70-DMG5', 'skos:prefLabel' => {'eng' => 'page'}},
+  'Book'          => {'@id' => 'https://pid.phaidra.org/vocabulary/CR2H-D544', 'skos:prefLabel' => {'eng' => 'book'}},
   'PDFDocument'   => {'@id' => 'https://pid.phaidra.org/vocabulary/69ZZ-2KGX', 'skos:prefLabel' => {'eng' => 'text'}},
   'LaTeXDocument' => {'@id' => 'https://pid.phaidra.org/vocabulary/69ZZ-2KGX', 'skos:prefLabel' => {'eng' => 'text'}},
   'Paper'         => {'@id' => 'https://pid.phaidra.org/vocabulary/69ZZ-2KGX', 'skos:prefLabel' => {'eng' => 'text'}},
