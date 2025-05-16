@@ -1397,7 +1397,7 @@ const vocabularies = {
       { '@id': ns + '8MY0-BQDQ', 'skos:prefLabel': { 'eng': 'Container', 'deu': 'Container', 'ita': 'Contenitore' } },
       { '@id': ns + 'T8GH-F4V8', 'skos:prefLabel': { 'eng': 'Link', 'deu': 'Link', 'ita': 'Risorsa Web' } },
       { '@id': ns + 'CR2H-D544', 'skos:prefLabel': { 'eng': 'Book', 'deu': 'Buch', 'ita': 'Libro' } },
-      { '@id': ns + '6V70-DMG5', 'skos:prefLabel': { 'eng': 'Page', 'deu': 'Page', 'ita': 'Page' } }
+      { '@id': ns + '6V70-DMG5', 'skos:prefLabel': { 'eng': 'Page', 'deu': 'Page', 'ita': 'Pagina' } }
     ],
     loaded: true
   },
