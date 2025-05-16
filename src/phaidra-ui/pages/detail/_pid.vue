@@ -2213,7 +2213,7 @@
                           <template v-slot:activator="{ on, attrs }">
                             <v-btn
                               v-on="on"
-                              v-bind="attrs" icon @click="copyToClipboard(objectInfo.oc_mpid)"><v-icon>mdi-content-copy</v-icon></v-btn>
+                              v-bind="attrs" icon @click="copyToClipboard('id='+objectInfo.oc_mpid)"><v-icon>mdi-content-copy</v-icon></v-btn>
                           </template>
                           <span>{{ $t('Copy to clipboard') }}</span>
                       </v-tooltip>
