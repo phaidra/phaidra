@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <div>
     <v-row>
       <v-col cols="12">
         <v-card>
@@ -22,7 +22,7 @@
               :no-results-text="$t('There were no search results')"
             >
               <template v-slot:top>
-                <v-toolbar flat color="transparent">
+                <v-toolbar flat color="transparent" class="my-4">
                   <v-text-field
                     v-model="groupsSearch"
                     append-icon="mdi-magnify"
@@ -39,7 +39,7 @@
                       <v-card-title class="title font-weight-light white--text">
                         {{ $t('New group') }}
                       </v-card-title>
-                      <v-card-text>
+                      <v-card-text class="my-4">
                         <v-text-field
                           v-model="newGroupName"
                           :label="$t('Enter group name...')"
@@ -71,8 +71,22 @@
                 {{ item.updated | unixtime }}
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-icon color="primary" class="mx-3" @click="loadedGroup = item">mdi-pencil</v-icon>
-                <v-icon color="btnred" class="mx-3" @click="deleteGroupDialog(item)">mdi-delete</v-icon>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon color="primary" @click="loadedGroup = item" v-on="on" v-bind="attrs" :aria-label="$t('Modify')">
+                      <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>{{ $t('Modify')}}</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon color="btnred" @click="deleteGroupDialog(item)" v-on="on" v-bind="attrs" :aria-label="$t('Delete')">
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>{{ $t('Delete')}}</span>
+                </v-tooltip>
               </template>
             </v-data-table>
           </v-card-text>
@@ -87,7 +101,6 @@
           </v-card-title>
           <v-card-text>
             <v-data-table
-              hide-default-header
               :headers="membersHeaders"
               :items="members"
               :search="membersSearch"
@@ -100,6 +113,7 @@
                 itemsPerPageAllText: $t('All')
               }"
               :no-results-text="$t('There were no search results')"
+              class="mt-4"
             >
               <!-- <template v-slot:top>
                 <v-toolbar flat>
@@ -119,11 +133,18 @@
                 [{{ item.username }}]
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-icon color="btnred" class="mx-3" @click="removeMember(item.username)">mdi-delete</v-icon>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon color="btnred" @click="removeMember(item.username)" v-on="on" v-bind="attrs" :aria-label="$t('Delete')">
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>{{ $t('Delete')}}</span>
+                </v-tooltip>                
               </template>
             </v-data-table>
             <v-card-actions>
-              <v-btn class="mb-4 mt-4 primary" @click="$refs.userSearchdialog.open()">
+              <v-btn color="primary" @click="$refs.userSearchdialog.open()">
                 {{ $t('Username search') }}
                 <v-icon
                   right
@@ -143,7 +164,7 @@
         <v-card-title class="title font-weight-light white--text">
           {{ $t('Delete group') }}
         </v-card-title>
-        <v-card-text class="mt-4">
+        <v-card-text class="my-4">
           <p class="title font-weight-light">{{ $t('Delete group') + ' ' + groupToDelete.name + '?' }}</p>
         </v-card-text>
         <v-card-actions>
@@ -154,7 +175,7 @@
       </v-card>
     </v-dialog>
     <user-search-dialog ref="userSearchdialog" @user-selected="searchUserSelected($event)"></user-search-dialog>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -243,11 +264,7 @@ export default {
       membersLoading: false,
       membersSearch: '',
       deleteMembersConfirm: false,
-      membersHeaders: [
-        { text: 'Name', align: 'left', value: 'name' },
-        { text: 'Username', align: 'left', value: 'username' },
-        { text: 'Actions', align: 'right', value: 'actions', sortable: false }
-      ],
+      membersHeaders: [],
       members: [],
       userSearch: null,
       userSearchModel: null,
@@ -263,6 +280,11 @@ export default {
               { text: this.$t('Name'), align: 'left', value: 'name' },
               { text: this.$t('Created'), align: 'right', value: 'created' },
               { text: this.$t('Modified'), align: 'right', value: 'updated' },
+              { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+            ];
+          this.membersHeaders = [
+              { text: this.$t('Name'), align: 'left', value: 'name' },
+              { text: this.$t('Username'), align: 'left', value: 'username' },
               { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
             ];
         }
