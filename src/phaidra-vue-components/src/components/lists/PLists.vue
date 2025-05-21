@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <div>
     <h1 class="d-sr-only">{{ $t('Object lists') }}</h1>
     <v-row>
       <v-col cols="12">
@@ -23,7 +23,7 @@
               :no-results-text="$t('There were no search results')"
             >
               <template v-slot:top>
-                <v-toolbar flat color="transparent">
+                <v-toolbar flat color="transparent" class="my-4">
                   <v-text-field
                     v-model="listsSearch"
                     append-icon="mdi-magnify"
@@ -90,7 +90,6 @@
           </v-card-title>
           <v-card-text>
             <v-data-table
-              hide-default-header
               :headers="membersHeaders"
               :items="members"
               :search="membersSearch"
@@ -105,7 +104,7 @@
               :no-results-text="$t('There were no search results')"
             >
               <template v-slot:top>
-                <v-toolbar flat color="transparent">
+                <v-toolbar flat color="transparent" class="mt-4">
                   <v-spacer></v-spacer>
                   <!-- <v-text-field
                     v-model="membersSearch"
@@ -149,7 +148,7 @@
       </v-card>
     </v-dialog>
     <collection-dialog ref="collectiondialog" @collection-selected="addToCollection($event)"></collection-dialog>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -192,11 +191,7 @@ export default {
       membersLoading: false,
       membersSearch: '',
       deleteMembersConfirm: false,
-      membersHeaders: [
-        { text: 'PID', align: 'left', value: 'pid' },
-        { text: 'Title', align: 'left', value: 'title' },
-        { text: 'Actions', align: 'right', value: 'actions', sortable: false }
-      ],
+      membersHeaders: [],
       members: [],
       token: null
     }
@@ -209,6 +204,11 @@ export default {
             { text: this.$t('Name'), align: 'left', value: 'name' },
             { text: this.$t('Created'), align: 'right', value: 'created' },
             { text: this.$t('Modified'), align: 'right', value: 'updated' },
+            { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+          ];
+          this.membersHeaders = [
+            { text: this.$t('PID'), align: 'left', value: 'pid' },
+            { text: this.$t('Title'), align: 'left', value: 'title' },
             { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
           ];
         }

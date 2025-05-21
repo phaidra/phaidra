@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid v-if="form && form.sections" >
+  <div v-if="form && form.sections" >
     <v-alert
       v-model="serverSubmitError"
       dismissible
@@ -905,7 +905,7 @@
       </v-card>
 </v-dialog>
 
-  </v-container>
+  </div>
 
 </template>
 

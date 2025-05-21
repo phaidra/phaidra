@@ -2,14 +2,13 @@
   <v-card :flat="!title">
     <v-card-title v-if="title" class="title font-weight-light white--text">{{ title }}</v-card-title>
     <v-divider v-if="title"></v-divider>
-    <v-card-text class="mt-4">
-      <v-container fluid>
+    <v-card-text>
         <v-row>
           <v-col cols="12">
             <v-card>
               <v-card-title class="title font-weight-light white--text">{{ (rightsArray.length > 0) ? $t('The following entities have access to the object') : $t('This object is worldwide accessible') }}</v-card-title>
               <v-divider></v-divider>
-              <v-card-text class="mt-4">
+              <v-card-text class="pt-4">
                 <v-data-table
                   hide-default-footer
                   :items="rightsArray"
@@ -254,7 +253,6 @@
           </v-date-picker>
         </v-dialog>
          <user-search-dialog ref="userSearchdialog" @user-selected="searchUserSelected($event)"></user-search-dialog>
-      </v-container>
     </v-card-text>
   </v-card>
 </template>
