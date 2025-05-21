@@ -771,7 +771,12 @@
                   </v-row>
                 </v-col>
                 <v-col cols="1" v-if="objectInfo.writerights === 1" justify="center">
-                  <v-btn icon class="mt-4" @click="collMemberToRemove = collMember.pid; confirmColMemDeleteDlg = true"><v-icon color="btnred">mdi-delete</v-icon></v-btn>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn icon color="btnred" class="mt-4" @click="collMemberToRemove = collMember.pid; confirmColMemDeleteDlg = true" v-on="on" v-bind="attrs" :aria-label="$t('Remove from collection')"><v-icon>mdi-delete</v-icon></v-btn>
+                    </template>
+                    <span>{{ $t('Remove from collection')}}</span>
+                  </v-tooltip>
                 </v-col>
               </v-row>
               <v-divider></v-divider>
