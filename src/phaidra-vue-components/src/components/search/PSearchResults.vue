@@ -39,7 +39,7 @@
           <v-row :key="'prev'+doc.pid">
             <v-col cols="2" >
               <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">
-                <p-img :src="instance.api + '/object/' + doc.pid + '/thumbnail'" class="preview-maxwidth elevation-1 mt-2"  :alt="$t('Thumbnail for') + ' ' + doc.dc_title ? doc.dc_title[0] : doc.pid">
+                <p-img :src="instance.api + '/object/' + doc.pid + '/thumbnail'" class="preview-maxwidth elevation-1 mt-2" :alt="doc.dc_title ? doc.dc_title[0] : doc.pid">
                   <template v-slot:placeholder>
                     <div class="fill-height ma-0" align="center" justify="center" >
                       <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>

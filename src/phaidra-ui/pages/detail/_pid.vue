@@ -40,6 +40,7 @@
                               '/thumbnail'
                             "
                             class="elevation-1 my-4"
+                            :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
                           ></p-img>
                         </v-col>
                         <v-col cols="12" md="7">
@@ -91,6 +92,7 @@
                               '/thumbnail'
                             "
                             class="elevation-1 my-4"
+                            :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
                           ></p-img>
                         </v-col>
                         <v-col cols="12" md="7">
@@ -141,6 +143,7 @@
                               '/thumbnail'
                             "
                             class="elevation-1 my-4"
+                            :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
                           ></p-img>
                         </v-col>
                         <v-col cols="12" md="7">
@@ -192,6 +195,7 @@
                               '/thumbnail'
                             "
                             class="elevation-1 my-4"
+                            :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
                           ></p-img>
                         </v-col>
                         <v-col cols="12" md="7">
@@ -244,6 +248,7 @@
                               '/thumbnail'
                             "
                             class="elevation-1 my-4"
+                            :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
                           ></p-img>
                         </v-col>
                         <v-col cols="12" md="7">
@@ -294,6 +299,7 @@
                               '/thumbnail'
                             "
                             class="elevation-1 my-4"
+                            :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
                           ></p-img>
                         </v-col>
                         <v-col cols="12" md="7">
@@ -345,6 +351,7 @@
                               '/thumbnail'
                             "
                             class="elevation-1 my-4"
+                            :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
                           ></p-img>
                         </v-col>
                         <v-col cols="12" md="7">
@@ -725,6 +732,7 @@
                           instanceconfig.api + '/object/' + collMember.pid + '/thumbnail'
                         "
                         class="elevation-1 mt-2"
+                        :alt="collMember['dc_title'] ? collMember['dc_title'][0] : collMember.pid"
                       >
                         <template v-slot:placeholder>
                           <div
@@ -1392,6 +1400,7 @@
                                   '/thumbnail'
                                 "
                                 class="elevation-1 my-4"
+                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
                               ></p-img>
                             </v-col>
                             <v-col cols="12" md="7">
@@ -1438,6 +1447,7 @@
                                   '/thumbnail'
                                 "
                                 class="elevation-1 my-4"
+                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
                               ></p-img>
                             </v-col>
                             <v-col cols="12" md="7">
@@ -1483,6 +1493,7 @@
                                   '/thumbnail'
                                 "
                                 class="elevation-1 my-4"
+                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
                               ></p-img>
                             </v-col>
                             <v-col cols="12" md="7">
@@ -1529,6 +1540,7 @@
                                   '/thumbnail'
                                 "
                                 class="elevation-1 my-4"
+                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
                               ></p-img>
                             </v-col>
                             <v-col cols="12" md="7">
@@ -1576,6 +1588,7 @@
                                   '/thumbnail'
                                 "
                                 class="elevation-1 my-4"
+                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
                               ></p-img>
                             </v-col>
                             <v-col cols="12" md="7">
@@ -1621,6 +1634,7 @@
                                   '/thumbnail'
                                 "
                                 class="elevation-1 my-4"
+                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
                               ></p-img>
                             </v-col>
                             <v-col cols="12" md="7">
@@ -1667,6 +1681,7 @@
                                   '/thumbnail'
                                 "
                                 class="elevation-1 my-4"
+                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
                               ></p-img>
                             </v-col>
                             <v-col cols="12" md="7">
