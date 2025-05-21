@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row class="mb-8">
     <v-col cols="12" class="breadcrumbs-container pb-0" aria-label="Breadcrumbs">
       <span class="youarehere secondary--text">{{ $t("You are here") }}:</span>
       <ol class="breadcrumbs-list">
