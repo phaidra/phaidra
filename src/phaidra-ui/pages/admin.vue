@@ -249,6 +249,15 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
+                      :label="$t('Enable Add Annotation')"
+                      v-model="parsedPublicConfigData.addannotation"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Enable tab for 'Add Annotation' in Preview.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-checkbox
                       label="Access restrictions: show persons"
                       v-model="parsedPublicConfigData.accessrestrictions_showpersons"
                     ></v-checkbox>
@@ -411,7 +420,6 @@
               </v-container>
             </v-tab-item>
           </v-tabs>
-          <v-btn fixed bottom right raised color="primary" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
         </v-card>
       </v-tab-item>
 
@@ -437,6 +445,43 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="6" class="mt-6">{{ $t("Used to fetch metadata from catalogue.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      label="SMTP server"
+                      v-model="parsedPrivateConfigData.smtpserver"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("Used when PHAIDRA sends emails.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      label="SMTP port"
+                      v-model="parsedPrivateConfigData.smtpport"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("Used when PHAIDRA sends emails ") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      label="SMTP user"
+                      v-model="parsedPrivateConfigData.smtpuser"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("Used when PHAIDRA sends emails ") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      label="SMTP password"
+                      v-model="parsedPrivateConfigData.smtppassword"
+                      type="password"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("Used when PHAIDRA sends emails.") }}</v-col>
                 </v-row>
               </v-container>
             </v-tab-item>
@@ -464,7 +509,6 @@
             </v-tab-item>
 
           </v-tabs>
-          <v-btn fixed bottom right raised color="primary" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
         </v-card>
 
       </v-tab-item>
@@ -515,7 +559,6 @@
             </v-tab-item>
 
           </v-tabs>
-          <v-btn fixed bottom right raised color="primary" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
         </v-card>
       </v-tab-item>
       <v-tab-item>
@@ -551,7 +594,11 @@
 
 
     </v-tabs>
-
+    <v-row class="my-2">
+      <v-col>
+        <v-btn large raised color="primary" class="float-right" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
+      </v-col>
+    </v-row>
     
   </v-container>
 

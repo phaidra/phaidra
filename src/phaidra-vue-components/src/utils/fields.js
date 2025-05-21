@@ -743,6 +743,16 @@ const fields = [
     definition: 'Events, all real or fictional.'
   },
   {
+    title: 'SUBJECT_SECTION',
+    type: 'phaidra:Subject',
+    id: 'phaidra:Subject',
+    removable: true,
+    multiplicable: true,
+    fields: [],
+    fieldname: 'SUBJECT_SECTION',
+    definition: "A metadata level describing the represented object. You can use 'Level of description' field to indicate the level."
+  },
+  {
     id: 'project',
     fieldname: 'Project',
     predicate: 'frapo:isOutputOf',
@@ -778,6 +788,20 @@ const fields = [
     predicate: 'rdax:P00009',
     component: 'p-association',
     multiplicable: true,
+    label: 'Association',
+    value: '',
+    'skos:prefLabel': [],
+    definition: 'Relates an object to a corporate body who is associated with an object.'
+  },
+  {
+    id: 'association-text',
+    fieldname: 'Association (Text)',
+    predicate: 'rdax:P00009',
+    type: 'foaf:Organization',
+    component: 'p-association-text',
+    showtype: true,
+    multiplicable: true,
+    multilingual: true,
     label: 'Association',
     value: '',
     'skos:prefLabel': [],

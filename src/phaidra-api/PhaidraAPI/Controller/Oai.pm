@@ -16,7 +16,7 @@ use Clone qw(clone);
 use Mojo::JSON qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
 use PhaidraAPI::Model::Mappings::Export::Openaire;
-use PhaidraAPI::Model::Mappings::Export::Dc;
+use PhaidraAPI::Model::Mappings::Export::Dublincore;
 use PhaidraAPI::Model::Mappings::Export::Edm;
 use PhaidraAPI::Model::Mappings::Export::Lom;
 
@@ -81,7 +81,7 @@ sub _get_metadata {
 
   switch ($metadataPrefix) {
     case 'oai_dc' {
-      my $dc_model = PhaidraAPI::Model::Mappings::Export::Dc->new;
+      my $dc_model = PhaidraAPI::Model::Mappings::Export::Dublincore->new;
       return $dc_model->get_metadata($self, $rec, $set);
     }
     case 'oai_openaire' {

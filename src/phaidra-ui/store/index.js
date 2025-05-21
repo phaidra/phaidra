@@ -52,6 +52,7 @@ export const mutations = {
       'accessrestrictions_showgroups',
       'data_affiliations',
       'feedback',
+      'addannotation',
       'forcePreview',
     ] 
     for (const p of configurable) {

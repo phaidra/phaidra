@@ -6,24 +6,17 @@
         <template v-if="entity['skos:exactMatch']">
           <template v-if="entity['skos:exactMatch'].length === 1">
             <a class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }" :href="getIDResolverURL(entity['skos:exactMatch'][0])" target="_blank">
-              <icon width="16px" height="16px" class="mr-1 mb-1" v-if="entity['skos:exactMatch'][0]['@type'] === 'ids:orcid'" name="orcid"></icon>
-              <template class="valuefield" v-for="(gn) in entity['schema:givenName']">{{ gn['@value'] }}</template>
-              <template class="valuefield" v-for="(fn) in entity['schema:familyName']"> {{ fn['@value'] }}</template>
-              <template class="valuefield" v-for="(n) in entity['schema:name']">{{ n['@value'] }}</template>
+              <icon width="16px" height="16px" class="mr-1 mb-1" v-if="entity['skos:exactMatch'][0]['@type'] === 'ids:orcid'" name="orcid"></icon><template class="valuefield" v-for="(gn) in entity['schema:givenName']">{{ gn['@value'] }}</template><template class="valuefield" v-for="(fn) in entity['schema:familyName']"> {{ fn['@value'] }}</template><template class="valuefield" v-for="(n) in entity['schema:name']">{{ n['@value'] }}</template>
             </a>
           </template>
           <template v-else-if="entity['skos:exactMatch'].length > 1">
             <a class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }" :href="getIDResolverURL(entity['skos:exactMatch'][0])" target="_blank">
-              <template class="valuefield" v-for="(gn) in entity['schema:givenName']">{{ gn['@value'] }}</template>
-              <template class="valuefield" v-for="(fn) in entity['schema:familyName']"> {{ fn['@value'] }}</template>
-              <template class="valuefield" v-for="(n) in entity['schema:name']">{{ n['@value'] }}</template>
+              <template class="valuefield" v-for="(gn) in entity['schema:givenName']">{{ gn['@value'] }}</template><template class="valuefield" v-for="(fn) in entity['schema:familyName']"> {{ fn['@value'] }}</template><template class="valuefield" v-for="(n) in entity['schema:name']">{{ n['@value'] }}</template>
             </a>
           </template>
         </template>
         <template v-else>
-          <template v-for="(gn) in entity['schema:givenName']"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }">{{ gn['@value'] }}</span></template>
-          <template v-for="(fn) in entity['schema:familyName']"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }"> {{ fn['@value'] }}</span></template>
-          <template v-for="(n) in entity['schema:name']"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }">{{ n['@value'] }}</span></template>
+          <template v-for="(gn) in entity['schema:givenName']"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }">{{ gn['@value'] }}</span></template><template v-for="(fn) in entity['schema:familyName']"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }"> {{ fn['@value'] }}</span></template><template v-for="(n) in entity['schema:name']"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }">{{ n['@value'] }}</span></template>
         </template>
         <template v-if="entity['schema:affiliation']" class="secondary--text">
           <br/>

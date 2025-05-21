@@ -820,11 +820,12 @@ sub create_simple {
   my $r;
   unless (exists($metadata->{'target-pid'})) {
 
-    # use transactions only for object creation
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $transaction_url = $fedora_model->useTransaction($c);
-    $c->stash(transaction_url => $transaction_url->{transaction_id});
-
+    if ($c->app->config->{fedora}->{version} >= 6) {
+      # use transactions only for object creation
+      my $fedora_model = PhaidraAPI::Model::Fedora->new;
+      my $transaction_url = $fedora_model->useTransaction($c);
+      $c->stash(transaction_url => $transaction_url->{transaction_id});
+    }
     # create object
     $r = $self->create($c, $cmodel, $username, $password);
     if ($r->{status} ne 200) {
@@ -1071,10 +1072,12 @@ sub create_container {
   my $r;
   unless (exists($container_metadata->{'target-pid'})) {
 
-    # use transactions only for single object creation. TODO: use a single transaction for all containers and children. This way, if one child fails to be created, the entire load fails, and no partial loads occur.  
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $transaction_url = $fedora_model->useTransaction($c);
-    $c->stash(transaction_url => $transaction_url->{transaction_id});
+    if ($c->app->config->{fedora}->{version} >= 6) {
+      # use transactions only for single object creation. TODO: use a single transaction for all containers and children. This way, if one child fails to be created, the entire load fails, and no partial loads occur.  
+      my $fedora_model = PhaidraAPI::Model::Fedora->new;
+      my $transaction_url = $fedora_model->useTransaction($c);
+      $c->stash(transaction_url => $transaction_url->{transaction_id});
+    }
 
     # create parent object
     $r = $self->create($c, 'cmodel:Container', $username, $password);

@@ -367,7 +367,17 @@ sub thumbnail {
         $self->render(json => $res, status => $res->{status});
         return;
       }
-      return $self->_proxy_thumbnail($r->{oldest_member}, $cmodelr->{cmodel}, $size);
+      if ($r->{oldest_member} && $r->{oldest_member}->{pid}) {
+        if ($r->{oldest_member}->{cmodel} eq 'Collection') {
+          $self->reply->static('images/collection.png');
+          return;
+        } else {
+          return $self->_proxy_thumbnail($r->{oldest_member}->{pid}, $r->{oldest_member}->{cmodel}, $size);
+        }
+      } else {
+        $self->reply->static('images/collection.png');
+        return;
+      }
     }
     case 'Resource' {
       $self->reply->static('images/resource.png');
@@ -393,6 +403,8 @@ sub preview {
   }
   my $lang = $self->param('lang') || 'en';  # Default to English
   $self->languages($lang);
+
+  my $addannotation = $self->param('addannotation');
 
   my $pid = $self->stash('pid');
 
@@ -611,7 +623,7 @@ sub preview {
         my $u_model = PhaidraAPI::Model::Util->new;
         $u_model->track_action($self, $pid, 'preview');
 
-        $self->render(template => 'utils/imageviewer', format => 'html');
+        $self->render(template => 'utils/imageviewer', format => 'html', addannotation => $addannotation);
         return;
       }
       else {

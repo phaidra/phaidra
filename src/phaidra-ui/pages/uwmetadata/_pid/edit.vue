@@ -1,7 +1,7 @@
 <template>
   <client-only>
     <div>
-      <v-btn color="primary" class="mt-4" :to="{ path: `/detail/${pid}`, params: { pid: pid } }">
+      <v-btn color="primary" class="my-4" :to="{ path: `/detail/${pid}`, params: { pid: pid } }">
         <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
       </v-btn>
       <p-i-form-uwm
@@ -21,11 +21,23 @@ import { config } from '../../../mixins/config'
 
 export default {
   mixins: [ context, config ],
+  watch: {
+    '$i18n.locale': function (newVal) {
+      this.sortUwmetadata(this.uwmetadata, '', newVal)
+    }
+  },
   data () {
     return {
       loading: false,
       editform: [],
-      parentpid: ''
+      parentpid: '',
+      uwmetadata: [],
+      sortXmlNamePaths: [
+        'lifecycle->contribute->role->',
+        'histkult->dimensions->resource->',
+        'provenience->contribute->resource->',
+        'provenience->contribute->role->'
+      ]
     }
   },
   computed: {
@@ -65,7 +77,31 @@ export default {
       if (lic.ui_value && (lic.ui_value !== 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_21/1')) {
         lic.disabled = true
       }
+      this.sortUwmetadata(uwmetadata, '', this.$i18n.locale)
+      this.uwmetadata = uwmetadata
       self.editform = uwmetadata
+    },
+    sortUwmetadata: function (uwmetadata, path, locale) {
+      uwmetadata.forEach(element => {
+        let xmlnamePath = path;
+        xmlnamePath += element.xmlname + '->';
+        if(this.sortXmlNamePaths.includes(xmlnamePath)) {
+          if(element.vocabularies.length > 0) {
+            element.vocabularies[0].terms.sort((a, b) => {
+              if(locale === 'ita' && a.labels.it && b.labels.it) {
+                return a.labels.it.localeCompare(b.labels.it)
+              } else if(locale === 'deu' && a.labels.de && b.labels.de) {
+                return a.labels.de.localeCompare(b.labels.de)
+              } else {
+                return a.labels.en.localeCompare(b.labels.en)
+              }
+            })
+          }
+        }
+        if(element.children) {
+          this.sortUwmetadata(element.children, xmlnamePath, locale)
+        }
+      });
     },
     loadUwmetadata: async function (self, pid) {
       self.loading = true

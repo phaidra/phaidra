@@ -365,11 +365,9 @@
         <template v-else-if="p==='dcterms:subject'">
 
           <template v-for="(subject, j) in o">
-            <v-card class="my-4" v-if="subject['@type']==='phaidra:Subject'" slot="phaidra:Subject" :key="componentid+'psubject'+j">
-              <v-card-title class="title font-weight-light white--text">
-                <span>{{ $t('SUBJECT_SECTION') }}</span>
-              </v-card-title>
-              <v-card-text class="ma-2">
+            <v-card outlined class="mt-4" v-if="subject['@type']==='phaidra:Subject'" slot="phaidra:Subject" :key="componentid+'psubject'+j">
+              <v-card-text>
+                <div class="overline mb-4">{{ $t('SUBJECT_SECTION') }}</div>
                 <p-d-jsonld :jsonld="subject" v-bind.sync="displayProperties"></p-d-jsonld>
               </v-card-text>
             </v-card>

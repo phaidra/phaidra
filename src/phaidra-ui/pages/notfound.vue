@@ -1,7 +1,7 @@
 <template>
-  <h3 class="title font-weight-light primary--text">
+  <h2 class="title font-weight-light primary--text">
     Not found
-  </h3>
+  </h2>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="mt-4">
     <v-card-title class="title font-weight-light white--text">
       {{ title ? title : $t('Select an object') }}
       <v-spacer></v-spacer>

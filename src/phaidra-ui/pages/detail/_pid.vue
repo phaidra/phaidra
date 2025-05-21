@@ -420,7 +420,7 @@
           </v-col>
         </template>
       </v-row>
-      <v-row v-else>
+      <v-row class="text-break" v-else>
         <v-col cols="12" md="8" class="mt-8">
           <v-row v-if="objectInfo.cmodel === 'Page'" justify="center">
             <v-col cols="6">
@@ -514,7 +514,7 @@
                     instanceconfig.api +
                     '/object/' +
                     objectInfo.pid +
-                    '/preview' + '?lang=' + $i18n.locale.substring(0, 2)
+                    '/preview' + '?lang=' + $i18n.locale.substring(0, 2) + `${instanceconfig.addannotation ? `&addannotation=${instanceconfig.addannotation}` : ''}`
                   "
                   :style="
                     objectInfo.cmodel === 'Audio'
@@ -582,6 +582,7 @@
               ></v-pagination>
             </v-toolbar>
             <v-row v-if="objectMembers">
+            <v-col>
               <v-card
                 class="mb-3 pt-4"
                 width="100%"
@@ -608,7 +609,7 @@
                   <v-chip class="pointer-disabled" label dark color="btnred"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
                 </v-col>
               </v-row>
-                <v-card-text class="ma-2">
+                <v-card-text>
                   <p-d-jsonld
                     :jsonld="member.metadata['JSON-LD']"
                     :pid="member.pid"
@@ -664,6 +665,7 @@
                   </v-menu>
                 </v-card-actions>
               </v-card>
+            </v-col>
             </v-row>
           </template>
           <template v-if="objectInfo.readrights && (objectInfo.cmodel === 'Container') && objectInfo.datastreams.includes('CONTAINERINFO')">
@@ -715,7 +717,7 @@
             </v-toolbar>
             <div v-for="(collMember, i) in collMembers" :key="'collMember' + i">
               <v-row class="my-4">
-                <v-col cols="1" >
+                <v-col md="1" class="d-none d-md-inline-block">
                   <div class="preview-maxwidth">
                   <nuxt-link :to="{ path: `${collMember.pid}`, params: { pid: collMember.pid } }">
                       <p-img
@@ -743,7 +745,7 @@
                 <v-col cols="10">
                   <v-row no-gutters class="mb-4">
                     <v-col cols="10">
-                      <h3
+                      <h2
                         class="title font-weight-light primary--text"
                         @click.stop
                         v-if="collMember.dc_title"
@@ -752,19 +754,33 @@
                           :to="{ path: `${collMember.pid}`, params: { pid: collMember.pid } }"
                           >{{ collMember.dc_title[0] }}</nuxt-link
                         >
-                      </h3>
+                      </h2>
                       <p>{{ collMember.pid }}</p>
                     </v-col>
                     <v-spacer></v-spacer>
-                    <v-col cols="1" class="text-right"
+                    <v-col cols="2" class="text-right"
                       ><span v-if="collMember.created">{{
                         collMember.created | date
-                      }}</span></v-col
-                    >
+                      }}</span>
+                      <v-icon v-if="collMember.cmodel == 'Video'" class="mx-2" color="grey">mdi-video</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Picture'" class="mx-2" color="grey">mdi-image</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Audio'" class="mx-2" color="grey">mdi-volume-high</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'PDFDocument'" class="mx-2" color="grey">mdi-file-document</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Asset'" class="mx-2" color="grey">mdi-file</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Resource'" class="mx-2" color="grey">mdi-link</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Collection'" class="mx-2" color="grey">mdi-folder-open</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Container'" class="mx-2" color="grey">mdi-folder</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Book'" class="mx-2" color="grey">mdi-book-open-variant</v-icon>
+                      </v-col>
                   </v-row>
                 </v-col>
                 <v-col cols="1" v-if="objectInfo.writerights === 1" justify="center">
-                  <v-btn icon class="mt-4" @click="collMemberToRemove = collMember.pid; confirmColMemDeleteDlg = true"><v-icon color="btnred">mdi-delete</v-icon></v-btn>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn icon color="btnred" class="mt-4" @click="collMemberToRemove = collMember.pid; confirmColMemDeleteDlg = true" v-on="on" v-bind="attrs" :aria-label="$t('Remove from collection')"><v-icon>mdi-delete</v-icon></v-btn>
+                    </template>
+                    <span>{{ $t('Remove from collection')}}</span>
+                  </v-tooltip>
                 </v-col>
               </v-row>
               <v-divider></v-divider>
@@ -785,7 +801,6 @@
         </v-col>
 
         <v-col cols="12" md="4" class="mt-4">
-          <v-row justify="end" class="mb-8" no-gutters v-if="objectInfo.isrestricted"><v-chip label dark color="red lighten-1 font-weight-regular" class="pointer-disabled"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></v-row>
           <v-row justify="end">
             <v-col cols="12" md="9">
               <ul class="mb-6 pl-0 side-list">
@@ -956,6 +971,7 @@
                     </v-card-text>
                   </v-card>
                 </li>
+                <li class="mb-6" v-if="objectInfo.isrestricted"><v-chip label dark color="btnred" class="pointer-disabled"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></li>
                 <li class="mb-6" v-if="
                   (downloadable && objectInfo.readrights) ||
                   objectInfo.cmodel === 'Collection' ||
@@ -1217,21 +1233,41 @@
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
-                      >{{ $t("Usage statistics") }}</v-card-title
-                    >
-                    <v-card-text class="mt-4">
-                      <v-row>
-                        <v-col>
-                          <v-icon>mdi-eye-outline</v-icon
-                          ><span class="ml-2">{{ stats.detail }}</span>
-                        </v-col>
-                        <v-col v-if="downloadable">
-                          <v-icon>mdi-download</v-icon
-                          ><span class="ml-2">{{ stats.download }}</span>
-                        </v-col>
-                        <v-spacer></v-spacer>
-                      </v-row>
-                    </v-card-text>
+                      >
+                        {{ $t("Usage statistics") }}
+                        <nuxt-link
+                          class="white--text"
+                          :to="localePath(`/stats/${objectInfo.pid}`)"
+                          :aria-label="$t('Show details')"
+                          v-if="(stats.detail > 0) || (stats.download > 0)"
+                        >
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-icon
+                                  class="white--text ml-2"                
+                                  v-on="on"
+                                  v-bind="attrs"
+                              >
+                                mdi-information-outline
+                              </v-icon>
+                            </template>
+                            <span>{{ $t('Show details') }}</span>
+                          </v-tooltip>
+                        </nuxt-link>
+                      </v-card-title>
+                      <v-card-text class="mt-4">
+                        <v-row>
+                          <v-col>
+                            <v-icon>mdi-eye-outline</v-icon
+                            ><span class="ml-2">{{ stats.detail }}</span>
+                          </v-col>
+                          <v-col v-if="downloadable">
+                            <v-icon>mdi-download</v-icon
+                            ><span class="ml-2">{{ stats.download }}</span>
+                          </v-col>
+                          <v-spacer></v-spacer>
+                        </v-row>
+                      </v-card-text>
                   </v-card>
                 </li>
 
@@ -1666,9 +1702,13 @@
                       >{{ $t("Metadata") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
-                      <v-row no-gutters class="pt-2">
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                        v-if="objectInfo.dshash['JSON-LD']"
+                      >
                         <a
-                          :href="
+                        :href="
                             instanceconfig.api +
                             '/object/' +
                             objectInfo.pid +
@@ -2099,7 +2139,17 @@
                     <v-col cols="12" class="pt-0">
                         <p class="text-right">
                           <span class="caption text--secondary">{{ $t('Media Package Identifier') }}</span
-                          ><br /><span>{{ objectInfo.oc_mpid }}</span>
+                          ><br /><span>id={{ objectInfo.oc_mpid }}
+                          <v-tooltip bottom>
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                  :aria-label="$t('Copy to clipboard')"
+                                  v-on="on"
+                                  v-bind="attrs" icon @click="copyToClipboard('id='+objectInfo.oc_mpid)"><v-icon>mdi-content-copy</v-icon></v-btn>
+                              </template>
+                              <span>{{ $t('Copy to clipboard') }}</span>
+                          </v-tooltip>
+                          </span>
                         </p>
                     </v-col>
                   </v-row>
@@ -2533,6 +2583,9 @@ export default {
     this.detailsMetaInfo = metaInfo
   },
   methods: {
+    copyToClipboard(text) {
+      navigator.clipboard.writeText(text);
+    },
     async fetchAsyncData(self, pid) {
       console.log('fetching object info ' + pid);
       await self.$store.dispatch("fetchObjectInfo", pid);

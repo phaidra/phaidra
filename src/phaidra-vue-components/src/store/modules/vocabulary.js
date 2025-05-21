@@ -305,6 +305,17 @@ const vocabularies = {
     ],
     loaded: true
   },
+  'orgtypes': {
+    terms: [
+      { '@id': 'foaf:Organization', 'skos:prefLabel': { 'eng': 'Organization', 'deu': 'Organisation', 'ita': 'Organizzazione' } },
+      { '@id': 'aiiso:Division', 'skos:prefLabel': { 'eng': 'Division', 'deu': 'Organisationseinheit', 'ita': 'Divisione' } },
+      { '@id': 'aiiso:Faculty', 'skos:prefLabel': { 'eng': 'Faculty', 'deu': 'Fakultät', 'ita': 'Facoltà' } },
+      { '@id': 'aiiso:Institute', 'skos:prefLabel': { 'eng': 'Institute', 'deu': 'Institut', 'ita': 'Istituto' } },
+      { '@id': 'aiiso:Department', 'skos:prefLabel': { 'eng': 'Abteilung', 'deu': 'Zitiert von', 'ita': 'Dipartimento' } },
+      { '@id': 'aiiso:ResearchGroup', 'skos:prefLabel': { 'eng': 'Forschungsgruppe', 'deu': 'Zitiert von', 'ita': 'Gruppo di ricerca' } }
+    ],
+    loaded: true
+  },
   'citationpredicate': {
     terms: [
       { '@id': 'cito:cites', 'skos:prefLabel': { 'eng': 'Cites', 'deu': 'Verweist auf', 'ita': 'Cita' } },
@@ -1384,7 +1395,9 @@ const vocabularies = {
       { '@id': ns + '7AVS-Y482', 'skos:prefLabel': { 'eng': 'Data', 'deu': 'Daten', 'ita': 'Dati' } },
       { '@id': ns + '8YB5-1M0J', 'skos:prefLabel': { 'eng': 'Sound', 'deu': 'Audio', 'ita': 'Audio' } },
       { '@id': ns + '8MY0-BQDQ', 'skos:prefLabel': { 'eng': 'Container', 'deu': 'Container', 'ita': 'Contenitore' } },
-      { '@id': ns + 'T8GH-F4V8', 'skos:prefLabel': { 'eng': 'Link', 'deu': 'Link', 'ita': 'Risorsa Web' } }
+      { '@id': ns + 'T8GH-F4V8', 'skos:prefLabel': { 'eng': 'Link', 'deu': 'Link', 'ita': 'Risorsa Web' } },
+      { '@id': ns + 'CR2H-D544', 'skos:prefLabel': { 'eng': 'Book', 'deu': 'Buch', 'ita': 'Libro' } },
+      { '@id': ns + '6V70-DMG5', 'skos:prefLabel': { 'eng': 'Page', 'deu': 'Page', 'ita': 'Pagina' } }
     ],
     loaded: true
   },

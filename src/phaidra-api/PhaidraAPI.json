@@ -11,6 +11,7 @@
     },
     "adminemail": "__PHAIDRA_ADMIN_EMAIL__",
     "mode": "production",
+    "home": "/usr/local/phaidra/phaidra-api",
     "scheme": "__OUTSIDE_HTTP_SCHEME__",
     "baseurl": "__PHAIDRA_HOSTNAME____PHAIDRA_PORTSTUB____PHAIDRA_HOSTPORT__",
     "basepath": "api",

@@ -68,6 +68,6 @@
   </script>
  </head>
  <body>
-   <div id="viewer"><% if ($rights eq 'rw') { %><center><button type="button" onclick="iipmooviewer.newAnnotation()">Add annotation</button></center><% } %></div>
+   <div id="viewer"><% if ($addannotation && $rights eq 'rw') { %><center><button type="button" onclick="iipmooviewer.newAnnotation()">Add annotation</button></center><% } %></div>
  </body>
 </html>

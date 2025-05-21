@@ -13,6 +13,7 @@
               solo
               :messages="[ total + ' ' + $t('objects') ]"
             ></p-search-autocomplete>
+             <a href="#filters" class="skip-link d-sr-only-focusable">{{ $t('Go to Search Filters') }}</a>
           </v-col>
           <v-spacer></v-spacer>
           <v-col  md="6" cols="12">
@@ -32,7 +33,7 @@
             </template>
             <v-card height="400px">
               <v-card-title>
-                <h3 class="title font-weight-light white--text">{{ $t('Filters') }}</h3>
+                <h2 class="title font-weight-light white--text">{{ $t('Filters') }}</h2>
                 <v-spacer></v-spacer>
                 <v-btn icon dark @click="filterdialog = !filterdialog" :aria-label="$t('Close')">
                   <v-icon>mdi-close</v-icon>
@@ -76,7 +77,7 @@
       </v-col>
       <v-divider vertical class="divider hidden-sm-and-down mt-3"></v-divider>
       <v-col cols="3" class="pa-3 hidden-sm-and-down">
-        <h3 class="title font-weight-light pt-2">{{ $t('Filters') }}</h3>
+        <h2 id="filters" class="title font-weight-light pt-2">{{ $t('Filters') }}</h2>
         <v-divider class="mt-3 divider"></v-divider>
         <p-search-filters
           ref="searchFilters"
@@ -481,5 +482,11 @@ svg {
 .theme--light.v-pagination .v-pagination__item--active {
   box-shadow: none;
   -webkit-box-shadow: none;
+  }
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 10px;
 }
 </style>

@@ -48,7 +48,7 @@
     </v-tabs>
 
     <v-tabs-items v-model="activetab">
-      <v-tab-item class="pa-3" v-if="form">
+      <v-tab-item class="pa-4" v-if="form">
 
         <v-row v-for="(s) in this.form.sections" :key="s.id" class="ma-3">
 
@@ -104,7 +104,7 @@
             </v-card-title>
             <v-expand-transition>
               <div v-show="!s.collapsed">
-                <v-card-text class="mt-4 pb-0">
+                <v-card-text class="pb-0">
 
                   <div v-for="(f) in s.fields" :key="'dv'+f.id">
                     <v-tooltip :disabled="!mouseoverfielddef" open-delay="1700" bottom >
@@ -643,6 +643,19 @@
                             ></p-i-association>
                           </template>
 
+                          <template v-else-if="f.component === 'p-association-text'">
+                            <p-i-association-text
+                              v-bind.sync="f"
+                              v-on:input="f.value=$event"
+                              v-on:input-association-type="setSelected(f, 'type', $event)"
+                              v-on:input-language="setSelected(f, 'language', $event)"
+                              v-on:add="addField(s.fields, f)"
+                              v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
+                              :configurable="enablefieldconfig || f.configurable"
+                            ></p-i-association-text>
+                          </template>
+
                           <template v-else-if="f.component === 'p-filename'">
                             <p-i-filename
                               v-bind.sync="f"
@@ -818,13 +831,13 @@
         </v-row>
 
       </v-tab-item>
-      <v-tab-item v-if="debug" class="pa-3">
+      <v-tab-item v-if="debug" class="pa-4">
         <div style="white-space: pre;">{{ JSON.stringify(metadatapreview, null, 2) }}</div>
       </v-tab-item>
-      <v-tab-item v-if="templating" class="ma-4">
+      <v-tab-item v-if="templating" class="pa-4">
         <p-templates ref="templates" v-on:load-template="loadTemplate($event)"></p-templates>
       </v-tab-item>
-      <v-tab-item  v-if="importing">
+      <v-tab-item  v-if="importing" class="pa-4">
         <v-row no-gutters>
           <v-col cols="12">
             <object-from-search :title="$t('Import metadata from existing object')" v-on:object-selected="importFromObject($event)" :jsonld-only="true"></object-from-search>
@@ -853,14 +866,14 @@
           </v-col>
         </v-row>
       </v-tab-item>
-      <v-tab-item v-if="(submittype !== 'container') && enablepreview" class="pa-3">
+      <v-tab-item v-if="(submittype !== 'container') && enablepreview" class="pa-4">
         <p-d-jsonld :jsonld="jsonld"></p-d-jsonld>
         <v-btn large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
       </v-tab-item>
-      <v-tab-item v-if="help" class="pa-3">
+      <v-tab-item v-if="help" class="pa-4">
         <p-help></p-help>
       </v-tab-item>
-      <v-tab-item v-if="feedback" class="pa-3">
+      <v-tab-item v-if="feedback" class="pa-4">
         <p-feedback :firstname="feedbackUser.firstname" :lastname="feedbackUser.lastname" :email="feedbackUser.email" :context="feedbackContext"></p-feedback>
       </v-tab-item>
     </v-tabs-items>
@@ -921,6 +934,7 @@ import PIProject from './PIProject'
 import PIEvent from './PIEvent'
 import PIFunder from './PIFunder'
 import PIAssociation from './PIAssociation'
+import PIAssociationText from './PIAssociationText'
 import PISeries from './PISeries'
 import PIContainedIn from './PIContainedIn'
 import PICitation from './PICitation'
@@ -971,6 +985,7 @@ export default {
     PIEvent,
     PIFunder,
     PIAssociation,
+    PIAssociationText,
     PISeries,
     PIContainedIn,
     PICitation,
@@ -2104,7 +2119,11 @@ export default {
       for (var i = 0; i < this.addfieldselection.length; i++) {
         let f = fields.getField(this.addfieldselection[i].id)
         f.removable = true
-        section.fields.push(f)
+        if(f.id.includes("phaidra:Subject")) {
+          this.form.sections.push(f)
+        } else {
+          section.fields.push(f)
+        }
       }
       this.addfieldselection = []
       section['adddialogue'] = false

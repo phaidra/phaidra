@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container class="text-break" fluid>
     <v-divider v-if="selectioncheck"></v-divider>
     <v-slide-y-transition hide-on-leave>
       <v-row v-if="selectioncheck" no-gutters class="my-4">
@@ -51,9 +51,9 @@
             <v-col cols="10">
               <v-row >
                 <v-col cols="12" md="9">
-                  <h3 class="title font-weight-light primary--text" @click.stop v-if="doc.dc_title">
+                  <h2 class="title font-weight-light primary--text" @click.stop v-if="doc.dc_title">
                     <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ doc.dc_title[0] }}</nuxt-link>
-                  </h3>
+                  </h2>
                 </v-col>
                 <v-col cols="12" md="3" class="text-right">
                   <v-chip class="pointer-disabled" v-if="doc.created" color="transparent">{{ doc.created | date }}
@@ -65,6 +65,7 @@
                     <v-icon v-else-if="doc.cmodel == 'Resource'" class="mx-2" color="grey">mdi-link</v-icon>
                     <v-icon v-else-if="doc.cmodel == 'Collection'" class="mx-2" color="grey">mdi-folder-open</v-icon>
                     <v-icon v-else-if="doc.cmodel == 'Container'" class="mx-2" color="grey">mdi-folder</v-icon>
+                    <v-icon v-else-if="doc.cmodel == 'Book'" class="mx-2" color="grey">mdi-book-open-variant</v-icon>
                   </v-chip>
                 </v-col>
               </v-row>

@@ -865,6 +865,7 @@
   "SUBJECT_SECTION": "Oggetto rappresentato",
   "Represented/depicted place": "Luogo rappresentato/raffigurato",
   "Association": "Affiliazione",
+  "Association (Text)": "Affiliazione (Testo)",
   "Association *": "Affiliazione *",
   "System fields": "Campi di sistema",
   "Project Id": "ID progetto",
@@ -1100,6 +1101,7 @@
   "Work the Instance described instantiates or manifests. For use to connect Instances to Works.": "Opera di cui l'istanza descritta è manifestazione. Da utilizzare per collegare le istanze alle opere.",
   "Relates a resource to a resource that is adapted as a motion picture.": "Collega una risorsa a una risorsa che è stata adattata come film.",
   "Events, all real or fictional.": "Eventi, reali o fittizi.",
+  "A metadata level describing the represented object. You can use 'Level of description' field to indicate the level.": "Un livello di metadati che descrive l'oggetto rappresentato. Puoi usare il campo 'Livello di descrizione' per indicare il livello.",
   "An administrative entity that enabled an endeavour such as a research investigation.": "Un'entità amministrativa che ha reso possibile un'iniziativa come un'indagine di ricerca.",
   "A funding agency that provided funding for the resource.": "Un ente finanziatore che ha fornito i fondi per la risorsa.",
   "Relates an object to a corporate body who is associated with an object.": "Collega un oggetto a un ente che è associato all'oggetto.",
@@ -1288,7 +1290,7 @@
   "Study plan notation": "Notazione del piano di studi",
   "Study plan identifier": "Identificatore del piano di studi",
   "This page does not exist...": "Questa pagina non esiste...",
-  "We apologise for the inconvenience, the page you are trying to access does not exist at this address.": "Ci scusiamo per l'inconveniente, la pagina cui stai provando ad accedere non esiste a questo indirizzo",
+  "We apologise for the inconvenience, the page you are trying to access does not exist at this address.": "Ci scusiamo per l'inconveniente, la pagina cui stai provando ad accedere non esiste a questo indirizzo.",
   "If you are sure you entered the correct address but still get an error, please contact": "Se hai inserito l'indirizzo corretto ma ricevi comunque un errore, per favore contatta",
   "Return to": "Ritorna alla",
   "Detail": "Dettagli",
@@ -1329,5 +1331,7 @@
   "Show details": "Mostra dettagli",
   "An error occurred.": "Si è verificato un errore.",
   "Skip to main content": "Vai al contenuto",
-  "Selected": "Selezionato"
+  "Selected": "Selezionato",
+  "RSS Feed": "Feed RSS",
+  "This object has been deleted.": "Quest'oggetto è stato eliminato."
 }
