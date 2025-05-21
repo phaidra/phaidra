@@ -1290,7 +1290,7 @@
   "Study plan notation": "Notazione del piano di studi",
   "Study plan identifier": "Identificatore del piano di studi",
   "This page does not exist...": "Questa pagina non esiste...",
-  "We apologise for the inconvenience, the page you are trying to access does not exist at this address.": "Ci scusiamo per l'inconveniente, la pagina cui stai provando ad accedere non esiste a questo indirizzo",
+  "We apologise for the inconvenience, the page you are trying to access does not exist at this address.": "Ci scusiamo per l'inconveniente, la pagina cui stai provando ad accedere non esiste a questo indirizzo.",
   "If you are sure you entered the correct address but still get an error, please contact": "Se hai inserito l'indirizzo corretto ma ricevi comunque un errore, per favore contatta",
   "Return to": "Ritorna alla",
   "Detail": "Dettagli",
@@ -1331,5 +1331,7 @@
   "Show details": "Mostra dettagli",
   "An error occurred.": "Si è verificato un errore.",
   "Skip to main content": "Vai al contenuto",
-  "Selected": "Selezionato"
+  "Selected": "Selezionato",
+  "RSS Feed": "Feed RSS",
+  "This object has been deleted.": "Quest'oggetto è stato eliminato."
 }

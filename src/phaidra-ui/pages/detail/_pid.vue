@@ -582,6 +582,7 @@
               ></v-pagination>
             </v-toolbar>
             <v-row v-if="objectMembers">
+            <v-col>
               <v-card
                 class="mb-3 pt-4"
                 width="100%"
@@ -608,7 +609,7 @@
                   <v-chip class="pointer-disabled" label dark color="btnred"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
                 </v-col>
               </v-row>
-                <v-card-text class="ma-2">
+                <v-card-text>
                   <p-d-jsonld
                     :jsonld="member.metadata['JSON-LD']"
                     :pid="member.pid"
@@ -664,6 +665,7 @@
                   </v-menu>
                 </v-card-actions>
               </v-card>
+            </v-col>
             </v-row>
           </template>
           <template v-if="objectInfo.readrights && (objectInfo.cmodel === 'Container') && objectInfo.datastreams.includes('CONTAINERINFO')">
@@ -715,7 +717,7 @@
             </v-toolbar>
             <div v-for="(collMember, i) in collMembers" :key="'collMember' + i">
               <v-row class="my-4">
-                <v-col cols="1" >
+                <v-col md="1" class="d-none d-md-inline-block">
                   <div class="preview-maxwidth">
                   <nuxt-link :to="{ path: `${collMember.pid}`, params: { pid: collMember.pid } }">
                       <p-img
@@ -767,6 +769,8 @@
                       <v-icon v-else-if="collMember.cmodel == 'Asset'" class="mx-2" color="grey">mdi-file</v-icon>
                       <v-icon v-else-if="collMember.cmodel == 'Resource'" class="mx-2" color="grey">mdi-link</v-icon>
                       <v-icon v-else-if="collMember.cmodel == 'Collection'" class="mx-2" color="grey">mdi-folder-open</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Container'" class="mx-2" color="grey">mdi-folder</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Book'" class="mx-2" color="grey">mdi-book-open-variant</v-icon>
                       </v-col>
                   </v-row>
                 </v-col>
@@ -1262,6 +1266,7 @@
                           class="white--text"
                           :to="localePath(`/stats/${objectInfo.pid}`)"
                           :aria-label="$t('Show details')"
+                          v-if="(stats.detail > 0) || (stats.download > 0)"
                         >
                           <v-tooltip bottom>
                             <template v-slot:activator="{ on, attrs }">
