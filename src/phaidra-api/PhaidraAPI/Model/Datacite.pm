@@ -921,7 +921,7 @@ sub _get_relsext_identifiers {
     }
 
     if (exists $fres->{identifier} && ref $fres->{identifier} eq 'ARRAY') {
-        @ids = @{$fres->{identifier}};
+        @ids = map { {value => $_ } } @{$fres->{identifier}};
     }
     $c->app->log->debug("Identifiers: " . Dumper(\@ids));
     return \@ids;

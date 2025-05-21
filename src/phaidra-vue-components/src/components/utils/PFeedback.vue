@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="mt-4">
     <v-card-title class="title font-weight-light white--text">{{ $t('Feedback') }}</v-card-title>
     <v-divider></v-divider>
     <v-card-text class="mt-4">

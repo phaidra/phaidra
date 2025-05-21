@@ -5163,7 +5163,7 @@ our %tree = (
                     { "labels" => {
                         "de" => "Abbildungsnachweis",
                         "en" => "Image Certificate",
-                        "it" => "certificato dell'immagine",
+                        "it" => "Certificato dell'immagine",
                         "sr" => "sertifikat slike"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_25/1552000"

@@ -1,10 +1,8 @@
 <template>
   <div>
-    <v-row class="my-6 ml-2">
-      <v-btn color="primary" :to="{ path: `/detail/${pid}`, params: { pid: pid } }">
-        <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
-      </v-btn>
-    </v-row>
+    <v-btn color="primary" class="my-4" :to="{ path: `/detail/${pid}`, params: { pid: pid } }">
+      <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
+    </v-btn>
     <v-row>
       <v-col v-if="signedin">
         <template v-if="members.length > 0">
