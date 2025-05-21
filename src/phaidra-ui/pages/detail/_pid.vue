@@ -2212,6 +2212,7 @@
                       <v-tooltip bottom>
                           <template v-slot:activator="{ on, attrs }">
                             <v-btn
+                              :aria-label="$t('Copy to clipboard')"
                               v-on="on"
                               v-bind="attrs" icon @click="copyToClipboard('id='+objectInfo.oc_mpid)"><v-icon>mdi-content-copy</v-icon></v-btn>
                           </template>
