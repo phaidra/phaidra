@@ -745,7 +745,7 @@
                 <v-col cols="10">
                   <v-row no-gutters class="mb-4">
                     <v-col cols="10">
-                      <h3
+                      <h2
                         class="title font-weight-light primary--text"
                         @click.stop
                         v-if="collMember.dc_title"
@@ -754,7 +754,7 @@
                           :to="{ path: `${collMember.pid}`, params: { pid: collMember.pid } }"
                           >{{ collMember.dc_title[0] }}</nuxt-link
                         >
-                      </h3>
+                      </h2>
                       <p>{{ collMember.pid }}</p>
                     </v-col>
                     <v-spacer></v-spacer>
