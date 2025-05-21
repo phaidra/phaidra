@@ -32,7 +32,14 @@
                 <a target="_blank" :href="instance.baseurl + '/' + item.object">{{ item.object }}</a>
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-icon :disabled="loading" color="btnred" class="mx-3" @click="removeRelationship(item)">mdi-delete</v-icon>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn :disabled="loading" icon class="mx-3" color="btnred" @click="removeRelationship(item)" v-on="on" v-bind="attrs" :aria-label="$t('Remove')">
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>{{ $t('Remove') }}</span>
+                </v-tooltip>                
               </template>
             </v-data-table>
           </v-col>

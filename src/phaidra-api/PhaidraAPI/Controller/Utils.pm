@@ -138,7 +138,7 @@ sub request_doi {
       TmplParams  => \%emaildata,
       TmplOptions => \%options
     );
-    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => 1);
+    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => ($privconfig->{smtpport} eq '465' || $privconfig->{smtpport} eq '587') ? 1 : 0);
   };
   if ($@) {
     my $err = "[$pid] sending DOI request email failed: " . $@;

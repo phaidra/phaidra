@@ -72,8 +72,22 @@
                 {{ item.updated | unixtime }}
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-icon color="primary" class="mx-3" @click="loadedList = item">mdi-pencil</v-icon>
-                <v-icon color="btnred" class="mx-3" @click="deleteListDialog(item)">mdi-delete</v-icon>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon class="mx-3" color="primary" @click="loadedList = item" v-on="on" v-bind="attrs" :aria-label="$t('Edit')">
+                      <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>{{ $t('Edit') }}</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon class="mx-3" color="btnred" @click="deleteListDialog(item)" v-on="on" v-bind="attrs" :aria-label="$t('Delete')">
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>{{ $t('Delete') }}</span>
+                </v-tooltip>
               </template>
             </v-data-table>
           </v-card-text>
@@ -125,7 +139,14 @@
                 {{ item.title | truncate(100) }}
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-icon color="btnred" class="mx-3" @click="removeMember(item.pid)">mdi-delete</v-icon>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn icon class="mx-3" color="btnred" @click="removeMember(item.pid)" v-on="on" v-bind="attrs" :aria-label="$t('Remove')">
+                        <v-icon>mdi-delete</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>{{ $t('Remove') }}</span>
+                </v-tooltip>                
               </template>
             </v-data-table>
           </v-card-text>
