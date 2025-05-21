@@ -51,9 +51,9 @@
             <v-col cols="10">
               <v-row >
                 <v-col cols="12" md="9">
-                  <h3 class="title font-weight-light primary--text" @click.stop v-if="doc.dc_title">
+                  <h2 class="title font-weight-light primary--text" @click.stop v-if="doc.dc_title">
                     <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ doc.dc_title[0] }}</nuxt-link>
-                  </h3>
+                  </h2>
                 </v-col>
                 <v-col cols="12" md="3" class="text-right">
                   <v-chip class="pointer-disabled" v-if="doc.created" color="transparent">{{ doc.created | date }}
