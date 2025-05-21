@@ -73,11 +73,11 @@
               <template v-slot:item.actions="{ item }">
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon color="primary" @click="loadedGroup = item" v-on="on" v-bind="attrs" :aria-label="$t('Modify')">
+                    <v-btn icon color="primary" @click="loadedGroup = item" v-on="on" v-bind="attrs" :aria-label="$t('Edit')">
                       <v-icon>mdi-pencil</v-icon>
                     </v-btn>
                   </template>
-                  <span>{{ $t('Modify')}}</span>
+                  <span>{{ $t('Edit')}}</span>
                 </v-tooltip>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
