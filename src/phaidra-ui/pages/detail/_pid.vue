@@ -803,10 +803,8 @@
         <v-col cols="12" md="4" class="mt-4">
           <v-row justify="end">
             <v-col cols="12" md="9">
-              <v-row
-                class="mb-6"
-              >
-                <v-col class="pt-0">
+              <ul class="mb-6 pl-0 side-list">
+                <li class="mb-6">
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
@@ -946,17 +944,8 @@
                       </v-row>
                     </v-card-text>
                   </v-card>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-
-          <v-row justify="end" v-if="identifiers.other.length > 0">
-            <v-col cols="12" md="9">
-              <v-row
-                class="mb-6"
-              >
-                <v-col class="pt-0">
+                </li>
+                <li class="mb-6" v-if="identifiers.other.length > 0">
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
@@ -981,23 +970,13 @@
                       </v-row>
                     </v-card-text>
                   </v-card>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-
-          <v-row justify="end" class="mb-8" no-gutters v-if="objectInfo.isrestricted"><v-chip label dark color="btnred" class="pointer-disabled"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></v-row>
-          <v-row justify="end">
-            <v-col cols="12" md="9">
-              <v-row
-                class="mb-6"
-                v-if="
+                </li>
+                <li class="mb-6" v-if="objectInfo.isrestricted"><v-chip label dark color="btnred" class="pointer-disabled"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></li>
+                <li class="mb-6" v-if="
                   (downloadable && objectInfo.readrights) ||
                   objectInfo.cmodel === 'Collection' ||
                   objectInfo.cmodel === 'Resource'
-                "
-              >
-                <v-col class="pt-0">
+                ">
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
@@ -1130,11 +1109,9 @@
                       </v-row>
                     </v-card-text>
                   </v-card>
-                </v-col>
-              </v-row>
+                </li>
 
-              <v-row class="mb-6" v-if="objectInfo.isinadminset">
-                <v-col class="pt-0">
+                <li class="mb-6" v-if="objectInfo.isinadminset">
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
@@ -1164,11 +1141,9 @@
                       </v-row>
                     </v-card-text>
                   </v-card>
-                </v-col>
-              </v-row>
+                </li>
 
-              <v-row class="mb-6">
-                <v-col class="pt-0">
+                <li class="mb-6">
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
@@ -1251,15 +1226,12 @@
                       </v-row>
                     </v-card-text>
                   </v-card>
-                </v-col>
-              </v-row>
+                </li>
 
-              <client-only>
-                <v-row class="my-6">
-                  <v-col class="pt-0">
-                    <v-card tile>
-                      <v-card-title
-                        class="ph-box title font-weight-light white--text"
+                <li class="mb-6">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box title font-weight-light white--text"
                       >
                         {{ $t("Usage statistics") }}
                         <nuxt-link
@@ -1295,13 +1267,10 @@
                           <v-spacer></v-spacer>
                         </v-row>
                       </v-card-text>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </client-only>
+                  </v-card>
+                </li>
 
-              <v-row v-if="objectInfo.versions && objectInfo.versions.length > 0" class="my-6">
-                <v-col class="pt-0">
+                <li v-if="objectInfo.versions && objectInfo.versions.length > 0" class="mb-6">
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
@@ -1333,14 +1302,9 @@
                       </div>
                     </v-card-text>
                   </v-card>
-                </v-col>
-              </v-row>
+                </li>
 
-              <v-row
-                v-if="objectInfo.alternativeversions && objectInfo.alternativeversions.length > 0"
-                class="my-6"
-              >
-                <v-col class="pt-0">
+                <li v-if="objectInfo.alternativeversions && objectInfo.alternativeversions.length > 0" class="mb-6">
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
@@ -1371,14 +1335,9 @@
                       </div>
                     </v-card-text>
                   </v-card>
-                </v-col>
-              </v-row>
+                </li>
 
-              <v-row
-                v-if="objectInfo.alternativeformats && objectInfo.alternativeformats.length > 0"
-                class="my-6"
-              >
-                <v-col class="pt-0">
+                <li v-if="objectInfo.alternativeformats && objectInfo.alternativeformats.length > 0" class="mb-6">
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
@@ -1410,15 +1369,10 @@
                       </div>
                     </v-card-text>
                   </v-card>
-                </v-col>
-              </v-row>
+                </li>
 
-              <template v-if="objectInfo.relationships">
-                <v-row
-                  v-if="objectInfo.relationships.ispartof && objectInfo.relationships.ispartof.length > 0"
-                  class="my-6"
-                >
-                  <v-col class="pt-0">
+                <template v-if="objectInfo.relationships">
+                  <li v-if="objectInfo.relationships.ispartof && objectInfo.relationships.ispartof.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
                         class="ph-box title font-weight-light white--text"
@@ -1461,14 +1415,9 @@
                         </div>
                       </v-card-text>
                     </v-card>
-                  </v-col>
-                </v-row>
+                  </li>
 
-                <v-row
-                  v-if="objectInfo.relationships.isbacksideof && objectInfo.relationships.isbacksideof.length > 0"
-                  class="my-6"
-                >
-                  <v-col class="pt-0">
+                  <li v-if="objectInfo.relationships.isbacksideof && objectInfo.relationships.isbacksideof.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
                         class="ph-box title font-weight-light white--text"
@@ -1512,14 +1461,9 @@
                         </div>
                       </v-card-text>
                     </v-card>
-                  </v-col>
-                </v-row>
+                  </li>
 
-                <v-row
-                  v-if="objectInfo.relationships.hasbackside && objectInfo.relationships.hasbackside.length > 0"
-                  class="my-6"
-                >
-                  <v-col class="pt-0">
+                  <li v-if="objectInfo.relationships.hasbackside && objectInfo.relationships.hasbackside.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
                         class="ph-box title font-weight-light white--text"
@@ -1562,14 +1506,9 @@
                         </div>
                       </v-card-text>
                     </v-card>
-                  </v-col>
-                </v-row>
+                  </li>
 
-                <v-row
-                  v-if="objectInfo.relationships.isthumbnailfor && objectInfo.relationships.isthumbnailfor.length > 0"
-                  class="my-6"
-                >
-                  <v-col class="pt-0">
+                  <li v-if="objectInfo.relationships.isthumbnailfor && objectInfo.relationships.isthumbnailfor.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
                         class="ph-box title font-weight-light white--text"
@@ -1614,14 +1553,9 @@
                         </div>
                       </v-card-text>
                     </v-card>
-                  </v-col>
-                </v-row>
+                  </li>
 
-                <v-row
-                  v-if="objectInfo.relationships.hasthumbnail && objectInfo.relationships.hasthumbnail.length > 0"
-                  class="my-6"
-                >
-                  <v-col class="pt-0">
+                  <li v-if="objectInfo.relationships.hasthumbnail && objectInfo.relationships.hasthumbnail.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
                         class="ph-box title font-weight-light white--text"
@@ -1665,14 +1599,9 @@
                         </div>
                       </v-card-text>
                     </v-card>
-                  </v-col>
-                </v-row>
+                  </li>
 
-                <v-row
-                  v-if="objectInfo.relationships.references && objectInfo.relationships.references.length > 0"
-                  class="my-6"
-                >
-                  <v-col class="pt-0">
+                  <li v-if="objectInfo.relationships.references && objectInfo.relationships.references.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
                         class="ph-box title font-weight-light white--text"
@@ -1715,14 +1644,9 @@
                         </div>
                       </v-card-text>
                     </v-card>
-                  </v-col>
-                </v-row>
+                  </li>
 
-                <v-row
-                  v-if="objectInfo.relationships.isreferencedby && objectInfo.relationships.isreferencedby.length > 0"
-                  class="my-6"
-                >
-                  <v-col class="pt-0">
+                  <li v-if="objectInfo.relationships.isreferencedby && objectInfo.relationships.isreferencedby.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
                         class="ph-box title font-weight-light white--text"
@@ -1767,11 +1691,10 @@
                         </div>
                       </v-card-text>
                     </v-card>
-                  </v-col>
-                </v-row>
-              </template>
-              <v-row class="my-6">
-                <v-col class="pt-0">
+                  </li>
+                </template>
+
+                <li class="mb-6">
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
@@ -1828,10 +1751,9 @@
                       </v-row>
                     </v-card-text>
                   </v-card>
-                </v-col>
-              </v-row>
-              <v-row class="my-6">
-                <v-col class="pt-0">
+                </li>
+
+                <li class="mb-6">
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
@@ -1916,11 +1838,9 @@
                       </v-row>
                     </v-card-text>
                   </v-card>
-                </v-col>
-              </v-row>
+                </li>
 
-              <v-row class="my-6" v-if="objectInfo.writerights === 1">
-                <v-col class="pt-0">
+                <li class="mb-6" v-if="objectInfo.writerights === 1">
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
@@ -2197,41 +2117,43 @@
                       </v-row>
                     </v-card-text>
                   </v-card>
-                </v-col>
-              </v-row>
+                </li>
 
-              <v-row justify="end" class="mb-2">
-                <v-col cols="12" class="pt-0">
-                  <template v-for="(md5, i) in checksums">
-                    <p
-                      class="text-right"
-                      v-if="md5.path.includes('OCTETS')"
-                      :key="'md5' + i"
-                    >
-                      <span class="caption text--secondary">md5</span
-                      ><br /><span>{{ md5.md5 }}</span>
-                    </p>
-                  </template>
-                </v-col>
-              </v-row>
-              <v-row v-if="objectInfo.oc_mpid" justify="end" class="mb-2">
-                <v-col cols="12" class="pt-0">
-                    <p class="text-right">
-                      <span class="caption text--secondary">{{ $t('Media Package Identifier') }}</span
-                      ><br /><span>id={{ objectInfo.oc_mpid }}
-                      <v-tooltip bottom>
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-btn
-                              :aria-label="$t('Copy to clipboard')"
-                              v-on="on"
-                              v-bind="attrs" icon @click="copyToClipboard('id='+objectInfo.oc_mpid)"><v-icon>mdi-content-copy</v-icon></v-btn>
-                          </template>
-                          <span>{{ $t('Copy to clipboard') }}</span>
-                      </v-tooltip>
-                      </span>
-                    </p>
-                </v-col>
-              </v-row>
+                <li class="mb-2">
+                  <v-row justify="end">
+                    <v-col cols="12" class="pt-0">
+                      <template v-for="(md5, i) in checksums">
+                        <p
+                          class="text-right"
+                          v-if="md5.path.includes('OCTETS')"
+                          :key="'md5' + i"
+                        >
+                          <span class="caption text--secondary">md5</span
+                          ><br /><span>{{ md5.md5 }}</span>
+                        </p>
+                      </template>
+                    </v-col>
+                  </v-row>
+                  <v-row v-if="objectInfo.oc_mpid" justify="end" class="mb-2">
+                    <v-col cols="12" class="pt-0">
+                        <p class="text-right">
+                          <span class="caption text--secondary">{{ $t('Media Package Identifier') }}</span
+                          ><br /><span>id={{ objectInfo.oc_mpid }}
+                          <v-tooltip bottom>
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                  :aria-label="$t('Copy to clipboard')"
+                                  v-on="on"
+                                  v-bind="attrs" icon @click="copyToClipboard('id='+objectInfo.oc_mpid)"><v-icon>mdi-content-copy</v-icon></v-btn>
+                              </template>
+                              <span>{{ $t('Copy to clipboard') }}</span>
+                          </v-tooltip>
+                          </span>
+                        </p>
+                    </v-col>
+                  </v-row>
+                </li>
+              </ul>
             </v-col>
           </v-row>
         </v-col>
@@ -3048,4 +2970,9 @@ export default {
     height: 100%;
 
 }
+
+.side-list {
+  list-style-type: none;
+}
+
 </style>
