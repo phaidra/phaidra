@@ -47,7 +47,24 @@
             <v-card-title class="title font-weight-light white--text mb-6">
               {{ $t('Link to search results') }}
             </v-card-title>
-            <v-card-text>{{ link }} <v-btn class="ml-4" icon @click="copyToClipboard()"><v-icon>mdi-content-copy</v-icon></v-btn></v-card-text>
+            <v-card-text>
+              {{ link }}
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-on="on"
+                    v-bind="attrs"
+                    icon
+                    @click="copyToClipboard()"
+                    class="ml-1"
+                    :aria-label="$t('Copy to clipboard')"
+                  >
+                    <v-icon>mdi-content-copy</v-icon>
+                  </v-btn>
+                </template>
+                <span>{{ $t('Copy to clipboard') }}</span>
+              </v-tooltip>
+            </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
