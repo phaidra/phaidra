@@ -79,19 +79,19 @@
             </v-row>
             <v-divider class="my-4"></v-divider>
             <v-row>
-              <a href="https://www.facebook.com/" target="_blank">
+              <a href="https://www.facebook.com/" target="_blank" aria-label="Facebook">
                 <icon class="mx-2" width="24px" height="18px" name="univie-facebook"></icon>
               </a>
-              <a href="https://twitter.com/" target="_blank">
+              <a href="https://twitter.com/" target="_blank" aria-label="Twitter">
                 <icon class="ml-2 mr-4" width="26px" height="18px" name="univie-twitter"></icon>
               </a>
-              <a href="https://www.youtube.com/" target="_blank">
+              <a href="https://www.youtube.com/" target="_blank" aria-label="YouTube">
                 <icon class="mx-2" width="24px" height="18px" name="univie-youtube"></icon>
               </a>
-              <a href="https://www.instagram.com/" target="_blank">
+              <a href="https://www.instagram.com/" target="_blank" aria-label="Instagram">
                 <icon class="mx-2" width="24px" height="18px" name="univie-instagram"></icon>
               </a>
-              <a href="http://www.flickr.com/" target="_blank">
+              <a href="http://www.flickr.com/" target="_blank" aria-label="Flickr">
                 <icon class="mx-2" width="24px" height="18px" name="univie-flickr"></icon>
               </a>
             </v-row>
