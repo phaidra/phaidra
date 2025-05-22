@@ -212,7 +212,10 @@ sub _add_roles_with_id {
                 }
               }
               if ($contr->{'skos:exactMatch'}) {
-                $id = $PhaidraAPI::Model::Jsonld::Extraction::jsonld_identifiers{$contr->{'skos:exactMatch'}[0]->{'@type'}} . ':' . $contr->{'skos:exactMatch'}[0]->{'@value'};
+                my $idv = $contr->{'skos:exactMatch'}[0]->{'@value'};
+                $idv =~ s{^(?:https?://)?orcid\.org/}{};
+                $idv =~ s/\s+//g;
+                $id = $PhaidraAPI::Model::Jsonld::Extraction::jsonld_identifiers{$contr->{'skos:exactMatch'}[0]->{'@type'}} . ':' . $idv;
               }
             }
             elsif ($contr->{'@type'} eq 'schema:Organization') {
@@ -262,6 +265,8 @@ sub _add_uwm_roles_with_id {
         my $id;
         my $affiliation;
         if ($e->{orcid}) {
+          $e->{orcid} =~ s{^(?:https?://)?orcid\.org/}{};
+          $e->{orcid} =~ s/\s+//g;
           $id = 'orcid:'.$e->{orcid};
         }
         if ($e->{viaf}) {
