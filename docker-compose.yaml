@@ -658,6 +658,33 @@ services:
       - fedora:/usr/local/tomcat/fcrepo-home
     profiles: ["demo-local-dev", "ssl-local-dev", "shib-local-dev"]
 
+
+  camel-toolbox:
+    image: phaidraorg/fcrepo-camel-toolbox:latest
+    <<: [*common, *logs]
+    volumes:
+      - "./camel-toolbox-config:/config"
+      - "./scripts/fixity_handler.sh:/usr/local/bin/fixity_handler.sh"
+    ports:
+      - "9080:9080"
+    command:
+      - -c
+      - "/config/configuration.properties"
+    environment:
+      <<: [*api_common_env, *hosts]
+      MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
+      MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
+      MONGODB_PHAIDRA_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra}"
+      MONGODB_DATABASE: "fixity"
+      MONGODB_PORT: "27017"
+      MONGODB_COLLECTION: "fixity_failures"
+      SMTP_HOST: ""
+      SMTP_PORT: ""
+      SMTP_USERNAME: ""
+      SMTP_PASSWORD: ""
+      SMTP_FROM: ""
+      SMTP_TO: ""
+
   ############## fedora service for s3 dev profile ###############
   fedora-s3-dev:
     hostname: "fedora"
