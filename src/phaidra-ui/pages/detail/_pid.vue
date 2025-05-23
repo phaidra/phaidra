@@ -7,7 +7,7 @@
       >
         <v-col cols="6">
           <v-row justify="center" class="mt-8">
-            <v-alert type="info" color="primary">
+            <v-alert type="info" dense outlined color="secondary">
               <div>
                 {{
                   $t("This object has been deleted.")
@@ -61,6 +61,7 @@
                         v-if="
                           i + 1 < objectInfo.relationships.ispartof.length
                         "
+                        class="my-4"
                       ></v-divider>
                     </div>
                   </v-card-text>
@@ -113,6 +114,7 @@
                         v-if="
                           i + 1 < objectInfo.relationships.isbacksideof.length
                         "
+                        class="my-4"
                       ></v-divider>
                     </div>
                   </v-card-text>
@@ -164,6 +166,7 @@
                         v-if="
                           i + 1 < objectInfo.relationships.hasbackside.length
                         "
+                        class="my-4"
                       ></v-divider>
                     </div>
                   </v-card-text>
@@ -217,6 +220,7 @@
                           i + 1 <
                           objectInfo.relationships.isthumbnailfor.length
                         "
+                        class="my-4"
                       ></v-divider>
                     </div>
                   </v-card-text>
@@ -269,6 +273,7 @@
                         v-if="
                           i + 1 < objectInfo.relationships.hasthumbnail.length
                         "
+                        class="my-4"
                       ></v-divider>
                     </div>
                   </v-card-text>
@@ -320,6 +325,7 @@
                         v-if="
                           i + 1 < objectInfo.relationships.references.length
                         "
+                        class="my-4"
                       ></v-divider>
                     </div>
                   </v-card-text>
@@ -373,6 +379,7 @@
                           i + 1 <
                           objectInfo.relationships.isreferencedby.length
                         "
+                        class="my-4"
                       ></v-divider>
                     </div>
                   </v-card-text>
@@ -446,7 +453,7 @@
             </v-col>
           </v-row>
           <v-row v-if="hasLaterVersion" justify="center">
-            <v-alert type="info" color="primary">
+            <v-alert type="info" dense outlined color="secondary" class="mt-4">
               <div>
                 {{
                   $t("There is a more recent version of this object available")
@@ -454,16 +461,14 @@
               </div>
             </v-alert>
           </v-row>
-          <v-row justify="center" v-if="latestVersion">
-            <v-col cols="12">
-              <v-btn
-                raised
-                color="primary"
-                class="mt-2 float-right"
-                :to="localePath({ path: `/detail/${latestVersion.pid}` })"
-                >{{ $t("Go to latest version") }}</v-btn
-              >
-            </v-col>
+          <v-row justify="center" v-if="latestVersion" class="my-4">
+            <v-btn
+              raised
+              large
+              color="primary"
+              :to="localePath({ path: `/detail/${latestVersion.pid}` })"
+              >{{ $t("Go to latest version") }}</v-btn
+            >
           </v-row>
           <v-row justify="center" v-if="showPreview">
             <template v-if="(objectInfo.cmodel === 'Book') && (objectInfo.datastreams.includes('UWMETADATA'))">
@@ -1057,7 +1062,7 @@
                         >
                       </v-row>
                       <v-divider
-                        class="mt-4 mb-4"
+                        class="my-4"
                         v-if="
                           (downloadable &&
                             objectInfo.readrights &&
@@ -1309,6 +1314,7 @@
                         <v-divider
                           v-if="i + 1 < objectInfo.versions.length"
                           :key="'versiond' + i"
+                          class="my-4"
                         ></v-divider>
                       </div>
                     </v-card-text>
@@ -1323,10 +1329,21 @@
                     >
                     <v-card-text class="mt-4">
                       <div
-                        v-for="(rel, i) in objectInfo.alternativeversions"  :key="'version' + i"
+                        v-for="(rel, i) in objectInfo.alternativeversions" :key="'version' + i"
                       >
-                        <v-row>
-                          <v-col cols="12" md="12">
+                        <v-row align="center">
+                          <v-col cols="12" md="5" class="preview-maxwidth">
+                              <p-img
+                                :src="instanceconfig.api +
+                                  '/object/' +
+                                  rel.pid +
+                                  '/thumbnail'
+                                "
+                                class="elevation-1 my-4"
+                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                              ></p-img>
+                          </v-col>
+                          <v-col cols="12" md="7">
                             <nuxt-link
                               v-if="rel['dc_title']"
                               :to="localePath(`/detail/${rel.pid}`)"
@@ -1342,6 +1359,7 @@
                         <v-divider
                           v-if="i + 1 < objectInfo.alternativeversions.length"
                           :key="'altversiond' + i"
+                          class="my-4"
                         ></v-divider>
                       </div>
                     </v-card-text>
@@ -1376,6 +1394,7 @@
                         <v-divider
                           v-if="i + 1 < objectInfo.alternativeformats.length"
                           :key="'altformatsd' + i"
+                          class="my-4"
                         ></v-divider>
                       </div>
                     </v-card-text>
@@ -1423,6 +1442,7 @@
                             v-if="
                               i + 1 < objectInfo.relationships.ispartof.length
                             "
+                            class="my-4"
                           ></v-divider>
                         </div>
                       </v-card-text>
@@ -1470,6 +1490,7 @@
                             v-if="
                               i + 1 < objectInfo.relationships.isbacksideof.length
                             "
+                            class="my-4"
                           ></v-divider>
                         </div>
                       </v-card-text>
@@ -1516,6 +1537,7 @@
                             v-if="
                               i + 1 < objectInfo.relationships.hasbackside.length
                             "
+                            class="my-4"
                           ></v-divider>
                         </div>
                       </v-card-text>
@@ -1564,6 +1586,7 @@
                               i + 1 <
                               objectInfo.relationships.isthumbnailfor.length
                             "
+                            class="my-4"
                           ></v-divider>
                         </div>
                       </v-card-text>
@@ -1611,6 +1634,7 @@
                             v-if="
                               i + 1 < objectInfo.relationships.hasthumbnail.length
                             "
+                            class="my-4"
                           ></v-divider>
                         </div>
                       </v-card-text>
@@ -1657,6 +1681,7 @@
                             v-if="
                               i + 1 < objectInfo.relationships.references.length
                             "
+                            class="my-4"
                           ></v-divider>
                         </div>
                       </v-card-text>
@@ -1705,6 +1730,7 @@
                               i + 1 <
                               objectInfo.relationships.isreferencedby.length
                             "
+                            class="my-4"
                           ></v-divider>
                         </div>
                       </v-card-text>
