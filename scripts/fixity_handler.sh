@@ -85,7 +85,7 @@ EOF
 log_success "Attempting to store in MongoDB..."
 
 # Store in MongoDB using mongosh
-mongosh --host "${MONGODB_PHAIDRA_HOST}" -u "${MONGODB_PHAIDRA_USER}" -p "${MONGODB_PHAIDRA_PASSWORD}" "${MONGODB_DATABASE}" --eval "
+mongosh --host "${MONGODB_PHAIDRA_HOST}" -u "${MONGODB_PHAIDRA_USER}" -p "${MONGODB_PHAIDRA_PASSWORD}" --authenticationDatabase admin "${MONGODB_DATABASE}" --eval "
 db.${MONGODB_COLLECTION}.insertOne($json_doc)
 " 2>> /tmp/fixity-errors.log
 

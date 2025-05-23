@@ -684,6 +684,14 @@ services:
       SMTP_PASSWORD: ""
       SMTP_FROM: ""
       SMTP_TO: ""
+    depends_on:
+      mongodb-phaidra:
+        condition: "service_started"
+        required: false
+      mongodb-phaidra-dev:
+        condition: "service_started"
+        required: false
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
 
   ############## fedora service for s3 dev profile ###############
   fedora-s3-dev:
