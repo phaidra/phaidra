@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-col>
     <slot name="phaidra:levelOfDescription"></slot>
     <!-- basics -->
     <slot name="dce:title"></slot>
@@ -118,7 +118,7 @@
 
     <!-- recursion starts here -->
     <slot name="phaidra:Subject"></slot><!-- dcterms:subject @type=phaidra:Subject -->
-  </v-container>
+  </v-col>
 </template>
 <script>
 export default {

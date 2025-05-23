@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <v-col>
     <v-row v-for="(ch, i) in orderedChildren" :key="ch.xmlname+i">
       <template v-if="isEmpty(ch)"></template>
       <template v-else-if="ch.xmlname === 'name'">
@@ -56,7 +56,7 @@
       </template>
       <v-alert v-else dense type="error" :value="true">Unknown field type {{ch.xmlname}} {{ch.input_type}}</v-alert>
     </v-row>
-  </div>
+  </v-col>
 </template>
 
 <script>
@@ -250,10 +250,6 @@ export default {
 </script>
 
 <style scoped>
-.wrapper {
-  width: 100%;
-}
-
 .wiv {
   font-weight: 400;
 }

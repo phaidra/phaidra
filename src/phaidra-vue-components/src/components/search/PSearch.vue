@@ -1,6 +1,6 @@
 <template>
     <v-row no-gutters>
-      <v-col md="9" cols="12" class="pr-2 mt-3">
+      <v-col md="9" cols="12" class="pr-2">
         <v-row align="start" class="my-2">
           <v-col md="6" cols="9">
             <p-search-autocomplete
@@ -75,7 +75,7 @@
           v-if="total>pagesize" v-bind:length="totalPages" total-visible="10" v-model="page" class="mb-3" />
         </v-row>
       </v-col>
-      <v-divider vertical class="divider hidden-sm-and-down mt-3"></v-divider>
+      <v-divider vertical class="divider hidden-sm-and-down"></v-divider>
       <v-col cols="3" class="pa-3 hidden-sm-and-down">
         <h2 id="filters" class="title font-weight-light pt-2">{{ $t('Filters') }}</h2>
         <v-divider class="mt-3 divider"></v-divider>

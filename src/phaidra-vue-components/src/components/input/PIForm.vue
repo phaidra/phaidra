@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid v-if="form && form.sections" >
+  <div v-if="form && form.sections" >
     <v-alert
       v-model="serverSubmitError"
       dismissible
@@ -837,14 +837,14 @@
       <v-tab-item v-if="templating" class="pa-4">
         <p-templates ref="templates" v-on:load-template="loadTemplate($event)"></p-templates>
       </v-tab-item>
-      <v-tab-item  v-if="importing" class="pa-4">
+      <v-tab-item v-if="importing" class="pa-4">
         <v-row no-gutters>
           <v-col cols="12">
             <object-from-search :title="$t('Import metadata from existing object')" v-on:object-selected="importFromObject($event)" :jsonld-only="true"></object-from-search>
           </v-col>
         </v-row>
       </v-tab-item>
-      <v-tab-item v-if="enablerights && !targetpid">
+      <v-tab-item v-if="enablerights && !targetpid" class="pa-4">
         <v-row no-gutters>
           <v-col cols="12">
             <p-m-rights 
@@ -905,7 +905,7 @@
       </v-card>
 </v-dialog>
 
-  </v-container>
+  </div>
 
 </template>
 

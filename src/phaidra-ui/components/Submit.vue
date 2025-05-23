@@ -4,9 +4,8 @@
   </div>
   
   <div v-else>
-    <v-container fluid>
       <v-row class="my-6" justify="start">
-        <div class="d-flex flex-row ml-6">
+        <div class="d-flex flex-row ml-3">
           <v-btn
             large
             class="primary"
@@ -15,7 +14,7 @@
             <v-icon dark class="mr-4">mdi-plus-circle</v-icon> {{ $t("Create new object") }}
           </v-btn>
           </div>
-        <div class="d-flex flex-row pt-3 ml-6">
+        <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
           <span>
           {{
             $t(
@@ -27,7 +26,7 @@
       </v-row>
       <v-divider class="my-2"></v-divider>
       <v-row class="my-6" justify="start">
-        <div class="d-flex flex-row ml-6">
+        <div class="d-flex flex-row ml-3">
           <v-btn
             large
             color="#94c154"
@@ -37,7 +36,7 @@
             <v-icon dark class="mr-4">mdi-plus-circle</v-icon> {{ $t("Open Educational Resources (OER) upload") }}
           </v-btn>
           </div>
-        <div class="d-flex flex-row pt-3 ml-6">
+        <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
           <span>
           {{
             $t(
@@ -50,7 +49,7 @@
       <v-divider class="my-2"></v-divider>
       <template v-if="instanceconfig.irbaseurl && (instanceconfig.irbaseurl !== '')">
         <v-row class="my-6" justify="start">
-          <div class="d-flex flex-row ml-6">
+          <div class="d-flex flex-row ml-3">
             <v-btn
               large
               class="primary"
@@ -59,7 +58,7 @@
               <v-icon dark class="mr-4">mdi-school</v-icon> {{ $t("Upload publication (via u:scholar)") }}
             </v-btn>
           </div>
-            <div class="d-flex flex-row pt-3 ml-6">
+            <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
             {{
               $t(
                 "Upload journal articles, reports, reviews, working papers, conference papers, monographs, individual chapters from monographs ..."
@@ -72,7 +71,7 @@
       </template>
       <template v-if="user.cataloguploader">
         <v-row class="my-6" justify="start">
-          <div class="d-flex flex-row ml-6">
+          <div class="d-flex flex-row ml-3">
             <v-btn
               large
               class="primary"
@@ -81,7 +80,7 @@
               <v-icon dark class="mr-4">mdi-plus-circle</v-icon> {{ $t("Catalog-fetch upload") }}
             </v-btn>
             </div>
-          <div class="d-flex flex-row pt-3 ml-6">
+          <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
             <span>
             {{
               $t(
@@ -124,7 +123,7 @@
         <v-divider class="my-2"></v-divider>
       </template>
       <v-row class="my-6" justify="start">
-        <div class="d-flex flex-row ml-6">
+        <div class="d-flex flex-row ml-3">
           <v-dialog class="pb-4" v-model="templateDialog" width="900px">
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" large color="primary">
@@ -153,7 +152,7 @@
             </v-card>
           </v-dialog>
         </div>
-        <div class="d-flex flex-row pt-3 ml-6">
+        <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
           <span>
               {{
                 $t(
@@ -195,7 +194,6 @@
           </v-col>
         </v-row>
       </template>
-    </v-container>
   </div>
 </template>
 
