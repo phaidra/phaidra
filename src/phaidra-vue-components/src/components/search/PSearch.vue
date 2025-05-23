@@ -56,7 +56,7 @@
         <v-row no-gutters>
           <v-btn v-if="inCollection" class="mb-8" color="primary">{{ $t('Members of') }}<nuxt-link class="ml-1 white--text" :to="localePath(`/detail/${inCollection}`)">{{ inCollection }}</nuxt-link><v-icon right @click.native="removeCollectionFilter()">mdi-close</v-icon></v-btn>
           <v-pagination
-          :wrapper-aria-label="''"
+          wrapper-aria-label=""
           :page-aria-label="$t('page')"
           :previous-aria-label="$t('previous')"
           :next-aria-label="$t('next')"
@@ -69,7 +69,7 @@
             :getallresults="getAllResults">
           </p-search-results>
           <v-pagination
-          :wrapper-aria-label="''"
+          wrapper-aria-label=""
           :page-aria-label="$t('page')"
           :previous-aria-label="$t('previous')"
           :next-aria-label="$t('next')"
