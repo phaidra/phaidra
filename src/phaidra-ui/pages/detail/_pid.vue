@@ -6,7 +6,7 @@
         justify="center"
       >
         <v-col cols="6">
-          <v-row justify="center" class="mt-8">
+          <v-row justify="center" class="mt-4">
             <v-alert type="info" dense outlined color="secondary">
               <div>
                 {{
@@ -15,7 +15,7 @@
               </div>
             </v-alert>
           </v-row>
-          <v-row justify="center" class="mt-5">{{ objectInfo.tombstone }}</v-row>
+          <v-row justify="center" class="my-4">{{ objectInfo.tombstone }}</v-row>
           <template v-if="objectInfo.relationships">
             <v-row
               v-if="objectInfo.relationships.ispartof && objectInfo.relationships.ispartof.length > 0"
