@@ -28,7 +28,7 @@
         </v-row>
 
         <v-row class="mt-6">
-          <v-col cols="6">
+          <v-col md="6">
             <DashboardUploads></DashboardUploads>
             <DashboardCmodels></DashboardCmodels>
           </v-col>
@@ -39,7 +39,7 @@
       </v-col>
 
       <v-col cols="12" lg="2" class="border-left mt-2">
-        <v-row>
+        <v-row class="px-2">
           <v-col cols="12">
             <v-row>
               <h2 class="md-headline title font-weight-light pa-2 mb-3">{{ "Manage Phaidra" }}</h2>
