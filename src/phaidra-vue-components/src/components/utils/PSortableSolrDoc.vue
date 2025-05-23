@@ -1,6 +1,6 @@
 <template>
   <li class="list-item">
-    <p-img :src="instance.api + '/object/' + item.pid + '/thumbnail'" class="elevation-1 mt-2 preview-maxwidth">
+    <p-img :src="instance.api + '/object/' + item.pid + '/thumbnail'" class="elevation-1 mt-2 preview-maxwidth" :alt="item.dc_title ? item.dc_title[0] : item.pid">
       <template v-slot:placeholder>
         <div class="fill-height ma-0" align="center" justify="center" >
           <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>

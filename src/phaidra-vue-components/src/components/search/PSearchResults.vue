@@ -39,7 +39,7 @@
           <v-row :key="'prev'+doc.pid">
             <v-col cols="2" >
               <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">
-                <p-img :src="instance.api + '/object/' + doc.pid + '/thumbnail'" class="preview-maxwidth elevation-1 mt-2">
+                <p-img :src="instance.api + '/object/' + doc.pid + '/thumbnail'" class="preview-maxwidth elevation-1 mt-2" :alt="doc.dc_title ? doc.dc_title[0] : doc.pid">
                   <template v-slot:placeholder>
                     <div class="fill-height ma-0" align="center" justify="center" >
                       <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
@@ -72,8 +72,8 @@
               <v-row class="my-4 mr-2">
                 <v-col>
                   <span>
-                    <span v-for="(aut,i) in doc.bib_roles_pers_aut" :key="'pers'+i">
-                      {{aut}}<span v-if="(i+1) < doc.bib_roles_pers_aut.length">; </span>
+                    <span v-for="(roleDoc,i) in getRoleList(doc)" :key="'pers'+i">
+                      {{roleDoc}}<span v-if="(i+1) < getRoleList(doc).length">; </span>
                     </span>
                     <!-- <span v-for="(aut,i) in doc.bib_roles_corp_aut" :key="'corp'+i">
                       {{aut}}<span v-if="(i+1) < doc.bib_roles_corp_aut.length">; </span>
@@ -154,6 +154,22 @@ export default {
     }
   },
   methods: {
+    getRoleList: function (doc) {
+      let roles = []
+      if (doc.bib_roles_pers_aut) {
+        roles = roles.concat(doc.bib_roles_pers_aut)
+      }
+      if (doc.bib_roles_pers_edt) {
+        roles = roles.concat(doc.bib_roles_pers_edt)
+      }
+      if (doc.bib_roles_pers_cmp) {
+        roles = roles.concat(doc.bib_roles_pers_cmp)
+      }
+      if (doc.bib_roles_pers_art) {
+        roles = roles.concat(doc.bib_roles_pers_art)
+      }
+      return roles
+    },
     getDescriptionLanguage: function (item) {
       let description = item.dc_description[0];
       let lang = 'en';

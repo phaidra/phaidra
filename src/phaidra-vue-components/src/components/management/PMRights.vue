@@ -25,7 +25,7 @@
                   :no-results-text="$t('There were no search results')"
                 >
                   <template v-slot:item.description="{ item }">
-                    <span :title="item.notation">{{ item.description }}</span>
+                    <span :title="item.notation">{{item.notation}} {{ item.description }}</span>
                   </template>
                   <template v-slot:item.expires="{ item }">
                     {{ item.expires | date }}
@@ -252,7 +252,8 @@
             <v-btn color="primary" @click="setExpires()">OK</v-btn>
           </v-date-picker>
         </v-dialog>
-         <user-search-dialog ref="userSearchdialog" @user-selected="searchUserSelected($event)"></user-search-dialog>
+        <user-search-dialog ref="userSearchdialog" @user-selected="searchUserSelected($event)"></user-search-dialog>
+      </v-container>
     </v-card-text>
   </v-card>
 </template>
