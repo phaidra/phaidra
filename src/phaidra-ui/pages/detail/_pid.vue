@@ -579,6 +579,7 @@
               </v-toolbar-title>
               <v-spacer></v-spacer>
               <v-pagination
+              :wrapper-aria-label="$t('pagination')"
               :page-aria-label="$t('page')"
               :previous-aria-label="$t('previous')"
               :next-aria-label="$t('next')"
@@ -712,6 +713,7 @@
               <v-switch @click="refreshCollectionMembers()" class="mx-2" dark hide-details :label="$t('Only latest versions')" v-model="collOnlyLatestVersions"></v-switch>
               <v-spacer></v-spacer>
               <v-pagination
+                :wrapper-aria-label="$t('pagination')"
                 :page-aria-label="$t('page')"
                 :previous-aria-label="$t('previous')"
                 :next-aria-label="$t('next')"
