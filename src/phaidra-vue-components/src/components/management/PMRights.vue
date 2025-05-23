@@ -253,7 +253,6 @@
           </v-date-picker>
         </v-dialog>
         <user-search-dialog ref="userSearchdialog" @user-selected="searchUserSelected($event)"></user-search-dialog>
-      </v-container>
     </v-card-text>
   </v-card>
 </template>
