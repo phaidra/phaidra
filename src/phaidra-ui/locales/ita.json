@@ -1144,7 +1144,7 @@
   "Back to detail page": "Torna all'oggetto",
   "PHAIDRA uses the following resources": "PHAIDRA fa uso dei seguenti servizi",
   "Open in Bookviewer": "Apri nel Book Viewer",
-  "There is a more recent version of this object available": "Esiste una versione più recente di questo oggetto",
+  "There is a more recent version of this object available": "Esiste una versione più recente di questo oggetto.",
   "Go to container": "Vai al Contenitore",
   "Go to book": "Vai al Libro",
   "This object is a member of multiple containers. Please choose a container to view": "Questo oggetto è membro di più contenitori. Scegliere un contenitore da visualizzare",
@@ -1334,5 +1334,7 @@
   "Selected": "Selezionato",
   "RSS Feed": "Feed RSS",
   "This object has been deleted.": "Quest'oggetto è stato eliminato.",
-  "Error: Request failed with status code 500" : "Il server ha riscontrato un errore interno."
+  "Error: Request failed with status code 500" : "Il server ha riscontrato un errore interno.",
+  "Relationship successfuly added": "Relazione aggiunta.",
+  "Relationship successfuly removed": "Relazione rimossa."
 }
