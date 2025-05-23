@@ -28,7 +28,7 @@
         </v-row>
 
         <v-row class="mt-6">
-          <v-col md="6">
+          <v-col lg="6">
             <DashboardUploads></DashboardUploads>
             <DashboardCmodels></DashboardCmodels>
           </v-col>
