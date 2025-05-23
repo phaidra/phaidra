@@ -1333,5 +1333,6 @@
   "Skip to main content": "Vai al contenuto",
   "Selected": "Selezionato",
   "RSS Feed": "Feed RSS",
-  "This object has been deleted.": "Quest'oggetto è stato eliminato."
+  "This object has been deleted.": "Quest'oggetto è stato eliminato.",
+  "Error: Request failed with status code 500" : "Il server ha riscontrato un errore interno."
 }
