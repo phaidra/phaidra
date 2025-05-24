@@ -15,36 +15,38 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row v-show="!showtou" class="mt-5">
-      <v-col cols="4" offset="4">
+    <v-row v-show="!showtou" justify="center">
+      <v-col md="4">
         <v-form v-model="valid">
           <v-card>
             <v-card-text>
-              <v-col cols="10" offset="1">
-                <v-text-field
-                  :disabled="loading"
-                  :label="$t('Username')"
-                  v-model="credentials.username"
-                  required
-                  filled
-                  :placeholder="' '"
-                  :autocomplete="'username'"
-                  @keydown.enter.prevent="login"
-                ></v-text-field>
-                <v-text-field
-                  :disabled="loading"
-                  :label="$t('Password')"
-                  v-model="credentials.password"
-                  required
-                  filled
-                  :placeholder="' '"
-                  :append-icon="passVisibility ? 'mdi-eye' : 'mdi-eye-off'"
-                  @click:append="toggleVisibility"
-                  :type="passVisibility ? 'password' : 'text'"
-                  :autocomplete="'current-password'"
-                  @keydown.enter.prevent="login"
-                ></v-text-field>
-              </v-col>
+              <v-row justify="center" class="mt-4">
+                <v-col cols="10">
+                  <v-text-field
+                    :disabled="loading"
+                    :label="$t('Username')"
+                    v-model="credentials.username"
+                    required
+                    filled
+                    :placeholder="' '"
+                    :autocomplete="'username'"
+                    @keydown.enter.prevent="login"
+                  ></v-text-field>
+                  <v-text-field
+                    :disabled="loading"
+                    :label="$t('Password')"
+                    v-model="credentials.password"
+                    required
+                    filled
+                    :placeholder="' '"
+                    :append-icon="passVisibility ? 'mdi-eye' : 'mdi-eye-off'"
+                    @click:append="toggleVisibility"
+                    :type="passVisibility ? 'password' : 'text'"
+                    :autocomplete="'current-password'"
+                    @keydown.enter.prevent="login"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
             </v-card-text>
             <v-divider class="mt-5"></v-divider>
             <v-card-actions>

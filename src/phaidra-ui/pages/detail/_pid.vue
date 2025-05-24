@@ -428,7 +428,7 @@
         </template>
       </v-row>
       <v-row class="text-break" v-else>
-        <v-col cols="12" md="8" class="mt-8">
+        <v-col cols="12" md="8">
           <v-row v-if="objectInfo.cmodel === 'Page'" justify="center">
             <v-col cols="6">
               <v-row justify="center" class="mt-5">{{
@@ -579,6 +579,7 @@
               </v-toolbar-title>
               <v-spacer></v-spacer>
               <v-pagination
+              :wrapper-aria-label="$t('pagination')"
               :page-aria-label="$t('page')"
               :previous-aria-label="$t('previous')"
               :next-aria-label="$t('next')"
@@ -712,6 +713,7 @@
               <v-switch @click="refreshCollectionMembers()" class="mx-2" dark hide-details :label="$t('Only latest versions')" v-model="collOnlyLatestVersions"></v-switch>
               <v-spacer></v-spacer>
               <v-pagination
+                :wrapper-aria-label="$t('pagination')"
                 :page-aria-label="$t('page')"
                 :previous-aria-label="$t('previous')"
                 :next-aria-label="$t('next')"
@@ -808,7 +810,7 @@
           </template>
         </v-col>
 
-        <v-col cols="12" md="4" class="mt-4">
+        <v-col cols="12" md="4">
           <v-row justify="end">
             <v-col cols="12" md="9">
               <ul class="mb-6 pl-0 side-list">

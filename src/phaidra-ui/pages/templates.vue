@@ -1,7 +1,6 @@
-<template>  
+<template>
   <div>
     <h1 class="d-sr-only">{{$t('Templates')}}</h1>
-    <v-container fluid>
         <v-card>
         <v-card-title class="title font-weight-light white--text">
             {{ $t('Manage templates') }}
@@ -19,7 +18,7 @@
               ></p-templates>
           </v-card-text>
         </v-card>
-        <v-dialog  v-model="validationEdit" width="500">
+        <v-dialog v-model="validationEdit" width="500">
               <v-card>
                 <v-card-title class="title font-weight-light white--text"><span v-t="'Edit Template Validation'"></span></v-card-title>
                 <v-card-text>
@@ -38,7 +37,6 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
-    </v-container>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper col">
+  <v-col>
     <v-row v-for="(ch, i) in children" :key="ch.xmlname+i">
       <template v-if="skip(ch) || isEmpty(ch)"></template>
       <template v-else-if="ch.input_type === 'static'">
@@ -185,7 +185,7 @@
       </template>
       <v-alert v-else dense type="error" :value="true">Unknown field type {{ch.xmlname}} {{ch.input_type}}</v-alert>
     </v-row>
-  </div>
+  </v-col>
 </template>
 
 <script>
@@ -530,10 +530,6 @@ export default {
 <style scoped>
 .valuefield {
   white-space: pre-wrap;
-}
-
-.wrapper {
-  width: 100%;
 }
 
 .wiv {

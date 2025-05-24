@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-container class="px-4" fluid v-if="!loading">
-      <v-row>
+      <v-row no-gutters>
         <v-col>
           <header>
             <a href="#main-content" class="skip-link d-sr-only-focusable">{{ $t("Skip to main content") }}</a>

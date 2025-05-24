@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="form && (form.length > 0)">
+  <div v-if="form && (form.length > 0)">
     <v-card :outlined="!title">
       <v-card-title v-if="title" class="title font-weight-light white--text">{{ $t(title) }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-card-title>
       <v-alert dismissible :type="'error'" :value="!valid" transition="fade-transition">
@@ -29,7 +29,7 @@
         <v-btn large @click="save()" :loading="loading" :disabled="loading" color="primary">{{ $t('Save') }}</v-btn>
       </v-card-actions>
     </v-card>
-  </v-container>
+  </div>
 </template>
 
 <script>

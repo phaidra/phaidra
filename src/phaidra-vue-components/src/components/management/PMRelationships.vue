@@ -2,9 +2,12 @@
   <v-card :flat="!title">
     <v-card-title v-if="title" class="title font-weight-light white--text">{{ title }}</v-card-title>
     <v-divider v-if="title"></v-divider>
-    <v-card-text class="mt-4">
-      <v-container fluid>
-        <v-row class="title font-weight-light">{{ $t('Here you can add or remove relationships to other objects inside this repository.') }}</v-row>
+    <v-card-text>
+        <v-row>
+          <v-col>
+            <h2 class="title font-weight-light">{{ $t('Here you can add or remove relationships to other objects inside this repository.') }}</h2>
+          </v-col>
+        </v-row>
         <v-row>
           <v-col cols="12">
             <v-data-table
@@ -96,7 +99,6 @@
             </v-card>
           </v-col>
         </v-row>
-      </v-container>
     </v-card-text>
   </v-card>
 </template>
@@ -148,12 +150,7 @@ export default {
     return {
       loading: false,
       relationshipsArray: [],
-      relationshipsHeaders: [
-        { text: this.$t('Relation'), align: 'left', value: 'relation' },
-        { text: this.$t('Object'), align: 'left', value: 'object' },
-        { text: this.$t('Title'), align: 'left', value: 'title' },
-        { text: '', align: 'right', value: 'actions', sortable: false }
-      ],
+      relationshipsHeaders: [],
       selectedRelationship: null,
       objectSearch: null,
       objectSearchModel: null,
@@ -162,6 +159,17 @@ export default {
     }
   },
   watch: {
+    '$i18n.locale': {
+      immediate: true, // Ensure it's set on load
+      handler() {
+        this.relationshipsHeaders = [
+          { text: this.$t('Relation'), align: 'left', value: 'relation' },
+          { text: this.$t('Object'), align: 'left', value: 'object' },
+          { text: this.$t('Title'), align: 'left', value: 'title' },
+          { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+        ]
+      }
+    },
     relationships: {
       handler: async function (val) {
         this.loading = true
