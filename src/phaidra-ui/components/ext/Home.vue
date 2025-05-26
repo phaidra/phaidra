@@ -18,7 +18,7 @@
       </v-col>
     </v-row>
 
-    <v-divider class="mb-4"></v-divider>
+    <v-divider class="mb-8"></v-divider>
 
     <v-row class="px-2">
 

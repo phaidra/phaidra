@@ -79,7 +79,7 @@
       </v-col>
       <v-divider vertical class="divider hidden-sm-and-down"></v-divider>
       <v-col cols="3" class="pa-3 hidden-sm-and-down">
-        <h2 id="filters" class="title font-weight-light pt-2">{{ $t('Filters') }}</h2>
+        <h2 id="filters" class="h5 font-weight-light pt-2">{{ $t('Filters') }}</h2>
         <v-divider class="mt-3 divider"></v-divider>
         <p-search-filters
           ref="searchFilters"
