@@ -12,4 +12,5 @@ BASH_ENV=/container.env
 50  23  *    *    *     perl /mnt/chronos/original-perl/checkExpiredRights.pl > /proc/1/fd/1 2>&1
 0    *  *   *   *       perl /mnt/chronos/original-perl/session_cleanup.pl > /proc/1/fd/1 2>&1
 50  23  *   *   *       perl /mnt/chronos/original-perl/imageserver_cleaner.pl > /proc/1/fd/1 2>&1
+0   0   */15 *    *     bash /mnt/chronos/camel-fixity-checker.bash > /proc/1/fd/1 2>&1
 
