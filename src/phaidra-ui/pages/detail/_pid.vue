@@ -2313,7 +2313,7 @@ export default {
                 if (idvalue.substr(0, 2) === 'AC') {
                   ids.other.push({ label: "AC", value: 'https://permalink.obvsg.at/' + idvalue });
                 } else {
-                  ids.other.push({ value: idvalue });
+                  ids.other.push({ value: idvalue, label: type });
                 }
                 break;
             }
