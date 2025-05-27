@@ -660,10 +660,7 @@ services:
 
 
   camel-toolbox:
-    # image: phaidraorg/fcrepo-camel-toolbox:latest
-    build:
-      context: .
-      dockerfile: dockerfiles/camel.dockerfile
+    image: phaidraorg/fcrepo-camel-toolbox:latest
     <<: [*common, *logs]
     volumes:
       - "./camel-toolbox-config:/config"
