@@ -1,7 +1,7 @@
 <template>
     <v-row no-gutters>
       <v-col md="9" cols="12" class="pr-2">
-        <v-row align="start" class="my-2">
+        <v-row align="start" class="pt-2 pb-4">
           <v-col md="6" cols="9">
             <p-search-autocomplete
               :placeholder="$t('SEARCH_PLACEHOLDER')"
@@ -78,8 +78,8 @@
         </v-row>
       </v-col>
       <v-divider vertical class="divider hidden-sm-and-down"></v-divider>
-      <v-col cols="3" class="pa-3 hidden-sm-and-down">
-        <h2 id="filters" class="title font-weight-light pt-2">{{ $t('Filters') }}</h2>
+      <v-col cols="3" class="pa-3 pt-2 hidden-sm-and-down">
+        <h2 id="filters" class="h5 font-weight-light">{{ $t('Filters') }}</h2>
         <v-divider class="mt-3 divider"></v-divider>
         <p-search-filters
           ref="searchFilters"

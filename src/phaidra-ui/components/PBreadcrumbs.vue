@@ -34,7 +34,7 @@
           </li>
         </template>
       </ol>
-      <v-divider></v-divider>
+      <v-divider class="mt-1"></v-divider>
     </v-col>
     <v-col cols="12" class="py-0">
       <v-progress-linear
