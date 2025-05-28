@@ -5,8 +5,8 @@
     
     <div v-else>
       <v-row no-gutters class="mb-6">
-          <v-col cols="12" md="10" offset-md="1" class="header py-3">
-          <v-row no-gutters class="mt-2" style="min-height: 125px">
+          <v-col cols="12" md="10" offset-md="1" class="header py-4">
+            <v-row no-gutters class="mt-2">
               <v-col class="text-left" cols="12" md="3">
                 <a :href="instanceconfig.institutionurl" target="_blank" aria-label="PHAIDRA - to the homepage">
                   <svg version="1.1" id="PHAIDRA_Logo_copy_xA0_Image_1_"
@@ -348,7 +348,7 @@
                   </v-tooltip>
                 </v-row>              
 
-                <v-row>
+                <v-row justify="center">
                   <v-col
                   v-if="appconfig.showinstanceswitch"                  
                   md="4"
@@ -385,95 +385,97 @@
                 </v-row>
 
                 <v-row>
-                  <v-toolbar flat dense color="transparent">
+                  <v-toolbar flat dense color="transparent" class="my-md-1">
                     <client-only>
-                      <v-menu attach="#mobile-menu-btn" offset-y :disable-keys="true" min-width="150px">
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-btn id="mobile-menu-btn" class="ml-4 hidden-md-and-up" icon color="primary" aria-controls="mobile-menu" aria-label="Main navigation menu"
-                          v-bind="attrs" v-on="on"><v-icon>mdi-menu</v-icon></v-btn>
-                        </template>
-                        <v-list id="mobile-menu">
-                          <v-list-item
-                              nuxt
-                              :to="localePath({
-                                  path: '/search',
-                                  query: { reset: 1 },
-                                  })"
-                              ><v-list-item-title>{{
-                              $t("Search")
-                              }}</v-list-item-title></v-list-item
-                          >
-                          <v-list-item
-                              v-if="signedin"
-                              nuxt
-                              :to="localePath('/submit')"
-                              ><v-list-item-title>{{
-                              $t("Upload")
-                              }}</v-list-item-title></v-list-item
-                          >
-                          <v-list-item
-                              v-if="signedin"
-                              nuxt
-                              :to="localePath({
-                                  path: '/search',
-                                  query: { reset: 1, owner: user.username },
-                                  })"
-                              ><v-list-item-title>{{
-                              $t("My objects")
-                              }}</v-list-item-title></v-list-item
-                          >
-                          <v-list-item
-                              v-if="signedin"
-                              nuxt
-                              :to="localePath('/lists')"
-                              ><v-list-item-title>{{
-                              $t("Object lists")
-                              }}</v-list-item-title></v-list-item
-                          >
-                          <v-list-item
-                              v-if="signedin && instanceconfig.groups"
-                              nuxt
-                              :to="localePath('/groups')"
-                              ><v-list-item-title>{{
-                              $t("Groups")
-                              }}</v-list-item-title></v-list-item
-                          >
-                          <v-list-item
-                              v-if="signedin"
-                              nuxt
-                              :to="localePath('/templates')"
-                              ><v-list-item-title>{{
-                              $t("Templates")
-                              }}</v-list-item-title></v-list-item
-                          >
-                          <v-list-item
-                              nuxt
-                              :to="localePath('/help')"
-                              ><v-list-item-title>{{
-                              $t("Help")
-                              }}</v-list-item-title></v-list-item
-                          >
-                          <v-list-item
-                              v-if="!signedin && appconfig.enablelogin"
-                              href
-                              :to="localePath('/login')"
-                              ><v-list-item-title>{{ $t("Login") }}</v-list-item-title></v-list-item
-                          >
-                          <v-list-item
-                              v-if="user.isadmin"
-                              nuxt
-                              :to="localePath('/admin')"                              
-                              ><v-list-item-title>{{
-                              $t("Admin")
-                              }}</v-list-item-title></v-list-item
-                          >
-                          <v-list-item v-if="signedin" @click="logout"
-                              ><v-list-item-title>{{
-                              $t("Logout")
-                              }}</v-list-item-title></v-list-item
-                          >
-                        </v-list>
-                      </v-menu>
+                      <v-row class="hidden-md-and-up">
+                        <v-menu attach="#mobile-menu-btn" offset-y :disable-keys="true" close-on-click close-on-content-click min-width="150px">
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn id="mobile-menu-btn" color="grey darken-1" text x-large aria-controls="mobile-menu" aria-label="Main navigation menu"
+                            v-bind="attrs" v-on="on" class="px-0 pb-3"><v-icon x-large class="mr-2">mdi-menu</v-icon>{{ $t('Menu') }}</v-btn>
+                          </template>
+                          <v-list id="mobile-menu">
+                            <v-list-item
+                                nuxt
+                                :to="localePath({
+                                    path: '/search',
+                                    query: { reset: 1 },
+                                    })"
+                                ><v-list-item-title>{{
+                                $t("Search")
+                                }}</v-list-item-title></v-list-item
+                            >
+                            <v-list-item
+                                v-if="signedin"
+                                nuxt
+                                :to="localePath('/submit')"
+                                ><v-list-item-title>{{
+                                $t("Upload")
+                                }}</v-list-item-title></v-list-item
+                            >
+                            <v-list-item
+                                v-if="signedin"
+                                nuxt
+                                :to="localePath({
+                                    path: '/search',
+                                    query: { reset: 1, owner: user.username },
+                                    })"
+                                ><v-list-item-title>{{
+                                $t("My objects")
+                                }}</v-list-item-title></v-list-item
+                            >
+                            <v-list-item
+                                v-if="signedin"
+                                nuxt
+                                :to="localePath('/lists')"
+                                ><v-list-item-title>{{
+                                $t("Object lists")
+                                }}</v-list-item-title></v-list-item
+                            >
+                            <v-list-item
+                                v-if="signedin && instanceconfig.groups"
+                                nuxt
+                                :to="localePath('/groups')"
+                                ><v-list-item-title>{{
+                                $t("Groups")
+                                }}</v-list-item-title></v-list-item
+                            >
+                            <v-list-item
+                                v-if="signedin"
+                                nuxt
+                                :to="localePath('/templates')"
+                                ><v-list-item-title>{{
+                                $t("Templates")
+                                }}</v-list-item-title></v-list-item
+                            >
+                            <v-list-item
+                                nuxt
+                                :to="localePath('/help')"
+                                ><v-list-item-title>{{
+                                $t("Help")
+                                }}</v-list-item-title></v-list-item
+                            >
+                            <v-list-item
+                                v-if="!signedin && appconfig.enablelogin"
+                                href
+                                :to="localePath('/login')"
+                                ><v-list-item-title>{{ $t("Login") }}</v-list-item-title></v-list-item
+                            >
+                            <v-list-item
+                                v-if="user.isadmin"
+                                nuxt
+                                :to="localePath('/admin')"                              
+                                ><v-list-item-title>{{
+                                $t("Admin")
+                                }}</v-list-item-title></v-list-item
+                            >
+                            <v-list-item v-if="signedin" @click="logout"
+                                ><v-list-item-title>{{
+                                $t("Logout")
+                                }}</v-list-item-title></v-list-item
+                            >
+                          </v-list>
+                        </v-menu>                                        
+                      </v-row>
                     </client-only>
                     <v-spacer></v-spacer>
                     <v-toolbar-items class="hidden-sm-and-down no-height-inherit py-2">
@@ -483,12 +485,13 @@
                           tile
                           depressed
                           nuxt
-                          :color="hover ? 'primary' : 'ph-button-bg'"
+                          active-class="ph-button-bg-active"
+                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
                           :to="localePath({
                               path: '/search',
-                              query: { reset: 1},
+                              query: { reset: 1 },
                           })"
-                          class="font-weight-regular"
+                          class="font-weight-regular"                          
                         >                    
                           {{ $t("Search") }}
                         </v-btn>
@@ -500,7 +503,8 @@
                           tile
                           depressed
                           nuxt
-                          :color="hover ? 'primary' : 'ph-button-bg'"
+                          active-class="ph-button-bg-active"
+                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
                           :to="localePath('/submit')"
                           class="font-weight-regular"
                         >
@@ -514,7 +518,8 @@
                           tile
                           depressed
                           nuxt
-                          :color="hover ? 'primary' : 'ph-button-bg'"
+                          active-class="ph-button-bg-active"
+                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
                           :to="localePath({
                               path: '/search',
                               query: { reset: 1, owner: user.username },
@@ -531,7 +536,8 @@
                           tile
                           depressed
                           nuxt
-                          :color="hover ? 'primary' : 'ph-button-bg'"
+                          active-class="ph-button-bg-active"
+                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
                           :to="localePath('/lists')"
                           class="font-weight-regular"
                         >                    
@@ -545,7 +551,8 @@
                           tile
                           depressed
                           nuxt
-                          :color="hover ? 'primary' : 'ph-button-bg'"
+                          active-class="ph-button-bg-active"
+                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
                           :to="localePath('/groups')"
                           class="font-weight-regular"
                         >                    
@@ -559,7 +566,8 @@
                           tile
                           depressed
                           nuxt
-                          :color="hover ? 'primary' : 'ph-button-bg'"
+                          active-class="ph-button-bg-active"
+                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
                           :to="localePath('/templates')"
                           class="font-weight-regular"
                         >                    
@@ -572,7 +580,8 @@
                           tile
                           depressed
                           nuxt
-                          :color="hover ? 'primary' : 'ph-button-bg'"
+                          active-class="ph-button-bg-active"
+                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
                           :to="localePath('/help')"
                           class="font-weight-regular"
                         >                    
@@ -584,9 +593,9 @@
                           v-show="!signedin && appconfig.enablelogin"
                           dark
                           tile
-                          depressed
+                          depressed                          
                           :href="localePath('/login')"
-                          :color="hover ? 'primary' : 'ph-button-bg'"                          
+                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
                           class="font-weight-regular"
                           >
                             {{ $t("Login") }}                        
@@ -599,7 +608,8 @@
                           tile
                           depressed
                           nuxt
-                          :color="hover ? 'primary' : 'ph-button-bg'"
+                          active-class="ph-button-bg-active"
+                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
                           :to="localePath('/admin')"
                           class="font-weight-regular"
                           >
@@ -612,7 +622,8 @@
                           dark
                           tile
                           depressed
-                          :color="hover ? 'primary' : 'ph-button-bg'"
+                          active-class="ph-button-bg-active"
+                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
                           @click="logout"
                           class="font-weight-regular"
                         >                    
@@ -639,6 +650,9 @@
     computed: {
       localeLabel: function () {
         return this.$i18n.locale;
+      },
+      isDarkTheme: function () {
+        return this.$vuetify.theme.dark;
       }
     },
     methods: {
@@ -717,25 +731,12 @@
 
 <style scoped>
   .ph-button:focus {
-      background-color: var(--v-primary-base) !important;
+    background-color: var(--v-primary-base) !important;
+    border-color: var(--v-primary-base) !important;
   }
-
   .ph-button {
     background-color: var(--v-cardtitlebg-base)!important;
     border-color: var(--v-cardtitlebg-base)!important;
-  }
-
-  .ph-button-bg:focus {
-    background-color: var(--v-primary-base) !important;
-  }
-
-  .ph-button-bg {
-    background-color: var(--v-cardtitlebg-base) !important;
-    border-color: var(--v-cardtitlebg-base) !important;
-  }
-
-  .v-toolbar__items .v-btn {
-    margin-left: 1px;
   }
 
   .theme--dark svg {
@@ -750,7 +751,21 @@
     background-color: black;
   }
 
-  .theme--dark .v-toolbar__items .v-btn {
-    background-color: #272727 !important;
+  .v-toolbar__items .v-btn {
+    margin-left: 1px;
   }
+
+  .ph-button-bg {
+    background-color: var(--v-cardtitlebg-base) !important;
+    border-color: var(--v-cardtitlebg-base) !important;
+  }
+
+  .ph-button-bg-active {
+    background-color: var(--v-primary-base) !important;
+    border-color: var(--v-primary-base) !important;
+  }
+
+  /* .v-btn:hover::before, .v-btn--active::before {
+    opacity: 0;
+  } */
 </style>
