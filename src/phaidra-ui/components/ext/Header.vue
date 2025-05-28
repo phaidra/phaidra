@@ -290,14 +290,14 @@
                   ></icon>
                   <span
                   v-if="signedin"
-                  class="ma-1 subtitle-1 grey--text text--darken-1"
+                  class="ma-1 subtitle-1"                  
                   >{{ user.firstname }} {{ user.lastname }}</span
                   >
 
                   <v-menu offset-y>
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn text v-on="on" v-bind="attrs" aria-controls="locale-menu">
-                        <span class="subtitle-1 grey--text text--darken-1 text-capitalize">{{
+                        <span class="subtitle-1 text-capitalize">{{
                             localeLabel
                         }}</span>
                         <icon
@@ -331,7 +331,7 @@
 
                   <v-tooltip v-if="!$vuetify.theme.dark" bottom>
                     <template v-slot:activator="{ on, attrs }">
-                      <v-btn v-on="on" v-bind="attrs" icon @click="darkMode" class="grey--text text--darken-1" :aria-label="$t('Dark Mode On')">
+                      <v-btn v-on="on" v-bind="attrs" icon @click="darkMode" :aria-label="$t('Dark Mode On')">
                         <v-icon>mdi-moon-waxing-crescent</v-icon>
                       </v-btn>
                     </template>
@@ -340,7 +340,7 @@
 
                   <v-tooltip v-else bottom>
                     <template v-slot:activator="{ on, attrs }">
-                      <v-btn v-on="on" v-bind="attrs" icon @click="darkMode" class="grey--text text--darken-1" :aria-label="$t('Dark Mode Off')">
+                      <v-btn v-on="on" v-bind="attrs" icon @click="darkMode" :aria-label="$t('Dark Mode Off')">
                         <v-icon>mdi-white-balance-sunny</v-icon>
                       </v-btn>
                     </template>
@@ -388,7 +388,7 @@
                   <v-toolbar flat dense color="transparent" class="my-md-1">
                     <client-only>
                       <v-row class="hidden-md-and-up">
-                        <v-menu attach="#mobile-menu-btn" offset-y :disable-keys="true" close-on-click close-on-content-click min-width="150px">
+                        <v-menu attach="#mobile-menu-btn" offset-y :disable-keys="true" min-width="150px">
                           <template v-slot:activator="{ on, attrs }">
                             <v-btn id="mobile-menu-btn" color="grey darken-1" text x-large aria-controls="mobile-menu" aria-label="Main navigation menu"
                             v-bind="attrs" v-on="on" class="px-0 pb-3"><v-icon x-large class="mr-2">mdi-menu</v-icon>{{ $t('Menu') }}</v-btn>
@@ -486,12 +486,12 @@
                           depressed
                           nuxt
                           active-class="ph-button-bg-active"
-                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
+                          :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
                           :to="localePath({
                               path: '/search',
                               query: { reset: 1 },
                           })"
-                          class="font-weight-regular"                          
+                          class="font-weight-regular white--text"                          
                         >                    
                           {{ $t("Search") }}
                         </v-btn>
@@ -504,9 +504,9 @@
                           depressed
                           nuxt
                           active-class="ph-button-bg-active"
-                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
+                          :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
                           :to="localePath('/submit')"
-                          class="font-weight-regular"
+                          class="font-weight-regular white--text"
                         >
                           {{ $t("Upload") }}
                         </v-btn>
@@ -519,12 +519,12 @@
                           depressed
                           nuxt
                           active-class="ph-button-bg-active"
-                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
+                          :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
                           :to="localePath({
                               path: '/search',
                               query: { reset: 1, owner: user.username },
                           })"
-                          class="font-weight-regular"
+                          class="font-weight-regular white--text"
                         >                    
                           {{ $t("My objects") }}
                         </v-btn>
@@ -537,9 +537,9 @@
                           depressed
                           nuxt
                           active-class="ph-button-bg-active"
-                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
+                          :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
                           :to="localePath('/lists')"
-                          class="font-weight-regular"
+                          class="font-weight-regular white--text"
                         >                    
                           {{ $t("Object lists") }}
                         </v-btn>
@@ -552,9 +552,9 @@
                           depressed
                           nuxt
                           active-class="ph-button-bg-active"
-                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
+                          :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
                           :to="localePath('/groups')"
-                          class="font-weight-regular"
+                          class="font-weight-regular white--text"
                         >                    
                           {{ $t("Groups") }}
                         </v-btn>
@@ -567,9 +567,9 @@
                           depressed
                           nuxt
                           active-class="ph-button-bg-active"
-                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
+                          :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
                           :to="localePath('/templates')"
-                          class="font-weight-regular"
+                          class="font-weight-regular white--text"
                         >                    
                           {{ $t("Templates") }}
                         </v-btn>
@@ -581,9 +581,9 @@
                           depressed
                           nuxt
                           active-class="ph-button-bg-active"
-                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
+                          :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
                           :to="localePath('/help')"
-                          class="font-weight-regular"
+                          class="font-weight-regular white--text"
                         >                    
                           {{ $t("Help") }}
                         </v-btn>
@@ -595,8 +595,8 @@
                           tile
                           depressed                          
                           :href="localePath('/login')"
-                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
-                          class="font-weight-regular"
+                          :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
+                          class="font-weight-regular white--text"
                           >
                             {{ $t("Login") }}                        
                         </v-btn>
@@ -609,9 +609,9 @@
                           depressed
                           nuxt
                           active-class="ph-button-bg-active"
-                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
+                          :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
                           :to="localePath('/admin')"
-                          class="font-weight-regular"
+                          class="font-weight-regular white--text"
                           >
                             {{ $t("Admin") }}
                         </v-btn>
@@ -623,9 +623,9 @@
                           tile
                           depressed
                           active-class="ph-button-bg-active"
-                          :color="hover ? 'primary' : isDarkTheme ? '#272727' : 'ph-button-bg'"
+                          :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
                           @click="logout"
-                          class="font-weight-regular"
+                          class="font-weight-regular white--text"
                         >                    
                           {{ $t("Logout") }}
                         </v-btn>
@@ -758,6 +758,11 @@
   .ph-button-bg {
     background-color: var(--v-cardtitlebg-base) !important;
     border-color: var(--v-cardtitlebg-base) !important;
+  }
+
+  .ph-button-bg-dark {
+    background-color: #272727;
+    border-color: #272727;
   }
 
   .ph-button-bg-active {
