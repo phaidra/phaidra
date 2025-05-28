@@ -760,25 +760,6 @@ sub uwmetadata_2_json {
   # fix taxonpath nodes (we first needed them filled)
   $self->fix_taxonpath_nodes($c, $metadata_tree);
 
-  # Order histkult children
-  my $histkult_node = $self->get_json_node($c, 'http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0', 'histkult', $metadata_tree);
-  if ($histkult_node && $histkult_node->{children}) {
-    my @ordered_children;
-    my %child_map;
-
-    foreach my $child (@{$histkult_node->{children}}) {
-      push @{$child_map{$child->{xmlname}}}, $child;
-    }
-    
-    foreach my $name ('inscription', 'dimensions', 'reference_number', 'stamp', 'note', 'gps') {
-      if (exists $child_map{$name}) {
-        push @ordered_children, @{$child_map{$name}};
-      }
-    }
-    
-    # Replace original children array with ordered one
-    @{$histkult_node->{children}} = @ordered_children;
-  }
 
   return {alerts => [], uwmetadata => $metadata_tree, status => 200};
 }
@@ -1866,6 +1847,10 @@ sub json_2_uwmetadata_rec() {
     }
     if ($child->{mandatory}) {
       $canskip = 0;
+    }
+
+    if($parent->{xmlname} eq 'histkult' && $child->{xmlname} eq 'reference_number' && (!defined($child->{ui_value}) || ($child->{ui_value} eq ''))) {
+      next;
     }
 
     #if(defined($parent)){
