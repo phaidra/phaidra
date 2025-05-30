@@ -185,16 +185,6 @@ export default {
       return this.$store.state.instanceconfig
     }
   },
-  watch: {
-    loadedList: {
-      handler: async function () {
-        if (this.loadedList) {
-          await this.refreshLoadedList()
-        }
-      },
-      deep: true
-    }
-  },
   data () {
     return {
       createDialog: false,
@@ -233,7 +223,15 @@ export default {
             { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
           ];
         }
-     }
+     },
+     loadedList: {
+      handler: async function () {
+        if (this.loadedList) {
+          await this.refreshLoadedList()
+        }
+      },
+      deep: true
+    },
   },
   methods: {
     refreshLoadedList: async function () {
