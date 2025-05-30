@@ -1849,8 +1849,16 @@ sub json_2_uwmetadata_rec() {
       $canskip = 0;
     }
 
-    if($parent->{xmlname} eq 'histkult' && $child->{xmlname} eq 'reference_number' && (!defined($child->{ui_value}) || ($child->{ui_value} eq ''))) {
-      next;
+    if($parent->{xmlname} eq 'histkult' && $child->{xmlname} eq 'reference_number') {
+      my $found_reference_value = 0;
+      foreach my $child2 (@{$child->{children}}) {
+        if($child2->{xmlname} eq 'number' && $child2->{ui_value} ne '') {
+          $found_reference_value = 1;
+        }
+      }
+      if(!$found_reference_value) {
+        next;
+      }
     }
 
     #if(defined($parent)){
