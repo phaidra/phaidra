@@ -742,10 +742,8 @@
   }
 
   .theme--dark .header {
-    -webkit-box-shadow: 48px 0 0 0 black, -48px 0 0 0 black,
-      0 8px 40px -6px rgba(70, 70, 70, 0.4);
-    box-shadow: 48px 0 0 0 black, -48px 0 0 0 black,
-      0 8px 40px -6px rgba(70, 70, 70, 0.4);
+    -webkit-box-shadow: 48px 0 0 0 black, -48px 0 0 0 black;
+    box-shadow: 48px 0 0 0 black, -48px 0 0 0 black;
     background-color: black;
   }
 
