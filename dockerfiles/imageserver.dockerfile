@@ -1,4 +1,4 @@
-FROM iipsrv/iipsrv:1.2
+FROM iipsrv/iipsrv:1.3
 
 RUN echo 'server.port = env.LIGHTTPD_PORT' >> /etc/lighttpd/lighttpd.conf &&\
   mkdir -p /etc/lighttpd/log &&\
