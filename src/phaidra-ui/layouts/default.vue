@@ -336,8 +336,6 @@ a.v-btn, a {
 }
 
 .header {
-  -webkit-box-shadow: 48px 0 0 0 white, -48px 0 0 0 white,
-    0 8px 40px -6px rgba(70, 70, 70, 0.4);
   box-shadow: 48px 0 0 0 white, -48px 0 0 0 white,
     0 8px 40px -6px rgba(70, 70, 70, 0.4);
   background-color: white;

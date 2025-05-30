@@ -742,7 +742,6 @@
   }
 
   .theme--dark .header {
-    -webkit-box-shadow: 48px 0 0 0 black, -48px 0 0 0 black;
     box-shadow: 48px 0 0 0 black, -48px 0 0 0 black;
     background-color: black;
   }
