@@ -279,32 +279,29 @@
               </v-col>
 
               <v-col md="9">
-                <v-row justify="start" justify-md="end" class="px-4">                  
-                  <icon
-                  v-if="signedin"
-                  dark
-                  class="personicon mt-1 subtitle-1 grey--text text--darken-1"
-                  name="material-social-person"
-                  width="24px"
-                  height="24px"
-                  ></icon>
-                  <span
-                  v-if="signedin"
-                  class="ma-1 subtitle-1"                  
-                  >{{ user.firstname }} {{ user.lastname }}</span
-                  >
+                <v-row justify-md="end" class="px-4 py-2 py-md-0">
+                  <div class="d-flex align-center me-2" v-if="signedin">
+                    <v-icon
+                      class="mr-1"
+                      aria-hidden="true"
+                    >mdi-account
+                    </v-icon>
+                    <span
+                      class="subtitle-1"
+                      >{{ user.firstname }} {{ user.lastname }}
+                    </span>
+                  </div>
 
                   <v-menu offset-y>
                     <template v-slot:activator="{ on, attrs }">
-                      <v-btn text v-on="on" v-bind="attrs" aria-controls="locale-menu">
-                        <span class="subtitle-1 text-capitalize">{{
-                            localeLabel
-                        }}</span>
-                        <icon
-                            aria-hidden="true"
-                            name="univie-sprache"
-                            class="lang-icon grey--text text--darken-1"
-                        ></icon>
+                      <v-btn text v-on="on" v-bind="attrs" aria-controls="locale-menu">                        
+                        <span class="subtitle-1 text-capitalize"
+                          >{{ localeLabel }}</span>
+                        <v-icon
+                          class="ml-1"  
+                          aria-hidden="true"
+                        >mdi-flag-variant
+                        </v-icon>
                       </v-btn>
                     </template>
                     <v-list id="locale-menu">
@@ -346,7 +343,7 @@
                     </template>
                     <span>{{ $t("Dark Mode Off") }}</span>
                   </v-tooltip>
-                </v-row>              
+                </v-row>
 
                 <v-row justify="center">
                   <v-col
@@ -354,33 +351,34 @@
                   md="4"
                   class="select-instance text-left"
                   >
-                  <v-select
-                      :items="instances"
-                      @input="switchInstance"
-                      :value="instanceconfig.baseurl"
-                      item-text="baseurl"
-                      single-line
-                  ></v-select>
+                    <v-select
+                        :items="instances"
+                        @input="switchInstance"
+                        :value="instanceconfig.baseurl"
+                        item-text="baseurl"
+                        single-line
+                    ></v-select>
                   </v-col>
                   <v-col                  
                   md="11"
                   offset-md="1"
                   v-else-if="instanceconfig.title"
                   >
-                  <icon
-                      left
-                      dark
-                      name="univie-right"
-                      color="#a4a4a4"
-                      width="14px"
-                      height="14px"
-                      class="mb-1"
-                  ></icon>
-                  <nuxt-link
-                      class="subtitle-1 primary--text "
-                      :to="localePath('/')"
-                      >{{ instanceconfig.title }}</nuxt-link
-                  >
+                    <icon
+                        aria-hidden="true"
+                        left
+                        dark
+                        name="univie-right"
+                        color="#a4a4a4"
+                        width="14px"
+                        height="14px"
+                        class="mb-1"
+                    ></icon>
+                    <nuxt-link
+                        class="subtitle-1"
+                        :to="localePath('/')"
+                        >{{ instanceconfig.title }}</nuxt-link
+                    >
                   </v-col>
                 </v-row>
 
@@ -390,8 +388,8 @@
                       <v-row class="hidden-md-and-up">
                         <v-menu attach="#mobile-menu-btn" offset-y :disable-keys="true" min-width="150px">
                           <template v-slot:activator="{ on, attrs }">
-                            <v-btn id="mobile-menu-btn" color="grey darken-1" text x-large aria-controls="mobile-menu" aria-label="Main navigation menu"
-                            v-bind="attrs" v-on="on" class="px-0 pb-3"><v-icon x-large class="mr-2">mdi-menu</v-icon>{{ $t('Menu') }}</v-btn>
+                            <v-btn id="mobile-menu-btn" text x-large aria-controls="mobile-menu" aria-label="Main navigation menu"
+                            v-bind="attrs" v-on="on" class="pa-2"><v-icon x-large class="mr-2">mdi-menu</v-icon>{{ $t('Menu') }}</v-btn>
                           </template>
                           <v-list id="mobile-menu">
                             <v-list-item
