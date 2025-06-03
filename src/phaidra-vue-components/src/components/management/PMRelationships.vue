@@ -289,7 +289,7 @@ export default {
               data: httpFormData
             })
             if (response.status === 200) {
-              this.$store.commit('setAlerts', [{ type: 'success', msg: 'Relationship successfuly added' }])
+              this.$store.commit('setAlerts', [{ type: 'success', msg: 'Relationship successfully added' }])
             } else {
               if (response.data.alerts && response.data.alerts.length > 0) {
                 this.$store.commit('setAlerts', response.data.alerts)
@@ -324,7 +324,7 @@ export default {
             data: httpFormData
           })
           if (response.status === 200) {
-            this.$store.commit('setAlerts', [{ type: 'success', msg: 'Relationship successfuly removed' }])
+            this.$store.commit('setAlerts', [{ type: 'success', msg: 'Relationship successfully removed' }])
           } else {
             if (response.data.alerts && response.data.alerts.length > 0) {
               this.$store.commit('setAlerts', response.data.alerts)

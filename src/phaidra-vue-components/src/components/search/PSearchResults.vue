@@ -207,7 +207,7 @@ export default {
           data: httpFormData
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfuly updated'), type: 'success' } ])
+          this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfully updated'), type: 'success' } ])
           this.$router.push({ path: `detail/${collection.pid}`, params: { pid: collection.pid } })
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
@@ -236,7 +236,7 @@ export default {
           data: httpFormData
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfuly updated'), type: 'success' } ])
+          this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfully updated'), type: 'success' } ])
           this.$router.push({ path: `detail/${collection.pid}`, params: { pid: collection.pid } })
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
@@ -265,7 +265,7 @@ export default {
           data: httpFormData
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [ { msg: this.$t('Object list successfuly updated'), type: 'success' } ])
+          this.$store.commit('setAlerts', [ { msg: this.$t('Object list successfully updated'), type: 'success' } ])
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
             this.$store.commit('setAlerts', response.data.alerts)
@@ -293,7 +293,7 @@ export default {
           data: httpFormData
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [ { msg: this.$t('Object list successfuly updated'), type: 'success' } ])
+          this.$store.commit('setAlerts', [ { msg: this.$t('Object list successfully updated'), type: 'success' } ])
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
             this.$store.commit('setAlerts', response.data.alerts)

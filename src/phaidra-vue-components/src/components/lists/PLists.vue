@@ -268,7 +268,7 @@ export default {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }
         })
-        this.$store.commit('setAlerts', [ { msg: this.$t('Share link successfuly created'), type: 'success' } ])
+        this.$store.commit('setAlerts', [ { msg: this.$t('Share link successfully created'), type: 'success' } ])
         if (response.data.alerts && response.data.alerts.length > 0) {
           this.$store.commit('setAlerts', response.data.alerts)
         }
@@ -291,7 +291,7 @@ export default {
             'X-XSRF-TOKEN': this.$store.state.user.token
           }
         })
-        this.$store.commit('setAlerts', [ { msg: this.$t('Share link successfuly deleted'), type: 'success' } ])
+        this.$store.commit('setAlerts', [ { msg: this.$t('Share link successfully deleted'), type: 'success' } ])
         if (response.data.alerts && response.data.alerts.length > 0) {
           this.$store.commit('setAlerts', response.data.alerts)
         }
@@ -316,7 +316,7 @@ export default {
           },
           data: httpFormData
         })
-        this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfuly updated'), type: 'success' } ])
+        this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfully updated'), type: 'success' } ])
         this.$router.push({ path: `detail/${collection.pid}` })
         if (response.data.alerts && response.data.alerts.length > 0) {
           this.$store.commit('setAlerts', response.data.alerts)
