@@ -2375,6 +2375,9 @@ export default {
       if (this.objectInfo.datastreams && this.objectInfo.datastreams.includes("OCTETS")) {
         return true;
       }
+      else {
+        return false;
+      }
     },
     hasLaterVersion: function () {
       if (this.$store.state.objectInfo.versions) {
