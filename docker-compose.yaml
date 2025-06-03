@@ -250,7 +250,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:74856da4
+    image: phaidraorg/ui:5eea469b
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -265,7 +265,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:74856da4
+    image: phaidraorg/ui:5eea469b
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -279,7 +279,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:e8fa71bf
+    image: phaidraorg/api-dist:605be0af
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -294,7 +294,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:e8fa71bf
+    image: phaidraorg/api-dist:605be0af
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -420,7 +420,7 @@ services:
   ############### chronos service for local profile ###############
   chronos:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:b7d75dda
+    image: phaidraorg/chronos-dist:39bf4894
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
@@ -660,7 +660,7 @@ services:
 
 
   camel-toolbox:
-    image: phaidraorg/fcrepo-camel-toolbox:latest
+    image: phaidraorg/fcrepo-camel-toolbox:39bf4894
     <<: [*common, *logs]
     volumes:
       - "./camel-toolbox-config:/config"
