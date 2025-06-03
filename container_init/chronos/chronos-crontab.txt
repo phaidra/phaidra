@@ -10,6 +10,7 @@ BASH_ENV=/container.env
 5    *  *    *    *     perl /mnt/chronos/original-perl/sitemap.pl > /proc/1/fd/1 2>&1
 10   0  *    *    *     perl /mnt/chronos/original-perl/updateOai.pl > /proc/1/fd/1 2>&1
 50  23  *    *    *     perl /mnt/chronos/original-perl/checkExpiredRights.pl > /proc/1/fd/1 2>&1
-0    *  *   *   *       perl /mnt/chronos/original-perl/session_cleanup.pl > /proc/1/fd/1 2>&1
-50  23  *   *   *       perl /mnt/chronos/original-perl/imageserver_cleaner.pl > /proc/1/fd/1 2>&1
+0    *  *    *    *     perl /mnt/chronos/original-perl/session_cleanup.pl > /proc/1/fd/1 2>&1
+50  23  *    *    *     perl /mnt/chronos/original-perl/imageserver_cleaner.pl > /proc/1/fd/1 2>&1
+0   20  15   */2  *     bash /mnt/chronos/camel-fixity-checker.bash > /proc/1/fd/1 2>&1
 
