@@ -85,19 +85,22 @@ export function updateFacetQueries (facetQueriesSolr, facetQueries) {
       for (let i = 0; i < facetQueries.length; i++) {
         for (let j = 0; j < facetQueries[i].queries.length; j++) {
           if (facetQueries[i].queries[j].query === key) {
-            Vue.set(facetQueries[i].queries[j], 'count', facetQueriesSolr[key])
+            const updatedQuery = { ...facetQueries[i].queries[j], count: facetQueriesSolr[key] }
+            Vue.set(facetQueries[i].queries, j, updatedQuery)
           }
           if (facetQueries[i].queries[j].childFacet) {
             let lvl1 = facetQueries[i].queries[j].childFacet
             for (let k = 0; k < lvl1.queries.length; k++) {
               if (lvl1.queries[k].query === key) {
-                Vue.set(lvl1.queries[k], 'count', facetQueriesSolr[key])
+                const updatedLvl1Query = { ...lvl1.queries[k], count: facetQueriesSolr[key] }
+                Vue.set(lvl1.queries, k, updatedLvl1Query)
               }
               if (lvl1.queries[k].childFacet) {
                 let lvl2 = lvl1.queries[k].childFacet
                 for (let l = 0; l < lvl2.queries.length; l++) {
                   if (lvl2.queries[l].query === key) {
-                    Vue.set(lvl2.queries[l], 'count', facetQueriesSolr[key])
+                    const updatedLvl2Query = { ...lvl2.queries[l], count: facetQueriesSolr[key] }
+                    Vue.set(lvl2.queries, l, updatedLvl2Query)
                   }
                 }
               }
