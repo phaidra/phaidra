@@ -2372,19 +2372,7 @@ export default {
       }
     },
     downloadable: function () {
-      switch (this.objectInfo.cmodel) {
-        case "PDFDocument":
-        case "Video":
-        case "Audio":
-        case "Picture":
-        case "Asset":
-        case "Page":
-          return true;
-        case "Book":
-          return this.objectInfo.datastreams.includes("UWMETADATA")
-        default:
-          return false;
-      }
+      return this.objectInfo.datastreams && this.objectInfo.datastreams.includes("OCTETS")
     },
     hasLaterVersion: function () {
       if (this.$store.state.objectInfo.versions) {
