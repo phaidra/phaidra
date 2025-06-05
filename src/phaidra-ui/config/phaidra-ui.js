@@ -46,7 +46,7 @@ export default {
   },
   instances: {
     'default': {
-      title: 'Phaidra - Docker',
+      title: 'PHAIDRA',
       institution: 'My institution',
       institutionurl: 'https://phaidra.org',
       address: 'My institution | address | here',
