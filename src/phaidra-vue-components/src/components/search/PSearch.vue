@@ -257,10 +257,10 @@ export default {
         this.docs = response.data.response.docs
         this.total = response.data.response.numFound
         this.facet_counts = response.data.facet_counts
-        if(!this.isFacetCountUpdated){
-          updateFacetQueries(response.data.facet_counts.facet_queries, this.facetQueries)
-          this.isFacetCountUpdated = true
-        }
+        updateFacetQueries(response.data.facet_counts.facet_queries, this.facetQueries)
+        this.$nextTick(() => {
+          this.$forceUpdate()
+        })
       } catch (error) {
         this.$store.commit('setLoading', false)
         console.log(error)
@@ -388,7 +388,6 @@ export default {
   data () {
     return {
       link: '',
-      isFacetCountUpdated: false,
       limitdialog: false,
       linkdialog: false,
       selectioncheck: false,
