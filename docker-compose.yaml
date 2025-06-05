@@ -250,7 +250,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:5eea469b
+    image: phaidraorg/ui:ba29afd3
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -265,7 +265,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:5eea469b
+    image: phaidraorg/ui:ba29afd3
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -348,7 +348,7 @@ services:
 
   mariadb-phaidra:
     hostname: "mariadb-phaidra"
-    image: phaidraorg/mariadb-phaidra-dist:ff704002
+    image: phaidraorg/mariadb-phaidra-dist:bc9b1c4e
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
