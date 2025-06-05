@@ -271,6 +271,7 @@ export const fieldSettings = {
           field.enableTypeSelect = false
           field.showActions = false
           field.showAffiliation = false
+          field.showBirthAndDeathDate = false
           field.type = 'schema:Person'
 
           // needed to prevent a "duplicate/order dropdown" from appearing
