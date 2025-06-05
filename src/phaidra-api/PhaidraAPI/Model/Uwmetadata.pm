@@ -760,6 +760,7 @@ sub uwmetadata_2_json {
   # fix taxonpath nodes (we first needed them filled)
   $self->fix_taxonpath_nodes($c, $metadata_tree);
 
+
   return {alerts => [], uwmetadata => $metadata_tree, status => 200};
 }
 
@@ -1846,6 +1847,18 @@ sub json_2_uwmetadata_rec() {
     }
     if ($child->{mandatory}) {
       $canskip = 0;
+    }
+
+    if($parent->{xmlname} eq 'histkult' && $child->{xmlname} eq 'reference_number') {
+      my $found_reference_value = 0;
+      foreach my $child2 (@{$child->{children}}) {
+        if($child2->{xmlname} eq 'number' && $child2->{ui_value} ne '') {
+          $found_reference_value = 1;
+        }
+      }
+      if(!$found_reference_value) {
+        next;
+      }
     }
 
     #if(defined($parent)){
