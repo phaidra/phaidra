@@ -2372,12 +2372,7 @@ export default {
       }
     },
     downloadable: function () {
-      if (this.objectInfo.datastreams && this.objectInfo.datastreams.includes("OCTETS")) {
-        return true;
-      }
-      else {
-        return false;
-      }
+      return this.objectInfo.datastreams && this.objectInfo.datastreams.includes("OCTETS")
     },
     hasLaterVersion: function () {
       if (this.$store.state.objectInfo.versions) {
