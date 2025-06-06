@@ -197,7 +197,7 @@ our %tree = (
           "labels"      => {
             "de" => "Geltungsbereich",
             "en" => "Coverage",
-            "it" => "Copertura (temporale – geografica – amministrativa)",
+            "it" => "Copertura (spaziale - temporale)",
             "sr" => "obseg"
           },
           "loaded" => 0,
@@ -2851,7 +2851,7 @@ our %tree = (
           "labels"      => {
             "de" => "Ausgew\x{e4}hlte Lizenz",
             "en" => "Licence Selected",
-            "it" => "Licenza scelta",
+            "it" => "Licenza",
             "sr" => "izabrana licenca"
           },
           "loaded" => 0,
@@ -4478,7 +4478,7 @@ our %tree = (
       "labels"      => {
         "de" => "Zuordnung",
         "en" => "Association",
-        "it" => "Relazioni",
+        "it" => "Afferenza",
         "sr" => "ustanove"
       },
       "loaded" => 0,
@@ -7139,7 +7139,7 @@ our %tree = (
       "labels"      => {
         "de" => "Digitales Buch",
         "en" => "Digital Book",
-        "it" => "Libro digitale",
+        "it" => "Dati bibliografici",
         "sr" => "podaci o knjizi"
       },
       "loaded" => 0,
