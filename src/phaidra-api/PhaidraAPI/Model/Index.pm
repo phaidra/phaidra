@@ -1230,6 +1230,9 @@ sub _get {
           $datastreams{$dsid} = 1;
         }
       }
+      if ($dsid eq 'OCTETS') {
+        $datastreamids{$dsid} = 1;
+      }
     }
     push @{$index{datastreams}}, keys %datastreamids;
   }
