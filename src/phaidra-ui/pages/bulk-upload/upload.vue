@@ -233,10 +233,10 @@ export default {
         try {
           this.setUploadState({ rowIndex, status: 'uploading', pid: null, error: null })
           const values = validRows[i].split(';').map(v => v.trim())
-          
-          // Create form data for upload
-          const formData = await this.createFormData(headers, values)
-          
+
+          const formData = new FormData()
+          const formMetadata = await this.createFormMetadata(headers, values)
+
           // Upload to PHAIDRA
           // // Mock 50% chance of failure
           // const shouldFail = Math.random() < 0.5;
@@ -245,9 +245,81 @@ export default {
           //   throw new Error('Mock upload failure: Random error occurred');
           // }
 
+          let createmethod = 'unknown'
+
+          // Add file data if present
+          const filenameMapping = this.fieldMappings['Filename']
+          const filenameIndex = headers.indexOf(filenameMapping.csvValue)
+          const filename = values[filenameIndex]
+          if (filename) {
+            const file = this.selectedFiles.find(f => f.name === filename)
+            if (file) {
+              formData.append('file', file)
+              formData.append('mimetype', file.type || 'application/octet-stream')
+
+              // add filename and mimetype to metadata
+              formMetadata.sections[0].fields.push(
+                {
+                  id: 'file',
+                  predicate: 'ebucore:filename',
+                  component: 'p-file',
+                  value: filename,
+                  mimetype: file.type
+                }
+              )
+
+              // choose upload method
+              switch (file.type) {
+                case 'image/jpeg':
+                case 'image/tiff':
+                case 'image/gif':
+                case 'image/png':
+                case 'image/x-ms-bmp':
+                  createmethod = 'picture'
+                  break
+
+                case 'audio/wav':
+                case 'audio/mpeg':
+                case 'audio/flac':
+                case 'audio/ogg':
+                  createmethod = 'audio'
+                  break
+
+                case 'application/pdf':
+                  createmethod = 'document'
+                  break
+
+                case 'video/mpeg':
+                case 'video/avi':
+                case 'video/mp4':
+                case 'video/quicktime':
+                case 'video/x-matroska':
+                  createmethod = 'video'
+                  break
+
+                default:
+                  // data
+                  createmethod = 'unknown'
+                  break
+              }
+            } else {
+              throw new Error(`File not found: ${filename}`)
+            }
+          }
+
+          // Create metadata object
+          let metadata = { 
+            metadata: {
+              'json-ld': jsonld.form2json(formMetadata),
+              ownerid: this.user.username
+            }
+          }
+          console.log('Final metadata:', metadata)    
+          formData.append('metadata', JSON.stringify(metadata))
+
           const response = await this.$axios.request({
             method: 'POST',
-            url: `http://localhost:8899/api/picture/create`,
+            url: `http://localhost:8899/api/${createmethod}/create`,
             headers: {
               'Content-Type': 'multipart/form-data',
               'X-XSRF-TOKEN': this.user.token
@@ -307,7 +379,7 @@ export default {
       await this.startUpload()
     },
 
-    async createFormData(headers, values) {
+    async createFormMetadata(headers, values) {
       console.log('Creating form data with mappings:', this.fieldMappings)
       
       let form = { 
@@ -390,35 +462,7 @@ export default {
 
       console.log('Final form:', form)
 
-      // Create metadata object
-      let metadata = { 
-        metadata: {
-          'json-ld': jsonld.form2json(form),
-          ownerid: this.user.username
-        }
-      }
-
-      console.log('Final metadata:', metadata)
-
-      // Create form data
-      const formData = new FormData()
-      formData.append('metadata', JSON.stringify(metadata))
-      
-      // Add file data if present
-      const filenameMapping = this.fieldMappings['Filename']
-      const filenameIndex = headers.indexOf(filenameMapping.csvValue)
-      const filename = values[filenameIndex]
-      if (filename) {
-        const file = this.selectedFiles.find(f => f.name === filename)
-        if (file) {
-          formData.append('file', file)
-          formData.append('mimetype', file.type || 'application/octet-stream')
-        } else {
-          throw new Error(`File not found: ${filename}`)
-        }
-      }
-
-      return formData
+      return form
     },
 
     setTypeProperties(f, value) {
