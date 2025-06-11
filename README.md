@@ -612,7 +612,7 @@ See the notes in the following subsections for provenance.
 This directory derives from commit c880c4159c5d68b25426451f4822f744a53ef680 of
 the repo at <https://github.com/phaidra/phaidra-api>.
 
-The Phaidra API comes with some utilities, usually executed with `docker exec -en phaidra-api-1 utils/<utility>`.
+The Phaidra API comes with some utilities, usually executed with `docker exec -it phaidra-api-1 utils/<utility>`.
 
 - the utility `utils/indexObjects.pl` allows you to re-index all objects. It takes the range of creation dates from and to as parameters.
 
