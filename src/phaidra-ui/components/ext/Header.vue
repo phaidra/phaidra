@@ -14,9 +14,9 @@
                       style="enable-background:new 0 0 435.6 134.88; height:100px" xml:space="preserve" aria-labelledby="titleID">
                     <title id="titleID">PHAIDRA</title>
                     <style v-if="isDarkTheme" type="text/css">
-                      .st0{fill:#fff;}
-                      .st1{fill:none;stroke:#fff;stroke-width:35;stroke-miterlimit:10;}
-                      .st2{fill:#fff;}
+                      .st0{fill:#dedede;}
+                      .st1{fill:none;stroke:#dedede;stroke-width:35;stroke-miterlimit:10;}
+                      .st2{fill:#dedede;}
                     </style>
                     <style v-else type="text/css">
                       .st0{fill:#212121;}
