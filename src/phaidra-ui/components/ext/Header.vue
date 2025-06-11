@@ -13,7 +13,12 @@
                       xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 435.6 134.88"
                       style="enable-background:new 0 0 435.6 134.88; height:100px" xml:space="preserve" aria-labelledby="titleID">
                     <title id="titleID">PHAIDRA</title>
-                    <style type="text/css">
+                    <style v-if="isDarkTheme" type="text/css">
+                      .st0{fill:#fff;}
+                      .st1{fill:none;stroke:#fff;stroke-width:35;stroke-miterlimit:10;}
+                      .st2{fill:#fff;}
+                    </style>
+                    <style v-else type="text/css">
                       .st0{fill:#212121;}
                       .st1{fill:none;stroke:#212121;stroke-width:35;stroke-miterlimit:10;}
                       .st2{fill:#222221;}
@@ -735,10 +740,6 @@
   .ph-button {
     background-color: var(--v-cardtitlebg-base)!important;
     border-color: var(--v-cardtitlebg-base)!important;
-  }
-
-  .theme--dark svg {
-    filter: invert(100%);
   }
 
   .theme--dark .header {
