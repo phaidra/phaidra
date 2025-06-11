@@ -18,7 +18,7 @@
             </v-toolbar>
           </template>
           <template v-slot:default="props">
-            <v-row>
+            <v-row class="mb-4">
               <v-col v-for="item in props.items" :key="item.country" cols="12" md="4">
                 <v-card>
                   <v-card-title class="title font-weight-light white--text"><span>{{ item.country.toUpperCase()

@@ -197,7 +197,7 @@ our %tree = (
           "labels"      => {
             "de" => "Geltungsbereich",
             "en" => "Coverage",
-            "it" => "Copertura (spaziale - temporale)",
+            "it" => "Copertura (spaziale-temporale)",
             "sr" => "obseg"
           },
           "loaded" => 0,
