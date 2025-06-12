@@ -49,16 +49,16 @@ sub generate_simple_manifest {
     "label" => {},
     "thumbnail" => [
       {
-        "id": "$apiBaseUrlPath/imageserver?IIIF=$pid.tif/full/!${tmb_width},${tmb_height}/0/default.jpg",
-        "type": "Image",
-        "format": "image/jpeg",
+        "id" => "$apiBaseUrlPath/imageserver?IIIF=$pid.tif/full/!$tmb_width,$tmb_height/0/default.jpg",
+        "type" => "Image",
+        "format" => "image/jpeg",
         "height" => $tmb_height,
         "width" => $tmb_width,
-        "service": [
+        "service" => [
           {
-            "id": "$apiBaseUrlPath/imageserver?IIIF=$pid.tif",
-            "type": "ImageService2",
-            "profile": "http://iiif.io/api/image/2/level1.json"
+            "id" => "$apiBaseUrlPath/imageserver?IIIF=$pid.tif",
+            "type" => "ImageService2",
+            "profile" => "http://iiif.io/api/image/2/level1.json"
           }
         ]
       }
