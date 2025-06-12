@@ -40,11 +40,29 @@ sub generate_simple_manifest {
     return $res;
   }
 
+  my ($tmb_width, $tmb_height) = $this->calculate_thumbnail_dimensions($c, $width, $height, "300", "300");
+
   my $manifest = {
     "\@context" => "http://iiif.io/api/presentation/3/context.json",
     "id" => "$apiBaseUrlPath/object/$pid/iiifmanifest",
     "type" => "Manifest",
     "label" => {},
+    "thumbnail" => [
+      {
+        "id": "$apiBaseUrlPath/imageserver?IIIF=$pid.tif/full/!${tmb_width},${tmb_height}/0/default.jpg",
+        "type": "Image",
+        "format": "image/jpeg",
+        "height" => $tmb_height,
+        "width" => $tmb_width,
+        "service": [
+          {
+            "id": "$apiBaseUrlPath/imageserver?IIIF=$pid.tif",
+            "type": "ImageService2",
+            "profile": "http://iiif.io/api/image/2/level1.json"
+          }
+        ]
+      }
+    ],
     "items" => [
       {
         "id" => "$apiBaseUrlPath/iiif/$pid/canvas/p1",
@@ -67,13 +85,13 @@ sub generate_simple_manifest {
                   "format" => "image/jpeg",
                   "height" => $height,
                   "width" => $width,
-                   "service" => [
-                     {
-                       "id" => "$apiBaseUrlPath/imageserver?IIIF=$pid.tif",
-                       "type" => "ImageService2",
-                       "profile" => "http://iiif.io/api/image/2/level1.json"
-                      }
-                    ]
+                  "service" => [
+                    {
+                      "id" => "$apiBaseUrlPath/imageserver?IIIF=$pid.tif",
+                      "type" => "ImageService2",
+                      "profile" => "http://iiif.io/api/image/2/level1.json"
+                    }
+                  ]
                 }
               }
             ]
@@ -97,6 +115,28 @@ sub generate_simple_manifest {
   return $res;
 }
 
+sub calculate_thumbnail_dimensions {
+    my ($self, $c, $original_width, $original_height, $max_width, $max_height) = @_;
+
+    # If the original dimensions are already smaller than the bounding box, return them
+    if ($original_width <= $max_width && $original_height <= $max_height) {
+        return ($original_width, $original_height);
+    }
+
+    # Calculate scaling factors for width and height
+    my $width_scale  = $max_width / $original_width;
+    my $height_scale = $max_height / $original_height;
+
+    # Use the smaller scaling factor to maintain aspect ratio
+    my $scale = ($width_scale < $height_scale) ? $width_scale : $height_scale;
+
+    # Calculate the new dimensions
+    my $new_width  = int($original_width * $scale);
+    my $new_height = int($original_height * $scale);
+
+    return ($new_width, $new_height);
+}
+
 sub _update_manifest_metadata {
   my ($self, $c, $pid, $index, $manifest) = @_;
 
@@ -113,10 +153,14 @@ sub _update_manifest_metadata {
 
   my @labels;
   if (exists($index->{dc_title_eng})) {
-    push @labels, $index->{dc_title_eng};
+    for my $e (@{$index->{dc_title_eng}}){
+      push @labels, $e;
+    }
   }
   else {
-    push @labels, $index->{sort_dc_title};
+    for my $e (@{$index->{sort_dc_title}}){
+      push @labels, $e;
+    }
   }
   $manifest->{label} = {'en' => \@labels};
 
