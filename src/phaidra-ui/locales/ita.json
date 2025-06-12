@@ -911,7 +911,7 @@
   "Selected results": "Risultati selezionati",
   "Add to collection": "Aggiungi a Collezione",
   "Add objects to collection": "Aggiungi oggetti a Collezione",
-  "Remove from collection": "Rimuovi da Collezione",
+  "Remove from collection": "Rimuovi dalla collezione",
   "Cite": "Cita",
   "Get BibTex": "Crea BibTeX",
   "Get citation": "Crea citazione",
@@ -1334,5 +1334,6 @@
   "Selected": "Selezionato",
   "RSS Feed": "Feed RSS",
   "This object has been deleted.": "Quest'oggetto è stato eliminato.",
-  "Error: Request failed with status code 500" : "Il server ha riscontrato un errore interno."
+  "Error: Request failed with status code 500" : "Il server ha riscontrato un errore interno.",
+  "All collections": "Tutte le collezioni"
 }
