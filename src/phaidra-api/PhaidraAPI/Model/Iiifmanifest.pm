@@ -158,9 +158,7 @@ sub _update_manifest_metadata {
     }
   }
   else {
-    for my $e (@{$index->{sort_dc_title}}){
-      push @labels, $e;
-    }
+    push @labels, $index->{sort_dc_title};
   }
   $manifest->{label} = {'en' => \@labels};
 
