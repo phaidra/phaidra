@@ -5,21 +5,23 @@
         <v-card-title class="title font-weight-light white--text">
           <span>{{ $t(label) }}</span>
           <v-spacer></v-spacer>
-          <v-btn icon dark @click="$emit('add', $event)">
-            <v-icon>mdi-content-duplicate</v-icon>
-          </v-btn>
-          <v-btn icon dark @click="$emit('add-clear', $event)">
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-          <v-btn icon dark @click="$emit('remove', $event)">
-            <v-icon>mdi-minus</v-icon>
-          </v-btn>
-          <v-btn icon dark @click="$emit('up', $event)">
-            <v-icon>mdi-chevron-up</v-icon>
-          </v-btn>
-          <v-btn icon dark @click="$emit('down', $event)">
-            <v-icon>mdi-chevron-down</v-icon>
-          </v-btn>
+          <template v-if="showActions">
+            <v-btn icon dark @click="$emit('add', $event)">
+              <v-icon>mdi-content-duplicate</v-icon>
+            </v-btn>
+            <v-btn icon dark @click="$emit('add-clear', $event)">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+            <v-btn icon dark @click="$emit('remove', $event)">
+              <v-icon>mdi-minus</v-icon>
+            </v-btn>
+            <v-btn icon dark @click="$emit('up', $event)">
+              <v-icon>mdi-chevron-up</v-icon>
+            </v-btn>
+            <v-btn icon dark @click="$emit('down', $event)">
+              <v-icon>mdi-chevron-down</v-icon>
+            </v-btn>
+          </template>
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="mt-4">
@@ -126,7 +128,7 @@
                     ></v-text-field>
                   </v-col>
                 </template>
-                <template>
+                <template v-if="showBirthAndDeathDate">
                   <v-col cols="12" md="6">
                     <v-text-field
                       :value="birthdate"
@@ -269,7 +271,7 @@
                 </v-col>
               </v-row>
             </template>
-            <v-row v-if="typeModel === 'schema:Person'">
+            <v-row v-if="(typeModel === 'schema:Person') && showAffiliation">
               <v-col cols="2">
                 <v-radio-group v-model="affiliationRadio" class="mt-0" @change="$emit('change-affiliation-type', $event)">
                   <v-radio color="primary" :label="$t(instanceconfig.institution)" :value="'select'"></v-radio>
@@ -500,6 +502,18 @@ export default {
     showIds: {
       type: Boolean,
       default: false
+    },
+    showBirthAndDeathDate: {
+      type: Boolean,
+      default: true
+    },
+    showActions: {
+      type: Boolean,
+      default: true
+    },
+    showAffiliation: {
+      type: Boolean,
+      default: true
     },
     enableTypeSelect: {
       type: Boolean,

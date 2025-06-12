@@ -33,7 +33,8 @@ export default {
     { src: '~/plugins/vue-meta.js' },
     { src: '~/plugins/lodash.js' },
     { src: '~/plugins/vuetify.js', mode: 'client' },
-    { src: '~/plugins/phaidra-vue-components' }
+    { src: '~/plugins/phaidra-vue-components' },
+    { src: '~/plugins/bulk-upload-persistence.js', mode: 'client' }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -74,7 +75,7 @@ export default {
   },
   publicRuntimeConfig: {
     primaryColor: process.env.PHAIDRA_PRIMARY_COLOR,
-    defaultThemeColor: process.env.PHAIDRA_DEFAULT_THEME_COLOR,
+    defaultTheme: process.env.PHAIDRA_DEFAULT_THEME,
     darkPrimaryColor: process.env.PHAIDRA_DARK_PRIMARY_COLOR,
     baseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT,
     apiBaseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT + '/api',
@@ -162,4 +163,20 @@ export default {
     },
     transpile: ['phaidra-vue-components', 'vuetify/lib']
   }
+}
+
+const crypto = require('crypto');
+
+/**
+ * The MD4 algorithm is not available anymore in Node.js 17+ (because of library SSL 3).
+ * In that case, silently replace MD4 by the MD5 algorithm.
+ */
+try {
+  crypto.createHash('md4');
+} catch (e) {
+  console.warn('Crypto "MD4" is not supported anymore by this Node.js version');
+  const origCreateHash = crypto.createHash;
+  crypto.createHash = (alg, opts) => {
+    return origCreateHash(alg === 'md4' ? 'md5' : alg, opts);
+  };
 }
