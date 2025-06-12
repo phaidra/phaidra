@@ -1944,11 +1944,9 @@
                               {{ $t("Manage members") }}
                             </v-card-title>
 
-                            <v-card-text>
-                              <p class="mt-4">{{$t('ADD_COLLECTION_MEMBERS_HELP')}}</p>
+                            <v-card-text class="mt-4">
+                              {{$t('ADD_COLLECTION_MEMBERS_HELP')}}
                             </v-card-text>
-
-                            <v-divider></v-divider>
 
                             <v-card-actions>
                               <v-spacer></v-spacer>
