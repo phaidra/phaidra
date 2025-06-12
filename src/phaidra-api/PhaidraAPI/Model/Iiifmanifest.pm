@@ -40,7 +40,7 @@ sub generate_simple_manifest {
     return $res;
   }
 
-  my ($tmb_width, $tmb_height) = $this->calculate_thumbnail_dimensions($c, $width, $height, "300", "300");
+  my ($tmb_width, $tmb_height) = $self->calculate_thumbnail_dimensions($c, $width, $height, "300", "300");
 
   my $manifest = {
     "\@context" => "http://iiif.io/api/presentation/3/context.json",
