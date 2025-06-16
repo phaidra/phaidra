@@ -84,9 +84,9 @@
       <v-col>
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <div v-on="on" v-bind="attrs" style="width:35px"><!-- div: vuetify tooltip vs checkbox fix -->
-              <v-checkbox :aria-label="$t('Select results')" hide-details class="mr-2 mt-1" color="primary" @click.stop="toggleSelection()" v-model="selectioncheck" v-on="on">            </v-checkbox>
-            </div>
+            <v-btn icon class="toolbar-btn" v-on="on" v-bind="attrs" :color="selectioncheck ? 'primary' : ''" @click.stop="toggleSelection()" :aria-label="$t('Select results')">
+              <v-icon>mdi-bookmark-plus-outline</v-icon>
+            </v-btn>
           </template>
           <span>{{ $t('Select results')}}</span>
         </v-tooltip>
