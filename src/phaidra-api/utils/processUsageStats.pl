@@ -65,16 +65,18 @@ $sth = $dbh->prepare("
 ");
 $sth->execute();
 
-while (my $row = $sth->fetchrow_hashref()) {
-    my $ip_address = $row->{ip};
+my @ip_addresses= ();
+while (my $row= $sth->fetchrow_hashref()) { push (@ip_addresses, $row->{ip}) }
+while (my $ip_address= shift(@ip_addresses)) {
     my $numeric_ip = unpack('N', pack('C4', split(/\./, $ip_address)));
-    my $country_code = 'XX';
+    my $country_code = 'xx';
     print "checking $ip_address\n";
     # Find country code matching the IP
     foreach my $range (@ip_ranges) {
         if ($numeric_ip >= $range->{start_ip} && $numeric_ip <= $range->{end_ip}) {
-            $country_code = lc($range->{country_code});
-            $country_code = 'xx' if $range->{country_code} eq 'None';
+            if (length($range->{country_code}) == 2) {
+                $country_code = lc($range->{country_code});
+            }
             print "found country code $country_code\n";
             last;
         }

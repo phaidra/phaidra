@@ -830,6 +830,10 @@ $cntr->dbh->do("
 
 
   ");
+
+$cntr->dbh->do("CREATE INDEX `idx_ip_created` ON `usage_stats` (`ip`,`created`);");
+$cntr->dbh->do("CREATE INDEX `idx_location_created` ON `usage_stats` (`location_country`,`created`);");
+
 $log->info("finished migration to v3.3.17");
 
 __END__
