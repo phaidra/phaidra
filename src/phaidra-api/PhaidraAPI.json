@@ -194,6 +194,7 @@
         "host": "__SOLR_HOST__",
         "path": "",
         "core": "phaidra",
+        "core_pages": "phaidra_pages",
         "port": "8983",
         "username": "__SOLR_USER__",
         "password": "__SOLR_PASS__"
