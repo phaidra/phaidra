@@ -1,5 +1,5 @@
 msgid "Open"
-msgstr "Offen"
+msgstr "Öffnen"
 
 msgid "University of Vienna"
 msgstr "Universität Wien"
