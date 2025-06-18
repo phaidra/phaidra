@@ -234,7 +234,7 @@ services:
     profiles: ["shib-s3"]
     
   solr:
-    image: phaidraorg/solr-dist:b8c456f0
+    image: phaidraorg/solr-dist:9cfcf9b8
     <<: [*common, *logs]
     volumes:
       - solr:/var/solr
