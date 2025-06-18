@@ -9,4 +9,5 @@ sed -i \
     -e "s|__SOLR_ENCODED_SALT__|${SOLR_ENCODED_SALT}|g" \
     /var/solr/data/security.json
 solr-precreate phaidra /tmp/phaidra_core_init
+solr-precreate phaidra_pages /tmp/phaidra_pages_core_init
 solr-foreground
