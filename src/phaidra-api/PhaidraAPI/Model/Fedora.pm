@@ -604,7 +604,7 @@ sub commitTransaction {
     $atomic_id = $c->stash->{transaction_url};
     $c->app->log->debug("Save transaction: ".$atomic_id);
     my $putres = $c->ua->put($atomic_id)->result;
-    # $c->app->log->debug($c->app->dumper($putres));
+    $c->app->log->debug($c->app->dumper($putres));
     unless ($putres->is_success) {
       $c->app->log->error("Cannot save transaction: code:" . $putres->{code} . " message:" . $putres->{message});
       unshift @{$res->{alerts}}, {type => 'error', msg => $putres->{message}};
