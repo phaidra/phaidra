@@ -4,6 +4,7 @@ import std;
 backend default {
     .host = "api";
     .port = "3000";
+    .first_byte_timeout = 300s;
 }
 sub vcl_recv {
     // only cache thumbnails
