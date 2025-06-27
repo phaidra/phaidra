@@ -2123,6 +2123,9 @@ export default {
             h['rdau:P60193'].push(series)
           }
         }
+        if (h['rdau:P60193'].length === 0) {
+          delete h['rdau:P60193']
+        }
       }
     }
     if (f.publisherName || f.publishingPlace || f.publishingDate || f.publisherOrgUnit) {
