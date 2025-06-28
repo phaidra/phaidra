@@ -22,6 +22,7 @@ running on a local desktop computer for evaluation, to an Shibboleth-enabled
 server version.
 
 # Setup
+
 For all versions, you will need a recent [Docker
 Installation](https://docs.docker.com/engine/install/), ideally on a
 Linux distribution (PHAIDRA is mainly developed on Ubuntu and Debian).
