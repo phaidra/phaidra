@@ -1341,5 +1341,10 @@
   "Share link successfully deleted": "Link pubblico cancellato.",
   "Object list successfully updated": "Elenco di preferiti aggiornato.",
   "All collections": "Tutte le collezioni",
-  "Copy to clipboard": "Copia"
+  "Copy to clipboard": "Copia",
+  "Cite this service:": "Cita questo servizio:",
+  "is a service by": "è un servizio del",
+  "Impressum": "Informazioni", 
+  "Code of Ethics": "Codice etico",
+  "Editorial Policies": "Politica editoriale"
 }
