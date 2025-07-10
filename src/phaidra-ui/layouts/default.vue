@@ -350,7 +350,9 @@ address {
 }
 
 .theme--light.v-card > .v-card__title,
-.theme--dark.v-card > .v-card__title {
+.theme--dark.v-card > .v-card__title,
+.theme--light.v-toolbar,
+.theme--dark.v-toolbar {
   background-color: var(--v-cardtitlebg-base);
 }
 
