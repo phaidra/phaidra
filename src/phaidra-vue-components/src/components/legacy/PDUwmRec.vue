@@ -136,13 +136,13 @@
                 <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_date_to') }}</v-col>
                 <v-col cols="12" md="10">{{ getChildValue(ch, 'date_to') | date }}</v-col>
               </v-row>
-              <v-row v-if="getChildValue(ch, 'chronological')">
-                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_chronological') }}<template v-if="getLangAttr(getChild(ch, 'chronological'))"> ({{getLangAttr(getChild(ch, 'chronological'))}})</template></v-col>
-                <v-col cols="12" md="10">{{ getChildValue(ch, 'chronological') }}</v-col>
+              <v-row v-for="(child, i) in getMultipleChild(ch, 'chronological')" :key="'chron'+i">
+                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_chronological') }}<template v-if="getLangAttr(child)"> ({{getLangAttr(child)}})</template></v-col>
+                <v-col cols="12" md="10">{{ child.ui_value }}</v-col>
               </v-row>
-              <v-row  v-if="getChildValue(ch, 'location')">
-                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_location') }}<template v-if="getLangAttr(getChild(ch, 'location'))"> ({{getLangAttr(getChild(ch, 'location'))}})</template></v-col>
-                <v-col cols="12" md="10">{{ getChildValue(ch, 'location') }}</v-col>
+              <v-row v-for="(child, i) in getMultipleChild(ch, 'location')" :key="'loc'+i">
+                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_location') }}<template v-if="getLangAttr(child)"> ({{getLangAttr(child)}})</template></v-col>
+                <v-col cols="12" md="10">{{ child.ui_value }}</v-col>
               </v-row>
             </v-card-text>
           </v-card>
