@@ -111,9 +111,9 @@
                 <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_resource') }}</v-col>
                 <v-col cols="12" md="10">{{ getChildLabel(ch, 'resource') }}</v-col>
               </v-row>
-              <v-row v-if="getChildValue(ch, 'comment')">
-                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_comment') }}<template v-if="getLangAttr(getChild(ch, 'comment'))"> ({{getLangAttr(getChild(ch, 'comment'))}})</template></v-col>
-                <v-col cols="12" md="10"><span v-html="link(getChildValue(ch, 'comment'))"></span></v-col>
+              <v-row v-for="(child, i) in getMultipleChild(ch, 'comment')" :key="'comment'+i">
+                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_comment') }}<template v-if="getLangAttr(child)"> ({{getLangAttr(child)}})</template></v-col>
+                <v-col cols="12" md="10"><span v-html="link(child.ui_value)"></span></v-col>
               </v-row>
               <v-row v-if="getChildValue(ch, 'role')">
                 <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getChildLabel(ch, 'role') }}</v-col>
@@ -136,13 +136,13 @@
                 <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_date_to') }}</v-col>
                 <v-col cols="12" md="10">{{ getChildValue(ch, 'date_to') | date }}</v-col>
               </v-row>
-              <v-row v-if="getChildValue(ch, 'chronological')">
-                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_chronological') }}<template v-if="getLangAttr(getChild(ch, 'chronological'))"> ({{getLangAttr(getChild(ch, 'chronological'))}})</template></v-col>
-                <v-col cols="12" md="10">{{ getChildValue(ch, 'chronological') }}</v-col>
+              <v-row v-for="(child, i) in getMultipleChild(ch, 'chronological')" :key="'chron'+i">
+                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_chronological') }}<template v-if="getLangAttr(child)"> ({{getLangAttr(child)}})</template></v-col>
+                <v-col cols="12" md="10">{{ child.ui_value }}</v-col>
               </v-row>
-              <v-row  v-if="getChildValue(ch, 'location')">
-                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_location') }}<template v-if="getLangAttr(getChild(ch, 'location'))"> ({{getLangAttr(getChild(ch, 'location'))}})</template></v-col>
-                <v-col cols="12" md="10">{{ getChildValue(ch, 'location') }}</v-col>
+              <v-row v-for="(child, i) in getMultipleChild(ch, 'location')" :key="'loc'+i">
+                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_location') }}<template v-if="getLangAttr(child)"> ({{getLangAttr(child)}})</template></v-col>
+                <v-col cols="12" md="10">{{ child.ui_value }}</v-col>
               </v-row>
             </v-card-text>
           </v-card>
@@ -399,6 +399,17 @@ export default {
             return ch.ui_value
           }
         }
+      }
+    },
+    getMultipleChild: function (id, xmlname) {
+      if (id.children) {
+        let values = []
+        for (let ch of id.children) {
+          if (ch.xmlname === xmlname) {
+            values.push(ch)
+          }
+        }
+        return values
       }
     },
     getChild: function (id, xmlname) {
