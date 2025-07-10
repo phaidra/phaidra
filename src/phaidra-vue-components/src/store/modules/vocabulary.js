@@ -1275,8 +1275,7 @@ const vocabularies = {
       { '@id': 'fullSwitchControl', 'skos:prefLabel': { 'eng': 'fullSwitchControl', 'deu': 'Schaltersteuerung' }, 'skos:definition': { 'eng': 'Users can fully control the resource through switch input.', 'deu': 'Die Benutzer:innen können die Ressource durch Schaltereingabe vollständig steuern.' } },
       { '@id': 'fullTouchControl', 'skos:prefLabel': { 'eng': 'fullTouchControl', 'deu': 'Touch-Steuerung' }, 'skos:definition': { 'eng': 'Users can fully control the resource through touch input.', 'deu': 'Die Benutzer:innen können die Ressource vollständig durch Berührung steuern.' } },
       { '@id': 'fullVideoControl', 'skos:prefLabel': { 'eng': 'fullVideoControl', 'deu': 'Videosteuerung' }, 'skos:definition': { 'eng': 'Users can fully control the resource through video input.', 'deu': 'Users can fully control the resource through video input.' } },
-      { '@id': 'fullVoiceControl', 'skos:prefLabel': { 'eng': 'fullVoiceControl', 'deu': 'Sprachsteuerung' }, 'skos:definition': { 'eng': 'Users can fully control the resource through voice input.', 'deu': 'Die Benutzer:innen können die Ressource vollständig durch Sprache steuern.' } },
-      { '@id': 'none', 'skos:prefLabel': { 'eng': 'none', 'deu': 'Keine' }, 'skos:definition': { 'eng': 'Indicates that the resource does not contain any accessibility features. The none value must not be set with any other feature value.', 'deu': 'Die Ressource enthält keine Zugänglichkeitsmerkmale. Der Wert "Keine" darf nicht zusammen mit einem anderen Merkmalswert gesetzt werden.' } }
+      { '@id': 'fullVoiceControl', 'skos:prefLabel': { 'eng': 'fullVoiceControl', 'deu': 'Sprachsteuerung' }, 'skos:definition': { 'eng': 'Users can fully control the resource through voice input.', 'deu': 'Die Benutzer:innen können die Ressource vollständig durch Sprache steuern.' } }
     ],
     loaded: true
   },
