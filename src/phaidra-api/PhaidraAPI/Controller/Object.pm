@@ -770,7 +770,7 @@ sub preview {
           eq "ACTIVATED")
       {
         my $object_job_info = $self->paf_mongo->get_collection('jobs')->
-          find_one({pid => $pid, agent => 'vige'});
+          find_one({pid => $pid, agent => 'vige'}, {}, { sort => { created => -1 } });
           $self->app->log->info("XXXXXXXXXXXXXXX MIGRATED pid[$pid]:\n".$self->app->dumper($object_job_info));
         if (defined $object_job_info) {
           my $job_status = $object_job_info->{'status'};
