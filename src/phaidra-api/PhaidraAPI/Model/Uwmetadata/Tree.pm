@@ -1048,7 +1048,7 @@ our %tree = (
                     { "labels" => {
                         "de" => "AutorIn des analogen Objekts",
                         "en" => "Author of the analogue object",
-                        "it" => "Autore dell'oggetto  analogico",
+                        "it" => "Autore",
                         "sr" => "autor analognog objekta"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_3/1552095"
@@ -6252,7 +6252,7 @@ our %tree = (
                     { "labels" => {
                         "de" => "AutorIn des analogen Objekts",
                         "en" => "Author of the analogue object",
-                        "it" => "Autore dell'oggetto  analogico",
+                        "it" => "Autore",
                         "sr" => "autor analognog objekta"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1552095"
