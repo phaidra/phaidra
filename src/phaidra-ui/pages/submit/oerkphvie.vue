@@ -143,7 +143,7 @@ export default {
 
       let lic = fields.getField("license");
       lic.showValueDefinition = true;
-      lic.vocabulary = "alllicenses";
+      lic.vocabulary = "oerlicenses";
       self.form.sections[0].fields.push(lic);
 
       let note = fields.getField("note-checkbox-with-link")
