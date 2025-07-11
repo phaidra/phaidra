@@ -30,7 +30,10 @@
             </v-row>
             <v-row v-for="(id, i) in o['skos:exactMatch']" :key="'seriesexactMatch'+i">
               <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold">{{ getLocalizedTermLabel('objectidentifiertype', id['@type']) }}</v-col>
-              <v-col :md="valueColMd" cols="12" v-if="getIDResolverURL(id)"><a :href="getIDResolverURL(id)" target="_blank">{{ id['@value'] }}</a></v-col>
+              <v-col :md="valueColMd" cols="12" v-if="getIDResolverURL(id)">
+                <a :href="getIDResolverURL(id)" target="_blank">{{ id['@value'] }}</a>
+              </v-col>
+              <v-col :md="valueColMd" cols="12" v-else >{{ id['@value'] }}</v-col>
             </v-row>
         </v-card-text>
       </v-card>
