@@ -568,6 +568,7 @@
             <p-d-uwm-rec
               :children="objectInfo.metadata['uwmetadata']"
               :cmodel="objectInfo.cmodel"
+              :dc_rights="objectInfo.dc_rights"
             ></p-d-uwm-rec>
           </v-row>
 
