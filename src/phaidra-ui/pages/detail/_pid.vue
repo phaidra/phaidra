@@ -40,14 +40,14 @@
                               '/thumbnail'
                             "
                             class="elevation-1 my-4"
-                            :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                            :alt="getObjectTitle(rel)"
                           ></p-img>
                         </v-col>
                         <v-col cols="12" md="7">
                           <nuxt-link
                             v-if="rel['dc_title']"
                             :to="localePath(`/detail/${rel.pid}`)"
-                            >{{ rel.dc_title[0] }}</nuxt-link
+                            >{{ getObjectTitle(rel) }}</nuxt-link
                           >
                           <nuxt-link
                             v-else
@@ -93,14 +93,14 @@
                               '/thumbnail'
                             "
                             class="elevation-1 my-4"
-                            :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                            :alt="getObjectTitle(rel)"
                           ></p-img>
                         </v-col>
                         <v-col cols="12" md="7">
                           <nuxt-link
                             v-if="rel['dc_title']"
                             :to="localePath(`/detail/${rel.pid}`)"
-                            >{{ rel.dc_title[0] }}</nuxt-link
+                            >{{ getObjectTitle(rel) }}</nuxt-link
                           >
                           <nuxt-link
                             v-else
@@ -145,14 +145,14 @@
                               '/thumbnail'
                             "
                             class="elevation-1 my-4"
-                            :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                            :alt="getObjectTitle(rel)"
                           ></p-img>
                         </v-col>
                         <v-col cols="12" md="7">
                           <nuxt-link
                             v-if="rel['dc_title']"
                             :to="localePath(`/detail/${rel.pid}`)"
-                            >{{ rel.dc_title[0] }}</nuxt-link
+                            >{{ getObjectTitle(rel) }}</nuxt-link
                           >
                           <nuxt-link
                             v-else
@@ -198,14 +198,14 @@
                               '/thumbnail'
                             "
                             class="elevation-1 my-4"
-                            :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                            :alt="getObjectTitle(rel)"
                           ></p-img>
                         </v-col>
                         <v-col cols="12" md="7">
                           <nuxt-link
                             v-if="rel['dc_title']"
                             :to="localePath(`/detail/${rel.pid}`)"
-                            >{{ rel.dc_title[0] }}</nuxt-link
+                            >{{ getObjectTitle(rel) }}</nuxt-link
                           >
                           <nuxt-link
                             v-else
@@ -252,14 +252,14 @@
                               '/thumbnail'
                             "
                             class="elevation-1 my-4"
-                            :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                            :alt="getObjectTitle(rel)"
                           ></p-img>
                         </v-col>
                         <v-col cols="12" md="7">
                           <nuxt-link
                             v-if="rel['dc_title']"
                             :to="localePath(`/detail/${rel.pid}`)"
-                            >{{ rel.dc_title[0] }}</nuxt-link
+                            >{{ getObjectTitle(rel) }}</nuxt-link
                           >
                           <nuxt-link
                             v-else
@@ -304,14 +304,14 @@
                               '/thumbnail'
                             "
                             class="elevation-1 my-4"
-                            :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                            :alt="getObjectTitle(rel)"
                           ></p-img>
                         </v-col>
                         <v-col cols="12" md="7">
                           <nuxt-link
                             v-if="rel['dc_title']"
                             :to="localePath(`/detail/${rel.pid}`)"
-                            >{{ rel.dc_title[0] }}</nuxt-link
+                            >{{ getObjectTitle(rel) }}</nuxt-link
                           >
                           <nuxt-link
                             v-else
@@ -357,14 +357,14 @@
                               '/thumbnail'
                             "
                             class="elevation-1 my-4"
-                            :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                            :alt="getObjectTitle(rel)"
                           ></p-img>
                         </v-col>
                         <v-col cols="12" md="7">
                           <nuxt-link
                             v-if="rel['dc_title']"
                             :to="localePath(`/detail/${rel.pid}`)"
-                            >{{ rel.dc_title[0] }}</nuxt-link
+                            >{{ getObjectTitle(rel) }}</nuxt-link
                           >
                           <nuxt-link
                             v-else
@@ -739,7 +739,7 @@
                           instanceconfig.api + '/object/' + collMember.pid + '/thumbnail'
                         "
                         class="elevation-1 mt-2"
-                        :alt="collMember['dc_title'] ? collMember['dc_title'][0] : collMember.pid"
+                        :alt="getObjectTitle(collMember)"
                       >
                         <template v-slot:placeholder>
                           <div
@@ -763,11 +763,10 @@
                       <h2
                         class="title font-weight-light primary--text"
                         @click.stop
-                        v-if="collMember.dc_title"
                       >
                         <nuxt-link
                           :to="{ path: `${collMember.pid}`, params: { pid: collMember.pid } }"
-                          >{{ collMember.dc_title[0] }}</nuxt-link
+                          >{{ getObjectTitle(collMember) }}</nuxt-link
                         >
                       </h2>
                       <p>{{ collMember.pid }}</p>
@@ -1302,7 +1301,7 @@
                             <nuxt-link
                               v-if="rel['dc_title']"
                               :to="localePath(`/detail/${rel.pid}`)"
-                              >{{ rel.dc_title[0] }}</nuxt-link
+                              >{{ getObjectTitle(rel) }}</nuxt-link
                             >
                             <nuxt-link
                               v-else
@@ -1340,14 +1339,14 @@
                                   '/thumbnail'
                                 "
                                 class="elevation-1 my-4"
-                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                                :alt="getObjectTitle(rel)"
                               ></p-img>
                           </v-col>
                           <v-col cols="12" md="7">
                             <nuxt-link
                               v-if="rel['dc_title']"
                               :to="localePath(`/detail/${rel.pid}`)"
-                              >{{ rel.dc_title[0] }}</nuxt-link
+                              >{{ getObjectTitle(rel) }}</nuxt-link
                             >
                             <nuxt-link
                               v-else
@@ -1382,7 +1381,7 @@
                             <nuxt-link
                               v-if="rel['dc_title']"
                               :to="localePath(`/detail/${rel.pid}`)"
-                              >{{ rel.dc_title[0] }}</nuxt-link
+                              >{{ getObjectTitle(rel) }}</nuxt-link
                             >
                             <nuxt-link
                               v-else
@@ -1421,14 +1420,14 @@
                                   '/thumbnail'
                                 "
                                 class="elevation-1 my-4"
-                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                                :alt="getObjectTitle(rel)"
                               ></p-img>
                             </v-col>
                             <v-col cols="12" md="7">
                               <nuxt-link
                                 v-if="rel['dc_title']"
                                 :to="localePath(`/detail/${rel.pid}`)"
-                                >{{ rel.dc_title[0] }}</nuxt-link
+                                >{{ getObjectTitle(rel) }}</nuxt-link
                               >
                               <nuxt-link
                                 v-else
@@ -1469,14 +1468,14 @@
                                   '/thumbnail'
                                 "
                                 class="elevation-1 my-4"
-                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                                :alt="getObjectTitle(rel)"
                               ></p-img>
                             </v-col>
                             <v-col cols="12" md="7">
                               <nuxt-link
                                 v-if="rel['dc_title']"
                                 :to="localePath(`/detail/${rel.pid}`)"
-                                >{{ rel.dc_title[0] }}</nuxt-link
+                                >{{ getObjectTitle(rel) }}</nuxt-link
                               >
                               <nuxt-link
                                 v-else
@@ -1516,14 +1515,14 @@
                                   '/thumbnail'
                                 "
                                 class="elevation-1 my-4"
-                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                                :alt="getObjectTitle(rel)"
                               ></p-img>
                             </v-col>
                             <v-col cols="12" md="7">
                               <nuxt-link
                                 v-if="rel['dc_title']"
                                 :to="localePath(`/detail/${rel.pid}`)"
-                                >{{ rel.dc_title[0] }}</nuxt-link
+                                >{{ getObjectTitle(rel) }}</nuxt-link
                               >
                               <nuxt-link
                                 v-else
@@ -1564,14 +1563,14 @@
                                   '/thumbnail'
                                 "
                                 class="elevation-1 my-4"
-                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                                :alt="getObjectTitle(rel)"
                               ></p-img>
                             </v-col>
                             <v-col cols="12" md="7">
                               <nuxt-link
                                 v-if="rel['dc_title']"
                                 :to="localePath(`/detail/${rel.pid}`)"
-                                >{{ rel.dc_title[0] }}</nuxt-link
+                                >{{ getObjectTitle(rel) }}</nuxt-link
                               >
                               <nuxt-link
                                 v-else
@@ -1613,14 +1612,14 @@
                                   '/thumbnail'
                                 "
                                 class="elevation-1 my-4"
-                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                                :alt="getObjectTitle(rel)"
                               ></p-img>
                             </v-col>
                             <v-col cols="12" md="7">
                               <nuxt-link
                                 v-if="rel['dc_title']"
                                 :to="localePath(`/detail/${rel.pid}`)"
-                                >{{ rel.dc_title[0] }}</nuxt-link
+                                >{{ getObjectTitle(rel) }}</nuxt-link
                               >
                               <nuxt-link
                                 v-else
@@ -1660,14 +1659,14 @@
                                   '/thumbnail'
                                 "
                                 class="elevation-1 my-4"
-                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                                :alt="getObjectTitle(rel)"
                               ></p-img>
                             </v-col>
                             <v-col cols="12" md="7">
                               <nuxt-link
                                 v-if="rel['dc_title']"
                                 :to="localePath(`/detail/${rel.pid}`)"
-                                >{{ rel.dc_title[0] }}</nuxt-link
+                                >{{ getObjectTitle(rel) }}</nuxt-link
                               >
                               <nuxt-link
                                 v-else
@@ -1708,14 +1707,14 @@
                                   '/thumbnail'
                                 "
                                 class="elevation-1 my-4"
-                                :alt="rel['dc_title'] ? rel['dc_title'][0] : rel.pid"
+                                :alt="getObjectTitle(rel)"
                               ></p-img>
                             </v-col>
                             <v-col cols="12" md="7">
                               <nuxt-link
                                 v-if="rel['dc_title']"
                                 :to="localePath(`/detail/${rel.pid}`)"
-                                >{{ rel.dc_title[0] }}</nuxt-link
+                                >{{ getObjectTitle(rel) }}</nuxt-link
                               >
                               <nuxt-link
                                 v-else
@@ -2228,9 +2227,10 @@
 import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
+import objectMixin from "phaidra-vue-components/src/mixins/object";
 
 export default {
-  mixins: [context, config, vocabulary],
+  mixins: [context, config, vocabulary, objectMixin],
   validate({ params }) {
     return /^o:\d+$/.test(params.pid);
   },
