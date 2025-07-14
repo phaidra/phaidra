@@ -1009,7 +1009,7 @@
                             '/download'
                           "
                           color="primary"
-                          ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }} ( {{ objectInfo.size | filesize }} )</v-btn
+                          ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }} ({{ objectInfo.size | filesize }})</v-btn
                         >
                         <v-btn
                           v-if="objectInfo.cmodel === 'Collection'"
