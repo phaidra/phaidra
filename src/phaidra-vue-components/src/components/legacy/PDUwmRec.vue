@@ -70,7 +70,7 @@
       </template>
       <template v-else-if="ch.input_type === 'node'">
         <template v-if="ch.xmlname === 'identifiers'">
-          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getChildLabel(ch, 'resource') }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getChildLabel(ch, 'resource') || $t("Other identifier") }}</v-col>
           <v-col cols="12" md="10">{{ getChildValue(ch, 'identifier') }}</v-col>
         </template>
         <template v-else-if="nodePath(ch) === 'uwm_lifecycle_contribute'">
