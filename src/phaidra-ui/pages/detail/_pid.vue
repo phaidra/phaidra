@@ -1009,7 +1009,7 @@
                             '/download'
                           "
                           color="primary"
-                          ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }} ({{ objectInfo.size | filesize }})</v-btn
+                          ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }} ({{ objectInfo.size | bytes }})</v-btn
                         >
                         <v-btn
                           v-if="objectInfo.cmodel === 'Collection'"
@@ -2237,21 +2237,6 @@ export default {
   },
   metaInfo() {
     return this.detailsMetaInfo;
-  },
-  filters: {
-    filesize: function (size) {
-      if (size < 1024) {
-        return size + ' B';
-      } else if (size < 1024 * 1024) {
-        return (size / 1024).toFixed(2) + ' KB';
-      } else if (size < 1024 * 1024 * 1024) {
-        return (size / 1024 / 1024).toFixed(2) + ' MB';
-      } else if (size < 1024 * 1024 * 1024 * 1024) {
-        return (size / 1024 / 1024 / 1024).toFixed(2) + ' GB';
-      } else {
-        return (size / 1024 / 1024 / 1024 / 1024).toFixed(2) + ' TB';
-      }
-    }
   },
   computed: {
     ownerEmail: function () {
