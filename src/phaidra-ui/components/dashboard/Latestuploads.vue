@@ -20,8 +20,8 @@
               <v-col cols="10">
                 <v-row no-gutters class="mb-4">
                   <v-col cols="10">
-                    <span class="primary--text" @click.stop v-if="doc.dc_title">
-                      <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ doc.dc_title[0] }}</nuxt-link>
+                    <span class="primary--text" @click.stop>
+                      <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ getObjectTitle(doc) }}</nuxt-link>
                     </span>
                   </v-col>
                   <v-spacer></v-spacer>
@@ -49,9 +49,10 @@
 import qs from "qs";
 import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
+import objectMixin from "phaidra-vue-components/src/mixins/object";
 
 export default {
-  mixins: [context, config],
+  mixins: [context, config, objectMixin],
   props: {
     label: {
       type: String,
@@ -80,7 +81,7 @@ export default {
       let params = {
         q: "*:*",
         rows: this.length,
-        fl: "pid,dc_title,created,owner,isrestricted,dc_rights,bib_roles_pers_aut",
+        fl: "pid,dc_title,created,owner,isrestricted,dc_rights,bib_roles_pers_aut,dc_title_*",
         sort: "tcreated desc",
         defType: "edismax",
         wt: "json",

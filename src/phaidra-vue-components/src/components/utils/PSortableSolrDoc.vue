@@ -7,15 +7,16 @@
         </div>
       </template>
     </p-img>
-    <div class="list-item-title">{{item.pid}} - {{item.cmodel}}<template v-if="'dc_title' in item"> - {{item.dc_title[0]}}</template></div>
+    <div class="list-item-title">{{item.pid}} - {{item.cmodel}}<template v-if="'dc_title' in item"> - {{getObjectTitle(item)}}</template></div>
   </li>
 </template>
 
 <script>
 import { ElementMixin } from 'vue-slicksort'
+import objectMixin from 'phaidra-vue-components/src/mixins/object'
 export default {
   name: 'p-sortable-solr-doc',
-  mixins: [ElementMixin],
+  mixins: [ElementMixin, objectMixin],
   props: {
     item: Object
   },

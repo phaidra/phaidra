@@ -60,7 +60,14 @@
         <template v-else-if="ch.xmlname === 'license'">
           <template v-if="(cmodel !== 'Collection') && (cmodel !== 'Resource')">
             <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
-            <v-col cols="12" md="10" class="wiv">{{ ch.labels[alpha2locale] }}</v-col>
+            <v-col cols="12" md="10" class="wiv">
+              <span v-if="dc_rights && dc_rights.length > 0">
+                <a :href="dc_rights[1]" target="_blank">{{ ch.labels[alpha2locale] }}</a>
+              </span>
+              <span v-else>
+                {{ ch.labels[alpha2locale] }}
+              </span>
+            </v-col>
           </template>
         </template>
         <template v-else>
@@ -70,7 +77,7 @@
       </template>
       <template v-else-if="ch.input_type === 'node'">
         <template v-if="ch.xmlname === 'identifiers'">
-          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getChildLabel(ch, 'resource') }}</v-col>
+          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getChildLabel(ch, 'resource') || $t("Other identifier") }}</v-col>
           <v-col cols="12" md="10">{{ getChildValue(ch, 'identifier') }}</v-col>
         </template>
         <template v-else-if="nodePath(ch) === 'uwm_lifecycle_contribute'">
@@ -174,12 +181,12 @@
           </v-col>
         </template>
         <template v-else-if="hideNodeBorder(nodePath(ch))">
-          <p-d-uwm-rec v-if="ch.children" :children="ch.children" :cmodel="cmodel" :path="nodePath(ch)"></p-d-uwm-rec>
+          <p-d-uwm-rec v-if="ch.children" :children="ch.children" :cmodel="cmodel" :dc_rights="dc_rights" :path="nodePath(ch)"></p-d-uwm-rec>
         </template>
         <v-card v-else outlined class="mt-4" :width="'100%'">
           <v-card-text>
             <div class="overline mb-4">{{ $t(nodePath(ch)) }}</div>
-            <p-d-uwm-rec v-if="ch.children" :children="ch.children" :cmodel="cmodel" :path="nodePath(ch)"></p-d-uwm-rec>
+            <p-d-uwm-rec v-if="ch.children" :children="ch.children" :cmodel="cmodel" :dc_rights="dc_rights" :path="nodePath(ch)"></p-d-uwm-rec>
           </v-card-text>
         </v-card>
       </template>
@@ -209,6 +216,9 @@ export default {
     },
     cmodel: {
       type: String
+    },
+    dc_rights: {
+      type: Array
     }
   },
   computed: {

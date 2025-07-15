@@ -188,6 +188,9 @@
                               v-on:configure="editFieldProps(f)"
                               :configurable="enablefieldconfig || f.configurable"
                             ></p-i-select>
+                            <v-col cols="12" v-if="f.predicate === 'edm:rights'">
+                              <span v-html="$t('LICENSE_NOTE')"></span>
+                            </v-col>
                             <v-col cols="12" v-if="(f.predicate === 'edm:rights') && f.showValueDefinition && license">
                               <p-d-license-info :license="license"></p-d-license-info>
                             </v-col>

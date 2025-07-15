@@ -52,7 +52,7 @@
               <v-row >
                 <v-col cols="12" md="9">
                   <h2 class="title font-weight-light primary--text" @click.stop v-if="doc.dc_title">
-                    <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ doc.dc_title[0] }}</nuxt-link>
+                    <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ getObjectTitle(doc) }}</nuxt-link>
                   </h2>
                 </v-col>
                 <v-col cols="12" md="3" class="text-right">
@@ -122,6 +122,7 @@ import PImg from '../utils/PImg'
 import PExpandText from '../utils/PExpandText'
 import ListDialog from '../select/ListDialog'
 import CollectionDialog from '../select/CollectionDialog'
+import objectMixin from '../../mixins/object'
 
 export default {
   name: 'p-search-results',
@@ -132,6 +133,7 @@ export default {
     CollectionDialog,
     ListDialog
   },
+  mixins: [objectMixin],
   props: {
     getallresults: {
       type: Function,

@@ -35,7 +35,7 @@
                    <v-img aspect-ratio="1" :src="instanceconfig.api + '/preview/' + doc.pid" @click="showDetailDialog(doc)"></v-img>
                 </span>
               </template>
-              <span>{{doc.dc_title[0]}}</span>
+              <span>{{getObjectTitle(doc)}}</span>
             </v-tooltip>
           </v-carousel-item>
         </v-carousel>
@@ -59,7 +59,7 @@
                     </v-card>
                   </span>
                 </template>
-                <span>{{doc.dc_title[0]}}</span>
+                <span>{{getObjectTitle(doc)}}</span>
               </v-tooltip>
             </v-col>
           </v-row>
@@ -69,7 +69,7 @@
     <v-dialog v-model="detailDialog" max-width="500px" v-if="detailToShow">
       <v-card>
         <v-card-title class="title font-weight-light white--text">
-          {{ detailToShow.dc_title[0] }}
+          {{ getObjectTitle(detailToShow) }}
         </v-card-title>
         <v-card-text>
           <v-img aspect-ratio="1" :src="instanceconfig.api + '/preview/' + detailToShow.pid"></v-img>
@@ -87,9 +87,11 @@
 
 <script>
 import qs from 'qs'
+import objectMixin from 'phaidra-vue-components/src/mixins/object'
 
 export default {
   name: 'p-collection-gallery',
+  mixins: [objectMixin],
   props: {
     collection: {
       type: String,
