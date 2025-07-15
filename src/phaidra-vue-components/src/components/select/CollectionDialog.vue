@@ -29,7 +29,7 @@
           :no-results-text="$t('There were no search results')"
         >
           <template v-slot:item.title="{ item }">
-            <span v-if="item.dc_title">{{ item.dc_title[0] | truncate(50) }}</span>
+            <span>{{ getObjectTitle(item) | truncate(50) }}</span>
           </template>
           <template v-slot:item.created="{ item }">
             {{ item.created | date }}
@@ -52,10 +52,12 @@
 </template>
 
 <script>
+import objectMixin from 'phaidra-vue-components/src/mixins/object'
 import qs from 'qs'
 
 export default {
   name: 'collection-dialog',
+  mixins: [objectMixin],
   computed: {
     instance: function () {
       return this.$store.state.instanceconfig
@@ -77,15 +79,7 @@ export default {
   },
   methods: {
     filterTitle (value, search, item) {
-      if (item.dc_title) {
-        if (item.dc_title.length > 0) {
-          return item.dc_title[0].indexOf(search) !== -1
-        } else {
-          return false
-        }
-      } else {
-        return false
-      }
+      return this.getObjectTitle(item).indexOf(search) !== -1
     },
     open: async function () {
       this.dialog = true
