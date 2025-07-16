@@ -23,7 +23,9 @@
               :link="link"
               :toggleSelection="toggleSelection"
               :selectioncheck="selectioncheck"
-              :csvExport="csvExport" />
+              :csvExport="csvExport"
+              :signedin="signedin"
+            />
           </v-col>
         </v-row>
         <v-row class="hidden-md-and-up">
@@ -154,6 +156,10 @@ export default {
     }
   },
   props: {
+    signedin: {
+      type: Boolean,
+      default: false
+    },
     collection: {
       type: String,
       default: ''
