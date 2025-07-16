@@ -40,7 +40,9 @@ our $namespaces = {
   ebucore      => {label => "EBUCore - the Dublin Core for media",                            IRI => "http://www.ebu.ch/metadata/ontologies/ebucore/ebucore"},
   aiiso        => {label => "Academic Institution Internal Structure Ontology",               IRI => "http://purl.org/vocab/aiiso/schema#"},
   cito         => {label => "CiTO, the Citation Typing Ontology",                             IRI => "http://purl.org/spar/cito/"},
-  arm          => {label => "Art and Rare Materials Core Ontology",                           IRI => "https://ld4p.github.io/arm/core/ontology/0.1/"}
+  arm          => {label => "Art and Rare Materials Core Ontology",                           IRI => "https://ld4p.github.io/arm/core/ontology/0.1/"},
+  rdam         => {label => "RDA Manifestation",                                              IRI => "http://rdaregistry.info/Elements/m/"},
+  rdax         => {label => "RDA Entity",                                                     IRI => "http://rdaregistry.info/Elements/x/"}
 };
 
 our %cm2rt = (
