@@ -231,6 +231,15 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
+                      :label="$t('Hide institution name by default.')"
+                      v-model="parsedPublicConfigData.hideInstitutionName"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Show/Hide institution name in breadcrumbs.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-checkbox
                       :label="$t('Upload preview')"
                       v-model="parsedPublicConfigData.forcePreview"
                     ></v-checkbox>
