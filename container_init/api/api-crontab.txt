@@ -1,0 +1,6 @@
+SHELL=/bin/bash
+BASH_ENV=/container.env
+
+# m h  dom  mon  dow   command
+0   11  *    *    *     perl /usr/local/phaidra/phaidra-api/utils/processUsageStats.pl >> /var/log/phaidra/phaidra-cron.log 2>&1
+0   0   *    *    0     perl /usr/local/phaidra/phaidra-api/utils/logStorageSize.pl >> /var/log/phaidra/phaidra-cron.log 2>&1

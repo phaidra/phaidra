@@ -899,6 +899,7 @@ services:
       - fedora:/mnt/fedora:ro
       - ./src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
       - converted_3d:/mnt/converted_3d:ro
+      - ./container_init/api:/mnt/api:ro
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
