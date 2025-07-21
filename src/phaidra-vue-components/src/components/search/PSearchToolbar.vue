@@ -81,7 +81,7 @@
           <span>{{ $t('Link to search results')}}</span>
         </v-tooltip>
       </v-col>
-      <v-col>
+      <v-col v-if="signedin">
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-btn icon class="toolbar-btn" v-on="on" v-bind="attrs" :color="selectioncheck ? 'primary' : ''" @click.stop="toggleSelection()" :aria-label="$t('Select results')">
@@ -109,6 +109,10 @@
 export default {
   name: 'p-search-toolbar',
   props: {
+    signedin: {
+      type: Boolean,
+      default: false
+    },
     setSort: {
       type: Function,
       required: true
