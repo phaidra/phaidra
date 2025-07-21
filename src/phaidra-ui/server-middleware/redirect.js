@@ -27,7 +27,7 @@ export default async (req, res, next) => {
                 redirect(res, config.instances[config.defaultinstance].fedora + '/objects/' + pid + '/methods/bdef:Book/view')
                 return
               } else {
-                redirect(res, apiBaseURL + '/object/' + pid + '/preview')
+                redirect(res, '/api/object/' + pid + '/preview')
                 return
               }
             }
