@@ -54,6 +54,7 @@ export const mutations = {
       'feedback',
       'addannotation',
       'forcePreview',
+      'hideInstitutionName'
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
@@ -70,15 +71,19 @@ export const mutations = {
   updateBreadcrumbs(state, transition) {
     state.breadcrumbs = [
       {
-        text: this.$i18n.t(state.instanceconfig.institution),
-        external: true,
-        to: state.instanceconfig.institutionurl
-      },
-      {
         text: state.instanceconfig.title,
         to: transition.localePath('/')
       }
     ]
+    if (!state.instanceconfig.hideInstitutionName && !process.server) {
+      state.breadcrumbs.unshift(
+        {
+          text: this.$i18n.t(state.instanceconfig.institution),
+          external: true,
+          to: state.instanceconfig.institutionurl
+        }
+      )
+    }
     if (transition.to.path.includes('/repostats')) {
       state.breadcrumbs.push(
         {
