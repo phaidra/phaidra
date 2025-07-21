@@ -7,8 +7,8 @@
       </v-col>
     </v-row>
 
-    <template v-if="isInitialized">
-      <v-row>
+    <template>
+      <v-row v-if="isInitialized">
         <v-col>
           <v-card outlined>
             <v-card-text class="table-container">
@@ -70,7 +70,7 @@
       </v-row>
 
       <!-- Navigation -->
-      <v-row justify="space-between" class="mt-4">
+      <v-row justify="space-between" class="mt-4" v-if="isInitialized || isError">
         <v-col cols="auto">
           <v-btn
             text
@@ -82,6 +82,7 @@
         </v-col>
         <v-col cols="auto">
           <v-btn
+            :disabled="isError"
             color="primary"
             @click="proceed"
             :to="steps[4].route"
@@ -117,7 +118,8 @@ export default {
     return {
       fieldSettings,
       previewData: [],
-      isInitialized: false
+      isInitialized: false,
+      isError: false
     }
   },
 
@@ -139,9 +141,12 @@ export default {
     if (process.client && this.$store.$initBulkUpload) {
       await this.$store.$initBulkUpload()
     }
-    
-    await this.processPreviewData()
-    this.isInitialized = true
+    try {
+      await this.processPreviewData()
+      this.isInitialized = true
+    } catch (error) {
+      this.isError = true
+    }
   },
 
   methods: {
