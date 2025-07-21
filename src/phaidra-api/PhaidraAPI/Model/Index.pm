@@ -1913,6 +1913,9 @@ sub _add_jsonld_index {
 
   if ($jsonld->{'dcterms:created'}) {
     for my $date (@{$jsonld->{'dcterms:created'}}) {
+      if (ref($date) eq 'HASH') {
+        next;
+      }
       # Store the full EDTF date
       push @{$index->{"dcterms_created_edtf"}}, $date;
       

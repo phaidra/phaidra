@@ -138,14 +138,6 @@ sub save_to_object() {
     return $res;
   }
 
-  my $dcterms_created = $metadata->{'dcterms:created'};
-  if (defined($dcterms_created)) {
-    foreach my $created (@{$dcterms_created}) {
-      if (ref($created) eq 'HASH') {
-        delete $metadata->{'dcterms:created'};
-      }
-    }
-  }
 
   my $object_model = PhaidraAPI::Model::Object->new;
   my $coder        = JSON->new->utf8->pretty;
