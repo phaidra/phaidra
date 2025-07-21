@@ -2464,7 +2464,8 @@ export default {
       collOnlyLatestVersions: true,
       datareplaceDialog: false,
       datareplaceFile: null,
-      datareplaceUploadErrors: []
+      datareplaceUploadErrors: [],
+      isInfoFetched: false
     };
   },
   async fetch() {
@@ -2619,6 +2620,9 @@ export default {
     async fetchAsyncData(self, pid) {
       console.log('fetching object info ' + pid);
       await self.$store.dispatch("fetchObjectInfo", pid);
+      if(process.browser) {
+        self.isInfoFetched = true
+      }
       self.postMetadataLoad(self);
       // console.log('cmodel: ' + self.$store.state.objectInfo.cmodel);
       if (self.$store.state.objectInfo.cmodel === "Container") {
@@ -2912,6 +2916,10 @@ export default {
         this.collMemberToRemove = null
         this.$store.commit('setLoading', false)
       }
+    },
+    async fetchObjectInfo() {
+      await this.$store.dispatch("fetchObjectInfo", this.$route.params.pid);
+      this.postMetadataLoad(this);
     }
   },
   mounted() {
@@ -2922,6 +2930,11 @@ export default {
           document.getElementById("d3-graph-container").offsetWidth;
       }, 2000);
     }
+    setTimeout(() => {
+      if(!this.isInfoFetched) {
+        this.fetchObjectInfo();
+      }
+    }, 500);
   },
   beforeRouteEnter: async function (to, from, next) {
     next(async function (vm) {
