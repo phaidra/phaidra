@@ -37,6 +37,7 @@ use FileHandle;
 use Data::Dumper;
 use Net::Amazon::S3;
 use Net::Amazon::S3::Authorization::Basic;
+use MIME::Base64 qw(encode_base64);
 autoflush STDOUT 1;
 
 
@@ -640,6 +641,16 @@ sub preview {
           $self->reply->static('images/error.png');
           return;
         }
+      }
+
+      # Get instance config and set favicon
+      my $model = PhaidraAPI::Model::Config->new;
+      my $modelres = $model->get_public_config($self, 1);
+      if (defined $modelres->{faviconText}) {
+        my $faviconText = $modelres->{faviconText};
+        $faviconText =~ s/^\s+|\s+$//g if defined $faviconText;
+        my $base64Svg = encode_base64($faviconText);
+        $self->stash(favIcon => "data:image/svg+xml;base64,$base64Svg");
       }
 
       my $page = $self->param('page');
