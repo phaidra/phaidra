@@ -1584,6 +1584,30 @@ sub add_relationship {
 
 }
 
+sub add_relationships {
+
+  my $self = shift;
+
+  unless (defined($self->stash('pid'))) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
+    return;
+  }
+
+  my $relationships = $self->param('relationships');
+
+  unless (defined($relationships)) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined relationships'}]}, status => 400);
+    return;
+  }
+
+  $relationships = decode_json(b($relationships)->encode('UTF-8'));
+
+  my $object_model = PhaidraAPI::Model::Object->new;
+  my $r            = $object_model->add_relationships($self, $self->stash('pid'), $relationships, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
+
+  $self->render(json => $r, status => $r->{status});
+}
+
 sub purge_relationship {
 
   my $self = shift;
