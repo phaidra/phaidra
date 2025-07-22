@@ -7,12 +7,13 @@ use DBI;
 
 # Configuration
 my $botTreshold = 100;
-my $tsv_file = '/usr/local/phaidra/phaidra-api/public/ip2country/ip2country-v4.tsv';
+my $tsv_file = '/mnt/chronos/original-perl/ip2country/ip2country-v4.tsv';
 my $dsn = "dbi:mysql:phaidradb:".$ENV{MARIADB_PHAIDRA_HOST};
 my $username = $ENV{MARIADB_PHAIDRA_USER};
 my $password = $ENV{MARIADB_PHAIDRA_PASSWORD};
 my @ip_ranges;
 my @visitor_ids;
+
 
 # Read IP ranges into a data structure
 print "loading IP ranges\n";

@@ -3,7 +3,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN <<EOF
 apt-get --quiet update
 apt-get install --yes --quiet --no-install-recommends \
-    mariadb-client cron libtemplate-perl libmojolicious-perl liblog-log4perl-perl \
+    mariadb-client cron libtemplate-perl libdbd-mysql-perl libdbix-connector-perl libmojolicious-perl liblog-log4perl-perl \
     liblog-dispatch-filerotate-perl libmongodb-perl libdatetime-format-iso8601-perl wget \
     ca-certificates curl jq
 EOF
