@@ -732,10 +732,12 @@ sub preview {
        
  #check if metadata has URL to display from the archive after the component loads in replayweb
 
-        if (exists($r->{info}->{metadata}->{"JSON-LD"}->{'rdfs:seeAlso'}[0]->{'schema:url'}[0])) {
+     
+           if (exists($r->{info}->{metadata}->{"JSON-LD"}->{'phaidra:systemTag'}[0])) {
+            $website_url = $r->{info}->{metadata}->{"JSON-LD"}->{'phaidra:systemTag'}[0];
+            }  elsif (exists($r->{info}->{metadata}->{"JSON-LD"}->{'rdfs:seeAlso'}[0]->{'schema:url'}[0])) {
             $website_url = $r->{info}->{metadata}->{"JSON-LD"}->{'rdfs:seeAlso'}[0]->{'schema:url'}[0];
             }  
-          
         $self->stash(website_url =>$website_url);
         $self->stash(baseurl  => $self->config->{baseurl});
         $self->stash(scheme   => $self->config->{scheme});
