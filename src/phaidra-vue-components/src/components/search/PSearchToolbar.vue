@@ -110,8 +110,8 @@ export default {
   name: 'p-search-toolbar',
   props: {
     signedin: {
-      type: Boolean,
-      default: false
+      type: Number,
+      default: 0
     },
     setSort: {
       type: Function,
