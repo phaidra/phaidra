@@ -31,11 +31,13 @@ export function buildSearchDef ({ sortdef, q, page, pagesize, facetQueries, corp
 
               let lvl2 = lvl1.queries[k].childFacet
               let foundActiveLvl2Query = false
-              for (let l = 0; l < lvl2.queries.length; l++) {
-                if (lvl2.queries[l].active) {
-                  foundActiveLvl2Query = true
-                  ors.push(lvl2.queries[l].query)
-                  searchdefarr.push('fq=' + facetQueries[i].id + '_' + lvl2.queries[l].id)
+              if (lvl2 && lvl2.queries) {
+                for (let l = 0; l < lvl2.queries.length; l++) {
+                  if (lvl2.queries[l].active) {
+                    foundActiveLvl2Query = true
+                    ors.push(lvl2.queries[l].query)
+                    searchdefarr.push('fq=' + facetQueries[i].id + '_' + lvl2.queries[l].id)
+                  }
                 }
               }
 
