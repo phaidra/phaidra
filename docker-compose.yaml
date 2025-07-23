@@ -424,7 +424,7 @@ services:
   ############### chronos service for local profile ###############
   chronos:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:6efb9d5e
+    image: phaidraorg/chronos-dist:b3ababb3
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
@@ -450,7 +450,7 @@ services:
   ############### chronos service for s3 profile ###############
   chronos-s3:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:6efb9d5e
+    image: phaidraorg/chronos-dist:b3ababb3
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
