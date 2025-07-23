@@ -1469,6 +1469,7 @@ sub save_metadata {
       $found = 1;
       if (exists($metadata->{'relationships'})) {
         $c->app->log->debug("Found relationships: " . $c->app->dumper($metadata->{'relationships'}));
+        my @relationships;
         foreach my $rel (@{$metadata->{'relationships'}}) {
           if ($rel->{'s'} eq "self") {
             $rel->{'s'} = $pid;
@@ -1477,16 +1478,14 @@ sub save_metadata {
             $rel->{'o'} = "info:fedora/" . $pid;
             $skiphook = 0;
           }
+          push @relationships, {predicate => $rel->{'p'}, object => "info:fedora/" . $rel->{'o'}};
         }
-        for my $rel (@{$metadata->{'relationships'}}) {
-          $c->app->log->debug("Adding relationship s[" . $rel->{'s'} . "] p[" . $rel->{'p'} . "] o[" . $rel->{'o'} . "]");
-          my $r = $self->add_relationship($c, $rel->{'s'}, $rel->{'p'}, $rel->{'o'}, $username, $password, $skiphook);
-          push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
-          $res->{status} = $r->{status};
-          if ($r->{status} ne 200) {
-            $c->app->log->error("Error adding relationship[" . $c->app->dumper($rel) . "] res[" . $c->app->dumper($res) . "]");
-            return $res;
-          }
+        my $r = $self->add_relationships($c, $pid, \@relationships, $username, $password, $skiphook);
+        push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
+        $res->{status} = $r->{status};
+        if ($r->{status} ne 200) {
+          $c->app->log->error("Error adding relationships[" . $c->app->dumper($metadata->{'relationships'}) . "] res[" . $c->app->dumper($res) . "]");
+          return $res;
         }
       }
     }
