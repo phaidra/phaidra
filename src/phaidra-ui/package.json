@@ -50,7 +50,7 @@
     "eslint": "^8.4.1",
     "sass": "^1.26.10",
     "sass-loader": "^10.1.1",
-    "stylus": "^0.54.8",
+    "stylus": "github:stylus/stylus#0.54.8",
     "stylus-loader": "^3.0.2"
   }
 }
