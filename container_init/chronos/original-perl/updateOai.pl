@@ -187,7 +187,7 @@ sub updateRecords {
               $log->info("doc pid[$docpid] needs update");
               my $recUpdate = _getRecordUpdate($ua, $urlsolr, $urlapi, $docpid, $d);
               if ($recUpdate) {
-                my $mdbres = $recordsColl->replace_one({ pid => $docpid }, { '$set' => $recUpdate });
+                my $mdbres = $recordsColl->replace_one({ pid => $docpid }, $recUpdate);
                 $log->debug("update result pid[$docpid] matched[".$mdbres->matched_count."]");
                 $updated++;
               }
@@ -214,7 +214,7 @@ sub updateRecords {
         $log->debug("doc pid[$r->{pid}] not found in solr batch, deleted?");
         my $recUpdate = _getRecordUpdate($ua, $urlsolr, $urlapi, $r->{pid}, undef);
         if ($recUpdate) {
-          my $mdbres = $recordsColl->replace_one({ pid => $r->{pid} }, { '$set' => $recUpdate });
+          my $mdbres = $recordsColl->replace_one({ pid => $r->{pid} }, $recUpdate );
           $log->debug("updated pid[$r->{pid}] matched[".$mdbres->matched_count."]");
           $updated++;
         }
