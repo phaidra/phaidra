@@ -140,6 +140,7 @@ sub save_to_object() {
     return $res;
   }
 
+
   my $object_model = PhaidraAPI::Model::Object->new;
   my $coder        = JSON->new->utf8->pretty;
   my $json         = $coder->encode($metadata);
