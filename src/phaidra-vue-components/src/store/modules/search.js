@@ -163,6 +163,11 @@ export const state = () => ({
           label: 'Public Domain Mark'
         },
         {
+          id: 'mit',
+          query: '(dc_license:"MIT" OR dc_license:https\\:\\/\\/opensource.org\\/license\\/mit\\/)',
+          label: 'MIT'
+        },
+        {
           id: 'cc-by',
           query: '(dc_license:"CC BY 2.0 AT" OR dc_license:"CC BY 2.0 Generic" OR dc_license:"CC BY 3.0 AT" OR dc_license:"CC BY 3.0 Unported" OR dc_license:"CC BY 4.0 International" OR dc_license:http\\:\\/\\/creativecommons.org\\/licenses\\/by\\/*)',
           label: 'CC BY'
