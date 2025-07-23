@@ -157,8 +157,8 @@ export default {
   },
   props: {
     signedin: {
-      type: Boolean,
-      default: false
+      type: Number,
+      default: 0
     },
     collection: {
       type: String,
