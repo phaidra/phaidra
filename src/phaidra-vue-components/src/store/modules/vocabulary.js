@@ -747,7 +747,8 @@ const vocabularies = {
           '16'
         ],
         'skos:prefLabel': {
-          'eng': 'CC BY 4.0 International'
+          'eng': 'CC BY 4.0 International',
+          'ita': 'CC BY 4.0 Internazionale'
         },
         'img': 'cc-by.png',
         'skos:definition': {
