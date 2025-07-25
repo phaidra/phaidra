@@ -45,6 +45,7 @@
     <v-row justify="space-between" class="mt-4">
       <v-col cols="auto">
         <v-btn
+          large
           :disabled="isUploading || isUploadComplete"
           text
           :to="steps[3].route"
@@ -55,6 +56,7 @@
       </v-col>
       <v-col cols="auto">
         <v-btn
+          large
           color="primary"
           :loading="isUploading"
           :disabled="!isLoggedIn || isUploading || isUploadComplete"

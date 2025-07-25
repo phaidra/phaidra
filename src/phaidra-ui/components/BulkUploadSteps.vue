@@ -1,5 +1,5 @@
 <template>
-  <v-card flat class="bulk-upload-steps">
+  <v-card flat class="bulk-upload-steps transparent">
     <h1 class="text-h4 mb-6">Bulk Upload</h1>
     <v-stepper v-model="currentStepModel" class="steps-container">
       <v-stepper-header>

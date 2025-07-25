@@ -80,7 +80,6 @@
             v-for="column in getColumnHeaders"
             :key="column"
             class="mr-2 mb-2"
-            color="primary"
             outlined
           >
             {{ column }}
@@ -93,11 +92,11 @@
     <v-dialog v-model="showConfirmDialog" max-width="500">
       <v-card>
         <v-card-title>Confirm New File Upload</v-card-title>
-        <v-card-text>
+        <v-card-text class="mt-4">
           Loading a new file will clear all your existing progress. Are you sure you want to continue?
         </v-card-text>
         <v-card-actions>
-          <v-btn text @click="cancelNewFile">Cancel</v-btn>
+          <v-btn outlined @click="cancelNewFile">Cancel</v-btn>
           <v-spacer></v-spacer>
           <v-btn color="error" @click="confirmNewFile">Confirm Progress Deletion</v-btn>
         </v-card-actions>
@@ -108,6 +107,7 @@
     <v-row justify="end" class="mt-4">
       <v-col cols="auto">
         <v-btn
+          large
           color="primary"
           @click="$router.push('/bulk-upload/meta-data-config')"
           :disabled="!isValid"

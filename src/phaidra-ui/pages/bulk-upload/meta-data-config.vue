@@ -141,6 +141,7 @@
       <v-row justify="space-between" class="mt-4">
         <v-col cols="auto">
           <v-btn
+            large
             text
             :to="steps[1].route"
           >
@@ -150,6 +151,7 @@
         </v-col>
         <v-col cols="auto">
           <v-btn
+            large
             color="primary"
             @click="proceed"
             :disabled="!allFieldsMapped"
