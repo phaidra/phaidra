@@ -91,7 +91,7 @@
     <!-- Add confirmation dialog when resetting csv file and user already was beyond step 1 -->
     <v-dialog v-model="showConfirmDialog" max-width="500">
       <v-card>
-        <v-card-title>Confirm New File Upload</v-card-title>
+        <v-card-title class="text-h6 font-weight-light white--text">Confirm New File Upload</v-card-title>
         <v-card-text class="mt-4">
           Loading a new file will clear all your existing progress. Are you sure you want to continue?
         </v-card-text>
