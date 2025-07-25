@@ -215,13 +215,13 @@ export default {
           self.templating = false
         }
         for (let s of self.form.sections) {
-          s.fields.forEach((f, index) => {
+          for (let f of s.fields) {
+            if(f.id.includes('mime-type_')) {
+              f.value = ''
+            }
             f.removable = true
             f.configurable = true
-            if(f.id.includes('mime-type_')) {
-              s.fields.splice(index, 1);
-            }
-          });
+          }
         }
         if (response.data.template.rights) {
           self.rights = response.data.template.rights
