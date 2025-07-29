@@ -1,6 +1,9 @@
 export default {
   getOrgUnitsTerms (orgunits, units, parent) {
     for (let u of units) {
+      if(u.subunits && u.subunits.length > 0) {
+        u.hasChildren = true
+      }
       let clone = JSON.parse(JSON.stringify(u))
       clone['subunits'] = null
       orgunits.push(clone)

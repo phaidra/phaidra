@@ -6,7 +6,7 @@
         :required="required"
         v-on:input="handleInput($event)"
         :rules="required ? [ v => !!v || 'Required'] : []"
-        :items="vocabularies['orgunits'].terms"
+        :items="vocabularies['orgunits'].terms.filter(element => !element.hasChildren)"
         :item-value="'@id'"
         :loading="loading"
         :filter="autocompleteFilterInfix"
