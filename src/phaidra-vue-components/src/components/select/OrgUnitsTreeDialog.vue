@@ -3,7 +3,7 @@
     <v-card :loading="loading">
       <v-card-title class="title font-weight-light white--text">{{ $t('Select an organizational unit') }}</v-card-title>
       <v-card-text class="mt-4">
-        <v-treeview :items="orgunits" item-children="subunits" item-key="@id" hoverable activatable @update:active="selectUnit($event)"></v-treeview>
+        <v-treeview :open="orgunits && orgunits.length > 0 ? [orgunits[0]['@id']] : []" :items="orgunits" item-children="subunits" item-key="@id" hoverable activatable @update:active="selectUnit($event)"></v-treeview>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
