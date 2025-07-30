@@ -1342,5 +1342,7 @@
   "Share link successfully deleted": "Link pubblico cancellato.",
   "Object list successfully updated": "Elenco di preferiti aggiornato.",
   "Copy to clipboard": "Copia",
-  "Other identifier": "Altro identificatore"
+  "Other identifier": "Altro identificatore",
+  "Disable Association parent selection": "Disabilita la selezione di unità superiori",
+  "Disable parent selection in Association dropdown and in tree view.": "Disabilita la selezione di unità superiori nell'elenco e nel diagramma ad albero."
 }

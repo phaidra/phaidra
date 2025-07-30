@@ -351,7 +351,9 @@ export default {
         self.form.sections[0].fields.push(role);
 
         self.form.sections[0].fields.push(fields.getField("oefos-subject"));
-        self.form.sections[0].fields.push(fields.getField("association"));
+        let association = fields.getField("association");
+        association.isParentSelectionDisabled = this.instanceconfig.isParentSelectionDisabled;
+        self.form.sections[0].fields.push(association);
 
         let lic = fields.getField("license");
         lic.showValueDefinition = true;

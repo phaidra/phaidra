@@ -37,6 +37,12 @@ export default {
       loading: false
     }
   },
+  props: {
+    isParentSelectionDisabled: {
+      type: Boolean,
+      default: false
+    }
+  },
   methods: {
     open: async function () {
       this.dialog = true
@@ -55,10 +61,14 @@ export default {
       }
     },
     selectUnit: function (item) {
-      if(!item[0].subunits || item[0].subunits.length === 0) {
-        this.$emit('unit-selected', item[0]['@id'])
-        this.dialog = false
+      if(item.length === 0) {
+        return
       }
+      if (this.isParentSelectionDisabled && item[0].subunits?.length > 0) {
+        return
+      }
+      this.$emit('unit-selected', item[0]['@id'])
+      this.dialog = false
     }
   }
 }
