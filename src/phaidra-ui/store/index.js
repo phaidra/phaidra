@@ -30,6 +30,7 @@ export const mutations = {
       'phone', 
       'email', 
       'oaidataprovider',
+      'googlesiteverificationcode',
       'languages', 
       'owneremailoverride', 
       'showdeletebutton',
