@@ -1639,6 +1639,7 @@ export default {
       newRole.identifierType = 'ids:orcid'
       newRole.firstname = f.firstname
       newRole.lastname = f.lastname
+      newRole.isParentSelectionDisabled = f.isParentSelectionDisabled
       newRole.role = f.role
       newRole.showDefinitions = f.showDefinitions
       arr.splice(arr.indexOf(f), 1, newRole)

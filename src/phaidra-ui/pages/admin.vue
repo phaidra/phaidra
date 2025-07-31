@@ -267,6 +267,15 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
+                      :label="$t('Disable Association parent selection')"
+                      v-model="parsedPublicConfigData.isParentSelectionDisabled"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Disable parent selection in Association dropdown and in tree view.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-checkbox
                       :label="$t('Enable Add Annotation')"
                       v-model="parsedPublicConfigData.addannotation"
                     ></v-checkbox>

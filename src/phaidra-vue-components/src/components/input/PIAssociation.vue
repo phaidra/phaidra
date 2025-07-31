@@ -6,7 +6,7 @@
         :required="required"
         v-on:input="handleInput($event)"
         :rules="required ? [ v => !!v || 'Required'] : []"
-        :items="vocabularies['orgunits'].terms"
+        :items="getOrgUnitsTerms"
         :item-value="'@id'"
         :loading="loading"
         :filter="autocompleteFilterInfix"
@@ -50,7 +50,7 @@
         </v-list>
       </v-menu>
     </v-col>
-    <org-units-tree-dialog ref="orgunitstreedialog" @unit-selected="handleInput(getTerm('orgunits', $event))"></org-units-tree-dialog>
+    <org-units-tree-dialog ref="orgunitstreedialog" :isParentSelectionDisabled="isParentSelectionDisabled" @unit-selected="handleInput(getTerm('orgunits', $event))"></org-units-tree-dialog>
   </v-row>
 </template>
 
@@ -64,6 +64,11 @@ export default {
   mixins: [fieldproperties, vocabulary],
   components: {
     OrgUnitsTreeDialog
+  },
+  computed: {
+    getOrgUnitsTerms: function () {
+      return !this.isParentSelectionDisabled ? this.vocabularies['orgunits'].terms : this.vocabularies['orgunits'].terms.filter(element => !element.hasChildren)
+    }
   },
   methods: {
     handleInput: function (unit) {
@@ -104,7 +109,11 @@ export default {
     showIds: {
       type: Boolean,
       default: false
-    }
+    },
+    isParentSelectionDisabled: {
+      type: Boolean,
+      default: false
+    },
   },
   data () {
     return {
