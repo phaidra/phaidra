@@ -674,6 +674,7 @@ sub startup {
 
       $writer->post('collection/:pid/members/remove')                        ->to('collection#remove_collection_members');
       $writer->post('collection/:pid/members/add')                           ->to('collection#add_collection_members');
+      $r->get('collection/template/:templateName')                           ->to('collection#get_collection_template');
       $writer->post('collection/:pid/members/order')                         ->to('membersorder#post');
       $writer->post('collection/:pid/members/:itempid/order/:position')      ->to('membersorder#order_object_member');
 
@@ -849,6 +850,7 @@ sub startup {
       $proxyauth->post('collection/create')                                     ->to('collection#create');
       $proxyauth->post('collection/:pid/members/remove')                        ->to('collection#remove_collection_members');
       $proxyauth->post('collection/:pid/members/add')                           ->to('collection#add_collection_members');
+      $r->get('collection/template/:templateName')                              ->to('collection#get_collection_template');
       $proxyauth->post('collection/:pid/members/order')                         ->to('membersorder#post');
       $proxyauth->post('collection/:pid/members/:itempid/order/:position')      ->to('membersorder#order_object_member');
 
