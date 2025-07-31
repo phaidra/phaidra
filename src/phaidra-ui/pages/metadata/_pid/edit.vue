@@ -45,7 +45,6 @@ export default {
       for (let s of form.sections) {
         for (let f of s.fields) {
           if(f.predicate === "rdax:P00009" || f.predicate === "role") {
-            console.log('f', f)
             f.isParentSelectionDisabled = this.instanceconfig.isParentSelectionDisabled
           }
           if (f.predicate === "edm:rights") {
