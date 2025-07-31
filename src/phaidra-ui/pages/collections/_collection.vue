@@ -3,7 +3,7 @@
         <runtimetemplate :template="collectionTemplate" />
     </div>
     <div v-else-if="loaded">
-        This collection template does not exist...
+        <h2 class="font-weight-light">{{$t('This collection template does not exist...')}}</h2>
         <p>{{$t('Return to')}} <NuxtLink to="/">home page</NuxtLink>.</p>
     </div>
     <div v-else>
