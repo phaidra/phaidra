@@ -552,6 +552,7 @@ sub startup {
   $r->get('list/token/:token')                      ->to('lists#get_token_list');
 
   $r->get('config/public')                          ->to('config#get_public_config');
+  $r->get('cms/template/:templateName')             ->to('cms#get_template');
 
   if ($self->app->config->{fedora}->{version} >= 6) {
     my $ext_creds = $r->under('/')->to('authentication#extract_credentials', creds_must_be_present => 0);
