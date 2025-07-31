@@ -123,7 +123,6 @@ export default {
       this.loading = true
       try {
         let settingResponse = await this.$axios.get("/config/public");
-        console.log(settingResponse?.data?.public_config)
         if(settingResponse?.data?.public_config){
           if(settingResponse?.data?.public_config?.faviconText){
             this.setFavIconText(settingResponse?.data?.public_config?.faviconText)
