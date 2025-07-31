@@ -181,19 +181,26 @@ sub get_members {
   }
   else {
     $c->app->log->debug("[cache miss] $cachekey");
-
-    # get members
-    my $sr = $search_model->triples($c, "<info:fedora/$pid> <info:fedora/fedora-system:def/relations-external#hasCollectionMember> *");
-    push @{$res->{alerts}}, @{$sr->{alerts}} if scalar @{$sr->{alerts}} > 0;
-    $res->{status} = $sr->{status};
-    if ($sr->{status} ne 200) {
-      return $sr;
-    }
-
     my %members;
-    foreach my $statement (@{$sr->{result}}) {
-      @{$statement}[2] =~ m/^\<info:fedora\/([a-zA-Z\-]+:[0-9]+)\>$/g;
-      $members{$1} = {'pos' => undef};
+    # get members
+    if ($c->app->config->{fedora}->{version} >= 6) {
+      my $fedora_model = PhaidraAPI::Model::Fedora->new;
+      my $fres         = $fedora_model->getObjectProperties($c, $pid);
+      foreach my $member (@{$fres->{hasmember}}) {
+        $members{$member} = {'pos' => undef};
+      }
+    } else {
+      my $sr = $search_model->triples($c, "<info:fedora/$pid> <info:fedora/fedora-system:def/relations-external#hasCollectionMember> *");
+      push @{$res->{alerts}}, @{$sr->{alerts}} if scalar @{$sr->{alerts}} > 0;
+      $res->{status} = $sr->{status};
+      if ($sr->{status} ne 200) {
+        return $sr;
+      }
+
+      foreach my $statement (@{$sr->{result}}) {
+        @{$statement}[2] =~ m/^\<info:fedora\/([a-zA-Z\-]+:[0-9]+)\>$/g;
+        $members{$1} = {'pos' => undef};
+      }
     }
 
     # check order definition

@@ -45,6 +45,7 @@
     <v-row justify="space-between" class="mt-4">
       <v-col cols="auto">
         <v-btn
+          large
           :disabled="isUploading || isUploadComplete"
           text
           :to="steps[3].route"
@@ -55,6 +56,7 @@
       </v-col>
       <v-col cols="auto">
         <v-btn
+          large
           color="primary"
           :loading="isUploading"
           :disabled="!isLoggedIn || isUploading || isUploadComplete"
@@ -77,8 +79,8 @@
       max-width="500"
     >
       <v-card>
-        <v-card-title>Upload Error</v-card-title>
-        <v-card-text>
+        <v-card-title class="text-h6 font-weight-light white--text">Upload Error</v-card-title>
+        <v-card-text class="mt-4">
           <p class="mb-2"><strong>Row:</strong> {{ errorDialog.row }}</p>
           <p class="mb-0"><strong>Error:</strong> {{ errorDialog.error }}</p>
         </v-card-text>

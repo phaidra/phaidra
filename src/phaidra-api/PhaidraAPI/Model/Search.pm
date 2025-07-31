@@ -643,6 +643,16 @@ sub get_last_modified_date {
 
   my $res = {alerts => [], status => 200};
 
+  if ($c->app->config->{fedora}->{version} >= 6) {
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+      my $r            = $fedora_model->getObjectProperties($c, $pid);
+      if ($r->{status} ne 200) {
+        return $r;
+      }
+      $res->{lastmodifieddate} = $r->{modified};
+      return $res;
+  }
+
   my $sr = $self->triples($c, "<info:fedora/$pid> <info:fedora/fedora-system:def/view#lastModifiedDate> *");
   push @{$res->{alerts}}, @{$sr->{alerts}} if scalar @{$sr->{alerts}} > 0;
   $res->{status} = $sr->{status};

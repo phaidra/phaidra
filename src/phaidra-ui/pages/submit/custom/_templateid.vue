@@ -216,6 +216,9 @@ export default {
         }
         for (let s of self.form.sections) {
           for (let f of s.fields) {
+            if(f.id.includes('mime-type_')) {
+              f.value = ''
+            }
             f.removable = true
             f.configurable = true
           }

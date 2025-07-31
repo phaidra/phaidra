@@ -12,7 +12,7 @@
           <v-chip class="mr-2" color="error" outlined>
             {{ progress.failed }} Failed
           </v-chip>
-          <v-chip color="primary" outlined>
+          <v-chip color="info" outlined>
             {{ progress.total - progress.completed }} Remaining
           </v-chip>
         </div>

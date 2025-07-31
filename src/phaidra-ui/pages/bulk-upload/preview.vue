@@ -73,6 +73,7 @@
       <v-row justify="space-between" class="mt-4" v-if="isInitialized || isError">
         <v-col cols="auto">
           <v-btn
+            large
             text
             :to="steps[2].route"
           >
@@ -82,6 +83,7 @@
         </v-col>
         <v-col cols="auto">
           <v-btn
+            large
             :disabled="isError"
             color="primary"
             @click="proceed"

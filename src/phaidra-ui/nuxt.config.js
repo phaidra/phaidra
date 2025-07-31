@@ -98,8 +98,8 @@ export default {
   //   defaultLocale: process.env.PHAIDRA_DEFAULT_LANGUAGE
   // },
   vuetify: {
-    customVariables: ['~/assets/variables.scss'], // Only works if treeshaking is enabled
-    treeShake: true, // If enabled, Vuetify components in runtime templates won't be available!
+    customVariables: ['~/assets/variables.scss'], // Only works if treeshake is enabled
+    treeShake: true, // If enabled, Vuetify components used in runtime templates need to be imported in the plugins/vuetify-runtime-components.js file
     optionsPath: './vuetify.options.js'
   },
   privateRuntimeConfig: {
