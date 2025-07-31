@@ -102,6 +102,12 @@ export default {
       { name: 'theme-color', content: this.$vuetify.theme.dark ? this.$config.darkPrimaryColor : this.$config.primaryColor }
       ]
     };
+    if (this.instanceconfig.googlesiteverificationcode) {
+      metaInfo.meta.push({
+        name: 'google-site-verification', 
+        content: this.instanceconfig.googlesiteverificationcode
+      })
+    }
     return metaInfo;
   },
   watch: {
