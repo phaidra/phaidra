@@ -977,6 +977,9 @@
                             <span v-if="id.label" class="caption text--secondary">
                               {{ $t(id.label) }}
                             </span>
+                            <span v-else class="caption text--secondary">
+                              {{ $t('Other identifier') }}
+                            </span>
                             <br />
                             <a v-if="id.value.startsWith('http')" :href="id.value">{{ id.value }}</a>
                             <span v-else>{{ id.value }}</span>
