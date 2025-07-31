@@ -335,8 +335,8 @@
         </v-card-text>
       </v-card>
     </v-col>
-    <org-units-tree-dialog ref="organizationstreedialog" @unit-selected="handleInput(getTerm('orgunits', $event), 'organizationPath', 'input-organization-select')"></org-units-tree-dialog>
-    <org-units-tree-dialog ref="affiliationstreedialog" @unit-selected="handleInput(getTerm('orgunits', $event), 'affiliationPath', 'input-affiliation-select')"></org-units-tree-dialog>
+    <org-units-tree-dialog :isParentSelectionDisabled="isParentSelectionDisabled" ref="organizationstreedialog" @unit-selected="handleInput(getTerm('orgunits', $event), 'organizationPath', 'input-organization-select')"></org-units-tree-dialog>
+    <org-units-tree-dialog :isParentSelectionDisabled="isParentSelectionDisabled" ref="affiliationstreedialog" @unit-selected="handleInput(getTerm('orgunits', $event), 'affiliationPath', 'input-affiliation-select')"></org-units-tree-dialog>
   </v-row>
 </template>
 
@@ -566,6 +566,10 @@ export default {
     enableAffTree: {
       type: Boolean,
       default: true
+    },
+    isParentSelectionDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -585,6 +589,9 @@ export default {
     },
     orgunits: function () {
       let units = this.vocabularies['orgunits'].terms
+      if (this.isParentSelectionDisabled) {
+        units = units.filter(element => !element.hasChildren)
+      }
       let groups = []
       for (let u of units) {
         if (u['phaidra:orgGroupOrdinal']) {
