@@ -13,7 +13,6 @@
       @input-identifier="value => handleInput(value, 'Identifier')"
       @input-identifier-type="value => handleInput(value, 'Identifier Type')"
       :disabled="disabled"
-      :class="{ 'grey-input': disabled }"
     ></component>
   </div>
 </template>
@@ -83,7 +82,4 @@ export default {
 </script>
 
 <style scoped>
-.grey-input :deep(.v-input__slot) {
-  background-color: #f5f5f5 !important;
-}
 </style> 
