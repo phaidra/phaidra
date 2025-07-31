@@ -745,7 +745,7 @@
                     <v-col>
                       <v-dialog v-if="addbutton && (s.addbutton != false)" class="pb-4" v-model="s['adddialogue']" scrollable width="700px">
                         <template v-slot:activator="{ on }">
-                          <v-btn v-on="on" color="primary" large elevation="4" class="mb-4 font-weight-black">
+                          <v-btn v-on="on" color="primary" large elevation="4" class="my-4">
                             <v-icon class="mr-4" color="white" size="24" right dark>mdi-plus-circle</v-icon>{{ $t('Add metadata field') }}
                           </v-btn>
                         </template>
@@ -1639,6 +1639,7 @@ export default {
       newRole.identifierType = 'ids:orcid'
       newRole.firstname = f.firstname
       newRole.lastname = f.lastname
+      newRole.isParentSelectionDisabled = f.isParentSelectionDisabled
       newRole.role = f.role
       newRole.showDefinitions = f.showDefinitions
       arr.splice(arr.indexOf(f), 1, newRole)

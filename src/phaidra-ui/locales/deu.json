@@ -1214,7 +1214,7 @@
     "Analog object": "Analoges Objekt",
     "Wrong file format.": "Falsches Dateityp.",
     "LICENSE_DISCLAIMER": "<b>Haftungsausschluss</b><br/>Der Diensteanbieter (PHAIDRA, {institution}) und Creative Commons sind nicht Partei der hier auszuwählenden Lizenzverträge. Durch Ihr Angebot, Ihren Schutzgegenstand einer Creative Commons Lizenz zu unterstellen und die Annahme Ihres Angebots durch andere Nutzer kommt ein Vertragsverhältnis zwischen Ihnen und dem jeweiligen Nutzer zustande. Daran ist weder der Diensteanbieter noch Creative Commons beteiligt. Dem Diensteanbieter und Creative Commons erwachsen daraus keinerlei Rechte und Pflichten.<br/>Weder der Diensteanbieter ist eine Rechtsanwaltsgesellschaft noch Creative Commons. Sie leisten keine Rechtsberatung. Sie erbringen die hier stehenden Informationen ohne Gewähr und übernehmen keine Haftung für eventuelle Schäden, die sich aus ihrem Gebrauch ergeben.",
-    "LICENSE_NOTE": "<b>Hinweis:</b> Wenn Sie die Option Alle Rechte vorbehalten wählen, können Sie dies später ändern und eine offene Lizenz (Creative Commons, MIT usw.) vergeben. Wenn Sie jedoch eine offene Lizenz wählen, kann diese nachträglich nicht mehr geändert werden.",
+    "LICENSE_NOTE": "<b>Hinweis:</b> Wenn Sie die Option <i>Alle Rechte vorbehalten</i> wählen, können Sie dies später ändern und eine <i>offene</i> Lizenz (Creative Commons, MIT usw.) vergeben. Wenn Sie jedoch eine <i>offene</i> Lizenz wählen, kann diese nachträglich nicht mehr geändert werden.",
     "PHAIDRA - University of Vienna": "PHAIDRA - Universität Wien",
     "Citable links": "zitierfähige Links",
     "Other links": "weitere Links",
@@ -1295,5 +1295,7 @@
     "Search Button": "Suchen",
     "Error: Request failed with status code 500" : "Auf dem Server ist ein interner Fehler aufgetreten.",
     "Other identifier": "Anderer Identifikator",
-    "This collection template does not exist...": "Diese Collection-Vorlage existiert nicht..."
+    "This collection template does not exist...": "Diese Collection-Vorlage existiert nicht...",
+    "Disable Association parent selection": "Deaktiviere Auswahl von übergeordneten Einheiten",
+    "Disable parent selection in Association dropdown and in tree view.": "Deaktiviere Auswahl von übergeordneten Einheiten in der Auswahlliste und im Baum."
   }

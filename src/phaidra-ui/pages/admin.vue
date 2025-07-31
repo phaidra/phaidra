@@ -112,6 +112,15 @@
                   </v-col>
                   <v-col cols="6" class="mt-6">{{ $t('Used in the EDM schema in OAI-PMH.') }}</v-col>
                 </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      label="Google site verification code"
+                      v-model="parsedPublicConfigData.googlesiteverificationcode"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t('Use to register the site in your Google Search Console') }}</v-col>
+                </v-row>
               </v-container>
             </v-tab-item>
 
@@ -254,6 +263,15 @@
                     ></v-checkbox>
                   </v-col>
                   <v-col cols="6" class="mt-4">{{ $t("Enable tab for 'Feedback' in Upload form.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-checkbox
+                      :label="$t('Disable Association parent selection')"
+                      v-model="parsedPublicConfigData.isParentSelectionDisabled"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Disable parent selection in Association dropdown and in tree view.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>

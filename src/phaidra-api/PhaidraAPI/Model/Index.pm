@@ -2606,7 +2606,56 @@ sub _add_uwm_index {
     }
   }
 
+  # padova: uwmetadata organisation association
+  my $uwm_organisations = $self->_get_uwm_organisations($c, $uwm);
+  #$c->app->log->debug("XXXXXXXXXXXX UWM ORGANISATIONS ".$c->app->dumper($uwm_organisations));
+  #$index->{"uwm_association_json"} = b(encode_json($uwm_organisations))->decode('UTF-8') if (@{$uwm_organisations});  
+  my %foundAssIds;
+  if (@{$uwm_organisations}) {
+    for my $org (@{$uwm_organisations}) {      
+      my $faculty = $org->{'faculty'} || '';
+      unless (exists($foundAssIds{$faculty})) {
+        if ($faculty ne '') {          
+          push @{$index->{"uwm_association_id"}}, $faculty;
+          $foundAssIds{$faculty} = 1;
+        }
+      }
+      my $department = $org->{'department'} || '';
+      unless (exists($foundAssIds{$department})) {
+        if ($department ne '') {            
+          push @{$index->{"uwm_association_id"}}, $department;
+          $foundAssIds{$department} = 1;
+        }                     
+      }
+    }
+  }
+
   return $res;
+}
+
+# padova
+sub _get_uwm_organisations {
+  my ($self, $c, $uwm) = @_;
+
+  my $org = $self->_find_first_uwm_node_rec($c, "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0", "organization", $uwm);
+  my @orgassignments_json;
+  for my $ch (@{$org->{children}}) {
+    if ($ch->{xmlname} eq "orgassignment") {
+      my %orgassignment_json;
+      for my $n (@{$ch->{children}}) {
+        if (($n->{xmlname} eq "faculty")) {
+          $n->{ui_value} =~ /([^\/]+$)/; # remove xmlns
+          $orgassignment_json{faculty} = $1 if ($1 ne '');
+        }
+        if (($n->{xmlname} eq "department")) {
+          $n->{ui_value} =~ /([^\/]+$)/; # remove xmlns
+          $orgassignment_json{department} = $1 if ($1 ne '');
+        }
+      }
+      push @orgassignments_json, \%orgassignment_json;
+    }
+  }
+  return \@orgassignments_json;
 }
 
 sub _get_uwm_educational {
