@@ -265,16 +265,6 @@ sub get_members {
 
 }
 
-sub get_collection_template {
-
-  my $self = shift;
-  my $c = shift;
-  my $templateName = shift;
-
-  my $template = $c->mongo->get_collection('collectiontemplates')->find_one({ templateName => $templateName });
-  return $template;
-}
-
 sub get_oldest_member {
 
   my $self    = shift;

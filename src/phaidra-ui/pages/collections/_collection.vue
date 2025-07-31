@@ -28,7 +28,7 @@ export default {
     methods: {
         getCollection() {
             try {
-                this.$axios.get(`/collection/template/${this.templateName}`).then(response => {
+                this.$axios.get(`/cms/template/${this.templateName}`).then(response => {
                     this.collectionTemplate = response?.data?.template?.templateContent
                     this.loaded = true
                 })

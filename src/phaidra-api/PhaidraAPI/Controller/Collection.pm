@@ -89,20 +89,6 @@ sub descendants_rec {
   }
 }
 
-sub get_collection_template {
-  my $self = shift;
-
-  my $templateName = $self->stash('templateName');
-  my $res = {alerts => [], status => 200};
-
-  my $model = PhaidraAPI::Model::Collection->new;
-  my $modelres = $model->get_collection_template($self, $templateName);
-
-  $res->{template} = $modelres;
-
-  $self->render(json => $res, status => $res->{status});
-}
-
 sub add_collection_members {
 
   my $self = shift;
