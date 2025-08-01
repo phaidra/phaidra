@@ -444,6 +444,8 @@ services:
       PHAIDRADB: "${PHAIDRADB:-phaidradb}"
       PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
       PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
+      FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
+      IMAGESERVER_ROOT_PATH: "/mnt/converted_images"
     depends_on: [mariadb-fedora, mariadb-phaidra, mongodb-phaidra, fedora]
     profiles: ["demo-local", "ssl-local", "shib-local"]
 
@@ -467,6 +469,8 @@ services:
       MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
       MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
       PHAIDRADB: "${PHAIDRADB:-phaidradb}"
+      FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-}"
+      IMAGESERVER_ROOT_PATH: "s3_cache/converted_images"
     depends_on: [mariadb-fedora, mariadb-phaidra, mongodb-phaidra, fedora-s3]
     profiles: ["demo-s3", "ssl-s3", "shib-s3"]
 
@@ -1022,6 +1026,8 @@ services:
       MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
       MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
       PHAIDRADB: "${PHAIDRADB:-phaidradb}"
+      FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
+      IMAGESERVER_ROOT_PATH: "/mnt/converted_images"
     depends_on: [mariadb-fedora-dev, mariadb-phaidra-dev, mongodb-phaidra-dev, fedora-local-dev]
     profiles: ["demo-local-dev", "ssl-local-dev", "shib-local-dev"]
 
@@ -1172,6 +1178,8 @@ services:
       MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
       MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
       PHAIDRADB: "${PHAIDRADB:-phaidradb}"
+      FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-}"
+      IMAGESERVER_ROOT_PATH: "s3_cache/converted_images"
     depends_on: [mariadb-fedora-dev, mariadb-phaidra-dev, mongodb-phaidra-dev, fedora-s3-dev]
     profiles: ["demo-s3-dev", "ssl-s3-dev", "shib-s3-dev"]
   
