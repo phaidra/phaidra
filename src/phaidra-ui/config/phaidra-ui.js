@@ -18,7 +18,7 @@ export default {
         citationstyles: 'https://citation.doi.org/styles/'
       },
       ror: {
-        baseurl: 'api.ror.org'
+        baseurl: 'api.ror.org/v1'
       },
       sherparomeo: {
         url: 'http://www.sherpa.ac.uk/romeo/api29.php',
