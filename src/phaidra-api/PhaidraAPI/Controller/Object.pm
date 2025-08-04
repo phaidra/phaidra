@@ -659,6 +659,7 @@ sub preview {
       $self->stash(baseurl  => $self->config->{baseurl});
       $self->stash(basepath => $self->config->{basepath});
       $self->stash(pid      => $pid);
+      $self->stash(lang     => $lang);
 
       my $u_model = PhaidraAPI::Model::Util->new;
       $u_model->track_action($self, $pid, 'preview');
