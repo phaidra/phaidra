@@ -155,7 +155,7 @@ export default {
         } else {
           await this.$store.dispatch('login', this.credentials)
           if (this.signedin) {
-            this.$router.push(this.localeLocation({path: '/'}))
+            this.$router.push(this.localeLocation({path: localStorage.getItem('redirect') || '/'}))
           }
         }
       } catch (error) {
