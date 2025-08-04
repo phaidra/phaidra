@@ -401,24 +401,27 @@ sub getLDAPEntryForUser {
   my $filter = $c->app->config->{authentication}->{ldap}->{usersearchfilter};
   $filter =~ s/\{0\}/$username/;
 
-  my @user_search_base = @{$c->app->config->{authentication}->{ldap}->{usersearchbase}};
+  my @user_search_bases = @{$c->app->config->{authentication}->{ldap}->{usersearchbase}};
 
-  $c->app->log->info("Searching for user $username in searchbase @user_search_base.");
+  foreach my $user_search_base (@user_search_bases){
 
-  my $ldapSearch = $ldap->search(base => @user_search_base, filter => $filter);
+    $c->app->log->info("Searching for user $username in searchbase $user_search_base.");
 
-  die "There was an error during search:\n\t" . ldap_error_text($ldapSearch->code) if $ldapSearch->code;
+    my $ldapSearch = $ldap->search(base => $user_search_base, filter => $filter);
 
-  while (my $ldapEntry = $ldapSearch->pop_entry()) {
-    foreach my $attr (@{$ldapEntry->{'asn'}->{'attributes'}}) {
-      my $attrtype = $attr->{'type'};
-      my @attvals  = @{$attr->{'vals'}};
-      foreach my $val (@attvals) {
-        if ($attrtype eq 'uid') {
-          if ($val eq $username) {
+    die "There was an error during search:\n\t" . ldap_error_text($ldapSearch->code) if $ldapSearch->code;
 
-            # $c->app->log->debug("getLDAPEntryForUser:\n".$c->app->dumper($ldapEntry));
-            return $ldapEntry;
+    while (my $ldapEntry = $ldapSearch->pop_entry()) {
+      foreach my $attr (@{$ldapEntry->{'asn'}->{'attributes'}}) {
+        my $attrtype = $attr->{'type'};
+        my @attvals  = @{$attr->{'vals'}};
+        foreach my $val (@attvals) {
+          if ($attrtype eq 'uid') {
+            if ($val eq $username) {
+
+              # $c->app->log->debug("getLDAPEntryForUser:\n".$c->app->dumper($ldapEntry));
+              return $ldapEntry;
+            }
           }
         }
       }
