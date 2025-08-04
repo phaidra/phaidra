@@ -471,22 +471,7 @@
             >
           </v-row>
           <v-row justify="center" v-if="showPreview">
-            <template v-if="(objectInfo.cmodel === 'Book') && (objectInfo.datastreams.includes('UWMETADATA'))">
-              <v-btn
-                large
-                raised
-                color="primary"
-                :href="
-                  instanceconfig.fedora +
-                  '/objects/' +
-                  objectInfo.pid +
-                  '/methods/bdef:Book/view'
-                "
-                target="_blank"
-                >{{ $t("Open in Bookviewer") }}</v-btn
-              >
-            </template>
-          <template v-else-if="(objectInfo.cmodel === 'Book') && (objectInfo.datastreams.includes('IIIF-MANIFEST'))">
+          <template v-if="(objectInfo.cmodel === 'Book') && (objectInfo.datastreams.includes('IIIF-MANIFEST'))">
               <v-btn
                 large
                 raised
