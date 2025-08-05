@@ -4,7 +4,7 @@
     <v-col :md="valueColMd" cols="12">
       <template v-for="(publisher, i) in o['bf:agent']">
         <template v-if="localizedOrgUnit(publisher)">
-          <a :key="'publname'+i" class="valuefield" :href="localizedOrgUnit(publisher).id" target="_blank">{{ localizedOrgUnit(publisher).value }}</a>
+          <a :key="'publname'+i" class="valuefield" :href="localizedOrgUnit(publisher).id" target="_blank">{{ localizedOrgUnit(publisher).value || localizedOrgUnit(publisher).name }}</a>
         </template>
         <template v-else v-for="(publishername, i) in publisher['schema:name']">
           <span :key="'publname'+i" class="valuefield">{{ publishername['@value'] }}</span>

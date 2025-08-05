@@ -24,6 +24,7 @@
             <v-col cols="2" v-show="!hideType">
               <v-radio-group v-model="typeModel" class="mt-0" @change="$emit('change-type', $event)">
                 <v-radio color="primary" :label="$t(instanceconfig.institution)" :value="'select'"></v-radio>
+                <v-radio color="primary" :label="'ROR'" :value="'ror'"></v-radio>
                 <v-radio color="primary" :label="$t('PUBLISHER_VERLAG')" :value="'other'"></v-radio>
               </v-radio-group>
             </v-col>
@@ -62,6 +63,11 @@
                     <v-icon v-if="enableOrgTree" @click="$refs.organizationstreedialog.open()">mdi-file-tree</v-icon>
                   </template>
                 </v-autocomplete>
+              </v-col>
+            </template>
+            <template v-if="typeModel === 'ror'">
+              <v-col cols="12" md="10">
+                <ror-search v-on:resolve="$emit('input-publisher-ror',$event)" :value="publisherRor" :text="publisherRorName" :errorMessages="publisherRorNameErrorMessages"></ror-search>
               </v-col>
             </template>
             <template v-else>
@@ -196,13 +202,15 @@ import { vocabulary } from '../../mixins/vocabulary'
 import xmlUtils from '../../utils/xml'
 import qs from 'qs'
 import OrgUnitsTreeDialog from '../select/OrgUnitsTreeDialog'
+import RorSearch from '../select/RorSearch'
 var iconv = require('iconv-lite')
 
 export default {
   name: 'p-i-bf-publication',
   mixins: [validationrules, fieldproperties, vocabulary, datepickerproperties],
   components: {
-    OrgUnitsTreeDialog
+    OrgUnitsTreeDialog,
+    RorSearch
   },
   props: {
     publisherName: {
@@ -214,6 +222,18 @@ export default {
     },
     publisherOrgUnit: {
       type: String
+    },
+    publisherRor: {
+      type: String
+    },
+    publisherRorName: {
+      type: String
+    },
+    publisherRorNameErrorMessages: {
+      type: Array
+    },
+    publisherSelectedName: {
+      type: Array
     },
     publisherOrgUnitErrorMessages: {
       type: Array
