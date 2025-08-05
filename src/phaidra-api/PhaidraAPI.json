@@ -179,9 +179,7 @@
             "server": "__OPENLDAP_HOST__",
             "port": "1389",
             "groupssearchbase": "ou=groups,__LDAP_ROOT__",
-            "usersearchbase": [
-                "ou=people,__LDAP_ROOT__"
-            ],
+            "usersearchbases": "ou=people,__LDAP_ROOT__",
             "usersearchfilter": "(&(uid={0})(objectClass=inetOrgPerson))",
             "useridattribute": "uid",
             "userattributes": "cn",

@@ -8,6 +8,7 @@ use Data::Dumper;
 use Storable 'dclone';
 use MongoDB;
 use Data::UUID;
+use Net::LDAPS;
 use Net::LDAP;
 use Net::LDAP::Util qw(ldap_error_text);
 use YAML::Syck;
@@ -388,6 +389,38 @@ sub get_ldap {
   return $ldap;
 }
 
+sub get_ldap_ext {
+  my $self = shift;
+  my $privateConfig = shift;
+  my $c    = shift;
+
+  my $res = {alerts => [], status => 500};
+
+  my $LDAP_SERVER   = $privateConfig->{ldapexthost};
+  my $LDAP_SSL_PORT = $privateConfig->{ldapextport};
+
+  my $ldap = Net::LDAPS->new($LDAP_SERVER, port => $LDAP_SSL_PORT);
+  unless (defined($ldap)) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => $!};
+    return $res;
+  }
+
+  # bind the security principal account
+  my $secDN   = $privateConfig->{ldapextprincipal};
+  my $secPASS = $privateConfig->{ldapextprincipalpassword};
+  my $ldapMsg = $ldap->bind($secDN, password => $secPASS);
+
+  if ($ldapMsg->is_error) {
+    $c->app->log->error("get_ldap error");
+    $c->app->log->error($ldapMsg->error);
+    unshift @{$res->{alerts}}, {type => 'error', msg => $ldapMsg->error};
+    return $res;
+  }
+
+  # $c->app->log->error("get_ldap_ext OK");
+  return $ldap;
+}
+
 sub getLDAPEntryForUser {
 
   my $self     = shift;
@@ -396,15 +429,41 @@ sub getLDAPEntryForUser {
 
   return undef unless (defined($username));
   
-  my $ldap = $self->get_ldap($c);
+  my $entry = $self->_getLDAPEntryForUser($c, $self->get_ldap($c), $c->app->config->{authentication}->{ldap}->{usersearchfilter}, $c->app->config->{authentication}->{ldap}->{usersearchbases}, $username);
 
-  my $filter = $c->app->config->{authentication}->{ldap}->{usersearchfilter};
+  my $confcol = $self->_get_config_col($c);
+  my $privateConfig = $confcol->find_one({"config_type" => "private"});
+  if ($privateConfig->{ldapextenable}) {
+    my $entry_ext = $self->_getLDAPEntryForUser($c, $self->get_ldap_ext($c), $privateConfig->{ldapextusersearchfilter}, $privateConfig->{ldapextusersearchbases}, $username);
+    if (defined $entry_ext) {
+      foreach my $attr (keys %$entry_ext) {
+        # Merge entry_ext into entry_local if entry_ext has attributes
+        # not already present in entry_local
+        $entry->{$attr} = $entry_ext->{$attr} unless exists $entry->{$attr};
+      }
+    }
+  }
+
+  return $entry;
+}
+
+sub _getLDAPEntryForUser {
+
+  my $self     = shift;
+  my $c        = shift;
+  my $ldap = shift;
+  my $filter = shift;
+  my $usersearchbases = shift;
+  my $username = shift;
+
+  return undef unless (defined($username));
+
   $filter =~ s/\{0\}/$username/;
 
-  my @user_search_bases = @{$c->app->config->{authentication}->{ldap}->{usersearchbase}};
+  my @user_search_bases = split(';', $usersearchbases);
 
   foreach my $user_search_base (@user_search_bases){
-
+    $user_search_base =~ s/^\s+|\s+$//g;
     $c->app->log->info("Searching for user $username in searchbase $user_search_base.");
 
     my $ldapSearch = $ldap->search(base => $user_search_base, filter => $filter);
@@ -419,7 +478,7 @@ sub getLDAPEntryForUser {
           if ($attrtype eq 'uid') {
             if ($val eq $username) {
 
-              # $c->app->log->debug("getLDAPEntryForUser:\n".$c->app->dumper($ldapEntry));
+              $c->app->log->debug("getLDAPEntryForUser $username in base $user_search_base:\n".$c->app->dumper($ldapEntry));
               return $ldapEntry;
             }
           }
@@ -430,84 +489,85 @@ sub getLDAPEntryForUser {
 
 }
 
-sub getUsersLDAPGroups {
-
+sub _getUsersLDAPGroups {
   my $self     = shift;
   my $c        = shift;
+  my $ldap = shift;
+  my $groupsearchbases = shift;
   my $username = shift;
 
   return undef unless (defined($username));
-  
-  my $ldap = $self->get_ldap($c);
 
   my $filter = "(&(memberUid={0})(objectClass=posixGroup))";
   $filter =~ s/\{0\}/$username/;
 
-  my $groups_search_base = $c->app->config->{authentication}->{ldap}->{groupssearchbase};
-
-  $c->app->log->info("Searching for groups of $username in searchbase $groups_search_base.");
-
-  my $ldapSearch = $ldap->search(base => $groups_search_base, filter => $filter);
-
-  die "There was an error during search:\n\t" . ldap_error_text($ldapSearch->code) if $ldapSearch->code;
+  my @groups_search_bases = split(';', $groupsearchbases);
 
   my @groups;
-  while (my $ldapEntry = $ldapSearch->pop_entry()) {
-    #$c->app->log->info("found: ".$c->app->dumper($ldapEntry));
-    foreach my $attr (@{$ldapEntry->{'asn'}->{'attributes'}}) {
-      my $attrtype = $attr->{'type'};
-      my @attvals  = @{$attr->{'vals'}};
-      if ($attrtype eq 'cn') {
-        foreach my $val (@attvals) {
-          push @groups, $val;
+  for my $groups_search_base (@groups_search_bases) {
+    $groups_search_base =~ s/^\s+|\s+$//g;
+
+    $c->app->log->info("Searching for local groups of $username in searchbase $groups_search_base.");
+
+    my $ldapSearch = $ldap->search(base => $groups_search_base, filter => $filter);
+
+    die "There was an error during search:\n\t" . ldap_error_text($ldapSearch->code) if $ldapSearch->code;
+
+    while (my $ldapEntry = $ldapSearch->pop_entry()) {
+      foreach my $attr (@{$ldapEntry->{'asn'}->{'attributes'}}) {
+        my $attrtype = $attr->{'type'};
+        my @attvals  = @{$attr->{'vals'}};
+        if ($attrtype eq 'cn') {
+          foreach my $val (@attvals) {
+            push @groups, $val;
+          }
         }
       }
     }
   }
 
   return \@groups;
-
 }
 
-sub authenticate() {
+sub getUsersLDAPGroups {
+  my $self     = shift;
+  my $c        = shift;
+  my $username = shift;
 
+  my $localGroups = $self->_getUsersLDAPGroups($c, $self->get_ldap($c), $c->app->config->{authentication}->{ldap}->{groupssearchbase}, $username);
+
+  my $confcol = $self->_get_config_col($c);
+  my $privateConfig = $confcol->find_one({"config_type" => "private"});
+  my $extGroups = [];
+  if ($privateConfig->{ldapextenable}) {
+    $extGroups = $self->_getUsersLDAPGroups($c, $self->get_ldap_ext($c), $privateConfig->{ldapextgroupssearchbases}, $username);
+  }
+
+  return [ @$localGroups, @$extGroups ];
+}
+
+sub _authenticate() {
   my $self      = shift;
   my $c         = shift;
+  my $LDAP_SERVER         = shift;
+  my $LDAP_PORT         = shift;
+  my $ldaps         = shift;
+  my $sf  = shift;
+  my $sp  = shift;
+  my $sc  = shift;
+  my $usersearchbases  = shift;
   my $username  = shift;
   my $password  = shift;
-  my $extradata = shift;    #not used
-
-  my $res = {alerts => [], status => 500};
-  for my $u (@{$c->app->config->{fedora}->{fedoraadmins}}) {
-    if (($u->{username} eq $username) && ($u->{password} eq $password)) {
-      $c->app->log->debug("auth: admin login");
-      $res->{status} = 200;
-      $c->stash({phaidra_auth_result => $res});
-      return $username;
-    }
-  }
-  for my $u (@{$c->app->config->{phaidra}->{users}}) {
-    if (($u->{username} eq $username) && ($u->{password} eq $password)) {
-      $c->app->log->debug("auth: yaml login");
-      $res->{status} = 200;
-      $c->stash({phaidra_auth_result => $res});
-      return $username;
-    }
-  }
-  if (($username eq $c->app->config->{phaidra}->{adminusername}) && ($password eq $c->app->config->{phaidra}->{adminpassword})) {
-
-    # this account is (should be) local to fedora so we cannot authenticate it against LDAP
-    $c->app->log->debug("auth: phaidraadmin login");
-    $res->{status} = 200;
-    $c->stash({phaidra_auth_result => $res});
-    return $username;
-  }
 
   $c->app->log->debug("auth: ldap login");
-  my $LDAP_SERVER   = $c->app->config->{authentication}->{ldap}->{server};
-  my $LDAP_SSL_PORT = $c->app->config->{authentication}->{ldap}->{port};
+  my $res = {alerts => [], status => 500};
 
-  my $ldap = Net::LDAP->new($LDAP_SERVER, port => $LDAP_SSL_PORT);
+  my $ldap;
+  if ($ldaps) {
+    $ldap = Net::LDAPS->new($LDAP_SERVER, port => $LDAP_PORT);
+  } else {
+    $ldap = Net::LDAP->new($LDAP_SERVER, port => $LDAP_PORT);
+  }
   unless (defined($ldap)) {
     unshift @{$res->{alerts}}, {type => 'error', msg => $!};
     $c->stash({phaidra_auth_result => $res});
@@ -515,16 +575,16 @@ sub authenticate() {
   }
 
   # first we have to find the DN (i think its differs for various account types)
-  my $sf = $c->app->config->{authentication}->{ldap}->{usersearchfilter};
-  my $sp = $c->app->config->{authentication}->{ldap}->{securityprincipal};
-  my $sc = $c->app->config->{authentication}->{ldap}->{securitycredentials};
   $sf =~ s/\{0\}/$username/g;
+  #$c->log->info("_authenticate filer $sf");
   if ($sp ne '') {
     $ldap->bind($sp, password => $sc);
   }
-  my @user_search_bases = @{$c->app->config->{authentication}->{ldap}->{usersearchbase}};
+  my @user_search_bases = split(';', $usersearchbases);
   my $dn;
   foreach my $user_search_base (@user_search_bases) {
+    $user_search_base =~ s/^\s+|\s+$//g;
+    $c->log->info("_authenticate searching $sf in searchbase $user_search_base");
     my $searchresult = $ldap->search(
       base   => $user_search_base,
       filter => $sf,
@@ -562,11 +622,76 @@ sub authenticate() {
   }
 }
 
+sub authenticate() {
+
+  my $self      = shift;
+  my $c         = shift;
+  my $username  = shift;
+  my $password  = shift;
+
+  my $res = {alerts => [], status => 500};
+  for my $u (@{$c->app->config->{fedora}->{fedoraadmins}}) {
+    if (($u->{username} eq $username) && ($u->{password} eq $password)) {
+      $c->app->log->debug("auth: admin login");
+      $res->{status} = 200;
+      $c->stash({phaidra_auth_result => $res});
+      return $username;
+    }
+  }
+  for my $u (@{$c->app->config->{phaidra}->{users}}) {
+    if (($u->{username} eq $username) && ($u->{password} eq $password)) {
+      $c->app->log->debug("auth: yaml login");
+      $res->{status} = 200;
+      $c->stash({phaidra_auth_result => $res});
+      return $username;
+    }
+  }
+  if (($username eq $c->app->config->{phaidra}->{adminusername}) && ($password eq $c->app->config->{phaidra}->{adminpassword})) {
+
+    # this account is (should be) local to fedora so we cannot authenticate it against LDAP
+    $c->app->log->debug("auth: phaidraadmin login");
+    $res->{status} = 200;
+    $c->stash({phaidra_auth_result => $res});
+    return $username;
+  }
+
+  my $localAuthRes = $self->_authenticate(
+    $c, 
+    $c->app->config->{authentication}->{ldap}->{server},
+    $c->app->config->{authentication}->{ldap}->{port},
+    0,
+    $c->app->config->{authentication}->{ldap}->{usersearchfilter},
+    $c->app->config->{authentication}->{ldap}->{securityprincipal},
+    $c->app->config->{authentication}->{ldap}->{securitycredentials},
+    $c->app->config->{authentication}->{ldap}->{usersearchbases},
+    $username, 
+    $password
+  );
+  return $localAuthRes if $localAuthRes;
+  
+  my $confcol = $self->_get_config_col($c);
+  my $privateConfig = $confcol->find_one({"config_type" => "private"});
+  if ($privateConfig->{ldapextenable}) {
+    return $self->_authenticate(
+      $c, 
+      $privateConfig->{ldapexthost},
+      $privateConfig->{ldapextport},
+      1,
+      $privateConfig->{ldapextusersearchfilter},
+      $privateConfig->{ldapextprincipal},
+      $privateConfig->{ldapextprincipalpassword},
+      $privateConfig->{ldapextusersearchbases},
+      $username, 
+      $password
+    );
+  }
+}
+
 sub get_name {
   my ($self, $c, $username) = @_;
 
   if ($username eq $c->app->config->{phaidra}->{adminusername}) {
-    return 'fedoraAdmin';
+    return $username;
   }
 
   my $entry = $self->getLDAPEntryForUser($c, $username);
@@ -705,7 +830,7 @@ sub get_user_data {
   }
 
   my $entry = $self->getLDAPEntryForUser($c, $username);
-  # $c->log->debug("ldap data: ".Dumper($entry));
+  $c->log->debug("ldap data: ".Dumper($entry));
 
   my $fname;
   my $lname;
@@ -794,14 +919,31 @@ sub search_user {
 }
 
 sub getLDAPEntriesForQuery {
-
   my ($self, $c, $query) = @_;
 
-  my $ldap = $self->get_ldap($c);
+  my $entry_local = $self->_getLDAPEntriesForQuery($c, $self->get_ldap($c), $c->app->config->{authentication}->{ldap}->{usersearchfilter}, $c->app->config->{authentication}->{ldap}->{usersearchbases}, $query);
 
-  my @user_search_bases = @{$c->app->config->{authentication}->{ldap}->{usersearchbase}};
+  my $confcol = $self->_get_config_col($c);
+  my $privateConfig = $confcol->find_one({"config_type" => "private"});
+  if ($privateConfig->{ldapextenable}) {
+    my $entry_ext = $self->_getLDAPEntriesForQuery($c, $self->get_ldap_ext($c), $privateConfig->{ldapextusersearchbases}, $privateConfig->{ldapextusersearchfilter}, $query);
+    if (defined $entry_ext) {
+      foreach my $attr (keys %$entry_ext) {
+        # Merge entry_ext into entry_local if entry_ext has attributes
+        # not already present in entry_local
+        $entry_local->{$attr} = $entry_ext->{$attr} unless exists $entry_local->{$attr};
+      }
+    }
+  }
+}
 
-  my $filter = $c->app->config->{authentication}->{ldap}->{usersearchfilter};
+sub _getLDAPEntriesForQuery {
+
+  my ($self, $c, $ldap, $filter, $usersearchbases, $query) = @_;
+
+  my @user_search_bases = split(';', $usersearchbases);
+  my $dn;
+
   $query = "*$query*";
   $filter =~ s/\{0\}/$query/;
 
@@ -809,6 +951,7 @@ sub getLDAPEntriesForQuery {
 
   my @persons;
   foreach my $user_search_base (@user_search_bases) {
+    $user_search_base =~ s/^\s+|\s+$//g;
 
     $c->log->info("Searching searchbase $user_search_base.");
 
