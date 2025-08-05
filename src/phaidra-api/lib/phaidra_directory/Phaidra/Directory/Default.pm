@@ -863,17 +863,16 @@ sub get_user_data {
         $email = decode('UTF-8', $val);
       }
       if ($attrtype eq 'ou') {
-        push @orgul1, $val;
+        push @orgul1, decode('UTF-8', $val);
       }
       if ($attrtype eq 'departmentNumber') {
-        push @orgul2, $val;
+        push @orgul2, decode('UTF-8', $val);
       }
       if ($attrtype eq 'description') {
         $description = decode('UTF-8', $val);
       }
     }
 
-    last if ($fname && $lname && $email);
   }
 
   my $ldapgroups = $self->getUsersLDAPGroups($c, $username);
