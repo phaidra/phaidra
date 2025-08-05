@@ -436,10 +436,10 @@ sub getLDAPEntryForUser {
   if ($privateConfig->{ldapextenable}) {
     my $entry_ext = $self->_getLDAPEntryForUser($c, $self->get_ldap_ext($c), $privateConfig->{ldapextusersearchfilter}, $privateConfig->{ldapextusersearchbases}, $username);
     if (defined $entry_ext) {
-      foreach my $attr (keys %$entry_ext) {
+      foreach my $attr (keys %{$entry_ext->{'asn'}->{'attributes'}}) {
         # Merge entry_ext into entry_local if entry_ext has attributes
         # not already present in entry_local
-        $entry->{$attr} = $entry_ext->{$attr} unless exists $entry->{$attr};
+        $entry->{'asn'}->{'attributes'}->{$attr} = $entry_ext->{'asn'}->{'attributes'}->{$attr} unless exists $entry_ext->{'asn'}->{'attributes'}->{$attr};
       }
     }
   }
@@ -839,6 +839,11 @@ sub get_user_data {
   my $orgul1;
   my $orgul2;
   my $description;
+
+  if ($entry->{'asn'}->{'attributes'}->{'uid'}) {
+    # if user was found in LDAP, it at least belongs to the organisation
+    $orgul1 = 'A-1';
+  }
 
   foreach my $attr (@{$entry->{'asn'}->{'attributes'}}) {
     my $attrtype = $attr->{'type'};
