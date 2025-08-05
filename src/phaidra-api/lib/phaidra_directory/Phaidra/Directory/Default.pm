@@ -391,9 +391,9 @@ sub get_ldap {
 
 sub get_ldap_ext {
   my $self = shift;
-  my $privateConfig = shift;
   my $c    = shift;
-
+  my $privateConfig = shift;
+  
   my $res = {alerts => [], status => 500};
 
   my $LDAP_SERVER   = $privateConfig->{ldapexthost};
@@ -434,13 +434,15 @@ sub getLDAPEntryForUser {
   my $confcol = $self->_get_config_col($c);
   my $privateConfig = $confcol->find_one({"config_type" => "private"});
   if ($privateConfig->{ldapextenable}) {
-    my $entry_ext = $self->_getLDAPEntryForUser($c, $self->get_ldap_ext($c), $privateConfig->{ldapextusersearchfilter}, $privateConfig->{ldapextusersearchbases}, $username);
-    if (defined $entry_ext) {
-      foreach my $attr (keys %{$entry_ext->{'asn'}->{'attributes'}}) {
-        # Merge entry_ext into entry_local if entry_ext has attributes
-        # not already present in entry_local
-        $entry->{'asn'}->{'attributes'}->{$attr} = $entry_ext->{'asn'}->{'attributes'}->{$attr} unless exists $entry_ext->{'asn'}->{'attributes'}->{$attr};
+    my $entry_ext = $self->_getLDAPEntryForUser($c, $self->get_ldap_ext($c, $privateConfig), $privateConfig->{ldapextusersearchfilter}, $privateConfig->{ldapextusersearchbases}, $username);
+    if ($entry_ext) {
+      if ($entry) {
+        for my $att (@{$entry->{'asn'}->{'attributes'}}) {
+          # Merge entry into entry_ext
+          push @{$entry_ext->{'asn'}->{'attributes'}}, $att;
+        }
       }
+      return $entry_ext;
     }
   }
 
@@ -478,7 +480,7 @@ sub _getLDAPEntryForUser {
           if ($attrtype eq 'uid') {
             if ($val eq $username) {
 
-              $c->app->log->debug("getLDAPEntryForUser $username in base $user_search_base:\n".$c->app->dumper($ldapEntry));
+              # $c->app->log->debug("getLDAPEntryForUser $username in base $user_search_base:\n".$c->app->dumper($ldapEntry));
               return $ldapEntry;
             }
           }
@@ -540,7 +542,9 @@ sub getUsersLDAPGroups {
   my $privateConfig = $confcol->find_one({"config_type" => "private"});
   my $extGroups = [];
   if ($privateConfig->{ldapextenable}) {
-    $extGroups = $self->_getUsersLDAPGroups($c, $self->get_ldap_ext($c), $privateConfig->{ldapextgroupssearchbases}, $username);
+    if ($privateConfig->{ldapextgroupssearchbases}) {
+      $extGroups = $self->_getUsersLDAPGroups($c, $self->get_ldap_ext($c, $privateConfig), $privateConfig->{ldapextgroupssearchbases}, $username);
+    }
   }
 
   return [ @$localGroups, @$extGroups ];
@@ -836,13 +840,13 @@ sub get_user_data {
   my $lname;
   my $email;
   my @affiliation;
-  my $orgul1;
-  my $orgul2;
+  my @orgul1;
+  my @orgul2;
   my $description;
 
-  if ($entry->{'asn'}->{'attributes'}->{'uid'}) {
+  if (exists($entry->{'asn'}->{'attributes'})) {
     # if user was found in LDAP, it at least belongs to the organisation
-    $orgul1 = 'A-1';
+    push @orgul1, 'A-1';
   }
 
   foreach my $attr (@{$entry->{'asn'}->{'attributes'}}) {
@@ -859,10 +863,10 @@ sub get_user_data {
         $email = decode('UTF-8', $val);
       }
       if ($attrtype eq 'ou') {
-        $orgul1 = $val;
+        push @orgul1, $val;
       }
       if ($attrtype eq 'departmentNumber') {
-        $orgul2 = $val;
+        push @orgul2, $val;
       }
       if ($attrtype eq 'description') {
         $description = decode('UTF-8', $val);
@@ -895,7 +899,7 @@ sub get_user_data {
 
   my $groups = $self->get_member_groups($c, $username);
 
-  my $res = {username => $username, firstname => $fname, lastname => $lname, ldapgroups => $ldapgroups, groups => $groups, email => $email, affiliation => \@affiliation, org_units_l1 => $orgul1, org_units_l2 => $orgul2, displayname => $description};
+  my $res = {username => $username, firstname => $fname, lastname => $lname, ldapgroups => $ldapgroups, groups => $groups, email => $email, affiliation => \@affiliation, org_units_l1 => \@orgul1, org_units_l2 => \@orgul2, displayname => $description};
 }
 
 sub is_superuser {
