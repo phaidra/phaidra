@@ -515,7 +515,7 @@
                   "
                   :style="
                     objectInfo.cmodel === 'Audio'
-                      ? 'height: 220px; width: 100%; border: 0px;'
+                      ? 'height: 270px; width: 100%; border: 0px;'
                       : objectInfo.cmodel === 'Container' ? 'height: 300px; width: 100%; border: 0px;' : 'height: 500px; width: 100%; border: 0px;'
                   "
                   scrolling="no"
