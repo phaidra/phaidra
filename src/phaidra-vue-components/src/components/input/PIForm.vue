@@ -290,6 +290,7 @@
                               v-on:input-publisher-name="f.publisherName=$event"
                               v-on:change-type="f.publisherType = $event"
                               v-on:input-publisher-select="publisherSelectInput(f, $event)"
+                              v-on:input-publisher-ror="publisherRorInput(f, $event)"
                               v-on:input-publishing-place="f.publishingPlace=$event"
                               v-on:input-publishing-date="f.publishingDate=$event"
                               v-on:add="addField(s.fields, f)"
@@ -1813,6 +1814,16 @@ export default {
         Object.entries(preflabels).forEach(([key, value]) => {
           f.publisherSelectedName.push({ '@value': value, '@language': key })
         })
+      }
+    },
+    publisherRorInput: function (f, event) {
+      f.publisherRor = ''
+      f.publisherSelectedName = []
+      if (event) {
+        for (const id of event['skos:exactMatch']) {
+          f.publisherRor = id
+        }
+        f.publisherSelectedName = event['schema:name']
       }
     },
     publisherSuggestInput: function (f, event) {

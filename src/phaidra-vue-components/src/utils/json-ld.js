@@ -521,6 +521,12 @@ export default {
                           if (id.startsWith('https://pid.phaidra.org/')) {
                             f.publisherType = 'select'
                             f.publisherOrgUnit = id
+                          } else if (id.startsWith('https://ror.org/')) {
+                            f.publisherType = 'ror'
+                            f.publisherRor = id
+                            for (let name of pub['schema:name']) {
+                              f.publisherRorName = name['@value']
+                            }
                           } else {
                             f.publisherType = 'other'
                             if (pub['schema:name']) {
@@ -676,6 +682,12 @@ export default {
                       if (id.startsWith('https://pid.phaidra.org/')) {
                         f.publisherType = 'select'
                         f.publisherOrgUnit = id
+                      } else if (id.startsWith('https://ror.org/')) {
+                        f.publisherType = 'ror'
+                        f.publisherRor = id
+                        for (let name of pub['schema:name']) {
+                          f.publisherRorName = name['@value']
+                        }
                       } else {
                         f.publisherType = 'other'
                         if (pub['schema:name']) {
@@ -2235,9 +2247,13 @@ export default {
       '@type': 'schema:Organization',
       'schema:name': []
     }
-    if (f.publisherType === 'select') {
+    if (f.publisherType === 'select' || f.publisherType === 'ror') {
       pa['schema:name'] = f.publisherSelectedName
-      pa['skos:exactMatch'] = [ f.publisherOrgUnit ]
+      if (f.publisherType === 'ror') {
+        pa['skos:exactMatch'] = [ f.publisherRor ]
+      } else {
+        pa['skos:exactMatch'] = [ f.publisherOrgUnit ]
+      }
     }
     if (f.publisherType === 'other') {
       pa['schema:name'] = [
@@ -2247,7 +2263,7 @@ export default {
       ]
     }
     if (
-      (f.publisherType === 'select' && (f.publisherSelectedName || f.publisherOrgUnit)) ||
+      ((f.publisherType === 'select' || f.publisherType === 'ror') && (f.publisherSelectedName || f.publisherOrgUnit)) ||
       (f.publisherType === 'other' && f.publisherName)
     ) {
       h['bf:agent'] = [ pa ]
