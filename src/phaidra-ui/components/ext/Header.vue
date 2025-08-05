@@ -299,8 +299,8 @@
 
                   <v-menu offset-y>
                     <template v-slot:activator="{ on, attrs }">
-                      <v-btn text v-on="on" v-bind="attrs" aria-controls="locale-menu">                        
-                        <span class="subtitle-1 text-capitalize"
+                      <v-btn class="px-12" icon tile v-on="on" v-bind="attrs" aria-controls="locale-menu">                        
+                        <span class="subtitle-1 text-capitalize font-weight-medium"
                           >{{ localeLabel }}</span>
                         <v-icon
                           class="ml-1"  
@@ -733,41 +733,4 @@
   </script>  
 
 <style scoped>
-  .ph-button:focus {
-    background-color: var(--v-primary-base) !important;
-    border-color: var(--v-primary-base) !important;
-  }
-  .ph-button {
-    background-color: var(--v-cardtitlebg-base)!important;
-    border-color: var(--v-cardtitlebg-base)!important;
-  }
-
-  .theme--dark .header {
-    box-shadow: 48px 0 0 0 #121212, -48px 0 0 0 #121212,
-    0 8px 40px -6px rgba(70, 70, 70, 0.4);
-    background-color: #121212;
-  }
-
-  .v-toolbar__items .v-btn {
-    margin-left: 1px;
-  }
-
-  .ph-button-bg {
-    background-color: var(--v-cardtitlebg-base) !important;
-    border-color: var(--v-cardtitlebg-base) !important;
-  }
-
-  .ph-button-bg-dark {
-    background-color: #272727;
-    border-color: #272727;
-  }
-
-  .ph-button-bg-active {
-    background-color: var(--v-primary-base) !important;
-    border-color: var(--v-primary-base) !important;
-  }
-
-  /* .v-btn:hover::before, .v-btn--active::before {
-    opacity: 0;
-  } */
 </style>

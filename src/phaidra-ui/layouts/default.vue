@@ -341,12 +341,6 @@ a.v-btn, a {
   max-height: 150px;
 }
 
-.header {
-  box-shadow: 48px 0 0 0 white, -48px 0 0 0 white,
-    0 8px 40px -6px rgba(70, 70, 70, 0.4);
-  background-color: white;
-  z-index: 1;
-}
 address {
   font-style: normal;
 }
@@ -409,6 +403,49 @@ address {
   text-decoration: none;
   color: white;
   font-weight: 400;
+}
+
+
+.header .ph-button:focus {
+  background-color: var(--v-primary-base) !important;
+  border-color: var(--v-primary-base) !important;
+}
+
+.header .ph-button {
+  background-color: var(--v-cardtitlebg-base)!important;
+  border-color: var(--v-cardtitlebg-base)!important;
+}
+
+.header {
+  box-shadow: 48px 0 0 0 white, -48px 0 0 0 white,
+    0 8px 40px -6px rgba(70, 70, 70, 0.4);
+  background-color: white;
+  z-index: 1;
+}
+
+.theme--dark .header {
+  box-shadow: 48px 0 0 0 #121212, -48px 0 0 0 #121212,
+  0 8px 40px -6px rgba(70, 70, 70, 0.4);
+  background-color: #121212;
+}
+
+.header .v-toolbar__items .v-btn {
+  margin-left: 1px;
+}
+
+.header .ph-button-bg {
+  background-color: var(--v-cardtitlebg-base) !important;
+  border-color: var(--v-cardtitlebg-base) !important;
+}
+
+.header .ph-button-bg-dark {
+  background-color: #272727;
+  border-color: #272727;
+}
+
+.header .ph-button-bg-active {
+  background-color: var(--v-primary-base) !important;
+  border-color: var(--v-primary-base) !important;
 }
 
 #quicklinks-button {
