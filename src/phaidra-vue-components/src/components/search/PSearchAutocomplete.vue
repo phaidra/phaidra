@@ -253,6 +253,11 @@ export default {
     // Sync parent model with initValue Props
     this.type = this.initValue ? this.initValue : null
   },
+  watch: {
+    initValue: function (newVal) {
+      this.type = newVal
+    }
+  },
 
   mounted () {
     if (this.required) { this.$refs.input.setAttribute('required', this.required) }
