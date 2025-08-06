@@ -3,9 +3,9 @@
     <BulkUploadSteps />
     <v-row>
       <v-col>
-        <h1 class="text-h4">Step 4: Upload</h1>
+        <h1 class="text-h4">{{$t('Step 4: Upload')}}</h1>
         <p class="text-subtitle-1 mt-2">
-          Upload your data to PHAIDRA. You can close the page and return later to resume any interrupted uploads.
+          {{$t('Upload your data to PHAIDRA. You can close the page and return later to resume any interrupted uploads.')}}
         </p>
       </v-col>
     </v-row>
@@ -51,7 +51,7 @@
           :to="steps[3].route"
         >
           <v-icon left>mdi-arrow-left</v-icon>
-          Back
+          {{$t('Back')}}
         </v-btn>
       </v-col>
       <v-col cols="auto">
@@ -63,10 +63,10 @@
           @click="startUpload"
         >
           <template v-if="hasFailedUploads">
-            Retry Failed Uploads
+            {{$t('Retry Failed Uploads')}}
           </template>
           <template v-else>
-            Start Upload
+            {{$t('Start Upload')}}
           </template>
           <v-icon right>mdi-cloud-upload</v-icon>
         </v-btn>
@@ -79,7 +79,7 @@
       max-width="500"
     >
       <v-card>
-        <v-card-title class="text-h6 font-weight-light white--text">Upload Error</v-card-title>
+        <v-card-title class="text-h6 font-weight-light white--text">{{$t('Upload Error')}}</v-card-title>
         <v-card-text class="mt-4">
           <p class="mb-2"><strong>Row:</strong> {{ errorDialog.row }}</p>
           <p class="mb-0"><strong>Error:</strong> {{ errorDialog.error }}</p>
@@ -91,7 +91,7 @@
             text
             @click="errorDialog.show = false"
           >
-            Close
+            {{$t('Close')}}
           </v-btn>
         </v-card-actions>
       </v-card>

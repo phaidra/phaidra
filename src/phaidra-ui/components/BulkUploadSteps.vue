@@ -1,6 +1,6 @@
 <template>
   <v-card flat class="bulk-upload-steps transparent">
-    <h1 class="text-h4 mb-6">Bulk Upload</h1>
+    <h1 class="text-h4 mb-6">{{$t('Bulk Upload')}}</h1>
     <v-stepper v-model="currentStepModel" class="steps-container">
       <v-stepper-header>
         <template v-for="(step, index) in steps">
@@ -29,10 +29,10 @@ export default {
   data() {
     return {
       steps: [
-        { label: 'Load CSV', route: '/bulk-upload/csv-config' },
-        { label: 'Select Mapping', route: '/bulk-upload/meta-data-config' },
-        { label: 'Preview', route: '/bulk-upload/preview' },
-        { label: 'Upload', route: '/bulk-upload/upload' }
+        { label: this.$t('Load CSV'), route: '/bulk-upload/csv-config' },
+        { label: this.$t('Select Mapping'), route: '/bulk-upload/meta-data-config' },
+        { label: this.$t('Preview'), route: '/bulk-upload/preview' },
+        { label: this.$t('Upload'), route: '/bulk-upload/upload' }
       ]
     }
   },
