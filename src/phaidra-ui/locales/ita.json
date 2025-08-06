@@ -1345,5 +1345,7 @@
   "Other identifier": "Altro identificatore",
   "This collection template does not exist...": "Questa collezione non esiste...",
   "Disable Association parent selection": "Disabilita la selezione di unità superiori",
-  "Disable parent selection in Association dropdown and in tree view.": "Disabilita la selezione di unità superiori nell'elenco e nel diagramma ad albero."
+  "Disable parent selection in Association dropdown and in tree view.": "Disabilita la selezione di unità superiori nell'elenco e nel diagramma ad albero.",
+  "Dark Mode Off": "Passa al tema chiaro",
+  "Dark Mode On": "Passa al tema scuro"
 }
