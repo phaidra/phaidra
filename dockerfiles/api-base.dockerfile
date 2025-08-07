@@ -11,7 +11,7 @@ apt-get install --yes --quiet --no-install-recommends \
     libclone-perl libmime-lite-perl libdbix-connector-perl libjson-perl libjson-validator-perl libcgi-pm-perl libxml-libxslt-perl \
     libcache-fastmmap-perl liblocale-maketext-lexicon-perl libyaml-syck-perl libmongodb-perl libmojolicious-perl \
     libmojolicious-plugin-i18n-perl libmojolicious-plugin-authentication-perl git libtemplate-perl libhtml-formattext-withlinks-perl libmodule-build-tiny-perl libdbd-sqlite3-perl libtest-needs-perl libtest-memory-cycle-perl libtest-output-perl libtest-exception-perl libtest-warn-perl libfile-mimeinfo-perl libdatetime-format-mail-perl libjson-xs-perl \
-    libnet-ip-perl libauthen-sasl-perl
+    libnet-ip-perl libauthen-sasl-perl libmojo-jwt-perl
 apt-get clean
 EOF
 # run after installation of libjson-xs-perl,
