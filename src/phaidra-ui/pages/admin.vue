@@ -240,11 +240,11 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
-                      :label="$t('Hide breadcrumbs')"
-                      v-model="parsedPublicConfigData.hideBreadcrumbs"
+                      :label="$t('Hide breadcrumbs on homepage')"
+                      v-model="parsedPublicConfigData.hideBreadcrumbsOnHomepage"
                     ></v-checkbox>
                   </v-col>
-                  <v-col cols="6" class="mt-4">{{ $t("Show/Hide breadcrumbs.") }}</v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Show/Hide breadcrumbs on homepage.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>

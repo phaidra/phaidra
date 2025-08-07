@@ -57,7 +57,7 @@ export const mutations = {
       'forcePreview',
       'hideInstitutionName',
       'isParentSelectionDisabled',
-      'hideBreadcrumbs'
+      'hideBreadcrumbsOnHomepage'
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
