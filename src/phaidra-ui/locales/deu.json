@@ -1297,5 +1297,7 @@
     "Other identifier": "Anderer Identifikator",
     "This collection template does not exist...": "Diese Collection-Vorlage existiert nicht...",
     "Disable Association parent selection": "Deaktiviere Auswahl von übergeordneten Einheiten",
-    "Disable parent selection in Association dropdown and in tree view.": "Deaktiviere Auswahl von übergeordneten Einheiten in der Auswahlliste und im Baum."
+    "Disable parent selection in Association dropdown and in tree view.": "Deaktiviere Auswahl von übergeordneten Einheiten in der Auswahlliste und im Baum.",
+    "Hide breadcrumbs": "Breadcrumbs ausblenden",
+    "Show/Hide breadcrumbs.": "Breadcrumbs anzeigen/ausblenden."
   }
