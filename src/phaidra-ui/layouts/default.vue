@@ -41,7 +41,7 @@
                         transition="slide-y-transition"
                       >
                         <v-row align="center">
-                          <v-col class="grow">{{ $t(alert.msg) }} {{ alert.type }} {{ typeof alert.type }}</v-col>
+                          <v-col class="grow">{{ $t(alert.msg) }}</v-col>
                           <v-col class="shrink">
                             <v-btn icon @click.native="dismiss(alert)"
                               ><v-icon>mdi-close</v-icon></v-btn
