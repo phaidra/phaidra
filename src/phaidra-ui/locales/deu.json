@@ -1335,5 +1335,10 @@
     "Failed": "Fehlgeschlagen",
     "Remaining": "Verbleibend",
     "View Error": "Fehler anzeigen",
-    "Row": "Zeile"
+    "Row": "Zeile",
+    "Bulk Upload Complete!": "Bulk Upload abgeschlossen!",
+    "All files have been successfully uploaded to PHAIDRA.": "Alle Dateien wurden erfolgreich in PHAIDRA hochgeladen.",
+    "Start New Bulk Upload": "Neuer Bulk Upload starten",
+    "Error starting new bulk upload:": "Fehler beim Starten eines neuen Bulk Uploads:",
+    "Loading local storage...": "Lade lokalen Speicher..."
   }

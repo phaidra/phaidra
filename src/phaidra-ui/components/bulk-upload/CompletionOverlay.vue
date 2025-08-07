@@ -2,16 +2,16 @@
   <v-overlay :value="isUploadComplete" absolute>
     <v-card class="pa-6 text-center" light>
       <v-icon size="64" color="success" class="mb-4">mdi-check-circle</v-icon>
-      <h2 class="text-h5 mb-4">Bulk Upload Complete!</h2>
+      <h2 class="text-h5 mb-4">{{$t('Bulk Upload Complete!')}}</h2>
       <p class="mb-4">
-        All files have been successfully uploaded to PHAIDRA.
+        {{$t('All files have been successfully uploaded to PHAIDRA.')}}
       </p>
       <v-btn
         color="success"
         large
         @click="startNewBulkUpload"
       >
-        Start New Bulk Upload
+        {{$t('Start New Bulk Upload')}}
       </v-btn>
     </v-card>
   </v-overlay>
@@ -35,7 +35,7 @@ export default {
         // Redirect to the first step
         this.$router.push('/bulk-upload/csv-config')
       } catch (error) {
-        console.error('Error starting new bulk upload:', error)
+        console.error(this.$t('Error starting new bulk upload:'), error)
       }
     }
   }
