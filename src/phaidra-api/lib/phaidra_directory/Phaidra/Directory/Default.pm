@@ -934,7 +934,7 @@ sub getLDAPEntriesForQuery {
   my $confcol = $self->_get_config_col($c);
   my $privateConfig = $confcol->find_one({"config_type" => "private"});
   if ($privateConfig->{ldapextenable}) {
-    my $entry_ext = $self->_getLDAPEntriesForQuery($c, $self->get_ldap_ext($c), $privateConfig->{ldapextusersearchbases}, $privateConfig->{ldapextusersearchfilter}, $query);
+    my $entry_ext = $self->_getLDAPEntriesForQuery($c, $self->get_ldap_ext($c, $privateConfig), $privateConfig->{ldapextusersearchbases}, $privateConfig->{ldapextusersearchfilter}, $query);
     if (defined $entry_ext) {
       foreach my $attr (keys %$entry_ext) {
         # Merge entry_ext into entry_local if entry_ext has attributes
