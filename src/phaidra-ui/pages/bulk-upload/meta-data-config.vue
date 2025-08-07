@@ -76,7 +76,7 @@
                     <PhaidraFieldSelector
                       v-if="getAllowedSources(field).includes('phaidra-field')"
                       :field="field"
-                      :value="getFieldMapping(field)?.phaidraValue"
+                      :value="Array.isArray(getFieldMapping(field)?.phaidraValue) ? [...getFieldMapping(field)?.phaidraValue] : getFieldMapping(field)?.phaidraValue"
                       :disabled="getFieldMapping(field)?.source !== 'phaidra-field' && getAllowedSources(field).includes('csv-column')"
                       @input="val => updateMapping(field, 'phaidra-field', val)"
                     />
