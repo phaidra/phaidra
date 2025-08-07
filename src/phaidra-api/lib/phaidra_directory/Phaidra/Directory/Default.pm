@@ -922,7 +922,7 @@ sub get_user_data {
     if ($response->is_success) {
       my $data = $response->json;
 
-      $c->log->debug("get_user_data data: ".$c->app->dumper($data));
+      # $c->log->debug("get_user_data data: ".$c->app->dumper($data));
 
       if (exists($data->{name})) {
         $fname = $data->{name}->{givenName} if $data->{name}->{givenName};
