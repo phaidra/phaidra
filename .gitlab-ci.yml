@@ -32,7 +32,7 @@ build-api-base:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/api-base.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/api-base:latest
     -t $CI_REGISTRY_USER/api-base:$CI_COMMIT_SHORT_SHA --push .
   rules:
