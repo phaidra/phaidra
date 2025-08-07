@@ -37,7 +37,7 @@
               <!-- Mapping Rows -->
               <template v-for="field in allFields">
                 <!-- Single Field Layout -->
-                <v-row v-if="fieldSettings[field]?.fieldType === 'single-field'" class="py-4 align-center" :class="{ 'border-bottom': field !== allFields[allFields.length - 1], 'flash-blue': field === flashingField }" :key="field">
+                <v-row v-if="fieldSettings[field]?.fieldType === 'single-field'" class="py-4 align-center" :class="{ 'border-bottom': field !== allFields[allFields.length - 1], 'flash-bg': field === flashingField }" :key="field">
                   <!-- Field Name -->
                   <v-col cols="2" class="d-flex align-center">
                     <v-icon
@@ -84,7 +84,7 @@
                 </v-row>
                 <!-- Multi Field Layout -->
                 <template v-else-if="fieldSettings[field]?.fieldType === 'multi-field'">
-                  <v-row v-if="fieldSettings[field]?.fieldType === 'multi-field'" class="py-4 align-center" :class="{ 'border-bottom': field !== allFields[allFields.length - 1], 'flash-blue': field === flashingField }" :key="field">
+                  <v-row v-if="fieldSettings[field]?.fieldType === 'multi-field'" class="py-4 align-center" :class="{ 'border-bottom': field !== allFields[allFields.length - 1], 'flash-bg': field === flashingField }" :key="field">
                     <v-col cols="2" class="d-flex align-center">
                       <v-icon
                         v-if="fieldIsMapped(field)"
@@ -358,7 +358,11 @@ export default {
   margin: 0 auto;
 }
 
-.flash-blue {
+.flash-bg {
   background-color: #e6f7ff;
+}
+
+.theme--dark .flash-bg {
+  background-color: #000000;
 }
 </style>
