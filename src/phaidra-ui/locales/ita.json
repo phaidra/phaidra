@@ -1386,5 +1386,10 @@
   "Failed": "Fallito",
   "Remaining": "Rimanenti",
   "View Error": "Visualizza errore",
-  "Row": "Riga"
+  "Row": "Riga",
+  "Bulk Upload Complete!": "Caricamento di massa completato!",
+  "All files have been successfully uploaded to PHAIDRA.": "Tutti i file sono stati caricati con successo in PHAIDRA.",
+  "Start New Bulk Upload": "Avvia nuovo caricamento di massa",
+  "Error starting new bulk upload:": "Errore durante l'avvio del nuovo caricamento di massa:",
+  "Loading local storage...": "Caricamento dello storage locale..."
 }
