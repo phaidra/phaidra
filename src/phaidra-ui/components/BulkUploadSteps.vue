@@ -28,12 +28,7 @@ export default {
   name: 'BulkUploadSteps',
   data() {
     return {
-      steps: [
-        { label: this.$t('Load CSV'), route: '/bulk-upload/csv-config' },
-        { label: this.$t('Select Mapping'), route: '/bulk-upload/meta-data-config' },
-        { label: this.$t('Preview'), route: '/bulk-upload/preview' },
-        { label: this.$t('Upload'), route: '/bulk-upload/upload' }
-      ]
+      steps: []
     }
   },
   computed: {
@@ -52,6 +47,17 @@ export default {
       handler(newRoute) {
         const currentStep = this.$store.getters['bulk-upload/getCurrentStepFromRoute'](newRoute.path)
         this.$store.commit('bulk-upload/setCurrentStep', currentStep)
+      }
+    },
+    '$i18n.locale': {
+      immediate: true,
+      handler() {
+        this.steps = [
+          { label: this.$t('Load CSV'), route: '/bulk-upload/csv-config' },
+          { label: this.$t('Select Mapping'), route: '/bulk-upload/meta-data-config' },
+          { label: this.$t('Preview'), route: '/bulk-upload/preview' },
+          { label: this.$t('Upload'), route: '/bulk-upload/upload' }
+        ]
       }
     }
   }
