@@ -13,6 +13,7 @@ use Net::LDAP;
 use Net::LDAP::Util qw(ldap_error_text);
 use YAML::Syck;
 use Mojo::JSON qw(encode_json decode_json);
+use Mojo::JWT;
 use base 'Phaidra::Directory';
 
 my $config = undef;
@@ -822,6 +823,43 @@ sub get_study_name {
   return $name;
 }
 
+sub create_scim_jwt {
+  my ($self, $c) = @_;
+
+  my $confcol = $self->_get_config_col($c);
+  my $privateConfig = $confcol->find_one({"config_type" => "private"});
+  unless ($privateConfig->{jwtprivkey} && $privateConfig->{jwks}) {
+    $c->app->log->error("jwtprivkey or jwks not configured");
+    return;
+  }
+
+  # JWT Header
+  my $header = {
+      alg => 'RS256', # Algorithm: RS256 (RSA with SHA-256)
+      typ => 'JWT',   # Type: JWT
+      kid => 'scim'  # Key ID (must match the "kid" in your JWKS)
+  };
+
+  # JWT Claims (Payload)
+  my $claims = {
+      iss => $c->app->config->{phaidra}->{baseurl}, # Issuer
+      aud => 'scim',              # Audience
+      sub => $c->app->config->{phaidra}->{baseurl}, # Subject (baseurl, since the API acts on it's own behalf)
+      iat => time(),              # Issued at (current timestamp)
+      exp => time() + 60          # We're not re-using this token
+  };
+
+  # Create and sign the JWT
+  my $jwt = Mojo::JWT->new(
+      header => $header,
+      claims => $claims,
+      secret    => $privateConfig->{jwtprivkey}, # Use the private key for signing
+      algorithm  => 'RS256'       # Specify the signing algorithm
+  )->encode;
+
+  return $jwt;
+}
+
 sub get_user_data {
   my $self     = shift;
   my $c        = shift;
@@ -834,7 +872,7 @@ sub get_user_data {
   }
 
   my $entry = $self->getLDAPEntryForUser($c, $username);
-  $c->log->debug("ldap data: ".Dumper($entry));
+  # $c->log->debug("get_user_data ldap data: ".$c->app->dumper($entry));
 
   my $fname;
   my $lname;
@@ -846,6 +884,7 @@ sub get_user_data {
 
   if (exists($entry->{'asn'}->{'attributes'})) {
     # if user was found in LDAP, it at least belongs to the organisation
+    # this was historically represented as A-1
     push @orgul1, 'A-1';
   }
 
@@ -872,12 +911,59 @@ sub get_user_data {
         $description = decode('UTF-8', $val);
       }
     }
+  }
 
+  my $confcol = $self->_get_config_col($c);
+  my $privateConfig = $confcol->find_one({"config_type" => "private"});
+  if ($privateConfig->{scimendpoint}) {
+    my $jwt = $self->create_scim_jwt($c);
+    my $url = $privateConfig->{scimendpoint}.'/Users/'.$username;
+    my $response = $c->app->ua->get($url => {Authorization => "Bearer $jwt"})->result;
+    if ($response->is_success) {
+      my $data = $response->json;
+
+      # $c->log->debug("get_user_data data: ".$c->app->dumper($data));
+
+      if (exists($data->{name})) {
+        $fname = $data->{name}->{givenName} if $data->{name}->{givenName};
+        $lname = $data->{name}->{familyName} if $data->{name}->{familyName};
+      }
+
+      if (exists($data->{emails})) {
+        for my $emailScim (@{$data->{emails}}) {
+          if ($emailScim->{type} eq 'work') {
+            if ($emailScim->{value}) {
+              $email = $emailScim->{value};
+              last;
+            }
+          }
+        }
+      }
+
+      if (exists($data->{groups})) {
+        for my $orgScim (@{$data->{groups}}) {
+          if ($orgScim->{value}) {
+            push @orgul1, $orgScim->{value};
+            # HACK: pass this to "department"/level 2 as well since (afaik)
+            # it does not really matter whether the org unit is level 1
+            # or level 2 (there's no instance where the IDs of org units
+            # on level 1 and 2 would be the same) and sometimes
+            # the flat org structures are implemented on level 1 only
+            # and sometimes on level 2 only.
+            # Later on, we shold remove this level distinction from access
+            # rights definition (would require migrating the access restrictions
+            # in objects though).
+            push @orgul2, $orgScim->{value};
+          }
+        }
+      }
+
+    } else {
+      $c->app->log->error("failed to query scimendpoint: ".$privateConfig->{scimendpoint}." ".$response->code." ".$response->message);
+    }
   }
 
   my $ldapgroups = $self->getUsersLDAPGroups($c, $username);
-
-  $c->app->log->info("ldapgroups: ".$c->app->dumper($ldapgroups));
 
   if ($c->stash('remote_user') && $c->stash('remote_user') eq $username) {
     # in case there is no user data api, use the attrs we saved on shib login, if it's equal to the requested user param
@@ -899,6 +985,10 @@ sub get_user_data {
   my $groups = $self->get_member_groups($c, $username);
 
   my $res = {username => $username, firstname => $fname, lastname => $lname, ldapgroups => $ldapgroups, groups => $groups, email => $email, affiliation => \@affiliation, org_units_l1 => \@orgul1, org_units_l2 => \@orgul2, displayname => $description};
+
+  $c->app->log->info("get_user_data: ".$c->app->dumper($res));
+
+  return $res;
 }
 
 sub is_superuser {
@@ -934,7 +1024,7 @@ sub getLDAPEntriesForQuery {
   my $confcol = $self->_get_config_col($c);
   my $privateConfig = $confcol->find_one({"config_type" => "private"});
   if ($privateConfig->{ldapextenable}) {
-    my $entry_ext = $self->_getLDAPEntriesForQuery($c, $self->get_ldap_ext($c), $privateConfig->{ldapextusersearchbases}, $privateConfig->{ldapextusersearchfilter}, $query);
+    my $entry_ext = $self->_getLDAPEntriesForQuery($c, $self->get_ldap_ext($c, $privateConfig), $privateConfig->{ldapextusersearchbases}, $privateConfig->{ldapextusersearchfilter}, $query);
     if (defined $entry_ext) {
       foreach my $attr (keys %$entry_ext) {
         # Merge entry_ext into entry_local if entry_ext has attributes

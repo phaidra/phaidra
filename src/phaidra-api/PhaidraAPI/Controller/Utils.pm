@@ -370,9 +370,9 @@ sub alma_search {
   }
 
   my $model = PhaidraAPI::Model::Config->new;
-  my $pubconfig = $model->get_private_config($self);
+  my $privconfig = $model->get_private_config($self);
 
-  unless (exists($pubconfig->{almasruurl})) {
+  unless (exists($privconfig->{almasruurl})) {
     my $err = "alma api is not configured";
     $self->app->log->error($err);
     $self->render(json => {alerts => [{type => 'error', msg => $err}]}, status => 500);
@@ -381,7 +381,7 @@ sub alma_search {
 
   my $params = { query => $query, version => $version, maximumRecords => $maximumRecords, startRecord => $startRecord, operation => $operation, recordSchema => $recordSchema };
 
-  my $url = Mojo::URL->new($pubconfig->{almasruurl})->query($params);
+  my $url = Mojo::URL->new($privconfig->{almasruurl})->query($params);
   my $get = $self->ua->max_redirects(5)->get($url)->result;
   if ($get->is_success) {
     $self->render(data => $get->body, status => $get->code);
@@ -396,5 +396,22 @@ sub alma_search {
   }
 
 }
+
+sub jwks {
+  my $self = shift;
+
+  my $model = PhaidraAPI::Model::Config->new;
+  my $privconfig = $model->get_private_config($self);
+
+  unless (exists($privconfig->{jwks})) {
+    my $err = "jwks is not configured";
+    $self->app->log->error($err);
+    $self->render(json => {alerts => [{type => 'error', msg => $err}]}, status => 500);
+    return;
+  }
+  
+  $self->render(json => decode_json($privconfig->{jwks}), status => 200);
+}
+
 
 1;

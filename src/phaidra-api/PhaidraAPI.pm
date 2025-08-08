@@ -554,6 +554,8 @@ sub startup {
   $r->get('config/public')                          ->to('config#get_public_config');
   $r->get('cms/template/:templateName')             ->to('cms#get_template');
 
+  $r->get('/jwks')                                  ->to('utils#jwks');
+
   if ($self->app->config->{fedora}->{version} >= 6) {
     my $ext_creds = $r->under('/')->to('authentication#extract_credentials', creds_must_be_present => 0);
 
