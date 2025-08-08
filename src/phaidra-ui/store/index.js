@@ -86,6 +86,15 @@ export const mutations = {
         }
       )
     }
+    if (transition.to.path.includes('/bulk-upload')) {
+      state.breadcrumbs.push(
+        {
+          text: 'Bulk upload',
+          to: transition.to.name,
+          disabled: true
+        }
+      )
+    }
     if (transition.to.path.includes('/repostats')) {
       state.breadcrumbs.push(
         {
