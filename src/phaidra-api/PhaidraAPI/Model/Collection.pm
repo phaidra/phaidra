@@ -186,7 +186,7 @@ sub get_members {
     if ($c->app->config->{fedora}->{version} >= 6) {
       my $fedora_model = PhaidraAPI::Model::Fedora->new;
       my $fres         = $fedora_model->getObjectProperties($c, $pid);
-      foreach my $member (@{$fres->{hasmember}}) {
+      foreach my $member (@{$fres->{haspart}}) {
         $members{$member} = {'pos' => undef};
       }
     } else {
