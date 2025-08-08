@@ -2169,7 +2169,7 @@ const actions = {
         commit('sortOefos', locale)
       } catch (error) {
         console.log(error)
-        commit('setAlerts', [{ type: 'danger', msg: 'Failed to fetch oefos: ' + error }])
+        commit('setAlerts', [{ type: 'danger', msg: 'Failed to fetch oefos: ' + error }], { root: true })
       }
     } else {
       if (state.vocabularies['oefos']['locale'] !== locale) {

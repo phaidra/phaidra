@@ -136,7 +136,8 @@ export default {
       errorMessage: '',
       showFileInput: false,
       showConfirmDialog: false,
-      pendingFile: null
+      pendingFile: null,
+      fileInputKey: 0
     }
   },
 
@@ -152,7 +153,7 @@ export default {
     },
     csvFile: {
       get() {
-        return this.$store.state['bulk-upload'].csvContent
+        return null
       },
       set(value) {
         if (!value) {
@@ -190,6 +191,8 @@ export default {
     cancelNewFile() {
       this.showConfirmDialog = false
       this.pendingFile = null
+
+      this.fileInputKey++
 
       if (this.$refs.fileInput) {
         // temporarily remove the change listener, since with the listener, setting file to null (see below)

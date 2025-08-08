@@ -29,7 +29,7 @@ export default {
       required: true
     },
     value: {
-      type: [String, Object],
+      type: [String, Object, Array],
       default: null
     },
     disabled: {
