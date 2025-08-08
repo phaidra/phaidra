@@ -907,33 +907,37 @@ sub _get_user_data {
   my @orgul2;
   my $description;
 
-  if (exists($entry->{'asn'}->{'attributes'})) {
-    # if user was found in LDAP, it at least belongs to the organisation
-    # this was historically represented as A-1
-    push @orgul1, 'A-1';
-  }
+  if ($entry) {
+    if (exists($entry->{'asn'})) {
+      if (exists($entry->{'asn'}->{'attributes'})) {
+        # if user was found in LDAP, it at least belongs to the organisation
+        # this was historically represented as A-1
+        push @orgul1, 'A-1';
+      }
 
-  foreach my $attr (@{$entry->{'asn'}->{'attributes'}}) {
-    my $attrtype = $attr->{'type'};
-    my @attvals  = @{$attr->{'vals'}};
-    foreach my $val (@attvals) {
-      if ($attrtype eq 'givenName') {
-        $fname = decode('UTF-8', $val);
-      }
-      if ($attrtype eq 'sn') {
-        $lname = decode('UTF-8', $val);
-      }
-      if ($attrtype eq 'mail') {
-        $email = decode('UTF-8', $val);
-      }
-      if ($attrtype eq 'ou') {
-        push @orgul1, decode('UTF-8', $val);
-      }
-      if ($attrtype eq 'departmentNumber') {
-        push @orgul2, decode('UTF-8', $val);
-      }
-      if ($attrtype eq 'description') {
-        $description = decode('UTF-8', $val);
+      foreach my $attr (@{$entry->{'asn'}->{'attributes'}}) {
+        my $attrtype = $attr->{'type'};
+        my @attvals  = @{$attr->{'vals'}};
+        foreach my $val (@attvals) {
+          if ($attrtype eq 'givenName') {
+            $fname = decode('UTF-8', $val);
+          }
+          if ($attrtype eq 'sn') {
+            $lname = decode('UTF-8', $val);
+          }
+          if ($attrtype eq 'mail') {
+            $email = decode('UTF-8', $val);
+          }
+          if ($attrtype eq 'ou') {
+            push @orgul1, decode('UTF-8', $val);
+          }
+          if ($attrtype eq 'departmentNumber') {
+            push @orgul2, decode('UTF-8', $val);
+          }
+          if ($attrtype eq 'description') {
+            $description = decode('UTF-8', $val);
+          }
+        }
       }
     }
   }
