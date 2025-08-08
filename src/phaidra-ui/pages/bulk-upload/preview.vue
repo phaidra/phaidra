@@ -3,7 +3,7 @@
     <BulkUploadSteps />
     <v-row>
       <v-col>
-        <h1 class="text-h4">Step 3: Data Preview</h1>
+        <h1 class="text-h4">{{$t('Step 3: Data Preview')}}</h1>
       </v-col>
     </v-row>
 
@@ -21,7 +21,7 @@
                           <PreviewTableHeader
                             v-for="(subFieldConfig, subField) in getSubFields(field)"
                             :key="field + '-' + subField"
-                            :field="field"
+                            :field="$t(field)"
                             :sub-field="subField"
                             :is-required="subFieldConfig.required"
                             :is-mapped="!!getSourceInfo(field, subField)"
@@ -31,7 +31,7 @@
                         <PreviewTableHeader
                           v-else
                           :key="field"
-                          :field="field"
+                          :field="$t(field)"
                           :is-required="fieldSettings[field].required"
                           :is-mapped="!!getAllFieldMappings[field]"
                           :source-info="getSourceInfo(field)"
@@ -46,7 +46,7 @@
                           <PreviewTableCell
                             v-for="(subFieldConfig, subField) in getSubFields(field)"
                             :key="field + '-' + subField"
-                            :field="field"
+                            :field="$t(field)"
                             :sub-field="subField"
                             :row-data="row"
                             :is-mapped="!!getSourceInfo(field, subField)"
@@ -55,7 +55,7 @@
                         <PreviewTableCell
                           v-else
                           :key="field"
-                          :field="field"
+                          :field="$t(field)"
                           :row-data="row"
                           :is-mapped="!!getAllFieldMappings[field]"
                         />
@@ -78,7 +78,7 @@
             :to="steps[2].route"
           >
             <v-icon left>mdi-arrow-left</v-icon>
-            Back
+            {{$t('Back')}}
           </v-btn>
         </v-col>
         <v-col cols="auto">
@@ -89,7 +89,7 @@
             @click="proceed"
             :to="steps[4].route"
           >
-            Next 
+            {{$t('Next')}}
             <v-icon right>mdi-arrow-right</v-icon>
           </v-btn>
         </v-col>
@@ -268,7 +268,7 @@ export default {
 
 <style scoped>
 .preview {
-  max-width: 1200px;
+  /* max-width: 1200px; */
   margin: 0 auto;
 }
 

@@ -36,7 +36,7 @@
                     <v-col cols="12">
                       <v-alert
                         v-if="alert.type !== 'success'"
-                        :type="alert.type"
+                        :type="alert.type === 'danger' ? 'error' : alert.type"
                         :value="true"
                         transition="slide-y-transition"
                       >
@@ -91,9 +91,19 @@ export default {
     }
   },
   metaInfo() {
+    // Detect locale during SSR from cookies, similar to theme detection
+    let currentLocale = this.$i18n.locale;
+    if (process.server) {
+      // During SSR, try to get locale from cookies
+      const ssrCookie = this.$cookies?.get('locale');
+      if (ssrCookie) {
+        currentLocale = ssrCookie;
+      }
+    }
+    
     let metaInfo = {
       htmlAttrs: {
-        lang: this.$i18n.locale === 'deu' ? 'de' : this.$i18n.locale === 'ita' ? 'it' : 'en'
+        lang: currentLocale === 'deu' ? 'de' : currentLocale === 'ita' ? 'it' : 'en'
       },
       title: this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
       meta: [

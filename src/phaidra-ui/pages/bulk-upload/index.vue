@@ -2,9 +2,9 @@
 
 <template>
   <div class="redirect-container">
-    <h1 class="text-h4 mb-6">Bulk Upload </h1>
+    <h1 class="text-h4 mb-6">{{$t('Bulk Upload')}} </h1>
     <div class="loader"></div>
-    <div class="redirect-text">Loading local storage...</div>
+    <div class="redirect-text">{{$t('Loading local storage...')}}</div>
   </div>
 </template>
 

@@ -529,6 +529,16 @@ sub preview {
     $self->app->log->info("preview pid[$pid] force[NO] cmodel[$cmodel] mimetype[$mimetype] size[$size] showloadbutton[$showloadbutton]");
   }
 
+  # Get instance config and set favicon
+  my $model = PhaidraAPI::Model::Config->new;
+  my $modelres = $model->get_public_config($self, 1);
+  if (defined $modelres->{faviconText}) {
+    my $faviconText = $modelres->{faviconText};
+    $faviconText =~ s/^\s+|\s+$//g if defined $faviconText;
+    my $base64Svg = encode_base64($faviconText);
+    $self->stash(favIcon => "data:image/svg+xml;base64,$base64Svg");
+  }
+
   switch ($cmodel) {
     case ['Picture', 'Page'] {
       my $imgsrvjobstatus = $self->imageserver_job_status($pid);
@@ -643,15 +653,6 @@ sub preview {
         }
       }
 
-      # Get instance config and set favicon
-      my $model = PhaidraAPI::Model::Config->new;
-      my $modelres = $model->get_public_config($self, 1);
-      if (defined $modelres->{faviconText}) {
-        my $faviconText = $modelres->{faviconText};
-        $faviconText =~ s/^\s+|\s+$//g if defined $faviconText;
-        my $base64Svg = encode_base64($faviconText);
-        $self->stash(favIcon => "data:image/svg+xml;base64,$base64Svg");
-      }
 
       my $page = $self->param('page');
       $page = looks_like_number($page) ? $page : 1;

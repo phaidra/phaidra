@@ -31,7 +31,7 @@
                   <v-icon small>mdi-alert-circle</v-icon>
                 </v-btn>
               </template>
-              <span>View Error</span>
+              <span>{{$t('View Error')}}</span>
             </v-tooltip>
             <v-btn
               icon
@@ -70,11 +70,11 @@ export default {
   data() {
     return {
       headers: [
-        { text: 'Row', value: 'index' },
-        { text: 'Title', value: 'title' },
-        { text: 'Filename', value: 'filename' },
-        { text: 'Status', value: 'status' },
-        { text: 'Actions', value: 'actions', sortable: false }
+        { text: this.$t('Row'), value: 'index' },
+        { text: this.$t('Title'), value: 'title' },
+        { text: this.$t('Filename'), value: 'filename' },
+        { text: this.$t('Status'), value: 'status' },
+        { text: this.$t('Actions'), value: 'actions', sortable: false }
       ]
     }
   },
