@@ -871,6 +871,31 @@ sub get_user_data {
     return {username => $c->app->config->{phaidra}->{adminusername}, firstname => 'PHAIDRA', lastname => 'Admin', isadmin => 1};
   }
 
+  my $cachekey = "get_user_data_$username";
+  my $cacheval = $c->app->chi->get($cachekey);
+  if ($cacheval) {
+    # $c->app->log->debug("[cache hit] $cachekey");
+  } else {
+    $c->app->log->debug("[cache miss] $cachekey");
+    $cacheval = $self->_get_user_data($c, $username);
+    # attributes are fetched for purposes of
+    # * authorization (eg org unit of the current user)
+    # * display (eg some object owner's name)
+    # so it should not be cached
+    # * for too long
+    # * for too short
+    $c->app->chi->set($cachekey, $cacheval, '2 hours');
+    $cacheval = $c->app->chi->get($cachekey);
+  }
+
+  return $cacheval;
+}
+
+sub _get_user_data {
+  my $self     = shift;
+  my $c        = shift;
+  my $username = shift;
+
   my $entry = $self->getLDAPEntryForUser($c, $username);
   # $c->log->debug("get_user_data ldap data: ".$c->app->dumper($entry));
 
