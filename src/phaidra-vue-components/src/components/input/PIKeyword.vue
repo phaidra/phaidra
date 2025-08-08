@@ -15,6 +15,7 @@
         :item-value="'payload'"
         :label="$t(label)"
         multiple
+        :disabled="disabled"
         clearable
         chips
         deletable-chips
@@ -125,6 +126,10 @@ export default {
     },
     hint: {
       type: String
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

@@ -6,7 +6,7 @@
       outlined
       dense
       clearable
-      :label="'Select CSV column'"
+      :label="$t('Select CSV column')"
       hide-details
       class="flex-grow-0 mr-8"
       style="width: 200px"

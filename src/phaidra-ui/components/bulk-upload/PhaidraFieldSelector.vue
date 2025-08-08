@@ -19,9 +19,11 @@
 
 <script>
 import { fieldSettings } from '../../config/bulk-upload/field-settings'
+import { config } from '../../mixins/config'
 
 export default {
   name: 'PhaidraFieldSelector',
+  mixins: [config],
 
   props: {
     field: {
@@ -29,7 +31,7 @@ export default {
       required: true
     },
     value: {
-      type: [String, Object],
+      type: [String, Object, Array],
       default: null
     },
     disabled: {
@@ -62,10 +64,14 @@ export default {
           ...fieldValue
         }
       } else {
-        return elementConfig.getProps(
+        let props = elementConfig.getProps(
           fieldValue,
           this.handleInput
         )
+        if(props.predicate === "rdax:P00009") {
+          props.isParentSelectionDisabled = this.instanceconfig.isParentSelectionDisabled
+        }
+        return props
       }
     }
   },

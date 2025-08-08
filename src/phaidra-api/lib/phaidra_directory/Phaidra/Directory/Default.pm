@@ -871,6 +871,31 @@ sub get_user_data {
     return {username => $c->app->config->{phaidra}->{adminusername}, firstname => 'PHAIDRA', lastname => 'Admin', isadmin => 1};
   }
 
+  my $cachekey = "get_user_data_$username";
+  my $cacheval = $c->app->chi->get($cachekey);
+  if ($cacheval) {
+    # $c->app->log->debug("[cache hit] $cachekey");
+  } else {
+    $c->app->log->debug("[cache miss] $cachekey");
+    $cacheval = $self->_get_user_data($c, $username);
+    # attributes are fetched for purposes of
+    # * authorization (eg org unit of the current user)
+    # * display (eg some object owner's name)
+    # so it should not be cached
+    # * for too long
+    # * for too short
+    $c->app->chi->set($cachekey, $cacheval, '2 hours');
+    $cacheval = $c->app->chi->get($cachekey);
+  }
+
+  return $cacheval;
+}
+
+sub _get_user_data {
+  my $self     = shift;
+  my $c        = shift;
+  my $username = shift;
+
   my $entry = $self->getLDAPEntryForUser($c, $username);
   # $c->log->debug("get_user_data ldap data: ".$c->app->dumper($entry));
 
@@ -944,6 +969,16 @@ sub get_user_data {
         for my $orgScim (@{$data->{groups}}) {
           if ($orgScim->{value}) {
             push @orgul1, $orgScim->{value};
+            # HACK: pass this to "department"/level 2 as well since (afaik)
+            # it does not really matter whether the org unit is level 1
+            # or level 2 (there's no instance where the IDs of org units
+            # on level 1 and 2 would be the same) and sometimes
+            # the flat org structures are implemented on level 1 only
+            # and sometimes on level 2 only.
+            # Later on, we shold remove this level distinction from access
+            # rights definition (would require migrating the access restrictions
+            # in objects though).
+            push @orgul2, $orgScim->{value};
           }
         }
       }

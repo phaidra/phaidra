@@ -37,6 +37,9 @@ See https://github.com/adobe-type-tools/cmap-resources
     <script src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/pdfjs/build/pdf.js"></script>
     <script src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/pdfjs/build/pdf.worker.js"></script>
     <script src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/pdfjs/web/viewer.js"></script>
+    % if (stash('favIcon')) {
+      <link rel="icon" type="image/svg+xml" href="<%= stash('favIcon') %>"/>
+    % }
 
   </head>
 

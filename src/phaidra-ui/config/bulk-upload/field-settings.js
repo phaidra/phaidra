@@ -125,6 +125,7 @@ export const fieldSettings = {
         component: 'PIKeyword',
         field: () => {
           const field = fieldslib.getField("keyword")
+          field.multiplicable = false
           field.suggester = 'keywordsuggester'
           field.disableSuggest = true
           return field
@@ -166,6 +167,7 @@ export const fieldSettings = {
         field: () => {
           const field = fieldslib.getField("object-type-checkboxes")
           field.showValueDefinition = false
+          field.multiplicable = false
           field.vocabulary = 'objecttype'
           field.component = 'select'
           field.label = 'Object Type'

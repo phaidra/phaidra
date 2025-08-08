@@ -66,6 +66,9 @@
     <% } %>
 
   </script>
+  % if (stash('favIcon')) {
+    <link rel="icon" type="image/svg+xml" href="<%= stash('favIcon') %>"/>
+  % }
  </head>
  <body>
    <div id="viewer"><% if ($addannotation && $rights eq 'rw') { %><center><button type="button" onclick="iipmooviewer.newAnnotation()">Add annotation</button></center><% } %></div>

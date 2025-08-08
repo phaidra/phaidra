@@ -3,7 +3,7 @@
     <BulkUploadSteps />
     <v-row>
       <v-col>
-        <h1 class="text-h4">Step 1: Load CSV File</h1>
+        <h1 class="text-h4">{{$t('Step 1: Load CSV File')}}</h1>
       </v-col>
     </v-row>
 
@@ -21,7 +21,7 @@
                 color="primary"
                 @click="showFileInput = true"
               >
-                Change File
+                {{$t('Change File')}}
               </v-btn>
             </div>
           </v-card>
@@ -33,7 +33,7 @@
                   ref="fileInput"
                   v-model="csvFile"
                   accept=".csv"
-                  label="Select New CSV File"
+                  :label="$t('Select New CSV File')"
                   outlined
                   class="mt-4 flex-grow-1"
                   @change="handleFileUpload"
@@ -47,7 +47,7 @@
                   class="mt-4 ml-2"
                   @click="showFileInput = false"
                 >
-                  Cancel
+                  {{$t('Cancel')}}
                 </v-btn>
               </div>
             </div>
@@ -57,7 +57,7 @@
           v-else
           v-model="csvFile"
           accept=".csv"
-          label="Select CSV File"
+          :label="$t('Select CSV File')"
           outlined
           @change="handleFileUpload"
           :error-messages="errorMessage"
@@ -73,7 +73,7 @@
         <v-card outlined class="pa-4">
           <div class="d-flex align-center mb-4">
             <h3 class="text-h6 mb-0 mr-4">
-              CSV Columns of your file:
+              {{$t('CSV Columns of your file:')}}
             </h3>
           </div>
           <v-chip
@@ -91,14 +91,14 @@
     <!-- Add confirmation dialog when resetting csv file and user already was beyond step 1 -->
     <v-dialog v-model="showConfirmDialog" max-width="500">
       <v-card>
-        <v-card-title class="text-h6 font-weight-light white--text">Confirm New File Upload</v-card-title>
+        <v-card-title class="text-h6 font-weight-light white--text">{{$t('Confirm New File Upload')}}</v-card-title>
         <v-card-text class="mt-4">
-          Loading a new file will clear all your existing progress. Are you sure you want to continue?
+          {{$t('Loading a new file will clear all your existing progress. Are you sure you want to continue?')}}
         </v-card-text>
         <v-card-actions>
-          <v-btn outlined @click="cancelNewFile">Cancel</v-btn>
+          <v-btn outlined @click="cancelNewFile">{{$t('Cancel')}}</v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="error" @click="confirmNewFile">Confirm Progress Deletion</v-btn>
+          <v-btn color="error" @click="confirmNewFile">{{$t('Confirm Progress Deletion')}}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -112,7 +112,7 @@
           @click="$router.push('/bulk-upload/meta-data-config')"
           :disabled="!isValid"
         >
-          Next
+          {{$t('Next')}}
           <v-icon right>mdi-arrow-right</v-icon>
         </v-btn>
       </v-col>
@@ -136,7 +136,8 @@ export default {
       errorMessage: '',
       showFileInput: false,
       showConfirmDialog: false,
-      pendingFile: null
+      pendingFile: null,
+      fileInputKey: 0
     }
   },
 
@@ -152,7 +153,7 @@ export default {
     },
     csvFile: {
       get() {
-        return this.$store.state['bulk-upload'].csvContent
+        return null
       },
       set(value) {
         if (!value) {
@@ -190,6 +191,8 @@ export default {
     cancelNewFile() {
       this.showConfirmDialog = false
       this.pendingFile = null
+
+      this.fileInputKey++
 
       if (this.$refs.fileInput) {
         // temporarily remove the change listener, since with the listener, setting file to null (see below)
@@ -281,7 +284,7 @@ export default {
 
 <style scoped>
 .csv-config {
-  max-width: 1200px;
+  /* max-width: 1200px; */
   margin: 0 auto;
 }
 </style>

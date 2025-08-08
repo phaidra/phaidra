@@ -3,17 +3,17 @@
     <v-card-text>
       <div class="d-flex align-center justify-space-between mb-2">
         <div>
-          <span class="text-h6">Upload Progress</span>
+          <span class="text-h6">{{$t('Upload Progress')}}</span>
         </div>
         <div class="d-flex align-center">
           <v-chip class="mr-2" color="success" outlined>
-            {{ progress.completed }} Completed
+            {{ progress.completed }} {{$t('Completed')}}
           </v-chip>
           <v-chip class="mr-2" color="error" outlined>
-            {{ progress.failed }} Failed
+            {{ progress.failed }} {{$t('Failed')}}
           </v-chip>
           <v-chip color="info" outlined>
-            {{ progress.total - progress.completed }} Remaining
+            {{ progress.total - progress.completed }} {{$t('Remaining')}}
           </v-chip>
         </div>
       </div>
