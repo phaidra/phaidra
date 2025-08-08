@@ -5,9 +5,9 @@
     <template v-if="isInitialized">
       <v-row>
         <v-col>
-          <h1 class="text-h4">Step 2: Map CSV Fields</h1>
+          <h1 class="text-h4">{{$t('Step 2: Map CSV Fields')}}</h1>
           <p class="text-subtitle-1 mt-2">
-            Map your CSV columns to the required fields. Fields with matching names are automatically mapped.
+            {{$t('Map your CSV columns to the required fields. Fields with matching names are automatically mapped.')}}
           </p>
         </v-col>
       </v-row>
@@ -19,18 +19,18 @@
               <!-- Header Row -->
               <v-row class="border-bottom">
                 <v-col cols="2" class="d-flex align-center">
-                  <h4>* required</h4>
+                  <h4>{{$t('* required')}}</h4>
                 </v-col>
                 <v-col cols="4">
-                  <h4>Source from your CSV</h4>
-                  <div class="caption text-grey">every entry gets its value from its corresponding CSV row</div>
+                  <h4>{{$t('Source from your CSV')}}</h4>
+                  <div class="caption text-grey">{{$t('every entry gets its value from its corresponding CSV row')}}</div>
                 </v-col>
                 <v-col cols="2" class="text-center">
-                  <p>OR</p>
+                  <p>{{$t('OR')}}</p>
                 </v-col>
                 <v-col cols="4">
-                  <h4>Source a Default Value from Phaidra</h4>
-                  <div class="caption text-grey">ALL rows get the selected default value</div>
+                  <h4>{{$t('Source a Default Value from Phaidra')}}</h4>
+                  <div class="caption text-grey">{{$t('ALL rows get the selected default value')}}</div>
                 </v-col>
               </v-row>
 
@@ -48,7 +48,7 @@
                     >
                       mdi-check-circle
                     </v-icon>
-                    <span class="text-capitalize text-subtitle-1">{{ field }}{{ fieldSettings[field]?.required ? ' *' : '' }}</span>
+                    <span class="text-capitalize text-subtitle-1">{{ $t(field) }}{{ fieldSettings[field]?.required ? ' *' : '' }}</span>
                   </v-col>
 
                   <v-col cols="4">
@@ -146,7 +146,7 @@
             :to="steps[1].route"
           >
             <v-icon left>mdi-arrow-left</v-icon>
-            Back
+            {{$t('Back')}}
           </v-btn>
         </v-col>
         <v-col cols="auto">
@@ -157,7 +157,7 @@
             :disabled="!allFieldsMapped"
             :to="steps[3].route"
           >
-            Next
+            {{$t('Next')}}
             <v-icon right>mdi-arrow-right</v-icon>
           </v-btn>
         </v-col>

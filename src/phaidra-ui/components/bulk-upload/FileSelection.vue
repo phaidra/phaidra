@@ -3,7 +3,7 @@
     <v-card-text>
       <div class="d-flex align-center justify-space-between mb-4">
         <div>
-          <span class="text-h6">Files</span>
+          <span class="text-h6">{{$t('Files')}}</span>
         </div>
         <div class="d-flex align-center">
           <v-file-input
@@ -12,7 +12,7 @@
             chips
             show-size
             counter
-            label="Select Files"
+            :label="$t('Select Files')"
             outlined
             dense
             class="max-w-500"
