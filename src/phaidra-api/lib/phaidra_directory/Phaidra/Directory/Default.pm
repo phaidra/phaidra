@@ -944,6 +944,16 @@ sub get_user_data {
         for my $orgScim (@{$data->{groups}}) {
           if ($orgScim->{value}) {
             push @orgul1, $orgScim->{value};
+            # HACK: pass this to "department"/level 2 as well since (afaik)
+            # it does not really matter whether the org unit is level 1
+            # or level 2 (there's no instance where the IDs of org units
+            # on level 1 and 2 would be the same) and sometimes
+            # the flat org structures are implemented on level 1 only
+            # and sometimes on level 2 only.
+            # Later on, we shold remove this level distinction from access
+            # rights definition (would require migrating the access restrictions
+            # in objects though).
+            push @orgul2, $orgScim->{value};
           }
         }
       }
