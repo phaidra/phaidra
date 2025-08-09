@@ -112,8 +112,8 @@ export const fieldSettings = {
     required: true,
     fieldType: 'single-field',
     allowedSources: ['csv-column', 'phaidra-field'],
-    csvDisplayValue: (value) => value.split(','),
-    csvAPIValue: (value) => value.split(','),
+    csvDisplayValue: (value) => value?.split(',') || [],
+    csvAPIValue: (value) => value?.split(',') || [],
     phaidraDisplayValue: (value) => value,
     phaidraFieldValue: (value) => {
       if (!value) return null

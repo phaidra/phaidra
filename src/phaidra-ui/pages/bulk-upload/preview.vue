@@ -168,7 +168,7 @@ export default {
     async processPreviewData() {
       if (!this.csvContent) return
 
-      const rows = this.csvContent.split('\n')
+      const rows = this.csvContent.split('\n').filter(row => row.trim() !== '')
       const headers = this.getColumnHeaders
 
       const previewRows = rows.slice(1).map(row => {
