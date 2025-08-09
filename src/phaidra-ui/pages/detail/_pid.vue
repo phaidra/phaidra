@@ -1225,8 +1225,8 @@
                           >{{ $t("Created") }}</v-col
                         >
                         <v-col cols="8" offset="1">{{
-                          objectInfo.created | datetime
-                        }}</v-col>
+                          objectInfo.created | datetimeutc
+                        }} UTC</v-col>
                       </v-row>
                     </v-card-text>
                   </v-card>
