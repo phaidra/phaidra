@@ -2354,7 +2354,7 @@ sub _add_jsonld_roles {
             for my $aff (@{$contr->{'schema:affiliation'}}) {
               for my $affname (@{$aff->{'schema:name'}}) {
                 unless (exists($foundAss->{$affname->{'@value'}})) {
-                  push @{$index->{"association"}}, $affname->{'@value'};
+                  push @{$index->{"affiliation"}}, $affname->{'@value'};
                   $foundAss->{$affname->{'@value'}} = 1;
                 }
               }
@@ -2362,14 +2362,14 @@ sub _add_jsonld_roles {
                 for my $id (@{$aff->{'skos:exactMatch'}}) {
                   unless (exists($foundAssIds->{$id})) {
                     if (reftype $id ne reftype {}) {
-                      push @{$index->{"association_id"}}, $id;
+                      push @{$index->{"affiliation_id"}}, $id;
                       $foundAssIds->{$id} = 1;
                       my $pp = $c->app->directory->org_get_parentpath($c, $id);
                       if ($pp->{status} eq 200) {
                         for my $parent (@{$pp->{parentpath}}) {
                           if ($parent->{'@id'} ne $id) {
                             unless (exists($foundAssIds->{$parent->{'@id'}})) {
-                              push @{$index->{"association_id"}}, $parent->{'@id'};
+                              push @{$index->{"affiliation_id"}}, $parent->{'@id'};
                               $foundAssIds->{$parent->{'@id'}} = 1;
                             }
                           }
