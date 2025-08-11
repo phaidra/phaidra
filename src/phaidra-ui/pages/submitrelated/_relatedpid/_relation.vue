@@ -568,7 +568,6 @@ export default {
 
           let kw = fields.getField("keyword");
           kw.multilingual = false;
-          kw.disableSuggest = true;
           self.form.sections[0].fields.push(kw);
 
           let role = fields.getField("role");

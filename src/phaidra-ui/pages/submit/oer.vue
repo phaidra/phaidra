@@ -257,7 +257,6 @@ export default {
       self.form.sections[0].fields.push(fields.getField("description"));
 
       let kw = fields.getField("keyword");
-      kw.disableSuggest = true;
       self.form.sections[0].fields.push(kw);
 
       let role = fields.getField("role");
