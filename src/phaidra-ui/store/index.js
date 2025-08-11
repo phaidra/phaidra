@@ -98,6 +98,33 @@ export const mutations = {
         }
       )
     }
+    if (transition.to.path.includes('/contact')) {
+      state.breadcrumbs.push(
+        {
+          text: 'Contact',
+          to: transition.to.name,
+          disabled: true
+        }
+      )
+    }
+    if (transition.to.path.includes('/editorial-policies')) {
+      state.breadcrumbs.push(
+        {
+          text: 'Editorial Policies',
+          to: transition.to.name,
+          disabled: true
+        }
+      )
+    }
+    if (transition.to.path.includes('/code-of-ethics')) {
+      state.breadcrumbs.push(
+        {
+          text: 'Code of Ethics',
+          to: transition.to.name,
+          disabled: true
+        }
+      )
+    }
     if (transition.to.path.includes('/repostats')) {
       state.breadcrumbs.push(
         {
