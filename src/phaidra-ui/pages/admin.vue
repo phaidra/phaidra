@@ -371,6 +371,33 @@
                 <v-row>
                   <v-col>
                     <v-textarea
+                      :label="$t('Contact')"
+                      v-model="parsedPublicConfigData.cms_contact"
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="3" class="mt-4">{{ $t("Contact component. Enclose template in a div.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-textarea
+                      :label="$t('Code of Ethics')"
+                      v-model="parsedPublicConfigData.cms_code_of_ethics"
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="3" class="mt-4">{{ $t("Code of Ethics component. Enclose template in a div.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-textarea
+                      :label="$t('Editorial Policies')"
+                      v-model="parsedPublicConfigData.cms_editorial_policies"
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="3" class="mt-4">{{ $t("Editorial Policies component. Enclose template in a div.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-textarea
                       label="Submit landing page"
                       v-model="parsedPublicConfigData.cms_submit"
                     ></v-textarea>
