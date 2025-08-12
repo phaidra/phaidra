@@ -721,11 +721,17 @@ export const actions = {
     console.log('fetching object info in store: ' + pid)
     try {
       let response
-      if (state.user.token) {
+      let token = state?.user?.token
+      if (process.server) {
+        let ssrCookie = app?.context?.ssrContext?.req?.headers?.cookie
+        let cookieToken = ssrCookie && ssrCookie.split('; ').find(row => row.startsWith('XSRF-TOKEN='))?.split('=')[1]
+        token = cookieToken || token
+      }
+      if (token) {
         response = await this.$axios.get('/object/' + pid + '/info',
           {
             headers: {
-              'X-XSRF-TOKEN': state.user.token
+              'X-XSRF-TOKEN': token
             }
           }
         )
@@ -848,6 +854,8 @@ export const actions = {
         commit('setAlerts', response.data.alerts)
       }
       if (response.status === 200) {
+        console.log('state.instanceconfig.cookiedomain', state.instanceconfig.cookiedomain)
+        this.$cookies.set('XSRF-TOKEN', response.data['XSRF-TOKEN'])
         if (state.instanceconfig.cookiedomain) {
           let cookieOptions = {
             path: '/',
