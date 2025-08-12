@@ -114,6 +114,8 @@
   <field name="annotations_json" type="text_general" indexed="false" stored="true"/>
   <field name="association" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="association_id" type="strings" multiValued="true" indexed="true" stored="true"/>
+  <field name="affiliation" type="strings" multiValued="true" indexed="true" stored="true"/>
+  <field name="affiliation_id" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="bbox" type="strings"/>
   <field name="bf_paralleltitle_maintitle" type="strings" indexed="true" stored="true"/>
   <field name="bf_paralleltitle_subtitle" type="strings" indexed="true" stored="true"/>
