@@ -54,7 +54,7 @@ export default {
       email: 'support email',
       since: '2023-01-01',
       // only uncomment for wildcard purposes
-      cookiedomain: 'phaidralocal.com:8899',
+      // cookiedomain: '<HOST_WITH_OR_WITHOUT_PORT>',
       languages: 'eng,deu'
     }
   }
