@@ -1752,6 +1752,22 @@
                       <v-row
                         no-gutters
                         class="pt-2"
+                        v-if="objectInfo.cmodel === 'Picture' || objectInfo.cmodel === 'Book'"
+                      >
+                        <a
+                        :href="
+                            instanceconfig.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/iiifmanifest'
+                          "
+                          target="_blank"
+                          >{{ $t("IIIF-MANIFEST") }}</a
+                        >
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
                         v-if="objectInfo.dshash['UWMETADATA']"
                       >
                         <a
