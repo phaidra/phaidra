@@ -854,7 +854,6 @@ export const actions = {
         commit('setAlerts', response.data.alerts)
       }
       if (response.status === 200) {
-        console.log('state.instanceconfig.cookiedomain', state.instanceconfig.cookiedomain)
         this.$cookies.set('XSRF-TOKEN', response.data['XSRF-TOKEN'])
         if (state.instanceconfig.cookiedomain) {
           let cookieOptions = {
