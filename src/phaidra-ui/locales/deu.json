@@ -1340,5 +1340,10 @@
     "All files have been successfully uploaded to PHAIDRA.": "Alle Dateien wurden erfolgreich in PHAIDRA hochgeladen.",
     "Start New Bulk Upload": "Neuer Bulk Upload starten",
     "Error starting new bulk upload:": "Fehler beim Starten eines neuen Bulk Uploads:",
-    "Loading local storage...": "Lade lokalen Speicher..."
+    "Loading local storage...": "Lade lokalen Speicher...",
+    "Contact component. Enclose template in a div.": "Kontakt-Komponente. Enthält die Vorlage in einem div.",
+    "Code of Ethics component. Enclose template in a div.": "Ethik-Komponente. Enthält die Vorlage in einem div.",
+    "Editorial Policies component. Enclose template in a div.": "Redaktionelle Richtlinien-Komponente. Enthält die Vorlage in einem div.",
+    "Code of Ethics": "Ethik",
+    "Editorial Policies": "Redaktionelle Richtlinien"
   }

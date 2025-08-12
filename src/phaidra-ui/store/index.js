@@ -43,6 +43,9 @@ export const mutations = {
       'cms_footer',
       'cms_home',
       'cms_impressum',
+      'cms_contact',
+      'cms_code_of_ethics',
+      'cms_editorial_policies',
       'cms_submit',
       'cms_css',
       'cms_help',
@@ -109,6 +112,33 @@ export const mutations = {
       state.breadcrumbs.push(
         {
           text: 'Bulk upload',
+          to: transition.to.name,
+          disabled: true
+        }
+      )
+    }
+    if (transition.to.path.includes('/contact')) {
+      state.breadcrumbs.push(
+        {
+          text: 'Contact',
+          to: transition.to.name,
+          disabled: true
+        }
+      )
+    }
+    if (transition.to.path.includes('/editorial-policies')) {
+      state.breadcrumbs.push(
+        {
+          text: 'Editorial Policies',
+          to: transition.to.name,
+          disabled: true
+        }
+      )
+    }
+    if (transition.to.path.includes('/code-of-ethics')) {
+      state.breadcrumbs.push(
+        {
+          text: 'Code of Ethics',
           to: transition.to.name,
           disabled: true
         }
