@@ -126,8 +126,6 @@ export const fieldSettings = {
         field: () => {
           const field = fieldslib.getField("keyword")
           field.multiplicable = false
-          field.suggester = 'keywordsuggester'
-          field.disableSuggest = true
           return field
         },
         getProps: function(value) {

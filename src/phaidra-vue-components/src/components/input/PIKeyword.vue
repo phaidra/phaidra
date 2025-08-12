@@ -7,7 +7,6 @@
         v-on:change="onInput($event)"
         :items="items"
         :loading="loading"
-        :search-input.sync="disableSuggest ? null : search"
         :required="required"
         :rules="required ? [ v => !!v || 'Required'] : []"
         hide-no-data
@@ -108,19 +107,11 @@ export default {
     multilingual: {
       type: Boolean
     },
-    suggester: {
-      type: String,
-      required: true
-    },
     debounce: {
       type: Number,
       default: 500
     },
     showIds: {
-      type: Boolean,
-      default: false
-    },
-    disableSuggest: {
       type: Boolean,
       default: false
     },
@@ -141,9 +132,6 @@ export default {
     }
   },
   watch: {
-    search (val) {
-      val && this.querySuggestionsDebounce(val)
-    },
     value: {
       handler: function (val) {
         this.model = this.value
@@ -168,46 +156,6 @@ export default {
     },
     htmlToPlaintext (html) {
       return xmlUtils.htmlToPlaintext(html)
-    },
-    querySuggestionsDebounce (value) {
-      this.showList = true
-
-      if (this.debounce) {
-        if (this.debounceTask !== undefined) clearTimeout(this.debounceTask)
-        this.debounceTask = setTimeout(() => {
-          return this.querySuggestions(value)
-        }, this.debounce)
-      } else {
-        return this.querySuggestions(value)
-      }
-    },
-    querySuggestions: async function (q) {
-      if (q.length < this.min || !this.suggester) return
-
-      this.loading = true
-
-      var params = {
-        suggest: true,
-        'suggest.dictionary': this.suggester,
-        wt: 'json',
-        'suggest.q': q
-      }
-
-      try {
-        let response = await this.$axios.request({
-          method: 'GET',
-          url: this.$store.state.instanceconfig.solr + '/suggest',
-          params: params
-        })
-        this.items = []
-        for (var i = 0; i < response.data.suggest[this.suggester][q].suggestions.length; i++) {
-          this.items.push(response.data.suggest[this.suggester][q].suggestions[i])
-        }
-      } catch (error) {
-        console.log(error)
-      } finally {
-        this.loading = false
-      }
     }
   }
 
