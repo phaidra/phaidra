@@ -124,6 +124,9 @@ export function toggleFacet (q, f) {
 }
 
 export function deactivateFacetQueries (f) {
+  if(f.selectedRadioValue){
+    delete f.selectedRadioValue
+  }
   for (var i = 0; i < f.queries.length; i++) {
     Vue.set(f.queries[i], 'active', false)
     if (f.queries[i].childFacet) {
