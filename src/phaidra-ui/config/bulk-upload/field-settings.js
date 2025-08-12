@@ -331,7 +331,7 @@ export const fieldSettings = {
     ]
   },
   'OEFOS': {
-    required: true,
+    required: false,
     fieldType: 'single-field',
     allowedSources: ['phaidra-field'],
     csvDisplayValue: (value) => value,
