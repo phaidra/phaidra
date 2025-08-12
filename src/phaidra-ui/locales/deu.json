@@ -1298,6 +1298,8 @@
     "This collection template does not exist...": "Diese Collection-Vorlage existiert nicht...",
     "Disable Association parent selection": "Deaktiviere Auswahl von übergeordneten Einheiten",
     "Disable parent selection in Association dropdown and in tree view.": "Deaktiviere Auswahl von übergeordneten Einheiten in der Auswahlliste und im Baum.",
+    "Hide breadcrumbs on homepage.": "Breadcrumbs auf der Startseite ausblenden.",
+    "Show/Hide breadcrumbs on homepage.": "Breadcrumbs auf der Startseite anzeigen/ausblenden.",
     "Bulk Upload": "Bulk Upload",
     "Load CSV": "CSV laden",
     "Select Mapping": "Mapping auswählen",
