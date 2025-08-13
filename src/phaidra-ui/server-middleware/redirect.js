@@ -23,13 +23,8 @@ export default async (req, res, next) => {
         if (doc['cmodel']) {
           if (doc['cmodel'] === 'Book') {
             if (!doc.datastreams.includes("POLICY") && !doc.isrestricted) {
-              if (doc.datastreams.includes("UWMETADATA")) {
-                redirect(res, config.instances[config.defaultinstance].fedora + '/objects/' + pid + '/methods/bdef:Book/view')
-                return
-              } else {
-                redirect(res, '/api/object/' + pid + '/preview')
-                return
-              }
+              redirect(res, '/api/object/' + pid + '/preview')
+              return
             }
           }
         }
