@@ -2472,6 +2472,9 @@ export default {
     };
   },
   async fetch() {
+    if(!this.$route.params.pid || ! this.$route.path === '/detail') {
+      return
+    }
     await this.fetchAsyncData(this, this.$route.params.pid);
     let metaInfo = {}
     if (this.objectInfo) {
