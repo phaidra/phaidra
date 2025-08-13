@@ -234,7 +234,7 @@ services:
     profiles: ["shib-s3"]
     
   solr:
-    image: phaidraorg/solr-dist:2e059f51
+    image: phaidraorg/solr-dist:62b1dfa2
     <<: [*common, *logs]
     volumes:
       - solr:/var/solr
@@ -250,7 +250,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:04dd545e
+    image: phaidraorg/ui:d57f6812
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -267,7 +267,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:04dd545e
+    image: phaidraorg/ui:d57f6812
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -283,7 +283,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:3c76e09e
+    image: phaidraorg/api-dist:62b1dfa2
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -298,7 +298,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:3c76e09e
+    image: phaidraorg/api-dist:62b1dfa2
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
