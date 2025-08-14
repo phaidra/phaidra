@@ -54,9 +54,9 @@
                 </template>
 
                 <transition name="fade" mode="out-in">
-                  <keep-alive>
+                  <v-col>
                     <Nuxt/>
-                  </keep-alive>
+                  </v-col>
                 </transition>
               </v-col>
             </v-row>
