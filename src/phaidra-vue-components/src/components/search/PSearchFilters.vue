@@ -436,7 +436,7 @@ export default {
         console.log('usernameSearchItems', this.usernameSearchItems)
         if (this.usernameSearchItems.length > 0) {
           for (let usr of this.usernameSearchItems) {
-            if (usr.uid === this.owner) {
+            if (usr?.uid === this.owner) {
                 this.usernameSearchModel = usr
             }
           }
