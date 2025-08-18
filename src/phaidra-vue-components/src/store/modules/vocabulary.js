@@ -2010,8 +2010,8 @@ const mutations = {
       if (state.vocabularies['oefos']['terms']) {
         if (state.vocabularies['oefos']['terms'][0]) {
           state.vocabularies['oefos']['terms'].sort(function (a, b) {
-            let aLabel = a['skos:prefLabel'][locale] || ''
-            let bLabel = b['skos:prefLabel'][locale] || ''
+            const aLabel = a['skos:prefLabel'][locale] || ''
+            const bLabel = b['skos:prefLabel'][locale] || ''
             return aLabel.localeCompare(bLabel, locale)
           })
         }
