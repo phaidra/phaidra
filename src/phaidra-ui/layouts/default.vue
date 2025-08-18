@@ -10,7 +10,9 @@
           <v-main id="main-content">
             <v-row>
               <v-col cols="12" md="10" offset-md="1" class="content">
-                <p-breadcrumbs :items="breadcrumbs" v-if="$route.path === '/' ? !instanceconfig.hideBreadcrumbsOnHomepage : true"></p-breadcrumbs>
+                <client-only>
+                  <p-breadcrumbs :items="breadcrumbs" v-if="$route.path === '/' ? !instanceconfig.hideBreadcrumbsOnHomepage : true"></p-breadcrumbs>
+                </client-only>
 
                 <template v-for="(alert, i) in alerts">
                   <v-snackbar
