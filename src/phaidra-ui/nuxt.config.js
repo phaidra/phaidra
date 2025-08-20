@@ -78,6 +78,7 @@ export default {
     primaryColor: process.env.PHAIDRA_PRIMARY_COLOR,
     defaultTheme: process.env.PHAIDRA_DEFAULT_THEME,
     darkPrimaryColor: process.env.PHAIDRA_DARK_PRIMARY_COLOR,
+    cookieDomain: process.env.COOKIE_DOMAIN,
     baseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT,
     apiBaseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT + '/api',
     axios: {

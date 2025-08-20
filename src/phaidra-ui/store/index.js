@@ -74,6 +74,9 @@ export const mutations = {
   setInstanceConfigApiBaseUrl(state, api) {
     Vue.set(state.instanceconfig, 'api', api)
   },
+  setInstanceConfigCookieDomain(state, cookieDomain) {
+    Vue.set(state.instanceconfig, 'cookiedomain', cookieDomain)
+  },
   updateBreadcrumbs(state, transition) {
     state.breadcrumbs = [
       {
