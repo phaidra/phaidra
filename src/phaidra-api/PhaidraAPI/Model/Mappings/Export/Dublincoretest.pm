@@ -199,7 +199,9 @@ sub _add_roles_with_id {
             my $id;
             if ($contr->{'@type'} eq 'schema:Person') {
               if ($contr->{'schema:givenName'} || $contr->{'schema:familyName'}) {
-                $name = $contr->{'schema:familyName'}[0]->{'@value'}.', '.$contr->{'schema:givenName'}[0]->{'@value'};
+                $name = $contr->{'schema:familyName'}[0]->{'@value'} if $contr->{'schema:familyName'}[0]->{'@value'};
+                $name = $name.', ' if $contr->{'schema:givenName'}[0]->{'@value'} && $name;
+                $name = $name.$contr->{'schema:givenName'}[0]->{'@value'} if $contr->{'schema:givenName'}[0]->{'@value'};
               }
               else {
                 $name = $contr->{'schema:name'}[0]->{'@value'};

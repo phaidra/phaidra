@@ -182,9 +182,13 @@ sub param_to_string {
 }
 
 sub create_imageserver_job {
-  my ($self, $c, $pid, $cmodel, $ds) = @_;
+  my ($self, $c, $pid, $cmodel, $ds, $agent) = @_;
 
   my $res = {alerts => [], status => 200};
+
+  unless (defined($agent)) {
+    $agent = 'pige';
+  }
 
   $c->app->log->info("Creating imageserver job pid[$pid] cm[$cmodel] ds[".(defined($ds) ? $ds : '')."]");
   my $hash;
@@ -204,7 +208,7 @@ sub create_imageserver_job {
       $c->app->log->error("imageserver job pid[$pid] cm[$cmodel]: could not get path");
     }
   }
-  my $job = {pid => $pid, cmodel => $cmodel, agent => "pige", status => "new", idhash => $hash, created => time};
+  my $job = {pid => $pid, cmodel => $cmodel, agent => $agent, status => "new", idhash => $hash, created => time};
   $job->{path} = $path if $path;
   $job->{ds} = $ds if $ds;
   $c->paf_mongo->get_collection('jobs')->insert_one($job);

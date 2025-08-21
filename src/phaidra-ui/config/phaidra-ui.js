@@ -21,7 +21,7 @@ export default {
         baseurl: 'api.ror.org/v1'
       },
       sherparomeo: {
-        url: 'http://www.sherpa.ac.uk/romeo/api29.php',
+        url: 'https://v2.sherpa.ac.uk/romeo/api/search',
         key: 'V9cjsv6PTJE'
       },
       vocserver: {

@@ -277,7 +277,7 @@ sub modify_hook {
       }
       if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
         my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
-        my $imsr = $imgsrv_model->create_imageserver_job($c, $pid, $res_cmodel->{cmodel});
+        my $imsr = $imgsrv_model->create_imageserver_job($c, $pid, $res_cmodel->{cmodel}, undef, undef);
         push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
       }
       if ($res_cmodel->{cmodel} eq 'Video') {
@@ -325,7 +325,7 @@ sub _create_imageserver_job_if_not_exists {
   my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
   my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'pige'});
   unless ($find->{pid}) {    
-    return $imgsrv_model->create_imageserver_job($c, $pid, $cmodel);
+    return $imgsrv_model->create_imageserver_job($c, $pid, $cmodel, undef, undef);
   }
 
   return $res;

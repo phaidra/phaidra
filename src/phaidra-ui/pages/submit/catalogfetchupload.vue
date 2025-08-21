@@ -241,7 +241,9 @@ export default {
         }
       }      
       jsonLdUtils.push_object(this.jsonld, this.objectypefield.predicate, jsonLdUtils.get_json_object(this.objectypefield['skos:prefLabel'], null, 'skos:Concept', [this.objectypefield.value]))
-      jsonLdUtils.push_object(this.jsonld, this.oefosfield.predicate, jsonLdUtils.get_json_concept(this.oefosfield['skos:prefLabel'], this.oefosfield['rdfs:label'], 'skos:Concept', [this.oefosfield.value], this.oefosfield['skos:notation'] ? this.oefosfield['skos:notation'] : null))
+      if (this.oefosfield.value) {
+        jsonLdUtils.push_object(this.jsonld, this.oefosfield.predicate, jsonLdUtils.get_json_concept(this.oefosfield['skos:prefLabel'], this.oefosfield['rdfs:label'], 'skos:Concept', [this.oefosfield.value], this.oefosfield['skos:notation'] ? this.oefosfield['skos:notation'] : null))
+      }
       jsonLdUtils.push_object(this.jsonld, this.associationfield.predicate, jsonLdUtils.get_json_object(this.associationfield['skos:prefLabel'], null, this.associationfield.type, [this.associationfield.value]))
       this.jsonld['edm:rights'] = [ this.licensefield.value ]
       this.jsonld['ebucore:filename'] = [ this.filefield.value ]
