@@ -89,18 +89,21 @@ sub get_jsonld {
                     'skos:prefLabel' => []
                 };
                 
+                my $found = 0;
                 foreach my $subfield (@{_ensure_array($field->{subfield})}) {
                     if ($subfield->{'@code'} eq 'a') {
+                        $found = 1;
                         my $label = { '@value' => $subfield->{'#text'} };
                         $label->{'@language'} = $primary_language if defined $primary_language;
                         push @{$subject->{'skos:prefLabel'}}, $label;
                     }
                     elsif ($subfield->{'@code'} eq '0' && $subfield->{'#text'} =~ /\(DE-588\)(.+)/) {
+                        $found = 1;
                         $subject->{'skos:exactMatch'} = ["http://d-nb.info/gnd/$1"];
                     }
                 }
                 
-                push @{$jsonld->{'dcterms:subject'}}, $subject;
+                push @{$jsonld->{'dcterms:subject'}}, $subject if $found;
             }
 
             # Keywords mapping (65X)
