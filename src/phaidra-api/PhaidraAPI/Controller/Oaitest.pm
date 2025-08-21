@@ -227,7 +227,7 @@ sub handler {
   elsif ($verb eq 'Identify') {
     my $earliestDatestampSec = 0;                                                                                   # 1970-01-01T00:00:01Z
     my $earliestDatestampStr = '1970-01-01T00:00:01Z';
-    my $rec                  = $self->mongo->get_collection('oai_records')->find()->sort({"updated" => 1})->next;
+    my $rec                  = $self->mongo->get_collection('oai_records')->find()->sort({"updated" => 1})->limit(1)->next;
     if ($rec) {
       $earliestDatestampStr = $self->_epochMsToIso($rec->{inserted});
     }
