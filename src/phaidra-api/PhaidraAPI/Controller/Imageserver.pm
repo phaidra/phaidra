@@ -20,6 +20,11 @@ sub process {
   my $pid          = $self->stash('pid');
   my $ds           = $self->param('ds');
   my $skipexisting = $self->param('skipexisting');
+  my $agent        = $self->param('agent');
+
+  unless ($agent) {
+    $agent = 'pige';
+  }
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
   my $res         = $authz_model->check_rights($self, $pid, 'rw');
@@ -30,14 +35,14 @@ sub process {
 
   if ($skipexisting && ($skipexisting eq 1)) {
     if (defined($ds)) {
-      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, ds => $ds, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
+      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, ds => $ds, agent => $agent}, {}, {"sort" => {"created" => -1}});
       if ($res1->{pid}) {
         $self->render(json => {alerts => [{type => 'info', msg => "Job for pid[$pid] and ds[$ds] already created"}], job => $res1}, status => 200);
         return;
       }
     }
     else {
-      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
+      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => $agent}, {}, {"sort" => {"created" => -1}});
       if ($res1->{pid}) {
         $self->render(json => {alerts => [{type => 'info', msg => "Job for pid[$pid] already created"}], job => $res1}, status => 200);
         return;
@@ -54,9 +59,9 @@ sub process {
   my $cmodel = $cmodelr->{cmodel};
 
   my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
-  $imgsrv_model->create_imageserver_job($self, $pid, $cmodel, $ds);
+  $imgsrv_model->create_imageserver_job($self, $pid, $cmodel, $ds, $agent);
 
-  $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
+  $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => $agent}, {}, {"sort" => {"created" => -1}});
 
   $self->render(json => $res, status => 200);
 }
@@ -111,7 +116,7 @@ sub process_pids {
     }
     my $cmodel = $cmodelr->{cmodel};
 
-    my $create_res = $imgsrv_model->create_imageserver_job($self, $pid, $cmodel);
+    my $create_res = $imgsrv_model->create_imageserver_job($self, $pid, $cmodel, undef, undef);
 
     push @results, {pid => $pid, idhash => $create_res->{hash}};
   }
