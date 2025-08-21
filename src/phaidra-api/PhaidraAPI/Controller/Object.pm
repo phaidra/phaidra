@@ -243,6 +243,14 @@ sub thumbnail {
   }
   my $size = "!$w,$h";
 
+  my $thumbnest = defined $self->stash('thumbnest') ? $self->stash('thumbnest') : 0;
+  if ($thumbnest > 1) {
+    $self->app->log->error("thumbnail nesting too deep [$thumbnest] for pid[$pid]");
+    $self->setNoCacheHeaders();
+    $self->reply->static('images/collection.png');
+    return;
+  }
+
   my $thumbPid = $self->get_is_thumbnail_for($pid);
   if ($thumbPid) {
     $pid = $thumbPid;
@@ -373,7 +381,9 @@ sub thumbnail {
           $self->reply->static('images/collection.png');
           return;
         } else {
-          return $self->_proxy_thumbnail($r->{oldest_member}->{pid}, $r->{oldest_member}->{cmodel}, $size);
+          $self->stash(pid => $r->{oldest_member}->{pid});
+          $self->stash(thumbnest => $thumbnest + 1);
+          return $self->thumbnail();
         }
       } else {
         $self->reply->static('images/collection.png');
