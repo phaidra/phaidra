@@ -18,7 +18,9 @@ export default {
     if (Array.isArray(tree)) {
       if (tree[0]) {
         tree.sort(function (a, b) {
-          return a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale)
+          const aLabel = a['skos:prefLabel'][locale] ?? ''
+          const bLabel = b['skos:prefLabel'][locale] ?? ''
+          return aLabel.localeCompare(bLabel, locale)
         })
       }
     }
