@@ -134,6 +134,7 @@ export default {
     loadInstanceConfigToStore: async function() {
       this.loading = true
       try {
+        this.$store.commit("setInstanceConfigCookieDomain", this.$config.cookieDomain);
         let settingResponse = await this.$axios.get("/config/public");
         if(settingResponse?.data?.public_config){
           if(settingResponse?.data?.public_config?.faviconText){
