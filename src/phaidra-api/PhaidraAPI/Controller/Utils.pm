@@ -131,7 +131,7 @@ sub request_doi {
     my $msg = MIME::Lite::TT::HTML->new(
       From        => $userdata->{email},
       To          => $to,
-      Subject     => 'Subsequent DOI allocation',
+      Subject     => 'Subsequent DOI allocation: '. $pid . ' ' . $userdata->{email},
       Charset     => 'utf8',
       Encoding    => 'quoted-printable',
       Template    => {html => 'email/doirequest.html.tt', text => 'email/doirequest.txt.tt'},
