@@ -182,7 +182,7 @@ services:
   #################### httpd service for shib-local profile ####################
   httpd-shib-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:97560bba
+    image: phaidraorg/httpd-shib-dist:6925dee0
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -522,7 +522,7 @@ services:
 
   prometheus:
     hostname: "prometheus"
-    image: phaidraorg/prometheus-dist:740acb28
+    image: phaidraorg/prometheus-dist:6925dee0
     volumes:
       - prometheus:/prometheus
     extra_hosts:
