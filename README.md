@@ -2,7 +2,10 @@
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 ___
-![alt text](./pictures/running_phaidra.png "Screenshot of PHAIDRA landing page")*Running PHAIDRA website*
+
+Running PHAIDRA website (light theme)             |  Running PHAIDRA website (dark theme)
+:-------------------------:|:-------------------------:
+![alt text](./pictures/running_phaidra_light.png "Screenshot of PHAIDRA landing page (light theme)") | ![alt text](./pictures/running_phaidra_dark.png "Screenshot of PHAIDRA landing page (dark theme)")
 ___
 
 # About this repository
