@@ -312,6 +312,10 @@ sub thumbnail {
         return $self->_proxy_thumbnail($firstpage, $cmodelr->{cmodel}, $size);
       }
       else {
+        if (defined $self->stash('defaulticonpath')) {
+          $self->reply->static($self->stash('defaulticonpath'));
+          return;
+        }
         $self->reply->static('images/book.png');
         return;
       }
@@ -331,6 +335,10 @@ sub thumbnail {
           $self->redirect_to($thumburl);
           return;
         } else {
+          if (defined $self->stash('defaulticonpath')) {
+            $self->reply->static($self->stash('defaulticonpath'));
+            return;
+          }
           $self->reply->static('images/video.png');
           return;
         }
@@ -357,15 +365,27 @@ sub thumbnail {
         }
       }
       else {
+        if (defined $self->stash('defaulticonpath')) {
+          $self->reply->static($self->stash('defaulticonpath'));
+          return;
+        }
         $self->reply->static('images/video.png');
         return;
       }
     }
     case 'Audio' {
+      if (defined $self->stash('defaulticonpath')) {
+        $self->reply->static($self->stash('defaulticonpath'));
+        return;
+      }
       $self->reply->static('images/audio.png');
       return;
     }
     case 'Container' {
+      if (defined $self->stash('defaulticonpath')) {
+        $self->reply->static($self->stash('defaulticonpath'));
+        return;
+      }
       $self->reply->static('images/container.png');
       return;
     }
@@ -383,18 +403,31 @@ sub thumbnail {
         } else {
           $self->stash(pid => $r->{oldest_member}->{pid});
           $self->stash(thumbnest => $thumbnest + 1);
+          $self->stash(defaulticonpath => 'images/collection.png');
           return $self->thumbnail();
         }
       } else {
+        if (defined $self->stash('defaulticonpath')) {
+          $self->reply->static($self->stash('defaulticonpath'));
+          return;
+        }
         $self->reply->static('images/collection.png');
         return;
       }
     }
     case 'Resource' {
+      if (defined $self->stash('defaulticonpath')) {
+        $self->reply->static($self->stash('defaulticonpath'));
+        return;
+      }
       $self->reply->static('images/resource.png');
       return;
     }
     case 'Asset' {
+      if (defined $self->stash('defaulticonpath')) {
+        $self->reply->static($self->stash('defaulticonpath'));
+        return;
+      }
       $self->reply->static('images/asset.png');
       return;
     }
