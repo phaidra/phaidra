@@ -137,9 +137,9 @@ sub search_solr {
     $url->path("/solr/$core/select");
   }
 
-  $self->app->log->info("proxying solr request");
-  $self->app->log->info($url);
-  $self->app->log->info($self->app->dumper($self->req->params->to_hash));
+  #$self->app->log->info("proxying solr request");
+  #$self->app->log->info($url);
+  #$self->app->log->info($self->app->dumper($self->req->params->to_hash));
 
   if (Mojo::IOLoop->is_running) {
     $self->render_later;

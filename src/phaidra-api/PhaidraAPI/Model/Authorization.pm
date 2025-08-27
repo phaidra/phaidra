@@ -76,6 +76,18 @@ sub check_rights {
       }
     }
 
+    # if defined, users with this affiliation are superuserforallusers
+    if (exists($ENV{"SHIB_SUPERUSER_AFFILIATION"})) {
+      for my $aff (@{$userdata->{affiliation}}) {
+        if ($aff eq $ENV{"SHIB_SUPERUSER_AFFILIATION"}) {
+          $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] GRANTED: SHIB_SUPERUSER_AFFILIATION: $aff");
+          $res->{rights} = 'rw';
+          $res->{status} = 200;
+          return $res;
+        }
+      }
+    }
+
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
     my $fres         = $fedora_model->getObjectProperties($c, $pid);
     if ($fres->{status} ne 200) {
