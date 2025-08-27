@@ -57,8 +57,17 @@ export default {
             f.removable = false
           }
           if (f.id.includes("license") && f.value !== "http://rightsstatements.org/vocab/InC/1.0/") {
-            f.removable = false
-            f.readonly = true
+            let existingResourceType = form.sections[0].fields.find(f => f.predicate === "dcterms:type");
+            if (existingResourceType.value.includes("GXS7-ENXJ")
+                || existingResourceType.value.includes("8MY0-BQDQ")
+                || existingResourceType.value.includes("7AVS-Y482")) {
+              f.removable = true
+              f.readonly = false
+              f.disabled = false
+            } else {
+              f.removable = false
+              f.readonly = true
+            }
           }
           if (f.id.includes("mime-type")) {
             f.removable = false
