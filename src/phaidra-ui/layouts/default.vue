@@ -56,9 +56,11 @@
                 </template>
 
                 <transition name="fade" mode="out-in">
-                  <v-col>
-                    <Nuxt/>
-                  </v-col>
+                  <v-row no-gutters>
+                    <v-col>
+                      <Nuxt/>
+                    </v-col>
+                  </v-row>
                 </transition>
               </v-col>
             </v-row>
