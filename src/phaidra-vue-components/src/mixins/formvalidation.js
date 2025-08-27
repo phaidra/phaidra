@@ -1073,7 +1073,6 @@ export const formvalidation = {
           }
         }
       }
-      console.log("resourceType", resourceType);
       switch (resourceType) {
         case 'https://pid.phaidra.org/vocabulary/8MY0-BQDQ':
           // container
@@ -1107,8 +1106,6 @@ export const formvalidation = {
         this.mandatoryFieldsFound['File'] = true
         this.mandatoryFieldsValidated['File'] = true
       }
-      console.log("mandatoryFieldsFound", this.mandatoryFieldsFound);
-      console.log("this.form.sections", this.form.sections);
       for (const s of this.form.sections) {
         for (const f of s.fields) {
           if (f.predicate === 'dcterms:type') {
