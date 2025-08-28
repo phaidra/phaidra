@@ -49,6 +49,9 @@
                   :corpAuthorsProp="corpAuthors"
                   :rolesProp="roles"
                   :ownerProp="owner"
+                  :accessibilityControlProp="accessibilityControl"
+                  :accessibilityFeatureProp="accessibilityFeature"
+                  :accessibilityHazardProp="accessibilityHazard"
                 ></p-search-filters>
               </v-card-text>
               <v-divider></v-divider>
@@ -91,6 +94,9 @@
           :corpAuthorsProp="corpAuthors"
           :rolesProp="roles"
           :ownerProp="owner"
+          :accessibilityControlProp="accessibilityControl"
+          :accessibilityFeatureProp="accessibilityFeature"
+          :accessibilityHazardProp="accessibilityHazard"
           ></p-search-filters>
       </v-col>
       <v-dialog v-model="limitdialog" width="500">
@@ -340,6 +346,9 @@ export default {
       this.corpAuthors.values = []
       this.persAuthors.values = []
       this.roles = []
+      this.accessibilityControl = []
+      this.accessibilityFeature = []
+      this.accessibilityHazard = []
       this.currentPage = 1
       this.pagesize = 10
       console.log(this.facetQueries)
@@ -410,6 +419,9 @@ export default {
       persAuthors,
       roles: [],
       owner: this.ownerProp,
+      accessibilityControl: [],
+      accessibilityFeature: [],
+      accessibilityHazard: [],
 
       docs: [],
       total: 0,

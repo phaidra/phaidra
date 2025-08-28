@@ -1,4 +1,4 @@
-export function buildSearchDef ({ sortdef, q, page, pagesize, facetQueries, corpAuthors, persAuthors, roles, owner, inCollection: collection, baseAnds }) {
+export function buildSearchDef ({ sortdef, q, page, pagesize, facetQueries, corpAuthors, persAuthors, roles, owner, inCollection: collection, baseAnds, accessibilityControl, accessibilityFeature, accessibilityHazard }) {
   let searchdefarr = []
 
   for (let i = 0; i < sortdef.length; i++) {
@@ -105,6 +105,37 @@ export function buildSearchDef ({ sortdef, q, page, pagesize, facetQueries, corp
   if (collection) {
     ands.push('ispartof:"' + collection + '"')
     searchdefarr.push('collection=' + collection)
+  }
+
+  // Handle accessibility filters
+  if (accessibilityControl && accessibilityControl.length > 0) {
+    for (let j = 0; j < accessibilityControl.length; j++) {
+      let v = accessibilityControl[j]
+      if (v !== '') {
+        ands.push('(accessibilityControl:"' + v + '")')
+        searchdefarr.push('accessibilityControl=' + encodeURIComponent(v))
+      }
+    }
+  }
+
+  if (accessibilityFeature && accessibilityFeature.length > 0) {
+    for (let j = 0; j < accessibilityFeature.length; j++) {
+      let v = accessibilityFeature[j]
+      if (v !== '') {
+        ands.push('(accessibilityFeature:"' + v + '")')
+        searchdefarr.push('accessibilityFeature=' + encodeURIComponent(v))
+      }
+    }
+  }
+
+  if (accessibilityHazard && accessibilityHazard.length > 0) {
+    for (let j = 0; j < accessibilityHazard.length; j++) {
+      let v = accessibilityHazard[j]
+      if (v !== '') {
+        ands.push('(accessibilityHazard:"' + v + '")')
+        searchdefarr.push('accessibilityHazard=' + encodeURIComponent(v))
+      }
+    }
   }
 
   if (baseAnds) {

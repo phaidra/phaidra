@@ -253,6 +253,103 @@
               </div>
             </v-row>
           </li>
+          <li>
+            <v-row no-gutters>
+              <v-col>
+                <v-checkbox
+                  v-model="showAccessibilityFilter"
+                  @change="toggleAccessibilityFilter()"
+                  :label="$t('Accessibility')"
+                  class="facet-label primary--text"
+                  hide-details
+                  dense
+                  :aria-expanded="showAccessibilityFilter"
+                  :aria-controls="'accessibility-content'"
+                  id="accessibility-control"
+                ></v-checkbox>
+              </v-col>
+            </v-row>
+            <v-row no-gutters v-if="showAccessibilityFilter" id="accessibility-content" role="region" aria-labelledby="accessibility-control">
+              <v-autocomplete
+                :value="getTerm('accessibilityControl', selectedAccessibilityControl)"
+                :item-value="'@id'"
+                class="mt-4"
+                :placeholder="$t('Add accessibility control') + '...'"
+                :hint="$t('Accessibility control')"
+                :items="loadedAccessibilityTerms('accessibilityControl')"
+                v-model="selectedAccessibilityControl"
+                multiple
+                @input="setAccessibilityControl()"
+                :menu-props="{maxHeight:'400'}"
+                persistent-hint
+                filled
+                single-line
+              >
+                <template slot="item" slot-scope="{ attr, item }">
+                  <v-list-item-content two-line>
+                    <v-list-item-title  v-html="`${getLocalizedTermLabel('accessibilityControl', item['@id'])}`"></v-list-item-title>
+                  </v-list-item-content>
+                </template>
+                <template slot="selection" slot-scope="{ item }">
+                  <v-list-item-content>
+                    <v-list-item-title v-html="`${getLocalizedTermLabel('accessibilityControl', item['@id'])}`"></v-list-item-title>
+                  </v-list-item-content>
+                </template>
+              </v-autocomplete>
+              <v-autocomplete
+                :value="getTerm('accessibilityFeature', selectedAccessibilityFeature)"
+                :item-value="'@id'"
+                class="mt-4"
+                :placeholder="$t('Add accessibility feature') + '...'"
+                :hint="$t('Accessibility feature')"
+                :items="loadedAccessibilityTerms('accessibilityFeature')"
+                v-model="selectedAccessibilityFeature"
+                multiple
+                @input="setAccessibilityFeature()"
+                :menu-props="{maxHeight:'400'}"
+                persistent-hint
+                filled
+                single-line
+              >
+                <template slot="item" slot-scope="{ attr, item }">
+                  <v-list-item-content two-line>
+                    <v-list-item-title  v-html="`${getLocalizedTermLabel('accessibilityFeature', item['@id'])}`"></v-list-item-title>
+                  </v-list-item-content>
+                </template>
+                <template slot="selection" slot-scope="{ item }">
+                  <v-list-item-content>
+                    <v-list-item-title v-html="`${getLocalizedTermLabel('accessibilityFeature', item['@id'])}`"></v-list-item-title>
+                  </v-list-item-content>
+                </template>
+              </v-autocomplete>
+              <v-autocomplete
+                :value="getTerm('accessibilityHazard', selectedAccessibilityHazard)"
+                :item-value="'@id'"
+                class="mt-4"
+                :placeholder="$t('Add accessibility hazard') + '...'"
+                :hint="$t('Accessibility hazard')"
+                :items="loadedAccessibilityTerms('accessibilityHazard')"
+                v-model="selectedAccessibilityHazard"
+                multiple
+                @input="setAccessibilityHazard()"
+                :menu-props="{maxHeight:'400'}"
+                persistent-hint
+                filled
+                single-line
+              >
+                <template slot="item" slot-scope="{ attr, item }">
+                  <v-list-item-content two-line>
+                    <v-list-item-title  v-html="`${getLocalizedTermLabel('accessibilityHazard', item['@id'])}`"></v-list-item-title>
+                  </v-list-item-content>
+                </template>
+                <template slot="selection" slot-scope="{ item }">
+                  <v-list-item-content>
+                    <v-list-item-title v-html="`${getLocalizedTermLabel('accessibilityHazard', item['@id'])}`"></v-list-item-title>
+                  </v-list-item-content>
+                </template>
+              </v-autocomplete>
+            </v-row>
+          </li>
         </ul>
       </v-col>
     </v-row>
@@ -270,9 +367,11 @@ import '@/compiled-icons/material-navigation-close'
 import { marcRoles } from './filters'
 import { toggleFacet, showFacet } from './facets'
 import UserSearchDialog from '../select/UserSearchDialog'
+import { vocabulary } from '../../mixins/vocabulary'
 
 export default {
   name: 'p-search-filters',
+  mixins: [vocabulary],
   components: {
     UserSearchDialog
   },
@@ -300,6 +399,18 @@ export default {
     ownerProp: {
       type: String,
       required: true
+    },
+    accessibilityControlProp: {
+      type: Array,
+      default: () => []
+    },
+    accessibilityFeatureProp: {
+      type: Array,
+      default: () => []
+    },
+    accessibilityHazardProp: {
+      type: Array,
+      default: () => []
     }
   },
   computed: {
@@ -338,7 +449,11 @@ export default {
       showOwnerFilter: false,
       showAuthorFilter: false,
       showRoleFilter: false,
+      showAccessibilityFilter: false,
       selectedRole: { pers: '', corp: '' },
+      selectedAccessibilityControl: [],
+      selectedAccessibilityFeature: [],
+      selectedAccessibilityHazard: [],
       marcRoles,
       roles: [],
       persAuthors: {},
@@ -379,6 +494,24 @@ export default {
       this.corpAuthors = v
       if (v.length) {
         this.showAuthorFilter = true
+      }
+    },
+    accessibilityControlProp: function (v) {
+      this.selectedAccessibilityControl = v
+      if (v.length) {
+        this.showAccessibilityFilter = true
+      }
+    },
+    accessibilityFeatureProp: function (v) {
+      this.selectedAccessibilityFeature = v
+      if (v.length) {
+        this.showAccessibilityFilter = true
+      }
+    },
+    accessibilityHazardProp: function (v) {
+      this.selectedAccessibilityHazard = v
+      if (v.length) {
+        this.showAccessibilityFilter = true
       }
     },
     userSearch: async function (val) {
@@ -467,6 +600,24 @@ export default {
     }
   },
   methods: {
+    loadedAccessibilityTerms: function (vocabulary) {
+      if (this.$store.state.vocabulary.vocabularies[vocabulary]) {
+        return this.$store.state.vocabulary.vocabularies[vocabulary].loaded ? this.$store.state.vocabulary.vocabularies[vocabulary].terms : []
+      }
+      return []
+    },
+    toggleAccessibilityFilter: function () {
+      if (!this.showAccessibilityFilter) {
+        this.selectedAccessibilityControl = []
+        this.selectedAccessibilityFeature = []
+        this.selectedAccessibilityHazard = []
+        this.search({ 
+          accessibilityControl: [], 
+          accessibilityFeature: [], 
+          accessibilityHazard: [] 
+        })
+      }
+    },
     searchUserSelected: function (val) {
       this.owner = val.username;
       this.search({ owner: this.owner })
@@ -534,6 +685,15 @@ export default {
     setCorpAuthors: function () {
       this.search({ corpAuthors: this.corpAuthors })
     },
+    setAccessibilityControl: function () {
+      this.search({ accessibilityControl: this.selectedAccessibilityControl })
+    },
+    setAccessibilityFeature: function () {
+      this.search({ accessibilityFeature: this.selectedAccessibilityFeature })
+    },
+    setAccessibilityHazard: function () {
+      this.search({ accessibilityHazard: this.selectedAccessibilityHazard })
+    },
     resetFilters: function () {
       for (const fq of this.facetQueries) {
         if (fq.resetable) {
@@ -547,7 +707,19 @@ export default {
           }
         }
       }
-      this.search({ page: 1, facetQueries: this.facetQueries })
+      // Reset accessibility filters
+      this.selectedAccessibilityControl = []
+      this.selectedAccessibilityFeature = []
+      this.selectedAccessibilityHazard = []
+      this.showAccessibilityFilter = false
+      
+      this.search({ 
+        page: 1, 
+        facetQueries: this.facetQueries,
+        accessibilityControl: [],
+        accessibilityFeature: [],
+        accessibilityHazard: []
+      })
     },
     handleRadioChange: function (q, f) {
       // Deactivate all other queries in this facet
@@ -566,6 +738,9 @@ export default {
     // }
     this.persAuthors = this.persAuthorsProp
     this.corpAuthors = this.corpAuthorsProp
+    this.selectedAccessibilityControl = this.accessibilityControlProp
+    this.selectedAccessibilityFeature = this.accessibilityFeatureProp
+    this.selectedAccessibilityHazard = this.accessibilityHazardProp
   }
 }
 </script>
