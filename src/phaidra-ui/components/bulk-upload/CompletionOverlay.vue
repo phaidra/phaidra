@@ -6,6 +6,14 @@
       <p class="mb-4">
         {{$t('All files have been successfully uploaded to PHAIDRA.')}}
       </p>
+      <p>
+        <nuxt-link
+          :to="localePath({
+            path: '/search',
+            query: { reset: 1 },
+          })"
+        >{{$t('Go to uploaded objects')}}</nuxt-link>
+      </p>
       <v-btn
         color="success"
         large
