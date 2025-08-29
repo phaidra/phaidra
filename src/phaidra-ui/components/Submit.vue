@@ -202,8 +202,14 @@ import { context } from "../mixins/context";
 import { config } from "../mixins/config";
 
 export default {
-  mixins: [context,config],
   middleware: "auth",
+  mixins: [context,config],
+  metaInfo() {
+    let metaInfo = {
+      title: this.$t('Upload') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+    };
+    return metaInfo;
+  },
   watch: {
     templateDialog(opened) {
       if (opened) {
