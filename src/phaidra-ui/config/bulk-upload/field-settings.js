@@ -328,7 +328,7 @@ export const fieldSettings = {
       }
     ]
   },
-  'OEFOS': {
+  'ÖFOS': {
     required: false,
     fieldType: 'single-field',
     allowedSources: ['phaidra-field'],

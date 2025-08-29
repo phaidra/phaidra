@@ -417,7 +417,7 @@ export default {
           if (field === 'Type') {
             this.setTypeProperties(f, value)
           }
-          else if (field === 'OEFOS') {
+          else if (field === 'ÖFOS') {
             this.setOefosProperties(f, value)
           }
           else if (field === 'ORG Unit / Association') {
