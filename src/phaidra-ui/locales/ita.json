@@ -1374,7 +1374,7 @@
   "can only be sourced from a CSV column": "Può essere ottenuto solo da una colonna del file CSV.",
   "can only be sourced from a default Phaidra value": "Può essere ottenuto solo da un valore predefinito in Phaidra.",
   "Step 3: Data Preview": "Passo 3: Anteprima dei dati",
-  "File Language": "Lingua del file",
+  "File Language": "Lingua",
   "Step 4: Upload": "Passo 4: Caricamento",
   "Upload your data to PHAIDRA. You can close the page and return later to resume any interrupted uploads.": "Carica i tuoi dati in PHAIDRA. Puoi chiudere la pagina e tornare in seguito per riprendere eventuali caricamenti interrotti.",
   "Start Upload": "Avvia caricamento",
