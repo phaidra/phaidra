@@ -48,7 +48,7 @@
                     >
                       mdi-check-circle
                     </v-icon>
-                    <span class="text-capitalize text-subtitle-1">{{ $t(field) }}{{ fieldSettings[field]?.required ? ' *' : '' }}</span>
+                    <span class="text-subtitle-1">{{ $t(field) }}{{ fieldSettings[field]?.required ? ' *' : '' }}</span>
                   </v-col>
 
                   <v-col cols="4">
@@ -94,7 +94,7 @@
                       >
                         mdi-check-circle
                       </v-icon>
-                      <span class="text-capitalize text-subtitle-1">{{ field }}{{ fieldSettings[field]?.required ? ' *' : '' }}</span>
+                      <span class="text-subtitle-1">{{ field }}{{ fieldSettings[field]?.required ? ' *' : '' }}</span>
                     </v-col>
                     <v-col cols="2">
                       <SourceSelector
