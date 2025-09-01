@@ -78,6 +78,15 @@ export function buildDateFacet () {
   return yearsFacet
 }
 
+export function buildAccessibilityFacet () {
+  return {
+    label: 'Accessibility',
+    field: 'accessibility',
+    id: 'a11y',
+    queries: []
+  }
+}
+
 export function updateFacetQueries (facetQueriesSolr, facetQueries) {
   // called by the `search` function
   if (facetQueriesSolr) {

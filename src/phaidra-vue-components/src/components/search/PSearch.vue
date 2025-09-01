@@ -127,7 +127,7 @@ import '@/compiled-icons/fontello-sort-number-down'
 import '@/compiled-icons/material-content-link'
 import '@/compiled-icons/material-action-bookmark'
 import '@/compiled-icons/material-toggle-check-box-outline-blank'
-import { buildDateFacet, updateFacetQueries, persAuthors, corpAuthors, deactivateFacetQueries } from './facets'
+import { buildDateFacet, updateFacetQueries, persAuthors, corpAuthors, deactivateFacetQueries, buildAccessibilityFacet } from './facets'
 import { buildParams, buildSearchDef, sortdef } from './utils'
 import { setSearchParams } from './location'
 import { saveAs } from 'file-saver'
@@ -477,8 +477,17 @@ export default {
   },
   mounted: function () {
     this.facetQueries = JSON.parse(JSON.stringify(this.$store.state.search.facetQueries));
-    this.facetQueries.push(buildDateFacet())
-    
+    this.facetQueries = this.facetQueries.map(element => {
+      if (element.id === 'created') {
+        // Build date facet if configured in admin panel
+        element = buildDateFacet()
+      }
+      if (element.id === 'a11y') {
+        // Build accessibility facet if configured in admin panel
+        element = buildAccessibilityFacet()
+      }
+      return element
+    });
     setSearchParams(this, this.$route.query)
 
     // This call is delayed because at this point
