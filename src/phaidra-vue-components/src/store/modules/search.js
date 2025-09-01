@@ -198,6 +198,11 @@ export const state = () => ({
           label: 'CC BY-NC-ND'
         }
       ]
+    },
+    {
+      label: 'Accessibility',
+      id: 'a11y',
+      queries: [],
     }
   ]
 })

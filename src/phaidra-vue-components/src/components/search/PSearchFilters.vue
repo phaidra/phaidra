@@ -20,7 +20,7 @@
               :aria-controls="'facet-content-' + i"
               :id="'facet-control-' + i"
             ></v-checkbox>
-            <ul v-if="f.show" :id="'facet-content-' + i" role="region" :aria-labelledby="'facet-control-' + i">
+            <ul v-if="f.show && f.id !== 'a11y'" :id="'facet-content-' + i" role="region" :aria-labelledby="'facet-control-' + i">
               <template v-if="f.exclusive">
                   <v-radio-group
                     hide-details
@@ -102,6 +102,89 @@
                 </ul>
               </li>
             </ul>
+            <ul v-if="f.show && f.id === 'a11y'" :id="'facet-content-' + i" role="region" :aria-labelledby="'facet-control-' + i">
+              <v-row no-gutters id="accessibility-content" role="region" aria-labelledby="accessibility-control">
+                <v-autocomplete
+                  :value="getTerm('accessibilityControl', selectedAccessibilityControl)"
+                  :item-value="'@id'"
+                  class="mt-4"
+                  :placeholder="$t('Add accessibility control') + '...'"
+                  :hint="$t('Accessibility control')"
+                  :items="loadedAccessibilityTerms('accessibilityControl')"
+                  v-model="selectedAccessibilityControl"
+                  multiple
+                  @input="setAccessibilityControl()"
+                  :menu-props="{maxHeight:'400'}"
+                  persistent-hint
+                  filled
+                  single-line
+                >
+                  <template slot="item" slot-scope="{ attr, item }">
+                    <v-list-item-content two-line>
+                      <v-list-item-title  v-html="`${getLocalizedTermLabel('accessibilityControl', item['@id'])}`"></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+                  <template slot="selection" slot-scope="{ item }">
+                    <v-list-item-content>
+                      <v-list-item-title v-html="`${getLocalizedTermLabel('accessibilityControl', item['@id'])}`"></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+                </v-autocomplete>
+                <v-autocomplete
+                  :value="getTerm('accessibilityFeature', selectedAccessibilityFeature)"
+                  :item-value="'@id'"
+                  class="mt-4"
+                  :placeholder="$t('Add accessibility feature') + '...'"
+                  :hint="$t('Accessibility feature')"
+                  :items="loadedAccessibilityTerms('accessibilityFeature')"
+                  v-model="selectedAccessibilityFeature"
+                  multiple
+                  @input="setAccessibilityFeature()"
+                  :menu-props="{maxHeight:'400'}"
+                  persistent-hint
+                  filled
+                  single-line
+                >
+                  <template slot="item" slot-scope="{ attr, item }">
+                    <v-list-item-content two-line>
+                      <v-list-item-title  v-html="`${getLocalizedTermLabel('accessibilityFeature', item['@id'])}`"></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+                  <template slot="selection" slot-scope="{ item }">
+                    <v-list-item-content>
+                      <v-list-item-title v-html="`${getLocalizedTermLabel('accessibilityFeature', item['@id'])}`"></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+                </v-autocomplete>
+                <v-autocomplete
+                  :value="getTerm('accessibilityHazard', selectedAccessibilityHazard)"
+                  :item-value="'@id'"
+                  class="mt-4"
+                  :placeholder="$t('Add accessibility hazard') + '...'"
+                  :hint="$t('Accessibility hazard')"
+                  :items="loadedAccessibilityTerms('accessibilityHazard')"
+                  v-model="selectedAccessibilityHazard"
+                  multiple
+                  @input="setAccessibilityHazard()"
+                  :menu-props="{maxHeight:'400'}"
+                  persistent-hint
+                  filled
+                  single-line
+                >
+                  <template slot="item" slot-scope="{ attr, item }">
+                    <v-list-item-content two-line>
+                      <v-list-item-title  v-html="`${getLocalizedTermLabel('accessibilityHazard', item['@id'])}`"></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+                  <template slot="selection" slot-scope="{ item }">
+                    <v-list-item-content>
+                      <v-list-item-title v-html="`${getLocalizedTermLabel('accessibilityHazard', item['@id'])}`"></v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+                </v-autocomplete>
+              </v-row>
+            </ul>
+
           </li>
           <li v-if="$store.state.user.token">
             <v-row no-gutters>
@@ -251,103 +334,6 @@
                   </v-col>
                 </v-row>
               </div>
-            </v-row>
-          </li>
-          <li>
-            <v-row no-gutters>
-              <v-col>
-                <v-checkbox
-                  v-model="showAccessibilityFilter"
-                  @change="toggleAccessibilityFilter()"
-                  :label="$t('Accessibility')"
-                  class="facet-label primary--text"
-                  hide-details
-                  dense
-                  :aria-expanded="showAccessibilityFilter"
-                  :aria-controls="'accessibility-content'"
-                  id="accessibility-control"
-                ></v-checkbox>
-              </v-col>
-            </v-row>
-            <v-row no-gutters v-if="showAccessibilityFilter" id="accessibility-content" role="region" aria-labelledby="accessibility-control">
-              <v-autocomplete
-                :value="getTerm('accessibilityControl', selectedAccessibilityControl)"
-                :item-value="'@id'"
-                class="mt-4"
-                :placeholder="$t('Add accessibility control') + '...'"
-                :hint="$t('Accessibility control')"
-                :items="loadedAccessibilityTerms('accessibilityControl')"
-                v-model="selectedAccessibilityControl"
-                multiple
-                @input="setAccessibilityControl()"
-                :menu-props="{maxHeight:'400'}"
-                persistent-hint
-                filled
-                single-line
-              >
-                <template slot="item" slot-scope="{ attr, item }">
-                  <v-list-item-content two-line>
-                    <v-list-item-title  v-html="`${getLocalizedTermLabel('accessibilityControl', item['@id'])}`"></v-list-item-title>
-                  </v-list-item-content>
-                </template>
-                <template slot="selection" slot-scope="{ item }">
-                  <v-list-item-content>
-                    <v-list-item-title v-html="`${getLocalizedTermLabel('accessibilityControl', item['@id'])}`"></v-list-item-title>
-                  </v-list-item-content>
-                </template>
-              </v-autocomplete>
-              <v-autocomplete
-                :value="getTerm('accessibilityFeature', selectedAccessibilityFeature)"
-                :item-value="'@id'"
-                class="mt-4"
-                :placeholder="$t('Add accessibility feature') + '...'"
-                :hint="$t('Accessibility feature')"
-                :items="loadedAccessibilityTerms('accessibilityFeature')"
-                v-model="selectedAccessibilityFeature"
-                multiple
-                @input="setAccessibilityFeature()"
-                :menu-props="{maxHeight:'400'}"
-                persistent-hint
-                filled
-                single-line
-              >
-                <template slot="item" slot-scope="{ attr, item }">
-                  <v-list-item-content two-line>
-                    <v-list-item-title  v-html="`${getLocalizedTermLabel('accessibilityFeature', item['@id'])}`"></v-list-item-title>
-                  </v-list-item-content>
-                </template>
-                <template slot="selection" slot-scope="{ item }">
-                  <v-list-item-content>
-                    <v-list-item-title v-html="`${getLocalizedTermLabel('accessibilityFeature', item['@id'])}`"></v-list-item-title>
-                  </v-list-item-content>
-                </template>
-              </v-autocomplete>
-              <v-autocomplete
-                :value="getTerm('accessibilityHazard', selectedAccessibilityHazard)"
-                :item-value="'@id'"
-                class="mt-4"
-                :placeholder="$t('Add accessibility hazard') + '...'"
-                :hint="$t('Accessibility hazard')"
-                :items="loadedAccessibilityTerms('accessibilityHazard')"
-                v-model="selectedAccessibilityHazard"
-                multiple
-                @input="setAccessibilityHazard()"
-                :menu-props="{maxHeight:'400'}"
-                persistent-hint
-                filled
-                single-line
-              >
-                <template slot="item" slot-scope="{ attr, item }">
-                  <v-list-item-content two-line>
-                    <v-list-item-title  v-html="`${getLocalizedTermLabel('accessibilityHazard', item['@id'])}`"></v-list-item-title>
-                  </v-list-item-content>
-                </template>
-                <template slot="selection" slot-scope="{ item }">
-                  <v-list-item-content>
-                    <v-list-item-title v-html="`${getLocalizedTermLabel('accessibilityHazard', item['@id'])}`"></v-list-item-title>
-                  </v-list-item-content>
-                </template>
-              </v-autocomplete>
             </v-row>
           </li>
         </ul>
