@@ -236,6 +236,15 @@ export const formvalidation = {
         }
       }
       switch (resourceType) {
+        case 'https://pid.phaidra.org/vocabulary/8MY0-BQDQ':
+          // container
+          this.mandatoryFieldsFound['File'] = true
+          this.mandatoryFieldsFound['License'] = true
+          this.mandatoryFieldsFound['Object type'] = true
+          this.mandatoryFieldsValidated['File'] = true
+          this.mandatoryFieldsValidated['License'] = true
+          this.mandatoryFieldsValidated['Object type'] = true
+          break
         case 'https://pid.phaidra.org/vocabulary/GXS7-ENXJ':
           // collection
           this.mandatoryFieldsFound['File'] = true
@@ -453,6 +462,15 @@ export const formvalidation = {
         }
       }
       switch (resourceType) {
+        case 'https://pid.phaidra.org/vocabulary/8MY0-BQDQ':
+          // container
+          this.mandatoryFieldsFound['File'] = true
+          this.mandatoryFieldsFound['License'] = true
+          this.mandatoryFieldsFound['Object type'] = true
+          this.mandatoryFieldsValidated['File'] = true
+          this.mandatoryFieldsValidated['License'] = true
+          this.mandatoryFieldsValidated['Object type'] = true
+          break
         case 'https://pid.phaidra.org/vocabulary/GXS7-ENXJ':
           // collection
           this.mandatoryFieldsFound['File'] = true
@@ -671,6 +689,15 @@ export const formvalidation = {
         }
       }
       switch (resourceType) {
+        case 'https://pid.phaidra.org/vocabulary/8MY0-BQDQ':
+          // container
+          this.mandatoryFieldsFound['File'] = true
+          this.mandatoryFieldsFound['License'] = true
+          this.mandatoryFieldsFound['Object type'] = true
+          this.mandatoryFieldsValidated['File'] = true
+          this.mandatoryFieldsValidated['License'] = true
+          this.mandatoryFieldsValidated['Object type'] = true
+          break
         case 'https://pid.phaidra.org/vocabulary/GXS7-ENXJ':
           // collection
           this.mandatoryFieldsFound['File'] = true
@@ -890,6 +917,17 @@ export const formvalidation = {
         }
       }
       switch (resourceType) {
+        case 'https://pid.phaidra.org/vocabulary/8MY0-BQDQ':
+          // container
+          this.mandatoryFieldsFound['File'] = true
+          this.mandatoryFieldsFound['License'] = true
+          this.mandatoryFieldsFound['Keyword'] = true
+          this.mandatoryFieldsFound['Object type'] = true
+          this.mandatoryFieldsValidated['File'] = true
+          this.mandatoryFieldsValidated['License'] = true
+          this.mandatoryFieldsValidated['Keyword'] = true
+          this.mandatoryFieldsValidated['Object type'] = true
+          break
         case 'https://pid.phaidra.org/vocabulary/GXS7-ENXJ':
           // collection
           this.mandatoryFieldsFound['File'] = true
@@ -1078,11 +1116,9 @@ export const formvalidation = {
           // container
           this.mandatoryFieldsFound['File'] = true
           this.mandatoryFieldsFound['License'] = true
-          this.mandatoryFieldsFound['Keyword'] = true
           this.mandatoryFieldsFound['Object type'] = true
           this.mandatoryFieldsValidated['File'] = true
           this.mandatoryFieldsValidated['License'] = true
-          this.mandatoryFieldsValidated['Keyword'] = true
           this.mandatoryFieldsValidated['Object type'] = true
           break
         case 'https://pid.phaidra.org/vocabulary/GXS7-ENXJ':
