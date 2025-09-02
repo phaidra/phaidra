@@ -49,6 +49,9 @@
                   :corpAuthorsProp="corpAuthors"
                   :rolesProp="roles"
                   :ownerProp="owner"
+                  :accessibilityControlProp="accessibilityControl"
+                  :accessibilityFeatureProp="accessibilityFeature"
+                  :accessibilityHazardProp="accessibilityHazard"
                 ></p-search-filters>
               </v-card-text>
               <v-divider></v-divider>
@@ -91,6 +94,9 @@
           :corpAuthorsProp="corpAuthors"
           :rolesProp="roles"
           :ownerProp="owner"
+          :accessibilityControlProp="accessibilityControl"
+          :accessibilityFeatureProp="accessibilityFeature"
+          :accessibilityHazardProp="accessibilityHazard"
           ></p-search-filters>
       </v-col>
       <v-dialog v-model="limitdialog" width="500">
@@ -121,7 +127,7 @@ import '@/compiled-icons/fontello-sort-number-down'
 import '@/compiled-icons/material-content-link'
 import '@/compiled-icons/material-action-bookmark'
 import '@/compiled-icons/material-toggle-check-box-outline-blank'
-import { buildDateFacet, updateFacetQueries, persAuthors, corpAuthors, deactivateFacetQueries } from './facets'
+import { buildDateFacet, updateFacetQueries, persAuthors, corpAuthors, deactivateFacetQueries, buildAccessibilityFacet } from './facets'
 import { buildParams, buildSearchDef, sortdef } from './utils'
 import { setSearchParams } from './location'
 import { saveAs } from 'file-saver'
@@ -340,6 +346,9 @@ export default {
       this.corpAuthors.values = []
       this.persAuthors.values = []
       this.roles = []
+      this.accessibilityControl = []
+      this.accessibilityFeature = []
+      this.accessibilityHazard = []
       this.currentPage = 1
       this.pagesize = 10
       console.log(this.facetQueries)
@@ -410,6 +419,9 @@ export default {
       persAuthors,
       roles: [],
       owner: this.ownerProp,
+      accessibilityControl: [],
+      accessibilityFeature: [],
+      accessibilityHazard: [],
 
       docs: [],
       total: 0,
@@ -465,8 +477,17 @@ export default {
   },
   mounted: function () {
     this.facetQueries = JSON.parse(JSON.stringify(this.$store.state.search.facetQueries));
-    this.facetQueries.push(buildDateFacet())
-    
+    this.facetQueries = this.facetQueries.map(element => {
+      if (element.id === 'created') {
+        // Build date facet if configured in admin panel
+        element = buildDateFacet()
+      }
+      if (element.id === 'a11y') {
+        // Build accessibility facet if configured in admin panel
+        element = buildAccessibilityFacet()
+      }
+      return element
+    });
     setSearchParams(this, this.$route.query)
 
     // This call is delayed because at this point

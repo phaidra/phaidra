@@ -2278,6 +2278,46 @@ sub _add_jsonld_index {
     }
   }
 
+  # Accessibility metadata
+  if ($jsonld->{'schema:accessibilityControl'}) {
+    for my $o (@{$jsonld->{'schema:accessibilityControl'}}) {
+      if ($o->{'skos:exactMatch'}) {
+        for my $id (@{$o->{'skos:exactMatch'}}) {
+          push @{$index->{"accessibilityControl"}}, $id;
+        }
+      }
+      elsif ($o->{'@id'}) {
+        push @{$index->{"accessibilityControl"}}, $o->{'@id'};
+      }
+    }
+  }
+
+  if ($jsonld->{'schema:accessibilityFeature'}) {
+    for my $o (@{$jsonld->{'schema:accessibilityFeature'}}) {
+      if ($o->{'skos:exactMatch'}) {
+        for my $id (@{$o->{'skos:exactMatch'}}) {
+          push @{$index->{"accessibilityFeature"}}, $id;
+        }
+      }
+      elsif ($o->{'@id'}) {
+        push @{$index->{"accessibilityFeature"}}, $o->{'@id'};
+      }
+    }
+  }
+
+  if ($jsonld->{'schema:accessibilityHazard'}) {
+    for my $o (@{$jsonld->{'schema:accessibilityHazard'}}) {
+      if ($o->{'skos:exactMatch'}) {
+        for my $id (@{$o->{'skos:exactMatch'}}) {
+          push @{$index->{"accessibilityHazard"}}, $id;
+        }
+      }
+      elsif ($o->{'@id'}) {
+        push @{$index->{"accessibilityHazard"}}, $o->{'@id'};
+      }
+    }
+  }
+
   if ($jsonld->{'dcterms:accessRights'}) {
     for my $o (@{$jsonld->{'dcterms:accessRights'}}) {
       for my $id (@{$o->{'skos:exactMatch'}}) {
