@@ -77,7 +77,14 @@ sub xml_2_json {
   $dom->parse($xml);
   my %json;
 
-  foreach my $e ($dom->find('allow')->first->children->each) {
+  # Gracefully handle missing or empty <allow> element
+  my $allow = $dom->find('allow')->first;
+  unless ($allow) {
+    $res->{rights} = \%json;
+    return $res;
+  }
+
+  foreach my $e ($allow->children->each) {
     my $type = $e->tag;
     $type =~ m/(\w+):(\w+)/;
     my $ns = $1;

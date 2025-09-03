@@ -109,37 +109,6 @@ sub add_or_modify_datastream_hooks {
         $res->{status} = 500;
         return $res;
       }
-      # Whenever RIGHTS are changed, for PDFDocument reset Tika job so extraction runs again,
-      # but only if object is not restricted (no rights set)
-      if ($res_cmodel->{cmodel} eq 'PDFDocument') {
-        eval {
-          my $rights_model = PhaidraAPI::Model::Rights->new;
-          my $res_rights = $rights_model->xml_2_json($c, $dscontent);
-          my $isRestricted = 0;
-          if ($res_rights->{status} eq 200) {
-            my $rights = $res_rights->{rights};
-            my $nrKeys = keys %{$rights};
-            $isRestricted = $nrKeys != 0 ? 1 : 0;
-          }
-          unless ($isRestricted) {
-            # ensure job exists
-            my $jr = $self->_create_pdf_extraction_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
-            push @{$res->{alerts}}, @{$jr->{alerts}} if scalar @{$jr->{alerts}} > 0;
-            # reset status to 'new'
-            $c->paf_mongo->get_collection('jobs')->update_one(
-              { 'pid' => $pid, 'agent' => 'tika' },
-              { '$set' => { 'status' => 'new' } },
-              { 'upsert' => 0 }
-            );
-            $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] RIGHTS updated, resetting Tika job to 'new' (unrestricted)");
-          } else {
-            $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] RIGHTS updated, document is restricted - not resetting Tika job");
-          }
-        };
-        if ($@) {
-          $c->app->log->error("add_or_modify_datastream_hooks pid[$pid] error evaluating RIGHTS/Tika reset: $@");
-        }
-      }
       # currently only for videos, so we check the cmodel first
       if ($res_cmodel->{cmodel} eq 'Video') {
         my $rights_model = PhaidraAPI::Model::Rights->new;
@@ -178,6 +147,43 @@ sub add_or_modify_datastream_hooks {
         }
       }
     }
+
+    # On modify reset Tika job so extraction runs again
+    # but only if object is not restricted (no rights set)\
+    my $res_cmodel = $search_model->get_cmodel($c, $pid);
+    $c->app->log->debug("add_or_modify_datastream_hooks pid[$pid] cmodel[$res_cmodel->{cmodel}]");
+    if ( $res_cmodel->{status} eq 200 && $res_cmodel->{cmodel} eq 'PDFDocument') {
+      eval {
+        my $rights_model = PhaidraAPI::Model::Rights->new;
+        my $res_rights = $rights_model->xml_2_json($c, $dscontent);
+        my $isRestricted = 0;
+        if ($res_rights->{status} eq 200) {
+          my $rights = $res_rights->{rights};
+          my $nrKeys = keys %{$rights};
+          $isRestricted = $nrKeys != 0 ? 1 : 0;
+        }
+        $c->app->log->debug("add_or_modify_datastream_hooks pid[$pid] isRestricted[$isRestricted]");
+        unless ($isRestricted) {
+          # ensure job exists
+          my $jr = $self->_create_pdf_extraction_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
+          push @{$res->{alerts}}, @{$jr->{alerts}} if scalar @{$jr->{alerts}} > 0;
+          # reset status to 'new'
+          $c->paf_mongo->get_collection('jobs')->update_one(
+            { 'pid' => $pid, 'agent' => 'tika' },
+            { '$set' => { 'status' => 'new' } },
+            { 'upsert' => 0 }
+          );
+          $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] RIGHTS updated, resetting Tika job to 'new' (unrestricted)");
+        } else {
+          $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] RIGHTS updated, document is restricted - not resetting Tika job");
+        }
+      };
+      if ($@) {
+        $c->app->log->error("add_or_modify_datastream_hooks pid[$pid] error evaluating RIGHTS/Tika reset: $@");
+      }
+    }
+
+
   }
 
   return $res;
