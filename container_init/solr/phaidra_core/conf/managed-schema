@@ -135,6 +135,7 @@
   <field name="dcterms_datesubmitted" type="date" indexed="true" stored="true"/>
   <field name="dcterms_subject_id" type="strings"/>
   <field name="descriptions_json" type="text_general" indexed="false" stored="true"/>
+  <field name="extracted_text" type="text_general" indexed="true" stored="true"/>
   <field name="edm_hastype" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="edm_hastype_id" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="educational_context" type="strings" multiValued="true" indexed="true" stored="true"/>
