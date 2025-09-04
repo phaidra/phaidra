@@ -86,7 +86,7 @@ export default {
           }
           this.getThemaPath(term, this.vocabularies['thema'].tree, pathArr)
           for (let i = pathArr.length; i--; i === 0) {
-            pathLabels.push(pathArr[i]['skos:notation'][0] + '. ' + pathArr[i]['skos:prefLabel'][this.$i18n.locale])
+            pathLabels.push(pathArr[i]['skos:notation'][0] + '. ' + (pathArr[i]['skos:prefLabel'][this.$i18n.locale] || pathArr[i]['skos:prefLabel']['eng']))
             pathLabelsDeu.push(pathArr[i]['skos:prefLabel']['deu'] + ' (' + pathArr[i]['skos:notation'][0] + ')')
             pathLabelsEng.push(pathArr[i]['skos:prefLabel']['eng'] + ' (' + pathArr[i]['skos:notation'][0] + ')')
           }
