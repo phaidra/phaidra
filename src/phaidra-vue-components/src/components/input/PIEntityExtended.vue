@@ -6,21 +6,46 @@
           <span>{{ $t(label) }}</span>
           <v-spacer></v-spacer>
           <template v-if="showActions">
-            <v-btn icon dark @click="$emit('add', $event)">
-              <v-icon>mdi-content-duplicate</v-icon>
-            </v-btn>
-            <v-btn icon dark @click="$emit('add-clear', $event)">
-              <v-icon>mdi-plus</v-icon>
-            </v-btn>
-            <v-btn icon dark @click="$emit('remove', $event)">
-              <v-icon>mdi-minus</v-icon>
-            </v-btn>
-            <v-btn icon dark @click="$emit('up', $event)">
-              <v-icon>mdi-chevron-up</v-icon>
-            </v-btn>
-            <v-btn icon dark @click="$emit('down', $event)">
-              <v-icon>mdi-chevron-down</v-icon>
-            </v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon dark v-bind="attrs" v-on="on" @click="$emit('add', $event)">
+                  <v-icon>mdi-content-duplicate</v-icon>
+                </v-btn>
+              </template>
+              <span>{{ $t('Duplicate') }}</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon dark v-bind="attrs" v-on="on" @click="$emit('add-clear', $event)">
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </template>
+              <span>{{ $t('Add') }}</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon dark v-bind="attrs" v-on="on" @click="$emit('remove', $event)">
+                  <v-icon>mdi-minus</v-icon>
+                </v-btn>
+              </template>
+              <span>{{ $t('Remove') }}</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon dark v-bind="attrs" v-on="on" @click="$emit('up', $event)">
+                  <v-icon>mdi-chevron-up</v-icon>
+                </v-btn>
+              </template>
+              <span>{{ $t('Move up') }}</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon dark v-bind="attrs" v-on="on" @click="$emit('down', $event)">
+                  <v-icon>mdi-chevron-down</v-icon>
+                </v-btn>
+              </template>
+              <span>{{ $t('Move down') }}</span>
+            </v-tooltip>
           </template>
         </v-card-title>
         <v-divider></v-divider>
