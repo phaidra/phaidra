@@ -37,7 +37,7 @@
                   >
                     <v-col cols="12">
                       <v-alert
-                        v-if="alert.type !== 'success'"
+                        v-if="alert.type !== 'success' && alert.msg"
                         :type="alert.type === 'danger' ? 'error' : alert.type"
                         :value="true"
                         transition="slide-y-transition"
