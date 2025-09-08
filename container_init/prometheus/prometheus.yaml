@@ -43,5 +43,5 @@ scrape_configs:
     static_configs:
     - targets: ['fedora:8080']
     basic_auth:
-      username: fedoraAdmin
-      password: "1234"
+      username: ${FEDORA_ADMIN_USER}
+      password: ${FEDORA_ADMIN_PASS}
