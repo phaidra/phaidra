@@ -46,7 +46,7 @@
                           <PreviewTableCell
                             v-for="(subFieldConfig, subField) in getSubFields(field)"
                             :key="field + '-' + subField"
-                            :field="$t(field)"
+                            :field="field"
                             :sub-field="subField"
                             :row-data="row"
                             :is-mapped="!!getSourceInfo(field, subField)"
@@ -55,7 +55,7 @@
                         <PreviewTableCell
                           v-else
                           :key="field"
-                          :field="$t(field)"
+                          :field="field"
                           :row-data="row"
                           :is-mapped="!!getAllFieldMappings[field]"
                         />
