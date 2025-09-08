@@ -744,6 +744,7 @@ export const actions = {
       } else {
         console.log('fetchObjectInfo error')
         console.log(error)
+        throw error
       }
     }
   },

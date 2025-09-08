@@ -2589,7 +2589,7 @@ export default {
         type: 'application/vnd.datacite.datacite+xml',
         href: this.instanceconfig.api + '/object/' + this.objectInfo.pid + '/datacite?format=xml'
       });
-      if (this.objectInfo.dshash['JSON-LD']) {
+      if (this.objectInfo?.dshash['JSON-LD']) {
         metaInfo.link.push({
           rel: 'describedby',
           type: 'application/ld+json',
@@ -2615,7 +2615,7 @@ export default {
       }
     }
 
-    if (this.objectInfo.dshash['JSON-LD']) {
+    if (this.objectInfo?.dshash['JSON-LD']) {
       metaInfo.script = []
       metaInfo.script.push(
         { 
@@ -2633,32 +2633,43 @@ export default {
     },
     async fetchAsyncData(self, pid) {
       console.log('fetching object info ' + pid);
-      await self.$store.dispatch("fetchObjectInfo", pid);
-      self.postMetadataLoad(self);
-      // console.log('cmodel: ' + self.$store.state.objectInfo.cmodel);
-      if (self.$store.state.objectInfo.cmodel === "Container") {
-        console.log('fetching container members ' + pid);
-        await self.$store.dispatch(
-          "fetchObjectMembers",
-          self.$store.state.objectInfo
-        );
-      }
-      if (self.$store.state.objectInfo.cmodel === "Collection") {
-        console.log('fetching collection members ' + pid + ' page ' + self.collMembersCurrentPage + ' size ' + self.collMembersPagesize);
-        await self.$store.dispatch(
-          "fetchCollectionMembers",
-          { pid: pid, page: self.collMembersCurrentPage, pagesize: self.collMembersPagesize, onlylatestversion: self.collOnlyLatestVersions }
-        );
-      }
+      try {
+        await self.$store.dispatch("fetchObjectInfo", pid);
+        self.postMetadataLoad(self);
+        // console.log('cmodel: ' + self.$store.state.objectInfo.cmodel);
+        if (self.$store.state.objectInfo.cmodel === "Container") {
+          console.log('fetching container members ' + pid);
+          await self.$store.dispatch(
+            "fetchObjectMembers",
+            self.$store.state.objectInfo
+          );
+        }
+        if (self.$store.state.objectInfo.cmodel === "Collection") {
+          console.log('fetching collection members ' + pid + ' page ' + self.collMembersCurrentPage + ' size ' + self.collMembersPagesize);
+          await self.$store.dispatch(
+            "fetchCollectionMembers",
+            { pid: pid, page: self.collMembersCurrentPage, pagesize: self.collMembersPagesize, onlylatestversion: self.collOnlyLatestVersions }
+          );
+        }
 
-      if (self.objectInfo.dshash['JSON-LD']) {
-        try {
-          let response = await self.$axios.get("/object/" + pid + "/json-ld");
-          if (response.data) {
-            self.fullJsonLd = response.data;
+        if (self.objectInfo?.dshash['JSON-LD']) {
+          try {
+            let response = await self.$axios.get("/object/" + pid + "/json-ld");
+            if (response.data) {
+              self.fullJsonLd = response.data;
+            }
+          } catch (error) {
+            console.log(error);
           }
-        } catch (error) {
-          console.log(error);
+        }
+      } catch (error) {
+        console.log('Error fetching object info:', error);
+        if (error.response?.status === 404) {
+          // Show 404 error page
+          self.$nuxt.error({ statusCode: 404, statusMessage: 'Object not found' });
+        } else {
+          // Show generic error page
+          self.$nuxt.error({ statusCode: 500, statusMessage: 'An error occurred while loading the object' });
         }
       }
     },
@@ -2705,7 +2716,7 @@ export default {
     postMetadataLoad: function (self) {
       if (self.objectInfo) {
         if (self.objectInfo.metadata) {
-          if (self.objectInfo.metadata["JSON-LD"]) {
+          if (self.objectInfo?.metadata?.["JSON-LD"]) {
             Object.entries(self.objectInfo.metadata["JSON-LD"]).forEach(
               ([p, arr]) => {
                 if (p === "rdam:P30004") {
