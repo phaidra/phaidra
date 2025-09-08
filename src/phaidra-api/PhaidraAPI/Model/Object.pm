@@ -1478,7 +1478,7 @@ sub save_metadata {
             $rel->{'o'} = "info:fedora/" . $pid;
             $skiphook = 0;
           }
-          push @relationships, {predicate => $rel->{'p'}, object => "info:fedora/" . $rel->{'o'}};
+          push @relationships, {predicate => $rel->{'p'}, object => $rel->{'o'}};
         }
         my $r = $self->add_relationships($c, $pid, \@relationships, $username, $password, $skiphook);
         push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
