@@ -20,6 +20,7 @@
                   <v-switch
                    class="ma-0"
                    v-model="extracted_text"
+                   @change="search"
                  ></v-switch>
                 </div>
               </template>
