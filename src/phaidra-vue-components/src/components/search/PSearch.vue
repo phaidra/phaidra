@@ -2,7 +2,7 @@
     <v-row no-gutters>
       <v-col md="9" cols="12" class="pr-2">
         <v-row align="start" class="pt-2 pb-4">
-          <v-col md="6" cols="12">
+          <v-col md="6" cols="12" class="d-flex align-baseline ga-2 search-input-wrapper">
             <p-search-autocomplete
               :placeholder="$t('SEARCH_PLACEHOLDER')"
               name="autocomplete"
@@ -14,6 +14,17 @@
               :messages="[ total + ' ' + $t('objects') ]"
             ></p-search-autocomplete>
              <a href="#filters" class="skip-link d-sr-only-focusable">{{ $t('Go to Search Filters') }}</a>
+             <v-tooltip bottom>
+              <template #activator="{ on, attrs }">
+                <div v-on="on" v-bind="attrs">
+                  <v-switch
+                   class="ma-0"
+                   v-model="extracted_text"
+                 ></v-switch>
+                </div>
+              </template>
+              <span>{{ $t('Full text search')}}</span>
+             </v-tooltip>
           </v-col>
           <v-spacer></v-spacer>
           <v-col  md="6" cols="12">
@@ -250,6 +261,9 @@ export default {
           params.sort = `pos_in_o_${pid} asc`
         }
       }
+      if (this.extracted_text) {
+        params.extracted_text = 'include'
+      }
       if (process.browser) {
         this.link = location.protocol + '//' + location.host + location.pathname + '?' + searchdefarr.join('&')
         window.history.replaceState(null, this.$t('Search results'), this.link)
@@ -414,7 +428,7 @@ export default {
       sortdef,
       lang: 'en',
       facetQueries: [],
-
+      extracted_text: false,
       corpAuthors,
       persAuthors,
       roles: [],
@@ -516,5 +530,11 @@ svg {
   position: absolute;
   left: -9999px;
   top: 10px;
+}
+.ga-2 {
+  gap: 0.5rem;
+}
+.search-input-wrapper .input-wrapper {
+  flex: 1;
 }
 </style>

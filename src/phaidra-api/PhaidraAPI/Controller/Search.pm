@@ -141,10 +141,29 @@ sub search_solr {
   #$self->app->log->info($url);
   #$self->app->log->info($self->app->dumper($self->req->params->to_hash));
 
+  my $params = $self->req->params->to_hash;
+  my $include_extracted = defined $params->{extracted_text} && $params->{extracted_text} eq 'include';
+  delete $params->{extracted_text};
+  if (!$include_extracted) {
+    if (defined $params->{qf}) {
+      my @qf_parts = split /\s+/, $params->{qf};
+      my @filtered = grep { $_ !~ /^(?:extracted_text|_text_)(\^\S+)?$/ } @qf_parts;
+      if (@filtered) {
+        $params->{qf} = join ' ', @filtered;
+      }
+      else {
+        delete $params->{qf};
+      }
+    }
+    if (defined $params->{df} && ($params->{df} eq 'extracted_text' || $params->{df} eq '_text_')) {
+      delete $params->{df};
+    }
+  }
+
   if (Mojo::IOLoop->is_running) {
     $self->render_later;
     $self->ua->post(
-      $url => form => $self->req->params->to_hash,
+      $url => form => $params,
       sub {
         my ($c, $tx) = @_;
         _proxy_tx($self, $tx);
@@ -152,7 +171,7 @@ sub search_solr {
     );
   }
   else {
-    my $tx = $self->ua->post($url => form => $self->req->params->to_hash);
+    my $tx = $self->ua->post($url => form => $params);
     _proxy_tx($self, $tx);
   }
 
