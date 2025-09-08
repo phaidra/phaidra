@@ -525,6 +525,7 @@ services:
     hostname: "prometheus"
     image: phaidraorg/prometheus-dist:3c2d3c31
     volumes:
+      - ./container_init/prometheus:/mnt/startup:ro
       - prometheus:/prometheus
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -532,7 +533,7 @@ services:
     environment:
       FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
       FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
-    entrypoint: [ "bash", "/mnt/startup/prometheus-entrypoint.bash" ]
+    entrypoint: [ "/mnt/startup/prometheus-entrypoint.sh" ]
     profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3"]
 
   vige:
@@ -1107,6 +1108,7 @@ services:
     image: prom/prometheus:v2.52.0
     volumes:
       - ./container_init/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+      - ./container_init/prometheus:/mnt/startup:ro
       - prometheus:/prometheus
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -1114,7 +1116,7 @@ services:
     environment:
       FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
       FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
-    entrypoint: [ "bash", "/mnt/startup/prometheus-entrypoint.bash" ]
+    entrypoint: [ "/mnt/startup/prometheus-entrypoint.sh" ]
     profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
 
   apache-exporter:
