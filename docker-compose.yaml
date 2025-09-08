@@ -523,7 +523,7 @@ services:
 
   prometheus:
     hostname: "prometheus"
-    image: phaidraorg/prometheus-dist:3c2d3c31
+    image: phaidraorg/prometheus-dist:879d29b8
     volumes:
       - ./container_init/prometheus:/mnt/startup:ro
       - prometheus:/prometheus
