@@ -323,16 +323,15 @@ sub add_legacy_container_members {
   my $containerinfo;
   if ($c->app->config->{fedora}->{version} >= 6) {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $getdsres     = $fedora_model->getDatastream($c, $pid, 'CONTAINERINFO');
+
+    my $getdsres = $fedora_model->getDatastream($c, $pid, 'CONTAINERINFO');
     if ($getdsres->{status} != 200) {
       return $getdsres;
     }
-
     my $dom = Mojo::DOM->new();
     $dom->xml(1);
-    $dom->parse($getdsres->{'CONTAINERINFO'});
+    $dom->parse('<foxml:xmlContent>' . decode('UTF-8', $getdsres->{'CONTAINERINFO'}) . '</foxml:xmlContent>');
     $containerinfo = $dom;
-
   }
   else {
     my $r_oxml = $self->get_foxml($c, $pid);
