@@ -2080,7 +2080,7 @@ sub get_legacy_container_member {
 
   if ($self->app->config->{fedora}->{version} >= 6) {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $dsAttr       = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
+    my $dsAttr       = $fedora_model->getDatastreamAttributes($self, $pid, $ds);
     if ($dsAttr->{status} ne 200) {
       $self->render(json => $dsAttr, status => $dsAttr->{status});
       return;
@@ -2088,7 +2088,7 @@ sub get_legacy_container_member {
     $filename = $dsAttr->{filename};
     $mimetype = $dsAttr->{mimetype};
     $size     = $dsAttr->{size};
-    $dsAttr   = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
+    $dsAttr   = $fedora_model->getDatastreamPath($self, $pid, $ds);
     if ($dsAttr->{status} ne 200) {
       $self->render(json => $dsAttr, status => $dsAttr->{status});
       return;
