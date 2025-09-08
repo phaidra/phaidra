@@ -86,7 +86,7 @@ export default {
           }
           this.getBicPath(term, this.vocabularies['bic'].tree, pathArr)
           for (let i = pathArr.length; i--; i === 0) {
-            pathLabels.push(pathArr[i]['skos:notation'][0] + '. ' + pathArr[i]['skos:prefLabel'][this.$i18n.locale])
+            pathLabels.push(pathArr[i]['skos:notation'][0] + '. ' + (pathArr[i]['skos:prefLabel'][this.$i18n.locale] || pathArr[i]['skos:prefLabel']['eng']))
             if(pathArr[i]['skos:prefLabel']['deu']) {
               pathLabelsDeu.push(pathArr[i]['skos:prefLabel']['deu'] + ' (' + pathArr[i]['skos:notation'][0] + ')')
             }
