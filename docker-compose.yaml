@@ -1107,7 +1107,7 @@ services:
     hostname: "prometheus"
     image: prom/prometheus:v2.52.0
     volumes:
-      - ./container_init/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:rw
+      - ./container_init/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
       - ./container_init/prometheus:/mnt/startup:ro
       - prometheus:/prometheus
     extra_hosts:
