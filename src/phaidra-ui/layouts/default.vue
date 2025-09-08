@@ -112,6 +112,7 @@ export default {
       title: this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
       meta: [
       { charset: 'utf-8' },
+      { name: 'Generator', content: 'PHAIDRA' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { name: 'theme-color', content: this.$vuetify.theme.dark ? this.$config.darkPrimaryColor : this.$config.primaryColor }
       ]
