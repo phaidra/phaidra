@@ -240,10 +240,8 @@ export const formvalidation = {
           // container
           this.mandatoryFieldsFound['File'] = true
           this.mandatoryFieldsFound['License'] = true
-          this.mandatoryFieldsFound['Object type'] = true
           this.mandatoryFieldsValidated['File'] = true
           this.mandatoryFieldsValidated['License'] = true
-          this.mandatoryFieldsValidated['Object type'] = true
           break
         case 'https://pid.phaidra.org/vocabulary/GXS7-ENXJ':
           // collection
@@ -466,10 +464,8 @@ export const formvalidation = {
           // container
           this.mandatoryFieldsFound['File'] = true
           this.mandatoryFieldsFound['License'] = true
-          this.mandatoryFieldsFound['Object type'] = true
           this.mandatoryFieldsValidated['File'] = true
           this.mandatoryFieldsValidated['License'] = true
-          this.mandatoryFieldsValidated['Object type'] = true
           break
         case 'https://pid.phaidra.org/vocabulary/GXS7-ENXJ':
           // collection
@@ -693,10 +689,8 @@ export const formvalidation = {
           // container
           this.mandatoryFieldsFound['File'] = true
           this.mandatoryFieldsFound['License'] = true
-          this.mandatoryFieldsFound['Object type'] = true
           this.mandatoryFieldsValidated['File'] = true
           this.mandatoryFieldsValidated['License'] = true
-          this.mandatoryFieldsValidated['Object type'] = true
           break
         case 'https://pid.phaidra.org/vocabulary/GXS7-ENXJ':
           // collection
@@ -922,11 +916,9 @@ export const formvalidation = {
           this.mandatoryFieldsFound['File'] = true
           this.mandatoryFieldsFound['License'] = true
           this.mandatoryFieldsFound['Keyword'] = true
-          this.mandatoryFieldsFound['Object type'] = true
           this.mandatoryFieldsValidated['File'] = true
           this.mandatoryFieldsValidated['License'] = true
           this.mandatoryFieldsValidated['Keyword'] = true
-          this.mandatoryFieldsValidated['Object type'] = true
           break
         case 'https://pid.phaidra.org/vocabulary/GXS7-ENXJ':
           // collection
@@ -1116,10 +1108,8 @@ export const formvalidation = {
           // container
           this.mandatoryFieldsFound['File'] = true
           this.mandatoryFieldsFound['License'] = true
-          this.mandatoryFieldsFound['Object type'] = true
           this.mandatoryFieldsValidated['File'] = true
           this.mandatoryFieldsValidated['License'] = true
-          this.mandatoryFieldsValidated['Object type'] = true
           break
         case 'https://pid.phaidra.org/vocabulary/GXS7-ENXJ':
           // collection
