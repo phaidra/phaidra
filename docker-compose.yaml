@@ -523,7 +523,7 @@ services:
 
   prometheus:
     hostname: "prometheus"
-    image: phaidraorg/prometheus-dist:6925dee0
+    image: phaidraorg/prometheus-dist:3c2d3c31
     volumes:
       - prometheus:/prometheus
     extra_hosts:
