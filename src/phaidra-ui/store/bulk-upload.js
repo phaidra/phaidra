@@ -94,13 +94,18 @@ export const mutations = {
           }
         }
       } else {
-        // Handle single-field mapping
-        state.fieldMappings = {
-          ...state.fieldMappings,
-          [field]: {
-            source,
-            csvValue: csvValue !== undefined ? csvValue : existingMapping.csvValue || null,
-            phaidraValue: phaidraValue !== undefined ? phaidraValue : existingMapping.phaidraValue || null
+
+        if(phaidraValue && Object.keys(phaidraValue).includes('value') && !phaidraValue.value) {
+          delete state.fieldMappings[field]
+        } else {
+          // Handle single-field mapping
+          state.fieldMappings = {
+            ...state.fieldMappings,
+            [field]: {
+              source,
+              csvValue: csvValue !== undefined ? csvValue : existingMapping.csvValue || null,
+              phaidraValue: phaidraValue !== undefined ? phaidraValue : existingMapping.phaidraValue || null
+            }
           }
         }
       }
