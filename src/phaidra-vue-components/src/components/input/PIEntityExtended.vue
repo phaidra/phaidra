@@ -33,7 +33,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn icon dark v-bind="attrs" v-on="on" @click="$emit('up', $event)">
-                  <v-icon>mdi-chevron-up</v-icon>
+                  <v-icon>mdi-chevron-up-circle-outline</v-icon>
                 </v-btn>
               </template>
               <span>{{ $t('Move up') }}</span>
@@ -41,7 +41,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn icon dark v-bind="attrs" v-on="on" @click="$emit('down', $event)">
-                  <v-icon>mdi-chevron-down</v-icon>
+                  <v-icon>mdi-chevron-down-circle-outline</v-icon>
                 </v-btn>
               </template>
               <span>{{ $t('Move down') }}</span>
