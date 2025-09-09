@@ -305,12 +305,14 @@ sub info {
 
   # $c->app->log->debug("XXXXXXXXXXXXXX ".$c->app->dumper($info));
 
-  if (defined $c->app->config->{external_services}->{opencast}->{mode} && $c->app->config->{external_services}->{opencast}->{mode} eq "ACTIVATED") {
-      my $object_job_info = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'vige'});
-      if ($object_job_info && defined($info)) {
-        my $oc_mpid = $object_job_info->{'oc_mpid'};
-        $info->{oc_mpid} = $oc_mpid;
-      }
+  if ($info->{cmodel} eq 'Video') {
+    if (defined $c->app->config->{external_services}->{opencast}->{mode} && $c->app->config->{external_services}->{opencast}->{mode} eq "ACTIVATED") {
+        my $object_job_info = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'vige'});
+        if ($object_job_info && defined($info)) {
+          my $oc_mpid = $object_job_info->{'oc_mpid'};
+          $info->{oc_mpid} = $oc_mpid;
+        }
+    }
   }
 
   $res->{info} = $info;
