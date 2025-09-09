@@ -131,6 +131,7 @@ import { buildDateFacet, updateFacetQueries, persAuthors, corpAuthors, deactivat
 import { buildParams, buildSearchDef, sortdef } from './utils'
 import { setSearchParams } from './location'
 import { saveAs } from 'file-saver'
+import { vocabulary } from '../../mixins/vocabulary'
 
 export default {
   name: 'p-search',
@@ -140,6 +141,7 @@ export default {
     PSearchFilters,
     PSearchToolbar
   },
+  mixins: [vocabulary],
   computed: {
     page: {
       get () {
@@ -176,6 +178,21 @@ export default {
     }
   },
   methods: {
+    constructAssociationQueries: function (orgArray) {
+      let associationQueries = []
+      for (let orgUnit of orgArray) {
+        let item = {
+          id: orgUnit['@id'],
+          label: orgUnit['skos:prefLabel'][this.$i18n.locale],
+          query:  `(association_id:\"${orgUnit['@id']}\" OR uwm_association_id:\"${orgUnit['@id']}\")`
+        }
+        if (orgUnit['subunits'] && orgUnit['subunits'].length) {
+          item.childFacet = { queries: this.constructAssociationQueries(orgUnit['subunits']) }
+        }
+        associationQueries.push(item)
+      }
+      return associationQueries
+    },
     csvExport: async function () {
       let { searchdefarr, ands } = buildSearchDef(this)
       let params = buildParams(this, ands)
@@ -475,7 +492,14 @@ export default {
       await vm.search()
     })
   },
-  mounted: function () {
+  mounted: async function () {
+    if (!this.vocabularies['orgunits'].loaded) {
+      try {
+        await this.$store.dispatch('vocabulary/loadOrgUnits', this.$i18n.locale)
+      } catch (e) {
+        console.log('Failed to load org units', e)
+      }
+    }
     this.facetQueries = JSON.parse(JSON.stringify(this.$store.state.search.facetQueries));
     this.facetQueries = this.facetQueries.map(element => {
       if (element.id === 'created') {
@@ -485,6 +509,11 @@ export default {
       if (element.id === 'a11y') {
         // Build accessibility facet if configured in admin panel
         element = buildAccessibilityFacet()
+      }
+      if (element.id === 'association' && !element?.queries?.length) {
+        // Build association facet if configured in admin panel
+        const tree = this.vocabularies['orgunits']['tree'] || []
+        element.queries = this.constructAssociationQueries(tree)
       }
       return element
     });
