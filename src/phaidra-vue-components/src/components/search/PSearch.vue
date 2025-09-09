@@ -186,9 +186,6 @@ export default {
           label: orgUnit['skos:prefLabel'][this.$i18n.locale],
           query:  `(association_id:\"${orgUnit['@id']}\" OR uwm_association_id:\"${orgUnit['@id']}\")`
         }
-        if (orgUnit['subunits'] && orgUnit['subunits'].length) {
-          item.childFacet = { queries: this.constructAssociationQueries(orgUnit['subunits']) }
-        }
         associationQueries.push(item)
       }
       return associationQueries
@@ -512,8 +509,8 @@ export default {
       }
       if (element.id === 'association' && !element?.queries?.length) {
         // Build association facet if configured in admin panel
-        const tree = this.vocabularies['orgunits']['tree'] || []
-        element.queries = this.constructAssociationQueries(tree)
+        const tree = this.vocabularies['orgunits']['tree']
+        element.queries = tree?.length ? this.constructAssociationQueries(tree[0].subunits) : []
       }
       return element
     });
