@@ -88,7 +88,7 @@ export default {
       }
     },
     getObjectUrl(pid) {
-      return pid ? `http://localhost:8899/${pid}` : '#'
+      return pid ? `/${pid}` : '#'
     }
   }
 }
