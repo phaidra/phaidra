@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  labels:
+    phaidra.app: cameltoolbox
+  name: cameltoolbox-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      phaidra.app: cameltoolbox
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        phaidra.app: cameltoolbox
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/cameltoolbox-configmap.yaml") . | sha256sum}}
+    spec:
+      containers:
+        - image: phaidraorg/fcrepo-camel-toolbox:39bf4894
+          name: cameltoolbox
+          resources:
+            requests:
+              cpu: 100m
+              memory: 150M
+            limits:
+              cpu: 200m
+              memory: 200M
+          volumeMounts:
+            # ./camel-toolbox-config:/config
+            - mountPath: /config
+              name: camel-toolbox-config
+            - mountPath: /usr/local/bin/
+              name: cameltoolbox-config
+      volumes:
+        - name: cameltoolbox-config
+          configMap:
+            name: fixityhandler
+            items:
+              - key: fixity_handler
+                path: fixity_handler.sh
