@@ -642,15 +642,10 @@ services:
       - pdf-extraction:/mnt/pdf-extraction
     environment:
       <<: [*api_common_env, *hosts]
-      MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
-      MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
-      MONGODB_PHAIDRA_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra}"
       MONGO_AGENT_DB: "${MONGO_AGENT_DB:-paf_mongodb}"
       SOLR_URL: "${SOLR_URL:-http://solr:8983/solr}"
       SOLR_COLLECTION: "${SOLR_COLLECTION:-phaidra}"
       SOLR_TEXT_FIELD: "${SOLR_TEXT_FIELD:-extracted_text}"
-      SOLR_USER: "${SOLR_USER:-phaidra}"
-      SOLR_PASS: "${SOLR_PASS:-phaidra}"
     depends_on:
       mongodb-phaidra:
         condition: "service_started"
