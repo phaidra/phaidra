@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1 class="d-sr-only">{{ $t('Credits') }}</h1>
     <v-card>
       <v-card-title class="text-h6 font-weight-light white--text">{{ $t('Credits') }}</v-card-title>
       <v-card-text class="mt-8 text-body-1">
