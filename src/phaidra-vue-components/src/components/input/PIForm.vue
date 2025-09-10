@@ -74,7 +74,7 @@
               <v-spacer></v-spacer>
               <v-checkbox dark color="white" v-if="s.type === 'member'" v-model="previewMember" :label="$t('Container thumbnail')" :value="s.id"></v-checkbox>
               <v-spacer></v-spacer>
-              <v-btn dark icon @click="s.collapsed = !s.collapsed">
+              <v-btn dark icon @click="toggleSectionCollapse(s)">
                 <v-icon>{{ s.collapsed ? 'mdi-chevron-down' : 'mdi-chevron-up' }}</v-icon>
               </v-btn>
               <v-menu open-on-hover bottom offset-y v-if="!s.disablemenu">
@@ -1175,6 +1175,9 @@ export default {
     }
   },
   methods: {
+    toggleSectionCollapse: function (section) {
+      this.$set(section, 'collapsed', !section.collapsed)
+    },
     initialize: function () {
       if (!this.$route.params.templateid) {
         if (this.instanceconfig.markmandatoryfnc) {

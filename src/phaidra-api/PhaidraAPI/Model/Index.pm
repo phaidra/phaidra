@@ -1235,13 +1235,8 @@ sub _get {
           $dom->parse('<foxml:xmlContent>' . decode('UTF-8', $getdsres->{$dsid}) . '</foxml:xmlContent>');
           $datastreams{$dsid} = $dom;
         }
-        else {
-          $datastreams{$dsid} = 1;
-        }
       }
-      if ($dsid eq 'OCTETS') {
-        $datastreamids{$dsid} = 1;
-      }
+      $datastreamids{$dsid} = 1;
     }
     push @{$index{datastreams}}, keys %datastreamids;
   }

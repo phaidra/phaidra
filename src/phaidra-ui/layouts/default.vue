@@ -37,7 +37,7 @@
                   >
                     <v-col cols="12">
                       <v-alert
-                        v-if="alert.type !== 'success'"
+                        v-if="alert.type !== 'success' && alert.msg"
                         :type="alert.type === 'danger' ? 'error' : alert.type"
                         :value="true"
                         transition="slide-y-transition"
@@ -112,6 +112,7 @@ export default {
       title: this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
       meta: [
       { charset: 'utf-8' },
+      { name: 'Generator', content: 'PHAIDRA' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { name: 'theme-color', content: this.$vuetify.theme.dark ? this.$config.darkPrimaryColor : this.$config.primaryColor }
       ]

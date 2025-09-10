@@ -305,12 +305,14 @@ sub info {
 
   # $c->app->log->debug("XXXXXXXXXXXXXX ".$c->app->dumper($info));
 
-  if (defined $c->app->config->{external_services}->{opencast}->{mode} && $c->app->config->{external_services}->{opencast}->{mode} eq "ACTIVATED") {
-      my $object_job_info = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'vige'});
-      if ($object_job_info && defined($info)) {
-        my $oc_mpid = $object_job_info->{'oc_mpid'};
-        $info->{oc_mpid} = $oc_mpid;
-      }
+  if ($info->{cmodel} eq 'Video') {
+    if (defined $c->app->config->{external_services}->{opencast}->{mode} && $c->app->config->{external_services}->{opencast}->{mode} eq "ACTIVATED") {
+        my $object_job_info = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'vige'});
+        if ($object_job_info && defined($info)) {
+          my $oc_mpid = $object_job_info->{'oc_mpid'};
+          $info->{oc_mpid} = $oc_mpid;
+        }
+    }
   }
 
   $res->{info} = $info;
@@ -323,16 +325,15 @@ sub add_legacy_container_members {
   my $containerinfo;
   if ($c->app->config->{fedora}->{version} >= 6) {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $getdsres     = $fedora_model->getDatastream($c, $pid, 'CONTAINERINFO');
+
+    my $getdsres = $fedora_model->getDatastream($c, $pid, 'CONTAINERINFO');
     if ($getdsres->{status} != 200) {
       return $getdsres;
     }
-
     my $dom = Mojo::DOM->new();
     $dom->xml(1);
-    $dom->parse($getdsres->{'CONTAINERINFO'});
+    $dom->parse('<foxml:xmlContent>' . decode('UTF-8', $getdsres->{'CONTAINERINFO'}) . '</foxml:xmlContent>');
     $containerinfo = $dom;
-
   }
   else {
     my $r_oxml = $self->get_foxml($c, $pid);
