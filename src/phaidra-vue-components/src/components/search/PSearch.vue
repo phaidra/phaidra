@@ -2,7 +2,7 @@
     <v-row no-gutters>
       <v-col md="9" cols="12" class="pr-2">
         <v-row align="start" class="pt-2 pb-4">
-          <v-col md="6" cols="12" class="d-flex align-baseline ga-2 search-input-wrapper">
+          <v-col md="6" cols="12">
             <p-search-autocomplete
               :placeholder="$t('SEARCH_PLACEHOLDER')"
               name="autocomplete"
@@ -14,18 +14,17 @@
               :messages="[ total + ' ' + $t('objects') ]"
             ></p-search-autocomplete>
              <a href="#filters" class="skip-link d-sr-only-focusable">{{ $t('Go to Search Filters') }}</a>
-             <v-tooltip bottom>
-              <template #activator="{ on, attrs }">
-                <div v-on="on" v-bind="attrs">
-                  <v-switch
-                   class="ma-0"
-                   v-model="extracted_text"
-                   @change="search"
-                 ></v-switch>
-                </div>
-              </template>
-              <span>{{ $t('Full text search')}}</span>
-             </v-tooltip>
+             <div class="d-flex full-text-checkbox-wrapper">
+               <v-checkbox
+                v-model="extracted_text"
+                @change="search"
+                label="Full text search"
+                hide-details
+                dense
+                class="mt-0"
+              >
+              </v-checkbox>
+             </div>
           </v-col>
           <v-spacer></v-spacer>
           <v-col  md="6" cols="12">
@@ -532,10 +531,8 @@ svg {
   left: -9999px;
   top: 10px;
 }
-.ga-2 {
-  gap: 0.5rem;
-}
-.search-input-wrapper .input-wrapper {
-  flex: 1;
+.full-text-checkbox-wrapper {
+  justify-content: flex-end;
+  margin-top: -30px;
 }
 </style>
