@@ -581,14 +581,14 @@ sub _authenticate() {
   my $rate_limit_model = PhaidraAPI::Model::RateLimit->new;
   
   # Check rate limit before processing authentication
-  my $rate_limit_check = $rate_limit_model->check_rate_limit($c, $identifier);
+  # my $rate_limit_check = $rate_limit_model->check_rate_limit($c, $identifier);
   
-  if ($rate_limit_check->{blocked}) {
-    $c->app->log->warn("Rate limit exceeded for authentication: $username, IP: $client_ip");
-    my $blocked_res = {alerts => $rate_limit_check->{alerts}, status => $rate_limit_check->{status}};
-    $c->stash({phaidra_auth_result => $blocked_res});
-    return undef;
-  }
+  # if ($rate_limit_check->{blocked}) {
+  #   $c->app->log->warn("Rate limit exceeded for authentication: $username, IP: $client_ip");
+  #   my $blocked_res = {alerts => $rate_limit_check->{alerts}, status => $rate_limit_check->{status}};
+  #   $c->stash({phaidra_auth_result => $blocked_res});
+  #   return undef;
+  # }
 
   $c->app->log->debug("auth: ldap login");
   my $res = {alerts => [], status => 500};
