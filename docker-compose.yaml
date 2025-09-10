@@ -255,7 +255,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:eb74029b
+    image: phaidraorg/ui:ce759fc1
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -273,7 +273,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:eb74029b
+    image: phaidraorg/ui:ce759fc1
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -290,7 +290,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:d3a92f97
+    image: phaidraorg/api-dist:56b00fa5
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -305,7 +305,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:d3a92f97
+    image: phaidraorg/api-dist:56b00fa5
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -523,12 +523,17 @@ services:
 
   prometheus:
     hostname: "prometheus"
-    image: phaidraorg/prometheus-dist:6925dee0
+    image: phaidraorg/prometheus-dist:879d29b8
     volumes:
+      - ./container_init/prometheus:/mnt/startup:ro
       - prometheus:/prometheus
     extra_hosts:
       - "host.docker.internal:host-gateway"
     <<: *common
+    environment:
+      FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
+      FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
+    entrypoint: [ "/mnt/startup/prometheus-entrypoint.sh" ]
     profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3"]
 
   vige:
@@ -1103,10 +1108,15 @@ services:
     image: prom/prometheus:v2.52.0
     volumes:
       - ./container_init/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+      - ./container_init/prometheus:/mnt/startup:ro
       - prometheus:/prometheus
     extra_hosts:
       - "host.docker.internal:host-gateway"
     <<: *common
+    environment:
+      FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
+      FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
+    entrypoint: [ "/mnt/startup/prometheus-entrypoint.sh" ]
     profiles: ["demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
 
   apache-exporter:

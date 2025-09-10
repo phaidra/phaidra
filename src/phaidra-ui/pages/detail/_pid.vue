@@ -978,7 +978,7 @@
                     </v-card-text>
                   </v-card>
                 </li>
-                <li class="mb-6" v-if="objectInfo.isrestricted"><v-chip label dark color="btnred" class="pointer-disabled"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></li>
+                <li class="mb-6" v-if="(objectInfo.isrestricted) && (objectInfo.cmodel !== 'Collection')"><v-chip label dark color="btnred" class="pointer-disabled"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></li>
                 <li class="mb-6" v-if="
                   (downloadable && objectInfo.readrights) ||
                   objectInfo.cmodel === 'Collection' ||
