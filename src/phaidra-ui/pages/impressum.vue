@@ -1,5 +1,8 @@
 <template>
-  <ExtImpressum></ExtImpressum>
+  <div>
+    <h1 class="d-sr-only">{{$t('Impressum')}}</h1>
+    <ExtImpressum></ExtImpressum>
+  </div>
 </template>
 
 <script>
