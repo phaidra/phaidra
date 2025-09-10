@@ -1225,7 +1225,7 @@ sub _get {
           $dom->xml(1);
           $dom->parse('<foxml:xmlContent>' . decode('UTF-8', $getdsres->{$dsid}) . '</foxml:xmlContent>');
           $datastreams{$dsid} = $dom;
-        else {
+        } else {
           $datastreams{$dsid} = 1;
         }
       }
