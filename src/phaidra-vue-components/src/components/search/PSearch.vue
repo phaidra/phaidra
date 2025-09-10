@@ -18,7 +18,7 @@
                <v-checkbox
                 v-model="extracted_text"
                 @change="search"
-                label="Full text search"
+                :label="$t('Full-text Search')"
                 hide-details
                 dense
                 class="mt-0"
