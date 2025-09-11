@@ -512,7 +512,7 @@ export default {
       }
       if (element.id === 'association' && !element?.queries?.length) {
         // Build association facet if configured in admin panel
-        const tree = this.vocabularies['orgunits']['tree']
+        const tree = this.vocabularies['orgunits']['treeUnsorted']
         element.queries = tree?.length ? this.constructAssociationQueries(tree) : []
       }
       return element

@@ -1977,6 +1977,7 @@ const mutations = {
     if (state.vocabularies['orgunits']['loaded'] === false) {
       state.vocabularies['orgunits']['tree'] = data.tree
       state.vocabularies['orgunits']['terms'] = data.terms
+      state.vocabularies['orgunits']['treeUnsorted'] = data.treeUnsorted
       state.vocabularies['orgunits']['loaded'] = true
     }
   },
@@ -2143,7 +2144,7 @@ const actions = {
         }
         let terms = []
         orgunits.getOrgUnitsTerms(terms, response.data.units, null)
-        commit('setOrgUnits', { tree: response.data.units, terms: terms, locale: locale })
+        commit('setOrgUnits', { tree: response.data.units, terms: terms, treeUnsorted: response.data.units ? JSON.parse(JSON.stringify(response.data.units)) : [], locale: locale })
         commit('sortOrgUnits', locale)
       } catch (error) {
         console.log(error)
