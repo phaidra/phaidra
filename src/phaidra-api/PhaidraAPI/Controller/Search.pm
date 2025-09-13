@@ -124,6 +124,8 @@ sub get_pids {
 sub search_ocr {
   my $self = shift;
 
+  my $apiBaseUrlPath = $self->app->config->{scheme} . '://' . $self->app->config->{baseurl}. ($self->app->config->{basepath} ? '/' . $self->app->config->{basepath} : '');
+
   my $query = $self->param('q');
   my $pid = $self->stash('pid');
 
@@ -206,14 +208,14 @@ sub search_ocr {
             'http://iiif.io/api/presentation/2/context.json',
             'http://iiif.io/api/search/1/context.json'
         ],
-        '@id' => "http://localhost:8899/api/search/ocr?q=$query",
+        '@id' => "$apiBaseUrlPath/search/ocr?q=$query",
         '@type' => 'sc:AnnotationList',
         'resources' => [],
         'hits' => [],
         'within' => {
             '@type' => 'sc:Layer',
-            'first' => "http://localhost:8899/api/search/ocr?q=$query&start=0",
-            'last' => "http://localhost:8899/api/search/ocr?q=$query&start=0",
+            'first' => "$apiBaseUrlPath/search/ocr?q=$query&start=0",
+            'last' => "$apiBaseUrlPath/search/ocr?q=$query&start=0",
             'ignored' => []
         }
     };
@@ -275,61 +277,87 @@ sub search_ocr {
                 : $doc->{extracted_text});
             
             if ($text) {
-                # Find the keyword match in the text (case-insensitive)
-                my $keyword = quotemeta($query);
-                my $before = '';
-                my $after = '';
-                my $match = $query;
-                my $match_coords = {};
+                # Find all keyword matches in individual text elements with their coordinates
+                my @matches = ();
                 
-                if ($text =~ /(.{0,10})($keyword)(.{0,100})/i) {
-                    $before = $1;
-                    $after = $3;
-                    $match = $2;
+                # Search through each text element individually to get specific coordinates
+                foreach my $coord (@$text_coords) {
+                    my $element_text = $coord->{text};
+                    my $keyword = quotemeta($query);
                     
-                    # Find coordinates for the matched text
-                    foreach my $coord (@$text_coords) {
-                        if ($coord->{text} =~ /\Q$query\E/i) {
-                            $match_coords = $coord;
-                            last;
-                        }
+                    # Find all matches in this specific text element
+                    while ($element_text =~ /(.{0,10})($keyword)(.{0,100})/gi) {
+                        push @matches, {
+                            before => $1,
+                            match => $2,
+                            after => $3,
+                            coords => {
+                                hpos => $coord->{hpos},
+                                vpos => $coord->{vpos},
+                                width => $coord->{width},
+                                height => $coord->{height}
+                            }
+                        };
                     }
                 }
                 
-                # Create annotation for each document
-                my $annotation = {
-                    '@id' => "http://localhost:8899/api/iiif/$pid/canvas/$page_number/text/at/". ($match_coords->{hpos} || 0) . "," . 
-                            ($match_coords->{vpos} || 0) . "," . 
-                            ($match_coords->{width} || 0) . "," . 
-                            ($match_coords->{height} || 0),
-                    '@type' => 'oa:Annotation',
-                    'motivation' => 'sc:painting',
-                    'resource' => {
-                        '@type' => 'cnt:ContentAsText',
-                        'chars' => $text
-                    },
-                    'on' => "http://localhost:8899/api/iiif/$pid/canvas/$page_number#xywh=" . 
-                            ($match_coords->{hpos} || 0) . "," . 
-                            ($match_coords->{vpos} || 0) . "," . 
-                            ($match_coords->{width} || 0) . "," . 
-                            ($match_coords->{height} || 0)
-                };
-                push @{$response_json->{resources}}, $annotation;
+                # If no matches found in individual elements, try full text search
+                if (!@matches) {
+                    my $keyword = quotemeta($query);
+                    while ($text =~ /(.{0,10})($keyword)(.{0,100})/gi) {
+                        push @matches, {
+                            before => $1,
+                            match => $2,
+                            after => $3,
+                            coords => {
+                                hpos => 0,
+                                vpos => 0,
+                                width => 0,
+                                height => 0
+                            }
+                        };
+                    }
+                }
                 
-                # Create hit for search highlighting
-                my $hit = {
-                    '@type' => 'search:Hit',
-                    'annotations' => ["http://localhost:8899/api/iiif/$pid/canvas/$page_number/text/at/". ($match_coords->{hpos} || 0) . "," . 
-                            ($match_coords->{vpos} || 0) . "," . 
-                            ($match_coords->{width} || 0) . "," . 
-                            ($match_coords->{height} || 0)],
-                    'before' => $before,
-                    'after' => $after,
-                    'match' => $match
-                };
-                push @{$response_json->{hits}}, $hit;
-                
-                $annotation_id++;
+                # Create annotations and hits for each match
+                foreach my $match (@matches) {
+                    my $match_coords = $match->{coords};
+                    
+                    # Create annotation for this match
+                    my $annotation = {
+                        '@id' => "$apiBaseUrlPath/iiif/$pid/canvas/$page_number/text/at/". ($match_coords->{hpos} || 0) . "," . 
+                                ($match_coords->{vpos} || 0) . "," . 
+                                ($match_coords->{width} || 0) . "," . 
+                                ($match_coords->{height} || 0),
+                        '@type' => 'oa:Annotation',
+                        'motivation' => 'sc:painting',
+                        'resource' => {
+                            '@type' => 'cnt:ContentAsText',
+                            'chars' => $match->{match}
+                        },
+                        'on' => "$apiBaseUrlPath/iiif/$pid/canvas/$page_number#xywh=" . 
+                                ($match_coords->{hpos} || 0) . "," . 
+                                ($match_coords->{vpos} || 0) . "," . 
+                                ($match_coords->{width} || 0) . "," . 
+                                ($match_coords->{height} || 0)
+                    };
+                    push @{$response_json->{resources}}, $annotation;
+                    
+                    # Create hit for this match
+                    my $hit = {
+                        '@type' => 'search:Hit',
+                        'annotations' => ["$apiBaseUrlPath/iiif/$pid/canvas/$page_number/text/at/". ($match_coords->{hpos} || 0) . "," . 
+                                ($match_coords->{vpos} || 0) . "," . 
+                                ($match_coords->{width} || 0) . "," . 
+                                ($match_coords->{height} || 0)],
+                        'before' => $match->{before},
+                        'after' => $match->{after},
+                        'match' => $match->{match}
+                    };
+                    push @{$response_json->{hits}}, $hit;
+                    
+                    $annotation_id++;
+                }
             }
         }
     }
