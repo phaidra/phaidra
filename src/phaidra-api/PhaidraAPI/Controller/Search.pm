@@ -277,43 +277,59 @@ sub search_ocr {
                 : $doc->{extracted_text});
             
             if ($text) {
-                # Find all keyword matches in individual text elements with their coordinates
+                # Find all keyword matches with context from ALTO XML structure
                 my @matches = ();
+                my $keyword = quotemeta($query);
                 
-                # Search through each text element individually to get specific coordinates
-                foreach my $coord (@$text_coords) {
-                    my $element_text = $coord->{text};
-                    my $keyword = quotemeta($query);
+                # Get all String elements from ALTO XML in order
+                my @alto_strings = $dom->find('String')->each;
+                
+                # Find matches and get context from surrounding String elements
+                for (my $i = 0; $i < @alto_strings; $i++) {
+                    my $string_element = $alto_strings[$i];
+                    my $element_text = $string_element->attr('CONTENT') || '';
                     
-                    # Find all matches in this specific text element
-                    while ($element_text =~ /(.{0,10})($keyword)(.{0,100})/gi) {
+                    # Check if this String element contains the search term
+                    if ($element_text =~ /\Q$query\E/i) {
+                        # Get coordinates for this match
+                        my $hpos = $string_element->attr('HPOS') || 0;
+                        my $vpos = $string_element->attr('VPOS') || 0;
+                        my $width = $string_element->attr('WIDTH') || 0;
+                        my $height = $string_element->attr('HEIGHT') || 0;
+                        
+                        # Build context from surrounding String elements
+                        my $before_text = '';
+                        my $after_text = '';
+                        
+                        # Get 3 String elements before (if available)
+                        for (my $j = $i - 3; $j < $i && $j >= 0; $j++) {
+                            my $before_element = $alto_strings[$j];
+                            my $before_content = $before_element->attr('CONTENT') || '';
+                            $before_text .= $before_content . ' ';
+                        }
+                        
+                        # Get 3 String elements after (if available)
+                        for (my $j = $i + 1; $j <= $i + 3 && $j < @alto_strings; $j++) {
+                            my $after_element = $alto_strings[$j];
+                            my $after_content = $after_element->attr('CONTENT') || '';
+                            $after_text .= $after_content . ' ';
+                        }
+                        
+                        # Clean up whitespace
+                        $before_text =~ s/\s+/ /g;
+                        $after_text =~ s/\s+/ /g;
+                        $before_text =~ s/^\s+|\s+$//g;
+                        $after_text =~ s/^\s+|\s+$//g;
+                        
                         push @matches, {
-                            before => $1,
-                            match => $2,
-                            after => $3,
+                            before => $before_text,
+                            match => $query,
+                            after => $after_text,
                             coords => {
-                                hpos => $coord->{hpos},
-                                vpos => $coord->{vpos},
-                                width => $coord->{width},
-                                height => $coord->{height}
-                            }
-                        };
-                    }
-                }
-                
-                # If no matches found in individual elements, try full text search
-                if (!@matches) {
-                    my $keyword = quotemeta($query);
-                    while ($text =~ /(.{0,10})($keyword)(.{0,100})/gi) {
-                        push @matches, {
-                            before => $1,
-                            match => $2,
-                            after => $3,
-                            coords => {
-                                hpos => 0,
-                                vpos => 0,
-                                width => 0,
-                                height => 0
+                                hpos => $hpos,
+                                vpos => $vpos,
+                                width => $width,
+                                height => $height
                             }
                         };
                     }
