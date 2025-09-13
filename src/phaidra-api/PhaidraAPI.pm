@@ -447,6 +447,7 @@ sub startup {
   $r->get('search/triples')                         ->to('search#triples');
   $r->get('search/select')                          ->to('search#search_solr');
   $r->post('search/select')                         ->to('search#search_solr');
+  $r->get('search/:pid/ocr')                        ->to('search#search_ocr');
   $r->post('search/get_pids')                       ->to('search#get_pids');
 
   $r->get('utils/get_all_pids')                     ->to('utils#get_all_pids');

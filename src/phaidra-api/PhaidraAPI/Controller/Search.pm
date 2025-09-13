@@ -5,6 +5,9 @@ use warnings;
 use v5.10;
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Search;
+use PhaidraAPI::Model::Fedora;
+use Encode qw(decode);
+use List::Util qw(first);
 
 sub triples {
   my $self = shift;
@@ -116,6 +119,226 @@ sub get_pids {
   }
 
   $self->render(json => {pids => $sr->{pids}}, status => $sr->{status});
+}
+
+sub search_ocr {
+  my $self = shift;
+
+  my $query = $self->param('q');
+  my $pid = $self->stash('pid');
+
+  # Step 1: Query phaidra core to get page PIDs from haspart field
+  my $url = Mojo::URL->new;
+  $url->scheme($self->app->config->{solr}->{scheme});
+  $url->host($self->app->config->{solr}->{host});
+  $url->port($self->app->config->{solr}->{port});
+  
+  my $phaidra_core = 'phaidra';
+  if ($self->app->config->{solr}->{path}) {
+    $url->path("/" . $self->app->config->{solr}->{path} . "/solr/$phaidra_core/select");
+  }
+  else {
+    $url->path("/solr/$phaidra_core/select");
+  }
+   # log pid
+   $self->app->log->debug("Searching for page PIDs for object $pid");
+   # Escape the PID for Solr query - quote it to handle colons and special characters
+   my $escaped_pid = "\"$pid\"";
+   $url->query(q => "pid:$escaped_pid", fl => "haspart", rows => 1000, wt => "json");
+   $self->app->log->debug("Query: " . $url->to_string);
+  my $ua = Mojo::UserAgent->new;
+  my $get = $ua->get($url)->result;
+  $self->app->log->debug("Response: " . $get->body);
+  if (!$get->is_success) {
+    $self->render(json => {error => "Failed to get page PIDs: " . $get->message}, status => 500);
+    return;
+  }
+  
+  my $phaidra_response = $get->json;
+  my @page_pids = ();
+  
+  # Extract page PIDs from haspart field
+  if ($phaidra_response->{response} && $phaidra_response->{response}->{docs} && @{$phaidra_response->{response}->{docs}}) {
+    my $haspart = $phaidra_response->{response}->{docs}->[0]->{haspart};
+    if ($haspart) {
+      if (ref($haspart) eq 'ARRAY') {
+        @page_pids = @$haspart;
+      } else {
+        @page_pids = ($haspart);
+      }
+    }
+  }
+  
+  if (!@page_pids) {
+    $self->render(json => {error => "No pages found for object $pid"}, status => 404);
+    return;
+  }
+  
+  # Step 2: Query phaidra_pages core with the page PIDs and search query
+  my $page_pids_query = join(' OR ', map { "pid:\"$_\"" } @page_pids);
+  my $search_query = "($page_pids_query) AND ($query)";
+  
+  $url = Mojo::URL->new;
+  $url->scheme($self->app->config->{solr}->{scheme});
+  $url->host($self->app->config->{solr}->{host});
+  $url->port($self->app->config->{solr}->{port});
+  
+  my $pages_core = 'phaidra_pages';
+  if ($self->app->config->{solr}->{path}) {
+    $url->path("/" . $self->app->config->{solr}->{path} . "/solr/$pages_core/select");
+  }
+  else {
+    $url->path("/solr/$pages_core/select");
+  }
+  $url->query(q => $search_query, fl => "extracted_text,pid", rows => 10, wt => "json");
+  $self->app->log->debug("pages Query: " . $url->to_string);
+  
+  $get = $ua->get($url)->result;
+  $self->app->log->debug("Response: " . $get->body);
+  if ($get->is_success) {
+    my $solr_response = $get->json;
+    my $base_url = $self->app->config->{baseurl} || 'http://localhost';
+    my $base_path = $self->app->config->{basepath} || '';
+    
+    # Process Solr response and create IIIF Search API response
+    my $response_json = {
+        '@context' => [
+            'http://iiif.io/api/presentation/2/context.json',
+            'http://iiif.io/api/search/1/context.json'
+        ],
+        '@id' => "http://localhost:8899/api/search/ocr?q=$query",
+        '@type' => 'sc:AnnotationList',
+        'resources' => [],
+        'hits' => [],
+        'within' => {
+            '@type' => 'sc:Layer',
+            'first' => "http://localhost:8899/api/search/ocr?q=$query&start=0",
+            'last' => "http://localhost:8899/api/search/ocr?q=$query&start=0",
+            'ignored' => []
+        }
+    };
+    
+    # Process Solr documents and create annotations
+    if ($solr_response->{response} && $solr_response->{response}->{docs}) {
+        my $annotation_id = 1;
+        foreach my $doc (@{$solr_response->{response}->{docs}}) {
+           my $page_number = 0;
+           
+           # Find the page number by getting the index of doc->pid in page_pids array
+           my $page_index = first { $page_pids[$_] eq $doc->{pid} } 0..$#page_pids;
+           if (defined $page_index) {
+               $page_number = $page_index + 1;
+           } else {
+               # Fallback: use 0 if page not found in page_pids
+               $page_number = 0;
+           }
+            # get the ocr datasteam from fedora
+            my $fedora_model = PhaidraAPI::Model::Fedora->new;
+            my $ocr_datasteam = $fedora_model->getDatastream($self, $doc->{pid}, 'ALTO');
+            if ($ocr_datasteam->{status} != 200) {
+             $self->render(json => {error => $ocr_datasteam->{alerts}->[0]->{msg}}, status => 500);
+             return;
+            }
+            
+            # Parse ALTO XML to extract text and coordinates
+            my $dom = Mojo::DOM->new();
+            $dom->xml(1);
+            $dom->parse(decode('UTF-8', $ocr_datasteam->{ALTO}));
+            
+            # Extract all text content with coordinates
+            my $all_text = '';
+            my $text_coords = [];
+            
+            # Find all String elements with their coordinates
+            my @strings = $dom->find('String')->each;
+            foreach my $string (@strings) {
+                my $content = $string->attr('CONTENT') || '';
+                my $hpos = $string->attr('HPOS') || 0;
+                my $vpos = $string->attr('VPOS') || 0;
+                my $width = $string->attr('WIDTH') || 0;
+                my $height = $string->attr('HEIGHT') || 0;
+                
+                if ($content) {
+                    $all_text .= $content . ' ';
+                    push @$text_coords, {
+                        text => $content,
+                        hpos => $hpos,
+                        vpos => $vpos,
+                        width => $width,
+                        height => $height
+                    };
+                }
+            }
+            # Use ALTO text if available, otherwise fall back to extracted_text
+            my $text = $all_text || (ref($doc->{extracted_text}) eq 'ARRAY' 
+                ? $doc->{extracted_text}->[0] 
+                : $doc->{extracted_text});
+            
+            if ($text) {
+                # Find the keyword match in the text (case-insensitive)
+                my $keyword = quotemeta($query);
+                my $before = '';
+                my $after = '';
+                my $match = $query;
+                my $match_coords = {};
+                
+                if ($text =~ /(.{0,10})($keyword)(.{0,100})/i) {
+                    $before = $1;
+                    $after = $3;
+                    $match = $2;
+                    
+                    # Find coordinates for the matched text
+                    foreach my $coord (@$text_coords) {
+                        if ($coord->{text} =~ /\Q$query\E/i) {
+                            $match_coords = $coord;
+                            last;
+                        }
+                    }
+                }
+                
+                # Create annotation for each document
+                my $annotation = {
+                    '@id' => "http://localhost:8899/api/iiif/$pid/canvas/$page_number/text/at/". ($match_coords->{hpos} || 0) . "," . 
+                            ($match_coords->{vpos} || 0) . "," . 
+                            ($match_coords->{width} || 0) . "," . 
+                            ($match_coords->{height} || 0),
+                    '@type' => 'oa:Annotation',
+                    'motivation' => 'sc:painting',
+                    'resource' => {
+                        '@type' => 'cnt:ContentAsText',
+                        'chars' => $text
+                    },
+                    'on' => "http://localhost:8899/api/iiif/$pid/canvas/$page_number#xywh=" . 
+                            ($match_coords->{hpos} || 0) . "," . 
+                            ($match_coords->{vpos} || 0) . "," . 
+                            ($match_coords->{width} || 0) . "," . 
+                            ($match_coords->{height} || 0)
+                };
+                push @{$response_json->{resources}}, $annotation;
+                
+                # Create hit for search highlighting
+                my $hit = {
+                    '@type' => 'search:Hit',
+                    'annotations' => ["http://localhost:8899/api/iiif/$pid/canvas/$page_number/text/at/". ($match_coords->{hpos} || 0) . "," . 
+                            ($match_coords->{vpos} || 0) . "," . 
+                            ($match_coords->{width} || 0) . "," . 
+                            ($match_coords->{height} || 0)],
+                    'before' => $before,
+                    'after' => $after,
+                    'match' => $match
+                };
+                push @{$response_json->{hits}}, $hit;
+                
+                $annotation_id++;
+            }
+        }
+    }
+    
+    $self->render(json => $response_json, status => 200);
+  }
+  else {
+    $self->render(json => {error => $get->message}, status => 500);
+  }
 }
 
 sub search_solr {
