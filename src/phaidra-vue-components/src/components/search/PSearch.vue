@@ -16,15 +16,6 @@
              <a href="#filters" class="skip-link d-sr-only-focusable">{{ $t('Go to Search Filters') }}</a>
              <div class="d-flex full-text-checkbox-wrapper">
                <v-checkbox
-                v-model="pagesSearchEnabled"
-                @change="search"
-                :label="$t('Search in pages')"
-                hide-details
-                dense
-                class="mt-0"
-              >
-              </v-checkbox>
-               <v-checkbox
                 v-model="extracted_text"
                 @change="search"
                 :label="$t('Full-text Search')"
@@ -290,9 +281,6 @@ export default {
       if (this.extracted_text) {
         params.extracted_text = 'include'
       }
-      if (this.pagesSearchEnabled) {
-        params.core = 'phaidra_pages'
-      }
       if (process.browser) {
         this.link = location.protocol + '//' + location.host + location.pathname + '?' + searchdefarr.join('&')
         window.history.replaceState(null, this.$t('Search results'), this.link)
@@ -446,7 +434,6 @@ export default {
   data () {
     return {
       link: '',
-      pagesSearchEnabled: false,
       limitdialog: false,
       linkdialog: false,
       selectioncheck: false,

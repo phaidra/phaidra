@@ -427,6 +427,46 @@ sub search_solr {
     }
   }
 
+  my @page_pids;
+  if ($include_extracted) {
+    my $original_q = $params->{q} // '';
+
+    my $pages_url = Mojo::URL->new;
+    $pages_url->scheme($self->app->config->{solr}->{scheme});
+    $pages_url->host($self->app->config->{solr}->{host});
+    $pages_url->port($self->app->config->{solr}->{port});
+    my $pages_core = 'phaidra_pages';
+    if ($self->app->config->{solr}->{path}) {
+      $pages_url->path("/" . $self->app->config->{solr}->{path} . "/solr/$pages_core/select");
+    }
+    else {
+      $pages_url->path("/solr/$pages_core/select");
+    }
+
+    $pages_url->query(q => $original_q, fl => 'pid', rows => 1000, wt => 'json');
+    $self->app->log->debug('Pages presearch URL: ' . $pages_url->to_string);
+
+    my $ua = Mojo::UserAgent->new;
+    my $pages_res = $ua->get($pages_url)->result;
+    if (!$pages_res->is_success) {
+      $self->app->log->error('Pages presearch failed: ' . $pages_res->message);
+    } else {
+      my $json = $pages_res->json;
+      if ($json->{response} && $json->{response}->{docs}) {
+        foreach my $d (@{$json->{response}->{docs}}) {
+          push @page_pids, $d->{pid} if defined $d->{pid};
+        }
+      }
+    }
+  }
+
+  if (@page_pids) {
+      my $haspart_clause = join ' OR ', map { 'haspart:"' . $_ . '"' } @page_pids;
+      my $books_q = '(' . $haspart_clause . ')';
+
+      $params->{q} = $books_q;
+  }
+
   if (Mojo::IOLoop->is_running) {
     $self->render_later;
     $self->ua->post(
