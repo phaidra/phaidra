@@ -1,6 +1,9 @@
 <template>
+  <div>
+    <h1 class="d-sr-only">{{$t('Editorial Policies')}}</h1>
     <ExtEditorialPolicies></ExtEditorialPolicies>
-  </template>
+  </div>
+</template>
   
   <script>
   import { config } from "../mixins/config";
