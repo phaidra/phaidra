@@ -633,7 +633,9 @@ sub startup {
       $admin->post('object/:pid/dc')                                         ->to('dc#update');
 
       $admin->post('imageserver/process')                                    ->to('imageserver#process_pids');
+      $admin->post('tikaserver/process')                                      ->to('tikaserver#process_pids');
       $writer->post('imageserver/:pid/process')                              ->to('imageserver#process');
+      $writer->post('tikaserver/:pid/process')                              ->to('tikaserver#process');
       $admin->post('streaming/process')                                      ->to('streaming#process_pids');
       $admin->post('streaming/:pid/process')                                 ->to('streaming#process');
 
@@ -806,9 +808,11 @@ sub startup {
       $admin->post('ir/embargocheck')                                           ->to('ir#embargocheck');
 
       $admin->post('imageserver/process')                                       ->to('imageserver#process_pids');
+      $admin->post('tikaserver/process')                                       ->to('tikaserver#process_pids');
 
       $proxyauth->post('imageserver/:pid/process')                              ->to('imageserver#process');
 
+      $proxyauth->post('tikaserver/:pid/process')                              ->to('tikaserver#process');
       $admin->post('streaming/process')                                         ->to('streaming#process_pids');
       $proxyauth->post('streaming/:pid/process')                                ->to('streaming#process');
 
