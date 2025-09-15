@@ -183,7 +183,7 @@ services:
   #################### httpd service for shib-local profile ####################
   httpd-shib-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:6925dee0
+    image: phaidraorg/httpd-shib-dist:f41291e5
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -290,7 +290,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:f41291e5
+    image: phaidraorg/api-dist:56b00fa5
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -305,7 +305,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:f41291e5
+    image: phaidraorg/api-dist:56b00fa5
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
