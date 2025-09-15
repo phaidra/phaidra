@@ -94,7 +94,7 @@
                       >
                         mdi-check-circle
                       </v-icon>
-                      <span class="text-subtitle-1">{{ field }}{{ fieldSettings[field]?.required ? ' *' : '' }}</span>
+                      <span class="text-subtitle-1">{{ $t(field) }}{{ fieldSettings[field]?.required ? ' *' : '' }}</span>
                     </v-col>
                     <v-col cols="2">
                       <SourceSelector
@@ -117,7 +117,7 @@
                       <div class="d-flex flex-wrap justify-center" style="row-gap: 1em;">
                         <div v-for="(fieldConfig, subField) in fieldSettings[field].multiFieldConfig.fields" :key="subField" class="mx-2">
                           <template v-if="!fieldConfig.hideForCSV">
-                            <label class="d-block mb-1"><b>{{ subField }}{{ fieldConfig.required ? ' *' : '' }}</b></label>
+                            <label class="d-block mb-1"><b>{{ $t(subField) }}{{ fieldConfig.required ? ' *' : '' }}</b></label>
                             <CSVColumnSelector
                               :field="subField"
                               :columns="getColumnHeaders"
