@@ -612,8 +612,19 @@ export default {
       this.init = true
     },
     showFacet: function (f) {
-      showFacet(f)
-      this.search({ facetQueries: this.facetQueries })
+      if(f.id === 'association') {
+        if(f.show){
+          f.queries[0].active = true
+          f.queries[0].show = true
+        } else {
+          f.queries[0].active = false
+          f.queries[0].show = false
+        }
+        this.toggleFacet(f.queries[0], f)
+      } else {
+        showFacet(f)
+        this.search({ facetQueries: this.facetQueries })
+      }
     },
     toggleFacet: function (q, f) {
       toggleFacet(q, f)

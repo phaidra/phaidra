@@ -1,5 +1,8 @@
 <template>
-  <ExtContact></ExtContact>
+  <div>
+    <h1 class="d-sr-only">{{$t('Contact')}}</h1>
+    <ExtContact></ExtContact>
+  </div>
 </template>
 
 <script>

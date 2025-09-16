@@ -1348,5 +1348,9 @@
     "Editorial Policies component. Enclose template in a div.": "Redaktionelle Richtlinien-Komponente. Enthält die Vorlage in einem div.",
     "Code of Ethics": "Ethik",
     "Editorial Policies": "Redaktionelle Richtlinien",
-    "Full-text Search": "Volltextsuche"
+    "Full-text Search": "Volltextsuche",
+    "ORG Unit / Association": "ORG-Einheit / Zugehörigkeit",
+    "First name": "Vorname",
+    "Last name": "Nachname",
+    "Object Type": "Objekttyp"
   }

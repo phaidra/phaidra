@@ -19,6 +19,7 @@
       <v-col md="4">
         <v-form v-model="valid">
           <v-card>
+            <v-card-title class="title font-weight-light white--text">{{ $t('Login') }}</v-card-title>
             <v-card-text>
               <v-row justify="center" class="mt-4">
                 <v-col cols="10">

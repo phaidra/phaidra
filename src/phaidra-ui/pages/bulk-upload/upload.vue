@@ -321,7 +321,7 @@ export default {
 
           const response = await this.$axios.request({
             method: 'POST',
-            url: `http://localhost:8899/api/${createmethod}/create`,
+            url: `/${createmethod}/create`,
             headers: {
               'Content-Type': 'multipart/form-data',
               'X-XSRF-TOKEN': this.user.token

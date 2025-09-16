@@ -12,7 +12,7 @@
 
     <!-- The ApplicationDefaults element is where most of Shibboleth's SAML bits are defined. -->
     <ApplicationDefaults entityID="https://__PHAIDRA_HOSTNAME__/shibboleth"
-        REMOTE_USER="eppn subject-id pairwise-id persistent-id"
+        REMOTE_USER="eppn subject-id pairwise-id persistent-id" sessionHook="/login"
         cipherSuites="DEFAULT:!EXP:!LOW:!aNULL:!eNULL:!DES:!IDEA:!SEED:!RC4:!3DES:!kRSA:!SSLv2:!SSLv3:!TLSv1:!TLSv1.1">
 
         <!--

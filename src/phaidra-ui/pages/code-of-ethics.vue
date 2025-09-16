@@ -1,6 +1,9 @@
 <template>
+  <div>
+    <h1 class="d-sr-only">{{$t('Code of Ethics')}}</h1>
     <ExtCodeOfEthics></ExtCodeOfEthics>
-  </template>
+  </div>
+</template>
   
   <script>
   import { config } from "../mixins/config";
