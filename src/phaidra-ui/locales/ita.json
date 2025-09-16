@@ -1392,5 +1392,7 @@
   "All files have been successfully uploaded to PHAIDRA.": "Tutti i file sono stati caricati con successo in PHAIDRA.",
   "Start New Bulk Upload": "Avvia nuovo caricamento di massa",
   "Error starting new bulk upload:": "Errore durante l'avvio del nuovo caricamento di massa:",
-  "Loading local storage...": "Caricamento dello storage locale..."
+  "Loading local storage...": "Caricamento dello storage locale...",
+  "First name": "Nome",
+  "Last name": "Cognome"
 }
