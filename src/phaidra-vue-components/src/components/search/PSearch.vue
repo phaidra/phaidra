@@ -184,7 +184,7 @@ export default {
         let item = {
           id: orgUnit['@id'],
           label: orgUnit['skos:prefLabel'][this.$i18n.locale],
-          query:  `(association_id:\"${orgUnit['@id']}\" OR uwm_association_id:\"${orgUnit['@id']}\")`
+          query:  `(association_id:\"${orgUnit['@id']}\" OR uwm_association_id:\"${orgUnit['@id'] ? orgUnit['@id'].split('/').pop() : ''}\")`
         }
         if (orgUnit['subunits'] && orgUnit['subunits'].length) {
           item.childFacet = { queries: this.constructAssociationQueries(orgUnit['subunits']) }
