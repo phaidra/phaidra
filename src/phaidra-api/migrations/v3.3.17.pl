@@ -30,7 +30,7 @@ $cntr->mode('ping');
 
 $cntr->dbh->do("
 
-  # roles added in Padova
+  -- roles added in Padova
   INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (1557151,'en','wallchart',24);
   INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (1557151,'de','Wandkarte',24);
   INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (1557151,'it','carta murale',24);
@@ -159,9 +159,9 @@ $cntr->dbh->do("
   UPDATE vocabulary_entry SET entry='Incisore su metallo' WHERE VEID='1557105' AND isocode='it';
   UPDATE vocabulary_entry SET entry='Responsabile del caricamento' WHERE VEID='1557146' AND isocode='it';
 
-  # roles added to angewandte
+  -- roles added to angewandte
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561101', 'en', 'Abridger', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561102', 'en', 'Addressee', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561102', 'en', 'Addressee', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561103', 'en', 'Analyst', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561104', 'en', 'Animator', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561105', 'en', 'Annotator', '3');
@@ -205,7 +205,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561144', 'en', 'Complainant-appellee', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561145', 'en', 'Compositor', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561146', 'en', 'Conceptor', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561147', 'en', 'Conservator', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561147', 'en', 'Conservator', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561148', 'en', 'Consultant', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561149', 'en', 'Consultant to a project', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561150', 'en', 'Contestant', '3');
@@ -226,7 +226,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561165', 'en', 'Cover designer', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561166', 'en', 'Curator', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561167', 'en', 'Dancer', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561168', 'en', 'Data contributor', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561168', 'en', 'Data contributor', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561169', 'en', 'Data manager', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561170', 'en', 'Defendant', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561171', 'en', 'Defendant-appellant', '3');
@@ -306,7 +306,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561245', 'en', 'Plaintiff-appellee', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561246', 'en', 'Platemaker', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561247', 'en', 'Praeses', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561248', 'en', 'Presenter', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561248', 'en', 'Presenter', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561249', 'en', 'Printer of plates', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561250', 'en', 'Printmaker', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561251', 'en', 'Process contact', '3');
@@ -316,7 +316,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561255', 'en', 'Production personnel', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561256', 'en', 'Production place', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561257', 'en', 'Programmer', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561258', 'en', 'Project director', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561258', 'en', 'Project director', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561259', 'en', 'Proofreader', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561260', 'en', 'Provider', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561261', 'en', 'Publication place', '3');
@@ -360,7 +360,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561300', 'en', 'Technical director', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561301', 'en', 'Television director', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561302', 'en', 'Television producer', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561303', 'en', 'Transcriber', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561303', 'en', 'Transcriber', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561304', 'en', 'Type designer', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561305', 'en', 'Typographer', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561306', 'en', 'University place', '3');
@@ -375,7 +375,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561315', 'en', 'Writer of supplementary textual content', '3');
 
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561101', 'de', 'Abridger', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561102', 'de', 'AdressatIn', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561102', 'de', 'AdressatIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561103', 'de', 'DateninterpretIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561104', 'de', 'AnimatorIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561105', 'de', 'AutorIn von Anmerkungen', '3');
@@ -419,7 +419,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561144', 'de', 'Complainant-appellee', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561145', 'de', 'SchriftsetzerIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561146', 'de', 'KonzepterIn / KonzeptionstexterIn', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561147', 'de', 'KonservatorIn', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561147', 'de', 'KonservatorIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561148', 'de', 'Fachliche Beratung / FachberaterIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561149', 'de', 'ProjektberaterIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561150', 'de', 'Contestant', '3');
@@ -440,7 +440,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561165', 'de', 'DesignerIn der Hüller / Verpackung', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561166', 'de', 'KuratorIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561167', 'de', 'TänzerIn', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561168', 'de', 'DatenlieferantIn', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561168', 'de', 'DatenlieferantIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561169', 'de', 'DatenmanagerIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561170', 'de', 'Defendant', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561171', 'de', 'Defendant-appellant', '3');
@@ -520,7 +520,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561245', 'de', 'Plaintiff-appellee', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561246', 'de', 'Platemaker', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561247', 'de', 'Präses', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561248', 'de', 'Presenter', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561248', 'de', 'Presenter', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561249', 'de', 'PlattendruckerIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561250', 'de', 'DruckerIn / GrafikkünstlerIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561251', 'de', 'AnsprechpartnerIn', '3');
@@ -530,7 +530,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561255', 'de', 'Produktionspersonal', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561256', 'de', 'Produktionsort', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561257', 'de', 'ProgrammiererIn', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561258', 'de', 'PrjektleiterIn', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561258', 'de', 'PrjektleiterIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561259', 'de', 'LektorIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561260', 'de', 'AnbieterIn / LieferantIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561261', 'de', 'Publikationsort', '3');
@@ -574,7 +574,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561300', 'de', 'Technische/r DirektorIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561301', 'de', 'FernsehintendantIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561302', 'de', 'FernsehproduzentIn', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561303', 'de', 'Transcriber', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561303', 'de', 'Transcriber', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561304', 'de', 'SchriftdesignerIn / SchriftentwerferIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561305', 'de', 'TypographIn', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561306', 'de', 'Universitätsort', '3');
@@ -589,7 +589,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561315', 'de', 'Writer of supplementary textual content', '3');
 
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561101', 'it', 'Abridger', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561102', 'it', 'Destinatario', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561102', 'it', 'Destinatario', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561103', 'it', 'Analista', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561104', 'it', 'Animator', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561105', 'it', 'Annotatore', '3');
@@ -633,7 +633,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561144', 'it', 'Complainant-appellee', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561145', 'it', 'Compositor', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561146', 'it', 'Conceptor', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561147', 'it', 'Conservator', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561147', 'it', 'Conservator', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561148', 'it', 'Consultant', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561149', 'it', 'Consultant to a project', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561150', 'it', 'Contestant', '3');
@@ -654,7 +654,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561165', 'it', 'Cover designer', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561166', 'it', 'Curator', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561167', 'it', 'Dancer', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561168', 'it', 'Data contributor', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561168', 'it', 'Data contributor', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561169', 'it', 'Gestore di dati', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561170', 'it', 'Defendant', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561171', 'it', 'Defendant-appellant', '3');
@@ -734,7 +734,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561245', 'it', 'Plaintiff-appellee', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561246', 'it', 'Platemaker', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561247', 'it', 'Praeses', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561248', 'it', 'Presenter', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561248', 'it', 'Presenter', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561249', 'it', 'Printer of plates', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561250', 'it', 'Printmaker', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561251', 'it', 'Process contact', '3');
@@ -744,7 +744,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561255', 'it', 'Production personnel', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561256', 'it', 'Production place', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561257', 'it', 'Programmer', '3');
-  # already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561258', 'it', 'Project director', '3');
+  -- already added INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561258', 'it', 'Project director', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561259', 'it', 'Correttore', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561260', 'it', 'Provider', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561261', 'it', 'Publication place', '3');
@@ -788,7 +788,7 @@ $cntr->dbh->do("
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561300', 'it', 'Technical director', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561301', 'it', 'Television director', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561302', 'it', 'Television producer', '3');
-  # already added NSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561303', 'it', 'Transcriber', '3');
+  -- already added NSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561303', 'it', 'Transcriber', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561304', 'it', 'Type designer', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561305', 'it', 'Tipografo', '3');
   INSERT INTO `vocabulary_entry`(`veid`, `isocode`, `entry`, `vid`) VALUES ('1561306', 'it', 'University place', '3');
@@ -828,6 +828,43 @@ $cntr->dbh->do("
 
   INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (1562584,'it','ÖFOS 2012',44);
 
+-- institutional repository tables
+  CREATE TABLE `alert` (
+    `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `username` varchar(64) NOT NULL,
+    `alert_type` varchar(8) NOT NULL,
+    `pids` varchar(64) DEFAULT NULL,
+    `gmtimestamp` varchar(50) DEFAULT NULL,
+    `processed` int(4) DEFAULT NULL,
+  CONSTRAINT `PRIMARY` PRIMARY KEY (`id`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+  CREATE TABLE `event` (
+    `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `event_type` varchar(50) DEFAULT NULL,
+    `pid` varchar(250) DEFAULT NULL,
+    `user_id` varchar(16) DEFAULT NULL,
+    `gmtimestamp` varchar(50) DEFAULT NULL,
+  CONSTRAINT `PRIMARY` PRIMARY KEY (`id`)
+  ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+  CREATE TABLE `requested_license` (
+    `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `pid` varchar(250) DEFAULT NULL,
+    `license` varchar(250) DEFAULT NULL,
+    `user_id` varchar(16) DEFAULT NULL,
+    `gmtimestamp` varchar(50) DEFAULT NULL,
+  CONSTRAINT `PRIMARY` PRIMARY KEY (`id`)
+  ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+  CREATE TABLE `pureimport_locks` (
+    `pureId` int(11) NOT NULL,
+    `lockName` varchar(128) NOT NULL,
+    `created` timestamp NOT NULL DEFAULT current_timestamp()
+  ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  ALTER TABLE `pureimport_locks`
+    ADD PRIMARY KEY (`pureId`);
 
   ");
 

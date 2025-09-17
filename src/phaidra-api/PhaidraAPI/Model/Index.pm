@@ -1565,22 +1565,6 @@ sub _get {
   }
   $index{resourcetype} = $resourcetype;
 
-  if ($c->app->config->{ir}) {
-    if ($c->app->config->{ir}->{adminset}) {
-      if (exists($index{isinadminset})) {
-        for my $as (@{$index{isinadminset}}) {
-          if ($as eq $c->app->config->{ir}->{adminset}) {
-            if (exists($index{dc_title})) {
-              for my $t (@{$index{dc_title}}) {
-                push @{$index{title_suggest_ir}}, $t;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
   # update the index with members metadata:
   # member_metadata - so that basic metadata of members (pid, title, desc, subject) will be indexed
   # also "memberresourcetype:<resourcetype>" is added as a value - so that we can filter containers containing particular types of members (eg videos)
@@ -2398,6 +2382,7 @@ sub _add_jsonld_roles {
               if ($aff->{'skos:exactMatch'}) {
                 for my $id (@{$aff->{'skos:exactMatch'}}) {
                   unless (exists($foundAssIds->{$id})) {
+                    no warnings 'uninitialized';
                     if (reftype $id ne reftype {}) {
                       push @{$index->{"affiliation_id"}}, $id;
                       $foundAssIds->{$id} = 1;

@@ -19,9 +19,9 @@ sub alma_get_record_json {
   my $res = {alerts => [], status => 200};
 
   my $model = PhaidraAPI::Model::Config->new;
-  my $pubconfig = $model->get_private_config($c);
+  my $privconfig = $model->get_private_config($c);
 
-  unless (exists($pubconfig->{almasruurl})) {
+  unless (exists($privconfig->{almasruurl})) {
     my $err = "alma api is not configured";
     $c->app->log->error($err);
     push @{$res->{alerts}}, {type => 'error', msg => $err};
@@ -38,7 +38,7 @@ sub alma_get_record_json {
     recordSchema => 'marcxml'
   };
 
-  my $url = Mojo::URL->new($pubconfig->{almasruurl})->query($params);
+  my $url = Mojo::URL->new($privconfig->{almasruurl})->query($params);
   my $get = $c->ua->max_redirects(5)->get($url)->result;
   if ($get->is_success) {
     my $xml = $get->body;
@@ -122,9 +122,9 @@ sub alma_search {
   }
 
   my $model = PhaidraAPI::Model::Config->new;
-  my $pubconfig = $model->get_private_config($c);
+  my $privconfig = $model->get_private_config($c);
 
-  unless (exists($pubconfig->{almasruurl})) {
+  unless (exists($privconfig->{almasruurl})) {
     my $err = "alma api is not configured";
     $c->app->log->error($err);
     push @{$res->{alerts}}, {type => 'error', msg => $err};
@@ -134,7 +134,7 @@ sub alma_search {
 
   my $params = { query => $query, version => $version, maximumRecords => $maximumRecords, startRecord => $startRecord, operation => $operation, recordSchema => $recordSchema };
 
-  my $url = Mojo::URL->new($pubconfig->{almasruurl})->query($params);
+  my $url = Mojo::URL->new($privconfig->{almasruurl})->query($params);
   my $get = $c->ua->max_redirects(5)->get($url)->result;
   if ($get->is_success) {
     $res->{resultxml} = $get->body;

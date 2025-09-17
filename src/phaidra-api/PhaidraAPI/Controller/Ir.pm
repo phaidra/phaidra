@@ -14,6 +14,7 @@ use PhaidraAPI::Model::Collection;
 use PhaidraAPI::Model::Search;
 use PhaidraAPI::Model::Rights;
 use PhaidraAPI::Model::Index;
+use PhaidraAPI::Model::Config;
 use PhaidraAPI::Model::Jsonld;
 use Time::HiRes qw/tv_interval gettimeofday/;
 use Storable qw(dclone);
@@ -228,10 +229,13 @@ sub accept {
 
   my $res = {alerts => [], status => 200};
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
 
-  if ($username ne $self->config->{ir}->{iraccount}) {
+  if ($username ne $pubconfig->{iraccount}) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Not authorized.'}]}, status => 403);
     return;
   }
@@ -245,7 +249,7 @@ sub accept {
 
   my $object_model = PhaidraAPI::Model::Object->new;
 
-  my $r = $object_model->modify($self, $pid, undef, undef, $self->config->{ir}->{iraccount}, 'ir accept', undef, $username, $password, 1);
+  my $r = $object_model->modify($self, $pid, undef, undef, $pubconfig->{iraccount}, 'ir accept', undef, $username, $password, 1);
   if ($r->{status} ne 200) {
     $res->{status} = 500;
     unshift @{$res->{alerts}}, @{$r->{alerts}};
@@ -265,10 +269,13 @@ sub reject {
 
   my $res = {alerts => [], status => 200};
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
 
-  if ($username ne $self->config->{ir}->{iraccount}) {
+  if ($username ne $pubconfig->{iraccount}) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Not authorized.'}]}, status => 403);
     return;
   }
@@ -282,7 +289,7 @@ sub reject {
 
   my $object_model = PhaidraAPI::Model::Object->new;
 
-  my $r = $object_model->purge_relationship($self, $pid, "http://phaidra.org/ontology/isInAdminSet", $self->config->{ir}->{adminset}, $self->config->{phaidra}->{adminusername}, $self->config->{phaidra}->{adminpassword}, 0);
+  my $r = $object_model->purge_relationship($self, $pid, "http://phaidra.org/ontology/isInAdminSet", $pubconfig->{iradminset}, $self->config->{phaidra}->{adminusername}, $self->config->{phaidra}->{adminpassword}, 0);
   push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
   if ($r->{status} ne 200) {
     $res->{status} = 500;
@@ -303,10 +310,14 @@ sub approve {
 
   my $res = {alerts => [], status => 200};
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+  my $privconfig = $confmodel->get_private_config($self);
+
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
 
-  if ($username ne $self->config->{ir}->{iraccount}) {
+  if ($username ne $pubconfig->{iraccount}) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Not authorized.'}]}, status => 403);
     return;
   }
@@ -342,7 +353,7 @@ sub approve {
     return;
   }
 
-  $res->{'JSON-LD'}->{'phaidra:systemTag'} = [$self->config->{ir}->{adminset} . ':approved'];
+  $res->{'JSON-LD'}->{'phaidra:systemTag'} = [$pubconfig->{iradminset} . ':approved'];
 
   my $saveres = $jsonld_model->save_to_object($self, $pid, $cmodel, $res->{'JSON-LD'}, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password}, 0);
   if ($saveres->{status} ne 200) {
@@ -367,33 +378,32 @@ sub approve {
 
   my %emaildata;
   $emaildata{pid}     = $pid;
-  $emaildata{baseurl} = $self->config->{ir}->{baseurl};
+  $emaildata{baseurl} = $pubconfig->{irbaseurl};
 
-  my $subject        = $self->config->{ir}->{name} . " - Redaktionelle Bearbeitung abgeschlossen / Submission process completed";
-  my $templatefolder = $self->config->{ir}->{templatefolder};
+  my $subject        = $pubconfig->{irname} . " - Redaktionelle Bearbeitung abgeschlossen / Submission process completed";
 
-  my $supportEmail = $self->config->{ir}->{supportemail};
+  my $supportEmail = $privconfig->{iremail};
   my $from = $supportEmail;
   $from = substr($supportEmail, 0, index($supportEmail, ',')) if index($supportEmail, ',') != -1;
 
-  my $confmodel = PhaidraAPI::Model::Config->new;
-  my $pubconfig = $confmodel->get_public_config($self);
-  my $privconfig = $confmodel->get_private_config($self);
+  my $template_string = $privconfig->{irmdcheckemail};
+  my $tt = Template->new();
+  my $output;
+  unless($tt->process(\$template_string, \%emaildata, \$output)) {
+    $self->app->log->error("send mdcheck email pid[$pid]: ".$tt->error());
+    push @{$res->{alerts}}, {type => 'error', msg => "error sending metadata check email for pid[$pid]: ".$tt->error()};
+  }
 
-  my %options;
-  $options{INCLUDE_PATH} = $templatefolder;
   eval {
-    my $msg = MIME::Lite::TT::HTML->new(
+    my $msg = MIME::Lite->new(
       From        => $from,
       To          => $email,
       Subject     => $subject,
-      Charset     => 'utf8',
-      Encoding    => 'quoted-printable',
-      Template    => {html => 'mdcheck.html.tt', text => 'mdcheck.txt.tt'},
-      TmplParams  => \%emaildata,
-      TmplOptions => \%options
+      Type        => 'text/html; charset=UTF-8',
+      Encoding    => 'quoted-printable'
     );
-    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => ($privconfig->{smtpport} eq '465' || $privconfig->{smtpport} eq '587') ? 1 : 0);
+    $msg->data(encode('UTF-8', $output));
+    $msg->send('smtp', $privconfig->{irsmtpserver}.':'.$privconfig->{irsmtpport}, AuthUser => $privconfig->{irsmtpuser}, AuthPass => $privconfig->{irsmtppassword}, SSL => ($privconfig->{irsmtpport} eq '465' || $privconfig->{irsmtpport} eq '587') ? 1 : 0);
   };
   if ($@) {
     $self->addEvent('approval_notification_failed', \@pids, $username);
@@ -420,10 +430,13 @@ sub events {
 
   my $res = {alerts => [], status => 200};
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
 
-  if ($username ne $self->config->{ir}->{iraccount}) {
+  if ($username ne $pubconfig->{iraccount}) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Not authorized.'}]}, status => 403);
     return;
   }
@@ -456,6 +469,9 @@ sub adminlistdata {
 
   my $res = {alerts => [], status => 200};
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
 
@@ -465,7 +481,7 @@ sub adminlistdata {
   }
   $self->app->log->debug("==============");
 
-  if ($username ne $self->config->{ir}->{iraccount}) {
+  if ($username ne $pubconfig->{iraccount}) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Not authorized.'}]}, status => 403);
     return;
   }
@@ -543,20 +559,24 @@ sub allowsubmit {
 
   my $res = {alerts => [], status => 200};
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $privconfig = $confmodel->get_private_config($self);
+
   $res->{allowsubmit}     = 0;
   $res->{candobulkupload} = 0;
 
   my $username = $self->stash->{basic_auth_credentials}->{username};
 
-  if ($self->config->{ir}->{bulkuploadlimit}->{nruploads} && $self->config->{ir}->{bulkuploadlimit}->{nrdays}) {
-    my $nruploads = $self->config->{ir}->{bulkuploadlimit}->{nruploads};
-    my $nrdays    = $self->config->{ir}->{bulkuploadlimit}->{nrdays};
+  if ($privconfig->{irbulkuploadlimitnr} && $privconfig->{irbulkuploadlimitdays}) {
+    my $nruploads = $privconfig->{irbulkuploadlimitnr};
+    my $nrdays    = $privconfig->{irbulkuploadlimitdays};
     $res->{nruploads} = $nruploads;
     $res->{nrdays}    = $nrdays;
     $self->app->log->info("Bulk upload check configured: nruploads[$nruploads] within days[$nrdays]");
     my $candobulkupload = 0;
-    if ($self->config->{ir}->{candobulkupload}) {
-      for my $acc (@{$self->config->{ir}->{candobulkupload}}) {
+    if ($privconfig->{ircandobulkupload}) {
+      my @accounts = split (',', $privconfig->{ircandobulkupload});
+      for my $acc (@accounts) {
         if ($username eq $acc) {
           $res->{candobulkupload} = 1;
           $candobulkupload = 1;
@@ -589,9 +609,12 @@ sub allowsubmit {
 sub getNrUnapprovedUploads {
   my ($self, $username, $nrdays) = @_;
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+
   my $ss
     = 'SELECT COUNT(*) AS nrunapproveduploads FROM (SELECT INSTR(GROUP_CONCAT(event_type),"approve") as approvedstrpos, pid, INSTR(GROUP_CONCAT(user_id),?) as userstrpos, gmtimestamp FROM event as e, (SELECT MAX(STR_TO_DATE(gmtimestamp,"%Y-%m-%dT%TZ")) as maxd FROM event WHERE user_id = ? AND event_type = "submit") subq1 WHERE user_id = ? OR user_id = ? AND STR_TO_DATE(e.gmtimestamp,"%Y-%m-%dT%TZ") >= SUBDATE(subq1.maxd, ?) GROUP BY pid) uploads WHERE approvedstrpos = 0 AND userstrpos > 0;';
-  my $res = $self->app->db_ir->dbh->selectrow_hashref($ss, undef, ($username, $username, $self->config->{ir}->{iraccount}, $username, $nrdays)) or $self->app->log->error($self->app->db_ir->dbh->errstr);
+  my $res = $self->app->db_ir->dbh->selectrow_hashref($ss, undef, ($username, $username, $pubconfig->{iraccount}, $username, $nrdays)) or $self->app->log->error($self->app->db_ir->dbh->errstr);
   return $res->{nrunapproveduploads};
 }
 
@@ -600,6 +623,9 @@ sub submit {
   my $self = shift;
 
   my $res = {alerts => [], status => 200};
+
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
 
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
@@ -671,7 +697,7 @@ sub submit {
             if (exists($metadata->{metadata}->{'json-ld'}->{'dcterms:available'})) {
               for my $embargoDate (@{$metadata->{metadata}->{'json-ld'}->{'dcterms:available'}}) {
                 push @{$rights{'username'}}, {value => $username, expires => $embargoDate . "T00:00:00Z"};
-                push @{$rights{'username'}}, {value => $self->config->{ir}->{iraccount}, expires => $embargoDate . "T00:00:00Z"};
+                push @{$rights{'username'}}, {value => $pubconfig->{iraccount}, expires => $embargoDate . "T00:00:00Z"};
                 last;
               }
             }
@@ -680,13 +706,13 @@ sub submit {
           # closed
           if ($arId eq 'https://pid.phaidra.org/vocabulary/QNGE-V02H') {
             push @{$rights{'username'}}, $username;
-            push @{$rights{'username'}}, $self->config->{ir}->{iraccount};
+            push @{$rights{'username'}}, $pubconfig->{iraccount};
           }
 
           # restricted
           if ($arId eq 'https://pid.phaidra.org/vocabulary/KC3K-CCGM') {
             push @{$rights{'username'}}, $username;
-            push @{$rights{'username'}}, $self->config->{ir}->{iraccount};
+            push @{$rights{'username'}}, $pubconfig->{iraccount};
           }
         }
       }
@@ -738,14 +764,14 @@ sub submit {
 
     $self->app->log->debug('Requested license:' . $self->app->dumper($jsonld->{'edm:rights'}));
     my $requestedLicense = @{$jsonld->{'edm:rights'}}[0];
-    if ($username ne $self->config->{ir}->{iraccount}) {
+    if ($username ne $pubconfig->{iraccount}) {
       my @lic;
       push @lic, 'http://rightsstatements.org/vocab/InC/1.0/';
       $jsonld->{'edm:rights'} = \@lic;
     }
 
-    if ($username eq $self->config->{ir}->{iraccount}) {
-      $jsonld->{'phaidra:systemTag'} = [$self->config->{ir}->{adminset} . ":approved"];
+    if ($username eq $pubconfig->{iraccount}) {
+      $jsonld->{'phaidra:systemTag'} = [$pubconfig->{iradminset} . ":approved"];
     }
 
     my $isAlternativeFormat = 0;
@@ -790,7 +816,7 @@ sub submit {
 
   my @mainObjectRelationships = (
     { predicate => "http://phaidra.org/ontology/isInAdminSet",
-      object    => $self->config->{ir}->{adminset}
+      object    => $pubconfig->{iradminset}
     }
   );
 
@@ -820,7 +846,7 @@ sub submit {
         object    => "info:fedora/" . $mainObjectPid
       },
       { predicate => "http://phaidra.org/ontology/isInAdminSet",
-        object    => $self->config->{ir}->{adminset}
+        object    => $pubconfig->{iradminset}
       }
     );
 
@@ -835,7 +861,7 @@ sub submit {
     }
   }
 
-  if ($username eq $self->config->{ir}->{iraccount}) {
+  if ($username eq $pubconfig->{iraccount}) {
     if ($self->app->config->{apis}->{pure}) {
       my $uuid = $self->param('uuid');
       $self->app->log->debug("pure import uuid[$uuid]");
@@ -875,15 +901,14 @@ sub submit {
 sub sendAdminEmail {
   my ($self, $title, $owner, $pid, $license) = @_;
 
-  my $phaidrabaseurl = $self->config->{phaidra}->{baseurl};
-  my $irbaseur       = $self->config->{ir}->{baseurl};
-
   my $confmodel = PhaidraAPI::Model::Config->new;
   my $pubconfig = $confmodel->get_public_config($self);
   my $privconfig = $confmodel->get_private_config($self);
 
-  my $email = "
-  <html>
+  my $phaidrabaseurl = $self->config->{phaidra}->{baseurl};
+  my $irbaseur       = $pubconfig->{irbaseurl};
+
+  my $email = "<html>
     <body>
       <p>Title: $title</p>
       <p>Owner: $owner</p>
@@ -891,24 +916,24 @@ sub sendAdminEmail {
       <p>Phaidra: <a href=\"https://$phaidrabaseurl/detail/$pid\" target=\"_blank\">https://$phaidrabaseurl/detail/$pid</a></p>		
       <p>Requested license: $license</p>
     </body>
-  </html>	
-  ";
+  </html>";
 
-  $self->app->log->info("Sending email for pid[$pid]: \n$email");
-
-  my $supportEmail = $self->config->{ir}->{supportemail};
+  my $supportEmail = $privconfig->{iremail};
   my $from = $supportEmail;
   $from = substr($supportEmail, 0, index($supportEmail, ',')) if index($supportEmail, ',') != -1;
 
-  my $msg = MIME::Lite->new(
-    From    => $from,
-    To      => $supportEmail,
-    Type    => 'text/html; charset=UTF-8',
-    Subject => "New upload: $pid",
-    Data    => encode('UTF-8', $email)
-  );
+  $self->app->log->info("Sending email from[$from] to[$supportEmail] for pid[$pid]: \n$email");
 
-  $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => ($privconfig->{smtpport} eq '465' || $privconfig->{smtpport} eq '587') ? 1 : 0);
+  my $msg = MIME::Lite->new(
+    From        => $from,
+    To          => $supportEmail,
+    Type        => 'text/html; charset=UTF-8',
+    Encoding    => 'quoted-printable',
+    Subject     => "New upload: $pid"
+  );
+  $msg->data(encode('UTF-8', $email));
+
+  $msg->send('smtp', $privconfig->{irsmtpserver}.':'.$privconfig->{irsmtpport}, AuthUser => $privconfig->{irsmtpuser}, AuthPass => $privconfig->{irsmtppassword}, SSL => ($privconfig->{irsmtpport} eq '465' || $privconfig->{irsmtpport} eq '587') ? 1 : 0);
 }
 
 sub stats {
@@ -1209,36 +1234,38 @@ sub changeEmbargoedToOpenAccess {
 sub sendEmbargoendEmail {
   my ($self, $username, $pid) = @_;
 
-  my $email = $self->app->directory->get_email($self, $username);
-
-  my %emaildata;
-  $emaildata{pid}     = $pid;
-  $emaildata{baseurl} = $self->config->{ir}->{baseurl};
-
-  my $subject        = $self->config->{ir}->{name} . " - Embargofrist abgelaufen / Embargo period expired";
-  my $templatefolder = $self->config->{ir}->{templatefolder};
-
-  my $supportEmail = $self->config->{ir}->{supportemail};
-  my $from = substr($supportEmail, 0, index($supportEmail, ','));
-
   my $confmodel = PhaidraAPI::Model::Config->new;
   my $pubconfig = $confmodel->get_public_config($self);
   my $privconfig = $confmodel->get_private_config($self);
 
-  my %options;
-  $options{INCLUDE_PATH} = $templatefolder;
+  my $email = $self->app->directory->get_email($self, $username);
+
+  my %emaildata;
+  $emaildata{pid}     = $pid;
+  $emaildata{baseurl} = $pubconfig->{irbaseurl};
+
+  my $subject        = $pubconfig->{irname} . " - Embargofrist abgelaufen / Embargo period expired";
+
+  my $template_string = $privconfig->{irembargoendemail};
+  my $tt = Template->new();
+  my $output;
+  unless($tt->process(\$template_string, \%emaildata, \$output)) {
+    $self->app->log->error("send embargo email pid[$pid]: ".$tt->error());
+  }
+
+  my $supportEmail = $privconfig->{iremail};
+  my $from = substr($supportEmail, 0, index($supportEmail, ','));
+
   eval {
-    my $msg = MIME::Lite::TT::HTML->new(
+    my $msg = MIME::Lite->new(
       From        => $from,
       To          => $email,
       Subject     => $subject,
-      Charset     => 'utf8',
-      Encoding    => 'quoted-printable',
-      Template    => {html => 'embargoend.html.tt', text => 'embargoend.txt.tt'},
-      TmplParams  => \%emaildata,
-      TmplOptions => \%options
+      Type        => 'text/html; charset=UTF-8',
+      Encoding    => 'quoted-printable'
     );
-    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => ($privconfig->{smtpport} eq '465' || $privconfig->{smtpport} eq '587') ? 1 : 0);
+    $msg->data(encode('UTF-8', $output));
+    $msg->send('smtp', $privconfig->{irsmtpserver}.':'.$privconfig->{irsmtpport}, AuthUser => $privconfig->{irsmtpuser}, AuthPass => $privconfig->{irsmtppassword}, SSL => ($privconfig->{irsmtpport} eq '465' || $privconfig->{irsmtpport} eq '587') ? 1 : 0);
   };
   if ($@) {
     my @pids;
@@ -1253,6 +1280,9 @@ sub embargocheck {
   my $self = shift;
 
   $self->app->log->info("embargocheck processing alerts");
+
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
 
   my @rows;
 
@@ -1321,7 +1351,7 @@ sub embargocheck {
   else {
     $urlget->path("/solr/" . $self->app->config->{solr}->{core} . "/select");
   }
-  $urlget->query(q => "*:*", fq => "isinadminset:\"" . $self->app->config->{ir}->{adminset} . "\" AND dcterms_accessrights_id:\"https://pid.phaidra.org/vocabulary/AVFC-ZZSZ\"", rows => "10000", wt => "json");
+  $urlget->query(q => "*:*", fq => "isinadminset:\"" . $pubconfig->{iradminset} . "\" AND dcterms_accessrights_id:\"https://pid.phaidra.org/vocabulary/AVFC-ZZSZ\"", rows => "10000", wt => "json");
 
   my $ua     = Mojo::UserAgent->new;
   my $getres = $ua->get($urlget)->result;
@@ -1355,9 +1385,12 @@ sub puresearch {
 
   my $res = {alerts => [], status => 200};
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+
   # already went through check_auth
   my $username = $self->stash->{basic_auth_credentials}->{username};
-  if ($username ne $self->config->{ir}->{iraccount}) {
+  if ($username ne $pubconfig->{iraccount}) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Not authorized.'}]}, status => 403);
     return;
   }
@@ -1422,10 +1455,13 @@ sub pureimport_lock {
 
   my $res = {alerts => [], status => 200};
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
 
-  if ($username ne $self->config->{ir}->{iraccount}) {
+  if ($username ne $pubconfig->{iraccount}) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Not authorized.'}]}, status => 403);
     return;
   }
@@ -1448,10 +1484,13 @@ sub pureimport_unlock {
 
   my $res = {alerts => [], status => 200};
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
 
-  if ($username ne $self->config->{ir}->{iraccount}) {
+  if ($username ne $pubconfig->{iraccount}) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Not authorized.'}]}, status => 403);
     return;
   }
@@ -1474,12 +1513,15 @@ sub pureimport_getlocks {
 
   my $res = {alerts => [], status => 200};
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+
   $self->_pureimport_expirelocks();
 
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
 
-  if ($username ne $self->config->{ir}->{iraccount}) {
+  if ($username ne $pubconfig->{iraccount}) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Not authorized.'}]}, status => 403);
     return;
   }
@@ -1517,10 +1559,13 @@ sub pureimport_reject {
 
   my $res = {alerts => [], status => 200};
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
 
-  if ($username ne $self->config->{ir}->{iraccount}) {
+  if ($username ne $pubconfig->{iraccount}) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Not authorized.'}]}, status => 403);
     return;
   }

@@ -201,6 +201,13 @@
         "opencast": {
             "mode": "__OC_EXTERNAL__"
         }
+    },
+    "ir": {
+        "db": {
+            "dsn": "dbi:mysql:phaidradb:__MARIADB_PHAIDRA_HOST__",
+            "username": "__MARIADB_PHAIDRA_USER__",
+            "password": "__MARIADB_PHAIDRA_PASSWORD__"
+        }
     }
 }
 

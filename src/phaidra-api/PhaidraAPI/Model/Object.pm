@@ -606,7 +606,7 @@ sub modify {
         }
       }
       unless($indexed) {
-        my $hr          = $hooks_model->modify_hook($c, $pid);
+        my $hr          = $hooks_model->modify_hook($c, $pid, $state);
         if ($hr->{status} ne 200) {
           $c->app->log->error("pid[$pid] Error in modify_hook: " . $c->app->dumper($hr));
           return $hr;
