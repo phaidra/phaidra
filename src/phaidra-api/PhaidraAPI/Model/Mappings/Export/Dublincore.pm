@@ -18,7 +18,7 @@ sub get_metadata {
   my @metadata;
 
   my $confmodel = PhaidraAPI::Model::Config->new;
-  my $privconfig = $confmodel->get_private_config($self);
+  my $privconfig = $confmodel->get_private_config($c);
 
   if (exists($rec->{bib_publisher})) {
     for my $v (@{$rec->{bib_publisher}}) {

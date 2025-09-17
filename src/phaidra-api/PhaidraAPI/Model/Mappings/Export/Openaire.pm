@@ -549,7 +549,7 @@ sub get_metadata {
   my ($self, $c, $rec) = @_;
 
   my $confmodel = PhaidraAPI::Model::Config->new;
-  my $privconfig = $confmodel->get_private_config($self);
+  my $privconfig = $confmodel->get_private_config($c);
 
   # pretend you don't see this
   my $lang_model   = PhaidraAPI::Model::Languages->new;
