@@ -588,9 +588,9 @@ sub _authenticate() {
     
     if ($rate_limit_check->{blocked}) {
       $c->app->log->warn("Rate limit exceeded for authentication: $username, IP: $client_ip");
-      my $blocked_res = {alerts => $rate_limit_check->{alerts}, status => $rate_limit_check->{status}};
-      $c->stash({phaidra_auth_result => $blocked_res});
-      return undef;
+      # my $blocked_res = {alerts => $rate_limit_check->{alerts}, status => $rate_limit_check->{status}};
+      # $c->stash({phaidra_auth_result => $blocked_res});
+      # return undef;
     }
   }
 
