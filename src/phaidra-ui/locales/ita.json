@@ -500,7 +500,7 @@
   "uwm_classification_taxonpath_source": "Tipo di classificazione",
   "uwm_classification_purpose": "Scopo",
   "uwm_annotation": "Commenti",
-  "uwm_annotation_annotations": "Commenti",
+  "uwm_annotation_annotations": "Commento",
   "uwm_annotation_annotations_description": "Descrizione",
   "uwm_annotation_annotations_date": "Data",
   "uwm_annotation_annotations_entity": "Ruolo / Dati personali",
@@ -1172,7 +1172,7 @@
   "Type of funder identifier": "Tipo di identificatore del finanziatore",
   "Funder identifier": "Identificatore del finanziatore",
   "No data available": "Nessun dato disponibile",
-  "Phaidra is a repository for the permanent secure storage of digital assets": "PHAIDRA (Permanent Hosting, Archiving and Indexing of Digital Resources and Assets) è la piattaforma del Sistema Bibliotecario dell'Università di Padova per l’archiviazione a lungo termine di oggetti e collezioni digitali.",
+  "Phaidra is a repository for the permanent secure storage of digital assets": "PHAIDRA è la piattaforma del Sistema Bibliotecario dell'Università di Padova per l’archiviazione a lungo termine di oggetti e collezioni digitali.",
   "Rows per page": "Righe per pagina",
   "All": "Tutte",
   "Page": "Pagina",
@@ -1374,7 +1374,7 @@
   "can only be sourced from a CSV column": "Può essere ottenuto solo da una colonna del file CSV.",
   "can only be sourced from a default Phaidra value": "Può essere ottenuto solo da un valore predefinito in Phaidra.",
   "Step 3: Data Preview": "Passo 3: Anteprima dei dati",
-  "File Language": "Lingua del file",
+  "File Language": "Lingua",
   "Step 4: Upload": "Passo 4: Caricamento",
   "Upload your data to PHAIDRA. You can close the page and return later to resume any interrupted uploads.": "Carica i tuoi dati in PHAIDRA. Puoi chiudere la pagina e tornare in seguito per riprendere eventuali caricamenti interrotti.",
   "Start Upload": "Avvia caricamento",
@@ -1392,5 +1392,7 @@
   "All files have been successfully uploaded to PHAIDRA.": "Tutti i file sono stati caricati con successo in PHAIDRA.",
   "Start New Bulk Upload": "Avvia nuovo caricamento di massa",
   "Error starting new bulk upload:": "Errore durante l'avvio del nuovo caricamento di massa:",
-  "Loading local storage...": "Caricamento dello storage locale..."
+  "Loading local storage...": "Caricamento dello storage locale...",
+  "First name": "Nome",
+  "Last name": "Cognome"
 }
