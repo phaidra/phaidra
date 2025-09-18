@@ -427,7 +427,8 @@ sub search_solr {
     }
   }
 
-  my @page_pids;
+  my @book_pids;
+  my %book_seen;
   if ($include_extracted) {
     my $original_q = $params->{q} // '';
 
@@ -443,27 +444,31 @@ sub search_solr {
       $pages_url->path("/solr/$pages_core/select");
     }
 
-    $pages_url->query(q => $original_q, fl => 'pid', rows => 1000, wt => 'json');
-    $self->app->log->debug('Pages presearch URL: ' . $pages_url->to_string);
+    my $facet_limit = 1000; # Limit for book pids not for pages
+    my $json_facet = '{"parents":{"terms":{"field":"ispartof","limit":' . $facet_limit . '}}}';
+    $pages_url->query(q => $original_q, rows => 0, wt => 'json', 'json.facet' => $json_facet);
+    $self->app->log->debug('Pages presearch URL (facet): ' . $pages_url->to_string);
 
     my $ua = Mojo::UserAgent->new;
     my $pages_res = $ua->get($pages_url)->result;
     if (!$pages_res->is_success) {
-      $self->app->log->error('Pages presearch failed: ' . $pages_res->message);
+      $self->app->log->error('Pages presearch (facet) failed: ' . $pages_res->message);
     } else {
       my $json = $pages_res->json;
-      if ($json->{response} && $json->{response}->{docs}) {
-        foreach my $d (@{$json->{response}->{docs}}) {
-          push @page_pids, $d->{pid} if defined $d->{pid};
+      if ($json->{facets} && $json->{facets}->{parents} && $json->{facets}->{parents}->{buckets}) {
+        for my $b (@{$json->{facets}->{parents}->{buckets}}) {
+          my $bp = $b->{val};
+          next unless defined $bp;
+          next if $book_seen{$bp}++;
+          push @book_pids, $bp;
         }
       }
     }
   }
 
-  if (@page_pids) {
-      my $haspart_clause = join ' OR ', map { 'haspart:"' . $_ . '"' } @page_pids;
-      my $books_q = '(' . $haspart_clause . ')';
-
+  if (@book_pids) {
+      my $books_pid_clause = join ' OR ', map { 'pid:"' . $_ . '"' } @book_pids;
+      my $books_q = '(' . $books_pid_clause . ')';
       $params->{q} = $books_q;
   }
 
