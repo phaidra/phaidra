@@ -803,7 +803,7 @@
   "seconds": "secondi",
   "rdam:P30004": "Identificatore alternativo",
   "bf:Title": "Titolo",
-  "bf:Note": "Note",
+  "bf:Note": "Descrizione",
   "bf:Summary": "Abstract",
   "phaidra:Remark": "Osservazioni",
   "arm:ConditionAssessment": "Condizione",
