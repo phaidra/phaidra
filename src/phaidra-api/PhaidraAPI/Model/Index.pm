@@ -663,6 +663,21 @@ sub update {
         }
       }
 
+      if ($cmodel_res->{cmodel} eq 'Book') {
+        if (($getStatus eq 301) || ($getStatus eq 302)) {
+          @{$collectionMembers} = ();
+        }
+        unless (defined($collectionMembers)) {
+          @{$collectionMembers} = ();
+        }
+        my $pageUpdateUrl = $self->getSolrUpdateUrl($c, $cmodel_res->{cmodel}, 'phaidra_pages');
+        my $umr = $self->_update_members($c, $pid, $cmodel_res->{cmodel}, $pageUpdateUrl, $collectionMembers, 'ispartof');
+        if ($umr->{status} ne 200) {
+          $res->{status} = $umr->{status};
+          push @{$res->{alerts}}, @{$umr->{alerts}} if scalar @{$umr->{alerts}} > 0;
+        }
+      }
+
       if ($cmodel_res->{cmodel} eq 'Container') {
 
         # if this container is Inactive or Deleted, set members to 0
