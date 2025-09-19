@@ -1322,7 +1322,11 @@ sub _get {
   }
 
   if (exists($datastreams{'BOOKINFO'})) {
-    $index{firstpagepid} = $datastreams{'BOOKINFO'}->find('book\:page[abspagenum="1"]')->first->attr('pid');
+    my $col = $datastreams{'BOOKINFO'}->find('book\:page[abspagenum="1"]');
+    if ($col) {
+      my $first = $col->first;
+      $index{firstpagepid} = $datastreams{'BOOKINFO'}->find('book\:page[abspagenum="1"]')->first->attr('pid') if $first;
+    }
   }
 
   if (exists($datastreams{'GEO'})) {
