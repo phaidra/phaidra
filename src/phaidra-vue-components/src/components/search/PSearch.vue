@@ -24,6 +24,21 @@
                 class="mt-0"
               >
               </v-checkbox>
+              <div v-if="allBooks">
+                <v-tooltip bottom class="ml-2" color="warning">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-icon
+                      color="warning"
+                      dark
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      mdi-alert
+                    </v-icon>
+                  </template>
+                  <span>The book limit has been reached for the search. Please add more filters to narrow down the results.</span>
+                </v-tooltip>
+              </div>
              </div>
           </v-col>
           <v-spacer></v-spacer>
@@ -297,6 +312,7 @@ export default {
           }
         })
         this.$store.commit('setLoading', false)
+        this.allBooks = response.headers['x-query-scope'] ? true : false
         this.docs = response.data.response.docs
         this.total = response.data.response.numFound
         this.facet_counts = response.data.facet_counts
@@ -456,7 +472,8 @@ export default {
 
       docs: [],
       total: 0,
-      facet_counts: null
+      facet_counts: null,
+      allBooks: false
     }
   },
   beforeRouteUpdate: async function (to, from, next) {

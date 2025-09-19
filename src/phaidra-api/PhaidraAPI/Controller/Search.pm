@@ -429,6 +429,7 @@ sub search_solr {
 
   my @book_pids;
   my %book_seen;
+  my $hit_facet_limit = 0;
   if ($include_extracted) {
     my $original_q = $params->{q} // '';
 
@@ -456,7 +457,13 @@ sub search_solr {
     } else {
       my $json = $pages_res->json;
       if ($json->{facets} && $json->{facets}->{parents} && $json->{facets}->{parents}->{buckets}) {
-        for my $b (@{$json->{facets}->{parents}->{buckets}}) {
+        my $buckets = $json->{facets}->{parents}->{buckets};
+        # Check if we hit the facet limit
+        if (@$buckets >= $facet_limit) {
+          $hit_facet_limit = 1;
+          $self->app->log->debug("Hit facet limit of $facet_limit, indicating all books queried");
+        }
+        for my $b (@$buckets) {
           my $bp = $b->{val};
           next unless defined $bp;
           next if $book_seen{$bp}++;
@@ -465,6 +472,7 @@ sub search_solr {
       }
     }
   }
+
 
   if (@book_pids) {
       my $books_pid_clause = join ' OR ', map { 'pid:"' . $_ . '"' } @book_pids;
@@ -478,23 +486,29 @@ sub search_solr {
       $url => form => $params,
       sub {
         my ($c, $tx) = @_;
-        _proxy_tx($self, $tx);
+        _proxy_tx($self, $tx, $hit_facet_limit);
       }
     );
   }
   else {
     my $tx = $self->ua->post($url => form => $params);
-    _proxy_tx($self, $tx);
+    _proxy_tx($self, $tx, $hit_facet_limit);
   }
 
 }
 
 
 sub _proxy_tx {
- my ($self, $tx) = @_;
+ my ($self, $tx, $hit_facet_limit) = @_;
   if (!$tx->error) {
     my $res = $tx->res;
     $self->tx->res($res);
+    
+    # Add custom header if we hit the facet limit
+    if ($hit_facet_limit) {
+      $self->tx->res->headers->add('X-Query-Scope', 'all-books');
+    }
+    
     $self->rendered;
   }
   else {
