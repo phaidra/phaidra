@@ -45,6 +45,7 @@
       <v-tab v-if="(submittype !== 'container') && enablepreview" @click="updateJsonld()" class="title font-weight-light text-capitalize">{{ $t('Preview') }}</v-tab>
       <v-tab v-if="help" class="title font-weight-light text-capitalize">{{ $t('Help') }}</v-tab>
       <v-tab v-if="feedback" class="title font-weight-light text-capitalize">{{ $t('Feedback') }}</v-tab>
+      <v-tab v-if="doiImport" class="title font-weight-light text-capitalize">{{ $t('DOI Import') }}</v-tab>
     </v-tabs>
 
     <v-tabs-items v-model="activetab">
@@ -880,6 +881,9 @@
       <v-tab-item v-if="feedback" class="pa-4">
         <p-feedback :firstname="feedbackUser.firstname" :lastname="feedbackUser.lastname" :email="feedbackUser.email" :context="feedbackContext"></p-feedback>
       </v-tab-item>
+      <v-tab-item v-if="doiImport" class="pa-4">
+        <p-doi-import v-on:load-form="loadFormFromDoiImport"></p-doi-import>
+      </v-tab-item>
     </v-tabs-items>
     <v-dialog v-model="showEditFieldPopup" max-width="600px" scrollable>
       <v-card>
@@ -964,6 +968,7 @@ import PIResourceType from './PIResourceType'
 import PIAlert from './PIAlert'
 import PFeedback from '../utils/PFeedback'
 import PHelp from '../info/PHelp'
+import PDoiImport from '../utils/PDoiImport'
 
 export default {
   name: 'p-i-form',
@@ -1013,7 +1018,8 @@ export default {
     PIObjectType,
     PIResourceType,
     PFeedback,
-    PHelp
+    PHelp,
+    PDoiImport
   },
   props: {
     form: {
@@ -1103,6 +1109,10 @@ export default {
       type: Boolean,
       default: false
     },
+    doiImport: {
+      type: Boolean,
+      default: false
+    },
     feedbackUser: {
       type: Object
     },
@@ -1175,6 +1185,11 @@ export default {
     }
   },
   methods: {
+    loadFormFromDoiImport: function (form) {
+      this.$emit('load-form', form)
+      // Change tab to 0
+      this.activetab = 0;
+    },
     toggleSectionCollapse: function (section) {
       this.$set(section, 'collapsed', !section.collapsed)
     },
