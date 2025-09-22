@@ -29,13 +29,6 @@ export default {
             }
         }
     },
-    watch: {
-        '$i18n.locale': {
-            handler() {
-                this.updateQueryParams()
-            }
-        }
-    },
     metaInfo() {
         let metaInfo = {
         title: this.templateTitle[this.$i18n.locale] + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
@@ -47,9 +40,6 @@ export default {
         this.getCollection()
     },
     methods: {
-        updateQueryParams() {
-            this.$router.push({ query: { ...this.$route.query, title: this.templateTitle[this.$i18n.locale] } })
-        },
         getCollection() {
             try {
                 this.$axios.get(`/cms/template/${this.templateName || 'index'}`).then(response => {
@@ -57,7 +47,6 @@ export default {
                     if(response?.data?.template?.templateTitle) {
                         this.templateTitle = response?.data?.template?.templateTitle
                     }
-                    this.updateQueryParams()
                     this.loaded = true
                 })
             } catch (error) {
