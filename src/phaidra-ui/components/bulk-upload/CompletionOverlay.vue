@@ -12,7 +12,7 @@
             path: '/search',
             query: { reset: 1 },
           })"
-        >{{$t('Go to search objects page')}}</nuxt-link>
+        >{{$t('Go to Search page')}}</nuxt-link>
       </p>
       <v-btn
         color="success"
