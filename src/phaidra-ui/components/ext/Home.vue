@@ -1,7 +1,7 @@
 <template>
 
-  <div v-if="instanceconfig.cms_home">
-    <runtimetemplate :template="instanceconfig.cms_home" />
+  <div v-if="homeCms">
+    <runtimetemplate :template="homeCms" />
   </div>
   
   <div v-else>
@@ -123,6 +123,7 @@ import '@/compiled-icons/univie-twitter'
 import '@/compiled-icons/univie-instagram'
 import '@/compiled-icons/univie-flickr'
 import VueHorizontal from 'vue-horizontal'
+import qs from "qs";
 
 export default {
   name: 'home',
@@ -132,7 +133,42 @@ export default {
   mixins: [config],
   data() {
     return {
-      q: ''
+      q: '',
+      objsTotal: 0
+    }
+  },
+  computed: {
+    homeCms() {
+      if(this.instanceconfig.cms_home && this.instanceconfig.cms_home.includes('{{objsTotal}}')) {
+        return this.instanceconfig.cms_home.replace('{{objsTotal}}', this.objsTotal)
+      }
+      return this.instanceconfig.cms_home
+    }
+  },
+  methods: {
+    async fetchStats(self) {
+      let params = {
+        q: "*:*",
+        rows: 0,
+        fq: 'owner:* AND -hassuccessor:* AND -ismemberof:["" TO *]',
+      };
+      let query = qs.stringify(params, {
+        encodeValuesOnly: true,
+        indices: false,
+      });
+      try {
+        let response = await self.$axios.get(
+          "/search/select?" + query
+        );
+        this.objsTotal = response?.data?.response?.numFound;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  async mounted() {
+    if(this.instanceconfig.cms_home && this.instanceconfig.cms_home.includes('{{objsTotal}}')) {
+      await this.fetchStats(this);
     }
   }
 }

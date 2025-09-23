@@ -234,6 +234,9 @@ sub authenticate_ir_admin {
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+
   $self->app->log->info("Authenticating user $username");
 
   $self->directory->authenticate($self, $username, $password);
@@ -243,7 +246,7 @@ sub authenticate_ir_admin {
     $self->render(json => {status => $res->{status}, alerts => $res->{alerts}}, status => $res->{status});
     return 0;
   }
-  unless ($username eq $self->config->{ir}->{iraccount}) {
+  unless ($username eq $pubconfig->{iraccount}) {
     $self->app->log->info("Not IR admin");
     $self->render(json => {status => 403, alerts => [{type => 'error', msg => "Not IR admin"}]}, status => 403);
     return 0;

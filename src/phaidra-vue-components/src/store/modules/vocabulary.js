@@ -189,6 +189,48 @@ const vocabularies = {
     ],
     loaded: true
   },
+  'formatsInfo': {
+    terms: {
+      // image
+      'https://pid.phaidra.org/vocabulary/44TN-P1S0': {
+        recommended: [
+          { label: 'TIFF', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/tiff/' }
+        ],
+        supported: [
+          { label: 'JPG', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/jpg/' },
+          { label: 'PNG', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/png/' }
+        ]
+      },
+      // audio
+      'https://pid.phaidra.org/vocabulary/8YB5-1M0J': {
+        recommended: [
+          { label: 'WAV', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/wav/' },
+          { label: 'FLAC', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/flac/' }
+        ],
+        supported: [
+          { label: 'MP3', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/mp3/' },
+          { label: 'OGG', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/ogg/' },
+          { label: 'AIFF', url: 'https://en.wikipedia.org/wiki/Audio_Interchange_File_Format' }
+        ]
+      },
+      // video
+      'https://pid.phaidra.org/vocabulary/B0Y6-GYT8': {
+        recommended: [
+          { label: 'AVI', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/avi/' },
+          { label: 'MPEG-2', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/mpeg-2/' },
+          { label: 'MKV', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/mkv/' }
+        ],
+        supported: [
+          { label: 'MP4', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/mp4/' }
+        ]
+      },
+      // collection
+      'https://pid.phaidra.org/vocabulary/GXS7-ENXJ': {
+        info: 'ADD_COLLECTION_MEMBERS_HELP'
+      }
+    },
+    loaded: true
+  },
   'relations': {
     terms: [
       { '@id': 'http://purl.org/dc/terms/references', 'skos:prefLabel': { 'eng': 'References', 'deu': 'bezieht sich auf', 'ita': 'Si riferisce a' }, 'skos:notation': ['references'] },
@@ -556,6 +598,7 @@ const vocabularies = {
       { '@id': 'role:sht', 'skos:prefLabel': { 'eng': 'Supporting host', 'deu': 'Unterstützer*in', 'ita': 'Fornitore di supporto' }, 'skos:definition': {  'eng': 'A person or organization that supports (by allocating facilities, staff, or other resources) a project, program, meeting, event, data objects, material culture objects, or other entities capable of support.',  'deu': 'Eine Person oder Organisation, die ein Projekt, ein Programm, ein Treffen, eine Veranstaltung, Datenobjekte, materielle Kulturgüter oder andere unterstützungsfähige Einheiten unterstützt (durch Bereitstellung von Einrichtungen, Personal oder anderen Ressourcen).' } },
       { '@id': 'role:srv', 'skos:prefLabel': { 'eng': 'Surveyor', 'deu': 'Landvermesser*in', 'ita': 'Topografo' }, 'skos:definition': {  'eng': 'A person, family, or organization contributing to a cartographic resource by providing measurements or dimensional relationships for the geographic area represented.',  'deu': 'Eine Person, Familie oder Organisation, die einen Beitrag zu einer kartografischen Ressource leistet, indem sie Maße oder Maßverhältnisse für das dargestellte geografische Gebiet bereitstellt.' } },
       { '@id': 'role:tch', 'skos:prefLabel': { 'eng': 'Teacher', 'deu': 'Lehrer*in', 'ita': 'Insegnante' }, 'skos:definition': {  'eng': 'A performer contributing to a resource by giving instruction or providing a demonstration.',  'deu': 'Ein*e Darsteller*in, der bzw. die zu einer Ressource beiträgt, indem er bzw. sie Anweisungen gibt oder eine Demonstration anbietet.' } },
+      { '@id': 'role:student', 'skos:prefLabel': { 'eng': 'Student', 'deu': 'Studierende', 'ita': 'Studente' }, 'skos:definition': {  'eng': 'A person contributing to a resource by learning, studying, or participating in an educational activity.',  'deu': 'Eine Person, die zu einer Ressource beiträgt, indem sie lernt, studiert oder an einer Bildungsaktivität teilnimmt.',  'ita': 'Una persona che contribuisce a una risorsa imparando, studiando o partecipando a un\'attività educativa.' } },
       { '@id': 'role:tcd', 'skos:prefLabel': { 'eng': 'Technical director', 'deu': 'Technische/r Direktor*in', 'ita': 'Direttore tecnico' }, 'skos:definition': {  'eng': 'A person who is ultimately in charge of scenery, props, lights and sound for a production.',  'deu': 'Eine Person, die letztendlich für Bühnenbild, Requisiten, Licht und Ton bei einer Produktion verantwortlich ist.' } },
       { '@id': 'role:technicalinspector', 'skos:prefLabel': { 'eng': 'Technical Inspector', 'deu': 'Technische/r Prüfer*in', 'ita': 'Collaudatore' }, 'skos:definition': { 'eng': 'A person or organisation who has checked the metadata of an object after it has been uploaded to the repository.', 'deu': 'Eine Person oder Organisation, die die Metadaten eines Objekts nach dessen Upload ins Repositorium überprüft hat.' } },
       { '@id': 'role:technicaltranslator', 'skos:prefLabel': { 'eng': 'Technical Translator', 'deu': 'Technische/r Übersetzer*in', 'ita': 'Traduttore Tecnico' }, 'skos:definition': { 'eng': 'A person or organisation who is responsible for archiving and publishing a digital object in the repository.', 'deu': 'Eine Person oder Organisation, die für die Archivierung und Veröffentlichung eines digitalen Objekts im Repositorium zuständig ist.' } },

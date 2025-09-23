@@ -1487,6 +1487,9 @@
         "role:tch": {
           "$ref": "#/$defs/entities"
         },
+        "role:student": {
+          "$ref": "#/$defs/entities"
+        },
         "role:tcd": {
           "$ref": "#/$defs/entities"
         },

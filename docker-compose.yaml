@@ -255,7 +255,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:214ee48d
+    image: phaidraorg/ui:dfe0bb9c
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -273,7 +273,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:214ee48d
+    image: phaidraorg/ui:dfe0bb9c
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -290,7 +290,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:56b00fa5
+    image: phaidraorg/api-dist:53ee92a2
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -305,7 +305,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:56b00fa5
+    image: phaidraorg/api-dist:53ee92a2
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -359,7 +359,7 @@ services:
 
   mariadb-phaidra:
     hostname: "mariadb-phaidra"
-    image: phaidraorg/mariadb-phaidra-dist:bc9b1c4e
+    image: phaidraorg/mariadb-phaidra-dist:dfe0bb9c
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]

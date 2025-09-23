@@ -9,12 +9,16 @@ use Mojo::JSON qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
 use base qw/Mojo::Base/;
 use PhaidraAPI::Model::Languages;
+use PhaidraAPI::Model::Config;
 
 sub get_metadata {
   my ($self, $c, $rec, $set) = @_;
   my @el          = qw/contributor coverage creator date description format identifier language publisher relation rights source subject title type/;
   my %valuesCheck = map {$_ => {}} @el;
   my @metadata;
+
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $privconfig = $confmodel->get_private_config($c);
 
   if (exists($rec->{bib_publisher})) {
     for my $v (@{$rec->{bib_publisher}}) {
@@ -91,8 +95,8 @@ sub get_metadata {
       if ($1 eq 'description') {
         if (exists($rec->{isinadminset})) {
           for my $as (@{$rec->{isinadminset}}) {
-            if ($as eq $c->app->config->{ir}->{adminset}) {
-              $field{values} = ["The abstract is available here: https://" . $c->app->config->{ir}->{baseurl} . "/" . $rec->{pid}];
+            if ($as eq $privconfig->{iradminset}) {
+              $field{values} = ["The abstract is available here: https://" . $privconfig->{irbaseurl} . "/" . $rec->{pid}];
             }
           }
         }

@@ -21,24 +21,12 @@ export default {
         return {
             templateName: null,
             collectionTemplate: null,
-            loaded: false,
-            templateTitle: {
-                eng: 'Collection',
-                deu: 'Sammlung',
-                ita: 'Collezione'
-            }
-        }
-    },
-    watch: {
-        '$i18n.locale': {
-            handler() {
-                this.updateQueryParams()
-            }
+            loaded: false
         }
     },
     metaInfo() {
         let metaInfo = {
-        title: this.templateTitle[this.$i18n.locale] + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+        title: this.$t(this.templateName || 'Collection') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
         };
         return metaInfo;
     },
@@ -47,17 +35,10 @@ export default {
         this.getCollection()
     },
     methods: {
-        updateQueryParams() {
-            this.$router.push({ query: { ...this.$route.query, title: this.templateTitle[this.$i18n.locale] } })
-        },
         getCollection() {
             try {
                 this.$axios.get(`/cms/template/${this.templateName || 'index'}`).then(response => {
                     this.collectionTemplate = response?.data?.template?.templateContent
-                    if(response?.data?.template?.templateTitle) {
-                        this.templateTitle = response?.data?.template?.templateTitle
-                    }
-                    this.updateQueryParams()
                     this.loaded = true
                 })
             } catch (error) {

@@ -1,5 +1,4 @@
 <template>
- 
   <v-container class="mt-8" fluid>
     <h1 class="d-sr-only">{{$t('Admin')}}</h1>
     <div class="mb-4"><strong>Note:</strong> Config is cached in each worker, don't forget to restart phaidra-api to apply changes.</div>
@@ -22,7 +21,7 @@
 
       <v-tab-item>
         <v-card tile>
-          
+        
           <v-tabs slider-color="primary" background-color="grey darken-1" vertical v-model="activetab2">
 
             <v-tab class="white--text" :active-class="'primary'" >
@@ -36,6 +35,9 @@
             </v-tab>
             <v-tab class="white--text" :active-class="'primary'">
               <span>{{ $t('Datastructures') }}</span>
+            </v-tab>
+            <v-tab class="white--text" :active-class="'primary'">
+              <span>{{ $t('IR') }}</span>
             </v-tab>
 
             <v-tab-item class="pa-8">
@@ -61,7 +63,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      label="Institution"
+                      :label="$t('Institution')"
                       v-model="parsedPublicConfigData.institution"
                     ></v-text-field>
                   </v-col>
@@ -70,7 +72,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      label="Institution URL"
+                      :label="$t('Institution URL')"
                       v-model="parsedPublicConfigData.institutionurl"
                     ></v-text-field>
                   </v-col>
@@ -79,7 +81,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      label="Address"
+                      :label="$t('Address')"
                       v-model="parsedPublicConfigData.address"
                     ></v-text-field>
                   </v-col>
@@ -88,7 +90,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      label="Phone"
+                      :label="$t('Phone')"
                       v-model="parsedPublicConfigData.phone"
                     ></v-text-field>
                   </v-col>
@@ -97,7 +99,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      label="Email"
+                      :label="$t('Email')"
                       v-model="parsedPublicConfigData.email"
                     ></v-text-field>
                   </v-col>
@@ -106,7 +108,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      label="OAI data provider"
+                      :label="$t('OAI data provider')"
                       v-model="parsedPublicConfigData.oaidataprovider"
                     ></v-text-field>
                   </v-col>
@@ -115,7 +117,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      label="Google site verification code"
+                      :label="$t('Google site verification code')"
                       v-model="parsedPublicConfigData.googlesiteverificationcode"
                     ></v-text-field>
                   </v-col>
@@ -177,7 +179,7 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
-                      label="Show delete link"
+                      :label="$t('Show delete link')"
                       v-model="parsedPublicConfigData.showdeletebutton"
                     ></v-checkbox>
                   </v-col>
@@ -186,7 +188,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      label="Owner email override"
+                      :label="$t('Owner email override')"
                       v-model="parsedPublicConfigData.owneremailoverride"
                     ></v-text-field>
                   </v-col>
@@ -195,7 +197,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      label="Languages"
+                      :label="$t('Languages')"
                       v-model="parsedPublicConfigData.languages"
                     ></v-text-field>
                   </v-col>
@@ -204,7 +206,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      label="Validation method"
+                      :label="$t('Validation method')"
                       v-model="parsedPublicConfigData.validationfnc"
                     ></v-text-field>
                   </v-col>
@@ -213,7 +215,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      label="Mark mandatory method"
+                      :label="$t('Mark mandatory method')"
                       v-model="parsedPublicConfigData.markmandatoryfnc"
                     ></v-text-field>
                   </v-col>
@@ -222,7 +224,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      label="Request DOI email"
+                      :label="$t('Request DOI email')"
                       v-model="parsedPublicConfigData.requestdoiemail"
                     ></v-text-field>
                   </v-col>
@@ -294,7 +296,7 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
-                      label="Access restrictions: show persons"
+                      :label="$t('Access restrictions: show persons')"
                       v-model="parsedPublicConfigData.accessrestrictions_showpersons"
                     ></v-checkbox>
                   </v-col>
@@ -303,7 +305,7 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
-                      label="Access restrictions: show accounts"
+                      :label="$t('Access restrictions: show accounts')"
                       v-model="parsedPublicConfigData.accessrestrictions_showaccounts"
                     ></v-checkbox>
                   </v-col>
@@ -312,7 +314,7 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
-                      label="Access restrictions: show eduPersonAffiliation"
+                      :label="$t('Access restrictions: show eduPersonAffiliation')"
                       v-model="parsedPublicConfigData.accessrestrictions_showedupersonaffiliation"
                     ></v-checkbox>
                   </v-col>
@@ -321,7 +323,7 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
-                      label="Access restrictions: show org units"
+                      :label="$t('Access restrictions: show org units')"
                       v-model="parsedPublicConfigData.accessrestrictions_showorgunits"
                     ></v-checkbox>
                   </v-col>
@@ -330,7 +332,7 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
-                      label="Access restrictions: show groups"
+                      :label="$t('Access restrictions: show groups')"
                       v-model="parsedPublicConfigData.accessrestrictions_showgroups"
                     ></v-checkbox>
                   </v-col>
@@ -344,7 +346,7 @@
                 <v-row>
                   <v-col>
                     <v-textarea
-                      label="Header"
+                      :label="$t('Header')"
                       v-model="parsedPublicConfigData.cms_header"
                     ></v-textarea>
                   </v-col>
@@ -353,7 +355,7 @@
                 <v-row>
                   <v-col>
                     <v-textarea
-                      label="Footer"
+                      :label="$t('Footer')"
                       v-model="parsedPublicConfigData.cms_footer"
                     ></v-textarea>
                   </v-col>
@@ -362,7 +364,7 @@
                 <v-row>
                   <v-col>
                     <v-textarea
-                      label="Homepage"
+                      :label="$t('Homepage')"
                       v-model="parsedPublicConfigData.cms_home"
                     ></v-textarea>
                   </v-col>
@@ -371,7 +373,7 @@
                 <v-row>
                   <v-col>
                     <v-textarea
-                      label="Impressum"
+                      :label="$t('Impressum')"
                       v-model="parsedPublicConfigData.cms_impressum"
                     ></v-textarea>
                   </v-col>
@@ -407,7 +409,16 @@
                 <v-row>
                   <v-col>
                     <v-textarea
-                      label="Submit landing page"
+                      :label="$t('File Formats')"
+                      v-model="parsedPublicConfigData.cms_file_formats"
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="3" class="mt-4">{{ $t("File Formats component. Enclose template in a div.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-textarea
+                      :label="$t('Submit landing page')"
                       v-model="parsedPublicConfigData.cms_submit"
                     ></v-textarea>
                   </v-col>
@@ -416,7 +427,7 @@
                 <v-row>
                   <v-col>
                     <v-textarea
-                      label="Help page"
+                      :label="$t('Help page')"
                       v-model="parsedPublicConfigData.cms_help"
                     ></v-textarea>
                   </v-col>
@@ -425,7 +436,7 @@
                 <v-row>
                   <v-col>
                     <v-textarea
-                      label="CSS"
+                      :label="$t('CSS')"
                       v-model="parsedPublicConfigData.cms_css"
                     ></v-textarea>
                   </v-col>
@@ -433,12 +444,13 @@
                 </v-row>
               </v-container>
             </v-tab-item>
+
             <v-tab-item class="pa-8">
               <v-container>
                 <v-row>
                   <v-col>
                     <v-textarea
-                      label="Org units"
+                      :label="$t('Org units')"
                       v-model="data_orgunits_text"
                     ></v-textarea>
                   </v-col>
@@ -447,7 +459,7 @@
                 <v-row>
                   <v-col>
                     <v-textarea
-                      label="Vocabularies"
+                      :label="$t('Vocabularies')"
                       v-model="data_vocabularies_text"
                     ></v-textarea>
                   </v-col>
@@ -456,7 +468,7 @@
                 <v-row>
                   <v-col>
                     <v-textarea
-                      label="i18n overrrides"
+                      :label="$t('i18n overrides')"
                       v-model="data_i18n_text"
                     ></v-textarea>
                   </v-col>
@@ -465,7 +477,7 @@
                 <v-row>
                   <v-col>
                     <v-textarea
-                      label="Facet queries"
+                      :label="$t('Facet queries')"
                       v-model="data_facetqueries_text"
                     ></v-textarea>
                   </v-col>
@@ -474,11 +486,52 @@
                 <v-row>
                   <v-col>
                     <v-textarea
-                      label="Affiliations"
+                      :label="$t('Affiliations')"
                       v-model="data_affiliations_text"
                     ></v-textarea>
                   </v-col>
                   <v-col cols="3" class="mt-4">{{ $t("Affiliations to use for defining access restrictions") }}</v-col>
+                </v-row>
+              </v-container>
+            </v-tab-item>
+
+            <v-tab-item class="pa-8">
+              <v-container>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      :label="$t('Repository name')"
+                      v-model="parsedPublicConfigData.irname"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Institutional repository name.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      :label="$t('Base URL')"
+                      v-model="parsedPublicConfigData.irbaseurl"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("Institutional repository FQDN") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      :label="$t('Adminset')"
+                      v-model="parsedPublicConfigData.iradminset"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("The adminset object should be linked to.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      :label="$t('Admin account')"
+                      v-model="parsedPublicConfigData.iraccount"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("The admin of IR and owner of accepted objects.") }}</v-col>
                 </v-row>
               </v-container>
             </v-tab-item>
@@ -488,7 +541,7 @@
 
       <v-tab-item>
         <v-card tile>
-          
+
           <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-1" vertical v-model="activetabprivate">
 
             <v-tab class="white--text" :active-class="'primary'" >
@@ -497,13 +550,16 @@
             <v-tab class="white--text" :active-class="'primary'">
               <span>{{ $t('Functionality') }}</span>
             </v-tab>
+            <v-tab class="white--text" :active-class="'primary'">
+              <span>{{ $t('IR') }}</span>
+            </v-tab>
 
             <v-tab-item class="pa-8">
               <v-container>
                 <v-row>
                   <v-col>
                     <v-text-field
-                      label="Alma SRU URL"
+                      :label="$t('Alma SRU URL')"
                       v-model="parsedPrivateConfigData.almasruurl"
                     ></v-text-field>
                   </v-col>
@@ -512,7 +568,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      label="SCIM Endpoint"
+                      :label="$t('SCIM Endpoint')"
                       v-model="parsedPrivateConfigData.scimendpoint"
                     ></v-text-field>
                   </v-col>
@@ -526,7 +582,7 @@
                         <v-row class="mt-4">
                           <v-col>
                             <v-text-field
-                              label="SMTP server"
+                              :label="$t('SMTP server')"
                               v-model="parsedPrivateConfigData.smtpserver"
                             ></v-text-field>
                           </v-col>
@@ -535,7 +591,7 @@
                         <v-row>
                           <v-col>
                             <v-text-field
-                              label="SMTP port"
+                              :label="$t('SMTP port')"
                               v-model="parsedPrivateConfigData.smtpport"
                             ></v-text-field>
                           </v-col>
@@ -544,8 +600,9 @@
                         <v-row>
                           <v-col>
                             <v-text-field
-                              label="SMTP user"
+                              :label="$t('SMTP user')"
                               v-model="parsedPrivateConfigData.smtpuser"
+                              autocomplete="off"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="6" class="mt-6">{{ $t("Used when PHAIDRA sends emails ") }}</v-col>
@@ -553,9 +610,10 @@
                         <v-row>
                           <v-col>
                             <v-text-field
-                              label="SMTP password"
+                              :label="$t('SMTP password')"
                               v-model="parsedPrivateConfigData.smtppassword"
                               type="password"
+                              autocomplete="off"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="6" class="mt-6">{{ $t("Used when PHAIDRA sends emails.") }}</v-col>
@@ -572,7 +630,7 @@
                         <v-row class="mt-4">
                           <v-col>
                             <v-checkbox
-                              label="Use external LDAP"
+                              :label="$t('Use external LDAP')"
                               v-model="parsedPrivateConfigData.ldapextenable"
                             ></v-checkbox>
                           </v-col>
@@ -581,7 +639,7 @@
                         <v-row>
                           <v-col>
                             <v-text-field
-                              label="External LDAP host"
+                              :label="$t('External LDAP host')"
                               v-model="parsedPrivateConfigData.ldapexthost"
                             ></v-text-field>
                           </v-col>
@@ -590,7 +648,7 @@
                         <v-row>
                           <v-col>
                             <v-text-field
-                              label="External LDAP port"
+                              :label="$t('External LDAP port')"
                               v-model="parsedPrivateConfigData.ldapextport"
                             ></v-text-field>
                           </v-col>
@@ -599,7 +657,7 @@
                         <v-row>
                           <v-col>
                             <v-text-field
-                              label="External LDAP security principal"
+                              :label="$t('External LDAP security principal')"
                               v-model="parsedPrivateConfigData.ldapextprincipal"
                             ></v-text-field>
                           </v-col>
@@ -608,9 +666,10 @@
                         <v-row>
                           <v-col>
                             <v-text-field
-                              label="External LDAP security principal password"
+                              :label="$t('External LDAP security principal password')"
                               v-model="parsedPrivateConfigData.ldapextprincipalpassword"
                               type="password"
+                              autocomplete="off"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="6" class="mt-6">{{ $t("Password of the security principal") }}</v-col>
@@ -618,7 +677,7 @@
                         <v-row>
                           <v-col>
                             <v-text-field
-                              label="External LDAP group search bases"
+                              :label="$t('External LDAP group search bases')"
                               v-model="parsedPrivateConfigData.ldapextgroupssearchbases"
                             ></v-text-field>
                           </v-col>
@@ -627,7 +686,7 @@
                         <v-row>
                           <v-col>
                             <v-text-field
-                              label="External LDAP user search bases"
+                              :label="$t('External LDAP user search bases')"
                               v-model="parsedPrivateConfigData.ldapextusersearchbases"
                             ></v-text-field>
                           </v-col>
@@ -636,7 +695,7 @@
                         <v-row>
                           <v-col>
                             <v-text-field
-                              label="External LDAP user search filter"
+                              :label="$t('External LDAP user search filter')"
                               v-model="parsedPrivateConfigData.ldapextusersearchfilter"
                             ></v-text-field>
                           </v-col>
@@ -654,7 +713,7 @@
                         <v-row class="mt-4">
                           <v-col>
                             <v-textarea
-                              label="Private key"
+                              :label="$t('Private key')"
                               v-model="parsedPrivateConfigData.jwtprivkey"
                             ></v-textarea>
                           </v-col>
@@ -663,7 +722,7 @@
                         <v-row>
                           <v-col>
                             <v-textarea
-                              label="JWKS json"
+                              :label="$t('JWKS json')"
                               v-model="parsedPrivateConfigData.jwks"
                             ></v-textarea>
                           </v-col>
@@ -680,7 +739,7 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
-                      label="Enable delete"
+                      :label="$t('Enable delete')"
                       v-model="parsedPrivateConfigData.enabledelete"
                     ></v-checkbox>
                   </v-col>
@@ -689,7 +748,7 @@
                 <v-row>
                   <v-col>
                     <v-text-field
-                      label="Username scope to trim"
+                      :label="$t('Username scope to trim')"
                       v-model="parsedPublicConfigData.userscopetotrim"
                     ></v-text-field>
                   </v-col>
@@ -697,10 +756,145 @@
                 </v-row>
               </v-container>
             </v-tab-item>
+            <v-tab-item class="pa-8">
+              <v-container>
+                <v-row>
+                  <v-col>
+                    <v-card>
+                      <v-card-title class="title font-weight-light white--text">{{ $t("General") }}</v-card-title>
+                      <v-card-text>
+                        <v-row class="mt-4">
+                          <v-col>
+                            <v-text-field
+                              :label="$t('Support email')"
+                              v-model="parsedPrivateConfigData.iremail"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="6" class="mt-6">{{ $t("From which address emails are sent, and to which adresses the admin email is sent. Multiple addresses can be divided by comma. First one will be sender.") }}</v-col>
+                        </v-row>
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                </v-row>
+
+                <v-row>
+                  <v-col>
+                  <v-card>
+                    <v-card-title class="title font-weight-light white--text">{{ $t("SMTP") }}</v-card-title>
+                    <v-card-text>
+                      <v-row class="mt-4">
+                        <v-col>
+                          <v-text-field
+                            :label="$t('SMTP server')"
+                            v-model="parsedPrivateConfigData.irsmtpserver"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="6" class="mt-6">{{ $t("Used when institutional repository sends emails.") }}</v-col>
+                      </v-row>
+                      <v-row>
+                        <v-col>
+                          <v-text-field
+                            :label="$t('SMTP port')"
+                            v-model="parsedPrivateConfigData.irsmtpport"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="6" class="mt-6">{{ $t("Used when institutional repository sends emails ") }}</v-col>
+                      </v-row>
+                      <v-row>
+                        <v-col>
+                          <v-text-field
+                            :label="$t('SMTP user')"
+                            v-model="parsedPrivateConfigData.irsmtpuser"
+                            autocomplete="off"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="6" class="mt-6">{{ $t("Used when institutional repository sends emails ") }}</v-col>
+                      </v-row>
+                      <v-row>
+                        <v-col>
+                          <v-text-field
+                            :label="$t('SMTP password')"
+                            v-model="parsedPrivateConfigData.irsmtppassword"
+                            type="password"
+                            autocomplete="off"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="6" class="mt-6">{{ $t("Used when institutional repository sends emails.") }}</v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                  </v-col>
+                </v-row>
+
+                <v-row>
+                  <v-col>
+                  <v-card>
+                    <v-card-title class="title font-weight-light white--text">{{ $t("Email templates") }}</v-card-title>
+                    <v-card-text>
+                      <v-row>
+                        <v-col>
+                          <v-textarea
+                            :label="$t('Metadata check email template')"
+                            v-model="parsedPrivateConfigData.irmdcheckemail"
+                          ></v-textarea>
+                        </v-col>
+                        <v-col cols="6" class="mt-4">{{ $t("Template Toolkit template for the metadata check email.") }}</v-col>
+                      </v-row>
+                      <v-row>
+                        <v-col>
+                          <v-textarea
+                            :label="$t('Embargo end email template')"
+                            v-model="parsedPrivateConfigData.irembargoendemail"
+                          ></v-textarea>
+                        </v-col>
+                        <v-col cols="6" class="mt-6">{{ $t("Template Toolkit template for the embargo end email.") }}</v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                  </v-col>
+                </v-row>
+
+                <v-row>
+                  <v-col>
+                    <v-card>
+                      <v-card-title class="title font-weight-light white--text">{{ $t("Bulk upload") }}</v-card-title>
+                      <v-card-text>
+                        <v-row>
+                          <v-col>
+                            <v-text-field
+                              :label="$t('Upload count parameter')"
+                              v-model="parsedPublicConfigData.irbulkuploadlimitnr"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="6" class="mt-4">{{ $t("Allow X number of uploads within X days.") }}</v-col>
+                        </v-row>
+                        <v-row>
+                          <v-col>
+                            <v-text-field
+                              :label="$t('Days parameter')"
+                              v-model="parsedPrivateConfigData.irbulkuploadlimitdays"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="6" class="mt-6">{{ $t("Allow X number of uploads within X days.") }}</v-col>
+                        </v-row>
+                        <v-row>
+                          <v-col>
+                            <v-text-field
+                              :label="$t('Can do bulk upload')"
+                              v-model="parsedPrivateConfigData.ircandobulkupload"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="6" class="mt-6">{{ $t("Comma separated list of accounts which can do bulk uploads.") }}</v-col>
+                        </v-row>
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-tab-item>
 
           </v-tabs>
         </v-card>
-
       </v-tab-item>
 
       <v-tab-item>
@@ -719,7 +913,10 @@
               <v-container>
                 <v-row>
                   <v-col>
-                    <v-textarea label="Config as JSON" v-model="configAsJSON"></v-textarea>
+                    <v-textarea 
+                      :label="$t('Config as JSON')" 
+                      v-model="configAsJSON">
+                    </v-textarea>
                   </v-col>
                   <v-col cols="3" class="mt-6">{{ $t("This is the whole config. You can copy it to back it up or to use the Import tab to import it on another 'instance'. Don't forget to adapt API base URL.") }}</v-col>
                 </v-row>
@@ -730,17 +927,20 @@
               <v-container>
                 <v-row>
                   <v-col>
-                    <v-textarea label="Config as JSON" v-model="configAsJSONToImport"></v-textarea>
+                    <v-textarea 
+                      :label="$t('Config as JSON')" 
+                      v-model="configAsJSONToImport">
+                    </v-textarea>
                   </v-col>
                   <v-col cols="3" class="mt-6">
                     <v-row>
                       <v-col>
-                        {{ $t("Enter config here.") }}
+                        {{ $t("Enter config here .") }}
                       </v-col>
                     </v-row>
                     <v-row>
                       <v-col>
-                        <v-btn raised color="primary" @click="importConfig()">Import</v-btn>
+                        <v-btn raised color="primary" @click="importConfig()">{{ $t("Import") }}</v-btn>
                       </v-col>
                     </v-row>
                   </v-col>
@@ -781,20 +981,16 @@
           </v-row>
         </v-container>
       </v-tab-item>
-
-
     </v-tabs>
     <v-row class="my-2">
       <v-col>
         <v-btn large raised color="primary" class="float-right" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
       </v-col>
     </v-row>
-    
   </v-container>
-
 </template>
-<script>
 
+<script>
 import FaviconMixin from '../mixins/favicon'
 import PRepostat from '../components/Repostat.vue';
 import { config } from "../mixins/config";

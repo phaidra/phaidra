@@ -9,6 +9,7 @@ use Mojo::JSON qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
 use base qw/Mojo::Base/;
 use PhaidraAPI::Model::Languages;
+use PhaidraAPI::Model::Config;
 
 my $resourceTypesToDownload = {
   'http://purl.org/coar/resource_type/c_18cc' => 1,    # sound
@@ -547,6 +548,9 @@ sub _bytes_string {
 sub get_metadata {
   my ($self, $c, $rec) = @_;
 
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $privconfig = $confmodel->get_private_config($c);
+
   # pretend you don't see this
   my $lang_model   = PhaidraAPI::Model::Languages->new;
   my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
@@ -995,8 +999,8 @@ sub get_metadata {
   for my $descNode (@{$descNodes}) {
     if (exists($rec->{isinadminset})) {
       for my $as (@{$rec->{isinadminset}}) {
-        if ($as eq $c->app->config->{ir}->{adminset}) {
-          $descNode = {name => 'dc:description', value => "The abstract is available here: https://" . $c->app->config->{ir}->{baseurl} . "/" . $rec->{pid}};
+        if ($as eq $privconfig->{iradminset}) {
+          $descNode = {name => 'dc:description', value => "The abstract is available here: https://" . $privconfig->{irbaseurl} . "/" . $rec->{pid}};
         }
       }
     }

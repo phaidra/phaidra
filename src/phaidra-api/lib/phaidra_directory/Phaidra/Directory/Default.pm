@@ -565,30 +565,35 @@ sub _authenticate() {
   my $username  = shift;
   my $password  = shift;
 
+  # Determine if we have a usable username for rate limiting
+  my $has_username = defined($username) && length($username);
+
   # Get client IP address for rate limiting
   my $client_ip = $c->tx->remote_address;
   if ($client_ip eq '127.0.0.1' || $client_ip eq '::1') {
-    # For local connections, try to get real IP from headers
     $client_ip = $c->req->headers->header('X-Forwarded-For') || 
                  $c->req->headers->header('X-Real-IP') || 
                  $client_ip;
   }
   
-  # Create rate limiting identifier (combine username and IP for better security)
-  my $identifier = $username . ':' . $client_ip;
-  
-  # Initialize rate limiting
-  my $rate_limit_model = PhaidraAPI::Model::RateLimit->new;
-  
-  # Check rate limit before processing authentication
-  # my $rate_limit_check = $rate_limit_model->check_rate_limit($c, $identifier);
-  
-  # if ($rate_limit_check->{blocked}) {
-  #   $c->app->log->warn("Rate limit exceeded for authentication: $username, IP: $client_ip");
-  #   my $blocked_res = {alerts => $rate_limit_check->{alerts}, status => $rate_limit_check->{status}};
-  #   $c->stash({phaidra_auth_result => $blocked_res});
-  #   return undef;
-  # }
+
+  # Build rate-limit helpers only when username is present
+  my ($identifier, $rate_limit_model);
+  if ($has_username) {
+    $identifier = $username . ':' . $client_ip;
+    $rate_limit_model = PhaidraAPI::Model::RateLimit->new;
+
+    # Check rate limit before processing authentication
+    my $rate_limit_check = $rate_limit_model->check_rate_limit($c, $identifier);
+    
+    if ($rate_limit_check->{blocked}) {
+      $c->app->log->warn("Rate limit exceeded for authentication: $username, IP: $client_ip");
+      # my $blocked_res = {alerts => $rate_limit_check->{alerts}, status => $rate_limit_check->{status}};
+      # $c->stash({phaidra_auth_result => $blocked_res});
+      # return undef;
+    }
+  }
+
 
   $c->app->log->debug("auth: ldap login");
   my $res = {alerts => [], status => 500};
@@ -607,7 +612,6 @@ sub _authenticate() {
 
   # first we have to find the DN (i think its differs for various account types)
   $sf =~ s/\{0\}/$username/g;
-  #$c->log->info("_authenticate filer $sf");
   if ($sp ne '') {
     $ldap->bind($sp, password => $sc);
   }
@@ -629,7 +633,9 @@ sub _authenticate() {
 
   unless ($dn) {
     $c->app->log->debug("auth: dn not found");
-    $rate_limit_model->record_failed_attempt($c, $identifier);
+    if ($has_username) {
+      $rate_limit_model->record_failed_attempt($c, $identifier);
+    }
     unshift @{$res->{alerts}}, {type => 'error', msg => 'user not found'};
     $res->{status} = 401;
     $c->stash({phaidra_auth_result => $res});
@@ -642,18 +648,22 @@ sub _authenticate() {
   $c->app->log->debug("Auth for user $dn [is error: " . $ldapMsg->is_error() . "]");
 
   if ($ldapMsg->is_error) {
-    # Record failed authentication attempt
-    $rate_limit_model->record_failed_attempt($c, $identifier);
-    
+    # Record failed authentication attempt (only if username is present)
+    if ($has_username) {
+      $rate_limit_model->record_failed_attempt($c, $identifier);
+    }
+
     unshift @{$res->{alerts}}, {type => 'error', msg => $ldapMsg->error};
     $res->{status} = 401;
     $c->stash({phaidra_auth_result => $res});
     return undef;
   }
   else {
-    # Record successful authentication attempt
-    $rate_limit_model->record_successful_attempt($c, $identifier);
-    
+    # Record successful authentication attempt (only if username is present)
+    if ($has_username) {
+      $rate_limit_model->record_successful_attempt($c, $identifier);
+    }
+
     $res->{status} = 200;
     $c->stash({phaidra_auth_result => $res});
     return $username;

@@ -491,7 +491,7 @@ sub preview {
       }
     }
 
-    unless ($trywebversion) {
+    unless ($trywebversion or ($cmodel eq 'Book')) {
       $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
       if ($dsAttr->{status} ne 200) {
         $self->render(json => $dsAttr, status => $dsAttr->{status});
