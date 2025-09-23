@@ -409,6 +409,15 @@
                 <v-row>
                   <v-col>
                     <v-textarea
+                      :label="$t('File Formats')"
+                      v-model="parsedPublicConfigData.cms_file_formats"
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="3" class="mt-4">{{ $t("File Formats component. Enclose template in a div.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-textarea
                       :label="$t('Submit landing page')"
                       v-model="parsedPublicConfigData.cms_submit"
                     ></v-textarea>

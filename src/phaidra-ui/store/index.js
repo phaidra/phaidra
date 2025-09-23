@@ -46,6 +46,7 @@ export const mutations = {
       'cms_contact',
       'cms_code_of_ethics',
       'cms_editorial_policies',
+      'cms_file_formats',
       'cms_submit',
       'cms_css',
       'cms_help',
@@ -143,6 +144,15 @@ export const mutations = {
       state.breadcrumbs.push(
         {
           text: 'Code of Ethics',
+          to: transition.to.name,
+          disabled: true
+        }
+      )
+    }
+    if (transition.to.path.includes('/file-formats')) {
+      state.breadcrumbs.push(
+        {
+          text: 'File Formats',
           to: transition.to.name,
           disabled: true
         }
