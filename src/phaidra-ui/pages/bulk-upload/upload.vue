@@ -502,14 +502,14 @@ export default {
     setRoleProperties(f, mapping, headers, values) {
       if (mapping.source === 'phaidra-field') {
         f.role = mapping.subFields['Role']?.phaidraValue?.['@id'] || ''
-        f.name = mapping.subFields['First name']?.phaidraValue || ''
+        f.firstname = mapping.subFields['First name']?.phaidraValue || ''
         f.lastname = mapping.subFields['Last name']?.phaidraValue || ''
         f.identifierType = mapping.subFields['Identifier Type']?.phaidraValue?.['@id'] || ''
         f.identifierText = mapping.subFields['Identifier']?.phaidraValue || ''
         f.value = f.role
       } else if (mapping.source === 'csv-column') {
         f.role = `role:${values[headers.indexOf(mapping.subFields['Role']?.csvValue)]}`
-        f.name = values[headers.indexOf(mapping.subFields['First name']?.csvValue)]
+        f.firstname = values[headers.indexOf(mapping.subFields['First name']?.csvValue)]
         f.lastname = values[headers.indexOf(mapping.subFields['Last name']?.csvValue)]
         if (mapping.subFields['ORCID']) {
           f.identifierType = 'ids:orcid'
