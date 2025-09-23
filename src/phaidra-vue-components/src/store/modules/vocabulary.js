@@ -189,6 +189,48 @@ const vocabularies = {
     ],
     loaded: true
   },
+  'formatsInfo': {
+    terms: {
+      // image
+      'https://pid.phaidra.org/vocabulary/44TN-P1S0': {
+        recommended: [
+          { label: 'TIFF', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/tiff/' }
+        ],
+        supported: [
+          { label: 'JPG', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/jpg/' },
+          { label: 'PNG', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/png/' }
+        ]
+      },
+      // audio
+      'https://pid.phaidra.org/vocabulary/8YB5-1M0J': {
+        recommended: [
+          { label: 'WAV', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/wav/' },
+          { label: 'FLAC', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/flac/' }
+        ],
+        supported: [
+          { label: 'MP3', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/mp3/' },
+          { label: 'OGG', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/ogg/' },
+          { label: 'AIFF', url: 'https://en.wikipedia.org/wiki/Audio_Interchange_File_Format' }
+        ]
+      },
+      // video
+      'https://pid.phaidra.org/vocabulary/B0Y6-GYT8': {
+        recommended: [
+          { label: 'AVI', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/avi/' },
+          { label: 'MPEG-2', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/mpeg-2/' },
+          { label: 'MKV', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/mkv/' }
+        ],
+        supported: [
+          { label: 'MP4', url: 'https://datamanagement.univie.ac.at/ueber-phaidra-services/formate/formate/mp4/' }
+        ]
+      },
+      // collection
+      'https://pid.phaidra.org/vocabulary/GXS7-ENXJ': {
+        info: 'ADD_COLLECTION_MEMBERS_HELP'
+      }
+    },
+    loaded: true
+  },
   'relations': {
     terms: [
       { '@id': 'http://purl.org/dc/terms/references', 'skos:prefLabel': { 'eng': 'References', 'deu': 'bezieht sich auf', 'ita': 'Si riferisce a' }, 'skos:notation': ['references'] },
