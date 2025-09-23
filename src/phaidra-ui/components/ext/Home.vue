@@ -147,20 +147,11 @@ export default {
   },
   methods: {
     async fetchStats(self) {
-      let params = {
-        q: "*:*",
-        rows: 0,
-        fq: 'owner:* AND -hassuccessor:* AND -ismemberof:["" TO *]',
-      };
-      let query = qs.stringify(params, {
-        encodeValuesOnly: true,
-        indices: false,
-      });
       try {
         let response = await self.$axios.get(
-          "/search/select?" + query
+          "/stats/object_counts"
         );
-        this.objsTotal = response?.data?.response?.numFound;
+        this.objsTotal = response?.data?.object_counts;
       } catch (error) {
         console.log(error);
       }
