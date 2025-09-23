@@ -729,18 +729,50 @@ sub get_book_for_page {
   unless ($bookpid = $c->app->chi->get($cachekey)) {
     $c->app->log->debug("[cache miss] $cachekey");
 
-    my $search_model = PhaidraAPI::Model::Search->new;
+    if ($c->app->config->{fedora}->{version} >= 6) {
 
-    # todo: add hasMember as well (new books)
-    my $r = $search_model->triples($c, "* <info:fedora/fedora-system:def/relations-external#hasCollectionMember> <info:fedora/$pagepid>");
-    if ($r->{status} ne 200) {
-      return $r;
-    }
+      my $urlget = Mojo::URL->new;
+      $urlget->scheme($c->app->config->{solr}->{scheme});
+      $urlget->host($c->app->config->{solr}->{host});
+      $urlget->port($c->app->config->{solr}->{port});
+      if ($c->app->config->{solr}->{path}) {
+        $urlget->path("/" . $c->app->config->{solr}->{path} . "/solr/" . $c->app->config->{solr}->{core} . "/select");
+      }
+      else {
+        $urlget->path("/solr/" . $c->app->config->{solr}->{core} . "/select");
+      }
+      $urlget->query(q => "*:*", fq => "haspart:\"$pagepid\"", sort => 'created desc', fl => 'pid', rows => "1", wt => "json");
+      my $getres = $c->ua->get($urlget)->result;
+      if ($getres->is_success) {
+        for my $d (@{$getres->json->{response}->{docs}}) {
+          $bookpid = $d->{pid};
+          last;
+        }
+      }
+      else {
+        my $err = "[$pagepid] error getting book pid: " . $getres->code . " " . $getres->message;
+        $self->app->log->error($err);
+        unshift @{$res->{alerts}}, {type => 'error', msg => $err};
+        $res->{status} = $getres->code ? $getres->code : 500;
+        return $res;
+      }
 
-    for my $t (@{$r->{result}}) {
-      next if (@{$t}[0] =~ m/fedora-system/g);
-      @{$t}[0] =~ m/<(info:fedora\/)(\w+:[0-9]+)>/g;
-      $bookpid = $2;
+    } else {
+
+      my $search_model = PhaidraAPI::Model::Search->new;
+
+      # todo: add hasMember as well (new books)
+      my $r = $search_model->triples($c, "* <info:fedora/fedora-system:def/relations-external#hasCollectionMember> <info:fedora/$pagepid>");
+      if ($r->{status} ne 200) {
+        return $r;
+      }
+
+      for my $t (@{$r->{result}}) {
+        next if (@{$t}[0] =~ m/fedora-system/g);
+        @{$t}[0] =~ m/<(info:fedora\/)(\w+:[0-9]+)>/g;
+        $bookpid = $2;
+      }
+
     }
 
     $c->app->chi->set($cachekey, $bookpid, '1 day');
