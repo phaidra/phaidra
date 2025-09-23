@@ -629,6 +629,32 @@ services:
         required: false
     profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
 
+  
+  pdf-extraction:
+    hostname: "pdf-extraction"
+    # image: phaidraorg/pdf-extraction:1.0.0
+    build:
+      context: .
+      dockerfile: dockerfiles/pdf_extraction.dockerfile
+    <<: [*common, *logs]
+    volumes:
+      - fedora:/mnt/fedora:ro
+      - pdf-extraction:/mnt/pdf-extraction
+    environment:
+      <<: [*api_common_env, *hosts]
+      MONGO_AGENT_DB: "${MONGO_AGENT_DB:-paf_mongodb}"
+      SOLR_URL: "${SOLR_URL:-http://solr:8983/solr}"
+      SOLR_COLLECTION: "${SOLR_COLLECTION:-phaidra}"
+      SOLR_TEXT_FIELD: "${SOLR_TEXT_FIELD:-extracted_text}"
+    depends_on:
+      mongodb-phaidra:
+        condition: "service_started"
+        required: false
+      mongodb-phaidra-dev:
+        condition: "service_started"
+        required: false
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
+
   ############### imageserver service for s3 profiles #################
   imageserver-s3:
     hostname: "imageserver"
@@ -1307,6 +1333,7 @@ volumes:
   openldap:
   pixelgecko:
   converted_3d:
+  pdf-extraction:
   prometheus:
   s3_cache:
   solr:

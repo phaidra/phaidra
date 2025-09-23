@@ -14,6 +14,17 @@
               :messages="[ total + ' ' + $t('objects') ]"
             ></p-search-autocomplete>
              <a href="#filters" class="skip-link d-sr-only-focusable">{{ $t('Go to Search Filters') }}</a>
+             <div class="d-flex full-text-checkbox-wrapper">
+               <v-checkbox
+                v-model="extracted_text"
+                @change="search"
+                :label="$t('Full-text Search')"
+                hide-details
+                dense
+                class="mt-0"
+              >
+              </v-checkbox>
+             </div>
           </v-col>
           <v-spacer></v-spacer>
           <v-col  md="6" cols="12">
@@ -267,6 +278,9 @@ export default {
           params.sort = `pos_in_o_${pid} asc`
         }
       }
+      if (this.extracted_text) {
+        params.extracted_text = 'include'
+      }
       if (process.browser) {
         this.link = location.protocol + '//' + location.host + location.pathname + '?' + searchdefarr.join('&')
         window.history.replaceState(null, this.$t('Search results'), this.link)
@@ -431,7 +445,7 @@ export default {
       sortdef,
       lang: 'en',
       facetQueries: [],
-
+      extracted_text: false,
       corpAuthors,
       persAuthors,
       roles: [],
@@ -545,5 +559,9 @@ svg {
   position: absolute;
   left: -9999px;
   top: 10px;
+}
+.full-text-checkbox-wrapper {
+  justify-content: flex-end;
+  margin-top: -30px;
 }
 </style>

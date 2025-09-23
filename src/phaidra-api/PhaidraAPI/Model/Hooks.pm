@@ -91,6 +91,11 @@ sub add_or_modify_datastream_hooks {
             my $imsr = $self->_create_imageserver_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
             push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
           }
+          if ($res_cmodel->{cmodel} eq 'PDFDocument') {
+            # New data uploaded - create new Tika extraction job
+            my $pdf_extraction_job = $self->_create_pdf_extraction_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
+            push @{$res->{alerts}}, @{$pdf_extraction_job->{alerts}} if scalar @{$pdf_extraction_job->{alerts}} > 0;
+          }
           if ($res_cmodel->{cmodel} eq 'Video') {
             my $vsr = $self->_create_streaming_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
             push @{$res->{alerts}}, @{$vsr->{alerts}} if scalar @{$vsr->{alerts}} > 0;
@@ -108,6 +113,31 @@ sub add_or_modify_datastream_hooks {
         push @{$res->{alerts}}, {type => 'error', msg => "add_or_modify_datastream_hooks pid[$pid] Error getting cmodel in add_or_modify_datastream_hooks"};
         $res->{status} = 500;
         return $res;
+      }
+      # Handle PDFDocument Tika job reset when restrictions are removed
+      if ($res_cmodel->{cmodel} eq 'PDFDocument') {
+        eval {
+          my $rights_model = PhaidraAPI::Model::Rights->new;
+          my $res_rights = $rights_model->xml_2_json($c, $dscontent);
+          my $isRestricted = 0;
+          if ($res_rights->{status} eq 200) {
+            my $rights = $res_rights->{rights};
+            my $nrKeys = keys %{$rights};
+            $isRestricted = $nrKeys != 0 ? 1 : 0;
+          }
+          $c->app->log->debug("add_or_modify_datastream_hooks pid[$pid] isRestricted[$isRestricted]");
+          unless ($isRestricted) {
+            # Object is unrestricted - ensure job exists and reset to 'new' for re-extraction
+            my $jr = $self->_create_pdf_extraction_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
+            push @{$res->{alerts}}, @{$jr->{alerts}} if scalar @{$jr->{alerts}} > 0;
+            $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] RIGHTS updated, object is unrestricted - resetting Tika job to 'new'");
+          } else {
+            $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] RIGHTS updated, object is restricted - not resetting Tika job");
+          }
+        };
+        if ($@) {
+          $c->app->log->error("add_or_modify_datastream_hooks pid[$pid] error evaluating RIGHTS/Tika reset: $@");
+        }
       }
       # currently only for videos, so we check the cmodel first
       if ($res_cmodel->{cmodel} eq 'Video') {
@@ -147,6 +177,8 @@ sub add_or_modify_datastream_hooks {
         }
       }
     }
+
+
   }
 
   return $res;
@@ -244,6 +276,10 @@ sub add_octets_hook {
         my $vsr = $self->_create_streaming_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
         push @{$res->{alerts}}, @{$vsr->{alerts}} if scalar @{$vsr->{alerts}} > 0;
       }
+      if ($res_cmodel->{cmodel} eq 'PDFDocument') {
+        my $pdf_extraction_job = $self->_create_pdf_extraction_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
+        push @{$res->{alerts}}, @{$pdf_extraction_job->{alerts}} if scalar @{$pdf_extraction_job->{alerts}} > 0;
+      }
     } else {
       $c->app->log->error("Hooks: could not get cmodel, not creating imageserver/streaming job");
     }
@@ -279,6 +315,10 @@ sub modify_hook {
         my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
         my $imsr = $imgsrv_model->create_imageserver_job($c, $pid, $res_cmodel->{cmodel}, undef, undef);
         push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
+        if($res_cmodel->{cmodel} eq 'PDFDocument') {
+          my $pdf_extraction_job = $self->_create_pdf_extraction_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
+          push @{$res->{alerts}}, @{$pdf_extraction_job->{alerts}} if scalar @{$pdf_extraction_job->{alerts}} > 0;
+        }
       }
       if ($res_cmodel->{cmodel} eq 'Video') {
         my $strm_model = PhaidraAPI::Model::Streaming->new;
@@ -326,6 +366,8 @@ sub _create_imageserver_job_if_not_exists {
   my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'pige'});
   unless ($find->{pid}) {    
     return $imgsrv_model->create_imageserver_job($c, $pid, $cmodel, undef, undef);
+  } else {
+    return $imgsrv_model->update_imageserver_job($c, $pid, $cmodel, undef, undef);
   }
 
   return $res;
@@ -342,7 +384,8 @@ sub delete_hook {
     'Picture'      => 'pige',
     'PDFDocument'  => 'pige',
     'Video'        => 'vige',
-    '3DObject'     => '3d'
+    '3DObject'     => '3d',
+    'PDFDocument'  => 'tika'
   );
 
   if (defined $res_cmodel->{cmodel} && exists $valid_models{ $res_cmodel->{cmodel} }) {
@@ -387,6 +430,43 @@ sub _create_streaming_job_if_not_exists {
   return $res;
 }
 
+sub _create_pdf_extraction_job_if_not_exists {
+  my ($self, $c, $pid, $cmodel) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'tika'});
+  my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
+  my $path;
+  if ($c->app->config->{fedora}->{version} >= 6) {
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    my $dsAttr = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+    if ($dsAttr->{status} eq 200) {
+      $path = $dsAttr->{path};
+    } else {
+      $c->app->log->error("pdf extraction job pid[$pid] cm[$cmodel]: could not get path");
+    }
+  }
+  $c->app->log->info("pdf extraction job pid[$pid] cm[$cmodel]: path[$path]");
+  unless ($find->{pid}) {    
+    my $job = {pid => $pid, cmodel => $cmodel, agent => "tika", status => "new", idhash => $hash, created => time};
+    $job->{path} = $path if $path;
+    $c->paf_mongo->get_collection('jobs')->insert_one($job);
+  } else {
+    $c->app->log->info("pdf extraction job pid[$pid] cm[$cmodel]: updating path[$path]");
+    $c->paf_mongo->get_collection('jobs')->update_one(
+      { 'pid' => $pid, 'agent' => 'tika' },
+      { '$set' => { 
+          'status' => 'new',
+          'idhash' => $hash,
+          'path' => $path 
+        } },
+      { 'upsert' => 0 }
+    );
+  }
+
+  return $res;
+}
 sub _create_3d_job_if_not_exists {
   my ($self, $c, $pid, $cmodel) = @_;
 

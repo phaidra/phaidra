@@ -215,6 +215,41 @@ sub create_imageserver_job {
   
   return $res;
 }
+sub update_imageserver_job {
+  my ($self, $c, $pid, $cmodel, $ds, $agent) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  unless (defined($agent)) {
+    $agent = 'pige';
+  }
+
+  $c->app->log->info("Updating imageserver job pid[$pid] cm[$cmodel] ds[".(defined($ds) ? $ds : '')."]");
+  my $hash;
+  if (defined($ds)) {
+    $hash = hmac_sha1_hex($pid . "_" . $ds, $self->app->config->{imageserver}->{hash_secret});
+  } else {
+    $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
+  }
+  $res->{hash} = $hash;
+  my $path;
+  if ($c->app->config->{fedora}->{version} >= 6) {
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+    if ($dsAttr->{status} eq 200) {
+      $path = $dsAttr->{path};
+    } else {
+      $c->app->log->error("imageserver job pid[$pid] cm[$cmodel]: could not get path");
+    }
+  }
+  $c->paf_mongo->get_collection('jobs')->update_one(
+    { 'pid' => $pid, 'agent' => $agent },
+    { '$set' => { 'status' => 'new', 'idhash' => $hash, 'path' => $path } },
+    { 'upsert' => 0 }
+  );
+  
+  return $res;
+}
 
 1;
 __END__

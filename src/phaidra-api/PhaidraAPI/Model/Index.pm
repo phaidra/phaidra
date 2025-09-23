@@ -599,6 +599,15 @@ sub update {
 
         if (exists($c->app->config->{solr})) {
           $t0 = [gettimeofday];
+          
+          # For PDFDocument, preserve existing extracted_text from Solr unless object is restricted
+          if ($r->{index}->{cmodel} && $r->{index}->{cmodel} eq 'PDFDocument') {
+            my $preserved_text = $self->_preserve_extracted_text($c, $pid, $r->{index});
+            if ($preserved_text) {
+              $r->{index}->{extracted_text} = $preserved_text;
+            }
+          }
+          
           my @docs = ($r->{index});
           my $post = $ua->post($updateurl => json => \@docs)->result;
           $c->app->log->debug("posting index took " . tv_interval($t0));
@@ -3204,6 +3213,57 @@ sub get_doc_from_ua {
   else {
     $c->app->log->error("[$pid] error getting solr doc for object[$pid]: " . $r->code . " " . $r->message);
   }
+}
+
+sub _preserve_extracted_text {
+  my ($self, $c, $pid, $index_doc) = @_;
+  
+  # Check if object has restrictions - if so, don't preserve extracted_text
+  my $object_model = PhaidraAPI::Model::Object->new;
+  my $rights_res = $object_model->get_datastream($c, $pid, 'RIGHTS');
+  if ($rights_res->{status} eq 200 && $rights_res->{RIGHTS}) {
+    my $rights_model = PhaidraAPI::Model::Rights->new;
+    my $res_rights = $rights_model->xml_2_json($c, $rights_res->{RIGHTS});
+    if ($res_rights->{status} eq 200) {
+      my $rights = $res_rights->{rights};
+      my $nrKeys = keys %{$rights};
+      if ($nrKeys != 0) {
+        $c->app->log->debug("[$pid] Object has restrictions, not preserving extracted_text");
+        return undef;
+      }
+    }
+  }
+  
+  # Get existing document from Solr to preserve extracted_text
+  my $ua = Mojo::UserAgent->new;
+  my $urlget = Mojo::URL->new;
+  $urlget->scheme($c->app->config->{solr}->{scheme});
+  $urlget->userinfo($c->app->config->{solr}->{username} . ":" . $c->app->config->{solr}->{password});
+  $urlget->host($c->app->config->{solr}->{host});
+  $urlget->port($c->app->config->{solr}->{port});
+  if ($c->app->config->{solr}->{path}) {
+    $urlget->path("/" . $c->app->config->{solr}->{path} . "/solr/" . $c->app->config->{solr}->{core} . "/select");
+  } else {
+    $urlget->path("/solr/" . $c->app->config->{solr}->{core} . "/select");
+  }
+  
+  $urlget->query(q => "pid:\"$pid\"", rows => "1", wt => "json", fl => "extracted_text");
+  my $r = $ua->get($urlget)->result;
+  
+  if ($r->is_success) {
+    my $response = $r->json;
+    if ($response->{response}->{docs} && @{$response->{response}->{docs}} > 0) {
+      my $existing_doc = $response->{response}->{docs}->[0];
+      if ($existing_doc->{extracted_text}) {
+        $c->app->log->debug("[$pid] Preserving existing extracted_text from Solr");
+        return $existing_doc->{extracted_text};
+      }
+    }
+  } else {
+    $c->app->log->warn("[$pid] Could not retrieve existing document from Solr: " . $r->code . " " . $r->message);
+  }
+  
+  return undef;
 }
 
 1;

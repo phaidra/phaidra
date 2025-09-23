@@ -1,0 +1,11 @@
+{
+  "name": "pdf-extraction-worker",
+  "version": "1.0.0",
+  "description": "PDF text extraction worker using Apache Tika",
+  "main": "index.js",
+  "dependencies": {
+    "mongodb": "^6.3.0"
+  }
+}
+
+
