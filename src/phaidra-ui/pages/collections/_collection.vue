@@ -21,12 +21,17 @@ export default {
         return {
             templateName: null,
             collectionTemplate: null,
-            loaded: false
+            loaded: false,
+            templateTitle: {
+                eng: 'Collection',
+                deu: 'Sammlung',
+                ita: 'Collezione'
+            }
         }
     },
     metaInfo() {
         let metaInfo = {
-        title: this.$t(this.templateName || 'Collection') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+        title: this.templateTitle[this.$i18n.locale] + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
         };
         return metaInfo;
     },
@@ -39,6 +44,9 @@ export default {
             try {
                 this.$axios.get(`/cms/template/${this.templateName || 'index'}`).then(response => {
                     this.collectionTemplate = response?.data?.template?.templateContent
+                    if(response?.data?.template?.templateTitle) {
+                        this.templateTitle = response?.data?.template?.templateTitle
+                    }
                     this.loaded = true
                 })
             } catch (error) {
