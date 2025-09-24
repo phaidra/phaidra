@@ -6,7 +6,7 @@ use v5.10;
 use XML::LibXML;
 use base qw/Mojo::Base/;
 
-sub object_counts {
+sub general_stats {
   my $self = shift;
   my $c    = shift;
 

@@ -149,7 +149,7 @@ export default {
     async fetchStats(self) {
       try {
         let response = await self.$axios.get(
-          "/stats/object_counts"
+          "/stats"
         );
         this.objsTotal = response?.data?.object_counts;
       } catch (error) {
