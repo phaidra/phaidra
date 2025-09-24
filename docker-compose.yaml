@@ -632,10 +632,10 @@ services:
   
   pdf-extraction:
     hostname: "pdf-extraction"
-    # image: phaidraorg/pdf-extraction:1.0.0
-    build:
-      context: .
-      dockerfile: dockerfiles/pdf_extraction.dockerfile
+    image: phaidraorg/pdf-extraction:8a305b63
+    # build:
+    #   context: .
+    #   dockerfile: dockerfiles/pdf_extraction.dockerfile
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
