@@ -2,6 +2,7 @@ const { MongoClient } = require('mongodb');
 const obj2gltf = require('obj2gltf');
 const fs = require('fs').promises;
 const path = require('path');
+const { ConvertGLBtoGltf} = require('gltf-import-export');
 
 // Service configuration
 const config = {
@@ -23,13 +24,24 @@ async function processJob(job) {
     const lvl2 = job.idhash.substring(1, 2);
     const outDir = path.join(config.store, lvl1, lvl2);
     await fs.mkdir(outDir, { recursive: true });
-    
-    // Convert OBJ to GLTF
-    const gltf = await obj2gltf(job.path);
     const outputPath = path.join(outDir, `${job.idhash}.gltf`);
-    
-    // Save the converted file
-    await fs.writeFile(outputPath, JSON.stringify(gltf));
+
+    if (job.mimetype === 'model/glb') {
+      console.log('Converting GLB to GLTF');
+      await ConvertGLBtoGltf(job.path, outputPath);
+      // Read the gltf file
+      const gltf = await fs.readFile(outputPath, 'utf8');
+      await fs.writeFile(outputPath, gltf);
+    } else if (job.mimetype === 'model/obj') {
+      // Convert OBJ to GLTF
+      const gltf = await obj2gltf(job.path);
+      await fs.writeFile(outputPath, JSON.stringify(gltf));
+    } else {
+      console.log('Unsupported mimetype: ' + job.mimetype);
+      await updateJobStatus(job.pid, 'failed');
+      return false;
+    }
+
     
     // Update job status
     await updateJobStatus(job.pid, 'finished', {

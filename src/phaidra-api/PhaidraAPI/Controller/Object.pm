@@ -748,7 +748,7 @@ sub preview {
       }
       $self->app->log->info("preview pid[$pid] metadata mimetype[$index_mime]");
 
-      if (($mimetype eq 'model/obj')) {
+      if (($mimetype eq 'model/obj') or ($mimetype eq 'model/glb')) {
         my $threed_model = PhaidraAPI::Model::Threed->new;
         my $model_path = $threed_model->get_model_path($self, $pid);
         

@@ -692,6 +692,7 @@ const vocabularies = {
   'mimetypes': {
     terms: [
       { '@id': 'model/obj', 'skos:notation': ['obj'], 'skos:prefLabel': { 'eng': 'OBJ' } },
+      { '@id': 'model/glb', 'skos:notation': ['glb'], 'skos:prefLabel': { 'eng': 'GLB' } },
       { '@id': 'image/jpeg', 'skos:notation': ['jpeg', 'jpg'], 'skos:prefLabel': { 'eng': 'JPG/JPEG' } },
       { '@id': 'image/tiff', 'skos:notation': ['tiff', 'tif'], 'skos:prefLabel': { 'eng': 'TIFF' } },
       { '@id': 'image/gif', 'skos:notation': ['gif'], 'skos:prefLabel': { 'eng': 'GIF' } },

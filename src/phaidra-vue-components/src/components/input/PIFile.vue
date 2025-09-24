@@ -145,7 +145,7 @@ export default {
     fileInput (file) {
       if (file) {
         this.$emit('input-file', file)
-        if (this.autoMimetype) {
+        if (this.autoMimetype || file.name.endsWith('.glb')) {
           if (file.name) {
             let ext = file.name.split('.').pop()
             for (let mt of this.vocabularies['mimetypes'].terms) {
