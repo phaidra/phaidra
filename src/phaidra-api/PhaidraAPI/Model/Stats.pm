@@ -6,6 +6,50 @@ use v5.10;
 use XML::LibXML;
 use base qw/Mojo::Base/;
 
+sub general_stats {
+  my $self = shift;
+  my $c    = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  my $cachekey = 'stats_object_counts';
+  my $cacheval = $c->app->chi->get($cachekey);
+  if ($cacheval) {
+    $c->app->log->debug("[cache hit] $cachekey");
+    $res->{object_counts} = $cacheval;
+    return $res;
+  }
+
+  $c->app->log->debug("[cache miss] $cachekey");
+
+
+  my $urlget = Mojo::URL->new;
+  $urlget->scheme($c->app->config->{solr}->{scheme});
+  $urlget->host($c->app->config->{solr}->{host});
+  $urlget->port($c->app->config->{solr}->{port});
+  if ($c->app->config->{solr}->{path}) {
+    $urlget->path("/" . $c->app->config->{solr}->{path} . "/solr/" . $c->app->config->{solr}->{core} . "/select");
+  }
+  else {
+    $urlget->path("/solr/" . $c->app->config->{solr}->{core} . "/select");
+  }
+  $urlget->query(q => '*:*', rows => "0", fq => 'owner:* AND -hassuccessor:* AND -ismemberof:["" TO *]', wt => "json");
+  my $get = $c->app->ua->get($urlget)->result;
+  if ($get->is_success) {
+    $res->{object_counts} = $get->json->{response}->{numFound};
+  }
+  else {
+    $c->app->log->error("Error getting object counts from solr: " . $get->message);
+    $res->{status} = 500;
+  }
+
+  $c->app->chi->set($cachekey, $res->{object_counts}, '1 day');
+  $cacheval = $c->app->chi->get($cachekey);
+  $res->{object_counts} = $cacheval;
+  return $res;
+  
+}
+
 sub disciplines {
   my $self = shift;
   my $c    = shift;
