@@ -249,6 +249,26 @@ build-3d-converter:
           - dockerfiles/3d.dockerfile
           - src/3d/**/*
 
+build-pdf-extraction:
+  stage: build-common
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/pdf_extraction.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/pdf-extraction:latest
+    -t $CI_REGISTRY_USER/pdf-extraction:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/pdf_extraction.dockerfile
+          - src/pdf_extraction/**/*
+
 build-camel-toolbox:
   stage: build-common
   before_script:
