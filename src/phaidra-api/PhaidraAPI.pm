@@ -528,7 +528,7 @@ sub startup {
   $r->get('stats/aggregates')                       ->to('stats#aggregates');
   $r->get('stats/disciplines')                      ->to('stats#disciplines');
   $r->get('stats/:pid')                             ->to('stats#stats');
-  $r->get('stats')                                  ->to('stats#stats', stats_param_key => 'general');
+  $r->get('stats')                                  ->to('stats#stats_general');
   $r->get('stats/:pid/downloads')                   ->to('stats#stats', stats_param_key => 'downloads');
   $r->get('stats/:pid/detail_page')                 ->to('stats#stats', stats_param_key => 'detail_page');
   $r->get('stats/:pid/chart')                       ->to('stats#chart');
