@@ -43,7 +43,7 @@ sub general_stats {
     $res->{status} = 500;
   }
 
-  $c->app->chi->set($cachekey, $res->{object_counts}, '1 week');
+  $c->app->chi->set($cachekey, $res->{object_counts}, '1 day');
   $cacheval = $c->app->chi->get($cachekey);
   $res->{object_counts} = $cacheval;
   return $res;
