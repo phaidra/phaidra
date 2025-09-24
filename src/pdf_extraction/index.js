@@ -5,7 +5,7 @@ const path = require('path');
 
 const execFileAsync = promisify(execFile);
 
-// Service configuration via environment variables with sensible defaults
+// Service configuration via environment variables with sensible default
 const config = {
   mongodb: {
     url: `mongodb://${process.env.MONGODB_PHAIDRA_USER}:${process.env.MONGODB_PHAIDRA_PASSWORD}@${process.env.MONGODB_PHAIDRA_HOST}/admin`,
