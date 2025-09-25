@@ -748,17 +748,26 @@ sub preview {
       }
       $self->app->log->info("preview pid[$pid] metadata mimetype[$index_mime]");
 
-      if (($mimetype eq 'model/obj')) {
+      if (($mimetype eq 'model/obj') or ($mimetype eq 'model/glb')) {
         my $threed_model = PhaidraAPI::Model::Threed->new;
-        my $model_path = $threed_model->get_model_path($self, $pid);
+        my $model_info = $threed_model->get_model_path($self, $pid);
+        $self->stash(model_info_json => Mojo::JSON::encode_json($model_info));
         
-        if ($model_path eq 'processing') {
+        if ($model_info eq 'processing') {
           $self->render('threed/processing');
           return;
         }
         
-        if ($model_path) {
-          $self->stash(model_path => $model_path);
+        if ($model_info) {
+          if (ref $model_info eq 'HASH') {
+            $self->stash(model_b64 => $model_info->{model_b64});
+            $self->stash(resource_map_b64 => $model_info->{resource_map_b64});
+            $self->stash(idhash => $model_info->{idhash});
+          } else {
+            # Backward compatibility: older return type was a single base64 gltf string
+            $self->stash(model_b64 => $model_info);
+            $self->stash(resource_map_b64 => '');
+          }
           $self->stash(baseurl       => $self->config->{baseurl});
           $self->stash(scheme        => $self->config->{scheme});
           $self->stash(basepath      => $self->config->{basepath});

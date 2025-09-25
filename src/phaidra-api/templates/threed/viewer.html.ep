@@ -28,14 +28,23 @@
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setClearColor(0x000000, 0);
+        if (THREE.sRGBEncoding) renderer.outputEncoding = THREE.sRGBEncoding;
+        if (THREE.ACESFilmicToneMapping) renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
         document.body.appendChild(renderer.domElement);
 
         // Add lights
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
         scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-        directionalLight.position.set(0, 1, 0);
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x888888, 0.6);
+        hemiLight.position.set(0, 1, 0);
+        scene.add(hemiLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        directionalLight.position.set(5, 10, 7.5);
         scene.add(directionalLight);
+        const fillLight = new THREE.DirectionalLight(0xffffff, 0.6);
+        fillLight.position.set(-5, -2, -5);
+        scene.add(fillLight);
 
         // Add controls
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -45,9 +54,43 @@
         // Set camera position
         camera.position.z = 5;
 
+        // Build simple filename -> base64 map from server
+        const resourceMapB64 = '<%= $resource_map_b64 // "" %>';
+        let resourceNameToBase64 = {};
+        if (resourceMapB64 && resourceMapB64.length > 0) {
+            try {
+                const rmJson = atob(resourceMapB64);
+                resourceNameToBase64 = JSON.parse(rmJson);
+            } catch (e) {
+                console.warn('Failed to parse resource map:', e);
+            }
+        }
+
+        function base64ToObjectURL(base64, mime) {
+            if (!base64) return null;
+            const binaryString = atob(base64);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) bytes[i] = binaryString.charCodeAt(i);
+            const blob = new Blob([bytes], { type: mime });
+            return URL.createObjectURL(blob);
+        }
+
+        const manager = new THREE.LoadingManager();
+        manager.setURLModifier((url) => {
+            const name = url.split("/").pop();
+            if (name && resourceNameToBase64[name]) {
+                if(name.endsWith('.bin')) {
+                    return base64ToObjectURL(resourceNameToBase64[name], "application/octet-stream")
+                } else if(name.endsWith('.jpg')) {
+                    return base64ToObjectURL(resourceNameToBase64[name], "image/jpeg")
+                }
+            };
+            return url;
+        });
+
         // Load the GLTF model
-        const loader = new THREE.GLTFLoader();
-        const modelContent = '<%= $model_path %>';
+        const loader = new THREE.GLTFLoader(manager);
+        const modelContent = '<%= $model_b64 %>';
         
         try {
             // Decode base64 content
@@ -65,19 +108,31 @@
                 const model = gltf.scene;
                 scene.add(model);
 
-                // Center and scale the model
+                // Compute bounds
                 const box = new THREE.Box3().setFromObject(model);
-                const center = box.getCenter(new THREE.Vector3());
                 const size = box.getSize(new THREE.Vector3());
+                const center = box.getCenter(new THREE.Vector3());
                 const maxDim = Math.max(size.x, size.y, size.z);
-                const scale = 2 / maxDim;
-                model.scale.setScalar(scale);
-                model.position.sub(center.multiplyScalar(scale));
+                const radius = maxDim * 0.5;
 
-                // Adjust camera to fit model
-                const distance = Math.max(size.x, size.y, size.z) * 1.5;
-                camera.position.z = distance;
+                // Frame the model: place camera back by the distance needed for FOV
+                const fov = camera.fov * Math.PI / 180; // radians
+                const fitHeightDistance = radius / Math.tan(fov / 2);
+                const distance = fitHeightDistance * 1.2; // extra padding
+
+                camera.near = Math.max(0.01, distance / 100);
+                camera.far = distance * 100;
+                camera.updateProjectionMatrix();
+
+                // Position camera with a slight elevation
+                const dir = new THREE.Vector3(0, radius * 0.3, distance);
+                camera.position.copy(center).add(dir);
+                camera.lookAt(center);
+
+                // Controls configuration
                 controls.target.copy(center);
+                controls.minDistance = Math.max(0.01, radius * 0.1);
+                controls.maxDistance = radius * 20;
                 controls.update();
                 
                 // Clean up the blob URL

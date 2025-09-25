@@ -346,8 +346,8 @@ sub modify_hook {
             (undef, $mimetype, undef) = $octets_model->_get_ds_attributes($c, $pid, 'OCTETS', $foxmldom);
           }
         }
-        if ($mimetype eq 'model/obj') {
-          my $threedr = $self->_create_3d_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
+        if ($mimetype eq 'model/obj' or $mimetype eq 'model/glb') {
+          my $threedr = $self->_create_3d_job_if_not_exists($c, $pid, $res_cmodel->{cmodel}, $mimetype);
           push @{$res->{alerts}}, @{$threedr->{alerts}} if scalar @{$threedr->{alerts}} > 0;
         }
       }
@@ -468,7 +468,7 @@ sub _create_pdf_extraction_job_if_not_exists {
   return $res;
 }
 sub _create_3d_job_if_not_exists {
-  my ($self, $c, $pid, $cmodel) = @_;
+  my ($self, $c, $pid, $cmodel, $mimetype) = @_;
 
   my $res = {alerts => [], status => 200};
 
@@ -485,7 +485,7 @@ sub _create_3d_job_if_not_exists {
         $c->app->log->error("3d job pid[$pid] cm[$cmodel]: could not get path");
       }
     }
-    my $job = {pid => $pid, cmodel => $cmodel, agent => "3d", status => "new", idhash => $hash, created => time};
+    my $job = {pid => $pid, cmodel => $cmodel, agent => "3d", status => "new", idhash => $hash, created => time, mimetype => $mimetype};
     $job->{path} = $path if $path;
     $c->paf_mongo->get_collection('jobs')->insert_one($job);
   }

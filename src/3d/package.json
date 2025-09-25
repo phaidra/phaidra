@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "mongodb": "^6.3.0",
-    "obj2gltf": "^3.1.5"
+    "obj2gltf": "^3.1.5",
+    "gltf-import-export": "^1.0.22"
   }
 }
