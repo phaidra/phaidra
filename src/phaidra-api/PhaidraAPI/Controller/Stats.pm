@@ -6,6 +6,15 @@ use v5.10;
 use PhaidraAPI::Model::Stats;
 use base 'Mojolicious::Controller';
 
+sub stats_general {
+  my $self = shift;
+
+  my $stats_model = PhaidraAPI::Model::Stats->new;
+  my $res         = $stats_model->stats_general($self);
+
+  $self->render(json => $res, status => $res->{status});
+}
+
 sub disciplines {
   my $self = shift;
 
@@ -44,14 +53,6 @@ sub stats {
 
   my $pid    = $self->stash('pid');
   my $siteid = $self->param('siteid');
-  my $key = $self->stash('stats_param_key');
-
-  if (defined($key) && $key eq 'general') {
-    my $stats_model = PhaidraAPI::Model::Stats->new;
-    my $res         = $stats_model->general_stats($self);
-    $self->render(json => $res, status => $res->{status});
-    return;
-  }
 
   unless (defined($pid)) {
     $self->render(json => {alerts => [{type => 'info', msg => 'Undefined pid'}]}, status => 400);
@@ -68,6 +69,7 @@ sub stats {
     }
   }
 
+  my $key = $self->stash('stats_param_key');
 
   my $stats_model = PhaidraAPI::Model::Stats->new;
   my $res         = $stats_model->stats($self, $pid, $siteid, 'stats');

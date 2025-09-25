@@ -6,7 +6,7 @@ use v5.10;
 use XML::LibXML;
 use base qw/Mojo::Base/;
 
-sub general_stats {
+sub stats_general {
   my $self = shift;
   my $c    = shift;
 
