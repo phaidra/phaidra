@@ -75,19 +75,35 @@
         const manager = new THREE.LoadingManager();
         const loaderOverlay = document.getElementById('loader');
         const loaderText = document.getElementById('loader-text');
+        let loadingSteps = 0;
+        let currentStep = 0;
+
+        if (loaderOverlay) loaderOverlay.classList.remove('hidden');
+        if (loaderText) loaderText.textContent = 'Initializing…';
+        
         manager.onStart = function(url, itemsLoaded, itemsTotal) {
-            if (loaderOverlay) loaderOverlay.classList.remove('hidden');
-            if (loaderText) loaderText.textContent = 'Loading model… 0%';
+            if (loaderText) loaderText.textContent = 'Loading GLTF…';
         };
+        
         manager.onProgress = function(url, itemsLoaded, itemsTotal) {
-            if (!itemsTotal) return;
-            const pct = Math.min(100, Math.round(itemsLoaded / itemsTotal * 100));
-            console.log('pct', pct)
-            if (loaderText) loaderText.textContent = `Loading model… ${pct}%`;
+            console.log('Loading progress:', url, itemsLoaded, itemsTotal);
+            if (itemsTotal > 0) {
+                const pct = Math.min(100, Math.round(itemsLoaded / itemsTotal * 100));
+                if (loaderText) loaderText.textContent = `Loading resources… ${pct}%`;
+            } else {
+                if (loaderText) loaderText.textContent = 'Loading resources…';
+            }
         };
+        
         manager.onLoad = function() {
-            if (loaderOverlay) loaderOverlay.classList.add('hidden');
+            console.log('All resources loaded');
+            if (loaderText) loaderText.textContent = 'Processing model…';
+
+            setTimeout(() => {
+                if (loaderOverlay) loaderOverlay.classList.add('hidden');
+            }, 500);
         };
+        
         manager.onError = function(url) {
             if (loaderText) loaderText.textContent = 'Error loading resources';
         };
@@ -105,6 +121,8 @@
         console.log('GLTF URL:', gltfUrl);
         
         loader.load(gltfUrl, function(gltf) {
+            console.log('GLTF loaded successfully');
+            if (loaderText) loaderText.textContent = 'Rendering model…';
             const model = gltf.scene;
             scene.add(model);
 
@@ -135,7 +153,10 @@
             controls.maxDistance = radius * 20;
             controls.update();
             
-        }, undefined, function(error) {
+        }, function(progress) {
+            console.log('GLTF loading progress:', progress);
+            if (loaderText) loaderText.textContent = `Loading GLTF… ${Math.round(progress.loaded / progress.total * 100)}%`;
+        }, function(error) {
             console.error('Error loading model:', error);
             document.getElementById('info').innerHTML = 'Error loading 3D model';
             if (loaderText) loaderText.textContent = 'Error loading 3D model';
