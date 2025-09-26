@@ -54,97 +54,56 @@
         // Set camera position
         camera.position.z = 5;
 
-        // Build simple filename -> base64 map from server
-        const resourceMapB64 = '<%= $resource_map_b64 // "" %>';
-        let resourceNameToBase64 = {};
-        if (resourceMapB64 && resourceMapB64.length > 0) {
-            try {
-                const rmJson = atob(resourceMapB64);
-                resourceNameToBase64 = JSON.parse(rmJson);
-            } catch (e) {
-                console.warn('Failed to parse resource map:', e);
-            }
-        }
-
-        function base64ToObjectURL(base64, mime) {
-            if (!base64) return null;
-            const binaryString = atob(base64);
-            const bytes = new Uint8Array(binaryString.length);
-            for (let i = 0; i < binaryString.length; i++) bytes[i] = binaryString.charCodeAt(i);
-            const blob = new Blob([bytes], { type: mime });
-            return URL.createObjectURL(blob);
-        }
 
         const manager = new THREE.LoadingManager();
         manager.setURLModifier((url) => {
             const name = url.split("/").pop();
-            if (name && resourceNameToBase64[name]) {
-                if(name.endsWith('.bin')) {
-                    return base64ToObjectURL(resourceNameToBase64[name], "application/octet-stream")
-                } else if(name.endsWith('.jpg')) {
-                    return base64ToObjectURL(resourceNameToBase64[name], "image/jpeg")
-                }
-            };
+            if(name && name.includes('.') && !url.includes('3d_resource')) {
+                return `<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/3d_resource?filename=${name}`;
+            }
             return url;
         });
 
-        // Load the GLTF model
+        // Load the GLTF model directly from URL
         const loader = new THREE.GLTFLoader(manager);
-        const modelContent = '<%= $model_b64 %>';
+        const gltfUrl = '<%= $gltf_url %>';
+        console.log('GLTF URL:', gltfUrl);
         
-        try {
-            // Decode base64 content
-            const binaryString = atob(modelContent);
-            const bytes = new Uint8Array(binaryString.length);
-            for (let i = 0; i < binaryString.length; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
-            }
+        loader.load(gltfUrl, function(gltf) {
+            const model = gltf.scene;
+            scene.add(model);
+
+            // Compute bounds
+            const box = new THREE.Box3().setFromObject(model);
+            const size = box.getSize(new THREE.Vector3());
+            const center = box.getCenter(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const radius = maxDim * 0.5;
+
+            // Frame the model: place camera back by the distance needed for FOV
+            const fov = camera.fov * Math.PI / 180; // radians
+            const fitHeightDistance = radius / Math.tan(fov / 2);
+            const distance = fitHeightDistance * 1.2; // extra padding
+
+            camera.near = Math.max(0.01, distance / 100);
+            camera.far = distance * 100;
+            camera.updateProjectionMatrix();
+
+            // Position camera with a slight elevation
+            const dir = new THREE.Vector3(0, radius * 0.3, distance);
+            camera.position.copy(center).add(dir);
+            camera.lookAt(center);
+
+            // Controls configuration
+            controls.target.copy(center);
+            controls.minDistance = Math.max(0.01, radius * 0.1);
+            controls.maxDistance = radius * 20;
+            controls.update();
             
-            // Create a blob from the decoded content
-            const blob = new Blob([bytes], { type: 'model/gltf+json' });
-            const url = URL.createObjectURL(blob);
-            
-            loader.load(url, function(gltf) {
-                const model = gltf.scene;
-                scene.add(model);
-
-                // Compute bounds
-                const box = new THREE.Box3().setFromObject(model);
-                const size = box.getSize(new THREE.Vector3());
-                const center = box.getCenter(new THREE.Vector3());
-                const maxDim = Math.max(size.x, size.y, size.z);
-                const radius = maxDim * 0.5;
-
-                // Frame the model: place camera back by the distance needed for FOV
-                const fov = camera.fov * Math.PI / 180; // radians
-                const fitHeightDistance = radius / Math.tan(fov / 2);
-                const distance = fitHeightDistance * 1.2; // extra padding
-
-                camera.near = Math.max(0.01, distance / 100);
-                camera.far = distance * 100;
-                camera.updateProjectionMatrix();
-
-                // Position camera with a slight elevation
-                const dir = new THREE.Vector3(0, radius * 0.3, distance);
-                camera.position.copy(center).add(dir);
-                camera.lookAt(center);
-
-                // Controls configuration
-                controls.target.copy(center);
-                controls.minDistance = Math.max(0.01, radius * 0.1);
-                controls.maxDistance = radius * 20;
-                controls.update();
-                
-                // Clean up the blob URL
-                URL.revokeObjectURL(url);
-            }, undefined, function(error) {
-                console.error('Error loading model:', error);
-                document.getElementById('info').innerHTML = 'Error loading 3D model';
-            });
-        } catch (error) {
-            console.error('Error processing model:', error);
-            document.getElementById('info').innerHTML = 'Error processing 3D model';
-        }
+        }, undefined, function(error) {
+            console.error('Error loading model:', error);
+            document.getElementById('info').innerHTML = 'Error loading 3D model';
+        });
 
         // Handle window resize
         window.addEventListener('resize', onWindowResize, false);

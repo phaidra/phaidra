@@ -68,46 +68,15 @@ sub get_model_path {
 
   $app->log->info("Resolved filepath: " . $filepath);
 
-  # Read the file contents
-  open(my $fh, '<', $filepath) or do {
-    $app->log->error("Could not open file $filepath: $!");
-    return undef;
-  };
-  my $content = do { local $/; <$fh> };
-  close($fh);
-
-  # Build resource map of sibling files (e.g., <idhash>_data.bin, <idhash>_imgX.jpg)
-  my %resources;
-  my $base_dir = dirname($filepath);
-  if (-d $base_dir) {
-    my @files = bsd_glob(File::Spec->catfile($base_dir, '*'));
-    foreach my $f (@files) {
-      next unless -f $f;
-      my ($name) = $f =~ m{([^/]+)$};
-      next if $name =~ /\.gltf$/i; # skip the gltf itself
-      # If idhash known, prefer only related files
-      if (defined $idhash && length $idhash) {
-        next unless ($name =~ /^\Q$idhash\E[_\.]/i);
-      }
-      open(my $rfh, '<', $f) or next;
-      binmode($rfh);
-      my $rdata = do { local $/; <$rfh> };
-      close($rfh);
-      my $b64 = encode_base64($rdata, '');
-      $resources{$name} = $b64;
-    }
-  }
-
-  # Encode model content to base64 (no newlines)
-  my $model_b64 = encode_base64($content, '');
-
-  # Encode resource map as JSON, then base64 for safe embedding
-  my $resources_json = encode_json(\%resources);
-  my $resource_map_b64 = encode_base64($resources_json, '');
-
+  # Just return the URL to serve the GLTF file directly - no memory loading
+  my $scheme = $c->config->{scheme};
+  my $baseurl = $c->config->{baseurl};
+  my $basepath = $c->config->{basepath};
+  
+  my $base_url = "$scheme://$baseurl/$basepath/object/$pid/3d_resource";
+  
   return {
-    model_b64 => $model_b64,
-    resource_map_b64 => $resource_map_b64,
+    gltf_url => "$base_url?filename=model.gltf",
     idhash => $idhash
   };
 }

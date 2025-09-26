@@ -599,6 +599,7 @@ sub startup {
     $reader->get('object/:pid/fulltext')                                     ->to('fulltext#get');
     $reader->get('object/:pid/thumbnail')                                    ->to('object#thumbnail');
     $reader->get('object/:pid/preview')                                      ->to('object#preview');
+    $reader->get('object/:pid/3d_resource')                        ->to('threed#get_resource');
     $reader->get('object/:pid/md5')                                          ->to('inventory#get_md5');
     $reader->get('object/:pid/octets')                                       ->to('octets#proxy');
     $reader->get('object/:pid/download')                                     ->to('octets#get', operation => 'download');
@@ -769,6 +770,7 @@ sub startup {
     $proxyauth_optional->get('object/:pid/comp/:ds')                            ->to('object#get_legacy_container_member');
     $proxyauth_optional->get('object/:pid/resourcelink/get')                    ->to('object#resourcelink', operation => 'get');
     $proxyauth_optional->get('object/:pid/resourcelink/redirect')               ->to('object#resourcelink', operation => 'redirect');
+    $proxyauth_optional->get('object/:pid/3d_resource')               ->to('threed#get_resource');
 
     $proxyauth_optional->get('imageserver/:pid/status')                         ->to('imageserver#status');
 
