@@ -759,15 +759,8 @@ sub preview {
         }
         
         if ($model_info) {
-          if (ref $model_info eq 'HASH') {
-            $self->stash(model_b64 => $model_info->{model_b64});
-            $self->stash(resource_map_b64 => $model_info->{resource_map_b64});
-            $self->stash(idhash => $model_info->{idhash});
-          } else {
-            # Backward compatibility: older return type was a single base64 gltf string
-            $self->stash(model_b64 => $model_info);
-            $self->stash(resource_map_b64 => '');
-          }
+          $self->stash(gltf_url => $model_info->{gltf_url});
+          $self->stash(idhash => $model_info->{idhash});
           $self->stash(baseurl       => $self->config->{baseurl});
           $self->stash(scheme        => $self->config->{scheme});
           $self->stash(basepath      => $self->config->{basepath});
