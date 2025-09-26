@@ -14,10 +14,27 @@
             pointer-events: none;
             font-family: Arial, sans-serif;
         }
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            z-index: 9999;
+        }
+        #loader.hidden { display: none; }
     </style>
 </head>
 <body>
     <div id="info">3D Model Viewer - Use mouse to rotate, right-click to pan, scroll to zoom</div>
+    <div id="loader"><span id="loader-text">Loading model… 0%</span></div>
     <script src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/threejs/build/three.min.js"></script>
     <script src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/threejs/build/OrbitControls.js"></script>
     <script src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/threejs/build/GLTFLoader.js"></script>
@@ -56,6 +73,24 @@
 
 
         const manager = new THREE.LoadingManager();
+        const loaderOverlay = document.getElementById('loader');
+        const loaderText = document.getElementById('loader-text');
+        manager.onStart = function(url, itemsLoaded, itemsTotal) {
+            if (loaderOverlay) loaderOverlay.classList.remove('hidden');
+            if (loaderText) loaderText.textContent = 'Loading model… 0%';
+        };
+        manager.onProgress = function(url, itemsLoaded, itemsTotal) {
+            if (!itemsTotal) return;
+            const pct = Math.min(100, Math.round(itemsLoaded / itemsTotal * 100));
+            console.log('pct', pct)
+            if (loaderText) loaderText.textContent = `Loading model… ${pct}%`;
+        };
+        manager.onLoad = function() {
+            if (loaderOverlay) loaderOverlay.classList.add('hidden');
+        };
+        manager.onError = function(url) {
+            if (loaderText) loaderText.textContent = 'Error loading resources';
+        };
         manager.setURLModifier((url) => {
             const name = url.split("/").pop();
             if(name && name.includes('.') && !url.includes('3d_resource')) {
@@ -103,6 +138,8 @@
         }, undefined, function(error) {
             console.error('Error loading model:', error);
             document.getElementById('info').innerHTML = 'Error loading 3D model';
+            if (loaderText) loaderText.textContent = 'Error loading 3D model';
+            if (loaderOverlay) loaderOverlay.classList.remove('hidden');
         });
 
         // Handle window resize
