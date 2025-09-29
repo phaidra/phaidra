@@ -12,6 +12,57 @@ use PhaidraAPI::Model::Util;
 use PhaidraAPI::Model::Config;
 use MIME::Lite::TT::HTML;
 
+sub fedora_storage_usage {
+
+  my $self = shift;
+
+  my $dbh = $self->app->db_fedora->dbh;
+
+  my $from = $self->param('from');
+  my $to   = $self->param('to');
+
+  my @where = (
+    "mime_type IS NOT NULL",
+    "(fedora_id LIKE '%OCTETS' OR fedora_id LIKE '%WEBVERSION')",
+  );
+  my @bind;
+
+  if ($from) {
+    # Accept YYYY-MM or YYYY-MM-DD
+    if ($from =~ /^\d{4}-\d{2}$/) { $from .= '-01'; }
+    push @where, 'DATE(created) >= ?';
+    push @bind, $from;
+  }
+
+  if ($to) {
+    if ($to =~ /^\d{4}-\d{2}$/) {
+      my ($y,$m) = split(/-/, $to);
+      my ($ny,$nm) = ($m == 12) ? ($y+1, 1) : ($y, $m+1);
+      push @where, 'DATE(created) < ?';
+      push @bind, sprintf('%04d-%02d-01', $ny, $nm);
+    } else {
+      push @where, 'DATE(created) <= ?';
+      push @bind, $to;
+    }
+  }
+
+  my $sql = 'SELECT DATE_FORMAT(created,\'%Y-%m\') AS month, mime_type, '
+          . 'SUM(content_size) AS total_bytes, COUNT(*) AS file_count '
+          . 'FROM fedoradb.simple_search '
+          . 'WHERE ' . join(' AND ', @where) . ' '
+          . 'GROUP BY month, mime_type '
+          . 'ORDER BY month, mime_type';
+
+  my $sth = $dbh->prepare($sql);
+  unless ($sth && $sth->execute(@bind)) {
+    return $self->render(json => {alerts => [{type => 'error', msg => 'Query failed'}]}, status => 500);
+  }
+  my $rows = $sth->fetchall_arrayref({});
+  $sth->finish();
+
+  $self->render(json => {usage => $rows, status => 200}, status => 200);
+}
+
 sub get_all_pids {
 
   my $self = shift;
