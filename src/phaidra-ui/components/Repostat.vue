@@ -6,6 +6,7 @@
             $t("Repository statistics")
             }}</v-card-title>
             <v-card-text>
+            <div class="subtitle-1 mb-1">{{ selectedYear }} Fedora</div>
             <v-data-table
                 :headers="avgHeaders"
                 :items="avgItems"
@@ -22,6 +23,7 @@
                 </template>
             </v-data-table>
 
+            <div class="subtitle-1 mb-1">{{ selectedYearImg }} Imageserver</div>
             <v-data-table
                 :headers="imgAvgHeaders"
                 :items="imgAvgItems"
