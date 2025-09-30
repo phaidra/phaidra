@@ -18,7 +18,7 @@
           :feedback="instanceconfig.feedback"
           :feedback-user="this.user"
           :feedback-context="'Upload'"
-          :doiImport="true"
+          :doiImport="instanceconfig.doiImport"
           v-on:load-form="form = $event"
           v-on:load-rights="rights = $event"
           v-on:object-created="objectCreated($event)"

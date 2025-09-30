@@ -57,6 +57,7 @@ export const mutations = {
       'accessrestrictions_showgroups',
       'data_affiliations',
       'feedback',
+      'doiImport',
       'addannotation',
       'forcePreview',
       'hideInstitutionName',
