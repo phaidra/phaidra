@@ -22,22 +22,6 @@
                 </template>
             </v-data-table>
 
-            <!-- Imageserver average per month (by year) -->
-            <v-row class="mb-2" align="center" justify="end">
-                <v-col cols="12" sm="6" md="3">
-                    <v-text-field
-                        v-model="selectedYearImg"
-                        label="Imageserver Year"
-                        type="number"
-                        min="2000"
-                        dense
-                        @keyup.enter="fetchImageserverAvgYear"
-                    ></v-text-field>
-                </v-col>
-                <v-col cols="auto">
-                    <v-btn color="primary" @click="fetchImageserverAvgYear">Load</v-btn>
-                </v-col>
-            </v-row>
             <v-data-table
                 :headers="imgAvgHeaders"
                 :items="imgAvgItems"
