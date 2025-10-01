@@ -36,7 +36,7 @@
       <v-col cols="3" class="ml-4 mt-2">
         <v-btn
           :loading="loading"
-          :disabled="loading || !doiToImport || doiToImport.lenght < 1"
+          :disabled="loading || !doiToImport || doiToImport.length < 1"
           class="mx-2"
           color="primary"
           @click="importDOI()"
@@ -298,6 +298,7 @@ import { vocabulary } from '../../mixins/vocabulary'
 import fields from '../../utils/fields'
 import {constructDataCite} from '../../utils/doiconstructor'
 import { formvalidation } from '../../mixins/formvalidation'
+import lang3to2map from '../../utils/lang3to2map'
 export default {
   name: 'p-doi-import',
   mixins: [vocabulary, formvalidation],
@@ -321,7 +322,6 @@ export default {
       loading: false,
       doiImportInput: null,
       doiImportData: null,
-      doiImportErrors: [],
       journalSearchQuery: null,
       journalSearchISSN: null,
       journalSearchLoading: false,
@@ -716,10 +716,10 @@ if (crossrefData['issued']['date-parts'][0]) {
           }
         } catch (error) {
           console.error(error);
-          if (error.response.status === 404) {
+          if (error.response?.status === 404) {
             this.doiImportErrors.push("DOI Not Found");
           } else {
-            this.doiImportErrors.push(error.message);
+            this.doiImportErrors.push(error.message || 'Unknown error');
           }
         } finally {
           this.loading = false;
