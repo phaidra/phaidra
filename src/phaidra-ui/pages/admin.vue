@@ -278,6 +278,15 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
+                      :label="$t('Enable DOI import')"
+                      v-model="parsedPublicConfigData.doiImport"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Enable tab for 'Metadata-Import via DOI' in Upload form.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-checkbox
                       :label="$t('Disable Association parent selection')"
                       v-model="parsedPublicConfigData.isParentSelectionDisabled"
                     ></v-checkbox>
