@@ -296,6 +296,7 @@
 <script>
 import { vocabulary } from '../../mixins/vocabulary'
 import fields from '../../utils/fields'
+import {constructDataCite} from '../../utils/doiconstructor'
 import { formvalidation } from '../../mixins/formvalidation'
 export default {
   name: 'p-doi-import',
