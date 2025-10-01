@@ -12,7 +12,7 @@
             :color="getStatusColor(item.status)"
             small
           >
-            {{ item.status }}
+            {{ $t(item.status) }}
           </v-chip>
         </template>
 
