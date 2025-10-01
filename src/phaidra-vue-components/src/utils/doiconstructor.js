@@ -52,7 +52,9 @@ export const constructDataCite = (dataciteData, that) => {
     }
   }
   if (dataciteData?.data?.attributes?.language) {
-    if (that.lang2to3map[dataciteData.data.attributes.language]) {
+    if(dataciteData.data.attributes.language.length === 3) {
+      doiImportData.language = dataciteData.data.attributes.language
+    } else if (that.lang2to3map[dataciteData.data.attributes.language]) {
       doiImportData.language = that.lang2to3map[dataciteData.data.attributes.language]
     }
   }

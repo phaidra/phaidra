@@ -484,9 +484,10 @@ if (crossrefData['issued']['date-parts'][0]) {
             }
 
             if (crossrefData["language"]) {
-              if (this.lang2to3map[crossrefData["language"]]) {
-                this.doiImportData.language =
-                  this.lang2to3map[crossrefData["language"]];
+              if(crossrefData["language"].length === 3) {
+                this.doiImportData.language = crossrefData["language"]
+              } else if (this.lang2to3map[crossrefData["language"]]) {
+                this.doiImportData.language = this.lang2to3map[crossrefData["language"]]
               }
             }
 
