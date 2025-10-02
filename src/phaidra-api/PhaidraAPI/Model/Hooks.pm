@@ -233,7 +233,6 @@ sub add_or_modify_relationships_hooks {
         push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
       }
     }
-
   }
 
   return $res;
