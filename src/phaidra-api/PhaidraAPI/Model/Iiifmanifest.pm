@@ -59,6 +59,13 @@ sub generate_simple_manifest {
     $is_recto_verso = 1;
     $recto_pid = $index->{isbacksideof}->[0];
     $verso_pid = $pid;
+  } else {
+    my $rels_res = $index_model->get_relationships($c, $pid);
+    if ($rels_res->{status} eq 200 && exists($rels_res->{relationships}->{hasbackside}) && scalar(@{$rels_res->{relationships}->{hasbackside}}) > 0) {
+      $is_recto_verso = 1;
+      $recto_pid = $pid;
+      $verso_pid = $rels_res->{relationships}->{hasbackside}->[0]->{pid};
+    }
   }
 
   my $manifest = {
@@ -379,8 +386,18 @@ sub update_manifest_metadata {
   }
   my $index = $r->{index};
 
-  # Check if this is a recto/verso relationship - only consider isbacksideof
+  # Check if this is a recto/verso relationship
+  my $is_recto_verso = 0;
   if (exists($index->{isbacksideof}) && scalar(@{$index->{isbacksideof}}) > 0) {
+    $is_recto_verso = 1;
+  } else {
+    my $rels_res = $index_model->get_relationships($c, $pid);
+    if ($rels_res->{status} eq 200 && exists($rels_res->{relationships}->{hasbackside}) && scalar(@{$rels_res->{relationships}->{hasbackside}}) > 0) {
+      $is_recto_verso = 1;
+    }
+  }
+  
+  if ($is_recto_verso) {
     # Regenerate the entire manifest for recto/verso objects
     my $new_manifest_res = $self->generate_simple_manifest($c, $pid);
     if ($new_manifest_res->{status} ne 200) {

@@ -234,30 +234,6 @@ sub add_or_modify_relationships_hooks {
       }
     }
 
-    # Check if IIIF manifest should be updated for recto/verso relationships
-    if (exists($c->app->config->{hooks}->{iiifmanifest}) && $c->app->config->{hooks}->{iiifmanifest}) {
-      # Check if this object has recto/verso relationships
-      my $index_model = PhaidraAPI::Model::Index->new;
-      my $r = $index_model->get($c, $pid);
-      if ($r->{status} eq 200) {
-        my $index = $r->{index};
-        # Only consider isbacksideof; ignore hasbackside
-        if (exists($index->{isbacksideof}) && scalar(@{$index->{isbacksideof}}) > 0) {
-          $c->app->log->debug("add_or_modify_relationships_hooks pid[$pid] Updating IIIF-MANIFEST due to recto/verso relationship changes");
-          
-          # Update IIIF manifest for this object
-          my $rdshash = $search_model->datastreams_hash($c, $pid);
-          if ($rdshash->{status} eq 200 && exists($rdshash->{dshash}->{'IIIF-MANIFEST'})) {
-            my $iiifm_model = PhaidraAPI::Model::Iiifmanifest->new;
-            my $update_r = $iiifm_model->update_manifest_metadata($c, $pid);
-            if ($update_r->{status} ne 200) {
-              push @{$res->{alerts}}, {type => 'error', msg => "Error updating IIIF-MANIFEST for pid[$pid] from relationships"};
-              push @{$res->{alerts}}, @{$update_r->{alerts}} if scalar @{$update_r->{alerts}} > 0;
-            }
-          }
-        }
-      }
-    }
   }
 
   return $res;
