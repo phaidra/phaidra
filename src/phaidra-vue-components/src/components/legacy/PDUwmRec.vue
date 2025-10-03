@@ -82,9 +82,9 @@
         </template>
         <template v-else-if="nodePath(ch) === 'uwm_lifecycle_contribute'">
           <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getChildLabel(ch, 'role') }}</v-col>
-          <v-col cols="12" md="10">
+          <v-col cols="12" md="10" :class="getChildValue(ch, 'date') ? 'uwm-border-left mb-4' : ''">
             <v-row no-gutters v-for="(entity, i) in getEntities(ch)" :key="'en'+i">
-              <v-col :cols="getChildValue(entity, 'date') ? 10 : 12">
+              <v-col>
                 <span v-if="getChildValue(entity, 'orcid')">
                   <a :href="'https://orcid.org/' + getChildValue(entity, 'orcid').replace('https://orcid.org/','')" target="_blank">
                     <icon width="16px" height="16px" class="mr-1 mb-1" name="orcid"></icon>
@@ -105,9 +105,10 @@
                 <span v-if="getChildValue(entity, 'isni')"> ISNI: <a :href="'http://isni.org/isni/' + getChildValue(entity, 'isni')" target="_blank">{{ getChildValue(entity, 'isni') }}</a></span>
               </v-col>
             </v-row>
-          </v-col>
-          <v-col v-if="getChildValue(ch, 'date')" cols="12" md="10" offset-md="2">
-            {{ getChildValue(ch, 'date') | date }}
+            <v-row v-if="getChildValue(ch, 'date')">
+              <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold d-none d-md-flex">{{ $t('uwm_lifecycle_contribute_date') }}</v-col>
+              <v-col cols="12" md="10">{{ getChildValue(ch, 'date') | date }}</v-col>              
+            </v-row>
           </v-col>
         </template>
         <template v-else-if="nodePath(ch) === 'uwm_provenience_contribute'">
@@ -556,5 +557,15 @@ export default {
 
 .wiv {
   font-weight: 400;
+}
+
+.uwm-border-left {
+  border-left: 1px solid;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.theme--dark .uwm-border-left {
+  border-left: 1px solid;
+  border-color: rgba(255, 255, 255, 0.25);
 }
 </style>
