@@ -128,7 +128,11 @@ sub search_ocr {
 
   my $query = $self->param('q');
   my $pid = $self->stash('pid');
-
+  
+  # Get start parameter for pagination (defaults to 0)
+  my $start = $self->param('start') // 0;
+  $start = int($start);
+  
   # Step 1: Query phaidra core to get page PIDs from haspart field
   my $url = Mojo::URL->new;
   $url->scheme($self->app->config->{solr}->{scheme});
@@ -176,7 +180,7 @@ sub search_ocr {
     return;
   }
   
-  # Step 2: Query phaidra_pages core with the page PIDs and search query
+  # Step 2: Find which pages contain matches (scalable approach)
   my $page_pids_query = join(' OR ', map { "pid:\"$_\"" } @page_pids);
   my $search_query = "($page_pids_query) AND ($query)";
   
@@ -192,197 +196,220 @@ sub search_ocr {
   else {
     $url->path("/solr/$pages_core/select");
   }
-  $url->query(q => $search_query, fl => "extracted_text,pid", rows => 10, wt => "json");
-  $self->app->log->debug("pages Query: " . $url->to_string);
+  
+  # First get total count of matching pages (scalable)
+  $url->query(q => $search_query, fl => "pid", rows => 0, wt => "json");
+  $self->app->log->debug("Count Query: " . $url->to_string);
   
   $get = $ua->get($url)->result;
-  $self->app->log->debug("Response: " . $get->body);
+  $self->app->log->debug("Count Response: " . $get->body);
+  
+  my $total_matching_pages = 0;
   if ($get->is_success) {
-    my $solr_response = $get->json;
-    my $base_url = $self->app->config->{baseurl} || 'http://localhost';
-    my $base_path = $self->app->config->{basepath} || '';
-    
-    # Process Solr response and create IIIF Search API response
+    my $count_response = $get->json;
+    $total_matching_pages = $count_response->{response}->{numFound} || 0;
+  }
+  
+  if ($total_matching_pages == 0) {
+    # No matches found - return empty result
     my $response_json = {
         '@context' => [
             'http://iiif.io/api/presentation/2/context.json',
             'http://iiif.io/api/search/1/context.json'
         ],
-        '@id' => "$apiBaseUrlPath/search/ocr?q=$query",
+        '@id' => "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=$start",
         '@type' => 'sc:AnnotationList',
         'resources' => [],
         'hits' => [],
         'within' => {
             '@type' => 'sc:Layer',
-            'first' => "$apiBaseUrlPath/search/ocr?q=$query&start=0",
-            'last' => "$apiBaseUrlPath/search/ocr?q=$query&start=0",
-            'ignored' => []
-        }
+            'total' => 0,
+            'first' => "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=0",
+            'last' => "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=0"
+        },
+        'startIndex' => $start
     };
-    
-    # Process Solr documents and create annotations
-    if ($solr_response->{response} && $solr_response->{response}->{docs}) {
-        my $annotation_id = 1;
-        foreach my $doc (@{$solr_response->{response}->{docs}}) {
-           my $page_number = 0;
-           
-           # Find the page number by getting the index of doc->pid in page_pids array
-           my $page_index = first { $page_pids[$_] eq $doc->{pid} } 0..$#page_pids;
-           if (defined $page_index) {
-               $page_number = $page_index + 1;
-           } else {
-               # Fallback: use 0 if page not found in page_pids
-               $page_number = 0;
-           }
-            # get the ocr datasteam from fedora
-            my $fedora_model = PhaidraAPI::Model::Fedora->new;
-            my $ocr_datasteam = $fedora_model->getDatastream($self, $doc->{pid}, 'ALTO');
-            if ($ocr_datasteam->{status} != 200) {
-             $self->render(json => {error => $ocr_datasteam->{alerts}->[0]->{msg}}, status => 500);
-             return;
-            }
-            
-            # Parse ALTO XML to extract text and coordinates
-            my $dom = Mojo::DOM->new();
-            $dom->xml(1);
-            $dom->parse(decode('UTF-8', $ocr_datasteam->{ALTO}));
-            
-            # Extract all text content with coordinates
-            my $all_text = '';
-            my $text_coords = [];
-            
-            # Find all String elements with their coordinates
-            my @strings = $dom->find('String')->each;
-            foreach my $string (@strings) {
-                my $content = $string->attr('CONTENT') || '';
-                my $hpos = $string->attr('HPOS') || 0;
-                my $vpos = $string->attr('VPOS') || 0;
-                my $width = $string->attr('WIDTH') || 0;
-                my $height = $string->attr('HEIGHT') || 0;
-                
-                if ($content) {
-                    $all_text .= $content . ' ';
-                    push @$text_coords, {
-                        text => $content,
-                        hpos => $hpos,
-                        vpos => $vpos,
-                        width => $width,
-                        height => $height
-                    };
-                }
-            }
-            # Use ALTO text if available, otherwise fall back to extracted_text
-            my $text = $all_text || (ref($doc->{extracted_text}) eq 'ARRAY' 
-                ? $doc->{extracted_text}->[0] 
-                : $doc->{extracted_text});
-            
-            if ($text) {
-                # Find all keyword matches with context from ALTO XML structure
-                my @matches = ();
-                my $keyword = quotemeta($query);
-                
-                # Get all String elements from ALTO XML in order
-                my @alto_strings = $dom->find('String')->each;
-                
-                # Find matches and get context from surrounding String elements
-                for (my $i = 0; $i < @alto_strings; $i++) {
-                    my $string_element = $alto_strings[$i];
-                    my $element_text = $string_element->attr('CONTENT') || '';
-                    
-                    # Check if this String element contains the search term
-                    if ($element_text =~ /\Q$query\E/i) {
-                        # Get coordinates for this match
-                        my $hpos = $string_element->attr('HPOS') || 0;
-                        my $vpos = $string_element->attr('VPOS') || 0;
-                        my $width = $string_element->attr('WIDTH') || 0;
-                        my $height = $string_element->attr('HEIGHT') || 0;
-                        
-                        # Build context from surrounding String elements
-                        my $before_text = '';
-                        my $after_text = '';
-                        
-                        # Get 3 String elements before (if available)
-                        for (my $j = $i - 3; $j < $i && $j >= 0; $j++) {
-                            my $before_element = $alto_strings[$j];
-                            my $before_content = $before_element->attr('CONTENT') || '';
-                            $before_text .= $before_content . ' ';
-                        }
-                        
-                        # Get 3 String elements after (if available)
-                        for (my $j = $i + 1; $j <= $i + 3 && $j < @alto_strings; $j++) {
-                            my $after_element = $alto_strings[$j];
-                            my $after_content = $after_element->attr('CONTENT') || '';
-                            $after_text .= $after_content . ' ';
-                        }
-                        
-                        # Clean up whitespace
-                        $before_text =~ s/\s+/ /g;
-                        $after_text =~ s/\s+/ /g;
-                        $before_text =~ s/^\s+|\s+$//g;
-                        $after_text =~ s/^\s+|\s+$//g;
-                        
-                        push @matches, {
-                            before => $before_text,
-                            match => $query,
-                            after => $after_text,
-                            coords => {
-                                hpos => $hpos,
-                                vpos => $vpos,
-                                width => $width,
-                                height => $height
-                            }
-                        };
-                    }
-                }
-                
-                # Create annotations and hits for each match
-                foreach my $match (@matches) {
-                    my $match_coords = $match->{coords};
-                    
-                    # Create annotation for this match
-                    my $annotation = {
-                        '@id' => "$apiBaseUrlPath/iiif/$pid/canvas/$page_number/text/at/". ($match_coords->{hpos} || 0) . "," . 
-                                ($match_coords->{vpos} || 0) . "," . 
-                                ($match_coords->{width} || 0) . "," . 
-                                ($match_coords->{height} || 0),
-                        '@type' => 'oa:Annotation',
-                        'motivation' => 'sc:painting',
-                        'resource' => {
-                            '@type' => 'cnt:ContentAsText',
-                            'chars' => $match->{match}
-                        },
-                        'on' => "$apiBaseUrlPath/iiif/$pid/canvas/$page_number#xywh=" . 
-                                ($match_coords->{hpos} || 0) . "," . 
-                                ($match_coords->{vpos} || 0) . "," . 
-                                ($match_coords->{width} || 0) . "," . 
-                                ($match_coords->{height} || 0)
-                    };
-                    push @{$response_json->{resources}}, $annotation;
-                    
-                    # Create hit for this match
-                    my $hit = {
-                        '@type' => 'search:Hit',
-                        'annotations' => ["$apiBaseUrlPath/iiif/$pid/canvas/$page_number/text/at/". ($match_coords->{hpos} || 0) . "," . 
-                                ($match_coords->{vpos} || 0) . "," . 
-                                ($match_coords->{width} || 0) . "," . 
-                                ($match_coords->{height} || 0)],
-                        'before' => $match->{before},
-                        'after' => $match->{after},
-                        'match' => $match->{match}
-                    };
-                    push @{$response_json->{hits}}, $hit;
-                    
-                    $annotation_id++;
-                }
-            }
-        }
-    }
-    
     $self->render(json => $response_json, status => 200);
+    return;
   }
-  else {
+  
+  # Step 3: Get the current page using Solr pagination (scalable)
+  my $pages_per_request = 1;  # Show one page at a time
+  my $current_page_index = int($start / $pages_per_request);
+  my $last_page_start = ($total_matching_pages - 1) * $pages_per_request;
+  
+  # Validate page index
+  if ($current_page_index >= $total_matching_pages) {
+    $self->render(json => {error => "Page index out of range"}, status => 400);
+    return;
+  }
+  
+  # Get the current page PID using true cursor-based pagination (scalable to unlimited pages)
+  # We'll use a more efficient approach that doesn't load all pages into memory
+  
+  # Create a mapping of page PIDs to their position in the original order
+  my %page_position_map = ();
+  for (my $i = 0; $i < @page_pids; $i++) {
+    $page_position_map{$page_pids[$i]} = $i;
+  }
+  
+  # Use Solr's built-in pagination with a sortable field
+  # We'll sort by PID which should give us consistent ordering
+  $url->query(q => $search_query, fl => "pid", start => $current_page_index, rows => 1, wt => "json", sort => "pid asc");
+  $self->app->log->debug("Current Page Query: " . $url->to_string);
+  
+  $get = $ua->get($url)->result;
+  $self->app->log->debug("Current Page Response: " . $get->body);
+  
+  if (!$get->is_success) {
     $self->render(json => {error => $get->message}, status => 500);
+    return;
   }
+  
+  my $page_response = $get->json;
+  if (!$page_response->{response} || !$page_response->{response}->{docs} || @{$page_response->{response}->{docs}} == 0) {
+    $self->render(json => {error => "No page found for index $current_page_index"}, status => 404);
+    return;
+  }
+  
+  # Get the current page PID from Solr's paginated result
+  my $current_page_pid = $page_response->{response}->{docs}->[0]->{pid};
+  
+  # Find the page number (1-indexed position in original book)
+  my $page_number = 0;
+  my $page_index = first { $page_pids[$_] eq $current_page_pid } 0..$#page_pids;
+  if (defined $page_index) {
+    $page_number = $page_index + 1;
+  }
+  
+  $self->app->log->debug("Processing page $current_page_index of $total_matching_pages matching pages (PID: $current_page_pid, book page: $page_number)");
+  
+  # Step 4: Process the current page and get all its matches
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $ocr_datasteam = $fedora_model->getDatastream($self, $current_page_pid, 'ALTO');
+  if ($ocr_datasteam->{status} != 200) {
+    $self->render(json => {error => $ocr_datasteam->{alerts}->[0]->{msg}}, status => 500);
+    return;
+  }
+  
+  # Parse ALTO XML to extract text and coordinates
+  my $dom = Mojo::DOM->new();
+  $dom->xml(1);
+  $dom->parse(decode('UTF-8', $ocr_datasteam->{ALTO}));
+  
+  # Find all matches on this page
+  my @annotations = ();
+  my @hits = ();
+  my $annotation_id = 1;
+  
+  my @alto_strings = $dom->find('String')->each;
+  
+  # Find matches and get context from surrounding String elements
+  for (my $i = 0; $i < @alto_strings; $i++) {
+    my $string_element = $alto_strings[$i];
+    my $element_text = $string_element->attr('CONTENT') || '';
+    
+    # Check if this String element contains the search term
+    if ($element_text =~ /\Q$query\E/i) {
+      # Get coordinates for this match
+      my $hpos = $string_element->attr('HPOS') || 0;
+      my $vpos = $string_element->attr('VPOS') || 0;
+      my $width = $string_element->attr('WIDTH') || 0;
+      my $height = $string_element->attr('HEIGHT') || 0;
+      
+      # Build context from surrounding String elements
+      my $before_text = '';
+      my $after_text = '';
+      
+      # Get 3 String elements before (if available)
+      for (my $j = $i - 3; $j < $i && $j >= 0; $j++) {
+        my $before_element = $alto_strings[$j];
+        my $before_content = $before_element->attr('CONTENT') || '';
+        $before_text .= $before_content . ' ';
+      }
+      
+      # Get 3 String elements after (if available)
+      for (my $j = $i + 1; $j <= $i + 3 && $j < @alto_strings; $j++) {
+        my $after_element = $alto_strings[$j];
+        my $after_content = $after_element->attr('CONTENT') || '';
+        $after_text .= $after_content . ' ';
+      }
+      
+      # Clean up whitespace
+      $before_text =~ s/\s+/ /g;
+      $after_text =~ s/\s+/ /g;
+      $before_text =~ s/^\s+|\s+$//g;
+      $after_text =~ s/^\s+|\s+$//g;
+      
+      # Create annotation for this match (IIIF Search API 1.0 format)
+      my $annotation = {
+        '@id' => "$apiBaseUrlPath/iiif/$pid/canvas/$page_number/text/at/". ($hpos || 0) . "," . 
+                ($vpos || 0) . "," . 
+                ($width || 0) . "," . 
+                ($height || 0),
+        '@type' => 'oa:Annotation',
+        'motivation' => 'sc:painting',
+        'resource' => {
+          '@type' => 'cnt:ContentAsText',
+          'chars' => $element_text
+        },
+        'on' => "$apiBaseUrlPath/iiif/$pid/canvas/$page_number#xywh=" . 
+                ($hpos || 0) . "," . 
+                ($vpos || 0) . "," . 
+                ($width || 0) . "," . 
+                ($height || 0)
+      };
+      push @annotations, $annotation;
+      
+      # Create hit for this match
+      my $hit = {
+        '@type' => 'search:Hit',
+        'annotations' => ["$apiBaseUrlPath/iiif/$pid/canvas/$page_number/text/at/". ($hpos || 0) . "," . 
+                ($vpos || 0) . "," . 
+                ($width || 0) . "," . 
+                ($height || 0)],
+        'before' => $before_text,
+        'after' => $after_text,
+        'match' => $query
+      };
+      push @hits, $hit;
+      
+      $annotation_id++;
+    }
+  }
+  
+  # Create response with page-based pagination
+  my $response_json = {
+      '@context' => [
+          'http://iiif.io/api/presentation/2/context.json',
+          'http://iiif.io/api/search/1/context.json'
+      ],
+      '@id' => "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=$start",
+      '@type' => 'sc:AnnotationList',
+      'resources' => \@annotations,
+      'hits' => \@hits,
+      'within' => {
+          '@type' => 'sc:Layer',
+          'total' => $total_matching_pages,  # Total number of pages with matches
+          'first' => "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=0",
+          'last' => "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=$last_page_start"
+      },
+      'startIndex' => $start
+  };
+  
+  # Add next/prev links for page navigation
+  if ($current_page_index < $total_matching_pages - 1) {
+      my $next_start = $start + $pages_per_request;
+      $response_json->{'next'} = "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=$next_start";
+  }
+  
+  if ($current_page_index > 0) {
+      my $prev_start = $start - $pages_per_request;
+      if ($prev_start < 0) { $prev_start = 0; }
+      $response_json->{'prev'} = "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=$prev_start";
+  }
+  
+  $self->render(json => $response_json, status => 200);
 }
 
 sub search_solr {
@@ -518,5 +545,5 @@ sub _proxy_tx {
     $self->render(status => 500, text => 'Failed to fetch data from backend');
   }
 }
-
 1;
+
