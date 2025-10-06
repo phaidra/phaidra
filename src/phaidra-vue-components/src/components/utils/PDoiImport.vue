@@ -791,6 +791,7 @@ if (crossrefData['issued']['date-parts'][0]) {
           let descField = fields.getField("description");
           descField.value = descItem.description;
           descField.language = descItem.lang;
+          descField.type = "bf:Summary";
           smf.push(descField);
         }
       }
