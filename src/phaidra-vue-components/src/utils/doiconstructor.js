@@ -11,7 +11,8 @@ export const constructDataCite = (dataciteData, that) => {
     journalIssue: '',
     pageStart: '',
     pageEnd: '',
-    licenceLabel: ''
+    licenceLabel: '',
+    descriptions: []
   }
   if (dataciteData?.data?.attributes?.titles?.length) {
     doiImportData.title = dataciteData.data.attributes.titles[0].title
@@ -182,6 +183,12 @@ export const constructDataCite = (dataciteData, that) => {
           break;
       }
     }
+  }
+  if (dataciteData?.data?.attributes?.descriptions?.length && doiImportData.license.includes('http://creativecommons.org/licenses')) {
+    doiImportData.descriptions = dataciteData.data.attributes.descriptions.map(x => x.descriptionType === 'Abstract' ? {
+      ...x,
+      lang: x.lang.length === 3 ? x.lang : that.lang2to3map[x.lang]
+    } : null).filter(x => x !== null)
   }
   return doiImportData
 }

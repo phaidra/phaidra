@@ -77,6 +77,19 @@
                   doiImportData.title
                 }}</v-col>
               </v-row>
+              <v-row v-if="doiImportData.descriptions && doiImportData.descriptions.length > 0">
+                <v-col
+                  md="2"
+                  cols="12"
+                  class="primary--text text-right"
+                  >{{ $t("Description") }}</v-col
+                >
+                <v-col md="10" cols="12">
+                  <v-row v-for="(desc, i) in doiImportData.descriptions" :key="'desc' + i">
+                    <v-col md="12" cols="12">{{ desc.description }} <b v-if="desc.lang">({{ desc.lang }})</b></v-col>
+                  </v-row>
+                </v-col>
+              </v-row>
               <v-row v-if="doiImportData.subtitle">
                 <v-col
                   md="2"
@@ -443,6 +456,7 @@ export default {
               journalIssue: "",
               pageStart: "",
               pageEnd: "",
+              descriptions: [],
             };
 
             if (crossrefData["title"]) {
@@ -707,6 +721,16 @@ if (crossrefData['issued']['date-parts'][0]) {
                 }
               }
             }
+
+            if (crossrefData["abstract"] && doiImportData.license.includes('http://creativecommons.org/licenses')) {
+              this.doiImportData.descriptions.push({
+                description: crossrefData["abstract"]
+                  .replace(/<jats:p>/g, "")
+                  .replace(/<\/jats:p>/g, "")
+                  .replace(/^Abstract\.\s*/i, "")
+                  .trim()
+              })
+            }
             console.log('this.doiImportData', this.doiImportData);
             // return
             this.resetForm(this, this.doiImportData);
@@ -762,8 +786,14 @@ if (crossrefData['issued']['date-parts'][0]) {
       tf.multilingual = false;
       tf.multiplicable = false;
       smf.push(tf);
-
-      smf.push(fields.getField("description"));
+      if (doiImportData && doiImportData.descriptions.length > 0) {
+        for (let descItem of doiImportData.descriptions) {
+          let descField = fields.getField("description");
+          descField.value = descItem.description;
+          descField.language = descItem.lang;
+          smf.push(descField);
+        }
+      }
 
       if (doiImportData && doiImportData.authors.length > 0) {
         for (let author of doiImportData.authors) {
