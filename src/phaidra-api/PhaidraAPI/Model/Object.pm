@@ -1471,6 +1471,7 @@ sub save_metadata {
       if (exists($metadata->{'relationships'})) {
         $c->app->log->debug("Found relationships: " . $c->app->dumper($metadata->{'relationships'}));
         my @relationships;
+        my $relsPerSubject;
         foreach my $rel (@{$metadata->{'relationships'}}) {
           if ($rel->{'s'} eq "self") {
             $rel->{'s'} = $pid;
@@ -1479,12 +1480,17 @@ sub save_metadata {
             $rel->{'o'} = "info:fedora/" . $pid;
             $skiphook = 0;
           }
-          push @relationships, {predicate => $rel->{'p'}, object => $rel->{'o'}};
+          $relsPerSubject->{$rel->{'s'}} = [] unless(exists($relsPerSubject->{$rel->{'s'}}));
+          push @{$relsPerSubject->{$rel->{'s'}}}, {predicate => $rel->{'p'}, object => $rel->{'o'}};
         }
-        my $r = $self->add_relationships($c, $pid, \@relationships, $username, $password, $skiphook);
-        push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
-        $res->{status} = $r->{status};
-        if ($r->{status} ne 200) {
+        foreach my $subjectPid (keys %{$relsPerSubject}) {
+          my $r = $self->add_relationships($c, $subjectPid, $relsPerSubject->{$subjectPid}, $username, $password, $skiphook);
+          push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
+          if ($r->{status} ne 200) {
+            $res->{status} = $r->{status};
+          }
+        }
+        if ($res->{status} ne 200) {
           $c->app->log->error("Error adding relationships[" . $c->app->dumper($metadata->{'relationships'}) . "] res[" . $c->app->dumper($res) . "]");
           return $res;
         }
