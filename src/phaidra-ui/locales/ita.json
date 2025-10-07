@@ -1398,5 +1398,12 @@
   "Loading local storage...": "Caricamento dello storage locale...",
   "First name": "Nome",
   "Last name": "Cognome",
-  "Go to Search page": "Vai alla pagina Cerca"
+  "Go to Search page": "Vai alla pagina Cerca",
+  "DOI Import": "Importa da DOI",
+  "Metadata-Import via DOI": "Importa metadati da identificatore DOI",
+  "Many electronically published journals assign persistent names, so called DOIs (Digital Object Identifiers), to their articles.": "Molte riviste elettroniche assegnano identificatori persistenti, i cosiddetti DOI (Digital Object Identifier), ai loro articoli.",
+  "If you enter your article's DOI here, its metadata can be loaded automatically.": "Se inserisci qui il DOI dell'articolo, i suoi metadati possono essere caricati automaticamente.",
+  "please enter": "Inserisci...",
+  "Following metadata were retrieved": "Sono stati trovati i seguenti metadati",
+  "please enter exact journal title or ISSN": "Inserisci il titolo esatto della rivista o l'ISSN"
 }
