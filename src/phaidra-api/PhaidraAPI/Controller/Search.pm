@@ -182,7 +182,12 @@ sub search_ocr {
   
   # Step 2: Find which pages contain matches (scalable approach)
   my $page_pids_query = join(' OR ', map { "pid:\"$_\"" } @page_pids);
-  my $search_query = "($page_pids_query) AND ($query)";
+  # Whole-word, case-insensitive match in Solr: use a quoted term
+  # Escape embedded quotes in the query
+  my $escaped_q = $query // '';
+  $escaped_q =~ s/"/\\"/g;
+  # Use a phrase query; rely on field analysis to match tokens exactly
+  my $search_query = "($page_pids_query) AND (\"$escaped_q\")";
   
   $url = Mojo::URL->new;
   $url->scheme($self->app->config->{solr}->{scheme});
@@ -309,8 +314,8 @@ sub search_ocr {
     my $string_element = $alto_strings[$i];
     my $element_text = $string_element->attr('CONTENT') || '';
     
-    # Check if this String element contains the search term
-    if ($element_text =~ /\Q$query\E/i) {
+    # Whole-word, case-insensitive match within the token (handles trailing punctuation like "time.")
+    if ($element_text =~ /\b\Q$query\E\b/i) {
       # Get coordinates for this match
       my $hpos = $string_element->attr('HPOS') || 0;
       my $vpos = $string_element->attr('VPOS') || 0;
