@@ -15,5 +15,13 @@ sub get_template {
   return $template;
 }
 
+sub get_all_templates {
+  my $self = shift;
+  my $c = shift;
+  my $cursor = $c->mongo->get_collection('cmstemplates')->find();
+  my @templates = $cursor->all;
+  return \@templates;
+}
+
 1;
 __END__

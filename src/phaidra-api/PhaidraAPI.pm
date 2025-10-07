@@ -553,6 +553,7 @@ sub startup {
   $r->get('list/token/:token')                      ->to('lists#get_token_list');
 
   $r->get('config/public')                          ->to('config#get_public_config');
+  $r->get('cms/template/all')                       ->to('cms#get_all_templates');
   $r->get('cms/template/:templateName')             ->to('cms#get_template');
 
   $r->get('/jwks')                                  ->to('utils#jwks');
