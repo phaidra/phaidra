@@ -180,7 +180,9 @@ sub get_jsonld {
                         };
                     }
                     elsif ($subfield->{'@code'} eq 'c') {
-                        $provision->{'bf:date'} = [$subfield->{'#text'}];
+                        my $date = $subfield->{'#text'};
+                        $date =~ s/^\[|\]$//g;
+                        $provision->{'bf:date'} = [$date];
                     }
                 }
 
