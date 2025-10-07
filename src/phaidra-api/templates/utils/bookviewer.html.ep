@@ -20,6 +20,17 @@
          manifestId: 'https://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/iiifmanifest',
          canvasId: 'https://<%= $baseurl %>/<%= $basepath %>/iiif/<%= $pid %>/canvas/<%= $page %>'
        }],
+       translations: {
+        en: {
+          searchResultsRemaining: ''
+        },
+        de : {
+          searchResultsRemaining: ''
+        },
+        it : {
+          searchResultsRemaining: ''
+        }
+      },
        language: '<%= $lang %>',
        window: {
         allowClose: false,
