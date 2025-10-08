@@ -1316,6 +1316,24 @@ services:
     entrypoint: bash
     command: ["-c", 'mkdir /data/${S3_BUCKETNAME:-phaidra-bucket}; /usr/bin/minio server /data --console-address :9001']
     profiles: ["minio-s3-dev"]
+
+  handle:
+    hostname: "handle"
+    <<: [*common, *logs]
+    environment: {}
+    build:
+      context: .
+      dockerfile: dockerfiles/handle.dockerfile
+    ports:
+      - 2641:2641
+      - 8000:8000
+    volumes:
+      - handle:/opt/handle-data
+    configs:
+      - source: handle_dct_config
+        target: /opt/handle-data/config.dct
+    profiles:
+      - handle
     
 volumes:
   chronos-database-dumps:
@@ -1339,6 +1357,7 @@ volumes:
   solr:
   vige-mongosh:
   vige:
+  handle:
 
 configs:
   httpd_tls_config:
@@ -1349,3 +1368,5 @@ configs:
     file: ./configs/shib/attribute-map.xml
   shibboleth_attribute_policy:
     file: ./configs/shib/attribute-policy.xml
+  handle_dct_config:
+    file: ./configs/handle/config.dct
