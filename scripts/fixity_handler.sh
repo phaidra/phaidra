@@ -34,12 +34,6 @@ required_vars=(
     "MONGODB_PORT"
     "MONGODB_DATABASE"
     "MONGODB_COLLECTION"
-    "SMTP_HOST"
-    "SMTP_PORT"
-    "SMTP_USERNAME"
-    "SMTP_PASSWORD"
-    "SMTP_FROM"
-    "SMTP_TO"
 )
 
 # Print all environment variables to success log

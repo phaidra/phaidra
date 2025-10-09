@@ -724,12 +724,12 @@ services:
       MONGODB_DATABASE: "fixity"
       MONGODB_PORT: "27017"
       MONGODB_COLLECTION: "fixity_failures"
-      SMTP_HOST: "${SMTP_HOST}"
-      SMTP_PORT: "${SMTP_PORT}"
-      SMTP_USERNAME: "${SMTP_USERNAME}"
-      SMTP_PASSWORD: "${SMTP_PASSWORD}"
-      SMTP_FROM: "${SMTP_FROM}"
-      SMTP_TO: "${SMTP_TO}"
+      SMTP_HOST:
+      SMTP_PORT:
+      SMTP_USERNAME:
+      SMTP_PASSWORD:
+      SMTP_FROM:
+      SMTP_TO:
     depends_on:
       mongodb-phaidra:
         condition: "service_started"
