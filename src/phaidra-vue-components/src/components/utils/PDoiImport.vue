@@ -36,7 +36,7 @@
       <v-col cols="3" class="ml-4 mt-2">
         <v-btn
           :loading="loading"
-          :disabled="loading || !doiToImport || doiToImport.lenght < 1"
+          :disabled="loading || !doiToImport || doiToImport.length < 1"
           class="mx-2"
           color="primary"
           @click="importDOI()"
@@ -61,7 +61,7 @@
             >{{
               $t("Following metadata were retrieved")
             }}
-            <p class="m-0 ml-2" v-if="metaProviderName">(Agency: {{ metaProviderName }})</p>
+            <p class="m-0 ml-2" v-if="metaProviderName">({{ $t("Agency") }}: {{ $t(metaProviderName) }})</p>
             </v-card-title
           >
           <v-card-text>
@@ -76,6 +76,19 @@
                 <v-col md="10" cols="12">{{
                   doiImportData.title
                 }}</v-col>
+              </v-row>
+              <v-row v-if="doiImportData.descriptions && doiImportData.descriptions.length > 0">
+                <v-col
+                  md="2"
+                  cols="12"
+                  class="primary--text text-right"
+                  >{{ $t("Description") }}</v-col
+                >
+                <v-col md="10" cols="12">
+                  <v-row v-for="(desc, i) in doiImportData.descriptions" :key="'desc' + i">
+                    <v-col md="12" cols="12">{{ desc.description }} <b v-if="desc.lang">({{ desc.lang }})</b></v-col>
+                  </v-row>
+                </v-col>
               </v-row>
               <v-row v-if="doiImportData.subtitle">
                 <v-col
@@ -296,7 +309,9 @@
 <script>
 import { vocabulary } from '../../mixins/vocabulary'
 import fields from '../../utils/fields'
+import {constructDataCite} from '../../utils/doiconstructor'
 import { formvalidation } from '../../mixins/formvalidation'
+import lang3to2map from '../../utils/lang3to2map'
 export default {
   name: 'p-doi-import',
   mixins: [vocabulary, formvalidation],
@@ -320,7 +335,6 @@ export default {
       loading: false,
       doiImportInput: null,
       doiImportData: null,
-      doiImportErrors: [],
       journalSearchQuery: null,
       journalSearchISSN: null,
       journalSearchLoading: false,
@@ -442,6 +456,7 @@ export default {
               journalIssue: "",
               pageStart: "",
               pageEnd: "",
+              descriptions: [],
             };
 
             if (crossrefData["title"]) {
@@ -483,9 +498,10 @@ if (crossrefData['issued']['date-parts'][0]) {
             }
 
             if (crossrefData["language"]) {
-              if (this.lang2to3map[crossrefData["language"]]) {
-                this.doiImportData.language =
-                  this.lang2to3map[crossrefData["language"]];
+              if(crossrefData["language"].length === 3) {
+                this.doiImportData.language = crossrefData["language"]
+              } else if (this.lang2to3map[crossrefData["language"]]) {
+                this.doiImportData.language = this.lang2to3map[crossrefData["language"]]
               }
             }
 
@@ -705,6 +721,16 @@ if (crossrefData['issued']['date-parts'][0]) {
                 }
               }
             }
+
+            if (crossrefData["abstract"] && doiImportData.license.includes('http://creativecommons.org/licenses')) {
+              this.doiImportData.descriptions.push({
+                description: crossrefData["abstract"]
+                  .replace(/<jats:p>/g, "")
+                  .replace(/<\/jats:p>/g, "")
+                  .replace(/^Abstract\.\s*/i, "")
+                  .trim()
+              })
+            }
             console.log('this.doiImportData', this.doiImportData);
             // return
             this.resetForm(this, this.doiImportData);
@@ -715,10 +741,10 @@ if (crossrefData['issued']['date-parts'][0]) {
           }
         } catch (error) {
           console.error(error);
-          if (error.response.status === 404) {
+          if (error.response?.status === 404) {
             this.doiImportErrors.push("DOI Not Found");
           } else {
-            this.doiImportErrors.push(error.message);
+            this.doiImportErrors.push(error.message || 'Unknown error');
           }
         } finally {
           this.loading = false;
@@ -760,8 +786,15 @@ if (crossrefData['issued']['date-parts'][0]) {
       tf.multilingual = false;
       tf.multiplicable = false;
       smf.push(tf);
-
-      smf.push(fields.getField("description"));
+      if (doiImportData && doiImportData.descriptions.length > 0) {
+        for (let descItem of doiImportData.descriptions) {
+          let descField = fields.getField("description");
+          descField.value = descItem.description;
+          descField.language = descItem.lang;
+          descField.type = "bf:Summary";
+          smf.push(descField);
+        }
+      }
 
       if (doiImportData && doiImportData.authors.length > 0) {
         for (let author of doiImportData.authors) {
