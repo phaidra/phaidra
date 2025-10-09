@@ -4960,7 +4960,7 @@ our %tree = (
           "labels"      => {
             "de" => "Abmessungen",
             "en" => "Dimensions",
-            "it" => "Dimensioni",
+            "it" => "Materiale / Dimensioni",
             "sr" => "dimenzije"
           },
           "loaded" => 0,
@@ -6681,7 +6681,7 @@ our %tree = (
           "labels"      => {
             "de" => "Angabe zur Quelle",
             "en" => "Details about the source",
-            "it" => "Informazioni sulla fonte",
+            "it" => "Provenienza / Informazioni sulla fonte",
             "sr" => "detalji o izvoru"
           },
           "loaded" => 0,
