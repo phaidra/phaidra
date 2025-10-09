@@ -21,4 +21,13 @@ sub get_template {
   $self->render(json => $res, status => $res->{status});
 }
 
+sub get_all_templates {
+  my $self = shift;
+  my $res = {alerts => [], status => 200};
+  my $model = PhaidraAPI::Model::Cms->new;
+  my $modelres = $model->get_all_templates($self);
+  $res->{templates} = $modelres;
+  $self->render(json => $res, status => $res->{status});
+}
+
 1;
