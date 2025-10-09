@@ -1,2 +1,5 @@
 msgid "Open"
 msgstr "Apri"
+
+msgid "object_preview_processing"
+msgstr "L'anteprima dell'oggetto sarà disponibile a breve. Ricarica la pagina o riprova tra poco."
