@@ -721,8 +721,7 @@ if (crossrefData['issued']['date-parts'][0]) {
                 }
               }
             }
-
-            if (crossrefData["abstract"] && doiImportData.license.includes('http://creativecommons.org/licenses')) {
+            if (crossrefData["abstract"] && this?.doiImportData?.license && this.doiImportData.license.includes('http://creativecommons.org/licenses')) {
               this.doiImportData.descriptions.push({
                 description: crossrefData["abstract"]
                   .replace(/<jats:p>/g, "")
