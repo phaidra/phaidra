@@ -50,6 +50,13 @@ my @fields_to_add = (
         stored => 'true'
     },
     {
+        name => 'dcterms_created_edtf',
+        type => 'strings',
+        multiValued => 'true',
+        indexed => 'true',
+        stored => 'true'
+    },
+    {
         name => 'uwm_association_id',
         type => 'strings',
         multiValued => 'true',
