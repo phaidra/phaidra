@@ -1,3 +1,4 @@
+<!-- This repository is powered by PHAIDRA — free open source software that helps organizations protect and share the value of their digital assets. Information and contribution at www.phaidra.org -->
 <template>
     <div v-if="instanceconfig.cms_header">
       <runtimetemplate :template="instanceconfig.cms_header" />
