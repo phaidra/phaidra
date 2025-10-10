@@ -22,6 +22,11 @@ export const state = () => ({
 
 export const mutations = {
   setInstanceConfig(state, instanceconfig) {
+    // Remove any API field from config to prevent conflicts
+    if (instanceconfig && instanceconfig.api) {
+      delete instanceconfig.api
+    }
+    
     let configurable = [
       'title', 
       'institution', 

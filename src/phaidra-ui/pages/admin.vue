@@ -1078,7 +1078,11 @@ export default {
           data: httpFormData
         })
 
-        this.$axios.defaults.baseURL = config.public.api
+        // API configuration is managed by environment variables, not MongoDB
+        // Remove any API field from config to prevent conflicts
+        if(config.public?.api){
+          delete config.public.api
+        }
         this.$store.commit('setInstanceConfig', config.public)
 
         var httpFormData = new FormData()
@@ -1148,8 +1152,10 @@ export default {
           this.updateFavicon(`data:image/svg+xml;base64,${base64Svg}`)
         }
 
+        // API configuration is managed by environment variables, not MongoDB
+        // Remove any API field from config to prevent conflicts
         if(instanceConfData?.api){
-          this.$axios.defaults.baseURL = instanceConfData.api
+          delete instanceConfData.api
         }
         this.$store.commit('setInstanceConfig', instanceConfData)
 
@@ -1195,6 +1201,12 @@ export default {
       this.selectedTemplateId = response?.data?.public_config?.defaulttemplateid
       if(response?.data?.public_config){
         this.parsedPublicConfigData = {...response?.data?.public_config}
+        
+        // API configuration is managed by environment variables, not MongoDB
+        // Remove any API field from config to prevent conflicts
+        if(this.parsedPublicConfigData?.api){
+          delete this.parsedPublicConfigData.api
+        }
 
         this.data_orgunits = response?.data?.public_config?.data_orgunits
         this.data_orgunits_text = JSON.stringify(this.data_orgunits, null, 2)
