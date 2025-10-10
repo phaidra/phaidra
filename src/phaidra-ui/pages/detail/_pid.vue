@@ -476,19 +476,35 @@
           </v-row>
           <v-row justify="center" v-if="showPreview">
           <template v-if="(objectInfo.cmodel === 'Book') && (objectInfo.datastreams.includes('IIIF-MANIFEST'))">
-              <v-btn
-                large
-                raised
-                color="primary"
-                :href="
-                  instanceconfig.api +
+              <v-col cols="12">
+                <iframe
+                  :title="$t('Preview')"
+                  :src="
+                    instanceconfig.api +
+                    '/object/' +
+                    objectInfo.pid +
+                    '/preview' + '?lang=' + $i18n.locale.substring(0, 2)
+                  "
+                  :style="'height: 500px; width: 100%; border: 0px;'"
+                  scrolling="no"
+                  frameborder="0"
+                  >Content</iframe
+                >
+                <v-btn
+                  large
+                  raised
+                  color="primary"
+                  class="mt-2 float-right"
+                  :href="
+                    instanceconfig.api +
                     '/object/' +
                     objectInfo.pid +
                     '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
-                "
-                target="_blank"
-                >{{ $t("Open in Bookviewer") }}</v-btn
-              >
+                  "
+                  target="_blank"
+                  >{{ $t('Open in Bookviewer') }}</v-btn
+                >
+              </v-col>
             </template>
             <template v-else>
               <v-col cols="12">
