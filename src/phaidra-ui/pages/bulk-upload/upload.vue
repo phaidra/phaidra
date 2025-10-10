@@ -424,8 +424,42 @@ export default {
             this.setOrgUnitProperties(f, value)
           } else if (field === 'Title') {
             f.title = value
+            // Set title language from File Language mapping
+            const lang = this.getFileLanguage(headers, values)
+            if (lang) {
+              f.language = lang
+            }
           } else if (field === 'Role') {
             this.setRoleProperties(f, mapping, headers, values)
+          } else if (field === 'Description') {
+            if (mapping.source === 'phaidra-field') {
+              f.value = fieldConfig.phaidraAPIValue 
+                ? fieldConfig.phaidraAPIValue(value) 
+                : value
+            } else if (mapping.source === 'csv-column') {
+              f.value = fieldConfig.csvAPIValue 
+                ? fieldConfig.csvAPIValue(value)
+                : value
+            }
+            // Set description language from File Language mapping
+            const lang = this.getFileLanguage(headers, values)
+            if (lang) {
+              f.language = lang
+            }
+          } else if (field === 'Keywords') {
+            if (mapping.source === 'phaidra-field') {
+              f.value = fieldConfig.phaidraAPIValue
+                ? fieldConfig.phaidraAPIValue(value)
+                : value
+            } else if (mapping.source === 'csv-column') {
+              f.value = fieldConfig.csvAPIValue
+                ? fieldConfig.csvAPIValue(value)
+                : value
+            }
+            const lang = this.getFileLanguage(headers, values)
+            if (lang) {
+              f.language = lang
+            }
           } else {
             if (mapping.source === 'phaidra-field') {
               f.value = fieldConfig.phaidraAPIValue
@@ -465,6 +499,33 @@ export default {
       console.log('Final form:', form)
 
       return form
+    },
+
+    getFileLanguage(headers, values) {
+      const fileLangMapping = this.fieldMappings['File Language']
+      if (!fileLangMapping) return null
+      try {
+        if (fileLangMapping.source === 'csv-column') {
+          const langIdx = headers.indexOf(fileLangMapping.csvValue)
+          const langRaw = values[langIdx]
+          if (langRaw) {
+            return this.fieldSettings['File Language'].csvAPIValue
+              ? this.fieldSettings['File Language'].csvAPIValue(langRaw)
+              : langRaw
+          }
+        } else if (fileLangMapping.source === 'phaidra-field') {
+          const langVal = fileLangMapping.phaidraValue
+          const notation = Array.isArray(langVal?.['skos:notation'])
+            ? langVal['skos:notation'][0]
+            : langVal?.['skos:notation']
+          if (notation) {
+            return notation
+          }
+        }
+      } catch (e) {
+        console.warn('Could not determine File Language', e)
+      }
+      return null
     },
 
     setTypeProperties(f, value) {
