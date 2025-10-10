@@ -1078,7 +1078,6 @@ export default {
           data: httpFormData
         })
 
-        // API configuration is managed by environment variables, not MongoDB
         // Remove any API field from config to prevent conflicts
         if(config.public?.api){
           delete config.public.api
@@ -1152,7 +1151,6 @@ export default {
           this.updateFavicon(`data:image/svg+xml;base64,${base64Svg}`)
         }
 
-        // API configuration is managed by environment variables, not MongoDB
         // Remove any API field from config to prevent conflicts
         if(instanceConfData?.api){
           delete instanceConfData.api
@@ -1202,7 +1200,6 @@ export default {
       if(response?.data?.public_config){
         this.parsedPublicConfigData = {...response?.data?.public_config}
         
-        // API configuration is managed by environment variables, not MongoDB
         // Remove any API field from config to prevent conflicts
         if(this.parsedPublicConfigData?.api){
           delete this.parsedPublicConfigData.api
