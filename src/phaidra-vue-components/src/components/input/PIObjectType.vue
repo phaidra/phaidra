@@ -76,7 +76,6 @@ export default {
   },
   mounted: function () {
     if(this.resourceType) {
-      console.log('this.ot4rt', this.ot4rt)
       this.$store.getters['vocabulary/getObjectTypeForResourceType'](this.resourceType, this.$i18n.locale)
     }
     this.$nextTick(function () {
