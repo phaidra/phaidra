@@ -14,19 +14,16 @@
         "log_accesses" = "yes"
     }
     "server_config" = {
-        "server_admins" = (
-            "300:0.NA/1234"
-        )
+        "server_admins" = ()
         "replication_admins" = ()
         "auto_homed_prefixes" = ()
         "max_session_time" = "86400000"
         "this_server_id" = "1"
         "max_auth_time" = "60000"
         "case_sensitive" = "no"
-        "server_admin_full_access" = "yes"
-        "allow_na_admins" = "no"
-        "template_ns_override" = "yes"
-        "allow_recursion" = "yes"
+        "server_admin_full_access" = "$SERVER_ADMIN_FULL_ACCESS"
+        "allow_na_admins" = "$ALLOW_NA_ADMINS"
+        "allow_recursion" = "$ALLOW_RECURSION"
     }
     "log_save_config" = {
         "log_save_interval" = "Never"

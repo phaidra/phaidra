@@ -13,7 +13,7 @@
   "servers": [
     {
       "serverId": 1,
-      "address": "172.17.0.2",
+      "address": "${HANDLE_PUBLIC_IP}",
       "publicKey": {
         "format": "base64",
         "value": "${PUBLIC_KEY_B64}"

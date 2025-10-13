@@ -90,6 +90,7 @@ x-custom:
     SOLR_HOST: "${SOLR_HOST:-solr}"
     UI_HOST: "${UI_HOST:-ui}"
     VARNISH_HOST: "${VARNISH_HOST:-varnish}"
+    HANDLE_HOST: "${HANDLE_HOST:-handle}"
 
 services:
   ##############################################################
@@ -1320,18 +1321,17 @@ services:
   handle:
     hostname: "handle"
     <<: [*common, *logs]
-    environment: {}
+    environment:
+      <<: [*api_common_env, *hosts]
+      HANDLE_PUBLIC_IP: "${HANDLE_PUBLIC_IP:?PUBLIC IP OF INSTANCE (handle server) REQUIRED}"
     build:
       context: .
       dockerfile: dockerfiles/handle.dockerfile
-    ports:
-      - 2641:2641
-      - 8000:8000
+    read_only: true
     volumes:
       - handle:/opt/handle-data
-    configs:
-      - source: handle_dct_config
-        target: /opt/handle-data/config.dct
+      - ./certs/handle/privkey.bin/:/opt/handle-data/privkey.bin:ro
+      - ./certs/handle/pubkey.bin/:/opt/handle-data/pubkey.bin:ro
     profiles:
       - handle
     
@@ -1368,5 +1368,3 @@ configs:
     file: ./configs/shib/attribute-map.xml
   shibboleth_attribute_policy:
     file: ./configs/shib/attribute-policy.xml
-  handle_dct_config:
-    file: ./configs/handle/config.dct

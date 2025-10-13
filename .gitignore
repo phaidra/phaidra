@@ -28,3 +28,6 @@ certs/shibboleth/sp-encrypt-cert.pem
 certs/shibboleth/sp-encrypt-key.pem
 certs/shibboleth/sp-signing-cert.pem
 certs/shibboleth/sp-signing-key.pem
+
+# handle keys
+certs/handle
