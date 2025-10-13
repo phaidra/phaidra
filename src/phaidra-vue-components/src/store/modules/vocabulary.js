@@ -2335,8 +2335,6 @@ const getters = {
   getObjectTypeForResourceType: (state) => (rtId, locale, overrideMapping) => {
     let arr = []
     let other = null
-    console.log('overrideMapping', overrideMapping)
-    console.log('rtId', rtId)
     const mapping = overrideMapping && overrideMapping[rtId] ? overrideMapping[rtId] : ot4rt[rtId]
     if (rtId !== ns + 'GXS7-ENXJ' && Array.isArray(mapping)) {
       for (let otId of mapping) {
