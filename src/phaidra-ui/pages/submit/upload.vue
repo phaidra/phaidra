@@ -329,6 +329,7 @@ export default {
         let ot = fields.getField("object-type-checkboxes");
         ot.resourceType = defaultResourceType;
         ot.showLabel = true;
+        ot.ot4rt = this.instanceconfig?.data_ot4rt;
         self.form.sections[0].fields.push(ot);
 
         self.form.sections[0].fields.push(fields.getField("title"));
