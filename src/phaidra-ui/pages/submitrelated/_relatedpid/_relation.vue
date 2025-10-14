@@ -187,6 +187,7 @@ export default {
         }
         otf2.resourceType = rtv2;
         otf2.showLabel = true;
+        otf2.ot4rt = this.instanceconfig?.data_ot4rt;
         this.form.sections[0].fields.splice(2, 0, otf2);
       }
     },
