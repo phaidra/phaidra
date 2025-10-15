@@ -25,5 +25,7 @@ COPY ./container_init/handle/siteinfo.json.template /siteinfo.json.template
 COPY ./container_init/handle/config.dct.template /config.dct.template
 
 EXPOSE 8000/tcp
+EXPOSE 2641/tcp
+EXPOSE 2641/udp
 
 ENTRYPOINT [ "/handle-entrypoint.sh" ]
