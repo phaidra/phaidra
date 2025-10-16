@@ -382,6 +382,8 @@ export default {
         self.form.sections[4].fields.push(fields.getField("condition-note"));
         self.form.sections[4].fields.push(fields.getField("height"));
         self.form.sections[4].fields.push(fields.getField("width"));
+        self.form.sections[4].fields.push(fields.getField("depth"));
+        self.form.sections[4].fields.push(fields.getField("diameter"));
         self.form.sections[4].fields.push(fields.getField("material-text"));
         self.form.sections[4].fields.push(fields.getField("technique-text"));
 
