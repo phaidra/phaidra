@@ -2332,11 +2332,12 @@ const getters = {
       }
     }
   },
-  getObjectTypeForResourceType: (state) => (rtId, locale) => {
+  getObjectTypeForResourceType: (state) => (rtId, locale, overrideMapping) => {
     let arr = []
     let other = null
-    if (rtId !== ns + 'GXS7-ENXJ') {
-      for (let otId of ot4rt[rtId]) {
+    const mapping = overrideMapping && overrideMapping[rtId] ? overrideMapping[rtId] : ot4rt[rtId]
+    if (rtId !== ns + 'GXS7-ENXJ' && Array.isArray(mapping)) {
+      for (let otId of mapping) {
         for (let term of state.vocabularies['objecttype'].terms) {
           if (term['@id'] === otId) {
             if (term['@id'] === ns + 'PYRE-RAWJ') {

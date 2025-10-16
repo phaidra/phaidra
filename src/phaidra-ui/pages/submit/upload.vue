@@ -107,6 +107,7 @@ export default {
         otf2.resourceType = rtv2;
         otf2.showLabel = true;
         otf2.label = this.$t('Object type') + ' *';
+        otf2.ot4rt = this.instanceconfig?.data_ot4rt;
         this.form.sections[0].fields.splice(2, 0, otf2);
       }
     },
@@ -329,6 +330,7 @@ export default {
         let ot = fields.getField("object-type-checkboxes");
         ot.resourceType = defaultResourceType;
         ot.showLabel = true;
+        ot.ot4rt = this.instanceconfig?.data_ot4rt;
         self.form.sections[0].fields.push(ot);
 
         self.form.sections[0].fields.push(fields.getField("title"));

@@ -477,6 +477,15 @@
                 <v-row>
                   <v-col>
                     <v-textarea
+                      :label="$t('Object types for resource types (ot4rt)')"
+                      v-model="data_ot4rt_text"
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="3" class="mt-4">{{ $t("Override featured object types per resource type. JSON hash mapping resourceTypeId -> [objectTypeIds]") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-textarea
                       :label="$t('i18n overrides')"
                       v-model="data_i18n_text"
                     ></v-textarea>
@@ -1021,6 +1030,7 @@ export default {
         delete publicConfig['_id']
         publicConfig.data_orgunits = this.data_orgunits
         publicConfig.data_vocabularies = this.data_vocabularies
+        publicConfig.data_ot4rt = this.data_ot4rt
         publicConfig.data_i18n = this.data_i18n
         publicConfig.data_affiliations = this.data_affiliations
 
@@ -1046,6 +1056,8 @@ export default {
       data_orgunits_text: '',
       data_vocabularies: {},
       data_vocabularies_text: '',
+      data_ot4rt: {},
+      data_ot4rt_text: '',
       data_i18n: {},
       data_i18n_text: '',
       data_facetqueries: [],
@@ -1117,6 +1129,11 @@ export default {
           this.data_vocabularies = JSON.parse(this.data_vocabularies_text)
         }
         instanceConfData['data_vocabularies'] = this.data_vocabularies
+
+        if (this.data_ot4rt_text) {
+          this.data_ot4rt = JSON.parse(this.data_ot4rt_text)
+        }
+        instanceConfData['data_ot4rt'] = this.data_ot4rt
 
         if (this.data_i18n_text) {
           this.data_i18n = JSON.parse(this.data_i18n_text)
@@ -1210,6 +1227,9 @@ export default {
 
         this.data_vocabularies = response?.data?.public_config?.data_vocabularies
         this.data_vocabularies_text = JSON.stringify(this.data_vocabularies, null, 2)
+
+        this.data_ot4rt = response?.data?.public_config?.data_ot4rt || {}
+        this.data_ot4rt_text = JSON.stringify(this.data_ot4rt, null, 2)
 
         this.data_i18n = response?.data?.public_config?.data_i18n
         this.data_i18n_text = JSON.stringify(this.data_i18n, null, 2)

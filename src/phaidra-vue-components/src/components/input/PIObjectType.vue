@@ -43,6 +43,9 @@ export default {
     resourceType: {
       type: String
     },
+    ot4rt: {
+      type: Object
+    },
     errorMessages: {
       type: Array
     },
@@ -61,7 +64,7 @@ export default {
       if (this.vocabulary === 'uniakobjecttypetheses' || this.vocabulary === 'oerobjecttype') {
         return this.vocabularies[this.vocabulary].terms
       } else {
-        return this.resourceType ? this.$store.getters['vocabulary/getObjectTypeForResourceType'](this.resourceType, this.$i18n.locale) : this.vocabularies[this.vocabulary].terms
+        return this.resourceType ? this.$store.getters['vocabulary/getObjectTypeForResourceType'](this.resourceType, this.$i18n.locale, this.ot4rt) : this.vocabularies[this.vocabulary].terms
       }
     }
   },
