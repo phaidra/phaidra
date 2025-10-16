@@ -26,7 +26,8 @@ my $orgunitsDefault = [
     "skos:notation" => "X1",
     "skos:prefLabel" => {
       "deu" => "Meine Organisation",
-      "eng" => "My Organization"
+      "eng" => "My Organization",
+      "ita" => "Mia organizzazione"
     },
     "subunits" => [
       {
@@ -35,7 +36,8 @@ my $orgunitsDefault = [
         "skos:notation" => "X11",
         "skos:prefLabel" => {
           "deu" => "Management meiner Organisation",
-          "eng" => "My Organization's Management"
+          "eng" => "My Organization's Management",
+          "ita" => "Dirigenza della mia organizzazione"
         }
       },
       {
@@ -44,7 +46,8 @@ my $orgunitsDefault = [
         "skos:notation" => "X12",
         "skos:prefLabel" => {
           "deu" => "Rechtsabteilung meiner Organisation",
-          "eng" => "My Organization's Law Department"
+          "eng" => "My Organization's Law Department",
+          "ita" => "Dipartimento di Legge della mia organizzazione"
         }
       }
     ]
