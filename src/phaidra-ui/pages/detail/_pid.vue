@@ -1162,7 +1162,7 @@
                         <v-col
                           class="caption"
                           cols="3"
-                          >{{ $t("Uploader") }}</v-col
+                          >{{ $t("UPLOADER_OBJECT_DETAILS") }}</v-col
                         >
                         <v-col
                           cols="8"

@@ -1352,5 +1352,6 @@
     "Last name": "Nachname",
     "Object Type": "Objekttyp",
     "Enable DOI import": "DOI-Import aktivieren",
-    "Enable tab for 'Metadata-Import via DOI' in Upload form.": "Reiter für 'Metadaten-Import via DOI' im Uploadformular aktivieren."
+    "Enable tab for 'Metadata-Import via DOI' in Upload form.": "Reiter für 'Metadaten-Import via DOI' im Uploadformular aktivieren.",
+    "UPLOADER_OBJECT_DETAILS": "Uploader"
   }
