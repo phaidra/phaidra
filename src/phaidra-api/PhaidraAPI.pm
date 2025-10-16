@@ -622,6 +622,9 @@ sub startup {
     $ir_admin->get('ir/puresearch')                                          ->to('ir#puresearch');
     $ir_admin->get('ir/pureimport/locks')                                    ->to('ir#pureimport_getlocks');
 
+    $admin->get('utils/fedora_storage_usage')                                ->to('utils#fedora_storage_usage');
+    $admin->get('utils/fedora_storage_avg_year')                            ->to('utils#fedora_storage_avg_year');
+    $admin->get('utils/imageserver_storage_avg_year')                       ->to('utils#imageserver_storage_avg_year');
     $admin->get('config/private')                                            ->to('config#get_private_config');
 
     unless($self->app->config->{readonly}){

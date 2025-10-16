@@ -12,6 +12,168 @@ use PhaidraAPI::Model::Util;
 use PhaidraAPI::Model::Config;
 use MIME::Lite::TT::HTML;
 
+sub fedora_storage_usage {
+
+  my $self = shift;
+
+  my $dbh = $self->app->db_fedora->dbh;
+
+  my $from = $self->param('from');
+  my $to   = $self->param('to');
+
+  my @where = (
+    "mime_type IS NOT NULL",
+    "(fedora_id LIKE '%OCTETS' OR fedora_id LIKE '%WEBVERSION')",
+  );
+  my @bind;
+
+  if ($from) {
+    # Accept YYYY-MM or YYYY-MM-DD
+    if ($from =~ /^\d{4}-\d{2}$/) { $from .= '-01'; }
+    push @where, 'DATE(created) >= ?';
+    push @bind, $from;
+  }
+
+  if ($to) {
+    if ($to =~ /^\d{4}-\d{2}$/) {
+      my ($y,$m) = split(/-/, $to);
+      my ($ny,$nm) = ($m == 12) ? ($y+1, 1) : ($y, $m+1);
+      push @where, 'DATE(created) < ?';
+      push @bind, sprintf('%04d-%02d-01', $ny, $nm);
+    } else {
+      push @where, 'DATE(created) <= ?';
+      push @bind, $to;
+    }
+  }
+
+  my $sql = 'SELECT DATE_FORMAT(created,\'%Y-%m\') AS month, mime_type, '
+          . 'SUM(content_size) AS total_bytes, COUNT(*) AS file_count '
+          . 'FROM fedoradb.simple_search '
+          . 'WHERE ' . join(' AND ', @where) . ' '
+          . 'GROUP BY month, mime_type '
+          . 'ORDER BY month, mime_type';
+
+  my $sth = $dbh->prepare($sql);
+  unless ($sth && $sth->execute(@bind)) {
+    return $self->render(json => {alerts => [{type => 'error', msg => 'Query failed'}]}, status => 500);
+  }
+  my $rows = $sth->fetchall_arrayref({});
+  $sth->finish();
+
+  $self->render(json => {usage => $rows, status => 200}, status => 200);
+}
+
+sub fedora_storage_avg_year {
+
+  my $self = shift;
+
+  my $year = $self->param('year');
+  $year = sprintf('%04d', $year) if defined $year && $year =~ /^\d{4}$/;
+  $year ||= (localtime)[5] + 1900;
+
+  my $start = sprintf('%04d-01-01', $year);
+  my $end   = sprintf('%04d-12-31', $year);
+
+  my $dbh = $self->app->db_fedora->dbh;
+
+  # total up to day before start
+  my $start_total = $dbh->selectrow_array(
+    q{SELECT IFNULL(SUM(content_size),0)
+      FROM fedoradb.simple_search
+      WHERE mime_type IS NOT NULL
+        AND (fedora_id LIKE '%OCTETS' OR fedora_id LIKE '%WEBVERSION')
+        AND DATE(created) < DATE(?)}, undef, $start
+  );
+  $start_total ||= 0;
+
+  my $sql = q{
+    WITH RECURSIVE days AS (
+      SELECT DATE(?) AS d
+      UNION ALL
+      SELECT d + INTERVAL 1 DAY FROM days WHERE d < DATE(?)
+    ),
+    daily_add AS (
+      SELECT DATE(created) AS d, SUM(content_size) AS added
+      FROM fedoradb.simple_search
+      WHERE mime_type IS NOT NULL
+        AND (fedora_id LIKE '%OCTETS' OR fedora_id LIKE '%WEBVERSION')
+        AND DATE(created) >= DATE(?)
+        AND DATE(created) <= DATE(?)
+      GROUP BY d
+    ),
+    eod AS (
+      SELECT days.d,
+             (? + SUM(IFNULL(daily_add.added,0)) OVER (ORDER BY days.d ROWS UNBOUNDED PRECEDING)) AS eod_bytes
+      FROM days
+      LEFT JOIN daily_add ON daily_add.d = days.d
+    )
+    SELECT MONTH(d) AS month, AVG(eod_bytes) AS avg_bytes, COUNT(*) AS num_days
+    FROM eod
+    GROUP BY month
+    ORDER BY month
+  };
+
+  my $sth = $dbh->prepare($sql);
+  unless ($sth && $sth->execute($start, $end, $start, $end, $start_total)) {
+    return $self->render(json => {alerts => [{type => 'error', msg => 'Query failed'}]}, status => 500);
+  }
+
+  my %by_month = map { $_ => 0 } (1..12);
+  while (my $row = $sth->fetchrow_hashref) {
+    $by_month{$row->{month}} = int($row->{avg_bytes} || 0);
+  }
+  $sth->finish();
+
+  $self->render(json => {year => $year, months => \%by_month, status => 200}, status => 200);
+}
+
+sub imageserver_storage_avg_year {
+
+  my $self = shift;
+
+  my $year = $self->param('year');
+  $year = sprintf('%04d', $year) if defined $year && $year =~ /^\d{4}$/;
+  $year ||= (localtime)[5] + 1900;
+
+  my $from_iso = sprintf('%04d-01-01T00:00:00Z', $year);
+  my $to_iso   = sprintf('%04d-01-01T00:00:00Z', $year + 1);
+
+  # Prefer paf_mongo if configured, fallback to mongo
+  my $db;
+  if ($self->can('paf_mongo')) {
+    eval { $db = $self->paf_mongo; };
+  }
+  $db ||= $self->mongo;
+
+  my $coll = $db->get_collection('storage_stats');
+
+  my $cursor = $coll->find({
+    timestamp_iso => { '$gte' => $from_iso, '$lt' => $to_iso }
+  });
+
+  my %sum_by_month;
+  my %count_by_month;
+  while (my $doc = $cursor->next) {
+    my $iso = $doc->{timestamp_iso};
+    next unless $iso && $iso =~ /^(\d{4})-(\d{2})/;
+    my $m = int($2);
+    my $v = $doc->{imageserver};
+    $v = defined $v ? $v : 0;
+    $v += 0; # coerce numeric (strings -> number)
+    $sum_by_month{$m}  += $v;
+    $count_by_month{$m} += 1;
+  }
+
+  my %avg_by_month = map { $_ => 0 } (1..12);
+  for my $m (1..12) {
+    my $cnt = $count_by_month{$m} || 0;
+    my $sum = $sum_by_month{$m}  || 0;
+    $avg_by_month{$m} = $cnt ? int($sum / $cnt) : 0;
+  }
+
+  $self->render(json => {year => 0 + $year, months => \%avg_by_month, status => 200}, status => 200);
+}
+
 sub get_all_pids {
 
   my $self = shift;
