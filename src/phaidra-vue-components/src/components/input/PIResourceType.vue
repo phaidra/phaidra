@@ -20,8 +20,8 @@
       </v-col>
     </v-row>
     <v-row v-if="!hidden && formats" class="ml-1">
-      <span v-if="formats.recommended">{{ $t('Recommended formats') }}: <a v-for="(f, i) in formats.recommended" :key="'fr' + i" :href="f.url" target="_blank">{{f.label}}<span v-if="i < (formats.recommended.length -1)">, </span></a></span>
-      <span class="ml-4" v-else-if="formats.supported">{{ $t('Other supported formats') }}: <a v-for="(f, i) in formats.supported" :key="'fs' + i" :href="f.url" target="_blank">{{f.label}}<span v-if="i < (formats.supported.length - 1)">, </span></a></span>
+      <span v-if="formats.recommended && formats.recommended.length > 0">{{ $t('Recommended formats') }}: <a v-for="(f, i) in formats.recommended" :key="'fr' + i" :href="f.url" target="_blank">{{f.label}}<span v-if="i < (formats.recommended.length -1)">, </span></a></span>
+      <span v-else-if="formats.supported && formats.supported.length > 0">{{ $t('Other supported formats') }}: <a v-for="(f, i) in formats.supported" :key="'fs' + i" :href="f.url" target="_blank">{{f.label}}<span v-if="i < (formats.supported.length - 1)">, </span></a></span>
       <template v-else-if="formats.info">
       <v-col cols="10" class="pa-0">
         <v-alert dense outlined type="info" color="secondary" icon="mdi-information-outline">{{ $t(formats.info) }}</v-alert>
