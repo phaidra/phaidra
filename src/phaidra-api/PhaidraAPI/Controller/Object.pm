@@ -597,7 +597,10 @@ sub preview {
         $self->app->log->info("Imageserver job queued: job status [$imgsrvjobstatus] pid[$pid] cm[$cmodel]");
 
         if ($imgsrvjobstatus ne 'finished') {
-          $self->render(text => "Image processing status: queued. Please try again later.", status => 200);
+          my $message = $self->l('object_preview_processing');
+          $message = decode('UTF-8', $message) if !utf8::is_utf8($message);
+          $self->res->headers->content_type('text/plain; charset=utf-8');
+          $self->render(text => $message, status => 200);
           return;
         }
       }
@@ -681,7 +684,10 @@ sub preview {
         return;
       }
       else {
-        $self->render(text => "Image processing status: " . $imgsrvjobstatus . ". Please try again later.", status => 200);
+        my $message = $self->l('object_preview_processing');
+        $message = decode('UTF-8', $message) if !utf8::is_utf8($message);
+        $self->res->headers->content_type('text/plain; charset=utf-8');
+        $self->render(text => $message, status => 200);
         return;
       }
     }

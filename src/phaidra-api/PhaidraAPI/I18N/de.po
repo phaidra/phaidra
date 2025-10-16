@@ -454,3 +454,6 @@ msgstr ""
 #: home/hudakr4/workspaces/phaidra_svn/phaidra_svn/trunk/webfrontend/root/base/help/help_ids.tt:58
 msgid "helpmeta_98"
 msgstr "Sie haben hier die Möglichkeit Ihre Publikation genau zu beschreiben."
+
+msgid "object_preview_processing"
+msgstr "Die Objektvorschau wird in Kürze verfügbar sein. Bitte laden Sie die Seite neu oder versuchen Sie es später erneut."
