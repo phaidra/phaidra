@@ -873,7 +873,7 @@
                                 </v-card-actions>
                               </v-card>
                             </v-dialog>
-                            <span v-if="id.label" class="caption text--secondary">
+                            <span v-if="id.label" class="caption font-weight-bold">
                               {{ $t(id.label) }}
                             </span>
                             <br />
@@ -946,10 +946,10 @@
                             v-for="(id, i) in identifiers.other"
                             :key="'id' + i"
                           >
-                            <span v-if="id.label" class="caption text--secondary">
+                            <span v-if="id.label" class="caption font-weight-bold">
                               {{ $t(id.label) }}
                             </span>
-                            <span v-else class="caption text--secondary">
+                            <span v-else class="caption font-weight-bold">
                               {{ $t('Other identifier') }}
                             </span>
                             <br />
@@ -1143,7 +1143,7 @@
                     <v-card-text class="mt-4">
                       <v-row no-gutters class="pt-2">
                         <v-col
-                          class="caption"
+                          class="caption font-weight-bold"
                           cols="3"
                           >{{ $t("UPLOADER_OBJECT_DETAILS") }}</v-col
                         >
@@ -1172,7 +1172,7 @@
                       </v-row>
                       <v-row no-gutters class="pt-2">
                         <v-col
-                          class="caption"
+                          class="caption font-weight-bold"
                           cols="3"
                           >{{ $t("Object type") }}</v-col
                         >
@@ -1186,7 +1186,7 @@
                         class="pt-2"
                       >
                         <v-col
-                          class="caption"
+                          class="caption font-weight-bold"
                           cols="3"
                           >{{ $t("Format") }}</v-col
                         >
@@ -1207,7 +1207,7 @@
                       </v-row>
                       <v-row no-gutters class="pt-2">
                         <v-col
-                          class="caption"
+                          class="caption font-weight-bold"
                           cols="3"
                           >{{ $t("Created") }}</v-col
                         >
@@ -2165,7 +2165,7 @@
                           v-if="md5.path.includes('OCTETS')"
                           :key="'md5' + i"
                         >
-                          <span class="caption text--secondary">md5</span
+                          <span class="caption font-weight-bold">md5</span
                           ><br /><span>{{ md5.md5 }}</span>
                         </p>
                       </template>
@@ -2174,7 +2174,7 @@
                   <v-row v-if="objectInfo.oc_mpid" justify="end" class="mb-2">
                     <v-col cols="12" class="pt-0">
                         <p class="text-right">
-                          <span class="caption text--secondary">{{ $t('Media Package Identifier') }}</span
+                          <span class="caption font-weight-bold">{{ $t('Media Package Identifier') }}</span
                           ><br /><span>id={{ objectInfo.oc_mpid }}
                           <v-tooltip bottom>
                               <template v-slot:activator="{ on, attrs }">
