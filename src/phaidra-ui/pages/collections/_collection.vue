@@ -20,6 +20,8 @@ export default {
     mixins: [config, cmsTemplates],
     data() {
         return {
+            activetab: null, // Added for Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
+            toggle: false,  // Added for Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
             templateName: null,
             collectionTemplate: null,
             loaded: false,
