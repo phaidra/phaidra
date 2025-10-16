@@ -42,65 +42,6 @@ sub generate_simple_manifest {
 
   my ($tmb_width, $tmb_height) = $self->calculate_thumbnail_dimensions($c, $width, $height, "300", "300");
 
-  my $manifest = {
-    "\@context" => "http://iiif.io/api/presentation/3/context.json",
-    "id" => "$apiBaseUrlPath/object/$pid/iiifmanifest",
-    "type" => "Manifest",
-    "label" => {},
-    "thumbnail" => [
-      {
-        "id" => "$apiBaseUrlPath/imageserver?IIIF=$pid.tif/full/!$tmb_width,$tmb_height/0/default.jpg",
-        "type" => "Image",
-        "format" => "image/jpeg",
-        "height" => $tmb_height,
-        "width" => $tmb_width,
-        "service" => [
-          {
-            "id" => "$apiBaseUrlPath/imageserver?IIIF=$pid.tif",
-            "type" => "ImageService2",
-            "profile" => "http://iiif.io/api/image/2/level1.json"
-          }
-        ]
-      }
-    ],
-    "items" => [
-      {
-        "id" => "$apiBaseUrlPath/iiif/$pid/canvas/p1",
-        "type" => "Canvas",
-        "height" => $height,
-        "width" => $width,
-        "items" => [
-          {
-            "id" => "$apiBaseUrlPath/iiif/$pid/page/p1/1",
-            "type" => "AnnotationPage",
-            "items" => [
-              {
-                "id" => "$apiBaseUrlPath/iiif/$pid/annotation/p0001-image",
-                "target" => "$apiBaseUrlPath/iiif/$pid/canvas/p1",
-                "type" => "Annotation",
-                "motivation" => "painting",
-                "body" => {
-                  "id" => "$apiBaseUrlPath/imageserver?IIIF=$pid.tif/full/full/0/default.jpg",
-                  "type" => "Image",
-                  "format" => "image/jpeg",
-                  "height" => $height,
-                  "width" => $width,
-                  "service" => [
-                    {
-                      "id" => "$apiBaseUrlPath/imageserver?IIIF=$pid.tif",
-                      "type" => "ImageService2",
-                      "profile" => "http://iiif.io/api/image/2/level1.json"
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  };
-
   my $index_model = PhaidraAPI::Model::Index->new;
   my $r           = $index_model->get($c, $pid);
   if ($r->{status} ne 200) {
@@ -108,9 +49,186 @@ sub generate_simple_manifest {
   }
   my $index = $r->{index};
 
+  # Check for recto/verso relationships
+  my $recto_pid = $pid;
+  my $verso_pid = undef;
+  my $is_recto_verso = 0;
+
+  # Only consider isbacksideof; ignore hasbackside
+  if (exists($index->{isbacksideof}) && scalar(@{$index->{isbacksideof}}) > 0) {
+    $is_recto_verso = 1;
+    $recto_pid = $index->{isbacksideof}->[0];
+    $verso_pid = $pid;
+  } else {
+    my $rels_res = $index_model->get_relationships($c, $pid);
+    if ($rels_res->{status} eq 200 && exists($rels_res->{relationships}->{hasbackside}) && scalar(@{$rels_res->{relationships}->{hasbackside}}) > 0) {
+      $is_recto_verso = 1;
+      $recto_pid = $pid;
+      $verso_pid = $rels_res->{relationships}->{hasbackside}->[0]->{pid};
+    }
+  }
+
+  my $manifest = {
+    "\@context" => "http://iiif.io/api/presentation/3/context.json",
+    "id" => "$apiBaseUrlPath/object/$pid/iiifmanifest",
+    "type" => "Manifest",
+    "label" => {},
+    "thumbnail" => [
+      {
+        "id" => "$apiBaseUrlPath/imageserver?IIIF=$recto_pid.tif/full/!$tmb_width,$tmb_height/0/default.jpg",
+        "type" => "Image",
+        "format" => "image/jpeg",
+        "height" => $tmb_height,
+        "width" => $tmb_width,
+        "service" => [
+          {
+            "id" => "$apiBaseUrlPath/imageserver?IIIF=$recto_pid.tif",
+            "type" => "ImageService2",
+            "profile" => "http://iiif.io/api/image/2/level1.json"
+          }
+        ]
+      }
+    ],
+    "items" => []
+  };
+
+  if ($is_recto_verso && $verso_pid) {
+    # Generate multi-canvas manifest for recto/verso
+    my $verso_dims = $self->_get_object_dimensions($c, $verso_pid);
+    if ($verso_dims->{status} eq 200) {
+      # Recto canvas
+      push @{$manifest->{items}}, {
+        "id" => "$apiBaseUrlPath/iiif/$recto_pid/canvas/recto",
+        "type" => "Canvas",
+        "height" => $height,
+        "width" => $width,
+        "label" => {"en" => ["Recto"]},
+        "items" => [{
+          "id" => "$apiBaseUrlPath/iiif/$recto_pid/page/recto/1",
+          "type" => "AnnotationPage",
+          "items" => [{
+            "id" => "$apiBaseUrlPath/iiif/$recto_pid/annotation/recto-image",
+            "target" => "$apiBaseUrlPath/iiif/$recto_pid/canvas/recto",
+            "type" => "Annotation",
+            "motivation" => "painting",
+            "body" => {
+              "id" => "$apiBaseUrlPath/imageserver?IIIF=$recto_pid.tif/full/full/0/default.jpg",
+              "type" => "Image",
+              "format" => "image/jpeg",
+              "height" => $height,
+              "width" => $width,
+              "service" => [{
+                "id" => "$apiBaseUrlPath/imageserver?IIIF=$recto_pid.tif",
+                "type" => "ImageService2",
+                "profile" => "http://iiif.io/api/image/2/level1.json"
+              }]
+            }
+          }]
+        }]
+      };
+      
+      # Verso canvas
+      push @{$manifest->{items}}, {
+        "id" => "$apiBaseUrlPath/iiif/$verso_pid/canvas/verso",
+        "type" => "Canvas",
+        "height" => $verso_dims->{height},
+        "width" => $verso_dims->{width},
+        "label" => {"en" => ["Verso"]},
+        "items" => [{
+          "id" => "$apiBaseUrlPath/iiif/$verso_pid/page/verso/1",
+          "type" => "AnnotationPage",
+          "items" => [{
+            "id" => "$apiBaseUrlPath/iiif/$verso_pid/annotation/verso-image",
+            "target" => "$apiBaseUrlPath/iiif/$verso_pid/canvas/verso",
+            "type" => "Annotation",
+            "motivation" => "painting",
+            "body" => {
+              "id" => "$apiBaseUrlPath/imageserver?IIIF=$verso_pid.tif/full/full/0/default.jpg",
+              "type" => "Image",
+              "format" => "image/jpeg",
+              "height" => $verso_dims->{height},
+              "width" => $verso_dims->{width},
+              "service" => [{
+                "id" => "$apiBaseUrlPath/imageserver?IIIF=$verso_pid.tif",
+                "type" => "ImageService2",
+                "profile" => "http://iiif.io/api/image/2/level1.json"
+              }]
+            }
+          }]
+        }]
+      };
+    } else {
+      # Fallback to single canvas if verso dimensions can't be retrieved
+      push @{$manifest->{items}}, $self->_create_single_canvas_item($apiBaseUrlPath, $pid, $width, $height);
+    }
+  } else {
+    # Single canvas for regular objects
+    push @{$manifest->{items}}, $self->_create_single_canvas_item($apiBaseUrlPath, $pid, $width, $height);
+  }
+
   $self->_update_manifest_metadata($c, $pid, $index, $manifest);
 
   $res->{manifest} = $manifest;
+
+  return $res;
+}
+
+sub _create_single_canvas_item {
+  my ($self, $apiBaseUrlPath, $pid, $width, $height) = @_;
+  
+  return {
+    "id" => "$apiBaseUrlPath/iiif/$pid/canvas/p1",
+    "type" => "Canvas",
+    "height" => $height,
+    "width" => $width,
+    "items" => [{
+      "id" => "$apiBaseUrlPath/iiif/$pid/page/p1/1",
+      "type" => "AnnotationPage",
+      "items" => [{
+        "id" => "$apiBaseUrlPath/iiif/$pid/annotation/p0001-image",
+        "target" => "$apiBaseUrlPath/iiif/$pid/canvas/p1",
+        "type" => "Annotation",
+        "motivation" => "painting",
+        "body" => {
+          "id" => "$apiBaseUrlPath/imageserver?IIIF=$pid.tif/full/full/0/default.jpg",
+          "type" => "Image",
+          "format" => "image/jpeg",
+          "height" => $height,
+          "width" => $width,
+          "service" => [{
+            "id" => "$apiBaseUrlPath/imageserver?IIIF=$pid.tif",
+            "type" => "ImageService2",
+            "profile" => "http://iiif.io/api/image/2/level1.json"
+          }]
+        }
+      }]
+    }]
+  };
+}
+
+sub _get_object_dimensions {
+  my ($self, $c, $pid) = @_;
+
+  my $res = {width => 0, height => 0, status => 200};
+
+  my $isrv_model = PhaidraAPI::Model::Imageserver->new;
+  my $urlres = $isrv_model->get_url($c, Mojo::Parameters->new("IIIF=$pid.tif/info.json"), 1);
+  if ($urlres->{status} ne 200) {
+    $res->{status} = $urlres->{status};
+    return $res;
+  }
+
+  my $getres = $c->app->ua->get($urlres->{url})->result;
+  if ($getres->is_success) {
+    if ($getres->json->{width}) {
+      $res->{width} = $getres->json->{width};
+    }
+    if ($getres->json->{height}) {
+      $res->{height} = $getres->json->{height};
+    }
+  } else {
+    $res->{status} = $getres->code ? $getres->code : 500;
+  }
 
   return $res;
 }
@@ -268,22 +386,42 @@ sub update_manifest_metadata {
   }
   my $index = $r->{index};
 
-  # $c->app->log->debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXX" . $c->app->dumper($index));
-
-  my $object_model = PhaidraAPI::Model::Object->new;
-  $r = $object_model->get_datastream($c, $pid, 'IIIF-MANIFEST', $c->stash->{basic_auth_credentials}->{username}, $c->stash->{basic_auth_credentials}->{password});
-  if ($r->{status} ne 200) {
-    return $r;
+  # Check if this is a recto/verso relationship
+  my $is_recto_verso = 0;
+  if (exists($index->{isbacksideof}) && scalar(@{$index->{isbacksideof}}) > 0) {
+    $is_recto_verso = 1;
+  } else {
+    my $rels_res = $index_model->get_relationships($c, $pid);
+    if ($rels_res->{status} eq 200 && exists($rels_res->{relationships}->{hasbackside}) && scalar(@{$rels_res->{relationships}->{hasbackside}}) > 0) {
+      $is_recto_verso = 1;
+    }
   }
+  
+  if ($is_recto_verso) {
+    # Regenerate the entire manifest for recto/verso objects
+    my $new_manifest_res = $self->generate_simple_manifest($c, $pid);
+    if ($new_manifest_res->{status} ne 200) {
+      return $new_manifest_res;
+    }
+    
+    my $object_model = PhaidraAPI::Model::Object->new;
+    my $json = JSON->new->utf8->pretty->encode($new_manifest_res->{manifest});
+    return $object_model->add_or_modify_datastream($c, $pid, "IIIF-MANIFEST", "application/json", undef, $c->app->config->{phaidra}->{defaultlabel}, $json, "M", undef, undef, $c->stash->{basic_auth_credentials}->{username}, $c->stash->{basic_auth_credentials}->{password}, 0, 0);
+  } else {
+    # Update existing manifest metadata for single canvas objects
+    my $object_model = PhaidraAPI::Model::Object->new;
+    $r = $object_model->get_datastream($c, $pid, 'IIIF-MANIFEST', $c->stash->{basic_auth_credentials}->{username}, $c->stash->{basic_auth_credentials}->{password});
+    if ($r->{status} ne 200) {
+      return $r;
+    }
 
-  my $manifest = decode_json($r->{'IIIF-MANIFEST'});
+    my $manifest = decode_json($r->{'IIIF-MANIFEST'});
 
-  $self->_update_manifest_metadata($c, $pid, $index, $manifest);
+    $self->_update_manifest_metadata($c, $pid, $index, $manifest);
 
-  # $c->app->log->debug("XXXXXXXXXXXXXXXXXXXX " . $c->app->dumper($manifest));
-
-  my $json = JSON->new->utf8->pretty->encode($manifest);
-  return $object_model->add_or_modify_datastream($c, $pid, "IIIF-MANIFEST", "application/json", undef, $c->app->config->{phaidra}->{defaultlabel}, $json, "M", undef, undef, $c->stash->{basic_auth_credentials}->{username}, $c->stash->{basic_auth_credentials}->{password}, 0, 0);
+    my $json = JSON->new->utf8->pretty->encode($manifest);
+    return $object_model->add_or_modify_datastream($c, $pid, "IIIF-MANIFEST", "application/json", undef, $c->app->config->{phaidra}->{defaultlabel}, $json, "M", undef, undef, $c->stash->{basic_auth_credentials}->{username}, $c->stash->{basic_auth_credentials}->{password}, 0, 0);
+  }
 }
 
 sub save_to_object {
