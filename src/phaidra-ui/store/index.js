@@ -102,7 +102,6 @@ export const mutations = {
       )
     }
     if (transition.to.path.includes('/collections')) {
-      console.log('transition.to', transition.to)
       state.breadcrumbs.push(
         {
           text: 'Collections',
@@ -110,15 +109,6 @@ export const mutations = {
           disabled: true
         }
       )
-      if (transition?.to?.query?.title) {
-        state.breadcrumbs.push(
-          {
-            text: transition.to.query.title,
-            to: transition.to.name,
-            disabled: true
-          }
-        )
-      }
     }
     if (transition.to.path.includes('/bulk-upload')) {
       state.breadcrumbs.push(
@@ -611,6 +601,9 @@ export const mutations = {
         }
       )
     }
+  },
+  addBreadcrumb(state, breadcrumb) {
+    state.breadcrumbs.push(breadcrumb)
   },
   setLoading(state, loading) {
     state.loading = loading
