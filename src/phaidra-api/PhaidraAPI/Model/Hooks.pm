@@ -183,7 +183,7 @@ sub add_or_modify_datastream_hooks {
       
       # Extract text from ALTO and prepare for Solr indexing
       my $index_model = PhaidraAPI::Model::Index->new;
-      my $alto_text = $index_model->_extract_text_from_alto($c, $dscontent);
+      my $alto_text = $index_model->_extact_text_from_ocr($c, $dscontent);
       if ($alto_text) {
         $c->app->log->info("add_or_modify_datastream_hooks ALTO pid[$pid] Extracted text: " . $alto_text);
         

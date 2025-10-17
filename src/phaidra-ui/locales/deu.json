@@ -1355,5 +1355,6 @@
     "Enable tab for 'Metadata-Import via DOI' in Upload form.": "Reiter für 'Metadaten-Import via DOI' im Uploadformular aktivieren.",
     "UPLOADER_OBJECT_DETAILS": "Uploader",
     "Disable Uploader": "Uploader deaktivieren",
-    "Disable showing uploader in object detail box.": "Anzeige des Uploaders im Objektdetailfeld deaktivieren."
+    "Disable showing uploader in object detail box.": "Anzeige des Uploaders im Objektdetailfeld deaktivieren.",
+    "The book limit has been reached for the search. Please add more filters to narrow down the results.": "Die Buch-Limit für die Suche wurde erreicht. Bitte fügen Sie weitere Filter hinzu, um die Ergebnisse einzuschränken."
   }

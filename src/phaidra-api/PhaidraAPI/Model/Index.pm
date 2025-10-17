@@ -1529,12 +1529,23 @@ sub _get {
   }
 
   if (exists($datastreams{'ALTO'})) {
-    my $alto_text = $self->_extract_text_from_alto($c, $datastreams{'ALTO'}->find('foxml\:xmlContent')->first);
+    my $alto_text = $self->_extact_text_from_ocr($c, $datastreams{'ALTO'}->find('foxml\:xmlContent')->first);
     if ($alto_text) {
       $index{extracted_text} = $alto_text;
       $c->app->log->debug("[$pid] ALTO text extracted: " . substr($alto_text, 0, 100) . "...");
     } else {
       $c->app->log->warn("[$pid] No text could be extracted from ALTO datastream");
+    }
+  }
+
+  # Try OCRTEXT datastream if ALTO didn't provide extracted text
+  if (!exists($index{extracted_text}) && exists($datastreams{'OCRTEXT'})) {
+    my $ocrtext = $self->_extact_text_from_ocr($c, $datastreams{'OCRTEXT'}->find('foxml\:xmlContent')->first);
+    if ($ocrtext) {
+      $index{extracted_text} = $ocrtext;
+      $c->app->log->debug("[$pid] OCRTEXT text extracted: " . substr($ocrtext, 0, 100) . "...");
+    } else {
+      $c->app->log->warn("[$pid] No text could be extracted from OCRTEXT datastream");
     }
   }
 
@@ -3283,7 +3294,7 @@ sub _preserve_extracted_text {
   return undef;
 }
 
-sub _extract_text_from_alto {
+sub _extact_text_from_ocr {
   my ($self, $c, $alto_dom) = @_;
   
   my $extracted_text = "";
@@ -3345,7 +3356,7 @@ sub _extract_text_from_alto {
   };
   
   if ($@) {
-    $c->app->log->error("_extract_text_from_alto: Error parsing ALTO content: $@");
+    $c->app->log->error("_extact_text_from_ocr: Error parsing ALTO content: $@");
     return undef;
   }
   

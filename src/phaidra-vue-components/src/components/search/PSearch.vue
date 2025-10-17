@@ -36,7 +36,7 @@
                       mdi-alert
                     </v-icon>
                   </template>
-                  <span>The book limit has been reached for the search. Please add more filters to narrow down the results.</span>
+                  <span>{{ $t('The book limit has been reached for the search. Please add more filters to narrow down the results.') }}</span>
                 </v-tooltip>
               </div>
              </div>
