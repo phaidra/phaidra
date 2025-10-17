@@ -13,14 +13,10 @@ RUN mkdir -p /opt/handle-data/logs && touch /opt/handle-data/logs/access.log && 
 RUN apk add --no-cache openjdk21-jre-headless gettext-envsubst &&\
     ln -sf /dev/stdout /opt/handle-data/logs/access.log &&\
     ln -sf /dev/stderr /opt/handle-data/logs/error.log &&\
-    adduser -D handle &&\
-    mkdir /opt/handle-data/.handle &&\
-    ln -sf /opt/handle-data/.handle /home/handle/.handle &&\
-    chown -R handle:handle /opt/handle /opt/handle-data
+    ln -sf /opt/handle-data/.handle /root/.handle
 
-USER handle:handle
 
-COPY --chown=handle:handle --chmod=700 ./container_init/handle/handle-entrypoint.sh /handle-entrypoint.sh
+COPY --chmod=700 ./container_init/handle/handle-entrypoint.sh /handle-entrypoint.sh
 COPY ./container_init/handle/siteinfo.json.template /siteinfo.json.template
 COPY ./container_init/handle/config.dct.template /config.dct.template
 

@@ -1327,6 +1327,8 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/handle.dockerfile
+    image: phaidraorg/handle:latest
+    pull_policy: missing
     read_only: true
     ports:
       - 2641:2641/tcp
