@@ -131,7 +131,7 @@ services:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
     volumes:
       - chronos-sitemaps:/mnt/sitemaps:ro
-      - ./static:/usr/local/apache2/htdocs/static:ro
+      - ./static:/mnt/static:ro
     environment:
       <<: [*api_common_env, *hosts]
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
@@ -146,7 +146,7 @@ services:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
     volumes:
       - chronos-sitemaps:/mnt/sitemaps:ro
-      - ./static:/usr/local/apache2/htdocs/static:ro
+      - ./static:/mnt/static:ro
     environment:
       <<: [*api_common_env, *hosts]
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
@@ -164,7 +164,7 @@ services:
       - chronos-sitemaps:/mnt/sitemaps:ro
       - ./certs/httpd:/ssl:ro
       - mdcerts:/mnt/mdcerts:rw
-      - ./static:/usr/local/apache2/htdocs/static:ro
+      - ./static:/mnt/static:ro
     environment:
       <<: [*api_common_env, *hosts]
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
@@ -182,7 +182,7 @@ services:
       - chronos-sitemaps:/mnt/sitemaps:ro
       - ./certs/httpd:/ssl:ro
       - mdcerts:/mnt/mdcerts:rw
-      - ./static:/usr/local/apache2/htdocs/static:ro
+      - ./static:/mnt/static:ro
     environment:
       <<: [*api_common_env, *hosts]
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
@@ -201,7 +201,7 @@ services:
       - ./certs/httpd:/ssl:ro
       - ./certs/shibboleth:/shibboleth-certs:ro
       - mdcerts:/mnt/mdcerts:rw
-      - ./static:/usr/local/apache2/htdocs/static:ro
+      - ./static:/mnt/static:ro
     environment:
       <<: [*api_common_env, *hosts]
       SHIB_DISCO_URL: "${SHIB_DISCO_URL:-}"
@@ -231,7 +231,7 @@ services:
       - ./certs/shibboleth:/shibboleth-certs:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
       - mdcerts:/mnt/mdcerts:rw
-      - ./static:/usr/local/apache2/htdocs/static:ro
+      - ./static:/mnt/static:ro
     environment:
       <<: [*api_common_env, *hosts]
       SHIB_DISCO_URL: "${SHIB_DISCO_URL:-}"
@@ -925,7 +925,7 @@ services:
     volumes:
       - ./container_init/httpd/phaidra-demo:/mnt/startup:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
-      - ./static:/usr/local/apache2/htdocs/static:ro
+      - ./static:/mnt/static:ro
     environment:
       <<: [*api_common_env, *hosts]
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
@@ -1192,7 +1192,7 @@ services:
     volumes:
       - ./container_init/httpd/phaidra-demo:/mnt/startup:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
-      - ./static:/usr/local/apache2/htdocs/static:ro
+      - ./static:/mnt/static:ro
     environment:
       <<: [*api_common_env, *hosts]
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
@@ -1293,7 +1293,7 @@ services:
       - ./container_init/httpd/phaidra-ssl/httpd-ssl-entrypoint.bash:/httpd-ssl-entrypoint.bash:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
       - mdcerts:/mnt/mdcerts:rw
-      - ./static:/usr/local/apache2/htdocs/static:ro
+      - ./static:/mnt/static:ro
     environment:
       <<: [*api_common_env, *hosts]
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-}"
@@ -1318,7 +1318,7 @@ services:
       - ./container_init/httpd/phaidra-shib/httpd-shib-entrypoint.bash:/httpd-shib-entrypoint.bash:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
       - mdcerts:/mnt/mdcerts:rw
-      - ./static:/usr/local/apache2/htdocs/static:ro
+      - ./static:/mnt/static:ro
     environment:
       <<: [*api_common_env, *hosts]
       SHIB_DISCO_URL: "${SHIB_DISCO_URL:-}"
