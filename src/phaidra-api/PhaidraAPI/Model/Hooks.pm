@@ -16,6 +16,7 @@ use PhaidraAPI::Model::Fedora;
 use PhaidraAPI::Model::Iiifmanifest;
 use PhaidraAPI::Model::Imageserver;
 use PhaidraAPI::Model::Streaming;
+use PhaidraAPI::Model::Config;
 
 sub add_or_modify_datastream_hooks {
 
@@ -304,11 +305,12 @@ sub modify_hook {
   }
   else {
     if ($state eq 'A') {
-      if (exists($c->app->config->{handle})) {
-        if ($c->app->config->{handle}->{create_handle_job} eq '1') {
-          unless (($c->app->config->{handle}->{ignore_pages} eq '1') && ($res_cmodel->{cmodel} eq 'Page')) {
-            $self->_create_handle($c, $pid);
-          }
+      my $model = PhaidraAPI::Model::Config->new;
+      my $privconfig = $model->get_private_config($c);
+
+      if ($privconfig->{hdlcreatejob}) {
+        unless (($privconfig->{hdlignorepages} eq '1') && ($res_cmodel->{cmodel} eq 'Page')) {
+          $self->_create_handle($c, $pid);
         }
       }
       if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
@@ -497,22 +499,23 @@ sub _create_handle {
   my ($self, $c, $pid) = @_;
 
   my $res = {alerts => [], status => 200};
+ 
+  my $model = PhaidraAPI::Model::Config->new;
+  my $privconfig = $model->get_private_config($c);
 
   my ($pidnoprefix) = $pid =~ /o:(\d+)/;
-  my @ts            = localtime(time());
-  my $ts_iso        = sprintf("%04d%02d%02dT%02d%02d%02d", $ts[5] + 1900, $ts[4] + 1, $ts[3], $ts[2], $ts[1], $ts[0]);
-  my $hdl           = $c->app->config->{handle}->{hdl_prefix} . "/" . $c->app->config->{handle}->{instance_hdl_prefix} . "." . $pidnoprefix;
-  my $url           = $c->app->config->{handle}->{instance_url_prefix} . $pid;
-
-  my $find = $c->irma_mongo->get_collection('irma.map')->find_one({hdl => $hdl});
+  my $hdl           = $privconfig->{hdlprefix} . "/" . $privconfig->{hdlinstanceprefix} . "." . $pidnoprefix;
+ 
+  my $find = $c->paf_mongo->get_collection('jobs')->find_one({hdl => $hdl});
   unless ($find->{hdl}) {
-    $c->app->log->info("_create_handle: creating handle job hdl[$hdl] url[$url]");
-    $c->irma_mongo->get_collection('irma.map')->insert_one(
-      { ts_iso   => $ts_iso,
-        _created => time,
-        _updated => time,
+    $c->app->log->info("_create_handle: creating handle job hdl[$hdl]");
+    $c->paf_mongo->get_collection('jobs')->insert_one(
+      {
+        created  => time,
         hdl      => $hdl,
-        url      => $url
+        pid      => $pid,
+        agent    => 'hdl',
+        status   => 'new'
       }
     );
 

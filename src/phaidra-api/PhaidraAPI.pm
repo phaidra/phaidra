@@ -221,20 +221,6 @@ sub startup {
     );
   }
 
-  if (exists($config->{irma})) {
-    $self->helper(
-      irma_mongo => sub {
-        state $irma_mongo = MongoDB::MongoClient->new(
-          host     => $config->{irma}->{host},
-          port     => $config->{irma}->{port},
-          username => $config->{irma}->{username},
-          password => $config->{irma}->{password},
-          db_name  => $config->{irma}->{database}
-        )->get_database($config->{irma}->{database});
-      }
-    );
-  }
-
   if ($config->{fedora}->{version} > 6) {
     $self->helper(
       fedoraurl => sub {

@@ -269,6 +269,26 @@ build-pdf-extraction:
           - dockerfiles/pdf_extraction.dockerfile
           - src/pdf_extraction/**/*
 
+build-agent-hdl:
+  stage: build-common
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/agent-hdl.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/agent-hdl:latest
+    -t $CI_REGISTRY_USER/agent-hdl:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/agent-hdl.dockerfile
+          - src/agents/hdl/**/*
+
 build-camel-toolbox:
   stage: build-common
   before_script:
