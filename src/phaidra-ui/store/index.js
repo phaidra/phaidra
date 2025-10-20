@@ -62,6 +62,7 @@ export const mutations = {
       'accessrestrictions_showgroups',
       'data_affiliations',
       'feedback',
+      'disableUploader',
       'doiImport',
       'addannotation',
       'forcePreview',
