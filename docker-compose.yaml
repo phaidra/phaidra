@@ -90,6 +90,7 @@ x-custom:
     SOLR_HOST: "${SOLR_HOST:-solr}"
     UI_HOST: "${UI_HOST:-ui}"
     VARNISH_HOST: "${VARNISH_HOST:-varnish}"
+    HANDLE_HOST: "${HANDLE_HOST:-handle}"
 
 services:
   ##############################################################
@@ -1316,6 +1317,28 @@ services:
     entrypoint: bash
     command: ["-c", 'mkdir /data/${S3_BUCKETNAME:-phaidra-bucket}; /usr/bin/minio server /data --console-address :9001']
     profiles: ["minio-s3-dev"]
+
+  handle:
+    hostname: "handle"
+    <<: [*common, *logs]
+    environment:
+      <<: [*api_common_env, *hosts]
+      HANDLE_PUBLIC_IP: "${HANDLE_PUBLIC_IP:?PUBLIC IP OF INSTANCE (handle server) REQUIRED}"
+    build:
+      context: .
+      dockerfile: dockerfiles/handle.dockerfile
+    image: phaidraorg/handle:latest
+    pull_policy: missing
+    read_only: true
+    ports:
+      - 2641:2641/tcp
+      - 2641:2641/udp
+    volumes:
+      - handle:/opt/handle-data
+      - ./certs/handle/privkey.bin/:/opt/handle-data/privkey.bin:ro
+      - ./certs/handle/pubkey.bin/:/opt/handle-data/pubkey.bin:ro
+    profiles:
+      - handle
     
 volumes:
   chronos-database-dumps:
@@ -1339,6 +1362,7 @@ volumes:
   solr:
   vige-mongosh:
   vige:
+  handle:
 
 configs:
   httpd_tls_config:

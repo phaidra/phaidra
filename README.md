@@ -294,6 +294,18 @@ After starting the containers, the mod_md will fetch the certificates, but a (gr
   + `OC_PASS`
   + `OC_EVENTS_URL`
   + `OC_INGEST_URL`
+## handle
++ `handle`: Start an integrated handle instance.
+Handle requires significant configuration! Makes sure to check the handle technical documentation at https://www.handle.net/tech_manual/HN_Tech_Manual_9.pdf.
+If you don't have certificates, you can create them via
+  ```
+  openssl genrsa -out ./certs/handle/privkey.pem
+  openssl rsa -in ./certs/handle/privkey.pem -pubout -out ./certs/handle/pubkey.pem
+  docker run --entrypoint sh -v ./certs/handle/:/mnt phaidra-handle /opt/handle/bin/hdl-convert-key /mnt/pubkey.pem > ./certs/handle/pubkey.bin
+  docker run --entrypoint sh -v ./certs/handle/:/mnt phaidra-handle /opt/handle/bin/hdl-convert-key /mnt/privkey.pem > ./certs/handle/privkey.bin
+```
+  + `HANDLE_HOST`: When using the integrated handle server, leave this as is. When using an external handle server, you can set configure it with this variable.
+  + `HANDLE_PUBLIC_IP`: The IP under which your phaidra (and integrated handle) instance is available.
 
 
 # Default credentials on administration sites
