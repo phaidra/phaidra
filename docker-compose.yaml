@@ -605,7 +605,6 @@ services:
     entrypoint: [ "bash", "/mnt/startup/imageserver-entrypoint.bash" ]
     profiles: ["demo-local", "ssl-local", "shib-local", "demo-local-dev", "ssl-local-dev", "shib-local-dev"]
 
-
   3d-converter:
     hostname: "3d-converter"
     image: phaidraorg/3d-converter:187cd28d
@@ -629,7 +628,6 @@ services:
         condition: "service_started"
         required: false
     profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
-
   
   pdf-extraction:
     hostname: "pdf-extraction"
@@ -655,6 +653,27 @@ services:
         condition: "service_started"
         required: false
     profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
+
+  agent-hdl:
+    hostname: "agent-hdl"
+    #image: phaidraorg/agent-hdl:aaaaaaaa
+    build:
+      context: .
+      dockerfile: dockerfiles/agent-hdl.dockerfile
+    <<: [*common, *logs]
+    environment:
+      <<: [*api_common_env, *hosts]
+      HANDLE_API_USER: "${HANDLE_API_USER:-}"
+      HANDLE_API_PASS: "${HANDLE_API_PASS:-}"
+    depends_on:
+      mongodb-phaidra:
+        condition: "service_started"
+        required: false
+      mongodb-phaidra-dev:
+        condition: "service_started"
+        required: false
+    profiles:
+      - handle
 
   ############### imageserver service for s3 profiles #################
   imageserver-s3:

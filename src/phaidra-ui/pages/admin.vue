@@ -595,6 +595,53 @@
                 <v-row>
                   <v-col>
                     <v-card>
+                      <v-card-title class="title font-weight-light white--text">{{ $t("Handle") }}</v-card-title>
+                      <v-card-text>
+                        <v-row>
+                          <v-col>
+                            <v-text-field
+                              :label="$t('Prefix')"
+                              v-model="parsedPrivateConfigData.hdlprefix"
+                              autocomplete="off"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="6" class="mt-6">{{ $t("Handle prefix of the organisation.") }}</v-col>
+                        </v-row>
+                        <v-row>
+                          <v-col>
+                            <v-text-field
+                              :label="$t('Instance prefix')"
+                              v-model="parsedPrivateConfigData.hdlinstanceprefix"
+                              autocomplete="off"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="6" class="mt-6">{{ $t("The prefix used in the handle suffix, to specify this repository.") }}</v-col>
+                        </v-row>
+                        <v-row class="mt-4">
+                          <v-col>
+                            <v-checkbox
+                              :label="$t('Create handle job')"
+                              v-model="parsedPrivateConfigData.hdlcreatejob"
+                            ></v-checkbox>
+                          </v-col>
+                          <v-col cols="6" class="mt-6">{{ $t("Whether handles should be automatically created on upload.") }}</v-col>
+                        </v-row>
+                        <v-row>
+                          <v-col>
+                            <v-checkbox
+                              :label="$t('Ignore pages')"
+                              v-model="parsedPrivateConfigData.hdlignorepages"
+                            ></v-checkbox>
+                          </v-col>
+                          <v-col cols="6" class="mt-6">{{ $t("If checked, objects of cmodel Page would not get a handle.") }}</v-col>
+                        </v-row>
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-card>
                       <v-card-title class="title font-weight-light white--text">{{ $t("SMTP") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
