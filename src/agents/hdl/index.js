@@ -34,15 +34,15 @@ async function processJob(job) {
     console.log(`PUT: ${json}`);
     console.log(`URL: http://handle:8000/api/handles/${job.hdl}?overwrite=false`);
 
-    // const username = 'prefix?';
-    // const password = 'privkey?';
-    // const base64Credentials = btoa(`${username}:${password}`);
+    const user = process.env.HANDLE_API_USER;
+    const pass = process.env.HANDLE_API_PASS;
+    const base64Credentials = btoa(`${user}:${pass}`);
   
     const response = await fetch(`http://handle:8000/api/handles/${job.hdl}?overwrite=false`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'//,
-        //'Authorization': `Basic ${base64Credentials}`
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${base64Credentials}`
       },
       body: json
     });

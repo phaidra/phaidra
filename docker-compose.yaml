@@ -663,6 +663,8 @@ services:
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
+      HANDLE_API_USER: "${HANDLE_API_USER:-}"
+      HANDLE_API_PASS: "${HANDLE_API_PASS:-}"
     depends_on:
       mongodb-phaidra:
         condition: "service_started"
