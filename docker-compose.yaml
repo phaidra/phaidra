@@ -672,7 +672,8 @@ services:
       mongodb-phaidra-dev:
         condition: "service_started"
         required: false
-    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
+    profiles:
+      - handle
 
   ############### imageserver service for s3 profiles #################
   imageserver-s3:
