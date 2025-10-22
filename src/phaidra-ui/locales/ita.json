@@ -1408,5 +1408,8 @@
   "Agency": "Agenzia",
   "please enter exact journal title or ISSN": "Inserisci il titolo esatto della rivista o l'ISSN",
   "UPLOADER_OBJECT_DETAILS": "Ente o persona di riferimento",
-  "Full-text Search": "Ricerca full text"
+  "Full-text Search": "Ricerca full text",
+  "ORG Unit / Association": "Unità organizzativa / Afferenza",
+  "Please log in to continue": "Autenticati per continuare",
+  "You must be logged in to bulk upload to PHAIDRA.": "Devi autenticarti per effettuare un caricamento multiplo in PHAIDRA."
 }
