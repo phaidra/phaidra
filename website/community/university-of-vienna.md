@@ -15,7 +15,7 @@ PHAIDRA was developed at the University of Vienna and by its Central Informatics
 
 #### Contact
 
-Head of Department: Dr. Susanne Blumesberger
+Head of Department: Dipl. Ing. (FH) Raman Ganguly
 
 Email: <phaidra@univie.ac.at>
 
