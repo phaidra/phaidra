@@ -125,7 +125,7 @@ services:
   ############### httpd service for demo-local profile ###############
   httpd-demo-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-demo-dist:77c968e9
+    image: phaidraorg/httpd-demo-dist:63fcc890
     <<: [*common, *logs]
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
@@ -140,7 +140,7 @@ services:
   ############### httpd service for demo-s3 profile ###############
   httpd-demo-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-demo-dist:77c968e9
+    image: phaidraorg/httpd-demo-dist:63fcc890
     <<: [*common, *logs]
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
@@ -640,7 +640,7 @@ services:
   
   pdf-extraction:
     hostname: "pdf-extraction"
-    image: phaidraorg/pdf-extraction:8a305b63
+    image: phaidraorg/pdf-extraction:1c1af80f
     # build:
     #   context: .
     #   dockerfile: dockerfiles/pdf_extraction.dockerfile
