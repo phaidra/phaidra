@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row no-gutters>
-      <h3 class="title font-weight-light primary--text mb-4">
+      <h3 class="title font-weight-light mb-4">
         {{ $t("Metadata-Import via DOI") }}
       </h3>
     </v-row>
@@ -23,7 +23,7 @@
         }}
       </p>
     </v-row>
-    <v-row no-gutters justify="center">
+    <v-row no-gutters justify="center" class="mt-4">
       <v-col cols="4">
         <v-text-field
           :error-messages="doiImportErrors"
@@ -33,7 +33,7 @@
           :placeholder="$t('please enter')"
         />
       </v-col>
-      <v-col cols="3" class="ml-4 mt-2">
+      <v-col cols="3" class="ml-2">
         <v-btn
           :loading="loading"
           :disabled="loading || !doiToImport || doiToImport.length < 1"
@@ -47,7 +47,7 @@
           :disabled="loading"
           class="mx-2"
           dark
-          color="grey"
+          color="btnred"
           @click="resetDOIImport()"
           >{{ $t("Reset") }}</v-btn
         >
@@ -57,11 +57,11 @@
       <v-col cols="12" md="7">
         <v-card>
           <v-card-title
-            class="title font-weight-light grey white--text"
+            class="title font-weight-light white--text"
             >{{
               $t("Following metadata were retrieved")
             }}
-            <p class="m-0 ml-2" v-if="metaProviderName">({{ $t("Agency") }}: {{ $t(metaProviderName) }})</p>
+            <span class="ml-2" v-if="metaProviderName">({{ $t("Agency") }}: {{ $t(metaProviderName) }})</span>
             </v-card-title
           >
           <v-card-text>
@@ -70,7 +70,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("Title") }}</v-col
                 >
                 <v-col md="10" cols="12">{{
@@ -81,7 +81,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("Description") }}</v-col
                 >
                 <v-col md="10" cols="12">
@@ -94,7 +94,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("Subtitle") }}</v-col
                 >
                 <v-col md="10" cols="12">{{
@@ -105,7 +105,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("Date issued") }}</v-col
                 >
                 <v-col md="10" cols="12">{{
@@ -120,7 +120,7 @@
                   v-if="i === 0"
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("Authors") }}</v-col
                 >
                 <v-col v-else md="2" cols="12"></v-col>
@@ -150,7 +150,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("Keywords") }}</v-col
                 >
                 <v-col md="10" cols="12"
@@ -166,7 +166,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("Language") }}</v-col
                 >
                 <v-col md="10" cols="12">{{
@@ -177,7 +177,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("Type of publication") }}</v-col
                 >
                 <v-col md="10" cols="12">{{
@@ -188,7 +188,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("PUBLISHER_VERLAG") }}</v-col
                 >
                 <v-col md="10" cols="12">{{
@@ -199,7 +199,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("Appeared in") }}</v-col
                 >
                 <v-col md="10" cols="12">{{
@@ -210,7 +210,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("ISSN") }}</v-col
                 >
                 <v-col md="10" cols="12">{{
@@ -221,7 +221,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("Volume") }}</v-col
                 >
                 <v-col md="10" cols="12">{{
@@ -232,7 +232,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("Issue") }}</v-col
                 >
                 <v-col md="10" cols="12">{{
@@ -243,7 +243,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("Start page") }}</v-col
                 >
                 <v-col md="10" cols="12">{{
@@ -254,7 +254,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("End page") }}</v-col
                 >
                 <v-col md="10" cols="12">{{
@@ -265,7 +265,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right mt-4"
                   >{{ $t("ISBN") }}</v-col
                 >
                 <v-col md="10" cols="12">{{
@@ -276,7 +276,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("License") }}</v-col
                 >
                 <v-col md="10" cols="12">{{
@@ -287,7 +287,7 @@
                 <v-col
                   md="2"
                   cols="12"
-                  class="primary--text text-right"
+                  class="font-weight-bold text-right"
                   >{{ $t("Access Rights") }}</v-col
                 >
                 <v-col md="10" cols="12">{{
@@ -297,7 +297,7 @@
             </v-container>
           </v-card-text>
         </v-card>
-        <div class="text-right mt-4">
+        <div class="font-weight-bold text-right mt-4">
           <v-btn color="primary" @click="proceedForm">Load Form</v-btn>
         </div>
       </v-col>
