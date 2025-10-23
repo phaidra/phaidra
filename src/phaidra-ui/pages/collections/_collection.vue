@@ -50,6 +50,12 @@ export default {
                     if(response?.data?.template?.templateTitle) {
                         this.templateTitle = response?.data?.template?.templateTitle
                     }
+                    const title = this.templateTitle[this.$i18n.locale] || this.templateTitle.eng || 'Collection'
+                    this.$store.commit('addBreadcrumb', {
+                        text: title,
+                        to: this.$route.name,
+                        disabled: true
+                    })
                     this.loaded = true
                 })
             } catch (error) {
