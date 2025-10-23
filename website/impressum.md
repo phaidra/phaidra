@@ -5,7 +5,6 @@ hide:
 
 # Contact
 
-- Mag. Dr. Susanne Blumesberger, MSc (<susanne.blumesberger@univie.ac.at>)
 - Dipl. Ing. (FH) Raman Ganguly (<raman.ganguly@univie.ac.at>)
 
 # Imprint
