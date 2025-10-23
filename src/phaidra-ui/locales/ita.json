@@ -1411,5 +1411,6 @@
   "Full-text Search": "Ricerca full text",
   "ORG Unit / Association": "Unità organizzativa / Afferenza",
   "Please log in to continue": "Autenticati per continuare",
-  "You must be logged in to bulk upload to PHAIDRA.": "Devi autenticarti per effettuare un caricamento multiplo in PHAIDRA."
+  "You must be logged in to bulk upload to PHAIDRA.": "Devi autenticarti per effettuare un caricamento multiplo in PHAIDRA.",
+  "The book limit has been reached for the search. Please add more filters to narrow down the results.": "Il limite di oggetti Libro è stato raggiunto per la ricerca. Aggiungi altri filtri per restringere i risultati."
 }
