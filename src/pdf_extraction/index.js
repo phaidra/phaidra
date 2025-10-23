@@ -35,9 +35,13 @@ async function updateJobStatus(pid, status, setFields = {}, agent = 'tika') {
 }
 
 async function extractPdfText(pdfFilePath) {
-  const args = ['-jar', config.tika.jarPath, '-t', pdfFilePath];
+  const tikaConfigPath = path.join(__dirname, 'tika-config.xml');
+  const args = ['-jar', config.tika.jarPath, '--config=' + tikaConfigPath, '-t', pdfFilePath];
   const options = { timeout: config.tika.timeoutMs, maxBuffer: 50 * 1024 * 1024 };
+  console.log("START TIKA PDF EXTRACTION", new Date().toISOString());
+  console.log("Using config:", tikaConfigPath);
   const { stdout } = await execFileAsync('java', args, options);
+  console.log("END TIKA PDF EXTRACTION", new Date().toISOString());
   return stdout;
 }
 
