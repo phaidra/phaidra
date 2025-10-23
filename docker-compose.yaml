@@ -771,7 +771,7 @@ services:
   ############## fedora service for s3 dev profile ###############
   fedora-s3-dev:
     hostname: "fedora"
-    image: fcrepo/fcrepo:6.5.0-tomcat9
+    image: fcrepo/fcrepo:6.5.1-tomcat9
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
@@ -797,7 +797,7 @@ services:
   ############### fedora service for s3 profiles ###############
   fedora-s3:
     hostname: "fedora"
-    image: fcrepo/fcrepo:6.5.0-tomcat9
+    image: fcrepo/fcrepo:6.5.1-tomcat9
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
