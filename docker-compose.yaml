@@ -256,7 +256,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:140d0499
+    image: phaidraorg/ui:bd2fa648
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -274,7 +274,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:140d0499
+    image: phaidraorg/ui:bd2fa648
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -291,7 +291,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:f78cacc9
+    image: phaidraorg/api-dist:bd2fa648
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -306,7 +306,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:f78cacc9
+    image: phaidraorg/api-dist:bd2fa648
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -656,10 +656,10 @@ services:
 
   agent-hdl:
     hostname: "agent-hdl"
-    #image: phaidraorg/agent-hdl:aaaaaaaa
-    build:
-      context: .
-      dockerfile: dockerfiles/agent-hdl.dockerfile
+    image: phaidraorg/agent-hdl:bd2fa648
+    # build:
+    #   context: .
+    #   dockerfile: dockerfiles/agent-hdl.dockerfile
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
