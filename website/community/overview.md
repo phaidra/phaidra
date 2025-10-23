@@ -33,5 +33,4 @@ PHAIDRA is currently installed across a range of institutions: some run our defa
 
 Whether you are interested in support with data management planning and setting up a PHAIDRA repository at your institution, hosted services or building custom applications on PHAIDRA, please contact us at <support.phaidra@univie.ac.at>
 
-- Mag. Dr. Susanne Blumesberger, MSc (<susanne.blumesberger@univie.ac.at>)
 - Dipl. Ing. (FH) Raman Ganguly (<raman.ganguly@univie.ac.at>)
