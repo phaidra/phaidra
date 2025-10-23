@@ -187,7 +187,7 @@ export const constructDataCite = (dataciteData, that) => {
   if (dataciteData?.data?.attributes?.descriptions?.length && doiImportData.license.includes('http://creativecommons.org/licenses')) {
     doiImportData.descriptions = dataciteData.data.attributes.descriptions.map(x => x.descriptionType === 'Abstract' ? {
       ...x,
-      lang: x.lang.length === 3 ? x.lang : that.lang2to3map[x.lang]
+      lang: x.lang ? x.lang.length === 3 ? x.lang : that.lang2to3map[x.lang] : null
     } : null).filter(x => x !== null)
   }
   return doiImportData
