@@ -278,6 +278,15 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
+                      :label="$t('Disable Uploader')"
+                      v-model="parsedPublicConfigData.disableUploader"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Disable showing uploader in object detail box.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-checkbox
                       :label="$t('Enable DOI import')"
                       v-model="parsedPublicConfigData.doiImport"
                     ></v-checkbox>

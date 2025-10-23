@@ -1141,7 +1141,7 @@
                       >{{ $t("Details") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
-                      <v-row no-gutters class="pt-2">
+                      <v-row no-gutters class="pt-2" v-if="!instanceconfig.disableUploader">
                         <v-col
                           class="caption font-weight-bold"
                           cols="3"
