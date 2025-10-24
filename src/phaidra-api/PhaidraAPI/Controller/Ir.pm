@@ -1408,8 +1408,6 @@ sub puresearch {
 
   my $size     = $self->param('size');
   my $offset   = $self->param('offset');
-  my $page     = $self->param('page');
-  my $pageSize = $self->param('pageSize');
 
   # $self->app->log->debug("XXXXXXXXXXXXXXXXXXXX : " . $self->app->config->{apis}->{pure}->{url} . '/research-outputs/search');
   # HACK:
@@ -1421,22 +1419,17 @@ sub puresearch {
     $urlget = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . '/research-outputs/search');
   }
 
-  my $params = {apiKey => $self->app->config->{apis}->{pure}->{key}};
+  my $params = {
+    "keywordUris" => ["/dk/atira/pure/keywords/ir_status/$ir_status"]
+  };
   if ($size) {
     $params->{size} = $size;
   }
   if ($offset) {
     $params->{offset} = $offset;
   }
-  if ($page) {
-    $params->{page} = $page;
-  }
-  if ($pageSize) {
-    $params->{pageSize} = $pageSize;
-  }
-  $urlget->query($params);
 
-  my $getres = $self->ua->post($urlget => {Accept => 'application/json'} => json => {"keywordUris" => ["/dk/atira/pure/keywords/ir_status/$ir_status"]})->result;
+  my $getres = $self->ua->post($urlget => {Accept => 'application/json', "api-key" => $self->app->config->{apis}->{pure}->{key}} => json => $params)->result;  
   if ($getres->is_success) {
     $res->{response} = $getres->json;
   }
@@ -1445,7 +1438,6 @@ sub puresearch {
     return;
   }
 
-  # $self->app->log->debug("XXXXXXXXXXXXXXXXXXXX res: " . $self->app->dumper($res));
   $self->render(json => $res, status => $res->{status});
 }
 
