@@ -1355,7 +1355,7 @@ services:
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
-      HANDLE_PUBLIC_IP: "${HANDLE_PUBLIC_IP}"
+      HANDLE_PUBLIC_IP: "${HANDLE_PUBLIC_IP:-}"
     build:
       context: .
       dockerfile: dockerfiles/handle.dockerfile
