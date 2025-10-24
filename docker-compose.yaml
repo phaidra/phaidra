@@ -672,8 +672,8 @@ services:
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
-      HANDLE_API_USER: "${HANDLE_API_USER:-}"
-      HANDLE_API_PASS: "${HANDLE_API_PASS:-}"
+      HANDLE_PREFIX: "${HANDLE_PREFIX:-}"
+      HANDLE_ADMIN_PRIVKEY: "${HANDLE_ADMIN_PRIVKEY:-}"
     depends_on:
       mongodb-phaidra:
         condition: "service_started"

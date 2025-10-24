@@ -17,6 +17,7 @@ async function processJob(job) {
     console.log(`Processing job for PID: ${job.pid}`);
 
     const handleData = {
+      handle: job.hdl,
       values: [
         {
           index: 1,
@@ -25,6 +26,18 @@ async function processJob(job) {
             format: "string",
             value: `${config.baseURL}/${job.pid}`
           }
+        },
+        {
+          "index": 100,
+          "type": "HS_ADMIN",
+          "data": {
+            "format": "admin",
+            "value": {
+              "handle": `0.NA/${process.env.HANDLE_PREFIX}`,
+              "index": "300",
+              "permissions": "011111110011"
+            }
+          }
         }
       ]
     };
@@ -32,13 +45,13 @@ async function processJob(job) {
     const json = JSON.stringify(handleData, null, 2);
 
     console.log(`PUT: ${json}`);
-    console.log(`URL: http://handle:8000/api/handles/${job.hdl}?overwrite=false`);
+    console.log(`URL: http://handle:8000/api/handles?overwrite=false`);
 
-    const user = process.env.HANDLE_API_USER;
-    const pass = process.env.HANDLE_API_PASS;
+    const user = `0.NA/${HANDLE_PREFIX}`;
+    const pass = process.env.HANDLE_ADMIN_PRIVKEY;
     const base64Credentials = btoa(`${user}:${pass}`);
   
-    const response = await fetch(`http://handle:8000/api/handles/${job.hdl}?overwrite=false`, {
+    const response = await fetch(`http://handle:8000/api/handles?overwrite=false`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
