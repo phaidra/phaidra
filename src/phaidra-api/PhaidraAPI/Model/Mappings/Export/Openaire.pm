@@ -1097,7 +1097,7 @@ sub get_metadata {
         if ($c->app->config->{basepath}) {
           $downloadUrl .= '/' . $c->app->config->{basepath};
         }
-        $downloadUrl .= '/objects/' . $rec->{pid} . '/download';
+        $downloadUrl .= '/object/' . $rec->{pid} . '/download';
       }
       else {
         $downloadUrl = 'https://' . $c->app->config->{phaidra}->{fedorabaseurl} . '/fedora/objects/' . $rec->{pid} . '/methods/bdef:Content/download';
