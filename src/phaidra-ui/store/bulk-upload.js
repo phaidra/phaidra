@@ -63,12 +63,9 @@ export const mutations = {
     }
   },
   setCsvContent(state, content) {
-    console.log('setCsvContent content =>>', content)
     const firstLine = content.split('\n')[0]
     let contentParse = content.split('\n').map(row => row.split(';').map(col => col.trim().replace(/["']/g, '')))
-    console.log('contentParse =>>', contentParse)
     const contentParsed = [firstLine, ...contentParse.slice(1).map(row => row.join(';'))].join('\n')
-    console.log('contentParsed =>>', contentParsed)
     state.csvContent = contentParsed
   },
   setFileName(state, fileName) {
