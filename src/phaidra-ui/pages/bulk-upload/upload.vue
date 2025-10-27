@@ -111,6 +111,7 @@ import { context } from "../../mixins/context"
 import { config } from "../../mixins/config"
 import jsonld from "phaidra-vue-components/src/utils/json-ld"
 import { fieldSettings } from '../../config/bulk-upload/field-settings'
+import Papa from 'papaparse'
 
 export default {
   name: 'Upload',
@@ -134,7 +135,8 @@ export default {
         show: false,
         row: null,
         error: null
-      }
+      },
+      parsedCsvData: null
     }
   },
 
@@ -149,40 +151,40 @@ export default {
     tableData() {
       if (!this.csvContent) return []
 
-      const rows = this.csvContent.split('\n')
-      const headers = rows[0].split(';').map(h => h.trim()).filter(Boolean)
-      
-      return rows.slice(1)
-        .filter(row => row && row.trim()) // Skip empty rows
-        .map((row, index) => {
-          const values = row.split(';').map(v => v.trim())
-          const uploadState = this.getUploadState(index)
-          
-          // Get title and filename from mapping
-          const titleMapping = this.fieldMappings['Title']
-          const filenameMapping = this.fieldMappings['Filename']
-          
-          const title = titleMapping?.source === 'phaidra-field' 
-            ? titleMapping.phaidraValue
-            : titleMapping?.source === 'csv-column'
-              ? values[headers.indexOf(titleMapping.csvValue)] || 'No title'
-              : 'No title'
-              
-          const filename = filenameMapping?.source === 'phaidra-field'
-            ? filenameMapping.phaidraValue
-            : filenameMapping?.source === 'csv-column'
-              ? values[headers.indexOf(filenameMapping.csvValue)]
-              : null
+      const parsed = this.parseCsv()
+      if (!parsed || !parsed.data || parsed.data.length < 2) return []
 
-          return {
-            index: index + 1,
-            title,
-            filename,
-            status: uploadState.status,
-            pid: uploadState.pid,
-            error: uploadState.error
-          }
-        })
+      const headers = parsed.data[0]
+      const dataRows = parsed.data.slice(1)
+      
+      return dataRows.map((values, index) => {
+        const uploadState = this.getUploadState(index)
+        
+        // Get title and filename from mapping
+        const titleMapping = this.fieldMappings['Title']
+        const filenameMapping = this.fieldMappings['Filename']
+        
+        const title = titleMapping?.source === 'phaidra-field' 
+          ? titleMapping.phaidraValue
+          : titleMapping?.source === 'csv-column'
+            ? values[headers.indexOf(titleMapping.csvValue)] || 'No title'
+            : 'No title'
+            
+        const filename = filenameMapping?.source === 'phaidra-field'
+          ? filenameMapping.phaidraValue
+          : filenameMapping?.source === 'csv-column'
+            ? values[headers.indexOf(filenameMapping.csvValue)]
+            : null
+
+        return {
+          index: index + 1,
+          title,
+          filename,
+          status: uploadState.status,
+          pid: uploadState.pid,
+          error: uploadState.error
+        }
+      })
     },
 
     isLoggedIn() {
@@ -199,6 +201,27 @@ export default {
       'hardResetState'
     ]),
 
+    parseCsv() {
+      if (!this.csvContent) return null
+      
+      if (this.parsedCsvData) return this.parsedCsvData
+      
+      this.parsedCsvData = Papa.parse(this.csvContent, {
+        delimiter: ';',
+        skipEmptyLines: true,
+        quoteChar: '"',
+        escapeChar: '"'
+      })
+
+      this.parsedCsvData.data = this.parsedCsvData.data.map(row => {
+        if(row.length === 1 && row[0].includes(';')){
+          return row[0].split(';')
+        }
+        return row
+      })
+      return this.parsedCsvData
+    },
+
     showError(item) {
       this.errorDialog = {
         show: true,
@@ -211,11 +234,15 @@ export default {
       if (this.isUploading) return
 
       this.isUploading = true
-      const rows = this.csvContent?.split('\n') || []
-      const headers = rows[0].split(';').map(h => h.trim()).filter(Boolean)
+      const parsed = this.parseCsv()
       
-      // Filter out empty rows
-      const validRows = rows.slice(1).filter(row => row && row.trim())
+      if (!parsed || !parsed.data || parsed.data.length < 2) {
+        this.isUploading = false
+        return
+      }
+      
+      const headers = parsed.data[0]
+      const validRows = parsed.data.slice(1)
 
       // Initialize progress
       this.setUploadProgress({
@@ -234,7 +261,7 @@ export default {
 
         try {
           this.setUploadState({ rowIndex, status: 'uploading', pid: null, error: null })
-          const values = validRows[i].split(';').map(v => v.trim())
+          const values = validRows[i]
 
           const formData = new FormData()
           const formMetadata = await this.createFormMetadata(headers, values)
@@ -587,13 +614,15 @@ export default {
   created() {
     // Initialize upload progress if not already set
     if (this.getUploadProgress.total === 0) {
-      const rows = this.csvContent?.split('\n') || []
-      const validRows = rows.slice(1).filter(row => row && row.trim())
-      this.setUploadProgress({
-        total: validRows.length,
-        completed: 0,
-        failed: 0
-      })
+      const parsed = this.parseCsv()
+      if (parsed && parsed.data && parsed.data.length > 1) {
+        const validRows = parsed.data.slice(1)
+        this.setUploadProgress({
+          total: validRows.length,
+          completed: 0,
+          failed: 0
+        })
+      }
     }
   }
 }

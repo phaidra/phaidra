@@ -123,6 +123,7 @@
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import BulkUploadSteps from '../../components/BulkUploadSteps.vue'
+import Papa from 'papaparse'
 
 export default {
   name: 'CsvConfig',
@@ -245,11 +246,26 @@ export default {
 
     async readFile(file) {
       const text = await this.readFileContent(file)
-      const firstLine = text.split('\n')[0]
-      const columns = firstLine
-        .split(';')
-        .map(col => col.trim().replace(/["']/g, ''))
-        .filter(col => col !== '')
+      
+      const parsed = Papa.parse(text, {
+        delimiter: ';',
+        skipEmptyLines: true,
+        quoteChar: '"',
+        escapeChar: '"'
+      })
+
+      parsed.data = parsed.data.map(row => {
+        if(row.length === 1 && row[0].includes(';')){
+          return row[0].split(';')
+        }
+        return row
+      })
+
+      if (!parsed.data || parsed.data.length === 0) {
+        throw new Error('No data found in the CSV file')
+      }
+      
+      const columns = parsed.data[0].map(col => col.trim()).filter(col => col !== '')
       
       if (columns.length === 0) {
         throw new Error('No valid columns found in the CSV file')
@@ -268,11 +284,7 @@ export default {
     },
 
     async storeFileData(text, fileName) {
-      const firstLine = text.split('\n')[0]
-      const columns = firstLine
-        .split(';')
-        .map(col => col.trim().replace(/["']/g, ''))
-        .filter(col => col !== '')
+      
       
       this.setCsvContent(text)
       this.setFileName(fileName)

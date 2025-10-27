@@ -28,6 +28,7 @@
     "nuxt": "^2.15.8",
     "nuxt-helmet": "^2.1.1",
     "nuxt-i18n": "^6.28.1",
+    "papaparse": "^5.5.3",
     "path": "^0.12.7",
     "quickchart-js": "^1.4.2",
     "vue": "^2.7.8",

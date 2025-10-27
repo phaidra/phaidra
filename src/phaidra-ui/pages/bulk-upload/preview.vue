@@ -104,6 +104,7 @@ import BulkUploadSteps from '../../components/BulkUploadSteps.vue'
 import PreviewTableHeader from '../../components/bulk-upload/PreviewTableHeader.vue'
 import PreviewTableCell from '../../components/bulk-upload/PreviewTableCell.vue'
 import { fieldSettings } from '../../config/bulk-upload/field-settings'
+import Papa from 'papaparse'
 
 export default {
   name: 'Preview',
@@ -168,11 +169,29 @@ export default {
     async processPreviewData() {
       if (!this.csvContent) return
 
-      const rows = this.csvContent.split('\n').filter(row => row.trim() !== '')
-      const headers = this.getColumnHeaders
 
-      const previewRows = rows.slice(1).map(row => {
-        const values = this.parseCsvRow(row)
+      const parsed = Papa.parse(this.csvContent, {
+        delimiter: ';',
+        skipEmptyLines: true,
+        quoteChar: '"',
+        escapeChar: '"'
+      })
+
+      parsed.data = parsed.data.map(row => {
+        if(row.length === 1 && row[0].includes(';')){
+          return row[0].split(';')
+        }
+        return row
+      })
+
+
+      if (!parsed || !parsed.data || parsed.data.length < 2) return
+
+      const headers = parsed.data[0]
+      const dataRows = parsed.data.slice(1)
+      
+
+      const previewRows = dataRows.map(values => {
         const rowData = {}
         
         this.allFields.forEach(field => {
@@ -207,10 +226,6 @@ export default {
       })
 
       this.previewData = previewRows
-    },
-
-    parseCsvRow(row) {
-      return row.split(';').map(v => v.trim().replace(/["']/g, ''))
     },
 
     getSourceInfo(field, subField = null) {

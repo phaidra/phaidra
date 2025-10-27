@@ -1,4 +1,5 @@
 import { fieldSettings } from '../config/bulk-upload/field-settings'
+import Papa from 'papaparse'
 
 export const state = () => ({
   currentStep: 1,
@@ -63,10 +64,7 @@ export const mutations = {
     }
   },
   setCsvContent(state, content) {
-    const firstLine = content.split('\n')[0]
-    let contentParse = content.split('\n').map(row => row.split(';').map(col => col.trim().replace(/["']/g, '')))
-    const contentParsed = [firstLine, ...contentParse.slice(1).map(row => row.join(';'))].join('\n')
-    state.csvContent = contentParsed
+    state.csvContent = content
   },
   setFileName(state, fileName) {
     state.fileName = fileName
@@ -182,7 +180,17 @@ export const getters = {
   },
   getColumnHeaders: (state) => {
     if (!state.csvContent) return []
-    return state.csvContent.split('\n')[0].split(';').map(v => v.trim().replace(/["']/g, ''))
+    
+    const parsed = Papa.parse(state.csvContent, {
+      delimiter: ';',
+      skipEmptyLines: true,
+      quoteChar: '"',
+      escapeChar: '"'
+    })
+    
+    if (!parsed || !parsed.data || parsed.data.length === 0) return []
+    
+    return parsed.data[0].map(v => v.trim())
   },
   getCurrentStepFromRoute: (state) => (route) => {
     for (const [stepNum, stepData] of Object.entries(state.steps)) {

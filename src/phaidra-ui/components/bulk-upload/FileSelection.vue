@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import Papa from 'papaparse'
+
 export default {
   name: 'FileSelection',
   props: {
@@ -55,9 +57,28 @@ export default {
         return
       }
 
-      // Get all required filenames from CSV
-      const rows = this.csvContent.split('\n')
-      const headers = rows[0].split(';').map(h => h.trim()).filter(Boolean)
+      const parsed = Papa.parse(this.csvContent, {
+        delimiter: ';',
+        skipEmptyLines: true,
+        quoteChar: '"',
+        escapeChar: '"'
+      })
+
+      parsed.data = parsed.data.map(row => {
+        if(row.length === 1 && row[0].includes(';')){
+          return row[0].split(';')
+        }
+        return row
+      })
+
+      if (!parsed || !parsed.data || parsed.data.length < 2) {
+        this.error = 'Invalid CSV data'
+        this.$emit('input', [])
+        return
+      }
+
+      const headers = parsed.data[0]
+      const dataRows = parsed.data.slice(1)
       const filenameMapping = this.fieldMappings['Filename']
       
       if (!filenameMapping || filenameMapping.source !== 'csv-column') {
@@ -74,9 +95,8 @@ export default {
       }
 
       const requiredFiles = new Set(
-        rows.slice(1)
-          .filter(row => row && row.trim()) // Skip empty rows
-          .map(row => row.split(';')[filenameIndex].trim())
+        dataRows
+          .map(row => row[filenameIndex] ? row[filenameIndex].trim() : '')
           .filter(Boolean)
       )
 
