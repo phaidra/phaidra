@@ -10,7 +10,6 @@ export function parseCsv(csvContent) {
   }
 
   const parsed = Papa.parse(csvContent, {
-    delimiter: ';',
     skipEmptyLines: true,
     quoteChar: '"',
     escapeChar: '"'
@@ -46,7 +45,6 @@ export const csvParser = {
       }
 
       const parsed = Papa.parse(csvContent, {
-        delimiter: ';',
         skipEmptyLines: true,
         quoteChar: '"',
         escapeChar: '"'
