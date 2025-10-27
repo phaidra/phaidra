@@ -20,6 +20,14 @@ export function parseCsv(csvContent) {
     console.warn('CSV Parser - Parsing errors:', parsed.errors)
   }
 
+  parsed.data = parsed.data.map(row => {
+    if (row.length === 1 && row[0].includes(';')) {
+      console.warn('CSV Warning: Row has all data in single field. This suggests improper quoting.')
+      return row[0].split(';')
+    }
+    return row
+  })
+
   return parsed
 }
 
@@ -49,6 +57,14 @@ export const csvParser = {
       if (parsed.errors && parsed.errors.length > 0) {
         console.warn('CSV Parser - Parsing errors:', parsed.errors)
       }
+
+      parsed.data = parsed.data.map(row => {
+        if (row.length === 1 && row[0].includes(';')) {
+          console.warn('CSV Warning: Row has all data in single field. This suggests improper quoting.')
+          return row[0].split(';')
+        }
+        return row
+      })
 
       return parsed
     },

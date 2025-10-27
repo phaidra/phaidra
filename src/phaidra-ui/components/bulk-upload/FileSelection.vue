@@ -60,13 +60,6 @@ export default {
 
       const parsed = this.parseCsvContent(this.csvContent)
 
-      parsed.data = parsed.data.map(row => {
-        if(row.length === 1 && row[0].includes(';')){
-          return row[0].split(';')
-        }
-        return row
-      })
-
       if (!parsed || !parsed.data || parsed.data.length < 2) {
         this.error = 'Invalid CSV data'
         this.$emit('input', [])

@@ -250,13 +250,6 @@ export default {
       
       const parsed = this.parseCsvContent(text)
 
-      parsed.data = parsed.data.map(row => {
-        if(row.length === 1 && row[0].includes(';')){
-          return row[0].split(';')
-        }
-        return row
-      })
-
       if (!parsed.data || parsed.data.length === 0) {
         throw new Error('No data found in the CSV file')
       }

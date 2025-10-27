@@ -208,13 +208,6 @@ export default {
       
       this.parsedCsvData = this.parseCsvContent(this.csvContent)
 
-      this.parsedCsvData.data = this.parsedCsvData.data.map(row => {
-        if(row.length === 1 && row[0].includes(';')){
-          return row[0].split(';')
-        }
-        return row
-      })
-
       return this.parsedCsvData
     },
 
