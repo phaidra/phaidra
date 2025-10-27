@@ -78,7 +78,7 @@
               <v-btn dark icon @click="toggleSectionCollapse(s)">
                 <v-icon>{{ s.collapsed ? 'mdi-chevron-down' : 'mdi-chevron-up' }}</v-icon>
               </v-btn>
-              <v-menu open-on-hover bottom offset-y v-if="!s.disablemenu">
+              <v-menu bottom offset-y v-if="!s.disablemenu">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn v-on="on" v-bind="attrs" icon dark>
                     <v-icon dark>mdi-dots-vertical</v-icon>
