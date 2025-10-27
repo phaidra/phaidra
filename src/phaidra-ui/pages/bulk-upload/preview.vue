@@ -104,7 +104,7 @@ import BulkUploadSteps from '../../components/BulkUploadSteps.vue'
 import PreviewTableHeader from '../../components/bulk-upload/PreviewTableHeader.vue'
 import PreviewTableCell from '../../components/bulk-upload/PreviewTableCell.vue'
 import { fieldSettings } from '../../config/bulk-upload/field-settings'
-import Papa from 'papaparse'
+import { csvParser } from '../../mixins/csvParser'
 
 export default {
   name: 'Preview',
@@ -115,6 +115,7 @@ export default {
     PreviewTableCell
   },
 
+  mixins: [csvParser],
   middleware: 'bulk-upload',
 
   data() {
@@ -169,13 +170,7 @@ export default {
     async processPreviewData() {
       if (!this.csvContent) return
 
-
-      const parsed = Papa.parse(this.csvContent, {
-        delimiter: ';',
-        skipEmptyLines: true,
-        quoteChar: '"',
-        escapeChar: '"'
-      })
+      const parsed = this.parseCsvContent(this.csvContent)
 
       parsed.data = parsed.data.map(row => {
         if(row.length === 1 && row[0].includes(';')){

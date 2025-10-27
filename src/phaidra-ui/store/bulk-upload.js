@@ -1,5 +1,5 @@
 import { fieldSettings } from '../config/bulk-upload/field-settings'
-import Papa from 'papaparse'
+import { parseCsv } from '../mixins/csvParser'
 
 export const state = () => ({
   currentStep: 1,
@@ -181,12 +181,7 @@ export const getters = {
   getColumnHeaders: (state) => {
     if (!state.csvContent) return []
     
-    const parsed = Papa.parse(state.csvContent, {
-      delimiter: ';',
-      skipEmptyLines: true,
-      quoteChar: '"',
-      escapeChar: '"'
-    })
+    const parsed = parseCsv(state.csvContent)
     
     if (!parsed || !parsed.data || parsed.data.length === 0) return []
     

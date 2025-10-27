@@ -26,10 +26,11 @@
 </template>
 
 <script>
-import Papa from 'papaparse'
+import { csvParser } from '../../mixins/csvParser'
 
 export default {
   name: 'FileSelection',
+  mixins: [csvParser],
   props: {
     csvContent: {
       type: String,
@@ -57,12 +58,7 @@ export default {
         return
       }
 
-      const parsed = Papa.parse(this.csvContent, {
-        delimiter: ';',
-        skipEmptyLines: true,
-        quoteChar: '"',
-        escapeChar: '"'
-      })
+      const parsed = this.parseCsvContent(this.csvContent)
 
       parsed.data = parsed.data.map(row => {
         if(row.length === 1 && row[0].includes(';')){

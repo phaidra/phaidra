@@ -109,9 +109,9 @@ import UploadProgress from '../../components/bulk-upload/UploadProgress.vue'
 import FileSelection from '../../components/bulk-upload/FileSelection.vue'
 import { context } from "../../mixins/context"
 import { config } from "../../mixins/config"
+import { csvParser } from "../../mixins/csvParser"
 import jsonld from "phaidra-vue-components/src/utils/json-ld"
 import { fieldSettings } from '../../config/bulk-upload/field-settings'
-import Papa from 'papaparse'
 
 export default {
   name: 'Upload',
@@ -123,7 +123,7 @@ export default {
     UploadProgress,
     FileSelection
   },
-  mixins: [context, config],
+  mixins: [context, config, csvParser],
   middleware: 'bulk-upload',
 
   data() {
@@ -206,12 +206,7 @@ export default {
       
       if (this.parsedCsvData) return this.parsedCsvData
       
-      this.parsedCsvData = Papa.parse(this.csvContent, {
-        delimiter: ';',
-        skipEmptyLines: true,
-        quoteChar: '"',
-        escapeChar: '"'
-      })
+      this.parsedCsvData = this.parseCsvContent(this.csvContent)
 
       this.parsedCsvData.data = this.parsedCsvData.data.map(row => {
         if(row.length === 1 && row[0].includes(';')){
@@ -219,6 +214,7 @@ export default {
         }
         return row
       })
+
       return this.parsedCsvData
     },
 

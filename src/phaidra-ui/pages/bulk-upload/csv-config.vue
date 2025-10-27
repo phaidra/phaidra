@@ -123,13 +123,14 @@
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import BulkUploadSteps from '../../components/BulkUploadSteps.vue'
-import Papa from 'papaparse'
+import { csvParser } from '../../mixins/csvParser'
 
 export default {
   name: 'CsvConfig',
   components: {
     BulkUploadSteps
   },
+  mixins: [csvParser],
   middleware: 'bulk-upload',
 
   data() {
@@ -247,12 +248,7 @@ export default {
     async readFile(file) {
       const text = await this.readFileContent(file)
       
-      const parsed = Papa.parse(text, {
-        delimiter: ';',
-        skipEmptyLines: true,
-        quoteChar: '"',
-        escapeChar: '"'
-      })
+      const parsed = this.parseCsvContent(text)
 
       parsed.data = parsed.data.map(row => {
         if(row.length === 1 && row[0].includes(';')){
