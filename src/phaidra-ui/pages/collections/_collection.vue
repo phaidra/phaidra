@@ -51,11 +51,21 @@ export default {
                         this.templateTitle = response?.data?.template?.templateTitle
                     }
                     const title = this.templateTitle[this.$i18n.locale] || this.templateTitle.eng || 'Collection'
-                    this.$store.commit('addBreadcrumb', {
-                        text: title,
-                        to: this.$route.name,
-                        disabled: true
-                    })
+                    let indexCollectionObject = {
+                        text: 'Collections',
+                        to: '/collections'
+                    }
+                    if(response?.data?.template?.templateName !== 'index') {
+                        this.$store.commit('addBreadcrumb', indexCollectionObject)
+                        this.$store.commit('addBreadcrumb', {
+                            text: title,
+                            to: this.$route.name,
+                            disabled: true
+                        })
+                    } else {
+                        indexCollectionObject.disabled = true
+                        this.$store.commit('addBreadcrumb', indexCollectionObject)
+                    }
                     this.loaded = true
                 })
             } catch (error) {

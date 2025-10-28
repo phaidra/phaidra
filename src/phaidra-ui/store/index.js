@@ -102,15 +102,6 @@ export const mutations = {
         }
       )
     }
-    if (transition.to.path.includes('/collections')) {
-      state.breadcrumbs.push(
-        {
-          text: 'Collections',
-          to: transition.to.name,
-          disabled: true
-        }
-      )
-    }
     if (transition.to.path.includes('/bulk-upload')) {
       state.breadcrumbs.push(
         {
