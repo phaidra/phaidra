@@ -11,7 +11,8 @@ export const formvalidation = {
           'image/gif',
           'image/tiff',
           'image/png',
-          'image/x-ms-bmp'
+          'image/x-ms-bmp',
+          'image/jp2',
         ],
         // text
         'https://pid.phaidra.org/vocabulary/69ZZ-2KGX': [

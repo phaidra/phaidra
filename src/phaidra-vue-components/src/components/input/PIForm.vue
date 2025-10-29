@@ -1888,6 +1888,7 @@ export default {
         case 'image/gif':
         case 'image/png':
         case 'image/x-ms-bmp':
+        case 'image/jp2':
           // picture
           return 'https://pid.phaidra.org/vocabulary/44TN-P1S0'
 
