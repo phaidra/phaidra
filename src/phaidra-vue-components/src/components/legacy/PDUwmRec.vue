@@ -112,48 +112,50 @@
           </v-col>
         </template>
         <template v-else-if="nodePath(ch) === 'uwm_provenience_contribute'">
-          <v-card outlined class="mt-4" :width="'100%'">
-            <v-card-text>
-              <div class="overline mb-4">{{ $t(nodePath(ch)) }}</div>
-              <v-row v-if="getChildLabel(ch, 'resource')">
-                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_resource') }}</v-col>
-                <v-col cols="12" md="10">{{ getChildLabel(ch, 'resource') }}</v-col>
-              </v-row>
-              <v-row v-for="(child, i) in getMultipleChild(ch, 'comment')" :key="'comment'+i">
-                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_comment') }}<template v-if="getLangAttr(child)"> ({{getLangAttr(child)}})</template></v-col>
-                <v-col cols="12" md="10"><span v-html="link(child.ui_value)"></span></v-col>
-              </v-row>
-              <v-row v-if="getChildValue(ch, 'role')">
-                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getChildLabel(ch, 'role') }}</v-col>
-                <v-col cols="12" md="10">
-                  <v-row no-gutters v-for="(entity, i) in getEntities(ch)" :key="'en'+i">
-                    <v-col>
-                      <span v-if="getChildValue(entity, 'firstname')" class="wiv">{{ getChildValue(entity, 'firstname') }}</span>
-                      <span v-if="getChildValue(entity, 'lastname')" class="wiv">{{ getChildValue(entity, 'lastname') }}</span>
-                      <span v-if="getChildValue(entity, 'institution') && (getChildValue(entity, 'firstname') || getChildValue(entity, 'lastname'))" class="secondary--text">&nbsp;({{ getChildValue(entity, 'institution') }})</span>
-                      <span v-else-if="getChildValue(entity, 'institution')">{{ getChildValue(entity, 'institution') }}</span>                      
-                    </v-col>
-                  </v-row>
-                </v-col>
-              </v-row>
-              <v-row v-if="getChildValue(ch, 'date_from')">
-                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_date_from') }}</v-col>
-                <v-col cols="12" md="10">{{ getChildValue(ch, 'date_from') | date }}</v-col>
-              </v-row>
-              <v-row v-if="getChildValue(ch, 'date_to')">
-                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_date_to') }}</v-col>
-                <v-col cols="12" md="10">{{ getChildValue(ch, 'date_to') | date }}</v-col>
-              </v-row>
-              <v-row v-for="(child, i) in getMultipleChild(ch, 'chronological')" :key="'chron'+i">
-                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_chronological') }}<template v-if="getLangAttr(child)"> ({{getLangAttr(child)}})</template></v-col>
-                <v-col cols="12" md="10">{{ child.ui_value }}</v-col>
-              </v-row>
-              <v-row v-for="(child, i) in getMultipleChild(ch, 'location')" :key="'loc'+i">
-                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_location') }}<template v-if="getLangAttr(child)"> ({{getLangAttr(child)}})</template></v-col>
-                <v-col cols="12" md="10">{{ child.ui_value }}</v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
+          <v-col>
+            <v-card outlined class="mt-4" :width="'100%'">
+              <v-card-text>
+                <div class="overline mb-4">{{ $t(nodePath(ch)) }}</div>
+                <v-row v-if="getChildLabel(ch, 'resource')">
+                  <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_resource') }}</v-col>
+                  <v-col cols="12" md="10">{{ getChildLabel(ch, 'resource') }}</v-col>
+                </v-row>
+                <v-row v-for="(child, i) in getMultipleChild(ch, 'comment')" :key="'comment'+i">
+                  <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_comment') }}<template v-if="getLangAttr(child)"> ({{getLangAttr(child)}})</template></v-col>
+                  <v-col cols="12" md="10"><span v-html="link(child.ui_value)"></span></v-col>
+                </v-row>
+                <v-row v-if="getChildValue(ch, 'role')">
+                  <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getChildLabel(ch, 'role') }}</v-col>
+                  <v-col cols="12" md="10">
+                    <v-row no-gutters v-for="(entity, i) in getEntities(ch)" :key="'en'+i">
+                      <v-col>
+                        <span v-if="getChildValue(entity, 'firstname')" class="wiv">{{ getChildValue(entity, 'firstname') }}</span>
+                        <span v-if="getChildValue(entity, 'lastname')" class="wiv">{{ getChildValue(entity, 'lastname') }}</span>
+                        <span v-if="getChildValue(entity, 'institution') && (getChildValue(entity, 'firstname') || getChildValue(entity, 'lastname'))" class="secondary--text">&nbsp;({{ getChildValue(entity, 'institution') }})</span>
+                        <span v-else-if="getChildValue(entity, 'institution')">{{ getChildValue(entity, 'institution') }}</span>                      
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                </v-row>
+                <v-row v-if="getChildValue(ch, 'date_from')">
+                  <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_date_from') }}</v-col>
+                  <v-col cols="12" md="10">{{ getChildValue(ch, 'date_from') | date }}</v-col>
+                </v-row>
+                <v-row v-if="getChildValue(ch, 'date_to')">
+                  <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_date_to') }}</v-col>
+                  <v-col cols="12" md="10">{{ getChildValue(ch, 'date_to') | date }}</v-col>
+                </v-row>
+                <v-row v-for="(child, i) in getMultipleChild(ch, 'chronological')" :key="'chron'+i">
+                  <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_chronological') }}<template v-if="getLangAttr(child)"> ({{getLangAttr(child)}})</template></v-col>
+                  <v-col cols="12" md="10">{{ child.ui_value }}</v-col>
+                </v-row>
+                <v-row v-for="(child, i) in getMultipleChild(ch, 'location')" :key="'loc'+i">
+                  <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_location') }}<template v-if="getLangAttr(child)"> ({{getLangAttr(child)}})</template></v-col>
+                  <v-col cols="12" md="10">{{ child.ui_value }}</v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
+          </v-col>
         </template>
         <template v-else-if="ch.xmlname === 'taxonpath'">
           <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getChildLabel(ch, 'source') }}</v-col>
