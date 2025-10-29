@@ -174,9 +174,12 @@ export default {
         return this.currentPage
       },
       set (value) {
+        const pageChanged = this.currentPage !== value
         this.currentPage = value
         this.search()
-        window.scrollTo(0, 0)
+        if (pageChanged) {
+          window.scrollTo(0, 0)
+        }
       }
     },
     totalPages: function () {
