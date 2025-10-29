@@ -623,7 +623,9 @@ export default {
   white-space: pre-wrap;
 }
 .pdlabel {
-  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-wrap: break-word; /* legacy fallback */
+  hyphens: auto;
 }
 </style>
 
