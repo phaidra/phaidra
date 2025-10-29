@@ -69,7 +69,9 @@ export const mutations = {
       'hideInstitutionName',
       'isParentSelectionDisabled',
       'hideBreadcrumbsOnHomepage',
-      'data_ot4rt'
+      'data_ot4rt',
+      'enableCookieBanner',
+      'cookiePrivacyPolicyUrl'
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
