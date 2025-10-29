@@ -186,12 +186,16 @@
         <template v-else-if="hideNodeBorder(nodePath(ch))">
           <p-d-uwm-rec v-if="ch.children" :children="ch.children" :cmodel="cmodel" :dc_rights="dc_rights" :path="nodePath(ch)"></p-d-uwm-rec>
         </template>
-        <v-card v-else outlined class="mt-4" :width="'100%'">
-          <v-card-text>
-            <div class="overline mb-4">{{ $t(nodePath(ch)) }}</div>
-            <p-d-uwm-rec v-if="ch.children" :children="ch.children" :cmodel="cmodel" :dc_rights="dc_rights" :path="nodePath(ch)"></p-d-uwm-rec>
-          </v-card-text>
-        </v-card>
+        <template v-else>
+          <v-col>
+            <v-card outlined class="mt-4" :width="'100%'">
+              <v-card-text>
+                <div class="overline mb-4">{{ $t(nodePath(ch)) }}</div>
+                <p-d-uwm-rec v-if="ch.children" :children="ch.children" :cmodel="cmodel" :dc_rights="dc_rights" :path="nodePath(ch)"></p-d-uwm-rec>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </template>
       </template>
       <v-alert v-else dense type="error" :value="true">Unknown field type {{ch.xmlname}} {{ch.input_type}}</v-alert>
     </v-row>
