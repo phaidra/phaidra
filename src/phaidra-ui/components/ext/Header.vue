@@ -346,7 +346,7 @@
                             <v-list-item
                                 v-if="!signedin && appconfig.enablelogin"
                                 href
-                                :to="localePath('/login')"
+                                :href="localePath('/login')"
                                 ><v-list-item-title>{{ $t("Login") }}</v-list-item-title></v-list-item
                             >
                             <v-list-item
