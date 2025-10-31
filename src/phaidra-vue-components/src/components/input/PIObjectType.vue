@@ -5,7 +5,20 @@
     </v-alert>
     <v-card outlined class="mt-4 mb-8">
       <v-card-title v-if="showLabel" class="title font-weight-light white--text">
-      {{ $t(label) }}
+        <span>{{ $t(label) }}</span>
+        <v-spacer></v-spacer>
+        <v-menu v-if="actions.length" open-on-hover bottom offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn v-on="on" v-bind="attrs" icon dark>
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
+              <v-list-item-title>{{ action.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </v-card-title>
       <v-card-text class="mt-4">
         <v-row no-gutters>
