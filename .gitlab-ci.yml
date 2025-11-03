@@ -655,7 +655,7 @@ helm-package:
     - PACKAGE_FILE=$(yq -r '.name + "-" + .version + ".tgz"' Chart.yaml)
     - curl --fail-with-body --request POST --user "$GITLAB_HELM_REPO_USERNAME:$GITLAB_HELM_REPO_PASSWORD" --form "chart=@$PACKAGE_FILE" "$GITLAB_HELM_REPO_URL/$CI_COMMIT_BRANCH/charts"
   rules:
-    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_BRANCH != null
       changes:
         paths:
           - k8s/helm/**/*
