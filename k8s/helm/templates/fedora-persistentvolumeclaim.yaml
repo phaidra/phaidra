@@ -9,7 +9,7 @@ metadata:
 spec:
   storageClassName: "{{ .Values.FEDORA_PVC_TYPE }}"
   accessModes:
-    - ReadOnlyMany
+    - ReadWriteMany
   resources:
     requests:
       storage: "{{ .Values.FEDORA_PVC_SIZE }}"

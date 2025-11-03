@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: phaidra-access
+  annotations:
+    "helm.sh/resource-policy": "keep"
+type: Opaque
+# immutable: true
+data:
+# dont modify secret if it exists
+{{- $existing := (lookup "v1" "Secret" (default .Values.K8S_Namespace .Release.Namespace) "phaidra-access").data }}
+{{- if $existing }}
+  {{- $existing | toYaml | nindent 2 -}}
+{{ else }}
+  {{- $new := include "names" . | fromYaml }}
+  {{- merge $existing $new | toYaml | nindent 2}}
+{{ end }}
+---
+{{ define "names" }}
+FEDORA_ADMIN_PASSWORD: {{ randAlphaNum 40 | b64enc }}
+LDAP_ADMIN_PASSWORD: {{ randAlphaNum 40 | b64enc }}
+PHAIDRA_ADMIN_PASSWORD: {{ randAlphaNum 40 | b64enc }}
+MONGODB_PHAIDRA_PASSWORD: {{ randAlphaNum 40 | b64enc }}
+MONGO_INITDB_ROOT_PASSWORD: {{ randAlphaNum 40 | b64enc }}
+
+MARIADB_PHAIDRA_PASSWORD: {{ randAlphaNum 40 | b64enc }}
+MARIADB_PHAIDRA_ROOT_PASSWORD: {{ randAlphaNum 40 | b64enc }}
+
+MARIADB_FEDORA_PASSWORD: {{ randAlphaNum 40 | b64enc }}
+MARIADB_FEDORA_ROOT_PASSWORD: {{ randAlphaNum 40 | b64enc }}
+SOLR_PASS: {{ randAlphaNum 40 | b64enc }}
+SOLR_SALT: {{ randAlphaNum 40 | b64enc }}
+PHAIDRA_SECRET: {{ randAlphaNum 40 | b64enc }}
+IMAGESERVER_HASH_SECRET: {{ randAlphaNum 40 | b64enc }}
+PHAIDRA_ENCRYPTION_KEY: {{ randAlphaNum 40 | b64enc }}
+DBGATE_PASS: {{ randAlphaNum 40 | b64enc }}
+GF_SECURITY_ADMIN_PASSWORD: {{ randAlphaNum 40 | b64enc }}
+{{ end }}

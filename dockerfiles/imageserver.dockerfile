@@ -1,15 +1,13 @@
-FROM ubuntu:jammy-20251001
+FROM iipsrv/iipsrv:1.3
 
-ENV DEBIAN_FRONTEND=noninteractive
-RUN touch /etc/default/iipsrv
-RUN <<EOF
-apt-get --quiet update
-apt-get install --yes --quiet --no-install-recommends \
-    iipimage-server libapache2-mod-fcgid apache2 apache2-utils
-apt-get clean
-echo 'FcgidInitialEnv BASE_URL "${OUTSIDE_HTTP_SCHEME}://${PHAIDRA_HOSTNAME}${PHAIDRA_PORTSTUB}${PHAIDRA_HOSTPORT}/api/imageserver?IIIF=\' >> /etc/apache2/mods-enabled/iipsrv.conf
-EOF
+RUN echo 'server.port = env.LIGHTTPD_PORT' >> /etc/lighttpd/lighttpd.conf &&\
+  mkdir -p /etc/lighttpd/log &&\
+  chown -R :root /etc/lighttpd/log &&\
+  chmod -R g+rwx /etc/lighttpd/log &&\
+  sed -i 's#fcgi-bin#iipsrv#g' /etc/lighttpd/lighttpd.conf &&\
+  sed -i 's#/var/log/lighttpd#/etc/lighttpd/log#g' /etc/lighttpd/lighttpd.conf &&\
+  sed -i 's#^.*pid-file.*$#server.pid-file = "/tmp/lighttpd.pid"#g' /etc/lighttpd/lighttpd.conf &&\
+  chown -R lighttpd:root /etc/lighttpd
 
-EXPOSE 80
-ADD ../container_init/imageserver/imageserver-entrypoint.bash /imageserver-entrypoint.bash
-ENTRYPOINT ["bash", "/imageserver-entrypoint.bash"]
+SHELL ["/bin/sh", "-c"]
+ENTRYPOINT lighttpd -f /etc/lighttpd/lighttpd.conf && iipsrv --bind ${HOST}:${PORT}

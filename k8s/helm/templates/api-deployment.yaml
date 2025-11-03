@@ -13,23 +13,30 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        promtail.io/scrape: 'true'
       labels:
         phaidra.app: api
     spec:
       containers:
         - env:
             - name: "FEDORA_ADMIN_PASS"
-              value: "{{ .Values.FEDORA_ADMIN_PASS }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "FEDORA_ADMIN_PASSWORD"
             - name: "FEDORA_ADMIN_USER"
               value: "{{ .Values.FEDORA_ADMIN_USER }}"
             - name: "FEDORA_OCFL_ROOT"
               value: "{{ .Values.FEDORA_OCFL_ROOT }}"
             - name: "IMAGESERVER_HASH_SECRET"
-              value: "{{ .Values.IMAGESERVER_HASH_SECRET }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "IMAGESERVER_HASH_SECRET"
             - name: "LDAP_ADMIN_PASSWORD"
-              value: "{{ .Values.LDAP_ADMIN_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "LDAP_ADMIN_PASSWORD"
             - name: "LDAP_ADMIN_USERNAME"
               value: "{{ .Values.LDAP_ADMIN_USERNAME }}"
             - name: "LDAP_ROOT"
@@ -39,11 +46,17 @@ spec:
             - name: "OUTSIDE_HTTP_SCHEME"
               value: "{{ .Values.OUTSIDE_HTTP_SCHEME }}"
             - name: "PHAIDRA_ADMIN_PASSWORD"
-              value: "{{ .Values.PHAIDRA_ADMIN_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "PHAIDRA_ADMIN_PASSWORD"
             - name: "PHAIDRA_ADMIN_USER"
               value: "{{ .Values.PHAIDRA_ADMIN_USER }}"
             - name: "PHAIDRA_ENCRYPTION_KEY"
-              value: "{{ .Values.PHAIDRA_ENCRYPTION_KEY }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "PHAIDRA_ENCRYPTION_KEY"
             - name: "PHAIDRA_HOSTNAME"
               value: "{{ .Values.PHAIDRA_HOSTNAME }}"
             - name: "PHAIDRA_HOSTPORT"
@@ -51,9 +64,15 @@ spec:
             - name: "PHAIDRA_PORTSTUB"
               value: "{{ .Values.PHAIDRA_PORTSTUB }}"
             - name: "PHAIDRA_SECRET"
-              value: "{{ .Values.PHAIDRA_SECRET }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "PHAIDRA_SECRET"
             - name: "SOLR_PASS"
-              value: "{{ .Values.SOLR_PASS }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "SOLR_PASS"
             - name: "SOLR_USER"
               value: "{{ .Values.SOLR_USER }}"
             - name: SOLR_HOST
@@ -63,30 +82,79 @@ spec:
             - name: MONGODB_PHAIDRA_USER
               value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
             - name: MONGODB_PHAIDRA_PASSWORD
-              value: "{{ .Values.MONGODB_PHAIDRA_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "MONGODB_PHAIDRA_PASSWORD"
             - name: MARIADB_PHAIDRA_HOST
               value: "mariadb-phaidra-service"
             - name: MARIADB_PHAIDRA_USER
               value: "{{ .Values.MARIADB_PHAIDRA_USER }}"
             - name: MARIADB_PHAIDRA_PASSWORD
-              value: "{{ .Values.MARIADB_PHAIDRA_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "MARIADB_PHAIDRA_PASSWORD"
             - name: FEDORA_HOST
               value: "fedora-service"
             - name: IMAGESERVER_HOST
               value: "imageserver-service"
             - name: OPENLDAP_HOST
               value: "openldap-service"
-          image: testuser34/api-dist:92256d60
+            - name: IMAGESERVER_ROOT_PATH
+              value: "/"
+            - name: CONVERTED_IMAGES_PATH
+              value: "mnt/"
+            {{- if .Values.s3 }}
+            - name: S3_ENABLED
+              value: "true"
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-s3-access"
+                  key: "AWS_ACCESS_KEY_ID"
+            - name: S3_BUCKETNAME
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-s3-access"
+                  key: "BUCKET_NAME"
+            - name: S3_CACHESIZE
+              value: "{{ .Values.s3.S3_CACHE_SIZE}}"
+            - name: S3_CACHE_TOPDIR
+              value: "{{ .Values.s3.S3_CACHE_TOPDIR }}"
+            - name: S3_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-s3-access"
+                  key: "ENDPOINT_URL"
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-s3-access"
+                  key: "AWS_SECRET_ACCESS_KEY"
+            {{- end }}
+          image: phaidraorg/api-dist:5dbc8851
           name: api
-          resources: {}
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "300M"
+            limits:
+              cpu: "350m"
+              memory: "1G"
           volumeMounts:
             - mountPath: /mnt/fedora
               name: fedora
               readOnly: true
+            - mountPath: /mnt/converted_images
+              name: pixelgecko
       restartPolicy: Always
       volumes:
         - name: fedora
           persistentVolumeClaim:
             claimName: fedora-pvc
             readOnly: true
+        - name: pixelgecko
+          persistentVolumeClaim:
+            claimName: pixelgecko-pvc
 status: {}

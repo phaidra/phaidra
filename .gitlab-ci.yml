@@ -9,6 +9,7 @@ stages:
   - build-dist
   - test
   - deploy
+  - helm
   - release
 
 services:
@@ -640,3 +641,21 @@ build-website-push-final:
         paths:
           - website/**/*
           - mkdocs.yml
+
+helm-package:
+  stage: helm
+  image: docker.io/library/alpine:latest
+  script:
+    - apk add --quiet curl helm git yq jq
+    - cd k8s/helm
+    # misusing APP_VERSION to mean commit hash of helm chart instead of phaidra version
+    # TODO change for production use
+    - APP_VERSION=$(git describe --always --tags)
+    - helm package --app-version $APP_VERSION .
+    - PACKAGE_FILE=$(yq -r '.name + "-" + .version + ".tgz"' Chart.yaml)
+    - curl --fail-with-body --request POST --user "$GITLAB_HELM_REPO_USERNAME:$GITLAB_HELM_REPO_PASSWORD" --form "chart=@$PACKAGE_FILE" "$GITLAB_HELM_REPO_URL/$CI_COMMIT_BRANCH/charts"
+  rules:
+    - if: $CI_COMMIT_BRANCH
+      changes:
+        paths:
+          - k8s/helm/**/*

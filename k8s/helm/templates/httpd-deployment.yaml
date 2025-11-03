@@ -14,7 +14,6 @@ spec:
   template:
     metadata:
       annotations:
-        promtail.io/scrape: 'true'
         checksum/config: {{ include (print $.Template.BasePath "/httpd-configmap.yaml") . | sha256sum }}
       labels:
         phaidra.app: httpd
@@ -33,11 +32,18 @@ spec:
               value: "{{ .Values.PHAIDRA_ADMIN_EMAIL }}"
             - name: SOURCE_CLIENT_IP_HEADER
               value: "{{ .Values.SOURCE_CLIENT_IP_HEADER }}"
-          image: httpd:2.4.59-bookworm
+          # image: httpd:2.4.63-bookworm
+          image: quay.io/fedora/httpd-24
           name: httpd
           ports:
-            - containerPort: 80
-          resources: {}
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "25M"
+            limits:
+              cpu: "50m"
+              memory: "100M"
           volumeMounts:
             - mountPath: /mnt/sitemaps
               name: chronos-sitemaps
@@ -45,14 +51,13 @@ spec:
             - mountPath: /config
               name: httpd-config
               readOnly: true
-          command: ["/bin/sh"]
-          args: [ "-c", "cp /config/httpd.conf /usr/local/apache2/conf/httpd.conf && httpd-foreground"]
+          command: ["httpd"]
+          args: [ "-DFOREGROUND", "-f", "/config/httpd.conf"]
       restartPolicy: Always
       volumes:
         - name: chronos-sitemaps
           persistentVolumeClaim:
             claimName: chronos-sitemaps-pvc
-            readOnly: true
         - name: httpd-config
           configMap:
             name: httpd-config

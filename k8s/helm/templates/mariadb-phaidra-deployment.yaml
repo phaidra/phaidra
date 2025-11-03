@@ -13,8 +13,6 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        promtail.io/scrape: 'true'
       labels:
         phaidra.app: mariadb-phaidra
     spec:
@@ -23,20 +21,31 @@ spec:
             - name: MARIADB_DATABASE
               value: "{{ .Values.PHAIDRADB }}"
             - name: MARIADB_PASSWORD
-              value: "{{ .Values.MARIADB_PHAIDRA_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "MARIADB_PHAIDRA_PASSWORD"
             - name: MARIADB_ROOT_PASSWORD
-              value: "{{ .Values.MARIADB_ROOT_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "MARIADB_PHAIDRA_ROOT_PASSWORD"
             - name: MARIADB_USER
               value: "{{ .Values.MARIADB_PHAIDRA_USER }}"
-          image: testuser34/mariadb-phaidra-dist:f21114b6
+          image: phaidraorg/mariadb-phaidra-dist:ff704002
           name: mariadb-phaidra
-          resources: {}
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "50M"
+            limits:
+              cpu: "20m"
+              memory: "300M"
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: mariadb-phaidra
-          # run as nobody because of container's chown sequence.
           securityContext:
-            runAsUser: 65534
+            allowPrivilegeEscalation: false
       restartPolicy: Always
       volumes:
         - name: mariadb-phaidra

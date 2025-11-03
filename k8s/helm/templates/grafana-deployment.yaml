@@ -30,11 +30,14 @@ spec:
             - name: GF_SECURITY_ADMIN_USER
               value: "{{ .Values.GF_SECURITY_ADMIN_USER }}"
             - name: GF_SECURITY_ADMIN_PASSWORD
-              value: "{{ .Values.GF_SECURITY_ADMIN_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "GF_SECURITY_ADMIN_PASSWORD"
             - name: GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH
               value: "/mnt/grafana/dashboards/phaidra_default.json"
           name: grafana
-          image: grafana/grafana:11.0.0
+          image: grafana/grafana:11.6.0
           volumeMounts:
             - name: grafana-provisioned-datasources
               mountPath: /etc/grafana/provisioning/datasources
@@ -47,7 +50,13 @@ spec:
               readOnly: true
             - name: grafana-data
               mountPath: /var/lib/grafana
-          resources: {}
+          resources:
+            requests:
+              cpu: "5m"
+              memory: "30M"
+            limits:
+              cpu: "10m"
+              memory: "200M"
       volumes:
         - name: grafana-provisioned-datasources
           configMap:

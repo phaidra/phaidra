@@ -13,22 +13,29 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        promtail.io/scrape: 'true'
       labels:
         phaidra.app: solr
     spec:
       containers:
         - env:
             - name: "SOLR_PASS"
-              value: "{{ .Values.SOLR_PASS }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "SOLR_PASS"
             - name: "SOLR_SALT"
               value: "{{ .Values.SOLR_SALT }}"
             - name: "SOLR_USER"
               value: "{{ .Values.SOLR_USER }}"
-          image: testuser34/solr-dist:10a6b315
+          image: phaidraorg/solr-dist:b8c456f0
           name: solr
-          resources: {}
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "200M"
+            limits:
+              cpu: "200m"
+              memory: "2G"
           volumeMounts:
             - mountPath: /var/solr
               name: solr

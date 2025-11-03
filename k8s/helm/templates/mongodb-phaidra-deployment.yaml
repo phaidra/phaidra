@@ -13,26 +13,30 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        promtail.io/scrape: 'true'
       labels:
         phaidra.app: mongodb-phaidra
     spec:
       containers:
         - env:
             - name: MONGO_INITDB_ROOT_PASSWORD
-              value: "{{ .Values.MONGODB_PHAIDRA_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "MONGODB_PHAIDRA_PASSWORD"
             - name: MONGO_INITDB_ROOT_USERNAME
               value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
-          image: testuser34/mongodb-dist:10a6b315
+          image: phaidraorg/mongodb-dist:1aefbfbc
           name: mongodb-phaidra
-          resources: {}
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "250M"
+            limits:
+              cpu: "100m"
+              memory: "500M"
           volumeMounts:
             - mountPath: /data/db
               name: mongodb-phaidra
-          # run as nobody because of container's chown sequence.
-          securityContext:
-            runAsUser: 65534
       restartPolicy: Always
       volumes:
         - name: mongodb-phaidra

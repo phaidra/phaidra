@@ -13,15 +13,16 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        promtail.io/scrape: 'true'
       labels:
         phaidra.app: openldap
     spec:
       containers:
         - env:
             - name: "LDAP_ADMIN_PASSWORD"
-              value: "{{ .Values.LDAP_ADMIN_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "LDAP_ADMIN_PASSWORD"
             - name: "LDAP_ADMIN_USERNAME"
               value: "{{ .Values.LDAP_ADMIN_USERNAME }}"
             - name: "LDAP_CUSTOM_LDIF_DIR"
@@ -30,12 +31,26 @@ spec:
               value: "{{ .Values.LDAP_PORT_NUMBER }}"
             - name: "LDAP_ROOT"
               value: "{{ .Values.LDAP_ROOT }}"
-          image: testuser34/openldap-dist:10a6b315
+          image: phaidraorg/openldap-dist:deea3eb5
           name: openldap
-          resources: {}
+          resources:
+            requests:
+              cpu: "1m"
+              memory: "10M"
+            limits:
+              cpu: "10m"
+              memory: "50M"
           volumeMounts:
             - mountPath: /bitnami/openldap
               name: openldap
+          securityContext:
+            allowPrivilegeEscalation: false
+            #see https://github.com/bitnami/containers/issues/40841
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_BIND_SERVICE
       restartPolicy: Always
       volumes:
         - name: openldap

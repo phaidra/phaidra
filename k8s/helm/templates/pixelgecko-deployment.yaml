@@ -14,18 +14,71 @@ spec:
   template:
     metadata:
       annotations:
-        promtail.io/scrape: 'true'
         checksum/config: {{ include (print $.Template.BasePath "/pixelgecko-configmap.yaml") . | sha256sum }}
       labels:
         phaidra.app: pixelgecko
     spec:
       containers:
         - env:
+            - name: MONGODB_HOST
+              value: mongodb-phaidra-service
             - name: IMAGE_CONVERSION_INTERVAL
               value: "{{ .Values.IMAGE_CONVERSION_INTERVAL }}"
-          image: testuser34/pixelgecko-dist:10a6b315
+            - name: MONGODB_PHAIDRA_USER
+              value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
+            - name: MONGODB_PHAIDRA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "MONGODB_PHAIDRA_PASSWORD"
+            - name: CONVERTED_IMAGES_PATH
+              value: "/mnt/converted_images"
+            - name: FEDORA_ADMIN_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "FEDORA_ADMIN_PASSWORD"
+            - name: FEDORA_ADMIN_USER
+              value: "{{ .Values.FEDORA_ADMIN_USER }}"
+            - name: FEDORA_HOST
+              value: "{{ .Values.FEDORA_HOST }}"
+            - name: FEDORA_PROTOCOL
+              value: "{{ .Values.FEDORA_PROTOCOL }}"
+            - name: FEDORA_PORT
+              value: "{{ .Values.FEDORA_PORT }}"
+            {{- if .Values.s3 }}
+            - name: S3_ENABLED
+              value: "true"
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-s3-access"
+                  key: "AWS_ACCESS_KEY_ID"
+            - name: S3_BUCKETNAME
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-s3-access"
+                  key: "BUCKET_NAME"
+            - name: S3_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-s3-access"
+                  key: "ENDPOINT_URL"
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-s3-access"
+                  key: "AWS_SECRET_ACCESS_KEY"
+            {{- end }}
+          image: phaidraorg/pixelgecko-dist:1aec19f1
           name: pixelgecko
-          resources: {}
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "50M"
+            limits:
+              cpu: "150m"
+              memory: "500M"
           volumeMounts:
             - mountPath: /mnt/fedora
               name: fedora

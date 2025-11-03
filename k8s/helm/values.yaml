@@ -1,33 +1,27 @@
+#one of the issuers defined in issuer-letsencrypt. currently letsencrypt-staging and letsencrypt-prod
+TLS_CERTIFICATE_ISSUER: "letsencrypt-staging"
+# only needs to be set
+K8S_NAMESPACE: "phaidra-dev"
 # phaidra hostname -- set to name (or IP address) that you use in your browser to access PHAIDRA
-PHAIDRA_HOSTNAME: "192.168.122.156"
+PHAIDRA_HOSTNAME: "phaidra.example.com"
 # phaidra server admin email address (for webserver configuration)
 PHAIDRA_ADMIN_EMAIL: "you@example.com"
 # IP addresses/ranges separated by blank spaces, that are allowed to access to phaidra admin pages (user management, grafana, databases,...).
-ADMIN_IP_LIST: "192.168.122.1"
+ADMIN_IP_LIST: "127.0.0.1"
 # IP address of your loadbalancer pod (needed for client IP detection), single IP or range
-LOAD_BALANCER_IP: "10.1.141.0/24"
+LOAD_BALANCER_IP: "10.1.0.0/24"
 # Header to use for original client ip detection
-SOURCE_CLIENT_IP_HEADER: "X-Original-Forwarded-For"
-# cluster namespace for deployment
-PHAIDRA_K8S_NAMESPACE: "phaidra-init"
+SOURCE_CLIENT_IP_HEADER: "X-Forwarded-For"
 # name of the mariadb database used by phaidra-api
 PHAIDRADB: "phaidradb"
 # name of the mariadb database used by fedora
 FEDORADB: "fedoradb"
-# root user password for the mariadb databases
-MARIADB_ROOT_PASSWORD: "example"
 # name of the mariadb database user
 MARIADB_PHAIDRA_USER: "phaidra"
-# password for the mariadb database user
-MARIADB_PHAIDRA_PASSWORD: "phaidra"
 # name of the mongodb database user
 MONGODB_PHAIDRA_USER: "phaidra"
-# password for the mongodb database user
-MONGODB_PHAIDRA_PASSWORD: "phaidra"
 # openldap admin username
 LDAP_ADMIN_USERNAME: "admin"
-# openldap admin password
-LDAP_ADMIN_PASSWORD: "adminpassword"
 # openldap port number
 LDAP_PORT_NUMBER: "1389"
 # openldap root
@@ -44,8 +38,6 @@ LDAP_USER: "cn=admin,dc=example,dc=org"
 LDAP_SERVER: "ldap://openldap-service:1389"
 # fedora admin username
 FEDORA_ADMIN_USER: "fedoraAdmin"
-# fedora admin password
-FEDORA_ADMIN_PASS: "1234"
 # api mountpoint of fedora data directory
 FEDORA_OCFL_ROOT: "/mnt/fedora/data/ocfl-root"
 # set to empty quoted string on a production setup
@@ -56,67 +48,61 @@ PHAIDRA_HOSTPORT: ""
 PHAIDRA_API_HOST_INTERNAL: "api-service"
 # set to "https" on a production setup
 OUTSIDE_HTTP_SCHEME: "http"
-# phaidra secret
-PHAIDRA_SECRET: "changeme"
-# phaidra encryption key
-PHAIDRA_ENCRYPTION_KEY: "changeme"
-# imageserver hash secret
-IMAGESERVER_HASH_SECRET: "changeme"
 # phaidra admin user
 PHAIDRA_ADMIN_USER: "phaidraAdmin"
-# phaidra admin password
-PHAIDRA_ADMIN_PASSWORD: "12345"
 # pixelgecko image conversion interval in seconds
 IMAGE_CONVERSION_INTERVAL: "5"
-# dbgate credentials
-DBGATE_PASS: "phaidra"
-# solr encryption salt
-SOLR_SALT: "phaidra"
 # solr admin user
 SOLR_USER: "phaidra"
-# solr admin password
-SOLR_PASS: "phaidra"
 # phaidra primary color
 PHAIDRA_PRIMARY_COLOR: "#008080"
 # chronos database dumps pvc size & type
 CHRONOS_DB_DUMP_PVC_SIZE: "100Mi"
-CHRONOS_DB_DUMP_PVC_TYPE: "nfs-csi"
+CHRONOS_DB_DUMP_PVC_TYPE: "cephfs-fspool-cluster"
 # chronos oai logs pvc size & type
 CHRONOS_OAI_LOGS_PVC_SIZE: "100Mi"
-CHRONOS_OAI_LOGS_PVC_TYPE: "nfs-csi"
+CHRONOS_OAI_LOGS_PVC_TYPE: "cephfs-fspool-cluster"
 # chronos sitemaps pvc size & type
 CHRONOS_SITEMAPS_PVC_SIZE: "100Mi"
-CHRONOS_SITEMAPS_PVC_TYPE: "nfs-csi"
+CHRONOS_SITEMAPS_PVC_TYPE: "cephfs-fspool-cluster"
 # dbgate pvc size & type
 DBGATE_PVC_SIZE: "100Mi"
-DBGATE_PVC_TYPE: "nfs-csi"
+DBGATE_PVC_TYPE: "rbd-storagepool-cluster"
 # fedora pvc size & type
 FEDORA_PVC_SIZE: "100Mi"
-FEDORA_PVC_TYPE: "nfs-csi"
+FEDORA_PVC_TYPE: "cephfs-fspool-cluster"
 # loki pvc size & type
 LOKI_PVC_SIZE: "100Mi"
-LOKI_PVC_TYPE: "nfs-csi"
+LOKI_PVC_TYPE: "cephfs-fspool-cluster"
 # mariadb-fedora pvc size & type
-MARIADB_FEDORA_PVC_SIZE: "100Mi"
-MARIADB_FEDORA_PVC_TYPE: "nfs-csi"
+MARIADB_FEDORA_PVC_SIZE: "1Gi"
+MARIADB_FEDORA_PVC_TYPE: "rbd-storagepool-cluster"
 # mariadb-phaidra pvc size & type
-MARIADB_PHAIDRA_PVC_SIZE: "100Mi"
-MARIADB_PHAIDRA_PVC_TYPE: "nfs-csi"
+MARIADB_PHAIDRA_PVC_SIZE: "1Gi"
+MARIADB_PHAIDRA_PVC_TYPE: "rbd-storagepool-cluster"
 # mongodb-phaidra pvc size & type
-MONGODB_PHAIDRA_PVC_SIZE: "100Mi"
-MONGODB_PHAIDRA_PVC_TYPE: "nfs-csi"
+MONGODB_PHAIDRA_PVC_SIZE: "1Gi"
+MONGODB_PHAIDRA_PVC_TYPE: "rbd-storagepool-cluster"
 # openldap pvc size & type
 OPENLDAP_PVC_SIZE: "100Mi"
-OPENLDAP_PVC_TYPE: "nfs-csi"
+OPENLDAP_PVC_TYPE: "cephfs-fspool-cluster"
 # pixelgecko pvc size & type
 PIXELGECKO_PVC_SIZE: "100Mi"
-PIXELGECKO_PVC_TYPE: "nfs-csi"
+PIXELGECKO_PVC_TYPE: "cephfs-fspool-cluster"
 # solr pvc size & type
 SOLR_PVC_SIZE: "100Mi"
-SOLR_PVC_TYPE: "nfs-csi"
+SOLR_PVC_TYPE: "cephfs-fspool-cluster"
 # grafana admin credentials
 GF_SECURITY_ADMIN_USER: "phaidra"
-GF_SECURITY_ADMIN_PASSWORD: "phaidra"
 # grafana pvc size & type
 GRAFANA_PVC_SIZE: "100Mi"
-GRAFANA_PVC_TYPE: "nfs-csi"
+GRAFANA_PVC_TYPE: "cephfs-fspool-cluster"
+
+s3:
+  S3_CACHE_SIZE: 500000000
+  S3_CACHE_TOPDIR: "/mnt/converted_images"
+
+# fedora for pixelgecko s3
+FEDORA_HOST: fedora-service
+FEDORA_PROTOCOL: http
+FEDORA_PORT: 8080

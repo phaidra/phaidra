@@ -12,8 +12,6 @@ spec:
   strategy: {}
   template:
     metadata:
-      annotations:
-        promtail.io/scrape: 'true'
       labels:
         phaidra.app: ui
     spec:
@@ -31,8 +29,20 @@ spec:
               value: "{{ .Values.PHAIDRA_PRIMARY_COLOR }}"
             - name: PHAIDRA_API_HOST_INTERNAL
               value: "{{ .Values.PHAIDRA_API_HOST_INTERNAL }}"
-          image: testuser34/ui-dist:830a35df
+            # avoids npm error:
+            # ERR! Your cache folder contains root-owned files, due to a bug in
+            # ERR! previous versions of npm which has since been addressed"
+            - name: "npm_config_cache"
+              value: "/tmp/.npm"
+          command: ["npm", "run", "start"]
+          image: phaidraorg/ui:facc3228
           name: ui
-          resources: {}
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "150M"
+            limits:
+              cpu: "150m"
+              memory: "500M"
       restartPolicy: Always
 status: {}

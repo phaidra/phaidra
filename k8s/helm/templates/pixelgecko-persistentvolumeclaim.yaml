@@ -10,7 +10,7 @@ metadata:
 spec:
   storageClassName: "{{ .Values.PIXELGECKO_PVC_TYPE }}"
   accessModes:
-    - ReadOnlyMany
+    - ReadWriteMany
   resources:
     requests:
       storage: "{{ .Values.PIXELGECKO_PVC_SIZE }}"

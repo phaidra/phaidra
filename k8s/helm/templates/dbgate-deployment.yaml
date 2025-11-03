@@ -13,8 +13,6 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        promtail.io/scrape: 'true'
       labels:
         phaidra.app: dbgate
     spec:
@@ -37,32 +35,59 @@ spec:
             - name: LOGINS
               value: phaidra
             - name: LOGIN_PASSWORD_phaidra
-              value: "{{ .Values.DBGATE_PASS }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: DBGATE_PASS
             - name: PASSWORD_con1
-              value: "{{ .Values.MARIADB_PHAIDRA_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "MARIADB_PHAIDRA_PASSWORD"
             - name: PASSWORD_con2
-              value: "{{ .Values.MARIADB_PHAIDRA_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "MARIADB_FEDORA_PASSWORD"
+            - name: PASSWORD_con3
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "MONGODB_PHAIDRA_PASSWORD"
             - name: PORT_con1
               value: "3306"
             - name: PORT_con2
               value: "3306"
+            - name: PORT_con3
+              value: "27017"
             - name: SERVER_con1
               value: mariadb-phaidra-service
             - name: SERVER_con2
               value: mariadb-fedora-service
-            - name: URL_con3
-              value: "mongodb://{{ .Values.MONGODB_PHAIDRA_USER }}:{{ .Values.MONGODB_PHAIDRA_PASSWORD }}@mongodb-phaidra-service:27017"
+            - name: SERVER_con3
+              value: mongodb-phaidra-service
             - name: USER_con1
               value: "{{ .Values.MARIADB_PHAIDRA_USER }}"
             - name: USER_con2
               value: "{{ .Values.MARIADB_PHAIDRA_USER }}"
+            - name: USER_con3
+              value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
             - name: WEB_ROOT
               value: /dbgate
-          image: dbgate/dbgate:5.2.9
+          image: dbgate/dbgate:6.3.3
+          # the default command writes to /etc/hosts which is not possible or necessary in openshift
+          command: ["node"]
+          args: ["bundle.js", "--listen-api"]
           name: dbgate
-          resources: {}
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "200M"
+            limits:
+              cpu: "50m"
+              memory: "600M"
           volumeMounts:
-            - mountPath: /root/.dbgate
+            - mountPath: /.dbgate
               name: dbgate
       restartPolicy: Always
       volumes:

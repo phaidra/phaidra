@@ -5,15 +5,16 @@ metadata:
   labels:
     phaidra.app: httpd
   annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
-    nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
+    cert-manager.io/issuer: {{ .Values.TLS_CERTIFICATE_ISSUER }}
 spec:
+  tls:
+    - hosts: ["{{ .Values.PHAIDRA_HOSTNAME }}"]
+      secretName: httpd-ingress-tls
   rules:
   - host: "{{ .Values.PHAIDRA_HOSTNAME }}"
     http:
       paths:
-      - path: "/(.*)"
+      - path: "/"
         pathType: Prefix
         backend:
           service:

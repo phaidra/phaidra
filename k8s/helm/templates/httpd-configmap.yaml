@@ -4,8 +4,8 @@ metadata:
   name: httpd-config
 data:
   httpd.conf: |
-    Listen 0.0.0.0:80
-    ServerRoot "/usr/local/apache2"
+    Listen 8080
+    # ServerRoot "/usr/local/apache2"
     ServerAdmin ${PHAIDRA_ADMIN_EMAIL}
     ServerName ${PHAIDRA_HOSTNAME}
     RemoteIPHeader ${SOURCE_CLIENT_IP_HEADER}
@@ -39,10 +39,11 @@ data:
     LoadModule dir_module modules/mod_dir.so
     LoadModule alias_module modules/mod_alias.so
 
-    <IfModule unixd_module>
-        User www-data
-        Group www-data
-    </IfModule>
+    # Remove: only works when run as root. with the fedora image, its not run as root anyways
+    # <IfModule unixd_module>
+    #     User www-data
+    #     Group www-data
+    # </IfModule>
 
     <Directory />
         AllowOverride none
@@ -79,24 +80,27 @@ data:
     </IfModule>
 
     <IfModule mime_module>
-        TypesConfig conf/mime.types
+        # TypesConfig conf/magic
+        TypesConfig /etc/mime.types
         AddType application/x-compress .Z
         AddType application/x-gzip .gz .tgz
     </IfModule>
 
-    <VirtualHost 0.0.0.0:80>
+    <VirtualHost 0.0.0.0:8080>
         ProxyPreserveHost On
         ProxyRequests off
         DocumentRoot /mnt/sitemaps
 
         <Location />
-            Require all granted
+            Require ip ${ADMIN_IP_LIST}
+            # Require all granted
             ProxyPass http://ui-service:3001/
             ProxyPassReverse http://ui-service:3001/
         </Location>
 
         <LocationMatch "^/api/(.*)">
-            Require all granted
+            Require ip ${ADMIN_IP_LIST}
+            # Require all granted
             ProxyPass http://api-service:3000/$1 timeout=360
             ProxyPassReverse http://api-service:3000/$1
             Proxy100Continue Off

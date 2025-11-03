@@ -13,8 +13,6 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        promtail.io/scrape: 'true'
       labels:
         phaidra.app: chronos
     spec:
@@ -23,13 +21,22 @@ spec:
             - name: FEDORADB
               value: "{{ .Values.FEDORADB }}"
             - name: FEDORA_ADMIN_PASS
-              value: "{{ .Values.FEDORA_ADMIN_PASS }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "FEDORA_ADMIN_PASSWORD"
             - name: FEDORA_ADMIN_USER
               value: "{{ .Values.FEDORA_ADMIN_USER }}"
             - name: MARIADB_ROOT_PASSWORD
-              value: "{{ .Values.MARIADB_ROOT_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "MARIADB_FEDORA_ROOT_PASSWORD"
             - name: MONGODB_PHAIDRA_PASSWORD
-              value: "{{ .Values.MONGODB_PHAIDRA_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "MONGODB_PHAIDRA_PASSWORD"
             - name: MONGODB_PHAIDRA_USER
               value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
             - name: OUTSIDE_HTTP_SCHEME
@@ -37,7 +44,10 @@ spec:
             - name: PHAIDRADB
               value: "{{ .Values.PHAIDRADB }}"
             - name: PHAIDRA_ADMIN_PASSWORD
-              value: "{{ .Values.PHAIDRA_ADMIN_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "phaidra-access"
+                  key: "PHAIDRA_ADMIN_PASSWORD"
             - name: PHAIDRA_ADMIN_USER
               value: "{{ .Values.PHAIDRA_ADMIN_USER }}"
             - name: PHAIDRA_HOSTNAME
@@ -56,9 +66,15 @@ spec:
               value: "mongodb-phaidra-service"
             - name: FEDORA_HOST
               value: "fedora-service"
-          image: testuser34/chronos-dist:830a35df
+          image: phaidraorg/chronos-dist:b7d75dda
           name: chronos
-          resources: {}
+          resources:
+            requests:
+              cpu: "1m"
+              memory: "10M"
+            limits:
+              cpu: "10m"
+              memory: "100M"
           volumeMounts:
             - mountPath: /mnt/database-dumps
               name: chronos-database-dumps
