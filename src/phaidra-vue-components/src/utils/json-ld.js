@@ -2429,6 +2429,9 @@ export default {
         // handled in PIForm
         continue
       }
+      if (s.type === 'resourcelink') {
+        continue
+      }
       if (s.type === 'member') {
         jsonldid = 'member_' + s.id
         jsonlds[jsonldid] = {}
@@ -2467,6 +2470,9 @@ export default {
       var jsonldid
       if (s.type === 'accessrights') {
         // handled in PIForm
+        continue
+      }
+      if (s.type === 'resourcelink') {
         continue
       }
       if (s.type === 'phaidra:Subject') {
