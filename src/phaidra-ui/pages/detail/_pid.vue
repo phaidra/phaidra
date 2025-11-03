@@ -1102,6 +1102,37 @@
                   </v-card>
                 </li>
 
+                <li class="mb-6" v-if="licenseUri || rightsStatements.length > 0">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box title font-weight-light white--text"
+                      >{{ $t("License and Rights") }}</v-card-title
+                    >
+                    <v-card-text class="mt-4">
+                      <v-row no-gutters class="pt-2" v-if="licenseUri">
+                        <v-col
+                          class="caption font-weight-bold"
+                          cols="12"
+                          >{{ $t("License") }}</v-col
+                        >
+                        <v-col cols="12" class="mt-2">
+                          <a :href="licenseUri" target="_blank">{{ getLicenseLabel(licenseUri) }}</a>
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters class="pt-2 mt-4" v-if="rightsStatements.length > 0">
+                        <v-col
+                          class="caption font-weight-bold"
+                          cols="12"
+                          >{{ $t("Rights statement") }}</v-col
+                        >
+                        <v-col cols="12" class="mt-2" v-for="(stmt, i) in rightsStatements" :key="'rights-' + i">
+                          {{ stmt }}
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </li>
+
                 <li class="mb-6" v-if="objectInfo.isinadminset">
                   <v-card tile>
                     <v-card-title
@@ -2429,6 +2460,45 @@ export default {
       }
       return "";
     },
+    licenseUri: function () {
+      if (this.objectInfo && this.objectInfo.metadata && this.objectInfo.metadata['JSON-LD']) {
+        const jsonld = this.objectInfo.metadata['JSON-LD'];
+        if (jsonld['edm:rights'] && jsonld['edm:rights'].length > 0) {
+          return jsonld['edm:rights'][0];
+        }
+      }
+      if (this.objectInfo["dc_rights"]) {
+        for (let f of this.objectInfo["dc_rights"]) {
+          if (f.includes("http")) {
+            return f;
+          }
+        }
+      }
+      return "";
+    },
+    rightsStatements: function () {
+      const statements = [];
+      if (this.objectInfo && this.objectInfo.metadata && this.objectInfo.metadata['JSON-LD']) {
+        const jsonld = this.objectInfo.metadata['JSON-LD'];
+        if (jsonld['dce:rights']) {
+          for (let right of jsonld['dce:rights']) {
+            if (typeof right === 'object' && right['@value']) {
+              statements.push(right['@value']);
+            } else if (typeof right === 'string' && !right.startsWith('http')) {
+              statements.push(right);
+            }
+          }
+        }
+      }
+      if (statements.length === 0 && this.objectInfo["dc_rights"]) {
+        for (let f of this.objectInfo["dc_rights"]) {
+          if (!f.includes("http")) {
+            statements.push(f);
+          }
+        }
+      }
+      return statements;
+    },
   },
   data() {
     return {
@@ -2614,6 +2684,13 @@ export default {
   methods: {
     copyToClipboard(text) {
       navigator.clipboard.writeText(text);
+    },
+    getLicenseLabel(uri) {
+      if (this.$store && this.$store.getters['vocabulary/getLocalizedTermLabel']) {
+        const label = this.$store.getters['vocabulary/getLocalizedTermLabel']('alllicenses', uri, this.$i18n.locale);
+        return label || uri;
+      }
+      return uri;
     },
     async fetchAsyncData(self, pid) {
       console.log('fetching object info ' + pid);
@@ -2925,6 +3002,8 @@ export default {
     },
   },
   mounted() {
+    this.$store.dispatch('vocabulary/loadVocabulary', { vocabularyName: 'alllicenses' });
+    
     if (this.showCollectionTree) {
       this.fetchCollectionTree(this.$route.params.pid);
       setTimeout(() => {
