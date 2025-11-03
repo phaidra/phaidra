@@ -1,5 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "kubernetes": {
+    "managerFilePatterns": ["/k8s/helm/.+\\.yaml$/"]
+  },
   "extends": [
     "config:recommended"
   ]
