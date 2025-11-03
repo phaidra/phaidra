@@ -7,7 +7,7 @@
       <v-card-title v-if="showLabel" class="title font-weight-light white--text">
         <span>{{ $t(label) }}</span>
         <v-spacer></v-spacer>
-        <v-menu v-if="actions.length" open-on-hover bottom offset-y>
+        <v-menu v-if="actions.length" bottom offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-on="on" v-bind="attrs" icon dark>
               <v-icon>mdi-dots-vertical</v-icon>
