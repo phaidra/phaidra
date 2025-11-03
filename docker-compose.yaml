@@ -1020,7 +1020,7 @@ services:
 
   mariadb-phaidra-dev:
     hostname: "mariadb-phaidra"
-    image: mariadb:11.0.2-jammy
+    image: mariadb:11.3.2-jammy
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
