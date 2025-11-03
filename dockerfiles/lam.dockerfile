@@ -1,4 +1,4 @@
-FROM ghcr.io/ldapaccountmanager/lam:9.1
+FROM ghcr.io/ldapaccountmanager/lam:9.3
 RUN chmod g+w /etc/php/8.2/apache2 &&\
  chmod g+rw /etc/ldap-account-manager &&\
  chmod g+rw /etc/ldap-account-manager/config.cfg &&\
