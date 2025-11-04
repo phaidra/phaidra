@@ -300,7 +300,7 @@
                       v-model="parsedPublicConfigData.enableresourcelink"
                     ></v-checkbox>
                   </v-col>
-                  <v-col cols="6" class="mt-4">{{ $t("Enable Link resource type in submit form.") }}</v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Enable upload of Resource/Link object in submit form.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>

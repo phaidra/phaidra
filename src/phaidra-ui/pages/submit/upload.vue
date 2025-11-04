@@ -173,7 +173,7 @@ export default {
               break;
             }
           }
-          if (!hasResourcelink && this.instanceconfig.enableresourcelink === true) {
+          if (!hasResourcelink) {
             this.form.sections.splice(1, 0, {
               title: "Resource Link",
               type: "resourcelink",
