@@ -912,28 +912,14 @@ sub preview {
               $self->render(template => 'utils/streamingplayer', format => 'html');
               return;
             } else {
-              
-              $self->stash(scheme        => $self->config->{scheme});
-              $self->stash(baseurl       => $self->config->{baseurl});
-              $self->stash(basepath      => $self->config->{basepath});
-              $self->stash(trywebversion => $trywebversion);
-              $self->stash(mimetype => $mimetype eq 'video/quicktime' ? 'video/mp4' : $mimetype);
-              $self->stash(pid      => $pid);
-              
-              if ($showloadbutton) {
-                $self->render(template => 'utils/loadbutton', format => 'html');
-                return;
+              $self->app->log->error("Video key not available: " . $self->app->dumper($r));
+              if ($r->{status} eq 404 or $r->{status} eq 503) {
+                $self->render(text => "Stream is not available. Reason: Video is being prepared for streaming, please try again later.", status => $r->{status});
+              }
+              else {
+                $self->render(text => "Stream is not available. Reason: " . $r->{alerts}[0]->{msg}, status => $r->{status});
               }
 
-              my $thumbPid = $self->get_is_thumbnail_for($pid);
-              if ($thumbPid) {
-                $self->stash(thumbpid => $pid);
-              }
-
-              my $u_model = PhaidraAPI::Model::Util->new;
-              $u_model->track_action($self, $pid, 'preview');
-
-              $self->render(template => 'utils/videoplayer', format => 'html');
               return;
             }
           }
@@ -1000,29 +986,14 @@ $self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
           return;
         }
         else {
-          $self->app->log->info("Video key not available for pid[$pid], falling back to direct playback: " . $self->app->dumper($r));
-          
-          $self->stash(scheme        => $self->config->{scheme});
-          $self->stash(baseurl       => $self->config->{baseurl});
-          $self->stash(basepath      => $self->config->{basepath});
-          $self->stash(trywebversion => $trywebversion);
-          $self->stash(mimetype => $mimetype eq 'video/quicktime' ? 'video/mp4' : $mimetype);
-          $self->stash(pid      => $pid);
-          
-          if ($showloadbutton) {
-            $self->render(template => 'utils/loadbutton', format => 'html');
-            return;
+          $self->app->log->error("Video key not available: " . $self->app->dumper($r));
+          if ($r->{status} eq 404 or $r->{status} eq 503) {
+            $self->render(text => "Stream is not available. Reason: Video is being prepared for streaming, please try again later.", status => $r->{status});
+          }
+          else {
+            $self->render(text => "Stream is not available. Reason: " . $r->{alerts}[0]->{msg}, status => $r->{status});
           }
 
-          my $thumbPid = $self->get_is_thumbnail_for($pid);
-          if ($thumbPid) {
-            $self->stash(thumbpid => $pid);
-          }
-
-          my $u_model = PhaidraAPI::Model::Util->new;
-          $u_model->track_action($self, $pid, 'preview');
-
-          $self->render(template => 'utils/videoplayer', format => 'html');
           return;
         }
       }
@@ -1091,27 +1062,14 @@ $self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
           return;
         }
         else {
-          $self->stash(scheme        => $self->config->{scheme});
-          $self->stash(baseurl       => $self->config->{baseurl});
-          $self->stash(basepath      => $self->config->{basepath});
-          $self->stash(trywebversion => $trywebversion);
-          $self->stash(mimetype => $mimetype eq 'video/quicktime' ? 'video/mp4' : $mimetype);
-          $self->stash(pid      => $pid);
-          
-          if ($showloadbutton) {
-            $self->render(template => 'utils/loadbutton', format => 'html');
-            return;
+          $self->app->log->error("Video key not available: " . $self->app->dumper($r));
+          if ($r->{status} eq 404 or $r->{status} eq 503) {
+            $self->render(text => "Stream is not available. Reason: Video is being prepared for streaming, please try again later.", status => $r->{status});
+          }
+          else {
+            $self->render(text => "Stream is not available. Reason: " . $r->{alerts}[0]->{msg}, status => $r->{status});
           }
 
-          my $thumbPid = $self->get_is_thumbnail_for($pid);
-          if ($thumbPid) {
-            $self->stash(thumbpid => $pid);
-          }
-
-          my $u_model = PhaidraAPI::Model::Util->new;
-          $u_model->track_action($self, $pid, 'preview');
-
-          $self->render(template => 'utils/videoplayer', format => 'html');
           return;
         }
       }

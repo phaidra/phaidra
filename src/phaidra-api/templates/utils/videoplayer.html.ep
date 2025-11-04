@@ -4,9 +4,8 @@
   % if (stash('favIcon')) {
     <link rel="icon" type="image/svg+xml" href="<%= stash('favIcon') %>"/>
   % }
-  <!-- Video.js assets from CDN -->
-  <link href="https://vjs.zencdn.net/7.20.3/video-js.min.css" rel="stylesheet" />
-  <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
+  <link rel="stylesheet" href="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/video-js/video-js.min.css" />
+  <script src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/video-js/video.min.js"></script>
  </head>
  <body>
   <video id="phaidra_video_player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="metadata" width="640" height="360">
