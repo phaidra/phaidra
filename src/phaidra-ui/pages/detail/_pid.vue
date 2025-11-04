@@ -2429,6 +2429,75 @@ export default {
       }
       return "";
     },
+    licenseUri: function () {
+      if (this.objectInfo && this.objectInfo.metadata && this.objectInfo.metadata['JSON-LD']) {
+        const jsonld = this.objectInfo.metadata['JSON-LD'];
+        if (jsonld['edm:rights'] && jsonld['edm:rights'].length > 0) {
+          return jsonld['edm:rights'][0];
+        }
+      }
+      if (this.objectInfo["dc_rights"]) {
+        for (let f of this.objectInfo["dc_rights"]) {
+          if (f.includes("http")) {
+            return f;
+          }
+        }
+      }
+      return "";
+    },
+    rightsStatements: function () {
+      const statements = [];
+      
+      const licenseStrings = new Set();
+      
+      if (this.objectInfo && this.objectInfo["dc_rights"]) {
+        const licenseUris = this.objectInfo["dc_rights"].filter(f => 
+          typeof f === 'string' && f.includes("://")
+        );
+        
+        for (let uri of licenseUris) {
+          licenseStrings.add(uri);
+          
+          if (this.$store && this.$store.getters['vocabulary/getLocalizedTermLabel']) {
+            const label = this.$store.getters['vocabulary/getLocalizedTermLabel']('alllicenses', uri, this.$i18n.locale);
+            if (label) {
+              licenseStrings.add(label);
+            }
+            const enLabel = this.$store.getters['vocabulary/getLocalizedTermLabel']('alllicenses', uri, 'eng');
+            if (enLabel) {
+              licenseStrings.add(enLabel);
+            }
+          }
+        }
+      }
+      
+      if (this.objectInfo && this.objectInfo.metadata && this.objectInfo.metadata['JSON-LD']) {
+        const jsonld = this.objectInfo.metadata['JSON-LD'];
+        if (jsonld['dce:rights']) {
+          for (let right of jsonld['dce:rights']) {
+            let value = '';
+            if (typeof right === 'object' && right['@value']) {
+              value = right['@value'];
+            } else if (typeof right === 'string' && !right.startsWith('http')) {
+              value = right;
+            }
+            if (value && !licenseStrings.has(value)) {
+              statements.push(value);
+            }
+          }
+        }
+      }
+      
+      if (statements.length === 0 && this.objectInfo["dc_rights"]) {
+        for (let f of this.objectInfo["dc_rights"]) {
+          if (!licenseStrings.has(f)) {
+            statements.push(f);
+          }
+        }
+      }
+      
+      return statements;
+    },
   },
   data() {
     return {
