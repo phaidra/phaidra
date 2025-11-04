@@ -82,7 +82,7 @@ const fields = [
     component: 'p-object-type-checkboxes',
     vocabulary: 'objecttype',
     resourceType: '',
-    multiplicable: true,
+    multiplicable: false,
     label: 'Object type',
     selectedTerms: [],
     errorMessages: [],
