@@ -3141,7 +3141,7 @@ our %tree = (
           "labels"      => {
             "de" => "Beschreibung oder zus\x{e4}tzliche Angaben",
             "en" => "Description or Additional Data",
-            "it" => "Descrizione",
+            "it" => "Descrizione dei diritti",
             "sr" => "opis ili dodatni podaci"
           },
           "loaded" => 0,
