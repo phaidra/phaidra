@@ -920,9 +920,6 @@ sub preview {
               $self->stash(mimetype => $mimetype eq 'video/quicktime' ? 'video/mp4' : $mimetype);
               $self->stash(pid      => $pid);
               
-              my $server = $self->config->{streaming}->{server} || $self->config->{baseurl};
-              $self->stash(server => $server);
-              
               if ($showloadbutton) {
                 $self->render(template => 'utils/loadbutton', format => 'html');
                 return;
@@ -936,7 +933,7 @@ sub preview {
               my $u_model = PhaidraAPI::Model::Util->new;
               $u_model->track_action($self, $pid, 'preview');
 
-              $self->render(template => 'utils/streamingplayer', format => 'html');
+              $self->render(template => 'utils/videoplayer', format => 'html');
               return;
             }
           }
@@ -1012,9 +1009,6 @@ $self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
           $self->stash(mimetype => $mimetype eq 'video/quicktime' ? 'video/mp4' : $mimetype);
           $self->stash(pid      => $pid);
           
-          my $server = $self->config->{streaming}->{server} || $self->config->{baseurl};
-          $self->stash(server => $server);
-          
           if ($showloadbutton) {
             $self->render(template => 'utils/loadbutton', format => 'html');
             return;
@@ -1028,7 +1022,7 @@ $self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
           my $u_model = PhaidraAPI::Model::Util->new;
           $u_model->track_action($self, $pid, 'preview');
 
-          $self->render(template => 'utils/streamingplayer', format => 'html');
+          $self->render(template => 'utils/videoplayer', format => 'html');
           return;
         }
       }
@@ -1104,9 +1098,6 @@ $self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
           $self->stash(mimetype => $mimetype eq 'video/quicktime' ? 'video/mp4' : $mimetype);
           $self->stash(pid      => $pid);
           
-          my $server = $self->config->{streaming}->{server} || $self->config->{baseurl};
-          $self->stash(server => $server);
-          
           if ($showloadbutton) {
             $self->render(template => 'utils/loadbutton', format => 'html');
             return;
@@ -1120,7 +1111,7 @@ $self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
           my $u_model = PhaidraAPI::Model::Util->new;
           $u_model->track_action($self, $pid, 'preview');
 
-          $self->render(template => 'utils/streamingplayer', format => 'html');
+          $self->render(template => 'utils/videoplayer', format => 'html');
           return;
         }
       }
@@ -1132,9 +1123,6 @@ $self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
         # html tag won't work with video/quicktime
         $self->stash(mimetype => $mimetype eq 'video/quicktime' ? 'video/mp4' : $mimetype);
         $self->stash(pid      => $pid);
-        
-        my $server = $self->config->{streaming}->{server} || $self->config->{baseurl};
-        $self->stash(server => $server);
         
         if ($showloadbutton) {
           
@@ -1150,7 +1138,7 @@ $self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
         my $u_model = PhaidraAPI::Model::Util->new;
         $u_model->track_action($self, $pid, 'preview');
 
-        $self->render(template => 'utils/streamingplayer', format => 'html');
+        $self->render(template => 'utils/videoplayer', format => 'html');
         return;
       }
       return;

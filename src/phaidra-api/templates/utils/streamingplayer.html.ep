@@ -1,58 +1,27 @@
-<!DOCTYPE html>
 <html>
   <head>
-    % if (stash('favIcon')) {
-      <link rel="icon" type="image/svg+xml" href="<%= stash('favIcon') %>"/>
-    % }
-    <% if (stash('video_key')) { %>
-      <!-- Video.js assets for streaming videos (from streaming server) -->
-      <link href="//<%= stash('server') %>/video-js/video-js.min.css" rel="stylesheet" type="text/css" />
-      <script type="text/javascript" src="//<%= stash('server') %>/video-js/video.min.js"></script>
-      <script type="text/javascript" src="//<%= stash('server') %>/videojs-contrib-hls/videojs-contrib-hls.min.js"></script>
-      <script type="text/javascript" src="//<%= stash('server') %>/videojs-persistvolume/videojs.persistvolume.js"></script>
+    <link href="//<%= $server %>/video-js/video-js.min.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="//<%= $server %>/video-js/video.min.js"></script>
+		<script type="text/javascript" src="//<%= $server %>/videojs-contrib-hls/videojs-contrib-hls.min.js"></script>
+		<script type="text/javascript" src="//<%= $server %>/videojs-persistvolume/videojs.persistvolume.js"></script>
 
-      <link href="//<%= stash('server') %>/videojs-vtt-thumbnails/videojs.thumbnails.css" type="text/css" rel="stylesheet">
-      <script type="text/javascript" src="//<%= stash('server') %>/videojs-vtt-thumbnails/videojs.thumbnails.js"></script>
-      <script type="text/javascript">
-        videojs.options.flash.swf = '//<%= stash('server') %>/video-js/video-js.swf';
-      </script>
-    <% } else { %>
-      <!-- Video.js assets for non-streaming videos (from CDN) -->
-      <link href="https://vjs.zencdn.net/7.20.3/video-js.min.css" rel="stylesheet" />
-      <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
-    <% } %>
+		<link href="//<%= $server %>/videojs-vtt-thumbnails/videojs.thumbnails.css" type="text/css" rel="stylesheet">
+		<script type="text/javascript" src="//<%= $server %>/videojs-vtt-thumbnails/videojs.thumbnails.js"></script>
+		<script type="text/javascript">
+			videojs.options.flash.swf = '//<%= $server %>/video-js/video-js.swf';
+		</script>
   </head>
   <body>
-    <% if (stash('video_key')) { %>
-      <!-- Streaming video -->
-      <video id="phaidra_vievid_w640" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls preload="none" width="640" poster="//<%= stash('server') %>/media/<%= stash('streamingbasepath') %>/<%= stash('video_key') %>.jpeg">
-        <source src="rtmp://<%= stash('server_cd') %>/media/&amp;mp4:media/<%= stash('streamingbasepath') %>/<%= stash('video_key') %>_hi.mp4" type="rtmp/mp4" />
-        <source src="//<%= stash('server_cd') %>/media/<%= stash('streamingbasepath') %>/<%= stash('video_key') %>_hi.mp4/playlist.m3u8" type="application/x-mpegURL" />
-        <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
-        <% if (stash('trackpid')) { %>
-          <track src="https://<%= stash('baseurl') %>/<%= stash('basepath') %>/object/<%= stash('trackpid') %>/get" kind="subtitles" srclang="<%= stash('tracklanguage') %>" label="<%= stash('tracklabel') %>">
-        <% } %>
-      </video>
-      <script>
-        var video = videojs('phaidra_vievid_w640', {autoplay: false, plugins:{persistvolume:{namespace: 'univie-zid-stream'},thumbnails:{width:105,height:60,vtt:"//<%= stash('server') %>/media/<%= stash('streamingbasepath') %>/<%= stash('video_key') %>.vtt"}}});
-      </script>
-    <% } else { %>
-      <!-- Non-streaming video (Video.js player) -->
-      <video id="phaidra_vievid_w640" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="metadata" width="640" height="360">
-        <source src="<%= stash('scheme') %>://<%= stash('baseurl') %>/<%= stash('basepath') %>/object/<%= stash('pid') %>/get<% if (stash('trywebversion')) { %>?trywebversion=1<% } %>" type="<%= stash('mimetype') %>">
-        <% if (stash('trackpid')) { %>
-          <track src="https://<%= stash('baseurl') %>/<%= stash('basepath') %>/object/<%= stash('trackpid') %>/get" kind="subtitles" srclang="<%= stash('tracklanguage') %>" label="<%= stash('tracklabel') %>">
-        <% } %>
-        <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
-      </video>
-      <script>
-        var player = videojs('phaidra_vievid_w640', {
-          fluid: true,
-          responsive: true,
-          controls: true,
-          preload: 'metadata'
-        });
-      </script>
-    <% } %>
+    <video id="phaidra_vievid_w640" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls preload="none" width="640" poster="//<%= $server %>/media/<%= $streamingbasepath %>/<%= $video_key %>.jpeg">
+      <source src="rtmp://<%= $server_cd %>/media/&amp;mp4:media/<%= $streamingbasepath %>/<%= $video_key %>_hi.mp4" type="rtmp/mp4" />
+      <source src="//<%= $server_cd %>/media/<%= $streamingbasepath %>/<%= $video_key %>_hi.mp4/playlist.m3u8" type="application/x-mpegURL" />
+      <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+      <% if ($trackpid) { %>
+        <track src="https://<%= $baseurl %>/<%= $basepath %>/object/<%= $trackpid %>/get" kind="subtitles" srclang="<%= $tracklanguage %>" label="<%= $tracklabel %>">
+      <% } %>
+    </video>
+    <script>
+      var video = videojs('phaidra_vievid_w640', {autoplay: false, plugins:{persistvolume:{namespace: 'univie-zid-stream'},thumbnails:{width:105,height:60,vtt:"//<%= $server %>/media/<%= $streamingbasepath %>/<%= $video_key %>.vtt"}}});
+    </script>
   </body>
 </html>
