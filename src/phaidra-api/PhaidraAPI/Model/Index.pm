@@ -41,7 +41,8 @@ our %indexed_datastreams_xml = (
   "RELS-EXT"        => 1,
   "COLLECTIONORDER" => 1,
   "RIGHTS"          => 1,
-  "BOOKINFO"        => 1
+  "BOOKINFO"        => 1,
+  "ALTO"            => 1
 );
 
 our %indexed_datastreams = (
@@ -53,7 +54,8 @@ our %indexed_datastreams = (
   "JSON-LD"         => 1,
   "COLLECTIONORDER" => 1,
   "RIGHTS"          => 1,
-  "BOOKINFO"        => 1
+  "BOOKINFO"        => 1,
+  "ALTO"            => 1
 );
 
 our %cmodel_2_resourcetype = (
@@ -655,6 +657,21 @@ sub update {
           @{$collectionMembers} = ();
         }
         my $umr = $self->_update_members($c, $pid, $cmodel_res->{cmodel}, $updateurl, $collectionMembers, 'ispartof');
+        if ($umr->{status} ne 200) {
+          $res->{status} = $umr->{status};
+          push @{$res->{alerts}}, @{$umr->{alerts}} if scalar @{$umr->{alerts}} > 0;
+        }
+      }
+
+      if ($cmodel_res->{cmodel} eq 'Book') {
+        if (($getStatus eq 301) || ($getStatus eq 302)) {
+          @{$collectionMembers} = ();
+        }
+        unless (defined($collectionMembers)) {
+          @{$collectionMembers} = ();
+        }
+        my $pageUpdateUrl = $self->getSolrUpdateUrl($c, $cmodel_res->{cmodel}, 'phaidra_pages');
+        my $umr = $self->_update_members($c, $pid, $cmodel_res->{cmodel}, $pageUpdateUrl, $collectionMembers, 'ispartof');
         if ($umr->{status} ne 200) {
           $res->{status} = $umr->{status};
           push @{$res->{alerts}}, @{$umr->{alerts}} if scalar @{$umr->{alerts}} > 0;
@@ -1508,6 +1525,27 @@ sub _get {
         my @sorted_expires = sort @expires;
         $index{checkafter} = $sorted_expires[0];
       }
+    }
+  }
+
+  if (exists($datastreams{'ALTO'})) {
+    my $alto_text = $self->_extact_text_from_ocr($c, $datastreams{'ALTO'}->find('foxml\:xmlContent')->first);
+    if ($alto_text) {
+      $index{extracted_text} = $alto_text;
+      $c->app->log->debug("[$pid] ALTO text extracted: " . substr($alto_text, 0, 100) . "...");
+    } else {
+      $c->app->log->warn("[$pid] No text could be extracted from ALTO datastream");
+    }
+  }
+
+  # Try OCRTEXT datastream if ALTO didn't provide extracted text
+  if (!exists($index{extracted_text}) && exists($datastreams{'OCRTEXT'})) {
+    my $ocrtext = $self->_extact_text_from_ocr($c, $datastreams{'OCRTEXT'}->find('foxml\:xmlContent')->first);
+    if ($ocrtext) {
+      $index{extracted_text} = $ocrtext;
+      $c->app->log->debug("[$pid] OCRTEXT text extracted: " . substr($ocrtext, 0, 100) . "...");
+    } else {
+      $c->app->log->warn("[$pid] No text could be extracted from OCRTEXT datastream");
     }
   }
 
@@ -3214,7 +3252,6 @@ sub get_doc_from_ua {
     $c->app->log->error("[$pid] error getting solr doc for object[$pid]: " . $r->code . " " . $r->message);
   }
 }
-
 sub _preserve_extracted_text {
   my ($self, $c, $pid, $index_doc) = @_;
   
@@ -3236,16 +3273,7 @@ sub _preserve_extracted_text {
   
   # Get existing document from Solr to preserve extracted_text
   my $ua = Mojo::UserAgent->new;
-  my $urlget = Mojo::URL->new;
-  $urlget->scheme($c->app->config->{solr}->{scheme});
-  $urlget->userinfo($c->app->config->{solr}->{username} . ":" . $c->app->config->{solr}->{password});
-  $urlget->host($c->app->config->{solr}->{host});
-  $urlget->port($c->app->config->{solr}->{port});
-  if ($c->app->config->{solr}->{path}) {
-    $urlget->path("/" . $c->app->config->{solr}->{path} . "/solr/" . $c->app->config->{solr}->{core} . "/select");
-  } else {
-    $urlget->path("/solr/" . $c->app->config->{solr}->{core} . "/select");
-  }
+  my $urlget = $self->_get_solrget_url($c, 'Page');  # Use the correct core for pages
   
   $urlget->query(q => "pid:\"$pid\"", rows => "1", wt => "json", fl => "extracted_text");
   my $r = $ua->get($urlget)->result;
@@ -3264,6 +3292,75 @@ sub _preserve_extracted_text {
   }
   
   return undef;
+}
+
+sub _extact_text_from_ocr {
+  my ($self, $c, $alto_dom) = @_;
+  
+  my $extracted_text = "";
+  
+  eval {
+    # Handle different ALTO formats
+    # 1. Standard ALTO format (http://www.loc.gov/standards/alto/)
+    my @text_blocks = $alto_dom->find('TextBlock, textblock')->each;
+    if (@text_blocks) {
+      for my $block (@text_blocks) {
+        my @text_lines = $block->find('TextLine, textline')->each;
+        for my $line (@text_lines) {
+          my @text_strings = $line->find('String, string')->each;
+          for my $string (@text_strings) {
+            my $text = $string->attr('CONTENT') || $string->text;
+            $extracted_text .= $text . " " if $text;
+          }
+          $extracted_text .= "\n" if @text_strings;
+        }
+      }
+    }
+    
+    # 2. Phaidra custom OCRTEXT format (http://phaidra.univie.ac.at/XML/book/ocrtext/V1.0)
+    if (!$extracted_text) {
+      my @ocr_words = $alto_dom->find('ocrword')->each;
+      if (@ocr_words) {
+        my $current_line_y = -1;
+        for my $word (@ocr_words) {
+          my $word_text = $word->attr('word');
+          my $y_pos = $word->attr('y1');
+          
+          # Add line break if Y position changes significantly (new line)
+          if ($current_line_y != -1 && abs($y_pos - $current_line_y) > 10) {
+            $extracted_text .= "\n";
+          }
+          $current_line_y = $y_pos;
+          
+          $extracted_text .= $word_text . " " if $word_text;
+        }
+      }
+    }
+    
+    # 3. Generic text extraction from any XML with text content
+    if (!$extracted_text) {
+      # Look for any text content in the XML
+      my @all_text = $alto_dom->find('*')->each;
+      for my $element (@all_text) {
+        my $text = $element->text;
+        if ($text && $text =~ /\S/) {  # Only non-whitespace text
+          $extracted_text .= $text . " ";
+        }
+      }
+    }
+    
+    # Clean up the extracted text
+    $extracted_text =~ s/\s+/ /g;  # Replace multiple whitespace with single space
+    $extracted_text =~ s/^\s+|\s+$//g;  # Trim leading/trailing whitespace
+    
+  };
+  
+  if ($@) {
+    $c->app->log->error("_extact_text_from_ocr: Error parsing ALTO content: $@");
+    return undef;
+  }
+  
+  return $extracted_text;
 }
 
 1;

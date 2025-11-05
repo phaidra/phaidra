@@ -178,8 +178,30 @@ sub add_or_modify_datastream_hooks {
         }
       }
     }
-
-
+    if ($dsid eq "ALTO") {
+      $c->app->log->info("add_or_modify_datastream_hooks ALTO pid[$pid] ALTO datastream has been added or modified. Extracting text for Solr indexing.");
+      
+      # Extract text from ALTO and prepare for Solr indexing
+      my $index_model = PhaidraAPI::Model::Index->new;
+      my $alto_text = $index_model->_extact_text_from_ocr($c, $dscontent);
+      if ($alto_text) {
+        $c->app->log->info("add_or_modify_datastream_hooks ALTO pid[$pid] Extracted text: " . $alto_text);
+        
+        # Trigger re-indexing to update Solr with ALTO text
+        my $dc_model     = PhaidraAPI::Model::Dc->new;
+        my $index_model  = PhaidraAPI::Model::Index->new;
+        my $object_model = PhaidraAPI::Model::Object->new;
+        my $r            = $index_model->update($c, $pid, $dc_model, $search_model, $object_model);
+        if ($r->{status} ne 200) {
+          # just log but don't change status, this isn't fatal
+          push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
+        } else {
+          $c->app->log->info("add_or_modify_datastream_hooks ALTO pid[$pid] Successfully updated Solr index with ALTO text");
+        }
+      } else {
+        $c->app->log->warn("add_or_modify_datastream_hooks ALTO pid[$pid] No text could be extracted from ALTO datastream");
+      }
+    }
   }
 
   return $res;
