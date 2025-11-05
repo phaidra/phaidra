@@ -2520,13 +2520,12 @@ export default {
       }
       
       if (statements.length === 0 && this.objectInfo) {
-        const locale = this.$i18n.locale;
-        const dcRightsFields = [
-          `dc_rights_${locale}`,
-          'dc_rights_eng',
-          'dc_rights_deu',
-          'dc_rights_ita'
-        ];
+        const dcRightsFields = [];
+        for (let key in this.objectInfo) {
+          if (key.match(/^dc_rights_[a-z]{3}$/)) {
+            dcRightsFields.push(key);
+          }
+        }
         
         for (let field of dcRightsFields) {
           if (this.objectInfo[field] && this.objectInfo[field].length > 0) {
