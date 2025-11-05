@@ -177,6 +177,7 @@
                               :configurable="enablefieldconfig || f.configurable"
                               v-bind.sync="f"
                               v-on:input="handleObjectTypeCheckboxesInput(f, $event)"
+                              v-on:remove="removeField(s.fields, f)"
                             ></p-i-object-type>
                           </template>
 

@@ -43,6 +43,7 @@ export default {
       this.$vuetify.goTo(0);
     },
     postMetadataLoad: function (self, form) {
+      let firstObjectTypeFound = false;
       for (let s of form.sections) {
         for (let f of s.fields) {
           if(f.predicate === "rdax:P00009" || f.predicate === "role") {
@@ -63,6 +64,11 @@ export default {
           }
           if (f.id.includes("mime-type")) {
             f.removable = false
+          }
+          // Make the first object-type field non-removable
+          if (f.predicate === "edm:hasType" && !firstObjectTypeFound) {
+            f.removable = false
+            firstObjectTypeFound = true
           }
         }
         s.removable = true
