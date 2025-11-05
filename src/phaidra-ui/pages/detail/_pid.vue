@@ -527,26 +527,26 @@
           </v-row>
 
           <v-divider class="mt-12 mb-10" v-if="showPreview"></v-divider>
-          <v-row justify="center" v-if="objectInfo.dshash['JSON-LD']">
+          <v-row justify="center" v-if="objectInfo.dshash?.['JSON-LD']">
             <p-d-jsonld
-              :jsonld="objectInfo.metadata['JSON-LD']"
+              :jsonld="objectInfo.metadata?.['JSON-LD']"
               :pid="objectInfo.pid"
               :bold-label-fields="['dce:title', 'role', 'edm:rights']"
               :predicatesToHide="['ebucore:filename', 'ebucore:hasMimeType']"
             ></p-d-jsonld>
           </v-row>
 
-          <v-row v-else-if="objectInfo.dshash['UWMETADATA']">
+          <v-row v-else-if="objectInfo.dshash?.['UWMETADATA']">
             <p-d-uwm-rec
-              :children="objectInfo.metadata['uwmetadata']"
+              :children="objectInfo.metadata?.['uwmetadata']"
               :cmodel="objectInfo.cmodel"
               :dc_rights="objectInfo.dc_rights"
             ></p-d-uwm-rec>
           </v-row>
 
-          <v-row v-else-if="objectInfo.dshash['MODS']">
+          <v-row v-else-if="objectInfo.dshash?.['MODS']">
             <p-d-mods-rec
-              :children="objectInfo.metadata['mods']"
+              :children="objectInfo.metadata?.['mods']"
             ></p-d-mods-rec>
           </v-row>
 
@@ -597,7 +597,7 @@
               </v-row>
                 <v-card-text>
                   <p-d-jsonld
-                    :jsonld="member.metadata['JSON-LD']"
+                    :jsonld="member.metadata?.['JSON-LD']"
                     :pid="member.pid"
                     :bold-label-fields="['dce:title', 'role', 'edm:rights']"
                     :predicatesToHide="['ebucore:filename', 'ebucore:hasMimeType']"
@@ -1044,7 +1044,7 @@
                             objectInfo.cmodel === 'Picture') ||
                           (downloadable &&
                             objectInfo.readrights &&
-                            objectInfo.dshash['WEBVERSION'])
+                            objectInfo.dshash?.['WEBVERSION'])
                         "
                       ></v-divider>
                       <template
@@ -1085,7 +1085,7 @@
                         v-if="
                           downloadable &&
                           objectInfo.readrights &&
-                          objectInfo.dshash['WEBVERSION']
+                          objectInfo.dshash?.['WEBVERSION']
                         "
                       >
                         <a
@@ -1727,7 +1727,7 @@
                       <v-row
                         no-gutters
                         class="pt-2"
-                        v-if="objectInfo.dshash['JSON-LD']"
+                        v-if="objectInfo.dshash?.['JSON-LD']"
                       >
                         <a
                         :href="
@@ -1759,7 +1759,7 @@
                       <v-row
                         no-gutters
                         class="pt-2"
-                        v-if="objectInfo.dshash['UWMETADATA']"
+                        v-if="objectInfo.dshash?.['UWMETADATA']"
                       >
                         <a
                           :href="
@@ -1775,7 +1775,7 @@
                       <v-row
                         no-gutters
                         class="pt-2"
-                        v-if="objectInfo.dshash['MODS']"
+                        v-if="objectInfo.dshash?.['MODS']"
                       >
                         <a
                           :href="
@@ -1889,7 +1889,7 @@
                       <v-row
                         no-gutters
                         class="pt-2"
-                        v-if="objectInfo.dshash['JSON-LD']"
+                        v-if="objectInfo.dshash?.['JSON-LD']"
                       >
                         <nuxt-link
                           :to="localePath(`/metadata/${objectInfo.pid}/edit`)"
@@ -1899,7 +1899,7 @@
                       <v-row
                         no-gutters
                         class="pt-2"
-                        v-if="objectInfo.dshash['UWMETADATA']"
+                        v-if="objectInfo.dshash?.['UWMETADATA']"
                       >
                         <nuxt-link
                           :to="localePath(`/uwmetadata/${objectInfo.pid}/edit`)"
@@ -2573,7 +2573,7 @@ export default {
         type: 'application/vnd.datacite.datacite+xml',
         href: this.instanceconfig.api + '/object/' + this.objectInfo.pid + '/datacite?format=xml'
       });
-      if (this.objectInfo?.dshash['JSON-LD']) {
+      if (this.objectInfo?.dshash?.['JSON-LD']) {
         metaInfo.link.push({
           rel: 'describedby',
           type: 'application/ld+json',
@@ -2599,7 +2599,7 @@ export default {
       }
     }
 
-    if (this.objectInfo?.dshash['JSON-LD']) {
+    if (this.objectInfo?.dshash?.['JSON-LD']) {
       metaInfo.script = []
       metaInfo.script.push(
         { 
@@ -2636,7 +2636,7 @@ export default {
           );
         }
 
-        if (self.objectInfo?.dshash['JSON-LD']) {
+        if (self.objectInfo?.dshash?.['JSON-LD']) {
           try {
             let response = await self.$axios.get("/object/" + pid + "/json-ld");
             if (response.data) {
