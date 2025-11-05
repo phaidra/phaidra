@@ -2488,10 +2488,26 @@ export default {
         }
       }
       
-      if (statements.length === 0 && this.objectInfo["dc_rights"]) {
-        for (let f of this.objectInfo["dc_rights"]) {
-          if (!licenseStrings.has(f)) {
-            statements.push(f);
+      if (statements.length === 0 && this.objectInfo) {
+        const locale = this.$i18n.locale;
+        const dcRightsFields = [
+          `dc_rights_${locale}`,
+          'dc_rights_eng',
+          'dc_rights_deu',
+          'dc_rights_ita'
+        ];
+        
+        for (let field of dcRightsFields) {
+          if (this.objectInfo[field] && this.objectInfo[field].length > 0) {
+            const beforeLength = statements.length;
+            for (let f of this.objectInfo[field]) {
+              if (!licenseStrings.has(f)) {
+                statements.push(f);
+              }
+            }
+            if (statements.length > beforeLength) {
+              break;
+            }
           }
         }
       }
