@@ -222,7 +222,7 @@
   "The copyright, usage and access rights that apply to the digital representation.": "I diritti d’autore, di utilizzo e di accesso che si applicano alla rappresentazione digitale.",
   "You are required to select the license from a controlled list. If you need to learn more about differences between these licenses, read the <a href=\"https://creativecommons.org/about/cclicenses/\"> Creative Commons webpage</a>.": "È necessario selezionare la licenza da un elenco controllato. Per saperne di più sulle differenze tra queste licenze, leggere la <a href=\"https://creativecommons.org/about/cclicenses/\">pagina web di Creative Commons</a>.",
   "To increase the reusability of your data, make sure you know who the data rights holder is before uploading the resource. It should also be clear what license applies.": "Per aumentare la riutilizzabilità dei dati, è necessario assicurarsi di sapere chi è il titolare dei diritti sui dati prima di caricare la risorsa. Deve essere chiaro quale licenza si applica alla risorsa.",
-  "Rights statement": "Dichiarazione dei diritti",
+  "Rights statement": "Descrizione dei diritti",
   "Information about rights held in and over the resource. Typically, rights information includes a statement about various property rights associated with the resource, including intellectual property rights.": "Informazioni sui diritti detenuti nella risorsa e su di essa. Tipicamente, le informazioni sui diritti includono una dichiarazione riguardo i vari diritti di proprietà associati alla risorsa, compresi i diritti di proprietà intellettuale.",
   "You can use this field to give supplemental information on intellectual property rights or access arrangements that is additional to the license you selected. For instance, you could specify details concerning accessibility, reproduction, copyright holder, restrictions, or securing permissions for use.": "Utilizzare questo campo per fornire informazioni supplementari sui diritti di proprietà intellettuale o sugli accordi di accesso che vanno oltre la licenza selezionata. Ad esempio, dettagli riguardo l’accessibilità, la riproduzione, il titolare dei diritti d’autore, le restrizioni o la richiesta di permessi d’uso.",
   "In addition to machine-understandable license information, a human-readable text concerning the conditions (e.g. obligations, restrictions) under which data can be reused can still be significant to the user to prevent ambiguity on your data. When you think a further specification might be useful, consider fill in the field.": "Oltre alle informazioni sulla licenza comprensibili dalla macchina, un testo leggibile dall’uomo riguardo le condizioni (ad esempio, obblighi, restrizioni) sotto le quali i dati possono essere riutilizzati può ancora essere significativo per l’utente per evitare ambiguità sui dati. Compilare il campo se si ritiene utile una specificazione aggiuntiva.",
@@ -513,7 +513,7 @@
   "uwm_rights": "Diritti e Licenze",
   "uwm_rights_infoeurepoembargo": "Fine dell'embargo in OpenAIRE",
   "uwm_rights_infoeurepoaccess": "Diritti di accesso in OpenAIRE",
-  "uwm_rights_description": "Descrizione",
+  "uwm_rights_description": "Descrizione dei diritti",
   "uwm_rights_license": "Licenza",
   "uwm_rights_copyright": "Copyright e altre limitazioni",
   "uwm_rights_cost": "Costi",
@@ -1407,5 +1407,10 @@
   "Following metadata were retrieved": "Sono stati trovati i seguenti metadati",
   "Agency": "Agenzia",
   "please enter exact journal title or ISSN": "Inserisci il titolo esatto della rivista o l'ISSN",
-  "UPLOADER_OBJECT_DETAILS": "Ente o persona di riferimento"
+  "UPLOADER_OBJECT_DETAILS": "Ente o persona di riferimento",
+  "Full-text Search": "Ricerca full text",
+  "ORG Unit / Association": "Unità organizzativa / Afferenza",
+  "Please log in to continue": "Autenticati per continuare",
+  "You must be logged in to bulk upload to PHAIDRA.": "Devi autenticarti per effettuare un caricamento multiplo in PHAIDRA.",
+  "The book limit has been reached for the search. Please add more filters to narrow down the results.": "Il limite di oggetti Libro è stato raggiunto per la ricerca. Aggiungi altri filtri per restringere i risultati."
 }
