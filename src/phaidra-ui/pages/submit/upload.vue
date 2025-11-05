@@ -39,6 +39,7 @@ import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
 
 export default {
   layout: "main",
+  middleware: "auth",
   mixins: [context, config, vocabulary],
   metaInfo() {
     let metaInfo = {

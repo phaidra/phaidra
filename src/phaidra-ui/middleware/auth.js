@@ -1,5 +1,8 @@
-export default function ({ store, redirect }) {
+export default function ({ store, redirect, route }) {
   if (!store.state.user.token) {
-    redirect('/')
+    if (process.client) {
+      localStorage.setItem('redirect', route.fullPath)
+    }
+    redirect('/login')
   }
 }

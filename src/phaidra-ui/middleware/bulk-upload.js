@@ -1,4 +1,11 @@
 export default async function ({ store, redirect, route }) {
+  if (!store.state.user.token) {
+    if (process.client) {
+      localStorage.setItem('redirect', route.fullPath)
+    }
+    return redirect('/login')
+  }
+
   // Wait for store initialization on client side
   if (process.client && store.$initBulkUpload) {
     await store.$initBulkUpload()

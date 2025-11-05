@@ -19,6 +19,7 @@ import { config } from "../../../mixins/config"
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
 
 export default {
+  middleware: "auth",
   mixins: [context, config, vocabulary],
   data() {
     return {

@@ -61,6 +61,7 @@ import { config } from "../../../mixins/config";
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
 
 export default {
+  middleware: "auth",
   mixins: [config, context, vocabulary],
   computed: {
     alpha2locale: function () {

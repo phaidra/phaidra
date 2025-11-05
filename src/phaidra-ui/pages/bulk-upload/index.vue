@@ -14,6 +14,7 @@ import BulkUploadSteps from '../../components/BulkUploadSteps.vue'
 
 export default {
   name: 'BulkUploadIndex',
+  middleware: "auth",
 
   components: {
     BulkUploadSteps

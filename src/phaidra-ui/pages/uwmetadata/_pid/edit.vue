@@ -20,6 +20,7 @@ import { context } from '../../../mixins/context'
 import { config } from '../../../mixins/config'
 
 export default {
+  middleware: "auth",
   mixins: [ context, config ],
   watch: {
     '$i18n.locale': function (newVal) {
