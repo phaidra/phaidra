@@ -6,7 +6,7 @@
         <v-card-title class="title font-weight-light white--text">
           <span>{{ $t(label) }}</span>
           <v-spacer></v-spacer>
-          <v-menu open-on-hover bottom offset-y v-if="actions.length">
+          <v-menu bottom offset-y v-if="actions.length">
             <template v-slot:activator="{ on, attrs }">
               <v-btn v-on="on" v-bind="attrs" icon dark>
                 <v-icon dark>mdi-dots-vertical</v-icon>
@@ -113,7 +113,7 @@
                   </v-col>
                 </template>
                 <v-col cols="1" v-if="roleActions.length">
-                  <v-menu open-on-hover bottom offset-y>
+                  <v-menu bottom offset-y>
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn v-on="on" v-bind="attrs" icon>
                         <v-icon>mdi-dots-vertical</v-icon>
