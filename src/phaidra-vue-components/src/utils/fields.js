@@ -880,7 +880,8 @@ const fields = [
     multiplicable: true,
     label: 'Call number',
     value: '',
-    definition: 'Piece/item identifier, such as a call or other type of number.'
+    definition: 'Piece/item identifier, such as a call or other type of number.',
+    allowLanguageCancel: true
   },
   {
     id: 'temporal-coverage',
@@ -956,7 +957,8 @@ const fields = [
     component: 'p-text-field',
     label: 'Accession number',
     value: '',
-    definition: 'Use for identification number assigned to a particular donation or acquisition.'
+    definition: 'Use for identification number assigned to a particular donation or acquisition.',
+    allowLanguageCancel: true
   },
   {
     id: 'volume',
