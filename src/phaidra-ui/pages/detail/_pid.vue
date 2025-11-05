@@ -2731,6 +2731,13 @@ export default {
     copyToClipboard(text) {
       navigator.clipboard.writeText(text);
     },
+    getLicenseLabel(uri) {
+      if (this.$store && this.$store.getters['vocabulary/getLocalizedTermLabel']) {
+        const label = this.$store.getters['vocabulary/getLocalizedTermLabel']('alllicenses', uri, this.$i18n.locale);
+        return label || uri;
+      }
+      return uri;
+    },
     async fetchAsyncData(self, pid) {
       console.log('fetching object info ' + pid);
       try {
@@ -3041,6 +3048,8 @@ export default {
     },
   },
   mounted() {
+    this.$store.dispatch('vocabulary/loadVocabulary', { vocabularyName: 'alllicenses' });
+    
     if (this.showCollectionTree) {
       this.fetchCollectionTree(this.$route.params.pid);
       setTimeout(() => {
