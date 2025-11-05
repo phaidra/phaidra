@@ -1,4 +1,5 @@
 import { fieldSettings } from '../config/bulk-upload/field-settings'
+import { parseCsv } from '../mixins/csvParser'
 
 export const state = () => ({
   currentStep: 1,
@@ -179,7 +180,12 @@ export const getters = {
   },
   getColumnHeaders: (state) => {
     if (!state.csvContent) return []
-    return state.csvContent.split('\n')[0].split(';').map(v => v.trim().replace(/["']/g, ''))
+    
+    const parsed = parseCsv(state.csvContent)
+    
+    if (!parsed || !parsed.data || parsed.data.length === 0) return []
+    
+    return parsed.data[0].map(v => v.trim())
   },
   getCurrentStepFromRoute: (state) => (route) => {
     for (const [stepNum, stepData] of Object.entries(state.steps)) {

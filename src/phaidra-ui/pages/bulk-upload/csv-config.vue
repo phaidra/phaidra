@@ -123,12 +123,14 @@
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import BulkUploadSteps from '../../components/BulkUploadSteps.vue'
+import { csvParser } from '../../mixins/csvParser'
 
 export default {
   name: 'CsvConfig',
   components: {
     BulkUploadSteps
   },
+  mixins: [csvParser],
   middleware: 'bulk-upload',
 
   data() {
@@ -245,11 +247,14 @@ export default {
 
     async readFile(file) {
       const text = await this.readFileContent(file)
-      const firstLine = text.split('\n')[0]
-      const columns = firstLine
-        .split(';')
-        .map(col => col.trim().replace(/["']/g, ''))
-        .filter(col => col !== '')
+      
+      const parsed = this.parseCsvContent(text)
+
+      if (!parsed.data || parsed.data.length === 0) {
+        throw new Error('No data found in the CSV file')
+      }
+      
+      const columns = parsed.data[0].map(col => col.trim()).filter(col => col !== '')
       
       if (columns.length === 0) {
         throw new Error('No valid columns found in the CSV file')
@@ -268,11 +273,7 @@ export default {
     },
 
     async storeFileData(text, fileName) {
-      const firstLine = text.split('\n')[0]
-      const columns = firstLine
-        .split(';')
-        .map(col => col.trim().replace(/["']/g, ''))
-        .filter(col => col !== '')
+      
       
       this.setCsvContent(text)
       this.setFileName(fileName)
