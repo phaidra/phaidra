@@ -1102,6 +1102,37 @@
                   </v-card>
                 </li>
 
+                <li class="mb-6" v-if="licenseUri || rightsStatements.length > 0">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box title font-weight-light white--text"
+                      >{{ $t("Rights") }}</v-card-title
+                    >
+                    <v-card-text class="mt-4">
+                      <v-row no-gutters class="pt-2" v-if="licenseUri">
+                        <v-col
+                          class="caption font-weight-bold"
+                          cols="12"
+                          >{{ $t("License") }}</v-col
+                        >
+                        <v-col cols="12" class="mt-2">
+                          <a :href="licenseUri" target="_blank">{{ getLicenseLabel(licenseUri) }}</a>
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters class="pt-2 mt-4" v-if="rightsStatements.length > 0">
+                        <v-col
+                          class="caption font-weight-bold"
+                          cols="12"
+                          >{{ $t("Rights statement") }}</v-col
+                        >
+                        <v-col cols="12" class="mt-2" v-for="(stmt, i) in rightsStatements" :key="'rights-' + i">
+                          {{ stmt }}
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </li>
+
                 <li class="mb-6" v-if="objectInfo.isinadminset">
                   <v-card tile>
                     <v-card-title
