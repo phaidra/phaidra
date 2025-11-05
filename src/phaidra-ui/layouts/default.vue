@@ -71,6 +71,9 @@
         </v-col>
       </v-row>
     </v-container>
+    <client-only>
+      <CookieBanner></CookieBanner>
+    </client-only>
   </v-app>
 </template>
 
@@ -81,11 +84,15 @@ import "@/compiled-icons/univie-sprache";
 import { config } from "../mixins/config";
 import { context } from "../mixins/context";
 import FaviconMixin from '../mixins/favicon'
+import CookieBanner from '../components/CookieBanner.vue'
 import Vue from "vue";
 import moment from "moment";
 import "@/assets/css/material-icons.css";
 
 export default {
+  components: {
+    CookieBanner
+  },
   mixins: [config, context, FaviconMixin],
   data() {
     return {

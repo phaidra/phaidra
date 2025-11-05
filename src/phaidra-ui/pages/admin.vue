@@ -356,6 +356,25 @@
                   </v-col>
                   <v-col cols="6" class="mt-4">{{ $t("This only shows/hides the particular frontend components for rights management.") }}</v-col>
                 </v-row>
+                <v-divider class="my-8"></v-divider>
+                <v-row>
+                  <v-col>
+                    <v-checkbox
+                      :label="$t('Enable cookie banner')"
+                      v-model="parsedPublicConfigData.enableCookieBanner"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Show a cookie consent banner at the bottom of the page. Users can dismiss it and it won't show again. The message can be translated via the i18n overrides in Datastructures section.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      :label="$t('Privacy Policy URL')"
+                      v-model="parsedPublicConfigData.cookiePrivacyPolicyUrl"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("URL to your Privacy Policy page. Will be displayed as a link in the cookie banner.") }}</v-col>
+                </v-row>
               </v-container>
             </v-tab-item>
 
