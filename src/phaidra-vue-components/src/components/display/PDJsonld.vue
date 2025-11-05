@@ -88,15 +88,15 @@
 
         <template v-else-if="p==='dcterms:language'" slot="dcterms:language">
           <template  v-for="(item, j) in o">
-            <p-d-skos-preflabel v-if="(typeof item === 'object') && (item !== null) && item.hasOwnProperty('skos:exactMatch')" :p="p" :o="item" :key="componentid+'lan'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
-            <p-d-labeled-value v-else :p="p" :o="item" :key="componentid+'lan'+j" v-bind.sync="displayProperties"></p-d-labeled-value>
+            <p-d-skos-preflabel v-if="(typeof item === 'object') && (item !== null) && item.hasOwnProperty('skos:exactMatch')" :p="p" :o="item" :key="componentid+'lan-skos'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+            <p-d-labeled-value v-else :p="p" :o="item" :key="componentid+'lan-lbl'+j" v-bind.sync="displayProperties"></p-d-labeled-value>
           </template>
         </template>
 
         <template v-else-if="p==='schema:subtitleLanguage'" slot="schema:subtitleLanguage">
           <template  v-for="(item, j) in o">
-            <p-d-skos-preflabel v-if="(typeof item === 'object') && (item !== null) && item.hasOwnProperty('skos:exactMatch')" :p="p" :o="item" :key="componentid+'sublan'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
-            <p-d-labeled-value v-else :p="p" :o="item" :key="componentid+'sublan'+j" v-bind.sync="displayProperties"></p-d-labeled-value>
+            <p-d-skos-preflabel v-if="(typeof item === 'object') && (item !== null) && item.hasOwnProperty('skos:exactMatch')" :p="p" :o="item" :key="componentid+'sublan-skos'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+            <p-d-labeled-value v-else :p="p" :o="item" :key="componentid+'sublan-lbl'+j" v-bind.sync="displayProperties"></p-d-labeled-value>
           </template>
         </template>
 
@@ -623,7 +623,9 @@ export default {
   white-space: pre-wrap;
 }
 .pdlabel {
-  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-wrap: break-word; /* legacy fallback */
+  hyphens: auto;
 }
 </style>
 
