@@ -3,8 +3,10 @@
 </template>
 <script>
 import { config } from "../../mixins/config";
+import Submit from "../../components/Submit.vue";
 
 export default {
+  middleware: "auth",
   mixins: [config],
   metaInfo() {
     let metaInfo = {
