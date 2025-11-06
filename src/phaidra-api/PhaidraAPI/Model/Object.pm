@@ -1316,7 +1316,7 @@ sub add_octets {
   }
 
   my $hooks_model = PhaidraAPI::Model::Hooks->new;
-  my $hr          = $hooks_model->add_octets_hook($c, $pid, $exists);
+  my $hr          = $hooks_model->add_octets_hook($c, $pid, $exists, $mimetype);
   if ($hr->{status} ne 200) {
     $c->app->log->error("pid[$pid] add_octets_hook error: " . $c->app->dumper($hr));
   }
