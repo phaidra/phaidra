@@ -122,7 +122,8 @@ export default {
       { name: 'Generator', content: 'PHAIDRA' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { name: 'theme-color', content: this.$vuetify.theme.dark ? this.$config.darkPrimaryColor : this.$config.primaryColor }
-      ]
+      ],
+      script: []
     };
     if (this.instanceconfig.googlesiteverificationcode) {
       metaInfo.meta.push({
@@ -130,6 +131,19 @@ export default {
         content: this.instanceconfig.googlesiteverificationcode
       })
     }
+    
+    if (this.instanceconfig.matomoTrackingCode && this.instanceconfig.matomoTrackingCode.trim()) {
+      let scriptContent = this.instanceconfig.matomoTrackingCode.trim();
+      scriptContent = scriptContent.replace(/<script[^>]*>/gi, '').replace(/<\/script>/gi, '');
+      
+      metaInfo.script.push({
+        type: 'text/javascript',
+        innerHTML: scriptContent,
+        body: false
+      })
+      metaInfo.__dangerouslyDisableSanitizers = ['script']
+    }
+    
     return metaInfo;
   },
   watch: {

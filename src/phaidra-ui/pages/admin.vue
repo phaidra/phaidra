@@ -123,6 +123,16 @@
                   </v-col>
                   <v-col cols="6" class="mt-6">{{ $t('Use to register the site in your Google Search Console') }}</v-col>
                 </v-row>
+                <v-row>
+                  <v-col>
+                    <v-textarea
+                      :label="$t('Matomo/Piwik tracking code')"
+                      v-model="parsedPublicConfigData.matomoTrackingCode"
+                      rows="10"
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t('Paste your complete Matomo (Piwik) tracking script here. Leave empty to disable tracking.') }}</v-col>
+                </v-row>
               </v-container>
             </v-tab-item>
 

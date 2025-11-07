@@ -72,7 +72,8 @@ export const mutations = {
       'hideBreadcrumbsOnHomepage',
       'data_ot4rt',
       'enableCookieBanner',
-      'cookiePrivacyPolicyUrl'
+      'cookiePrivacyPolicyUrl',
+      'matomoTrackingCode',
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
