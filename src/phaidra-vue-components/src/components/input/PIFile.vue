@@ -148,12 +148,19 @@ export default {
         if (this.autoMimetype || file.name.endsWith('.glb')) {
           if (file.name) {
             let ext = file.name.split('.').pop()
+            let mimetypeFound = false
             for (let mt of this.vocabularies['mimetypes'].terms) {
               for (let notation of mt['skos:notation']) {
                 if (ext === notation) {
                   this.$emit('input-mimetype', mt)
+                  mimetypeFound = true
+                  break
                 }
               }
+              if (mimetypeFound) break
+            }
+            if (!mimetypeFound) {
+              this.$emit('input-mimetype', { '@id': 'application/octet-stream' })
             }
           }
         }
