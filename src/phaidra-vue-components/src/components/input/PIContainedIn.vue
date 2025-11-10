@@ -258,7 +258,7 @@
                             ({{ s.seriesVolumeLanguage ? s.seriesVolumeLanguage : '--' }})
                           </span>
                         </v-btn>
-                        <select-language :ref="'langdialogvolumeseries' + s.id" @language-selected="$emit('input-series', { series: s, seriesVolumeLanguageTerm: $event })"></select-language>
+                        <select-language :ref="'langdialogvolumeseries' + s.id" :showReset="s.seriesVolumeLanguage ? true : false" @language-selected="$emit('input-series', { series: s, seriesVolumeLanguageTerm: $event })"></select-language>
                       </v-col>
 
                       <v-col cols="12" :md="multilingual ? ((hideSeriesVolume && hideSeriesIssued) ? 10 : 4) : ((hideSeriesVolume && hideSeriesIssued) ? 12 : (hideSeriesVolume || hideSeriesIssued) ? 6:  4)" v-if="!hideSeriesIssue">
@@ -276,7 +276,7 @@
                             ({{ s.seriesIssueLanguage ? s.seriesIssueLanguage : '--' }})
                           </span>
                         </v-btn>
-                        <select-language :ref="'langdialogissueseries' + s.id" @language-selected="$emit('input-series', { series: s, seriesIssueLanguageTerm: $event })"></select-language>
+                        <select-language :ref="'langdialogissueseries' + s.id" :showReset="s.seriesIssueLanguage ? true : false" @language-selected="$emit('input-series', { series: s, seriesIssueLanguageTerm: $event })"></select-language>
                       </v-col>
 
                       <v-col cols="12" :md="(hideSeriesVolume && hideSeriesIssue) ? 12 : (hideSeriesVolume && hideSeriesIssue) ? 6 : 4" v-if="!hideSeriesIssued">

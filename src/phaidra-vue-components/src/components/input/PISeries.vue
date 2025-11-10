@@ -93,7 +93,7 @@
                   ({{ volumeLanguage ? volumeLanguage : '--' }})
                 </span>
               </v-btn>
-              <select-language ref="volumelangdialog" @language-selected="$emit('input-volume-language', $event)"></select-language>
+              <select-language ref="volumelangdialog" :showReset="volumeLanguage ? true : false" @language-selected="$emit('input-volume-language', $event)"></select-language>
             </v-col>
 
             <v-col cols="12" :md="multilingual ? ((hideVolume && hideIssued)? 10 : 4) : ((hideVolume && hideIssued)? 12 : 4)" v-if="!hideIssue">
@@ -111,7 +111,7 @@
                   ({{ issueLanguage ? issueLanguage : '--' }})
                 </span>
               </v-btn>
-              <select-language ref="issuelangdialog" @language-selected="$emit('input-issue-language', $event)"></select-language>
+              <select-language ref="issuelangdialog" :showReset="issueLanguage ? true : false" @language-selected="$emit('input-issue-language', $event)"></select-language>
             </v-col>
 
             <v-col cols="12" :md="(hideVolume && hideIssue)? 12 : 4" v-if="!hideIssued">
