@@ -257,7 +257,9 @@
                               v-on:input-title="f.title=$event"
                               v-on:input-title-language="setSelected(f, 'titleLanguage', $event)"
                               v-on:input-volume="f.volume=$event"
+                              v-on:input-volume-language="setSelected(f, 'volumeLanguage', $event)"
                               v-on:input-issue="f.issue=$event"
+                              v-on:input-issue-language="setSelected(f, 'issueLanguage', $event)"
                               v-on:input-issued="f.issued=$event"
                               v-on:input-issn="f.issn=$event"
                               v-on:input-identifier="f.identifier=$event"
@@ -2102,8 +2104,14 @@ export default {
           if (event.hasOwnProperty('seriesVolume')) {
             s.seriesVolume = event.seriesVolume
           }
+          if (event.hasOwnProperty('seriesVolumeLanguageTerm')) {
+            s.seriesVolumeLanguage = event.seriesVolumeLanguageTerm['@id']
+          }
           if (event.hasOwnProperty('seriesIssue')) {
             s.seriesIssue = event.seriesIssue
+          }
+          if (event.hasOwnProperty('seriesIssueLanguageTerm')) {
+            s.seriesIssueLanguage = event.seriesIssueLanguageTerm['@id']
           }
           if (event.hasOwnProperty('seriesIssued')) {
             s.seriesIssued = event.seriesIssued

@@ -59,14 +59,14 @@
                       </v-row>
                       <v-row :key="'svol'+k">
                         <template v-for="(volume, i) in series['bibo:volume']">
-                          <v-col md="3" cols="12" class="pdlabel secondary--text font-weight-bold" :key="'vl'+i">{{ $t('Volume') }}</v-col>
-                          <v-col md="9" cols="12" class="valuefield" :key="'v'+i">{{ volume }}</v-col>
+                          <v-col md="3" cols="12" class="pdlabel secondary--text font-weight-bold" :key="'vl'+i">{{ $t('Volume') }}<template v-if="showLang && volume['@language']"> ({{ volume['@language'] }})</template></v-col>
+                          <v-col md="9" cols="12" class="valuefield" :key="'v'+i">{{ volume['@value'] || volume }}</v-col>
                         </template>
                       </v-row>
                       <v-row :key="'sissue'+k">
                         <template v-for="(issue, i) in series['bibo:issue']">
-                          <v-col md="3" cols="12"  class="pdlabel secondary--text font-weight-bold" :key="'il'+i">{{ $t('Issue') }}</v-col>
-                          <v-col md="9" cols="12" class="valuefield" :key="'i'+i">{{ issue }}</v-col>
+                          <v-col md="3" cols="12"  class="pdlabel secondary--text font-weight-bold" :key="'il'+i">{{ $t('Issue') }}<template v-if="showLang && issue['@language']"> ({{ issue['@language'] }})</template></v-col>
+                          <v-col md="9" cols="12" class="valuefield" :key="'i'+i">{{ issue['@value'] || issue }}</v-col>
                         </template>
                       </v-row>
                       <v-row :key="'sissued'+k">

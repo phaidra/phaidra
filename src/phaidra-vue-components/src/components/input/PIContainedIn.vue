@@ -231,19 +231,19 @@
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" md="2" v-if="multilingual">
-                        <v-btn text @click="$refs['langdialogtitleseries' + s.id].open()">
+                        <v-btn text @click="$refs['langdialogtitleseries' + s.id][0].open()">
                           <span>
                             ({{ s.seriesTitleLanguage ? s.seriesTitleLanguage : '--' }})
                           </span>
                         </v-btn>
-                        <select-language :ref="'langdialogtitleseries' + s.id" @language-selected="$emit('input-series', { series: s, seriesTitleLanguageTerm: $event })""></select-language>
+                        <select-language :ref="'langdialogtitleseries' + s.id" @language-selected="$emit('input-series', { series: s, seriesTitleLanguageTerm: $event })"></select-language>
                       </v-col>
 
                     </v-row>
 
                     <v-row >
 
-                      <v-col cols="12" :md="(hideSeriesIssue && hideSeriesIssued) ? 12 : (hideSeriesIssue || hideSeriesIssued) ? 6 : 4" v-if="!hideSeriesVolume">
+                      <v-col cols="12" :md="multilingual ? ((hideSeriesIssue && hideSeriesIssued) ? 10 : 4) : ((hideSeriesIssue && hideSeriesIssued) ? 12 : (hideSeriesIssue || hideSeriesIssued) ? 6 : 4)" v-if="!hideSeriesVolume">
                         <v-text-field
                           :value="s.seriesVolume"
                           :label="$t('Volume')"
@@ -252,8 +252,16 @@
                           :outlined="inputStyle==='outlined'"
                         ></v-text-field>
                       </v-col>
+                      <v-col cols="12" md="2" v-if="!hideSeriesVolume && multilingual">
+                        <v-btn text @click="$refs['langdialogvolumeseries' + s.id][0].open()">
+                          <span>
+                            ({{ s.seriesVolumeLanguage ? s.seriesVolumeLanguage : '--' }})
+                          </span>
+                        </v-btn>
+                        <select-language :ref="'langdialogvolumeseries' + s.id" @language-selected="$emit('input-series', { series: s, seriesVolumeLanguageTerm: $event })"></select-language>
+                      </v-col>
 
-                      <v-col cols="12" :md="(hideSeriesVolume && hideSeriesIssued) ? 12 : (hideSeriesVolume || hideSeriesIssued) ? 6:  4" v-if="!hideSeriesIssue">
+                      <v-col cols="12" :md="multilingual ? ((hideSeriesVolume && hideSeriesIssued) ? 10 : 4) : ((hideSeriesVolume && hideSeriesIssued) ? 12 : (hideSeriesVolume || hideSeriesIssued) ? 6:  4)" v-if="!hideSeriesIssue">
                         <v-text-field
                           :value="s.seriesIssue"
                           :label="$t('Issue')"
@@ -261,6 +269,14 @@
                           :filled="inputStyle==='filled'"
                           :outlined="inputStyle==='outlined'"
                         ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" md="2" v-if="!hideSeriesIssue && multilingual">
+                        <v-btn text @click="$refs['langdialogissueseries' + s.id][0].open()">
+                          <span>
+                            ({{ s.seriesIssueLanguage ? s.seriesIssueLanguage : '--' }})
+                          </span>
+                        </v-btn>
+                        <select-language :ref="'langdialogissueseries' + s.id" @language-selected="$emit('input-series', { series: s, seriesIssueLanguageTerm: $event })"></select-language>
                       </v-col>
 
                       <v-col cols="12" :md="(hideSeriesVolume && hideSeriesIssue) ? 12 : (hideSeriesVolume && hideSeriesIssue) ? 6 : 4" v-if="!hideSeriesIssued">

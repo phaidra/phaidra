@@ -309,12 +309,22 @@ export default {
               }
               if (obj['bibo:volume']) {
                 for (let v of obj['bibo:volume']) {
-                  f.volume = v
+                  if (typeof v === 'object' && v['@value']) {
+                    f.volume = v['@value']
+                    f.volumeLanguage = v['@language'] ? v['@language'] : ''
+                  } else {
+                    f.volume = v
+                  }
                 }
               }
               if (obj['bibo:issue']) {
                 for (let v of obj['bibo:issue']) {
-                  f.issue = v
+                  if (typeof v === 'object' && v['@value']) {
+                    f.issue = v['@value']
+                    f.issueLanguage = v['@language'] ? v['@language'] : ''
+                  } else {
+                    f.issue = v
+                  }
                 }
               }
               if (obj['dcterms:issued']) {
@@ -479,12 +489,22 @@ export default {
                     }
                     if (series['bibo:volume']) {
                       for (let v of series['bibo:volume']) {
-                        s.seriesVolume = v
+                        if (typeof v === 'object' && v['@value']) {
+                          s.seriesVolume = v['@value']
+                          s.seriesVolumeLanguage = v['@language'] ? v['@language'] : ''
+                        } else {
+                          s.seriesVolume = v
+                        }
                       }
                     }
                     if (series['bibo:issue']) {
                       for (let v of series['bibo:issue']) {
-                        s.seriesIssue = v
+                        if (typeof v === 'object' && v['@value']) {
+                          s.seriesIssue = v['@value']
+                          s.seriesIssueLanguage = v['@language'] ? v['@language'] : ''
+                        } else {
+                          s.seriesIssue = v
+                        }
                       }
                     }
                     if (series['dcterms:issued']) {
@@ -2015,7 +2035,7 @@ export default {
     }
     return h
   },
-  get_json_series (type, title, titleLanguage, volume, issue, issued, issn, identifier, idnetifierType) {
+  get_json_series (type, title, titleLanguage, volume, volumeLanguage, issue, issueLanguage, issued, issn, identifier, idnetifierType) {
     var h = {
       '@type': type
     }
@@ -2034,10 +2054,10 @@ export default {
       h['dce:title'] = [ tit ]
     }
     if (volume) {
-      h['bibo:volume'] = [ volume ]
+      h['bibo:volume'] = [ this.get_json_valueobject(volume, volumeLanguage) ]
     }
     if (issue) {
-      h['bibo:issue'] = [ issue ]
+      h['bibo:issue'] = [ this.get_json_valueobject(issue, issueLanguage) ]
     }
     if (issued) {
       h['dcterms:issued'] = [ issued ]
@@ -2158,10 +2178,10 @@ export default {
               series['dce:title'] = [ tit ]
             }
             if (s.seriesVolume) {
-              series['bibo:volume'] = [ s.seriesVolume ]
+              series['bibo:volume'] = [ this.get_json_valueobject(s.seriesVolume, s.seriesVolumeLanguage) ]
             }
             if (s.seriesIssue) {
-              series['bibo:issue'] = [ s.seriesIssue ]
+              series['bibo:issue'] = [ this.get_json_valueobject(s.seriesIssue, s.seriesIssueLanguage) ]
             }
             if (s.seriesIssued) {
               series['dcterms:issued'] = [ s.seriesIssued ]
@@ -2685,7 +2705,7 @@ export default {
 
         case 'rdau:P60193':
           if (f.title || f.volume || f.issue || f.issued || f.issn || f.identifier) {
-            this.push_object(jsonld, f.predicate, this.get_json_series(f.type, f.title, f.titleLanguage, f.volume, f.issue, f.issued, f.issn, f.identifier, f.identifierType))
+            this.push_object(jsonld, f.predicate, this.get_json_series(f.type, f.title, f.titleLanguage, f.volume, f.volumeLanguage, f.issue, f.issueLanguage, f.issued, f.issn, f.identifier, f.identifierType))
           }
           if (f.pageStart) {
             this.push_literal(jsonld, 'schema:pageStart', f.pageStart)

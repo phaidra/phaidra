@@ -614,7 +614,9 @@ const fields = [
     title: '',
     titleLanguage: '',
     volume: '',
+    volumeLanguage: '',
     issue: '',
+    issueLanguage: '',
     issued: '',
     issuedDateLabel: 'Issued',
     issuedDatePicker: true,
@@ -627,6 +629,7 @@ const fields = [
     pageStartLabel: 'Page start',
     pageEndLabel: 'Page end',
     journalSuggest: false,
+    multilingual: true,
     definition: 'Relates a resource to a resource in which a part has been issued; a title of a larger resource appears on a part.'
   },
   {
@@ -665,7 +668,9 @@ const fields = [
         seriesTitle: '',
         seriesTitleLanguage: '',
         seriesVolume: '',
+        seriesVolumeLanguage: '',
         seriesIssue: '',
+        seriesIssueLanguage: '',
         seriesIssued: '',
         seriesIssn: '',
         seriesIdentifier: '',
@@ -696,6 +701,7 @@ const fields = [
     publishingDate: '',
     publishingDatePicker: true,
     publisherCollapse: false,
+    multilingual: true,
     definition: 'Relates a resource to a larger resource of which a part is a discrete component.'
   },
   {
