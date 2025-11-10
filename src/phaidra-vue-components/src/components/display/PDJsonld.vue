@@ -223,7 +223,7 @@
         </template>
 
         <template v-else-if="p==='bf:shelfMark'" slot="bf:shelfMark">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'callnr'+j" v-bind.sync="displayProperties"></p-d-value>
+          <p-d-lang-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'callnr'+j" v-bind.sync="displayProperties"></p-d-lang-value>
         </template>
 
         <template v-else-if="p==='dcterms:provenance'" slot="dcterms:provenance">
@@ -255,7 +255,7 @@
         </template>
 
         <template v-else-if="p==='opaque:cco_accessionNumber'" slot="opaque:cco_accessionNumber">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'accnr'+j" v-bind.sync="displayProperties"></p-d-value>
+          <p-d-lang-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'accnr'+j" v-bind.sync="displayProperties"></p-d-lang-value>
         </template>
 
         <template v-else-if="p==='vra:hasInscription'" slot="vra:hasInscription">
@@ -323,7 +323,7 @@
         </template>
 
         <template v-else-if="p==='bf:soundCharacteristic'" slot="bf:soundCharacteristic">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'soundCharacteristic'+j" v-bind.sync="displayProperties"></p-d-value>
+          <p-d-lang-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'soundCharacteristic'+j" v-bind.sync="displayProperties"></p-d-lang-value>
         </template>
 
         <template v-else-if="p==='schema:pageStart'" slot="schema:pageStart">

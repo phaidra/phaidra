@@ -1082,7 +1082,12 @@ export default {
             case 'bf:soundCharacteristic':
               f = fields.getField('sound-characteristic')
               f.label = key
-              f.value = obj
+              if (typeof obj === 'object' && obj['@value']) {
+                f.value = obj['@value']
+                f.language = obj['@language'] ? obj['@language'] : ''
+              } else {
+                f.value = obj
+              }
               components.push(f)
               break
 
@@ -1134,14 +1139,24 @@ export default {
             // opaque:cco_accessionNumber
             case 'opaque:cco_accessionNumber':
               f = fields.getField('accession-number')
-              f.value = obj
+              if (typeof obj === 'object' && obj['@value']) {
+                f.value = obj['@value']
+                f.language = obj['@language'] ? obj['@language'] : ''
+              } else {
+                f.value = obj
+              }
               components.push(f)
               break
 
             // bf:shelfMark
             case 'bf:shelfMark':
               f = fields.getField('shelf-mark')
-              f.value = obj
+              if (typeof obj === 'object' && obj['@value']) {
+                f.value = obj['@value']
+                f.language = obj['@language'] ? obj['@language'] : ''
+              } else {
+                f.value = obj
+              }
               components.push(f)
               break
 
@@ -1164,14 +1179,24 @@ export default {
             // bibo:issue
             case 'bibo:issue':
               f = fields.getField('issue')
-              f.value = obj
+              if (typeof obj === 'object' && obj['@value']) {
+                f.value = obj['@value']
+                f.language = obj['@language'] ? obj['@language'] : ''
+              } else {
+                f.value = obj
+              }
               components.push(f)
               break
 
             // bibo:volume
             case 'bibo:volume':
               f = fields.getField('volume')
-              f.value = obj
+              if (typeof obj === 'object' && obj['@value']) {
+                f.value = obj['@value']
+                f.language = obj['@language'] ? obj['@language'] : ''
+              } else {
+                f.value = obj
+              }
               components.push(f)
               break
 
@@ -1491,6 +1516,9 @@ export default {
                             if (role['schema:name']) {
                               for (let name of role['schema:name']) {
                                 f.organizationText = name['@value']
+                                if (name['@language']) {
+                                  f.language = name['@language']
+                                }
                               }
                             }
                           }
@@ -1502,6 +1530,9 @@ export default {
                         if (role['schema:name']) {
                           for (let name of role['schema:name']) {
                             f.organizationText = name['@value']
+                            if (name['@language']) {
+                              f.language = name['@language']
+                            }
                           }
                         }
                       }
@@ -1511,6 +1542,9 @@ export default {
                       for (let name of role['schema:name']) {
                         f.organizationType = 'other'
                         f.organizationText = name['@value']
+                        if (name['@language']) {
+                          f.language = name['@language']
+                        }
                       }
                     }
                   }
@@ -1857,6 +1891,9 @@ export default {
                 '@value': f.organizationText
               }
             ]
+            if (f.language) {
+              h['schema:name'][0]['@language'] = f.language
+            }
           }
           if (f.identifierText) {
             if (f.identifierType) {
@@ -2612,10 +2649,15 @@ export default {
           break
 
         case 'edm:rights':
+          if (f.value) {
+            this.push_literal(jsonld, f.predicate, f.value)
+          }
+          break
+
         case 'bibo:issue':
         case 'bibo:volume':
           if (f.value) {
-            this.push_literal(jsonld, f.predicate, f.value)
+            this.push_value(jsonld, f.predicate, this.get_json_valueobject(f.value, f.language))
           }
           break
 
@@ -2729,13 +2771,13 @@ export default {
 
         case 'opaque:cco_accessionNumber':
           if (f.value) {
-            this.push_literal(jsonld, f.predicate, f.value)
+            this.push_value(jsonld, f.predicate, this.get_json_valueobject(f.value, f.language))
           }
           break
 
         case 'bf:shelfMark':
           if (f.value) {
-            this.push_literal(jsonld, f.predicate, f.value)
+            this.push_value(jsonld, f.predicate, this.get_json_valueobject(f.value, f.language))
           }
           break
 
@@ -2849,7 +2891,7 @@ export default {
         case 'schema:numberOfPages':
         case 'bf:soundCharacteristic':
           if (f.value) {
-            this.push_literal(jsonld, f.predicate, f.value)
+            this.push_value(jsonld, f.predicate, this.get_json_valueobject(f.value, f.language))
           }
           break
 

@@ -1,6 +1,6 @@
 <template>
   <v-row v-if="entity">
-    <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold text-md-right"><span v-show="!hideLabel">{{ getLocalizedTermLabel(this.role) }}</span></v-col>
+    <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold text-md-right"><span v-show="!hideLabel">{{ getLocalizedTermLabel(this.role) }}<template v-if="showLang && organizationLanguage"> ({{ organizationLanguage }})</template></span></v-col>
     <v-col :md="valueColMd" cols="12">
       <template v-if="entity['@type'] === 'schema:Person'">
         <template v-if="entity['skos:exactMatch']">
@@ -48,7 +48,7 @@
           {{ ' ' }}<a class="valuefield" :href="typeof entity['skos:exactMatch'][0] === 'string' ? entity['skos:exactMatch'][0] : getIDResolverURL(entity['skos:exactMatch'][0])" target="_blank">{{ entity['schema:name'][0]['@value'] }}</a>
         </template>
         <template v-else>
-          <template class="valuefield" v-for="(corpname) in entity['schema:name']">{{ corpname['@value'] }}</template>
+          <template class="valuefield" v-for="(corpname, i) in entity['schema:name']"><template v-if="i>0">, </template>{{ corpname['@value'] }}</template>
         </template>
       </template>
     </v-col>
@@ -104,6 +104,14 @@ export default {
         }
       }
       return ''
+    },
+    organizationLanguage: function () {
+      if (this.entity['@type'] === 'schema:Organization' && this.entity['schema:name']) {
+        if (this.entity['schema:name'][0] && this.entity['schema:name'][0]['@language']) {
+          return this.entity['schema:name'][0]['@language']
+        }
+      }
+      return null
     }
   },
   methods: {

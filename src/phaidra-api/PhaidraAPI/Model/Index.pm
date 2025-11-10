@@ -2232,10 +2232,14 @@ sub _add_jsonld_index {
         }
       }
       if (exists($o->{'bibo:volume'}) && $o->{'bibo:volume'} ne '') {
-        push @{$index->{"bib_volume"}}, $o->{'bibo:volume'}[0];
+        my $vol = $o->{'bibo:volume'}[0];
+        $vol = ref($vol) eq 'HASH' ? $vol->{'@value'} : $vol;
+        push @{$index->{"bib_volume"}}, $vol if $vol;
       }
       if (exists($o->{'bibo:issue'}) && $o->{'bibo:issue'} ne '') {
-        push @{$index->{"bib_issue"}}, $o->{'bibo:issue'}[0];
+        my $iss = $o->{'bibo:issue'}[0];
+        $iss = ref($iss) eq 'HASH' ? $iss->{'@value'} : $iss;
+        push @{$index->{"bib_issue"}}, $iss if $iss;
       }
       unless (exists($index->{"bib_published"})) {
         if ((exists($o->{'bibo:volume'}) && $o->{'bibo:volume'} ne '') or (exists($o->{'bibo:issue'}) && $o->{'bibo:issue'} ne '')) {
@@ -2374,7 +2378,11 @@ sub _add_jsonld_index {
 
   if ($jsonld->{'bf:shelfMark'}) {
     for my $o (@{$jsonld->{'bf:shelfMark'}}) {
-      push @{$index->{"bf_shelfmark"}}, $o;
+      if (ref($o) eq 'HASH') {
+        push @{$index->{"bf_shelfmark"}}, $o->{'@value'};
+      } else {
+        push @{$index->{"bf_shelfmark"}}, $o;
+      }
     }
   }
 

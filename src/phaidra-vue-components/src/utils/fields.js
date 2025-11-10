@@ -290,7 +290,9 @@ const fields = [
     component: 'p-text-field',
     label: 'Reproduction note',
     value: '',
-    definition: 'Information, usually in textual form, on attributes of a resource or some aspect of a resource.'
+    definition: 'Information, usually in textual form, on attributes of a resource or some aspect of a resource.',
+    multilingual: true,
+    allowLanguageCancel: true
   },
   {
     id: 'note-checkbox',
@@ -391,7 +393,10 @@ const fields = [
     organizationLabel: 'Production place',
     role: 'role:prp',
     hideRole: true,
-    definition: 'The place of production (e.g., inscription, fabrication, construction, etc.) of a resource in an unpublished form'
+    definition: 'The place of production (e.g., inscription, fabrication, construction, etc.) of a resource in an unpublished form',
+    multilingual: true,
+    allowLanguageCancel: true,
+    language: ''
   },
   {
     id: 'production-company',
@@ -881,7 +886,9 @@ const fields = [
     label: 'Call number',
     value: '',
     definition: 'Piece/item identifier, such as a call or other type of number.',
-    allowLanguageCancel: true
+    allowLanguageCancel: true,
+    multilingual: true,
+    language: ''
   },
   {
     id: 'temporal-coverage',
@@ -958,7 +965,9 @@ const fields = [
     label: 'Accession number',
     value: '',
     definition: 'Use for identification number assigned to a particular donation or acquisition.',
-    allowLanguageCancel: true
+    allowLanguageCancel: true,
+    multilingual: true,
+    language: ''
   },
   {
     id: 'volume',
@@ -968,7 +977,8 @@ const fields = [
     label: 'Volume',
     value: '',
     definition: 'A volume number.',
-    allowLanguageCancel: true
+    allowLanguageCancel: true,
+    multilingual: true
   },
   {
     id: 'issue',
@@ -978,7 +988,8 @@ const fields = [
     label: 'Issue',
     value: '',
     definition: 'An issue number.',
-    allowLanguageCancel: true
+    allowLanguageCancel: true,
+    multilingual: true
   },
   {
     id: 'extent',
@@ -1007,7 +1018,10 @@ const fields = [
     component: 'p-literal',
     label: 'Sound characteristic',
     value: '',
-    definition: 'Technical specification relating to the encoding of sound in a resource.'
+    definition: 'Technical specification relating to the encoding of sound in a resource.',
+    multilingual: true,
+    allowLanguageCancel: true,
+    language: ''
   },
   {
     id: 'dce-format-vocab',

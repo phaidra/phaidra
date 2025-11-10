@@ -375,6 +375,7 @@
                               v-on:input-identifier="f.identifierText = $event"
                               v-on:input-organization="f.organizationText=$event"
                               v-on:input-role="roleInput(f, $event)"
+                              v-on:input-language="setSelected(f, 'language', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
                               v-on:configure="editFieldProps(f)"
@@ -546,6 +547,7 @@
                             <p-i-literal
                               v-bind.sync="f"
                               v-on:input-value="f.value=$event"
+                              v-on:input-language="setSelected(f, 'language', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
                               v-on:configure="editFieldProps(f)"
