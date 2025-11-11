@@ -2745,7 +2745,7 @@ export const state = () => ({
               title: 'Usage notes',
               content: {
                 level1:
-                  'The information about the file format can be relevant to determine the equipment needed to display or operate a resource (e.g. if the described resource has format PDF, you need a PDF reader to use it). <br> Once you upload the file, the value is pre-selected by the system. Check if this value fits your digital object. If not, choose the right one from the drop-down menu. <br><b>Note:</b> If possible, before uploading the file consider file formats that are widely used and supported by the most commonly used software and tools. A list of the formats recommended by Phaidra can be found <a href="https://datamanagement.univie.ac.at/en/about-phaidra/formats/">here</a>. ',
+                  'The information about the file format can be relevant to determine the equipment needed to display or operate a resource (e.g. if the described resource has format PDF, you need a PDF reader to use it). <br> Once you upload the file, the value is pre-selected by the system. Check if this value fits your digital object. If not, choose the right one from the drop-down menu. <br><b>Note:</b> If possible, before uploading the file consider file formats that are widely used and supported by the most commonly used software and tools. A list of the formats recommended by Phaidra can be found <a href="https://datamanagement.univie.ac.at/en/about-phaidra/formats/">here</a>.',
                 level2: '',
                 level3: ''
               }
