@@ -241,7 +241,7 @@ export default {
     });
     Vue.filter('datetimeutc', function (value) {
       if (value) {
-        return moment.utc(String(value)).format('DD.MM.YYYY hh:mm:ss')
+        return moment.utc(String(value)).format('DD.MM.YYYY HH:mm:ss')
       }
     })
     Vue.filter("date", function (value) {
