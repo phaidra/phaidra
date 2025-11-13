@@ -4410,6 +4410,120 @@ export default {
           'fra': 'vénète',
           'ita': 'Venetico'
         }
+      },
+      {
+        '@id': 'ndv',
+        'skos:prefLabel': {
+          'eng': 'Ndut',
+          'deu': 'Ndut',
+          'fra': 'Ndut',
+          'ita': 'Ndut'
+        }
+      },
+      {
+        '@id': 'fap',
+        'skos:prefLabel': {
+          'eng': 'Palor',
+          'deu': 'Palor',
+          'fra': 'Palor',
+          'ita': 'Palor'
+        }
+      },{
+        '@id': 'bun',
+        'skos:prefLabel': {
+          'eng': 'Sherbro',
+          'deu': 'Sherbro',
+          'fra': 'Sherbro',
+          'ita': 'Sherbro'
+        }
+      },{
+        '@id': 'bgo',
+        'skos:prefLabel': {
+          'eng': 'Baga Koga',
+          'deu': 'Baga Koga',
+          'fra': 'Baga Koga',
+          'ita': 'Baga Koga'
+        }
+      },{
+        '@id': 'lia',
+        'skos:prefLabel': {
+          'eng': 'Limba (West-Zentral)',
+          'deu': 'Limba (West-Central)',
+          'fra': 'Limba (occidental)',
+          'ita': 'Limba (occidentale)'
+        }
+      },{
+        '@id': 'lma',
+        'skos:prefLabel': {
+          'eng': 'Limba (Ost)',
+          'deu': 'Limba (East)',
+          'fra': 'Limba (oriental)',
+          'ita': 'Limba (orientale)'
+        }
+      },{
+        '@id': 'klu',
+        'skos:prefLabel': {
+          'eng': 'Klao',
+          'deu': 'Klao',
+          'fra': 'Klao',
+          'ita': 'Klao'
+        }
+      },{
+        '@id': 'cae',
+        'skos:prefLabel': {
+          'eng': 'Laalaa',
+          'deu': 'Laalaa',
+          'fra': 'Laalaa',
+          'ita': 'Laalaa'
+        }
+      },{
+        '@id': 'kiz',
+        'skos:prefLabel': {
+          'eng': 'Kisi',
+          'deu': 'Kisi',
+          'fra': 'Kisi',
+          'ita': 'Kisi'
+        }
+      },{
+        '@id': 'bda',
+        'skos:prefLabel': {
+          'eng': 'Bayot',
+          'deu': 'Bayot',
+          'fra': 'Bayot',
+          'ita': 'Bayot'
+        }
+      },{
+        '@id': 'bcz',
+        'skos:prefLabel': {
+          'eng': 'Banyun | Bainouk)',
+          'deu': 'Banyun | Bainouk)',
+          'fra': 'Banyun | Bainouk)',
+          'ita': 'Banyun | Bainouk)'
+        }
+      },{
+        '@id': 'knf',
+        'skos:prefLabel': {
+          'eng': 'Mankanya',
+          'deu': 'Mankanya',
+          'fra': 'Mankanya',
+          'ita': 'Mankanya'
+        }
+      },{
+        '@id': 'snf',
+        'skos:prefLabel': {
+          'eng': 'Noon',
+          'deu': 'Noon',
+          'fra': 'Noon',
+          'ita': 'Noon'
+        }
+      },{
+        '@id': 'bmf',
+        'skos:prefLabel': {
+          'eng': 'Krim',
+          'deu': 'Krim',
+          'fra': 'Krim',
+          'ita': 'Krim'
+        }
       }
     ]
   }
