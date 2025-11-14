@@ -956,7 +956,7 @@
                           <v-col>
                             <v-text-field
                               :label="$t('Upload count parameter')"
-                              v-model="parsedPublicConfigData.irbulkuploadlimitnr"
+                              v-model="parsedPrivateConfigData.irbulkuploadlimitnr"
                             ></v-text-field>
                           </v-col>
                           <v-col cols="6" class="mt-4">{{ $t("Allow X number of uploads within X days.") }}</v-col>
