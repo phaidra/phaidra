@@ -89,11 +89,13 @@ else
     log_error "Failed to store fixity failure in MongoDB for resource: $resource_uri"
 fi
 
-# Log email attempt
-log_success "Attempting to send email notification..."
+# Check if SMTP configuration is available
+if [ -n "${SMTP_HOST}" ] && [ -n "${SMTP_PORT}" ] && [ -n "${SMTP_USERNAME}" ] && [ -n "${SMTP_PASSWORD}" ] && [ -n "${SMTP_TO}" ]; then
+    # Log email attempt
+    log_success "SMTP configured, attempting to send email notification..."
 
-# Create email content
-email_content=$(cat << EOF
+    # Create email content
+    email_content=$(cat << EOF
 From: ${SMTP_USERNAME}
 To: ${SMTP_TO}
 Subject: Fixity Check Failed
@@ -109,32 +111,35 @@ This is an automated message from the Fixity Checker service.
 EOF
 )
 
-# Try sending email with SMTPS
-email_output=$(echo "$email_content" | curl -v --url "smtps://${SMTP_HOST}:${SMTP_PORT}" \
-    --mail-from "${SMTP_USERNAME}" \
-    --mail-rcpt "${SMTP_TO}" \
-    --ssl \
-    --user "${SMTP_USERNAME}:${SMTP_PASSWORD}" \
-    --upload-file - 2>&1)
+    # Try sending email with SMTPS
+    email_output=$(echo "$email_content" | curl -v --url "smtps://${SMTP_HOST}:${SMTP_PORT}" \
+        --mail-from "${SMTP_USERNAME}" \
+        --mail-rcpt "${SMTP_TO}" \
+        --ssl \
+        --user "${SMTP_USERNAME}:${SMTP_PASSWORD}" \
+        --upload-file - 2>&1)
 
-email_status=$?
+    email_status=$?
 
-if [ $email_status -eq 0 ]; then
-    log_success "Successfully sent email notification for resource: $resource_uri"
-else
-    log_error "Failed to send email notification for resource: $resource_uri"
-    log_error "Email error details: $email_output"
-    
-    # Try alternative method using sendmail if available
-    if command -v sendmail >/dev/null 2>&1; then
-        log_success "Attempting to send email using sendmail..."
-        echo "$email_content" | sendmail -t
-        if [ $? -eq 0 ]; then
-            log_success "Successfully sent email using sendmail"
-        else
-            log_error "Failed to send email using sendmail"
+    if [ $email_status -eq 0 ]; then
+        log_success "Successfully sent email notification for resource: $resource_uri"
+    else
+        log_error "Failed to send email notification for resource: $resource_uri"
+        log_error "Email error details: $email_output"
+        
+        # Try alternative method using sendmail if available
+        if command -v sendmail >/dev/null 2>&1; then
+            log_success "Attempting to send email using sendmail..."
+            echo "$email_content" | sendmail -t
+            if [ $? -eq 0 ]; then
+                log_success "Successfully sent email using sendmail"
+            else
+                log_error "Failed to send email using sendmail"
+            fi
         fi
     fi
+else
+    log_success "SMTP not configured, skipping email notification (data stored in MongoDB)"
 fi
 
 # Log script completion
