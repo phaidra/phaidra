@@ -83,7 +83,7 @@
         <template v-else-if="nodePath(ch) === 'uwm_lifecycle_contribute'">
           <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ getChildLabel(ch, 'role') }}</v-col>
           <v-col cols="12" md="10" :class="getChildValue(ch, 'date') ? 'uwm-border-left mb-4' : ''">
-            <v-row no-gutters v-for="(entity, i) in getEntities(ch)" :key="'en'+i">
+            <v-row no-gutters v-for="(entity, i) in getEntities(ch)" :key="'en'+i" class="mb-2">
               <v-col>
                 <span v-if="getChildValue(entity, 'orcid')">
                   <a :href="'https://orcid.org/' + getChildValue(entity, 'orcid').replace('https://orcid.org/','')" target="_blank">
@@ -98,11 +98,11 @@
                 </span>
                 <span v-if="getChildValue(entity, 'institution') && (getChildValue(entity, 'firstname') || getChildValue(entity, 'lastname'))" class="secondary--text">&nbsp;({{ getChildValue(entity, 'institution') }})</span>
                 <span v-else-if="getChildValue(entity, 'institution')">{{ getChildValue(entity, 'institution') }}</span>
-                <span v-if="getChildValue(entity, 'viaf')"> VIAF: <a :href="'https://viaf.org/viaf/' + getChildValue(entity, 'viaf')" target="_blank">{{ getChildValue(entity, 'viaf') }}</a></span>
-                <span v-if="getChildValue(entity, 'wdq')"> Wikidata: <a :href="'https://www.wikidata.org/wiki/' + getChildValue(entity, 'wdq')" target="_blank">{{ getChildValue(entity, 'wdq') }}</a></span>
-                <span v-if="getChildValue(entity, 'gnd')"> GND: <a :href="'https://d-nb.info/gnd/' + getChildValue(entity, 'gnd')" target="_blank">{{ getChildValue(entity, 'gnd') }}</a></span>
-                <span v-if="getChildValue(entity, 'lcnaf')"> LCCN: <a :href="'https://lccn.loc.gov/' + getChildValue(entity, 'lcnaf')" target="_blank">{{ getChildValue(entity, 'lcnaf') }}</a></span>
-                <span v-if="getChildValue(entity, 'isni')"> ISNI: <a :href="'http://isni.org/isni/' + getChildValue(entity, 'isni')" target="_blank">{{ getChildValue(entity, 'isni') }}</a></span>
+                <span v-if="getChildValue(entity, 'viaf')" class="caption secondary--text ml-1">VIAF: <a :href="'https://viaf.org/viaf/' + getChildValue(entity, 'viaf')" target="_blank">{{ getChildValue(entity, 'viaf') }}</a></span>
+                <span v-if="getChildValue(entity, 'wdq')" class="caption secondary--text ml-1">Wikidata: <a :href="'https://www.wikidata.org/wiki/' + getChildValue(entity, 'wdq')" target="_blank">{{ getChildValue(entity, 'wdq') }}</a></span>
+                <span v-if="getChildValue(entity, 'gnd')" class="caption secondary--text ml-1">GND: <a :href="'https://d-nb.info/gnd/' + getChildValue(entity, 'gnd')" target="_blank">{{ getChildValue(entity, 'gnd') }}</a></span>
+                <span v-if="getChildValue(entity, 'lcnaf')" class="caption secondary--text ml-1">LCCN: <a :href="'https://lccn.loc.gov/' + getChildValue(entity, 'lcnaf')" target="_blank">{{ getChildValue(entity, 'lcnaf') }}</a></span>
+                <span v-if="getChildValue(entity, 'isni')" class="caption secondary--text ml-1">ISNI: <a :href="'http://isni.org/isni/' + getChildValue(entity, 'isni')" target="_blank">{{ getChildValue(entity, 'isni') }}</a></span>
               </v-col>
             </v-row>
             <v-row v-if="getChildValue(ch, 'date')">
@@ -176,11 +176,24 @@
         <template v-else-if="ch.xmlname === 'dimensions'">
           <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
           <v-col cols="12" md="10">
-            <template v-for="(d, i) in ch.children">
-              <span v-if="d.xmlname === 'resource'" :key="i+'dima'"><span class="secondary--text font-weight-bold">{{ $t(nodePath(ch)+'_resource') }}</span>: {{ getLabel(d) }}</span>
-              <span v-else-if="d.xmlname === 'dimension_unit'" :key="i+'dimb'"><span class="secondary--text font-weight-bold ml-4">{{ $t(nodePath(ch)+'_dimension_unit') }}</span>: {{ getLabel(d) }}</span>
-              <span v-else :key="i+'dimc'"><span class="secondary--text font-weight-bold ml-4">{{ $t(nodePath(ch) + '_' + d.xmlname) }}</span>: {{ d.ui_value }}</span>
-            </template>
+            <v-card tile elevation="0" color="transparent">
+              <v-card-text class="uwm-border-left">
+                <v-row v-for="(d, i) in ch.children" :key="'dim'+i">
+                  <template v-if="d.xmlname === 'resource'">
+                    <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold">{{ $t(nodePath(ch)+'_resource') }}</v-col>
+                    <v-col cols="12" md="10">{{ getLabel(d) }}</v-col>
+                  </template>
+                  <template v-else-if="d.xmlname === 'dimension_unit'">
+                    <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold">{{ $t(nodePath(ch)+'_dimension_unit') }}</v-col>
+                    <v-col cols="12" md="10">{{ getLabel(d) }}</v-col>
+                  </template>
+                  <template v-else>
+                    <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold">{{ $t(nodePath(ch) + '_' + d.xmlname) }}</v-col>
+                    <v-col cols="12" md="10">{{ d.ui_value }}</v-col>
+                  </template>
+                </v-row>
+              </v-card-text>
+            </v-card>
           </v-col>
         </template>
         <template v-else-if="hideNodeBorder(nodePath(ch))">
