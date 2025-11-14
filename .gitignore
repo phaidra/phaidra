@@ -31,3 +31,6 @@ certs/shibboleth/sp-signing-key.pem
 
 # handle keys
 certs/handle
+
+static/*
+!static/index.html
