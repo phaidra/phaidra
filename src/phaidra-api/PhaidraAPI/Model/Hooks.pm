@@ -262,7 +262,7 @@ sub add_or_modify_relationships_hooks {
 }
 
 sub add_octets_hook {
-  my ($self, $c, $pid, $exists) = @_;
+  my ($self, $c, $pid, $exists, $mimetype) = @_;
 
   my $res = {alerts => [], status => 200};
   my $search_model = PhaidraAPI::Model::Search->new;
@@ -300,6 +300,10 @@ sub add_octets_hook {
         push @{$res->{alerts}}, @{$vsr->{alerts}} if scalar @{$vsr->{alerts}} > 0;
       }
       if ($res_cmodel->{cmodel} eq 'PDFDocument') {
+        my $pdf_extraction_job = $self->_create_pdf_extraction_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
+        push @{$res->{alerts}}, @{$pdf_extraction_job->{alerts}} if scalar @{$pdf_extraction_job->{alerts}} > 0;
+      }
+      if ($res_cmodel->{cmodel} eq 'Book' && $mimetype eq 'application/pdf') {
         my $pdf_extraction_job = $self->_create_pdf_extraction_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
         push @{$res->{alerts}}, @{$pdf_extraction_job->{alerts}} if scalar @{$pdf_extraction_job->{alerts}} > 0;
       }
