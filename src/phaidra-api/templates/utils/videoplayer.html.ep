@@ -4,11 +4,21 @@
   % if (stash('favIcon')) {
     <link rel="icon" type="image/svg+xml" href="<%= stash('favIcon') %>"/>
   % }
+  <link rel="stylesheet" href="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/video-js/video-js.min.css" />
+  <script src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/video-js/video.min.js"></script>
  </head>
  <body>
-  <video preload="metadata" width="100%" controls>
+  <video id="phaidra_video_player" class="video-js vjs-default-skin vjs-big-play-centered" width="640" height="360">
     <source src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get<% if ($trywebversion) { %>?trywebversion=1<% } %>" type="<%= $mimetype %>">
-    Your browser does not support the video element.
+    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
   </video>
+  <script>
+    var player = videojs('phaidra_video_player', {
+      fluid: true,
+      responsive: true,
+      controls: true,
+      preload: 'metadata'
+    });
+  </script>
  </body>
 </html>
