@@ -2703,7 +2703,7 @@ export default {
             // project
             if (f.type === 'foaf:Project') {
               if (f.name || f.acronym || f.code || f.identifier || f.description || f.homepage || f.funderName || f.funderIdentifier) {
-                if (f.funderName, f.funderIdentifier) {
+                if (f.funderName || f.funderIdentifier) {
                   this.push_object(jsonld, f.predicate, this.get_json_project(f.name, f.acronym, f.nameLanguage, f.description, f.descriptionLanguage, f.code, f.identifier, f.identifierType, f.homepage, f.dateFrom, f.dateTo, this.get_json_funder(f.funderName, f.funderNameLanguage, f.funderIdentifier, f.funderIdentifierType)))
                 } else {
                   this.push_object(jsonld, f.predicate, this.get_json_project(f.name, f.acronym, f.nameLanguage, f.description, f.descriptionLanguage, f.code, f.identifier, f.identifierType, f.homepage, f.dateFrom, f.dateTo))
