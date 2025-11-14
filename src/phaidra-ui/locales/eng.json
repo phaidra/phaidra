@@ -662,6 +662,10 @@
     "page": "Go to Page {0}",
     "currentPage": "Current Page, Page {0}",
     "Error: Request failed with status code 500" : "The server experienced an internal error.",
-    "UPLOADER_OBJECT_DETAILS": "Uploader"
+    "UPLOADER_OBJECT_DETAILS": "Uploader",
+    "PDFDocument": "Text (PDF)",
+    "Audio": "Sound",
+    "Picture": "Image",
+    "Asset": "Data"
   }
   
