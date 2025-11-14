@@ -8,9 +8,9 @@
           <v-card-text style="max-height: 500px; white-space: pre-wrap;" class="overflow-y-auto mt-4">{{ tou }}</v-card-text>
           <v-divider class="mt-4"></v-divider>
           <v-card-actions class="pa-4">
-            <v-checkbox v-model="touCheckbox" @click="agree" :disabled="loading" :loading="loading" color="primary" :label="$t('I agree to the terms of use.')"></v-checkbox>
+            <v-checkbox v-model="touCheckbox" :disabled="loading" color="primary" :label="$t('I agree to the terms of use.')"></v-checkbox>
             <v-spacer></v-spacer>
-            <v-btn @click="login" :disabled="loading || !touAgreed" :loading="loading" color="primary" raised>{{ $t('Continue') }}</v-btn>
+            <v-btn @click="agree" :disabled="loading || !touCheckbox" :loading="loading" color="primary" raised>{{ $t('Continue') }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -99,26 +99,29 @@ export default {
   },
   methods: {
     async agree () {
-      if (this.touCheckbox) {
-        this.loading = true
-        try {
-          let response = await this.$axios.post('/termsofuse/agree/' + this.touVersion, undefined,
-            {
-              headers: {
-                'Authorization': 'Basic ' + btoa(this.credentials.username + ':' + this.credentials.password)
-              }
+      this.loading = true
+      try {
+        let response = await this.$axios.post('/termsofuse/agree/' + this.touVersion, undefined,
+          {
+            headers: {
+              'Authorization': 'Basic ' + btoa(this.credentials.username + ':' + this.credentials.password)
             }
-          )
-          if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
           }
-          this.touAgreed = true
-        } catch (error) {
-          console.log(error)
-          this.$store.commit('setAlerts', [ { type: 'error', msg: error } ])
-        } finally {
-          this.loading = false
+        )
+        if (response.data.alerts && response.data.alerts.length > 0) {
+          this.$store.commit('setAlerts', response.data.alerts)
         }
+        this.touAgreed = true
+        // Proceed with login after agreeing to terms
+        await this.$store.dispatch('login', this.credentials)
+        if (this.signedin) {
+          this.$router.push(this.localeLocation({path: localStorage.getItem('redirect') || '/'}))
+        }
+      } catch (error) {
+        console.log(error)
+        this.$store.commit('setAlerts', [ { type: 'error', msg: error } ])
+      } finally {
+        this.loading = false
       }
     },
     async getTermsOfUse () {
