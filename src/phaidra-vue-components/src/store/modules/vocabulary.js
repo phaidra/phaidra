@@ -170,6 +170,17 @@ const ot4rt = {
     ns + 'T6C3-46S4',
     // other
     ns + 'PYRE-RAWJ'
+  ],
+  // link
+  'https://pid.phaidra.org/vocabulary/T8GH-F4V8': [
+    // website
+    ns + 'R1WF-V45Y',
+    // learning object
+    ns + 'YA8R-1M0D',
+    // dataset
+    ns + 'KW6N-2VTP',
+    // other
+    ns + 'PYRE-RAWJ'
   ]
 }
 

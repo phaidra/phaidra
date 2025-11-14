@@ -55,6 +55,11 @@ export default {
   },
   methods: {
     addRemovedFieldsCol: function (rt) {
+      for (let i = this.form.sections.length - 1; i >= 0; i--) {
+        if (this.form.sections[i].type === "resourcelink") {
+          this.form.sections.splice(i, 1);
+        }
+      }
       let haslicense = false;
       for (let s of this.form.sections) {
         for (let f of s.fields) {
@@ -150,8 +155,8 @@ export default {
           }
           this.markOefosMandatory()
           break;
-        case "https://pid.phaidra.org/vocabulary/GXS7-ENXJ":
-          // collection => remove file, language, license, oefos and object type field
+        case "https://pid.phaidra.org/vocabulary/T8GH-F4V8":
+          // link/resource => remove file field, add resourcelink section
           for (let s of this.form.sections) {
             for (let f of s.fields) {
               if (f.component === "p-file") {
@@ -160,7 +165,43 @@ export default {
               }
             }
           }
+          // Add resourcelink section if not exists
+          let hasResourcelink = false;
           for (let s of this.form.sections) {
+            if (s.type === "resourcelink") {
+              hasResourcelink = true;
+              break;
+            }
+          }
+          if (!hasResourcelink) {
+            this.form.sections.splice(1, 0, {
+              title: "Resource Link",
+              type: "resourcelink",
+              id: (new Date()).getTime(),
+              resourcelink: ""
+            });
+          }
+          this.markOefosMandatory()
+          break;
+        case "https://pid.phaidra.org/vocabulary/GXS7-ENXJ":
+          // collection => remove file, language, license, oefos and object type field
+          // Remove resourcelink section if switching from Link type
+          for (let i = this.form.sections.length - 1; i >= 0; i--) {
+            if (this.form.sections[i].type === "resourcelink") {
+              this.form.sections.splice(i, 1);
+            }
+          }
+          for (let s of this.form.sections) {
+            if (!s.fields) continue;
+            for (let f of s.fields) {
+              if (f.component === "p-file") {
+                arrays.remove(s.fields, f);
+                break;
+              }
+            }
+          }
+          for (let s of this.form.sections) {
+            if (!s.fields) continue;
             for (let f of s.fields) {
               if (f.predicate === "dcterms:language") {
                 arrays.remove(s.fields, f);
@@ -169,6 +210,7 @@ export default {
             }
           }
           for (let s of this.form.sections) {
+            if (!s.fields) continue;
             for (let f of s.fields) {
               if (f.predicate === "edm:hasType") {
                 arrays.remove(s.fields, f);
@@ -177,6 +219,7 @@ export default {
             }
           }
           for (let s of this.form.sections) {
+            if (!s.fields) continue;
             for (let f of s.fields) {
               if (f.predicate === "edm:rights") {
                 arrays.remove(s.fields, f);

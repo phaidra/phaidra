@@ -220,6 +220,7 @@ export const formvalidation = {
       let resourceType = null
       let hasReadonlyOefos = false
       for (const s of this.form.sections) {
+        if (!s.fields) continue
         for (const f of s.fields) {
           if (f.predicate === 'dcterms:type') {
             console.log('resourceType ' + f['skos:prefLabel'][0]['@value'])
@@ -256,11 +257,9 @@ export const formvalidation = {
           this.mandatoryFieldsValidated['OEFOS Classification'] = true
           break
         case 'https://pid.phaidra.org/vocabulary/T8GH-F4V8':
-          // resource
+          // link/resource - uses resourcelink instead of file
           this.mandatoryFieldsFound['File'] = true
-          this.mandatoryFieldsFound['License'] = true
           this.mandatoryFieldsValidated['File'] = true
-          this.mandatoryFieldsValidated['License'] = true
           break
       }
       if (targetpid) {
@@ -268,7 +267,18 @@ export const formvalidation = {
         this.mandatoryFieldsValidated['File'] = true
       }
 
+      // Check for resourcelink section (for Link resource type)
       for (const s of this.form.sections) {
+        if (s.type === 'resourcelink') {
+          this.mandatoryFieldsFound['File'] = true
+          if (s.resourcelink && s.resourcelink.length > 0) {
+            this.mandatoryFieldsValidated['File'] = true
+          }
+        }
+      }
+
+      for (const s of this.form.sections) {
+        if (!s.fields) continue // Skip sections without fields (like resourcelink)
         for (const f of s.fields) {
           console.log('checking p[' + f.predicate + '] c[' + f.component + ']') 
           if (f.predicate === 'dcterms:type') {
@@ -444,6 +454,7 @@ export const formvalidation = {
       let resourceType = null
       let hasReadonlyOefos = false
       for (const s of this.form.sections) {
+        if (!s.fields) continue // Skip sections without fields (like resourcelink)
         for (const f of s.fields) {
           if (f.predicate === 'dcterms:type') {
             console.log('resourceType ' + f['skos:prefLabel'][0]['@value'])
@@ -480,11 +491,9 @@ export const formvalidation = {
           this.mandatoryFieldsValidated['OEFOS Classification'] = true
           break
         case 'https://pid.phaidra.org/vocabulary/T8GH-F4V8':
-          // resource
+          // link/resource - uses resourcelink instead of file
           this.mandatoryFieldsFound['File'] = true
-          this.mandatoryFieldsFound['License'] = true
           this.mandatoryFieldsValidated['File'] = true
-          this.mandatoryFieldsValidated['License'] = true
           break
       }
       if (targetpid) {
@@ -492,7 +501,18 @@ export const formvalidation = {
         this.mandatoryFieldsValidated['File'] = true
       }
 
+      // Check for resourcelink section (for Link resource type)
       for (const s of this.form.sections) {
+        if (s.type === 'resourcelink') {
+          this.mandatoryFieldsFound['File'] = true
+          if (s.resourcelink && s.resourcelink.length > 0) {
+            this.mandatoryFieldsValidated['File'] = true
+          }
+        }
+      }
+
+      for (const s of this.form.sections) {
+        if (!s.fields) continue // Skip sections without fields (like resourcelink)
         for (const f of s.fields) {
           console.log('checking p[' + f.predicate + '] c[' + f.component + ']') 
           if (f.predicate === 'dcterms:type') {
@@ -678,6 +698,7 @@ export const formvalidation = {
       }
       let resourceType = null
       for (const s of this.form.sections) {
+        if (!s.fields) continue // Skip sections without fields (like resourcelink)
         for (const f of s.fields) {
           if (f.predicate === 'dcterms:type') {
             resourceType = f.value
@@ -705,9 +726,7 @@ export const formvalidation = {
         case 'https://pid.phaidra.org/vocabulary/T8GH-F4V8':
           // resource
           this.mandatoryFieldsFound['File'] = true
-          this.mandatoryFieldsFound['License'] = true
           this.mandatoryFieldsValidated['File'] = true
-          this.mandatoryFieldsValidated['License'] = true
           break
       }
       if (targetpid) {
@@ -904,6 +923,7 @@ export const formvalidation = {
       }
       let resourceType = null
       for (const s of this.form.sections) {
+        if (!s.fields) continue // Skip sections without fields (like resourcelink)
         for (const f of s.fields) {
           if (f.predicate === 'dcterms:type') {
             resourceType = f.value
@@ -933,9 +953,7 @@ export const formvalidation = {
         case 'https://pid.phaidra.org/vocabulary/T8GH-F4V8':
           // resource
           this.mandatoryFieldsFound['File'] = true
-          this.mandatoryFieldsFound['License'] = true
           this.mandatoryFieldsValidated['File'] = true
-          this.mandatoryFieldsValidated['License'] = true
           break
       }
       if (targetpid) {
@@ -1097,6 +1115,7 @@ export const formvalidation = {
       }
       let resourceType = null
       for (const s of this.form.sections) {
+        if (!s.fields) continue // Skip sections without fields (like resourcelink)
         for (const f of s.fields) {
           if (f.predicate === 'dcterms:type') {
             resourceType = f.value
@@ -1124,9 +1143,7 @@ export const formvalidation = {
         case 'https://pid.phaidra.org/vocabulary/T8GH-F4V8':
           // resource
           this.mandatoryFieldsFound['File'] = true
-          this.mandatoryFieldsFound['License'] = true
           this.mandatoryFieldsValidated['File'] = true
-          this.mandatoryFieldsValidated['License'] = true
           break
       }
       if (targetpid) {
@@ -1134,6 +1151,16 @@ export const formvalidation = {
         this.mandatoryFieldsValidated['File'] = true
       }
       for (const s of this.form.sections) {
+        if (s.type === 'resourcelink') {
+          this.mandatoryFieldsFound['File'] = true
+          if (s.resourcelink && s.resourcelink.length > 0) {
+            this.mandatoryFieldsValidated['File'] = true
+          }
+        }
+      }
+      
+      for (const s of this.form.sections) {
+        if (!s.fields) continue // Skip sections without fields (like resourcelink)
         for (const f of s.fields) {
           if (f.predicate === 'dcterms:type') {
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] v[' + f.value + ']') 

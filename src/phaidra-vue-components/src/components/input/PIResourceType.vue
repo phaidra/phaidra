@@ -14,8 +14,8 @@
           <v-btn v-show="resourceTypes.includes('https://pid.phaidra.org/vocabulary/B0Y6-GYT8')"><v-icon :color="value === 'https://pid.phaidra.org/vocabulary/B0Y6-GYT8' ? 'white' : 'grey'">mdi-video</v-icon><span class="ml-2">{{ $t('Video') }}</span></v-btn>
           <v-btn v-show="resourceTypes.includes('https://pid.phaidra.org/vocabulary/69ZZ-2KGX')"><v-icon :color="value === 'https://pid.phaidra.org/vocabulary/69ZZ-2KGX' ? 'white' : 'grey'">mdi-file-document</v-icon><span class="ml-2">{{ $t('PDF Document') }}</span></v-btn>
           <v-btn v-show="resourceTypes.includes('https://pid.phaidra.org/vocabulary/7AVS-Y482')"><v-icon :color="value === 'https://pid.phaidra.org/vocabulary/7AVS-Y482' ? 'white' : 'grey'">mdi-file</v-icon><span class="ml-2">{{ $t('Other documents / Data') }}</span></v-btn>
+          <v-btn v-show="resourceTypes.includes('https://pid.phaidra.org/vocabulary/T8GH-F4V8') && instanceconfig.enableresourcelink === true"><v-icon :color="value === 'https://pid.phaidra.org/vocabulary/T8GH-F4V8' ? 'white' : 'grey'">mdi-link</v-icon><span class="ml-2">{{ $t('Link') }}</span></v-btn>
           <v-btn v-show="resourceTypes.includes('https://pid.phaidra.org/vocabulary/GXS7-ENXJ')"><v-icon :color="value === 'https://pid.phaidra.org/vocabulary/GXS7-ENXJ' ? 'white' : 'grey'">mdi-folder-open</v-icon><span class="ml-2">{{ $t('Collection') }}</span></v-btn>
-          <!--<v-btn><v-icon color="white">mdi-link</v-icon><span class="ml-2">{{ $t('Resource') }}</span></v-btn>-->
         </v-btn-toggle>
       </v-col>
     </v-row>
@@ -55,11 +55,15 @@ export default {
         'https://pid.phaidra.org/vocabulary/B0Y6-GYT8',
         'https://pid.phaidra.org/vocabulary/69ZZ-2KGX',
         'https://pid.phaidra.org/vocabulary/7AVS-Y482',
+        'https://pid.phaidra.org/vocabulary/T8GH-F4V8',
         'https://pid.phaidra.org/vocabulary/GXS7-ENXJ'
       ]
     },
   },
   computed: {
+    instanceconfig() {
+      return this.$store.state.instanceconfig
+    },
     formats: function () {
       return this.vocabularies['formatsInfo'].terms[this.resourceTypes[this.toggleResourcetypeModel]]
     }

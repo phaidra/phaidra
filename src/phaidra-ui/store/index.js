@@ -64,6 +64,7 @@ export const mutations = {
       'feedback',
       'disableUploader',
       'doiImport',
+      'enableresourcelink',
       'addannotation',
       'forcePreview',
       'hideInstitutionName',
