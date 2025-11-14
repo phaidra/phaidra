@@ -70,6 +70,9 @@ export default {
             f.removable = false
             firstObjectTypeFound = true
           }
+          if (f.predicate === "edm:hasType" && f.vocabulary === "objecttype") {
+            f.showIds = true
+          }
         }
         s.removable = true
       }
