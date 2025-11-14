@@ -2128,13 +2128,20 @@ export default {
         // try to match the extension with our vocabulary
         let ext = event.name.split('.').pop()
         console.log('no mimetype, using extension (' + ext + ') to search vocabulary')
+        let mimetypeFound = false
         for (let mt of this.vocabularies['mimetypes'].terms) {
           for (let notation of mt['skos:notation']) {
             if (ext === notation) {
               console.log('found mimetype: ' + mt['@id'])
               this.setSelected(f, 'mimetype', { '@id': mt['@id'] })
+              mimetypeFound = true
+              break
             }
           }
+          if (mimetypeFound) break
+        }
+        if (!mimetypeFound) {
+          this.setSelected(f, 'mimetype', { '@id': 'application/octet-stream' })
         }
       } else {
         this.setSelected(f, 'mimetype', { '@id': event.type })
@@ -2184,3 +2191,4 @@ export default {
   font-weight: 400;
 }
 </style>
+

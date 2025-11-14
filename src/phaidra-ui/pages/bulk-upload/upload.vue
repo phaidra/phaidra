@@ -282,7 +282,7 @@ export default {
                   predicate: 'ebucore:filename',
                   component: 'p-file',
                   value: filename,
-                  mimetype: file.type
+                  mimetype: file.type || 'application/octet-stream'
                 }
               )
 
