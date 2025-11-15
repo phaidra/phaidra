@@ -16,7 +16,8 @@ my $resourceTypesToDownload = {
   'http://purl.org/coar/resource_type/c_18cf' => 1,    # text
   'http://purl.org/coar/resource_type/c_6501' => 1,    # journal article
   'http://purl.org/coar/resource_type/c_c513' => 1,    # image
-  'http://purl.org/coar/resource_type/c_12ce' => 1     # video
+  'http://purl.org/coar/resource_type/c_12ce' => 1,    # video
+  'http://purl.org/coar/resource_type/c_ddb1' => 1     # dataset
 };
 
 my $relations = {
