@@ -1091,7 +1091,7 @@ sub get_metadata {
         value => $downloadObjectType
         };
     }
-    if ($resourceTypesToDownload->{$resourceTypeURI}) {
+    if ($resourceTypesToDownload->{$resourceTypeURI} || ($rec->{cmodel} eq 'Asset')) {
       my $downloadUrl;
       if ($c->app->config->{fedora}->{version} > 6) {
         $downloadUrl = 'https://' . $c->app->config->{baseurl};
