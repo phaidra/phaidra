@@ -3047,8 +3047,6 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch('vocabulary/loadVocabulary', { vocabularyName: 'alllicenses' });
-    
     if (this.showCollectionTree) {
       this.fetchCollectionTree(this.$route.params.pid);
       setTimeout(() => {
