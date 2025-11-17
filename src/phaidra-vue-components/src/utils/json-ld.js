@@ -570,8 +570,16 @@ export default {
             // dcterms:temporal
             case 'dcterms:temporal':
               f = fields.getField('temporal-coverage')
-              f.value = obj['@value']
-              f.language = obj['@language'] ? obj['@language'] : 'eng'
+              if (obj['@type'] === 'edm:TimeSpan' && obj['skos:prefLabel']) {
+                f.type = obj['@type']
+                for (let pl of obj['skos:prefLabel']) {
+                  f.value = pl['@value']
+                  f.language = pl['@language'] ? pl['@language'] : 'eng'
+                }
+              } else {
+                f.value = obj['@value']
+                f.language = obj['@language'] ? obj['@language'] : 'eng'
+              }
               components.push(f)
               break
 
