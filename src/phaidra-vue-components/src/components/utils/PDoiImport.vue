@@ -374,7 +374,7 @@ export default {
       console.log('this.form', this.form);
       this.$emit('load-form', this.form);
     },
-    resetDOIImport: function () {
+    resetDOIImport: async function () {
       this.doiImportInput = null;
       this.doiImportData = null;
       this.doiImportErrors = [];
@@ -382,7 +382,7 @@ export default {
       this.journalSearchISSN = null;
       this.journalSearchItems = [];
       this.journalSearchSelected = [];
-      this.resetForm(this, null);
+      await this.resetForm(this, null);
     },
     importDOI: async function () {
       this.loading = true;
@@ -405,7 +405,7 @@ export default {
               const dataciteResp = await this.$axios.get(`https://api.datacite.org/dois/${this.doiToImport}`)
               const dataciteData = dataciteResp?.data;
               this.doiImportData = constructDataCite(dataciteData, this)
-              this.resetForm(this, this.doiImportData);
+              await this.resetForm(this, this.doiImportData);
               if (this.doiImportData.journalISSN) {
                 this.journalSearchISSN = this.doiImportData.journalISSN;
                 // this.journalSearch();
@@ -732,7 +732,7 @@ if (crossrefData['issued']['date-parts'][0]) {
             }
             console.log('this.doiImportData', this.doiImportData);
             // return
-            this.resetForm(this, this.doiImportData);
+            await this.resetForm(this, this.doiImportData);
             if (this.doiImportData.journalISSN) {
               this.journalSearchISSN = this.doiImportData.journalISSN;
               // this.journalSearch();
@@ -750,29 +750,102 @@ if (crossrefData['issued']['date-parts'][0]) {
         }
       }
     },
-    resetForm: function (self, doiImportData) {
-      self.$store.commit("vocabulary/enableAllVocabularyTerms", "versiontypes");
-      self.$store.commit(
-        "vocabulary/enableAllVocabularyTerms",
-        self.irObjectTypeVocabulary
-      );
+    resetForm: async function (self, doiImportData) {
+      self.$store.dispatch("vocabulary/sortObjectTypes", self.$i18n.locale);
+
+      self.validationError = false;
+      self.mandatoryFieldsFound = {};
+      self.mandatoryFieldsFilled = {};
 
       self.form = {
-        sections: [],
+        sections: [
+          {
+            title: null,
+            type: "digitalobject",
+            id: 1,
+            fields: [],
+          },
+          {
+            title: "Terminology services",
+            mode: "expansion",
+            addbutton: false,
+            disablemenu: true,
+            collapsed: true,
+            outlined: true,
+            id: 2,
+            fields: [],
+          },
+          {
+            title: "Coverage",
+            mode: "expansion",
+            addbutton: false,
+            disablemenu: true,
+            collapsed: true,
+            outlined: true,
+            id: 3,
+            fields: [],
+          },
+          {
+            title: "Project",
+            mode: "expansion",
+            addbutton: false,
+            disablemenu: true,
+            collapsed: true,
+            outlined: true,
+            id: 4,
+            fields: [],
+          },
+          {
+            title: "Represented object",
+            type: "phaidra:Subject",
+            mode: "expansion",
+            disablemenu: true,
+            collapsed: true,
+            outlined: true,
+            id: 5,
+            fields: [],
+          },
+          {
+            title: "Bibliographic metadata",
+            mode: "expansion",
+            addbutton: false,
+            disablemenu: true,
+            collapsed: true,
+            outlined: true,
+            id: 6,
+            fields: [],
+          },
+          {
+            title: "Accessibility",
+            mode: "expansion",
+            addbutton: false,
+            disablemenu: true,
+            collapsed: true,
+            outlined: true,
+            id: 7,
+            fields: [],
+          }
+        ],
       };
 
-      let smf = [];
+      let defaultResourceType = "https://pid.phaidra.org/vocabulary/69ZZ-2KGX"; // document
 
-      let rt = fields.getField("resource-type");
-      rt.value = "https://pid.phaidra.org/vocabulary/69ZZ-2KGX";
-      smf.push(rt);
+      let rt = fields.getField("resource-type-buttongroup");
+      rt.vocabulary = "resourcetypenocontainer";
+      rt.value = defaultResourceType;
+      self.form.sections[0].fields.push(rt);
 
-      let f = fields.getField("file");
-      f.multiplicable = false;
-      f.mimetype = "application/pdf";
-      f.autoMimetype = true;
-      f.showMimetype = false;
-      smf.push(f);
+      let file = fields.getField("file");
+      file.fileInputClass = "mb-2";
+      file.showMimetype = false;
+      file.backgroundColor = '#0063a620';
+      self.form.sections[0].fields.push(file);
+
+      let ot = fields.getField("object-type-checkboxes");
+      ot.resourceType = defaultResourceType;
+      ot.showLabel = true;
+      ot.ot4rt = self.instanceconfig?.data_ot4rt;
+      self.form.sections[0].fields.push(ot);
 
       let tf = fields.getField("title");
       if (doiImportData && doiImportData.title) {
@@ -782,314 +855,290 @@ if (crossrefData['issued']['date-parts'][0]) {
         tf.subtitle = doiImportData.subtitle;
         tf.hideSubtitle = false;
       }
-      tf.multilingual = false;
-      tf.multiplicable = false;
-      smf.push(tf);
-      if (doiImportData && doiImportData.descriptions.length > 0) {
-        for (let descItem of doiImportData.descriptions) {
-          let descField = fields.getField("description");
-          descField.value = descItem.description;
-          descField.language = descItem.lang;
-          descField.type = "bf:Summary";
-          smf.push(descField);
+      self.form.sections[0].fields.push(tf);
+
+      let desc = fields.getField("description");
+      if (doiImportData && doiImportData.descriptions && doiImportData.descriptions.length > 0) {
+        desc.value = doiImportData.descriptions[0].description;
+        if (doiImportData.descriptions[0].lang) {
+          desc.language = doiImportData.descriptions[0].lang;
         }
       }
+      self.form.sections[0].fields.push(desc);
 
-      if (doiImportData && doiImportData.authors.length > 0) {
+      let lang = fields.getField("language");
+      if (doiImportData && doiImportData.language) {
+        lang.value = doiImportData.language;
+      } else {
+        lang.value = self.$i18n.locale;
+      }
+      lang.label = "Language of object";
+      self.form.sections[0].fields.push(lang);
+
+      let kw = fields.getField("keyword");
+      if (doiImportData && doiImportData.keywords) {
+        kw.value = doiImportData.keywords;
+      }
+      self.form.sections[0].fields.push(kw);
+
+      if (doiImportData && doiImportData.authors && doiImportData.authors.length > 0) {
         for (let author of doiImportData.authors) {
-          let role = fields.getField("role-extended");
-          role.type = author.type;
-          role.role = "role:aut";
-          role.showBirthAndDeathDate = false
-          if (
-            self.submitformparam === "journal-article" ||
-            self.submitformparam === "book-part"
-          ) {
-            role.hideRole = true;
-            role.label = "Author";
-          }
-          role.roleVocabulary = "irrolepredicate";
-          role.ordergroup = "roles";
-          role.firstname = author["firstname"] ? author["firstname"] : "";
-          role.lastname = author["lastname"] ? author["lastname"] : "";
-          role.showIdentifierType = false;
+          let role = fields.getField("role");
+          role.ordergroup = "role";
+          role.roleVocabulary = "submitrolepredicate";
           role.identifierType = "ids:orcid";
-          role.identifierLabel = "ORCID";
-          role.identifierText = author["orcid"] ? author["orcid"] : "";
-          if (author["affiliation"]) {
-            role.affiliationType = "other";
-            // iterate, although currently multiple affiliations are not supported
-            for (let af of author["affiliation"]) {
-              role.affiliationText = af;
-              break;
+          role.showDefinitions = true;
+          role.showIdentifier = true;
+          role.isParentSelectionDisabled = self.instanceconfig?.isParentSelectionDisabled;
+          
+          role.role = "role:aut";
+          
+          if (author.type === "schema:Person") {
+            role.firstname = author.firstname || "";
+            role.lastname = author.lastname || "";
+            if (author.orcid) {
+              role.identifierText = author.orcid;
             }
-          } else {
-            role.affiliationType = "";
+            if (author.affiliation && author.affiliation.length > 0) {
+              role.affiliationText = author.affiliation[0];
+              role.affiliationType = "other";
+            }
+          } else if (author.type === "schema:Organization") {
+            role.name = author.name || "";
+            role.type = "schema:Organization";
           }
-          if (author.type === "schema:Organization") {
-            role.organizationType = "other";
-            role.organizationText = author["name"];
-          }
-          smf.push(role);
+          
+          self.form.sections[0].fields.push(role);
         }
       } else {
-        let role = fields.getField("role-extended");
-        role.role = "role:aut";
-        role.type = "schema:Person";
-        role.enableTypeSelect = false;
-        role.showBirthAndDeathDate = false
-        if (
-          self.submitformparam === "journal-article" ||
-          self.submitformparam === "book-part"
-        ) {
-          role.hideRole = true;
-          role.label = "Author";
-        }
-        role.roleVocabulary = "irrolepredicate";
-        role.ordergroup = "roles";
-        role.showIdentifierType = false;
+        let role = fields.getField("role");
+        role.ordergroup = "role";
+        role.roleVocabulary = "submitrolepredicate";
         role.identifierType = "ids:orcid";
-        role.identifierLabel = "ORCID";
-        role.affiliationType = "";
-        smf.push(role);
+        role.showDefinitions = true;
+        role.showIdentifier = true;
+        role.isParentSelectionDisabled = self.instanceconfig?.isParentSelectionDisabled;
+        self.form.sections[0].fields.push(role);
       }
 
-      let vtf = fields.getField("version-type");
-      vtf.showValueDefinition = true;
-      smf.push(vtf);
-
-      let issued = fields.getField("date-edtf");
-      issued.mainSubmitDate = true; // we need to find this field again when changing predicates
-      issued.picker = true;
-      issued.type = "dcterms:issued";
-      issued.hideType = true;
-      issued.dateLabel = "Date issued";
-      issued.multiplicable = false;
-      if (doiImportData && doiImportData.dateIssued) {
-        issued.value = doiImportData.dateIssued;
-      }
-      smf.push(issued);
-
-      let lmf = fields.getField("language");
-      lmf.multiplicable = false;
-      if (doiImportData && doiImportData.language) {
-        lmf.value = doiImportData.language;
-      }
-      smf.push(lmf);
-
-      let otf = fields.getField("object-type");
-      otf.vocabulary = 'objecttype';
-      otf.multiplicable = false;
-      otf.label = "Type of publication";
-      otf.showValueDefinition = true;
-      if (doiImportData && doiImportData.publicationTypeId) {
-        otf.value = doiImportData.publicationTypeId;
-      }
-      if (self.submitformparam === "book") {
-        otf.value = "https://pid.phaidra.org/vocabulary/47QB-8QF1";
-        otf.disabled = true;
-      }
-      if (self.submitformparam === "book-part") {
-        otf.value = "https://pid.phaidra.org/vocabulary/XA52-09WA";
-        otf.disabled = true;
-      }
-      smf.push(otf);
-
-      if (self.submitformparam === "book-part") {
-        let sf = fields.getField("contained-in");
-        sf.label = "Appeared in";
-        sf.multilingual = false;
-        sf.series[0].multiplicableCleared = true;
-        sf.hideSeriesIssn = true;
-        sf.hideSeriesIssue = true;
-        sf.hideSeriesIssued = true;
-        sf.collapseSeries = true;
-        sf.hidePages = false;
-        sf.publicationType = "other";
-        sf.publisherSearch = false;
-        sf.publisherShowDate = true;
-        sf.publisherLabel = "PUBLISHER_VERLAG";
-        if (doiImportData) {
-          if (doiImportData.pageStart) {
-            sf.pageStart = doiImportData.pageStart;
-          }
-          if (doiImportData.pageEnd) {
-            sf.pageEnd = doiImportData.pageEnd;
-          }
-          if (doiImportData.publisher) {
-            sf.publisherName = doiImportData.publisher;
-          }
-          if (doiImportData.dateIssued) {
-            sf.publishingDate = doiImportData.dateIssued;
-          }
-        }
-        smf.push(sf);
-      }
-
-      if (self.submitformparam === "book") {
-        let pf = fields.getField("bf-publication");
-        pf.publisherSearch = false;
-        pf.multiplicable = false;
-        pf.showDate = true;
-        pf.label = "PUBLISHER_VERLAG";
-        if (doiImportData && doiImportData.publisher) {
-          pf.publisherName = doiImportData.publisher;
-        }
-        if (doiImportData && doiImportData.dateIssued) {
-          pf.publishingDate = doiImportData.dateIssued;
-        }
-        smf.push(pf);
-      }
-
-      let arf = fields.getField("access-right");
-      arf.vocabulary = "iraccessright";
-      arf.showValueDefinition = true;
-      if (doiImportData && doiImportData.accessrights) {
-        arf.value = doiImportData.accessrights
-      }
-      smf.push(arf);
-
-      let embargoDate = fields.getField("date-edtf");
-      embargoDate.picker = true;
-      embargoDate.type = "dcterms:available";
-      embargoDate.hideType = true;
-      embargoDate.dateLabel = "Embargo date";
-      embargoDate.multiplicable = false;
-      smf.push(embargoDate);
+      self.form.sections[0].fields.push(fields.getField("oefos-subject"));
+      
+      let association = fields.getField("association");
+      association.isParentSelectionDisabled = self.instanceconfig?.isParentSelectionDisabled;
+      self.form.sections[0].fields.push(association);
 
       let lic = fields.getField("license");
+      lic.showValueDefinition = true;
+      lic.vocabulary = "alllicenses";
       if (doiImportData && doiImportData.license) {
         lic.value = doiImportData.license;
-      } else {
-        lic.value = 'http://rightsstatements.org/vocab/InC/1.0/';
       }
-      lic.label = 'Rights';
-      smf.push(lic);
+      self.form.sections[0].fields.push(lic);
 
+      // Section 1: Terminology services
+      self.form.sections[1].fields.push(fields.getField("gnd-subject"));
+      self.form.sections[1].fields.push(fields.getField("bk-subject"));
 
-      // handled by submit-ir-description-keyword component
-      smf.push(fields.getField("abstract"));
-      self.keywordsValue = [];
-      let keyws = fields.getField("keyword");
-      if (doiImportData) {
-        if (doiImportData.keywords) {
-          keyws.value = doiImportData.keywords;
-          self.keywordsValue = doiImportData.keywords;
-        }
-      }
-      smf.push(keyws);
+      // Section 2: Coverage
+      self.form.sections[2].fields.push(fields.getField("temporal-coverage"));
+      let place = fields.getField("spatial-geonames");
+      place.showtype = false;
+      self.form.sections[2].fields.push(place);
 
-      if (self.submitformparam === "book") {
-        let isbn = {
-          id: "alternate-identifier",
-          fieldname: "Alternate identifier",
-          predicate: "rdam:P30004",
-          component: "isbn",
-          type: "ids:isbn",
-          showType: false,
-          disableType: true,
-          multiplicable: false,
-          identifierLabel: "ISBN",
-          valueErrorMessages: [],
-          value: "",
-        };
-        if (doiImportData && doiImportData.ISBN) {
-          isbn.value = doiImportData.ISBN;
-        }
-        smf.push(isbn);
-      }
+      // Section 3: Project
+      self.form.sections[3].fields.push(fields.getField("project"));
 
+      // Section 4: Represented object
+      self.form.sections[4].fields.push(fields.getField("date-edtf"));
+      self.form.sections[4].fields.push(fields.getField("inscription"));
+      self.form.sections[4].fields.push(fields.getField("shelf-mark"));
+      self.form.sections[4].fields.push(fields.getField("accession-number"));
+      self.form.sections[4].fields.push(fields.getField("provenance"));
+      self.form.sections[4].fields.push(fields.getField("production-company"));
+      self.form.sections[4].fields.push(fields.getField("production-place"));
+      self.form.sections[4].fields.push(fields.getField("physical-location"));
+      self.form.sections[4].fields.push(fields.getField("condition-note"));
+      self.form.sections[4].fields.push(fields.getField("height"));
+      self.form.sections[4].fields.push(fields.getField("width"));
+      self.form.sections[4].fields.push(fields.getField("depth"));
+      self.form.sections[4].fields.push(fields.getField("diameter"));
+      self.form.sections[4].fields.push(fields.getField("material-text"));
+      self.form.sections[4].fields.push(fields.getField("technique-text"));
+
+      // Section 5: Bibliographic metadata
+      // Alternate identifier (DOI)
       let aif = fields.getField("alternate-identifier");
-      aif.label = "Identifier";
-      aif.identifierLabel = "Publication identifier(s)";
-      aif.vocabulary = "irobjectidentifiertypenoisbn";
-      aif.multiplicable = true;
-      aif.addOnly = true;
-      aif.subloopFlag = true;
       if (doiImportData && doiImportData.doi) {
-        aif.type = "ids:doi";
         aif.value = doiImportData.doi;
-      }
-      smf.push(aif);
-
-      // handled by submit-ir-funding-field component
-      let pof = fields.getField("project");
-      pof.label = "Funder/Project";
-      pof.multiplicable = true;
-      pof.multiplicableCleared = true;
-      pof.subloopFlag = true;
-      smf.push(pof);
-
-      if (self.submitformparam === "book") {
-        let nop = fields.getField("number-of-pages");
-        nop.multiplicable = false;
-        smf.push(nop);
-      }
-
-      if (
-        self.submitformparam === "journal-article" ||
-        self.submitformparam === "book"
-      ) {
-        let sf = fields.getField("series");
-        sf.multilingual = false;
-        sf.multiplicableCleared = self.submitformparam === "book";
-        sf.hideIdentifier = true;
-        sf.label =
-          self.submitformparam === "book" ? "Series" : "Journal/Series";
-        sf.hidePages = self.submitformparam !== "journal-article";
-        sf.hideIssue = self.submitformparam !== "journal-article";
-        sf.hideIssued = self.submitformparam !== "journal-article";
-        sf.hideIssn = self.submitformparam !== "journal-article";
-        sf.issuedDatePicker = true;
-        if (doiImportData) {
-          if (doiImportData.journalTitle) {
-            sf.title = doiImportData.journalTitle;
-          }
-          if (doiImportData.journalISSN) {
-            sf.issn = doiImportData.journalISSN;
-          }
-          if (doiImportData.journalVolume) {
-            sf.volume = doiImportData.journalVolume;
-          }
-          if (doiImportData.journalIssue) {
-            sf.issue = doiImportData.journalIssue;
-          }
-          if (doiImportData.pageStart) {
-            sf.pageStart = doiImportData.pageStart;
-          }
-          if (doiImportData.pageEnd) {
-            sf.pageEnd = doiImportData.pageEnd;
-          }
-          if (doiImportData && doiImportData.dateIssued) {
-            sf.issued = doiImportData.dateIssued;
+        // Try to set type to DOI if available
+        if (self.vocabularies && self.vocabularies['irobjectidentifiertypenoisbn']) {
+          for (let term of self.vocabularies['irobjectidentifiertypenoisbn'].terms) {
+            if (term['skos:notation'] && term['skos:notation'].includes('doi')) {
+              aif.type = term['@id'];
+              break;
+            }
           }
         }
-        smf.push(sf);
+      }
+      self.form.sections[5].fields.push(aif);
+
+      // Date issued
+      let published = fields.getField("date-edtf");
+      published.type = 'dcterms:issued';
+      if (doiImportData && doiImportData.dateIssued) {
+        published.value = doiImportData.dateIssued;
+      }
+      self.form.sections[5].fields.push(published);
+
+      // Volume
+      let vol = fields.getField("volume");
+      if (doiImportData && doiImportData.journalVolume) {
+        vol.value = doiImportData.journalVolume;
+      }
+      self.form.sections[5].fields.push(vol);
+
+      // Issue
+      let issue = fields.getField("issue");
+      if (doiImportData && doiImportData.journalIssue) {
+        issue.value = doiImportData.journalIssue;
+      }
+      self.form.sections[5].fields.push(issue);
+
+      // Series/Journal
+      let sf = fields.getField("series");
+      if (doiImportData) {
+        if (doiImportData.journalTitle) {
+          sf.title = doiImportData.journalTitle;
+        }
+        if (doiImportData.journalISSN) {
+          sf.issn = doiImportData.journalISSN;
+        }
+        if (doiImportData.journalVolume) {
+          sf.volume = doiImportData.journalVolume;
+        }
+        if (doiImportData.journalIssue) {
+          sf.issue = doiImportData.journalIssue;
+        }
+        if (doiImportData.pageStart) {
+          sf.pageStart = doiImportData.pageStart;
+        }
+        if (doiImportData.pageEnd) {
+          sf.pageEnd = doiImportData.pageEnd;
+        }
+        if (doiImportData.dateIssued) {
+          sf.issued = doiImportData.dateIssued;
+        }
+      }
+      self.form.sections[5].fields.push(sf);
+
+      // Publication/Publisher
+      let publ = fields.getField("bf-publication");
+      if (doiImportData && doiImportData.publisher) {
+        publ.publisherName = doiImportData.publisher;
+      }
+      if (doiImportData && doiImportData.dateIssued) {
+        publ.publishingDate = doiImportData.dateIssued;
+      }
+      self.form.sections[5].fields.push(publ);
+
+      // Section 6: Accessibility
+      let ac1 = fields.getField("accessibility-control");
+      ac1.multiplicable = true;
+      ac1.showValueDefinition = true;
+      self.form.sections[6].fields.push(ac1);
+      
+      let ac2 = fields.getField("access-mode");
+      ac2.multiplicable = true;
+      ac2.showValueDefinition = true;
+      self.form.sections[6].fields.push(ac2);
+      
+      let ac3 = fields.getField("accessibility-hazard");
+      ac3.multiplicable = true;
+      ac3.showValueDefinition = true;
+      self.form.sections[6].fields.push(ac3);
+      
+      let ac4 = fields.getField("accessibility-feature");
+      ac4.multiplicable = true;
+      ac4.showValueDefinition = true;
+      self.form.sections[6].fields.push(ac4);
+
+      // Set language properties for all fields (same as upload.vue)
+      for (let s of self.form.sections) {
+        for (let f of s.fields) {
+          f.configurable = false;
+          f.multilingual = true;
+          for (let prop of Object.keys(f)) {
+            switch (prop) {
+              case "language":
+                if (!f.language) {
+                  f.language = self.$i18n.locale;
+                }
+                break;
+              case "nameLanguage":
+                if (!f.nameLanguage) {
+                  f.nameLanguage = self.$i18n.locale;
+                }
+                break;
+              case "funderNameLanguage":
+                if (!f.funderNameLanguage) {
+                  f.funderNameLanguage = self.$i18n.locale;
+                }
+                break;
+              case "descriptionLanguage":
+                if (!f.descriptionLanguage) {
+                  f.descriptionLanguage = self.$i18n.locale;
+                }
+                break;
+              case "titleLanguage":
+                if (!f.titleLanguage) {
+                  f.titleLanguage = self.$i18n.locale;
+                }
+                break;
+              case "citationLanguage":
+                if (!f.citationLanguage) {
+                  f.citationLanguage = self.$i18n.locale;
+                }
+                break;
+            }
+          }
+        }
       }
 
+      // Set object type if available
+      if (doiImportData && doiImportData.publicationTypeId && ot) {
+        self.$nextTick(() => {
+          // Set object type via selectedTerms
+          if (ot.selectedTerms === undefined) {
+            ot.selectedTerms = [];
+          }
+          // Find the term in vocabulary and add to selectedTerms
+          if (self.vocabularies && self.vocabularies['objecttype']) {
+            for (let term of self.vocabularies['objecttype'].terms) {
+              if (term['@id'] === doiImportData.publicationTypeId) {
+                let field = {
+                  value: term['@id']
+                };
+                if (term['skos:prefLabel']) {
+                  let preflabels = term['skos:prefLabel'];
+                  field['skos:prefLabel'] = [];
+                  Object.entries(preflabels).forEach(([key, value]) => {
+                    field['skos:prefLabel'].push({ '@value': value, '@language': key });
+                  });
+                }
+                ot.selectedTerms = [field];
+                break;
+              }
+            }
+          }
+        });
+      }
 
-      self.form.sections.push({
-        type: "digitalobject",
-        obligation: "mandatory",
-        id: 5,
-        fields: smf,
-      });
-
-      self.$nextTick().then(function () {
-        // put things here which might be overwritten
-        // when components re-initialize
-        // some use nextTick to wait for vocabularies or
-        // something, and then fire input event which is cought
-        // eg by selectInput here, but they fire AFTER resetForm
-        // while still having old values set
-        self.license = null;
-        self.showEmbargoDate = false;
-      });
-      if (this.instanceconfig.markmandatoryfnc) {
-          this[this.instanceconfig.markmandatoryfnc]()
-        } else {
-          this.markMandatory()
-        }
+      // Mark mandatory fields
+      if (self.instanceconfig && self.instanceconfig.markmandatoryfnc) {
+        self[self.instanceconfig.markmandatoryfnc]();
+      } else if (self.markMandatory) {
+        self.markMandatory();
+      }
     }
   }
 }
