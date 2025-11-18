@@ -1092,7 +1092,7 @@
   "The topic of the resource, represented using a controlled vocabulary.": "L'argomento della risorsa, rappresentato utilizzando un vocabolario controllato.",
   "Subjects from terms collection https://vocab.phaidra.org/vocabulary/en/collections/60PM-DY5T.html": "Argomenti della raccolta di vocaboli https://vocab.phaidra.org/vocabulary/en/collections/60PM-DY5T.html",
   "Study plan": "Piano di studi",
-  "Material (vocabulary)": "Materiale (vocabolario)",
+  "Material (vocabulary)": "Materiale (Vocabolario)",
   "Relates a resource to a resource in which a part has been issued; a title of a larger resource appears on a part.": "Relaziona una risorsa a una risorsa in cui una parte è stata emessa; un titolo di una risorsa più grande appare su una parte.",
   "Relates a resource to a larger resource of which a part is a discrete component.": "Relaziona una risorsa a una risorsa più grande di cui una parte è un componente distinto.",
   "Work the Instance described instantiates or manifests. For use to connect Instances to Works.": "Opera di cui l'istanza descritta è manifestazione. Da utilizzare per collegare le istanze alle opere.",
@@ -1178,7 +1178,7 @@
   "Metadata fields overview": "Elenco dei campi dei metadati",
   "Metadata fields": "Campi dei metadati",
   "Audience (text)": "Audience (Testo)",
-  "Audience (vocabulary)": "Pubblico di riferimento (vocabolario)",
+  "Audience (vocabulary)": "Pubblico di riferimento (Vocabolario)",
   "Technique (vocabulary)": "Tecnica (Vocabolario)",
   "Managed by": "Gestito da",
   "ROR Search": "Ricerca ROR (Research Organization Registry)",
@@ -1271,7 +1271,7 @@
   "Subject (Thema)": "Soggetto (Thema)",
   "Subject (BIC)": "Soggetto (BIC)",
   "Study plan.": "Piano di studi.",
-  "Study plan (select)": "Piano di studi (seleziona)",
+  "Study plan (select)": "Piano di studi (Vocabolario)",
   "Study plan controlled vocabulary.": "Piano di studi – Vocabolario controllato.",
   "Instance of": "Istanza di",
   "The human sensory perceptual system or cognitive faculty through which a person may process or perceive information. Values should be drawn from the approved vocabulary.": "Il sistema percettivo sensoriale umano o la facoltà cognitiva attraverso cui una persona può elaborare o percepire l'informazione. I valori vanno attinti dal vocabolario controllato.",
@@ -1418,5 +1418,7 @@
   "MUSEO": "Metadati museali ICCD",
   "Vocabulary": "Vocabolario",
   "Can be used inside \"Complex subject\" to specify what the subject metadata are describing.": "Può essere usato all'interno di un \"Soggetto complesso\" per specificare cosa descrivono i metadati del soggetto.",
-  "Important in cases where the same metadata fields have to be used on different description levels (ie dimensions - of the photography vs dimensions of the instrument depicted on the photography -, creation date, etc).": "Importante nei casi in cui gli stessi campi di metadati devono essere usati a diversi livelli di descrizione (ad esempio, dimensioni della fotografia vs. dimensioni dello strumento raffigurato nella fotografia, data di creazione, ecc)."
+  "Important in cases where the same metadata fields have to be used on different description levels (ie dimensions - of the photography vs dimensions of the instrument depicted on the photography -, creation date, etc).": "Importante nei casi in cui gli stessi campi di metadati devono essere usati a diversi livelli di descrizione (ad esempio, dimensioni della fotografia vs. dimensioni dello strumento raffigurato nella fotografia, data di creazione, ecc).",
+  "Date (text/concept)": "Data (Testo/Concetto)",
+  "OER Object type (Higher Education Resource Types)": "Tipo di oggetto OER (Tipo di risorsa per l'istruzione superiore)"
 }
