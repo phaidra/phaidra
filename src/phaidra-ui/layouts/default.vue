@@ -132,17 +132,17 @@ export default {
       })
     }
     
-    if (this.instanceconfig.matomoTrackingCode && this.instanceconfig.matomoTrackingCode.trim()) {
-      let scriptContent = this.instanceconfig.matomoTrackingCode.trim();
-      scriptContent = scriptContent.replace(/<script[^>]*>/gi, '').replace(/<\/script>/gi, '');
-      
-      metaInfo.script.push({
-        type: 'text/javascript',
-        innerHTML: scriptContent,
-        body: false
-      })
-      metaInfo.__dangerouslyDisableSanitizers = ['script']
-    }
+      if (this.instanceconfig.customJavaScript && this.instanceconfig.customJavaScript.trim()) {
+        let scriptContent = this.instanceconfig.customJavaScript.trim();
+        scriptContent = scriptContent.replace(/<script[^>]*>/gi, '').replace(/<\/script>/gi, '');
+        
+        metaInfo.script.push({
+          type: 'text/javascript',
+          innerHTML: scriptContent,
+          body: false
+        })
+        metaInfo.__dangerouslyDisableSanitizers = ['script']
+      }
     
     return metaInfo;
   },

@@ -73,7 +73,7 @@ export const mutations = {
       'data_ot4rt',
       'enableCookieBanner',
       'cookiePrivacyPolicyUrl',
-      'matomoTrackingCode',
+      'customJavaScript',
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
