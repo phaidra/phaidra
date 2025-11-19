@@ -505,6 +505,8 @@ export default {
               case 'purpose':
               case 'location':
               case 'upload_date':
+              case 'size':
+              case 'format':
                 return true
               default:
                 return false
