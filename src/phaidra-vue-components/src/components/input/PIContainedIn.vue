@@ -214,8 +214,12 @@
                     <v-icon>mdi-minus</v-icon>
                   </v-btn>
                   <span>
-                    <v-icon dark v-show="collapseSeriesModel" @click="collapseSeriesModel=!collapseSeriesModel">mdi-arrow-right-drop-circle</v-icon>
-                    <v-icon dark v-show="!collapseSeriesModel" @click="collapseSeriesModel=!collapseSeriesModel">mdi-arrow-down-drop-circle</v-icon>
+                    <v-btn dark icon v-show="collapseSeriesModel" @click="collapseSeriesModel=!collapseSeriesModel">
+                      <v-icon>mdi-chevron-up</v-icon>
+                    </v-btn>
+                    <v-btn dark icon v-show="!collapseSeriesModel" @click="collapseSeriesModel=!collapseSeriesModel">
+                      <v-icon>mdi-chevron-down</v-icon>
+                    </v-btn>
                   </span>
                 </v-card-title>
                 <v-card-text class="mt-4" v-show="!collapseSeriesModel">
@@ -357,8 +361,12 @@
                   <span>{{ $t(publisherLabel) }}</span>
                   <v-spacer></v-spacer>
                   <span>
-                    <v-icon dark v-show="collapsePublisherModel" @click="collapsePublisherModel=!collapsePublisherModel">mdi-arrow-right-drop-circle</v-icon>
-                    <v-icon dark v-show="!collapsePublisherModel" @click="collapsePublisherModel=!collapsePublisherModel">mdi-arrow-down-drop-circle</v-icon>
+                    <v-btn dark icon v-show="collapsePublisherModel" @click="collapsePublisherModel=!collapsePublisherModel">
+                      <v-icon>mdi-chevron-up</v-icon>
+                    </v-btn>
+                    <v-btn dark icon v-show="!collapsePublisherModel" @click="collapsePublisherModel=!collapsePublisherModel">
+                      <v-icon>mdi-chevron-down</v-icon>
+                    </v-btn>
                   </span>
                 </v-card-title>
                 <v-divider></v-divider>
