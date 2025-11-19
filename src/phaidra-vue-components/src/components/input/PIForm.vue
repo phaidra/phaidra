@@ -834,7 +834,10 @@
               <v-btn large fixed bottom right v-if="targetpid && floatingsavebutton" raised :loading="loading" :disabled="loading" color="primary" @click="save()"><span v-t="'Save'"></span></v-btn>
               <v-btn v-else-if="targetpid && !floatingsavebutton" large raised :loading="loading" :disabled="loading" class="primary float-right" @click="save()"><span v-t="'Save'"></span></v-btn>
               <v-btn v-else-if="forcePreview" large raised :loading="loading" :disabled="loading" class="primary float-right" @click="showForcePreview()"><span v-t="'Preview'"></span></v-btn>
-              <v-btn v-else large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
+              <template v-else>
+                <v-btn large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
+                <v-btn large raised :loading="loading" :disabled="loading" class="grey mr-2 float-right" @click="checksumDialog = true"><span v-t="'Add checksum'"></span></v-btn>
+              </template>
             </template>
             <v-switch :hide-details="true" class="float-right mt-1 mx-2" v-if="$store.state.user.isadmin" v-model="skipValidation" :label="$t('Skip validation')"></v-switch>
           </v-col>
@@ -879,6 +882,7 @@
       <v-tab-item v-if="(submittype !== 'container') && enablepreview" class="pa-4">
         <p-d-jsonld :jsonld="jsonld"></p-d-jsonld>
         <v-btn large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
+        <v-btn large raised :loading="loading" :disabled="loading" class="grey mr-2 float-right" @click="checksumDialog = true"><span v-t="'Add checksum'"></span></v-btn>
       </v-tab-item>
       <v-tab-item v-if="help" class="pa-4">
         <p-help></p-help>
@@ -890,6 +894,48 @@
         <p-doi-import v-on:load-form="loadFormFromDoiImport"></p-doi-import>
       </v-tab-item>
     </v-tabs-items>
+    <v-dialog v-model="checksumDialog" max-width="500px">
+      <v-card>
+        <v-card-title class="title font-weight-light white--text">
+          <span v-t="'Add checksum'"></span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-select
+                  v-model="checksumType"
+                  :items="checksumTypes"
+                  :label="$t('Checksum type')"
+                  outlined
+                  hide-details
+                  class="mb-4"
+                ></v-select>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="checksumValue"
+                  :label="$t('Checksum')"
+                  outlined
+                  hide-details
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn outlined @click="checksumDialog = false">
+            <span v-t="'Cancel'"></span>
+          </v-btn>
+          <v-btn color="primary" @click="checksumDialog = false">
+            <span v-t="'OK'"></span>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="showEditFieldPopup" max-width="600px" scrollable>
       <v-card>
         <v-card-title class="title font-weight-light white--text">
@@ -916,7 +962,7 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-</v-dialog>
+    </v-dialog>
 
   </div>
 
@@ -1186,7 +1232,11 @@ export default {
       fieldPropForm: [],
       initonly: false,
       serverSubmitError: false,
-      serverSubmitErrors: []
+      serverSubmitErrors: [],
+      checksumDialog: false,
+      checksumType: '',
+      checksumValue: '',
+      checksumTypes: ['SHA-1', 'SHA-256', 'MD5']
     }
   },
   methods: {
@@ -1551,6 +1601,10 @@ export default {
       httpFormData.append('metadata', JSON.stringify(this.getMetadata()))
       if (mime) {
         httpFormData.append('mimetype', mime)
+      }
+      if (this.checksumType && this.checksumValue) {
+        httpFormData.append('checksumtype', this.checksumType)
+        httpFormData.append('checksum', this.checksumValue)
       }
 
       let self = this
