@@ -123,6 +123,16 @@
                   </v-col>
                   <v-col cols="6" class="mt-6">{{ $t('Use to register the site in your Google Search Console') }}</v-col>
                 </v-row>
+                <v-row>
+                  <v-col>
+                    <v-textarea
+                      :label="$t('Custom JavaScript snippet')"
+                      v-model="parsedPublicConfigData.customJavaScript"
+                      rows="10"
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t('Paste your custom JavaScript code here (e.g., Matomo, Google Analytics, or any other tracking script). The code will be injected into the page head. Leave empty to disable.') }}</v-col>
+                </v-row>
               </v-container>
             </v-tab-item>
 
