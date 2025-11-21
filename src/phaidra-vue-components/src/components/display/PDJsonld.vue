@@ -633,4 +633,7 @@ export default {
 .wiv {
   font-weight: 400;
 }
+.theme--dark.v-card {
+  background-color: transparent !important;
+}
 </style>

@@ -131,3 +131,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.theme--dark.v-card {
+  background-color: transparent !important;
+}
+</style>
