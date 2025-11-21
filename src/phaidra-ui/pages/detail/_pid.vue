@@ -1819,6 +1819,24 @@
                           >{{ $t("Metadata XML") }}</a
                         >
                       </v-row>
+                      <v-row
+                        v-for="(dsid, index) in downloadableDatastreams"
+                        :key="'ds-' + index"
+                        no-gutters
+                        class="pt-2"
+                      >
+                        <a
+                          :href="
+                            instanceconfig.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/datastream/' +
+                            dsid
+                          "
+                          target="_blank"
+                          >{{ $t(dsid) }}</a
+                        >
+                      </v-row>
                     </v-card-text>
                   </v-card>
                 </li>
@@ -2562,6 +2580,15 @@ export default {
       }
       
       return statements;
+    },
+    downloadableDatastreams: function () {
+      if (this.instanceconfig.downloadabledatastreams) {
+        return this.instanceconfig.downloadabledatastreams
+          .split(',')
+          .map(ds => ds.trim())
+          .filter(ds => ds.length > 0);
+      }
+      return [];
     },
   },
   data() {

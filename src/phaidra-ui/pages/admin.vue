@@ -242,6 +242,15 @@
                 </v-row>
                 <v-row>
                   <v-col>
+                    <v-text-field
+                      :label="$t('Additional downloadable datastreams')"
+                      v-model="parsedPublicConfigData.downloadabledatastreams"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Comma-separated list of additional datastreams IDs to show as download links in object detail metadata box (e.g., MUSEO, BOOKINFO).") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
                     <v-checkbox
                       :label="$t('Show Groups link')"
                       v-model="parsedPublicConfigData.groups"
