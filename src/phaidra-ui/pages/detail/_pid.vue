@@ -2472,6 +2472,19 @@ export default {
           if (f.includes("http")) {
             return f;
           }
+          if (f === "All rights reserved") {
+            return "http://rightsstatements.org/vocab/InC/1.0/";
+          }
+        }
+      }
+      if (this.objectInfo["dc_license"]) {
+        for (let f of this.objectInfo["dc_license"]) {
+          if (f.includes("http")) {
+            return f;
+          }
+          if (f === "All rights reserved") {
+            return "http://rightsstatements.org/vocab/InC/1.0/";
+          }
         }
       }
       return "";
@@ -2480,6 +2493,8 @@ export default {
       const statements = [];
       
       const licenseStrings = new Set();
+      
+      licenseStrings.add("All rights reserved");
       
       if (this.objectInfo && this.objectInfo["dc_rights"]) {
         const licenseUris = this.objectInfo["dc_rights"].filter(f => 
@@ -2525,6 +2540,10 @@ export default {
           if (key.match(/^dc_rights_[a-z]{3}$/)) {
             dcRightsFields.push(key);
           }
+        }
+        
+        if (this.objectInfo['dc_rights']) {
+          dcRightsFields.push('dc_rights');
         }
         
         for (let field of dcRightsFields) {
@@ -3047,8 +3066,6 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch('vocabulary/loadVocabulary', { vocabularyName: 'alllicenses' });
-    
     if (this.showCollectionTree) {
       this.fetchCollectionTree(this.$route.params.pid);
       setTimeout(() => {
