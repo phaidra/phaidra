@@ -490,8 +490,9 @@ sub search_solr {
       my $json = $pages_res->json;
       if ($json->{facets} && $json->{facets}->{parents} && $json->{facets}->{parents}->{buckets}) {
         my $buckets = $json->{facets}->{parents}->{buckets};
+        my $bucket_count = scalar @$buckets;
         # Check if we hit the facet limit
-        if (@$buckets >= $facet_limit) {
+        if ($bucket_count == $facet_limit) {
           $hit_facet_limit = 1;
           $self->app->log->debug("Hit facet limit of $facet_limit, indicating all books queried");
         }
