@@ -3992,7 +3992,7 @@ our %tree = (
               "labels"      => {
                 "de" => "Fakultaet",
                 "en" => "Faculty",
-                "it" => "Facoltà",
+                "it" => "Istituzione",
                 "sr" => "fakultet"
               },
               "loaded" => 0,
@@ -4149,7 +4149,7 @@ our %tree = (
               "labels"      => {
                 "de" => "Institut",
                 "en" => "Institute",
-                "it" => "Istituto",
+                "it" => "Struttura",
                 "sr" => "institut"
               },
               "loaded" => 0,
@@ -4179,7 +4179,7 @@ our %tree = (
           "labels"      => {
             "de" => "Organisationszuordnung",
             "en" => "Organization Association",
-            "it" => "Struttura",
+            "it" => "Istituzione e Struttura",
             "sr" => "ustanova"
           },
           "loaded" => 0,
