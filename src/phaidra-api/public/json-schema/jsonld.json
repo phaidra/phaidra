@@ -73,6 +73,33 @@
         ]
       }
     },
+    "array-of-strings-or-lang-values": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "@language": {
+                "$ref": "#/$defs/language-code"
+              },
+              "@value": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "@value"
+            ]
+          }
+        ]
+      }
+    },
     "schema-quantitative-values": {
       "type": "array",
       "minItems": 1,
@@ -320,10 +347,10 @@
             "const": "schema:CreativeWork"
           },
           "bibo:volume": {
-            "$ref": "#/$defs/array-of-strings"
+            "$ref": "#/$defs/array-of-strings-or-lang-values"
           },
           "bibo:issue": {
-            "$ref": "#/$defs/array-of-strings"
+            "$ref": "#/$defs/array-of-strings-or-lang-values"
           },
           "dce:title": {
             "$ref": "#/$defs/dce-title"
@@ -803,13 +830,13 @@
           }
         },
         "bibo:volume": {
-          "$ref": "#/$defs/array-of-strings"
+          "$ref": "#/$defs/array-of-strings-or-lang-values"
         },
         "bibo:issue": {
-          "$ref": "#/$defs/array-of-strings"
+          "$ref": "#/$defs/array-of-strings-or-lang-values"
         },
         "bf:soundCharacteristic": {
-          "$ref": "#/$defs/array-of-strings"
+          "$ref": "#/$defs/array-of-strings-or-lang-values"
         },
         "ebucore:hasRelatedEvent": {
           "type": "array",
@@ -2003,7 +2030,7 @@
           "$ref": "#/$defs/skos-concepts"
         },
         "opaque:cco_accessionNumber": {
-          "$ref": "#/$defs/array-of-strings"
+          "$ref": "#/$defs/array-of-strings-or-lang-values"
         },
         "phaidra:systemTag": {
           "$ref": "#/$defs/array-of-strings"
@@ -2072,7 +2099,7 @@
           "$ref": "#/$defs/language-tagged-values"
         },
         "bf:shelfMark": {
-          "$ref": "#/$defs/array-of-strings"
+          "$ref": "#/$defs/array-of-strings-or-lang-values"
         },
         "dcterms:provenance": {
           "type": "array",

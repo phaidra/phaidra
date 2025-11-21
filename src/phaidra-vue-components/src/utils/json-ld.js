@@ -309,12 +309,22 @@ export default {
               }
               if (obj['bibo:volume']) {
                 for (let v of obj['bibo:volume']) {
-                  f.volume = v
+                  if (typeof v === 'object' && v['@value']) {
+                    f.volume = v['@value']
+                    f.volumeLanguage = v['@language'] ? v['@language'] : ''
+                  } else {
+                    f.volume = v
+                  }
                 }
               }
               if (obj['bibo:issue']) {
                 for (let v of obj['bibo:issue']) {
-                  f.issue = v
+                  if (typeof v === 'object' && v['@value']) {
+                    f.issue = v['@value']
+                    f.issueLanguage = v['@language'] ? v['@language'] : ''
+                  } else {
+                    f.issue = v
+                  }
                 }
               }
               if (obj['dcterms:issued']) {
@@ -479,12 +489,22 @@ export default {
                     }
                     if (series['bibo:volume']) {
                       for (let v of series['bibo:volume']) {
-                        s.seriesVolume = v
+                        if (typeof v === 'object' && v['@value']) {
+                          s.seriesVolume = v['@value']
+                          s.seriesVolumeLanguage = v['@language'] ? v['@language'] : ''
+                        } else {
+                          s.seriesVolume = v
+                        }
                       }
                     }
                     if (series['bibo:issue']) {
                       for (let v of series['bibo:issue']) {
-                        s.seriesIssue = v
+                        if (typeof v === 'object' && v['@value']) {
+                          s.seriesIssue = v['@value']
+                          s.seriesIssueLanguage = v['@language'] ? v['@language'] : ''
+                        } else {
+                          s.seriesIssue = v
+                        }
                       }
                     }
                     if (series['dcterms:issued']) {
@@ -1082,7 +1102,12 @@ export default {
             case 'bf:soundCharacteristic':
               f = fields.getField('sound-characteristic')
               f.label = key
-              f.value = obj
+              if (typeof obj === 'object' && obj['@value']) {
+                f.value = obj['@value']
+                f.language = obj['@language'] ? obj['@language'] : ''
+              } else {
+                f.value = obj
+              }
               components.push(f)
               break
 
@@ -1134,14 +1159,24 @@ export default {
             // opaque:cco_accessionNumber
             case 'opaque:cco_accessionNumber':
               f = fields.getField('accession-number')
-              f.value = obj
+              if (typeof obj === 'object' && obj['@value']) {
+                f.value = obj['@value']
+                f.language = obj['@language'] ? obj['@language'] : ''
+              } else {
+                f.value = obj
+              }
               components.push(f)
               break
 
             // bf:shelfMark
             case 'bf:shelfMark':
               f = fields.getField('shelf-mark')
-              f.value = obj
+              if (typeof obj === 'object' && obj['@value']) {
+                f.value = obj['@value']
+                f.language = obj['@language'] ? obj['@language'] : ''
+              } else {
+                f.value = obj
+              }
               components.push(f)
               break
 
@@ -1164,14 +1199,24 @@ export default {
             // bibo:issue
             case 'bibo:issue':
               f = fields.getField('issue')
-              f.value = obj
+              if (typeof obj === 'object' && obj['@value']) {
+                f.value = obj['@value']
+                f.language = obj['@language'] ? obj['@language'] : ''
+              } else {
+                f.value = obj
+              }
               components.push(f)
               break
 
             // bibo:volume
             case 'bibo:volume':
               f = fields.getField('volume')
-              f.value = obj
+              if (typeof obj === 'object' && obj['@value']) {
+                f.value = obj['@value']
+                f.language = obj['@language'] ? obj['@language'] : ''
+              } else {
+                f.value = obj
+              }
               components.push(f)
               break
 
@@ -1491,6 +1536,9 @@ export default {
                             if (role['schema:name']) {
                               for (let name of role['schema:name']) {
                                 f.organizationText = name['@value']
+                                if (name['@language']) {
+                                  f.language = name['@language']
+                                }
                               }
                             }
                           }
@@ -1502,6 +1550,9 @@ export default {
                         if (role['schema:name']) {
                           for (let name of role['schema:name']) {
                             f.organizationText = name['@value']
+                            if (name['@language']) {
+                              f.language = name['@language']
+                            }
                           }
                         }
                       }
@@ -1511,6 +1562,9 @@ export default {
                       for (let name of role['schema:name']) {
                         f.organizationType = 'other'
                         f.organizationText = name['@value']
+                        if (name['@language']) {
+                          f.language = name['@language']
+                        }
                       }
                     }
                   }
@@ -1857,6 +1911,9 @@ export default {
                 '@value': f.organizationText
               }
             ]
+            if (f.language) {
+              h['schema:name'][0]['@language'] = f.language
+            }
           }
           if (f.identifierText) {
             if (f.identifierType) {
@@ -1978,7 +2035,7 @@ export default {
     }
     return h
   },
-  get_json_series (type, title, titleLanguage, volume, issue, issued, issn, identifier, idnetifierType) {
+  get_json_series (type, title, titleLanguage, volume, volumeLanguage, issue, issueLanguage, issued, issn, identifier, idnetifierType) {
     var h = {
       '@type': type
     }
@@ -1997,10 +2054,10 @@ export default {
       h['dce:title'] = [ tit ]
     }
     if (volume) {
-      h['bibo:volume'] = [ volume ]
+      h['bibo:volume'] = [ this.get_json_valueobject(volume, volumeLanguage) ]
     }
     if (issue) {
-      h['bibo:issue'] = [ issue ]
+      h['bibo:issue'] = [ this.get_json_valueobject(issue, issueLanguage) ]
     }
     if (issued) {
       h['dcterms:issued'] = [ issued ]
@@ -2121,10 +2178,10 @@ export default {
               series['dce:title'] = [ tit ]
             }
             if (s.seriesVolume) {
-              series['bibo:volume'] = [ s.seriesVolume ]
+              series['bibo:volume'] = [ this.get_json_valueobject(s.seriesVolume, s.seriesVolumeLanguage) ]
             }
             if (s.seriesIssue) {
-              series['bibo:issue'] = [ s.seriesIssue ]
+              series['bibo:issue'] = [ this.get_json_valueobject(s.seriesIssue, s.seriesIssueLanguage) ]
             }
             if (s.seriesIssued) {
               series['dcterms:issued'] = [ s.seriesIssued ]
@@ -2612,10 +2669,15 @@ export default {
           break
 
         case 'edm:rights':
+          if (f.value) {
+            this.push_literal(jsonld, f.predicate, f.value)
+          }
+          break
+
         case 'bibo:issue':
         case 'bibo:volume':
           if (f.value) {
-            this.push_literal(jsonld, f.predicate, f.value)
+            this.push_value(jsonld, f.predicate, this.get_json_valueobject(f.value, f.language))
           }
           break
 
@@ -2643,7 +2705,7 @@ export default {
 
         case 'rdau:P60193':
           if (f.title || f.volume || f.issue || f.issued || f.issn || f.identifier) {
-            this.push_object(jsonld, f.predicate, this.get_json_series(f.type, f.title, f.titleLanguage, f.volume, f.issue, f.issued, f.issn, f.identifier, f.identifierType))
+            this.push_object(jsonld, f.predicate, this.get_json_series(f.type, f.title, f.titleLanguage, f.volume, f.volumeLanguage, f.issue, f.issueLanguage, f.issued, f.issn, f.identifier, f.identifierType))
           }
           if (f.pageStart) {
             this.push_literal(jsonld, 'schema:pageStart', f.pageStart)
@@ -2729,13 +2791,13 @@ export default {
 
         case 'opaque:cco_accessionNumber':
           if (f.value) {
-            this.push_literal(jsonld, f.predicate, f.value)
+            this.push_value(jsonld, f.predicate, this.get_json_valueobject(f.value, f.language))
           }
           break
 
         case 'bf:shelfMark':
           if (f.value) {
-            this.push_literal(jsonld, f.predicate, f.value)
+            this.push_value(jsonld, f.predicate, this.get_json_valueobject(f.value, f.language))
           }
           break
 
@@ -2849,7 +2911,7 @@ export default {
         case 'schema:numberOfPages':
         case 'bf:soundCharacteristic':
           if (f.value) {
-            this.push_literal(jsonld, f.predicate, f.value)
+            this.push_value(jsonld, f.predicate, this.get_json_valueobject(f.value, f.language))
           }
           break
 

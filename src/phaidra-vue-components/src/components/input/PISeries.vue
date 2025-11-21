@@ -78,7 +78,7 @@
 
           <v-row >
 
-            <v-col cols="12" :md="(hideIssue && hideIssued)? 12 : 4" v-if="!hideVolume">
+            <v-col cols="12" :md="multilingual ? ((hideIssue && hideIssued)? 10 : 4) : ((hideIssue && hideIssued)? 12 : 4)" v-if="!hideVolume">
               <v-text-field
                 :value="volume"
                 :label="$t('Volume')"
@@ -87,8 +87,16 @@
                 :outlined="inputStyle==='outlined'"
               ></v-text-field>
             </v-col>
+            <v-col cols="12" md="2" v-if="!hideVolume && multilingual">
+              <v-btn text @click="$refs.volumelangdialog.open()">
+                <span>
+                  ({{ volumeLanguage ? volumeLanguage : '--' }})
+                </span>
+              </v-btn>
+              <select-language ref="volumelangdialog" :showReset="volumeLanguage ? true : false" @language-selected="$emit('input-volume-language', $event)"></select-language>
+            </v-col>
 
-            <v-col cols="12" :md="(hideVolume && hideIssued)? 12 : 4" v-if="!hideIssue">
+            <v-col cols="12" :md="multilingual ? ((hideVolume && hideIssued)? 10 : 4) : ((hideVolume && hideIssued)? 12 : 4)" v-if="!hideIssue">
               <v-text-field
                 :value="issue"
                 :label="$t('Issue')"
@@ -96,6 +104,14 @@
                 :filled="inputStyle==='filled'"
                 :outlined="inputStyle==='outlined'"
               ></v-text-field>
+            </v-col>
+            <v-col cols="12" md="2" v-if="!hideIssue && multilingual">
+              <v-btn text @click="$refs.issuelangdialog.open()">
+                <span>
+                  ({{ issueLanguage ? issueLanguage : '--' }})
+                </span>
+              </v-btn>
+              <select-language ref="issuelangdialog" :showReset="issueLanguage ? true : false" @language-selected="$emit('input-issue-language', $event)"></select-language>
             </v-col>
 
             <v-col cols="12" :md="(hideVolume && hideIssue)? 12 : 4" v-if="!hideIssued">
@@ -260,10 +276,16 @@ export default {
     volume: {
       type: String
     },
+    volumeLanguage: {
+      type: String
+    },
     hideIssue: {
       type: Boolean
     },
     issue: {
+      type: String
+    },
+    issueLanguage: {
       type: String
     },
     hideIssued: {

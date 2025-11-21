@@ -257,7 +257,9 @@
                               v-on:input-title="f.title=$event"
                               v-on:input-title-language="setSelected(f, 'titleLanguage', $event)"
                               v-on:input-volume="f.volume=$event"
+                              v-on:input-volume-language="setSelected(f, 'volumeLanguage', $event)"
                               v-on:input-issue="f.issue=$event"
+                              v-on:input-issue-language="setSelected(f, 'issueLanguage', $event)"
                               v-on:input-issued="f.issued=$event"
                               v-on:input-issn="f.issn=$event"
                               v-on:input-identifier="f.identifier=$event"
@@ -375,6 +377,7 @@
                               v-on:input-identifier="f.identifierText = $event"
                               v-on:input-organization="f.organizationText=$event"
                               v-on:input-role="roleInput(f, $event)"
+                              v-on:input-language="setSelected(f, 'language', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
                               v-on:configure="editFieldProps(f)"
@@ -546,6 +549,7 @@
                             <p-i-literal
                               v-bind.sync="f"
                               v-on:input-value="f.value=$event"
+                              v-on:input-language="setSelected(f, 'language', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
                               v-on:configure="editFieldProps(f)"
@@ -2100,8 +2104,14 @@ export default {
           if (event.hasOwnProperty('seriesVolume')) {
             s.seriesVolume = event.seriesVolume
           }
+          if (event.hasOwnProperty('seriesVolumeLanguageTerm')) {
+            s.seriesVolumeLanguage = event.seriesVolumeLanguageTerm['@id']
+          }
           if (event.hasOwnProperty('seriesIssue')) {
             s.seriesIssue = event.seriesIssue
+          }
+          if (event.hasOwnProperty('seriesIssueLanguageTerm')) {
+            s.seriesIssueLanguage = event.seriesIssueLanguageTerm['@id']
           }
           if (event.hasOwnProperty('seriesIssued')) {
             s.seriesIssued = event.seriesIssued
