@@ -4,38 +4,41 @@
       <template v-if="funderAndProjIdOnly">
         <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold text-md-right"><span v-if="!hideLabel">{{ $t('Funder') }}</span></v-col>
         <v-col :md="valueColMd" cols="12">
-          <v-container>
-            <v-row v-for="(funder, i) in o['frapo:hasFundingAgency']" :key="'ftx'+i">
-              <span v-for="(ft, j) in funder['skos:prefLabel']" :key="'ftx'+i+j">
-                <template v-if="funder['skos:exactMatch']">
-                  <template v-for="(fid, k) in funder['skos:exactMatch']">
-                    <template v-if="fid['@value']">
-                      <span :key="'idzf'+i+j+k"><a :href="getIDResolverURL(fid)" target="_blank">{{ ft['@value'] }}</a></span>
-                    </template>
-                    <template v-else>
-                      <span :key="'idzx'+i+j+k"><a :href="fid" target="_blank">{{ ft['@value'] }}</a></span>
-                    </template>
+          <v-row v-for="(funder, i) in o['frapo:hasFundingAgency']" :key="'ftx'+i">
+            <span v-for="(ft, j) in funder['skos:prefLabel']" :key="'ftx'+i+j">
+              <template v-if="funder['skos:exactMatch']">
+                <template v-for="(fid, k) in funder['skos:exactMatch']">
+                  <template v-if="fid['@value']">
+                    <span :key="'idzf'+i+j+k">
+                      <a :href="getIDResolverURL(fid)" target="_blank">{{ ft['@value'] }}</a>
+                    </span>
+                  </template>
+                  <template v-else>
+                    <span :key="'idzx'+i+j+k">
+                      <a v-if="fid !== 'other'" :href="fid" target="_blank">{{ ft['@value'] }}</a>
+                      <span v-else>{{ ft['@value'] }}</span>
+                    </span>
                   </template>
                 </template>
-                <span v-else class="valuefield">{{ ft['@value'] }}</span>
+              </template>
+              <span v-else class="valuefield">{{ ft['@value'] }}</span>
+            </span>
+            <span v-if="o['skos:exactMatch']">
+              <span v-for="(id, i) in o['skos:exactMatch']" :key="'idprojxv'+i">
+                <span class="mx-4">—</span>
+                <span v-if="id['@value']"><a :href="getIDResolverURL(id)" target="_blank">{{ id['@value'] }}</a></span>
+                <span v-else >{{ id }}</span>
               </span>
-              <span v-if="o['skos:exactMatch']">
-                <span v-for="(id, i) in o['skos:exactMatch']" :key="'idprojxv'+i">
-                  <span class="mx-4">—</span>
-                  <span v-if="id['@value']"><a :href="getIDResolverURL(id)" target="_blank">{{ id['@value'] }}</a></span>
-                  <span v-else >{{ id }}</span>
-                </span>
+            </span>
+            <span v-else>
+              <span v-if="o['frapo:hasProjectIdentifier']">
+                <span v-for="(id, i) in o['frapo:hasProjectIdentifier']" :key="'idprojxvfr'+i">
+                <span class="mx-4">—</span>
+                <span>{{ id }}</span>
               </span>
-              <span v-else>
-                <span v-if="o['frapo:hasProjectIdentifier']">
-                  <span v-for="(id, i) in o['frapo:hasProjectIdentifier']" :key="'idprojxvfr'+i">
-                  <span class="mx-4">—</span>
-                  <span>{{ id }}</span>
-                </span>
-                </span>
               </span>
-            </v-row>
-          </v-container>
+            </span>
+          </v-row>
         </v-col>
       </template>
       <template v-else>
@@ -130,7 +133,7 @@ export default {
     funderAndProjIdOnly: function () {
       let found
       Object.keys(this.o).forEach(name => {   
-        if ((name !== 'frapo:hasFundingAgency') && (name !== 'skos:exactMatch') && (name !== '@type')) {
+        if ((name !== 'frapo:hasFundingAgency') && (name !== 'skos:exactMatch') && (name !== 'frapo:hasProjectIdentifier') && (name !== '@type')) {
           found = true
         }
       })
