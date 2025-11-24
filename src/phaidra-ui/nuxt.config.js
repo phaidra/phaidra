@@ -46,7 +46,10 @@ export default {
 
   middleware: ['auth'],
 
-  serverMiddleware: ['~/server-middleware/redirect'],
+  serverMiddleware: [
+    '~/server-middleware/response-headers',
+    '~/server-middleware/redirect'
+  ],
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
