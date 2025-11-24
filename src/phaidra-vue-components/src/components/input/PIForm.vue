@@ -1720,6 +1720,9 @@ export default {
       newRole.isParentSelectionDisabled = f.isParentSelectionDisabled
       newRole.role = f.role
       newRole.showDefinitions = f.showDefinitions
+      if (f.hasOwnProperty('removable')) {
+        newRole.removable = f.removable
+      }
       arr.splice(arr.indexOf(f), 1, newRole)
     },
     removeField: function (arr, f) {

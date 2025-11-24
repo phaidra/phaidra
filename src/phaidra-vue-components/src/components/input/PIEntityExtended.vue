@@ -22,7 +22,7 @@
               </template>
               <span>{{ $t('Add') }}</span>
             </v-tooltip>
-            <v-tooltip bottom>
+            <v-tooltip bottom v-if="removable !== false">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn icon dark v-bind="attrs" v-on="on" @click="$emit('remove', $event)">
                   <v-icon>mdi-minus</v-icon>
@@ -595,6 +595,10 @@ export default {
     isParentSelectionDisabled: {
       type: Boolean,
       default: false
+    },
+    removable: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
