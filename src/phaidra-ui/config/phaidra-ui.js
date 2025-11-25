@@ -5,11 +5,6 @@ export default {
     showinstanceswitch: 0,
     enablelogin: 1,
     showdeletebutton: 1,
-    // Custom HTTP response headers applied to all instances
-    // customResponseHeaders: {
-    //   'X-Frame-Options': 'SAMEORIGIN',
-    //   'X-Content-Type-Options': 'nosniff'
-    // },
     suggesters: {
       geonames: 'https://ws.gbv.de/suggest/geonames/'
     },
@@ -60,11 +55,7 @@ export default {
       since: '2023-01-01',
       // only uncomment for wildcard purposes
       // cookiedomain: '<HOST_WITH_OR_WITHOUT_PORT>',
-      languages: 'eng,deu',
-      // Custom HTTP response headers for specific instance. Useful for preventing search engines from indexing sandbox/test instances.
-      // customResponseHeaders: {
-      //   'X-Robots-Tag': 'noindex, nofollow'
-      // }
+      languages: 'eng,deu'
     }
   }
 }
