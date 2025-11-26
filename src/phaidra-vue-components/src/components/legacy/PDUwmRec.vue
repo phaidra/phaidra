@@ -175,25 +175,21 @@
         </template>
         <template v-else-if="ch.xmlname === 'dimensions'">
           <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
-          <v-col cols="12" md="10">
-            <v-card tile elevation="0" color="transparent">
-              <v-card-text class="uwm-border-left">
-                <v-row v-for="(d, i) in ch.children" :key="'dim'+i">
-                  <template v-if="d.xmlname === 'resource'">
-                    <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold">{{ $t(nodePath(ch)+'_resource') }}</v-col>
-                    <v-col cols="12" md="10">{{ getLabel(d) }}</v-col>
-                  </template>
-                  <template v-else-if="d.xmlname === 'dimension_unit'">
-                    <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold">{{ $t(nodePath(ch)+'_dimension_unit') }}</v-col>
-                    <v-col cols="12" md="10">{{ getLabel(d) }}</v-col>
-                  </template>
-                  <template v-else>
-                    <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold">{{ $t(nodePath(ch) + '_' + d.xmlname) }}</v-col>
-                    <v-col cols="12" md="10">{{ d.ui_value }}</v-col>
-                  </template>
-                </v-row>
-              </v-card-text>
-            </v-card>
+          <v-col cols="12" md="10" class="uwm-border-left mb-4">            
+            <v-row v-for="(d, i) in ch.children" :key="'dim'+i">
+              <template v-if="d.xmlname === 'resource'">
+                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold">{{ $t(nodePath(ch)+'_resource') }}</v-col>
+                <v-col cols="12" md="10">{{ getLabel(d) }}</v-col>
+              </template>
+              <template v-else-if="d.xmlname === 'dimension_unit'">
+                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold">{{ $t(nodePath(ch)+'_dimension_unit') }}</v-col>
+                <v-col cols="12" md="10">{{ getLabel(d) }}</v-col>
+              </template>
+              <template v-else>
+                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold">{{ $t(nodePath(ch) + '_' + d.xmlname) }}</v-col>
+                <v-col cols="12" md="10">{{ d.ui_value }}</v-col>
+              </template>
+            </v-row>
           </v-col>
         </template>
         <template v-else-if="hideNodeBorder(nodePath(ch))">
