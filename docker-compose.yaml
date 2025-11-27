@@ -447,6 +447,7 @@ services:
       - fedora:/mnt/fedora:ro
       - derivates-images:/mnt/derivates-images:ro
       - derivates-3d:/mnt/derivates-3d:ro
+      - derivates-unzipped:/mnt/derivates-unzipped:ro
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
@@ -464,6 +465,10 @@ services:
       - ./src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
       - derivates-3d:/mnt/derivates-3d:ro
       - derivates-images:/mnt/derivates-images:ro
+<<<<<<< HEAD
+      - derivates-unzipped:/mnt/derivates-unzipped:ro
+=======
+>>>>>>> 06a8c7e6 (Reorganize compose file based on services, not profiles)
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
@@ -637,6 +642,32 @@ services:
         required: false
     profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
   
+  ############### unzip agent ###############
+  agent-unzip:
+    hostname: "agent-unzip"
+    image: phaidraorg/agent-unzip:latest
+    <<: [*common, *logs]
+    volumes:
+      - fedora:/mnt/fedora:ro
+      - derivates-expanded:/mnt/derivates-expanded
+    environment:
+      <<: [*api_common_env, *hosts]
+      MONGODB_PHAIDRA_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
+      MONGODB_PHAIDRA_PASSWORD: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
+      MONGODB_PHAIDRA_HOST: "${MONGODB_PHAIDRA_HOST:-mongodb-phaidra}"
+      MONGO_AGENT_DB: "${MONGO_AGENT_DB:-paf_mongodb}"
+      EXPANDED_PATH: "/mnt/derivates-expanded"
+      FEDORA_DATA_PATH: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
+      IMAGE_CONVERSION_INTERVAL: "${IMAGE_CONVERSION_INTERVAL:-5}"
+    depends_on:
+      mongodb-phaidra:
+        condition: "service_started"
+        required: false
+      mongodb-phaidra-dev:
+        condition: "service_started"
+        required: false
+    profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
+
   ############### tika agent ###############
   agent-tika:
     hostname: "agent-tika"
@@ -1364,6 +1395,7 @@ volumes:
   derivates-images:
   derivates-3d:
   derivates-extracts:
+  derivates-expanded:
   prometheus:
   s3-cache:
   solr:

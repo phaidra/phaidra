@@ -262,7 +262,7 @@ sub add_or_modify_relationships_hooks {
 }
 
 sub add_octets_hook {
-  my ($self, $c, $pid, $exists, $mimetype) = @_;
+  my ($self, $c, $pid, $exists, $mimetype, $cmodel) = @_;
 
   my $res = {alerts => [], status => 200};
   my $search_model = PhaidraAPI::Model::Search->new;
@@ -278,6 +278,15 @@ sub add_octets_hook {
     $exists = $sr->{'exists'};
   }
 
+  my $res_cmodel;
+  if (defined($cmodel)) {
+    my $clean_cmodel = $cmodel;
+    $clean_cmodel =~ s/^cmodel://;
+    $res_cmodel = {status => 200, cmodel => $clean_cmodel};
+  } else {
+    $res_cmodel = $search_model->get_cmodel($c, $pid);
+  }
+  
   if ($exists) {
 
     # $object_model->add_octets will re-index, so keep inventory cleanup above it to avoid indexing old data
@@ -289,7 +298,6 @@ sub add_octets_hook {
       $c->app->db_imagemanipulator->dbh->do('DELETE FROM image WHERE url = "' . $pid . '";') or $c->app->log->error("Error deleting from imagemanipulator db:" . $c->app->db_imagemanipulator->dbh->errstr);
     }
 
-    my $res_cmodel = $search_model->get_cmodel($c, $pid);
     if ($res_cmodel->{status} eq 200) {
       if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
         my $imsr = $self->_create_imageserver_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
@@ -307,8 +315,12 @@ sub add_octets_hook {
         my $pdf_extraction_job = $self->_create_pdf_extraction_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
         push @{$res->{alerts}}, @{$pdf_extraction_job->{alerts}} if scalar @{$pdf_extraction_job->{alerts}} > 0;
       }
+      if ($res_cmodel->{cmodel} eq '360Viewer') {
+        my $v360r = $self->_create_360viewer_job_if_not_exists($c, $pid, $res_cmodel->{cmodel}, $mimetype);
+        push @{$res->{alerts}}, @{$v360r->{alerts}} if scalar @{$v360r->{alerts}} > 0;
+      }
     } else {
-      $c->app->log->error("Hooks: could not get cmodel, not creating imageserver/streaming job");
+      $c->app->log->error("Hooks: could not get cmodel, not creating imageserver/streaming/360viewer job");
     }
 
     if (exists($c->app->config->{hooks})) {
@@ -323,6 +335,11 @@ sub add_octets_hook {
       }
     }
     
+  } else {
+    if ($res_cmodel->{status} eq 200 && $res_cmodel->{cmodel} eq '360Viewer') {
+      my $v360r = $self->_create_360viewer_job_if_not_exists($c, $pid, $res_cmodel->{cmodel}, $mimetype);
+      push @{$res->{alerts}}, @{$v360r->{alerts}} if scalar @{$v360r->{alerts}} > 0;
+    }
   }
 
   return $res;
@@ -389,6 +406,19 @@ sub modify_hook {
         if ($mimetype eq 'model/obj' or $mimetype eq 'model/glb') {
           my $threedr = $self->_create_3d_job_if_not_exists($c, $pid, $res_cmodel->{cmodel}, $mimetype);
           push @{$res->{alerts}}, @{$threedr->{alerts}} if scalar @{$threedr->{alerts}} > 0;
+        }
+      }
+      if ($res_cmodel->{cmodel} eq '360Viewer') {
+        my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => '360viewer'});
+        if ($find->{pid} && !$find->{path} && $c->app->config->{fedora}->{version} >= 6) {
+          my $fedora_model = PhaidraAPI::Model::Fedora->new;
+          my $dsAttr = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+          if ($dsAttr->{status} eq 200) {
+            $c->paf_mongo->get_collection('jobs')->update_one(
+              {pid => $pid, agent => '360viewer'},
+              {'$set' => {path => $dsAttr->{path}}}
+            );
+          }
         }
       }
     }
@@ -527,6 +557,41 @@ sub _create_3d_job_if_not_exists {
     }
     my $job = {pid => $pid, cmodel => $cmodel, agent => "3d", status => "new", idhash => $hash, created => time, mimetype => $mimetype};
     $job->{path} = $path if $path;
+    $c->paf_mongo->get_collection('jobs')->insert_one($job);
+  }
+
+  return $res;
+}
+
+sub _create_360viewer_job_if_not_exists {
+  my ($self, $c, $pid, $cmodel, $mimetype) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => '360viewer'});
+  unless ($find->{pid}) {    
+    my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
+    my $path;
+    
+    if ($c->app->config->{fedora}->{version} >= 6) {
+      eval {
+        my $fedora_model = PhaidraAPI::Model::Fedora->new;
+        my $dsAttr = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+        $path = $dsAttr->{path} if $dsAttr->{status} eq 200;
+      };
+    }
+    
+    my $job = {
+      pid => $pid,
+      cmodel => $cmodel,
+      agent => "360viewer",
+      status => "new",
+      idhash => $hash,
+      created => time,
+      mimetype => $mimetype
+    };
+    $job->{path} = $path if $path;
+    
     $c->paf_mongo->get_collection('jobs')->insert_one($job);
   }
 
