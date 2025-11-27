@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-container class="px-4" fluid v-if="!loading">
+    <v-container class="px-4 px-md-0" fluid v-if="!loading">
       <v-row no-gutters>
         <v-col>
           <header>
