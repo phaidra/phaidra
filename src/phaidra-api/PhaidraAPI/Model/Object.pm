@@ -75,7 +75,9 @@ my %mime_to_cmodel = (
   'video/x-msvideo'  => 'cmodel:Video',
   'video/mp4'        => 'cmodel:Video',
   'video/quicktime'  => 'cmodel:Video',
-  'video/x-matroska' => 'cmodel:Video'
+  'video/x-matroska' => 'cmodel:Video',
+
+  'application/zip' => 'cmodel:360Viewer'
 );
 
 sub info {
@@ -828,6 +830,29 @@ sub create_simple {
   }
 
   my $t0 = [gettimeofday];
+  my $has_3d_type = 0;
+  if ($metadata->{metadata}->{'json-ld'}->{'edm:hasType'}) {
+    for my $type (@{$metadata->{metadata}->{'json-ld'}->{'edm:hasType'}}) {
+      for my $match (@{$type->{'skos:exactMatch'} || []}) {
+        $has_3d_type = 1 if $match eq 'https://pid.phaidra.org/vocabulary/T6C3-46S4';
+      }
+    }
+  }
+
+  if ($mimetype eq 'application/zip' && $cmodel eq 'cmodel:Asset' && $has_3d_type) {
+    $cmodel = 'cmodel:360Viewer';
+    
+    if ($metadata->{metadata}->{'json-ld'}->{'dcterms:type'}) {
+      for my $type (@{$metadata->{metadata}->{'json-ld'}->{'dcterms:type'}}) {
+        $type->{'skos:exactMatch'} = ['https://pid.phaidra.org/vocabulary/360V-EWER'];
+        $type->{'skos:prefLabel'} = [
+          {'@value' => '360 Viewer', '@language' => 'eng'},
+          {'@value' => '360-Grad-Ansicht', '@language' => 'deu'},
+          {'@value' => 'Vista 360', '@language' => 'ita'}
+        ];
+      }
+    }
+  }
 
   my $pid = '';
   my $r;
@@ -909,7 +934,7 @@ sub create_simple {
     }
   }
   else {
-    my $aor = $self->add_octets($c, $pid, $upload, $mimetype, $checksumtype, $checksum, $username, $password, 0);
+    my $aor = $self->add_octets($c, $pid, $upload, $mimetype, $checksumtype, $checksum, $username, $password, 0, $cmodel);
     if ($aor->{status} ne 200) {
       return $aor;
     }
@@ -1260,6 +1285,7 @@ sub add_octets {
   my $username     = shift;
   my $password     = shift;
   my $exists       = shift;
+  my $cmodel       = shift;
 
   unless ($username) {
     $username = $c->stash->{basic_auth_credentials}->{username};
@@ -1336,7 +1362,7 @@ sub add_octets {
   }
 
   my $hooks_model = PhaidraAPI::Model::Hooks->new;
-  my $hr          = $hooks_model->add_octets_hook($c, $pid, $exists, $mimetype);
+  my $hr          = $hooks_model->add_octets_hook($c, $pid, $exists, $mimetype, $cmodel);
   if ($hr->{status} ne 200) {
     $c->app->log->error("pid[$pid] add_octets_hook error: " . $c->app->dumper($hr));
   }

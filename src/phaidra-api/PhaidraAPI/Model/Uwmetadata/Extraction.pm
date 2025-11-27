@@ -23,6 +23,7 @@ our %cmodelMapping = (
   'Book'          => 'Book',
   'Page'          => 'Page',
   'Paper'         => 'Text',
+  '360Viewer'     => 'InteractiveResource',
 );
 
 our %uwns = (

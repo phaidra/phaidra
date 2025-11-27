@@ -57,7 +57,8 @@ our %cm2rt = (
   'Asset'         => {'@id' => 'https://pid.phaidra.org/vocabulary/7AVS-Y482', 'skos:prefLabel' => {'eng' => 'data'}},
   'Audio'         => {'@id' => 'https://pid.phaidra.org/vocabulary/8YB5-1M0J', 'skos:prefLabel' => {'eng' => 'sound'}},
   'Container'     => {'@id' => 'https://pid.phaidra.org/vocabulary/8MY0-BQDQ', 'skos:prefLabel' => {'eng' => 'container'}},
-  'Resource'      => {'@id' => 'https://pid.phaidra.org/vocabulary/T8GH-F4V8', 'skos:prefLabel' => {'eng' => 'resource'}}
+  'Resource'      => {'@id' => 'https://pid.phaidra.org/vocabulary/T8GH-F4V8', 'skos:prefLabel' => {'eng' => 'resource'}},
+  '360Viewer'     => {'@id' => 'https://pid.phaidra.org/vocabulary/360V-EWER', 'skos:prefLabel' => {'eng' => '360 viewer'}}
 );
 
 sub get_schema_str {

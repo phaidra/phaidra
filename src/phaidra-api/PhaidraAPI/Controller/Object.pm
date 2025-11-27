@@ -217,6 +217,10 @@ sub _proxy_thumbnail {
         $self->reply->static('images/asset.png');
         return;
       }
+      case '360Viewer' {
+        $self->reply->static('images/asset.png');
+        return;
+      }
       case 'Book' {
         $self->reply->static('images/book.png');
         return;
@@ -828,6 +832,34 @@ sub preview {
         $self->reply->static('images/asset.png');
         return;
       }
+    }
+    case '360Viewer' {
+      my $viewer360_model = PhaidraAPI::Model::Viewer360->new;
+      my $viewer_info = $viewer360_model->get_viewer_config($self, $pid);
+      
+      if ($viewer_info->{status} eq 'processing' || $viewer_info->{status} eq 'new') {
+        $self->render('360viewer/processing');
+        return;
+      }
+      
+      if ($viewer_info->{status} eq 'finished') {
+        $self->stash(viewer_config => Mojo::JSON::encode_json($viewer_info));
+        $self->stash(baseurl => $self->config->{baseurl});
+        $self->stash(scheme => $self->config->{scheme});
+        $self->stash(basepath => $self->config->{basepath});
+        $self->stash(pid => $pid);
+        
+        my $u_model = PhaidraAPI::Model::Util->new;
+        $u_model->track_action($self, $pid, 'preview');
+        
+        $self->render('360viewer/viewer');
+        return;
+      }
+      
+      # If status is not found or error, show error
+      $self->app->log->error("360viewer pid[$pid] status: " . ($viewer_info->{status} || 'unknown'));
+      $self->reply->static('images/asset.png');
+      return;
     }
     case 'Video' {
       if (defined $self->config

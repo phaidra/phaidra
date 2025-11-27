@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>360° Viewer</title>
+    <script defer src="/<%= $basepath %>/360viewer/JavascriptViewer.min.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #jsv-holder {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #jsv-holder img {
+            max-width: 100%;
+            max-height: 100vh;
+            width: auto;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="jsv-holder">
+        <img id="jsv-image" alt="360 viewer"></div>
+    
+    <script>
+        const viewerConfig = <%== $viewer_config %>;
+        const pid = '<%= $pid %>';
+        const baseUrl = '<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>';
+        
+        window.addEventListener('load', () => {
+            // Filter out Mac OS metadata files
+            const actualFrames = viewerConfig.frames.filter(f => !f.startsWith('._'));
+            const totalFrames = actualFrames.length;
+            
+            // Set first image
+            const firstFrameUrl = `${baseUrl}/object/${pid}/360_frames/${encodeURIComponent(actualFrames[0])}`;
+            document.getElementById('jsv-image').src = firstFrameUrl;
+            
+            // Build image URL pattern
+            const imageBasePath = `${baseUrl}/object/${pid}/360_frames/`;
+            const imageUrlFormat = imageBasePath + actualFrames[0].replace(/\d+/g, 'xx');
+            
+            // Initialize viewer
+            const viewer = new JavascriptViewer({
+                mainHolderId: 'jsv-holder', 
+                mainImageId: 'jsv-image',
+                imageUrlFormat: imageUrlFormat,
+                totalFrames: totalFrames,
+                speed: 70,
+                defaultProgressBar: true
+            });
+            
+            viewer.start();
+        });
+    </script>
+</body>
+</html>
+
