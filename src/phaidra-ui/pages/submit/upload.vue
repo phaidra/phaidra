@@ -394,6 +394,7 @@ export default {
         role.identifierType = "ids:orcid";
         role.showDefinitions = true;
         role.showIdentifier = true;
+        role.removable = false;
         role.isParentSelectionDisabled = this.instanceconfig.isParentSelectionDisabled;
         self.form.sections[0].fields.push(role);
 
