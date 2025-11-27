@@ -74,7 +74,8 @@ export const mutations = {
       'enableCookieBanner',
       'cookiePrivacyPolicyUrl',
       'customJavaScript',
-      'downloadabledatastreams'
+      'downloadabledatastreams',
+      'customResponseHeaders'
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {

@@ -133,6 +133,16 @@
                   </v-col>
                   <v-col cols="6" class="mt-4">{{ $t('Paste your custom JavaScript code here (e.g., Matomo, Google Analytics, or any other tracking script). The code will be injected into the page head. Leave empty to disable.') }}</v-col>
                 </v-row>
+                <v-row>
+                  <v-col>
+                    <v-textarea
+                      :label="$t('Custom HTTP Response Headers')"
+                      v-model="customResponseHeaders_text"
+                      rows="10"
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t('Add custom HTTP headers to every response as JSON object.') }}</v-col>
+                </v-row>
               </v-container>
             </v-tab-item>
 
@@ -1136,6 +1146,7 @@ export default {
         publicConfig.data_ot4rt = this.data_ot4rt
         publicConfig.data_i18n = this.data_i18n
         publicConfig.data_affiliations = this.data_affiliations
+        publicConfig.customResponseHeaders = this.customResponseHeaders
 
         let privateConfig = {...this.parsedPrivateConfigData}
         delete privateConfig['_id']
@@ -1167,6 +1178,8 @@ export default {
       data_facetqueries_text: '',
       data_affiliations: [],
       data_affiliations_text: '',
+      customResponseHeaders: {},
+      customResponseHeaders_text: '',
       loading: false,
       activetabimpexp: null,
       activetab: null,
@@ -1252,6 +1265,11 @@ export default {
           this.data_affiliations = JSON.parse(this.data_affiliations_text)
         }
         instanceConfData['data_affiliations'] = this.data_affiliations
+
+        if (this.customResponseHeaders_text) {
+          this.customResponseHeaders = JSON.parse(this.customResponseHeaders_text)
+        }
+        instanceConfData['customResponseHeaders'] = this.customResponseHeaders
 
         instanceConfData['defaulttemplateid'] = this.selectedTemplateId
 
@@ -1342,6 +1360,9 @@ export default {
 
         this.data_affiliations = response?.data?.public_config?.data_affiliations
         this.data_affiliations_text = JSON.stringify(this.data_affiliations, null, 2)
+
+        this.customResponseHeaders = response?.data?.public_config?.customResponseHeaders || {}
+        this.customResponseHeaders_text = JSON.stringify(this.customResponseHeaders, null, 2)
       } else {
         if(this.$store?.state?.instanceconfig){
           this.parsedPublicConfigData = {...this.$store.state.instanceconfig}
