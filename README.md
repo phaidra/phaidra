@@ -298,7 +298,7 @@ After starting the containers, the mod_md will fetch the certificates, but a (gr
 + `handle`: Start an integrated handle instance.
 Handle requires significant configuration! Makes sure to check the handle technical documentation at https://www.handle.net/tech_manual/HN_Tech_Manual_9.pdf.
 If you don't have certificates, you can create them via
-  ```
+```
   openssl genrsa -out ./certs/handle/privkey.pem
   openssl rsa -in ./certs/handle/privkey.pem -pubout -out ./certs/handle/pubkey.pem
   docker run --entrypoint sh -v ./certs/handle/:/mnt phaidra-handle /opt/handle/bin/hdl-convert-key /mnt/pubkey.pem > ./certs/handle/pubkey.bin
