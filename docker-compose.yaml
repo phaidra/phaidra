@@ -74,6 +74,8 @@ x-custom:
     configs:
       - source: httpd_tls_config
         target: "/usr/local/apache2/conf/httpd_tls.conf"
+      - source: httpd_custom_config
+        target: "/usr/local/apache2/conf/httpd_custom.conf"
       - source: shibboleth_attribute_map
         target: /shib-init/attribute-map.xml
       - source: shibboleth_attribute_policy
@@ -944,6 +946,9 @@ services:
       - ./container_init/httpd/phaidra-demo:/mnt/startup:ro
       - chronos-sitemaps:/mnt/sitemaps:ro
       - ./static:/mnt/static:ro
+    configs:
+      - source: httpd_custom_config
+        target: "/usr/local/apache2/conf/httpd_custom.conf"
     environment:
       <<: [*api_common_env, *hosts]
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
@@ -1417,6 +1422,8 @@ volumes:
 configs:
   httpd_tls_config:
     file: ./configs/httpd_tls.conf
+  httpd_custom_config:
+    file: ./configs/httpd_custom.conf
   varnish_config:
     file: ./configs/varnish.vcl
   shibboleth_attribute_map:
