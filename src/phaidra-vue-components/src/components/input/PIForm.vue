@@ -836,7 +836,7 @@
               <v-btn v-else-if="forcePreview" large raised :loading="loading" :disabled="loading" class="primary float-right" @click="showForcePreview()"><span v-t="'Preview'"></span></v-btn>
               <template v-else>
                 <v-btn large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
-                <v-btn large raised :loading="loading" :disabled="loading" class="grey mr-2 float-right" @click="checksumDialog = true"><span v-t="'Add checksum'"></span></v-btn>
+                <v-btn v-if="enableChecksum" large raised :loading="loading" :disabled="loading" class="grey mr-2 float-right" @click="checksumDialog = true"><span v-t="'Add checksum'"></span></v-btn>
               </template>
             </template>
             <v-switch :hide-details="true" class="float-right mt-1 mx-2" v-if="$store.state.user.isadmin" v-model="skipValidation" :label="$t('Skip validation')"></v-switch>
@@ -882,7 +882,7 @@
       <v-tab-item v-if="(submittype !== 'container') && enablepreview" class="pa-4">
         <p-d-jsonld :jsonld="jsonld"></p-d-jsonld>
         <v-btn large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
-        <v-btn large raised :loading="loading" :disabled="loading" class="grey mr-2 float-right" @click="checksumDialog = true"><span v-t="'Add checksum'"></span></v-btn>
+        <v-btn v-if="enableChecksum" large raised :loading="loading" :disabled="loading" class="grey mr-2 float-right" @click="checksumDialog = true"><span v-t="'Add checksum'"></span></v-btn>
       </v-tab-item>
       <v-tab-item v-if="help" class="pa-4">
         <p-help></p-help>
@@ -1157,6 +1157,10 @@ export default {
       default: false
     },
     feedback: {
+      type: Boolean,
+      default: false
+    },
+    enableChecksum: {
       type: Boolean,
       default: false
     },

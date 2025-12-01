@@ -19,6 +19,7 @@
           :feedback-user="this.user"
           :feedback-context="'Upload'"
           :doiImport="instanceconfig.doiImport"
+          :enableChecksum="instanceconfig.enableChecksum"
           v-on:load-form="form = $event"
           v-on:load-rights="rights = $event"
           v-on:object-created="objectCreated($event)"
