@@ -72,8 +72,6 @@ x-custom:
 
   configs: &configs
     configs:
-      - source: httpd_tls_config
-        target: "/usr/local/apache2/conf/httpd_tls.conf"
       - source: httpd_custom_config
         target: "/usr/local/apache2/conf/httpd_custom.conf"
       - source: shibboleth_attribute_map
@@ -1420,8 +1418,6 @@ volumes:
   handle:
 
 configs:
-  httpd_tls_config:
-    file: ./configs/httpd_tls.conf
   httpd_custom_config:
     file: ./configs/httpd_custom.conf
   varnish_config:

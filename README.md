@@ -265,9 +265,9 @@ Phaidra supports ACME in the \*ssl\* and \*shib\* profiles. To enable it, the fo
 + `MD_CERTIFICATE_AGREEMENT`: set to `accepted` if you accept the TOS of your CA.
 + `PHAIDRA_ADMIN_EMAIL`: Must be set to a valid email address. The ACME client uses this as contact address.
 
-Additionally the MDStoreDir and MDomain stanzas in `configs/httpd_tls.conf` must be uncommented.
+Additionally the MDStoreDir and MDomain stanzas in `configs/httpd_custom.conf` must be uncommented.
 
-In case you want to use an ACME endpoint requiring authentication ("External Account Binding"), you must set it manually in the docker config `configs/httpd_tls.conf`.
+In case you want to use an ACME endpoint requiring authentication ("External Account Binding"), you must set it manually in the docker config `configs/httpd_custom.conf`.
 
 After starting the containers, the mod_md will fetch the certificates, but a (graceful) restart is needed for apache to start using them. You can simply restart the httpd container using `docker restart <containe_id>`
 
