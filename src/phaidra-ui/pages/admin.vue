@@ -252,6 +252,16 @@
                 </v-row>
                 <v-row>
                   <v-col>
+                    <v-checkbox
+                      :label="$t('Use mailto link for Request DOI')"
+                      v-model="parsedPublicConfigData.requestdoiusemailto"
+                      hide-details
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("If enabled, the 'Request DOI' button will open a mailto link instead of sending an email through the API.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
                     <v-text-field
                       :label="$t('Additional downloadable datastreams')"
                       v-model="parsedPublicConfigData.downloadabledatastreams"

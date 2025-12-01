@@ -41,6 +41,7 @@ export const mutations = {
       'showdeletebutton',
       'markmandatoryfnc',
       'requestdoiemail',
+      'requestdoiusemailto',
       'validationfnc',
       'groups',
       'defaulttemplateid',
