@@ -157,7 +157,7 @@ sub imageserver_storage_avg_year {
     my $iso = $doc->{timestamp_iso};
     next unless $iso && $iso =~ /^(\d{4})-(\d{2})/;
     my $m = int($2);
-    my $v = $doc->{imageserver};
+    my $v = $doc->{imageserver}*1024; # on GNU/Linux du -s returns nr of 1KiB blocks by default
     $v = defined $v ? $v : 0;
     $v += 0; # coerce numeric (strings -> number)
     $sum_by_month{$m}  += $v;
