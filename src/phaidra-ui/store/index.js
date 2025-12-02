@@ -41,6 +41,7 @@ export const mutations = {
       'showdeletebutton',
       'markmandatoryfnc',
       'requestdoiemail',
+      'requestdoiusemailto',
       'validationfnc',
       'groups',
       'defaulttemplateid',
@@ -74,7 +75,8 @@ export const mutations = {
       'enableCookieBanner',
       'cookiePrivacyPolicyUrl',
       'customJavaScript',
-      'downloadabledatastreams'
+      'downloadabledatastreams',
+      'enableChecksum'
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {

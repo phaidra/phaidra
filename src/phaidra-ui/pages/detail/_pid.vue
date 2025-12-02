@@ -882,7 +882,13 @@
                         </v-col>
                       </v-row>
                       <v-row no-gutters justify="end" v-if="(objectInfo.writerights === 1) && !doi && instanceconfig.requestdoiemail && (instanceconfig.requestdoiemail !== '')">
+                        <v-btn 
+                          v-if="instanceconfig.requestdoiusemailto"
+                          color="primary"
+                          :href="doiRequestMailtoLink"
+                        >{{ $t('Request DOI') }}</v-btn>
                         <v-dialog
+                          v-else
                           class="pb-4"
                           v-model="doiRequestDialog"
                           width="800px"
@@ -2332,6 +2338,21 @@ export default {
         }
       }
       return null;
+    },
+    doiRequestMailtoLink: function () {
+      if (!this.instanceconfig.requestdoiemail || !this.user || !this.objectInfo) {
+        return '';
+      }
+      const to = this.instanceconfig.requestdoiemail;
+      const pid = this.objectInfo.pid;
+      const userEmail = this.user.email || '';
+      const userName = (this.user.firstname && this.user.lastname) 
+        ? `${this.user.firstname} ${this.user.lastname}` 
+        : (this.user.username || '');
+      const objectUrl = `${this.instanceconfig.baseurl}/${pid}`;
+      const subject = encodeURIComponent(`Subsequent DOI allocation: ${pid} ${userEmail}`);
+      const body = encodeURIComponent(`Name: ${userName}\nEmail sender: ${userEmail}\nURL of the object: ${objectUrl}`);
+      return `mailto:${to}?subject=${subject}&body=${body}`;
     },
     identifiers: function () {
       let ids = { persistent: [], other: [] };

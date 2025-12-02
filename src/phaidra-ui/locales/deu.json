@@ -329,6 +329,8 @@
     "Add checksum": "Prüfsumme hinzufügen",
     "Checksum type": "Prüfsummentyp",
     "Checksum": "Prüfsumme",
+    "Enable checksum": "Prüfsumme aktivieren",
+    "Enable Add checksum button in Upload form.": "Schaltfläche 'Prüfsumme hinzufügen' im Upload-Formular aktivieren.",
     "Members of": "Mitglieder der",
     "There are no search results for your query.": "Die Suche lieferte keine Treffer. Bitte versuchen sie es erneut!",
     "objects": "Objekte",

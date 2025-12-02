@@ -73,7 +73,12 @@
         "adminuser": "__FEDORA_ADMIN_USER__",
         "adminpass": "__FEDORA_ADMIN_PASS__",
         "pidnamespace": "o",
-        "fedoraadmins": []
+        "fedoraadmins": [],
+        "fedora_db": {
+            "dsn": "dbi:mysql:fedoradb:__MARIADB_FEDORA_HOST__",
+            "username": "__MARIADB_FEDORA_USER__",
+            "password": "__MARIADB_FEDORA_PASSWORD__"
+        }
     },
     "imageserver": {
         "hash_secret": "__IMAGESERVER_HASH_SECRET__",
