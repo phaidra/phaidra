@@ -35,7 +35,7 @@
                 hide-default-footer
             >
                 <template v-for="col in imgAvgCols" v-slot:[`item.${col.value}`]="{ item }">
-                    <span v-if="item[col.value]">{{ item[col.value] | bytes }}</span>
+                    <span v-if="item[col.value]">{{ item[col.value] | gigabytes }}</span>
                     <span v-else>-</span>
                 </template>
             </v-data-table>
@@ -127,7 +127,7 @@ export default {
       try {
         let response = null;
         this.storageLoading = true;
-        
+
         try {
           response = await this.$axios.get(`/utils/fedora_storage_avg_year?year=${this.selectedYear}`, {
             headers: {

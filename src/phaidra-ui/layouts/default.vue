@@ -281,6 +281,14 @@ export default {
       );
     });
 
+    Vue.filter("gigabytes", function (bytes, precision) {
+      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return "-";
+      if (typeof precision === "undefined") precision = 1;
+      const n = parseFloat(bytes);
+      if (isNaN(n) || !isFinite(n)) return "-";
+      return (n / Math.pow(1024, 3)).toFixed(precision) + " GB";
+    });
+
     Vue.filter("truncate", function (text, length, clamp) {
       clamp = clamp || "...";
       length = length || 30;
