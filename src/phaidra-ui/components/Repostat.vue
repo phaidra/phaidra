@@ -125,11 +125,19 @@ export default {
   methods: {
     async fetchStorageAvgYear () {
       try {
+        let response = null;
         this.storageLoading = true;
-        const url = `/api/utils/fedora_storage_avg_year?year=${this.selectedYear}`;
-        const res = await fetch(url, { credentials: 'include' });
-        const json = await res.json();
-        const months = (json && json.months) ? json.months : {};
+        
+        try {
+          response = await this.$axios.get(`/utils/fedora_storage_avg_year?year=${this.selectedYear}`, {
+            headers: {
+              "X-XSRF-TOKEN": this.$store.state.user.token,
+            },
+          });
+        } catch (error) {
+          console.error(error)
+        }
+        const months = response?.data?.months;
 
         // Build columns up to current month for current year; all 12 for past; none for future
         const now = new Date();
@@ -171,10 +179,16 @@ export default {
     async fetchImageserverAvgYear () {
       try {
         this.imgLoading = true;
-        const url = `/api/utils/imageserver_storage_avg_year?year=${this.selectedYearImg}`;
-        const res = await fetch(url, { credentials: 'include' });
-        const json = await res.json();
-        const months = (json && json.months) ? json.months : {};
+        try {
+          response = await this.$axios.get(`/utils/imageserver_storage_avg_year?year=${this.selectedYearImg}`, {
+            headers: {
+              "X-XSRF-TOKEN": this.$store.state.user.token,
+            },
+          });
+        } catch (error) {
+          console.error(error)
+        }
+        const months = response?.data?.months;
 
         const now = new Date();
         const currentYear = now.getFullYear();
