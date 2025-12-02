@@ -178,6 +178,7 @@ export default {
     },
     async fetchImageserverAvgYear () {
       try {
+        let response = null;
         this.imgLoading = true;
         try {
           response = await this.$axios.get(`/utils/imageserver_storage_avg_year?year=${this.selectedYearImg}`, {
