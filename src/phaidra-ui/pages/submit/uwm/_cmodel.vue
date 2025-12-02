@@ -79,13 +79,7 @@ export default {
       if (this.$route.params.cmodel === "resource") {
         return "resource";
       }
-      if (this.$route.params.cmodel === "360viewer") {
-        return "360viewer";
-      }
       switch (this.mimetype) {
-        case "application/zip":
-          return "360viewer";
-
         case "image/jpeg":
         case "image/tiff":
         case "image/gif":

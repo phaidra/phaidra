@@ -75,9 +75,7 @@ my %mime_to_cmodel = (
   'video/x-msvideo'  => 'cmodel:Video',
   'video/mp4'        => 'cmodel:Video',
   'video/quicktime'  => 'cmodel:Video',
-  'video/x-matroska' => 'cmodel:Video',
-
-  'application/zip' => 'cmodel:360Viewer'
+  'video/x-matroska' => 'cmodel:Video'
 );
 
 sub info {
@@ -830,26 +828,13 @@ sub create_simple {
   }
 
   my $t0 = [gettimeofday];
-  my $has_3d_type = 0;
-  if ($metadata->{metadata}->{'json-ld'}->{'edm:hasType'}) {
+  if ($cmodel eq 'cmodel:Asset' && $mimetype eq 'application/zip' && $metadata->{metadata}->{'json-ld'}->{'edm:hasType'}) {
     for my $type (@{$metadata->{metadata}->{'json-ld'}->{'edm:hasType'}}) {
       for my $match (@{$type->{'skos:exactMatch'} || []}) {
-        $has_3d_type = 1 if $match eq 'https://pid.phaidra.org/vocabulary/T6C3-46S4';
-      }
-    }
-  }
-
-  if ($mimetype eq 'application/zip' && $cmodel eq 'cmodel:Asset' && $has_3d_type) {
-    $cmodel = 'cmodel:360Viewer';
-    
-    if ($metadata->{metadata}->{'json-ld'}->{'dcterms:type'}) {
-      for my $type (@{$metadata->{metadata}->{'json-ld'}->{'dcterms:type'}}) {
-        $type->{'skos:exactMatch'} = ['https://pid.phaidra.org/vocabulary/360V-EWER'];
-        $type->{'skos:prefLabel'} = [
-          {'@value' => '360 Viewer', '@language' => 'eng'},
-          {'@value' => '360-Grad-Ansicht', '@language' => 'deu'},
-          {'@value' => 'Vista 360', '@language' => 'ita'}
-        ];
+        if ($match eq 'https://pid.phaidra.org/vocabulary/T6C3-46S4') {
+          $c->stash(is_360viewer_candidate => 1);
+          last;
+        }
       }
     }
   }

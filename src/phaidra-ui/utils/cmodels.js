@@ -38,10 +38,5 @@ export const cmodels = [
     text: 'Collection',
     cmodelparam: 'collection',
     value: 'https://pid.phaidra.org/vocabulary/GXS7-ENXJ'
-  },
-  {
-    text: '360 Viewer',
-    cmodelparam: '360viewer',
-    value: 'https://pid.phaidra.org/vocabulary/360V-EWER'
   }
 ]
