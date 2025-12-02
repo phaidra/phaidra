@@ -131,7 +131,7 @@ services:
   ############### httpd service for demo-local profile ###############
   httpd-demo-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-demo-dist:c9689b8f
+    image: phaidraorg/httpd-demo-dist:9201a885
     <<: [*common, *logs]
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
@@ -146,7 +146,7 @@ services:
   ############### httpd service for demo-s3 profile ###############
   httpd-demo-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-demo-dist:c9689b8f
+    image: phaidraorg/httpd-demo-dist:9201a885
     <<: [*common, *logs]
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
@@ -161,7 +161,7 @@ services:
   #################### httpd service for ssl-local profile ####################
   httpd-ssl-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:c9689b8f
+    image: phaidraorg/httpd-ssl-dist:9201a885
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -179,7 +179,7 @@ services:
   #################### httpd service for ssl-s3 profile ####################
   httpd-ssl-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:c9689b8f
+    image: phaidraorg/httpd-ssl-dist:9201a885
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -197,7 +197,7 @@ services:
   #################### httpd service for shib-local profile ####################
   httpd-shib-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:c9689b8f
+    image: phaidraorg/httpd-shib-dist:9201a885
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -227,7 +227,7 @@ services:
   #################### httpd service for shib-s3 profile ####################
   httpd-shib-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:c9689b8f
+    image: phaidraorg/httpd-shib-dist:9201a885
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -271,7 +271,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:60c3b601
+    image: phaidraorg/ui:9201a885
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -289,7 +289,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:60c3b601
+    image: phaidraorg/ui:9201a885
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -306,7 +306,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:e9ca65fa
+    image: phaidraorg/api-dist:6e18b8cc
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -321,7 +321,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:e9ca65fa
+    image: phaidraorg/api-dist:6e18b8cc
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
