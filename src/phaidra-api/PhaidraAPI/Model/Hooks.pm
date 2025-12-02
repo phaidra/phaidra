@@ -315,7 +315,7 @@ sub add_octets_hook {
         my $pdf_extraction_job = $self->_create_pdf_extraction_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
         push @{$res->{alerts}}, @{$pdf_extraction_job->{alerts}} if scalar @{$pdf_extraction_job->{alerts}} > 0;
       }
-      if ($res_cmodel->{cmodel} eq '360Viewer') {
+      if ($res_cmodel->{cmodel} eq 'Asset' && $mimetype eq 'application/zip' && $c->stash('is_360viewer_candidate')) {
         my $v360r = $self->_create_360viewer_job_if_not_exists($c, $pid, $res_cmodel->{cmodel}, $mimetype);
         push @{$res->{alerts}}, @{$v360r->{alerts}} if scalar @{$v360r->{alerts}} > 0;
       }
@@ -336,7 +336,7 @@ sub add_octets_hook {
     }
     
   } else {
-    if ($res_cmodel->{status} eq 200 && $res_cmodel->{cmodel} eq '360Viewer') {
+    if ($res_cmodel->{status} eq 200 && $res_cmodel->{cmodel} eq 'Asset' && $mimetype eq 'application/zip' && $c->stash('is_360viewer_candidate')) {
       my $v360r = $self->_create_360viewer_job_if_not_exists($c, $pid, $res_cmodel->{cmodel}, $mimetype);
       push @{$res->{alerts}}, @{$v360r->{alerts}} if scalar @{$v360r->{alerts}} > 0;
     }
@@ -408,17 +408,15 @@ sub modify_hook {
           push @{$res->{alerts}}, @{$threedr->{alerts}} if scalar @{$threedr->{alerts}} > 0;
         }
       }
-      if ($res_cmodel->{cmodel} eq '360Viewer') {
-        my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => '360viewer'});
-        if ($find->{pid} && !$find->{path} && $c->app->config->{fedora}->{version} >= 6) {
-          my $fedora_model = PhaidraAPI::Model::Fedora->new;
-          my $dsAttr = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
-          if ($dsAttr->{status} eq 200) {
-            $c->paf_mongo->get_collection('jobs')->update_one(
-              {pid => $pid, agent => '360viewer'},
-              {'$set' => {path => $dsAttr->{path}}}
-            );
-          }
+      my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => '360viewer'});
+      if ($find && $find->{pid} && !$find->{path} && $c->app->config->{fedora}->{version} >= 6) {
+        my $fedora_model = PhaidraAPI::Model::Fedora->new;
+        my $dsAttr = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+        if ($dsAttr->{status} eq 200) {
+          $c->paf_mongo->get_collection('jobs')->update_one(
+            {pid => $pid, agent => '360viewer'},
+            {'$set' => {path => $dsAttr->{path}}}
+          );
         }
       }
     }

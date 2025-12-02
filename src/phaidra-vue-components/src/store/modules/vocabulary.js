@@ -181,26 +181,12 @@ const ot4rt = {
     ns + 'KW6N-2VTP',
     // other
     ns + 'PYRE-RAWJ'
-  ],
-  // 360 viewer
-  'https://pid.phaidra.org/vocabulary/360V-EWER': [
-    // still image of physical object
-    ns + '4YS3-8T2K',
-    // 3D model
-    ns + 'T6C3-46S4',
-    // learning object
-    ns + 'YA8R-1M0D',
-    // dataset
-    ns + 'KW6N-2VTP',
-    // other
-    ns + 'PYRE-RAWJ'
   ]
 }
 
 const vocabularies = {
   'cmodels': {
     terms: [
-      { '@id': '360Viewer', 'skos:prefLabel': { 'eng': '360 Viewer', 'deu': '360-Grad-Ansicht' } },
       { '@id': 'Asset', 'skos:prefLabel': { 'eng': 'Asset', 'deu': '' } },
       { '@id': 'Audio', 'skos:prefLabel': { 'eng': 'Audio', 'deu': '' } },
       { '@id': 'Book', 'skos:prefLabel': { 'eng': 'Book', 'deu': '' } },
@@ -252,10 +238,6 @@ const vocabularies = {
       // collection
       'https://pid.phaidra.org/vocabulary/GXS7-ENXJ': {
         info: 'ADD_COLLECTION_MEMBERS_HELP'
-      },
-      // 360 viewer
-      'https://pid.phaidra.org/vocabulary/360V-EWER': {
-        info: 'Upload a ZIP file containing sequential images (36-72 frames) taken from different angles around an object. Images should be named sequentially (e.g., frame-01.png, frame-02.png). Supported image formats: PNG, JPG, GIF, WebP.'
       }
     },
     loaded: true
@@ -1467,7 +1449,6 @@ const vocabularies = {
       { '@id': ns + 'B0Y6-GYT8', 'skos:prefLabel': { 'eng': 'Video', 'deu': 'Video', 'ita': 'Video' } },
       { '@id': ns + '7AVS-Y482', 'skos:prefLabel': { 'eng': 'Data', 'deu': 'Daten', 'ita': 'Dati' } },
       { '@id': ns + '8YB5-1M0J', 'skos:prefLabel': { 'eng': 'Sound', 'deu': 'Audio', 'ita': 'Audio' } },
-      { '@id': ns + '360V-EWER', 'skos:prefLabel': { 'eng': '360 Viewer', 'deu': '360-Grad-Ansicht', 'ita': 'Vista 360' } },
       { '@id': ns + '8MY0-BQDQ', 'skos:prefLabel': { 'eng': 'Container', 'deu': 'Container', 'ita': 'Contenitore' } },
       { '@id': ns + 'T8GH-F4V8', 'skos:prefLabel': { 'eng': 'Link', 'deu': 'Link', 'ita': 'Risorsa Web' } },
       { '@id': ns + 'CR2H-D544', 'skos:prefLabel': { 'eng': 'Book', 'deu': 'Buch', 'ita': 'Libro' } },
@@ -1483,7 +1464,6 @@ const vocabularies = {
       { '@id': ns + 'B0Y6-GYT8', 'skos:prefLabel': { 'eng': 'Video', 'deu': 'Video', 'ita': 'Video' } },
       { '@id': ns + '7AVS-Y482', 'skos:prefLabel': { 'eng': 'Data', 'deu': 'Daten', 'ita': 'Dati' } },
       { '@id': ns + '8YB5-1M0J', 'skos:prefLabel': { 'eng': 'Sound', 'deu': 'Audio', 'ita': 'Audio' } },
-      { '@id': ns + '360V-EWER', 'skos:prefLabel': { 'eng': '360 Viewer', 'deu': '360-Grad-Ansicht', 'ita': 'Vista 360' } },
       { '@id': ns + 'T8GH-F4V8', 'skos:prefLabel': { 'eng': 'Link', 'deu': 'Link', 'ita': 'Risorsa Web' } }
     ],
     loaded: true

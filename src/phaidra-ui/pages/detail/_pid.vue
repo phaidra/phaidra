@@ -2330,6 +2330,7 @@ export default {
               this.mimetype === "model/obj" ||
               this.mimetype === "model/glb" ||
               this.mimetype === "model/ply" ||
+              this.mimetype === "application/zip" ||
               this.mimetype === "application/x-wacz")
               )) &&
         this.objectInfo.cmodel !== "Container" &&
