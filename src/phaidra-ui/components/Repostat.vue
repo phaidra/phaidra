@@ -18,7 +18,7 @@
                 hide-default-footer
             >
                 <template v-for="col in avgCols" v-slot:[`item.${col.value}`]="{ item }">
-                    <span v-if="item[col.value]">{{ item[col.value] | bytes }}</span>
+                    <span v-if="item[col.value]">{{ item[col.value] | gigabytes }}</span>
                     <span v-else>-</span>
                 </template>
             </v-data-table>
