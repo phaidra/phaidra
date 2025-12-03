@@ -2908,7 +2908,6 @@ export default {
           }
           break
 
-        case 'schema:numberOfPages':
         case 'bf:soundCharacteristic':
           if (f.value) {
             this.push_value(jsonld, f.predicate, this.get_json_valueobject(f.value, f.language))
@@ -2924,6 +2923,7 @@ export default {
           }
           break
 
+        case 'schema:numberOfPages':
         case 'ebucore:hasMimeType':
           if (f.value) {
             this.push_literal(jsonld, f.predicate, f.value)
