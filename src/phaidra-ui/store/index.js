@@ -76,7 +76,7 @@ export const mutations = {
       'cookiePrivacyPolicyUrl',
       'customJavaScript',
       'downloadabledatastreams',
-      'enableChecksum'
+      'disableChecksum'
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
