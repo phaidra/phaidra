@@ -1182,7 +1182,7 @@ services:
 
   prometheus-dev:
     hostname: "prometheus"
-    image: prom/prometheus:v2.52.0
+    image: prom/prometheus:v2.55.1
     volumes:
       - ./container_init/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
       - ./container_init/prometheus:/mnt/startup:ro
