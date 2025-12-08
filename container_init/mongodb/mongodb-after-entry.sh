@@ -34,4 +34,12 @@ db.oai_records.createIndex({ updated: -1 });
 db.oai_records.deleteOne({ _temp: true });
 "
 
+echo "Adding indexes to jobs collection..."
+mongo --quiet --authenticationDatabase admin -u ${MONGO_INITDB_ROOT_USERNAME} -p ${MONGO_INITDB_ROOT_PASSWORD} paf_mongodb --eval "
+db = db.getSiblingDB('paf_mongodb');
+if (db.jobs.countDocuments({}) === 0) db.oai_records.insertOne({ _temp: true });
+db.jobs.createIndexes([{ agent_name: 1 }, { status: 1 }, { idhash: 1 }] );
+db.jobs.deleteOne({ _temp: true });
+"
+
 echo "Indexes created (if they did not already exist)."
