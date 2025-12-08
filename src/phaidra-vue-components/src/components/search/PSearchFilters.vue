@@ -445,14 +445,6 @@ export default {
       persAuthors: {},
       corpAuthors: {},
       owner: '',
-      userSearchLoading: false,
-      userSearch: null,
-      userSearchModel: null,
-      userSearchItems: [],
-      usernameSearchLoading: false,
-      usernameSearch: null,
-      usernameSearchModel: null,
-      usernameSearchItems: [],
       init: true
     }
   },
@@ -466,9 +458,6 @@ export default {
     ownerProp: async function (v) {
       this.owner = v
       this.showOwnerFilter = v.length
-      if (v.length && this.$store.state.user.token) {
-        this.usernameSearch = v
-      }
     },
     persAuthorsProp: function (v) {
       this.persAuthors = v
@@ -499,90 +488,6 @@ export default {
       if (v.length) {
         this.showAccessibilityFilter = true
       }
-    },
-    userSearch: async function (val) {
-      if ((val && (val.length < 2)) || !val) {
-        this.userSearchItems = []
-        return
-      }
-      if (this.userSearchLoading) return
-      this.userSearchLoading = true
-      try {
-        let response = await this.$axios.get('/directory/user/search', {
-          headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
-          },
-          params: {
-            q: val
-          }
-        })
-        if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
-        }
-        this.userSearchItems = response.data.accounts ? response.data.accounts : []
-        if (this.init && this.owner) {
-          this.userSearchModel = this.userSearchItems[0]
-          this.init = false
-        }
-      } catch (error) {
-        console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
-      } finally {
-        this.userSearchLoading = false
-      }
-    },
-    usernameSearch: async function (val) {
-      if ((val && (val.length < 2)) || !val) {
-        this.usernameSearchItems = []
-        return
-      }
-      if (this.usernameSearchLoading) return
-      this.usernameSearchLoading = true
-      try {
-        let response = await this.$axios.get('/directory/user/search', {
-          headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
-          },
-          params: {
-            q: val,
-            exact: 1
-          }
-        })
-        if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
-        }
-        this.usernameSearchItems = response.data.accounts ? response.data.accounts : []
-        console.log('usernameSearchItems', this.usernameSearchItems)
-        if (this.usernameSearchItems.length > 0) {
-          for (let usr of this.usernameSearchItems) {
-            if (usr?.uid === this.owner) {
-                this.usernameSearchModel = usr
-            }
-          }
-          this.init = false
-        }
-      } catch (error) {
-        console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
-      } finally {
-        this.usernameSearchLoading = false
-      }
-    },
-    userSearchModel: function (v) {
-      if (v) {
-        this.owner = v.uid
-      } else {
-        this.owner = ''
-      }
-      this.search({ owner: this.owner })
-    },
-    usernameSearchModel: function (v) {
-      if (v) {
-        this.owner = v.uid
-      } else {
-        this.owner = ''
-      }
-      this.search({ owner: this.owner })
     }
   },
   methods: {

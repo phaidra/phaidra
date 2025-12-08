@@ -556,10 +556,6 @@ sub startup {
     my $reader    = $ext_creds->under('/')->to('authorization#authorize', op => 'r');
     my $writer    = $loggedin->under('/')->to('authorization#authorize', op => 'w');
 
-    if($self->app->config->{allow_userdata_queries}){
-      $loggedin->get('directory/user/search')                                ->to('directory#search_user');
-    }
-
     $loggedin->get('directory/user/data')                                    ->to('directory#get_user_data');
 
     $loggedin->get('settings')                                               ->to('settings#get_settings');
@@ -723,10 +719,6 @@ sub startup {
     my $check_auth = $proxyauth->under('/')->to('authentication#authenticate');
     # check the user sends phaidra admin credentials
     my $admin = $proxyauth->under('/')->to('authentication#authenticate_admin');
-
-    if($self->app->config->{allow_userdata_queries}){
-      $check_auth->get('directory/user/search')                                 ->to('directory#search_user');
-    }
 
     $check_auth->get('directory/user/data')                                     ->to('directory#get_user_data');
 
