@@ -608,11 +608,13 @@ export default {
   mounted: function () {
     this.$store.dispatch('vocabulary/loadLanguages', this.$i18n.locale)
     this.getProjectIds()
+    if (this.jsonld) {
     this.overallAccessibility = {
       control: this.jsonld['schema:accessibilityControl'] || [],
       feature: this.jsonld['schema:accessibilityFeature'] || [],
       hazard: this.jsonld['schema:accessibilityHazard'] || [],
       mode: this.jsonld['schema:accessMode'] || [],
+      }
     }
   }
 }
