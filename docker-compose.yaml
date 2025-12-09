@@ -271,7 +271,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:43527732
+    image: phaidraorg/ui:120d6b60
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -289,7 +289,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:43527732
+    image: phaidraorg/ui:120d6b60
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -306,7 +306,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:ece5e226
+    image: phaidraorg/api-dist:120d6b60
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -321,7 +321,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:ece5e226
+    image: phaidraorg/api-dist:120d6b60
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -403,7 +403,7 @@ services:
 
   mongodb-phaidra:
     hostname: "mongodb-phaidra"
-    image: phaidraorg/mongodb-dist:0e03288f
+    image: phaidraorg/mongodb-dist:120d6b60
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
@@ -646,7 +646,7 @@ services:
   
   pdf-extraction:
     hostname: "pdf-extraction"
-    image: phaidraorg/pdf-extraction:1c1af80f
+    image: phaidraorg/pdf-extraction:120d6b60
     # build:
     #   context: .
     #   dockerfile: dockerfiles/pdf_extraction.dockerfile
