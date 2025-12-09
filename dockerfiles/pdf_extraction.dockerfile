@@ -8,7 +8,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Apache Tika App
-ENV TIKA_VERSION=2.9.4
+ENV TIKA_VERSION=3.2.3
 RUN mkdir -p /opt/tika && \
     curl -L "https://downloads.apache.org/tika/$TIKA_VERSION/tika-app-$TIKA_VERSION.jar" -o /opt/tika/tika-app.jar
 # Copy worker sources and install deps
