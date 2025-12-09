@@ -493,11 +493,28 @@ sub signin_shib {
 
   }
 
-  $self->app->log->debug("redirecting to " . $self->app->config->{authentication}->{shibboleth}->{frontendloginurl});
+  my $redirecturl = $self->app->config->{authentication}->{shibboleth}->{frontendloginurl};
+
+  my $returnto;
+
+  my $target = $self->param('target');  # target is used if the user does not have a session at IdP...
+  if ($target) {
+    my $u = Mojo::URL->new($target);
+    $returnto = $u->query->param('returnto');
+  } else {
+    $returnto = $self->param('returnto'); # otherwise the query params are simply passed...
+  }
+
+  # Sanitize to avoid open redirects. Allow only same-site paths.
+  $returnto = '' unless $returnto =~ m{\A/};
+
+  $redirecturl .= $returnto;
+
+  $self->app->log->debug("redirecting to $redirecturl");
   
   # 302 would set, but not immediately send strict cookies, so we need to send 200 and create a client side redirect via html
   #$self->redirect_to($self->app->config->{authentication}->{shibboleth}->{frontendloginurl});
-  my $html = '<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="refresh" content="0;URL=\''.$self->app->config->{authentication}->{shibboleth}->{frontendloginurl}.'\'" /></head><body><p>Redirectring...</p></body></html>';
+  my $html = '<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="refresh" content="0;URL=\''.$redirecturl.'\'" /></head><body><p>Redirectring...</p></body></html>';
   # set format explicitly because the stash value 'format' seems overwritten when saving consent (so application/json gets back)
   $self->render(text => $html, format => 'html', status => 200);
 
