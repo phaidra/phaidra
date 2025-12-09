@@ -453,7 +453,15 @@ sub delete {
 
   if ($c->app->config->{fedora}->{version} >= 6) {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    $fedora_model->delete($c, $pid);
+    my $delete_res = $fedora_model->delete($c, $pid);
+    if ($delete_res->{status} ne 200) {
+      push @{$res->{alerts}}, @{$delete_res->{alerts}} if scalar @{$delete_res->{alerts}} > 0;
+      $res->{status} = $delete_res->{status};
+      return $res;
+    }
+    my $cachekey = 'cmodel_' . $pid;
+    $c->app->chi->remove($cachekey);
+    
     my $index_model = PhaidraAPI::Model::Index->new;
     my $ri          = $index_model->updateDoc($c, $pid);
     if ($ri->{status} ne 200) {
