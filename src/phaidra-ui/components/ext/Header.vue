@@ -345,7 +345,7 @@
                             >
                             <v-list-item
                                 v-if="!signedin && appconfig.enablelogin"
-                                ><v-list-item-title><a :href="localePath('/login')">{{ $t("Login") }}</a></v-list-item-title></v-list-item
+                                ><v-list-item-title><a :href="localePath('/login') + '?returnto=' + encodeURIComponent($route.fullPath)">{{ $t("Login") }}</a></v-list-item-title></v-list-item
                             >
                             <v-list-item
                                 v-if="user.isadmin"
@@ -481,7 +481,7 @@
                           dark
                           tile
                           depressed                          
-                          :href="localePath('/login')"
+                          :href="localePath('/login') + '?returnto=' + encodeURIComponent($route.fullPath)"
                           :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
                           class="font-weight-regular white--text"
                           >

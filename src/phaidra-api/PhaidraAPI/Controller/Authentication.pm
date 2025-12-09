@@ -494,7 +494,7 @@ sub signin_shib {
   }
 
   my $redirecturl = $self->app->config->{authentication}->{shibboleth}->{frontendloginurl};
-
+  $redirecturl =~ s{/\z}{};
   my $returnto;
 
   my $target = $self->param('target');  # target is used if the user does not have a session at IdP...
