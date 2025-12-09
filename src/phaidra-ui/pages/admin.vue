@@ -261,6 +261,15 @@
                 </v-row>
                 <v-row>
                   <v-col>
+                    <v-text-field
+                      :label="$t('Base search ANDs')"
+                      v-model="parsedPublicConfigData.searchbaseands"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("These conditions will be always added to the array of AND conditions of the search query.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
                     <v-checkbox
                       :label="$t('Show Groups link')"
                       v-model="parsedPublicConfigData.groups"

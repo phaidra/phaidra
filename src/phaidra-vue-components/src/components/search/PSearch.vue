@@ -281,10 +281,8 @@ export default {
 
       Object.assign(this, options)
 
-      if (this.instance.search) {
-        if (this.instance.search.baseands) {
-          this['baseAnds'] = this.instance.search.baseands
-        }
+      if (this.instance.searchbaseands) {
+        this['baseAnds'] = this.instance.searchbaseands
       }
 
       let { searchdefarr, ands } = buildSearchDef(this)
