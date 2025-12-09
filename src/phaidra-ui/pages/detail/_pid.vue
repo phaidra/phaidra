@@ -2603,13 +2603,23 @@ export default {
       return statements;
     },
     downloadableDatastreams: function () {
-      if (this.instanceconfig.downloadabledatastreams) {
-        return this.instanceconfig.downloadabledatastreams
-          .split(',')
-          .map(ds => ds.trim())
-          .filter(ds => ds.length > 0);
+      if (!this.instanceconfig.downloadabledatastreams || !this.objectInfo) {
+        return [];
       }
-      return [];
+      
+      const configuredDatastreams = this.instanceconfig.downloadabledatastreams
+        .split(',')
+        .map(ds => ds.trim())
+        .filter(ds => ds.length > 0);
+      return configuredDatastreams.filter(dsid => {
+        if (this.objectInfo.dshash && this.objectInfo.dshash[dsid]) {
+          return true;
+        }
+        if (this.objectInfo.datastreams && this.objectInfo.datastreams.includes(dsid)) {
+          return true;
+        }
+        return false;
+      });
     },
   },
   data() {
