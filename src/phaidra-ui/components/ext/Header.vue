@@ -600,8 +600,6 @@
       }
     },
     mounted() {
-      console.log('mounting header, signedin: ' + this.signedin)
-      console.log('mounting header, token: ' + this.$store.state.user.token)
       if (localStorage.getItem("locale")) {
         this.$i18n.locale = localStorage.getItem("locale");
       } else {
