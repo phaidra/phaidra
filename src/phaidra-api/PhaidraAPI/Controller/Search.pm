@@ -504,13 +504,26 @@ sub search_solr {
         }
       }
     }
-  }
 
-
-  if (@book_pids) {
+    my @query_parts;
+    
+    if (@book_pids) {
       my $books_pid_clause = join ' OR ', map { 'pid:"' . $_ . '"' } @book_pids;
-      my $books_q = '(' . $books_pid_clause . ')';
-      $params->{q} = $books_q;
+      push @query_parts, '(' . $books_pid_clause . ')';
+    }
+    
+    my $pdf_clause = 'extracted_text:(' . $original_q . ')';
+    push @query_parts, '(' . $pdf_clause . ')';
+    
+    my $combined_q = join ' OR ', @query_parts;
+    $params->{q} = $combined_q;
+    $self->app->log->info('Combined query (books OR PDFs): ' . $combined_q);
+    $self->app->log->info('Book PIDs found: ' . scalar(@book_pids));
+    
+    unless (defined $params->{sort} && $params->{sort} ne '') {
+      $params->{sort} = 'created desc';
+      $self->app->log->info('Setting default sort: created desc');
+    }
   }
 
   if (Mojo::IOLoop->is_running) {
