@@ -896,6 +896,15 @@
                 </v-row>
                 <v-row>
                   <v-col>
+                    <v-checkbox
+                      :label="$t('Don\'t use Fedora transactions')"
+                      v-model="parsedPrivateConfigData.donotusefedoratransactions"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("Skips creating a tx on object creation. Used the avoid performance problems in older fedora versions.)") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
                     <v-text-field
                       :label="$t('Username scope to trim')"
                       v-model="parsedPublicConfigData.userscopetotrim"
