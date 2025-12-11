@@ -139,7 +139,7 @@ export const constructDataCite = (dataciteData, that) => {
     doiImportData.pageEnd = dataciteData.data.attributes.container.lastPage
   }
   if (dataciteData?.data?.attributes?.container?.volume) {
-    doiImportData.journalVolume = dataciteData.data.attributes.container.lastPage
+    doiImportData.journalVolume = dataciteData.data.attributes.container.volume
   }
   if (dataciteData?.data?.attributes?.rightsList?.length) {
     const licenseIndex = dataciteData.data.attributes.rightsList.findIndex(x => x.schemeUri && x.schemeUri.includes('/licenses/'))
@@ -184,7 +184,7 @@ export const constructDataCite = (dataciteData, that) => {
       }
     }
   }
-  if (dataciteData?.data?.attributes?.descriptions?.length && doiImportData.license.includes('http://creativecommons.org/licenses')) {
+  if (dataciteData?.data?.attributes?.descriptions?.length && doiImportData?.license && doiImportData.license.includes('http://creativecommons.org/licenses')) {
     doiImportData.descriptions = dataciteData.data.attributes.descriptions.map(x => x.descriptionType === 'Abstract' ? {
       ...x,
       lang: x.lang ? x.lang.length === 3 ? x.lang : that.lang2to3map[x.lang] : null

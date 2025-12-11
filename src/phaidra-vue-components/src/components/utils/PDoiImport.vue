@@ -883,17 +883,18 @@ if (crossrefData['issued']['date-parts'][0]) {
 
       if (doiImportData && doiImportData.authors && doiImportData.authors.length > 0) {
         for (let author of doiImportData.authors) {
-          let role = fields.getField("role");
+          let role = fields.getField("role-extended");
           role.ordergroup = "role";
           role.roleVocabulary = "submitrolepredicate";
           role.identifierType = "ids:orcid";
-          role.showDefinitions = true;
+          role.identifierLabel = "ORCID";
           role.showIdentifier = true;
+          role.showIdentifierType = false;
           role.isParentSelectionDisabled = self.instanceconfig?.isParentSelectionDisabled;
-          
           role.role = "role:aut";
-          
+
           if (author.type === "schema:Person") {
+            role.type = "schema:Person";
             role.firstname = author.firstname || "";
             role.lastname = author.lastname || "";
             if (author.orcid) {
@@ -904,20 +905,23 @@ if (crossrefData['issued']['date-parts'][0]) {
               role.affiliationType = "other";
             }
           } else if (author.type === "schema:Organization") {
-            role.name = author.name || "";
             role.type = "schema:Organization";
+            role.organizationText = author.name || "";
+            role.organizationType = "other";
           }
-          
+
           self.form.sections[0].fields.push(role);
         }
       } else {
-        let role = fields.getField("role");
+        let role = fields.getField("role-extended");
         role.ordergroup = "role";
         role.roleVocabulary = "submitrolepredicate";
         role.identifierType = "ids:orcid";
-        role.showDefinitions = true;
+        role.identifierLabel = "ORCID";
         role.showIdentifier = true;
+        role.showIdentifierType = false;
         role.isParentSelectionDisabled = self.instanceconfig?.isParentSelectionDisabled;
+        role.role = "role:aut";
         self.form.sections[0].fields.push(role);
       }
 
