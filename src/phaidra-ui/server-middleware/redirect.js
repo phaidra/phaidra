@@ -29,11 +29,8 @@ export default async (req, res, next) => {
           }
         }
         if (doc['isinadminset']) {
-          console.log('doc has isinadminset')
           for (let adminset of doc['isinadminset']) {
-            console.log('checking adminset ' + adminset)
             if (adminset === 'phaidra:ir.univie.ac.at') {
-              console.log('IR_BASE_URL = ' + process.env.IR_BASE_URL)
               redirect(res, process.env.IR_BASE_URL + '/' + pid)
               return
             }
