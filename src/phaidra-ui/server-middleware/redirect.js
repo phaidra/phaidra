@@ -31,7 +31,7 @@ export default async (req, res, next) => {
         if (doc['isinadminset']) {
           for (let adminset of doc['isinadminset']) {
             if (adminset === 'phaidra:ir.univie.ac.at') {
-              redirect(res, config.instances[config.defaultinstance].irbaseurl + '/' + pid)
+              redirect(res, process.env.IR_BASE_URL + '/' + pid)
               return
             }
           }

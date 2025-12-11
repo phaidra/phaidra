@@ -271,7 +271,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:554bd7df
+    image: phaidraorg/ui:face385b
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -281,6 +281,7 @@ services:
       PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#da3000}"
       PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
       LEGACY_OPEN_REDIRECT: "${LEGACY_OPEN_REDIRECT:-false}"
+      IR_BASE_URL: "${IR_BASE_URL:-}"
       COOKIE_DOMAIN: "${COOKIE_DOMAIN:-}"
     profiles: ["demo-local", "ssl-local", "shib-local"]
 
@@ -289,7 +290,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:554bd7df
+    image: phaidraorg/ui:face385b
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -299,6 +300,7 @@ services:
       PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#da3000}"
       PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
       LEGACY_OPEN_REDIRECT: "${LEGACY_OPEN_REDIRECT:-false}"
+      IR_BASE_URL: "${IR_BASE_URL:-}"
       COOKIE_DOMAIN: "${COOKIE_DOMAIN:-}"
     profiles: ["demo-s3", "ssl-s3", "shib-s3"]
 
@@ -306,7 +308,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:5944ba3e
+    image: phaidraorg/api-dist:face385b
     <<: [*common, *logs]
     volumes:
       - s3_cache:/s3_cache
@@ -321,7 +323,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:5944ba3e
+    image: phaidraorg/api-dist:face385b
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -967,6 +969,7 @@ services:
       PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#da3000}"
       PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
       LEGACY_OPEN_REDIRECT: "${LEGACY_OPEN_REDIRECT:-false}"
+      IR_BASE_URL: "${IR_BASE_URL:-}"
       COOKIE_DOMAIN: "${COOKIE_DOMAIN:-}"
     profiles: ["demo-local-dev", "ssl-local-dev", "shib-local-dev"]
     develop:
@@ -1251,6 +1254,7 @@ services:
       PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#da3000}"
       PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
       LEGACY_OPEN_REDIRECT: "${LEGACY_OPEN_REDIRECT:-false}"
+      IR_BASE_URL: "${IR_BASE_URL:-}"
       COOKIE_DOMAIN: "${COOKIE_DOMAIN:-}"
     profiles: ["demo-s3-dev", "ssl-s3-dev", "shib-s3-dev"]
   
