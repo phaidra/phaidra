@@ -58,28 +58,30 @@
               :no-results-text="$t('There were no search results')"
             >
             <template v-slot:item.acronyms="{ item }">
-              <template v-if="item.acronyms">
+              <template v-if="item.acronyms && item.acronyms.length">
                 <div v-for="(v, i) of item.acronyms" :key="'vn' + i">{{ v }}</div>
               </template>
             </template>
             <template v-slot:item.aliases="{ item }">
-              <template v-if="item.aliases">
+              <template v-if="item.aliases && item.aliases.length">
                 <div v-for="(v, i) of item.aliases" :key="'va' + i">{{ v }}</div>
               </template>
             </template>
             <template v-slot:item.types="{ item }">
-              <template v-if="item.types">
+              <template v-if="item.types && item.types.length">
                 <div v-for="(v, i) of item.types" :key="'vt' + i">{{ v }}</div>
               </template>
             </template>
             <template v-slot:item.addresses="{ item }">
-              <template v-if="item.addresses">
-                <div v-for="(v, i) of item.addresses" :key="'vad' + i">{{ v.city }}</div>
+              <template v-if="item.locations && item.locations.length">
+                <div v-for="(loc, i) of item.locations" :key="'vad' + i">
+                  {{ loc.geonames_details ? loc.geonames_details.name : '' }}
+                </div>
               </template>
             </template>
             <template v-slot:item.country="{ item }">
-              <template v-if="item.country">
-                {{ item.country.country_name }}
+              <template v-if="item.locations && item.locations.length && item.locations[0].geonames_details">
+                {{ item.locations[0].geonames_details.country_name }}
               </template>
             </template>
             </v-data-table>
@@ -191,7 +193,24 @@ export default {
           url: 'https://' + this.$store.state.appconfig.apis.ror.baseurl + '/organizations',
           params: params
         })
-        this.items = response.data.items
+        this.items = response.data.items.map(item => {
+          const displayName = item.names?.find(n => n.types?.includes('ror_display')) || 
+                             item.names?.find(n => n.types?.includes('label')) ||
+                             item.names?.[0]
+          const name = displayName?.value || ''
+          const acronyms = item.names?.filter(n => n.types?.includes('acronym')).map(n => n.value) || []
+          const aliases = item.names?.filter(n => n.types?.includes('alias')).map(n => n.value) || []
+          
+          return {
+            id: item.id,
+            name: name,
+            acronyms: acronyms,
+            aliases: aliases,
+            types: item.types || [],
+            locations: item.locations || [],
+            country: item.locations?.[0]?.geonames_details || null
+          }
+        })
         this.total = response.data.number_of_results
         this.showItems = true
       } catch (error) {
