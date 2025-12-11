@@ -93,6 +93,13 @@ export default async (req, res, next) => {
       redirect(res, redUrl)
       return
     }
+    if (/^\/download\/o:\d+$/.test(req.url)) { 
+      let pid = req.url.replace('/download', '')
+      let redUrl = baseURL + '/api/object/' + pid + '/download'
+      console.log(redUrl)
+      redirect(res, redUrl)
+      return
+    }
   }
   if (/^\/o:\d+$/.test(req.url)) { 
     let pid = req.url.replace('/', '')
