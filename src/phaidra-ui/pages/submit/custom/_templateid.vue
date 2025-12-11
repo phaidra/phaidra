@@ -3,6 +3,7 @@
     <v-row>
       <v-col>
         <p-i-form 
+        :doiImport="true"
         :form="form" 
         :rights="rights" 
         :enablerights="true" 

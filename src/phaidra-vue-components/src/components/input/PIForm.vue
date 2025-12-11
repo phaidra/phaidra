@@ -911,7 +911,7 @@
         <p-feedback :firstname="feedbackUser.firstname" :lastname="feedbackUser.lastname" :email="feedbackUser.email" :context="feedbackContext"></p-feedback>
       </v-tab-item>
       <v-tab-item v-if="doiImport" class="pa-4">
-        <p-doi-import v-on:load-form="loadFormFromDoiImport"></p-doi-import>
+        <p-doi-import :external-form="form" v-on:load-form="loadFormFromDoiImport"></p-doi-import>
       </v-tab-item>
     </v-tabs-items>
     <v-dialog v-model="checksumDialog" max-width="500px">
