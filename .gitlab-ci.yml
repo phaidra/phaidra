@@ -73,7 +73,7 @@ build-ui:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/ui.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/ui:latest
     -t $CI_REGISTRY_USER/ui:$CI_COMMIT_SHORT_SHA --push .
   rules:
