@@ -355,7 +355,7 @@ sub getDatastreamsHash {
 
   $res->{dshash} = \%dsh;
 
-  $c->app->log->debug("getDatastreamsHash\n" . $c->app->dumper(\%dsh));
+  #$c->app->log->debug("getDatastreamsHash\n" . $c->app->dumper(\%dsh));
 
   return $res;
 }
