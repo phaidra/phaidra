@@ -834,7 +834,7 @@ sub create_simple {
       # use transactions only for object creation
       my $fedora_model = PhaidraAPI::Model::Fedora->new;
       my $confmodel = PhaidraAPI::Model::Config->new;
-      my $privconfig = $confmodel->get_private_config($self);
+      my $privconfig = $confmodel->get_private_config($c);
       unless (exists($privconfig->{donotusefedoratransactions}) && $privconfig->{donotusefedoratransactions}) {
         my $transaction_url = $fedora_model->useTransaction($c);
         $c->stash(transaction_url => $transaction_url->{transaction_id});
@@ -1090,7 +1090,7 @@ sub create_container {
       # use transactions only for single object creation. TODO: use a single transaction for all containers and children. This way, if one child fails to be created, the entire load fails, and no partial loads occur.  
       my $fedora_model = PhaidraAPI::Model::Fedora->new;
       my $confmodel = PhaidraAPI::Model::Config->new;
-      my $privconfig = $confmodel->get_private_config($self);
+      my $privconfig = $confmodel->get_private_config($c);
       unless (exists($privconfig->{donotusefedoratransactions}) && $privconfig->{donotusefedoratransactions}) {
         my $transaction_url = $fedora_model->useTransaction($c);
         $c->stash(transaction_url => $transaction_url->{transaction_id});

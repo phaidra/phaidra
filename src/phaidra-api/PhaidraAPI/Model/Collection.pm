@@ -30,7 +30,7 @@ sub create {
     # use transactions only for single object creation. TODO: use only one transactions also for membership relation when adding members
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
     my $confmodel = PhaidraAPI::Model::Config->new;
-    my $privconfig = $confmodel->get_private_config($self);
+    my $privconfig = $confmodel->get_private_config($c);
     unless (exists($privconfig->{donotusefedoratransactions}) && $privconfig->{donotusefedoratransactions}) {
       my $transaction_url = $fedora_model->useTransaction($c);
       $c->stash(transaction_url => $transaction_url->{transaction_id});
