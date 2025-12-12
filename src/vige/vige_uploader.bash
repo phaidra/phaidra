@@ -21,7 +21,7 @@ function get_path {
             -p $M_PASS \
             mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
             --eval \
-            'JSON.stringify(db.jobs.findOne({pid: "'$1'", "agent": "vige"}))' | \
+            'JSON.stringify(db.jobs.findOne({pid: "'$1'", "agent": "vige"}, {}, { sort: { created: -1 } }))' | \
             jq -r '.path'
 }
 
@@ -75,6 +75,7 @@ do
             fi
             LINKNAME="$PID_UPLOAD.$FILETYPE"
             ln -s $ORIGINAL_FILE $LINKNAME
+            
             OC_MPID=$(upload_file_get_mpid $PID_UPLOAD "$ACL_PUBLIC" $LINKNAME)
             if [[ -z $OC_MPID ]]
             then

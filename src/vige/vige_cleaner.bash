@@ -38,7 +38,7 @@ function get_mongo_status {
         -u $M_USER \
         -p $M_PASS \
         mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
-        --eval 'JSON.stringify(db.jobs.findOne({ pid: "'$1'", "agent": "vige" }, {}, { sort: { created: -1 } }}))' | \
+        --eval 'JSON.stringify(db.jobs.findOne({ pid: "'$1'", "agent": "vige" }, {}, { sort: { created: -1 } }))' | \
         jq -r '.status'
 }
 
