@@ -937,7 +937,7 @@ sub create_simple {
     return $res;
   }
   else {
-    $c->app->log->info("Object successfully created pid[$pid] cmodel[$cmodel] took[".tv_interval($t0)".]");
+    $c->app->log->info("Object successfully created pid[$pid] cmodel[$cmodel] took[".tv_interval($t0)."]");
   }
 
   if (exists($metadata->{metadata}->{'ownerid'})) {
