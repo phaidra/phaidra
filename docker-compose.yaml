@@ -720,7 +720,7 @@ services:
   ############## fedora service for local profile ###############
   fedora:
     hostname: "fedora"
-    image: fcrepo/fcrepo:6.5.1-tomcat9
+    image: fcrepo/fcrepo:6.5.1-whikloj-simple-search-queries
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
@@ -738,7 +738,7 @@ services:
   ############## fedora service for local dev profile ###############
   fedora-local-dev:
     hostname: "fedora"
-    image: fcrepo/fcrepo:6.5.1-tomcat9
+    image: fcrepo/fcrepo:6.5.1-whikloj-simple-search-queries
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
@@ -791,7 +791,7 @@ services:
   ############## fedora service for s3 dev profile ###############
   fedora-s3-dev:
     hostname: "fedora"
-    image: fcrepo/fcrepo:6.5.1-tomcat9
+    image: fcrepo/fcrepo:6.5.1-whikloj-simple-search-queries
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
@@ -817,7 +817,7 @@ services:
   ############### fedora service for s3 profiles ###############
   fedora-s3:
     hostname: "fedora"
-    image: fcrepo/fcrepo:6.5.1-tomcat9
+    image: fcrepo/fcrepo:6.5.1-whikloj-simple-search-queries
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
