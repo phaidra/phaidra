@@ -382,7 +382,11 @@ sub signin_shib {
         last if $authorized;
         $self->app->log->debug("Checking if affiliation $userAff can login");
         my @valid_affiliations = map {split(/,/)} @{$self->app->config->{authentication}->{shibboleth}->{requiredaffiliations}};
-
+        # if no required affiliations are configured, allow user to log in
+        unless (@valid_affiliations) {
+          $authorized = 1;
+          last;
+        }
         # $self->app->log->debug(Dumper(@valid_affiliations));
         for my $configAff (@valid_affiliations) {
           $self->app->log->debug("$configAff");
