@@ -376,7 +376,7 @@ sub signin_shib {
     $affiliation = $ENV{$self->app->config->{authentication}->{shibboleth}->{attributes}->{affiliation}};
     $affiliation = $self->req->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{affiliation}) unless $affiliation;
 
-    if ($self->app->config->{authentication}->{shibboleth}->{requiredaffiliations}) {
+    if ($self->app->config->{authentication}->{shibboleth}->{requiredaffiliations} && ($self->app->config->{authentication}->{shibboleth}->{requiredaffiliations} ne "")) {
       my @userAffs = split(';', $affiliation);
       for my $userAff (@userAffs) {
         last if $authorized;
@@ -396,8 +396,6 @@ sub signin_shib {
     } else {
       $authorized = 1;
     }
-  } else {
-    $authorized = 1;
   }
 
   $self->app->log->debug("[$username] attributes: firstname[$firstname] lastname[$lastname] email[$email] affiliation[$affiliation]");
