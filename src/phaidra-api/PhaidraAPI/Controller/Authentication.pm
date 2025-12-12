@@ -396,6 +396,8 @@ sub signin_shib {
     } else {
       $authorized = 1;
     }
+  } else {
+    $authorized = 1;
   }
 
   $self->app->log->debug("[$username] attributes: firstname[$firstname] lastname[$lastname] email[$email] affiliation[$affiliation]");
