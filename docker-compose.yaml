@@ -556,7 +556,7 @@ services:
 
   vige:
     hostname: "vige"
-    image: phaidraorg/vige-dist:fdd4d7b6
+    image: phaidraorg/vige-dist:f1540359
     <<: [*common, *logs]
     volumes:
       - vige:/opt/vige
