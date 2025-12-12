@@ -26,6 +26,7 @@ use IO::Scalar;
 use File::MimeInfo;
 use File::MimeInfo::Magic;
 use File::Temp 'tempfile';
+use Time::HiRes qw/tv_interval gettimeofday/;
 
 # only those where a PID can be the object (in RDF sense)
 my %relationships_to_object = (
@@ -826,6 +827,8 @@ sub create_simple {
     return $res;
   }
 
+  my $t0 = [gettimeofday];
+
   my $pid = '';
   my $r;
   unless (exists($metadata->{'target-pid'})) {
@@ -934,7 +937,7 @@ sub create_simple {
     return $res;
   }
   else {
-    $c->app->log->info("Object successfully created pid[$pid] cmodel[$cmodel]");
+    $c->app->log->info("Object successfully created pid[$pid] cmodel[$cmodel] took[".tv_interval($t0)".]");
   }
 
   if (exists($metadata->{metadata}->{'ownerid'})) {

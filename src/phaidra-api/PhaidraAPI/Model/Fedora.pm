@@ -12,6 +12,7 @@ use base qw/Mojo::Base/;
 use Net::Amazon::S3;
 use Net::Amazon::S3::Vendor::Generic;
 use Net::Amazon::S3::Authorization::Basic;
+use Time::HiRes qw/tv_interval gettimeofday/;
 
 # S3 credentials and bucketname
 my $aws_access_key_id = $ENV{S3_ACCESS_KEY};
@@ -603,7 +604,9 @@ sub commitTransaction {
   if ($c->stash->{transaction_url}) {
     $atomic_id = $c->stash->{transaction_url};
     $c->app->log->debug("Save transaction: ".$atomic_id);
+    my $t0 = [gettimeofday];
     my $putres = $c->ua->put($atomic_id)->result;
+    $c->app->log->debug("Save transaction took : ".tv_interval($t0));
     $c->app->log->debug($c->app->dumper($putres));
     unless ($putres->is_success) {
       $c->app->log->error("Cannot save transaction: code:" . $putres->{code} . " message:" . $putres->{message});
