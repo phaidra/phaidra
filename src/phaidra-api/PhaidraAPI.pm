@@ -532,8 +532,6 @@ sub startup {
 
   $r->get('oai')                                    ->to('oai#handler');
   $r->post('oai')                                   ->to('oai#handler');
-  $r->get('oaitest')                                ->to('oaitest#handler');
-  $r->post('oaitest')                               ->to('oaitest#handler');
 
   $r->get('termsofuse')                             ->to('termsofuse#get');
 

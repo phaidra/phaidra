@@ -1,4 +1,4 @@
-package PhaidraAPI::Controller::Oai;
+package PhaidraAPI::Controller::Oaitest;
 
 # based on https://github.com/LibreCat/Dancer-Plugin-Catmandu-OAI
 
