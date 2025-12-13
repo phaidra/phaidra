@@ -363,7 +363,7 @@ sub signin_shib {
   my $lastname;
   my $email;
   my $affiliation;
-  my $authorized;
+  my $authorized = 0;
 
   $firstname = $ENV{$self->app->config->{authentication}->{shibboleth}->{attributes}->{firstname}};
   $firstname = $self->req->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{firstname}) unless $firstname;
@@ -376,7 +376,10 @@ sub signin_shib {
     $affiliation = $ENV{$self->app->config->{authentication}->{shibboleth}->{attributes}->{affiliation}};
     $affiliation = $self->req->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{affiliation}) unless $affiliation;
 
-    if ($self->app->config->{authentication}->{shibboleth}->{requiredaffiliations} && ($self->app->config->{authentication}->{shibboleth}->{requiredaffiliations} ne "")) {
+    my $reqAff = $self->app->config->{authentication}->{shibboleth}->{requiredaffiliations};
+    # we only want to check required affiliations if those are defined
+    # if requiredaffiliations are NOT defined via docker env config, $reqAff will be an array ref with 1 empty string
+    if (!(ref($reqAff) eq 'ARRAY' && @$reqAff == 1 && defined $reqAff->[0] && $reqAff->[0] eq '')) {
       my @userAffs = split(';', $affiliation);
       for my $userAff (@userAffs) {
         last if $authorized;
