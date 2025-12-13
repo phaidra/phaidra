@@ -66,9 +66,9 @@ sub getFedoraUrlPrefix {
 sub getFirstJsonldValue {
   my ($self, $c, $jsonld, $p) = @_;
 
-  for my $ob (@{ensure_array($jsonld)}) {
+  for my $ob (ensure_array($jsonld)) {
     if (exists($ob->{$p})) {
-      for my $ob1 (@{ensure_array($ob->{$p})}) {
+      for my $ob1 (ensure_array($ob->{$p})) {
         if (exists($ob1->{'@value'})) {
           return $ob1->{'@value'};
         }
@@ -86,9 +86,9 @@ sub getJsonldValue {
   my ($self, $c, $jsonld, $p) = @_;
 
   my @a;
-  for my $ob (@{ensure_array($jsonld)}) {
+  for my $ob (ensure_array($jsonld)) {
     if (exists($ob->{$p})) {
-      for my $ob1 (@{ensure_array($ob->{$p})}) {
+      for my $ob1 (ensure_array($ob->{$p})) {
         if (exists($ob1->{'@value'})) {
           push @a, $ob1->{'@value'};
         } else {
@@ -170,7 +170,7 @@ sub getObjectProperties {
   $res->{sameas}                 = $self->getJsonldValue($c, $props, 'http://www.w3.org/2002/07/owl#sameAs');
 
   $res->{contains} = [];
-  for my $ob (@{ensure_array($props)}) {
+  for my $ob (ensure_array($props)) {
     if (exists($ob->{'http://www.w3.org/ns/ldp#contains'})) {
       for my $ob1 (@{$ob->{'http://www.w3.org/ns/ldp#contains'}}) {
         if (exists($ob1->{'@id'})) {
