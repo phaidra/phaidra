@@ -47,6 +47,13 @@ my %prefix2ns = (
   "http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#" => "ebucore"
 );
 
+sub ensure_array {
+  my ($x) = @_;
+  return ()     if !defined $x;
+  return @$x    if ref($x) eq 'ARRAY';
+  return ($x);
+}
+
 sub getFedoraUrlPrefix {
   my ($self, $c) = @_;
   if ($c->app->fedoraurl->{port}) {
@@ -59,9 +66,9 @@ sub getFedoraUrlPrefix {
 sub getFirstJsonldValue {
   my ($self, $c, $jsonld, $p) = @_;
 
-  for my $ob (@{$jsonld}) {
+  for my $ob (@{ensure_array($jsonld)}) {
     if (exists($ob->{$p})) {
-      for my $ob1 (@{$ob->{$p}}) {
+      for my $ob1 (@{ensure_array($ob->{$p})}) {
         if (exists($ob1->{'@value'})) {
           return $ob1->{'@value'};
         }
@@ -79,9 +86,9 @@ sub getJsonldValue {
   my ($self, $c, $jsonld, $p) = @_;
 
   my @a;
-  for my $ob (@{$jsonld}) {
+  for my $ob (@{ensure_array($jsonld)}) {
     if (exists($ob->{$p})) {
-      for my $ob1 (@{$ob->{$p}}) {
+      for my $ob1 (@{ensure_array($ob->{$p})}) {
         if (exists($ob1->{'@value'})) {
           push @a, $ob1->{'@value'};
         } else {
@@ -163,7 +170,7 @@ sub getObjectProperties {
   $res->{sameas}                 = $self->getJsonldValue($c, $props, 'http://www.w3.org/2002/07/owl#sameAs');
 
   $res->{contains} = [];
-  for my $ob (@{$props}) {
+  for my $ob (@{ensure_array($props)}) {
     if (exists($ob->{'http://www.w3.org/ns/ldp#contains'})) {
       for my $ob1 (@{$ob->{'http://www.w3.org/ns/ldp#contains'}}) {
         if (exists($ob1->{'@id'})) {
