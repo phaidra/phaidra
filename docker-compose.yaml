@@ -449,7 +449,7 @@ services:
   ############### chronos service for local profile ###############
   chronos:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:e24fe1a0
+    image: phaidraorg/chronos-dist:88b52fc0
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
