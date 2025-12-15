@@ -9,10 +9,6 @@ use DateTime::Format::ISO8601;
 use Time::HiRes qw/tv_interval gettimeofday/;
 
 my $folders = {
-  'ocflroot' => {
-    'path' => $ENV{FEDORA_OCFL_ROOT},
-    'size' => undef
-  },
   'imageserver' => {
     'path' => $ENV{IMAGESERVER_ROOT_PATH},
     'size' => undef
