@@ -174,6 +174,7 @@ services:
     environment:
       <<: [*api_common_env, *hosts]
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
+      HTTPD_ACME_ENABLE: "${HTTPD_ACME_ENABLE:-false}"
     profiles: ["ssl-local"]
 
   #################### httpd service for ssl-s3 profile ####################
@@ -1323,6 +1324,7 @@ services:
       <<: [*api_common_env, *hosts]
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-}"
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
+      HTTPD_ACME_ENABLE: "${HTTPD_ACME_ENABLE:-false}"
     entrypoint: [ "bash", "/httpd-ssl-entrypoint.bash" ]
     profiles: ["ssl-local-dev", "ssl-s3-dev"]
 
