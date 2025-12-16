@@ -443,18 +443,42 @@ sub search_solr {
   my $params = $self->req->params->to_hash;
   my $include_extracted = defined $params->{extracted_text} && $params->{extracted_text} eq 'include';
   delete $params->{extracted_text};
-  if (!$include_extracted) {
+  if ($include_extracted) {
     if (defined $params->{qf}) {
       my @qf_parts = split /\s+/, $params->{qf};
-      my @filtered = grep { $_ !~ /^(?:extracted_text|_text_)(\^\S+)?$/ } @qf_parts;
+      my @filtered = grep { $_ !~ /^(?:_text_|dc_identifier)(\^\S+)?$/ } @qf_parts;
       if (@filtered) {
         $params->{qf} = join ' ', @filtered;
       }
       else {
-        delete $params->{qf};
+        $params->{qf} = 'extracted_text';
       }
     }
-    if (defined $params->{df} && ($params->{df} eq 'extracted_text' || $params->{df} eq '_text_')) {
+  }
+  else {
+    if (defined $params->{qf}) {
+      my @qf_parts = split /\s+/, $params->{qf};
+      # Remove extracted_text field only
+      my @filtered = grep { $_ !~ /^extracted_text(\^\S+)?$/ } @qf_parts;
+      my $has_text = 0;
+      for (my $i = 0; $i < @filtered; $i++) {
+        if ($filtered[$i] =~ /^_text_(\^|$)/) {
+          $filtered[$i] = '_text_^0.5';
+          $has_text = 1;
+          last;
+        }
+      }
+      if (!$has_text) {
+        push @filtered, '_text_^0.5';
+      }
+      if (@filtered) {
+        $params->{qf} = join ' ', @filtered;
+      }
+      else {
+        $params->{qf} = '_text_';
+      }
+    }
+    if (defined $params->{df} && $params->{df} eq 'extracted_text') {
       delete $params->{df};
     }
   }
