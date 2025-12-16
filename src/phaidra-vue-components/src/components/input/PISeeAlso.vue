@@ -44,7 +44,7 @@
         </v-list>
       </v-menu>
 
-      <select-language ref="langdialog" @language-selected="$emit('input-title-language', $event)"></select-language>
+      <select-language ref="langdialog" :showReset="allowLanguageCancel && titleLanguage ? true : false" @language-selected="$emit('input-title-language', $event)"></select-language>
       <yarm-ref ref="yarmselect" @input-citation="$emit('input-title', $event)" @input-identifier="$emit('input-url', $event)"></yarm-ref>
     </v-col>
   </v-row>
@@ -79,13 +79,16 @@ export default {
       default: 'Title'
     },
     titleLanguage: {
-      type: String,
-      default: 'Title'
+      type: String
     },
     multilingual: {
       type: Boolean
     },
     showIds: {
+      type: Boolean,
+      default: false
+    },
+    allowLanguageCancel: {
       type: Boolean,
       default: false
     }
