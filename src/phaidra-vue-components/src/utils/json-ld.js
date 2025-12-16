@@ -760,12 +760,18 @@ export default {
             case 'cito:citesAsDataSource':
               f = fields.getField('citation')
               f.type = key
-              for (let prefLabel of obj['skos:prefLabel']) {
-                f.citation = prefLabel['@value']
-                f.citationLanguage = prefLabel['@language'] ? prefLabel['@language'] : ''
+              if (obj['skos:prefLabel']) {
+                for (let prefLabel of obj['skos:prefLabel']) {
+                  f.citation = prefLabel['@value']
+                  f.citationLanguage = prefLabel['@language'] ? prefLabel['@language'] : ''
+                }
               }
-              for (let em of obj['skos:exactMatch']) {
-                f.identifier = em
+              if (obj['skos:exactMatch']) {
+                for (let em of obj['skos:exactMatch']) {
+                  f.identifier = em
+                }
+              } else {
+                f.identifier = ''
               }
               components.push(f)
               break
@@ -2747,7 +2753,21 @@ export default {
 
         case 'citation':
           if (f.citation || f.identifier) {
-            this.push_object(jsonld, f.type, this.get_json_object([{ '@value': f.citation, '@language': f.citationLanguage }], null, 'rdfs:Resource', [ f.identifier ]))
+            // identifier is optional; only include skos:exactMatch when it's non-empty
+            const identifiers = []
+            if (f.identifier) {
+              identifiers.push(f.identifier)
+            }
+            this.push_object(
+              jsonld,
+              f.type,
+              this.get_json_object(
+                [{ '@value': f.citation, '@language': f.citationLanguage }],
+                null,
+                'rdfs:Resource',
+                identifiers
+              )
+            )
           }
           break
 
