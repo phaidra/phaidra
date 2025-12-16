@@ -1831,8 +1831,7 @@
             },
             "required": [
               "@type",
-              "schema:url",
-              "skos:prefLabel"
+              "schema:url"
             ]
           }
         },
