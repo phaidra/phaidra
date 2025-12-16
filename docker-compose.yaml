@@ -477,7 +477,7 @@ services:
   ############### chronos service for s3 profile ###############
   chronos-s3:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:b3ababb3
+    image: phaidraorg/chronos-dist:88b52fc0
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
