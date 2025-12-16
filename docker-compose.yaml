@@ -952,7 +952,7 @@ services:
     environment:
       <<: [*api_common_env, *hosts]
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
-    entrypoint: [ "bash", "/mnt/startup/httpd-demo-startup.bash" ]
+    entrypoint: [ "bash", "/mnt/startup/httpd-demo-entrypoint.bash" ]
     profiles: ["demo-local-dev"]
 
   ui-local-dev:
@@ -1220,7 +1220,7 @@ services:
     environment:
       <<: [*api_common_env, *hosts]
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
-    entrypoint: [ "bash", "/mnt/startup/httpd-demo-startup.bash" ]
+    entrypoint: [ "bash", "/mnt/startup/httpd-demo-entrypoint.bash" ]
     profiles: ["demo-s3-dev"]
 
   api-s3-dev:
