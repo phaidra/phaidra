@@ -2252,6 +2252,9 @@ export default {
       for (var i = 0; i < this.addfieldselection.length; i++) {
         let f = fields.getField(this.addfieldselection[i].id)
         f.removable = true
+        if (f.component === 'p-association' || f.predicate === 'rdax:P00009') {
+          f.isParentSelectionDisabled = this.instanceconfig.isParentSelectionDisabled || false
+        }
         if(f.id.includes("phaidra:Subject")) {
           this.form.sections.push(f)
         } else {
