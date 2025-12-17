@@ -40,6 +40,8 @@ x-custom:
     HTTPD_ACME_ENABLE: "${HTTPD_ACME_ENABLE:-false}"
     CA_ENDPOINT: "${CA_ENDPOINT:-LetsEncrypt-Test}"
     MD_CERTIFICATE_AGREEMENT: "${MD_CERTIFICATE_AGREEMENT?}"
+    HTTPD_PFSA_ENABLE: "${HTTPD_PFSA_ENABLE:-false}"
+    HTTPD_NOINDEX_ENABLE: "${HTTPD_NOINDEX_ENABLE:-false}"
 
   shib_env: &shib_env
     SHIB_DISCO_URL: "${SHIB_DISCO_URL:-}"
@@ -187,6 +189,7 @@ services:
       - ./certs/httpd:/ssl:ro
       - mdcerts:/mnt/mdcerts:rw
       - ./static:/mnt/static:ro
+      - ./pfsa:/mnt/pfsa:ro
     environment:
       <<: [*httpd_env, *api_common_env, *hosts]
     profiles: ["ssl-local"]
@@ -222,6 +225,7 @@ services:
       - ./certs/shibboleth:/shibboleth-certs:ro
       - mdcerts:/mnt/mdcerts:rw
       - ./static:/mnt/static:ro
+      - ./pfsa:/mnt/pfsa:ro
     environment:
       <<: [*shib_env, *httpd_env, *api_common_env, *hosts]
     entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
