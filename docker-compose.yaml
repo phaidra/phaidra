@@ -35,6 +35,24 @@ x-custom:
     S3_ENDPOINT: "${S3_ENDPOINT:-http://minio:9000}"
     S3_SECRET_KEY: "${S3_SECRET_KEY:-phaidraphaidra}"
 
+  httpd_env: &httpd_env
+    UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
+    HTTPD_ACME_ENABLE: "${HTTPD_ACME_ENABLE:-false}"
+    CA_ENDPOINT: "${CA_ENDPOINT:-LetsEncrypt-Test}"
+    MD_CERTIFICATE_AGREEMENT: "${MD_CERTIFICATE_AGREEMENT?}"
+
+  shib_env: &shib_env
+    SHIB_DISCO_URL: "${SHIB_DISCO_URL:-}"
+    SHIB_METADATA_CERT: "${SHIB_METADATA_CERT:-}"
+    SHIB_METADATA_FILE: "${SHIB_METADATA_FILE:-}"
+    SHIB_METADATA: "${SHIB_METADATA:-}"
+    SHIB_ENTITY_ID: "${SHIB_ENTITY_ID:-}"
+    SHIB_MAIL: "${SHIB_MAIL:-}"
+    SHIB_GIVEN_NAME: "${SHIB_GIVEN_NAME:-}"
+    SHIB_SURNAME: "${SHIB_SURNAME:-}"
+    SHIB_USERNAME: "${SHIB_USERNAME:-}"
+    SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
+
   api_common_env: &api_common_env
     FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
     FEDORA_ADMIN_USER: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
@@ -64,8 +82,6 @@ x-custom:
     SOLR_PASS: "${SOLR_PASS:-phaidra}"
     SOLR_USER: "${SOLR_USER:-phaidra}"
     PHAIDRA_ADMIN_EMAIL: "${PHAIDRA_ADMIN_EMAIL:?}"
-    CA_ENDPOINT: "${CA_ENDPOINT:-LetsEncrypt-Test}"
-    MD_CERTIFICATE_AGREEMENT: "${MD_CERTIFICATE_AGREEMENT?}"
     MARIADB_FEDORA_HOST: "${MARIADB_FEDORA_HOST:-mariadb-fedora}"
     MARIADB_FEDORA_USER: "${MARIADB_FEDORA_USER:-phaidra}"
     MARIADB_FEDORA_PASSWORD: "${MARIADB_FEDORA_PASSWORD:-phaidra}"
@@ -172,8 +188,7 @@ services:
       - mdcerts:/mnt/mdcerts:rw
       - ./static:/mnt/static:ro
     environment:
-      <<: [*api_common_env, *hosts]
-      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
+      <<: [*httpd_env, *api_common_env, *hosts]
     profiles: ["ssl-local"]
 
   #################### httpd service for ssl-s3 profile ####################
@@ -190,8 +205,7 @@ services:
       - mdcerts:/mnt/mdcerts:rw
       - ./static:/mnt/static:ro
     environment:
-      <<: [*api_common_env, *hosts]
-      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
+      <<: [*httpd_env, *api_common_env, *hosts]
     profiles: ["ssl-s3"]
 
   #################### httpd service for shib-local profile ####################
@@ -209,18 +223,7 @@ services:
       - mdcerts:/mnt/mdcerts:rw
       - ./static:/mnt/static:ro
     environment:
-      <<: [*api_common_env, *hosts]
-      SHIB_DISCO_URL: "${SHIB_DISCO_URL:-}"
-      SHIB_METADATA_CERT: "${SHIB_METADATA_CERT:-}"
-      SHIB_METADATA_FILE: "${SHIB_METADATA_FILE:-}"
-      SHIB_METADATA: "${SHIB_METADATA:-}"
-      SHIB_ENTITY_ID: "${SHIB_ENTITY_ID:-}"
-      SHIB_MAIL: "${SHIB_MAIL:-}"
-      SHIB_GIVEN_NAME: "${SHIB_GIVEN_NAME:-}"
-      SHIB_SURNAME: "${SHIB_SURNAME:-}"
-      SHIB_USERNAME: "${SHIB_USERNAME:-}"
-      SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
-      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
+      <<: [*shib_env, *httpd_env, *api_common_env, *hosts]
     entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
     profiles: ["shib-local"]
 
@@ -239,18 +242,7 @@ services:
       - mdcerts:/mnt/mdcerts:rw
       - ./static:/mnt/static:ro
     environment:
-      <<: [*api_common_env, *hosts]
-      SHIB_DISCO_URL: "${SHIB_DISCO_URL:-}"
-      SHIB_METADATA_CERT: "${SHIB_METADATA_CERT:-}"
-      SHIB_METADATA_FILE: "${SHIB_METADATA_FILE:-}"
-      SHIB_METADATA: "${SHIB_METADATA:-}"
-      SHIB_ENTITY_ID: "${SHIB_ENTITY_ID:-}"
-      SHIB_MAIL: "${SHIB_MAIL:-}"
-      SHIB_GIVEN_NAME: "${SHIB_GIVEN_NAME:-}"
-      SHIB_SURNAME: "${SHIB_SURNAME:-}"
-      SHIB_USERNAME: "${SHIB_USERNAME:-}"
-      SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
-      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
+      <<: [*shib_env, *httpd_env, *api_common_env, *hosts]
     entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
     profiles: ["shib-s3"]
     
@@ -952,7 +944,7 @@ services:
     environment:
       <<: [*api_common_env, *hosts]
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
-    entrypoint: [ "bash", "/mnt/startup/httpd-demo-startup.bash" ]
+    entrypoint: [ "bash", "/mnt/startup/httpd-demo-entrypoint.bash" ]
     profiles: ["demo-local-dev"]
 
   ui-local-dev:
@@ -1220,7 +1212,7 @@ services:
     environment:
       <<: [*api_common_env, *hosts]
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
-    entrypoint: [ "bash", "/mnt/startup/httpd-demo-startup.bash" ]
+    entrypoint: [ "bash", "/mnt/startup/httpd-demo-entrypoint.bash" ]
     profiles: ["demo-s3-dev"]
 
   api-s3-dev:
@@ -1320,9 +1312,7 @@ services:
       - mdcerts:/mnt/mdcerts:rw
       - ./static:/mnt/static:ro
     environment:
-      <<: [*api_common_env, *hosts]
-      PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-}"
-      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
+      <<: [*httpd_env, *api_common_env, *hosts]
     entrypoint: [ "bash", "/httpd-ssl-entrypoint.bash" ]
     profiles: ["ssl-local-dev", "ssl-s3-dev"]
 
@@ -1345,18 +1335,7 @@ services:
       - mdcerts:/mnt/mdcerts:rw
       - ./static:/mnt/static:ro
     environment:
-      <<: [*api_common_env, *hosts]
-      SHIB_DISCO_URL: "${SHIB_DISCO_URL:-}"
-      SHIB_METADATA_CERT: "${SHIB_METADATA_CERT:-}"
-      SHIB_METADATA_FILE: "${SHIB_METADATA_FILE:-}"
-      SHIB_METADATA: "${SHIB_METADATA:-}"
-      SHIB_ENTITY_ID: "${SHIB_ENTITY_ID:-}"
-      SHIB_MAIL: "${SHIB_MAIL:-}"
-      SHIB_GIVEN_NAME: "${SHIB_GIVEN_NAME:-}"
-      SHIB_SURNAME: "${SHIB_SURNAME:-}"
-      SHIB_USERNAME: "${SHIB_USERNAME:-}"
-      SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
-      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
+      <<: [*shib_env, *httpd_env, *api_common_env, *hosts]
     entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
     profiles: ["shib-local-dev", "shib-s3-dev"]
 
