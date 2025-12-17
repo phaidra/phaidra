@@ -36,3 +36,6 @@ certs/handle
 
 static/*
 !static/index.html
+
+pfsa/*
+!pfsa/index.html
