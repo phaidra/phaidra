@@ -1334,6 +1334,8 @@ services:
       PHAIDRA_HOSTPORT: "${PHAIDRA_HOSTPORT:-}"
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
       HTTPD_ACME_ENABLE: "${HTTPD_ACME_ENABLE:-false}"
+      CA_ENDPOINT: "${CA_ENDPOINT:-LetsEncrypt-Test}"
+      MD_CERTIFICATE_AGREEMENT: "${MD_CERTIFICATE_AGREEMENT?}"
     entrypoint: [ "bash", "/httpd-ssl-entrypoint.bash" ]
     profiles: ["ssl-local-dev", "ssl-s3-dev"]
 
@@ -1368,6 +1370,8 @@ services:
       SHIB_USERNAME: "${SHIB_USERNAME:-}"
       SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
+      CA_ENDPOINT: "${CA_ENDPOINT:-LetsEncrypt-Test}"
+      MD_CERTIFICATE_AGREEMENT: "${MD_CERTIFICATE_AGREEMENT?}"
     entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
     profiles: ["shib-local-dev", "shib-s3-dev"]
 
