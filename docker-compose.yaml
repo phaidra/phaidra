@@ -64,8 +64,6 @@ x-custom:
     SOLR_PASS: "${SOLR_PASS:-phaidra}"
     SOLR_USER: "${SOLR_USER:-phaidra}"
     PHAIDRA_ADMIN_EMAIL: "${PHAIDRA_ADMIN_EMAIL:?}"
-    CA_ENDPOINT: "${CA_ENDPOINT:-LetsEncrypt-Test}"
-    MD_CERTIFICATE_AGREEMENT: "${MD_CERTIFICATE_AGREEMENT?}"
     MARIADB_FEDORA_HOST: "${MARIADB_FEDORA_HOST:-mariadb-fedora}"
     MARIADB_FEDORA_USER: "${MARIADB_FEDORA_USER:-phaidra}"
     MARIADB_FEDORA_PASSWORD: "${MARIADB_FEDORA_PASSWORD:-phaidra}"
@@ -175,6 +173,8 @@ services:
       <<: [*api_common_env, *hosts]
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
       HTTPD_ACME_ENABLE: "${HTTPD_ACME_ENABLE:-false}"
+      CA_ENDPOINT: "${CA_ENDPOINT:-LetsEncrypt-Test}"
+      MD_CERTIFICATE_AGREEMENT: "${MD_CERTIFICATE_AGREEMENT?}"
     profiles: ["ssl-local"]
 
   #################### httpd service for ssl-s3 profile ####################
@@ -193,6 +193,9 @@ services:
     environment:
       <<: [*api_common_env, *hosts]
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
+      HTTPD_ACME_ENABLE: "${HTTPD_ACME_ENABLE:-false}"
+      CA_ENDPOINT: "${CA_ENDPOINT:-LetsEncrypt-Test}"
+      MD_CERTIFICATE_AGREEMENT: "${MD_CERTIFICATE_AGREEMENT?}"
     profiles: ["ssl-s3"]
 
   #################### httpd service for shib-local profile ####################
@@ -222,6 +225,9 @@ services:
       SHIB_USERNAME: "${SHIB_USERNAME:-}"
       SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
+      HTTPD_ACME_ENABLE: "${HTTPD_ACME_ENABLE:-false}"
+      CA_ENDPOINT: "${CA_ENDPOINT:-LetsEncrypt-Test}"
+      MD_CERTIFICATE_AGREEMENT: "${MD_CERTIFICATE_AGREEMENT?}"
     entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
     profiles: ["shib-local"]
 
@@ -252,6 +258,9 @@ services:
       SHIB_USERNAME: "${SHIB_USERNAME:-}"
       SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
+      HTTPD_ACME_ENABLE: "${HTTPD_ACME_ENABLE:-false}"
+      CA_ENDPOINT: "${CA_ENDPOINT:-LetsEncrypt-Test}"
+      MD_CERTIFICATE_AGREEMENT: "${MD_CERTIFICATE_AGREEMENT?}"
     entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
     profiles: ["shib-s3"]
     
