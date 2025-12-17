@@ -310,6 +310,18 @@ sub add_octets_hook {
     } else {
       $c->app->log->error("Hooks: could not get cmodel, not creating imageserver/streaming job");
     }
+
+    if (exists($c->app->config->{hooks})) {
+      if (exists($c->app->config->{hooks}->{updateindex}) && $c->app->config->{hooks}->{updateindex}) {
+        my $dc_model     = PhaidraAPI::Model::Dc->new;
+        my $index_model  = PhaidraAPI::Model::Index->new;
+        my $object_model = PhaidraAPI::Model::Object->new;
+        my $r            = $index_model->update($c, $pid, $dc_model, $search_model, $object_model);
+        if ($r->{status} ne 200) {
+          push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
+        }
+      }
+    }
     
   }
 

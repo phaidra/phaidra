@@ -2956,6 +2956,7 @@ export default {
         })
         if (response.status === 200) {
           this.$store.commit('setAlerts', [{ type: 'success', msg: 'File was sucessfully uploaded' }])
+          await this.$store.dispatch('fetchObjectInfo', this.objectInfo.pid)
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
             this.$store.commit('setAlerts', response.data.alerts)
