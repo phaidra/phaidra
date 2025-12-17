@@ -1370,6 +1370,7 @@ services:
       SHIB_USERNAME: "${SHIB_USERNAME:-}"
       SHIB_AFFILIATION: "${SHIB_AFFILIATION:-}"
       UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
+      HTTPD_ACME_ENABLE: "${HTTPD_ACME_ENABLE:-false}"
       CA_ENDPOINT: "${CA_ENDPOINT:-LetsEncrypt-Test}"
       MD_CERTIFICATE_AGREEMENT: "${MD_CERTIFICATE_AGREEMENT?}"
     entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
