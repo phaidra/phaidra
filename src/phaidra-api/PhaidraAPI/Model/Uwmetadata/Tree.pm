@@ -344,7 +344,7 @@ our %tree = (
                     { "labels" => {
                         "de" => "AC-Nummer",
                         "en" => "AC-Number",
-                        "it" => "Numero-AC",
+                        "it" => "ID Catalogo",
                         "sr" => "AC-broj"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/extended/V1.0/voc_31/1552151"
