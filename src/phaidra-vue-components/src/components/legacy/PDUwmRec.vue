@@ -62,7 +62,7 @@
             <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
             <v-col cols="12" md="10" class="wiv">
               <span v-if="dc_rights && dc_rights.length > 0">
-                <a :href="dc_rights[1]" target="_blank">{{ ch.labels[alpha2locale] }}</a>
+                <a :href="(dc_rights && dc_rights.length > 1 && dc_rights[1]) ? dc_rights[1] : 'http://rightsstatements.org/vocab/InC/1.0/'" target="_blank">{{ ch.labels[alpha2locale] }}</a>
               </span>
               <span v-else>
                 {{ ch.labels[alpha2locale] }}
