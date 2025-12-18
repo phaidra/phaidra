@@ -286,7 +286,7 @@
                 <v-col cols="12" md="10" v-if="organizationRadio === 'other'">
                   <v-text-field
                     :value="organizationText"
-                    :label="$t('Organization')"
+                    :label="$t('Organization') + ' *'"
                     v-on:blur="$emit('input-organization-other', $event.target.value)"
                     :filled="inputStyle==='filled'"
                     :outlined="inputStyle==='outlined'"

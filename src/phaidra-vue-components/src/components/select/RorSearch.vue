@@ -108,7 +108,7 @@ export default {
     },
     label: {
       type: String,
-      default: 'ROR Search'
+      default: 'ROR Search *'
     },
     searchlabel: {
       type: String,
