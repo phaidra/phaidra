@@ -67,6 +67,7 @@
         :feedback-user="this.user" 
         :feedback-context="'Related object submit'" 
         :mouseoverfielddef="true"
+        :disableChecksum="instanceconfig.disableChecksum"
         v-on:load-form="form = $event" 
         v-on:load-rights="rights = $event"
         v-on:object-created="objectCreated($event)"

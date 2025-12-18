@@ -9,6 +9,7 @@
         :enablerights="true" 
         :addbutton="true" 
         :templating="templating"
+        :disableChecksum="instanceconfig.disableChecksum"
         :validationfnc="validationfnc ? validationfnc : null" 
         v-on:load-form="form = $event" 
         v-on:load-rights="rights = $event"
