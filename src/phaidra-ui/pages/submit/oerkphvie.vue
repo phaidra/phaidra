@@ -15,6 +15,7 @@
           :mouseoverfielddef="true"
           :help="false"
           :debug="false"
+          :disableChecksum="instanceconfig.disableChecksum"
           :feedback="false"
           v-on:load-form="form = $event"
           v-on:load-rights="rights = $event"

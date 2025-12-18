@@ -15,6 +15,7 @@
           :help="false"
           :debug="false"
           :feedback="false"
+          :disableChecksum="instanceconfig.disableChecksum"
           v-on:load-form="form = $event"
           v-on:load-rights="rights = $event"
           v-on:object-created="objectCreated($event)"
