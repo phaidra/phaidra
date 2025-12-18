@@ -913,7 +913,7 @@
   "Selected results": "Risultati selezionati",
   "Add to collection": "Aggiungi a Collezione",
   "Add objects to collection": "Aggiungi oggetti a Collezione",
-  "Remove from collection": "Rimuovi dalla collezione",
+  "Remove from collection": "Rimuovi da Collezione",
   "Cite": "Cita",
   "Get BibTex": "Crea BibTeX",
   "Get citation": "Crea citazione",
@@ -1086,7 +1086,7 @@
   "Genre of the creative work, broadcast channel or group. Example: Master thesis, Comedy, Late Renaissance": "Genere dell'opera creativa, del canale di trasmissione o del gruppo. Esempio: Tesi di laurea, Commedia, Tardo Rinascimento.",
   "The status in the publication process of journal articles.": "Lo stato nel processo di pubblicazione degli articoli di rivista.",
   "Information about who can access the resource or an indication of its security status.": "Limitazioni di accesso: categorie di utenti, sistemi di protezione...",
-  "A name given to the resource. Typically, a title will be a name by which the resource is formally known.": "Un nome dato alla risorsa. Tipicamente, un Titolo è un nome con cui la risorsa è formalmente conosciuta.",
+  "A name given to the resource. Typically, a Title will be a name by which the resource is formally known.": "Un nome dato alla risorsa. Tipicamente, un titolo è un nome con cui la risorsa è formalmente conosciuta.",
   "Title in another language and/or script.": "Titolo in un'altra lingua e/o scrittura.",
   "Summary or abstract of the resource described.": "Sintesi o abstract della risorsa descritta.",
   "Table of contents of the described resource.": "Indice della risorsa descritta.",
@@ -1425,5 +1425,6 @@
   "Can be used inside \"Complex subject\" to specify what the subject metadata are describing.": "Può essere usato all'interno di un \"Soggetto complesso\" per specificare cosa descrivono i metadati del soggetto.",
   "Important in cases where the same metadata fields have to be used on different description levels (ie dimensions - of the photography vs dimensions of the instrument depicted on the photography -, creation date, etc).": "Importante nei casi in cui gli stessi campi di metadati devono essere usati a diversi livelli di descrizione (ad esempio, dimensioni della fotografia vs. dimensioni dello strumento raffigurato nella fotografia, data di creazione, ecc).",
   "Date (text/concept)": "Data (Testo/Concetto)",
-  "OER Object type (Higher Education Resource Types)": "Tipo di oggetto OER (Tipo di risorsa per l'istruzione superiore)"
+  "OER Object type (Higher Education Resource Types)": "Tipo di oggetto OER (Tipo di risorsa per l'istruzione superiore)",
+  "AC-Number": "ID Catalogo"
 }
