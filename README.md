@@ -261,6 +261,7 @@ Some versions might require the execution of a migration script, but this will b
 
 # ACME
 Phaidra supports ACME in the \*ssl\* and \*shib\* profiles. To enable it, the following ENV variables need to be set:
++ `HTTPD_ACME_ENABLE`: Set to `true`.
 + `CA_ENDPOINT`: ACME endpoint you want to use. Defaults to LetsEncrypt staging, i.e. the certificates you get won't be production-ready!
 + `MD_CERTIFICATE_AGREEMENT`: set to `accepted` if you accept the TOS of your CA.
 + `PHAIDRA_ADMIN_EMAIL`: Must be set to a valid email address. The ACME client uses this as contact address.
