@@ -30,6 +30,11 @@ sub get_iiif_manifest {
     return;
   } else {
     if (exists($rdshash->{dshash}->{'IIIF-MANIFEST'})) {
+      my $iiifm_model = PhaidraAPI::Model::Iiifmanifest->new;
+      my $ur = $iiifm_model->update_manifest_metadata($self, $pid);
+      if ($ur->{status} ne 200) {
+        $self->app->log->error("get_iiif_manifest pid[$pid] Error updating IIIF-MANIFEST metadata");
+      }
       my $object_model = PhaidraAPI::Model::Object->new;
       $object_model->proxy_datastream($self, $pid, 'IIIF-MANIFEST', $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password}, 1);
       return;
