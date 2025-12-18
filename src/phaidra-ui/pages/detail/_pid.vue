@@ -2258,14 +2258,25 @@
         <v-divider></v-divider>
         <v-card-text class="mt-4">
           <v-container @drop.prevent="addDropFile" @dragover.prevent>
-            <v-file-input v-model="datareplaceFile" :error-messages="datareplaceUploadErrors"></v-file-input>
+            <v-file-input v-model="datareplaceFile" :error-messages="datareplaceUploadErrors" :disabled="datareplaceLoading"></v-file-input>
           </v-container>
+          <v-row v-if="datareplaceUploadProgress" class="mt-4">
+            <v-col cols="12">
+              <v-row no-gutters>
+                <v-progress-linear :indeterminate="datareplaceUploadProgress === 100" v-model="datareplaceUploadProgress" color="primary"></v-progress-linear>
+              </v-row>
+              <v-row no-gutters class="primary--text mt-1">
+                <span v-if="datareplaceUploadProgress < 100">{{ $t('Uploading...') + ' ' + Math.ceil(datareplaceUploadProgress) }}%</span>
+                <span v-else>{{ $t('Processing...') }}</span>
+              </v-row>
+            </v-col>
+          </v-row>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn outlined @click.stop="datareplaceDialog=false">{{ $t("Cancel") }}</v-btn>
-          <v-btn color="primary" @click="datareplaceUpload()">{{ $t("Upload File") }}</v-btn>
+          <v-btn outlined @click.stop="datareplaceDialog=false" :disabled="datareplaceLoading">{{ $t("Cancel") }}</v-btn>
+          <v-btn color="primary" @click="datareplaceUpload()" :loading="datareplaceLoading" :disabled="datareplaceLoading">{{ $t("Upload File") }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -2652,7 +2663,9 @@ export default {
       collOnlyLatestVersions: true,
       datareplaceDialog: false,
       datareplaceFile: null,
-      datareplaceUploadErrors: []
+      datareplaceUploadErrors: [],
+      datareplaceLoading: false,
+      datareplaceUploadProgress: 0
     };
   },
   async fetch() {
@@ -2925,14 +2938,20 @@ export default {
         this.datareplaceUploadErrors.push(this.$t('Missing file'))
         return
       }
-      this.$store.commit('setLoading', true)
+      this.datareplaceLoading = true
+      this.datareplaceUploadProgress = 0
+      this.datareplaceUploadErrors = []
       try {
         var httpFormData = new FormData()
         httpFormData.append('file', this.datareplaceFile)
+        let self = this
         let response = await this.$axios.post('/object/' + this.objectInfo.pid + '/data', httpFormData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             'X-XSRF-TOKEN': this.$store.state.user.token
+          },
+          onUploadProgress: function (progressEvent) {
+            self.datareplaceUploadProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
           }
         })
         if (response.status === 200) {
@@ -2947,7 +2966,8 @@ export default {
         this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
       } finally {
         this.datareplaceDialog = false
-        this.$store.commit('setLoading', false)
+        this.datareplaceLoading = false
+        this.datareplaceUploadProgress = 0
       }
     },
     loadCitationStyles: async function () {
