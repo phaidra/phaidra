@@ -1251,6 +1251,7 @@ const fields = [
     titleLanguage: '',
     multiplicable: true,
     multilingual: true,
+    allowLanguageCancel: true,
     definition: 'A URL linking to a related resource.'
   },
   {
