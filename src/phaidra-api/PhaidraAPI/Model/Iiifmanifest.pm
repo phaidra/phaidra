@@ -424,6 +424,48 @@ sub update_manifest_metadata {
   }
 }
 
+sub get_updated_manifest {
+
+  my ($self, $c, $pid) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  my $index_model = PhaidraAPI::Model::Index->new;
+  my $r           = $index_model->get($c, $pid);
+  if ($r->{status} ne 200) {
+    return $r;
+  }
+  my $index = $r->{index};
+
+  my $is_recto_verso = 0;
+  if (exists($index->{isbacksideof}) && scalar(@{$index->{isbacksideof}}) > 0) {
+    $is_recto_verso = 1;
+  } else {
+    my $rels_res = $index_model->get_relationships($c, $pid);
+    if ($rels_res->{status} eq 200 && exists($rels_res->{relationships}->{hasbackside}) && scalar(@{$rels_res->{relationships}->{hasbackside}}) > 0) {
+      $is_recto_verso = 1;
+    }
+  }
+
+  if ($is_recto_verso) {
+    my $new_manifest_res = $self->generate_simple_manifest($c, $pid);
+    return $new_manifest_res;
+  } else {
+    my $object_model = PhaidraAPI::Model::Object->new;
+    $r = $object_model->get_datastream($c, $pid, 'IIIF-MANIFEST', $c->stash->{basic_auth_credentials}->{username}, $c->stash->{basic_auth_credentials}->{password});
+    if ($r->{status} ne 200) {
+      return $r;
+    }
+
+    my $manifest = decode_json($r->{'IIIF-MANIFEST'});
+
+    $self->_update_manifest_metadata($c, $pid, $index, $manifest);
+
+    $res->{manifest} = $manifest;
+    return $res;
+  }
+}
+
 sub save_to_object {
   my ($self, $c, $pid, $manifest, $username, $password, $skiphook) = @_;
 
