@@ -316,10 +316,10 @@ export default {
   name: 'p-doi-import',
   mixins: [vocabulary, formvalidation],
   props: {
-    // loadForm: {
-    //   type: Function,
-    //   required: true
-    // }
+    externalForm: {
+      type: Object,
+      required: false
+    }
   },
   data () {
     return {
@@ -370,6 +370,169 @@ export default {
     },
   },
   methods: {
+    cloneForm: function (form) {
+      return JSON.parse(JSON.stringify(form))
+    },
+    findFields: function (form, predicateFn) {
+      const found = []
+      if (!form || !form.sections) return found
+      form.sections.forEach((s, sIdx) => {
+        if (!s.fields) return
+        s.fields.forEach((f, fIdx) => {
+          if (predicateFn(f)) {
+            found.push({ field: f, sectionIndex: sIdx, fieldIndex: fIdx })
+          }
+        })
+      })
+      return found
+    },
+    setIfEmpty: function (obj, key, value, overwrite) {
+      if (value === undefined || value === null || value === '') return
+      if (overwrite || obj[key] === undefined || obj[key] === null || obj[key] === '') {
+        this.$set ? this.$set(obj, key, value) : (obj[key] = value)
+      }
+    },
+    getBaseForm: function () {
+      if (this.form && this.form.sections && this.form.sections.length > 0) {
+        return this.cloneForm(this.form)
+      }
+      if (this.externalForm && this.externalForm.sections && this.externalForm.sections.length > 0) {
+        return this.cloneForm(this.externalForm)
+      }
+      return null
+    },
+    populateFormWithDoiData: function (baseForm, doiImportData, options = {}) {
+      const overwrite = options.overwrite || false
+      if (!baseForm || !baseForm.sections) return baseForm
+
+      // Title
+      const titleHit = this.findFields(baseForm, f => f.component === 'p-title')[0]
+      if (titleHit) {
+        const f = titleHit.field
+        this.setIfEmpty(f, 'title', doiImportData.title, overwrite)
+        this.setIfEmpty(f, 'subtitle', doiImportData.subtitle, overwrite)
+        if (doiImportData.subtitle) f.hideSubtitle = false
+      }
+
+      // Description / abstract
+      const descHit = this.findFields(baseForm, f => f.id === 'description' || f.fieldname === 'Description' || f.component === 'p-text-field')[0]
+      if (descHit && doiImportData.descriptions && doiImportData.descriptions.length > 0) {
+        const f = descHit.field
+        const firstDesc = doiImportData.descriptions[0]
+        this.setIfEmpty(f, 'value', firstDesc.description, overwrite)
+        this.setIfEmpty(f, 'language', firstDesc.lang, overwrite)
+      }
+
+      // Language
+      const langHit = this.findFields(baseForm, f => f.predicate === 'dcterms:language' || f.id === 'language')[0]
+      if (langHit) {
+        this.setIfEmpty(langHit.field, 'value', doiImportData.language, overwrite)
+      }
+
+      // Keywords
+      const kwHit = this.findFields(baseForm, f => f.component === 'p-keyword')[0]
+      if (kwHit && doiImportData.keywords && doiImportData.keywords.length > 0) {
+        const f = kwHit.field
+        if (overwrite || !f.value || f.value.length === 0) {
+          f.value = doiImportData.keywords
+        }
+      }
+
+      // Object type
+      const otHit = this.findFields(baseForm, f => f.id === 'object-type-checkboxes' || f.component === 'p-object-type')[0]
+      if (otHit && doiImportData.publicationTypeId) {
+        const f = otHit.field
+        f.selectedTerms = [
+          { value: doiImportData.publicationTypeId }
+        ]
+      }
+
+      // DOI identifier
+      const altIdHit = this.findFields(baseForm, f => f.id === 'alternate-identifier' || f.component === 'p-alternate-identifier')[0]
+      if (altIdHit && doiImportData.doi) {
+        const f = altIdHit.field
+        this.setIfEmpty(f, 'value', doiImportData.doi, overwrite)
+        if (!f.type) {
+          // best effort set to DOI if available in vocab
+          f.type = 'ids:doi'
+        }
+      }
+
+      // Date issued
+      const issuedHit = this.findFields(baseForm, f => f.component === 'p-date-edtf' && (f.type === 'dcterms:issued' || f.mainSubmitDate))[0]
+      if (issuedHit) {
+        this.setIfEmpty(issuedHit.field, 'value', doiImportData.dateIssued, overwrite)
+      }
+
+      // Series / journal
+      const seriesHit = this.findFields(baseForm, f => f.component === 'p-series')[0]
+      if (seriesHit) {
+        const f = seriesHit.field
+        this.setIfEmpty(f, 'title', doiImportData.journalTitle, overwrite)
+        this.setIfEmpty(f, 'issn', doiImportData.journalISSN, overwrite)
+        this.setIfEmpty(f, 'volume', doiImportData.journalVolume, overwrite)
+        this.setIfEmpty(f, 'issue', doiImportData.journalIssue, overwrite)
+        this.setIfEmpty(f, 'pageStart', doiImportData.pageStart, overwrite)
+        this.setIfEmpty(f, 'pageEnd', doiImportData.pageEnd, overwrite)
+        this.setIfEmpty(f, 'issued', doiImportData.dateIssued, overwrite)
+      }
+
+      // Publisher
+      const publHit = this.findFields(baseForm, f => f.component === 'p-bf-publication')[0]
+      if (publHit) {
+        const f = publHit.field
+        this.setIfEmpty(f, 'publisherName', doiImportData.publisher, overwrite)
+        this.setIfEmpty(f, 'publishingDate', doiImportData.dateIssued, overwrite)
+      }
+
+      // License
+      const licHit = this.findFields(baseForm, f => (f.id === 'license' || f.predicate === 'edm:rights'))[0]
+      if (licHit && doiImportData.license) {
+        this.setIfEmpty(licHit.field, 'value', doiImportData.license, overwrite)
+      }
+
+      // Authors / roles
+      if (doiImportData.authors && doiImportData.authors.length > 0) {
+        const roleHits = this.findFields(baseForm, f => f.component === 'p-entity-extended' || f.component === 'p-entity')
+        const targetSectionIndex = roleHits[0]?.sectionIndex ?? 0
+        const targetSection = baseForm.sections[targetSectionIndex]
+        const ensureRoleField = () => {
+          if (roleHits.length > 0) {
+            return roleHits.shift().field
+          }
+          // create new role-extended field if multiplicable is allowed
+          const newRole = fields.getField('role-extended')
+          targetSection.fields.push(newRole)
+          return newRole
+        }
+        doiImportData.authors.forEach((author, idx) => {
+          const roleField = ensureRoleField()
+          if (!roleField) return
+          roleField.role = 'role:aut'
+          roleField.roleVocabulary = roleField.roleVocabulary || 'submitrolepredicate'
+          roleField.identifierType = roleField.identifierType || 'ids:orcid'
+          roleField.identifierLabel = roleField.identifierLabel || 'ORCID'
+          roleField.showIdentifier = true
+          roleField.showIdentifierType = roleField.showIdentifierType === undefined ? false : roleField.showIdentifierType
+          if (author.type === 'schema:Person') {
+            this.setIfEmpty(roleField, 'type', 'schema:Person', true)
+            this.setIfEmpty(roleField, 'firstname', author.firstname, overwrite || idx === 0)
+            this.setIfEmpty(roleField, 'lastname', author.lastname, overwrite || idx === 0)
+            this.setIfEmpty(roleField, 'identifierText', author.orcid, overwrite || idx === 0)
+            if (author.affiliation && author.affiliation.length > 0) {
+              this.setIfEmpty(roleField, 'affiliationText', author.affiliation[0], overwrite || idx === 0)
+              this.setIfEmpty(roleField, 'affiliationType', 'other', true)
+            }
+          } else if (author.type === 'schema:Organization') {
+            this.setIfEmpty(roleField, 'type', 'schema:Organization', true)
+            this.setIfEmpty(roleField, 'organizationText', author.name, overwrite || idx === 0)
+            this.setIfEmpty(roleField, 'organizationType', 'other', true)
+          }
+        })
+      }
+
+      return baseForm
+    },
     proceedForm: function () {
       console.log('this.form', this.form);
       this.$emit('load-form', this.form);
@@ -405,7 +568,7 @@ export default {
               const dataciteResp = await this.$axios.get(`https://api.datacite.org/dois/${this.doiToImport}`)
               const dataciteData = dataciteResp?.data;
               this.doiImportData = constructDataCite(dataciteData, this)
-              await this.resetForm(this, this.doiImportData);
+              await this.applyDoiImportData(this.doiImportData);
               if (this.doiImportData.journalISSN) {
                 this.journalSearchISSN = this.doiImportData.journalISSN;
                 // this.journalSearch();
@@ -732,7 +895,7 @@ if (crossrefData['issued']['date-parts'][0]) {
             }
             console.log('this.doiImportData', this.doiImportData);
             // return
-            await this.resetForm(this, this.doiImportData);
+            await this.applyDoiImportData(this.doiImportData);
             if (this.doiImportData.journalISSN) {
               this.journalSearchISSN = this.doiImportData.journalISSN;
               // this.journalSearch();
@@ -748,6 +911,14 @@ if (crossrefData['issued']['date-parts'][0]) {
         } finally {
           this.loading = false;
         }
+      }
+    },
+    applyDoiImportData: async function (doiImportData) {
+      const baseForm = this.getBaseForm()
+      if (baseForm) {
+        this.form = this.populateFormWithDoiData(baseForm, doiImportData, { overwrite: false })
+      } else {
+        await this.resetForm(this, doiImportData)
       }
     },
     resetForm: async function (self, doiImportData) {
@@ -883,17 +1054,18 @@ if (crossrefData['issued']['date-parts'][0]) {
 
       if (doiImportData && doiImportData.authors && doiImportData.authors.length > 0) {
         for (let author of doiImportData.authors) {
-          let role = fields.getField("role");
+          let role = fields.getField("role-extended");
           role.ordergroup = "role";
           role.roleVocabulary = "submitrolepredicate";
           role.identifierType = "ids:orcid";
-          role.showDefinitions = true;
+          role.identifierLabel = "ORCID";
           role.showIdentifier = true;
+          role.showIdentifierType = false;
           role.isParentSelectionDisabled = self.instanceconfig?.isParentSelectionDisabled;
-          
           role.role = "role:aut";
-          
+
           if (author.type === "schema:Person") {
+            role.type = "schema:Person";
             role.firstname = author.firstname || "";
             role.lastname = author.lastname || "";
             if (author.orcid) {
@@ -904,20 +1076,23 @@ if (crossrefData['issued']['date-parts'][0]) {
               role.affiliationType = "other";
             }
           } else if (author.type === "schema:Organization") {
-            role.name = author.name || "";
             role.type = "schema:Organization";
+            role.organizationText = author.name || "";
+            role.organizationType = "other";
           }
-          
+
           self.form.sections[0].fields.push(role);
         }
       } else {
-        let role = fields.getField("role");
+        let role = fields.getField("role-extended");
         role.ordergroup = "role";
         role.roleVocabulary = "submitrolepredicate";
         role.identifierType = "ids:orcid";
-        role.showDefinitions = true;
+        role.identifierLabel = "ORCID";
         role.showIdentifier = true;
+        role.showIdentifierType = false;
         role.isParentSelectionDisabled = self.instanceconfig?.isParentSelectionDisabled;
+        role.role = "role:aut";
         self.form.sections[0].fields.push(role);
       }
 
