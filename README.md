@@ -8,6 +8,12 @@ Running PHAIDRA website (light theme)             |  Running PHAIDRA website (da
 ![alt text](./pictures/running_phaidra_light.png "Screenshot of PHAIDRA landing page (light theme)") | ![alt text](./pictures/running_phaidra_dark.png "Screenshot of PHAIDRA landing page (dark theme)")
 ___
 
+# TL;DR
+
+```
+docker compose --profile demo-local up -d
+```
+
 # About this repository
 
 This repo hosts the source code and the docker-compose startup file of the
