@@ -80,6 +80,7 @@ export const formvalidation = {
             f.roleLabel = this.addAsterixIfNotPresent(f.roleLabel)
             f.firstnameLabel = this.addAsterixIfNotPresent(f.firstnameLabel)
             f.lastnameLabel = this.addAsterixIfNotPresent(f.lastnameLabel)
+            f.required = true
           }
           if (f.component === 'p-select') {
             if (f.predicate === 'edm:rights') {
@@ -112,6 +113,7 @@ export const formvalidation = {
             f.roleLabel = this.addAsterixIfNotPresent(f.roleLabel)
             f.firstnameLabel = this.addAsterixIfNotPresent(f.firstnameLabel)
             f.lastnameLabel = this.addAsterixIfNotPresent(f.lastnameLabel)
+            f.required = true
           }
           if (f.component === 'p-select') {
             if (f.predicate === 'edm:rights') {
@@ -144,6 +146,7 @@ export const formvalidation = {
             f.roleLabel = this.addAsterixIfNotPresent(f.roleLabel)
             f.firstnameLabel = this.addAsterixIfNotPresent(f.firstnameLabel)
             f.lastnameLabel = this.addAsterixIfNotPresent(f.lastnameLabel)
+            f.required = true
           }
           if (f.component === 'p-select') {
             if (f.predicate === 'edm:rights') {
@@ -179,6 +182,7 @@ export const formvalidation = {
             f.roleLabel = this.addAsterixIfNotPresent(f.roleLabel)
             f.firstnameLabel = this.addAsterixIfNotPresent(f.firstnameLabel)
             f.lastnameLabel = this.addAsterixIfNotPresent(f.lastnameLabel)
+            f.required = true
           }
           if (f.component === 'p-select') {
             if (f.predicate === 'edm:rights') {

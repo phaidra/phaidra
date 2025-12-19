@@ -1744,8 +1744,29 @@ export default {
       newRole.isParentSelectionDisabled = f.isParentSelectionDisabled
       newRole.role = f.role
       newRole.showDefinitions = f.showDefinitions
+      if (f.label) {
+        newRole.label = f.label
+      }
+      if (f.roleLabel) {
+        newRole.roleLabel = f.roleLabel
+      }
+      if (f.firstnameLabel) {
+        newRole.firstnameLabel = f.firstnameLabel
+      }
+      if (f.lastnameLabel) {
+        newRole.lastnameLabel = f.lastnameLabel
+      }
+      if (f.organizationSelectLabel) {
+        newRole.organizationSelectLabel = f.organizationSelectLabel
+      }
+      if (f.affiliationSelectLabel) {
+        newRole.affiliationSelectLabel = f.affiliationSelectLabel
+      }
       if (f.hasOwnProperty('removable')) {
         newRole.removable = f.removable
+      }
+      if (f.hasOwnProperty('required')) {
+        newRole.required = f.required
       }
       arr.splice(arr.indexOf(f), 1, newRole)
     },

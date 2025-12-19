@@ -254,7 +254,7 @@
                     :loading="loading"
                     :filter="autocompleteFilterInfix"
                     hide-no-data
-                    :label="$t(organizationSelectLabel)"
+                    :label="isMandatory ? $t(organizationSelectLabel) + ' *' : $t(organizationSelectLabel)"
                     :filled="inputStyle==='filled'"
                     :outlined="inputStyle==='outlined'"
                     return-object
@@ -281,12 +281,18 @@
                   </v-autocomplete>
                 </v-col>
                 <v-col cols="12" md="10" v-if="organizationRadio === 'ror'">
-                  <ror-search v-on:resolve="$emit('input-organization-ror',$event)" :value="organization" :text="organizationRorName" :errorMessages="organizationErrorMessages"></ror-search>
+                  <ror-search
+                    v-on:resolve="$emit('input-organization-ror',$event)"
+                    :value="organization"
+                    :text="organizationRorName"
+                    :errorMessages="organizationErrorMessages"
+                    :label="isMandatory ? $t('ROR Search') + ' *' : $t('ROR Search')"
+                  ></ror-search>
                 </v-col>
                 <v-col cols="12" md="10" v-if="organizationRadio === 'other'">
                   <v-text-field
                     :value="organizationText"
-                    :label="$t('Organization') + ' *'"
+                    :label="isMandatory ? $t('Organization') + ' *' : $t('Organization')"
                     v-on:blur="$emit('input-organization-other', $event.target.value)"
                     :filled="inputStyle==='filled'"
                     :outlined="inputStyle==='outlined'"
@@ -607,6 +613,9 @@ export default {
     },
     appconfig: function () {
       return this.$root.$store.state.appconfig
+    },
+    isMandatory: function () {
+      return this.required === true
     },
     identifierTypePlaceholder: function () {
       for (let i of this.vocabularies[this.identifierVocabulary].terms) {
