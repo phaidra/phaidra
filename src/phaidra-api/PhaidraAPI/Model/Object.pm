@@ -828,6 +828,16 @@ sub create_simple {
   }
 
   my $t0 = [gettimeofday];
+  if ($cmodel eq 'cmodel:Asset' && $mimetype eq 'application/zip' && $metadata->{metadata}->{'json-ld'}->{'edm:hasType'}) {
+    for my $type (@{$metadata->{metadata}->{'json-ld'}->{'edm:hasType'}}) {
+      for my $match (@{$type->{'skos:exactMatch'} || []}) {
+        if ($match eq 'https://pid.phaidra.org/vocabulary/T6C3-46S4') {
+          $c->stash(is_360viewer_candidate => 1);
+          last;
+        }
+      }
+    }
+  }
 
   my $pid = '';
   my $r;
@@ -909,7 +919,7 @@ sub create_simple {
     }
   }
   else {
-    my $aor = $self->add_octets($c, $pid, $upload, $mimetype, $checksumtype, $checksum, $username, $password, 0);
+    my $aor = $self->add_octets($c, $pid, $upload, $mimetype, $checksumtype, $checksum, $username, $password, 0, $cmodel);
     if ($aor->{status} ne 200) {
       return $aor;
     }
@@ -1260,6 +1270,7 @@ sub add_octets {
   my $username     = shift;
   my $password     = shift;
   my $exists       = shift;
+  my $cmodel       = shift;
 
   unless ($username) {
     $username = $c->stash->{basic_auth_credentials}->{username};
@@ -1336,7 +1347,7 @@ sub add_octets {
   }
 
   my $hooks_model = PhaidraAPI::Model::Hooks->new;
-  my $hr          = $hooks_model->add_octets_hook($c, $pid, $exists, $mimetype);
+  my $hr          = $hooks_model->add_octets_hook($c, $pid, $exists, $mimetype, $cmodel);
   if ($hr->{status} ne 200) {
     $c->app->log->error("pid[$pid] add_octets_hook error: " . $c->app->dumper($hr));
   }

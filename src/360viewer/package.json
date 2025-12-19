@@ -1,0 +1,14 @@
+{
+  "name": "360viewer-converter",
+  "version": "1.0.0",
+  "description": "360 viewer frame extraction service for Phaidra",
+  "main": "index.js",
+  "dependencies": {
+    "mongodb": "^6.3.0",
+    "adm-zip": "^0.5.10"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
+

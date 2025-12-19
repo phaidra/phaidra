@@ -776,6 +776,34 @@ sub preview {
           return;
         }
       }
+      my $viewer360_job;
+      if (exists($self->app->config->{paf_mongodb})) {
+        $viewer360_job = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => '360viewer'});
+      }
+      
+      if ($viewer360_job) {
+        my $viewer360_model = PhaidraAPI::Model::Viewer360->new;
+        my $viewer_info = $viewer360_model->get_viewer_config($self, $pid);
+        
+        if ($viewer_info->{status} eq 'processing' || $viewer_info->{status} eq 'new') {
+          $self->render('360viewer/processing');
+          return;
+        }
+        
+        if ($viewer_info->{status} eq 'finished') {
+          $self->stash(viewer_config => Mojo::JSON::encode_json($viewer_info));
+          $self->stash(baseurl => $self->config->{baseurl});
+          $self->stash(scheme => $self->config->{scheme});
+          $self->stash(basepath => $self->config->{basepath});
+          $self->stash(pid => $pid);
+          
+          my $u_model = PhaidraAPI::Model::Util->new;
+          $u_model->track_action($self, $pid, 'preview');
+          
+          $self->render('360viewer/viewer');
+          return;
+        }
+      }
 
        if (($index_mime eq 'application/x-wacz')) {
         
