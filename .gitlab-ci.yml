@@ -249,6 +249,26 @@ build-agent-obj2gltf:
           - dockerfiles/agent-obj2gltf.dockerfile
           - src/agents/obj2gltf/**/*
 
+build-agent-unzip:
+  stage: build-common
+  before_script:
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+  script: >
+    docker context create builder-context &&
+    docker buildx create builder-context --name container --driver=docker-container &&
+    docker buildx build -f dockerfiles/agent-unzip.dockerfile
+    --builder=container
+    --platform=linux/amd64,linux/arm64
+    -t $CI_REGISTRY_USER/agent-unzip:latest
+    -t $CI_REGISTRY_USER/agent-unzip:$CI_COMMIT_SHORT_SHA --push .
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
+      changes:
+        paths:
+          - dockerfiles/agent-unzip.dockerfile
+          - src/agents/unzip/**/*
+
 build-agent-tika:
   stage: build-common
   before_script:
