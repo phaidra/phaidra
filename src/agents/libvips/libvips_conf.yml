@@ -1,4 +1,4 @@
-pixelgecko:
+agent-libvips:
   mongodb:
     host:                  'mongodb-phaidra-dev'
     ## authentication database
@@ -9,5 +9,5 @@ pixelgecko:
     password:              'phaidra'
     col:                   'jobs'
     activity:              'activity'
-  store:                 '/converted_images'
+  store:                 '/derivates-images'
   temp_path:             '/tmp'

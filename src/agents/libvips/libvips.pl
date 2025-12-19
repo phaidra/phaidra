@@ -2,7 +2,7 @@ use strict;
 
 use Data::Dumper;
 $Data::Dumper::Indent= 1;
-use lib qw(/opt/pixelgecko/perl_modules);
+use lib qw(/opt/agent-libvips/perl_modules);
 use PAF::JobQueue;
 use PAF::Activity;
 use YAML::Syck;
@@ -15,11 +15,11 @@ use Net::Amazon::S3::Authorization::Basic;
 autoflush STDOUT 1;
 autoflush STDERR 1;
 
-my $fnm_config= './pixelgecko_conf.yml';
+my $fnm_config= './agent-libvips_conf.yml';
 # my $config= YAML::Syck::LoadFile($fnm_config);
 
 my $config = {
-  'pixelgecko' => {
+  'agent-libvips' => {
     'mongodb' => {
       'host' => $ENV{MONGODB_HOST},
       'db_name' => 'admin',
@@ -29,7 +29,7 @@ my $config = {
       'col' => 'jobs',
       'activity' => 'activity'
     },
-    'store' => $ENV{CONVERTED_IMAGES_PATH},
+    'store' => $ENV{DERIVATES_IMAGES_PATH},
     'temp_path' => '/tmp',
     'sleep_time' => $ENV{IMAGE_CONVERSION_INTERVAL},
   },
@@ -88,12 +88,12 @@ if ($op_mode eq 'direct') {
   exit(0);
 }
 
-my $jq= new PAF::JobQueue( mongodb => $config->{pixelgecko}->{mongodb} );
+my $jq= new PAF::JobQueue( mongodb => $config->{agent-libvips}->{mongodb} );
 my $mdb= $jq->get_database();
 my $activity;
 
-if (exists ($config->{pixelgecko}->{mongodb}->{activity})) {
-  $activity= new PAF::Activity ($mdb, $config->{pixelgecko}->{mongodb}->{activity}, $agent_name);
+if (exists ($config->{agent-libvips}->{mongodb}->{activity})) {
+  $activity= new PAF::Activity ($mdb, $config->{agent-libvips}->{mongodb}->{activity}, $agent_name);
 }
 
 process_job_queue($jq, $activity);
@@ -131,9 +131,9 @@ sub process_job_queue
 
         unless (defined ($job))
           {
-            my $db = exists($config->{pixelgecko}->{mongodb}->{database}) ?
-              $config->{pixelgecko}->{mongodb}->{database} :
-              $config->{pixelgecko}->{mongodb}->{db_name};
+            my $db = exists($config->{agent-libvips}->{mongodb}->{database}) ?
+              $config->{agent-libvips}->{mongodb}->{database} :
+              $config->{agent-libvips}->{mongodb}->{db_name};
 
             if ($activity_record{e} + 600 < time () || $activity_record{status} ne 'idle') {
               $activity_record{status}= 'idle';
@@ -146,7 +146,7 @@ sub process_job_queue
               $activity->save (%activity_record) if (defined ($activity));
             }
 
-            sleep($config->{pixelgecko}->{sleep_time});
+            sleep($config->{agent-libvips}->{sleep_time});
             next JOB;
           }
         print scalar localtime(), " ", "job: ", Dumper ($job);
@@ -204,7 +204,7 @@ sub process_image
     my $cmodel = shift;
     my $path = shift;
 
-    my $tmp_dir= $config->{pixelgecko}->{temp_path};
+    my $tmp_dir= $config->{agent-libvips}->{temp_path};
     # directory for downloaded files
     my $dl_tmp_dir;
     system ('mkdir', '-p', $tmp_dir) unless (-d $tmp_dir);
@@ -218,12 +218,12 @@ sub process_image
     if (defined($idhash) && $idhash =~ /\b([a-f0-9]{40})\b/) {
       my $lvl1= substr($idhash, 0, 1);
       my $lvl2= substr($idhash, 1, 1);
-      my $out_dir= join ('/', $config->{pixelgecko}->{store}, $lvl1, $lvl2);
+      my $out_dir= join ('/', $config->{agent-libvips}->{store}, $lvl1, $lvl2);
       system ('mkdir', '-p', $out_dir) unless (-d $out_dir);
       $out_img= join ('/', $out_dir, $idhash.'.tif');
     } else {
       print scalar localtime(), " ", "idhash[$idhash] is not defined or is not a SHA-1 hash\n";
-      $out_img= join ('/', $config->{pixelgecko}->{store}, $img_fnm.'.tif');
+      $out_img= join ('/', $config->{agent-libvips}->{store}, $img_fnm.'.tif');
     }
 
     my @curl_lines;

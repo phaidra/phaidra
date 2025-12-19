@@ -354,7 +354,7 @@ docker stats
 # EXPECTED OUTPUT:
 CONTAINER ID   NAME                                    CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O         PIDS
 d1eccd22d530   eval-shib-opencast-ui-1                 0.01%     127.8MiB / 15.03GiB   0.83%     297kB / 3.05kB    83MB / 2.26MB     23
-08cc62d6527d   eval-shib-opencast-pixelgecko-1         0.01%     113.3MiB / 15.03GiB   0.74%     49kB / 79.5kB     2.38MB / 0B       1
+08cc62d6527d   eval-shib-opencast-agent-libvips-1         0.01%     113.3MiB / 15.03GiB   0.74%     49kB / 79.5kB     2.38MB / 0B       1
 ec1451f4a0ef   eval-shib-opencast-api-1                0.16%     211.6MiB / 15.03GiB   1.37%     1.33kB / 0B       40.4MB / 28.7kB   5
 1eaaca21a7b9   eval-shib-opencast-chronos-1            0.00%     1.379MiB / 15.03GiB   0.01%     1.33kB / 0B       578kB / 16.4kB    3
 5004acea700d   eval-shib-opencast-lam-1                0.00%     25.34MiB / 15.03GiB   0.16%     1.48kB / 0B       33MB / 86kB       8
@@ -405,7 +405,7 @@ docker compose --project-name eval-shib-opencast-3 --profile shib-local --profil
  ✔ Container eval-shib-opencast-ui-1                Removed                                                                            1.0s 
  ✔ Container eval-shib-opencast-solr-1              Removed                                                                           10.5s 
  ✔ Container eval-shib-opencast-prometheus-1        Removed                                                                            0.7s 
- ✔ Container eval-shib-opencast-pixelgecko-1        Removed                                                                           10.6s 
+ ✔ Container eval-shib-opencast-agent-libvips-1        Removed                                                                           10.6s 
  ✔ Container eval-shib-opencast-cadvisor-1          Removed                                                                            0.8s 
  ✔ Container eval-shib-opencast-chronos-1           Removed                                                                           10.4s 
  ✔ Container eval-shib-opencast-promtail-1          Removed                                                                            0.6s 
@@ -442,7 +442,7 @@ eval-shib-opencast_mariadb_fedora
 eval-shib-opencast_mariadb_phaidra
 eval-shib-opencast_mongodb_phaidra
 eval-shib-opencast_openldap
-eval-shib-opencast_pixelgecko
+eval-shib-opencast_agent-libvips
 eval-shib-opencast_prometheus
 eval-shib-opencast_solr
 eval-shib-opencast_vige
@@ -606,7 +606,7 @@ System when running `docker compose --project-name $PROJECT_NAME --profile shib-
 │   ├── phaidra-api
 │   ├── phaidra-ui
 │   ├── phaidra-vue-components
-│   ├── pixelgecko
+│   ├── agent-libvips
 │   └── vige
 └── website
     ├── about
@@ -621,7 +621,7 @@ System when running `docker compose --project-name $PROJECT_NAME --profile shib-
 
 ## Phaidra Components
 
-In the folder `./src` one will find `phaidra-api`, `phaidra-ui`, `phaidra-vue-components`, and `pixelgecko`, the core components of PHAIDRA.
+In the folder `./src` one will find `phaidra-api`, `phaidra-ui`, `phaidra-vue-components`, and `agent-libvips`, the core components of PHAIDRA.
 See the notes in the following subsections for provenance.
 
 ### phaidra-api
@@ -643,10 +643,10 @@ the repo at <https://github.com/phaidra/phaidra-ui>.
 This directory derives from commit 64f8b9870a0bc66a6b4a58fec5dfe6c2431e72d7 of
 the repo at <https://github.com/phaidra/phaidra-vue-components.git>.
 
-### pixelgecko
+### agent-libvips
 
 This directory derives from commit be0af173eaac297289fa51843b69327f7c95242c of the repo at
-<https://gitlab.phaidra.org/phaidra-dev/pixelgecko>.
+<https://gitlab.phaidra.org/phaidra-dev/agent-libvips>.
 
 ## Software in use
 

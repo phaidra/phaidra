@@ -12,9 +12,9 @@ ENV TIKA_VERSION=3.2.3
 RUN mkdir -p /opt/tika && \
     curl -L "https://downloads.apache.org/tika/$TIKA_VERSION/tika-app-$TIKA_VERSION.jar" -o /opt/tika/tika-app.jar
 # Copy worker sources and install deps
-COPY src/pdf_extraction/package*.json ./
+COPY src/agents/tika/package*.json ./
 RUN npm install --omit=dev
-COPY src/pdf_extraction/ .
+COPY src/agents/tika/ .
 
 # Environment defaults (override via docker-compose)
 ENV MONGO_AGENT_DB=paf_mongodb \

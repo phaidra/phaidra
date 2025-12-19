@@ -25,7 +25,7 @@ spec:
             - name: VERBOSITY
               value: "10"
             - name: FILESYSTEM_PREFIX
-              value: "/mnt/mnt/converted_images"
+              value: "/mnt/mnt/derivates-images"
             - name: BASE_URL
               value: "{{ .Values.OUTSIDE_HTTP_SCHEME }}://{{ .Values.PHAIDRA_HOSTNAME }}{{ .Values.PHAIDRA_PORTSTUB }}{{ .Values.PHAIDRA_HOSTPORT }}/api/imageserver?IIIF="
             - name: LIGHTTPD_PORT
@@ -40,12 +40,12 @@ spec:
               memory: "100M"
           volumeMounts:
             - mountPath: /mnt
-              name: pixelgecko
+              name: derivates-images
               readOnly: true
       restartPolicy: Always
       volumes:
-        - name: pixelgecko
+        - name: derivates-images
           persistentVolumeClaim:
-            claimName: pixelgecko-pvc
+            claimName: derivates-images-pvc
             readOnly: true
 status: {}

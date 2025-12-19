@@ -508,12 +508,12 @@ data:
                     "uid": "phaidra_loki_default"
                   },
                   "editorMode": "builder",
-                  "expr": "{container=\"pixelgecko\"} |= ``",
+                  "expr": "{container=\"agent-libvips\"} |= ``",
                   "queryType": "range",
                   "refId": "A"
                 }
               ],
-              "title": "pixelgecko logs",
+              "title": "agent-libvips logs",
               "type": "logs"
             },
             {

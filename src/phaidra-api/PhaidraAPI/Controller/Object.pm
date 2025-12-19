@@ -613,7 +613,7 @@ sub preview {
         $self->app->log->info("Imageserver job new/in_progress: job status [$imgsrvjobstatus] pid[$pid] cm[$cmodel]");
       }
       if ($imgsrvjobstatus eq 'finished') {
-        # cache file from pixelgecko's converted images bucket if stored on S3.
+        # cache file from agent-libvips's converted images bucket if stored on S3.
         if ( defined $ENV{S3_ENABLED} and $ENV{S3_ENABLED} eq "true" ) {
           my $paf_mongo = $self->paf_mongo;
           my $s3_cache = PhaidraAPI::S3::Cache->new(paf_mongodb=>$paf_mongo,

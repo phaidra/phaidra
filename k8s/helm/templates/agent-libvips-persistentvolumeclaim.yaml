@@ -3,15 +3,15 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    phaidra.app: pixelgecko
-  name: pixelgecko-pvc
+    phaidra.app: agent-libvips
+  name: agent-libvips-pvc
   annotations:
     helm.sh/resource-policy: keep
 spec:
-  storageClassName: "{{ .Values.PIXELGECKO_PVC_TYPE }}"
+  storageClassName: "{{ .Values.AGENT_LIBVIPS_PVC_TYPE }}"
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storage: "{{ .Values.PIXELGECKO_PVC_SIZE }}"
+      storage: "{{ .Values.AGENT_LIBVIPS_PVC_SIZE }}"
 status: {}
