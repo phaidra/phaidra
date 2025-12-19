@@ -645,9 +645,7 @@ services:
   
   360viewer-converter:
     hostname: "360viewer-converter"
-    build:
-      context: .
-      dockerfile: dockerfiles/360viewer.dockerfile
+    image: phaidraorg/360viewer-converter:e1554863
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -673,9 +671,6 @@ services:
   pdf-extraction:
     hostname: "pdf-extraction"
     image: phaidraorg/pdf-extraction:120d6b60
-    # build:
-    #   context: .
-    #   dockerfile: dockerfiles/pdf_extraction.dockerfile
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -698,9 +693,6 @@ services:
   agent-hdl:
     hostname: "agent-hdl"
     image: phaidraorg/agent-hdl:bd2fa648
-    # build:
-    #   context: .
-    #   dockerfile: dockerfiles/agent-hdl.dockerfile
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
