@@ -10,8 +10,6 @@ compose_s3/.env
 components/phaidra-ui/.nuxt/
 components/phaidra-ui/node_modules/
 
-configs/httpd_custom.conf
-
 # generated files from mkdocs
 .cache/
 site/
