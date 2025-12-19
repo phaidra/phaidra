@@ -83,9 +83,6 @@ All default values assume that you are running docker rootless as the first non-
 ## Demo version with local storage
 ###  Prerequisites
 + make sure no other service is using port 8899 on your computer.
-+ set the following variables in your `.env` file:
-  + `PHAIDRA_ADMIN_EMAIL`
-  + `MD_CERTIFICATE_AGREEMENT`
 
 ### Startup
 Run the following command to get PHAIDRA running on `http://localhost:8899`:
