@@ -32,7 +32,7 @@ async function processJob(job, db) {
   try {
     if (!job.path) {
       await db.collection('jobs').updateOne(
-        { pid: job.pid, agent: '360viewer' },
+        { pid: job.pid, agent: 'unzip' },
         { $set: { status: 'new' } }
       );
       return false;
@@ -79,7 +79,7 @@ async function processJob(job, db) {
 
 async function updateJobStatus(pid, status, additionalFields = {}) {
   await db.collection(config.mongodb.collection).updateOne(
-    { pid, agent: '360viewer' },
+    { pid, agent: 'unzip' },
     { $set: { status, ...additionalFields } }
   );
 }
@@ -96,13 +96,13 @@ async function main() {
   while (true) {
     try {
       const jobs = await db.collection(config.mongodb.collection)
-        .find({ agent: '360viewer', status: 'new' })
+        .find({ agent: 'unzip', status: 'new' })
         .limit(10)
         .toArray();
 
       for (const job of jobs) {
         await db.collection(config.mongodb.collection).updateOne(
-          { pid: job.pid, agent: '360viewer' },
+          { pid: job.pid, agent: 'unzip' },
           { $set: { status: 'processing' } }
         );
         await processJob(job, db);
