@@ -279,7 +279,7 @@ After starting the containers, the mod_md will fetch the certificates, but a (gr
 + `website`: For convenient development of our website at [www.phaidra.org](https://www.phaidra.org).
    This profile can be activated by running `docker compose --profile website up -d`.  You will have a hot-reloading version of our website at `http://localhost:8000` which is controlled by `mkdocs.yaml` and renders the pages under `website`.
 ## Add-On
-+ `external-opencast`: can be added to any of the profiles that use local storage, if an external opencast-streaming-server is available to you. Uses a versioned image including all code. It can be started up with a command like: `docker compose --profile ssl-local --profile external-opencast up -d`.  An additional container (`vige`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
++ `external-opencast`: can be added to any of the profiles that use local storage, if an external opencast-streaming-server is available to you. Uses a versioned image including all code. It can be started up with a command like: `docker compose --profile ssl-local --profile external-opencast up -d`.  An additional container (`agent-opencast`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
 
   The following variables will have to be set:
   + `OC_EXTERNAL="ACTIVATED"`
@@ -288,7 +288,7 @@ After starting the containers, the mod_md will fetch the certificates, but a (gr
   + `OC_EVENTS_URL`
   + `OC_INGEST_URL`
 
-+ `external-opencast-dev`: can be added to any of the dev-profiles that use local storage, if an external opencast-streaming-server is available to you. Uses bindmounted code from the repository. It can be started up with a command like: `docker compose --profile ssl-local-dev --profile external-opencast-dev up -d`.  An additional container (`vige`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
++ `external-opencast-dev`: can be added to any of the dev-profiles that use local storage, if an external opencast-streaming-server is available to you. Uses bindmounted code from the repository. It can be started up with a command like: `docker compose --profile ssl-local-dev --profile external-opencast-dev up -d`.  An additional container (`agent-opencast`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
     The following variables will have to be set:
   + `OC_EXTERNAL="ACTIVATED"`
   + `OC_USER`
@@ -539,135 +539,51 @@ source .env
  docker container restart $COMPOSE_PROJECT_NAME-httpd-ssl-local-1 
 ```
 
-
-# Technical Notes
-## Graphical System Overview
-###  Demo with local storage
-System when running `docker compose --project-name $PROJECT_NAME --profile demo-local up -d`.
-
-![](./pictures/demo-local.svg)
-
-+ Color meanings:
-  + turquoise -- container-volume-mapping.
-  + yellow -- container-container-communication (active).
-  + black -- container-container-communication (passive/monitoring).
-  + magenta -- container-container-communication (proxy).
-
-###  SSL with local storage
-System when running `docker compose --project-name $PROJECT_NAME --profile ssl-local up -d`.
-
-![](./pictures/ssl-local.svg)
-
-+ Color meanings:
-  + turquoise -- container-volume-mapping (named).
-  + blue -- container-volume-mapping (bind).
-  + yellow -- container-container-communication (active).
-  + black -- container-container-communication (passive/monitoring).
-  + magenta -- container-container-communication (proxy).
-
-
-###  Shibboleth with local storage
-System when running `docker compose --project-name $PROJECT_NAME --profile shib-local up -d`.
-
-![](./pictures/shib-local.svg)
-
-+ Color meanings:
-  + turquoise -- container-volume-mapping (named).
-  + blue -- container-volume-mapping (bind).
-  + yellow -- container-container-communication (active).
-  + black -- container-container-communication (passive/monitoring).
-  + magenta -- container-container-communication (proxy).
-
-## Directory structure of this repository
-
-``` example
-.
-├── certs
-│   ├── httpd
-│   └── shibboleth
-├── container_init
-│   ├── api
-│   ├── chronos
-│   ├── grafana
-│   ├── httpd
-│   ├── loki
-│   ├── mariadb
-│   ├── mongodb
-│   ├── openldap
-│   ├── postgres
-│   ├── prometheus
-│   ├── promtail
-│   └── solr
-├── dockerfiles
-├── k8s
-│   └── helm
-├── pictures
-├── src
-│   ├── phaidra-api
-│   ├── phaidra-ui
-│   ├── phaidra-vue-components
-│   ├── agent-libvips
-│   └── vige
-└── website
-    ├── about
-    ├── assets
-    ├── community
-    ├── docs
-    ├── fair-data
-    └── overrides
-
-34 directories
-```
-
 ## Phaidra Components
 
-In the folder `./src` one will find `phaidra-api`, `phaidra-ui`, `phaidra-vue-components`, and `agent-libvips`, the core components of PHAIDRA.
+In the folder `./src` one will find `phaidra-api`, `phaidra-ui`, `phaidra-vue-components`, and `agents`, the core components of PHAIDRA.
 See the notes in the following subsections for provenance.
 
 ### phaidra-api
-
-This directory derives from commit c880c4159c5d68b25426451f4822f744a53ef680 of
-the repo at <https://github.com/phaidra/phaidra-api>.
 
 The Phaidra API comes with some utilities, usually executed with `docker exec -it phaidra-api-1 utils/<utility>`.
 
 - the utility `utils/indexObjects.pl` allows you to re-index all objects. It takes the range of creation dates from and to as parameters.
 
-### phaidra-ui
-
-This directory derives from commit 5c9455373d36f4756e9caa2af989fac4dbd28f9f of
-the repo at <https://github.com/phaidra/phaidra-ui>.
-
-### phaidra-vue-components
-
-This directory derives from commit 64f8b9870a0bc66a6b4a58fec5dfe6c2431e72d7 of
-the repo at <https://github.com/phaidra/phaidra-vue-components.git>.
-
-### agent-libvips
-
-This directory derives from commit be0af173eaac297289fa51843b69327f7c95242c of the repo at
-<https://gitlab.phaidra.org/phaidra-dev/agent-libvips>.
+- in the folder `migrations` you can find scripts needed to migrate between PHAIDRA versions.
 
 ## Software in use
 
 [PHAIDRA](https://phaidra.org/) is based on the shoulders of the
 following great pieces of software (in alphabetical order):
 
+-   [360 Javascript Viewer](https://www.360-javascriptviewer.com/)
+-   [3DHOP](https://3dhop.net/)
 -   [Apache HTTP server](https://httpd.apache.org/)
 -   [Apache Solr](https://solr.apache.org/)
+-   [Apache Tika](https://tika.apache.org/)
 -   [DbGate](https://dbgate.org/)
 -   [Debian](https://www.debian.org/)
 -   [Docker](https://www.docker.com/)
+-   [Grafana](https://grafana.com/)
 -   [LDAP Account Manager](https://www.ldap-account-manager.org/lamcms/)
--   [Lyrasis Fedora](https://fedora.lyrasis.org/)
+-   [Fedora](https://fedora.lyrasis.org/)
+-   [Handle](http://handle.net/)
+-   [IIPMooViewer](https://iipimage.sourceforge.io/documentation/iipmooviewer)
+-   [iipsrv](https://iipimage.sourceforge.io/)
+-   [libvips](https://www.libvips.org/)
 -   [MariaDB](https://mariadb.org/)
 -   [MongoDB](https://www.mongodb.com/)
+-   [Mojolicious](https://mojolicious.org/)
+-   [Nuxt](https://nuxt.com/)
+-   [obj2gltf](https://github.com/CesiumGS/obj2gltf)
 -   [OpenLDAP](https://www.openldap.org/)
--   [Perl](https://www.perl.org/)
+-   [pdf.js](https://mozilla.github.io/pdf.js/)
 -   [Shibboleth](https://www.shibboleth.net/)
+-   [three.js](https://threejs.org/)
 -   [Ubuntu](https://ubuntu.com/)
+-   [video.js](https://videojs.org/)
 -   [Vue.js](https://vuejs.org/)
-
 
 ## Docker Notes
 Below you see what we use at the time of writing (Fri Sep 15 01:18:31 PM
