@@ -45,7 +45,7 @@ function get_mpids {
         -p $M_PASS \
         mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
         --eval \
-        'db.jobs.find({"oc_mpid": {$exists: true}, "agent": "vige", "status": "sent"}).forEach(r=>print(JSON.stringify(r)))' | \
+        'db.jobs.find({"oc_mpid": {$exists: true}, "agent": "opencast", "status": "sent"}).forEach(r=>print(JSON.stringify(r)))' | \
         jq -r '.oc_mpid'
 }
 
@@ -81,7 +81,7 @@ function set_url {
         -u $M_USER \
         -p $M_PASS \
         mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
-        --eval 'db.jobs.findOneAndUpdate({ pid: "'$1'", "agent": "vige" }, { $set: { "'$2'": "'$3'" } }, { sort: { created: -1 } })'
+        --eval 'db.jobs.findOneAndUpdate({ pid: "'$1'", "agent": "opencast" }, { $set: { "'$2'": "'$3'" } }, { sort: { created: -1 } })'
 }
 
     

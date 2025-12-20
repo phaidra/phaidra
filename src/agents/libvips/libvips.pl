@@ -52,7 +52,7 @@ my $config = {
 
 my $op_mode;
 
-my $agent_name= 'pige';
+my $agent_name= 'libvips';
 
 my @JOBS;
 while (defined (my $arg= shift (@ARGV))) {

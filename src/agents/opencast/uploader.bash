@@ -9,7 +9,7 @@ function get_new_jobs {
         -p $M_PASS \
         mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
         --eval \
-        'db.jobs.find({"agent": "vige", "status": "new"}).forEach(r=>print(JSON.stringify(r)))' | \
+        'db.jobs.find({"agent": "opencast", "status": "new"}).forEach(r=>print(JSON.stringify(r)))' | \
         jq -r '.pid'
 }
 
@@ -21,7 +21,7 @@ function get_path {
             -p $M_PASS \
             mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
             --eval \
-            'JSON.stringify(db.jobs.findOne({pid: "'$1'", "agent": "vige"}, {}, { sort: { created: -1 } }))' | \
+            'JSON.stringify(db.jobs.findOne({pid: "'$1'", "agent": "opencast"}, {}, { sort: { created: -1 } }))' | \
             jq -r '.path'
 }
 
@@ -47,7 +47,7 @@ function set_mpid_sent {
         -p $M_PASS \
         mongodb://$MONGODB_PHAIDRA_HOST/$M_AGENT_DB \
         --eval \
-        'db.jobs.findOneAndUpdate({ pid: "'$1'", "agent": "vige" }, { $set: { 'oc_mpid': "'$2'", 'status': "sent" } }, { sort: { created: -1 } })'
+        'db.jobs.findOneAndUpdate({ pid: "'$1'", "agent": "opencast" }, { $set: { 'oc_mpid': "'$2'", 'status': "sent" } }, { sort: { created: -1 } })'
 }
 
 function get_suffix {

@@ -16,6 +16,6 @@ RUN <<EOF
 apt-get --quiet update
 apt-get install --yes --quiet mongodb-mongosh
 EOF
-RUN mkdir /opt/vige
-WORKDIR /opt/vige
-ENTRYPOINT ["bash", "/mnt/vige/vige_controller.bash"]
+RUN mkdir /opt/opencast
+WORKDIR /opt/opencast
+ENTRYPOINT ["bash", "/mnt/opencast/controller.bash"]

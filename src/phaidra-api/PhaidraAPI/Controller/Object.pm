@@ -84,7 +84,7 @@ sub imageserver_job_status {
   if (exists($self->app->config->{paf_mongodb})) {
     my $jobs_coll = $self->paf_mongo->get_collection('jobs');
     if ($jobs_coll) {
-      my $job_record = $jobs_coll->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
+      my $job_record = $jobs_coll->find_one({pid => $pid, agent => 'libvips'}, {}, {"sort" => {"created" => -1}});
 
       # $self->app->log->debug($self->app->dumper($job_record));
       return $job_record->{status};
@@ -285,7 +285,7 @@ sub thumbnail {
                                                   s3_cachesize=>$s3_cachesize,
                                                   s3_cache_topdir=>$s3_cache_topdir);
         my $jobs_coll = $self->paf_mongo->get_collection('jobs');
-        my $job_record = $jobs_coll->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
+        my $job_record = $jobs_coll->find_one({pid => $pid, agent => 'libvips'}, {}, {"sort" => {"created" => -1}});
         my $FileToBeCached = $job_record->{image};
         my $s3_result = $s3_cache->cache_file($pid,$FileToBeCached);
         unless ( $s3_result eq "OK" ) {
@@ -588,7 +588,7 @@ sub preview {
       unless ($imgsrvjobstatus) {
         $self->app->log->info("Imageserver job not found: creating imageserver job pid[$pid] cm[$cmodel]");
         my $hash = hmac_sha1_hex($pid, $self->app->config->{imageserver}->{hash_secret});
-        $self->paf_mongo->get_collection('jobs')->insert_one({pid => $pid, cmodel => $cmodel, agent => "pige", status => "new", idhash => $hash, created => time});
+        $self->paf_mongo->get_collection('jobs')->insert_one({pid => $pid, cmodel => $cmodel, agent => "libvips", status => "new", idhash => $hash, created => time});
         $self->app->log->info("Imageserver job queued: sleeping... pid[$pid] cm[$cmodel]");
         Mojo::IOLoop->timer(8 => sub { });
         Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
@@ -624,7 +624,7 @@ sub preview {
                                                     s3_cachesize=>$s3_cachesize,
                                                     s3_cache_topdir=>$s3_cache_topdir);
           my $jobs_coll = $self->paf_mongo->get_collection('jobs');
-          my $job_record = $jobs_coll->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
+          my $job_record = $jobs_coll->find_one({pid => $pid, agent => 'libvips'}, {}, {"sort" => {"created" => -1}});
           my $FileToBeCached = $job_record->{image};
           my $s3_result = $s3_cache->cache_file($pid,$FileToBeCached);
           unless ( $s3_result eq "OK" ) {
@@ -836,7 +836,7 @@ sub preview {
           eq "ACTIVATED")
       {
         my $object_job_info = $self->paf_mongo->get_collection('jobs')->
-          find_one({pid => $pid, agent => 'vige'}, {}, { sort => { created => -1 } });
+          find_one({pid => $pid, agent => 'opencast'}, {}, { sort => { created => -1 } });
           $self->app->log->info("XXXXXXXXXXXXXXX MIGRATED pid[$pid]:\n".$self->app->dumper($object_job_info));
         if (defined $object_job_info) {
           my $job_status = $object_job_info->{'status'};

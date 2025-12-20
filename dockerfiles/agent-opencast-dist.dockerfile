@@ -1,2 +1,2 @@
-FROM phaidraorg/vige-base:latest
-ADD ../src/agents/vige /mnt/vige/
+FROM phaidraorg/agent-opencast-base:latest
+ADD ../src/agents/opencast /mnt/opencast/

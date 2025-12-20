@@ -420,9 +420,6 @@ services:
   agent-tika:
     hostname: "agent-tika"
     image: phaidraorg/agent-tika:120d6b60
-    # build:
-    #   context: .
-    #   dockerfile: dockerfiles/agent-tika.dockerfile
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -446,9 +443,6 @@ services:
   agent-hdl:
     hostname: "agent-hdl"
     image: phaidraorg/agent-hdl:bd2fa648
-    # build:
-    #   context: .
-    #   dockerfile: dockerfiles/agent-hdl.dockerfile
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
@@ -971,6 +965,7 @@ services:
       - fedora:/mnt/fedora:ro
       - ./src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
       - derivates-3d:/mnt/derivates-3d:ro
+      - derivates-images:/mnt/derivates-images:ro
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
