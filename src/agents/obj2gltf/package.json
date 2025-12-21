@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "obj2gltf",
+=======
+  "name": "agent-obj2gltf",
+>>>>>>> ce525203 (Rebase to main and normalize unzip agent and volume)
   "version": "1.0.0",
   "description": "3D model converter service for PHAIDRA",
   "main": "index.js",

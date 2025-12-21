@@ -88,12 +88,21 @@ if ($op_mode eq 'direct') {
   exit(0);
 }
 
+<<<<<<<< HEAD:src/agents/libvips/agent-libvips.pl
 my $jq= new PAF::JobQueue( mongodb => $config->{'agent-libvips'}->{mongodb} );
 my $mdb= $jq->get_database();
 my $activity;
 
 if (exists ($config->{'agent-libvips'}->{mongodb}->{activity})) {
   $activity= new PAF::Activity ($mdb, $config->{'agent-libvips'}->{mongodb}->{activity}, $agent_name);
+========
+my $jq= new PAF::JobQueue( mongodb => $config->{agent-libvips}->{mongodb} );
+my $mdb= $jq->get_database();
+my $activity;
+
+if (exists ($config->{agent-libvips}->{mongodb}->{activity})) {
+  $activity= new PAF::Activity ($mdb, $config->{agent-libvips}->{mongodb}->{activity}, $agent_name);
+>>>>>>>> ce525203 (Rebase to main and normalize unzip agent and volume):src/agents/libvips/libvips.pl
 }
 
 process_job_queue($jq, $activity);
@@ -131,9 +140,15 @@ sub process_job_queue
 
         unless (defined ($job))
           {
+<<<<<<<< HEAD:src/agents/libvips/agent-libvips.pl
             my $db = exists($config->{'agent-libvips'}->{mongodb}->{database}) ?
               $config->{'agent-libvips'}->{mongodb}->{database} :
               $config->{'agent-libvips'}->{mongodb}->{db_name};
+========
+            my $db = exists($config->{agent-libvips}->{mongodb}->{database}) ?
+              $config->{agent-libvips}->{mongodb}->{database} :
+              $config->{agent-libvips}->{mongodb}->{db_name};
+>>>>>>>> ce525203 (Rebase to main and normalize unzip agent and volume):src/agents/libvips/libvips.pl
 
             if ($activity_record{e} + 600 < time () || $activity_record{status} ne 'idle') {
               $activity_record{status}= 'idle';
@@ -146,7 +161,11 @@ sub process_job_queue
               $activity->save (%activity_record) if (defined ($activity));
             }
 
+<<<<<<<< HEAD:src/agents/libvips/agent-libvips.pl
             sleep($config->{'agent-libvips'}->{sleep_time});
+========
+            sleep($config->{agent-libvips}->{sleep_time});
+>>>>>>>> ce525203 (Rebase to main and normalize unzip agent and volume):src/agents/libvips/libvips.pl
             next JOB;
           }
         print scalar localtime(), " ", "job: ", Dumper ($job);
@@ -204,7 +223,11 @@ sub process_image
     my $cmodel = shift;
     my $path = shift;
 
+<<<<<<<< HEAD:src/agents/libvips/agent-libvips.pl
     my $tmp_dir= $config->{'agent-libvips'}->{temp_path};
+========
+    my $tmp_dir= $config->{agent-libvips}->{temp_path};
+>>>>>>>> ce525203 (Rebase to main and normalize unzip agent and volume):src/agents/libvips/libvips.pl
     # directory for downloaded files
     my $dl_tmp_dir;
     system ('mkdir', '-p', $tmp_dir) unless (-d $tmp_dir);
@@ -218,12 +241,20 @@ sub process_image
     if (defined($idhash) && $idhash =~ /\b([a-f0-9]{40})\b/) {
       my $lvl1= substr($idhash, 0, 1);
       my $lvl2= substr($idhash, 1, 1);
+<<<<<<<< HEAD:src/agents/libvips/agent-libvips.pl
       my $out_dir= join ('/', $config->{'agent-libvips'}->{store}, $lvl1, $lvl2);
+========
+      my $out_dir= join ('/', $config->{agent-libvips}->{store}, $lvl1, $lvl2);
+>>>>>>>> ce525203 (Rebase to main and normalize unzip agent and volume):src/agents/libvips/libvips.pl
       system ('mkdir', '-p', $out_dir) unless (-d $out_dir);
       $out_img= join ('/', $out_dir, $idhash.'.tif');
     } else {
       print scalar localtime(), " ", "idhash[$idhash] is not defined or is not a SHA-1 hash\n";
+<<<<<<<< HEAD:src/agents/libvips/agent-libvips.pl
       $out_img= join ('/', $config->{'agent-libvips'}->{store}, $img_fnm.'.tif');
+========
+      $out_img= join ('/', $config->{agent-libvips}->{store}, $img_fnm.'.tif');
+>>>>>>>> ce525203 (Rebase to main and normalize unzip agent and volume):src/agents/libvips/libvips.pl
     }
 
     my @curl_lines;

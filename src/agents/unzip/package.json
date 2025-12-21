@@ -1,7 +1,7 @@
 {
-  "name": "360viewer-converter",
+  "name": "agent-unzip",
   "version": "1.0.0",
-  "description": "360 viewer frame extraction service for Phaidra",
+  "description": "Unzip extraction service for PHAIDRA",
   "main": "index.js",
   "dependencies": {
     "mongodb": "^6.3.0",

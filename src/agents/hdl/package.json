@@ -1,5 +1,5 @@
 {
-  "name": "handle",
+  "name": "agent-handle",
   "version": "1.0.0",
   "description": "A script for processing jobs to register handle identifiers",
   "main": "index.js",

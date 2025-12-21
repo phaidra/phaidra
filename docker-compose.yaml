@@ -39,7 +39,7 @@ x-custom:
     UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
     HTTPD_ACME_ENABLE: "${HTTPD_ACME_ENABLE:-false}"
     CA_ENDPOINT: "${CA_ENDPOINT:-LetsEncrypt-Test}"
-    MD_CERTIFICATE_AGREEMENT: "${MD_CERTIFICATE_AGREEMENT:-changeme}"
+    MD_CERTIFICATE_AGREEMENT: "${MD_CERTIFICATE_AGREEMENT?}"
     HTTPD_PFSA_ENABLE: "${HTTPD_PFSA_ENABLE:-false}"
     HTTPD_NOINDEX_ENABLE: "${HTTPD_NOINDEX_ENABLE:-false}"
 
@@ -83,7 +83,7 @@ x-custom:
     SHIB_USERNAME: "${SHIB_USERNAME:-}"
     SOLR_PASS: "${SOLR_PASS:-phaidra}"
     SOLR_USER: "${SOLR_USER:-phaidra}"
-    PHAIDRA_ADMIN_EMAIL: "${PHAIDRA_ADMIN_EMAIL:-changeme}"
+    PHAIDRA_ADMIN_EMAIL: "${PHAIDRA_ADMIN_EMAIL:?}"
     MARIADB_FEDORA_HOST: "${MARIADB_FEDORA_HOST:-mariadb-fedora}"
     MARIADB_FEDORA_USER: "${MARIADB_FEDORA_USER:-phaidra}"
     MARIADB_FEDORA_PASSWORD: "${MARIADB_FEDORA_PASSWORD:-phaidra}"
@@ -465,10 +465,7 @@ services:
       - ./src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
       - derivates-3d:/mnt/derivates-3d:ro
       - derivates-images:/mnt/derivates-images:ro
-<<<<<<< HEAD
       - derivates-unzipped:/mnt/derivates-unzipped:ro
-=======
->>>>>>> 06a8c7e6 (Reorganize compose file based on services, not profiles)
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
