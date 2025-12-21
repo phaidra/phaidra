@@ -465,7 +465,10 @@ services:
       - ./src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
       - derivates-3d:/mnt/derivates-3d:ro
       - derivates-images:/mnt/derivates-images:ro
+<<<<<<< HEAD
       - derivates-unzipped:/mnt/derivates-unzipped:ro
+=======
+>>>>>>> 06a8c7e6 (Reorganize compose file based on services, not profiles)
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
