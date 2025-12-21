@@ -2,9 +2,9 @@ FROM node:20-slim
 
 WORKDIR /app
 
-COPY src/agents/3d/package*.json ./
+COPY src/agents/obj2gltf/package*.json ./
 RUN npm install
 
-COPY src/agents/3d/ .
+COPY src/agents/obj2gltf/ .
 
 CMD ["node", "index.js"]
