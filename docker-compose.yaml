@@ -447,7 +447,7 @@ services:
       - fedora:/mnt/fedora:ro
       - derivates-images:/mnt/derivates-images:ro
       - derivates-3d:/mnt/derivates-3d:ro
-      - derivates-unzipped:/mnt/derivates-unzipped:ro
+      - derivates-expanded:/mnt/derivates-expanded:ro
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
@@ -465,7 +465,7 @@ services:
       - ./src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
       - derivates-3d:/mnt/derivates-3d:ro
       - derivates-images:/mnt/derivates-images:ro
-      - derivates-unzipped:/mnt/derivates-unzipped:ro
+      - derivates-expanded:/mnt/derivates-expanded:ro
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
