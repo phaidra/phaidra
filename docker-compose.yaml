@@ -495,7 +495,7 @@ services:
     hostname: "agent-libvips"
     depends_on: [mongodb-phaidra, api]
     <<: [*common, *logs]
-    image: phaidraorg/agent-libvips-dist:latest
+    image: phaidraorg/agent-libvips-dist:408f2ba8
     volumes:
       - fedora:/mnt/fedora:ro
       - derivates-images:/mnt/derivates-images
@@ -515,7 +515,7 @@ services:
     hostname: "agent-libvips"
     depends_on: [mongodb-phaidra, api-s3, fedora-s3]
     <<: [*common, *logs]
-    image: phaidraorg/agent-libvips-dist:latest
+    image: phaidraorg/agent-libvips-dist:408f2ba8
     environment:
       <<: [*api_common_env, *hosts, *s3]
       DERIVATES_IMAGES_PATH: "${DERIVATES_IMAGES_PATH:-/derivates-images}"
@@ -530,7 +530,7 @@ services:
 
   agent-libvips-local-dev:
     hostname: "agent-libvips"
-    image: phaidraorg/agent-libvips-base:latest
+    image: phaidraorg/agent-libvips-base:408f2ba8
     pull_policy: always
     <<: [*common, *logs]
     volumes:
@@ -553,7 +553,7 @@ services:
     hostname: "agent-libvips"
     depends_on: [mongodb-phaidra-dev, api-s3-dev, fedora-s3-dev]
     <<: [*common, *logs]
-    image: phaidraorg/agent-libvips-base:latest
+    image: phaidraorg/agent-libvips-base:408f2ba8
     pull_policy: always
     volumes:
       - ./src/agents/libvips:/opt/agent-libvips:ro
@@ -572,7 +572,7 @@ services:
   ############### opencast agent ###############
   agent-opencast:
     hostname: "agent-opencast"
-    image: phaidraorg/agent-opencast-dist:latest
+    image: phaidraorg/agent-opencast-dist:408f2ba8
     <<: [*common, *logs]
     volumes:
       - agent-opencast-work:/opt/agent-opencast
@@ -593,7 +593,7 @@ services:
 
   agent-opencast-dev:
     hostname: "opencast"
-    image: phaidraorg/opencast-base:latest
+    image: phaidraorg/opencast-base:408f2ba8
     pull_policy: always
     <<: [*common, *logs]
     volumes:
@@ -617,7 +617,7 @@ services:
   ############### obj2gltf agent ###############
   agent-obj2gltf:
     hostname: "agent-obj2gltf"
-    image: phaidraorg/agent-obj2gltf:latest
+    image: phaidraorg/agent-obj2gltf:408f2ba8
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -642,7 +642,7 @@ services:
   ############### unzip agent ###############
   agent-unzip:
     hostname: "agent-unzip"
-    image: phaidraorg/agent-unzip:latest
+    image: phaidraorg/agent-unzip:408f2ba8
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -668,7 +668,7 @@ services:
   ############### tika agent ###############
   agent-tika:
     hostname: "agent-tika"
-    image: phaidraorg/agent-tika:latest
+    image: phaidraorg/agent-tika:408f2ba8
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -691,7 +691,7 @@ services:
   ############### hdl agent ###############
   agent-hdl:
     hostname: "agent-hdl"
-    image: phaidraorg/agent-hdl:latest
+    image: phaidraorg/agent-hdl:408f2ba8
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
