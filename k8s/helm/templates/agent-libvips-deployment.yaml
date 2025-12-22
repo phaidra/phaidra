@@ -2,21 +2,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    phaidra.app: pixelgecko
-  name: pixelgecko-deployment
+    phaidra.app: libvips
+  name: libvips-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      phaidra.app: pixelgecko
+      phaidra.app: libvips
   strategy:
     type: Recreate
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/pixelgecko-configmap.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/libvips-configmap.yaml") . | sha256sum }}
       labels:
-        phaidra.app: pixelgecko
+        phaidra.app: libvips
     spec:
       containers:
         - env:
@@ -31,8 +31,8 @@ spec:
                 secretKeyRef:
                   name: "phaidra-access"
                   key: "MONGODB_PHAIDRA_PASSWORD"
-            - name: CONVERTED_IMAGES_PATH
-              value: "/mnt/converted_images"
+            - name: DERIVATES_IMAGES_PATH
+              value: "/mnt/derivates-images"
             - name: FEDORA_ADMIN_PASS
               valueFrom:
                 secretKeyRef:
@@ -70,8 +70,8 @@ spec:
                   name: "phaidra-s3-access"
                   key: "AWS_SECRET_ACCESS_KEY"
             {{- end }}
-          image: phaidraorg/pixelgecko-dist:1aec19f1
-          name: pixelgecko
+          image: phaidraorg/libvips-dist:1aec19f1
+          name: libvips
           resources:
             requests:
               cpu: "50m"
@@ -83,26 +83,26 @@ spec:
             - mountPath: /mnt/fedora
               name: fedora
               readOnly: true
-            - mountPath: /mnt/converted_images
-              name: pixelgecko
+            - mountPath: /mnt/derivates-images
+              name: libvips
             - mountPath: /config
-              name: pixelgecko-config
+              name: libvips-config
               readOnly: true
           command: ["/bin/sh"]
-          args: [ "-c", "cp /config/pixelgecko_conf.yml /opt/pixelgecko/pixelgecko_conf.yml && perl pixelgecko.pl --watch"]
+          args: [ "-c", "cp /config/libvips_conf.yml /opt/libvips/libvips_conf.yml && perl libvips.pl --watch"]
       restartPolicy: Always
       volumes:
         - name: fedora
           persistentVolumeClaim:
             claimName: fedora-pvc
             readOnly: true
-        - name: pixelgecko
+        - name: libvips
           persistentVolumeClaim:
-            claimName: pixelgecko-pvc
-        - name: pixelgecko-config
+            claimName: libvips-pvc
+        - name: libvips-config
           configMap:
-            name: pixelgecko-config
+            name: libvips-config
             items:
-              - key: "pixelgecko_conf.yml"
-                path: "pixelgecko_conf.yml"
+              - key: "libvips_conf.yml"
+                path: "libvips_conf.yml"
 status: {}

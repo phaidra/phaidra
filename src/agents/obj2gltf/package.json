@@ -1,7 +1,7 @@
 {
-  "name": "3d-converter",
+  "name": "agent-obj2gltf",
   "version": "1.0.0",
-  "description": "3D model converter service for Phaidra",
+  "description": "3D model converter service for PHAIDRA",
   "main": "index.js",
   "dependencies": {
     "mongodb": "^6.3.0",

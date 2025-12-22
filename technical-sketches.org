@@ -32,7 +32,7 @@ This file is used for generating the technical sketches included in the frontpag
                                              <td align="text">/usr/local/tomcat/fcrepo-home<br align="left" /></td>
                                              </tr>
                                              <tr>
-                                             <td align="text">pixelgecko-container:<br align="left" /></td>
+                                             <td align="text">agent-libvips-container:<br align="left" /></td>
                                              <td align="text"> /mnt/fedora:ro<br align="left" /></td>
                                              </tr>
                                              <tr>
@@ -88,19 +88,19 @@ This file is used for generating the technical sketches included in the frontpag
                                            </tr>
                                            </table>
                                            >];
-                                  HS_PIXELGECKO [label=<
+                                  HS_AGENT_LIBVIPS [label=<
                                                  <table border="0">
                                                  <tr>
                                                  <td align="text"><b>host:</b><br align="left" /></td>
-                                                 <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_pixelgecko/_data<br align="left" /></td>
+                                                 <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_agent-libvips/_data<br align="left" /></td>
                                                  </tr>
                                                  <tr>
-                                                 <td align="text">pixelgecko-container:<br align="left" /></td>
-                                                 <td align="text">/mnt/converted_images<br align="left" /></td>
+                                                 <td align="text">agent-libvips-container:<br align="left" /></td>
+                                                 <td align="text">/mnt/derivates-images<br align="left" /></td>
                                                  </tr>
                                                  <tr>
                                                  <td align="text">imageserver-container:<br align="left" /></td>
-                                                 <td align="text">/mnt/converted_images:ro<br align="left" /></td>
+                                                 <td align="text">/mnt/derivates-images:ro<br align="left" /></td>
                                                  </tr>
                                                  </table>
                                                  >];
@@ -226,7 +226,7 @@ This file is used for generating the technical sketches included in the frontpag
                                            URL="https://solr.apache.org/"];
                                    C_IMAGESERVER [label="$PROJECT_NAME-imageserver-1",
                                                   URL="https://github.com/ruven/iipsrv"];
-                                   C_PIXELGECKO [label="$PROJECT_NAME-pixelgecko-1"];
+                                   C_AGENT_LIBVIPS [label="$PROJECT_NAME-agent-libvips-1"];
                                    C_DBGATE [label="$PROJECT_NAME-dbgate-1"];
                                    C_LAM [label="$PROJECT_NAME-lam-1"];
                                    C_MARIADB_FEDORA [label="$PROJECT_NAME-mariadb-fedora-1",
@@ -256,9 +256,9 @@ This file is used for generating the technical sketches included in the frontpag
                            HS_MONGODB_PHAIDRA -- C_MONGODB_PHAIDRA [color="turquoise"];
                            HS_OPENLDAP -- C_OPENLDAP [color="turquoise"];
                            HS_SOLR -- C_SOLR [color="turquoise"];
-                           HS_PIXELGECKO -- C_IMAGESERVER [color="turquoise"];
-                           HS_FEDORA -- C_PIXELGECKO [color="turquoise"];
-                           HS_PIXELGECKO -- C_PIXELGECKO [color="turquoise"];
+                           HS_AGENT_LIBVIPS -- C_IMAGESERVER [color="turquoise"];
+                           HS_FEDORA -- C_AGENT_LIBVIPS [color="turquoise"];
+                           HS_AGENT_LIBVIPS -- C_AGENT_LIBVIPS [color="turquoise"];
                            HS_DBGATE -- C_DBGATE [color="turquoise"];
                            HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
                            C_HTTPD -- HS_SITEMAPS [color="turquoise"];
@@ -271,11 +271,11 @@ This file is used for generating the technical sketches included in the frontpag
 
                            C_FEDORA -- C_MARIADB_FEDORA [color="orange"];
                            C_API -- C_FEDORA,C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_UI,C_OPENLDAP,C_SOLR,C_IMAGESERVER [color="orange"];
-                           C_MONGODB_PHAIDRA -- C_PIXELGECKO [color="orange"];
+                           C_MONGODB_PHAIDRA -- C_AGENT_LIBVIPS [color="orange"];
                            C_OPENLDAP -- C_LAM [color="orange"];
                            C_DBGATE -- C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_MARIADB_FEDORA [color="orange"];
                            C_CHRONOS -- C_MONGODB_PHAIDRA,C_MARIADB_PHAIDRA,C_MARIADB_FEDORA,C_SOLR,C_API [color="orange"];
-                           C_PROMTAIL_LOCAL -- C_MONGODB_PHAIDRA,C_MARIADB_PHAIDRA,C_MARIADB_FEDORA,C_SOLR,C_API,C_UI,C_IMAGESERVER,C_HTTPD,C_OPENLDAP,C_LAM,C_DBGATE,C_CHRONOS,C_PIXELGECKO, C_FEDORA, C_LOKI [color="black"];
+                           C_PROMTAIL_LOCAL -- C_MONGODB_PHAIDRA,C_MARIADB_PHAIDRA,C_MARIADB_FEDORA,C_SOLR,C_API,C_UI,C_IMAGESERVER,C_HTTPD,C_OPENLDAP,C_LAM,C_DBGATE,C_CHRONOS,C_AGENT_LIBVIPS, C_FEDORA, C_LOKI [color="black"];
                            C_GRAFANA -- C_LOKI, C_PROMETHEUS, C_MARIADB_FEDORA, C_MARIADB_PHAIDRA [color="black"];
                            C_PROMETHEUS -- C_CADVISOR, C_NODE_EXPORTER [color="black"]
                            C_HTTPD -- C_FEDORA,C_API,C_UI,C_SOLR,C_DBGATE,C_LAM, C_GRAFANA [color="magenta"];
@@ -319,7 +319,7 @@ This file is used for generating the technical sketches included in the frontpag
                                              <td align="text">/usr/local/tomcat/fcrepo-home<br align="left" /></td>
                                              </tr>
                                              <tr>
-                                             <td align="text">pixelgecko-container:<br align="left" /></td>
+                                             <td align="text">agent-libvips-container:<br align="left" /></td>
                                              <td align="text"> /mnt/fedora:ro<br align="left" /></td>
                                              </tr>
                                              <tr>
@@ -375,19 +375,19 @@ This file is used for generating the technical sketches included in the frontpag
                                            </tr>
                                            </table>
                                            >];
-                                  HS_PIXELGECKO [label=<
+                                  HS_AGENT_LIBVIPS [label=<
                                                  <table border="0">
                                                  <tr>
                                                  <td align="text"><b>host:</b><br align="left" /></td>
-                                                 <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_pixelgecko/_data<br align="left" /></td>
+                                                 <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_agent-libvips/_data<br align="left" /></td>
                                                  </tr>
                                                  <tr>
-                                                 <td align="text">pixelgecko-container:<br align="left" /></td>
-                                                 <td align="text">/mnt/converted_images<br align="left" /></td>
+                                                 <td align="text">agent-libvips-container:<br align="left" /></td>
+                                                 <td align="text">/mnt/derivates-images<br align="left" /></td>
                                                  </tr>
                                                  <tr>
                                                  <td align="text">imageserver-container:<br align="left" /></td>
-                                                 <td align="text">/mnt/converted_images:ro<br align="left" /></td>
+                                                 <td align="text">/mnt/derivates-images:ro<br align="left" /></td>
                                                  </tr>
                                                  </table>
                                                  >];
@@ -531,7 +531,7 @@ This file is used for generating the technical sketches included in the frontpag
                                            URL="https://solr.apache.org/"];
                                    C_IMAGESERVER [label="$PROJECT_NAME-imageserver-1",
                                                   URL="https://github.com/ruven/iipsrv"];
-                                   C_PIXELGECKO [label="$PROJECT_NAME-pixelgecko-1"];
+                                   C_AGENT_LIBVIPS [label="$PROJECT_NAME-agent-libvips-1"];
                                    C_DBGATE [label="$PROJECT_NAME-dbgate-1"];
                                    C_LAM [label="$PROJECT_NAME-lam-1"];
                                    C_MARIADB_FEDORA [label="$PROJECT_NAME-mariadb-fedora-1",
@@ -561,9 +561,9 @@ This file is used for generating the technical sketches included in the frontpag
                            HS_MONGODB_PHAIDRA -- C_MONGODB_PHAIDRA [color="turquoise"];
                            HS_OPENLDAP -- C_OPENLDAP [color="turquoise"];
                            HS_SOLR -- C_SOLR [color="turquoise"];
-                           HS_PIXELGECKO -- C_IMAGESERVER [color="turquoise"];
-                           HS_FEDORA -- C_PIXELGECKO [color="turquoise"];
-                           HS_PIXELGECKO -- C_PIXELGECKO [color="turquoise"];
+                           HS_AGENT_LIBVIPS -- C_IMAGESERVER [color="turquoise"];
+                           HS_FEDORA -- C_AGENT_LIBVIPS [color="turquoise"];
+                           HS_AGENT_LIBVIPS -- C_AGENT_LIBVIPS [color="turquoise"];
                            HS_DBGATE -- C_DBGATE [color="turquoise"];
                            HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
                            C_HTTPD -- HS_SITEMAPS [color="turquoise"];
@@ -577,11 +577,11 @@ This file is used for generating the technical sketches included in the frontpag
 
                            C_FEDORA -- C_MARIADB_FEDORA [color="orange"];
                            C_API -- C_FEDORA,C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_UI,C_OPENLDAP,C_SOLR,C_IMAGESERVER [color="orange"];
-                           C_MONGODB_PHAIDRA -- C_PIXELGECKO [color="orange"];
+                           C_MONGODB_PHAIDRA -- C_AGENT_LIBVIPS [color="orange"];
                            C_OPENLDAP -- C_LAM [color="orange"];
                            C_DBGATE -- C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_MARIADB_FEDORA [color="orange"];
                            C_CHRONOS -- C_MONGODB_PHAIDRA,C_MARIADB_PHAIDRA,C_MARIADB_FEDORA,C_SOLR,C_API [color="orange"];
-                           C_PROMTAIL_LOCAL -- C_MONGODB_PHAIDRA,C_MARIADB_PHAIDRA,C_MARIADB_FEDORA,C_SOLR,C_API,C_UI,C_IMAGESERVER,C_HTTPD,C_OPENLDAP,C_LAM,C_DBGATE,C_CHRONOS,C_PIXELGECKO, C_FEDORA, C_LOKI [color="black"];
+                           C_PROMTAIL_LOCAL -- C_MONGODB_PHAIDRA,C_MARIADB_PHAIDRA,C_MARIADB_FEDORA,C_SOLR,C_API,C_UI,C_IMAGESERVER,C_HTTPD,C_OPENLDAP,C_LAM,C_DBGATE,C_CHRONOS,C_AGENT_LIBVIPS, C_FEDORA, C_LOKI [color="black"];
                            C_GRAFANA -- C_LOKI, C_PROMETHEUS, C_MARIADB_FEDORA, C_MARIADB_PHAIDRA [color="black"];
                            C_PROMETHEUS -- C_CADVISOR, C_NODE_EXPORTER [color="black"]
                            C_HTTPD -- C_FEDORA,C_API,C_UI,C_SOLR,C_DBGATE,C_LAM, C_GRAFANA [color="magenta"];
@@ -626,7 +626,7 @@ This file is used for generating the technical sketches included in the frontpag
                                              <td align="text">/usr/local/tomcat/fcrepo-home<br align="left" /></td>
                                              </tr>
                                              <tr>
-                                             <td align="text">pixelgecko-container:<br align="left" /></td>
+                                             <td align="text">agent-libvips-container:<br align="left" /></td>
                                              <td align="text"> /mnt/fedora:ro<br align="left" /></td>
                                              </tr>
                                              <tr>
@@ -682,19 +682,19 @@ This file is used for generating the technical sketches included in the frontpag
                                            </tr>
                                            </table>
                                            >];
-                                  HS_PIXELGECKO [label=<
+                                  HS_AGENT_LIBVIPS [label=<
                                                  <table border="0">
                                                  <tr>
                                                  <td align="text"><b>host:</b><br align="left" /></td>
-                                                 <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_pixelgecko/_data<br align="left" /></td>
+                                                 <td align="text">$HOME/.local/share/docker/volumes/$PROJECT_NAME_agent-libvips/_data<br align="left" /></td>
                                                  </tr>
                                                  <tr>
-                                                 <td align="text">pixelgecko-container:<br align="left" /></td>
-                                                 <td align="text">/mnt/converted_images<br align="left" /></td>
+                                                 <td align="text">agent-libvips-container:<br align="left" /></td>
+                                                 <td align="text">/mnt/derivates-images<br align="left" /></td>
                                                  </tr>
                                                  <tr>
                                                  <td align="text">imageserver-container:<br align="left" /></td>
-                                                 <td align="text">/mnt/converted_images:ro<br align="left" /></td>
+                                                 <td align="text">/mnt/derivates-images:ro<br align="left" /></td>
                                                  </tr>
                                                  </table>
                                                  >];
@@ -850,7 +850,7 @@ This file is used for generating the technical sketches included in the frontpag
                                            URL="https://solr.apache.org/"];
                                    C_IMAGESERVER [label="$PROJECT_NAME-imageserver-1",
                                                   URL="https://github.com/ruven/iipsrv"];
-                                   C_PIXELGECKO [label="$PROJECT_NAME-pixelgecko-1"];
+                                   C_AGENT_LIBVIPS [label="$PROJECT_NAME-agent-libvips-1"];
                                    C_DBGATE [label="$PROJECT_NAME-dbgate-1"];
                                    C_LAM [label="$PROJECT_NAME-lam-1"];
                                    C_MARIADB_FEDORA [label="$PROJECT_NAME-mariadb-fedora-1",
@@ -880,9 +880,9 @@ This file is used for generating the technical sketches included in the frontpag
                            HS_MONGODB_PHAIDRA -- C_MONGODB_PHAIDRA [color="turquoise"];
                            HS_OPENLDAP -- C_OPENLDAP [color="turquoise"];
                            HS_SOLR -- C_SOLR [color="turquoise"];
-                           HS_PIXELGECKO -- C_IMAGESERVER [color="turquoise"];
-                           HS_FEDORA -- C_PIXELGECKO [color="turquoise"];
-                           HS_PIXELGECKO -- C_PIXELGECKO [color="turquoise"];
+                           HS_AGENT_LIBVIPS -- C_IMAGESERVER [color="turquoise"];
+                           HS_FEDORA -- C_AGENT_LIBVIPS [color="turquoise"];
+                           HS_AGENT_LIBVIPS -- C_AGENT_LIBVIPS [color="turquoise"];
                            HS_DBGATE -- C_DBGATE [color="turquoise"];
                            HS_MARIADB_FEDORA -- C_MARIADB_FEDORA [color="turquoise"];
                            C_HTTPD -- HS_SITEMAPS [color="turquoise"];
@@ -896,11 +896,11 @@ This file is used for generating the technical sketches included in the frontpag
 
                            C_FEDORA -- C_MARIADB_FEDORA [color="orange"];
                            C_API -- C_FEDORA,C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_UI,C_OPENLDAP,C_SOLR,C_IMAGESERVER [color="orange"];
-                           C_MONGODB_PHAIDRA -- C_PIXELGECKO [color="orange"];
+                           C_MONGODB_PHAIDRA -- C_AGENT_LIBVIPS [color="orange"];
                            C_OPENLDAP -- C_LAM [color="orange"];
                            C_DBGATE -- C_MARIADB_PHAIDRA,C_MONGODB_PHAIDRA,C_MARIADB_FEDORA [color="orange"];
                            C_CHRONOS -- C_MONGODB_PHAIDRA,C_MARIADB_PHAIDRA,C_MARIADB_FEDORA,C_SOLR,C_API [color="orange"];
-                           C_PROMTAIL_LOCAL -- C_MONGODB_PHAIDRA,C_MARIADB_PHAIDRA,C_MARIADB_FEDORA,C_SOLR,C_API,C_UI,C_IMAGESERVER,C_HTTPD,C_OPENLDAP,C_LAM,C_DBGATE,C_CHRONOS,C_PIXELGECKO, C_FEDORA, C_LOKI [color="black"];
+                           C_PROMTAIL_LOCAL -- C_MONGODB_PHAIDRA,C_MARIADB_PHAIDRA,C_MARIADB_FEDORA,C_SOLR,C_API,C_UI,C_IMAGESERVER,C_HTTPD,C_OPENLDAP,C_LAM,C_DBGATE,C_CHRONOS,C_AGENT_LIBVIPS, C_FEDORA, C_LOKI [color="black"];
                            C_GRAFANA -- C_LOKI, C_PROMETHEUS, C_MARIADB_FEDORA, C_MARIADB_PHAIDRA [color="black"];
                            C_PROMETHEUS -- C_CADVISOR, C_NODE_EXPORTER [color="black"]
                            C_HTTPD -- C_FEDORA,C_API,C_UI,C_SOLR,C_DBGATE,C_LAM, C_GRAFANA [color="magenta"];

@@ -103,7 +103,7 @@ spec:
               value: "openldap-service"
             - name: IMAGESERVER_ROOT_PATH
               value: "/"
-            - name: CONVERTED_IMAGES_PATH
+            - name: DERIVATES_IMAGES_PATH
               value: "mnt/"
             {{- if .Values.s3 }}
             - name: S3_ENABLED
@@ -146,15 +146,15 @@ spec:
             - mountPath: /mnt/fedora
               name: fedora
               readOnly: true
-            - mountPath: /mnt/converted_images
-              name: pixelgecko
+            - mountPath: /mnt/derivates-images
+              name: derivates-images
       restartPolicy: Always
       volumes:
         - name: fedora
           persistentVolumeClaim:
             claimName: fedora-pvc
             readOnly: true
-        - name: pixelgecko
+        - name: derivates-images
           persistentVolumeClaim:
-            claimName: pixelgecko-pvc
+            claimName: derivates-images-pvc
 status: {}

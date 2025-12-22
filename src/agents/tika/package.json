@@ -1,5 +1,5 @@
 {
-  "name": "pdf-extraction-worker",
+  "name": "agent-tika",
   "version": "1.0.0",
   "description": "PDF text extraction worker using Apache Tika",
   "main": "index.js",

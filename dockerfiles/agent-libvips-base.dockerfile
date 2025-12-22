@@ -8,6 +8,6 @@ imagemagick libvips-tools libyaml-syck-perl libmongodb-perl libnet-amazon-s3-per
 apt-get clean
 EOF
 
-RUN mkdir -pv /opt/pixelgecko
-WORKDIR /opt/pixelgecko
-ENTRYPOINT ["perl", "pixelgecko.pl", "--watch"]
+RUN mkdir -pv /opt/agent-libvips
+WORKDIR /opt/agent-libvips
+ENTRYPOINT ["perl", "agent-libvips.pl", "--watch"]

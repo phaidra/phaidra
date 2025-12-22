@@ -61,7 +61,7 @@ sub create_streaming_job {
         $path = $parthres->{path};
       }
     }
-    my $job = {pid => $pid, cmodel => $cmodel, agent => "vige", status => "new", created => time};
+    my $job = {pid => $pid, cmodel => $cmodel, agent => "opencast", status => "new", created => time};
     $job->{path} = $path if $path;
     $c->paf_mongo->get_collection('jobs')->insert_one($job);
   }
@@ -78,7 +78,7 @@ sub get_job {
       $c->app->config->{external_services}->{opencast}->{mode}
       eq "ACTIVATED") {
     $c->app->log->info("Searching for streaming job pid[$pid]");
-    my $resjob = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'vige'}, {}, {"sort" => {"created" => -1}});
+    my $resjob = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'}, {}, {"sort" => {"created" => -1}});
     if ($resjob->{pid}) {
       $res->{job} = $resjob;
       $c->app->log->info("job pid[$pid]:\n".$c->app->dumper($resjob));

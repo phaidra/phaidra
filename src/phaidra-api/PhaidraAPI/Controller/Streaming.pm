@@ -26,7 +26,7 @@ sub key {
   }
 
   if (defined $self->config->{external_services}->{opencast}->{mode} && $self->config->{external_services}->{opencast}->{mode} eq "ACTIVATED") {
-    my $object_job_info = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'vige'});
+    my $object_job_info = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'});
     if (defined $object_job_info) {
       $self->render(text => $object_job_info->{oc_mpid}, status => 200);
       return;
@@ -54,7 +54,7 @@ sub process {
   }
 
   if ($skipexisting && ($skipexisting eq 1)) {
-    my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'vige'}, {}, {"sort" => {"created" => -1}});
+    my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'}, {}, {"sort" => {"created" => -1}});
     if ($res1->{pid}) {
       $self->render(json => {alerts => [{type => 'info', msg => "Job for pid[$pid] already created"}], job => $res1}, status => 200);
       return;
@@ -72,7 +72,7 @@ sub process {
   my $imgsrv_model = PhaidraAPI::Model::Streaming->new;
   $imgsrv_model->create_streaming_job($self, $pid, $cmodel);
 
-  $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'vige'}, {}, {"sort" => {"created" => -1}});
+  $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'}, {}, {"sort" => {"created" => -1}});
 
   $self->render(json => $res, status => 200);
 }
@@ -113,7 +113,7 @@ sub process_pids {
   for my $pid (@{$pids->{pids}}) {
 
     if ($skipexisting && ($skipexisting eq 1)) {
-      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'vige'}, {}, {"sort" => {"created" => -1}});
+      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'}, {}, {"sort" => {"created" => -1}});
       if ($res1->{pid}) {
         $self->render(json => {alerts => [{type => 'info', msg => "Job for pid[$pid] already created"}], job => $res1}, status => 200);
         next;
@@ -149,7 +149,7 @@ sub status {
     return;
   }
 
-  $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'vige'}, {}, {"sort" => {"created" => -1}});
+  $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'}, {}, {"sort" => {"created" => -1}});
 
   $self->render(json => { status => $res->{status} }, status => 200);
 

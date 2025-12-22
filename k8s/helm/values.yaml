@@ -50,7 +50,7 @@ PHAIDRA_API_HOST_INTERNAL: "api-service"
 OUTSIDE_HTTP_SCHEME: "http"
 # phaidra admin user
 PHAIDRA_ADMIN_USER: "phaidraAdmin"
-# pixelgecko image conversion interval in seconds
+# agent-libvips image conversion interval in seconds
 IMAGE_CONVERSION_INTERVAL: "5"
 # solr admin user
 SOLR_USER: "phaidra"
@@ -86,9 +86,9 @@ MONGODB_PHAIDRA_PVC_TYPE: "rbd-storagepool-cluster"
 # openldap pvc size & type
 OPENLDAP_PVC_SIZE: "100Mi"
 OPENLDAP_PVC_TYPE: "cephfs-fspool-cluster"
-# pixelgecko pvc size & type
-PIXELGECKO_PVC_SIZE: "100Mi"
-PIXELGECKO_PVC_TYPE: "cephfs-fspool-cluster"
+# agent-libvips pvc size & type
+AGENT_LIBVIPS_PVC_SIZE: "100Mi"
+AGENT_LIBVIPS_PVC_TYPE: "cephfs-fspool-cluster"
 # solr pvc size & type
 SOLR_PVC_SIZE: "100Mi"
 SOLR_PVC_TYPE: "cephfs-fspool-cluster"
@@ -100,9 +100,9 @@ GRAFANA_PVC_TYPE: "cephfs-fspool-cluster"
 
 s3:
   S3_CACHE_SIZE: 500000000
-  S3_CACHE_TOPDIR: "/mnt/converted_images"
+  S3_CACHE_TOPDIR: "/mnt/derivates-images"
 
-# fedora for pixelgecko s3
+# fedora for agent-libvips s3
 FEDORA_HOST: fedora-service
 FEDORA_PROTOCOL: http
 FEDORA_PORT: 8080

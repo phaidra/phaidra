@@ -2,10 +2,9 @@ FROM node:20-slim
 
 WORKDIR /app
 
-COPY src/360viewer/package*.json ./
+COPY src/agents/obj2gltf/package*.json ./
 RUN npm install
 
-COPY src/360viewer/ .
+COPY src/agents/obj2gltf/ .
 
 CMD ["node", "index.js"]
-

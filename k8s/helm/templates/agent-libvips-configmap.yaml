@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: pixelgecko-config
+  name: agent-libvips-config
 data:
-  pixelgecko_conf.yml: |
-    pixelgecko:
+  agent-libvips_conf.yml: |
+    agent-libvips:
       mongodb:
         host:                  'mongodb-phaidra-service'
         ## authentication database
@@ -15,6 +15,6 @@ data:
         password:              'phaidra'
         col:                   'jobs'
         activity:              'activity'
-      store:                 '/mnt/converted_images'
+      store:                 '/mnt/derivates-images'
       temp_path:             '/tmp'
 

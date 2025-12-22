@@ -63,7 +63,7 @@
 <text text-anchor="start" x="858.5" y="-1665.43" font-family="Times,serif" font-size="14.00">$HOME/.local/share/docker/volumes/$PROJECT_NAME_fedora/_data</text>
 <text text-anchor="start" x="699.5" y="-1644.43" font-family="Times,serif" font-size="14.00">fedora&#45;container:</text>
 <text text-anchor="start" x="858.5" y="-1644.43" font-family="Times,serif" font-size="14.00">/usr/local/tomcat/fcrepo&#45;home</text>
-<text text-anchor="start" x="699.5" y="-1623.43" font-family="Times,serif" font-size="14.00">pixelgecko&#45;container:</text>
+<text text-anchor="start" x="699.5" y="-1623.43" font-family="Times,serif" font-size="14.00">agent-libvips&#45;container:</text>
 <text text-anchor="start" x="858.5" y="-1623.43" font-family="Times,serif" font-size="14.00"> /mnt/fedora:ro</text>
 <text text-anchor="start" x="699.5" y="-1602.43" font-family="Times,serif" font-size="14.00">api&#45;container:</text>
 <text text-anchor="start" x="858.5" y="-1602.43" font-family="Times,serif" font-size="14.00"> /mnt/fedora:ro</text>
@@ -100,17 +100,17 @@
 <title>HS_FEDORA&#45;&#45;C_API</title>
 <path fill="none" stroke="turquoise" d="M687.42,-1653.94C647.41,-1639.11 614.29,-1613.7 596,-1572.63 582.82,-1543.05 582.82,-436.22 596,-406.63 650.8,-283.58 822.24,-255.24 930.63,-250.04"/>
 </g>
-<!-- C_PIXELGECKO -->
+<!-- C_AGENT_LIBVIPS -->
 <g id="node25" class="node">
-<title>C_PIXELGECKO</title>
+<title>C_AGENT_LIBVIPS</title>
 <polygon fill="none" stroke="green" points="2042,-644.63 1803,-644.63 1803,-640.63 1799,-640.63 1799,-636.63 1803,-636.63 1803,-616.63 1799,-616.63 1799,-612.63 1803,-612.63 1803,-608.63 2042,-608.63 2042,-644.63"/>
 <polyline fill="none" stroke="green" points="1803,-640.63 1807,-640.63 1807,-636.63 1803,-636.63 "/>
 <polyline fill="none" stroke="green" points="1803,-616.63 1807,-616.63 1807,-612.63 1803,-612.63 "/>
-<text text-anchor="middle" x="1922.5" y="-622.93" font-family="Times,serif" font-size="14.00">$PROJECT_NAME&#45;pixelgecko&#45;1</text>
+<text text-anchor="middle" x="1922.5" y="-622.93" font-family="Times,serif" font-size="14.00">$PROJECT_NAME&#45;agent-libvips&#45;1</text>
 </g>
-<!-- HS_FEDORA&#45;&#45;C_PIXELGECKO -->
+<!-- HS_FEDORA&#45;&#45;C_AGENT_LIBVIPS -->
 <g id="edge8" class="edge">
-<title>HS_FEDORA&#45;&#45;C_PIXELGECKO</title>
+<title>HS_FEDORA&#45;&#45;C_AGENT_LIBVIPS</title>
 <path fill="none" stroke="turquoise" d="M1359.71,-1632.94C1389.85,-1621.13 1417.72,-1604.53 1441,-1581.63 1483.31,-1540.03 1441.76,-1505.76 1461,-1449.63 1580.33,-1101.54 1845.07,-730.32 1907.92,-644.87"/>
 </g>
 <!-- HS_MARIADB_PHAIDRA -->
@@ -213,16 +213,16 @@
 <title>HS_SOLR&#45;&#45;C_SOLR</title>
 <path fill="none" stroke="turquoise" d="M1325.76,-1408.78C1378.36,-1402.87 1422.27,-1391.62 1441,-1371.63 1481.57,-1328.33 1422.69,-348.96 1461,-303.63 1473.44,-288.92 1491.14,-280.56 1509.88,-276.09"/>
 </g>
-<!-- HS_PIXELGECKO -->
+<!-- HS_AGENT_LIBVIPS -->
 <g id="node7" class="node">
-<title>HS_PIXELGECKO</title>
+<title>HS_AGENT_LIBVIPS</title>
 <polygon fill="none" stroke="turquoise" points="1381,-1776.13 1378,-1780.13 1357,-1780.13 1354,-1776.13 666,-1776.13 666,-1703.13 1381,-1703.13 1381,-1776.13"/>
 <text text-anchor="start" x="678.5" y="-1757.43" font-family="Times,serif" font-weight="bold" font-size="14.00">host:</text>
-<text text-anchor="start" x="850.5" y="-1756.43" font-family="Times,serif" font-size="14.00">$HOME/.local/share/docker/volumes/$PROJECT_NAME_pixelgecko/_data</text>
-<text text-anchor="start" x="678.5" y="-1735.43" font-family="Times,serif" font-size="14.00">pixelgecko&#45;container:</text>
-<text text-anchor="start" x="850.5" y="-1735.43" font-family="Times,serif" font-size="14.00">/mnt/converted_images</text>
+<text text-anchor="start" x="850.5" y="-1756.43" font-family="Times,serif" font-size="14.00">$HOME/.local/share/docker/volumes/$PROJECT_NAME_agent-libvips/_data</text>
+<text text-anchor="start" x="678.5" y="-1735.43" font-family="Times,serif" font-size="14.00">agent-libvips&#45;container:</text>
+<text text-anchor="start" x="850.5" y="-1735.43" font-family="Times,serif" font-size="14.00">/mnt/derivates-images</text>
 <text text-anchor="start" x="678.5" y="-1714.43" font-family="Times,serif" font-size="14.00">imageserver&#45;container:</text>
-<text text-anchor="start" x="850.5" y="-1714.43" font-family="Times,serif" font-size="14.00">/mnt/converted_images:ro</text>
+<text text-anchor="start" x="850.5" y="-1714.43" font-family="Times,serif" font-size="14.00">/mnt/derivates-images:ro</text>
 </g>
 <!-- C_IMAGESERVER -->
 <g id="node24" class="node">
@@ -235,14 +235,14 @@
 </a>
 </g>
 </g>
-<!-- HS_PIXELGECKO&#45;&#45;C_IMAGESERVER -->
+<!-- HS_AGENT_LIBVIPS&#45;&#45;C_IMAGESERVER -->
 <g id="edge7" class="edge">
-<title>HS_PIXELGECKO&#45;&#45;C_IMAGESERVER</title>
+<title>HS_AGENT_LIBVIPS&#45;&#45;C_IMAGESERVER</title>
 <path fill="none" stroke="turquoise" d="M1381.03,-1738.36C1403.37,-1727.25 1423.76,-1712.62 1441,-1693.63 1494.94,-1634.24 1409.36,-311.03 1461,-249.63 1466.14,-243.52 1472.19,-238.51 1478.84,-234.41"/>
 </g>
-<!-- HS_PIXELGECKO&#45;&#45;C_PIXELGECKO -->
+<!-- HS_AGENT_LIBVIPS&#45;&#45;C_AGENT_LIBVIPS -->
 <g id="edge9" class="edge">
-<title>HS_PIXELGECKO&#45;&#45;C_PIXELGECKO</title>
+<title>HS_AGENT_LIBVIPS&#45;&#45;C_AGENT_LIBVIPS</title>
 <path fill="none" stroke="turquoise" d="M1381.25,-1723.41C1402.23,-1715.46 1422.35,-1705.65 1441,-1693.63 1838.93,-1437.27 1910.54,-763.68 1920.2,-644.72"/>
 </g>
 <!-- HS_DBGATE -->
@@ -408,9 +408,9 @@
 <title>C_API&#45;&#45;C_IMAGESERVER</title>
 <path fill="none" stroke="orange" d="M1116.08,-246.21C1213.92,-241.49 1369.65,-233.97 1478.9,-228.7"/>
 </g>
-<!-- C_MONGODB_PHAIDRA&#45;&#45;C_PIXELGECKO -->
+<!-- C_MONGODB_PHAIDRA&#45;&#45;C_AGENT_LIBVIPS -->
 <g id="edge28" class="edge">
-<title>C_MONGODB_PHAIDRA&#45;&#45;C_PIXELGECKO</title>
+<title>C_MONGODB_PHAIDRA&#45;&#45;C_AGENT_LIBVIPS</title>
 <path fill="none" stroke="orange" d="M1736.23,-516.77C1741.05,-519.39 1745.67,-522.33 1750,-525.63 1779.07,-547.83 1757.05,-577.29 1786,-599.63 1791.22,-603.67 1796.89,-607.14 1802.84,-610.14"/>
 </g>
 <!-- C_LAM -->
@@ -596,9 +596,9 @@
 <title>C_PROMTAIL_LOCAL&#45;&#45;C_IMAGESERVER</title>
 <path fill="none" stroke="black" d="M183.1,-289.5C214.87,-269.28 269.83,-237.47 322,-222.63 443.81,-188 479.47,-204.75 606,-199.63 976.81,-184.64 1070.79,-173.72 1441,-199.63 1457.3,-200.78 1474.45,-202.55 1491.25,-204.62"/>
 </g>
-<!-- C_PROMTAIL_LOCAL&#45;&#45;C_PIXELGECKO -->
+<!-- C_PROMTAIL_LOCAL&#45;&#45;C_AGENT_LIBVIPS -->
 <g id="edge50" class="edge">
-<title>C_PROMTAIL_LOCAL&#45;&#45;C_PIXELGECKO</title>
+<title>C_PROMTAIL_LOCAL&#45;&#45;C_AGENT_LIBVIPS</title>
 <path fill="none" stroke="black" d="M162.15,-325.77C179.09,-372.66 231.33,-498.04 322,-552.63 570.41,-702.22 1476.22,-657.14 1802.96,-635.34"/>
 </g>
 <!-- C_PROMTAIL_LOCAL&#45;&#45;C_DBGATE -->

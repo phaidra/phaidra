@@ -309,7 +309,7 @@ sub info {
 
   if ($info->{cmodel} eq 'Video') {
     if (defined $c->app->config->{external_services}->{opencast}->{mode} && $c->app->config->{external_services}->{opencast}->{mode} eq "ACTIVATED") {
-        my $object_job_info = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'vige'});
+        my $object_job_info = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'});
         if ($object_job_info && defined($info)) {
           my $oc_mpid = $object_job_info->{'oc_mpid'};
           $info->{oc_mpid} = $oc_mpid;

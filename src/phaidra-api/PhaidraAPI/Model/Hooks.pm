@@ -159,7 +159,7 @@ sub add_or_modify_datastream_hooks {
                 } else {
                   $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] Marking stream for delete.");
                   $c->paf_mongo->get_collection('jobs')->update_one(
-                    { 'pid' => $pid, 'agent' => 'vige' },
+                    { 'pid' => $pid, 'agent' => 'opencast' },
                     { '$set'     => { 'status' => 'TO_DELETE' }},
                     { 'upsert'   => 0 }
                   );
@@ -431,7 +431,7 @@ sub _create_imageserver_job_if_not_exists {
   my $res = {alerts => [], status => 200};
 
   my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
-  my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'pige'});
+  my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'libvips'});
   unless ($find->{pid}) {    
     return $imgsrv_model->create_imageserver_job($c, $pid, $cmodel, undef, undef);
   } else {
@@ -449,9 +449,9 @@ sub delete_hook {
   $c->app->log->debug("res_cmodel\n" . $c->app->dumper($res_cmodel));
 
   my %valid_models = (
-    'Picture'      => 'pige',
-    'PDFDocument'  => 'pige',
-    'Video'        => 'vige',
+    'Picture'      => 'libvips',
+    'PDFDocument'  => 'libvips',
+    'Video'        => 'opencast',
     '3DObject'     => '3d',
     'PDFDocument'  => 'tika'
   );
@@ -490,7 +490,7 @@ sub _create_streaming_job_if_not_exists {
   my $res = {alerts => [], status => 200};
 
   my $strm_model = PhaidraAPI::Model::Streaming->new;
-  my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'vige'});
+  my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'});
   unless ($find->{pid}) {    
     return $strm_model->create_streaming_job($c, $pid, $cmodel);
   }

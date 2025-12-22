@@ -23,7 +23,7 @@ sub process {
   my $agent        = $self->param('agent');
 
   unless ($agent) {
-    $agent = 'pige';
+    $agent = 'libvips';
   }
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
@@ -102,7 +102,7 @@ sub process_pids {
   for my $pid (@{$pids->{pids}}) {
 
     if ($skipexisting && ($skipexisting eq 1)) {
-      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
+      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'libvips'}, {}, {"sort" => {"created" => -1}});
       if ($res1->{pid}) {
         $self->render(json => {alerts => [{type => 'info', msg => "Job for pid[$pid] already created"}], job => $res1}, status => 200);
         next;
@@ -138,7 +138,7 @@ sub status {
     return;
   }
 
-  $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
+  $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'libvips'}, {}, {"sort" => {"created" => -1}});
 
   $self->render(json => { conversion => $res->{conversion}, status => $res->{status} }, status => 200);
 
@@ -156,11 +156,11 @@ sub tmp_hash {
   if ($rres->{status} eq '404') {
 
     # it's ok
-    my $res = $self->mongo->get_collection('imgsrv.hashmap')->find_one({pid => $pid, agent => 'pige'});
+    my $res = $self->mongo->get_collection('imgsrv.hashmap')->find_one({pid => $pid, agent => 'libvips'});
     if (!defined($res) || !exists($res->{tmp_hash})) {
 
       # if we could not find the temp hash, look into the jobs if the image isn't there as processed
-      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'pige'}, {}, {"sort" => {"created" => -1}});
+      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'libvips'}, {}, {"sort" => {"created" => -1}});
       if (!defined($res1) || $res1->{status} ne 'finished') {
 
         # if it isn't then this image isn't known to imageserver

@@ -1,0 +1,1 @@
+parallel --lb ::: 'bash /mnt/agent-opencast/checker.bash' 'bash /mnt/agent-opencast/uploader.bash' 'bash /mnt/agent-opencast/cleaner.bash'

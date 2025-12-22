@@ -187,7 +187,7 @@ sub create_imageserver_job {
   my $res = {alerts => [], status => 200};
 
   unless (defined($agent)) {
-    $agent = 'pige';
+    $agent = 'libvips';
   }
 
   $c->app->log->info("Creating imageserver job pid[$pid] cm[$cmodel] ds[".(defined($ds) ? $ds : '')."]");
@@ -221,7 +221,7 @@ sub update_imageserver_job {
   my $res = {alerts => [], status => 200};
 
   unless (defined($agent)) {
-    $agent = 'pige';
+    $agent = 'libvips';
   }
 
   $c->app->log->info("Updating imageserver job pid[$pid] cm[$cmodel] ds[".(defined($ds) ? $ds : '')."]");

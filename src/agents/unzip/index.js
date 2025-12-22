@@ -9,7 +9,7 @@ const config = {
     dbName: process.env.MONGO_AGENT_DB || 'paf_mongodb',
     collection: 'jobs'
   },
-  store: process.env.CONVERTED_360_PATH || '/mnt/converted_360',
+  store: process.env.EXPANDED_PATH || '/mnt/derivates-expanded',
   sleepTime: parseInt(process.env.IMAGE_CONVERSION_INTERVAL || '5') * 1000
 };
 
@@ -87,7 +87,7 @@ async function updateJobStatus(pid, status, additionalFields = {}) {
 let db;
 
 async function main() {
-  console.log('360 Viewer service started');
+  console.log('Unzip agent started');
   
   const client = new MongoClient(config.mongodb.url);
   await client.connect();
