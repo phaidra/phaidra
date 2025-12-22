@@ -32,12 +32,12 @@ my $mongodb = MongoDB::MongoClient->new(
   password           => $ENV{MONGODB_PHAIDRA_PASSWORD},
   connect_timeout_ms => 300000,
   socket_timeout_ms  => 300000,
-)->get_database('paf_mongodb')
+)->get_database('paf_mongodb');
 
-$mongodb->get_collection('jobs')->update_many({ agent: "pige" },{ $set: { agent: "libvips" } });
-$mongodb->get_collection('jobs')->update_many({ agent: "vige" },{ $set: { agent: "opencast" } });
-$mongodb->get_collection('jobs')->update_many({ agent: "3d" },{ $set: { agent: "obj2gltf" } });
-$mongodb->get_collection('jobs')->update_many({ agent: "360viewer" },{ $set: { agent: "unzip" } });
+$mongodb->get_collection('jobs')->update_many({ agent => "pige" },{ '$set' => { agent => "libvips" } });
+$mongodb->get_collection('jobs')->update_many({ agent => "vige" },{ '$set' => { agent => "opencast" } });
+$mongodb->get_collection('jobs')->update_many({ agent => "3d" },{ '$set' => { agent => "obj2gltf" } });
+$mongodb->get_collection('jobs')->update_many({ agent => "360viewer" },{ '$set' => { agent => "unzip" } });
 
 $log->info("finished migration to v3.4.0-1");
 
