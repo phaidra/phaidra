@@ -148,6 +148,12 @@ sub aggregates {
   return $res;
 }
 
+sub parse_pid_num {
+  my ($pid) = @_;
+  my ($n) = ($pid // '') =~ /^o:(\d+)$/;
+  return defined $n ? int($n) : 0;
+}
+
 sub stats {
   my $self   = shift;
   my $c      = shift;
@@ -156,167 +162,77 @@ sub stats {
   my $output = shift;
 
   my $fr = undef;
-  if (exists($c->app->config->{sites})) {
-    for my $f (@{$c->app->config->{sites}}) {
-      if (defined($f->{site}) && $f->{site} eq 'phaidra') {
-        $fr = $f;
-      }
+  my $pid_num = parse_pid_num($pid);
+
+  my $dbh = $c->app->db_metadata->dbh;
+
+  if ($output eq 'chart') {
+
+    my $sql = q{
+      SELECT
+        DATE_FORMAT(created, '%Y-%m-%d') AS day,
+        COALESCE(country, 'xx')          AS country,
+        COUNT(*)                         AS cnt
+      FROM usage_log
+      WHERE action = 'download'
+        AND pid_num = ?
+      GROUP BY day, country
+      ORDER BY day, country
+    };
+
+    my $sth = $dbh->prepare($sql) or $c->app->log->error($dbh->errstr);
+    $sth->execute($pid_num) or $c->app->log->error($dbh->errstr);
+
+    my $downloads = {};
+    while (my $row = $sth->fetchrow_hashref) {
+      my ($day, $country, $cnt) = @$row{qw/day country cnt/};
+      $downloads->{$country}{$day} = $cnt;
     }
 
-    unless (defined($fr)) {
+    $sql = q{
+      SELECT
+        DATE_FORMAT(created, '%Y-%m-%d') AS day,
+        COALESCE(country, 'xx')          AS country,
+        COUNT(*)                         AS cnt
+      FROM usage_log
+      WHERE action = 'info'
+        AND pid_num = ?
+      GROUP BY day, country
+      ORDER BY day, country
+    };
 
-      # return 200, this is just ok
-      return {alerts => [{type => 'info', msg => 'Site is not configured'}], status => 200};
-    }
-    unless ($fr->{site} eq 'phaidra') {
+    $sth = $dbh->prepare($sql) or $c->app->log->error($dbh->errstr);
+    $sth->execute($pid_num) or $c->app->log->error($dbh->errstr);
 
-      # return 200, this is just ok
-      return {alerts => [{type => 'info', msg => 'Site [' . $fr->{site} . '] is not supported'}], status => 200};
-    }
-    unless (defined($fr->{stats})) {
-
-      # return 200, this is just ok
-      return {alerts => [{type => 'info', msg => 'Statistics source is not configured'}], status => 200};
-    }
-
-    # only piwik now
-    unless ($fr->{stats}->{type} eq 'piwik') {
-
-      # return 200, this is just ok
-      return {alerts => [{type => 'info', msg => 'Statistics source [' . $fr->{stats}->{type} . '] is not supported.'}], status => 200};
-    }
-    unless ($siteid) {
-      unless (defined($fr->{stats}->{siteid})) {
-        return {alerts => [{type => 'info', msg => 'Piwik siteid is not configured'}], status => 500};
-      }
-      $siteid = $fr->{stats}->{siteid};
+    my $detail_page = {};
+    while (my $row = $sth->fetchrow_hashref) {
+      my ($day, $country, $cnt) = @$row{qw/day country cnt/};
+      $detail_page->{$country}{$day} = $cnt;
     }
 
-    if ($output eq 'chart') {
-
-      my $downloads;
-      my $sth = $c->app->db_stats_phaidra->dbh->prepare("SELECT DATE_FORMAT(server_time,'%Y-%m-%d'), location_country FROM downloads_$siteid WHERE pid = '$pid';")
-        or $c->app->log->error("Error querying piwik database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
-      $sth->execute() or $c->app->log->error("Error querying piwik database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
-      my $date;
-      my $country;
-      $sth->bind_columns(undef, \$date, \$country);
-      while ($sth->fetch) {
-        if ($downloads->{$country}) {
-          $downloads->{$country}->{$date}++;
-        }
-        else {
-          $downloads->{$country} = {$date => 1};
-        }
-      }
-
-      my $detail_page;
-      $sth = $c->app->db_stats_phaidra->dbh->prepare("SELECT DATE_FORMAT(server_time,'%Y-%m-%d'), location_country FROM views_$siteid WHERE pid = '$pid';") or $c->app->log->error("Error querying piwik database for detail stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
-      $sth->execute()                                                                                                                                       or $c->app->log->error("Error querying piwik database for detail stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
-      $sth->bind_columns(undef, \$date, \$country);
-      while ($sth->fetch) {
-        if ($detail_page->{$country}) {
-          $detail_page->{$country}->{$date}++;
-        }
-        else {
-          $detail_page->{$country} = {$date => 1};
-        }
-      }
-
-      if (defined($detail_page) || defined($downloads)) {
-        return {downloads => $downloads, detail_page => $detail_page, alerts => [], status => 200};
-      }
-      else {
-        my $msg = "No data has been fetched. DB msg:" . $c->app->db_stats_phaidra->dbh->errstr;
-        $c->app->log->warn($msg);
-        return {alerts => [{type => 'info', msg => $msg}], status => 200};
-      }
+    if (defined($detail_page) || defined($downloads)) {
+      return {downloads => $downloads, detail_page => $detail_page, alerts => [], status => 200};
     }
     else {
-
-      my $downloads = $c->app->db_stats_phaidra->dbh->selectrow_array("SELECT count(*) FROM downloads_$siteid WHERE pid = '$pid';");
-      unless (defined($downloads)) {
-        $c->app->log->error("Error querying piwik database for download stats:" . $c->app->db_stats_phaidra->dbh->errstr);
-      }
-
-      my $detail_page = $c->app->db_stats_phaidra->dbh->selectrow_array("SELECT count(*) FROM views_$siteid WHERE pid = '$pid';");
-      unless (defined($detail_page)) {
-        $c->app->log->error("Error querying piwik database for detail stats:" . $c->app->db_stats_phaidra->dbh->errstr);
-      }
-
-      if (defined($detail_page)) {
-        return {downloads => $downloads, detail_page => $detail_page, alerts => [], status => 200};
-      }
-      else {
-        my $msg = "No data has been fetched. DB msg:" . $c->app->db_stats_phaidra->dbh->errstr;
-        $c->app->log->warn($msg);
-        return {alerts => [{type => 'info', msg => $msg}], status => 200};
-      }
+      my $msg = "No data has been fetched. DB msg:" . $c->app->db_metadata->dbh->errstr;
+      $c->app->log->warn($msg);
+      return {alerts => [{type => 'info', msg => $msg}], status => 200};
     }
   }
   else {
-    if ($output eq 'chart') {
 
-      my $downloads;
-      my $sth = $c->app->db_metadata->dbh->prepare("SELECT DATE_FORMAT(created,'%Y-%m-%d'), location_country FROM usage_stats WHERE action = 'download' AND pid = '$pid' AND `created` <= NOW() - INTERVAL 1 DAY;")
-        or $c->app->log->error("Error querying database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
-      $sth->execute() or $c->app->log->error("Error querying database for download stats chart:" . $c->app->db_stats_phaidra->dbh->errstr);
-      my $date;
-      my $country;
-      $sth->bind_columns(undef, \$date, \$country);
-      while ($sth->fetch) {
-        if ($downloads->{$country}) {
-          $downloads->{$country}->{$date}++;
-        }
-        else {
-          $downloads->{$country} = {$date => 1};
-        }
-      }
+    my ($detail_page, $download) = $dbh->selectrow_array("SELECT `info`, `download` FROM usage_statistics WHERE pid_num = $pid_num");
 
-      my $detail_page;
-      $sth = $c->app->db_metadata->dbh->prepare("SELECT DATE_FORMAT(created,'%Y-%m-%d'), location_country FROM usage_stats WHERE action = 'info' AND pid = '$pid' AND `created` <= NOW() - INTERVAL 1 DAY;") or $c->app->log->error("Error querying piwik database for detail stats chart:" . $c->app->db_metadata->dbh->errstr);
-      $sth->execute()                                                                                                                                                or $c->app->log->error("Error querying piwik database for detail stats chart:" . $c->app->db_metadata->dbh->errstr);
-      $sth->bind_columns(undef, \$date, \$country);
-      while ($sth->fetch) {
-        if ($detail_page->{$country}) {
-          $detail_page->{$country}->{$date}++;
-        }
-        else {
-          $detail_page->{$country} = {$date => 1};
-        }
-      }
-
-      if (defined($detail_page) || defined($downloads)) {
-        return {downloads => $downloads, detail_page => $detail_page, alerts => [], status => 200};
-      }
-      else {
-        my $msg = "No data has been fetched. DB msg:" . $c->app->db_metadata->dbh->errstr;
-        $c->app->log->warn($msg);
-        return {alerts => [{type => 'info', msg => $msg}], status => 200};
-      }
+    if (defined($detail_page) || defined($download)) {
+      return {downloads => $download, detail_page => $detail_page, alerts => [], status => 200};
     }
     else {
-
-      my $downloads = $c->app->db_metadata->dbh->selectrow_array("SELECT count(*) FROM usage_stats WHERE action = 'download' AND pid = '$pid' AND `created` <= NOW() - INTERVAL 1 DAY;");
-      unless (defined($downloads)) {
-        $c->app->log->error("Error querying database for download stats:" . $c->app->db_metadata->dbh->errstr);
-      }
-
-      my $detail_page = $c->app->db_metadata->dbh->selectrow_array("SELECT count(*) FROM usage_stats WHERE action = 'info' AND pid = '$pid' AND `created` <= NOW() - INTERVAL 1 DAY;");
-      unless (defined($detail_page)) {
-        $c->app->log->error("Error querying database for detail stats:" . $c->app->db_metadata->dbh->errstr);
-      }
-
-      if (defined($detail_page)) {
-        return {downloads => $downloads, detail_page => $detail_page, alerts => [], status => 200};
-      }
-      else {
-        my $msg = "No data has been fetched. DB msg:" . $c->app->db_metadata->dbh->errstr;
-        $c->app->log->warn($msg);
-        return {alerts => [{type => 'info', msg => $msg}], status => 200};
-      }
+      my $msg = "No data has been fetched. DB msg:" . $c->app->db_metadata->dbh->errstr;
+      $c->app->log->warn($msg);
+      return {alerts => [{type => 'info', msg => $msg}], status => 200};
     }
   }
+  
 }
 
 1;
