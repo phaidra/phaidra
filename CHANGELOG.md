@@ -1,3 +1,42 @@
+# head
+
+## upgrade
+
+Some volumes have been renamed, here's how you can migrate to the new structure:
+
+NOTICE: If you have a lot of data in some volume (probably pixelgecko), you can remove it from migration script and instead do `docker volume create phaidra_derivates-images` and then mv the files manually if both volumes are on the same storage.
+
+* compose down
+
+* pull to get newest version
+
+* copy volumes
+```
+./scripts/migrate_volumes_v3.4.0.sh
+```
+
+* compose up
+
+* change agent names in jobs
+```
+docker exec -it phaidra-api-1 perl migrations/v3.4.0-1.pl
+```
+
+* check if everything is fine
+
+* remove old volumes
+```
+docker volume rm phaidra_mariadb_fedora
+docker volume rm phaidra_mariadb_phaidra
+docker volume rm phaidra_mongodb_phaidra
+docker volume rm phaidra_converted_3d
+docker volume rm phaidra_converted_360
+docker volume rm phaidra_pdf-extraction
+docker volume rm phaidra_vige-mongosh
+docker volume rm phaidra_vige
+docker volume rm phaidra_pixelgecko
+```
+
 # v3.3.17
 
 Here are the key highlights from the fixes and enhancements since the last release:
