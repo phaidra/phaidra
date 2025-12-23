@@ -475,55 +475,57 @@
             >
           </v-row>
           <v-row justify="center" v-if="showPreview">
-            <v-col cols="12">
-              <div class="iframe-container" v-if="objectInfo.cmodel === 'Video'">
+            <client-only>
+              <v-col cols="12">
+                <div class="iframe-container" v-if="objectInfo.cmodel === 'Video'">
+                  <iframe
+                    :title="$t('Video preview')"
+                    :src="
+                      instanceconfig.api +
+                      '/object/' +
+                      objectInfo.pid +
+                      '/preview' + '?lang=' + $i18n.locale.substring(0, 2)
+                    "
+                    width="100%"
+                    frameborder="0"
+                    scrolling="no"
+                    allowfullscreen="yes"
+                    class="responsive-iframe"
+                    >Content</iframe>
+                </div>
                 <iframe
-                  :title="$t('Video preview')"
+                v-else
+                  :title="$t('Preview')"
                   :src="
                     instanceconfig.api +
                     '/object/' +
                     objectInfo.pid +
-                    '/preview' + '?lang=' + $i18n.locale.substring(0, 2)
+                    '/preview' + '?lang=' + $i18n.locale.substring(0, 2) + `${instanceconfig.addannotation ? `&addannotation=${instanceconfig.addannotation}` : ''}`
                   "
-                  width="100%"
-                  frameborder="0"
+                  :style="
+                    objectInfo.cmodel === 'Audio'
+                      ? 'height: 270px; width: 100%; border: 0px;'
+                      : objectInfo.cmodel === 'Container' ? 'height: 300px; width: 100%; border: 0px;' : 'height: 500px; width: 100%; border: 0px;'
+                  "
                   scrolling="no"
-                  allowfullscreen="yes"
-                  class="responsive-iframe"
-                  >Content</iframe>
-              </div>
-              <iframe
-              v-else
-                :title="$t('Preview')"
-                :src="
-                  instanceconfig.api +
-                  '/object/' +
-                  objectInfo.pid +
-                  '/preview' + '?lang=' + $i18n.locale.substring(0, 2) + `${instanceconfig.addannotation ? `&addannotation=${instanceconfig.addannotation}` : ''}`
-                "
-                :style="
-                  objectInfo.cmodel === 'Audio'
-                    ? 'height: 270px; width: 100%; border: 0px;'
-                    : objectInfo.cmodel === 'Container' ? 'height: 300px; width: 100%; border: 0px;' : 'height: 500px; width: 100%; border: 0px;'
-                "
-                scrolling="no"
-                frameborder="0"
-                >Content</iframe
-              >
-              <v-btn
-              raised
-              color="primary"
-                class="mt-2 float-right"
-                :href="
-                  instanceconfig.api +
-                  '/object/' +
-                  objectInfo.pid +
-                  '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
-                "
-                target="_blank"
-                >{{ $t("Open in new window") }}</v-btn
-              >
-            </v-col>
+                  frameborder="0"
+                  >Content</iframe
+                >
+                <v-btn
+                raised
+                color="primary"
+                  class="mt-2 float-right"
+                  :href="
+                    instanceconfig.api +
+                    '/object/' +
+                    objectInfo.pid +
+                    '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
+                  "
+                  target="_blank"
+                  >{{ $t("Open in new window") }}</v-btn
+                >
+              </v-col>
+            </client-only>
           </v-row>
 
           <v-divider class="mt-12 mb-10" v-if="showPreview"></v-divider>
