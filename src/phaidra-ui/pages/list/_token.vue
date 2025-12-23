@@ -40,6 +40,13 @@ export default {
             },
           });
           this.list = response.data.list;
+          if (this.list && this.list.name) {
+            this.$store.commit("addBreadcrumb", {
+              text: this.list.name,
+              to: this.$route.path,
+              disabled: true,
+            });
+          }
           if (response.data.alerts && response.data.alerts.length > 0) {
             this.$store.commit("setAlerts", response.data.alerts);
           }

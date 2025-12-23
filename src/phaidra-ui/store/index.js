@@ -217,16 +217,6 @@ export const mutations = {
           disabled: true
         }
       )
-    } else {
-      if (transition.to.path.includes('list')) {
-        state.breadcrumbs.push(
-          {
-            text: transition.to.params.token,
-            to: { name: transition.to.path, params: { token: transition.to.params.token } },
-            disabled: true
-          }
-        )
-      }
     }
     if (transition.to.path.includes('/credits')) {
       state.breadcrumbs.push(
