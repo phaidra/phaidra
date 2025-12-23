@@ -5,6 +5,7 @@ BASH_ENV=/container.env
 0   23  *    *    *     bash /mnt/chronos/mariadb-phaidra.bash > /proc/1/fd/1 2>&1
 20  23  *    *    *     bash /mnt/chronos/mariadb-fedora.bash > /proc/1/fd/1 2>&1
 40  23  *    *    *     bash /mnt/chronos/mongodb-phaidra.bash > /proc/1/fd/1 2>&1
+50  23  *    *    *     bash /mnt/chronos/solr-phaidra.bash > /proc/1/fd/1 2>&1
 0    0  *    *    *     bash /mnt/chronos/database-dump-cleaner.bash > /proc/1/fd/1 2>&1
 0    0  2    *    *     bash /mnt/chronos/fixity-checker.bash > /proc/1/fd/1 2>&1
 5    *  *    *    *     perl /mnt/chronos/original-perl/sitemap.pl > /proc/1/fd/1 2>&1
