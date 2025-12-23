@@ -219,12 +219,6 @@
   <copyField source="dc_subject*" dest="keyword_suggest"/>
   <copyField source="*_dc_title" dest="title_suggest"/>
   <!-- Explicitly copy individual fields into _text_, excluding extracted_text -->
-  <copyField source="_id" dest="_text_"/>
-  <copyField source="_id._oid" dest="_text_"/>
-  <copyField source="_root_" dest="_text_"/>
-  <copyField source="_ts" dest="_text_"/>
-  <copyField source="_updated" dest="_text_"/>
-  <copyField source="_version_" dest="_text_"/>
   <copyField source="altformats" dest="_text_"/>
   <copyField source="altversions" dest="_text_"/>
   <copyField source="annotations" dest="_text_"/>
