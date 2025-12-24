@@ -61,8 +61,8 @@
           <template v-if="(cmodel !== 'Collection') && (cmodel !== 'Resource')">
             <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
             <v-col cols="12" md="10" class="wiv">
-              <span v-if="dc_rights && dc_rights.length > 0">
-                <a :href="(dc_rights && dc_rights.length > 1 && dc_rights[1]) ? dc_rights[1] : 'http://rightsstatements.org/vocab/InC/1.0/'" target="_blank">{{ ch.labels[alpha2locale] }}</a>
+              <span v-if="getLicenseUri(ch)">
+                <a :href="getLicenseUri(ch)" target="_blank">{{ ch.labels[alpha2locale] }}</a>
               </span>
               <span v-else>
                 {{ ch.labels[alpha2locale] }}
@@ -193,14 +193,14 @@
           </v-col>
         </template>
         <template v-else-if="hideNodeBorder(nodePath(ch))">
-          <p-d-uwm-rec v-if="ch.children" :children="ch.children" :cmodel="cmodel" :dc_rights="dc_rights" :path="nodePath(ch)"></p-d-uwm-rec>
+          <p-d-uwm-rec v-if="ch.children" :children="ch.children" :cmodel="cmodel" :path="nodePath(ch)"></p-d-uwm-rec>
         </template>
         <template v-else>
           <v-col>
             <v-card outlined class="mt-4" :width="'100%'">
               <v-card-text>
                 <div class="overline mb-4">{{ $t(nodePath(ch)) }}</div>
-                <p-d-uwm-rec v-if="ch.children" :children="ch.children" :cmodel="cmodel" :dc_rights="dc_rights" :path="nodePath(ch)"></p-d-uwm-rec>
+                <p-d-uwm-rec v-if="ch.children" :children="ch.children" :cmodel="cmodel" :path="nodePath(ch)"></p-d-uwm-rec>
               </v-card-text>
             </v-card>
           </v-col>
@@ -217,11 +217,12 @@ import '@/compiled-icons/orcid'
 import uwmlangs from '../../utils/uwmlangs'
 import lang3to2map from '../../utils/lang3to2map'
 import { validationrules } from '../../mixins/validationrules'
+import { vocabulary } from '../../mixins/vocabulary'
 import PDateModifier from '../../utils/PDateModifier'
 
 export default {
   name: 'p-d-uwm-rec',
-  mixins: [ validationrules ],
+  mixins: [ validationrules, vocabulary ],
   props: {
     children: {
       type: Array
@@ -233,9 +234,6 @@ export default {
     cmodel: {
       type: String
     },
-    dc_rights: {
-      type: Array
-    }
   },
   computed: {
     alpha2locale: function () {
@@ -300,6 +298,27 @@ export default {
       } else {
         return v
       }
+    },
+    getLicenseUri: function (ch) {
+      if (!ch || !ch.ui_value) {
+        return null
+      }
+      if (typeof ch.ui_value === 'string' && ch.ui_value.startsWith('http')) {
+        return ch.ui_value
+      }
+      const licenseId = String(ch.ui_value)
+      const vocab = this.$store.state.vocabulary.vocabularies['alllicenses']
+      if (vocab && vocab.terms) {
+        for (let term of vocab.terms) {
+          if (term['skos:notation']) {
+            const notations = Array.isArray(term['skos:notation']) ? term['skos:notation'] : [term['skos:notation']]
+            if (notations.includes(licenseId)) {
+              return term['@id']
+            }
+          }
+        }
+      }
+      return null
     },
     hideNodeBorder: function (nodePath) {
       switch (nodePath) {
