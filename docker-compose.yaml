@@ -495,7 +495,7 @@ services:
     hostname: "agent-libvips"
     depends_on: [mongodb-phaidra, api]
     <<: [*common, *logs]
-    image: phaidraorg/agent-libvips-dist:408f2ba8
+    image: phaidraorg/agent-libvips-dist:04bd1d38
     volumes:
       - fedora:/mnt/fedora:ro
       - derivates-images:/mnt/derivates-images
