@@ -190,7 +190,7 @@ export const constructDataCite = (dataciteData, that) => {
       }
     }
   }
-  if (dataciteData?.data?.attributes?.descriptions?.length && doiImportData?.license && doiImportData.license.includes('http://creativecommons.org/licenses')) {
+  if (dataciteData?.data?.attributes?.descriptions?.length && doiImportData?.license && typeof doiImportData.license === 'string' && doiImportData.license.includes('http://creativecommons.org/licenses')) {
     doiImportData.descriptions = dataciteData.data.attributes.descriptions.map(x => x.descriptionType === 'Abstract' ? {
       ...x,
       lang: x.lang ? x.lang.length === 3 ? x.lang : that.lang2to3map[x.lang] : null
