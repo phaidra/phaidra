@@ -443,7 +443,7 @@ export default {
       }
 
       // Object type
-      const otHit = this.findFields(baseForm, f => f.id === 'object-type-checkboxes' || f.component === 'p-object-type')[0]
+      const otHit = this.findFields(baseForm, f => f.id === 'object-type-checkboxes' || f.component.includes('p-object-type'))[0]
       if (otHit && doiImportData.publicationTypeId) {
         const f = otHit.field
         f.selectedTerms = [
