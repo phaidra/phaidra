@@ -4,9 +4,9 @@ use strict;
 use warnings;
 use v5.10;
 use XML::LibXML;
-use Digest::SHA qw(sha256_hex);
+use Digest::SHA qw(hmac_sha256);
 use POSIX qw(strftime);
-use Net::IP qw(:PROC);
+use Socket qw(AF_INET6 inet_aton inet_pton);
 use base qw/Mojo::Base/;
 
 sub validate_xml() {
@@ -181,48 +181,99 @@ sub get_video_key {
   return $res;
 }
 
-sub anonymize_ip {
-
-  my $self      = shift;
-  my $c         = shift;
-  my $ipaddress = shift;
-
-  my $ip = new Net::IP($ipaddress);
-
-  unless ($ip) {
-    $c->app->log->error(Net::IP::Error());
-    return '0.0.0.0';
-  }
-
-  return ip_bintoip(substr($ip->binip(), 0, 24) . '0' x 8,  $ip->version()) if $ip->version() eq 4;
-  return ip_bintoip(substr($ip->binip(), 0, 48) . '0' x 80, $ip->version()) if $ip->version() eq 6;
-  return '0.0.0.0';
+# Parse pid 'o:<num>' into pid_num INT
+sub parse_pid_num {
+  my ($pid) = @_;
+  my ($n) = ($pid // '') =~ /^o:(\d+)$/;
+  return defined $n ? int($n) : 0;
 }
 
-sub create_visitor_id {
-    my ($self, $c, $ipaddress) = @_;
+# Return packed 4 or 16 byte IP; undef if invalid
+sub pack_ip_canonical {
+  my ($ip) = @_;
+  return unless defined $ip && length $ip;
+  my $v4 = inet_aton($ip);
+  return $v4 if $v4;                           # 4 bytes
+  # inet_pton may be unavailable on very old Perls; check and fall back to undef
+  if (defined &Socket::inet_pton) {
+    my $v6 = inet_pton(AF_INET6, $ip);
+    return $v6 if $v6;                         # 16 bytes
+  }
+  return;                                      # invalid
+}
 
-    my $hashed_ip = sha256_hex($ipaddress);
-    my $current_date = strftime('%Y-%m-%d', localtime);
-    my $visitor_id = sha256_hex($hashed_ip . $current_date);
+# Make per-day visitor_id from IP + YYYY-MM-DD using HMAC-SHA256 (with secret pepper)
+# Variant A: 64-bit BIGINT
+sub make_visitor_id_u64 {
+  my ($ip_str) = @_;
+  my $packed = pack_ip_canonical($ip_str) or return undef;
+  my $pepper = $ENV{PHAIDRA_ENCRYPTION_KEY} // die "PHAIDRA_ENCRYPTION_KEY not set";
+  my $day = strftime('%Y-%m-%d', localtime);
+  my $mac    = hmac_sha256($packed . $day, $pepper); # 32 bytes
+  my $first8 = substr($mac, 0, 8);
+  return unpack('Q>', $first8);                # unsigned 64-bit, big-endian
+}
 
-    return $visitor_id;
+# Anonymize IP with Socket only and return storage-ready fields:
+# ip_version (4|6), ip_v4 (INT UNSIGNED, masked /24) or ip_v6 (VARBINARY(16), masked /64)
+sub anonymize_ip_for_storage {
+  my ($ipaddress) = @_;
+
+  # Try IPv4
+  if (my $v4 = inet_aton($ipaddress)) {
+    # Zero last octet => /24
+    my ($a, $b, $c, $d) = unpack('C4', $v4);
+    my $masked_v4 = pack('C4', $a, $b, $c, 0);
+    my $ip_v4_int = unpack('N', $masked_v4); # INT UNSIGNED in network order
+    return (4, $ip_v4_int, undef);
+  }
+
+  # Try IPv6 (if inet_pton is available)
+  if (defined &Socket::inet_pton) {
+    if (my $v6 = inet_pton(AF_INET6, $ipaddress)) {
+      # Zero last 8 bytes => /64
+      my $masked_v6 = substr($v6, 0, 8) . ("\0" x 8);
+      return (6, undef, $masked_v6);          # VARBINARY(16)
+    }
+  }
+
+  # Fallback: invalid IP -> 0.0.0.0
+  return (4, 0, undef);
 }
 
 sub track_action {
   my ($self, $c, $pid, $action) = @_;
 
+  return if $c->{isbot};
+
   eval {
-    unless (exists($c->app->config->{"sites"})) {
-      my $ip  = $c->tx->remote_address;
-      my $x_forwarded_for = $c->req->headers->header('X-Forwarded-For');
-      if ($x_forwarded_for) {
-        ($ip) = $x_forwarded_for =~ /^([^,]+)/;
-      }
-      my $visitor_id = $self->create_visitor_id($c, $ip);
-      my $ipa = $self->anonymize_ip($c, $ip);
-      $c->app->db_metadata->dbh->do("INSERT INTO usage_stats (action, pid, ip, visitor_id) VALUES ('$action', '$pid', '$ipa', '$visitor_id');") or $c->app->log->error($c->app->db_metadata->dbh->errstr);
+
+    # Normalize pid -> pid_num (INT)
+    my $pid_num = parse_pid_num($pid);
+
+    # Resolve client IP (prefer first X-Forwarded-For value if present)
+    my $ip = $c->tx->remote_address;
+    if (my $xff = $c->req->headers->header('X-Forwarded-For')) {
+      ($ip) = $xff =~ /^([^,]+)/; # first in list
     }
+
+    # Use current timestamp; visitor_id needs only the date part
+    my $visitor_id = make_visitor_id_u64($ip);
+
+    my ($ip_version, $ip_v4, $ip_v6) = anonymize_ip_for_storage($ip);
+
+    my $dbh = $c->app->db_metadata->dbh;
+
+    # Prepared insert into usage_log; country filled later by nightly job
+    my $sql = qq{
+      INSERT INTO usage_log
+        (action, pid_num, visitor_id, ip_version, ip_v4, ip_v6, country)
+      VALUES
+        (?, ?, ?, ?, ?, ?, NULL)
+    };
+    my $sth = $dbh->prepare($sql);
+    $sth->execute($action, $pid_num, $visitor_id, $ip_version, $ip_v4, $ip_v6)
+      or $c->app->log->error($dbh->errstr);
   };
 
   if ($@) {

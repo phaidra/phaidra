@@ -678,6 +678,7 @@ sub preview {
         $self->stash(license  => $license);
 
         my $u_model = PhaidraAPI::Model::Util->new;
+        $self->app->log->error("pid[$pid] tracking preview for image");
         $u_model->track_action($self, $pid, 'preview');
 
         $self->render(template => 'utils/imageviewer', format => 'html', addannotation => $addannotation);
@@ -805,7 +806,7 @@ sub preview {
         }
       }
 
-       if (($index_mime eq 'application/x-wacz')) {
+      if (($index_mime eq 'application/x-wacz')) {
         
        my $object_model = PhaidraAPI::Model::Object->new;
        my $r= $object_model->info($self, $pid);

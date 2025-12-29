@@ -51,6 +51,23 @@ $ENV{MOJO_MAX_MESSAGE_SIZE}   = 207374182400;
 $ENV{MOJO_INACTIVITY_TIMEOUT} = 1209600;
 $ENV{MOJO_HEARTBEAT_TIMEOUT}  = 1209600;
 
+sub is_bot_ua {
+  my ($ua) = @_;
+  return 0 unless defined $ua;
+  my $l = lc $ua;
+
+  # Any UA containing 'bot', 'spider' or 'crawl'
+  return 1 if index($l, 'bot')     >= 0;
+  return 1 if index($l, 'spider')  >= 0;
+  return 1 if index($l, 'crawl')   >= 0;
+
+  # Known non-'bot' identifiers
+  return 1 if index($l, 'slurp')               >= 0;  # Yahoo
+  return 1 if index($l, 'facebookexternalhit') >= 0;  # Facebook
+  return 1 if index($l, 'bingpreview')         >= 0;  # Bing link preview
+  return 0;
+}
+
 #$ENV{MOJO_TMPDIR} = '/usr/local/fedora/imagemanipulator/tmp';
 
 # This method will run once at server start
@@ -258,7 +275,13 @@ sub startup {
     'before_dispatch' => sub {
       my $self = shift;
 
-      $self->app->log->debug('===> ' . $self->req->method . ' ' . $self->req->url);
+      my $bot = "";
+      if (is_bot_ua($self->req->headers->user_agent)) {
+        $bot = "[bot] ";
+        $self->{isbot} = 1;
+      }
+
+      $self->app->log->debug("$bot===> " . $self->req->method . ' ' . $self->req->url);
 
       my $session = $self->stash('mojox-session');
       $session->load;
@@ -277,7 +300,11 @@ sub startup {
     'after_dispatch' => sub {
       my $self = shift;
 
-      $self->app->log->debug('<=== ' . $self->res->code . ' ' . $self->req->method . ' ' . $self->req->url);
+      my $bot = "";
+      if ($self->{isbot}) {
+        $bot = "[bot] ";
+      }
+      $self->app->log->debug("$bot<=== " . $self->res->code . ' ' . $self->req->method . ' ' . $self->req->url);
 
       # CORS
       unless ($self->res->headers->header('Access-Control-Allow-Origin')) {
