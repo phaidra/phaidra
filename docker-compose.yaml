@@ -341,7 +341,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:04afa407
+    image: phaidraorg/ui:2514c503
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -359,7 +359,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:04afa407
+    image: phaidraorg/ui:2514c503
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -427,7 +427,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:5141c529
+    image: phaidraorg/api-dist:2514c503
     <<: [*common, *logs]
     volumes:
       - s3-cache:/s3-cache
@@ -441,7 +441,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:5141c529
+    image: phaidraorg/api-dist:2514c503
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -710,7 +710,7 @@ services:
   ############### phaidra sql db ###############
   mariadb-phaidra:
     hostname: "mariadb-phaidra"
-    image: phaidraorg/mariadb-phaidra-dist:dfe0bb9c
+    image: phaidraorg/mariadb-phaidra-dist:62e27136
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
@@ -859,7 +859,7 @@ services:
   ############### cronjobs service ###############
   chronos:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:88b52fc0
+    image: phaidraorg/chronos-dist:2514c503
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
@@ -886,7 +886,7 @@ services:
 
   chronos-s3:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:88b52fc0
+    image: phaidraorg/chronos-dist:2514c503
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
