@@ -216,60 +216,73 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="6">
-            <v-text-field
-              :value="funderName"
-              :label="$t('Funder name')"
-              v-on:blur="$emit('input-funder-name',$event.target.value)"
-              :filled="inputStyle==='filled'"
-              :outlined="inputStyle==='outlined'"
-            ></v-text-field>
+          <v-col cols="2">
+            <v-radio-group v-model="funderRadio" class="mt-0" @change="$emit('change-funder-type', $event)">
+              <v-radio color="primary" :label="$t('Funder name')" :value="'name'"></v-radio>
+              <v-radio color="primary" :label="'ROR'" :value="'ror'"></v-radio>
+            </v-radio-group>
           </v-col>
-          <v-col cols="1" v-if="multilingual">
-            <v-btn text @click="$refs.langdialogfunder.open()">
-              <span>
-                ({{ funderNameLanguage ? funderNameLanguage : '--' }})
-              </span>
-            </v-btn>
-            <select-language ref="langdialogfunder" @language-selected="$emit('input-funder-name-language', $event)"></select-language>
-          </v-col>
-          <v-col :cols="multilingual ? 4 : 6">
-            <v-row >
-              <v-col :cols="6" v-if="!hideIdentifierType && !hideIdentifier">
-                <v-autocomplete
-                  v-on:input="$emit('input-funder-identifier-type', $event)"
-                  :label="$t('Type of funder identifier')"
-                  :items="vocabularies[identifierVocabulary].terms"
-                  :item-value="'@id'"
-                  :value="getTerm(identifierVocabulary, funderIdentifierType)"
-                  :filter="autocompleteFilter"
-                  :filled="inputStyle==='filled'"
-                  :outlined="inputStyle==='outlined'"
-                  return-object
-                  clearable
-                >
-                  <template slot="item" slot-scope="{ item }">
-                    <v-list-item-content two-line>
-                      <v-list-item-title  v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
-                  </template>
-                  <template slot="selection" slot-scope="{ item }">
-                    <v-list-item-content>
-                      <v-list-item-title v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
-                  </template>
-                </v-autocomplete>
-              </v-col>
-              <v-col :cols="!hideIdentifierType ? 6 : 12" v-if="!hideIdentifier">
+          <v-col cols="12" md="10" v-if="funderRadio === 'name'">
+            <v-row>
+              <v-col cols="6">
                 <v-text-field
-                  :value="funderIdentifier"
-                  :label="$t('Funder identifier')"
-                  v-on:blur="$emit('input-funder-identifier',$event.target.value)"
+                  :value="funderName"
+                  :label="$t('Funder name')"
+                  v-on:blur="$emit('input-funder-name',$event.target.value)"
                   :filled="inputStyle==='filled'"
                   :outlined="inputStyle==='outlined'"
                 ></v-text-field>
               </v-col>
+              <v-col cols="1" v-if="multilingual">
+                <v-btn text @click="$refs.langdialogfunder.open()">
+                  <span>
+                    ({{ funderNameLanguage ? funderNameLanguage : '--' }})
+                  </span>
+                </v-btn>
+                <select-language ref="langdialogfunder" @language-selected="$emit('input-funder-name-language', $event)"></select-language>
+              </v-col>
+              <v-col :cols="multilingual ? 4 : 6">
+                <v-row >
+                  <v-col :cols="6" v-if="!hideIdentifierType && !hideIdentifier">
+                    <v-autocomplete
+                      v-on:input="$emit('input-funder-identifier-type', $event)"
+                      :label="$t('Type of funder identifier')"
+                      :items="vocabularies[identifierVocabulary].terms"
+                      :item-value="'@id'"
+                      :value="getTerm(identifierVocabulary, funderIdentifierType)"
+                      :filter="autocompleteFilter"
+                      :filled="inputStyle==='filled'"
+                      :outlined="inputStyle==='outlined'"
+                      return-object
+                      clearable
+                    >
+                      <template slot="item" slot-scope="{ item }">
+                        <v-list-item-content two-line>
+                          <v-list-item-title  v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
+                        </v-list-item-content>
+                      </template>
+                      <template slot="selection" slot-scope="{ item }">
+                        <v-list-item-content>
+                          <v-list-item-title v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
+                        </v-list-item-content>
+                      </template>
+                    </v-autocomplete>
+                  </v-col>
+                  <v-col :cols="!hideIdentifierType ? 6 : 12" v-if="!hideIdentifier">
+                    <v-text-field
+                      :value="funderIdentifier"
+                      :label="$t('Funder identifier')"
+                      v-on:blur="$emit('input-funder-identifier',$event.target.value)"
+                      :filled="inputStyle==='filled'"
+                      :outlined="inputStyle==='outlined'"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-col>
             </v-row>
+          </v-col>
+          <v-col cols="12" md="10" v-if="funderRadio === 'ror'">
+            <ror-search v-on:resolve="$emit('input-funder-ror',$event)" :value="funderRor" :text="funderRorName" :errorMessages="funderRorErrorMessages"></ror-search>
           </v-col>
         </v-row>
         </v-card-text>
@@ -284,12 +297,14 @@ import datepickerproperties from '../../mixins/datepickerproperties'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { validationrules } from '../../mixins/validationrules'
 import SelectLanguage from '../select/SelectLanguage'
+import RorSearch from '../select/RorSearch'
 
 export default {
   name: 'p-i-project',
   mixins: [vocabulary, fieldproperties, validationrules, datepickerproperties],
   components: {
-    SelectLanguage
+    SelectLanguage,
+    RorSearch
   },
   props: {
     type: {
@@ -324,6 +339,18 @@ export default {
     },
     funderIdentifier: {
       type: String
+    },
+    funderRor: {
+      type: String
+    },
+    funderRorName: {
+      type: String
+    },
+    funderType: {
+      type: String
+    },
+    funderRorErrorMessages: {
+      type: Array
     },
     hideIdentifier: {
       type: Boolean
@@ -383,7 +410,15 @@ export default {
       pickerFromModel: new Date().toISOString().substr(0, 10),
       dateFromMenu: false,
       pickerToModel: new Date().toISOString().substr(0, 10),
-      dateToMenu: false
+      dateToMenu: false,
+      funderRadio: this.funderType || 'name'
+    }
+  },
+  watch: {
+    funderType: function (newVal) {
+      if (newVal) {
+        this.funderRadio = newVal
+      }
     }
   }
 }
