@@ -691,19 +691,20 @@
                 {{ $t("Members") }} ({{ $store.state.collectionMembersTotal /* leave it like this, computed property wasn't working on first access */ }})
               </v-toolbar-title>
               <v-switch @click="refreshCollectionMembers()" class="mx-2" dark hide-details :label="$t('Only latest versions')" v-model="collOnlyLatestVersions"></v-switch>
-              <v-spacer></v-spacer>
+            </v-toolbar>
+            <v-row no-gutters v-if="$store.state.collectionMembersTotal > collMembersPagesize">
               <v-pagination
                 :wrapper-aria-label="$t('pagination')"
                 :page-aria-label="$t('page')"
                 :previous-aria-label="$t('previous')"
                 :next-aria-label="$t('next')"
                 :current-page-aria-label="$t('currentPage')" 
-                v-if="$store.state.collectionMembersTotal > collMembersPagesize"
                 v-bind:length="collMembersTotalPages"
                 total-visible="10"
                 v-model="collMembersPage"
+                class="mb-4"
               ></v-pagination>
-            </v-toolbar>
+            </v-row>
             <div v-for="(collMember, i) in collMembers" :key="'collMember' + i">
               <v-row class="my-4">
                 <v-col md="1" class="d-none d-md-inline-block">
