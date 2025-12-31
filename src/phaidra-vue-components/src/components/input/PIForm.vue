@@ -1707,6 +1707,36 @@ export default {
         this.loading = false
       }
     },
+    preserveSchemaMetadata: function (originalField, newField) {
+      if (originalField.hasOwnProperty('group')) {
+        newField.group = originalField.group
+      }
+      if (originalField.hasOwnProperty('groupMandatory')) {
+        newField.groupMandatory = originalField.groupMandatory
+      }
+      if (originalField.hasOwnProperty('mandatory')) {
+        newField.mandatory = originalField.mandatory
+      }
+    },
+    removeAsterisksFromLabels: function (field) {
+      if (field.label) field.label = field.label.replace(/\s*\*\s*$/, '').trim()
+      if (field.titleLabel) field.titleLabel = field.titleLabel.replace(/\s*\*\s*$/, '').trim()
+      if (field.roleLabel) field.roleLabel = field.roleLabel.replace(/\s*\*\s*$/, '').trim()
+      if (field.firstnameLabel) field.firstnameLabel = field.firstnameLabel.replace(/\s*\*\s*$/, '').trim()
+      if (field.lastnameLabel) field.lastnameLabel = field.lastnameLabel.replace(/\s*\*\s*$/, '').trim()
+      if (field.organizationSelectLabel) field.organizationSelectLabel = field.organizationSelectLabel.replace(/\s*\*\s*$/, '').trim()
+      if (field.rorSearchLabel) field.rorSearchLabel = field.rorSearchLabel.replace(/\s*\*\s*$/, '').trim()
+      if (field.organizationTextLabel) field.organizationTextLabel = field.organizationTextLabel.replace(/\s*\*\s*$/, '').trim()
+    },
+    applyRequiredLogicToDuplicate: function (newField) {
+      if (newField.groupMandatory === true && newField.group) {
+        newField.required = false
+        this.removeAsterisksFromLabels(newField)
+      } else if (newField.mandatory === true) {
+        newField.required = true
+      } else if (newField.groupMandatory === undefined && newField.mandatory === undefined) {
+      }
+    },
     addField: function (arr, f) {
       var newField = arrays.duplicate(arr, f)
       if (newField) {
@@ -1715,6 +1745,8 @@ export default {
         newField.lastname = ''
         newField.identifierText = ''
         newField.removable = true
+        this.preserveSchemaMetadata(f, newField)
+        this.applyRequiredLogicToDuplicate(newField)
       }
     },
     addEntityClear: function (arr, f) {
@@ -1734,6 +1766,8 @@ export default {
         newField.organizationType = 'select'
         newField.type = 'schema:Person'
         newField.removable = true
+        this.preserveSchemaMetadata(f, newField)
+        this.applyRequiredLogicToDuplicate(newField)
       }
     },
     extendEntity: function (arr, f) {
@@ -1759,6 +1793,12 @@ export default {
       if (f.organizationSelectLabel) {
         newRole.organizationSelectLabel = f.organizationSelectLabel
       }
+      if (f.rorSearchLabel) {
+        newRole.rorSearchLabel = f.rorSearchLabel
+      }
+      if (f.organizationTextLabel) {
+        newRole.organizationTextLabel = f.organizationTextLabel
+      }
       if (f.affiliationSelectLabel) {
         newRole.affiliationSelectLabel = f.affiliationSelectLabel
       }
@@ -1767,6 +1807,15 @@ export default {
       }
       if (f.hasOwnProperty('required')) {
         newRole.required = f.required
+      }
+      if (f.hasOwnProperty('group')) {
+        newRole.group = f.group
+      }
+      if (f.hasOwnProperty('groupMandatory')) {
+        newRole.groupMandatory = f.groupMandatory
+      }
+      if (f.hasOwnProperty('mandatory')) {
+        newRole.mandatory = f.mandatory
       }
       arr.splice(arr.indexOf(f), 1, newRole)
     },

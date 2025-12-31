@@ -254,7 +254,7 @@
                     :loading="loading"
                     :filter="autocompleteFilterInfix"
                     hide-no-data
-                    :label="isMandatory ? $t(organizationSelectLabel) + ' *' : $t(organizationSelectLabel)"
+                    :label="$t(organizationSelectLabel)"
                     :filled="inputStyle==='filled'"
                     :outlined="inputStyle==='outlined'"
                     return-object
@@ -286,13 +286,13 @@
                     :value="organization"
                     :text="organizationRorName"
                     :errorMessages="organizationErrorMessages"
-                    :label="isMandatory ? $t('ROR Search') + ' *' : $t('ROR Search')"
+                    :label="$t(rorSearchLabel ? rorSearchLabel : 'ROR Search')"
                   ></ror-search>
                 </v-col>
                 <v-col cols="12" md="10" v-if="organizationRadio === 'other'">
                   <v-text-field
                     :value="organizationText"
-                    :label="isMandatory ? $t('Organization') + ' *' : $t('Organization')"
+                    :label="$t(organizationTextLabel ? organizationTextLabel : 'Organization')"
                     v-on:blur="$emit('input-organization-other', $event.target.value)"
                     :filled="inputStyle==='filled'"
                     :outlined="inputStyle==='outlined'"
@@ -553,6 +553,12 @@ export default {
     organizationSelectLabel: {
       type: String,
       default: 'Please choose'
+    },
+    rorSearchLabel: {
+      type: String
+    },
+    organizationTextLabel: {
+      type: String
     },
     affiliationSelectLabel: {
       type: String,
