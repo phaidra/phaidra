@@ -391,7 +391,7 @@
                           <template v-else-if="f.component === 'p-entity-extended'">
                             <p-i-entity-extended
                               v-bind.sync="f"
-                              v-on:change-type="f.type = $event"
+                              v-on:change-type="handleEntityTypeChange(f, $event)"
                               v-on:input-firstname="f.firstname = $event"
                               v-on:input-birthdate="f.birthdate = $event"
                               v-on:input-deathdate="f.deathdate = $event"
@@ -2024,6 +2024,24 @@ export default {
           f.organization = id
         }
         f.organizationSelectedName = event['schema:name']
+      }
+    },
+    handleEntityTypeChange: function (f, event) {
+      f.type = event
+      if (event === 'schema:Organization' && f.required === true && f.component === 'p-entity-extended') {
+        const fieldDef = fields.getField('role-extended')
+        if (!f.organizationSelectLabel) {
+          f.organizationSelectLabel = fieldDef.organizationSelectLabel
+        }
+        if (!f.rorSearchLabel) {
+          f.rorSearchLabel = 'ROR Search'
+        }
+        if (!f.organizationTextLabel) {
+          f.organizationTextLabel = 'Organization'
+        }
+        f.organizationSelectLabel = this.addAsterixIfNotPresent(f.organizationSelectLabel)
+        f.rorSearchLabel = this.addAsterixIfNotPresent(f.rorSearchLabel)
+        f.organizationTextLabel = this.addAsterixIfNotPresent(f.organizationTextLabel)
       }
     },
     organizationTypeChange: function (f, event) {
