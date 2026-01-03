@@ -310,7 +310,7 @@ services:
     
   ############### solr ###############
   solr:
-    image: phaidraorg/solr-dist:6c704369
+    image: phaidraorg/solr-dist:16284734
     <<: [*common, *logs]
     volumes:
       - solr:/var/solr
@@ -343,7 +343,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:2514c503
+    image: phaidraorg/ui:2517a9d6e2b4c503
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -361,7 +361,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:2514c503
+    image: phaidraorg/ui:7a9d6e2b
     command: "npm run start"
     environment:
       <<: [*api_common_env, *hosts]
@@ -429,7 +429,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:2514c503
+    image: phaidraorg/api-dist:4c405636
     <<: [*common, *logs]
     volumes:
       - s3-cache:/s3-cache
@@ -443,7 +443,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:2514c503
+    image: phaidraorg/api-dist:4c405636
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -861,7 +861,7 @@ services:
   ############### cronjobs service ###############
   chronos:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:2514c503
+    image: phaidraorg/chronos-dist:cde0a762
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
@@ -888,7 +888,7 @@ services:
 
   chronos-s3:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:2514c503
+    image: phaidraorg/chronos-dist:cde0a762
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
