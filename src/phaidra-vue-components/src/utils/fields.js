@@ -45,6 +45,7 @@ const fields = [
     value: '',
     'skos:prefLabel': [],
     errorMessages: [],
+    mandatory: true,
     definition: 'The nature of the resource. Example: Image, Text, Sound'
   },
   {
@@ -86,6 +87,7 @@ const fields = [
     label: 'Object type',
     selectedTerms: [],
     errorMessages: [],
+    mandatory: true,
     definition: 'This property relates a resource with the concepts it belongs to. It does not capture aboutness. Example: Photography',
     helptext: 'An object type represents real-world entity. For example, an object type can represent a photography, an interview, a lecture or a letter.'
   },
@@ -143,6 +145,9 @@ const fields = [
     subtitleLabel: '',
     hideSubtitle: false,
     language: '',
+    group: 'title',
+    groupMandatory: true,
+    mandatory: false,
     definition: 'A name given to the resource. Typically, a Title will be a name by which the resource is formally known.'
   },
   {
@@ -175,6 +180,9 @@ const fields = [
     label: 'Description',
     value: '',
     language: '',
+    group: 'description',
+    groupMandatory: true,
+    mandatory: false,
     definition: 'Information, usually in textual form, on attributes of a resource or some aspect of a resource.'
   },
   {
@@ -358,6 +366,9 @@ const fields = [
     role: '',
     roleLabel: 'Role',
     hideRole: false,
+    group: 'role',
+    groupMandatory: true,
+    mandatory: false,
     definition: 'Function played or provided by a contributor, e.g., author, illustrator, etc.'
   },
   {
@@ -459,6 +470,9 @@ const fields = [
     enableTypeSelect: true,
     organizationSelectLabel: 'Please choose',
     affiliationSelectLabel: 'Please choose affiliation',
+    group: 'role',
+    groupMandatory: true,
+    mandatory: false,
     definition: 'Function played or provided by a contributor, e.g., author, illustrator, etc.'
   },
   {
@@ -472,6 +486,9 @@ const fields = [
     hint: 'Confirm each keyword with enter',
     value: [],
     language: '',
+    group: 'keyword',
+    groupMandatory: true,
+    mandatory: false,
     definition: 'The topic of the resource, represented using keywords.'
   },
   {
@@ -1408,6 +1425,7 @@ const fields = [
     value: '',
     'skos:prefLabel': [],
     errorMessages: [],
+    mandatory: true,
     definition: 'The value will indicate the copyright, usage and access rights that apply to this digital representation.'
   },
   {
@@ -1434,6 +1452,7 @@ const fields = [
     autoMimetype: false,
     fileErrorMessages: [],
     mimetypeErrorMessages: [],
+    mandatory: true,
     definition: 'File input.'
   },
   {

@@ -124,6 +124,9 @@ export default {
     fileInputClass: {
       type: String,
       default: ''
+    },
+    required: {
+      type: Boolean
     }
   },
   data () {

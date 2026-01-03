@@ -51,6 +51,73 @@ export const formvalidation = {
     addAsterixIfNotPresent(value) {
       return value ? (value.includes('*') ? value : value + ' *') : value 
     },
+    applySchemaBasedRequired() {
+      const groupFirstInstanceMarked = {}
+      
+      for (const s of this.form.sections) {
+        if (!s.fields) continue
+        
+        for (const f of s.fields) {
+          if (f.mandatory === undefined && f.groupMandatory === undefined) {
+            continue
+          }
+          
+          if (f.mandatory === true) {
+            f.required = true
+          }
+          
+          if (f.groupMandatory === true && f.group) {
+            const groupKey = f.group
+            
+            if (!groupFirstInstanceMarked[groupKey]) {
+              f.required = true
+              groupFirstInstanceMarked[groupKey] = true
+            } else {
+              f.required = false
+            }
+          }
+        }
+      }
+    },
+    applyAsterisksToLabels() {
+      for (const s of this.form.sections) {
+        if (!s.fields) continue
+        
+        for (const f of s.fields) {
+          if (f.required === true) {
+            if (f.component === 'p-title' && f.titleLabel) {
+              f.titleLabel = this.addAsterixIfNotPresent(f.titleLabel)
+            }
+            if (f.component === 'p-text-field' && f.label) {
+              f.label = this.addAsterixIfNotPresent(f.label)
+            }
+            if (f.component === 'p-keyword' && f.label) {
+              f.label = this.addAsterixIfNotPresent(f.label)
+            }
+            if (f.component === 'p-select' && f.label) {
+              f.label = this.addAsterixIfNotPresent(f.label)
+            }
+            if (f.component === 'p-file' && f.label) {
+              f.label = this.addAsterixIfNotPresent(f.label)
+            }
+            if ((f.component === 'p-entity') || (f.component === 'p-entity-extended')) {
+              if (f.label) f.label = this.addAsterixIfNotPresent(f.label)
+              if (f.roleLabel) f.roleLabel = this.addAsterixIfNotPresent(f.roleLabel)
+              if (f.firstnameLabel) f.firstnameLabel = this.addAsterixIfNotPresent(f.firstnameLabel)
+              if (f.lastnameLabel) f.lastnameLabel = this.addAsterixIfNotPresent(f.lastnameLabel)
+              if (f.component === 'p-entity-extended') {
+                if (!f.organizationSelectLabel) f.organizationSelectLabel = 'Please choose'
+                f.organizationSelectLabel = this.addAsterixIfNotPresent(f.organizationSelectLabel)
+                if (!f.rorSearchLabel) f.rorSearchLabel = 'ROR Search'
+                f.rorSearchLabel = this.addAsterixIfNotPresent(f.rorSearchLabel)
+                if (!f.organizationTextLabel) f.organizationTextLabel = 'Organization'
+                f.organizationTextLabel = this.addAsterixIfNotPresent(f.organizationTextLabel)
+              }
+            }
+          }
+        }
+      }
+    },
     markMandatoryWithOefosAndAssoc() {
       for (const s of this.form.sections) {
         for (const f of s.fields) {
@@ -60,13 +127,15 @@ export const formvalidation = {
           if (f.predicate === 'edm:hasType') {
             f.label = f.label = this.addAsterixIfNotPresent(f.label)
           }
-          if (f.component === 'p-title') {
+          const hasSchemaMetadata = f.mandatory === true || f.groupMandatory === true
+          
+          if (f.component === 'p-title' && !hasSchemaMetadata) {
             f.titleLabel = f.titleLabel ? this.addAsterixIfNotPresent(f.titleLabel) : this.addAsterixIfNotPresent(f.type)
           }
-          if ((f.predicate === 'bf:note') && (f.type === 'bf:Note')) {
+          if ((f.predicate === 'bf:note') && (f.type === 'bf:Note') && !hasSchemaMetadata) {
             f.label = this.addAsterixIfNotPresent(f.label)
           }
-          if (f.component === 'p-keyword') {
+          if (f.component === 'p-keyword' && !hasSchemaMetadata) {
             f.label = this.addAsterixIfNotPresent(f.label)
           }
           if (f.component === 'p-subject-oefos') {
@@ -76,21 +145,25 @@ export const formvalidation = {
             f.label = this.addAsterixIfNotPresent(f.label)
           }
           if ((f.component === 'p-entity') || (f.component === 'p-entity-extended')) {
-            f.label = this.addAsterixIfNotPresent(f.label)
-            f.roleLabel = this.addAsterixIfNotPresent(f.roleLabel)
-            f.firstnameLabel = this.addAsterixIfNotPresent(f.firstnameLabel)
-            f.lastnameLabel = this.addAsterixIfNotPresent(f.lastnameLabel)
+            if (!hasSchemaMetadata) {
+              f.label = this.addAsterixIfNotPresent(f.label)
+              f.roleLabel = this.addAsterixIfNotPresent(f.roleLabel)
+              f.firstnameLabel = this.addAsterixIfNotPresent(f.firstnameLabel)
+              f.lastnameLabel = this.addAsterixIfNotPresent(f.lastnameLabel)
+            }
           }
           if (f.component === 'p-select') {
-            if (f.predicate === 'edm:rights') {
+            if (f.predicate === 'edm:rights' && !hasSchemaMetadata) {
               f.label = this.addAsterixIfNotPresent(f.label)
             }
           }
-          if (f.component === 'p-file') {
+          if (f.component === 'p-file' && !hasSchemaMetadata) {
             f.label = this.addAsterixIfNotPresent(f.label)
           }
         }
       }
+      this.applySchemaBasedRequired()
+      this.applyAsterisksToLabels()
     },
     markMandatoryWithoutKeywords() {
       for (const s of this.form.sections) {
@@ -101,28 +174,38 @@ export const formvalidation = {
           if (f.predicate === 'edm:hasType') {
             f.label = this.addAsterixIfNotPresent(f.label)
           }
-          if (f.component === 'p-title') {
+          // Skip label mutations for fields with schema metadata (components handle * display via required prop)
+          const hasSchemaMetadata = f.mandatory === true || f.groupMandatory === true
+          
+          if (f.component === 'p-title' && !hasSchemaMetadata) {
             f.titleLabel = f.titleLabel ? this.addAsterixIfNotPresent(f.titleLabel) : this.addAsterixIfNotPresent(f.type)
           }
-          if ((f.predicate === 'bf:note') && (f.type === 'bf:Note')) {
+          if ((f.predicate === 'bf:note') && (f.type === 'bf:Note') && !hasSchemaMetadata) {
             f.label = this.addAsterixIfNotPresent(f.label)
           }
           if ((f.component === 'p-entity') || (f.component === 'p-entity-extended')) {
-            f.label = this.addAsterixIfNotPresent(f.label)
-            f.roleLabel = this.addAsterixIfNotPresent(f.roleLabel)
-            f.firstnameLabel = this.addAsterixIfNotPresent(f.firstnameLabel)
-            f.lastnameLabel = this.addAsterixIfNotPresent(f.lastnameLabel)
+            // Only mutate labels if field doesn't have schema metadata
+            if (!hasSchemaMetadata) {
+              f.label = this.addAsterixIfNotPresent(f.label)
+              f.roleLabel = this.addAsterixIfNotPresent(f.roleLabel)
+              f.firstnameLabel = this.addAsterixIfNotPresent(f.firstnameLabel)
+              f.lastnameLabel = this.addAsterixIfNotPresent(f.lastnameLabel)
+            }
           }
           if (f.component === 'p-select') {
-            if (f.predicate === 'edm:rights') {
+            if (f.predicate === 'edm:rights' && !hasSchemaMetadata) {
               f.label = this.addAsterixIfNotPresent(f.label)
             }
           }
-          if (f.component === 'p-file') {
+          if (f.component === 'p-file' && !hasSchemaMetadata) {
             f.label = this.addAsterixIfNotPresent(f.label)
           }
         }
       }
+      // Apply schema-based required flags
+      this.applySchemaBasedRequired()
+      // Apply asterisks to labels based on required prop (centralized)
+      this.applyAsterisksToLabels()
     },
     markMandatoryWithoutKeywordsWithAbstract() {
       for (const s of this.form.sections) {
@@ -133,28 +216,38 @@ export const formvalidation = {
           if (f.predicate === 'edm:hasType') {
             f.label = this.addAsterixIfNotPresent(f.label)
           }
-          if (f.component === 'p-title') {
+          // Skip label mutations for fields with schema metadata (components handle * display via required prop)
+          const hasSchemaMetadata = f.mandatory === true || f.groupMandatory === true
+          
+          if (f.component === 'p-title' && !hasSchemaMetadata) {
             f.titleLabel = f.titleLabel ? this.addAsterixIfNotPresent(f.titleLabel) : this.addAsterixIfNotPresent(f.type)
           }
-          if ((f.predicate === 'bf:note') && (f.type === 'bf:Summary')) {
+          if ((f.predicate === 'bf:note') && (f.type === 'bf:Summary') && !hasSchemaMetadata) {
             f.label = this.addAsterixIfNotPresent(f.label)
           }
           if ((f.component === 'p-entity') || (f.component === 'p-entity-extended')) {
-            f.label = this.addAsterixIfNotPresent(f.label)
-            f.roleLabel = this.addAsterixIfNotPresent(f.roleLabel)
-            f.firstnameLabel = this.addAsterixIfNotPresent(f.firstnameLabel)
-            f.lastnameLabel = this.addAsterixIfNotPresent(f.lastnameLabel)
+            // Only mutate labels if field doesn't have schema metadata
+            if (!hasSchemaMetadata) {
+              f.label = this.addAsterixIfNotPresent(f.label)
+              f.roleLabel = this.addAsterixIfNotPresent(f.roleLabel)
+              f.firstnameLabel = this.addAsterixIfNotPresent(f.firstnameLabel)
+              f.lastnameLabel = this.addAsterixIfNotPresent(f.lastnameLabel)
+            }
           }
           if (f.component === 'p-select') {
-            if (f.predicate === 'edm:rights') {
+            if (f.predicate === 'edm:rights' && !hasSchemaMetadata) {
               f.label = this.addAsterixIfNotPresent(f.label)
             }
           }
-          if (f.component === 'p-file') {
+          if (f.component === 'p-file' && !hasSchemaMetadata) {
             f.label = this.addAsterixIfNotPresent(f.label)
           }
         }
       }
+      // Apply schema-based required flags
+      this.applySchemaBasedRequired()
+      // Apply asterisks to labels based on required prop (centralized)
+      this.applyAsterisksToLabels()
     },
     markMandatory() {
       for (const s of this.form.sections) {
@@ -165,31 +258,41 @@ export const formvalidation = {
           if (f.predicate === 'edm:hasType') {
             f.label = this.addAsterixIfNotPresent(f.label)
           }
-          if (f.component === 'p-title') {
+          // Skip label mutations for fields with schema metadata (components handle * display via required prop)
+          const hasSchemaMetadata = f.mandatory === true || f.groupMandatory === true
+          
+          if (f.component === 'p-title' && !hasSchemaMetadata) {
             f.titleLabel = f.titleLabel ? this.addAsterixIfNotPresent(f.titleLabel) : this.addAsterixIfNotPresent(f.type)
           }
-          if ((f.predicate === 'bf:note') && (f.type === 'bf:Note')) {
+          if ((f.predicate === 'bf:note') && (f.type === 'bf:Note') && !hasSchemaMetadata) {
             f.label = this.addAsterixIfNotPresent(f.label)
           }
-          if (f.component === 'p-keyword') {
+          if (f.component === 'p-keyword' && !hasSchemaMetadata) {
             f.label = this.addAsterixIfNotPresent(f.label)
           }
           if ((f.component === 'p-entity') || (f.component === 'p-entity-extended')) {
-            f.label = this.addAsterixIfNotPresent(f.label)
-            f.roleLabel = this.addAsterixIfNotPresent(f.roleLabel)
-            f.firstnameLabel = this.addAsterixIfNotPresent(f.firstnameLabel)
-            f.lastnameLabel = this.addAsterixIfNotPresent(f.lastnameLabel)
+            // Only mutate labels if field doesn't have schema metadata
+            if (!hasSchemaMetadata) {
+              f.label = this.addAsterixIfNotPresent(f.label)
+              f.roleLabel = this.addAsterixIfNotPresent(f.roleLabel)
+              f.firstnameLabel = this.addAsterixIfNotPresent(f.firstnameLabel)
+              f.lastnameLabel = this.addAsterixIfNotPresent(f.lastnameLabel)
+            }
           }
           if (f.component === 'p-select') {
-            if (f.predicate === 'edm:rights') {
+            if (f.predicate === 'edm:rights' && !hasSchemaMetadata) {
               f.label = this.addAsterixIfNotPresent(f.label)
             }
           }
-          if (f.component === 'p-file') {
+          if (f.component === 'p-file' && !hasSchemaMetadata) {
             f.label = this.addAsterixIfNotPresent(f.label)
           }
         }
       }
+      // Apply schema-based required flags
+      this.applySchemaBasedRequired()
+      // Apply asterisks to labels based on required prop (centralized)
+      this.applyAsterisksToLabels()
     },
     validationWithOefosAndAssoc(targetpid) {
       this.validationError = false

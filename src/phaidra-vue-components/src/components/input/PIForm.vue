@@ -391,7 +391,7 @@
                           <template v-else-if="f.component === 'p-entity-extended'">
                             <p-i-entity-extended
                               v-bind.sync="f"
-                              v-on:change-type="f.type = $event"
+                              v-on:change-type="handleEntityTypeChange(f, $event)"
                               v-on:input-firstname="f.firstname = $event"
                               v-on:input-birthdate="f.birthdate = $event"
                               v-on:input-deathdate="f.deathdate = $event"
@@ -1707,6 +1707,36 @@ export default {
         this.loading = false
       }
     },
+    preserveSchemaMetadata: function (originalField, newField) {
+      if (originalField.hasOwnProperty('group')) {
+        newField.group = originalField.group
+      }
+      if (originalField.hasOwnProperty('groupMandatory')) {
+        newField.groupMandatory = originalField.groupMandatory
+      }
+      if (originalField.hasOwnProperty('mandatory')) {
+        newField.mandatory = originalField.mandatory
+      }
+    },
+    removeAsterisksFromLabels: function (field) {
+      if (field.label) field.label = field.label.replace(/\s*\*\s*$/, '').trim()
+      if (field.titleLabel) field.titleLabel = field.titleLabel.replace(/\s*\*\s*$/, '').trim()
+      if (field.roleLabel) field.roleLabel = field.roleLabel.replace(/\s*\*\s*$/, '').trim()
+      if (field.firstnameLabel) field.firstnameLabel = field.firstnameLabel.replace(/\s*\*\s*$/, '').trim()
+      if (field.lastnameLabel) field.lastnameLabel = field.lastnameLabel.replace(/\s*\*\s*$/, '').trim()
+      if (field.organizationSelectLabel) field.organizationSelectLabel = field.organizationSelectLabel.replace(/\s*\*\s*$/, '').trim()
+      if (field.rorSearchLabel) field.rorSearchLabel = field.rorSearchLabel.replace(/\s*\*\s*$/, '').trim()
+      if (field.organizationTextLabel) field.organizationTextLabel = field.organizationTextLabel.replace(/\s*\*\s*$/, '').trim()
+    },
+    applyRequiredLogicToDuplicate: function (newField) {
+      if (newField.groupMandatory === true && newField.group) {
+        newField.required = false
+        this.removeAsterisksFromLabels(newField)
+      } else if (newField.mandatory === true) {
+        newField.required = true
+      } else if (newField.groupMandatory === undefined && newField.mandatory === undefined) {
+      }
+    },
     addField: function (arr, f) {
       var newField = arrays.duplicate(arr, f)
       if (newField) {
@@ -1715,6 +1745,8 @@ export default {
         newField.lastname = ''
         newField.identifierText = ''
         newField.removable = true
+        this.preserveSchemaMetadata(f, newField)
+        this.applyRequiredLogicToDuplicate(newField)
       }
     },
     addEntityClear: function (arr, f) {
@@ -1734,6 +1766,8 @@ export default {
         newField.organizationType = 'select'
         newField.type = 'schema:Person'
         newField.removable = true
+        this.preserveSchemaMetadata(f, newField)
+        this.applyRequiredLogicToDuplicate(newField)
       }
     },
     extendEntity: function (arr, f) {
@@ -1744,8 +1778,44 @@ export default {
       newRole.isParentSelectionDisabled = f.isParentSelectionDisabled
       newRole.role = f.role
       newRole.showDefinitions = f.showDefinitions
+      if (f.label) {
+        newRole.label = f.label
+      }
+      if (f.roleLabel) {
+        newRole.roleLabel = f.roleLabel
+      }
+      if (f.firstnameLabel) {
+        newRole.firstnameLabel = f.firstnameLabel
+      }
+      if (f.lastnameLabel) {
+        newRole.lastnameLabel = f.lastnameLabel
+      }
+      if (f.organizationSelectLabel) {
+        newRole.organizationSelectLabel = f.organizationSelectLabel
+      }
+      if (f.rorSearchLabel) {
+        newRole.rorSearchLabel = f.rorSearchLabel
+      }
+      if (f.organizationTextLabel) {
+        newRole.organizationTextLabel = f.organizationTextLabel
+      }
+      if (f.affiliationSelectLabel) {
+        newRole.affiliationSelectLabel = f.affiliationSelectLabel
+      }
       if (f.hasOwnProperty('removable')) {
         newRole.removable = f.removable
+      }
+      if (f.hasOwnProperty('required')) {
+        newRole.required = f.required
+      }
+      if (f.hasOwnProperty('group')) {
+        newRole.group = f.group
+      }
+      if (f.hasOwnProperty('groupMandatory')) {
+        newRole.groupMandatory = f.groupMandatory
+      }
+      if (f.hasOwnProperty('mandatory')) {
+        newRole.mandatory = f.mandatory
       }
       arr.splice(arr.indexOf(f), 1, newRole)
     },
@@ -1954,6 +2024,24 @@ export default {
           f.organization = id
         }
         f.organizationSelectedName = event['schema:name']
+      }
+    },
+    handleEntityTypeChange: function (f, event) {
+      f.type = event
+      if (event === 'schema:Organization' && f.required === true && f.component === 'p-entity-extended') {
+        const fieldDef = fields.getField('role-extended')
+        if (!f.organizationSelectLabel) {
+          f.organizationSelectLabel = fieldDef.organizationSelectLabel
+        }
+        if (!f.rorSearchLabel) {
+          f.rorSearchLabel = 'ROR Search'
+        }
+        if (!f.organizationTextLabel) {
+          f.organizationTextLabel = 'Organization'
+        }
+        f.organizationSelectLabel = this.addAsterixIfNotPresent(f.organizationSelectLabel)
+        f.rorSearchLabel = this.addAsterixIfNotPresent(f.rorSearchLabel)
+        f.organizationTextLabel = this.addAsterixIfNotPresent(f.organizationTextLabel)
       }
     },
     organizationTypeChange: function (f, event) {
