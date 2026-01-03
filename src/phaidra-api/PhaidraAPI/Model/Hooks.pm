@@ -50,32 +50,6 @@ sub add_or_modify_datastream_hooks {
       }
     }
 
-    if (exists($c->app->config->{hooks}->{iiifmanifest}) && $c->app->config->{hooks}->{iiifmanifest}) {
-      if ($dsid eq "UWMETADATA" or $dsid eq "MODS" or $dsid eq "JSON-LD") {
-        $c->app->log->debug("add_or_modify_datastream_hooks pid[$pid] Updating IIIF-MANIFEST from $dsid");
-        
-        my $rdshash      = $search_model->datastreams_hash($c, $pid);
-        if ($rdshash->{status} ne 200) {
-
-          # just log but don't change status, this isn't fatal
-          push @{$res->{alerts}}, {type => 'error', msg => "add_or_modify_datastream_hooks pid[$pid] Error getting datastreams_hash when updating IIIF-MANIFEST metadata"};
-          push @{$res->{alerts}}, @{$rdshash->{alerts}} if scalar @{$rdshash->{alerts}} > 0;
-          return $res;
-        }
-
-        if (exists($rdshash->{dshash}->{'IIIF-MANIFEST'})) {
-          my $iiifm_model = PhaidraAPI::Model::Iiifmanifest->new;
-          my $r           = $iiifm_model->update_manifest_metadata($c, $pid);
-          if ($r->{status} ne 200) {
-
-            # just log but don't change status, this isn't fatal
-            push @{$res->{alerts}}, {type => 'error', msg => "add_or_modify_datastream_hooks pid[$pid] Error updating IIIF-MANIFEST metadata"};
-            push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
-          }
-        }
-      }
-    }
-
     if ($dsid eq "OCTETS") {
       if ($exists) {
 

@@ -30,9 +30,17 @@ sub get_iiif_manifest {
     return;
   } else {
     if (exists($rdshash->{dshash}->{'IIIF-MANIFEST'})) {
-      my $object_model = PhaidraAPI::Model::Object->new;
-      $object_model->proxy_datastream($self, $pid, 'IIIF-MANIFEST', $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password}, 1);
-      return;
+      my $iiifm_model = PhaidraAPI::Model::Iiifmanifest->new;
+      my $mr = $iiifm_model->get_updated_manifest($self, $pid);
+      if ($mr->{status} eq 200) {
+        $self->render(json => $mr->{manifest}, status => $res->{status});
+        return;
+      } else {
+        $self->app->log->error("get_iiif_manifest pid[$pid] Error building updated IIIF-MANIFEST");
+        my $object_model = PhaidraAPI::Model::Object->new;
+        $object_model->proxy_datastream($self, $pid, 'IIIF-MANIFEST', $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password}, 1);
+        return;
+      }
     } else {
       my $cmodelr      = $search_model->get_cmodel($self, $pid);
       if ($cmodelr->{status} ne 200) {
