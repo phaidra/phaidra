@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <div>
     <v-row no-gutters v-if="list">
       <v-col cols="12">
         <v-card>
@@ -44,7 +44,7 @@
         </v-card>
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>
