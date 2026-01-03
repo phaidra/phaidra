@@ -574,7 +574,7 @@ services:
   ############### opencast agent ###############
   agent-opencast:
     hostname: "agent-opencast"
-    image: phaidraorg/agent-opencast-dist:408f2ba8
+    image: phaidraorg/agent-opencast-dist:957ed414
     <<: [*common, *logs]
     volumes:
       - agent-opencast-work:/opt/agent-opencast
@@ -595,7 +595,7 @@ services:
 
   agent-opencast-dev:
     hostname: "opencast"
-    image: phaidraorg/opencast-base:408f2ba8
+    image: phaidraorg/opencast-base:957ed414
     pull_policy: always
     <<: [*common, *logs]
     volumes:
