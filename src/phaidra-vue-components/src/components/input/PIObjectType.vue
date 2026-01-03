@@ -70,6 +70,28 @@ export default {
     resourceType (val) {
       this.checkboxes = {}
       this.$emit('input', this.checkboxes)
+    },
+    selectedTerms: {
+      handler: function (newVal) {
+        if (!newVal || newVal.length === 0) {
+          return
+        }
+        
+        this.$nextTick(() => {
+          // Only update checkboxes that aren't already set correctly
+          let hasChanges = false
+          for (let term of newVal) {
+            if (term.value && !this.checkboxes[term.value]) {
+              Vue.set(this.checkboxes, term.value, true)
+              hasChanges = true
+            }
+          }
+          if (hasChanges) {
+            this.$emit('input', this.checkboxes)
+          }
+        })
+      },
+      deep: true
     }
   },
   computed: {
