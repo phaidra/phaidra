@@ -611,6 +611,8 @@
                               v-on:input-name-language="setSelected(f, 'nameLanguage', $event)"
                               v-on:input-funder-name="f.funderName=$event"
                               v-on:input-funder-name-language="setSelected(f, 'funderNameLanguage', $event)"
+                              v-on:change-funder-type="funderTypeChange(f, $event)"
+                              v-on:input-funder-ror="funderRorInput(f, $event)"
                               v-on:input-description="f.description=$event"
                               v-on:input-description-language="setSelected(f, 'descriptionLanguage', $event)"
                               v-on:input-code="f.code=$event"
@@ -2052,6 +2054,38 @@ export default {
           break
         case 'other':
           f.organizationType = 'other'
+          break
+      }
+    },
+    funderRorInput: function (f, event) {
+      f.funderName = ''
+      f.funderNameLanguage = ''
+      f.funderIdentifier = ''
+      f.funderIdentifierType = ''
+      f.funderRor = ''
+      f.funderRorName = ''
+      if (event) {
+        for (const id of event['skos:exactMatch']) {
+          f.funderRor = id
+        }
+        if (event['schema:name'] && event['schema:name'].length > 0) {
+          f.funderRorName = event['schema:name'][0]['@value']
+        }
+      }
+    },
+    funderTypeChange: function (f, event) {
+      switch (event) {
+        case 'name':
+          f.funderType = 'name'
+          f.funderRor = ''
+          f.funderRorName = ''
+          break
+        case 'ror':
+          f.funderType = 'ror'
+          f.funderName = ''
+          f.funderNameLanguage = ''
+          f.funderIdentifier = ''
+          f.funderIdentifierType = ''
           break
       }
     },

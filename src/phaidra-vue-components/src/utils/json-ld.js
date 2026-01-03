@@ -947,20 +947,38 @@ export default {
                 }
                 if (obj['frapo:hasFundingAgency']) {
                   for (let funder of obj['frapo:hasFundingAgency']) {
-                    if (funder['skos:prefLabel']) {
+                    if (funder['skos:exactMatch']) {
+                      let isRor = false
+                      for (let v of funder['skos:exactMatch']) {
+                        let id = typeof v === 'object' ? v['@value'] : v
+                        if (id && id.startsWith('https://ror.org/')) {
+                          // ROR funder
+                          isRor = true
+                          f.funderType = 'ror'
+                          f.funderRor = id
+                          if (funder['schema:name'] && funder['schema:name'].length > 0) {
+                            f.funderRorName = funder['schema:name'][0]['@value']
+                          } else if (funder['skos:prefLabel'] && funder['skos:prefLabel'].length > 0) {
+                            f.funderRorName = funder['skos:prefLabel'][0]['@value']
+                          }
+                          break
+                        }
+                      }
+                      if (!isRor) {
+                        for (let v of funder['skos:exactMatch']) {
+                          if (v['@value']) {
+                            f.funderIdentifierType = v['@type']
+                            f.funderIdentifier = v['@value']
+                          } else {
+                            f.funderIdentifier = v
+                          }
+                        }
+                      }
+                    }
+                    if (funder['skos:prefLabel'] && !f.funderRor) {
                       for (let pl of funder['skos:prefLabel']) {
                         f.funderName = pl['@value']
                         f.funderNameLanguage = pl['@language'] ? pl['@language'] : 'eng'
-                      }
-                    }
-                    if (funder['skos:exactMatch']) {
-                      for (let v of funder['skos:exactMatch']) {
-                        if (v['@value']) {
-                          f.funderIdentifierType = v['@type']
-                          f.funderIdentifier = v['@value']
-                        } else {
-                          f.funderIdentifier = v
-                        }
                       }
                     }
                   }
@@ -2792,8 +2810,20 @@ export default {
           } else {
             // project
             if (f.type === 'foaf:Project') {
-              if (f.name || f.acronym || f.code || f.identifier || f.description || f.homepage || f.funderName || f.funderIdentifier) {
-                if (f.funderName || f.funderIdentifier) {
+              if (f.name || f.acronym || f.code || f.identifier || f.description || f.homepage || f.funderName || f.funderIdentifier || f.funderRor) {
+                if (f.funderRor) {
+                  // ROR funder
+                  var funderObject = {
+                    '@type': 'frapo:FundingAgency',
+                    'skos:exactMatch': [f.funderRor]
+                  }
+                  if (f.funderRorName) {
+                    funderObject['skos:prefLabel'] = [{ '@value': f.funderRorName }]
+                  } else {
+                    funderObject['skos:prefLabel'] = [{ '@value': f.funderRor }]
+                  }
+                  this.push_object(jsonld, f.predicate, this.get_json_project(f.name, f.acronym, f.nameLanguage, f.description, f.descriptionLanguage, f.code, f.identifier, f.identifierType, f.homepage, f.dateFrom, f.dateTo, funderObject))
+                } else if (f.funderName || f.funderIdentifier) {
                   this.push_object(jsonld, f.predicate, this.get_json_project(f.name, f.acronym, f.nameLanguage, f.description, f.descriptionLanguage, f.code, f.identifier, f.identifierType, f.homepage, f.dateFrom, f.dateTo, this.get_json_funder(f.funderName, f.funderNameLanguage, f.funderIdentifier, f.funderIdentifierType)))
                 } else {
                   this.push_object(jsonld, f.predicate, this.get_json_project(f.name, f.acronym, f.nameLanguage, f.description, f.descriptionLanguage, f.code, f.identifier, f.identifierType, f.homepage, f.dateFrom, f.dateTo))
