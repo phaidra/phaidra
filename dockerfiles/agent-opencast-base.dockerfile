@@ -18,4 +18,4 @@ apt-get install --yes --quiet mongodb-mongosh
 EOF
 RUN mkdir /opt/opencast
 WORKDIR /opt/opencast
-ENTRYPOINT ["bash", "/mnt/opencast/controller.bash"]
+ENTRYPOINT ["bash", "/mnt/agent-opencast/controller.bash"]
