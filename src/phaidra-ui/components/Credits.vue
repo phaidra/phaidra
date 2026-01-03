@@ -33,7 +33,7 @@
         </v-row>
 
         <v-row>
-          <v-col><a href="https://v2.sherpa.ac.uk/" target="_blank">Sherpa Services</a> - Tools to access and comply with
+          <v-col><a href="https://openpolicyfinder.jisc.ac.uk/" target="_blank">Open Policy Finder</a> - Tools to access and comply with
             OA
             archiving policies | <a href="https://www.jisc.ac.uk/" target="_blank">Jisc</a></v-col>
         </v-row>
