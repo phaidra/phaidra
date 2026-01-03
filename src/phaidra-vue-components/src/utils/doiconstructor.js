@@ -1,3 +1,9 @@
+const normalizeOrcid = (orcid) => {
+  if (!orcid) return orcid
+  // Remove all common ORCID URL prefixes and return just the ID
+  return orcid.replace(/^https?:\/\/(www\.)?orcid\.org\//i, '').trim()
+}
+
 export const constructDataCite = (dataciteData, that) => {
   let doiImportData = {
     title: '',
@@ -39,7 +45,7 @@ export const constructDataCite = (dataciteData, that) => {
             }
           }
           if (author['ORCID']) {
-            auth.orcid = author['ORCID'].replace('http://orcid.org/', '')
+            auth.orcid = normalizeOrcid(author['ORCID'])
           }
           doiImportData.authors.push(auth)
         } else if (author['name']) {

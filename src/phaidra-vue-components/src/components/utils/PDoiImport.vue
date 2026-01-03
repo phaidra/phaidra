@@ -370,6 +370,10 @@ export default {
     },
   },
   methods: {
+    normalizeOrcid: function (orcid) {
+      if (!orcid) return orcid
+      return orcid.replace(/^https?:\/\/(www\.)?orcid\.org\//i, '').trim()
+    },
     cloneForm: function (form) {
       return JSON.parse(JSON.stringify(form))
     },
@@ -691,10 +695,7 @@ if (crossrefData['issued']['date-parts'][0]) {
                       }
                     }
                     if (author["ORCID"]) {
-                      auth.orcid = author["ORCID"].replace(
-                        "http://orcid.org/",
-                        ""
-                      );
+                      auth.orcid = this.normalizeOrcid(author["ORCID"]);
                     }
                     this.doiImportData.authors.push(auth);
                   }
