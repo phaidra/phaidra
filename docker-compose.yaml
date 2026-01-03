@@ -314,6 +314,7 @@ services:
     <<: [*common, *logs]
     volumes:
       - solr:/var/solr
+      - chronos-database-dumps:/mnt/database-dumps
     environment:
       <<: [*api_common_env, *hosts]
       SOLR_SALT: "${SOLR_SALT:-phaidra}"
@@ -327,6 +328,7 @@ services:
     <<: [*common, *logs]
     volumes:
       - solr:/var/solr
+      - chronos-database-dumps:/mnt/database-dumps
       - ./container_init/solr:/mnt/solr:ro
     environment:
       <<: [*api_common_env, *hosts]
