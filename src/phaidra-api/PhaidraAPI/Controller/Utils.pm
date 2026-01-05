@@ -575,5 +575,20 @@ sub jwks {
   $self->render(json => decode_json($privconfig->{jwks}), status => 200);
 }
 
+sub robots_txt {
+  my $self = shift;
+
+  my $model = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $model->get_public_config($self);
+
+  unless (exists($pubconfig->{robotstxt})) {
+    my $err = "robotstxt is not configured";
+    $self->app->log->error($err);
+    $self->render(json => {alerts => [{type => 'error', msg => $err}]}, status => 404);
+    return;
+  }
+
+  $self->render(text => $pubconfig->{robotstxt}, format => 'txt', status => 200);
+}
 
 1;

@@ -133,6 +133,16 @@
                   </v-col>
                   <v-col cols="6" class="mt-4">{{ $t('Paste your custom JavaScript code here (e.g., Matomo, Google Analytics, or any other tracking script). The code will be injected into the page head. Leave empty to disable.') }}</v-col>
                 </v-row>
+                <v-row>
+                  <v-col>
+                    <v-textarea
+                      :label="$t('robots.txt content')"
+                      v-model="parsedPublicConfigData.robotstxt"
+                      rows="10"
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t('Indicate to visiting web crawlers and other web robots which portions of the website they are allowed to visit.') }}</v-col>
+                </v-row>
               </v-container>
             </v-tab-item>
 
