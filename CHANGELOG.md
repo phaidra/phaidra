@@ -64,7 +64,7 @@ docker exec -it phaidra-api-1 perl migrations/v3.4.0/05_add_oai_records_index.pl
 We had to change the way we use copy fields in solr schema. You need to execute the following script to add new definitions to schema (change SOLR_URL and AUTH accordingly):
 
 ```
-docker exec -it phaidra-api-1 migrations/v3.4.0/06_add_solr_copyfields.sh
+docker exec -it phaidra-api-1 perl migrations/v3.4.0/06_add_solr_copyfields.pl
 ```
 
 # v3.3.17
