@@ -51,20 +51,20 @@ docker exec -it phaidra-api-1 perl migrations/v3.4.0/03_load_ip2country_to_db.pl
 docker exec -it phaidra-api-1 perl migrations/v3.4.0/04_migrate_usage_stats_to_usage_log.pl
 ```
 
-### Updating solr schema
-
-We had to change the way we use copy fields in solr schema. You need to execute the following script to add new definitions to schema (change SOLR_URL and AUTH accordingly):
-
-```
-docker exec -it phaidra-api-1 migrations/v3.4.0/06_add_solr_copyfields.sh
-```
-
 ### OAI collection index
 
 An additional index is necessary to avoid disk usage for sort in mongodb, execute:
 
 ```
 docker exec -it phaidra-api-1 perl migrations/v3.4.0/05_add_oai_records_index.pl
+```
+
+### Updating solr schema
+
+We had to change the way we use copy fields in solr schema. You need to execute the following script to add new definitions to schema (change SOLR_URL and AUTH accordingly):
+
+```
+docker exec -it phaidra-api-1 migrations/v3.4.0/06_add_solr_copyfields.sh
 ```
 
 # v3.3.17
