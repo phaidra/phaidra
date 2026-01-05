@@ -1,10 +1,12 @@
-# head
+# Head
 
-## upgrade
+## Upgrade
+
+### Renaming volumes
 
 Some volumes have been renamed, here's how you can migrate to the new structure:
 
-NOTICE: If you have a lot of data in some volume (probably pixelgecko), you can remove it from migration script and instead do `docker volume create phaidra_derivates-images` and then mv the files manually if both volumes are on the same storage.
+NOTICE: If you have a lot of data in some volume (probably pixelgecko), you can remove it from migration script and instead do eg `docker volume create phaidra_derivates-images` and then mv the files manually if both volumes are on the same storage.
 
 * compose down
 
@@ -12,14 +14,14 @@ NOTICE: If you have a lot of data in some volume (probably pixelgecko), you can 
 
 * copy volumes
 ```
-./scripts/migrate_volumes_v3.4.0.sh
+./scripts/migrations/v3.4.0/01_migrate_volumes.sh
 ```
 
 * compose up
 
 * change agent names in jobs
 ```
-docker exec -it phaidra-api-1 perl migrations/v3.4.0-1.pl
+docker exec -it phaidra-api-1 perl migrations/v3.4.0/01_rename_mongodb_agents.pl
 ```
 
 * check if everything is fine
@@ -35,6 +37,34 @@ docker volume rm phaidra_pdf-extraction
 docker volume rm phaidra_vige-mongosh
 docker volume rm phaidra_vige
 docker volume rm phaidra_pixelgecko
+```
+
+### Usage stats update
+
+In an ongoing effort to optimize usage stats, we have changes some tables and a migration is necessary.
+
+Execute the migration scripts as follows:
+
+```
+docker exec -it phaidra-api-1 perl migrations/v3.4.0/02_create_new_usage_stats_tables.pl
+docker exec -it phaidra-api-1 perl migrations/v3.4.0/03_load_ip2country_to_db.pl
+docker exec -it phaidra-api-1 perl migrations/v3.4.0/04_migrate_usage_stats_to_usage_log.pl
+```
+
+### Updating solr schema
+
+We had to change the way we use copy fields in solr schema. You need to execute the following script to add new definitions to schema (change SOLR_URL and AUTH accordingly):
+
+```
+docker exec -it phaidra-api-1 migrations/v3.4.0/06_add_solr_copyfields.sh
+```
+
+### OAI collection index
+
+An additional index is necessary to avoid disk usage for sort in mongodb, execute:
+
+```
+docker exec -it phaidra-api-1 perl migrations/v3.4.0/05_add_oai_records_index.pl
 ```
 
 # v3.3.17
@@ -354,11 +384,11 @@ Overall, this release strengthens accessibility and internationalization, stabil
   + to upgrade from previous version, please execute the migration scripts as follows
 
   ```
-  docker exec -it phaidra-api-1 perl migrations/v3.3.17a.pl
-  docker exec -it phaidra-api-1 perl migrations/v3.3.17b.pl
-  docker exec -it phaidra-api-1 perl migrations/v3.3.17c.pl
-  docker exec -it phaidra-api-1 perl migrations/v3.3.17d.pl
-  docker exec -it phaidra-api-1 perl migrations/v3.3.17e.pl
+  docker exec -it phaidra-api-1 perl migrations/v3.3.17/01_add_uwm_object_types.pl
+  docker exec -it phaidra-api-1 perl migrations/v3.3.17/02_add_uwm__roles.pl
+  docker exec -it phaidra-api-1 perl migrations/v3.3.17/03_add_missing_labels.pl
+  docker exec -it phaidra-api-1 perl migrations/v3.3.17/04_add_phaidra_ir_tables.pl
+  docker exec -it phaidra-api-1 perl migrations/v3.3.17/05_add_more_usage_stats_indexes.pl
   ```
 
 # v3.3.16
@@ -368,7 +398,7 @@ Overall, this release strengthens accessibility and internationalization, stabil
   + to upgrade from previous version, please execute the migration script
 
   ```
-  docker exec -it phaidra-api-1 perl migrations/v3.3.16.pl
+  docker exec -it phaidra-api-1 perl migrations/v3.3.16/alter_usage_stats_table.pl
   ```
 
 ## phaidra-api

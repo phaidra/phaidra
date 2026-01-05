@@ -41,12 +41,20 @@ my $page = 0;
 my $failed = 0;
 my $ok = 0;
 
-my $apibaseurl_with_creds = 'http://'.$ENV{PHAIDRA_ADMIN_USER}.":".$ENV{PHAIDRA_ADMIN_PASSWORD}.'@'.$ENV{PHAIDRA_API_HOST}.':3000';
+my $api = Mojo::URL->new;
+$api->scheme('http');
+$api->host($ENV{PHAIDRA_API_HOST});
+$api->port(3000);
+$api->userinfo($ENV{PHAIDRA_ADMIN_USER}.':'.$ENV{PHAIDRA_ADMIN_PASSWORD});
+
 my $fedorabaseurl = 'http://'.$ENV{FEDORA_HOST}.':8080/fcrepo/rest';
-my $fedoraadmin_credentials = $ENV{FEDORA_ADMIN_USER}.":".$ENV{FEDORA_ADMIN_PASS};
-my $fedorasearchurl = Mojo::URL->new("$fedorabaseurl/fcr:search");
-$fedorasearchurl->userinfo($fedoraadmin_credentials);
-$fedorasearchurl->query(
+my $fedora = Mojo::URL->new;
+$fedora->scheme('http');
+$fedora->host($ENV{FEDORA_HOST});
+$fedora->port(8080);
+$fedora->path('fcrepo/rest/fcr:search');
+$fedora->userinfo($ENV{FEDORA_ADMIN_USER}.':'.$ENV{FEDORA_ADMIN_PASS});
+$fedora->query(
   fields => 'fedora_id,created',
   order_by => 'created',
   order => 'asc',
@@ -54,17 +62,18 @@ $fedorasearchurl->query(
   max_results => $pagesize
 );
 if ($from) {
-  $fedorasearchurl->query([ condition => "created>$from" ]);
+  $fedora->query([ condition => "created>$from" ]);
 }
 if ($until) {
-  $fedorasearchurl->query([ condition => "created<$until" ]);
+  $fedora->query([ condition => "created<$until" ]);
 }
-$fedorasearchurl->query([ condition => "rdf_type=http://fedora.info/definitions/v4/repository#ArchivalGroup" ]);
+$fedora->query([ condition => "rdf_type=http://fedora.info/definitions/v4/repository#ArchivalGroup" ]);
 
 sub indexObject {
   my ($pid) = @_;
 
-  my $apires = $ua->post("$apibaseurl_with_creds/object/$pid/index")->result;
+  $api->path("/object/$pid/index");
+  my $apires = $ua->post($api)->result;
   if ($apires->code != 200) {
     if (exists($apires->json->{alerts})) {
       for my $a (@{$apires->json->{alerts}}) {
@@ -88,8 +97,8 @@ sub _epochToIso {
 sub processPage {
   my ($page) = @_;
 
-  $fedorasearchurl->query({ offset => $page * $pagesize });
-  my $fedres = $ua->get($fedorasearchurl)->result;
+  $fedora->query({ offset => $page * $pagesize });
+  my $fedres = $ua->get($fedora)->result;
   unless ($fedres->is_success) {
     $log->error("error querying fedora: ".$fedres->code." ".$fedres->message);
     exit(1);

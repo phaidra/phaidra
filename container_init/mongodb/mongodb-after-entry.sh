@@ -29,6 +29,7 @@ mongo --quiet --authenticationDatabase admin -u ${MONGO_INITDB_ROOT_USERNAME} -p
 db = db.getSiblingDB('mongodb');
 if (db.oai_records.countDocuments({}) === 0) db.oai_records.insertOne({ _temp: true });
 db.oai_records.createIndex({ pid: 1 });
+db.oai_records.createIndex({ deleted: 1, pid: 1 });
 db.oai_records.createIndex({ created: -1 });
 db.oai_records.createIndex({ updated: -1 });
 db.oai_records.deleteOne({ _temp: true });
