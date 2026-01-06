@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use POSIX;
 use Socket qw(AF_INET6 inet_aton inet_pton);
 use Digest::SHA qw(hmac_sha256);
 use Time::HiRes qw(time);
