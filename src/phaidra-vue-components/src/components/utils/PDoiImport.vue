@@ -298,7 +298,7 @@
           </v-card-text>
         </v-card>
         <div class="font-weight-bold text-right mt-4">
-          <v-btn color="primary" @click="proceedForm">Load Form</v-btn>
+          <v-btn color="primary" @click="proceedForm">{{ $t("Load Form") }}</v-btn>
         </div>
       </v-col>
     </v-row>
