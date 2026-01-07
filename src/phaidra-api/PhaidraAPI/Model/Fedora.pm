@@ -111,6 +111,12 @@ sub _getObjectProperties {
 
   my $res = {alerts => [], status => 200};
 
+  unless ($pid =~ m/^o:\d+$/) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Invalid pid'};
+    $res->{status} = 400;
+    return;
+  }
+
   my $url = $c->app->fedoraurl->path($pid);
   $c->app->log->debug("GET $url");
   my $getres = $c->ua->get($url => $self->wrapAtomic($c, {'Accept' => 'application/ld+json'}))->result;
@@ -375,6 +381,12 @@ sub getDatastream {
 
   $c->app->log->debug("getDatastream pid[$pid] dsid[$dsid]");
 
+  unless ($pid =~ m/^o:\d+$/) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Invalid pid'};
+    $res->{status} = 400;
+    return;
+  }
+
   if ($dsid eq "OCTETS") {
     unshift @{$res->{alerts}}, {type => 'error', msg => "getDatastream is not meant for OCTETS"};
     $res->{status} = 400;
@@ -408,6 +420,12 @@ sub getDatastreamAttributes {
   my $res = {alerts => [], status => 200};
 
   $c->app->log->debug("getDatastreamSize pid[$pid] dsid[$dsid]");
+
+  unless ($pid =~ m/^o:\d+$/) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Invalid pid'};
+    $res->{status} = 400;
+    return;
+  }
 
   my $url = $c->app->fedoraurl->path("$pid/$dsid/fcr:metadata");
   $c->app->log->debug("GET $url");
@@ -699,8 +717,17 @@ sub delete {
 sub isDeleted {
   my ($self, $c, $pid) = @_;
 
+  my $res = {alerts => [], status => 200};
+
   my $url = $c->app->fedoraurl->path($pid);
   $c->app->log->debug("GET $url");
+
+  unless ($pid =~ m/^o:\d+$/) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Invalid pid'};
+    $res->{status} = 400;
+    return;
+  }
+
   my $getres = $c->ua->get($url)->result;
   return $getres->{code} == 410;
 }
