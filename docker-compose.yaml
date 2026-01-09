@@ -357,8 +357,8 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:85250eef
-    command: "npm run start"
+    image: phaidraorg/ui:latest
+    command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
       OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
@@ -375,8 +375,8 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:85250eef
-    command: "npm run start"
+    image: phaidraorg/ui:latest
+    command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
       OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
@@ -395,7 +395,7 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/ui-dev.dockerfile
-    command: "npm run dev"
+    command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
       PHAIDRA_DEFAULT_THEME: "${PHAIDRA_DEFAULT_THEME:-light}"
@@ -427,7 +427,7 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/ui.dockerfile
-    command: "npm run start"
+    command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
       PHAIDRA_DEFAULT_THEME: "${PHAIDRA_DEFAULT_THEME:-light}"

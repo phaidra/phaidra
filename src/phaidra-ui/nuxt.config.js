@@ -1,6 +1,8 @@
 const path = require('path')
 
 export default {
+  rootDir: process.cwd(),
+  buildDir: process.cwd() + '/.nuxt/',
   // render: { csp: true },
   // Global page headers: https://go.nuxtjs.dev/config-head
   // head: {

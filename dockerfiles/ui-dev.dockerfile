@@ -18,6 +18,7 @@ ENV NODE_OPTIONS=--openssl-legacy-provider
 ENV PORT=3001
 EXPOSE 3001
 RUN <<EOF
+npm i -g pm2@latest
 npm install
 npm install /usr/local/phaidra/phaidra-vue-components
 EOF
