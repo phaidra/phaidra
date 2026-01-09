@@ -123,16 +123,30 @@ services:
   ############### varnish ###############
   varnish:
     <<: [*common, *logs]
+    image: varnish:8
     hostname: varnish
-    image: varnish
     tmpfs:
-      - "/var/lib/varnish/varnishd:exec"
+      - /var/lib/varnish/varnishd:exec
     configs:
       - source: varnish_config
         target: /etc/varnish/default.vcl
+    command:
+      - varnishd
+      - -F
+      - -a
+      - :80
+      - -f
+      - /etc/varnish/default.vcl
+      - -s
+      - Transient=malloc,1G
+      - -s
+      - malloc,6G
+    deploy:
+      resources:
+        limits:
+          memory: 12G
     environment:
       <<: [*api_common_env, *hosts]
-      VARNISH_SIZE: 5G
     profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]
 
   ############### httpd ###############
