@@ -39,7 +39,10 @@ echo "Adding indexes to jobs collection..."
 mongo --quiet --authenticationDatabase admin -u ${MONGO_INITDB_ROOT_USERNAME} -p ${MONGO_INITDB_ROOT_PASSWORD} paf_mongodb --eval "
 db = db.getSiblingDB('paf_mongodb');
 if (db.jobs.countDocuments({}) === 0) db.jobs.insertOne({ _temp: true });
-db.jobs.createIndexes([{ agent_name: 1 }, { status: 1 }, { idhash: 1 }] );
+db.jobs.createIndexes([{ agent: 1 }, { status: 1 }, { idhash: 1 }] );
+db.jobs.createIndex({ status: 1, agent: 1 })
+db.jobs.createIndex({ idhash: 1, created: -1 })
+db.jobs.createIndex({ agent: 1, pid: 1, created: -1 })
 db.jobs.deleteOne({ _temp: true });
 "
 

@@ -67,6 +67,14 @@ We had to change the way we use copy fields in solr schema. You need to execute 
 docker exec -it phaidra-api-1 perl migrations/v3.4.0/06_add_solr_copyfields.pl
 ```
 
+### jobs collection index
+
+Additional indexes are necessary to avoid slow queries:
+
+```
+docker exec -it phaidra-api-1 perl migrations/v3.4.0/07_add_jobs_indexes.pl
+```
+
 # v3.3.17
 
 Here are the key highlights from the fixes and enhancements since the last release:
