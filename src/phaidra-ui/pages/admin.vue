@@ -1058,6 +1058,34 @@
                     </v-card>
                   </v-col>
                 </v-row>
+
+                <v-row>
+                  <v-col>
+                  <v-card>
+                    <v-card-title class="title font-weight-light white--text">{{ $t("Pure") }}</v-card-title>
+                    <v-card-text>
+                      <v-row class="mt-4">
+                        <v-col>
+                          <v-text-field
+                            :label="$t('Pure endpoint')"
+                            v-model="parsedPrivateConfigData.irpureurl"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="6" class="mt-6">{{ $t("Endpoint for the integration with Pure. Eg <pure base url>/ws/api") }}</v-col>
+                      </v-row>
+                      <v-row class="mt-4">
+                        <v-col>
+                          <v-text-field
+                            :label="$t('Pure key')"
+                            v-model="parsedPrivateConfigData.irpurekey"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="6" class="mt-6">{{ $t("API key for integration with Pure.") }}</v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                  </v-col>
+                </v-row>
               </v-container>
             </v-tab-item>
 

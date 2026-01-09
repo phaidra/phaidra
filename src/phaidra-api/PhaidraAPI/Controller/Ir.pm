@@ -626,6 +626,7 @@ sub submit {
 
   my $confmodel = PhaidraAPI::Model::Config->new;
   my $pubconfig = $confmodel->get_public_config($self);
+  my $privconfig = $confmodel->get_private_config($self);
 
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
@@ -867,11 +868,11 @@ sub submit {
       $self->app->log->debug("pure import uuid[$uuid]");
       if ($uuid) {
         my $urlget = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . "/research-outputs/$uuid");
-        my $params = {apiKey => $self->app->config->{apis}->{pure}->{key}};
+        my $params = {apiKey => $privconfig->{irpurekey}};
 
         my $pureUpdate = $self->createPureUpdate($mainObjectPid, $uuid, $metadata);
         $self->app->log->debug("pure update:\n" . $self->app->dumper($pureUpdate));
-        my $putres = $self->ua->put($urlget => {Accept => 'application/json', 'api-key' => $self->app->config->{apis}->{pure}->{key}} => json => $pureUpdate)->result;
+        my $putres = $self->ua->put($urlget => {Accept => 'application/json', 'api-key' => $privconfig->{irpurekey}} => json => $pureUpdate)->result;
         $self->app->log->debug("XXXXXXXXx pure update result:\n" . $self->app->dumper($putres));
         if ($putres->is_success) {
           $res->{response} = $putres->json;
@@ -1387,6 +1388,7 @@ sub puresearch {
 
   my $confmodel = PhaidraAPI::Model::Config->new;
   my $pubconfig = $confmodel->get_public_config($self);
+  my $privconfig = $confmodel->get_private_config($self);
 
   # already went through check_auth
   my $username = $self->stash->{basic_auth_credentials}->{username};
@@ -1429,7 +1431,7 @@ sub puresearch {
     $params->{offset} = $offset;
   }
 
-  my $getres = $self->ua->post($urlget => {Accept => 'application/json', "api-key" => $self->app->config->{apis}->{pure}->{key}} => json => $params)->result;  
+  my $getres = $self->ua->post($urlget => {Accept => 'application/json', "api-key" => $privconfig->{irpurekey}} => json => $params)->result;  
   if ($getres->is_success) {
     $res->{response} = $getres->json;
   }
@@ -1553,6 +1555,7 @@ sub pureimport_reject {
 
   my $confmodel = PhaidraAPI::Model::Config->new;
   my $pubconfig = $confmodel->get_public_config($self);
+  my $privconfig = $confmodel->get_private_config($self);
 
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
@@ -1567,7 +1570,7 @@ sub pureimport_reject {
   # get pure metadata
   my $puremetadata;
   my $url    = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . "/research-outputs/$uuid");
-  my $getres = $self->ua->get($url => {Accept => 'application/json', 'api-key' => $self->app->config->{apis}->{pure}->{key}})->result;
+  my $getres = $self->ua->get($url => {Accept => 'application/json', 'api-key' => $privconfig->{irpurekey}})->result;
   if ($getres->is_success) {
     $puremetadata = $getres->json;
     $self->app->log->debug("Pure metadata:\n" . $self->app->dumper($puremetadata));
@@ -1588,7 +1591,7 @@ sub pureimport_reject {
     }
   }
 
-  my $putres = $self->ua->put($url => {Accept => 'application/json', 'api-key' => $self->app->config->{apis}->{pure}->{key}} => json => $update)->result;
+  my $putres = $self->ua->put($url => {Accept => 'application/json', 'api-key' => $privconfig->{irpurekey}} => json => $update)->result;
   if ($putres->is_success) {
     $self->app->log->debug("Pure response:\n" . $self->app->dumper($res));
   }
@@ -1602,6 +1605,9 @@ sub pureimport_reject {
 sub createPureUpdate {
 
   my ($self, $pid, $uuid, $metadata) = @_;
+
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $privconfig = $confmodel->get_private_config($self);
 
   my $version;
   for my $e (@{$metadata->{metadata}->{'json-ld'}->{'oaire:version'}}) {
@@ -1628,7 +1634,7 @@ sub createPureUpdate {
   # get pure metadata
   my $puremetadata;
   my $url    = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . "/research-outputs/$uuid");
-  my $getres = $self->ua->get($url => {Accept => 'application/json', 'api-key' => $self->app->config->{apis}->{pure}->{key}})->result;
+  my $getres = $self->ua->get($url => {Accept => 'application/json', 'api-key' => $privconfig->{irpurekey}})->result;
   if ($getres->is_success) {
     $puremetadata = $getres->json;
     $self->app->log->debug("Pure metadata:\n" . $self->app->dumper($puremetadata));
