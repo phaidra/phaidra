@@ -5,7 +5,7 @@ module.exports = {
     script: './node_modules/.bin/nuxt',
     args: `start -c ${process.cwd()}/nuxt.config.js`,
     exec_mode: 'cluster',
-    instances: '8',
+    instances: '2',
     watch: false,
     env: { NODE_ENV: 'production' }
   }]
