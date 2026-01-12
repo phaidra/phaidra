@@ -31,7 +31,7 @@ if [ "${HTTPD_PFSA_ENABLE}" = "true" ]; then
   EXTRA_FLAGS="$EXTRA_FLAGS -D PFSA"
 fi
 
-if [ -n "$PFSA_REDIRECT_FQDN" ]; then
+if [ -n "$HTTPD_PFSA_REDIRECT_FQDN" ]; then
   EXTRA_FLAGS="$EXTRA_FLAGS -D PFSA_REDIRECT"
 fi
 
