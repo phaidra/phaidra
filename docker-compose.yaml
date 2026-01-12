@@ -179,7 +179,7 @@ services:
 
   httpd-ssl-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:8b7310ba
+    image: phaidraorg/httpd-ssl-dist:15082ea2
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -196,7 +196,7 @@ services:
 
   httpd-ssl-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:8b7310ba
+    image: phaidraorg/httpd-ssl-dist:15082ea2
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -212,7 +212,7 @@ services:
 
   httpd-shib-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:8b7310ba
+    image: phaidraorg/httpd-shib-dist:15082ea2
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -231,7 +231,7 @@ services:
 
   httpd-shib-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:8b7310ba
+    image: phaidraorg/httpd-shib-dist:15082ea2
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -358,7 +358,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:8b7310ba
+    image: phaidraorg/ui:15082ea2
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -376,7 +376,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:8b7310ba
+    image: phaidraorg/ui:15082ea2
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -444,7 +444,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:3b6d4903
+    image: phaidraorg/api-dist:49ebe0bd
     <<: [*common, *logs]
     volumes:
       - s3-cache:/s3-cache
@@ -458,7 +458,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:3b6d4903
+    image: phaidraorg/api-dist:49ebe0bd
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
