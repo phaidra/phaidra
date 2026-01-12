@@ -477,6 +477,18 @@ sub _create_pdf_extraction_job_if_not_exists {
 
   my $res = {alerts => [], status => 200};
 
+  my $state;
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $fres         = $fedora_model->getObjectProperties($c, $pid);
+  if ($fres->{status} ne 200) {
+    return $fres;
+  }
+  if ($fres->{state} ne 'Active') {
+    # Do not extract fulltext for inactive objects, it would create a solr document
+    push @{$res->{alerts}}, {type => 'error', msg => "_create_pdf_extraction_job_if_not_exists pid[$pid] Skipping, object is in state ".$fres->{state}};
+    return $res;
+  }
+
   my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'tika'});
   my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
   my $path;
