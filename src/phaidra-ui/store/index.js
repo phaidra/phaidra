@@ -77,7 +77,8 @@ export const mutations = {
       'customJavaScript',
       'downloadabledatastreams',
       'disableChecksum',
-      'searchbaseands'
+      'searchbaseands',
+      'irbaseurl'
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {

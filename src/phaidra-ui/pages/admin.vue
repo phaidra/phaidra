@@ -1071,7 +1071,7 @@
                             v-model="parsedPrivateConfigData.irpureurl"
                           ></v-text-field>
                         </v-col>
-                        <v-col cols="6" class="mt-6">{{ $t("Endpoint for the integration with Pure. Eg <pure base url>/ws/api") }}</v-col>
+                        <v-col cols="6" class="mt-6">{{ $t("Endpoint for the integration with Pure. Eg https://my-pure-instance/ws/api") }}</v-col>
                       </v-row>
                       <v-row class="mt-4">
                         <v-col>

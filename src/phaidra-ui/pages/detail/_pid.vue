@@ -2341,7 +2341,7 @@ export default {
       );
     },
     uscholarlink: function () {
-      return (this.instanceconfig.irbaseurl + "/" + this.objectInfo.pid);
+      return ('https://' + this.instanceconfig.irbaseurl + "/" + this.objectInfo.pid);
     },
     doi: function () {
       for (let id of this.objectInfo.dc_identifier) {

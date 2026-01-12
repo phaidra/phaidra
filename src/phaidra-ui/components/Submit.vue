@@ -53,7 +53,7 @@
             <v-btn
               large
               class="primary"
-              :href="'https://uscholar.univie.ac.at/login'"
+              :href="'https://' + instanceconfig.irbaseurl + '/login'"
             >
               <v-icon dark class="mr-2">mdi-school</v-icon> {{ $t("Upload publication (via u:scholar)") }}
             </v-btn>
