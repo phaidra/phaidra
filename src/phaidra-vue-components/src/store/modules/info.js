@@ -2582,7 +2582,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="http://id.loc.gov/vocabulary/identifiers.html"> Standard Identifier Scheme </a>'
+                '<a href="http://id.loc.gov/vocabulary/identifiers.html">Standard Identifier Scheme</a>'
             },
             {
               id: 'obligation',
@@ -2624,7 +2624,7 @@ export const state = () => ({
             {
               id: 'vocabulary',
               title: 'Vocabulary',
-              content: 'ISO 8601 date and time format'
+              content: '<a href="https://en.wikipedia.org/wiki/ISO_8601#Durations">ISO 8601 date and time format</a>'
             },
             {
               id: 'obligation',
