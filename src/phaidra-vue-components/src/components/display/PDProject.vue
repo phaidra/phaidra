@@ -4,7 +4,7 @@
       <template v-if="funderAndProjIdOnly">
         <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold text-md-right"><span v-if="!hideLabel">{{ $t('Funder') }}</span></v-col>
         <v-col :md="valueColMd" cols="12">
-          <v-row v-for="(funder, i) in o['frapo:hasFundingAgency']" :key="'ftx'+i">
+          <div v-for="(funder, i) in o['frapo:hasFundingAgency']" :key="'ftx'+i">
             <span v-for="(ft, j) in funder['skos:prefLabel']" :key="'ftx'+i+j">
               <template v-if="funder['skos:exactMatch']">
                 <template v-for="(fid, k) in funder['skos:exactMatch']">
@@ -38,7 +38,7 @@
               </span>
               </span>
             </span>
-          </v-row>
+          </div>
         </v-col>
       </template>
       <template v-else>
