@@ -1391,6 +1391,20 @@ export default {
               }
               break
 
+            // schema:weight
+            case 'schema:weight':
+              if (obj['@type'] === 'schema:QuantitativeValue') {
+                f = fields.getField('weight')
+                for (let c of obj['schema:unitCode']) {
+                  f.unit = c
+                }
+                for (let v of obj['schema:value']) {
+                  f.value = v
+                }
+                components.push(f)
+              }
+              break
+
             // vra:diameter
             case 'vra:diameter':
               if (obj['@type'] === 'schema:QuantitativeValue') {
