@@ -93,7 +93,3 @@ done
 
 echo "------------------------------------------------------------"
 echo "All requested migrations processed."
-echo "Next steps:"
-echo "  1) Update your docker-compose.yml to use the new volume names."
-echo "  2) Start services: docker compose up -d"
-echo "  3) Verify data. Remove old volumes manually when ready."
