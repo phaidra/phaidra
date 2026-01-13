@@ -159,8 +159,7 @@ sub process_core {
 # Main execution
 my $success = 1;
 
-# Process only the main phaidra core
-my @cores = ('phaidra');
+my @cores = ('phaidra', 'phaidra_pages');
 
 foreach my $core (@cores) {
     $log->info("Processing core: $core");
