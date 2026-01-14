@@ -2197,7 +2197,7 @@ export default {
       if (f.series.length > 0) {
         h['rdau:P60193'] = []
         for (let s of f.series) {
-          if (s.seriesTitle || s.seriesVolume || s.seriesIssue || s.seriesIssued || s.seriesIssn || s.seriesIdentifier) {
+          if (s.seriesTitle) {
             let series = {
               '@type': s.seriesType
             }
@@ -2742,7 +2742,7 @@ export default {
           break
 
         case 'rdau:P60193':
-          if (f.title || f.volume || f.issue || f.issued || f.issn || f.identifier) {
+          if (f.title) {
             this.push_object(jsonld, f.predicate, this.get_json_series(f.type, f.title, f.titleLanguage, f.volume, f.volumeLanguage, f.issue, f.issueLanguage, f.issued, f.issn, f.identifier, f.identifierType))
           }
           if (f.pageStart) {
