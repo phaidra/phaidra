@@ -12,6 +12,7 @@ export const formvalidation = {
           'image/tiff',
           'image/png',
           'image/x-ms-bmp',
+          'image/bmp',
           'image/jp2',
         ],
         // text
