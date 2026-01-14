@@ -133,8 +133,6 @@ export default {
         return `(${birthDate}-${deathDate})`
       } else if (birthDate) {
         return `(${birthDate})`
-      } else if (deathDate) {
-        return `(${deathDate})`
       }
       
       return ''
