@@ -8,18 +8,18 @@
             <a class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }" :href="getIDResolverURL(entity['skos:exactMatch'][0])" target="_blank">
               <icon width="16px" height="16px" class="mr-1 mb-1" v-if="entity['skos:exactMatch'][0]['@type'] === 'ids:orcid'" name="orcid"></icon><template class="valuefield" v-for="(gn) in entity['schema:givenName']">{{ gn['@value'] }}</template><template class="valuefield" v-for="(fn) in entity['schema:familyName']"> {{ fn['@value'] }}</template><template class="valuefield" v-for="(n) in entity['schema:name']">{{ n['@value'] }}</template>
             </a>
-<template class="valuefield" v-for="(bd) in entity['schema:birthDate']">({{bd}})</template>
+<template class="valuefield">{{ formatBirthDeathDate() }}</template>
           </template>
           <template v-else-if="entity['skos:exactMatch'].length > 1">
             <a class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }" :href="getIDResolverURL(entity['skos:exactMatch'][0])" target="_blank">
               <template class="valuefield" v-for="(gn) in entity['schema:givenName']">{{ gn['@value'] }}</template><template class="valuefield" v-for="(fn) in entity['schema:familyName']"> {{ fn['@value'] }}</template><template class="valuefield" v-for="(n) in entity['schema:name']">{{ n['@value'] }}</template>
             </a>
-            <template class="valuefield" v-for="(bd) in entity['schema:birthDate']">({{bd}})</template>
+            <template class="valuefield">{{ formatBirthDeathDate() }}</template>
           </template>
         </template>
         <template v-else>
           <template v-for="(gn) in entity['schema:givenName']"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }">{{ gn['@value'] }}</span></template><template v-for="(fn) in entity['schema:familyName']"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }"> {{ fn['@value'] }}</span></template><template v-for="(n) in entity['schema:name']"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }">{{ n['@value'] }}</span></template>
-       <template class="valuefield" v-for="(bd) in entity['schema:birthDate']">({{bd}})</template>
+       <template class="valuefield">{{ formatBirthDeathDate() }}</template>
         </template>
         <template v-if="entity['schema:affiliation']" class="secondary--text">
           <br/>
@@ -117,6 +117,27 @@ export default {
   methods: {
     getLocalizedTermLabel: function (role) {
       return this.$store.getters['vocabulary/getLocalizedTermLabel']('rolepredicate', role, this.$i18n.locale)
+    },
+    formatBirthDeathDate: function () {
+      if (this.entity['@type'] !== 'schema:Person') {
+        return ''
+      }
+      
+      const birthDates = this.entity['schema:birthDate'] || []
+      const deathDates = this.entity['schema:deathDate'] || []
+      
+      const birthDate = birthDates.length > 0 ? birthDates[0] : null
+      const deathDate = deathDates.length > 0 ? deathDates[0] : null
+      
+      if (birthDate && deathDate) {
+        return `(${birthDate}-${deathDate})`
+      } else if (birthDate) {
+        return `(${birthDate})`
+      } else if (deathDate) {
+        return `(${deathDate})`
+      }
+      
+      return ''
     }
   },
   mounted: function () {
