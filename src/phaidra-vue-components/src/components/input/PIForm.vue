@@ -2104,6 +2104,7 @@ export default {
           // picture
           return 'https://pid.phaidra.org/vocabulary/44TN-P1S0'
 
+        case 'audio/x-wav':
         case 'audio/wav':
         case 'audio/mpeg':
         case 'audio/flac':
@@ -2118,6 +2119,7 @@ export default {
         case 'video/mpeg':
         case 'video/avi':
         case 'video/vnd.avi':
+        case 'video/x-msvideo':
         case 'video/mp4':
         case 'video/quicktime':
         case 'video/x-matroska':
