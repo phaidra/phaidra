@@ -856,6 +856,7 @@
   "vra:material": "Materiale",
   "vra:hasInscription": "Iscrizione",
   "schema:AdministrativeArea": "Area amministrativa",
+  "schema:availableLanguage": "Lingua disponibile",
   "phaidra:systemTag": "Tag di sistema",
   "bf:subtitle": "Sottotitolo",
   "Condition note": "Nota sullo stato",
