@@ -478,7 +478,16 @@ export default {
         this.setIfEmpty(f, 'issue', doiImportData.journalIssue, overwrite)
         this.setIfEmpty(f, 'pageStart', doiImportData.pageStart, overwrite)
         this.setIfEmpty(f, 'pageEnd', doiImportData.pageEnd, overwrite)
-        this.setIfEmpty(f, 'issued', doiImportData.dateIssued, overwrite)
+        const hasJournalInfo = doiImportData.journalTitle || doiImportData.journalISSN || 
+                              doiImportData.journalVolume || doiImportData.journalIssue || 
+                              doiImportData.pageStart || doiImportData.pageEnd
+        if (hasJournalInfo) {
+          this.setIfEmpty(f, 'issued', doiImportData.dateIssued, overwrite)
+        } else {
+          if (overwrite || f.issued) {
+            this.$set ? this.$set(f, 'issued', undefined) : (f.issued = undefined)
+          }
+        }
       }
 
       // Publisher
@@ -1201,8 +1210,13 @@ if (crossrefData['issued']['date-parts'][0]) {
         if (doiImportData.pageEnd) {
           sf.pageEnd = doiImportData.pageEnd;
         }
-        if (doiImportData.dateIssued) {
+        const hasJournalInfo = doiImportData.journalTitle || doiImportData.journalISSN || 
+                              doiImportData.journalVolume || doiImportData.journalIssue || 
+                              doiImportData.pageStart || doiImportData.pageEnd
+        if (hasJournalInfo && doiImportData.dateIssued) {
           sf.issued = doiImportData.dateIssued;
+        } else {
+          sf.issued = undefined;
         }
       }
       self.form.sections[5].fields.push(sf);
