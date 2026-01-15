@@ -2099,6 +2099,7 @@ export default {
         case 'image/gif':
         case 'image/png':
         case 'image/x-ms-bmp':
+        case 'image/bmp':
         case 'image/jp2':
           // picture
           return 'https://pid.phaidra.org/vocabulary/44TN-P1S0'
@@ -2114,8 +2115,9 @@ export default {
           // document
           return 'https://pid.phaidra.org/vocabulary/69ZZ-2KGX'
 
-        case 'video/mpeg':
+        case 'video/mpeg':        
         case 'video/avi':
+        case 'video/vnd.avi':
         case 'video/mp4':
         case 'video/quicktime':
         case 'video/x-matroska':
