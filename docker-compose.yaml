@@ -179,7 +179,7 @@ services:
 
   httpd-ssl-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:4eea8519
+    image: phaidraorg/httpd-ssl-dist:2a4fab59
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -196,7 +196,7 @@ services:
 
   httpd-ssl-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:4eea8519
+    image: phaidraorg/httpd-ssl-dist:2a4fab59
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
