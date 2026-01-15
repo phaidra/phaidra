@@ -847,7 +847,7 @@
                   class="grey mr-2 float-right"
                   @click="checksumDialog = true"
                 >
-                  <span v-t="'Add checksum'"></span>
+                  <span v-t="'Add file checksum'"></span>
                 </v-btn>
               </template>
             </template>
