@@ -34,6 +34,9 @@ my $mongodb = MongoDB::MongoClient->new(
   socket_timeout_ms  => 300000,
 )->get_database('mongodb');
 
+$mongodb->get_collection('jobs')->indexes->create_one([ status => 1 ]);
+$mongodb->get_collection('jobs')->indexes->create_one([ agent => 1 ]);
+$mongodb->get_collection('jobs')->indexes->create_one([ idhash => 1 ]);
 $mongodb->get_collection('jobs')->indexes->create_one([ status => 1, agent => 1 ]);
 $mongodb->get_collection('jobs')->indexes->create_one([ idhash => 1, created => -1 ]);
 $mongodb->get_collection('jobs')->indexes->create_one([ agent => 1, pid => 1, created => -1 ]);
