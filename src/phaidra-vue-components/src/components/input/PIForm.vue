@@ -524,7 +524,7 @@
                             <p-i-dimension
                               v-bind.sync="f"
                               v-on:input-value="f.value=$event"
-                              v-on:input-unit="setSelected(f, 'unitCode', $event)"
+                              v-on:input-unit="setSelected(f, 'unit', $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
                               v-on:configure="editFieldProps(f)"
@@ -2125,7 +2125,8 @@ export default {
       }
     },
     setSelected: function (f, property, event) {
-      this.$set(f, property, event['@id'])
+      var value = (typeof event === 'string') ? event : event['@id']
+      this.$set(f, property, value)
       this.$emit('form-input-' + f.component, f)
       // eg on
       // v-on:input-identifier-type="setSelected(f, 'identifierType', $event)"

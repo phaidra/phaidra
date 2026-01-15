@@ -11,7 +11,7 @@
     </v-col>
     <v-col cols="2">
       <v-select
-        v-on:blur="$emit('input-unit',$event.target.value)"
+        @input="$emit('input-unit', $event)"
         :label="$t('Unit')"
         :items="vocabularies[vocabulary].terms"
         :item-value="'@id'"
