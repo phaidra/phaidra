@@ -303,16 +303,39 @@ export default {
       if (!ch || !ch.ui_value) {
         return null
       }
-      if (typeof ch.ui_value === 'string' && ch.ui_value.startsWith('http')) {
-        return ch.ui_value
+
+      const uiValue = String(ch.ui_value)
+
+      if (uiValue.startsWith('http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_21/')) {
+        const licenseId = uiValue.replace('http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_21/', '')
+        const vocab = this.$store.state.vocabulary.vocabularies['alllicenses']
+        if (vocab && vocab.terms) {
+          for (let term of vocab.terms) {
+            if (term['skos:notation']) {
+              const notations = Array.isArray(term['skos:notation']) ? term['skos:notation'] : [term['skos:notation']]
+              if (notations.includes(licenseId) || notations.includes(String(licenseId))) {
+                return term['@id']
+              }
+            }
+          }
+        }
+        return null
       }
-      const licenseId = String(ch.ui_value)
+
+      if (uiValue.startsWith('http://rightsstatements.org/') || 
+          uiValue.startsWith('http://creativecommons.org/') || 
+          uiValue.startsWith('https://creativecommons.org/') || 
+          uiValue.startsWith('http://www.gnu.org/')) {
+        return uiValue
+      }
+
+      const licenseId = uiValue
       const vocab = this.$store.state.vocabulary.vocabularies['alllicenses']
       if (vocab && vocab.terms) {
         for (let term of vocab.terms) {
           if (term['skos:notation']) {
             const notations = Array.isArray(term['skos:notation']) ? term['skos:notation'] : [term['skos:notation']]
-            if (notations.includes(licenseId)) {
+            if (notations.includes(licenseId) || notations.includes(String(licenseId))) {
               return term['@id']
             }
           }
