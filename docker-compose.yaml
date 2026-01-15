@@ -358,7 +358,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:15082ea2
+    image: phaidraorg/ui:3d18b299
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -376,7 +376,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:15082ea2
+    image: phaidraorg/ui:3d18b299
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -876,7 +876,7 @@ services:
   ############### cronjobs service ###############
   chronos:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:cde0a762
+    image: phaidraorg/chronos-dist:1dc2a2d1
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
@@ -903,7 +903,7 @@ services:
 
   chronos-s3:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:cde0a762
+    image: phaidraorg/chronos-dist:1dc2a2d1
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
