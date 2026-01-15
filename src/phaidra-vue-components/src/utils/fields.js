@@ -921,6 +921,7 @@ const fields = [
     component: 'p-text-field',
     label: 'Temporal coverage',
     multilingual: true,
+    allowLanguageCancel: true,
     value: '',
     language: '',
     definition: 'Temporal characteristics of the resource. Indicates the period that the content applies to, i.e. that it describes.'
@@ -1278,6 +1279,7 @@ const fields = [
     component: 'p-text-field',
     multiplicable: true,
     multilingual: true,
+    allowLanguageCancel: true,
     label: 'Inscription',
     value: '',
     language: '',
