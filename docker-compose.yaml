@@ -787,7 +787,7 @@ services:
   ############### phaidra document db ###############
   mongodb-phaidra:
     hostname: "mongodb-phaidra"
-    image: phaidraorg/mongodb-dist:fdac5484
+    image: phaidraorg/mongodb-dist:7cd9d090
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
