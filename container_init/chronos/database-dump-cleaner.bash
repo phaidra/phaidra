@@ -19,5 +19,11 @@ find /mnt/database-dumps -type f \
      -ctime +30 -delete -print | \
     grep \/ || printf "### nothing older than 30 days, doing nothing.\n"
 printf "############################################################\n"
+printf "### deleting old solr phaidra backups: #####################\n"
+find /mnt/database-dumps -type d \
+     -name "solr-backup-*" \
+     -ctime +30 -delete -print | \
+    grep \/ || printf "### nothing older than 30 days, doing nothing.\n"
+printf "############################################################\n"
 printf "### done. ##################################################\n"
 printf "############################################################\n"
