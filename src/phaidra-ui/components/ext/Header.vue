@@ -596,7 +596,7 @@
         this.$store.dispatch("vocabulary/sortRoles", this.$i18n.locale);
         this.$store.dispatch("vocabulary/sortFields", {locale: this.$i18n.locale, i18nInstance: this.$i18n});
         this.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
-        this.$store.dispatch('info/sortFieldsOverview', this.$i18n.locale)
+        this.$store.dispatch('info/sortFieldsOverview', {locale: this.$i18n.locale, i18nInstance: this.$i18n})
       }
     },
     mounted() {
