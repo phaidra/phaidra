@@ -531,7 +531,8 @@ sub adminlistdata {
   my $namesCache;
   for my $submit (@submits) {
     unless (exists($namesCache->{$submit->{user}->{username}})) {
-      $namesCache->{$submit->{user}->{username}} = $self->app->directory->get_user_data($self, $submit->{user}->{username});
+      my $user_data = $self->app->directory->get_user_data($self, $submit->{user}->{username});
+      $namesCache->{$submit->{user}->{username}} = $user_data->{firstname}.' '.$user_data->{lastname};
     }
     $submit->{user}->{name} = $namesCache->{$submit->{user}->{username}};
   }
