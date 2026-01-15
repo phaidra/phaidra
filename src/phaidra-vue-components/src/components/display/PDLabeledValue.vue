@@ -27,6 +27,7 @@ export default {
       switch (p) {
         case 'dcterms:language':
         case 'schema:subtitleLanguage':
+        case 'schema:availableLanguage':
           vocabulary = 'lang'
           break
 

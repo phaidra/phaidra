@@ -100,6 +100,13 @@
           </template>
         </template>
 
+        <template v-else-if="p==='schema:availableLanguage'" slot="schema:availableLanguage">
+          <template  v-for="(item, j) in o">
+            <p-d-skos-preflabel v-if="(typeof item === 'object') && (item !== null) && item.hasOwnProperty('skos:exactMatch')" :p="p" :o="item" :key="componentid+'availan-skos'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+            <p-d-labeled-value v-else :p="p" :o="item" :key="componentid+'availan-lbl'+j" v-bind.sync="displayProperties"></p-d-labeled-value>
+          </template>
+        </template>
+
         <template v-else-if="p==='dcterms:date'" slot="dcterms:date">
           <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'date'+j" v-bind.sync="displayProperties"></p-d-date>
         </template>

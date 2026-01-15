@@ -18,6 +18,7 @@
     <slot name="dcterms:audience"></slot>
     <slot name="dcterms:language"></slot>
     <slot name="schema:subtitleLanguage"></slot>
+    <slot name="schema:availableLanguage"></slot>
 
     <!-- IDs -->
     <slot name="pid"></slot>

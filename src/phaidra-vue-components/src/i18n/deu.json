@@ -773,6 +773,7 @@
     "dcterms:subject": "Schlagwort",
     "dcterms:language": "Sprache",
     "schema:subtitleLanguage": "Untertitel-Sprache",
+    "schema:availableLanguage": "Verfügbare Sprache",
     "dcterms:type": "Resource Type",
     "edm:hasType": "Typ",
     "bf:physicalLocation": "Standort",

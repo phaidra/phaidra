@@ -1426,5 +1426,6 @@
   "Important in cases where the same metadata fields have to be used on different description levels (ie dimensions - of the photography vs dimensions of the instrument depicted on the photography -, creation date, etc).": "Importante nei casi in cui gli stessi campi di metadati devono essere usati a diversi livelli di descrizione (ad esempio, dimensioni della fotografia vs. dimensioni dello strumento raffigurato nella fotografia, data di creazione, ecc).",
   "Date (text/concept)": "Data (Testo/Concetto)",
   "OER Object type (Higher Education Resource Types)": "Tipo di oggetto OER (Tipo di risorsa per l'istruzione superiore)",
-  "AC-Number": "ID Catalogo"
+  "AC-Number": "ID Catalogo",
+  "schema:availableLanguage": "Lingua disponibile"
 }

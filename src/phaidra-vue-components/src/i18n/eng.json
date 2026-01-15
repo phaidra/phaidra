@@ -23,6 +23,7 @@
     "dcterms:subject": "Subject",
     "dcterms:language": "Language",
     "schema:subtitleLanguage": "Subtitle language",
+    "schema:availableLanguage": "Available language",
     "dcterms:type": "Resource type",
     "edm:hasType": "Type",
     "bf:physicalLocation": "Physical location",

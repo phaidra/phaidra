@@ -218,6 +218,16 @@ export default {
               components.push(f)
               break
 
+            // schema:availableLanguage
+            case 'schema:availableLanguage':
+              f = fields.getField('available-language')
+              f.value = obj
+              if (obj['skos:exactMatch']) {
+                f.vocabulary = 'lang_vocab'
+              }
+              components.push(f)
+              break
+
             // dce:subject
             case 'dce:subject':
               // noop - we handled this already
@@ -2647,6 +2657,12 @@ export default {
           break
 
         case 'schema:subtitleLanguage':
+          if (f.value) {
+            this.push_literal(jsonld, f.predicate, f.value)
+          }
+          break
+
+        case 'schema:availableLanguage':
           if (f.value) {
             this.push_literal(jsonld, f.predicate, f.value)
           }
