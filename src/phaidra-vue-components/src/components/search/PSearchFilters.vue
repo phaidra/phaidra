@@ -113,6 +113,7 @@
                   :items="loadedAccessibilityTerms('accessibilityControl')"
                   v-model="selectedAccessibilityControl"
                   multiple
+                  clearable
                   @input="setAccessibilityControl()"
                   :menu-props="{maxHeight:'400'}"
                   persistent-hint
@@ -139,6 +140,7 @@
                   :items="loadedAccessibilityTerms('accessibilityFeature')"
                   v-model="selectedAccessibilityFeature"
                   multiple
+                  clearable
                   @input="setAccessibilityFeature()"
                   :menu-props="{maxHeight:'400'}"
                   persistent-hint
@@ -165,6 +167,7 @@
                   :items="loadedAccessibilityTerms('accessibilityHazard')"
                   v-model="selectedAccessibilityHazard"
                   multiple
+                  clearable
                   @input="setAccessibilityHazard()"
                   :menu-props="{maxHeight:'400'}"
                   persistent-hint
@@ -413,6 +416,11 @@ export default {
           }
         }
       }
+      if (this.selectedAccessibilityControl.length > 0 ||
+          this.selectedAccessibilityFeature.length > 0 ||
+          this.selectedAccessibilityHazard.length > 0) {
+        return true
+      }
       return false
     },
     marcRolesArray () {
@@ -526,6 +534,19 @@ export default {
           f.queries[0].show = false
         }
         this.toggleFacet(f.queries[0], f)
+      } else if(f.id === 'a11y') {
+        if (!f.show) {
+          this.selectedAccessibilityControl = []
+          this.selectedAccessibilityFeature = []
+          this.selectedAccessibilityHazard = []
+          this.search({ 
+            accessibilityControl: [], 
+            accessibilityFeature: [], 
+            accessibilityHazard: [] 
+          })
+        }
+        showFacet(f)
+        this.search({ facetQueries: this.facetQueries })
       } else {
         showFacet(f)
         this.search({ facetQueries: this.facetQueries })
