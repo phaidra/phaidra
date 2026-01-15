@@ -531,7 +531,7 @@ sub adminlistdata {
   my $namesCache;
   for my $submit (@submits) {
     unless (exists($namesCache->{$submit->{user}->{username}})) {
-      $namesCache->{$submit->{user}->{username}} = $self->app->directory->get_name($self, $submit->{user}->{username});
+      $namesCache->{$submit->{user}->{username}} = $self->app->directory->get_user_data($self, $submit->{user}->{username});
     }
     $submit->{user}->{name} = $namesCache->{$submit->{user}->{username}};
   }
@@ -863,11 +863,11 @@ sub submit {
   }
 
   if ($username eq $pubconfig->{iraccount}) {
-    if ($self->app->config->{apis}->{pure}) {
+    if ($privconfig->{irpureurl}) {
       my $uuid = $self->param('uuid');
       $self->app->log->debug("pure import uuid[$uuid]");
       if ($uuid) {
-        my $urlget = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . "/research-outputs/$uuid");
+        my $urlget = Mojo::URL->new($privconfig->{irpureurl} . "/research-outputs/$uuid");
         my $params = {apiKey => $privconfig->{irpurekey}};
 
         my $pureUpdate = $self->createPureUpdate($mainObjectPid, $uuid, $metadata);
@@ -935,185 +935,6 @@ sub sendAdminEmail {
   $msg->data(encode('UTF-8', $email));
 
   $msg->send('smtp', $privconfig->{irsmtpserver}.':'.$privconfig->{irsmtpport}, AuthUser => $privconfig->{irsmtpuser}, AuthPass => $privconfig->{irsmtppassword}, SSL => ($privconfig->{irsmtpport} eq '465' || $privconfig->{irsmtpport} eq '587') ? 1 : 0);
-}
-
-sub stats {
-  my $self = shift;
-
-  my $pid      = $self->stash('pid');
-  my $irsiteid = $self->param('siteid');
-
-  unless (defined($pid)) {
-    $self->render(json => {alerts => [{type => 'info', msg => 'Undefined pid'}]}, status => 400);
-    return;
-  }
-
-  my $key = $self->stash('stats_param_key');
-
-  my $fr = undef;
-  if (exists($self->app->config->{sites})) {
-    for my $f (@{$self->app->config->{sites}}) {
-      if (defined($f->{site}) && $f->{site} eq 'phaidra') {
-        $fr = $f;
-      }
-    }
-  }
-
-  unless (defined($fr)) {
-
-    # return 200, this is just ok
-    $self->render(json => {alerts => [{type => 'info', msg => 'Site is not configured'}]}, status => 200);
-    return;
-  }
-  unless ($fr->{site} eq 'ir' or $fr->{site} eq 'phaidra') {
-
-    # return 200, this is just ok
-    $self->render(json => {alerts => [{type => 'info', msg => 'Site [' . $fr->{site} . '] is not supported'}]}, status => 200);
-    return;
-  }
-  unless (defined($fr->{stats})) {
-
-    # return 200, this is just ok
-    $self->render(json => {alerts => [{type => 'info', msg => 'Statistics source is not configured'}]}, status => 200);
-    return;
-  }
-
-  # only piwik now
-  unless ($fr->{stats}->{type} eq 'piwik') {
-
-    # return 200, this is just ok
-    $self->render(json => {alerts => [{type => 'info', msg => 'Statistics source [' . $fr->{stats}->{type} . '] is not supported.'}]}, status => 200);
-    return;
-  }
-  unless ($irsiteid) {
-    unless (defined($fr->{stats}->{siteid})) {
-      $self->render(json => {alerts => [{type => 'info', msg => 'Piwik siteid is not configured'}]}, status => 500);
-      return;
-    }
-    $irsiteid = $fr->{stats}->{siteid};
-  }
-
-  my $stats;
-
-  my $downloads = $self->app->db_stats_phaidra->dbh->selectrow_array("SELECT count(*) FROM downloads_$irsiteid WHERE pid = '$pid';");
-  unless (defined($downloads)) {
-    $self->app->log->error("Error querying piwik database for download stats:" . $self->app->db_stats_phaidra->dbh->errstr);
-  }
-
-  my $detail_page = $self->app->db_stats_phaidra->dbh->selectrow_array("SELECT count(*) FROM views_$irsiteid WHERE pid = '$pid';");
-  unless (defined($detail_page)) {
-    $self->app->log->error("Error querying piwik database for detail stats:" . $self->app->db_stats_phaidra->dbh->errstr);
-  }
-
-  if (defined($detail_page) || defined($downloads)) {
-    $stats = {downloads => $downloads, detail_page => $detail_page};
-  }
-
-  $self->app->log->debug("stats: " . $self->app->dumper($stats));
-
-  $self->render(json => {stats => $stats}, status => 200);
-}
-
-sub stats_chart {
-  my $self = shift;
-
-  my $pid      = $self->stash('pid');
-  my $irsiteid = $self->param('siteid');
-
-  unless (defined($pid)) {
-    $self->render(json => {alerts => [{type => 'info', msg => 'Undefined pid'}]}, status => 400);
-    return;
-  }
-
-  my $key = $self->stash('stats_param_key');
-
-  my $fr = undef;
-  if (exists($self->app->config->{sites})) {
-    for my $f (@{$self->app->config->{sites}}) {
-      if (defined($f->{site}) && $f->{site} eq 'phaidra') {
-        $fr = $f;
-      }
-    }
-  }
-
-  unless (defined($fr)) {
-
-    # return 200, this is just ok
-    $self->render(json => {alerts => [{type => 'info', msg => 'Site is not configured'}]}, status => 200);
-    return;
-  }
-  unless ($fr->{site} eq 'ir' or $fr->{site} eq 'phaidra') {
-
-    # return 200, this is just ok
-    $self->render(json => {alerts => [{type => 'info', msg => 'Site [' . $fr->{site} . '] is not supported'}]}, status => 200);
-    return;
-  }
-  unless (defined($fr->{stats})) {
-
-    # return 200, this is just ok
-    $self->render(json => {alerts => [{type => 'info', msg => 'Statistics source is not configured'}]}, status => 200);
-    return;
-  }
-
-  # only piwik now
-  unless ($fr->{stats}->{type} eq 'piwik') {
-
-    # return 200, this is just ok
-    $self->render(json => {alerts => [{type => 'info', msg => 'Statistics source [' . $fr->{stats}->{type} . '] is not supported.'}]}, status => 200);
-    return;
-  }
-  unless ($irsiteid) {
-    unless (defined($fr->{stats}->{siteid})) {
-      $self->render(json => {alerts => [{type => 'info', msg => 'Piwik siteid is not configured'}]}, status => 500);
-      return;
-    }
-    $irsiteid = $fr->{stats}->{siteid};
-  }
-
-  my $downloads;
-  my $sth = $self->app->db_stats_phaidra->dbh->prepare("SELECT DATE_FORMAT(server_time,'%Y-%m-%d'), location_country FROM downloads_$irsiteid WHERE pid = '$pid';")
-    or $self->app->log->error("Error querying piwik database for download stats chart:" . $self->app->db_stats_phaidra->dbh->errstr);
-  $sth->execute() or $self->app->log->error("Error querying piwik database for download stats chart:" . $self->app->db_stats_phaidra->dbh->errstr);
-  my $date;
-  my $country;
-  $sth->bind_columns(undef, \$date, \$country);
-
-  while ($sth->fetch) {
-    if ($downloads->{$country}) {
-      $downloads->{$country}->{$date}++;
-    }
-    else {
-      $downloads->{$country} = {$date => 1};
-    }
-  }
-
-  my $detail_page;
-  $sth = $self->app->db_stats_phaidra->dbh->prepare("SELECT DATE_FORMAT(server_time,'%Y-%m-%d'), location_country FROM views_$irsiteid WHERE pid = '$pid';")
-    or $self->app->log->error("Error querying piwik database for detail stats chart:" . $self->app->db_stats_phaidra->dbh->errstr);
-  $sth->execute() or $self->app->log->error("Error querying piwik database for detail stats chart:" . $self->app->db_stats_phaidra->dbh->errstr);
-  $sth->bind_columns(undef, \$date, \$country);
-  while ($sth->fetch) {
-    if ($detail_page->{$country}) {
-      $detail_page->{$country}->{$date}++;
-    }
-    else {
-      $detail_page->{$country} = {$date => 1};
-    }
-  }
-
-  if (defined($key)) {
-    if ($key eq 'downloads') {
-      $self->render(text => $downloads, status => 200);
-      return;
-    }
-    if ($key eq 'detail_page') {
-      $self->render(text => $detail_page, status => 200);
-      return;
-    }
-  }
-  else {
-    $self->render(json => {stats => {downloads => $downloads, detail_page => $detail_page}}, status => 200);
-  }
 }
 
 sub isRestricted {
@@ -1397,7 +1218,7 @@ sub puresearch {
     return;
   }
 
-  unless ($self->app->config->{apis}->{pure}) {
+  unless ($privconfig->{irpureurl}) {
     $self->render(json => {alerts => [{type => 'info', msg => 'Pure integration not configured'}]}, status => 400);
     return;
   }
@@ -1411,14 +1232,14 @@ sub puresearch {
   my $size     = $self->param('size');
   my $offset   = $self->param('offset');
 
-  # $self->app->log->debug("XXXXXXXXXXXXXXXXXXXX : " . $self->app->config->{apis}->{pure}->{url} . '/research-outputs/search');
+  # $self->app->log->debug("XXXXXXXXXXXXXXXXXXXX : " . $privconfig->{irpureurl} . '/research-outputs/search');
   # HACK:
   my $urlget;
-  if ($self->app->config->{apis}->{pure}->{url} eq "https://ucris.univie.ac.at/ws/api/523/research-outputs") {
-    $urlget = Mojo::URL->new($self->app->config->{apis}->{pure}->{url});
+  if ($privconfig->{irpureurl} eq "https://ucris.univie.ac.at/ws/api/523/research-outputs") {
+    $urlget = Mojo::URL->new($privconfig->{irpureurl});
   }
   else {
-    $urlget = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . '/research-outputs/search');
+    $urlget = Mojo::URL->new($privconfig->{irpureurl} . '/research-outputs/search');
   }
 
   my $params = {
@@ -1569,7 +1390,7 @@ sub pureimport_reject {
 
   # get pure metadata
   my $puremetadata;
-  my $url    = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . "/research-outputs/$uuid");
+  my $url    = Mojo::URL->new($privconfig->{irpureurl} . "/research-outputs/$uuid");
   my $getres = $self->ua->get($url => {Accept => 'application/json', 'api-key' => $privconfig->{irpurekey}})->result;
   if ($getres->is_success) {
     $puremetadata = $getres->json;
@@ -1633,7 +1454,7 @@ sub createPureUpdate {
 
   # get pure metadata
   my $puremetadata;
-  my $url    = Mojo::URL->new($self->app->config->{apis}->{pure}->{url} . "/research-outputs/$uuid");
+  my $url    = Mojo::URL->new($privconfig->{irpureurl} . "/research-outputs/$uuid");
   my $getres = $self->ua->get($url => {Accept => 'application/json', 'api-key' => $privconfig->{irpurekey}})->result;
   if ($getres->is_success) {
     $puremetadata = $getres->json;

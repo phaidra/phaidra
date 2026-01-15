@@ -548,12 +548,6 @@ sub startup {
   $r->get('stats/:pid/detail_page')                 ->to('stats#stats', stats_param_key => 'detail_page');
   $r->get('stats/:pid/chart')                       ->to('stats#chart');
 
-  $r->get('ir/stats/topdownloads')                  ->to('ir#stats_topdownloads');
-  $r->get('ir/stats/:pid')                          ->to('ir#stats');
-  $r->get('ir/stats/:pid/downloads')                ->to('ir#stats', stats_param_key => 'downloads');
-  $r->get('ir/stats/:pid/detail_page')              ->to('ir#stats', stats_param_key => 'detail_page');
-  $r->get('ir/stats/:pid/chart')                    ->to('ir#stats_chart');
-
   $r->get('directory/user/#username/data')          ->to('directory#get_user_data');
   $r->get('directory/user/#username/name')          ->to('directory#get_user_name');
   $r->get('directory/user/#username/email')         ->to('directory#get_user_email');
