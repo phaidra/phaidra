@@ -2115,7 +2115,7 @@ export default {
           // document
           return 'https://pid.phaidra.org/vocabulary/69ZZ-2KGX'
 
-        case 'video/mpeg':        
+        case 'video/mpeg':
         case 'video/avi':
         case 'video/vnd.avi':
         case 'video/mp4':
