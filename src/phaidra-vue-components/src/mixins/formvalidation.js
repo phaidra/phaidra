@@ -12,6 +12,7 @@ export const formvalidation = {
           'image/tiff',
           'image/png',
           'image/x-ms-bmp',
+          'image/bmp',
           'image/jp2',
         ],
         // text
@@ -23,6 +24,7 @@ export const formvalidation = {
         'https://pid.phaidra.org/vocabulary/B0Y6-GYT8': [
           'video/mpeg',
           'video/avi',
+          'video/vnd.avi',
           'video/x-msvideo',
           'video/mp4',
           'video/quicktime',
