@@ -139,13 +139,13 @@ services:
       - -f
       - /etc/varnish/default.vcl
       - -s
-      - Transient=malloc,1G
+      - Transient=malloc,${VARNISH_TRANSIENT_SIZE:-1G}
       - -s
-      - malloc,6G
+      - malloc,${VARNISH_CACHE_SIZE:-2G}
     deploy:
       resources:
         limits:
-          memory: 12G
+          memory: ${VARNISH_MEMORY_LIMIT:-4G}
     environment:
       <<: [*api_common_env, *hosts]
     profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3", "demo-local-dev", "demo-s3-dev", "ssl-local-dev", "ssl-s3-dev", "shib-local-dev", "shib-s3-dev"]

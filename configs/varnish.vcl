@@ -84,6 +84,9 @@ sub vcl_backend_response {
   if (beresp.http.Cache-Control ~ "(?i)no-store|private") {
     set beresp.uncacheable = true;
     set beresp.ttl = 0s;
+    set beresp.do_stream = true;
+    set beresp.do_gzip = false;
+    set beresp.do_gunzip = false;
     return (deliver);
   }
 
@@ -99,6 +102,7 @@ sub vcl_backend_response {
       set beresp.ttl = 0s;
       set beresp.do_stream = true;
       set beresp.do_gzip = false;
+      set beresp.do_gunzip = false;
       return (deliver);
     }
 
@@ -108,6 +112,9 @@ sub vcl_backend_response {
         && std.integer(beresp.http.Content-Length, 0) > 1048576) {
       set beresp.uncacheable = true;
       set beresp.ttl = 0s;
+      set beresp.do_stream = true;
+      set beresp.do_gzip = false;
+      set beresp.do_gunzip = false;
       return (deliver);
     }
 
@@ -119,6 +126,9 @@ sub vcl_backend_response {
       if (beresp.http.Set-Cookie) {
         set beresp.uncacheable = true;
         set beresp.ttl = 0s;
+        set beresp.do_stream = true;
+        set beresp.do_gzip = false;
+        set beresp.do_gunzip = false;
         return (deliver);
       }
     }
@@ -157,6 +167,8 @@ sub vcl_backend_response {
     set beresp.ttl = 0s;
     set beresp.do_stream = true;
     set beresp.do_gzip = false;
+    set beresp.do_gunzip = false;
+
     return (deliver);
   }
 }
