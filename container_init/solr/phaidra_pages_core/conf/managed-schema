@@ -132,6 +132,7 @@
   <field name="dcterms_available" type="date" indexed="true" stored="true"/>
   <field name="dcterms_created_year" type="tlongs"/>
   <field name="dcterms_created_year_sort" type="tlongs" multiValued="false" indexed="true"/>
+  <field name="dcterms_created_edtf" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="dcterms_datesubmitted" type="date" indexed="true" stored="true"/>
   <field name="dcterms_subject_id" type="strings"/>
   <field name="descriptions_json" type="text_general" indexed="false" stored="true"/>

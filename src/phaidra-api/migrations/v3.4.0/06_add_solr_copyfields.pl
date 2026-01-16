@@ -49,6 +49,7 @@ my @FIELDS = qw(
   dcterms_available
   dcterms_created_year
   dcterms_created_year_sort
+  dcterms_created_edtf
   dcterms_datesubmitted
   dcterms_subject_id
   descriptions_json
