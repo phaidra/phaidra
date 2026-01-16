@@ -175,6 +175,7 @@ sub vcl_backend_response {
 
 sub vcl_pipe {
   if (req.http.Upgrade) {
-    set bereq.http.Connection = "upgrade";
+    set bereq.http.upgrade = req.http.upgrade;
+    set bereq.http.connection = req.http.connection;
   }
 }
