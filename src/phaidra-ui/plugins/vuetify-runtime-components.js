@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { VRow, VCol, VImg, VCard, VCardTitle, VCardText, VDivider, VBtn, VIcon, VList, VListItem, VListItemTitle, VListItemSubtitle, VListItemContent, VCarousel, VCarouselItem, VTabs, VTab, VTabsItems, VTabItem, VSwitch } from 'vuetify/lib'
+import { VRow, VCol, VImg, VCard, VCardTitle, VCardText, VDivider, VBtn, VIcon, VList, VListItem, VListItemTitle, VListItemSubtitle, VListItemContent, VCarousel, VCarouselItem, VTabs, VTab, VTabsItems, VTabItem, VSwitch, VSimpleTable } from 'vuetify/lib'
 
 Vue.component('v-row', VRow)
 Vue.component('v-col', VCol)
@@ -22,3 +22,4 @@ Vue.component('v-tab', VTab)
 Vue.component('v-tabs-items', VTabsItems)
 Vue.component('v-tab-item', VTabItem)
 Vue.component('v-switch', VSwitch)
+Vue.component('v-simple-table', VSimpleTable)
