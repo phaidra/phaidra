@@ -10,7 +10,7 @@ sub get_viewer_config {
   my ($self, $c, $pid) = @_;
   
   my $job = $c->paf_mongo->get_collection('jobs')->find_one(
-    { pid => $pid, agent => '360viewer' },
+    { pid => $pid, agent => 'unzip' },
     {},
     { sort => { created => -1 } }
   );
@@ -32,7 +32,7 @@ sub get_frame_path {
   my ($self, $c, $pid, $frame_number) = @_;
   
   my $job = $c->paf_mongo->get_collection('jobs')->find_one(
-    { pid => $pid, agent => '360viewer' },
+    { pid => $pid, agent => 'unzip' },
     {},
     { sort => { created => -1 } }
   );
@@ -46,7 +46,7 @@ sub get_frame_path {
   my $idhash = $job->{idhash};
   
   my $filepath = File::Spec->catfile(
-    '/mnt/converted_360',
+    '/mnt/derivates-expanded',
     substr($idhash, 0, 1),
     substr($idhash, 1, 1),
     $idhash,

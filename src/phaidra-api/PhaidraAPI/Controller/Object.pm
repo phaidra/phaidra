@@ -779,7 +779,7 @@ sub preview {
       }
       my $viewer360_job;
       if (exists($self->app->config->{paf_mongodb})) {
-        $viewer360_job = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => '360viewer'});
+        $viewer360_job = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'unzip'});
       }
       
       if ($viewer360_job) {
