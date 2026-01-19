@@ -325,7 +325,7 @@ services:
     
   ############### solr ###############
   solr:
-    image: phaidraorg/solr-dist:16284734
+    image: phaidraorg/solr-dist:5f4fdef9
     <<: [*common, *logs]
     volumes:
       - solr:/var/solr
@@ -358,7 +358,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:3d18b299
+    image: phaidraorg/ui:015fa1fc
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -376,7 +376,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:3d18b299
+    image: phaidraorg/ui:015fa1fc
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -444,7 +444,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:80a4f553
+    image: phaidraorg/api-dist:5f4fdef9
     <<: [*common, *logs]
     volumes:
       - s3-cache:/s3-cache
@@ -458,7 +458,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:80a4f553
+    image: phaidraorg/api-dist:5f4fdef9
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
