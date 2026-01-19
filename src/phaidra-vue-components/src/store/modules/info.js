@@ -2957,10 +2957,11 @@ export const state = () => ({
 })
 
 const mutations = {
-  sortFieldsOverview (state, locale) {
-    i18n.locale = locale
+  sortFieldsOverview (state, {locale, i18nInstance}) {
+    const i18nToUse = i18nInstance || i18n
+    i18nToUse.locale = locale
     for (let section of state.metadataFieldsOverview) {
-      section.fields.sort((a, b) => i18n.t(a.title).localeCompare(i18n.t(b.title), locale))
+      section.fields.sort((a, b) => i18nToUse.t(a.title).localeCompare(i18nToUse.t(b.title), locale))
     }
   },
   initFieldsOverview (state) {
@@ -2980,8 +2981,10 @@ const mutations = {
 }
 
 const actions = {
-  sortFieldsOverview ({ commit, state }, locale) {
-    commit('sortFieldsOverview', locale)
+  sortFieldsOverview ({ commit, state }, payload) {
+    // Handle both old format (just locale) and new format ({locale, i18nInstance})
+    const params = typeof payload === 'string' ? { locale: payload } : payload
+    commit('sortFieldsOverview', params)
   }
 }
 
