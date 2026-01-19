@@ -39,20 +39,22 @@
             // Filter out Mac OS metadata files
             const actualFrames = viewerConfig.frames.filter(f => !f.startsWith('._'));
             const totalFrames = actualFrames.length;
-            
-            // Set first image
-            const firstFrameUrl = `${baseUrl}/object/${pid}/360_frames/${encodeURIComponent(actualFrames[0])}`;
-            document.getElementById('jsv-image').src = firstFrameUrl;
-            
-            // Build image URL pattern
+
+            if (totalFrames === 0) {
+                return;
+            }
+
             const imageBasePath = `${baseUrl}/object/${pid}/360_frames/`;
-            const imageUrlFormat = imageBasePath + actualFrames[0].replace(/\d+/g, 'xx');
+            const frameUrls = actualFrames.map(name => `${imageBasePath}${encodeURIComponent(name)}`);
+
+            // Set first image
+            document.getElementById('jsv-image').src = frameUrls[0];
             
-            // Initialize viewer
+            // Initialize viewer with explicit URLs
             const viewer = new JavascriptViewer({
                 mainHolderId: 'jsv-holder', 
                 mainImageId: 'jsv-image',
-                imageUrlFormat: imageUrlFormat,
+                imageUrls: frameUrls,
                 totalFrames: totalFrames,
                 speed: 70,
                 defaultProgressBar: true

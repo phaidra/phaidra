@@ -382,13 +382,13 @@ sub modify_hook {
           push @{$res->{alerts}}, @{$threedr->{alerts}} if scalar @{$threedr->{alerts}} > 0;
         }
       }
-      my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => '360viewer'});
+      my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'unzip'});
       if ($find && $find->{pid} && !$find->{path} && $c->app->config->{fedora}->{version} >= 6) {
         my $fedora_model = PhaidraAPI::Model::Fedora->new;
         my $dsAttr = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
         if ($dsAttr->{status} eq 200) {
           $c->paf_mongo->get_collection('jobs')->update_one(
-            {pid => $pid, agent => '360viewer'},
+            {pid => $pid, agent => 'unzip'},
             {'$set' => {path => $dsAttr->{path}}}
           );
         }
@@ -552,7 +552,7 @@ sub _create_360viewer_job_if_not_exists {
 
   my $res = {alerts => [], status => 200};
 
-  my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => '360viewer'});
+  my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'unzip'});
   unless ($find->{pid}) {    
     my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
     my $path;
@@ -568,7 +568,7 @@ sub _create_360viewer_job_if_not_exists {
     my $job = {
       pid => $pid,
       cmodel => $cmodel,
-      agent => "360viewer",
+      agent => "unzip",
       status => "new",
       idhash => $hash,
       created => time,

@@ -124,7 +124,7 @@ sub get_frame_by_name {
   }
 
   my $idhash = $config->{idhash};
-  my $base_dir = File::Spec->catfile('/mnt/converted_360', substr($idhash, 0, 1), substr($idhash, 1, 1), $idhash);
+  my $base_dir = File::Spec->catfile('/mnt/derivates-expanded', substr($idhash, 0, 1), substr($idhash, 1, 1), $idhash);
   my $filepath = File::Spec->catfile($base_dir, $filename);
 
   # Check if file exists first
