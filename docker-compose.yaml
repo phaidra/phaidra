@@ -142,6 +142,12 @@ services:
       - Transient=malloc,${VARNISH_TRANSIENT_SIZE:-1G}
       - -s
       - malloc,${VARNISH_CACHE_SIZE:-2G}
+      - -p
+      # otherwise varnish tries to preload the whole content into storage
+      - transit_buffer=${VARNISH_TRANSIT_SIZE:-128K}
+      - -p
+      # approximation: allows download of 30G with currently set max speed in httpd (1024K): (30G*1024M)s
+      - send_timeout=${VARNISH_SEND_TIMEOUT:-30750s}
     deploy:
       resources:
         limits:
