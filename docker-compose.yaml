@@ -1223,8 +1223,6 @@ services:
     volumes:
       - "./camel-toolbox-config:/config"
       - "./scripts/fixity_handler.sh:/usr/local/bin/fixity_handler.sh"
-    ports:
-      - "9080:9080"
     command:
       - -c
       - "/config/configuration.properties"
