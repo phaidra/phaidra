@@ -349,6 +349,18 @@ const fields = [
     definition: 'Languages in which subtitles/captions are available.'
   },
   {
+    id: 'available-language',
+    fieldname: 'Available language',
+    predicate: 'schema:availableLanguage',
+    component: 'p-select',
+    vocabulary: 'lang',
+    multiplicable: true,
+    label: 'Available language',
+    value: '',
+    errorMessages: [],
+    definition: 'An additional available language someone may use with audio and video resources.'
+  },
+  {
     id: 'role',
     fieldname: 'Role',
     predicate: 'role',
@@ -1610,6 +1622,7 @@ const predicateOrder = [
 
   'dcterms:language',
   'schema:subtitleLanguage',
+  'schema:availableLanguage',
   'dce:subject',
   'dcterms:subject',
 

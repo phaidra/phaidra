@@ -666,6 +666,7 @@
     "PDFDocument": "Text (PDF)",
     "Audio": "Sound",
     "Picture": "Image",
-    "Asset": "Data"
+    "Asset": "Data",
+    "schema:availableLanguage": "Available language"
   }
   

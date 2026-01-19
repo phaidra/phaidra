@@ -821,6 +821,7 @@
   "dcterms:subject": "Soggetto",
   "dcterms:language": "Lingua",
   "schema:subtitleLanguage": "Lingua dei sottotitoli",
+  "schema:availableLanguage": "Lingua disponibile",
   "edm:hasType": "Tipo",
   "bf:physicalLocation": "Posizione fisica",
   "bf:shelfMark": "Segnatura",
