@@ -124,6 +124,16 @@ export default {
   watch: {
     selected (val) {
       (val !== null) && this.resolve(this.items[val])
+    },
+    value (newVal, oldVal) {
+      if (!newVal) {
+        this.clearState()
+      } else if (oldVal && newVal !== oldVal) {
+        this.clearState()
+        if (newVal) {
+          this.initializeFromValue()
+        }
+      }
     }
   },
   data () {
@@ -139,11 +149,28 @@ export default {
     }
   },
   methods: {
+    clearState: function () {
+      this.q = null
+      this.preflabel = []
+      this.rdfslabel = []
+      this.resolved = ''
+      this.selected = null
+      this.items = []
+      this.showItems = false
+    },
+    initializeFromValue: async function () {
+      if (this.value) {
+        let term = await this.getTerm(this.value)
+        if (term) {
+          this.resolve(term)
+        }
+      }
+    },
     resolve: async function (selectedItem) {
       if (selectedItem) {
         this.$emit('input', selectedItem.uri)
         this.q = selectedItem.notation[0] + ' ' + selectedItem.prefLabel?.de
-        this.preflabel.push({ '@value': selectedItem.notation[0] + ' ' + selectedItem.prefLabel?.de, '@language': 'deu' })
+        this.preflabel = [{ '@value': selectedItem.notation[0] + ' ' + selectedItem.prefLabel?.de, '@language': 'deu' }]
         let path = selectedItem.prefLabel?.de
         this.resolved = '<a href="' + selectedItem.uri + '" target="_blank">' + selectedItem.notation[0] + ' ' + selectedItem.prefLabel?.de + '</a>'
         if (selectedItem.ancestors) {
@@ -152,10 +179,11 @@ export default {
             this.resolved = '<a href="' + anc.uri + '" target="_blank">' + anc.prefLabel?.de + '</a>' + ' -- ' + this.resolved
           }
         }
-        this.rdfslabel.push({ '@value': path, '@language': 'deu' })
+        this.rdfslabel = [{ '@value': path, '@language': 'deu' }]
         this.$emit('resolve', { 'skos:prefLabel': this.preflabel, 'rdfs:label': this.rdfslabel, 'skos:notation': selectedItem.notation[0] })
         this.showItems = false
       } else {
+        this.clearState()
         this.$emit('input', null)
       }
     },
@@ -202,11 +230,13 @@ export default {
     }
   },
   mounted: async function () {
-    if (this.initquery) {
-      //this.items = [{ value: this.value, text: this.initquery }]
-      //this.q = { value: this.value, text: this.initquery }
+    if (this.value && this.initquery) {
       let term = await this.getTerm(this.value)
-      this.resolve(term)
+      if (term) {
+        this.resolve(term)
+      }
+    } else if (this.value && !this.initquery) {
+      this.initializeFromValue()
     }
   }
 }

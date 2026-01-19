@@ -1739,6 +1739,23 @@ export default {
       } else if (newField.groupMandatory === undefined && newField.mandatory === undefined) {
       }
     },
+    clearSubjectFields: function (newField) {
+      if (newField.hasOwnProperty('skos:prefLabel')) {
+        newField['skos:prefLabel'] = []
+      }
+      if (newField.hasOwnProperty('rdfs:label')) {
+        newField['rdfs:label'] = []
+      }
+      if (newField.hasOwnProperty('value') && newField.type === 'skos:Concept') {
+        newField.value = ''
+      }
+      if (newField.hasOwnProperty('initquery')) {
+        newField.initquery = ''
+      }
+      if (newField.hasOwnProperty('loadedpreflabel')) {
+        newField.loadedpreflabel = ''
+      }
+    },
     addField: function (arr, f) {
       var newField = arrays.duplicate(arr, f)
       if (newField) {
@@ -1747,6 +1764,7 @@ export default {
         newField.lastname = ''
         newField.identifierText = ''
         newField.removable = true
+        this.clearSubjectFields(newField)
         this.preserveSchemaMetadata(f, newField)
         this.applyRequiredLogicToDuplicate(newField)
       }
