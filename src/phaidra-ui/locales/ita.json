@@ -251,7 +251,7 @@
   "dcterms:dateSubmitted": "Data di presentazione",
   "phaidra:dateAccessioned": "Data di registrazione",
   "phaidra:dateApprobation": "Data di approvazione",
-  "dce:rights": "Diritti",
+  "dce:rights": "Descrizione dei diritti",
   "oaire:version": "Tipo di versione",
   "dcterms:accessRights": "Diritti di accesso",
   "rdau:P60101": "Contenuto in",
