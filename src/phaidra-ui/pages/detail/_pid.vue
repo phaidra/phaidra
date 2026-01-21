@@ -806,6 +806,9 @@
                             v-for="(id, i) in identifiers.persistent"
                             :key="'id' + i"
                           >
+                            <span v-if="id.label" class="caption font-weight-bold">
+                              {{ $t(id.label) }}
+                            </span>
                             <v-dialog
                               @input="loadCitationStyles()"
                               v-if="id.label === 'DOI'"
@@ -874,9 +877,6 @@
                                 </v-card-actions>
                               </v-card>
                             </v-dialog>
-                            <span v-if="id.label" class="caption font-weight-bold">
-                              {{ $t(id.label) }}
-                            </span>
                             <br />
                             <a :href="id.value">{{ id.value }}</a>
                           </p>
