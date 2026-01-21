@@ -63,30 +63,8 @@ sub add_or_modify_datastream_hooks {
         my $res_cmodel = $search_model->get_cmodel($c, $pid);
         if ($res_cmodel->{status} eq 200) {
           if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
-            my $mimetype;
-            if ($c->app->config->{fedora}->{version} >= 6) {
-              my $fedora_model = PhaidraAPI::Model::Fedora->new;
-              my $dsAttr = $fedora_model->getDatastreamAttributes($c, $pid, 'OCTETS');
-              if ($dsAttr->{status} eq 200) {
-                $mimetype = $dsAttr->{mimetype};
-              }
-            } else {
-              my $object_model = PhaidraAPI::Model::Object->new;
-              my $r_oxml = $object_model->get_foxml($c, $pid);
-              if ($r_oxml->{status} eq 200) {
-                my $foxmldom = Mojo::DOM->new();
-                $foxmldom->xml(1);
-                $foxmldom->parse($r_oxml->{foxml});
-                my $octets_model = PhaidraAPI::Model::Octets->new;
-                (undef, $mimetype, undef) = $octets_model->_get_ds_attributes($c, $pid, 'OCTETS', $foxmldom);
-              }
-            }
-            unless ($mimetype && $mimetype eq 'image/gif') {
-              my $imsr = $self->_create_imageserver_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
-              push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
-            } else {
-              $c->app->log->info("Skipping imageserver job for GIF pid[$pid]");
-            }
+            my $imsr = $self->_create_imageserver_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
+            push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
           }
           if ($res_cmodel->{cmodel} eq 'PDFDocument') {
             # New data uploaded - create new Tika extraction job
@@ -296,12 +274,8 @@ sub add_octets_hook {
 
     if ($res_cmodel->{status} eq 200) {
       if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
-        unless ($mimetype && $mimetype eq 'image/gif') {
-          my $imsr = $self->_create_imageserver_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
-          push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
-        } else {
-          $c->app->log->info("Skipping imageserver job for GIF pid[$pid]");
-        }
+        my $imsr = $self->_create_imageserver_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
+        push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
       }
       if ($res_cmodel->{cmodel} eq 'Video') {
         my $vsr = $self->_create_streaming_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
@@ -369,31 +343,9 @@ sub modify_hook {
         }
       }
       if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
-        my $mimetype;
-        if ($c->app->config->{fedora}->{version} >= 6) {
-          my $fedora_model = PhaidraAPI::Model::Fedora->new;
-          my $dsAttr = $fedora_model->getDatastreamAttributes($c, $pid, 'OCTETS');
-          if ($dsAttr->{status} eq 200) {
-            $mimetype = $dsAttr->{mimetype};
-          }
-        } else {
-          my $object_model = PhaidraAPI::Model::Object->new;
-          my $r_oxml = $object_model->get_foxml($c, $pid);
-          if ($r_oxml->{status} eq 200) {
-            my $foxmldom = Mojo::DOM->new();
-            $foxmldom->xml(1);
-            $foxmldom->parse($r_oxml->{foxml});
-            my $octets_model = PhaidraAPI::Model::Octets->new;
-            (undef, $mimetype, undef) = $octets_model->_get_ds_attributes($c, $pid, 'OCTETS', $foxmldom);
-          }
-        }
-        unless ($mimetype && $mimetype eq 'image/gif') {
-          my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
-          my $imsr = $imgsrv_model->create_imageserver_job($c, $pid, $res_cmodel->{cmodel}, undef, undef);
-          push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
-        } else {
-          $c->app->log->info("Skipping imageserver job for GIF pid[$pid]");
-        }
+        my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
+        my $imsr = $imgsrv_model->create_imageserver_job($c, $pid, $res_cmodel->{cmodel}, undef, undef);
+        push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
         if($res_cmodel->{cmodel} eq 'PDFDocument') {
           my $pdf_extraction_job = $self->_create_pdf_extraction_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
           push @{$res->{alerts}}, @{$pdf_extraction_job->{alerts}} if scalar @{$pdf_extraction_job->{alerts}} > 0;

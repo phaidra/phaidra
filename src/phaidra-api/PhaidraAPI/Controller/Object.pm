@@ -275,32 +275,6 @@ sub thumbnail {
 
   switch ($cmodelr->{cmodel}) {
     case ['Picture', 'Page', 'PDFDocument'] {
-      my $mimetype;
-      if ($self->app->config->{fedora}->{version} >= 6) {
-        my $fedora_model = PhaidraAPI::Model::Fedora->new;
-        my $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
-        if ($dsAttr->{status} eq 200) {
-          $mimetype = $dsAttr->{mimetype};
-        }
-      } else {
-        my $object_model = PhaidraAPI::Model::Object->new;
-        my $r_oxml = $object_model->get_foxml($self, $pid);
-        if ($r_oxml->{status} eq 200) {
-          my $foxmldom = Mojo::DOM->new();
-          $foxmldom->xml(1);
-          $foxmldom->parse($r_oxml->{foxml});
-          my $octets_model = PhaidraAPI::Model::Octets->new;
-          (undef, $mimetype, undef) = $octets_model->_get_ds_attributes($self, $pid, 'OCTETS', $foxmldom);
-        }
-      }
-      
-      if ($mimetype && $mimetype eq 'image/gif') {
-        $self->app->log->info("Thumbnail for GIF pid[$pid] - proxying OCTETS directly");
-        my $object_model = PhaidraAPI::Model::Object->new;
-        $object_model->proxy_datastream($self, $pid, 'OCTETS', $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
-        return;
-      }
-      
       if ( defined $ENV{S3_ENABLED} and $ENV{S3_ENABLED} eq "true" ) {
         my $paf_mongo = $self->paf_mongo;
         my $s3_cache = PhaidraAPI::S3::Cache->new(paf_mongodb=>$paf_mongo,
@@ -610,22 +584,6 @@ sub preview {
 
   switch ($cmodel) {
     case ['Picture', 'Page'] {
-      if ($mimetype eq 'image/gif') {
-        $self->app->log->info("Skipping imageserver job for GIF pid[$pid] cm[$cmodel] - displaying directly");
-        
-        $self->stash(baseurl  => $self->config->{baseurl});
-        $self->stash(scheme   => $self->config->{scheme});
-        $self->stash(basepath => $self->config->{basepath});
-        $self->stash(pid      => $pid);
-
-        my $u_model = PhaidraAPI::Model::Util->new;
-        $self->app->log->info("pid[$pid] tracking preview for GIF");
-        $u_model->track_action($self, $pid, 'preview');
-
-        $self->render(template => 'utils/gifviewer', format => 'html');
-        return;
-      }
-      
       my $imgsrvjobstatus = $self->imageserver_job_status($pid);
       unless ($imgsrvjobstatus) {
         $self->app->log->info("Imageserver job not found: creating imageserver job pid[$pid] cm[$cmodel]");

@@ -159,8 +159,19 @@ sub process_job_queue
 
         my $rc= process_image ($job->{pid}, $job->{idhash}, $job->{ds}, $job->{cmodel}, $job->{path});
 
-        if (!defined ($rc)) {
+        if (!defined ($rc) || (ref($rc) eq 'HASH' && exists($rc->{'error_message'}))) {
           $job->{'status'}= 'failed';
+          if (defined($rc) && ref($rc) eq 'HASH' && exists($rc->{'error_message'})) {
+            $job->{'error_message'}= $rc->{'error_message'};
+            # Store additional debug info if available
+            $job->{'gifload_output'}= $rc->{'gifload_output'} if exists($rc->{'gifload_output'});
+            $job->{'tr_output'}= $rc->{'tr_output'} if exists($rc->{'tr_output'});
+            $job->{'copy_output'}= $rc->{'copy_output'} if exists($rc->{'copy_output'});
+            $job->{'cast_output'}= $rc->{'cast_output'} if exists($rc->{'cast_output'});
+            $job->{'vips_output'}= $rc->{'vips_output'} if exists($rc->{'vips_output'});
+          } else {
+            $job->{'error_message'}= 'Unknown error during image processing';
+          }
         } else {
           $job->{'status'}= 'finished';
           foreach my $an (keys %$rc) {
@@ -254,8 +265,9 @@ sub process_image
 
         unless (-f $tmp_img)
           {
-            print scalar localtime(), " ", "ATTN: could not retrieve [$url] and save to [$tmp_img]\n";
-            return undef;
+            my $error_msg = "Could not retrieve image from Fedora: $url";
+            print scalar localtime(), " ", "ATTN: $error_msg\n";
+            return { 'error_message' => $error_msg };
           }
 
         print scalar localtime(), " retrieved: ", "$tmp_img\n";
@@ -284,8 +296,9 @@ sub process_image
 
       unless (-f $cast_img)
         {
-          print scalar localtime(), " ", "ATTN: could not save [$cast_img] using copy=[$cast]\n";
-          return undef;
+          my $error_msg = "Could not save cast image using copy: $cast_txt";
+          print scalar localtime(), " ", "ATTN: $error_msg\n";
+          return { 'error_message' => $error_msg, 'cast_output' => $cast_txt };
         }
 
 
@@ -299,8 +312,9 @@ sub process_image
 
       unless (-f $out_img)
         {
-          print scalar localtime(), " ", "ATTN: could not save [$out_img] using vips=[$vips]\n";
-          return undef;
+          my $error_msg = "Could not save output TIFF using im_vips2tiff: $vips_txt";
+          print scalar localtime(), " ", "ATTN: $error_msg\n";
+          return { 'error_message' => $error_msg, 'vips_output' => $vips_txt };
         }
       my @out_st= stat(_);
       # TODO: check ....
@@ -325,8 +339,9 @@ sub process_image
         @tr_lines= x_lines ($tr_txt);
         unless (-f $tr_img)
           {
-            print scalar localtime(), " ", "ATTN: could not save [$tr_img] using tr=[$tr]\n";
-            return undef;
+            my $error_msg = "Could not save transformed image using icc_transform: $tr_txt";
+            print scalar localtime(), " ", "ATTN: $error_msg\n";
+            return { 'error_message' => $error_msg, 'tr_output' => $tr_txt };
           }
       }
 
@@ -341,8 +356,9 @@ sub process_image
 
       unless (-f $cast_img)
         {
-          print scalar localtime(), " ", "ATTN: could not save [$cast_img] using cast=[$cast]\n";
-          return undef;
+          my $error_msg = "Could not save cast image using im_msb: $cast_txt";
+          print scalar localtime(), " ", "ATTN: $error_msg\n";
+          return { 'error_message' => $error_msg, 'cast_output' => $cast_txt };
         }
 
 
@@ -356,8 +372,9 @@ sub process_image
 
       unless (-f $out_img)
         {
-          print scalar localtime(), " ", "ATTN: could not save [$out_img] using vips=[$vips]\n";
-          return undef;
+          my $error_msg = "Could not save output TIFF using im_vips2tiff: $vips_txt";
+          print scalar localtime(), " ", "ATTN: $error_msg\n";
+          return { 'error_message' => $error_msg, 'vips_output' => $vips_txt };
         }
       my @out_st= stat(_);
       # TODO: check ....
