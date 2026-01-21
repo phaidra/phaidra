@@ -88,6 +88,7 @@ x-custom:
     MARIADB_FEDORA_HOST: "${MARIADB_FEDORA_HOST:-mariadb-fedora}"
     MARIADB_FEDORA_USER: "${MARIADB_FEDORA_USER:-phaidra}"
     MARIADB_FEDORA_PASSWORD: "${MARIADB_FEDORA_PASSWORD:-phaidra}"
+    PHAIDRA_API_WORKER: "${PHAIDRA_API_WORKER:-16}"
 
   configs: &configs
     configs:
