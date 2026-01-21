@@ -49,14 +49,6 @@ RUN curl -L -o /tmp/vips.tar.gz https://github.com/libvips/libvips/archive/refs/
  && cd / \
  && rm -rf /tmp/libvips-8.18.0 /tmp/vips.tar.gz
 
-# wget https://github.com/libvips/libvips/releases/download/v8.18.0/vips-8.18.0.tar.xz
-# tar xf vips-8.13.3.tar.gz
-# cd vips-8.13.3
-# meson setup build --libdir=lib --buildtype=release -Dintrospection=false
-# cd build
-# meson compile
-# meson test
-# sudo meson install
 
 RUN mkdir -pv /opt/agent-libvips
 WORKDIR /opt/agent-libvips
