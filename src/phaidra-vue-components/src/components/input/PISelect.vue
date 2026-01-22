@@ -72,6 +72,15 @@
         </v-col>
       </v-row>
     </v-slide-y-transition>
+    <v-slide-y-transition hide-on-leave>
+      <v-row no-gutters v-show="showDisclaimer && isMITLicense" :class=" hint ? 'mt-2 mb-6' : 'mb-6'">
+        <v-col cols="10">
+          <v-row class="px-4">
+            <p v-html="$t('LICENSE_DISCLAIMER_MIT', { institution: $t($store.state.instanceconfig.institution) })"></p>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-slide-y-transition>
   </v-col>
 </template>
 
@@ -132,7 +141,10 @@ export default {
       return []
     },
     isCCLicense: function () {
-      return this.value?.startsWith('http://creativecommons.org/licenses') || this.value?.startsWith('https://opensource.org/license')
+      return this.value?.startsWith('http://creativecommons.org/licenses') || this.value?.startsWith('https://creativecommons.org/licenses')
+    },
+    isMITLicense: function () {
+      return this.value?.startsWith('https://opensource.org/license')
     }
   },
   data () {
