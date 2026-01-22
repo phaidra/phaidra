@@ -339,7 +339,7 @@
                       v-model="parsedPublicConfigData.disableChecksum"
                     ></v-checkbox>
                   </v-col>
-                  <v-col cols="6" class="mt-4">{{ $t("Disable Add checksum button in Upload form.") }}</v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Disable Add file checksum button in Upload form.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>

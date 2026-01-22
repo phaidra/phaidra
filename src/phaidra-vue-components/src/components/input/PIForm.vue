@@ -903,7 +903,7 @@
           class="grey mr-2 float-right"
           @click="checksumDialog = true"
         >
-          <span v-t="'Add checksum'"></span>
+          <span v-t="'Add file checksum'"></span>
         </v-btn>
       </v-tab-item>
       <v-tab-item v-if="help" class="pa-4">
@@ -919,7 +919,7 @@
     <v-dialog v-model="checksumDialog" max-width="500px">
       <v-card>
         <v-card-title class="title font-weight-light white--text">
-          <span v-t="'Add checksum'"></span>
+          <span v-t="'Add file checksum'"></span>
         </v-card-title>
         <v-card-text>
           <v-container>
