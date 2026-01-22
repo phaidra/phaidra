@@ -6,6 +6,7 @@ use v5.10;
 use utf8;
 use base qw/Mojo::Base/;
 use JSON;
+use Mojo::URL;
 use PhaidraAPI::Model::Index;
 use PhaidraAPI::Model::Object;
 
@@ -461,8 +462,74 @@ sub get_updated_manifest {
 
     $self->_update_manifest_metadata($c, $pid, $index, $manifest);
 
+    $self->_replace_instance_urls($c, $manifest);
+
     $res->{manifest} = $manifest;
     return $res;
+  }
+}
+
+sub _replace_instance_urls {
+  my ($self, $c, $data) = @_;
+
+  my $current_base_url = $c->app->config->{scheme} . '://' . $c->app->config->{baseurl};
+  
+  my @api_patterns = qw(/object/ /imageserver /iiif/ /search/);
+  
+  if (ref($data) eq 'HASH') {
+    for my $key (keys %{$data}) {
+      if (ref($data->{$key}) eq 'HASH' || ref($data->{$key}) eq 'ARRAY') {
+        $self->_replace_instance_urls($c, $data->{$key});
+      } elsif (ref($data->{$key}) eq '') {
+        my $value = $data->{$key};
+        if (defined($value) && $value =~ /^https?:\/\//) {
+          for my $pattern (@api_patterns) {
+            if ($value =~ /$pattern/) {
+              eval {
+                my $url = Mojo::URL->new($value);
+                my $path_query = $url->path;
+                $path_query .= '?' . $url->query->to_string if $url->query->to_string;
+                $data->{$key} = $current_base_url . $path_query;
+              };
+              if ($@) {
+                if ($value =~ /^https?:\/\/[^\/]+(\/.*)$/) {
+                  my $path = $1;
+                  $data->{$key} = $current_base_url . $path;
+                }
+              }
+              last;
+            }
+          }
+        }
+      }
+    }
+  } elsif (ref($data) eq 'ARRAY') {
+    for my $i (0 .. $#{$data}) {
+      my $item = $data->[$i];
+      if (ref($item) eq 'HASH' || ref($item) eq 'ARRAY') {
+        $self->_replace_instance_urls($c, $item);
+      } elsif (ref($item) eq '') {
+        if (defined($item) && $item =~ /^https?:\/\//) {
+          for my $pattern (@api_patterns) {
+            if ($item =~ /$pattern/) {
+              eval {
+                my $url = Mojo::URL->new($item);
+                my $path_query = $url->path;
+                $path_query .= '?' . $url->query->to_string if $url->query->to_string;
+                $data->[$i] = $current_base_url . $path_query;
+              };
+              if ($@) {
+                if ($item =~ /^https?:\/\/[^\/]+(\/.*)$/) {
+                  my $path = $1;
+                  $data->[$i] = $current_base_url . $path;
+                }
+              }
+              last;
+            }
+          }
+        }
+      }
+    }
   }
 }
 
