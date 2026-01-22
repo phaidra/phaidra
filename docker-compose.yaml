@@ -402,7 +402,7 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/ui-dev.dockerfile
-    command: ["pm2-runtime", "start", "ecosystem.config.js"]
+    command: "npm run dev"
     environment:
       <<: [*api_common_env, *hosts]
       PHAIDRA_DEFAULT_THEME: "${PHAIDRA_DEFAULT_THEME:-light}"

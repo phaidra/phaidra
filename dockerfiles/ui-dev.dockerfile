@@ -21,5 +21,4 @@ RUN <<EOF
 npm i -g pm2@latest
 npm install
 npm install /usr/local/phaidra/phaidra-vue-components
-npm run build
 EOF
