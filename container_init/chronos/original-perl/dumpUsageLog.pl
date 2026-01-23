@@ -6,15 +6,16 @@ use DBI;
 use POSIX qw(strftime);
 
 # Configuration
-my $dsn = "dbi:mysql:phaidradb:".$ENV{MARIADB_PHAIDRA_HOST};
-my $username = $ENV{MARIADB_PHAIDRA_USER};
-my $password = $ENV{MARIADB_PHAIDRA_PASSWORD};
 my $dump_dir = '/mnt/database-dumps';
+my $db_name = 'phaidradb';
+my $table_name = 'usage_log';
 
-# Connect to the database
-print "connecting to database\n";
-my $dbh = DBI->connect($dsn, $username, $password, { RaiseError => 1, AutoCommit => 0 })
-    or die $DBI::errstr;
+# Helper function to safely quote shell arguments
+sub shell_quote {
+    my ($arg) = @_;
+    $arg =~ s/'/'\\''/g;
+    return "'$arg'";
+}
 
 my ($sec, $min, $hour, $mday, $mon, $year) = localtime();
 my $current_year = $year + 1900;
@@ -23,7 +24,6 @@ my $current_month = $mon + 1;  # Perl months are 0-11
 # Only run on the 1st of the month
 if ($mday != 1) {
     print "Not the 1st of the month. Exiting.\n";
-    $dbh->disconnect();
     exit 0;
 }
 
@@ -51,20 +51,26 @@ print "Dump file: $dump_path_gz\n";
 # Check if dump already exists
 if (-f $dump_path_gz) {
     print "WARNING: Dump file $dump_path_gz already exists. Skipping to avoid overwriting.\n";
-    $dbh->disconnect();
     exit 0;
 }
 
+my $dsn = "dbi:mysql:${db_name}:".$ENV{MARIADB_PHAIDRA_HOST};
+my $username = $ENV{MARIADB_PHAIDRA_USER};
+my $password = $ENV{MARIADB_PHAIDRA_PASSWORD};
+my $dbh = DBI->connect($dsn, $username, $password, { RaiseError => 1, AutoCommit => 0 })
+    or die $DBI::errstr;
+
 # Count how many records will be dumped
 my ($count) = $dbh->selectrow_array(
-    'SELECT COUNT(*) FROM usage_log WHERE created < ?',
+    "SELECT COUNT(*) FROM $table_name WHERE created < ?",
     undef, $cutoff_date
 );
 print "Found $count records to dump\n";
 
+$dbh->disconnect();
+
 if ($count == 0) {
     print "No records to dump. Exiting.\n";
-    $dbh->disconnect();
     exit 0;
 }
 
@@ -73,82 +79,27 @@ unless (-d $dump_dir) {
     die "Dump directory $dump_dir does not exist\n";
 }
 
-# Dump the records to SQL file
-print "Dumping records to $dump_path...\n";
+# Use mariadb-dump to create the dump
+print "Dumping records using mariadb-dump...\n";
 
-# Open output file
-open(my $out_fh, '>', $dump_path) or die "Cannot open $dump_path: $!\n";
+# Escape the cutoff date for the WHERE clause (already safe as it's a formatted date)
+my $where_clause = "created < '$cutoff_date'";
 
-# Write SQL header
-print $out_fh "-- usage_log dump for $dump_year-$dump_month\n";
-print $out_fh "-- Dumped on " . strftime("%Y-%m-%d %H:%M:%S", localtime()) . "\n";
-print $out_fh "-- Cutoff date: $cutoff_date\n";
-print $out_fh "-- Total records: $count\n\n";
-print $out_fh "SET NAMES utf8mb4;\n";
-print $out_fh "SET FOREIGN_KEY_CHECKS = 0;\n\n";
+# Build the mariadb-dump command
+my $dump_cmd = 'mariadb-dump --verbose -h ' . shell_quote($ENV{MARIADB_PHAIDRA_HOST}) .
+                ' -u ' . shell_quote($username) .
+                ' -p' . shell_quote($password) .
+                ' --where=' . shell_quote($where_clause) .
+                ' ' . shell_quote($db_name) .
+                ' ' . shell_quote($table_name) .
+                ' | gzip > ' . shell_quote($dump_path_gz);
 
-# Fetch and write records
-my $sth = $dbh->prepare(
-    'SELECT id, action, pid_num, visitor_id, ip_version, ip_v4, ip_v6, country, created 
-     FROM usage_log 
-     WHERE created < ? 
-     ORDER BY id'
-);
-$sth->execute($cutoff_date);
+print "Executing: mariadb-dump ... --where=\"$where_clause\" $db_name $table_name | gzip > $dump_path_gz\n";
 
-my $batch_size = 1000;
-my $batch_count = 0;
-my $total_written = 0;
-
-print $out_fh "INSERT INTO usage_log (id, action, pid_num, visitor_id, ip_version, ip_v4, ip_v6, country, created) VALUES\n";
-
-while (my $row = $sth->fetchrow_arrayref) {
-    my ($id, $action, $pid_num, $visitor_id, $ip_version, $ip_v4, $ip_v6, $country, $created) = @$row;
-    
-    if ($batch_count > 0) {
-        print $out_fh ",\n";
-    }
-    
-    # Format values for SQL
-    $action = $dbh->quote($action);
-    $country = defined($country) ? $dbh->quote($country) : 'NULL';
-    $created = $dbh->quote($created);
-    
-    # Handle binary data for ip_v6
-    my $ip_v6_sql = 'NULL';
-    if (defined($ip_v6)) {
-        my $hex = unpack('H*', $ip_v6);
-        $ip_v6_sql = "0x$hex";
-    }
-    
-    my $ip_v4_sql = defined($ip_v4) ? $ip_v4 : 'NULL';
-    
-    print $out_fh "($id, $action, $pid_num, $visitor_id, $ip_version, $ip_v4_sql, $ip_v6_sql, $country, $created)";
-    
-    $batch_count++;
-    $total_written++;
-    
-    if ($batch_count >= $batch_size) {
-        print $out_fh ";\n\n";
-        print $out_fh "INSERT INTO usage_log (id, action, pid_num, visitor_id, ip_version, ip_v4, ip_v6, country, created) VALUES\n";
-        $batch_count = 0;
-    }
+my $exit_code = system($dump_cmd);
+if ($exit_code != 0) {
+    die "mariadb-dump failed with exit code " . ($exit_code >> 8) . "\n";
 }
-
-if ($batch_count > 0) {
-    print $out_fh ";\n";
-}
-
-print $out_fh "\nSET FOREIGN_KEY_CHECKS = 1;\n";
-
-close($out_fh);
-
-print "Dumped $total_written records to $dump_path\n";
-
-# Compress the dump
-print "Compressing dump...\n";
-system("gzip", $dump_path) == 0 or die "Failed to compress $dump_path: $!\n";
-print "Compressed to $dump_path_gz\n";
 
 # Verify the compressed file exists
 unless (-f $dump_path_gz) {
@@ -161,16 +112,21 @@ my $file_size_mb = sprintf("%.2f", $file_size / (1024 * 1024));
 print "Dump file size: $file_size_mb MB\n";
 
 # Now delete the dumped records from usage_log
-print "Deleting dumped records from usage_log...\n";
+print "Deleting dumped records from $table_name...\n";
+
+# Reconnect to database for deletion
+$dbh = DBI->connect($dsn, $username, $password, { RaiseError => 1, AutoCommit => 0 })
+    or die $DBI::errstr;
+
 eval {
     $dbh->begin_work;
     
-    my $delete_sth = $dbh->prepare('DELETE FROM usage_log WHERE created < ?');
+    my $delete_sth = $dbh->prepare("DELETE FROM $table_name WHERE created < ?");
     $delete_sth->execute($cutoff_date);
     my $deleted = $delete_sth->rows;
     
     $dbh->commit;
-    print "Deleted $deleted records from usage_log\n";
+    print "Deleted $deleted records from $table_name\n";
 } or do {
     my $err = $@ || 'unknown error';
     eval { $dbh->rollback };
