@@ -1216,8 +1216,6 @@
   "LICENSE_DISCLAIMER": "<b>Disclaimer</b><br/>Il proprietario di un oggetto può autorizzare il suo uso da parte di terzi tramite una licenza Creative Commons; si stabilisce così un rapporto contrattuale tra le parti. Il fornitore del servizio (Phaidra) e Creative Commons non sono parti contraenti di questo accordo. Non si creerà alcun diritto od obbligo vincolante per il fornitore del servizio e per Creative Commons. <br>Né il fornitore del servizio né Creative Commons esercitano la professione di legale, e quindi non possono fornire una consulenza legale. Le informazioni qui riportate esonerano il fornitore del servizio e Creative Commons da responsabilità per eventuali danni derivanti dal loro uso.",
   "LICENSE_NOTE": "<b>Attenzione:</b> se scegli l'opzione <i>Tutti i diritti riservati</i>, potrai in seguito modificarla e applicare una licenza <i>aperta</i> (Creative Commons, MIT, ecc.), invece se scegli una licenza <i>aperta</i> non sarà più possibile cambiarla.",
   "PHAIDRA - University of Vienna": "PHAIDRA - Universität Wien",
-  "Citable links": "Identificatori",
-  "Other links": "Altri identificatori",
   "Only latest versions": "Solo versione più recente",
   "Thema Subject Codes": "Classificazione Thema",
   "Members": "Oggetti",
@@ -1431,5 +1429,7 @@
   "OER Object type (Higher Education Resource Types)": "Tipo di oggetto OER (Tipo di risorsa per l'istruzione superiore)",
   "AC-Number": "ID Catalogo",
   "Load Form": "Carica metadati",
-  "File Formats": "Formati dei file"
+  "File Formats": "Formati dei file",
+  "Cite as": "Cita questo oggetto",
+  "Other links and identifiers": "Altri identificatori"
 }
