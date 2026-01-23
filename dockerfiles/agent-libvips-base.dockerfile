@@ -8,6 +8,7 @@ libcgif-dev \
 build-essential \
 meson \
 ninja-build \
+file \
 python3-pip \
 bc \
 wget \
