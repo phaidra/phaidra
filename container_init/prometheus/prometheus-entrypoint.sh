@@ -6,6 +6,8 @@ cp /etc/prometheus/prometheus.yml /tmp/prometheus.yml
 # Replace placeholders in the Prometheus configuration file
 sed -i "s|\${FEDORA_ADMIN_USER}|${FEDORA_ADMIN_USER}|g" /tmp/prometheus.yml
 sed -i "s|\${FEDORA_ADMIN_PASS}|${FEDORA_ADMIN_PASS}|g" /tmp/prometheus.yml
+sed -i "s|\${PHAIDRA_ADMIN_USER}|${PHAIDRA_ADMIN_USER}|g" /tmp/prometheus.yml
+sed -i "s|\${PHAIDRA_ADMIN_PASSWORD}|${PHAIDRA_ADMIN_PASSWORD}|g" /tmp/prometheus.yml
 
 # Start Prometheus
 exec /bin/prometheus --config.file=/tmp/prometheus.yml "$@"
