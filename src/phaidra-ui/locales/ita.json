@@ -1431,5 +1431,8 @@
   "Load Form": "Carica metadati",
   "File Formats": "Formati dei file",
   "Cite as": "Cita questo oggetto",
-  "Other links and identifiers": "Altri identificatori"
+  "Other links and identifiers": "Altri identificatori",
+  "Link": "Risorsa Web",
+  "Resource link": "Indirizzo web della risorsa",
+  "Required": "Obbligatorio"
 }
