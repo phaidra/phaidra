@@ -40,7 +40,7 @@ Assuming you already have a running standard Docker installation, you can either
 continue that way, as it should not interfere with the code of this
 repo.
 
-However, we recommend using docker rootless to stay in sync with
+However, we recommend using Docker rootless to stay in sync with
 this repo's documentation. There is extensive official [upstream
 documentation](https://docs.docker.com/engine/security/rootless/) on how to
 do that.
@@ -49,7 +49,7 @@ See section [Docker Notes](#docker-notes) below to see what we do on a typical i
 
 # Docker compose profiles
 
-We are using docker profiles to start up the relevant containers for the desired use case.
+We are using Docker profiles to start up the relevant containers for the desired use case.
 
 You can set `COMPOSE_PROJECT_NAME="PROJECT_NAME_OF_YOUR_LIKING"` in your `.env` or use the `--project-name $PROJECT_NAME_OF_YOUR_LIKING` flag to the `docker compose` command, if you want to change the default project-name `phaidra`. The name will be used in the folder name of your volumes.
 
@@ -76,10 +76,10 @@ Additionally to the bind-mounted code, the ui components phaidra-ui and phaidra-
 Note: Running the Nuxt application in hotreload requires a lot of memory and can occasionally lead to a crash when it reaches the heap limit.
 
 # Run it
-All default values assume that you are running docker rootless as the first non-root user with uid 1000 on your Linux computer. This is what we strongly recommend. However, if this does not match your reality, please check the following options:
-## Linux user on docker rootless, but not uid 1000
+All default values assume that you are running Docker rootless as the first non-root user with uid 1000 on your Linux computer. This is what we strongly recommend. However, if this does not match your reality, please check the following options:
+## Linux user on Docker rootless, but not uid 1000
 + Please set the variable `HOST_DOCKER_SOCKET` to `/run/user/$YOUR-UID/docker.sock` in an `.env` file.  You can get your uid quickly by running `id -u`.
-## Users running privileged ('normal') docker (Linux and Windows Docker based on wsl2)
+## Users running privileged ('normal') Docker (Linux and Windows Docker based on WSL2)
 + Please set the variable `ADMIN_IP_LIST` to `172.29.5.1` in an `.env` file for the demo/localhost version. This is to reach the admin area. For SSL/Shib, see below.
 + Please set the variable `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` in an `.env` file. This is to get proper service monitoring.
 ## Users running privileged ('normal') docker (OSX)
@@ -124,7 +124,7 @@ docker compose --profile demo-s3 up -d
 + SSL-certificate and -key (put them into the `certs/httpd` and name them `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).  Certificates acquired from the [certbot tool](https://certbot.eff.org/) should do the job as they contain the full chain of certificates.
 + firewall with ports 80 and 443 open on your computer.
 + set the following variables in your `.env` file:
-  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts`, you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for privileged docker on Linux or Windows,  192.168.65.1 for privileged docker on OSX).
+  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts`, you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless Docker on Linux, 172.29.5.1 for privileged Docker on Linux or Windows, 192.168.65.1 for privileged Docker on OSX).
   + `OUTSIDE_HTTP_SCHEME="https"`
   + `PHAIDRA_HOSTPORT=""`
   + `PHAIDRA_PORTSTUB=""`
@@ -146,7 +146,7 @@ docker compose --profile ssl-local up -d
 + SSL-certificate and -key (put them into the `certs/httpd` and name them `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).  Certificates acquired from the [certbot tool](https://certbot.eff.org/) should do the job as they contain the full chain of certificates.
 + firewall with ports 80 and 443 open on your computer.
 + set the following variables in your `.env` file:
-  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts` you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for privileged docker on Linux or Windows,  192.168.65.1 for privileged docker on OSX).
+  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts` you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless Docker on Linux, 172.29.5.1 for privileged Docker on Linux or Windows, 192.168.65.1 for privileged Docker on OSX).
   + `OUTSIDE_HTTP_SCHEME="https"`
   + `PHAIDRA_HOSTPORT=""`
   + `PHAIDRA_PORTSTUB=""`
@@ -179,7 +179,7 @@ openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days 
 ```
 + firewall with ports 80 and 443 open on your computer.
 + set the following variables in your `.env` file:
-  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts` you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for privileged docker on Linux or Windows,  192.168.65.1 for privileged docker on OSX).
+  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts` you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless Docker on Linux, 172.29.5.1 for privileged Docker on Linux or Windows, 192.168.65.1 for privileged Docker on OSX).
   + `OUTSIDE_HTTP_SCHEME="https"`
   + `PHAIDRA_HOSTPORT=""`
   + `PHAIDRA_PORTSTUB=""`
@@ -221,7 +221,7 @@ openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days 
 ```
 + firewall with ports 80 and 443 open on your computer.
 + set the following variables in your `.env` file:
-  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts`, you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for privileged docker on Linux or Windows,  192.168.65.1 for privileged docker on OSX).
+  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts`, you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless Docker on Linux, 172.29.5.1 for privileged Docker on Linux or Windows,  192.168.65.1 for privileged Docker on OSX).
   + `OUTSIDE_HTTP_SCHEME="https"`
   + `PHAIDRA_HOSTPORT=""`
   + `PHAIDRA_PORTSTUB=""`
@@ -378,7 +378,7 @@ d1471b4d0494   eval-shib-opencast-openldap-1           0.00%     6.902MiB / 15.0
 # Data persistence and integrity
 The startup command will create directories in
 `$HOME/.local/share/docker/volumes` (`/var/lib/docker/volumes` in case you run rootful docker) to persist data created by PHAIDRA
-over docker restarts or whole system reboots.  These directories are the ones that need to be backed up to prevent data loss in case 
+over Docker restarts or whole system reboots.  These directories are the ones that need to be backed up to prevent data loss in case 
 of hardware failure.
 
 Objects loaded into PHAIDRA are automatically checksummed using the [SHA512-algorithm](https://en.wikipedia.org/wiki/SHA-2) by the underlying
@@ -448,7 +448,7 @@ eval-shib-opencast_vige
 eval-shib-opencast_vige-mongosh
 ```
 
-## Remove docker images built by compose
+## Remove Docker images built by compose
 NOTE: This command is only needed if you use one of the *-dev profiles, which will actually build the user-interface. This command can be run from anywhere.
 
 ```
@@ -741,7 +741,7 @@ sudo loginctl enable-linger $USER
 
     To receive the original client IPs accessing the web server,
     we change the port-forwarding mode of the rootlesskit (the default
-    one drops IPs and nginx/apache only receive the docker
+    one drops IPs and nginx/apache only receive the Docker
     network-bridge address, which does not allow for IP-filtering
     administrative parts of the system as a consequence).
 
@@ -765,7 +765,7 @@ sudo sysctl --system
 
 6.  add cpuset support
 
-    By default docker cpuset limitations are not enabled for rootless
+    By default Docker cpuset limitations are not enabled for rootless
     configurations (see [upstream documentation](https://docs.docker.com/engine/security/rootless/#limiting-resources)). One can do the following to change this:
 
 ``` example
