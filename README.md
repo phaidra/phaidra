@@ -21,13 +21,13 @@ This repo hosts the source code and the docker-compose startup file of the
 Indexing of Digital Resources and Assets) software, developed at the
 [Vienna University Computer Center](https://zid.univie.ac.at/en/).
 
-The aim of this project is to provide a high-quality, easy-to-set-up
+This project aims to provide a high-quality, easy-to-set-up
 web-based digital archiving system for academic institutions and other
 organizations that need to provide a solution for long-term-archiving of
 valuable data and metadata about the stored objects.
 
 We provide various flavors for different use cases, from a demo version
-running on a local desktop computer for evaluation, to an Shibboleth-enabled
+running on a local desktop computer for evaluation, to a Shibboleth-enabled
 server version.
 
 # Setup
@@ -36,7 +36,7 @@ For all versions, you will need a recent [Docker
 Installation](https://docs.docker.com/engine/install/), ideally on a
 Linux distribution (PHAIDRA is mainly developed on Ubuntu and Debian).
 
-Assuming you already have a running standard Docker installation you can either
+Assuming you already have a running standard Docker installation, you can either
 continue that way, as it should not interfere with the code of this
 repo.
 
@@ -59,8 +59,8 @@ You can set `COMPOSE_PROJECT_NAME="PROJECT_NAME_OF_YOUR_LIKING"` in your `.env` 
 + `demo-s3`: for an evaluation installation, serving PHAIDRA on `http://localhost:8899`. Uses an S3-bucket for the object repository and images converted to the format supported by IIPImage.
 + `ssl-local`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses only local storage.
 + `ssl-s3`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses an S3-bucket for the object repository and images converted to the format supported by IIPImage.
-+ `shib-local`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses only local storage.  Uses an external shibboleth-idp for authentication.
-+ `shib-s3`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses an S3-bucket for the object repository and images converted to the format supported by IIPImage.  Uses an external shibboleth-idp for authentication.
++ `shib-local`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses only local storage. Uses an external shibboleth-idp for authentication.
++ `shib-s3`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses an S3-bucket for the object repository and images converted to the format supported by IIPImage. Uses an external shibboleth-idp for authentication.
 
 ## Profiles bindmounting the repository's code
 
@@ -71,7 +71,7 @@ You can set `COMPOSE_PROJECT_NAME="PROJECT_NAME_OF_YOUR_LIKING"` in your `.env` 
 + `shib-local-dev`: see above.
 + `shib-s3-dev`: see above.
 
-Additionally to the bind mounted code, the ui components phaidra-ui and phaidra-vue-components directories will be watched and the Nuxt app will be started in hotreload. Changes to the source code should then be recompiled and applied on save. To start the container in watch mode you can use the --watch parameter.
+Additionally to the bind-mounted code, the ui components phaidra-ui and phaidra-vue-components directories will be watched, and the Nuxt app will be started in hotreload. Changes to the source code should then be recompiled and applied on save. To start the container in watch mode, you can use the --watch parameter.
 
 Note: Running the Nuxt application in hotreload requires a lot of memory and can occasionally lead to a crash when it reaches the heap limit.
 
@@ -80,10 +80,10 @@ All default values assume that you are running docker rootless as the first non-
 ## Linux user on docker rootless, but not uid 1000
 + Please set the variable `HOST_DOCKER_SOCKET` to `/run/user/$YOUR-UID/docker.sock` in an `.env` file.  You can get your uid quickly by running `id -u`.
 ## Users running privileged ('normal') docker (Linux and Windows Docker based on wsl2)
-+ Please set the variable `ADMIN_IP_LIST` to `172.29.5.1` in an `.env` file for the demo/localhost version. This is to reach the admin area. For ssl/shib see below.
++ Please set the variable `ADMIN_IP_LIST` to `172.29.5.1` in an `.env` file for the demo/localhost version. This is to reach the admin area. For SSL/Shib, see below.
 + Please set the variable `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` in an `.env` file. This is to get proper service monitoring.
 ## Users running privileged ('normal') docker (OSX)
-+ Please set the variable `ADMIN_IP_LIST` to `192.168.65.1` in an `.env` file for the demo/localhost version. This is to reach the admin area. For ssl/shib see below.
++ Please set the variable `ADMIN_IP_LIST` to `192.168.65.1` in an `.env` file for the demo/localhost version. This is to reach the admin area. For SSL/Shib, see below.
 + Please set the variable `HOST_DOCKER_SOCKET` to `/var/run/docker.sock` in an `.env` file. This is to get proper service monitoring.
 
 ## Demo version with local storage
@@ -124,7 +124,7 @@ docker compose --profile demo-s3 up -d
 + SSL-certificate and -key (put them into the `certs/httpd` and name them `privkey.pem` and `fullchain.pem` -- **make sure your user has read access on these files**).  Certificates acquired from the [certbot tool](https://certbot.eff.org/) should do the job as they contain the full chain of certificates.
 + firewall with ports 80 and 443 open on your computer.
 + set the following variables in your `.env` file:
-  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts` you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for privileged docker on Linux or Windows,  192.168.65.1 for privileged docker on OSX).
+  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts`, you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for privileged docker on Linux or Windows,  192.168.65.1 for privileged docker on OSX).
   + `OUTSIDE_HTTP_SCHEME="https"`
   + `PHAIDRA_HOSTPORT=""`
   + `PHAIDRA_PORTSTUB=""`
@@ -167,7 +167,7 @@ docker compose --profile ssl-s3 up -d
 ```
 
 ## Shibboleth version with local storage
-NOTE: This profile is not as straightforward, as the built-in apache2 webserver will act as a Shibboleth-SP, which requires registration at your organization's Shibboleth IDP. It's very likely that you need to modify a row of variables, depending on your organization.
+NOTE: This profile is not as straightforward as the built-in apache2 webserver will act as a Shibboleth-SP, which requires registration at your organization's Shibboleth IDP. You likely need to modify a row of variables, depending on your organization.
 ###  Prerequisites
 + make sure no other service is using ports 80 and 443 on your computer.
 + a DNS-entry pointing to your computer's IP-address.
@@ -187,7 +187,7 @@ openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days 
   + `SHIB_DISCO_URL`: shibboleth discovery URL.
   + `SHIB_METADATA_CERT`: shibboleth metadata signing certificate.
   + `SHIB_METADATA_FILE`: shibboleth metadata file.
-  + `SHIB_METADATA`: shibboleth metadata file url.
+  + `SHIB_METADATA`: shibboleth metadata file URL.
   + `SHIB_ENTITY_ID`: shibboleth weblogin address.
   + `SHIB_MAIL`: shibboleth mail attribute.
   + `SHIB_GIVEN_NAME`: shibboleth given name attribute.
@@ -209,7 +209,7 @@ docker compose --profile shib-local up -d
 After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/Shibboleth.sso/Metadata`. You will have to hand this file to the IDP-manager of your organization and ask for registration.  After that, users matching the list in `SHIB_REQUIRED_AFFILIATIONS` should be able to log in and upload their files to your system.
 
 ## Shibboleth version with S3 storage
-NOTE: This profile is not as straight forward, as the built-in apache2 webserver will act as a Shibboleth-SP, which requires registration at your organization's Shibboleth IDP. It's very likely that you need to modify a row of variables, depending on your organization.
+NOTE: This profile is not as straightforward as the built-in apache2 webserver will act as a Shibboleth-SP, which requires registration at your organization's Shibboleth IDP. You likely need to modify a row of variables, depending on your organization.
 ###  Prerequisites
 + make sure no other service is using ports 80 and 443 on your computer.
 + a DNS-entry pointing to your computer's IP-address.
@@ -221,7 +221,7 @@ openssl req -new -x509 -nodes -newkey rsa:2048 -keyout sp-signing-key.pem -days 
 ```
 + firewall with ports 80 and 443 open on your computer.
 + set the following variables in your `.env` file:
-  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts` you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for privileged docker on Linux or Windows,  192.168.65.1 for privileged docker on OSX).
+  + `ADMIN_IP_LIST`: List of space-delimited IP addresses that should be allowed to reach the admin area. This includes the static IP address of your computer if you access the installation through your local browser. If you access your installation from localhost by modifying `/etc/hosts`, you will want to keep the gateway address in there as well (10.0.2.2 [default] for rootless docker on Linux, 172.29.5.1 for privileged docker on Linux or Windows,  192.168.65.1 for privileged docker on OSX).
   + `OUTSIDE_HTTP_SCHEME="https"`
   + `PHAIDRA_HOSTPORT=""`
   + `PHAIDRA_PORTSTUB=""`
@@ -258,7 +258,7 @@ After startup, download your SP's Metadata file by visiting `https://$YOUR-FQDN/
 # Version update
 If you have a previous version running, check CHANGELOG.pm for changes and update instructions. The normal procedure is:
 * compose down
-* pull latest version of this repository
+* pull the latest version of this repository
 * compose up
 Some versions might require the execution of a migration script, but this will be mentioned in the changelog.
 
@@ -267,18 +267,18 @@ Phaidra supports ACME in the \*ssl\* and \*shib\* profiles. To enable it, the fo
 + `HTTPD_ACME_ENABLE`: Set to `true`.
 + `CA_ENDPOINT`: ACME endpoint you want to use. Defaults to LetsEncrypt staging, i.e. the certificates you get won't be production-ready!
 + `MD_CERTIFICATE_AGREEMENT`: set to `accepted` if you accept the TOS of your CA.
-+ `PHAIDRA_ADMIN_EMAIL`: Must be set to a valid email address. The ACME client uses this as contact address.
++ `PHAIDRA_ADMIN_EMAIL`: Must be set to a valid email address. The ACME client uses this as the contact address.
 
-After starting the containers, the mod_md will fetch the certificates, but a (graceful) restart is needed for apache to start using them. You can simply restart the httpd container using `docker restart <containe_id>`
+After starting the containers, the mod_md will fetch the certificates, but a (graceful) restart is needed for Apache to start using them. You can simply restart the httpd container using `docker restart <container_id>`
 
 # Extra profiles
 ## minio
 + `minio-s3-dev`: Local Minio S3 instance. Combine with \*-s3-\* profile if you don't have an S3 instance at hand. With default S3_\* ENV variables (i.e. none set), no further configuration is required. Do not use this in production! The admin UI is available under localhost:9001 with `$S3_ACCESS_KEY` and `$S3_SECRET_KEY` as username/password. Default to `phaidra` and `phaidraphaidra`.
 ## Standalone
 + `website`: For convenient development of our website at [www.phaidra.org](https://www.phaidra.org).
-   This profile can be activated by running `docker compose --profile website up -d`.  You will have a hot-reloading version of our website at `http://localhost:8000` which is controlled by `mkdocs.yaml` and renders the pages under `website`.
+   This profile can be activated by running `docker compose --profile website up -d`. You will have a hot-reloading version of our website at `http://localhost:8000`, which is controlled by `mkdocs.yaml` and renders the pages under `website`.
 ## Add-On
-+ `external-opencast`: can be added to any of the profiles that use local storage, if an external opencast-streaming-server is available to you. Uses a versioned image including all code. It can be started up with a command like: `docker compose --profile ssl-local --profile external-opencast up -d`.  An additional container (`agent-opencast`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
++ `external-opencast`: can be added to any of the profiles that use local storage, if an external opencast-streaming-server is available to you. Uses a versioned image including all code. It can be started up with a command like: `docker compose --profile ssl-local --profile external-opencast up -d`. An additional container (`agent-opencast`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
 
   The following variables will have to be set:
   + `OC_EXTERNAL="ACTIVATED"`
@@ -287,7 +287,7 @@ After starting the containers, the mod_md will fetch the certificates, but a (gr
   + `OC_EVENTS_URL`
   + `OC_INGEST_URL`
 
-+ `external-opencast-dev`: can be added to any of the dev-profiles that use local storage, if an external opencast-streaming-server is available to you. Uses bindmounted code from the repository. It can be started up with a command like: `docker compose --profile ssl-local-dev --profile external-opencast-dev up -d`.  An additional container (`agent-opencast`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
++ `external-opencast-dev`: can be added to any of the dev-profiles that use local storage, if an external opencast-streaming-server is available to you. Uses bind-mounted code from the repository. It can be started up with a command like: `docker compose --profile ssl-local-dev --profile external-opencast-dev up -d`.  An additional container (`agent-opencast`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
     The following variables will have to be set:
   + `OC_EXTERNAL="ACTIVATED"`
   + `OC_USER`
@@ -296,7 +296,7 @@ After starting the containers, the mod_md will fetch the certificates, but a (gr
   + `OC_INGEST_URL`
 ## handle
 + `handle`: Start an integrated handle instance.
-Handle requires significant configuration! Makes sure to check the handle technical documentation at https://www.handle.net/tech_manual/HN_Tech_Manual_9.pdf.
+Handle requires significant configuration! Make sure to check the handle technical documentation at https://www.handle.net/tech_manual/HN_Tech_Manual_9.pdf.
 If you don't have certificates, you can create them via
 ```
   openssl genrsa -out ./certs/handle/privkey.pem
@@ -305,7 +305,7 @@ If you don't have certificates, you can create them via
   docker run --entrypoint sh -v ./certs/handle/:/mnt phaidra-handle /opt/handle/bin/hdl-convert-key /mnt/privkey.pem > ./certs/handle/privkey.bin
 ```
   + `HANDLE_HOST`: When using the integrated handle server, leave this as is. When using an external handle server, you can set configure it with this variable.
-  + `HANDLE_PUBLIC_IP`: The IP under which your phaidra (and integrated handle) instance is available.
+  + `HANDLE_PUBLIC_IP`: The IP under which your Phaidra (and integrated handle) instance is available.
 
 
 # Default credentials on administration sites
@@ -313,7 +313,7 @@ If you don't have certificates, you can create them via
   - user: `admin`
   - password: `adminpassword`.
   These credentials can be altered at first startup through the variables `LDAP_ADMIN_USERNAME` and `LDAP_ADMIN_PASSWORD` at first startup in your `.env` file.
-    - There are three default users built in for testing purposes (logging into Phaidra, uploading, etc) `pone`, `ptwo`, and `barchiver`.  They all share the same password `1234`.
+    - There are three default users built in for testing purposes (logging into Phaidra, uploading, etc): `pone`, `ptwo`, and `barchiver`.  They all share the same password `1234`.
     - These users can be accessed/altered/deleted from **LDAP Account manager**.
 - **Fedora** (from the Web interface: Manage Phaidra -> Inspect Object Repository):
   - username: `fedoraAdmin`
@@ -326,15 +326,15 @@ If you don't have certificates, you can create them via
 - **DbGate** (from the Web interface: Manage Phaidra -> Inspect Databases)
   - username: `phaidra`
   - password: `phaidra`
-  - Here only the password can be modified in the `.env` file through the variable `DBGATE_PASS`.  If you want to change the username as well, please change it in the `docker-compose.yaml` file in the `dbgate:` section.  The corresponding variable is called `LOGINS`. You will have to put the username into the variable in the next line `LOGIN_PASSWORD_[username]` as well, that's why we can't centrally manage this from `.env` for now.
+  - Here, only the password can be modified in the `.env` file through the variable `DBGATE_PASS`.  If you want to change the username as well, please change it in the `docker-compose.yaml` file in the `dbgate:` section.  The corresponding variable is called `LOGINS`. You will have to put the username into the variable in the next line `LOGIN_PASSWORD_[username]` as well, that's why we can't centrally manage this from `.env` for now.
 - **Solr** (from the Web interface: Manage Phaidra -> Inspect Search Engine)
   - username: `phaidra`
   - password: `phaidra`
-  - These credentials can be modified in the `.env` file through the variables `SOLR_USER` and `SOLR_PASS`. You might also want to change `SOLR_SALT` to some random string for a more random encryption of the credentials within solr.
+  - These credentials can be modified in the `.env` file through the variables `SOLR_USER` and `SOLR_PASS`. You might also want to change `SOLR_SALT` to some random string for a more random encryption of the credentials within Solr.
 - the **api**
   - username: `phaidraAdmin`
   - password: `12345`
-  - These credentials can be modified in the `.env` file through the variables `PHAIDRA_ADMIN_USER` and `PHAIDRA_ADMIN_PASSWORD`.  You might also want to change `PHAIDRA_ENCRYPTION_KEY` and `PHAIDRA_SECRET` to enhance privacy.
+  - These credentials can be modified in the `.env` file through the variables `PHAIDRA_ADMIN_USER` and `PHAIDRA_ADMIN_PASSWORD`. You might also want to change `PHAIDRA_ENCRYPTION_KEY` and `PHAIDRA_SECRET` to enhance privacy.
 # Monitoring PHAIDRA
 
 ___
@@ -375,10 +375,10 @@ d1471b4d0494   eval-shib-opencast-openldap-1           0.00%     6.902MiB / 15.0
 2566420dc22a   eval-shib-opencast-imageserver-1        0.00%     19.9MiB / 15.03GiB    0.13%     1.59kB / 0B       2.05MB / 28.7kB   57
 ```
 
-# Data persistance and integrity
+# Data persistence and integrity
 The startup command will create directories in
 `$HOME/.local/share/docker/volumes` (`/var/lib/docker/volumes` in case you run rootful docker) to persist data created by PHAIDRA
-over docker restarts or whole system reboots.  These directories are the ones that need to be backupped to prevent data loss in case 
+over docker restarts or whole system reboots.  These directories are the ones that need to be backed up to prevent data loss in case 
 of hardware failure.
 
 Objects loaded into PHAIDRA are automatically checksummed using the [SHA512-algorithm](https://en.wikipedia.org/wiki/SHA-2) by the underlying
@@ -461,7 +461,7 @@ Deleted: sha256:473336b19091df7aec4e549ae0f41ba7cea0147a08e86e335cebe64e88f16812
 
 ## Clean up Docker caches
 In case you are developing and changing a lot of components, dockerfiles and docker-compose files, 
-things can become cluttered. To remove everything including build caches, you can run 
+things can become cluttered. To remove everything, including build caches, you can run 
  the following command:
 ```
 # COMMAND:
@@ -533,14 +533,14 @@ source .env
  docker volume rm $(docker volume ls -q --filter label=com.docker.compose.project=$COMPOSE_PROJECT_NAME)
 # Compose the project
  docker compose --profile <your profile> up -d
-# Restart the http container if the certificate is managed by MD
+# Restart the HTTP container if the certificate is managed by MD
  sleep 60
  docker container restart $COMPOSE_PROJECT_NAME-httpd-ssl-local-1 
 ```
 
 ## Phaidra Components
 
-In the folder `./src` one will find `phaidra-api`, `phaidra-ui`, `phaidra-vue-components`, and `agents`, the core components of PHAIDRA.
+In the folder `./src`, one will find `phaidra-api`, `phaidra-ui`, `phaidra-vue-components`, and `agents`, the core components of PHAIDRA.
 See the notes in the following subsections for provenance.
 
 ### phaidra-api
@@ -549,12 +549,11 @@ The Phaidra API comes with some utilities, usually executed with `docker exec -i
 
 - the utility `utils/indexObjects.pl` allows you to re-index all objects. It takes the range of creation dates from and to as parameters.
 
-- in the folder `migrations` you can find scripts needed to migrate between PHAIDRA versions.
+- in the folder `migrations`, you can find scripts needed to migrate between PHAIDRA versions.
 
 ## Software in use
 
-[PHAIDRA](https://phaidra.org/) is based on the shoulders of the
-following great pieces of software (in alphabetical order):
+[PHAIDRA](https://phaidra.org/) is based on the shoulders of the following great pieces of software (in alphabetical order):
 
 -   [360 Javascript Viewer](https://www.360-javascriptviewer.com/)
 -   [3DHOP](https://3dhop.net/)
@@ -703,14 +702,14 @@ that the user starting up the program does not need root/admin
 privileges on the machine running PHAIDRA.
 
 Nevertheless, setting up Docker itself will need a system admin user.
-Below we describe the steps that we use for rootless Docker with
-privileged ports and (needed for http and https traffic on the
+Below, we describe the steps that we use for rootless Docker with
+privileged ports and (needed for HTTP and HTTPS traffic on the
 SSL-enabled versions) and client-IP forwarding (needed for restricting
 access to parts of the system).
 
 ### set up rootlesskit
 
-1.  turn off running privileged docker service
+1.  turn off the running privileged Docker service
 
 ``` example
 sudo systemctl disable --now docker.service docker.socket
@@ -719,7 +718,7 @@ sudo reboot
 
 2.  install uidmap package
 
-    The `uidmap` package is available in both ubuntu and Debian official
+    The `uidmap` package is available in both Ubuntu and Debian official
     repositories and is needed for Docker's rootlesskit to properly
     function.
 
@@ -740,7 +739,7 @@ sudo loginctl enable-linger $USER
 
 4.  change port-forwarding mode for rootlesskit to slirp4netns
 
-    In order to receive the original client IPs accessing the webserver,
+    To receive the original client IPs accessing the web server,
     we change the port-forwarding mode of the rootlesskit (the default
     one drops IPs and nginx/apache only receive the docker
     network-bridge address, which does not allow for IP-filtering
@@ -787,15 +786,15 @@ systemctl --user restart docker
 
 7.  activate br_netfilter kernel module
     
-    You might run into the issue, that docker version warns about `WARNING: bridge-nf-call-iptables is disabled` and 
+    You might run into the issue that Docker version warns about `WARNING: bridge-nf-call-iptables is disabled` and 
     `WARNING: bridge-nf-call-ip6tables is disabled`. You can get rid of this warning by running `sudo modprobe br_netfilter`.
     To make this change persistent on systemd-enabled systems (here tested on Debian-12), you can run the following command:
     ```
     echo "br_netfilter" | sudo tee -a /etc/modules-load.d/br_netfilter.conf
     ```
-8. configure prometheus monitorability
+8. configure Prometheus monitorability
    
-   To activate the docker metrics endpoint, create the file `~/.config/docker/daemon.json` and add the following (the code below is for a rootless setup, for privileged docker see the [upstream documentation](https://docs.docker.com/config/daemon/prometheus/)):
+   To activate the Docker metrics endpoint, create the file `~/.config/docker/daemon.json` and add the following (the code below is for a rootless setup, for privileged Docker see the [upstream documentation](https://docs.docker.com/config/daemon/prometheus/)):
    
    ```
    {
@@ -809,7 +808,7 @@ systemctl --user restart docker
    Environment=DOCKERD_ROOTLESS_ROOTLESSKIT_FLAGS="-p 0.0.0.0:9323:9323/tcp"
    ```
    
-   Then, run the following, to apply the changes:
+   Then, run the following to apply the changes:
    
    ```
    systemctl --user daemon-reload
