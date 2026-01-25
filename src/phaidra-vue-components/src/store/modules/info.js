@@ -641,7 +641,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://www.geonames.org/"> GeoNames </a>'
+                '<a href="https://www.geonames.org/">GeoNames</a>'
             },
             {
               id: 'obligation',
@@ -1672,7 +1672,51 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://www.geonames.org/"> GeoNames </a> '
+                '<a href="https://www.geonames.org/">GeoNames</a>'
+            },
+            {
+              id: 'obligation',
+              title: 'Obligation',
+              content: ''
+            },
+            {
+              id: 'occurrence',
+              title: 'Occurrence',
+              content: ''
+            },
+            {
+              id: 'exampleHR',
+              title: 'Example',
+              content: ''
+            }
+          ]
+        },
+        {
+          title: 'Place of repository',
+          predicate: 'vra:placeOfRepository',
+          open: false,
+          sections: [
+            {
+              id: 'description',
+              title: 'Description',
+              content:
+                'Place where the work or its components are stored.'
+            },
+            {
+              id: 'usagenotes',
+              title: 'Usage notes',
+              content: {
+                level1:
+                  'Indicate the place where the work is stored. Use the suggester to find the suitable value or write your own value.',
+                level2: '',
+                level3: ''
+              }
+            },
+            {
+              id: 'vocabulary',
+              title: 'Vocabulary',
+              content:
+                '<a href="https://www.geonames.org/">GeoNames</a>'
             },
             {
               id: 'obligation',
@@ -1716,7 +1760,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://www.geonames.org/"> GeoNames </a>'
+                '<a href="https://www.geonames.org/">GeoNames</a>'
             },
             {
               id: 'obligation',
@@ -2927,6 +2971,49 @@ export const state = () => ({
                 level2: '',
                 level3:
                   'In addition to machine-understandable license information, a human-readable text concerning the conditions (e.g. obligations, restrictions) under which data can be reused can still be significant to the user to prevent ambiguity on your data. When you think a further specification might be useful, consider fill in the field.'
+              }
+            },
+            {
+              id: 'vocabulary',
+              title: 'Vocabulary',
+              content: 'None'
+            },
+            {
+              id: 'obligation',
+              title: 'Obligation',
+              content: ''
+            },
+            {
+              id: 'occurrence',
+              title: 'Occurrence',
+              content: ''
+            },
+            {
+              id: 'exampleHR',
+              title: 'Example',
+              content: ''
+            }
+          ]
+        },
+        {
+          title: 'System tag',
+          predicate: 'phaidra:systemTag',
+          open: false,
+          sections: [
+            {
+              id: 'description',
+              title: 'Description',
+              content:
+                'A tag for the purpose of identification or to give other information.'
+            },
+            {
+              id: 'usagenotes',
+              title: 'Usage notes',
+              content: {
+                level1:
+                  'Information to support system logic that are not relevant to the user.',
+                level2: '',
+                level3: ''
               }
             },
             {
