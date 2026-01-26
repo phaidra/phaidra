@@ -11,7 +11,7 @@ const config = {
     dbName: process.env.MONGO_AGENT_DB || 'paf_mongodb',
     collection: 'jobs'
   },
-  store: process.env.CONVERTED_3D_PATH || '/mnt/converted_3d',
+  store: process.env.CONVERTED_3D_PATH || '/mnt/derivates-3d',
   sleepTime: parseInt(process.env.IMAGE_CONVERSION_INTERVAL || '5') * 1000
 };
 
