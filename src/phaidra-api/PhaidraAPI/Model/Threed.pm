@@ -46,7 +46,7 @@ sub get_model_path {
   }
 
   # Get the root path from config
-  my $root = $c->config->{converted_3d_path} || '/mnt/converted_3d';
+  my $root = $c->config->{converted_3d_path} || '/mnt/derivates-3d';
   $app->log->info("3D models root: " . $root);
   
   # If the path already includes the root, use it as is

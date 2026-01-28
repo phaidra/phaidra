@@ -58,7 +58,7 @@ sub get_resource {
   }
 
   # Get the root path from config
-  my $root = $self->config->{converted_3d_path} || '/mnt/converted_3d';
+  my $root = $self->config->{converted_3d_path} || '/mnt/derivates-3d';
   my $idhash = $model_info->{idhash};
   my $scheme = $self->config->{scheme};
   my $baseurl = $self->config->{baseurl};
