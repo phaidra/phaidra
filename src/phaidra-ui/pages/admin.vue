@@ -252,6 +252,15 @@
                 </v-row>
                 <v-row>
                   <v-col>
+                    <v-text-field
+                      :label="$t('PHAIDRA DOI prefix')"
+                      v-model="parsedPublicConfigData.phaidra_doi_prefix"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Used to distinguish PHAIDRA DOIs from external DOIs on the object detail page (e.g. 10.25365).") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
                     <v-checkbox
                       :label="$t('Use mailto link for Request DOI')"
                       v-model="parsedPublicConfigData.requestdoiusemailto"

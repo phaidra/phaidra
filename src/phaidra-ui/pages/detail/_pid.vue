@@ -797,16 +797,18 @@
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
-                      >{{ $t('Citable links') }}</v-card-title
+                      >{{ $t('Cite as') }}</v-card-title
                     >
                     <v-card-text class="mt-4">
                       <v-row no-gutters class="pt-2" justify="start">
                        <v-col cols="12" class="pt-0">
                           <p
-                            class="text-right"
                             v-for="(id, i) in identifiers.persistent"
                             :key="'id' + i"
                           >
+                            <span v-if="id.label" class="caption font-weight-bold">
+                              {{ $t(id.label) }}
+                            </span>
                             <v-dialog
                               @input="loadCitationStyles()"
                               v-if="id.label === 'DOI'"
@@ -875,9 +877,6 @@
                                 </v-card-actions>
                               </v-card>
                             </v-dialog>
-                            <span v-if="id.label" class="caption font-weight-bold">
-                              {{ $t(id.label) }}
-                            </span>
                             <br />
                             <a :href="id.value">{{ id.value }}</a>
                           </p>
@@ -944,13 +943,12 @@
                   <v-card tile>
                     <v-card-title
                       class="ph-box title font-weight-light white--text"
-                      >{{ $t('Other links') }}</v-card-title
+                      >{{ $t('Other links and identifiers') }}</v-card-title
                     >
                     <v-card-text class="mt-4">
                       <v-row no-gutters class="pt-2" justify="start">
                        <v-col cols="12" class="pt-0">
                           <p
-                            class="text-right"
                             v-for="(id, i) in identifiers.other"
                             :key="'id' + i"
                           >
@@ -2344,11 +2342,22 @@ export default {
       return ('https://' + this.instanceconfig.irbaseurl + "/" + this.objectInfo.pid);
     },
     doi: function () {
+      if (!this.objectInfo.dc_identifier || !Array.isArray(this.objectInfo.dc_identifier)) {
+        return null
+      }
+      const prefix = this.instanceconfig.phaidra_doi_prefix
+      if (!prefix) {
+        // Without a configured prefix we don't treat any DOI as the PHAIDRA DOI
+        return null
+      }
       for (let id of this.objectInfo.dc_identifier) {
         let type = id.substr(0, id.indexOf(":"));
         let idvalue = id.substr(id.indexOf(":") + 1);
         if (type === "doi") {
-          return idvalue;
+          const normalized = this.normalizeDoi(idvalue)
+          if (normalized && normalized.startsWith(prefix + '/')) {
+            return normalized
+          }
         }
       }
       return null;
@@ -2381,16 +2390,22 @@ export default {
           } else {
             let type = id.substr(0, id.indexOf(":"));
             let idvalue = id.substr(id.indexOf(":") + 1);
+            const doiPrefix = this.instanceconfig.phaidra_doi_prefix
             switch (type) {
               case "hdl":
                 ids.persistent.push({ label: "Handle", value: 'https://hdl.handle.net/' + idvalue });
                 break;
               case "doi":
-                let doi = idvalue
-                if (!(doi.includes('https:') || doi.includes('http:'))) {
-                  doi = 'https://doi.org/' + idvalue
+                const normalizedDoi = this.normalizeDoi(idvalue)
+                let doiUrl = normalizedDoi
+                if (!(doiUrl.includes('https:') || doiUrl.includes('http:'))) {
+                  doiUrl = 'https://doi.org/' + normalizedDoi
                 }
-                ids.persistent.push({ label: "DOI", value: doi });
+                if (doiPrefix && normalizedDoi.startsWith(doiPrefix + '/')) {
+                  ids.persistent.push({ label: "DOI", value: doiUrl });
+                } else {
+                  ids.other.push({ label: "DOI", value: doiUrl });
+                }
                 break;
               case "urn":
                 ids.persistent.push({ label: "URN", value: 'https://nbn-resolving.org/' + idvalue });
@@ -2820,6 +2835,12 @@ export default {
     this.detailsMetaInfo = metaInfo
   },
   methods: {
+    normalizeDoi (value) {
+      if (!value) {
+        return ''
+      }
+      return value.replace(/^https?:\/\/(dx\.)?doi\.org\//i, '').trim()
+    },
     copyToClipboard(text) {
       navigator.clipboard.writeText(text);
     },

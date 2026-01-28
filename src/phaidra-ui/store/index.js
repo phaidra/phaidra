@@ -78,7 +78,8 @@ export const mutations = {
       'downloadabledatastreams',
       'disableChecksum',
       'searchbaseands',
-      'irbaseurl'
+      'irbaseurl',
+      'phaidra_doi_prefix'
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
