@@ -641,7 +641,7 @@ services:
   ############### obj2gltf agent ###############
   agent-obj2gltf:
     hostname: "agent-obj2gltf"
-    image: phaidraorg/agent-obj2gltf:408f2ba8
+    image: phaidraorg/agent-obj2gltf:5614b72b
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
