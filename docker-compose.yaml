@@ -451,7 +451,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:5f4fdef9
+    image: phaidraorg/api-dist:4f0a3c9d
     <<: [*common, *logs]
     volumes:
       - s3-cache:/s3-cache
@@ -465,7 +465,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:5f4fdef9
+    image: phaidraorg/api-dist:4f0a3c9d
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -1074,7 +1074,7 @@ services:
   ############### prometheus ###############
   prometheus:
     hostname: "prometheus"
-    image: phaidraorg/prometheus-dist:879d29b8
+    image: phaidraorg/prometheus-dist:4f0a3c9d
     volumes:
       - ./container_init/prometheus:/mnt/startup:ro
       - prometheus:/prometheus
