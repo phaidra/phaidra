@@ -159,8 +159,19 @@ sub process_job_queue
 
         my $rc= process_image ($job->{pid}, $job->{idhash}, $job->{ds}, $job->{cmodel}, $job->{path});
 
-        if (!defined ($rc)) {
+        if (!defined ($rc) || (ref($rc) eq 'HASH' && exists($rc->{'error_message'}))) {
           $job->{'status'}= 'failed';
+          if (defined($rc) && ref($rc) eq 'HASH' && exists($rc->{'error_message'})) {
+            $job->{'error_message'}= $rc->{'error_message'};
+            # Store additional debug info if available
+            $job->{'gifload_output'}= $rc->{'gifload_output'} if exists($rc->{'gifload_output'});
+            $job->{'tr_output'}= $rc->{'tr_output'} if exists($rc->{'tr_output'});
+            $job->{'copy_output'}= $rc->{'copy_output'} if exists($rc->{'copy_output'});
+            $job->{'cast_output'}= $rc->{'cast_output'} if exists($rc->{'cast_output'});
+            $job->{'vips_output'}= $rc->{'vips_output'} if exists($rc->{'vips_output'});
+          } else {
+            $job->{'error_message'}= 'Unknown error during image processing';
+          }
         } else {
           $job->{'status'}= 'finished';
           foreach my $an (keys %$rc) {
@@ -254,8 +265,9 @@ sub process_image
 
         unless (-f $tmp_img)
           {
-            print scalar localtime(), " ", "ATTN: could not retrieve [$url] and save to [$tmp_img]\n";
-            return undef;
+            my $error_msg = "Could not retrieve image from Fedora: $url";
+            print scalar localtime(), " ", "ATTN: $error_msg\n";
+            return { 'error_message' => $error_msg };
           }
 
         print scalar localtime(), " retrieved: ", "$tmp_img\n";
@@ -284,8 +296,9 @@ sub process_image
 
       unless (-f $cast_img)
         {
-          print scalar localtime(), " ", "ATTN: could not save [$cast_img] using copy=[$cast]\n";
-          return undef;
+          my $error_msg = "Could not save cast image using copy: $cast_txt";
+          print scalar localtime(), " ", "ATTN: $error_msg\n";
+          return { 'error_message' => $error_msg, 'cast_output' => $cast_txt };
         }
 
 
@@ -299,8 +312,9 @@ sub process_image
 
       unless (-f $out_img)
         {
-          print scalar localtime(), " ", "ATTN: could not save [$out_img] using vips=[$vips]\n";
-          return undef;
+          my $error_msg = "Could not save output TIFF using im_vips2tiff: $vips_txt";
+          print scalar localtime(), " ", "ATTN: $error_msg\n";
+          return { 'error_message' => $error_msg, 'vips_output' => $vips_txt };
         }
       my @out_st= stat(_);
       # TODO: check ....
@@ -311,40 +325,87 @@ sub process_image
     } else {
 
       my $tr_img = $tmp_img;
-      my $test_icc= `identify -quiet -format "%r" "$tr_img"`;
-      $test_icc =~ s/^\s+|\s+$//g;
-      print scalar localtime(), " ", "Color profile [$test_icc]\n";
-      if ($test_icc eq "DirectClass sRGB") {
-        # transform color profile
-        $tr_img = $tmp_img.'.v';
-        my @tr= (qw(/usr/bin/vips icc_transform --input-profile=sRGB.icm --embedded=true), $tmp_img, $tr_img, 'sRGB.icm');
-        my $tr= join (' ', @tr);
-        print scalar localtime(), " ", "tr: [$tr]\n";
-        my $tr_txt= `@tr 2>&1`;
-        print scalar localtime(), " ", "tr_txt=[$tr_txt]\n";
-        @tr_lines= x_lines ($tr_txt);
-        unless (-f $tr_img)
+      my $cast_img;
+
+      # Detect mimetype so we can special-case GIFs (tmp filenames have no extension)
+      my $mime_type = `file -b --mime-type "$tmp_img" 2>/dev/null`;
+      $mime_type =~ s/^\s+|\s+$//g if defined $mime_type;
+      print scalar localtime(), " ", "MIME type [$mime_type]\n";
+
+      my $format = `identify -quiet -format "%m" "$tmp_img" 2>/dev/null`;
+      $format =~ s/^\s+|\s+$//g if defined $format;
+      print scalar localtime(), " ", "Image format [$format]\n";
+
+      if ( (defined($mime_type) && $mime_type eq 'image/gif')
+           || (defined($format) && $format eq 'GIF') ) {
+        $cast_img = $tmp_img . '.tif';
+        my $convert_cmd = "convert \"${tmp_img}[0]\" -background white -alpha remove \"$cast_img\"";
+        print scalar localtime(), " ", "convert: [$convert_cmd]\n";
+        my $convert_txt = `$convert_cmd 2>&1`;
+        print scalar localtime(), " ", "convert_txt=[$convert_txt]\n";
+        @cast_lines = x_lines ($convert_txt);
+
+        unless (-f $cast_img)
           {
-            print scalar localtime(), " ", "ATTN: could not save [$tr_img] using tr=[$tr]\n";
-            return undef;
+            my $error_msg = "Could not convert [$tmp_img] to TIFF using ImageMagick: $convert_txt";
+            print scalar localtime(), " ", "ATTN: $error_msg\n";
+            return { 'error_message' => $error_msg, 'cast_output' => $convert_txt };
           }
-      }
-
-      # we have to cast 16bit to 8bit when using jpeg compression
-      my $cast_img = $tr_img.'.v'; # vips format, see https://github.com/jcupitt/libvips/issues/8#issuecomment-12292039
-      my @cast= (qw(/usr/bin/vips im_msb), $tr_img, $cast_img);
-      my $cast= join (' ', @cast);
-      print scalar localtime(), " ", "cast: [$cast]\n";
-      my $cast_txt= `@cast 2>&1`;
-      print scalar localtime(), " ", "cast_txt=[$cast_txt]\n";
-      @cast_lines= x_lines ($cast_txt);
-
-      unless (-f $cast_img)
-        {
-          print scalar localtime(), " ", "ATTN: could not save [$cast_img] using cast=[$cast]\n";
-          return undef;
+      } else {
+        my $test_icc= `identify -quiet -format "%r" "$tr_img"`;
+        $test_icc =~ s/^\s+|\s+$//g;
+        print scalar localtime(), " ", "Color profile [$test_icc]\n";
+        if ($test_icc eq "DirectClass sRGB") {
+          # transform color profile
+          $tr_img = $tmp_img.'.v';
+          my @tr= (qw(/usr/bin/vips icc_transform --input-profile=sRGB.icm --embedded=true), $tmp_img, $tr_img, 'sRGB.icm');
+          my $tr= join (' ', @tr);
+          print scalar localtime(), " ", "tr: [$tr]\n";
+          my $tr_txt= `@tr 2>&1`;
+          print scalar localtime(), " ", "tr_txt=[$tr_txt]\n";
+          @tr_lines= x_lines ($tr_txt);
+          unless (-f $tr_img)
+            {
+              my $error_msg = "Could not save transformed image using icc_transform: $tr_txt";
+              print scalar localtime(), " ", "ATTN: $error_msg\n";
+              return { 'error_message' => $error_msg, 'tr_output' => $tr_txt };
+            }
         }
 
+        # we have to cast 16bit to 8bit when using jpeg compression
+        $cast_img = $tr_img.'.v'; # vips format, see https://github.com/jcupitt/libvips/issues/8#issuecomment-12292039
+        my @cast= (qw(/usr/bin/vips im_msb), $tr_img, $cast_img);
+        my $cast= join (' ', @cast);
+        print scalar localtime(), " ", "cast: [$cast]\n";
+        my $cast_txt= `@cast 2>&1`;
+        print scalar localtime(), " ", "cast_txt=[$cast_txt]\n";
+        @cast_lines= x_lines ($cast_txt);
+
+        unless (-f $cast_img)
+          {
+            # If vips cannot read the format at all, fall back to ImageMagick convert
+            if ($cast_txt =~ /not a known format/i) {
+              my $fallback_tif = $tmp_img . '.tif';
+              my $convert_cmd  = "convert \"$tmp_img\" \"$fallback_tif\"";
+              print scalar localtime(), " ", "cast-fallback-convert: [$convert_cmd]\n";
+              my $convert_txt = `$convert_cmd 2>&1`;
+              print scalar localtime(), " ", "cast-fallback-convert_txt=[$convert_txt]\n";
+              @cast_lines= (@cast_lines, x_lines($convert_txt));
+
+              if (-f $fallback_tif) {
+                $cast_img = $fallback_tif;
+              } else {
+                my $error_msg = "Could not save cast image using im_msb, and fallback convert failed: $cast_txt | $convert_txt";
+                print scalar localtime(), " ", "ATTN: $error_msg\n";
+                return { 'error_message' => $error_msg, 'cast_output' => "$cast_txt\n$convert_txt" };
+              }
+            } else {
+              my $error_msg = "Could not save cast image using im_msb: $cast_txt";
+              print scalar localtime(), " ", "ATTN: $error_msg\n";
+              return { 'error_message' => $error_msg, 'cast_output' => $cast_txt };
+            }
+          }
+      }
 
       my @vips= (qw(/usr/bin/vips im_vips2tiff --vips-progress --vips-concurrency=4),
                  $cast_img, $out_img.':jpeg:85,tile:256x256,pyramid');
@@ -356,8 +417,9 @@ sub process_image
 
       unless (-f $out_img)
         {
-          print scalar localtime(), " ", "ATTN: could not save [$out_img] using vips=[$vips]\n";
-          return undef;
+          my $error_msg = "Could not save output TIFF using im_vips2tiff: $vips_txt";
+          print scalar localtime(), " ", "ATTN: $error_msg\n";
+          return { 'error_message' => $error_msg, 'vips_output' => $vips_txt };
         }
       my @out_st= stat(_);
       # TODO: check ....
