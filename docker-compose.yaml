@@ -883,7 +883,7 @@ services:
   ############### cronjobs service ###############
   chronos:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:1dc2a2d1
+    image: phaidraorg/chronos-dist:d8f8cfd2
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
@@ -910,7 +910,7 @@ services:
 
   chronos-s3:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:1dc2a2d1
+    image: phaidraorg/chronos-dist:d8f8cfd2
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
