@@ -262,7 +262,7 @@ const fields = [
     label: 'Note',
     value: '',
     language: '',
-    definition: 'Information, usually in textual form, on attributes of a resource or some aspect of a resource.'
+    definition: 'Additional information that could be relevant for the identification of the resource.'
   },
   {
     id: 'digitization-note',
@@ -275,7 +275,7 @@ const fields = [
     label: 'Digitization note',
     value: '',
     language: '',
-    definition: 'Information, usually in textual form, on attributes of a resource or some aspect of a resource.'
+    definition: 'Information regarding the digitization process (e.g. scanner, OCR process, etc.).'
   },
   {
     id: 'condition-note',
@@ -288,7 +288,7 @@ const fields = [
     label: 'Condition',
     value: '',
     language: '',
-    definition: 'Information, usually in textual form, on attributes of a resource or some aspect of a resource.'
+    definition: 'Assessment and/or documentation of the physical condition of an item, including damage, material vulnerabilities, special storage requirements, etc.'
   },
   {
     id: 'reproduction-note',
@@ -298,7 +298,7 @@ const fields = [
     component: 'p-text-field',
     label: 'Reproduction note',
     value: '',
-    definition: 'Information, usually in textual form, on attributes of a resource or some aspect of a resource.',
+    definition: 'A note stating if the analogue object is a copy or an original.',
     multilingual: true,
     allowLanguageCancel: true
   },
