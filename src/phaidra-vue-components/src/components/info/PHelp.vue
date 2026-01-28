@@ -1,5 +1,5 @@
 <template>
-  <v-card class="my-8">
+  <v-card>
     <v-card-title class="title font-weight-light white--text">{{ $t('Help') }}</v-card-title>
     <v-card-text class="mt-4">
       <div v-if="$i18n.locale === 'deu'">

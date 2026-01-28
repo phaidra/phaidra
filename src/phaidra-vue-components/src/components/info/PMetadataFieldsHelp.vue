@@ -21,7 +21,7 @@
       </v-col>
       <v-col cols="9">
         <template v-if="selectedField">
-          <div class="display-1 my-8">
+          <div class="display-1">
             <span class="font-weight-light mr-2">{{ $t(selectedField.title) }}</span> <v-chip class="ma-2 pointer-disabled" label >{{ selectedField.predicate }}</v-chip>
           </div>
           <div v-for="(section, i) in selectedField.sections" :key="i" :id="'sec' + i">
