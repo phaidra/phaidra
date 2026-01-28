@@ -45,3 +45,12 @@ scrape_configs:
     basic_auth:
       username: ${FEDORA_ADMIN_USER}
       password: ${FEDORA_ADMIN_PASS}
+
+  - job_name: mojo
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ["api:3000"]
+    basic_auth:
+      username: ${PHAIDRA_ADMIN_USER}
+      password: ${PHAIDRA_ADMIN_PASSWORD}

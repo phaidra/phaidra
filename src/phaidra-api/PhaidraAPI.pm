@@ -8,6 +8,7 @@ use Mojolicious::Static;
 use Mojolicious::Plugin::I18N;
 use Mojolicious::Plugin::Session;
 use Mojolicious::Plugin::Log::Any;
+use Mojolicious::Plugin::Prometheus;
 use Mojo::Loader qw(load_class);
 use FindBin;
 use lib "$FindBin::Bin/lib/phaidra_directory";
@@ -572,6 +573,8 @@ sub startup {
 
     my $admin     = $ext_creds->under('/')->to('authentication#authenticate_admin');
     my $ir_admin  = $ext_creds->under('/')->to('authentication#authenticate_ir_admin');
+
+    $self->plugin('Prometheus' => { 'route' => $admin });
 
     my $reader    = $ext_creds->under('/')->to('authorization#authorize', op => 'r');
     my $writer    = $loggedin->under('/')->to('authorization#authorize', op => 'w');

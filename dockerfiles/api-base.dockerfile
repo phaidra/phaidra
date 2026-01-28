@@ -23,6 +23,7 @@ EOF
 RUN <<EOF
 cpanm Mojolicious::Plugin::Database Mojolicious::Plugin::Session \
       Mojolicious::Plugin::Log::Any Mojolicious::Plugin::CHI \
+      Mojolicious::Plugin::Prometheus \
       IO::Scalar Crypt::Rijndael MIME::Base64 File::MimeInfo::Magic \
       XML::SAX XML::Parser::PerlSAX File::Find::utf8  MIME::Lite::TT::HTML Storable UNIVERSAL::require Mojo::IOLoop::Delay
 EOF
