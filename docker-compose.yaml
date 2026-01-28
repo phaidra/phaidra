@@ -519,7 +519,7 @@ services:
     hostname: "agent-libvips"
     depends_on: [mongodb-phaidra, api]
     <<: [*common, *logs]
-    image: phaidraorg/agent-libvips-dist:04bd1d38
+    image: phaidraorg/agent-libvips-dist:97fa33e2
     volumes:
       - fedora:/mnt/fedora:ro
       - derivates-images:/mnt/derivates-images
@@ -539,7 +539,7 @@ services:
     hostname: "agent-libvips"
     depends_on: [mongodb-phaidra, api-s3, fedora-s3]
     <<: [*common, *logs]
-    image: phaidraorg/agent-libvips-dist:408f2ba8
+    image: phaidraorg/agent-libvips-dist:97fa33e2
     environment:
       <<: [*api_common_env, *hosts, *s3]
       DERIVATES_IMAGES_PATH: "${DERIVATES_IMAGES_PATH:-/derivates-images}"
@@ -554,7 +554,7 @@ services:
 
   agent-libvips-local-dev:
     hostname: "agent-libvips"
-    image: phaidraorg/agent-libvips-base:408f2ba8
+    image: phaidraorg/agent-libvips-base:97fa33e2
     pull_policy: always
     <<: [*common, *logs]
     volumes:
@@ -577,7 +577,7 @@ services:
     hostname: "agent-libvips"
     depends_on: [mongodb-phaidra-dev, api-s3-dev, fedora-s3-dev]
     <<: [*common, *logs]
-    image: phaidraorg/agent-libvips-base:408f2ba8
+    image: phaidraorg/agent-libvips-base:97fa33e2
     pull_policy: always
     volumes:
       - ./src/agents/libvips:/opt/agent-libvips:ro
