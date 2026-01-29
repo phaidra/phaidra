@@ -277,6 +277,8 @@ export default {
       if (collection) {
         this.inCollection = collection
         delete options.collection
+      } else if (this.$route.query.collection) {
+        this.inCollection = this.$route.query.collection
       }
 
       Object.assign(this, options)
