@@ -213,6 +213,7 @@
     "rdau:P60101": "Is contained in",
     "rdau:P60101_rdau:P60193": "Series",
     "rdau:P60101_bf:provisionActivity": "Publication",
+    "bf:instanceOf": "Instance of",
     "rdau:P60227": "Is motion picture adaptation of",
     "bf:provisionActivity": "Publication",
     "cito:cites": "Cites",
@@ -223,6 +224,7 @@
     "dcterms:spatial": "Depicted / Represented place",
     "vra:placeOfCreation": "Place of creation",
     "vra:placeOfSite": "Place of site",
+    "vra:placeOfRepository": "Place of repository",
     "ebucore:hasRelatedEvent": "Event",
 
     "frapo:isOutputOf": "Project",
