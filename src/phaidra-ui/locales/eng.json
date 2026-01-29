@@ -223,6 +223,7 @@
     "dcterms:spatial": "Depicted / Represented place",
     "vra:placeOfCreation": "Place of creation",
     "vra:placeOfSite": "Place of site",
+    "ebucore:hasRelatedEvent": "Event",
 
     "frapo:isOutputOf": "Project",
     "frapo:hasFundingAgency": "Funder",
