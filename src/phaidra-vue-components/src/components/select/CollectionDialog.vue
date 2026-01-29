@@ -10,21 +10,22 @@
           single-line
           hide-details
           class="mb-4"
+          @keyup.enter="loadCollections"
         ></v-text-field>
         <v-data-table
           hide-default-header
           :headers="collectionsHeaders"
           :items="collections"
-          :search="collectionsSearch"
-          :custom-filter="filterTitle"
+          :options="options"
+          :server-items-length="totalCollections"
+          @update:options="onOptionsUpdate"
           :loading="loading"
           :loading-text="$t('Loading...')"
-          :items-per-page="5"
           :no-data-text="$t('No data available')"
           :footer-props="{
+                itemsPerPageOptions: [5, 10, 25, 50, 100],
                 pageText: $t('Page'),
-                itemsPerPageText: $t('Rows per page'),
-                itemsPerPageAllText: $t('All')
+                itemsPerPageText: $t('Rows per page')
               }"
           :no-results-text="$t('There were no search results')"
         >
@@ -68,28 +69,36 @@ export default {
       dialog: false,
       loading: false,
       collectionsSearch: '',
+      options: {
+        page: 1,
+        itemsPerPage: 5
+      },
       collectionsHeaders: [
         { text: 'Pid', align: 'left', value: 'pid' },
         { text: 'Title', align: 'left', value: 'title' },
         { text: 'Created', align: 'right', value: 'created' },
         { text: 'Actions', align: 'right', value: 'actions', sortable: false }
       ],
-      collections: []
+      collections: [],
+      totalCollections: 0
     }
   },
   methods: {
-    filterTitle (value, search, item) {
-      return this.getObjectTitle(item).indexOf(search) !== -1
+    onOptionsUpdate (opts) {
+      this.options = { ...opts, itemsPerPage: opts.itemsPerPage === -1 ? 100 : opts.itemsPerPage }
+      if (this.dialog) {
+        this.loadCollections()
+      }
     },
-    open: async function () {
-      this.dialog = true
+    loadCollections: async function () {
       this.loading = true
+      let searchQuery = this.collectionsSearch ? this.collectionsSearch : '*:*'
       let params = {
-        q: '*:*',
+        q: searchQuery,
         defType: 'edismax',
         wt: 'json',
-        start: 0,
-        rows: 1000,
+        start: (this.options.page - 1) * this.options.itemsPerPage,
+        rows: this.options.itemsPerPage,
         sort: 'created desc',
         fq: 'resourcetype:collection AND owner:' + this.$store.state.user.username
       }
@@ -104,12 +113,18 @@ export default {
           params: params
         })
         this.collections = response.data.response.docs
+        this.totalCollections = response.data.response.numFound
       } catch (error) {
         console.log(error)
         this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
       } finally {
         this.loading = false
       }
+    },
+    open: async function () {
+      this.dialog = true
+      this.options = { page: 1, itemsPerPage: this.options.itemsPerPage }
+      this.collectionsSearch = ''
     },
     selectCollection: function (item) {
       this.$emit('collection-selected', item)
