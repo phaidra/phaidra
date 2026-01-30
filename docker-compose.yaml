@@ -1400,8 +1400,8 @@ services:
       - 2641:2641/udp
     volumes:
       - handle:/opt/handle-data
-      - ./certs/handle/privkey.bin/:/opt/handle-data/privkey.bin:ro
-      - ./certs/handle/pubkey.bin/:/opt/handle-data/pubkey.bin:ro
+      - ./certs/handle/privkey.bin:/opt/handle-data/privkey.bin:ro
+      - ./certs/handle/pubkey.bin:/opt/handle-data/pubkey.bin:ro
     profiles:
       - handle
     
