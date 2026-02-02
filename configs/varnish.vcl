@@ -1,25 +1,19 @@
 vcl 4.1;
 import std;
+import dynamic;
 
-# Backends
-backend api {
-  .host = "api";
-  .port = "3000";
-  .first_byte_timeout = 300s;
-}
-
-backend ui {
-  .host = "ui";
-  .port = "3001";
-  .first_byte_timeout = 60s;
+# Using dynamic backends - see https://github.com/nigoroll/libvmod-dynamic for docs
+backend default none;
+sub vcl_init {
+    new dynamicdirector = dynamic.director(port = 3000, first_byte_timeout = 300s, ttl = 30s);
 }
 
 sub vcl_recv {
   # Route by path
   if (req.url ~ "^/api/") {
-    set req.backend_hint = api;
+    set req.backend_hint = dynamicdirector.backend("api");
   } else {
-    set req.backend_hint = ui;
+    set req.backend_hint = dynamicdirector.backend("ui", port = 3001);
   }
 
   # WebSocket pass-through
@@ -38,7 +32,7 @@ sub vcl_recv {
   }
 
   # API rules
-  if (req.backend_hint == api) {
+  if (req.backend_hint == dynamicdirector.backend("api")) {
     # Whitelisted API static directories (client-facing, with /api)
     if (req.url ~ "^/api/(?:3dhop|docs|iipmooviewer|images|ip2country|json-schema|languages|licenses|mirador|mods|pdfjs|replayweb|swagger-ui|threejs|video-js|vocabulary|xsd)(?:/|$)"
         || req.url ~ "^/api/object/o:[0-9]+/thumbnail"
@@ -60,7 +54,7 @@ sub vcl_recv {
   }
 
   # UI rules: cache static assets; pass HTML and dynamic endpoints
-  if (req.backend_hint == ui) {
+  if (req.backend_hint == dynamicdirector.backend("ui", port = 3001)) {
     if (req.url ~ "(?i)\\.(?:css|js|mjs|png|jpg|jpeg|gif|svg|webp|ico|woff2?|ttf|eot)(?:\\?.*)?$"
         || req.url ~ "^/(?:static|assets|_nuxt)/") {
 
@@ -74,7 +68,7 @@ sub vcl_recv {
 
 sub vcl_backend_fetch {
   # Strip /api from the path before sending to the API backend
-  if (bereq.backend == api && bereq.url ~ "^/api/") {
+  if (bereq.backend == dynamicdirector.backend("api") && bereq.url ~ "^/api/") {
     set bereq.url = regsub(bereq.url, "^/api", "");
   }
 }
@@ -91,7 +85,7 @@ sub vcl_backend_response {
   }
 
   # API backend behavior
-  if (bereq.backend == api) {
+  if (bereq.backend == dynamicdirector.backend("api")) {
     # After vcl_backend_fetch, bereq.url no longer has /api
 
     # If not a whitelisted cacheable API resource → stream/pass (uncacheable)
@@ -147,9 +141,8 @@ sub vcl_backend_response {
 
     return (deliver);
   }
-
   # UI backend behavior
-  if (bereq.backend == ui) {
+  if (bereq.backend == dynamicdirector.backend("ui", port = 3001)) {
     if (bereq.url ~ "(?i)\\.(?:css|js|mjs|png|jpg|jpeg|gif|svg|webp|ico|woff2?|ttf|eot)(?:\\?.*)?$"
         || bereq.url ~ "^/(?:static|assets|_nuxt)/") {
 
