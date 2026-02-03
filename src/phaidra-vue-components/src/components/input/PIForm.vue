@@ -812,7 +812,7 @@
           </v-col>
         </v-row>
 
-        <v-row class="mt-4 mx-4">
+        <v-row no-gutters class="mt-9 ma-3">
           <v-col cols="12">
             <v-dialog v-if="templating || savetemplatebtn" v-model="templatedialog" width="500">
               <template v-slot:activator="{ on }">
