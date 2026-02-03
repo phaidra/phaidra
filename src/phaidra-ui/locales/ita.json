@@ -1207,7 +1207,7 @@
   "Press Enter to initiate search": "Premi Invio per avviare la ricerca.",
   "Select a term": "Seleziona un termine",
   "Download search results as a CSV file": "Scarica i risultati come file CSV",
-  "ADD_COLLECTION_MEMBERS_HELP": "Gestire gli oggetti nella Collezione: dopo aver creato la Collezione, cercare gli oggetti nella ricerca e selezionare i singoli oggetti dall'elenco dei risultati sotto \"Seleziona i risultati della ricerca\" (piccolo rettangolo in alto a destra). Fare quindi clic su \"Seleziona\" in alto a destra e selezionare \"Aggiungi alla Collezione\"; appariranno le collezioni create in precedenza, selezionare quella desiderata.",
+  "ADD_COLLECTION_MEMBERS_HELP": "Gestire gli oggetti nella Collezione: dopo aver creato la Collezione, cercare gli oggetti nella ricerca e selezionare i singoli oggetti dall'elenco dei risultati utilizzando la funzione \"Seleziona risultati\". Fare quindi clic su \"Risultati selezionati\" in alto a destra e selezionare \"Aggiungi a Collezione\"; appariranno le collezioni create in precedenza, selezionare quella desiderata.",
   "Manage members": "Gestisci oggetti",
   "An object type represents real-world entity. For example, an object type can represent a photography, an interview, a lecture or a letter.": "Un tipo di oggetto rappresenta una specifica entità del mondo reale. Ad esempio, può corrispondere a una fotografia, un'intervista, una lezione o una lettera.",
   "Restricted access": "Accesso ristretto",
