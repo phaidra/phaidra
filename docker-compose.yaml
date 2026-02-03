@@ -778,7 +778,7 @@ services:
 
   mariadb-fedora-dev:
     hostname: "mariadb-fedora"
-    image: mariadb:10.5
+    image: mariadb:10.11
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
