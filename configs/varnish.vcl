@@ -21,6 +21,13 @@ sub vcl_recv {
     return (pipe);
   }
 
+  # Any SSE request should pass immediately (before other routing)
+  # This is critical for Nuxt HMR to work properly
+  if (req.http.Accept && req.http.Accept ~ "text/event-stream"
+  || req.url ~ "^/(_nuxt|__webpack_hmr|_loading|_chunks)") {
+    return (pass);
+  }
+
   # Only cache GET/HEAD
   if (req.method != "GET" && req.method != "HEAD") {
     return (pass);
@@ -143,6 +150,19 @@ sub vcl_backend_response {
   }
   # UI backend behavior
   if (bereq.backend == dynamicdirector.backend("ui", port = 3001)) {
+
+    # For SSE, avoid caching and buffering
+    # This is critical for Nuxt HMR to work properly
+    if (bereq.http.Accept ~ "text/event-stream"
+    || bereq.url ~ "^/(__webpack_hmr|_loading|_chunks)") {
+      set beresp.ttl = 0s;
+      set beresp.uncacheable = true;
+      set beresp.do_stream = true;
+      set beresp.do_gzip = false;
+      set beresp.do_gunzip = false;
+      return (deliver);
+    }
+
     if (bereq.url ~ "(?i)\\.(?:css|js|mjs|png|jpg|jpeg|gif|svg|webp|ico|woff2?|ttf|eot)(?:\\?.*)?$"
         || bereq.url ~ "^/(?:static|assets|_nuxt)/") {
 
