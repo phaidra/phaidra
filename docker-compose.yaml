@@ -365,7 +365,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:aad5be84
+    image: phaidraorg/ui:2b611c67
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -383,7 +383,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:aad5be84
+    image: phaidraorg/ui:2b611c67
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -764,7 +764,7 @@ services:
   ############### fedora sql db ###############
   mariadb-fedora:
     hostname: "mariadb-fedora"
-    image: phaidraorg/mariadb-fedora-dist:f21114b6
+    image: phaidraorg/mariadb-fedora-dist:789617f5
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
