@@ -487,6 +487,7 @@
                       '/preview' + '?lang=' + $i18n.locale.substring(0, 2)
                     "
                     width="100%"
+                    height="100%"
                     frameborder="0"
                     scrolling="no"
                     allowfullscreen="yes"
@@ -502,6 +503,8 @@
                     objectInfo.pid +
                     '/preview' + '?lang=' + $i18n.locale.substring(0, 2) + `${instanceconfig.addannotation ? `&addannotation=${instanceconfig.addannotation}` : ''}`
                   "
+                  :width="objectInfo.cmodel === 'Audio' ? '100%' : objectInfo.cmodel === 'Container' ? '100%' : '100%'"
+                  :height="objectInfo.cmodel === 'Audio' ? '270' : objectInfo.cmodel === 'Container' ? '300' : '500'"
                   :style="
                     objectInfo.cmodel === 'Audio'
                       ? 'height: 270px; width: 100%; border: 0px;'
@@ -582,6 +585,8 @@
                   :src="
                     instanceconfig.api + '/object/' + member.pid + '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
                   "
+                  width="100%"
+                  :height="member.cmodel === 'Audio' ? '60' : '500'"
                   :style="
                     member.cmodel === 'Audio'
                       ? 'height: 60px; width: 100%; border: 0px;'
