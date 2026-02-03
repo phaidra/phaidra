@@ -772,6 +772,7 @@ services:
       MARIADB_DATABASE: "${FEDORADB:-fedoradb}"
       MARIADB_USER: "${MARIADB_FEDORA_USER:-phaidra}"
       MARIADB_PASSWORD: "${MARIADB_FEDORA_PASSWORD:-phaidra}"
+      MARIADB_AUTO_UPGRADE: "1"
     volumes:
       - mariadb-fedora:/var/lib/mysql
     profiles: ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3"]
@@ -786,6 +787,7 @@ services:
       MARIADB_DATABASE: "${FEDORADB:-fedoradb}"
       MARIADB_USER: "${MARIADB_FEDORA_USER:-phaidra}"
       MARIADB_PASSWORD: "${MARIADB_FEDORA_PASSWORD:-phaidra}"
+      MARIADB_AUTO_UPGRADE: "1"
     volumes:
       - ./container_init/mariadb/fedoradb/fedoradb_grafana.sql:/docker-entrypoint-initdb.d/fedoradb_grafana.sql:ro
       - mariadb-fedora:/var/lib/mysql
