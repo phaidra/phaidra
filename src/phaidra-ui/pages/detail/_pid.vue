@@ -2217,20 +2217,6 @@
                 </li>
 
                 <li class="mb-2">
-                  <v-row justify="end">
-                    <v-col cols="12" class="pt-0">
-                      <template v-for="(md5, i) in checksums">
-                        <p
-                          class="text-right"
-                          v-if="md5.path.includes('OCTETS')"
-                          :key="'md5' + i"
-                        >
-                          <span class="caption font-weight-bold">md5</span
-                          ><br /><span>{{ md5.md5 }}</span>
-                        </p>
-                      </template>
-                    </v-col>
-                  </v-row>
                   <v-row v-if="objectInfo.oc_mpid" justify="end" class="mb-2">
                     <v-col cols="12" class="pt-0">
                         <p class="text-right">
@@ -2673,7 +2659,6 @@ export default {
         download: "-",
         detail: "-",
       },
-      checksums: [],
       fullJsonLd: "",
       membersPage: 1,
       membersPageSize: 10,
@@ -2921,23 +2906,6 @@ export default {
         console.log(error);
       }
     },
-    async fetchChecksums(self, pid) {
-      try {
-        let response = await self.$axios.get(
-          "/object/" + pid + "/md5",
-          {
-            headers: {
-              "X-XSRF-TOKEN": self.user.token,
-            },
-          }
-        );
-        if (response.data.md5) {
-          self.checksums = response.data.md5;
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
     postMetadataLoad: function (self) {
       if (self.objectInfo) {
         if (self.objectInfo.metadata) {
@@ -3104,7 +3072,6 @@ export default {
         download: "-",
         detail: "-",
       };
-      self.checksums = [];
     },
     addToCollection: async function (collection) {
       try {
@@ -3192,7 +3159,6 @@ export default {
         vm.resetData(vm);
         vm.$store.commit("setLoading", true);
         vm.$store.commit("setObjectInfo", null);
-        vm.fetchChecksums(vm, to.params.pid);
         console.log("showtree:" + vm.showCollectionTree);
         vm.$store.commit("setLoading", false);
       }
@@ -3204,7 +3170,6 @@ export default {
     this.resetData(this);
     this.$store.commit("setLoading", true);
     this.$store.commit("setObjectInfo", null);
-    this.fetchChecksums(this, to.params.pid);
     console.log("showtree:" + this.showCollectionTree);
     this.$store.commit("setLoading", false);
     next();

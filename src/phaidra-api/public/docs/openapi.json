@@ -12801,55 +12801,6 @@
                     }
                 }
             },
-            "md5": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "_id": {
-                            "type": "object",
-                            "properties": {
-                                "$oid": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "c_size": {
-                            "type": "number"
-                        },
-                        "fileinfo": {
-                            "type": "string"
-                        },
-                        "fs_size": {
-                            "type": "number"
-                        },
-                        "ino": {
-                            "type": "number"
-                        },
-                        "key": {
-                            "type": "string"
-                        },
-                        "md5": {
-                            "type": "string"
-                        },
-                        "mtime": {
-                            "type": "number"
-                        },
-                        "path": {
-                            "type": "string"
-                        },
-                        "seq": {
-                            "type": "number"
-                        },
-                        "store": {
-                            "type": "string"
-                        },
-                        "type": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
             "user_objects": {
                 "type": "object",
                 "properties": {

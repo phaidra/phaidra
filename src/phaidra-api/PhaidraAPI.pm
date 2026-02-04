@@ -609,7 +609,6 @@ sub startup {
     $reader->get('object/:pid/3d_resource')                        ->to('threed#get_resource');
     $reader->get('object/:pid/360_frame')                          ->to('viewer360#get_frame');
     $reader->get('object/:pid/360_frames/*filename')               ->to('viewer360#get_frame_by_name');
-    $reader->get('object/:pid/md5')                                          ->to('inventory#get_md5');
     $reader->get('object/:pid/octets')                                       ->to('octets#proxy');
     $reader->get('object/:pid/download')                                     ->to('octets#get', operation => 'download');
     $reader->get('object/:pid/get')                                          ->to('octets#get', operation => 'get');
@@ -771,7 +770,6 @@ sub startup {
     $proxyauth_optional->get('object/:pid/info')                                ->to('object#info');
     $proxyauth_optional->get('object/:pid/thumbnail')                           ->to('object#thumbnail');
     $proxyauth_optional->get('object/:pid/preview')                             ->to('object#preview');
-    $proxyauth_optional->get('object/:pid/md5')                                 ->to('inventory#get_md5');
     $proxyauth_optional->get('object/:pid/octets')                              ->to('octets#proxy');
     $proxyauth_optional->get('object/:pid/download')                            ->to('octets#get', operation => 'download');
     $proxyauth_optional->get('object/:pid/get')                                 ->to('octets#get', operation => 'get');
