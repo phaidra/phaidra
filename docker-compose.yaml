@@ -346,7 +346,7 @@ services:
 
   solr-dev:
     hostname: "solr"
-    image: solr:9.6.1
+    image: solr:9.10.1
     <<: [*common, *logs]
     volumes:
       - solr:/var/solr
