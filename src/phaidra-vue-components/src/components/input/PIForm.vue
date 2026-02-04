@@ -364,6 +364,7 @@
                               v-on:down-role="sortContainedInRoleDown(f.roles, $event)"
                               v-on:configure="editFieldProps(f)"
                               v-on:remove="removeField(s.fields, f)"
+                              :hidePages="instanceconfig.hideContainedInPages"
                               :configurable="enablefieldconfig || f.configurable"
                             ></p-i-contained-in>
                           </template>

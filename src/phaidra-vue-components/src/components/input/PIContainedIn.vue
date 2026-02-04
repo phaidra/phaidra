@@ -127,7 +127,7 @@
                   </v-menu>
                 </v-col>
               </v-row>
-              <v-row>
+              <v-row v-if="!hidePages">
                 <v-col cols="12" md="6">
                   <v-text-field
                     :value="pageStart"
@@ -604,6 +604,10 @@ export default {
     },
     pageEnd: {
       type: String
+    },
+    hidePages: {
+      type: Boolean,
+      default: false
     },
     isbn: {
       type: String

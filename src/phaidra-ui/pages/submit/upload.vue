@@ -442,6 +442,9 @@ export default {
         self.form.sections[5].fields.push(fields.getField("volume"));
         self.form.sections[5].fields.push(fields.getField("issue"));
         self.form.sections[5].fields.push(fields.getField("series"));
+        self.form.sections[5].fields.push(fields.getField("contained-in"));
+        self.form.sections[5].fields.push(fields.getField("page-start"));
+        self.form.sections[5].fields.push(fields.getField("page-end"));
         let publ = fields.getField("bf-publication")
         self.form.sections[5].fields.push(publ);
 
@@ -466,7 +469,13 @@ export default {
       for (let s of self.form.sections) {
         for (let f of s.fields) {
           f.configurable = false
-          f.multilingual = true
+          if (f.predicate === 'schema:pageStart' || f.predicate === 'schema:pageEnd') {
+            f.multilingual = false
+            f.language = ''
+            f.allowLanguageCancel = false
+          } else {
+            f.multilingual = true
+          }
           for (let prop of Object.keys(f)) {
             switch (prop) {
               case "language":

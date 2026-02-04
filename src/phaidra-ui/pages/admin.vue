@@ -380,6 +380,17 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
+                      :label="$t('Hide page start/end in Is contained in field')"
+                      v-model="parsedPublicConfigData.hideContainedInPages"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">
+                    {{ $t("If enabled, the page start and page end inputs inside the 'Is contained in' field will be hidden in submit forms and editors.") }}
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-checkbox
                       :label="$t('Enable Add Annotation')"
                       v-model="parsedPublicConfigData.addannotation"
                     ></v-checkbox>

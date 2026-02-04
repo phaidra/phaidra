@@ -1258,6 +1258,26 @@ const fields = [
     definition: 'Ratio of the dimensions of a form contained or embodied in a resource to the dimensions of the entity it represents, e.g., for images or cartographic resources.'
   },
   {
+    id: 'page-start',
+    fieldname: 'Page start',
+    predicate: 'schema:pageStart',
+    component: 'p-text-field',
+    multilingual: false,
+    label: 'schema:pageStart',
+    value: '',
+    definition: 'First page of the part within a larger resource.'
+  },
+  {
+    id: 'page-end',
+    fieldname: 'Page end',
+    predicate: 'schema:pageEnd',
+    component: 'p-text-field',
+    multilingual: false,
+    label: 'schema:pageEnd',
+    value: '',
+    definition: 'Last page of the part within a larger resource.'
+  },
+  {
     id: 'duration',
     fieldname: 'Duration',
     predicate: 'schema:duration',

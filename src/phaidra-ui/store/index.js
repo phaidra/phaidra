@@ -79,7 +79,8 @@ export const mutations = {
       'disableChecksum',
       'searchbaseands',
       'irbaseurl',
-      'phaidra_doi_prefix'
+      'phaidra_doi_prefix',
+      'hideContainedInPages'
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
