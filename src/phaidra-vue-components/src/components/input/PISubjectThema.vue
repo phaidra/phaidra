@@ -7,7 +7,7 @@
             :value="getTerm('thema', value)"
             :required="required"
             v-on:input="handleInput($event)"
-            :rules="required ? [ v => !!v || 'Required'] : []"
+            :rules="required ? [ v => !!v || $t('Required')] : []"
             :items="vocabularies['thema'].terms"
             :item-value="'@id'"
             :loading="loading"

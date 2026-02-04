@@ -63,7 +63,7 @@
                 :label="$t('URL')"
                 :required="true"
                 :placeholder="$t('e.g.: https://phaidra.org')"
-                :rules="[ v => !!v || 'Required']"
+                :rules="[ v => !!v || $t('Required')]"
                 filled
               ></v-text-field>
             </v-card-text>

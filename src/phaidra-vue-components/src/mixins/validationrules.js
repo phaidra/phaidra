@@ -177,39 +177,39 @@ export const validationrules = {
     return {
       validationrules: {
         noop: value => { return true },
-        required: value => !!value || 'Required',
+        required: value => !!value || this.$t('Required'),
         date: value => {
-          return typeof value === 'undefined' || value === '' || this.isValidDate(value) || 'Invalid date'
+          return typeof value === 'undefined' || value === '' || this.isValidDate(value) || this.$t('Invalid date')
         },
         duration: value => {
-          return typeof value === 'undefined' || value === '' || this.isValidDuration(value) || 'Invalid duration'
+          return typeof value === 'undefined' || value === '' || this.isValidDuration(value) || this.$t('Invalid duration')
         },
         isbn: value => {
-          return typeof value === 'undefined' || value === '' || this.isValidISBN(value) || 'Invalid ISBN'
+          return typeof value === 'undefined' || value === '' || this.isValidISBN(value) || this.$t('Invalid ISBN')
         },
         doi: value => {
-          return typeof value === 'undefined' || value === '' || this.isValidDOI(value) || 'Invalid DOI'
+          return typeof value === 'undefined' || value === '' || this.isValidDOI(value) || this.$t('Invalid DOI')
         },
         hdl: value => {
-          return typeof value === 'undefined' || value === '' || this.isValidHandle(value) || 'Invalid Handle identifier'
+          return typeof value === 'undefined' || value === '' || this.isValidHandle(value) || this.$t('Invalid Handle identifier')
         },
         urn: value => {
-          return typeof value === 'undefined' || value === '' || this.isValidURN(value) || 'Invalid URN'
+          return typeof value === 'undefined' || value === '' || this.isValidURN(value) || this.$t('Invalid URN')
         },
         acnumber: value => {
-          return typeof value === 'undefined' || value === '' || this.isValidACNumber(value) || 'Invalid AC-number'
+          return typeof value === 'undefined' || value === '' || this.isValidACNumber(value) || this.$t('Invalid AC-number')
         },
         orcid: value => {
-          return typeof value === 'undefined' || value === '' || this.isValidORCID(value) || 'Invalid ORCID'
+          return typeof value === 'undefined' || value === '' || this.isValidORCID(value) || this.$t('Invalid ORCID')
         },
         gnd: value => {
-          return typeof value === 'undefined' || value === '' || this.isValidGND(value) || 'Invalid GND identifier'
+          return typeof value === 'undefined' || value === '' || this.isValidGND(value) || this.$t('Invalid GND identifier')
         },
         viaf: value => {
-          return typeof value === 'undefined' || value === '' || this.isValidVIAF(value) || 'Invalid VIAF identifier'
+          return typeof value === 'undefined' || value === '' || this.isValidVIAF(value) || this.$t('Invalid VIAF identifier')
         },
         wikidata: value => {
-          return typeof value === 'undefined' || value === '' || this.isValidWikidata(value) || 'Invalid Wikidata identifier'
+          return typeof value === 'undefined' || value === '' || this.isValidWikidata(value) || this.$t('Invalid Wikidata identifier')
         }
       }
     }

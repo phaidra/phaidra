@@ -5,7 +5,7 @@
         :value="getTerm('orgunits', value)"
         :required="required"
         v-on:input="handleInput($event)"
-        :rules="required ? [ v => !!v || 'Required'] : []"
+        :rules="required ? [ v => !!v || $t('Required')] : []"
         :items="getOrgUnitsTerms"
         :item-value="'@id'"
         :loading="loading"

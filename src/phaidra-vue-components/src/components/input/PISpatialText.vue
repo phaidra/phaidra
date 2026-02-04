@@ -33,7 +33,7 @@
         v-on:input="$emit('input', $event)"
         :label="$t(label)"
         :required="required"
-        :rules="required ? [ v => !!v || 'Required'] : []"
+        :rules="required ? [ v => !!v || $t('Required')] : []"
         :filled="inputStyle==='filled'"
         :outlined="inputStyle==='outlined'"
       ></v-text-field>
@@ -42,7 +42,7 @@
         v-on:input="$emit('input', $event)"
         :label="$t(label)"
         :required="required"
-        :rules="required ? [ v => !!v || 'Required'] : []"
+        :rules="required ? [ v => !!v || $t('Required')] : []"
         :filled="inputStyle==='filled'"
         :outlined="inputStyle==='outlined'"
       ></v-textarea>

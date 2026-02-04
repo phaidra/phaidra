@@ -33,7 +33,7 @@
         v-on:input="$emit('input-citation', $event)"
         :label="$t(citationLabel)"
         :required="required"
-        :rules="required ? [ v => !!v || 'Required'] : []"
+        :rules="required ? [ v => !!v || $t('Required')] : []"
         :filled="inputStyle==='filled'"
         :outlined="inputStyle==='outlined'"      
         append-outer-icon="mdi-magnify"
@@ -54,7 +54,7 @@
         v-on:input="$emit('input-identifier', $event)"
         :label="$t(identifierLabel)"
         :required="required"
-        :rules="required ? [ v => !!v || 'Required'] : []"
+        :rules="required ? [ v => !!v || $t('Required')] : []"
         :filled="inputStyle==='filled'"
         :outlined="inputStyle==='outlined'"
       ></v-text-field>

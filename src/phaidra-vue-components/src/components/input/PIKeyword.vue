@@ -8,7 +8,7 @@
         :items="items"
         :loading="loading"
         :required="required"
-        :rules="required ? [ v => !!v || 'Required'] : []"
+        :rules="required ? [ v => !!v || $t('Required')] : []"
         hide-no-data
         :item-text="'term'"
         :item-value="'payload'"
