@@ -416,10 +416,7 @@ const fields = [
     organizationLabel: 'Production place',
     role: 'role:prp',
     hideRole: true,
-    definition: 'The place of production (e.g., inscription, fabrication, construction, etc.) of a resource in an unpublished form',
-    multilingual: true,
-    allowLanguageCancel: true,
-    language: ''
+    definition: 'The place of production (e.g., inscription, fabrication, construction, etc.) of a resource in an unpublished form'
   },
   {
     id: 'production-company',
