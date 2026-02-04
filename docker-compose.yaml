@@ -1,12 +1,19 @@
 name: phaidra
 
 networks:
-  phaidra-network:
+  outer-network:
     ipam:
       config:
         - subnet: 172.29.0.0/16
           ip_range: 172.29.7.0/24
           gateway: 172.29.5.1
+  phaidra-network:
+    driver: macvlan
+    # ipam:
+    #   config:
+    #     - subnet: 172.29.0.0/16
+    #       ip_range: 172.29.7.0/24
+    #       gateway: 172.29.5.1
 
 # see https://docs.docker.com/reference/compose-file/extension/
 x-custom:
@@ -169,6 +176,9 @@ services:
       - ./static:/mnt/static:ro
     environment:
       <<: [*httpd_env, *api_common_env, *hosts]
+    networks:
+      - outer-network
+      - phaidra-network
     profiles: ["demo-local"]
 
   httpd-demo-s3:
@@ -332,6 +342,7 @@ services:
     
   ############### solr ###############
   solr:
+    hostname: "solr"
     image: phaidraorg/solr-dist:5f4fdef9
     <<: [*common, *logs]
     volumes:
