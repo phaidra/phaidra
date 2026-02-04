@@ -207,6 +207,9 @@ services:
       - mdcerts:/mnt/mdcerts:rw
       - ./static:/mnt/static:ro
       - ./pfsa:/mnt/pfsa:ro
+    networks:
+      - outer-network
+      - phaidra-network
     environment:
       <<: [*httpd_env, *api_common_env, *hosts]
     profiles: ["ssl-local"]
@@ -241,6 +244,9 @@ services:
       - mdcerts:/mnt/mdcerts:rw
       - ./static:/mnt/static:ro
       - ./pfsa:/mnt/pfsa:ro
+    networks:
+      - outer-network
+      - phaidra-network
     environment:
       <<: [*shib_env, *httpd_env, *api_common_env, *hosts]
     entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
