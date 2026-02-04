@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-VOLUME_NAME="phaidra_solr"
+PROJECT="${PROJECT:-phaidra}"
+VOLUME_NAME="${PROJECT}_solr"
 
 # Resolve repo root based on this script’s location:
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
