@@ -1291,11 +1291,11 @@
                         <v-row>
                           <v-col>
                             <v-icon>mdi-eye-outline</v-icon
-                            ><span class="ml-2">{{ stats.detail }}</span>
+                            ><span class="ml-2">{{ stats.detail || '-' }}</span>
                           </v-col>
                           <v-col v-if="downloadable">
                             <v-icon>mdi-download</v-icon
-                            ><span class="ml-2">{{ stats.download }}</span>
+                            ><span class="ml-2">{{ stats.download || '-' }}</span>
                           </v-col>
                           <v-spacer></v-spacer>
                         </v-row>
