@@ -11,6 +11,8 @@
         :templating="templating"
         :disableChecksum="instanceconfig.disableChecksum"
         :validationfnc="validationfnc ? validationfnc : null" 
+        :enablepreview="true"
+        :forcePreview="instanceconfig.forcePreview"
         v-on:load-form="form = $event" 
         v-on:load-rights="rights = $event"
         v-on:object-created="objectCreated($event)"

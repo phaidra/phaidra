@@ -1287,7 +1287,11 @@ export default {
     showForcePreview: function() {
       this.validationError = false
       this.updateJsonld()
-      this.activetab = 2
+      if(this.templating) {
+        this.activetab = 4
+      } else {
+        this.activetab = 2
+      }
       window.scrollTo(0,0);
     },
     editFieldProps: function(fieldDet) {
