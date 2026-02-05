@@ -317,6 +317,15 @@ sub info {
     }
   }
 
+  delete $info->{extracted_text} if exists $info->{extracted_text};
+
+  if (exists $info->{members} && ref($info->{members}) eq 'ARRAY') {
+    for my $member (@{$info->{members}}) {
+      next unless ref($member) eq 'HASH';
+      delete $member->{extracted_text} if exists $member->{extracted_text};
+    }
+  }
+
   $res->{info} = $info;
   return $res;
 }
