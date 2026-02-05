@@ -87,7 +87,14 @@
         </v-col>
       </template>
     </template>
-    <v-col :cols="(type === 'schema:Organization' && multilingual) ? (actions.length ? 4 : 6) : 6" v-if="type === 'schema:Organization'">
+    <v-col
+      :cols="multilingual
+        ? (actions.length ? 4 : 6)
+        : (hideRole
+          ? (actions.length ? 10 : 12)
+          : (actions.length ? 6 : 8)
+        )"
+      v-if="type === 'schema:Organization'">
       <v-text-field
         :value="organizationText"
         :label="$t( organizationLabel ? organizationLabel : 'Organization' )"
