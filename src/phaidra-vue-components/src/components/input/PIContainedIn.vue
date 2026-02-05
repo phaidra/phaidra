@@ -165,7 +165,7 @@
                   <v-autocomplete
                     v-on:input="$emit('input-identifier-type', $event)"
                     :label="$t('Type of identifier')"
-                    :items="vocabularies[identifierVocabulary].terms"
+                    :items="filteredIdentifierTypes"
                     :item-value="'@id'"
                     :value="getTerm(identifierVocabulary, identifierType)"
                     :filter="autocompleteFilter"
@@ -767,6 +767,12 @@ export default {
       arr.push({ title: this.$t('Move up'), event: 'up-role' })
       arr.push({ title: this.$t('Move down'), event: 'down-role' })
       return arr
+    },
+    filteredIdentifierTypes: function () {
+      if (this.vocabularies[this.identifierVocabulary] && this.vocabularies[this.identifierVocabulary].terms) {
+        return this.vocabularies[this.identifierVocabulary].terms.filter(term => term['@id'] !== 'ids:isbn')
+      }
+      return []
     }
   },
   watch: {
