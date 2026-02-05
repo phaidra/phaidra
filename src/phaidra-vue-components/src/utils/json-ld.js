@@ -471,6 +471,7 @@ export default {
                     serIdx++
                     let s = {
                       id: 'contained-in-series-' + serIdx,
+                      seriesType: series['@type'] || 'schema:CreativeWork',
                       seriesTitle: '',
                       seriesTitleLanguage: '',
                       seriesVolume: '',
