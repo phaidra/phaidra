@@ -7,7 +7,7 @@
           <v-card-title class="title font-weight-light white--text">{{
             $t("Terms of use")
           }}</v-card-title>
-          <v-card-text class="mt-4" style="white-space: pre-wrap">{{ tou }}</v-card-text>
+          <v-card-text class="text-body-1 mt-4" style="white-space: pre-wrap">{{ tou }}</v-card-text>
         </v-card>
       </v-col>
     </v-row>
