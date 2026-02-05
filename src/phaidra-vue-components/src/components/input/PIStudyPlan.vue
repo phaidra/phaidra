@@ -28,7 +28,7 @@
                 v-on:blur="$emit('input-name',$event.target.value)"
                 :label="$t('Study plan name')"
                 :required="required"
-                :rules="required ? [ v => !!v || 'Required'] : []"
+                :rules="required ? [ v => !!v || $t('Required')] : []"
                 :filled="inputStyle==='filled'"
                 :outlined="inputStyle==='outlined'"
               ></v-text-field>

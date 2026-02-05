@@ -5,7 +5,7 @@
         :value="getTerm(vocabulary, selectvalue)"
         :required="required"
         v-on:input="updateLocation('select', $event)"
-        :rules="required ? [ v => !!v || 'Required'] : []"
+        :rules="required ? [ v => !!v || $t('Required')] : []"
         :items="vocabularies[vocabulary].terms"
         :item-value="'@id'"
         :filter="autocompleteFilter"
@@ -35,7 +35,7 @@
         v-on:input="updateLocation('text', $event)"
         :label="$t(label)"
         :required="required"
-        :rules="required ? [ v => !!v || 'Required'] : []"
+        :rules="required ? [ v => !!v || $t('Required')] : []"
         :filled="inputStyle==='filled'"
         :outlined="inputStyle==='outlined'"
       ></v-text-field>

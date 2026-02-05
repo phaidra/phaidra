@@ -7,7 +7,7 @@
           :value="getTerm(vocabulary, value)"
           :background-color="backgroundColor ? backgroundColor : undefined"
           v-on:input="$emit('input', $event)"
-          :rules="required ? [ v => !!v || 'Required'] : []"
+          :rules="required ? [ v => !!v || $t('Required')] : []"
           :items="loadedTerms"
           :item-value="'@id'"
           :loading="loading"

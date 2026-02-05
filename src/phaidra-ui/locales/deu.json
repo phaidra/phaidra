@@ -1370,5 +1370,6 @@
     "Additional downloadable datastreams": "Zusätzliche herunterladbare Datenströme",
     "Comma-separated list of additional datastreams IDs to show as download links in object detail metadata box (e.g., MUSEO, BOOKINFO).": "Kommagetrennte Liste von zusätzlichen Datenstrom-IDs, die als Download-Links im Objektdetail-Metadatenfeld angezeigt werden (z.B. MUSEO, BOOKINFO).",
     "schema:availableLanguage": "Verfügbare Sprache",
-    "Resource Link": "Ressourcenlink"
+    "Resource Link": "Ressourcenlink",
+    "Required": "Pflichtfeld"
   }

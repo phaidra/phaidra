@@ -9,7 +9,7 @@
         :loading="loading"
         :search-input.sync="search"
         :required="required"
-        :rules="required ? [ v => !!v || 'Required'] : []"
+        :rules="required ? [ v => !!v || $t('Required')] : []"
         cache-items
         hide-no-data
         hide-selected
