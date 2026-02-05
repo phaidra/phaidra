@@ -37,7 +37,7 @@ spec:
             - name: GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH
               value: "/mnt/grafana/dashboards/phaidra_default.json"
           name: grafana
-          image: grafana/grafana:12.3.1
+          image: grafana/grafana:12.3.2
           volumeMounts:
             - name: grafana-provisioned-datasources
               mountPath: /etc/grafana/provisioning/datasources
