@@ -1,4 +1,4 @@
-FROM httpd:2.4.65-trixie
+FROM httpd:2.4.66-trixie
 ADD ../container_init/httpd/phaidra-ssl/conf/phaidra-ssl.conf \
     /usr/local/apache2/conf/httpd.conf
 ADD ../container_init/httpd/phaidra-ssl/httpd-ssl-entrypoint.bash \

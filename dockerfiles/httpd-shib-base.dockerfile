@@ -1,4 +1,4 @@
-FROM httpd:2.4.65-trixie
+FROM httpd:2.4.66-trixie
 RUN <<EOF
 apt-get --quiet update
 apt-get install --yes --quiet --no-install-recommends \
