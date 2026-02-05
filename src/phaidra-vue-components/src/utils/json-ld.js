@@ -1478,10 +1478,23 @@ export default {
               components.push(f)
               break
 
-            // pages, handled insisde rdau:P60193 or rdau:P60101
             case 'schema:pageStart':
+              f = fields.getField('page-start')
+              if (typeof obj === 'string') {
+                f.value = obj
+              } else if (obj && obj['@value']) {
+                f.value = obj['@value']
+              }
+              components.push(f)
+              break
             case 'schema:pageEnd':
-              // noop
+              f = fields.getField('page-end')
+              if (typeof obj === 'string') {
+                f.value = obj
+              } else if (obj && obj['@value']) {
+                f.value = obj['@value']
+              }
+              components.push(f)
               break
 
             default:
@@ -2657,6 +2670,13 @@ export default {
           break
 
         case 'schema:subtitleLanguage':
+          if (f.value) {
+            this.push_literal(jsonld, f.predicate, f.value)
+          }
+          break
+
+        case 'schema:pageStart':
+        case 'schema:pageEnd':
           if (f.value) {
             this.push_literal(jsonld, f.predicate, f.value)
           }
