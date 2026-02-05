@@ -1054,7 +1054,7 @@ services:
 
   grafana-dev:
     hostname: "grafana"
-    image: grafana/grafana:12.3.1
+    image: grafana/grafana:12.3.2
     volumes:
       - ./container_init/grafana/ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml:ro
       - ./container_init/grafana/dd.yaml:/etc/grafana/provisioning/dashboards/dd.yaml:ro
