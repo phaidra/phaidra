@@ -256,7 +256,7 @@ services:
 
   httpd-demo-local-dev:
     hostname: "httpd"
-    image: httpd:2.4.65-trixie
+    image: httpd:2.4.66-trixie
     <<: [*common, *logs]
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
@@ -275,7 +275,7 @@ services:
 
   httpd-demo-s3-dev:
     hostname: "httpd"
-    image: httpd:2.4.65-trixie
+    image: httpd:2.4.66-trixie
     <<: [*common, *logs]
     ports:
       - "${PHAIDRA_HOSTPORT:-8899}:80"
@@ -291,7 +291,7 @@ services:
 
   httpd-ssl-dev:
     hostname: "httpd"
-    image: httpd:2.4.65-trixie
+    image: httpd:2.4.66-trixie
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
