@@ -332,7 +332,7 @@ services:
     
   ############### solr ###############
   solr:
-    image: phaidraorg/solr-dist:5f4fdef9
+    image: phaidraorg/solr-dist:ff7493a2
     <<: [*common, *logs]
     volumes:
       - solr:/var/solr
@@ -365,7 +365,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:2b611c67
+    image: phaidraorg/ui:c722bbe9
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -383,7 +383,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:2b611c67
+    image: phaidraorg/ui:c722bbe9
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -451,7 +451,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:4f0a3c9d
+    image: phaidraorg/api-dist:c722bbe9
     <<: [*common, *logs]
     volumes:
       - s3-cache:/s3-cache
@@ -465,7 +465,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:4f0a3c9d
+    image: phaidraorg/api-dist:c722bbe9
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -989,7 +989,7 @@ services:
   ############### promtail ###############
   promtail:
     hostname: "promtail"
-    image: phaidraorg/promtail-dist:17fb62e1
+    image: phaidraorg/promtail-dist:9636bf6e
     volumes:
       - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
     command: -config.file=/etc/promtail/config.yaml -config.expand-env=true
@@ -1036,7 +1036,7 @@ services:
   ############### grafana ###############
   grafana:
     hostname: "grafana"
-    image: phaidraorg/grafana-dist:32b5939f
+    image: phaidraorg/grafana-dist:5877a15e
     volumes:
       - grafana:/var/lib/grafana
     environment:
