@@ -2311,7 +2311,25 @@ export default {
     collMembersTotalPages: function () {
       return Math.ceil(this.$store.state.collectionMembersTotal / this.collMembersPagesize);
     },
+    is3DModelType: function () {
+      if (!this.objectInfo || !this.objectInfo.edm_hastype) {
+        return false;
+      }
+      const types = this.objectInfo.edm_hastype;
+      if (Array.isArray(types)) {
+        return types.some(
+          (t) =>
+            typeof t === "string" &&
+            t.includes("3D model")
+        );
+      }
+      if (typeof types === "string") {
+        return types.includes("3D model");
+      }
+      return false;
+    },
     showPreview: function () {
+      const is3DZip = this.mimetype === "application/zip" && this.is3DModelType;
       return (
         this.objectInfo.cmodel !== "Resource" &&
         this.objectInfo.cmodel !== "Collection" &&
@@ -2321,7 +2339,7 @@ export default {
               this.mimetype === "model/obj" ||
               this.mimetype === "model/glb" ||
               this.mimetype === "model/ply" ||
-              this.mimetype === "application/zip" ||
+              is3DZip ||
               this.mimetype === "application/x-wacz")
               )) &&
         this.objectInfo.cmodel !== "Container" &&
