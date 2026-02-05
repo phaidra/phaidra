@@ -1739,6 +1739,41 @@ export default {
       } else if (newField.groupMandatory === undefined && newField.mandatory === undefined) {
       }
     },
+    setDefaultLanguageForAddedField: function (baseId, field) {
+      const lang = this.$i18n && this.$i18n.locale
+      if (!lang) {
+        return
+      }
+      
+      if (field.multilingual && (!field.language || field.language === '')) {
+        field.language = lang
+      }
+
+      const applyLanguageRecursively = (obj) => {
+        if (!obj || typeof obj !== 'object') {
+          return
+        }
+
+        Object.keys(obj).forEach(key => {
+          const value = obj[key]
+
+          if (key === 'language' || key.endsWith('Language')) {
+            if (value === '' || value === null || value === undefined) {
+              obj[key] = lang
+            }
+            return
+          }
+
+          if (Array.isArray(value)) {
+            value.forEach(child => applyLanguageRecursively(child))
+          } else if (value && typeof value === 'object') {
+            applyLanguageRecursively(value)
+          }
+        })
+      }
+
+      applyLanguageRecursively(field)
+    },
     clearSubjectFields: function (newField) {
       if (newField.hasOwnProperty('skos:prefLabel')) {
         newField['skos:prefLabel'] = []
@@ -2398,11 +2433,13 @@ export default {
     },
     addFields (section) {
       for (var i = 0; i < this.addfieldselection.length; i++) {
-        let f = fields.getField(this.addfieldselection[i].id)
+        const baseId = this.addfieldselection[i].id
+        let f = fields.getField(baseId)
         f.removable = true
         if (f.component === 'p-association' || f.predicate === 'rdax:P00009') {
           f.isParentSelectionDisabled = this.instanceconfig.isParentSelectionDisabled || false
         }
+        this.setDefaultLanguageForAddedField(baseId, f)
         if(f.id.includes("phaidra:Subject")) {
           this.form.sections.push(f)
         } else {
