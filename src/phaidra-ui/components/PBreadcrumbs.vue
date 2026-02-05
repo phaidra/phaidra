@@ -36,14 +36,6 @@
       </ol>
       <v-divider class="mt-1"></v-divider>
     </v-col>
-    <v-col cols="12" class="py-0">
-      <v-progress-linear
-        :active="$store.state.loading"
-        :height="2"
-        indeterminate
-        color="primary"
-      ></v-progress-linear>
-    </v-col>
   </v-row>
 </template>
 
