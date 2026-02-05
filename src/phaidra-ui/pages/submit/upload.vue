@@ -176,7 +176,7 @@ export default {
           }
           if (!hasResourcelink) {
             this.form.sections.splice(1, 0, {
-              title: "Resource Link",
+              title: this.$t("Resource Link"),
               type: "resourcelink",
               id: (new Date()).getTime(),
               resourcelink: ""
