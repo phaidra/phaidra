@@ -116,7 +116,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://pid.phaidra.org/univie-org/"> University Vienna Organization Structure </a>'
+                '<a href="https://pid.phaidra.org/univie-org/">University Vienna Organization Structure</a>'
             },
             {
               id: 'obligation',
@@ -160,7 +160,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="http://id.loc.gov/vocabulary/languages"> MARC List for Languages </a> <br> <a href="https://vocab.phaidra.org/vocabulary/WKFZ-VG0C"> Language Phaidra Vocabulary </a>'
+                '<a href="http://id.loc.gov/vocabulary/languages">MARC List for Languages</a> <br> <a href="https://vocab.phaidra.org/vocabulary/WKFZ-VG0C">Language Phaidra Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -369,7 +369,7 @@ export const state = () => ({
               title: 'Usage notes',
               content: {
                 level1:
-                  'This field expresses the storage medium of the physical source. <br>Select a value from the drop-down list. In case the value you want to select is not in the list, choose <i>Other</i> and notify the metadata administrators.', // NB: there's no "Other" in the list rigtht now
+                  'This field expresses the storage medium of the physical source. <br>Select a value from the drop-down list. In case the value you want to select is not in the list, choose <i>Other</i> and notify the metadata administrators.', // NB: there's no "Other" in the list right now
                 level2: '',
                 level3: ''
               }
@@ -378,7 +378,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/YGE3-S9WD"> Carrier type Phaidra Vocabulary </a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/YGE3-S9WD">Carrier type Phaidra Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -901,7 +901,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://pid.phaidra.org/vocabulary/en/collections/BBDA-1SJY.html"> Funders Phaidra Vocabulary </a>'
+                '<a href="https://pid.phaidra.org/vocabulary/en/collections/BBDA-1SJY.html">Funders Phaidra Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -1204,7 +1204,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="http://id.loc.gov/vocabulary/languages"> MARC List for Languages </a> <br> <a href="https://vocab.phaidra.org/vocabulary/WKFZ-VG0C"> Language Phaidra Vocabulary </a>'
+                '<a href="http://id.loc.gov/vocabulary/languages">MARC List for Languages</a> <br> <a href="https://vocab.phaidra.org/vocabulary/WKFZ-VG0C">Language Phaidra Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -1248,7 +1248,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="http://id.loc.gov/vocabulary/languages"> MARC List for Languages </a> <br> <a href="https://vocab.phaidra.org/vocabulary/WKFZ-VG0C"> Language Phaidra Vocabulary </a>'
+                '<a href="http://id.loc.gov/vocabulary/languages">MARC List for Languages</a> <br> <a href="https://vocab.phaidra.org/vocabulary/WKFZ-VG0C">Language Phaidra Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -1294,7 +1294,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/VPSR-KHRC"> Material Phaidra Vocabulary </a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/VPSR-KHRC">Material Phaidra Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -1504,7 +1504,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/NB34-DPJR"> Object type Phaidra Vocabulary </a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/NB34-DPJR">Object type Phaidra Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -1976,7 +1976,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/HHB2-GXRZ"> Regional encoding Phaidra Vocabulary </a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/HHB2-GXRZ">Regional encoding Phaidra Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -2063,7 +2063,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/8MPB-RN23"> Reproduction note Phaidra Vocabulary </a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/8MPB-RN23">Reproduction note Phaidra Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -2410,7 +2410,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/W6R8-EAQS"> Technique Phaidra Vocabulary </a>'
+                '<a href="https://vocab.phaidra.org/vocabulary/W6R8-EAQS">Technique Phaidra Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -2454,7 +2454,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="http://vocab.getty.edu/aat/"> Art and Architecture Thesaurus </a>'
+                '<a href="http://vocab.getty.edu/aat/">Art and Architecture Thesaurus</a>'
             },
             {
               id: 'obligation',
@@ -2798,7 +2798,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://www.iana.org/assignments/media-types/media-types.xhtml"> Internet Media Types (IMT) </a> '
+                '<a href="https://www.iana.org/assignments/media-types/media-types.xhtml">Internet Media Types (IMT)</a>'
             },
             {
               id: 'obligation',
@@ -2842,7 +2842,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://vocab.phaidra.org/vocabulary/7E4S-MA30"> Resource type Phaidra Vocabulary </a> '
+                '<a href="https://vocab.phaidra.org/vocabulary/7E4S-MA30">Resource type Phaidra Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -2887,7 +2887,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://pid.phaidra.org/vocabulary/PY38-5KQZ"> Access rights Phaidra Vocabulary </a>'
+                '<a href="https://pid.phaidra.org/vocabulary/PY38-5KQZ">Access rights Phaidra Vocabulary</a>'
             },
             {
               id: 'obligation',
@@ -2932,7 +2932,7 @@ export const state = () => ({
               id: 'vocabulary',
               title: 'Vocabulary',
               content:
-                '<a href="https://creativecommons.org/licenses/"> Creative Commons licenses </a> '
+                '<a href="https://creativecommons.org/licenses/">Creative Commons licenses</a>'
             },
             {
               id: 'obligation',

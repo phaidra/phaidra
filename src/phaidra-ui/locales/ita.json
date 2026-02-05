@@ -812,7 +812,7 @@
   "arm:ConditionAssessment": "Condizione",
   "bf:tableOfContents": "Indice",
   "rdau:P60071": "Data di produzione",
-  "edm:rights": "Diritti",
+  "edm:rights": "Diritti / Licenza",
   "schema:pageStart": "Pagina iniziale",
   "schema:pageEnd": "Pagina finale",
   "rdau:P60193": "Fa parte della serie",
@@ -1450,5 +1450,6 @@
   "Place where the work or its components are stored.": "Luogo in cui l'opera o i suoi componenti sono conservati.",
   "Indicate the place where the work is stored. Use the suggester to find the suitable value or write your own value.": "Indica il luogo in cui l'opera è conservata. Usare il suggeritore per trovare il valore adatto o scrivere un proprio valore.",
   "A tag for the purpose of identification or to give other information.": "Un tag (etichetta) identificativo o che fornisce informazioni.",
-  "Information to support system logic that are not relevant to the user.": "Informazioni a supporto della logica di sistema che non sono rilevanti per l'utente."
+  "Information to support system logic that are not relevant to the user.": "Informazioni a supporto della logica di sistema che non sono rilevanti per l'utente.",
+  "<a href=\"https://creativecommons.org/licenses/\">Creative Commons licenses</a>": "<a href=\"https://creativecommons.org/licenses/\">Licenze Creative Commons</a>"
 }
