@@ -92,6 +92,8 @@ export const vocabulary = {
           return 'https://lccn.loc.gov/' + value
         case 'ids:isni':
           return 'https://isni.org/isni/' + value
+        case 'ids:issn':
+          return 'http://issn.org/resource/ISSN/' + value
         case 'ids:uri':
           return value
       }
