@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Usage:
-#   PROJECT=phaidra ./migrate_volumes.sh
+#   PROJECT=phaidra ./01_migrate_volumes.sh
 #
 # This script:
 #   - Creates new volumes with the renamed scheme

@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Usage:
+#   PROJECT=phaidra ./02_update-solr_config.sh
+#
+# This script creates a temporary container which copies newest solr config to existing volume
+
+
 PROJECT="${PROJECT:-phaidra}"
 VOLUME_NAME="${PROJECT}_solr"
 
