@@ -506,27 +506,67 @@ export default {
 
       // Authors / roles
       if (doiImportData.authors && doiImportData.authors.length > 0) {
-        const roleHits = this.findFields(baseForm, f => f.component === 'p-entity-extended' || f.component === 'p-entity')
-        const targetSectionIndex = roleHits[0]?.sectionIndex ?? 0
-        const targetSection = baseForm.sections[targetSectionIndex]
-        const ensureRoleField = () => {
-          if (roleHits.length > 0) {
-            return roleHits.shift().field
+        const existingRoleHits = this.findFields(baseForm, f =>
+          (f.component === 'p-entity-extended' || f.component === 'p-entity') &&
+          f.group === 'role'
+        )
+        baseForm.sections.forEach(section => {
+          if (!section || !Array.isArray(section.fields)) return
+          for (let i = section.fields.length - 1; i >= 0; i--) {
+            const f = section.fields[i]
+            if (!f || f.component !== 'p-entity') continue
+            if (f.group && f.group !== 'role') continue
+            const hasPersonData = (f.firstname && f.firstname.trim()) || (f.lastname && f.lastname.trim())
+            const hasOrgData = (f.name && f.name.trim()) || (f.organizationText && f.organizationText.trim())
+            if (!hasPersonData && !hasOrgData) {
+              section.fields.splice(i, 1)
+            }
           }
-          // create new role-extended field if multiplicable is allowed
-          const newRole = fields.getField('role-extended')
+        })
+        const defaultRoleHits = this.findFields(baseForm, f =>
+          f.id === 'role' &&
+          f.component === 'p-entity'
+        )
+        defaultRoleHits.forEach(hit => {
+          const section = baseForm.sections[hit.sectionIndex]
+          if (section && Array.isArray(section.fields)) {
+            const idx = section.fields.indexOf(hit.field)
+            if (idx !== -1) {
+              section.fields.splice(idx, 1)
+            }
+          }
+        })
+
+        const digitalObjectSectionIndex = baseForm.sections.findIndex(s => s.type === 'digitalobject')
+        const targetSectionIndex = existingRoleHits[0]?.sectionIndex ??
+          (digitalObjectSectionIndex !== -1 ? digitalObjectSectionIndex : 0)
+        const targetSection = baseForm.sections[targetSectionIndex]
+
+        const templateRoleFieldHit = existingRoleHits.find(h => h.field.component === 'p-entity-extended')
+        const templateRoleField = templateRoleFieldHit ? templateRoleFieldHit.field : null
+
+        const ensureRoleField = () => {
+          const newRole = templateRoleField
+            ? JSON.parse(JSON.stringify(templateRoleField))
+            : fields.getField('role-extended')
+
+          newRole.component = 'p-entity-extended'
+          newRole.group = 'role'
+          newRole.role = 'role:aut'
+          newRole.roleVocabulary = newRole.roleVocabulary || 'submitrolepredicate'
+          newRole.identifierType = newRole.identifierType || 'ids:orcid'
+          newRole.identifierLabel = newRole.identifierLabel || 'ORCID'
+          newRole.showIdentifier = true
+          newRole.showIdentifierType = newRole.showIdentifierType === undefined ? false : newRole.showIdentifierType
+          newRole.isParentSelectionDisabled = this.instanceconfig?.isParentSelectionDisabled
+
           targetSection.fields.push(newRole)
           return newRole
         }
         doiImportData.authors.forEach((author, idx) => {
           const roleField = ensureRoleField()
           if (!roleField) return
-          roleField.role = 'role:aut'
-          roleField.roleVocabulary = roleField.roleVocabulary || 'submitrolepredicate'
-          roleField.identifierType = roleField.identifierType || 'ids:orcid'
-          roleField.identifierLabel = roleField.identifierLabel || 'ORCID'
-          roleField.showIdentifier = true
-          roleField.showIdentifierType = roleField.showIdentifierType === undefined ? false : roleField.showIdentifierType
+
           if (author.type === 'schema:Person') {
             this.setIfEmpty(roleField, 'type', 'schema:Person', true)
             this.setIfEmpty(roleField, 'firstname', author.firstname, overwrite || idx === 0)
