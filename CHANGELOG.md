@@ -79,9 +79,12 @@ docker exec -it phaidra-api-1 perl migrations/v3.4.0/07_add_jobs_indexes.pl
 
 Run the migration script to update solrconfig.xml in volume to the version from container_init:
 
+* git pull latest version
+* docker compose ... down ...
 ```
 ./scripts/migrations/v3.4.0/02_update_solr_config.sh
 ```
+* docker compose ... up ...
 
 This is needed for `update solr docker tag to v9.10.1`.
 
