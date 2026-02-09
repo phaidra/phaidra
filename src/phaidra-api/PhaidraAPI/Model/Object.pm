@@ -1511,6 +1511,9 @@ sub save_metadata {
             $rel->{'o'} = "info:fedora/" . $pid;
             $skiphook = 0;
           }
+          if ($rel->{'o'} !~ m{^info:fedora/} && $rel->{'o'} !~ m{^https?://} && $rel->{'o'} ne $pid) {
+            $rel->{'o'} = "info:fedora/" . $rel->{'o'};
+          }
           $relsPerSubject->{$rel->{'s'}} = [] unless(exists($relsPerSubject->{$rel->{'s'}}));
           push @{$relsPerSubject->{$rel->{'s'}}}, {predicate => $rel->{'p'}, object => $rel->{'o'}};
         }
