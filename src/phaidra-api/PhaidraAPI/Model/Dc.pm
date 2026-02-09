@@ -179,7 +179,6 @@ sub map_mods_2_dc_hash {
   my $classifications = $ext->_get_mods_classifications($c, $dom);
   push @{$dc_p{subject}}, @$classifications;
   $dc_p{identifier} = $ext->_get_mods_element_values($c, $dom, 'mods > identifier');
-  push @{$dc_p{identifier}}, {value => $c->app->config->{scheme}."://" . $c->app->config->{phaidra}->{baseurl} . "/" . $pid};
 
   unless ($indexing) {
     my $relids = $self->_get_relsext_identifiers($c, $pid);
@@ -312,7 +311,6 @@ sub map_jsonld_2_dc_hash {
   }
 
   # $dc_p{identifier} = $ext->_get_jsonld_identifiers($c, $jsonld);
-  push @{$dc_p{identifier}}, {value => $c->app->config->{scheme}."://" . $c->app->config->{phaidra}->{baseurl} . "/" . $pid};
   unless ($indexing) {
     my $relids = $self->_get_relsext_identifiers($c, $pid);
     for my $relid (@$relids) {
