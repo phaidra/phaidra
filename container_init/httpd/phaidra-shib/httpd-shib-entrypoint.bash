@@ -28,7 +28,7 @@ else
 fi
 
 if [ "${HTTPD_ACME_EAB_ENABLE}" = "true" ]; then
-  EXTRA_FLAGS="-D ACME_EAB"
+  EXTRA_FLAGS="$EXTRA_FLAGS -D ACME_EAB"
 fi
 
 if [ "${HTTPD_PFSA_ENABLE}" = "true" ]; then
