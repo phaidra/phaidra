@@ -6,6 +6,10 @@ else
   cp /ssl/privkey.pem /usr/local/apache2/conf/server.key
 fi
 
+if [ "${HTTPD_ACME_EAB_ENABLE}" = "true" ]; then
+  EXTRA_FLAGS="-D ACME_EAB"
+fi
+
 if [ "${HTTPD_PFSA_ENABLE}" = "true" ]; then
   EXTRA_FLAGS="$EXTRA_FLAGS -D PFSA"
 fi

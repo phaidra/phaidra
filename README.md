@@ -263,13 +263,20 @@ If you have a previous version running, check CHANGELOG.pm for changes and updat
 Some versions might require the execution of a migration script, but this will be mentioned in the changelog.
 
 # ACME
-Phaidra supports ACME in the \*ssl\* and \*shib\* profiles. To enable it, the following ENV variables need to be set:
+PHAIDRA supports ACME in the \*ssl\* and \*shib\* profiles. To enable it, the following ENV variables need to be set:
 + `HTTPD_ACME_ENABLE`: Set to `true`.
 + `CA_ENDPOINT`: ACME endpoint you want to use. Defaults to LetsEncrypt staging, i.e. the certificates you get won't be production-ready!
 + `MD_CERTIFICATE_AGREEMENT`: set to `accepted` if you accept the TOS of your CA.
 + `PHAIDRA_ADMIN_EMAIL`: Must be set to a valid email address. The ACME client uses this as the contact address.
 
 After starting the containers, the mod_md will fetch the certificates, but a (graceful) restart is needed for Apache to start using them. You can simply restart the httpd container using `docker restart <container_id>`
+
+If you want to use extrenal account binding, you have to additionally define
++ `HTTPD_ACME_EAB_ENABLE`: Set to `true`.
++ `HTTPD_ACME_KEYID`: Key identifier.
++ `HTTPD_ACME_HMAC64`: A base64 encoded 'hmac' value.
+
+and change `CA_ENDPOINT` to the endpoint of your certificate provider.
 
 # Extra profiles
 ## minio
