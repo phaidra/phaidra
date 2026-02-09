@@ -1444,7 +1444,7 @@ const vocabularies = {
   'resourcetype': {
     terms: [
       { '@id': ns + '44TN-P1S0', 'skos:prefLabel': { 'eng': 'Image', 'deu': 'Bild', 'ita': 'Immagine' } },
-      { '@id': ns + '69ZZ-2KGX', 'skos:prefLabel': { 'eng': 'Text', 'deu': 'Text', 'ita': 'Testo' } },
+      { '@id': ns + '69ZZ-2KGX', 'skos:prefLabel': { 'eng': 'Text', 'deu': 'Text', 'ita': 'Documento PDF' } },
       { '@id': ns + 'GXS7-ENXJ', 'skos:prefLabel': { 'eng': 'Collection', 'deu': 'Collection', 'ita': 'Collezione' } },
       { '@id': ns + 'B0Y6-GYT8', 'skos:prefLabel': { 'eng': 'Video', 'deu': 'Video', 'ita': 'Video' } },
       { '@id': ns + '7AVS-Y482', 'skos:prefLabel': { 'eng': 'Data', 'deu': 'Daten', 'ita': 'Dati' } },
@@ -1459,7 +1459,7 @@ const vocabularies = {
   'resourcetypenocontainer': {
     terms: [
       { '@id': ns + '44TN-P1S0', 'skos:prefLabel': { 'eng': 'Image', 'deu': 'Bild', 'ita': 'Immagine' } },
-      { '@id': ns + '69ZZ-2KGX', 'skos:prefLabel': { 'eng': 'Text', 'deu': 'Text', 'ita': 'Testo' } },
+      { '@id': ns + '69ZZ-2KGX', 'skos:prefLabel': { 'eng': 'Text', 'deu': 'Text', 'ita': 'Documento PDF' } },
       { '@id': ns + 'GXS7-ENXJ', 'skos:prefLabel': { 'eng': 'Collection', 'deu': 'Collection', 'ita': 'Collezione' } },
       { '@id': ns + 'B0Y6-GYT8', 'skos:prefLabel': { 'eng': 'Video', 'deu': 'Video', 'ita': 'Video' } },
       { '@id': ns + '7AVS-Y482', 'skos:prefLabel': { 'eng': 'Data', 'deu': 'Daten', 'ita': 'Dati' } },
