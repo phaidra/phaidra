@@ -942,6 +942,69 @@
                   </v-col>
                   <v-col cols="6" class="mt-4">{{ $t("I.e. 'example.com'. Then removes 'example.com' from 'user@example.com'. Used for backward compatibility. Should be used with caution: Don't use on instances where users from multiple organisations can login!") }}</v-col>
                 </v-row>
+                <v-row>
+                  <v-col>
+                    <v-card>
+                      <v-card-title class="title font-weight-light white--text">{{ $t("Reporting") }}</v-card-title>
+                      <v-card-text>
+                        <v-row class="mt-4">
+                          <v-col>
+                            <v-text-field
+                              :label="$t('Reporting email')"
+                              v-model="parsedPrivateConfigData.reportingemail"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="6" class="mt-6">{{ $t("Email address to receive daily reports.") }}</v-col>
+                        </v-row>
+                        <v-row>
+                          <v-col>
+                            <v-checkbox
+                              :label="$t('Include storage information')"
+                              v-model="parsedPrivateConfigData.reportingincludestorage"
+                            ></v-checkbox>
+                          </v-col>
+                          <v-col cols="6" class="mt-6">{{ $t("Include Fedora and Imageserver storage tables in daily reports.") }}</v-col>
+                        </v-row>
+                        <v-row>
+                          <v-col>
+                            <v-card-title class="subtitle-1">{{ $t("Query count reports") }}</v-card-title>
+                            <div v-for="(queryReport, index) in (parsedPrivateConfigData.reportingquerycountreports || [])" :key="index" class="mt-4">
+                              <v-card outlined class="pa-4">
+                                <v-row>
+                                  <v-col cols="12" md="4">
+                                    <v-text-field
+                                      :label="$t('Label')"
+                                      v-model="queryReport.label"
+                                    ></v-text-field>
+                                  </v-col>
+                                  <v-col cols="12" md="6">
+                                    <v-text-field
+                                      :label="$t('FQ Solr query')"
+                                      v-model="queryReport.fq"
+                                    ></v-text-field>
+                                  </v-col>
+                                  <v-col cols="12" md="2">
+                                    <v-checkbox
+                                      :label="$t('Daily')"
+                                      v-model="queryReport.daily"
+                                    ></v-checkbox>
+                                  </v-col>
+                                </v-row>
+                                <v-row>
+                                  <v-col>
+                                    <v-btn color="error" small @click="removeQueryReport(index)">{{ $t('Remove') }}</v-btn>
+                                  </v-col>
+                                </v-row>
+                              </v-card>
+                            </div>
+                            <v-btn color="primary" small class="mt-4" @click="addQueryReport">{{ $t('Add query count report') }}</v-btn>
+                          </v-col>
+                          <v-col cols="6" class="mt-6">{{ $t("Define Solr queries to count in daily reports. If 'Daily' is checked, only count objects created today.") }}</v-col>
+                        </v-row>
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                </v-row>
               </v-container>
             </v-tab-item>
             <v-tab-item class="pa-8">
@@ -1400,6 +1463,19 @@ export default {
     onTemplateSelect: async function (templateid) {
       this.selectedTemplateId = templateid
       this.templateDialog = false;
+    },
+    addQueryReport: function () {
+      if (!this.parsedPrivateConfigData.reportingquerycountreports) {
+        this.$set(this.parsedPrivateConfigData, 'reportingquerycountreports', [])
+      }
+      this.parsedPrivateConfigData.reportingquerycountreports.push({
+        label: '',
+        fq: '',
+        daily: false
+      })
+    },
+    removeQueryReport: function (index) {
+      this.parsedPrivateConfigData.reportingquerycountreports.splice(index, 1)
     },
     getExistingAppSetting: async function () {
       this.loading = true
