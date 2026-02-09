@@ -38,6 +38,7 @@ x-custom:
   httpd_env: &httpd_env
     UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
     HTTPD_ACME_ENABLE: "${HTTPD_ACME_ENABLE:-false}"
+    HTTPD_ACME_EAB_ENABLE: "${HTTPD_ACME_EAB_ENABLE:-false}"
     HTTPD_ACME_KEYID: "${HTTPD_ACME_KEYID:-}"
     HTTPD_ACME_HMAC64: "${HTTPD_ACME_HMAC64:-}"
     CA_ENDPOINT: "${CA_ENDPOINT:-LetsEncrypt-Test}"
