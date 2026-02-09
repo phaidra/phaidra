@@ -365,7 +365,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:a6508bb7
+    image: phaidraorg/ui:71bcd93f
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -383,7 +383,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:a6508bb7
+    image: phaidraorg/ui:71bcd93f
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -451,7 +451,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:c722bbe9
+    image: phaidraorg/api-dist:7d59b33b
     <<: [*common, *logs]
     volumes:
       - s3-cache:/s3-cache
@@ -465,7 +465,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:c722bbe9
+    image: phaidraorg/api-dist:7d59b33b
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -519,7 +519,7 @@ services:
     hostname: "agent-libvips"
     depends_on: [mongodb-phaidra, api]
     <<: [*common, *logs]
-    image: phaidraorg/agent-libvips-dist:97fa33e2
+    image: phaidraorg/agent-libvips-dist:7d59b33b
     volumes:
       - fedora:/mnt/fedora:ro
       - derivates-images:/mnt/derivates-images
@@ -539,7 +539,7 @@ services:
     hostname: "agent-libvips"
     depends_on: [mongodb-phaidra, api-s3, fedora-s3]
     <<: [*common, *logs]
-    image: phaidraorg/agent-libvips-dist:97fa33e2
+    image: phaidraorg/agent-libvips-dist:7d59b33b
     environment:
       <<: [*api_common_env, *hosts, *s3]
       DERIVATES_IMAGES_PATH: "${DERIVATES_IMAGES_PATH:-/derivates-images}"
@@ -554,7 +554,7 @@ services:
 
   agent-libvips-local-dev:
     hostname: "agent-libvips"
-    image: phaidraorg/agent-libvips-base:97fa33e2
+    image: phaidraorg/agent-libvips-base:7d59b33b
     pull_policy: always
     <<: [*common, *logs]
     volumes:
@@ -577,7 +577,7 @@ services:
     hostname: "agent-libvips"
     depends_on: [mongodb-phaidra-dev, api-s3-dev, fedora-s3-dev]
     <<: [*common, *logs]
-    image: phaidraorg/agent-libvips-base:97fa33e2
+    image: phaidraorg/agent-libvips-base:7d59b33b
     pull_policy: always
     volumes:
       - ./src/agents/libvips:/opt/agent-libvips:ro
@@ -596,7 +596,7 @@ services:
   ############### opencast agent ###############
   agent-opencast:
     hostname: "agent-opencast"
-    image: phaidraorg/agent-opencast-dist:957ed414
+    image: phaidraorg/agent-opencast-dist:7d59b33b
     <<: [*common, *logs]
     volumes:
       - agent-opencast-work:/opt/agent-opencast
@@ -617,7 +617,7 @@ services:
 
   agent-opencast-dev:
     hostname: "opencast"
-    image: phaidraorg/opencast-base:957ed414
+    image: phaidraorg/opencast-base:7d59b33b
     pull_policy: always
     <<: [*common, *logs]
     volumes:
@@ -885,7 +885,7 @@ services:
   ############### cronjobs service ###############
   chronos:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:d8f8cfd2
+    image: phaidraorg/chronos-dist:7d59b33b
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
@@ -912,7 +912,7 @@ services:
 
   chronos-s3:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:d8f8cfd2
+    image: phaidraorg/chronos-dist:7d59b33b
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
