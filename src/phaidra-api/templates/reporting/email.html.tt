@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <style>
+      body { font-family: Arial, sans-serif; }
+      table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+      th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+      th { background-color: #f2f2f2; }
+      h2 { color: #333; }
+      .section { margin: 20px 0; }
+    </style>
+  </head>
+  <body>
+    <h1>Phaidra Daily Report - [% date %]</h1>
+    
+    [% IF storage_info %]
+    <div class="section">
+      <h2>Storage Information</h2>
+      
+      <h3>Fedora Storage</h3>
+      [% fedora_total_gb = fedora_total / 1024 / 1024 / 1024 %]
+      <p><strong>Total Storage:</strong> [% fedora_total %] bytes ([% fedora_total_gb | format('%.2f') %] GB)</p>
+      [% IF fedora_rows && fedora_rows.size > 0 %]
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>MIME Type</th>
+            <th>Total Bytes</th>
+            <th>File Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          [% FOREACH row IN fedora_rows %]
+          <tr>
+            <td>[% row.month %]</td>
+            <td>[% row.mime_type %]</td>
+            <td>[% row.total_bytes %]</td>
+            <td>[% row.file_count %]</td>
+          </tr>
+          [% END %]
+        </tbody>
+      </table>
+      [% END %]
+      
+      <h3>Imageserver Storage</h3>
+      [% imageserver_total_gb = imageserver_total / 1024 / 1024 / 1024 %]
+      <p><strong>Total Storage:</strong> [% imageserver_total %] bytes ([% imageserver_total_gb | format('%.2f') %] GB)</p>
+    </div>
+    [% END %]
+    
+    [% IF query_reports && query_reports.size > 0 %]
+    <div class="section">
+      <h2>Query Count Reports</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Label</th>
+            <th>Query</th>
+            <th>Count</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          [% FOREACH report IN query_reports %]
+          <tr>
+            <td>[% report.label %]</td>
+            <td>[% report.fq %]</td>
+            <td>[% report.numFound %]</td>
+            <td>[% IF report.daily %]Daily[% ELSE %]Total[% END %]</td>
+          </tr>
+          [% END %]
+        </tbody>
+      </table>
+    </div>
+    [% END %]
+  </body>
+</html>

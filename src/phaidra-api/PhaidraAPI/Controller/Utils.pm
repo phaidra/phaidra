@@ -5,8 +5,11 @@ use warnings;
 use v5.10;
 use Mojo::File;
 use Mojo::JSON qw(decode_json);
+use Mojo::UserAgent;
+use Mojo::URL;
 use base 'Mojolicious::Controller';
 use Scalar::Util qw(looks_like_number);
+use POSIX qw(strftime);
 use PhaidraAPI::Model::Search;
 use PhaidraAPI::Model::Util;
 use PhaidraAPI::Model::Config;
@@ -589,6 +592,152 @@ sub robots_txt {
   }
 
   $self->render(text => $pubconfig->{robotstxt}, format => 'txt', status => 200);
+}
+
+sub send_daily_report {
+  my $self = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $pubconfig = $confmodel->get_public_config($self);
+  my $privconfig = $confmodel->get_private_config($self);
+
+  unless ($privconfig->{reportingemail}) {
+    $self->app->log->debug("Daily report: reporting email not configured, skipping");
+    $self->render(json => {alerts => [{type => 'info', msg => 'Reporting email not configured'}]}, status => 200);
+    return;
+  }
+
+  unless ($privconfig->{smtpserver} && $privconfig->{smtpport}) {
+    $self->app->log->error("Daily report: SMTP not configured");
+    $res->{status} = 500;
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'SMTP not configured'};
+    $self->render(json => $res, status => $res->{status});
+    return;
+  }
+
+  my %emaildata;
+  $emaildata{date} = strftime('%Y-%m-%d', localtime);
+  
+  # Get storage information if enabled
+  if ($privconfig->{reportingincludestorage}) {
+    $emaildata{storage_info} = 1;
+    
+    # Get Fedora storage
+    my $dbh = $self->app->db_fedora->dbh;
+    my $fedora_total = $dbh->selectrow_array(
+      q{SELECT IFNULL(SUM(content_size),0)
+        FROM fedoradb.simple_search
+        WHERE mime_type IS NOT NULL
+          AND (fedora_id LIKE '%OCTETS' OR fedora_id LIKE '%WEBVERSION')}
+    ) || 0;
+    
+    my $fedora_sql = q{
+      SELECT DATE_FORMAT(created,'%Y-%m') AS month, mime_type,
+        SUM(content_size) AS total_bytes, COUNT(*) AS file_count
+      FROM fedoradb.simple_search
+      WHERE mime_type IS NOT NULL
+        AND (fedora_id LIKE '%OCTETS' OR fedora_id LIKE '%WEBVERSION')
+      GROUP BY month, mime_type
+      ORDER BY month DESC, mime_type
+      LIMIT 100
+    };
+    my $fedora_sth = $dbh->prepare($fedora_sql);
+    my @fedora_rows;
+    if ($fedora_sth && $fedora_sth->execute()) {
+      @fedora_rows = @{$fedora_sth->fetchall_arrayref({})};
+      $fedora_sth->finish();
+    }
+    $emaildata{fedora_total} = $fedora_total;
+    $emaildata{fedora_rows} = \@fedora_rows;
+    
+    # Get Imageserver storage (latest from storage_stats)
+    my $db;
+    if ($self->can('paf_mongo')) {
+      eval { $db = $self->paf_mongo; };
+    }
+    $db ||= $self->mongo;
+    my $coll = $db->get_collection('storage_stats');
+    my $latest_stats = $coll->find_one({}, {sort => {timestamp_iso => -1}});
+    my $imageserver_size = 0;
+    if ($latest_stats && $latest_stats->{imageserver}) {
+      $imageserver_size = $latest_stats->{imageserver} * 1024; # Convert from KB to bytes
+    }
+    $emaildata{imageserver_total} = $imageserver_size;
+  }
+  
+  # Get query count reports if defined
+  if ($privconfig->{reportingquerycountreports} && ref($privconfig->{reportingquerycountreports}) eq 'ARRAY') {
+    my @query_reports;
+    my $today = strftime('%Y-%m-%d', localtime);
+    
+    for my $query_report (@{$privconfig->{reportingquerycountreports}}) {
+      next unless $query_report->{label} && $query_report->{fq};
+      
+      my $fq = $query_report->{fq};
+      if ($query_report->{daily}) {
+        $fq .= ' AND tcreated:[' . $today . 'T00:00:00Z TO ' . $today . 'T23:59:59Z]';
+      }
+      
+      # Execute Solr query
+      my $ua = Mojo::UserAgent->new;
+      my $url = Mojo::URL->new;
+      $url->scheme($self->app->config->{solr}->{scheme});
+      $url->host($self->app->config->{solr}->{host});
+      $url->port($self->app->config->{solr}->{port});
+      if ($self->app->config->{solr}->{path}) {
+        $url->path("/" . $self->app->config->{solr}->{path} . "/solr/" . $self->app->config->{solr}->{core} . "/select");
+      } else {
+        $url->path("/solr/" . $self->app->config->{solr}->{core} . "/select");
+      }
+      $url->query(q => '*:*', fq => $fq, rows => 0, wt => 'json');
+      
+      my $get = $ua->get($url)->result;
+      my $numFound = 0;
+      if ($get->is_success) {
+        my $json = $get->json;
+        $numFound = $json->{response}->{numFound} || 0;
+      } else {
+        $self->app->log->error("Daily report: Solr query failed for " . $query_report->{label} . ": " . $get->message);
+      }
+      
+      push @query_reports, {
+        label => $query_report->{label},
+        fq => $fq,
+        daily => $query_report->{daily} ? 1 : 0,
+        numFound => $numFound
+      };
+    }
+    $emaildata{query_reports} = \@query_reports;
+  }
+
+  my %options;
+  $options{INCLUDE_PATH} = $self->config->{home} . '/templates/reporting';
+  eval {
+    my $msg = MIME::Lite::TT::HTML->new(
+      From        => $pubconfig->{email} || $privconfig->{reportingemail},
+      To          => $privconfig->{reportingemail},
+      Subject     => 'Phaidra Daily Report - ' . $emaildata{date},
+      Charset     => 'utf8',
+      Encoding    => 'quoted-printable',
+      Template    => {html => 'email.html.tt', text => 'email.txt.tt'},
+      TmplParams  => \%emaildata,
+      TmplOptions => \%options
+    );
+    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => ($privconfig->{smtpport} eq '465' || $privconfig->{smtpport} eq '587') ? 1 : 0);
+    $self->app->log->info("Daily report sent successfully to " . $privconfig->{reportingemail});
+  };
+  if ($@) {
+    my $err = "Error sending daily report email: " . $@;
+    $self->app->log->error($err);
+    $res->{status} = 500;
+    unshift @{$res->{alerts}}, {type => 'error', msg => $err};
+    $self->render(json => $res, status => $res->{status});
+    return;
+  }
+
+  $self->render(json => $res, status => $res->{status});
 }
 
 1;

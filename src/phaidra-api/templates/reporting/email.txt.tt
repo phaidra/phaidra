@@ -1,0 +1,30 @@
+Phaidra Daily Report - [% date %]
+
+[% IF storage_info %]
+Storage Information
+
+Fedora Storage
+[% fedora_total_gb = fedora_total / 1024 / 1024 / 1024 %]
+Total Storage: [% fedora_total %] bytes ([% fedora_total_gb | format('%.2f') %] GB)
+[% IF fedora_rows && fedora_rows.size > 0 %]
+Month | MIME Type | Total Bytes | File Count
+[% FOREACH row IN fedora_rows %]
+[% row.month %] | [% row.mime_type %] | [% row.total_bytes %] | [% row.file_count %]
+[% END %]
+[% END %]
+
+Imageserver Storage
+[% imageserver_total_gb = imageserver_total / 1024 / 1024 / 1024 %]
+Total Storage: [% imageserver_total %] bytes ([% imageserver_total_gb | format('%.2f') %] GB)
+
+[% END %]
+
+[% IF query_reports && query_reports.size > 0 %]
+Query Count Reports
+
+Label | Query | Count | Type
+[% FOREACH report IN query_reports %]
+[% report.label %] | [% report.fq %] | [% report.numFound %] | [% IF report.daily %]Daily[% ELSE %]Total[% END %]
+[% END %]
+
+[% END %]
