@@ -187,7 +187,8 @@ sub search_ocr {
   my $escaped_q = $query // '';
   $escaped_q =~ s/"/\\"/g;
   # Use a phrase query; rely on field analysis to match tokens exactly
-  my $search_query = "($page_pids_query) AND (\"$escaped_q\")";
+  # Search specifically in extracted_text (OCR text stored in phaidra_pages core)
+  my $search_query = "($page_pids_query) AND extracted_text:(\"$escaped_q\")";
   
   $url = Mojo::URL->new;
   $url->scheme($self->app->config->{solr}->{scheme});
