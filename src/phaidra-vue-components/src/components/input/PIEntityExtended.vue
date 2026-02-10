@@ -301,6 +301,82 @@
                   ></v-text-field>
                 </v-col>
               </v-row>
+              <v-row v-if="showIdentifier && !showIdentifierType">
+                <v-col cols="12" md="12">
+                  <v-text-field
+                    v-show="identifierType === 'ids:orcid'"
+                    v-mask="'####-####-####-###X'"
+                    :value="identifierText"
+                    :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
+                    v-on:blur="$emit('input-identifier', $event.target.value)"
+                    :placeholder="identifierTypePlaceholder"
+                    :rules="identifierType ? [validationrules['orcid']] : [validationrules['noop']]"
+                    :filled="inputStyle==='filled'"
+                    :outlined="inputStyle==='outlined'"
+                  ></v-text-field>
+                  <v-text-field
+                    v-show="identifierType !== 'ids:orcid'"
+                    :value="identifierText"
+                    :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
+                    v-on:blur="$emit('input-identifier', $event.target.value)"
+                    :placeholder="identifierTypePlaceholder"
+                    :rules="identifierType ? [validationrules[getIdentifierRuleName(identifierType)]] : [validationrules['noop']]"
+                    :filled="inputStyle==='filled'"
+                    :outlined="inputStyle==='outlined'"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row v-if="showIdentifier && showIdentifierType">
+                <v-col cols="12" md="6">
+                  <v-autocomplete
+                    v-on:input="$emit('input-identifier-type', $event)"
+                    :label="$t('Type of identifier')"
+                    :items="vocabularies[identifierVocabulary].terms"
+                    :item-value="'@id'"
+                    :value="getTerm(identifierVocabulary, identifierType)"
+                    :filter="autocompleteFilter"
+                    :disabled="disableIdentifierType"
+                    :filled="inputStyle==='filled'"
+                    :outlined="inputStyle==='outlined'"
+                    return-object
+                    clearable
+                  >
+                    <template slot="item" slot-scope="{ item }">
+                      <v-list-item-content two-line>
+                        <v-list-item-title  v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
+                      </v-list-item-content>
+                    </template>
+                    <template slot="selection" slot-scope="{ item }">
+                      <v-list-item-content>
+                        <v-list-item-title v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
+                      </v-list-item-content>
+                    </template>
+                  </v-autocomplete>
+                </v-col>
+                <v-col cols="12" md="6" >
+                  <v-text-field
+                    v-show="identifierType === 'ids:orcid'"
+                    v-mask="'####-####-####-###X'"
+                    :value="identifierText"
+                    :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
+                    v-on:blur="$emit('input-identifier', $event.target.value)"
+                    :placeholder="identifierTypePlaceholder"
+                    :rules="identifierType ? [validationrules['orcid']] : [validationrules['noop']]"
+                    :filled="inputStyle==='filled'"
+                    :outlined="inputStyle==='outlined'"
+                  ></v-text-field>
+                  <v-text-field
+                    v-show="identifierType !== 'ids:orcid'"
+                    :value="identifierText"
+                    :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
+                    v-on:blur="$emit('input-identifier', $event.target.value)"
+                    :placeholder="identifierTypePlaceholder"
+                    :rules="identifierType ? [validationrules[getIdentifierRuleName(identifierType)]] : [validationrules['noop']]"
+                    :filled="inputStyle==='filled'"
+                    :outlined="inputStyle==='outlined'"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
             </template>
             <v-row v-if="(typeModel === 'schema:Person') && showAffiliation">
               <v-col cols="2">
