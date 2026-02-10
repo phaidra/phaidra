@@ -1451,5 +1451,9 @@
   "Indicate the place where the work is stored. Use the suggester to find the suitable value or write your own value.": "Indica il luogo in cui l'opera è conservata. Usare il suggeritore per trovare il valore adatto o scrivere un proprio valore.",
   "A tag for the purpose of identification or to give other information.": "Un tag (etichetta) identificativo o che fornisce informazioni.",
   "Information to support system logic that are not relevant to the user.": "Informazioni a supporto della logica di sistema che non sono rilevanti per l'utente.",
-  "<a href=\"https://creativecommons.org/licenses/\">Creative Commons licenses</a>": "<a href=\"https://creativecommons.org/licenses/\">Licenze Creative Commons</a>"
+  "<a href=\"https://creativecommons.org/licenses/\">Creative Commons licenses</a>": "<a href=\"https://creativecommons.org/licenses/\">Licenze Creative Commons</a>",
+  "Access restrictions for collections": "Restrizioni di accesso per le collezioni",
+  "Collections only contain metadata and metadata cannot be restricted. Access restrictions only make sense at object/file level, not at collection level.": "Le collezioni contengono solo metadati e i metadati non possono essere limitati. Le restrizioni di accesso si applicano solo a livello di oggetto/file, non a livello di collezione.",
+  "DOI Not Found": "DOI non trovato",
+  "Unknown error": "Errore sconosciuto"
 }
