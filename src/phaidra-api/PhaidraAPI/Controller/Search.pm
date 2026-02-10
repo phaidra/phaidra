@@ -503,7 +503,8 @@ sub search_solr {
 
     my $facet_limit = 1000; # Limit for book pids not for pages
     my $json_facet = '{"parents":{"terms":{"field":"ispartof","limit":' . $facet_limit . '}}}';
-    $pages_url->query(q => $original_q, rows => 0, wt => 'json', 'json.facet' => $json_facet);
+    my $pages_query = 'extracted_text:(' . $original_q . ')';
+    $pages_url->query(q => $pages_query, rows => 0, wt => 'json', 'json.facet' => $json_facet);
     $self->app->log->debug('Pages presearch URL (facet): ' . $pages_url->to_string);
 
     my $ua = Mojo::UserAgent->new;
