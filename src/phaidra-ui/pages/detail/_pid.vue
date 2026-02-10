@@ -2182,7 +2182,9 @@
                         class="pt-2"
                         v-if="
                           objectInfo.cmodel !== 'Container' &&
-                          objectInfo.cmodel !== 'Collection'
+                          objectInfo.cmodel !== 'Collection' &&
+                          objectInfo.cmodel !== 'Book' &&
+                          objectInfo.cmodel !== 'Page'
                         "
                       >
                         <nuxt-link
