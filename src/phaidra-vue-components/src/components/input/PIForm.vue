@@ -874,6 +874,7 @@
         <v-row no-gutters>
           <v-col cols="12">
             <p-m-rights 
+              :is-collection="submittype === 'collection'"
               :show-persons="instanceconfig.accessrestrictions_showpersons"
               :show-accounts="instanceconfig.accessrestrictions_showaccounts"
               :show-edu-person-affiliation="instanceconfig.accessrestrictions_showedupersonaffiliation"
