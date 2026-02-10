@@ -5,12 +5,7 @@
     <v-card-text>
         <v-row v-if="isCollection">
           <v-col cols="12">
-            <v-alert
-              type="info"
-              border="left"
-              colored-border
-              elevation="2"
-            >
+            <v-alert dense outlined type="info" color="secondary" icon="mdi-information-outline">
               <div class="text-h6 mb-2">{{ $t('Access restrictions for collections') }}</div>
               <div>{{ $t('Collections only contain metadata and metadata cannot be restricted. Access restrictions only make sense at object/file level, not at collection level.') }}</div>
             </v-alert>
