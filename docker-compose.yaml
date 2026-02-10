@@ -368,7 +368,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:71bcd93f
+    image: phaidraorg/ui:5ed15fa2
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -386,7 +386,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:71bcd93f
+    image: phaidraorg/ui:5ed15fa2
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -454,7 +454,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:7d59b33b
+    image: phaidraorg/api-dist:5ed15fa2
     <<: [*common, *logs]
     volumes:
       - s3-cache:/s3-cache
@@ -468,7 +468,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:7d59b33b
+    image: phaidraorg/api-dist:5ed15fa2
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -888,7 +888,7 @@ services:
   ############### cronjobs service ###############
   chronos:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:7d59b33b
+    image: phaidraorg/chronos-dist:5ed15fa2
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
@@ -915,7 +915,7 @@ services:
 
   chronos-s3:
     hostname: "chronos"
-    image: phaidraorg/chronos-dist:7d59b33b
+    image: phaidraorg/chronos-dist:5ed15fa2
     <<: [*common, *logs]
     volumes:
       - chronos-database-dumps:/mnt/database-dumps
@@ -992,7 +992,7 @@ services:
   ############### promtail ###############
   promtail:
     hostname: "promtail"
-    image: phaidraorg/promtail-dist:9636bf6e
+    image: phaidraorg/promtail-dist:3a35fc3c
     volumes:
       - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
     command: -config.file=/etc/promtail/config.yaml -config.expand-env=true
@@ -1019,7 +1019,7 @@ services:
   ############### grafana loki ###############
   loki:
     hostname: "loki"
-    image: phaidraorg/loki-dist:6d289ebf
+    image: phaidraorg/loki-dist:c81cdc33
     volumes:
       - loki:/loki
     command: -config.file=/etc/loki/local-config.yaml
