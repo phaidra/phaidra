@@ -954,9 +954,9 @@ if (crossrefData['issued']['date-parts'][0]) {
         } catch (error) {
           console.error(error);
           if (error.response?.status === 404) {
-            this.doiImportErrors.push("DOI Not Found");
+            this.doiImportErrors.push(this.$t("DOI Not Found"));
           } else {
-            this.doiImportErrors.push(error.message || 'Unknown error');
+            this.doiImportErrors.push(error.message || this.$t("Unknown error"));
           }
         } finally {
           this.loading = false;
