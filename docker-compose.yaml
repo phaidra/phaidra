@@ -1005,7 +1005,7 @@ services:
 
   promtail-dev:
     hostname: "promtail"
-    image: grafana/promtail:3.6.4
+    image: grafana/promtail:3.6.5
     volumes:
       - ./container_init/promtail/promtail-local-config.yaml:/etc/promtail/config.yaml:ro
       - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
