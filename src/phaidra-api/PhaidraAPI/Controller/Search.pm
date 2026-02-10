@@ -187,7 +187,8 @@ sub search_ocr {
   my $escaped_q = $query // '';
   $escaped_q =~ s/"/\\"/g;
   # Use a phrase query; rely on field analysis to match tokens exactly
-  my $search_query = "($page_pids_query) AND (\"$escaped_q\")";
+  # Search specifically in extracted_text (OCR text stored in phaidra_pages core)
+  my $search_query = "($page_pids_query) AND extracted_text:(\"$escaped_q\")";
   
   $url = Mojo::URL->new;
   $url->scheme($self->app->config->{solr}->{scheme});
@@ -503,7 +504,8 @@ sub search_solr {
 
     my $facet_limit = 1000; # Limit for book pids not for pages
     my $json_facet = '{"parents":{"terms":{"field":"ispartof","limit":' . $facet_limit . '}}}';
-    $pages_url->query(q => $original_q, rows => 0, wt => 'json', 'json.facet' => $json_facet);
+    my $pages_query = 'extracted_text:(' . $original_q . ')';
+    $pages_url->query(q => $pages_query, rows => 0, wt => 'json', 'json.facet' => $json_facet);
     $self->app->log->debug('Pages presearch URL (facet): ' . $pages_url->to_string);
 
     my $ua = Mojo::UserAgent->new;

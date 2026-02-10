@@ -482,6 +482,9 @@ sub _replace_instance_urls {
         $self->_replace_instance_urls($c, $data->{$key});
       } elsif (ref($data->{$key}) eq '') {
         my $value = $data->{$key};
+        # Skip IIIF API context and related URLs that point to iiif.io
+        next if defined($value) && $value =~ m{^https?://iiif\.io/}i;
+
         if (defined($value) && $value =~ /^https?:\/\//) {
           for my $pattern (@api_patterns) {
             if ($value =~ /$pattern/) {
@@ -509,6 +512,9 @@ sub _replace_instance_urls {
       if (ref($item) eq 'HASH' || ref($item) eq 'ARRAY') {
         $self->_replace_instance_urls($c, $item);
       } elsif (ref($item) eq '') {
+        # Skip IIIF API context and related URLs that point to iiif.io
+        next if defined($item) && $item =~ m{^https?://iiif\.io/}i;
+
         if (defined($item) && $item =~ /^https?:\/\//) {
           for my $pattern (@api_patterns) {
             if ($item =~ /$pattern/) {
