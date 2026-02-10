@@ -1293,5 +1293,7 @@
   "This page does not exist...": "Questa pagina non esiste...",
   "We apologise for the inconvenience, the page you are trying to access does not exist at this address.": "Ci scusiamo per l'inconveniente, la pagina cui stai provando ad accedere non esiste a questo indirizzo",
   "If you are sure you entered the correct address but still get an error, please contact": "Se hai inserito l'indirizzo corretto ma ricevi comunque un errore, per favore contatta",
-  "Return to": "Ritorna alla"
+  "Return to": "Ritorna alla",
+  "Access restrictions for collections": "Restrizioni di accesso per le collezioni",
+  "Collections only contain metadata and metadata cannot be restricted. Access restrictions only make sense at object/file level, not at collection level.": "Le collezioni contengono solo metadati e i metadati non possono essere limitati. Le restrizioni di accesso hanno senso solo a livello di oggetto/file, non a livello di collezione."
 }

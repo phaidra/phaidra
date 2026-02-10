@@ -3,6 +3,20 @@
     <v-card-title v-if="title" class="title font-weight-light white--text">{{ title }}</v-card-title>
     <v-divider v-if="title"></v-divider>
     <v-card-text>
+        <v-row v-if="isCollection">
+          <v-col cols="12">
+            <v-alert
+              type="info"
+              border="left"
+              colored-border
+              elevation="2"
+            >
+              <div class="text-h6 mb-2">{{ $t('Access restrictions for collections') }}</div>
+              <div>{{ $t('Collections only contain metadata and metadata cannot be restricted. Access restrictions only make sense at object/file level, not at collection level.') }}</div>
+            </v-alert>
+          </v-col>
+        </v-row>
+        <template v-else>
         <v-row>
           <v-col cols="12">
             <v-card>
@@ -234,6 +248,7 @@
             </v-card>
           </v-col>
         </v-row>
+        </template>
         <v-dialog
           ref="dialog"
           v-model="dateDialog"
@@ -282,6 +297,10 @@ export default {
     },
     title: {
       type: String
+    },
+    isCollection: {
+      type: Boolean,
+      default: false
     },
     showOrgUnits: {
       type: Boolean,
