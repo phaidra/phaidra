@@ -104,6 +104,9 @@
               <a href="http://www.flickr.com/" target="_blank" aria-label="Flickr">
                 <icon class="mx-2" width="24px" height="18px" name="univie-flickr"></icon>
               </a>
+              <a href="http://www.linkedin.com/" target="_blank" aria-label="LinkedIn">
+                <icon class="mx-2" width="24px" height="18px" name="linkedin"></icon>
+              </a>
             </v-row>
           </v-col>
         </v-row>
@@ -123,6 +126,7 @@ import '@/compiled-icons/univie-youtube'
 import '@/compiled-icons/univie-twitter'
 import '@/compiled-icons/univie-instagram'
 import '@/compiled-icons/univie-flickr'
+import '@/compiled-icons/linkedin'
 import VueHorizontal from 'vue-horizontal'
 import qs from "qs";
 
