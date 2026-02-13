@@ -2416,9 +2416,17 @@ sub _proxy_tx {
     $c->rendered;
   }
   else {
-    my $error = $tx->error;
-    $c->tx->res->headers->add('X-Remote-Status', $error->{code} . ': ' . $error->{message});
-    $c->render(status => 500, text => 'Failed to fetch data from Fedora: ' . $c->app->dumper($tx->error));
+    my $status_code = $res->code || 500;
+    my $status_message = $res->message || 'Unknown error';
+    if ($tx->error) {
+      my $error = $tx->error;
+      $c->tx->res->headers->add('X-Remote-Status', $error->{code} . ': ' . $error->{message});
+    } else {
+      $c->tx->res->headers->add('X-Remote-Status', $status_code . ': ' . $status_message);
+    }
+    
+    $c->tx->res($res);
+    $c->rendered;
   }
 }
 
