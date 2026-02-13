@@ -1822,7 +1822,7 @@ export default {
 
     if (notations) {
       if (notations.length > 0) {
-        h['skos:notation'] = notations
+        h['skos:notation'] = notations.map(n => (typeof n === 'string' ? n : String(n)))
       }
     }
     return h
@@ -2437,7 +2437,7 @@ export default {
     }
     if (notations) {
       if (notations.length > 0) {
-        h['skos:notation'] = notations
+        h['skos:notation'] = notations.map(n => (typeof n === 'string' ? n : String(n)))
       }
     }
     if (identifiers) {
