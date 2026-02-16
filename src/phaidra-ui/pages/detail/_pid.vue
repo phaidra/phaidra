@@ -476,12 +476,13 @@
               </v-row>
             </v-col>
           </v-row>
-          <v-row v-if="displayTitles && displayTitles.length > 0" class="mt-6 mb-4">
+          <v-row v-if="displayTitles && displayTitles.length > 0">
             <v-col cols="12">
               <div v-for="(titleObj, idx) in displayTitles" :key="'title-' + idx" class="mb-4">
-                <h1 class="display-1 font-weight-light primary--text mb-2">{{ titleObj.mainTitle }}</h1>
-                <h2 v-if="titleObj.subtitle" class="headline font-weight-light secondary--text">{{ titleObj.subtitle }}</h2>
+                <h1 class="text-h4 font-weight-light mb-2">{{ titleObj.mainTitle }}</h1>
+                <h2 v-if="titleObj.subtitle" class="text-h5 font-weight-light secondary--text">{{ titleObj.subtitle }}</h2>
               </div>
+              <v-divider class="mb-2" v-if="!showPreview"></v-divider>
             </v-col>
           </v-row>
           <v-row justify="center" v-if="showPreview">
