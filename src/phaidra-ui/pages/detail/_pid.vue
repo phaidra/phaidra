@@ -442,10 +442,10 @@
         <v-col cols="12" md="8">
           <v-row v-if="objectInfo.cmodel === 'Page'" justify="center">
             <v-col cols="6">
-              <v-row justify="center" class="mt-5">{{
+              <v-row justify="center" class="text-center text-h6 font-weight-light mt-0 mb-4">{{
                 $t("PAGE_OF_BOOK", { bookpid: objectInfo.bookpid })
               }}</v-row>
-              <v-row justify="center" class="mt-4"
+              <v-row justify="center" class="mt-4 mb-8"
                 ><v-btn
                   large
                   raised
