@@ -1001,7 +1001,7 @@
   "Other documents": "Altri documenti",
   "Please fill in the required fields": "Compilare i campi obbligatori",
   "Some required fields are missing": "Alcuni campi obbligatori sono mancanti",
-  "is part of collections": "è membro della collezione",
+  "is part of collections": "è membro delle collezioni",
   "an object referencing": "oggetto in relazione con",
   "the back side of": "il verso di",
   "a thumbnail for": "una thumbnail per",
@@ -1458,5 +1458,6 @@
   "Access restrictions for collections": "Restrizioni di accesso per le collezioni",
   "Collections only contain metadata and metadata cannot be restricted. Access restrictions only make sense at object/file level, not at collection level.": "Le collezioni contengono solo metadati e i metadati non possono essere limitati. Le restrizioni di accesso si applicano solo a livello di oggetto/file, non a livello di collezione.",
   "DOI Not Found": "DOI non trovato",
-  "Unknown error": "Errore sconosciuto"
+  "Unknown error": "Errore sconosciuto",
+  "owner": "proprietario"
 }
