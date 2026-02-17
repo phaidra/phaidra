@@ -1,24 +1,29 @@
 <template>
-  <v-col>
+  <div>
     <v-btn color="primary" class="my-4" :to="{ path: `/detail/${relatedpid}`, params: { pid: relatedpid } }">
       <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
     </v-btn>
     <v-alert v-if="
       relation === 'hassuccessor' &&
       objectInfo &&
-      objectInfo.relationships.ispartof.length > 0
-    " type="info">
-      <div>{{ relatedpid + " " + $t("is part of collections:") }}</div>
-      <div v-for="(col, i) in objectInfo.relationships.ispartof" :key="'cola' + i">
-        {{ col.pid + " (owner:" + col.owner + "): " + col.dc_title[0] }}
-      </div>
-      <div>
+      objectInfo.relationships.ispartof.length > 0"
+      outlined
+      type="info"
+      color="secondary"
+      icon="mdi-alert-circle-outline">
+      <div>{{ relatedpid + " " + $t("is part of collections") + ":"}}</div>
+      <ul>
+        <li v-for="(col, i) in objectInfo.relationships.ispartof" :key="'cola' + i" class="mt-1">
+          {{ col.pid + " (" + $t("owner") + ": " + col.owner + "): " + col.dc_title[0] }}
+        </li>
+      </ul>
+      <div class="mt-4">
         {{
             $t(
               "Should the collection membership in collections you own be transferred to new version?"
             )
         }}
-        <v-switch v-model="transferMembership" :label="transferMembership ? $t('Yes') : $t('No')"></v-switch>
+        <v-switch hide-details v-model="transferMembership" :label="transferMembership ? $t('Yes') : $t('No')"></v-switch>
       </div>
     </v-alert>
     <v-card>
@@ -50,7 +55,7 @@
         }}</span>
         <span class="ml-1">{{ relatedpid }}</span>
       </v-card-title>
-      <v-card-text v-if="!transferringMembership">
+      <v-card-text v-if="!transferringMembership" class="mt-8">
         <p-i-form 
         :form="form" 
         :rights="rights" 
@@ -91,7 +96,7 @@
         </v-row>
       </v-card-text>
     </v-card>
-  </v-col>
+  </div>
 </template>
 
 <script>
