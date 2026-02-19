@@ -442,10 +442,10 @@
         <v-col cols="12" md="8">
           <v-row v-if="objectInfo.cmodel === 'Page'" justify="center">
             <v-col cols="6">
-              <v-row justify="center" class="mt-5">{{
+              <v-row justify="center" class="text-center text-h6 font-weight-light mt-0 mb-4">{{
                 $t("PAGE_OF_BOOK", { bookpid: objectInfo.bookpid })
               }}</v-row>
-              <v-row justify="center" class="mt-4"
+              <v-row justify="center" class="mt-4 mb-8"
                 ><v-btn
                   large
                   raised
@@ -457,22 +457,24 @@
             </v-col>
           </v-row>
           <v-row v-if="hasLaterVersion" justify="center">
-            <v-alert type="info" dense outlined color="secondary" class="mt-4">
-              <div>
-                {{
-                  $t("There is a more recent version of this object available")
-                }}
-              </div>
-            </v-alert>
-          </v-row>
-          <v-row justify="center" v-if="latestVersion" class="my-4">
-            <v-btn
-              raised
-              large
-              color="primary"
-              :to="localePath({ path: `/detail/${latestVersion.pid}` })"
-              >{{ $t("Go to latest version") }}</v-btn
-            >
+            <v-col cols="12" md="6">
+              <v-alert type="info" dense outlined color="secondary" class="mt-0 mb-4">
+                <div>
+                  {{
+                    $t("There is a more recent version of this object available")
+                  }}
+                </div>
+              </v-alert>          
+              <v-row justify="center" v-if="latestVersion" class="mt-4 mb-8">
+                <v-btn
+                  raised
+                  large
+                  color="primary"
+                  :to="localePath({ path: `/detail/${latestVersion.pid}` })"
+                  >{{ $t("Go to latest version") }}</v-btn
+                >
+              </v-row>
+            </v-col>
           </v-row>
           <v-row justify="center" v-if="showPreview">
             <client-only>
