@@ -1237,6 +1237,19 @@ export default {
     },
     instanceconfig: function () {
       return this.$root.$store.state.instanceconfig
+    },
+    previewTabIndex: function () {
+      if (this.submittype === 'container' || !this.enablepreview) {
+        return null
+      }
+      let index = 1
+      if (this.debug) index++
+      if (this.templating) index++
+      if (this.importing) index++
+      if (this.enablerights) index++
+      if (this.enablerelationships) index++
+      
+      return index
     }
   },
   data () {
@@ -1288,10 +1301,8 @@ export default {
     showForcePreview: function() {
       this.validationError = false
       this.updateJsonld()
-      if(this.templating) {
-        this.activetab = 4
-      } else {
-        this.activetab = 2
+      if (this.previewTabIndex !== null) {
+        this.activetab = this.previewTabIndex
       }
       window.scrollTo(0,0);
     },
