@@ -826,7 +826,7 @@ services:
   ############### dbgate ###############
   dbgate:
     hostname: "dbgate"
-    image: dbgate/dbgate:6.6.9
+    image: dbgate/dbgate:6.8.2
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
@@ -856,7 +856,7 @@ services:
 
   dbgate-dev:
     hostname: "dbgate"
-    image: dbgate/dbgate:6.6.9
+    image: dbgate/dbgate:6.8.2
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
