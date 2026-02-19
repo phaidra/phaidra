@@ -476,6 +476,15 @@
               </v-row>
             </v-col>
           </v-row>
+          <v-row v-if="displayTitles && displayTitles.length > 0">
+            <v-col cols="12">
+              <div v-for="(titleObj, idx) in displayTitles" :key="'title-' + idx" class="mb-4">
+                <h1 class="text-h4 font-weight-light mb-2">{{ titleObj.mainTitle }}</h1>
+                <h2 v-if="titleObj.subtitle" class="text-h5 font-weight-light secondary--text">{{ titleObj.subtitle }}</h2>
+              </div>
+              <v-divider class="mb-2" v-if="!showPreview"></v-divider>
+            </v-col>
+          </v-row>
           <v-row justify="center" v-if="showPreview">
             <client-only>
               <v-col cols="12">
@@ -2285,6 +2294,7 @@ import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
 import objectMixin from "phaidra-vue-components/src/mixins/object";
+import lang3to2map from "phaidra-vue-components/src/utils/lang3to2map";
 
 export default {
   mixins: [context, config, vocabulary, objectMixin],
@@ -2662,6 +2672,62 @@ export default {
         }
         return false;
       });
+    },
+    displayTitles: function () {
+      const jsonld = this.objectInfo?.metadata?.['JSON-LD'];
+      if (!jsonld?.['dce:title'] || !Array.isArray(jsonld['dce:title'])) {
+        return [];
+      }
+      
+      const lang2to3map = Object.keys(lang3to2map).reduce((ret, key) => {
+        ret[lang3to2map[key]] = key;
+        return ret;
+      }, {});
+      
+      const normalizeLang = (lang) => {
+        if (!lang) return '';
+        lang = lang.toLowerCase();
+        return lang.length === 2 ? (lang2to3map[lang] || lang) : lang;
+      };
+      
+      // Extract all titles grouped by language
+      const titlesByLang = {};
+      jsonld['dce:title'].forEach(titleObj => {
+        titleObj['bf:mainTitle']?.forEach(mainTitle => {
+          const mainTitleValue = mainTitle['@value']?.trim();
+          if (!mainTitleValue) return;
+          
+          const lang = normalizeLang(mainTitle['@language']);
+          const subtitle = titleObj['bf:subtitle']?.[0]?.['@value']?.trim() || null;
+          
+          if (!titlesByLang[lang]) {
+            titlesByLang[lang] = [];
+          }
+          titlesByLang[lang].push({
+            mainTitle: mainTitleValue,
+            subtitle: subtitle,
+            lang: lang
+          });
+        });
+      });
+      
+      if (Object.keys(titlesByLang).length === 0) {
+        return [];
+      }
+      
+      const currentLang = (this.$i18n.locale || 'eng').toLowerCase();
+      const currentLang2 = currentLang.substring(0, 2);
+      const langPriority = [
+        currentLang,
+        currentLang2,
+        lang2to3map[currentLang2],
+        'eng',
+        'en'
+      ].filter(Boolean);
+      
+      // Find first matching language
+      const matchedLang = langPriority.find(lang => titlesByLang[lang]?.length > 0);
+      return matchedLang ? titlesByLang[matchedLang] : Object.values(titlesByLang).flat();
     },
   },
   data() {
