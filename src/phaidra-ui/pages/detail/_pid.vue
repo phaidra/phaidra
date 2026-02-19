@@ -2741,7 +2741,7 @@ export default {
       citationStyle: "apa",
       citationStyles: [],
       citationStylesLoading: false,
-      chosenRelation: "http://purl.org/dc/terms/references",
+      chosenRelation: null,
       utheseslink: "",
       stats: {
         download: "-",
@@ -2911,6 +2911,13 @@ export default {
     }
 
     this.detailsMetaInfo = metaInfo
+  },
+  watch: {
+    relationDialog(newVal) {
+      if (newVal) {
+        this.chosenRelation = null;
+      }
+    }
   },
   methods: {
     normalizeDoi (value) {
