@@ -1135,7 +1135,7 @@ $self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
       $self->stash(baseurl       => $self->config->{baseurl});
       $self->stash(basepath      => $self->config->{basepath});
       $self->stash(trywebversion => $trywebversion);
-      $self->stash(mimetype      => $mimetype);
+      $self->stash(mimetype      => $mimetype eq 'audio/x-flac' ? 'audio/flac' : $mimetype);
       $self->stash(pid           => $pid);
       if ($showloadbutton) {
         $self->render(template => 'utils/loadbutton', format => 'html');
