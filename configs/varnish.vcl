@@ -81,6 +81,15 @@ sub vcl_backend_fetch {
 }
 
 sub vcl_backend_response {
+  if (beresp.status >= 400) {
+    set beresp.uncacheable = true;
+    set beresp.ttl = 0s;
+    set beresp.do_stream = true;
+    set beresp.do_gzip = false;
+    set beresp.do_gunzip = false;
+    return (deliver);
+  }
+
   # Never cache if origin explicitly forbids it
   if (beresp.http.Cache-Control ~ "(?i)no-store|private") {
     set beresp.uncacheable = true;
