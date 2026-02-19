@@ -536,7 +536,7 @@
                     '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
                   "
                   target="_blank"
-                  >{{ $t("Open in new window") }}</v-btn
+                  ><v-icon class="mr-2" aria-hidden="true">mdi-open-in-new</v-icon>{{ $t("Open in new window") }}</v-btn
                 >
               </v-col>
             </client-only>
