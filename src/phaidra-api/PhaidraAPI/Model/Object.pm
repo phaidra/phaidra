@@ -292,15 +292,6 @@ sub info {
         detail_page => $statsres->{detail_page}
       };
     }
-
-    if ($info->{readrights}) {
-      my $pido   = $pid =~ s/\:/_/r;
-      my $cursor = $c->paf_mongo->get_collection('octets.catalog')->find({'path' => qr/$pido\+/}, {path => 1, md5 => 1});
-      $info->{md5} = [];
-      while (my $doc = $cursor->next) {
-        push @{$info->{md5}}, $doc;
-      }
-    }
   }
 
   $c->app->directory->update_info_data($c, $info);
