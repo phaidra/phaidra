@@ -1903,7 +1903,8 @@ sub get_metadata {
   my $search_model = PhaidraAPI::Model::Search->new;
   my $r            = $search_model->datastreams_hash($self, $pid);
   if ($r->{status} ne 200) {
-    return $r;
+    $self->render(json => $r, status => $r->{status});
+    return;
   }
 
   my $writerights = 0;
