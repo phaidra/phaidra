@@ -3,7 +3,7 @@
     <h1 class="d-sr-only">{{$t('Login')}}</h1>
     <v-row v-show="showtou" justify="center">
       <v-col>
-        <v-card tile>
+        <v-card>
           <v-card-title class="title font-weight-light white--text">{{ $t('Terms of use') }}</v-card-title>
           <v-card-text style="max-height: 500px; white-space: pre-wrap;" class="overflow-y-auto mt-4">{{ tou }}</v-card-text>
           <v-divider class="mt-4"></v-divider>

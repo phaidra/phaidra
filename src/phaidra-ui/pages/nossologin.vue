@@ -2,7 +2,7 @@
   <v-container>
     <v-row v-show="showtou" justify="center">
       <v-col>
-        <v-card tile>
+        <v-card>
           <v-card-title class="title font-weight-light white--text">{{ $t('Terms of use') }}</v-card-title>
           <v-card-text style="max-height: 500px; white-space: pre-wrap;" class="overflow-y-auto">{{ tou }}</v-card-text>
           <v-divider class="mt-5"></v-divider>
