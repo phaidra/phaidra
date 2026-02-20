@@ -1018,7 +1018,7 @@
                           "
                           :disabled="collMembers.length === 0"
                           color="primary"
-                          >{{ $t("Show members") }} ({{
+                          ><v-icon class="mr-2" aria-hidden="true">mdi-eye</v-icon>{{ $t("Show members") }} ({{
                             objectInfo.haspartsize
                           }})</v-btn
                         >
