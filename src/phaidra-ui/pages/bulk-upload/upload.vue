@@ -295,6 +295,7 @@ export default {
                 case 'image/x-ms-bmp':
                 case 'image/bmp':
                 case 'image/jp2':
+                case 'image/jpx':
                   createmethod = 'picture'
                   break
 
