@@ -1054,8 +1054,9 @@
                             objectInfo.pid +
                             '/resourcelink/redirect'
                           "
+                          target="_blank"
                           color="primary"
-                          >{{ $t("Open link") }}</v-btn
+                          ><v-icon class="mr-2" aria-hidden="true">mdi-open-in-new</v-icon>{{ $t("Open link") }}</v-btn
                         >
                       </v-row>
                       <v-divider
