@@ -1028,7 +1028,7 @@ services:
 
   loki-dev:
     hostname: "loki"
-    image: grafana/loki:3.6.5
+    image: grafana/loki:3.6.7
     volumes:
       - ./container_init/loki/loki-docker-config.yaml:/etc/loki/local-config.yaml:ro
       - loki:/loki
