@@ -33,15 +33,17 @@
                     >
                       <v-row v-if="rel" align="center">
                         <v-col cols="12" md="5" class="preview-maxwidth">
-                          <p-img
-                            :src="instanceconfig.api +
-                              '/object/' +
-                              rel.pid +
-                              '/thumbnail'
-                            "
-                            class="elevation-1 my-4"
-                            :alt="getObjectTitle(rel)"
-                          ></p-img>
+                          <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                            <p-img
+                              :src="instanceconfig.api +
+                                '/object/' +
+                                rel.pid +
+                                '/thumbnail'
+                              "
+                              class="elevation-1 my-4"
+                              :alt="getObjectTitle(rel)"
+                            ></p-img>
+                          </nuxt-link>
                         </v-col>
                         <v-col cols="12" md="7">
                           <nuxt-link
@@ -86,15 +88,17 @@
                     >
                       <v-row align="center">
                         <v-col cols="12" md="5" class="preview-maxwidth">
-                          <p-img
-                            :src="instanceconfig.api +
-                              '/object/' +
-                              rel.pid +
-                              '/thumbnail'
-                            "
-                            class="elevation-1 my-4"
-                            :alt="getObjectTitle(rel)"
-                          ></p-img>
+                          <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                            <p-img
+                              :src="instanceconfig.api +
+                                '/object/' +
+                                rel.pid +
+                                '/thumbnail'
+                              "
+                              class="elevation-1 my-4"
+                              :alt="getObjectTitle(rel)"
+                            ></p-img>
+                          </nuxt-link>
                         </v-col>
                         <v-col cols="12" md="7">
                           <nuxt-link
@@ -138,15 +142,17 @@
                     >
                       <v-row align="center">
                         <v-col cols="12" md="5" class="preview-maxwidth">
-                          <p-img
-                            :src="instanceconfig.api +
-                              '/object/' +
-                              rel.pid +
-                              '/thumbnail'
-                            "
-                            class="elevation-1 my-4"
-                            :alt="getObjectTitle(rel)"
-                          ></p-img>
+                          <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                            <p-img
+                              :src="instanceconfig.api +
+                                '/object/' +
+                                rel.pid +
+                                '/thumbnail'
+                              "
+                              class="elevation-1 my-4"
+                              :alt="getObjectTitle(rel)"
+                            ></p-img>
+                          </nuxt-link>
                         </v-col>
                         <v-col cols="12" md="7">
                           <nuxt-link
@@ -191,15 +197,17 @@
                     >
                       <v-row align="center">
                         <v-col cols="12" md="5" class="preview-maxwidth">
-                          <p-img
-                            :src="instanceconfig.api +
-                              '/object/' +
-                              rel.pid +
-                              '/thumbnail'
-                            "
-                            class="elevation-1 my-4"
-                            :alt="getObjectTitle(rel)"
-                          ></p-img>
+                          <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                            <p-img
+                              :src="instanceconfig.api +
+                                '/object/' +
+                                rel.pid +
+                                '/thumbnail'
+                              "
+                              class="elevation-1 my-4"
+                              :alt="getObjectTitle(rel)"
+                            ></p-img>
+                          </nuxt-link>
                         </v-col>
                         <v-col cols="12" md="7">
                           <nuxt-link
@@ -245,15 +253,17 @@
                     >
                       <v-row align="center">
                         <v-col cols="12" md="5" class="preview-maxwidth">
-                          <p-img
-                            :src="instanceconfig.api +
-                              '/object/' +
-                              rel.pid +
-                              '/thumbnail'
-                            "
-                            class="elevation-1 my-4"
-                            :alt="getObjectTitle(rel)"
-                          ></p-img>
+                          <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                            <p-img
+                              :src="instanceconfig.api +
+                                '/object/' +
+                                rel.pid +
+                                '/thumbnail'
+                              "
+                              class="elevation-1 my-4"
+                              :alt="getObjectTitle(rel)"
+                            ></p-img>
+                          </nuxt-link>
                         </v-col>
                         <v-col cols="12" md="7">
                           <nuxt-link
@@ -1368,15 +1378,17 @@
                       >
                         <v-row align="center">
                           <v-col cols="12" md="5" class="preview-maxwidth">
-                              <p-img
-                                :src="instanceconfig.api +
-                                  '/object/' +
-                                  rel.pid +
-                                  '/thumbnail'
-                                "
-                                class="elevation-1 my-4"
-                                :alt="getObjectTitle(rel)"
-                              ></p-img>
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                  :src="instanceconfig.api +
+                                    '/object/' +
+                                    rel.pid +
+                                    '/thumbnail'
+                                  "
+                                  class="elevation-1 my-4"
+                                  :alt="getObjectTitle(rel)"
+                                ></p-img>
+                              </nuxt-link>
                           </v-col>
                           <v-col cols="12" md="7">
                             <nuxt-link
@@ -1449,15 +1461,17 @@
                         >
                           <v-row align="center">
                             <v-col cols="12" md="5" class="preview-maxwidth">
-                              <p-img
-                                :src="instanceconfig.api +
-                                  '/object/' +
-                                  rel.pid +
-                                  '/thumbnail'
-                                "
-                                class="elevation-1 my-4"
-                                :alt="getObjectTitle(rel)"
-                              ></p-img>
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                  :src="instanceconfig.api +
+                                    '/object/' +
+                                    rel.pid +
+                                    '/thumbnail'
+                                  "
+                                  class="elevation-1 my-4"
+                                  :alt="getObjectTitle(rel)"
+                                ></p-img>
+                              </nuxt-link>
                             </v-col>
                             <v-col cols="12" md="7">
                               <nuxt-link
@@ -1497,15 +1511,17 @@
                         >
                           <v-row align="center">
                             <v-col cols="12" md="5" class="preview-maxwidth">
-                              <p-img
-                                :src="instanceconfig.api +
-                                  '/object/' +
-                                  rel.pid +
-                                  '/thumbnail'
-                                "
-                                class="elevation-1 my-4"
-                                :alt="getObjectTitle(rel)"
-                              ></p-img>
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                  :src="instanceconfig.api +
+                                    '/object/' +
+                                    rel.pid +
+                                    '/thumbnail'
+                                  "
+                                  class="elevation-1 my-4"
+                                  :alt="getObjectTitle(rel)"
+                                ></p-img>
+                              </nuxt-link>
                             </v-col>
                             <v-col cols="12" md="7">
                               <nuxt-link
@@ -1544,15 +1560,17 @@
                         >
                           <v-row align="center">
                             <v-col cols="12" md="5" class="preview-maxwidth">
-                              <p-img
-                                :src="instanceconfig.api +
-                                  '/object/' +
-                                  rel.pid +
-                                  '/thumbnail'
-                                "
-                                class="elevation-1 my-4"
-                                :alt="getObjectTitle(rel)"
-                              ></p-img>
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                  :src="instanceconfig.api +
+                                    '/object/' +
+                                    rel.pid +
+                                    '/thumbnail'
+                                  "
+                                  class="elevation-1 my-4"
+                                  :alt="getObjectTitle(rel)"
+                                ></p-img>
+                              </nuxt-link>
                             </v-col>
                             <v-col cols="12" md="7">
                               <nuxt-link
@@ -1592,15 +1610,17 @@
                         >
                           <v-row align="center">
                             <v-col cols="12" md="5" class="preview-maxwidth">
-                              <p-img
-                                :src="instanceconfig.api +
-                                  '/object/' +
-                                  rel.pid +
-                                  '/thumbnail'
-                                "
-                                class="elevation-1 my-4"
-                                :alt="getObjectTitle(rel)"
-                              ></p-img>
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                  :src="instanceconfig.api +
+                                    '/object/' +
+                                    rel.pid +
+                                    '/thumbnail'
+                                  "
+                                  class="elevation-1 my-4"
+                                  :alt="getObjectTitle(rel)"
+                                ></p-img>
+                              </nuxt-link>
                             </v-col>
                             <v-col cols="12" md="7">
                               <nuxt-link
@@ -1641,15 +1661,17 @@
                         >
                           <v-row align="center">
                             <v-col cols="12" md="5" class="preview-maxwidth">
-                              <p-img
-                                :src="instanceconfig.api +
-                                  '/object/' +
-                                  rel.pid +
-                                  '/thumbnail'
-                                "
-                                class="elevation-1 my-4"
-                                :alt="getObjectTitle(rel)"
-                              ></p-img>
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                  :src="instanceconfig.api +
+                                    '/object/' +
+                                    rel.pid +
+                                    '/thumbnail'
+                                  "
+                                  class="elevation-1 my-4"
+                                  :alt="getObjectTitle(rel)"
+                                ></p-img>
+                              </nuxt-link>
                             </v-col>
                             <v-col cols="12" md="7">
                               <nuxt-link
