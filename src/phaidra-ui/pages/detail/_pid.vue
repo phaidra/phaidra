@@ -764,9 +764,9 @@
                     </nuxt-link>
                   </div>
                 </v-col>
-                <v-col cols="10">
+                <v-col :cols="objectInfo.writerights === 1 ? 10 : 11">
                   <v-row no-gutters class="mb-4">
-                    <v-col cols="10">
+                    <v-col>
                       <h2
                         class="title font-weight-light primary--text"
                         @click.stop
@@ -778,9 +778,12 @@
                       </h2>
                       <p>{{ collMember.pid }}</p>
                     </v-col>
-                    <v-spacer></v-spacer>
-                    <v-col cols="2" class="text-right"
-                      ><span v-if="collMember.created">{{
+                    <v-col
+                      cols="12"
+                      sm="auto"
+                      class="pl-sm-4 text-sm-right"
+                    >
+                      <span v-if="collMember.created">{{
                         collMember.created | date
                       }}</span>
                       <v-icon v-if="collMember.cmodel == 'Video'" class="mx-2" color="grey">mdi-video</v-icon>
@@ -792,7 +795,7 @@
                       <v-icon v-else-if="collMember.cmodel == 'Collection'" class="mx-2" color="grey">mdi-folder-open</v-icon>
                       <v-icon v-else-if="collMember.cmodel == 'Container'" class="mx-2" color="grey">mdi-folder</v-icon>
                       <v-icon v-else-if="collMember.cmodel == 'Book'" class="mx-2" color="grey">mdi-book-open-variant</v-icon>
-                      </v-col>
+                    </v-col>
                   </v-row>
                 </v-col>
                 <v-col cols="1" v-if="objectInfo.writerights === 1" justify="center">
