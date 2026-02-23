@@ -701,11 +701,17 @@
           </div>
           </template>
           <template v-if="objectInfo.cmodel === 'Collection' && collMembers.length">
-            <v-toolbar class="my-10 white--text" elevation="1">
-              <v-toolbar-title>
-                {{ $t("Members") }} ({{ $store.state.collectionMembersTotal /* leave it like this, computed property wasn't working on first access */ }})
-              </v-toolbar-title>
-              <v-switch @click="refreshCollectionMembers()" class="mx-2" dark hide-details :label="$t('Only latest versions')" v-model="collOnlyLatestVersions"></v-switch>
+            <v-toolbar class="mt-10 mb-5 white--text" elevation="1">
+              <v-row align="center">
+                <v-col>
+                  <v-toolbar-title>
+                    {{ $t("Members") }} ({{ $store.state.collectionMembersTotal /* leave it like this, computed property wasn't working on first access */ }})
+                  </v-toolbar-title>
+                </v-col>
+                <v-col class="d-flex justify-end">
+                  <v-switch @click="refreshCollectionMembers()" dark hide-details :label="$t('Only latest versions')" v-model="collOnlyLatestVersions"></v-switch>
+                </v-col>
+              </v-row>
             </v-toolbar>
             <v-row no-gutters v-if="$store.state.collectionMembersTotal > collMembersPagesize">
               <v-pagination
