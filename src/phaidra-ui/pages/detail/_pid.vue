@@ -2681,8 +2681,7 @@ export default {
       });
     },
     displayTitles: function () {
-      const jsonld = this.objectInfo?.metadata?.['JSON-LD'];
-      if (!jsonld?.['dce:title'] || !Array.isArray(jsonld['dce:title'])) {
+      if (!this.objectInfo) {
         return [];
       }
       
@@ -2697,26 +2696,107 @@ export default {
         return lang.length === 2 ? (lang2to3map[lang] || lang) : lang;
       };
       
-      // Extract all titles grouped by language
       const titlesByLang = {};
-      jsonld['dce:title'].forEach(titleObj => {
-        titleObj['bf:mainTitle']?.forEach(mainTitle => {
-          const mainTitleValue = mainTitle['@value']?.trim();
-          if (!mainTitleValue) return;
-          
-          const lang = normalizeLang(mainTitle['@language']);
-          const subtitle = titleObj['bf:subtitle']?.[0]?.['@value']?.trim() || null;
-          
-          if (!titlesByLang[lang]) {
-            titlesByLang[lang] = [];
-          }
-          titlesByLang[lang].push({
-            mainTitle: mainTitleValue,
-            subtitle: subtitle,
-            lang: lang
+      
+      // JSON-LD format
+      const jsonld = this.objectInfo?.metadata?.['JSON-LD'];
+      if (jsonld?.['dce:title'] && Array.isArray(jsonld['dce:title'])) {
+        jsonld['dce:title'].forEach(titleObj => {
+          titleObj['bf:mainTitle']?.forEach(mainTitle => {
+            const mainTitleValue = mainTitle['@value']?.trim();
+            if (!mainTitleValue) return;
+            
+            const lang = normalizeLang(mainTitle['@language']);
+            const subtitle = titleObj['bf:subtitle']?.[0]?.['@value']?.trim() || null;
+            
+            if (!titlesByLang[lang]) {
+              titlesByLang[lang] = [];
+            }
+            titlesByLang[lang].push({
+              mainTitle: mainTitleValue,
+              subtitle: subtitle,
+              lang: lang
+            });
           });
         });
-      });
+      }
+      
+      // UWMETADATA format
+      if (!Object.keys(titlesByLang).length && this.objectInfo.dshash?.['UWMETADATA']) {
+        const uwmetadata = this.objectInfo.metadata?.uwmetadata;
+        if (Array.isArray(uwmetadata)) {
+          const generalNode = uwmetadata.find(node => node.xmlname === 'general');
+          if (generalNode && Array.isArray(generalNode.children)) {
+            const titles = [];
+            const subtitles = [];
+            
+            generalNode.children.forEach(child => {
+              if (child.xmlname === 'title' && child.ui_value) {
+                const lang = normalizeLang(child.attributes?.[0]?.ui_value || 'eng');
+                titles.push({
+                  value: child.ui_value.trim(),
+                  lang: lang
+                });
+              } else if (child.xmlname === 'subtitle' && child.ui_value) {
+                const lang = normalizeLang(child.attributes?.[0]?.ui_value || 'eng');
+                subtitles.push({
+                  value: child.ui_value.trim(),
+                  lang: lang
+                });
+              }
+            });
+              
+            titles.forEach((title, index) => {
+              let matchingSubtitle = subtitles.find(st => st.lang === title.lang);
+              if (!matchingSubtitle && subtitles[index]) {
+                matchingSubtitle = subtitles[index];
+              }
+              if (!matchingSubtitle && subtitles.length > 0) {
+                matchingSubtitle = subtitles[0];
+              }
+              
+              if (!titlesByLang[title.lang]) {
+                titlesByLang[title.lang] = [];
+              }
+              titlesByLang[title.lang].push({
+                mainTitle: title.value,
+                subtitle: matchingSubtitle ? matchingSubtitle.value : null,
+                lang: title.lang
+              });
+            });
+          }
+        }
+      }
+      
+      // MODS format
+      if (!Object.keys(titlesByLang).length && this.objectInfo.dshash?.['MODS'] && Array.isArray(this.objectInfo.dc_title)) {
+        this.objectInfo.dc_title.forEach(titleValue => {
+          if (titleValue && typeof titleValue === 'string' && titleValue.trim()) {
+            const colonIndex = titleValue.indexOf(': ');
+            let mainTitle, subtitle;
+            if (colonIndex > 0) {
+              mainTitle = titleValue.substring(0, colonIndex).trim();
+              subtitle = titleValue.substring(colonIndex + 2).trim() || null;
+            } else {
+              mainTitle = titleValue.trim();
+              subtitle = null;
+            }
+            
+            const lang = normalizeLang(this.objectInfo.dc_language?.[0]) || 'eng';
+            
+            if (mainTitle) {
+              if (!titlesByLang[lang]) {
+                titlesByLang[lang] = [];
+              }
+              titlesByLang[lang].push({
+                mainTitle: mainTitle,
+                subtitle: subtitle,
+                lang: lang
+              });
+            }
+          }
+        });
+      }
       
       if (Object.keys(titlesByLang).length === 0) {
         return [];
