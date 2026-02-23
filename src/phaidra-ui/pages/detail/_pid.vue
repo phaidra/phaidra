@@ -536,7 +536,7 @@
                     '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
                   "
                   target="_blank"
-                  >{{ $t("Open in new window") }}</v-btn
+                  ><v-icon class="mr-2" aria-hidden="true">mdi-open-in-new</v-icon>{{ $t("Open in new window") }}</v-btn
                 >
               </v-col>
             </client-only>
@@ -1018,7 +1018,7 @@
                           "
                           :disabled="collMembers.length === 0"
                           color="primary"
-                          >{{ $t("Show members") }} ({{
+                          ><v-icon class="mr-2" aria-hidden="true">mdi-eye</v-icon>{{ $t("Show members") }} ({{
                             objectInfo.haspartsize
                           }})</v-btn
                         >
@@ -1054,8 +1054,9 @@
                             objectInfo.pid +
                             '/resourcelink/redirect'
                           "
+                          target="_blank"
                           color="primary"
-                          >{{ $t("Open link") }}</v-btn
+                          ><v-icon class="mr-2" aria-hidden="true">mdi-open-in-new</v-icon>{{ $t("Open link") }}</v-btn
                         >
                       </v-row>
                       <v-divider
