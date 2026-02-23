@@ -484,6 +484,35 @@ sub search_solr {
     }
   }
 
+  my $default_fl = 'pid,dc_title,dc_title_eng,dc_title_deu,dc_title_ita,dc_description,dc_description_eng,dc_description_deu,dc_description_ita,created,cmodel,bib_roles_pers_aut,bib_roles_pers_edt,bib_roles_pers_cmp,bib_roles_pers_art,isrestricted,dc_rights';
+  
+  if (defined $params->{fl} && $params->{fl} ne '') {
+    my $fl_value = $params->{fl};
+    if ($fl_value =~ /\*/) {
+      $params->{fl} = '*,-extracted_text,-haspart,-hasmember';
+    } else {
+      my @fl_parts = split /[\s,]+/, $fl_value;
+      my @filtered_fl = grep { 
+        $_ ne 'extracted_text' && 
+        $_ ne 'haspart' && 
+        $_ ne 'hasmember' &&
+        $_ !~ /^extracted_text\^/ &&
+        $_ !~ /^haspart\^/ &&
+        $_ !~ /^hasmember\^/ &&
+        $_ !~ /^-extracted_text/ &&
+        $_ !~ /^-haspart/ &&
+        $_ !~ /^-hasmember/
+      } @fl_parts;
+      if (@filtered_fl) {
+        $params->{fl} = join ' ', @filtered_fl;
+      } else {
+        $params->{fl} = $default_fl;
+      }
+    }
+  } else {
+    $params->{fl} = $default_fl;
+  }
+
   my @book_pids;
   my %book_seen;
   my $hit_facet_limit = 0;
