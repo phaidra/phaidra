@@ -55,14 +55,22 @@ export default {
     },
     displaylang: function () {
       let lang
-      let somelang
+      let engLang
+      let deuLang
+      let anyLang
       for (let label of this.o['skos:prefLabel']) {
-        somelang = label['@language']
+        anyLang = label['@language']
         if (label['@language'] === this.$i18n.locale) {
           lang = this.$i18n.locale
         }
+        if (label['@language'] === 'eng') {
+          engLang = 'eng'
+        }
+        if (label['@language'] === 'deu') {
+          deuLang = 'deu'
+        }
       }
-      return lang || somelang
+      return lang || engLang || deuLang || anyLang
     },
     usedMarkdown: function () {
       return (this.p === 'bf:TableOfContents') ||
