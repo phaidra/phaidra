@@ -712,7 +712,7 @@ const vocabularies = {
       { '@id': 'image/bmp', 'skos:notation': ['bmp'], 'skos:prefLabel': { 'eng': 'BMP (Generic Bitmap)' } },
       { '@id': 'image/jp2', 'skos:notation': ['jp2'], 'skos:prefLabel': { 'eng': 'JPEG 2000 (jp2)' } },
       { '@id': 'image/jpx', 'skos:notation': ['jpx'], 'skos:prefLabel': { 'eng': 'JPEG 2000 (jpx)' } },
-      { '@id': 'audio/x-wav', 'skos:notation': ['x-wav'], 'skos:prefLabel': { 'eng': 'WAVE' } },
+      { '@id': 'audio/x-wav', 'skos:notation': ['x-wav'], 'skos:prefLabel': { 'eng': 'WAVE (x-wav)' } },
       { '@id': 'audio/wav', 'skos:notation': ['wav'], 'skos:prefLabel': { 'eng': 'WAVE' } },
       { '@id': 'audio/mpeg', 'skos:notation': ['mp3'], 'skos:prefLabel': { 'eng': 'MP3' } },
       { '@id': 'audio/flac', 'skos:notation': ['flac'], 'skos:prefLabel': { 'eng': 'FLAC' } },
