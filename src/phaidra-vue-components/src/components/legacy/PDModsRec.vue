@@ -19,11 +19,11 @@
           <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(getLabel(ch)) }}</v-col>
           <v-col cols="12" md="10" class="wiv">{{ ch.ui_value }}</v-col>
         </template>
-        <template v-else-if="ch.xmlname === 'accessCondition'">
-          <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(getLabel(ch)) }}</v-col>
-          <v-col v-if="ch.ui_value.startsWith('http')" cols="12" md="10" class="wiv"><a :href="ch.ui_value" target="_blank">{{ getLocalizedTermLabel('alllicenses', ch.ui_value) }}</a></v-col>
-          <v-col v-else cols="12" md="10" class="wiv">{{ ch.ui_value }}</v-col>
-        </template>
+      <template v-else-if="ch.xmlname === 'accesscondition' || ch.xmlname === 'accessCondition'">
+        <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(getLabel(ch)) }}</v-col>
+        <v-col v-if="ch.ui_value.startsWith('http')" cols="12" md="10" class="wiv"><a :href="ch.ui_value" target="_blank">{{ getLocalizedTermLabel('alllicenses', ch.ui_value) }}</a></v-col>
+        <v-col v-else cols="12" md="10" class="wiv">{{ ch.ui_value }}</v-col>
+      </template>
         <template v-else>
           <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(getLabel(ch)) }}</v-col>
           <v-col cols="12" md="10">{{ ch.ui_value }}</v-col>
