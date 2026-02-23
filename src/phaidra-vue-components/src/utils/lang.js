@@ -4495,10 +4495,10 @@ export default {
       },{
         '@id': 'bcz',
         'skos:prefLabel': {
-          'eng': 'Banyun | Bainouk)',
-          'deu': 'Banyun | Bainouk)',
-          'fra': 'Banyun | Bainouk)',
-          'ita': 'Banyun | Bainouk)'
+          'eng': 'Banyun | Bainouk',
+          'deu': 'Banyun | Bainouk',
+          'fra': 'Banyun | Bainouk',
+          'ita': 'Banyun | Bainouk'
         }
       },{
         '@id': 'knf',
@@ -4523,6 +4523,24 @@ export default {
           'deu': 'Krim',
           'fra': 'Krim',
           'ita': 'Krim'
+        }
+      }
+      ,{
+        '@id': 'kqs',
+        'skos:prefLabel': {
+          'eng': 'Northern Kissi',
+          'deu': 'Nord-Kissi',
+          'fra': 'Kissi du Nord',
+          'ita': 'Kissi settentrionale'
+        }
+      }
+      ,{
+        '@id': 'kss',
+        'skos:prefLabel': {
+          'eng': 'Southern Kissi',
+          'deu': 'Süd-Kissi',
+          'fra': 'Kissi du Sud',
+          'ita': 'Kissi meridionale'
         }
       }
     ]
