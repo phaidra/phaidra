@@ -368,7 +368,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:3e8e5964
+    image: phaidraorg/ui:42f6cc98
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -386,7 +386,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:3e8e5964
+    image: phaidraorg/ui:42f6cc98
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -454,7 +454,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:4ee5cd1d
+    image: phaidraorg/api-dist:04a9569b
     <<: [*common, *logs]
     volumes:
       - s3-cache:/s3-cache
@@ -468,7 +468,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:4ee5cd1d
+    image: phaidraorg/api-dist:04a9569b
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
@@ -992,7 +992,7 @@ services:
   ############### promtail ###############
   promtail:
     hostname: "promtail"
-    image: phaidraorg/promtail-dist:3a35fc3c
+    image: phaidraorg/promtail-dist:4757f6c2
     volumes:
       - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
     command: -config.file=/etc/promtail/config.yaml -config.expand-env=true
@@ -1019,7 +1019,7 @@ services:
   ############### grafana loki ###############
   loki:
     hostname: "loki"
-    image: phaidraorg/loki-dist:c81cdc33
+    image: phaidraorg/loki-dist:18ba0328
     volumes:
       - loki:/loki
     command: -config.file=/etc/loki/local-config.yaml
@@ -1039,7 +1039,7 @@ services:
   ############### grafana ###############
   grafana:
     hostname: "grafana"
-    image: phaidraorg/grafana-dist:5877a15e
+    image: phaidraorg/grafana-dist:6e2c4690
     volumes:
       - grafana:/var/lib/grafana
     environment:
