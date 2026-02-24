@@ -507,7 +507,7 @@ sub search_solr {
   
   if (defined $params->{fl} && $params->{fl} ne '') {
     my $fl_value = $params->{fl};
-    if ($fl_value =~ /\*/) {
+    if ($fl_value eq '*' || $fl_value =~ /^\*[,\s]/) {
       $params->{fl} = '*,-extracted_text,-haspart,-hasmember';
     } else {
       my @fl_parts = split /[\s,]+/, $fl_value;
