@@ -422,3 +422,12 @@ msgstr "Here you can create a digital book."
 
 msgid "object_preview_processing"
 msgstr "The object preview will be available soon. Please reload the page or try again later."
+
+msgid "user_not_found"
+msgstr "user not found"
+
+msgid "replayweb_archive_info"
+msgstr ""
+"This project is stored in PHAIDRA for long-term archiving. You can use the "
+"archive in the same way as the original. However, due to technical necessities "
+"some functionalities may not work as expected."

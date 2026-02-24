@@ -13,6 +13,9 @@ use PhaidraAPI::Model::Config;
 sub extract_credentials {
   my $self = shift;
 
+  my $lang = $self->param('lang') || 'en';
+  $self->languages($lang);
+
   my $username;
   my $password;
   my $upstream_auth_success = 0;

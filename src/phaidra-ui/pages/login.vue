@@ -142,7 +142,7 @@ export default {
     async login () {
       this.loading = true
       try {
-        let response = await this.$axios.get('/termsofuse/getagreed',
+        let response = await this.$axios.get('/termsofuse/getagreed?lang=' + this.$i18n.locale.substring(0, 2),
           {
             headers: {
               'Authorization': 'Basic ' + btoa(this.credentials.username + ':' + this.credentials.password)

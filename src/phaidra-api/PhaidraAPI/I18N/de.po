@@ -457,3 +457,13 @@ msgstr "Sie haben hier die Möglichkeit Ihre Publikation genau zu beschreiben."
 
 msgid "object_preview_processing"
 msgstr "Die Objektvorschau wird in Kürze verfügbar sein. Bitte laden Sie die Seite neu oder versuchen Sie es später erneut."
+
+msgid "user_not_found"
+msgstr "Benutzer nicht gefunden"
+
+msgid "replayweb_archive_info"
+msgstr ""
+"Dieses Projekt wird in PHAIDRA zur langfristigen Archivierung gespeichert. Sie "
+"können das Archiv auf die gleiche Weise wie das Original verwenden. Aufgrund "
+"technischer Notwendigkeiten funktionieren jedoch einige Funktionen möglicherweise "
+"nicht wie erwartet."

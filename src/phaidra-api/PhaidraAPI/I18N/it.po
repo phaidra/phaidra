@@ -3,3 +3,13 @@ msgstr "Apri"
 
 msgid "object_preview_processing"
 msgstr "L'anteprima dell'oggetto sarà disponibile a breve. Ricarica la pagina o riprova tra poco."
+
+msgid "user_not_found"
+msgstr "utente non trovato"
+
+msgid "replayweb_archive_info"
+msgstr ""
+"Questo progetto è archiviato in PHAIDRA per l'archiviazione a lungo termine. "
+"Puoi utilizzare l'archivio allo stesso modo dell'originale. Tuttavia, a causa "
+"delle necessità tecniche alcune funzionalità potrebbero non funzionare come "
+"previsto."
