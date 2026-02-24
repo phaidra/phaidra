@@ -458,7 +458,7 @@ export const state = () => ({
                 level1:
                   'With this field you can provide a bibliographic reference for your resource. You first need to specify the type of citation (Cites or Is cited by) and then format the citation in the available subfields.',
                 level2:
-                  'When the resource you are uploading is research data, make sure you state the scholarly output of your dataset. Explicitly defining the link between dataset and the related publication is in compliance with Open Access policies. It also ensures faster exposure of the dataset in the OpenAIRE portal, to which Phaidra metadata are exposed.',
+                  'When the resource you are uploading is research data, make sure you state the scholarly output of your dataset. Explicitly defining the link between dataset and the related publication is in compliance with Open Access policies. It also ensures faster dissemination of the dataset, e.g. in the OpenAIRE portal.',
                 level3: ''
               }
             },
@@ -1838,7 +1838,7 @@ export const state = () => ({
                 level1:
                   'This field gathers information about the project which your resource is related to. <br>It consists of:<br> <br><ul><li> Project name: <br> Name of the project.</li> <br><li> Project acronym: <br> Acronym used to identify the project, based on its full name or title. For example, the ontology "Funding, Research Administration and Projects Ontology" has the acronym "FRAPO"</li> <br><li>Project description: <br> Brief description of the project.</li> <br> <li>Project identifier: <br>The project identification number.</li> <br> <li>Project homepage: <br> The main link to the project.</li> <br> <li> Funder name: <br> The name of the project funder, providing its identifier where available.</li></ul>',
                 level2:
-                  'Explicit EC or national funding information adheres to Open Access policies and meets the requirements of the <i>OpenAIRE</i> infrastructure. Where applicable, fill in the field to improve discoverability of your resource in the <i>OpenAIRE</i> portal.',
+                  'Explicit EC or national funding information adheres to Open Access policies and meets the requirements of the <i>OpenAIRE</i> infrastructure. Where applicable, fill in the field to improve discoverability of your resource, e.g. in the <i>OpenAIRE</i> portal.',
                 level3:
                   'Globally unique and persistent identifiers can help computers to interpret your data in a meaningful way, to create automatic links between datasets, publications and researchers, and to increase discoverability. To make your data Findable, reference Project and Funder identifiers when describing your resource.'
               }
