@@ -447,13 +447,32 @@ sub search_solr {
   if ($include_extracted) {
     if (defined $params->{qf}) {
       my @qf_parts = split /\s+/, $params->{qf};
-      my @filtered = grep { $_ !~ /^(?:_text_|dc_identifier)(\^\S+)?$/ } @qf_parts;
+      my @filtered = grep { $_ !~ /^(?:dc_identifier)(\^\S+)?$/ } @qf_parts;
+      my $has_extracted = 0;
+      my $has_text = 0;
+      for (my $i = 0; $i < @filtered; $i++) {
+        if ($filtered[$i] =~ /^extracted_text(\^|$)/) {
+          $has_extracted = 1;
+        }
+        if ($filtered[$i] =~ /^_text_(\^|$)/) {
+          $has_text = 1;
+        }
+      }
+      if (!$has_extracted) {
+        push @filtered, 'extracted_text';
+      }
+      if (!$has_text) {
+        push @filtered, '_text_^0.5';
+      }
       if (@filtered) {
         $params->{qf} = join ' ', @filtered;
       }
       else {
-        $params->{qf} = 'extracted_text';
+        $params->{qf} = 'extracted_text _text_^0.5';
       }
+    }
+    else {
+      $params->{qf} = 'extracted_text _text_^0.5';
     }
   }
   else {
@@ -570,9 +589,12 @@ sub search_solr {
     my $pdf_clause = 'extracted_text:(' . $original_q . ')';
     push @query_parts, '(' . $pdf_clause . ')';
     
+    my $metadata_clause = '_text_:(' . $original_q . ')';
+    push @query_parts, '(' . $metadata_clause . ')';
+    
     my $combined_q = join ' OR ', @query_parts;
     $params->{q} = $combined_q;
-    $self->app->log->info('Combined query (books OR PDFs): ' . $combined_q);
+    $self->app->log->info('Combined query (books OR PDFs OR metadata): ' . $combined_q);
     $self->app->log->info('Book PIDs found: ' . scalar(@book_pids));
     
     unless (defined $params->{sort} && $params->{sort} ne '') {
