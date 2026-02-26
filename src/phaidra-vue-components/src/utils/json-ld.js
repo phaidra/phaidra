@@ -357,18 +357,6 @@ export default {
                   }
                 }
               }
-              Object.entries(jsonld).forEach(([key1, value1]) => {
-                if (key1 === 'schema:pageStart') {
-                  for (let ps of value1) {
-                    f.pageStart = ps
-                  }
-                }
-                if (key1 === 'schema:pageEnd') {
-                  for (let pe of value1) {
-                    f.pageEnd = pe
-                  }
-                }
-              })
               components.push(f)
               break
 
@@ -448,18 +436,6 @@ export default {
                       }
                     }
                     f.roles.push(entity)
-                  }
-                }
-              })
-              Object.entries(jsonld).forEach(([key1, value1]) => {
-                if (key1 === 'schema:pageStart') {
-                  for (let ps of value1) {
-                    f.pageStart = ps
-                  }
-                }
-                if (key1 === 'schema:pageEnd') {
-                  for (let pe of value1) {
-                    f.pageEnd = pe
                   }
                 }
               })
