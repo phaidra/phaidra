@@ -622,14 +622,18 @@ sub search_solr {
 
 
 sub _proxy_tx {
- my ($self, $tx, $hit_facet_limit) = @_;
+  my ($self, $tx, $hit_facet_limit) = @_;
   if (!$tx->error) {
     my $res = $tx->res;
     $self->tx->res($res);
     
-    # Add custom header if we hit the facet limit
+    # Show warning only if we hit the limit AND there are books in the filtered results
     if ($hit_facet_limit) {
-      $self->tx->res->headers->add('X-Query-Scope', 'all-books');
+      my $json = $res->json;
+      my $book_count = $json->{facet_counts}->{facet_queries}->{'resourcetype:book'} || 0;
+      if ($book_count > 0) {
+        $self->tx->res->headers->add('X-Query-Scope', 'all-books');
+      }
     }
     
     $self->rendered;
