@@ -206,6 +206,35 @@ sub authenticate {
   return 1;
 }
 
+sub authenticate_if_username {
+
+  my $self = shift;
+
+  if ($self->stash->{remote_user}) {
+    $self->app->log->info("Remote user " . $self->stash->{remote_user});
+    return 1;
+  }
+
+  my $username = $self->stash->{basic_auth_credentials}->{username};
+  my $password = $self->stash->{basic_auth_credentials}->{password};
+
+  if ($username) {
+
+    $self->app->log->info("Authenticating user $username");
+
+    $self->directory->authenticate($self, $username, $password);
+    my $res = $self->stash('phaidra_auth_result');
+    unless (($res->{status} eq 200)) {
+      $self->app->log->info("User $username not authenticated");
+      $self->render(json => {status => $res->{status}, alerts => $res->{alerts}}, status => $res->{status});
+      return 0;
+    }
+    $self->app->log->info("User $username successfully authenticated");
+  }
+
+  return 1;
+}
+
 sub authenticate_admin {
 
   my $self = shift;

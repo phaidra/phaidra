@@ -566,342 +566,172 @@ sub startup {
 
   $r->get('/jwks')                                  ->to('utils#jwks');
 
-  if ($self->app->config->{fedora}->{version} >= 6) {
-    my $ext_creds = $r->under('/')->to('authentication#extract_credentials', creds_must_be_present => 0);
-
-    my $loggedin  = $ext_creds->under('/')->to('authentication#authenticate');
-
-    my $admin     = $ext_creds->under('/')->to('authentication#authenticate_admin');
-    my $ir_admin  = $ext_creds->under('/')->to('authentication#authenticate_ir_admin');
-
-    $self->plugin('Prometheus' => { 'route' => $admin });
-
-    my $reader    = $ext_creds->under('/')->to('authorization#authorize', op => 'r');
-    my $writer    = $loggedin->under('/')->to('authorization#authorize', op => 'w');
-
-    $loggedin->get('directory/user/data')                                    ->to('directory#get_user_data');
-
-    $loggedin->get('settings')                                               ->to('settings#get_settings');
-
-    $loggedin->get('groups')                                                 ->to('groups#get_users_groups');
-    $loggedin->get('group/:gid')                                             ->to('groups#get_group');
-
-    $loggedin->get('lists')                                                  ->to('lists#get_lists');
-    $loggedin->get('list/:lid')                                              ->to('lists#get_list');
-
-    $loggedin->get('jsonld/templates')                                       ->to('jsonld#get_users_templates');
-    $loggedin->get('jsonld/template/:tid')                                   ->to('jsonld#get_template');
-
-    $loggedin->get('authz/check/:pid/:op')                                   ->to('authorization#check_rights');
-
-    $reader->get('streaming/:pid')                                           ->to('object#preview');
-    $reader->get('streaming/:pid/key')                                       ->to('streaming#key');
-
-    $reader->get('imageserver')                                              ->to('imageserver#imageserverproxy');
-    $reader->get('imageserver/:pid/status')                                  ->to('imageserver#status');
-
-    $ext_creds->get('object/:pid/info')                                      ->to('object#info');
-    $ext_creds->get('object/:pid/metadata')                                  ->to('object#get_metadata');
-
-    $reader->get('object/:pid/fulltext')                                     ->to('fulltext#get');
-    $reader->get('object/:pid/thumbnail')                                    ->to('object#thumbnail');
-    $reader->get('object/:pid/preview')                                      ->to('object#preview');
-    $reader->get('object/:pid/3d_resource')                        ->to('threed#get_resource');
-    $reader->get('object/:pid/360_frame')                          ->to('viewer360#get_frame');
-    $reader->get('object/:pid/360_frames/*filename')               ->to('viewer360#get_frame_by_name');
-    $reader->get('object/:pid/octets')                                       ->to('octets#proxy');
-    $reader->get('object/:pid/download')                                     ->to('octets#get', operation => 'download');
-    $reader->get('object/:pid/get')                                          ->to('octets#get', operation => 'get');
-    $reader->get('object/:pid/comp/:ds')                                     ->to('object#get_legacy_container_member');
-    $reader->get('object/:pid/datastream/:dsid')                             ->to('object#get_public_datastream');
-    $reader->get('object/:pid/resourcelink/get')                             ->to('object#resourcelink', operation => 'get');
-    $reader->get('object/:pid/resourcelink/redirect')                        ->to('object#resourcelink', operation => 'redirect');
-
-    $writer->get('object/:pid/jsonldprivate')                                ->to('jsonldprivate#get');
-    $writer->get('object/:pid/rights')                                       ->to('rights#get');
-
-    $loggedin->get('termsofuse/getagreed')                                   ->to('termsofuse#getagreed');
-    $loggedin->get('users/search')                                           ->to('utils#search_users');
-
-    $ir_admin->post('ir/adminlistdata')                                      ->to('ir#adminlistdata');
-    $ir_admin->get('ir/:pid/events')                                         ->to('ir#events');
-    $ir_admin->get('ir/allowsubmit')                                         ->to('ir#allowsubmit');
-    $ir_admin->get('ir/puresearch')                                          ->to('ir#puresearch');
-    $ir_admin->get('ir/pureimport/locks')                                    ->to('ir#pureimport_getlocks');
-
-    $admin->get('utils/fedora_storage_usage')                                ->to('utils#fedora_storage_usage');
-    $admin->get('utils/fedora_storage_avg_year')                            ->to('utils#fedora_storage_avg_year');
-    $admin->get('utils/imageserver_storage_avg_year')                       ->to('utils#imageserver_storage_avg_year');
-    $admin->post('utils/send_daily_report')                                  ->to('utils#send_daily_report');
-    $admin->get('config/private')                                            ->to('config#get_private_config');
-
-    unless($self->app->config->{readonly}){
-
-      $admin->post('config/public')                                          ->to('config#post_public_config');
-      $admin->post('config/private')                                         ->to('config#post_private_config');
-
-      $admin->post('index')                                                  ->to('index#update');
-      $admin->post('dc')                                                     ->to('dc#update');
-
-      $admin->post('object/:pid/index')                                      ->to('index#update');
-      $admin->post('object/:pid/dc')                                         ->to('dc#update');
-
-      $admin->post('imageserver/process')                                    ->to('imageserver#process_pids');
-      $admin->post('tikaserver/process')                                      ->to('tikaserver#process_pids');
-      $writer->post('imageserver/:pid/process')                              ->to('imageserver#process');
-      $writer->post('tikaserver/:pid/process')                              ->to('tikaserver#process');
-      $admin->post('streaming/process')                                      ->to('streaming#process_pids');
-      $admin->post('streaming/:pid/process')                                 ->to('streaming#process');
-
-      $writer->post('object/:pid/updateiiifmanifest')                        ->to('iiifmanifest#update_manifest_metadata');
-      $writer->post('object/:pid/modify')                                    ->to('object#modify');
-      $writer->post('object/:pid/delete')                                    ->to('object#delete');
-      $writer->post('object/:pid/uwmetadata')                                ->to('uwmetadata#post');
-      $writer->post('object/:pid/mods')                                      ->to('mods#post');
-      $writer->post('object/:pid/jsonld')                                    ->to('jsonld#post');
-      $writer->post('object/:pid/jsonldprivate')                             ->to('jsonldprivate#post');
-      $writer->post('object/:pid/geo')                                       ->to('geo#post');
-      $writer->post('object/:pid/annotations')                               ->to('annotations#post');
-      $writer->post('object/:pid/rights')                                    ->to('rights#post');
-      $writer->post('object/:pid/iiifmanifest')                              ->to('iiifmanifest#post');
-      $writer->post('object/:pid/metadata')                                  ->to('object#metadata');
-      $writer->post('object/:pid/relationship/add')                          ->to('object#add_relationship');
-      $writer->post('object/:pid/relationships/add')                         ->to('object#add_relationships');
-      $writer->post('object/:pid/relationship/remove')                       ->to('object#purge_relationship');
-      $writer->post('object/:pid/id/add')                                    ->to('object#add_or_remove_identifier', operation => 'add');
-      $writer->post('object/:pid/id/remove')                                 ->to('object#add_or_remove_identifier', operation => 'remove');
-      $writer->post('object/:pid/datastream/:dsid')                          ->to('object#add_or_modify_datastream');
-      $writer->post('object/:pid/data')                                      ->to('object#add_octets');
-
-      $admin->post('objects/:currentowner/modify')                           ->to('object#modify_bulk');
-      $admin->post('objects/:currentowner/delete')                           ->to('object#delete_bulk');
-
-      $loggedin->post('picture/create')                                      ->to('object#create_simple', cmodel => 'cmodel:Picture');
-      $loggedin->post('document/create')                                     ->to('object#create_simple', cmodel => 'cmodel:PDFDocument');
-      $loggedin->post('video/create')                                        ->to('object#create_simple', cmodel => 'cmodel:Video');
-      $loggedin->post('audio/create')                                        ->to('object#create_simple', cmodel => 'cmodel:Audio');
-      $loggedin->post('unknown/create')                                      ->to('object#create_simple', cmodel => 'cmodel:Asset');
-      $loggedin->post('resource/create')                                     ->to('object#create_simple', cmodel => 'cmodel:Resource');
-      $loggedin->post('page/create')                                         ->to('object#create_simple', cmodel => 'cmodel:Page');
-      $loggedin->post('object/create')                                       ->to('object#create_empty');
-      $loggedin->post('object/create/:cmodel')                               ->to('object#create');
-      $loggedin->post('container/create')                                    ->to('object#create_container');
-      $loggedin->post('collection/create')                                   ->to('collection#create');
-
-      $writer->post('container/:pid/members/order')                          ->to('membersorder#post');
-      $writer->post('container/:pid/members/:itempid/order/:position')       ->to('membersorder#order_object_member');
-
-      $writer->post('collection/:pid/members/remove')                        ->to('collection#remove_collection_members');
-      $writer->post('collection/:pid/members/add')                           ->to('collection#add_collection_members');
-      $writer->post('collection/:pid/members/order')                         ->to('membersorder#post');
-      $writer->post('collection/:pid/members/:itempid/order/:position')      ->to('membersorder#order_object_member');
-
-      $loggedin->post('group/add')                                           ->to('groups#add_group');
-      $loggedin->post('group/:gid/remove')                                   ->to('groups#remove_group');
-      $loggedin->post('group/:gid/members/add')                              ->to('groups#add_members');
-      $loggedin->post('group/:gid/members/remove')                           ->to('groups#remove_members');
-
-      $loggedin->post('list/add')                                            ->to('lists#add_list');
-      $loggedin->post('list/:lid/token/create')                              ->to('lists#token_create');
-      $loggedin->post('list/:lid/token/delete')                              ->to('lists#token_delete');
-      $loggedin->post('list/:lid/remove')                                    ->to('lists#remove_list');
-      $loggedin->post('list/:lid/members/add')                               ->to('lists#add_members');
-      $loggedin->post('list/:lid/members/remove')                            ->to('lists#remove_members');
-
-      $loggedin->post('jsonld/template/add')                                 ->to('jsonld#add_template');
-      $loggedin->post('jsonld/template/:tid/remove')                         ->to('jsonld#remove_template');
-      $loggedin->post('jsonld/template/:tid/edit')                           ->to('jsonld#edit_template');
-      
-      $admin->get('jsonld/templates/admin')                                  ->to('jsonld#get_templates_admin');
-      $admin->post('jsonld/template/admin/:tid/remove')                     ->to('jsonld#remove_template_admin');
-      $admin->post('jsonld/template/admin/:tid/edit')                       ->to('jsonld#edit_template_admin');
-
-
-      $loggedin->post('ir/submit')                                           ->to('ir#submit');
-      $loggedin->post('ir/notifications')                                    ->to('ir#notifications');
-      $ir_admin->post('ir/:pid/accept')                                      ->to('ir#accept');
-      $ir_admin->post('ir/:pid/reject')                                      ->to('ir#reject');
-      $ir_admin->post('ir/:pid/approve')                                     ->to('ir#approve');
-      $ir_admin->post('ir/pureimport/lock/:pureid/:lockname')                ->to('ir#pureimport_lock');
-      $ir_admin->post('ir/pureimport/unlock/:pureid/:lockname')              ->to('ir#pureimport_unlock');
-      $ir_admin->post('ir/pureimport/reject/:uuid')                          ->to('ir#pureimport_reject');
-      $admin->post('ir/embargocheck')                                        ->to('ir#embargocheck');
-
-      $loggedin->post('feedback')                                            ->to('feedback#feedback');
-
-      $loggedin->post('termsofuse/agree/:version')                           ->to('termsofuse#agree');
-
-      $loggedin->post('settings')                                            ->to('settings#post_settings');
-
-      $loggedin->post('utils/:pid/requestdoi')                               ->to('utils#request_doi');
-    }
-  } else {
-
-    # this just extracts the credentials - authentication will be done by fedora
-    my $proxyauth = $r->under('/')->to('authentication#extract_credentials', creds_must_be_present => 1);
-    my $proxyauth_optional = $r->under('/')->to('authentication#extract_credentials', creds_must_be_present => 0);
-
-    my $check_auth = $proxyauth->under('/')->to('authentication#authenticate');
-    # check the user sends phaidra admin credentials
-    my $admin = $proxyauth->under('/')->to('authentication#authenticate_admin');
-
-    $check_auth->get('directory/user/data')                                     ->to('directory#get_user_data');
-
-    $check_auth->get('settings')                                                ->to('settings#get_settings');
-
-    $check_auth->get('groups')                                                  ->to('groups#get_users_groups');
-    $check_auth->get('group/:gid')                                              ->to('groups#get_group');
-
-    $check_auth->get('lists')                                                   ->to('lists#get_lists');
-    $check_auth->get('list/:lid')                                               ->to('lists#get_list');
-
-    $check_auth->get('jsonld/templates')                                        ->to('jsonld#get_users_templates');
-    $check_auth->get('jsonld/template/:tid')                                    ->to('jsonld#get_template');
-
-    $proxyauth_optional->get('authz/check/:pid/:op')                            ->to('authorization#check_rights');
-
-    $proxyauth_optional->get('streaming/:pid')                                  ->to('object#preview');
-    $proxyauth_optional->get('streaming/:pid/key')                              ->to('streaming#key');
-
-    $proxyauth_optional->get('imageserver')                                     ->to('imageserver#imageserverproxy');
-
-    $proxyauth_optional->get('object/:pid/diss/:bdef/:method')                  ->to('object#diss');
-    $proxyauth_optional->get('object/:pid/fulltext')                            ->to('fulltext#get');
-    $proxyauth_optional->get('object/:pid/metadata')                            ->to('object#get_metadata');
-    $proxyauth_optional->get('object/:pid/info')                                ->to('object#info');
-    $proxyauth_optional->get('object/:pid/thumbnail')                           ->to('object#thumbnail');
-    $proxyauth_optional->get('object/:pid/preview')                             ->to('object#preview');
-    $proxyauth_optional->get('object/:pid/octets')                              ->to('octets#proxy');
-    $proxyauth_optional->get('object/:pid/download')                            ->to('octets#get', operation => 'download');
-    $proxyauth_optional->get('object/:pid/get')                                 ->to('octets#get', operation => 'get');
-    $proxyauth_optional->get('object/:pid/comp/:ds')                            ->to('object#get_legacy_container_member');
-    $proxyauth_optional->get('object/:pid/resourcelink/get')                    ->to('object#resourcelink', operation => 'get');
-    $proxyauth_optional->get('object/:pid/resourcelink/redirect')               ->to('object#resourcelink', operation => 'redirect');
-    $proxyauth_optional->get('object/:pid/3d_resource')               ->to('threed#get_resource');
-    $proxyauth_optional->get('object/:pid/360_frame')                 ->to('viewer360#get_frame');
-    $proxyauth_optional->get('object/:pid/360_frames/*filename')      ->to('viewer360#get_frame_by_name');
-
-    $proxyauth_optional->get('imageserver/:pid/status')                         ->to('imageserver#status');
-
-    $proxyauth->get('object/:pid/jsonldprivate')                                ->to('jsonldprivate#get');
-    $proxyauth->get('object/:pid/rights')                                       ->to('rights#get');
-
-    $check_auth->post('ir/requestedlicenses')                                   ->to('ir#adminlistdata'); # remove
-    $check_auth->post('ir/adminlistdata')                                       ->to('ir#adminlistdata');
-    $check_auth->get('ir/:pid/events')                                          ->to('ir#events');
-    $check_auth->get('ir/allowsubmit')                                          ->to('ir#allowsubmit');
-    $check_auth->get('ir/puresearch')                                           ->to('ir#puresearch');
-    $check_auth->get('ir/pureimport/locks')                                     ->to('ir#pureimport_getlocks');
-
-    $check_auth->get('termsofuse/getagreed')                                    ->to('termsofuse#getagreed');
-    $check_auth->get('users/search')                                            ->to('utils#search_users');
-
-    $admin->get('test/error')                                                   ->to('utils#testerror');
-
-    $admin->get('config/private')                                               ->to('config#get_private_config');
-
-    unless($self->app->config->{readonly}){
-
-      $admin->get('jsonld/templates/admin')                                     ->to('jsonld#get_templates_admin');
-      $admin->post('jsonld/template/admin/:tid/remove')                        ->to('jsonld#remove_template_admin');
-      $admin->post('jsonld/template/admin/:tid/edit')                          ->to('jsonld#edit_template_admin');
-
-      $admin->post('config/public')                                             ->to('config#post_public_config');
-      $admin->post('config/private')                                            ->to('config#post_private_config');
-
-      $admin->post('index')                                                     ->to('index#update');
-      $admin->post('dc')                                                        ->to('dc#update');
-
-      $check_auth->post('settings')                                             ->to('settings#post_settings');
-
-      $admin->post('object/:pid/index')                                         ->to('index#update');
-      $admin->post('object/:pid/dc')                                            ->to('dc#update');
-
-      $admin->post('ir/embargocheck')                                           ->to('ir#embargocheck');
-
-      $admin->post('imageserver/process')                                       ->to('imageserver#process_pids');
-      $admin->post('tikaserver/process')                                       ->to('tikaserver#process_pids');
-
-      $proxyauth->post('imageserver/:pid/process')                              ->to('imageserver#process');
-
-      $proxyauth->post('tikaserver/:pid/process')                              ->to('tikaserver#process');
-      $admin->post('streaming/process')                                         ->to('streaming#process_pids');
-      $proxyauth->post('streaming/:pid/process')                                ->to('streaming#process');
-
-      $proxyauth->post('object/:pid/updateiiifmanifest')                        ->to('iiifmanifest#update_manifest_metadata');
-      $proxyauth->post('object/:pid/modify')                                    ->to('object#modify');
-      $proxyauth->post('object/:pid/delete')                                    ->to('object#delete');
-      $proxyauth->post('object/:pid/uwmetadata')                                ->to('uwmetadata#post');
-      $proxyauth->post('object/:pid/mods')                                      ->to('mods#post');
-      $proxyauth->post('object/:pid/jsonld')                                    ->to('jsonld#post');
-      $proxyauth->post('object/:pid/jsonldprivate')                             ->to('jsonldprivate#post');
-      $proxyauth->post('object/:pid/geo')                                       ->to('geo#post');
-      $proxyauth->post('object/:pid/annotations')                               ->to('annotations#post');
-      $proxyauth->post('object/:pid/rights')                                    ->to('rights#post');
-      $proxyauth->post('object/:pid/iiifmanifest')                              ->to('iiifmanifest#post');
-      $proxyauth->post('object/:pid/metadata')                                  ->to('object#metadata');
-      $proxyauth->post('object/create')                                         ->to('object#create_empty');
-      $proxyauth->post('object/create/:cmodel')                                 ->to('object#create');
-      $proxyauth->post('object/:pid/relationship/add')                          ->to('object#add_relationship');
-      $proxyauth->post('object/:pid/relationships/add')                         ->to('object#add_relationships');
-      $proxyauth->post('object/:pid/relationship/remove')                       ->to('object#purge_relationship');
-      $proxyauth->post('object/:pid/id/add')                                    ->to('object#add_or_remove_identifier', operation => 'add');
-      $proxyauth->post('object/:pid/id/remove')                                 ->to('object#add_or_remove_identifier', operation => 'remove');
-      $proxyauth->post('object/:pid/datastream/:dsid')                          ->to('object#add_or_modify_datastream');
-      $proxyauth->post('object/:pid/data')                                      ->to('object#add_octets');
-
-      $admin->post('objects/:currentowner/modify')                              ->to('object#modify_bulk');
-      $admin->post('objects/:currentowner/delete')                              ->to('object#delete_bulk');
-
-      $proxyauth->post('picture/create')                                        ->to('object#create_simple', cmodel => 'cmodel:Picture');
-      $proxyauth->post('document/create')                                       ->to('object#create_simple', cmodel => 'cmodel:PDFDocument');
-      $proxyauth->post('video/create')                                          ->to('object#create_simple', cmodel => 'cmodel:Video');
-      $proxyauth->post('audio/create')                                          ->to('object#create_simple', cmodel => 'cmodel:Audio');
-      $proxyauth->post('unknown/create')                                        ->to('object#create_simple', cmodel => 'cmodel:Asset');
-      $proxyauth->post('resource/create')                                       ->to('object#create_simple', cmodel => 'cmodel:Resource');
-      $proxyauth->post('page/create')                                           ->to('object#create_simple', cmodel => 'cmodel:Page');
-
-      $proxyauth->post('container/create')                                      ->to('object#create_container');
-      $proxyauth->post('container/:pid/members/order')                          ->to('membersorder#post');
-      $proxyauth->post('container/:pid/members/:itempid/order/:position')       ->to('membersorder#order_object_member');
-
-      $proxyauth->post('collection/create')                                     ->to('collection#create');
-      $proxyauth->post('collection/:pid/members/remove')                        ->to('collection#remove_collection_members');
-      $proxyauth->post('collection/:pid/members/add')                           ->to('collection#add_collection_members');
-      $proxyauth->post('collection/:pid/members/order')                         ->to('membersorder#post');
-      $proxyauth->post('collection/:pid/members/:itempid/order/:position')      ->to('membersorder#order_object_member');
-
-      $check_auth->post('group/add')                                            ->to('groups#add_group');
-      $check_auth->post('group/:gid/remove')                                    ->to('groups#remove_group');
-      $check_auth->post('group/:gid/members/add')                               ->to('groups#add_members');
-      $check_auth->post('group/:gid/members/remove')                            ->to('groups#remove_members');
-
-      $check_auth->post('list/add')                                             ->to('lists#add_list');
-      $check_auth->post('list/:lid/token/create')                               ->to('lists#token_create');
-      $check_auth->post('list/:lid/token/delete')                               ->to('lists#token_delete');
-      $check_auth->post('list/:lid/remove')                                     ->to('lists#remove_list');
-      $check_auth->post('list/:lid/members/add')                                ->to('lists#add_members');
-      $check_auth->post('list/:lid/members/remove')                             ->to('lists#remove_members');
-
-      $check_auth->post('jsonld/template/add')                                  ->to('jsonld#add_template');
-      $check_auth->post('jsonld/template/:tid/remove')                          ->to('jsonld#remove_template');
-      $check_auth->post('jsonld/template/:tid/edit')                            ->to('jsonld#edit_template');
-
-      $proxyauth->post('ir/submit')                                             ->to('ir#submit');
-      $check_auth->post('ir/notifications')                                     ->to('ir#notifications');
-      $check_auth->post('ir/:pid/accept')                                       ->to('ir#accept');
-      $check_auth->post('ir/:pid/reject')                                       ->to('ir#reject');
-      $check_auth->post('ir/:pid/approve')                                      ->to('ir#approve');
-      $check_auth->post('ir/pureimport/lock/:pureid/:lockname')                 ->to('ir#pureimport_lock');
-      $check_auth->post('ir/pureimport/unlock/:pureid/:lockname')               ->to('ir#pureimport_unlock');
-      $check_auth->post('ir/pureimport/reject/:uuid')                           ->to('ir#pureimport_reject');
-
-      $check_auth->post('feedback')                                             ->to('feedback#feedback');
-
-      $check_auth->post('termsofuse/agree/:version')                            ->to('termsofuse#agree');
-
-      $check_auth->post('utils/:pid/requestdoi')                                ->to('utils#request_doi');
-    }
+  my $ext_creds       = $r->under('/')->to('authentication#extract_credentials');
+
+  my $optionally_authenticated  = $ext_creds->under('/')->to('authentication#authenticate_if_username');
+  my $authenticated   = $ext_creds->under('/')->to('authentication#authenticate');
+  my $admin           = $ext_creds->under('/')->to('authentication#authenticate_admin');
+  my $ir_admin        = $ext_creds->under('/')->to('authentication#authenticate_ir_admin');
+
+  my $reader          = $optionally_authenticated->under('/')->to('authorization#authorize', op => 'r');
+  my $writer          = $authenticated->under('/')->to('authorization#authorize', op => 'w');
+
+  $self->plugin('Prometheus' => { 'route' => $admin });
+
+  $authenticated->get('directory/user/data')                                    ->to('directory#get_user_data');
+
+  $authenticated->get('settings')                                               ->to('settings#get_settings');
+
+  $authenticated->get('groups')                                                 ->to('groups#get_users_groups');
+  $authenticated->get('group/:gid')                                             ->to('groups#get_group');
+
+  $authenticated->get('lists')                                                  ->to('lists#get_lists');
+  $authenticated->get('list/:lid')                                              ->to('lists#get_list');
+
+  $authenticated->get('jsonld/templates')                                       ->to('jsonld#get_users_templates');
+  $authenticated->get('jsonld/template/:tid')                                   ->to('jsonld#get_template');
+
+  $authenticated->get('authz/check/:pid/:op')                                   ->to('authorization#check_rights');
+
+  $reader->get('streaming/:pid')                                           ->to('object#preview');
+  $reader->get('streaming/:pid/key')                                       ->to('streaming#key');
+
+  $reader->get('imageserver')                                              ->to('imageserver#imageserverproxy');
+  $reader->get('imageserver/:pid/status')                                  ->to('imageserver#status');
+
+  $reader->get('object/:pid/info')                                         ->to('object#info');
+  $reader->get('object/:pid/metadata')                                     ->to('object#get_metadata');
+
+  $reader->get('object/:pid/fulltext')                                     ->to('fulltext#get');
+  $reader->get('object/:pid/thumbnail')                                    ->to('object#thumbnail');
+  $reader->get('object/:pid/preview')                                      ->to('object#preview');
+  $reader->get('object/:pid/3d_resource')                                  ->to('threed#get_resource');
+  $reader->get('object/:pid/360_frame')                                    ->to('viewer360#get_frame');
+  $reader->get('object/:pid/360_frames/*filename')                         ->to('viewer360#get_frame_by_name');
+  $reader->get('object/:pid/octets')                                       ->to('octets#proxy');
+  $reader->get('object/:pid/download')                                     ->to('octets#get', operation => 'download');
+  $reader->get('object/:pid/get')                                          ->to('octets#get', operation => 'get');
+  $reader->get('object/:pid/comp/:ds')                                     ->to('object#get_legacy_container_member');
+  $reader->get('object/:pid/datastream/:dsid')                             ->to('object#get_public_datastream');
+  $reader->get('object/:pid/resourcelink/get')                             ->to('object#resourcelink', operation => 'get');
+  $reader->get('object/:pid/resourcelink/redirect')                        ->to('object#resourcelink', operation => 'redirect');
+
+  $writer->get('object/:pid/jsonldprivate')                                ->to('jsonldprivate#get');
+  $writer->get('object/:pid/rights')                                       ->to('rights#get');
+
+  $authenticated->get('termsofuse/getagreed')                                   ->to('termsofuse#getagreed');
+  $authenticated->get('users/search')                                           ->to('utils#search_users');
+
+  $ir_admin->post('ir/adminlistdata')                                      ->to('ir#adminlistdata');
+  $ir_admin->get('ir/:pid/events')                                         ->to('ir#events');
+  $ir_admin->get('ir/allowsubmit')                                         ->to('ir#allowsubmit');
+  $ir_admin->get('ir/puresearch')                                          ->to('ir#puresearch');
+  $ir_admin->get('ir/pureimport/locks')                                    ->to('ir#pureimport_getlocks');
+
+  $admin->get('utils/fedora_storage_usage')                                ->to('utils#fedora_storage_usage');
+  $admin->get('utils/fedora_storage_avg_year')                             ->to('utils#fedora_storage_avg_year');
+  $admin->get('utils/imageserver_storage_avg_year')                        ->to('utils#imageserver_storage_avg_year');
+  $admin->post('utils/send_daily_report')                                  ->to('utils#send_daily_report');
+  $admin->get('config/private')                                            ->to('config#get_private_config');
+
+  unless($self->app->config->{readonly}){
+
+    $admin->post('config/public')                                          ->to('config#post_public_config');
+    $admin->post('config/private')                                         ->to('config#post_private_config');
+
+    $admin->post('index')                                                  ->to('index#update');
+    $admin->post('dc')                                                     ->to('dc#update');
+
+    $admin->post('object/:pid/index')                                      ->to('index#update');
+    $admin->post('object/:pid/dc')                                         ->to('dc#update');
+
+    $admin->post('imageserver/process')                                    ->to('imageserver#process_pids');
+    $admin->post('tikaserver/process')                                     ->to('tikaserver#process_pids');
+    $writer->post('imageserver/:pid/process')                              ->to('imageserver#process');
+    $writer->post('tikaserver/:pid/process')                               ->to('tikaserver#process');
+    $admin->post('streaming/process')                                      ->to('streaming#process_pids');
+    $admin->post('streaming/:pid/process')                                 ->to('streaming#process');
+
+    $writer->post('object/:pid/updateiiifmanifest')                        ->to('iiifmanifest#update_manifest_metadata');
+    $writer->post('object/:pid/modify')                                    ->to('object#modify');
+    $writer->post('object/:pid/delete')                                    ->to('object#delete');
+    $writer->post('object/:pid/uwmetadata')                                ->to('uwmetadata#post');
+    $writer->post('object/:pid/mods')                                      ->to('mods#post');
+    $writer->post('object/:pid/jsonld')                                    ->to('jsonld#post');
+    $writer->post('object/:pid/jsonldprivate')                             ->to('jsonldprivate#post');
+    $writer->post('object/:pid/geo')                                       ->to('geo#post');
+    $writer->post('object/:pid/annotations')                               ->to('annotations#post');
+    $writer->post('object/:pid/rights')                                    ->to('rights#post');
+    $writer->post('object/:pid/iiifmanifest')                              ->to('iiifmanifest#post');
+    $writer->post('object/:pid/metadata')                                  ->to('object#metadata');
+    $writer->post('object/:pid/relationship/add')                          ->to('object#add_relationship');
+    $writer->post('object/:pid/relationships/add')                         ->to('object#add_relationships');
+    $writer->post('object/:pid/relationship/remove')                       ->to('object#purge_relationship');
+    $writer->post('object/:pid/id/add')                                    ->to('object#add_or_remove_identifier', operation => 'add');
+    $writer->post('object/:pid/id/remove')                                 ->to('object#add_or_remove_identifier', operation => 'remove');
+    $writer->post('object/:pid/datastream/:dsid')                          ->to('object#add_or_modify_datastream');
+    $writer->post('object/:pid/data')                                      ->to('object#add_octets');
+
+    $admin->post('objects/:currentowner/modify')                           ->to('object#modify_bulk');
+    $admin->post('objects/:currentowner/delete')                           ->to('object#delete_bulk');
+
+    $authenticated->post('picture/create')                                      ->to('object#create_simple', cmodel => 'cmodel:Picture');
+    $authenticated->post('document/create')                                     ->to('object#create_simple', cmodel => 'cmodel:PDFDocument');
+    $authenticated->post('video/create')                                        ->to('object#create_simple', cmodel => 'cmodel:Video');
+    $authenticated->post('audio/create')                                        ->to('object#create_simple', cmodel => 'cmodel:Audio');
+    $authenticated->post('unknown/create')                                      ->to('object#create_simple', cmodel => 'cmodel:Asset');
+    $authenticated->post('resource/create')                                     ->to('object#create_simple', cmodel => 'cmodel:Resource');
+    $authenticated->post('page/create')                                         ->to('object#create_simple', cmodel => 'cmodel:Page');
+    $authenticated->post('object/create')                                       ->to('object#create_empty');
+    $authenticated->post('object/create/:cmodel')                               ->to('object#create');
+    $authenticated->post('container/create')                                    ->to('object#create_container');
+    $authenticated->post('collection/create')                                   ->to('collection#create');
+
+    $writer->post('container/:pid/members/order')                          ->to('membersorder#post');
+    $writer->post('container/:pid/members/:itempid/order/:position')       ->to('membersorder#order_object_member');
+
+    $writer->post('collection/:pid/members/remove')                        ->to('collection#remove_collection_members');
+    $writer->post('collection/:pid/members/add')                           ->to('collection#add_collection_members');
+    $writer->post('collection/:pid/members/order')                         ->to('membersorder#post');
+    $writer->post('collection/:pid/members/:itempid/order/:position')      ->to('membersorder#order_object_member');
+
+    $authenticated->post('group/add')                                           ->to('groups#add_group');
+    $authenticated->post('group/:gid/remove')                                   ->to('groups#remove_group');
+    $authenticated->post('group/:gid/members/add')                              ->to('groups#add_members');
+    $authenticated->post('group/:gid/members/remove')                           ->to('groups#remove_members');
+
+    $authenticated->post('list/add')                                            ->to('lists#add_list');
+    $authenticated->post('list/:lid/token/create')                              ->to('lists#token_create');
+    $authenticated->post('list/:lid/token/delete')                              ->to('lists#token_delete');
+    $authenticated->post('list/:lid/remove')                                    ->to('lists#remove_list');
+    $authenticated->post('list/:lid/members/add')                               ->to('lists#add_members');
+    $authenticated->post('list/:lid/members/remove')                            ->to('lists#remove_members');
+
+    $authenticated->post('jsonld/template/add')                                 ->to('jsonld#add_template');
+    $authenticated->post('jsonld/template/:tid/remove')                         ->to('jsonld#remove_template');
+    $authenticated->post('jsonld/template/:tid/edit')                           ->to('jsonld#edit_template');
+    
+    $admin->get('jsonld/templates/admin')                                  ->to('jsonld#get_templates_admin');
+    $admin->post('jsonld/template/admin/:tid/remove')                      ->to('jsonld#remove_template_admin');
+    $admin->post('jsonld/template/admin/:tid/edit')                        ->to('jsonld#edit_template_admin');
+
+    $authenticated->post('ir/submit')                                           ->to('ir#submit');
+    $authenticated->post('ir/notifications')                                    ->to('ir#notifications');
+    $ir_admin->post('ir/:pid/accept')                                      ->to('ir#accept');
+    $ir_admin->post('ir/:pid/reject')                                      ->to('ir#reject');
+    $ir_admin->post('ir/:pid/approve')                                     ->to('ir#approve');
+    $ir_admin->post('ir/pureimport/lock/:pureid/:lockname')                ->to('ir#pureimport_lock');
+    $ir_admin->post('ir/pureimport/unlock/:pureid/:lockname')              ->to('ir#pureimport_unlock');
+    $ir_admin->post('ir/pureimport/reject/:uuid')                          ->to('ir#pureimport_reject');
+    $admin->post('ir/embargocheck')                                        ->to('ir#embargocheck');
+
+    $authenticated->post('feedback')                                            ->to('feedback#feedback');
+
+    $authenticated->post('termsofuse/agree/:version')                           ->to('termsofuse#agree');
+
+    $authenticated->post('settings')                                            ->to('settings#post_settings');
+
+    $authenticated->post('utils/:pid/requestdoi')                               ->to('utils#request_doi');
   }
   #>>>
 

@@ -23,22 +23,11 @@ sub authorize {
     return 0;
   }
 
-  my $controller;
-  my $action;
-  my $pid;
-
-  if ($op eq 'w') {
-    # extract_credentials -> authorize -> action
-    $controller = $self->match->stack->[3]{controller};
-    $action = $self->match->stack->[3]{action};
-    $pid = $self->match->stack->[3]{pid};
-  } else {
-    # extract_credentials -> action
-    $controller = $self->match->stack->[2]{controller};
-    $action = $self->match->stack->[2]{action};
-    $pid = $self->match->stack->[2]{pid};
-  }
-
+  # extract_credentials -> authorize[_if_username] -> action
+  my $controller = $self->match->stack->[3]{controller};
+  my $action = $self->match->stack->[3]{action};
+  my $pid = $self->match->stack->[3]{pid};
+  
   # imageserverproxy is an exception
   # -> the PID is in the query string
   # -> pass this, we'll check rights in imageserver model where we parse the query
