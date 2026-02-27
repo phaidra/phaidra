@@ -831,7 +831,12 @@ sub preview {
 
         my $u_model = PhaidraAPI::Model::Util->new;
         $u_model->track_action($self, $pid, 'preview');
-         $self->render(template => 'utils/replayweb', format => 'html');
+        # Ensure UTF-8 encoding for translations
+        my $archive_info = $self->l('replayweb_archive_info');
+        $archive_info = decode('UTF-8', $archive_info) if !utf8::is_utf8($archive_info);
+        $self->stash(archive_info => $archive_info);
+        $self->res->headers->content_type('text/html; charset=utf-8');
+        $self->render(template => 'utils/replayweb', format => 'html');
         return;
       }
       if (($index_mime eq 'model/ply') || ($index_mime eq 'model/nxz')) {

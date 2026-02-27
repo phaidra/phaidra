@@ -639,7 +639,9 @@ sub _authenticate() {
     if ($has_username) {
       $rate_limit_model->record_failed_attempt($c, $identifier);
     }
-    unshift @{$res->{alerts}}, {type => 'error', msg => 'user not found'};
+    my $error_msg = $c->l('user_not_found');
+    $error_msg = decode('UTF-8', $error_msg) if !utf8::is_utf8($error_msg);
+    unshift @{$res->{alerts}}, {type => 'error', msg => $error_msg};
     $res->{status} = 401;
     $c->stash({phaidra_auth_result => $res});
     return undef;
