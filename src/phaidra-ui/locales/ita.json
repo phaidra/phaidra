@@ -1459,5 +1459,7 @@
   "Collections only contain metadata and metadata cannot be restricted. Access restrictions only make sense at object/file level, not at collection level.": "Le collezioni contengono solo metadati e i metadati non possono essere limitati. Le restrizioni di accesso si applicano solo a livello di oggetto/file, non a livello di collezione.",
   "DOI Not Found": "DOI non trovato",
   "Unknown error": "Errore sconosciuto",
-  "owner": "proprietario"
+  "owner": "proprietario",
+  "Format: YYYY-MM-DD or EDTF (e.g. 1984~, 1964/2008, 2001-21)": "Formato: AAAA-MM-GG oppure EDTF (es. 1984~, 1964/2008, 2001-21)",
+  "EDTF Examples: 1984? (uncertain 1984), 1964/2008 (range), 2001-21 (Spring 2001), 156X (1560s), 2004-06~ (approximate June 2004), 1984-03-12% (uncertain and approximate date in 1984)": "Esempi in formato EDTF: 1984? (1984 incerto), 1964/2008 (intervallo), 2001-21 (primavera 2001), 156X (anni '60 del XVI secolo), 2004-06~ (circa giugno 2004), 1984-03-12% (data incerta e approssimativa nel 1984)"
 }
