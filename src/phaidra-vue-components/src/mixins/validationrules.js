@@ -123,7 +123,12 @@ export const validationrules = {
         /^(\d{4})-\d{2}-\d{2}\?$/,     // Uncertain date (e.g. "2023-02-03?")
         /^(\d{4})%$/,                   // Uncertain and approximate year (e.g. "1984%")
         /^(\d{4})-\d{2}%$/,            // Uncertain and approximate month (e.g. "2004-06%")
-        /^(\d{4})-\d{2}-\d{2}%$/       // Uncertain and approximate date (e.g. "2004-06-11%")
+        /^(\d{4})-\d{2}-\d{2}%$/,      // Uncertain and approximate date (e.g. "2004-06-11%")
+        /^\d{3}X$/,                     // Unspecified year digit (e.g. "156X" for 1560s)
+        /^\d{2}XX$/,                    // Two unspecified year digits (e.g. "19XX")
+        /^(\d{4})-XX$/,                 // Unspecified month (e.g. "2004-XX")
+        /^(\d{4})-\d{2}-XX$/,          // Unspecified day (e.g. "1985-04-XX")
+        /^(\d{4})-XX-XX$/              // Unspecified month and day (e.g. "1985-XX-XX")
       ];
 
       // Check if it matches any EDTF pattern
