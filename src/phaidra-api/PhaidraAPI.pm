@@ -599,10 +599,10 @@ sub startup {
   $reader->get('imageserver')                                              ->to('imageserver#imageserverproxy');
   $reader->get('imageserver/:pid/status')                                  ->to('imageserver#status');
 
-  $reader->get('object/:pid/info')                                         ->to('object#info');
-
   # only authn, authz happens in controller because metadata might be partially restricted (JSON-LD-PRIVATE)
   $optionally_authenticated->get('object/:pid/metadata')                   ->to('object#get_metadata');
+  # only authn, authz is queried in model to find out if the user (if any) has write rights to set the flag for UI
+  $optionally_authenticated->get('object/:pid/info')                       ->to('object#info');
 
   $reader->get('object/:pid/fulltext')                                     ->to('fulltext#get');
   $reader->get('object/:pid/thumbnail')                                    ->to('object#thumbnail');
