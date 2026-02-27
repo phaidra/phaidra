@@ -708,6 +708,7 @@ sub preview {
       $page = looks_like_number($page) ? $page : 1;
       $self->stash(page     => $page);
       $self->stash(baseurl  => $self->config->{baseurl});
+      $self->stash(scheme   => $self->config->{scheme});
       $self->stash(basepath => $self->config->{basepath});
       $self->stash(pid      => $pid);
       $self->stash(lang     => $lang);
