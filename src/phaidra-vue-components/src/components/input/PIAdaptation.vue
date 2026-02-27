@@ -54,6 +54,7 @@
               <v-row>
                 <v-col cols="4">
                   <v-autocomplete
+                    :no-data-text="$t('No data available')"
                     :disabled="disablerole"
                     v-on:input="$emit('input-role', $event)"
                     :label="$t('Role')"

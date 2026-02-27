@@ -2,6 +2,7 @@
   <v-row v-if="!hidden">
     <v-col cols="5">
       <v-autocomplete
+        :no-data-text="$t('No data available')"
         v-on:input="$emit('input-place-type', $event)"
         :label="$t('Type of place')"
         :items="vocabularies['placetype'].terms"

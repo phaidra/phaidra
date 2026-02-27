@@ -56,6 +56,7 @@
               <v-row v-for="(role, i) in roles" :key="'role'+i">
                 <v-col cols="4">
                   <v-autocomplete
+                    :no-data-text="$t('No data available')"
                     :disabled="disablerole"
                     v-on:input="$emit('input-role', { role: role, roleTerm: $event })"
                     :label="$t('Role')"
@@ -163,6 +164,7 @@
               <v-row>
                 <v-col :cols="6" v-if="showIdentifierType && !hideIdentifier">
                   <v-autocomplete
+                    :no-data-text="$t('No data available')"
                     v-on:input="$emit('input-identifier-type', $event)"
                     :label="$t('Type of identifier')"
                     :items="filteredIdentifierTypes"
@@ -314,6 +316,7 @@
                     <v-row>
                       <v-col :cols="6" v-if="showSeriesIdentifierType && !hideSeriesIdentifier">
                         <v-autocomplete
+                          :no-data-text="$t('No data available')"
                           v-on:input="$emit('input-series', { series: s, seriesIdentifierType: $event['@id'] })"
                           :label="$t('Type of identifier')"
                           :items="vocabularies[seriesIdentifierVocabulary].terms"

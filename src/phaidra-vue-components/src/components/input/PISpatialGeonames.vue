@@ -23,6 +23,7 @@
           <v-row>
             <v-col cols="4" v-if="showtype">
               <v-autocomplete
+                :no-data-text="$t('No data available')"
                 v-on:input="$emit('input-place-type', $event)"
                 :label="$t('Type of place')"
                 :items="vocabularies['placetype'].terms"

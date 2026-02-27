@@ -2,6 +2,7 @@
   <v-row v-if="!hidden">
     <v-col cols="5" v-if="!hideType">
       <v-autocomplete
+        :no-data-text="$t('No data available')"
         v-on:input="$emit('input-date-type', $event)"
         :label="$t('Type of date')"
         :items="vocabularies['datepredicate'].terms"

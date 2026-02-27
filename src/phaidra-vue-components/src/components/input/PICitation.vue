@@ -2,6 +2,7 @@
   <v-row v-if="!hidden">
     <v-col cols="2">
       <v-autocomplete
+        :no-data-text="$t('No data available')"
         v-on:input="$emit('input-citation-type', $event)"
         :label="$t('Citation type')"
         :items="vocabularies['citationpredicate'].terms"
