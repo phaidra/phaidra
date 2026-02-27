@@ -293,9 +293,13 @@ export default {
                 case 'image/gif':
                 case 'image/png':
                 case 'image/x-ms-bmp':
+                case 'image/bmp':
+                case 'image/jp2':
+                case 'image/jpx':
                   createmethod = 'picture'
                   break
 
+                case 'audio/x-wav':
                 case 'audio/wav':
                 case 'audio/mpeg':
                 case 'audio/flac':
@@ -309,6 +313,8 @@ export default {
 
                 case 'video/mpeg':
                 case 'video/avi':
+                case 'video/vnd.avi':
+                case 'video/x-msvideo':
                 case 'video/mp4':
                 case 'video/quicktime':
                 case 'video/x-matroska':

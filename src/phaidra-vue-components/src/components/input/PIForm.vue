@@ -2180,6 +2180,7 @@ export default {
         case 'image/x-ms-bmp':
         case 'image/bmp':
         case 'image/jp2':
+        case 'image/jpx':
           // picture
           return 'https://pid.phaidra.org/vocabulary/44TN-P1S0'
 
