@@ -674,13 +674,21 @@
                             <p-i-filename
                               v-bind.sync="f"
                               v-on:input-value="f.value=$event"
+                              v-on:add="addField(s.fields, f)"
+                              v-on:remove="removeField(s.fields, f)"
                               v-on:configure="editFieldProps(f)"
                               :configurable="enablefieldconfig || f.configurable"
                             ></p-i-filename>
                           </template>
 
                           <template v-else-if="f.component === 'p-filename-readonly'">
-                            <p-i-filename-readonly v-bind.sync="f" v-on:configure="editFieldProps(f)" :configurable="enablefieldconfig || f.configurable"></p-i-filename-readonly>
+                            <p-i-filename-readonly
+                              v-bind.sync="f"
+                              v-on:add="addField(s.fields, f)"
+                              v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
+                              :configurable="enablefieldconfig || f.configurable"
+                            ></p-i-filename-readonly>
                           </template>
 
                           <template v-else-if="f.component === 'p-unknown'">
