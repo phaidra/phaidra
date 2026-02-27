@@ -425,7 +425,12 @@ sub add_metatags {
     }
   }
 
-  $info->{metatags}->{citation_keywords}          = $info->{keyword_suggest} if exists $info->{keyword_suggest};
+  my @keywords;
+  push @keywords, @{$info->{dc_subject}} if exists $info->{dc_subject} && ref($info->{dc_subject}) eq 'ARRAY';
+  push @keywords, @{$info->{dc_subject_eng}} if exists $info->{dc_subject_eng} && ref($info->{dc_subject_eng}) eq 'ARRAY';
+  push @keywords, @{$info->{dc_subject_deu}} if exists $info->{dc_subject_deu} && ref($info->{dc_subject_deu}) eq 'ARRAY';
+  push @keywords, @{$info->{dc_subject_ita}} if exists $info->{dc_subject_ita} && ref($info->{dc_subject_ita}) eq 'ARRAY';
+  $info->{metatags}->{citation_keywords} = \@keywords if @keywords;
   $info->{metatags}->{citation_language}          = $info->{dc_language}     if exists $info->{dc_language};
   $info->{metatags}->{citation_abstract_html_url} = ('https://' . $c->app->config->{phaidra}->{baseurl} . '/detail/' . $info->{pid});
 

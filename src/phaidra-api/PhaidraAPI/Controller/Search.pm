@@ -503,32 +503,10 @@ sub search_solr {
     }
   }
 
+  # Set default fl if not provided - only return fields needed by frontend
   my $default_fl = 'pid,dc_title,dc_title_eng,dc_title_deu,dc_title_ita,dc_description,dc_description_eng,dc_description_deu,dc_description_ita,created,cmodel,bib_roles_pers_aut,bib_roles_pers_edt,bib_roles_pers_cmp,bib_roles_pers_art,isrestricted,dc_rights';
   
-  if (defined $params->{fl} && $params->{fl} ne '') {
-    my $fl_value = $params->{fl};
-    if ($fl_value eq '*' || $fl_value =~ /^\*[,\s]/) {
-      $params->{fl} = '*,-extracted_text,-haspart,-hasmember';
-    } else {
-      my @fl_parts = split /[\s,]+/, $fl_value;
-      my @filtered_fl = grep { 
-        $_ ne 'extracted_text' && 
-        $_ ne 'haspart' && 
-        $_ ne 'hasmember' &&
-        $_ !~ /^extracted_text\^/ &&
-        $_ !~ /^haspart\^/ &&
-        $_ !~ /^hasmember\^/ &&
-        $_ !~ /^-extracted_text/ &&
-        $_ !~ /^-haspart/ &&
-        $_ !~ /^-hasmember/
-      } @fl_parts;
-      if (@filtered_fl) {
-        $params->{fl} = join ' ', @filtered_fl;
-      } else {
-        $params->{fl} = $default_fl;
-      }
-    }
-  } else {
+  unless (defined $params->{fl}) {
     $params->{fl} = $default_fl;
   }
 

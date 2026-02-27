@@ -245,7 +245,7 @@ export default {
         params.rows = response.data.response.numFound
         params.indent = 'on'
         params.wt = 'csv'
-        params.fl = ['pid', 'dc_title', 'dc_creator', 'dc_contributor', 'dc_description', 'dc_language', 'keywords:keyword_suggest', 'dc_rights', 'bib_published', 'dc_identifier', 'owner', 'dc_format','edm_hastype','resourcetype','created', 'modified', 'size','is_in_container:ismemberof','is_in_collection:ispartof']
+        params.fl = ['pid', 'dc_title', 'dc_creator', 'dc_contributor', 'dc_description', 'dc_language', 'dc_subject', 'dc_subject_eng', 'dc_subject_deu', 'dc_subject_ita', 'dc_rights', 'bib_published', 'dc_identifier', 'owner', 'dc_format','edm_hastype','resourcetype','created', 'modified', 'size','is_in_container:ismemberof','is_in_collection:ispartof']
         params['fl.alias'] = ''
         const csvquery = qs.stringify(params, { encodeValuesOnly: true, indices: false })
         this.$axios.request('/search/select?' + csvquery, {

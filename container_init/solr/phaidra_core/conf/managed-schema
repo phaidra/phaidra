@@ -161,7 +161,6 @@
   <field name="isrestricted" type="boolean" multiValued="false" indexed="true" stored="true"/>
   <field name="isthumbnailfor" type="strings" multiValued="true" indexed="true" stored="false"/>
   <field name="journal_title" type="strings" multiValued="true" indexed="true" stored="true"/>
-  <field name="keyword_suggest" type="text_suggest" multiValued="true" indexed="true" stored="true"/>
   <field name="language" type="string" indexed="true" stored="true"/>
   <field name="latlon" type="location_rpt" indexed="true" stored="true"/>
   <field name="members_metadata" type="strings"/>
@@ -217,7 +216,7 @@
   <copyField source="dc_rights" dest="dc_license"/>
   <copyField source="modified" dest="tmodified"/>
   <copyField source="size" dest="tsize"/>
-  <copyField source="dc_subject*" dest="keyword_suggest"/>
+  <copyField source="dc_subject*" dest="_text_"/>
   <copyField source="*_dc_title" dest="title_suggest"/>
   <!-- Explicitly copy individual fields into _text_, excluding extracted_text -->
   <copyField source="altformats" dest="_text_"/>
@@ -272,7 +271,6 @@
   <copyField source="isrestricted" dest="_text_"/>
   <copyField source="isthumbnailfor" dest="_text_"/>
   <copyField source="journal_title" dest="_text_"/>
-  <copyField source="keyword_suggest" dest="_text_"/>
   <copyField source="language" dest="_text_"/>
   <copyField source="latlon" dest="_text_"/>
   <copyField source="members_metadata" dest="_text_"/>
