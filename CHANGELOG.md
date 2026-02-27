@@ -75,6 +75,25 @@ Additional indexes are necessary to avoid slow queries:
 docker exec -it phaidra-api-1 perl migrations/v3.4.0/07_add_jobs_indexes.pl
 ```
 
+### Removing unused Solr suggester fields
+
+The following Solr fields were used for suggester functionality that is no longer in use and have been removed:
+- `keyword_suggest`
+- `title_suggest`
+- `title_suggest_ir`
+
+Keywords are now searched via `dc_subject` and its language variants (`dc_subject_eng`, `dc_subject_deu`, `dc_subject_ita`).
+Titles are searched via `dc_title` and its language variants.
+Both are now directly copied to `_text_` for general search.
+
+Run the following migration script to update existing Solr cores:
+
+```
+docker exec -it phaidra-api-1 perl migrations/v3.4.0/08_remove_keyword_suggest.pl
+```
+
+**Note:** After running this migration, a full reindex is recommended to ensure `dc_subject*` and `*_dc_title` values are properly copied to `_text_`.
+
 ### Solr config updates
 
 Run the migration script to update solrconfig.xml in volume to the version from container_init:
