@@ -607,6 +607,7 @@
                           <template v-else-if="f.component === 'p-project'">
                             <p-i-project
                               v-bind.sync="f"
+                              :showHeader="s.title !== 'Project'"
                               v-on:input-name="f.name=$event"
                               v-on:input-acronym="f.acronym=$event"
                               v-on:input-name-language="setSelected(f, 'nameLanguage', $event)"
