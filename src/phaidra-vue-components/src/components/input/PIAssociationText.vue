@@ -2,6 +2,7 @@
   <v-row v-if="!hidden">
     <v-col cols="4" v-if="showtype">
       <v-autocomplete
+        :no-data-text="$t('No data available')"
         v-on:input="$emit('input-association-type', $event)"
         :label="$t('Type')"
         :items="vocabularies['orgtypes'].terms"

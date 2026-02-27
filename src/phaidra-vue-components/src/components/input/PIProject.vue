@@ -182,6 +182,7 @@
             <v-row >
               <v-col :cols="6" v-if="!hideIdentifierType && !hideIdentifier">
                 <v-autocomplete
+                  :no-data-text="$t('No data available')"
                   v-on:input="$emit('input-identifier-type', $event)"
                   :label="$t('Type of identifier')"
                   :items="vocabularies[identifierVocabulary].terms"
@@ -247,6 +248,7 @@
                 <v-row >
                   <v-col :cols="6" v-if="!hideIdentifierType && !hideIdentifier">
                     <v-autocomplete
+                      :no-data-text="$t('No data available')"
                       v-on:input="$emit('input-funder-identifier-type', $event)"
                       :label="$t('Type of funder identifier')"
                       :items="vocabularies[identifierVocabulary].terms"

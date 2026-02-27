@@ -883,6 +883,7 @@
                                         >{{ $t("Get citation") }}</v-btn
                                       >
                                       <v-autocomplete
+                                        :no-data-text="$t('No data available')"
                                         :loading="citationStylesLoading"
                                         v-model="citationStyle"
                                         :items="citationStyles"

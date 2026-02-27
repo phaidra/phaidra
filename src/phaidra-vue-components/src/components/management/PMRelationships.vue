@@ -61,6 +61,7 @@
                     </v-col>
                     <v-col cols="5">
                       <v-autocomplete
+                        :no-data-text="$t('No data available')"
                         v-model="objectSearchModel"
                         :items="objectSearchItems.length > 0 ? objectSearchItems : []"
                         :loading="objectSearchLoading"

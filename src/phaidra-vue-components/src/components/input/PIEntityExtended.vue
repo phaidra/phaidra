@@ -57,6 +57,7 @@
                   :disabled="disablerole"
                   v-on:input="$emit('input-role', $event)"
                   :label="$t(roleLabel ? roleLabel : 'Role')"
+                  :no-data-text="$t('No data available')"
                   :items="vocabularies[roleVocabulary].terms"
                   :item-value="'@id'"
                   :value="getTerm(roleVocabulary, role)"
@@ -187,6 +188,7 @@
                   <v-autocomplete
                     v-on:input="$emit('input-identifier-type', $event)"
                     :label="$t('Type of identifier')"
+                    :no-data-text="$t('No data available')"
                     :items="vocabularies[identifierVocabulary].terms"
                     :item-value="'@id'"
                     :value="getTerm(identifierVocabulary, identifierType)"
@@ -331,6 +333,7 @@
                   <v-autocomplete
                     v-on:input="$emit('input-identifier-type', $event)"
                     :label="$t('Type of identifier')"
+                    :no-data-text="$t('No data available')"
                     :items="vocabularies[identifierVocabulary].terms"
                     :item-value="'@id'"
                     :value="getTerm(identifierVocabulary, identifierType)"

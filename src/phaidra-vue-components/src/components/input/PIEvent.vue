@@ -160,6 +160,7 @@
           <v-row>
             <v-col cols="12" md="6">
               <v-autocomplete
+                :no-data-text="$t('No data available')"
                 v-on:input="$emit('input-identifier-type', $event)"
                 :label="$t('Type of identifier')"
                 :items="vocabularies[identifierVocabulary].terms"
@@ -185,6 +186,7 @@
             </v-col>
             <v-col cols="12" md="6" >
               <v-text-field
+                :no-data-text="$t('No data available')"
                 :value="identifierText"
                 :label="identifierLabel ? identifierLabel : $t('Identifier')"
                 v-on:blur="$emit('input-identifier', $event.target.value)"

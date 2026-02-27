@@ -2,6 +2,7 @@
   <v-row v-if="!hidden">
     <v-col cols="12" md="5" v-if="showType">
       <v-autocomplete
+        :no-data-text="$t('No data available')"
         v-on:input="$emit('input-identifier-type', $event)"
         :label="$t('Type of identifier')"
         :items="vocabularies[vocabulary].terms"

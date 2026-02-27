@@ -105,6 +105,7 @@
             <ul v-if="f.show && f.id === 'a11y'" :id="'facet-content-' + i" role="region" :aria-labelledby="'facet-control-' + i">
               <v-row no-gutters id="accessibility-content" role="region" aria-labelledby="accessibility-control">
                 <v-autocomplete
+                  :no-data-text="$t('No data available')"
                   :value="getTerm('accessibilityControl', selectedAccessibilityControl)"
                   :item-value="'@id'"
                   class="mt-4"
@@ -132,6 +133,7 @@
                   </template>
                 </v-autocomplete>
                 <v-autocomplete
+                  :no-data-text="$t('No data available')"
                   :value="getTerm('accessibilityFeature', selectedAccessibilityFeature)"
                   :item-value="'@id'"
                   class="mt-4"
@@ -159,6 +161,7 @@
                   </template>
                 </v-autocomplete>
                 <v-autocomplete
+                  :no-data-text="$t('No data available')"
                   :value="getTerm('accessibilityHazard', selectedAccessibilityHazard)"
                   :item-value="'@id'"
                   class="mt-4"

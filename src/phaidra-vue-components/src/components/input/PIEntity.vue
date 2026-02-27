@@ -2,6 +2,7 @@
   <v-row v-if="!hidden">
     <v-col cols="4" v-if="!hideRole">
         <v-autocomplete
+          :no-data-text="$t('No data available')"
           :disabled="disablerole"
           v-on:input="$emit('input-role', $event)"
           :label="$t(roleLabel ? roleLabel : 'Role')"
