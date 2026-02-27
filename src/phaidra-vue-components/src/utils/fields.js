@@ -649,7 +649,7 @@ const fields = [
     issn: '',
     idnetifierType: '',
     identifier: '',
-    hidePages: false,
+    hidePages: true,
     pageStart: '',
     pageEnd: '',
     pageStartLabel: 'Page start',

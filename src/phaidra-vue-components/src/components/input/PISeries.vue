@@ -342,7 +342,7 @@ export default {
     },
     hidePages: {
       type: Boolean,
-      default: false
+      default: true
     },
     pageStartLabel: {
       type: String
