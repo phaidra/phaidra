@@ -29,6 +29,7 @@ sub get_iiif_manifest {
     $self->render(json => {alerts => [{type => 'error', msg => "get_iiif_manifest pid[$pid] Error getting datastreams_hash"}], status => $rdshash->{status}}, status => $rdshash->{status});
     return;
   } else {
+    # IIIF-MANIFEST datastream has precedence
     if (exists($rdshash->{dshash}->{'IIIF-MANIFEST'})) {
       my $iiifm_model = PhaidraAPI::Model::Iiifmanifest->new;
       my $mr = $iiifm_model->get_updated_manifest($self, $pid);
@@ -42,19 +43,35 @@ sub get_iiif_manifest {
         return;
       }
     } else {
+      # otherwise generate the manifest where applicable
       my $cmodelr      = $search_model->get_cmodel($self, $pid);
       if ($cmodelr->{status} ne 200) {
         $self->render(json => {alerts => [{type => 'error', msg => "get_iiif_manifest pid[$pid] Error getting cmodel"}], status => $cmodelr->{status}}, status => $cmodelr->{status});
         return;
       }
+
       if ($cmodelr->{cmodel} eq 'Picture') {
         my $iiifm_model = PhaidraAPI::Model::Iiifmanifest->new;
         my $r = $iiifm_model->generate_simple_manifest($self, $pid);
-        $self->render(json => $r->{manifest}, status => $res->{status});
-      } else {
-        $self->render(json => {alerts => [{type => 'error', msg => "get_iiif_manifest pid[$pid] This object has no IIIF manifest"}], status => 400}, status => 400);
-        return;
+        if ($r->{status} == 200) {
+          $self->render(json => $r->{manifest}, status => $res->{status});
+          return;
+        }
+        $res->{status} = $r->{status};
       }
+
+      if ($cmodelr->{cmodel} eq 'Container') {
+        my $iiifm_model = PhaidraAPI::Model::Iiifmanifest->new;
+        my $r = $iiifm_model->generate_container_manifest($self, $pid);
+        if ($r->{status} == 200) {
+          $self->render(json => $r->{manifest}, status => $res->{status});
+          return;
+        }
+        $res->{status} = $r->{status};
+      }
+    
+      $self->render(json => {alerts => [{type => 'error', msg => "get_iiif_manifest pid[$pid] This object has currently no IIIF manifest"}], status => $res->{status}}, status => $res->{status});
+      return;
     }
   }
 }
