@@ -189,7 +189,7 @@ services:
 
   httpd-ssl-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:ec56cd52
+    image: phaidraorg/httpd-ssl-dist:d60796f9
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -206,7 +206,7 @@ services:
 
   httpd-ssl-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:ec56cd52
+    image: phaidraorg/httpd-ssl-dist:d60796f9
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -222,7 +222,7 @@ services:
 
   httpd-shib-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:ec56cd52
+    image: phaidraorg/httpd-shib-dist:d60796f9
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -241,7 +241,7 @@ services:
 
   httpd-shib-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:ec56cd52
+    image: phaidraorg/httpd-shib-dist:d60796f9
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -454,7 +454,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:46618515
+    image: phaidraorg/api-dist:eb245c65
     <<: [*common, *logs]
     volumes:
       - s3-cache:/s3-cache
@@ -468,7 +468,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:46618515
+    image: phaidraorg/api-dist:eb245c65
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
