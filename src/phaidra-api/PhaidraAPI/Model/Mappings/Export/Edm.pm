@@ -10,6 +10,7 @@ use Mojo::ByteStream qw(b);
 use base qw/Mojo::Base/;
 use PhaidraAPI::Model::Languages;
 use PhaidraAPI::Model::Config;
+use PhaidraAPI::Model::Index;
 
 sub get_metadata {
   my ($self, $c, $rec) = @_;
@@ -56,6 +57,40 @@ sub get_metadata {
     ],
     children => []
   };
+
+  # use viewer for 3D objects and videos
+  my $useViewer = 0;
+  if ($rec->{cmodel} eq 'Video') {
+    $useViewer = 1;
+  }
+  if (
+    $rec->{cmodel} eq 'Asset' && 
+    (grep { $_ eq 'application/zip' || $_ eq 'model/glb' } @{$rec->{dc_format}}) && 
+    (grep { $_ eq 'https://pid.phaidra.org/vocabulary/T6C3-46S4' } @{$rec->{edm_hastype_id}})
+  ) {
+    $useViewer = 1;
+  }
+
+  # use IIIF manifest for Picture and Books
+  my $hasManifest = 0;
+  if (($rec->{cmodel} eq 'Pictures') || ($rec->{cmodel} eq 'Book')) {
+    $hasManifest = 1;
+  }
+  # use IIIF manifest for Containers containing Picture members
+  if ($rec->{cmodel} eq 'Container') {
+    my $index_model   = PhaidraAPI::Model::Index->new;
+    my $urlget = $index_model->_get_solrget_url($c, 'Container');
+    $urlget->query(q => "ismemberof:\"$pid\" AND cmodel:Picture", rows => "0", wt => "json");
+    my $r = $c->app->ua->get($urlget)->result;
+    if ($r->is_success) {
+      my $response = $r->json->{response};
+      if ($response->{numFound} > 0) {
+        $hasManifest = 1;
+      }
+    } else {
+      $c->app->log->warn("[$pid] Edm: Could not retrieve document from Solr: " . $r->code . " " . $r->message);
+    }
+  }
 
   #### ore:Aggregation ####
 
@@ -111,7 +146,7 @@ sub get_metadata {
     name => 'edm:isShownBy',
     attributes => [
       { name  => 'rdf:resource',
-        value => ($rec->{cmodel} eq 'Video') ? $previewUrl : $getUrl,
+        value => $useViewer ? $previewUrl : $getUrl,
       }
     ]
   };
@@ -463,7 +498,7 @@ sub get_metadata {
   }
 
   # svcs:has_service
-  if ($rec->{cmodel} eq 'Picture') {
+  if ($hasManifest) {
     push @{$edmWebResource->{children}}, {
       name => 'dcterms:isReferencedBy',
       attributes => [
