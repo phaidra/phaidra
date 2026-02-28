@@ -10,10 +10,56 @@ use Mojo::URL;
 use PhaidraAPI::Model::Index;
 use PhaidraAPI::Model::Object;
 
+sub generate_container_manifest {
+  my ($self, $c, $pid) = @_;
+
+  my $res = {alerts => [], status => 200};
+  my $apiBaseUrlPath = $c->app->config->{scheme} . '://' . $c->app->config->{baseurl}. ($c->app->config->{basepath} ? '/' . $c->app->config->{basepath} : '');
+
+  my $index_model   = PhaidraAPI::Model::Index->new;
+  my $urlget = $index_model->_get_solrget_url($c, 'Container');
+  $urlget->query(q => "ismemberof:\"$pid\" AND cmodel:Picture", rows => "1000", wt => "json", sort => "pos_in_$pid asc");
+  my $qr = $c->app->ua->get($urlget)->result;
+  unless ($qr->is_success) {
+    return {alerts => [{type => 'error', msg => $qr->code . " " . $qr->message}], status => 500};
+  }
+
+  my $response = $qr->json->{response};
+  if ($response->{numFound} eq 0) {
+    return {alerts => [{type => 'error', msg => 'No picture members'}], status => 400};
+  }
+  
+  my $manifest;
+  for my $d (@{$response->{docs}}) {
+    # get picture dimensions
+    my $dims = $self->_get_pic_dimensions($c, $d->{pid});
+    return $res if $dims->{status} != 200;
+
+    # create manifest using the first picture as thumbnail
+    unless ($manifest) {
+      my ($thumb_width, $thumb_height) = $self->_calculate_thumbnail_dimensions($c, $dims->{width}, $dims->{height}, "300", "300");
+      $manifest = $self->_create_manifest_root($c, $apiBaseUrlPath, $pid, $d->{pid}, $thumb_width, $thumb_height);
+    }
+
+    # add picture to manifest
+    push @{$manifest->{items}}, $self->_create_single_canvas_item($apiBaseUrlPath, $d->{pid}, $dims->{width}, $dims->{height}, @{$d->{dc_title}}[0]);
+  }
+
+  # update manifest with metadata
+  my $r           = $index_model->get_doc($c, $pid);
+  return $r if $r->{status} ne 200;
+  my $index = $r->{doc};
+  $self->_update_manifest_metadata($c, $pid, $index, $manifest);
+
+  $res->{manifest} = $manifest;
+
+  return $res;
+}
+
 sub generate_simple_manifest {
   my ($self, $c, $pid) = @_;
 
-  my $res = {manifest => {}, alerts => [], status => 200};
+  my $res = {alerts => [], status => 200};
 
   my $apiBaseUrlPath = $c->app->config->{scheme} . '://' . $c->app->config->{baseurl}. ($c->app->config->{basepath} ? '/' . $c->app->config->{basepath} : '');
 
@@ -40,15 +86,15 @@ sub generate_simple_manifest {
     $res->{status} = $getres->code ? $getres->code : 500;
     return $res;
   }
+  my $dims = $self->_get_pic_dimensions($c, $pid);
+  return $res if $dims->{status} != 200;
 
-  my ($tmb_width, $tmb_height) = $self->calculate_thumbnail_dimensions($c, $width, $height, "300", "300");
+  my ($tmb_width, $tmb_height) = $self->_calculate_thumbnail_dimensions($c, $dims->{width}, $dims->{height}, "300", "300");
 
   my $index_model = PhaidraAPI::Model::Index->new;
-  my $r           = $index_model->get($c, $pid);
-  if ($r->{status} ne 200) {
-    return $r;
-  }
-  my $index = $r->{index};
+  my $r           = $index_model->get_doc($c, $pid);
+  return $r if $r->{status} ne 200;
+  my $index = $r->{doc};
 
   # Check for recto/verso relationships
   my $recto_pid = $pid;
@@ -69,95 +115,16 @@ sub generate_simple_manifest {
     }
   }
 
-  my $manifest = {
-    "\@context" => "http://iiif.io/api/presentation/3/context.json",
-    "id" => "$apiBaseUrlPath/object/$pid/iiifmanifest",
-    "type" => "Manifest",
-    "label" => {},
-    "thumbnail" => [
-      {
-        "id" => "$apiBaseUrlPath/imageserver?IIIF=$recto_pid.tif/full/!$tmb_width,$tmb_height/0/default.jpg",
-        "type" => "Image",
-        "format" => "image/jpeg",
-        "height" => $tmb_height,
-        "width" => $tmb_width,
-        "service" => [
-          {
-            "id" => "$apiBaseUrlPath/imageserver?IIIF=$recto_pid.tif",
-            "type" => "ImageService2",
-            "profile" => "http://iiif.io/api/image/2/level1.json"
-          }
-        ]
-      }
-    ],
-    "items" => []
-  };
+  my $manifest = $self->_create_manifest_root($c, $apiBaseUrlPath, $pid, $recto_pid, $tmb_width, $tmb_height);
 
   if ($is_recto_verso && $verso_pid) {
     # Generate multi-canvas manifest for recto/verso
     my $verso_dims = $self->_get_object_dimensions($c, $verso_pid);
     if ($verso_dims->{status} eq 200) {
       # Recto canvas
-      push @{$manifest->{items}}, {
-        "id" => "$apiBaseUrlPath/iiif/$recto_pid/canvas/recto",
-        "type" => "Canvas",
-        "height" => $height,
-        "width" => $width,
-        "label" => {"en" => ["Recto"]},
-        "items" => [{
-          "id" => "$apiBaseUrlPath/iiif/$recto_pid/page/recto/1",
-          "type" => "AnnotationPage",
-          "items" => [{
-            "id" => "$apiBaseUrlPath/iiif/$recto_pid/annotation/recto-image",
-            "target" => "$apiBaseUrlPath/iiif/$recto_pid/canvas/recto",
-            "type" => "Annotation",
-            "motivation" => "painting",
-            "body" => {
-              "id" => "$apiBaseUrlPath/imageserver?IIIF=$recto_pid.tif/full/full/0/default.jpg",
-              "type" => "Image",
-              "format" => "image/jpeg",
-              "height" => $height,
-              "width" => $width,
-              "service" => [{
-                "id" => "$apiBaseUrlPath/imageserver?IIIF=$recto_pid.tif",
-                "type" => "ImageService2",
-                "profile" => "http://iiif.io/api/image/2/level1.json"
-              }]
-            }
-          }]
-        }]
-      };
-      
+      push @{$manifest->{items}}, $self->_create_single_canvas_item($apiBaseUrlPath, $recto_pid, $width, $height, "Recto");
       # Verso canvas
-      push @{$manifest->{items}}, {
-        "id" => "$apiBaseUrlPath/iiif/$verso_pid/canvas/verso",
-        "type" => "Canvas",
-        "height" => $verso_dims->{height},
-        "width" => $verso_dims->{width},
-        "label" => {"en" => ["Verso"]},
-        "items" => [{
-          "id" => "$apiBaseUrlPath/iiif/$verso_pid/page/verso/1",
-          "type" => "AnnotationPage",
-          "items" => [{
-            "id" => "$apiBaseUrlPath/iiif/$verso_pid/annotation/verso-image",
-            "target" => "$apiBaseUrlPath/iiif/$verso_pid/canvas/verso",
-            "type" => "Annotation",
-            "motivation" => "painting",
-            "body" => {
-              "id" => "$apiBaseUrlPath/imageserver?IIIF=$verso_pid.tif/full/full/0/default.jpg",
-              "type" => "Image",
-              "format" => "image/jpeg",
-              "height" => $verso_dims->{height},
-              "width" => $verso_dims->{width},
-              "service" => [{
-                "id" => "$apiBaseUrlPath/imageserver?IIIF=$verso_pid.tif",
-                "type" => "ImageService2",
-                "profile" => "http://iiif.io/api/image/2/level1.json"
-              }]
-            }
-          }]
-        }]
-      };
+      push @{$manifest->{items}}, $self->_create_single_canvas_item($apiBaseUrlPath, $verso_pid, $width, $height, "Verso");
     } else {
       # Fallback to single canvas if verso dimensions can't be retrieved
       push @{$manifest->{items}}, $self->_create_single_canvas_item($apiBaseUrlPath, $pid, $width, $height);
@@ -174,10 +141,63 @@ sub generate_simple_manifest {
   return $res;
 }
 
-sub _create_single_canvas_item {
-  my ($self, $apiBaseUrlPath, $pid, $width, $height) = @_;
-  
+sub _get_pic_dimensions {
+  my ($self, $c, $pid) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  my $isrv_model = PhaidraAPI::Model::Imageserver->new;
+  my $urlres        = $isrv_model->get_url($c, Mojo::Parameters->new("IIIF=$pid.tif/info.json"), 1);
+  if ($urlres->{status} ne 200) {
+    return $urlres;
+  }
+  my $getres = $c->app->ua->get($urlres->{url})->result;
+  if ($getres->is_success) {
+    $res->{width} = $getres->json->{width};
+    $res->{height} = $getres->json->{height};
+  } else {
+    my $err = "generate_simple_manifest [$pid] error getting iiif info: " . $getres->code . " " . $getres->message;
+    $c->app->log->error($err);
+    unshift @{$res->{alerts}}, {type => 'error', msg => $err};
+    $res->{status} = $getres->code ? $getres->code : 500;
+    return $res;
+  }
+
+  return $res;
+}
+
+sub _create_manifest_root {
+  my ($self, $c, $apiBaseUrlPath, $pid, $thumb_pid, $thumb_width, $thumb_height) = @_;
+
   return {
+    "\@context" => "http://iiif.io/api/presentation/3/context.json",
+    "id" => "$apiBaseUrlPath/object/$pid/iiifmanifest",
+    "type" => "Manifest",
+    "label" => {},
+    "thumbnail" => [
+      {
+        "id" => "$apiBaseUrlPath/imageserver?IIIF=$thumb_pid.tif/full/!$thumb_width,$thumb_height/0/default.jpg",
+        "type" => "Image",
+        "format" => "image/jpeg",
+        "height" => $thumb_height,
+        "width" => $thumb_width,
+        "service" => [
+          {
+            "id" => "$apiBaseUrlPath/imageserver?IIIF=$thumb_pid.tif",
+            "type" => "ImageService2",
+            "profile" => "http://iiif.io/api/image/2/level1.json"
+          }
+        ]
+      }
+    ],
+    "items" => []
+  };
+}
+
+sub _create_single_canvas_item {
+  my ($self, $apiBaseUrlPath, $pid, $width, $height, $label) = @_;
+
+  my $item = {
     "id" => "$apiBaseUrlPath/iiif/$pid/canvas/p1",
     "type" => "Canvas",
     "height" => $height,
@@ -205,6 +225,11 @@ sub _create_single_canvas_item {
       }]
     }]
   };
+  
+  if ($label) {
+    $item->{label} = {"en" => [$label]};
+  }
+  return $item;
 }
 
 sub _get_object_dimensions {
@@ -234,7 +259,7 @@ sub _get_object_dimensions {
   return $res;
 }
 
-sub calculate_thumbnail_dimensions {
+sub _calculate_thumbnail_dimensions {
     my ($self, $c, $original_width, $original_height, $max_width, $max_height) = @_;
 
     # If the original dimensions are already smaller than the bounding box, return them
@@ -381,11 +406,9 @@ sub update_manifest_metadata {
   my $res = {alerts => [], status => 200};
 
   my $index_model = PhaidraAPI::Model::Index->new;
-  my $r           = $index_model->get($c, $pid);
-  if ($r->{status} ne 200) {
-    return $r;
-  }
-  my $index = $r->{index};
+  my $r           = $index_model->get_doc($c, $pid);
+  return $r if $r->{status} ne 200;
+  my $index = $r->{doc};
 
   # Check if this is a recto/verso relationship
   my $is_recto_verso = 0;
@@ -432,11 +455,9 @@ sub get_updated_manifest {
   my $res = {alerts => [], status => 200};
 
   my $index_model = PhaidraAPI::Model::Index->new;
-  my $r           = $index_model->get($c, $pid);
-  if ($r->{status} ne 200) {
-    return $r;
-  }
-  my $index = $r->{index};
+  my $r           = $index_model->get_doc($c, $pid);
+  return $r if $r->{status} ne 200;
+  my $index = $r->{doc};
 
   my $is_recto_verso = 0;
   if (exists($index->{isbacksideof}) && scalar(@{$index->{isbacksideof}}) > 0) {
