@@ -2212,7 +2212,7 @@ export default {
       }
     },
     setSelected: function (f, property, event) {
-      var value = (typeof event === 'string') ? event : event['@id']
+      var value = event === null || event === undefined ? '' : (typeof event === 'string') ? event : event['@id']
       this.$set(f, property, value)
       this.$emit('form-input-' + f.component, f)
       // eg on
