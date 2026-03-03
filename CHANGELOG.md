@@ -410,6 +410,7 @@ Overall, this release strengthens accessibility and internationalization, stabil
   docker exec -it phaidra-api-1 perl migrations/v3.3.17/03_add_missing_labels.pl
   docker exec -it phaidra-api-1 perl migrations/v3.3.17/04_add_phaidra_ir_tables.pl
   docker exec -it phaidra-api-1 perl migrations/v3.3.17/05_add_more_usage_stats_indexes.pl
+  docker exec -it phaidra-api-1 perl migrations/v3.3.17/06_add_solr_fields.pl
   ```
 
 # v3.3.16
