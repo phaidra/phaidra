@@ -22,6 +22,7 @@ use Crypt::URandom          (qw/urandom/);
 use Digest::SHA             (qw/hmac_sha256/);
 use Math::Random::ISAAC::XS ();
 use DBIx::Connector;
+use PhaidraAPI::Model::Index;
 
 BEGIN {
   # that's what we want:
@@ -294,6 +295,37 @@ sub startup {
         $session->extend_expires;
         $session->flush;
       }
+    }
+  );
+
+  $self->hook(
+    around_action => sub {
+      my ($next, $c, $action, $last) = @_;
+
+      my $pid = $c->stash('pid');
+      if (defined $pid && $pid =~ /^o:/) {
+
+        my $cachekey = 'e_' . $pid;
+        my $cacheval = $c->app->chi->get($cachekey);
+
+        if ($cacheval) {
+          return $next->();
+        }
+
+        my $index_model = PhaidraAPI::Model::Index->new;
+        my $res         = $index_model->get_doc($c, $pid);
+
+        if ($res->{status} && $res->{status} == 404) {
+          $c->render(text => 'Object not found', status => 404);
+          return;
+        }
+        if (!$res->{status} || $res->{status} == 200) {
+          $c->app->chi->set($cachekey, 1, '1 day');
+          return $next->();
+        }
+      }
+
+      return $next->();
     }
   );
 
