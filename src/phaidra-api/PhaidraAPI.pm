@@ -313,7 +313,7 @@ sub startup {
         }
 
         my $fedora_model = PhaidraAPI::Model::Fedora->new;
-        my $res          = $fedora_model->getObjectProperties($c, $pid);
+        my $res          = $fedora_model->headObjectExists($c, $pid);
 
         if ($res->{status} && ($res->{status} == 404 || $res->{status} == 410)) {
           $c->render(text => 'Object not found', status => 404);
