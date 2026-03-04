@@ -43,7 +43,8 @@ sub vcl_recv {
     # Whitelisted API static directories (client-facing, with /api)
     if (req.url ~ "^/api/(?:3dhop|docs|iipmooviewer|images|ip2country|json-schema|languages|licenses|mirador|mods|pdfjs|replayweb|swagger-ui|threejs|video-js|vocabulary|xsd)(?:/|$)"
         || req.url ~ "^/api/object/o:[0-9]+/thumbnail"
-        || req.url ~ "^/api/oai($|\\?)") {
+        || req.url ~ "^/api/oai($|\\?)"
+        || req.url ~ "^/api/directory/org_get_units($|\\?)") {
 
       # Do NOT cache if the client sends XSRF-TOKEN cookie or Authorization
       if (req.http.Cookie ~ "XSRF-TOKEN=" || req.http.Authorization) {
@@ -107,7 +108,8 @@ sub vcl_backend_response {
     # If not a whitelisted cacheable API resource → stream/pass (uncacheable)
     if (bereq.url !~ "^/(?:3dhop|docs|iipmooviewer|images|ip2country|json-schema|languages|licenses|mirador|mods|pdfjs|replayweb|swagger-ui|threejs|video-js|vocabulary|xsd)(?:/|$)"
      && bereq.url !~ "^/object/o:[0-9]+/thumbnail"
-     && bereq.url !~ "^/oai($|\\?)") {
+     && bereq.url !~ "^/oai($|\\?)"
+     && bereq.url !~ "^/directory/org_get_units($|\\?)") {
       set beresp.uncacheable = true;
       set beresp.ttl = 0s;
       set beresp.do_stream = true;
@@ -128,8 +130,9 @@ sub vcl_backend_response {
       return (deliver);
     }
 
-    # Static API directories: safe to strip accidental cookies
-    if (bereq.url ~ "^/(?:3dhop|docs|iipmooviewer|images|ip2country|json-schema|languages|licenses|mirador|mods|pdfjs|replayweb|swagger-ui|threejs|video-js|vocabulary|xsd)(?:/|$)") {
+    # Static API directories and cacheable endpoints: safe to strip accidental cookies
+    if (bereq.url ~ "^/(?:3dhop|docs|iipmooviewer|images|ip2country|json-schema|languages|licenses|mirador|mods|pdfjs|replayweb|swagger-ui|threejs|video-js|vocabulary|xsd)(?:/|$)"
+        || bereq.url ~ "^/directory/org_get_units($|\\?)") {
       unset beresp.http.Set-Cookie;
     } else {
       # For thumbnails/OAI, if Set-Cookie is present, avoid caching to be safe
@@ -145,10 +148,14 @@ sub vcl_backend_response {
 
     # Honor origin cache headers; otherwise set defaults
     if (!beresp.http.Cache-Control) {
-      if (bereq.url !~ "^/oai($|\\?)") {
+      if (bereq.url !~ "^/oai($|\\?)" && bereq.url !~ "^/directory/org_get_units($|\\?)") {
         set beresp.ttl = 30d;
         set beresp.grace = 7d;
-      }else {
+      } else if (bereq.url ~ "^/directory/org_get_units($|\\?)") {
+        # Org units change infrequently
+        set beresp.ttl = 1h;
+        set beresp.grace = 6h;
+      } else {
         # OAI get's re-generated every night
         set beresp.ttl = 6h;
         set beresp.grace = 2h;
