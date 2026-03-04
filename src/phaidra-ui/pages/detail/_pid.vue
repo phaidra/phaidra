@@ -738,7 +738,7 @@
             </v-row>
             <div v-for="(collMember, i) in collMembers" :key="'collMember' + i">
               <v-row class="my-4">
-                <v-col md="1" class="d-none d-md-inline-block">
+                <v-col md="2" class="d-none d-md-inline-block">
                   <div class="preview-maxwidth">
                   <nuxt-link :to="{ path: `${collMember.pid}`, params: { pid: collMember.pid } }">
                       <p-img
@@ -764,7 +764,7 @@
                     </nuxt-link>
                   </div>
                 </v-col>
-                <v-col :cols="objectInfo.writerights === 1 ? 10 : 11">
+                <v-col :cols="objectInfo.writerights === 1 ? 9 : 10">
                   <v-row no-gutters class="mb-4">
                     <v-col>
                       <h2
@@ -3393,7 +3393,7 @@ export default {
 }
 
 .preview-maxwidth {
-  max-width: 80px;
+  max-width: 120px;
 }
 
 .container {
