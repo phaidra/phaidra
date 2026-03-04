@@ -315,12 +315,12 @@ sub startup {
         my $fedora_model = PhaidraAPI::Model::Fedora->new;
         my $res          = $fedora_model->headObjectExists($c, $pid);
 
-        if ($res->{status} && ($res->{status} == 404 || $res->{status} == 410)) {
+        if ($res->{status} && $res->{status} == 404) {
           $c->render(text => 'Object not found', status => 404);
           return;
         }
 
-        if ($res->{status} && $res->{status} == 200) {
+        if ($res->{status} && ($res->{status} == 200 || $res->{status} == 410)) {
           $c->app->chi->set($cachekey, 1, '1 day');
           return $next->();
         }
