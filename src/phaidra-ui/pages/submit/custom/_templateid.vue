@@ -221,7 +221,7 @@ export default {
         }
         for (let s of self.form.sections) {
           for (let f of s.fields) {
-            if(f.id.includes('mime-type_')) {
+            if (f.id && typeof f.id === 'string' && f.id.includes('mime-type_')) {
               f.value = ''
             }
             f.removable = true

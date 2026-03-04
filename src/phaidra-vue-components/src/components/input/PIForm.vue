@@ -2467,7 +2467,7 @@ export default {
           f.isParentSelectionDisabled = this.instanceconfig.isParentSelectionDisabled || false
         }
         this.setDefaultLanguageForAddedField(baseId, f)
-        if(f.id.includes("phaidra:Subject")) {
+        if (f.id && typeof f.id === 'string' && f.id.includes("phaidra:Subject")) {
           this.form.sections.push(f)
         } else {
           section.fields.push(f)

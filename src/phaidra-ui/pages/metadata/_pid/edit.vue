@@ -55,14 +55,14 @@ export default {
             }
           }
           f.removable = true
-          if (f.id.includes("resource-type")) {
+          if (f.id && typeof f.id === "string" && f.id.includes("resource-type")) {
             f.removable = false
           }
-          if (f.id.includes("license") && f.value !== "http://rightsstatements.org/vocab/InC/1.0/") {
+          if (f.id && typeof f.id === "string" && f.id.includes("license") && f.value !== "http://rightsstatements.org/vocab/InC/1.0/") {
             f.removable = false
             f.readonly = true
           }
-          if (f.id.includes("mime-type")) {
+          if (f.id && typeof f.id === "string" && f.id.includes("mime-type")) {
             f.removable = false
           }
           // Make the first object-type field non-removable
