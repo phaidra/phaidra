@@ -196,8 +196,6 @@
   <field name="successor" type="strings"/>
   <field name="systemtag" type="strings" indexed="true" stored="true"/>
   <field name="tcreated" type="tdates" multiValued="true" indexed="true" stored="false"/>
-  <field name="title_suggest" type="text_suggest" multiValued="true" indexed="true" stored="true"/>
-  <field name="title_suggest_ir" type="text_suggest" multiValued="true" indexed="true" stored="true"/>
   <field name="tmodified" type="tdates" multiValued="true" indexed="true" stored="false"/>
   <field name="tsize" type="tdoubles" multiValued="true" indexed="true" stored="false"/>
   <field name="uwm_association_id" type="strings" multiValued="true" indexed="true" stored="true"/>
@@ -217,7 +215,7 @@
   <copyField source="modified" dest="tmodified"/>
   <copyField source="size" dest="tsize"/>
   <copyField source="dc_subject*" dest="_text_"/>
-  <copyField source="*_dc_title" dest="title_suggest"/>
+  <copyField source="*_dc_title" dest="_text_"/>
   <!-- Explicitly copy individual fields into _text_, excluding extracted_text -->
   <copyField source="altformats" dest="_text_"/>
   <copyField source="altversions" dest="_text_"/>
@@ -306,8 +304,6 @@
   <copyField source="successor" dest="_text_"/>
   <copyField source="systemtag" dest="_text_"/>
   <copyField source="tcreated" dest="_text_"/>
-  <copyField source="title_suggest" dest="_text_"/>
-  <copyField source="title_suggest_ir" dest="_text_"/>
   <copyField source="tmodified" dest="_text_"/>
   <copyField source="tsize" dest="_text_"/>
   <copyField source="uwm_association_id" dest="_text_"/>
