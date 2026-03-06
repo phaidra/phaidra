@@ -73,7 +73,7 @@ build-ui:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/ui.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/ui:latest
     -t $CI_REGISTRY_USER/ui:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -94,7 +94,7 @@ build-chronos-base:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/chronos-base.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/chronos-base:latest
     -t $CI_REGISTRY_USER/chronos-base:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -113,7 +113,7 @@ build-chronos-dist:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/chronos-dist.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/chronos-dist:latest
     -t $CI_REGISTRY_USER/chronos-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -134,7 +134,7 @@ build-httpd-shib-base:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/httpd-shib-base.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/httpd-shib-base:latest
     -t $CI_REGISTRY_USER/httpd-shib-base:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -153,7 +153,7 @@ build-httpd-shib-dist:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/httpd-shib-dist.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/httpd-shib-dist:latest
     -t $CI_REGISTRY_USER/httpd-shib-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -179,7 +179,7 @@ build-httpd-demo-dist:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/httpd-demo-dist.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/httpd-demo-dist:latest
     -t $CI_REGISTRY_USER/httpd-demo-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -199,7 +199,7 @@ build-httpd-ssl-dist:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/httpd-ssl-dist.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/httpd-ssl-dist:latest
     -t $CI_REGISTRY_USER/httpd-ssl-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -220,7 +220,7 @@ build-imageserver:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/imageserver.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/imageserver:latest
     -t $CI_REGISTRY_USER/imageserver:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -239,7 +239,7 @@ build-agent-obj2gltf:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/agent-obj2gltf.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/agent-obj2gltf:latest
     -t $CI_REGISTRY_USER/agent-obj2gltf:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -259,7 +259,7 @@ build-agent-unzip:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/agent-unzip.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/agent-unzip:latest
     -t $CI_REGISTRY_USER/agent-unzip:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -279,7 +279,7 @@ build-agent-tika:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/agent-tika.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/agent-tika:latest
     -t $CI_REGISTRY_USER/agent-tika:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -299,7 +299,7 @@ build-agent-hdl:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/agent-hdl.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/agent-hdl:latest
     -t $CI_REGISTRY_USER/agent-hdl:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -319,7 +319,7 @@ build-agent-opencast-base:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/agent-opencast-base.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/agent-opencast-base:latest
     -t $CI_REGISTRY_USER/agent-opencast-base:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -338,7 +338,7 @@ build-agent-opencast-dist:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/agent-opencast-dist.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/agent-opencast-dist:latest
     -t $CI_REGISTRY_USER/agent-opencast-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -359,7 +359,7 @@ build-agent-libvips-base:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/agent-libvips-base.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/agent-libvips-base:latest
     -t $CI_REGISTRY_USER/agent-libvips-base:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -378,7 +378,7 @@ build-agent-libvips-dist:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/agent-libvips-dist.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/agent-libvips-dist:latest
     -t $CI_REGISTRY_USER/agent-libvips-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -399,7 +399,7 @@ build-camel-toolbox:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/camel.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/fcrepo-camel-toolbox:latest
     -t $CI_REGISTRY_USER/fcrepo-camel-toolbox:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -418,7 +418,7 @@ build-mariadb-phaidra-dist:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/mariadb-phaidra-dist.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/mariadb-phaidra-dist:latest
     -t $CI_REGISTRY_USER/mariadb-phaidra-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -438,7 +438,7 @@ build-mariadb-fedora-dist:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/mariadb-fedora-dist.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/mariadb-fedora-dist:latest
     -t $CI_REGISTRY_USER/mariadb-fedora-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -458,7 +458,7 @@ build-mongodb-dist:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/mongodb-dist.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/mongodb-dist:latest
     -t $CI_REGISTRY_USER/mongodb-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -478,7 +478,7 @@ build-solr-dist:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/solr-dist.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/solr-dist:latest
     -t $CI_REGISTRY_USER/solr-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -498,7 +498,7 @@ build-openldap-dist:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/openldap-dist.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/openldap-dist:latest
     -t $CI_REGISTRY_USER/openldap-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -518,7 +518,7 @@ build-promtail-dist:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/promtail-dist.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/promtail-dist:latest
     -t $CI_REGISTRY_USER/promtail-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -538,7 +538,7 @@ build-loki-dist:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/loki-dist.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/loki-dist:latest
     -t $CI_REGISTRY_USER/loki-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -558,7 +558,7 @@ build-grafana-dist:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/grafana-dist.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/grafana-dist:latest
     -t $CI_REGISTRY_USER/grafana-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -578,7 +578,7 @@ build-prometheus-dist:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/prometheus-dist.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/prometheus-dist:latest
     -t $CI_REGISTRY_USER/prometheus-dist:$CI_COMMIT_SHORT_SHA --push .
   rules:
@@ -598,7 +598,7 @@ build-handle:
     docker buildx create builder-context --name container --driver=docker-container &&
     docker buildx build -f dockerfiles/handle.dockerfile
     --builder=container
-    --platform=linux/amd64,linux/arm64
+    --platform=linux/amd64
     -t $CI_REGISTRY_USER/handle:latest
     -t $CI_REGISTRY_USER/handle:$CI_COMMIT_SHORT_SHA --push .
   rules:
