@@ -190,6 +190,35 @@ sub getObjectProperties {
   return $res;
 }
 
+sub headObjectExists {
+  my ($self, $c, $pid) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  unless ($pid =~ m/^o:\d+$/) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Invalid pid'};
+    $res->{status} = 400;
+    return $res;
+  }
+
+  my $url = $c->app->fedoraurl->path($pid);
+  $c->app->log->debug("HEAD $url");
+  my $headres = $c->ua->head($url => $self->wrapAtomic($c, {}))->result;
+
+  if ($headres->is_success) {
+    $res->{status} = 200;
+    return $res;
+  }
+
+  if ($headres->{code} == 410) {
+    $res->{tombstone} = $headres->body;
+  }
+
+  unshift @{$res->{alerts}}, {type => 'error', msg => $headres->message};
+  $res->{status} = $headres->{code};
+  return $res;
+}
+
 sub addRelationship {
   my ($self, $c, $pid, $predicate, $object, $skiphook) = @_;
 
