@@ -106,12 +106,13 @@ import fields from "phaidra-vue-components/src/utils/fields"
 import arrays from "phaidra-vue-components/src/utils/arrays"
 import jsonLd from "phaidra-vue-components/src/utils/json-ld"
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
+import { formvalidation } from "phaidra-vue-components/src/mixins/formvalidation"
 import { context } from "../../../mixins/context"
 import { config } from "../../../mixins/config"
 
 export default {
   middleware: "auth",
-  mixins: [context, config, vocabulary],
+  mixins: [context, config, vocabulary, formvalidation],
   computed: {
     relatedpid: function () {
       return this.$route.params.relatedpid;
@@ -663,6 +664,14 @@ export default {
             }
           }
         }
+      }
+
+      if (self.instanceconfig && self.instanceconfig.markmandatoryfnc) {
+        if (typeof self[self.instanceconfig.markmandatoryfnc] === 'function') {
+          self[self.instanceconfig.markmandatoryfnc]()
+        }
+      } else if (typeof self.markMandatory === 'function') {
+        self.markMandatory()
       }
     },
   },
