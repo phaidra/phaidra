@@ -203,7 +203,20 @@ sub headObjectExists {
 
   my $url = $c->app->fedoraurl->path($pid);
   $c->app->log->debug("HEAD $url");
-  my $headres = $c->ua->head($url => $self->wrapAtomic($c, {}))->result;
+
+  my $prefer_omit = join(' ', (
+    'http://fedora.info/definitions/fcrepo#PreferInboundReferences',
+    'http://fedora.info/definitions/fcrepo#ServerManaged',
+    'http://www.w3.org/ns/oa#PreferContainedDescriptions',
+    'http://www.w3.org/ns/ldp#PreferContainment',
+    'http://www.w3.org/ns/ldp#PreferMembership',
+    'http://www.w3.org/ns/ldp#PreferMinimalContainer',
+  ));
+  my $headers = {
+    'Accept'  => 'application/ld+json',
+    'Prefer'  => qq{return=representation; omit="$prefer_omit"},
+  };
+  my $headres = $c->ua->head($url => $self->wrapAtomic($c, $headers))->result;
 
   if ($headres->is_success) {
     $res->{status} = 200;
