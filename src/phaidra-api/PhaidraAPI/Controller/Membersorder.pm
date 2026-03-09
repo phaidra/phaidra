@@ -8,6 +8,9 @@ use Mojo::ByteStream qw(b);
 use Mojo::JSON qw(encode_json decode_json);
 use PhaidraAPI::Model::Membersorder;
 use PhaidraAPI::Model::Util;
+use PhaidraAPI::Model::Collection;
+use PhaidraAPI::Model::Search;
+use PhaidraAPI::Model::Fedora;
 use Time::HiRes qw/tv_interval gettimeofday/;
 
 sub json2xml {
@@ -203,45 +206,72 @@ sub order_object_member {
   my $itempid  = $self->stash('itempid');
   my $position = $self->stash('position');
 
-  # FIXME - support container
-  my $coll_model = PhaidraAPI::Model::Collection->new;
-  my $r          = $coll_model->get_members($self, $pid);
-  push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
-  $res->{status} = $r->{status};
-  if ($r->{status} ne 200) {
+  my $search_model = PhaidraAPI::Model::Search->new;
+  my $cmodel_res   = $search_model->get_cmodel($self, $pid);
+  push @{$res->{alerts}}, @{$cmodel_res->{alerts}} if scalar @{$cmodel_res->{alerts}} > 0;
+  $res->{status} = $cmodel_res->{status};
+  if ($cmodel_res->{status} ne 200) {
     $self->render(json => $res, status => $res->{status});
+    return;
   }
 
-  my @ordered_members = @{$r->{members}};
+  my $cmodel = $cmodel_res->{cmodel};
 
-  my $i            = 0;
-  my $update_index = 1;
+  my @pids;
+  if ($cmodel eq 'Collection') {
+    my $coll_model = PhaidraAPI::Model::Collection->new;
+    my $r          = $coll_model->get_members($self, $pid);
+    push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
+    $res->{status} = $r->{status};
+    if ($r->{status} ne 200) {
+      $self->render(json => $res, status => $res->{status});
+      return;
+    }
+    @pids = grep { $_ } map { $_->{pid} } @{$r->{members}};
+  }
+  elsif ($cmodel eq 'Container') {
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    my $r            = $fedora_model->getObjectProperties($self, $pid);
+    push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
+    $res->{status} = $r->{status};
+    if ($r->{status} ne 200) {
+      $self->render(json => $res, status => $res->{status});
+      return;
+    }
+
+    my $members = $r->{hasmember};
+    if (defined $members) {
+      if (ref($members) eq 'ARRAY') {
+        @pids = grep { $_ } @{$members};
+      }
+      else {
+        @pids = ($members);
+      }
+    }
+  }
+  else {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Object content model is not Collection or Container'};
+    $res->{status} = 400;
+    $self->render(json => $res, status => $res->{status});
+    return;
+  }
+
+  @pids = grep { $_ ne $itempid } @pids;
+
+  my $max_pos = scalar(@pids) + 1;
+  $position = 1        if $position < 1;
+  $position = $max_pos if $position > $max_pos;
+
+  my $idx = $position - 1;
+  splice(@pids, $idx, 0, $itempid);
 
   my @new_order;
-
-  # insert item to new position
-  $new_order[$position] = {pid => $itempid, 'pos' => $position};
-  foreach my $m (@ordered_members) {
-
-    if ($i eq $position) {
-
-      # skip the place in new_order where we already inserted the new item
-      $i++;
-    }
-    if ($m->{pid} eq $itempid) {
-
-      # skip the item in ordered_members we already inserted
-      next;
-    }
-    if ($m->{pid}) {
-      $new_order[$i] = {pid => $m->{pid}, 'pos' => $i};
-      $i++;
-    }
-
+  for (my $i = 0 ; $i < @pids ; $i++) {
+    push @new_order, {pid => $pids[$i], 'pos' => $i + 1};
   }
 
   my $membersorder_model = PhaidraAPI::Model::Membersorder->new;
-  $r = $membersorder_model->save_to_object($self, $pid, \@new_order, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password}, 0);
+  my $r = $membersorder_model->save_to_object($self, $pid, \@new_order, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password}, 0);
   push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
   $res->{status} = $r->{status};
   if ($r->{status} ne 200) {
