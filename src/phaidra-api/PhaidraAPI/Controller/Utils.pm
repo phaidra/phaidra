@@ -218,13 +218,6 @@ sub state {
   $self->render(text => "remote_address:" . $self->tx->remote_address, status => 200);
 }
 
-sub testerror {
-  my $self = shift;
-
-  $self->app->log->error("test error");
-  $self->render(json => {error => 'test error'}, status => 500);
-}
-
 sub openapi {
   my $self = shift;
   $self->stash(scheme   => $self->config->{scheme});

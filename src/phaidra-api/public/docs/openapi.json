@@ -8003,9 +8003,6 @@
                                             },
                                             "pid": {
                                                 "type": "string"
-                                            },
-                                            "tmp_hash": {
-                                                "type": "string"
                                             }
                                         }
                                     }
