@@ -144,53 +144,6 @@ sub status {
 
 }
 
-sub tmp_hash {
-
-  my $self = shift;
-
-  my $pid = $self->stash('pid');
-
-  # check rights
-  my $object_model = PhaidraAPI::Model::Object->new;
-  my $rres         = $object_model->get_datastream($self, $pid, 'READONLY', $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
-  if ($rres->{status} eq '404') {
-
-    # it's ok
-    my $res = $self->mongo->get_collection('imgsrv.hashmap')->find_one({pid => $pid, agent => 'libvips'});
-    if (!defined($res) || !exists($res->{tmp_hash})) {
-
-      # if we could not find the temp hash, look into the jobs if the image isn't there as processed
-      my $res1 = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'libvips'}, {}, {"sort" => {"created" => -1}});
-      if (!defined($res1) || $res1->{status} ne 'finished') {
-
-        # if it isn't then this image isn't known to imageserver
-        $self->render(json => {alerts => [{type => 'info', msg => 'Not found in imageserver'}]}, status => 404);
-        return;
-      }
-      else {
-        # if it is, create the temp hash
-        if ($res1->{idhash}) {
-          my $tmp_hash = hmac_sha1_hex($res1->{idhash}, $self->app->config->{imageserver}->{tmp_hash_secret});
-          $self->mongo->get_collection('imgsrv.hashmap')->insert_one({pid => $pid, idhash => $res1->{idhash}, tmp_hash => $tmp_hash, created => time});
-          $self->render(text => $tmp_hash, status => 200);
-          return;
-        }
-      }
-
-    }
-    else {
-      $self->render(text => $res->{tmp_hash}, status => 200);
-      return;
-    }
-
-  }
-  else {
-    $self->render(json => {}, status => 403);
-    return;
-  }
-
-}
-
 sub imageserverproxy {
   my $self = shift;
 
