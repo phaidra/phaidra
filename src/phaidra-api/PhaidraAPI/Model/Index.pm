@@ -2687,10 +2687,7 @@ sub _add_uwm_index {
     }
   }
 
-  # padova: uwmetadata organisation association
   my $uwm_organisations = $self->_get_uwm_organisations($c, $uwm);
-  #$c->app->log->debug("XXXXXXXXXXXX UWM ORGANISATIONS ".$c->app->dumper($uwm_organisations));
-  #$index->{"uwm_association_json"} = b(encode_json($uwm_organisations))->decode('UTF-8') if (@{$uwm_organisations});  
   my %foundAssIds;
   if ($index->{"association_id"}) {
     $foundAssIds{$_} = 1 for @{$index->{"association_id"}};
@@ -2725,7 +2722,6 @@ sub _add_uwm_index {
   return $res;
 }
 
-# padova
 sub _get_uwm_organisations {
   my ($self, $c, $uwm) = @_;
 
