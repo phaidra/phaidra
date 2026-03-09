@@ -2692,21 +2692,32 @@ sub _add_uwm_index {
   #$c->app->log->debug("XXXXXXXXXXXX UWM ORGANISATIONS ".$c->app->dumper($uwm_organisations));
   #$index->{"uwm_association_json"} = b(encode_json($uwm_organisations))->decode('UTF-8') if (@{$uwm_organisations});  
   my %foundAssIds;
+  if ($index->{"association_id"}) {
+    $foundAssIds{$_} = 1 for @{$index->{"association_id"}};
+  }
   if (@{$uwm_organisations}) {
-    for my $org (@{$uwm_organisations}) {      
-      my $faculty = $org->{'faculty'} || '';
-      unless (exists($foundAssIds{$faculty})) {
-        if ($faculty ne '') {          
-          push @{$index->{"uwm_association_id"}}, $faculty;
-          $foundAssIds{$faculty} = 1;
+    for my $org (@{$uwm_organisations}) {
+      for my $notation ($org->{'faculty'} || (), $org->{'department'} || ()) {
+        next if $notation eq '';
+        my $unit_res = $c->app->directory->org_get_unit_for_notation($c, $notation);
+        next unless $unit_res->{status} == 200 && $unit_res->{unit} && $unit_res->{unit}->{'@id'};
+        my $id = $unit_res->{unit}->{'@id'};
+        unless (exists($foundAssIds{$id})) {
+          push @{$index->{"association_id"}}, $id;
+          push @{$index->{"uwm_association_id"}}, $id;
+          $foundAssIds{$id} = 1;
         }
-      }
-      my $department = $org->{'department'} || '';
-      unless (exists($foundAssIds{$department})) {
-        if ($department ne '') {            
-          push @{$index->{"uwm_association_id"}}, $department;
-          $foundAssIds{$department} = 1;
-        }                     
+        my $pp = $c->app->directory->org_get_parentpath($c, $id);
+        if ($pp->{status} == 200 && $pp->{parentpath}) {
+          for my $parent (@{$pp->{parentpath}}) {
+            next unless $parent->{'@id'} && $parent->{'@id'} ne $id;
+            unless (exists($foundAssIds{$parent->{'@id'}})) {
+              push @{$index->{"association_id"}}, $parent->{'@id'};
+              push @{$index->{"uwm_association_id"}}, $parent->{'@id'};
+              $foundAssIds{$parent->{'@id'}} = 1;
+            }
+          }
+        }
       }
     }
   }
