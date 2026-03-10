@@ -1,4 +1,4 @@
-FROM ubuntu:jammy-20260109
+FROM ubuntu:jammy-20260210.1
 ENV DEBIAN_FRONTEND=noninteractive
 RUN <<EOF
 apt-get --quiet update
