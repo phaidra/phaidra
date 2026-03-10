@@ -91,6 +91,11 @@ sub get_dc {
     }
   }
 
+  if ($r->{index}->{pid}) {
+    my $pid_identifier = $self->app->config->{scheme} . '://' . $self->app->config->{phaidra}->{baseurl} . '/' . $r->{index}->{pid};
+    $dc .= "\n  <dc:identifier>" . xml_escape(html_unescape($pid_identifier)) . "</dc:identifier>";
+  }
+
   $dc .= "\n</oai_dc:dc>";
 
   $self->render(text => $dc, format => 'xml', status => 200);

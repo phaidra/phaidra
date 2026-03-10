@@ -128,6 +128,12 @@ sub get_metadata {
     }
   }
 
+  # add PID-based identifier URL
+  if ($rec->{pid}) {
+    my $pid_identifier = $c->app->config->{scheme} . '://' . $c->app->config->{phaidra}->{baseurl} . '/' . $rec->{pid};
+    push @metadata, { name => 'identifier', values => [$pid_identifier] };
+  }
+
   for my $f (@metadata) {
     unless ($f->{lang}) {
       for my $v (@{$f->{values}}) {
