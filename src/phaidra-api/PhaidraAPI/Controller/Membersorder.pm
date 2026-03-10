@@ -248,6 +248,28 @@ sub order_object_member {
         @pids = ($members);
       }
     }
+
+    if (@pids) {
+      my %is_member = map { $_ => 1 } @pids;
+      my $username  = $self->stash->{basic_auth_credentials}->{username};
+      my $password  = $self->stash->{basic_auth_credentials}->{password};
+
+      my $membersorder_model = PhaidraAPI::Model::Membersorder->new;
+      my $or = $membersorder_model->get_object_collectionorder_json($self, $pid, $username, $password);
+      if ($or->{status} eq 200 && $or->{members} && ref($or->{members}) eq 'ARRAY') {
+
+        my @ordered = sort {
+          ($a->{pos} // 0) <=> ($b->{pos} // 0)
+        } grep {
+          $_->{pid} && $is_member{$_->{pid}}
+        } @{$or->{members}};
+
+        my @ordered_pids = map { $_->{pid} } @ordered;
+        my %seen         = map { $_ => 1 } @ordered_pids;
+
+        @pids = (@ordered_pids, grep { !$seen{$_} } @pids);
+      }
+    }
   }
   else {
     unshift @{$res->{alerts}}, {type => 'error', msg => 'Object content model is not Collection or Container'};
