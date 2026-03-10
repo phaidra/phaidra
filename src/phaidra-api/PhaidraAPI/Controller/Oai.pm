@@ -99,6 +99,141 @@ sub _get_metadata {
   }
 }
 
+sub _tsv_field_index {
+  my ($line, $names) = @_;
+  my @cols = map { my $x = $_; $x =~ s/^\s+|\s+$//gr } split(/\t/, $line);
+  my %num;
+  @num{@cols} = (0..$#cols);
+
+  for my $name (@$names) {
+    return $num{$name} if defined $num{$name};
+  }
+  return undef;
+}
+
+sub _normalize_sets {    
+  my ($self) = @_;
+  my @sets = $self->every_param('sets');
+
+  if (!@sets) {
+    my $body = $self->req->body;
+    if ($body && $body =~ /\S/) {
+      my $json = eval { decode_json($body) };
+      if (!$@ && ref($json) eq 'HASH' && $json->{sets}) {
+        if (ref($json->{sets}) eq 'ARRAY') {
+          @sets = @{$json->{sets}};
+        }
+        else {
+          @sets = split(/[;,]/, $json->{sets});
+        }
+      }
+    }
+  }
+
+  unless (@sets) {
+    my $sets_param = $self->param('sets');
+    if ($sets_param) {
+      @sets = split(/[;,]/, $sets_param);
+    }
+  }
+
+  @sets = map { $_ =~ s/^\s+|\s+$//gr } grep { defined $_ && $_ ne '' } @sets;
+  return @sets;
+}
+
+sub blacklist {
+  my $self = shift;
+  my $body = $self->req->body // '';
+
+  unless ($body =~ /\S/) {
+    return $self->render(json => {error => 'empty request body'}, status => 400);
+  }
+
+  my @sets = $self->_normalize_sets;
+  unless (@sets) {
+    return $self->render(json => {error => 'missing sets parameter'}, status => 400);
+  }
+
+  my @lines = split(/\r?\n/, $body);
+  my $header = shift @lines;
+  unless (defined $header && $header =~ /\S/) {
+    return $self->render(json => {error => 'missing header line'}, status => 400);
+  }
+
+  my @headerCols = map { my $c = $_; $c =~ s/^\s+|\s+$//gr } split(/\t/, $header);
+  my %lookup;
+  @lookup{ map { lc($_) } @headerCols } = (0..$#headerCols);
+
+  my %target = (
+    ac_number => ['ac-nummer', 'ac_number', 'ac nummer'],
+    pid       => ['identifier phaidra', 'pid', 'identifier']
+  );
+
+  my %index;
+  for my $field (keys %target) {
+    for my $candidate (@{$target{$field}}) {
+      my $k = lc($candidate);
+      if (defined $lookup{$k}) {
+        $index{$field} = $lookup{$k};
+        last;
+      }
+    }
+  }
+
+  unless (defined $index{ac_number} && defined $index{pid}) {
+    # fallback: first two columns
+    $index{ac_number} = 0 unless defined $index{ac_number};
+    $index{pid}       = 1 unless defined $index{pid};
+  }
+
+  my @inserted;
+  my @existing;
+  my @invalid;
+
+  my $coll = $self->mongo->get_collection('oai_records_blacklist');
+  my $ts   = DateTime->now->iso8601 . 'Z';
+
+  for my $line (@lines) {
+    next unless $line =~ /\S/;
+    my @cols = split(/\t/, $line, -1);
+
+    my $ac  = defined $cols[$index{ac_number}] ? $cols[$index{ac_number}] : '';
+    my $pid = defined $cols[$index{pid}]       ? $cols[$index{pid}]       : '';
+
+    $ac  =~ s/^\s+|\s+$//g;
+    $pid =~ s/^\s+|\s+$//g;
+
+    unless ($ac && $pid) {
+      push @invalid, {line => $line, ac_number => $ac, pid => $pid};
+      next;
+    }
+
+    my $match = $coll->find_one({
+      '$or' => [ {ac_number => $ac}, {pid => $pid} ],
+    });
+
+    if ($match) {
+      push @existing, {ac_number => $ac, pid => $pid};
+      next;
+    }
+
+    my $rec = {sets => \@sets, ts => $ts, ac_number => $ac, pid => $pid};
+    $coll->insert_one($rec);
+    push @inserted, $rec;
+  }
+
+  return $self->render(json => {
+    total_rows      => scalar(@lines) + 1,
+    inserted        => scalar @inserted,
+    existing        => scalar @existing,
+    invalid         => scalar @invalid,
+    inserted_items  => \@inserted,
+    existing_items  => \@existing,
+    invalid_items   => \@invalid,
+    sets            => \@sets
+  }, status => 200);
+}
+
 sub handler {
   my $self = shift;
 

@@ -588,6 +588,7 @@ sub startup {
 
   $r->get('oai')                                    ->to('oai#handler');
   $r->post('oai')                                   ->to('oai#handler');
+  $r->post('oai/blacklist')                         ->to('oai#blacklist');
 
   $r->get('termsofuse')                             ->to('termsofuse#get');
 

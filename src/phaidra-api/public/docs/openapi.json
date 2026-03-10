@@ -5389,6 +5389,78 @@
                 }
             }
         },
+        "/oai/blacklist": {
+            "post": {
+                "summary": "Add blacklist entries from TSV or JSON payload",
+                "description": "Ingest TSV with columns `AC-Nummer` and `Identifier Phaidra`, and create records in `oai_records_blacklist` if ac_number/pid not already present. The blacklist is a list of PIDs which should not be included in a particular set in OAI-PMH, e.g. because the harvester gets those objects by other means (avoids duplicity).",
+                "tags": ["oai-pmh"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "sets",
+                        "schema": { "type": "string" },
+                        "description": "Optional sets (comma-separated), if not supplied in JSON body."
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "text/plain": {
+                            "schema": { "type": "string" },
+                            "example": "AC-Nummer\tIdentifier Phaidra\nAC00001880\to:2045295\nAC00003863\to:2040220"
+                        },
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "sets": {"type": "array", "items": {"type": "string"}},
+                                    "tsv": {"type": "string"}
+                                }
+                            },
+                            "example": {
+                                "sets": ["phaidra4primo"],
+                                "tsv": "AC-Nummer\tIdentifier Phaidra\nAC00001880\to:2045295"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Summary of inserted/existing/invalid rows",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "total_rows": {"type": "integer"},
+                                        "inserted": {"type": "integer"},
+                                        "existing": {"type": "integer"},
+                                        "invalid": {"type": "integer"},
+                                        "inserted_items": {"type": "array", "items": {"type": "object"}},
+                                        "existing_items": {"type": "array", "items": {"type": "object"}},
+                                        "invalid_items": {"type": "array", "items": {"type": "object"}},
+                                        "sets": {"type": "array", "items": {"type": "string"}}
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {"type": "string"}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/termsofuse": {
             "get": {
                 "summary": "Get terms of use",
