@@ -598,6 +598,14 @@ export const mutations = {
   addBreadcrumb(state, breadcrumb) {
     state.breadcrumbs.push(breadcrumb)
   },
+  updateCollectionBreadcrumb(state, title) {
+    if (state.breadcrumbs.length > 0) {
+      const lastBreadcrumb = state.breadcrumbs[state.breadcrumbs.length - 1]
+      if (lastBreadcrumb && lastBreadcrumb.disabled) {
+        lastBreadcrumb.text = title
+      }
+    }
+  },
   setLoading(state, loading) {
     state.loading = loading
   },
