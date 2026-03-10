@@ -42,7 +42,16 @@ export default {
         this.templateName = this.$route.params.collection
         this.getCollection()
     },
+    watch: {
+        '$i18n.locale'() {
+            this.updateBreadcrumbTitle()
+        }
+    },
     methods: {
+        updateBreadcrumbTitle() {
+            const title = this.templateTitle[this.$i18n.locale] || this.templateTitle.eng || 'Collection'
+            this.$store.commit('updateCollectionBreadcrumb', title)
+        },
         getCollection() {
             try {
                 this.$axios.get(`/cms/template/${this.templateName || 'index'}`).then(response => {
