@@ -93,7 +93,14 @@ sub get_dc {
 
   if ($r->{index}->{pid}) {
     my $pid_identifier = $self->app->config->{scheme} . '://' . $self->app->config->{phaidra}->{baseurl} . '/' . $r->{index}->{pid};
-    $dc .= "\n  <dc:identifier>" . xml_escape(html_unescape($pid_identifier)) . "</dc:identifier>";
+
+    my $has_dc_identifier = (exists($r->{index}->{dc_identifier})
+      && ref($r->{index}->{dc_identifier}) eq 'ARRAY'
+      && @{$r->{index}->{dc_identifier}} > 0);
+
+    unless ($has_dc_identifier) {
+      $dc .= "\n  <dc:identifier>" . xml_escape(html_unescape($pid_identifier)) . "</dc:identifier>";
+    }
   }
 
   $dc .= "\n</oai_dc:dc>";
