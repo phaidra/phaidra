@@ -22,6 +22,7 @@ sub get_metadata {
   my $apiBaseUrlPath = $c->app->config->{baseurl}. ($c->app->config->{basepath} ? '/' . $c->app->config->{basepath} : '');
   my $getUrl       = "https://$apiBaseUrlPath/object/$pid/get";
   my $previewUrl   = "https://$apiBaseUrlPath/object/$pid/preview";
+  my $thumbnailUrl = "https://$apiBaseUrlPath/object/$pid/thumbnail";
   my $iiifUri      = "https://$apiBaseUrlPath/imageserver?IIIF=$pid.tif/info.json";
   my $iiifManifestUri = "https://$apiBaseUrlPath/object/$pid/iiifmanifest";
 
@@ -147,6 +148,16 @@ sub get_metadata {
     attributes => [
       { name  => 'rdf:resource',
         value => $useViewer ? $previewUrl : $getUrl,
+      }
+    ]
+  };
+
+  # edm:object
+  push @{$oreAggregation->{children}}, {
+    name => 'edm:object',
+    attributes => [
+      { name  => 'rdf:resource',
+        value => $thumbnailUrl,
       }
     ]
   };
