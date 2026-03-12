@@ -2350,7 +2350,7 @@ export default {
     return /^o:\d+$/.test(params.pid);
   },
   metaInfo() {
-    return this.detailsMetaInfo;
+    return this.detailsMetaInfo || {};
   },
   computed: {
     ownerEmail: function () {
