@@ -17,6 +17,7 @@
     "@nuxtjs/markdownit": "^2.0.0",
     "@nuxtjs/sentry": "^5.1.7",
     "@types/markdown-it": "^14.1.2",
+    "autolinker": "^4.1.5",
     "chart.js": "^3.6.2",
     "chartjs-plugin-datalabels": "^2.0.0",
     "cookie-universal-nuxt": "^2.1.5",

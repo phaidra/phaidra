@@ -1169,7 +1169,7 @@
                           >{{ $t("Rights statement") }}</v-col
                         >
                         <v-col cols="12" class="mt-2" v-for="(stmt, i) in rightsStatements" :key="'rights-' + i">
-                          {{ stmt }}
+                          <span v-html="autolinkerCheck(stmt)"></span>
                         </v-col>
                       </v-row>
                     </v-card-text>
@@ -2328,6 +2328,7 @@ import { config } from "../../mixins/config";
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
 import objectMixin from "phaidra-vue-components/src/mixins/object";
 import lang3to2map from "phaidra-vue-components/src/utils/lang3to2map";
+import Autolinker from "autolinker";
 
 export default {
   mixins: [context, config, vocabulary, objectMixin],
@@ -3033,6 +3034,9 @@ export default {
     }
   },
   methods: {
+    autolinkerCheck(val) {
+      return Autolinker.link(String(val ?? ""));
+    },
     normalizeDoi (value) {
       if (!value) {
         return ''
