@@ -84,8 +84,10 @@
             </v-card>
           </v-bottom-sheet>
         </v-row>
+        <v-row no-gutters v-if="inCollection">
+          <v-btn class="mb-8" color="primary">{{ $t('Members of') }}<nuxt-link class="ml-1 white--text" :to="localePath(`/detail/${inCollection}`)">{{ inCollection }}</nuxt-link><v-icon right @click.native="removeCollectionFilter()">mdi-close</v-icon></v-btn>
+        </v-row>
         <v-row no-gutters>
-          <v-btn v-if="inCollection" class="mb-8" color="primary">{{ $t('Members of') }}<nuxt-link class="ml-1 white--text" :to="localePath(`/detail/${inCollection}`)">{{ inCollection }}</nuxt-link><v-icon right @click.native="removeCollectionFilter()">mdi-close</v-icon></v-btn>
           <v-pagination
           :wrapper-aria-label="$t('pagination')"
           :page-aria-label="$t('page')"
