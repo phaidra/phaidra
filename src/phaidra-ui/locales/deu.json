@@ -1392,5 +1392,17 @@
     "DOI Not Found": "DOI nicht gefunden",
     "Unknown error": "Unbekannter Fehler",
     "Load Form": "Formular laden",
-    "Datacite": "DataCite"
+    "Datacite": "DataCite",
+    "Select a value from the drop-down list. In case the value you want to select is not in the list, choose <i>Other</i> and notify the metadata administrators.": "Wählen Sie einen Wert aus der Dropdown-Liste. Falls der gewünschte Wert nicht in der Liste enthalten ist, wählen Sie <i>Andere</i> und benachrichtigen Sie die Metadaten-Administration.",
+    "When the resource you are uploading is research data, make sure you state the scholarly output of your dataset. Explicitly defining the link between dataset and the related publication is in compliance with Open Access policies. It also ensures faster exposure of the dataset in the OpenAIRE portal, to which Phaidra metadata are exposed.": "Wenn es sich bei der Ressource, die Sie hochladen, um Forschungsdaten handelt, sollten Sie unbedingt den wissenschaftlichen Output Ihres Datensatzes angeben. Die explizite Angabe der Verbindung zwischen dem Datensatz und der zugehörigen Veröffentlichung steht im Einklang mit den Open-Access-Richtlinien. Außerdem gewährleistet dies eine schnellere Veröffentlichung des Datensatzes im OpenAIRE-Portal, in dem die Phaidra-Metadaten veröffentlicht werden.",
+    "PDF Document": "PDF Dokument",
+    "Object type (chekcboxes)": "Objekttyp (checkboxes)",
+    "Project number": "Projektnummer",
+    "Object list": "Objektliste",
+    "New list": "Neue Objektliste",
+    "Close": "Schliessen",
+    "Add metadatafield": "Metadatenfeld hinzufügen",
+    "Date (text/concept)": "Datum (Text/Konzept)",
+    "Access restrictions for collections": "Zugriffsbeschränkungen für Sammlungen",
+    "Collections only contain metadata and metadata cannot be restricted. Access restrictions only make sense at object/file level, not at collection level.": "Sammlungen enthalten nur Metadaten und Metadaten können nicht eingeschränkt werden. Zugriffsbeschränkungen machen nur auf Objekt-/Dateiebene Sinn, nicht auf Sammlungsebene."
   }
