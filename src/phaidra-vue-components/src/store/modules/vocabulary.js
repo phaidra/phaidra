@@ -6,7 +6,6 @@ import fieldsLib from '../../utils/fields'
 import oefos from '../../utils/oefos'
 import thema from '../../utils/thema'
 import bic from '../../utils/bic'
-import i18n from '../../i18n/i18n'
 
 const lang2to3map = Object.keys(lang3to2map).reduce((ret, key) => {
   ret[lang3to2map[key]] = key
@@ -2099,7 +2098,8 @@ const mutations = {
     }
   },
   sortFields(state, {locale, i18nInstance}) {
-    i18n.locale = locale
+    if (!i18nInstance) return
+    i18nInstance.locale = locale
     if (state.fields) {
       state.fields.sort(function (a, b) {
         return i18nInstance.t(a.fieldname).localeCompare(i18nInstance.t(b.fieldname), locale)
