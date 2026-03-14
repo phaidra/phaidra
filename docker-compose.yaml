@@ -48,18 +48,17 @@ x-custom:
     HTTPD_NOINDEX_ENABLE: "${HTTPD_NOINDEX_ENABLE:-false}"
     HTTPD_RATE_LIMIT: "${HTTPD_RATE_LIMIT:-3072}"
     HTTPD_RATE_LIMIT_BURST: "${HTTPD_RATE_LIMIT_BURST:-6144}"
-
-  httpd_csp: &httpd_csp >-
-    default-src 'none';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline';
-    connect-src 'self' https://api.dante.gbv.de https://api.crossref.org https://api.datacite.org https://ws.gbv.de https://doi.org https://citation.doi.org https://api.ror.org https://v2.sherpa.ac.uk https://vocab.phaidra.org https://yarm.phaidra.org;
-    img-src 'self' data: https://*.tile.osm.org https://*.tile.openstreetmap.org;
-    style-src 'self' 'unsafe-inline';
-    base-uri 'self';
-    form-action 'self';
-    font-src 'self' data:;
-    media-src 'self';
-    frame-src 'self' https://phaidra.ustream.univie.ac.at;
+    HTTPD_CSP: >-
+        ${HTTPD_CSP:-default-src 'none';
+        script-src 'self' 'unsafe-eval' 'unsafe-inline';
+        connect-src 'self' https://api.dante.gbv.de https://api.crossref.org https://api.datacite.org https://ws.gbv.de https://doi.org https://citation.doi.org https://api.ror.org https://v2.sherpa.ac.uk https://vocab.phaidra.org https://yarm.phaidra.org;
+        img-src 'self' data: https://*.tile.osm.org https://*.tile.openstreetmap.org;
+        style-src 'self' 'unsafe-inline';
+        base-uri 'self';
+        form-action 'self';
+        font-src 'self' data:;
+        media-src 'self';
+        frame-src 'self' https://phaidra.ustream.univie.ac.at;}
 
   shib_env: &shib_env
     SHIB_DISCO_URL: "${SHIB_DISCO_URL:-}"
@@ -186,7 +185,6 @@ services:
       - ./static:/mnt/static:ro
     environment:
       <<: [*httpd_env, *api_common_env, *hosts]
-      HTTPD_CSP: *httpd_csp
     profiles: ["demo-local"]
 
   httpd-demo-s3:
@@ -200,7 +198,6 @@ services:
       - ./static:/mnt/static:ro
     environment:
       <<: [*httpd_env, *api_common_env, *hosts]
-      HTTPD_CSP: *httpd_csp
     profiles: ["demo-s3"]
 
   httpd-ssl-local:
@@ -218,7 +215,6 @@ services:
       - ./pfsa:/mnt/pfsa:ro
     environment:
       <<: [*httpd_env, *api_common_env, *hosts]
-      HTTPD_CSP: *httpd_csp
     profiles: ["ssl-local"]
 
   httpd-ssl-s3:
@@ -235,7 +231,6 @@ services:
       - ./static:/mnt/static:ro
     environment:
       <<: [*httpd_env, *api_common_env, *hosts]
-      HTTPD_CSP: *httpd_csp
     profiles: ["ssl-s3"]
 
   httpd-shib-local:
@@ -289,9 +284,7 @@ services:
       - source: httpd_custom_config
         target: "/usr/local/apache2/conf/httpd_custom.conf"
     environment:
-      <<: [*api_common_env, *hosts]
-      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
-      HTTPD_CSP: *httpd_csp
+      <<: [*httpd_env, *api_common_env, *hosts]
     entrypoint: [ "bash", "/mnt/startup/httpd-demo-entrypoint.bash" ]
     profiles: ["demo-local-dev"]
 
@@ -306,9 +299,7 @@ services:
       - chronos-sitemaps:/mnt/sitemaps:ro
       - ./static:/mnt/static:ro
     environment:
-      <<: [*api_common_env, *hosts]
-      UI_REQUIRE: "${UI_REQUIRE:-Require all granted}"
-      HTTPD_CSP: *httpd_csp
+      <<: [*httpd_env, *api_common_env, *hosts]
     entrypoint: [ "bash", "/mnt/startup/httpd-demo-entrypoint.bash" ]
     profiles: ["demo-s3-dev"]
 
@@ -328,7 +319,6 @@ services:
       - ./static:/mnt/static:ro
     environment:
       <<: [*httpd_env, *api_common_env, *hosts]
-      HTTPD_CSP: *httpd_csp
     entrypoint: [ "bash", "/httpd-ssl-entrypoint.bash" ]
     profiles: ["ssl-local-dev", "ssl-s3-dev"]
 
@@ -351,7 +341,6 @@ services:
       - ./static:/mnt/static:ro
     environment:
       <<: [*shib_env, *httpd_env, *api_common_env, *hosts]
-      HTTPD_CSP: *httpd_csp
     entrypoint: [ "bash", "/httpd-shib-entrypoint.bash" ]
     profiles: ["shib-local-dev", "shib-s3-dev"]
     
