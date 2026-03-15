@@ -821,7 +821,7 @@
   "frapo:isOutputOf": "Output del progetto",
   "rdax:P00009": "Afferenza",
   "rdfs:seeAlso": "Vedi anche",
-  "dce:subject": "Soggetto",
+  "dce:subject": "Parole chiave",
   "dcterms:subject": "Soggetto",
   "dcterms:language": "Lingua",
   "schema:subtitleLanguage": "Lingua dei sottotitoli",
