@@ -1,6 +1,15 @@
 <template>
   <v-container fluid>
-    <template v-if="objectInfo">
+    <template v-if="notFound">
+      <v-row justify="center" class="mt-8">
+        <v-col cols="12" md="8">
+          <v-alert type="error" outlined>
+            {{ $t('This page does not exist or the object cannot be found.') }}
+          </v-alert>
+        </v-col>
+      </v-row>
+    </template>
+    <template v-else-if="objectInfo">
       <v-row
         v-if="objectInfo.tombstone"
         justify="center"
@@ -2889,7 +2898,8 @@ export default {
       datareplaceFile: null,
       datareplaceUploadErrors: [],
       datareplaceLoading: false,
-      datareplaceUploadProgress: 0
+      datareplaceUploadProgress: 0,
+      notFound: false
     };
   },
   async fetch() {
@@ -3101,12 +3111,14 @@ export default {
       } catch (error) {
         console.log('Error fetching object info:', error);
         if (error.response?.status === 404) {
-          // Show 404 error page
-          self.$nuxt.error({ statusCode: 404, statusMessage: 'Object not found' });
-        } else {
-          // Show generic error page
-          self.$nuxt.error({ statusCode: 500, statusMessage: 'An error occurred while loading the object' });
+          self.notFound = true;
+          self.$store.commit('setObjectInfo', null);
+          return;
         }
+        self.$store.commit('setAlerts', [{
+          type: 'error',
+          msg: self.$t('An error occurred while loading the object'),
+        }]);
       }
     },
     async refreshCollectionMembers () {
