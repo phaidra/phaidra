@@ -711,7 +711,7 @@
           </div>
           </template>
           <template v-if="objectInfo.cmodel === 'Collection' && collMembers.length">
-            <v-toolbar class="mt-10 mb-5 white--text" elevation="1">
+            <v-toolbar ref="collectionMembersTop" class="mt-10 mb-5 white--text" elevation="1">
               <v-row align="center">
                 <v-col>
                   <v-toolbar-title>
@@ -809,6 +809,20 @@
               </v-row>
               <v-divider></v-divider>
             </div>
+            <v-row no-gutters v-if="$store.state.collectionMembersTotal > collMembersPagesize">
+              <v-pagination
+                :wrapper-aria-label="$t('pagination')"
+                :page-aria-label="$t('page')"
+                :previous-aria-label="$t('previous')"
+                :next-aria-label="$t('next')"
+                :current-page-aria-label="$t('currentPage')" 
+                v-bind:length="collMembersTotalPages"
+                total-visible="10"
+                v-model="collMembersPage"
+                class="mt-4 mb-4"
+                @input="scrollToCollectionMembersTop"
+              ></v-pagination>
+            </v-row>
             <v-dialog v-model="confirmColMemDeleteDlg" width="500" >
               <v-card>
                 <v-card-title class="title font-weight-light white--text">{{ $t('Remove') }}</v-card-title>
@@ -3101,6 +3115,22 @@ export default {
         "fetchCollectionMembers",
         { pid: this.objectInfo.pid, page: this.collMembersCurrentPage, pagesize: this.collMembersPagesize, onlylatestversion: this.collOnlyLatestVersions }
       );
+    },
+    scrollToCollectionMembersTop () {
+      if (!process.browser) {
+        return;
+      }
+      const ref = this.$refs.collectionMembersTop;
+      const el = ref && (ref.$el || ref);
+      if (!el || !el.getBoundingClientRect) {
+        return;
+      }
+      const rect = el.getBoundingClientRect();
+      const offset = rect.top + window.pageYOffset;
+      window.scrollTo({
+        top: offset,
+        behavior: "smooth",
+      });
     },
     async fetchUsageStats(self, pid) {
       console.log("fetchUsageStats");
