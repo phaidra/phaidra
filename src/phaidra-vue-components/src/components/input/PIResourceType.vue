@@ -73,10 +73,25 @@ export default {
       toggleResourcetypeModel: 0
     }
   },
+  watch: {
+    value: {
+      immediate: true,
+      handler (val) {
+        if (val && this.resourceTypes && this.resourceTypes.length) {
+          const idx = this.resourceTypes.indexOf(val)
+          if (idx !== -1 && this.toggleResourcetypeModel !== idx) {
+            this.toggleResourcetypeModel = idx
+          }
+        }
+      }
+    }
+  },
   mounted: function () {
     this.$nextTick(function () {
-      // emit input to set skos:prefLabel in parent
       if (this.value) {
+        const idx = this.resourceTypes.indexOf(this.value)
+        if (idx !== -1) this.toggleResourcetypeModel = idx
+        // emit input to set skos:prefLabel in parent
         for (let term of this.vocabularies['resourcetype'].terms) {
           if (term['@id'] === this.value) {
             this.$emit('input', term)

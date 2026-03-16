@@ -429,8 +429,30 @@ export default {
 
       // Language
       const langHit = this.findFields(baseForm, f => f.predicate === 'dcterms:language' || f.id === 'language')[0]
-      if (langHit) {
-        this.setIfEmpty(langHit.field, 'value', doiImportData.language, overwrite)
+      if (doiImportData.language) {
+        if (langHit) {
+          langHit.field.value = doiImportData.language
+        } else {
+          const langField = fields.getField('language')
+          langField.value = doiImportData.language
+          langField.label = 'Language of object'
+
+          const digitalObjectSectionIndex = baseForm.sections.findIndex(s => s.type === 'digitalobject')
+          const targetSection = digitalObjectSectionIndex !== -1
+            ? baseForm.sections[digitalObjectSectionIndex]
+            : baseForm.sections[0]
+
+          if (targetSection && Array.isArray(targetSection.fields)) {
+            let insertIndex = targetSection.fields.length
+            const titleIdx = targetSection.fields.findIndex(f => f.id === 'title' || f.component === 'p-title')
+            const descIdx = targetSection.fields.findIndex(f => f.id === 'description' || f.component === 'p-text-field')
+            const afterIdx = Math.max(titleIdx, descIdx)
+            if (afterIdx !== -1) {
+              insertIndex = afterIdx + 1
+            }
+            targetSection.fields.splice(insertIndex, 0, langField)
+          }
+        }
       }
 
       // Keywords
@@ -446,6 +468,7 @@ export default {
       const otHit = this.findFields(baseForm, f => f.id === 'object-type-checkboxes' || f.component.includes('p-object-type'))[0]
       if (otHit && doiImportData.publicationTypeId) {
         const f = otHit.field
+        f.initialSelectedTermId = doiImportData.publicationTypeId
         f.selectedTerms = [
           { value: doiImportData.publicationTypeId }
         ]
@@ -598,8 +621,21 @@ export default {
       return baseForm
     },
     proceedForm: function () {
-      console.log('this.form', this.form);
-      this.$emit('load-form', this.form);
+      const textResourceTypeId = 'https://pid.phaidra.org/vocabulary/69ZZ-2KGX'
+      if (this.form && this.form.sections) {
+        for (const s of this.form.sections) {
+          if (!s.fields) continue
+          for (const f of s.fields) {
+            if (f.predicate === 'dcterms:type' && f.component === 'p-resource-type-buttongroup') {
+              f.value = textResourceTypeId
+            }
+            if (f.predicate === 'edm:hasType') {
+              f.resourceType = textResourceTypeId
+            }
+          }
+        }
+      }
+      this.$emit('load-form', this.form)
     },
     resetDOIImport: async function () {
       this.doiImportInput = null;
