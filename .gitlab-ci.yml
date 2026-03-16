@@ -672,7 +672,7 @@ helm-package:
     - APP_VERSION=$(git describe --always --tags)
     - helm package --app-version $APP_VERSION .
     - PACKAGE_FILE=$(yq -r '.name + "-" + .version + ".tgz"' Chart.yaml)
-    - curl --fail-with-body --request POST --user "$GITLAB_HELM_REPO_USERNAME:$GITLAB_HELM_REPO_PASSWORD" --form "chart=@$PACKAGE_FILE" "$GITLAB_HELM_REPO_URL/$CI_COMMIT_BRANCH/charts"
+    - curl -s --fail-with-body --request POST --user "$GITLAB_HELM_REPO_USERNAME:$GITLAB_HELM_REPO_PASSWORD" --form "chart=@$PACKAGE_FILE" "$GITLAB_HELM_REPO_URL/$CI_COMMIT_BRANCH/charts"
   rules:
     - if: $CI_COMMIT_BEFORE_SHA == "0000000000000000000000000000000000000000"
       when: never
