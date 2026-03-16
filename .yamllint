@@ -1,0 +1,30 @@
+---
+# https://yamllint.readthedocs.io/en/stable/configuration.html
+yaml-files:
+  - '*.yaml'
+  - '*.yml'
+  - '.yamllint'
+
+extends: default
+rules:
+  comments:
+    # https://github.com/prettier/prettier/issues/6780
+    min-spaces-from-content: 1
+  # https://github.com/adrienverge/yamllint/issues/384
+  comments-indentation: false
+  document-start:
+    present: false
+    level: error
+  # Long lines for clear variable names and because we already have a lot of long lines
+  line-length:
+    max: 180
+    allow-non-breakable-words: true
+    allow-non-breakable-inline-mappings: true
+  # We are adding an extra space inside braces as that's how prettier does it
+  # and we are trying not to fight other linters.
+  braces:
+    min-spaces-inside: 0 # yamllint defaults to 0
+    max-spaces-inside: 1 # yamllint defaults to 0
+  octal-values:
+    forbid-implicit-octal: true # yamllint defaults to false
+    forbid-explicit-octal: true # yamllint defaults to false
