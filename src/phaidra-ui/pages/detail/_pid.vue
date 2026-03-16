@@ -938,6 +938,20 @@
                             </v-dialog>
                             <br />
                             <a :href="id.value">{{ id.value }}</a>
+                            <v-tooltip bottom>
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                  :aria-label="$t('Copy to clipboard')"
+                                  v-on="on"
+                                  v-bind="attrs"
+                                  icon
+                                  @click="copyToClipboard(id.value)"
+                                >
+                                  <v-icon>mdi-content-copy</v-icon>
+                                </v-btn>
+                              </template>
+                              <span>{{ $t('Copy to clipboard') }}</span>
+                            </v-tooltip>
                           </p>
                         </v-col>
                       </v-row>
@@ -1020,6 +1034,20 @@
                             <br />
                             <a v-if="id.value.startsWith('http')" :href="id.value">{{ id.value }}</a>
                             <span v-else>{{ id.value }}</span>
+                            <v-tooltip bottom>
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                  :aria-label="$t('Copy to clipboard')"
+                                  v-on="on"
+                                  v-bind="attrs"
+                                  icon
+                                  @click="copyToClipboard(id.value)"
+                                >
+                                  <v-icon>mdi-content-copy</v-icon>
+                                </v-btn>
+                              </template>
+                              <span>{{ $t('Copy to clipboard') }}</span>
+                            </v-tooltip>
                           </p>
                         </v-col>
                       </v-row>
