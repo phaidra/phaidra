@@ -1213,7 +1213,11 @@ See https://github.com/adobe-type-tools/cmap-resources
     <script type="module">
       import { PDFViewerApplication } from '<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/pdfjs/web/viewer.mjs';
       const URL = "<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get";
-      await PDFViewerApplication.open({ url: URL });
+
+      PDFViewerApplication.initializedPromise.then(() => {
+        window.PDFViewerApplicationOptions.set('defaultUrl', URL);
+        PDFViewerApplication.open();
+      });
     </script>
   </body>
 </html>
