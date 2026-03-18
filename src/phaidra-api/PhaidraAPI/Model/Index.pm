@@ -2231,6 +2231,31 @@ sub _add_jsonld_index {
           push @{$index->{"bib_journal"}}, $o->{'dce:title'}[0]->{'bf:mainTitle'}[0]->{'@value'};
         }
       }
+      if (exists($o->{'ids:issn'})) {
+        for my $issn (@{$o->{'ids:issn'}}) {
+          if (defined($issn) && ($issn ne '')) {
+            push @{$index->{"bib_issn"}}, $issn;
+          }
+        }
+      }
+      if (exists($o->{'skos:exactMatch'})) {
+        for my $id (@{$o->{'skos:exactMatch'}}) {
+          my $series_id_value;
+          if (reftype $id eq reftype {}) {
+            $series_id_value = $id->{'@value'} if exists($id->{'@value'});
+            if (exists($id->{'@type'}) && defined($id->{'@type'}) && ($id->{'@type'} ne '') && defined($series_id_value) && ($series_id_value ne '')) {
+              push @{$index->{"bib_seriesidentifier"}}, $id->{'@type'} . ":" . $series_id_value;
+            }
+          }
+          else {
+            $series_id_value = $id;
+          }
+          if (defined($series_id_value) && ($series_id_value ne '')) {
+            push @{$index->{"bib_seriesidentifier"}}, $series_id_value;
+            push @{$index->{"dc_identifier"}}, $series_id_value;
+          }
+        }
+      }
       if (exists($o->{'bibo:volume'}) && $o->{'bibo:volume'} ne '') {
         my $vol = $o->{'bibo:volume'}[0];
         $vol = ref($vol) eq 'HASH' ? $vol->{'@value'} : $vol;
