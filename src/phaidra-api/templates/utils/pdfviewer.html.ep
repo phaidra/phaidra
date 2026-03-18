@@ -1216,7 +1216,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 
       PDFViewerApplication.initializedPromise.then(() => {
         window.PDFViewerApplicationOptions.set('defaultUrl', URL);
-        PDFViewerApplication.open();
+        PDFViewerApplication.open({"url": URL});
       });
     </script>
   </body>
