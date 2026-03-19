@@ -31,6 +31,10 @@ const ot4rt = {
     ns + 'YA8R-1M0D',
     // map
     ns + 'A52A-CWMM',
+    // artistic work
+    ns + 'PX65-RM8F',
+    // physical sample
+    ns + '99J6-2F2T',
     // other
     ns + 'PYRE-RAWJ'
   ],
@@ -44,6 +48,8 @@ const ot4rt = {
     ns + 'EWZ9-3MPH',
     // learning object
     ns + 'YA8R-1M0D',
+    // artistic work
+    ns + 'PX65-RM8F',
     // other
     ns + 'PYRE-RAWJ'
   ],
@@ -57,6 +63,8 @@ const ot4rt = {
     ns + '8KGA-CH97',
     // learning object
     ns + 'YA8R-1M0D',
+    // artistic work
+    ns + 'PX65-RM8F',
     // other
     ns + 'PYRE-RAWJ'
   ],
@@ -100,6 +108,14 @@ const ot4rt = {
     ns + '8A6X-FKB1',
     // project deliverable
     ns + 'T8PK-GADB',
+    // artistic work
+    ns + 'PX65-RM8F',
+    // conference presentation
+    ns + '2NMC-XD14',
+    // thesis
+    ns + '62DN-RZ7V',
+    // bibliography
+    ns + 'TME0-3GXS',
     // other
     ns + 'PYRE-RAWJ'
   ],
@@ -167,6 +183,16 @@ const ot4rt = {
     ns + 'R1WF-V45Y',
     // 3D model
     ns + 'T6C3-46S4',
+    // physical sample
+    ns + '99J6-2F2T',
+    // artistic work
+    ns + 'PX65-RM8F',
+    // conference presentation
+    ns + '2NMC-XD14',
+    // thesis
+    ns + '62DN-RZ7V',
+    // bibliography
+    ns + 'TME0-3GXS',
     // other
     ns + 'PYRE-RAWJ'
   ],
