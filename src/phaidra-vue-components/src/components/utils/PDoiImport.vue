@@ -476,8 +476,6 @@ export default {
         this.setIfEmpty(f, 'issn', doiImportData.journalISSN, overwrite)
         this.setIfEmpty(f, 'volume', doiImportData.journalVolume, overwrite)
         this.setIfEmpty(f, 'issue', doiImportData.journalIssue, overwrite)
-        this.setIfEmpty(f, 'pageStart', doiImportData.pageStart, overwrite)
-        this.setIfEmpty(f, 'pageEnd', doiImportData.pageEnd, overwrite)
         const hasJournalInfo = doiImportData.journalTitle || doiImportData.journalISSN || 
                               doiImportData.journalVolume || doiImportData.journalIssue || 
                               doiImportData.pageStart || doiImportData.pageEnd
@@ -488,6 +486,19 @@ export default {
             this.$set ? this.$set(f, 'issued', undefined) : (f.issued = undefined)
           }
         }
+      }
+
+      const pageStartHit = this.findFields(baseForm, f =>
+        f.predicate === 'schema:pageStart' || f.id === 'page-start'
+      )[0]
+      if (pageStartHit) {
+        this.setIfEmpty(pageStartHit.field, 'value', doiImportData.pageStart, overwrite)
+      }
+      const pageEndHit = this.findFields(baseForm, f =>
+        f.predicate === 'schema:pageEnd' || f.id === 'page-end'
+      )[0]
+      if (pageEndHit) {
+        this.setIfEmpty(pageEndHit.field, 'value', doiImportData.pageEnd, overwrite)
       }
 
       // Publisher
@@ -1229,6 +1240,18 @@ if (crossrefData['issued']['date-parts'][0]) {
       }
       self.form.sections[5].fields.push(issue);
 
+      if (doiImportData && doiImportData.pageStart) {
+        let pageStartField = fields.getField("page-start");
+        pageStartField.value = doiImportData.pageStart;
+        self.form.sections[5].fields.push(pageStartField);
+      }
+
+      if (doiImportData && doiImportData.pageEnd) {
+        let pageEndField = fields.getField("page-end");
+        pageEndField.value = doiImportData.pageEnd;
+        self.form.sections[5].fields.push(pageEndField);
+      }
+
       // Series/Journal
       let sf = fields.getField("series");
       if (doiImportData) {
@@ -1243,12 +1266,6 @@ if (crossrefData['issued']['date-parts'][0]) {
         }
         if (doiImportData.journalIssue) {
           sf.issue = doiImportData.journalIssue;
-        }
-        if (doiImportData.pageStart) {
-          sf.pageStart = doiImportData.pageStart;
-        }
-        if (doiImportData.pageEnd) {
-          sf.pageEnd = doiImportData.pageEnd;
         }
         const hasJournalInfo = doiImportData.journalTitle || doiImportData.journalISSN || 
                               doiImportData.journalVolume || doiImportData.journalIssue || 
