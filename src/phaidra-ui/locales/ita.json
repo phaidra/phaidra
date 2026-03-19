@@ -1461,5 +1461,12 @@
   "Unknown error": "Errore sconosciuto",
   "owner": "proprietario",
   "Format: YYYY-MM-DD or EDTF (e.g. 1984~, 1964/2008, 2001-21)": "Formato: AAAA-MM-GG oppure EDTF (es. 1984~, 1964/2008, 2001-21)",
-  "EDTF Examples: 1984? (uncertain 1984), 1964/2008 (range), 2001-21 (Spring 2001), 156X (1560s), 2004-06~ (approximate June 2004), 1984-03-12% (uncertain and approximate date in 1984)": "Esempi in formato EDTF: 1984? (1984 incerto), 1964/2008 (intervallo), 2001-21 (primavera 2001), 156X (anni '60 del XVI secolo), 2004-06~ (circa giugno 2004), 1984-03-12% (data incerta e approssimativa nel 1984)"
+  "EDTF Examples: 1984? (uncertain 1984), 1964/2008 (range), 2001-21 (Spring 2001), 156X (1560s), 2004-06~ (approximate June 2004), 1984-03-12% (uncertain and approximate date in 1984)": "Esempi in formato EDTF: 1984? (1984 incerto), 1964/2008 (intervallo), 2001-21 (primavera 2001), 156X (anni '60 del XVI secolo), 2004-06~ (circa giugno 2004), 1984-03-12% (data incerta e approssimativa nel 1984)",
+  "Date issued": "Data di pubblicazione",
+  "Appeared in": "Pubblicato in",
+  "Start page": "Pagina iniziale",
+  "End page": "Pagina finale",
+  "Type of publication": "Tipo di pubblicazione",
+  "Access Rights": "Diritti di accesso",
+  "Datacite": "DataCite"
 }
