@@ -824,7 +824,7 @@
 
         <v-row no-gutters class="mt-9 ma-3">
           <v-col cols="12">
-            <v-dialog v-if="templating || savetemplatebtn" v-model="templatedialog" width="500">
+            <v-dialog v-if="(templating || savetemplatebtn) && !hideSaveAsTemplate" v-model="templatedialog" width="500">
               <template v-slot:activator="{ on }">
                 <v-btn class="mr-3 float-left" v-on="on" large raised :loading="loading" :disabled="loading" color="primary"><span v-t="'Save as new template'"></span></v-btn>
               </template>
@@ -847,9 +847,9 @@
               <v-btn v-else-if="targetpid && !floatingsavebutton" large raised :loading="loading" :disabled="loading" class="primary float-right" @click="save()"><span v-t="'Save'"></span></v-btn>
               <v-btn v-else-if="forcePreview" large raised :loading="loading" :disabled="loading" class="primary float-right" @click="showForcePreview()"><span v-t="'Preview'"></span></v-btn>
               <template v-else>
-                <v-btn large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
+                <v-btn v-if="!hideUploadButton" large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
                 <v-btn
-                  v-if="!disableChecksum && submittype !== 'collection' && submittype !== 'resource'"
+                  v-if="!hideUploadButton && !disableChecksum && !hideAddFileChecksum && submittype !== 'collection' && submittype !== 'resource'"
                   large
                   raised
                   :loading="loading"
@@ -904,9 +904,9 @@
       </v-tab-item>
       <v-tab-item v-if="(submittype !== 'container') && enablepreview" class="pa-4">
         <p-d-jsonld :jsonld="jsonld"></p-d-jsonld>
-        <v-btn large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
+        <v-btn v-if="!hideUploadButton" large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
         <v-btn
-          v-if="!disableChecksum && submittype !== 'collection' && submittype !== 'resource'"
+          v-if="!hideUploadButton && !disableChecksum && !hideAddFileChecksum && submittype !== 'collection' && submittype !== 'resource'"
           large
           raised
           :loading="loading"
@@ -927,7 +927,7 @@
         <p-doi-import :external-form="form" v-on:load-form="loadFormFromDoiImport"></p-doi-import>
       </v-tab-item>
     </v-tabs-items>
-    <v-dialog v-model="checksumDialog" max-width="500px">
+    <v-dialog v-if="!hideAddFileChecksum" v-model="checksumDialog" max-width="500px">
       <v-card>
         <v-card-title class="title font-weight-light white--text">
           <span v-t="'Add file checksum'"></span>
@@ -1194,6 +1194,18 @@ export default {
       default: false
     },
     disableChecksum: {
+      type: Boolean,
+      default: false
+    },
+    hideAddFileChecksum: {
+      type: Boolean,
+      default: false
+    },
+    hideSaveAsTemplate: {
+      type: Boolean,
+      default: false
+    },
+    hideUploadButton: {
       type: Boolean,
       default: false
     },
