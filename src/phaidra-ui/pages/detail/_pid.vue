@@ -5,6 +5,8 @@
         <v-col cols="12" md="8">
           <v-alert type="error" outlined>
             {{ $t('This page does not exist or the object cannot be found.') }}
+            <p class="mt-4">{{$t('We apologise for the inconvenience, the page you are trying to access does not exist at this address.')}}</p>
+            <p v-if="instanceconfig.email">{{$t('If you are sure you entered the correct address but still get an error, please contact')}} <a :href="'mailto:' + instanceconfig.email">{{ instanceconfig.email }}</a>.</p>
           </v-alert>
         </v-col>
       </v-row>
@@ -3145,7 +3147,7 @@ export default {
         }
         self.$store.commit('setAlerts', [{
           type: 'error',
-          msg: self.$t('An error occurred while loading the object'),
+          msg: self.$t('An error occurred.'),
         }]);
       }
     },
