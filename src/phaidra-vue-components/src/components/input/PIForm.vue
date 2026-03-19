@@ -2287,10 +2287,11 @@ export default {
       if (f.vocabulary) {
         voc = f.vocabulary
       }
-      if (event) {
+      if (event && Object.keys(event).length > 0) {
         Object.entries(event).forEach(([otkey, ot]) => {
           if (ot) {
             let term = this.$store.getters['vocabulary/getTerm'](voc, otkey)
+            if (!term) return
             let field = {
               value: term['@id']
             }
@@ -2304,6 +2305,19 @@ export default {
             f.selectedTerms.push(field)
           }
         })
+      } else if (f.initialSelectedTermId) {
+        const term = this.$store.getters['vocabulary/getTerm'](voc, f.initialSelectedTermId)
+        if (term) {
+          const field = { value: term['@id'] }
+          if (term['skos:prefLabel']) {
+            const preflabels = term['skos:prefLabel']
+            field['skos:prefLabel'] = []
+            Object.entries(preflabels).forEach(([key, value]) => {
+              field['skos:prefLabel'].push({ '@value': value, '@language': key })
+            })
+          }
+          f.selectedTerms = [field]
+        }
       }
     },
     selectInput: function (f, event) {
