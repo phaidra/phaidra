@@ -52,7 +52,7 @@ x-custom:
         ${HTTPD_CSP:-default-src 'none';
         script-src 'self' 'unsafe-eval' 'unsafe-inline';
         connect-src 'self' https://api.dante.gbv.de https://api.crossref.org https://api.datacite.org https://ws.gbv.de https://doi.org https://citation.doi.org https://api.ror.org https://v2.sherpa.ac.uk https://vocab.phaidra.org https://yarm.phaidra.org;
-        img-src 'self' data: https://*.tile.osm.org https://*.tile.openstreetmap.org;
+        img-src 'self' data: blob: https://*.tile.osm.org https://*.tile.openstreetmap.org;
         style-src 'self' 'unsafe-inline';
         base-uri 'self';
         form-action 'self';
