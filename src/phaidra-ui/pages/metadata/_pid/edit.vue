@@ -4,7 +4,7 @@
       <v-btn color="primary" class="my-4" :to="{ path: `/detail/${pid}`, params: { pid: pid } }">
         <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
       </v-btn>
-      <p-i-form :form="form" :targetpid="pid" :enablerights="false" :enablerelationships="false" :templating="false"
+      <p-i-form :form="form" :targetpid="pid" :enablerights="false" :enablerelationships="false" :templating="false" :hideContainedInPages="instanceconfig.hideContainedInPages"
         :importing="false" :addbutton="true" :help="false" :debug="false" :feedback="false"
         :enableLicenseAdd="false"
         v-on:object-saved="objectSaved($event)" class="mt-4"></p-i-form>

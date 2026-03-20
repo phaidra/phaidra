@@ -3,6 +3,7 @@
     <v-row>
       <v-col cols="12">
         <p-i-form
+          :hideContainedInPages="instanceconfig.hideContainedInPages"
           :form="form"
           :rights="rights"
           :enablerights="false"

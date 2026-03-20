@@ -75,6 +75,7 @@
         :mouseoverfielddef="true"
         :forcePreview="instanceconfig.forcePreview"
         :disableChecksum="instanceconfig.disableChecksum"
+        :hideContainedInPages="instanceconfig.hideContainedInPages"
         v-on:load-form="form = $event" 
         v-on:load-rights="rights = $event"
         v-on:object-created="objectCreated($event)"
