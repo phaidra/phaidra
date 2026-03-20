@@ -202,6 +202,8 @@
   <field name="uwm_funding" type="strings" multiValued="true" indexed="true" stored="true"/>
   <field name="uwm_roles_json" type="text_general" indexed="false" stored="true"/>
   <field name="vra_inscription" type="text_general" multiValued="true" indexed="true" stored="true"/>
+  <field name="bib_issn" type="strings" multiValued="true" indexed="true" stored="true"/>
+  <field name="bib_seriesidentifier" type="strings" multiValued="true" indexed="true" stored="true"/>
   <dynamicField name="member_dc_*" type="text_general" multiValued="true" indexed="true" stored="true"/>
   <dynamicField name="*_desc_raw" type="strings" multiValued="true" indexed="false" stored="true"/>
   <dynamicField name="pos_in_*" type="tlongs" multiValued="false" indexed="true" stored="true"/>
@@ -244,6 +246,8 @@
   <copyField source="created" dest="_text_"/>
   <copyField source="datastreams" dest="_text_"/>
   <copyField source="dc_license" dest="_text_"/>
+  <copyField source="bib_issn" dest="_text_"/>
+  <copyField source="bib_seriesidentifier" dest="_text_"/>
   <copyField source="dcterms_accessrights_id" dest="_text_"/>
   <copyField source="dcterms_available" dest="_text_"/>
   <copyField source="dcterms_created_year" dest="_text_"/>
