@@ -2,7 +2,6 @@ import Vue from 'vue'
 import store from './store'
 import VueRouter from 'vue-router'
 import SvgIcon from 'vue-svgicon'
-import i18n from './i18n/i18n'
 import App from './App.vue'
 import moment from 'moment'
 import vuetify from './plugins/vuetify'
@@ -81,7 +80,6 @@ const router = new VueRouter({
 
 new Vue({
   store,
-  i18n,
   router,
   vuetify,
   render: h => h(App)

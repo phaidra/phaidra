@@ -671,6 +671,7 @@
     "Audio": "Sound",
     "Picture": "Image",
     "Asset": "Data",
-    "schema:availableLanguage": "Available language"
+    "schema:availableLanguage": "Available language",
+    "rdam:P30004": "Alternative identifier"
   }
   

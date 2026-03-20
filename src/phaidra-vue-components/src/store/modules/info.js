@@ -1,5 +1,3 @@
-import i18n from '../../i18n/i18n'
-
 export const state = () => ({
   metadataFieldsOverview: [
     {
@@ -3045,10 +3043,10 @@ export const state = () => ({
 
 const mutations = {
   sortFieldsOverview (state, {locale, i18nInstance}) {
-    const i18nToUse = i18nInstance || i18n
-    i18nToUse.locale = locale
+    if (!i18nInstance) return
+    i18nInstance.locale = locale
     for (let section of state.metadataFieldsOverview) {
-      section.fields.sort((a, b) => i18nToUse.t(a.title).localeCompare(i18nToUse.t(b.title), locale))
+      section.fields.sort((a, b) => i18nInstance.t(a.title).localeCompare(i18nInstance.t(b.title), locale))
     }
   },
   initFieldsOverview (state) {
