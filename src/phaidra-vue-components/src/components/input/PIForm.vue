@@ -364,7 +364,7 @@
                               v-on:down-role="sortContainedInRoleDown(f.roles, $event)"
                               v-on:configure="editFieldProps(f)"
                               v-on:remove="removeField(s.fields, f)"
-                              :hidePages="instanceconfig.hideContainedInPages"
+                              :hidePages="hideContainedInPages"
                               :configurable="enablefieldconfig || f.configurable"
                             ></p-i-contained-in>
                           </template>
@@ -1209,6 +1209,10 @@ export default {
     },
     guidelinesUrl: {
       type: String
+    },
+    hideContainedInPages: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
