@@ -189,26 +189,7 @@ if (!$ok) {
   exit 1;
 }
 
-$log->info("Solr schema additions completed. Reindexing existing instances (ArchivalGroup)...");
-
-my $index_script = File::Spec->catfile($Bin, '..', '..', 'utils', 'indexObjects.pl');
-$index_script = File::Spec->rel2abs($index_script);
-
-if (!-f $index_script) {
-  $log->error("Could not locate index script at '$index_script'");
-  exit 1;
-}
-
-$log->info("Running reindex script: $index_script " . join(' ', @ARGV));
-
-# Usage of indexObjects.pl: optional from-date-iso until-date-iso
-my $cmd_ok = system('perl', $index_script, @ARGV);
-if ($cmd_ok != 0) {
-  $log->error("Reindex script exited with code $cmd_ok");
-  exit 1;
-}
-
-$log->info("Done: schema updated and existing instances reindexed.");
+$log->info("Solr schema additions completed.");
 
 __END__
 
