@@ -25,6 +25,12 @@ sub auth_headers {
 
 # Fields to copy to _text_ (excluding extracted_text)
 my @FIELDS = qw(
+  dc_*
+  member_dc_*
+  bib_*
+  *_eng
+  *_deu
+  *_ita
   altformats
   altversions
   annotations

@@ -216,6 +216,13 @@
   <copyField source="size" dest="tsize"/>
   <copyField source="dc_subject*" dest="_text_"/>
   <copyField source="*_dc_title" dest="_text_"/>
+  <!-- dynamic metadata fields into _text_ -->
+  <copyField source="dc_*" dest="_text_"/>
+  <copyField source="member_dc_*" dest="_text_"/>
+  <copyField source="bib_*" dest="_text_"/>
+  <copyField source="*_eng" dest="_text_"/>
+  <copyField source="*_deu" dest="_text_"/>
+  <copyField source="*_ita" dest="_text_"/>
   <!-- Explicitly copy individual fields into _text_, excluding extracted_text -->
   <copyField source="altformats" dest="_text_"/>
   <copyField source="altversions" dest="_text_"/>
