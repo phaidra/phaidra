@@ -6,19 +6,19 @@ use v5.10;
 use utf8;
 use JSON;
 use Mojo::File;
-use Mojo::Util qw(encode);
+use Mojo::Util  qw(encode);
 use Digest::SHA qw(sha256_hex);
-use base qw/Mojo::Base/;
+use base        qw/Mojo::Base/;
 use Net::Amazon::S3;
 use Net::Amazon::S3::Vendor::Generic;
 use Net::Amazon::S3::Authorization::Basic;
 use Time::HiRes qw/tv_interval gettimeofday/;
 
 # S3 credentials and bucketname
-my $aws_access_key_id = $ENV{S3_ACCESS_KEY};
+my $aws_access_key_id     = $ENV{S3_ACCESS_KEY};
 my $aws_secret_access_key = $ENV{S3_SECRET_KEY};
-my $s3_endpoint = $ENV{S3_ENDPOINT};
-my $bucketname = $ENV{S3_BUCKETNAME};
+my $s3_endpoint           = $ENV{S3_ENDPOINT};
+my $bucketname            = $ENV{S3_BUCKETNAME};
 
 my %prefix2ns = (
 
@@ -49,17 +49,18 @@ my %prefix2ns = (
 
 sub ensure_array {
   my ($x) = @_;
-  return ()     if !defined $x;
-  return @$x    if ref($x) eq 'ARRAY';
+  return ()  if !defined $x;
+  return @$x if ref($x) eq 'ARRAY';
   return ($x);
 }
 
 sub getFedoraUrlPrefix {
   my ($self, $c) = @_;
   if ($c->app->fedoraurl->{port}) {
-    return $c->app->fedoraurl->{scheme}.'://'.$c->app->fedoraurl->{host}.':'.$c->app->fedoraurl->{port}.'/'.$c->app->fedoraurl->{path};
-  } else {
-    return $c->app->fedoraurl->{scheme}.'://'.$c->app->fedoraurl->{host}.'/'.$c->app->fedoraurl->{path};
+    return $c->app->fedoraurl->{scheme} . '://' . $c->app->fedoraurl->{host} . ':' . $c->app->fedoraurl->{port} . '/' . $c->app->fedoraurl->{path};
+  }
+  else {
+    return $c->app->fedoraurl->{scheme} . '://' . $c->app->fedoraurl->{host} . '/' . $c->app->fedoraurl->{path};
   }
 }
 
@@ -91,9 +92,11 @@ sub getJsonldValue {
       for my $ob1 (ensure_array($ob->{$p})) {
         if (exists($ob1->{'@value'})) {
           push @a, $ob1->{'@value'};
-        } else {
+        }
+        else {
           if (exists($ob1->{'@id'})) {
             my $fp = $self->getFedoraUrlPrefix($c);
+
             # $c->app->log->debug("XXXXXXXXXXX prefix $fp");
             $ob1->{'@id'} =~ s/$fp//g;
             push @a, $ob1->{'@id'};
@@ -146,6 +149,7 @@ sub getObjectProperties {
   }
 
   my $props = $propres->{props};
+
   # $c->app->log->debug("XXXXXXXXXXXXXXX getObjectProperties propres:\n" . $c->app->dumper($props));
 
   # cmodel
@@ -204,17 +208,15 @@ sub headObjectExists {
   my $url = $c->app->fedoraurl->path($pid);
   $c->app->log->debug("HEAD $url");
 
-  my $prefer_omit = join(' ', (
-    'http://fedora.info/definitions/fcrepo#PreferInboundReferences',
-    'http://fedora.info/definitions/fcrepo#ServerManaged',
-    'http://www.w3.org/ns/oa#PreferContainedDescriptions',
-    'http://www.w3.org/ns/ldp#PreferContainment',
-    'http://www.w3.org/ns/ldp#PreferMembership',
-    'http://www.w3.org/ns/ldp#PreferMinimalContainer',
-  ));
+  my $prefer_omit = join(
+    ' ',
+    ( 'http://fedora.info/definitions/fcrepo#PreferInboundReferences', 'http://fedora.info/definitions/fcrepo#ServerManaged', 'http://www.w3.org/ns/oa#PreferContainedDescriptions', 'http://www.w3.org/ns/ldp#PreferContainment',
+      'http://www.w3.org/ns/ldp#PreferMembership', 'http://www.w3.org/ns/ldp#PreferMinimalContainer',
+    )
+  );
   my $headers = {
-    'Accept'  => 'application/ld+json',
-    'Prefer'  => qq{return=representation; omit="$prefer_omit"},
+    'Accept' => 'application/ld+json',
+    'Prefer' => qq{return=representation; omit="$prefer_omit"},
   };
   my $headres = $c->ua->head($url => $self->wrapAtomic($c, $headers))->result;
 
@@ -289,9 +291,10 @@ sub _deleteOrInsertTriples {
     my $ns  = $prefix2ns{$pref};
     my $val = $p->{object};
     if ($val =~ m/info\:fedora/) {
-      $val = '<'.$val.'>';
-    } else {
-      $val = '"'.$val.'"';
+      $val = '<' . $val . '>';
+    }
+    else {
+      $val = '"' . $val . '"';
     }
 
     $prefixes .= "PREFIX " . $ns . ": <" . $pref . ">\n";
@@ -355,7 +358,8 @@ sub editTriples {
 
     if ($newVal =~ m/info\:fedora/) {
       $newValues .= "<> $ns:$prop <$newVal>\n";
-    } else {
+    }
+    else {
       $newValues .= "<> $ns:$prop \"$newVal\"\n";
     }
   }
@@ -439,10 +443,12 @@ sub getDatastream {
   $c->app->log->debug("GET $url");
   my $getres = $c->ua->get($url)->result;
 
-  if(($getres->{code} == 307) && ($dsid eq 'LINK') && $getres->headers->location) {
+  if (($getres->{code} == 307) && ($dsid eq 'LINK') && $getres->headers->location) {
+
     # if this was a LINK in fedora 3.x it was migrated as external content redirect
     $res->{'LINK'} = $getres->headers->location;
-  } else {
+  }
+  else {
     if ($getres->is_success) {
       $res->{$dsid} = $getres->body;
     }
@@ -506,32 +512,33 @@ sub getDatastreamPath {
   my $inventoryFile;
   my $inventoryFileFromS3;
 
-  if ( defined $ENV{S3_ENABLED} and $ENV{S3_ENABLED} eq "true" ) {
-    my $s3 = Net::Amazon::S3-> new(
-      authorization_context => Net::Amazon::S3::Authorization::Basic-> new (
-        aws_access_key_id => $aws_access_key_id,
+  if (defined $ENV{S3_ENABLED} and $ENV{S3_ENABLED} eq "true") {
+    my $s3 = Net::Amazon::S3->new(
+      authorization_context => Net::Amazon::S3::Authorization::Basic->new(
+        aws_access_key_id     => $aws_access_key_id,
         aws_secret_access_key => $aws_secret_access_key,
       ),
-      retry => 1,
+      retry  => 1,
       vendor => Net::Amazon::S3::Vendor::Generic->new(
-        host => $s3_endpoint =~ s/^https?:\/\///r,
+        host             => $s3_endpoint =~ s/^https?:\/\///r,
         use_virtual_host => 0,
-        use_https => !($s3_endpoint =~ qr/^http:\/\/.*/),
-        default_region => "eu-central-1",
+        use_https        => !($s3_endpoint =~ qr/^http:\/\/.*/),
+        default_region   => "eu-central-1",
       ),
-     );
+    );
     my $bucket = $s3->bucket($bucketname);
     $inventoryFileFromS3 = '/tmp/' . $pid . '_inventory.json';
     my $bucket_prefix = "fedora";
-    my $response = $bucket->get_key_filename( "$bucket_prefix/$first/$second/$third/$hash/inventory.json", 'GET', $inventoryFileFromS3 )
+    my $response      = $bucket->get_key_filename("$bucket_prefix/$first/$second/$third/$hash/inventory.json", 'GET', $inventoryFileFromS3)
       or die $s3->err . ": " . $s3->errstr;
     $inventoryFile = $inventoryFileFromS3;
-  } else {
+  }
+  else {
     $inventoryFile = "$objRootPath/inventory.json";
   }
 
-  my $bytes         = Mojo::File->new($inventoryFile)->slurp;
-  my $inventory     = decode_json($bytes);
+  my $bytes     = Mojo::File->new($inventoryFile)->slurp;
+  my $inventory = decode_json($bytes);
 
   # # clean up inventoryfile if downloaded from S3
   # if (defined $inventoryFileFromS3) {
@@ -570,6 +577,7 @@ sub addOrModifyDatastream {
   my $res = {alerts => [], status => 200};
 
   if ($location) {
+
     # we're not going to create 'external content' in fcrepo because the resource cmodel is not supposed
     # to be pointing to binary data (normally it's just a link where user should be redirected)
     # my $url = $c->app->fedoraurl->path("$pid/LINK");
@@ -615,7 +623,7 @@ sub addOrModifyDatastream {
 
   if ($upload) {
     my $headers;
-    $headers->{'Content-Type'}        = $mimetype;
+    $headers->{'Content-Type'} = $mimetype;
     my $filename = utf8::is_utf8($upload->filename) ? encode('UTF-8', $upload->filename) : $upload->filename;
     $headers->{'Content-Disposition'} = 'attachment; filename="' . $filename . '"';
     if ($checksumtype) {
@@ -643,12 +651,13 @@ sub useTransaction {
   my ($self, $c) = @_;
 
   my $res = {alerts => [], status => 200};
+
   # return the transaction if available
   if ($c->stash->{transaction_url}) {
     $res->{transaction_id} = $c->stash->{transaction_url};
     return $res;
   }
-  my $url = $c->app->fedoraurl->path("fcr:tx");
+  my $url     = $c->app->fedoraurl->path("fcr:tx");
   my $postres = $c->ua->post($url)->result;
   unless ($postres->is_success) {
     $c->app->log->error("Cannot create transaction: code:" . $postres->{code} . " message:" . $postres->{message});
@@ -658,7 +667,7 @@ sub useTransaction {
   }
 
   $res->{transaction_id} = $postres->headers->location;
-  $c->app->log->debug("Created transaction: ".$res->{transaction_id});
+  $c->app->log->debug("Created transaction: " . $res->{transaction_id});
 
   return $res;
 }
@@ -670,16 +679,16 @@ sub commitTransaction {
   my $atomic_id;
   if ($c->stash->{transaction_url}) {
     $atomic_id = $c->stash->{transaction_url};
-    $c->app->log->debug("Save transaction: ".$atomic_id);
-    my $t0 = [gettimeofday];
+    $c->app->log->debug("Save transaction: " . $atomic_id);
+    my $t0     = [gettimeofday];
     my $putres = $c->ua->put($atomic_id)->result;
-    $c->app->log->debug("Save transaction took : ".tv_interval($t0));
+    $c->app->log->debug("Save transaction took : " . tv_interval($t0));
     $c->app->log->debug($c->app->dumper($putres));
     unless ($putres->is_success) {
       $c->app->log->error("Cannot save transaction: code:" . $putres->{code} . " message:" . $putres->{message});
       unshift @{$res->{alerts}}, {type => 'error', msg => $putres->{message}};
       $res->{status} = $putres->{code} ? $putres->{code} : 500;
-     return $res;
+      return $res;
     }
     else {
       # delete the transaction for the hook/update flow
@@ -687,10 +696,8 @@ sub commitTransaction {
     }
   }
 
-  
   return $res;
 }
-
 
 sub wrapAtomic {
   my ($self, $c, $wheaders) = @_;
@@ -701,7 +708,7 @@ sub wrapAtomic {
   }
 
   return $wheaders;
-  }
+}
 
 sub createEmpty {
   my ($self, $c, $username) = @_;
@@ -724,8 +731,10 @@ sub createEmpty {
   my $url = $c->app->fedoraurl->path($pid);
   $c->app->log->debug("PUT $url\n$body");
   my $ceheaders = $self->wrapAtomic($c, {'Content-Type' => 'text/turtle', 'Link' => '<http://fedora.info/definitions/v4/repository#ArchivalGroup>;rel="type"'});
+
   # $c->app->log->debug($c->app->dumper($ceheaders));
   my $putres = $c->ua->put($url => $ceheaders => $body)->result;
+
   # $c->app->log->debug("Atomic:" . $c->app->dumper($putres));
   unless ($putres->is_success) {
     $c->app->log->error("Cannot create fedora object pid[$pid]: code:" . $putres->{code} . " message:" . $putres->{message});

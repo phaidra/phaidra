@@ -18,17 +18,13 @@ use File::Glob qw(bsd_glob);
 
 sub get_model_path {
   my ($self, $c, $pid) = @_;
-  
+
   # Get the app instance for logging
   my $app = $c->app;
   $app->log->info("Getting 3D model path for PID: " . $pid);
 
   # Get the most recent job for this PID
-  my $job = $c->paf_mongo->get_collection('jobs')->find_one(
-    { pid => $pid, agent => '3d' },
-    {},
-    { sort => { created => -1 } }
-  );
+  my $job = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => '3d'}, {}, {sort => {created => -1}});
 
   unless ($job) {
     $app->log->error("No 3D job found for PID: " . $pid);
@@ -48,37 +44,39 @@ sub get_model_path {
   # Get the root path from config
   my $root = $c->config->{converted_3d_path} || '/mnt/derivates-3d';
   $app->log->info("3D models root: " . $root);
-  
+
   # If the path already includes the root, use it as is
   my $filepath = $job->{image};
   my $idhash;
   unless ($filepath =~ m/^\/?\Q$root/i) {
+
     # If not, construct the path using the idhash
     $idhash = $job->{idhash};
     unless ($idhash) {
       $app->log->error("No idhash found in job for PID: " . $pid);
       return undef;
     }
-    my $first = substr($idhash, 0, 1);
+    my $first  = substr($idhash, 0, 1);
     my $second = substr($idhash, 1, 1);
     $filepath = "$root/$first/$second/$idhash.gltf";
-  } else {
+  }
+  else {
     $idhash = $job->{idhash};
   }
 
   $app->log->info("Resolved filepath: " . $filepath);
 
   # Just return the URL to serve the GLTF file directly - no memory loading
-  my $scheme = $c->config->{scheme};
-  my $baseurl = $c->config->{baseurl};
+  my $scheme   = $c->config->{scheme};
+  my $baseurl  = $c->config->{baseurl};
   my $basepath = $c->config->{basepath};
-  
+
   my $base_url = "$scheme://$baseurl/$basepath/object/$pid/3d_resource";
-  
+
   return {
     gltf_url => "$base_url?filename=model.gltf",
-    idhash => $idhash
+    idhash   => $idhash
   };
 }
 
-1; 
+1;

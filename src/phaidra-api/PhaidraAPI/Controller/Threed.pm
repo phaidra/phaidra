@@ -14,7 +14,7 @@ use Cwd qw(abs_path);
 sub get_resource {
   my $self = shift;
 
-  my $pid = $self->stash('pid');
+  my $pid      = $self->stash('pid');
   my $filename = $self->req->param('filename');
 
   unless (defined($pid)) {
@@ -29,11 +29,13 @@ sub get_resource {
 
   # Sanitize and validate filename to prevent path traversal
   $filename =~ s/^\s+|\s+$//g;
+
   # Disallow any path separators or traversal
   if ($filename =~ m{[\\/]} || $filename =~ /\.\./) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Invalid filename'}]}, status => 400);
     return;
   }
+
   # Allow only safe characters in filename (any extension permitted)
   unless ($filename =~ /\A[A-Za-z0-9_.+\-]+\z/) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Invalid filename characters'}]}, status => 400);
@@ -42,7 +44,7 @@ sub get_resource {
 
   # Check authorization
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my $authzres = $authz_model->check_rights($self, $pid, 'ro');
+  my $authzres    = $authz_model->check_rights($self, $pid, 'ro');
   if ($authzres->{status} != 200) {
     $self->render(json => $authzres, status => $authzres->{status});
     return;
@@ -50,23 +52,23 @@ sub get_resource {
 
   # Get the 3D model info to find the directory
   my $threed_model = PhaidraAPI::Model::Threed->new;
-  my $model_info = $threed_model->get_model_path($self, $pid);
-  
+  my $model_info   = $threed_model->get_model_path($self, $pid);
+
   unless ($model_info && ref $model_info eq 'HASH') {
     $self->render(json => {alerts => [{type => 'error', msg => '3D model not found'}]}, status => 404);
     return;
   }
 
   # Get the root path from config
-  my $root = $self->config->{converted_3d_path} || '/mnt/derivates-3d';
-  my $idhash = $model_info->{idhash};
-  my $scheme = $self->config->{scheme};
-  my $baseurl = $self->config->{baseurl};
+  my $root     = $self->config->{converted_3d_path} || '/mnt/derivates-3d';
+  my $idhash   = $model_info->{idhash};
+  my $scheme   = $self->config->{scheme};
+  my $baseurl  = $self->config->{baseurl};
   my $basepath = $self->config->{basepath};
-  
+
   # Construct the base directory for this object's resources
   my ($first, $second) = (substr($idhash, 0, 1), substr($idhash, 1, 1));
-  my $base_dir = "$root/$first/$second";
+  my $base_dir    = "$root/$first/$second";
   my $target_name = ($filename eq 'model.gltf') ? "$idhash.gltf" : $filename;
 
   # Optional: enforce files belong to this idhash when not gltf
@@ -95,15 +97,20 @@ sub get_resource {
   my $mimetype = 'application/octet-stream';
   if ($filename =~ /\.gltf$/i) {
     $mimetype = 'model/gltf+json';
-  } elsif ($filename =~ /\.bin$/i) {
+  }
+  elsif ($filename =~ /\.bin$/i) {
     $mimetype = 'application/octet-stream';
-  } elsif ($filename =~ /\.jpe?g$/i) {
+  }
+  elsif ($filename =~ /\.jpe?g$/i) {
     $mimetype = 'image/jpeg';
-  } elsif ($filename =~ /\.png$/i) {
+  }
+  elsif ($filename =~ /\.png$/i) {
     $mimetype = 'image/png';
-  } elsif ($filename =~ /\.gif$/i) {
+  }
+  elsif ($filename =~ /\.gif$/i) {
     $mimetype = 'image/gif';
-  } elsif ($filename =~ /\.webp$/i) {
+  }
+  elsif ($filename =~ /\.webp$/i) {
     $mimetype = 'image/webp';
   }
 
@@ -115,7 +122,7 @@ sub get_resource {
   my $asset = Mojo::Asset::File->new(path => $filepath);
   $self->res->headers->add('Content-Length' => $asset->size);
   $self->res->content->asset($asset);
-  
+
   $self->rendered(200);
 }
 

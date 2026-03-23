@@ -8,34 +8,26 @@ use File::Spec;
 
 sub get_viewer_config {
   my ($self, $c, $pid) = @_;
-  
-  my $job = $c->paf_mongo->get_collection('jobs')->find_one(
-    { pid => $pid, agent => 'unzip' },
-    {},
-    { sort => { created => -1 } }
-  );
 
-  return { status => 'not_found' } unless $job;
-  return { status => $job->{status} } unless $job->{status} eq 'finished';
-  return { status => 'error' } unless ($job->{totalFrames} && $job->{frames});
+  my $job = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'unzip'}, {}, {sort => {created => -1}});
+
+  return {status => 'not_found'}    unless $job;
+  return {status => $job->{status}} unless $job->{status} eq 'finished';
+  return {status => 'error'}        unless ($job->{totalFrames} && $job->{frames});
 
   return {
-    status => 'finished',
-    totalFrames => $job->{totalFrames},
+    status       => 'finished',
+    totalFrames  => $job->{totalFrames},
     imagePattern => $job->{imagePattern} || 'frame-xx.png',
-    frames => $job->{frames},
-    idhash => $job->{idhash}
+    frames       => $job->{frames},
+    idhash       => $job->{idhash}
   };
 }
 
 sub get_frame_path {
   my ($self, $c, $pid, $frame_number) = @_;
-  
-  my $job = $c->paf_mongo->get_collection('jobs')->find_one(
-    { pid => $pid, agent => 'unzip' },
-    {},
-    { sort => { created => -1 } }
-  );
+
+  my $job = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'unzip'}, {}, {sort => {created => -1}});
 
   return undef unless ($job && $job->{status} eq 'finished' && $job->{frames});
 
@@ -43,17 +35,11 @@ sub get_frame_path {
   return undef if ($frame_number < 1 || $frame_number > $total_frames);
 
   my $filename = $job->{frames}->[$frame_number - 1];
-  my $idhash = $job->{idhash};
-  
-  my $filepath = File::Spec->catfile(
-    '/mnt/derivates-expanded',
-    substr($idhash, 0, 1),
-    substr($idhash, 1, 1),
-    $idhash,
-    $filename
-  );
-  
-  return { path => $filepath, filename => $filename };
+  my $idhash   = $job->{idhash};
+
+  my $filepath = File::Spec->catfile('/mnt/derivates-expanded', substr($idhash, 0, 1), substr($idhash, 1, 1), $idhash, $filename);
+
+  return {path => $filepath, filename => $filename};
 }
 
 1;

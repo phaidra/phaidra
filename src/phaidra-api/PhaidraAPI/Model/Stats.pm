@@ -22,7 +22,6 @@ sub stats_general {
 
   $c->app->log->debug("[cache miss] $cachekey");
 
-
   my $urlget = Mojo::URL->new;
   $urlget->scheme($c->app->config->{solr}->{scheme});
   $urlget->host($c->app->config->{solr}->{host});
@@ -47,7 +46,7 @@ sub stats_general {
   $cacheval = $c->app->chi->get($cachekey);
   $res->{object_counts} = $cacheval;
   return $res;
-  
+
 }
 
 sub disciplines {
@@ -150,7 +149,7 @@ sub aggregates {
 
 sub parse_pid_num {
   my ($pid) = @_;
-  my ($n) = ($pid // '') =~ /^o:(\d+)$/;
+  my ($n)   = ($pid // '') =~ /^o:(\d+)$/;
   return defined $n ? int($n) : 0;
 }
 
@@ -161,7 +160,7 @@ sub stats {
   my $siteid = shift;
   my $output = shift;
 
-  my $fr = undef;
+  my $fr      = undef;
   my $pid_num = parse_pid_num($pid);
 
   my $dbh = $c->app->db_metadata->dbh;
@@ -181,7 +180,7 @@ sub stats {
     };
 
     my $sth = $dbh->prepare($sql) or $c->app->log->error($dbh->errstr);
-    $sth->execute($pid_num) or $c->app->log->error($dbh->errstr);
+    $sth->execute($pid_num)       or $c->app->log->error($dbh->errstr);
 
     my $downloads = {};
     while (my $row = $sth->fetchrow_hashref) {
@@ -202,7 +201,7 @@ sub stats {
     };
 
     $sth = $dbh->prepare($sql) or $c->app->log->error($dbh->errstr);
-    $sth->execute($pid_num) or $c->app->log->error($dbh->errstr);
+    $sth->execute($pid_num)    or $c->app->log->error($dbh->errstr);
 
     my $detail_page = {};
     while (my $row = $sth->fetchrow_hashref) {
@@ -232,7 +231,7 @@ sub stats {
       return {alerts => [{type => 'info', msg => $msg}], status => 200};
     }
   }
-  
+
 }
 
 1;

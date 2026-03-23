@@ -7,7 +7,7 @@ use utf8;
 use Mojo::ByteStream qw(b);
 use JSON;
 use Mojo::Util qw(encode decode);
-use base qw/Mojo::Base/;
+use base       qw/Mojo::Base/;
 use JSON::Validator;
 use XML::LibXML;
 use PhaidraAPI::Model::Object;
@@ -140,7 +140,6 @@ sub save_to_object() {
     return $res;
   }
 
-
   my $object_model = PhaidraAPI::Model::Object->new;
   my $coder        = JSON->new->utf8->pretty;
   my $json         = $coder->encode($metadata);
@@ -215,7 +214,7 @@ sub validate() {
 
   if (exists($c->app->config->{validate_jsonld})) {
     my $schema_str = $self->get_schema_str($c);
-    my $schema = decode_json($schema_str);
+    my $schema     = decode_json($schema_str);
     unless (keys %{$schema}) {
       $res->{status} = 500;
       $c->app->log->error("Could not read json-ld schema");
@@ -233,7 +232,7 @@ sub validate() {
         if (exists($e->{details})) {
           $details = join(' / ', @{$e->{details}});
         }
-        push @{$res->{alerts}}, {type => 'error', msg => ($e->{message} ? $e->{message}.' - ' : '').$e->{path}.($details ? ' - ' . $details : '')};
+        push @{$res->{alerts}}, {type => 'error', msg => ($e->{message} ? $e->{message} . ' - ' : '') . $e->{path} . ($details ? ' - ' . $details : '')};
       }
     }
   }

@@ -5,8 +5,8 @@ use warnings;
 use v5.10;
 use utf8;
 use Mojo::ByteStream qw(b);
-use Mojo::Util qw(xml_escape html_unescape encode decode);
-use base qw/Mojo::Base/;
+use Mojo::Util       qw(xml_escape html_unescape encode decode);
+use base             qw/Mojo::Base/;
 use XML::LibXML;
 use Storable qw(dclone);
 use PhaidraAPI::Model::Object;
@@ -537,7 +537,7 @@ sub map_uwmetadata_2_dc_hash {
 
   # get provenience versions
 
-  push @$identifiers, {value => $c->app->config->{scheme}."://" . $c->app->config->{phaidra}->{baseurl} . "/" . $pid};
+  push @$identifiers, {value => $c->app->config->{scheme} . "://" . $c->app->config->{phaidra}->{baseurl} . "/" . $pid};
 
   my @subjects;
   for my $k (@{$keywords}) {

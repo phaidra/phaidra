@@ -5,7 +5,7 @@ use warnings;
 use v5.10;
 use base 'Mojolicious::Controller';
 use Mojo::ByteStream qw(b);
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::JSON       qw(encode_json decode_json);
 use PhaidraAPI::Model::Jsonld;
 use PhaidraAPI::Model::Util;
 use Time::HiRes qw/tv_interval gettimeofday/;
@@ -38,11 +38,11 @@ sub get {
     $jsonld->{'@id'}      = 'https://' . $self->config->{phaidra}->{baseurl} . '/' . $pid;
     for my $pred (keys %{$jsonld}) {
       if ($pred =~ m/^role:(\w+)$/) {
-          my $role_name = $1;
-          $jsonld->{'@context'}->{'role'}->{'@context'}->{$role_name} = {
-              '@id' => "http://id.loc.gov/vocabulary/relators/$role_name",
-              '@container' => '@list'
-          };
+        my $role_name = $1;
+        $jsonld->{'@context'}->{'role'}->{'@context'}->{$role_name} = {
+          '@id'        => "http://id.loc.gov/vocabulary/relators/$role_name",
+          '@container' => '@list'
+        };
       }
     }
   }
@@ -177,13 +177,14 @@ sub add_template {
   my $owner;
   if ($self->stash('remote_user')) {
     $owner = $self->stash('remote_user');
-  } else {
+  }
+  else {
     $owner = $self->stash->{basic_auth_credentials}->{username};
   }
 
   my $doc = {tid => $tid, owner => $owner, name => $name, form => $form, tag => $tag, created => time};
   if ($rights) {
-    $doc->{rights} = decode_json(b($rights)->encode('UTF-8'))
+    $doc->{rights} = decode_json(b($rights)->encode('UTF-8'));
   }
   $self->mongo->get_collection('jsonldtemplates')->insert_one($doc);
 
@@ -203,9 +204,9 @@ sub edit_template_admin {
   }
   my $tid = $self->stash('tid');
 
-  my $public = ($self->param('public') eq 'true') ? true : false;
+  my $public        = ($self->param('public') eq 'true') ? true : false;
   my $validationfnc = $self->param('validationfnc');
-  $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid}, { '$set' => { public => $public, validationfnc => $validationfnc, updated => time}});
+  $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid}, {'$set' => {public => $public, validationfnc => $validationfnc, updated => time}});
   $self->render(json => $res, status => $res->{status});
 }
 
@@ -252,13 +253,14 @@ sub edit_template {
   my $owner;
   if ($self->stash('remote_user')) {
     $owner = $self->stash('remote_user');
-  } else {
+  }
+  else {
     $owner = $self->stash->{basic_auth_credentials}->{username};
   }
 
-  $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid, owner => $owner}, { '$set' => { form => $form, updated => time}});
+  $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid, owner => $owner}, {'$set' => {form => $form, updated => time}});
   if ($rights) {
-    $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid, owner => $owner}, { '$set' => { rights => decode_json(b($rights)->encode('UTF-8')), updated => time}});
+    $self->mongo->get_collection('jsonldtemplates')->update_one({tid => $tid, owner => $owner}, {'$set' => {rights => decode_json(b($rights)->encode('UTF-8')), updated => time}});
   }
 
   $self->render(json => $res, status => $res->{status});
@@ -278,15 +280,17 @@ sub get_template {
   my $owner;
   if ($self->stash('remote_user')) {
     $owner = $self->stash('remote_user');
-  } else {
+  }
+  else {
     $owner = $self->stash->{basic_auth_credentials}->{username};
   }
 
-  my $sres = $self->mongo->get_collection('config')->find_one({ config_type => 'public' });
+  my $sres = $self->mongo->get_collection('config')->find_one({config_type => 'public'});
   if ($sres->{defaulttemplateid}) {
     if ($sres->{defaulttemplateid} eq $self->stash('tid')) {
+
       # everybody can read the default template
-      $self->app->log->debug("loading default template[".$self->stash('tid')."]");
+      $self->app->log->debug("loading default template[" . $self->stash('tid') . "]");
       my $tres = $self->mongo->get_collection('jsonldtemplates')->find_one({tid => $self->stash('tid')});
       $res->{template} = $tres;
       $self->render(json => $res, status => $res->{status});
@@ -295,9 +299,8 @@ sub get_template {
   }
 
   my $tres = $self->mongo->get_collection('jsonldtemplates')->find_one(
-    {
-      tid => $self->stash('tid'), 
-      '$or' => [{ owner => $owner }, { public => true }]
+    { tid   => $self->stash('tid'),
+      '$or' => [{owner => $owner}, {public => true}]
     }
   );
 
@@ -316,7 +319,8 @@ sub get_users_templates {
   my $owner;
   if ($self->stash('remote_user')) {
     $owner = $self->stash('remote_user');
-  } else {
+  }
+  else {
     $owner = $self->stash->{basic_auth_credentials}->{username};
   }
 
@@ -372,7 +376,8 @@ sub remove_template {
   my $owner;
   if ($self->stash('remote_user')) {
     $owner = $self->stash('remote_user');
-  } else {
+  }
+  else {
     $owner = $self->stash->{basic_auth_credentials}->{username};
   }
 
@@ -380,7 +385,6 @@ sub remove_template {
 
   $self->render(json => $res, status => $res->{status});
 }
-
 
 sub remove_template_admin {
   my $self = shift;

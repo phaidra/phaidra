@@ -4,14 +4,14 @@ use strict;
 use warnings;
 use v5.10;
 use utf8;
-use base qw/Mojo::Base/;
+use base     qw/Mojo::Base/;
 use Storable qw(dclone);
-use POSIX qw/strftime/;
+use POSIX    qw/strftime/;
 use Switch;
 use Data::Dumper;
 use Mojo::ByteStream qw(b);
-use Mojo::JSON qw(encode_json decode_json);
-use Mojo::Util qw(html_unescape);
+use Mojo::JSON       qw(encode_json decode_json);
+use Mojo::Util       qw(html_unescape);
 use XML::Writer;
 use XML::LibXML;
 use PhaidraAPI::Model::Object;
@@ -55,10 +55,10 @@ sub getSplTermArray {
   if (exists($pubconfig->{data_vocabularies})) {
     if (exists($pubconfig->{data_vocabularies}->{studyplansuwm})) {
       if (exists($pubconfig->{data_vocabularies}->{studyplansuwm}->{terms})) {
-        my $lang_model = PhaidraAPI::Model::Languages->new;
+        my $lang_model   = PhaidraAPI::Model::Languages->new;
         my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
         for my $t (@{$pubconfig->{data_vocabularies}->{studyplansuwm}->{terms}}) {
-          
+
           # from
           # {
           #   "@type": "aiiso:Programme",
@@ -70,23 +70,24 @@ sub getSplTermArray {
           #   ],
           #   "@id": "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_spl/33"
           # }
-          
+
           # to
-          # { 
+          # {
           #   "labels" => {"de" => "SPL 33: Ernahrungswissenschaften"},
           #   "uri"    => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_spl/33"
           # }
-          
+
           my $labels;
           for my $lang (keys %{$t->{'skos:prefLabel'}}) {
             my $alpha2lang = exists($iso6393ToBCP{$lang}) ? $iso6393ToBCP{$lang} : $lang;
             $labels->{$alpha2lang} = $t->{'skos:prefLabel'}->{$lang};
           }
 
-          push @termarraySpl, {
-            "uri" => $t->{'@id'},
+          push @termarraySpl,
+            {
+            "uri"    => $t->{'@id'},
             "labels" => $labels
-          };
+            };
         }
       }
     }
@@ -125,6 +126,7 @@ sub metadata_tree {
       my $resunits = $c->app->directory->org_get_units_uwm($c, undef, $lang);
       if (exists($resunits->{alerts})) {
         if ($resunits->{status} != 200) {
+
           # there are only alerts
           return {alerts => $resunits->{alerts}, status => $resunits->{status}};
         }
@@ -141,17 +143,17 @@ sub metadata_tree {
       push @termarray, $element;
     }
     $vocabulary{'terms'} = \@termarray;
-    $facultyNode->{vocabularies} = [ \%vocabulary ];
+    $facultyNode->{vocabularies} = [\%vocabulary];
 
     # the same for "spl" (study plans)
     my $splNode = $self->get_json_node($c, 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization', 'spl', $res->{metadata_tree});
     my %vocabularySpl;
     $vocabularySpl{namespace} = 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_spl/';
-    
+
     my $termarraySpl = $self->getSplTermArray($c);
-    
+
     $vocabularySpl{'terms'} = $termarraySpl;
-    $splNode->{vocabularies} = [ \%vocabularySpl ];
+    $splNode->{vocabularies} = [\%vocabularySpl];
 
     return $res;
   }
@@ -424,7 +426,7 @@ sub get_metadata_tree {
       $format{$mid}->{data_order} = '0';
     }
 
-    $id_hash{$mid} = $format{$mid};                                # we will use this later for direct id -> element access
+    $id_hash{$mid} = $format{$mid};    # we will use this later for direct id -> element access
   }
 
   # create the hierarchy
@@ -433,7 +435,7 @@ sub get_metadata_tree {
   foreach my $key (keys %format) {
     if ($format{$key}{mid_parent}) {
       $parents{$format{$key}{mid_parent}} = $format{$format{$key}{mid_parent}};
-      push @todelete, $key;
+      push @todelete,                                       $key;
       push @{$format{$format{$key}{mid_parent}}{children}}, $format{$key};
     }
   }
@@ -583,9 +585,9 @@ sub get_metadata_tree {
       my $termarraySpl = $self->getSplTermArray($c);
 
       unless ($termarraySpl) {
-        
+
         my $terms_model = PhaidraAPI::Model::Terms->new;
-        my $langs = $c->app->config->{directory}->{study_plans_languages};
+        my $langs       = $c->app->config->{directory}->{study_plans_languages};
         foreach my $lang (@$langs) {
 
           my $spls = $terms_model->get_study_plans($c, $lang);
@@ -759,7 +761,6 @@ sub uwmetadata_2_json {
 
   # fix taxonpath nodes (we first needed them filled)
   $self->fix_taxonpath_nodes($c, $metadata_tree);
-
 
   return {alerts => [], uwmetadata => $metadata_tree, status => 200};
 }
@@ -1098,7 +1099,7 @@ sub get_org_units_terms {
   my $langs = $c->app->config->{directory}->{org_units_languages};
   foreach my $lang (@$langs) {
 
-    my $res = $c->app->directory->org_get_units_uwm($c, $parent_id, $lang);
+    my $res       = $c->app->directory->org_get_units_uwm($c, $parent_id, $lang);
     my $org_units = $res->{org_units};
 
     foreach my $u (@$org_units) {
@@ -1169,11 +1170,11 @@ sub get_study_name {
     }
     return \%names;
   }
-  
+
   for my $t (@{$termarraySpl}) {
     if ($t->{'@id'} eq $spl) {
       my %names;
-      my $lang_model = PhaidraAPI::Model::Languages->new;
+      my $lang_model   = PhaidraAPI::Model::Languages->new;
       my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
       for my $lang (keys %{$t->{'skos:prefLabel'}}) {
         my $alpha2lang = exists($iso6393ToBCP{$lang}) ? $iso6393ToBCP{$lang} : $lang;
@@ -1182,7 +1183,7 @@ sub get_study_name {
       return \%names;
     }
   }
-  
+
 }
 
 sub fill_object_metadata {
@@ -1849,14 +1850,14 @@ sub json_2_uwmetadata_rec() {
       $canskip = 0;
     }
 
-    if($parent->{xmlname} eq 'histkult' && $child->{xmlname} eq 'reference_number') {
+    if ($parent->{xmlname} eq 'histkult' && $child->{xmlname} eq 'reference_number') {
       my $found_reference_value = 0;
       foreach my $child2 (@{$child->{children}}) {
-        if($child2->{xmlname} eq 'number' && $child2->{ui_value} ne '') {
+        if ($child2->{xmlname} eq 'number' && $child2->{ui_value} ne '') {
           $found_reference_value = 1;
         }
       }
-      if(!$found_reference_value) {
+      if (!$found_reference_value) {
         next;
       }
     }

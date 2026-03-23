@@ -83,7 +83,8 @@ sub get {
         push @{$rels{owl_sameas}}, $v;
       }
     }
-  } else {
+  }
+  else {
 
     $self->app->log->debug("get_rels_ext $pid: getting foxml");
 
@@ -112,10 +113,10 @@ sub get {
       }
     }
 
-    my $relsExt     = $datastreams{'RELS-EXT'}->find('foxml\:xmlContent')->first;
+    my $relsExt = $datastreams{'RELS-EXT'}->find('foxml\:xmlContent')->first;
 
     my $index_model = PhaidraAPI::Model::Index->new;
-    my $r_relsext = $index_model->_index_relsext($self, $datastreams{'RELS-EXT'}->find('foxml\:xmlContent')->first, \%rels);
+    my $r_relsext   = $index_model->_index_relsext($self, $datastreams{'RELS-EXT'}->find('foxml\:xmlContent')->first, \%rels);
     if ($r_relsext->{status} ne 200) {
       push @{$res->{alerts}}, {type => 'error', msg => "Error indexing RELS-EXT for $pid"};
       push @{$res->{alerts}}, @{$r_relsext->{alerts}} if scalar @{$r_relsext->{alerts}} > 0;

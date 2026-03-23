@@ -54,9 +54,8 @@ sub get {
     return;
   }
 
-
   my $jsonld_model = PhaidraAPI::Model::Jsonld->new;
-  my $jsonldres          = $jsonld_model->get_object_jsonld_parsed($self, $pid);
+  my $jsonldres    = $jsonld_model->get_object_jsonld_parsed($self, $pid);
   if ($jsonldres->{status} eq 200) {
     $md->{jsonld} = $jsonldres->{'JSON-LD'};
   }

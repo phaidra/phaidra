@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use v5.10;
 use Mojo::ByteStream qw(b);
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::JSON       qw(encode_json decode_json);
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Uwmetadata;
 use PhaidraAPI::Model::Util;

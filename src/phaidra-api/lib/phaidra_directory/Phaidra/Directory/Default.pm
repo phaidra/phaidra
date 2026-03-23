@@ -19,31 +19,28 @@ use base 'Phaidra::Directory';
 
 my $config = undef;
 
-my $orgunitsDefault = [ 
-  {
-    '@id' => "https://example.com/my-organization/1234",
-    '@type' => "foaf:Organization",
-    "skos:notation" => "X1",
+my $orgunitsDefault = [
+  { '@id'            => "https://example.com/my-organization/1234",
+    '@type'          => "foaf:Organization",
+    "skos:notation"  => "X1",
     "skos:prefLabel" => {
       "deu" => "Meine Organisation",
       "eng" => "My Organization",
       "ita" => "Mia organizzazione"
     },
     "subunits" => [
-      {
-        '@id' => "https://example.com/my-organization/5678",
-        '@type' => "aiiso:Division",
-        "skos:notation" => "X11",
+      { '@id'            => "https://example.com/my-organization/5678",
+        '@type'          => "aiiso:Division",
+        "skos:notation"  => "X11",
         "skos:prefLabel" => {
           "deu" => "Management meiner Organisation",
           "eng" => "My Organization's Management",
           "ita" => "Dirigenza della mia organizzazione"
         }
       },
-      {
-        '@id' => "https://example.com/my-organization/5678",
-        '@type' => "aiiso:Division",
-        "skos:notation" => "X12",
+      { '@id'            => "https://example.com/my-organization/5678",
+        '@type'          => "aiiso:Division",
+        "skos:notation"  => "X12",
         "skos:prefLabel" => {
           "deu" => "Rechtsabteilung meiner Organisation",
           "eng" => "My Organization's Law Department",
@@ -58,9 +55,9 @@ sub _init {
 
   # this is the app config
   my $self = shift;
-  my $c = shift;
+  my $c    = shift;
 
-  $c->app->log->info(__PACKAGE__.' loaded');
+  $c->app->log->info(__PACKAGE__ . ' loaded');
 
   return $self;
 }
@@ -68,12 +65,14 @@ sub _init {
 sub _get_org_units {
   my ($self, $c) = @_;
 
-  my $confcol = $self->_get_config_col($c);
+  my $confcol      = $self->_get_config_col($c);
   my $publicConfig = $confcol->find_one({"config_type" => "public"});
   if ($publicConfig && ($publicConfig->{data_orgunits}) && ($publicConfig->{data_orgunits} ne '')) {
+
     # $c->app->log->info("orgunits public config found");
     return $publicConfig->{data_orgunits};
-  } else {
+  }
+  else {
     $c->app->log->info("orgunits config not found in public config, using default");
     return $orgunitsDefault;
   }
@@ -87,7 +86,8 @@ sub _find_org_unit_rec {
     if ($u->{'@id'} eq $id) {
       $unit = $u;
       last;
-    } else {
+    }
+    else {
       if (exists($u->{'subunits'})) {
         $unit = $self->_find_org_unit_rec($c, $u->{'subunits'}, $id);
         last if $unit;
@@ -105,7 +105,8 @@ sub _find_org_superunit_rec {
     if ($u->{'@id'} eq $id) {
       $unit = $parent;
       last;
-    } else {
+    }
+    else {
       if (exists($u->{'subunits'})) {
         $unit = $self->_find_org_superunit_rec($c, $u, $u->{'subunits'}, $id);
         last if $unit;
@@ -123,7 +124,8 @@ sub _find_org_unit_rec_for_notation {
     if ($u->{'skos:notation'} eq $notation) {
       $unit = $u;
       last;
-    } else {
+    }
+    else {
       if (exists($u->{'subunits'})) {
         $unit = $self->_find_org_unit_rec_for_notation($c, $u->{'subunits'}, $notation);
         last if $unit;
@@ -139,13 +141,14 @@ sub org_get_unit {
   my $res = {alerts => [], status => 200};
 
   my $orgunits = $self->_get_org_units($c);
-  my $unit = $self->_find_org_unit_rec($c, $orgunits, $id);
+  my $unit     = $self->_find_org_unit_rec($c, $orgunits, $id);
   if ($unit) {
     for my $u (@{$unit->{subunits}}) {
       delete $u->{subunits};
     }
     $res->{unit} = $unit;
-  } else {
+  }
+  else {
     push @{$res->{alerts}}, {type => 'error', msg => "id[$id] not found"};
     $res->{status} = 404;
   }
@@ -158,13 +161,14 @@ sub org_get_unit_for_notation {
   my $res = {alerts => [], status => 200};
 
   my $orgunits = $self->_get_org_units($c);
-  my $unit = $self->_find_org_unit_rec_for_notation($c, $orgunits, $id);
+  my $unit     = $self->_find_org_unit_rec_for_notation($c, $orgunits, $id);
   if ($unit) {
     for my $u (@{$unit->{subunits}}) {
       delete $u->{subunits};
     }
     $res->{unit} = $unit;
-  } else {
+  }
+  else {
     push @{$res->{alerts}}, {type => 'error', msg => "notation[$id] not found"};
     $res->{status} = 404;
   }
@@ -174,7 +178,7 @@ sub org_get_unit_for_notation {
 sub org_get_name {
   my ($self, $c, $lang) = @_;
 
-  my $confcol = $self->_get_config_col($c);
+  my $confcol      = $self->_get_config_col($c);
   my $publicConfig = $confcol->find_one({"config_type" => "public"});
   my $inst;
   if ($publicConfig && ($publicConfig->{institution}) && ($publicConfig->{institution} ne '')) {
@@ -191,7 +195,8 @@ sub org_get_name {
       }
     }
     return $inst;
-  } else {
+  }
+  else {
     return '';
   }
 }
@@ -202,13 +207,14 @@ sub org_get_subunits {
   my $res = {alerts => [], status => 200};
 
   my $orgunits = $self->_get_org_units($c);
-  my $unit = $self->_find_org_unit_rec($c, $orgunits, $id);
+  my $unit     = $self->_find_org_unit_rec($c, $orgunits, $id);
   if ($unit) {
     for my $u (@{$unit->{subunits}}) {
       delete $u->{subunits};
     }
     $res->{subunits} = $unit->{subunits};
-  } else {
+  }
+  else {
     push @{$res->{alerts}}, {type => 'error', msg => "$id not found"};
     $res->{status} = 404;
   }
@@ -224,7 +230,8 @@ sub org_get_subunits_for_notation {
   my $unit;
   if ($notation) {
     $unit = $self->_find_org_unit_rec_for_notation($c, $orgunits, $notation);
-  } else {
+  }
+  else {
     $unit = @{$orgunits}[0];
   }
   if ($unit) {
@@ -232,7 +239,8 @@ sub org_get_subunits_for_notation {
       delete $u->{subunits};
     }
     $res->{subunits} = $unit->{subunits};
-  } else {
+  }
+  else {
     push @{$res->{alerts}}, {type => 'error', msg => "$notation not found"};
     $res->{status} = 404;
   }
@@ -245,14 +253,15 @@ sub org_get_superunits {
   my $res = {alerts => [], status => 200};
 
   my $orgunits = $self->_get_org_units($c);
-  my $unit = $self->_find_org_superunit_rec($c, undef, $orgunits, $id);
+  my $unit     = $self->_find_org_superunit_rec($c, undef, $orgunits, $id);
   if ($unit) {
     delete $unit->{subunits};
-    $res->{superunits} = [ $unit ];
-  } else {
+    $res->{superunits} = [$unit];
+  }
+  else {
     $res->{superunits} = [];
   }
- 
+
   return $res;
 }
 
@@ -281,7 +290,8 @@ sub org_get_units_uwm {
   my $unitsres;
   if ($parent_id) {
     $unitsres = $self->org_get_subunits_for_notation($c, $parent_id);
-  } else {
+  }
+  else {
     $unitsres = $self->org_get_subunits_for_notation($c);
   }
 
@@ -297,14 +307,15 @@ sub org_get_units_uwm {
       unless ($name) {
         $name = $u->{'skos:prefLabel'}->{'eng'};
       }
-      push @{$values}, {
+      push @{$values},
+        {
         value => $u->{'skos:notation'},
-        name => $name
-      };
+        name  => $name
+        };
     }
   }
 
-  return { org_units => $values };
+  return {org_units => $values};
 }
 
 sub org_get_parentpath {
@@ -312,7 +323,7 @@ sub org_get_parentpath {
 
   my @parentpath;
   my $orgunits = $self->_get_org_units($c);
-  my $unit = $self->_find_org_unit_rec($c, $orgunits, $id);
+  my $unit     = $self->_find_org_unit_rec($c, $orgunits, $id);
   if ($unit) {
     delete $unit->{subunits};
     push @parentpath, $unit;
@@ -323,7 +334,7 @@ sub org_get_parentpath {
       $superunit = $self->_find_org_superunit_rec($c, undef, $orgunits, $superunit->{'@id'});
     }
   }
-  
+
   return {alerts => [], parentpath => \@parentpath, status => 200};
 }
 
@@ -395,10 +406,10 @@ sub get_ldap {
 }
 
 sub get_ldap_ext {
-  my $self = shift;
-  my $c    = shift;
+  my $self          = shift;
+  my $c             = shift;
   my $privateConfig = shift;
-  
+
   my $res = {alerts => [], status => 500};
 
   my $LDAP_SERVER   = $privateConfig->{ldapexthost};
@@ -433,16 +444,17 @@ sub getLDAPEntryForUser {
   my $username = shift;
 
   return undef unless (defined($username));
-  
+
   my $entry = $self->_getLDAPEntryForUser($c, $self->get_ldap($c), $c->app->config->{authentication}->{ldap}->{usersearchfilter}, $c->app->config->{authentication}->{ldap}->{usersearchbases}, $username);
 
-  my $confcol = $self->_get_config_col($c);
+  my $confcol       = $self->_get_config_col($c);
   my $privateConfig = $confcol->find_one({"config_type" => "private"});
   if ($privateConfig->{ldapextenable}) {
     my $entry_ext = $self->_getLDAPEntryForUser($c, $self->get_ldap_ext($c, $privateConfig), $privateConfig->{ldapextusersearchfilter}, $privateConfig->{ldapextusersearchbases}, $username);
     if ($entry_ext) {
       if ($entry) {
         for my $att (@{$entry->{'asn'}->{'attributes'}}) {
+
           # Merge entry into entry_ext
           push @{$entry_ext->{'asn'}->{'attributes'}}, $att;
         }
@@ -456,12 +468,12 @@ sub getLDAPEntryForUser {
 
 sub _getLDAPEntryForUser {
 
-  my $self     = shift;
-  my $c        = shift;
-  my $ldap = shift;
-  my $filter = shift;
+  my $self            = shift;
+  my $c               = shift;
+  my $ldap            = shift;
+  my $filter          = shift;
   my $usersearchbases = shift;
-  my $username = shift;
+  my $username        = shift;
 
   return undef unless (defined($username));
 
@@ -469,7 +481,7 @@ sub _getLDAPEntryForUser {
 
   my @user_search_bases = split(';', $usersearchbases);
 
-  foreach my $user_search_base (@user_search_bases){
+  foreach my $user_search_base (@user_search_bases) {
     $user_search_base =~ s/^\s+|\s+$//g;
     $c->app->log->info("Searching for user $username in searchbase $user_search_base.");
 
@@ -497,11 +509,11 @@ sub _getLDAPEntryForUser {
 }
 
 sub _getUsersLDAPGroups {
-  my $self     = shift;
-  my $c        = shift;
-  my $ldap = shift;
+  my $self             = shift;
+  my $c                = shift;
+  my $ldap             = shift;
   my $groupsearchbases = shift;
-  my $username = shift;
+  my $username         = shift;
 
   return undef unless (defined($username));
 
@@ -543,30 +555,30 @@ sub getUsersLDAPGroups {
 
   my $localGroups = $self->_getUsersLDAPGroups($c, $self->get_ldap($c), $c->app->config->{authentication}->{ldap}->{groupssearchbase}, $username);
 
-  my $confcol = $self->_get_config_col($c);
+  my $confcol       = $self->_get_config_col($c);
   my $privateConfig = $confcol->find_one({"config_type" => "private"});
-  my $extGroups = [];
+  my $extGroups     = [];
   if ($privateConfig->{ldapextenable}) {
     if ($privateConfig->{ldapextgroupssearchbases}) {
       $extGroups = $self->_getUsersLDAPGroups($c, $self->get_ldap_ext($c, $privateConfig), $privateConfig->{ldapextgroupssearchbases}, $username);
     }
   }
 
-  return [ @$localGroups, @$extGroups ];
+  return [@$localGroups, @$extGroups];
 }
 
 sub _authenticate() {
-  my $self      = shift;
-  my $c         = shift;
-  my $LDAP_SERVER         = shift;
-  my $LDAP_PORT         = shift;
-  my $ldaps         = shift;
-  my $sf  = shift;
-  my $sp  = shift;
-  my $sc  = shift;
-  my $usersearchbases  = shift;
-  my $username  = shift;
-  my $password  = shift;
+  my $self            = shift;
+  my $c               = shift;
+  my $LDAP_SERVER     = shift;
+  my $LDAP_PORT       = shift;
+  my $ldaps           = shift;
+  my $sf              = shift;
+  my $sp              = shift;
+  my $sc              = shift;
+  my $usersearchbases = shift;
+  my $username        = shift;
+  my $password        = shift;
 
   # Determine if we have a usable username for rate limiting
   my $has_username = defined($username) && length($username);
@@ -574,29 +586,29 @@ sub _authenticate() {
   # Get client IP address for rate limiting
   my $client_ip = $c->tx->remote_address;
   if ($client_ip eq '127.0.0.1' || $client_ip eq '::1') {
-    $client_ip = $c->req->headers->header('X-Forwarded-For') || 
-                 $c->req->headers->header('X-Real-IP') || 
-                 $client_ip;
+    $client_ip
+      = $c->req->headers->header('X-Forwarded-For')
+      || $c->req->headers->header('X-Real-IP')
+      || $client_ip;
   }
-  
 
   # Build rate-limit helpers only when username is present
   my ($identifier, $rate_limit_model);
   if ($has_username) {
-    $identifier = $username . ':' . $client_ip;
+    $identifier       = $username . ':' . $client_ip;
     $rate_limit_model = PhaidraAPI::Model::RateLimit->new;
 
     # Check rate limit before processing authentication
     my $rate_limit_check = $rate_limit_model->check_rate_limit($c, $identifier);
-    
+
     if ($rate_limit_check->{blocked}) {
       $c->app->log->warn("Rate limit exceeded for authentication: $username, IP: $client_ip");
+
       # my $blocked_res = {alerts => $rate_limit_check->{alerts}, status => $rate_limit_check->{status}};
       # $c->stash({phaidra_auth_result => $blocked_res});
       # return undef;
     }
   }
-
 
   $c->app->log->debug("auth: ldap login");
   my $res = {alerts => [], status => 500};
@@ -604,7 +616,8 @@ sub _authenticate() {
   my $ldap;
   if ($ldaps) {
     $ldap = Net::LDAPS->new($LDAP_SERVER, port => $LDAP_PORT);
-  } else {
+  }
+  else {
     $ldap = Net::LDAP->new($LDAP_SERVER, port => $LDAP_PORT);
   }
   unless (defined($ldap)) {
@@ -653,6 +666,7 @@ sub _authenticate() {
   $c->app->log->debug("Auth for user $dn [is error: " . $ldapMsg->is_error() . "]");
 
   if ($ldapMsg->is_error) {
+
     # Record failed authentication attempt (only if username is present)
     if ($has_username) {
       $rate_limit_model->record_failed_attempt($c, $identifier);
@@ -677,10 +691,10 @@ sub _authenticate() {
 
 sub authenticate() {
 
-  my $self      = shift;
-  my $c         = shift;
-  my $username  = shift;
-  my $password  = shift;
+  my $self     = shift;
+  my $c        = shift;
+  my $username = shift;
+  my $password = shift;
 
   my $res = {alerts => [], status => 500};
   for my $u (@{$c->app->config->{fedora}->{fedoraadmins}}) {
@@ -709,7 +723,7 @@ sub authenticate() {
   }
 
   my $localAuthRes = $self->_authenticate(
-    $c, 
+    $c,
     $c->app->config->{authentication}->{ldap}->{server},
     $c->app->config->{authentication}->{ldap}->{port},
     0,
@@ -717,26 +731,14 @@ sub authenticate() {
     $c->app->config->{authentication}->{ldap}->{securityprincipal},
     $c->app->config->{authentication}->{ldap}->{securitycredentials},
     $c->app->config->{authentication}->{ldap}->{usersearchbases},
-    $username, 
-    $password
+    $username, $password
   );
   return $localAuthRes if $localAuthRes;
-  
-  my $confcol = $self->_get_config_col($c);
+
+  my $confcol       = $self->_get_config_col($c);
   my $privateConfig = $confcol->find_one({"config_type" => "private"});
   if ($privateConfig->{ldapextenable}) {
-    return $self->_authenticate(
-      $c, 
-      $privateConfig->{ldapexthost},
-      $privateConfig->{ldapextport},
-      1,
-      $privateConfig->{ldapextusersearchfilter},
-      $privateConfig->{ldapextprincipal},
-      $privateConfig->{ldapextprincipalpassword},
-      $privateConfig->{ldapextusersearchbases},
-      $username, 
-      $password
-    );
+    return $self->_authenticate($c, $privateConfig->{ldapexthost}, $privateConfig->{ldapextport}, 1, $privateConfig->{ldapextusersearchfilter}, $privateConfig->{ldapextprincipal}, $privateConfig->{ldapextprincipalpassword}, $privateConfig->{ldapextusersearchbases}, $username, $password);
   }
 }
 
@@ -874,7 +876,7 @@ sub get_study_name {
 sub create_scim_jwt {
   my ($self, $c) = @_;
 
-  my $confcol = $self->_get_config_col($c);
+  my $confcol       = $self->_get_config_col($c);
   my $privateConfig = $confcol->find_one({"config_type" => "private"});
   unless ($privateConfig->{jwtprivkey} && $privateConfig->{jwks}) {
     $c->app->log->error("jwtprivkey or jwks not configured");
@@ -883,26 +885,26 @@ sub create_scim_jwt {
 
   # JWT Header
   my $header = {
-      alg => 'RS256', # Algorithm: RS256 (RSA with SHA-256)
-      typ => 'JWT',   # Type: JWT
-      kid => 'scim'  # Key ID (must match the "kid" in your JWKS)
+    alg => 'RS256',    # Algorithm: RS256 (RSA with SHA-256)
+    typ => 'JWT',      # Type: JWT
+    kid => 'scim'      # Key ID (must match the "kid" in your JWKS)
   };
 
   # JWT Claims (Payload)
   my $claims = {
-      iss => $c->app->config->{phaidra}->{baseurl}, # Issuer
-      aud => 'scim',              # Audience
-      sub => $c->app->config->{phaidra}->{baseurl}, # Subject (baseurl, since the API acts on it's own behalf)
-      iat => time(),              # Issued at (current timestamp)
-      exp => time() + 60          # We're not re-using this token
+    iss => $c->app->config->{phaidra}->{baseurl},    # Issuer
+    aud => 'scim',                                   # Audience
+    sub => $c->app->config->{phaidra}->{baseurl},    # Subject (baseurl, since the API acts on it's own behalf)
+    iat => time(),                                   # Issued at (current timestamp)
+    exp => time() + 60                               # We're not re-using this token
   };
 
   # Create and sign the JWT
   my $jwt = Mojo::JWT->new(
-      header => $header,
-      claims => $claims,
-      secret    => $privateConfig->{jwtprivkey}, # Use the private key for signing
-      algorithm  => 'RS256'       # Specify the signing algorithm
+    header    => $header,
+    claims    => $claims,
+    secret    => $privateConfig->{jwtprivkey},       # Use the private key for signing
+    algorithm => 'RS256'                             # Specify the signing algorithm
   )->encode;
 
   return $jwt;
@@ -914,7 +916,7 @@ sub get_user_data {
   my $username = shift;
 
   return {} unless (defined($username));
-  
+
   if ($username eq $c->app->config->{phaidra}->{adminusername}) {
     return {username => $c->app->config->{phaidra}->{adminusername}, firstname => 'PHAIDRA', lastname => 'Admin', isadmin => 1};
   }
@@ -922,10 +924,13 @@ sub get_user_data {
   my $cachekey = "get_user_data_$username";
   my $cacheval = $c->app->chi->get($cachekey);
   if ($cacheval) {
+
     # $c->app->log->debug("[cache hit] $cachekey");
-  } else {
+  }
+  else {
     $c->app->log->debug("[cache miss] $cachekey");
     $cacheval = $self->_get_user_data($c, $username);
+
     # attributes are fetched for purposes of
     # * authorization (eg org unit of the current user)
     # * display (eg some object owner's name)
@@ -945,6 +950,7 @@ sub _get_user_data {
   my $username = shift;
 
   my $entry = $self->getLDAPEntryForUser($c, $username);
+
   # $c->log->debug("get_user_data ldap data: ".$c->app->dumper($entry));
 
   my $fname;
@@ -958,6 +964,7 @@ sub _get_user_data {
   if ($entry) {
     if (exists($entry->{'asn'})) {
       if (exists($entry->{'asn'}->{'attributes'})) {
+
         # if user was found in LDAP, it at least belongs to the organisation
         # this was historically represented as A-1
         push @orgul1, 'A-1';
@@ -990,11 +997,11 @@ sub _get_user_data {
     }
   }
 
-  my $confcol = $self->_get_config_col($c);
+  my $confcol       = $self->_get_config_col($c);
   my $privateConfig = $confcol->find_one({"config_type" => "private"});
   if ($privateConfig->{scimendpoint}) {
-    my $jwt = $self->create_scim_jwt($c);
-    my $url = $privateConfig->{scimendpoint}.'/Users/'.$username;
+    my $jwt      = $self->create_scim_jwt($c);
+    my $url      = $privateConfig->{scimendpoint} . '/Users/' . $username;
     my $response = $c->app->ua->get($url => {Authorization => "Bearer $jwt"})->result;
     if ($response->is_success) {
       my $data = $response->json;
@@ -1002,7 +1009,7 @@ sub _get_user_data {
       # $c->log->debug("get_user_data data: ".$c->app->dumper($data));
 
       if (exists($data->{name})) {
-        $fname = $data->{name}->{givenName} if $data->{name}->{givenName};
+        $fname = $data->{name}->{givenName}  if $data->{name}->{givenName};
         $lname = $data->{name}->{familyName} if $data->{name}->{familyName};
       }
 
@@ -1021,6 +1028,7 @@ sub _get_user_data {
         for my $orgScim (@{$data->{groups}}) {
           if ($orgScim->{value}) {
             push @orgul1, $orgScim->{value};
+
             # HACK: pass this to "department"/level 2 as well since (afaik)
             # it does not really matter whether the org unit is level 1
             # or level 2 (there's no instance where the IDs of org units
@@ -1035,14 +1043,16 @@ sub _get_user_data {
         }
       }
 
-    } else {
-      $c->app->log->error("failed to query scimendpoint: ".$privateConfig->{scimendpoint}." ".$response->code." ".$response->message);
+    }
+    else {
+      $c->app->log->error("failed to query scimendpoint: " . $privateConfig->{scimendpoint} . " " . $response->code . " " . $response->message);
     }
   }
 
   my $ldapgroups = $self->getUsersLDAPGroups($c, $username);
 
   if ($c->stash('remote_user') && $c->stash('remote_user') eq $username) {
+
     # in case there is no user data api, use the attrs we saved on shib login, if it's equal to the requested user param
     my $sessionData = $c->load_cred;
     unless ($fname) {
@@ -1063,7 +1073,7 @@ sub _get_user_data {
 
   my $res = {username => $username, firstname => $fname, lastname => $lname, ldapgroups => $ldapgroups, groups => $groups, email => $email, affiliation => \@affiliation, org_units_l1 => \@orgul1, org_units_l2 => \@orgul2, displayname => $description};
 
-  $c->app->log->info("get_user_data: ".$c->app->dumper($res));
+  $c->app->log->info("get_user_data: " . $c->app->dumper($res));
 
   return $res;
 }
@@ -1123,7 +1133,6 @@ sub _connect_mongodb_group_manager() {
   return $client;
 }
 
-
 sub _get_groups_col() {
   my $self = shift;
   my $c    = shift;
@@ -1155,7 +1164,7 @@ sub get_member_groups {
   my $groups = $self->_get_groups_col($c);
 
   my $members_groups = $groups->find({"members" => $owner});
-  my @grps         = ();
+  my @grps           = ();
   if ($members_groups) {
     while (my $doc = $members_groups->next) {
       push @grps, {groupid => $doc->{groupid}, name => $doc->{name}, created => $doc->{created}, updated => $doc->{updated}};

@@ -20,7 +20,7 @@ my $logconf = q(
   log4perl.appender.Screen.utf8   = 1
 );
 
-Log::Log4perl::init( \$logconf );
+Log::Log4perl::init(\$logconf);
 my $log = Log::Log4perl::get_logger("MyLogger");
 
 $log->info("adding oai_records index");
@@ -34,7 +34,7 @@ my $mongodb = MongoDB::MongoClient->new(
   socket_timeout_ms  => 300000,
 )->get_database('mongodb');
 
-$mongodb->get_collection('oai_records')->indexes->create_one([ deleted => 1, pid => 1 ]);
+$mongodb->get_collection('oai_records')->indexes->create_one([deleted => 1, pid => 1]);
 
 $log->info("finished adding oai_records index");
 

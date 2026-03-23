@@ -4,10 +4,10 @@ variables:
   DOCKER_TLS_CERTDIR: "/certs"
 
 stages:
+  - test
   - build-common
   - build-base
   - build-dist
-  - test
   - deploy
   - helm
   - release
@@ -679,6 +679,51 @@ build-website-push-final:
         paths:
           - website/**/*
           - mkdocs.yml
+
+
+lint:
+  image: docker.io/phaidraorg/cicd:e9e114ee
+  script:
+    # TODO: first fix helm
+    # - helm lint k8s/helm/
+    - mkdir reports
+    - touch reports/codequality.json
+    - >
+      perlcritic --verbose "{'description': '%m', 'check_name': '%p', 'fingerprint': '%f%c%l%p', 'location': {'path': '%f', 'lines': {'begin': %l}}, 'severity': 'major'}\n" src/phaidra-api/ | grep -vE "OK$" | sed 's#"#\\"#g' | tr "'" '"' | jq -s > reports/codequality_perlcritic.json || inhibit_pipefail=$?
+    # adapted from yamllint manpage
+    # use gawk because alpine busybox awk can't capture in match
+    - >
+      yamllint -f parsable . | tee >(gawk '
+      BEGIN {FS = ":"; ORS="\n"; first=1}
+      {
+          gsub(/^[ \t]+|[ \t]+$|"/, "", $4);
+          match($4, /^\[(warning|error)\](.*)/, a);
+          match($0, /^\S+ [0-9]+ [0-9]+ \[\w+\] (.*)$/, description);
+          match($0, /^.*\((.*)\)$/, checkname);
+          sev = (a[1] == "error" ? "major" : "minor");
+          if (first) {
+              first=0;
+              printf("[");
+          } else {
+              printf(",");
+          }
+          printf("{\"location\":{\"path\":\"%s\",\"lines\":{\"begin\":%s,"\
+                  "\"end\":%s}},\"severity\":\"%s\",\"check_name\":\"%s\","\
+                  "\"categories\":[\"Style\"],\"type\":\"issue\","\
+                  "\"description\":\"%s\","\
+                  "\"fingerprint\":\"%s\"}", $1, $2, $3, sev, checkname[1], description[1], $0);
+      }
+      END { if (!first) printf("]\n"); }' > reports/codequality_yamllint.json) || inhibit_pipefail=$?
+    - cd src/phaidra-api/ && find . -name "*.p[ml]" | xargs -P4 -I{} perltidy -st -se -ast {} 1> /dev/null; cd ../..
+  after_script:
+    - jq -s 'add' reports/codequality_*.json > reports/codequality.json
+  artifacts:
+    when: always
+    # paths:
+    #   - reports
+    expire_in: 1 week
+    reports:
+      codequality: reports/codequality.json
 
 helm-package:
   stage: helm

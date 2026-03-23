@@ -6,8 +6,8 @@ use v5.10;
 use utf8;
 
 use Mojo::ByteStream qw(b);
-use Mojo::Util qw(xml_escape encode decode);
-use base qw/Mojo::Base/;
+use Mojo::Util       qw(xml_escape encode decode);
+use base             qw/Mojo::Base/;
 use XML::LibXML;
 use Storable qw(dclone);
 use PhaidraAPI::Model::Object;
@@ -171,13 +171,13 @@ sub map_uwmetadata_2_datacite {
     }
   }
   push @{$data{identifiers}}, {value => "http://" . $c->app->config->{phaidra}->{baseurl} . "/" . $pid, type => "URL"};
-  $data{titles}          = $ext->_get_titles($c, $dom, \%doc_uwns);
-  $data{descriptions}    = $ext->_get_uwm_element_values($c, $dom, $doc_uwns{'lom'} . '\:description');
-  $data{creators}        = $ext->_get_creators($c, $dom, \%doc_uwns);
-  $data{pubyears}        = $ext->_get_uwm_element_values($c, $dom, $doc_uwns{'digitalbook'} . '\:releaseyear');      # does not work!
-  $data{uploaddates}     = $ext->_get_uwm_element_values($c, $dom, $doc_uwns{'lom'} . '\:upload_date');
-  $data{embargodates}    = $ext->_get_uwm_element_values($c, $dom, $doc_uwns{'extended'} . '\:infoeurepoembargo');
-  $data{formats}         = $ext->_get_formats($c, $pid, $cmodel, $dom, \%doc_uwns);
+  $data{titles}       = $ext->_get_titles($c, $dom, \%doc_uwns);
+  $data{descriptions} = $ext->_get_uwm_element_values($c, $dom, $doc_uwns{'lom'} . '\:description');
+  $data{creators}     = $ext->_get_creators($c, $dom, \%doc_uwns);
+  $data{pubyears}     = $ext->_get_uwm_element_values($c, $dom, $doc_uwns{'digitalbook'} . '\:releaseyear');      # does not work!
+  $data{uploaddates}  = $ext->_get_uwm_element_values($c, $dom, $doc_uwns{'lom'} . '\:upload_date');
+  $data{embargodates} = $ext->_get_uwm_element_values($c, $dom, $doc_uwns{'extended'} . '\:infoeurepoembargo');
+  $data{formats}      = $ext->_get_formats($c, $pid, $cmodel, $dom, \%doc_uwns);
   push @{$data{filesizes}}, {value => $index->{size}};
   $data{publishers}      = $ext->_get_publishers($c, $dom, \%doc_uwns);
   $data{publicationYear} = $ext->_get_releaseyear($c, $dom, \%doc_uwns);
@@ -206,7 +206,6 @@ sub map_uwmetadata_2_datacite {
 sub map_mods_2_datacite {
 
   my ($self, $c, $pid, $cmodel, $xml) = @_;
-
 
   my $index_model = PhaidraAPI::Model::Index->new;
   my $r           = $index_model->get($c, $pid);
@@ -921,7 +920,7 @@ sub _get_relsext_identifiers {
     }
 
     if (exists $fres->{identifier} && ref $fres->{identifier} eq 'ARRAY') {
-        @ids = map { {value => $_ } } @{$fres->{identifier}};
+      @ids = map {{value => $_}} @{$fres->{identifier}};
     }
     $c->app->log->debug("Identifiers: " . Dumper(\@ids));
     return \@ids;

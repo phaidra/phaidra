@@ -20,12 +20,12 @@ my $logconf = q(
   log4perl.appender.Screen.utf8   = 1
 );
 
-Log::Log4perl::init( \$logconf );
+Log::Log4perl::init(\$logconf);
 my $log = Log::Log4perl::get_logger("MyLogger");
 
 $log->info("started migration to v3.3.17");
 
-my $cntr = DBIx::Connector->new("dbi:mysql:phaidradb:".$ENV{MARIADB_PHAIDRA_HOST}, $ENV{MARIADB_PHAIDRA_USER}, $ENV{MARIADB_PHAIDRA_PASSWORD}, {mysql_auto_reconnect => 1, mysql_multi_statements => 1});
+my $cntr = DBIx::Connector->new("dbi:mysql:phaidradb:" . $ENV{MARIADB_PHAIDRA_HOST}, $ENV{MARIADB_PHAIDRA_USER}, $ENV{MARIADB_PHAIDRA_PASSWORD}, {mysql_auto_reconnect => 1, mysql_multi_statements => 1});
 $cntr->mode('ping');
 
 $cntr->dbh->do("
@@ -57,7 +57,6 @@ $cntr->dbh->do("
   INSERT INTO vocabulary_entry (veid, isocode, entry, vid) VALUES (1562584,'it','ÖFOS 2012',44);
 
   ");
-
 
 $log->info("finished migration to v3.3.17");
 

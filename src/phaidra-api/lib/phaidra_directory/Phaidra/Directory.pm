@@ -29,7 +29,7 @@ sub update_info_data {
 }
 
 sub authenticate($$$$) {
-  my $self = shift;
+  my $self      = shift;
   my $app       = shift;
   my $username  = shift;
   my $password  = shift;
@@ -252,20 +252,19 @@ sub _get_org_units {
 }
 
 sub org_get_subunits_for_notation {
- my ($self, $c, $notation) = @_;
-$c->app->log->error("Directory.pm - " . ((caller(0))[3]) . " - this method is not implemented");
+  my ($self, $c, $notation) = @_;
+  $c->app->log->error("Directory.pm - " . ((caller(0))[3]) . " - this method is not implemented");
 }
 
 sub org_get_parentpath {
-   my ($self, $c, $id)= @_;
-$c->app->log->error("Directory.pm - " . ((caller(0))[3]) . " - this method is not implemented");
+  my ($self, $c, $id) = @_;
+  $c->app->log->error("Directory.pm - " . ((caller(0))[3]) . " - this method is not implemented");
 }
 
 sub org_get_unit_for_notation {
   my ($self, $c, $id) = @_;
-$c->app->log->error("Directory.pm - " . ((caller(0))[3]) . " - this method is not implemented");
+  $c->app->log->error("Directory.pm - " . ((caller(0))[3]) . " - this method is not implemented");
 }
-
 
 1;
 __END__

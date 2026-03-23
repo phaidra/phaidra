@@ -18,9 +18,9 @@ sub feedback {
   my $email     = $self->param('email');
   my $message   = $self->param('message');
 
-  my $user = $self->app->directory->get_user_data($self, $self->stash->{basic_auth_credentials}->{username});
-  my $confmodel = PhaidraAPI::Model::Config->new;
-  my $pubconfig = $confmodel->get_public_config($self);
+  my $user       = $self->app->directory->get_user_data($self, $self->stash->{basic_auth_credentials}->{username});
+  my $confmodel  = PhaidraAPI::Model::Config->new;
+  my $pubconfig  = $confmodel->get_public_config($self);
   my $privconfig = $confmodel->get_private_config($self);
 
   my %emaildata;
@@ -44,7 +44,7 @@ sub feedback {
       TmplParams  => \%emaildata,
       TmplOptions => \%options
     );
-    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => ($privconfig->{smtpport} eq '465' || $privconfig->{smtpport} eq '587') ? 1 : 0);
+    $msg->send('smtp', $privconfig->{smtpserver} . ':' . $privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => ($privconfig->{smtpport} eq '465' || $privconfig->{smtpport} eq '587') ? 1 : 0);
   };
   if ($@) {
     my $err = "Error sending feedback email: " . $@;

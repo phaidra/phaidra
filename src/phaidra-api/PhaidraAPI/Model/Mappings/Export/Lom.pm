@@ -5,50 +5,50 @@ use warnings;
 use v5.10;
 use utf8;
 use Switch;
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::JSON       qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
-use base qw/Mojo::Base/;
+use base             qw/Mojo::Base/;
 use PhaidraAPI::Model::Languages;
 
 my $kimHcrtVocab = {
-  'https://w3id.org/kim/hcrt/application' => { 'eng' => 'Software Application', 'deu' => 'Softwareanwendung' },
-  'https://w3id.org/kim/hcrt/assessment' => { 'eng' => 'Assessment', 'deu' => 'Lernkontrolle' },
-  'https://w3id.org/kim/hcrt/audio' => { 'eng' => 'Audio Recording', 'deu' => 'Audio' },
-  'https://w3id.org/kim/hcrt/case_study' => { 'eng' => 'Case Study', 'deu' => 'Fallstudie' },
-  'https://w3id.org/kim/hcrt/course' => { 'eng' => 'Course', 'deu' => 'Kurs' },
-  'https://w3id.org/kim/hcrt/data' => { 'eng' => 'Data', 'deu' => 'Daten' },
-  'https://w3id.org/kim/hcrt/diagram' => { 'eng' => 'Diagram', 'deu' => 'Grafik' },
-  'https://w3id.org/kim/hcrt/drill_and_practice' => { 'eng' => 'Drill and Practice', 'deu' => 'Übung' },
-  'https://w3id.org/kim/hcrt/educational_game' => { 'eng' => 'Game', 'deu' => 'Lernspiel' },
-  'https://w3id.org/kim/hcrt/experiment' => { 'eng' => 'Experiment', 'deu' => 'Experiment' },
-  'https://w3id.org/kim/hcrt/image' => { 'eng' => 'Image', 'deu' => 'Abbildung' },
-  'https://w3id.org/kim/hcrt/index' => { 'eng' => 'Reference Work', 'deu' => 'Nachschlagewerk' },
-  'https://w3id.org/kim/hcrt/lesson_plan' => { 'eng' => 'Lesson Plan', 'deu' => 'Unterrichtsplanung' },
-  'https://w3id.org/kim/hcrt/map' => { 'eng' => 'Map', 'deu' => 'Karte' },
-  'https://w3id.org/kim/hcrt/portal' => { 'eng' => 'Web Portal', 'deu' => 'Portal' },
-  'https://w3id.org/kim/hcrt/questionnaire' => { 'eng' => 'Questionnaire', 'deu' => 'Fragebogen' },
-  'https://w3id.org/kim/hcrt/script' => { 'eng' => 'Script', 'deu' => 'Skript' },
-  'https://w3id.org/kim/hcrt/sheet_music' => { 'eng' => 'Sheet Music', 'deu' => 'Musiknoten' },
-  'https://w3id.org/kim/hcrt/simulation' => { 'eng' => 'Simulation', 'deu' => 'Simulation' },
-  'https://w3id.org/kim/hcrt/slide' => { 'eng' => 'Presentation', 'deu' => 'Präsentation' },
-  'https://w3id.org/kim/hcrt/text' => { 'eng' => 'Text', 'deu' => 'Textdokument' },
-  'https://w3id.org/kim/hcrt/textbook' => { 'eng' => 'Textbook', 'deu' => 'Lehrbuch' },
-  'https://w3id.org/kim/hcrt/video' => { 'eng' => 'Video', 'deu' => 'Video' },
-  'https://w3id.org/kim/hcrt/web_page' => { 'eng' => 'Web Page', 'deu' => 'Webseite' },
-  'https://w3id.org/kim/hcrt/worksheet' => { 'eng' => 'Worksheet', 'deu' => 'Arbeitsmaterial' },
-  'https://w3id.org/kim/hcrt/other' => { 'eng' => 'Other', 'deu' => 'Sonstiges' }
+  'https://w3id.org/kim/hcrt/application'        => {'eng' => 'Software Application', 'deu' => 'Softwareanwendung'},
+  'https://w3id.org/kim/hcrt/assessment'         => {'eng' => 'Assessment',           'deu' => 'Lernkontrolle'},
+  'https://w3id.org/kim/hcrt/audio'              => {'eng' => 'Audio Recording',      'deu' => 'Audio'},
+  'https://w3id.org/kim/hcrt/case_study'         => {'eng' => 'Case Study',           'deu' => 'Fallstudie'},
+  'https://w3id.org/kim/hcrt/course'             => {'eng' => 'Course',               'deu' => 'Kurs'},
+  'https://w3id.org/kim/hcrt/data'               => {'eng' => 'Data',                 'deu' => 'Daten'},
+  'https://w3id.org/kim/hcrt/diagram'            => {'eng' => 'Diagram',              'deu' => 'Grafik'},
+  'https://w3id.org/kim/hcrt/drill_and_practice' => {'eng' => 'Drill and Practice',   'deu' => 'Übung'},
+  'https://w3id.org/kim/hcrt/educational_game'   => {'eng' => 'Game',                 'deu' => 'Lernspiel'},
+  'https://w3id.org/kim/hcrt/experiment'         => {'eng' => 'Experiment',           'deu' => 'Experiment'},
+  'https://w3id.org/kim/hcrt/image'              => {'eng' => 'Image',                'deu' => 'Abbildung'},
+  'https://w3id.org/kim/hcrt/index'              => {'eng' => 'Reference Work',       'deu' => 'Nachschlagewerk'},
+  'https://w3id.org/kim/hcrt/lesson_plan'        => {'eng' => 'Lesson Plan',          'deu' => 'Unterrichtsplanung'},
+  'https://w3id.org/kim/hcrt/map'                => {'eng' => 'Map',                  'deu' => 'Karte'},
+  'https://w3id.org/kim/hcrt/portal'             => {'eng' => 'Web Portal',           'deu' => 'Portal'},
+  'https://w3id.org/kim/hcrt/questionnaire'      => {'eng' => 'Questionnaire',        'deu' => 'Fragebogen'},
+  'https://w3id.org/kim/hcrt/script'             => {'eng' => 'Script',               'deu' => 'Skript'},
+  'https://w3id.org/kim/hcrt/sheet_music'        => {'eng' => 'Sheet Music',          'deu' => 'Musiknoten'},
+  'https://w3id.org/kim/hcrt/simulation'         => {'eng' => 'Simulation',           'deu' => 'Simulation'},
+  'https://w3id.org/kim/hcrt/slide'              => {'eng' => 'Presentation',         'deu' => 'Präsentation'},
+  'https://w3id.org/kim/hcrt/text'               => {'eng' => 'Text',                 'deu' => 'Textdokument'},
+  'https://w3id.org/kim/hcrt/textbook'           => {'eng' => 'Textbook',             'deu' => 'Lehrbuch'},
+  'https://w3id.org/kim/hcrt/video'              => {'eng' => 'Video',                'deu' => 'Video'},
+  'https://w3id.org/kim/hcrt/web_page'           => {'eng' => 'Web Page',             'deu' => 'Webseite'},
+  'https://w3id.org/kim/hcrt/worksheet'          => {'eng' => 'Worksheet',            'deu' => 'Arbeitsmaterial'},
+  'https://w3id.org/kim/hcrt/other'              => {'eng' => 'Other',                'deu' => 'Sonstiges'}
 };
 
 sub get_metadata {
   my ($self, $c, $rec) = @_;
 
-  my $pid = $rec->{pid};
-  my $lang_model   = PhaidraAPI::Model::Languages->new;
-  my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
+  my $pid            = $rec->{pid};
+  my $lang_model     = PhaidraAPI::Model::Languages->new;
+  my %iso6393ToBCP   = reverse %{$lang_model->get_iso639map()};
   my $phaidraBaseurl = $c->app->config->{phaidra}->{baseurl};
-  my $pidUri       = "https://$phaidraBaseurl/$pid";
-  my $apiBaseUrlPath = $c->app->config->{baseurl}. ($c->app->config->{basepath} ? '/' . $c->app->config->{basepath} : '');
-  my $thumbnailUrl = "https://$apiBaseUrlPath/object/$pid/thumbnail";
+  my $pidUri         = "https://$phaidraBaseurl/$pid";
+  my $apiBaseUrlPath = $c->app->config->{baseurl} . ($c->app->config->{basepath} ? '/' . $c->app->config->{basepath} : '');
+  my $thumbnailUrl   = "https://$apiBaseUrlPath/object/$pid/thumbnail";
 
   my @metadata;
 
@@ -71,27 +71,24 @@ sub get_metadata {
   #### general ####
 
   my $general = {
-    name       => 'lom:general',
+    name     => 'lom:general',
     children => []
   };
 
   # identifier
-  push @{$general->{children}}, {
-    name => 'lom:identifier',
+  push @{$general->{children}},
+    {
+    name     => 'lom:identifier',
     children => [
-      { 
-        name  => 'lom:catalog',
-        value =>  $phaidraBaseurl
+      { name  => 'lom:catalog',
+        value => $phaidraBaseurl
       },
-      { 
-        name  => 'lom:entry',
+      { name     => 'lom:entry',
         children => [
-          { 
-            name => 'lom:langstring',
-            value =>  $pid,
+          { name       => 'lom:langstring',
+            value      => $pid,
             attributes => [
-              { 
-                name  => 'xml:lang',
+              { name  => 'xml:lang',
                 value => 'x-none'
               }
             ]
@@ -99,26 +96,23 @@ sub get_metadata {
         ]
       }
     ]
-  };
+    };
   if (exists($rec->{dc_identifier})) {
     for my $id (@{$rec->{dc_identifier}}) {
       if (rindex($id, 'hdl:', 0) == 0) {
-        push @{$general->{children}}, {
-          name => 'lom:identifier',
+        push @{$general->{children}},
+          {
+          name     => 'lom:identifier',
           children => [
-            { 
-              name  => 'lom:catalog',
-              value =>  'HDL'
+            { name  => 'lom:catalog',
+              value => 'HDL'
             },
-            { 
-              name  => 'lom:entry',
+            { name     => 'lom:entry',
               children => [
-                { 
-                  name => 'lom:langstring',
-                  value =>  substr($id, 4),
+                { name       => 'lom:langstring',
+                  value      => substr($id, 4),
                   attributes => [
-                    { 
-                      name  => 'xml:lang',
+                    { name  => 'xml:lang',
                       value => 'x-none'
                     }
                   ]
@@ -126,25 +120,22 @@ sub get_metadata {
               ]
             }
           ]
-        };
+          };
       }
       if (rindex($id, 'doi:', 0) == 0) {
-        push @{$general->{children}}, {
-          name => 'lom:identifier',
+        push @{$general->{children}},
+          {
+          name     => 'lom:identifier',
           children => [
-            { 
-              name  => 'lom:catalog',
-              value =>  'DOI'
+            { name  => 'lom:catalog',
+              value => 'DOI'
             },
-            { 
-              name  => 'lom:entry',
+            { name     => 'lom:entry',
               children => [
-                { 
-                  name => 'lom:langstring',
-                  value =>  substr($id, 4),
+                { name       => 'lom:langstring',
+                  value      => substr($id, 4),
                   attributes => [
-                    { 
-                      name  => 'xml:lang',
+                    { name  => 'xml:lang',
                       value => 'x-none'
                     }
                   ]
@@ -152,25 +143,22 @@ sub get_metadata {
               ]
             }
           ]
-        };
+          };
       }
       if (rindex($id, 'urn:', 0) == 0) {
-        push @{$general->{children}}, {
-          name => 'lom:identifier',
+        push @{$general->{children}},
+          {
+          name     => 'lom:identifier',
           children => [
-            { 
-              name  => 'lom:catalog',
-              value =>  'URN'
+            { name  => 'lom:catalog',
+              value => 'URN'
             },
-            { 
-              name  => 'lom:entry',
+            { name     => 'lom:entry',
               children => [
-                { 
-                  name => 'lom:langstring',
-                  value =>  substr($id, 4),
+                { name       => 'lom:langstring',
+                  value      => substr($id, 4),
                   attributes => [
-                    { 
-                      name  => 'xml:lang',
+                    { name  => 'xml:lang',
                       value => 'x-none'
                     }
                   ]
@@ -178,26 +166,23 @@ sub get_metadata {
               ]
             }
           ]
-        };
+          };
       }
       if (rindex($id, 'ISBN:', 0) == 0) {
         $id =~ s/^ISBN:\s+//g;
-        push @{$general->{children}}, {
-          name => 'lom:identifier',
+        push @{$general->{children}},
+          {
+          name     => 'lom:identifier',
           children => [
-            { 
-              name  => 'lom:catalog',
-              value =>  'ISBN'
+            { name  => 'lom:catalog',
+              value => 'ISBN'
             },
-            { 
-              name  => 'lom:entry',
+            { name     => 'lom:entry',
               children => [
-                { 
-                  name => 'lom:langstring',
-                  value =>  $id,
+                { name       => 'lom:langstring',
+                  value      => $id,
                   attributes => [
-                    { 
-                      name  => 'xml:lang',
+                    { name  => 'xml:lang',
                       value => 'x-none'
                     }
                   ]
@@ -205,7 +190,7 @@ sub get_metadata {
               ]
             }
           ]
-        };
+          };
       }
     }
   }
@@ -221,38 +206,43 @@ sub get_metadata {
   # language
   if (exists($rec->{dc_language})) {
     for my $l (@{$rec->{dc_language}}) {
-      push @{$general->{children}}, {
-        name => 'lom:language',
+      push @{$general->{children}},
+        {
+        name  => 'lom:language',
         value => $l
-      };
+        };
     }
   }
 
   #### lifecycle ####
 
   my $lifecycle = {
-    name => 'lom:lifecycle',
+    name     => 'lom:lifecycle',
     children => []
   };
 
   if (exists($rec->{modified})) {
-    push @{$lifecycle->{children}}, {
-      name => 'lom:datetime',
+    push @{$lifecycle->{children}},
+      {
+      name  => 'lom:datetime',
       value => $rec->{modified}
-    };
-  } else {
-    if (exists($rec->{created})) {
-      push @{$lifecycle->{children}}, {
-        name => 'lom:datetime',
-        value => $rec->{created}
       };
+  }
+  else {
+    if (exists($rec->{created})) {
+      push @{$lifecycle->{children}},
+        {
+        name  => 'lom:datetime',
+        value => $rec->{created}
+        };
     }
   }
 
   # contribute
   if (exists($rec->{roles_json})) {
     $self->_add_contribute($c, $lifecycle, $rec, 'roles_json');
-  } else {
+  }
+  else {
     if (exists($rec->{uwm_roles_json})) {
       $self->_add_contribute($c, $lifecycle, $rec, 'uwm_roles_json');
     }
@@ -261,45 +251,48 @@ sub get_metadata {
   #### technical ####
 
   my $technical = {
-    name => 'lom:technical',
+    name     => 'lom:technical',
     children => []
   };
 
   # format
   for my $format (@{$rec->{dc_format}}) {
     if ($format =~ m/(\w)+\/(\w)+/) {
-      push @{$technical->{children}}, {
-        name => 'lom:format',
+      push @{$technical->{children}},
+        {
+        name  => 'lom:format',
         value => $format
-      };
+        };
       last;
     }
   }
 
   # size
   if (exists($rec->{size})) {
-    push @{$technical->{children}}, {
-      name => 'lom:size',
+    push @{$technical->{children}},
+      {
+      name  => 'lom:size',
       value => $rec->{size}
-    };
+      };
   }
 
   # location
-  push @{$technical->{children}}, {
-    name => 'lom:location',
+  push @{$technical->{children}},
+    {
+    name  => 'lom:location',
     value => $pidUri
-  };
+    };
 
   # thumbnail
-  push @{$technical->{children}}, {
-    name => 'lom:thumbnail',
+  push @{$technical->{children}},
+    {
+    name     => 'lom:thumbnail',
     children => [
-      {
-        name => 'lom:url',
+      { name  => 'lom:url',
         value => $thumbnailUrl
       }
     ]
-  };
+    };
 
   #### educational ####
 
@@ -333,49 +326,39 @@ sub get_metadata {
   }
 
   my $educational = {
-    name => 'lom:educational',
+    name     => 'lom:educational',
     children => [
-      {
-        name => 'lom:learningresourcetype',
+      { name     => 'lom:learningresourcetype',
         children => [
-          {
-            name => 'lom:source',
+          { name     => 'lom:source',
             children => [
-              {
-                name => 'lom:langstring',
-                value => 'https://w3id.org/kim/hcrt/scheme',
+              { name       => 'lom:langstring',
+                value      => 'https://w3id.org/kim/hcrt/scheme',
                 attributes => [
-                  { 
-                    name  => 'xml:lang',
+                  { name  => 'xml:lang',
                     value => 'x-none'
                   }
                 ]
               }
             ]
           },
-          {
-            name => 'lom:id',
+          { name  => 'lom:id',
             value => $kimHcrtType
           },
-          {
-            name => 'lom:entry',
+          { name     => 'lom:entry',
             children => [
-              {
-                name => 'lom:langstring',
-                value => $kimHcrtVocab->{$kimHcrtType}->{deu},
+              { name       => 'lom:langstring',
+                value      => $kimHcrtVocab->{$kimHcrtType}->{deu},
                 attributes => [
-                  {
-                    name => 'xml:lang',
+                  { name  => 'xml:lang',
                     value => 'de'
                   }
                 ]
               },
-              {
-                name => 'lom:langstring',
-                value => $kimHcrtVocab->{$kimHcrtType}->{eng},
+              { name       => 'lom:langstring',
+                value      => $kimHcrtVocab->{$kimHcrtType}->{eng},
                 attributes => [
-                  {
-                    name => 'xml:lang',
+                  { name  => 'xml:lang',
                     value => 'en'
                   }
                 ]
@@ -390,35 +373,28 @@ sub get_metadata {
   #### rights ####
 
   my $rights = {
-    name => 'lom:rights',
+    name     => 'lom:rights',
     children => [
-      {
-        name => 'lom:copyrightandotherrestrictions',
+      { name     => 'lom:copyrightandotherrestrictions',
         children => [
-          {
-            name => 'lom:source',
+          { name     => 'lom:source',
             children => [
-              {
-                name => 'lom:langstring',
-                value => 'LOMv1.0',
+              { name       => 'lom:langstring',
+                value      => 'LOMv1.0',
                 attributes => [
-                  { 
-                    name  => 'xml:lang',
+                  { name  => 'xml:lang',
                     value => 'x-none'
                   }
                 ]
               }
             ]
           },
-          {
-            name => 'lom:value',
+          { name     => 'lom:value',
             children => [
-              {
-                name => 'lom:langstring',
-                value => 'yes',
+              { name       => 'lom:langstring',
+                value      => 'yes',
                 attributes => [
-                  { 
-                    name  => 'xml:lang',
+                  { name  => 'xml:lang',
                     value => 'x-none'
                   }
                 ]
@@ -430,24 +406,21 @@ sub get_metadata {
     ]
   };
 
-  my $lic = $self->_get_license_uri($c, $rec);
+  my $lic        = $self->_get_license_uri($c, $rec);
   my $licLangStr = {
-    name => 'lom:langstring',
+    name  => 'lom:langstring',
     value => $lic
   };
   if ($lic =~ m/^https?\:\/\/creativecommons.org\/licenses\//) {
     $licLangStr->{attributes} = [
-      {
-        name => 'xml:lang',
+      { name  => 'xml:lang',
         value => 'x-t-cc-url'
       }
-    ]
-  };
+    ];
+  }
   my $licNode = {
-    name => 'lom:description',
-    children => [ 
-      $licLangStr
-    ]
+    name     => 'lom:description',
+    children => [$licLangStr]
   };
 
   push @{$rights->{children}}, $licNode;
@@ -455,35 +428,28 @@ sub get_metadata {
   #### classification ####
 
   my $classification = {
-    name       => 'lom:classification',
+    name     => 'lom:classification',
     children => [
-      {
-        name => 'lom:purpose',
+      { name     => 'lom:purpose',
         children => [
-          {
-            name => 'lom:source',
+          { name     => 'lom:source',
             children => [
-              {
-                name => 'lom:langstring',
-                value => 'LOMv1.0',
+              { name       => 'lom:langstring',
+                value      => 'LOMv1.0',
                 attributes => [
-                  { 
-                    name  => 'xml:lang',
+                  { name  => 'xml:lang',
                     value => 'x-none'
                   }
                 ]
               }
             ]
           },
-          {
-            name => 'lom:value',
+          { name     => 'lom:value',
             children => [
-              {
-                name => 'lom:langstring',
-                value => 'discipline',
+              { name       => 'lom:langstring',
+                value      => 'discipline',
                 attributes => [
-                  { 
-                    name  => 'xml:lang',
+                  { name  => 'xml:lang',
                     value => 'x-none'
                   }
                 ]
@@ -505,7 +471,7 @@ sub get_metadata {
   push @{$lom->{children}}, $classification;
 
   # $c->app->log->debug("XXXXXXXXXXXX LOM XXXXXXXXXXXXX\n".$c->app->dumper($lom));
-  
+
   push @metadata, $lom;
 
   return \@metadata;
@@ -549,12 +515,12 @@ sub _add_oefos_and_keywords {
         my $lastTaxon;
         my $lastTaxonLabel;
         for my $entry (@path) {
-          if (rindex($entry , 'ÖFOS', 0) == 0) {
+          if (rindex($entry, 'ÖFOS', 0) == 0) {
             next;
           }
           $entry =~ m/(.+)\s\((\d+)\)$/;
           $lastTaxonLabel = $1;
-          $lastTaxon = $2;
+          $lastTaxon      = $2;
         }
 
         $taxonPaths->{$lastTaxon} = [];
@@ -562,14 +528,15 @@ sub _add_oefos_and_keywords {
 
         # now add the full path for that taxon
         for my $entry (@path) {
-          if (rindex($entry , 'ÖFOS', 0) == 0) {
+          if (rindex($entry, 'ÖFOS', 0) == 0) {
             next;
           }
           $entry =~ m/(.+)\s\((\d+)\)$/;
-          push @{$taxonPaths->{$lastTaxon}}, {
+          push @{$taxonPaths->{$lastTaxon}},
+            {
             'notation' => $2,
-            'eng' => $1
-          }
+            'eng'      => $1
+            };
         }
       }
     }
@@ -586,18 +553,18 @@ sub _add_oefos_and_keywords {
         my $lastTaxon;
         my $lastTaxonLabel;
         for my $entry (@path) {
-          if (rindex($entry , 'ÖFOS', 0) == 0) {
+          if (rindex($entry, 'ÖFOS', 0) == 0) {
             next;
           }
           $entry =~ m/(.+)\s\((\d+)\)$/;
           $lastTaxonLabel = $1;
-          $lastTaxon = $2;
+          $lastTaxon      = $2;
         }
 
         push @lastTaxonLabels, $lastTaxonLabel;
 
         for my $entry (@path) {
-          if (rindex($entry , 'ÖFOS', 0) == 0) {
+          if (rindex($entry, 'ÖFOS', 0) == 0) {
             next;
           }
           $entry =~ m/(.+)\s\((\d+)\)$/;
@@ -611,59 +578,52 @@ sub _add_oefos_and_keywords {
       }
     }
   }
-  
+
   for my $lastTaxon (keys %{$taxonPaths}) {
 
     my @taxonChildren;
-    
-    push @taxonChildren, {
-      name => 'lom:source',
+
+    push @taxonChildren,
+      {
+      name     => 'lom:source',
       children => [
-        {
-          name => 'lom:langstring',
-          value => 'https://w3id.org/oerbase/vocabs/oefos2012',
+        { name       => 'lom:langstring',
+          value      => 'https://w3id.org/oerbase/vocabs/oefos2012',
           attributes => [
-            { 
-              name  => 'xml:lang',
+            { name  => 'xml:lang',
               value => 'x-none'
             }
           ]
         }
       ]
-    };
-    
+      };
+
     for my $entry (@{$taxonPaths->{$lastTaxon}}) {
-      push @taxonChildren, {
-        name => 'lom:taxon',
+      push @taxonChildren,
+        {
+        name     => 'lom:taxon',
         children => [
-          {
-            name => 'lom:id',
-            value => 'https://w3id.org/oerbase/vocabs/oefos2012/'.$entry->{notation}
+          { name  => 'lom:id',
+            value => 'https://w3id.org/oerbase/vocabs/oefos2012/' . $entry->{notation}
           },
-          {
-            name => 'lom:entry',
+          { name     => 'lom:entry',
             children => [
-              {
-                name => 'lom:langstring',
-                value => $entry->{eng},
+              { name       => 'lom:langstring',
+                value      => $entry->{eng},
                 attributes => [
-                  {
-                    name => 'xml:lang',
+                  { name  => 'xml:lang',
                     value => 'en'
                   }
                 ]
               }
             ]
           },
-          {
-            name => 'lom:entry',
+          { name     => 'lom:entry',
             children => [
-              {
-                name => 'lom:langstring',
-                value => $entry->{deu},
+              { name       => 'lom:langstring',
+                value      => $entry->{deu},
                 attributes => [
-                  {
-                    name => 'xml:lang',
+                  { name  => 'xml:lang',
                     value => 'de'
                   }
                 ]
@@ -671,25 +631,27 @@ sub _add_oefos_and_keywords {
             ]
           }
         ]
-      };
+        };
     }
 
-    push @{$classification->{children}}, {
-      name => 'lom:taxonpath',
+    push @{$classification->{children}},
+      {
+      name     => 'lom:taxonpath',
       children => \@taxonChildren
-    };
+      };
   }
 
   my $keywords = $self->_get_dc_fields($c, $iso6393ToBCP, $rec, 'subject', 'lom:keyword');
   for my $kw (@{$keywords}) {
     for my $kwLangString (@{$kw->{children}}) {
+
       # when indexing, this
       # ÖFOS 2012 -- SOZIALWISSENSCHAFTEN (5) -- Erziehungswissenschaften (503) -- Erziehungswissenschaften (5030) -- E-Learning (503008)
       # and this
       # E-Learning
       # was added to dc_subject along with keywords
       # we want to skip those, since those were just added as classification
-      my $kwval = $kwLangString->{value};
+      my $kwval        = $kwLangString->{value};
       my $isOefosTaxon = 0;
       for my $lt (@lastTaxonLabels) {
         if ($kwval eq $lt) {
@@ -714,7 +676,8 @@ sub _add_contribute {
     my $roles;
     if ($solrfield eq 'roles_json') {
       $roles = $self->_get_jsonld_roles($c, $json);
-    } else {
+    }
+    else {
       $roles = $self->_get_uwm_roles($c, $json);
     }
 
@@ -722,41 +685,34 @@ sub _add_contribute {
       my $entityCnt = scalar @{$roles->{$role}};
       if ($entityCnt > 0) {
         my $contribute = {
-          name => 'lom:contribute',
+          name     => 'lom:contribute',
           children => [
-            {
-              name => 'lom:role',
+            { name     => 'lom:role',
               children => [
-                {
-                  name => 'lom:source',
+                { name     => 'lom:source',
                   children => [
-                    {
-                      name => 'lom:langstring',
-                      value => 'LOMv1.0',
+                    { name       => 'lom:langstring',
+                      value      => 'LOMv1.0',
                       attributes => [
-                       {
-                        name  => 'xml:lang',
-                        value => 'x-none'
-                       }
+                        { name  => 'xml:lang',
+                          value => 'x-none'
+                        }
                       ]
                     }
                   ]
                 },
-                {
-                  name => 'lom:value',
+                { name     => 'lom:value',
                   children => [
-                    {
-                      name => 'lom:langstring',
-                      value => $role,
+                    { name       => 'lom:langstring',
+                      value      => $role,
                       attributes => [
-                      {
-                        name  => 'xml:lang',
-                        value => 'x-none'
-                      }
-                     ]
+                        { name  => 'xml:lang',
+                          value => 'x-none'
+                        }
+                      ]
                     }
-                   ]
-                  
+                  ]
+
                 }
               ]
             }
@@ -773,12 +729,12 @@ sub _add_contribute {
           }
           else {
             $fn = $entity->{lastname};
-            $fn = $entity->{firstname}.' '.$entity->{lastname} if $entity->{firstname};
+            $fn = $entity->{firstname} . ' ' . $entity->{lastname} if $entity->{firstname};
 
-            $n = $entity->{lastname}.';;';
-            $n = $entity->{lastname}.';'.$entity->{firstname}.';' if $entity->{firstname};
+            $n = $entity->{lastname} . ';;';
+            $n = $entity->{lastname} . ';' . $entity->{firstname} . ';' if $entity->{firstname};
           }
-          
+
           my $vcard = "BEGIN:VCARD\nVERSION:3.0\n";
 
           if ($n) {
@@ -788,20 +744,20 @@ sub _add_contribute {
           $vcard .= "FN:$fn\n";
 
           if ($entity->{orcid}) {
-            $vcard .= "X-ORCID:https\://orcid.org/".$entity->{orcid}."\n";
+            $vcard .= "X-ORCID:https\://orcid.org/" . $entity->{orcid} . "\n";
           }
 
           $vcard .= "END:VCARD";
 
-          push @{$contribute->{children}}, {
-            name => 'lom:centity',
+          push @{$contribute->{children}},
+            {
+            name     => 'lom:centity',
             children => [
-              {
-                name => 'lom:vcard',
+              { name  => 'lom:vcard',
                 value => $vcard
               }
             ]
-          };
+            };
         }
 
         push @{$lifecycle->{children}}, $contribute;
@@ -814,14 +770,14 @@ sub _get_jsonld_roles {
   my ($self, $c, $json) = @_;
 
   my $roles = {
-    Author => [],
+    Author    => [],
     Publisher => [],
-    Editor => []
+    Editor    => []
   };
   for my $hash (@{$json}) {
     for my $rolePredicate (keys %{$hash}) {
       for my $e (@{$hash->{$rolePredicate}}) {
-        my $entity = {};
+        my $entity   = {};
         my $roleCode = $rolePredicate;
         $roleCode =~ s/^role://g;
         switch ($roleCode) {
@@ -875,9 +831,9 @@ sub _get_uwm_roles {
   my ($self, $c, $json) = @_;
 
   my $roles = {
-    Author => [],
+    Author    => [],
     Publisher => [],
-    Editor => []
+    Editor    => []
   };
 
   my @contrib = sort {$a->{data_order} <=> $b->{data_order}} @{$json};
@@ -885,7 +841,7 @@ sub _get_uwm_roles {
     if ($con->{entities}) {
       my @entities = sort {$a->{data_order} <=> $b->{data_order}} @{$con->{entities}};
       for my $e (@entities) {
-        my $entity = {};
+        my $entity   = {};
         my $roleCode = $con->{role};
         switch ($roleCode) {
           case 'aut' {
@@ -906,8 +862,9 @@ sub _get_uwm_roles {
         }
         if ($e->{firstname} || $e->{lastname}) {
           $entity->{firstname} = $e->{firstname};
-          $entity->{lastname} = $e->{lastname};
-        } else {
+          $entity->{lastname}  = $e->{lastname};
+        }
+        else {
           if ($e->{institution}) {
             $entity->{name} = $e->{institution};
           }
@@ -918,7 +875,6 @@ sub _get_uwm_roles {
 
   return $roles;
 }
-
 
 sub _map_iso3_to_bcp {
   my ($self, $iso6393ToBCP, $lang) = @_;
@@ -935,21 +891,20 @@ sub _get_dc_fields {
       my $lang = $1;
       for my $v (@{$rec->{$k}}) {
         $foundValues{$v} = 1;
-        push @nodes, {
-          name => $targetfield,
+        push @nodes,
+          {
+          name     => $targetfield,
           children => [
-            { 
-              name => 'lom:langstring',
-              value => $v,
+            { name       => 'lom:langstring',
+              value      => $v,
               attributes => [
-                {
-                  name  => 'xml:lang',
+                { name  => 'xml:lang',
                   value => $self->_map_iso3_to_bcp($iso6393ToBCP, $lang)
                 }
               ]
             }
           ]
-        };
+          };
       }
     }
   }
@@ -957,15 +912,15 @@ sub _get_dc_fields {
     if ($k =~ m/^dc_$dcfield$/) {
       for my $v (@{$rec->{$k}}) {
         unless ($foundValues{$v}) {
-          push @nodes, {
-            name => $targetfield,
+          push @nodes,
+            {
+            name     => $targetfield,
             children => [
-              { 
-                name => 'lom:langstring',
+              { name  => 'lom:langstring',
                 value => $v
               }
             ]
-          };
+            };
         }
       }
     }

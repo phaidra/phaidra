@@ -4,8 +4,8 @@ use strict;
 use warnings;
 use v5.10;
 use base 'Mojolicious::Controller';
-use Mojo::JSON qw(encode_json decode_json);
-use Mojo::Util qw(encode decode);
+use Mojo::JSON       qw(encode_json decode_json);
+use Mojo::Util       qw(encode decode);
 use Mojo::ByteStream qw(b);
 use PhaidraAPI::Model::Collection;
 use PhaidraAPI::Model::Object;
@@ -364,7 +364,7 @@ sub create {
 # Helper method to call Solr
 sub call_solr {
   my ($self, $params) = @_;
-  
+
   my $url = Mojo::URL->new;
   $url->scheme($self->app->config->{solr}->{scheme});
   $url->host($self->app->config->{solr}->{host});
@@ -403,11 +403,11 @@ sub rss {
 
   # Get collection details from Solr
   my $collection_solr_params = {
-    q => "pid:$pid",
+    q       => "pid:$pid",
     defType => 'edismax',
-    wt => 'json',
-    start => 0,
-    rows => 1
+    wt      => 'json',
+    start   => 0,
+    rows    => 1
   };
 
   my $collection_solr_res = $self->call_solr($collection_solr_params);
@@ -418,13 +418,13 @@ sub rss {
 
   # Get member details from Solr
   my $members_solr_params = {
-    q => '-hassuccessor:* AND -ismemberof:["" TO *]',
+    q       => '-hassuccessor:* AND -ismemberof:["" TO *]',
     defType => 'edismax',
-    wt => 'json',
-    fq => "owner:* AND ispartof:\"$pid\"",
-    start => 0,
-    rows => 1000,
-    sort => "pos_in_$pid asc"
+    wt      => 'json',
+    fq      => "owner:* AND ispartof:\"$pid\"",
+    start   => 0,
+    rows    => 1000,
+    sort    => "pos_in_$pid asc"
   };
 
   my $members_solr_res = $self->call_solr($members_solr_params);
@@ -435,43 +435,44 @@ sub rss {
 
   # Build RSS feed
   my $feed;
-  my $collection_created = $collection_solr_res->{data}->{response}->{docs}[0]->{tcreated}[0];      
-  my $collection_dt = DateTime->from_epoch(epoch => DateTime::Format::ISO8601->parse_datetime($collection_created)->epoch);
-  my $rfc822_date = DateTime::Format::Mail->format_datetime($collection_dt) =~ s/\+0000/GMT/r =~ s/,  /, /r;
+  my $collection_created = $collection_solr_res->{data}->{response}->{docs}[0]->{tcreated}[0];
+  my $collection_dt      = DateTime->from_epoch(epoch => DateTime::Format::ISO8601->parse_datetime($collection_created)->epoch);
+  my $rfc822_date        = DateTime::Format::Mail->format_datetime($collection_dt) =~ s/\+0000/GMT/r =~ s/,  /, /r;
   eval {
     my $now = time;
+
     # my $rfc822_date = $self->format_rfc822_date(scalar gmtime($now));
-    
+
     $feed = qq{<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>}.xml_escape($self,$collection_solr_res->{data}->{response}->{docs}[0]->{dc_title}[0]).qq{</title>
-    <link>}.$self->url_for("/detail/$pid")->to_abs.qq{</link>
-    <atom:link href="}.$self->url_for("/api/collection/$pid/rss")->to_abs.qq{" rel="self" type="application/rss+xml" />
-    <description>}.xml_escape($self,$collection_solr_res->{data}->{response}->{docs}[0]->{dc_description}[0]).qq{</description>
+    <title>} . xml_escape($self, $collection_solr_res->{data}->{response}->{docs}[0]->{dc_title}[0]) . qq{</title>
+    <link>} . $self->url_for("/detail/$pid")->to_abs . qq{</link>
+    <atom:link href="} . $self->url_for("/api/collection/$pid/rss")->to_abs . qq{" rel="self" type="application/rss+xml" />
+    <description>} . xml_escape($self, $collection_solr_res->{data}->{response}->{docs}[0]->{dc_description}[0]) . qq{</description>
     <language>en-us</language>
-    <pubDate>}.$rfc822_date.qq{</pubDate>
+    <pubDate>} . $rfc822_date . qq{</pubDate>
 };
 
     # Add items from Solr results
     foreach my $doc (@{$members_solr_res->{data}->{response}->{docs}}) {
       my $member_title = $doc->{dc_title}[0] || $doc->{pid};
-      my $description = $doc->{dc_description}[0] ? "Description: " . $doc->{dc_description}[0] : "";
-      my $created = $doc->{tcreated}[0];      
-      my $dt = DateTime->from_epoch(epoch => DateTime::Format::ISO8601->parse_datetime($created)->epoch);
-      my $rfc822_date = DateTime::Format::Mail->format_datetime($dt) =~ s/\+0000/GMT/r =~ s/,  /, /r;
-      
+      my $description  = $doc->{dc_description}[0] ? "Description: " . $doc->{dc_description}[0] : "";
+      my $created      = $doc->{tcreated}[0];
+      my $dt           = DateTime->from_epoch(epoch => DateTime::Format::ISO8601->parse_datetime($created)->epoch);
+      my $rfc822_date  = DateTime::Format::Mail->format_datetime($dt) =~ s/\+0000/GMT/r =~ s/,  /, /r;
+
       $feed .= qq{
     <item>
-      <title>}.xml_escape($self,$member_title).qq{</title>
-      <link>}.$self->url_for("/detail/".$doc->{pid})->to_abs.qq{</link>
-      <guid>}.$self->url_for("/detail/".$doc->{pid})->to_abs.qq{</guid>};
-      
+      <title>} . xml_escape($self, $member_title) . qq{</title>
+      <link>} . $self->url_for("/detail/" . $doc->{pid})->to_abs . qq{</link>
+      <guid>} . $self->url_for("/detail/" . $doc->{pid})->to_abs . qq{</guid>};
+
       if ($description) {
         $feed .= qq{
-      <description>}.xml_escape($self,$description).qq{</description>};
+      <description>} . xml_escape($self, $description) . qq{</description>};
       }
-      
+
       $feed .= qq{
       <pubDate>$rfc822_date</pubDate>
     </item>};
@@ -481,7 +482,7 @@ sub rss {
   </channel>
 </rss>};
   };
-  
+
   if ($@) {
     my $error_msg = "Error generating RSS feed: $@";
     $self->app->log->error("RSS feed error for $pid: $error_msg");
@@ -498,25 +499,24 @@ sub rss {
 sub format_rfc822_date {
   my ($self, $date) = @_;
   return '' unless $date;
-  
+
   eval {
     # Convert ISO 8601 to RFC822 format
     # Example: 2024-02-20T12:34:56.178Z -> Tue, 20 Feb 2024 12:34:56 GMT
     if ($date =~ /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?Z$/) {
       my ($year, $month, $day, $hour, $min, $sec) = ($1, $2, $3, $4, $5, $6);
-     
-      my @months = qw(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec);
-      my @days = qw(Sun Mon Tue Wed Thu Fri Sat);
-      my $time = Time::Local::timegm($sec, $min, $hour, $day, $month-1, $year);
-      my ($wday) = (gmtime($time))[6];
-      my $formatted = sprintf("%s, %02d %s %04d %02d:%02d:%02d GMT", 
-                    $days[$wday], $day, $months[$month-1], $year, $hour, $min, $sec);
+
+      my @months    = qw(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec);
+      my @days      = qw(Sun Mon Tue Wed Thu Fri Sat);
+      my $time      = Time::Local::timegm($sec, $min, $hour, $day, $month - 1, $year);
+      my ($wday)    = (gmtime($time))[6];
+      my $formatted = sprintf("%s, %02d %s %04d %02d:%02d:%02d GMT", $days[$wday], $day, $months[$month - 1], $year, $hour, $min, $sec);
       return $formatted;
     }
     $self->app->log->warn("Invalid date format: $date");
     return '';
   };
-  
+
   if ($@) {
     $self->app->log->warn("Error formatting date '$date': $@");
     return '';

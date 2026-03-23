@@ -5,14 +5,14 @@ use warnings;
 use v5.10;
 use Switch;
 use base 'Mojolicious::Controller';
-use Mojo::JSON qw(encode_json decode_json);
-use Mojo::Util qw(encode decode);
+use Mojo::JSON       qw(encode_json decode_json);
+use Mojo::Util       qw(encode decode);
 use Mojo::ByteStream qw(b);
 use Mojo::Upload;
 use Mojo::Path;
 use Mojo::IOLoop;
 use Scalar::Util qw(looks_like_number);
-use Mojo::Util qw(url_escape);
+use Mojo::Util   qw(url_escape);
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Collection;
 use PhaidraAPI::Model::Search;
@@ -40,14 +40,13 @@ use Net::Amazon::S3::Authorization::Basic;
 use MIME::Base64 qw(encode_base64);
 autoflush STDOUT 1;
 
-
 # S3 credentials and bucketname
-my $aws_access_key_id = $ENV{S3_ACCESS_KEY};
+my $aws_access_key_id     = $ENV{S3_ACCESS_KEY};
 my $aws_secret_access_key = $ENV{S3_SECRET_KEY};
-my $s3_endpoint = $ENV{S3_ENDPOINT};
-my $bucketname = $ENV{S3_BUCKETNAME};
-my $s3_cachesize= $ENV{S3_CACHESIZE};
-my $s3_cache_topdir = $ENV{S3_CACHE_TOPDIR};
+my $s3_endpoint           = $ENV{S3_ENDPOINT};
+my $bucketname            = $ENV{S3_BUCKETNAME};
+my $s3_cachesize          = $ENV{S3_CACHESIZE};
+my $s3_cache_topdir       = $ENV{S3_CACHE_TOPDIR};
 
 sub info {
   my $self = shift;
@@ -133,15 +132,15 @@ sub setNoCacheHeaders {
 }
 
 sub _proxy_thumbnail {
-  my $self = shift;
-  my $pid  = shift;
+  my $self   = shift;
+  my $pid    = shift;
   my $cmodel = shift;
-  my $size = shift;
+  my $size   = shift;
 
   # let's assume the job is finished
   # this can lead to a broken thumbnail until the job is finished
   # but this is better than checking the job status forever after
-  my $jobstatus = 'finished';#$self->imageserver_job_status($pid);
+  my $jobstatus = 'finished';    #$self->imageserver_job_status($pid);
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
   my $res         = $authz_model->check_rights($self, $pid, 'ro');
@@ -155,9 +154,9 @@ sub _proxy_thumbnail {
 
     # use imageserver
     my $isrv_model = PhaidraAPI::Model::Imageserver->new;
-    my $t0 = [gettimeofday];
+    my $t0         = [gettimeofday];
     my $res        = $isrv_model->get_url($self, Mojo::Parameters->new(IIIF => "$pid.tif/full/$size/0/default.jpg"), 0);
-    $self->app->log->debug($pid . " " . $self->req->params." _proxy_thumbnail get_url took " . tv_interval($t0));
+    $self->app->log->debug($pid . " " . $self->req->params . " _proxy_thumbnail get_url took " . tv_interval($t0));
     if ($res->{status} ne 200) {
       $self->render(json => $res, status => $res->{status});
       return;
@@ -170,7 +169,7 @@ sub _proxy_thumbnail {
         sub {
           my ($c, $tx) = @_;
           _proxy_tx($self, $tx);
-          $self->app->log->debug($pid . " " . $self->req->params." _proxy_thumbnail call_url took " . tv_interval($t1));
+          $self->app->log->debug($pid . " " . $self->req->params . " _proxy_thumbnail call_url took " . tv_interval($t1));
         }
       );
     }
@@ -198,8 +197,8 @@ sub _proxy_thumbnail {
         return;
       }
       case 'Audio' {
-      $self->reply->static('images/audio.png');
-      return;
+        $self->reply->static('images/audio.png');
+        return;
       }
       case 'Container' {
         $self->reply->static('images/container.png');
@@ -275,20 +274,22 @@ sub thumbnail {
 
   switch ($cmodelr->{cmodel}) {
     case ['Picture', 'Page', 'PDFDocument'] {
-      if ( defined $ENV{S3_ENABLED} and $ENV{S3_ENABLED} eq "true" ) {
+      if (defined $ENV{S3_ENABLED} and $ENV{S3_ENABLED} eq "true") {
         my $paf_mongo = $self->paf_mongo;
-        my $s3_cache = PhaidraAPI::S3::Cache->new(paf_mongodb=>$paf_mongo,
-                                                  aws_access_key_id=>$aws_access_key_id,
-                                                  aws_secret_access_key=>$aws_secret_access_key,
-                                                  s3_endpoint=>$s3_endpoint,
-                                                  bucketname=>$bucketname,
-                                                  s3_cachesize=>$s3_cachesize,
-                                                  s3_cache_topdir=>$s3_cache_topdir);
-        my $jobs_coll = $self->paf_mongo->get_collection('jobs');
-        my $job_record = $jobs_coll->find_one({pid => $pid, agent => 'libvips'}, {}, {"sort" => {"created" => -1}});
+        my $s3_cache  = PhaidraAPI::S3::Cache->new(
+          paf_mongodb           => $paf_mongo,
+          aws_access_key_id     => $aws_access_key_id,
+          aws_secret_access_key => $aws_secret_access_key,
+          s3_endpoint           => $s3_endpoint,
+          bucketname            => $bucketname,
+          s3_cachesize          => $s3_cachesize,
+          s3_cache_topdir       => $s3_cache_topdir
+        );
+        my $jobs_coll      = $self->paf_mongo->get_collection('jobs');
+        my $job_record     = $jobs_coll->find_one({pid => $pid, agent => 'libvips'}, {}, {"sort" => {"created" => -1}});
         my $FileToBeCached = $job_record->{image};
-        my $s3_result = $s3_cache->cache_file($pid,$FileToBeCached);
-        unless ( $s3_result eq "OK" ) {
+        my $s3_result      = $s3_cache->cache_file($pid, $FileToBeCached);
+        unless ($s3_result eq "OK") {
           $self->render(text => $s3_result, status => 200);
           return;
         }
@@ -321,20 +322,19 @@ sub thumbnail {
       }
     }
     case 'Video' {
-      if (defined $self->config
-          ->{external_services}->{opencast}->{mode} &&
-          $self->config->{external_services}->{opencast}->{mode}
-          eq "ACTIVATED")
+      if (defined $self->config->{external_services}->{opencast}->{mode}
+        && $self->config->{external_services}->{opencast}->{mode} eq "ACTIVATED")
       {
         my $strm_model = PhaidraAPI::Model::Streaming->new;
-        my $vsr = $strm_model->get_job($self, $pid);
+        my $vsr        = $strm_model->get_job($self, $pid);
         if ($vsr->{status} eq 200 && ($vsr->{job}->{status} eq 'SUCCEEDED')) {
           my $thumburl = $vsr->{job}->{oc_search_thumbnail};
           $self->app->log->debug("pid[$pid] redirtecting to $thumburl");
           $self->res->code(303);
           $self->redirect_to($thumburl);
           return;
-        } else {
+        }
+        else {
           if (defined $self->stash('defaulticonpath')) {
             $self->reply->static($self->stash('defaulticonpath'));
             return;
@@ -342,7 +342,8 @@ sub thumbnail {
           $self->reply->static('images/video.png');
           return;
         }
-      } elsif ($self->config->{streaming}) {
+      }
+      elsif ($self->config->{streaming}) {
         my $u_model = PhaidraAPI::Model::Util->new;
         my $r       = $u_model->get_video_key($self, $pid);
         if ($r->{status} eq 200) {
@@ -391,7 +392,7 @@ sub thumbnail {
     }
     case 'Collection' {
       my $col_model = PhaidraAPI::Model::Collection->new;
-      my $r       = $col_model->get_oldest_member($self, $pid);
+      my $r         = $col_model->get_oldest_member($self, $pid);
       if ($res->{status} ne 200) {
         $self->render(json => $res, status => $res->{status});
         return;
@@ -400,13 +401,15 @@ sub thumbnail {
         if ($r->{oldest_member}->{cmodel} eq 'Collection') {
           $self->reply->static('images/collection.png');
           return;
-        } else {
-          $self->stash(pid => $r->{oldest_member}->{pid});
-          $self->stash(thumbnest => $thumbnest + 1);
+        }
+        else {
+          $self->stash(pid             => $r->{oldest_member}->{pid});
+          $self->stash(thumbnest       => $thumbnest + 1);
           $self->stash(defaulticonpath => 'images/collection.png');
           return $self->thumbnail();
         }
-      } else {
+      }
+      else {
         if (defined $self->stash('defaulticonpath')) {
           $self->reply->static($self->stash('defaulticonpath'));
           return;
@@ -445,7 +448,7 @@ sub preview {
     $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
     return;
   }
-  my $lang = $self->param('lang') || 'en';  # Default to English
+  my $lang = $self->param('lang') || 'en';    # Default to English
   $self->languages($lang);
 
   my $addannotation = $self->param('addannotation');
@@ -573,7 +576,7 @@ sub preview {
   }
 
   # Get instance config and set favicon
-  my $model = PhaidraAPI::Model::Config->new;
+  my $model    = PhaidraAPI::Model::Config->new;
   my $modelres = $model->get_public_config($self, 1);
   if (defined $modelres->{faviconText}) {
     my $faviconText = $modelres->{faviconText};
@@ -613,21 +616,24 @@ sub preview {
         $self->app->log->info("Imageserver job new/in_progress: job status [$imgsrvjobstatus] pid[$pid] cm[$cmodel]");
       }
       if ($imgsrvjobstatus eq 'finished') {
+
         # cache file from agent-libvips's converted images bucket if stored on S3.
-        if ( defined $ENV{S3_ENABLED} and $ENV{S3_ENABLED} eq "true" ) {
+        if (defined $ENV{S3_ENABLED} and $ENV{S3_ENABLED} eq "true") {
           my $paf_mongo = $self->paf_mongo;
-          my $s3_cache = PhaidraAPI::S3::Cache->new(paf_mongodb=>$paf_mongo,
-                                                    aws_access_key_id=>$aws_access_key_id,
-                                                    aws_secret_access_key=>$aws_secret_access_key,
-                                                    s3_endpoint=>$s3_endpoint,
-                                                    bucketname=>$bucketname,
-                                                    s3_cachesize=>$s3_cachesize,
-                                                    s3_cache_topdir=>$s3_cache_topdir);
-          my $jobs_coll = $self->paf_mongo->get_collection('jobs');
-          my $job_record = $jobs_coll->find_one({pid => $pid, agent => 'libvips'}, {}, {"sort" => {"created" => -1}});
+          my $s3_cache  = PhaidraAPI::S3::Cache->new(
+            paf_mongodb           => $paf_mongo,
+            aws_access_key_id     => $aws_access_key_id,
+            aws_secret_access_key => $aws_secret_access_key,
+            s3_endpoint           => $s3_endpoint,
+            bucketname            => $bucketname,
+            s3_cachesize          => $s3_cachesize,
+            s3_cache_topdir       => $s3_cache_topdir
+          );
+          my $jobs_coll      = $self->paf_mongo->get_collection('jobs');
+          my $job_record     = $jobs_coll->find_one({pid => $pid, agent => 'libvips'}, {}, {"sort" => {"created" => -1}});
           my $FileToBeCached = $job_record->{image};
-          my $s3_result = $s3_cache->cache_file($pid,$FileToBeCached);
-          unless ( $s3_result eq "OK" ) {
+          my $s3_result      = $s3_cache->cache_file($pid, $FileToBeCached);
+          unless ($s3_result eq "OK") {
             $self->render(text => $s3_result, status => 200);
             return;
           }
@@ -703,7 +709,6 @@ sub preview {
         }
       }
 
-
       my $page = $self->param('page');
       $page = looks_like_number($page) ? $page : 1;
       $self->stash(page     => $page);
@@ -758,17 +763,17 @@ sub preview {
 
       if (($mimetype eq 'model/obj') or ($mimetype eq 'model/glb')) {
         my $threed_model = PhaidraAPI::Model::Threed->new;
-        my $model_info = $threed_model->get_model_path($self, $pid);
+        my $model_info   = $threed_model->get_model_path($self, $pid);
         $self->stash(model_info_json => Mojo::JSON::encode_json($model_info));
-        
+
         if ($model_info eq 'processing') {
           $self->render('threed/processing');
           return;
         }
-        
+
         if ($model_info) {
-          $self->stash(gltf_url => $model_info->{gltf_url});
-          $self->stash(idhash => $model_info->{idhash});
+          $self->stash(gltf_url      => $model_info->{gltf_url});
+          $self->stash(idhash        => $model_info->{idhash});
           $self->stash(baseurl       => $self->config->{baseurl});
           $self->stash(scheme        => $self->config->{scheme});
           $self->stash(basepath      => $self->config->{basepath});
@@ -782,55 +787,55 @@ sub preview {
       if (exists($self->app->config->{paf_mongodb})) {
         $viewer360_job = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'unzip'});
       }
-      
+
       if ($viewer360_job) {
         my $viewer360_model = PhaidraAPI::Model::Viewer360->new;
-        my $viewer_info = $viewer360_model->get_viewer_config($self, $pid);
-        
+        my $viewer_info     = $viewer360_model->get_viewer_config($self, $pid);
+
         if ($viewer_info->{status} eq 'processing' || $viewer_info->{status} eq 'new') {
           $self->render('360viewer/processing');
           return;
         }
-        
+
         if ($viewer_info->{status} eq 'finished') {
           $self->stash(viewer_config => Mojo::JSON::encode_json($viewer_info));
-          $self->stash(baseurl => $self->config->{baseurl});
-          $self->stash(scheme => $self->config->{scheme});
-          $self->stash(basepath => $self->config->{basepath});
-          $self->stash(pid => $pid);
-          
+          $self->stash(baseurl       => $self->config->{baseurl});
+          $self->stash(scheme        => $self->config->{scheme});
+          $self->stash(basepath      => $self->config->{basepath});
+          $self->stash(pid           => $pid);
+
           my $u_model = PhaidraAPI::Model::Util->new;
           $u_model->track_action($self, $pid, 'preview');
-          
+
           $self->render('360viewer/viewer');
           return;
         }
       }
 
       if (($index_mime eq 'application/x-wacz')) {
-        
-       my $object_model = PhaidraAPI::Model::Object->new;
-       my $r= $object_model->info($self, $pid);
-       my $website_url;
-       
- #check if metadata has URL to display from the archive after the component loads in replayweb
 
-     
-           if (exists($r->{info}->{metadata}->{"JSON-LD"}->{'phaidra:systemTag'}[0])) {
-            $website_url = $r->{info}->{metadata}->{"JSON-LD"}->{'phaidra:systemTag'}[0];
-            }  elsif (exists($r->{info}->{metadata}->{"JSON-LD"}->{'rdfs:seeAlso'}[0]->{'schema:url'}[0])) {
-            $website_url = $r->{info}->{metadata}->{"JSON-LD"}->{'rdfs:seeAlso'}[0]->{'schema:url'}[0];
-            }  
-        $self->stash(website_url =>$website_url);
-        $self->stash(baseurl  => $self->config->{baseurl});
-        $self->stash(scheme   => $self->config->{scheme});
-        $self->stash(basepath => $self->config->{basepath});
-        $self->stash(baseurl       => $self->config->{baseurl});
-        $self->stash(pid      => $pid);
-       
+        my $object_model = PhaidraAPI::Model::Object->new;
+        my $r            = $object_model->info($self, $pid);
+        my $website_url;
+
+        #check if metadata has URL to display from the archive after the component loads in replayweb
+
+        if (exists($r->{info}->{metadata}->{"JSON-LD"}->{'phaidra:systemTag'}[0])) {
+          $website_url = $r->{info}->{metadata}->{"JSON-LD"}->{'phaidra:systemTag'}[0];
+        }
+        elsif (exists($r->{info}->{metadata}->{"JSON-LD"}->{'rdfs:seeAlso'}[0]->{'schema:url'}[0])) {
+          $website_url = $r->{info}->{metadata}->{"JSON-LD"}->{'rdfs:seeAlso'}[0]->{'schema:url'}[0];
+        }
+        $self->stash(website_url => $website_url);
+        $self->stash(baseurl     => $self->config->{baseurl});
+        $self->stash(scheme      => $self->config->{scheme});
+        $self->stash(basepath    => $self->config->{basepath});
+        $self->stash(baseurl     => $self->config->{baseurl});
+        $self->stash(pid         => $pid);
 
         my $u_model = PhaidraAPI::Model::Util->new;
         $u_model->track_action($self, $pid, 'preview');
+
         # Ensure UTF-8 encoding for translations
         my $archive_info = $self->l('replayweb_archive_info');
         $archive_info = decode('UTF-8', $archive_info) if !utf8::is_utf8($archive_info);
@@ -840,13 +845,13 @@ sub preview {
         return;
       }
       if (($index_mime eq 'model/ply') || ($index_mime eq 'model/nxz')) {
-        $self->stash(baseurl  => $self->config->{baseurl});
-        $self->stash(scheme   => $self->config->{scheme});
-        $self->stash(basepath => $self->config->{basepath});
+        $self->stash(baseurl       => $self->config->{baseurl});
+        $self->stash(scheme        => $self->config->{scheme});
+        $self->stash(basepath      => $self->config->{basepath});
         $self->stash(trywebversion => $trywebversion);
-        $self->stash(pid      => $pid);
-        $self->stash(mType    => 'ply')   if $index_mime eq 'model/ply';
-        $self->stash(mType    => 'nexus') if $index_mime eq 'model/nxz';
+        $self->stash(pid           => $pid);
+        $self->stash(mType         => 'ply')   if $index_mime eq 'model/ply';
+        $self->stash(mType         => 'nexus') if $index_mime eq 'model/nxz';
 
         if ($showloadbutton) {
           $self->render(template => 'utils/loadbutton', format => 'html');
@@ -865,14 +870,11 @@ sub preview {
       }
     }
     case 'Video' {
-      if (defined $self->config
-          ->{external_services}->{opencast}->{mode} &&
-          $self->config->{external_services}->{opencast}->{mode}
-          eq "ACTIVATED")
+      if (defined $self->config->{external_services}->{opencast}->{mode}
+        && $self->config->{external_services}->{opencast}->{mode} eq "ACTIVATED")
       {
-        my $object_job_info = $self->paf_mongo->get_collection('jobs')->
-          find_one({pid => $pid, agent => 'opencast'}, {}, { sort => { created => -1 } });
-          $self->app->log->info("XXXXXXXXXXXXXXX MIGRATED pid[$pid]:\n".$self->app->dumper($object_job_info));
+        my $object_job_info = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'}, {}, {sort => {created => -1}});
+        $self->app->log->info("XXXXXXXXXXXXXXX MIGRATED pid[$pid]:\n" . $self->app->dumper($object_job_info));
         if (defined $object_job_info) {
           my $job_status = $object_job_info->{'status'};
           if ($job_status eq "SUCCEEDED") {
@@ -885,10 +887,13 @@ sub preview {
           }
           elsif ($job_status eq "sent") {
             $self->render(text => "please be patient, video is being processed for streaming.");
-          # }
-          # elsif ($job_status eq "FAILED") {
-          #   $self->render(text => "stream preparation failed, please contact your admin.");
-          } elsif ($self->config->{streaming}) {
+
+            # }
+            # elsif ($job_status eq "FAILED") {
+            #   $self->render(text => "stream preparation failed, please contact your admin.");
+          }
+          elsif ($self->config->{streaming}) {
+
             # TODO: this is duplicate code, but we'll remove both old streaming paths after migration
             my $u_model = PhaidraAPI::Model::Util->new;
             my $r       = $u_model->get_video_key($self, $pid);
@@ -946,7 +951,8 @@ sub preview {
 
               $self->render(template => 'utils/streamingplayer', format => 'html');
               return;
-            } else {
+            }
+            else {
               $self->app->log->error("Video key not available: " . $self->app->dumper($r));
               if ($r->{status} eq 404 or $r->{status} eq 503) {
                 $self->render(text => "Stream is not available. Reason: Video is being prepared for streaming, please try again later.", status => $r->{status});
@@ -959,79 +965,79 @@ sub preview {
             }
           }
         }
-        
+
         # TODO: this is duplicate code, but we'll remove both old streaming paths after migration
-      elsif ($self->config->{streaming}) {
-$self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
-        my $u_model = PhaidraAPI::Model::Util->new;
-        my $r       = $u_model->get_video_key($self, $pid);
-        if ($r->{status} eq 200) {
-          my $trackpid;
-          my $tracklabel;
-          my $tracklanguage;
+        elsif ($self->config->{streaming}) {
+          $self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
+          my $u_model = PhaidraAPI::Model::Util->new;
+          my $r       = $u_model->get_video_key($self, $pid);
+          if ($r->{status} eq 200) {
+            my $trackpid;
+            my $tracklabel;
+            my $tracklanguage;
 
-          # check if there isn't a track object
-          unless ($docres) {
-            $docres = $index_model->get_doc($self, $pid);
-          }
-          if ($docres->{status} ne 200) {
-            $self->app->log->error("pid[$pid] error searching for doc: " . $self->app->dumper($docres));
-          }
-          else {
-            for my $tpid (@{$docres->{doc}->{hastrack}}) {
-              $self->app->log->info("pid[$pid] found track object: $tpid");
-              $trackpid = $tpid;
-              my $trackdocres = $index_model->get_doc($self, $trackpid);
-              if ($trackdocres->{status} ne 200) {
-                $self->app->log->error("pid[$pid] error searching for doc trackpid[$trackpid]: " . $self->app->dumper($docres));
-              }
-              else {
-                for my $ttit (@{$trackdocres->{doc}->{dc_title}}) {
-                  $tracklabel = $ttit;
-                  last;
+            # check if there isn't a track object
+            unless ($docres) {
+              $docres = $index_model->get_doc($self, $pid);
+            }
+            if ($docres->{status} ne 200) {
+              $self->app->log->error("pid[$pid] error searching for doc: " . $self->app->dumper($docres));
+            }
+            else {
+              for my $tpid (@{$docres->{doc}->{hastrack}}) {
+                $self->app->log->info("pid[$pid] found track object: $tpid");
+                $trackpid = $tpid;
+                my $trackdocres = $index_model->get_doc($self, $trackpid);
+                if ($trackdocres->{status} ne 200) {
+                  $self->app->log->error("pid[$pid] error searching for doc trackpid[$trackpid]: " . $self->app->dumper($docres));
                 }
+                else {
+                  for my $ttit (@{$trackdocres->{doc}->{dc_title}}) {
+                    $tracklabel = $ttit;
+                    last;
+                  }
 
-                # pretend you don't see this
-                my $lang_model   = PhaidraAPI::Model::Languages->new;
-                my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
-                for my $lng3 (@{$trackdocres->{doc}->{dc_language}}) {
-                  $tracklanguage = exists($iso6393ToBCP{$lng3}) ? $iso6393ToBCP{$lng3} : $lng3;
-                  last;
+                  # pretend you don't see this
+                  my $lang_model   = PhaidraAPI::Model::Languages->new;
+                  my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
+                  for my $lng3 (@{$trackdocres->{doc}->{dc_language}}) {
+                    $tracklanguage = exists($iso6393ToBCP{$lng3}) ? $iso6393ToBCP{$lng3} : $lng3;
+                    last;
+                  }
                 }
               }
             }
-          }
 
-          $self->stash(baseurl           => $self->config->{baseurl});
-          $self->stash(basepath          => $self->config->{basepath});
-          $self->stash(video_key         => $r->{video_key});
-          $self->stash(errormsg          => $r->{errormsq});
-          $self->stash(server            => $self->config->{streaming}->{server});
-          $self->stash(server_rtmp       => $self->config->{streaming}->{server_rtmp});
-          $self->stash(server_cd         => $self->config->{streaming}->{server_cd});
-          $self->stash(streamingbasepath => $self->config->{streaming}->{basepath});
-          $self->stash(trackpid          => $trackpid);
-          $self->stash(tracklabel        => $tracklabel);
-          $self->stash(tracklanguage     => $tracklanguage);
+            $self->stash(baseurl           => $self->config->{baseurl});
+            $self->stash(basepath          => $self->config->{basepath});
+            $self->stash(video_key         => $r->{video_key});
+            $self->stash(errormsg          => $r->{errormsq});
+            $self->stash(server            => $self->config->{streaming}->{server});
+            $self->stash(server_rtmp       => $self->config->{streaming}->{server_rtmp});
+            $self->stash(server_cd         => $self->config->{streaming}->{server_cd});
+            $self->stash(streamingbasepath => $self->config->{streaming}->{basepath});
+            $self->stash(trackpid          => $trackpid);
+            $self->stash(tracklabel        => $tracklabel);
+            $self->stash(tracklanguage     => $tracklanguage);
 
-          my $u_model = PhaidraAPI::Model::Util->new;
-          $u_model->track_action($self, $pid, 'preview');
+            my $u_model = PhaidraAPI::Model::Util->new;
+            $u_model->track_action($self, $pid, 'preview');
 
-          $self->render(template => 'utils/streamingplayer', format => 'html');
-          return;
-        }
-        else {
-          $self->app->log->error("Video key not available: " . $self->app->dumper($r));
-          if ($r->{status} eq 404 or $r->{status} eq 503) {
-            $self->render(text => "Stream is not available. Reason: Video is being prepared for streaming, please try again later.", status => $r->{status});
+            $self->render(template => 'utils/streamingplayer', format => 'html');
+            return;
           }
           else {
-            $self->render(text => "Stream is not available. Reason: " . $r->{alerts}[0]->{msg}, status => $r->{status});
-          }
+            $self->app->log->error("Video key not available: " . $self->app->dumper($r));
+            if ($r->{status} eq 404 or $r->{status} eq 503) {
+              $self->render(text => "Stream is not available. Reason: Video is being prepared for streaming, please try again later.", status => $r->{status});
+            }
+            else {
+              $self->render(text => "Stream is not available. Reason: " . $r->{alerts}[0]->{msg}, status => $r->{status});
+            }
 
-          return;
+            return;
+          }
         }
-      }
         else {
           $self->render(text => "Did you recently migrate to a streaming service?  It looks like this video has not been not been processed!");
         }
@@ -1113,12 +1119,13 @@ $self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
         $self->stash(baseurl       => $self->config->{baseurl});
         $self->stash(basepath      => $self->config->{basepath});
         $self->stash(trywebversion => $trywebversion);
+
         # html tag won't work with video/quicktime
         $self->stash(mimetype => $mimetype eq 'video/quicktime' ? 'video/mp4' : $mimetype);
         $self->stash(pid      => $pid);
-        
+
         if ($showloadbutton) {
-          
+
           $self->render(template => 'utils/loadbutton', format => 'html');
           return;
         }
@@ -1273,9 +1280,9 @@ sub modify_bulk {
   }
 
   @objarr = @{$objects->{objects}};
-  
+
   my $objcount = scalar @objarr;
-  my $i         = 0;
+  my $i        = 0;
   my @res;
   my $status = 200;
   for my $o (@objarr) {
@@ -1284,10 +1291,10 @@ sub modify_bulk {
     $i++;
     $self->app->log->info("modify_bulk processing $pid [$i/$objcount]");
 
-    my $state = exists($o->{state}) ? $o->{state} : undef;
-    my $label = exists($o->{label}) ? $o->{label} : undef;
-    my $ownerid = exists($o->{ownerid}) ? $o->{ownerid} : undef;
-    my $logmessage = exists($o->{logmessage}) ? $o->{logmessage} : undef;
+    my $state            = exists($o->{state})            ? $o->{state}            : undef;
+    my $label            = exists($o->{label})            ? $o->{label}            : undef;
+    my $ownerid          = exists($o->{ownerid})          ? $o->{ownerid}          : undef;
+    my $logmessage       = exists($o->{logmessage})       ? $o->{logmessage}       : undef;
     my $lastmodifieddate = exists($o->{lastmodifieddate}) ? $o->{lastmodifieddate} : undef;
 
     my $search_model = PhaidraAPI::Model::Search->new;
@@ -1302,7 +1309,7 @@ sub modify_bulk {
     $objectowner =~ s/"//g;
 
     # Sanity check. Only allow bulk operations on objects which belong to single owner.
-    # The owner must be sent in currentowner param, and object's owner must match it.  
+    # The owner must be sent in currentowner param, and object's owner must match it.
     if ($objectowner ne $currentowner) {
       push @res, {alerts => [{type => 'error', msg => "Object[$pid] owner[$objectowner] does not match currentowner[$currentowner]"}], status => 400};
       $status = 500;
@@ -1377,7 +1384,7 @@ sub delete_bulk {
     $objectowner =~ s/"//g;
 
     # Sanity check. Only allow bulk operations on objects which belong to single owner.
-    # The owner must be sent in currentowner param, and object's owner must match it.  
+    # The owner must be sent in currentowner param, and object's owner must match it.
     if ($objectowner ne $currentowner) {
       push @res, {alerts => [{type => 'error', msg => "Object[$pid] owner[$objectowner] does not match currentowner[$currentowner]"}], status => 400};
       $status = 500;
@@ -1879,10 +1886,10 @@ sub get_public_datastream {
     return;
   }
 
-  my $dsid = $self->stash('dsid');
+  my $dsid        = $self->stash('dsid');
   my $authz_model = PhaidraAPI::Model::Authorization->new;
   if ($authz_model->is_private_ds($self, $dsid)) {
-    $self->render(json => {alerts => [{type => 'error', msg => 'Datastream '.$dsid.' is not public.'}]}, status => 400);
+    $self->render(json => {alerts => [{type => 'error', msg => 'Datastream ' . $dsid . ' is not public.'}]}, status => 400);
     return;
   }
 
@@ -2285,7 +2292,7 @@ sub resourcelink {
 
     if ($cmodelr->{cmodel} ne 'Resource') {
       $self->app->log->error("pid[$pid] called resourcelink on a non-resource object");
-      $self->render(json => {alerts => [{type => 'error', msg => "Object $pid does not have a Resource cmodel (current cmodel: ".$cmodelr->{cmodel}.")"}]}, status => 500);
+      $self->render(json => {alerts => [{type => 'error', msg => "Object $pid does not have a Resource cmodel (current cmodel: " . $cmodelr->{cmodel} . ")"}]}, status => 500);
       return;
     }
 
@@ -2316,11 +2323,12 @@ sub resourcelink {
       $self->redirect_to($resgetds->{LINK});
       return;
     }
-    
+
     $self->app->log->error("pid[$pid] resourcelink, unknown operation: $operation");
     $self->render(json => {alerts => [{type => 'error', msg => "pid[$pid] resourcelink, unknown operation: $operation"}]}, status => 400);
     return;
-  } else {
+  }
+  else {
 
     if ($operation eq 'get') {
       my $url = Mojo::URL->new;
@@ -2340,7 +2348,7 @@ sub resourcelink {
     }
 
     if ($operation eq 'redirect') {
-      $self->stash->{bdef} = 'Resource';
+      $self->stash->{bdef}   = 'Resource';
       $self->stash->{method} = 'get';
       return $self->diss($self);
     }
@@ -2423,15 +2431,16 @@ sub _proxy_tx {
     $c->rendered;
   }
   else {
-    my $status_code = $res->code || 500;
+    my $status_code    = $res->code    || 500;
     my $status_message = $res->message || 'Unknown error';
     if ($tx->error) {
       my $error = $tx->error;
       $c->tx->res->headers->add('X-Remote-Status', $error->{code} . ': ' . $error->{message});
-    } else {
+    }
+    else {
       $c->tx->res->headers->add('X-Remote-Status', $status_code . ': ' . $status_message);
     }
-    
+
     $c->tx->res($res);
     $c->rendered;
   }

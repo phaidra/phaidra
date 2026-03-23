@@ -5,9 +5,9 @@ use warnings;
 use v5.10;
 use utf8;
 use Switch;
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::JSON       qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
-use base qw/Mojo::Base/;
+use base             qw/Mojo::Base/;
 use PhaidraAPI::Model::Languages;
 use PhaidraAPI::Model::Config;
 
@@ -53,9 +53,9 @@ my $openaireContributorType = {
   # RightsHolder
   spn => "Sponsor"
 
-    # Supervisor
-    # WorkPackageLeader
-    # Other < all unmapped contributor roles
+  # Supervisor
+  # WorkPackageLeader
+  # Other < all unmapped contributor roles
 };
 
 sub _get_roles_uwm {
@@ -549,7 +549,7 @@ sub _bytes_string {
 sub get_metadata {
   my ($self, $c, $rec) = @_;
 
-  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $confmodel  = PhaidraAPI::Model::Config->new;
   my $privconfig = $confmodel->get_private_config($c);
 
   # pretend you don't see this

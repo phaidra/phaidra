@@ -4,10 +4,10 @@ use strict;
 use warnings;
 use v5.10;
 use base 'Mojolicious::Controller';
-use Mojo::JSON qw(encode_json decode_json);
-use Mojo::Util qw(decode encode url_escape url_unescape);
+use Mojo::JSON       qw(encode_json decode_json);
+use Mojo::Util       qw(decode encode url_escape url_unescape);
 use Mojo::ByteStream qw(b);
-use Digest::SHA qw(hmac_sha1_hex);
+use Digest::SHA      qw(hmac_sha1_hex);
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Authorization;
 use PhaidraAPI::Model::Imageserver;
@@ -140,7 +140,7 @@ sub status {
 
   $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'libvips'}, {}, {"sort" => {"created" => -1}});
 
-  $self->render(json => { conversion => $res->{conversion}, status => $res->{status} }, status => 200);
+  $self->render(json => {conversion => $res->{conversion}, status => $res->{status}}, status => 200);
 
 }
 
@@ -148,9 +148,9 @@ sub imageserverproxy {
   my $self = shift;
 
   my $isrv_model = PhaidraAPI::Model::Imageserver->new;
-  my $t0 = [gettimeofday];
+  my $t0         = [gettimeofday];
   my $res        = $isrv_model->get_url($self, $self->req->params, 1);
-  $self->app->log->debug($self->req->params." imageserverproxy get_url took " . tv_interval($t0));
+  $self->app->log->debug($self->req->params . " imageserverproxy get_url took " . tv_interval($t0));
   if ($res->{status} ne 200) {
     $self->render(json => $res, status => $res->{status});
     return;
@@ -164,7 +164,7 @@ sub imageserverproxy {
       sub {
         my ($c, $tx) = @_;
         _proxy_tx($self, $tx);
-        $self->app->log->debug($self->req->params." imageserverproxy call_url took " . tv_interval($t1));
+        $self->app->log->debug($self->req->params . " imageserverproxy call_url took " . tv_interval($t1));
       }
     );
   }
@@ -184,8 +184,7 @@ sub _proxy_tx {
   }
   else {
     my $error = $tx->error;
-    $c->tx->res->headers->add('X-Remote-Status',
-      $error->{code} . ': ' . $error->{message});
+    $c->tx->res->headers->add('X-Remote-Status', $error->{code} . ': ' . $error->{message});
     $c->render(status => 500, text => 'Failed to fetch data from backend');
   }
 }

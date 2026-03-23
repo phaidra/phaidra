@@ -4,17 +4,17 @@ use strict;
 use warnings;
 use v5.10;
 use base 'Mojolicious::Controller';
-use Mojo::JSON qw(encode_json decode_json);
-use Mojo::Util qw(decode encode url_escape url_unescape);
+use Mojo::JSON       qw(encode_json decode_json);
+use Mojo::Util       qw(decode encode url_escape url_unescape);
 use Mojo::ByteStream qw(b);
-use Digest::SHA qw(hmac_sha1_hex);
+use Digest::SHA      qw(hmac_sha1_hex);
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Authorization;
 use PhaidraAPI::Model::Streaming;
 
 sub key {
   my $self = shift;
-  
+
   unless (defined($self->stash('pid'))) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
     return;
@@ -30,13 +30,15 @@ sub key {
     if (defined $object_job_info) {
       $self->render(text => $object_job_info->{oc_mpid}, status => 200);
       return;
-    } else {
+    }
+    else {
       $self->render(json => {alerts => [{type => 'error', msg => 'Not found'}]}, status => 404);
       return;
     }
-  } else {
-   $self->render(json => {alerts => [{type => 'error', msg => 'Streaming is not configured'}]}, status => 400);
-   return;
+  }
+  else {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Streaming is not configured'}]}, status => 400);
+    return;
   }
 }
 
@@ -151,7 +153,7 @@ sub status {
 
   $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'}, {}, {"sort" => {"created" => -1}});
 
-  $self->render(json => { status => $res->{status} }, status => 200);
+  $self->render(json => {status => $res->{status}}, status => 200);
 
 }
 

@@ -55,7 +55,7 @@ sub agree {
     $self->render(json => {alerts => [{type => 'error', msg => 'No version provided'}]}, status => 400);
     return;
   }
-  unless(looks_like_number($version)) {
+  unless (looks_like_number($version)) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Invalid version provided'}]}, status => 400);
     return;
   }
@@ -63,7 +63,7 @@ sub agree {
   my $username = $self->stash->{basic_auth_credentials}->{username};
 
   my $termsofuse_model = PhaidraAPI::Model::Termsofuse->new;
-  my $res = $termsofuse_model->agree($self, $username, $version);
+  my $res              = $termsofuse_model->agree($self, $username, $version);
 
   $self->render(json => $res, status => $res->{status});
 }
@@ -74,7 +74,7 @@ sub getagreed {
   my $username = $self->stash->{basic_auth_credentials}->{username};
 
   my $termsofuse_model = PhaidraAPI::Model::Termsofuse->new;
-  my $res = $termsofuse_model->getagreed($self, $username);
+  my $res              = $termsofuse_model->getagreed($self, $username);
 
   $self->render(json => $res, status => $res->{status});
 }

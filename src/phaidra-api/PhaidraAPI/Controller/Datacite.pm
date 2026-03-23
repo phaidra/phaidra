@@ -5,7 +5,7 @@ use warnings;
 use v5.10;
 use base 'Mojolicious::Controller';
 use Mojo::ByteStream qw(b);
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::JSON       qw(encode_json decode_json);
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Datacite;
 

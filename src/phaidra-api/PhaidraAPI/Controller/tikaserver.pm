@@ -4,10 +4,10 @@ use strict;
 use warnings;
 use v5.10;
 use base 'Mojolicious::Controller';
-use Mojo::JSON qw(encode_json decode_json);
-use Mojo::Util qw(decode encode url_escape url_unescape);
+use Mojo::JSON       qw(encode_json decode_json);
+use Mojo::Util       qw(decode encode url_escape url_unescape);
 use Mojo::ByteStream qw(b);
-use Digest::SHA qw(hmac_sha1_hex);
+use Digest::SHA      qw(hmac_sha1_hex);
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Authorization;
 use PhaidraAPI::Model::Fedora;
@@ -64,10 +64,11 @@ sub process {
   my $path;
   if ($self->app->config->{fedora}->{version} >= 6) {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $dsAttr = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
+    my $dsAttr       = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
     if ($dsAttr->{status} eq 200) {
       $path = $dsAttr->{path};
-    } else {
+    }
+    else {
       $self->app->log->error("tikaserver process pid[$pid] cm[$cmodel]: could not get path");
     }
   }
@@ -75,12 +76,9 @@ sub process {
     my $job = {pid => $pid, cmodel => $cmodel, agent => $agent, status => 'new', idhash => $hash, created => time};
     $job->{path} = $path if $path;
     $self->paf_mongo->get_collection('jobs')->insert_one($job);
-  } else {
-    $self->paf_mongo->get_collection('jobs')->update_one(
-      { 'pid' => $pid, 'agent' => $agent },
-      { '$set' => { 'status' => 'new', 'idhash' => $hash, ($path ? ('path' => $path) : ()) } },
-      { 'upsert' => 0 }
-    );
+  }
+  else {
+    $self->paf_mongo->get_collection('jobs')->update_one({'pid' => $pid, 'agent' => $agent}, {'$set' => {'status' => 'new', 'idhash' => $hash, ($path ? ('path' => $path) : ())}}, {'upsert' => 0});
   }
 
   $res = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => $agent}, {}, {"sort" => {"created" => -1}});
@@ -143,10 +141,11 @@ sub process_pids {
     my $path;
     if ($self->app->config->{fedora}->{version} >= 6) {
       my $fedora_model = PhaidraAPI::Model::Fedora->new;
-      my $dsAttr = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
+      my $dsAttr       = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
       if ($dsAttr->{status} eq 200) {
         $path = $dsAttr->{path};
-      } else {
+      }
+      else {
         $self->app->log->error("tikaserver process_pids pid[$pid] cm[$cmodel]: could not get path");
       }
     }
@@ -154,12 +153,9 @@ sub process_pids {
       my $job = {pid => $pid, cmodel => $cmodel, agent => 'tika', status => 'new', idhash => $hash, created => time};
       $job->{path} = $path if $path;
       $self->paf_mongo->get_collection('jobs')->insert_one($job);
-    } else {
-      $self->paf_mongo->get_collection('jobs')->update_one(
-        { 'pid' => $pid, 'agent' => 'tika' },
-        { '$set' => { 'status' => 'new', 'idhash' => $hash, ($path ? ('path' => $path) : ()) } },
-        { 'upsert' => 0 }
-      );
+    }
+    else {
+      $self->paf_mongo->get_collection('jobs')->update_one({'pid' => $pid, 'agent' => 'tika'}, {'$set' => {'status' => 'new', 'idhash' => $hash, ($path ? ('path' => $path) : ())}}, {'upsert' => 0});
     }
 
     push @results, {pid => $pid, idhash => $hash};
@@ -168,6 +164,5 @@ sub process_pids {
   $self->render(json => \@results, status => 200);
 
 }
-
 
 1;

@@ -5,7 +5,7 @@ use warnings;
 use Data::Dumper;
 use Digest::SHA qw(sha256_hex);
 
-my $pid = shift (@ARGV);
+my $pid = shift(@ARGV);
 
 my $resourceID = "info:fedora/$pid";
 my $hash       = sha256_hex($resourceID);

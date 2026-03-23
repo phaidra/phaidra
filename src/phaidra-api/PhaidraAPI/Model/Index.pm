@@ -5,10 +5,10 @@ use warnings;
 use v5.10;
 use utf8;
 use Switch;
-use Time::HiRes qw/tv_interval gettimeofday/;
+use Time::HiRes      qw/tv_interval gettimeofday/;
 use Mojo::ByteStream qw(b);
-use Mojo::Util qw(encode decode trim);
-use Mojo::JSON qw(encode_json decode_json from_json to_json);
+use Mojo::Util       qw(encode decode trim);
+use Mojo::JSON       qw(encode_json decode_json from_json to_json);
 use Mojo::URL;
 use Mojo::UserAgent;
 use base qw/Mojo::Base/;
@@ -25,11 +25,11 @@ use PhaidraAPI::Model::Fedora;
 use Scalar::Util qw(reftype looks_like_number);
 
 my %modifiedDateOverwriteDatastreams = (
-  'OCTETS' => 1,
-  'JSON-LD' => 1,
-  'UWMETADATA' => 1,
-  'MODS' => 1,
-  'RIGHTS' => 1,
+  'OCTETS'        => 1,
+  'JSON-LD'       => 1,
+  'UWMETADATA'    => 1,
+  'MODS'          => 1,
+  'RIGHTS'        => 1,
   'IIIF-MANIFEST' => 1
 );
 
@@ -532,9 +532,10 @@ sub update {
 
     my $tcm        = [gettimeofday];
     my $cmodel_res = $search_model->get_cmodel($c, $pid);
-    $c->app->log->debug("getting cmodel[" . ($cmodel_res->{cmodel} ? $cmodel_res->{cmodel} : '') . "] took " . tv_interval($tcm). " status[".$cmodel_res->{status}."]");
-    
+    $c->app->log->debug("getting cmodel[" . ($cmodel_res->{cmodel} ? $cmodel_res->{cmodel} : '') . "] took " . tv_interval($tcm) . " status[" . $cmodel_res->{status} . "]");
+
     if (($cmodel_res->{status} eq 410) && ($c->app->config->{fedora}->{version} >= 6)) {
+
       # object was deleted
       $c->app->log->debug("[$pid] object returns 410 Gone - deleting from index");
       my $post = $ua->post($self->getSolrUpdateUrl($c) => json => {delete => $pid})->result;
@@ -601,7 +602,7 @@ sub update {
 
         if (exists($c->app->config->{solr})) {
           $t0 = [gettimeofday];
-          
+
           # For PDFDocument, preserve existing extracted_text from Solr unless object is restricted
           if ($r->{index}->{cmodel} && $r->{index}->{cmodel} eq 'PDFDocument') {
             my $preserved_text = $self->_preserve_extracted_text($c, $pid, $r->{index});
@@ -609,7 +610,7 @@ sub update {
               $r->{index}->{extracted_text} = $preserved_text;
             }
           }
-          
+
           my @docs = ($r->{index});
           my $post = $ua->post($updateurl => json => \@docs)->result;
           $c->app->log->debug("posting index took " . tv_interval($t0));
@@ -671,7 +672,7 @@ sub update {
           @{$collectionMembers} = ();
         }
         my $pageUpdateUrl = $self->getSolrUpdateUrl($c, $cmodel_res->{cmodel}, 'phaidra_pages');
-        my $umr = $self->_update_members($c, $pid, $cmodel_res->{cmodel}, $pageUpdateUrl, $collectionMembers, 'ispartof');
+        my $umr           = $self->_update_members($c, $pid, $cmodel_res->{cmodel}, $pageUpdateUrl, $collectionMembers, 'ispartof');
         if ($umr->{status} ne 200) {
           $res->{status} = $umr->{status};
           push @{$res->{alerts}}, @{$umr->{alerts}} if scalar @{$umr->{alerts}} > 0;
@@ -1010,7 +1011,7 @@ sub _update_members {
 
   #$c->app->log->debug("XXXXXXXXXXXX ".$c->app->dumper(\@remove_from));
 
-  my $addCnt = scalar @add_to;
+  my $addCnt    = scalar @add_to;
   my $removeCnt = scalar @remove_from;
 
   if ($addCnt > 0) {
@@ -1231,6 +1232,7 @@ sub _get {
 
     for my $dsid (@{$fres->{contains}}) {
       if ($modifiedDateOverwriteDatastreams{$dsid}) {
+
         # if metadata was modified later, we want that date in 'modified' date
         my $propresDs = $fedora_model->_getObjectProperties($c, "$pid/$dsid/fcr:metadata");
         if ($propresDs->{status} == 200) {
@@ -1251,7 +1253,8 @@ sub _get {
           $dom->xml(1);
           $dom->parse('<foxml:xmlContent>' . decode('UTF-8', $getdsres->{$dsid}) . '</foxml:xmlContent>');
           $datastreams{$dsid} = $dom;
-        } else {
+        }
+        else {
           $datastreams{$dsid} = 1;
         }
       }
@@ -1450,6 +1453,7 @@ sub _get {
   elsif (exists($datastreams{'UWMETADATA'})) {    # keep in else to avoid overwriting index fields for objects which have both JSON-LD and uwmetadata
     my $tadduwmindex = [gettimeofday];
     my $r_add_uwm    = $self->_add_uwm_index($c, $pid, $datastreams{'UWMETADATA'}->find('foxml\:xmlContent')->first, \%index);
+
     # $c->app->log->debug("_add_uwm_index took " . tv_interval($tadduwmindex));
     if ($r_add_uwm->{status} ne 200) {
       push @{$res->{alerts}}, {type => 'error', msg => "Error adding UWMETADATA fields for $pid"};
@@ -1460,6 +1464,7 @@ sub _get {
 
     my $tgetuwmtree = [gettimeofday];
     my $r0          = $uw_model->metadata_tree($c);
+
     # $c->app->log->debug("getting metadata_tree took " . tv_interval($tgetuwmtree));
 
     if ($r0->{status} ne 200) {
@@ -1469,6 +1474,7 @@ sub _get {
     else {
       my $tmapuwmdc = [gettimeofday];
       my ($dc_p, $dc_oai) = $dc_model->map_uwmetadata_2_dc_hash($c, $pid, $index{cmodel}, $datastreams{'UWMETADATA'}->find('foxml\:xmlContent')->first, $r0->{metadata_tree}, $uw_model, 1);
+
       # $c->app->log->debug("mapping uwm to dc took " . tv_interval($tmapuwmdc));
 
       $self->_add_dc_index($c, $dc_p, \%index);
@@ -1533,7 +1539,8 @@ sub _get {
     if ($alto_text) {
       $index{extracted_text} = $alto_text;
       $c->app->log->debug("[$pid] ALTO text extracted: " . substr($alto_text, 0, 100) . "...");
-    } else {
+    }
+    else {
       $c->app->log->warn("[$pid] No text could be extracted from ALTO datastream");
     }
   }
@@ -1544,7 +1551,8 @@ sub _get {
     if ($ocrtext) {
       $index{extracted_text} = $ocrtext;
       $c->app->log->debug("[$pid] OCRTEXT text extracted: " . substr($ocrtext, 0, 100) . "...");
-    } else {
+    }
+    else {
       $c->app->log->warn("[$pid] No text could be extracted from OCRTEXT datastream");
     }
   }
@@ -1948,28 +1956,38 @@ sub _add_jsonld_index {
       if (ref($date) eq 'HASH') {
         next;
       }
+
       # Store the full EDTF date
       push @{$index->{"dcterms_created_edtf"}}, $date;
-      
+
       # Extract year from EDTF date
       my $year;
       if ($date =~ /^(\d{4})/) {
+
         # Simple year format (e.g. "2023")
         $year = $1;
-      } elsif ($date =~ /^(\d{4})~/) {
+      }
+      elsif ($date =~ /^(\d{4})~/) {
+
         # Approximate year (e.g. "2023~")
         $year = $1;
-      } elsif ($date =~ /^(\d{4})\/(\d{4})/) {
+      }
+      elsif ($date =~ /^(\d{4})\/(\d{4})/) {
+
         # Year range (e.g. "2020/2023")
         $year = $1;
-      } elsif ($date =~ /^(\d{4})-\d{2}/) {
+      }
+      elsif ($date =~ /^(\d{4})-\d{2}/) {
+
         # Year with month (e.g. "2023-02")
         $year = $1;
-      } elsif ($date =~ /^(\d{4})-\d{2}-\d{2}/) {
+      }
+      elsif ($date =~ /^(\d{4})-\d{2}-\d{2}/) {
+
         # Full date (e.g. "2023-02-03")
         $year = $1;
       }
-      
+
       if ($year && looks_like_number($year)) {
         my $year_int = int($year);
         push @{$index->{"dcterms_created_year"}}, $year_int;
@@ -2006,8 +2024,10 @@ sub _add_jsonld_index {
       }
       else {
         push @{$index->{"dc_identifier"}}, $prefix . ":" . $id->{'@value'};
+
         # index without prefix too, makes it easier to search
         push @{$index->{"_text_"}}, $id->{'@value'};
+
         # index without prefix too, makes it easier to search
         push @{$index->{"_text_"}}, $id->{'@value'};
       }
@@ -2061,6 +2081,7 @@ sub _add_jsonld_index {
   }
 
   unless (exists($jsonld->{'@type'}) && ($jsonld->{'@type'} eq 'phaidra:Subject')) {
+
     # If it was phaidra:Subject (=represented object section), then roles
     # array would overwrite the digital object roles array.
     # Merge would not be easy (could create dups), so let's just skip adding
@@ -2150,7 +2171,8 @@ sub _add_jsonld_index {
             for my $projId (@{$proj->{'skos:exactMatch'}}) {
               if (reftype $projId eq reftype {}) {
                 push @{$index->{"project_id"}}, $projId->{'@value'};
-              } else {
+              }
+              else {
                 push @{$index->{"project_id"}}, $projId;
               }
             }
@@ -2166,7 +2188,8 @@ sub _add_jsonld_index {
             for my $projId (@{$proj->{'skos:exactMatch'}}) {
               if (reftype $projId eq reftype {}) {
                 push @{$index->{"programme_id"}}, $projId->{'@value'};
-              } else {
+              }
+              else {
                 push @{$index->{"programme_id"}}, $projId;
               }
             }
@@ -2189,7 +2212,8 @@ sub _add_jsonld_index {
             for my $id (@{$funder->{'skos:exactMatch'}}) {
               if (reftype $id eq reftype {}) {
                 push @{$index->{"funder_id"}}, $id->{'@value'};
-              } else {
+              }
+              else {
                 push @{$index->{"funder_id"}}, $id;
               }
             }
@@ -2252,7 +2276,7 @@ sub _add_jsonld_index {
           }
           if (defined($series_id_value) && ($series_id_value ne '')) {
             push @{$index->{"bib_seriesidentifier"}}, $series_id_value;
-            push @{$index->{"dc_identifier"}}, $series_id_value;
+            push @{$index->{"dc_identifier"}},        $series_id_value;
           }
         }
       }
@@ -2405,7 +2429,8 @@ sub _add_jsonld_index {
     for my $o (@{$jsonld->{'bf:shelfMark'}}) {
       if (ref($o) eq 'HASH') {
         push @{$index->{"bf_shelfmark"}}, $o->{'@value'};
-      } else {
+      }
+      else {
         push @{$index->{"bf_shelfmark"}}, $o;
       }
     }
@@ -2557,7 +2582,7 @@ sub _add_uwm_index {
   # $c->app->log->debug("XXXXXXXXXXXX ".$c->app->dumper($contributions));
   $index->{"uwm_roles_json"} = to_json($contributions);
   for my $r (@{$roles}) {
-    push @{$index->{"bib_roles_pers_" . $r->{role}}}, trim $r->{name}   if $r->{name} && ($r->{name} ne '');
+    push @{$index->{"bib_roles_pers_" . $r->{role}}}, trim $r->{name}   if $r->{name}        && ($r->{name} ne '');
     push @{$index->{"bib_roles_corp_" . $r->{role}}}, $r->{institution} if $r->{institution} && ($r->{institution} ne '');
   }
 
@@ -2725,7 +2750,7 @@ sub _add_uwm_index {
         next unless $unit_res->{status} == 200 && $unit_res->{unit} && $unit_res->{unit}->{'@id'};
         my $id = $unit_res->{unit}->{'@id'};
         unless (exists($foundAssIds{$id})) {
-          push @{$index->{"association_id"}}, $id;
+          push @{$index->{"association_id"}},     $id;
           push @{$index->{"uwm_association_id"}}, $id;
           $foundAssIds{$id} = 1;
         }
@@ -2734,7 +2759,7 @@ sub _add_uwm_index {
           for my $parent (@{$pp->{parentpath}}) {
             next unless $parent->{'@id'} && $parent->{'@id'} ne $id;
             unless (exists($foundAssIds{$parent->{'@id'}})) {
-              push @{$index->{"association_id"}}, $parent->{'@id'};
+              push @{$index->{"association_id"}},     $parent->{'@id'};
               push @{$index->{"uwm_association_id"}}, $parent->{'@id'};
               $foundAssIds{$parent->{'@id'}} = 1;
             }
@@ -2757,11 +2782,11 @@ sub _get_uwm_organisations {
       my %orgassignment_json;
       for my $n (@{$ch->{children}}) {
         if (($n->{xmlname} eq "faculty")) {
-          $n->{ui_value} =~ /([^\/]+$)/; # remove xmlns
+          $n->{ui_value} =~ /([^\/]+$)/;    # remove xmlns
           $orgassignment_json{faculty} = $1 if ($1 ne '');
         }
         if (($n->{xmlname} eq "department")) {
-          $n->{ui_value} =~ /([^\/]+$)/; # remove xmlns
+          $n->{ui_value} =~ /([^\/]+$)/;    # remove xmlns
           $orgassignment_json{department} = $1 if ($1 ne '');
         }
       }
@@ -3255,6 +3280,7 @@ sub add_indexed_and_reverse {
       # $c->app->log->debug("getting doc of $relpid ($relationfield of $pid)");
       my $d = $self->get_doc_from_ua($c, $ua, $urlget, $relpid);
       unless ($d) {
+
         # pages are usually not related in this fashion, so this case is rare: so I'd let it guess a second time
         # instead of asking for cmodel first, which we'd then need to do for evey case/object
         $d = $self->get_doc_from_ua($c, $ua, $self->_get_solrget_url($c, 'Page'), $relpid);
@@ -3292,15 +3318,16 @@ sub get_doc_from_ua {
     $c->app->log->error("[$pid] error getting solr doc for object[$pid]: " . $r->code . " " . $r->message);
   }
 }
+
 sub _preserve_extracted_text {
   my ($self, $c, $pid, $index_doc) = @_;
-  
+
   # Check if object has restrictions - if so, don't preserve extracted_text
   my $object_model = PhaidraAPI::Model::Object->new;
-  my $rights_res = $object_model->get_datastream($c, $pid, 'RIGHTS');
+  my $rights_res   = $object_model->get_datastream($c, $pid, 'RIGHTS');
   if ($rights_res->{status} eq 200 && $rights_res->{RIGHTS}) {
     my $rights_model = PhaidraAPI::Model::Rights->new;
-    my $res_rights = $rights_model->xml_2_json($c, $rights_res->{RIGHTS});
+    my $res_rights   = $rights_model->xml_2_json($c, $rights_res->{RIGHTS});
     if ($res_rights->{status} eq 200) {
       my $rights = $res_rights->{rights};
       my $nrKeys = keys %{$rights};
@@ -3310,14 +3337,14 @@ sub _preserve_extracted_text {
       }
     }
   }
-  
+
   # Get existing document from Solr to preserve extracted_text
-  my $ua = Mojo::UserAgent->new;
-  my $urlget = $self->_get_solrget_url($c, 'Page');  # Use the correct core for pages
-  
+  my $ua     = Mojo::UserAgent->new;
+  my $urlget = $self->_get_solrget_url($c, 'Page');    # Use the correct core for pages
+
   $urlget->query(q => "pid:\"$pid\"", rows => "1", wt => "json", fl => "extracted_text");
   my $r = $ua->get($urlget)->result;
-  
+
   if ($r->is_success) {
     my $response = $r->json;
     if ($response->{response}->{docs} && @{$response->{response}->{docs}} > 0) {
@@ -3327,18 +3354,19 @@ sub _preserve_extracted_text {
         return $existing_doc->{extracted_text};
       }
     }
-  } else {
+  }
+  else {
     $c->app->log->warn("[$pid] Could not retrieve existing document from Solr: " . $r->code . " " . $r->message);
   }
-  
+
   return undef;
 }
 
 sub _extact_text_from_ocr {
   my ($self, $c, $alto_dom) = @_;
-  
+
   my $extracted_text = "";
-  
+
   eval {
     # Handle different ALTO formats
     # 1. Standard ALTO format (http://www.loc.gov/standards/alto/)
@@ -3356,7 +3384,7 @@ sub _extact_text_from_ocr {
         }
       }
     }
-    
+
     # 2. Phaidra custom OCRTEXT format (http://phaidra.univie.ac.at/XML/book/ocrtext/V1.0)
     if (!$extracted_text) {
       my @ocr_words = $alto_dom->find('ocrword')->each;
@@ -3364,42 +3392,43 @@ sub _extact_text_from_ocr {
         my $current_line_y = -1;
         for my $word (@ocr_words) {
           my $word_text = $word->attr('word');
-          my $y_pos = $word->attr('y1');
-          
+          my $y_pos     = $word->attr('y1');
+
           # Add line break if Y position changes significantly (new line)
           if ($current_line_y != -1 && abs($y_pos - $current_line_y) > 10) {
             $extracted_text .= "\n";
           }
           $current_line_y = $y_pos;
-          
+
           $extracted_text .= $word_text . " " if $word_text;
         }
       }
     }
-    
+
     # 3. Generic text extraction from any XML with text content
     if (!$extracted_text) {
+
       # Look for any text content in the XML
       my @all_text = $alto_dom->find('*')->each;
       for my $element (@all_text) {
         my $text = $element->text;
-        if ($text && $text =~ /\S/) {  # Only non-whitespace text
+        if ($text && $text =~ /\S/) {    # Only non-whitespace text
           $extracted_text .= $text . " ";
         }
       }
     }
-    
+
     # Clean up the extracted text
-    $extracted_text =~ s/\s+/ /g;  # Replace multiple whitespace with single space
-    $extracted_text =~ s/^\s+|\s+$//g;  # Trim leading/trailing whitespace
-    
+    $extracted_text =~ s/\s+/ /g;         # Replace multiple whitespace with single space
+    $extracted_text =~ s/^\s+|\s+$//g;    # Trim leading/trailing whitespace
+
   };
-  
+
   if ($@) {
     $c->app->log->error("_extact_text_from_ocr: Error parsing ALTO content: $@");
     return undef;
   }
-  
+
   return $extracted_text;
 }
 

@@ -645,12 +645,12 @@ sub get_last_modified_date {
 
   if ($c->app->config->{fedora}->{version} >= 6) {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
-      my $r            = $fedora_model->getObjectProperties($c, $pid);
-      if ($r->{status} ne 200) {
-        return $r;
-      }
-      $res->{lastmodifieddate} = $r->{modified};
-      return $res;
+    my $r            = $fedora_model->getObjectProperties($c, $pid);
+    if ($r->{status} ne 200) {
+      return $r;
+    }
+    $res->{lastmodifieddate} = $r->{modified};
+    return $res;
   }
 
   my $sr = $self->triples($c, "<info:fedora/$pid> <info:fedora/fedora-system:def/view#lastModifiedDate> *");
@@ -757,7 +757,8 @@ sub get_book_for_page {
         return $res;
       }
 
-    } else {
+    }
+    else {
 
       my $search_model = PhaidraAPI::Model::Search->new;
 

@@ -8,7 +8,7 @@ use XML::LibXML;
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Util;
 
-=cut example
+=begin example
 <uwr:rights xmlns:uwr="http://phaidra.univie.ac.at/XML/V1.0/rights">
 	<uwr:allow>
 		<uwr:username expires="2017-04-06T09:11:51Z">hudakr4</uwr:username>
@@ -20,17 +20,18 @@ use PhaidraAPI::Model::Util;
     <uwr:affiliation>staff</uwr:affiliation>
 	</uwr:allow>
 </uwr:rights>
+=end example
 =cut
 
 our %allowed_tags = (
-  'username'   => 1,
-  'department' => 1,
-  'faculty'    => 1,
-  'gruppe'     => 1,
-  'spl'        => 1,
-  'kennzahl'   => 1,
-  'perfunk'    => 1,
-  'affiliation'    => 1
+  'username'    => 1,
+  'department'  => 1,
+  'faculty'     => 1,
+  'gruppe'      => 1,
+  'spl'         => 1,
+  'kennzahl'    => 1,
+  'perfunk'     => 1,
+  'affiliation' => 1
 );
 
 sub json_2_xml {

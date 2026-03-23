@@ -25,22 +25,23 @@ sub authorize {
 
   # extract_credentials -> authorize[_if_username] -> action
   my $controller = $self->match->stack->[3]{controller};
-  my $action = $self->match->stack->[3]{action};
-  my $pid = $self->match->stack->[3]{pid};
-  
+  my $action     = $self->match->stack->[3]{action};
+  my $pid        = $self->match->stack->[3]{pid};
+
   # imageserverproxy is an exception
   # -> the PID is in the query string
   # -> pass this, we'll check rights in imageserver model where we parse the query
   if ($action eq 'imageserverproxy') {
     $self->app->log->debug("Authz controller[$controller] action[$action] op[$op]");
     return 1;
-  } else {
+  }
+  else {
     $self->app->log->debug("Authz controller[$controller] action[$action] pid[$pid] op[$op]");
   }
 
   if (($controller eq 'object') && ($action eq 'delete')) {
-    my $confmodel = PhaidraAPI::Model::Config->new;
-    my $privconfig = $confmodel->get_private_config($self);
+    my $confmodel   = PhaidraAPI::Model::Config->new;
+    my $privconfig  = $confmodel->get_private_config($self);
     my $currentuser = $self->stash->{basic_auth_credentials}->{username};
     if ($self->stash->{remote_user}) {
       $currentuser = $self->stash->{remote_user};
@@ -64,10 +65,11 @@ sub authorize {
   }
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  $res         = $authz_model->check_rights($self, $pid, $op);
+  $res = $authz_model->check_rights($self, $pid, $op);
   if ($res->{status} == 200) {
     return 1;
-  } else {
+  }
+  else {
     if ($action eq 'thumbnail' && $res->{status} == 403) {
       $self->res->headers->add('Pragma-Directive' => 'no-cache');
       $self->res->headers->add('Cache-Directive'  => 'no-cache');
@@ -76,7 +78,8 @@ sub authorize {
       $self->res->headers->add('Expires'          => 0);
       $self->reply->static('images/locked.png');
       return 0;
-    } else {
+    }
+    else {
       $self->render(json => $res, status => $res->{status});
       return 0;
     }
@@ -104,7 +107,7 @@ sub check_rights {
   }
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  $res         = $authz_model->check_rights($self, $pid, $op);
+  $res = $authz_model->check_rights($self, $pid, $op);
 
   $self->render(json => {status => $res->{status}, alerts => $res->{alerts}}, status => $res->{status});
 }

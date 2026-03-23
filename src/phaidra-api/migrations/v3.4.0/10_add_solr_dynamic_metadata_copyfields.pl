@@ -52,11 +52,11 @@ sub add_missing {
   my ($url, $label) = @_;
   print "[$label] Ensuring dynamic metadata copyFields -> _text_ at $url...\n";
 
-  my $cf = list_copyfields($url);
-  my %existing_to_text = map { ($_->{source} // '') => 1 }
-    grep { ($_->{dest} // '') eq '_text_' && defined $_->{source} } @$cf;
+  my $cf               = list_copyfields($url);
+  my %existing_to_text = map {($_->{source} // '') => 1}
+    grep {($_->{dest} // '') eq '_text_' && defined $_->{source}} @$cf;
 
-  my @missing = grep { !$existing_to_text{$_} } @SOURCES;
+  my @missing = grep {!$existing_to_text{$_}} @SOURCES;
 
   print "  Already present: " . (scalar(@SOURCES) - scalar(@missing)) . "\n";
   print "  Missing to add: " . scalar(@missing) . "\n";
@@ -66,8 +66,8 @@ sub add_missing {
     return;
   }
 
-  my @adds = map { { source => $_, dest => '_text_' } } @missing;
-  my $payload = { 'add-copy-field' => \@adds };
+  my @adds    = map {{source => $_, dest => '_text_'}} @missing;
+  my $payload = {'add-copy-field' => \@adds};
 
   print "  Sending add request for " . scalar(@missing) . " copyField(s)...\n";
   my $tx = $ua->post($url => auth_headers() => json => $payload);
@@ -82,7 +82,7 @@ sub add_missing {
       print $tx->result->body . "\n";
     }
     else {
-      print( ($tx->error->{message} // 'Unknown error') . "\n" );
+      print(($tx->error->{message} // 'Unknown error') . "\n");
       print $tx->result->body . "\n" if defined $tx->result->body;
     }
   }

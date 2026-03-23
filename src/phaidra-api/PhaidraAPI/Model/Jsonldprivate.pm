@@ -5,9 +5,9 @@ use warnings;
 use v5.10;
 use utf8;
 use Mojo::ByteStream qw(b);
-use Mojo::JSON qw(decode_json encode_json);
-use Mojo::Util qw(encode decode);
-use base qw/Mojo::Base/;
+use Mojo::JSON       qw(decode_json encode_json);
+use Mojo::Util       qw(encode decode);
+use base             qw/Mojo::Base/;
 use XML::LibXML;
 use PhaidraAPI::Model::Object;
 

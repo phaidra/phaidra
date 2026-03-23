@@ -3,9 +3,9 @@ package PhaidraAPI::Model::Licenses;
 use strict;
 use warnings;
 use v5.10;
-use base qw/Mojo::Base/;
+use base             qw/Mojo::Base/;
 use Mojo::ByteStream qw(b);
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::JSON       qw(encode_json decode_json);
 use Mojo::File;
 
 sub get_licenses {

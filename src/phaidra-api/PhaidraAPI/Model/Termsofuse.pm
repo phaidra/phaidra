@@ -3,15 +3,15 @@ package PhaidraAPI::Model::Termsofuse;
 use strict;
 use warnings;
 use v5.10;
-use base qw/Mojo::Base/;
+use base             qw/Mojo::Base/;
 use Mojo::ByteStream qw(b);
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::JSON       qw(encode_json decode_json);
 use Mojo::File;
 
 sub getagreed {
-  my $self = shift;
-  my $c    = shift;
-  my $username  = shift;
+  my $self     = shift;
+  my $c        = shift;
+  my $username = shift;
 
   my $res = {alerts => [], status => 200, agreed => undef};
 
@@ -38,10 +38,10 @@ sub getagreed {
 }
 
 sub agree {
-  my $self = shift;
-  my $c    = shift;
-  my $username  = shift;
-  my $version = shift;
+  my $self     = shift;
+  my $c        = shift;
+  my $username = shift;
+  my $version  = shift;
 
   my $res = {alerts => [], status => 200};
 

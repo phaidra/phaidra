@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use v5.10;
 use utf8;
-use base qw/Mojo::Base/;
+use base        qw/Mojo::Base/;
 use Digest::SHA qw(hmac_sha1_hex);
 use IO::Scalar;
 use Mojo::ByteStream qw(b);
@@ -67,6 +67,7 @@ sub add_or_modify_datastream_hooks {
             push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
           }
           if ($res_cmodel->{cmodel} eq 'PDFDocument') {
+
             # New data uploaded - create new Tika extraction job
             my $pdf_extraction_job = $self->_create_pdf_extraction_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
             push @{$res->{alerts}}, @{$pdf_extraction_job->{alerts}} if scalar @{$pdf_extraction_job->{alerts}} > 0;
@@ -75,7 +76,8 @@ sub add_or_modify_datastream_hooks {
             my $vsr = $self->_create_streaming_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
             push @{$res->{alerts}}, @{$vsr->{alerts}} if scalar @{$vsr->{alerts}} > 0;
           }
-        } else {
+        }
+        else {
           $c->app->log->error("add_or_modify_datastream_hooks pid[$pid] Could not get cmodel, not creating imageserver/streaming/3d job");
         }
 
@@ -89,11 +91,12 @@ sub add_or_modify_datastream_hooks {
         $res->{status} = 500;
         return $res;
       }
+
       # Handle PDFDocument Tika job reset when restrictions are removed
       if ($res_cmodel->{cmodel} eq 'PDFDocument') {
         eval {
           my $rights_model = PhaidraAPI::Model::Rights->new;
-          my $res_rights = $rights_model->xml_2_json($c, $dscontent);
+          my $res_rights   = $rights_model->xml_2_json($c, $dscontent);
           my $isRestricted = 0;
           if ($res_rights->{status} eq 200) {
             my $rights = $res_rights->{rights};
@@ -102,11 +105,13 @@ sub add_or_modify_datastream_hooks {
           }
           $c->app->log->debug("add_or_modify_datastream_hooks pid[$pid] isRestricted[$isRestricted]");
           unless ($isRestricted) {
+
             # Object is unrestricted - ensure job exists and reset to 'new' for re-extraction
             my $jr = $self->_create_pdf_extraction_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
             push @{$res->{alerts}}, @{$jr->{alerts}} if scalar @{$jr->{alerts}} > 0;
             $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] RIGHTS updated, object is unrestricted - resetting Tika job to 'new'");
-          } else {
+          }
+          else {
             $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] RIGHTS updated, object is restricted - not resetting Tika job");
           }
         };
@@ -114,38 +119,40 @@ sub add_or_modify_datastream_hooks {
           $c->app->log->error("add_or_modify_datastream_hooks pid[$pid] error evaluating RIGHTS/Tika reset: $@");
         }
       }
+
       # currently only for videos, so we check the cmodel first
       if ($res_cmodel->{cmodel} eq 'Video') {
         my $rights_model = PhaidraAPI::Model::Rights->new;
-        my $res_rights = $rights_model->xml_2_json($c, $dscontent);
+        my $res_rights   = $rights_model->xml_2_json($c, $dscontent);
         if ($res_rights->{status} eq 200) {
           my $rights = $res_rights->{rights};
           my $nrKeys = keys %{$rights};
           if ($nrKeys != 0) {
             my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid});
             if ($find->{pid}) {
-              $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] Access restrictions have been added or modified: Current streaming job status[".$find->{status}."]");
+              $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] Access restrictions have been added or modified: Current streaming job status[" . $find->{status} . "]");
               if ($find->{status} eq "TO_DELETE" or $find->{status} eq "DEL_REQUESTED") {
                 $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] Delete already requested. Noop.");
-              } else {
+              }
+              else {
                 if ($find->{status} =~ m/^OC_DELETED_/) {
                   $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] Already deleted. Noop.");
-                } else {
+                }
+                else {
                   $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] Marking stream for delete.");
-                  $c->paf_mongo->get_collection('jobs')->update_one(
-                    { 'pid' => $pid, 'agent' => 'opencast' },
-                    { '$set'     => { 'status' => 'TO_DELETE' }},
-                    { 'upsert'   => 0 }
-                  );
+                  $c->paf_mongo->get_collection('jobs')->update_one({'pid' => $pid, 'agent' => 'opencast'}, {'$set' => {'status' => 'TO_DELETE'}}, {'upsert' => 0});
                 }
               }
-            } else {
+            }
+            else {
               $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] Access restrictions have been added or modified, but streaming job wasn't found. Noop.");
             }
-          } else {
+          }
+          else {
             $c->app->log->info("add_or_modify_datastream_hooks pid[$pid] Access restrictions have been removed. Consider updating streaming jobs (manually).");
           }
-        } else {
+        }
+        else {
           push @{$res->{alerts}}, {type => 'error', msg => 'Error reading RIGHTS'};
           $res->{status} = 500;
           return $res;
@@ -154,25 +161,28 @@ sub add_or_modify_datastream_hooks {
     }
     if ($dsid eq "ALTO") {
       $c->app->log->info("add_or_modify_datastream_hooks ALTO pid[$pid] ALTO datastream has been added or modified. Extracting text for Solr indexing.");
-      
+
       # Extract text from ALTO and prepare for Solr indexing
       my $index_model = PhaidraAPI::Model::Index->new;
-      my $alto_text = $index_model->_extact_text_from_ocr($c, $dscontent);
+      my $alto_text   = $index_model->_extact_text_from_ocr($c, $dscontent);
       if ($alto_text) {
         $c->app->log->info("add_or_modify_datastream_hooks ALTO pid[$pid] Extracted text: " . $alto_text);
-        
+
         # Trigger re-indexing to update Solr with ALTO text
         my $dc_model     = PhaidraAPI::Model::Dc->new;
         my $index_model  = PhaidraAPI::Model::Index->new;
         my $object_model = PhaidraAPI::Model::Object->new;
         my $r            = $index_model->update($c, $pid, $dc_model, $search_model, $object_model);
         if ($r->{status} ne 200) {
+
           # just log but don't change status, this isn't fatal
           push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
-        } else {
+        }
+        else {
           $c->app->log->info("add_or_modify_datastream_hooks ALTO pid[$pid] Successfully updated Solr index with ALTO text");
         }
-      } else {
+      }
+      else {
         $c->app->log->warn("add_or_modify_datastream_hooks ALTO pid[$pid] No text could be extracted from ALTO datastream");
       }
     }
@@ -238,11 +248,11 @@ sub add_or_modify_relationships_hooks {
 sub add_octets_hook {
   my ($self, $c, $pid, $exists, $mimetype, $cmodel) = @_;
 
-  my $res = {alerts => [], status => 200};
+  my $res          = {alerts => [], status => 200};
   my $search_model = PhaidraAPI::Model::Search->new;
 
   unless (defined($exists)) {
-    
+
     my $sr = $search_model->datastream_exists($c, $pid, 'OCTETS');
     if ($sr->{status} ne 200) {
       unshift @{$res->{alerts}}, @{$sr->{alerts}};
@@ -257,10 +267,11 @@ sub add_octets_hook {
     my $clean_cmodel = $cmodel;
     $clean_cmodel =~ s/^cmodel://;
     $res_cmodel = {status => 200, cmodel => $clean_cmodel};
-  } else {
+  }
+  else {
     $res_cmodel = $search_model->get_cmodel($c, $pid);
   }
-  
+
   if ($exists) {
 
     # $object_model->add_octets will re-index, so keep inventory cleanup above it to avoid indexing old data
@@ -293,7 +304,8 @@ sub add_octets_hook {
         my $v360r = $self->_create_360viewer_job_if_not_exists($c, $pid, $res_cmodel->{cmodel}, $mimetype);
         push @{$res->{alerts}}, @{$v360r->{alerts}} if scalar @{$v360r->{alerts}} > 0;
       }
-    } else {
+    }
+    else {
       $c->app->log->error("Hooks: could not get cmodel, not creating imageserver/streaming/360viewer job");
     }
 
@@ -308,8 +320,9 @@ sub add_octets_hook {
         }
       }
     }
-    
-  } else {
+
+  }
+  else {
     if ($res_cmodel->{status} eq 200 && $res_cmodel->{cmodel} eq 'Asset' && $mimetype eq 'application/zip' && $c->stash('is_360viewer_candidate')) {
       my $v360r = $self->_create_360viewer_job_if_not_exists($c, $pid, $res_cmodel->{cmodel}, $mimetype);
       push @{$res->{alerts}}, @{$v360r->{alerts}} if scalar @{$v360r->{alerts}} > 0;
@@ -322,7 +335,7 @@ sub add_octets_hook {
 sub modify_hook {
   my ($self, $c, $pid, $state) = @_;
 
-  my $res = {alerts => [], status => 200};
+  my $res    = {alerts => [], status => 200};
   my $idxres = $self->_index($c, $pid);
   push @{$res->{alerts}}, @{$idxres->{alerts}} if scalar @{$idxres->{alerts}} > 0;
 
@@ -334,7 +347,7 @@ sub modify_hook {
   }
   else {
     if ($state eq 'A') {
-      my $model = PhaidraAPI::Model::Config->new;
+      my $model      = PhaidraAPI::Model::Config->new;
       my $privconfig = $model->get_private_config($c);
 
       if ($privconfig->{hdlcreatejob}) {
@@ -344,16 +357,16 @@ sub modify_hook {
       }
       if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
         my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
-        my $imsr = $imgsrv_model->create_imageserver_job($c, $pid, $res_cmodel->{cmodel}, undef, undef);
+        my $imsr         = $imgsrv_model->create_imageserver_job($c, $pid, $res_cmodel->{cmodel}, undef, undef);
         push @{$res->{alerts}}, @{$imsr->{alerts}} if scalar @{$imsr->{alerts}} > 0;
-        if($res_cmodel->{cmodel} eq 'PDFDocument') {
+        if ($res_cmodel->{cmodel} eq 'PDFDocument') {
           my $pdf_extraction_job = $self->_create_pdf_extraction_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
           push @{$res->{alerts}}, @{$pdf_extraction_job->{alerts}} if scalar @{$pdf_extraction_job->{alerts}} > 0;
         }
       }
       if ($res_cmodel->{cmodel} eq 'Video') {
         my $strm_model = PhaidraAPI::Model::Streaming->new;
-        my $vsr = $strm_model->create_streaming_job($c, $pid, $res_cmodel->{cmodel});
+        my $vsr        = $strm_model->create_streaming_job($c, $pid, $res_cmodel->{cmodel});
         push @{$res->{alerts}}, @{$vsr->{alerts}} if scalar @{$vsr->{alerts}} > 0;
       }
       if ($res_cmodel->{cmodel} eq 'Asset') {
@@ -361,14 +374,14 @@ sub modify_hook {
 
         if ($c->app->config->{fedora}->{version} >= 6) {
           my $fedora_model = PhaidraAPI::Model::Fedora->new;
-          my $dsAttr = $fedora_model->getDatastreamAttributes($c, $pid, 'OCTETS');
+          my $dsAttr       = $fedora_model->getDatastreamAttributes($c, $pid, 'OCTETS');
           if ($dsAttr->{status} eq 200) {
             $mimetype = $dsAttr->{mimetype};
           }
         }
         else {
           my $object_model = PhaidraAPI::Model::Object->new;
-          my $r_oxml = $object_model->get_foxml($c, $pid);
+          my $r_oxml       = $object_model->get_foxml($c, $pid);
           if ($r_oxml->{status} eq 200) {
             my $foxmldom = Mojo::DOM->new();
             $foxmldom->xml(1);
@@ -385,12 +398,9 @@ sub modify_hook {
       my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'unzip'});
       if ($find && $find->{pid} && !$find->{path} && $c->app->config->{fedora}->{version} >= 6) {
         my $fedora_model = PhaidraAPI::Model::Fedora->new;
-        my $dsAttr = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+        my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
         if ($dsAttr->{status} eq 200) {
-          $c->paf_mongo->get_collection('jobs')->update_one(
-            {pid => $pid, agent => 'unzip'},
-            {'$set' => {path => $dsAttr->{path}}}
-          );
+          $c->paf_mongo->get_collection('jobs')->update_one({pid => $pid, agent => 'unzip'}, {'$set' => {path => $dsAttr->{path}}});
         }
       }
     }
@@ -405,51 +415,52 @@ sub _create_imageserver_job_if_not_exists {
   my $res = {alerts => [], status => 200};
 
   my $imgsrv_model = PhaidraAPI::Model::Imageserver->new;
-  my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'libvips'});
-  unless ($find->{pid}) {    
+  my $find         = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'libvips'});
+  unless ($find->{pid}) {
     return $imgsrv_model->create_imageserver_job($c, $pid, $cmodel, undef, undef);
-  } else {
+  }
+  else {
     return $imgsrv_model->update_imageserver_job($c, $pid, $cmodel, undef, undef);
   }
 
   return $res;
 }
+
 sub delete_hook {
   my ($self, $c, $pid) = @_;
-  my $res = { alerts => [], status => 200 };
+  my $res = {alerts => [], status => 200};
 
   my $search_model = PhaidraAPI::Model::Search->new;
-  my $res_cmodel = $search_model->get_cmodel($c, $pid);
+  my $res_cmodel   = $search_model->get_cmodel($c, $pid);
   $c->app->log->debug("res_cmodel\n" . $c->app->dumper($res_cmodel));
 
   my %valid_models = (
-    'Picture'      => 'libvips',
-    'PDFDocument'  => 'libvips',
-    'Video'        => 'opencast',
-    '3DObject'     => '3d',
-    'PDFDocument'  => 'tika'
+    'Picture'     => 'libvips',
+    'PDFDocument' => 'libvips',
+    'Video'       => 'opencast',
+    '3DObject'    => '3d',
+    'PDFDocument' => 'tika'
   );
 
-  if (defined $res_cmodel->{cmodel} && exists $valid_models{ $res_cmodel->{cmodel} }) {
-    my $agent = $valid_models{ $res_cmodel->{cmodel} };
-    my $find = $c->paf_mongo->get_collection('jobs')->find_one({ pid => $pid });
+  if (defined $res_cmodel->{cmodel} && exists $valid_models{$res_cmodel->{cmodel}}) {
+    my $agent = $valid_models{$res_cmodel->{cmodel}};
+    my $find  = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid});
 
     if ($find && defined $find->{status}) {
       $c->app->log->info("delete object hook for cmodel $res_cmodel->{cmodel} pid[$pid] : Current streaming job status[$find->{status}]");
 
       if ($find->{status} eq "TO_DELETE" or $find->{status} eq "DEL_REQUESTED") {
         $c->app->log->info("Delete already requested. Noop.");
-      } elsif ($find->{status} =~ m/^OC_DELETED_/) {
-        $c->app->log->info("Already deleted. Noop.");
-      } else {
-        $c->app->log->info("Marking stream for delete.");
-        $c->paf_mongo->get_collection('jobs')->update_one(
-          { 'pid' => $pid, 'agent' => $agent },
-          { '$set' => { 'status' => 'TO_DELETE' } },
-          { 'upsert' => 0 }
-        );
       }
-    } else {
+      elsif ($find->{status} =~ m/^OC_DELETED_/) {
+        $c->app->log->info("Already deleted. Noop.");
+      }
+      else {
+        $c->app->log->info("Marking stream for delete.");
+        $c->paf_mongo->get_collection('jobs')->update_one({'pid' => $pid, 'agent' => $agent}, {'$set' => {'status' => 'TO_DELETE'}}, {'upsert' => 0});
+      }
+    }
+    else {
       $c->app->log->info("Streaming job wasn't found. Noop.");
     }
   }
@@ -457,15 +468,14 @@ sub delete_hook {
   return $res;
 }
 
-
 sub _create_streaming_job_if_not_exists {
   my ($self, $c, $pid, $cmodel) = @_;
 
   my $res = {alerts => [], status => 200};
 
   my $strm_model = PhaidraAPI::Model::Streaming->new;
-  my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'});
-  unless ($find->{pid}) {    
+  my $find       = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'});
+  unless ($find->{pid}) {
     return $strm_model->create_streaming_job($c, $pid, $cmodel);
   }
 
@@ -484,8 +494,9 @@ sub _create_pdf_extraction_job_if_not_exists {
     return $fres;
   }
   if ($fres->{state} ne 'Active') {
+
     # Do not extract fulltext for inactive objects, it would create a solr document
-    push @{$res->{alerts}}, {type => 'error', msg => "_create_pdf_extraction_job_if_not_exists pid[$pid] Skipping, object is in state ".$fres->{state}};
+    push @{$res->{alerts}}, {type => 'error', msg => "_create_pdf_extraction_job_if_not_exists pid[$pid] Skipping, object is in state " . $fres->{state}};
     return $res;
   }
 
@@ -494,48 +505,53 @@ sub _create_pdf_extraction_job_if_not_exists {
   my $path;
   if ($c->app->config->{fedora}->{version} >= 6) {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $dsAttr = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+    my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
     if ($dsAttr->{status} eq 200) {
       $path = $dsAttr->{path};
-    } else {
+    }
+    else {
       $c->app->log->error("pdf extraction job pid[$pid] cm[$cmodel]: could not get path");
     }
   }
   $c->app->log->info("pdf extraction job pid[$pid] cm[$cmodel]: path[$path]");
-  unless ($find->{pid}) {    
+  unless ($find->{pid}) {
     my $job = {pid => $pid, cmodel => $cmodel, agent => "tika", status => "new", idhash => $hash, created => time};
     $job->{path} = $path if $path;
     $c->paf_mongo->get_collection('jobs')->insert_one($job);
-  } else {
+  }
+  else {
     $c->app->log->info("pdf extraction job pid[$pid] cm[$cmodel]: updating path[$path]");
     $c->paf_mongo->get_collection('jobs')->update_one(
-      { 'pid' => $pid, 'agent' => 'tika' },
-      { '$set' => { 
+      {'pid' => $pid, 'agent' => 'tika'},
+      { '$set' => {
           'status' => 'new',
           'idhash' => $hash,
-          'path' => $path 
-        } },
-      { 'upsert' => 0 }
+          'path'   => $path
+        }
+      },
+      {'upsert' => 0}
     );
   }
 
   return $res;
 }
+
 sub _create_3d_job_if_not_exists {
   my ($self, $c, $pid, $cmodel, $mimetype) = @_;
 
   my $res = {alerts => [], status => 200};
 
   my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => '3d'});
-  unless ($find->{pid}) {    
+  unless ($find->{pid}) {
     my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
     my $path;
     if ($c->app->config->{fedora}->{version} >= 6) {
       my $fedora_model = PhaidraAPI::Model::Fedora->new;
-      my $dsAttr = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+      my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
       if ($dsAttr->{status} eq 200) {
         $path = $dsAttr->{path};
-      } else {
+      }
+      else {
         $c->app->log->error("3d job pid[$pid] cm[$cmodel]: could not get path");
       }
     }
@@ -553,29 +569,29 @@ sub _create_360viewer_job_if_not_exists {
   my $res = {alerts => [], status => 200};
 
   my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'unzip'});
-  unless ($find->{pid}) {    
+  unless ($find->{pid}) {
     my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
     my $path;
-    
+
     if ($c->app->config->{fedora}->{version} >= 6) {
       eval {
         my $fedora_model = PhaidraAPI::Model::Fedora->new;
-        my $dsAttr = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+        my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
         $path = $dsAttr->{path} if $dsAttr->{status} eq 200;
       };
     }
-    
+
     my $job = {
-      pid => $pid,
-      cmodel => $cmodel,
-      agent => "unzip",
-      status => "new",
-      idhash => $hash,
-      created => time,
+      pid      => $pid,
+      cmodel   => $cmodel,
+      agent    => "unzip",
+      status   => "new",
+      idhash   => $hash,
+      created  => time,
       mimetype => $mimetype
     };
     $job->{path} = $path if $path;
-    
+
     $c->paf_mongo->get_collection('jobs')->insert_one($job);
   }
 
@@ -586,23 +602,22 @@ sub _create_handle {
   my ($self, $c, $pid) = @_;
 
   my $res = {alerts => [], status => 200};
- 
-  my $model = PhaidraAPI::Model::Config->new;
+
+  my $model      = PhaidraAPI::Model::Config->new;
   my $privconfig = $model->get_private_config($c);
 
   my ($pidnoprefix) = $pid =~ /o:(\d+)/;
-  my $hdl           = $privconfig->{hdlprefix} . "/" . $privconfig->{hdlinstanceprefix} . "." . $pidnoprefix;
- 
+  my $hdl = $privconfig->{hdlprefix} . "/" . $privconfig->{hdlinstanceprefix} . "." . $pidnoprefix;
+
   my $find = $c->paf_mongo->get_collection('jobs')->find_one({hdl => $hdl});
   unless ($find->{hdl}) {
     $c->app->log->info("_create_handle: creating handle job hdl[$hdl]");
     $c->paf_mongo->get_collection('jobs')->insert_one(
-      {
-        created  => time,
-        hdl      => $hdl,
-        pid      => $pid,
-        agent    => 'hdl',
-        status   => 'new'
+      { created => time,
+        hdl     => $hdl,
+        pid     => $pid,
+        agent   => 'hdl',
+        status  => 'new'
       }
     );
 

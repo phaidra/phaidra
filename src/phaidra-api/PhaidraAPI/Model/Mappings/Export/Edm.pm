@@ -5,9 +5,9 @@ use warnings;
 use v5.10;
 use utf8;
 use Switch;
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::JSON       qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
-use base qw/Mojo::Base/;
+use base             qw/Mojo::Base/;
 use PhaidraAPI::Model::Languages;
 use PhaidraAPI::Model::Config;
 use PhaidraAPI::Model::Index;
@@ -15,15 +15,15 @@ use PhaidraAPI::Model::Index;
 sub get_metadata {
   my ($self, $c, $rec) = @_;
 
-  my $pid = $rec->{pid};
-  my $lang_model   = PhaidraAPI::Model::Languages->new;
-  my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
-  my $pidUri       = 'https://' . $c->app->config->{phaidra}->{baseurl} . '/' . $pid;
-  my $apiBaseUrlPath = $c->app->config->{baseurl}. ($c->app->config->{basepath} ? '/' . $c->app->config->{basepath} : '');
-  my $getUrl       = "https://$apiBaseUrlPath/object/$pid/get";
-  my $previewUrl   = "https://$apiBaseUrlPath/object/$pid/preview";
-  my $thumbnailUrl = "https://$apiBaseUrlPath/object/$pid/thumbnail";
-  my $iiifUri      = "https://$apiBaseUrlPath/imageserver?IIIF=$pid.tif/info.json";
+  my $pid             = $rec->{pid};
+  my $lang_model      = PhaidraAPI::Model::Languages->new;
+  my %iso6393ToBCP    = reverse %{$lang_model->get_iso639map()};
+  my $pidUri          = 'https://' . $c->app->config->{phaidra}->{baseurl} . '/' . $pid;
+  my $apiBaseUrlPath  = $c->app->config->{baseurl} . ($c->app->config->{basepath} ? '/' . $c->app->config->{basepath} : '');
+  my $getUrl          = "https://$apiBaseUrlPath/object/$pid/get";
+  my $previewUrl      = "https://$apiBaseUrlPath/object/$pid/preview";
+  my $thumbnailUrl    = "https://$apiBaseUrlPath/object/$pid/thumbnail";
+  my $iiifUri         = "https://$apiBaseUrlPath/imageserver?IIIF=$pid.tif/info.json";
   my $iiifManifestUri = "https://$apiBaseUrlPath/object/$pid/iiifmanifest";
 
   my @metadata;
@@ -64,11 +64,10 @@ sub get_metadata {
   if ($rec->{cmodel} eq 'Video') {
     $useViewer = 1;
   }
-  if (
-    $rec->{cmodel} eq 'Asset' && 
-    (grep { $_ eq 'application/zip' || $_ eq 'model/glb' } @{$rec->{dc_format}}) && 
-    (grep { $_ eq 'https://pid.phaidra.org/vocabulary/T6C3-46S4' } @{$rec->{edm_hastype_id}})
-  ) {
+  if ( $rec->{cmodel} eq 'Asset'
+    && (grep {$_ eq 'application/zip' || $_ eq 'model/glb'} @{$rec->{dc_format}})
+    && (grep {$_ eq 'https://pid.phaidra.org/vocabulary/T6C3-46S4'} @{$rec->{edm_hastype_id}}))
+  {
     $useViewer = 1;
   }
 
@@ -77,10 +76,11 @@ sub get_metadata {
   if (($rec->{cmodel} eq 'Pictures') || ($rec->{cmodel} eq 'Book')) {
     $hasManifest = 1;
   }
+
   # use IIIF manifest for Containers containing Picture members
   if ($rec->{cmodel} eq 'Container') {
-    my $index_model   = PhaidraAPI::Model::Index->new;
-    my $urlget = $index_model->_get_solrget_url($c, 'Container');
+    my $index_model = PhaidraAPI::Model::Index->new;
+    my $urlget      = $index_model->_get_solrget_url($c, 'Container');
     $urlget->query(q => "ismemberof:\"$pid\" AND cmodel:Picture", rows => "0", wt => "json");
     my $r = $c->app->ua->get($urlget)->result;
     if ($r->is_success) {
@@ -88,7 +88,8 @@ sub get_metadata {
       if ($response->{numFound} > 0) {
         $hasManifest = 1;
       }
-    } else {
+    }
+    else {
       $c->app->log->warn("[$pid] Edm: Could not retrieve document from Solr: " . $r->code . " " . $r->message);
     }
   }
@@ -99,80 +100,88 @@ sub get_metadata {
     name       => 'ore:Aggregation',
     attributes => [
       { name  => 'rdf:about',
-        value => $pidUri.'/#Aggregation'
+        value => $pidUri . '/#Aggregation'
       }
     ],
     children => []
   };
 
   # edm:aggregatedCHO
-  push @{$oreAggregation->{children}}, {
-    name => 'edm:aggregatedCHO',
+  push @{$oreAggregation->{children}},
+    {
+    name       => 'edm:aggregatedCHO',
     attributes => [
       { name  => 'rdf:resource',
         value => $pidUri
       }
     ]
-  };
+    };
 
   # edm:dataProvider
-  my $model = PhaidraAPI::Model::Config->new;
+  my $model     = PhaidraAPI::Model::Config->new;
   my $pubconfig = $model->get_public_config($c);
   if (exists($pubconfig->{oaidataprovider})) {
-    push @{$oreAggregation->{children}}, {
-      name       => 'edm:dataProvider',
-      value      => $pubconfig->{oaidataprovider}
-    };
-  } else {
-    if (exists($c->app->config->{oai}->{dataprovider})) {
-      push @{$oreAggregation->{children}}, {
-        name       => 'edm:dataProvider',
-        value      => $c->app->config->{oai}->{dataprovider}
+    push @{$oreAggregation->{children}},
+      {
+      name  => 'edm:dataProvider',
+      value => $pubconfig->{oaidataprovider}
       };
+  }
+  else {
+    if (exists($c->app->config->{oai}->{dataprovider})) {
+      push @{$oreAggregation->{children}},
+        {
+        name  => 'edm:dataProvider',
+        value => $c->app->config->{oai}->{dataprovider}
+        };
     }
   }
 
   # edm:isShownAt
-  push @{$oreAggregation->{children}}, {
-    name => 'edm:isShownAt',
+  push @{$oreAggregation->{children}},
+    {
+    name       => 'edm:isShownAt',
     attributes => [
       { name  => 'rdf:resource',
         value => $pidUri
       }
     ]
-  };
+    };
 
   # edm:isShownBy
-  push @{$oreAggregation->{children}}, {
-    name => 'edm:isShownBy',
+  push @{$oreAggregation->{children}},
+    {
+    name       => 'edm:isShownBy',
     attributes => [
       { name  => 'rdf:resource',
         value => $useViewer ? $previewUrl : $getUrl,
       }
     ]
-  };
+    };
 
   # edm:object
-  push @{$oreAggregation->{children}}, {
-    name => 'edm:object',
+  push @{$oreAggregation->{children}},
+    {
+    name       => 'edm:object',
     attributes => [
       { name  => 'rdf:resource',
         value => $thumbnailUrl,
       }
     ]
-  };
+    };
 
   # edm:rights
   my $licenseUri = $self->_get_license_uri($c, $rec);
   if ($licenseUri) {
-    push @{$oreAggregation->{children}}, {
-      name => 'edm:rights',
+    push @{$oreAggregation->{children}},
+      {
+      name       => 'edm:rights',
       attributes => [
         { name  => 'rdf:resource',
           value => $licenseUri
         }
       ]
-    };
+      };
   }
 
   push @{$edm->{children}}, $oreAggregation;
@@ -188,7 +197,7 @@ sub get_metadata {
     ],
     children => []
   };
-  
+
   # dc:title
   my $titles = $self->_get_dc_fields($c, \%iso6393ToBCP, $rec, 'title', 'dc:title');
   push @{$edmProvidedCHO->{children}}, @{$titles};
@@ -198,55 +207,62 @@ sub get_metadata {
   push @{$edmProvidedCHO->{children}}, @{$descriptions};
 
   # dc:identifier
-  push @{$edmProvidedCHO->{children}}, {
-    name => 'dc:identifier',
+  push @{$edmProvidedCHO->{children}},
+    {
+    name       => 'dc:identifier',
     attributes => [
       { name  => 'rdf:resource',
         value => $pidUri,
       }
     ]
-  };
+    };
 
   # dc:language
   for my $lang (@{$rec->{dc_language}}) {
-    push @{$edmProvidedCHO->{children}}, {
+    push @{$edmProvidedCHO->{children}},
+      {
       name  => 'dc:language',
       value => $self->_map_iso3_to_bcp(\%iso6393ToBCP, $lang)
-    };
+      };
   }
 
   # edm:type
   if ($rec->{cmodel} eq 'Picture') {
-    push @{$edmProvidedCHO->{children}}, {
+    push @{$edmProvidedCHO->{children}},
+      {
       name  => 'edm:type',
       value => 'IMAGE'
-    };
+      };
   }
   if ($rec->{cmodel} eq 'Audio') {
-    push @{$edmProvidedCHO->{children}}, {
+    push @{$edmProvidedCHO->{children}},
+      {
       name  => 'edm:type',
       value => 'SOUND'
-    };
+      };
   }
   if ($rec->{cmodel} eq 'Video') {
-    push @{$edmProvidedCHO->{children}}, {
+    push @{$edmProvidedCHO->{children}},
+      {
       name  => 'edm:type',
       value => 'VIDEO'
-    };
+      };
   }
   if (($rec->{cmodel} eq 'PDFDocument') || ($rec->{cmodel} eq 'Book')) {
-    push @{$edmProvidedCHO->{children}}, {
+    push @{$edmProvidedCHO->{children}},
+      {
       name  => 'edm:type',
       value => 'TEXT'
-    };
+      };
   }
   if (exists($rec->{edm_hastype_id})) {
     for my $edmt (@{$rec->{edm_hastype_id}}) {
       if ($edmt eq 'https://pid.phaidra.org/vocabulary/T6C3-46S4') {
-        push @{$edmProvidedCHO->{children}}, {
+        push @{$edmProvidedCHO->{children}},
+          {
           name  => 'edm:type',
           value => '3D'
-        };
+          };
       }
     }
   }
@@ -254,10 +270,11 @@ sub get_metadata {
   # dc:type
   if (exists($rec->{edm_hastype})) {
     for my $edmt (@{$rec->{edm_hastype}}) {
-      push @{$edmProvidedCHO->{children}}, {
+      push @{$edmProvidedCHO->{children}},
+        {
         name  => 'dc:type',
         value => $edmt
-      };
+        };
     }
   }
   my $types = $self->_get_dc_fields($c, \%iso6393ToBCP, $rec, 'type', 'dc:type');
@@ -270,26 +287,29 @@ sub get_metadata {
   # dc:date
   if (exists($rec->{bib_published})) {
     for my $pubDate (@{$rec->{bib_published}}) {
-      push @{$edmProvidedCHO->{children}}, {
+      push @{$edmProvidedCHO->{children}},
+        {
         name  => 'dcterms:issued',
         value => $pubDate
-      };
+        };
     }
   }
   if (exists($rec->{dcterms_created_year})) {
     for my $cDate (@{$rec->{dcterms_created_year}}) {
-      push @{$edmProvidedCHO->{children}}, {
+      push @{$edmProvidedCHO->{children}},
+        {
         name  => 'dcterms:created',
         value => $cDate
-      };
+        };
     }
   }
   if (exists($rec->{dc_date})) {
     for my $date (@{$rec->{dc_date}}) {
-      push @{$edmProvidedCHO->{children}}, {
+      push @{$edmProvidedCHO->{children}},
+        {
         name  => 'dc:date',
         value => $date
-      };
+        };
     }
   }
 
@@ -308,8 +328,9 @@ sub get_metadata {
       }
     }
   }
-         
+
   unless ($hasRepresentedObjectRoles) {
+
     # dc:creator
     my $creators = $self->_get_dc_fields($c, \%iso6393ToBCP, $rec, 'creator', 'dc:creator');
     push @{$edmProvidedCHO->{children}}, @{$creators};
@@ -332,10 +353,11 @@ sub get_metadata {
       if (exists($rec->{"title_of_$upid"})) {
         $title = $rec->{"title_of_$upid"};
       }
-      push @{$edmProvidedCHO->{children}}, {
+      push @{$edmProvidedCHO->{children}},
+        {
         name  => 'dcterms:isPartOf',
         value => $title
-      };
+        };
     }
   }
 
@@ -351,6 +373,7 @@ sub get_metadata {
     if (exists($jsonld->{'dcterms:temporal'})) {
       $temporal = $jsonld->{'dcterms:temporal'};
     }
+
     # use represented-object temporal coverage preferrably
     if (exists($jsonld->{'dcterms:subject'})) {
       for my $subject (@{$jsonld->{'dcterms:subject'}}) {
@@ -364,16 +387,15 @@ sub get_metadata {
     if ($temporal) {
       for my $temp (@{$temporal}) {
         my $tempNode = {
-          name => 'dcterms:temporal',
+          name  => 'dcterms:temporal',
           value => $temp->{'@value'}
         };
         if ($temp->{'@language'}) {
           $tempNode->{attributes} = [
-            {
-              name => 'xml:lang',
+            { name  => 'xml:lang',
               value => $self->_map_iso3_to_bcp(\%iso6393ToBCP, $temp->{'@language'})
             }
-          ]
+          ];
         }
         push @{$edmProvidedCHO->{children}}, $tempNode;
       }
@@ -384,6 +406,7 @@ sub get_metadata {
     if (exists($jsonld->{'dcterms:spatial'})) {
       $spatial = $jsonld->{'dcterms:spatial'};
     }
+
     # use represented-object spatial coverage preferrably
     if (exists($jsonld->{'dcterms:subject'})) {
       for my $subject (@{$jsonld->{'dcterms:subject'}}) {
@@ -405,10 +428,9 @@ sub get_metadata {
         }
         if ($placeid) {
           my $spatialNode = {
-            name => 'dcterms:spatial',
+            name       => 'dcterms:spatial',
             attributes => [
-              {
-                name => 'rdf:resource',
+              { name  => 'rdf:resource',
                 value => $placeid
               }
             ]
@@ -425,20 +447,19 @@ sub get_metadata {
 
           if ($rdfsLabel) {
             my $edmPlace = {
-              name => 'edm:Place',
+              name       => 'edm:Place',
               attributes => [
-                {
-                  name => 'rdf:about',
+                { name  => 'rdf:about',
                   value => $placeid
                 }
               ],
               children => [
-                {
-                  name => 'skos:prefLabel',
+                { name  => 'skos:prefLabel',
                   value => $rdfsLabel
                 }
               ]
             };
+
             # this goes one level up
             push @{$edm->{children}}, $edmPlace;
           }
@@ -451,6 +472,7 @@ sub get_metadata {
     if (exists($jsonld->{'dcterms:provenance'})) {
       $provenance = $jsonld->{'dcterms:provenance'};
     }
+
     # use represented-object spatial coverage preferrably
     if (exists($jsonld->{'dcterms:subject'})) {
       for my $subject (@{$jsonld->{'dcterms:subject'}}) {
@@ -467,13 +489,12 @@ sub get_metadata {
         if (exists($prov->{'skos:prefLabel'})) {
           for my $lab (@{$prov->{'skos:prefLabel'}}) {
             my $provenanceNode = {
-              name => 'dcterms:provenance',
+              name  => 'dcterms:provenance',
               value => $lab->{'@value'}
             };
             if (exists($lab->{'@language'})) {
               $provenanceNode->{attributes} = [
-                {
-                  name => 'xml:lang',
+                { name  => 'xml:lang',
                   value => $self->_map_iso3_to_bcp(\%iso6393ToBCP, $lab->{'@language'})
                 }
               ];
@@ -502,30 +523,33 @@ sub get_metadata {
   # dc:rights
   my $rights = $self->_get_rights_statement($c, $rec);
   if ($rights) {
-    push @{$edmWebResource->{children}}, {
-      name => 'dc:rights',
+    push @{$edmWebResource->{children}},
+      {
+      name  => 'dc:rights',
       value => $rights
-    };
+      };
   }
 
   # svcs:has_service
   if ($hasManifest) {
-    push @{$edmWebResource->{children}}, {
-      name => 'dcterms:isReferencedBy',
+    push @{$edmWebResource->{children}},
+      {
+      name       => 'dcterms:isReferencedBy',
       attributes => [
         { name  => 'rdf:resource',
           value => $iiifManifestUri
         }
       ]
-    };
-    push @{$edmWebResource->{children}}, {
-      name => 'svcs:has_service',
+      };
+    push @{$edmWebResource->{children}},
+      {
+      name       => 'svcs:has_service',
       attributes => [
         { name  => 'rdf:resource',
           value => $iiifUri
         }
       ]
-    };
+      };
 
     #### svcs:Service ####
 
@@ -537,16 +561,14 @@ sub get_metadata {
         }
       ],
       children => [
-        {
-          name => 'dcterms:conformsTo',
+        { name       => 'dcterms:conformsTo',
           attributes => [
             { name  => 'rdf:resource',
               value => 'http://iiif.io/api/image'
             }
           ]
         },
-        {
-          name => 'doap:implements',
+        { name       => 'doap:implements',
           attributes => [
             { name  => 'rdf:resource',
               value => 'https://iiif.io/api/image/2/level1.json'
@@ -560,7 +582,7 @@ sub get_metadata {
   }
 
   push @{$edm->{children}}, $edmWebResource;
-  
+
   #### skos:Concept ####
 
   if (exists($rec->{jsonld})) {
@@ -568,31 +590,33 @@ sub get_metadata {
       for my $c_in (@{$rec->{jsonld}->{'dcterms:subject'}}) {
         if ($c_in->{'@type'} eq 'skos:Concept') {
           my $c_out = {
-            name => 'skos:Concept',
+            name       => 'skos:Concept',
             attributes => [],
-            children => []
+            children   => []
           };
           my $prefLabels = [];
-          my $exactMatch;  
+          my $exactMatch;
           for my $em (@{$c_in->{'skos:exactMatch'}}) {
-            push @{$c_out->{attributes}}, { 
+            push @{$c_out->{attributes}},
+              {
               name  => 'rdf:about',
               value => $em
-            };
+              };
             last;
           }
           for my $l_in (@{$c_in->{'skos:prefLabel'}}) {
             my $l_out = {
-              name => 'skos:prefLabel',
+              name       => 'skos:prefLabel',
               attributes => [],
-              value => $l_in->{'@value'}
+              value      => $l_in->{'@value'}
             };
-            
+
             if ($l_in->{'@language'}) {
-              push @{$l_out->{attributes}}, { 
+              push @{$l_out->{attributes}},
+                {
                 name  => 'xml:lang',
                 value => $self->_map_iso3_to_bcp(\%iso6393ToBCP, $l_in->{'@language'})
-              };
+                };
             }
             push @{$c_out->{children}}, $l_out;
           }
@@ -603,7 +627,7 @@ sub get_metadata {
   }
 
   # $c->app->log->debug("XXXXXXXXXXXXX EDM XXXXXXXXXXXX\n".$c->app->dumper($edm));
-  
+
   push @metadata, $edm;
 
   return \@metadata;
@@ -629,8 +653,7 @@ sub _get_dc_fields {
         $node{value} = $v;
         unless ($lang eq 'xxx') {
           $node{attributes} = [
-            { 
-              name  => 'xml:lang',
+            { name  => 'xml:lang',
               value => $self->_map_iso3_to_bcp($iso6393ToBCP, $lang)
             }
           ];
@@ -674,7 +697,7 @@ sub _get_rights_statement {
     if ($key =~ m/^dc_rights/) {
       for my $v (@{$rec->{key}}) {
         unless ($v =~ m/^http(s)?:\/\//) {
-          return $v; # cardinality 0..1
+          return $v;    # cardinality 0..1
         }
       }
     }

@@ -10,8 +10,8 @@ use PhaidraAPI::Model::Languages;
 use PhaidraAPI::Model::Licenses;
 use PhaidraAPI::Model::Object;
 use Mojo::ByteStream qw(b);
-use Mojo::JSON qw(encode_json decode_json);
-use Time::HiRes qw/tv_interval gettimeofday/;
+use Mojo::JSON       qw(encode_json decode_json);
+use Time::HiRes      qw/tv_interval gettimeofday/;
 
 sub get {
   my $self = shift;

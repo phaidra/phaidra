@@ -5,9 +5,9 @@ use warnings;
 use v5.10;
 use base qw/Mojo::Base/;
 use Data::Dumper;
-use Mojo::Util qw(xml_escape encode decode);
-use Mojo::JSON qw(encode_json decode_json);
-use Digest::SHA qw(hmac_sha1_hex);
+use Mojo::Util       qw(xml_escape encode decode);
+use Mojo::JSON       qw(encode_json decode_json);
+use Digest::SHA      qw(hmac_sha1_hex);
 use Mojo::ByteStream qw(b);
 use PhaidraAPI::Model::Rights;
 use PhaidraAPI::Model::Geo;
@@ -300,11 +300,11 @@ sub info {
 
   if ($info->{cmodel} eq 'Video') {
     if (defined $c->app->config->{external_services}->{opencast}->{mode} && $c->app->config->{external_services}->{opencast}->{mode} eq "ACTIVATED") {
-        my $object_job_info = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'});
-        if ($object_job_info && defined($info)) {
-          my $oc_mpid = $object_job_info->{'oc_mpid'};
-          $info->{oc_mpid} = $oc_mpid;
-        }
+      my $object_job_info = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'});
+      if ($object_job_info && defined($info)) {
+        my $oc_mpid = $object_job_info->{'oc_mpid'};
+        $info->{oc_mpid} = $oc_mpid;
+      }
     }
   }
 
@@ -426,12 +426,12 @@ sub add_metatags {
   }
 
   my @keywords;
-  push @keywords, @{$info->{dc_subject}} if exists $info->{dc_subject} && ref($info->{dc_subject}) eq 'ARRAY';
+  push @keywords, @{$info->{dc_subject}}     if exists $info->{dc_subject}     && ref($info->{dc_subject}) eq 'ARRAY';
   push @keywords, @{$info->{dc_subject_eng}} if exists $info->{dc_subject_eng} && ref($info->{dc_subject_eng}) eq 'ARRAY';
   push @keywords, @{$info->{dc_subject_deu}} if exists $info->{dc_subject_deu} && ref($info->{dc_subject_deu}) eq 'ARRAY';
   push @keywords, @{$info->{dc_subject_ita}} if exists $info->{dc_subject_ita} && ref($info->{dc_subject_ita}) eq 'ARRAY';
-  $info->{metatags}->{citation_keywords} = \@keywords if @keywords;
-  $info->{metatags}->{citation_language}          = $info->{dc_language}     if exists $info->{dc_language};
+  $info->{metatags}->{citation_keywords}          = \@keywords           if @keywords;
+  $info->{metatags}->{citation_language}          = $info->{dc_language} if exists $info->{dc_language};
   $info->{metatags}->{citation_abstract_html_url} = ('https://' . $c->app->config->{phaidra}->{baseurl} . '/detail/' . $info->{pid});
 
   # this is just the extension in the citation_pdf_url link
@@ -460,7 +460,7 @@ sub delete {
 
   if ($c->app->config->{fedora}->{version} >= 6) {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $delete_res = $fedora_model->delete($c, $pid);
+    my $delete_res   = $fedora_model->delete($c, $pid);
     if ($delete_res->{status} ne 200) {
       push @{$res->{alerts}}, @{$delete_res->{alerts}} if scalar @{$delete_res->{alerts}} > 0;
       $res->{status} = $delete_res->{status};
@@ -468,7 +468,7 @@ sub delete {
     }
     my $cachekey = 'cmodel_' . $pid;
     $c->app->chi->remove($cachekey);
-    
+
     my $index_model = PhaidraAPI::Model::Index->new;
     my $ri          = $index_model->updateDoc($c, $pid);
     if ($ri->{status} ne 200) {
@@ -550,7 +550,7 @@ sub delete {
       $res->{status} = $deleteres->code;
     }
   }
-  
+
   my $hooks_model = PhaidraAPI::Model::Hooks->new;
   my $hr          = $hooks_model->delete_hook($c, $pid);
   push @{$res->{alerts}}, @{$hr->{alerts}} if scalar @{$hr->{alerts}} > 0;
@@ -567,14 +567,15 @@ sub add_upstream_headers {
   if ($c->stash->{remote_user}) {
     $headers->{$c->app->config->{authentication}->{upstream}->{principalheader}}   = $c->stash->{remote_user};
     $headers->{$c->app->config->{authentication}->{upstream}->{affiliationheader}} = $c->stash->{affiliation} if $c->stash->{affiliation};
+
     #$headers->{$c->app->config->{authentication}->{upstream}->{groupsheader}}      = $c->stash->{groups}      if $c->stash->{groups};
     if ($c->app->config->{fedora}->{version} < 6) {
       $headers->{fakcode} = $c->stash->{fakcode} if $c->stash->{fakcode};
-      $headers->{inum}    = $c->stash->{inum} if $c->stash->{inum};
-      $headers->{gruppe}  = $c->stash->{gruppe} if $c->stash->{gruppe};
-      $headers->{groups}  = $c->stash->{gruppe} if $c->stash->{gruppe};
+      $headers->{inum}    = $c->stash->{inum}    if $c->stash->{inum};
+      $headers->{gruppe}  = $c->stash->{gruppe}  if $c->stash->{gruppe};
+      $headers->{groups}  = $c->stash->{gruppe}  if $c->stash->{gruppe};
     }
-    $c->app->log->debug("setting upstream headers\n".$c->app->dumper($headers));
+    $c->app->log->debug("setting upstream headers\n" . $c->app->dumper($headers));
   }
 }
 
@@ -604,14 +605,15 @@ sub modify {
     }
     if (scalar @properties) {
       my $eres = $fedora_model->editTriples($c, $pid, \@properties);
+
       # save transaction if any
       $fedora_model->commitTransaction($c);
       my $hooks_model = PhaidraAPI::Model::Hooks->new;
-      my $indexed = 0;
+      my $indexed     = 0;
       if ($eres->{status} == 200) {
         if (defined($state)) {
           if ($state eq 'A') {
-            my $hr          = $hooks_model->modify_hook($c, $pid, 'A');
+            my $hr = $hooks_model->modify_hook($c, $pid, 'A');
             if ($hr->{status} ne 200) {
               $c->app->log->error("pid[$pid] Error in modify_hook: " . $c->app->dumper($hr));
               return $hr;
@@ -620,8 +622,8 @@ sub modify {
           }
         }
       }
-      unless($indexed) {
-        my $hr          = $hooks_model->modify_hook($c, $pid, $state);
+      unless ($indexed) {
+        my $hr = $hooks_model->modify_hook($c, $pid, $state);
         if ($hr->{status} ne 200) {
           $c->app->log->error("pid[$pid] Error in modify_hook: " . $c->app->dumper($hr));
           return $hr;
@@ -849,15 +851,17 @@ sub create_simple {
   unless (exists($metadata->{'target-pid'})) {
 
     if ($c->app->config->{fedora}->{version} >= 6) {
+
       # use transactions only for object creation
       my $fedora_model = PhaidraAPI::Model::Fedora->new;
-      my $confmodel = PhaidraAPI::Model::Config->new;
-      my $privconfig = $confmodel->get_private_config($c);
+      my $confmodel    = PhaidraAPI::Model::Config->new;
+      my $privconfig   = $confmodel->get_private_config($c);
       unless (exists($privconfig->{donotusefedoratransactions}) && $privconfig->{donotusefedoratransactions}) {
         my $transaction_url = $fedora_model->useTransaction($c);
         $c->stash(transaction_url => $transaction_url->{transaction_id});
       }
     }
+
     # create object
     $r = $self->create($c, $cmodel, $username, $password);
     if ($r->{status} ne 200) {
@@ -952,7 +956,7 @@ sub create_simple {
     return $res;
   }
   else {
-    $c->app->log->info("Object successfully created pid[$pid] cmodel[$cmodel] took[".tv_interval($t0)."]");
+    $c->app->log->info("Object successfully created pid[$pid] cmodel[$cmodel] took[" . tv_interval($t0) . "]");
   }
 
   if (exists($metadata->{metadata}->{'ownerid'})) {
@@ -1105,10 +1109,11 @@ sub create_container {
   unless (exists($container_metadata->{'target-pid'})) {
 
     if ($c->app->config->{fedora}->{version} >= 6) {
-      # use transactions only for single object creation. TODO: use a single transaction for all containers and children. This way, if one child fails to be created, the entire load fails, and no partial loads occur.  
+
+      # use transactions only for single object creation. TODO: use a single transaction for all containers and children. This way, if one child fails to be created, the entire load fails, and no partial loads occur.
       my $fedora_model = PhaidraAPI::Model::Fedora->new;
-      my $confmodel = PhaidraAPI::Model::Config->new;
-      my $privconfig = $confmodel->get_private_config($c);
+      my $confmodel    = PhaidraAPI::Model::Config->new;
+      my $privconfig   = $confmodel->get_private_config($c);
       unless (exists($privconfig->{donotusefedoratransactions}) && $privconfig->{donotusefedoratransactions}) {
         my $transaction_url = $fedora_model->useTransaction($c);
         $c->stash(transaction_url => $transaction_url->{transaction_id});
@@ -1519,7 +1524,7 @@ sub save_metadata {
           if ($rel->{'o'} !~ m{^info:fedora/} && $rel->{'o'} !~ m{^https?://} && $rel->{'o'} ne $pid) {
             $rel->{'o'} = "info:fedora/" . $rel->{'o'};
           }
-          $relsPerSubject->{$rel->{'s'}} = [] unless(exists($relsPerSubject->{$rel->{'s'}}));
+          $relsPerSubject->{$rel->{'s'}} = [] unless (exists($relsPerSubject->{$rel->{'s'}}));
           push @{$relsPerSubject->{$rel->{'s'}}}, {predicate => $rel->{'p'}, object => $rel->{'o'}};
         }
         foreach my $subjectPid (keys %{$relsPerSubject}) {
@@ -1692,7 +1697,8 @@ sub proxy_datastream {
   my $url;
   if ($c->app->config->{fedora}->{version} >= 6) {
     $url = $c->app->fedoraurl->path("$pid/$dsid");
-  } else {
+  }
+  else {
     $url = Mojo::URL->new;
     $url->scheme($c->app->config->{fedora}->{scheme} ? $c->app->config->{fedora}->{scheme} : 'https');
 
@@ -1706,7 +1712,7 @@ sub proxy_datastream {
     $url->host($c->app->config->{phaidra}->{fedorabaseurl});
     $url->path("/fedora/objects/$pid/datastreams/$dsid/content");
   }
-  
+
   if (Mojo::IOLoop->is_running) {
     $c->render_later;
     $c->ua->get(
