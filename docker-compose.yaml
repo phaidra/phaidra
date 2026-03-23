@@ -1050,7 +1050,7 @@ services:
   ############### grafana ###############
   grafana:
     hostname: "grafana"
-    image: phaidraorg/grafana-dist:6e2c4690
+    image: phaidraorg/grafana-dist:b2367c4d
     volumes:
       - grafana:/var/lib/grafana
     environment:
