@@ -1349,7 +1349,7 @@ services:
 
   ############### cadvisor: retrieves container metrics (scraped by prometheus) ###############
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.55.1
+    image: ghcr.io/google/cadvisor:0.56.2
     <<: *common
     volumes:
       - /:/rootfs:ro
