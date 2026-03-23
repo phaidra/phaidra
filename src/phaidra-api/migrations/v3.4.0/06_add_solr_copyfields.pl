@@ -2,7 +2,6 @@
 use strict;
 use warnings;
 use Mojo::UserAgent;
-use Mojo::JSON qw(decode_json);
 use MIME::Base64 qw(encode_base64);
 
 # Read environment variables
@@ -25,12 +24,6 @@ sub auth_headers {
 
 # Fields to copy to _text_ (excluding extracted_text)
 my @FIELDS = qw(
-  dc_*
-  member_dc_*
-  bib_*
-  *_eng
-  *_deu
-  *_ita
   altformats
   altversions
   annotations
@@ -83,7 +76,6 @@ my @FIELDS = qw(
   isrestricted
   isthumbnailfor
   journal_title
-  keyword_suggest
   language
   latlon
   members_metadata
@@ -119,8 +111,6 @@ my @FIELDS = qw(
   successor
   systemtag
   tcreated
-  title_suggest
-  title_suggest_ir
   tmodified
   tsize
   uwm_association_id
@@ -153,10 +143,10 @@ sub delete_wildcard {
   } else {
     print "⚠ Could not remove wildcard copyField (may not exist): ";
     if ($tx->result->is_success) {
-      print $tx->result->body, "\n";
+      print $tx->result->body . "\n";
     } else {
-      print ($tx->error->{message} // 'Unknown error'), "\n";
-      print $tx->result->body, "\n" if defined $tx->result->body;
+      print( ($tx->error->{message} // 'Unknown error') . "\n" );
+      print $tx->result->body . "\n" if defined $tx->result->body;
     }
   }
 
@@ -218,10 +208,10 @@ sub add_missing_copyfields {
   } else {
     print "✗ Error adding copyFields:\n";
     if ($tx->result->is_success) {
-      print $tx->result->body, "\n";
+      print $tx->result->body . "\n";
     } else {
-      print ($tx->error->{message} // 'Unknown error'), "\n";
-      print $tx->result->body, "\n" if defined $tx->result->body;
+      print( ($tx->error->{message} // 'Unknown error') . "\n" );
+      print $tx->result->body . "\n" if defined $tx->result->body;
     }
   }
 }
