@@ -74,7 +74,7 @@ spec:
               value: "{{ .Values.MONGODB_PHAIDRA_USER }}"
             - name: WEB_ROOT
               value: /dbgate
-          image: dbgate/dbgate:6.8.2
+          image: dbgate/dbgate:7.1.4
           # the default command writes to /etc/hosts which is not possible or necessary in openshift
           command: ["node"]
           args: ["bundle.js", "--listen-api"]
