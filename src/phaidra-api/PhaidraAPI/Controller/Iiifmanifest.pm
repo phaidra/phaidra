@@ -8,8 +8,8 @@ use PhaidraAPI::Model::Iiifmanifest;
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Search;
 use Mojo::ByteStream qw(b);
-use Mojo::JSON qw(encode_json decode_json);
-use Time::HiRes qw/tv_interval gettimeofday/;
+use Mojo::JSON       qw(encode_json decode_json);
+use Time::HiRes      qw/tv_interval gettimeofday/;
 
 sub get_iiif_manifest {
   my $self = shift;
@@ -24,27 +24,30 @@ sub get_iiif_manifest {
   }
 
   my $search_model = PhaidraAPI::Model::Search->new;
-  my $rdshash = $search_model->datastreams_hash($self, $pid);
+  my $rdshash      = $search_model->datastreams_hash($self, $pid);
   if ($rdshash->{status} ne 200) {
     $self->render(json => {alerts => [{type => 'error', msg => "get_iiif_manifest pid[$pid] Error getting datastreams_hash"}], status => $rdshash->{status}}, status => $rdshash->{status});
     return;
-  } else {
+  }
+  else {
     # IIIF-MANIFEST datastream has precedence
     if (exists($rdshash->{dshash}->{'IIIF-MANIFEST'})) {
       my $iiifm_model = PhaidraAPI::Model::Iiifmanifest->new;
-      my $mr = $iiifm_model->get_updated_manifest($self, $pid);
+      my $mr          = $iiifm_model->get_updated_manifest($self, $pid);
       if ($mr->{status} eq 200) {
         $self->render(json => $mr->{manifest}, status => $res->{status});
         return;
-      } else {
+      }
+      else {
         $self->app->log->error("get_iiif_manifest pid[$pid] Error building updated IIIF-MANIFEST");
         my $object_model = PhaidraAPI::Model::Object->new;
         $object_model->proxy_datastream($self, $pid, 'IIIF-MANIFEST', $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password}, 1);
         return;
       }
-    } else {
+    }
+    else {
       # otherwise generate the manifest where applicable
-      my $cmodelr      = $search_model->get_cmodel($self, $pid);
+      my $cmodelr = $search_model->get_cmodel($self, $pid);
       if ($cmodelr->{status} ne 200) {
         $self->render(json => {alerts => [{type => 'error', msg => "get_iiif_manifest pid[$pid] Error getting cmodel"}], status => $cmodelr->{status}}, status => $cmodelr->{status});
         return;
@@ -52,7 +55,7 @@ sub get_iiif_manifest {
 
       if ($cmodelr->{cmodel} eq 'Picture') {
         my $iiifm_model = PhaidraAPI::Model::Iiifmanifest->new;
-        my $r = $iiifm_model->generate_simple_manifest($self, $pid);
+        my $r           = $iiifm_model->generate_simple_manifest($self, $pid);
         if ($r->{status} == 200) {
           $self->render(json => $r->{manifest}, status => $res->{status});
           return;
@@ -62,14 +65,14 @@ sub get_iiif_manifest {
 
       if ($cmodelr->{cmodel} eq 'Container') {
         my $iiifm_model = PhaidraAPI::Model::Iiifmanifest->new;
-        my $r = $iiifm_model->generate_container_manifest($self, $pid);
+        my $r           = $iiifm_model->generate_container_manifest($self, $pid);
         if ($r->{status} == 200) {
           $self->render(json => $r->{manifest}, status => $res->{status});
           return;
         }
         $res->{status} = $r->{status};
       }
-    
+
       $self->render(json => {alerts => [{type => 'error', msg => "get_iiif_manifest pid[$pid] This object has currently no IIIF manifest"}], status => $res->{status}}, status => $res->{status});
       return;
     }

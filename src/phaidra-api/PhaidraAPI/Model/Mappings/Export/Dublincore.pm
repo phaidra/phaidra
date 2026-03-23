@@ -5,9 +5,9 @@ use warnings;
 use v5.10;
 use utf8;
 use Switch;
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::JSON       qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
-use base qw/Mojo::Base/;
+use base             qw/Mojo::Base/;
 use PhaidraAPI::Model::Languages;
 use PhaidraAPI::Model::Vocabulary;
 use PhaidraAPI::Model::Config;
@@ -18,7 +18,7 @@ sub get_metadata {
   my %valuesCheck = map {$_ => {}} @el;
   my @metadata;
 
-  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $confmodel  = PhaidraAPI::Model::Config->new;
   my $privconfig = $confmodel->get_private_config($c);
 
   if (exists($rec->{bib_publisher})) {
@@ -51,7 +51,7 @@ sub get_metadata {
   if (exists($rec->{ispartof})) {
     my @ispartofs;
     for my $v (@{$rec->{ispartof}}) {
-      my $val  = 'isPartOf:'.$c->app->config->{scheme}.'://' . $c->app->config->{phaidra}->{baseurl} . '/' . $v;
+      my $val  = 'isPartOf:' . $c->app->config->{scheme} . '://' . $c->app->config->{phaidra}->{baseurl} . '/' . $v;
       my $upid = $v =~ s/:/_/r;
       if (exists($rec->{"title_of_$upid"})) {
         $val .= "[" . $rec->{"title_of_$upid"} . "]";
@@ -69,12 +69,13 @@ sub get_metadata {
 
   if (($set eq 'phaidra4primo')) {
     my $voc_model = PhaidraAPI::Model::Vocabulary->new;
-    my $res = $voc_model->get_vocabulary($c, 'roles');
-    my $rolesvoc = $res->{vocabulary};
+    my $res       = $voc_model->get_vocabulary($c, 'roles');
+    my $rolesvoc  = $res->{vocabulary};
 
     if (exists($rec->{roles_json})) {
       $self->_add_roles_with_id($rolesvoc, $rec, \@metadata);
-    } else {
+    }
+    else {
       if (exists($rec->{uwm_roles_json})) {
         $self->_add_uwm_roles_with_id($rolesvoc, $rec, \@metadata);
       }
@@ -89,8 +90,8 @@ sub get_metadata {
         }
       }
       my $skip = 0;
-      $skip = 1 if ($1 eq 'license');                                                                                            # dc_license is not a dc field, it's in rights
-      $skip = 1 if (($set eq 'phaidra4primo') && ($1 eq 'date'));                                                                # bib_published was already added, the rest is not interesting
+      $skip = 1 if ($1 eq 'license');                                                              # dc_license is not a dc field, it's in rights
+      $skip = 1 if (($set eq 'phaidra4primo') && ($1 eq 'date'));                                  # bib_published was already added, the rest is not interesting
       $skip = 1 if (($set eq 'phaidra4primo') && (($1 eq 'creator') || ($1 eq 'contributor')));    # we added those already, with IDs
       next if $skip;
       for my $v (@{$rec->{$k}}) {
@@ -141,11 +142,11 @@ sub get_metadata {
     }
 
     if ($identifier_field) {
-      my %existing = map { $_ => 1 } @{$identifier_field->{values} // []};
+      my %existing = map {$_ => 1} @{$identifier_field->{values} // []};
       push @{$identifier_field->{values}}, $pid_identifier unless $existing{$pid_identifier};
     }
     else {
-      push @metadata, { name => 'identifier', values => [$pid_identifier] };
+      push @metadata, {name => 'identifier', values => [$pid_identifier]};
     }
   }
 
@@ -193,11 +194,11 @@ sub _get_role_label_de {
   }
 
   for my $r (@{$rolesvoc}) {
-    if ($r->{'@id'} eq 'role:'.$rolecode) {
+    if ($r->{'@id'} eq 'role:' . $rolecode) {
       return $r->{'skos:prefLabel'}->{'deu'};
     }
   }
-  return $rolecode; # Default to role code if no label found
+  return $rolecode;    # Default to role code if no label found
 }
 
 sub _add_roles_with_id {
@@ -210,7 +211,8 @@ sub _add_roles_with_id {
         my $dcrole;
         if ($PhaidraAPI::Model::Jsonld::Extraction::jsonld_creator_roles{substr($pred, 5)}) {
           $dcrole = 'creator';
-        } else {
+        }
+        else {
           $dcrole = 'contributor';
         }
 
@@ -224,9 +226,9 @@ sub _add_roles_with_id {
             my $id;
             if ($contr->{'@type'} eq 'schema:Person') {
               if ($contr->{'schema:givenName'} || $contr->{'schema:familyName'}) {
-                $name = $contr->{'schema:familyName'}[0]->{'@value'} if $contr->{'schema:familyName'}[0]->{'@value'};
-                $name = $name.', ' if $contr->{'schema:givenName'}[0]->{'@value'} && $name;
-                $name = $name.$contr->{'schema:givenName'}[0]->{'@value'} if $contr->{'schema:givenName'}[0]->{'@value'};
+                $name = $contr->{'schema:familyName'}[0]->{'@value'}        if $contr->{'schema:familyName'}[0]->{'@value'};
+                $name = $name . ', '                                        if $contr->{'schema:givenName'}[0]->{'@value'} && $name;
+                $name = $name . $contr->{'schema:givenName'}[0]->{'@value'} if $contr->{'schema:givenName'}[0]->{'@value'};
               }
               else {
                 $name = $contr->{'schema:name'}[0]->{'@value'};
@@ -278,7 +280,8 @@ sub _add_uwm_roles_with_id {
     my $dcrole;
     if ($PhaidraAPI::Model::Jsonld::Extraction::jsonld_creator_roles{$con->{role}}) {
       $dcrole = 'creator';
-    } else {
+    }
+    else {
       $dcrole = 'contributor';
     }
 
@@ -294,25 +297,25 @@ sub _add_uwm_roles_with_id {
         if ($e->{orcid}) {
           $e->{orcid} =~ s{^(?:https?://)?orcid\.org/}{};
           $e->{orcid} =~ s/\s+//g;
-          $id = 'orcid:'.$e->{orcid};
+          $id = 'orcid:' . $e->{orcid};
         }
         if ($e->{viaf}) {
-          $id = ($id ? "$id|" : '') .'viaf:'.$e->{viaf};
+          $id = ($id ? "$id|" : '') . 'viaf:' . $e->{viaf};
         }
         if ($e->{wdq}) {
-          $id = ($id ? "$id|" : ''). 'wdq:'.$e->{wdq};
+          $id = ($id ? "$id|" : '') . 'wdq:' . $e->{wdq};
         }
         if ($e->{gnd}) {
-          $id = ($id ? "$id|" : ''). 'gnd:'.$e->{gnd};
+          $id = ($id ? "$id|" : '') . 'gnd:' . $e->{gnd};
         }
         if ($e->{isni}) {
-          $id = ($id ? "$id|" : ''). 'isni:'.$e->{isni};
+          $id = ($id ? "$id|" : '') . 'isni:' . $e->{isni};
         }
 
         if ($e->{firstname} || $e->{lastname}) {
-          $name = $e->{lastname};
-          $name = $name . ', ' . $e->{firstname} if $e->{firstname};
-          $affiliation = $e->{institution} if $e->{institution};
+          $name        = $e->{lastname};
+          $name        = $name . ', ' . $e->{firstname} if $e->{firstname};
+          $affiliation = $e->{institution}              if $e->{institution};
         }
         else {
           if ($e->{institution}) {
@@ -345,9 +348,9 @@ sub _add_uwm_roles_with_id {
   for my $f (@fields) {
     unless (exists($merging->{$f->{name}})) {
       $merging->{$f->{name}} = {
-        name => $f->{name},
+        name   => $f->{name},
         values => ()
-      }
+      };
     }
     for my $v (@{$f->{values}}) {
       push @{$merging->{$f->{name}}->{values}}, $v;

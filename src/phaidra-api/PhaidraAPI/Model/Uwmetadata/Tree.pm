@@ -6076,10 +6076,10 @@ our %tree = (
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1557145"
                     },
                     { "labels" => {
-                      "en" => "Performer",
-                      "it" => "Interprete"
+                        "en" => "Performer",
+                        "it" => "Interprete"
                       },
-                      "uri"    => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1557130"
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_3/1557130"
                     },
                     { "labels" => {
                         "de" => "VorbesitzerIn",

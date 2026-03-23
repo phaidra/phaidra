@@ -5,7 +5,7 @@ use warnings;
 use v5.10;
 use base 'Mojolicious::Controller';
 use Mojo::ByteStream qw(b);
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::JSON       qw(encode_json decode_json);
 use PhaidraAPI::Model::Membersorder;
 use PhaidraAPI::Model::Util;
 use PhaidraAPI::Model::Collection;
@@ -227,7 +227,7 @@ sub order_object_member {
       $self->render(json => $res, status => $res->{status});
       return;
     }
-    @pids = grep { $_ } map { $_->{pid} } @{$r->{members}};
+    @pids = grep {$_} map {$_->{pid}} @{$r->{members}};
   }
   elsif ($cmodel eq 'Container') {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
@@ -242,7 +242,7 @@ sub order_object_member {
     my $members = $r->{hasmember};
     if (defined $members) {
       if (ref($members) eq 'ARRAY') {
-        @pids = grep { $_ } @{$members};
+        @pids = grep {$_} @{$members};
       }
       else {
         @pids = ($members);
@@ -250,24 +250,20 @@ sub order_object_member {
     }
 
     if (@pids) {
-      my %is_member = map { $_ => 1 } @pids;
+      my %is_member = map {$_ => 1} @pids;
       my $username  = $self->stash->{basic_auth_credentials}->{username};
       my $password  = $self->stash->{basic_auth_credentials}->{password};
 
       my $membersorder_model = PhaidraAPI::Model::Membersorder->new;
-      my $or = $membersorder_model->get_object_collectionorder_json($self, $pid, $username, $password);
+      my $or                 = $membersorder_model->get_object_collectionorder_json($self, $pid, $username, $password);
       if ($or->{status} eq 200 && $or->{members} && ref($or->{members}) eq 'ARRAY') {
 
-        my @ordered = sort {
-          ($a->{pos} // 0) <=> ($b->{pos} // 0)
-        } grep {
-          $_->{pid} && $is_member{$_->{pid}}
-        } @{$or->{members}};
+        my @ordered = sort {($a->{pos} // 0) <=> ($b->{pos} // 0)} grep {$_->{pid} && $is_member{$_->{pid}}} @{$or->{members}};
 
-        my @ordered_pids = map { $_->{pid} } @ordered;
-        my %seen         = map { $_ => 1 } @ordered_pids;
+        my @ordered_pids = map {$_->{pid}} @ordered;
+        my %seen         = map {$_ => 1} @ordered_pids;
 
-        @pids = (@ordered_pids, grep { !$seen{$_} } @pids);
+        @pids = (@ordered_pids, grep {!$seen{$_}} @pids);
       }
     }
   }
@@ -278,7 +274,7 @@ sub order_object_member {
     return;
   }
 
-  @pids = grep { $_ ne $itempid } @pids;
+  @pids = grep {$_ ne $itempid} @pids;
 
   my $max_pos = scalar(@pids) + 1;
   $position = 1        if $position < 1;
@@ -288,12 +284,12 @@ sub order_object_member {
   splice(@pids, $idx, 0, $itempid);
 
   my @new_order;
-  for (my $i = 0 ; $i < @pids ; $i++) {
+  for (my $i = 0; $i < @pids; $i++) {
     push @new_order, {pid => $pids[$i], 'pos' => $i + 1};
   }
 
   my $membersorder_model = PhaidraAPI::Model::Membersorder->new;
-  my $r = $membersorder_model->save_to_object($self, $pid, \@new_order, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password}, 0);
+  my $r                  = $membersorder_model->save_to_object($self, $pid, \@new_order, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password}, 0);
   push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
   $res->{status} = $r->{status};
   if ($r->{status} ne 200) {

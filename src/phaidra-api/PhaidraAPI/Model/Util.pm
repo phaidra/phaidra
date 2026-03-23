@@ -5,9 +5,9 @@ use warnings;
 use v5.10;
 use XML::LibXML;
 use Digest::SHA qw(hmac_sha256);
-use POSIX qw(strftime);
-use Socket qw(AF_INET6 inet_aton inet_pton);
-use base qw/Mojo::Base/;
+use POSIX       qw(strftime);
+use Socket      qw(AF_INET6 inet_aton inet_pton);
+use base        qw/Mojo::Base/;
 
 sub validate_xml() {
 
@@ -51,7 +51,7 @@ sub validate_xml() {
 
 sub xml_to_hash {
   my $self = shift;
-  my $c = shift;
+  my $c    = shift;
   my $node = shift;
 
   return $self->_xml_to_hash($c, $node);
@@ -59,54 +59,59 @@ sub xml_to_hash {
 
 sub _xml_to_hash {
   my ($self, $c, $node) = @_;
-    my %hash;
+  my %hash;
 
-    # Handle attributes if present
-    if ($node->hasAttributes) {
-        foreach my $attr ($node->attributes) {
-            $hash{'@' . $attr->nodeName} = $attr->value;
-        }
+  # Handle attributes if present
+  if ($node->hasAttributes) {
+    foreach my $attr ($node->attributes) {
+      $hash{'@' . $attr->nodeName} = $attr->value;
+    }
+  }
+
+  # Handle child nodes
+  foreach my $child ($node->childNodes) {
+    my $name = $child->nodeName;
+
+    # Skip processing instructions and comments
+    next
+      if $child->nodeType == XML::LibXML::XML_PI_NODE
+      || $child->nodeType == XML::LibXML::XML_COMMENT_NODE;
+
+    # Handle text content
+    if ($child->nodeType == XML::LibXML::XML_TEXT_NODE) {
+      my $content = $child->textContent;
+      $content =~ s/^\s+|\s+$//g;    # trim whitespace
+      if ($content ne '') {
+        $hash{'#text'} = $content;
+      }
+      next;
     }
 
-    # Handle child nodes
-    foreach my $child ($node->childNodes) {
-        my $name = $child->nodeName;
-        
-        # Skip processing instructions and comments
-        next if $child->nodeType == XML::LibXML::XML_PI_NODE 
-             || $child->nodeType == XML::LibXML::XML_COMMENT_NODE;
+    my $value;
+    if ($child->hasChildNodes) {
 
-        # Handle text content
-        if ($child->nodeType == XML::LibXML::XML_TEXT_NODE) {
-            my $content = $child->textContent;
-            $content =~ s/^\s+|\s+$//g;  # trim whitespace
-            if ($content ne '') {
-                $hash{'#text'} = $content;
-            }
-            next;
-        }
-
-        my $value;
-        if ($child->hasChildNodes) {
-            # Recursive call for nested elements
-            $value = $self->_xml_to_hash($c, $child);
-        } else {
-            $value = $child->textContent;
-        }
-
-        # Handle multiple elements with same name
-        if (exists $hash{$name}) {
-            if (ref($hash{$name}) eq 'ARRAY') {
-                push @{$hash{$name}}, $value;
-            } else {
-                $hash{$name} = [$hash{$name}, $value];
-            }
-        } else {
-            $hash{$name} = $value;
-        }
+      # Recursive call for nested elements
+      $value = $self->_xml_to_hash($c, $child);
+    }
+    else {
+      $value = $child->textContent;
     }
 
-    return \%hash;
+    # Handle multiple elements with same name
+    if (exists $hash{$name}) {
+      if (ref($hash{$name}) eq 'ARRAY') {
+        push @{$hash{$name}}, $value;
+      }
+      else {
+        $hash{$name} = [$hash{$name}, $value];
+      }
+    }
+    else {
+      $hash{$name} = $value;
+    }
+  }
+
+  return \%hash;
 }
 
 sub get_video_key {
@@ -184,7 +189,7 @@ sub get_video_key {
 # Parse pid 'o:<num>' into pid_num INT
 sub parse_pid_num {
   my ($pid) = @_;
-  my ($n) = ($pid // '') =~ /^o:(\d+)$/;
+  my ($n)   = ($pid // '') =~ /^o:(\d+)$/;
   return defined $n ? int($n) : 0;
 }
 
@@ -193,25 +198,25 @@ sub pack_ip_canonical {
   my ($ip) = @_;
   return unless defined $ip && length $ip;
   my $v4 = inet_aton($ip);
-  return $v4 if $v4;                           # 4 bytes
-  # inet_pton may be unavailable on very old Perls; check and fall back to undef
+  return $v4 if $v4;    # 4 bytes
+                        # inet_pton may be unavailable on very old Perls; check and fall back to undef
   if (defined &Socket::inet_pton) {
     my $v6 = inet_pton(AF_INET6, $ip);
-    return $v6 if $v6;                         # 16 bytes
+    return $v6 if $v6;    # 16 bytes
   }
-  return;                                      # invalid
+  return;                 # invalid
 }
 
 # Make per-day visitor_id from IP + YYYY-MM-DD using HMAC-SHA256 (with secret pepper)
 # Variant A: 64-bit BIGINT
 sub make_visitor_id_u64 {
   my ($ip_str) = @_;
-  my $packed = pack_ip_canonical($ip_str) or return undef;
-  my $pepper = $ENV{PHAIDRA_ENCRYPTION_KEY} // die "PHAIDRA_ENCRYPTION_KEY not set";
-  my $day = strftime('%Y-%m-%d', localtime);
-  my $mac    = hmac_sha256($packed . $day, $pepper); # 32 bytes
-  my $first8 = substr($mac, 0, 8);
-  return unpack('Q>', $first8);                # unsigned 64-bit, big-endian
+  my $packed   = pack_ip_canonical($ip_str) or return undef;
+  my $pepper   = $ENV{PHAIDRA_ENCRYPTION_KEY} // die "PHAIDRA_ENCRYPTION_KEY not set";
+  my $day      = strftime('%Y-%m-%d', localtime);
+  my $mac      = hmac_sha256($packed . $day, $pepper);                                   # 32 bytes
+  my $first8   = substr($mac, 0, 8);
+  return unpack('Q>', $first8);                                                          # unsigned 64-bit, big-endian
 }
 
 # Anonymize IP with Socket only and return storage-ready fields:
@@ -221,19 +226,21 @@ sub anonymize_ip_for_storage {
 
   # Try IPv4
   if (my $v4 = inet_aton($ipaddress)) {
+
     # Zero last octet => /24
     my ($a, $b, $c, $d) = unpack('C4', $v4);
     my $masked_v4 = pack('C4', $a, $b, $c, 0);
-    my $ip_v4_int = unpack('N', $masked_v4); # INT UNSIGNED in network order
+    my $ip_v4_int = unpack('N', $masked_v4);     # INT UNSIGNED in network order
     return (4, $ip_v4_int, undef);
   }
 
   # Try IPv6 (if inet_pton is available)
   if (defined &Socket::inet_pton) {
     if (my $v6 = inet_pton(AF_INET6, $ipaddress)) {
+
       # Zero last 8 bytes => /64
       my $masked_v6 = substr($v6, 0, 8) . ("\0" x 8);
-      return (6, undef, $masked_v6);          # VARBINARY(16)
+      return (6, undef, $masked_v6);    # VARBINARY(16)
     }
   }
 
@@ -254,7 +261,7 @@ sub track_action {
     # Resolve client IP (prefer first X-Forwarded-For value if present)
     my $ip = $c->tx->remote_address;
     if (my $xff = $c->req->headers->header('X-Forwarded-For')) {
-      ($ip) = $xff =~ /^([^,]+)/; # first in list
+      ($ip) = $xff =~ /^([^,]+)/;    # first in list
     }
 
     # Use current timestamp; visitor_id needs only the date part

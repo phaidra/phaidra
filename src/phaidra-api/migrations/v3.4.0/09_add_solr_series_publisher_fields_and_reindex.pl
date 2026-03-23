@@ -23,48 +23,43 @@ my $logconf = q(
   log4perl.appender.Screen.layout.ConversionPattern=%d %m%n
   log4perl.appender.Screen.utf8   = 1
 );
-Log::Log4perl::init( \$logconf );
+Log::Log4perl::init(\$logconf);
 my $log = Log::Log4perl::get_logger("MyLogger");
 
 $log->info("Starting Solr schema additions for series/publisher indexing fields");
 
 # Solr configuration from env
-my $solr_host   = $ENV{SOLR_HOST} || 'solr';
-my $solr_port   = $ENV{SOLR_PORT} || '8983';
-my $solr_user   = $ENV{SOLR_USER} || 'phaidra';
-my $solr_pass   = $ENV{SOLR_PASS} || 'phaidra';
+my $solr_host   = $ENV{SOLR_HOST}   || 'solr';
+my $solr_port   = $ENV{SOLR_PORT}   || '8983';
+my $solr_user   = $ENV{SOLR_USER}   || 'phaidra';
+my $solr_pass   = $ENV{SOLR_PASS}   || 'phaidra';
 my $solr_scheme = $ENV{SOLR_SCHEME} || 'http';
 
 my @cores = ('phaidra', 'phaidra_pages');
 
 my @fields_to_add = (
-  {
-    name         => 'bib_issn',
-    type         => 'strings',
-    multiValued  => 'true',
-    indexed      => 'true',
-    stored       => 'true',
+  { name        => 'bib_issn',
+    type        => 'strings',
+    multiValued => 'true',
+    indexed     => 'true',
+    stored      => 'true',
   },
-  {
-    name         => 'bib_seriesidentifier',
-    type         => 'strings',
-    multiValued  => 'true',
-    indexed      => 'true',
-    stored       => 'true',
+  { name        => 'bib_seriesidentifier',
+    type        => 'strings',
+    multiValued => 'true',
+    indexed     => 'true',
+    stored      => 'true',
   },
 );
 
-my @copyfields_to_add = (
-  { source => 'bib_issn',             dest => '_text_' },
-  { source => 'bib_seriesidentifier', dest => '_text_' },
-);
+my @copyfields_to_add = ({source => 'bib_issn', dest => '_text_'}, {source => 'bib_seriesidentifier', dest => '_text_'},);
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(30);
 
 sub field_exists {
   my ($field_name, $core) = @_;
-  my $url = "$solr_scheme://$solr_host:$solr_port/solr/$core/schema/fields/$field_name";
+  my $url     = "$solr_scheme://$solr_host:$solr_port/solr/$core/schema/fields/$field_name";
   my $request = HTTP::Request->new(GET => $url);
   $request->authorization_basic($solr_user, $solr_pass);
 
@@ -88,8 +83,8 @@ sub add_field {
   $request->authorization_basic($solr_user, $solr_pass);
   $request->header('Content-Type' => 'application/json');
 
-  my $solr_field_config = { "add-field" => $field_config };
-  my $json = JSON->new->utf8->encode($solr_field_config);
+  my $solr_field_config = {"add-field" => $field_config};
+  my $json              = JSON->new->utf8->encode($solr_field_config);
   $request->content($json);
 
   my $response = $ua->request($request);
@@ -117,22 +112,22 @@ sub add_copyfields {
     return 0;
   }
 
-  my $data = JSON->new->utf8->decode($list_response->content);
+  my $data                = JSON->new->utf8->decode($list_response->content);
   my $existing_copyfields = $data->{copyFields} // [];
-  my %existing = ();
+  my %existing            = ();
   for my $cf (@$existing_copyfields) {
     next unless ref($cf) eq 'HASH';
     my $source = $cf->{source} // '';
-    my $dest = $cf->{dest} // '';
+    my $dest   = $cf->{dest}   // '';
     $existing{"$source=>$dest"} = 1;
   }
 
   my @adds = ();
   for my $cf (@copyfields_to_add) {
     my $source = $cf->{source};
-    my $dest = $cf->{dest};
+    my $dest   = $cf->{dest};
     if (!$existing{"$source=>$dest"}) {
-      push @adds, { source => $source, dest => $dest };
+      push @adds, {source => $source, dest => $dest};
     }
   }
 
@@ -141,7 +136,7 @@ sub add_copyfields {
     return 1;
   }
 
-  my $payload = { 'add-copy-field' => \@adds };
+  my $payload = {'add-copy-field' => \@adds};
   my $request = HTTP::Request->new(POST => $url);
   $request->authorization_basic($solr_user, $solr_pass);
   $request->header('Content-Type' => 'application/json');
@@ -166,7 +161,7 @@ for my $core (@cores) {
 
   for my $field_config (@fields_to_add) {
     my $field_name = $field_config->{name};
-    my $exists = field_exists($field_name, $core);
+    my $exists     = field_exists($field_name, $core);
 
     if ($exists == 1) {
       $log->info("Field '$field_name' already exists in core '$core', skipping");

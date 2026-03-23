@@ -11,9 +11,9 @@ sub get_template {
   my $self = shift;
 
   my $templateName = $self->stash('templateName');
-  my $res = {alerts => [], status => 200};
+  my $res          = {alerts => [], status => 200};
 
-  my $model = PhaidraAPI::Model::Cms->new;
+  my $model    = PhaidraAPI::Model::Cms->new;
   my $modelres = $model->get_template($self, $templateName);
 
   $res->{template} = $modelres;
@@ -22,9 +22,9 @@ sub get_template {
 }
 
 sub get_all_templates {
-  my $self = shift;
-  my $res = {alerts => [], status => 200};
-  my $model = PhaidraAPI::Model::Cms->new;
+  my $self     = shift;
+  my $res      = {alerts => [], status => 200};
+  my $model    = PhaidraAPI::Model::Cms->new;
   my $modelres = $model->get_all_templates($self);
   $res->{templates} = $modelres;
   $self->render(json => $res, status => $res->{status});

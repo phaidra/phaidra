@@ -12,8 +12,8 @@ use MIME::Base64 qw(encode_base64url decode_base64url);
 use DateTime;
 use DateTime::Format::ISO8601;
 use DateTime::Format::Strptime;
-use Clone qw(clone);
-use Mojo::JSON qw(encode_json decode_json);
+use Clone            qw(clone);
+use Mojo::JSON       qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
 use PhaidraAPI::Model::Mappings::Export::Openaire;
 use PhaidraAPI::Model::Mappings::Export::Dublincore;
@@ -101,9 +101,9 @@ sub _get_metadata {
 
 sub _tsv_field_index {
   my ($line, $names) = @_;
-  my @cols = map { my $x = $_; $x =~ s/^\s+|\s+$//gr } split(/\t/, $line);
+  my @cols = map {my $x = $_; $x =~ s/^\s+|\s+$//gr} split(/\t/, $line);
   my %num;
-  @num{@cols} = (0..$#cols);
+  @num{@cols} = (0 .. $#cols);
 
   for my $name (@$names) {
     return $num{$name} if defined $num{$name};
@@ -111,14 +111,14 @@ sub _tsv_field_index {
   return undef;
 }
 
-sub _normalize_sets {    
+sub _normalize_sets {
   my ($self) = @_;
   my @sets = $self->every_param('sets');
 
   if (!@sets) {
     my $body = $self->req->body;
     if ($body && $body =~ /\S/) {
-      my $json = eval { decode_json($body) };
+      my $json = eval {decode_json($body)};
       if (!$@ && ref($json) eq 'HASH' && $json->{sets}) {
         if (ref($json->{sets}) eq 'ARRAY') {
           @sets = @{$json->{sets}};
@@ -137,7 +137,7 @@ sub _normalize_sets {
     }
   }
 
-  @sets = map { $_ =~ s/^\s+|\s+$//gr } grep { defined $_ && $_ ne '' } @sets;
+  @sets = map {$_ =~ s/^\s+|\s+$//gr} grep {defined $_ && $_ ne ''} @sets;
   return @sets;
 }
 
@@ -154,19 +154,19 @@ sub blacklist {
     return $self->render(json => {error => 'missing sets parameter'}, status => 400);
   }
 
-  my @lines = split(/\r?\n/, $body);
+  my @lines  = split(/\r?\n/, $body);
   my $header = shift @lines;
   unless (defined $header && $header =~ /\S/) {
     return $self->render(json => {error => 'missing header line'}, status => 400);
   }
 
-  my @headerCols = map { my $c = $_; $c =~ s/^\s+|\s+$//gr } split(/\t/, $header);
+  my @headerCols = map {my $c = $_; $c =~ s/^\s+|\s+$//gr} split(/\t/, $header);
   my %lookup;
-  @lookup{ map { lc($_) } @headerCols } = (0..$#headerCols);
+  @lookup{map {lc($_)} @headerCols} = (0 .. $#headerCols);
 
   my %target = (
-    ac_number => ['ac-nummer', 'ac_number', 'ac nummer'],
-    pid       => ['identifier phaidra', 'pid', 'identifier']
+    ac_number => ['ac-nummer',          'ac_number', 'ac nummer'],
+    pid       => ['identifier phaidra', 'pid',       'identifier']
   );
 
   my %index;
@@ -181,6 +181,7 @@ sub blacklist {
   }
 
   unless (defined $index{ac_number} && defined $index{pid}) {
+
     # fallback: first two columns
     $index{ac_number} = 0 unless defined $index{ac_number};
     $index{pid}       = 1 unless defined $index{pid};
@@ -208,9 +209,7 @@ sub blacklist {
       next;
     }
 
-    my $match = $coll->find_one({
-      '$or' => [ {ac_number => $ac}, {pid => $pid} ],
-    });
+    my $match = $coll->find_one({'$or' => [{ac_number => $ac}, {pid => $pid}],});
 
     if ($match) {
       push @existing, {ac_number => $ac, pid => $pid};
@@ -222,16 +221,19 @@ sub blacklist {
     push @inserted, $rec;
   }
 
-  return $self->render(json => {
-    total_rows      => scalar(@lines) + 1,
-    inserted        => scalar @inserted,
-    existing        => scalar @existing,
-    invalid         => scalar @invalid,
-    inserted_items  => \@inserted,
-    existing_items  => \@existing,
-    invalid_items   => \@invalid,
-    sets            => \@sets
-  }, status => 200);
+  return $self->render(
+    json => {
+      total_rows     => scalar(@lines) + 1,
+      inserted       => scalar @inserted,
+      existing       => scalar @existing,
+      invalid        => scalar @invalid,
+      inserted_items => \@inserted,
+      existing_items => \@existing,
+      invalid_items  => \@invalid,
+      sets           => \@sets
+    },
+    status => 200
+  );
 }
 
 sub handler {
@@ -360,7 +362,7 @@ sub handler {
 
   }
   elsif ($verb eq 'Identify') {
-    my $earliestDatestampSec = 0;                                                                                   # 1970-01-01T00:00:01Z
+    my $earliestDatestampSec = 0;                                                                                             # 1970-01-01T00:00:01Z
     my $earliestDatestampStr = '1970-01-01T00:00:01Z';
     my $rec                  = $self->mongo->get_collection('oai_records')->find()->sort({"updated" => 1})->limit(1)->next;
     if ($rec) {

@@ -27,10 +27,11 @@ sub create {
   my $pid;
 
   if ($c->app->config->{fedora}->{version} >= 6) {
+
     # use transactions only for single object creation. TODO: use only one transactions also for membership relation when adding members
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $confmodel = PhaidraAPI::Model::Config->new;
-    my $privconfig = $confmodel->get_private_config($c);
+    my $confmodel    = PhaidraAPI::Model::Config->new;
+    my $privconfig   = $confmodel->get_private_config($c);
     unless (exists($privconfig->{donotusefedoratransactions}) && $privconfig->{donotusefedoratransactions}) {
       my $transaction_url = $fedora_model->useTransaction($c);
       $c->stash(transaction_url => $transaction_url->{transaction_id});
@@ -187,6 +188,7 @@ sub get_members {
   else {
     $c->app->log->debug("[cache miss] $cachekey");
     my %members;
+
     # get members
     if ($c->app->config->{fedora}->{version} >= 6) {
       my $fedora_model = PhaidraAPI::Model::Fedora->new;
@@ -194,7 +196,8 @@ sub get_members {
       foreach my $member (@{$fres->{haspart}}) {
         $members{$member} = {'pos' => undef};
       }
-    } else {
+    }
+    else {
       my $sr = $search_model->triples($c, "<info:fedora/$pid> <info:fedora/fedora-system:def/relations-external#hasCollectionMember> *");
       push @{$res->{alerts}}, @{$sr->{alerts}} if scalar @{$sr->{alerts}} > 0;
       $res->{status} = $sr->{status};
@@ -292,11 +295,12 @@ sub get_oldest_member {
 
   $nocache = $nocache ? $nocache : 0;
   if ($oldest_member && ($nocache != 1)) {
+
     # $c->app->log->debug("[cache hit] $cachekey");
   }
   else {
     # $c->app->log->debug("[cache miss] $cachekey");
-  
+
     my $urlget = Mojo::URL->new;
     $urlget->scheme($c->app->config->{solr}->{scheme});
     $urlget->host($c->app->config->{solr}->{host});
@@ -314,7 +318,7 @@ sub get_oldest_member {
     if ($getres->is_success) {
       for my $d (@{$getres->json->{response}->{docs}}) {
         $oldest_member = {
-          pid => $d->{pid},
+          pid    => $d->{pid},
           cmodel => $d->{cmodel}
         };
         last;

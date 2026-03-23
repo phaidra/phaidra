@@ -3,9 +3,9 @@ package PhaidraAPI::Model::Languages;
 use strict;
 use warnings;
 use v5.10;
-use base qw/Mojo::Base/;
+use base             qw/Mojo::Base/;
 use Mojo::ByteStream qw(b);
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::JSON       qw(encode_json decode_json);
 use Mojo::File;
 
 our %iso639map = (

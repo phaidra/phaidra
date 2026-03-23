@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use v5.10;
 use Data::UUID;
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::JSON       qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
 
 use base 'Mojolicious::Controller';
@@ -139,7 +139,8 @@ sub remove_members {
     $self->render(json => {alerts => [{type => 'error', msg => 'No members sent'}]}, status => 400);
     return;
   }
-#$self->app->log->debug('XXXXXXXXXXXXXXX: '.$self->app->dumper($members));
+
+  #$self->app->log->debug('XXXXXXXXXXXXXXX: '.$self->app->dumper($members));
   eval {
     if (ref $members eq 'Mojo::Upload') {
       $self->app->log->debug("Members sent as file param");
@@ -152,14 +153,17 @@ sub remove_members {
       $members = decode_json(b($members)->encode('UTF-8'));
     }
   };
-#$self->app->log->debug('XXXXXXXXXXXXXXX: '.$self->app->dumper($lid));
-#$self->app->log->debug('XXXXXXXXXXXXXXX: '.$self->app->dumper($owner));
+
+  #$self->app->log->debug('XXXXXXXXXXXXXXX: '.$self->app->dumper($lid));
+  #$self->app->log->debug('XXXXXXXXXXXXXXX: '.$self->app->dumper($owner));
   my $r;
   for my $pid (@{$members->{members}}) {
-#$self->app->log->debug('XXXXXXXXXXXXXXX: '.$self->app->dumper($pid));
+
+    #$self->app->log->debug('XXXXXXXXXXXXXXX: '.$self->app->dumper($pid));
     $r = $self->mongo->get_collection('lists')->update_one({"listid" => $lid, "owner" => $owner}, {'$pull' => {'members' => {'pid' => $pid}}, '$set' => {"updated" => time}});
   }
-#$self->app->log->debug('XXXXXXXXXXXXXXX: '.$self->app->dumper($r));
+
+  #$self->app->log->debug('XXXXXXXXXXXXXXX: '.$self->app->dumper($r));
   if ($r->{matched_count} && ($r->{matched_count} > 0)) {
     $self->render(json => {status => 200, alerts => []}, status => 200);
   }

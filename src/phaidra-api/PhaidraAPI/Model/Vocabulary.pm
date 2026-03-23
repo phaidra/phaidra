@@ -3,9 +3,9 @@ package PhaidraAPI::Model::Vocabulary;
 use strict;
 use warnings;
 use v5.10;
-use base qw/Mojo::Base/;
+use base             qw/Mojo::Base/;
 use Mojo::ByteStream qw(b);
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::JSON       qw(encode_json decode_json);
 use Mojo::File;
 
 sub get_vocabulary {
@@ -25,16 +25,17 @@ sub get_vocabulary {
 
   my %vocab_router = (
     'http://id.loc.gov/vocabulary/iso639-2' => $c->app->config->{vocabulary_folder} . '/iso639-2.json',
-    'roles' => $c->app->config->{vocabulary_folder} . '/roles.json'
+    'roles'                                 => $c->app->config->{vocabulary_folder} . '/roles.json'
   );
 
   my $url;
-  if($vocab_router{$uri}) {
+  if ($vocab_router{$uri}) {
     return $self->_get_file_vocabulary($c, $vocab_router{$uri}, $nocache);
-  } else {
+  }
+  else {
     return $self->_get_server_vocabulary($c, $url, $nocache);
   }
-  
+
 }
 
 sub _get_file_vocabulary {
@@ -106,7 +107,6 @@ sub _get_server_vocabulary {
   # TODO! - sparql to provided url
 }
 
-
 sub _get_bic_vocabulary {
   my ($self, $c, $nocache) = @_;
 
@@ -150,7 +150,6 @@ sub _get_bic_vocabulary {
   return $res;
 }
 
-
 sub _get_bic_vocabulary_hash {
   my ($self, $c) = @_;
 
@@ -159,7 +158,7 @@ sub _get_bic_vocabulary_hash {
 
   my $csvEn = $c->app->config->{vocabulary_folder} . '/101201-BIC2.1-Subj-only.csv';
   open my $data_1, '<:encoding(UTF-8)', $csvEn or $c->app->log->error("Can't open '" . $csvEn . "' for reading: $!");
-  <$data_1>; # ignore csv header to reduce log warnings
+  <$data_1>;    # ignore csv header to reduce log warnings
   while (my $line = <$data_1>) {
     chomp $line;
     my @fields = split ',', $line;
@@ -169,9 +168,9 @@ sub _get_bic_vocabulary_hash {
       $field =~ s/^\s+|\s+$//g;
     }
 
-    my $code  = $fields[0];
+    my $code    = $fields[0];
     my $heading = $fields[1];
-    my $level = length($code);
+    my $level   = length($code);
 
     # $c->app->log->debug("level[$level] code[$code] title[$heading]");
 
@@ -214,17 +213,19 @@ sub _get_thema_vocabulary {
   my $json;
   my $termsHash = {};
 
-  # CodeValue: "A",
-  # CodeDescription: "The Arts",
-  # CodeNotes: "Use all A* codes for: specialist and general adult titles, including both highly illustrated and more text-based works. For a hobby or recreational approach, prefer a WF* code as the main subject and supplement with A* code(s) where appropriate. Use all A* codes with: other subject categories and qualifiers as appropriate, in particular STYLE 6*, plus PLACE 1* and TIME PERIOD 3* Qualifiers",
-  # CodeParent: "",
-  # IssueNumber: 1,
-  # Modified: 1.4
+# CodeValue: "A",
+# CodeDescription: "The Arts",
+# CodeNotes: "Use all A* codes for: specialist and general adult titles, including both highly illustrated and more text-based works. For a hobby or recreational approach, prefer a WF* code as the main subject and supplement with A* code(s) where appropriate. Use all A* codes with: other subject categories and qualifiers as appropriate, in particular STYLE 6*, plus PLACE 1* and TIME PERIOD 3* Qualifiers",
+# CodeParent: "",
+# IssueNumber: 1,
+# Modified: 1.4
   for my $codeNode (@{$themaEn->{CodeList}->{ThemaCodes}->{Code}}) {
+
     #$c->app->log->debug("code[".$codeNode->{CodeValue}."] title[".$codeNode->{CodeDescription}."]");
     if ($codeNode->{CodeParent} eq "") {
       push @$json, $self->_get_eng_term($c, $termsHash, 'thema', $codeNode->{CodeValue}, $codeNode->{CodeDescription}, $codeNode->{CodeNotes});
-    } else {
+    }
+    else {
       push @{$termsHash->{$codeNode->{CodeParent}}->{children}}, $self->_get_eng_term($c, $termsHash, 'thema', $codeNode->{CodeValue}, $codeNode->{CodeDescription}, $codeNode->{CodeNotes});
     }
   }
@@ -232,8 +233,9 @@ sub _get_thema_vocabulary {
   $fileVoc = $self->_get_file_vocabulary($c, $c->app->config->{vocabulary_folder} . '/20231031_Thema_v1.5_de.json', $nocache);
   my $themaDe = $fileVoc->{vocabulary};
   for my $codeNode (@{$themaDe->{CodeList}->{ThemaCodes}->{Code}}) {
+
     # $c->app->log->debug("code[".$codeNode->{CodeValue}."] title[".$codeNode->{CodeDescription}."]");
-    $termsHash->{$codeNode->{CodeValue}}->{'skos:prefLabel'}->{'deu'} = $codeNode->{CodeDescription};
+    $termsHash->{$codeNode->{CodeValue}}->{'skos:prefLabel'}->{'deu'}  = $codeNode->{CodeDescription};
     $termsHash->{$codeNode->{CodeValue}}->{'skos:definition'}->{'deu'} = $codeNode->{CodeNotes};
   }
 
@@ -292,7 +294,7 @@ sub _get_oefos_vocabulary_hash {
 
   my $csvEn = $c->app->config->{vocabulary_folder} . '/OEFOS2012_EN_CTI_utf8.csv';
   open my $data_1, '<:encoding(UTF-8)', $csvEn or $c->app->log->error("Can't open '" . $csvEn . "' for reading: $!");
-  <$data_1>; # ignore csv header to reduce log warnings
+  <$data_1>;    # ignore csv header to reduce log warnings
   while (my $line = <$data_1>) {
     chomp $line;
     my @fields = split ';', $line;
@@ -327,7 +329,7 @@ sub _get_oefos_vocabulary_hash {
 
   my $csvDe = $c->app->config->{vocabulary_folder} . '/OEFOS2012_DE_CTI_utf8.csv';
   open my $data_2, '<:encoding(UTF-8)', $csvDe or $c->app->log->error("Can't open '" . $csvDe . "' for reading: $!");
-  <$data_2>; # ignore csv header to reduce log warnings
+  <$data_2>;    # ignore csv header to reduce log warnings
   while (my $line = <$data_2>) {
     chomp $line;
     my @fields = split ';', $line;
@@ -356,7 +358,7 @@ sub _get_eng_term {
     'children'       => []
   };
   push @{$n->{'skos:notation'}}, $code;
-  $n->{'skos:definition'} = { 'eng' => $def } if $def;
+  $n->{'skos:definition'} = {'eng' => $def} if $def;
   $termsHash->{$code} = $n;
   return $n;
 }

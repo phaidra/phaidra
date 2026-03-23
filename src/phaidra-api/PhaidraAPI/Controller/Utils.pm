@@ -9,7 +9,7 @@ use Mojo::UserAgent;
 use Mojo::URL;
 use base 'Mojolicious::Controller';
 use Scalar::Util qw(looks_like_number);
-use POSIX qw(strftime);
+use POSIX        qw(strftime);
 use PhaidraAPI::Model::Search;
 use PhaidraAPI::Model::Util;
 use PhaidraAPI::Model::Config;
@@ -24,37 +24,31 @@ sub fedora_storage_usage {
   my $from = $self->param('from');
   my $to   = $self->param('to');
 
-  my @where = (
-    "mime_type IS NOT NULL",
-    "(fedora_id LIKE '%OCTETS' OR fedora_id LIKE '%WEBVERSION')",
-  );
+  my @where = ("mime_type IS NOT NULL", "(fedora_id LIKE '%OCTETS' OR fedora_id LIKE '%WEBVERSION')",);
   my @bind;
 
   if ($from) {
+
     # Accept YYYY-MM or YYYY-MM-DD
-    if ($from =~ /^\d{4}-\d{2}$/) { $from .= '-01'; }
+    if ($from =~ /^\d{4}-\d{2}$/) {$from .= '-01';}
     push @where, 'DATE(created) >= ?';
-    push @bind, $from;
+    push @bind,  $from;
   }
 
   if ($to) {
     if ($to =~ /^\d{4}-\d{2}$/) {
-      my ($y,$m) = split(/-/, $to);
-      my ($ny,$nm) = ($m == 12) ? ($y+1, 1) : ($y, $m+1);
+      my ($y,  $m)  = split(/-/, $to);
+      my ($ny, $nm) = ($m == 12) ? ($y + 1, 1) : ($y, $m + 1);
       push @where, 'DATE(created) < ?';
-      push @bind, sprintf('%04d-%02d-01', $ny, $nm);
-    } else {
+      push @bind,  sprintf('%04d-%02d-01', $ny, $nm);
+    }
+    else {
       push @where, 'DATE(created) <= ?';
-      push @bind, $to;
+      push @bind,  $to;
     }
   }
 
-  my $sql = 'SELECT DATE_FORMAT(created,\'%Y-%m\') AS month, mime_type, '
-          . 'SUM(content_size) AS total_bytes, COUNT(*) AS file_count '
-          . 'FROM fedoradb.simple_search '
-          . 'WHERE ' . join(' AND ', @where) . ' '
-          . 'GROUP BY month, mime_type '
-          . 'ORDER BY month, mime_type';
+  my $sql = 'SELECT DATE_FORMAT(created,\'%Y-%m\') AS month, mime_type, ' . 'SUM(content_size) AS total_bytes, COUNT(*) AS file_count ' . 'FROM fedoradb.simple_search ' . 'WHERE ' . join(' AND ', @where) . ' ' . 'GROUP BY month, mime_type ' . 'ORDER BY month, mime_type';
 
   my $sth = $dbh->prepare($sql);
   unless ($sth && $sth->execute(@bind)) {
@@ -121,7 +115,7 @@ sub fedora_storage_avg_year {
     return $self->render(json => {alerts => [{type => 'error', msg => 'Query failed'}]}, status => 500);
   }
 
-  my %by_month = map { $_ => 0 } (1..12);
+  my %by_month = map {$_ => 0} (1 .. 12);
   while (my $row = $sth->fetchrow_hashref) {
     $by_month{$row->{month}} = int($row->{avg_bytes} || 0);
   }
@@ -144,15 +138,13 @@ sub imageserver_storage_avg_year {
   # Prefer paf_mongo if configured, fallback to mongo
   my $db;
   if ($self->can('paf_mongo')) {
-    eval { $db = $self->paf_mongo; };
+    eval {$db = $self->paf_mongo;};
   }
   $db ||= $self->mongo;
 
   my $coll = $db->get_collection('storage_stats');
 
-  my $cursor = $coll->find({
-    timestamp_iso => { '$gte' => $from_iso, '$lt' => $to_iso }
-  });
+  my $cursor = $coll->find({timestamp_iso => {'$gte' => $from_iso, '$lt' => $to_iso}});
 
   my %sum_by_month;
   my %count_by_month;
@@ -160,17 +152,17 @@ sub imageserver_storage_avg_year {
     my $iso = $doc->{timestamp_iso};
     next unless $iso && $iso =~ /^(\d{4})-(\d{2})/;
     my $m = int($2);
-    my $v = $doc->{imageserver}*1024; # on GNU/Linux du -s returns nr of 1KiB blocks by default
+    my $v = $doc->{imageserver} * 1024;    # on GNU/Linux du -s returns nr of 1KiB blocks by default
     $v = defined $v ? $v : 0;
-    $v += 0; # coerce numeric (strings -> number)
-    $sum_by_month{$m}  += $v;
+    $v                  += 0;              # coerce numeric (strings -> number)
+    $sum_by_month{$m}   += $v;
     $count_by_month{$m} += 1;
   }
 
-  my %avg_by_month = map { $_ => 0 } (1..12);
-  for my $m (1..12) {
+  my %avg_by_month = map {$_ => 0} (1 .. 12);
+  for my $m (1 .. 12) {
     my $cnt = $count_by_month{$m} || 0;
-    my $sum = $sum_by_month{$m}  || 0;
+    my $sum = $sum_by_month{$m}   || 0;
     $avg_by_month{$m} = $cnt ? int($sum / $cnt) : 0;
   }
 
@@ -254,8 +246,8 @@ sub request_doi {
 
   $self->app->log->debug("DOI request received pid[$pid]");
 
-  my $confmodel = PhaidraAPI::Model::Config->new;
-  my $pubconfig = $confmodel->get_public_config($self);
+  my $confmodel  = PhaidraAPI::Model::Config->new;
+  my $pubconfig  = $confmodel->get_public_config($self);
   my $privconfig = $confmodel->get_private_config($self);
 
   my $to = $pubconfig->{requestdoiemail};
@@ -276,11 +268,11 @@ sub request_doi {
   }
 
   my %emaildata;
-  $emaildata{name}    = $userdata->{firstname}." ".$userdata->{lastname};
+  $emaildata{name}    = $userdata->{firstname} . " " . $userdata->{lastname};
   $emaildata{pid}     = $pid;
   $emaildata{email}   = $userdata->{email};
   $emaildata{baseurl} = $self->config->{phaidra}->{baseurl};
-  $self->app->log->debug("Sending DOI request email pid[$pid] currentuser[$currentuser] name[".$userdata->{firstname}." ".$userdata->{lastname}."] from[".$userdata->{email}."] to[$to]");
+  $self->app->log->debug("Sending DOI request email pid[$pid] currentuser[$currentuser] name[" . $userdata->{firstname} . " " . $userdata->{lastname} . "] from[" . $userdata->{email} . "] to[$to]");
   my %options;
   for my $p (@{$self->app->renderer->paths}) {
     $options{INCLUDE_PATH} = $p;
@@ -289,14 +281,14 @@ sub request_doi {
     my $msg = MIME::Lite::TT::HTML->new(
       From        => $userdata->{email},
       To          => $to,
-      Subject     => 'Subsequent DOI allocation: '. $pid . ' ' . $userdata->{email},
+      Subject     => 'Subsequent DOI allocation: ' . $pid . ' ' . $userdata->{email},
       Charset     => 'utf8',
       Encoding    => 'quoted-printable',
       Template    => {html => 'email/doirequest.html.tt', text => 'email/doirequest.txt.tt'},
       TmplParams  => \%emaildata,
       TmplOptions => \%options
     );
-    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => ($privconfig->{smtpport} eq '465' || $privconfig->{smtpport} eq '587') ? 1 : 0);
+    $msg->send('smtp', $privconfig->{smtpserver} . ':' . $privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => ($privconfig->{smtpport} eq '465' || $privconfig->{smtpport} eq '587') ? 1 : 0);
   };
   if ($@) {
     my $err = "[$pid] sending DOI request email failed: " . $@;
@@ -312,47 +304,47 @@ sub request_doi {
 }
 
 sub search_users {
-    my $self = shift;
+  my $self = shift;
 
-    my $username = $self->param('q');  # Get search query parameter
-    my $res = { alerts => [], status => 200, users => [] };
+  my $username = $self->param('q');                            # Get search query parameter
+  my $res      = {alerts => [], status => 200, users => []};
 
-    unless ($username) {
-        $res->{status} = 400;
-        push @{$res->{alerts}}, "Missing required parameter: q";
-        return $self->render(json => $res, status => 400);
-    }
+  unless ($username) {
+    $res->{status} = 400;
+    push @{$res->{alerts}}, "Missing required parameter: q";
+    return $self->render(json => $res, status => 400);
+  }
 
-    my $dbh = $self->app->db_user->dbh;
+  my $dbh = $self->app->db_user->dbh;
 
-    # Secure query to get all fields for matching users
-    my $ss = "SELECT DISTINCT(username) FROM user_terms WHERE username LIKE ?";
-    my $sth = $dbh->prepare($ss);
+  # Secure query to get all fields for matching users
+  my $ss  = "SELECT DISTINCT(username) FROM user_terms WHERE username LIKE ?";
+  my $sth = $dbh->prepare($ss);
 
-    unless ($sth) {
-        $self->app->log->error("Database prepare error: " . $dbh->errstr);
-        $res->{status} = 500;
-        push @{$res->{alerts}}, "Database error: " . $dbh->errstr;
-        return $self->render(json => $res, status => 500);
-    }
+  unless ($sth) {
+    $self->app->log->error("Database prepare error: " . $dbh->errstr);
+    $res->{status} = 500;
+    push @{$res->{alerts}}, "Database error: " . $dbh->errstr;
+    return $self->render(json => $res, status => 500);
+  }
 
-    # Use a wildcard search to match usernames
-    unless ($sth->execute("%$username%")) {
-        $self->app->log->error("Database execution error: " . $dbh->errstr);
-        $res->{status} = 500;
-        push @{$res->{alerts}}, "Database execution error: " . $dbh->errstr;
-        return $self->render(json => $res, status => 500);
-    }
+  # Use a wildcard search to match usernames
+  unless ($sth->execute("%$username%")) {
+    $self->app->log->error("Database execution error: " . $dbh->errstr);
+    $res->{status} = 500;
+    push @{$res->{alerts}}, "Database execution error: " . $dbh->errstr;
+    return $self->render(json => $res, status => 500);
+  }
 
-    # Fetch all rows and store them in an array of hashes
-    my $users = $sth->fetchall_arrayref({});
-    $sth->finish();
+  # Fetch all rows and store them in an array of hashes
+  my $users = $sth->fetchall_arrayref({});
+  $sth->finish();
 
-    if (@$users) {
-        $res->{users} = $users;
-    }
+  if (@$users) {
+    $res->{users} = $users;
+  }
 
-    return $self->render(json => $res, status => $res->{status});
+  return $self->render(json => $res, status => $res->{status});
 }
 
 sub geonames_search {
@@ -361,7 +353,7 @@ sub geonames_search {
 
   my $res = {alerts => [], status => 200};
 
-  my $q = $self->req->param('q');
+  my $q    = $self->req->param('q');
   my $lang = $self->req->param('lang');
 
   unless ($q) {
@@ -392,8 +384,8 @@ sub geonames_search {
     }
   }
 
-  my $params = { q => $q, lang => $lang };
-  $params->{maxRows} = $self->config->{apis}->{geonames}->{maxRows} || 50;
+  my $params = {q => $q, lang => $lang};
+  $params->{maxRows}  = $self->config->{apis}->{geonames}->{maxRows}  || 50;
   $params->{username} = $self->config->{apis}->{geonames}->{username} || 'phaidra';
 
   my $url = Mojo::URL->new($self->config->{apis}->{geonames}->{search})->query($params);
@@ -419,7 +411,7 @@ sub gnd_search {
 
   my $res = {alerts => [], status => 200};
 
-  my $q = $self->req->param('q');
+  my $q    = $self->req->param('q');
   my $from = $self->req->param('from');
   my $size = $self->req->param('size');
 
@@ -430,12 +422,12 @@ sub gnd_search {
     return;
   }
 
-  unless(looks_like_number($from)) {
+  unless (looks_like_number($from)) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Invalid from param provided'}]}, status => 400);
     return;
   }
 
-  unless(looks_like_number($size)) {
+  unless (looks_like_number($size)) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Invalid size param provided'}]}, status => 400);
     return;
   }
@@ -454,9 +446,9 @@ sub gnd_search {
     return;
   }
 
-  my $params = { q => $q, from => $from, size => $size, format => 'json' };
+  my $params = {q => $q, from => $from, size => $size, format => 'json'};
 
-  my $url = Mojo::URL->new('https://'.$self->config->{apis}->{lobid}->{baseurl}.'/gnd/search')->query($params);
+  my $url = Mojo::URL->new('https://' . $self->config->{apis}->{lobid}->{baseurl} . '/gnd/search')->query($params);
   my $get = $self->ua->max_redirects(5)->get($url)->result;
   if ($get->is_success) {
     my $json = $get->json;
@@ -478,12 +470,12 @@ sub alma_search {
 
   my $res = {alerts => [], status => 200};
 
-  my $query = $self->req->param('query');
-  my $version = $self->req->param('version');
-  my $operation = $self->req->param('operation');
-  my $recordSchema = $self->req->param('recordSchema');
+  my $query          = $self->req->param('query');
+  my $version        = $self->req->param('version');
+  my $operation      = $self->req->param('operation');
+  my $recordSchema   = $self->req->param('recordSchema');
   my $maximumRecords = $self->req->param('maximumRecords');
-  my $startRecord = $self->req->param('startRecord');
+  my $startRecord    = $self->req->param('startRecord');
 
   unless ($query) {
     my $err = "missing query param";
@@ -493,29 +485,32 @@ sub alma_search {
   }
 
   if ($version) {
-    unless(looks_like_number($version)) {
+    unless (looks_like_number($version)) {
       $self->render(json => {alerts => [{type => 'error', msg => 'Invalid version param provided'}]}, status => 400);
       return;
     }
-  } else {
+  }
+  else {
     $version = '1.2';
   }
 
   if ($maximumRecords) {
-    unless(looks_like_number($maximumRecords)) {
+    unless (looks_like_number($maximumRecords)) {
       $self->render(json => {alerts => [{type => 'error', msg => 'Invalid maximumRecords param provided'}]}, status => 400);
       return;
     }
-  } else {
+  }
+  else {
     $maximumRecords = '10';
   }
 
   if ($startRecord) {
-    unless(looks_like_number($startRecord)) {
+    unless (looks_like_number($startRecord)) {
       $self->render(json => {alerts => [{type => 'error', msg => 'Invalid startRecord param provided'}]}, status => 400);
       return;
     }
-  } else {
+  }
+  else {
     $startRecord = '1';
   }
 
@@ -527,7 +522,7 @@ sub alma_search {
     $recordSchema = 'mods';
   }
 
-  my $model = PhaidraAPI::Model::Config->new;
+  my $model      = PhaidraAPI::Model::Config->new;
   my $privconfig = $model->get_private_config($self);
 
   unless (exists($privconfig->{almasruurl})) {
@@ -537,7 +532,7 @@ sub alma_search {
     return;
   }
 
-  my $params = { query => $query, version => $version, maximumRecords => $maximumRecords, startRecord => $startRecord, operation => $operation, recordSchema => $recordSchema };
+  my $params = {query => $query, version => $version, maximumRecords => $maximumRecords, startRecord => $startRecord, operation => $operation, recordSchema => $recordSchema};
 
   my $url = Mojo::URL->new($privconfig->{almasruurl})->query($params);
   my $get = $self->ua->max_redirects(5)->get($url)->result;
@@ -558,7 +553,7 @@ sub alma_search {
 sub jwks {
   my $self = shift;
 
-  my $model = PhaidraAPI::Model::Config->new;
+  my $model      = PhaidraAPI::Model::Config->new;
   my $privconfig = $model->get_private_config($self);
 
   unless (exists($privconfig->{jwks})) {
@@ -567,14 +562,14 @@ sub jwks {
     $self->render(json => {alerts => [{type => 'error', msg => $err}]}, status => 500);
     return;
   }
-  
+
   $self->render(json => decode_json($privconfig->{jwks}), status => 200);
 }
 
 sub robots_txt {
   my $self = shift;
 
-  my $model = PhaidraAPI::Model::Config->new;
+  my $model     = PhaidraAPI::Model::Config->new;
   my $pubconfig = $model->get_public_config($self);
 
   unless (exists($pubconfig->{robotstxt})) {
@@ -592,8 +587,8 @@ sub send_daily_report {
 
   my $res = {alerts => [], status => 200};
 
-  my $confmodel = PhaidraAPI::Model::Config->new;
-  my $pubconfig = $confmodel->get_public_config($self);
+  my $confmodel  = PhaidraAPI::Model::Config->new;
+  my $pubconfig  = $confmodel->get_public_config($self);
   my $privconfig = $confmodel->get_private_config($self);
 
   unless ($privconfig->{reportingemail}) {
@@ -612,20 +607,20 @@ sub send_daily_report {
 
   my %emaildata;
   $emaildata{date} = strftime('%Y-%m-%d', localtime);
-  
+
   # Get storage information if enabled
   if ($privconfig->{reportingincludestorage}) {
     $emaildata{storage_info} = 1;
-    
+
     # Get Fedora storage
-    my $dbh = $self->app->db_fedora->dbh;
+    my $dbh          = $self->app->db_fedora->dbh;
     my $fedora_total = $dbh->selectrow_array(
       q{SELECT IFNULL(SUM(content_size),0)
         FROM fedoradb.simple_search
         WHERE mime_type IS NOT NULL
           AND (fedora_id LIKE '%OCTETS' OR fedora_id LIKE '%WEBVERSION')}
     ) || 0;
-    
+
     my $fedora_sql = q{
       SELECT DATE_FORMAT(created,'%Y-%m') AS month, mime_type,
         SUM(content_size) AS total_bytes, COUNT(*) AS file_count
@@ -643,64 +638,67 @@ sub send_daily_report {
       $fedora_sth->finish();
     }
     $emaildata{fedora_total} = $fedora_total;
-    $emaildata{fedora_rows} = \@fedora_rows;
-    
+    $emaildata{fedora_rows}  = \@fedora_rows;
+
     # Get Imageserver storage (latest from storage_stats)
     my $db;
     if ($self->can('paf_mongo')) {
-      eval { $db = $self->paf_mongo; };
+      eval {$db = $self->paf_mongo;};
     }
     $db ||= $self->mongo;
-    my $coll = $db->get_collection('storage_stats');
-    my $latest_stats = $coll->find_one({}, {sort => {timestamp_iso => -1}});
+    my $coll             = $db->get_collection('storage_stats');
+    my $latest_stats     = $coll->find_one({}, {sort => {timestamp_iso => -1}});
     my $imageserver_size = 0;
     if ($latest_stats && $latest_stats->{imageserver}) {
-      $imageserver_size = $latest_stats->{imageserver} * 1024; # Convert from KB to bytes
+      $imageserver_size = $latest_stats->{imageserver} * 1024;    # Convert from KB to bytes
     }
     $emaildata{imageserver_total} = $imageserver_size;
   }
-  
+
   # Get query count reports if defined
   if ($privconfig->{reportingquerycountreports} && ref($privconfig->{reportingquerycountreports}) eq 'ARRAY') {
     my @query_reports;
     my $today = strftime('%Y-%m-%d', localtime);
-    
+
     for my $query_report (@{$privconfig->{reportingquerycountreports}}) {
       next unless $query_report->{label} && $query_report->{fq};
-      
+
       my $fq = $query_report->{fq};
       if ($query_report->{daily}) {
         $fq .= ' AND tcreated:[' . $today . 'T00:00:00Z TO ' . $today . 'T23:59:59Z]';
       }
-      
+
       # Execute Solr query
-      my $ua = Mojo::UserAgent->new;
+      my $ua  = Mojo::UserAgent->new;
       my $url = Mojo::URL->new;
       $url->scheme($self->app->config->{solr}->{scheme});
       $url->host($self->app->config->{solr}->{host});
       $url->port($self->app->config->{solr}->{port});
       if ($self->app->config->{solr}->{path}) {
         $url->path("/" . $self->app->config->{solr}->{path} . "/solr/" . $self->app->config->{solr}->{core} . "/select");
-      } else {
+      }
+      else {
         $url->path("/solr/" . $self->app->config->{solr}->{core} . "/select");
       }
       $url->query(q => '*:*', fq => $fq, rows => 0, wt => 'json');
-      
-      my $get = $ua->get($url)->result;
+
+      my $get      = $ua->get($url)->result;
       my $numFound = 0;
       if ($get->is_success) {
         my $json = $get->json;
         $numFound = $json->{response}->{numFound} || 0;
-      } else {
+      }
+      else {
         $self->app->log->error("Daily report: Solr query failed for " . $query_report->{label} . ": " . $get->message);
       }
-      
-      push @query_reports, {
-        label => $query_report->{label},
-        fq => $fq,
-        daily => $query_report->{daily} ? 1 : 0,
+
+      push @query_reports,
+        {
+        label    => $query_report->{label},
+        fq       => $fq,
+        daily    => $query_report->{daily} ? 1 : 0,
         numFound => $numFound
-      };
+        };
     }
     $emaildata{query_reports} = \@query_reports;
   }
@@ -718,7 +716,7 @@ sub send_daily_report {
       TmplParams  => \%emaildata,
       TmplOptions => \%options
     );
-    $msg->send('smtp', $privconfig->{smtpserver}.':'.$privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => ($privconfig->{smtpport} eq '465' || $privconfig->{smtpport} eq '587') ? 1 : 0);
+    $msg->send('smtp', $privconfig->{smtpserver} . ':' . $privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => ($privconfig->{smtpport} eq '465' || $privconfig->{smtpport} eq '587') ? 1 : 0);
     $self->app->log->info("Daily report sent successfully to " . $privconfig->{reportingemail});
   };
   if ($@) {

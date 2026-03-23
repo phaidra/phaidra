@@ -16,10 +16,10 @@ use change_refs;
 use MongoDB 1.8.3;
 use Sereal::Encoder qw(encode_sereal);
 use Sereal::Decoder qw(decode_sereal);
-use Crypt::CBC              ();
-use Crypt::Rijndael         ();
-use Crypt::URandom          (qw/urandom/);
-use Digest::SHA             (qw/hmac_sha256/);
+use Crypt::CBC      ();
+use Crypt::Rijndael ();
+use Crypt::URandom (qw/urandom/);
+use Digest::SHA    (qw/hmac_sha256/);
 use Math::Random::ISAAC::XS ();
 use DBIx::Connector;
 use PhaidraAPI::Model::Fedora;
@@ -59,14 +59,14 @@ sub is_bot_ua {
   my $l = lc $ua;
 
   # Any UA containing 'bot', 'spider' or 'crawl'
-  return 1 if index($l, 'bot')     >= 0;
-  return 1 if index($l, 'spider')  >= 0;
-  return 1 if index($l, 'crawl')   >= 0;
+  return 1 if index($l, 'bot') >= 0;
+  return 1 if index($l, 'spider') >= 0;
+  return 1 if index($l, 'crawl') >= 0;
 
   # Known non-'bot' identifiers
-  return 1 if index($l, 'slurp')               >= 0;  # Yahoo
-  return 1 if index($l, 'facebookexternalhit') >= 0;  # Facebook
-  return 1 if index($l, 'bingpreview')         >= 0;  # Bing link preview
+  return 1 if index($l, 'slurp') >= 0;                  # Yahoo
+  return 1 if index($l, 'facebookexternalhit') >= 0;    # Facebook
+  return 1 if index($l, 'bingpreview') >= 0;            # Bing link preview
   return 0;
 }
 
@@ -90,7 +90,7 @@ sub startup {
   if ($config->{tmpdir}) {
     $self->app->log->debug("Setting MOJO_TMPDIR: " . $config->{tmpdir});
     $ENV{MOJO_TMPDIR} = $config->{tmpdir};
-    $ENV{TMPDIR} = $config->{tmpdir};
+    $ENV{TMPDIR}      = $config->{tmpdir};
   }
 
   if ($config->{ssl_ca_path}) {
@@ -147,8 +147,9 @@ sub startup {
     };
   }
 
-  if ($config->{phaidra}->{triplestore} &&
-      $config->{phaidra}->{triplestore} eq 'localMysqlMPTTriplestore') {
+  if ( $config->{phaidra}->{triplestore}
+    && $config->{phaidra}->{triplestore} eq 'localMysqlMPTTriplestore')
+  {
     $databases{'db_triplestore'} = {
       dsn      => $config->{localMysqlMPTTriplestore}->{dsn},
       username => $config->{localMysqlMPTTriplestore}->{username},
@@ -368,18 +369,18 @@ sub startup {
 
   $self->helper(
     save_cred => sub {
-      my $self = shift;
-      my $u    = shift;
-      my $p    = shift;
-      my $ru   = shift;
-      my $firstname   = shift;
-      my $lastname   = shift;
-      my $email   = shift;
-      my $affiliation   = shift;
-      my $org_units_l1   = shift;
-      my $org_units_l2   = shift;
-      my $localgroups   = shift;
-      my $displayname = shift;
+      my $self         = shift;
+      my $u            = shift;
+      my $p            = shift;
+      my $ru           = shift;
+      my $firstname    = shift;
+      my $lastname     = shift;
+      my $email        = shift;
+      my $affiliation  = shift;
+      my $org_units_l1 = shift;
+      my $org_units_l2 = shift;
+      my $localgroups  = shift;
+      my $displayname  = shift;
 
       my $ciphertext;
 
@@ -394,20 +395,19 @@ sub startup {
       }
       if (defined($ru)) {
         $ba = encode_sereal(
-          {
-            remote_user => $ru, 
-            firstname => $firstname, 
-            lastname => $lastname, 
-            displayname => $displayname,
-            email => $email, 
-            affiliation => $affiliation, 
-            org_units_l1 => $org_units_l1, 
-            org_units_l2 => $org_units_l2, 
-            localgroups => $localgroups
+          { remote_user  => $ru,
+            firstname    => $firstname,
+            lastname     => $lastname,
+            displayname  => $displayname,
+            email        => $email,
+            affiliation  => $affiliation,
+            org_units_l1 => $org_units_l1,
+            org_units_l2 => $org_units_l2,
+            localgroups  => $localgroups
           }
         );
       }
-      
+
       my $salt = Math::Random::ISAAC::XS->new(map {unpack("N", urandom(4))} 1 .. 256)->irand();
       my $key  = hmac_sha256($salt, $self->app->config->{enc_key});
       my $cbc  = Crypt::CBC->new(-key => $key, -pbkdf => 'pbkdf2');

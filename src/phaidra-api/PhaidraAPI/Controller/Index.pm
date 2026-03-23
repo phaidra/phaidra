@@ -5,8 +5,8 @@ use warnings;
 use v5.10;
 use base 'Mojolicious::Controller';
 use Mojo::ByteStream qw(b);
-use Mojo::Util qw(xml_escape html_unescape);
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::Util       qw(xml_escape html_unescape);
+use Mojo::JSON       qw(encode_json decode_json);
 use PhaidraAPI::Model::Index;
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Search;
@@ -119,8 +119,8 @@ sub update {
   my $self         = shift;
   my $pid_param    = $self->stash('pid');
   my $ignorestatus = $self->param('ignorestatus');
-  my $norecursion = $self->param('norecursion');
-  my $core = $self->param('core');
+  my $norecursion  = $self->param('norecursion');
+  my $core         = $self->param('core');
 
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};

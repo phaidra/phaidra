@@ -4,8 +4,8 @@ use strict;
 use warnings;
 use v5.10;
 use base 'Mojolicious::Controller';
-use Mojo::JSON qw(encode_json decode_json);
-use Mojo::Util qw(encode decode);
+use Mojo::JSON       qw(encode_json decode_json);
+use Mojo::Util       qw(encode decode);
 use Mojo::ByteStream qw(b);
 use Mojo::URL;
 use Mojo::UserAgent;
@@ -17,8 +17,8 @@ use PhaidraAPI::Model::Index;
 use PhaidraAPI::Model::Config;
 use PhaidraAPI::Model::Jsonld;
 use Time::HiRes qw/tv_interval gettimeofday/;
-use Storable qw(dclone);
-use POSIX qw/strftime/;
+use Storable    qw(dclone);
+use POSIX       qw/strftime/;
 use MIME::Lite;
 use MIME::Lite::TT::HTML;
 use DateTime;
@@ -310,8 +310,8 @@ sub approve {
 
   my $res = {alerts => [], status => 200};
 
-  my $confmodel = PhaidraAPI::Model::Config->new;
-  my $pubconfig = $confmodel->get_public_config($self);
+  my $confmodel  = PhaidraAPI::Model::Config->new;
+  my $pubconfig  = $confmodel->get_public_config($self);
   my $privconfig = $confmodel->get_private_config($self);
 
   my $username = $self->stash->{basic_auth_credentials}->{username};
@@ -380,30 +380,30 @@ sub approve {
   $emaildata{pid}     = $pid;
   $emaildata{baseurl} = $pubconfig->{irbaseurl};
 
-  my $subject        = $pubconfig->{irname} . " - Redaktionelle Bearbeitung abgeschlossen / Submission process completed";
+  my $subject = $pubconfig->{irname} . " - Redaktionelle Bearbeitung abgeschlossen / Submission process completed";
 
   my $supportEmail = $privconfig->{iremail};
-  my $from = $supportEmail;
+  my $from         = $supportEmail;
   $from = substr($supportEmail, 0, index($supportEmail, ',')) if index($supportEmail, ',') != -1;
 
   my $template_string = $privconfig->{irmdcheckemail};
-  my $tt = Template->new();
+  my $tt              = Template->new();
   my $output;
-  unless($tt->process(\$template_string, \%emaildata, \$output)) {
-    $self->app->log->error("send mdcheck email pid[$pid]: ".$tt->error());
-    push @{$res->{alerts}}, {type => 'error', msg => "error sending metadata check email for pid[$pid]: ".$tt->error()};
+  unless ($tt->process(\$template_string, \%emaildata, \$output)) {
+    $self->app->log->error("send mdcheck email pid[$pid]: " . $tt->error());
+    push @{$res->{alerts}}, {type => 'error', msg => "error sending metadata check email for pid[$pid]: " . $tt->error()};
   }
 
   eval {
     my $msg = MIME::Lite->new(
-      From        => $from,
-      To          => $email,
-      Subject     => $subject,
-      Type        => 'text/html; charset=UTF-8',
-      Encoding    => 'quoted-printable'
+      From     => $from,
+      To       => $email,
+      Subject  => $subject,
+      Type     => 'text/html; charset=UTF-8',
+      Encoding => 'quoted-printable'
     );
     $msg->data(encode('UTF-8', $output));
-    $msg->send('smtp', $privconfig->{irsmtpserver}.':'.$privconfig->{irsmtpport}, AuthUser => $privconfig->{irsmtpuser}, AuthPass => $privconfig->{irsmtppassword}, SSL => ($privconfig->{irsmtpport} eq '465' || $privconfig->{irsmtpport} eq '587') ? 1 : 0);
+    $msg->send('smtp', $privconfig->{irsmtpserver} . ':' . $privconfig->{irsmtpport}, AuthUser => $privconfig->{irsmtpuser}, AuthPass => $privconfig->{irsmtppassword}, SSL => ($privconfig->{irsmtpport} eq '465' || $privconfig->{irsmtpport} eq '587') ? 1 : 0);
   };
   if ($@) {
     $self->addEvent('approval_notification_failed', \@pids, $username);
@@ -532,7 +532,7 @@ sub adminlistdata {
   for my $submit (@submits) {
     unless (exists($namesCache->{$submit->{user}->{username}})) {
       my $user_data = $self->app->directory->get_user_data($self, $submit->{user}->{username});
-      $namesCache->{$submit->{user}->{username}} = $user_data->{firstname}.' '.$user_data->{lastname};
+      $namesCache->{$submit->{user}->{username}} = $user_data->{firstname} . ' ' . $user_data->{lastname};
     }
     $submit->{user}->{name} = $namesCache->{$submit->{user}->{username}};
   }
@@ -560,7 +560,7 @@ sub allowsubmit {
 
   my $res = {alerts => [], status => 200};
 
-  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $confmodel  = PhaidraAPI::Model::Config->new;
   my $privconfig = $confmodel->get_private_config($self);
 
   $res->{allowsubmit}     = 0;
@@ -576,7 +576,7 @@ sub allowsubmit {
     $self->app->log->info("Bulk upload check configured: nruploads[$nruploads] within days[$nrdays]");
     my $candobulkupload = 0;
     if ($privconfig->{ircandobulkupload}) {
-      my @accounts = split (',', $privconfig->{ircandobulkupload});
+      my @accounts = split(',', $privconfig->{ircandobulkupload});
       for my $acc (@accounts) {
         if ($username eq $acc) {
           $res->{candobulkupload} = 1;
@@ -625,8 +625,8 @@ sub submit {
 
   my $res = {alerts => [], status => 200};
 
-  my $confmodel = PhaidraAPI::Model::Config->new;
-  my $pubconfig = $confmodel->get_public_config($self);
+  my $confmodel  = PhaidraAPI::Model::Config->new;
+  my $pubconfig  = $confmodel->get_public_config($self);
   my $privconfig = $confmodel->get_private_config($self);
 
   my $username = $self->stash->{basic_auth_credentials}->{username};
@@ -903,8 +903,8 @@ sub submit {
 sub sendAdminEmail {
   my ($self, $title, $owner, $pid, $license) = @_;
 
-  my $confmodel = PhaidraAPI::Model::Config->new;
-  my $pubconfig = $confmodel->get_public_config($self);
+  my $confmodel  = PhaidraAPI::Model::Config->new;
+  my $pubconfig  = $confmodel->get_public_config($self);
   my $privconfig = $confmodel->get_private_config($self);
 
   my $phaidrabaseurl = $self->config->{phaidra}->{baseurl};
@@ -921,21 +921,21 @@ sub sendAdminEmail {
   </html>";
 
   my $supportEmail = $privconfig->{iremail};
-  my $from = $supportEmail;
+  my $from         = $supportEmail;
   $from = substr($supportEmail, 0, index($supportEmail, ',')) if index($supportEmail, ',') != -1;
 
   $self->app->log->info("Sending email from[$from] to[$supportEmail] for pid[$pid]: \n$email");
 
   my $msg = MIME::Lite->new(
-    From        => $from,
-    To          => $supportEmail,
-    Type        => 'text/html; charset=UTF-8',
-    Encoding    => 'quoted-printable',
-    Subject     => "New upload: $pid"
+    From     => $from,
+    To       => $supportEmail,
+    Type     => 'text/html; charset=UTF-8',
+    Encoding => 'quoted-printable',
+    Subject  => "New upload: $pid"
   );
   $msg->data(encode('UTF-8', $email));
 
-  $msg->send('smtp', $privconfig->{irsmtpserver}.':'.$privconfig->{irsmtpport}, AuthUser => $privconfig->{irsmtpuser}, AuthPass => $privconfig->{irsmtppassword}, SSL => ($privconfig->{irsmtpport} eq '465' || $privconfig->{irsmtpport} eq '587') ? 1 : 0);
+  $msg->send('smtp', $privconfig->{irsmtpserver} . ':' . $privconfig->{irsmtpport}, AuthUser => $privconfig->{irsmtpuser}, AuthPass => $privconfig->{irsmtppassword}, SSL => ($privconfig->{irsmtpport} eq '465' || $privconfig->{irsmtpport} eq '587') ? 1 : 0);
 }
 
 sub isRestricted {
@@ -1057,8 +1057,8 @@ sub changeEmbargoedToOpenAccess {
 sub sendEmbargoendEmail {
   my ($self, $username, $pid) = @_;
 
-  my $confmodel = PhaidraAPI::Model::Config->new;
-  my $pubconfig = $confmodel->get_public_config($self);
+  my $confmodel  = PhaidraAPI::Model::Config->new;
+  my $pubconfig  = $confmodel->get_public_config($self);
   my $privconfig = $confmodel->get_private_config($self);
 
   my $email = $self->app->directory->get_email($self, $username);
@@ -1067,28 +1067,28 @@ sub sendEmbargoendEmail {
   $emaildata{pid}     = $pid;
   $emaildata{baseurl} = $pubconfig->{irbaseurl};
 
-  my $subject        = $pubconfig->{irname} . " - Embargofrist abgelaufen / Embargo period expired";
+  my $subject = $pubconfig->{irname} . " - Embargofrist abgelaufen / Embargo period expired";
 
   my $template_string = $privconfig->{irembargoendemail};
-  my $tt = Template->new();
+  my $tt              = Template->new();
   my $output;
-  unless($tt->process(\$template_string, \%emaildata, \$output)) {
-    $self->app->log->error("send embargo email pid[$pid]: ".$tt->error());
+  unless ($tt->process(\$template_string, \%emaildata, \$output)) {
+    $self->app->log->error("send embargo email pid[$pid]: " . $tt->error());
   }
 
   my $supportEmail = $privconfig->{iremail};
-  my $from = substr($supportEmail, 0, index($supportEmail, ','));
+  my $from         = substr($supportEmail, 0, index($supportEmail, ','));
 
   eval {
     my $msg = MIME::Lite->new(
-      From        => $from,
-      To          => $email,
-      Subject     => $subject,
-      Type        => 'text/html; charset=UTF-8',
-      Encoding    => 'quoted-printable'
+      From     => $from,
+      To       => $email,
+      Subject  => $subject,
+      Type     => 'text/html; charset=UTF-8',
+      Encoding => 'quoted-printable'
     );
     $msg->data(encode('UTF-8', $output));
-    $msg->send('smtp', $privconfig->{irsmtpserver}.':'.$privconfig->{irsmtpport}, AuthUser => $privconfig->{irsmtpuser}, AuthPass => $privconfig->{irsmtppassword}, SSL => ($privconfig->{irsmtpport} eq '465' || $privconfig->{irsmtpport} eq '587') ? 1 : 0);
+    $msg->send('smtp', $privconfig->{irsmtpserver} . ':' . $privconfig->{irsmtpport}, AuthUser => $privconfig->{irsmtpuser}, AuthPass => $privconfig->{irsmtppassword}, SSL => ($privconfig->{irsmtpport} eq '465' || $privconfig->{irsmtpport} eq '587') ? 1 : 0);
   };
   if ($@) {
     my @pids;
@@ -1208,8 +1208,8 @@ sub puresearch {
 
   my $res = {alerts => [], status => 200};
 
-  my $confmodel = PhaidraAPI::Model::Config->new;
-  my $pubconfig = $confmodel->get_public_config($self);
+  my $confmodel  = PhaidraAPI::Model::Config->new;
+  my $pubconfig  = $confmodel->get_public_config($self);
   my $privconfig = $confmodel->get_private_config($self);
 
   # already went through check_auth
@@ -1230,8 +1230,8 @@ sub puresearch {
     return;
   }
 
-  my $size     = $self->param('size');
-  my $offset   = $self->param('offset');
+  my $size   = $self->param('size');
+  my $offset = $self->param('offset');
 
   # $self->app->log->debug("XXXXXXXXXXXXXXXXXXXX : " . $privconfig->{irpureurl} . '/research-outputs/search');
   # HACK:
@@ -1243,9 +1243,7 @@ sub puresearch {
     $urlget = Mojo::URL->new($privconfig->{irpureurl} . '/research-outputs/search');
   }
 
-  my $params = {
-    "keywordUris" => ["/dk/atira/pure/keywords/ir_status/$ir_status"]
-  };
+  my $params = {"keywordUris" => ["/dk/atira/pure/keywords/ir_status/$ir_status"]};
   if ($size) {
     $params->{size} = $size;
   }
@@ -1253,7 +1251,7 @@ sub puresearch {
     $params->{offset} = $offset;
   }
 
-  my $getres = $self->ua->post($urlget => {Accept => 'application/json', "api-key" => $privconfig->{irpurekey}} => json => $params)->result;  
+  my $getres = $self->ua->post($urlget => {Accept => 'application/json', "api-key" => $privconfig->{irpurekey}} => json => $params)->result;
   if ($getres->is_success) {
     $res->{response} = $getres->json;
   }
@@ -1375,8 +1373,8 @@ sub pureimport_reject {
 
   my $res = {alerts => [], status => 200};
 
-  my $confmodel = PhaidraAPI::Model::Config->new;
-  my $pubconfig = $confmodel->get_public_config($self);
+  my $confmodel  = PhaidraAPI::Model::Config->new;
+  my $pubconfig  = $confmodel->get_public_config($self);
   my $privconfig = $confmodel->get_private_config($self);
 
   my $username = $self->stash->{basic_auth_credentials}->{username};
@@ -1428,7 +1426,7 @@ sub createPureUpdate {
 
   my ($self, $pid, $uuid, $metadata) = @_;
 
-  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $confmodel  = PhaidraAPI::Model::Config->new;
   my $privconfig = $confmodel->get_private_config($self);
 
   my $version;

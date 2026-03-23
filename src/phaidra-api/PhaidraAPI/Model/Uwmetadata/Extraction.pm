@@ -4,10 +4,10 @@ use strict;
 use warnings;
 use v5.10;
 use utf8;
-use Mojo::Util qw(html_unescape);
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::Util       qw(html_unescape);
+use Mojo::JSON       qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
-use base qw/Mojo::Base/;
+use base             qw/Mojo::Base/;
 use PhaidraAPI::Model::Terms;
 
 our %cmodelMapping = (
@@ -647,6 +647,7 @@ sub _get_affiliation_cached {
   my $cachekey = 'affid_' . $code . '_' . $lang;
   unless ($inststr = $c->app->chi->get($cachekey)) {
     $c->app->log->debug("[cache miss] $cachekey");
+
     #$inststr = $c->app->directory->get_affiliation($c, $code, $lang);
     my $u = $c->app->directory->org_get_unit_for_notation($c, $code);
     if ($u) {

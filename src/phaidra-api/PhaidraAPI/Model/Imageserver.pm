@@ -4,8 +4,8 @@ use strict;
 use warnings;
 use v5.10;
 use utf8;
-use base qw/Mojo::Base/;
-use Mojo::Util qw(decode encode url_escape url_unescape);
+use base        qw/Mojo::Base/;
+use Mojo::Util  qw(decode encode url_escape url_unescape);
 use Digest::SHA qw(hmac_sha1_hex);
 use PhaidraAPI::Model::Object;
 
@@ -41,14 +41,16 @@ sub get_url {
   }
 
   my $root = $c->app->config->{imageserver}->{image_server_root};
+
   # if this is a request using the image path
-  if($p =~ m/^\/?\Q$root/i) {
+  if ($p =~ m/^\/?\Q$root/i) {
     if ($rightscheck) {
+
       # find the corresponding pid and check rights
-      if($p =~ m/.+\/([0-9A-F]{40})\.tif(.+)?$/i) {
-        my $idhash = $1;
+      if ($p =~ m/.+\/([0-9A-F]{40})\.tif(.+)?$/i) {
+        my $idhash   = $1;
         my $cachekey = "idhash2pid_" . $idhash;
-        my $pid = $c->app->chi->get($cachekey);
+        my $pid      = $c->app->chi->get($cachekey);
         unless ($pid) {
           $c->app->log->debug("[cache miss] $cachekey");
 
@@ -65,21 +67,24 @@ sub get_url {
         if ($pid) {
           my $check_pid_rights = $self->check_pid_rights($c, $pid);
           unless ($check_pid_rights eq 200) {
-            $c->app->log->info("imageserver::get_url username[" . (defined($c->stash->{basic_auth_credentials}->{username}) ? $c->stash->{basic_auth_credentials}->{username} : '' ) . "] idhash[$idhash] pid[$pid] forbidden");
+            $c->app->log->info("imageserver::get_url username[" . (defined($c->stash->{basic_auth_credentials}->{username}) ? $c->stash->{basic_auth_credentials}->{username} : '') . "] idhash[$idhash] pid[$pid] forbidden");
             unshift @{$res->{alerts}}, {type => 'error', msg => 'Forbidden'};
             $res->{status} = 403;
             return $res;
           }
-        } else {
+        }
+        else {
           $c->render(json => {alerts => [{type => 'info', msg => "Could not find PID for idhash[$idhash]"}]}, status => 400);
           return;
         }
-      } else {
+      }
+      else {
         $c->render(json => {alerts => [{type => 'info', msg => "Seems like a request using image path but can't match the idhash"}]}, status => 400);
         return;
       }
     }
-  } else {
+  }
+  else {
 
     # if this is a request using the pid
     $p =~ m/([a-z]+:[0-9]+)_?([A-Z]+)?\.tif/;
@@ -89,7 +94,7 @@ sub get_url {
     if ($rightscheck) {
       my $check_pid_rights = $self->check_pid_rights($c, $pid);
       unless ($check_pid_rights eq 200) {
-        $c->app->log->info("imageserver::get_url username[" . (defined($c->stash->{basic_auth_credentials}->{username}) ? $c->stash->{basic_auth_credentials}->{username} : '' ) . "] pid[$pid] forbidden");
+        $c->app->log->info("imageserver::get_url username[" . (defined($c->stash->{basic_auth_credentials}->{username}) ? $c->stash->{basic_auth_credentials}->{username} : '') . "] pid[$pid] forbidden");
         unshift @{$res->{alerts}}, {type => 'error', msg => 'Forbidden'};
         $res->{status} = 403;
         return $res;
@@ -104,7 +109,7 @@ sub get_url {
     else {
       $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
     }
-    
+
     my $first   = substr($hash, 0, 1);
     my $second  = substr($hash, 1, 1);
     my $imgpath = "$root/$first/$second/$hash.tif";
@@ -190,11 +195,12 @@ sub create_imageserver_job {
     $agent = 'libvips';
   }
 
-  $c->app->log->info("Creating imageserver job pid[$pid] cm[$cmodel] ds[".(defined($ds) ? $ds : '')."]");
+  $c->app->log->info("Creating imageserver job pid[$pid] cm[$cmodel] ds[" . (defined($ds) ? $ds : '') . "]");
   my $hash;
   if (defined($ds)) {
     $hash = hmac_sha1_hex($pid . "_" . $ds, $self->app->config->{imageserver}->{hash_secret});
-  } else {
+  }
+  else {
     $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
   }
   $res->{hash} = $hash;
@@ -204,17 +210,19 @@ sub create_imageserver_job {
     my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
     if ($dsAttr->{status} eq 200) {
       $path = $dsAttr->{path};
-    } else {
+    }
+    else {
       $c->app->log->error("imageserver job pid[$pid] cm[$cmodel]: could not get path");
     }
   }
   my $job = {pid => $pid, cmodel => $cmodel, agent => $agent, status => "new", idhash => $hash, created => time};
   $job->{path} = $path if $path;
-  $job->{ds} = $ds if $ds;
+  $job->{ds}   = $ds   if $ds;
   $c->paf_mongo->get_collection('jobs')->insert_one($job);
-  
+
   return $res;
 }
+
 sub update_imageserver_job {
   my ($self, $c, $pid, $cmodel, $ds, $agent) = @_;
 
@@ -224,11 +232,12 @@ sub update_imageserver_job {
     $agent = 'libvips';
   }
 
-  $c->app->log->info("Updating imageserver job pid[$pid] cm[$cmodel] ds[".(defined($ds) ? $ds : '')."]");
+  $c->app->log->info("Updating imageserver job pid[$pid] cm[$cmodel] ds[" . (defined($ds) ? $ds : '') . "]");
   my $hash;
   if (defined($ds)) {
     $hash = hmac_sha1_hex($pid . "_" . $ds, $self->app->config->{imageserver}->{hash_secret});
-  } else {
+  }
+  else {
     $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
   }
   $res->{hash} = $hash;
@@ -238,16 +247,13 @@ sub update_imageserver_job {
     my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
     if ($dsAttr->{status} eq 200) {
       $path = $dsAttr->{path};
-    } else {
+    }
+    else {
       $c->app->log->error("imageserver job pid[$pid] cm[$cmodel]: could not get path");
     }
   }
-  $c->paf_mongo->get_collection('jobs')->update_one(
-    { 'pid' => $pid, 'agent' => $agent },
-    { '$set' => { 'status' => 'new', 'idhash' => $hash, 'path' => $path } },
-    { 'upsert' => 0 }
-  );
-  
+  $c->paf_mongo->get_collection('jobs')->update_one({'pid' => $pid, 'agent' => $agent}, {'$set' => {'status' => 'new', 'idhash' => $hash, 'path' => $path}}, {'upsert' => 0});
+
   return $res;
 }
 

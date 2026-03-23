@@ -7,16 +7,18 @@ use utf8;
 use base qw/Mojo::Base/;
 
 sub get_public_config {
-  my $self = shift;
-  my $c = shift;
+  my $self    = shift;
+  my $c       = shift;
   my $nocache = shift;
 
   my $cacheval = $c->app->chi->get('public_config');
   if ($cacheval && !$nocache) {
+
     # $c->app->log->debug("[cache hit] public_config");
-  } else {
+  }
+  else {
     $c->app->log->debug("[cache miss] public_config");
-    $cacheval = $c->mongo->get_collection('config')->find_one({ config_type => 'public' });
+    $cacheval = $c->mongo->get_collection('config')->find_one({config_type => 'public'});
     $c->app->chi->set('public_config', $cacheval, '1 day');
     $cacheval = $c->app->chi->get('public_config');
   }
@@ -25,16 +27,18 @@ sub get_public_config {
 }
 
 sub get_private_config {
-  my $self = shift;
-  my $c = shift;
+  my $self    = shift;
+  my $c       = shift;
   my $nocache = shift;
 
   my $cacheval = $c->app->chi->get('private_config');
   if ($cacheval && !$nocache) {
+
     # $c->app->log->debug("[cache hit] private_config");
-  } else {
+  }
+  else {
     $c->app->log->debug("[cache miss] private_config");
-    $cacheval = $c->mongo->get_collection('config')->find_one({ config_type => 'private' });
+    $cacheval = $c->mongo->get_collection('config')->find_one({config_type => 'private'});
     $c->app->chi->set('private_config', $cacheval, '1 day');
     $cacheval = $c->app->chi->get('private_config');
   }

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use v5.10;
 use Mojo::ByteStream qw(b);
-use Scalar::Util qw(looks_like_number);
+use Scalar::Util     qw(looks_like_number);
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Termsofuse;
@@ -89,12 +89,13 @@ sub extract_credentials {
     my $sess = $self->load_cred;
     $username = $sess->{username};
     $password = $sess->{password};
-    my $remote_user = $sess->{remote_user};
+    my $remote_user       = $sess->{remote_user};
     my $remoteaffiliation = $sess->{affiliation};
-    my $remotegroups = $sess->{groups};
-    my $org_units_l1 = $sess->{org_units_l1};
-    my $org_units_l2 = $sess->{org_units_l2};
-    my $localgroups =  $sess->{localgroups};
+    my $remotegroups      = $sess->{groups};
+    my $org_units_l1      = $sess->{org_units_l1};
+    my $org_units_l2      = $sess->{org_units_l2};
+    my $localgroups       = $sess->{localgroups};
+
     if (defined($username) && defined($password)) {
       $self->app->log->info("User $username, token authentication provided");
       $self->stash->{basic_auth_credentials} = {username => $username, password => $password};
@@ -106,7 +107,7 @@ sub extract_credentials {
         $self->app->log->info("Remote user $remote_user, token authentication provided");
         $self->stash->{remote_user} = $remote_user;
         $self->stash->{affiliation} = $remoteaffiliation;
-        $self->stash->{groups} = $remotegroups;
+        $self->stash->{groups}      = $remotegroups;
         if ($self->app->config->{fedora}->{version} >= 6) {
 
           # TODO fix code to use BA creds OR remote_user if available (controllers currently pass BA username as username... -> becomes owner on create)
@@ -115,9 +116,9 @@ sub extract_credentials {
         else {
           # in fedora 3 we need to use it's upstream authentication feature
           $self->stash->{basic_auth_credentials} = {username => $self->app->config->{authentication}->{upstream}->{upstreamusername}, password => $self->app->config->{authentication}->{upstream}->{upstreampassword}};
-          $self->stash->{fakcode} = $org_units_l1;
-          $self->stash->{inum} = $org_units_l2;
-          $self->stash->{gruppe} = $localgroups;
+          $self->stash->{fakcode}                = $org_units_l1;
+          $self->stash->{inum}                   = $org_units_l2;
+          $self->stash->{gruppe}                 = $localgroups;
         }
         return 1;
       }
@@ -345,11 +346,12 @@ sub signout {
     $cookie->path('/');
     $cookie->expires(-1);
     $cookie->samesite('Strict');
+
     if ($self->app->config->{authentication}->{cookie_domain}) {
       $cookie->domain($self->app->config->{authentication}->{cookie_domain});
     }
     $self->tx->res->cookies($cookie);
-    $self->app->log->info("signout: unsetting cookie ".$self->app->dumper($cookie));
+    $self->app->log->info("signout: unsetting cookie " . $self->app->dumper($cookie));
     $self->render(json => {status => 200, alerts => [{type => 'success', msg => 'You have been signed out'}], sid => $session->sid}, status => 200);
   }
   else {
@@ -374,8 +376,9 @@ sub signin_shib {
       }
     }
   }
+
   # new
-  my $confmodel = PhaidraAPI::Model::Config->new;
+  my $confmodel  = PhaidraAPI::Model::Config->new;
   my $privconfig = $confmodel->get_private_config($self);
   if (exists($privconfig->{userscopetotrim})) {
     if ($privconfig->{userscopetotrim}) {
@@ -409,6 +412,7 @@ sub signin_shib {
     $affiliation = $self->req->headers->header($self->app->config->{authentication}->{shibboleth}->{attributes}->{affiliation}) unless $affiliation;
 
     my $reqAff = $self->app->config->{authentication}->{shibboleth}->{requiredaffiliations};
+
     # we only want to check required affiliations if those are defined
     # if requiredaffiliations are NOT defined via docker env config, $reqAff will be an array ref with 1 empty string
     if (!(ref($reqAff) eq 'ARRAY' && @$reqAff == 1 && defined $reqAff->[0] && $reqAff->[0] eq '')) {
@@ -417,11 +421,13 @@ sub signin_shib {
         last if $authorized;
         $self->app->log->debug("Checking if affiliation $userAff can login");
         my @valid_affiliations = map {split(/,/)} @{$self->app->config->{authentication}->{shibboleth}->{requiredaffiliations}};
+
         # if no required affiliations are configured, allow user to log in
         unless (@valid_affiliations) {
           $authorized = 1;
           last;
         }
+
         # $self->app->log->debug(Dumper(@valid_affiliations));
         for my $configAff (@valid_affiliations) {
           $self->app->log->debug("$configAff");
@@ -432,7 +438,8 @@ sub signin_shib {
           }
         }
       }
-    } else {
+    }
+    else {
       $authorized = 1;
     }
   }
@@ -445,19 +452,20 @@ sub signin_shib {
     if ($version) {
       $self->app->log->debug("consentversion[$version] provided");
 
-      unless(looks_like_number($version)) {
+      unless (looks_like_number($version)) {
         $self->render(json => {alerts => [{type => 'error', msg => 'Invalid version provided'}]}, status => 400);
         return;
       }
 
       my $termsofuse_model = PhaidraAPI::Model::Termsofuse->new;
-      my $agreeres = $termsofuse_model->agree($self, $username, $version);
+      my $agreeres         = $termsofuse_model->agree($self, $username, $version);
+
       # $self->app->log->debug("agree result: \n".$self->app->dumper($agreeres));
     }
-    
+
     my $termsofuse_model = PhaidraAPI::Model::Termsofuse->new;
-    my $termsres = $termsofuse_model->getagreed($self, $username);
-    unless($termsres->{agreed}) {
+    my $termsres         = $termsofuse_model->getagreed($self, $username);
+    unless ($termsres->{agreed}) {
       $self->app->log->debug("redirecting to " . $self->app->config->{authentication}->{shibboleth}->{frontendconsenturl});
       $self->redirect_to($self->app->config->{authentication}->{shibboleth}->{frontendconsenturl});
       return;
@@ -477,7 +485,7 @@ sub signin_shib {
         $org_units_l1 = join(',', @{$org1});
       }
     }
-    
+
     my $org2 = $userData->{org_units_l2};
     if ($org2) {
       if (scalar @{$org2} > 0) {
@@ -487,12 +495,12 @@ sub signin_shib {
     if ($self->app->config->{mongodb_group_manager}) {
       my @memberGroupsArr;
       my $groupsClient = MongoDB::MongoClient->new(
-          host => $self->app->config->{mongodb_group_manager}->{host}, 
-          port => $self->app->config->{mongodb_group_manager}->{port},
-          username => $self->app->config->{mongodb_group_manager}->{username},
-          password => $self->app->config->{mongodb_group_manager}->{password}
+        host     => $self->app->config->{mongodb_group_manager}->{host},
+        port     => $self->app->config->{mongodb_group_manager}->{port},
+        username => $self->app->config->{mongodb_group_manager}->{username},
+        password => $self->app->config->{mongodb_group_manager}->{password}
       );
-      my $groupsDb = $groupsClient->get_database($self->app->config->{mongodb_group_manager}->{database});
+      my $groupsDb     = $groupsClient->get_database($self->app->config->{mongodb_group_manager}->{database});
       my $memberGroups = $groupsDb->get_collection('usergroups')->find({"members" => $username});
       while (my $doc = $memberGroups->next) {
         push @memberGroupsArr, $doc->{groupid};
@@ -536,12 +544,13 @@ sub signin_shib {
   $redirecturl =~ s{/\z}{};
   my $returnto;
 
-  my $target = $self->param('target');  # target is used if the user does not have a session at IdP...
+  my $target = $self->param('target');    # target is used if the user does not have a session at IdP...
   if ($target) {
     my $u = Mojo::URL->new($target);
     $returnto = $u->query->param('returnto');
-  } else {
-    $returnto = $self->param('returnto'); # otherwise the query params are simply passed...
+  }
+  else {
+    $returnto = $self->param('returnto');    # otherwise the query params are simply passed...
   }
 
   # Sanitize to avoid open redirects. Allow only same-site paths.
@@ -550,10 +559,11 @@ sub signin_shib {
   $redirecturl .= $returnto;
 
   $self->app->log->debug("redirecting to $redirecturl");
-  
+
   # 302 would set, but not immediately send strict cookies, so we need to send 200 and create a client side redirect via html
   #$self->redirect_to($self->app->config->{authentication}->{shibboleth}->{frontendloginurl});
-  my $html = '<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="refresh" content="0;URL=\''.$redirecturl.'\'" /></head><body><p>Redirectring...</p></body></html>';
+  my $html = '<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="refresh" content="0;URL=\'' . $redirecturl . '\'" /></head><body><p>Redirectring...</p></body></html>';
+
   # set format explicitly because the stash value 'format' seems overwritten when saving consent (so application/json gets back)
   $self->render(text => $html, format => 'html', status => 200);
 

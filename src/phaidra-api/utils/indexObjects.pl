@@ -24,50 +24,52 @@ my $logconf = q(
   log4perl.appender.Screen.utf8   = 1
 );
 
-Log::Log4perl::init( \$logconf );
+Log::Log4perl::init(\$logconf);
 my $log = Log::Log4perl::get_logger("MyLogger");
 
 my $ua = Mojo::UserAgent->new;
 
-my $from = _epochToIso(0);
-my $until = _epochToIso(time + 86400);
-my $fromParam = shift (@ARGV);
-my $untilParam = shift (@ARGV);
-$from = $fromParam if $fromParam;
+my $from       = _epochToIso(0);
+my $until      = _epochToIso(time + 86400);
+my $fromParam  = shift(@ARGV);
+my $untilParam = shift(@ARGV);
+$from  = $fromParam  if $fromParam;
 $until = $untilParam if $untilParam;
+
 # this is the maximum in fcrepo simple search
 my $pagesize = 100;
-my $page = 0;
-my $failed = 0;
-my $ok = 0;
+my $page     = 0;
+my $failed   = 0;
+my $ok       = 0;
 
 my $api = Mojo::URL->new;
 $api->scheme('http');
 $api->host($ENV{PHAIDRA_API_HOST});
 $api->port(3000);
-$api->userinfo($ENV{PHAIDRA_ADMIN_USER}.':'.$ENV{PHAIDRA_ADMIN_PASSWORD});
+$api->userinfo($ENV{PHAIDRA_ADMIN_USER} . ':' . $ENV{PHAIDRA_ADMIN_PASSWORD});
 
-my $fedorabaseurl = 'http://'.$ENV{FEDORA_HOST}.':8080/fcrepo/rest';
-my $fedora = Mojo::URL->new;
+my $fedorabaseurl = 'http://' . $ENV{FEDORA_HOST} . ':8080/fcrepo/rest';
+my $fedora        = Mojo::URL->new;
 $fedora->scheme('http');
 $fedora->host($ENV{FEDORA_HOST});
 $fedora->port(8080);
 $fedora->path('fcrepo/rest/fcr:search');
-$fedora->userinfo($ENV{FEDORA_ADMIN_USER}.':'.$ENV{FEDORA_ADMIN_PASS});
+$fedora->userinfo($ENV{FEDORA_ADMIN_USER} . ':' . $ENV{FEDORA_ADMIN_PASS});
 $fedora->query(
-  fields => 'fedora_id,created',
-  order_by => 'created',
-  order => 'asc',
-  condition => 'fedora_id=o:*',
+  fields      => 'fedora_id,created',
+  order_by    => 'created',
+  order       => 'asc',
+  condition   => 'fedora_id=o:*',
   max_results => $pagesize
 );
+
 if ($from) {
-  $fedora->query([ condition => "created>$from" ]);
+  $fedora->query([condition => "created>$from"]);
 }
 if ($until) {
-  $fedora->query([ condition => "created<$until" ]);
+  $fedora->query([condition => "created<$until"]);
 }
-$fedora->query([ condition => "rdf_type=http://fedora.info/definitions/v4/repository#ArchivalGroup" ]);
+$fedora->query([condition => "rdf_type=http://fedora.info/definitions/v4/repository#ArchivalGroup"]);
 
 sub indexObject {
   my ($pid) = @_;
@@ -77,7 +79,7 @@ sub indexObject {
   if ($apires->code != 200) {
     if (exists($apires->json->{alerts})) {
       for my $a (@{$apires->json->{alerts}}) {
-        $log->error("pid[$pid] index result code[".$apires->code."]:".$a->{msg});
+        $log->error("pid[$pid] index result code[" . $apires->code . "]:" . $a->{msg});
         return 0;
       }
     }
@@ -97,10 +99,10 @@ sub _epochToIso {
 sub processPage {
   my ($page) = @_;
 
-  $fedora->query({ offset => $page * $pagesize });
+  $fedora->query({offset => $page * $pagesize});
   my $fedres = $ua->get($fedora)->result;
   unless ($fedres->is_success) {
-    $log->error("error querying fedora: ".$fedres->code." ".$fedres->message);
+    $log->error("error querying fedora: " . $fedres->code . " " . $fedres->message);
     exit(1);
   }
 
@@ -110,10 +112,11 @@ sub processPage {
     my $pid = $1;
     if (indexObject($pid)) {
       $ok++;
-      $log->info("ok[$ok] failed[$failed] pid[$pid] created[".$item->{created}."] - ok");
-    } else {
+      $log->info("ok[$ok] failed[$failed] pid[$pid] created[" . $item->{created} . "] - ok");
+    }
+    else {
       $failed++;
-      $log->info("ok[$ok] failed[$failed] pid[$pid] created[".$item->{created}."] - failed");
+      $log->info("ok[$ok] failed[$failed] pid[$pid] created[" . $item->{created} . "] - failed");
     }
   }
 
@@ -121,7 +124,6 @@ sub processPage {
 
   return scalar @{$fedres->json->{items}};
 }
-
 
 $log->info("started from[$from] until[$until]");
 

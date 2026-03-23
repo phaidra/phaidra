@@ -9,7 +9,7 @@ my $HAVE_INET_PTON = defined &Socket::inet_pton;
 
 my $batch = 10_000;
 
-my $cntr = DBIx::Connector->new("dbi:mysql:phaidradb:".$ENV{MARIADB_PHAIDRA_HOST}, $ENV{MARIADB_PHAIDRA_USER}, $ENV{MARIADB_PHAIDRA_PASSWORD}, {mysql_auto_reconnect => 1, mysql_multi_statements => 1});
+my $cntr = DBIx::Connector->new("dbi:mysql:phaidradb:" . $ENV{MARIADB_PHAIDRA_HOST}, $ENV{MARIADB_PHAIDRA_USER}, $ENV{MARIADB_PHAIDRA_PASSWORD}, {mysql_auto_reconnect => 1, mysql_multi_statements => 1});
 $cntr->mode('ping');
 my $dbh = $cntr->dbh;
 
@@ -39,14 +39,15 @@ sub ipv6_to_bin {
   my ($ip) = @_;
   if ($HAVE_INET_PTON) {
     my $bin = inet_pton(AF_INET6, $ip);
-    return $bin; # undef if invalid
-  } else {
+    return $bin;    # undef if invalid
+  }
+  else {
     # Fallback using Net::IP if inet_pton is not available
     eval {
       require Net::IP;
       my $obj = Net::IP->new($ip) or return;
       return unless $obj->version == 6;
-      my $bits = $obj->binip;              # 128-bit string of '0'/'1'
+      my $bits = $obj->binip;    # 128-bit string of '0'/'1'
       return pack('B128', $bits);
     } // return;
   }
@@ -56,8 +57,8 @@ sub load_v4 {
   my ($file) = @_;
   open my $fh, '<', $file or die "Cannot open $file: $!";
   my $count = 0;
-  my $ok = 0;
-  my $bad = 0;
+  my $ok    = 0;
+  my $bad   = 0;
 
   $dbh->begin_work;
   while (my $line = <$fh>) {
@@ -65,6 +66,7 @@ sub load_v4 {
     chomp $line;
     my ($start, $end, $country) = split /\t/, $line;
     unless (defined $start && defined $end && defined $country) {
+
       # try split on any whitespace if not true TSV
       ($start, $end, $country) = split /\s+/, $line;
     }
@@ -74,7 +76,8 @@ sub load_v4 {
     if (defined $s && defined $e && $s <= $e) {
       $ins_v4->execute($s, $e, $c);
       $ok++;
-    } else {
+    }
+    else {
       warn "Skipping bad IPv4 line: $line\n";
       $bad++;
     }
@@ -94,8 +97,8 @@ sub load_v6 {
   my ($file) = @_;
   open my $fh, '<', $file or die "Cannot open $file: $!";
   my $count = 0;
-  my $ok = 0;
-  my $bad = 0;
+  my $ok    = 0;
+  my $bad   = 0;
 
   $dbh->begin_work;
   while (my $line = <$fh>) {
@@ -109,15 +112,18 @@ sub load_v6 {
     my $s = ipv6_to_bin($start);
     my $e = ipv6_to_bin($end);
     if (defined $s && defined $e) {
+
       # Ensure start <= end in lexicographic byte order (same as numeric compare for fixed 16-byte big-endian)
       if ($s le $e) {
         $ins_v6->execute($s, $e, $c);
         $ok++;
-      } else {
+      }
+      else {
         warn "Skipping IPv6 line with start>end: $line\n";
         $bad++;
       }
-    } else {
+    }
+    else {
       warn "Skipping bad IPv6 line: $line\n";
       $bad++;
     }

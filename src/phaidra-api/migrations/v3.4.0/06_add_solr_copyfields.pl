@@ -10,8 +10,8 @@ my $SOLR_USER = $ENV{SOLR_USER} // die "SOLR_USER is not set\n";
 my $SOLR_PASS = $ENV{SOLR_PASS} // die "SOLR_PASS is not set\n";
 
 # Endpoints
-my $SOLR_URL        = "http://$SOLR_HOST:8983/solr/phaidra/schema/copyfields";
-my $SOLR_URL_PAGES  = "http://$SOLR_HOST:8983/solr/phaidra_pages/schema/copyfields";
+my $SOLR_URL       = "http://$SOLR_HOST:8983/solr/phaidra/schema/copyfields";
+my $SOLR_URL_PAGES = "http://$SOLR_HOST:8983/solr/phaidra_pages/schema/copyfields";
 
 # Basic auth header
 sub auth_headers {
@@ -135,27 +135,30 @@ sub delete_wildcard {
   my ($url) = @_;
   print "Removing wildcard copyField (source=\"*\" -> dest=\"_text_\") via Schema API at $url...\n";
 
-  my $payload = { 'delete-copy-field' => { source => '*', dest => '_text_' } };
-  my $tx = $ua->post($url => auth_headers() => json => $payload);
+  my $payload = {'delete-copy-field' => {source => '*', dest => '_text_'}};
+  my $tx      = $ua->post($url => auth_headers() => json => $payload);
 
   if ($tx->result->is_success && ($tx->result->json->{responseHeader}{status} // 1) == 0) {
     print "✓ Wildcard copyField removed\n";
-  } else {
+  }
+  else {
     print "⚠ Could not remove wildcard copyField (may not exist): ";
     if ($tx->result->is_success) {
       print $tx->result->body . "\n";
-    } else {
-      print( ($tx->error->{message} // 'Unknown error') . "\n" );
+    }
+    else {
+      print(($tx->error->{message} // 'Unknown error') . "\n");
       print $tx->result->body . "\n" if defined $tx->result->body;
     }
   }
 
   print "Verifying wildcard removal...\n";
-  my $cf = list_copyfields($url);
-  my $has_wildcard = grep { ($_->{source} // '') eq '*' && ($_->{dest} // '') eq '_text_' } @$cf;
+  my $cf           = list_copyfields($url);
+  my $has_wildcard = grep {($_->{source} // '') eq '*' && ($_->{dest} // '') eq '_text_'} @$cf;
   if ($has_wildcard) {
     print "✗ Wildcard copyField still present\n\n";
-  } else {
+  }
+  else {
     print "✓ Wildcard copyField not present\n\n";
   }
 }
@@ -168,11 +171,11 @@ sub add_missing_copyfields {
   my $cf = list_copyfields($url);
 
   # Build a set of sources that already copy to _text_
-  my %existing_to_text = map { ($_->{source} // '') => 1 }
-                         grep { ($_->{dest} // '') eq '_text_' && defined $_->{source} } @$cf;
+  my %existing_to_text = map {($_->{source} // '') => 1}
+    grep {($_->{dest} // '') eq '_text_' && defined $_->{source}} @$cf;
 
   # Compute missing fields
-  my @missing = grep { !$existing_to_text{$_} } @FIELDS;
+  my @missing = grep {!$existing_to_text{$_}} @FIELDS;
 
   print "Already present (dest=_text_): " . (scalar(@FIELDS) - scalar(@missing)) . "\n";
   print "Missing to add: " . scalar(@missing) . "\n\n";
@@ -183,8 +186,8 @@ sub add_missing_copyfields {
     return;
   }
 
-  my @adds = map { { source => $_, dest => '_text_' } } @missing;
-  my $payload = { 'add-copy-field' => \@adds };
+  my @adds    = map {{source => $_, dest => '_text_'}} @missing;
+  my $payload = {'add-copy-field' => \@adds};
 
   print "Sending add request for " . scalar(@missing) . " copyFields...\n";
   my $tx = $ua->post($url => auth_headers() => json => $payload);
@@ -192,25 +195,28 @@ sub add_missing_copyfields {
   if ($tx->result->is_success && ($tx->result->json->{responseHeader}{status} // 1) == 0) {
     print "✓ Successfully added missing copyFields to _text_\n\n";
     print "Verifying...\n";
-    my $cf2 = list_copyfields($url);
-    my %post_existing = map { ($_->{source} // '') => 1 }
-                        grep { ($_->{dest} // '') eq '_text_' && defined $_->{source} } @$cf2;
-    my @still_missing = grep { !$post_existing{$_} } @missing;
+    my $cf2           = list_copyfields($url);
+    my %post_existing = map {($_->{source} // '') => 1}
+      grep {($_->{dest} // '') eq '_text_' && defined $_->{source}} @$cf2;
+    my @still_missing = grep {!$post_existing{$_}} @missing;
 
-    my $count_text = scalar grep { ($_->{dest} // '') eq '_text_' } @$cf2;
+    my $count_text = scalar grep {($_->{dest} // '') eq '_text_'} @$cf2;
     print "Found $count_text copyFields copying to _text_\n";
     if (@still_missing) {
       print "⚠ Still missing after add: " . join(', ', @still_missing) . "\n";
-    } else {
+    }
+    else {
       print "✓ All requested fields are now present.\n";
     }
     print "\nNote: You'll need to reindex documents for _text_ to be updated.\n";
-  } else {
+  }
+  else {
     print "✗ Error adding copyFields:\n";
     if ($tx->result->is_success) {
       print $tx->result->body . "\n";
-    } else {
-      print( ($tx->error->{message} // 'Unknown error') . "\n" );
+    }
+    else {
+      print(($tx->error->{message} // 'Unknown error') . "\n");
       print $tx->result->body . "\n" if defined $tx->result->body;
     }
   }

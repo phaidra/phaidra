@@ -3,8 +3,8 @@ package PhaidraAPI::Controller::Groups;
 use strict;
 use warnings;
 use v5.10;
-use Mojo::JSON qw(encode_json decode_json);
-use Mojo::Util qw(encode decode);
+use Mojo::JSON       qw(encode_json decode_json);
+use Mojo::Util       qw(encode decode);
 use Mojo::ByteStream qw(b);
 
 use base 'Mojolicious::Controller';

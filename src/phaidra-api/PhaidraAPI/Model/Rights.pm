@@ -24,14 +24,14 @@ use PhaidraAPI::Model::Util;
 =cut
 
 our %allowed_tags = (
-  'username'   => 1,
-  'department' => 1,
-  'faculty'    => 1,
-  'gruppe'     => 1,
-  'spl'        => 1,
-  'kennzahl'   => 1,
-  'perfunk'    => 1,
-  'affiliation'    => 1
+  'username'    => 1,
+  'department'  => 1,
+  'faculty'     => 1,
+  'gruppe'      => 1,
+  'spl'         => 1,
+  'kennzahl'    => 1,
+  'perfunk'     => 1,
+  'affiliation' => 1
 );
 
 sub json_2_xml {

@@ -5,7 +5,7 @@ use warnings;
 use v5.10;
 use base 'Mojolicious::Controller';
 use Mojo::ByteStream qw(b);
-use Mojo::JSON qw(encode_json decode_json);
+use Mojo::JSON       qw(encode_json decode_json);
 use PhaidraAPI::Model::Config;
 
 sub post_public_config {
@@ -44,11 +44,11 @@ sub post_public_config {
     if ($public_config->{$key}) {
       if ($key ne '_id') {
         $self->app->log->info("public_config $key = " . $public_config->{$key});
-        $self->mongo->get_collection('config')->update_one({ config_type => 'public' }, {'$set' => {$key => $public_config->{$key}}}, {upsert => 1});
+        $self->mongo->get_collection('config')->update_one({config_type => 'public'}, {'$set' => {$key => $public_config->{$key}}}, {upsert => 1});
       }
     }
     else {
-      $self->mongo->get_collection('config')->update_one({ config_type => 'public' }, {'$unset' => {$key => ''}});
+      $self->mongo->get_collection('config')->update_one({config_type => 'public'}, {'$unset' => {$key => ''}});
     }
   }
 
@@ -91,11 +91,11 @@ sub post_private_config {
     if ($private_config->{$key}) {
       if ($key ne '_id') {
         $self->app->log->info("private_config $key = " . $private_config->{$key});
-        $self->mongo->get_collection('config')->update_one({ config_type => 'private' }, {'$set' => {$key => $private_config->{$key}}}, {upsert => 1});
+        $self->mongo->get_collection('config')->update_one({config_type => 'private'}, {'$set' => {$key => $private_config->{$key}}}, {upsert => 1});
       }
     }
     else {
-      $self->mongo->get_collection('config')->update_one({ config_type => 'private' }, {'$unset' => {$key => ''}});
+      $self->mongo->get_collection('config')->update_one({config_type => 'private'}, {'$unset' => {$key => ''}});
     }
   }
 
@@ -111,7 +111,7 @@ sub get_public_config {
 
   $self->app->log->debug("reading public_config");
 
-  my $model = PhaidraAPI::Model::Config->new;
+  my $model    = PhaidraAPI::Model::Config->new;
   my $modelres = $model->get_public_config($self, $nocache);
 
   # $self->app->log->debug("XXXXXXXXXXXXXXX " . $self->app->dumper($modelres));
@@ -129,7 +129,7 @@ sub get_private_config {
 
   $self->app->log->debug("reading private_config");
 
-  my $model = PhaidraAPI::Model::Config->new;
+  my $model    = PhaidraAPI::Model::Config->new;
   my $modelres = $model->get_private_config($self, $nocache);
 
   # $self->app->log->debug("XXXXXXXXXXXXXXX " . $self->app->dumper($modelres));
