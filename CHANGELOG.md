@@ -67,6 +67,16 @@ We had to change the way we use copy fields in solr schema. You need to execute 
 docker exec -it phaidra-api-1 perl migrations/v3.4.0/06_add_solr_copyfields.pl
 ```
 
+### Solr: copy dynamic metadata fields to `_text_`
+
+Uwmetadata / Dublin Core style fields use dynamic patterns (`dc_*`, `member_dc_*`, `bib_*`, `*_eng`, `*_deu`, `*_ita`). After pulling schema/container changes, run this **once** on existing Solr cores so those patterns are copied into `_text_` for full-text search (idempotent):
+
+```
+docker exec -it phaidra-api-1 bash -lc 'export SOLR_HOST=solr SOLR_USER=phaidra SOLR_PASS=phaidra; perl migrations/v3.4.0/10_add_solr_dynamic_metadata_copyfields.pl'
+```
+
+Adjust `SOLR_HOST` / credentials to match your environment. **Reindex** Solr content afterward so existing documents get updated `_text_`.
+
 ### jobs collection index
 
 Additional indexes are necessary to avoid slow queries:
