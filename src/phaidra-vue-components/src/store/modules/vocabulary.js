@@ -90,8 +90,6 @@ const ot4rt = {
     ns + 'DCHD-W3GM',
     // magazine
     ns + 'EHPQ-XYA3',
-    // magazine article
-    ns + '3VKA-1FW2',
     // preprint
     ns + 'T023-BGTD',
     // report
@@ -118,6 +116,8 @@ const ot4rt = {
     ns + '62DN-RZ7V',
     // bibliography
     ns + 'TME0-3GXS',
+    // magazine article
+    ns + '3VKA-1FW2',
     // other
     ns + 'PYRE-RAWJ'
   ],
