@@ -90,6 +90,8 @@ const ot4rt = {
     ns + 'DCHD-W3GM',
     // magazine
     ns + 'EHPQ-XYA3',
+    // magazine article
+    ns + '3VKA-1FW2',
     // preprint
     ns + 'T023-BGTD',
     // report
@@ -1627,6 +1629,7 @@ const vocabularies = {
       { '@id': ns + 'KW6N-2VTP', 'skos:prefLabel': { 'eng': 'dataset', 'deu': 'Dataset', 'ita': 'Dataset' } },
       { '@id': ns + 'A9K1-3WQA', 'skos:prefLabel': { 'eng': 'diary', 'deu': 'Tagebuch', 'ita': 'Diario' } },
       { '@id': ns + '85QM-7TZ3', 'skos:prefLabel': { 'eng': 'drawing', 'deu': 'Zeichnung', 'ita': 'Disegno' } },
+      { '@id': ns + '3YVW-43D9', 'skos:prefLabel': { 'eng': 'herbaria', 'deu': 'Herbarium', 'ita': 'Erbari' } },
       { '@id': ns + 'QXRQ-Z2PJ', 'skos:prefLabel': { 'eng': 'internal report', 'deu': 'interner Bericht', 'ita': 'Rapporto interno' } },
       { '@id': ns + '8KGA-CH97', 'skos:prefLabel': { 'eng': 'interview', 'deu': 'Interview', 'ita': 'Intervista' } },
       { '@id': ns + 'VKA6-9XTY', 'skos:prefLabel': { 'eng': 'journal article', 'deu': 'Wissenschaftlicher Artikel', 'ita': 'Articolo scientifico' } },
@@ -1634,6 +1637,7 @@ const vocabularies = {
       { '@id': ns + 'F4JN-ZST0', 'skos:prefLabel': { 'eng': 'lecture', 'deu': 'Vortrag', 'ita': 'Lezione' } },
       { '@id': ns + 'GBWA-JJP8', 'skos:prefLabel': { 'eng': 'letter (correspondence)', 'deu': 'Brief', 'ita': 'Lettera' } },
       { '@id': ns + 'EHPQ-XYA3', 'skos:prefLabel': { 'eng': 'magazine', 'deu': 'Magazin (Zeitschrift)', 'ita': 'Rivista divulgativa' } },
+      { '@id': ns + '3VKA-1FW2', 'skos:prefLabel': { 'eng': 'magazine article', 'deu': 'Zeitschriftenartikel', 'ita': 'Articolo di rivista' } },
       { '@id': ns + 'KMRH-NFR9', 'skos:prefLabel': { 'eng': 'manuscript', 'deu': 'Manuskript', 'ita': 'Manoscritto' } },
       { '@id': ns + 'A52A-CWMM', 'skos:prefLabel': { 'eng': 'map', 'deu': 'Karte', 'ita': 'Mappa' } },
       { '@id': ns + 'MCN9-1NSA', 'skos:prefLabel': { 'eng': 'memorandum', 'deu': 'Memorandum', 'ita': 'Memorandum' } },
