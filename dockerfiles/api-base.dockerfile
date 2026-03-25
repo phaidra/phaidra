@@ -7,6 +7,7 @@ ADD --checksum=sha256:5b46c15340d0eb8cb10d9b110b455ca4c2719b58f394f6c892b6eae887
  https://github.com/mozilla/pdf.js/releases/download/v5.5.207/pdfjs-5.5.207-legacy-dist.zip \
  /pdfjs.zip
 RUN unzip /pdfjs.zip -d /pdfjs
+
 FROM ubuntu:jammy-20260210.1
 ENV DEBIAN_FRONTEND=noninteractive
 RUN <<EOF
@@ -36,6 +37,10 @@ cpanm -n Mojolicious::Plugin::Database Mojolicious::Plugin::Session \
       IO::Scalar Crypt::Rijndael MIME::Base64 File::MimeInfo::Magic \
       XML::SAX XML::Parser::PerlSAX File::Find::utf8  MIME::Lite::TT::HTML Storable UNIVERSAL::require Mojo::IOLoop::Delay
 EOF
+# see https://github.com/tyldum/mojolicious-plugin-prometheus/pull/27
+# this is not published on CPAN, so directly plug in the files. Not ideal, but works for now
+ADD https://raw.githubusercontent.com/tyldum/mojolicious-plugin-prometheus/4e8d19f6564be45f8e7d92cd7d31aabd7a64989c/lib/Mojolicious/Plugin/Prometheus.pm /usr/local/share/perl/5.34.0/Mojolicious/Plugin/Prometheus.pm
+ADD https://raw.githubusercontent.com/tyldum/mojolicious-plugin-prometheus/4e8d19f6564be45f8e7d92cd7d31aabd7a64989c/lib/Mojolicious/Plugin/Prometheus/Collector/Perl.pm /usr/local/share/perl/5.34.0/Mojolicious/Plugin/Prometheus/Collector/Perl.pm
 # add perl s3 packages
 RUN <<EOF
 apt-get install --yes --quiet --no-install-recommends libnet-amazon-s3-perl
