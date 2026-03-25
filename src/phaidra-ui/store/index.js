@@ -84,7 +84,7 @@ export const mutations = {
     ] 
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
-        state.instanceconfig[p] = instanceconfig[p]
+        Vue.set(state.instanceconfig, p, instanceconfig[p])
       }
     }
   },
