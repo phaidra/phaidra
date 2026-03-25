@@ -195,6 +195,14 @@ const ot4rt = {
     ns + '62DN-RZ7V',
     // bibliography
     ns + 'TME0-3GXS',
+    // magazine article
+    ns + '3VKA-1FW2',
+    // archival collection
+    ns + 'M7SB-MPS3',
+    // botanical specimen
+    ns + '7GRZ-1GMH',
+    // herbaria
+    ns + '3YVW-43D9',
     // other
     ns + 'PYRE-RAWJ'
   ],
@@ -1619,6 +1627,7 @@ const vocabularies = {
       { '@id': ns + '47QB-8QF1', 'skos:prefLabel': { 'eng': 'book', 'deu': 'Buch', 'ita': 'Libro' } },
       { '@id': ns + 'XA52-09WA', 'skos:prefLabel': { 'eng': 'book part', 'deu': 'Buchkapitel', 'ita': 'Capitolo di libro' } },
       { '@id': ns + 'VP4W-DQ1P', 'skos:prefLabel': { 'eng': 'book review', 'deu': 'Buchrezension', 'ita': 'Recensione di libro' } },
+      { '@id': ns + '7GRZ-1GMH', 'skos:prefLabel': { 'eng': 'botanical specimen', 'deu': 'botanisches Exemplar​​', 'ita': 'Esemplare botanico' } },
       { '@id': ns + '62RJ-SFV2', 'skos:prefLabel': { 'eng': 'cartographic material', 'deu': 'kartographisches Material', 'ita': 'Materiale cartografico' } },
       { '@id': ns + 'QKDF-E5HA', 'skos:prefLabel': { 'eng': 'conference object', 'deu': 'Konferenzveröffentlichung', 'ita': 'Risultato di convegno' } },
       { '@id': ns + '2NMC-XD14', 'skos:prefLabel': { 'eng': 'conference presentation', 'deu': 'Konferenzpräsentation', 'ita': 'Presentazione' } },
