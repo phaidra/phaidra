@@ -35,6 +35,8 @@ const ot4rt = {
     ns + 'PX65-RM8F',
     // physical sample
     ns + '99J6-2F2T',
+    // botanical specimen
+    ns + '7GRZ-1GMH',
     // other
     ns + 'PYRE-RAWJ'
   ],
@@ -203,6 +205,8 @@ const ot4rt = {
     ns + '7GRZ-1GMH',
     // herbaria
     ns + '3YVW-43D9',
+    // botanical specimen
+    ns + '7GRZ-1GMH',
     // other
     ns + 'PYRE-RAWJ'
   ],
