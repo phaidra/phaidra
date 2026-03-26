@@ -31,6 +31,12 @@ const ot4rt = {
     ns + 'YA8R-1M0D',
     // map
     ns + 'A52A-CWMM',
+    // artistic work
+    ns + 'PX65-RM8F',
+    // physical sample
+    ns + '99J6-2F2T',
+    // botanical specimen
+    ns + '7GRZ-1GMH',
     // other
     ns + 'PYRE-RAWJ'
   ],
@@ -44,6 +50,8 @@ const ot4rt = {
     ns + 'EWZ9-3MPH',
     // learning object
     ns + 'YA8R-1M0D',
+    // artistic work
+    ns + 'PX65-RM8F',
     // other
     ns + 'PYRE-RAWJ'
   ],
@@ -57,6 +65,8 @@ const ot4rt = {
     ns + '8KGA-CH97',
     // learning object
     ns + 'YA8R-1M0D',
+    // artistic work
+    ns + 'PX65-RM8F',
     // other
     ns + 'PYRE-RAWJ'
   ],
@@ -100,6 +110,16 @@ const ot4rt = {
     ns + '8A6X-FKB1',
     // project deliverable
     ns + 'T8PK-GADB',
+    // artistic work
+    ns + 'PX65-RM8F',
+    // conference presentation
+    ns + '2NMC-XD14',
+    // thesis
+    ns + '62DN-RZ7V',
+    // bibliography
+    ns + 'TME0-3GXS',
+    // magazine article
+    ns + '3VKA-1FW2',
     // other
     ns + 'PYRE-RAWJ'
   ],
@@ -167,6 +187,26 @@ const ot4rt = {
     ns + 'R1WF-V45Y',
     // 3D model
     ns + 'T6C3-46S4',
+    // physical sample
+    ns + '99J6-2F2T',
+    // artistic work
+    ns + 'PX65-RM8F',
+    // conference presentation
+    ns + '2NMC-XD14',
+    // thesis
+    ns + '62DN-RZ7V',
+    // bibliography
+    ns + 'TME0-3GXS',
+    // magazine article
+    ns + '3VKA-1FW2',
+    // archival collection
+    ns + 'M7SB-MPS3',
+    // botanical specimen
+    ns + '7GRZ-1GMH',
+    // herbaria
+    ns + '3YVW-43D9',
+    // botanical specimen
+    ns + '7GRZ-1GMH',
     // other
     ns + 'PYRE-RAWJ'
   ],
@@ -1583,13 +1623,18 @@ const vocabularies = {
       { '@id': ns + '985A-GCQJ', 'skos:prefLabel': { 'eng': 'album cover', 'deu': 'Albumcover', 'ita': 'Copertina di album musicale' } },
       { '@id': ns + 'N35H-PDEE', 'skos:prefLabel': { 'eng': 'annotation', 'deu': 'Anmerkung', 'ita': 'Commento' } },
       { '@id': ns + '8EBX-CA9X', 'skos:prefLabel': { 'eng': 'annual report', 'deu': 'Jahresbericht', 'ita': 'Rapporto annuale' } },
+      { '@id': ns + 'M7SB-MPS3', 'skos:prefLabel': { 'eng': 'archival collection', 'deu': 'Archivsammlung', 'ita': 'Collezione archivistica' } },
       { '@id': ns + '2WRQ-GSE9', 'skos:prefLabel': { 'eng': 'arrangement (music)', 'deu': 'Arrangement (Musik)', 'ita': 'Arrangiamento' } },
+      { '@id': ns + 'PX65-RM8F', 'skos:prefLabel': { 'eng': 'artistic work', 'deu': 'Kunstwerk', 'ita': 'Materiale artistico' } },
       { '@id': ns + '9J46-2X9E', 'skos:prefLabel': { 'eng': 'atlas', 'deu': 'Atlas', 'ita': 'Atlante' } },
+      { '@id': ns + 'TME0-3GXS', 'skos:prefLabel': { 'eng': 'bibliography', 'deu': 'Bibliografie', 'ita': 'Bibliografia' } },
       { '@id': ns + '47QB-8QF1', 'skos:prefLabel': { 'eng': 'book', 'deu': 'Buch', 'ita': 'Libro' } },
       { '@id': ns + 'XA52-09WA', 'skos:prefLabel': { 'eng': 'book part', 'deu': 'Buchkapitel', 'ita': 'Capitolo di libro' } },
       { '@id': ns + 'VP4W-DQ1P', 'skos:prefLabel': { 'eng': 'book review', 'deu': 'Buchrezension', 'ita': 'Recensione di libro' } },
+      { '@id': ns + '7GRZ-1GMH', 'skos:prefLabel': { 'eng': 'botanical specimen', 'deu': 'botanisches Exemplar​​', 'ita': 'Esemplare botanico' } },
       { '@id': ns + '62RJ-SFV2', 'skos:prefLabel': { 'eng': 'cartographic material', 'deu': 'kartographisches Material', 'ita': 'Materiale cartografico' } },
       { '@id': ns + 'QKDF-E5HA', 'skos:prefLabel': { 'eng': 'conference object', 'deu': 'Konferenzveröffentlichung', 'ita': 'Risultato di convegno' } },
+      { '@id': ns + '2NMC-XD14', 'skos:prefLabel': { 'eng': 'conference presentation', 'deu': 'Konferenzpräsentation', 'ita': 'Presentazione' } },
       { '@id': ns + 'MF25-FDGW', 'skos:prefLabel': { 'eng': 'contribution to journal', 'deu': 'Zeitschriftenbeitrag', 'ita': 'Contributo in rivista' } },
       { '@id': ns + 'CEET-8C4S', 'skos:prefLabel': { 'eng': 'cover', 'deu': 'Abdeckung', 'ita': 'Coperta' } },
       { '@id': ns + 'CPVB-YXG6', 'skos:prefLabel': { 'eng': 'cultural artifact', 'deu': 'Kulturartefakt', 'ita': 'Artefatto culturale' } },
@@ -1597,6 +1642,7 @@ const vocabularies = {
       { '@id': ns + 'KW6N-2VTP', 'skos:prefLabel': { 'eng': 'dataset', 'deu': 'Dataset', 'ita': 'Dataset' } },
       { '@id': ns + 'A9K1-3WQA', 'skos:prefLabel': { 'eng': 'diary', 'deu': 'Tagebuch', 'ita': 'Diario' } },
       { '@id': ns + '85QM-7TZ3', 'skos:prefLabel': { 'eng': 'drawing', 'deu': 'Zeichnung', 'ita': 'Disegno' } },
+      { '@id': ns + '3YVW-43D9', 'skos:prefLabel': { 'eng': 'herbaria', 'deu': 'Herbarium', 'ita': 'Erbari' } },
       { '@id': ns + 'QXRQ-Z2PJ', 'skos:prefLabel': { 'eng': 'internal report', 'deu': 'interner Bericht', 'ita': 'Rapporto interno' } },
       { '@id': ns + '8KGA-CH97', 'skos:prefLabel': { 'eng': 'interview', 'deu': 'Interview', 'ita': 'Intervista' } },
       { '@id': ns + 'VKA6-9XTY', 'skos:prefLabel': { 'eng': 'journal article', 'deu': 'Wissenschaftlicher Artikel', 'ita': 'Articolo scientifico' } },
@@ -1604,6 +1650,7 @@ const vocabularies = {
       { '@id': ns + 'F4JN-ZST0', 'skos:prefLabel': { 'eng': 'lecture', 'deu': 'Vortrag', 'ita': 'Lezione' } },
       { '@id': ns + 'GBWA-JJP8', 'skos:prefLabel': { 'eng': 'letter (correspondence)', 'deu': 'Brief', 'ita': 'Lettera' } },
       { '@id': ns + 'EHPQ-XYA3', 'skos:prefLabel': { 'eng': 'magazine', 'deu': 'Magazin (Zeitschrift)', 'ita': 'Rivista divulgativa' } },
+      { '@id': ns + '3VKA-1FW2', 'skos:prefLabel': { 'eng': 'magazine article', 'deu': 'Zeitschriftenartikel', 'ita': 'Articolo di rivista' } },
       { '@id': ns + 'KMRH-NFR9', 'skos:prefLabel': { 'eng': 'manuscript', 'deu': 'Manuskript', 'ita': 'Manoscritto' } },
       { '@id': ns + 'A52A-CWMM', 'skos:prefLabel': { 'eng': 'map', 'deu': 'Karte', 'ita': 'Mappa' } },
       { '@id': ns + 'MCN9-1NSA', 'skos:prefLabel': { 'eng': 'memorandum', 'deu': 'Memorandum', 'ita': 'Memorandum' } },
@@ -1618,6 +1665,7 @@ const vocabularies = {
       { '@id': ns + 'WWS3-0ACP', 'skos:prefLabel': { 'eng': 'painting', 'deu': 'Malerei', 'ita': 'Pittura' } },
       { '@id': ns + 'GY3Z-50FT', 'skos:prefLabel': { 'eng': 'periodical', 'deu': 'Periodikum', 'ita': 'Periodico' } },
       { '@id': ns + '7CAB-P987', 'skos:prefLabel': { 'eng': 'photograph', 'deu': 'Fotografie', 'ita': 'Fotografia' } },
+      { '@id': ns + '99J6-2F2T', 'skos:prefLabel': { 'eng': 'physical sample', 'deu': 'physische Probe', 'ita': 'Esemplare' } },
       { '@id': ns + 'R4W3-ZQ76', 'skos:prefLabel': { 'eng': 'picture', 'deu': 'Bild', 'ita': 'Immagine' } },
       { '@id': ns + 'JF85-NYRJ', 'skos:prefLabel': { 'eng': 'podcast', 'deu': 'Podcast', 'ita': 'Podcast' } },
       { '@id': ns + 'XWWK-533P', 'skos:prefLabel': { 'eng': 'policy report', 'deu': 'politischer Bericht', 'ita': 'Informativa politica' } },
@@ -1639,6 +1687,7 @@ const vocabularies = {
       { '@id': ns + '6KMM-SD3M', 'skos:prefLabel': { 'eng': 'dianegative', 'deu': 'Dianegativ', 'ita': 'Dianegativo' } },
       { '@id': ns + '622D-CM27', 'skos:prefLabel': { 'eng': 'software', 'deu': 'Software', 'ita': 'Software' } },
       { '@id': ns + 'DF69-TVE8', 'skos:prefLabel': { 'eng': 'technical report', 'deu': 'technischer Bericht', 'ita': 'Rapporto tecnico' } },
+      { '@id': ns + '62DN-RZ7V', 'skos:prefLabel': { 'eng': 'thesis', 'deu': 'Hochschulschrift', 'ita': 'Tesi' } },
       { '@id': ns + '6FG3-514E', 'skos:prefLabel': { 'eng': 'transcript', 'deu': 'Transkript', 'ita': 'Trascrizione' } },
       { '@id': ns + 'QM0R-ZTAA', 'skos:prefLabel': { 'eng': 'wall chart', 'deu': 'Wandtafel', 'ita': 'Tavola parietale' } },
       { '@id': ns + 'R1WF-V45Y', 'skos:prefLabel': { 'eng': 'website', 'deu': 'Website', 'ita': 'Sito web' } },
