@@ -123,7 +123,7 @@ sub generate_simple_manifest {
   if ($is_recto_verso && $verso_pid) {
 
     # Generate multi-canvas manifest for recto/verso
-    my $verso_dims = $self->_get_object_dimensions($c, $verso_pid);
+    my $verso_dims = $self->_get_pic_dimensions($c, $verso_pid);
     if ($verso_dims->{status} eq 200) {
 
       # Recto canvas
@@ -240,34 +240,6 @@ sub _create_single_canvas_item {
     $item->{label} = {"en" => [$label]};
   }
   return $item;
-}
-
-sub _get_object_dimensions {
-  my ($self, $c, $pid) = @_;
-
-  my $res = {width => 0, height => 0, status => 200};
-
-  my $isrv_model = PhaidraAPI::Model::Imageserver->new;
-  my $urlres     = $isrv_model->get_url($c, Mojo::Parameters->new("IIIF=$pid.tif/info.json"), 1);
-  if ($urlres->{status} ne 200) {
-    $res->{status} = $urlres->{status};
-    return $res;
-  }
-
-  my $getres = $c->app->ua->get($urlres->{url})->result;
-  if ($getres->is_success) {
-    if ($getres->json->{width}) {
-      $res->{width} = $getres->json->{width};
-    }
-    if ($getres->json->{height}) {
-      $res->{height} = $getres->json->{height};
-    }
-  }
-  else {
-    $res->{status} = $getres->code ? $getres->code : 500;
-  }
-
-  return $res;
 }
 
 sub _calculate_thumbnail_dimensions {
