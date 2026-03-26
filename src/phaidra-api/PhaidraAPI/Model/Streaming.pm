@@ -9,28 +9,6 @@ use Mojo::Util  qw(decode encode url_escape url_unescape);
 use Digest::SHA qw(hmac_sha1_hex);
 use PhaidraAPI::Model::Object;
 
-sub check_pid_rights {
-  my ($self, $c, $pid) = @_;
-
-  my $usrnm           = $c->stash->{basic_auth_credentials}->{username} ? $c->stash->{basic_auth_credentials}->{username} : '';
-  my $cachekey        = "img_rights_" . $usrnm . "_$pid";
-  my $status_cacheval = $c->app->chi->get($cachekey);
-  unless ($status_cacheval) {
-    $c->app->log->debug("[cache miss] $cachekey");
-
-    my $authz = PhaidraAPI::Model::Authorization->new;
-    my $rres  = $authz->check_rights($c, $pid, 'r');
-    $status_cacheval = $rres->{status};
-
-    $c->app->chi->set($cachekey, $status_cacheval, '1 day');
-  }
-  else {
-    $c->app->log->debug("[cache hit] $cachekey");
-  }
-
-  return $status_cacheval;
-}
-
 sub create_streaming_job {
   my ($self, $c, $pid, $cmodel) = @_;
 
