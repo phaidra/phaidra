@@ -500,10 +500,15 @@ services:
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
-      - ./src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
       - derivates-3d:/mnt/derivates-3d:ro
       - derivates-images:/mnt/derivates-images:ro
       - derivates-expanded:/mnt/derivates-expanded:ro
+    develop:
+      watch:
+        - path: ./src/phaidra-api
+          target: /usr/local/phaidra/phaidra-api
+          ignore: public/pdfjs
+          action: sync+restart
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
@@ -518,8 +523,13 @@ services:
     <<: [*common, *logs]
     volumes:
       - s3-cache:/s3-cache
-      - ./src/phaidra-api:/usr/local/phaidra/phaidra-api:ro
       - ./container_init/api/api-entrypoint.bash:/mnt/api-entrypoint.bash:ro
+    develop:
+      watch:
+        - path: ./src/phaidra-api
+          target: /usr/local/phaidra/phaidra-api
+          ignore: public/pdfjs
+          action: sync+restart
     environment:
       <<: [*api_common_env, *hosts, *s3]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-}"
