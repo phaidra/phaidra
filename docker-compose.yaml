@@ -379,7 +379,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:f89dc961
+    image: phaidraorg/ui:2c54b659
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -397,7 +397,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:f89dc961
+    image: phaidraorg/ui:2c54b659
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -465,7 +465,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:f9c12532
+    image: phaidraorg/api-dist:e7ee52d0
     <<: [*common, *logs]
     volumes:
       - s3-cache:/s3-cache
@@ -479,7 +479,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:f9c12532
+    image: phaidraorg/api-dist:e7ee52d0
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
