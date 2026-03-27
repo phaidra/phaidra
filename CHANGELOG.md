@@ -104,6 +104,19 @@ docker exec -it phaidra-api-1 perl migrations/v3.4.0/08_remove_keyword_suggest.p
 
 **Note:** After running this migration, a full reindex is recommended to ensure `dc_subject*` and `*_dc_title` values are properly copied to `_text_`.
 
+### Solr: series ISSN and series identifier indexing fields
+
+To ensure series ISSN and series identifier values are indexed as string fields (and prevent unwanted numeric field type creation), run:
+
+```
+docker exec -it phaidra-api-1 perl migrations/v3.4.0/09_add_solr_series_publisher_fields_and_reindex.pl
+```
+
+This migration:
+- adds `bib_issn` and `bib_seriesidentifier` fields to Solr schema (both cores)
+- adds copyField rules to `_text_`
+- reindexes existing instances so current records get these fields populated
+
 ### Solr config updates
 
 Run the migration script to update solrconfig.xml in volume to the version from container_init:
