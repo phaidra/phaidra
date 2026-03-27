@@ -3,7 +3,7 @@
   <v-row v-if="!hidden">
     <v-col cols="12">
 
-      <v-card class="mb-8">
+      <v-card :flat="!showHeader" :outlined="showHeader" class="mb-8">
         <template v-if="showHeader">
           <v-card-title class="title font-weight-light white--text">
               <span>{{ $t('Project') }}</span>
