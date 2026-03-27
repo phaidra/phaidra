@@ -115,7 +115,9 @@ docker exec -it phaidra-api-1 perl migrations/v3.4.0/09_add_solr_series_publishe
 This migration:
 - adds `bib_issn` and `bib_seriesidentifier` fields to Solr schema (both cores)
 - adds copyField rules to `_text_`
-- reindexes existing instances so current records get these fields populated
+
+This script does **not** reindex existing records.  
+If you need existing objects to populate these new fields in Solr, run a separate reindex afterwards.
 
 ### Solr config updates
 
