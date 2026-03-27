@@ -442,10 +442,10 @@ export default {
         self.form.sections[5].fields.push(published)
         self.form.sections[5].fields.push(fields.getField("volume"));
         self.form.sections[5].fields.push(fields.getField("issue"));
-        self.form.sections[5].fields.push(fields.getField("series"));
-        self.form.sections[5].fields.push(fields.getField("contained-in"));
         self.form.sections[5].fields.push(fields.getField("page-start"));
         self.form.sections[5].fields.push(fields.getField("page-end"));
+        self.form.sections[5].fields.push(fields.getField("series"));
+        self.form.sections[5].fields.push(fields.getField("contained-in"));
         let publ = fields.getField("bf-publication")
         self.form.sections[5].fields.push(publ);
 
