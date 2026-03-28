@@ -4408,7 +4408,7 @@ our %tree = (
               "ordered"   => 1,
               "ui_value"  => "",
 
-              "value_lang"   => "",
+              "value_lang"  => "",
               "xmlname" => "kennzahl",
               "xmlns"   => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization"
             }
