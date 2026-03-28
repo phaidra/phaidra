@@ -13,6 +13,7 @@ use POSIX        qw(strftime);
 use PhaidraAPI::Model::Search;
 use PhaidraAPI::Model::Util;
 use PhaidraAPI::Model::Config;
+use PhaidraAPI::Model::Directory;
 use MIME::Lite::TT::HTML;
 
 sub fedora_storage_usage {
@@ -261,7 +262,8 @@ sub request_doi {
     $currentuser = $self->stash->{remote_user};
   }
 
-  my $userdata = $self->app->directory->get_user_data($self, $currentuser);
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+  my $userdata        = $directory_model->get_user_data($self, $currentuser);
   unless ($userdata) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Could not fetch user data'}]}, status => 500);
     return;

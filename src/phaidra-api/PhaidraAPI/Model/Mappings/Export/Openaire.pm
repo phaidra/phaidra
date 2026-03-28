@@ -53,9 +53,9 @@ my $openaireContributorType = {
   # RightsHolder
   spn => "Sponsor"
 
-  # Supervisor
-  # WorkPackageLeader
-  # Other < all unmapped contributor roles
+    # Supervisor
+    # WorkPackageLeader
+    # Other < all unmapped contributor roles
 };
 
 sub _get_roles_uwm {

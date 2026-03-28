@@ -10,9 +10,6 @@ use Mojolicious::Plugin::Session;
 use Mojolicious::Plugin::Log::Any;
 use Mojolicious::Plugin::Prometheus;
 use Mojo::Loader qw(load_class);
-use FindBin;
-use lib "$FindBin::Bin/lib/phaidra_directory";
-use change_refs;
 use MongoDB 1.8.3;
 use Sereal::Encoder qw(encode_sereal);
 use Sereal::Decoder qw(decode_sereal);
@@ -74,18 +71,14 @@ sub is_bot_ua {
 
 # This method will run once at server start
 sub startup {
-  my $self   = shift;
-  my $config = $self->plugin('JSONConfig' => {file => 'PhaidraAPI.json'});
-  change_refs::change_refs($config);
+  my $self = shift;
+
+  my $config = $self->plugin('Config' => {file => 'PhaidraAPI.conf'});
   $self->config($config);
+
   $self->mode($config->{mode});
   $self->secrets([$config->{secret}]);
   push @{$self->static->paths} => 'public';
-
-  Log::Log4perl::init($FindBin::Bin . '/log4perl.conf');
-
-  my $log = Log::Log4perl::get_logger("root");
-  $self->plugin('Log::Any' => {logger => 'Log::Log4perl'});
 
   if ($config->{tmpdir}) {
     $self->app->log->debug("Setting MOJO_TMPDIR: " . $config->{tmpdir});
@@ -97,18 +90,6 @@ sub startup {
     $self->app->log->debug("Setting SSL_ca_path: " . $config->{ssl_ca_path});
     IO::Socket::SSL::set_defaults(SSL_ca_path => $config->{ssl_ca_path},);
   }
-
-  my $directory_impl = $config->{directory_class};
-  $self->app->log->debug("Loading directory implementation $directory_impl");
-  my $e = load_class $directory_impl;
-  if (ref $e) {
-    $self->app->log->error("Loading $directory_impl failed: $e");
-
-    #   next;
-  }
-  my $directory = $directory_impl->new($self, $config);
-
-  $self->helper(directory => sub {return $directory;});
 
   # init I18N
   $self->plugin(I18N => {namespace => 'PhaidraAPI::I18N', support_url_langs => [qw(en de it sr)]});
@@ -498,10 +479,7 @@ sub startup {
   $r->get('directory/get_study')                    ->to('directory#get_study');
   $r->get('directory/get_study_plans')              ->to('directory#get_study_plans');
   $r->get('directory/get_study_name')               ->to('directory#get_study_name');
-  # old
-  $r->get('directory/get_org_units')                ->to('directory#get_org_units');
-  $r->get('directory/get_parent_org_unit_id')       ->to('directory#get_parent_org_unit_id');
-  # new
+
   $r->get('directory/org_get_subunits')             ->to('directory#org_get_subunits');
   $r->get('directory/org_get_superunits')           ->to('directory#org_get_superunits');
   $r->get('directory/org_get_parentpath')           ->to('directory#org_get_parentpath');
@@ -546,8 +524,6 @@ sub startup {
   # does not show inactive objects, not specific to collection (but does ordering)
   $r->get('object/:pid/related')                    ->to('search#related');
 
-  # we will get this datastreams by using intcall credentials
-  # (instead of defining a API-A disseminator for each of them)
   $r->get('object/:pid/uwmetadata')                 ->to('uwmetadata#get');
   $r->get('object/:pid/mods')                       ->to('mods#get');
   $r->get('object/:pid/jsonld')                     ->to('jsonld#get');
@@ -771,7 +747,7 @@ sub startup {
     $authenticated->post('utils/:pid/requestdoi')                               ->to('utils#request_doi');
   }
   #>>>
-
+  $self->app->log->error(__LINE__);
   return $self;
 }
 

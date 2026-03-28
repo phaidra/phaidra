@@ -50,4 +50,4 @@ ADD ../src/phaidra-api /usr/local/phaidra/phaidra-api
 COPY --from=builder /pdfjs /usr/local/phaidra/phaidra-api/public/pdfjs
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
-ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]
+ENTRYPOINT ["MOJO_LOG_LEVEL=trace hypnotoad", "-f", "phaidra-api.cgi"]

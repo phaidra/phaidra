@@ -9,6 +9,7 @@ use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Termsofuse;
 use PhaidraAPI::Model::Config;
+use PhaidraAPI::Model::Directory;
 
 sub extract_credentials {
   my $self = shift;
@@ -475,7 +476,8 @@ sub signin_shib {
     $self->app->log->debug("remote user authorized: username[$username] affiliation[$affiliation], getting user data...");
 
     # we need to pass the attributes as upstream because the sec. filters (like DBFilterForAttributes) ignore remote user
-    my $userData = $self->app->directory->get_user_data($self, $username);
+    my $directory_model = PhaidraAPI::Model::Directory->new;
+    my $userData        = $directory_model->get_user_data($self, $username);
     my $org_units_l1;
     my $org_units_l2;
     my $localgroups;
