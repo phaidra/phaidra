@@ -102,126 +102,49 @@ sub metadata_tree {
 
   my $res = {alerts => [], status => 200};
 
-  $nocache = $nocache ? $nocache : '';
+  # $c->app->log->debug("Reading uwmetadata tree from " . $c->app->config->{local_uwmetadata_tree} . " class");
+  $res->{metadata_tree} = $PhaidraAPI::Model::Uwmetadata::Tree::tree{tree};
 
-  # $c->app->log->debug("metadata_tree nocache[$nocache]");
+  # "faculties" are different on every instance so we have to pull this from config and update the tree with it
+  my $facultyNode = $self->get_json_node($c, 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization', 'faculty', $res->{metadata_tree});
+  my %vocabulary;
+  $vocabulary{namespace} = 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_faculty/';
+  my $langs = $c->app->config->{directory}->{org_units_languages};
+  foreach my $lang (@$langs) {
+    my $resunits = $c->app->directory->org_get_units_uwm($c, undef, $lang);
+    if (exists($resunits->{alerts})) {
+      if ($resunits->{status} != 200) {
 
-  if ($nocache) {
-    $c->app->log->debug("Reading uwmetadata tree from db (nocache request)");
-    $res->{metadata_tree} = $self->get_metadata_tree($c);
-    return $res;
-  }
-
-  if ($c->app->config->{local_uwmetadata_tree} eq 'PhaidraAPI::Model::Uwmetadata::Tree') {
-
-    # $c->app->log->debug("Reading uwmetadata tree from " . $c->app->config->{local_uwmetadata_tree} . " class");
-    $res->{metadata_tree} = $PhaidraAPI::Model::Uwmetadata::Tree::tree{tree};
-
-    # "faculties" are different on every instance so we have to pull this from config and update the tree with it
-    my $facultyNode = $self->get_json_node($c, 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization', 'faculty', $res->{metadata_tree});
-    my %vocabulary;
-    $vocabulary{namespace} = 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_faculty/';
-    my $langs = $c->app->config->{directory}->{org_units_languages};
-    foreach my $lang (@$langs) {
-      my $resunits = $c->app->directory->org_get_units_uwm($c, undef, $lang);
-      if (exists($resunits->{alerts})) {
-        if ($resunits->{status} != 200) {
-
-          # there are only alerts
-          return {alerts => $resunits->{alerts}, status => $resunits->{status}};
-        }
-      }
-
-      my $org_units = $resunits->{org_units};
-      foreach my $u (@$org_units) {
-        $vocabulary{'terms'}->{$u->{value}}->{uri} = $vocabulary{namespace} . $u->{value};
-        $vocabulary{'terms'}->{$u->{value}}->{labels}->{$lang} = $u->{name};
+        # there are only alerts
+        return {alerts => $resunits->{alerts}, status => $resunits->{status}};
       }
     }
-    my @termarray;
-    while (my ($key, $element) = each %{$vocabulary{'terms'}}) {
-      push @termarray, $element;
-    }
-    $vocabulary{'terms'} = \@termarray;
-    $facultyNode->{vocabularies} = [\%vocabulary];
 
-    # the same for "spl" (study plans)
-    my $splNode = $self->get_json_node($c, 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization', 'spl', $res->{metadata_tree});
-    my %vocabularySpl;
-    $vocabularySpl{namespace} = 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_spl/';
-
-    my $termarraySpl = $self->getSplTermArray($c);
-
-    $vocabularySpl{'terms'} = $termarraySpl;
-    $splNode->{vocabularies} = [\%vocabularySpl];
-
-    return $res;
-  }
-
-  # $c->app->log->debug("Reading uwmetadata tree from cache");
-
-  my $cachekey = 'uwmetadata_tree';
-  my $cacheval = $c->app->chi->get($cachekey);
-
-  my $miss = 1;
-
-  if ($cacheval) {
-    if (scalar @{$cacheval} > 0) {
-      $miss = 0;
-      $c->app->log->debug("[cache hit] $cachekey");
+    my $org_units = $resunits->{org_units};
+    foreach my $u (@$org_units) {
+      $vocabulary{'terms'}->{$u->{value}}->{uri} = $vocabulary{namespace} . $u->{value};
+      $vocabulary{'terms'}->{$u->{value}}->{labels}->{$lang} = $u->{name};
     }
   }
-
-  if ($miss) {
-    $c->app->log->debug("[cache miss] $cachekey");
-
-    if ($c->app->config->{local_uwmetadata_tree}) {
-      $c->app->log->debug("Reading uwmetadata tree from file");
-
-      unless (-e $c->app->config->{local_uwmetadata_tree}) {
-        $c->app->log->error("Error reading local_uwmetadata_tree, file " . $c->app->config->{local_uwmetadata_tree} . " does not exist");
-        push @{$res->{alerts}}, {type => 'error', msg => "Error reading local_uwmetadata_tree"};
-        $res->{status} = 500;
-        return $res;
-      }
-
-      # read metadata tree from file
-      my $content;
-      open my $fh, "<", $c->app->config->{local_uwmetadata_tree} or push @{$res->{alerts}}, {type => 'error', msg => "Error reading local_uwmetadata_tree, " . $!};
-      local $/;
-      $content = <$fh>;
-      close $fh;
-
-      unless (defined($content)) {
-        my $msg = "Error reading local_uwmetadata_tree, no content";
-        $c->app->log->error($msg);
-        push @{$res->{alerts}}, {type => 'error', msg => $msg};
-        $res->{status} = 500;
-        return $res;
-      }
-
-      my $metadata = decode_json($content);
-
-      $cacheval = $metadata->{tree};
-
-    }
-    else {
-
-      $cacheval = $self->get_metadata_tree($c);
-    }
-
-    $c->app->chi->set($cachekey, $cacheval, '1 day');
-
-    # save and get the value. the serialization can change integers to strings so
-    # if we want to get the same structure for cache miss and cache hit we have to run it through
-    # the cache serialization process
-    $cacheval = $c->app->chi->get($cachekey);
-
-    #$c->app->log->debug($c->app->dumper($res));
+  my @termarray;
+  while (my ($key, $element) = each %{$vocabulary{'terms'}}) {
+    push @termarray, $element;
   }
-  $res->{metadata_tree} = $cacheval;
+  $vocabulary{'terms'} = \@termarray;
+  $facultyNode->{vocabularies} = [\%vocabulary];
+
+  # the same for "spl" (study plans)
+  my $splNode = $self->get_json_node($c, 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization', 'spl', $res->{metadata_tree});
+  my %vocabularySpl;
+  $vocabularySpl{namespace} = 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_spl/';
+
+  my $termarraySpl = $self->getSplTermArray($c);
+
+  $vocabularySpl{'terms'} = $termarraySpl;
+  $splNode->{vocabularies} = [\%vocabularySpl];
 
   return $res;
+
 }
 
 sub get_metadata_tree {
@@ -1245,65 +1168,6 @@ sub fill_object_metadata {
                   last;
                 }
                 $faculty = $child;
-              }
-            }
-          }
-
-          if ($node->{xmlname} eq 'kennzahl') {
-
-            # get the previous sibling and study plan and fill the study plan vocabulary
-            if ($e->parent) {
-              my $prev        = undef;
-              my $spl         = undef;
-              my $current_seq = undef;
-              my $ids_all;
-              my $last_kennzahl = 0;
-              for my $child ($e->parent->children->each) {
-
-                if ($e->parent->children->reverse->first->tree eq $e->tree) {
-                  $last_kennzahl = 1;
-                }
-
-                my $child_type = $child->tag;
-                my ($ns, $id) = $self->_get_ns_id($c, $child_type);
-                if ($id eq 'spl') {
-                  $spl = $child->text;
-                  next;
-                }
-                if ($id eq 'kennzahl') {
-                  push @$ids_all, {text => $child->text, seq => $child->attr('seq')};
-                  if ($child->tree eq $e->tree) {
-                    $current_seq = $child->attr('seq');
-                  }
-                }
-              }
-              @$ids_all = sort {$a->{seq} <=> $b->{seq}} @$ids_all;
-
-              # for the get_study method we need all the ids until the current one
-              my @ids;
-              for my $id (@$ids_all) {
-                if ($id->{seq} eq $current_seq) {
-                  last;
-                }
-                else {
-                  push @ids, $id->{text};
-                }
-              }
-
-              foreach my $voc (@{$node->{vocabularies}}) {
-                $voc->{terms} = $self->get_study_terms($c, $spl, \@ids, "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_kennzahl/");
-              }
-
-              # try to get the study name
-              if ($last_kennzahl) {
-
-                my @ids;
-                for my $id (@$ids_all) {
-                  push @ids, $id->{text};
-                }
-
-                $metadata_tree_parent->{study_name} = $self->get_study_name($c, $spl, \@ids);
-
               }
             }
           }

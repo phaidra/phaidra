@@ -4389,13 +4389,13 @@ our %tree = (
             },
             { "cardinality" => "*",
               "data_order"  => 0,
-              "datatype"    => "Curriculum",
+              "datatype"    => "CharacterString",
               "disabled"    => 0,
               "field_order" => 9999,
               "help_id"     => "helpmeta_78",
               "hidden"      => 0,
               "input_regex" => "^.*\$",
-              "input_type"  => "select",
+              "input_type"  => "input_text",
               "labels"      => {
                 "de" => "Studienkennzahl",
                 "en" => "Study ID",
@@ -4409,11 +4409,6 @@ our %tree = (
               "ui_value"  => "",
 
               "value_lang"   => "",
-              "vocabularies" => [
-                { "namespace" => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_kennzahl/",
-                  "terms"     => []
-                }
-              ],
               "xmlname" => "kennzahl",
               "xmlns"   => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization"
             }
