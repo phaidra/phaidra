@@ -4408,9 +4408,9 @@ our %tree = (
               "ordered"   => 1,
               "ui_value"  => "",
 
-              "value_lang"  => "",
-              "xmlname" => "kennzahl",
-              "xmlns"   => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization"
+              "value_lang" => "",
+              "xmlname"    => "kennzahl",
+              "xmlns"      => "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization"
             }
           ],
           "data_order"  => "",
