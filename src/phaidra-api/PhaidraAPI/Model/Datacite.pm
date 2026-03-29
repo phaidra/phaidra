@@ -45,6 +45,7 @@ sub get {
 
   my $search_model = PhaidraAPI::Model::Search->new;
   my $object_model = PhaidraAPI::Model::Object->new;
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
 
   my $cmodel;
   my $res_cmodel = $search_model->get_cmodel($c, $pid);
@@ -56,7 +57,7 @@ sub get {
     $cmodel = $res_cmodel->{cmodel};
   }
 
-  my $r = $search_model->datastreams_hash($c, $pid);
+  my $r = $fedora_model->getDatastreamsHash($c, $pid);
   if ($r->{status} ne 200) {
     return $r;
   }
@@ -910,21 +911,20 @@ sub _get_relsext_identifiers {
   my ($self, $c, $pid) = @_;
 
   my @ids;
-  if ($c->app->config->{fedora}->{version} >= 6) {
 
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $fres         = $fedora_model->getObjectProperties($c, $pid);
-    if ($fres->{status} ne 200) {
-      $c->app->log->debug("STATUS NOT 200");
-      return $fres;
-    }
-
-    if (exists $fres->{identifier} && ref $fres->{identifier} eq 'ARRAY') {
-      @ids = map {{value => $_}} @{$fres->{identifier}};
-    }
-    $c->app->log->debug("Identifiers: " . Dumper(\@ids));
-    return \@ids;
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $fres         = $fedora_model->getObjectProperties($c, $pid);
+  if ($fres->{status} ne 200) {
+    $c->app->log->debug("STATUS NOT 200");
+    return $fres;
   }
+
+  if (exists $fres->{identifier} && ref $fres->{identifier} eq 'ARRAY') {
+    @ids = map {{value => $_}} @{$fres->{identifier}};
+  }
+  $c->app->log->debug("Identifiers: " . Dumper(\@ids));
+  return \@ids;
+  
   my $search_model = PhaidraAPI::Model::Search->new;
 
   my $query = "<info:fedora/$pid> <http://purl.org/dc/terms/identifier> *";
@@ -941,31 +941,6 @@ sub _get_relsext_identifiers {
   }
 
   return \@ids;
-}
-
-sub _get_filesize {
-
-  my ($self, $c, $pid, $cmodel) = @_;
-
-  my $bytesize;
-  if (exists($c->app->config->{paf_mongodb})) {
-    my $inv_coll = $c->paf_mongo->get_collection('foxml.ds');
-    if ($inv_coll) {
-      my $ds_doc = $inv_coll->find_one({pid => $pid}, {}, {"sort" => {"updated_at" => -1}});
-      $bytesize = $ds_doc->{ds_sizes}->{OCTETS};
-    }
-  }
-  unless ($bytesize) {
-    my $octets_model = PhaidraAPI::Model::Octets->new;
-    my $parthres     = $octets_model->_get_ds_path($c, $pid, 'OCTETS');
-    if ($parthres->{status} == 200) {
-      $bytesize = -s $parthres->{path};
-    }
-  }
-
-  my @sizes;
-  push @sizes, {value => $bytesize};
-  return \@sizes;
 }
 
 sub json_2_xml {

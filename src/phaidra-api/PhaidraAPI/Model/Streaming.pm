@@ -18,26 +18,13 @@ sub create_streaming_job {
   {
     $c->app->log->info("Creating streaming job pid[$pid] cm[$cmodel]");
     my $path;
-    if ($c->app->config->{fedora}->{version} >= 6) {
-      my $fedora_model = PhaidraAPI::Model::Fedora->new;
-      my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
-      if ($dsAttr->{status} eq 200) {
-        $c->app->log->error("streaming job pid[$pid] cm[$cmodel]: could not get path");
-        $path = $dsAttr->{path};
-      }
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+    if ($dsAttr->{status} eq 200) {
+      $c->app->log->error("streaming job pid[$pid] cm[$cmodel]: could not get path");
+      $path = $dsAttr->{path};
     }
-    else {
-      my $octets_model = PhaidraAPI::Model::Octets->new;
-      my $parthres     = $octets_model->_get_ds_path($c, $pid, 'OCTETS');
-      if ($parthres->{status} != 200) {
-        $res->{status} = $parthres->{status};
-        push @{$res->{alerts}}, @{$parthres->{alerts}} if scalar @{$parthres->{alerts}} > 0;
-        return $res;
-      }
-      else {
-        $path = $parthres->{path};
-      }
-    }
+
     my $job = {pid => $pid, cmodel => $cmodel, agent => "opencast", status => "new", created => time};
     $job->{path} = $path if $path;
     $c->paf_mongo->get_collection('jobs')->insert_one($job);

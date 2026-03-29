@@ -26,17 +26,15 @@ sub create {
   # create object
   my $pid;
 
-  if ($c->app->config->{fedora}->{version} >= 6) {
-
-    # use transactions only for single object creation. TODO: use only one transactions also for membership relation when adding members
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $confmodel    = PhaidraAPI::Model::Config->new;
-    my $privconfig   = $confmodel->get_private_config($c);
-    unless (exists($privconfig->{donotusefedoratransactions}) && $privconfig->{donotusefedoratransactions}) {
-      my $transaction_url = $fedora_model->useTransaction($c);
-      $c->stash(transaction_url => $transaction_url->{transaction_id});
-    }
+  # use transactions only for single object creation. TODO: use only one transactions also for membership relation when adding members
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $confmodel    = PhaidraAPI::Model::Config->new;
+  my $privconfig   = $confmodel->get_private_config($c);
+  unless (exists($privconfig->{donotusefedoratransactions}) && $privconfig->{donotusefedoratransactions}) {
+    my $transaction_url = $fedora_model->useTransaction($c);
+    $c->stash(transaction_url => $transaction_url->{transaction_id});
   }
+  
   my $object_model = PhaidraAPI::Model::Object->new;
   my $res_create   = $object_model->create($c, 'cmodel:Collection', $username, $password);
   if ($res_create->{status} ne 200) {
@@ -190,25 +188,10 @@ sub get_members {
     my %members;
 
     # get members
-    if ($c->app->config->{fedora}->{version} >= 6) {
-      my $fedora_model = PhaidraAPI::Model::Fedora->new;
-      my $fres         = $fedora_model->getObjectProperties($c, $pid);
-      foreach my $member (@{$fres->{haspart}}) {
-        $members{$member} = {'pos' => undef};
-      }
-    }
-    else {
-      my $sr = $search_model->triples($c, "<info:fedora/$pid> <info:fedora/fedora-system:def/relations-external#hasCollectionMember> *");
-      push @{$res->{alerts}}, @{$sr->{alerts}} if scalar @{$sr->{alerts}} > 0;
-      $res->{status} = $sr->{status};
-      if ($sr->{status} ne 200) {
-        return $sr;
-      }
-
-      foreach my $statement (@{$sr->{result}}) {
-        @{$statement}[2] =~ m/^\<info:fedora\/([a-zA-Z\-]+:[0-9]+)\>$/g;
-        $members{$1} = {'pos' => undef};
-      }
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    my $fres         = $fedora_model->getObjectProperties($c, $pid);
+    foreach my $member (@{$fres->{haspart}}) {
+      $members{$member} = {'pos' => undef};
     }
 
     # check order definition

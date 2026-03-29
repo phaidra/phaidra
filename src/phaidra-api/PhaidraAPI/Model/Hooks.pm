@@ -53,10 +53,6 @@ sub add_or_modify_datastream_hooks {
     if ($dsid eq "OCTETS") {
       if ($exists) {
 
-        # $object_model->add_octets will re-index, so keep inventory cleanup above it to avoid indexing old data
-        # delete inventory info
-        $c->app->paf_mongo->get_collection('foxml.ds')->delete_one({'pid' => $pid});
-
         # delete imagemanipulator record
         $c->app->db_imagemanipulator->dbh->do('DELETE FROM image WHERE url = "' . $pid . '";') or $c->app->log->error("Error deleting from imagemanipulator db:" . $c->app->db_imagemanipulator->dbh->errstr);
 
@@ -199,13 +195,14 @@ sub add_or_modify_relationships_hooks {
 
   my $dc_model     = PhaidraAPI::Model::Dc->new;
   my $search_model = PhaidraAPI::Model::Search->new;
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
 
   my $object_model = PhaidraAPI::Model::Object->new;
 
   if (exists($c->app->config->{hooks})) {
     if (exists($c->app->config->{hooks}->{updatedc}) && $c->app->config->{hooks}->{updatedc}) {
 
-      my $r = $search_model->datastreams_hash($c, $pid);
+      my $r = $fedora_model->getDatastreamsHash($c, $pid);
       if ($r->{status} ne 200) {
         return $r;
       }
@@ -273,10 +270,6 @@ sub add_octets_hook {
   }
 
   if ($exists) {
-
-    # $object_model->add_octets will re-index, so keep inventory cleanup above it to avoid indexing old data
-    # delete inventory info
-    $c->app->paf_mongo->get_collection('foxml.ds')->delete_one({'pid' => $pid});
 
     # delete imagemanipulator record
     if ($c->app->config->{imagemanipulator_db}) {
@@ -372,31 +365,19 @@ sub modify_hook {
       if ($res_cmodel->{cmodel} eq 'Asset') {
         my $mimetype;
 
-        if ($c->app->config->{fedora}->{version} >= 6) {
-          my $fedora_model = PhaidraAPI::Model::Fedora->new;
-          my $dsAttr       = $fedora_model->getDatastreamAttributes($c, $pid, 'OCTETS');
-          if ($dsAttr->{status} eq 200) {
-            $mimetype = $dsAttr->{mimetype};
-          }
+        my $fedora_model = PhaidraAPI::Model::Fedora->new;
+        my $dsAttr       = $fedora_model->getDatastreamAttributes($c, $pid, 'OCTETS');
+        if ($dsAttr->{status} eq 200) {
+          $mimetype = $dsAttr->{mimetype};
         }
-        else {
-          my $object_model = PhaidraAPI::Model::Object->new;
-          my $r_oxml       = $object_model->get_foxml($c, $pid);
-          if ($r_oxml->{status} eq 200) {
-            my $foxmldom = Mojo::DOM->new();
-            $foxmldom->xml(1);
-            $foxmldom->parse($r_oxml->{foxml});
-            my $octets_model = PhaidraAPI::Model::Octets->new;
-            (undef, $mimetype, undef) = $octets_model->_get_ds_attributes($c, $pid, 'OCTETS', $foxmldom);
-          }
-        }
+
         if ($mimetype eq 'model/obj' or $mimetype eq 'model/glb') {
           my $threedr = $self->_create_3d_job_if_not_exists($c, $pid, $res_cmodel->{cmodel}, $mimetype);
           push @{$res->{alerts}}, @{$threedr->{alerts}} if scalar @{$threedr->{alerts}} > 0;
         }
       }
       my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'unzip'});
-      if ($find && $find->{pid} && !$find->{path} && $c->app->config->{fedora}->{version} >= 6) {
+      if ($find && $find->{pid} && !$find->{path}) {
         my $fedora_model = PhaidraAPI::Model::Fedora->new;
         my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
         if ($dsAttr->{status} eq 200) {
@@ -503,16 +484,15 @@ sub _create_pdf_extraction_job_if_not_exists {
   my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'tika'});
   my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
   my $path;
-  if ($c->app->config->{fedora}->{version} >= 6) {
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
-    if ($dsAttr->{status} eq 200) {
-      $path = $dsAttr->{path};
-    }
-    else {
-      $c->app->log->error("pdf extraction job pid[$pid] cm[$cmodel]: could not get path");
-    }
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+  if ($dsAttr->{status} eq 200) {
+    $path = $dsAttr->{path};
   }
+  else {
+    $c->app->log->error("pdf extraction job pid[$pid] cm[$cmodel]: could not get path");
+  }
+  
   $c->app->log->info("pdf extraction job pid[$pid] cm[$cmodel]: path[$path]");
   unless ($find->{pid}) {
     my $job = {pid => $pid, cmodel => $cmodel, agent => "tika", status => "new", idhash => $hash, created => time};
@@ -545,16 +525,15 @@ sub _create_3d_job_if_not_exists {
   unless ($find->{pid}) {
     my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
     my $path;
-    if ($c->app->config->{fedora}->{version} >= 6) {
-      my $fedora_model = PhaidraAPI::Model::Fedora->new;
-      my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
-      if ($dsAttr->{status} eq 200) {
-        $path = $dsAttr->{path};
-      }
-      else {
-        $c->app->log->error("3d job pid[$pid] cm[$cmodel]: could not get path");
-      }
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+    if ($dsAttr->{status} eq 200) {
+      $path = $dsAttr->{path};
     }
+    else {
+      $c->app->log->error("3d job pid[$pid] cm[$cmodel]: could not get path");
+    }
+    
     my $job = {pid => $pid, cmodel => $cmodel, agent => "3d", status => "new", idhash => $hash, created => time, mimetype => $mimetype};
     $job->{path} = $path if $path;
     $c->paf_mongo->get_collection('jobs')->insert_one($job);
@@ -573,13 +552,11 @@ sub _create_360viewer_job_if_not_exists {
     my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
     my $path;
 
-    if ($c->app->config->{fedora}->{version} >= 6) {
-      eval {
-        my $fedora_model = PhaidraAPI::Model::Fedora->new;
-        my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
-        $path = $dsAttr->{path} if $dsAttr->{status} eq 200;
-      };
-    }
+    eval {
+      my $fedora_model = PhaidraAPI::Model::Fedora->new;
+      my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+      $path = $dsAttr->{path} if $dsAttr->{status} eq 200;
+    };
 
     my $job = {
       pid      => $pid,

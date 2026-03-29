@@ -222,20 +222,18 @@ sub startup {
     );
   }
 
-  if ($config->{fedora}->{version} > 6) {
-    $self->helper(
-      fedoraurl => sub {
-        my $url = Mojo::URL->new;
-        $url->scheme($config->{fedora}->{scheme});
-        $url->host($config->{fedora}->{host});
-        $url->port($config->{fedora}->{port}) if $config->{fedora}->{port};
-        $url->path($config->{fedora}->{path});
-        $url->userinfo($config->{fedora}->{adminuser} . ":" . $config->{fedora}->{adminpass});
-        return $url;
-      }
-    );
-  }
-
+  $self->helper(
+    fedoraurl => sub {
+      my $url = Mojo::URL->new;
+      $url->scheme($config->{fedora}->{scheme});
+      $url->host($config->{fedora}->{host});
+      $url->port($config->{fedora}->{port}) if $config->{fedora}->{port};
+      $url->path($config->{fedora}->{path});
+      $url->userinfo($config->{fedora}->{adminuser} . ":" . $config->{fedora}->{adminpass});
+      return $url;
+    }
+  );
+ 
   # we might possibly save a lot of data to session
   # so we are not going to use cookies, but a database instead
   $self->plugin(

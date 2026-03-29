@@ -990,7 +990,6 @@ sub get_object_metadata {
 
   my $object_model = PhaidraAPI::Model::Object->new;
 
-  #my $res = $object_model->get_dissemination($c, $pid, 'bdef:Asset', 'getUWMETADATA', $username, $password);
   my $res = $object_model->get_datastream($c, $pid, 'UWMETADATA', $username, $password, 1);
 
   if ($res->{status} ne 200) {
@@ -1001,7 +1000,6 @@ sub get_object_metadata {
 
   if ($mode eq 'full') {
 
-    #$res = $self->uwmetadata_2_json($c, $res->{content});
     $res = $self->uwmetadata_2_json($c, $uwmetadata);
     return {uwmetadata => $res->{uwmetadata}, alerts => $res->{alerts}, status => $res->{status}};
   }

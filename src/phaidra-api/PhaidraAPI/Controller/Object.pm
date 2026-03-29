@@ -17,7 +17,6 @@ use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Collection;
 use PhaidraAPI::Model::Search;
 use PhaidraAPI::Model::Rights;
-use PhaidraAPI::Model::Octets;
 use PhaidraAPI::Model::Uwmetadata;
 use PhaidraAPI::Model::Geo;
 use PhaidraAPI::Model::Mods;
@@ -470,74 +469,38 @@ sub preview {
   # we need mimetype for the audio/video player and size (either octets or webversion) to know if to use load button
   my ($filename, $mimetype, $size, $cmodel);
 
-  if ($self->app->config->{fedora}->{version} >= 6) {
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
 
-    my $propres = $fedora_model->getObjectProperties($self, $pid);
-    if ($propres->{status} != 200) {
-      return $propres;
-    }
-    $cmodel = $propres->{cmodel};
-    my $dsAttr;
-    if (exists($propres->{contains})) {
-      for my $contains (@{$propres->{contains}}) {
-        if ($contains eq 'WEBVERSION') {
-          $trywebversion = 1;
-          $dsAttr        = $fedora_model->getDatastreamAttributes($self, $pid, 'WEBVERSION');
-          if ($dsAttr->{status} eq 200) {
-            $filename = $dsAttr->{filename};
-            $mimetype = $dsAttr->{mimetype};
-            $size     = $dsAttr->{size};
-          }
-          last;
+  my $propres = $fedora_model->getObjectProperties($self, $pid);
+  if ($propres->{status} != 200) {
+    return $propres;
+  }
+  $cmodel = $propres->{cmodel};
+  my $dsAttr;
+  if (exists($propres->{contains})) {
+    for my $contains (@{$propres->{contains}}) {
+      if ($contains eq 'WEBVERSION') {
+        $trywebversion = 1;
+        $dsAttr        = $fedora_model->getDatastreamAttributes($self, $pid, 'WEBVERSION');
+        if ($dsAttr->{status} eq 200) {
+          $filename = $dsAttr->{filename};
+          $mimetype = $dsAttr->{mimetype};
+          $size     = $dsAttr->{size};
         }
+        last;
       }
-    }
-
-    unless ($trywebversion or ($cmodel eq 'Book')) {
-      $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
-      if ($dsAttr->{status} ne 200) {
-        $self->render(json => $dsAttr, status => $dsAttr->{status});
-        return;
-      }
-      $filename = $dsAttr->{filename};
-      $mimetype = $dsAttr->{mimetype};
-      $size     = $dsAttr->{size};
     }
   }
-  else {
 
-    my $object_model = PhaidraAPI::Model::Object->new;
-    my $r_oxml       = $object_model->get_foxml($self, $pid);
-    if ($r_oxml->{status} ne 200) {
-      $self->render(json => $r_oxml, status => $r_oxml->{status});
+  unless ($trywebversion or ($cmodel eq 'Book')) {
+    $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
+    if ($dsAttr->{status} ne 200) {
+      $self->render(json => $dsAttr, status => $dsAttr->{status});
       return;
     }
-    my $foxmldom = Mojo::DOM->new();
-    $foxmldom->xml(1);
-    $foxmldom->parse($r_oxml->{foxml});
-
-    my $relsext;
-    for my $e ($foxmldom->find('foxml\:datastream[ID="RELS-EXT"]')->each) {
-      $relsext = $e->find('foxml\:datastreamVersion')->first;
-      for my $e1 ($e->find('foxml\:datastreamVersion')->each) {
-        if ($e1->attr('CREATED') gt $relsext->attr('CREATED')) {
-          $relsext = $e1;
-        }
-      }
-    }
-    $cmodel = $relsext->find('foxml\:xmlContent')->first->find('hasModel')->first->attr('rdf:resource');
-    $cmodel =~ s/^info:fedora\/cmodel:(.*)$/$1/;
-
-    my $octets_model = PhaidraAPI::Model::Octets->new;
-
-    if ($foxmldom->find('foxml\:datastream[ID="WEBVERSION"]')->first) {
-      $trywebversion = 1;
-      ($filename, $mimetype, $size) = $octets_model->_get_ds_attributes($self, $pid, 'WEBVERSION', $foxmldom);
-    }
-    else {
-      ($filename, $mimetype, $size) = $octets_model->_get_ds_attributes($self, $pid, 'OCTETS', $foxmldom);
-    }
+    $filename = $dsAttr->{filename};
+    $mimetype = $dsAttr->{mimetype};
+    $size     = $dsAttr->{size};
   }
 
   my $docres;
@@ -1411,15 +1374,8 @@ sub get_state {
     return;
   }
 
-  my $r;
-  if ($self->param('foxml')) {
-    my $object_model = PhaidraAPI::Model::Object->new;
-    $r = $object_model->get_state($self, $self->stash('pid'));
-  }
-  else {
-    my $search_model = PhaidraAPI::Model::Search->new;
-    $r = $search_model->get_state($self, $self->stash('pid'));
-  }
+  my $object_model = PhaidraAPI::Model::Object->new;
+  my $r = $object_model->get_state($self, $self->stash('pid'));
 
   $self->render(json => $r, status => $r->{status});
 }
@@ -1913,20 +1869,18 @@ sub get_metadata {
     $mode = 'basic';
   }
 
-  my $search_model = PhaidraAPI::Model::Search->new;
-  my $r            = $search_model->datastreams_hash($self, $pid);
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $r            = $fedora_model->getDatastreamsHash($self, $pid);
   if ($r->{status} ne 200) {
     $self->render(json => $r, status => $r->{status});
     return;
   }
 
   my $writerights = 0;
-  if ($self->app->config->{fedora}->{version} >= 6) {
-    my $authz = PhaidraAPI::Model::Authorization->new;
-    my $wr    = $authz->check_rights($self, $pid, 'w');
-    if ($wr->{status} == 200) {
-      $writerights = 1;
-    }
+  my $authz = PhaidraAPI::Model::Authorization->new;
+  my $wr    = $authz->check_rights($self, $pid, 'w');
+  if ($wr->{status} == 200) {
+    $writerights = 1;
   }
 
   if ($r->{dshash}->{'JSON-LD'}) {
@@ -1942,7 +1896,7 @@ sub get_metadata {
   }
 
   if ($r->{dshash}->{'JSON-LD-PRIVATE'}) {
-    if (($self->app->config->{fedora}->{version} < 6) || (($self->app->config->{fedora}->{version} >= 6) && $writerights)) {
+    if ($writerights)) {
       my $jsonldprivate_model = PhaidraAPI::Model::Jsonldprivate->new;
       my $r_jsonldprivate     = $jsonldprivate_model->get_object_jsonldprivate_parsed($self, $pid, $username, $password);
       if ($r_jsonldprivate->{status} ne 200) {
@@ -1998,7 +1952,7 @@ sub get_metadata {
   }
 
   if ($r->{dshash}->{'RIGHTS'}) {
-    if (($self->app->config->{fedora}->{version} < 6) || (($self->app->config->{fedora}->{version} >= 6) && $writerights)) {
+    if ($writerights) {
       my $rights_model = PhaidraAPI::Model::Rights->new;
       my $r            = $rights_model->get_object_rights_json($self, $pid, $username, $password);
       if ($r->{status} ne 200) {
@@ -2129,47 +2083,22 @@ sub get_legacy_container_member {
 
   my ($filename, $mimetype, $size, $path);
 
-  if ($self->app->config->{fedora}->{version} >= 6) {
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $dsAttr       = $fedora_model->getDatastreamAttributes($self, $pid, $ds);
-    if ($dsAttr->{status} ne 200) {
-      $self->render(json => $dsAttr, status => $dsAttr->{status});
-      return;
-    }
-    $filename = $dsAttr->{filename};
-    $mimetype = $dsAttr->{mimetype};
-    $size     = $dsAttr->{size};
-    $dsAttr   = $fedora_model->getDatastreamPath($self, $pid, $ds);
-    if ($dsAttr->{status} ne 200) {
-      $self->render(json => $dsAttr, status => $dsAttr->{status});
-      return;
-    }
-    $path = $dsAttr->{path};
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $dsAttr       = $fedora_model->getDatastreamAttributes($self, $pid, $ds);
+  if ($dsAttr->{status} ne 200) {
+    $self->render(json => $dsAttr, status => $dsAttr->{status});
+    return;
   }
-  else {
-    my $object_model = PhaidraAPI::Model::Object->new;
-    my $r_oxml       = $object_model->get_foxml($self, $pid);
-    if ($r_oxml->{status} ne 200) {
-      $self->render(json => $r_oxml, status => $r_oxml->{status});
-      return;
-    }
-    my $dom = Mojo::DOM->new();
-    $dom->xml(1);
-    $dom->parse($r_oxml->{foxml});
+  $filename = $dsAttr->{filename};
+  $mimetype = $dsAttr->{mimetype};
+  $size     = $dsAttr->{size};
+  $dsAttr   = $fedora_model->getDatastreamPath($self, $pid, $ds);
+  if ($dsAttr->{status} ne 200) {
+    $self->render(json => $dsAttr, status => $dsAttr->{status});
+    return;
+  }
+  $path = $dsAttr->{path};
 
-    my $octets_model = PhaidraAPI::Model::Octets->new;
-    my $parthres     = $octets_model->_get_ds_path($self, $pid, $ds);
-    if ($parthres->{status} != 200) {
-      $res->{status} = $parthres->{status};
-      push @{$res->{alerts}}, @{$parthres->{alerts}} if scalar @{$parthres->{alerts}} > 0;
-      $self->render(json => $res, status => $res->{status});
-      return;
-    }
-    else {
-      $path = $parthres->{path};
-    }
-    ($filename, $mimetype, $size) = $octets_model->_get_ds_attributes($self, $pid, $ds, $dom);
-  }
   $self->app->log->debug("operation[download_member] pid[$pid] path[$path] mimetype[$mimetype] filename[$filename] size[$size]");
 
   $self->res->headers->content_disposition("attachment;filename=\"$filename\"");
@@ -2281,146 +2210,52 @@ sub resourcelink {
     return;
   }
 
-  if ($self->app->config->{fedora}->{version} >= 6) {
-    my $search_model = PhaidraAPI::Model::Search->new;
-    my $cmodelr      = $search_model->get_cmodel($self, $pid);
-    if ($cmodelr->{status} ne 200) {
-      $self->app->log->error("pid[$pid] could not get cmodel");
-      $self->render(json => {alerts => [{type => 'error', msg => 'could not get cmodel'}]}, status => 500);
-      return;
-    }
-
-    if ($cmodelr->{cmodel} ne 'Resource') {
-      $self->app->log->error("pid[$pid] called resourcelink on a non-resource object");
-      $self->render(json => {alerts => [{type => 'error', msg => "Object $pid does not have a Resource cmodel (current cmodel: " . $cmodelr->{cmodel} . ")"}]}, status => 500);
-      return;
-    }
-
-    my $authz_model = PhaidraAPI::Model::Authorization->new;
-    my $authzres    = $authz_model->check_rights($self, $pid, 'r');
-    if ($authzres->{status} != 200) {
-      $res->{status} = $authzres->{status};
-      push @{$res->{alerts}}, @{$authzres->{alerts}} if scalar @{$authzres->{alerts}} > 0;
-      $self->render(json => $res, status => $res->{status});
-      return;
-    }
-
-    my $object_model = PhaidraAPI::Model::Object->new;
-    my $resgetds     = $object_model->get_datastream($self, $pid, 'LINK', $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
-    if (($resgetds->{status} ne 200) || (!$resgetds->{LINK})) {
-      $self->render(json => $resgetds, status => $resgetds->{status});
-      return;
-    }
-
-    if ($operation eq 'get') {
-      $res->{resourcelink} = $resgetds->{LINK};
-      $self->render(json => $res, status => $res->{status});
-      return;
-    }
-
-    if ($operation eq 'redirect') {
-      $self->app->log->debug("redirecting to " . $resgetds->{LINK});
-      $self->redirect_to($resgetds->{LINK});
-      return;
-    }
-
-    $self->app->log->error("pid[$pid] resourcelink, unknown operation: $operation");
-    $self->render(json => {alerts => [{type => 'error', msg => "pid[$pid] resourcelink, unknown operation: $operation"}]}, status => 400);
+  my $search_model = PhaidraAPI::Model::Search->new;
+  my $cmodelr      = $search_model->get_cmodel($self, $pid);
+  if ($cmodelr->{status} ne 200) {
+    $self->app->log->error("pid[$pid] could not get cmodel");
+    $self->render(json => {alerts => [{type => 'error', msg => 'could not get cmodel'}]}, status => 500);
     return;
   }
-  else {
 
-    if ($operation eq 'get') {
-      my $url = Mojo::URL->new;
-      $url->scheme('https');
-      $url->host($self->app->config->{phaidra}->{fedorabaseurl});
-      $url->userinfo($self->stash->{basic_auth_credentials}->{username} . ":" . $self->stash->{basic_auth_credentials}->{password}) if $self->stash->{basic_auth_credentials}->{username};
-      $url->path("/fedora/get/$pid/bdef:Resource/get");
-      my $redres = $self->ua->get($url)->result;
-      if ($redres->code ne 302) {
-        $self->render(json => $redres, status => $redres->{status});
-        return;
-      }
-
-      $res->{resourcelink} = $redres->headers->location;
-      $self->render(json => $res, status => $res->{status});
-      return;
-    }
-
-    if ($operation eq 'redirect') {
-      $self->stash->{bdef}   = 'Resource';
-      $self->stash->{method} = 'get';
-      return $self->diss($self);
-    }
+  if ($cmodelr->{cmodel} ne 'Resource') {
+    $self->app->log->error("pid[$pid] called resourcelink on a non-resource object");
+    $self->render(json => {alerts => [{type => 'error', msg => "Object $pid does not have a Resource cmodel (current cmodel: " . $cmodelr->{cmodel} . ")"}]}, status => 500);
+    return;
   }
 
-}
-
-# Diss method is for calling the disseminator which is api-a access, so it can also be called without credentials.
-# However, if the credentials are necessary, we want to send 401 so that the browser creates login prompt. Fedora sends 403
-# in such case which won't create login prompt, so user cannot access locked object even if he should be able to login.
-sub diss {
-  my $self = shift;
-
-  my $pid    = $self->stash('pid');
-  my $bdef   = $self->stash('bdef');
-  my $method = $self->stash('method');
-
-  unless (defined($pid)) {
-    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
+  my $authz_model = PhaidraAPI::Model::Authorization->new;
+  my $authzres    = $authz_model->check_rights($self, $pid, 'r');
+  if ($authzres->{status} != 200) {
+    $res->{status} = $authzres->{status};
+    push @{$res->{alerts}}, @{$authzres->{alerts}} if scalar @{$authzres->{alerts}} > 0;
+    $self->render(json => $res, status => $res->{status});
     return;
   }
 
   my $object_model = PhaidraAPI::Model::Object->new;
-
-  # do we have access without credentials?
-  unless ($self->stash->{basic_auth_credentials}->{username}) {
-    my $res = $object_model->get_datastream($self, $pid, 'READONLY', undef, undef);
-    $self->app->log->info("pid[$pid] read rights: " . $res->{status});
-    unless ($res->{status} eq '404') {
-      $self->res->headers->www_authenticate('Basic');
-      $self->render(json => {alerts => [{type => 'error', msg => 'authentication needed'}]}, status => 401);
-      return;
-    }
+  my $resgetds     = $object_model->get_datastream($self, $pid, 'LINK', $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
+  if (($resgetds->{status} ne 200) || (!$resgetds->{LINK})) {
+    $self->render(json => $resgetds, status => $resgetds->{status});
+    return;
   }
 
-  my $url = Mojo::URL->new;
-  $url->scheme('https');
-  $url->host($self->app->config->{phaidra}->{fedorabaseurl});
-  $url->userinfo($self->stash->{basic_auth_credentials}->{username} . ":" . $self->stash->{basic_auth_credentials}->{password}) if $self->stash->{basic_auth_credentials}->{username};
-  $url->path("/fedora/get/$pid/bdef:$bdef/$method");
-
-  if (($bdef eq 'Resource') && ($method eq 'get')) {
-    my $redres = $self->ua->get($url)->result;
-    $self->app->log->info("fedora resource get result code[" . $redres->code . "] message[" . $redres->message . "] location[" . $redres->headers->location . "]");
-    if ($redres->code == 302) {
-
-      $self->res->headers->location($redres->headers->location);
-      $self->rendered(302);
-      return;
-    }
-    else {
-      $self->render(json => {alerts => [{type => 'error', msg => $redres->message}]}, status => $redres->code);
-      return;
-    }
+  if ($operation eq 'get') {
+    $res->{resourcelink} = $resgetds->{LINK};
+    $self->render(json => $res, status => $res->{status});
+    return;
   }
-  else {
-    $self->app->log->info("user[" . $self->stash->{basic_auth_credentials}->{username} . "] proxying $url") if $self->stash->{basic_auth_credentials}->{username};
-    if (Mojo::IOLoop->is_running) {
-      $self->render_later;
-      $self->ua->get(
-        $url,
-        sub {
-          my ($c, $tx) = @_;
-          _proxy_tx($self, $tx);
-        }
-      );
-    }
-    else {
-      my $tx = $self->ua->get($url);
-      _proxy_tx($self, $tx);
-    }
+
+  if ($operation eq 'redirect') {
+    $self->app->log->debug("redirecting to " . $resgetds->{LINK});
+    $self->redirect_to($resgetds->{LINK});
+    return;
   }
+
+  $self->app->log->error("pid[$pid] resourcelink, unknown operation: $operation");
+  $self->render(json => {alerts => [{type => 'error', msg => "pid[$pid] resourcelink, unknown operation: $operation"}]}, status => 400);
+  return;
+
 }
 
 sub _proxy_tx {

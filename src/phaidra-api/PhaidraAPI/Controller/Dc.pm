@@ -190,6 +190,7 @@ sub update {
   my $object_model = PhaidraAPI::Model::Object->new;
   my $dc_model     = PhaidraAPI::Model::Dc->new;
   my $search_model = PhaidraAPI::Model::Search->new;
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
   my @res;
   my $pidscount = scalar @pidsarr;
   my $i         = 0;
@@ -209,7 +210,7 @@ sub update {
     }
 
     eval {
-      my $r_dsh = $search_model->datastreams_hash($self, $pid);
+      my $r_dsh = $fedora_model->getDatastreamsHash($self, $pid);
       if ($r_dsh->{status} ne 200) {
         push @res, {pid => $pid, res => $r_dsh};
         next;

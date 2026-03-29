@@ -263,8 +263,8 @@ sub remove_collection_members {
   my $r            = $object_model->purge_relationships($self, $pid, \@relationships, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
 
   # FIXME: remove from COLLECTIONORDER
-  my $search_model = PhaidraAPI::Model::Search->new;
-  my $r2           = $search_model->datastreams_hash($self, $pid);
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $r2           = $fedora_model->getDatastreamsHash($self, $pid);
   if ($r2->{status} ne 200) {
     return $r2;
   }

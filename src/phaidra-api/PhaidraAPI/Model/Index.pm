@@ -20,7 +20,6 @@ use PhaidraAPI::Model::Search;
 use PhaidraAPI::Model::Dc;
 use PhaidraAPI::Model::Annotations;
 use PhaidraAPI::Model::Membersorder;
-use PhaidraAPI::Model::Octets;
 use PhaidraAPI::Model::Fedora;
 use Scalar::Util qw(reftype looks_like_number);
 
@@ -534,7 +533,7 @@ sub update {
     my $cmodel_res = $search_model->get_cmodel($c, $pid);
     $c->app->log->debug("getting cmodel[" . ($cmodel_res->{cmodel} ? $cmodel_res->{cmodel} : '') . "] took " . tv_interval($tcm) . " status[" . $cmodel_res->{status} . "]");
 
-    if (($cmodel_res->{status} eq 410) && ($c->app->config->{fedora}->{version} >= 6)) {
+    if ($cmodel_res->{status} eq 410) {
 
       # object was deleted
       $c->app->log->debug("[$pid] object returns 410 Gone - deleting from index");
@@ -1143,212 +1142,122 @@ sub _get {
   my %datastreamids;
 
   # get basic object properties and a list of datastreams
-  if ($c->app->config->{fedora}->{version} >= 6) {
-
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $fres         = $fedora_model->getObjectProperties($c, $pid);
-    if ($fres->{status} ne 200) {
-      return $fres;
-    }
-
-    # skip inactive objects
-    my $state = $fres->{state};
-    if ($state ne 'Active') {
-      my $errmsg = "[_get index] $pid is $state, deleting from index.";
-      $c->app->log->warn($errmsg);
-      push @{$res->{alerts}}, {type => 'error', msg => $errmsg};
-      if ($state eq 'Deleted') {
-        $res->{status} = 301;
-      }
-      if ($state eq 'Inactive') {
-        $res->{status} = 302;
-      }
-      return $res;
-    }
-    $index{owner}    = $fres->{owner};
-    $index{cmodel}   = $fres->{cmodel};
-    $index{created}  = $fres->{created};
-    $index{modified} = $fres->{modified};
-    if (ref($fres->{identifier}) eq 'ARRAY') {
-      for my $v (@{$fres->{identifier}}) {
-        push @{$index{dc_identifier}}, $v;
-      }
-    }
-    if (ref($fres->{references}) eq 'ARRAY') {
-      for my $v (@{$fres->{references}}) {
-        push @{$index{references}}, $self->removeInfoFedoraPrefix($c, $v);
-      }
-    }
-    if (ref($fres->{isbacksideof}) eq 'ARRAY') {
-      for my $v (@{$fres->{isbacksideof}}) {
-        push @{$index{isbacksideof}}, $self->removeInfoFedoraPrefix($c, $v);
-      }
-    }
-    if (ref($fres->{isthumbnailfor}) eq 'ARRAY') {
-      for my $v (@{$fres->{isthumbnailfor}}) {
-        push @{$index{isthumbnailfor}}, $self->removeInfoFedoraPrefix($c, $v);
-      }
-    }
-    if (ref($fres->{hassuccessor}) eq 'ARRAY') {
-      for my $v (@{$fres->{hassuccessor}}) {
-        push @{$index{hassuccessor}}, $self->removeInfoFedoraPrefix($c, $v);
-      }
-    }
-    if (ref($fres->{isalternativeformatof}) eq 'ARRAY') {
-      for my $v (@{$fres->{isalternativeformatof}}) {
-        push @{$index{isalternativeformatof}}, $self->removeInfoFedoraPrefix($c, $v);
-      }
-    }
-    if (ref($fres->{isalternativeversionof}) eq 'ARRAY') {
-      for my $v (@{$fres->{isalternativeversionof}}) {
-        push @{$index{isalternativeversionof}}, $self->removeInfoFedoraPrefix($c, $v);
-      }
-    }
-    if (ref($fres->{isinadminset}) eq 'ARRAY') {
-      for my $v (@{$fres->{isinadminset}}) {
-        push @{$index{isinadminset}}, $v;
-      }
-    }
-    if (ref($fres->{haspart}) eq 'ARRAY') {
-      for my $v (@{$fres->{haspart}}) {
-        push @{$index{haspart}}, $self->removeInfoFedoraPrefix($c, $v);
-      }
-    }
-    if (ref($fres->{hasmember}) eq 'ARRAY') {
-      for my $v (@{$fres->{hasmember}}) {
-        push @{$index{hasmember}}, $self->removeInfoFedoraPrefix($c, $v);
-      }
-    }
-    if (ref($fres->{hastrack}) eq 'ARRAY') {
-      for my $v (@{$fres->{hastrack}}) {
-        push @{$index{hastrack}}, $self->removeInfoFedoraPrefix($c, $v);
-      }
-    }
-    if (ref($fres->{sameAs}) eq 'ARRAY') {
-      for my $v (@{$fres->{sameAs}}) {
-        push @{$index{owl_sameas}}, $v;
-      }
-    }
-
-    for my $dsid (@{$fres->{contains}}) {
-      if ($modifiedDateOverwriteDatastreams{$dsid}) {
-
-        # if metadata was modified later, we want that date in 'modified' date
-        my $propresDs = $fedora_model->_getObjectProperties($c, "$pid/$dsid/fcr:metadata");
-        if ($propresDs->{status} == 200) {
-          my $dsModified = $fedora_model->getFirstJsonldValue($c, $propresDs->{props}, 'http://fedora.info/definitions/v4/repository#lastModified');
-          if ($dsModified gt $index{modified}) {
-            $index{modified} = $dsModified;
-          }
-        }
-      }
-      if ($indexed_datastreams{$dsid}) {
-        $datastreamids{$dsid} = 1;
-        if ($indexed_datastreams_xml{$dsid}) {
-          my $getdsres = $fedora_model->getDatastream($c, $pid, $dsid);
-          if ($getdsres->{status} != 200) {
-            return $getdsres;
-          }
-          my $dom = Mojo::DOM->new();
-          $dom->xml(1);
-          $dom->parse('<foxml:xmlContent>' . decode('UTF-8', $getdsres->{$dsid}) . '</foxml:xmlContent>');
-          $datastreams{$dsid} = $dom;
-        }
-        else {
-          $datastreams{$dsid} = 1;
-        }
-      }
-      $datastreamids{$dsid} = 1;
-    }
-    push @{$index{datastreams}}, keys %datastreamids;
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $fres         = $fedora_model->getObjectProperties($c, $pid);
+  if ($fres->{status} ne 200) {
+    return $fres;
   }
-  else {
-    $c->app->log->debug("indexing $pid: getting foxml");
-    my $tgetfoxml = [gettimeofday];
-    my $r_oxml    = $object_model->get_foxml($c, $pid);
-    $c->app->log->debug("getting foxml took " . tv_interval($tgetfoxml));
-    if ($r_oxml->{status} ne 200) {
-      return $r_oxml;
+
+  # skip inactive objects
+  my $state = $fres->{state};
+  if ($state ne 'Active') {
+    my $errmsg = "[_get index] $pid is $state, deleting from index.";
+    $c->app->log->warn($errmsg);
+    push @{$res->{alerts}}, {type => 'error', msg => $errmsg};
+    if ($state eq 'Deleted') {
+      $res->{status} = 301;
     }
-    $c->app->log->debug("indexing $pid: parsing foxml");
-    my $tparsefoxml = [gettimeofday];
-    my $dom         = Mojo::DOM->new();
-    $dom->xml(1);
-    $dom->parse($r_oxml->{foxml});
-    $c->app->log->debug("parsing foxml took " . tv_interval($tparsefoxml));
-    $c->app->log->debug("indexing $pid: foxml parsed!");
-
-    for my $e ($dom->find('foxml\:datastream')->each) {
-
-      my $dsid = $e->attr('ID');
-
-      $datastreamids{$dsid} = 1;
-
-      if ($indexed_datastreams{$dsid}) {
-        my $latestVersion = $e->find('foxml\:datastreamVersion')->first;
-        for my $e1 ($e->find('foxml\:datastreamVersion')->each) {
-          if ($e1->attr('CREATED') gt $latestVersion->attr('CREATED')) {
-            $latestVersion = $e1;
-          }
-        }
-        $datastreams{$dsid} = $latestVersion;
-      }
-
+    if ($state eq 'Inactive') {
+      $res->{status} = 302;
     }
-
-    push @{$index{datastreams}}, keys %datastreamids;
-
-    # keep this first so that we always get the cmodel
-    if (exists($datastreams{'RELS-EXT'})) {    # it should
-
-      my $r_relsext = $self->_index_relsext($c, $datastreams{'RELS-EXT'}->find('foxml\:xmlContent')->first, \%index);
-      if ($r_relsext->{status} ne 200) {
-        push @{$res->{alerts}}, {type => 'error', msg => "Error indexing RELS-EXT for $pid"};
-        push @{$res->{alerts}}, @{$r_relsext->{alerts}} if scalar @{$r_relsext->{alerts}} > 0;
-      }
-
-    }
-
-    for my $e ($dom->find('foxml\:objectProperties')->each) {
-      for my $e1 ($e->find('foxml\:property')->each) {
-
-        if ($e1->attr('NAME') eq 'info:fedora/fedora-system:def/model#state') {
-          if ($ignorestatus && ($ignorestatus eq '1')) {
-            $c->app->log->debug("[_get index] ignorestatus=$ignorestatus");
-          }
-          else {
-            # skip inactive objects
-            my $state = $e1->attr('VALUE');
-            if ($state ne 'Active') {
-              my $errmsg = "[_get index] $pid is $state, deleting from index.";
-              $c->app->log->warn($errmsg);
-              push @{$res->{alerts}}, {type => 'error', msg => $errmsg};
-              if ($state eq 'Deleted') {
-                $res->{status} = 301;
-              }
-              if ($state eq 'Inactive') {
-                $res->{status} = 302;
-              }
-              return $res;
-            }
-          }
-        }
-
-        if ($e1->attr('NAME') eq 'info:fedora/fedora-system:def/model#ownerId') {
-          $index{owner} = $e1->attr('VALUE');
-        }
-
-        if ($e1->attr('NAME') eq 'info:fedora/fedora-system:def/model#createdDate') {
-          $index{created} = $e1->attr('VALUE');
-        }
-
-        if ($e1->attr('NAME') eq 'info:fedora/fedora-system:def/view#lastModifiedDate') {
-          $index{modified} = $e1->attr('VALUE');
-        }
-
-      }
+    return $res;
+  }
+  $index{owner}    = $fres->{owner};
+  $index{cmodel}   = $fres->{cmodel};
+  $index{created}  = $fres->{created};
+  $index{modified} = $fres->{modified};
+  if (ref($fres->{identifier}) eq 'ARRAY') {
+    for my $v (@{$fres->{identifier}}) {
+      push @{$index{dc_identifier}}, $v;
     }
   }
+  if (ref($fres->{references}) eq 'ARRAY') {
+    for my $v (@{$fres->{references}}) {
+      push @{$index{references}}, $self->removeInfoFedoraPrefix($c, $v);
+    }
+  }
+  if (ref($fres->{isbacksideof}) eq 'ARRAY') {
+    for my $v (@{$fres->{isbacksideof}}) {
+      push @{$index{isbacksideof}}, $self->removeInfoFedoraPrefix($c, $v);
+    }
+  }
+  if (ref($fres->{isthumbnailfor}) eq 'ARRAY') {
+    for my $v (@{$fres->{isthumbnailfor}}) {
+      push @{$index{isthumbnailfor}}, $self->removeInfoFedoraPrefix($c, $v);
+    }
+  }
+  if (ref($fres->{hassuccessor}) eq 'ARRAY') {
+    for my $v (@{$fres->{hassuccessor}}) {
+      push @{$index{hassuccessor}}, $self->removeInfoFedoraPrefix($c, $v);
+    }
+  }
+  if (ref($fres->{isalternativeformatof}) eq 'ARRAY') {
+    for my $v (@{$fres->{isalternativeformatof}}) {
+      push @{$index{isalternativeformatof}}, $self->removeInfoFedoraPrefix($c, $v);
+    }
+  }
+  if (ref($fres->{isalternativeversionof}) eq 'ARRAY') {
+    for my $v (@{$fres->{isalternativeversionof}}) {
+      push @{$index{isalternativeversionof}}, $self->removeInfoFedoraPrefix($c, $v);
+    }
+  }
+  if (ref($fres->{isinadminset}) eq 'ARRAY') {
+    for my $v (@{$fres->{isinadminset}}) {
+      push @{$index{isinadminset}}, $v;
+    }
+  }
+  if (ref($fres->{haspart}) eq 'ARRAY') {
+    for my $v (@{$fres->{haspart}}) {
+      push @{$index{haspart}}, $self->removeInfoFedoraPrefix($c, $v);
+    }
+  }
+  if (ref($fres->{hasmember}) eq 'ARRAY') {
+    for my $v (@{$fres->{hasmember}}) {
+      push @{$index{hasmember}}, $self->removeInfoFedoraPrefix($c, $v);
+    }
+  }
+  if (ref($fres->{hastrack}) eq 'ARRAY') {
+    for my $v (@{$fres->{hastrack}}) {
+      push @{$index{hastrack}}, $self->removeInfoFedoraPrefix($c, $v);
+    }
+  }
+  if (ref($fres->{sameAs}) eq 'ARRAY') {
+    for my $v (@{$fres->{sameAs}}) {
+      push @{$index{owl_sameas}}, $v;
+    }
+  }
+
+  for my $dsid (@{$fres->{contains}}) {
+    if ($modifiedDateOverwriteDatastreams{$dsid}) {
+
+      # if metadata was modified later, we want that date in 'modified' date
+      my $propresDs = $fedora_model->_getObjectProperties($c, "$pid/$dsid/fcr:metadata");
+      if ($propresDs->{status} == 200) {
+        my $dsModified = $fedora_model->getFirstJsonldValue($c, $propresDs->{props}, 'http://fedora.info/definitions/v4/repository#lastModified');
+        if ($dsModified gt $index{modified}) {
+          $index{modified} = $dsModified;
+        }
+      }
+    }
+    if ($indexed_datastreams{$dsid}) {
+      $datastreamids{$dsid} = 1;
+      if ($indexed_datastreams_xml{$dsid}) {
+        my $getdsres = $fedora_model->getDatastream($c, $pid, $dsid);
+        if ($getdsres->{status} != 200) {
+          return $getdsres;
+        }
+        my $dom = Mojo::DOM->new();
+        $dom->xml(1);
+        $dom->parse('<foxml:xmlContent>' . decode('UTF-8', $getdsres->{$dsid}) . '</foxml:xmlContent>');
+        $datastreams{$dsid} = $dom;
+      }
+      else {
+        $datastreams{$dsid} = 1;
+      }
+    }
+    $datastreamids{$dsid} = 1;
+  }
+  push @{$index{datastreams}}, keys %datastreamids;
 
   if (exists($datastreams{'BOOKINFO'})) {
     my $col = $datastreams{'BOOKINFO'}->find('book\:page[abspagenum="1"]');
@@ -1579,29 +1488,10 @@ sub _get {
   }
 
   # inventory
-  if ($c->app->config->{fedora}->{version} >= 6) {
-
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $dssres       = $fedora_model->getDatastreamAttributes($c, $pid, 'OCTETS');
-    if ($dssres->{status} == 200) {
-      $index{size} = $dssres->{size};
-    }
-  }
-  else {
-    if (exists($c->app->config->{paf_mongodb})) {
-      my $inv_coll = $c->paf_mongo->get_collection('foxml.ds');
-      if ($inv_coll) {
-        my $ds_doc = $inv_coll->find_one({pid => $pid}, {}, {"sort" => {"updated_at" => -1}});
-        $index{size} = $ds_doc->{ds_sizes}->{OCTETS};
-      }
-    }
-    unless ($index{size}) {
-      my $octets_model = PhaidraAPI::Model::Octets->new;
-      my $parthres     = $octets_model->_get_ds_path($c, $pid, 'OCTETS');
-      if ($parthres->{status} == 200) {
-        $index{size} = -s $parthres->{path};
-      }
-    }
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $dssres       = $fedora_model->getDatastreamAttributes($c, $pid, 'OCTETS');
+  if ($dssres->{status} == 200) {
+    $index{size} = $dssres->{size};
   }
 
   # pid

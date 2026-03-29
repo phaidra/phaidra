@@ -109,18 +109,7 @@ sub extract_credentials {
         $self->stash->{remote_user} = $remote_user;
         $self->stash->{affiliation} = $remoteaffiliation;
         $self->stash->{groups}      = $remotegroups;
-        if ($self->app->config->{fedora}->{version} >= 6) {
-
-          # TODO fix code to use BA creds OR remote_user if available (controllers currently pass BA username as username... -> becomes owner on create)
-          $self->stash->{basic_auth_credentials} = {username => $remote_user};
-        }
-        else {
-          # in fedora 3 we need to use it's upstream authentication feature
-          $self->stash->{basic_auth_credentials} = {username => $self->app->config->{authentication}->{upstream}->{upstreamusername}, password => $self->app->config->{authentication}->{upstream}->{upstreampassword}};
-          $self->stash->{fakcode}                = $org_units_l1;
-          $self->stash->{inum}                   = $org_units_l2;
-          $self->stash->{gruppe}                 = $localgroups;
-        }
+        $self->stash->{basic_auth_credentials} = {username => $remote_user};
         return 1;
       }
     }

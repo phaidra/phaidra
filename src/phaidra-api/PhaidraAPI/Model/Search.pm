@@ -525,81 +525,23 @@ sub datastream_exists {
 
   my $res = {alerts => [], status => 200};
 
-  if ($c->app->config->{fedora}->{version} >= 6) {
-    my $exists       = 0;
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $propres      = $fedora_model->getObjectProperties($c, $pid);
-    if ($propres->{status} ne 200) {
-      return $propres;
-    }
-    if (exists($propres->{contains})) {
-      for my $contains (@{$propres->{contains}}) {
-        if ($contains eq $dsid) {
-          $exists = 1;
-          last;
-        }
+  my $exists       = 0;
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $propres      = $fedora_model->getObjectProperties($c, $pid);
+  if ($propres->{status} ne 200) {
+    return $propres;
+  }
+  if (exists($propres->{contains})) {
+    for my $contains (@{$propres->{contains}}) {
+      if ($contains eq $dsid) {
+        $exists = 1;
+        last;
       }
     }
-    $res->{'exists'} = $exists;
   }
-  else {
-
-    my $triplequery = "<info:fedora/$pid> <info:fedora/fedora-system:def/view#disseminates> <info:fedora/$pid/$dsid>";
-
-    my %params;
-    $params{dt}     = 'on';
-    $params{format} = 'count';
-    $params{lang}   = 'spo';
-    $params{limit}  = '1';
-    $params{query}  = $triplequery;
-    $params{type}   = 'triples';
-
-    my $url = Mojo::URL->new;
-    $url->scheme($c->app->config->{fedora}->{scheme} ? $c->app->config->{fedora}->{scheme} : 'https');
-    $url->host($c->app->config->{phaidra}->{fedorabaseurl});
-    $url->path("/fedora/risearch");
-    $url->query(\%params);
-
-    my $ua    = Mojo::UserAgent->new;
-    my $txres = $ua->post($url)->result;
-
-    if ($txres->is_success) {
-      $res->{'exists'} = scalar($txres->body);
-    }
-    else {
-      unshift @{$res->{alerts}}, {type => 'error', msg => $txres->message};
-      $res->{status} = $txres->code;
-    }
-  }
+  $res->{'exists'} = $exists;
 
   return $res;
-}
-
-sub get_state {
-  my $self = shift;
-  my $c    = shift;
-  my $pid  = shift;
-
-  my $res = {alerts => [], status => 200};
-
-  my $sr = $self->triples($c, "<info:fedora/$pid> <info:fedora/fedora-system:def/model#state> *");
-  push @{$res->{alerts}}, @{$sr->{alerts}} if scalar @{$sr->{alerts}} > 0;
-  $res->{status} = $sr->{status};
-  if ($sr->{status} ne 200) {
-    return $res;
-  }
-
-  foreach my $statement (@{$sr->{result}}) {
-    if (@{$statement}[2] =~ m/info:fedora\/fedora-system:def\/model#(\w+)/) {
-      $res->{state} = $1;
-      return $res;
-    }
-  }
-
-  unshift @{$res->{alerts}}, {type => 'error', msg => "Cannot determine status"};
-  $res->{status} = 500;
-  return $res;
-
 }
 
 sub get_ownerid {
@@ -609,30 +551,12 @@ sub get_ownerid {
 
   my $res = {alerts => [], status => 200};
 
-  if ($c->app->config->{fedora}->{version} >= 6) {
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $r            = $fedora_model->getObjectProperties($c, $pid);
-    if ($r->{status} ne 200) {
-      return $r;
-    }
-    $res->{ownerid} = $r->{owner};
-    return $res;
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $r            = $fedora_model->getObjectProperties($c, $pid);
+  if ($r->{status} ne 200) {
+    return $r;
   }
-
-  my $sr = $self->triples($c, "<info:fedora/$pid> <info:fedora/fedora-system:def/model#ownerId> *");
-  push @{$res->{alerts}}, @{$sr->{alerts}} if scalar @{$sr->{alerts}} > 0;
-  $res->{status} = $sr->{status};
-  if ($sr->{status} ne 200) {
-    return $res;
-  }
-
-  foreach my $statement (@{$sr->{result}}) {
-    $res->{ownerid} = @{$statement}[2];
-    return $res;
-  }
-
-  unshift @{$res->{alerts}}, {type => 'error', msg => "Cannot determine ownerId"};
-  $res->{status} = 500;
+  $res->{ownerid} = $r->{owner};
   return $res;
 }
 
@@ -643,32 +567,12 @@ sub get_last_modified_date {
 
   my $res = {alerts => [], status => 200};
 
-  if ($c->app->config->{fedora}->{version} >= 6) {
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $r            = $fedora_model->getObjectProperties($c, $pid);
-    if ($r->{status} ne 200) {
-      return $r;
-    }
-    $res->{lastmodifieddate} = $r->{modified};
-    return $res;
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $r            = $fedora_model->getObjectProperties($c, $pid);
+  if ($r->{status} ne 200) {
+    return $r;
   }
-
-  my $sr = $self->triples($c, "<info:fedora/$pid> <info:fedora/fedora-system:def/view#lastModifiedDate> *");
-  push @{$res->{alerts}}, @{$sr->{alerts}} if scalar @{$sr->{alerts}} > 0;
-  $res->{status} = $sr->{status};
-  if ($sr->{status} ne 200) {
-    return $res;
-  }
-
-  foreach my $statement (@{$sr->{result}}) {
-    if (@{$statement}[2] =~ m/\"([\d\-\:\.TZ]+)\"/) {
-      $res->{lastmodifieddate} = $1;
-      return $res;
-    }
-  }
-
-  unshift @{$res->{alerts}}, {type => 'error', msg => "Cannot get lastModifiedDate"};
-  $res->{status} = 500;
+  $res->{lastmodifieddate} = $r->{modified};
   return $res;
 }
 
@@ -683,30 +587,12 @@ sub get_cmodel {
   my $cachekey = 'cmodel_' . $pid;
   unless ($cmodel = $c->app->chi->get($cachekey)) {
     $c->app->log->debug("[cache miss] $cachekey");
-    if ($c->app->config->{fedora}->{version} >= 6) {
-      my $fedora_model = PhaidraAPI::Model::Fedora->new;
-      my $r            = $fedora_model->getObjectProperties($c, $pid);
-      if ($r->{status} ne 200) {
-        return $r;
-      }
-      $cmodel = $r->{cmodel};
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    my $r            = $fedora_model->getObjectProperties($c, $pid);
+    if ($r->{status} ne 200) {
+      return $r;
     }
-    else {
-      my $r = $self->triples($c, "<info:fedora/$pid> <info:fedora/fedora-system:def/model#hasModel> *");
-      if ($r->{status} ne 200) {
-        return $r;
-      }
-
-      for my $t (@{$r->{result}}) {
-        next if (@{$t}[2] =~ m/fedora-system/g);
-
-        @{$t}[2] =~ m/<(info:fedora\/)(\w+):(\w+)>/g;
-
-        if ($2 eq 'cmodel' && defined($3) && ($3 ne '')) {
-          $cmodel = $3;
-        }
-      }
-    }
+    $cmodel = $r->{cmodel};
     $c->app->chi->set($cachekey, $cmodel, '1 day');
   }
   else {
@@ -729,51 +615,30 @@ sub get_book_for_page {
   unless ($bookpid = $c->app->chi->get($cachekey)) {
     $c->app->log->debug("[cache miss] $cachekey");
 
-    if ($c->app->config->{fedora}->{version} >= 6) {
-
-      my $urlget = Mojo::URL->new;
-      $urlget->scheme($c->app->config->{solr}->{scheme});
-      $urlget->host($c->app->config->{solr}->{host});
-      $urlget->port($c->app->config->{solr}->{port});
-      if ($c->app->config->{solr}->{path}) {
-        $urlget->path("/" . $c->app->config->{solr}->{path} . "/solr/" . $c->app->config->{solr}->{core} . "/select");
-      }
-      else {
-        $urlget->path("/solr/" . $c->app->config->{solr}->{core} . "/select");
-      }
-      $urlget->query(q => "*:*", fq => "haspart:\"$pagepid\"", sort => 'created desc', fl => 'pid', rows => "1", wt => "json");
-      my $getres = $c->ua->get($urlget)->result;
-      if ($getres->is_success) {
-        for my $d (@{$getres->json->{response}->{docs}}) {
-          $bookpid = $d->{pid};
-          last;
-        }
-      }
-      else {
-        my $err = "[$pagepid] error getting book pid: " . $getres->code . " " . $getres->message;
-        $self->app->log->error($err);
-        unshift @{$res->{alerts}}, {type => 'error', msg => $err};
-        $res->{status} = $getres->code ? $getres->code : 500;
-        return $res;
-      }
-
+    my $urlget = Mojo::URL->new;
+    $urlget->scheme($c->app->config->{solr}->{scheme});
+    $urlget->host($c->app->config->{solr}->{host});
+    $urlget->port($c->app->config->{solr}->{port});
+    if ($c->app->config->{solr}->{path}) {
+      $urlget->path("/" . $c->app->config->{solr}->{path} . "/solr/" . $c->app->config->{solr}->{core} . "/select");
     }
     else {
-
-      my $search_model = PhaidraAPI::Model::Search->new;
-
-      # todo: add hasMember as well (new books)
-      my $r = $search_model->triples($c, "* <info:fedora/fedora-system:def/relations-external#hasCollectionMember> <info:fedora/$pagepid>");
-      if ($r->{status} ne 200) {
-        return $r;
+      $urlget->path("/solr/" . $c->app->config->{solr}->{core} . "/select");
+    }
+    $urlget->query(q => "*:*", fq => "haspart:\"$pagepid\"", sort => 'created desc', fl => 'pid', rows => "1", wt => "json");
+    my $getres = $c->ua->get($urlget)->result;
+    if ($getres->is_success) {
+      for my $d (@{$getres->json->{response}->{docs}}) {
+        $bookpid = $d->{pid};
+        last;
       }
-
-      for my $t (@{$r->{result}}) {
-        next if (@{$t}[0] =~ m/fedora-system/g);
-        @{$t}[0] =~ m/<(info:fedora\/)(\w+:[0-9]+)>/g;
-        $bookpid = $2;
-      }
-
+    }
+    else {
+      my $err = "[$pagepid] error getting book pid: " . $getres->code . " " . $getres->message;
+      $self->app->log->error($err);
+      unshift @{$res->{alerts}}, {type => 'error', msg => $err};
+      $res->{status} = $getres->code ? $getres->code : 500;
+      return $res;
     }
 
     $c->app->chi->set($cachekey, $bookpid, '1 day');
@@ -783,37 +648,6 @@ sub get_book_for_page {
   }
 
   $res->{bookpid} = $bookpid;
-  return $res;
-}
-
-sub datastreams_hash {
-  my $self = shift;
-  my $c    = shift;
-  my $pid  = shift;
-
-  my $res = {alerts => [], status => 200};
-
-  if ($c->app->config->{fedora}->{version} >= 6) {
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    return $fedora_model->getDatastreamsHash($c, $pid);
-  }
-
-  my $sr = $self->triples($c, "<info:fedora/$pid> <info:fedora/fedora-system:def/view#disseminates> *");
-  push @{$res->{alerts}}, @{$sr->{alerts}} if scalar @{$sr->{alerts}} > 0;
-  $res->{status} = $sr->{status};
-  if ($sr->{status} ne 200) {
-    return $res;
-  }
-
-  my %dsh;
-  foreach my $statement (@{$sr->{result}}) {
-    if (@{$statement}[2] =~ m/info:fedora\/o:[0-9]+\/([A-Z_\-]+)/) {
-      $dsh{$1} = 1;
-    }
-  }
-
-  $res->{dshash} = \%dsh;
-
   return $res;
 }
 

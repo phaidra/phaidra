@@ -211,11 +211,6 @@ sub map_mods_2_dc_hash {
 
   $dc_p{rights} = $ext->_get_mods_element_values($c, $dom, 'mods > accessCondition[type="use and reproduction"]');
 
-  unless ($indexing) {
-    my $filesize = $self->_get_filesize($c, $pid, $cmodel);
-    push @{$dc_p{format}} => {value => "$filesize bytes"};
-  }
-
   # FIXME GEO datastream to DCMI BOX
 
   # see https://guidelines.openaire.eu/wiki/OpenAIRE_Guidelines:_For_Literature_repositories
@@ -365,10 +360,6 @@ sub map_jsonld_2_dc_hash {
   }
 
   $dc_p{format} = $ext->_get_jsonld_values($c, $jsonld, 'ebucore:hasMimeType');
-  unless ($indexing) {
-    my $filesize = $self->_get_filesize($c, $pid, $cmodel);
-    push @{$dc_p{format}} => {value => "$filesize bytes"};
-  }
 
   #$c->app->log->debug("XXXXXXXXXXXXXX dc_p:".$c->app->dumper(\%dc_p));
   my %dc_oai = %dc_p;
@@ -512,12 +503,6 @@ sub map_uwmetadata_2_dc_hash {
 
   my $formats = $ext->_get_formats($c, $pid, $cmodel, $dom, \%doc_uwns);
 
-  # include filesize and mimetype of OCTETS
-  unless ($indexing) {
-    my $filesize = $self->_get_filesize($c, $pid, $cmodel);
-    push @$formats, {value => $filesize . " bytes"} if defined($filesize);
-  }
-
   my $srcs = $ext->_get_sources($c, $dom, \%doc_uwns, $tree, $metadata_model);
 
   my $publishers = $ext->_get_publishers($c, $dom, \%doc_uwns);
@@ -629,29 +614,6 @@ sub _get_relsext_identifiers {
   }
 
   return \@ids;
-}
-
-sub _get_filesize {
-
-  my ($self, $c, $pid, $cmodel) = @_;
-
-  my $bytesize;
-  if (exists($c->app->config->{paf_mongodb})) {
-    my $inv_coll = $c->paf_mongo->get_collection('foxml.ds');
-    if ($inv_coll) {
-      my $ds_doc = $inv_coll->find_one({pid => $pid}, {}, {"sort" => {"updated_at" => -1}});
-      $bytesize = $ds_doc->{ds_sizes}->{OCTETS};
-    }
-  }
-  unless ($bytesize) {
-    my $octets_model = PhaidraAPI::Model::Octets->new;
-    my $parthres     = $octets_model->_get_ds_path($c, $pid, 'OCTETS');
-    if ($parthres->{status} == 200) {
-      $bytesize = -s $parthres->{path};
-    }
-  }
-
-  return $bytesize;
 }
 
 sub _create_dc_from_hash {

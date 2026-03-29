@@ -1093,16 +1093,12 @@ sub get_metadata {
     }
     if ($resourceTypesToDownload->{$resourceTypeURI} || ($rec->{cmodel} eq 'Asset')) {
       my $downloadUrl;
-      if ($c->app->config->{fedora}->{version} > 6) {
-        $downloadUrl = 'https://' . $c->app->config->{baseurl};
-        if ($c->app->config->{basepath}) {
-          $downloadUrl .= '/' . $c->app->config->{basepath};
-        }
-        $downloadUrl .= '/object/' . $rec->{pid} . '/download';
+      $downloadUrl = 'https://' . $c->app->config->{baseurl};
+      if ($c->app->config->{basepath}) {
+        $downloadUrl .= '/' . $c->app->config->{basepath};
       }
-      else {
-        $downloadUrl = 'https://' . $c->app->config->{phaidra}->{fedorabaseurl} . '/fedora/objects/' . $rec->{pid} . '/methods/bdef:Content/download';
-      }
+      $downloadUrl .= '/object/' . $rec->{pid} . '/download';
+
       push @{$openaire->{children}},
         {
         name       => 'file',
