@@ -107,6 +107,15 @@ export default {
       if(this.parents[node.id] && this.parents[node.id].children) {
         f = arrays.duplicate(this.parents[node.id].children, node)
         f.removable = true
+        if (f.ordered === 1) {
+          let maxOrder = 0
+          for (let ch of this.parents[node.id].children) {
+            if (parseInt(ch.data_order) > maxOrder) {
+              maxOrder = parseInt(ch.data_order)
+            }
+          }
+          f.data_order = maxOrder + 1
+        }
       }
       this.assignIdsAndParentsRec(this.form, 'root', { id: 'root', children: this.form })
       this.$emit('load-form', this.form)

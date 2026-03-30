@@ -335,10 +335,6 @@
               <p-i-uwm-rec :children="ch.children" :parent="ch" @update-parent="$forceUpdate()" @add-field="$emit('add-field', $event)" @remove-field="$emit('remove-field', $event)"></p-i-uwm-rec>
             </template>
           </v-card-text>
-          <v-divider v-if="ch.xmlname === 'curriculum'"></v-divider>
-          <v-card-actions v-if="ch.xmlname === 'curriculum'">
-            <span>{{ studyName(ch) }}</span>
-          </v-card-actions>
         </v-card>
       </template>
       <v-alert v-else dense type="error" :value="true">Unknown field type {{ch.xmlname}} {{ch.input_type}}</v-alert>
@@ -530,60 +526,6 @@ export default {
         }
       }
     },
-    studyName: function (node) {
-      if (node.study_name) {
-        if (node.study_name[this.alpha2locale]) {
-          return node.study_name[this.alpha2locale]
-        } else {
-          Object.entries(node.study_name).forEach(([key, value]) => {
-            return value
-          })
-        }
-      }
-    },
-    getStudyNameHashId: function (node) {
-      let hashId = ''
-      for (let ch of node.children) {
-        if (ch.xmlname === 'spl') {
-          let spl = ch.ui_value.replace('http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_spl/', '')
-          hashId = hashId === '' ? spl : hashId + '_' + spl
-        }
-        if (ch.xmlname === 'kennzahl') {
-          let kennzahl = ch.ui_value.replace('http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_kennzahl/', '')
-          hashId = hashId === '' ? kennzahl : hashId + '_' + kennzahl
-        }
-      }
-      return hashId
-    },
-    getStudyName: async function (node) {
-      let spl = ''
-      let ids = []
-      let hashId = ''
-      for (let ch of node.children) {
-        if (ch.xmlname === 'spl') {
-          spl = ch.ui_value.replace('http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_spl/', '')
-          hashId = hashId === '' ? spl : hashId + '_' + spl
-        }
-        if (ch.xmlname === 'kennzahl') {
-          let kennzahl = ch.ui_value.replace('http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_kennzahl/', '')
-          ids.push(kennzahl)
-          hashId = hashId === '' ? kennzahl : hashId + '_' + kennzahl
-        }
-      }
-      let response = await this.$axios.request({
-        method: 'GET',
-        url: '/directory/get_study_name',
-        params: {
-          spl: spl,
-          ids: ids
-        },
-        paramsSerializer: params => {
-          return qs.stringify(params, { arrayFormat: 'repeat' })
-        }
-      })
-      node.study_name = response.data.study_name
-      this.$emit('update-parent')
-    },
     selectHandler: async function (node, event) {
       if (node.xmlname === 'faculty') {
         this.orgLoading = true
@@ -607,75 +549,6 @@ export default {
         } finally {
           this.orgLoading = false
         }
-      }
-      if (node.xmlname === 'spl') {
-        this.splLoading = true
-        try {
-          let spl = node.ui_value.replace('http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_spl/', '')
-          let response = await this.$axios.request({
-            method: 'GET',
-            url: '/directory/get_study',
-            params: {
-              spl: spl,
-              values_namespace: 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_kennzahl/'
-            }
-          })
-          for (let ch of this.children) {
-            // set up first kennzahl
-            if (ch.xmlname === 'kennzahl') {
-              ch.ui_value = ''
-              ch.vocabularies[0].terms = response.data.terms
-              break
-            }
-          }
-          // remove all other kennzahls
-          this.children.length = 2
-          this.getStudyName(this.parent)
-        } catch (error) {
-          console.error(error)
-        } finally {
-          this.splLoading = false
-        }
-      }
-      if (node.xmlname === 'kennzahl') {
-        let trimLength = 0
-        let spl = ''
-        let ids = []
-        let i = 0
-        let nodeClone = {}
-        for (let ch of this.children) {
-          i++
-          if (ch.xmlname === 'spl') {
-            spl = ch.ui_value.replace('http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_spl/', '')
-          } else {
-            ids.push(ch.ui_value.replace('http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_kennzahl/', ''))
-            if (ch.ui_value === event) {
-              trimLength = i
-              nodeClone = JSON.parse(JSON.stringify(ch))
-              break
-            }
-          }
-        }
-        this.children.length = trimLength
-        let response = await this.$axios.request({
-          method: 'GET',
-          url: '/directory/get_study',
-          params: {
-            spl: spl,
-            ids: ids,
-            values_namespace: 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_kennzahl/'
-          },
-          paramsSerializer: params => {
-            return qs.stringify(params, { arrayFormat: 'repeat' })
-          }
-        })
-        if (response.data.terms && response.data.terms.length && response.data.terms.length > 0) {
-          nodeClone.ui_value = ''
-          nodeClone.data_order = parseInt(nodeClone.data_order) + 1
-          nodeClone.vocabularies[0].terms = response.data.terms
-          this.children.push(nodeClone)
-        }
-        this.getStudyName(this.parent)
       }
       this.loadNextTermSelect(node)
     },
