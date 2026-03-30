@@ -1248,7 +1248,7 @@ sub _get {
         }
         my $dom = Mojo::DOM->new();
         $dom->xml(1);
-        $dom->parse('<foxml:xmlContent>' . decode('UTF-8', $getdsres->{$dsid}) . '</foxml:xmlContent>');
+        $dom->parse(decode('UTF-8', $getdsres->{$dsid}));
         $datastreams{$dsid} = $dom;
       }
       else {
@@ -1269,7 +1269,7 @@ sub _get {
 
   if (exists($datastreams{'GEO'})) {
     my $geo_model = PhaidraAPI::Model::Geo->new;
-    my $r_geo     = $geo_model->xml_2_json($c, $datastreams{'GEO'}->find('foxml\:xmlContent')->first);
+    my $r_geo     = $geo_model->xml_2_json($c, $datastreams{'GEO'});
     if ($r_geo->{status} ne 200) {
 
       push @{$res->{alerts}}, {type => 'error', msg => "Error adding GEO fields from $pid"};
@@ -1317,7 +1317,7 @@ sub _get {
 
   if (exists($datastreams{'MODS'})) {
     my $mods_model = PhaidraAPI::Model::Mods->new;
-    my $r_mods     = $mods_model->xml_2_json($c, $datastreams{'MODS'}->find('foxml\:xmlContent')->first, 'basic');
+    my $r_mods     = $mods_model->xml_2_json($c, $datastreams{'MODS'}, 'basic');
     if ($r_mods->{status} ne 200) {
       push @{$res->{alerts}}, {type => 'error', msg => "Error converting MODS xml to json for $pid"};
       push @{$res->{alerts}}, @{$r_mods->{alerts}} if scalar @{$r_mods->{alerts}} > 0;
@@ -1329,7 +1329,7 @@ sub _get {
         push @{$res->{alerts}}, @{$r_add_mods->{alerts}} if scalar @{$r_add_mods->{alerts}} > 0;
       }
       else {
-        my ($dc_p, $dc_oai) = $dc_model->map_mods_2_dc_hash($c, $pid, $index{cmodel}, $datastreams{'MODS'}->find('foxml\:xmlContent')->first, $mods_model, 1);
+        my ($dc_p, $dc_oai) = $dc_model->map_mods_2_dc_hash($c, $pid, $index{cmodel}, $datastreams{'MODS'}, $mods_model, 1);
         $self->_add_dc_index($c, $dc_p, \%index);
       }
     }
@@ -1361,7 +1361,8 @@ sub _get {
   }
   elsif (exists($datastreams{'UWMETADATA'})) {    # keep in else to avoid overwriting index fields for objects which have both JSON-LD and uwmetadata
     my $tadduwmindex = [gettimeofday];
-    my $r_add_uwm    = $self->_add_uwm_index($c, $pid, $datastreams{'UWMETADATA'}->find('foxml\:xmlContent')->first, \%index);
+
+    my $r_add_uwm = $self->_add_uwm_index($c, $pid, $datastreams{'UWMETADATA'}, \%index);
 
     # $c->app->log->debug("_add_uwm_index took " . tv_interval($tadduwmindex));
     if ($r_add_uwm->{status} ne 200) {
@@ -1382,7 +1383,7 @@ sub _get {
     }
     else {
       my $tmapuwmdc = [gettimeofday];
-      my ($dc_p, $dc_oai) = $dc_model->map_uwmetadata_2_dc_hash($c, $pid, $index{cmodel}, $datastreams{'UWMETADATA'}->find('foxml\:xmlContent')->first, $r0->{metadata_tree}, $uw_model, 1);
+      my ($dc_p, $dc_oai) = $dc_model->map_uwmetadata_2_dc_hash($c, $pid, $index{cmodel}, $datastreams{'UWMETADATA'}, $r0->{metadata_tree}, $uw_model, 1);
 
       # $c->app->log->debug("mapping uwm to dc took " . tv_interval($tmapuwmdc));
 
@@ -1393,7 +1394,7 @@ sub _get {
   if (exists($datastreams{'ANNOTATIONS'})) {
 
     my $ann_model = PhaidraAPI::Model::Annotations->new;
-    my $r_ann     = $ann_model->xml_2_json($c, $datastreams{'ANNOTATIONS'}->find('foxml\:xmlContent')->first);
+    my $r_ann     = $ann_model->xml_2_json($c, $datastreams{'ANNOTATIONS'});
     if ($r_ann->{status} ne 200) {
       push @{$res->{alerts}}, {type => 'error', msg => "Error adding ANNOTATIONS from $pid"};
       push @{$res->{alerts}}, @{$r_ann->{alerts}} if scalar @{$r_ann->{alerts}} > 0;
@@ -1416,7 +1417,7 @@ sub _get {
   if (exists($datastreams{'RIGHTS'})) {
 
     my $rights_model = PhaidraAPI::Model::Rights->new;
-    my $r_rights     = $rights_model->xml_2_json($c, $datastreams{'RIGHTS'}->find('foxml\:xmlContent')->first);
+    my $r_rights     = $rights_model->xml_2_json($c, $datastreams{'RIGHTS'});
     if ($r_rights->{status} ne 200) {
       push @{$res->{alerts}}, {type => 'error', msg => "Error indexing RIGHTS from $pid"};
       push @{$res->{alerts}}, @{$r_rights->{alerts}} if scalar @{$r_rights->{alerts}} > 0;
@@ -1444,7 +1445,7 @@ sub _get {
   }
 
   if (exists($datastreams{'ALTO'})) {
-    my $alto_text = $self->_extact_text_from_ocr($c, $datastreams{'ALTO'}->find('foxml\:xmlContent')->first);
+    my $alto_text = $self->_extact_text_from_ocr($c, $datastreams{'ALTO'});
     if ($alto_text) {
       $index{extracted_text} = $alto_text;
       $c->app->log->debug("[$pid] ALTO text extracted: " . substr($alto_text, 0, 100) . "...");
@@ -1456,7 +1457,7 @@ sub _get {
 
   # Try OCRTEXT datastream if ALTO didn't provide extracted text
   if (!exists($index{extracted_text}) && exists($datastreams{'OCRTEXT'})) {
-    my $ocrtext = $self->_extact_text_from_ocr($c, $datastreams{'OCRTEXT'}->find('foxml\:xmlContent')->first);
+    my $ocrtext = $self->_extact_text_from_ocr($c, $datastreams{'OCRTEXT'});
     if ($ocrtext) {
       $index{extracted_text} = $ocrtext;
       $c->app->log->debug("[$pid] OCRTEXT text extracted: " . substr($ocrtext, 0, 100) . "...");
@@ -1469,7 +1470,7 @@ sub _get {
   if (exists($datastreams{'COLLECTIONORDER'})) {
 
     my $membersorder_model = PhaidraAPI::Model::Membersorder->new;
-    my $r_mo               = $membersorder_model->xml_2_json($c, $datastreams{'COLLECTIONORDER'}->find('foxml\:xmlContent')->first);
+    my $r_mo               = $membersorder_model->xml_2_json($c, $datastreams{'COLLECTIONORDER'});
     if ($r_mo->{status} ne 200) {
       push @{$res->{alerts}}, {type => 'error', msg => "Error adding COLLECTIONORDER from $pid"};
       push @{$res->{alerts}}, @{$r_mo->{alerts}} if scalar @{$r_mo->{alerts}} > 0;
@@ -1488,8 +1489,7 @@ sub _get {
   }
 
   # inventory
-  my $fedora_model = PhaidraAPI::Model::Fedora->new;
-  my $dssres       = $fedora_model->getDatastreamAttributes($c, $pid, 'OCTETS');
+  my $dssres = $fedora_model->getDatastreamAttributes($c, $pid, 'OCTETS');
   if ($dssres->{status} == 200) {
     $index{size} = $dssres->{size};
   }

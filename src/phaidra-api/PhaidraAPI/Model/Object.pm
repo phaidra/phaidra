@@ -320,7 +320,7 @@ sub add_legacy_container_members {
   }
   my $dom = Mojo::DOM->new();
   $dom->xml(1);
-  $dom->parse('<foxml:xmlContent>' . decode('UTF-8', $getdsres->{'CONTAINERINFO'}) . '</foxml:xmlContent>');
+  $dom->parse(decode('UTF-8', $getdsres->{'CONTAINERINFO'}));
   $containerinfo = $dom;
 
   # <c:container xmlns:c="http://phaidra.univie.ac.at/XML/V1.0/container">
