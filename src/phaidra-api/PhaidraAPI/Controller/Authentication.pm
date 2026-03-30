@@ -106,9 +106,9 @@ sub extract_credentials {
       # remote user in token - this is the case for shib
       if (defined($remote_user)) {
         $self->app->log->info("Remote user $remote_user, token authentication provided");
-        $self->stash->{remote_user} = $remote_user;
-        $self->stash->{affiliation} = $remoteaffiliation;
-        $self->stash->{groups}      = $remotegroups;
+        $self->stash->{remote_user}            = $remote_user;
+        $self->stash->{affiliation}            = $remoteaffiliation;
+        $self->stash->{groups}                 = $remotegroups;
         $self->stash->{basic_auth_credentials} = {username => $remote_user};
         return 1;
       }

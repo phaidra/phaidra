@@ -516,7 +516,7 @@ sub modify {
     return $res;
   }
   return $res;
-  
+
   my %params;
   $params{state}            = $state            if $state;
   $params{label}            = $label            if $label;
@@ -1522,18 +1522,18 @@ sub add_or_modify_datastream {
     $exists = $sr->{'exists'};
   }
 
-if (defined($skiphook) and ($skiphook == 1)) {
-  $c->app->log->debug("Adding $dsid for $pid add_or_modify_datastream_hooks skipped.");
-}
-else {
-  my $hooks_model = PhaidraAPI::Model::Hooks->new;
-  my $hr          = $hooks_model->add_or_modify_datastream_hooks($c, $pid, $dsid, $dscontent, $exists, $username, $password);
-  push @{$res->{alerts}}, @{$hr->{alerts}} if scalar @{$hr->{alerts}} > 0;
-  $res->{status} = $hr->{status};
-  if ($hr->{status} ne 200) {
-    return $res;
+  if (defined($skiphook) and ($skiphook == 1)) {
+    $c->app->log->debug("Adding $dsid for $pid add_or_modify_datastream_hooks skipped.");
   }
-}
+  else {
+    my $hooks_model = PhaidraAPI::Model::Hooks->new;
+    my $hr          = $hooks_model->add_or_modify_datastream_hooks($c, $pid, $dsid, $dscontent, $exists, $username, $password);
+    push @{$res->{alerts}}, @{$hr->{alerts}} if scalar @{$hr->{alerts}} > 0;
+    $res->{status} = $hr->{status};
+    if ($hr->{status} ne 200) {
+      return $res;
+    }
+  }
 
   return $res;
 }

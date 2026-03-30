@@ -924,7 +924,7 @@ sub _get_relsext_identifiers {
   }
   $c->app->log->debug("Identifiers: " . Dumper(\@ids));
   return \@ids;
-  
+
   my $search_model = PhaidraAPI::Model::Search->new;
 
   my $query = "<info:fedora/$pid> <http://purl.org/dc/terms/identifier> *";

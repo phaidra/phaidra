@@ -34,7 +34,7 @@ sub create {
     my $transaction_url = $fedora_model->useTransaction($c);
     $c->stash(transaction_url => $transaction_url->{transaction_id});
   }
-  
+
   my $object_model = PhaidraAPI::Model::Object->new;
   my $res_create   = $object_model->create($c, 'cmodel:Collection', $username, $password);
   if ($res_create->{status} ne 200) {

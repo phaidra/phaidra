@@ -492,7 +492,7 @@ sub _create_pdf_extraction_job_if_not_exists {
   else {
     $c->app->log->error("pdf extraction job pid[$pid] cm[$cmodel]: could not get path");
   }
-  
+
   $c->app->log->info("pdf extraction job pid[$pid] cm[$cmodel]: path[$path]");
   unless ($find->{pid}) {
     my $job = {pid => $pid, cmodel => $cmodel, agent => "tika", status => "new", idhash => $hash, created => time};
@@ -533,7 +533,7 @@ sub _create_3d_job_if_not_exists {
     else {
       $c->app->log->error("3d job pid[$pid] cm[$cmodel]: could not get path");
     }
-    
+
     my $job = {pid => $pid, cmodel => $cmodel, agent => "3d", status => "new", idhash => $hash, created => time, mimetype => $mimetype};
     $job->{path} = $path if $path;
     $c->paf_mongo->get_collection('jobs')->insert_one($job);

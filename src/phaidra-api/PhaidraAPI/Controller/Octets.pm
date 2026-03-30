@@ -52,7 +52,6 @@ sub get {
   my ($filename, $mimetype, $size, $path);
   my $trywebversion = $self->param('trywebversion');
 
-  
   my $fedora_model = PhaidraAPI::Model::Fedora->new;
   my $dsAttr;
   if (defined $ENV{S3_ENABLED} and $ENV{S3_ENABLED} eq "true") {

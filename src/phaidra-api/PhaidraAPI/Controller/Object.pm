@@ -1375,7 +1375,7 @@ sub get_state {
   }
 
   my $object_model = PhaidraAPI::Model::Object->new;
-  my $r = $object_model->get_state($self, $self->stash('pid'));
+  my $r            = $object_model->get_state($self, $self->stash('pid'));
 
   $self->render(json => $r, status => $r->{status});
 }
@@ -1877,8 +1877,8 @@ sub get_metadata {
   }
 
   my $writerights = 0;
-  my $authz = PhaidraAPI::Model::Authorization->new;
-  my $wr    = $authz->check_rights($self, $pid, 'w');
+  my $authz       = PhaidraAPI::Model::Authorization->new;
+  my $wr          = $authz->check_rights($self, $pid, 'w');
   if ($wr->{status} == 200) {
     $writerights = 1;
   }
@@ -1896,7 +1896,7 @@ sub get_metadata {
   }
 
   if ($r->{dshash}->{'JSON-LD-PRIVATE'}) {
-    if ($writerights)) {
+    if ($writerights) {
       my $jsonldprivate_model = PhaidraAPI::Model::Jsonldprivate->new;
       my $r_jsonldprivate     = $jsonldprivate_model->get_object_jsonldprivate_parsed($self, $pid, $username, $password);
       if ($r_jsonldprivate->{status} ne 200) {

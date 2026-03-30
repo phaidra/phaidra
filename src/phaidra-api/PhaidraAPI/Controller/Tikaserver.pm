@@ -62,7 +62,7 @@ sub process {
   my $find = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => $agent});
   my $hash = hmac_sha1_hex($pid, $self->app->config->{imageserver}->{hash_secret});
   my $path;
-  
+
   my $fedora_model = PhaidraAPI::Model::Fedora->new;
   my $dsAttr       = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
   if ($dsAttr->{status} eq 200) {
@@ -71,7 +71,7 @@ sub process {
   else {
     $self->app->log->error("tikaserver process pid[$pid] cm[$cmodel]: could not get path");
   }
-  
+
   unless ($find->{pid}) {
     my $job = {pid => $pid, cmodel => $cmodel, agent => $agent, status => 'new', idhash => $hash, created => time};
     $job->{path} = $path if $path;
@@ -139,7 +139,7 @@ sub process_pids {
     my $find = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'tika'});
     my $hash = hmac_sha1_hex($pid, $self->app->config->{imageserver}->{hash_secret});
     my $path;
-    
+
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
     my $dsAttr       = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
     if ($dsAttr->{status} eq 200) {
@@ -148,7 +148,7 @@ sub process_pids {
     else {
       $self->app->log->error("tikaserver process_pids pid[$pid] cm[$cmodel]: could not get path");
     }
-    
+
     unless ($find->{pid}) {
       my $job = {pid => $pid, cmodel => $cmodel, agent => 'tika', status => 'new', idhash => $hash, created => time};
       $job->{path} = $path if $path;
