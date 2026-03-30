@@ -4,8 +4,8 @@ apt-get --quiet update
 apt-get install --yes --quiet --no-install-recommends unzip
 EOF
 ADD --checksum=sha256:5b46c15340d0eb8cb10d9b110b455ca4c2719b58f394f6c892b6eae887b67f4a \
- https://github.com/mozilla/pdf.js/releases/download/v5.5.207/pdfjs-5.5.207-legacy-dist.zip \
- /pdfjs.zip
+    https://github.com/mozilla/pdf.js/releases/download/v5.5.207/pdfjs-5.5.207-legacy-dist.zip \
+    /pdfjs.zip
 RUN unzip /pdfjs.zip -d /pdfjs
 
 FROM ubuntu:jammy-20260210.1
@@ -50,4 +50,4 @@ ADD ../src/phaidra-api /usr/local/phaidra/phaidra-api
 COPY --from=builder /pdfjs /usr/local/phaidra/phaidra-api/public/pdfjs
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
-ENTRYPOINT ["MOJO_LOG_LEVEL=trace hypnotoad", "-f", "phaidra-api.cgi"]
+ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]
