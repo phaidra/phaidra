@@ -10,6 +10,7 @@ use Mojo::ByteStream qw(b);
 use base             qw/Mojo::Base/;
 use PhaidraAPI::Model::Languages;
 use PhaidraAPI::Model::Config;
+use PhaidraAPI::Model::Directory;
 
 my $resourceTypesToDownload = {
   'http://purl.org/coar/resource_type/c_18cc' => 1,    # sound
@@ -49,13 +50,13 @@ my $openaireContributorType = {
   # RelatedPerson
   res => "Researcher",
 
-  # ResearchGroup
-  # RightsHolder
-  spn => "Sponsor"
-
   # Supervisor
   # WorkPackageLeader
   # Other < all unmapped contributor roles
+
+  # ResearchGroup
+  # RightsHolder
+  spn => "Sponsor"
 };
 
 sub _get_roles_uwm {
@@ -164,6 +165,8 @@ sub _get_roles {
   my ($self, $c, $str) = @_;
 
   my @roles;
+
+  my $directory_model = PhaidraAPI::Model::Directory->new;
 
   my $arr = decode_json(b($str)->encode('UTF-8'));
 
@@ -316,7 +319,7 @@ sub _get_roles {
               if ($affs{'eng'}) {
                 my $affiliation = $affs{'eng'};
                 if ($addInstitutionName) {
-                  my $institutionName = $c->app->directory->org_get_name($c, 'eng');
+                  my $institutionName = $directory_model->org_get_name($c, 'eng');
                   if ($institutionName) {
                     if ((index($affiliation, $institutionName) == -1)) {
                       $affiliation = "$institutionName. $affiliation";
@@ -331,7 +334,7 @@ sub _get_roles {
                 for my $affLang (keys %affs) {
                   $affiliation = $affs{$affLang};
                   if ($addInstitutionName) {
-                    my $institutionName = $c->app->directory->org_get_name($c, $affLang);
+                    my $institutionName = $directory_model->org_get_name($c, $affLang);
                     if ($institutionName) {
                       if ((index($affiliation, $institutionName) == -1)) {
                         $affiliation = "$institutionName. $affiliation";

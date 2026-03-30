@@ -21,6 +21,7 @@ use PhaidraAPI::Model::Dc;
 use PhaidraAPI::Model::Annotations;
 use PhaidraAPI::Model::Membersorder;
 use PhaidraAPI::Model::Fedora;
+use PhaidraAPI::Model::Directory;
 use Scalar::Util qw(reftype looks_like_number);
 
 my %modifiedDateOverwriteDatastreams = (
@@ -1805,6 +1806,8 @@ sub _add_jsonld_index {
 
   my $res = {alerts => [], status => 200};
 
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+
   my @roles;
 
   my @descriptions;
@@ -1934,7 +1937,7 @@ sub _add_jsonld_index {
           unless (exists($foundAssIds{$id})) {
             push @{$index->{"association_id"}}, $id;
             $foundAssIds{$id} = 1;
-            my $pp = $c->app->directory->org_get_parentpath($c, $id);
+            my $pp = $directory_model->org_get_parentpath($c, $id);
             if ($pp->{status} eq 200) {
               for my $parent (@{$pp->{parentpath}}) {
                 if ($parent->{'@id'} ne $id) {
@@ -2034,7 +2037,7 @@ sub _add_jsonld_index {
               }
             }
             if ($addInstitutionName) {
-              my $institutionName = $c->app->directory->org_get_name($c, 'eng');
+              my $institutionName = $directory_model->org_get_name($c, 'eng');
               if ($institutionName) {
                 if ((index($publisher, $institutionName) == -1)) {
                   $publisher = "$institutionName. $publisher";
@@ -2342,7 +2345,8 @@ sub _add_jsonld_index {
 
 sub _add_jsonld_roles {
   my ($self, $c, $pid, $jsonld, $index, $foundAss, $foundAssIds) = @_;
-  my $res = {alerts => [], status => 200};
+  my $res             = {alerts => [], status => 200};
+  my $directory_model = PhaidraAPI::Model::Directory->new;
   my @roles;
   for my $pred (keys %{$jsonld}) {
     if ($pred =~ m/role:(\w+)/g) {
@@ -2380,7 +2384,7 @@ sub _add_jsonld_roles {
                     if (reftype $id ne reftype {}) {
                       push @{$index->{"affiliation_id"}}, $id;
                       $foundAssIds->{$id} = 1;
-                      my $pp = $c->app->directory->org_get_parentpath($c, $id);
+                      my $pp = $directory_model->org_get_parentpath($c, $id);
                       if ($pp->{status} eq 200) {
                         for my $parent (@{$pp->{parentpath}}) {
                           if ($parent->{'@id'} ne $id) {
@@ -2431,6 +2435,8 @@ sub _add_uwm_index {
   my ($self, $c, $pid, $uwmetadata, $index) = @_;
 
   my $res = {alerts => [], status => 200};
+
+  my $directory_model = PhaidraAPI::Model::Directory->new;
 
   my $uwmetadata_model = PhaidraAPI::Model::Uwmetadata->new;
   my $r_uwm            = $uwmetadata_model->uwmetadata_2_json_basic($c, $uwmetadata, 'resolved');
@@ -2631,7 +2637,7 @@ sub _add_uwm_index {
     for my $org (@{$uwm_organisations}) {
       for my $notation ($org->{'faculty'} || (), $org->{'department'} || ()) {
         next if $notation eq '';
-        my $unit_res = $c->app->directory->org_get_unit_for_notation($c, $notation);
+        my $unit_res = $directory_model->org_get_unit_for_notation($c, $notation);
         next unless $unit_res->{status} == 200 && $unit_res->{unit} && $unit_res->{unit}->{'@id'};
         my $id = $unit_res->{unit}->{'@id'};
         unless (exists($foundAssIds{$id})) {
@@ -2639,7 +2645,7 @@ sub _add_uwm_index {
           push @{$index->{"uwm_association_id"}}, $id;
           $foundAssIds{$id} = 1;
         }
-        my $pp = $c->app->directory->org_get_parentpath($c, $id);
+        my $pp = $directory_model->org_get_parentpath($c, $id);
         if ($pp->{status} == 200 && $pp->{parentpath}) {
           for my $parent (@{$pp->{parentpath}}) {
             next unless $parent->{'@id'} && $parent->{'@id'} ne $id;

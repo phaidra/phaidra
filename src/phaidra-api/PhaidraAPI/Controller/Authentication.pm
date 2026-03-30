@@ -132,7 +132,8 @@ sub authenticate {
 
   $self->app->log->info("Authenticating user $username");
 
-  $self->directory->authenticate($self, $username, $password);
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+  $directory_model->authenticate($self, $username, $password);
   my $res = $self->stash('phaidra_auth_result');
   unless (($res->{status} eq 200)) {
     $self->app->log->info("User $username not authenticated");
@@ -159,7 +160,8 @@ sub authenticate_if_username {
 
     $self->app->log->info("Authenticating user $username");
 
-    $self->directory->authenticate($self, $username, $password);
+    my $directory_model = PhaidraAPI::Model::Directory->new;
+    $directory_model->authenticate($self, $username, $password);
     my $res = $self->stash('phaidra_auth_result');
     unless (($res->{status} eq 200)) {
       $self->app->log->info("User $username not authenticated");
@@ -205,7 +207,8 @@ sub authenticate_ir_admin {
 
   $self->app->log->info("Authenticating user $username");
 
-  $self->directory->authenticate($self, $username, $password);
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+  $directory_model->authenticate($self, $username, $password);
   my $res = $self->stash('phaidra_auth_result');
   unless (($res->{status} eq 200)) {
     $self->app->log->info("User $username not authenticated");
@@ -236,7 +239,8 @@ sub signin {
   my ($username, $password) = split(/:/, b($str)->b64_decode);
 
   # authenticate, return 401 if authentication failed
-  $self->directory->authenticate($self, $username, $password);
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+  $directory_model->authenticate($self, $username, $password);
   my $res = $self->stash('phaidra_auth_result');
   unless (($res->{status} eq 200)) {
     $self->app->log->info("User $username not authenticated");

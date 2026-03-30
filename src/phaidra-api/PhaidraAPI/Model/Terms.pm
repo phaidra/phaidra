@@ -5,6 +5,7 @@ use warnings;
 use v5.10;
 use base qw/Mojo::Base/;
 use PhaidraAPI::Model::Languages;
+use PhaidraAPI::Model::Directory;
 
 our $classification_ns = "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification";
 our $organization_ns   = "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization";
@@ -139,12 +140,14 @@ sub _get_vocab_labels {
 sub get_study_plans {
   my ($self, $c, $lang) = @_;
 
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+
   my $res;
   my $cachekey = 'study_plans';
   unless ($res = $c->app->chi->get($cachekey)) {
     $c->app->log->debug("[cache miss] $cachekey");
 
-    my $dirres = $c->app->directory->get_study_plans($c, $lang);
+    my $dirres = $directory_model->get_study_plans($c, $lang);
 
     if (exists($dirres->{alerts})) {
       if ($dirres->{status} != 200) {
@@ -207,6 +210,8 @@ sub label {
 
   my $res = {alerts => [], status => 200};
 
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+
   my $labels;
   my $cachekey = 'labels_' . $uri;
   unless ($labels = $c->app->chi->get($cachekey)) {
@@ -219,12 +224,7 @@ sub label {
       my $fac_or_dep = $1;
       my $unit_id    = $2;
 
-      # for my $lang (@{$c->app->config->{directory}->{org_units_languages}}) {
-      #   my $name = $c->app->directory->get_org_unit_name($c, $unit_id, $lang);
-      #   $labels->{$lang} = $name;
-      # }
-
-      my $unitres = $c->app->directory->org_get_unit_for_notation($c, $unit_id);
+      my $unitres = $directory_model->org_get_unit_for_notation($c, $unit_id);
       if ($unitres->{status} == 200) {
         my $unit         = $unitres->{unit};
         my $lang_model   = PhaidraAPI::Model::Languages->new;

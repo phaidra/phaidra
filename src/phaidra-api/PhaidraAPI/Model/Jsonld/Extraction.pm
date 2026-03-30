@@ -6,6 +6,7 @@ use v5.10;
 use utf8;
 use base qw/Mojo::Base/;
 use PhaidraAPI::Model::Terms;
+use PhaidraAPI::Model::Directory;
 
 our %jsonld_contributor_roles = ('ctb' => 1);
 
@@ -211,6 +212,8 @@ sub _get_jsonld_roles {
 
   my ($self, $c, $jsonld) = @_;
 
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+
   my @creators;
   my @contributors;
   for my $pred (keys %{$jsonld}) {
@@ -243,7 +246,7 @@ sub _get_jsonld_roles {
           for my $aff (@{$contr->{'schema:affiliation'}}) {
             if ($aff->{'skos:exactMatch'}) {
               for my $id (@{$aff->{'skos:exactMatch'}}) {
-                my $pp = $c->app->directory->org_get_parentpath($c, $id);
+                my $pp = $directory_model->org_get_parentpath($c, $id);
                 if ($pp->{status} eq 200) {
                   my @parentpathlabels;
                   for my $parent (@{$pp->{parentpath}}) {
@@ -315,6 +318,8 @@ sub _get_jsonld_publisheddates {
 sub _get_jsonld_publishers {
   my ($self, $c, $jsonld) = @_;
 
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+
   my @arr;
   my $provisionActivity;
   if (exists($jsonld->{'rdau:P60101'})) {
@@ -366,7 +371,7 @@ sub _get_jsonld_publishers {
               }
             }
             if ($addInstitutionName) {
-              my $institutionName = $c->app->directory->org_get_name($c, 'eng');
+              my $institutionName = $directory_model->org_get_name($c, 'eng');
               if ($institutionName) {
                 if ((index($publisher, $institutionName) == -1)) {
                   $publisher = "$institutionName. $publisher";

@@ -22,6 +22,7 @@ use PhaidraAPI::Model::Index;
 use PhaidraAPI::Model::Stats;
 use PhaidraAPI::Model::Fedora;
 use PhaidraAPI::Model::Config;
+use PhaidraAPI::Model::Directory;
 use IO::Scalar;
 use File::MimeInfo;
 use File::MimeInfo::Magic;
@@ -87,6 +88,9 @@ sub info {
   my $password = shift;
 
   my $res = {alerts => [], status => 200};
+
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+
   my $info;
 
   my $index_model = PhaidraAPI::Model::Index->new;
@@ -260,7 +264,7 @@ sub info {
     }
   }
 
-  my $user_data = $c->app->directory->get_user_data($c, $info->{owner});
+  my $user_data = $directory_model->get_user_data($c, $info->{owner});
   $info->{owner} = {
     username    => $user_data->{username},
     firstname   => $user_data->{firstname},
@@ -281,7 +285,7 @@ sub info {
     }
   }
 
-  $c->app->directory->update_info_data($c, $info);
+  $directory_model->update_info_data($c, $info);
 
   # $c->app->log->debug("XXXXXXXXXXXXXX ".$c->app->dumper($info));
 

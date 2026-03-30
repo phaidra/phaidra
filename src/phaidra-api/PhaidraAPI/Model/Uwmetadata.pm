@@ -21,6 +21,7 @@ use PhaidraAPI::Model::Util;
 use PhaidraAPI::Model::Licenses;
 use PhaidraAPI::Model::Uwmetadata::Tree;
 use PhaidraAPI::Model::Config;
+use PhaidraAPI::Model::Directory;
 
 our %input_types_map = (
   "LangString"      => "input_text",
@@ -102,6 +103,8 @@ sub metadata_tree {
 
   my $res = {alerts => [], status => 200};
 
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+
   # $c->app->log->debug("Reading uwmetadata tree from " . $c->app->config->{local_uwmetadata_tree} . " class");
   $res->{metadata_tree} = $PhaidraAPI::Model::Uwmetadata::Tree::tree{tree};
 
@@ -111,7 +114,7 @@ sub metadata_tree {
   $vocabulary{namespace} = 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_faculty/';
   my $langs = $c->app->config->{directory}->{org_units_languages};
   foreach my $lang (@$langs) {
-    my $resunits = $c->app->directory->org_get_units_uwm($c, undef, $lang);
+    my $resunits = $directory_model->org_get_units_uwm($c, undef, $lang);
     if (exists($resunits->{alerts})) {
       if ($resunits->{status} != 200) {
 
@@ -158,6 +161,8 @@ sub get_metadata_tree {
 
   my $sth;
   my $ss;
+
+  my $directory_model = PhaidraAPI::Model::Directory->new;
 
   # create mapping of veid to licence id
   $ss  = qq/SELECT LID, name FROM licenses/;
@@ -467,7 +472,7 @@ sub get_metadata_tree {
       my $langs = $c->app->config->{directory}->{org_units_languages};
       foreach my $lang (@$langs) {
 
-        my $res = $c->app->directory->org_get_units_uwm($c, undef, $lang);
+        my $res = $directory_model->org_get_units_uwm($c, undef, $lang);
         if (exists($res->{alerts})) {
           if ($res->{status} != 200) {
 
@@ -1016,11 +1021,13 @@ sub get_org_units_terms {
   my $parent_id       = shift;
   my $value_namespace = shift;
 
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+
   my %vocabulary;
   my $langs = $c->app->config->{directory}->{org_units_languages};
   foreach my $lang (@$langs) {
 
-    my $res       = $c->app->directory->org_get_units_uwm($c, $parent_id, $lang);
+    my $res       = $directory_model->org_get_units_uwm($c, $parent_id, $lang);
     my $org_units = $res->{org_units};
 
     foreach my $u (@$org_units) {
@@ -1044,6 +1051,8 @@ sub get_study_terms {
   my $ids              = shift;
   my $values_namespace = shift;
 
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+
   my $termarraySpl = $self->getSplTermArray($c);
 
   unless ($termarraySpl) {
@@ -1051,7 +1060,7 @@ sub get_study_terms {
     my $langs = $c->app->config->{directory}->{study_plans_languages};
 
     foreach my $lang (@$langs) {
-      my $res = $c->app->directory->get_study($c, $spl, $ids, $lang);
+      my $res = $directory_model->get_study($c, $spl, $ids, $lang);
 
       my $study = $res->{'study'};
 
@@ -1079,6 +1088,8 @@ sub get_study_name {
   my $spl  = shift;
   my $ids  = shift;
 
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+
   my $termarraySpl = $self->getSplTermArray($c);
 
   unless ($termarraySpl) {
@@ -1086,7 +1097,7 @@ sub get_study_name {
 
     my %names;
     foreach my $lang (@$langs) {
-      my $name = $c->app->directory->get_study_name($c, $spl, $ids, $lang);
+      my $name = $directory_model->get_study_name($c, $spl, $ids, $lang);
       $names{$lang} = $name;
     }
     return \%names;

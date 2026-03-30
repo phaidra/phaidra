@@ -9,6 +9,7 @@ use Mojo::JSON       qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
 use base             qw/Mojo::Base/;
 use PhaidraAPI::Model::Terms;
+use PhaidraAPI::Model::Directory;
 
 our %cmodelMapping = (
   'Picture'       => 'Image',
@@ -614,8 +615,8 @@ sub _get_affiliation_cached {
   unless ($inststr = $c->app->chi->get($cachekey)) {
     $c->app->log->debug("[cache miss] $cachekey");
 
-    #$inststr = $c->app->directory->get_affiliation($c, $code, $lang);
-    my $u = $c->app->directory->org_get_unit_for_notation($c, $code);
+    my $directory_model = PhaidraAPI::Model::Directory->new;
+    my $u               = $directory_model->org_get_unit_for_notation($c, $code);
     if ($u) {
       for my $l (keys %{$u->{'skos:prefLabel'}}) {
         if ($l eq $lang) {

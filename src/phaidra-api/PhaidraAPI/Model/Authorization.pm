@@ -7,6 +7,7 @@ use base qw/Mojo::Base/;
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Rights;
 use PhaidraAPI::Model::Fedora;
+use PhaidraAPI::Model::Directory;
 
 my %private_datastreams = (
   'RIGHTS'          => 1,
@@ -47,7 +48,8 @@ sub check_rights {
     return $res;
   }
 
-  my $userdata = $c->app->directory->get_user_data($c, $currentuser);
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+  my $userdata        = $directory_model->get_user_data($c, $currentuser);
   unless ($userdata) {
     $c->app->log->error("Authz op[$op] pid[$pid] currentuser[$currentuser] get_user_data failed");
     $res->{status} = 500;
