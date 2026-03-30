@@ -512,7 +512,6 @@ sub startup {
   $r->get('object/:pid/geo')                        ->to('geo#get');
   $r->get('object/:pid/members/order')              ->to('membersorder#get');
   $r->get('object/:pid/annotations')                ->to('annotations#get');
-  $r->get('object/:pid/techinfo')                   ->to('techinfo#get');
   $r->get('object/:pid/dc')                         ->to('dc#get');
   $r->get('object/:pid/index')                      ->to('index#get');
   $r->get('object/:pid/index/dc')                   ->to('dc#get');
