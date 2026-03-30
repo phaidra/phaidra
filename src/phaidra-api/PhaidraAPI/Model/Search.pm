@@ -9,61 +9,6 @@ use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Fedora;
 use base qw/Mojo::Base/;
 
-sub triples {
-  my $self  = shift;
-  my $c     = shift;
-  my $query = shift;
-  my $limit = shift;
-
-  my $res = {alerts => [], status => 200};
-
-  my %params;
-  $params{dt}     = 'on';
-  $params{lang}   = 'spo';
-  $params{format} = 'N-Triples';
-  $params{limit}  = $limit if $limit;
-  $params{query}  = $query;
-  $params{type}   = 'triples';
-
-  my $url = Mojo::URL->new;
-  $url->scheme($c->app->config->{fedora}->{scheme} ? $c->app->config->{fedora}->{scheme} : 'https');
-  $url->host($c->app->config->{phaidra}->{fedorabaseurl});
-  $url->path("/fedora/risearch");
-  $url->query(\%params);
-
-  my $ua    = Mojo::UserAgent->new;
-  my $txres = $ua->post($url)->result;
-
-  if ($txres->is_success) {
-
-    my @a;
-    my $str = $txres->body;
-    while ($str =~ /([^\n]+)\n?/g) {
-      my $line = $1;
-
-      #$c->app->log->debug("line: $line");
-      #my @spo = split(' ', $line);
-      #push @a, [$spo[0], $spo[1], $spo[2]];
-      $line =~ /([^\s]+) ([^\s]+) ([^\n]+)/g;
-      my $o = $3;
-      chop($o) if (substr($o, -1) eq '.');
-      chop($o) if (substr($o, -1) eq ' ');
-
-      #$c->app->log->debug("\nsub: $1 \npred: $2 \nobj: $3");
-      push @a, [$1, $2, $o];
-    }
-
-    $res->{result} = \@a;
-
-  }
-  else {
-    unshift @{$res->{alerts}}, {type => 'error', msg => $txres->message};
-    $res->{status} = $txres->code;
-  }
-
-  return $res;
-}
-
 sub related_objects_itql() {
 
   my ($self, $c, $subject, $relation, $right, $offset, $limit) = @_;

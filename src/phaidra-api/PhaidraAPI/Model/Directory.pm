@@ -14,7 +14,7 @@ use Net::LDAP::Util qw(ldap_error_text);
 use YAML::Syck;
 use Mojo::JSON qw(encode_json decode_json);
 use Mojo::JWT;
-use PhaidraAPI::Model::RateLimit;
+use PhaidraAPI::Model::Ratelimit;
 use base qw/Mojo::Base/;
 
 my $config = undef;
@@ -585,7 +585,7 @@ sub _authenticate() {
   my ($identifier, $rate_limit_model);
   if ($has_username) {
     $identifier       = $username . ':' . $client_ip;
-    $rate_limit_model = PhaidraAPI::Model::RateLimit->new;
+    $rate_limit_model = PhaidraAPI::Model::Ratelimit->new;
 
     # Check rate limit before processing authentication
     my $rate_limit_check = $rate_limit_model->check_rate_limit($c, $identifier);

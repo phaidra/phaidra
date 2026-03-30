@@ -5393,12 +5393,16 @@
             "post": {
                 "summary": "Add blacklist entries from TSV or JSON payload",
                 "description": "Ingest TSV with columns `AC-Nummer` and `Identifier Phaidra`, and create records in `oai_records_blacklist` if ac_number/pid not already present. The blacklist is a list of PIDs which should not be included in a particular set in OAI-PMH, e.g. because the harvester gets those objects by other means (avoids duplicity).",
-                "tags": ["oai-pmh"],
+                "tags": [
+                    "oai-pmh"
+                ],
                 "parameters": [
                     {
                         "in": "query",
                         "name": "sets",
-                        "schema": { "type": "string" },
+                        "schema": {
+                            "type": "string"
+                        },
                         "description": "Optional sets (comma-separated), if not supplied in JSON body."
                     }
                 ],
@@ -5406,19 +5410,30 @@
                     "required": true,
                     "content": {
                         "text/plain": {
-                            "schema": { "type": "string" },
+                            "schema": {
+                                "type": "string"
+                            },
                             "example": "AC-Nummer\tIdentifier Phaidra\nAC00001880\to:2045295\nAC00003863\to:2040220"
                         },
                         "application/json": {
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "sets": {"type": "array", "items": {"type": "string"}},
-                                    "tsv": {"type": "string"}
+                                    "sets": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "tsv": {
+                                        "type": "string"
+                                    }
                                 }
                             },
                             "example": {
-                                "sets": ["phaidra4primo"],
+                                "sets": [
+                                    "phaidra4primo"
+                                ],
                                 "tsv": "AC-Nummer\tIdentifier Phaidra\nAC00001880\to:2045295"
                             }
                         }
@@ -5432,14 +5447,42 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "total_rows": {"type": "integer"},
-                                        "inserted": {"type": "integer"},
-                                        "existing": {"type": "integer"},
-                                        "invalid": {"type": "integer"},
-                                        "inserted_items": {"type": "array", "items": {"type": "object"}},
-                                        "existing_items": {"type": "array", "items": {"type": "object"}},
-                                        "invalid_items": {"type": "array", "items": {"type": "object"}},
-                                        "sets": {"type": "array", "items": {"type": "string"}}
+                                        "total_rows": {
+                                            "type": "integer"
+                                        },
+                                        "inserted": {
+                                            "type": "integer"
+                                        },
+                                        "existing": {
+                                            "type": "integer"
+                                        },
+                                        "invalid": {
+                                            "type": "integer"
+                                        },
+                                        "inserted_items": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "existing_items": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "invalid_items": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "sets": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -5452,7 +5495,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {"type": "string"}
+                                        "error": {
+                                            "type": "string"
+                                        }
                                     }
                                 }
                             }
@@ -8347,7 +8392,7 @@
         "/object/{pid}/relationship/add": {
             "post": {
                 "summary": "Add a relationship.",
-                "description": "Add a triple. It is then available in the triplestore and indexed automatically. Adding some system relationships (like hasModel) might be restricted. See the [list of supported relationships](https://github.com/phaidra/phaidra-api/wiki/Relations).",
+                "description": "Add a triple. Adding some system relationships (like hasModel) might be restricted. See the [list of supported relationships](https://github.com/phaidra/phaidra-api/wiki/Relations).",
                 "tags": [
                     "relationships"
                 ],
@@ -8563,7 +8608,7 @@
         "/object/{pid}/id/add": {
             "post": {
                 "summary": "Add an identifier triple",
-                "description": "Add an identifier to the triples (as a relationship with the predicate 'http://purl.org/dc/terms/identifier'). It is then available in the triplestore, Dublin Core and index automatically, but will not be added to metadata. IDs added this way are usually added by PHAIDRA (for Handles), while the IDs in metadata are added and controlled by the user.",
+                "description": "Add an identifier to the triples (as a relationship with the predicate 'http://purl.org/dc/terms/identifier'). It is then available in the Dublin Core and index automatically, but will not be added to metadata. IDs added this way are usually added by PHAIDRA (for Handles), while the IDs in metadata are added and controlled by the user.",
                 "tags": [
                     "object-advanced"
                 ],
@@ -9391,104 +9436,102 @@
                 }
             }
         },
-        "/search/select":{
-            "post": { 
-            "summary": "Search query",
-            "description": "Solr query, for the query parameters see [Solr common query parameters](https://solr.apache.org/guide/solr/latest/query-guide/common-query-parameters.html)",
-            "tags": [
-                "search"
-            ],
-            "parameters": [
-                {
-                    "in": "query",
-                    "name": "q",
-                    "schema": {
-                        "type": "string",
-                        "required": true
-                    },
-                    "description": "query string"
-                }
-
-            ],
-            "responses": {
-                "200": {
-                    "description": "search response",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "responseHeader": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "object",
-                                            "properties": {
-                                                "status": {
-                                                    "type": "number"
-                                                },
-                                                "QTime": {
-                                                    "type": "number"
-                                                },
-                                                "params": {
-                                                    "type": "object"
+        "/search/select": {
+            "post": {
+                "summary": "Search query",
+                "description": "Solr query, for the query parameters see [Solr common query parameters](https://solr.apache.org/guide/solr/latest/query-guide/common-query-parameters.html)",
+                "tags": [
+                    "search"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "q",
+                        "schema": {
+                            "type": "string",
+                            "required": true
+                        },
+                        "description": "query string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "search response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "responseHeader": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "status": {
+                                                        "type": "number"
+                                                    },
+                                                    "QTime": {
+                                                        "type": "number"
+                                                    },
+                                                    "params": {
+                                                        "type": "object"
+                                                    }
                                                 }
                                             }
-                                        }
-                                    },
-                                    "response": {
-                                        "type": "object",
-                                        "properties": {
-                                            "numFound": {
-                                                "type": "number"
-                                            },
-                                            "start": {
-                                                "type": "number"
-                                            },
-                                            "numFoundExact": {
-                                                "type": "boolean"
-                                            },
-                                            "docs": {
-                                                "type": "array"
+                                        },
+                                        "response": {
+                                            "type": "object",
+                                            "properties": {
+                                                "numFound": {
+                                                    "type": "number"
+                                                },
+                                                "start": {
+                                                    "type": "number"
+                                                },
+                                                "numFoundExact": {
+                                                    "type": "boolean"
+                                                },
+                                                "docs": {
+                                                    "type": "array"
+                                                }
                                             }
-                                        }
-                                    },
-                                    "facet_counts": {
-                                        "type": "object",
-                                        "properties": {
-                                            "facet_querie": {
-                                                "type": "object"
-                                            },
-                                            "facet_fields": {
-                                                "type": "object"
-                                            },
-                                            "facet_ranges": {
-                                                "type": "object"
-                                            },
-                                            "facet_intervals": {
-                                                "type": "object"
-                                            },
-                                            "facet_heatmaps": {
-                                                "type": "object"
+                                        },
+                                        "facet_counts": {
+                                            "type": "object",
+                                            "properties": {
+                                                "facet_querie": {
+                                                    "type": "object"
+                                                },
+                                                "facet_fields": {
+                                                    "type": "object"
+                                                },
+                                                "facet_ranges": {
+                                                    "type": "object"
+                                                },
+                                                "facet_intervals": {
+                                                    "type": "object"
+                                                },
+                                                "facet_heatmaps": {
+                                                    "type": "object"
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                },
-                "404": {
-                    "description": "object has not been found",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object"
+                    },
+                    "404": {
+                        "description": "object has not been found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
                             }
                         }
                     }
                 }
-            }
-          
             }
         }
     },

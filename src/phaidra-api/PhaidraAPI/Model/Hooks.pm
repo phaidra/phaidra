@@ -27,16 +27,6 @@ sub add_or_modify_datastream_hooks {
   my $search_model = PhaidraAPI::Model::Search->new;
 
   if (exists($c->app->config->{hooks})) {
-    if (exists($c->app->config->{hooks}->{updatedc}) && $c->app->config->{hooks}->{updatedc}) {
-      if ($dsid eq "UWMETADATA") {
-        my $dc_model = PhaidraAPI::Model::Dc->new;
-        $res = $dc_model->generate_dc_from_uwmetadata($c, $pid, $dscontent, $username, $password);
-      }
-      elsif ($dsid eq "MODS") {
-        my $dc_model = PhaidraAPI::Model::Dc->new;
-        $res = $dc_model->generate_dc_from_mods($c, $pid, $dscontent, $username, $password);
-      }
-    }
 
     if (exists($c->app->config->{hooks}->{updateindex}) && $c->app->config->{hooks}->{updateindex}) {
       my $dc_model     = PhaidraAPI::Model::Dc->new;
@@ -196,36 +186,7 @@ sub add_or_modify_relationships_hooks {
   my $dc_model     = PhaidraAPI::Model::Dc->new;
   my $search_model = PhaidraAPI::Model::Search->new;
   my $fedora_model = PhaidraAPI::Model::Fedora->new;
-
   my $object_model = PhaidraAPI::Model::Object->new;
-
-  if (exists($c->app->config->{hooks})) {
-    if (exists($c->app->config->{hooks}->{updatedc}) && $c->app->config->{hooks}->{updatedc}) {
-
-      my $r = $fedora_model->getDatastreamsHash($c, $pid);
-      if ($r->{status} ne 200) {
-        return $r;
-      }
-
-      if (exists($r->{dshash}->{'UWMETADATA'})) {
-        $res = $object_model->get_datastream($c, $pid, 'UWMETADATA', $username, $password);
-        if ($res->{status} ne 200) {
-          return $res;
-        }
-        $res->{UWMETADATA} = b($res->{UWMETADATA})->decode('UTF-8');
-        return $dc_model->generate_dc_from_uwmetadata($c, $pid, $res->{UWMETADATA}, $username, $password);
-      }
-
-      if (exists($r->{dshash}->{'MODS'})) {
-        $res = $object_model->get_datastream($c, $pid, 'MODS', $username, $password);
-        if ($res->{status} ne 200) {
-          return $res;
-        }
-        $res->{MODS} = b($res->{MODS})->decode('UTF-8');
-        return $dc_model->generate_dc_from_mods($c, $pid, $res->{MODS}, $username, $password);
-      }
-    }
-  }
 
   if (exists($c->app->config->{hooks})) {
     if (exists($c->app->config->{hooks}->{updateindex}) && $c->app->config->{hooks}->{updateindex}) {
@@ -484,8 +445,7 @@ sub _create_pdf_extraction_job_if_not_exists {
   my $find = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'tika'});
   my $hash = hmac_sha1_hex($pid, $c->app->config->{imageserver}->{hash_secret});
   my $path;
-  my $fedora_model = PhaidraAPI::Model::Fedora->new;
-  my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+  my $dsAttr = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
   if ($dsAttr->{status} eq 200) {
     $path = $dsAttr->{path};
   }

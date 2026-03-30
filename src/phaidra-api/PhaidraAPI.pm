@@ -128,17 +128,6 @@ sub startup {
     };
   }
 
-  if ( $config->{phaidra}->{triplestore}
-    && $config->{phaidra}->{triplestore} eq 'localMysqlMPTTriplestore')
-  {
-    $databases{'db_triplestore'} = {
-      dsn      => $config->{localMysqlMPTTriplestore}->{dsn},
-      username => $config->{localMysqlMPTTriplestore}->{username},
-      password => $config->{localMysqlMPTTriplestore}->{password},
-      options  => {mysql_auto_reconnect => 1}
-    };
-  }
-
   if ($config->{fedora}->{fedora_db}) {
     $databases{'db_fedora'} = {
       dsn      => $config->{fedora}->{fedora_db}->{dsn},
@@ -483,13 +472,10 @@ sub startup {
   $r->get('directory/org_get_parentpath')           ->to('directory#org_get_parentpath');
   $r->get('directory/org_get_units')                ->to('directory#org_get_units');
 
-  $r->get('search/triples')                         ->to('search#triples');
   $r->get('search/select')                          ->to('search#search_solr');
   $r->post('search/select')                         ->to('search#search_solr');
   $r->get('search/:pid/ocr')                        ->to('search#search_ocr');
   $r->post('search/get_pids')                       ->to('search#get_pids');
-
-  $r->get('utils/get_all_pids')                     ->to('utils#get_all_pids');
 
   $r->get('geonames/search')                        ->to('utils#geonames_search');
   $r->get('gnd/search')                             ->to('utils#gnd_search');
@@ -530,10 +516,9 @@ sub startup {
   $r->get('object/:pid/members/order')              ->to('membersorder#get');
   $r->get('object/:pid/annotations')                ->to('annotations#get');
   $r->get('object/:pid/techinfo')                   ->to('techinfo#get');
-  $r->get('object/:pid/dc')                         ->to('dc#get', dsid => 'DC');
-  $r->get('object/:pid/oai_dc')                     ->to('dc#get', dsid => 'DC_OAI');
+  $r->get('object/:pid/dc')                         ->to('dc#get');
   $r->get('object/:pid/index')                      ->to('index#get');
-  $r->get('object/:pid/index/dc')                   ->to('index#get_dc');
+  $r->get('object/:pid/index/dc')                   ->to('dc#get');
   $r->get('object/:pid/index/relationships')        ->to('index#get_relationships');
   $r->get('object/:pid/index/members')              ->to('index#get_object_members');
   $r->get('object/:pid/datacite')                   ->to('datacite#get');
@@ -546,8 +531,6 @@ sub startup {
   $r->get('object/:pid/iiifmanifest')               ->to('iiifmanifest#get_iiif_manifest');
 
   $r->get('object/:pid/id')                         ->to('search#id');
-
-  $r->post('dc/uwmetadata_2_dc_index')              ->to('dc#uwmetadata_2_dc_index');
 
   $r->get('stats/aggregates')                       ->to('stats#aggregates');
   $r->get('stats/disciplines')                      ->to('stats#disciplines');
@@ -651,10 +634,7 @@ sub startup {
     $admin->post('config/private')                                         ->to('config#post_private_config');
 
     $admin->post('index')                                                  ->to('index#update');
-    $admin->post('dc')                                                     ->to('dc#update');
-
     $admin->post('object/:pid/index')                                      ->to('index#update');
-    $admin->post('object/:pid/dc')                                         ->to('dc#update');
 
     $admin->post('imageserver/process')                                    ->to('imageserver#process_pids');
     $admin->post('tikaserver/process')                                     ->to('tikaserver#process_pids');

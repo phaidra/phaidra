@@ -9,46 +9,6 @@ use PhaidraAPI::Model::Fedora;
 use Encode     qw(decode);
 use List::Util qw(first);
 
-sub triples {
-  my $self = shift;
-
-  my $query = $self->param('q');
-  my $limit = $self->param('limit');
-
-  my $search_model = PhaidraAPI::Model::Search->new;
-  my $sr           = $search_model->triples($self, $query, $limit);
-
-  $self->render(json => $sr, status => $sr->{status});
-}
-
-sub id {
-  my $self = shift;
-
-  my $res = {alerts => [], status => 200};
-
-  unless (defined($self->stash('pid'))) {
-    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
-    return;
-  }
-
-  my $search_model = PhaidraAPI::Model::Search->new;
-  my $sr           = $search_model->triples($self, "<info:fedora/" . $self->stash('pid') . "> <http://purl.org/dc/terms/identifier> *", 0);
-
-  $res->{alerts} = $sr->{alerts};
-  $res->{status} = $sr->{status};
-
-  my @ids;
-  for my $triple (@{$sr->{result}}) {
-    my $id = @$triple[2];
-    $id =~ s/^\<+|\>+$//g;
-    push @ids, $id;
-  }
-
-  $res->{ids} = \@ids;
-
-  $self->render(json => $res, status => $res->{status});
-}
-
 sub related {
 
   my $self = shift;

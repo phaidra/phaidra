@@ -1329,8 +1329,8 @@ sub _get {
         push @{$res->{alerts}}, @{$r_add_mods->{alerts}} if scalar @{$r_add_mods->{alerts}} > 0;
       }
       else {
-        my ($dc_p, $dc_oai) = $dc_model->map_mods_2_dc_hash($c, $pid, $index{cmodel}, $datastreams{'MODS'}, $mods_model, 1);
-        $self->_add_dc_index($c, $dc_p, \%index);
+        my $dc = $dc_model->map_mods_2_dc_hash($c, $pid, $index{cmodel}, $datastreams{'MODS'}, $mods_model, 1);
+        $self->_add_dc_index($c, $dc, \%index);
       }
     }
 
@@ -1354,8 +1354,8 @@ sub _get {
         push @{$res->{alerts}}, @{$r_add_jsonld->{alerts}} if scalar @{$r_add_jsonld->{alerts}} > 0;
       }
       else {
-        my ($dc_p, $dc_oai) = $dc_model->map_jsonld_2_dc_hash($c, $pid, $index{cmodel}, $jsonld, $jsonld_model, 1);
-        $self->_add_dc_index($c, $dc_p, \%index);
+        my $dc = $dc_model->map_jsonld_2_dc_hash($c, $pid, $index{cmodel}, $jsonld, $jsonld_model, 1);
+        $self->_add_dc_index($c, $dc, \%index);
       }
     }
   }
@@ -1364,7 +1364,6 @@ sub _get {
 
     my $r_add_uwm = $self->_add_uwm_index($c, $pid, $datastreams{'UWMETADATA'}, \%index);
 
-    # $c->app->log->debug("_add_uwm_index took " . tv_interval($tadduwmindex));
     if ($r_add_uwm->{status} ne 200) {
       push @{$res->{alerts}}, {type => 'error', msg => "Error adding UWMETADATA fields for $pid"};
       push @{$res->{alerts}}, @{$r_add_uwm->{alerts}} if scalar @{$r_add_uwm->{alerts}} > 0;
@@ -1375,19 +1374,15 @@ sub _get {
     my $tgetuwmtree = [gettimeofday];
     my $r0          = $uw_model->metadata_tree($c);
 
-    # $c->app->log->debug("getting metadata_tree took " . tv_interval($tgetuwmtree));
-
     if ($r0->{status} ne 200) {
       push @{$res->{alerts}}, {type => 'error', msg => "Error getting UWMETADATA tree for $pid"};
       push @{$res->{alerts}}, @{$r0->{alerts}} if scalar @{$r0->{alerts}} > 0;
     }
     else {
       my $tmapuwmdc = [gettimeofday];
-      my ($dc_p, $dc_oai) = $dc_model->map_uwmetadata_2_dc_hash($c, $pid, $index{cmodel}, $datastreams{'UWMETADATA'}, $r0->{metadata_tree}, $uw_model, 1);
+      my $dc        = $dc_model->map_uwmetadata_2_dc_hash($c, $pid, $index{cmodel}, $datastreams{'UWMETADATA'}, $r0->{metadata_tree}, $uw_model, 1);
 
-      # $c->app->log->debug("mapping uwm to dc took " . tv_interval($tmapuwmdc));
-
-      $self->_add_dc_index($c, $dc_p, \%index);
+      $self->_add_dc_index($c, $dc, \%index);
     }
   }
 

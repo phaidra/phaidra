@@ -323,9 +323,7 @@ sub _get_formats {
 
 sub _get_infoeurepoaccess {
 
-  my ($self, $c, $dom, $doc_uwns, $tree, $metadata_model, $mode) = @_;
-
-  $mode = 'p' unless defined $mode;
+  my ($self, $c, $dom, $doc_uwns, $tree, $metadata_model) = @_;
 
   my @acc;
   my $vals = $self->_get_uwm_element_values($c, $dom, $doc_uwns->{'extended'} . '\:infoeurepoaccess');
@@ -335,13 +333,7 @@ sub _get_infoeurepoaccess {
     #$c->app->log->debug("XXXXXXXX ".$v->{value});
     my $acclabel = $self->_get_value_label($c, $uwns_rev{'extended'}, 'infoeurepoaccess', $v->{value}, $uw_vocs{'infoeurepoaccess'}, $tree, $metadata_model, 'en');
 
-    #$c->app->log->debug("XXXXXXXX ".$c->app->dumper($vals));
-    if ($mode eq 'oai') {
-      push @acc, {value => "info:eu-repo/semantics/$acclabel"};
-    }
-    else {
-      push @acc, {value => $acclabel};
-    }
+    push @acc, {value => $acclabel};
   }
 
   return \@acc;
@@ -361,9 +353,7 @@ sub _get_value_label {
 }
 
 sub _get_types {
-  my ($self, $c, $cmodel, $dom, $doc_uwns, $tree, $metadata_model, $mode) = @_;
-
-  $mode = 'p' unless defined $mode;
+  my ($self, $c, $cmodel, $dom, $doc_uwns, $tree, $metadata_model) = @_;
 
   my $types;
   if (my $hst = $dom->find($doc_uwns->{'organization'} . '\:hoschtyp')->first) {
@@ -372,32 +362,8 @@ sub _get_types {
     foreach my $term (@{$n->{vocabularies}[0]->{terms}}) {
       if ($term->{uri} eq $uwns_rev{'organization'} . "/voc_" . $uw_vocs{'hoschtyp'} . "/$id") {
 
-        if ($mode eq 'oai') {
-
-          if ($id eq '1552261' || $id eq '1552259' || $id eq '1743' || $id eq '1552258') {
-
-            # 1) in case it's a value which is not supported by OpenAIRE, put 'Other'
-            # "Lecture series (one person)", "Multimedia", "Professorial Dissertation", "Theses"
-            push @{$types}, {value => "info:eu-repo/semantics/other"};
-          }
-          elsif ($id eq '1739' || $id eq '1740' || $id eq '1741') {
-
-            # 2) mapping of "Diploma Dissertation", "Master's (Austria) Dissertation", "Master's Dissertation"
-            push @{$types}, {value => "info:eu-repo/semantics/masterThesis"};
-          }
-          else {
-            my $value = $term->{labels}->{en};
-            $value = lcfirst($value);
-            $value =~ s/\s+//g;
-            push @{$types}, {value => "info:eu-repo/semantics/" . $value};
-          }
-        }
-        elsif ($mode eq 'p') {
-
-          # en, I think we should not need this in another language really..
-          push @{$types}, {value => lcfirst($term->{labels}->{en}), lang => 'en'};
-        }
-
+        # en, I think we should not need this in another language really..
+        push @{$types}, {value => lcfirst($term->{labels}->{en}), lang => 'en'};
       }
     }
   }
@@ -697,9 +663,7 @@ sub _get_titles {
 
 sub _get_versions {
 
-  my ($self, $c, $dom, $doc_uwns, $tree, $metadata_model, $mode) = @_;
-
-  $mode = 'p' unless defined $mode;
+  my ($self, $c, $dom, $doc_uwns, $tree, $metadata_model) = @_;
 
   my @vals;
   for my $e ($dom->find($doc_uwns->{'extended'} . '\:infoeurepoversion')->each) {
@@ -709,12 +673,7 @@ sub _get_versions {
     foreach my $term (@{$n->{vocabularies}[0]->{terms}}) {
       my $id = $e->text;
       if ($term->{uri} eq $uwns_rev{'extended'} . "/voc_" . $uw_vocs{'infoeurepoversion'} . "/$id") {
-        if ($mode eq 'oai') {
-          $v{value} = "info:eu-repo/semantics/" . $term->{labels}->{en};
-        }
-        else {
-          $v{value} = $term->{labels}->{en};
-        }
+        $v{value} = $term->{labels}->{en};
         push @vals, \%v;
       }
     }

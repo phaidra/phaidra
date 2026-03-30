@@ -265,8 +265,8 @@ sub map_mods_2_datacite {
   my $editions = $ext->_get_mods_element_values($c, $dom, 'mods > originInfo > edition');
   push @{$data{relations}}, @$editions;
   $data{languages}    = $ext->_get_mods_element_values($c, $dom, 'mods > language > languageTerm');
-  $data{creators}     = $ext->_get_mods_creators($c, $dom, 'p');
-  $data{contributors} = $ext->_get_mods_contributors($c, $dom, 'p');
+  $data{creators}     = $ext->_get_mods_creators($c, $dom);
+  $data{contributors} = $ext->_get_mods_contributors($c, $dom);
   my $issueddates = $ext->_get_mods_element_values($c, $dom, 'mods > originInfo > dateIssued[keyDate="yes"]');
 
   for my $id (@{$issueddates}) {
@@ -923,23 +923,6 @@ sub _get_relsext_identifiers {
     @ids = map {{value => $_}} @{$fres->{identifier}};
   }
   $c->app->log->debug("Identifiers: " . Dumper(\@ids));
-  return \@ids;
-
-  my $search_model = PhaidraAPI::Model::Search->new;
-
-  my $query = "<info:fedora/$pid> <http://purl.org/dc/terms/identifier> *";
-  my $sr    = $search_model->triples($c, $query, 0);
-  unless ($sr->{status} eq 200) {
-    $c->app->log->error("Could not query triplestore for identifiers.");
-    return \@ids;
-  }
-
-  for my $triple (@{$sr->{result}}) {
-    my $id = @$triple[2];
-    $id =~ s/^\<+|\>+$//g;
-    push @ids, {value => $id};
-  }
-
   return \@ids;
 }
 
