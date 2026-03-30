@@ -285,10 +285,6 @@ sub info {
     }
   }
 
-  $directory_model->update_info_data($c, $info);
-
-  # $c->app->log->debug("XXXXXXXXXXXXXX ".$c->app->dumper($info));
-
   if ($info->{cmodel} eq 'Video') {
     if (defined $c->app->config->{external_services}->{opencast}->{mode} && $c->app->config->{external_services}->{opencast}->{mode} eq "ACTIVATED") {
       my $object_job_info = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'});
