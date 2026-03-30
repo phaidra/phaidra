@@ -1,4 +1,4 @@
-package Phaidra::Directory::Default;
+package PhaidraAPI::Model::Directory;
 
 use utf8;
 use Encode;
@@ -14,8 +14,8 @@ use Net::LDAP::Util qw(ldap_error_text);
 use YAML::Syck;
 use Mojo::JSON qw(encode_json decode_json);
 use Mojo::JWT;
-use PhaidraAPI::Model::RateLimit;
-use base 'Phaidra::Directory';
+use PhaidraAPI::Model::Ratelimit;
+use base qw/Mojo::Base/;
 
 my $config = undef;
 
@@ -50,17 +50,6 @@ my $orgunitsDefault = [
     ]
   }
 ];
-
-sub _init {
-
-  # this is the app config
-  my $self = shift;
-  my $c    = shift;
-
-  $c->app->log->info(__PACKAGE__ . ' loaded');
-
-  return $self;
-}
 
 sub _get_org_units {
   my ($self, $c) = @_;
@@ -596,7 +585,7 @@ sub _authenticate() {
   my ($identifier, $rate_limit_model);
   if ($has_username) {
     $identifier       = $username . ':' . $client_ip;
-    $rate_limit_model = PhaidraAPI::Model::RateLimit->new;
+    $rate_limit_model = PhaidraAPI::Model::Ratelimit->new;
 
     # Check rate limit before processing authentication
     my $rate_limit_check = $rate_limit_model->check_rate_limit($c, $identifier);
@@ -794,83 +783,6 @@ sub get_email {
       }
     }
   }
-}
-
-#get all branch of studies
-sub get_study_plans {
-  my ($self, $c, $lang) = @_;
-
-  my @values = ();
-
-  push @values, {value => 1, name => 'Study 1'};
-  push @values, {value => 2, name => 'Study 2'};
-
-  my $res = {alerts => [], status => 200};
-  $res->{study_plans} = \@values;
-  return $res;
-}
-
-#get studies
-sub get_study {
-  my $self  = shift;
-  my $c     = shift;
-  my $id    = shift;
-  my $index = shift;
-  my $lang  = shift;
-
-  my @values = ();
-
-  my $taxonnr = undef;
-  $taxonnr = @$index if (defined($index));
-
-  if (!defined($index->[0]) && defined($id)) {
-    push @values, {value => '001', name => '001'} if ($id eq '1');
-    push @values, {value => '002', name => '002'} if ($id eq '1');
-    push @values, {value => '003', name => '003'} if ($id eq '2');
-  }
-  elsif ($taxonnr eq '1') {
-    if ($index->[0] eq '001') {
-      push @values, {value => '0011', name => '0011'};
-      push @values, {value => '0012', name => '0012'};
-      push @values, {value => '0013', name => '0013'};
-    }
-    elsif ($index->[0] eq '002') {
-      push @values, {value => '0021', name => '0021'};
-      push @values, {value => '0022', name => '0022'};
-      push @values, {value => '0023', name => '0023'};
-    }
-  }
-
-  my $res = {alerts => [], status => 200};
-  $res->{study} = \@values;
-  return $res;
-}
-
-#get the name of a study
-sub get_study_name {
-  my $self  = shift;
-  my $c     = shift;
-  my $id    = shift;
-  my $index = shift;
-  my $lang  = shift;
-
-  my $taxonnr = @$index;
-  my $name    = '';
-  if ($taxonnr eq '1') {
-    $name = "Study 3" if ($index->[0] eq '003');
-  }
-  elsif ($taxonnr eq '2') {
-  CASE:
-    {
-      $index->[1] eq '0011' && do {$name = 'Study 1-1'; last CASE;};
-      $index->[1] eq '0012' && do {$name = 'Study 1-2'; last CASE;};
-      $index->[1] eq '0013' && do {$name = 'Study 1-3'; last CASE;};
-      $index->[1] eq '0021' && do {$name = 'Study 2-1'; last CASE;};
-      $index->[1] eq '0022' && do {$name = 'Study 2-2'; last CASE;};
-      $index->[1] eq '0023' && do {$name = 'Study 2-3'; last CASE;};
-    }
-  }
-  return $name;
 }
 
 sub create_scim_jwt {

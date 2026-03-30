@@ -10,9 +10,6 @@ use Mojolicious::Plugin::Session;
 use Mojolicious::Plugin::Log::Any;
 use Mojolicious::Plugin::Prometheus;
 use Mojo::Loader qw(load_class);
-use FindBin;
-use lib "$FindBin::Bin/lib/phaidra_directory";
-use change_refs;
 use MongoDB 1.8.3;
 use Sereal::Encoder qw(encode_sereal);
 use Sereal::Decoder qw(decode_sereal);
@@ -74,18 +71,14 @@ sub is_bot_ua {
 
 # This method will run once at server start
 sub startup {
-  my $self   = shift;
-  my $config = $self->plugin('JSONConfig' => {file => 'PhaidraAPI.json'});
-  change_refs::change_refs($config);
+  my $self = shift;
+
+  my $config = $self->plugin('Config' => {file => 'PhaidraAPI.conf'});
   $self->config($config);
+
   $self->mode($config->{mode});
   $self->secrets([$config->{secret}]);
   push @{$self->static->paths} => 'public';
-
-  Log::Log4perl::init($FindBin::Bin . '/log4perl.conf');
-
-  my $log = Log::Log4perl::get_logger("root");
-  $self->plugin('Log::Any' => {logger => 'Log::Log4perl'});
 
   if ($config->{tmpdir}) {
     $self->app->log->debug("Setting MOJO_TMPDIR: " . $config->{tmpdir});
@@ -97,18 +90,6 @@ sub startup {
     $self->app->log->debug("Setting SSL_ca_path: " . $config->{ssl_ca_path});
     IO::Socket::SSL::set_defaults(SSL_ca_path => $config->{ssl_ca_path},);
   }
-
-  my $directory_impl = $config->{directory_class};
-  $self->app->log->debug("Loading directory implementation $directory_impl");
-  my $e = load_class $directory_impl;
-  if (ref $e) {
-    $self->app->log->error("Loading $directory_impl failed: $e");
-
-    #   next;
-  }
-  my $directory = $directory_impl->new($self, $config);
-
-  $self->helper(directory => sub {return $directory;});
 
   # init I18N
   $self->plugin(I18N => {namespace => 'PhaidraAPI::I18N', support_url_langs => [qw(en de it sr)]});
@@ -143,17 +124,6 @@ sub startup {
       dsn      => $config->{phaidra_user_db}->{dsn},
       username => $config->{phaidra_user_db}->{username},
       password => $config->{phaidra_user_db}->{password},
-      options  => {mysql_auto_reconnect => 1}
-    };
-  }
-
-  if ( $config->{phaidra}->{triplestore}
-    && $config->{phaidra}->{triplestore} eq 'localMysqlMPTTriplestore')
-  {
-    $databases{'db_triplestore'} = {
-      dsn      => $config->{localMysqlMPTTriplestore}->{dsn},
-      username => $config->{localMysqlMPTTriplestore}->{username},
-      password => $config->{localMysqlMPTTriplestore}->{password},
       options  => {mysql_auto_reconnect => 1}
     };
   }
@@ -241,19 +211,17 @@ sub startup {
     );
   }
 
-  if ($config->{fedora}->{version} > 6) {
-    $self->helper(
-      fedoraurl => sub {
-        my $url = Mojo::URL->new;
-        $url->scheme($config->{fedora}->{scheme});
-        $url->host($config->{fedora}->{host});
-        $url->port($config->{fedora}->{port}) if $config->{fedora}->{port};
-        $url->path($config->{fedora}->{path});
-        $url->userinfo($config->{fedora}->{adminuser} . ":" . $config->{fedora}->{adminpass});
-        return $url;
-      }
-    );
-  }
+  $self->helper(
+    fedoraurl => sub {
+      my $url = Mojo::URL->new;
+      $url->scheme($config->{fedora}->{scheme});
+      $url->host($config->{fedora}->{host});
+      $url->port($config->{fedora}->{port}) if $config->{fedora}->{port};
+      $url->path($config->{fedora}->{path});
+      $url->userinfo($config->{fedora}->{adminuser} . ":" . $config->{fedora}->{adminpass});
+      return $url;
+    }
+  );
 
   # we might possibly save a lot of data to session
   # so we are not going to use cookies, but a database instead
@@ -355,13 +323,6 @@ sub startup {
 
       # X-Prototype-Version, X-Requested-With - comes from prototype's Ajax.Updater
       my $allow_headers = 'Authorization, Content-Type, X-Prototype-Version, X-Requested-With, ' . $config->{authentication}->{token_header};
-      if ($config->{authentication}->{upstream}->{principalheader}) {
-        $allow_headers .= ', ' . $config->{authentication}->{upstream}->{principalheader};
-      }
-      if ($config->{authentication}->{upstream}->{affiliationheader}) {
-        $allow_headers .= ', ' . $config->{authentication}->{upstream}->{affiliationheader};
-      }
-
       $self->res->headers->add('Access-Control-Allow-Headers'  => $allow_headers);
       $self->res->headers->add('Access-Control-Expose-Headers' => 'x-json, Content-Disposition');
     }
@@ -498,22 +459,16 @@ sub startup {
   $r->get('directory/get_study')                    ->to('directory#get_study');
   $r->get('directory/get_study_plans')              ->to('directory#get_study_plans');
   $r->get('directory/get_study_name')               ->to('directory#get_study_name');
-  # old
-  $r->get('directory/get_org_units')                ->to('directory#get_org_units');
-  $r->get('directory/get_parent_org_unit_id')       ->to('directory#get_parent_org_unit_id');
-  # new
+
   $r->get('directory/org_get_subunits')             ->to('directory#org_get_subunits');
   $r->get('directory/org_get_superunits')           ->to('directory#org_get_superunits');
   $r->get('directory/org_get_parentpath')           ->to('directory#org_get_parentpath');
   $r->get('directory/org_get_units')                ->to('directory#org_get_units');
 
-  $r->get('search/triples')                         ->to('search#triples');
   $r->get('search/select')                          ->to('search#search_solr');
   $r->post('search/select')                         ->to('search#search_solr');
   $r->get('search/:pid/ocr')                        ->to('search#search_ocr');
   $r->post('search/get_pids')                       ->to('search#get_pids');
-
-  $r->get('utils/get_all_pids')                     ->to('utils#get_all_pids');
 
   $r->get('geonames/search')                        ->to('utils#geonames_search');
   $r->get('gnd/search')                             ->to('utils#gnd_search');
@@ -543,11 +498,6 @@ sub startup {
   $r->get('collection/:pid/descendants')            ->to('collection#descendants');
   $r->get('collection/:pid/rss')                    ->to('collection#rss');
 
-  # does not show inactive objects, not specific to collection (but does ordering)
-  $r->get('object/:pid/related')                    ->to('search#related');
-
-  # we will get this datastreams by using intcall credentials
-  # (instead of defining a API-A disseminator for each of them)
   $r->get('object/:pid/uwmetadata')                 ->to('uwmetadata#get');
   $r->get('object/:pid/mods')                       ->to('mods#get');
   $r->get('object/:pid/jsonld')                     ->to('jsonld#get');
@@ -555,11 +505,9 @@ sub startup {
   $r->get('object/:pid/geo')                        ->to('geo#get');
   $r->get('object/:pid/members/order')              ->to('membersorder#get');
   $r->get('object/:pid/annotations')                ->to('annotations#get');
-  $r->get('object/:pid/techinfo')                   ->to('techinfo#get');
-  $r->get('object/:pid/dc')                         ->to('dc#get', dsid => 'DC');
-  $r->get('object/:pid/oai_dc')                     ->to('dc#get', dsid => 'DC_OAI');
+  $r->get('object/:pid/dc')                         ->to('dc#get');
   $r->get('object/:pid/index')                      ->to('index#get');
-  $r->get('object/:pid/index/dc')                   ->to('index#get_dc');
+  $r->get('object/:pid/index/dc')                   ->to('dc#get');
   $r->get('object/:pid/index/relationships')        ->to('index#get_relationships');
   $r->get('object/:pid/index/members')              ->to('index#get_object_members');
   $r->get('object/:pid/datacite')                   ->to('datacite#get');
@@ -572,8 +520,6 @@ sub startup {
   $r->get('object/:pid/iiifmanifest')               ->to('iiifmanifest#get_iiif_manifest');
 
   $r->get('object/:pid/id')                         ->to('search#id');
-
-  $r->post('dc/uwmetadata_2_dc_index')              ->to('dc#uwmetadata_2_dc_index');
 
   $r->get('stats/aggregates')                       ->to('stats#aggregates');
   $r->get('stats/disciplines')                      ->to('stats#disciplines');
@@ -677,10 +623,7 @@ sub startup {
     $admin->post('config/private')                                         ->to('config#post_private_config');
 
     $admin->post('index')                                                  ->to('index#update');
-    $admin->post('dc')                                                     ->to('dc#update');
-
     $admin->post('object/:pid/index')                                      ->to('index#update');
-    $admin->post('object/:pid/dc')                                         ->to('dc#update');
 
     $admin->post('imageserver/process')                                    ->to('imageserver#process_pids');
     $admin->post('tikaserver/process')                                     ->to('tikaserver#process_pids');
@@ -771,7 +714,7 @@ sub startup {
     $authenticated->post('utils/:pid/requestdoi')                               ->to('utils#request_doi');
   }
   #>>>
-
+  $self->app->log->error(__LINE__);
   return $self;
 }
 

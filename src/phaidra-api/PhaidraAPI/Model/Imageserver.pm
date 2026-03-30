@@ -205,15 +205,13 @@ sub create_imageserver_job {
   }
   $res->{hash} = $hash;
   my $path;
-  if ($c->app->config->{fedora}->{version} >= 6) {
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
-    if ($dsAttr->{status} eq 200) {
-      $path = $dsAttr->{path};
-    }
-    else {
-      $c->app->log->error("imageserver job pid[$pid] cm[$cmodel]: could not get path");
-    }
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+  if ($dsAttr->{status} eq 200) {
+    $path = $dsAttr->{path};
+  }
+  else {
+    $c->app->log->error("imageserver job pid[$pid] cm[$cmodel]: could not get path");
   }
   my $job = {pid => $pid, cmodel => $cmodel, agent => $agent, status => "new", idhash => $hash, created => time};
   $job->{path} = $path if $path;
@@ -242,16 +240,15 @@ sub update_imageserver_job {
   }
   $res->{hash} = $hash;
   my $path;
-  if ($c->app->config->{fedora}->{version} >= 6) {
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
-    if ($dsAttr->{status} eq 200) {
-      $path = $dsAttr->{path};
-    }
-    else {
-      $c->app->log->error("imageserver job pid[$pid] cm[$cmodel]: could not get path");
-    }
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $dsAttr       = $fedora_model->getDatastreamPath($c, $pid, 'OCTETS');
+  if ($dsAttr->{status} eq 200) {
+    $path = $dsAttr->{path};
   }
+  else {
+    $c->app->log->error("imageserver job pid[$pid] cm[$cmodel]: could not get path");
+  }
+
   $c->paf_mongo->get_collection('jobs')->update_one({'pid' => $pid, 'agent' => $agent}, {'$set' => {'status' => 'new', 'idhash' => $hash, 'path' => $path}}, {'upsert' => 0});
 
   return $res;

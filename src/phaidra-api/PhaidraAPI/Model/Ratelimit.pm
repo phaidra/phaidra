@@ -1,4 +1,4 @@
-package PhaidraAPI::Model::RateLimit;
+package PhaidraAPI::Model::Ratelimit;
 
 use strict;
 use warnings;

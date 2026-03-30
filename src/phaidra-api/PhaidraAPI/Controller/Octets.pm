@@ -6,7 +6,6 @@ use v5.10;
 use base 'Mojolicious::Controller';
 use Mojo::Util qw(url_escape encode);
 use PhaidraAPI::Model::Object;
-use PhaidraAPI::Model::Octets;
 use PhaidraAPI::Model::Authorization;
 use PhaidraAPI::Model::Index;
 use PhaidraAPI::Model::Util;
@@ -53,93 +52,43 @@ sub get {
   my ($filename, $mimetype, $size, $path);
   my $trywebversion = $self->param('trywebversion');
 
-  if ($self->app->config->{fedora}->{version} >= 6) {
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $dsAttr;
-    if (defined $ENV{S3_ENABLED} and $ENV{S3_ENABLED} eq "true") {
-      return $self->proxy();
-    }
-    else {
-      if ($trywebversion) {
-        $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'WEBVERSION');
-        if ($dsAttr->{status} ne 200) {
-          $self->render(json => $dsAttr, status => $dsAttr->{status});
-          return;
-        }
-        $filename = $dsAttr->{filename};
-        $mimetype = $dsAttr->{mimetype};
-        $size     = $dsAttr->{size};
-        $dsAttr   = $fedora_model->getDatastreamPath($self, $pid, 'WEBVERSION');
-        if ($dsAttr->{status} ne 200) {
-          $self->render(json => $dsAttr, status => $dsAttr->{status});
-          return;
-        }
-        $path = $dsAttr->{path};
-      }
-      unless ($path) {
-        $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
-        if ($dsAttr->{status} ne 200) {
-          $self->render(json => $dsAttr, status => $dsAttr->{status});
-          return;
-        }
-        $filename = $dsAttr->{filename};
-        $mimetype = $dsAttr->{mimetype};
-        $size     = $dsAttr->{size};
-        $dsAttr   = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
-        if ($dsAttr->{status} ne 200) {
-          $self->render(json => $dsAttr, status => $dsAttr->{status});
-          return;
-        }
-        $path = $dsAttr->{path};
-      }
-    }
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $dsAttr;
+  if (defined $ENV{S3_ENABLED} and $ENV{S3_ENABLED} eq "true") {
+    return $self->proxy();
   }
   else {
-    my $object_model = PhaidraAPI::Model::Object->new;
-    my $r_oxml       = $object_model->get_foxml($self, $pid);
-    if ($r_oxml->{status} ne 200) {
-      $self->render(json => $r_oxml, status => $r_oxml->{status});
-      return;
-    }
-    my $dom = Mojo::DOM->new();
-    $dom->xml(1);
-    $dom->parse($r_oxml->{foxml});
-
-    my $octets_model = PhaidraAPI::Model::Octets->new;
-
     if ($trywebversion) {
-      my $parthres = $octets_model->_get_ds_path($self, $pid, 'WEBVERSION');
-      if ($parthres->{status} == 200) {
-        $path = $parthres->{path};
-        ($filename, $mimetype, $size) = $octets_model->_get_ds_attributes($self, $pid, 'WEBVERSION', $dom);
+      $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'WEBVERSION');
+      if ($dsAttr->{status} ne 200) {
+        $self->render(json => $dsAttr, status => $dsAttr->{status});
+        return;
       }
+      $filename = $dsAttr->{filename};
+      $mimetype = $dsAttr->{mimetype};
+      $size     = $dsAttr->{size};
+      $dsAttr   = $fedora_model->getDatastreamPath($self, $pid, 'WEBVERSION');
+      if ($dsAttr->{status} ne 200) {
+        $self->render(json => $dsAttr, status => $dsAttr->{status});
+        return;
+      }
+      $path = $dsAttr->{path};
     }
-
     unless ($path) {
-      my $parthres = $octets_model->_get_ds_path($self, $pid, 'OCTETS');
-      if ($parthres->{status} != 200) {
-        $res->{status} = $parthres->{status};
-        push @{$res->{alerts}}, @{$parthres->{alerts}} if scalar @{$parthres->{alerts}} > 0;
-        $self->render(json => $res, status => $res->{status});
+      $dsAttr = $fedora_model->getDatastreamAttributes($self, $pid, 'OCTETS');
+      if ($dsAttr->{status} ne 200) {
+        $self->render(json => $dsAttr, status => $dsAttr->{status});
         return;
       }
-      else {
-        $path = $parthres->{path};
-      }
-      ($filename, $mimetype, $size) = $octets_model->_get_ds_attributes($self, $pid, 'OCTETS', $dom);
-    }
-
-    my $docres;
-    my $index_model = PhaidraAPI::Model::Index->new;
-    if (!$size or $size == -1) {
-      $self->app->log->debug("pid[$pid] getting size from index");
-      $docres = $index_model->get_doc($self, $pid);
-      if ($docres->{status} ne 200) {
-        $self->app->log->error("pid[$pid] error searching for doc: " . $self->app->dumper($docres));
-        $self->reply->static('images/error.png');
+      $filename = $dsAttr->{filename};
+      $mimetype = $dsAttr->{mimetype};
+      $size     = $dsAttr->{size};
+      $dsAttr   = $fedora_model->getDatastreamPath($self, $pid, 'OCTETS');
+      if ($dsAttr->{status} ne 200) {
+        $self->render(json => $dsAttr, status => $dsAttr->{status});
         return;
       }
-      $size = $docres->{doc}->{size};
+      $path = $dsAttr->{path};
     }
   }
 

@@ -71,9 +71,7 @@ sub _get_mods_classifications {
 }
 
 sub _get_mods_creators {
-  my ($self, $c, $dom, $mode) = @_;
-
-  $mode = 'p' unless defined $mode;
+  my ($self, $c, $dom) = @_;
 
   my @creators;
 
@@ -86,15 +84,7 @@ sub _get_mods_creators {
         my $lastname  = $name->find('namePart[type="family"]')->map('text')->join(" ");
 
         if (defined($firstname) && $firstname ne '' && defined($lastname) && $lastname ne '') {
-          if ($mode eq 'oai') {
-
-            # APA bibliographic style
-            my $initials = ucfirst(substr($firstname, 0, 1));
-            push @creators, {value => "$lastname, $initials ($firstname)"};
-          }
-          else {
-            push @creators, {value => "$lastname, $firstname"};
-          }
+          push @creators, {value => "$lastname, $firstname"};
         }
         else {
           my $name = $name->find('namePart')->map('text')->join(" ");
@@ -109,9 +99,7 @@ sub _get_mods_creators {
 }
 
 sub _get_mods_contributors {
-  my ($self, $c, $dom, $mode) = @_;
-
-  $mode = 'p' unless defined $mode;
+  my ($self, $c, $dom) = @_;
 
   my @contributors;
 
@@ -124,15 +112,7 @@ sub _get_mods_contributors {
         my $lastname  = $name->find('namePart[type="family"]')->map('text')->join(" ");
 
         if (defined($firstname) && $firstname ne '' && defined($lastname) && $lastname ne '') {
-          if ($mode eq 'oai') {
-
-            # APA bibliographic style
-            my $initials = ucfirst(substr($firstname, 0, 1));
-            push @contributors, {value => "$lastname, $initials ($firstname)"};
-          }
-          else {
-            push @contributors, {value => "$lastname, $firstname"};
-          }
+          push @contributors, {value => "$lastname, $firstname"};
         }
         else {
           my $namepart = $name->find('namePart')->map('text')->join(" ");

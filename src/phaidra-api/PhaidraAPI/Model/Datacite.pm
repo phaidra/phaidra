@@ -45,6 +45,7 @@ sub get {
 
   my $search_model = PhaidraAPI::Model::Search->new;
   my $object_model = PhaidraAPI::Model::Object->new;
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
 
   my $cmodel;
   my $res_cmodel = $search_model->get_cmodel($c, $pid);
@@ -56,7 +57,7 @@ sub get {
     $cmodel = $res_cmodel->{cmodel};
   }
 
-  my $r = $search_model->datastreams_hash($c, $pid);
+  my $r = $fedora_model->getDatastreamsHash($c, $pid);
   if ($r->{status} ne 200) {
     return $r;
   }
@@ -264,8 +265,8 @@ sub map_mods_2_datacite {
   my $editions = $ext->_get_mods_element_values($c, $dom, 'mods > originInfo > edition');
   push @{$data{relations}}, @$editions;
   $data{languages}    = $ext->_get_mods_element_values($c, $dom, 'mods > language > languageTerm');
-  $data{creators}     = $ext->_get_mods_creators($c, $dom, 'p');
-  $data{contributors} = $ext->_get_mods_contributors($c, $dom, 'p');
+  $data{creators}     = $ext->_get_mods_creators($c, $dom);
+  $data{contributors} = $ext->_get_mods_contributors($c, $dom);
   my $issueddates = $ext->_get_mods_element_values($c, $dom, 'mods > originInfo > dateIssued[keyDate="yes"]');
 
   for my $id (@{$issueddates}) {
@@ -910,62 +911,19 @@ sub _get_relsext_identifiers {
   my ($self, $c, $pid) = @_;
 
   my @ids;
-  if ($c->app->config->{fedora}->{version} >= 6) {
 
-    my $fedora_model = PhaidraAPI::Model::Fedora->new;
-    my $fres         = $fedora_model->getObjectProperties($c, $pid);
-    if ($fres->{status} ne 200) {
-      $c->app->log->debug("STATUS NOT 200");
-      return $fres;
-    }
-
-    if (exists $fres->{identifier} && ref $fres->{identifier} eq 'ARRAY') {
-      @ids = map {{value => $_}} @{$fres->{identifier}};
-    }
-    $c->app->log->debug("Identifiers: " . Dumper(\@ids));
-    return \@ids;
-  }
-  my $search_model = PhaidraAPI::Model::Search->new;
-
-  my $query = "<info:fedora/$pid> <http://purl.org/dc/terms/identifier> *";
-  my $sr    = $search_model->triples($c, $query, 0);
-  unless ($sr->{status} eq 200) {
-    $c->app->log->error("Could not query triplestore for identifiers.");
-    return \@ids;
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $fres         = $fedora_model->getObjectProperties($c, $pid);
+  if ($fres->{status} ne 200) {
+    $c->app->log->debug("STATUS NOT 200");
+    return $fres;
   }
 
-  for my $triple (@{$sr->{result}}) {
-    my $id = @$triple[2];
-    $id =~ s/^\<+|\>+$//g;
-    push @ids, {value => $id};
+  if (exists $fres->{identifier} && ref $fres->{identifier} eq 'ARRAY') {
+    @ids = map {{value => $_}} @{$fres->{identifier}};
   }
-
+  $c->app->log->debug("Identifiers: " . Dumper(\@ids));
   return \@ids;
-}
-
-sub _get_filesize {
-
-  my ($self, $c, $pid, $cmodel) = @_;
-
-  my $bytesize;
-  if (exists($c->app->config->{paf_mongodb})) {
-    my $inv_coll = $c->paf_mongo->get_collection('foxml.ds');
-    if ($inv_coll) {
-      my $ds_doc = $inv_coll->find_one({pid => $pid}, {}, {"sort" => {"updated_at" => -1}});
-      $bytesize = $ds_doc->{ds_sizes}->{OCTETS};
-    }
-  }
-  unless ($bytesize) {
-    my $octets_model = PhaidraAPI::Model::Octets->new;
-    my $parthres     = $octets_model->_get_ds_path($c, $pid, 'OCTETS');
-    if ($parthres->{status} == 200) {
-      $bytesize = -s $parthres->{path};
-    }
-  }
-
-  my @sizes;
-  push @sizes, {value => $bytesize};
-  return \@sizes;
 }
 
 sub json_2_xml {

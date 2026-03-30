@@ -16,6 +16,7 @@ use PhaidraAPI::Model::Rights;
 use PhaidraAPI::Model::Index;
 use PhaidraAPI::Model::Config;
 use PhaidraAPI::Model::Jsonld;
+use PhaidraAPI::Model::Directory;
 use Time::HiRes qw/tv_interval gettimeofday/;
 use Storable    qw(dclone);
 use POSIX       qw/strftime/;
@@ -374,7 +375,8 @@ sub approve {
 
   my $owner = $alert->{username};
 
-  my $email = $self->app->directory->get_email($self, $owner);
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+  my $email           = $directory_model->get_email($self, $owner);
 
   my %emaildata;
   $emaildata{pid}     = $pid;
@@ -529,9 +531,10 @@ sub adminlistdata {
   }
 
   my $namesCache;
+  my $directory_model = PhaidraAPI::Model::Directory->new;
   for my $submit (@submits) {
     unless (exists($namesCache->{$submit->{user}->{username}})) {
-      my $user_data = $self->app->directory->get_user_data($self, $submit->{user}->{username});
+      my $user_data = $directory_model->get_user_data($self, $submit->{user}->{username});
       $namesCache->{$submit->{user}->{username}} = $user_data->{firstname} . ' ' . $user_data->{lastname};
     }
     $submit->{user}->{name} = $namesCache->{$submit->{user}->{username}};
@@ -1061,7 +1064,8 @@ sub sendEmbargoendEmail {
   my $pubconfig  = $confmodel->get_public_config($self);
   my $privconfig = $confmodel->get_private_config($self);
 
-  my $email = $self->app->directory->get_email($self, $username);
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+  my $email           = $directory_model->get_email($self, $username);
 
   my %emaildata;
   $emaildata{pid}     = $pid;

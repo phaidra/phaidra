@@ -5,6 +5,7 @@ use warnings;
 use v5.10;
 use MIME::Lite;
 use MIME::Lite::TT::HTML;
+use PhaidraAPI::Model::Directory;
 use base 'Mojolicious::Controller';
 
 sub feedback {
@@ -18,10 +19,11 @@ sub feedback {
   my $email     = $self->param('email');
   my $message   = $self->param('message');
 
-  my $user       = $self->app->directory->get_user_data($self, $self->stash->{basic_auth_credentials}->{username});
-  my $confmodel  = PhaidraAPI::Model::Config->new;
-  my $pubconfig  = $confmodel->get_public_config($self);
-  my $privconfig = $confmodel->get_private_config($self);
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+  my $user            = $directory_model->get_user_data($self, $self->stash->{basic_auth_credentials}->{username});
+  my $confmodel       = PhaidraAPI::Model::Config->new;
+  my $pubconfig       = $confmodel->get_public_config($self);
+  my $privconfig      = $confmodel->get_private_config($self);
 
   my %emaildata;
   $emaildata{context}   = $context;

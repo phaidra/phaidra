@@ -9,6 +9,7 @@ use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Termsofuse;
 use PhaidraAPI::Model::Config;
+use PhaidraAPI::Model::Directory;
 
 sub extract_credentials {
   my $self = shift;
@@ -18,134 +19,66 @@ sub extract_credentials {
 
   my $username;
   my $password;
-  my $upstream_auth_success = 0;
-  if ($self->app->config->{authentication}->{upstream}->{enabled}) {
 
-    $self->app->log->debug("Trying to extract upstream authentication");
-
-    my $remoteuser = $self->req->headers->header($self->app->config->{authentication}->{upstream}->{principalheader});
-
-    # remote user in header - basic auth must contain correct upstreamusername/upstreampassword as per config
-    if ($remoteuser) {
-      $self->app->log->debug("remote user: " . $remoteuser);
-
-      my $upstreamusername;
-      my $upstreampassword;
-      ($upstreamusername, $upstreampassword) = $self->extract_basic_auth_credentials();
-
-      my $configupstreamusername = $self->app->config->{authentication}->{upstream}->{upstreamusername};
-      my $configupstreampassword = $self->app->config->{authentication}->{upstream}->{upstreampassword};
-
-      if ( defined($upstreamusername)
-        && defined($upstreampassword)
-        && defined($configupstreamusername)
-        && defined($configupstreampassword)
-        && ($upstreamusername eq $configupstreamusername)
-        && ($upstreampassword eq $configupstreampassword))
-      {
-        $self->app->log->debug("upstream credentials OK");
-        $self->stash->{basic_auth_credentials} = {username => $self->app->config->{authentication}->{upstream}->{upstreamusername}, password => $self->app->config->{authentication}->{upstream}->{upstreampassword}};
-        $self->stash->{remote_user}            = $remoteuser;
-        my $remoteaffiliation = $self->req->headers->header($self->app->config->{authentication}->{upstream}->{affiliationheader});
-        if ($remoteaffiliation) {
-          $self->stash->{affiliation} = $remoteaffiliation;
-          $self->app->log->debug("remote affiliation: " . $remoteaffiliation);
-        }
-        my $remotegroups = $self->req->headers->header($self->app->config->{authentication}->{upstream}->{groupsheader});
-        if ($remotegroups) {
-          $self->stash->{groups} = $remotegroups;
-          $self->app->log->debug("remote groups: " . $remotegroups);
-        }
-        $upstream_auth_success = 1;
-      }
-      else {
-        # the request contains the principal header with a remote user definition but it has wrong upstream auth credentials
-        $self->render(json => {status => 500, alerts => [{type => 'error', msg => 'upstream authentication failed'}]}, status => 500);
-        return 0;
-      }
-
-    }
-    else {
-
-      # this is ok, even if upstream auth is enabled, someone can send a non-upstream-auth request
-      $self->app->log->debug("no upstream authentication: missing principal header");
-    }
-
+  # try to find basic authentication
+  $self->app->log->debug("Trying to extract basic authentication");
+  ($username, $password) = $self->extract_basic_auth_credentials();
+  if (defined($username) && defined($password)) {
+    $self->app->log->info("User $username, basic authentication provided");
+    $self->stash->{basic_auth_credentials} = {username => $username, password => $password};
+    return 1;
   }
 
-  unless ($upstream_auth_success) {
+  # try to find token session
+  $self->app->log->debug("Trying to extract token authentication");
+  my $sess = $self->load_cred;
+  $username = $sess->{username};
+  $password = $sess->{password};
+  my $remote_user       = $sess->{remote_user};
+  my $remoteaffiliation = $sess->{affiliation};
+  my $remotegroups      = $sess->{groups};
+  my $org_units_l1      = $sess->{org_units_l1};
+  my $org_units_l2      = $sess->{org_units_l2};
+  my $localgroups       = $sess->{localgroups};
 
-    # try to find basic authentication
-    $self->app->log->debug("Trying to extract basic authentication");
-    ($username, $password) = $self->extract_basic_auth_credentials();
-    if (defined($username) && defined($password)) {
-      $self->app->log->info("User $username, basic authentication provided");
-      $self->stash->{basic_auth_credentials} = {username => $username, password => $password};
+  if (defined($username) && defined($password)) {
+    $self->app->log->info("User $username, token authentication provided");
+    $self->stash->{basic_auth_credentials} = {username => $username, password => $password};
+    return 1;
+  }
+  else {
+    # remote user in token - this is the case for shib
+    if (defined($remote_user)) {
+      $self->app->log->info("Remote user $remote_user, token authentication provided");
+      $self->stash->{remote_user}            = $remote_user;
+      $self->stash->{affiliation}            = $remoteaffiliation;
+      $self->stash->{groups}                 = $remotegroups;
+      $self->stash->{basic_auth_credentials} = {username => $remote_user};
       return 1;
     }
+  }
 
-    # try to find token session
-    $self->app->log->debug("Trying to extract token authentication");
-    my $sess = $self->load_cred;
-    $username = $sess->{username};
-    $password = $sess->{password};
-    my $remote_user       = $sess->{remote_user};
-    my $remoteaffiliation = $sess->{affiliation};
-    my $remotegroups      = $sess->{groups};
-    my $org_units_l1      = $sess->{org_units_l1};
-    my $org_units_l2      = $sess->{org_units_l2};
-    my $localgroups       = $sess->{localgroups};
-
-    if (defined($username) && defined($password)) {
-      $self->app->log->info("User $username, token authentication provided");
-      $self->stash->{basic_auth_credentials} = {username => $username, password => $password};
-      return 1;
-    }
-    else {
-      # remote user in token - this is the case for shib
-      if (defined($remote_user)) {
-        $self->app->log->info("Remote user $remote_user, token authentication provided");
-        $self->stash->{remote_user} = $remote_user;
-        $self->stash->{affiliation} = $remoteaffiliation;
-        $self->stash->{groups}      = $remotegroups;
-        if ($self->app->config->{fedora}->{version} >= 6) {
-
-          # TODO fix code to use BA creds OR remote_user if available (controllers currently pass BA username as username... -> becomes owner on create)
-          $self->stash->{basic_auth_credentials} = {username => $remote_user};
-        }
-        else {
-          # in fedora 3 we need to use it's upstream authentication feature
-          $self->stash->{basic_auth_credentials} = {username => $self->app->config->{authentication}->{upstream}->{upstreamusername}, password => $self->app->config->{authentication}->{upstream}->{upstreampassword}};
-          $self->stash->{fakcode}                = $org_units_l1;
-          $self->stash->{inum}                   = $org_units_l2;
-          $self->stash->{gruppe}                 = $localgroups;
-        }
-        return 1;
+  if ($self->stash('creds_must_be_present')) {
+    unless ((defined($username) && defined($password)) || defined($remote_user)) {
+      my $t = $self->tx->req->headers->header($self->app->config->{authentication}->{token_header});
+      my $errmsg;
+      if ($t) {
+        $errmsg = 'session invalid or expired';
       }
-    }
-
-    if ($self->stash('creds_must_be_present')) {
-      unless ((defined($username) && defined($password)) || defined($remote_user)) {
-        my $t = $self->tx->req->headers->header($self->app->config->{authentication}->{token_header});
-        my $errmsg;
-        if ($t) {
-          $errmsg = 'session invalid or expired';
-        }
-        else {
-          $errmsg = 'no credentials found';
-        }
-        $self->app->log->error($errmsg);
-
-        # If I use the realm the browser does not want to show the prompt!
-        # $self->res->headers->www_authenticate('Basic "'.$self->app->config->{authentication}->{realm}.'"');
-        $self->res->headers->www_authenticate('Basic');
-        $self->render(json => {status => 401, alerts => [{type => 'error', msg => $errmsg}]}, status => 401);
-        return 0;
+      else {
+        $errmsg = 'no credentials found';
       }
+      $self->app->log->error($errmsg);
+
+      # If I use the realm the browser does not want to show the prompt!
+      # $self->res->headers->www_authenticate('Basic "'.$self->app->config->{authentication}->{realm}.'"');
+      $self->res->headers->www_authenticate('Basic');
+      $self->render(json => {status => 401, alerts => [{type => 'error', msg => $errmsg}]}, status => 401);
+      return 0;
     }
-    else {
-      return 1;
-    }
+  }
+  else {
+    return 1;
   }
 
 }
@@ -474,8 +407,8 @@ sub signin_shib {
     # init session, save credentials
     $self->app->log->debug("remote user authorized: username[$username] affiliation[$affiliation], getting user data...");
 
-    # we need to pass the attributes as upstream because the sec. filters (like DBFilterForAttributes) ignore remote user
-    my $userData = $self->app->directory->get_user_data($self, $username);
+    my $directory_model = PhaidraAPI::Model::Directory->new;
+    my $userData        = $directory_model->get_user_data($self, $username);
     my $org_units_l1;
     my $org_units_l2;
     my $localgroups;

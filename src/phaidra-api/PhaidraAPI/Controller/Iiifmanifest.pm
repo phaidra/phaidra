@@ -24,9 +24,10 @@ sub get_iiif_manifest {
   }
 
   my $search_model = PhaidraAPI::Model::Search->new;
-  my $rdshash      = $search_model->datastreams_hash($self, $pid);
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $rdshash      = $fedora_model->getDatastreamsHash($self, $pid);
   if ($rdshash->{status} ne 200) {
-    $self->render(json => {alerts => [{type => 'error', msg => "get_iiif_manifest pid[$pid] Error getting datastreams_hash"}], status => $rdshash->{status}}, status => $rdshash->{status});
+    $self->render(json => {alerts => [{type => 'error', msg => "get_iiif_manifest pid[$pid] Error getting getDatastreamsHash"}], status => $rdshash->{status}}, status => $rdshash->{status});
     return;
   }
   else {
