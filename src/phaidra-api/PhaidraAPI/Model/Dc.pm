@@ -60,14 +60,7 @@ sub map_mods_2_dc_hash {
   my $classifications = $ext->_get_mods_classifications($c, $dom);
   push @{$dc{subject}}, @$classifications;
   $dc{identifier} = $ext->_get_mods_element_values($c, $dom, 'mods > identifier');
-
-  unless ($indexing) {
-    my $relids = $self->_get_relsext_identifiers($c, $pid);
-    for my $relid (@$relids) {
-      push @{$dc{identifier}}, $relid;
-    }
-  }
-  $dc{relation} = $ext->_get_mods_relations($c, $dom);
+  $dc{relation}   = $ext->_get_mods_relations($c, $dom);
   my $editions = $ext->_get_mods_element_values($c, $dom, 'mods > originInfo > edition');
   push @{$dc{relation}}, @$editions;
   $dc{language}    = $ext->_get_mods_element_values($c, $dom, 'mods > language > languageTerm');
@@ -165,14 +158,6 @@ sub map_jsonld_2_dc_hash {
     }
   }
 
-  # $dc{identifier} = $ext->_get_jsonld_identifiers($c, $jsonld);
-  unless ($indexing) {
-    my $relids = $self->_get_relsext_identifiers($c, $pid);
-    for my $relid (@$relids) {
-      push @{$dc{identifier}}, $relid;
-    }
-  }
-
   $dc{language} = $ext->_get_jsonld_values($c, $jsonld, 'dcterms:language');
 
   for my $d (@{$ext->_get_jsonld_values($c, $jsonld, 'dcterms:date')}) {
@@ -259,13 +244,7 @@ sub map_uwmetadata_2_dc_hash {
     }
   }
 
-  my $identifiers = $ext->_get_uwm_identifiers($c, $dom, \%doc_uwns, $tree, $metadata_model);
-  unless ($indexing) {
-    my $relids = $self->_get_relsext_identifiers($c, $pid);
-    for my $relid (@$relids) {
-      push @$identifiers, $relid;
-    }
-  }
+  my $identifiers      = $ext->_get_uwm_identifiers($c, $dom, \%doc_uwns, $tree, $metadata_model);
   my $titles           = $ext->_get_titles($c, $dom, \%doc_uwns);
   my $descriptions     = $ext->_get_uwm_element_values($c, $dom, $doc_uwns{'lom'} . '\:general > ' . $doc_uwns{'lom'} . '\:description');
   my $rightsStatements = $ext->_get_uwm_element_values($c, $dom, $doc_uwns{'lom'} . '\:rights > ' . $doc_uwns{'lom'} . '\:description');
@@ -362,28 +341,6 @@ sub map_uwmetadata_2_dc_hash {
   }
 
   return \%dc;
-}
-
-sub _get_relsext_identifiers {
-  my ($self, $c, $pid) = @_;
-
-  my @ids;
-  my $search_model = PhaidraAPI::Model::Search->new;
-
-  my $query = "<info:fedora/$pid> <http://purl.org/dc/terms/identifier> *";
-  my $sr    = $search_model->triples($c, $query, 0);
-  unless ($sr->{status} eq 200) {
-    $c->app->log->error("Could not query triplestore for identifiers.");
-    return \@ids;
-  }
-
-  for my $triple (@{$sr->{result}}) {
-    my $id = @$triple[2];
-    $id =~ s/^\<+|\>+$//g;
-    push @ids, {value => $id};
-  }
-
-  return \@ids;
 }
 
 1;

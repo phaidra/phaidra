@@ -9,59 +9,6 @@ use PhaidraAPI::Model::Fedora;
 use Encode     qw(decode);
 use List::Util qw(first);
 
-sub related {
-
-  my $self = shift;
-  my $relation;
-  my $from  = 1;
-  my $limit = 10;
-  my $right = 0;
-  my @fields;
-
-  unless (defined($self->stash('pid'))) {
-    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
-    return;
-  }
-
-  if (defined($self->param('relation'))) {
-    $relation = $self->param('relation');
-  }
-  else {
-    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined relation'}]}, status => 400);
-    return;
-  }
-
-  if (defined($self->param('from'))) {
-    $from = $self->param('from');
-  }
-
-  if (defined($self->param('limit'))) {
-    $limit = $self->param('limit');
-  }
-
-  if (defined($self->param('right'))) {
-    $right = $self->param('right');
-  }
-
-  if (defined($self->param('fields'))) {
-    @fields = $self->every_param('fields');
-  }
-
-  my $search_model = PhaidraAPI::Model::Search->new;
-  my $r;
-
-  if (@fields) {
-    $r = $search_model->related($self, $self->stash('pid'), $relation, $right, $from, $limit, @fields);
-  }
-  else {
-    $r = $search_model->related($self, $self->stash('pid'), $relation, $right, $from, $limit, undef);
-  }
-
-  #$self->app->log->debug($self->app->dumper($r));
-  $self->render(json => $r, status => $r->{status});
-
-}
-
 sub get_pids {
   my $self = shift;
 

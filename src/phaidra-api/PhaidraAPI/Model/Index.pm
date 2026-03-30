@@ -556,13 +556,13 @@ sub update {
 
     if ($cmodel_res->{cmodel} eq '') {
 
-      # triplestore works but returns nothing for this object -> it was probably deleted -> remove from index
+      # cmodel query works but returns nothing for this object -> it was probably deleted -> remove from index
       $c->app->log->debug("[$pid] no cmodel found, deleting from index");
       if (exists($c->app->config->{solr})) {
         my $post = $ua->post($updateurl => json => {delete => $pid});
         my $r    = $post->result;
         if ($r->is_success) {
-          $c->app->log->debug("[$pid] solr document deleted (not found in triplestore)");
+          $c->app->log->debug("[$pid] solr document deleted (empty cmodel)");
         }
         else {
           my ($err, $code) = $post->error;
