@@ -320,18 +320,8 @@ sub startup {
       }
       $self->res->headers->add('Access-Control-Allow-Credentials' => 'true');
       $self->res->headers->add('Access-Control-Allow-Methods'     => 'GET, POST, PUT, DELETE, OPTIONS');
-
-      # X-Prototype-Version, X-Requested-With - comes from prototype's Ajax.Updater
-      my $allow_headers = 'Authorization, Content-Type, X-Prototype-Version, X-Requested-With, ' . $config->{authentication}->{token_header};
-      if ($config->{authentication}->{upstream}->{principalheader}) {
-        $allow_headers .= ', ' . $config->{authentication}->{upstream}->{principalheader};
-      }
-      if ($config->{authentication}->{upstream}->{affiliationheader}) {
-        $allow_headers .= ', ' . $config->{authentication}->{upstream}->{affiliationheader};
-      }
-
-      $self->res->headers->add('Access-Control-Allow-Headers'  => $allow_headers);
-      $self->res->headers->add('Access-Control-Expose-Headers' => 'x-json, Content-Disposition');
+      $self->res->headers->add('Access-Control-Allow-Headers'     => $allow_headers);
+      $self->res->headers->add('Access-Control-Expose-Headers'    => 'x-json, Content-Disposition');
     }
   );
 

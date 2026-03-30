@@ -447,18 +447,6 @@ sub delete {
   return $res;
 }
 
-sub add_upstream_headers {
-  my $self    = shift;
-  my $c       = shift;
-  my $headers = shift;
-
-  if ($c->stash->{remote_user}) {
-    $headers->{$c->app->config->{authentication}->{upstream}->{principalheader}}   = $c->stash->{remote_user};
-    $headers->{$c->app->config->{authentication}->{upstream}->{affiliationheader}} = $c->stash->{affiliation} if $c->stash->{affiliation};
-    $c->app->log->debug("setting upstream headers\n" . $c->app->dumper($headers));
-  }
-}
-
 sub modify {
   my $self             = shift;
   my $c                = shift;
@@ -516,44 +504,6 @@ sub modify {
     return $res;
   }
   return $res;
-
-  my %params;
-  $params{state}            = $state            if $state;
-  $params{label}            = $label            if $label;
-  $params{ownerId}          = $ownerid          if $ownerid;
-  $params{logMessage}       = $logmessage       if $logmessage;
-  $params{lastModifiedDate} = $lastmodifieddate if $lastmodifieddate;
-
-  if ($useadmin) {
-    $username = $c->app->{config}->{phaidra}->{adminusername};
-    $password = $c->app->{config}->{phaidra}->{adminpassword};
-  }
-
-  my $url = Mojo::URL->new;
-  $url->scheme($c->app->config->{fedora}->{scheme} ? $c->app->config->{fedora}->{scheme} : 'https');
-  $url->userinfo("$username:$password");
-  $url->host($c->app->config->{phaidra}->{fedorabaseurl});
-  $url->path("/fedora/objects/$pid");
-  $url->query(\%params);
-
-  my $ua = Mojo::UserAgent->new;
-  my %headers;
-  $self->add_upstream_headers($c, \%headers);
-
-  my $putres = $ua->put($url => \%headers)->result;
-  if ($putres->is_success) {
-    my $hooks_model = PhaidraAPI::Model::Hooks->new;
-    my $hr          = $hooks_model->modify_hook($c, $pid, $state);
-    if ($hr->{status} ne 200) {
-      $c->app->log->error("pid[$pid] Error in modify_hook: " . $c->app->dumper($hr));
-    }
-  }
-  else {
-    unshift @{$res->{alerts}}, {type => 'error', msg => $putres->message};
-    $res->{status} = $putres->{code} ? $putres->{code} : 500;
-  }
-
-  return $res;
 }
 
 sub create {
@@ -583,9 +533,6 @@ sub create {
   my $oaiid = "oai:" . $c->app->config->{phaidra}->{proaiRepositoryIdentifier} . ":" . $pid;
   my @relationships;
   push @relationships, {predicate => "info:fedora/fedora-system:def/model#hasModel", object => "info:fedora/" . $contentmodel};
-  unless (exists($c->app->config->{phaidra}->{nolegacyds}) and $c->app->config->{phaidra}->{nolegacyds} == 1) {
-    push @relationships, {predicate => "http://www.openarchives.org/OAI/2.0/itemID", object => $oaiid};
-  }
 
   # set cmodel
   $c->app->log->debug("Set cmodel ($contentmodel)");
@@ -596,28 +543,6 @@ sub create {
     $c->app->log->debug("Error setting cmodel ($contentmodel)");
     return $res;
   }
-
-  unless (exists($c->app->config->{phaidra}->{nolegacyds}) and $c->app->config->{phaidra}->{nolegacyds} == 1) {
-
-    # add thumbnail
-    my $thumburl = "http://" . $c->app->config->{phaidra}->{baseurl} . "/preview/$pid";
-    $c->app->log->debug("Adding thumbnail ($thumburl)");
-    $r = $self->add_datastream($c, $pid, "THUMBNAIL", "image/png", $thumburl, undef, undef, "E", undef, undef, $username, $password);
-    push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
-    $res->{status} = $r->{status};
-    if ($r->{status} ne 200) {
-      return $res;
-    }
-
-    # add stylesheet
-    $r = $self->add_datastream($c, $pid, "STYLESHEET", "text/xml", $c->app->config->{phaidra}->{fedorastylesheeturl}, undef, undef, "E", undef, undef, $username, $password);
-    push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
-    $res->{status} = $r->{status};
-    if ($r->{status} ne 200) {
-      return $res;
-    }
-  }
-
   return $res;
 }
 
