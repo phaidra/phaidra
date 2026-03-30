@@ -12,6 +12,22 @@
       </v-row>
     </template>
     <template v-else-if="objectInfo">
+      <collection-dialog
+        ref="addcollectiondialog"
+        @collection-selected="addToCollection($event)"
+      ></collection-dialog>
+      <collection-dialog
+        ref="removecollectiondialog"
+        @collection-selected="removeObjectFromCollection($event)"
+      ></collection-dialog>
+      <list-dialog
+        ref="addlistdialog"
+        @list-selected="addObjectToList($event)"
+      ></list-dialog>
+      <list-dialog
+        ref="removelistdialog"
+        @list-selected="removeObjectFromList($event)"
+      ></list-dialog>
       <v-row
         v-if="objectInfo.tombstone"
         justify="center"
@@ -497,13 +513,69 @@
               </v-row>
             </v-col>
           </v-row>
-          <v-row v-if="displayTitles && displayTitles.length > 0">
-            <v-col cols="12">
+          <v-row
+            v-if="(displayTitles && displayTitles.length > 0) || (signedin && showAddToCollectionAction)"
+            align="start"
+            no-gutters
+            :justify="(displayTitles && displayTitles.length > 0) ? 'start' : 'end'"
+            :class="{ 'mb-2': !displayTitles || !displayTitles.length }"
+          >
+            <v-col
+              v-if="displayTitles && displayTitles.length > 0"
+              cols="12"
+              sm
+              class="pr-sm-2"
+              style="min-width: 0;"
+            >
               <div v-for="(titleObj, idx) in displayTitles" :key="'title-' + idx" class="mb-4">
                 <h1 class="text-h4 font-weight-light mb-2">{{ titleObj.mainTitle }}</h1>
                 <h2 v-if="titleObj.subtitle" class="text-h5 font-weight-light secondary--text">{{ titleObj.subtitle }}</h2>
               </div>
               <v-divider class="mb-2" v-if="!showPreview"></v-divider>
+            </v-col>
+            <v-col
+              v-if="signedin && showAddToCollectionAction"
+              cols="12"
+              sm="auto"
+              class="flex-shrink-0 align-self-start pt-1"
+            >
+              <div
+                class="d-flex"
+                :class="displayTitles && displayTitles.length > 0 ? 'justify-end justify-sm-start' : 'justify-end'"
+              >
+                <v-menu offset-y>
+                  <template v-slot:activator="{ on: menuOn, attrs: menuAttrs }">
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on: tipOn, attrs: tipAttrs }">
+                        <v-btn
+                          icon
+                          :class="displayTitles && displayTitles.length > 0 ? 'ml-sm-1' : ''"
+                          v-bind="{ ...menuAttrs, ...tipAttrs }"
+                          v-on="{ ...tipOn, ...menuOn }"
+                          :aria-label="$t('Add to collection') + ' / ' + $t('Add to object list')"
+                        >
+                          <v-icon>mdi-bookmark-plus-outline</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>{{ $t('Add to collection') }} / {{ $t('Add to object list') }}</span>
+                    </v-tooltip>
+                  </template>
+                  <v-list>
+                    <v-list-item @click="$refs.addlistdialog.open()">
+                      <v-list-item-title>{{ $t('Add to object list') }} ...</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="$refs.removelistdialog.open()">
+                      <v-list-item-title>{{ $t('Remove from object list') }} ...</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="$refs.addcollectiondialog.open()">
+                      <v-list-item-title>{{ $t('Add to collection') }} ...</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="$refs.removecollectiondialog.open()">
+                      <v-list-item-title>{{ $t('Remove from collection') }} ...</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </div>
             </v-col>
           </v-row>
           <v-row justify="center" v-if="showPreview">
@@ -2072,7 +2144,6 @@
                             class="mb-1"
                             @click="$refs.addcollectiondialog.open()"
                         >{{ $t("Add to collection") }}</a>
-                        <collection-dialog ref="addcollectiondialog" @collection-selected="addToCollection($event)"></collection-dialog>
                       </v-row>
 
                       <v-row
@@ -2382,8 +2453,12 @@ import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
 import objectMixin from "phaidra-vue-components/src/mixins/object";
 import lang3to2map from "phaidra-vue-components/src/utils/lang3to2map";
 import Autolinker from "autolinker";
+import ListDialog from "phaidra-vue-components/src/components/select/ListDialog";
 
 export default {
+  components: {
+    ListDialog
+  },
   mixins: [context, config, vocabulary, objectMixin],
   validate({ params }) {
     return /^o:\d+$/.test(params.pid);
@@ -2394,6 +2469,16 @@ export default {
   computed: {
     ownerEmail: function () {
       return this.instanceconfig.owneremailoverride ? this.instanceconfig.owneremailoverride : this.objectInfo.owner.email
+    },
+    showAddToCollectionAction: function () {
+      return !!(this.objectInfo && !this.objectInfo.tombstone)
+    },
+    detailBookmarkMembers: function () {
+      if (!this.objectInfo) {
+        return []
+      }
+      const title = this.objectInfo.sort_dc_title ? String(this.objectInfo.sort_dc_title) : ''
+      return [{ pid: this.objectInfo.pid, title }]
     },
     collMembersPage: {
       get() {
@@ -3357,6 +3442,92 @@ export default {
         detail: "-",
       };
     },
+    async refreshDetailObjectInfo () {
+      const pid = (this.objectInfo && this.objectInfo.pid) || this.$route.params.pid
+      if (!pid) {
+        return
+      }
+      await this.fetchAsyncData(this, pid)
+    },
+    addObjectToList: async function (list) {
+      try {
+        this.$store.commit('setLoading', true)
+        var httpFormData = new FormData()
+        httpFormData.append('members', JSON.stringify({ members: this.detailBookmarkMembers }))
+        let response = await this.$axios.request({
+          method: 'POST',
+          url: '/list/' + list.listid + '/members/add',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-XSRF-TOKEN': this.user.token
+          },
+          data: httpFormData
+        })
+        if (response.data.status === 200) {
+          this.$store.commit('setAlerts', [{ msg: this.$t('Object list successfully updated'), type: 'success' }])
+        } else if (response.data.alerts && response.data.alerts.length > 0) {
+          this.$store.commit('setAlerts', response.data.alerts)
+        }
+      } catch (error) {
+        console.log(error)
+        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+      } finally {
+        this.$store.commit('setLoading', false)
+      }
+    },
+    removeObjectFromList: async function (list) {
+      try {
+        this.$store.commit('setLoading', true)
+        var httpFormData = new FormData()
+        httpFormData.append('members', JSON.stringify({ members: this.detailBookmarkMembers }))
+        let response = await this.$axios.request({
+          method: 'POST',
+          url: '/list/' + list.listid + '/members/remove',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-XSRF-TOKEN': this.user.token
+          },
+          data: httpFormData
+        })
+        if (response.data.status === 200) {
+          this.$store.commit('setAlerts', [{ msg: this.$t('Object list successfully updated'), type: 'success' }])
+        } else if (response.data.alerts && response.data.alerts.length > 0) {
+          this.$store.commit('setAlerts', response.data.alerts)
+        }
+      } catch (error) {
+        console.log(error)
+        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+      } finally {
+        this.$store.commit('setLoading', false)
+      }
+    },
+    removeObjectFromCollection: async function (collection) {
+      try {
+        this.$store.commit('setLoading', true)
+        var httpFormData = new FormData()
+        httpFormData.append('metadata', JSON.stringify({ metadata: { members: this.detailBookmarkMembers } }))
+        let response = await this.$axios.request({
+          method: 'POST',
+          url: '/collection/' + collection.pid + '/members/remove',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-XSRF-TOKEN': this.user.token
+          },
+          data: httpFormData
+        })
+        if (response.data.status === 200) {
+          this.$store.commit('setAlerts', [{ msg: this.$t('Collection successfully updated'), type: 'success' }])
+          await this.refreshDetailObjectInfo()
+        } else if (response.data.alerts && response.data.alerts.length > 0) {
+          this.$store.commit('setAlerts', response.data.alerts)
+        }
+      } catch (error) {
+        console.log(error)
+        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+      } finally {
+        this.$store.commit('setLoading', false)
+      }
+    },
     addToCollection: async function (collection) {
       try {
         this.$store.commit('setLoading', true)
@@ -3373,10 +3544,7 @@ export default {
         })
         if (response.data.status === 200) {
           this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfully updated'), type: 'success' } ])
-          await this.$store.dispatch(
-            "fetchCollectionMembers",
-            { pid: this.objectInfo.pid, page: this.collMembersCurrentPage, pagesize: this.collMembersPagesize }
-          )
+          await this.refreshDetailObjectInfo()
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
             this.$store.commit('setAlerts', response.data.alerts)
