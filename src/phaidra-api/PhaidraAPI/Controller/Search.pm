@@ -58,11 +58,16 @@ sub search_ocr {
   $self->app->log->debug("Searching for page PIDs for object $pid");
 
   # Escape the PID for Solr query - quote it to handle colons and special characters
-  my $escaped_pid = "\"$pid\"";
-  $url->query(q => "pid:$escaped_pid", fl => "haspart", rows => 1000, wt => "json");
-  $self->app->log->debug("Query: " . $url->to_string);
+  my $escaped_pid      = "\"$pid\"";
+  my %pid_query_params = (
+    q    => "pid:$escaped_pid",
+    fl   => "haspart",
+    rows => 1000,
+    wt   => "json",
+  );
+  $self->app->log->debug("POST Query URL: " . $url->to_string . " params: " . $self->app->dumper(\%pid_query_params));
   my $ua  = Mojo::UserAgent->new;
-  my $get = $ua->get($url)->result;
+  my $get = $ua->post($url => form => \%pid_query_params)->result;
   $self->app->log->debug("Response: " . $get->body);
   if (!$get->is_success) {
     $self->render(json => {error => "Failed to get page PIDs: " . $get->message}, status => 500);
@@ -116,10 +121,15 @@ sub search_ocr {
   }
 
   # First get total count of matching pages (scalable)
-  $url->query(q => $search_query, fl => "pid", rows => 0, wt => "json");
-  $self->app->log->debug("Count Query: " . $url->to_string);
+  my %count_query_params = (
+    q    => $search_query,
+    fl   => "pid",
+    rows => 0,
+    wt   => "json",
+  );
+  $self->app->log->debug("POST Count Query URL: " . $url->to_string . " params: " . $self->app->dumper(\%count_query_params));
 
-  $get = $ua->get($url)->result;
+  $get = $ua->post($url => form => \%count_query_params)->result;
   $self->app->log->debug("Count Response: " . $get->body);
 
   my $total_matching_pages = 0;
@@ -171,10 +181,17 @@ sub search_ocr {
 
   # Use Solr's built-in pagination with a sortable field
   # We'll sort by PID which should give us consistent ordering
-  $url->query(q => $search_query, fl => "pid", start => $current_page_index, rows => 1, wt => "json", sort => "pid asc");
-  $self->app->log->debug("Current Page Query: " . $url->to_string);
+  my %page_query_params = (
+    q     => $search_query,
+    fl    => "pid",
+    start => $current_page_index,
+    rows  => 1,
+    wt    => "json",
+    sort  => "pid asc",
+  );
+  $self->app->log->debug("POST Current Page Query URL: " . $url->to_string . " params: " . $self->app->dumper(\%page_query_params));
 
-  $get = $ua->get($url)->result;
+  $get = $ua->post($url => form => \%page_query_params)->result;
   $self->app->log->debug("Current Page Response: " . $get->body);
 
   if (!$get->is_success) {
