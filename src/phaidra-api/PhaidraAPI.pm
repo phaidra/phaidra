@@ -67,8 +67,6 @@ sub is_bot_ua {
   return 0;
 }
 
-#$ENV{MOJO_TMPDIR} = '/usr/local/fedora/imagemanipulator/tmp';
-
 # This method will run once at server start
 sub startup {
   my $self = shift;
@@ -133,15 +131,6 @@ sub startup {
       dsn      => $config->{fedora}->{fedora_db}->{dsn},
       username => $config->{fedora}->{fedora_db}->{username},
       password => $config->{fedora}->{fedora_db}->{password},
-      options  => {mysql_auto_reconnect => 1}
-    };
-  }
-
-  if ($config->{imagemanipulator_db}) {
-    $databases{'db_imagemanipulator'} = {
-      dsn      => $config->{imagemanipulator_db}->{dsn},
-      username => $config->{imagemanipulator_db}->{username},
-      password => $config->{imagemanipulator_db}->{password},
       options  => {mysql_auto_reconnect => 1}
     };
   }
