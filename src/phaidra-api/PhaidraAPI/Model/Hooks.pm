@@ -42,10 +42,6 @@ sub add_or_modify_datastream_hooks {
 
     if ($dsid eq "OCTETS") {
       if ($exists) {
-
-        # delete imagemanipulator record
-        $c->app->db_imagemanipulator->dbh->do('DELETE FROM image WHERE url = "' . $pid . '";') or $c->app->log->error("Error deleting from imagemanipulator db:" . $c->app->db_imagemanipulator->dbh->errstr);
-
         my $res_cmodel = $search_model->get_cmodel($c, $pid);
         if ($res_cmodel->{status} eq 200) {
           if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
@@ -231,11 +227,6 @@ sub add_octets_hook {
   }
 
   if ($exists) {
-
-    # delete imagemanipulator record
-    if ($c->app->config->{imagemanipulator_db}) {
-      $c->app->db_imagemanipulator->dbh->do('DELETE FROM image WHERE url = "' . $pid . '";') or $c->app->log->error("Error deleting from imagemanipulator db:" . $c->app->db_imagemanipulator->dbh->errstr);
-    }
 
     if ($res_cmodel->{status} eq 200) {
       if ($res_cmodel->{cmodel} eq 'Picture' or $res_cmodel->{cmodel} eq 'PDFDocument') {
