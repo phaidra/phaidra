@@ -71,6 +71,8 @@ sub is_bot_ua {
 sub startup {
   my $self = shift;
 
+  $self->log->level('debug');
+
   my $config = $self->plugin('Config' => {file => 'PhaidraAPI.conf'});
   $self->config($config);
 
