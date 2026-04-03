@@ -549,6 +549,7 @@
                       <template v-slot:activator="{ on: tipOn, attrs: tipAttrs }">
                         <v-btn
                           icon
+                          large
                           :class="displayTitles && displayTitles.length > 0 ? 'ml-sm-1' : ''"
                           v-bind="{ ...menuAttrs, ...tipAttrs }"
                           v-on="{ ...tipOn, ...menuOn }"
