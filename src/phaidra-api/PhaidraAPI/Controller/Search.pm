@@ -6,6 +6,7 @@ use v5.10;
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Search;
 use PhaidraAPI::Model::Fedora;
+use PhaidraAPI::Model::Iiifmanifest;
 use Encode     qw(decode);
 use List::Util qw(first);
 
@@ -40,74 +41,33 @@ sub search_ocr {
   my $start = $self->param('start') // 0;
   $start = int($start);
 
-  # Step 1: Query phaidra core to get page PIDs from haspart field
-  my $url = Mojo::URL->new;
-  $url->scheme($self->app->config->{solr}->{scheme});
-  $url->host($self->app->config->{solr}->{host});
-  $url->port($self->app->config->{solr}->{port});
-
-  my $phaidra_core = 'phaidra';
-  if ($self->app->config->{solr}->{path}) {
-    $url->path("/" . $self->app->config->{solr}->{path} . "/solr/$phaidra_core/select");
-  }
-  else {
-    $url->path("/solr/$phaidra_core/select");
-  }
-
-  # log pid
-  $self->app->log->debug("Searching for page PIDs for object $pid");
-
-  # Escape the PID for Solr query - quote it to handle colons and special characters
-  my $escaped_pid      = "\"$pid\"";
-  my %pid_query_params = (
-    q    => "pid:$escaped_pid",
-    fl   => "haspart",
-    rows => 1000,
-    wt   => "json",
-  );
-  $self->app->log->debug("POST Query URL: " . $url->to_string . " params: " . $self->app->dumper(\%pid_query_params));
-  my $ua  = Mojo::UserAgent->new;
-  my $get = $ua->post($url => form => \%pid_query_params)->result;
-  $self->app->log->debug("Response: " . $get->body);
-  if (!$get->is_success) {
-    $self->render(json => {error => "Failed to get page PIDs: " . $get->message}, status => 500);
+  # Step 1: Get the ordered page PIDs from the IIIF manifest
+  my $iiifm_model = PhaidraAPI::Model::Iiifmanifest->new;
+  my $mr          = $iiifm_model->get_updated_manifest($self, $pid);
+  if ($mr->{status} ne 200) {
+    $self->render(json => {error => "Failed to load IIIF manifest: " . ($mr->{alerts}->[0]->{msg} // 'unknown error')}, status => 500);
     return;
   }
 
-  my $phaidra_response = $get->json;
-  my @page_pids        = ();
-
-  # Extract page PIDs from haspart field
-  if ($phaidra_response->{response} && $phaidra_response->{response}->{docs} && @{$phaidra_response->{response}->{docs}}) {
-    my $haspart = $phaidra_response->{response}->{docs}->[0]->{haspart};
-    if ($haspart) {
-      if (ref($haspart) eq 'ARRAY') {
-        @page_pids = @$haspart;
-      }
-      else {
-        @page_pids = ($haspart);
-      }
-    }
-  }
-
+  my @page_pids = $self->_extract_page_pids_from_manifest($mr->{manifest});
   if (!@page_pids) {
     $self->render(json => {error => "No pages found for object $pid"}, status => 404);
     return;
   }
 
-  # Step 2: Find which pages contain matches (scalable approach)
-  my $page_pids_query = join(' OR ', map {"pid:\"$_\""} @page_pids);
+  # Step 2: Find which pages contain matches in the book's pages
 
   # Whole-word, case-insensitive match in Solr: use a quoted term
   # Escape embedded quotes in the query
   my $escaped_q = $query // '';
-  $escaped_q =~ s/([+\-&|!(){}[\]^"~:\\\/])/\\$1/g;
+  $escaped_q =~ s{([+\-!(){}\[\]^"~*?:\\\/])}{\\$1}g;
 
-  # Use wildcard query for compatibility with newer Solr versions
   # Search specifically in extracted_text (OCR text stored in phaidra_pages core)
-  my $search_query = "($page_pids_query) AND extracted_text:(*$escaped_q*)";
+  # Use exact query, since we currently do exact search in ALTO as well. Otherwise we'll
+  # have pages for which we have no ALTO matches and the navigation in Mirador will be broken
+  my $search_query = "extracted_text:($escaped_q)";
 
-  $url = Mojo::URL->new;
+  my $url = Mojo::URL->new;
   $url->scheme($self->app->config->{solr}->{scheme});
   $url->host($self->app->config->{solr}->{host});
   $url->port($self->app->config->{solr}->{port});
@@ -120,16 +80,18 @@ sub search_ocr {
     $url->path("/solr/$pages_core/select");
   }
 
-  # First get total count of matching pages (scalable)
+  # First get total count of matching pages in this book
   my %count_query_params = (
     q    => $search_query,
+    fq   => "ispartof:\"$pid\"",
     fl   => "pid",
     rows => 0,
     wt   => "json",
   );
+  my $ua = Mojo::UserAgent->new;
   $self->app->log->debug("POST Count Query URL: " . $url->to_string . " params: " . $self->app->dumper(\%count_query_params));
 
-  $get = $ua->post($url => form => \%count_query_params)->result;
+  my $get = $ua->post($url => form => \%count_query_params)->result;
   $self->app->log->debug("Count Response: " . $get->body);
 
   my $total_matching_pages = 0;
@@ -159,40 +121,24 @@ sub search_ocr {
     return;
   }
 
-  # Step 3: Get the current page using Solr pagination (scalable)
-  my $pages_per_request  = 1;                                                  # Show one page at a time
-  my $current_page_index = int($start / $pages_per_request);
-  my $last_page_start    = ($total_matching_pages - 1) * $pages_per_request;
-
-  # Validate page index
-  if ($current_page_index >= $total_matching_pages) {
-    $self->render(json => {error => "Page index out of range"}, status => 400);
-    return;
-  }
-
-  # Get the current page PID using true cursor-based pagination (scalable to unlimited pages)
-  # We'll use a more efficient approach that doesn't load all pages into memory
-
-  # Create a mapping of page PIDs to their position in the original order
+  # Load all matching page pids and order them by the IIIF manifest sequence
   my %page_position_map = ();
   for (my $i = 0; $i < @page_pids; $i++) {
     $page_position_map{$page_pids[$i]} = $i;
   }
 
-  # Use Solr's built-in pagination with a sortable field
-  # We'll sort by PID which should give us consistent ordering
   my %page_query_params = (
-    q     => $search_query,
-    fl    => "pid",
-    start => $current_page_index,
-    rows  => 1,
-    wt    => "json",
-    sort  => "pid asc",
+    q    => $search_query,
+    fq   => "ispartof:\"$pid\"",
+    fl   => "pid",
+    rows => $total_matching_pages,
+    wt   => "json",
+    sort => "created asc",
   );
-  $self->app->log->debug("POST Current Page Query URL: " . $url->to_string . " params: " . $self->app->dumper(\%page_query_params));
+  $self->app->log->debug("POST Matching Pages Query URL: " . $url->to_string . " params: " . $self->app->dumper(\%page_query_params));
 
   $get = $ua->post($url => form => \%page_query_params)->result;
-  $self->app->log->debug("Current Page Response: " . $get->body);
+  $self->app->log->debug("Matching Pages Response: " . $get->body);
 
   if (!$get->is_success) {
     $self->render(json => {error => $get->message}, status => 500);
@@ -201,19 +147,25 @@ sub search_ocr {
 
   my $page_response = $get->json;
   if (!$page_response->{response} || !$page_response->{response}->{docs} || @{$page_response->{response}->{docs}} == 0) {
-    $self->render(json => {error => "No page found for index $current_page_index"}, status => 404);
+    $self->render(json => {error => "No page found for index $start"}, status => 404);
     return;
   }
 
-  # Get the current page PID from Solr's paginated result
-  my $current_page_pid = $page_response->{response}->{docs}->[0]->{pid};
+  my @matching_page_pids = map {$_->{pid}} @{$page_response->{response}->{docs}};
+  @matching_page_pids   = sort {$page_position_map{$a} <=> $page_position_map{$b}} grep {exists $page_position_map{$_}} @matching_page_pids;
+  $total_matching_pages = scalar @matching_page_pids;
 
-  # Find the page number (1-indexed position in original book)
-  my $page_number = 0;
-  my $page_index  = first {$page_pids[$_] eq $current_page_pid} 0 .. $#page_pids;
-  if (defined $page_index) {
-    $page_number = $page_index + 1;
+  my $current_page_index = $start;
+  my $last_page_start    = $total_matching_pages - 1;
+
+  # Validate page index
+  if ($current_page_index >= $total_matching_pages) {
+    $self->render(json => {error => "Page index out of range"}, status => 400);
+    return;
   }
+
+  my $current_page_pid = $matching_page_pids[$current_page_index];
+  my $page_number      = exists $page_position_map{$current_page_pid} ? $page_position_map{$current_page_pid} + 1 : 0;
 
   $self->app->log->debug("Processing page $current_page_index of $total_matching_pages matching pages (PID: $current_page_pid, book page: $page_number)");
 
@@ -320,17 +272,72 @@ sub search_ocr {
 
   # Add next/prev links for page navigation
   if ($current_page_index < $total_matching_pages - 1) {
-    my $next_start = $start + $pages_per_request;
+    my $next_start = $start + 1;
     $response_json->{'next'} = "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=$next_start";
   }
 
   if ($current_page_index > 0) {
-    my $prev_start = $start - $pages_per_request;
+    my $prev_start = $start - 1;
     if ($prev_start < 0) {$prev_start = 0;}
     $response_json->{'prev'} = "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=$prev_start";
   }
 
   $self->render(json => $response_json, status => 200);
+}
+
+sub _extract_page_pids_from_manifest {
+  my ($self, $manifest) = @_;
+  return () unless $manifest && ref $manifest eq 'HASH' && $manifest->{items} && ref $manifest->{items} eq 'ARRAY';
+
+  my @pids;
+  for my $canvas (@{$manifest->{items}}) {
+    next unless ref $canvas eq 'HASH';
+    if (my $pid = $self->_page_pid_from_manifest_canvas($canvas)) {
+      push @pids, $pid;
+    }
+  }
+  return @pids;
+}
+
+sub _page_pid_from_manifest_canvas {
+  my ($self, $canvas) = @_;
+  return unless $canvas && ref $canvas eq 'HASH';
+
+  if (my $items = $canvas->{items}) {
+    if (ref $items eq 'ARRAY' && @$items) {
+      my $annotation_page = $items->[0];
+      if (ref $annotation_page eq 'HASH' && $annotation_page->{items} && ref $annotation_page->{items} eq 'ARRAY' && @{$annotation_page->{items}}) {
+        my $annotation = $annotation_page->{items}->[0];
+        if (ref $annotation eq 'HASH' && $annotation->{body} && ref $annotation->{body} eq 'HASH' && $annotation->{body}->{id}) {
+          return $self->_page_pid_from_image_id($annotation->{body}->{id});
+        }
+      }
+    }
+  }
+
+  if (my $label = $canvas->{label}) {
+    if (ref $label eq 'HASH' && $label->{en} && ref $label->{en} eq 'ARRAY' && @{$label->{en}}) {
+      for my $txt (@{$label->{en}}) {
+        if ($txt =~ /(o:\d+)/) {
+          return $1;
+        }
+      }
+    }
+    elsif (!ref $label && $label =~ /(o:\d+)/) {
+      return $1;
+    }
+  }
+
+  return;
+}
+
+sub _page_pid_from_image_id {
+  my ($self, $image_id) = @_;
+  return unless defined $image_id;
+  if ($image_id =~ m{[?&]IIIF=([^/]+)\.tif}) {
+    return $1;
+  }
+  return;
 }
 
 sub search_solr {
