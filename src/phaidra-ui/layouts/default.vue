@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <style v-if="cmsCss" id="instance-cms-css" v-html="cmsCss"></style>
     <v-container class="px-4 px-md-0" fluid v-if="!loading">
       <v-row no-gutters>
         <v-col>
@@ -118,10 +119,10 @@ export default {
       },
       title: this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
       meta: [
-      { charset: 'utf-8' },
-      { name: 'Generator', content: 'PHAIDRA' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { name: 'theme-color', content: this.$vuetify.theme.dark ? this.$config.darkPrimaryColor : this.$config.primaryColor }
+        { charset: 'utf-8' },
+        { name: 'Generator', content: 'PHAIDRA' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'theme-color', content: this.$vuetify.theme.dark ? this.$config.darkPrimaryColor : this.$config.primaryColor }
       ],
       script: []
     };
@@ -132,18 +133,18 @@ export default {
       })
     }
     
-      if (this.instanceconfig.customJavaScript && this.instanceconfig.customJavaScript.trim()) {
-        let scriptContent = this.instanceconfig.customJavaScript.trim();
-        scriptContent = scriptContent.replace(/<script[^>]*>/gi, '').replace(/<\/script>/gi, '');
+    if (this.instanceconfig.customJavaScript && this.instanceconfig.customJavaScript.trim()) {
+      let scriptContent = this.instanceconfig.customJavaScript.trim();
+      scriptContent = scriptContent.replace(/<script[^>]*>/gi, '').replace(/<\/script>/gi, '');
         
-        metaInfo.script.push({
-          type: 'text/javascript',
-          innerHTML: scriptContent,
-          body: false
-        })
-        metaInfo.__dangerouslyDisableSanitizers = ['script']
-      }
-    
+      metaInfo.script.push({
+        type: 'text/javascript',
+        innerHTML: scriptContent,
+        body: false
+      })
+      metaInfo.__dangerouslyDisableSanitizers = ['script']
+    }
+
     return metaInfo;
   },
   watch: {
@@ -192,13 +193,6 @@ export default {
     }
   },
   mounted() {
-    if (this.instanceconfig.cms_css && this.instanceconfig.cms_css !== '') {
-      const style = document.createElement('style');
-      style.type = 'text/css';
-      style.innerHTML = this.instanceconfig.cms_css;
-      document.head.appendChild(style);
-    }
-
     Object.entries(this.i18n_override).forEach(([lang, messages]) => {
         this.$i18n.mergeLocaleMessage(lang, messages)
       }
@@ -215,6 +209,9 @@ export default {
     await this.loadInstanceConfigToStore()
   },
   computed: {
+    cmsCss() {
+      return this.instanceconfig?.cms_css?.trim() || ''
+    },
     prettyInstanceconfig: function () {
       return JSON.stringify(this.instanceconfig, null, 2)
     },
