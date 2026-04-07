@@ -341,7 +341,7 @@ metadata->json-ld->container->{predicates}
 
 metadata->json-ld->member_foo->{predicates} 
 
-metadata->json-ld->member_bar->{predicaes}
+metadata->json-ld->member_bar->{predicates}
 
 etc.
 
