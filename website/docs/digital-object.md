@@ -23,7 +23,7 @@ The basic properties are
 
 ## Datastreams
 
-Many types of datasteams have been used in PHAIDRA throughout it's history. Currently, the most important are:
+Many types of datastreams have been used in PHAIDRA throughout it's history. Currently, the most important are:
 
 - OCTETS - Holds the binary data of the object, if there are any. I.e. if the object is a Picture, then OCTETS is the JPEG file (or TIFF, or any other file type allowed by the repository, see [Content models](#content-models) for typical values). If the object is a Collection however, there will be no OCTETS datastream, since Collection does not contain binary data of it's own, only relationships to other objects. Access restriction apply to this datastream.
 
@@ -43,7 +43,7 @@ Many types of datasteams have been used in PHAIDRA throughout it's history. Curr
 
 - FULLTEXT - Can contain the fulltext extracted from the object. Access restriction apply to this datastream.
 
-- ANNOTATIONS - If Pictures are annotated, the annotations are saved here. An annotation consits of the bounding box coordinates (x,y,w,h), title, category and text (the implementation follows the annotation feature of <a target="_blank" href="https://github.com/guglielmo/iipmooviewer">iipmooviewer</a>).
+- ANNOTATIONS - If Pictures are annotated, the annotations are saved here. An annotation consist of the bounding box coordinates (x,y,w,h), title, category and text (the implementation follows the annotation feature of <a target="_blank" href="https://github.com/guglielmo/iipmooviewer">iipmooviewer</a>).
 
 - ? - One can also save a custom datastream (i.e. MY-MIGRATION-DATA) and retrieve it back from API. Access restriction apply to custom datastreams.
 
@@ -65,7 +65,7 @@ Here are the current content models. The allowed types can vary on PHAIDRA insta
 
 - Audio - Examples: audio/x-wav, audio/wav, audio/mpeg, audio/flac, audio/ogg, audio/x-aiff, audio/aiff
 
-- PDFDocument - Exampes: application/pdf, application/x-pdf
+- PDFDocument - Examples: application/pdf, application/x-pdf
 
 - Asset - Anything that contains binary data and does not fit into the content models listed above can be saved as an Asset.
 

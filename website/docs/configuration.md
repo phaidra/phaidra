@@ -13,7 +13,7 @@ To see what values need to be and can be present in .env please refer to the [RE
 
 If you log in to PHAIDRA using admin credentials (`PHAIDRA_ADMIN_USER`, `PHAIDRA_ADMIN_PASSWORD` in `.env`, `phaidraAdmin`/`12345` by default), you will see the link to admin section in navigation.
 
-The configuration in admin is split into a *private* and *public* configuration. Private is basically API configuration and also conains credentials. Public is the configuration of the UI and API which is open and only defines information like name of the repository, controlled vocabularies, etc (so it can be sent to the clients in single-page-applications as well).
+The configuration in admin is split into a *private* and *public* configuration. Private is basically API configuration and also contains credentials. Public is the configuration of the UI and API which is open and only defines information like name of the repository, controlled vocabularies, etc (so it can be sent to the clients in single-page-applications as well).
 
 Most of the settings have an explanatory hint text, but some, like datastructures, need some more explanation/examples.
 
@@ -21,7 +21,7 @@ Most of the settings have an explanatory hint text, but some, like datastructure
 
 In CMS section you can define/modify Vue templates which should be used on specific pages like Header, Main page, Impressum, etc.
 
-You can only define the template here (which will be included via rutime compiler) if any special
+You can only define the template here (which will be included via runtime compiler) if any special
 
 ### Datastructures
 
@@ -29,7 +29,7 @@ You can only define the template here (which will be included via rutime compile
 
 In PHAIDRA we use to define the organisational structure in our own persistent-identifier based data model. The reason is that on one hand, we do not always have access to an API providing this information about the organization, on the other hand the organisational structure can be changing without keeping track of the history, which would make management of the links difficult.
 
-The org units is a simple json structure looking like this:
+The org units is a simple JSON structure looking like this:
 
 ```json
 [

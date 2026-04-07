@@ -56,9 +56,9 @@ PHAIDRA objects can be access in multiple ways:
 
 - An [IIIF imageserver](https://iiif.io/) is integrated for displaying Pictures ([iipmooviewer](https://github.com/guglielmo/iipmooviewer)) and Books ([Mirador](https://projectmirador.org/)).
 
-- Videos can be viewed via html 5 video tag or a streaming server can be integrated (i.e. [OpenCast](https://opencast.org/). The streaming server is not part of PHAIDRA.)
+- Videos can be viewed via HTML 5 video tag or a streaming server can be integrated (i.e. [OpenCast](https://opencast.org/). The streaming server is not part of PHAIDRA.)
 
-- Audios can be played via html 5 audio tag.
+- Audios can be played via HTML 5 audio tag.
 
 - PDF documents are displayed on detail page using [PDF.js](https://mozilla.github.io/pdf.js/) viewer.
 

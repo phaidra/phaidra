@@ -10,7 +10,7 @@ Now we'll try to explain the role these components play in the repository:
 
 ## OCFL
 
-All digital object's data and matadata are stored on a filesystem using the Oxford Common Filesystem Layout standard (with Fedora Repository extensions). Ideally, it contains all information necessary to reconstuct the repository during a disaster recovery. This includes the binaries and all the metadata: metadata describing the digital object provided from the user as well as preservation metadata necessary to understand the structure of the repository and the relationships between the objects, verify the integrity of all files and enable authorization.
+All digital object's data and metadata are stored on a filesystem using the Oxford Common Filesystem Layout standard (with Fedora Repository extensions). Ideally, it contains all information necessary to reconstruct the repository during a disaster recovery. This includes the binaries and all the metadata: metadata describing the digital object provided from the user as well as preservation metadata necessary to understand the structure of the repository and the relationships between the objects, verify the integrity of all files and enable authorization.
 
 ## Fedora Repository
 
@@ -18,7 +18,7 @@ Fedora Repository is a toolkit implementing many critical repository features us
 
 ## Fedora DB
 
-Fedora Repository keeps it's own index of the content to enable efficent management of the filesystem, the linked-data platform features, etc.
+Fedora Repository keeps it's own index of the content to enable efficient management of the filesystem, the linked-data platform features, etc.
 
 ## Fixity
 
@@ -42,7 +42,7 @@ The imageserver is used to generate thumbnails (for pictures and PDF documents) 
 
 ## PHAIDRA Vue Components
 
-Right from the early days of PHAIDRA there was a need for more than just one frontend for the repository. This led not only to PHAIDRA API implementing many features which would be typically left for frontend (i.e. providing various data viewers which the frontend merely embeds via iframe) but also to the creation of reusable frontend components. PHAIDRA Vue Componets is a library of Vue components and scripts which implement many common use cases: ingest, metadata editing, defining relationships and access rights, search, etc. It enables fast development of tailored frontends (see [Docked Applications](/docs/docked/) for examples) while also keeping them thin, hence easier to maintain.
+Right from the early days of PHAIDRA there was a need for more than just one frontend for the repository. This led not only to PHAIDRA API implementing many features which would be typically left for frontend (i.e. providing various data viewers which the frontend merely embeds via iframe) but also to the creation of reusable frontend components. PHAIDRA Vue Components is a library of Vue components and scripts which implement many common use cases: ingest, metadata editing, defining relationships and access rights, search, etc. It enables fast development of tailored frontends (see [Docked Applications](/docs/docked/) for examples) while also keeping them thin, hence easier to maintain.
 
 Here is a little schematics which summarizes how the parts of PHAIDRA Vue Components work together:
 
@@ -82,5 +82,5 @@ As a central datahub, a repository often needs to be integrated with many other 
 
 ## Harvesters
 
-One of the primary missions of an open respository is dissemination. PHAIDRA uses the OAI-PMH interface through whitch metadata can be harvested in oai_dc and oai_openaire metadata schemas.
+One of the primary missions of an open repository is dissemination. PHAIDRA uses the OAI-PMH interface through which metadata can be harvested in oai_dc and oai_openaire metadata schemas.
 
