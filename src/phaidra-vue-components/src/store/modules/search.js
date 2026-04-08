@@ -154,7 +154,7 @@ export const state = () => ({
         },
         {
           id: 'gplv3',
-          query: 'dc_license:"GPLv3"',
+          query: '(dc_license:"GPLv3" OR dc_license:https\\:\\/\\/www.gnu.org\\/licenses\\/gpl-3.0-standalone.html)',
           label: 'GPLv3'
         },
         {
