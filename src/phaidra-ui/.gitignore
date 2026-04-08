@@ -88,9 +88,3 @@ sw.*
 
 # Vim swap files
 *.swp
-
-# customizable stuff
-components/ext
-pages/ext
-assets/ext
-static/favicon.ico
