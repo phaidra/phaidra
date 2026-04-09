@@ -1677,7 +1677,8 @@ export default {
         title: 'General metadata',
         id: 1,
         fields: digitalFields,
-        disablemenu: true
+        disablemenu: true,
+        outlined: true
       }
     )
 
@@ -1689,7 +1690,8 @@ export default {
             title: 'SUBJECT_SECTION',
             type: 'phaidra:Subject',
             id: 'subject-' + i,
-            fields: subjectFields
+            fields: subjectFields,
+            outlined: true
           }
         )
       }
