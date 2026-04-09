@@ -1305,6 +1305,21 @@ const vocabularies = {
           'ita': 'La Licenza MIT è una licenza open-source permissiva che concede ampia libertà nell\'uso, copia, modifica, fusione, pubblicazione, distribuzione, sublicenza e vendita del software con restrizioni minime. Richiede che la licenza originale e una nota di copyright siano incluse in tutte le copie o parti sostanziali del software. Inoltre, il software viene fornito "così com\'è", senza alcuna garanzia o responsabilità per danni. Tutto ciò rende la licenza semplice e ampiamente consigliata per favorire collaborazione e innovazione.<br/><br/>Questa è una sintesi umanamente comprensibile della licenza (non un suo sostituto). Il testo giuridicamente vincolante della licenza è disponibile qui:<br/><a target="_blank" href="https://opensource.org/license/mit/">Versione estesa</a>'
         }
       },
+      {
+        '@id': 'https://www.gnu.org/licenses/gpl-3.0-standalone.html',
+        'skos:notation': [
+          '8'
+        ],
+        'skos:prefLabel': {
+          'eng': 'GPLv3'
+        },
+        'img': 'gplv3.png',
+        'skos:definition': {
+          'eng': 'The GNU General Public License v3 (GPLv3) is a copyleft open-source license that allows anyone to use, modify, and distribute the software, provided that any distributed modifications or derivative works are also licensed under GPLv3. It requires source code to be made available when the software is distributed. The license also includes patent protections and addresses certain DRM-related restrictions. The software is provided “as is,” without warranty or liability.<br/><br/>This is a human-readable summary of (and not a substitute for) the licence.<br/>The legal binding text of the licence is available here:<br/><a target="_blank" href="https://www.gnu.org/licenses/gpl-3.0-standalone.html">Long version</a>',
+          'deu': 'Die GNU General Public License v3 (GPLv3) ist eine Copyleft-Open-Source-Lizenz, die es erlaubt, die Software zu nutzen, zu kopieren, zu modifizieren und zu verbreiten – unter der Bedingung, dass alle weitergegebenen Änderungen oder abgeleiteten Werke ebenfalls unter der GPLv3 lizenziert werden. Sie verpflichtet dazu, den Quellcode bei der Weitergabe der Software offenzulegen. Darüber hinaus enthält sie Regelungen zum Patentschutz und adressiert bestimmte Einschränkungen im Zusammenhang mit DRM. Die Software wird „as is“ bereitgestellt, ohne jegliche Gewährleistung oder Haftung für Schäden.<br/><br/>Dieser Text ist nicht der Text des Lizenzvertrages sondern nur eine unverbindliche Kurzfassung dessen.<br/>Die verbindliche Fassung der ausgewählten Lizenz finden Sie hier:<br/><a target="_blank" href="https://www.gnu.org/licenses/gpl-3.0-standalone.html">Langversion</a>',
+          'ita': 'La GNU General Public License v3 (GPLv3) è una licenza open-source di tipo copyleft che consente di utilizzare, copiare, modificare e distribuire il software, a condizione che eventuali modifiche o opere derivate distribuite siano rilasciate sotto la stessa licenza GPLv3. Richiede inoltre che il codice sorgente sia reso disponibile quando il software viene distribuito. Include anche disposizioni relative alla protezione brevettuale e affronta alcune restrizioni legate al DRM. Il software viene fornito "così com\'è", senza alcuna garanzia o responsabilità per danni.<br/><br/>Questa è una sintesi umanamente comprensibile della licenza (non un suo sostituto). Il testo giuridicamente vincolante della licenza è disponibile qui:<br/><a target="_blank" href="https://www.gnu.org/licenses/gpl-3.0-standalone.html">Versione estesa</a>'
+        }
+      }
     ],
     loaded: true
   },
