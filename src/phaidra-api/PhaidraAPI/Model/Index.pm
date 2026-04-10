@@ -1915,9 +1915,6 @@ sub _add_jsonld_index {
 
         # index without prefix too, makes it easier to search
         push @{$index->{"_text_"}}, $id->{'@value'};
-
-        # index without prefix too, makes it easier to search
-        push @{$index->{"_text_"}}, $id->{'@value'};
       }
     }
   }
