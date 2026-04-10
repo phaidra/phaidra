@@ -3,6 +3,7 @@ package PhaidraAPI::Controller::Dc;
 use strict;
 use warnings;
 use v5.10;
+use Mojo::Util qw(xml_escape html_unescape encode decode);
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Index;
 
