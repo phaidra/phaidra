@@ -352,7 +352,7 @@ sub signin_shib {
 
     # we only want to check required affiliations if those are defined
     # if requiredaffiliations are NOT defined via docker env config, $reqAff will be an array ref with 1 empty string
-    if (!(ref($reqAff) eq 'ARRAY' && @$reqAff == 1 && defined $reqAff->[0] && $reqAff->[0] eq '')) {
+    if ($reqAff && !(ref($reqAff) eq 'ARRAY' && @$reqAff == 1 && defined $reqAff->[0] && $reqAff->[0] eq '')) {
       my @userAffs = split(';', $affiliation);
       for my $userAff (@userAffs) {
         last if $authorized;
