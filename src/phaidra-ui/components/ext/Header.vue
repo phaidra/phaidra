@@ -170,7 +170,7 @@
 
               <v-col md="9" >
                 <v-row justify-md="end" class="pr-4 py-2">
-                  <div class="d-flex align-center me-2" v-if="signedin">
+                  <div class="d-flex align-center me-2" v-if="signedin && $vuetify.breakpoint.smAndDown">
                     <v-icon
                       class="mr-1"
                       aria-hidden="true"
@@ -503,20 +503,29 @@
                             {{ $t("Admin") }}
                         </v-btn>
                       </v-hover>
-                      <v-hover v-slot:default="{ hover }">
-                        <v-btn
-                          v-show="signedin"
-                          dark
-                          tile
-                          depressed
-                          active-class="ph-button-bg-active"
-                          :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
-                          @click="logout"
-                          class="font-weight-regular white--text"
-                        >                    
-                          {{ $t("Logout") }}
-                        </v-btn>
-                      </v-hover>
+                      <v-menu v-if="signedin" offset-y>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            dark
+                            tile
+                            depressed
+                            class="font-weight-regular white--text text-none"
+                            :color="isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
+                            v-bind="attrs"
+                            v-on="on"
+                            aria-controls="user-menu"
+                          >
+                            <v-icon class="mr-1" aria-hidden="true">mdi-account</v-icon>
+                            {{ user.firstname }} {{ user.lastname }}
+                            <v-icon class="ml-1" aria-hidden="true">mdi-chevron-down</v-icon>
+                          </v-btn>
+                        </template>
+                        <v-list id="user-menu">
+                          <v-list-item @click="logout">
+                            <v-list-item-title>{{ $t("Logout") }}</v-list-item-title>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
                     </v-toolbar-items>
                   </v-toolbar>
                 </v-row>
