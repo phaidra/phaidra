@@ -36,12 +36,6 @@ unless ($bookpid) {
 
 my $ua = Mojo::UserAgent->new;
 
-# this is the maximum in fcrepo simple search
-my $pagesize = 100;
-my $page     = 0;
-my $failed   = 0;
-my $ok       = 0;
-
 my $api = Mojo::URL->new;
 $api->scheme('http');
 $api->host($ENV{PHAIDRA_API_HOST});
@@ -70,6 +64,7 @@ sub getPages {
   my $params = {
     core => 'phaidra_pages',
     q    => '*:*',
+    rows => 99999,
     fq   => 'ispartof:"' . $bookpid . '"'
   };
 
