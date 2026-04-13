@@ -2,7 +2,7 @@
   <div>
     <h1 class="d-sr-only">{{$t('Templates')}}</h1>
         <v-card>
-        <v-card-title class="title font-weight-light white--text">
+        <v-card-title class="title font-weight-light text-white">
             {{ $t('Manage templates') }}
           </v-card-title>
           <v-card-text>
@@ -20,19 +20,19 @@
         </v-card>
         <v-dialog v-model="validationEdit" width="500">
               <v-card>
-                <v-card-title class="title font-weight-light white--text"><span v-t="'Edit Template Validation'"></span></v-card-title>
+                <v-card-title class="title font-weight-light text-white"><span v-t="'Edit Template Validation'"></span></v-card-title>
                 <v-card-text>
                    <v-select
                     class="mt-5"
                     v-model="validationName"
                     :items="availableValidationOptions"
-                    filled
+                    variant="filled"
                     :label="$t('Validation name')"
                   ></v-select>
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn :loading="validationSaveLoading" :disabled="validationSaveLoading" outlined @click="validationEdit= false"><span v-t="'Cancel'"></span></v-btn>
+                  <v-btn :loading="validationSaveLoading" :disabled="validationSaveLoading" variant="outlined" @click="validationEdit= false"><span v-t="'Cancel'"></span></v-btn>
                   <v-btn :loading="validationSaveLoading" :disabled="validationSaveLoading" color="primary" @click="saveValidation()"><span v-t="'Save'"></span></v-btn>
                 </v-card-actions>
               </v-card>

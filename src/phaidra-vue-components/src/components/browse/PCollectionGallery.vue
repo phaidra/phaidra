@@ -17,9 +17,11 @@
         <v-treeview
           :items="collections"
           :load-children="getChildCollections"
-          :active.sync="active"
-          :open.sync="open"
-          @update:active="getChildren"
+          v-model:activated="active"
+          v-model:opened="open"
+          item-title="name"
+          item-value="id"
+          @update:activated="getChildren"
           activatable
           transition
           color="primary"
@@ -30,8 +32,8 @@
         <v-carousel hide-delimiters height="100%">
           <v-carousel-item v-for="(doc, i) in childrenOfActiveCollection" :key="'cha1'+i">
              <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <span v-on="on" v-bind="attrs">
+              <template v-slot:activator="{ props: activatorProps }">
+                <span v-bind="activatorProps">
                    <v-img aspect-ratio="1" :src="instanceconfig.api + '/preview/' + doc.pid" @click="showDetailDialog(doc)"></v-img>
                 </span>
               </template>
@@ -45,8 +47,8 @@
           <v-row>
             <v-col class="d-flex child-flex" cols="4" v-for="(doc, i) in childrenOfActiveCollection" :key="'cha2'+i">
               <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <span v-on="on" v-bind="attrs">
+                <template v-slot:activator="{ props: activatorProps }">
+                  <span v-bind="activatorProps">
                     <v-card tile elevation="0" class="d-flex">
                       <v-img class="grey lighten-2" aspect-ratio="1" :src="instanceconfig.api + '/preview/' + doc.pid"
                         @click="showDetailDialog(doc)">
@@ -68,7 +70,7 @@
     </v-row>
     <v-dialog v-model="detailDialog" max-width="500px" v-if="detailToShow">
       <v-card>
-        <v-card-title class="title font-weight-light white--text">
+        <v-card-title class="title font-weight-light text-white">
           {{ getObjectTitle(detailToShow) }}
         </v-card-title>
         <v-card-text>
@@ -87,7 +89,7 @@
 
 <script>
 import qs from 'qs'
-import objectMixin from 'phaidra-vue-components/src/mixins/object'
+import objectMixin from '../../mixins/object'
 
 export default {
   name: 'p-collection-gallery',
@@ -100,7 +102,7 @@ export default {
   },
   computed: {
     instanceconfig: function () {
-      return this.$root.$store.state.instanceconfig
+      return this.$store.state.instanceconfig
     }
   },
   data () {

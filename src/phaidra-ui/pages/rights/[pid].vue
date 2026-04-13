@@ -1,12 +1,19 @@
 <template>
   <div>
-    <v-btn color="primary" class="my-4" :to="{ path: `/detail/${pid}`, params: { pid: pid } }">
+    <v-btn color="primary" class="my-4" :to="`/detail/${pid}`">
       <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
     </v-btn>
     <v-row>
       <v-col v-if="signedin && pid">
-        <p-m-relationships :relationships="relationships" :pid="pid" v-on:load-relationships="loadRelationships()">
-        </p-m-relationships>
+        <p-m-rights 
+          :pid="pid" 
+          :rights="rights"
+          :show-persons="instanceconfig.accessrestrictions_showpersons"
+          :show-accounts="instanceconfig.accessrestrictions_showaccounts"
+          :show-edu-person-affiliation="instanceconfig.accessrestrictions_showedupersonaffiliation"
+          :show-org-units="instanceconfig.accessrestrictions_showorgunits"
+          :show-groups="instanceconfig.accessrestrictions_showgroups"
+          v-on:load-rights="loadRights()"></p-m-rights>
       </v-col>
     </v-row>
   </div>
@@ -27,26 +34,25 @@ export default {
   data() {
     return {
       loading: false,
-      relationships: {}
+      rights: {}
     }
   },
   methods: {
-    loadRelationships: async function (self) {
+    loadRights: async function (self) {
       if (!self) {
         self = this
       }
       self.loading = true
-      self.relationships = {}
       try {
         let response = await self.$axios.request({
           method: 'GET',
-          url: '/object/' + self.pid + '/relationships',
+          url: '/object/' + self.pid + '/rights',
           headers: {
             'X-XSRF-TOKEN': self.$store.state.user.token
           }
         })
-        if (response.status === 200) {
-          this.relationships = response.data.relationships
+        if (response.data.metadata.status === 200) {
+          self.rights = response.data.metadata.rights
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
             self.$store.commit('setAlerts', response.data.alerts)
@@ -54,7 +60,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        self.$store.commit('setAlerts', [{ type: 'error', msg: error }])
+        // this.$store.commit('setAlerts', [{ type: 'error', msg: error }])
       } finally {
         self.loading = false
       }
@@ -62,11 +68,11 @@ export default {
   },
   beforeRouteEnter: async function (to, from, next) {
     next(async function (vm) {
-      await vm.loadRelationships(vm)
+      await vm.loadRights(vm)
     })
   },
   beforeRouteUpdate: async function (to, from, next) {
-    await this.loadRelationships(this)
+    await this.loadRights(this)
     next()
   }
 }

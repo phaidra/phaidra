@@ -3,14 +3,14 @@
     <v-col cols="12">
       <v-row>
         <v-col cols="12">
-          <v-card outlined class="mb-8">
-            <v-card-title class="title font-weight-light white--text">
+          <v-card variant="outlined" class="mb-8">
+            <v-card-title class="title font-weight-light text-white">
               <span>{{ $t(label) }}</span>
               <v-spacer></v-spacer>
-              <v-menu bottom offset-y v-if="actions.length">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn v-on="on" v-bind="attrs" icon dark>
-                    <v-icon dark>mdi-dots-vertical</v-icon>
+              <v-menu open-on-hover bottom offset-y v-if="actions.length">
+                <template v-slot:activator="{ props }">
+                  <v-btn v-bind="props" icon variant="text" color="white">
+                    <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
                 </template>
                 <v-list>
@@ -28,8 +28,7 @@
                     v-model="q"
                     :loading="loading"
                     :label="$t(searchlabel)"
-                    :filled="inputStyle==='filled'"
-                    :outlined="inputStyle==='outlined'"
+                    :variant="fieldVariant"
                     clearable
                     :messages="resolved"
                     append-icon="mdi-magnify"
@@ -43,20 +42,16 @@
                 </v-col>
               </v-row>
               <v-row v-if="showItems">
-                <v-data-table
+                <v-data-table-server
+                  v-model:options="options"
                   :headers="headers"
                   :items="items"
-                  :options.sync="options"
-                  :server-items-length="total"
+                  :items-length="total"
                   :loading="loading"
-                  @click:row="select"
                   :no-data-text="$t('No data available')"
-                  :footer-props="{
-                    pageText: $t('Page'),
-                    itemsPerPageText: $t('Rows per page'),
-                    itemsPerPageAllText: $t('All')
-                  }"
-                  :no-results-text="$t('There were no search results')"
+                  :page-text="$t('Page')"
+                  :items-per-page-text="$t('Rows per page')"
+                  :row-props="({ item }) => ({ style: 'cursor: pointer', onClick: () => select(item) })"
                 >
                 <template v-slot:item.variantName="{ item }">
                   <template v-if="item.variantName">
@@ -68,7 +63,7 @@
                     <div v-for="(v, i) of item.type" :key="'vt' + i">{{ v }}</div>
                   </template>
                 </template>
-                </v-data-table>
+                </v-data-table-server>
               </v-row>
             </v-card-text>
           </v-card>
@@ -155,11 +150,11 @@ export default {
       },
       total: 0,
       headers: [
-        { text: 'ID', value: 'gndIdentifier' },
-        { text: 'Preferred name', value: 'preferredName' },
-        { text: 'Variant name', value: 'variantName' },
-        { text: 'Type', value: 'type' },
-        { text: 'Description', value: 'biographicalOrHistoricalInformation' }
+        { title: 'ID', key: 'gndIdentifier' },
+        { title: 'Preferred name', key: 'preferredName' },
+        { title: 'Variant name', key: 'variantName' },
+        { title: 'Type', key: 'type' },
+        { title: 'Description', key: 'biographicalOrHistoricalInformation' }
       ]
     }
   },

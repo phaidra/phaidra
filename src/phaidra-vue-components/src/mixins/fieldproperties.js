@@ -44,6 +44,9 @@ export const fieldproperties = {
     }
   },
   computed: {
+    fieldVariant () {
+      return this.inputStyle === 'filled' ? 'filled' : (this.inputStyle === 'outlined' ? 'outlined' : 'underlined')
+    },
     actions: function () {
       var arr = []
       if (this.configurable) {

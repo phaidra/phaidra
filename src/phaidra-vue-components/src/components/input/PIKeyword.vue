@@ -3,43 +3,34 @@
     <v-col cols="12" :md="multilingual ? (actions.length ? 8 : 10) : (actions.length ? 10 : 12)">
       <v-combobox
         v-model="model"
-        v-on:input="onInput($event)"
-        v-on:change="onInput($event)"
+        @update:model-value="onInput"
         :items="items"
         :loading="loading"
         :required="required"
         :rules="required ? [ v => !!v || $t('Required')] : []"
         hide-no-data
-        :item-text="'term'"
-        :item-value="'payload'"
+        item-title="term"
+        item-value="payload"
         :label="$t(label)"
         multiple
         :disabled="disabled"
         clearable
         chips
-        deletable-chips
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        closable-chips
+        :variant="fieldVariant"
         :error-messages="errorMessages"
         :hint="$t(hint)"
       >
-        <template slot="item" slot-scope="{ item }">
-          <v-list-item-content two-line>
-            <v-list-item-title inset v-html="item.term"></v-list-item-title>
-          </v-list-item-content>
+        <template #item="{ props, item }">
+          <v-list-item v-bind="props" lines="one">
+            <template #title>
+              <span v-html="item.raw.term" />
+            </template>
+          </v-list-item>
         </template>
-        <template
-          slot="selection"
-          slot-scope="data"
-        >
-          <v-chip
-            close
-            :input-value="data.selected"
-            :disabled="data.disabled"
-            class="v-chip--select-multi"
-            @click:close="removeKeyword(data.item)"
-          >
-            {{ htmlToPlaintext(data.item) }}
+        <template #chip="{ item, props: chipProps }">
+          <v-chip v-bind="chipProps" @click:close="removeKeyword(item.raw)">
+            {{ htmlToPlaintext(item.raw && item.raw.term != null ? item.raw.term : item.raw) }}
           </v-chip>
         </template>
       </v-combobox>
@@ -47,7 +38,7 @@
     <v-col cols="12" md="2" v-if="multilingual || actions.length">
       <v-row>
         <v-col v-if="multilingual" cols="6">
-          <v-btn text @click="$refs.langdialog.open()">
+          <v-btn text @click="$refs.langdialog.open()" variant="text">
             <span>
               ({{ language ? language : '--' }})
             </span>
@@ -86,6 +77,7 @@ export default {
   components: {
     SelectLanguage
   },
+  emits: ['input', 'input-language', 'add', 'remove', 'configure', 'add-clear', 'up', 'down'],
   props: {
     value: {
       type: Array,

@@ -5,8 +5,7 @@
         :value="title"
         v-on:blur="$emit('input-title',$event.target.value)"
         :label="$t(titleLabel)"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
         append-outer-icon="mdi-magnify"
         @click:append-outer="$refs.yarmselect.open()"
       ></v-text-field>
@@ -16,8 +15,7 @@
         :value="url"
         v-on:blur="$emit('input-url',$event.target.value)"
         :label="$t(urlLabel)"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
     <v-col cols="12" md="1" v-if="multilingual || actions.length">

@@ -3,8 +3,8 @@
     <v-row>
       <v-col>
         <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon class="toolbar-btn" @click="setSort('title asc')" :color="sortIsActive('title asc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Title ascending')">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-btn icon class="toolbar-btn" @click="setSort('title asc')" :color="sortIsActive('title asc') ? 'primary' : ''" v-bind="activatorProps" :aria-label="$t('Title ascending')">
               <icon width="16px" height="16px" name="fontello-sort-name-up"></icon>
             </v-btn>
           </template>
@@ -13,8 +13,8 @@
       </v-col>
       <v-col>
         <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon class="toolbar-btn" @click="setSort('title desc')" :color="sortIsActive('title desc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Title descending')">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-btn icon class="toolbar-btn" @click="setSort('title desc')" :color="sortIsActive('title desc') ? 'primary' : ''" v-bind="activatorProps" :aria-label="$t('Title descending')">
               <icon width="16px" height="16px" name="fontello-sort-name-down"></icon>
             </v-btn>
           </template>
@@ -23,8 +23,8 @@
       </v-col>
       <v-col>
         <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon class="toolbar-btn" @click="setSort('created asc')" :color="sortIsActive('created asc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Upload date ascending')">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-btn icon class="toolbar-btn" @click="setSort('created asc')" :color="sortIsActive('created asc') ? 'primary' : ''" v-bind="activatorProps" :aria-label="$t('Upload date ascending')">
               <icon width="16px" height="16px" name="fontello-sort-number-up"></icon>
             </v-btn>
           </template>
@@ -33,8 +33,8 @@
       </v-col>
       <v-col>
         <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon class="toolbar-btn" @click="setSort('created desc')" :color="sortIsActive('created desc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Upload date descending')">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-btn icon class="toolbar-btn" @click="setSort('created desc')" :color="sortIsActive('created desc') ? 'primary' : ''" v-bind="activatorProps" :aria-label="$t('Upload date descending')">
               <icon width="16px" height="16px" name="fontello-sort-number-down"></icon>
             </v-btn>
           </template>
@@ -44,16 +44,15 @@
       <v-col>
         <v-dialog v-model="linkdialog" max-width="800px">
           <v-card>
-            <v-card-title class="title font-weight-light white--text mb-6">
+            <v-card-title class="title font-weight-light text-white mb-6">
               {{ $t('Link to search results') }}
             </v-card-title>
             <v-card-text>
               {{ link }}
               <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
+                <template v-slot:activator="{ props: activatorProps }">
                   <v-btn
-                    v-on="on"
-                    v-bind="attrs"
+                    v-bind="activatorProps"
                     icon
                     @click="copyToClipboard()"
                     class="ml-1"
@@ -73,8 +72,8 @@
           </v-card>
         </v-dialog>
         <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon class="toolbar-btn" @click="linkdialog=true" v-on="on" v-bind="attrs" :aria-label="$t('Link to search results')">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-btn icon class="toolbar-btn" @click="linkdialog=true" v-bind="activatorProps" :aria-label="$t('Link to search results')">
               <icon width="18px" height="18px" name="material-content-link"></icon>
             </v-btn>
           </template>
@@ -83,8 +82,8 @@
       </v-col>
       <v-col v-if="signedin">
         <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon class="toolbar-btn" v-on="on" v-bind="attrs" :color="selectioncheck ? 'primary' : ''" @click.stop="toggleSelection()" :aria-label="$t('Select results')">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-btn icon class="toolbar-btn" v-bind="activatorProps" :color="selectioncheck ? 'primary' : ''" @click.stop="toggleSelection()" :aria-label="$t('Select results')">
               <v-icon>mdi-bookmark-plus-outline</v-icon>
             </v-btn>
           </template>
@@ -93,8 +92,8 @@
       </v-col>
       <v-col>
         <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon class="toolbar-btn" v-on="on" v-bind="attrs" @click.native="csvExport()" :aria-label="$t('Download search results as a CSV file')">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-btn icon class="toolbar-btn" v-bind="activatorProps" @click="csvExport()" :aria-label="$t('Download search results as a CSV file')">
               <v-icon>mdi-download</v-icon>
             </v-btn>
           </template>
@@ -133,7 +132,7 @@ export default {
   },
   computed: {
     instance: function () {
-      return this.$root.$store.state.instanceconfig
+      return this.$store.state.instanceconfig
     }
   },
   data () {

@@ -7,17 +7,17 @@
         </div>
         <div class="d-flex align-center">
           <v-file-input
-            :value="value"
+            :model-value="value"
             multiple
             chips
             show-size
             counter
             :label="$t('Select Files')"
-            outlined
-            dense
+            variant="outlined"
+            density="compact"
             class="max-w-500"
             :error-messages="error"
-            @change="handleFileSelection"
+            @update:model-value="handleFileSelection"
           ></v-file-input>
         </div>
       </div>

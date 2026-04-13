@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title class="title font-weight-light white--text">{{ $t('Define order') }}</v-card-title>
+    <v-card-title class="title font-weight-light text-white">{{ $t('Define order') }}</v-card-title>
     <v-divider></v-divider>
     <v-card-text class="mt-4" v-if="members.length > 0">
       <div>{{ $t('Please provide the order of the members by ordering the PIDs') }}</div>
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { vuetifyGoTo } from '../../utils/vuetifyGoToCompat'
 
 export default {
   name: 'p-m-sort-textinput',
@@ -83,7 +84,7 @@ export default {
         this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
       } finally {
         this.loading = false
-        this.$vuetify.goTo(0)
+        vuetifyGoTo(0)
       }
     }
   }

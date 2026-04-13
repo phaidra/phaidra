@@ -1,6 +1,6 @@
 <template>
   <v-card class="mt-4">
-    <v-card-title class="title font-weight-light white--text">
+    <v-card-title class="title font-weight-light text-white">
       {{ title ? title : $t('Select an object') }}
       <v-spacer></v-spacer>
       <v-switch
@@ -20,32 +20,28 @@
         class="mb-4"
         v-on:blur="search()"
       ></v-text-field>
-      <v-data-table
+      <v-data-table-server
+        v-model:options="options"
         :headers="objectsHeaders"
         :items="objects"
+        :items-length="totalObjects"
         :loading="loading"
         :loading-text="$t('Loading...')"
-        :options.sync="options"
-        :server-items-length="totalObjects"
         :no-data-text="$t('No data available')"
-        :footer-props="{
-          itemsPerPageOptions: [10, 50, 100],
-          pageText: $t('Page'),
-          itemsPerPageText: $t('Rows per page'),
-          itemsPerPageAllText: $t('All')
-        }"
-        :no-results-text="$t('There were no search results')"
+        :items-per-page-options="[10, 50, 100]"
+        :page-text="$t('Page')"
+        :items-per-page-text="$t('Rows per page')"
       >
         <template v-slot:item.title="{ item }">
-          <span v-if="item.dc_title">{{ item.dc_title[0] | truncate(50) }}</span>
+          <span v-if="item.dc_title">{{ $truncate(item.dc_title[0], 50) }}</span>
         </template>
         <template v-slot:item.created="{ item }">
-          {{ item.created | date }}
+          {{ $date(item.created) }}
         </template>
         <template v-slot:item.actions="{ item }">
-          <v-btn text color="primary" @click="selectObject(item)">{{ $t('Select') }}</v-btn>
+          <v-btn variant="text" color="primary" @click="selectObject(item)">{{ $t('Select') }}</v-btn>
         </template>
-      </v-data-table>
+      </v-data-table-server>
     </v-card-text>
     <v-divider></v-divider>
   </v-card>
@@ -95,10 +91,10 @@ export default {
       immediate: true, // Ensure it's set on load
       handler() {
         this.objectsHeaders = [
-        { text: this.$t('Pid'), align: 'left', value: 'pid' },
-        { text: this.$t('Title'), align: 'left', value: 'title' },
-        { text: this.$t('Created'), align: 'right', value: 'created' },
-        { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+        { title: this.$t('Pid'), align: 'start', key: 'pid' },
+        { title: this.$t('Title'), align: 'start', key: 'title' },
+        { title: this.$t('Created'), align: 'end', key: 'created' },
+        { title: this.$t('Actions'), align: 'end', key: 'actions', sortable: false }
       ];
       }
     },
@@ -158,10 +154,10 @@ export default {
     },
     selectObject: function (item) {
       this.$emit('object-selected', item)
-    },
-    mounted () {
-      this.search()
     }
+  },
+  mounted () {
+    this.search()
   }
 }
 </script>

@@ -1,5 +1,6 @@
 import { allowedMimetypes } from '../utils/mimetypes'
 import { isNonBlankString } from '../utils/stringValidation'
+import { vuetifyGoTo } from '../utils/vuetifyGoToCompat'
 
 export const formvalidation = {
   data() {
@@ -495,7 +496,7 @@ export const formvalidation = {
       }
    
       if (this.validationError) {
-        this.$vuetify.goTo(0)
+        vuetifyGoTo(0)
       }
       console.log('validation error ' + this.validationError)
       return !this.validationError
@@ -691,7 +692,7 @@ export const formvalidation = {
       }
    
       if (this.validationError) {
-        this.$vuetify.goTo(0)
+        vuetifyGoTo(0)
       }
       console.log('validation error ' + this.validationError)
       return !this.validationError
@@ -881,7 +882,7 @@ export const formvalidation = {
       }
    
       if (this.validationError) {
-        this.$vuetify.goTo(0)
+        vuetifyGoTo(0)
       }
       console.log('validation error ' + this.validationError)
       return !this.validationError
@@ -1039,7 +1040,7 @@ export const formvalidation = {
       }
    
       if (this.validationError) {
-        this.$vuetify.goTo(0)
+        vuetifyGoTo(0)
       }
       console.log('validation error ' + this.validationError)
       return !this.validationError
@@ -1213,7 +1214,7 @@ export const formvalidation = {
       }
    
       if (this.validationError) {
-        this.$vuetify.goTo(0)
+        vuetifyGoTo(0)
       }
       console.log('validation error ' + this.validationError)
       return !this.validationError

@@ -1,10 +1,10 @@
 <template>
   <v-container fluid>
-    <v-btn color="primary" class="my-4" :to="{ path: `/detail/${routepid}`, params: { pid: routepid } }">
+    <v-btn color="primary" class="my-4" :to="`/detail/${routepid}`">
       <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
     </v-btn>
     <v-card class="mt-8" v-if="objectInfo && objectInfo.metadata['JSON-LD']">
-      <v-card-title class="title font-weight-light white--text">{{ routepid }} JSON-LD</v-card-title>
+      <v-card-title class="title font-weight-light text-white">{{ routepid }} JSON-LD</v-card-title>
       <v-card-text>
         <vue-json-pretty :data="objectInfo.metadata['JSON-LD']"></vue-json-pretty>
       </v-card-text>

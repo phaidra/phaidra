@@ -1,0 +1,44 @@
+import { createI18n } from 'vue-i18n'
+import eng from '~/locales/eng.json'
+import deu from '~/locales/deu.json'
+import ita from '~/locales/ita.json'
+
+export default defineNuxtPlugin((nuxtApp) => {
+  const defaultLocale = useRuntimeConfig().public?.defaultLocale || 'eng'
+  const messages = { eng, deu, ita }
+
+  const i18n = createI18n({
+    legacy: true,
+    globalInjection: true,
+    locale: defaultLocale,
+    fallbackLocale: 'eng',
+    messages,
+    silentTranslationWarn: true,
+    silentFallbackWarn: true
+  })
+
+  nuxtApp.vueApp.use(i18n)
+
+  const localePath = (to) => {
+    if (typeof to === 'string') return to.startsWith('/') ? to : `/${to}`
+    if (to && typeof to === 'object') return to.path || '/'
+    return '/'
+  }
+  const localeLocation = (to) => to
+  const switchLocalePath = () => {
+    const route = useRoute()
+    return route?.fullPath || '/'
+  }
+
+  nuxtApp.vueApp.config.globalProperties.$localePath = localePath
+  nuxtApp.vueApp.config.globalProperties.localePath = localePath
+  nuxtApp.vueApp.config.globalProperties.$localeLocation = localeLocation
+  nuxtApp.vueApp.config.globalProperties.localeLocation = localeLocation
+  nuxtApp.vueApp.config.globalProperties.$switchLocalePath = switchLocalePath
+  nuxtApp.vueApp.config.globalProperties.switchLocalePath = switchLocalePath
+
+  nuxtApp.provide('localePath', localePath)
+  nuxtApp.provide('localeLocation', localeLocation)
+  nuxtApp.provide('switchLocalePath', switchLocalePath)
+})
+

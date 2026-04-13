@@ -1,10 +1,13 @@
 export const config = {
   computed: {
     appconfig () {
-      return this.$store.state.config.global
+      return this.$store?.state?.config?.global || {}
     },
     instanceconfig () {
-      return this.$store.state.instanceconfig
+      return this.$store?.state?.instanceconfig || {}
+    },
+    apiBaseUrl () {
+      return this.instanceconfig?.api || this.$config?.apiBaseURL || this.$config?.public?.apiBaseURL || ''
     },
     documentTitleSuffix () {
       const title = this.$t(this.instanceconfig.title)

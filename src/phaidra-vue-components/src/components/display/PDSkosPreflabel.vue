@@ -1,18 +1,19 @@
 <template>
-  <span>
-    <v-row v-for="(l, i) in o['skos:prefLabel']" v-if="l['@language'] === displaylang" :key="'prl'+i">
-      <v-col :md="labelColMd" cols="12" v-if="p==='bf:note'" class="pdlabel secondary--text font-weight-bold text-md-right" >{{ $t(o['@type']) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
-      <v-col :md="labelColMd" cols="12" v-else class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(p) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
-      <v-col :md="valueColMd" cols="12" v-if="o['skos:exactMatch']">
-        <span v-if="o['skos:exactMatch'][0].startsWith('oefos2012:')">ÖFOS 2012 -- {{ o['skos:notation'][0] }} -- {{ l['@value'] }}</span>
-        <span v-else-if="o['skos:exactMatch'][0].startsWith('thema:')">{{ $t('Thema Subject Codes') }} -- {{ o['skos:notation'][0] }} -- {{ l['@value'] }}</span>
-        <span v-else-if="o['skos:exactMatch'][0].startsWith('bic:')">{{ l['@value'] }}</span>
-        <span v-else-if="isA11y">{{ getLocalizedTermLabel(a11yVocab, o['skos:exactMatch'][0]) }}</span>
-        <a v-else class="valuefield" :href="o['skos:exactMatch'][0]" target="_blank">{{ l['@value'] }}</a>
-      </v-col>
-      <!--<v-col :md="valueColMd" cols="12" v-else-if="usedMarkdown" class="valuefield" v-html="$md.disable(['image','emphasis']).render(l['@value'])"></v-col>-->
-      <v-col class="valuefield" :md="valueColMd" cols="12" v-else ><span v-html="autolinkerCheck(l['@value'])"></span></v-col>
-    </v-row>
+  <span v-if="prefLabels.length">
+    <template v-for="(l, i) in prefLabels" :key="'prl' + i">
+      <v-row v-if="l && matchesDisplayLang(l)">
+        <v-col :md="labelColMd" cols="12" v-if="p==='bf:note'" class="pdlabel secondary--text font-weight-bold text-md-right" >{{ $t(o['@type']) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
+        <v-col :md="labelColMd" cols="12" v-else class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(p) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
+        <v-col :md="valueColMd" cols="12" v-if="o['skos:exactMatch']?.[0]">
+          <span v-if="o['skos:exactMatch'][0].startsWith('oefos2012:')">ÖFOS 2012 -- {{ o['skos:notation']?.[0] }} -- {{ l['@value'] }}</span>
+          <span v-else-if="o['skos:exactMatch'][0].startsWith('thema:')">{{ $t('Thema Subject Codes') }} -- {{ o['skos:notation']?.[0] }} -- {{ l['@value'] }}</span>
+          <span v-else-if="o['skos:exactMatch'][0].startsWith('bic:')">{{ l['@value'] }}</span>
+          <span v-else-if="isA11y">{{ getLocalizedTermLabel(a11yVocab, o['skos:exactMatch'][0]) }}</span>
+          <a v-else class="valuefield" :href="o['skos:exactMatch'][0]" target="_blank">{{ l['@value'] }}</a>
+        </v-col>
+        <v-col class="valuefield" :md="valueColMd" cols="12" v-else><span v-html="autolinkerCheck(l['@value'] || '')"></span></v-col>
+      </v-row>
+    </template>
   </span>
 </template>
 
@@ -34,6 +35,10 @@ export default {
     }
   },
   computed: {
+    prefLabels () {
+      const raw = this.o?.['skos:prefLabel']
+      return Array.isArray(raw) ? raw.filter((x) => x != null) : []
+    },
     isA11y: function () {
       return ((this.p === 'schema:accessMode') ||
         (this.p === 'schema:accessibilityFeature') ||
@@ -54,12 +59,19 @@ export default {
       }
     },
     displaylang: function () {
+      const labels = this.prefLabels
+      if (!labels.length) {
+        return this.$i18n?.locale
+      }
       let lang
       let engLang
       let deuLang
       let anyLang
-      for (let label of this.o['skos:prefLabel']) {
-        anyLang = label['@language']
+      for (const label of labels) {
+        if (!label || typeof label !== 'object') continue
+        if (label['@language'] != null) {
+          anyLang = label['@language']
+        }
         if (label['@language'] === this.$i18n.locale) {
           lang = this.$i18n.locale
         }
@@ -70,7 +82,7 @@ export default {
           deuLang = 'deu'
         }
       }
-      return lang || engLang || deuLang || anyLang
+      return lang || engLang || deuLang || anyLang || this.$i18n?.locale
     },
     usedMarkdown: function () {
       return (this.p === 'bf:TableOfContents') ||
@@ -79,9 +91,12 @@ export default {
     }
   },
   methods: {
-    autolinkerCheck(val) {
-      return Autolinker.link(val);
-
+    matchesDisplayLang (l) {
+      if (!l || typeof l !== 'object') return false
+      return l['@language'] === this.displaylang
+    },
+    autolinkerCheck (val) {
+      return Autolinker.link(val == null ? '' : String(val))
     }
   },
 }

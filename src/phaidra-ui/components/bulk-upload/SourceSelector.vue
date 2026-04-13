@@ -3,19 +3,17 @@
     <v-radio-group
       v-if="shouldShowRadioButtons"
       v-model="selectedSource"
-      dense
+      density="compact"
       class="mt-0 p-2 source-select"
     >
       <v-radio
         value="csv-column"
         class="mt-0"
         label="CSV"
-        dense
       ></v-radio>
       <v-radio
         value="phaidra-field"
         label="Phaidra"
-        dense
       ></v-radio>
     </v-radio-group>
     <div v-else class="text-caption">
@@ -57,6 +55,7 @@ export default {
         return this.value
       },
       set(value) {
+        this.$emit('update:modelValue', value)
         this.$emit('input', value)
       }
     },

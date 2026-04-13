@@ -34,7 +34,7 @@
       >
         <v-col cols="6">
           <v-row justify="center" class="mt-4">
-            <v-alert type="info" dense outlined color="secondary">
+            <v-alert type="info" density="compact" variant="outlined" color="secondary">
               <div>
                 {{
                   $t("This object has been deleted.")
@@ -51,7 +51,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box title font-weight-light white--text"
+                    class="ph-box title font-weight-light text-white"
                     >{{ $t("This object is in collection") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -62,7 +62,7 @@
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
-                              :src="instanceconfig.api +
+                              :src="apiBaseUrl +
                                 '/object/' +
                                 rel.pid +
                                 '/thumbnail'
@@ -105,7 +105,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box title font-weight-light white--text"
+                    class="ph-box title font-weight-light text-white"
                     >{{ $t("This object is a back side of") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -117,7 +117,7 @@
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
-                              :src="instanceconfig.api +
+                              :src="apiBaseUrl +
                                 '/object/' +
                                 rel.pid +
                                 '/thumbnail'
@@ -160,7 +160,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box title font-weight-light white--text"
+                    class="ph-box title font-weight-light text-white"
                     >{{ $t("This object has a back side") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -171,7 +171,7 @@
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
-                              :src="instanceconfig.api +
+                              :src="apiBaseUrl +
                                 '/object/' +
                                 rel.pid +
                                 '/thumbnail'
@@ -214,7 +214,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box title font-weight-light white--text"
+                    class="ph-box title font-weight-light text-white"
                     >{{ $t("This object is thumbnail for") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -226,7 +226,7 @@
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
-                              :src="instanceconfig.api +
+                              :src="apiBaseUrl +
                                 '/object/' +
                                 rel.pid +
                                 '/thumbnail'
@@ -270,7 +270,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box title font-weight-light white--text"
+                    class="ph-box title font-weight-light text-white"
                     >{{ $t("This object has thumbnail") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -282,7 +282,7 @@
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
-                              :src="instanceconfig.api +
+                              :src="apiBaseUrl +
                                 '/object/' +
                                 rel.pid +
                                 '/thumbnail'
@@ -325,7 +325,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box title font-weight-light white--text"
+                    class="ph-box title font-weight-light text-white"
                     >{{ $t("This object references") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -336,7 +336,7 @@
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
-                              :src="instanceconfig.api +
+                              :src="apiBaseUrl +
                                 '/object/' +
                                 rel.pid +
                                 '/thumbnail'
@@ -379,7 +379,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box title font-weight-light white--text"
+                    class="ph-box title font-weight-light text-white"
                     >{{ $t("This object is referenced by") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -391,7 +391,7 @@
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
-                              :src="instanceconfig.api +
+                              :src="apiBaseUrl +
                                 '/object/' +
                                 rel.pid +
                                 '/thumbnail'
@@ -443,8 +443,8 @@
             }}</v-row>
             <v-row justify="center" class="mt-4"
               ><v-btn
-                large
-                raised
+                size="large"
+                variant="elevated"
                 color="primary"
                 :to="
                   localePath({ path: `/detail/${objectInfo.ismemberof[0]}` })
@@ -465,8 +465,8 @@
               ><v-btn
                 v-for="(contpid, i) in objectInfo.ismemberof"
                 :key="'contbtn' + i"
-                large
-                raised
+                size="large"
+                variant="elevated"
                 color="primary"
                 :to="localePath({ path: `/detail/${contpid}` })"
                 >{{ $t("Go to container") }}&nbsp;{{ contpid }}</v-btn
@@ -484,8 +484,8 @@
               }}</v-row>
               <v-row justify="center" class="mt-4 mb-8"
                 ><v-btn
-                  large
-                  raised
+                  size="large"
+                  variant="elevated"
                   color="primary"
                   :to="localePath({ path: `/detail/${objectInfo.bookpid}` })"
                   >{{ $t("Go to book") }}</v-btn
@@ -495,17 +495,17 @@
           </v-row>
           <v-row v-if="hasLaterVersion" justify="center">
             <v-col cols="12" md="6">
-              <v-alert type="info" dense outlined color="secondary" class="mt-0 mb-4">
+              <v-alert type="info" density="compact" variant="outlined" color="secondary" class="mt-0 mb-4">
                 <div>
                   {{
                     $t("There is a more recent version of this object available")
                   }}
                 </div>
-              </v-alert>          
+              </v-alert>
               <v-row justify="center" v-if="latestVersion" class="mt-4 mb-8">
                 <v-btn
-                  raised
-                  large
+                  variant="elevated"
+                  size="large"
                   color="primary"
                   :to="localePath({ path: `/detail/${latestVersion.pid}` })"
                   >{{ $t("Go to latest version") }}</v-btn
@@ -586,7 +586,7 @@
                   <iframe
                     :title="$t('Video preview')"
                     :src="
-                      instanceconfig.api +
+                      apiBaseUrl +
                       '/object/' +
                       objectInfo.pid +
                       '/preview' + '?lang=' + $i18n.locale.substring(0, 2)
@@ -603,7 +603,7 @@
                 v-else
                   :title="$t('Preview')"
                   :src="
-                    instanceconfig.api +
+                    apiBaseUrl +
                     '/object/' +
                     objectInfo.pid +
                     '/preview' + '?lang=' + $i18n.locale.substring(0, 2) + `${instanceconfig.addannotation ? `&addannotation=${instanceconfig.addannotation}` : ''}`
@@ -620,11 +620,11 @@
                   >Content</iframe
                 >
                 <v-btn
-                raised
+                variant="elevated"
                 color="primary"
                   class="mt-2 float-right"
                   :href="
-                    instanceconfig.api +
+                    apiBaseUrl +
                     '/object/' +
                     objectInfo.pid +
                     '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
@@ -637,7 +637,10 @@
           </v-row>
 
           <v-divider class="mt-12 mb-10" v-if="showPreview"></v-divider>
-          <v-row justify="center" v-if="objectInfo.dshash?.['JSON-LD']">
+          <v-row justify="center" v-if="objectInfo.dshash['JSON-LD']">
+            <!-- <pre>
+              {{ JSON.stringify(objectInfo.metadata, null, 2) }}
+            </pre> -->
             <p-d-jsonld
               :jsonld="objectInfo.metadata?.['JSON-LD']"
               :pid="objectInfo.pid"
@@ -660,7 +663,7 @@
           </v-row>
 
           <template v-if="(objectInfo.cmodel === 'Container') && !objectInfo.datastreams.includes('CONTAINERINFO')">
-            <v-toolbar class="my-10 white--text" elevation="1">
+            <v-toolbar class="my-10 text-white" elevation="1">
               <v-toolbar-title>
                 {{ $t("Members") }} ({{ objectInfo.members.length }})
               </v-toolbar-title>
@@ -688,7 +691,7 @@
                   :title="$t('Preview')"
                   v-if="!member.isrestricted"
                   :src="
-                    instanceconfig.api + '/object/' + member.pid + '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
+                    apiBaseUrl + '/object/' + member.pid + '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
                   "
                   width="100%"
                   :height="member.cmodel === 'Audio' ? '60' : '500'"
@@ -719,18 +722,18 @@
                   <v-spacer></v-spacer>
                   <v-btn
                     class="ml-2"
-                    raised
+                    variant="elevated"
                     :href="
-                      instanceconfig.api + '/object/' + member.pid + '/download'
+                      apiBaseUrl + '/object/' + member.pid + '/download'
                     "
                     color="primary"
                     ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }}</v-btn
                   >
                   <v-menu offset-y v-if="objectInfo.writerights === 1">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn class="ml-2" raised color="primary" dark v-on="on" v-bind="attrs"
+                    <template v-slot:activator="{ props: menuProps }">
+                      <v-btn class="ml-2" variant="elevated" color="primary" v-bind="menuProps"
                         >{{ $t("Edit")
-                        }}<v-icon right dark>arrow_drop_down</v-icon></v-btn
+                        }}<v-icon end>mdi-menu-down</v-icon></v-btn
                       >
                     </template>
                     <v-list>
@@ -766,7 +769,7 @@
             </v-row>
           </template>
           <template v-if="objectInfo.readrights && (objectInfo.cmodel === 'Container') && objectInfo.datastreams.includes('CONTAINERINFO')">
-            <v-toolbar class="my-10 white--text" elevation="1">
+            <v-toolbar class="my-10 text-white" elevation="1">
               <v-toolbar-title>
                 {{ $t("Members") }} ({{ objectInfo.legacy_container_members.length }})
               </v-toolbar-title>
@@ -780,7 +783,7 @@
                 <v-btn
                   v-if="objectInfo.readrights"
                   :href="
-                    instanceconfig.api +
+                    apiBaseUrl +
                     '/object/' +
                     objectInfo.pid +
                     '/comp/' +
@@ -795,19 +798,12 @@
           </div>
           </template>
           <template v-if="objectInfo.cmodel === 'Collection' && collMembers.length">
-            <v-toolbar ref="collectionMembersTop" class="mt-10 mb-5 white--text" elevation="1">
-              <v-row align="center">
-                <v-col>
-                  <v-toolbar-title>
-                    {{ $t("Members") }} ({{ $store.state.collectionMembersTotal /* leave it like this, computed property wasn't working on first access */ }})
-                  </v-toolbar-title>
-                </v-col>
-                <v-col class="d-flex justify-end">
-                  <v-switch @click="refreshCollectionMembers()" dark hide-details :label="$t('Only latest versions')" v-model="collOnlyLatestVersions"></v-switch>
-                </v-col>
-              </v-row>
-            </v-toolbar>
-            <v-row no-gutters v-if="$store.state.collectionMembersTotal > collMembersPagesize">
+            <v-toolbar class="my-10 text-white" elevation="1">
+              <v-toolbar-title>
+                {{ $t("Members") }} ({{ $store.state.collectionMembersTotal /* leave it like this, computed property wasn't working on first access */ }})
+              </v-toolbar-title>
+              <v-switch @click="refreshCollectionMembers()" class="mx-2" dark hide-details :label="$t('Only latest versions')" v-model="collOnlyLatestVersions"></v-switch>
+              <v-spacer></v-spacer>
               <v-pagination
                 :wrapper-aria-label="$t('pagination')"
                 :page-aria-label="$t('page')"
@@ -819,15 +815,15 @@
                 v-model="collMembersPage"
                 class="mb-4"
               ></v-pagination>
-            </v-row>
+            </v-toolbar>
             <div v-for="(collMember, i) in collMembers" :key="'collMember' + i">
               <v-row class="my-4">
                 <v-col md="2" class="d-none d-md-inline-block">
                   <div class="preview-maxwidth">
-                  <nuxt-link :to="{ path: `${collMember.pid}`, params: { pid: collMember.pid } }">
+                  <nuxt-link :to="`/detail/${collMember.pid}`">
                       <p-img
                         :src="
-                          instanceconfig.api + '/object/' + collMember.pid + '/thumbnail'
+                          apiBaseUrl + '/object/' + collMember.pid + '/thumbnail'
                         "
                         class="elevation-1 mt-2"
                         :alt="getObjectTitle(collMember)"
@@ -856,7 +852,7 @@
                         @click.stop
                       >
                         <nuxt-link
-                          :to="{ path: `${collMember.pid}`, params: { pid: collMember.pid } }"
+                          :to="`/detail/${collMember.pid}`"
                           >{{ getObjectTitle(collMember) }}</nuxt-link
                         >
                       </h2>
@@ -868,7 +864,7 @@
                       class="pl-sm-4 text-sm-right"
                     >
                       <span v-if="collMember.created">{{
-                        collMember.created | date
+                        $filterDate(collMember.created)
                       }}</span>
                       <v-icon v-if="collMember.cmodel == 'Video'" class="mx-2" color="grey">mdi-video</v-icon>
                       <v-icon v-else-if="collMember.cmodel == 'Picture'" class="mx-2" color="grey">mdi-image</v-icon>
@@ -883,9 +879,9 @@
                   </v-row>
                 </v-col>
                 <v-col cols="1" v-if="objectInfo.writerights === 1" justify="center">
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn icon color="btnred" class="mt-4" @click="collMemberToRemove = collMember.pid; confirmColMemDeleteDlg = true" v-on="on" v-bind="attrs" :aria-label="$t('Remove from collection')"><v-icon>mdi-delete</v-icon></v-btn>
+                  <v-tooltip location="bottom">
+                    <template v-slot:activator="{ props: tipProps }">
+                      <v-btn icon color="btnred" class="mt-4" v-bind="tipProps" @click="collMemberToRemove = collMember.pid; confirmColMemDeleteDlg = true" :aria-label="$t('Remove from collection')"><v-icon>mdi-delete</v-icon></v-btn>
                     </template>
                     <span>{{ $t('Remove from collection')}}</span>
                   </v-tooltip>
@@ -909,13 +905,13 @@
             </v-row>
             <v-dialog v-model="confirmColMemDeleteDlg" width="500" >
               <v-card>
-                <v-card-title class="title font-weight-light white--text">{{ $t('Remove') }}</v-card-title>
+                <v-card-title class="title font-weight-light text-white">{{ $t('Remove') }}</v-card-title>
                 <v-card-text class="my-4">{{ $t('REMOVE_COLLECTION_MEMBER', { oldpid: collMemberToRemove, collection: objectInfo.pid })}}</v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn outlined :disabled="$store.state.loading" @click="collMemberToRemove = null; confirmColMemDeleteDlg = false">{{ $t('Cancel') }}</v-btn>
-                  <v-btn color="btnred" class="white--text" :loading="$store.state.loading" :disabled="$store.state.loading" @click="removeFromCollection()">{{ $t('Remove') }}</v-btn>                  
+                  <v-btn variant="outlined" :disabled="$store.state.loading" @click="collMemberToRemove = null; confirmColMemDeleteDlg = false">{{ $t('Cancel') }}</v-btn>
+                  <v-btn color="btnred" class="text-white" :loading="$store.state.loading" :disabled="$store.state.loading" @click="removeFromCollection()">{{ $t('Remove') }}</v-btn>                  
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -929,8 +925,8 @@
                 <li class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light white--text"
-                      >{{ $t('Cite as') }}</v-card-title
+                      class="ph-box title font-weight-light text-white"
+                      >{{ $t('Citable links') }}</v-card-title
                     >
                     <v-card-text class="mt-4">
                       <v-row no-gutters class="pt-2" justify="start">
@@ -943,17 +939,17 @@
                               {{ $t(id.label) }}
                             </span>
                             <v-dialog
-                              @input="loadCitationStyles()"
+                              @update:model-value="v => v && loadCitationStyles()"
                               v-if="id.label === 'DOI'"
                               class="pb-4"
                               v-model="doiCiteDialog"
                               width="800px"
                             >
-                              <template v-slot:activator="{ on }">
+                              <template v-slot:activator="{ props: activatorProps }">
                                 <v-btn
-                                  v-on="on"
-                                  depressed
-                                  x-small
+                                  v-bind="activatorProps"
+                                  variant="flat"
+                                  size="x-small"
                                   color="primary"
                                   class="mr-2"
                                   >{{ $t("Cite") }}</v-btn
@@ -961,7 +957,7 @@
                               </template>
                               <v-card>
                                 <v-card-title
-                                  class="title font-weight-light white--text"
+                                  class="title font-weight-light text-white"
                                   >{{ $t("Cite") }}</v-card-title
                                 >
                                 <v-card-text>
@@ -993,7 +989,7 @@
                                         hide-details
                                         height="300px"
                                         readonly
-                                        filled
+                                        variant="filled"
                                         v-model="citeResult"
                                       ></v-textarea>
                                     </v-row>
@@ -1003,7 +999,7 @@
                                 <v-card-actions>
                                   <v-spacer></v-spacer>
                                   <v-btn
-                                    outlined
+                                    variant="outlined"
                                     :loading="doiCiteLoading"
                                     @click="doiCiteDialog = false"
                                     >{{ $t("Close") }}</v-btn
@@ -1042,12 +1038,12 @@
                           v-model="doiRequestDialog"
                           width="800px"
                         >
-                          <template v-slot:activator="{ on }">
-                            <v-btn v-on="on" color="primary" @click="doiRequestDialog = true" :loading="doiRequestLoading">{{  $t('Request DOI') }}</v-btn>
+                          <template v-slot:activator="{ props: activatorProps }">
+                            <v-btn v-bind="activatorProps" color="primary" @click="doiRequestDialog = true" :loading="doiRequestLoading">{{  $t('Request DOI') }}</v-btn>
                           </template>
                           <v-card>
                             <v-card-title
-                              class="title font-weight-light white--text"
+                              class="title font-weight-light text-white"
                               >{{ $t("Request DOI") }}</v-card-title
                             >
                             <v-card-text>
@@ -1068,7 +1064,7 @@
                             <v-card-actions>
                               <v-spacer></v-spacer>
                               <v-btn
-                                outlined
+                                variant="outlined"
                                 :loading="doiRequestLoading"
                                 @click="doiRequestDialog = false"
                                 >{{ $t("Cancel") }}</v-btn
@@ -1090,8 +1086,8 @@
                 <li class="mb-6" v-if="identifiers.other.length > 0">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light white--text"
-                      >{{ $t('Other links and identifiers') }}</v-card-title
+                      class="ph-box title font-weight-light text-white"
+                      >{{ $t('Other links') }}</v-card-title
                     >
                     <v-card-text class="mt-4">
                       <v-row no-gutters class="pt-2" justify="start">
@@ -1137,7 +1133,7 @@
                 ">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light white--text"
+                      class="ph-box title font-weight-light text-white"
                       >{{ $t("Content") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1146,13 +1142,13 @@
                           class="mr-2 mb-2"
                           v-if="downloadable && objectInfo.readrights"
                           :href="
-                            instanceconfig.api +
+                            apiBaseUrl +
                             '/object/' +
                             objectInfo.pid +
                             '/download'
                           "
                           color="primary"
-                          ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }} ({{ objectInfo.size | bytes }})</v-btn
+                          ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }} ({{ $filterBytes(objectInfo.size) }})</v-btn
                         >
                         <v-btn
                           v-if="objectInfo.cmodel === 'Collection'"
@@ -1168,18 +1164,17 @@
                             objectInfo.haspartsize
                           }})</v-btn
                         >
-                        <v-tooltip bottom>
-                          <template v-slot:activator="{ on, attrs }">
+                        <v-tooltip location="bottom">
+                          <template v-slot:activator="{ props: tipProps }">
                             <v-btn
-                              v-on="on"
-                              v-bind="attrs"
+                              v-bind="tipProps"
                               class="ml-2"
                               v-if="objectInfo.cmodel === 'Collection'"
                               icon
                               color="primary"
                               target="_blank"
                               :href="
-                                instanceconfig.api +
+                                apiBaseUrl +
                                 '/collection/' +
                                 objectInfo.pid +
                                 '/rss'
@@ -1195,7 +1190,7 @@
                         <v-btn
                           v-if="objectInfo.cmodel === 'Resource'"
                           :href="
-                            instanceconfig.api +
+                            apiBaseUrl +
                             '/object/' +
                             objectInfo.pid +
                             '/resourcelink/redirect'
@@ -1227,7 +1222,7 @@
                           <a
                             target="_blank"
                             :href="
-                              instanceconfig.api +
+                              apiBaseUrl +
                               '/imageserver/?IIIF=' +
                               objectInfo.pid +
                               '.tif/full/pct:50/0/default.jpg'
@@ -1239,7 +1234,7 @@
                           <a
                             target="_blank"
                             :href="
-                              instanceconfig.api +
+                              apiBaseUrl +
                               '/imageserver/?IIIF=' +
                               objectInfo.pid +
                               '.tif/full/pct:25/0/default.jpg'
@@ -1259,7 +1254,7 @@
                       >
                         <a
                           :href="
-                            instanceconfig.api +
+                            apiBaseUrl +
                             '/object/' +
                             objectInfo.pid +
                             '/download?trywebversion=1'
@@ -1305,7 +1300,7 @@
                 <li class="mb-6" v-if="objectInfo.isinadminset">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light white--text"
+                      class="ph-box title font-weight-light text-white"
                       >{{ $t("Managed by") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1337,7 +1332,7 @@
                 <li class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light white--text"
+                      class="ph-box title font-weight-light text-white"
                       >{{ $t("Details") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1412,7 +1407,7 @@
                           >{{ $t("Created") }}</v-col
                         >
                         <v-col cols="8" offset="1">{{
-                          objectInfo.created | datetimeutc
+                          $filterDateTimeUtc(objectInfo.created)
                         }} UTC</v-col>
                       </v-row>
                     </v-card-text>
@@ -1422,21 +1417,20 @@
                 <li class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light white--text"
+                      class="ph-box title font-weight-light text-white"
                       >
                         {{ $t("Usage statistics") }}
-                        <!-- <nuxt-link
-                          class="white--text"
+                        <nuxt-link
+                          class="text-white"
                           :to="localePath(`/stats/${objectInfo.pid}`)"
                           :aria-label="$t('Show details')"
                           v-if="(stats.detail > 0) || (stats.download > 0)"
                         >
-                          <v-tooltip bottom>
-                            <template v-slot:activator="{ on, attrs }">
+                          <v-tooltip location="bottom">
+                            <template v-slot:activator="{ props: tipProps }">
                               <v-icon
-                                  class="white--text ml-2"                
-                                  v-on="on"
-                                  v-bind="attrs"
+                                  class="text-white ml-2"
+                                  v-bind="tipProps"
                               >
                                 mdi-information-outline
                               </v-icon>
@@ -1464,14 +1458,14 @@
                 <li v-if="objectInfo.versions && objectInfo.versions.length > 0" class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light white--text"
+                      class="ph-box title font-weight-light text-white"
                       >{{ $t("Versions") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
                       <div v-for="(rel, i) in objectInfo.versions" :key="'version' + i">
                         <v-row>
                           <v-col cols="12" md="5">{{
-                            rel.created | date
+                            $filterDate(rel.created)
                           }}</v-col>
                           <v-col cols="12" md="7">
                             <nuxt-link
@@ -1499,7 +1493,7 @@
                 <li v-if="objectInfo.alternativeversions && objectInfo.alternativeversions.length > 0" class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light white--text"
+                      class="ph-box title font-weight-light text-white"
                       >{{ $t("Alternative versions") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1510,7 +1504,7 @@
                           <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                  :src="instanceconfig.api +
+                                  :src="apiBaseUrl +
                                     '/object/' +
                                     rel.pid +
                                     '/thumbnail'
@@ -1546,7 +1540,7 @@
                 <li v-if="objectInfo.alternativeformats && objectInfo.alternativeformats.length > 0" class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light white--text"
+                      class="ph-box title font-weight-light text-white"
                       >{{ $t("Alternative formats") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1582,7 +1576,7 @@
                   <li v-if="objectInfo.relationships.ispartof && objectInfo.relationships.ispartof.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box title font-weight-light white--text"
+                        class="ph-box title font-weight-light text-white"
                         >{{ $t("This object is in collection") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1593,7 +1587,7 @@
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                  :src="instanceconfig.api +
+                                  :src="apiBaseUrl +
                                     '/object/' +
                                     rel.pid +
                                     '/thumbnail'
@@ -1631,7 +1625,7 @@
                   <li v-if="objectInfo.relationships.isbacksideof && objectInfo.relationships.isbacksideof.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box title font-weight-light white--text"
+                        class="ph-box title font-weight-light text-white"
                         >{{ $t("This object is a back side of") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1643,7 +1637,7 @@
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                  :src="instanceconfig.api +
+                                  :src="apiBaseUrl +
                                     '/object/' +
                                     rel.pid +
                                     '/thumbnail'
@@ -1681,7 +1675,7 @@
                   <li v-if="objectInfo.relationships.hasbackside && objectInfo.relationships.hasbackside.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box title font-weight-light white--text"
+                        class="ph-box title font-weight-light text-white"
                         >{{ $t("This object has a back side") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1692,7 +1686,7 @@
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                  :src="instanceconfig.api +
+                                  :src="apiBaseUrl +
                                     '/object/' +
                                     rel.pid +
                                     '/thumbnail'
@@ -1730,7 +1724,7 @@
                   <li v-if="objectInfo.relationships.isthumbnailfor && objectInfo.relationships.isthumbnailfor.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box title font-weight-light white--text"
+                        class="ph-box title font-weight-light text-white"
                         >{{ $t("This object is thumbnail for") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1742,7 +1736,7 @@
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                  :src="instanceconfig.api +
+                                  :src="apiBaseUrl +
                                     '/object/' +
                                     rel.pid +
                                     '/thumbnail'
@@ -1781,7 +1775,7 @@
                   <li v-if="objectInfo.relationships.hasthumbnail && objectInfo.relationships.hasthumbnail.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box title font-weight-light white--text"
+                        class="ph-box title font-weight-light text-white"
                         >{{ $t("This object has thumbnail") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1793,7 +1787,7 @@
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                  :src="instanceconfig.api +
+                                  :src="apiBaseUrl +
                                     '/object/' +
                                     rel.pid +
                                     '/thumbnail'
@@ -1831,7 +1825,7 @@
                   <li v-if="objectInfo.relationships.references && objectInfo.relationships.references.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box title font-weight-light white--text"
+                        class="ph-box title font-weight-light text-white"
                         >{{ $t("This object references") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1842,7 +1836,7 @@
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                :src="instanceconfig.api +
+                                :src="apiBaseUrl +
                                   '/object/' +
                                   rel.pid +
                                   '/thumbnail'
@@ -1880,7 +1874,7 @@
                   <li v-if="objectInfo.relationships.isreferencedby && objectInfo.relationships.isreferencedby.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box title font-weight-light white--text"
+                        class="ph-box title font-weight-light text-white"
                         >{{ $t("This object is referenced by") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1892,7 +1886,7 @@
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                  :src="instanceconfig.api +
+                                  :src="apiBaseUrl +
                                     '/object/' +
                                     rel.pid +
                                     '/thumbnail'
@@ -1932,7 +1926,7 @@
                 <li class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light white--text"
+                      class="ph-box title font-weight-light text-white"
                       >{{ $t("Metadata") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1943,7 +1937,7 @@
                       >
                         <a
                         :href="
-                            instanceconfig.api +
+                            apiBaseUrl +
                             '/object/' +
                             objectInfo.pid +
                             '/json-ld'
@@ -1959,7 +1953,7 @@
                       >
                         <a
                         :href="
-                            instanceconfig.api +
+                            apiBaseUrl +
                             '/object/' +
                             objectInfo.pid +
                             '/iiifmanifest'
@@ -1975,7 +1969,7 @@
                       >
                         <a
                           :href="
-                            instanceconfig.api +
+                            apiBaseUrl +
                             '/object/' +
                             objectInfo.pid +
                             '/uwmetadata?format=xml'
@@ -1991,7 +1985,7 @@
                       >
                         <a
                           :href="
-                            instanceconfig.api +
+                            apiBaseUrl +
                             '/object/' +
                             objectInfo.pid +
                             '/mods?format=xml'
@@ -2008,7 +2002,7 @@
                       >
                         <a
                           :href="
-                            instanceconfig.api +
+                            apiBaseUrl +
                             '/object/' +
                             objectInfo.pid +
                             '/datastream/' +
@@ -2025,14 +2019,14 @@
                 <li class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light white--text"
+                      class="ph-box title font-weight-light text-white"
                       >{{ $t("Export formats") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
                       <v-row no-gutters class="pt-2">
                         <a
                           :href="
-                            instanceconfig.api +
+                            apiBaseUrl +
                             '/object/' +
                             objectInfo.pid +
                             '/index/dc'
@@ -2048,7 +2042,7 @@
                         <a
                           class="mb-1"
                           :href="
-                            instanceconfig.api +
+                            apiBaseUrl +
                             '/object/' +
                             objectInfo.pid +
                             '/datacite?format=xml'
@@ -2064,7 +2058,7 @@
                         <a
                           class="mb-1"
                           :href="
-                            instanceconfig.api +
+                            apiBaseUrl +
                             '/object/' +
                             objectInfo.pid +
                             '/lom'
@@ -2080,7 +2074,7 @@
                         <a
                           class="mb-1"
                           :href="
-                            instanceconfig.api +
+                            apiBaseUrl +
                             '/object/' +
                             objectInfo.pid +
                             '/edm'
@@ -2096,7 +2090,7 @@
                         <a
                           class="mb-1"
                           :href="
-                            instanceconfig.api +
+                            apiBaseUrl +
                             '/object/' +
                             objectInfo.pid +
                             '/openaire'
@@ -2112,7 +2106,7 @@
                 <li class="mb-6" v-if="objectInfo.writerights === 1">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light white--text"
+                      class="ph-box title font-weight-light text-white"
                       >{{ $t("Edit") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -2156,15 +2150,15 @@
                           v-model="collectionHelpDialog"
                           width="800"
                         >
-                          <template v-slot:activator="{ on }">
+                          <template v-slot:activator="{ props: activatorProps }">
                             <a
                               class="mb-1"
-                              v-on="on"
+                              v-bind="activatorProps"
                               >{{ $t("Manage members") }}</a
                             >
                           </template>
                           <v-card>
-                            <v-card-title class="title font-weight-light white--text">
+                            <v-card-title class="title font-weight-light text-white">
                               {{ $t("Manage members") }}
                             </v-card-title>
 
@@ -2175,7 +2169,7 @@
                             <v-card-actions>
                               <v-spacer></v-spacer>
                               <v-btn
-                                outlined
+                                variant="outlined"
                                 @click="collectionHelpDialog = false"
                               >
                                 {{ $t("Close") }}
@@ -2222,14 +2216,14 @@
                           v-model="relationDialog"
                           width="800px"
                         >
-                          <template v-slot:activator="{ on }">
-                            <a v-on="on" class="mb-1">{{
+                          <template v-slot:activator="{ props: activatorProps }">
+                            <a v-bind="activatorProps" class="mb-1">{{
                               $t("Upload related object")
                             }}</a>
                           </template>
                           <v-card>
                             <v-card-title
-                              class="title font-weight-light white--text"
+                              class="title font-weight-light text-white"
                               >{{ $t("Choose relation") }}</v-card-title
                             >
                             <v-card-text>
@@ -2327,7 +2321,7 @@
                             </v-card-text>
                             <v-card-actions>
                               <v-spacer></v-spacer>
-                              <v-btn outlined @click="relationDialog = false">{{
+                              <v-btn variant="outlined" @click="relationDialog = false">{{
                                 $t("Cancel")
                               }}</v-btn>
                               <v-btn
@@ -2393,12 +2387,13 @@
                         <p class="text-right">
                           <span class="caption font-weight-bold">{{ $t('Media Package Identifier') }}</span
                           ><br /><span>id={{ objectInfo.oc_mpid }}
-                          <v-tooltip bottom>
-                              <template v-slot:activator="{ on, attrs }">
+                          <v-tooltip location="bottom">
+                              <template v-slot:activator="{ props: tipProps }">
                                 <v-btn
                                   :aria-label="$t('Copy to clipboard')"
-                                  v-on="on"
-                                  v-bind="attrs" icon @click="copyToClipboard('id='+objectInfo.oc_mpid)"><v-icon>mdi-content-copy</v-icon></v-btn>
+                                  v-bind="tipProps"
+                                  icon
+                                  @click="copyToClipboard('id='+objectInfo.oc_mpid)"><v-icon>mdi-content-copy</v-icon></v-btn>
                               </template>
                               <span>{{ $t('Copy to clipboard') }}</span>
                           </v-tooltip>
@@ -2414,8 +2409,8 @@
       </v-row>
       <v-dialog v-model="datareplaceDialog" max-width="1200px">
       <v-card>
-        <v-card-title class="title font-weight-light white--text">
-          {{ $t('Upload new file to') }} {{objectInfo.pid}} ({{ $t(objectInfo.cmodel) }})
+        <v-card-title class="title font-weight-light text-white">
+          {{ $t('Upload new file to') }} {{objectInfo.pid}} ({{objectInfo.cmodel}})
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="mt-4">
@@ -2437,8 +2432,8 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn outlined @click.stop="datareplaceDialog=false" :disabled="datareplaceLoading">{{ $t("Cancel") }}</v-btn>
-          <v-btn color="primary" @click="datareplaceUpload()" :loading="datareplaceLoading" :disabled="datareplaceLoading">{{ $t("Upload File") }}</v-btn>
+          <v-btn variant="outlined" @click.stop="datareplaceDialog=false">{{ $t("Cancel") }}</v-btn>
+          <v-btn color="primary" @click="datareplaceUpload()">{{ $t("Upload File") }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -2448,19 +2443,114 @@
 
 
 <script>
+import { getCurrentInstance, nextTick } from 'vue'
+import { onBeforeRouteUpdate } from 'vue-router'
+import { useAsyncData, useNuxtApp, useRoute } from '#app'
 import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
-import objectMixin from "phaidra-vue-components/src/mixins/object";
+import objectMixin from 'phaidra-vue-components/src/mixins/object'
 import lang3to2map from "phaidra-vue-components/src/utils/lang3to2map";
 import Autolinker from "autolinker";
-import ListDialog from "phaidra-vue-components/src/components/select/ListDialog";
 
 export default {
-  components: {
-    ListDialog
-  },
   mixins: [context, config, vocabulary, objectMixin],
+  setup () {
+    const route = useRoute()
+    const nuxtApp = useNuxtApp()
+    const instance = getCurrentInstance()
+
+    /**
+     * Load via Vuex/axios (works SSR + client). Do not depend on `instance.proxy` for the fetch:
+     * during setup/hydration `proxy` is often still null, which previously aborted the handler and left the page empty.
+     */
+    useAsyncData(
+      'detail-object',
+      async () => {
+        const pid = route.params.pid
+        if (!pid || !/^o:\d+$/.test(String(pid))) return null
+
+        if (import.meta.client) {
+          await nextTick()
+          instance?.proxy?.clearDetailAuxiliaryState?.()
+          nuxtApp.$store.commit('setLoading', true)
+          nuxtApp.$store.commit('setObjectInfo', null)
+        }
+
+        await nuxtApp.$store.dispatch('fetchObjectInfo', pid)
+        const info = nuxtApp.$store.state.objectInfo
+
+        if (!info) {
+          if (import.meta.client) nuxtApp.$store.commit('setLoading', false)
+          return null
+        }
+
+        if (info.cmodel === 'Container') {
+          await nuxtApp.$store.dispatch('fetchObjectMembers', info)
+        }
+        if (info.cmodel === 'Collection') {
+          await nextTick()
+          const proxy = instance?.proxy
+          await nuxtApp.$store.dispatch('fetchCollectionMembers', {
+            pid,
+            page: proxy?.collMembersCurrentPage ?? 1,
+            pagesize: proxy?.collMembersPagesize ?? 10,
+            onlylatestversion: proxy?.collOnlyLatestVersions ?? true
+          })
+        }
+
+        await nextTick()
+        let proxy = instance?.proxy
+        if (proxy) {
+          proxy.postMetadataLoad(proxy)
+        }
+
+        if (info?.dshash?.['JSON-LD']) {
+          try {
+            const response = await nuxtApp.$axios.get('/object/' + pid + '/json-ld')
+            await nextTick()
+            proxy = instance?.proxy
+            if (proxy) proxy.fullJsonLd = response.data
+          } catch (e) {
+            console.log(e)
+          }
+        }
+
+        await nextTick()
+        proxy = instance?.proxy
+        if (proxy && typeof proxy.syncDetailMetaFromObject === 'function') {
+          proxy.syncDetailMetaFromObject()
+        }
+
+        if (import.meta.client && route.params.pid === pid) {
+          await nextTick()
+          proxy = instance?.proxy
+          try {
+            if (proxy) await proxy.fetchChecksums(proxy, pid)
+          } catch (_) {}
+          proxy?.fetchUsageStats(proxy, pid)
+          nuxtApp.$store.commit('setLoading', false)
+        }
+
+        return true
+      },
+      { watch: [() => route.params.pid] }
+    )
+
+    onBeforeRouteUpdate((to) => {
+      if (!import.meta.client) return
+      const proxy = instance?.proxy
+      if (!proxy) return
+      if (!to.params.pid || !/^o:\d+$/.test(String(to.params.pid))) return
+      if (!proxy.objectInfo || proxy.objectInfo.pid !== to.params.pid) {
+        proxy.clearDetailAuxiliaryState()
+        proxy.$store.commit('setLoading', true)
+        proxy.$store.commit('setObjectInfo', null)
+      }
+    })
+
+    return {}
+  },
   validate({ params }) {
     return /^o:\d+$/.test(params.pid);
   },
@@ -2538,25 +2628,24 @@ export default {
       return ('https://' + this.instanceconfig.irbaseurl + "/" + this.objectInfo.pid);
     },
     doi: function () {
-      if (!this.objectInfo.dc_identifier || !Array.isArray(this.objectInfo.dc_identifier)) {
-        return null
+      const list = this.dcIdentifierList
+      if (!list.length) return null
+      for (let id of list) {
+        const s = typeof id === 'string' ? id : String(id ?? '')
+        const c = s.indexOf(':')
+        if (c < 0) continue
+        const type = s.slice(0, c)
+        const idvalue = s.slice(c + 1)
+        if (type === 'doi') return idvalue
       }
-      const prefix = this.instanceconfig.phaidra_doi_prefix
-      if (!prefix) {
-        // Without a configured prefix we don't treat any DOI as the PHAIDRA DOI
-        return null
-      }
-      for (let id of this.objectInfo.dc_identifier) {
-        let type = id.substr(0, id.indexOf(":"));
-        let idvalue = id.substr(id.indexOf(":") + 1);
-        if (type === "doi") {
-          const normalized = this.normalizeDoi(idvalue)
-          if (normalized && normalized.startsWith(prefix + '/')) {
-            return normalized
-          }
-        }
-      }
-      return null;
+      return null
+    },
+    /** API may omit `dc_identifier`, or send one string instead of an array. */
+    dcIdentifierList () {
+      if (!this.objectInfo) return []
+      const raw = this.objectInfo.dc_identifier
+      if (raw == null) return []
+      return Array.isArray(raw) ? raw : [raw]
     },
     doiRequestMailtoLink: function () {
       if (!this.instanceconfig.requestdoiemail || !this.user || !this.objectInfo) {
@@ -2575,18 +2664,22 @@ export default {
     },
     identifiers: function () {
       let ids = { persistent: [], other: [] };
+      if (!this.objectInfo) return ids
       ids.persistent.push({
         label: "Persistent identifier",
         value: this.instanceconfig.baseurl + "/" + this.objectInfo.pid,
       });
-      if (this.objectInfo.dc_identifier) {
-        for (let id of this.objectInfo.dc_identifier) {
+      const list = this.dcIdentifierList
+      if (list.length) {
+        for (let id of list) {
           if (id === this.instanceconfig.baseurl + "/" + this.objectInfo.pid) {
             continue;
           } else {
-            let type = id.substr(0, id.indexOf(":"));
-            let idvalue = id.substr(id.indexOf(":") + 1);
-            const doiPrefix = this.instanceconfig.phaidra_doi_prefix
+            const s = typeof id === 'string' ? id : String(id ?? '')
+            const c = s.indexOf(':')
+            if (c < 0) continue
+            let type = s.slice(0, c)
+            let idvalue = s.slice(c + 1)
             switch (type) {
               case "hdl":
                 ids.persistent.push({ label: "Handle", value: 'https://hdl.handle.net/' + idvalue });
@@ -3069,15 +3162,58 @@ export default {
       notFound: false
     };
   },
-  async fetch() {
-    if (!this.$route.params.pid || !this.$route.path === '/detail') {
-      return
+  watch: {
+    relationDialog(newVal) {
+      if (newVal) {
+        this.chosenRelation = null;
+      }
     }
-    await this.fetchAsyncData(this, this.$route.params.pid);
-    let metaInfo = {}
-    if (this.objectInfo) {
+  },
+  methods: {
+    copyToClipboard(text) {
+      navigator.clipboard.writeText(text);
+    },
+    autolinkerCheck(val) {
+      return Autolinker.link(String(val ?? ""));
+    },
+    normalizeLang(lang) {
+      if (!lang) return '';
+      lang = String(lang).toLowerCase();
+      return lang.length === 2 ? (this.lang2to3map[lang] || lang) : lang;
+    },
+    pickByUiLanguage(byLang) {
+      if (!byLang || !Object.keys(byLang).length) {
+        return null;
+      }
+      const currentLang = (this.$i18n.locale || 'eng').toLowerCase();
+      const currentLang2 = currentLang.substring(0, 2);
+      const langPriority = [
+        currentLang,
+        currentLang2,
+        this.lang2to3map[currentLang2],
+        'eng',
+        'en'
+      ].filter(Boolean);
+      const matchedLang = langPriority.find(lang => byLang[lang]?.length > 0);
+      return matchedLang ? byLang[matchedLang] : Object.values(byLang).flat();
+    },
+    normalizeDoi(value) {
+      if (!value) {
+        return ''
+      }
+      return value.replace(/^https?:\/\/(dx\.)?doi\.org\//i, '').trim()
+    },
+    async loadDetailPage () {
+      if (!this.$route.params.pid) return
+      await this.fetchAsyncData(this, this.$route.params.pid)
+      this.syncDetailMetaFromObject()
+    },
+    /** Head/meta + signposting; safe to call after store `objectInfo` is set. */
+    syncDetailMetaFromObject () {
+      let metaInfo = {}
+      if (this.objectInfo) {
       let thumbnail =
-        this.instanceconfig.api +
+        this.apiBaseUrl +
         "/object/" +
         this.objectInfo.pid +
         "/thumbnail";
@@ -3221,25 +3357,25 @@ export default {
       metaInfo.link.push({
         rel: 'describedby',
         type: 'application/xml',
-        href: this.instanceconfig.api + '/object/' + this.objectInfo.pid + '/index/dc'
+        href: this.apiBaseUrl + '/object/' + this.objectInfo.pid + '/index/dc'
       });
       metaInfo.link.push({
         rel: 'describedby',
         type: 'application/vnd.datacite.datacite+xml',
-        href: this.instanceconfig.api + '/object/' + this.objectInfo.pid + '/datacite?format=xml'
+        href: this.apiBaseUrl + '/object/' + this.objectInfo.pid + '/datacite?format=xml'
       });
       if (this.objectInfo?.dshash?.['JSON-LD']) {
         metaInfo.link.push({
           rel: 'describedby',
           type: 'application/ld+json',
-          href: this.instanceconfig.api + '/object/' + this.objectInfo.pid + '/json-ld'
+          href: this.apiBaseUrl + '/object/' + this.objectInfo.pid + '/json-ld'
         });
       }
       if (this.downloadable) {
         metaInfo.link.push({
           rel: 'item',
           type: this.mimetype,
-          href: this.instanceconfig.api + '/object/' + this.objectInfo.pid + '/download'
+          href: this.apiBaseUrl + '/object/' + this.objectInfo.pid + '/download'
         });
       }
       if (this.objectInfo.id_bib_roles_pers_aut) {
@@ -3254,7 +3390,7 @@ export default {
       }
     }
 
-    if (this.objectInfo?.dshash?.['JSON-LD']) {
+      if (this.objectInfo?.dshash?.['JSON-LD']) {
       metaInfo.script = []
       metaInfo.script.push(
         {
@@ -3264,48 +3400,7 @@ export default {
       )
     }
 
-    this.detailsMetaInfo = metaInfo
-  },
-  watch: {
-    relationDialog(newVal) {
-      if (newVal) {
-        this.chosenRelation = null;
-      }
-    }
-  },
-  methods: {
-    autolinkerCheck(val) {
-      return Autolinker.link(String(val ?? ""));
-    },
-    normalizeLang(lang) {
-      if (!lang) return '';
-      lang = String(lang).toLowerCase();
-      return lang.length === 2 ? (this.lang2to3map[lang] || lang) : lang;
-    },
-    pickByUiLanguage(byLang) {
-      if (!byLang || !Object.keys(byLang).length) {
-        return null;
-      }
-      const currentLang = (this.$i18n.locale || 'eng').toLowerCase();
-      const currentLang2 = currentLang.substring(0, 2);
-      const langPriority = [
-        currentLang,
-        currentLang2,
-        this.lang2to3map[currentLang2],
-        'eng',
-        'en'
-      ].filter(Boolean);
-      const matchedLang = langPriority.find(lang => byLang[lang]?.length > 0);
-      return matchedLang ? byLang[matchedLang] : Object.values(byLang).flat();
-    },
-    normalizeDoi(value) {
-      if (!value) {
-        return ''
-      }
-      return value.replace(/^https?:\/\/(dx\.)?doi\.org\//i, '').trim()
-    },
-    copyToClipboard(text) {
-      navigator.clipboard.writeText(text);
+      this.detailsMetaInfo = metaInfo
     },
     getLicenseLabel(uri) {
       if (this.$store && this.$store.getters['vocabulary/getLocalizedTermLabel']) {
@@ -3315,11 +3410,10 @@ export default {
       return uri;
     },
     async fetchAsyncData(self, pid) {
-      console.log('fetching object info ' + pid);
       try {
+        console.log('fetching object info ' + pid);
         await self.$store.dispatch("fetchObjectInfo", pid);
         self.postMetadataLoad(self);
-        // console.log('cmodel: ' + self.$store.state.objectInfo.cmodel);
         if (self.$store.state.objectInfo.cmodel === "Container") {
           console.log('fetching container members ' + pid);
           await self.$store.dispatch(
@@ -3337,7 +3431,7 @@ export default {
 
         if (self.objectInfo?.dshash?.['JSON-LD']) {
           try {
-            let response = await self.$axios.get("/object/" + pid + "/json-ld");
+            const response = await self.$axios.get("/object/" + pid + "/json-ld");
             if (response.data) {
               self.fullJsonLd = response.data;
             }
@@ -3558,97 +3652,13 @@ export default {
         this.doiRequestLoading = false
       }
     },
-    resetData: function (self) {
-      self.stats = {
-        download: "-",
-        detail: "-",
-      };
-    },
-    async refreshDetailObjectInfo() {
-      const pid = (this.objectInfo && this.objectInfo.pid) || this.$route.params.pid
-      if (!pid) {
-        return
+    /** Resets client-only bits when switching objects (avoid name `resetData` / legacy router `next(vm)` quirks). */
+    clearDetailAuxiliaryState: function () {
+      this.stats = {
+        download: '-',
+        detail: '-'
       }
-      await this.fetchAsyncData(this, pid)
-    },
-    addObjectToList: async function (list) {
-      try {
-        this.$store.commit('setLoading', true)
-        var httpFormData = new FormData()
-        httpFormData.append('members', JSON.stringify({ members: this.detailBookmarkMembers }))
-        let response = await this.$axios.request({
-          method: 'POST',
-          url: '/list/' + list.listid + '/members/add',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.user.token
-          },
-          data: httpFormData
-        })
-        if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [{ msg: this.$t('Object list successfully updated'), type: 'success' }])
-        } else if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
-        }
-      } catch (error) {
-        console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
-      } finally {
-        this.$store.commit('setLoading', false)
-      }
-    },
-    removeObjectFromList: async function (list) {
-      try {
-        this.$store.commit('setLoading', true)
-        var httpFormData = new FormData()
-        httpFormData.append('members', JSON.stringify({ members: this.detailBookmarkMembers }))
-        let response = await this.$axios.request({
-          method: 'POST',
-          url: '/list/' + list.listid + '/members/remove',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.user.token
-          },
-          data: httpFormData
-        })
-        if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [{ msg: this.$t('Object list successfully updated'), type: 'success' }])
-        } else if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
-        }
-      } catch (error) {
-        console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
-      } finally {
-        this.$store.commit('setLoading', false)
-      }
-    },
-    removeObjectFromCollection: async function (collection) {
-      try {
-        this.$store.commit('setLoading', true)
-        var httpFormData = new FormData()
-        httpFormData.append('metadata', JSON.stringify({ metadata: { members: this.detailBookmarkMembers } }))
-        let response = await this.$axios.request({
-          method: 'POST',
-          url: '/collection/' + collection.pid + '/members/remove',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.user.token
-          },
-          data: httpFormData
-        })
-        if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [{ msg: this.$t('Collection successfully updated'), type: 'success' }])
-          await this.refreshDetailObjectInfo()
-        } else if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
-        }
-      } catch (error) {
-        console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
-      } finally {
-        this.$store.commit('setLoading', false)
-      }
+      this.checksums = []
     },
     addToCollection: async function (collection) {
       try {
@@ -3722,31 +3732,6 @@ export default {
           document.getElementById("d3-graph-container").offsetWidth;
       }, 2000);
     }
-  },
-  beforeRouteEnter: async function (to, from, next) {
-    next(async function (vm) {
-      console.log('beforeRouteEnter')
-      if (
-        process.browser &&
-        (!vm.objectInfo || vm.objectInfo.pid !== to.params.pid)
-      ) {
-        vm.resetData(vm);
-        vm.$store.commit("setLoading", true);
-        vm.$store.commit("setObjectInfo", null);
-        console.log("showtree:" + vm.showCollectionTree);
-        vm.$store.commit("setLoading", false);
-      }
-      vm.fetchUsageStats(vm, to.params.pid);
-    });
-  },
-  beforeRouteUpdate: async function (to, from, next) {
-    console.log('beforeRouteUpdate')
-    this.resetData(this);
-    this.$store.commit("setLoading", true);
-    this.$store.commit("setObjectInfo", null);
-    console.log("showtree:" + this.showCollectionTree);
-    this.$store.commit("setLoading", false);
-    next();
   },
 };
 </script>

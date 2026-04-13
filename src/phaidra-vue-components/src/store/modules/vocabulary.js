@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import languages from '../../utils/lang'
 import lang3to2map from '../../utils/lang3to2map'
 import orgunits from '../../utils/orgunits'
@@ -6,6 +5,7 @@ import fieldsLib from '../../utils/fields'
 import oefos from '../../utils/oefos'
 import thema from '../../utils/thema'
 import bic from '../../utils/bic'
+import { setGlobalLocale } from '../../i18n/i18n'
 
 const lang2to3map = Object.keys(lang3to2map).reduce((ret, key) => {
   ret[lang3to2map[key]] = key
@@ -2161,7 +2161,12 @@ const mutations = {
       state.vocabularies['bic']['loaded'] = true
     }
   },
-  sortFields(state, {locale, i18nInstance}) {
+  sortFields(state, payload) {
+    const locale = payload?.locale
+    const i18nInstance = payload?.i18nInstance
+
+    if (!locale) return
+    setGlobalLocale(locale)
     if (!i18nInstance) return
     i18nInstance.locale = locale
     if (state.fields) {
@@ -2197,7 +2202,7 @@ const mutations = {
   setInstanceConfig(state, instanceconfig) {
     if (instanceconfig.hasOwnProperty('data_vocabularies')) {
       for (let vocid of Object.keys(instanceconfig.data_vocabularies)) {
-        Vue.set(state.vocabularies, vocid, instanceconfig.data_vocabularies[vocid])
+        state.vocabularies[vocid] = instanceconfig.data_vocabularies[vocid]
         state.vocabularies[vocid].loaded = true
       }
     }
@@ -2229,10 +2234,10 @@ const mutations = {
         terms.push(term)
       }
     }
-    Vue.set(state.vocabularies, id, {
+    state.vocabularies[id] = {
       terms: terms,
       loaded: true
-    })
+    }
   }
 }
 

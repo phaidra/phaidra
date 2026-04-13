@@ -14,7 +14,7 @@
             ></v-text-field>
             <p-i-file
               v-else
-              v-bind.sync="fileField"
+              v-bind="fileField"
               :mimetype="mimetype"
               v-on:input-file="file = $event"
               v-on:input-mimetype="mimetype = $event ? $event['@id'] : $event"

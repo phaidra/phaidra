@@ -14,7 +14,7 @@
 
       <v-row class="mt-4">
         <v-col cols="12">
-          <v-card outlined>
+          <v-card variant="outlined">
             <v-card-text>
               <!-- Header Row -->
               <v-row class="border-bottom">
@@ -59,7 +59,7 @@
                       :value="getFieldMapping(field)?.csvValue"
                       :disabled="getFieldMapping(field)?.source !== 'csv-column' && getAllowedSources(field).includes('phaidra-field')"
                       :all-mappings="getAllFieldMappings"
-                      @input="val => updateMapping(field, 'csv-column', val)"
+                      @update:model-value="val => updateMapping(field, 'csv-column', val)"
                     />
                   </v-col>
 
@@ -68,7 +68,7 @@
                       :field="field"
                       :allowed-sources="getAllowedSources(field)"
                       :value="getFieldMapping(field)?.source"
-                      @input="val => updateSource(field, val)"
+                      @update:model-value="val => updateSource(field, val)"
                     />
                   </v-col>
 
@@ -78,7 +78,7 @@
                       :field="field"
                       :value="Array.isArray(getFieldMapping(field)?.phaidraValue) ? [...getFieldMapping(field)?.phaidraValue] : getFieldMapping(field)?.phaidraValue"
                       :disabled="getFieldMapping(field)?.source !== 'phaidra-field' && getAllowedSources(field).includes('csv-column')"
-                      @input="val => updateMapping(field, 'phaidra-field', val)"
+                      @update:model-value="val => updateMapping(field, 'phaidra-field', val)"
                     />
                   </v-col>
                 </v-row>
@@ -101,7 +101,7 @@
                         :field="field"
                         :allowed-sources="getAllowedSources(field)"
                         :value="getFieldMapping(field)?.source"
-                        @input="val => updateSource(field, val)"
+                        @update:model-value="val => updateSource(field, val)"
                     />
                     </v-col>
                     <v-col v-if="getAllowedSources(field).includes('phaidra-field') && getFieldMapping(field)?.source === 'phaidra-field'" cols="8">
@@ -110,7 +110,7 @@
                         :field="field"
                         :value="getFieldMapping(field)"
                         :disabled="getFieldMapping(field)?.source !== 'phaidra-field' && getAllowedSources(field).includes('csv-column')"
-                        @input="val => updateMapping(field, 'phaidra-field', val)"
+                        @update:model-value="val => updateMapping(field, 'phaidra-field', val)"
                       />
                     </v-col>
                     <v-col v-if="getAllowedSources(field).includes('csv-column') && getFieldMapping(field)?.source === 'csv-column'" cols="8">
@@ -123,7 +123,7 @@
                               :columns="getColumnHeaders"
                               :all-mappings="getAllFieldMappings"
                               :value="getFieldMapping(field)?.subFields?.[subField]?.csvValue"
-                              @input="val => updateMapping(field, 'csv-column', val, subField)"
+                              @update:model-value="val => updateMapping(field, 'csv-column', val, subField)"
                             />
                           </template>
                         </div>

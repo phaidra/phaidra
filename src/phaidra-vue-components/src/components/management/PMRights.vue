@@ -1,6 +1,6 @@
 <template>
   <v-card :flat="!title">
-    <v-card-title v-if="title" class="title font-weight-light white--text">{{ title }}</v-card-title>
+    <v-card-title v-if="title" class="title font-weight-light text-white">{{ title }}</v-card-title>
     <v-divider v-if="title"></v-divider>
     <v-card-text>
         <v-row v-if="isCollection">
@@ -15,7 +15,7 @@
         <v-row>
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light white--text">{{ (rightsArray.length > 0) ? $t('The following entities have access to the object') : $t('This object is worldwide accessible') }}</v-card-title>
+              <v-card-title class="title font-weight-light text-white">{{ (rightsArray.length > 0) ? $t('The following entities have access to the object') : $t('This object is worldwide accessible') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="pt-4">
                 <v-data-table
@@ -37,7 +37,7 @@
                     <span :title="item.notation">{{item.notation}} {{ item.description }}</span>
                   </template>
                   <template v-slot:item.expires="{ item }">
-                    {{ item.expires | date }}
+                    {{ $date(item.expires) }}
                   </template>
                   <template v-slot:item.actions="{ item }">
                     <v-btn text color="primary" @click="openDateDialog(item)">{{ $t('Edit expiration date') }}</v-btn>
@@ -52,7 +52,7 @@
         <v-row>
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light white--text">{{ $t('Restrict access rights to the owner of the object') }}</v-card-title>
+              <v-card-title class="title font-weight-light text-white">{{ $t('Restrict access rights to the owner of the object') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
                 <v-container fluid>
@@ -73,7 +73,7 @@
         <v-row v-if="showPersons">
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light white--text">{{ $t('Restrict access rights to particular persons') }}</v-card-title>
+              <v-card-title class="title font-weight-light text-white">{{ $t('Restrict access rights to particular persons') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
                 <v-container fluid>
@@ -83,25 +83,23 @@
                         v-model="userSearchModel"
                         :items="userSearchItems.length > 0 ? userSearchItems : []"
                         :loading="userSearchLoading"
-                        :search-input.sync="userSearch"
+                        v-model:search="userSearch"
                         :label="$t('User search')"
                         :placeholder="$t('Start typing to search')"
                         item-value="uid"
-                        item-text="value"
-                        prepend-icon="mdi-database-search"
+                        item-title="value"
+                        prepend-inner-icon="mdi-database-search"
                         hide-no-data
                         hide-selected
                         return-object
                         clearable
                         @click:clear="userSearchItems=[]"
                       >
-                        <template slot="item" slot-scope="{ item }">
-                          <template v-if="item">
-                            <v-list-item-content two-line>
-                              <v-list-item-title>{{ item.value }}</v-list-item-title>
-                              <v-list-item-subtitle>{{ item.uid }}</v-list-item-subtitle>
-                            </v-list-item-content>
-                          </template>
+                        <template #item="{ props, item }">
+                          <v-list-item v-if="item.raw" v-bind="props" lines="two">
+                            <template #title>{{ item.raw.value }}</template>
+                            <template #subtitle>{{ item.raw.uid }}</template>
+                          </v-list-item>
                         </template>
                       </v-autocomplete>
                     </v-col>
@@ -117,7 +115,7 @@
         <v-row v-if="showAccounts">
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light white--text">{{ $t('Restrict access rights to particular account') }}</v-card-title>
+              <v-card-title class="title font-weight-light text-white">{{ $t('Restrict access rights to particular account') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
                 <v-container fluid>
@@ -142,7 +140,7 @@
         <v-row v-if="showEduPersonAffiliation">
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light white--text">{{ $t('Restrict access rights to particular eduPersonAffiliation values') }}</v-card-title>
+              <v-card-title class="title font-weight-light text-white">{{ $t('Restrict access rights to particular eduPersonAffiliation values') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
                 <v-container fluid>
@@ -167,7 +165,7 @@
         <v-row v-if="showOrgUnits">
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light white--text">{{ $t('Restrict access rights to organisational units/subunits') }}</v-card-title>
+              <v-card-title class="title font-weight-light text-white">{{ $t('Restrict access rights to organisational units/subunits') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
                 <v-container fluid>
@@ -175,29 +173,40 @@
                     <v-col cols="8">
                       <v-autocomplete
                         v-model="orgunit"
-                        v-on:input="handleInput($event)"
+                        @update:model-value="handleInput($event)"
                         :items="vocabularies['orgunits'].terms"
-                        :item-value="'@id'"
-                        :filter="autocompleteFilter"
+                        item-value="@id"
+                        :item-title="orgunitItemTitle"
+                        :custom-filter="orgunitsAutocompleteFilter"
                         :label="$t('Select organizational unit')"
                         :messages="path"
-                        filled
+                        variant="filled"
                         hide-no-data
                         return-object
                         clearable
                       >
-                        <template slot="item" slot-scope="{ item }">
-                          <v-list-item-content two-line>
-                            <v-list-item-title v-html="`${getLocalizedTermLabel('orgunits', item['@id'])}`"></v-list-item-title>
-                            <v-list-item-subtitle v-html="`${item['@id']}`"></v-list-item-subtitle>
-                          </v-list-item-content>
+                        <template #item="{ props, item }">
+                          <v-divider v-if="item.raw && item.raw.divider" />
+                          <v-list-subheader v-else-if="item.raw && item.raw.header != null">
+                            {{ item.raw.header }}
+                          </v-list-subheader>
+                          <v-list-item
+                            v-else
+                            v-bind="props"
+                            lines="two"
+                          >
+                            <template #title>
+                              <span v-html="getLocalizedTermLabel('orgunits', item.raw['@id'])" />
+                            </template>
+                            <template #subtitle>
+                              <span v-html="item.raw['@id']" />
+                            </template>
+                          </v-list-item>
                         </template>
-                        <template slot="selection" slot-scope="{ item }">
-                          <v-list-item-content>
-                            <v-list-item-title v-html="`${getLocalizedTermLabel('orgunits', item['@id'])}`"></v-list-item-title>
-                          </v-list-item-content>
+                        <template #selection="{ item }">
+                          <span v-html="getLocalizedTermLabel('orgunits', (item.raw || item)['@id'])" />
                         </template>
-                        <template v-slot:append-outer>
+                        <template #append>
                           <v-icon @click="$refs.orgunitstreedialog.open()">mdi-file-tree</v-icon>
                         </template>
                       </v-autocomplete>
@@ -215,7 +224,7 @@
         <v-row v-if="showGroups">
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light white--text">{{ $t('Restrict access rights to particular groups') }}</v-card-title>
+              <v-card-title class="title font-weight-light text-white">{{ $t('Restrict access rights to particular groups') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
                 <v-data-table
@@ -331,8 +340,8 @@ export default {
       userSearchExactLoading: false,
       groupsLoading: false,
       groupsHeaders: [
-        { text: this.$t('Name'), align: 'left', value: 'description', sortable: false },
-        { text: '', align: 'right', value: 'actions', sortable: false }
+        { title: this.$t('Name'), align: 'start', key: 'description', sortable: false },
+        { title: '', align: 'end', key: 'actions', sortable: false }
       ],
       groups: [],
       rightsjson: {},
@@ -357,9 +366,9 @@ export default {
       immediate: true, // Ensure it's set on load
       handler() {
         this.rightsHeaders = [
-          { text: this.$t('Rule'), align: 'left', value: 'description', sortable: false },
-          { text: this.$t('Expires'), align: 'left', value: 'expires', sortable: false },
-          { text: '', align: 'right', value: 'actions', sortable: false }
+          { title: this.$t('Rule'), align: 'start', key: 'description', sortable: false },
+          { title: this.$t('Expires'), align: 'start', key: 'expires', sortable: false },
+          { title: '', align: 'end', key: 'actions', sortable: false }
         ];
       }
     },

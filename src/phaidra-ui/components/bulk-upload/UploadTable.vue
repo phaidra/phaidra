@@ -10,7 +10,7 @@
         <template v-slot:item.status="{ item }">
           <v-chip
             :color="getStatusColor(item.status)"
-            small
+            size="small"
           >
             {{ $t(item.status) }}
           </v-chip>
@@ -18,38 +18,37 @@
 
         <template v-slot:item.actions="{ item }">
           <template v-if="item.status === 'error'">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
+            <v-tooltip location="bottom">
+              <template v-slot:activator="{ props: tipProps }">
                 <v-btn
                   icon
-                  small
+                  size="small"
                   color="error"
-                  v-bind="attrs"
-                  v-on="on"
+                  v-bind="tipProps"
                   @click="$emit('show-error', item)"
                 >
-                  <v-icon small>mdi-alert-circle</v-icon>
+                  <v-icon size="small">mdi-alert-circle</v-icon>
                 </v-btn>
               </template>
               <span>{{$t('View Error')}}</span>
             </v-tooltip>
             <v-btn
               icon
-              small
+              size="small"
               class="ml-2"
               @click="$emit('retry-upload', item.index)"
             >
-              <v-icon small>mdi-refresh</v-icon>
+              <v-icon size="small">mdi-refresh</v-icon>
             </v-btn>
           </template>
           <template v-else-if="item.status === 'completed'">
             <v-btn
               icon
-              small
+              size="small"
               :href="getObjectUrl(item.pid)"
               target="_blank"
             >
-              <v-icon small>mdi-open-in-new</v-icon>
+              <v-icon size="small">mdi-open-in-new</v-icon>
             </v-btn>
           </template>
         </template>
@@ -70,11 +69,11 @@ export default {
   data() {
     return {
       headers: [
-        { text: this.$t('Row'), value: 'index' },
-        { text: this.$t('Title'), value: 'title' },
-        { text: this.$t('Filename'), value: 'filename' },
-        { text: this.$t('Status'), value: 'status' },
-        { text: this.$t('Actions'), value: 'actions', sortable: false }
+        { title: this.$t('Row'), key: 'index' },
+        { title: this.$t('Title'), key: 'title' },
+        { title: this.$t('Filename'), key: 'filename' },
+        { title: this.$t('Status'), key: 'status' },
+        { title: this.$t('Actions'), key: 'actions', sortable: false }
       ]
     }
   },

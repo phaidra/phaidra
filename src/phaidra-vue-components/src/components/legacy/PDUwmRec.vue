@@ -47,10 +47,10 @@
           <v-col cols="12" md="10" class="valuefield" ref="autolink">{{ ch.ui_value }}</v-col>
         </template>
         <template v-else-if="ch.xmlname === 'keyword' && i === firstKeywordIndex">
-          <template v-for="(keywords, language) in langKeywords">
+          <template v-for="(keywords, language) in langKeywords" :key="'kwblk-' + language">
             <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }} <template v-if="language"> ({{language}})</template></v-col>
             <v-col cols="12" md="10" class="valuefield" ref="autolink">
-                <v-chip :key="'kw' + language + i" v-for="(kw, i) in keywords" class="mr-2 mb-2 pointer-disabled">{{kw}}</v-chip>
+                <v-chip v-for="(kw, kwi) in keywords" :key="'kw' + language + kwi" class="mr-2 mb-2 pointer-disabled">{{kw}}</v-chip>
             </v-col>
           </template>
         </template>
@@ -182,21 +182,12 @@
         </template>
         <template v-else-if="ch.xmlname === 'dimensions'">
           <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
-          <v-col cols="12" md="10" :class="$vuetify.breakpoint.mdAndUp ? 'uwm-border-left mb-4' : ''">
-            <v-row v-for="(d, i) in ch.children" :key="'dim'+i">
-              <template v-if="d.xmlname === 'resource'">
-                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold">{{ $t(nodePath(ch)+'_resource') }}</v-col>
-                <v-col cols="12" md="10">{{ getLabel(d) }}</v-col>
-              </template>
-              <template v-else-if="d.xmlname === 'dimension_unit'">
-                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold">{{ $t(nodePath(ch)+'_dimension_unit') }}</v-col>
-                <v-col cols="12" md="10">{{ getLabel(d) }}</v-col>
-              </template>
-              <template v-else>
-                <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold">{{ $t(nodePath(ch) + '_' + d.xmlname) }}</v-col>
-                <v-col cols="12" md="10">{{ d.ui_value }}</v-col>
-              </template>
-            </v-row>
+          <v-col cols="12" md="10">
+            <template v-for="(d, i) in ch.children" :key="i+'dim-wrap'">
+              <span v-if="d.xmlname === 'resource'"><span class="secondary--text font-weight-bold">{{ $t(nodePath(ch)+'_resource') }}</span>: {{ getLabel(d) }}</span>
+              <span v-else-if="d.xmlname === 'dimension_unit'"><span class="secondary--text font-weight-bold ml-4">{{ $t(nodePath(ch)+'_dimension_unit') }}</span>: {{ getLabel(d) }}</span>
+              <span v-else><span class="secondary--text font-weight-bold ml-4">{{ $t(nodePath(ch) + '_' + d.xmlname) }}</span>: {{ d.ui_value }}</span>
+            </template>
           </v-col>
         </template>
         <template v-else>

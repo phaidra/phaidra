@@ -9,7 +9,7 @@
         <div class="bulk-upload-layout">
           <BulkUploadSteps />
           <div class="content">
-            <Nuxt />
+            <NuxtPage />
           </div>
         </div>
       </v-container>

@@ -1,10 +1,10 @@
 <template>
   <v-col>
-    <v-btn color="primary" class="my-4" :to="{ path: `/detail/${parentpid}`, params: { pid: parentpid } }">
+    <v-btn color="primary" class="my-4" :to="`/detail/${parentpid}`">
       <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
     </v-btn>
     <v-card>
-      <v-card-title class="title font-weight-light white--text">{{ $t('Upload web-optimized version of') }} {{
+      <v-card-title class="title font-weight-light text-white">{{ $t('Upload web-optimized version of') }} {{
           parentpid
       }}</v-card-title>
       <v-card-text>

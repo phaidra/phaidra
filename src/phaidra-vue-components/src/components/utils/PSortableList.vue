@@ -1,14 +1,19 @@
 <template>
-  <ul class="list mt-4">
+  <component :is="tag" class="list mt-4">
     <slot />
-  </ul>
+  </component>
 </template>
 
 <script>
-import { ContainerMixin } from 'vue-slicksort'
+/** Presentational wrapper; drag logic lives in parent (e.g. PMSort with vue-draggable-next). */
 export default {
   name: 'p-sortable-list',
-  mixins: [ContainerMixin]
+  props: {
+    tag: {
+      type: String,
+      default: 'ul'
+    }
+  }
 }
 </script>
 
@@ -20,6 +25,6 @@ export default {
   overflow: auto;
   background-color: #f3f3f3;
   border: 1px solid #efefef;
-  border-radius: 3;
+  border-radius: 3px;
 }
 </style>

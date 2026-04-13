@@ -79,7 +79,7 @@
       max-width="500"
     >
       <v-card>
-        <v-card-title class="text-h6 font-weight-light white--text">{{$t('Upload Error')}}</v-card-title>
+        <v-card-title class="text-h6 font-weight-light text-white">{{$t('Upload Error')}}</v-card-title>
         <v-card-text class="mt-4">
           <p class="mb-2"><strong>Row:</strong> {{ errorDialog.row }}</p>
           <p class="mb-0"><strong>Error:</strong> {{ errorDialog.error }}</p>

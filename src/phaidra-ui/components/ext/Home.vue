@@ -126,14 +126,10 @@ import '@/compiled-icons/univie-twitter'
 import '@/compiled-icons/univie-instagram'
 import '@/compiled-icons/univie-flickr'
 import '@/compiled-icons/linkedin'
-import VueHorizontal from 'vue-horizontal'
 import qs from "qs";
 
 export default {
   name: 'home',
-  components: {
-    VueHorizontal
-  },
   mixins: [config],
   data() {
     return {

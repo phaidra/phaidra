@@ -51,6 +51,8 @@
 </template>
 
 <script>
+import { vuetifyGoTo } from '../../utils/vuetifyGoToCompat'
+
 export default {
   name: 'p-metadata-fields-help',
   computed: {
@@ -62,7 +64,7 @@ export default {
     selectField: function (field) {
       this.$store.commit('info/switchFieldsOverview', field.id)
       this.selectedField = field
-      this.$vuetify.goTo(1)
+      vuetifyGoTo(1)
     }
   },
   mounted: function () {

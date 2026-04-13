@@ -1,18 +1,22 @@
+<template>
+  <VImg v-bind="$attrs" @error="onError">
+    <slot />
+    <template v-if="$slots.placeholder" #placeholder>
+      <slot name="placeholder" />
+    </template>
+  </VImg>
+</template>
+
 <script>
-import { VImg } from 'vuetify/lib'
+import { VImg } from 'vuetify/components'
 
 export default {
   name: 'p-img',
-  extends: VImg,
+  components: { VImg },
+  inheritAttrs: false,
   methods: {
     onError () {
-      // Change the verbose error to a warning.
-      // This is useful to declutter the console when testing
-      // with phaidra-sandbox outside the network.
-      // As of 2019-07-21 used in SearchResults component only.
-
-      // disable message altogether
-      // console.warn(`Image ${this.currentSrc} failed to load`)
+      // Declutter console when thumbnails fail (e.g. offline sandbox).
     }
   }
 }

@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row v-if="filtersActive">
       <v-col cols="12">
-        <v-btn class="my-1" color="primary" @click.native="resetFilters()">{{ $t('Remove filters') }}</v-btn>
+        <v-btn class="my-1" color="primary" @click="resetFilters()">{{ $t('Remove filters') }}</v-btn>
       </v-col>
     </v-row>
     <v-row>
@@ -336,7 +336,7 @@
                     />
                   </v-col>
                   <v-col cols="2">
-                    <icon name="material-navigation-close" class="primary--text" height="100%" @click.native="removeRoleFilter(role)"></icon>
+                    <icon name="material-navigation-close" class="primary--text" height="100%" @click="removeRoleFilter(role)"></icon>
                   </v-col>
                 </v-row>
               </div>
@@ -350,12 +350,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import '@/compiled-icons/univie-stop2'
-import '@/compiled-icons/univie-checkbox-unchecked'
-import '@/compiled-icons/material-action-account-balance'
-import '@/compiled-icons/material-social-person'
-import '@/compiled-icons/material-navigation-close'
 import { marcRoles } from './filters'
 import { toggleFacet, showFacet } from './facets'
 import UserSearchDialog from '../select/UserSearchDialog'
@@ -624,12 +618,12 @@ export default {
       for (const fq of this.facetQueries) {
         if (fq.resetable) {
           for (const q of fq.queries) {
-            if(q.active) {
-              Vue.set(q, 'active', false)              
+            if (q.active) {
+              q.active = false
             }
           }
           if (fq.exclusive) {
-            Vue.set(fq, 'selectedRadioValue', null)
+            fq.selectedRadioValue = null
           }
         }
       }
@@ -656,7 +650,7 @@ export default {
     }
   },
   mounted () {
-    if (this.$router.currentRoute.query.collection) {
+    if (this.$route.query?.collection) {
       this.resetFilters()
     }
     // for (let role in this.marcRoles) {

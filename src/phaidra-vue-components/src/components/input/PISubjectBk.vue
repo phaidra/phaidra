@@ -4,13 +4,13 @@
       <v-row>
         <v-col cols="12">
           <v-card outlined class="mb-8">
-            <v-card-title class="title font-weight-light white--text">
+            <v-card-title class="title font-weight-light text-white">
               <span>{{ $t(label) }}</span>
               <v-spacer></v-spacer>
-              <v-menu bottom offset-y v-if="actions.length">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn v-on="on" v-bind="attrs" icon dark>
-                    <v-icon dark>mdi-dots-vertical</v-icon>
+              <v-menu open-on-hover bottom offset-y v-if="actions.length">
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-btn v-bind="activatorProps" icon variant="text" color="white">
+                    <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
                 </template>
                 <v-list>
@@ -28,8 +28,7 @@
                     v-model="q"
                     :loading="loading"
                     :label="$t(searchlabel)"
-                    :filled="inputStyle==='filled'"
-                    :outlined="inputStyle==='outlined'"
+                    :variant="fieldVariant"
                     clearable
                     :messages="resolved"
                     append-icon="mdi-magnify"
@@ -49,16 +48,14 @@
                 <v-col cols="12" md="9" v-show="showItems">
                   <v-list two-line style="max-height: 400px" class="overflow-y-auto">
                     <v-list-item-group v-model="selected" active-class="text--primary">
-                      <template v-for="(item, index) in items">
-                        <v-list-item :key="item.uri">
-                          <template v-slot:default="{ active }">
-                            <v-list-item-content>
-                              <v-list-item-title v-text="item.prefLabel ? item.prefLabel.de : item.prefLabel.en"></v-list-item-title>
-                              <v-list-item-subtitle v-for="(notation, idx) in item.notation" :key="'not'+idx" class="text--primary" v-text="notation"></v-list-item-subtitle>
-                            </v-list-item-content>
+                      <template v-for="(item, index) in items" :key="item.uri">
+                        <v-list-item>
+                          <template v-slot:default>
+                            <v-list-item-title v-text="item.prefLabel ? item.prefLabel.de : item.prefLabel.en"></v-list-item-title>
+                            <v-list-item-subtitle v-for="(notation, idx) in item.notation" :key="'not'+idx" class="text--primary" v-text="notation"></v-list-item-subtitle>
                           </template>
                         </v-list-item>
-                        <v-divider v-if="index < items.length - 1" :key="index"></v-divider>
+                        <v-divider v-if="index < items.length - 1"></v-divider>
                       </template>
                     </v-list-item-group>
                   </v-list>

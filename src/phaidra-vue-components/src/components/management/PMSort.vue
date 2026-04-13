@@ -1,12 +1,19 @@
 <template>
   <v-card>
-    <v-card-title class="title font-weight-light white--text">{{ $t('Sort') }}</v-card-title>
+    <v-card-title class="title font-weight-light text-white">{{ $t('Sort') }}</v-card-title>
     <v-divider></v-divider>
     <v-card-text class="mt-4" v-if="members.length > 0">
       <div>{{ $t('Here you can sort members of this object (drag & drop).') }}</div>
-      <PSortableList lockAxis="y" v-model="memberscomputed">
-        <PSortableSolrDoc v-for="(item, index) in memberscomputed" :index="index" :key="index" :item="item"/>
-      </PSortableList>
+      <draggable
+        v-model="memberscomputed"
+        item-key="pid"
+        tag="ul"
+        class="sortable-list mt-4"
+      >
+        <template #item="{ element }">
+          <PSortableSolrDoc :item="element" />
+        </template>
+      </draggable>
     </v-card-text>
     <v-card-actions v-if="members.length > 0">
       <v-spacer></v-spacer>
@@ -16,14 +23,14 @@
 </template>
 
 <script>
-import PSortableList from '../utils/PSortableList'
+import { VueDraggableNext as draggable } from 'vue-draggable-next'
 import PSortableSolrDoc from '../utils/PSortableSolrDoc'
 
 export default {
   name: 'p-m-sort',
   components: {
     PSortableSolrDoc,
-    PSortableList
+    draggable
   },
   props: {
     pid: {
@@ -90,9 +97,22 @@ export default {
         this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
       } finally {
         this.loading = false
-        this.$vuetify.goTo(0)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       }
     }
   }
 }
 </script>
+
+<style scoped>
+.sortable-list {
+  max-height: 80vh;
+  margin: 0 auto;
+  padding: 0;
+  overflow: auto;
+  background-color: #f3f3f3;
+  border: 1px solid #efefef;
+  border-radius: 3px;
+  list-style: none;
+}
+</style>

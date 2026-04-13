@@ -3,8 +3,8 @@
     <v-select
       v-model="selectedColumn"
       :items="availableColumns"
-      outlined
-      dense
+      variant="outlined"
+      density="compact"
       clearable
       :label="$t('Select CSV column')"
       hide-details
@@ -48,6 +48,7 @@ export default {
         return this.value
       },
       set(value) {
+        this.$emit('update:modelValue', value)
         this.$emit('input', value)
       }
     },

@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" width="700px">
     <v-card>
-      <v-card-title class="title font-weight-light white--text">{{ $t('Select a list') }}</v-card-title>
+      <v-card-title class="title font-weight-light text-white">{{ $t('Select a list') }}</v-card-title>
       <v-card-text class="mt-4">
         <!-- <v-text-field
           v-model="listsSearch"
@@ -29,8 +29,8 @@
         >
           <template v-slot:item.name="{ item }">
             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <span v-on="on" v-bind="attrs">{{ item.name | truncate(50) }}</span>
+              <template v-slot:activator="{ props: activatorProps }">
+                <span v-bind="activatorProps">{{ item.name | truncate(50) }}</span>
               </template>
               <span>{{ item.listid }}</span>
             </v-tooltip>

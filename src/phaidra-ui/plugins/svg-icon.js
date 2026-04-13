@@ -1,7 +1,3 @@
-import Vue from 'vue'
-import SvgIcon from 'vue-svgicon'
-
-// Default tag name is 'svgicon'
-Vue.use(SvgIcon, {
-  tagName: 'icon'
+export default defineNuxtPlugin(() => {
+  // vue-svgicon plugin is Vue2-only; icon system migration pending.
 })

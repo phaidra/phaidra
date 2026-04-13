@@ -4,19 +4,18 @@
       <v-col :cols="(actions.length ? 10 : 12)">
         <!---->
         <v-autocomplete
-          :value="getTerm(vocabulary, value)"
-          :background-color="backgroundColor ? backgroundColor : undefined"
-          v-on:input="$emit('input', $event)"
+          :model-value="getTerm(vocabulary, value)"
+          :bg-color="backgroundColor ? backgroundColor : undefined"
+          @update:model-value="$emit('input', $event)"
           :rules="required ? [ v => !!v || $t('Required')] : []"
           :items="loadedTerms"
-          :item-value="'@id'"
+          item-value="@id"
+          :item-title="selectItemTitle"
+          :custom-filter="vocabAutocompleteFilter"
           :loading="loading"
-          :filter="autocompleteFilter"
           hide-no-data
-          :height="7"
           :label="$t(label)"
-          :filled="inputStyle==='filled'"
-          :outlined="inputStyle==='outlined'"
+          :variant="fieldVariant"
           return-object
           clearable
           :readonly="readonly"
@@ -25,24 +24,28 @@
           :persistent-hint="hint ? true : false"
           :error-messages="errorMessages"
         >
-          <!-- the attr binds the 'disabled' property of the vocabulary term (if defined) to the item component -->
-          <template slot="item" slot-scope="{ attr, item }">
-            <v-list-item-content two-line>
-              <v-list-item-title  v-html="`${getLocalizedTermLabel(vocabulary, item['@id'])}`"></v-list-item-title>
-              <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-            </v-list-item-content>
+          <template #item="{ props, item }">
+            <v-list-item
+              v-bind="props"
+              :lines="showIds ? 'two' : 'one'"
+            >
+              <template #title>
+                <span v-html="getLocalizedTermLabel(vocabulary, item.raw['@id'])" />
+              </template>
+              <template v-if="showIds" #subtitle>
+                <span v-html="item.raw['@id']" />
+              </template>
+            </v-list-item>
           </template>
-          <template slot="selection" slot-scope="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-html="`${getLocalizedTermLabel(vocabulary, item['@id'])}`"></v-list-item-title>
-            </v-list-item-content>
+          <template #selection="{ item }">
+            <span v-html="getLocalizedTermLabel(vocabulary, (item.raw || item)['@id'])" />
           </template>
         </v-autocomplete>
       </v-col>
       <v-col cols="2" v-if="actions.length">
-        <v-menu bottom offset-y>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn v-on="on" v-bind="attrs" icon>
+        <v-menu open-on-hover bottom offset-y>
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-btn v-bind="activatorProps" icon variant="text">
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
@@ -91,6 +94,7 @@ import { fieldproperties } from '../../mixins/fieldproperties'
 export default {
   name: 'p-i-select',
   mixins: [vocabulary, fieldproperties],
+  emits: ['input', 'add', 'remove', 'configure'],
   props: {
     value: {
       type: String
@@ -153,11 +157,17 @@ export default {
       terms: []
     }
   },
+  methods: {
+    selectItemTitle (item) {
+      if (!item || !item['@id']) return ''
+      return this.getLocalizedTermLabel(this.vocabulary, item['@id'])
+    }
+  },
   mounted: function () {
     this.$nextTick(async function () {
       if (this.vocabulary) {
-        if (this.vocabularies[vocabulary]) {
-          if (this.vocabularies[vocabulary].loaded) {
+        if (this.vocabularies[this.vocabulary]) {
+          if (this.vocabularies[this.vocabulary].loaded) {
             // emit input to set skos:prefLabel in parent
             if (this.value) {
               for (let term of this.vocabularies[this.vocabulary].terms) {

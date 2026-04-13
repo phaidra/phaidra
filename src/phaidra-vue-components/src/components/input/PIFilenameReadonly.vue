@@ -6,8 +6,7 @@
         :label="$t('Filename')"
         readonly
         disabled
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
     <v-col cols="2" v-if="actions.length">

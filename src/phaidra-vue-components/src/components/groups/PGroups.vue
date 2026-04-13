@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light white--text">
+          <v-card-title class="title font-weight-light text-white">
             {{ $t('Manage user groups') }}
           </v-card-title>
           <v-card-text>
@@ -32,11 +32,11 @@
                   ></v-text-field>
                   <v-spacer></v-spacer>
                   <v-dialog v-model="createDialog" max-width="500px">
-                    <template v-slot:activator="{ on }">
-                      <v-btn color="primary" dark class="mb-2" v-on="on">{{ $t('Create new group') }}</v-btn>
+                    <template v-slot:activator="{ props: activatorProps }">
+                      <v-btn color="primary" dark class="mb-2" v-bind="activatorProps">{{ $t('Create new group') }}</v-btn>
                     </template>
                     <v-card>
-                      <v-card-title class="title font-weight-light white--text">
+                      <v-card-title class="title font-weight-light text-white">
                         {{ $t('New group') }}
                       </v-card-title>
                       <v-card-text class="my-4">
@@ -58,8 +58,8 @@
               </template>
               <template v-slot:item.name="{ item }">
                 <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <span v-on="on" v-bind="attrs">{{ item.name }}</span>
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <span v-bind="activatorProps">{{ item.name }}</span>
                   </template>
                   <span>{{ item.groupid }}</span>
                 </v-tooltip>
@@ -72,16 +72,16 @@
               </template>
               <template v-slot:item.actions="{ item }">
                 <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon color="primary" @click="loadedGroup = item" v-on="on" v-bind="attrs" :aria-label="$t('Edit')">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-btn icon color="primary" @click="loadedGroup = item" v-bind="activatorProps" :aria-label="$t('Edit')">
                       <v-icon>mdi-pencil</v-icon>
                     </v-btn>
                   </template>
                   <span>{{ $t('Edit')}}</span>
                 </v-tooltip>
                 <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon color="btnred" @click="deleteGroupDialog(item)" v-on="on" v-bind="attrs" :aria-label="$t('Delete')">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-btn icon color="btnred" @click="deleteGroupDialog(item)" v-bind="activatorProps" :aria-label="$t('Delete')">
                       <v-icon>mdi-delete</v-icon>
                     </v-btn>
                   </template>
@@ -96,7 +96,7 @@
     <v-row v-if="loadedGroup">
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light white--text">
+          <v-card-title class="title font-weight-light text-white">
             {{ loadedGroup.name }}
           </v-card-title>
           <v-card-text>
@@ -134,8 +134,8 @@
               </template>
               <template v-slot:item.actions="{ item }">
                 <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon color="btnred" @click="removeMember(item.username)" v-on="on" v-bind="attrs" :aria-label="$t('Delete')">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-btn icon color="btnred" @click="removeMember(item.username)" v-bind="activatorProps" :aria-label="$t('Delete')">
                       <v-icon>mdi-delete</v-icon>
                     </v-btn>
                   </template>
@@ -161,7 +161,7 @@
     </v-row>
     <v-dialog v-model="deleteDialog" max-width="500px" v-if="groupToDelete">
       <v-card>
-        <v-card-title class="title font-weight-light white--text">
+        <v-card-title class="title font-weight-light text-white">
           {{ $t('Delete group') }}
         </v-card-title>
         <v-card-text class="my-4">

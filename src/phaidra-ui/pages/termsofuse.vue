@@ -3,8 +3,8 @@
     <h1 class="d-sr-only">{{$t('Terms of use')}}</h1>
     <v-row justify="center">
       <v-col>
-        <v-card>
-          <v-card-title class="title font-weight-light white--text">{{
+        <v-card tile>
+          <v-card-title class="title font-weight-light text-white">{{
             $t("Terms of use")
           }}</v-card-title>
           <v-card-text class="text-body-1 mt-4" style="white-space: pre-wrap">{{ tou }}</v-card-text>

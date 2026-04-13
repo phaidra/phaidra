@@ -4,7 +4,7 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light white--text">
+          <v-card-title class="title font-weight-light text-white">
             {{ $t('Manage object lists') }}
           </v-card-title>
           <v-card-text>
@@ -33,11 +33,11 @@
                   ></v-text-field>
                   <v-spacer></v-spacer>
                   <v-dialog v-model="createDialog" max-width="500px">
-                    <template v-slot:activator="{ on }">
-                      <v-btn color="primary" dark class="mb-2" v-on="on">{{ $t('Create new object list') }}</v-btn>
+                    <template v-slot:activator="{ props: activatorProps }">
+                      <v-btn color="primary" dark class="mb-2" v-bind="activatorProps">{{ $t('Create new object list') }}</v-btn>
                     </template>
                     <v-card>
-                      <v-card-title class="title font-weight-light white--text">
+                      <v-card-title class="title font-weight-light text-white">
                         {{ $t('New object list') }}
                       </v-card-title>
                       <v-card-text>
@@ -59,8 +59,8 @@
               </template>
               <template v-slot:item.name="{ item }">
                 <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <span v-on="on" v-bind="attrs">{{ item.name }}</span>
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <span v-bind="activatorProps">{{ item.name }}</span>
                   </template>
                   <span>{{ item.listid }}</span>
                 </v-tooltip>
@@ -73,16 +73,16 @@
               </template>
               <template v-slot:item.actions="{ item }">
                 <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon class="mx-3" color="primary" @click="loadedList = item" v-on="on" v-bind="attrs" :aria-label="$t('Edit')">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-btn icon class="mx-3" color="primary" @click="loadedList = item" v-bind="activatorProps" :aria-label="$t('Edit')">
                       <v-icon>mdi-pencil</v-icon>
                     </v-btn>
                   </template>
                   <span>{{ $t('Edit') }}</span>
                 </v-tooltip>
                 <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon class="mx-3" color="btnred" @click="deleteListDialog(item)" v-on="on" v-bind="attrs" :aria-label="$t('Delete')">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-btn icon class="mx-3" color="btnred" @click="deleteListDialog(item)" v-bind="activatorProps" :aria-label="$t('Delete')">
                       <v-icon>mdi-delete</v-icon>
                     </v-btn>
                   </template>
@@ -97,10 +97,10 @@
     <v-row v-if="loadedList">
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light white--text">
+          <v-card-title class="title font-weight-light text-white">
             <span>{{ loadedList.name }}</span>
             <v-spacer></v-spacer>
-            <template v-if="token && token.length > 0"><a class="pl-2 white--text" target="_blank" :href="'/list/' + token">{{ instance.baseurl + '/list/' + token }}</a></template>
+            <template v-if="token && token.length > 0"><a class="pl-2 text-white" target="_blank" :href="'/list/' + token">{{ instance.baseurl + '/list/' + token }}</a></template>
           </v-card-title>
           <v-card-text>
             <v-data-table
@@ -133,15 +133,15 @@
                 </v-toolbar>
               </template>
               <template v-slot:item.pid="{ item }">
-                <nuxt-link :to="{ path: `detail/${item.pid}`, params: { pid: item.pid } }">{{ item.pid }}</nuxt-link>
+                <component :is="PhaidraLink" :to="detailRouteTo(item.pid)">{{ item.pid }}</component>
               </template>
               <template v-slot:item.title="{ item }">
-                {{ item.title | truncate(100) }}
+                {{ $truncate(item.title, 100) }}
               </template>
               <template v-slot:item.actions="{ item }">
                 <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn icon class="mx-3" color="btnred" @click="removeMember(item.pid)" v-on="on" v-bind="attrs" :aria-label="$t('Remove')">
+                    <template v-slot:activator="{ props: activatorProps }">
+                      <v-btn icon class="mx-3" color="btnred" @click="removeMember(item.pid)" v-bind="activatorProps" :aria-label="$t('Remove')">
                         <v-icon>mdi-delete</v-icon>
                       </v-btn>
                     </template>
@@ -155,7 +155,7 @@
     </v-row>
     <v-dialog v-model="deleteDialog" max-width="500px" v-if="listToDelete">
       <v-card>
-        <v-card-title class="title font-weight-light white--text">
+        <v-card-title class="title font-weight-light text-white">
           {{ $t('Delete object list') }}
         </v-card-title>
         <v-card-text class="mt-4">
@@ -174,9 +174,11 @@
 
 <script>
 import CollectionDialog from '../select/CollectionDialog'
+import phaidraNavigation from '../../mixins/phaidraNavigation'
 
 export default {
   name: 'p-lists',
+  mixins: [phaidraNavigation],
   components: {
     CollectionDialog
   },

@@ -6,8 +6,8 @@
         <span class="mt-2"><a @click="selectPage()">{{ $t('Select this page') }}</a><span class="mx-2">/</span><a @click="unselectPage()">{{ $t('Unselect this page') }}</a><span class="mx-2">/</span><a @click="selectAllResults()">{{ $t('Select all results') }}</a><span class="mx-2">/</span><a @click="selection = []">{{ $t('Clear selection') }}</a></span>
         <v-spacer></v-spacer>
         <v-menu offset-y>
-          <template v-slot:activator="{ on: menu, attrs }">
-            <v-btn v-on="{ ...menu }" v-bind="attrs" text outlined color="primary" class="mx-4" :disabled="!selection.length">{{ $t('Selected results') }} ({{ selection.length }})</v-btn>
+          <template v-slot:activator="{ props: menuProps }">
+            <v-btn v-bind="menuProps" text outlined color="primary" class="mx-4" :disabled="!selection.length">{{ $t('Selected results') }} ({{ selection.length }})</v-btn>
           </template>
           <v-list>
             <v-list-item @click="$refs.addlistdialog.open()">
@@ -38,7 +38,7 @@
         <v-col :cols="selectioncheck ? 11 : 12">
           <v-row :key="'prev'+doc.pid">
             <v-col cols="2" >
-              <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">
+              <component :is="PhaidraLink" :to="detailRouteTo(doc.pid)">
                 <p-img :src="instance.api + '/object/' + doc.pid + '/thumbnail'" class="preview-maxwidth elevation-1 mt-2" :alt="doc.dc_title ? doc.dc_title[0] : doc.pid">
                   <template v-slot:placeholder>
                     <div class="fill-height ma-0" align="center" justify="center" >
@@ -46,17 +46,17 @@
                     </div>
                   </template>
                 </p-img>
-              </nuxt-link>
+              </component>
             </v-col>
             <v-col cols="10">
               <v-row >
                 <v-col cols="12" md="9">
                   <h2 class="title font-weight-light primary--text" @click.stop v-if="doc.dc_title">
-                    <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ getObjectTitle(doc) }}</nuxt-link>
+                    <component :is="PhaidraLink" :to="detailRouteTo(doc.pid)">{{ getObjectTitle(doc) }}</component>
                   </h2>
                 </v-col>
                 <v-col cols="12" md="3" class="text-right">
-                  <v-chip class="pointer-disabled" v-if="doc.created" color="transparent">{{ doc.created | date }}
+                  <v-chip class="pointer-disabled" v-if="doc.created" color="transparent">{{ $date(doc.created) }}
                     <v-icon v-if="doc.cmodel == 'Video'" class="mx-2" color="grey">mdi-video</v-icon>
                     <v-icon v-else-if="doc.cmodel == 'Picture'" class="mx-2" color="grey">mdi-image</v-icon>
                     <v-icon v-else-if="doc.cmodel == 'Audio'" class="mx-2" color="grey">mdi-volume-high</v-icon>
@@ -123,6 +123,7 @@ import PExpandText from '../utils/PExpandText'
 import ListDialog from '../select/ListDialog'
 import CollectionDialog from '../select/CollectionDialog'
 import objectMixin from '../../mixins/object'
+import phaidraNavigation from '../../mixins/phaidraNavigation'
 
 export default {
   name: 'p-search-results',
@@ -133,7 +134,7 @@ export default {
     CollectionDialog,
     ListDialog
   },
-  mixins: [objectMixin],
+  mixins: [objectMixin, phaidraNavigation],
   props: {
     getallresults: {
       type: Function,

@@ -3,32 +3,28 @@
     <v-col cols="8">
       <v-combobox
         v-model="model"
-        v-on:input="$emit('input', xmlUtils.htmlToPlaintext($event))"
-        v-on:change="$emit('input', xmlUtils.htmlToPlaintext($event))"
+        @update:model-value="(v) => $emit('input', xmlUtils.htmlToPlaintext(v == null ? '' : String(v)))"
         :items="items"
         :loading="loading"
-        :search-input.sync="search"
+        v-model:search="search"
         :required="required"
         :rules="required ? [ v => !!v || $t('Required')] : []"
         cache-items
         hide-no-data
         hide-selected
-        item-text="text"
-        item-value="value"
         :label="$t(label)"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
         clearable
       >
-        <template slot="item" slot-scope="{ item }">
-          <v-list-item-content two-line>
-            <v-list-item-title inset v-html="item"></v-list-item-title>
-          </v-list-item-content>
+        <template #item="{ props, item }">
+          <v-list-item v-bind="props" lines="one">
+            <template #title>
+              <span v-html="item.raw" />
+            </template>
+          </v-list-item>
         </template>
-        <template slot="selection" slot-scope="{ item }">
-          <v-list-item-content>
-            <v-list-item-title inset>{{ xmlUtils.htmlToPlaintext(item) }}</v-list-item-title>
-          </v-list-item-content>
+        <template #selection="{ item }">
+          {{ xmlUtils.htmlToPlaintext(item.raw) }}
         </template>
       </v-combobox>
     </v-col>

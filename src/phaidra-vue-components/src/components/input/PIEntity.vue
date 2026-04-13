@@ -4,28 +4,32 @@
         <v-autocomplete
           :no-data-text="$t('No data available')"
           :disabled="disablerole"
-          v-on:input="$emit('input-role', $event)"
+          @update:model-value="$emit('input-role', $event)"
           :label="$t(roleLabel ? roleLabel : 'Role')"
           :items="rolesArray"
-          :item-value="'@id'"
-          :value="getTerm(roleVocabulary, role)"
-          :filter="autocompleteFilter"
-          :filled="inputStyle==='filled'"
-          :outlined="inputStyle==='outlined'"
+          item-value="@id"
+          :item-title="roleItemTitle"
+          :model-value="getTerm(roleVocabulary, role)"
+          :variant="fieldVariant"
           return-object
           clearable
           :error-messages="roleErrorMessages"
         >
-        <template slot="item" slot-scope="{ item }">
-          <v-list-item-content two-line>
-            <v-list-item-title  v-html="`${getLocalizedTermLabel(roleVocabulary, item['@id'])}`"></v-list-item-title>
-            <v-list-item-subtitle class="role-definition" v-if="showDefinitions" v-html="`${getLocalizedDefinition(roleVocabulary, item['@id'])}`"></v-list-item-subtitle>
-          </v-list-item-content>
+        <template #item="{ props, item }">
+          <v-list-item
+            v-bind="props"
+            :lines="showDefinitions ? 'two' : 'one'"
+          >
+            <template #title>
+              <span v-html="getLocalizedTermLabel(roleVocabulary, item.raw['@id'])"></span>
+            </template>
+            <template v-if="showDefinitions" #subtitle>
+              <span class="role-definition" v-html="getLocalizedDefinition(roleVocabulary, item.raw['@id'])"></span>
+            </template>
+          </v-list-item>
         </template>
-        <template slot="selection" slot-scope="{ item }">
-          <v-list-item-content>
-            <v-list-item-title v-html="`${getLocalizedTermLabel(roleVocabulary, item['@id'])}`"></v-list-item-title>
-          </v-list-item-content>
+        <template #selection="{ item }">
+          <span v-html="getLocalizedTermLabel(roleVocabulary, (item.raw || item)['@id'])"></span>
         </template>
       </v-autocomplete>
     </v-col>
@@ -33,11 +37,10 @@
       <template v-if="showname">
         <v-col cols="6" >
           <v-text-field
-            :value="name"
+            :model-value="name"
+            @update:model-value="$emit('input-name', $event)"
             :label="$t(nameLabel ? nameLabel : 'Name')"
-            v-on:blur="$emit('input-name',$event.target.value)"
-            :filled="inputStyle==='filled'"
-            :outlined="inputStyle==='outlined'"
+            :variant="fieldVariant"
             :error-messages="nameErrorMessages"
           ></v-text-field>
         </v-col>
@@ -45,45 +48,41 @@
       <template v-else>
         <v-col :cols="showIdentifier ? '2' : '3'">
           <v-text-field
-            :value="firstname"
+            :model-value="firstname"
+            @update:model-value="$emit('input-firstname', $event)"
             :label="$t(firstnameLabel ? firstnameLabel : 'Firstname')"
-            v-on:blur="$emit('input-firstname',$event.target.value)"
-            :filled="inputStyle==='filled'"
-            :outlined="inputStyle==='outlined'"
+            :variant="fieldVariant"
             :error-messages="firstnameErrorMessages"
           ></v-text-field>
         </v-col>
         <v-col :cols="showIdentifier ? '2' : '3'">
           <v-text-field
-            :value="lastname"
+            :model-value="lastname"
+            @update:model-value="$emit('input-lastname', $event)"
             :label="$t(lastnameLabel ? lastnameLabel : 'Lastname')"
-            v-on:blur="$emit('input-lastname',$event.target.value)"
-            :filled="inputStyle==='filled'"
-            :outlined="inputStyle==='outlined'"
+            :variant="fieldVariant"
             :error-messages="lastnameErrorMessages"
           ></v-text-field>
         </v-col>
         <v-col v-if="showIdentifier" :cols="showIdentifier ? '2' : '3'">
           <v-text-field
               v-show="identifierType === 'ids:orcid'"
-              v-mask="'####-####-####-###X'"
-              :value="identifierText"
+              v-maska data-maska="####-####-####-####"
+              :model-value="identifierText"
+              @update:model-value="$emit('input-identifier', $event)"
               :label="identifierLabel ? identifierLabel : $t('ORCID')"
-              v-on:blur="$emit('input-identifier', $event.target.value)"
               :placeholder="identifierTypePlaceholder"
               :rules="identifierType ? [validationrules['orcid']] : [validationrules['noop']]"
-              :filled="inputStyle==='filled'"
-              :outlined="inputStyle==='outlined'"
+              :variant="fieldVariant"
             ></v-text-field>
             <v-text-field
               v-show="identifierType !== 'ids:orcid'"
-              :value="identifierText"
+              :model-value="identifierText"
+              @update:model-value="$emit('input-identifier', $event)"
               :label="identifierLabel ? identifierLabel : $t('Identifier')"
-              v-on:blur="$emit('input-identifier', $event.target.value)"
               :placeholder="identifierTypePlaceholder"
               :rules="identifierType ? [validationrules[getIdentifierRuleName(identifierType)]] : [validationrules['noop']]"
-              :filled="inputStyle==='filled'"
-              :outlined="inputStyle==='outlined'"
+              :variant="fieldVariant"
             ></v-text-field>
         </v-col>
       </template>
@@ -97,11 +96,10 @@
         )"
       v-if="type === 'schema:Organization'">
       <v-text-field
-        :value="organizationText"
+        :model-value="organizationText"
+        @update:model-value="$emit('input-organization', $event)"
         :label="$t( organizationLabel ? organizationLabel : 'Organization' )"
-        v-on:blur="$emit('input-organization',$event.target.value)"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
         :error-messages="organizationErrorMessages"
       ></v-text-field>
     </v-col>
@@ -138,7 +136,7 @@
 </template>
 
 <script>
-import { mask } from 'vue-the-mask'
+import { vMaska } from 'maska/vue'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { validationrules } from '../../mixins/validationrules'
@@ -151,8 +149,23 @@ export default {
     SelectLanguage
   },
   directives: {
-    mask
+    maska: vMaska
   },
+  emits: [
+    'input',
+    'input-role',
+    'input-firstname',
+    'input-lastname',
+    'input-name',
+    'input-identifier',
+    'input-organization',
+    'add',
+    'remove',
+    'configure',
+    'up',
+    'down',
+    'extend'
+  ],
   props: {
     firstname: {
       type: String
@@ -268,6 +281,12 @@ export default {
         }
       }
       return ''
+    }
+  },
+  methods: {
+    roleItemTitle (item) {
+      if (!item || !item['@id']) return ''
+      return this.getLocalizedTermLabel(this.roleVocabulary, item['@id'])
     }
   },
   mounted: function () {

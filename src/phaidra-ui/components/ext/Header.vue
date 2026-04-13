@@ -21,15 +21,8 @@
                 <a :href="instanceconfig.institutionurl" target="_blank" aria-label="PHAIDRA - to the homepage">
                     <svg version="1.1" id="PHAIDRA_Logo_copy_xA0_Image_1_"
                       xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 348.55 83.1"
+                      :class="isDarkTheme ? 'logo-dark' : 'logo-light'"
                       style="enable-background:new 0 0 348.55 83.1; max-height: 70px;" xml:space="preserve">
-                      <style v-if="isDarkTheme" type="text/css">
-                        .st0{fill:#dedede;}
-                        .st1{fill:none;stroke:#dedede;stroke-width:35;stroke-miterlimit:10;}
-                      </style>
-                      <style v-else type="text/css">
-                        .st0{fill:#212121;}
-                        .st1{fill:none;stroke:#212121;stroke-width:35;stroke-miterlimit:10;}
-                      </style>
                     <g>
                       <g>
                         <g>
@@ -97,7 +90,7 @@
                       <g>
                         <g>
                           <g>
-                            <path style="fill:none;stroke:#212121;stroke-width:35;stroke-miterlimit:10;" d="M16.3,30.7"/>
+                            <path class="st1" d="M16.3,30.7"/>
                           </g>
                         </g>
                       </g>
@@ -193,8 +186,8 @@
                   </div>
 
                   <v-menu offset-y>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn class="px-12" icon tile v-on="on" v-bind="attrs" aria-controls="locale-menu">                        
+                    <template v-slot:activator="{ props }">
+                      <v-btn class="px-12" icon tile v-bind="props" aria-controls="locale-menu">                        
                         <span class="subtitle-1 text-capitalize font-weight-medium"
                           >{{ localeLabel }}</span>
                         <v-icon
@@ -227,8 +220,8 @@
                   </v-menu>
 
                   <v-tooltip v-if="!$vuetify.theme.dark" bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn v-on="on" v-bind="attrs" icon @click="darkMode" :aria-label="$t('Dark Mode On')">
+                    <template v-slot:activator="{ props }">
+                      <v-btn v-bind="props" icon @click="darkMode" :aria-label="$t('Dark Mode On')">
                         <v-icon>mdi-moon-waxing-crescent</v-icon>
                       </v-btn>
                     </template>
@@ -236,8 +229,8 @@
                   </v-tooltip>
 
                   <v-tooltip v-else bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn v-on="on" v-bind="attrs" icon @click="darkMode" :aria-label="$t('Dark Mode Off')">
+                    <template v-slot:activator="{ props }">
+                      <v-btn v-bind="props" icon @click="darkMode" :aria-label="$t('Dark Mode Off')">
                         <v-icon>mdi-white-balance-sunny</v-icon>
                       </v-btn>
                     </template>
@@ -288,9 +281,9 @@
                     <client-only>
                       <v-row class="hidden-md-and-up">
                         <v-menu attach="#mobile-menu-btn" offset-y :disable-keys="true" min-width="150px">
-                          <template v-slot:activator="{ on, attrs }">
+                          <template v-slot:activator="{ props }">
                             <v-btn id="mobile-menu-btn" text x-large aria-controls="mobile-menu" aria-label="Main navigation menu"
-                            v-bind="attrs" v-on="on" class="pa-2"><v-icon x-large class="mr-2">mdi-menu</v-icon>{{ $t('Menu') }}</v-btn>
+                            v-bind="props" class="pa-2"><v-icon x-large class="mr-2">mdi-menu</v-icon>{{ $t('Menu') }}</v-btn>
                           </template>
                           <v-list id="mobile-menu">
                             <v-list-item
@@ -636,4 +629,25 @@
   </script>  
 
 <style scoped>
+.logo-light .st0 {
+  fill: #212121;
+}
+
+.logo-light .st1 {
+  fill: none;
+  stroke: #212121;
+  stroke-width: 35;
+  stroke-miterlimit: 10;
+}
+
+.logo-dark .st0 {
+  fill: #dedede;
+}
+
+.logo-dark .st1 {
+  fill: none;
+  stroke: #dedede;
+  stroke-width: 35;
+  stroke-miterlimit: 10;
+}
 </style>

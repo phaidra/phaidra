@@ -68,8 +68,9 @@ export default {
             self.value.push(a[j + 1])
           }
         }
-        if (response?.data?.response?.docs?.length > 0) {
-          let lastUploadDate = new Date(response.data.response.docs[0].tcreated)
+        const docs = response?.data?.response?.docs
+        if (docs?.length) {
+          let lastUploadDate = new Date(docs[0].tcreated)
           this.lastUpload = this.timeSince(lastUploadDate)
         }
       } catch (error) {

@@ -3,49 +3,49 @@
     <v-col cols="4" v-if="showtype">
       <v-autocomplete
         :no-data-text="$t('No data available')"
-        v-on:input="$emit('input-association-type', $event)"
+        @update:model-value="$emit('input-association-type', $event)"
         :label="$t('Type')"
         :items="vocabularies['orgtypes'].terms"
-        :item-value="'@id'"
-        :value="getTerm('orgtypes', type)"
-        :filter="autocompleteFilter"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        item-value="@id"
+        :item-title="(item) => skosTermItemTitle(item, 'orgtypes')"
+        :model-value="getTerm('orgtypes', type)"
+        :custom-filter="vocabAutocompleteFilter"
+        :variant="fieldVariant"
         return-object
         clearable
       >
-        <template slot="item" slot-scope="{ item }">
-          <v-list-item-content two-line>
-            <v-list-item-title  v-html="`${getLocalizedTermLabel('orgtypes', item['@id'])}`"></v-list-item-title>
-            <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-          </v-list-item-content>
+        <template #item="{ props, item }">
+          <v-list-item v-bind="props" :lines="showIds ? 'two' : 'one'">
+            <template #title>
+              <span v-html="`${getLocalizedTermLabel('orgtypes', item.raw['@id'])}`" />
+            </template>
+            <template v-if="showIds" #subtitle>
+              <span v-html="item.raw['@id']" />
+            </template>
+          </v-list-item>
         </template>
-        <template slot="selection" slot-scope="{ item }">
-          <v-list-item-content>
-            <v-list-item-title v-html="`${getLocalizedTermLabel('orgtypes', item['@id'])}`"></v-list-item-title>
-          </v-list-item-content>
+        <template #selection="{ item }">
+          <span v-html="`${getLocalizedTermLabel('orgtypes', (item.raw || item)['@id'])}`" />
         </template>
       </v-autocomplete>
     </v-col>
     <v-col cols="12" :md="multilingual ? (actions.length ? 6 : 8) : (actions.length ? 8 : 10)">
       <v-text-field v-if="!multiline"
-        :value="value"
-        v-on:blur="$emit('input',$event.target.value)"
+        :model-value="value"
+        @update:model-value="$emit('input',$event)"
         :label="$t(label)"
         :required="required"
         :rules="required ? [ v => !!v || $t('Required')] : []"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
         :error-messages="errorMessages"
       ></v-text-field>
       <v-textarea v-if="multiline"
-        :value="value"
-        v-on:blur="$emit('input',$event.target.value)"
+        :model-value="value"
+        @update:model-value="$emit('input',$event)"
         :label="$t(label)"
         :required="required"
         :rules="required ? [ v => !!v || $t('Required')] : []"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
         :error-messages="errorMessages"
       ></v-textarea>
     </v-col>

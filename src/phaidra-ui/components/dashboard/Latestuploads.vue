@@ -2,13 +2,13 @@
   <v-card class="mt-2 mx-auto" :elevation="0" color="transparent">
     <div class="title font-weight-light transparent text-h6" :class="titlecolor ? titlecolor + '--text' : ''">{{ $t(label) }}</div>
     <v-card-text>
-      <div v-for="(doc, i) in this.docs" :key="'doc'+i" class="pa-4">
+      <div v-for="(doc, i) in docs" :key="'doc'+i" class="pa-4">
         <v-row>
           <v-col :cols="12">
             <v-row :key="'prev'+doc.pid">
               <v-col cols="2" class="preview-maxwidth">
-                <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">
-                  <p-img :src="instanceconfig.api + '/object/' + doc.pid + '/thumbnail'" class="elevation-2 mt-2" :alt="doc.dc_title ? doc.dc_title[0] : doc.pid">
+                <nuxt-link :to="`/detail/${doc.pid}`">
+                  <p-img :src="apiBaseUrl + '/object/' + doc.pid + '/thumbnail'" class="elevation-2 mt-2" :alt="doc.dc_title ? doc.dc_title[0] : doc.pid">
                     <template v-slot:placeholder>
                       <div class="fill-height ma-0" align="center" justify="center" >
                         <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
@@ -21,7 +21,7 @@
                 <v-row no-gutters class="mb-4">
                   <v-col cols="10">
                     <span class="primary--text" @click.stop>
-                      <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ getObjectTitle(doc) }}</nuxt-link>
+                      <nuxt-link :to="`/detail/${doc.pid}`">{{ getObjectTitle(doc) }}</nuxt-link>
                     </span>
                   </v-col>
                   <v-spacer></v-spacer>
@@ -49,7 +49,7 @@
 import qs from "qs";
 import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
-import objectMixin from "phaidra-vue-components/src/mixins/object";
+import objectMixin from 'phaidra-vue-components/src/mixins/object'
 
 export default {
   mixins: [context, config, objectMixin],

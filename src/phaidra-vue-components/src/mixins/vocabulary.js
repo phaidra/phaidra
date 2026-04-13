@@ -20,6 +20,31 @@ export const vocabulary = {
         return this.$store.getters['vocabulary/getTerm'](vocabulary, value)
       }
     },
+    /** Plain title string for v-select/v-autocomplete item-title (Vuetify 3) */
+    skosTermItemTitle (item, voc) {
+      const raw = item?.raw !== undefined ? item.raw : item
+      if (!raw || !raw['@id'] || !voc) return ''
+      const s = this.getLocalizedTermLabel(voc, raw['@id'])
+      return typeof s === 'string' ? s.replace(/<[^>]+>/g, '') : String(s || '')
+    },
+    /** SKOS label plus notation (Thema, OEFOS, BIC-style lists) */
+    skosTermItemTitleWithNotation (item, voc) {
+      const base = this.skosTermItemTitle(item, voc)
+      const raw = item?.raw !== undefined ? item.raw : item
+      if (!raw || !raw['@id']) return base
+      const not = raw['skos:notation'] && raw['skos:notation'][0]
+      return not ? `${base} - ${not}` : base
+    },
+    /** orgunits list rows (flat or grouped with divider/header) */
+    orgunitItemTitle (item) {
+      const raw = item?.raw !== undefined ? item.raw : item
+      if (!raw) return ''
+      if (raw.header != null && !raw['@id']) return String(raw.header)
+      if (raw.divider) return ''
+      if (!raw['@id']) return ''
+      const s = this.getLocalizedTermLabel('orgunits', raw['@id'])
+      return typeof s === 'string' ? s.replace(/<[^>]+>/g, '') : String(s || '')
+    },
     getTermProperty: function (vocabulary, id, property) {
       if (vocabulary && id && property) {
         return this.$store.getters['vocabulary/getTermProperty'](vocabulary, id, property)
@@ -40,6 +65,27 @@ export const vocabulary = {
       const lab = item['skos:prefLabel'][this.$i18n.locale] ? item['skos:prefLabel'][this.$i18n.locale].toLowerCase() : item['skos:prefLabel']['eng'].toLowerCase()
       const query = queryText.toLowerCase()
       return lab.indexOf(query) > -1
+    },
+    /** Vuetify 3 v-autocomplete customFilter: return match index or -1 */
+    vocabAutocompleteFilter (_value, query, item) {
+      const raw = item?.raw ?? item
+      if (!raw || !raw['@id']) return -1
+      return this.autocompleteFilter(raw, String(query ?? '')) ? 0 : -1
+    },
+    vocabAutocompleteFilterWithNotation (_value, query, item) {
+      const raw = item?.raw ?? item
+      if (!raw || !raw['@id']) return -1
+      return this.autocompleteFilterWithNotation(raw, String(query ?? '')) ? 0 : -1
+    },
+    /** For grouped orgunits lists: { divider }, { header } rows + SKOS terms */
+    orgunitsAutocompleteFilter (_value, query, item) {
+      const raw = item?.raw ?? item
+      if (!raw) return -1
+      if (raw.divider || (raw.header != null && !raw['@id'])) {
+        return String(query ?? '').length ? -1 : 0
+      }
+      if (!raw['@id']) return -1
+      return this.autocompleteFilterInfix(raw, String(query ?? '')) ? 0 : -1
     },
     getLocalizedValue: function (values) {
       for (let v of values) {

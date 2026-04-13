@@ -5,8 +5,8 @@
       <v-col :md="valueColMd" cols="12">
         <a v-if="o['skos:exactMatch']" :href="o['skos:exactMatch'][0]" target="_blank"><v-row no-gutters class="valuefield" >{{ l['@value'] }}</v-row></a>
         <v-row v-else no-gutters class="valuefield" >{{ l['@value'] }}</v-row>
-        <template v-for="(id, i) in o['skos:notation']">
-          <v-row v-if="id" no-gutters class="secondary--text cols"  :key="'notation'+i">[{{ id }}]</v-row>
+        <template v-for="(id, i) in o['skos:notation']" :key="'notation'+i">
+          <v-row v-if="id" no-gutters class="secondary--text cols">[{{ id }}]</v-row>
         </template>
       </v-col>
     </v-row>

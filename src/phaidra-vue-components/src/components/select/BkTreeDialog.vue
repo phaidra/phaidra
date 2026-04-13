@@ -1,19 +1,20 @@
 <template>
   <v-dialog v-model="dialog" width="700px">
     <v-card :loading="loading">
-      <v-card-title class="title font-weight-light white--text">{{ $t('Select a term') }}</v-card-title>
+      <v-card-title class="title font-weight-light text-white">{{ $t('Select a term') }}</v-card-title>
       <v-card-text class="mt-4">
         <v-treeview
-          :active.sync="active"
+          v-model:activated="active"
+          v-model:opened="opened"
           :items="items"
           :load-children="loadChildren"
-          :open.sync="opened"
-          item-key="uri"
+          item-title="name"
+          item-value="uri"
           transition
           activatable
           hoverable
-          @update:active="selectItem($event)
-          ">
+          @update:activated="selectItem($event)"
+        >
         </v-treeview>
       </v-card-text>
       <v-divider></v-divider>

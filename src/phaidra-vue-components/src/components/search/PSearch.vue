@@ -56,14 +56,14 @@
         </v-row>
         <v-row class="hidden-md-and-up">
           <v-bottom-sheet v-model="filterdialog" scrollable>
-            <template v-slot:activator="{ on }">
-              <v-btn class="ml-4 mb-6" color="primary" v-on="on">{{ $t('Filters') }}</v-btn>
+            <template v-slot:activator="{ props }">
+              <v-btn class="ml-4 mb-6" color="primary" v-bind="props">{{ $t('Filters') }}</v-btn>
             </template>
             <v-card height="400px">
               <v-card-title>
-                <h2 class="title font-weight-light white--text">{{ $t('Filters') }}</h2>
+                <h2 class="title font-weight-light text-white">{{ $t('Filters') }}</h2>
                 <v-spacer></v-spacer>
-                <v-btn icon dark @click="filterdialog = !filterdialog" :aria-label="$t('Close')">
+                <v-btn icon variant="text" color="white" @click="filterdialog = !filterdialog" :aria-label="$t('Close')">
                   <v-icon>mdi-close</v-icon>
                 </v-btn>
               </v-card-title>
@@ -84,10 +84,8 @@
             </v-card>
           </v-bottom-sheet>
         </v-row>
-        <v-row no-gutters v-if="inCollection">
-          <v-btn class="mb-8" color="primary">{{ $t('Members of') }}<nuxt-link class="ml-1 white--text" :to="localePath(`/detail/${inCollection}`)">{{ inCollection }}</nuxt-link><v-icon right @click.native="removeCollectionFilter()">mdi-close</v-icon></v-btn>
-        </v-row>
         <v-row no-gutters>
+          <v-btn v-if="inCollection" class="mb-8" color="primary">{{ $t('Members of') }}<component class="ml-1 text-white" :is="PhaidraLink" :to="detailRouteTo(inCollection)">{{ inCollection }}</component><v-icon end @click="removeCollectionFilter()">mdi-close</v-icon></v-btn>
           <v-pagination
           :wrapper-aria-label="$t('pagination')"
           :page-aria-label="$t('page')"
@@ -129,7 +127,7 @@
       </v-col>
       <v-dialog v-model="limitdialog" width="500">
         <v-card>
-          <v-card-title class="title font-weight-light white--text">{{ $t('Selection limit') }}</v-card-title>
+          <v-card-title class="title font-weight-light text-white">{{ $t('Selection limit') }}</v-card-title>
           <v-card-text class="mt-4">
             {{ $t('SELECTION_LIMIT', { limit: appconfig.search.selectionlimit }) }}
           </v-card-text>
@@ -160,16 +158,17 @@ import { buildParams, buildSearchDef, sortdef } from './utils'
 import { setSearchParams } from './location'
 import { saveAs } from 'file-saver'
 import { vocabulary } from '../../mixins/vocabulary'
+import phaidraNavigation from '../../mixins/phaidraNavigation'
 
 export default {
   name: 'p-search',
+  mixins: [phaidraNavigation, vocabulary],
   components: {
     PSearchAutocomplete,
     PSearchResults,
     PSearchFilters,
     PSearchToolbar
   },
-  mixins: [vocabulary],
   computed: {
     page: {
       get () {
@@ -188,10 +187,10 @@ export default {
       return Math.ceil(this.total / this.pagesize)
     },
     instance: function () {
-      return this.$root.$store.state.instanceconfig
+      return this.$store?.state?.instanceconfig ?? {}
     },
     appconfig: function () {
-      return this.$root.$store.state.appconfig
+      return this.$store?.state?.appconfig ?? {}
     }
   },
   props: {
@@ -285,8 +284,8 @@ export default {
 
       Object.assign(this, options)
 
-      if (this.instance.searchbaseands) {
-        this['baseAnds'] = this.instance.searchbaseands
+      if (this.instance?.search?.baseands) {
+        this['baseAnds'] = this.instance.search.baseands
       }
 
       let { searchdefarr, ands } = buildSearchDef(this)

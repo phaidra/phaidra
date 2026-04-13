@@ -1,14 +1,14 @@
 /* eslint-disable */
-require('./fontello-sort-name-down')
-require('./fontello-sort-name-up')
-require('./fontello-sort-number-down')
-require('./fontello-sort-number-up')
-require('./material-action-account-balance')
-require('./material-action-bookmark')
-require('./material-content-link')
-require('./material-navigation-close')
-require('./material-social-person')
-require('./material-toggle-check-box-outline-blank')
-require('./orcid')
-require('./univie-checkbox-unchecked')
-require('./univie-stop2')
+import './fontello-sort-name-down'
+import './fontello-sort-name-up'
+import './fontello-sort-number-down'
+import './fontello-sort-number-up'
+import './material-action-account-balance'
+import './material-action-bookmark'
+import './material-content-link'
+import './material-navigation-close'
+import './material-social-person'
+import './material-toggle-check-box-outline-blank'
+import './orcid'
+import './univie-checkbox-unchecked'
+import './univie-stop2'

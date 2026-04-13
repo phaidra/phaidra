@@ -7,7 +7,15 @@ export default async (req, res, next) => {
 
   const redirectEvaluator = async (pid) => {
     let apiBaseURL = 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000'
-    let params = { q: '*:*', defType: 'edismax', wt: 'json', start: 0, rows: 1, fq: 'pid:"' + pid + '"', fl: 'pid,cmodel,datastreams,isinadminset' }
+    let params = {
+      q: '*:*',
+      defType: 'edismax',
+      wt: 'json',
+      start: 0,
+      rows: 1,
+      fq: 'pid:"' + pid + '"',
+      fl: 'pid,cmodel,datastreams,isinadminset,isrestricted'
+    }
     let response = await axios.request({
       method: 'POST',
       url: apiBaseURL + '/search/select',
@@ -17,13 +25,12 @@ export default async (req, res, next) => {
       },
       params: params
     })
-    let docs = response.data.response.docs
-    if (docs.length >= 1) {
+    let docs = response.data?.response?.docs
+    if (docs?.length >= 1) {
       let doc = docs[0]
-      console.log(docs)
       if (doc['cmodel']) {
         if (doc['cmodel'] === 'Book') {
-          if (!doc.datastreams.includes("POLICY") && !doc.isrestricted) {
+          if (!doc.datastreams.includes('POLICY') && !doc.isrestricted) {
             redirect(res, '/api/object/' + pid + '/preview')
             return
           }
@@ -32,8 +39,13 @@ export default async (req, res, next) => {
       if (doc['isinadminset']) {
         for (let adminset of doc['isinadminset']) {
           if (adminset === 'phaidra:ir.univie.ac.at') {
-            redirect(res, process.env.IR_BASE_URL + '/' + pid)
-            return
+            const irBaseUrl =
+              process.env.IR_BASE_URL ||
+              config.instances[config.defaultinstance]?.irbaseurl
+            if (irBaseUrl) {
+              redirect(res, irBaseUrl + '/' + pid)
+              return
+            }
           }
         }
       }

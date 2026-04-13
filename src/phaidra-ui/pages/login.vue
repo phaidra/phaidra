@@ -3,14 +3,14 @@
     <h1 class="d-sr-only">{{$t('Login')}}</h1>
     <v-row v-show="showtou" justify="center">
       <v-col>
-        <v-card>
-          <v-card-title class="title font-weight-light white--text">{{ $t('Terms of use') }}</v-card-title>
+        <v-card tile>
+          <v-card-title class="title font-weight-light text-white">{{ $t('Terms of use') }}</v-card-title>
           <v-card-text style="max-height: 500px; white-space: pre-wrap;" class="overflow-y-auto mt-4">{{ tou }}</v-card-text>
           <v-divider class="mt-4"></v-divider>
           <v-card-actions class="pa-4">
             <v-checkbox v-model="touCheckbox" :disabled="loading" color="primary" :label="$t('I agree to the terms of use.')"></v-checkbox>
             <v-spacer></v-spacer>
-            <v-btn @click="agree" :disabled="loading || !touCheckbox" :loading="loading" color="primary" raised>{{ $t('Continue') }}</v-btn>
+            <v-btn @click="agree" :disabled="loading || !touCheckbox" :loading="loading" color="primary" variant="elevated">{{ $t('Continue') }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -19,40 +19,40 @@
       <v-col md="4">
         <v-form v-model="valid">
           <v-card>
-            <v-card-title class="title font-weight-light white--text">{{ $t('Login') }}</v-card-title>
+            <v-card-title class="title font-weight-light text-white">{{ $t('Login') }}</v-card-title>
             <v-card-text>
               <v-row justify="center" class="mt-4">
                 <v-col cols="10">
                   <v-text-field
-                    :disabled="loading"
-                    :label="$t('Username')"
-                    v-model="credentials.username"
-                    required
-                    filled
-                    :placeholder="' '"
-                    :autocomplete="'username'"
-                    @keydown.enter.prevent="login"
-                  ></v-text-field>
-                  <v-text-field
-                    :disabled="loading"
-                    :label="$t('Password')"
-                    v-model="credentials.password"
-                    required
-                    filled
-                    :placeholder="' '"
-                    :append-icon="passVisibility ? 'mdi-eye' : 'mdi-eye-off'"
-                    @click:append="toggleVisibility"
-                    :type="passVisibility ? 'password' : 'text'"
-                    :autocomplete="'current-password'"
-                    @keydown.enter.prevent="login"
-                  ></v-text-field>
+	                  :disabled="loading"
+	                  :label="$t('Username')"
+	                  v-model="credentials.username"
+	                  required
+	                  variant="filled"
+	                  :placeholder="' '"
+	                  :autocomplete="'username'"
+	                  @keydown.enter.prevent="login"
+	                  ></v-text-field>
+	                  <v-text-field
+	                  :disabled="loading"
+	                  :label="$t('Password')"
+	                  v-model="credentials.password"
+	                  required
+	                  variant="filled"
+	                  :placeholder="' '"
+	                  :append-inner-icon="passVisibility ? 'mdi-eye' : 'mdi-eye-off'"
+	                  @click:append-inner="toggleVisibility"
+	                  :type="passVisibility ? 'password' : 'text'"
+	                  :autocomplete="'current-password'"
+	                  @keydown.enter.prevent="login"
+	                  ></v-text-field>
                 </v-col>
               </v-row>
             </v-card-text>
             <v-divider class="mt-4"></v-divider>
             <v-card-actions class="pa-4">
               <v-spacer></v-spacer>
-              <v-btn @click="login" :disabled="loading" :loading="loading" color="primary" raised>{{ $t('Login') }}</v-btn>
+              <v-btn @click="login" :disabled="loading" :loading="loading" color="primary" variant="elevated">{{ $t('Login') }}</v-btn>
             </v-card-actions>
           </v-card>
         </v-form>

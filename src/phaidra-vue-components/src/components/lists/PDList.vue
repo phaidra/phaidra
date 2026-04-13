@@ -3,7 +3,7 @@
     <v-row no-gutters v-if="list">
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light white--text">
+          <v-card-title class="title font-weight-light text-white">
             {{ list.name }}
           </v-card-title>
           <v-card-text>

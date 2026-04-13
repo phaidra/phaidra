@@ -94,113 +94,52 @@
                 </v-list>
               </v-toolbar>
               <v-divider></v-divider>
-              <v-list>
-                <v-item-group
-                  v-model="window"
-                  class="shrink mr-4"
-                  mandatory
-                  tag="v-flex"
-                >
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Display")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Edit")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Submit")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Search")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Manage")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Browse")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Uwm editor")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Uwm display")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Mods display")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                </v-item-group>
+              <v-list class="shrink mr-4" nav density="compact">
+                <v-list-item
+                  :active="window === 0"
+                  :title="$t('Display')"
+                  @click="window = 0"
+                />
+                <v-list-item
+                  :active="window === 1"
+                  :title="$t('Edit')"
+                  @click="window = 1"
+                />
+                <v-list-item
+                  :active="window === 2"
+                  :title="$t('Submit')"
+                  @click="window = 2"
+                />
+                <v-list-item
+                  :active="window === 3"
+                  :title="$t('Search')"
+                  @click="window = 3"
+                />
+                <v-list-item
+                  :active="window === 4"
+                  :title="$t('Manage')"
+                  @click="window = 4"
+                />
+                <v-list-item
+                  :active="window === 5"
+                  :title="$t('Browse')"
+                  @click="window = 5"
+                />
+                <v-list-item
+                  :active="window === 6"
+                  :title="$t('Uwm editor')"
+                  @click="window = 6"
+                />
+                <v-list-item
+                  :active="window === 7"
+                  :title="$t('Uwm display')"
+                  @click="window = 7"
+                />
+                <v-list-item
+                  :active="window === 8"
+                  :title="$t('Mods display')"
+                  @click="window = 8"
+                />
               </v-list>
             </v-navigation-drawer>
           </v-col>

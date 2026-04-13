@@ -4,44 +4,46 @@
       <v-row>
         <v-col cols="10">
           <v-autocomplete
-            :value="getTerm('bic', value)"
+            :model-value="getTerm('bic', value)"
             :required="required"
-            v-on:input="handleInput($event)"
+            @update:model-value="handleInput($event)"
             :rules="required ? [ v => !!v || $t('Required')] : []"
             :items="vocabularies['bic'].terms"
-            :item-value="'@id'"
+            item-value="@id"
+            :item-title="bicItemTitle"
+            :custom-filter="vocabAutocompleteFilterWithNotation"
             :loading="loading"
-            :filter="autocompleteFilterWithNotation"
             hide-no-data
             :label="$t(label)"
-            :filled="inputStyle==='filled'"
-            :outlined="inputStyle==='outlined'"
+            :variant="fieldVariant"
             return-object
             clearable
             :disabled="disabled"
             :messages="path"
             :error-messages="errorMessages"
           >
-            <template slot="item" slot-scope="{ item }">
-              <v-list-item-content two-line>
-                <v-list-item-title  v-html="`${getLocalizedTermLabel('bic', item['@id']) + ' - ' + item['skos:notation'][0]}`"></v-list-item-title>
-                <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-              </v-list-item-content>
+            <template #item="{ props, item }">
+              <v-list-item v-bind="props" :lines="showIds ? 'two' : 'one'">
+                <template #title>
+                  <span v-html="`${getLocalizedTermLabel('bic', item.raw['@id']) + ' - ' + item.raw['skos:notation'][0]}`" />
+                </template>
+                <template v-if="showIds" #subtitle>
+                  <span v-html="item.raw['@id']" />
+                </template>
+              </v-list-item>
             </template>
-            <template slot="selection" slot-scope="{ item }">
-              <v-list-item-content>
-                <v-list-item-title v-html="`${getLocalizedTermLabel('bic', item['@id']) + ' - ' + item['skos:notation'][0]}`"></v-list-item-title>
-              </v-list-item-content>
+            <template #selection="{ item }">
+              <span v-html="`${getLocalizedTermLabel('bic', (item.raw || item)['@id']) + ' - ' + (item.raw || item)['skos:notation'][0]}`" />
             </template>
-            <template v-slot:append-outer>
+            <template #append>
               <v-icon @click="$refs.bictreedialog.open()">mdi-file-tree</v-icon>
             </template>
           </v-autocomplete>
         </v-col>
         <v-col cols="1" v-if="actions.length">
-          <v-menu bottom offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn v-on="on" v-bind="attrs" icon>
+          <v-menu open-on-hover bottom offset-y>
+            <template v-slot:activator="{ props: activatorProps }">
+              <v-btn v-bind="activatorProps" icon variant="text">
                 <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
@@ -73,6 +75,10 @@ export default {
     BicTreeDialog
   },
   methods: {
+    bicItemTitle (item) {
+      if (!item || !item['@id'] || !item['skos:notation']?.length) return ''
+      return `${this.getLocalizedTermLabel('bic', item['@id'])} - ${item['skos:notation'][0]}`
+    },
     handleInput: function (term) {
       if (term) {
         this.path = ''

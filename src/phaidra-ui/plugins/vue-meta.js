@@ -1,4 +1,3 @@
-import Vue from 'vue'
-import VueMeta from 'vue-meta'
-
-Vue.use(VueMeta)
+export default defineNuxtPlugin(() => {
+  // vue-meta is Vue2-era; Nuxt 3 uses unhead/useHead.
+})

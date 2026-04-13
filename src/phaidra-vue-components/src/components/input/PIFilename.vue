@@ -5,8 +5,7 @@
         :value="value"
         :label="$t('Filename')"
         v-on:blur="$emit('input-value',$event.target.value)"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
     <v-col cols="2" v-if="actions.length">

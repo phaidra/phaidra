@@ -1,0 +1,83 @@
+/*
+ * Global Vuetify 2 -> Vuetify 3 visual compatibility layer.
+ * Keep this focused on legacy utility classes and shared component chrome.
+ */
+
+/* Vuetify 3 sets .v-card-title { display: block }, which breaks v-spacer (flex-grow). */
+.v-card-title {
+  display: flex !important;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: 8px;
+}
+
+/* ---- Legacy typography utility classes ---- */
+.title {
+  font-size: 1.25rem !important;
+  line-height: 2rem !important;
+  letter-spacing: 0.0125em !important;
+}
+
+.headline {
+  font-size: 1.5rem !important;
+  line-height: 2rem !important;
+  letter-spacing: normal !important;
+}
+
+.subtitle-1 {
+  font-size: 1rem !important;
+  line-height: 1.75rem !important;
+  letter-spacing: 0.009375em !important;
+}
+
+.display-1 {
+  font-size: 2.125rem !important;
+  line-height: 2.5rem !important;
+  letter-spacing: normal !important;
+}
+
+.black--text {
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+
+.grey--text {
+  color: #9e9e9e !important;
+}
+
+.grey--text.text--darken-1 {
+  color: #757575 !important;
+}
+
+.grey--text.text--darken-2 {
+  color: #616161 !important;
+}
+
+.grey--text.text--darken-3 {
+  color: #424242 !important;
+}
+
+.grey--text.text--darken-4 {
+  color: #212121 !important;
+}
+
+/* ---- Legacy section header look (common in this codebase) ---- */
+.v-card-title.title.font-weight-light.white--text {
+  background-color: rgb(var(--v-theme-primary));
+  min-height: 48px;
+}
+
+
+.v-tab.title {
+  font-weight: 300 !important;
+  color: rgba(0, 0, 0, 0.5) !important;
+  min-width: auto;
+}
+
+.v-tab--selected.title {
+  color: rgb(var(--v-theme-primary)) !important;
+}
+
+.v-tabs .v-tabs-slider {
+  background-color: rgb(var(--v-theme-primary)) !important;
+  height: 2px;
+}

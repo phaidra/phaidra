@@ -2,14 +2,14 @@
   <v-container>
     <v-row justify="center">
       <v-col>
-        <v-card>
-          <v-card-title class="title font-weight-light white--text">{{ $t('Terms of use') }}</v-card-title>
+        <v-card tile>
+          <v-card-title class="title font-weight-light text-white">{{ $t('Terms of use') }}</v-card-title>
           <v-card-text style="max-height: 500px; white-space: pre-wrap;" class="overflow-y-auto">{{ tou }}</v-card-text>
           <v-divider class="mt-5"></v-divider>
           <v-card-actions>
-            <v-btn @click="back" :disabled="loading" :loading="loading" color="primary" raised>{{ $t('Back') }}</v-btn>
+            <v-btn @click="back" :disabled="loading" :loading="loading" color="primary" variant="elevated">{{ $t('Back') }}</v-btn>
             <v-spacer></v-spacer>
-            <v-btn @click="login" :disabled="loading" :loading="loading" color="primary" raised>{{ $t('I agree to the terms of use.') }}</v-btn>
+            <v-btn @click="login" :disabled="loading" :loading="loading" color="primary" variant="elevated">{{ $t('I agree to the terms of use.') }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>

@@ -1,14 +1,14 @@
 <template>
   <v-row v-if="!hidden">
     <v-col cols="12">
-      <v-card outlined class="mb-8">
-        <v-card-title class="title font-weight-light white--text">
+      <v-card class="mb-8">
+        <v-card-title class="title font-weight-light text-white">
           <span>{{ $t(label) }}</span>
           <v-spacer></v-spacer>
-          <v-menu bottom offset-y v-if="actions.length">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn v-on="on" v-bind="attrs" icon dark>
-                <v-icon dark>mdi-dots-vertical</v-icon>
+          <v-menu open-on-hover bottom offset-y v-if="actions.length">
+            <template v-slot:activator="{ props: activatorProps }">
+              <v-btn v-bind="activatorProps" icon variant="text" color="white">
+                <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
             <v-list>
@@ -31,35 +31,45 @@
             <template v-if="typeModel === 'select'">
               <v-col cols="10">
                 <v-autocomplete
-                  :value="getTerm('orgunits', publisherOrgUnit)"
+                  :model-value="getTerm('orgunits', publisherOrgUnit)"
                   :required="required"
-                  v-on:input="handleInput($event, 'organizationPath', 'input-publisher-select')"
+                  @update:model-value="handleInput($event, 'organizationPath', 'input-publisher-select')"
                   :rules="required ? [ v => !!v || $t('Required')] : []"
                   :items="orgunits"
                   :item-value="'@id'"
+                  :item-title="orgunitItemTitle"
                   :loading="loading"
-                  :filter="autocompleteFilterInfix"
+                  :custom-filter="orgunitsAutocompleteFilter"
                   hide-no-data
                   :label="$t('Please choose')"
-                  :filled="inputStyle==='filled'"
-                  :outlined="inputStyle==='outlined'"
+                  :variant="fieldVariant"
                   return-object
                   clearable
                   :error-messages="publisherOrgUnitErrorMessages"
                   :messages="organizationPath"
                 >
-                  <template slot="item" slot-scope="{ item }">
-                    <v-list-item-content two-line>
-                      <v-list-item-title  v-html="`${getLocalizedTermLabel('orgunits', item['@id'])}`"></v-list-item-title>
-                      <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-                    </v-list-item-content>
+                  <template #item="{ props, item }">
+                    <v-divider v-if="item.raw && item.raw.divider" />
+                    <v-list-subheader v-else-if="item.raw && item.raw.header != null">
+                      {{ item.raw.header }}
+                    </v-list-subheader>
+                    <v-list-item
+                      v-else
+                      v-bind="props"
+                      :lines="showIds ? 'two' : 'one'"
+                    >
+                      <template #title>
+                        <span v-html="getLocalizedTermLabel('orgunits', item.raw['@id'])" />
+                      </template>
+                      <template v-if="showIds" #subtitle>
+                        <span v-html="item.raw['@id']" />
+                      </template>
+                    </v-list-item>
                   </template>
-                  <template slot="selection" slot-scope="{ item }">
-                    <v-list-item-content>
-                      <v-list-item-title v-html="`${getLocalizedTermLabel('orgunits', item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
+                  <template #selection="{ item }">
+                    <span v-html="getLocalizedTermLabel('orgunits', (item.raw || item)['@id'])" />
                   </template>
-                  <template v-slot:append-outer>
+                  <template #append>
                     <v-icon v-if="enableOrgTree" @click="$refs.organizationstreedialog.open()">mdi-file-tree</v-icon>
                   </template>
                 </v-autocomplete>
@@ -76,45 +86,40 @@
                   v-model="publisherSearchModel"
                   :items="publisherSearchItems"
                   :loading="publisherSearchLoading"
-                  :search-input.sync="publisherSearchQuery"
+                  v-model:search="publisherSearchQuery"
                   :error-messages="publisherSearchErrors"
-                  v-on:input="$emit('input-suggest-publisher', $event)"
-                  cache-items
+                  @update:model-value="$emit('input-suggest-publisher', $event)"
                   hide-no-data
                   hide-selected
                   return-object
-                  item-text="name"
+                  item-title="name"
                   item-value="name"
                   :placeholder="$t('search publishers')"
-                  :filled="inputStyle==='filled'"
-                  :outlined="inputStyle==='outlined'"
+                  :variant="fieldVariant"
                   clearable
                   append-icon="mdi-magnify"
                 >
-                  <template slot="item" slot-scope="{ item }">
-                    <v-list-item-content>
-                      <v-list-item-title>{{ item.name }}</v-list-item-title>
-                      <v-list-item-subtitle v-if="item.alias">{{ $t('Alias') + ': ' + item.alias }}</v-list-item-subtitle>
-                    </v-list-item-content>
+                  <template #item="{ props, item }">
+                    <v-list-item v-bind="props" :lines="item.raw.alias ? 'two' : 'one'">
+                      <template #title>{{ item.raw.name }}</template>
+                      <template v-if="item.raw.alias" #subtitle>{{ $t('Alias') + ': ' + item.raw.alias }}</template>
+                    </v-list-item>
                   </template>
-                  <template slot="selection" slot-scope="{ item }">
-                    <v-list-item-content>
-                      <v-list-item-title>{{ item.name }}</v-list-item-title>
-                    </v-list-item-content>
+                  <template #selection="{ item }">
+                    {{ (item.raw || item).name }}
                   </template>
                 </v-combobox>
               </v-col>
               <v-col cols="12" :md="publisherSearch ? 5 : 10">
                 <v-text-field
-                  :value="publisherName"
-                  v-on:blur="$emit('input-publisher-name',$event.target.value)"
+                  :model-value="publisherName"
+                  @update:model-value="$emit('input-publisher-name', $event)"
                   :label="$t(publisherNameLabel ? publisherNameLabel : '')"
                   :required="required"
                   :rules="required ? [ v => !!v || $t('Required')] : []"
-                  :filled="inputStyle==='filled'"
-                  :outlined="inputStyle==='outlined'"
+                  :variant="fieldVariant"
                   :error-messages="publisherNameErrorMessages"
-                  :background-color="publisherBackgroundColor ? publisherBackgroundColor : undefined"
+                  :bg-color="publisherBackgroundColor ? publisherBackgroundColor : undefined"
                 ></v-text-field>
               </v-col>
             </template>
@@ -122,27 +127,25 @@
           <v-row>
             <v-col v-if="showPlace" cols="12" :md="showDate ? 8 : 12">
               <v-text-field
-                :value="publishingPlace"
-                v-on:blur="$emit('input-publishing-place',$event.target.value)"
+                :model-value="publishingPlace"
+                @update:model-value="$emit('input-publishing-place', $event)"
                 :label="$t(publishingPlaceLabel ? publishingPlaceLabel : '')"
                 :required="required"
                 :rules="required ? [ v => !!v || $t('Required')] : []"
-                :filled="inputStyle==='filled'"
-                :outlined="inputStyle==='outlined'"
+                :variant="fieldVariant"
               ></v-text-field>
             </v-col>
             <v-col v-if="showDate" cols="12" :md="showPlace ? 4 : 12">
               <template v-if="publishingDatePicker">
                 <v-text-field
-                  :value="publishingDate"
-                  v-on:blur="$emit('input-publishing-date',$event.target.value)"
+                  :model-value="publishingDate"
+                  @update:model-value="$emit('input-publishing-date', $event)"
                   :label="$t(publishingDateLabel ? publishingDateLabel : 'Date')"
                   :required="required"
                   :rules="[validationrules.date]"
-                  :filled="inputStyle==='filled'"
-                  :outlined="inputStyle==='outlined'"
+                  :variant="fieldVariant"
                   :error-messages="publishingDateErrorMessages"
-                  :background-color="publishingDateBackgroundColor ? publishingDateBackgroundColor : undefined"
+                  :bg-color="publishingDateBackgroundColor ? publishingDateBackgroundColor : undefined"
                 >
                   <template v-slot:append>
                     <v-fade-transition leave-absolute>
@@ -155,17 +158,16 @@
                         max-width="290px"
                         min-width="290px"
                       >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-icon v-on="on" v-bind="attrs">mdi-calendar</v-icon>
+                        <template v-slot:activator="{ props: activatorProps }">
+                          <v-icon v-bind="activatorProps">mdi-calendar</v-icon>
                         </template>
                         <v-date-picker
                           color="primary"
-                          :value="publishingDate"
                           :show-current="false"
                           v-model="pickerModel"
                           :first-day-of-week="1"
                           :locale="alpha2bcp47($i18n.locale)"
-                          v-on:input="dateMenu = false; $emit('input-publishing-date', $event)"
+                          @update:model-value="dateMenu = false; $emit('input-publishing-date', $event)"
                         ></v-date-picker>
                       </v-menu>
                     </v-fade-transition>
@@ -174,15 +176,14 @@
               </template>
               <template v-else>
                 <v-text-field
-                  :value="publishingDate"
-                  v-on:blur="$emit('input-publishing-date',$event.target.value)"
+                  :model-value="publishingDate"
+                  @update:model-value="$emit('input-publishing-date', $event)"
                   :label="$t(publishingDateLabel ? publishingDateLabel : 'Date')"
                   :required="required"
                   :hint="$t(dateFormatHint)"
                   :rules="[validationrules.date]"
-                  :filled="inputStyle==='filled'"
-                  :outlined="inputStyle==='outlined'"
-                  :background-color="publishingDateBackgroundColor ? publishingDateBackgroundColor : undefined"
+                  :variant="fieldVariant"
+                  :bg-color="publishingDateBackgroundColor ? publishingDateBackgroundColor : undefined"
                 ></v-text-field>
               </template>
             </v-col>
@@ -203,7 +204,6 @@ import xmlUtils from '../../utils/xml'
 import qs from 'qs'
 import OrgUnitsTreeDialog from '../select/OrgUnitsTreeDialog'
 import RorSearch from '../select/RorSearch'
-var iconv = require('iconv-lite')
 
 export default {
   name: 'p-i-bf-publication',
@@ -311,10 +311,10 @@ export default {
   },
   computed: {
     appconfig: function () {
-      return this.$root.$store.state.appconfig
+      return this.$store.state.appconfig
     },
     instanceconfig: function () {
-      return this.$root.$store.state.instanceconfig
+      return this.$store.state.instanceconfig
     },
     parentSelectionDisabled: function () {
       return this.isParentSelectionDisabled || this.instanceconfig?.isParentSelectionDisabled || false
@@ -384,7 +384,8 @@ export default {
             url: this.appconfig.apis.sherparomeo.url + '?' + query,
             responseType: 'arraybuffer'
           })
-          let utfxml = iconv.decode(Buffer.from(response.data), 'ISO-8859-1')
+          const bytes = response.data instanceof ArrayBuffer ? new Uint8Array(response.data) : new Uint8Array(response.data);
+          const utfxml = new TextDecoder('iso-8859-1').decode(bytes)
           let dp = new window.DOMParser()
           let obj = xmlUtils.xmlToJson(dp.parseFromString(utfxml, 'text/xml'))
           for (let p of obj.romeoapi[1].publishers.publisher) {

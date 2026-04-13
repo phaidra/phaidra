@@ -10,60 +10,58 @@
     <template>
       <v-row v-if="isInitialized">
         <v-col>
-          <v-card outlined>
+          <v-card variant="outlined">
             <v-card-text class="table-container">
-              <v-simple-table fixed-header>
-                <template v-slot:default>
-                  <thead>
-                    <tr>
-                      <template v-for="field in allFields">
-                        <template v-if="isMultiField(field)">
-                          <PreviewTableHeader
-                            v-for="(subFieldConfig, subField) in getSubFields(field)"
-                            :key="field + '-' + subField"
-                            :field="$t(field)"
-                            :sub-field="subField"
-                            :is-required="subFieldConfig.required"
-                            :is-mapped="!!getSourceInfo(field, subField)"
-                            :source-info="getSourceInfo(field, subField)"
-                          />
-                        </template>
+              <v-table fixed-header>
+                <thead>
+                  <tr>
+                    <template v-for="field in allFields">
+                      <template v-if="isMultiField(field)">
                         <PreviewTableHeader
-                          v-else
-                          :key="field"
+                          v-for="(subFieldConfig, subField) in getSubFields(field)"
+                          :key="field + '-' + subField"
                           :field="$t(field)"
-                          :is-required="fieldSettings[field].required"
-                          :is-mapped="!!getAllFieldMappings[field]"
-                          :source-info="getSourceInfo(field)"
+                          :sub-field="subField"
+                          :is-required="subFieldConfig.required"
+                          :is-mapped="!!getSourceInfo(field, subField)"
+                          :source-info="getSourceInfo(field, subField)"
                         />
                       </template>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(row, index) in previewData" :key="index">
-                      <template v-for="field in allFields">
-                        <template v-if="isMultiField(field)">
-                          <PreviewTableCell
-                            v-for="(subFieldConfig, subField) in getSubFields(field)"
-                            :key="field + '-' + subField"
-                            :field="field"
-                            :sub-field="subField"
-                            :row-data="row"
-                            :is-mapped="!!getSourceInfo(field, subField)"
-                          />
-                        </template>
+                      <PreviewTableHeader
+                        v-else
+                        :key="field"
+                        :field="$t(field)"
+                        :is-required="fieldSettings[field].required"
+                        :is-mapped="!!getAllFieldMappings[field]"
+                        :source-info="getSourceInfo(field)"
+                      />
+                    </template>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(row, index) in previewData" :key="index">
+                    <template v-for="field in allFields">
+                      <template v-if="isMultiField(field)">
                         <PreviewTableCell
-                          v-else
-                          :key="field"
-                          :field="field"
+                          v-for="(subFieldConfig, subField) in getSubFields(field)"
+                          :key="field + '-' + subField"
+                          :field="$t(field)"
+                          :sub-field="subField"
                           :row-data="row"
-                          :is-mapped="!!getAllFieldMappings[field]"
+                          :is-mapped="!!getSourceInfo(field, subField)"
                         />
                       </template>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
+                      <PreviewTableCell
+                        v-else
+                        :key="field"
+                        :field="$t(field)"
+                        :row-data="row"
+                        :is-mapped="!!getAllFieldMappings[field]"
+                      />
+                    </template>
+                  </tr>
+                </tbody>
+              </v-table>
             </v-card-text>
           </v-card>
         </v-col>
@@ -73,24 +71,24 @@
       <v-row justify="space-between" class="mt-4" v-if="isInitialized || isError">
         <v-col cols="auto">
           <v-btn
-            large
-            text
+            size="large"
+            variant="text"
             :to="steps[2].route"
           >
-            <v-icon left>mdi-arrow-left</v-icon>
+            <v-icon start>mdi-arrow-left</v-icon>
             {{$t('Back')}}
           </v-btn>
         </v-col>
         <v-col cols="auto">
           <v-btn
-            large
+            size="large"
             :disabled="isError"
             color="primary"
             @click="proceed"
             :to="steps[4].route"
           >
             {{$t('Next')}}
-            <v-icon right>mdi-arrow-right</v-icon>
+            <v-icon end>mdi-arrow-right</v-icon>
           </v-btn>
         </v-col>
       </v-row>

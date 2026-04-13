@@ -2,8 +2,9 @@
   <div v-if="form && form.sections" >
     <v-alert
       v-model="serverSubmitError"
-      dismissible
+      closable
       type="error"
+      variant="tonal"
       transition="slide-y-transition"
     >
       <template>
@@ -14,8 +15,9 @@
     </v-alert>
     <v-alert
       v-model="validationError"
-      dismissible
+      closable
       type="error"
+      variant="tonal"
       transition="slide-y-transition"
     >
       <span>{{ $t("Please fill in the required fields") }}.</span>
@@ -35,53 +37,60 @@
         </ul>
       </template>
     </v-alert>
-    <v-tabs v-model="activetab" align-with-title>
-      <v-tab class="title font-weight-light text-none">{{ $t('Metadata') }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-tab>
-      <v-tab v-if="debug" @click="metadatapreview = getMetadata()" class="title font-weight-light text-none">{{ $t('JSON-LD') }}</v-tab>
-      <v-tab v-if="templating" @click="loadTemplates()" class="title font-weight-light text-none">{{ $t('Templates') }}</v-tab>
-      <v-tab v-if="importing" class="title font-weight-light text-none">{{ $t('Import') }}</v-tab>
-      <v-tab v-if="enablerights" class="title font-weight-light text-none">{{ $t('Access rights') }}</v-tab>
-      <v-tab v-if="enablerelationships" class="title font-weight-light text-none">{{ $t('Relationships') }}</v-tab>
-      <v-tab v-if="(submittype !== 'container') && enablepreview" @click="updateJsonld()" class="title font-weight-light text-none">{{ $t('Preview') }}</v-tab>
-      <v-tab v-if="help" class="title font-weight-light text-none">{{ $t('Help') }}</v-tab>
-      <v-tab v-if="feedback" class="title font-weight-light text-none">{{ $t('Feedback') }}</v-tab>
-      <v-tab v-if="doiImport" class="title font-weight-light text-none">{{ $t('DOI Import') }}</v-tab>
+    <v-tabs v-model="activetab" align-tabs="title">
+      <v-tab value="metadata" class="title font-weight-light text-capitalize">{{ $t('Metadata') }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-tab>
+      <v-tab v-if="debug" value="jsonld" @click="metadatapreview = getMetadata()" class="title font-weight-light text-capitalize">{{ $t('JSON-LD') }}</v-tab>
+      <v-tab v-if="templating" value="templates" @click="loadTemplates()" class="title font-weight-light text-capitalize">{{ $t('Templates') }}</v-tab>
+      <v-tab v-if="importing" value="import" class="title font-weight-light text-capitalize">{{ $t('Import') }}</v-tab>
+      <v-tab v-if="enablerights" value="rights" class="title font-weight-light text-capitalize">{{ $t('Access rights') }}</v-tab>
+      <v-tab v-if="enablerelationships" value="relationships" class="title font-weight-light text-capitalize">{{ $t('Relationships') }}</v-tab>
+      <v-tab v-if="(submittype !== 'container') && enablepreview" value="preview" @click="updateJsonld()" class="title font-weight-light text-capitalize">{{ $t('Preview') }}</v-tab>
+      <v-tab v-if="help" value="help" class="title font-weight-light text-capitalize">{{ $t('Help') }}</v-tab>
+      <v-tab v-if="feedback" value="feedback" class="title font-weight-light text-capitalize">{{ $t('Feedback') }}</v-tab>
+      <v-tab v-if="doiImport" value="doiImport" class="title font-weight-light text-capitalize">{{ $t('DOI Import') }}</v-tab>
     </v-tabs>
 
-    <v-tabs-items v-model="activetab">
-      <v-tab-item class="pa-4" v-if="form">
+    <v-window v-model="activetab">
+      <v-window-item value="metadata" class="pa-4" v-if="form">
 
         <v-row v-for="(s) in this.form.sections" :key="s.id" class="ma-3">
 
           <v-card v-if="s.type === 'resourcelink'" width="100%" class="mb-6">
-            <v-card-title class="title font-weight-light white--text">
+            <v-card-title class="title font-weight-light text-white">
               <span>{{s.title}}</span>
               <v-spacer></v-spacer>
             </v-card-title>
             <v-card-text class="mt-4">
-              <v-text-field v-model="s.resourcelink"
+              <v-text-field
+                :model-value="s.resourcelink"
+                @update:model-value="(v) => { s.resourcelink = v }"
                 :label="$t('URL')"
                 :required="true"
                 :placeholder="$t('e.g.: https://phaidra.org')"
                 :rules="[ v => !!v || $t('Required')]"
-                filled
+                variant="filled"
               ></v-text-field>
             </v-card-text>
           </v-card>
 
           <v-card :outlined="s.outlined" :flat="(!s.title || (s.mode === 'expansion' && s.collapsed) || s.flat)" v-else-if="(s.type !== 'accessrights')" width="100%">
-            <v-card-title v-if="s.title" class="title font-weight-light white--text">
+            <v-card-title v-if="s.title" class="title font-weight-light text-white">
               <span v-t="s.title"></span>
               <v-spacer></v-spacer>
               <v-checkbox dark color="white" v-if="s.type === 'member'" v-model="previewMember" :label="$t('Container thumbnail')" :value="s.id"></v-checkbox>
               <v-spacer></v-spacer>
-              <v-btn dark icon @click="toggleSectionCollapse(s)">
+              <v-btn
+                icon
+                variant="text"
+                color="white"
+                @click="s.collapsed = !s.collapsed"
+              >
                 <v-icon>{{ s.collapsed ? 'mdi-chevron-down' : 'mdi-chevron-up' }}</v-icon>
               </v-btn>
-              <v-menu bottom offset-y v-if="!s.disablemenu">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn v-on="on" v-bind="attrs" icon dark>
-                    <v-icon dark>mdi-dots-vertical</v-icon>
+              <v-menu open-on-hover bottom offset-y v-if="!s.disablemenu">
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-btn v-bind="activatorProps" icon variant="text" color="white">
+                    <v-icon>mdi-dots-vertical</v-icon>
                   </v-btn>
                 </template>
                 <v-list>
@@ -109,11 +118,11 @@
 
                   <div v-for="(f) in s.fields" :key="'dv'+f.id">
                     <v-tooltip :disabled="!mouseoverfielddef" open-delay="1700" bottom >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-row v-on="on" v-bind="attrs" no-gutters>
+                      <template v-slot:activator="{ props: activatorProps }">
+                        <v-row v-bind="activatorProps" no-gutters>
                           <template v-if="f.component === 'p-text-field'">
                             <p-i-text-field
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="f.value=$event"
                               v-on:input-language="setSelected(f, 'language', $event)"
                               v-on:add="addField(s.fields, f)"
@@ -125,7 +134,7 @@
 
                           <template v-else-if="f.component === 'p-text-field-suggest'">
                             <p-i-text-field-suggest
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="f.value=$event"
                               v-on:input-language="setSelected(f, 'language', $event)"
                               v-on:add="addField(s.fields, f)"
@@ -137,7 +146,7 @@
 
                           <template v-else-if="f.component === 'p-keyword'">
                             <p-i-keyword
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="f.value=$event"
                               v-on:input-language="setSelected(f, 'language', $event)"
                               v-on:add="addField(s.fields, f)"
@@ -149,7 +158,7 @@
 
                           <template v-if="f.component === 'p-title'">
                             <p-i-title
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-title="f.title=$event"
                               v-on:input-subtitle="f.subtitle=$event"
                               v-on:input-language="setSelected(f, 'language', $event)"
@@ -166,7 +175,7 @@
                             <p-i-resource-type
                               v-on:configure="editFieldProps(f)"
                               :configurable="enablefieldconfig || f.configurable"
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="selectInput(f, $event)"
                             ></p-i-resource-type>
                           </template>
@@ -175,7 +184,7 @@
                             <p-i-object-type
                               v-on:configure="editFieldProps(f)"
                               :configurable="enablefieldconfig || f.configurable"
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="handleObjectTypeCheckboxesInput(f, $event)"
                               v-on:remove="removeField(s.fields, f)"
                             ></p-i-object-type>
@@ -183,7 +192,7 @@
 
                           <template v-else-if="f.component === 'p-select'">
                             <p-i-select
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="selectInput(f, $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
@@ -200,7 +209,7 @@
 
                           <template v-else-if="f.component === 'p-select-text'">
                             <p-i-select-text
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="f.value=$event"
                               v-on:input-select="f.selectvalue=$event"
                               v-on:input-text="f.textvalue=$event"
@@ -214,7 +223,7 @@
 
                           <template v-else-if="f.component === 'p-date-edtf'">
                             <p-i-date-edtf
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-date="f.value=$event"
                               v-on:input-date-type="setSelected(f, 'type', $event)"
                               v-on:add="addField(s.fields, f)"
@@ -226,7 +235,7 @@
 
                           <template v-else-if="f.component === 'p-date-edmtimespan'">
                             <p-i-date-edmtimespan
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-date="f.value=$event"
                               v-on:input-date-type="setSelected(f, 'type', $event)"
                               v-on:input-language="setSelected(f, 'language', $event)"
@@ -241,7 +250,7 @@
 
                           <template v-else-if="f.component === 'p-duration'">
                             <p-i-duration
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="f.value=$event"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
@@ -252,7 +261,7 @@
 
                           <template v-else-if="f.component === 'p-series'">
                             <p-i-series
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-select-journal="selectJournal(f, $event)"
                               v-on:input-title="f.title=$event"
                               v-on:input-title-language="setSelected(f, 'titleLanguage', $event)"
@@ -275,7 +284,7 @@
 
                           <template v-else-if="f.component === 'p-citation'">
                             <p-i-citation
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-citation-type="setSelected(f, 'type', $event)"
                               v-on:input-citation="f.citation=$event"
                               v-on:input-citation-language="setSelected(f, 'citationLanguage', $event)"
@@ -289,7 +298,7 @@
 
                           <template v-else-if="f.component === 'p-bf-publication'">
                             <p-i-bf-publication
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-suggest-publisher="publisherSuggestInput(f, $event)"
                               v-on:input-publisher-name="f.publisherName=$event"
                               v-on:change-type="f.publisherType = $event"
@@ -306,7 +315,7 @@
 
                           <template v-else-if="f.component === 'p-instance-of'">
                             <p-i-instance-of
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-title="f.title=$event"
                               v-on:input-subtitle="f.subtitle=$event"
                               v-on:input-title-language="setSelected(f, 'titleLanguage', $event)"
@@ -321,7 +330,7 @@
 
                           <template v-else-if="f.component === 'p-adaptation'">
                             <p-i-adaptation
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-title="f.title=$event"
                               v-on:input-subtitle="f.subtitle=$event"
                               v-on:input-title-language="setSelected(f, 'titleLanguage', $event)"
@@ -338,7 +347,7 @@
 
                           <template v-else-if="f.component === 'p-contained-in'">
                             <p-i-contained-in
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-title="f.title=$event"
                               v-on:input-subtitle="f.subtitle=$event"
                               v-on:input-title-language="setSelected(f, 'titleLanguage', $event)"
@@ -371,7 +380,7 @@
 
                           <template v-else-if="f.component === 'p-entity'">
                             <p-i-entity
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-firstname="f.firstname=$event"
                               v-on:input-lastname="f.lastname=$event"
                               v-on:input-name="f.name=$event"
@@ -391,8 +400,8 @@
 
                           <template v-else-if="f.component === 'p-entity-extended'">
                             <p-i-entity-extended
-                              v-bind.sync="f"
-                              v-on:change-type="handleEntityTypeChange(f, $event)"
+                              v-bind="f"
+                              v-on:change-type="f.type = $event"
                               v-on:input-firstname="f.firstname = $event"
                               v-on:input-birthdate="f.birthdate = $event"
                               v-on:input-deathdate="f.deathdate = $event"
@@ -421,7 +430,7 @@
 
                           <template v-else-if="f.component === 'p-entity-fixedrole-person'">
                             <p-i-entity-fixedrole-person
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-firstname="f.firstname=$event"
                               v-on:input-lastname="f.lastname=$event"
                               v-on:input-identifier="f.identifierText = $event"
@@ -436,7 +445,7 @@
 
                           <template v-else-if="f.component === 'p-subject-gnd'">
                             <p-i-subject-gnd
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="f.value=$event"
                               v-on:resolve="updateSubject(f, $event)"
                               v-on:add="addField(s.fields, f)"
@@ -449,7 +458,7 @@
 
                           <template v-else-if="f.component === 'p-subject-bk'">
                             <p-i-subject-bk
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="f.value=$event"
                               v-on:resolve="updateSubject(f, $event)"
                               v-on:add="addField(s.fields, f)"
@@ -461,7 +470,7 @@
 
                           <template v-else-if="f.component === 'p-subject-oefos'">
                             <p-i-subject-oefos
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="f.value=$event"
                               v-on:resolve="updateVocSubject(f, $event)"
                               v-on:add="addField(s.fields, f)"
@@ -473,7 +482,7 @@
 
                           <template v-else-if="f.component === 'p-subject-thema'">
                             <p-i-subject-thema
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="f.value=$event"
                               v-on:resolve="updateVocSubject(f, $event)"
                               v-on:add="addField(s.fields, f)"
@@ -485,7 +494,7 @@
 
                           <template v-else-if="f.component === 'p-subject-bic'">
                             <p-i-subject-bic
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="f.value=$event"
                               v-on:resolve="updateVocSubject(f, $event)"
                               v-on:add="addField(s.fields, f)"
@@ -497,7 +506,7 @@
 
                           <template v-else-if="f.component === 'p-spatial-geonames'">
                             <p-i-spatial-geonames
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="f.value=$event"
                               v-on:input-place-type="setSelected(f, 'type', $event)"
                               v-on:resolve="updatePlace(f, $event)"
@@ -510,7 +519,7 @@
 
                           <template v-else-if="f.component === 'p-spatial-text'">
                             <p-i-spatial-text
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="f.value=$event"
                               v-on:input-place-type="setSelected(f, 'type', $event)"
                               v-on:input-language="setSelected(f, 'language', $event)"
@@ -523,7 +532,7 @@
 
                           <template v-else-if="f.component === 'p-dimension'">
                             <p-i-dimension
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-value="f.value=$event"
                               v-on:input-unit="setSelected(f, 'unit', $event)"
                               v-on:add="addField(s.fields, f)"
@@ -535,7 +544,7 @@
 
                           <template v-else-if="f.component === 'p-see-also'">
                             <p-i-see-also
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-url="f.url=$event"
                               v-on:input-title="f.title=$event"
                               v-on:input-title-language="setSelected(f, 'titleLanguage', $event)"
@@ -548,7 +557,7 @@
 
                           <template v-else-if="(f.component === 'p-literal') && (f.predicate !== 'schema:pageStart') && (f.predicate !== 'schema:pageEnd')">
                             <p-i-literal
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-value="f.value=$event"
                               v-on:input-language="setSelected(f, 'language', $event)"
                               v-on:add="addField(s.fields, f)"
@@ -560,7 +569,7 @@
 
                           <template v-else-if="f.component === 'p-alternate-identifier'">
                             <p-i-alternate-identifier
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-identifier="f.value=$event"
                               v-on:input-identifier-type="setSelected(f, 'type', $event)"
                               v-on:add="addField(s.fields, f)"
@@ -573,7 +582,7 @@
 
                           <template v-else-if="f.component === 'p-study-plan'">
                             <p-i-study-plan
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-identifier="f.identifier=$event"
                               v-on:input-name="f.name=$event"
                               v-on:input-name-language="setSelected(f, 'nameLanguage', $event)"
@@ -587,7 +596,7 @@
 
                           <template v-else-if="f.component === 'p-event'">
                             <p-i-event
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-name="f.name=$event"
                               v-on:input-name-language="setSelected(f, 'nameLanguage', $event)"
                               v-on:input-description="f.description=$event"
@@ -606,8 +615,7 @@
 
                           <template v-else-if="f.component === 'p-project'">
                             <p-i-project
-                              v-bind.sync="f"
-                              :showHeader="s.title !== 'Project'"
+                              v-bind="f"
                               v-on:input-name="f.name=$event"
                               v-on:input-acronym="f.acronym=$event"
                               v-on:input-name-language="setSelected(f, 'nameLanguage', $event)"
@@ -634,7 +642,7 @@
 
                           <template v-else-if="f.component === 'p-funder'">
                             <p-i-funder
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-name="f.name=$event"
                               v-on:input-name-language="setSelected(f, 'nameLanguage', $event)"
                               v-on:input-identifier="f.identifier=$event"
@@ -648,7 +656,7 @@
 
                           <template v-else-if="f.component === 'p-association'">
                             <p-i-association
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="selectInput(f, $event)"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
@@ -659,7 +667,7 @@
 
                           <template v-else-if="f.component === 'p-association-text'">
                             <p-i-association-text
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="f.value=$event"
                               v-on:input-association-type="setSelected(f, 'type', $event)"
                               v-on:input-language="setSelected(f, 'language', $event)"
@@ -672,7 +680,7 @@
 
                           <template v-else-if="f.component === 'p-filename'">
                             <p-i-filename
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-value="f.value=$event"
                               v-on:add="addField(s.fields, f)"
                               v-on:remove="removeField(s.fields, f)"
@@ -682,18 +690,12 @@
                           </template>
 
                           <template v-else-if="f.component === 'p-filename-readonly'">
-                            <p-i-filename-readonly
-                              v-bind.sync="f"
-                              v-on:add="addField(s.fields, f)"
-                              v-on:remove="removeField(s.fields, f)"
-                              v-on:configure="editFieldProps(f)"
-                              :configurable="enablefieldconfig || f.configurable"
-                            ></p-i-filename-readonly>
+                            <p-i-filename-readonly v-bind="f" v-on:configure="editFieldProps(f)" :configurable="enablefieldconfig || f.configurable"></p-i-filename-readonly>
                           </template>
 
                           <template v-else-if="f.component === 'p-unknown'">
                             <p-i-unknown
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:remove="removeField(s.fields, f)"
                               v-on:configure="editFieldProps(f)"
                               :configurable="enablefieldconfig || f.configurable"
@@ -702,7 +704,7 @@
 
                           <template v-else-if="f.component === 'p-vocab-ext-readonly'">
                             <p-i-vocab-ext-readonly
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:remove="removeField(s.fields, f)"
                               v-on:configure="editFieldProps(f)"
                               :configurable="enablefieldconfig || f.configurable"
@@ -711,7 +713,7 @@
 
                           <template v-else-if="f.component === 'p-spatial-readonly'">
                             <p-i-spatial-readonly
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:remove="removeField(s.fields, f)"
                               v-on:configure="editFieldProps(f)"
                               :configurable="enablefieldconfig || f.configurable"
@@ -720,7 +722,7 @@
 
                           <template v-else-if="f.component === 'p-file'">
                             <p-i-file
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input-file="setFilename(f, $event)"
                               v-on:input-mimetype="setSelected(f, 'mimetype', $event)"
                               v-on:add="addField(s.fields, f)"
@@ -732,7 +734,7 @@
 
                           <template v-if="f.component === 'p-note-checkbox'">
                             <p-i-note-checkbox
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="f.value=$event"
                               v-on:configure="editFieldProps(f)"
                               :configurable="enablefieldconfig || f.configurable"
@@ -741,7 +743,7 @@
 
                           <template v-if="f.component === 'p-note-checkbox-with-link'">
                             <p-i-note-checkbox-with-link
-                              v-bind.sync="f"
+                              v-bind="f"
                               v-on:input="f.value=$event"
                               v-on:configure="editFieldProps(f)"
                               :configurable="enablefieldconfig || f.configurable"
@@ -750,7 +752,7 @@
 
                           <template v-if="f.component === 'p-alert'">
                             <p-i-alert
-                              v-bind.sync="f"
+                              v-bind="f"
                             ></p-i-alert>
                           </template>
 
@@ -763,13 +765,13 @@
                   <v-row no-gutters>
                     <v-col>
                       <v-dialog v-if="addbutton && (s.addbutton != false)" class="pb-4" v-model="s['adddialogue']" scrollable width="700px">
-                        <template v-slot:activator="{ on }">
-                          <v-btn v-on="on" color="primary" large elevation="4" class="my-4">
+                        <template v-slot:activator="{ props: activatorProps }">
+                          <v-btn v-bind="activatorProps" color="primary" large elevation="4" class="my-4">
                             <v-icon class="mr-4" color="white" size="24" right dark>mdi-plus-circle</v-icon>{{ $t('Add metadata field') }}
                           </v-btn>
                         </template>
                         <v-card>
-                          <v-card-title class="title font-weight-light white--text"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn class="grey--text text--darken-2" color="white" target='_blank' :to="'/metadata-fields-help'"><v-icon class="mr-2" aria-hidden="true">mdi-help-circle-outline</v-icon>{{ $t('Metadata fields Help') }}</v-btn></v-card-title>
+                          <v-card-title class="title font-weight-light text-white"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn class="grey--text text--darken-2" color="white" target='_blank' :to="'/metadata-fields-help'"><v-icon class="mr-2" aria-hidden="true">mdi-help-circle-outline</v-icon>{{ $t('Metadata fields Help') }}</v-btn></v-card-title>
                           <v-card-text>
                             <v-list three-line >
                               <v-text-field clearable :label="$t('Search...')" append-icon="mdi-magnify" v-model="searchfieldsinput"></v-text-field>
@@ -824,12 +826,12 @@
 
         <v-row no-gutters class="mt-9 ma-3">
           <v-col cols="12">
-            <v-dialog v-if="(templating || savetemplatebtn) && !hideSaveAsTemplate" v-model="templatedialog" width="500">
-              <template v-slot:activator="{ on }">
-                <v-btn class="mr-3 float-left" v-on="on" large raised :loading="loading" :disabled="loading" color="primary"><span v-t="'Save as new template'"></span></v-btn>
+            <v-dialog v-if="templating || savetemplatebtn" v-model="templatedialog" width="500">
+              <template v-slot:activator="{ props: activatorProps }">
+                <v-btn class="mr-3 float-left" v-bind="activatorProps" large raised :loading="loading" :disabled="loading" color="primary"><span v-t="'Save as new template'"></span></v-btn>
               </template>
               <v-card>
-                <v-card-title class="title font-weight-light white--text"><span v-t="'Save as new template'"></span></v-card-title>
+                <v-card-title class="title font-weight-light text-white"><span v-t="'Save as new template'"></span></v-card-title>
                 <v-card-text>
                   <v-text-field class="mt-4" hide-details filled single-line v-model="templatename" :label="$t('Template name')" ></v-text-field>
                 </v-card-text>
@@ -865,21 +867,21 @@
           </v-col>
         </v-row>
 
-      </v-tab-item>
-      <v-tab-item v-if="debug" class="pa-4">
+      </v-window-item>
+      <v-window-item value="jsonld" v-if="debug" class="pa-4">
         <div style="white-space: pre;">{{ JSON.stringify(metadatapreview, null, 2) }}</div>
-      </v-tab-item>
-      <v-tab-item v-if="templating" class="pa-4">
+      </v-window-item>
+      <v-window-item value="templates" v-if="templating" class="pa-4">
         <p-templates ref="templates" v-on:load-template="loadTemplate($event)"></p-templates>
-      </v-tab-item>
-      <v-tab-item v-if="importing" class="pa-4">
+      </v-window-item>
+      <v-window-item value="import" v-if="importing" class="pa-4">
         <v-row no-gutters>
           <v-col cols="12">
             <object-from-search :title="$t('Import metadata from existing object')" v-on:object-selected="importFromObject($event)" :jsonld-only="true"></object-from-search>
           </v-col>
         </v-row>
-      </v-tab-item>
-      <v-tab-item v-if="enablerights && !targetpid" class="pa-4">
+      </v-window-item>
+      <v-window-item value="rights" v-if="enablerights && !targetpid" class="pa-4">
         <v-row no-gutters>
           <v-col cols="12">
             <p-m-rights 
@@ -894,17 +896,16 @@
              ></p-m-rights>
           </v-col>
         </v-row>
-      </v-tab-item>
-      <v-tab-item v-if="enablerelationships && !targetpid">
+      </v-window-item>
+      <v-window-item value="relationships" v-if="enablerelationships && !targetpid">
         <v-row no-gutters>
           <v-col cols="12">
             <p-m-relationships v-on:remove-relationship="$emit('remove-relationship', $event)" v-on:add-relationship="$emit('add-relationship', $event)" :relationships="relationships" ></p-m-relationships>
           </v-col>
         </v-row>
-      </v-tab-item>
-      <v-tab-item v-if="(submittype !== 'container') && enablepreview" class="pa-4">
+      </v-window-item>
+      <v-window-item value="preview" v-if="(submittype !== 'container') && enablepreview" class="pa-4">
         <p-d-jsonld :jsonld="jsonld"></p-d-jsonld>
-        <v-btn v-if="!hideUploadButton" large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
         <v-btn
           v-if="!hideUploadButton && !disableChecksum && !hideAddFileChecksum && submittype !== 'collection' && submittype !== 'resource'"
           large
@@ -916,62 +917,18 @@
         >
           <span v-t="'Add file checksum'"></span>
         </v-btn>
-      </v-tab-item>
-      <v-tab-item v-if="help" class="pa-4">
+        <v-btn large elevation="2" :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
+      </v-window-item>
+      <v-window-item value="help" v-if="help" class="pa-4">
         <p-help></p-help>
-      </v-tab-item>
-      <v-tab-item v-if="feedback" class="pa-4">
+      </v-window-item>
+      <v-window-item value="feedback" v-if="feedback" class="pa-4">
         <p-feedback :firstname="feedbackUser.firstname" :lastname="feedbackUser.lastname" :email="feedbackUser.email" :context="feedbackContext"></p-feedback>
-      </v-tab-item>
-      <v-tab-item v-if="doiImport" class="pa-4">
-        <p-doi-import :external-form="form" v-on:load-form="loadFormFromDoiImport"></p-doi-import>
-      </v-tab-item>
-    </v-tabs-items>
-    <v-dialog v-if="!hideAddFileChecksum" v-model="checksumDialog" max-width="500px">
-      <v-card>
-        <v-card-title class="title font-weight-light white--text">
-          <span v-t="'Add file checksum'"></span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12">
-                <v-select
-                  v-model="checksumType"
-                  :items="checksumTypes"
-                  :label="$t('Checksum type')"
-                  outlined
-                  hide-details
-                  class="mb-4"
-                ></v-select>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="checksumValue"
-                  :label="$t('Checksum')"
-                  outlined
-                  hide-details
-                ></v-text-field>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn outlined @click="checksumDialog = false">
-            <span v-t="'Cancel'"></span>
-          </v-btn>
-          <v-btn color="primary" @click="checksumDialog = false">
-            <span v-t="'OK'"></span>
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+      </v-window-item>
+    </v-window>
     <v-dialog v-model="showEditFieldPopup" max-width="600px" scrollable>
       <v-card>
-        <v-card-title class="title font-weight-light white--text">
+        <v-card-title class="title font-weight-light text-white">
           {{ $t("Field Settings") }}
         </v-card-title>
         <v-card-text>
@@ -1006,6 +963,7 @@ import { vocabulary } from '../../mixins/vocabulary'
 import { formvalidation } from '../../mixins/formvalidation'
 import { mimeToResourceType as mimeToResourceTypeFromMime } from '../../utils/mimetypes'
 import arrays from '../../utils/arrays'
+import { vuetifyGoTo } from '../../utils/vuetifyGoToCompat'
 import jsonLd from '../../utils/json-ld'
 import fields from '../../utils/fields'
 import PITextField from './PITextField'
@@ -1262,31 +1220,18 @@ export default {
       }
     },
     instanceconfig: function () {
-      return this.$root.$store.state.instanceconfig
-    },
-    previewTabIndex: function () {
-      if (this.submittype === 'container' || !this.enablepreview) {
-        return null
-      }
-      let index = 1
-      if (this.debug) index++
-      if (this.templating) index++
-      if (this.importing) index++
-      if (this.enablerights) index++
-      if (this.enablerelationships) index++
-      
-      return index
+      return this.$store.state.instanceconfig
     }
   },
   data () {
     return {
       skipValidation: false,
-      activetab: null,
+      activetab: 'metadata',
       loadedMetadata: [],
       loading: false,
       fab: false,
       addfieldselection: [],
-      templatedialog: '',
+      templatedialog: false,
       templatename: '',
       previewMember: '',
       searchfieldsinput: '',
@@ -1327,9 +1272,7 @@ export default {
     showForcePreview: function() {
       this.validationError = false
       this.updateJsonld()
-      if (this.previewTabIndex !== null) {
-        this.activetab = this.previewTabIndex
-      }
+      this.activetab = 'preview'
       window.scrollTo(0,0);
     },
     editFieldProps: function(fieldDet) {
@@ -1391,7 +1334,7 @@ export default {
           }
         }
         this.$emit('load-form', form)
-        this.activetab = 0
+        this.activetab = 'metadata'
       } catch (error) {
         console.error(error)
       } finally {
@@ -1528,7 +1471,7 @@ export default {
     loadTemplate: function (template) {
       this.$emit('load-form', template.form)
       this.$emit('load-rights', template.rights)
-      this.activetab = 0
+      this.activetab = 'metadata'
     },
     prepareTemplateForSave: function (form) {
       let clone = JSON.parse(JSON.stringify(form))
@@ -1647,7 +1590,7 @@ export default {
       if (!this.skipValidation && !this.formIsValid()) {
         this.validationError = true
         if(this.forcePreview){
-          this.activetab = 0
+          this.activetab = 'metadata'
         }
         return
       }
@@ -1736,7 +1679,7 @@ export default {
           this.$store.commit('setAlerts', [{ type: 'error', msg: error }])
         }
       } finally {
-        this.$vuetify.goTo(0)
+        vuetifyGoTo(0)
         this.loading = false
         this.uploadProgress = 0
       }
@@ -1772,7 +1715,7 @@ export default {
         console.log(error)
         this.$store.commit('setAlerts', [{ type: 'error', msg: error }])
       } finally {
-        this.$vuetify.goTo(0)
+        vuetifyGoTo(0)
         this.loading = false
       }
     },
@@ -2216,13 +2159,12 @@ export default {
       return mimeToResourceTypeFromMime(mime)
     },
     setSelected: function (f, property, event) {
-      var value = event === null || event === undefined ? '' : (typeof event === 'string') ? event : event['@id']
-      this.$set(f, property, value)
+      f[property] = event && event['@id'] != null ? event['@id'] : ''
       this.$emit('form-input-' + f.component, f)
       // eg on
       // v-on:input-identifier-type="setSelected(f, 'identifierType', $event)"
       // the type property of the component should be updated, but
-      // v-bind.sync="f"
+      // v-bind="f"
       // does not work, probably because the update is too deep (form -> field -> property)
       this.$forceUpdate()
     },
@@ -2438,20 +2380,20 @@ export default {
       }
     },
     setFilename: function (f, event) {
+      if (!event || !(event instanceof File)) {
+        f.value = ''
+        f.file = null
+        this.$emit('form-input-' + f.component, f)
+        return
+      }
       f.value = event.name
       f.file = event
-      console.log('browser mimetype:')
-      console.log(event.type)
       if (event.type === '') {
-        // if browser does not provide mimetype
-        // try to match the extension with our vocabulary
-        let ext = event.name.split('.').pop()
-        console.log('no mimetype, using extension (' + ext + ') to search vocabulary')
+        const ext = event.name.split('.').pop()
         let mimetypeFound = false
-        for (let mt of this.vocabularies['mimetypes'].terms) {
-          for (let notation of mt['skos:notation']) {
+        for (const mt of this.vocabularies['mimetypes'].terms) {
+          for (const notation of mt['skos:notation']) {
             if (ext === notation) {
-              console.log('found mimetype: ' + mt['@id'])
               this.setSelected(f, 'mimetype', { '@id': mt['@id'] })
               mimetypeFound = true
               break
@@ -2459,9 +2401,7 @@ export default {
           }
           if (mimetypeFound) break
         }
-        if (!mimetypeFound) {
-          this.setSelected(f, 'mimetype', { '@id': 'application/octet-stream' })
-        }
+        if (!mimetypeFound) this.setSelected(f, 'mimetype', { '@id': 'application/octet-stream' })
       } else {
         this.setSelected(f, 'mimetype', { '@id': event.type })
       }

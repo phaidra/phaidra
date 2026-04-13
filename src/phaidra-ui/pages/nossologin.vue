@@ -2,14 +2,14 @@
   <v-container>
     <v-row v-show="showtou" justify="center">
       <v-col>
-        <v-card>
-          <v-card-title class="title font-weight-light white--text">{{ $t('Terms of use') }}</v-card-title>
+        <v-card tile>
+          <v-card-title class="title font-weight-light text-white">{{ $t('Terms of use') }}</v-card-title>
           <v-card-text style="max-height: 500px; white-space: pre-wrap;" class="overflow-y-auto">{{ tou }}</v-card-text>
           <v-divider class="mt-5"></v-divider>
           <v-card-actions>
             <v-checkbox v-model="touCheckbox" @click="agree" :disabled="loading" :loading="loading" color="primary" :label="$t('I agree to the terms of use.')"></v-checkbox>
             <v-spacer></v-spacer>
-            <v-btn @click="login" :disabled="loading || !touAgreed" :loading="loading" color="primary" raised>{{ $t('Continue') }}</v-btn>
+            <v-btn @click="login" :disabled="loading || !touAgreed" :loading="loading" color="primary" variant="elevated">{{ $t('Continue') }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -25,7 +25,7 @@
                   :label="$t('Username')"
                   v-model="credentials.username"
                   required
-                  filled
+                  variant="filled"
                   :placeholder="' '"
                   :autocomplete="'username'"
                   @keydown.enter.prevent="login"
@@ -35,10 +35,10 @@
                   :label="$t('Password')"
                   v-model="credentials.password"
                   required
-                  filled
+                  variant="filled"
                   :placeholder="' '"
-                  :append-icon="passVisibility ? 'mdi-eye' : 'mdi-eye-off'"
-                  @click:append="toggleVisibility"
+                  :append-inner-icon="passVisibility ? 'mdi-eye' : 'mdi-eye-off'"
+                  @click:append-inner="toggleVisibility"
                   :type="passVisibility ? 'password' : 'text'"
                   :autocomplete="'current-password'"
                   @keydown.enter.prevent="login"
@@ -48,7 +48,7 @@
             <v-divider class="mt-5"></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn @click="login" :disabled="loading" :loading="loading" color="primary" raised>{{ $t('Login') }}</v-btn>
+              <v-btn @click="login" :disabled="loading" :loading="loading" color="primary" variant="elevated">{{ $t('Login') }}</v-btn>
             </v-card-actions>
           </v-card>
         </v-form>

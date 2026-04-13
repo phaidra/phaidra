@@ -7,11 +7,12 @@
       <v-row class="my-6" justify="start">
         <div class="d-flex flex-row ml-3">
           <v-btn
-            large
-            class="primary"
+            size="large"
+            color="primary"
+            variant="elevated"
             @click="$router.push(localePath('/submit/upload'))"
           >
-            <v-icon dark class="mr-2">mdi-plus-circle</v-icon> {{ $t("Create new object") }}
+            <v-icon class="mr-2">mdi-plus-circle</v-icon> {{ $t("Create new object") }}
           </v-btn>
           </div>
         <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
@@ -28,12 +29,12 @@
       <v-row class="my-6" justify="start">
         <div class="d-flex flex-row ml-3">
           <v-btn
-            large
-            color="#94c154"
-            class="primary"
+            size="large"
+            color="primary"
+            variant="elevated"
             @click="$router.push(localePath('/submit/oer'))"
           >
-            <v-icon dark class="mr-2">mdi-plus-circle</v-icon> {{ $t("Open Educational Resources (OER) upload") }}
+            <v-icon class="mr-2">mdi-plus-circle</v-icon> {{ $t("Open Educational Resources (OER) upload") }}
           </v-btn>
           </div>
         <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
@@ -51,11 +52,12 @@
         <v-row class="my-6" justify="start">
           <div class="d-flex flex-row ml-3">
             <v-btn
-              large
-              class="primary"
-              :href="'https://' + instanceconfig.irbaseurl + '/login'"
+              size="large"
+              color="primary"
+              variant="elevated"
+              :href="'https://uscholar.univie.ac.at/login'"
             >
-              <v-icon dark class="mr-2">mdi-school</v-icon> {{ $t("Upload publication (via u:scholar)") }}
+              <v-icon class="mr-2">mdi-school</v-icon> {{ $t("Upload publication (via u:scholar)") }}
             </v-btn>
           </div>
             <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
@@ -73,11 +75,12 @@
         <v-row class="my-6" justify="start">
           <div class="d-flex flex-row ml-3">
             <v-btn
-              large
-              class="primary"
+              size="large"
+              color="primary"
+              variant="elevated"
               @click="$router.push(localePath('/submit/catalogfetchupload'))"
             >
-              <v-icon dark class="mr-2">mdi-plus-circle</v-icon> {{ $t("Catalog-fetch upload") }}
+              <v-icon class="mr-2">mdi-plus-circle</v-icon> {{ $t("Catalog-fetch upload") }}
             </v-btn>
             </div>
           <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
@@ -105,7 +108,7 @@
             <v-btn
               large
               dark
-              color="grey white--text mr-8"
+              color="grey text-white mr-8"
               :to="localePath({ path: '/submit/uwm/asset'})"
             >
               {{ $t("File") }}
@@ -113,7 +116,7 @@
             <v-btn
               large
               dark
-              color="grey white--text mr-8"
+              color="grey text-white mr-8"
               :to="localePath({ path: '/submit/uwm/collection'})"
             >
               {{ $t("Collection") }}
@@ -125,15 +128,15 @@
       <v-row class="my-6" justify="start">
         <div class="d-flex flex-row ml-3">
           <v-dialog class="pb-4" v-model="templateDialog" width="900px">
-            <template v-slot:activator="{ on }">
-              <v-btn v-on="on" large color="primary">
-                <v-icon dark class="mr-2">mdi-script</v-icon>
+            <template v-slot:activator="{ props: activatorProps }">
+              <v-btn v-bind="activatorProps" size="large" color="primary" variant="elevated">
+                <v-icon class="mr-2">mdi-script</v-icon>
                 {{ $t("Open template") }}
               </v-btn>
             </template>
             <v-card>
               <v-card-title                
-                class="title font-weight-light white--text"
+                class="title font-weight-light text-white"
                 >{{ $t("Open template") }}</v-card-title
               >
               <v-card-text>
@@ -147,7 +150,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer
-                ><v-btn outlined @click="templateDialog = false">{{ $t("Cancel") }}</v-btn>
+                ><v-btn variant="outlined" @click="templateDialog = false">{{ $t("Cancel") }}</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -176,7 +179,7 @@
             <v-btn
               large
               dark
-              color="grey white--text mr-8"
+              color="grey text-white mr-8"
               @click="$router.push(localePath({ path: '/submit/uwm/asset' }))"
             >
               {{ $t("File") }}
@@ -184,7 +187,7 @@
             <v-btn
               large
               dark
-              color="grey white--text mr-8"
+              color="grey text-white mr-8"
               @click="
                 $router.push(localePath({ path: '/submit/uwm/collection' }))
               "

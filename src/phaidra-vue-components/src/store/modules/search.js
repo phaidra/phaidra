@@ -1,5 +1,3 @@
-import Vue from 'vue'
-
 export const state = () => ({
   facetQueries: [
     {
@@ -215,7 +213,7 @@ const mutations = {
   setFacetQueries (state, facetQueries) {
     // console.log('setting facet queries')
     // console.log(facetQueries)
-    Vue.set(state, 'facetQueries', facetQueries)
+    state.facetQueries = facetQueries
   }
 }
 

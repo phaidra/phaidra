@@ -3,11 +3,13 @@
     <v-row>
       <v-col cols="12">
         <v-btn-toggle
-          background-color='white-text'
-          active-class='primary white--text'
           v-model="toggleResourcetypeModel"
-          mandatory
-          @change="$emit('input', getTerm('resourcetype', resourceTypes[$event]))"
+          class="pi-resource-type-toggle"
+          color="primary"
+          variant="flat"
+          divided
+          mandatory="force"
+          @update:model-value="onResourceTypeChange"
         >
           <v-btn v-show="resourceTypes.includes('https://pid.phaidra.org/vocabulary/44TN-P1S0')"><v-icon :color="value === 'https://pid.phaidra.org/vocabulary/44TN-P1S0' ? 'white' : 'grey'">mdi-image</v-icon><span class="ml-2">{{ $t('Picture') }}</span></v-btn>
           <v-btn v-show="resourceTypes.includes('https://pid.phaidra.org/vocabulary/8YB5-1M0J')"><v-icon :color="value === 'https://pid.phaidra.org/vocabulary/8YB5-1M0J' ? 'white' : 'grey'">mdi-volume-high</v-icon><span class="ml-2">{{ $t('Audio') }}</span></v-btn>
@@ -24,7 +26,7 @@
       <span v-else-if="formats.supported && formats.supported.length > 0">{{ $t('Other supported formats') }}: <span v-for="(f, i) in formats.supported" :key="'fs' + i"><a v-if="f.url" :href="f.url" target="_blank">{{f.label}}</a><span v-else>{{f.label}}</span><span v-if="i < (formats.supported.length - 1)">, </span></span></span>
       <template v-else-if="formats.info">
       <v-col cols="10" class="pa-0">
-        <v-alert dense outlined type="info" color="secondary" icon="mdi-information-outline">{{ $t(formats.info) }}</v-alert>
+        <v-alert density="compact" variant="outlined" type="info" color="secondary" icon="mdi-information-outline">{{ $t(formats.info) }}</v-alert>
     </v-col>
       </template>
     </v-row>
@@ -99,6 +101,30 @@ export default {
         }
       }
     })
+  },
+  methods: {
+    onResourceTypeChange (index) {
+      this.$emit('input', this.getTerm('resourcetype', this.resourceTypes[index]))
+    }
   }
 }
 </script>
+
+<style scoped>
+/* Flat toggle: inactive segments stay light grey like legacy; active uses theme primary (orange when configured). */
+.pi-resource-type-toggle {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pi-resource-type-toggle :deep(.v-btn:not(.v-btn--active)) {
+  border-radius: 0;
+  background-color: #eeeeee !important;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.pi-resource-type-toggle :deep(.v-btn--active) {
+  color: rgb(var(--v-theme-on-primary)) !important;
+}
+</style>

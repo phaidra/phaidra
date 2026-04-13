@@ -3,49 +3,45 @@
     <v-row class="mt-8">
       <v-col cols="3">
         <p-i-file
-          v-bind.sync="filefield"
+          v-bind="filefield"
           v-on:input-file="setFilename(filefield, $event)"
         ></p-i-file>
       </v-col>
       <v-col cols="3">
         <v-autocomplete
-          :value = "getTerm('alllicenses', 'http://rightsstatements.org/vocab/InC/1.0/')"
-          v-on:input="setLicense($event)"
-          :items="this.vocabularies['alllicenses'].terms"
-          :item-value="'@id'"
+          :model-value="getTerm('alllicenses', 'http://rightsstatements.org/vocab/InC/1.0/')"
+          @update:model-value="setLicense($event)"
+          :items="vocabularies['alllicenses'].terms"
+          item-value="@id"
           :filter="autocompleteFilter"
           hide-no-data
-          :filled="true"
-          :height="7"
+          variant="filled"
           :label="$t('License')"
           return-object
           clearable
           :disabled="licenseDisabled"
         >
-          <!-- the attr binds the 'disabled' property of the vocabulary term (if defined) to the item component -->
-          <template slot="item" slot-scope="{ attr, item }">
-            <v-list-item-content two-line>
-              <v-list-item-title v-html="`${getLocalizedTermLabel('alllicenses', item['@id'])}`"></v-list-item-title>
-              <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-            </v-list-item-content>
+          <template #item="{ props, item }">
+            <v-list-item v-bind="props" lines="two">
+              <v-list-item-title v-html="`${getLocalizedTermLabel('alllicenses', item.raw['@id'])}`"></v-list-item-title>
+              <v-list-item-subtitle v-if="showIds" v-html="`${item.raw['@id']}`"></v-list-item-subtitle>
+            </v-list-item>
           </template>
-          <template slot="selection" slot-scope="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-html="`${getLocalizedTermLabel('alllicenses', item['@id'])}`"></v-list-item-title>
-            </v-list-item-content>
+          <template #selection="{ item }">
+            <span v-html="`${getLocalizedTermLabel('alllicenses', item.raw['@id'])}`"></span>
           </template>
       </v-autocomplete>
       </v-col>
       <v-col cols="3">
         <v-text-field
           v-model="acnumber"
-          :filled="true"
+          variant="filled"
           :label="$t('AC number')"
         ></v-text-field>
       </v-col>
       <v-col cols="3">
-        <v-btn dark color="green" @click="fetchMetadata()">{{  $t('Fetch metadata') }}</v-btn>
-        <v-btn class="primary mr-4" @click="upload()" :disabled="!uploadEnabled">{{  'Upload ' + (createmethod === 'unknown' ? 'data' : createmethod) }}</v-btn>
+        <v-btn color="success" variant="elevated" @click="fetchMetadata()">{{  $t('Fetch metadata') }}</v-btn>
+        <v-btn class="mr-4" color="primary" variant="elevated" @click="upload()" :disabled="!uploadEnabled">{{  'Upload ' + (createmethod === 'unknown' ? 'data' : createmethod) }}</v-btn>
       </v-col>
     </v-row>
      <!--<v-row>{{ mods }}</v-row>
@@ -53,7 +49,7 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light white--text">{{ $t('Metadata preview') }}</v-card-title>
+          <v-card-title class="title font-weight-light text-white">{{ $t('Metadata preview') }}</v-card-title>
           <v-card-text>
             <v-container class="mt-6">
               <p-d-mods-rec
@@ -73,7 +69,7 @@
         <v-row no-gutters>
           <v-progress-linear :indeterminate="uploadProgress === 100" v-model="uploadProgress" color="primary"></v-progress-linear>
         </v-row>
-        <v-row no-gutters class="primary--text mt-1">
+        <v-row no-gutters class="text-primary mt-1">
           <span v-if="uploadProgress < 100">{{ $t('Uploading...') + ' ' + Math.ceil(uploadProgress) }}%</span>
           <span v-else>{{ $t('Processing...') }}</span>
         </v-row>

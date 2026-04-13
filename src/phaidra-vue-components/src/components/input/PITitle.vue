@@ -4,22 +4,20 @@
   <v-row v-if="!hidden">
     <v-col cols="12" :md="hideSubtitle ? ( (multilingual || actions.length) ? 8 : 12 ) : ( (multilingual || actions.length) ? 4 : 8 )">
       <v-text-field
-        :value="title"
+        :model-value="title"
         :label="$t( titleLabel ? titleLabel : type )"
-        v-on:blur="$emit('input-title',$event.target.value)"
-        :background-color="titleBackgroundColor ? titleBackgroundColor : undefined"
+        @update:model-value="$emit('input-title', $event)"
+        :bg-color="titleBackgroundColor ? titleBackgroundColor : undefined"
         :error-messages="titleErrorMessages"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
     <v-col cols="12" md="4" v-if="!hideSubtitle">
       <v-text-field
-        :value="subtitle"
+        :model-value="subtitle"
         :label="$t( subtitleLabel ? subtitleLabel : 'Subtitle' )"
-        v-on:blur="$emit('input-subtitle',$event.target.value)"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        @update:model-value="$emit('input-subtitle', $event)"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
  
@@ -27,7 +25,7 @@
      
       <v-row>
         <v-col v-if="multilingual" cols="6">
-          <v-btn text @click="$refs.langdialog.open()">
+          <v-btn text @click="$refs.langdialog.open()" variant="text">
             <span>
               ({{ language ? language : '--' }})
             </span>
@@ -67,7 +65,7 @@ export default {
   },
   computed: {
     instanceconfig: function () {
-      return this.$root.$store.state.instanceconfig
+      return this.$store.state.instanceconfig
     }
   },
   props: {

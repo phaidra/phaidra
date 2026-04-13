@@ -78,10 +78,9 @@ export default {
 
   methods: {
     handleInput(value, subField = null) {
-      this.$emit('input', {
-        value,
-        subField
-      })
+      const payload = { value, subField }
+      this.$emit('update:modelValue', payload)
+      this.$emit('input', payload)
     }
   }
 }

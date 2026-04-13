@@ -7,8 +7,8 @@
         </v-col>
         <v-col :md="valueColMd" cols="12">
             <v-row no-gutters class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('dce:title') }">{{ mt['@value'] }}</v-row>
-            <template v-for="(st, i) in o['bf:subtitle']">
-              <v-row no-gutters class="valuefield" :key="'stv'+i">{{ st['@value'] }}</v-row>
+            <template v-for="(st, si) in o['bf:subtitle']" :key="'stv' + i + '-' + si">
+              <v-row no-gutters class="valuefield">{{ st['@value'] }}</v-row>
             </template>
         </v-col>
       </v-row>

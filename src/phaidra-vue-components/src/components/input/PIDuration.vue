@@ -7,8 +7,7 @@
         type="number"
         :label="$t('Duration')"
         :suffix="$t('hours')"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
     <v-col cols="3" v-if="!hideMinutes">
@@ -18,8 +17,7 @@
         type="number"
         :label="$t('Duration')"
         :suffix="$t('minutes')"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
     <v-col cols="3" v-if="!hideSeconds">
@@ -29,14 +27,13 @@
         type="number"
         :label="$t('Duration')"
         :suffix="$t('seconds')"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
     <v-col cols="1" v-if="actions.length">
-      <v-menu bottom offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn v-on="on" v-bind="attrs" icon>
+      <v-menu open-on-hover bottom offset-y>
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-btn v-bind="activatorProps" icon variant="text">
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>

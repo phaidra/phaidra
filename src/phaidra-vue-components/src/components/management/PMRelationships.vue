@@ -1,6 +1,6 @@
 <template>
   <v-card :flat="!title">
-    <v-card-title v-if="title" class="title font-weight-light white--text">{{ title }}</v-card-title>
+    <v-card-title v-if="title" class="title font-weight-light text-white">{{ title }}</v-card-title>
     <v-divider v-if="title"></v-divider>
     <v-card-text>
         <v-row>
@@ -33,8 +33,8 @@
               </template>
               <template v-slot:item.actions="{ item }">
                 <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn :disabled="loading" icon class="mx-3" color="btnred" @click="removeRelationship(item)" v-on="on" v-bind="attrs" :aria-label="$t('Remove')">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-btn :disabled="loading" icon class="mx-3" color="btnred" @click="removeRelationship(item)" v-bind="activatorProps" :aria-label="$t('Remove')">
                       <v-icon>mdi-delete</v-icon>
                     </v-btn>
                   </template>
@@ -47,7 +47,7 @@
         <v-row>
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light white--text">{{ $t('Add new relationship of object') + ' ' + pid }}</v-card-title>
+              <v-card-title class="title font-weight-light text-white">{{ $t('Add new relationship of object') + ' ' + pid }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
                 <v-container fluid>
@@ -65,10 +65,12 @@
                         v-model="objectSearchModel"
                         :items="objectSearchItems.length > 0 ? objectSearchItems : []"
                         :loading="objectSearchLoading"
-                        :search-input.sync="objectSearch"
+                        v-model:search="objectSearch"
                         :label="$t('Object search')"
                         :placeholder="$t('Start typing to search')"
-                        :filter="customFilter"
+                        :custom-filter="customFilter"
+                        item-title="text"
+                        item-value="value"
                         prepend-inner-icon="mdi-magnify"
                         hide-no-data
                         hide-selected
@@ -76,18 +78,14 @@
                         clearable
                         @click:clear="userSearchItems=[]"
                       >
-                        <template slot="selection" slot-scope="{ item }">
-                          <v-list-item-content>
-                            <v-list-item-title><span class="primary--text">{{ item.value }}:</span> {{ item.text }}</v-list-item-title>
-                          </v-list-item-content>
+                        <template #selection="{ item }">
+                          <span><span class="text-primary">{{ (item.raw || item).value }}:</span> {{ (item.raw || item).text }}</span>
                         </template>
-                        <template slot="item" slot-scope="{ item }">
-                          <template v-if="item">
-                            <v-list-item-content two-line>
-                              <v-list-item-title>{{ item.text }}</v-list-item-title>
-                              <v-list-item-subtitle>{{ item.value }}</v-list-item-subtitle>
-                            </v-list-item-content>
-                          </template>
+                        <template #item="{ props, item }">
+                          <v-list-item v-if="item.raw || item" v-bind="props" lines="two">
+                            <template #title>{{ (item.raw || item).text }}</template>
+                            <template #subtitle>{{ (item.raw || item).value }}</template>
+                          </v-list-item>
                         </template>
                       </v-autocomplete>
                     </v-col>
@@ -235,13 +233,13 @@ export default {
     }
   },
   methods: {
-    customFilter (item, queryText) {
-      const text = item.text.toLowerCase()
-      const value = item.value.toLowerCase()
-      const searchText = queryText.toLowerCase()
-      console.log(searchText + ' found in [' + text + ']:' + (text.indexOf(searchText) > -1) + ' or [' + value + ']:' + (value.indexOf(searchText) > -1))
-      return text.indexOf(searchText) > -1 ||
-        value.indexOf(searchText) > -1
+    customFilter (_value, query, item) {
+      const raw = item?.raw ?? item
+      if (!raw || raw.text == null || raw.value == null) return -1
+      const text = String(raw.text).toLowerCase()
+      const value = String(raw.value).toLowerCase()
+      const searchText = String(query ?? '').toLowerCase()
+      return text.indexOf(searchText) > -1 || value.indexOf(searchText) > -1 ? 0 : -1
     },
     getTitlesHash: async function (pids) {
       let titles = {}

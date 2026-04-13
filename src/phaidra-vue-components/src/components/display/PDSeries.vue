@@ -5,10 +5,10 @@
       <v-card tile elevation="0" color="transparent">
         <v-card-text class="jsonld-border-left">
             <v-row>
-              <template v-for="(title, j) in o['dce:title']">
-                <template v-for="(mt, i) in title['bf:mainTitle']">
-                  <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold" :key="'mt'+j+i">{{ $t(title['@type']) }}<template v-if="showLang && mt['@language']"> ({{ mt['@language'] }})</template></v-col>
-                  <v-col :md="valueColMd" cols="12" :key="'mtv'+j+i" class="valuefield">{{ mt['@value'] }}</v-col>
+              <template v-for="(title, j) in o['dce:title']" :key="'title' + j">
+                <template v-for="(mt, i) in title['bf:mainTitle']" :key="'mt' + j + '-' + i">
+                  <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold">{{ $t(title['@type']) }}<template v-if="showLang && mt['@language']"> ({{ mt['@language'] }})</template></v-col>
+                  <v-col :md="valueColMd" cols="12" class="valuefield">{{ mt['@value'] }}</v-col>
                 </template>
               </template>
             </v-row>

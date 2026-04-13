@@ -2,11 +2,10 @@
   <v-row v-if="!hidden">
     <v-col :cols="multilingual ? (actions.length ? 8 : 10) : (actions.length ? 10 : 12)">
       <v-text-field
-        :value="value"
-        v-on:blur="$emit('input-value',$event.target.value)"
+        :model-value="value"
+        @update:model-value="$emit('input-value', $event)"
         :label="$t(label)"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
     <v-col cols="12" md="2" v-if="multilingual || actions.length">

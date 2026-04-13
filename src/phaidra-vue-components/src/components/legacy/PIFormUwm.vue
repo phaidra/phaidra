@@ -1,7 +1,7 @@
 <template>
   <div v-if="form && (form.length > 0)">
     <v-card :outlined="!title">
-      <v-card-title v-if="title" class="title font-weight-light white--text">{{ $t(title) }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-card-title>
+      <v-card-title v-if="title" class="title font-weight-light text-white">{{ $t(title) }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-card-title>
       <v-alert dismissible :type="'error'" :value="!valid" transition="fade-transition">
         <span>{{ $t('Metadata validation failed') }}</span>
         <ul v-if="validationErrors.length > 0">
@@ -10,13 +10,13 @@
       </v-alert>
       <v-divider></v-divider>
       <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-2" vertical v-model="activetab">
-        <template v-for="(s, i) in this.form">
-          <v-tab class="white--text" :active-class="'primary'" v-if="(s.xmlname !== 'annotation') && (s.xmlname !== 'etheses')" :key="'tab'+i">
+        <template v-for="(s, i) in this.form" :key="'tab-wrap'+i">
+          <v-tab class="text-white" :active-class="'primary'" v-if="(s.xmlname !== 'annotation') && (s.xmlname !== 'etheses')">
             <span v-t="s.labels[alpha2locale]"></span>
           </v-tab>
         </template>
-        <template v-for="(s, i) in this.form">
-          <v-tab-item class="pa-3" v-if="(s.xmlname !== 'annotation') && (s.xmlname !== 'etheses')" :key="'tabitem'+i">
+        <template v-for="(s, i) in this.form" :key="'tabitem-wrap'+i">
+          <v-tab-item class="pa-3" v-if="(s.xmlname !== 'annotation') && (s.xmlname !== 'etheses')">
             <template v-if="s.children">
               <p-i-uwm-rec :disabled="disabled" :children="s.children" :parent="s" @add-field="addField($event)" @remove-field="removeField($event)"></p-i-uwm-rec>
             </template>
@@ -35,6 +35,7 @@
 <script>
 import arrays from '../../utils/arrays'
 import { isNonBlankString } from '../../utils/stringValidation'
+import { vuetifyGoTo } from '../../utils/vuetifyGoToCompat'
 import PIUwmRec from './PIUwmRec'
 
 export default {
@@ -81,7 +82,7 @@ export default {
       loading: false,
       fab: false,
       addfieldselection: [],
-      templatedialog: '',
+      templatedialog: false,
       templatename: '',
       previewMember: '',
       searchfieldsinput: '',
@@ -276,7 +277,7 @@ export default {
         console.log(error)
         this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
       } finally {
-        this.$vuetify.goTo(0)
+        vuetifyGoTo(0)
         this.loading = false
       }
     }

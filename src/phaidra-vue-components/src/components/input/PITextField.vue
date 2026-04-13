@@ -2,30 +2,28 @@
   <v-row v-if="!hidden">
     <v-col cols="12" :md="multilingual ? (actions.length ? 8 : 10) : (actions.length ? 10 : 12)">
       <v-text-field v-if="!multiline"
-        :value="value"
-        v-on:blur="$emit('input',$event.target.value)"
+        :model-value="value"
+        @update:model-value="$emit('input', $event)"
         :label="$t(label)"
         :required="required"
         :rules="required ? [ v => !!v || $t('Required')] : []"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
         :error-messages="errorMessages"
       ></v-text-field>
       <v-textarea v-if="multiline"
-        :value="value"
-        v-on:blur="$emit('input',$event.target.value)"
+        :model-value="value"
+        @update:model-value="$emit('input', $event)"
         :label="$t(label)"
         :required="required"
         :rules="required ? [ v => !!v || $t('Required')] : []"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
         :error-messages="errorMessages"
       ></v-textarea>
     </v-col>
     <v-col cols="12" md="2" v-if="multilingual || actions.length">
       <v-row>
         <v-col v-if="multilingual" cols="6">
-          <v-btn text @click="$refs.langdialog.open()">
+          <v-btn text @click="$refs.langdialog.open()" variant="text">
             <span>
               ({{ language ? language : '--' }})
             </span>
@@ -62,6 +60,7 @@ export default {
   components: {
     SelectLanguage
   },
+  emits: ['input', 'input-language', 'add', 'remove', 'configure', 'add-clear', 'up', 'down'],
   props: {
     value: {
       type: String,

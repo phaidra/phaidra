@@ -5,42 +5,42 @@ export default {
         return {
             typeHeaders: [
                 {
-                    text: "Object types",
+                    title: "Object types",
                     align: "start",
                     sortable: false,
-                    value: "objectType",
+                    key: "objectType",
                 },
             ],
             newTypeHeaders: [
                 {
-                    text: "New object types",
+                    title: "New object types",
                     align: "start",
                     sortable: false,
-                    value: "objectType",
+                    key: "objectType",
                 },
             ],
             cmodelHeaders: [
                 {
-                    text: "Content models",
+                    title: "Content models",
                     align: "start",
                     sortable: false,
-                    value: "cmodel",
+                    key: "cmodel",
                 },
             ],
             cmodelStorageHeaders: [
                 {
-                    text: "Storage approx. (GB)",
+                    title: "Storage approx. (GB)",
                     align: "start",
                     sortable: false,
-                    value: "cmodel",
+                    key: "cmodel",
                 }
             ],
             ownerHeaders: [
                 {
-                    text: "Owner",
+                    title: "Owner",
                     align: "start",
                     sortable: false,
-                    value: "owner",
+                    key: "owner",
                 },
             ],
             typeItems: [],
@@ -71,19 +71,19 @@ export default {
             }
             let toYear = new Date().getFullYear();
             for (let i = fromYear; i <= toYear; i++) {
-                this.typeHeaders.push({ text: i.toString(), value: i.toString() });
-                this.newTypeHeaders.push({ text: i.toString(), value: i.toString() });
-                this.cmodelHeaders.push({ text: i.toString(), value: i.toString() });
+                this.typeHeaders.push({ title: i.toString(), key: i.toString() });
+                this.newTypeHeaders.push({ title: i.toString(), key: i.toString() });
+                this.cmodelHeaders.push({ title: i.toString(), key: i.toString() });
                 this.cmodelStorageHeaders.push({
-                    text: i.toString(),
-                    value: i.toString(),
+                    title: i.toString(),
+                    key: i.toString(),
                 });
-                this.ownerHeaders.push({ text: i.toString(), value: i.toString() });
+                this.ownerHeaders.push({ title: i.toString(), key: i.toString() });
             }
-            this.typeHeaders.push({ text: "Total", value: "total" });
-            this.newTypeHeaders.push({ text: "Total", value: "total" });
-            this.cmodelHeaders.push({ text: "Total", value: "total" });
-            this.cmodelStorageHeaders.push({ text: "Total", value: "total" });
+            this.typeHeaders.push({ title: "Total", key: "total" });
+            this.newTypeHeaders.push({ title: "Total", key: "total" });
+            this.cmodelHeaders.push({ title: "Total", key: "total" });
+            this.cmodelStorageHeaders.push({ title: "Total", key: "total" });
             for (let term of this.$store.state.vocabulary.vocabularies["objecttypeuwm"].terms) {
                 let params = {
                     q: "*:*",
