@@ -216,7 +216,7 @@ services:
 
   httpd-ssl-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:46af2787
+    image: phaidraorg/httpd-ssl-dist:4104d346
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -233,7 +233,7 @@ services:
 
   httpd-ssl-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-ssl-dist:46af2787
+    image: phaidraorg/httpd-ssl-dist:4104d346
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -249,7 +249,7 @@ services:
 
   httpd-shib-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:46af2787
+    image: phaidraorg/httpd-shib-dist:4104d346
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -268,7 +268,7 @@ services:
 
   httpd-shib-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:46af2787
+    image: phaidraorg/httpd-shib-dist:4104d346
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
