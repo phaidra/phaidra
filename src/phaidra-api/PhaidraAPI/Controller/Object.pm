@@ -298,17 +298,17 @@ sub thumbnail {
       my $index_model = PhaidraAPI::Model::Index->new;
       my $docres      = $index_model->get_doc($self, $pid);
       if ($docres->{status} ne 200) {
-        $self->app->log->error("pid [$pid] error searching for firstpage: " . $self->app->dumper($docres));
+        $self->app->log->error("pid [$pid] error searching for firstpagepid: " . $self->app->dumper($docres));
         $self->setNoCacheHeaders();
         $self->reply->static('images/error.png');
         return;
       }
-      my $firstpage;
-      if (exists($docres->{doc}->{firstpage})) {
-        $firstpage = $docres->{doc}->{firstpage};
+      my $firstpagepid;
+      if (exists($docres->{doc}->{firstpagepid})) {
+        $firstpagepid = $docres->{doc}->{firstpagepid};
       }
-      if ($firstpage) {
-        return $self->_proxy_thumbnail($firstpage, $cmodelr->{cmodel}, $size);
+      if ($firstpagepid) {
+        return $self->_proxy_thumbnail($firstpagepid, $cmodelr->{cmodel}, $size);
       }
       else {
         if (defined $self->stash('defaulticonpath')) {

@@ -1260,11 +1260,45 @@ sub _get {
   }
   push @{$index{datastreams}}, keys %datastreamids;
 
-  if (exists($datastreams{'BOOKINFO'})) {
-    my $col = $datastreams{'BOOKINFO'}->find('book\:page[abspagenum="1"]');
-    if ($col) {
-      my $first = $col->first;
-      $index{firstpagepid} = $datastreams{'BOOKINFO'}->find('book\:page[abspagenum="1"]')->first->attr('pid') if $first;
+  if (exists($datastreamids{'IIIF-MANIFEST'})) {
+    my $startCanvasId;
+    my $startPagePid;
+    my $getdsres = $fedora_model->getDatastream($c, $pid, 'IIIF-MANIFEST');
+    if ($getdsres->{status} != 200) {
+      return $getdsres;
+    }
+    my $manifest = decode_json($getdsres->{'IIIF-MANIFEST'});
+    if ($manifest->{start}) {
+      if ($manifest->{start}->{id}) {
+        $startCanvasId = $manifest->{start}->{id};
+      }
+    }
+    if ($startCanvasId) {
+      if (my $manifest_items = $manifest->{items}) {
+        if (ref $manifest_items eq 'ARRAY' && @$manifest_items) {
+          for my $item (@{$manifest_items}) {
+            if ($item->{id} eq $startCanvasId) {
+              my $startCanvas = $item;
+              if (my $canvas_items = $startCanvas->{items}) {
+                if (ref $canvas_items eq 'ARRAY' && @$canvas_items) {
+                  my $annotation_page = $canvas_items->[0];
+                  if (ref $annotation_page eq 'HASH' && $annotation_page->{items} && ref $annotation_page->{items} eq 'ARRAY' && @{$annotation_page->{items}}) {
+                    my $annotation = $annotation_page->{items}->[0];
+                    if (ref $annotation eq 'HASH' && $annotation->{body} && ref $annotation->{body} eq 'HASH' && $annotation->{body}->{id}) {
+                      if ($annotation->{body}->{id} =~ m{[?&]IIIF=([^/]+)\.tif}) {
+                        $startPagePid = $1;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    if ($startPagePid) {
+      $index{firstpagepid} = $startPagePid;
     }
   }
 
