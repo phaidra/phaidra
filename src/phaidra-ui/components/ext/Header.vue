@@ -177,7 +177,7 @@
 
                   <v-menu offset-y>
                     <template v-slot:activator="{ props }">
-                      <v-btn class="px-12" icon tile v-bind="props" aria-controls="locale-menu">                        
+                      <v-btn class="px-12 header-btn-icon" icon tile v-bind="props" aria-controls="locale-menu">                        
                       <span class="subtitle-1 text-capitalize font-weight-medium"
                         >{{ localeLabel }}</span>
                       <v-icon
@@ -211,7 +211,7 @@
 
                   <v-tooltip v-if="!$vuetify.theme.dark" bottom>
                     <template v-slot:activator="{ props }">
-                      <v-btn v-bind="props" icon @click="darkMode" :aria-label="$t('Dark Mode On')">
+                      <v-btn class="header-btn-icon" v-bind="props" icon @click="darkMode" :aria-label="$t('Dark Mode On')">
                       <v-icon>mdi-moon-waxing-crescent</v-icon>
                     </v-btn>
                   </template>

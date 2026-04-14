@@ -536,6 +536,11 @@ address {
   background-color: var(--v-primary-base) !important;
   border-color: var(--v-primary-base) !important;
 }
+
+.header-btn-icon {
+  width: calc(var(--v-btn-height) + 12px) !important;
+  height: calc(var(--v-btn-height)) !important;
+}
 </style>
 
 <style scoped>
