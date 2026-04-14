@@ -358,140 +358,149 @@
                     </v-row>
                   </client-only>
                   <v-spacer></v-spacer>
-                  <v-toolbar-items class="hidden-sm-and-down no-height-inherit py-2">
-                    <v-hover v-slot:default="{ hover }">
+                  <div class="v-toolbar-items hidden-sm-and-down no-height-inherit py-2">
+                    <v-hover v-slot:default="{ isHovering, props }">
                       <v-btn
+                        v-bind="props"
                         dark
                         tile
                         depressed
                         nuxt
                         active-class="ph-button-bg-active"
-                        :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
+                        :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
                         :to="localePath({
                             path: '/search',
                             query: { reset: 1 },
                         })"
-                        class="font-weight-regular white--text"                          
+                        class="font-weight-regular text-white"                          
                       >                    
                         {{ $t("Search") }}
                       </v-btn>
                     </v-hover>
-                    <v-hover v-slot:default="{ hover }">
+                    <v-hover v-slot:default="{ isHovering, props }">
                       <v-btn
+                        v-bind="props"
                         v-show="signedin"
                         dark
                         tile
                         depressed
                         nuxt
                         active-class="ph-button-bg-active"
-                        :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
+                        :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
                         :to="localePath('/submit')"
-                        class="font-weight-regular white--text"
+                        class="font-weight-regular text-white"
                       >
                         {{ $t("Upload") }}
                       </v-btn>
                     </v-hover>
-                    <v-hover v-slot:default="{ hover }">
+                    <v-hover v-slot:default="{ isHovering, props }">
                       <v-btn
+                        v-bind="props"
                         v-show="signedin"
                         dark
                         tile
                         depressed
                         nuxt
                         active-class="ph-button-bg-active"
-                        :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
+                        :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
                         :to="localePath({
                             path: '/search',
                             query: { reset: 1, owner: user.username },
                         })"
-                        class="font-weight-regular white--text"
+                        class="font-weight-regular text-white"
                       >                    
                         {{ $t("My objects") }}
                       </v-btn>
                     </v-hover>
-                    <v-hover v-slot:default="{ hover }">
+                    <v-hover v-slot:default="{ isHovering, props }">
                       <v-btn
+                        v-bind="props"
                         v-show="signedin"
                         dark
                         tile
                         depressed
                         nuxt
                         active-class="ph-button-bg-active"
-                        :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
+                        :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
                         :to="localePath('/lists')"
-                        class="font-weight-regular white--text"
+                        class="font-weight-regular text-white"
                       >                    
                         {{ $t("Object lists") }}
                       </v-btn>
                     </v-hover>
-                    <v-hover v-slot:default="{ hover }">
+                    <v-hover v-slot:default="{ isHovering, props }">
                       <v-btn
+                        v-bind="props"
                         v-show="signedin && instanceconfig.groups"
                         dark
                         tile
                         depressed
                         nuxt
                         active-class="ph-button-bg-active"
-                        :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
+                        :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
                         :to="localePath('/groups')"
-                        class="font-weight-regular white--text"
+                        class="font-weight-regular text-white"
                       >                    
                         {{ $t("Groups") }}
                       </v-btn>
                     </v-hover>
-                    <v-hover v-slot:default="{ hover }">
+                    <v-hover v-slot:default="{ isHovering, props }">
                       <v-btn
+                        v-bind="props"
                         v-show="signedin"
                         dark
                         tile
                         depressed
                         nuxt
                         active-class="ph-button-bg-active"
-                        :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
+                        :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
                         :to="localePath('/templates')"
-                        class="font-weight-regular white--text"
+                        class="font-weight-regular text-white"
                       >                    
                         {{ $t("Templates") }}
                       </v-btn>
                     </v-hover>
-                    <v-hover v-slot:default="{ hover }">
+                    <v-hover v-slot:default="{ isHovering, props }">
                       <v-btn                          
+                        v-bind="props"
                         dark
                         tile
                         depressed
                         nuxt
                         active-class="ph-button-bg-active"
-                        :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
+                        :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
                         :to="localePath('/help')"
-                        class="font-weight-regular white--text"
+                        class="font-weight-regular text-white"
                       >                    
                         {{ $t("Help") }}
                       </v-btn>
                     </v-hover>
-                    <v-hover v-slot:default="{ hover }">
+                    <v-hover v-slot:default="{ isHovering, props }">
                       <v-btn
+                        v-bind="props"
                         v-show="!signedin && appconfig.enablelogin"
                         dark
                         tile
                         depressed                          
                         :href="localePath('/login') + '?returnto=' + encodeURIComponent($route.fullPath)"
-                        :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
-                        class="font-weight-regular white--text"
+                        :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
+                        class="font-weight-regular text-white"
                         >
                           {{ $t("Login") }}                        
                       </v-btn>
                     </v-hover>
-                    <v-hover v-slot:default="{ hover }">
+                    <v-hover v-slot:default="{ isHovering, props }">
                       <v-btn
+                        v-bind="props"
                         v-show="user.isadmin"
                         dark
                         tile
                         depressed
                         nuxt
                         active-class="ph-button-bg-active"
-                        :color="hover ? 'primary' : isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
+                        :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
                         :to="localePath('/admin')"
-                        class="font-weight-regular white--text"
+                        class="font-weight-regular text-white"
                         >
                           {{ $t("Admin") }}
                       </v-btn>
@@ -502,8 +511,8 @@
                           dark
                           tile
                           depressed
-                          class="font-weight-regular white--text text-none"
-                          :color="isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg'"
+                          class="font-weight-regular text-white text-none"
+                          :class="['font-weight-regular', 'text-white', 'text-none', isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg']"
                           v-bind="props"
                           aria-controls="user-menu"
                         >
@@ -518,7 +527,7 @@
                         </v-list-item>
                       </v-list>
                     </v-menu>
-                  </v-toolbar-items>
+                  </div>
                 </v-toolbar>
               </v-row>
             </v-col>
