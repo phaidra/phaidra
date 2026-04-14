@@ -107,7 +107,7 @@ export default {
         { charset: 'utf-8' },
         { name: 'Generator', content: 'PHAIDRA' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'theme-color', content: this.$vuetify.theme.dark ? this.$config.darkPrimaryColor : this.$config.primaryColor }
+        { name: 'theme-color', content: this.$vuetify?.theme?.global?.current?.value?.dark ? this.$config.darkPrimaryColor : this.$config.primaryColor }
       ],
       script: []
     };
@@ -322,6 +322,10 @@ a:hover {
 a.v-btn,
 a {
   text-decoration: none;
+}
+
+.v-application a {
+  color: rgb(var(--v-theme-primary));
 }
 
 .logo {

@@ -209,7 +209,7 @@
                   </v-list>
                 </v-menu>
 
-                  <v-tooltip v-if="!$vuetify.theme.dark" bottom>
+                  <v-tooltip v-if="!isDarkTheme" bottom>
                     <template v-slot:activator="{ props }">
                       <v-btn class="header-btn-icon" v-bind="props" icon @click="darkMode" :aria-label="$t('Dark Mode On')">
                       <v-icon>mdi-moon-waxing-crescent</v-icon>
@@ -220,7 +220,7 @@
 
                   <v-tooltip v-else bottom>
                     <template v-slot:activator="{ props }">
-                      <v-btn v-bind="props" icon @click="darkMode" :aria-label="$t('Dark Mode Off')">
+                      <v-btn class="header-btn-icon" v-bind="props" icon @click="darkMode" :aria-label="$t('Dark Mode Off')">
                       <v-icon>mdi-white-balance-sunny</v-icon>
                     </v-btn>
                   </template>
@@ -611,12 +611,32 @@ export default {
   },
   methods: {
     darkMode() {
-      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-      localStorage.setItem("theme", this.$vuetify.theme.dark ? "dark" : "light");
-      this.$cookies.set('theme', this.$vuetify.theme.dark ? "dark" : "light", {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 365 // 1 year
-      });
+      const nextTheme = this.isDarkTheme ? "light" : "dark";
+      const themeApi = this.$vuetify?.theme;
+      const themeName = themeApi?.global?.name;
+      if (themeName && typeof themeName === "object" && "value" in themeName) {
+        themeName.value = nextTheme;
+      } else if (typeof themeName === "string") {
+        themeApi.global.name = nextTheme;
+      } else if (themeApi) {
+        // Fallback for legacy-like shape used in some Nuxt bridges
+        themeApi.dark = nextTheme === "dark";
+      }
+
+      // Keep legacy and mixed bridge integrations in sync.
+      if (themeApi && typeof themeApi.dark === "boolean") {
+        themeApi.dark = nextTheme === "dark";
+      }
+
+      localStorage.setItem("theme", nextTheme);
+      if (this.$cookies?.set) {
+        this.$cookies.set('theme', nextTheme, {
+          path: '/',
+          maxAge: 60 * 60 * 24 * 365 // 1 year
+        });
+      } else if (process.client) {
+        document.cookie = `theme=${nextTheme}; path=/; max-age=${60 * 60 * 24 * 365}`;
+      }
     },
     logout: function () {
       console.log("local logout")
