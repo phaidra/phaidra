@@ -29,9 +29,12 @@
                 <template v-if="showAlerts">
                   <v-row justify="center" v-for="(alert, i) in alerts" :key="'alert' + i">
                     <v-col cols="12">
-                      <v-alert v-if="alert.type !== 'success' && alert.msg"
-                        :type="alert.type === 'danger' ? 'error' : alert.type" :value="true"
-                        transition="slide-y-transition">
+                      <v-alert
+                        v-if="alert.type !== 'success' && alert.msg"
+                        :type="alert.type === 'danger' ? 'error' : alert.type"
+                        :model-value="true"
+                        transition="slide-y-transition"
+                      >
                         <v-row align="center">
                           <v-col class="grow">{{ $t(alert.msg) }}</v-col>
                           <v-col class="shrink">

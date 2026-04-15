@@ -54,7 +54,7 @@
           </v-container>
         </template>
       </template>
-      <v-alert v-else dense type="error" :value="true">Unknown field type {{ch.xmlname}} {{ch.input_type}}</v-alert>
+      <v-alert v-else density="compact" type="error" :model-value="true">Unknown field type {{ch.xmlname}} {{ch.input_type}}</v-alert>
     </v-row>
   </v-col>
 </template>

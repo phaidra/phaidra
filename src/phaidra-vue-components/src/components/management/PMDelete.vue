@@ -3,7 +3,7 @@
     <v-card-title class="title font-weight-light text-white">{{ $t('Delete') }}</v-card-title>
     <v-divider></v-divider>
     <v-card-text class="mt-4">
-      <v-alert :type="'info'" :value="true" transition="slide-y-transition" v-if="(cmodel === 'Container') && (members.length > 0)">{{ $t('MEMBERS_DELETE_ALERT_CONTAINER', { nrmembers: members.length }) }}</v-alert>
+      <v-alert :type="'info'" :model-value="true" transition="slide-y-transition" v-if="(cmodel === 'Container') && (members.length > 0)">{{ $t('MEMBERS_DELETE_ALERT_CONTAINER', { nrmembers: members.length }) }}</v-alert>
       <div v-else>{{ $t('DELETE_OBJECT', { pid: instance.baseurl + '/' + pid }) }}</div>
     </v-card-text>
     <v-card-actions>

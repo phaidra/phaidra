@@ -6,15 +6,15 @@
           <v-col cols="10">
             <v-alert
               prominent
-              dense
+              density="compact"
               :type="alert.type === 'danger' ? 'error' : alert.type"
-              :value="true"
+              :model-value="true"
               transition="slide-y-transition"
             >
               <v-row align="center">
                 <v-col class="grow">{{ alert.msg }}</v-col>
                 <v-col class="shrink">
-                  <v-btn icon @click.native="dismiss(alert)"
+                  <v-btn icon @click="dismiss(alert)"
                     ><v-icon>mdi-close</v-icon></v-btn
                   >
                 </v-col>

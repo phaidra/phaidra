@@ -386,7 +386,7 @@
 
         <template v-else>
           <v-container class="my-4" :key="entry.p">
-            <v-alert :type="'error'" :value="true" transition="fade-transition">Unknown predicate <b>{{ entry.p }}</b></v-alert>
+            <v-alert :type="'error'" :model-value="true" transition="fade-transition">Unknown predicate <b>{{ entry.p }}</b></v-alert>
             <p-d-unknown :jsonld="entry.o" :label="entry.p" v-bind="displayProperties"></p-d-unknown>
           </v-container>
         </template>

@@ -7,7 +7,7 @@
       relation === 'hassuccessor' &&
       objectInfo &&
       objectInfo.relationships.ispartof.length > 0"
-      outlined
+      variant="outlined"
       type="info"
       color="secondary"
       icon="mdi-alert-circle-outline">
