@@ -53,7 +53,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       variant: 'flat'
     },
     VTextField: {
-      density: 'compact'
+      density: 'comfortable'
     }
   },
   })

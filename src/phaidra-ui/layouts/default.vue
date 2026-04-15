@@ -529,6 +529,7 @@ address {
 .ph-button-bg {
   background-color: var(--v-cardtitlebg-base) !important;
   border-color: var(--v-cardtitlebg-base) !important;
+  height: calc(var(--v-btn-height) - 4px) !important;
 }
 
 .ph-button-bg-dark {
@@ -541,10 +542,7 @@ address {
   border-color: var(--v-primary-base) !important;
 }
 
-.header-btn-icon {
-  width: calc(var(--v-btn-height) + 12px) !important;
-  height: calc(var(--v-btn-height)) !important;
-}
+
 </style>
 
 <style scoped>
