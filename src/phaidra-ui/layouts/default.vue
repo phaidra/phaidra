@@ -541,8 +541,13 @@ address {
   background-color: var(--v-primary-base) !important;
   border-color: var(--v-primary-base) !important;
 }
-
-
+.v-toolbar__content,
+.v-toolbar__extension {
+  padding: 0px 16px;
+}
+.v-theme--light.v-btn.v-btn--icon {
+    color: rgba(0, 0, 0, 0.54);
+}
 </style>
 
 <style scoped>

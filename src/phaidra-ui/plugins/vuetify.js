@@ -54,6 +54,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
     VTextField: {
       density: 'comfortable'
+    },
+    VToolbar: {
+      density: 'compact'
     }
   },
   })
