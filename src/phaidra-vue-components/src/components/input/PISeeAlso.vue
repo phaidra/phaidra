@@ -6,8 +6,8 @@
         v-on:blur="$emit('input-title',$event.target.value)"
         :label="$t(titleLabel)"
         :variant="fieldVariant"
-        append-outer-icon="mdi-magnify"
-        @click:append-outer="$refs.yarmselect.open()"
+        append-inner-icon="mdi-magnify"
+        @click:append-inner="$refs.yarmselect.open()"
       ></v-text-field>
     </v-col>
     <v-col cols="4">

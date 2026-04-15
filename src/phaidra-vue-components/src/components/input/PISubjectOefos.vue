@@ -35,7 +35,7 @@
             <template #selection="{ item }">
               <span v-html="`${getLocalizedTermLabel('oefos', (item.raw || item)['@id']) + ' - ' + (item.raw || item)['skos:notation'][0]}`" />
             </template>
-            <template #append>
+            <template #append-inner>
               <v-icon @click="$refs.oefostreedialog.open()">mdi-file-tree</v-icon>
             </template>
           </v-autocomplete>

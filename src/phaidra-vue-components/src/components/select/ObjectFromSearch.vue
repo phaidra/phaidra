@@ -12,7 +12,7 @@
     <v-card-text>
       <v-text-field
         v-model="objectsSearch"
-        append-icon="mdi-magnify"
+        append-inner-icon="mdi-magnify"
         :label="$t('Search...')"
         @keydown="handleKeyDown"
         single-line

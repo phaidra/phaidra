@@ -774,7 +774,7 @@
                           <v-card-title class="title font-weight-light text-white"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn class="grey--text text--darken-2" color="white" target='_blank' :to="'/metadata-fields-help'"><v-icon class="mr-2" aria-hidden="true">mdi-help-circle-outline</v-icon>{{ $t('Metadata fields Help') }}</v-btn></v-card-title>
                           <v-card-text>
                             <v-list three-line >
-                              <v-text-field clearable :label="$t('Search...')" append-icon="mdi-magnify" v-model="searchfieldsinput"></v-text-field>
+                              <v-text-field clearable :label="$t('Search...')" append-inner-icon="mdi-magnify" v-model="searchfieldsinput"></v-text-field>
                               <div v-for="field in filteredMetadatafields" :key="field.id">
                                 <v-list-item @click="addfieldselection.push(field)">
                                   <v-list-item-content>
@@ -833,7 +833,7 @@
               <v-card>
                 <v-card-title class="title font-weight-light text-white"><span v-t="'Save as new template'"></span></v-card-title>
                 <v-card-text>
-                  <v-text-field class="mt-4" hide-details filled single-line v-model="templatename" :label="$t('Template name')" ></v-text-field>
+                  <v-text-field class="mt-4" hide-details single-line v-model="templatename" :label="$t('Template name')" variant="filled" ></v-text-field>
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>

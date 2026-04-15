@@ -69,7 +69,7 @@
                   <template #selection="{ item }">
                     <span v-html="getLocalizedTermLabel('orgunits', (item.raw || item)['@id'])" />
                   </template>
-                  <template #append>
+                  <template #append-inner>
                     <v-icon v-if="enableOrgTree" @click="$refs.organizationstreedialog.open()">mdi-file-tree</v-icon>
                   </template>
                 </v-autocomplete>
@@ -97,7 +97,7 @@
                   :placeholder="$t('search publishers')"
                   :variant="fieldVariant"
                   clearable
-                  append-icon="mdi-magnify"
+                  append-inner-icon="mdi-magnify"
                 >
                   <template #item="{ props, item }">
                     <v-list-item v-bind="props" :lines="item.raw.alias ? 'two' : 'one'">
@@ -147,7 +147,7 @@
                   :error-messages="publishingDateErrorMessages"
                   :bg-color="publishingDateBackgroundColor ? publishingDateBackgroundColor : undefined"
                 >
-                  <template v-slot:append>
+                  <template v-slot:append-inner>
                     <v-fade-transition leave-absolute>
                       <v-menu
                         ref="menu1"

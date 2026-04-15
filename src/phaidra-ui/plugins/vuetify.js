@@ -51,6 +51,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     defaults: {
     VBtn: {
       variant: 'flat'
+    },
+    VTextField: {
+      density: 'compact'
     }
   },
   })

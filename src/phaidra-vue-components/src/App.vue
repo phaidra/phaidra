@@ -63,7 +63,7 @@
               <v-text-field
                 v-model="credentials.password"
                 :label="'password'"
-                :append-icon="psvis ? 'mdi-eye' : 'mdi-eye-off'"
+                :append-inner-icon="psvis ? 'mdi-eye' : 'mdi-eye-off'"
                 @click:append="toggleVisibility"
                 :type="psvis ? 'password' : 'text'"
               ></v-text-field>
@@ -153,7 +153,7 @@
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       v-model="pid"
@@ -187,7 +187,7 @@
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       v-model="pid"
@@ -224,7 +224,7 @@
                       v-model="contentmodel"
                       label="Object type"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       v-on:change="resetForm($event)"
@@ -256,7 +256,7 @@
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       :placeholder="'Collection, e.g. ' + sampleCollection"
@@ -276,7 +276,7 @@
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       :placeholder="'o:123456789'"
@@ -322,7 +322,7 @@
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       :placeholder="'Collection, e.g. ' + sampleCollection"
@@ -346,7 +346,7 @@
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       :placeholder="'o:123456789'"
@@ -381,7 +381,7 @@
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       :placeholder="'o:123456789'"
@@ -409,7 +409,7 @@
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       :placeholder="'o:123456789'"

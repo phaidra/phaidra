@@ -26,7 +26,7 @@
                 <!-- <v-toolbar flat>
                   <v-text-field
                     v-model="membersSearch"
-                    append-icon="mdi-magnify"
+                    append-inner-icon="mdi-magnify"
                     :label="$t('Search...')"
                     single-line
                     hide-details

@@ -27,7 +27,7 @@
       <v-col cols="4">
         <v-text-field
           :error-messages="doiImportErrors"
-          filled
+          variant="filled"
           v-model="doiImportInput"
           label="DOI"
           :placeholder="$t('please enter')"

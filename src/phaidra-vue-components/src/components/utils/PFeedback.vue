@@ -12,7 +12,7 @@
                 :rules="nameRules"
                 :label="$t('Firstname')"
                 required
-                filled
+                variant="filled"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="4">
@@ -21,7 +21,7 @@
                 :rules="nameRules"
                 :label="$t('Lastname')"
                 required
-                filled
+                variant="filled"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="4">
@@ -30,7 +30,7 @@
                 :rules="emailRules"
                 :label="$t('E-mail')"
                 required
-                filled
+                variant="filled"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -41,7 +41,7 @@
                 :rules="feedbackRules"
                 :label="$t('Feedback')"
                 required
-                filled
+                variant="filled"
               ></v-textarea>
             </v-col>
           </v-row>

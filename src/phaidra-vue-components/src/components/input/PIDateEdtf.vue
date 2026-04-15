@@ -42,7 +42,7 @@
           :variant="fieldVariant"
           :error-messages="valueErrorMessages"
         >
-          <template v-slot:append>
+          <template v-slot:append-inner>
             <v-fade-transition leave-absolute>
               <v-menu
                 ref="menu1"
@@ -81,7 +81,7 @@
           :variant="fieldVariant"
           :error-messages="valueErrorMessages"
         >
-          <template v-slot:append-outer>
+          <template v-slot:append-inner>
             <v-tooltip bottom>
               <template v-slot:activator="{ props: activatorProps }">
                 <v-icon v-bind="activatorProps">mdi-help-circle-outline</v-icon>

@@ -30,7 +30,7 @@
                 clearable
                 :messages="resolved"
                 :error-messages="errorMessages"
-                append-icon="mdi-magnify"
+                append-inner-icon="mdi-magnify"
                 @click:append="search()"
                 @keyup.enter="search()"
               >

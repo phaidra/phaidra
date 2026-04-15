@@ -83,7 +83,7 @@
                       :variant="fieldVariant"
                       :error-messages="dateFromErrorMessages"
                     >
-                      <template v-slot:append>
+                      <template v-slot:append-inner>
                         <v-fade-transition leave-absolute>
                           <v-menu
                             v-model="dateFromMenu"
@@ -120,7 +120,7 @@
                       :variant="fieldVariant"
                       :error-messages="dateToErrorMessages"
                     >
-                      <template v-slot:append>
+                      <template v-slot:append-inner>
                         <v-fade-transition leave-absolute>
                           <v-menu
                             v-model="dateToMenu"

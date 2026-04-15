@@ -118,7 +118,7 @@
                   @input="setAccessibilityControl()"
                   :menu-props="{maxHeight:'400'}"
                   persistent-hint
-                  filled
+                  variant="filled"
                   single-line
                 >
                   <template slot="item" slot-scope="{ attr, item }">
@@ -146,7 +146,7 @@
                   @input="setAccessibilityFeature()"
                   :menu-props="{maxHeight:'400'}"
                   persistent-hint
-                  filled
+                  variant="filled"
                   single-line
                 >
                   <template slot="item" slot-scope="{ attr, item }">
@@ -174,7 +174,7 @@
                   @input="setAccessibilityHazard()"
                   :menu-props="{maxHeight:'400'}"
                   persistent-hint
-                  filled
+                  variant="filled"
                   single-line
                 >
                   <template slot="item" slot-scope="{ attr, item }">
@@ -251,7 +251,7 @@
                   clearable
                   deletable-chips
                   multiple
-                  filled
+                  variant="filled"
                   single-line
                   v-model="persAuthors.values"
                   @input="setPersAuthors()"/>
@@ -268,7 +268,7 @@
                   clearable
                   deletable-chips
                   multiple
-                  filled
+                  variant="filled"
                   single-line
                   v-model="corpAuthors.values"
                   @input="setCorpAuthors()"/>
@@ -301,7 +301,7 @@
                 @input="addRoleFilter('pers')"
                 :menu-props="{maxHeight:'400'}"
                 persistent-hint
-                filled
+                variant="filled"
                 single-line
               ></v-select>
               <v-select
@@ -313,7 +313,7 @@
                 @input="addRoleFilter('corp')"
                 :menu-props="{maxHeight:'400'}"
                 persistent-hint
-                filled
+                variant="filled"
                 single-line
               ></v-select>
               <div v-for="(role, i) in roles" :key="i" v-if="roles.length > 0" >
@@ -328,7 +328,7 @@
                       clearable
                       deletable-chips
                       multiple
-                      filled
+                      variant="filled"
                       single-line
                       :items="role.values"
                       v-model="role.values"

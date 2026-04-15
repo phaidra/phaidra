@@ -26,7 +26,7 @@
                 <v-toolbar flat color="transparent" class="my-4">
                   <v-text-field
                     v-model="listsSearch"
-                    append-icon="mdi-magnify"
+                    append-inner-icon="mdi-magnify"
                     :label="$t('Search...')"
                     single-line
                     hide-details
@@ -122,7 +122,7 @@
                   <v-spacer></v-spacer>
                   <!-- <v-text-field
                     v-model="membersSearch"
-                    append-icon="mdi-magnify"
+                    append-inner-icon="mdi-magnify"
                     :label="$t('Search...')"
                     single-line
                     hide-details

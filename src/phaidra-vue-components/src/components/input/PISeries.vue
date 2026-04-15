@@ -34,7 +34,7 @@
               :placeholder="$t('please enter exact journal title or ISSN')"
               :variant="fieldVariant"
               clearable
-              append-icon="mdi-magnify"
+              append-inner-icon="mdi-magnify"
             >
               <template #item="{ props, item }">
                 <v-list-item
@@ -122,7 +122,7 @@
                   :rules="[validationrules.date]"
                   :variant="fieldVariant"
                 >
-                  <template v-slot:append>
+                  <template v-slot:append-inner>
                     <v-fade-transition leave-absolute>
                       <v-menu
                         ref="menu1"

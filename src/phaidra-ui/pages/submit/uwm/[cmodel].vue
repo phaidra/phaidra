@@ -9,8 +9,8 @@
               :label="$t('Link')"
               :placeholder="'https://...'"
               v-model="link"
-              outlined
               :error-messages="linkErrorMessages"
+              variant="outlined"
             ></v-text-field>
             <p-i-file
               v-else

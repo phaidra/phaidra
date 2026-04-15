@@ -8,9 +8,9 @@
     <v-row class="mx-4 mt-10">
       <v-col cols="12" md="10" offset-md="1">
         <v-row>
-          <v-text-field class="searchBox" v-model="q" :placeholder="$t('Search...')" autocomplete="off" append-icon="mdi-magnify"
-            v-on:keyup.enter="$router.push({ name: 'search', query: { q } })" clearable solo hide-details>
-            <template #append>
+          <v-text-field class="searchBox" v-model="q" :placeholder="$t('Search...')" autocomplete="off"
+            @keyup.enter="$router.push({ name: 'search', query: { q } })" clearable hide-details variant="solo">
+            <template #append-inner>
               <v-btn
                 icon
                 :aria-label="$t('Search')"

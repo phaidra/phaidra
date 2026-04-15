@@ -56,7 +56,7 @@
                 :messages="resolved"
                 :hint="$t(hint)"
                 autocomplete="off"
-                append-icon="mdi-magnify"
+                append-inner-icon="mdi-magnify"
                 @click:append="search()"
                 @keyup.enter="search()"
               >

@@ -150,7 +150,7 @@
                         v-model="selectedEduPersonAffiliation"
                         :items="instance.data_affiliations"
                         :label="$t('eduPersonAffiliation')"
-                        filled
+                        variant="filled"
                       ></v-select>
                     </v-col>
                     <v-col cols="1" class="pt-6">
@@ -206,7 +206,7 @@
                         <template #selection="{ item }">
                           <span v-html="getLocalizedTermLabel('orgunits', (item.raw || item)['@id'])" />
                         </template>
-                        <template #append>
+                        <template #append-inner>
                           <v-icon @click="$refs.orgunitstreedialog.open()">mdi-file-tree</v-icon>
                         </template>
                       </v-autocomplete>

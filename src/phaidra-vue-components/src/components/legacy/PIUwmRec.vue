@@ -10,7 +10,7 @@
                 v-model="ch.ui_value"
                 :label="ch.labels[alpha2locale]"
                 :readonly="true"
-                filled
+                variant="filled"
                 :disabled="disabled"
               ></v-text-field>
             </v-col>
@@ -28,7 +28,7 @@
             :label="ch.labels[alpha2locale]"
             :error-messages="ch.errorMessages"
             @change="selectHandler(ch, $event)"
-            filled
+            variant="filled"
             clearable
           >
             <template v-slot:item="{ item, index }">
@@ -49,7 +49,7 @@
             :label="ch.labels[alpha2locale]"
             :error-messages="ch.errorMessages"
             @change="selectHandler(ch, $event)"
-            filled
+            variant="filled"
             clearable
           >
             <template v-slot:item="{ item, index }">
@@ -69,7 +69,7 @@
                   :disabled="disabled"
                   :label="ch.labels[alpha2locale]"
                   :error-messages="ch.errorMessages"
-                  filled
+                  variant="filled"
                   :readonly="readOnly(ch)"
                 ></v-text-field>
               </v-col>
@@ -94,7 +94,7 @@
                 :disabled="disabled"
                 :label="ch.labels[alpha2locale]"
                 :error-messages="ch.errorMessages"
-                filled
+                variant="filled"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="2">
@@ -104,7 +104,7 @@
                 :items="languages"
                 :label="$t('Language')"
                 :error-messages="ch.langErrorMessages"
-                filled
+                variant="filled"
                 clearable
               ></v-select>
             </v-col>
@@ -131,8 +131,8 @@
                 v-model="ch.ui_value"
                 :disabled="disabled"
                 :label="ch.labels[alpha2locale]"
+                variant="filled"
                 :error-messages="ch.errorMessages"
-                filled
               ></v-textarea>
             </v-col>
             <v-col cols="12" md="2">
@@ -142,7 +142,7 @@
                 :items="languages"
                 :error-messages="ch.langErrorMessages"
                 :label="$t('Language')"
-                filled
+                variant="filled"
                 clearable
               ></v-select>
             </v-col>
@@ -174,7 +174,7 @@
                 :label="ch.labels[alpha2locale]"
                 :error-messages="ch.errorMessages"
                 @change="selectHandler(ch, $event)"
-                filled
+                variant="filled"
                 clearable
               >
                 <template v-slot:item="{ item, index }">
@@ -210,7 +210,7 @@
                   :items="languages"
                   :error-messages="ch.errorMessages"
                   :label="ch.labels[alpha2locale]"
-                  filled
+                  variant="filled"
                   clearable
                 >
                 </v-select>
@@ -240,8 +240,8 @@
                 :label="ch.labels[alpha2locale]"
                 :error-messages="ch.errorMessages"
                 :hint="$t('Format YYYY-MM-DD')"
+                variant="filled"
                 :rules="[validationrules.date]"
-                filled
               ></v-text-field>
             </v-col>
           </v-row>

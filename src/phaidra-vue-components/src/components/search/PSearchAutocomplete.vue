@@ -13,14 +13,13 @@
       @focus="handleFocus"
       autocomplete="off"
       clearable
-      :filled="!solo"
+      :variant="solo ? 'solo' : 'filled'"
       single-line
-      :solo="solo"
-      append-icon="mdi-magnify"
+      append-inner-icon="mdi-magnify"
       @click:append="onSelect({ term: type })"
       :messages="messages"
     >
-    <template #append>
+    <template #append-inner>
       <v-btn 
         icon
         :aria-label="$t('Search')"

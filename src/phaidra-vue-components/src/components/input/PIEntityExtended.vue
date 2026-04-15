@@ -287,7 +287,7 @@
                     <template #selection="{ item }">
                       <span v-html="getLocalizedTermLabel('orgunits', (item.raw || item)['@id'])" />
                     </template>
-                    <template #append>
+                    <template #append-inner>
                       <v-icon v-if="enableOrgTree" @click="$refs.organizationstreedialog.open()">mdi-file-tree</v-icon>
                     </template>
                   </v-autocomplete>
@@ -322,8 +322,7 @@
                     v-on:blur="$emit('input-identifier', $event.target.value)"
                     :placeholder="identifierTypePlaceholder"
                     :rules="identifierType ? [validationrules['orcid']] : [validationrules['noop']]"
-                    :filled="inputStyle==='filled'"
-                    :outlined="inputStyle==='outlined'"
+                    variant="outlined"
                   ></v-text-field>
                   <v-text-field
                     v-show="identifierType !== 'ids:orcid'"
@@ -332,8 +331,7 @@
                     v-on:blur="$emit('input-identifier', $event.target.value)"
                     :placeholder="identifierTypePlaceholder"
                     :rules="identifierType ? [validationrules[getIdentifierRuleName(identifierType)]] : [validationrules['noop']]"
-                    :filled="inputStyle==='filled'"
-                    :outlined="inputStyle==='outlined'"
+                    variant="outlined"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -348,10 +346,9 @@
                     :value="getTerm(identifierVocabulary, identifierType)"
                     :filter="autocompleteFilter"
                     :disabled="disableIdentifierType"
-                    :filled="inputStyle==='filled'"
-                    :outlined="inputStyle==='outlined'"
                     return-object
                     clearable
+                    variant="outlined"
                   >
                     <template slot="item" slot-scope="{ item }">
                       <v-list-item-content two-line>
@@ -374,8 +371,7 @@
                     v-on:blur="$emit('input-identifier', $event.target.value)"
                     :placeholder="identifierTypePlaceholder"
                     :rules="identifierType ? [validationrules['orcid']] : [validationrules['noop']]"
-                    :filled="inputStyle==='filled'"
-                    :outlined="inputStyle==='outlined'"
+                    variant="outlined"
                   ></v-text-field>
                   <v-text-field
                     v-show="identifierType !== 'ids:orcid'"
@@ -384,8 +380,7 @@
                     v-on:blur="$emit('input-identifier', $event.target.value)"
                     :placeholder="identifierTypePlaceholder"
                     :rules="identifierType ? [validationrules[getIdentifierRuleName(identifierType)]] : [validationrules['noop']]"
-                    :filled="inputStyle==='filled'"
-                    :outlined="inputStyle==='outlined'"
+                    variant="outlined"
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -440,7 +435,7 @@
                   <template #selection="{ item }">
                     <span v-html="getLocalizedTermLabel('orgunits', (item.raw || item)['@id'])" />
                   </template>
-                  <template #append>
+                  <template #append-inner>
                     <v-icon v-if="enableAffTree" @click="$refs.affiliationstreedialog.open()">mdi-file-tree</v-icon>
                   </template>
                 </v-autocomplete>

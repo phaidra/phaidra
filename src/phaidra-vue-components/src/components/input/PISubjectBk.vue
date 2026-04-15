@@ -31,14 +31,14 @@
                     :variant="fieldVariant"
                     clearable
                     :messages="resolved"
-                    append-icon="mdi-magnify"
+                    append-inner-icon="mdi-magnify"
                     @click:append="search()"
                     @keyup.enter="search()"
                   >
                   <template v-slot:message="{ key, message }">
                     <span v-html="`${message}`"></span>
                   </template>
-                  <template v-slot:append-outer>
+                  <template v-slot:append-inner>
                     <v-icon @click="$refs.bktreedialog.open()">mdi-file-tree</v-icon>
                   </template>
                   </v-text-field>

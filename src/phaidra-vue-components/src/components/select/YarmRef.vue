@@ -6,7 +6,7 @@
           {{ $t('Logout') }} (YARM)
         </v-btn></v-card-title>
       <v-card-text v-if="yarmToken">
-        <v-text-field clearable :label="$t('Search...')" append-icon="mdi-magnify" v-model="searchInput"></v-text-field>
+        <v-text-field clearable :label="$t('Search...')" append-inner-icon="mdi-magnify" v-model="searchInput"></v-text-field>
         <v-data-table-server
           v-model:options="options"
           class="elevation-1"

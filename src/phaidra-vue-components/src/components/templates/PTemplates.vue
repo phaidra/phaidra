@@ -18,7 +18,7 @@
       <v-toolbar flat color="transparent">
         <v-text-field
           v-model="templateSearch"
-          append-icon="mdi-magnify"
+          append-inner-icon="mdi-magnify"
           :label="$t('Search...')"
           single-line
           hide-details

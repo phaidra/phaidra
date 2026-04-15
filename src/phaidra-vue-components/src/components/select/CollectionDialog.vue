@@ -5,7 +5,7 @@
       <v-card-text class="mt-4">
         <v-text-field
           v-model="collectionsSearch"
-          append-icon="mdi-magnify"
+          append-inner-icon="mdi-magnify"
           :label="$t('Search...')"
           single-line
           hide-details

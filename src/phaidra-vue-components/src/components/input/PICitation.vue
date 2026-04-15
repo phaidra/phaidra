@@ -38,8 +38,8 @@
         :required="required"
         :rules="required ? [ v => !!v || $t('Required')] : []"
         :variant="fieldVariant"
-        append-icon="mdi-magnify"
-        @click:append="$refs.yarmselect.open()"
+        append-inner-icon="mdi-magnify"
+        @click:append-inner="$refs.yarmselect.open()"
       ></v-text-field>
     </v-col>
     <v-col cols="2">
