@@ -552,6 +552,10 @@ address {
 .v-theme--light.v-btn.v-btn--icon {
     color: rgba(0, 0, 0, 0.54);
 }
+.v-application ul, .v-application ol {
+  padding-left: 24px;
+}
+
 </style>
 
 <style scoped>
