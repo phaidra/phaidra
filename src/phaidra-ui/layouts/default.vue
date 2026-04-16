@@ -543,6 +543,7 @@ address {
 .ph-button-bg-active {
   background-color: rgb(var(--v-theme-primary)) !important;
   border-color: rgb(var(--v-theme-primary)) !important;
+  height: calc(var(--v-btn-height) - 4px) !important;
 }
 .v-toolbar__content,
 .v-toolbar__extension {
