@@ -114,6 +114,8 @@ x-custom:
         target: /shib-init/attribute-map.xml
       - source: shibboleth_attribute_policy
         target: /shib-init/attribute-policy.xml
+      - source: shibboleth_config
+        target: /shib-init/shibboleth2.xml
 
   hosts: &hosts
     ADMIN_IP_LIST: "${ADMIN_IP_LIST:-10.0.2.2}"
@@ -1696,3 +1698,5 @@ configs:
     file: ./configs/shib/attribute-map.xml
   shibboleth_attribute_policy:
     file: ./configs/shib/attribute-policy.xml
+  shibboleth_config:
+    file: ./configs/shib/shibboleth2.xml
