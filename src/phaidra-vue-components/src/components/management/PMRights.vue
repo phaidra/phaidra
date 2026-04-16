@@ -58,7 +58,7 @@
                 <v-container fluid>
                   <v-row>
                     <v-col cols="12" v-if="doc" >
-                      <v-btn class="primary" :disabled="loading || userSearchLoading" @click="addOwner()">
+                      <v-btn class="bg-primary" :disabled="loading || userSearchLoading" @click="addOwner()">
                         <div v-if="doc.owner == $store.state.user.username">{{ $t('Restrict access to me') }}</div>
                         <div v-else-if="doc.owner">{{ $t('Restrict access to owner') }} ({{ doc.owner }})</div>
                         <div v-else>{{ $t('Restrict access to me') }}</div>
@@ -104,7 +104,7 @@
                       </v-autocomplete>
                     </v-col>
                     <v-col cols="1" class="pt-6">
-                      <v-btn class="primary" :disabled="loading || userSearchLoading" @click="addUser()">{{ $t('Apply') }}</v-btn>
+                      <v-btn class="bg-primary" :disabled="loading || userSearchLoading" @click="addUser()">{{ $t('Apply') }}</v-btn>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -121,11 +121,11 @@
                 <v-container fluid>
                   <v-row>
                     <v-col>
-                      <v-btn class="mb-4 mt-4 primary" @click="$refs.userSearchdialog.open()">
+                      <v-btn class="mb-4 mt-4 bg-primary" @click="$refs.userSearchdialog.open()">
                         {{ $t('Username search') }}
                         <v-icon
                           right
-                          dark
+                          theme="dark"
                         >
                           mdi-database-search
                         </v-icon>
@@ -154,7 +154,7 @@
                       ></v-select>
                     </v-col>
                     <v-col cols="1" class="pt-6">
-                      <v-btn class="primary" :disabled="loading" @click="addEduPersonAffiliation()">{{ $t('Apply') }}</v-btn>
+                      <v-btn class="bg-primary" :disabled="loading" @click="addEduPersonAffiliation()">{{ $t('Apply') }}</v-btn>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -213,7 +213,7 @@
                     </v-col>
                     <org-units-tree-dialog ref="orgunitstreedialog" @unit-selected="handleInput(getTerm('orgunits', $event))"></org-units-tree-dialog>
                     <v-col cols="1" class="pt-6">
-                      <v-btn class="primary" :disabled="loading" @click="addOrgUnit()">{{ $t('Apply') }}</v-btn>
+                      <v-btn class="bg-primary" :disabled="loading" @click="addOrgUnit()">{{ $t('Apply') }}</v-btn>
                     </v-col>
                   </v-row>
                 </v-container>

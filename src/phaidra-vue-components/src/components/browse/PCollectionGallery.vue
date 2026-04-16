@@ -50,11 +50,11 @@
                 <template v-slot:activator="{ props: activatorProps }">
                   <span v-bind="activatorProps">
                     <v-card tile elevation="0" class="d-flex">
-                      <v-img class="grey lighten-2" aspect-ratio="1" :src="instanceconfig.api + '/preview/' + doc.pid"
+                      <v-img class="bg-grey-lighten-2" aspect-ratio="1" :src="instanceconfig.api + '/preview/' + doc.pid"
                         @click="showDetailDialog(doc)">
                         <template v-slot:placeholder>
                           <v-row class="fill-height ma-0" align="center" justify="center">
-                            <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                            <v-progress-circular indeterminate color="grey-lighten-5"></v-progress-circular>
                           </v-row>
                         </template>
                       </v-img>
@@ -78,7 +78,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn dark @click="detailDialog = false" color="grey">Abbrechen</v-btn>
+          <v-btn theme="dark" @click="detailDialog = false" color="grey">Abbrechen</v-btn>
           <v-btn @click="openDetails()" color="primary">Details</v-btn>
         </v-card-actions>
       </v-card>

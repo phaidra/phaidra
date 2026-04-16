@@ -1,6 +1,6 @@
 <template>
   <v-overlay :value="isUploadComplete" absolute>
-    <v-card class="pa-6 text-center" light>
+    <v-card class="pa-6 text-center" theme="light">
       <v-icon size="64" color="success" class="mb-4">mdi-check-circle</v-icon>
       <h2 class="text-h5 mb-4">{{$t('Bulk Upload Complete!')}}</h2>
       <p class="mb-4">

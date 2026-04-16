@@ -510,13 +510,13 @@ address {
 }
 
 .ph-button:focus {
-  background-color: var(--v-primary-base) !important;
-  border-color: var(--v-primary-base) !important;
+  background-color: rgb(var(--v-theme-primary)) !important;
+  border-color: rgb(var(--v-theme-primary)) !important;
 }
 
 .ph-button {
-  background-color: var(--v-cardtitlebg-base) !important;
-  border-color: var(--v-cardtitlebg-base) !important;
+  background-color: rgb(var(--v-theme-cardtitlebg))!important;
+  border-color: rgb(var(--v-theme-cardtitlebg))!important;
 }
 
 .theme--dark .header {
@@ -530,8 +530,8 @@ address {
 }
 
 .ph-button-bg {
-  background-color: var(--v-cardtitlebg-base) !important;
-  border-color: var(--v-cardtitlebg-base) !important;
+  background-color: rgb(var(--v-theme-cardtitlebg)) !important;
+  border-color: rgb(var(--v-theme-cardtitlebg)) !important;
   height: calc(var(--v-btn-height) - 4px) !important;
 }
 
@@ -541,8 +541,8 @@ address {
 }
 
 .ph-button-bg-active {
-  background-color: var(--v-primary-base) !important;
-  border-color: var(--v-primary-base) !important;
+  background-color: rgb(var(--v-theme-primary)) !important;
+  border-color: rgb(var(--v-theme-primary)) !important;
 }
 .v-toolbar__content,
 .v-toolbar__extension {

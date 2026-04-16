@@ -153,7 +153,7 @@
                     <v-dialog class="pb-4" v-model="templateDialog" width="700px">
                       <template v-slot:activator="{ props: activatorProps }">
                         <v-btn v-bind="activatorProps" size="large" color="primary">
-                          <v-icon dark class="mr-4">mdi-script</v-icon>
+                          <v-icon theme="dark" class="mr-4">mdi-script</v-icon>
                           {{ $t("Select submit template") }}
                         </v-btn>
                       </template>

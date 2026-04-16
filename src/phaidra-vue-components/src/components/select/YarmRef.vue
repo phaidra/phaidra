@@ -2,7 +2,7 @@
   <v-dialog class="pb-4" v-model="showYarmDialog" scrollable width="1000px">
     <v-card>
       <v-card-title class="title font-weight-light text-white"><span v-t="'YARM'"></span><v-spacer></v-spacer><v-btn @click="yarmLogout()"
-          color="primary" dark v-if="yarmToken">
+          color="primary" theme="dark" v-if="yarmToken">
           {{ $t('Logout') }} (YARM)
         </v-btn></v-card-title>
       <v-card-text v-if="yarmToken">
@@ -24,7 +24,7 @@
       </v-card-text>
       <v-card-text v-else>
         <div class="login-btn-container">
-          <v-btn @click="yarmLoginDialog = true" color="primary" dark>
+          <v-btn @click="yarmLoginDialog = true" color="primary" theme="dark">
             {{ $t('Login') }} (YARM)
           </v-btn>
         </div>
@@ -48,10 +48,10 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="yarmLoginDialog = false">
+              <v-btn color="blue-darken-1" text @click="yarmLoginDialog = false">
                 {{ $t('Cancel') }}
               </v-btn>
-              <v-btn color="blue darken-1" text @click="yarmLogin()">
+              <v-btn color="blue-darken-1" text @click="yarmLogin()">
                 {{ $t('Login') }}
               </v-btn>
             </v-card-actions>
@@ -63,7 +63,7 @@
       <v-card-actions>
         <v-container fluid>
           <v-row justify="end">
-            <v-btn class="mx-1" color="grey" dark @click="closeYarmSelect()"><span v-t="'Cancel'"></span></v-btn>
+            <v-btn class="mx-1" color="grey" theme="dark" @click="closeYarmSelect()"><span v-t="'Cancel'"></span></v-btn>
           </v-row>
         </v-container>
       </v-card-actions>

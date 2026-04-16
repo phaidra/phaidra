@@ -43,10 +43,10 @@
             <v-col cols="4" class="body-2">{{ token }}</v-col>
             <v-col cols="1">
               <v-btn
-                dark
+                theme="dark"
                 raised
                 single-line
-                color="grey darken-3"
+                color="grey-darken-3"
                 @click="logout()"
                 >Logout</v-btn
               >
@@ -70,10 +70,10 @@
             </v-col>
             <v-col cols="1">
               <v-btn
-                dark
+                theme="dark"
                 raised
                 single-line
-                color="grey darken-3"
+                color="grey-darken-3"
                 @click="login()"
                 >Login</v-btn
               >
@@ -148,7 +148,7 @@
             <v-window v-model="window">
               <v-window-item>
                 <v-card>
-                  <v-toolbar dark color="grey">
+                  <v-toolbar theme="dark" color="grey">
                     <v-toolbar-title>{{ $t("Display") }}</v-toolbar-title>
                     <v-text-field
                       class="mx-4"
@@ -164,7 +164,7 @@
                       raised
                       single-line
                       class="float-right"
-                      color="grey darken-3"
+                      color="grey-darken-3"
                       @click="loadDisplay()"
                       >Load</v-btn
                     >
@@ -182,7 +182,7 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar dark color="grey">
+                  <v-toolbar theme="dark" color="grey">
                     <v-toolbar-title>{{ $t("Edit") }}</v-toolbar-title>
                     <v-text-field
                       class="mx-4"
@@ -198,7 +198,7 @@
                       raised
                       single-line
                       class="float-right"
-                      color="grey darken-3"
+                      color="grey-darken-3"
                       @click="loadEdit()"
                       >Load</v-btn
                     >
@@ -216,7 +216,7 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar class="grey" dark>
+                  <v-toolbar class="bg-grey" theme="dark">
                     <v-toolbar-title>{{ $t("Submit") }}</v-toolbar-title>
                     <v-select
                       class="mx-4"
@@ -251,7 +251,7 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar dark color="grey">
+                  <v-toolbar theme="dark" color="grey">
                     <v-toolbar-title>{{ $t("Search") }}</v-toolbar-title>
                     <v-text-field
                       class="mx-4"
@@ -271,7 +271,7 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar class="grey" dark>
+                  <v-toolbar class="bg-grey" theme="dark">
                     <v-toolbar-title>{{ $t("Manage") }}</v-toolbar-title>
                     <v-text-field
                       class="mx-4"
@@ -287,7 +287,7 @@
                       raised
                       single-line
                       class="float-right"
-                      color="grey darken-3"
+                      color="grey-darken-3"
                       @click="loadManagement(pid)"
                       >Load</v-btn
                     >
@@ -315,7 +315,7 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar class="grey" dark>
+                  <v-toolbar class="bg-grey" theme="dark">
                     <v-toolbar-title>{{
                       $t("Collection gallery")
                     }}</v-toolbar-title>
@@ -339,7 +339,7 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar class="grey" dark>
+                  <v-toolbar class="bg-grey" theme="dark">
                     <v-toolbar-title>{{
                       $t("Uwmetadata Editor")
                     }}</v-toolbar-title>
@@ -357,7 +357,7 @@
                       raised
                       single-line
                       class="float-right"
-                      color="grey darken-3"
+                      color="grey-darken-3"
                       @click="loadUwmetadataEdit()"
                       >Load</v-btn
                     >
@@ -374,7 +374,7 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar class="grey" dark>
+                  <v-toolbar class="bg-grey" theme="dark">
                     <v-toolbar-title>{{
                       $t("Uwmetadata Display")
                     }}</v-toolbar-title>
@@ -392,7 +392,7 @@
                       raised
                       single-line
                       class="float-right"
-                      color="grey darken-3"
+                      color="grey-darken-3"
                       @click="loadUwmetadataDisplay()"
                       >Load</v-btn
                     >
@@ -404,7 +404,7 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar class="grey" dark>
+                  <v-toolbar class="bg-grey" theme="dark">
                     <v-toolbar-title>{{ $t("Mods Display") }}</v-toolbar-title>
                     <v-text-field
                       class="mx-4"
@@ -420,7 +420,7 @@
                       raised
                       single-line
                       class="float-right"
-                      color="grey darken-3"
+                      color="grey-darken-3"
                       @click="loadModsDisplay()"
                       >Load</v-btn
                     >

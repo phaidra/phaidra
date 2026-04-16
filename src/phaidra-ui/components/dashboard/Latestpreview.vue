@@ -7,7 +7,7 @@
           <v-img max-width="200" :src="src" class="mx-auto elevation-2 mt-2" :alt="alt" :title="alt">
             <template v-slot:placeholder>
               <div class="fill-height ma-0">
-                <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                <v-progress-circular indeterminate color="grey-lighten-5"></v-progress-circular>
               </div>
             </template>
           </v-img>
@@ -72,7 +72,7 @@ export default {
     titleClass: function () {
       let c = ''
       if (this.titlecolor) {
-        c += this.titlecolor + '--text'
+        c += 'text-' + this.titlecolor
       }
       if (this.textcenter) {
         c += ' text-center justify-center'

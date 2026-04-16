@@ -3,7 +3,7 @@
     <v-col cols="12">
       <v-checkbox class="mt-0 check" v-model="checkbox" @click.capture="$emit('input', note)">
         <template v-slot:label>
-          <i18n :path="labelMessageId" tag="span" class="black--text">
+          <i18n :path="labelMessageId" tag="span" class="text-black">
             <a
               @click.stop
               :href="link"

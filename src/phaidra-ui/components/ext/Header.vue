@@ -251,7 +251,7 @@
                   <icon
                       aria-hidden="true"
                       left
-                      dark
+                     
                       name="univie-right"
                       color="#a4a4a4"
                       width="14px"
@@ -362,7 +362,7 @@
                     <v-hover v-slot:default="{ isHovering, props }">
                       <v-btn
                         v-bind="props"
-                        dark
+                       
                         tile
                         depressed
                         nuxt
@@ -381,7 +381,7 @@
                       <v-btn
                         v-bind="props"
                         v-show="signedin"
-                        dark
+                       
                         tile
                         depressed
                         nuxt
@@ -397,7 +397,7 @@
                       <v-btn
                         v-bind="props"
                         v-show="signedin"
-                        dark
+                       
                         tile
                         depressed
                         nuxt
@@ -416,7 +416,7 @@
                       <v-btn
                         v-bind="props"
                         v-show="signedin"
-                        dark
+                       
                         tile
                         depressed
                         nuxt
@@ -432,7 +432,7 @@
                       <v-btn
                         v-bind="props"
                         v-show="signedin && instanceconfig.groups"
-                        dark
+                       
                         tile
                         depressed
                         nuxt
@@ -448,7 +448,7 @@
                       <v-btn
                         v-bind="props"
                         v-show="signedin"
-                        dark
+                       
                         tile
                         depressed
                         nuxt
@@ -463,7 +463,7 @@
                     <v-hover v-slot:default="{ isHovering, props }">
                       <v-btn                          
                         v-bind="props"
-                        dark
+                       
                         tile
                         depressed
                         nuxt
@@ -479,7 +479,7 @@
                       <v-btn
                         v-bind="props"
                         v-show="!signedin && appconfig.enablelogin"
-                        dark
+                       
                         tile
                         depressed                          
                         :href="localePath('/login') + '?returnto=' + encodeURIComponent($route.fullPath)"
@@ -493,7 +493,7 @@
                       <v-btn
                         v-bind="props"
                         v-show="user.isadmin"
-                        dark
+                       
                         tile
                         depressed
                         nuxt
@@ -508,7 +508,7 @@
                     <v-menu v-if="signedin" offset-y>
                       <template v-slot:activator="{ props }">
                         <v-btn
-                          dark
+                         
                           tile
                           depressed
                           class="font-weight-regular text-white text-none"

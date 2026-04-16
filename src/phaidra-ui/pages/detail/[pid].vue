@@ -529,7 +529,7 @@
             >
               <div v-for="(titleObj, idx) in displayTitles" :key="'title-' + idx" class="mb-4">
                 <h1 class="text-h4 font-weight-light mb-2">{{ titleObj.mainTitle }}</h1>
-                <h2 v-if="titleObj.subtitle" class="text-h5 font-weight-light secondary--text">{{ titleObj.subtitle }}</h2>
+                <h2 v-if="titleObj.subtitle" class="text-h5 font-weight-light text-secondary">{{ titleObj.subtitle }}</h2>
               </div>
               <v-divider class="mb-2" v-if="!showPreview"></v-divider>
             </v-col>
@@ -706,7 +706,7 @@
                 >
                 <v-row v-else>
                 <v-col class="text-right mr-3">
-                  <v-chip class="pointer-disabled" label dark color="btnred"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
+                  <v-chip class="pointer-disabled" label theme="dark" color="btnred"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
                 </v-col>
               </v-row>
                 <v-card-text>
@@ -802,7 +802,7 @@
               <v-toolbar-title>
                 {{ $t("Members") }} ({{ $store.state.collectionMembersTotal /* leave it like this, computed property wasn't working on first access */ }})
               </v-toolbar-title>
-              <v-switch @click="refreshCollectionMembers()" class="mx-2" dark hide-details :label="$t('Only latest versions')" v-model="collOnlyLatestVersions"></v-switch>
+              <v-switch @click="refreshCollectionMembers()" class="mx-2" theme="dark" hide-details :label="$t('Only latest versions')" v-model="collOnlyLatestVersions"></v-switch>
               <v-spacer></v-spacer>
               <v-pagination
                 :wrapper-aria-label="$t('pagination')"
@@ -836,7 +836,7 @@
                           >
                             <v-progress-circular
                               indeterminate
-                              color="grey lighten-5"
+                              color="grey-lighten-5"
                             ></v-progress-circular>
                           </div>
                         </template>
@@ -848,7 +848,7 @@
                   <v-row no-gutters class="mb-4">
                     <v-col>
                       <h2
-                        class="title font-weight-light primary--text"
+                        class="title font-weight-light text-primary"
                         @click.stop
                       >
                         <nuxt-link
@@ -1125,7 +1125,7 @@
                     </v-card-text>
                   </v-card>
                 </li>
-                <li class="mb-6" v-if="(objectInfo.isrestricted) && (objectInfo.cmodel !== 'Collection')"><v-chip label dark color="btnred" class="pointer-disabled"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></li>
+                <li class="mb-6" v-if="(objectInfo.isrestricted) && (objectInfo.cmodel !== 'Collection')"><v-chip label theme="dark" color="btnred" class="pointer-disabled"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></li>
                 <li class="mb-6" v-if="
                   (downloadable && objectInfo.readrights) ||
                   objectInfo.cmodel === 'Collection' ||
@@ -1269,7 +1269,7 @@
                 <li class="mb-6" v-if="licenseUri || rightsStatements.length > 0">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box title font-weight-light white--text"
+                      class="ph-box title font-weight-light text-white"
                       >{{ $t("Rights") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -2325,7 +2325,7 @@
                                 $t("Cancel")
                               }}</v-btn>
                               <v-btn
-                                class="primary"
+                                class="bg-primary"
                                 :disabled="!chosenRelation"
                                 @click="
                                   $router.push(
@@ -2422,7 +2422,7 @@
               <v-row no-gutters>
                 <v-progress-linear :indeterminate="datareplaceUploadProgress === 100" v-model="datareplaceUploadProgress" color="primary"></v-progress-linear>
               </v-row>
-              <v-row no-gutters class="primary--text mt-1">
+              <v-row no-gutters class="text-primary mt-1">
                 <span v-if="datareplaceUploadProgress < 100">{{ $t('Uploading...') + ' ' + Math.ceil(datareplaceUploadProgress) }}%</span>
                 <span v-else>{{ $t('Processing...') }}</span>
               </v-row>

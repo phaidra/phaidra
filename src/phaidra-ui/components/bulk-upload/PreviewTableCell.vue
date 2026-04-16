@@ -1,5 +1,5 @@
 <template>
-  <td :class="{ 'grey--text': !isMapped }">
+  <td :class="{ 'text-grey': !isMapped }">
     {{ displayValue || '-' }}
   </td>
 </template>

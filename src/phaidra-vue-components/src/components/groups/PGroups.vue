@@ -33,7 +33,7 @@
                   <v-spacer></v-spacer>
                   <v-dialog v-model="createDialog" max-width="500px">
                     <template v-slot:activator="{ props: activatorProps }">
-                      <v-btn color="primary" dark class="mb-2" v-bind="activatorProps">{{ $t('Create new group') }}</v-btn>
+                      <v-btn color="primary" theme="dark" class="mb-2" v-bind="activatorProps">{{ $t('Create new group') }}</v-btn>
                     </template>
                     <v-card>
                       <v-card-title class="title font-weight-light text-white">
@@ -148,7 +148,7 @@
                 {{ $t('Username search') }}
                 <v-icon
                   right
-                  dark
+                  theme="dark"
                 >
                   mdi-database-search
                 </v-icon>
@@ -170,7 +170,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn outlined @click="deleteDialog = false">{{ $t('Cancel') }}</v-btn>
-          <v-btn dark @click="deleteGroup()" color="btnred">{{ $t('Delete') }}</v-btn>
+          <v-btn theme="dark" @click="deleteGroup()" color="btnred">{{ $t('Delete') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

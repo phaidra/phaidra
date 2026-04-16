@@ -1,7 +1,7 @@
 <template>
   <v-row v-if="!hidden">
     <v-col cols="12" md="10">
-      <v-col class="primary--text" cols="3">{{ label }}</v-col>
+      <v-col class="text-primary" cols="3">{{ label }}</v-col>
       {{jsonld}}
     </v-col>
     <v-col cols="12" md="1" v-if="actions.length">

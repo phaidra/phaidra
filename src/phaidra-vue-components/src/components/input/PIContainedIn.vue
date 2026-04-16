@@ -208,10 +208,10 @@
                     <v-icon>mdi-minus</v-icon>
                   </v-btn>
                   <span>
-                    <v-btn dark icon v-show="collapseSeriesModel" @click="collapseSeriesModel=!collapseSeriesModel">
+                    <v-btn theme="dark" icon v-show="collapseSeriesModel" @click="collapseSeriesModel=!collapseSeriesModel">
                       <v-icon>mdi-chevron-up</v-icon>
                     </v-btn>
-                    <v-btn dark icon v-show="!collapseSeriesModel" @click="collapseSeriesModel=!collapseSeriesModel">
+                    <v-btn theme="dark" icon v-show="!collapseSeriesModel" @click="collapseSeriesModel=!collapseSeriesModel">
                       <v-icon>mdi-chevron-down</v-icon>
                     </v-btn>
                   </span>
@@ -350,10 +350,10 @@
                   <span>{{ $t(publisherLabel) }}</span>
                   <v-spacer></v-spacer>
                   <span>
-                    <v-btn dark icon v-show="collapsePublisherModel" @click="collapsePublisherModel=!collapsePublisherModel">
+                    <v-btn theme="dark" icon v-show="collapsePublisherModel" @click="collapsePublisherModel=!collapsePublisherModel">
                       <v-icon>mdi-chevron-up</v-icon>
                     </v-btn>
-                    <v-btn dark icon v-show="!collapsePublisherModel" @click="collapsePublisherModel=!collapsePublisherModel">
+                    <v-btn theme="dark" icon v-show="!collapsePublisherModel" @click="collapsePublisherModel=!collapsePublisherModel">
                       <v-icon>mdi-chevron-down</v-icon>
                     </v-btn>
                   </span>

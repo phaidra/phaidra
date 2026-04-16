@@ -1,7 +1,7 @@
 <template>
   <v-row class="mb-8">
     <v-col cols="12" class="breadcrumbs-container pb-0" aria-label="Breadcrumbs">
-      <span class="youarehere secondary--text">{{ $t("You are here") }}:</span>
+      <span class="youarehere text-secondary">{{ $t("You are here") }}:</span>
       <ol class="breadcrumbs-list">
         <template v-for="(item, index) in translatedArray" :key="'item' + index">
           <li class="breadcrumb-item" :aria-current="item.disabled ? 'page' : undefined">

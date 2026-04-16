@@ -29,7 +29,7 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-icon
                       color="warning"
-                      dark
+                      theme="dark"
                       v-bind="attrs"
                       v-on="on"
                     >

@@ -203,7 +203,7 @@ export default {
     // },
 
     activeClass (i) {
-      const focusClass = i === this.focusList ? 'grey lighten-4' : ''
+      const focusClass = i === this.focusList ? 'grey-lighten-4' : ''
       return `${focusClass}`
     },
 

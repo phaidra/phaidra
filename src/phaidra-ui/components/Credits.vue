@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card>
-      <v-card-title class="text-h6 font-weight-light white--text">{{ $t('Credits') }}</v-card-title>
+      <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Credits') }}</v-card-title>
       <v-card-text class="mt-8 text-body-1">
         <h2 class="text-h6 font-weight-light mb-4">{{ $t('PHAIDRA uses the following resources') }}:</h2>
         <v-row>

@@ -321,10 +321,10 @@
             <span>{{ ch.labels[alpha2locale] }}</span>
             <v-spacer></v-spacer>
             <template v-if="ch.cardinality !== 1">
-              <v-btn icon dark @click="$emit('add-field', ch)">
+              <v-btn icon theme="dark" @click="$emit('add-field', ch)">
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
-              <v-btn v-if="canRemoveNode(ch, parent)" icon dark @click="$emit('remove-field', ch)">
+              <v-btn v-if="canRemoveNode(ch, parent)" icon theme="dark" @click="$emit('remove-field', ch)">
                 <v-icon>mdi-minus</v-icon>
               </v-btn>
             </template>

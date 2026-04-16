@@ -89,7 +89,7 @@
             <v-row no-gutters>
               <v-progress-linear indeterminate color="primary"></v-progress-linear>
             </v-row>
-            <v-row no-gutters class="primary--text mt-1">
+            <v-row no-gutters class="text-primary mt-1">
               <span>{{ $t("Transferring relationships...") }}</span><span class="ml-2"
                 v-if="transferMembershipAction">{{
                     transferMembershipAction

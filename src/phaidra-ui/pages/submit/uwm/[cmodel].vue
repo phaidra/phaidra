@@ -46,7 +46,7 @@
         large
         :disabled="loading"
         :loading="loading"
-        class="primary mr-8"
+        class="bg-primary mr-8"
         @click="save()"
         >{{ $t("Submit") }}</v-btn
       >

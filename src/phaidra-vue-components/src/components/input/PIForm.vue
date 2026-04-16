@@ -767,11 +767,11 @@
                       <v-dialog v-if="addbutton && (s.addbutton != false)" class="pb-4" v-model="s['adddialogue']" scrollable width="700px">
                         <template v-slot:activator="{ props: activatorProps }">
                           <v-btn v-bind="activatorProps" color="primary" large elevation="4" class="my-4">
-                            <v-icon class="mr-4" color="white" size="24" right dark>mdi-plus-circle</v-icon>{{ $t('Add metadata field') }}
+                            <v-icon class="mr-4" color="white" size="24" right theme="dark">mdi-plus-circle</v-icon>{{ $t('Add metadata field') }}
                           </v-btn>
                         </template>
                         <v-card>
-                          <v-card-title class="title font-weight-light text-white"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn class="grey--text text--darken-2" color="white" target='_blank' :to="'/metadata-fields-help'"><v-icon class="mr-2" aria-hidden="true">mdi-help-circle-outline</v-icon>{{ $t('Metadata fields Help') }}</v-btn></v-card-title>
+                          <v-card-title class="title font-weight-light text-white"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn class="text-grey text-darken-2" color="white" target='_blank' :to="'/metadata-fields-help'"><v-icon class="mr-2" aria-hidden="true">mdi-help-circle-outline</v-icon>{{ $t('Metadata fields Help') }}</v-btn></v-card-title>
                           <v-card-text>
                             <v-list three-line >
                               <v-text-field clearable :label="$t('Search...')" append-inner-icon="mdi-magnify" v-model="searchfieldsinput"></v-text-field>
@@ -817,7 +817,7 @@
             <v-row no-gutters>
               <v-progress-linear :indeterminate="uploadProgress === 100" v-model="uploadProgress" color="primary"></v-progress-linear>
             </v-row>
-            <v-row no-gutters class="primary--text mt-1">
+            <v-row no-gutters class="text-primary mt-1">
               <span v-if="uploadProgress < 100">{{ $t('Uploading...') + ' ' + Math.ceil(uploadProgress) }}%</span>
               <span v-else>{{ $t('Processing...') }}</span>
             </v-row>
@@ -846,17 +846,17 @@
             <v-spacer></v-spacer>
             <template v-if="!disablesave">
               <v-btn large fixed bottom right v-if="targetpid && floatingsavebutton" raised :loading="loading" :disabled="loading" color="primary" @click="save()"><span v-t="'Save'"></span></v-btn>
-              <v-btn v-else-if="targetpid && !floatingsavebutton" large raised :loading="loading" :disabled="loading" class="primary float-right" @click="save()"><span v-t="'Save'"></span></v-btn>
-              <v-btn v-else-if="forcePreview" large raised :loading="loading" :disabled="loading" class="primary float-right" @click="showForcePreview()"><span v-t="'Preview'"></span></v-btn>
+              <v-btn v-else-if="targetpid && !floatingsavebutton" large raised :loading="loading" :disabled="loading" class="bg-primary float-right" @click="save()"><span v-t="'Save'"></span></v-btn>
+              <v-btn v-else-if="forcePreview" large raised :loading="loading" :disabled="loading" class="bg-primary float-right" @click="showForcePreview()"><span v-t="'Preview'"></span></v-btn>
               <template v-else>
-                <v-btn v-if="!hideUploadButton" large raised :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
+                <v-btn v-if="!hideUploadButton" large raised :loading="loading" :disabled="loading" class="bg-primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
                 <v-btn
                   v-if="!hideUploadButton && !disableChecksum && !hideAddFileChecksum && submittype !== 'collection' && submittype !== 'resource'"
                   large
                   raised
                   :loading="loading"
                   :disabled="loading"
-                  class="grey mr-2 float-right"
+                  class="bg-grey mr-2 float-right"
                   @click="checksumDialog = true"
                 >
                   <span v-t="'Add file checksum'"></span>
@@ -912,12 +912,12 @@
           raised
           :loading="loading"
           :disabled="loading"
-          class="grey mr-2 float-right"
+          class="bg-grey mr-2 float-right"
           @click="checksumDialog = true"
         >
           <span v-t="'Add file checksum'"></span>
         </v-btn>
-        <v-btn large elevation="2" :loading="loading" :disabled="loading" class="primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
+        <v-btn large elevation="2" :loading="loading" :disabled="loading" class="bg-primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
       </v-window-item>
       <v-window-item value="help" v-if="help" class="pa-4">
         <p-help></p-help>

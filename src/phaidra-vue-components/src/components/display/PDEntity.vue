@@ -1,6 +1,6 @@
 <template>
   <v-row v-if="entity">
-    <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold text-md-right"><span v-show="!hideLabel">{{ getLocalizedTermLabel(this.role) }}</span></v-col>
+    <v-col :md="labelColMd" cols="12" class="pdlabel text-secondary font-weight-bold text-md-right"><span v-show="!hideLabel">{{ getLocalizedTermLabel(this.role) }}</span></v-col>
     <v-col :md="valueColMd" cols="12">
       <template v-if="entity['@type'] === 'schema:Person'">
         <template v-if="entity['skos:exactMatch']">
@@ -21,7 +21,7 @@
           <template v-for="(gn, gni) in entity['schema:givenName']" :key="'gn3-'+gni"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }">{{ gn['@value'] }}</span></template><template v-for="(fn, fni) in entity['schema:familyName']" :key="'fn3-'+fni"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }"> {{ fn['@value'] }}</span></template><template v-for="(n, ni) in entity['schema:name']" :key="'nm3-'+ni"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }">{{ n['@value'] }}</span></template>
           <template class="valuefield">{{ formatBirthDeathDate() }}</template>
         </template>
-        <template v-if="entity['schema:affiliation']" class="secondary--text">
+        <template v-if="entity['schema:affiliation']" class="text-secondary">
           <br/>
           <div>
             <template v-for="(af, afi) in entity['schema:affiliation']" :key="'aff-'+afi">

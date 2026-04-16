@@ -46,7 +46,7 @@
           :loading="loading"
           :disabled="loading"
           class="mx-2"
-          dark
+          theme="dark"
           color="btnred"
           @click="resetDOIImport()"
           >{{ $t("Reset") }}</v-btn
@@ -57,7 +57,7 @@
       <v-col cols="12" md="7">
         <v-card>
           <v-card-title
-            class="title font-weight-light white--text"
+            class="title font-weight-light text-white"
             >{{
               $t("Following metadata were retrieved")
             }}

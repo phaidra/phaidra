@@ -4,7 +4,7 @@
 
     <template v-if="pid && !predicatesToHide.includes('pid')"  v-slot:pid>
       <v-row>
-        <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('Persistent identifier') }}</v-col>
+        <v-col :md="labelColMd" cols="12" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t('Persistent identifier') }}</v-col>
         <v-col :md="valueColMd" cols="12"><a :href="`${instance.baseurl}/${pid}`">{{ instance.baseurl }}/{{ pid }}</a></v-col>
       </v-row>
     </template>
@@ -15,7 +15,7 @@
           <p-d-entity :role="role.p" :entity="e" :hideLabel="j !== 0" v-for="(e, j) in getEntities(role.p, role.o)" :key="componentid+'entity'+role.p+i+j" v-bind="displayProperties"></p-d-entity>
           <v-row v-if="entitiesLimited[role.p] && !showAllEntities[role.p]" :key="componentid+'entitymore'+role.p">
             <v-col :md="valueColMd" :offset-md="labelColMd">
-              <span class="mx-2 primary--text" @click="setShowAllEntities(role.p)">... {{ $t('show all') }}</span>
+              <span class="mx-2 text-primary" @click="setShowAllEntities(role.p)">... {{ $t('show all') }}</span>
             </v-col>
           </v-row>
         </template>
@@ -215,7 +215,7 @@
           </template>
             <v-row v-if="!shownAllProjectIds">
                 <v-col cols="6" offset="3">
-                      <span @click="showAllProjectIds()" class="mx-1 primary--text">... {{ $t('show all') }}</span>
+                      <span @click="showAllProjectIds()" class="mx-1 text-primary">... {{ $t('show all') }}</span>
                 </v-col>
             </v-row>
         </template>

@@ -9,7 +9,7 @@
         </ul>
       </v-alert>
       <v-divider></v-divider>
-      <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-2" vertical v-model="activetab">
+      <v-tabs slider-color="primary" slider-size="20px" bg-color="grey-darken-2" vertical v-model="activetab">
         <template v-for="(s, i) in this.form" :key="'tab-wrap'+i">
           <v-tab class="text-white" :active-class="'primary'" v-if="(s.xmlname !== 'annotation') && (s.xmlname !== 'etheses')">
             <span v-t="s.labels[alpha2locale]"></span>

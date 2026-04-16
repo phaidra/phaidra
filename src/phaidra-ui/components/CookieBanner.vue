@@ -7,7 +7,7 @@
             app
             sticky
             rounded
-            light
+            theme="light"
             elevation="10"
             color="white"
             class="cookie-banner"

@@ -4,7 +4,7 @@
       {{ title ? title : $t('Select an object') }}
       <v-spacer></v-spacer>
       <v-switch
-        dark
+        theme="dark"
         v-model="ownerFilter"
         :label="$t('Show only my objects')"
       ></v-switch>

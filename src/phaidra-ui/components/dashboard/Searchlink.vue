@@ -48,7 +48,7 @@ export default {
     titleClass: function () {
       let c = ''
       if (this.titlecolor) {
-        c += this.titlecolor + '--text'
+        c += 'text-' + this.titlecolor
       }
       if (this.textcenter) {
         c += ' text-center justify-center'

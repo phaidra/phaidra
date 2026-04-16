@@ -13,7 +13,7 @@
               v-model="f.show"
               @change="showFacet(f)"
               :label="$t(f.label ? f.label.toString() : '')"
-              class="facet-label primary--text"
+              class="facet-label text-primary"
               hide-details
               dense
               :aria-expanded="f.show"
@@ -32,15 +32,15 @@
                       v-for="(q, j) in f.queries" :key="i+j"
                       :value="q.id"
                       :label="$t(q.label ? q.label.toString() : '')"
-                      class="facet-label primary--text"
+                      class="facet-label text-primary"
                       
                       :aria-expanded="q.active && q.childFacet"
                       :aria-controls="q.childFacet ? 'facet-subcontent-' + i + '-' + j : null"
                       :id="'facet-subcontrol-' + i + '-' + j"
                     >
                       <template v-slot:label>
-                        <span class="facet-label primary--text">{{ $t(q.label ? q.label.toString() : '') }}</span>
-                        <span class="facet-count secondary--text font-weight-medium" v-if="q.count > 0">({{q.count}})</span>
+                        <span class="facet-label text-primary">{{ $t(q.label ? q.label.toString() : '') }}</span>
+                        <span class="facet-count text-secondary font-weight-medium" v-if="q.count > 0">({{q.count}})</span>
                       </template>
                     </v-radio>
                   </v-radio-group>
@@ -50,7 +50,7 @@
                   v-model="q.active"
                   @change="toggleFacet(q,f)"
                   :label="$t(q.label ? q.label.toString() : '')"
-                  class="facet-label primary--text"
+                  class="facet-label text-primary"
                   hide-details
                   dense
                   :aria-expanded="q.active && q.childFacet"
@@ -58,8 +58,8 @@
                   :id="'facet-subcontrol-' + i + '-' + j"
                 >
                   <template v-slot:label>
-                    <span class="facet-label primary--text">{{ $t(q.label ? q.label.toString() : '') }}</span>
-                    <span class="facet-count secondary--text font-weight-medium" v-if="q.count > 0">({{q.count}})</span>
+                    <span class="facet-label text-primary">{{ $t(q.label ? q.label.toString() : '') }}</span>
+                    <span class="facet-count text-secondary font-weight-medium" v-if="q.count > 0">({{q.count}})</span>
                   </template>
                 </v-checkbox>
                 <ul v-if="q.active && q.childFacet" :id="'facet-subcontent-' + i + '-' + j" role="region" :aria-labelledby="'facet-subcontrol-' + i + '-' + j">
@@ -68,7 +68,7 @@
                         v-model="q1.active"
                         @change="toggleFacet(q1,q.childFacet)"
                         :label="$t(q1.label ? q1.label.toString() : '')"
-                        class="facet-label primary--text"
+                        class="facet-label text-primary"
                         hide-details
                         dense
                         :aria-expanded="q1.active && q1.childFacet"
@@ -76,8 +76,8 @@
                         :id="'facet-subsubcontrol-' + i + '-' + j + '-' + k"
                       >
                         <template v-slot:label>
-                          <span class="facet-label primary--text">{{ $t(q1.label ? q1.label.toString() : '') }}</span>
-                          <span class="facet-count secondary--text font-weight-medium" v-if="q1.count > 0">({{q1.count}})</span>
+                          <span class="facet-label text-primary">{{ $t(q1.label ? q1.label.toString() : '') }}</span>
+                          <span class="facet-count text-secondary font-weight-medium" v-if="q1.count > 0">({{q1.count}})</span>
                         </template>
                       </v-checkbox>
                     <ul v-if="q1.active && q1.childFacet" :id="'facet-subsubcontent-' + i + '-' + j + '-' + k" role="region" :aria-labelledby="'facet-subsubcontrol-' + i + '-' + j + '-' + k">
@@ -86,14 +86,14 @@
                             v-model="q2.active"
                             @change="toggleFacet(q2,q1.childFacet)"
                             :label="$t(q2.label ? q2.label.toString() : '')"
-                            class="facet-label primary--text"
+                            class="facet-label text-primary"
                             hide-details
                             dense
                             :id="'facet-item-' + i + '-' + j + '-' + k + '-' + l"
                           >
                             <template v-slot:label>
-                              <span class="facet-label primary--text">{{ $t(q2.label ? q2.label.toString() : '') }}</span>
-                              <span class="facet-count secondary--text font-weight-medium" v-if="q2.count>0">({{q2.count}})</span>
+                              <span class="facet-label text-primary">{{ $t(q2.label ? q2.label.toString() : '') }}</span>
+                              <span class="facet-count text-secondary font-weight-medium" v-if="q2.count>0">({{q2.count}})</span>
                             </template>
                           </v-checkbox>
                       </li>
@@ -199,7 +199,7 @@
                   v-model="showOwnerFilter"
                   @change="toggleOwnerFilter()"
                   :label="$t('Owner')"
-                  class="facet-label primary--text"
+                  class="facet-label text-primary"
                   hide-details
                   dense
                   :aria-expanded="showOwnerFilter"
@@ -213,11 +213,11 @@
             </v-row>
             
             <v-row no-gutters>
-              <v-btn class="mb-4 mt-4 primary" @click="$refs.userSearchdialog.open()" v-if="showOwnerFilter">
+              <v-btn class="mb-4 mt-4 bg-primary" @click="$refs.userSearchdialog.open()" v-if="showOwnerFilter">
                 {{ $t('Username search') }}
                 <v-icon
                   right
-                  dark
+                  theme="dark"
                 >
                   mdi-database-search
                 </v-icon>
@@ -231,7 +231,7 @@
                   v-model="showAuthorFilter"
                   @change="toggleAuthorFilter()"
                   :label="$t('Authors')"
-                  class="facet-label primary--text"
+                  class="facet-label text-primary"
                   hide-details
                   dense
                   :aria-expanded="showAuthorFilter"
@@ -282,7 +282,7 @@
                   v-model="showRoleFilter"
                   @change="toggleRoleFilter()"
                   :label="$t('Roles')"
-                  class="facet-label primary--text"
+                  class="facet-label text-primary"
                   hide-details
                   dense
                   :aria-expanded="showRoleFilter"
@@ -336,7 +336,7 @@
                     />
                   </v-col>
                   <v-col cols="2">
-                    <icon name="material-navigation-close" class="primary--text" height="100%" @click="removeRoleFilter(role)"></icon>
+                    <icon name="material-navigation-close" class="text-primary" height="100%" @click="removeRoleFilter(role)"></icon>
                   </v-col>
                 </v-row>
               </div>
@@ -684,6 +684,6 @@ svg
   margin-bottom: 3px
   cursor: pointer
 
-svg.primary--text
+svg.text-primary
   margin-right: 4px
 </style>

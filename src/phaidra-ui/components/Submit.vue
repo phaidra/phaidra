@@ -98,7 +98,7 @@
       <template v-if="instanceconfig.uwmsubmit">
         <v-row class="my-6" justify="start">
           <v-col cols="12">
-            <span class="title font-weight-light primary--text">{{
+            <span class="title font-weight-light text-primary">{{
               $t("Legacy (Uwmetadata)")
             }}</span>
           </v-col>
@@ -107,7 +107,7 @@
           <v-col cols="12">
             <v-btn
               large
-              dark
+              theme="dark"
               color="grey text-white mr-8"
               :to="localePath({ path: '/submit/uwm/asset'})"
             >
@@ -115,7 +115,7 @@
             </v-btn>
             <v-btn
               large
-              dark
+              theme="dark"
               color="grey text-white mr-8"
               :to="localePath({ path: '/submit/uwm/collection'})"
             >
@@ -168,7 +168,7 @@
       <template v-if="false">
         <v-row class="my-6" justify="start">
           <v-col cols="12">
-            <span class="title font-weight-light primary--text">{{
+            <span class="title font-weight-light text-primary">{{
               $t("Legacy (Uwmetadata)")
             }}</span>
             <v-divider></v-divider>
@@ -178,7 +178,7 @@
           <v-col cols="12">
             <v-btn
               large
-              dark
+              theme="dark"
               color="grey text-white mr-8"
               @click="$router.push(localePath({ path: '/submit/uwm/asset' }))"
             >
@@ -186,7 +186,7 @@
             </v-btn>
             <v-btn
               large
-              dark
+              theme="dark"
               color="grey text-white mr-8"
               @click="
                 $router.push(localePath({ path: '/submit/uwm/collection' }))

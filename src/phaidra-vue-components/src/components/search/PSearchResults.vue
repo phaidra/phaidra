@@ -42,7 +42,7 @@
                 <p-img :src="instance.api + '/object/' + doc.pid + '/thumbnail'" class="preview-maxwidth elevation-1 mt-2" :alt="doc.dc_title ? doc.dc_title[0] : doc.pid">
                   <template v-slot:placeholder>
                     <div class="fill-height ma-0" align="center" justify="center" >
-                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                      <v-progress-circular indeterminate color="grey-lighten-5"></v-progress-circular>
                     </div>
                   </template>
                 </p-img>
@@ -51,7 +51,7 @@
             <v-col cols="10">
               <v-row >
                 <v-col cols="12" md="9">
-                  <h2 class="title font-weight-light primary--text" @click.stop v-if="doc.dc_title">
+                  <h2 class="title font-weight-light text-primary" @click.stop v-if="doc.dc_title">
                     <component :is="PhaidraLink" :to="detailRouteTo(doc.pid)">{{ getObjectTitle(doc) }}</component>
                   </h2>
                 </v-col>
@@ -71,7 +71,7 @@
               </v-row>
               <v-row class="my-4 mr-2">
                 <v-col>
-                  <span class="text-subtitle-2 secondary--text">
+                  <span class="text-subtitle-2 text-secondary">
                     <span v-for="(roleDoc,i) in getRoleList(doc)" :key="'pers'+i">
                       {{roleDoc}}<span v-if="(i+1) < getRoleList(doc).length">; </span>
                     </span>
@@ -88,7 +88,7 @@
               </v-row>
               <v-row v-if="doc.isrestricted">
                 <v-col>
-                  <v-chip class="pointer-disabled" label dark color="btnred"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
+                  <v-chip class="pointer-disabled" label theme="dark" color="btnred"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
                 </v-col>
               </v-row>
               <v-row >

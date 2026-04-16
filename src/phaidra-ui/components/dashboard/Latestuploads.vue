@@ -1,6 +1,6 @@
 <template>
   <v-card class="mt-2 mx-auto" :elevation="0" color="transparent">
-    <div class="title font-weight-light transparent text-h6" :class="titlecolor ? titlecolor + '--text' : ''">{{ $t(label) }}</div>
+    <div class="title font-weight-light transparent text-h6" :class="titlecolor ? ('text-' + titlecolor) : ''">{{ $t(label) }}</div>
     <v-card-text>
       <div v-for="(doc, i) in docs" :key="'doc'+i" class="pa-4">
         <v-row>
@@ -11,7 +11,7 @@
                   <p-img :src="apiBaseUrl + '/object/' + doc.pid + '/thumbnail'" class="elevation-2 mt-2" :alt="doc.dc_title ? doc.dc_title[0] : doc.pid">
                     <template v-slot:placeholder>
                       <div class="fill-height ma-0" align="center" justify="center" >
-                        <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                        <v-progress-circular indeterminate color="grey-lighten-5"></v-progress-circular>
                       </div>
                     </template>
                   </p-img>
@@ -20,7 +20,7 @@
               <v-col cols="10">
                 <v-row no-gutters class="mb-4">
                   <v-col cols="10">
-                    <span class="primary--text" @click.stop>
+                    <span class="text-primary" @click.stop>
                       <nuxt-link :to="`/detail/${doc.pid}`">{{ getObjectTitle(doc) }}</nuxt-link>
                     </span>
                   </v-col>

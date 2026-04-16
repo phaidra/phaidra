@@ -51,7 +51,7 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn v-if="!sent" class="primary" :loading="loading" :disabled="loading" @click="send()">{{ $t('Send') }}</v-btn>
+      <v-btn v-if="!sent" class="bg-primary" :loading="loading" :disabled="loading" @click="send()">{{ $t('Send') }}</v-btn>
       <v-btn v-if="sent" :loading="loading" :disabled="loading" @click="newFeedback()">{{ $t('New feedback') }}</v-btn>
     </v-card-actions>
   </v-card>
