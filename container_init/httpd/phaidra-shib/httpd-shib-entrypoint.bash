@@ -6,6 +6,7 @@ cp /shibboleth-certs/sp-signing-key.pem \
    /shib-init/attribute-map.xml \
    /shib-init/attribute-policy.xml \
    /shib-init/security-policy.xml \
+   /shib-init/shibboleth2.xml \
    /etc/shibboleth/
 sed -i \
     -e "s|__PHAIDRA_HOSTNAME__|${PHAIDRA_HOSTNAME}|" \
