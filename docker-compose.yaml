@@ -251,7 +251,7 @@ services:
 
   httpd-shib-local:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:76080e1f
+    image: phaidraorg/httpd-shib-dist:2548caea
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
@@ -270,7 +270,7 @@ services:
 
   httpd-shib-s3:
     hostname: "httpd"
-    image: phaidraorg/httpd-shib-dist:76080e1f
+    image: phaidraorg/httpd-shib-dist:2548caea
     <<: [*common, *logs, *configs]
     ports:
       - "80:80"
