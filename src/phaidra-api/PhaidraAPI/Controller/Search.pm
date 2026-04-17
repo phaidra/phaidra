@@ -427,7 +427,8 @@ sub search_solr {
   }
 
   # Set default fl if not provided - only return fields needed by frontend
-  my $default_fl = 'pid,owner,dc_title,dc_title_eng,dc_title_deu,dc_title_ita,dc_description,dc_description_eng,dc_description_deu,dc_description_ita,created,cmodel,bib_roles_pers_aut,bib_roles_pers_edt,bib_roles_pers_cmp,bib_roles_pers_art,isrestricted,dc_rights,systemtag';
+  my $default_fl
+    = 'pid,owner,dc_title,dc_title_eng,dc_title_deu,dc_title_ita,dc_description,dc_description_eng,dc_description_deu,dc_description_ita,created,cmodel,bib_roles_pers_aut,bib_roles_pers_edt,bib_roles_pers_cmp,bib_roles_pers_art,bib_roles_corp_aut,isrestricted,dc_rights,systemtag,bf_shelfmark,dc_subject';
 
   unless (defined $params->{fl}) {
     $params->{fl} = $default_fl;
