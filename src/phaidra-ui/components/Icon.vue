@@ -66,7 +66,8 @@ export default {
         display: 'inline-block',
         width: this.computedWidth + 'px',
         height: this.computedHeight + 'px',
-        fill: this.color || undefined
+        // Inherit surrounding text/link color by default; explicit prop still wins.
+        fill: this.color || 'currentColor'
       }
     }
   }
