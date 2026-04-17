@@ -552,6 +552,16 @@ address {
 .v-theme--light.v-btn.v-btn--icon {
     color: rgba(0, 0, 0, 0.54);
 }
+
+/* Vuetify 3 theme selectors (replacement for .theme--light ...) */
+.v-theme--light .v-icon {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.v-theme--light .v-card > .v-card-text,
+.v-theme--light .v-card > .v-card-subtitle {
+  color: rgba(0, 0, 0, 0.6);
+}
 .v-application ul, .v-application ol {
   padding-left: 24px;
 }
