@@ -487,7 +487,7 @@ services:
   api-s3:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
-    image: phaidraorg/api-dist:11d3e84b
+    image: phaidraorg/api-dist:8d04994e
     <<: [*common, *logs]
     volumes:
       - s3-cache:/s3-cache
@@ -501,7 +501,7 @@ services:
   api:
     hostname: "api"
     depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
-    image: phaidraorg/api-dist:11d3e84b
+    image: phaidraorg/api-dist:8d04994e
     <<: [*common, *logs]
     volumes:
       - fedora:/mnt/fedora:ro
