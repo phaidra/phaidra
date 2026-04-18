@@ -3758,7 +3758,7 @@ export default {
   max-width: 120px;
 }
 
-.container {
+.v-container {
   padding: 0px;
 }
 

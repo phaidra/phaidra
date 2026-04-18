@@ -666,7 +666,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.container
+.v-container
   padding-top: 1em
   padding-left: 0
 

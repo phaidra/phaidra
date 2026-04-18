@@ -149,7 +149,7 @@ export default {
 </script>
 
 <style scoped>
-.container .toolbar {
+.v-container .toolbar {
   padding: 0px;
 }
 
