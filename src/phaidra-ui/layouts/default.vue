@@ -79,6 +79,61 @@ import moment from "moment";
 import "@/assets/css/material-icons.css";
 
 export default {
+  setup() {
+    const nuxtApp = useNuxtApp()
+    const runtime = useRuntimeConfig()
+
+    useHead(() => {
+      const store = nuxtApp.$store
+      const instanceconfig = store?.state?.instanceconfig || {}
+
+      // Detect locale during SSR from cookies, similar to theme detection.
+      let currentLocale = nuxtApp.$i18n?.locale || 'eng'
+      if (import.meta.server) {
+        const ssrCookie = nuxtApp.$cookies?.get('locale')
+        if (ssrCookie) currentLocale = ssrCookie
+      }
+
+      const lang = currentLocale === 'deu' ? 'de' : currentLocale === 'ita' ? 'it' : 'en'
+      const titlePart = nuxtApp.$i18n?.t ? nuxtApp.$i18n.t(instanceconfig.title) : (instanceconfig.title || '')
+      const institutionPart = nuxtApp.$i18n?.t ? nuxtApp.$i18n.t(instanceconfig.institution) : (instanceconfig.institution || '')
+      const title = `${titlePart} - ${institutionPart}`.trim()
+
+      const dark = nuxtApp.$vuetify?.theme?.global?.current?.value?.dark
+      const themeColor = dark ? runtime.public.darkPrimaryColor : runtime.public.primaryColor
+
+      const meta = [
+        { charset: 'utf-8' },
+        { name: 'Generator', content: 'PHAIDRA' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'theme-color', content: themeColor }
+      ]
+
+      if (instanceconfig.googlesiteverificationcode) {
+        meta.push({
+          name: 'google-site-verification',
+          content: instanceconfig.googlesiteverificationcode
+        })
+      }
+
+      const script = []
+      if (instanceconfig.customJavaScript && instanceconfig.customJavaScript.trim()) {
+        let scriptContent = instanceconfig.customJavaScript.trim()
+        scriptContent = scriptContent.replace(/<script[^>]*>/gi, '').replace(/<\/script>/gi, '')
+        script.push({
+          type: 'text/javascript',
+          children: scriptContent
+        })
+      }
+
+      return {
+        htmlAttrs: { lang },
+        title,
+        meta,
+        script
+      }
+    })
+  },
   components: {
     CookieBanner
   },
@@ -86,6 +141,7 @@ export default {
   data() {
     return {
       loading: false,
+      hasLoadedInstanceConfig: false,
       i18n_override: {},
       faviconUrl: ``
     }
@@ -175,6 +231,8 @@ export default {
           } else if (this.$config?.public?.apiBaseURL) {
             this.$store.commit("setInstanceConfigApiBaseUrl", this.$config?.public?.apiBaseURL);
           }
+          this.refreshBreadcrumbs()
+          this.hasLoadedInstanceConfig = true
         }
       } catch (error) {
         console.error(error)
@@ -182,6 +240,26 @@ export default {
         this.loading = false;
       }
       return true
+    },
+    applyRuntimeOverrides() {
+      if (process.client && this.instanceconfig.cms_css && this.instanceconfig.cms_css !== '') {
+        const style = document.createElement('style');
+        style.type = 'text/css';
+        style.innerHTML = this.instanceconfig.cms_css;
+        document.head.appendChild(style);
+      }
+
+      Object.entries(this.i18n_override).forEach(([lang, messages]) => {
+        this.$i18n.mergeLocaleMessage(lang, messages)
+      })
+    },
+    refreshBreadcrumbs() {
+      const localePath = this.$localePath || ((path) => path)
+      this.$store.commit('updateBreadcrumbs', {
+        to: this.$route,
+        from: this.$route,
+        localePath
+      })
     },
     setFavIconText(svgText) {
       const base64Svg = Buffer.from(svgText).toString('base64')
@@ -193,19 +271,23 @@ export default {
       }
     }
   },
-  mounted() {
-    this.mergeInfoBannerMessage(this.instanceconfig?.infoBannerMessage)
-    this.loadInstanceConfigToStore()
-    if (this.instanceconfig.cms_css && this.instanceconfig.cms_css !== '') {
-      const style = document.createElement('style');
-      style.type = 'text/css';
-      style.innerHTML = this.instanceconfig.cms_css;
-      document.head.appendChild(style);
+  async serverPrefetch() {
+    if (!this.hasLoadedInstanceConfig) {
+      await this.loadInstanceConfigToStore()
     }
 
     Object.entries(this.i18n_override).forEach(([lang, messages]) => {
       this.$i18n.mergeLocaleMessage(lang, messages)
-    })
+    }
+    )
+    this.applyRuntimeOverrides()
+  },
+  async mounted() {
+    if (!this.hasLoadedInstanceConfig) {
+      await this.loadInstanceConfigToStore()
+    }
+    this.mergeInfoBannerMessage(this.instanceconfig?.infoBannerMessage)
+    this.applyRuntimeOverrides()
     if (!this.signedin) {
       let token = window.localStorage.getItem("XSRF-TOKEN")
       if (token) {

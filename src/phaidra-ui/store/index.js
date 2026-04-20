@@ -108,7 +108,7 @@ export const mutations = {
         to: transition.localePath('/')
       }
     ]
-    if (!state.instanceconfig.hideInstitutionName && !process.server) {
+    if (!state.instanceconfig.hideInstitutionName) {
       state.breadcrumbs.unshift(
         {
           text: state.instanceconfig.institution || '',
