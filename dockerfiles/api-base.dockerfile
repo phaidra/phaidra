@@ -7,6 +7,8 @@ ADD --checksum=sha256:5b46c15340d0eb8cb10d9b110b455ca4c2719b58f394f6c892b6eae887
     https://github.com/mozilla/pdf.js/releases/download/v5.5.207/pdfjs-5.5.207-legacy-dist.zip \
     /pdfjs.zip
 RUN unzip /pdfjs.zip -d /pdfjs
+ADD https://github.com/swagger-api/swagger-ui/archive/refs/tags/v5.32.4.tar.gz /swagger
+RUN tar -xzf /swagger
 
 FROM ubuntu:jammy-20260210.1
 ENV DEBIAN_FRONTEND=noninteractive
@@ -47,7 +49,9 @@ apt-get install --yes --quiet --no-install-recommends libnet-amazon-s3-perl
 apt-get clean
 EOF
 ADD ../src/phaidra-api /usr/local/phaidra/phaidra-api
+# add files from builder
 COPY --from=builder /pdfjs /usr/local/phaidra/phaidra-api/public/pdfjs
+COPY --from=builder /swagger-ui-5.32.4/dist/* /usr/local/phaidra/phaidra-api/public/swagger-ui/
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]
