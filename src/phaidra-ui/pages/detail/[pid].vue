@@ -62,7 +62,7 @@
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
-                              :src="apiBaseUrl +
+                              :src="instanceconfig?.api +
                                 '/object/' +
                                 rel.pid +
                                 '/thumbnail'
@@ -117,7 +117,7 @@
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
-                              :src="apiBaseUrl +
+                              :src="instanceconfig?.api +
                                 '/object/' +
                                 rel.pid +
                                 '/thumbnail'
@@ -171,7 +171,7 @@
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
-                              :src="apiBaseUrl +
+                              :src="instanceconfig?.api +
                                 '/object/' +
                                 rel.pid +
                                 '/thumbnail'
@@ -226,7 +226,7 @@
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
-                              :src="apiBaseUrl +
+                              :src="instanceconfig?.api +
                                 '/object/' +
                                 rel.pid +
                                 '/thumbnail'
@@ -282,7 +282,7 @@
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
-                              :src="apiBaseUrl +
+                              :src="instanceconfig?.api +
                                 '/object/' +
                                 rel.pid +
                                 '/thumbnail'
@@ -336,7 +336,7 @@
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
-                              :src="apiBaseUrl +
+                              :src="instanceconfig?.api +
                                 '/object/' +
                                 rel.pid +
                                 '/thumbnail'
@@ -391,7 +391,7 @@
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
-                              :src="apiBaseUrl +
+                              :src="instanceconfig?.api +
                                 '/object/' +
                                 rel.pid +
                                 '/thumbnail'
@@ -586,7 +586,7 @@
                   <iframe
                     :title="$t('Video preview')"
                     :src="
-                      apiBaseUrl +
+                      instanceconfig?.api +
                       '/object/' +
                       objectInfo.pid +
                       '/preview' + '?lang=' + $i18n.locale.substring(0, 2)
@@ -603,7 +603,7 @@
                 v-else
                   :title="$t('Preview')"
                   :src="
-                    apiBaseUrl +
+                    instanceconfig?.api +
                     '/object/' +
                     objectInfo.pid +
                     '/preview' + '?lang=' + $i18n.locale.substring(0, 2) + `${instanceconfig.addannotation ? `&addannotation=${instanceconfig.addannotation}` : ''}`
@@ -624,7 +624,7 @@
                 color="primary"
                   class="mt-2 float-right"
                   :href="
-                    apiBaseUrl +
+                    instanceconfig?.api +
                     '/object/' +
                     objectInfo.pid +
                     '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
@@ -691,7 +691,7 @@
                   :title="$t('Preview')"
                   v-if="!member.isrestricted"
                   :src="
-                    apiBaseUrl + '/object/' + member.pid + '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
+                    instanceconfig?.api + '/object/' + member.pid + '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
                   "
                   width="100%"
                   :height="member.cmodel === 'Audio' ? '60' : '500'"
@@ -724,7 +724,7 @@
                     class="ml-2"
                     variant="elevated"
                     :href="
-                      apiBaseUrl + '/object/' + member.pid + '/download'
+                      instanceconfig?.api + '/object/' + member.pid + '/download'
                     "
                     color="primary"
                     ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }}</v-btn
@@ -783,7 +783,7 @@
                 <v-btn
                   v-if="objectInfo.readrights"
                   :href="
-                    apiBaseUrl +
+                    instanceconfig?.api +
                     '/object/' +
                     objectInfo.pid +
                     '/comp/' +
@@ -823,7 +823,7 @@
                   <nuxt-link :to="`/detail/${collMember.pid}`">
                       <p-img
                         :src="
-                          apiBaseUrl + '/object/' + collMember.pid + '/thumbnail'
+                          instanceconfig?.api + '/object/' + collMember.pid + '/thumbnail'
                         "
                         class="elevation-1 mt-2"
                         :alt="getObjectTitle(collMember)"
@@ -1142,7 +1142,7 @@
                           class="mr-2 mb-2"
                           v-if="downloadable && objectInfo.readrights"
                           :href="
-                            apiBaseUrl +
+                            instanceconfig?.api +
                             '/object/' +
                             objectInfo.pid +
                             '/download'
@@ -1174,7 +1174,7 @@
                               color="primary"
                               target="_blank"
                               :href="
-                                apiBaseUrl +
+                                instanceconfig?.api +
                                 '/collection/' +
                                 objectInfo.pid +
                                 '/rss'
@@ -1190,7 +1190,7 @@
                         <v-btn
                           v-if="objectInfo.cmodel === 'Resource'"
                           :href="
-                            apiBaseUrl +
+                            instanceconfig?.api +
                             '/object/' +
                             objectInfo.pid +
                             '/resourcelink/redirect'
@@ -1222,7 +1222,7 @@
                           <a
                             target="_blank"
                             :href="
-                              apiBaseUrl +
+                              instanceconfig?.api +
                               '/imageserver/?IIIF=' +
                               objectInfo.pid +
                               '.tif/full/pct:50/0/default.jpg'
@@ -1234,7 +1234,7 @@
                           <a
                             target="_blank"
                             :href="
-                              apiBaseUrl +
+                              instanceconfig?.api +
                               '/imageserver/?IIIF=' +
                               objectInfo.pid +
                               '.tif/full/pct:25/0/default.jpg'
@@ -1254,7 +1254,7 @@
                       >
                         <a
                           :href="
-                            apiBaseUrl +
+                            instanceconfig?.api +
                             '/object/' +
                             objectInfo.pid +
                             '/download?trywebversion=1'
@@ -1504,7 +1504,7 @@
                           <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                  :src="apiBaseUrl +
+                                  :src="instanceconfig?.api +
                                     '/object/' +
                                     rel.pid +
                                     '/thumbnail'
@@ -1587,7 +1587,7 @@
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                  :src="apiBaseUrl +
+                                  :src="instanceconfig?.api +
                                     '/object/' +
                                     rel.pid +
                                     '/thumbnail'
@@ -1637,7 +1637,7 @@
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                  :src="apiBaseUrl +
+                                  :src="instanceconfig?.api +
                                     '/object/' +
                                     rel.pid +
                                     '/thumbnail'
@@ -1686,7 +1686,7 @@
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                  :src="apiBaseUrl +
+                                  :src="instanceconfig?.api +
                                     '/object/' +
                                     rel.pid +
                                     '/thumbnail'
@@ -1736,7 +1736,7 @@
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                  :src="apiBaseUrl +
+                                  :src="instanceconfig?.api +
                                     '/object/' +
                                     rel.pid +
                                     '/thumbnail'
@@ -1787,7 +1787,7 @@
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                  :src="apiBaseUrl +
+                                  :src="instanceconfig?.api +
                                     '/object/' +
                                     rel.pid +
                                     '/thumbnail'
@@ -1836,7 +1836,7 @@
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                :src="apiBaseUrl +
+                                :src="instanceconfig?.api +
                                   '/object/' +
                                   rel.pid +
                                   '/thumbnail'
@@ -1886,7 +1886,7 @@
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
-                                  :src="apiBaseUrl +
+                                  :src="instanceconfig?.api +
                                     '/object/' +
                                     rel.pid +
                                     '/thumbnail'
@@ -1937,7 +1937,7 @@
                       >
                         <a
                         :href="
-                            apiBaseUrl +
+                            instanceconfig?.api +
                             '/object/' +
                             objectInfo.pid +
                             '/json-ld'
@@ -1953,7 +1953,7 @@
                       >
                         <a
                         :href="
-                            apiBaseUrl +
+                            instanceconfig?.api +
                             '/object/' +
                             objectInfo.pid +
                             '/iiifmanifest'
@@ -1969,7 +1969,7 @@
                       >
                         <a
                           :href="
-                            apiBaseUrl +
+                            instanceconfig?.api +
                             '/object/' +
                             objectInfo.pid +
                             '/uwmetadata?format=xml'
@@ -1985,7 +1985,7 @@
                       >
                         <a
                           :href="
-                            apiBaseUrl +
+                            instanceconfig?.api +
                             '/object/' +
                             objectInfo.pid +
                             '/mods?format=xml'
@@ -2002,7 +2002,7 @@
                       >
                         <a
                           :href="
-                            apiBaseUrl +
+                            instanceconfig?.api +
                             '/object/' +
                             objectInfo.pid +
                             '/datastream/' +
@@ -2026,7 +2026,7 @@
                       <v-row no-gutters class="pt-2">
                         <a
                           :href="
-                            apiBaseUrl +
+                            instanceconfig?.api +
                             '/object/' +
                             objectInfo.pid +
                             '/index/dc'
@@ -2042,7 +2042,7 @@
                         <a
                           class="mb-1"
                           :href="
-                            apiBaseUrl +
+                            instanceconfig?.api +
                             '/object/' +
                             objectInfo.pid +
                             '/datacite?format=xml'
@@ -2058,7 +2058,7 @@
                         <a
                           class="mb-1"
                           :href="
-                            apiBaseUrl +
+                            instanceconfig?.api +
                             '/object/' +
                             objectInfo.pid +
                             '/lom'
@@ -2074,7 +2074,7 @@
                         <a
                           class="mb-1"
                           :href="
-                            apiBaseUrl +
+                            instanceconfig?.api +
                             '/object/' +
                             objectInfo.pid +
                             '/edm'
@@ -2090,7 +2090,7 @@
                         <a
                           class="mb-1"
                           :href="
-                            apiBaseUrl +
+                            instanceconfig?.api +
                             '/object/' +
                             objectInfo.pid +
                             '/openaire'
@@ -3213,7 +3213,7 @@ export default {
       let metaInfo = {}
       if (this.objectInfo) {
       let thumbnail =
-        this.apiBaseUrl +
+        this.instanceconfig?.api +
         "/object/" +
         this.objectInfo.pid +
         "/thumbnail";
@@ -3357,25 +3357,25 @@ export default {
       metaInfo.link.push({
         rel: 'describedby',
         type: 'application/xml',
-        href: this.apiBaseUrl + '/object/' + this.objectInfo.pid + '/index/dc'
+        href: this.instanceconfig?.api + '/object/' + this.objectInfo.pid + '/index/dc'
       });
       metaInfo.link.push({
         rel: 'describedby',
         type: 'application/vnd.datacite.datacite+xml',
-        href: this.apiBaseUrl + '/object/' + this.objectInfo.pid + '/datacite?format=xml'
+        href: this.instanceconfig?.api + '/object/' + this.objectInfo.pid + '/datacite?format=xml'
       });
       if (this.objectInfo?.dshash?.['JSON-LD']) {
         metaInfo.link.push({
           rel: 'describedby',
           type: 'application/ld+json',
-          href: this.apiBaseUrl + '/object/' + this.objectInfo.pid + '/json-ld'
+          href: this.instanceconfig?.api + '/object/' + this.objectInfo.pid + '/json-ld'
         });
       }
       if (this.downloadable) {
         metaInfo.link.push({
           rel: 'item',
           type: this.mimetype,
-          href: this.apiBaseUrl + '/object/' + this.objectInfo.pid + '/download'
+          href: this.instanceconfig?.api + '/object/' + this.objectInfo.pid + '/download'
         });
       }
       if (this.objectInfo.id_bib_roles_pers_aut) {

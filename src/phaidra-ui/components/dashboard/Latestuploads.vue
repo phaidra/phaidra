@@ -4,11 +4,12 @@
     <v-card-text>
       <div v-for="(doc, i) in docs" :key="'doc'+i" class="pa-4">
         <v-row>
+          instanceconfig: {{ instanceconfig }}
           <v-col :cols="12">
             <v-row :key="'prev'+doc.pid">
               <v-col cols="2" class="preview-maxwidth">
                 <nuxt-link :to="`/detail/${doc.pid}`">
-                  <p-img :src="apiBaseUrl + '/object/' + doc.pid + '/thumbnail'" class="elevation-2 mt-2" :alt="doc.dc_title ? doc.dc_title[0] : doc.pid">
+                  <p-img :src="instanceconfig.api + '/object/' + doc.pid + '/thumbnail'" class="elevation-2 mt-2" :alt="doc.dc_title ? doc.dc_title[0] : doc.pid">
                     <template v-slot:placeholder>
                       <div class="fill-height ma-0" align="center" justify="center" >
                         <v-progress-circular indeterminate color="grey-lighten-5"></v-progress-circular>

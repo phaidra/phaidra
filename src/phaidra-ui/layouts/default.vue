@@ -110,7 +110,7 @@ export default {
         { charset: 'utf-8' },
         { name: 'Generator', content: 'PHAIDRA' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'theme-color', content: this.$vuetify?.theme?.global?.current?.value?.dark ? this.$config.darkPrimaryColor : this.$config.primaryColor }
+        { name: 'theme-color', content: this.$vuetify?.theme?.global?.current?.value?.dark ? this.$config?.public?.darkPrimaryColor : this.$config?.public?.primaryColor }
       ],
       script: []
     };
@@ -147,6 +147,7 @@ export default {
     loadInstanceConfigToStore: async function () {
       this.loading = true
       try {
+        this.$store.commit("setInstanceConfigCookieDomain", this.$config?.public?.cookieDomain);
         let settingResponse = await this.$axios.get("/config/public");
         const publicConfig = settingResponse?.data?.public_config
         if (publicConfig) {
@@ -166,13 +167,13 @@ export default {
           // Do not overwrite API-provided values with undefined runtime config.
           if (publicConfig.baseurl) {
             this.$store.commit("setInstanceConfigBaseUrl", publicConfig.baseurl);
-          } else if (this.$config?.baseURL) {
-            this.$store.commit("setInstanceConfigBaseUrl", this.$config.baseURL);
+          } else if (this.$config?.public?.baseURL) {
+            this.$store.commit("setInstanceConfigBaseUrl", this.$config?.public?.baseURL);
           }
           if (publicConfig.api) {
             this.$store.commit("setInstanceConfigApiBaseUrl", publicConfig.api);
-          } else if (this.$config?.apiBaseURL) {
-            this.$store.commit("setInstanceConfigApiBaseUrl", this.$config.apiBaseURL);
+          } else if (this.$config?.public?.apiBaseURL) {
+            this.$store.commit("setInstanceConfigApiBaseUrl", this.$config?.public?.apiBaseURL);
           }
         }
       } catch (error) {

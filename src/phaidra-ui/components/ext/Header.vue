@@ -690,9 +690,9 @@ export default {
     if (localStorage.getItem("locale")) {
       this.$i18n.locale = localStorage.getItem("locale");
     } else {
-      console.log('default locale: ' + this.$config.defaultLocale)
-      if (this.$config.defaultLocale) {
-        this.$i18n.locale = this.$config.defaultLocale
+      console.log('default locale: ' + this.$config.public.defaultLocale)
+      if (this.$config.public.defaultLocale) {
+        this.$i18n.locale = this.$config.public.defaultLocale
       }
       localStorage.setItem("locale", this.$i18n.locale);
       this.$cookies.set("locale", this.$i18n.locale);
