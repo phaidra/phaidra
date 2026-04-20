@@ -20,7 +20,7 @@
                 @change="search"
                 :label="$t('Full-text Search')"
                 hide-details
-                dense
+                density="compact"
                 class="mt-0"
               >
               </v-checkbox>

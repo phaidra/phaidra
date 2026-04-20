@@ -15,7 +15,7 @@
               :label="$t(f.label ? f.label.toString() : '')"
               class="facet-label text-primary"
               hide-details
-              dense
+              density="compact"
               :aria-expanded="f.show"
               :aria-controls="'facet-content-' + i"
               :id="'facet-control-' + i"
@@ -52,7 +52,7 @@
                   :label="$t(q.label ? q.label.toString() : '')"
                   class="facet-label text-primary"
                   hide-details
-                  dense
+                  density="compact"
                   :aria-expanded="q.active && q.childFacet"
                   :aria-controls="q.childFacet ? 'facet-subcontent-' + i + '-' + j : null"
                   :id="'facet-subcontrol-' + i + '-' + j"
@@ -70,7 +70,7 @@
                         :label="$t(q1.label ? q1.label.toString() : '')"
                         class="facet-label text-primary"
                         hide-details
-                        dense
+                        density="compact"
                         :aria-expanded="q1.active && q1.childFacet"
                         :aria-controls="q1.childFacet ? 'facet-subsubcontent-' + i + '-' + j + '-' + k : null"
                         :id="'facet-subsubcontrol-' + i + '-' + j + '-' + k"
@@ -88,7 +88,7 @@
                             :label="$t(q2.label ? q2.label.toString() : '')"
                             class="facet-label text-primary"
                             hide-details
-                            dense
+                            density="compact"
                             :id="'facet-item-' + i + '-' + j + '-' + k + '-' + l"
                           >
                             <template v-slot:label>
@@ -201,7 +201,7 @@
                   :label="$t('Owner')"
                   class="facet-label text-primary"
                   hide-details
-                  dense
+                  density="compact"
                   :aria-expanded="showOwnerFilter"
                   :aria-controls="'owner-content'"
                   id="owner-control"
@@ -233,7 +233,7 @@
                   :label="$t('Authors')"
                   class="facet-label text-primary"
                   hide-details
-                  dense
+                  density="compact"
                   :aria-expanded="showAuthorFilter"
                   :aria-controls="'author-content'"
                   id="author-control"
@@ -284,7 +284,7 @@
                   :label="$t('Roles')"
                   class="facet-label text-primary"
                   hide-details
-                  dense
+                  density="compact"
                   :aria-expanded="showRoleFilter"
                   :aria-controls="'role-content'"
                   id="role-control"

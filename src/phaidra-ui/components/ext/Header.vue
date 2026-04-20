@@ -267,7 +267,7 @@
               </v-row>
 
               <v-row>
-                <v-toolbar flat dense color="transparent" class="my-md-1">
+                <v-toolbar flat density="compact" color="transparent" class="my-md-1">
                   <client-only>
                     <v-row class="hidden-md-and-up">
                         <v-menu attach="#mobile-menu-btn" offset-y :disable-keys="true" min-width="150px">
