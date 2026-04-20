@@ -564,7 +564,8 @@ export default {
 
 <style scoped>
 .divider {
-  border-color: #bdbdbd;
+  opacity: 1 !important;
+  border-color: #bdbdbd !important;
 }
 
 svg {

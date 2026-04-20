@@ -13,7 +13,8 @@
               v-model="f.show"
               @change="showFacet(f)"
               :label="$t(f.label ? f.label.toString() : '')"
-              class="facet-label text-primary"
+              class="facet-label"
+              color="primary"
               hide-details
               density="compact"
               :aria-expanded="f.show"
@@ -32,7 +33,8 @@
                       v-for="(q, j) in f.queries" :key="i+j"
                       :value="q.id"
                       :label="$t(q.label ? q.label.toString() : '')"
-                      class="facet-label text-primary"
+                      class="facet-label"
+                      color="primary"
                       
                       :aria-expanded="q.active && q.childFacet"
                       :aria-controls="q.childFacet ? 'facet-subcontent-' + i + '-' + j : null"
@@ -50,7 +52,8 @@
                   v-model="q.active"
                   @change="toggleFacet(q,f)"
                   :label="$t(q.label ? q.label.toString() : '')"
-                  class="facet-label text-primary"
+                  class="facet-label"
+                  color="primary"
                   hide-details
                   density="compact"
                   :aria-expanded="q.active && q.childFacet"
@@ -68,7 +71,8 @@
                         v-model="q1.active"
                         @change="toggleFacet(q1,q.childFacet)"
                         :label="$t(q1.label ? q1.label.toString() : '')"
-                        class="facet-label text-primary"
+                        class="facet-label"
+                        color="primary"
                         hide-details
                         density="compact"
                         :aria-expanded="q1.active && q1.childFacet"
@@ -86,7 +90,8 @@
                             v-model="q2.active"
                             @change="toggleFacet(q2,q1.childFacet)"
                             :label="$t(q2.label ? q2.label.toString() : '')"
-                            class="facet-label text-primary"
+                            class="facet-label"
+                            color="primary"
                             hide-details
                             density="compact"
                             :id="'facet-item-' + i + '-' + j + '-' + k + '-' + l"
@@ -199,7 +204,8 @@
                   v-model="showOwnerFilter"
                   @change="toggleOwnerFilter()"
                   :label="$t('Owner')"
-                  class="facet-label text-primary"
+                  class="facet-label"
+                  color="primary"
                   hide-details
                   density="compact"
                   :aria-expanded="showOwnerFilter"
@@ -231,7 +237,8 @@
                   v-model="showAuthorFilter"
                   @change="toggleAuthorFilter()"
                   :label="$t('Authors')"
-                  class="facet-label text-primary"
+                  class="facet-label"
+                  color="primary"
                   hide-details
                   density="compact"
                   :aria-expanded="showAuthorFilter"
@@ -282,7 +289,8 @@
                   v-model="showRoleFilter"
                   @change="toggleRoleFilter()"
                   :label="$t('Roles')"
-                  class="facet-label text-primary"
+                  class="facet-label"
+                  color="primary"
                   hide-details
                   density="compact"
                   :aria-expanded="showRoleFilter"
@@ -677,6 +685,9 @@ export default {
 
 .facet-label
   cursor: pointer
+
+:deep(.searchFilters .v-selection-control--dirty .v-icon)
+  color: unquote('rgb(var(--v-theme-primary))') !important
 
 .facet-count
   margin-left: 5px
