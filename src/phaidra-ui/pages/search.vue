@@ -13,11 +13,14 @@ import { context } from "../mixins/context";
 
 export default {
   mixins: [config, context],
-  metaInfo() {
-    let metaInfo = {
-      title: this.documentTitle(this.$t('Search')),
-    };
-    return metaInfo;
-  },
+  setup() {
+    const nuxtApp = useNuxtApp()
+    useHead(() => {
+      const t = nuxtApp.$i18n?.t || ((v) => v)
+      return {
+        title: this.documentTitle(t('Search'))
+      }
+    })
+  }
 }
 </script>

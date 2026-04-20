@@ -32,11 +32,14 @@ export default {
             }
         }
     },
-    metaInfo() {
-        let metaInfo = {
-        title: this.documentTitle(this.templateTitle[this.$i18n.locale]),
-        };
-        return metaInfo;
+    setup() {
+        const nuxtApp = useNuxtApp()
+        useHead(() => {
+            const t = nuxtApp.$i18n?.t || ((v) => v)
+            return {
+                title: this.documentTitle(t('Collection'))
+            }
+        })
     },
     created() {
         this.templateName = this.$route.params.collection

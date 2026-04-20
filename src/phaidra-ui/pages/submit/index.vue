@@ -8,11 +8,14 @@ import Submit from "../../components/Submit.vue";
 export default {
   middleware: "auth",
   mixins: [config],
-  metaInfo() {
-    let metaInfo = {
-      title: this.documentTitle(this.$t('Submit')),
-    };
-    return metaInfo;
-  },
+  setup() {
+    const nuxtApp = useNuxtApp()
+    useHead(() => {
+      const t = nuxtApp.$i18n?.t || ((v) => v)
+      return {
+        title: this.documentTitle(t('Submit'))
+      }
+    })
+  }
 }
 </script>

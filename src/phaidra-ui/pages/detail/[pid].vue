@@ -2460,6 +2460,8 @@ export default {
     const nuxtApp = useNuxtApp()
     const instance = getCurrentInstance()
 
+    useHead(() => instance?.proxy?.detailsMetaInfo || {})
+
     /**
      * Load via Vuex/axios (works SSR + client). Do not depend on `instance.proxy` for the fetch:
      * during setup/hydration `proxy` is often still null, which previously aborted the handler and left the page empty.
@@ -2553,9 +2555,6 @@ export default {
   },
   validate({ params }) {
     return /^o:\d+$/.test(params.pid);
-  },
-  metaInfo() {
-    return this.detailsMetaInfo;
   },
   computed: {
     ownerEmail: function () {

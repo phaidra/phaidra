@@ -1342,11 +1342,14 @@ export default {
   mixins: [FaviconMixin, config],
   components: {PRepostat},
   middleware: "auth",
-  metaInfo() {
-    let metaInfo = {
-      title: this.documentTitle(this.$t('Admin')),
-    };
-    return metaInfo;
+  setup() {
+    const nuxtApp = useNuxtApp()
+    useHead(() => {
+      const t = nuxtApp.$i18n?.t || ((v) => v)
+      return {
+        title: this.documentTitle(t('Admin'))
+      }
+    })
   },
   computed: {
     configAsJSON: {

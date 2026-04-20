@@ -9,11 +9,14 @@ import { config } from "../mixins/config";
 
 export default {
   mixins: [config],
-  metaInfo() {
-    let metaInfo = {
-      title: this.documentTitle(this.$t('Help')),
-    };
-    return metaInfo;
-  },
+  setup() {
+    const nuxtApp = useNuxtApp()
+    useHead(() => {
+      const t = nuxtApp.$i18n?.t || ((v) => v)
+      return {
+        title: this.documentTitle(t('Help'))
+      }
+    })
+  }
 }
 </script>
