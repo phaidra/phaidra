@@ -1,0 +1,7 @@
+rules:
+  - name: any
+    conditions:
+      - userAgent.matches(".*")
+    action: challenge
+    settings:
+      challenges: ["js-pow-sha256"]

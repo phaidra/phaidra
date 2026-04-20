@@ -1,0 +1,113 @@
+name: phaidra
+
+include:
+  - docker-compose.yaml
+
+services:
+  httpd-ssl-local:
+    # build:
+    #   context: .
+    #   dockerfile: dockerfiles/httpd-ssl-dist.dockerfile
+    # pull_policy: build
+    extends:
+      file: docker-compose.yaml
+      service: httpd-ssl-local
+    ports: !reset []
+    expose:
+      - 443
+
+  caddy:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM caddy:builder AS builder
+        RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build xcaddy build --with github.com/shift72/caddy-geo-ip
+
+        FROM caddy
+        COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - phaidra-network
+    command: ["/usr/bin/caddy", "run", "--config", "/Caddyfile"]
+    volumes:
+      - ./certs/httpd:/ssl:ro
+    configs:
+      - source: caddyfile
+        target: /Caddyfile
+    profiles: ["ssl-local", "shib-local"]
+
+  anubis:
+    hostname: "botblocker"
+    image: ghcr.io/techarohq/anubis:latest
+    # explicitly set labels restart, networks because it's not possible to use anchor when including compose files
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    restart: always
+    networks:
+      - phaidra-network
+    environment:
+      COOKIE_SECURE: false
+      TARGET: http://httpd:443
+      TARGET_INSECURE_SKIP_VERIFY: true
+      SLOG_LEVEL: DEBUG
+      REDIRECT_DOMAINS: localhost
+      DIFFICULTY: 5
+      POLICY_FNAME: /data/cfg/botPolicy.yaml
+      BIND: ":8080"
+    volumes:
+      - ./configs/anubis.yaml:/data/cfg/botPolicy.yaml:ro
+    develop:
+      watch:
+        - path: ./configs/anubis.yaml
+          target: /data/cfg/botPolicy.yaml
+          action: sync+restart
+          initial_sync: true
+    # profiles: [ssl-local, shib-local]
+    profiles: ["anubis"]
+
+  goaway:
+    hostname: "botblocker"
+    image: ghcr.io/weebdatahoarder/go-away:latest
+    # explicitly set labels restart, networks because it's not possible to use anchor when including compose files
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    restart: always
+    networks:
+      - phaidra-network
+    environment:
+      GOAWAY_BIND: ":8080"
+      GOAWAY_CACHE: "/cache"
+      GOAWAY_CLIENT_IP_HEADER: "X-Real-Ip"
+      GOAWAY_POLICY: /policy.yaml
+      GOAWAY_BACKEND: "*=http://httpd:443"
+    volumes:
+      - goaway_cache:/cache
+      - ./configs/goaway.yaml:/policy.yaml
+    profiles: ["goaway"]
+
+configs:
+  caddyfile:
+    content: |
+      # not sure why we have to manually redirect. maybe because of caddy?
+      localhost:80 {
+        redir "https://localhost"
+      }
+      localhost /etc/ssl/fullchain.pem /etc/ssl/privkey.pem {
+      # localhost {
+        reverse_proxy http://botblocker:8080 {
+          # transport http {
+          #   tls_insecure_skip_verify
+          # }
+          header_up X-Real-Ip {http.request.remote.host}
+        }
+        log {
+          level debug
+        }
+      }
+
+volumes:
+  goaway_cache:
