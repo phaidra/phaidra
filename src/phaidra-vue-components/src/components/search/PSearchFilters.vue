@@ -670,7 +670,8 @@ export default {
   padding-top: 1em
   padding-left: 0
 
-ul
+.main-ul.searchFilters,
+.main-ul.searchFilters ul
   list-style: none
   padding-left: 1em
 
