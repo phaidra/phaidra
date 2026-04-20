@@ -57,6 +57,11 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
     VToolbar: {
       density: 'compact'
+    },
+    VPagination: {
+      activeColor: 'primary',
+      elevation: 1,
+      size: 'small',
     }
   },
   })

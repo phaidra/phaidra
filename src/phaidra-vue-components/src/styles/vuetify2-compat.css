@@ -81,3 +81,7 @@
   background-color: rgb(var(--v-theme-primary)) !important;
   height: 2px;
 }
+
+.v-pagination__list {
+  padding-left: 0 !important;
+}

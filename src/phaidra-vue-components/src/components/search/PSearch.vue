@@ -584,6 +584,6 @@ svg {
 }
 .full-text-checkbox-wrapper {
   justify-content: flex-end;
-  margin-top: -30px;
+  margin-top: -25px;
 }
 </style>
