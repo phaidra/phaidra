@@ -116,13 +116,6 @@ sub info {
     }
     $info->{cmodel} = $cmodelr->{cmodel};
     if ($info->{cmodel} eq 'Page') {
-      my $search_model = PhaidraAPI::Model::Search->new;
-      my $bookpidr     = $search_model->get_book_for_page($c, $pid);
-      if ($bookpidr->{status} ne 200) {
-        $c->app->log->error("pid[$pid] could not get book pid");
-        return $bookpidr;
-      }
-      $c->app->log->info("bookpid for [$pid] " . $c->app->dumper($bookpidr));
       $docres = $index_model->get_page_doc($c, $pid);
       if ($docres->{status} == 200) {
         $info = $docres->{doc};
@@ -132,7 +125,8 @@ sub info {
         my $idxres = $index_model->get($c, $pid);
         $info = $idxres->{index};
       }
-      $info->{bookpid} = $bookpidr->{bookpid};
+      $c->app->log->info("bookpid for [$pid] " . $c->app->dumper($info->{ispartof}));
+      $info->{bookpid} = @{$info->{ispartof}}[0];
     }
     else {
       return $docres;

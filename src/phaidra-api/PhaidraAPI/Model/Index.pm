@@ -665,17 +665,28 @@ sub update {
       }
 
       if ($cmodel_res->{cmodel} eq 'Book') {
+        my $pageUpdateUrl = $self->getSolrUpdateUrl($c, $cmodel_res->{cmodel}, 'phaidra_pages');
         if (($getStatus eq 301) || ($getStatus eq 302)) {
           @{$collectionMembers} = ();
         }
         unless (defined($collectionMembers)) {
           @{$collectionMembers} = ();
         }
-        my $pageUpdateUrl = $self->getSolrUpdateUrl($c, $cmodel_res->{cmodel}, 'phaidra_pages');
-        my $umr           = $self->_update_members($c, $pid, $cmodel_res->{cmodel}, $pageUpdateUrl, $collectionMembers, 'ispartof');
-        if ($umr->{status} ne 200) {
-          $res->{status} = $umr->{status};
-          push @{$res->{alerts}}, @{$umr->{alerts}} if scalar @{$umr->{alerts}} > 0;
+        if (scalar @{$collectionMembers} == 0) {
+          if (scalar @{$members} > 0) {
+            my $umr = $self->_update_members($c, $pid, $cmodel_res->{cmodel}, $pageUpdateUrl, $members, 'ispartof');
+            if ($umr->{status} ne 200) {
+              $res->{status} = $umr->{status};
+              push @{$res->{alerts}}, @{$umr->{alerts}} if scalar @{$umr->{alerts}} > 0;
+            }
+          }
+        }
+        else {
+          my $umr = $self->_update_members($c, $pid, $cmodel_res->{cmodel}, $pageUpdateUrl, $collectionMembers, 'ispartof');
+          if ($umr->{status} ne 200) {
+            $res->{status} = $umr->{status};
+            push @{$res->{alerts}}, @{$umr->{alerts}} if scalar @{$umr->{alerts}} > 0;
+          }
         }
       }
 
