@@ -10,9 +10,9 @@
             <v-list-group prepend-icon="" v-for="(field, j) in category.fields" sub-group :key="'field'+j">
               <template v-slot:activator>
                 <v-list-item :value="field.open">
-                  <v-list-item-content @click="selectField(field)">
+                  <div class="v-list-item-content" @click="selectField(field)">
                     <v-list-item-title>{{ $t(field.title) }}</v-list-item-title>
-                  </v-list-item-content>
+                  </div>
                 </v-list-item>
               </template>
             </v-list-group>

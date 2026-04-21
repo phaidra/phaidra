@@ -11,11 +11,13 @@
                 <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
-            <v-list>
-              <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
-                <v-list-item-title>{{ action.title }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
+            <div>
+              <v-list>
+                <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
+                  <v-list-item-title>{{ action.title }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </div>
           </v-menu>
         </v-card-title>
         <v-divider></v-divider>
@@ -102,6 +104,7 @@
 </template>
 
 <script>
+import { markRaw } from 'vue'
 import 'leaflet/dist/leaflet.css'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
@@ -289,9 +292,9 @@ export default {
           iconUrl: markerIconUrl,
           shadowUrl: markerShadowUrl
         })
-        this.LMapComp = vueLeaflet.LMap
-        this.LTileLayerComp = vueLeaflet.LTileLayer
-        this.LMarkerComp = vueLeaflet.LMarker
+        this.LMapComp = markRaw(vueLeaflet.LMap)
+        this.LTileLayerComp = markRaw(vueLeaflet.LTileLayer)
+        this.LMarkerComp = markRaw(vueLeaflet.LMarker)
         this.leafletReady = true
       }).catch((error) => {
         console.log(error)

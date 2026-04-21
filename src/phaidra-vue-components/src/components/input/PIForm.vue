@@ -777,10 +777,10 @@
                               <v-text-field clearable :label="$t('Search...')" append-inner-icon="mdi-magnify" v-model="searchfieldsinput"></v-text-field>
                               <div v-for="field in filteredMetadatafields" :key="field.id">
                                 <v-list-item @click="addfieldselection.push(field)">
-                                  <v-list-item-content>
+                                  <div class="v-list-item-content">
                                     <v-list-item-title>{{ $t(field.fieldname) }}</v-list-item-title>
                                     <v-list-item-subtitle>{{ $t(field.helptext ? field.helptext : field.definition) }}</v-list-item-subtitle>
-                                  </v-list-item-content>
+                                  </div>
                                 </v-list-item>
                                 <v-divider :key="'divi'+field.id"></v-divider>
                               </div>

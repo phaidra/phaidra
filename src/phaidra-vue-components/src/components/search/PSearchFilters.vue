@@ -127,14 +127,14 @@
                   single-line
                 >
                   <template slot="item" slot-scope="{ attr, item }">
-                    <v-list-item-content two-line>
+                    <div class="v-list-item-content two-line">
                       <v-list-item-title  v-html="`${getLocalizedTermLabel('accessibilityControl', item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
+                    </div>
                   </template>
                   <template slot="selection" slot-scope="{ item }">
-                    <v-list-item-content>
+                    <div class="v-list-item-content">
                       <v-list-item-title v-html="`${getLocalizedTermLabel('accessibilityControl', item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
+                    </div>
                   </template>
                 </v-autocomplete>
                 <v-autocomplete
@@ -155,14 +155,14 @@
                   single-line
                 >
                   <template slot="item" slot-scope="{ attr, item }">
-                    <v-list-item-content two-line>
+                    <div class="v-list-item-content two-line">
                       <v-list-item-title  v-html="`${getLocalizedTermLabel('accessibilityFeature', item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
+                    </div>
                   </template>
                   <template slot="selection" slot-scope="{ item }">
-                    <v-list-item-content>
+                    <div class="v-list-item-content">
                       <v-list-item-title v-html="`${getLocalizedTermLabel('accessibilityFeature', item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
+                    </div>
                   </template>
                 </v-autocomplete>
                 <v-autocomplete
@@ -183,14 +183,14 @@
                   single-line
                 >
                   <template slot="item" slot-scope="{ attr, item }">
-                    <v-list-item-content two-line>
+                    <div class="v-list-item-content two-line">
                       <v-list-item-title  v-html="`${getLocalizedTermLabel('accessibilityHazard', item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
+                    </div>
                   </template>
                   <template slot="selection" slot-scope="{ item }">
-                    <v-list-item-content>
+                    <div class="v-list-item-content">
                       <v-list-item-title v-html="`${getLocalizedTermLabel('accessibilityHazard', item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
+                    </div>
                   </template>
                 </v-autocomplete>
               </v-row>
