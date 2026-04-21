@@ -1434,7 +1434,7 @@
                             </template>
                             <span>{{ $t('Show details') }}</span>
                           </v-tooltip>
-                        </nuxt-link> -->
+                        </nuxt-link>
                       </v-card-title>
                       <v-card-text class="mt-4">
                         <v-row>
