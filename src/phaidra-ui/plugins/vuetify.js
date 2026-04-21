@@ -62,6 +62,11 @@ export default defineNuxtPlugin((nuxtApp) => {
       activeColor: 'primary',
       elevation: 1,
       size: 'small',
+    },
+    VCardActions: {
+      VBtn: {
+        variant: 'flat'
+      }
     }
   },
   })
