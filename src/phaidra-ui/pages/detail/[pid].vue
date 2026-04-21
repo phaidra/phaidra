@@ -544,15 +544,14 @@
                 :class="displayTitles && displayTitles.length > 0 ? 'justify-end justify-sm-start' : 'justify-end'"
               >
                 <v-menu offset-y>
-                  <template v-slot:activator="{ on: menuOn, attrs: menuAttrs }">
+                  <template v-slot:activator="{ props: menuProps }">
                     <v-tooltip bottom>
-                      <template v-slot:activator="{ on: tipOn, attrs: tipAttrs }">
+                      <template v-slot:activator="{ props: tipProps }">
                         <v-btn
                           icon
                           large
                           :class="displayTitles && displayTitles.length > 0 ? 'ml-sm-1' : ''"
-                          v-bind="{ ...menuAttrs, ...tipAttrs }"
-                          v-on="{ ...tipOn, ...menuOn }"
+                          v-bind="mergeProps(menuProps, tipProps)"
                           :aria-label="$t('Add to collection') + ' / ' + $t('Add to object list')"
                         >
                           <v-icon>mdi-bookmark-plus-outline</v-icon>
@@ -1010,11 +1009,10 @@
                             <br />
                             <a :href="id.value">{{ id.value }}</a>
                             <v-tooltip bottom>
-                              <template v-slot:activator="{ on, attrs }">
+                              <template v-slot:activator="{ props }">
                                 <v-btn
                                   :aria-label="$t('Copy to clipboard')"
-                                  v-on="on"
-                                  v-bind="attrs"
+                                  v-bind="props"
                                   icon
                                   @click="copyToClipboard(id.value)"
                                 >
@@ -1106,11 +1104,10 @@
                             <a v-if="id.value.startsWith('http')" :href="id.value">{{ id.value }}</a>
                             <span v-else>{{ id.value }}</span>
                             <v-tooltip bottom>
-                              <template v-slot:activator="{ on, attrs }">
+                              <template v-slot:activator="{ props }">
                                 <v-btn
                                   :aria-label="$t('Copy to clipboard')"
-                                  v-on="on"
-                                  v-bind="attrs"
+                                  v-bind="props"
                                   icon
                                   @click="copyToClipboard(id.value)"
                                 >
@@ -2443,7 +2440,7 @@
 
 
 <script>
-import { getCurrentInstance, nextTick } from 'vue'
+import { getCurrentInstance, mergeProps, nextTick } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { useAsyncData, useNuxtApp, useRoute } from '#app'
 import { context } from "../../mixins/context";

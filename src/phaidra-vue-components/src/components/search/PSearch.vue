@@ -26,12 +26,11 @@
               </v-checkbox>
               <div v-if="allBooks">
                 <v-tooltip bottom class="ml-2" color="warning">
-                  <template v-slot:activator="{ on, attrs }">
+                  <template v-slot:activator="{ props }">
                     <v-icon
                       color="warning"
                       theme="dark"
-                      v-bind="attrs"
-                      v-on="on"
+                      v-bind="props"
                     >
                       mdi-alert
                     </v-icon>
