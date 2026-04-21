@@ -163,7 +163,7 @@
 
             <v-col md="9" >
               <v-row justify-md="end" class="pr-4 py-2">
-                <div class="d-flex align-center me-2" v-if="signedin && $vuetify.breakpoint.smAndDown">
+                <div class="d-flex align-center me-2" v-if="signedin && $vuetify?.display?.smAndDown">
                   <v-icon
                     class="mr-1"
                     aria-hidden="true"
