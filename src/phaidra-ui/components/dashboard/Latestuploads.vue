@@ -4,7 +4,6 @@
     <v-card-text>
       <div v-for="(doc, i) in docs" :key="'doc'+i" class="pa-4">
         <v-row>
-          instanceconfig: {{ instanceconfig }}
           <v-col :cols="12">
             <v-row :key="'prev'+doc.pid">
               <v-col cols="2" class="preview-maxwidth">
