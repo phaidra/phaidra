@@ -551,7 +551,7 @@
                           icon
                           large
                           :class="displayTitles && displayTitles.length > 0 ? 'ml-sm-1' : ''"
-                          v-bind="mergeProps(menuProps, tipProps)"
+                          v-bind="{ ...menuProps, ...tipProps }"
                           :aria-label="$t('Add to collection') + ' / ' + $t('Add to object list')"
                         >
                           <v-icon>mdi-bookmark-plus-outline</v-icon>
@@ -2440,7 +2440,7 @@
 
 
 <script>
-import { getCurrentInstance, mergeProps, nextTick } from 'vue'
+import { getCurrentInstance, nextTick } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { useAsyncData, useNuxtApp, useRoute } from '#app'
 import { context } from "../../mixins/context";
