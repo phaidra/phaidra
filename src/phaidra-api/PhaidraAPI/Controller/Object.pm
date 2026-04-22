@@ -117,6 +117,20 @@ sub get_is_thumbnail_for {
   else {
     $self->app->log->debug("error searching for isthumbnailfor: " . $getres->code . " " . $getres->message);
   }
+
+  $urlget->path("/solr/" . $self->app->config->{solr}->{core_pages} . "/select");
+  $urlget->query(q => "*:*", fq => "isthumbnailfor:\"$pid\"", rows => "1", wt => "json");
+  $getres = $ua->get($urlget)->result;
+  if ($getres->is_success) {
+    for my $d (@{$getres->json->{response}->{docs}}) {
+      $self->app->log->info($d->{pid} . " is thumbnail for $pid");
+      return $d->{pid};
+    }
+  }
+  else {
+    $self->app->log->debug("error searching for isthumbnailfor: " . $getres->code . " " . $getres->message);
+  }
+
 }
 
 sub setNoCacheHeaders {
@@ -338,28 +352,6 @@ sub thumbnail {
             return;
           }
           $self->reply->static('images/video.png');
-          return;
-        }
-      }
-      elsif ($self->config->{streaming}) {
-        my $u_model = PhaidraAPI::Model::Util->new;
-        my $r       = $u_model->get_video_key($self, $pid);
-        if ($r->{status} eq 200) {
-          my $thumburl = 'https://' . $self->config->{streaming}->{server} . '/media/' . $self->config->{streaming}->{basepath} . '/' . $r->{video_key} . '.jpeg';
-          if (Mojo::IOLoop->is_running) {
-            $self->render_later;
-            $self->ua->get(
-              $thumburl,
-              sub {
-                my ($c, $tx) = @_;
-                _proxy_tx($self, $tx);
-              }
-            );
-          }
-          else {
-            my $tx = $self->ua->get($thumburl);
-            _proxy_tx($self, $tx);
-          }
           return;
         }
       }
