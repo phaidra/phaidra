@@ -12,18 +12,13 @@
             <v-row>
               <v-col cols="12" md="10" offset-md="1" class="content">
                 <client-only>
-                  <p-breadcrumbs :items="breadcrumbs" v-if="$route.path === '/' ? !instanceconfig.hideBreadcrumbsOnHomepage : true"></p-breadcrumbs>
+                  <p-breadcrumbs :items="breadcrumbs"
+                    v-if="$route.path === '/' ? !instanceconfig.hideBreadcrumbsOnHomepage : true"></p-breadcrumbs>
                 </client-only>
 
                 <template v-for="(alert, i) in alerts">
-                  <v-snackbar
-                    :key="'altsnack' + i"
-                    class="font-weight-regular"
-                    top
-                    color="success"
-                    v-if="alert.type === 'success'"
-                    v-model="showSnackbar"
-                  >
+                  <v-snackbar :key="'altsnack' + i" class="font-weight-regular" top color="success"
+                    v-if="alert.type === 'success'" v-model="showSnackbar">
                     <span v-if="alert.key && alert.params">{{ $t(alert.key, alert.params) }}</span>
                     <span v-else>{{ $t(alert.msg) }}</span>
                     <v-btn dark text @click.native="dismiss(alert)">OK</v-btn>
@@ -31,24 +26,15 @@
                 </template>
 
                 <template v-if="showAlerts">
-                  <v-row
-                    justify="center"
-                    v-for="(alert, i) in alerts"
-                    :key="'alert' + i"
-                  >
+                  <v-row justify="center" v-for="(alert, i) in alerts" :key="'alert' + i">
                     <v-col cols="12">
-                      <v-alert
-                        v-if="alert.type !== 'success' && alert.msg"
-                        :type="alert.type === 'danger' ? 'error' : alert.type"
-                        :value="true"
-                        transition="slide-y-transition"
-                      >
+                      <v-alert v-if="alert.type !== 'success' && alert.msg"
+                        :type="alert.type === 'danger' ? 'error' : alert.type" :value="true"
+                        transition="slide-y-transition">
                         <v-row align="center">
                           <v-col class="grow">{{ $t(alert.msg) }}</v-col>
                           <v-col class="shrink">
-                            <v-btn icon @click.native="dismiss(alert)"
-                              ><v-icon>mdi-close</v-icon></v-btn
-                            >
+                            <v-btn icon @click.native="dismiss(alert)"><v-icon>mdi-close</v-icon></v-btn>
                           </v-col>
                         </v-row>
                       </v-alert>
@@ -59,7 +45,7 @@
                 <transition name="fade" mode="out-in">
                   <v-row no-gutters>
                     <v-col>
-                      <Nuxt/>
+                      <Nuxt />
                     </v-col>
                   </v-row>
                 </transition>
@@ -112,7 +98,7 @@ export default {
         currentLocale = ssrCookie;
       }
     }
-    
+
     let metaInfo = {
       htmlAttrs: {
         lang: currentLocale === 'deu' ? 'de' : currentLocale === 'ita' ? 'it' : 'en'
@@ -128,15 +114,15 @@ export default {
     };
     if (this.instanceconfig.googlesiteverificationcode) {
       metaInfo.meta.push({
-        name: 'google-site-verification', 
+        name: 'google-site-verification',
         content: this.instanceconfig.googlesiteverificationcode
       })
     }
-    
+
     if (this.instanceconfig.customJavaScript && this.instanceconfig.customJavaScript.trim()) {
       let scriptContent = this.instanceconfig.customJavaScript.trim();
       scriptContent = scriptContent.replace(/<script[^>]*>/gi, '').replace(/<\/script>/gi, '');
-        
+
       metaInfo.script.push({
         type: 'text/javascript',
         innerHTML: scriptContent,
@@ -156,13 +142,12 @@ export default {
     dismiss: function (alert) {
       this.$store.commit("clearAlert", alert);
     },
-    loadInstanceConfigToStore: async function() {
+    loadInstanceConfigToStore: async function () {
       this.loading = true
       try {
-        this.$store.commit("setInstanceConfigCookieDomain", this.$config.cookieDomain);
         let settingResponse = await this.$axios.get("/config/public");
-        if(settingResponse?.data?.public_config){
-          if(settingResponse?.data?.public_config?.faviconText){
+        if (settingResponse?.data?.public_config) {
+          if (settingResponse?.data?.public_config?.faviconText) {
             this.setFavIconText(settingResponse?.data?.public_config?.faviconText)
           }
           this.$store.dispatch("setInstanceConfig", settingResponse?.data?.public_config);
@@ -194,8 +179,8 @@ export default {
   },
   mounted() {
     Object.entries(this.i18n_override).forEach(([lang, messages]) => {
-        this.$i18n.mergeLocaleMessage(lang, messages)
-      }
+      this.$i18n.mergeLocaleMessage(lang, messages)
+    }
     )
     if (!this.signedin) {
       let token = window.localStorage.getItem("XSRF-TOKEN")
@@ -370,14 +355,17 @@ a {
 .v-main a {
   text-decoration: underline;
 }
+
 .v-main .breadcrumbs-container a:not(:hover) {
   text-decoration: none;
 }
+
 a:hover {
   text-decoration: underline;
 }
 
-a.v-btn, a {
+a.v-btn,
+a {
   text-decoration: none;
 }
 
@@ -396,8 +384,8 @@ address {
   vertical-align: top;
 }
 
-.theme--light.v-card > .v-card__title,
-.theme--dark.v-card > .v-card__title {
+.theme--light.v-card>.v-card__title,
+.theme--dark.v-card>.v-card__title {
   background-color: var(--v-cardtitlebg-base);
 }
 
@@ -459,8 +447,8 @@ address {
 }
 
 .header .ph-button {
-  background-color: var(--v-cardtitlebg-base)!important;
-  border-color: var(--v-cardtitlebg-base)!important;
+  background-color: var(--v-cardtitlebg-base) !important;
+  border-color: var(--v-cardtitlebg-base) !important;
 }
 
 .header {
@@ -472,7 +460,7 @@ address {
 
 .theme--dark .header {
   box-shadow: 48px 0 0 0 #121212, -48px 0 0 0 #121212,
-  0 8px 40px -6px rgba(70, 70, 70, 0.4);
+    0 8px 40px -6px rgba(70, 70, 70, 0.4);
   background-color: #121212;
 }
 
@@ -511,6 +499,7 @@ address {
 .fade-leave-active {
   transition: opacity 0.1s;
 }
+
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
@@ -533,6 +522,7 @@ address {
 #app .v-btn {
   text-transform: none;
 }
+
 #app .v-tabs__div {
   text-transform: none;
   font-weight: 300;
@@ -551,6 +541,7 @@ address {
   border-left: 1px solid;
   border-color: rgba(255, 255, 255, 0.25);
 }
+
 .v-application .pointer-disabled {
   pointer-events: none;
 }
@@ -559,14 +550,15 @@ address {
   background-color: var(--v-primary-base) !important;
   border-color: var(--v-primary-base) !important;
 }
+
 .ph-button {
-  background-color: var(--v-cardtitlebg-base)!important;
-  border-color: var(--v-cardtitlebg-base)!important;
+  background-color: var(--v-cardtitlebg-base) !important;
+  border-color: var(--v-cardtitlebg-base) !important;
 }
 
 .theme--dark .header {
   box-shadow: 48px 0 0 0 #121212, -48px 0 0 0 #121212,
-  0 8px 40px -6px rgba(70, 70, 70, 0.4);
+    0 8px 40px -6px rgba(70, 70, 70, 0.4);
   background-color: #121212;
 }
 
@@ -614,6 +606,7 @@ address {
 .float-right {
   float: right;
 }
+
 .skip-link {
   position: absolute;
   top: -40px;
