@@ -55,7 +55,7 @@ services:
       - phaidra-network
     environment:
       COOKIE_SECURE: false
-      TARGET: http://httpd:443
+      TARGET: https://httpd:443
       TARGET_INSECURE_SKIP_VERIFY: true
       SLOG_LEVEL: DEBUG
       REDIRECT_DOMAINS: localhost
