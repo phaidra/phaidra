@@ -58,7 +58,7 @@ services:
       TARGET: https://httpd:443
       TARGET_INSECURE_SKIP_VERIFY: true
       SLOG_LEVEL: DEBUG
-      REDIRECT_DOMAINS: localhost
+      REDIRECT_DOMAINS: "${PHAIDRA_HOSTNAME}"
       DIFFICULTY: 5
       POLICY_FNAME: /data/cfg/botPolicy.yaml
       BIND: ":8080"
