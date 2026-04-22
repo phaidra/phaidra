@@ -101,7 +101,7 @@ configs:
       # {$PHAIDRA_HOSTNAME}:80 {
       #   redir "https://localhost"
       # }
-      {$PHAIDRA_HOSTNAME} /ssl/fullchain.pem /ssl/privkey.pem {
+      $PHAIDRA_HOSTNAME /ssl/fullchain.pem /ssl/privkey.pem {
       # localhost {
         reverse_proxy http://botblocker:8080 {
           # transport http {
