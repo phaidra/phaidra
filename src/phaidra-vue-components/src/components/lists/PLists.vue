@@ -50,7 +50,7 @@
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn outlined @click="createDialog = false">{{ $t('Cancel') }}</v-btn>
+                        <v-btn variant="outlined" @click="createDialog = false">{{ $t('Cancel') }}</v-btn>
                         <v-btn @click="createList()" color="primary">{{ $t('Create') }}</v-btn>
                       </v-card-actions>
                     </v-card>
@@ -163,7 +163,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn outlined @click="deleteDialog = false">{{ $t('Cancel') }}</v-btn>
+          <v-btn variant="outlined" @click="deleteDialog = false">{{ $t('Cancel') }}</v-btn>
           <v-btn theme="dark" @click="deleteList()" color="btnred">{{ $t('Delete') }}</v-btn>
         </v-card-actions>
       </v-card>

@@ -142,7 +142,7 @@
         <v-col cols="auto">
           <v-btn
             large
-            text
+            variant="text"
             :to="steps[1].route"
           >
             <v-icon left>mdi-arrow-left</v-icon>

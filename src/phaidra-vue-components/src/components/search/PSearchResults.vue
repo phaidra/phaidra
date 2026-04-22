@@ -7,7 +7,7 @@
         <v-spacer></v-spacer>
         <v-menu offset-y>
           <template v-slot:activator="{ props: menuProps }">
-            <v-btn v-bind="menuProps" text outlined color="primary" class="mx-4" :disabled="!selection.length">{{ $t('Selected results') }} ({{ selection.length }})</v-btn>
+            <v-btn v-bind="menuProps" variant="outlined" color="primary" class="mx-4" :disabled="!selection.length">{{ $t('Selected results') }} ({{ selection.length }})</v-btn>
           </template>
           <v-list>
             <v-list-item @click="$refs.addlistdialog.open()">

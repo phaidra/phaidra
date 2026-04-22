@@ -43,7 +43,7 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="1" v-if="multilingual">
-                  <v-btn text @click="$refs.langdialogtitle.open()">
+                  <v-btn variant="text" @click="$refs.langdialogtitle.open()">
                     <span>
                       ({{ titleLanguage ? titleLanguage : '--' }})
                     </span>
@@ -228,7 +228,7 @@
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" md="2" v-if="multilingual">
-                        <v-btn text @click="$refs['langdialogtitleseries' + s.id][0].open()">
+                        <v-btn variant="text" @click="$refs['langdialogtitleseries' + s.id][0].open()">
                           <span>
                             ({{ s.seriesTitleLanguage ? s.seriesTitleLanguage : '--' }})
                           </span>
@@ -249,7 +249,7 @@
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" md="2" v-if="!hideSeriesVolume && multilingual">
-                        <v-btn text @click="$refs['langdialogvolumeseries' + s.id][0].open()">
+                        <v-btn variant="text" @click="$refs['langdialogvolumeseries' + s.id][0].open()">
                           <span>
                             ({{ s.seriesVolumeLanguage ? s.seriesVolumeLanguage : '--' }})
                           </span>
@@ -266,7 +266,7 @@
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" md="2" v-if="!hideSeriesIssue && multilingual">
-                        <v-btn text @click="$refs['langdialogissueseries' + s.id][0].open()">
+                        <v-btn variant="text" @click="$refs['langdialogissueseries' + s.id][0].open()">
                           <span>
                             ({{ s.seriesIssueLanguage ? s.seriesIssueLanguage : '--' }})
                           </span>

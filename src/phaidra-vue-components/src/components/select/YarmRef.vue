@@ -48,10 +48,10 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue-darken-1" text @click="yarmLoginDialog = false">
+              <v-btn color="blue-darken-1" variant="text" @click="yarmLoginDialog = false">
                 {{ $t('Cancel') }}
               </v-btn>
-              <v-btn color="blue-darken-1" text @click="yarmLogin()">
+              <v-btn color="blue-darken-1" variant="text" @click="yarmLogin()">
                 {{ $t('Login') }}
               </v-btn>
             </v-card-actions>

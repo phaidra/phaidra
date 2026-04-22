@@ -44,7 +44,7 @@
     <v-col cols="12" md="2" v-if="multilingual || actions.length">
       <v-row>
         <v-col v-if="multilingual" cols="6">
-          <v-btn text @click="$refs.langdialog.open()">
+          <v-btn variant="text" @click="$refs.langdialog.open()">
             <span>
               ({{ language ? language : '--' }})
             </span>

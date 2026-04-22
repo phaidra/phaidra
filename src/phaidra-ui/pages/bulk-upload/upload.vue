@@ -47,7 +47,7 @@
         <v-btn
           large
           :disabled="isUploading || isUploadComplete"
-          text
+          variant="text"
           :to="steps[3].route"
         >
           <v-icon left>mdi-arrow-left</v-icon>
@@ -88,7 +88,7 @@
           <v-spacer></v-spacer>
           <v-btn
             color="primary"
-            text
+            variant="text"
             @click="errorDialog.show = false"
           >
             {{$t('Close')}}

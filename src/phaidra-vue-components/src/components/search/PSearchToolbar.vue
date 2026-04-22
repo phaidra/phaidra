@@ -67,7 +67,7 @@
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn outlined @click.stop="linkdialog=false">{{ $t("Close") }}</v-btn>
+              <v-btn variant="outlined" @click.stop="linkdialog=false">{{ $t("Close") }}</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>

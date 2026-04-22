@@ -40,7 +40,7 @@
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn outlined @click="dialog = false">{{ $t('Cancel') }}</v-btn>             
+        <v-btn variant="outlined" @click="dialog = false">{{ $t('Cancel') }}</v-btn>             
       </v-card-actions>
     </v-card>
   </v-dialog>

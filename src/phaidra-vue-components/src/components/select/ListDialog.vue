@@ -42,7 +42,7 @@
             {{ item.updated | unixtime }}
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-btn text color="primary" @click="selectList(item)">{{ $t('Select') }}</v-btn>
+            <v-btn variant="text" color="primary" @click="selectList(item)">{{ $t('Select') }}</v-btn>
           </template>
         </v-data-table>
       </v-card-text>
@@ -50,7 +50,7 @@
       <v-card-actions>
         <v-container fluid>
           <v-row justify="end" class="px-4">
-            <v-btn outlined @click="dialog = false">{{ $t('Cancel') }}</v-btn>
+            <v-btn variant="outlined" @click="dialog = false">{{ $t('Cancel') }}</v-btn>
           </v-row>
         </v-container>
       </v-card-actions>

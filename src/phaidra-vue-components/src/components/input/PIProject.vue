@@ -35,7 +35,7 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="1" v-if="multilingual">
-                <v-btn text @click="$refs.langdialogname.open()">
+                <v-btn variant="text" @click="$refs.langdialogname.open()">
                   <span>
                     ({{ nameLanguage ? nameLanguage : '--' }})
                   </span>
@@ -55,7 +55,7 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="1" v-if="multilingual">
-                <v-btn text @click="$refs.langdialogdesc.open()">
+                <v-btn variant="text" @click="$refs.langdialogdesc.open()">
                   <span>
                     ({{ descriptionLanguage ? descriptionLanguage : '--' }})
                   </span>
@@ -226,7 +226,7 @@
               </v-col>
 
               <v-col cols="1" v-if="multilingual">
-                <v-btn text @click="$refs.langdialogfunder.open()">
+                <v-btn variant="text" @click="$refs.langdialogfunder.open()">
                   <span>({{ funderNameLanguage ? funderNameLanguage : '--' }})</span>
                 </v-btn>
                 <select-language ref="langdialogfunder" @language-selected="$emit('input-funder-name-language', $event)"></select-language>

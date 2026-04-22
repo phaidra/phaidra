@@ -67,7 +67,7 @@
               </v-text-field>
             </v-col>
             <v-col cols="12" md="2" v-if="multilingual">
-              <v-btn text @click="$refs.langdialog.open()">
+              <v-btn variant="text" @click="$refs.langdialog.open()">
                 <span>
                   ({{ titleLanguage ? titleLanguage : '--' }})
                 </span>
@@ -88,7 +88,7 @@
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="2" v-if="!hideVolume && multilingual">
-              <v-btn text @click="$refs.volumelangdialog.open()">
+              <v-btn variant="text" @click="$refs.volumelangdialog.open()">
                 <span>
                   ({{ volumeLanguage ? volumeLanguage : '--' }})
                 </span>
@@ -105,7 +105,7 @@
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="2" v-if="!hideIssue && multilingual">
-              <v-btn text @click="$refs.issuelangdialog.open()">
+              <v-btn variant="text" @click="$refs.issuelangdialog.open()">
                 <span>
                   ({{ issueLanguage ? issueLanguage : '--' }})
                 </span>

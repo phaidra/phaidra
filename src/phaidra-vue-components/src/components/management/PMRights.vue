@@ -40,9 +40,9 @@
                     {{ $date(item.expires) }}
                   </template>
                   <template v-slot:item.actions="{ item }">
-                    <v-btn text color="primary" @click="openDateDialog(item)">{{ $t('Edit expiration date') }}</v-btn>
-                    <v-btn v-if="item.expires" text color="btnred" @click="removeExpires(item)">{{ $t('Remove expiration date') }}</v-btn>
-                    <v-btn text color="btnred" @click="removeRight(item)">{{ $t('Remove right') }}</v-btn>
+                    <v-btn variant="text" color="primary" @click="openDateDialog(item)">{{ $t('Edit expiration date') }}</v-btn>
+                    <v-btn v-if="item.expires" variant="text" color="btnred" @click="removeExpires(item)">{{ $t('Remove expiration date') }}</v-btn>
+                    <v-btn variant="text" color="btnred" @click="removeRight(item)">{{ $t('Remove right') }}</v-btn>
                   </template>
                 </v-data-table>
               </v-card-text>
@@ -245,7 +245,7 @@
                     <span :title="item.groupid">{{ item.name }}</span>
                   </template>
                   <template v-slot:item.actions="{ item }">
-                    <v-btn text :disabled="loading" color="primary" @click="addGroup(item)">{{ $t('Apply') }}</v-btn>
+                    <v-btn variant="text" :disabled="loading" color="primary" @click="addGroup(item)">{{ $t('Apply') }}</v-btn>
                   </template>
                 </v-data-table>
               </v-card-text>
@@ -267,7 +267,7 @@
             scrollable
           >
             <v-spacer></v-spacer>
-            <v-btn outlined @click="dateDialog = false">{{ $t('Cancel') }}</v-btn>
+            <v-btn variant="outlined" @click="dateDialog = false">{{ $t('Cancel') }}</v-btn>
             <v-btn color="primary" @click="setExpires()">OK</v-btn>
           </v-date-picker>
         </v-dialog>

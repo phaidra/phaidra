@@ -39,7 +39,7 @@
       ></v-text-field>
     </v-col>
     <v-col cols="1">
-      <v-btn text @click="$refs.langdialog.open()">
+      <v-btn variant="text" @click="$refs.langdialog.open()">
         <span>
           ({{ language ? language : '--' }})
         </span>

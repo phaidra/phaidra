@@ -106,7 +106,7 @@
     <v-col cols="12" md="2" v-if="(type === 'schema:Organization' && multilingual) || actions.length">
       <v-row>
         <v-col v-if="type === 'schema:Organization' && multilingual" cols="6">
-          <v-btn text @click="$refs.langdialog.open()">
+          <v-btn variant="text" @click="$refs.langdialog.open()">
             <span>
               ({{ language ? language : '--' }})
             </span>

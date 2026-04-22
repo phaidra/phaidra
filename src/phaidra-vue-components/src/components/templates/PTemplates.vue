@@ -50,17 +50,17 @@
       {{ $unixtime(item.created) }}
     </template>
     <template v-slot:item.load="{ item }">
-      <v-btn text color="primary" @click="editValidation(item)" v-if="type === 'navtemplate' && $store.state.user.isadmin">
+      <v-btn variant="text" color="primary" @click="editValidation(item)" v-if="type === 'navtemplate' && $store.state.user.isadmin">
         <span>{{ $t('Edit Validation') }}</span>
       </v-btn>
-      <v-btn text color="primary" @click="loadTemplate('')" v-if="isDefaultSelect && item.tid === selectedTemplateId">
+      <v-btn variant="text" color="primary" @click="loadTemplate('')" v-if="isDefaultSelect && item.tid === selectedTemplateId">
         <span v-if="isDefaultSelect">{{ $t('Remove') }}</span>
       </v-btn>
-      <v-btn text color="primary" @click="loadTemplate(item.tid)" v-else>
+      <v-btn variant="text" color="primary" @click="loadTemplate(item.tid)" v-else>
         <span v-if="isDefaultSelect">{{ $t('Select') }}</span>
         <span v-else-if="item.tid !== selectedTemplateId">{{ $t('Load') }}</span>
       </v-btn>
-      <v-btn v-if="!isDefaultSelect" text color="btnred" @click="deleteTemplate(item.tid)">{{ $t('Delete') }}</v-btn>
+      <v-btn v-if="!isDefaultSelect" variant="text" color="btnred" @click="deleteTemplate(item.tid)">{{ $t('Delete') }}</v-btn>
     </template>
   </v-data-table>
 
