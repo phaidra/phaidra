@@ -26,18 +26,18 @@ export const mutations = {
     if (instanceconfig && instanceconfig.api) {
       delete instanceconfig.api
     }
-    
+
     let configurable = [
-      'title', 
-      'institution', 
-      'institutionurl', 
-      'address', 
-      'phone', 
-      'email', 
+      'title',
+      'institution',
+      'institutionurl',
+      'address',
+      'phone',
+      'email',
       'oaidataprovider',
       'googlesiteverificationcode',
-      'languages', 
-      'owneremailoverride', 
+      'languages',
+      'owneremailoverride',
       'showdeletebutton',
       'markmandatoryfnc',
       'requestdoiemail',
@@ -81,7 +81,7 @@ export const mutations = {
       'irbaseurl',
       'phaidra_doi_prefix',
       'hideContainedInPages'
-    ] 
+    ]
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
         Vue.set(state.instanceconfig, p, instanceconfig[p])
@@ -93,9 +93,6 @@ export const mutations = {
   },
   setInstanceConfigApiBaseUrl(state, api) {
     Vue.set(state.instanceconfig, 'api', api)
-  },
-  setInstanceConfigCookieDomain(state, cookieDomain) {
-    Vue.set(state.instanceconfig, 'cookiedomain', cookieDomain)
   },
   updateBreadcrumbs(state, transition) {
     state.breadcrumbs = [
@@ -683,8 +680,7 @@ export const mutations = {
     let cookieOptions = {
       path: '/',
       secure: true,
-      sameSite: 'Strict',
-      domain: state.instanceconfig.cookiedomain
+      sameSite: 'Strict'
     }
     this.$cookies.remove('XSRF-TOKEN', cookieOptions)
     if (process.browser) {
@@ -700,8 +696,7 @@ export const mutations = {
     let cookieOptions = {
       path: '/',
       secure: true,
-      sameSite: 'Strict',
-      domain: state.instanceconfig.cookiedomain
+      sameSite: 'Strict'
     }
     this.$cookies.remove('XSRF-TOKEN', cookieOptions)
     if (process.browser) {
@@ -863,19 +858,6 @@ export const actions = {
         commit('setAlerts', response.data.alerts)
       }
       if (response.status === 200) {
-        if (state.instanceconfig.cookiedomain) {
-          let cookieOptions = {
-            path: '/',
-            secure: true,
-            sameSite: 'Strict',
-            domain: state.instanceconfig.cookiedomain
-          }
-          // we need this because on instances where api runs under services.phaidra... the api
-          // cannot set the cookie
-          console.log('setting cookie ' + response.data['XSRF-TOKEN'])
-          console.log(cookieOptions)
-          this.$cookies.set('XSRF-TOKEN', response.data['XSRF-TOKEN'], cookieOptions)
-        }
         console.log('setting token ' + response.data['XSRF-TOKEN'])
         commit('setToken', response.data['XSRF-TOKEN'])
         dispatch('getLoginData')
