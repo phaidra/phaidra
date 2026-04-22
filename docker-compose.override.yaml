@@ -97,12 +97,16 @@ services:
 configs:
   caddyfile:
     content: |
+      {
+        auto_https disable_certs
+      }
       # not sure why we have to manually redirect. maybe because of caddy?
-      # {$PHAIDRA_HOSTNAME}:80 {
+      # $PHAIDRA_HOSTNAME:80 {
       #   redir "https://localhost"
       # }
-      $PHAIDRA_HOSTNAME /ssl/fullchain.pem /ssl/privkey.pem {
-      # localhost {
+      $PHAIDRA_HOSTNAME {
+        tls /ssl/fullchain.pem /ssl/privkey.pem {
+        }
         reverse_proxy http://botblocker:8080 {
           # transport http {
           #   tls_insecure_skip_verify
