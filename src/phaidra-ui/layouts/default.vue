@@ -523,9 +523,9 @@ address {
   border-color: #272727;
 }
 
-/* Vuetify 3 ignores active-class on VBtn; active route uses v-btn--active + active-color */
+/* Active route buttons are marked with v-btn--active; force nav active color over base bg classes */
 .header .ph-button-bg-active,
-.header .v-btn.v-btn--active.bg-primary {
+.header .v-btn.v-btn--active {
   background-color: rgb(var(--v-theme-primary)) !important;
   border-color: rgb(var(--v-theme-primary)) !important;
 }
