@@ -467,7 +467,6 @@ sub signin_shib {
     $cookie->secure(1);
     $cookie->samesite('Strict');
     $cookie->path('/');
-    $cookie->domain($self->app->config->{phaidra}->{baseurl});
     $self->tx->res->cookies($cookie);
 
   }
