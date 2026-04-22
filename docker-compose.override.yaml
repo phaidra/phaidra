@@ -5,13 +5,16 @@ include:
 
 services:
   httpd-ssl-local:
-    # build:
-    #   context: .
-    #   dockerfile: dockerfiles/httpd-ssl-dist.dockerfile
-    # pull_policy: build
     extends:
       file: docker-compose.yaml
       service: httpd-ssl-local
+    ports: !reset []
+    expose:
+      - 443
+  httpd-shib-local:
+    extends:
+      file: docker-compose.yaml
+      service: httpd-shib-local
     ports: !reset []
     expose:
       - 443
