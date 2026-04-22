@@ -1,18 +1,12 @@
 ---
 bots:
-  - name: test
-    path_regex: ^.*$
-    # path_regex: ^/api/imageserver$
+  - name: univie
+    expression: 'verifyFCrDNS(remoteAddress, "univie\\.ac\\.at$")'
+    action: ALLOW
+
+  - name: catchall
+    path_regex: .*
     action: CHALLENGE
     challenge:
       difficulty: 4
       algorithm: fast
-# thresholds:
-#   - name: always
-#     expression:
-#       any:
-#         - weight < 100000
-#     action: CHALLENGE
-#     challenge:
-#       difficulty: 6
-#       algorithm: fast
