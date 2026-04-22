@@ -10,7 +10,7 @@ bots:
 
   - import: (data)/common/allow-private-addresses.yaml
   - import: (data)/common/keep-internet-working.yaml
-  - import: (data)/crawlers/allow-good.yaml
+  - import: (data)/crawlers/_allow-good.yaml
 
   - name: catchall
     path_regex: .*
