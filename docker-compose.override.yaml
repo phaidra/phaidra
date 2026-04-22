@@ -34,6 +34,8 @@ services:
     networks:
       - phaidra-network
     command: ["/usr/bin/caddy", "run", "--config", "/Caddyfile"]
+    environment:
+      PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME}"
     volumes:
       - ./certs/httpd:/ssl:ro
     configs:
@@ -96,10 +98,10 @@ configs:
   caddyfile:
     content: |
       # not sure why we have to manually redirect. maybe because of caddy?
-      localhost:80 {
-        redir "https://localhost"
-      }
-      localhost /etc/ssl/fullchain.pem /etc/ssl/privkey.pem {
+      # {$PHAIDRA_HOSTNAME}:80 {
+      #   redir "https://localhost"
+      # }
+      {$PHAIDRA_HOSTNAME} /ssl/fullchain.pem /ssl/privkey.pem {
       # localhost {
         reverse_proxy http://botblocker:8080 {
           # transport http {
