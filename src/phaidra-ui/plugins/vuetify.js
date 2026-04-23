@@ -68,6 +68,9 @@ export default defineNuxtPlugin((nuxtApp) => {
       VBtn: {
         variant: 'flat'
       }
+    },
+    VCheckbox: {
+      density: 'compact'
     }
   },
   })
