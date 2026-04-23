@@ -662,11 +662,13 @@ export default {
       this.doiDuplicate = null;
       this.doiImportData = null;
       this.metaProviderName = ''
+      // External DOI APIs (Crossref/DataCite) reject credentialed browser requests for wildcard CORS.
+      const externalApiConfig = { withCredentials: false }
       if (this.doiImportInput) {
         try {
           let doiAgency = null
           try {
-            const agencyResp = await this.$axios.get(`https://api.crossref.org/works/${this.doiToImport}/agency`)
+            const agencyResp = await this.$axios.get(`https://api.crossref.org/works/${this.doiToImport}/agency`, externalApiConfig)
             doiAgency = agencyResp?.data?.message?.agency?.id
           } catch (error) {
             console.log('Doi agency error', error)
@@ -674,7 +676,7 @@ export default {
           if(doiAgency === 'datacite'){
               this.metaProviderName = 'Datacite'
               this.doiImportData = {}
-              const dataciteResp = await this.$axios.get(`https://api.datacite.org/dois/${this.doiToImport}`)
+              const dataciteResp = await this.$axios.get(`https://api.datacite.org/dois/${this.doiToImport}`, externalApiConfig)
               const dataciteData = dataciteResp?.data;
               this.doiImportData = constructDataCite(dataciteData, this)
               await this.applyDoiImportData(this.doiImportData);
@@ -707,6 +709,7 @@ export default {
                 "/works/" +
                 this.doiToImport,
               {
+                ...externalApiConfig,
                 headers: {
                   Accept: this.doi.accept,
                 },
