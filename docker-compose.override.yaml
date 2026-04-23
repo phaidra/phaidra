@@ -33,6 +33,7 @@ services:
       - "443:443"
     networks:
       - phaidra-network
+    restart: always
     command: ["/usr/bin/caddy", "run", "--config", "/Caddyfile"]
     environment:
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME}"
