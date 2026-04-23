@@ -863,7 +863,7 @@
                 </v-btn>
               </template>
             </template>
-            <v-switch :hide-details="true" class="float-right mt-1 mx-2" v-if="$store.state.user.isadmin" v-model="skipValidation" :label="$t('Skip validation')"></v-switch>
+            <v-switch density="compact" :hide-details="true" class="float-right mt-1 mx-2" v-if="$store.state.user.isadmin" v-model="skipValidation" :label="$t('Skip validation')"></v-switch>
           </v-col>
         </v-row>
 
@@ -924,6 +924,12 @@
       </v-window-item>
       <v-window-item value="feedback" v-if="feedback" class="pa-4">
         <p-feedback :firstname="feedbackUser.firstname" :lastname="feedbackUser.lastname" :email="feedbackUser.email" :context="feedbackContext"></p-feedback>
+      </v-window-item>
+      <v-window-item value="doiImport" v-if="doiImport" class="pa-4">
+        <p-doi-import
+          :external-form="form"
+          @load-form="loadFormFromDoiImport"
+        ></p-doi-import>
       </v-window-item>
     </v-window>
     <v-dialog v-model="showEditFieldPopup" max-width="600px" scrollable>
@@ -1254,8 +1260,8 @@ export default {
   methods: {
     loadFormFromDoiImport: function (form) {
       this.$emit('load-form', form)
-      // Change tab to 0
-      this.activetab = 0;
+      // Switch back to metadata tab after importing DOI data.
+      this.activetab = 'metadata'
     },
     toggleSectionCollapse: function (section) {
       this.$set(section, 'collapsed', !section.collapsed)
