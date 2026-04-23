@@ -906,18 +906,20 @@
       </v-window-item>
       <v-window-item value="preview" v-if="(submittype !== 'container') && enablepreview" class="pa-4">
         <p-d-jsonld :jsonld="jsonld"></p-d-jsonld>
-        <v-btn
-          v-if="!hideUploadButton && !disableChecksum && !hideAddFileChecksum && submittype !== 'collection' && submittype !== 'resource'"
-          large
-          raised
-          :loading="loading"
-          :disabled="loading"
-          class="bg-grey mr-2 float-right"
-          @click="checksumDialog = true"
-        >
-          <span v-t="'Add file checksum'"></span>
-        </v-btn>
-        <v-btn large elevation="2" :loading="loading" :disabled="loading" class="bg-primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
+        <div class="d-flex justify-end ga-2">
+          <v-btn
+            v-if="!hideUploadButton && !disableChecksum && !hideAddFileChecksum && submittype !== 'collection' && submittype !== 'resource'"
+            large
+            raised
+            :loading="loading"
+            :disabled="loading"
+            class="bg-grey"
+            @click="checksumDialog = true"
+          >
+            <span v-t="'Add file checksum'"></span>
+          </v-btn>
+          <v-btn large elevation="2" :loading="loading" :disabled="loading" class="bg-primary" @click="submit()"><span v-t="'Upload'"></span></v-btn>
+        </div>
       </v-window-item>
       <v-window-item value="help" v-if="help" class="pa-4">
         <p-help></p-help>
