@@ -132,6 +132,14 @@ Run the migration script to update solrconfig.xml in volume to the version from 
 
 This is needed for `update solr docker tag to v9.10.1`.
 
+### OAI collection index 2
+
+Additional indexes are necessary to avoid disk usage for sort in mongodb, execute:
+
+```
+docker exec -it phaidra-api-1 perl migrations/v3.4.0/11_add_oai_records_index_2.pl
+```
+
 # v3.3.17
 
 Here are the key highlights from the fixes and enhancements since the last release:

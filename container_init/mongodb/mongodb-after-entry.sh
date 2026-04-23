@@ -32,6 +32,7 @@ db.oai_records.createIndex({ pid: 1 });
 db.oai_records.createIndex({ deleted: 1, pid: 1 });
 db.oai_records.createIndex({ created: -1 });
 db.oai_records.createIndex({ updated: -1 });
+db.oai_records.createIndex({ setSpec: 1, updated: -1 });
 db.oai_records.deleteOne({ _temp: true });
 "
 
