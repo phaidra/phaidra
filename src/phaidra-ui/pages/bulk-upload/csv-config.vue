@@ -109,7 +109,6 @@
     <v-row justify="end" class="mt-4">
       <v-col cols="auto">
         <v-btn
-          size="large"
           color="primary"
           @click="$router.push('/bulk-upload/meta-data-config')"
           :disabled="!isValid"

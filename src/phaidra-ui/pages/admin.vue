@@ -152,7 +152,7 @@
                   <v-col>
                     <v-dialog class="pb-4" v-model="templateDialog" width="700px">
                       <template v-slot:activator="{ props: activatorProps }">
-                        <v-btn v-bind="activatorProps" size="large" color="primary">
+                        <v-btn v-bind="activatorProps" color="primary">
                           <v-icon theme="dark" class="mr-4">mdi-script</v-icon>
                           {{ $t("Select submit template") }}
                         </v-btn>
@@ -1327,7 +1327,7 @@
     </v-row>
     <v-row class="my-2">
       <v-col>
-        <v-btn size="large" color="primary" variant="elevated" class="float-right" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
+        <v-btn color="primary" variant="elevated" class="float-right" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
       </v-col>
     </v-row>
   </v-container>

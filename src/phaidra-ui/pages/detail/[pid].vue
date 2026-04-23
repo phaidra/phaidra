@@ -443,7 +443,6 @@
             }}</v-row>
             <v-row justify="center" class="mt-4"
               ><v-btn
-                size="large"
                 variant="elevated"
                 color="primary"
                 :to="
@@ -465,7 +464,6 @@
               ><v-btn
                 v-for="(contpid, i) in objectInfo.ismemberof"
                 :key="'contbtn' + i"
-                size="large"
                 variant="elevated"
                 color="primary"
                 :to="localePath({ path: `/detail/${contpid}` })"
@@ -484,7 +482,6 @@
               }}</v-row>
               <v-row justify="center" class="mt-4 mb-8"
                 ><v-btn
-                  size="large"
                   variant="elevated"
                   color="primary"
                   :to="localePath({ path: `/detail/${objectInfo.bookpid}` })"
@@ -505,7 +502,6 @@
               <v-row justify="center" v-if="latestVersion" class="mt-4 mb-8">
                 <v-btn
                   variant="elevated"
-                  size="large"
                   color="primary"
                   :to="localePath({ path: `/detail/${latestVersion.pid}` })"
                   >{{ $t("Go to latest version") }}</v-btn
@@ -549,7 +545,6 @@
                       <template v-slot:activator="{ props: tipProps }">
                         <v-btn
                           icon
-                          large
                           :class="displayTitles && displayTitles.length > 0 ? 'ml-sm-1' : ''"
                           v-bind="{ ...menuProps, ...tipProps }"
                           :aria-label="$t('Add to collection') + ' / ' + $t('Add to object list')"

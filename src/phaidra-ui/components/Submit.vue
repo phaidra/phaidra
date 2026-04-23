@@ -7,7 +7,6 @@
       <v-row class="my-6" justify="start">
         <div class="d-flex flex-row ml-3">
           <v-btn
-            size="large"
             color="primary"
             variant="elevated"
             @click="$router.push(localePath('/submit/upload'))"
@@ -29,7 +28,6 @@
       <v-row class="my-6" justify="start">
         <div class="d-flex flex-row ml-3">
           <v-btn
-            size="large"
             color="primary"
             variant="elevated"
             @click="$router.push(localePath('/submit/oer'))"
@@ -52,7 +50,6 @@
         <v-row class="my-6" justify="start">
           <div class="d-flex flex-row ml-3">
             <v-btn
-              size="large"
               color="primary"
               variant="elevated"
               :href="'https://uscholar.univie.ac.at/login'"
@@ -75,7 +72,6 @@
         <v-row class="my-6" justify="start">
           <div class="d-flex flex-row ml-3">
             <v-btn
-              size="large"
               color="primary"
               variant="elevated"
               @click="$router.push(localePath('/submit/catalogfetchupload'))"
@@ -129,7 +125,7 @@
         <div class="d-flex flex-row ml-3">
           <v-dialog class="pb-4" v-model="templateDialog" width="900px">
             <template v-slot:activator="{ props: activatorProps }">
-              <v-btn v-bind="activatorProps" size="large" color="primary" variant="elevated">
+              <v-btn v-bind="activatorProps" color="primary" variant="elevated">
                 <v-icon class="mr-2">mdi-script</v-icon>
                 {{ $t("Open template") }}
               </v-btn>
