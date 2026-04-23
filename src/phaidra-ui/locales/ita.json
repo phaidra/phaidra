@@ -1100,7 +1100,7 @@
   "Subjects from terms collection https://vocab.phaidra.org/vocabulary/en/collections/60PM-DY5T.html": "Argomenti della raccolta di vocaboli https://vocab.phaidra.org/vocabulary/en/collections/60PM-DY5T.html",
   "Study plan": "Piano di studi",
   "Material (vocabulary)": "Materiale (Vocabolario)",
-  "Relates a resource to a resource in which a part has been issued; a title of a larger resource appears on a part.": "Relaziona una risorsa a una risorsa in cui una parte è stata emessa; un titolo di una risorsa più grande appare su una parte.",
+  "Relates a resource to a resource in which a part has been issued; a title of a larger resource appears on a part.": "Collega una risorsa alla pubblicazione periodica o serie di cui fa parte.",
   "Relates a resource to a larger resource of which a part is a discrete component.": "Relaziona una risorsa a una risorsa più grande di cui una parte è un componente distinto.",
   "Work the Instance described instantiates or manifests. For use to connect Instances to Works.": "Opera di cui l'istanza descritta è manifestazione. Da utilizzare per collegare le istanze alle opere.",
   "Relates a resource to a resource that is adapted as a motion picture.": "Collega una risorsa a una risorsa che è stata adattata come film.",
