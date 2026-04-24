@@ -5,7 +5,7 @@ bots:
     action: ALLOW
 
   - name: univie
-    expression: 'verifyFCrDNS(remoteAddress, "univie\\.ac\\.at$")'
+    expression: 'verifyFCrDNS(remoteAddress, "univie\\.ac\\.at|obvsg\\.at|phaidra\\.org$")'
     action: ALLOW
 
   - import: (data)/common/allow-private-addresses.yaml
