@@ -28,6 +28,9 @@ services:
 
         FROM caddy
         COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
     ports:
       - "80:80"
       - "443:443"
