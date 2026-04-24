@@ -20,6 +20,7 @@ services:
       - 443
 
   caddy:
+    hostname: caddy
     build:
       context: .
       dockerfile_inline: |
@@ -61,7 +62,7 @@ services:
       COOKIE_SECURE: false
       TARGET: https://httpd:443
       TARGET_INSECURE_SKIP_VERIFY: true
-      SLOG_LEVEL: DEBUG
+      SLOG_LEVEL: WARN
       REDIRECT_DOMAINS: "${PHAIDRA_HOSTNAME}"
       DIFFICULTY: 5
       POLICY_FNAME: /data/cfg/botPolicy.yaml
