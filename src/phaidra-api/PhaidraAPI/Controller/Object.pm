@@ -828,7 +828,6 @@ sub preview {
         && $self->config->{external_services}->{opencast}->{mode} eq "ACTIVATED")
       {
         my $object_job_info = $self->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'}, {}, {sort => {created => -1}});
-        $self->app->log->info("XXXXXXXXXXXXXXX MIGRATED pid[$pid]:\n" . $self->app->dumper($object_job_info));
         if (defined $object_job_info) {
           my $job_status = $object_job_info->{'status'};
           if ($job_status eq "SUCCEEDED") {
@@ -841,159 +840,10 @@ sub preview {
           }
           elsif ($job_status eq "sent") {
             $self->render(text => "please be patient, video is being processed for streaming.");
-
-            # }
-            # elsif ($job_status eq "FAILED") {
-            #   $self->render(text => "stream preparation failed, please contact your admin.");
-          }
-          elsif ($self->config->{streaming}) {
-
-            # TODO: this is duplicate code, but we'll remove both old streaming paths after migration
-            my $u_model = PhaidraAPI::Model::Util->new;
-            my $r       = $u_model->get_video_key($self, $pid);
-            if ($r->{status} eq 200) {
-              my $trackpid;
-              my $tracklabel;
-              my $tracklanguage;
-
-              # check if there isn't a track object
-              unless ($docres) {
-                $docres = $index_model->get_doc($self, $pid);
-              }
-              if ($docres->{status} ne 200) {
-                $self->app->log->error("pid[$pid] error searching for doc: " . $self->app->dumper($docres));
-              }
-              else {
-                for my $tpid (@{$docres->{doc}->{hastrack}}) {
-                  $self->app->log->info("pid[$pid] found track object: $tpid");
-                  $trackpid = $tpid;
-                  my $trackdocres = $index_model->get_doc($self, $trackpid);
-                  if ($trackdocres->{status} ne 200) {
-                    $self->app->log->error("pid[$pid] error searching for doc trackpid[$trackpid]: " . $self->app->dumper($docres));
-                  }
-                  else {
-                    for my $ttit (@{$trackdocres->{doc}->{dc_title}}) {
-                      $tracklabel = $ttit;
-                      last;
-                    }
-
-                    # pretend you don't see this
-                    my $lang_model   = PhaidraAPI::Model::Languages->new;
-                    my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
-                    for my $lng3 (@{$trackdocres->{doc}->{dc_language}}) {
-                      $tracklanguage = exists($iso6393ToBCP{$lng3}) ? $iso6393ToBCP{$lng3} : $lng3;
-                      last;
-                    }
-                  }
-                }
-              }
-
-              $self->stash(baseurl           => $self->config->{baseurl});
-              $self->stash(basepath          => $self->config->{basepath});
-              $self->stash(video_key         => $r->{video_key});
-              $self->stash(errormsg          => $r->{errormsq});
-              $self->stash(server            => $self->config->{streaming}->{server});
-              $self->stash(server_rtmp       => $self->config->{streaming}->{server_rtmp});
-              $self->stash(server_cd         => $self->config->{streaming}->{server_cd});
-              $self->stash(streamingbasepath => $self->config->{streaming}->{basepath});
-              $self->stash(trackpid          => $trackpid);
-              $self->stash(tracklabel        => $tracklabel);
-              $self->stash(tracklanguage     => $tracklanguage);
-
-              my $u_model = PhaidraAPI::Model::Util->new;
-              $u_model->track_action($self, $pid, 'preview');
-
-              $self->render(template => 'utils/streamingplayer', format => 'html');
-              return;
-            }
-            else {
-              $self->app->log->error("Video key not available: " . $self->app->dumper($r));
-              if ($r->{status} eq 404 or $r->{status} eq 503) {
-                $self->render(text => "Stream is not available. Reason: Video is being prepared for streaming, please try again later.", status => $r->{status});
-              }
-              else {
-                $self->render(text => "Stream is not available. Reason: " . $r->{alerts}[0]->{msg}, status => $r->{status});
-              }
-
-              return;
-            }
-          }
-        }
-
-        # TODO: this is duplicate code, but we'll remove both old streaming paths after migration
-        elsif ($self->config->{streaming}) {
-          $self->app->log->info("XXXXXXXXXXXXXXX NOT-MIGRATED pid[$pid]");
-          my $u_model = PhaidraAPI::Model::Util->new;
-          my $r       = $u_model->get_video_key($self, $pid);
-          if ($r->{status} eq 200) {
-            my $trackpid;
-            my $tracklabel;
-            my $tracklanguage;
-
-            # check if there isn't a track object
-            unless ($docres) {
-              $docres = $index_model->get_doc($self, $pid);
-            }
-            if ($docres->{status} ne 200) {
-              $self->app->log->error("pid[$pid] error searching for doc: " . $self->app->dumper($docres));
-            }
-            else {
-              for my $tpid (@{$docres->{doc}->{hastrack}}) {
-                $self->app->log->info("pid[$pid] found track object: $tpid");
-                $trackpid = $tpid;
-                my $trackdocres = $index_model->get_doc($self, $trackpid);
-                if ($trackdocres->{status} ne 200) {
-                  $self->app->log->error("pid[$pid] error searching for doc trackpid[$trackpid]: " . $self->app->dumper($docres));
-                }
-                else {
-                  for my $ttit (@{$trackdocres->{doc}->{dc_title}}) {
-                    $tracklabel = $ttit;
-                    last;
-                  }
-
-                  # pretend you don't see this
-                  my $lang_model   = PhaidraAPI::Model::Languages->new;
-                  my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
-                  for my $lng3 (@{$trackdocres->{doc}->{dc_language}}) {
-                    $tracklanguage = exists($iso6393ToBCP{$lng3}) ? $iso6393ToBCP{$lng3} : $lng3;
-                    last;
-                  }
-                }
-              }
-            }
-
-            $self->stash(baseurl           => $self->config->{baseurl});
-            $self->stash(basepath          => $self->config->{basepath});
-            $self->stash(video_key         => $r->{video_key});
-            $self->stash(errormsg          => $r->{errormsq});
-            $self->stash(server            => $self->config->{streaming}->{server});
-            $self->stash(server_rtmp       => $self->config->{streaming}->{server_rtmp});
-            $self->stash(server_cd         => $self->config->{streaming}->{server_cd});
-            $self->stash(streamingbasepath => $self->config->{streaming}->{basepath});
-            $self->stash(trackpid          => $trackpid);
-            $self->stash(tracklabel        => $tracklabel);
-            $self->stash(tracklanguage     => $tracklanguage);
-
-            my $u_model = PhaidraAPI::Model::Util->new;
-            $u_model->track_action($self, $pid, 'preview');
-
-            $self->render(template => 'utils/streamingplayer', format => 'html');
-            return;
-          }
-          else {
-            $self->app->log->error("Video key not available: " . $self->app->dumper($r));
-            if ($r->{status} eq 404 or $r->{status} eq 503) {
-              $self->render(text => "Stream is not available. Reason: Video is being prepared for streaming, please try again later.", status => $r->{status});
-            }
-            else {
-              $self->render(text => "Stream is not available. Reason: " . $r->{alerts}[0]->{msg}, status => $r->{status});
-            }
-
-            return;
           }
         }
         else {
-          $self->render(text => "Did you recently migrate to a streaming service?  It looks like this video has not been not been processed!");
+          $self->render(text => "Did you recently migrate to a streaming service? It looks like this video has not been not been processed!");
         }
         return;
       }
