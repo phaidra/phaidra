@@ -3211,37 +3211,30 @@ export default {
       const seoDescription = this.seoDescription;
       metaInfo.meta = [
         {
-          hid: "og:title",
           name: "og:title",
           content: this.objectInfo.sort_dc_title,
         },
         {
-          hid: "og:image",
           name: "og:image",
           content: thumbnail,
         },
         {
-          hid: "og:image:width",
           name: "og:image:width",
           content: "1200",
         },
         {
-          hid: "og:image:height",
           name: "og:image:height",
           content: "630",
         },
         {
-          hid: "twitter:title",
           name: "twitter:title",
           content: this.objectInfo.sort_dc_title,
         },
         {
-          hid: "twitter:card",
           name: "twitter:card",
           content: "summary_large_image",
         },
         {
-          hid: "twitter:image",
           name: "twitter:image",
           content: thumbnail,
         },

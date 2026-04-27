@@ -33,7 +33,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     state: typeof root.state === 'function' ? root.state : () => ({}),
     mutations: root.mutations || {},
     actions: rootActions,
-    getters: root.getters || {},
+    getters: {},
     modules: {
       search: normalizeModule(search),
       vocabulary: normalizeModule(vocabulary),

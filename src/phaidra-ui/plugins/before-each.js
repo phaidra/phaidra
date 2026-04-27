@@ -5,7 +5,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   if (!router || !axios || !store) return
 
-  router.beforeEach(async (to, from, next) => {
+  router.beforeEach(async () => {
     if (store.state?.user?.token) {
       try {
         await axios.request({
@@ -18,11 +18,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       } catch (error) {
         console.log('failed keepalive, logging out ' + error)
         await store.dispatch('logout')
-      } finally {
-        next()
       }
-    } else {
-      next()
     }
   })
 })

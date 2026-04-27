@@ -12,10 +12,12 @@ export default defineNuxtPlugin((nuxtApp) => {
   if (process.env.PHAIDRA_DISABLE_PVC === '1') return
 
   if (!nuxtApp?.vueApp?.use) {
-    throw new Error('[phaidra-vue-components plugin] nuxtApp.vueApp.use is unavailable')
+    console.error('[phaidra-vue-components plugin] nuxtApp.vueApp.use is unavailable')
+    return
   }
   if (!PhaidraVueComponents) {
-    throw new Error('[phaidra-vue-components plugin] imported plugin is undefined')
+    console.error('[phaidra-vue-components plugin] imported plugin is undefined')
+    return
   }
   nuxtApp.vueApp.use(PhaidraVueComponents)
 
