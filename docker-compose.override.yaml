@@ -59,7 +59,7 @@ services:
     networks:
       - phaidra-network
     environment:
-      COOKIE_SECURE: false
+      COOKIE_SECURE: true
       TARGET: https://httpd:443
       TARGET_INSECURE_SKIP_VERIFY: true
       SLOG_LEVEL: WARN
