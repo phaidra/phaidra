@@ -67,6 +67,10 @@ export default {
     '@nuxtjs/markdownit'
   ],
 
+  helmet: {
+    referrerPolicy: { policy: 'strict-origin' }
+  },
+
   markdownit: {
     preset: 'default',
     linkify: true,
