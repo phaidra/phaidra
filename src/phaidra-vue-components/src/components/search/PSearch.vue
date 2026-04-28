@@ -40,7 +40,6 @@
               </div>
              </div>
           </v-col>
-          <v-spacer></v-spacer>
           <v-col  md="6" cols="12">
             <p-search-toolbar
               :setSort="setSort"

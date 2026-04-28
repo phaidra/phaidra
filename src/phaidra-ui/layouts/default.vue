@@ -410,7 +410,7 @@ a {
   text-decoration: none;
 }
 
-.v-application a {
+.v-application a:not(.v-btn) {
   color: rgb(var(--v-theme-primary));
 }
 
@@ -632,9 +632,9 @@ address {
 .v-toolbar__extension {
   padding: 0px 16px;
 }
-.v-theme--light.v-btn.v-btn--icon {
+/* .v-theme--light.v-btn.v-btn--icon {
     color: rgba(0, 0, 0, 0.54);
-}
+} */
 
 .v-theme--light .v-card > .v-card-text,
 .v-theme--light .v-card > .v-card-subtitle {
