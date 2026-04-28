@@ -54,8 +54,8 @@ x-custom:
       'unsafe-inline'; connect-src 'self' https://api.dante.gbv.de
       https://api.crossref.org https://api.datacite.org https://ws.gbv.de
       https://doi.org https://citation.doi.org https://api.ror.org
-      https://v2.sherpa.ac.uk https://vocab.phaidra.org
-      https://yarm.phaidra.org; img-src 'self' data: blob:
+      https://v2.sherpa.ac.uk https://vocab.phaidra.org https://yarm.phaidra.org
+      https://data.crosscite.org; img-src 'self' data: blob:
       https://*.tile.osm.org https://*.tile.openstreetmap.org; style-src 'self'
       'unsafe-inline'; base-uri 'self'; form-action 'self'; font-src 'self'
       data:; media-src 'self'; frame-src 'self'
