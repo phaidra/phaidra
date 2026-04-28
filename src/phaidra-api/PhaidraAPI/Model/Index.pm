@@ -11,6 +11,7 @@ use Mojo::Util       qw(encode decode trim);
 use Mojo::JSON       qw(encode_json decode_json from_json to_json);
 use Mojo::URL;
 use Mojo::UserAgent;
+use Mojo::DOM;
 use base qw/Mojo::Base/;
 use XML::LibXML;
 use Storable qw(dclone);
@@ -3296,7 +3297,11 @@ sub _preserve_extracted_text {
 }
 
 sub _extact_text_from_ocr {
-  my ($self, $c, $alto_dom) = @_;
+  my ($self, $c, $alto) = @_;
+
+  my $alto_dom = Mojo::DOM->new();
+  $alto_dom->xml(1);
+  $alto_dom->parse(decode('UTF-8', $alto));
 
   my $extracted_text = "";
 
