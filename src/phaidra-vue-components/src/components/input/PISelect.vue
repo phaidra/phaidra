@@ -24,21 +24,21 @@
           :persistent-hint="hint ? true : false"
           :error-messages="errorMessages"
         >
-          <template #item="{ props, item }">
+          <template #item="{ props, internalItem }">
             <v-list-item
               v-bind="props"
               :lines="showIds ? 'two' : 'one'"
             >
               <template #title>
-                <span v-html="getLocalizedTermLabel(vocabulary, item.raw['@id'])" />
+                <span v-html="getLocalizedTermLabel(vocabulary, internalItem.raw['@id'])" />
               </template>
               <template v-if="showIds" #subtitle>
-                <span v-html="item.raw['@id']" />
+                <span v-html="internalItem.raw['@id']" />
               </template>
             </v-list-item>
           </template>
-          <template #selection="{ item }">
-            <span v-html="getLocalizedTermLabel(vocabulary, (item.raw || item)['@id'])" />
+          <template #selection="{ internalItem }">
+            <span v-html="getLocalizedTermLabel(vocabulary, (internalItem.raw || internalItem)['@id'])" />
           </template>
         </v-autocomplete>
       </v-col>

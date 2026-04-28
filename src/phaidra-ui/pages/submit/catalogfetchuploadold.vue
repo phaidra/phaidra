@@ -21,14 +21,14 @@
           clearable
           :disabled="licenseDisabled"
         >
-          <template #item="{ props, item }">
+          <template #item="{ props, internalItem }">
             <v-list-item v-bind="props" lines="two">
-              <v-list-item-title v-html="`${getLocalizedTermLabel('alllicenses', item.raw['@id'])}`"></v-list-item-title>
-              <v-list-item-subtitle v-if="showIds" v-html="`${item.raw['@id']}`"></v-list-item-subtitle>
+              <v-list-item-title v-html="`${getLocalizedTermLabel('alllicenses', internalItem.raw['@id'])}`"></v-list-item-title>
+              <v-list-item-subtitle v-if="showIds" v-html="`${internalItem.raw['@id']}`"></v-list-item-subtitle>
             </v-list-item>
           </template>
-          <template #selection="{ item }">
-            <span v-html="`${getLocalizedTermLabel('alllicenses', item.raw['@id'])}`"></span>
+          <template #selection="{ internalItem }">
+            <span v-html="`${getLocalizedTermLabel('alllicenses', internalItem.raw['@id'])}`"></span>
           </template>
       </v-autocomplete>
       </v-col>

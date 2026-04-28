@@ -37,14 +37,14 @@
                 return-object
                 clearable
               >
-                <template #item="{ props, item }">
+                <template #item="{ props, internalItem }">
                   <v-list-item v-bind="props">
-                    <v-list-item-title v-html="`${getLocalizedTermLabel('placetype', item.raw['@id'])}`"></v-list-item-title>
-                    <v-list-item-subtitle v-if="showIds" v-html="`${item.raw['@id']}`"></v-list-item-subtitle>
+                    <v-list-item-title v-html="`${getLocalizedTermLabel('placetype', internalItem.raw['@id'])}`"></v-list-item-title>
+                    <v-list-item-subtitle v-if="showIds" v-html="`${internalItem.raw['@id']}`"></v-list-item-subtitle>
                   </v-list-item>
                 </template>
-                <template #selection="{ item }">
-                  <span v-html="`${getLocalizedTermLabel('placetype', item['@id'])}`"></span>
+                <template #selection="{ internalItem }">
+                  <span v-html="`${getLocalizedTermLabel('placetype', internalItem['@id'])}`"></span>
                 </template>
               </v-autocomplete>
             </v-col>

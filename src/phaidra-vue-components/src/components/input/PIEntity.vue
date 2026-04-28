@@ -15,21 +15,21 @@
           clearable
           :error-messages="roleErrorMessages"
         >
-        <template #item="{ props, item }">
+        <template #item="{ props, internalItem }">
           <v-list-item
             v-bind="props"
             :lines="showDefinitions ? 'two' : 'one'"
           >
             <template #title>
-              <span v-html="getLocalizedTermLabel(roleVocabulary, item.raw['@id'])"></span>
+              <span v-html="getLocalizedTermLabel(roleVocabulary, internalItem.raw['@id'])"></span>
             </template>
             <template v-if="showDefinitions" #subtitle>
-              <span class="role-definition" v-html="getLocalizedDefinition(roleVocabulary, item.raw['@id'])"></span>
+              <span class="role-definition" v-html="getLocalizedDefinition(roleVocabulary, internalItem.raw['@id'])"></span>
             </template>
           </v-list-item>
         </template>
-        <template #selection="{ item }">
-          <span v-html="getLocalizedTermLabel(roleVocabulary, (item.raw || item)['@id'])"></span>
+        <template #selection="{ internalItem }">
+          <span v-html="getLocalizedTermLabel(roleVocabulary, (internalItem.raw || internalItem)['@id'])"></span>
         </template>
       </v-autocomplete>
     </v-col>

@@ -22,18 +22,18 @@
             :messages="path"
             :error-messages="errorMessages"
           >
-            <template #item="{ props, item }">
+            <template #item="{ props, internalItem }">
               <v-list-item v-bind="props" :lines="showIds ? 'two' : 'one'">
                 <template #title>
-                  <span v-html="`${getLocalizedTermLabel('oefos', item.raw['@id']) + ' - ' + item.raw['skos:notation'][0]}`" />
+                  <span v-html="`${getLocalizedTermLabel('oefos', internalItem.raw['@id']) + ' - ' + internalItem.raw['skos:notation'][0]}`" />
                 </template>
                 <template v-if="showIds" #subtitle>
-                  <span v-html="item.raw['@id']" />
+                  <span v-html="internalItem.raw['@id']" />
                 </template>
               </v-list-item>
             </template>
-            <template #selection="{ item }">
-              <span v-html="`${getLocalizedTermLabel('oefos', (item.raw || item)['@id']) + ' - ' + (item.raw || item)['skos:notation'][0]}`" />
+            <template #selection="{ internalItem }">
+              <span v-html="`${getLocalizedTermLabel('oefos', (internalItem.raw || internalItem)['@id']) + ' - ' + (internalItem.raw || internalItem)['skos:notation'][0]}`" />
             </template>
             <template #append-inner>
               <v-icon @click="$refs.oefostreedialog.open()">mdi-file-tree</v-icon>

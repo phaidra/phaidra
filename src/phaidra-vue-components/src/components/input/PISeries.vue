@@ -36,21 +36,21 @@
               clearable
               append-inner-icon="mdi-magnify"
             >
-              <template #item="{ props, item }">
+              <template #item="{ props, internalItem }">
                 <v-list-item
                   v-bind="props"
-                  :lines="(item.raw.issn || item.raw.romeopub) ? 'two' : 'one'"
+                  :lines="(internalItem.raw.issn || internalItem.raw.romeopub) ? 'two' : 'one'"
                 >
-                  <template #title>{{ item.raw.title }}</template>
-                  <template v-if="item.raw.issn || item.raw.romeopub" #subtitle>
-                    <template v-if="item.raw.issn">{{ $t('ISSN') + ': ' + item.raw.issn }}</template>
-                    <template v-if="item.raw.issn && item.raw.romeopub"> · </template>
-                    <template v-if="item.raw.romeopub">{{ $t('PUBLISHER_VERLAG') + ': ' + item.raw.romeopub }}</template>
+                  <template #title>{{ internalItem.raw.title }}</template>
+                  <template v-if="internalItem.raw.issn || internalItem.raw.romeopub" #subtitle>
+                    <template v-if="internalItem.raw.issn">{{ $t('ISSN') + ': ' + internalItem.raw.issn }}</template>
+                    <template v-if="internalItem.raw.issn && internalItem.raw.romeopub"> · </template>
+                    <template v-if="internalItem.raw.romeopub">{{ $t('PUBLISHER_VERLAG') + ': ' + internalItem.raw.romeopub }}</template>
                   </template>
                 </v-list-item>
               </template>
-              <template #selection="{ item }">
-                {{ (item.raw || item).title }}
+              <template #selection="{ internalItem }">
+                {{ (internalItem.raw || internalItem).title }}
               </template>
             </v-combobox>
           </v-row>
@@ -208,15 +208,15 @@
                 return-object
                 clearable
               >
-                <template #item="{ props, item }">
+                <template #item="{ props, internalItem }">
                   <v-list-item v-bind="props" lines="one">
                     <template #title>
-                      <span v-html="`${getLocalizedTermLabel(identifierVocabulary, item.raw['@id'])}`" />
+                      <span v-html="`${getLocalizedTermLabel(identifierVocabulary, internalItem.raw['@id'])}`" />
                     </template>
                   </v-list-item>
                 </template>
-                <template #selection="{ item }">
-                  <span v-html="`${getLocalizedTermLabel(identifierVocabulary, (item.raw || item)['@id'])}`" />
+                <template #selection="{ internalItem }">
+                  <span v-html="`${getLocalizedTermLabel(identifierVocabulary, (internalItem.raw || internalItem)['@id'])}`" />
                 </template>
               </v-autocomplete>
             </v-col>

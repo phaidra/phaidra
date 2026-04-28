@@ -95,10 +95,10 @@
                         clearable
                         @click:clear="userSearchItems=[]"
                       >
-                        <template #item="{ props, item }">
-                          <v-list-item v-if="item.raw" v-bind="props" lines="two">
-                            <template #title>{{ item.raw.value }}</template>
-                            <template #subtitle>{{ item.raw.uid }}</template>
+                        <template #item="{ props, internalItem }">
+                          <v-list-item v-if="internalItem.raw" v-bind="props" lines="two">
+                            <template #title>{{ internalItem.raw.value }}</template>
+                            <template #subtitle>{{ internalItem.raw.uid }}</template>
                           </v-list-item>
                         </template>
                       </v-autocomplete>
@@ -185,10 +185,10 @@
                         return-object
                         clearable
                       >
-                        <template #item="{ props, item }">
-                          <v-divider v-if="item.raw && item.raw.divider" />
-                          <v-list-subheader v-else-if="item.raw && item.raw.header != null">
-                            {{ item.raw.header }}
+                        <template #item="{ props, internalItem }">
+                          <v-divider v-if="internalItem.raw && internalItem.raw.divider" />
+                          <v-list-subheader v-else-if="internalItem.raw && internalItem.raw.header != null">
+                            {{ internalItem.raw.header }}
                           </v-list-subheader>
                           <v-list-item
                             v-else
@@ -196,15 +196,15 @@
                             lines="two"
                           >
                             <template #title>
-                              <span v-html="getLocalizedTermLabel('orgunits', item.raw['@id'])" />
+                              <span v-html="getLocalizedTermLabel('orgunits', internalItem.raw['@id'])" />
                             </template>
                             <template #subtitle>
-                              <span v-html="item.raw['@id']" />
+                              <span v-html="internalItem.raw['@id']" />
                             </template>
                           </v-list-item>
                         </template>
-                        <template #selection="{ item }">
-                          <span v-html="getLocalizedTermLabel('orgunits', (item.raw || item)['@id'])" />
+                        <template #selection="{ internalItem }">
+                          <span v-html="getLocalizedTermLabel('orgunits', (internalItem.raw || internalItem)['@id'])" />
                         </template>
                         <template #append-inner>
                           <v-icon @click="$refs.orgunitstreedialog.open()">mdi-file-tree</v-icon>

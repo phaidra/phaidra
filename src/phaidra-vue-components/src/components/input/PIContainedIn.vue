@@ -67,18 +67,18 @@
                     clearable
                     item-value="@id"
                   >
-                    <template #item="{ props, item }">
+                    <template #item="{ props, internalItem }">
                       <v-list-item v-bind="props" :lines="showIds ? 'two' : 'one'">
                         <template #title>
-                          <span v-html="`${getLocalizedTermLabel(rolesVocabulary, item.raw['@id'])}`" />
+                          <span v-html="`${getLocalizedTermLabel(rolesVocabulary, internalItem.raw['@id'])}`" />
                         </template>
                         <template v-if="showIds" #subtitle>
-                          <span v-html="item.raw['@id']" />
+                          <span v-html="internalItem.raw['@id']" />
                         </template>
                       </v-list-item>
                     </template>
-                    <template #selection="{ item }">
-                      <span v-html="`${getLocalizedTermLabel(rolesVocabulary, (item.raw || item)['@id'])}`" />
+                    <template #selection="{ internalItem }">
+                      <span v-html="`${getLocalizedTermLabel(rolesVocabulary, (internalItem.raw || internalItem)['@id'])}`" />
                     </template>
                   </v-autocomplete>
                 </v-col>
@@ -169,15 +169,15 @@
                     return-object
                     clearable
                   >
-                    <template #item="{ props, item }">
+                    <template #item="{ props, internalItem }">
                       <v-list-item v-bind="props" lines="one">
                         <template #title>
-                          <span v-html="`${getLocalizedTermLabel(identifierVocabulary, item.raw['@id'])}`" />
+                          <span v-html="`${getLocalizedTermLabel(identifierVocabulary, internalItem.raw['@id'])}`" />
                         </template>
                       </v-list-item>
                     </template>
-                    <template #selection="{ item }">
-                      <span v-html="`${getLocalizedTermLabel(identifierVocabulary, (item.raw || item)['@id'])}`" />
+                    <template #selection="{ internalItem }">
+                      <span v-html="`${getLocalizedTermLabel(identifierVocabulary, (internalItem.raw || internalItem)['@id'])}`" />
                     </template>
                   </v-autocomplete>
                 </v-col>
@@ -315,15 +315,15 @@
                           return-object
                           clearable
                         >
-                          <template #item="{ props, item }">
+                          <template #item="{ props, internalItem }">
                             <v-list-item v-bind="props" lines="one">
                               <template #title>
-                                <span v-html="`${getLocalizedTermLabel(seriesIdentifierVocabulary, item.raw['@id'])}`" />
+                                <span v-html="`${getLocalizedTermLabel(seriesIdentifierVocabulary, internalItem.raw['@id'])}`" />
                               </template>
                             </v-list-item>
                           </template>
-                          <template #selection="{ item }">
-                            <span v-html="`${getLocalizedTermLabel(seriesIdentifierVocabulary, (item.raw || item)['@id'])}`" />
+                          <template #selection="{ internalItem }">
+                            <span v-html="`${getLocalizedTermLabel(seriesIdentifierVocabulary, (internalItem.raw || internalItem)['@id'])}`" />
                           </template>
                         </v-autocomplete>
                       </v-col>
@@ -386,10 +386,10 @@
                           :messages="organizationPath"
                           :bg-color="publisherBackgroundColor ? publisherBackgroundColor : undefined"
                         >
-                          <template #item="{ props, item }">
-                            <v-divider v-if="item.raw && item.raw.divider" />
-                            <v-list-subheader v-else-if="item.raw && item.raw.header != null">
-                              {{ item.raw.header }}
+                          <template #item="{ props, internalItem }">
+                            <v-divider v-if="internalItem.raw && internalItem.raw.divider" />
+                            <v-list-subheader v-else-if="internalItem.raw && internalItem.raw.header != null">
+                              {{ internalItem.raw.header }}
                             </v-list-subheader>
                             <v-list-item
                               v-else
@@ -397,15 +397,15 @@
                               :lines="showIds ? 'two' : 'one'"
                             >
                               <template #title>
-                                <span v-html="getLocalizedTermLabel('orgunits', item.raw['@id'])" />
+                                <span v-html="getLocalizedTermLabel('orgunits', internalItem.raw['@id'])" />
                               </template>
                               <template v-if="showIds" #subtitle>
-                                <span v-html="item.raw['@id']" />
+                                <span v-html="internalItem.raw['@id']" />
                               </template>
                             </v-list-item>
                           </template>
-                          <template #selection="{ item }">
-                            <span v-html="getLocalizedTermLabel('orgunits', (item.raw || item)['@id'])" />
+                          <template #selection="{ internalItem }">
+                            <span v-html="getLocalizedTermLabel('orgunits', (internalItem.raw || internalItem)['@id'])" />
                           </template>
                           <template #append-inner>
                             <v-icon v-if="enableOrgTree" @click="$refs.organizationstreedialog.open()">mdi-file-tree</v-icon>
@@ -432,14 +432,14 @@
                           clearable
                           append-inner-icon="mdi-magnify"
                         >
-                          <template #item="{ props, item }">
-                            <v-list-item v-bind="props" :lines="item.raw.alias ? 'two' : 'one'">
-                              <template #title>{{ item.raw.name }}</template>
-                              <template v-if="item.raw.alias" #subtitle>{{ $t('Alias') + ': ' + item.raw.alias }}</template>
+                          <template #item="{ props, internalItem }">
+                            <v-list-item v-bind="props" :lines="internalItem.raw.alias ? 'two' : 'one'">
+                              <template #title>{{ internalItem.raw.name }}</template>
+                              <template v-if="internalItem.raw.alias" #subtitle>{{ $t('Alias') + ': ' + internalItem.raw.alias }}</template>
                             </v-list-item>
                           </template>
-                          <template #selection="{ item }">
-                            {{ (item.raw || item).name }}
+                          <template #selection="{ internalItem }">
+                            {{ (internalItem.raw || internalItem).name }}
                           </template>
                         </v-combobox>
                       </v-col>

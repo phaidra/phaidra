@@ -16,15 +16,15 @@
         :variant="fieldVariant"
         clearable
       >
-        <template #item="{ props, item }">
+        <template #item="{ props, internalItem }">
           <v-list-item v-bind="props" lines="one">
             <template #title>
-              <span v-html="item.raw" />
+              <span v-html="internalItem.raw" />
             </template>
           </v-list-item>
         </template>
-        <template #selection="{ item }">
-          {{ xmlUtils.htmlToPlaintext(item.raw) }}
+        <template #selection="{ internalItem }">
+          {{ xmlUtils.htmlToPlaintext(internalItem.raw) }}
         </template>
       </v-combobox>
     </v-col>

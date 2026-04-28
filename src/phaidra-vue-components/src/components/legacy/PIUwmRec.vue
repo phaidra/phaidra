@@ -31,11 +31,11 @@
             variant="filled"
             clearable
           >
-            <template v-slot:item="{ item, index }">
-              <span>{{ item.labels[alpha2locale] }}</span>
+            <template v-slot:item="{ internalItem, index }">
+              <span>{{ internalItem.labels[alpha2locale] }}</span>
             </template>
-            <template v-slot:selection="{ item, index }">
-              <span>{{ item.labels[alpha2locale] }}</span>
+            <template v-slot:selection="{ internalItem, index }">
+              <span>{{ internalItem.labels[alpha2locale] }}</span>
             </template>
           </v-select>
         </v-col>
@@ -52,11 +52,11 @@
             variant="filled"
             clearable
           >
-            <template v-slot:item="{ item, index }">
-              <span>{{ item.labels[alpha2locale] }}</span>
+            <template v-slot:item="{ internalItem, index }">
+              <span>{{ internalItem.labels[alpha2locale] }}</span>
             </template>
-            <template v-slot:selection="{ item, index }">
-              <span>{{ item.labels[alpha2locale] }}</span>
+            <template v-slot:selection="{ internalItem, index }">
+              <span>{{ internalItem.labels[alpha2locale] }}</span>
             </template>
           </v-select>
         </v-col>
@@ -177,11 +177,11 @@
                 variant="filled"
                 clearable
               >
-                <template v-slot:item="{ item, index }">
-                  <span>{{ item.labels[alpha2locale] }}</span>
+                <template v-slot:item="{ internalItem, index }">
+                  <span>{{ internalItem.labels[alpha2locale] }}</span>
                 </template>
-                <template v-slot:selection="{ item, index }">
-                  <span>{{ item.labels[alpha2locale] }}</span>
+                <template v-slot:selection="{ internalItem, index }">
+                  <span>{{ internalItem.labels[alpha2locale] }}</span>
                 </template>
               </v-select>
             </v-col>

@@ -82,7 +82,7 @@
         </template>
         <template v-else-if="nodePath(ch) === 'uwm_lifecycle_contribute'">
           <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ getChildLabel(ch, 'role') }}</v-col>
-          <v-col cols="12" md="10" :class="getChildValue(ch, 'date') && $vuetify.breakpoint.mdAndUp ? 'uwm-border-left mb-4' : ''">
+          <v-col cols="12" md="10" :class="getChildValue(ch, 'date') && $vuetify.display.mdAndUp ? 'uwm-border-left mb-4' : ''">
             <v-row no-gutters v-for="(entity, i) in getEntities(ch)" :key="'en'+i" class="mb-2">
               <v-col>
                 <span v-if="getChildValue(entity, 'orcid')">

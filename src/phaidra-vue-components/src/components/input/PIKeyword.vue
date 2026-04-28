@@ -21,16 +21,16 @@
         :error-messages="errorMessages"
         :hint="$t(hint)"
       >
-        <template #item="{ props, item }">
+        <template #item="{ props, internalItem }">
           <v-list-item v-bind="props" lines="one">
             <template #title>
-              <span v-html="item.raw.term" />
+              <span v-html="internalItem.raw.term" />
             </template>
           </v-list-item>
         </template>
         <template #chip="{ item, props: chipProps }">
           <v-chip v-bind="chipProps" @click:close="removeKeyword(item.raw)">
-            {{ htmlToPlaintext(item.raw && item.raw.term != null ? item.raw.term : item.raw) }}
+            {{ htmlToPlaintext(item.raw && internalItem.raw.term != null ? internalItem.raw.term : internalItem.raw) }}
           </v-chip>
         </template>
       </v-combobox>

@@ -69,26 +69,26 @@
                   clearable
                   :error-messages="roleErrorMessages"
                 >
-                  <template #item="{ props, item }">
+                  <template #item="{ props, internalItem }">
                     <v-list-item
                       v-bind="props"
                       :lines="roleAutocompleteLines"
                     >
                       <template #title>
-                        <span v-html="getLocalizedTermLabel(roleVocabulary, item.raw['@id'])" />
+                        <span v-html="getLocalizedTermLabel(roleVocabulary, internalItem.raw['@id'])" />
                       </template>
                       <template v-if="showIds || showDefinitions" #subtitle>
-                        <div v-if="showIds" v-html="item.raw['@id']" />
+                        <div v-if="showIds" v-html="internalItem.raw['@id']" />
                         <div
                           v-if="showDefinitions"
                           class="role-definition"
-                          v-html="getLocalizedDefinition(roleVocabulary, item.raw['@id'])"
+                          v-html="getLocalizedDefinition(roleVocabulary, internalItem.raw['@id'])"
                         />
                       </template>
                     </v-list-item>
                   </template>
-                  <template #selection="{ item }">
-                    <span v-html="getLocalizedTermLabel(roleVocabulary, (item.raw || item)['@id'])" />
+                  <template #selection="{ internalItem }">
+                    <span v-html="getLocalizedTermLabel(roleVocabulary, (internalItem.raw || internalItem)['@id'])" />
                   </template>
                 </v-autocomplete>
               </v-col>
@@ -201,15 +201,15 @@
                     return-object
                     clearable
                   >
-                    <template #item="{ props, item }">
+                    <template #item="{ props, internalItem }">
                       <v-list-item v-bind="props" lines="one">
                         <template #title>
-                          <span v-html="getLocalizedTermLabel(identifierVocabulary, item.raw['@id'])" />
+                          <span v-html="getLocalizedTermLabel(identifierVocabulary, internalItem.raw['@id'])" />
                         </template>
                       </v-list-item>
                     </template>
-                    <template #selection="{ item }">
-                      <span v-html="getLocalizedTermLabel(identifierVocabulary, (item.raw || item)['@id'])" />
+                    <template #selection="{ internalItem }">
+                      <span v-html="getLocalizedTermLabel(identifierVocabulary, (internalItem.raw || internalItem)['@id'])" />
                     </template>
                   </v-autocomplete>
                 </v-col>
@@ -266,10 +266,10 @@
                     :error-messages="organizationErrorMessages"
                     :bg-color="organizationBackgroundColor ? organizationBackgroundColor : undefined"
                   >
-                    <template #item="{ props, item }">
-                      <v-divider v-if="item.raw && item.raw.divider" />
-                      <v-list-subheader v-else-if="item.raw && item.raw.header != null">
-                        {{ item.raw.header }}
+                    <template #item="{ props, internalItem }">
+                      <v-divider v-if="internalItem.raw && internalItem.raw.divider" />
+                      <v-list-subheader v-else-if="internalItem.raw && internalItem.raw.header != null">
+                        {{ internalItem.raw.header }}
                       </v-list-subheader>
                       <v-list-item
                         v-else
@@ -277,15 +277,15 @@
                         :lines="showIds ? 'two' : 'one'"
                       >
                         <template #title>
-                          <span v-html="getLocalizedTermLabel('orgunits', item.raw['@id'])" />
+                          <span v-html="getLocalizedTermLabel('orgunits', internalItem.raw['@id'])" />
                         </template>
                         <template v-if="showIds" #subtitle>
-                          <span v-html="item.raw['@id']" />
+                          <span v-html="internalItem.raw['@id']" />
                         </template>
                       </v-list-item>
                     </template>
-                    <template #selection="{ item }">
-                      <span v-html="getLocalizedTermLabel('orgunits', (item.raw || item)['@id'])" />
+                    <template #selection="{ internalItem }">
+                      <span v-html="getLocalizedTermLabel('orgunits', (internalItem.raw || internalItem)['@id'])" />
                     </template>
                     <template #append-inner>
                       <v-icon v-if="enableOrgTree" @click="$refs.organizationstreedialog.open()">mdi-file-tree</v-icon>
@@ -414,10 +414,10 @@
                   :error-messages="affiliationErrorMessages"
                   :bg-color="affiliationBackgroundColor ? affiliationBackgroundColor : undefined"
                 >
-                  <template #item="{ props, item }">
-                    <v-divider v-if="item.raw && item.raw.divider" />
-                    <v-list-subheader v-else-if="item.raw && item.raw.header != null">
-                      {{ item.raw.header }}
+                  <template #item="{ props, internalItem }">
+                    <v-divider v-if="internalItem.raw && internalItem.raw.divider" />
+                    <v-list-subheader v-else-if="internalItem.raw && internalItem.raw.header != null">
+                      {{ internalItem.raw.header }}
                     </v-list-subheader>
                     <v-list-item
                       v-else
@@ -425,15 +425,15 @@
                       :lines="showIds ? 'two' : 'one'"
                     >
                       <template #title>
-                        <span v-html="getLocalizedTermLabel('orgunits', item.raw['@id'])" />
+                        <span v-html="getLocalizedTermLabel('orgunits', internalItem.raw['@id'])" />
                       </template>
                       <template v-if="showIds" #subtitle>
-                        <span v-html="item.raw['@id']" />
+                        <span v-html="internalItem.raw['@id']" />
                       </template>
                     </v-list-item>
                   </template>
-                  <template #selection="{ item }">
-                    <span v-html="getLocalizedTermLabel('orgunits', (item.raw || item)['@id'])" />
+                  <template #selection="{ internalItem }">
+                    <span v-html="getLocalizedTermLabel('orgunits', (internalItem.raw || internalItem)['@id'])" />
                   </template>
                   <template #append-inner>
                     <v-icon v-if="enableAffTree" @click="$refs.affiliationstreedialog.open()">mdi-file-tree</v-icon>

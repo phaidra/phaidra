@@ -22,18 +22,18 @@
             :messages="path"
             :error-messages="errorMessages"
           >
-            <template #item="{ props, item }">
+            <template #item="{ props, internalItem }">
               <v-list-item v-bind="props" :lines="showIds ? 'two' : 'one'">
                 <template #title>
-                  <span v-html="`${getLocalizedTermLabel('bic', item.raw['@id']) + ' - ' + item.raw['skos:notation'][0]}`" />
+                  <span v-html="`${getLocalizedTermLabel('bic', internalItem.raw['@id']) + ' - ' + internalItem.raw['skos:notation'][0]}`" />
                 </template>
                 <template v-if="showIds" #subtitle>
-                  <span v-html="item.raw['@id']" />
+                  <span v-html="internalItem.raw['@id']" />
                 </template>
               </v-list-item>
             </template>
-            <template #selection="{ item }">
-              <span v-html="`${getLocalizedTermLabel('bic', (item.raw || item)['@id']) + ' - ' + (item.raw || item)['skos:notation'][0]}`" />
+            <template #selection="{ internalItem }">
+              <span v-html="`${getLocalizedTermLabel('bic', (internalItem.raw || internalItem)['@id']) + ' - ' + (internalItem.raw || internalItem)['skos:notation'][0]}`" />
             </template>
             <template #append-inner>
               <v-icon @click="$refs.bictreedialog.open()">mdi-file-tree</v-icon>

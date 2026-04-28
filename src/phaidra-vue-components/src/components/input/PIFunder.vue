@@ -33,15 +33,15 @@
             return-object
             clearable
           >
-            <template #item="{ props, item }">
+            <template #item="{ props, internalItem }">
               <v-list-item v-bind="props" lines="one">
                 <template #title>
-                  <span v-html="getLocalizedTermLabel(identifierVocabulary, item.raw['@id'])" />
+                  <span v-html="getLocalizedTermLabel(identifierVocabulary, internalItem.raw['@id'])" />
                 </template>
               </v-list-item>
             </template>
-            <template #selection="{ item }">
-              <span v-html="getLocalizedTermLabel(identifierVocabulary, (item.raw || item)['@id'])" />
+            <template #selection="{ internalItem }">
+              <span v-html="getLocalizedTermLabel(identifierVocabulary, (internalItem.raw || internalItem)['@id'])" />
             </template>
           </v-autocomplete>
         </v-col>

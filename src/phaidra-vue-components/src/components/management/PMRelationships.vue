@@ -78,13 +78,13 @@
                         clearable
                         @click:clear="userSearchItems=[]"
                       >
-                        <template #selection="{ item }">
-                          <span><span class="text-primary">{{ (item.raw || item).value }}:</span> {{ (item.raw || item).text }}</span>
+                        <template #selection="{ internalItem }">
+                          <span><span class="text-primary">{{ (internalItem.raw || internalItem).value }}:</span> {{ (internalItem.raw || internalItem).text }}</span>
                         </template>
-                        <template #item="{ props, item }">
-                          <v-list-item v-if="item.raw || item" v-bind="props" lines="two">
-                            <template #title>{{ (item.raw || item).text }}</template>
-                            <template #subtitle>{{ (item.raw || item).value }}</template>
+                        <template #item="{ props, internalItem }">
+                          <v-list-item v-if="internalItem.raw || internalItem" v-bind="props" lines="two">
+                            <template #title>{{ (internalItem.raw || internalItem).text }}</template>
+                            <template #subtitle>{{ (internalItem.raw || internalItem).value }}</template>
                           </v-list-item>
                         </template>
                       </v-autocomplete>
