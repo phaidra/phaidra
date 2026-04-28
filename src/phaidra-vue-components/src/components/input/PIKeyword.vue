@@ -29,8 +29,8 @@
           </v-list-item>
         </template>
         <template #chip="{ item, props: chipProps }">
-          <v-chip v-bind="chipProps" @click:close="removeKeyword(item.raw)">
-            {{ htmlToPlaintext(item.raw && internalItem.raw.term != null ? internalItem.raw.term : internalItem.raw) }}
+          <v-chip v-bind="chipProps" @click:close="removeKeyword(resolveChipValue(item))">
+            {{ htmlToPlaintext(resolveChipLabel(item)) }}
           </v-chip>
         </template>
       </v-combobox>
@@ -135,13 +135,38 @@ export default {
     onInput (value) {
       let arr = []
       for (let v of value) {
-        if (v.payload) {
-          arr.push(v.payload)
-        } else {
-          arr.push(v)
+        if (v && typeof v === 'object') {
+          if (v.payload !== undefined) {
+            arr.push(v.payload)
+            continue
+          }
+          if (v.value !== undefined && typeof v.value !== 'object') {
+            arr.push(v.value)
+            continue
+          }
+          if (v.raw !== undefined) {
+            arr.push(v.raw)
+            continue
+          }
         }
+        arr.push(v)
       }
       this.$emit('input', arr)
+    },
+    resolveChipValue (chipItem) {
+      if (!chipItem || typeof chipItem !== 'object') return chipItem
+      if (chipItem.raw !== undefined) return chipItem.raw
+      if (chipItem.value !== undefined) return chipItem.value
+      return chipItem
+    },
+    resolveChipLabel (chipItem) {
+      const value = this.resolveChipValue(chipItem)
+      if (value && typeof value === 'object') {
+        if (value.term != null) return value.term
+        if (value.title != null) return value.title
+        if (typeof value.value !== 'object' && value.value != null) return value.value
+      }
+      return value
     },
     removeKeyword (keyword) {
       arrayUtils.remove(this.model, keyword)
