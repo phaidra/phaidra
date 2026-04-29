@@ -30,10 +30,10 @@
           :no-results-text="$t('There were no search results')"
         >
           <template v-slot:item.title="{ item }">
-            <span>{{ getObjectTitle(item) | truncate(50) }}</span>
+            <span>{{ $truncate(getObjectTitle(item), 50) }}</span>
           </template>
           <template v-slot:item.created="{ item }">
-            {{ item.created | date }}
+            {{ $date(item.created) }}
           </template>
           <template v-slot:item.actions="{ item }">
             <v-btn variant="text" color="primary" @click="selectCollection(item)">{{ $t('Select') }}</v-btn>
