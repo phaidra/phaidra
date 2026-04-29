@@ -46,8 +46,10 @@ import { config } from "../mixins/config";
 
 export default {
   mixins: [context, config],
-  middleware: "auth",
   setup() {
+    definePageMeta({
+      middleware: 'auth'
+    })
     const nuxtApp = useNuxtApp()
     useHead(() => {
       const t = nuxtApp.$i18n?.t || ((v) => v)

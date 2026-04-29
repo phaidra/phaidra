@@ -6,9 +6,11 @@ import { config } from "../../mixins/config";
 import Submit from "../../components/Submit.vue";
 
 export default {
-  middleware: "auth",
   mixins: [config],
   setup() {
+    definePageMeta({
+      middleware: 'auth'
+    })
     const nuxtApp = useNuxtApp()
     useHead(() => {
       const t = nuxtApp.$i18n?.t || ((v) => v)

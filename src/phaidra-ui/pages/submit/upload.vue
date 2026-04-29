@@ -41,9 +41,11 @@ import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
 
 export default {
   layout: "main",
-  middleware: "auth",
   mixins: [context, config, vocabulary],
   setup() {
+    definePageMeta({
+      middleware: 'auth'
+    })
     const nuxtApp = useNuxtApp()
     useHead(() => {
       const t = nuxtApp.$i18n?.t || ((v) => v)

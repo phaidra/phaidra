@@ -128,11 +128,15 @@ import { csvParser } from '../../mixins/csvParser'
 
 export default {
   name: 'CsvConfig',
+  setup () {
+    definePageMeta({
+      middleware: 'bulk-upload'
+    })
+  },
   components: {
     BulkUploadSteps
   },
   mixins: [csvParser],
-  middleware: 'bulk-upload',
 
   data() {
     return {

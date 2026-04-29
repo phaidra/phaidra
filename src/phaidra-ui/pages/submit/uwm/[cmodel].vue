@@ -62,7 +62,11 @@ import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
 import { mimeToCreateMethod } from "phaidra-vue-components/src/utils/mimetypes";
 
 export default {
-  middleware: "auth",
+  setup() {
+    definePageMeta({
+      middleware: 'auth'
+    })
+  },
   mixins: [config, context, vocabulary],
   computed: {
     alpha2locale: function () {

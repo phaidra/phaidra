@@ -33,7 +33,11 @@ import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
 
 export default {
   name: 'submit-custom',
-  middleware: "auth",
+  setup() {
+    definePageMeta({
+      middleware: 'auth'
+    })
+  },
   mixins: [context, config, vocabulary],
   data() {
     return {

@@ -1341,8 +1341,10 @@ import { config } from "../mixins/config";
 export default {
   mixins: [FaviconMixin, config],
   components: {PRepostat},
-  middleware: "auth",
   setup() {
+    definePageMeta({
+      middleware: 'auth'
+    })
     const nuxtApp = useNuxtApp()
     useHead(() => {
       const t = nuxtApp.$i18n?.t || ((v) => v)

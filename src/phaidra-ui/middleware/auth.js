@@ -1,34 +1,29 @@
-/**
- * Nuxt 3 route middleware: signature is (to, from), not Nuxt 2 context.
- * Login required only for editing / admin flows; /detail/:pid and search stay public.
- */
-function pathRequiresAuth (path) {
-  const p = (path || '').split('?')[0]
-  const prefixes = [
-    '/admin',
-    '/bulk-upload',
-    '/submit',
-    '/submitrelated/',
-    '/delete/',
-    '/rights/',
-    '/uwmetadata/',
-    '/upload-webversion/',
-    '/sort/',
-    '/relationships/',
-    '/stats/',
-    '/sorttextinput/',
-    '/list/'
-  ]
-  if (prefixes.some((pre) => p.startsWith(pre))) return true
-  if (/^\/metadata\/o:/.test(p)) return true
-  return false
-}
-
-export default defineNuxtRouteMiddleware((to) => {
-  if (!pathRequiresAuth(to.path)) return
-
+export default defineNuxtRouteMiddleware(async (to) => {
   const store = useNuxtApp().$store
-  if (!store?.state?.user?.token) {
+  if (!store) return
+
+  // Keep old behavior, but restore persisted token on hard refresh.
+  if (!store.state?.user?.token) {
+    let token = useCookie('XSRF-TOKEN').value
+    if (!token && import.meta.client) {
+      try {
+        token = localStorage.getItem('XSRF-TOKEN')
+      } catch (_) {}
+    }
+    if (token) {
+      store.commit('setToken', token)
+    }
+  }
+
+  // Rehydrate full user profile (isadmin, firstname, lastname, ...)
+  // so header/admin menu is correct after hard refresh.
+  if (store.state?.user?.token && !store.state?.user?.username) {
+    try {
+      await store.dispatch('getLoginData')
+    } catch (_) {}
+  }
+
+  if (!store.state?.user?.token) {
     if (import.meta.client) {
       try {
         localStorage.setItem('redirect', to.fullPath)

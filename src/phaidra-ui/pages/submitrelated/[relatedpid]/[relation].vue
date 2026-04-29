@@ -112,7 +112,11 @@ import { context } from "../../../mixins/context"
 import { config } from "../../../mixins/config"
 
 export default {
-  middleware: "auth",
+  setup() {
+    definePageMeta({
+      middleware: 'auth'
+    })
+  },
   mixins: [context, config, vocabulary, formvalidation],
   computed: {
     relatedpid: function () {

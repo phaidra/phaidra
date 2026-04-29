@@ -116,6 +116,11 @@ import { fieldSettings } from '../../config/bulk-upload/field-settings'
 
 export default {
   name: 'Upload',
+  setup () {
+    definePageMeta({
+      middleware: 'bulk-upload'
+    })
+  },
   components: {
     BulkUploadSteps,
     LoginOverlay,
@@ -125,7 +130,6 @@ export default {
     FileSelection
   },
   mixins: [context, config, csvParser],
-  middleware: 'bulk-upload',
 
   data() {
     return {
