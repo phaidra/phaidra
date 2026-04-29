@@ -66,10 +66,10 @@
                 </v-tooltip>
               </template>
               <template v-slot:item.created="{ item }">
-                {{ item.created | unixtime }}
+                {{ $unixtime(item.created) }}
               </template>
               <template v-slot:item.updated="{ item }">
-                {{ item.updated | unixtime }}
+                {{ $unixtime(item.updated) }}
               </template>
               <template v-slot:item.actions="{ item }">
                 <v-tooltip bottom>

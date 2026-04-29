@@ -37,7 +37,7 @@
                 <a :href="`${instance.baseurl}/${item.pid}`">{{ item.pid }}</a>
               </template>
               <template v-slot:item.title="{ item }">
-                {{ item.title | truncate(100) }}
+                {{ $truncate(item.title, 100) }}
               </template>
             </v-data-table>
           </v-card-text>

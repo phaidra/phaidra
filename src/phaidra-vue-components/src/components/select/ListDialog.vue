@@ -30,16 +30,16 @@
           <template v-slot:item.name="{ item }">
             <v-tooltip bottom>
               <template v-slot:activator="{ props: activatorProps }">
-                <span v-bind="activatorProps">{{ item.name | truncate(50) }}</span>
+                <span v-bind="activatorProps">{{ $truncate(item.name, 50) }}</span>
               </template>
               <span>{{ item.listid }}</span>
             </v-tooltip>
           </template>
           <template v-slot:item.created="{ item }">
-            {{ item.created | unixtime }}
+            {{ $unixtime(item.created) }}
           </template>
           <template v-slot:item.updated="{ item }">
-            {{ item.updated | unixtime }}
+            {{ $unixtime(item.updated) }}
           </template>
           <template v-slot:item.actions="{ item }">
             <v-btn variant="text" color="primary" @click="selectList(item)">{{ $t('Select') }}</v-btn>

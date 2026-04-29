@@ -13,7 +13,7 @@
         </template>
         <template v-else-if="nodePath(ch) === 'uwm_lifecycle_upload_date'">
           <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
-          <v-col cols="12" md="10">{{ ch.ui_value | datetimeutc }} UTC</v-col>
+          <v-col cols="12" md="10">{{ $datetimeutc(ch.ui_value) }} UTC</v-col>
         </template>
         <template v-else-if="ch.datatype === 'ClassificationSource'">
           <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
@@ -21,7 +21,7 @@
         </template>
         <template v-else-if="ch.datatype === 'FileSize'">
           <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
-          <v-col cols="12" md="10">{{ ch.ui_value | bytes }}</v-col>
+          <v-col cols="12" md="10">{{ $bytes(ch.ui_value) }}</v-col>
         </template>
         <template v-else-if="ch.datatype === 'Taxon'">
           <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
@@ -107,7 +107,7 @@
             </v-row>
             <v-row v-if="getChildValue(ch, 'date')">
               <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold d-none d-md-flex">{{ $t('uwm_lifecycle_contribute_date') }}</v-col>
-              <v-col cols="12" md="10">{{ getChildValue(ch, 'date') | date }}</v-col>
+              <v-col cols="12" md="10">{{ $date(getChildValue(ch, 'date')) }}</v-col>
             </v-row>
           </v-col>
         </template>
@@ -139,11 +139,11 @@
                 </v-row>
                 <v-row v-if="getChildValue(ch, 'date_from')">
                   <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_date_from') }}</v-col>
-                  <v-col cols="12" md="10">{{ getChildValue(ch, 'date_from') | date }}</v-col>
+                  <v-col cols="12" md="10">{{ $date(getChildValue(ch, 'date_from')) }}</v-col>
                 </v-row>
                 <v-row v-if="getChildValue(ch, 'date_to')">
                   <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_date_to') }}</v-col>
-                  <v-col cols="12" md="10">{{ getChildValue(ch, 'date_to') | date }}</v-col>
+                  <v-col cols="12" md="10">{{ $date(getChildValue(ch, 'date_to')) }}</v-col>
                 </v-row>
                 <v-row v-for="(child, i) in getMultipleChild(ch, 'chronological')" :key="'chron'+i">
                   <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_chronological') }}<template v-if="getLangAttr(child)"> ({{getLangAttr(child)}})</template></v-col>
