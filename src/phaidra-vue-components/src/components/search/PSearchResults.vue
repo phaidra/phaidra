@@ -28,13 +28,13 @@
     </v-slide-y-transition>
     <v-divider v-if="selectioncheck" class="mb-4"></v-divider>
     <div v-for="(doc, i) in this.docs" :key="'doc'+i">
-      <v-row>
+      <v-row no-gutters>
         <v-slide-x-transition hide-on-leave>
-          <v-col cols="1" v-if="selectioncheck" align-self="center">
+          <v-col cols="1" v-if="selectioncheck" class="d-flex align-center">
             <v-checkbox color="primary" @update:model-value="selectDoc($event, doc)" :model-value="selectionIncludes(doc)"></v-checkbox>
+            <v-divider vertical class="align-self-stretch mx-2"></v-divider>
           </v-col>
         </v-slide-x-transition>
-        <v-divider inset vertical v-if="selectioncheck"></v-divider>
         <v-col :cols="selectioncheck ? 11 : 12">
           <v-row :key="'prev'+doc.pid">
             <v-col cols="2" >
