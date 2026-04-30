@@ -235,7 +235,14 @@ export default {
           this.hasLoadedInstanceConfig = true
         }
       } catch (error) {
-        console.error(error)
+        const status = error?.response?.status
+        if (status === 404) {
+          // API can be temporarily unavailable during local dev startup.
+          // Keep defaults and avoid noisy stack traces in terminal logs.
+          console.warn('Could not load /config/public (404), using defaults for now.')
+        } else {
+          console.warn('Could not load /config/public:', error?.message || error)
+        }
       } finally {
         this.loading = false;
       }
