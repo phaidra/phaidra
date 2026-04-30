@@ -111,11 +111,11 @@ export default {
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.cookie-banner >>> .v-banner__wrapper {
+.cookie-banner :deep(.v-banner__wrapper) {
   padding: 20px 24px;
 }
 
-.cookie-banner >>> .v-banner__content {
+.cookie-banner :deep(.v-banner__content) {
   width: 100%;
 }
 
