@@ -574,7 +574,6 @@
             </v-col>
           </v-row>
           <v-row justify="center" v-if="showPreview">
-            <client-only>
               <v-col cols="12">
                 <div class="iframe-container" v-if="objectInfo.cmodel === 'Video'">
                   <iframe
@@ -627,7 +626,6 @@
                   ><v-icon class="mr-2" aria-hidden="true">mdi-open-in-new</v-icon>{{ $t("Open in new window") }}</v-btn
                 >
               </v-col>
-            </client-only>
           </v-row>
 
           <v-divider class="mt-12 mb-10" v-if="showPreview"></v-divider>
@@ -2464,7 +2462,26 @@ export default {
         const pid = route.params.pid
         if (!pid || !/^o:\d+$/.test(String(pid))) return null
 
-        if (import.meta.client) {
+        // Detail is public and does not always run auth middleware.
+        // Rehydrate token here so permission-sensitive fields (writerights, menus) are fetched as authenticated user on reload.
+        if (!nuxtApp.$store.state?.user?.token) {
+          let token = useCookie('XSRF-TOKEN').value
+          if (!token && import.meta.client) {
+            try {
+              token = localStorage.getItem('XSRF-TOKEN')
+            } catch (_) {}
+          }
+          if (token) {
+            nuxtApp.$store.commit('setToken', token)
+            if (!nuxtApp.$store.state?.user?.username) {
+              try {
+                await nuxtApp.$store.dispatch('getLoginData')
+              } catch (_) {}
+            }
+          }
+        }
+
+        if (import.meta.client && !nuxtApp.isHydrating) {
           await nextTick()
           instance?.proxy?.clearDetailAuxiliaryState?.()
           nuxtApp.$store.commit('setLoading', true)

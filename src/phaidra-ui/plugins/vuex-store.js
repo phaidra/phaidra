@@ -42,6 +42,19 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
   })
 
+  // Explicit SSR <-> client hydration for custom Vuex store in Nuxt 4.
+  if (import.meta.server) {
+    nuxtApp.hooks.hook('app:rendered', () => {
+      nuxtApp.payload.vuex = store.state
+    })
+  }
+  if (import.meta.client && nuxtApp.payload?.vuex) {
+    store.replaceState({
+      ...store.state,
+      ...nuxtApp.payload.vuex
+    })
+  }
+
   // Nuxt 2 injected $axios/$cookies onto the store for actions/mutations; restore for Vuex 4.
   store.$axios = nuxtApp.$axios
   store.$cookies = nuxtApp.$cookies || {

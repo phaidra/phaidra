@@ -95,6 +95,7 @@ import PExpandText from './utils/PExpandText'
 import PMetadataFieldsHelp from './info/PMetadataFieldsHelp'
 import PHelp from './info/PHelp'
 import CollectionDialog from './select/CollectionDialog'
+import ListDialog from './select/ListDialog'
 
 const Components = {
   icon: Icon,
@@ -191,7 +192,8 @@ const Components = {
   PHelp,
   PMetadataFieldsHelp,
   PExpandText,
-  CollectionDialog
+  CollectionDialog,
+  ListDialog
 }
 
 export { default as phaidraNavigationMixin } from '../mixins/phaidraNavigation.js'

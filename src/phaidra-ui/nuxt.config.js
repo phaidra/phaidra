@@ -12,7 +12,9 @@ const envOrigin = `${process.env.OUTSIDE_HTTP_SCHEME || 'http'}://${process.env.
 const publicApiBaseURL = process.env.PHAIDRA_API_BASE_URL || `${envOrigin}/api`
 const internalApiHost = process.env.PHAIDRA_API_INTERNAL_HOST || process.env.PHAIDRA_API_HOST || 'api'
 const internalApiPort = process.env.PHAIDRA_API_INTERNAL_PORT || process.env.PHAIDRA_API_PORT || '3000'
-const fallbackInternalApiBaseURL = `http://${internalApiHost}:${internalApiPort}/api`
+// Internal API service URL used by SSR inside Docker network.
+// Keep it without "/api" because the api container serves routes at root (e.g. /object/:pid/info).
+const fallbackInternalApiBaseURL = `http://${internalApiHost}:${internalApiPort}`
 let apiBaseURL = process.env.PHAIDRA_API_BASE_URL_INTERNAL || ''
 
 if (!apiBaseURL) {

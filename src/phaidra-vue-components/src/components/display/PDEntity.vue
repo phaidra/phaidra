@@ -1,6 +1,6 @@
 <template>
   <v-row v-if="entity">
-    <v-col :md="labelColMd" cols="12" class="pdlabel text-secondary font-weight-bold text-md-right"><span v-show="!hideLabel">{{ getLocalizedTermLabel(this.role) }}</span></v-col>
+    <v-col :md="labelColMd" cols="12" class="pdlabel text-secondary font-weight-bold text-md-right"><span v-show="!hideLabel">{{ getLocalizedTermLabel(role) }}</span></v-col>
     <v-col :md="valueColMd" cols="12">
       <template v-if="entity['@type'] === 'schema:Person'">
         <template v-if="entity['skos:exactMatch']">
