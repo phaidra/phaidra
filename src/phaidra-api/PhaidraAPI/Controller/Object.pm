@@ -638,7 +638,7 @@ sub preview {
         $self->stash(license  => $license);
 
         my $u_model = PhaidraAPI::Model::Util->new;
-        $self->app->log->error("pid[$pid] tracking preview for image");
+        $self->app->log->debug("pid[$pid] tracking preview for image");
         $u_model->track_action($self, $pid, 'preview');
 
         $self->render(template => 'utils/imageviewer', format => 'html', addannotation => $addannotation);
