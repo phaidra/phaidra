@@ -576,10 +576,10 @@ address {
 .v-application .v-btn {
   text-transform: none;
 }
-.v-application .v-tab {
+/*.v-application .v-tab {
   text-transform: none;
   font-weight: 300;
-}
+}*/
 
 .univie-grey {
   color: #7b7b7b;

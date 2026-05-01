@@ -5,6 +5,9 @@
     <v-row class="admin-root-tabs" no-gutters>
       <v-col cols="auto">
         <v-tabs
+          inset
+          inset-padding="0"
+          inset-radius="0"
           v-model="activetab"
           direction="vertical"
           slider-color="primary"
@@ -25,6 +28,10 @@
               <v-row no-gutters>
                 <v-col cols="auto">
                   <v-tabs
+                    border-radius="0"
+                    inset
+                    inset-padding="0"
+                    inset-radius="0"
                     v-model="activetab2"
                     direction="vertical"
                     slider-color="primary"
