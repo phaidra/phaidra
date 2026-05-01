@@ -843,27 +843,35 @@
               </v-card>
             </v-dialog>
             <v-btn v-if="templating && $route.params.templateid" class="mr-3 float-left" large raised :loading="loading" :disabled="loading" color="primary" @click="saveTemplate()"><span v-t="'Save template'"></span></v-btn>
-            <v-spacer></v-spacer>
-            <template v-if="!disablesave">
-              <v-btn large fixed bottom right v-if="targetpid && floatingsavebutton" raised :loading="loading" :disabled="loading" color="primary" @click="save()"><span v-t="'Save'"></span></v-btn>
-              <v-btn v-else-if="targetpid && !floatingsavebutton" large raised :loading="loading" :disabled="loading" class="bg-primary float-right" @click="save()"><span v-t="'Save'"></span></v-btn>
-              <v-btn v-else-if="forcePreview" large raised :loading="loading" :disabled="loading" class="bg-primary float-right" @click="showForcePreview()"><span v-t="'Preview'"></span></v-btn>
-              <template v-else>
-                <v-btn v-if="!hideUploadButton" large raised :loading="loading" :disabled="loading" class="bg-primary float-right" @click="submit()"><span v-t="'Upload'"></span></v-btn>
-                <v-btn
-                  v-if="!hideUploadButton && !disableChecksum && !hideAddFileChecksum && submittype !== 'collection' && submittype !== 'resource'"
-                  large
-                  raised
-                  :loading="loading"
-                  :disabled="loading"
-                  class="bg-grey mr-2 float-right"
-                  @click="checksumDialog = true"
-                >
-                  <span v-t="'Add file checksum'"></span>
-                </v-btn>
+            <div class="d-flex flex-wrap justify-end align-center ga-2">
+              <v-switch
+                v-if="$store.state.user.isadmin"
+                v-model="skipValidation"
+                density="compact"
+                :hide-details="true"
+                class="mt-0 flex-shrink-0"
+                :label="$t('Skip validation')"
+              ></v-switch>
+              <template v-if="!disablesave">
+                <v-btn large fixed bottom right v-if="targetpid && floatingsavebutton" raised :loading="loading" :disabled="loading" color="primary" @click="save()"><span v-t="'Save'"></span></v-btn>
+                <v-btn v-else-if="targetpid && !floatingsavebutton" large raised :loading="loading" :disabled="loading" color="primary" @click="save()"><span v-t="'Save'"></span></v-btn>
+                <v-btn v-else-if="forcePreview" large raised :loading="loading" :disabled="loading" color="primary" @click="showForcePreview()"><span v-t="'Preview'"></span></v-btn>
+                <template v-else>
+                  <v-btn
+                    v-if="!hideUploadButton && !disableChecksum && !hideAddFileChecksum && submittype !== 'collection' && submittype !== 'resource'"
+                    large
+                    raised
+                    :loading="loading"
+                    :disabled="loading"
+                    color="grey"
+                    @click="checksumDialog = true"
+                  >
+                    <span v-t="'Add file checksum'"></span>
+                  </v-btn>
+                  <v-btn v-if="!hideUploadButton" large raised :loading="loading" :disabled="loading" color="primary" @click="submit()"><span v-t="'Upload'"></span></v-btn>
+                </template>
               </template>
-            </template>
-            <v-switch density="compact" :hide-details="true" class="float-right mt-1 mx-2" v-if="$store.state.user.isadmin" v-model="skipValidation" :label="$t('Skip validation')"></v-switch>
+            </div>
           </v-col>
         </v-row>
 
@@ -961,6 +969,64 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <template v-if="!hideAddFileChecksum">
+    <v-dialog
+      v-model="checksumDialog"
+      max-width="500px"
+      scrollable
+      :retain-focus="false"
+    >
+      <v-card>
+        <v-card-title class="title font-weight-light text-white">
+          <span v-t="'Add file checksum'"></span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-select
+                  v-model="checksumType"
+                  :items="checksumTypes"
+                  :label="$t('Checksum type')"
+                  variant="filled"
+                  hide-details
+                  class="mb-4"
+                ></v-select>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="checksumValue"
+                  :label="$t('Checksum')"
+                  variant="filled"
+                  hide-details
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions class="checksum-dialog-actions">
+          <v-spacer></v-spacer>
+          <v-btn
+            type="button"
+            variant="outlined"
+            @click.stop.prevent="closeChecksumDialog"
+          >
+            <span v-t="'Cancel'"></span>
+          </v-btn>
+          <v-btn
+            type="button"
+            color="primary"
+            @click.stop.prevent="confirmChecksumDialog"
+          >
+            <span v-t="'OK'"></span>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    </template>
 
   </div>
 
@@ -1312,6 +1378,14 @@ export default {
       this.fieldPropForm.forEach(element => {
         this.selectedFieldForEdit[element.fieldKey] = element.fieldValue
       });
+    },
+    closeChecksumDialog: function () {
+      this.checksumType = ''
+      this.checksumValue = ''
+      this.checksumDialog = false
+    },
+    confirmChecksumDialog: function () {
+      this.checksumDialog = false
     },
     importFromObject: async function (doc) {
       this.loading = true
@@ -2461,6 +2535,11 @@ export default {
 
 .v-input__control {
   font-weight: 400;
+}
+
+.checksum-dialog-actions {
+  position: relative;
+  z-index: 1;
 }
 </style>
 
