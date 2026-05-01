@@ -28,19 +28,24 @@
           </v-btn>
         </v-col>
         <v-col cols="6" v-if="actions.length">
-          <v-btn icon @click="showMenu">
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+          <v-menu location="bottom end" close-on-content-click>
+            <template #activator="{ props: menuActivatorProps }">
+              <v-btn icon v-bind="menuActivatorProps">
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
+            <v-list density="compact">
+              <v-list-item
+                v-for="(action, i) in actions"
+                :key="i"
+                @click="$emit(action.event, $event)"
+              >
+                <v-list-item-title>{{ action.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </v-col>
       </v-row>
-
-      <v-menu :position-x="menux" :position-y="menuy" absolute offset-y v-model="showMenuModel">
-        <v-list>
-          <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
-            <v-list-item-title>{{ action.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
 
       <select-language ref="langdialog" :showReset="allowLanguageCancel && titleLanguage ? true : false" @language-selected="$emit('input-title-language', $event)"></select-language>
       <yarm-ref ref="yarmselect" @input-citation="$emit('input-title', $event)" @input-identifier="$emit('input-url', $event)"></yarm-ref>
