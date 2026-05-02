@@ -643,10 +643,10 @@ address {
     color: rgba(0, 0, 0, 0.54);
 } */
 
-.v-theme--light .v-card > .v-card-text,
+/* .v-theme--light .v-card > .v-card-text,
 .v-theme--light .v-card > .v-card-subtitle {
   color: rgba(0, 0, 0, 0.6);
-}
+} */
 .v-application ul, .v-application ol {
   padding-left: 24px;
 }
