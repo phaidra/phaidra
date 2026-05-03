@@ -1483,5 +1483,6 @@
   "PDF Document": "Documento PDF",
   "Citable links": "Identificatori",
   "Other links": "Altri link",
-  "Metadata fields Help": "Guida ai campi dei metadati"
+  "Metadata fields Help": "Guida ai campi dei metadati",
+  "indicates required field": "indica un campo obbligatorio"
 }

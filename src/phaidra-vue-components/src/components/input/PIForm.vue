@@ -983,7 +983,7 @@
               </v-col>
             </v-row>
           </v-container>
-          <small>*indicates required field</small>
+          <small>* {{ $t("indicates required field") }}</small>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
