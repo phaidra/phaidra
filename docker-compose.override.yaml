@@ -62,7 +62,7 @@ services:
       COOKIE_SECURE: true
       TARGET: https://httpd:443
       TARGET_INSECURE_SKIP_VERIFY: true
-      SLOG_LEVEL: WARN
+      SLOG_LEVEL: "${ANUBIS_LOG_LEVEL:-WARN}"
       REDIRECT_DOMAINS: "${PHAIDRA_HOSTNAME}"
       DIFFICULTY: 5
       POLICY_FNAME: /data/cfg/botPolicy.yaml
