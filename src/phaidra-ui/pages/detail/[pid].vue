@@ -655,22 +655,31 @@
           </v-row>
 
           <template v-if="(objectInfo.cmodel === 'Container') && !objectInfo.datastreams.includes('CONTAINERINFO')">
-            <v-toolbar class="my-10 text-white" elevation="1">
-              <v-toolbar-title>
-                {{ $t("Members") }} ({{ objectInfo.members.length }})
-              </v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-pagination
-              :wrapper-aria-label="$t('pagination')"
-              :page-aria-label="$t('page')"
-              :previous-aria-label="$t('previous')"
-              :next-aria-label="$t('next')"
-              :current-page-aria-label="$t('currentPage')" 
+            <div class="my-10">
+              <v-toolbar color="cardtitlebg" elevation="1">
+                <v-toolbar-title>
+                  {{ $t("Members") }} ({{ objectInfo.members.length }})
+                </v-toolbar-title>
+                <v-spacer></v-spacer>
+              </v-toolbar>
+              <v-row
                 v-if="objectInfo.members.length > membersPageSize"
-                v-model="membersPage"
-                :length="Math.ceil(objectInfo.members.length/membersPageSize)"
-              ></v-pagination>
-            </v-toolbar>
+                justify="start"
+                class="py-4 bg-surface"
+              >
+                <v-col cols="12" class="d-flex justify-start">
+                  <v-pagination
+                    :wrapper-aria-label="$t('pagination')"
+                    :page-aria-label="$t('page')"
+                    :previous-aria-label="$t('previous')"
+                    :next-aria-label="$t('next')"
+                    :current-page-aria-label="$t('currentPage')"
+                    v-model="membersPage"
+                    :length="Math.ceil(objectInfo.members.length / membersPageSize)"
+                  ></v-pagination>
+                </v-col>
+              </v-row>
+            </div>
             <v-row v-if="objectMembers">
             <v-col>
               <v-card
@@ -761,7 +770,7 @@
             </v-row>
           </template>
           <template v-if="objectInfo.readrights && (objectInfo.cmodel === 'Container') && objectInfo.datastreams.includes('CONTAINERINFO')">
-            <v-toolbar class="my-10 text-white" elevation="1">
+            <v-toolbar color="cardtitlebg" class="my-10" elevation="1">
               <v-toolbar-title>
                 {{ $t("Members") }} ({{ objectInfo.legacy_container_members.length }})
               </v-toolbar-title>
@@ -790,51 +799,55 @@
           </div>
           </template>
           <template v-if="objectInfo.cmodel === 'Collection' && collMembers.length">
-            <v-toolbar class="my-10 text-white" elevation="1">
-              <v-toolbar-title>
-                {{ $t("Members") }} ({{ $store.state.collectionMembersTotal /* leave it like this, computed property wasn't working on first access */ }})
-              </v-toolbar-title>
-              <v-switch @click="refreshCollectionMembers()" class="mx-2" theme="dark" hide-details :label="$t('Only latest versions')" v-model="collOnlyLatestVersions"></v-switch>
-              <v-spacer></v-spacer>
-              <v-pagination
-                :wrapper-aria-label="$t('pagination')"
-                :page-aria-label="$t('page')"
-                :previous-aria-label="$t('previous')"
-                :next-aria-label="$t('next')"
-                :current-page-aria-label="$t('currentPage')" 
-                v-bind:length="collMembersTotalPages"
-                total-visible="10"
-                v-model="collMembersPage"
-                class="mb-4"
-              ></v-pagination>
-            </v-toolbar>
+            <div class="my-10">
+              <v-toolbar color="cardtitlebg" elevation="1" density="default">
+                <v-toolbar-title>
+                  {{ $t("Members") }} ({{ $store.state.collectionMembersTotal /* leave it like this, computed property wasn't working on first access */ }})
+                </v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-switch
+                  class="mx-2"
+                  theme="dark"
+                  hide-details
+                  :label="$t('Only latest versions')"
+                  v-model="collOnlyLatestVersions"
+                  @click="refreshCollectionMembers()"
+                ></v-switch>
+              </v-toolbar>
+              <v-row justify="start" class="py-4 bg-surface">
+                <v-col cols="12" class="d-flex justify-start">
+                  <v-pagination
+                    :wrapper-aria-label="$t('pagination')"
+                    :page-aria-label="$t('page')"
+                    :previous-aria-label="$t('previous')"
+                    :next-aria-label="$t('next')"
+                    :current-page-aria-label="$t('currentPage')"
+                    v-bind:length="collMembersTotalPages"
+                    total-visible="10"
+                    v-model="collMembersPage"
+                  ></v-pagination>
+                </v-col>
+              </v-row>
+            </div>
             <div v-for="(collMember, i) in collMembers" :key="'collMember' + i">
               <v-row class="my-4">
-                <v-col md="2" class="d-none d-md-inline-block">
-                  <div class="preview-maxwidth">
+                <v-col cols="2" class="preview-maxwidth">
                   <nuxt-link :to="`/detail/${collMember.pid}`">
-                      <p-img
-                        :src="
-                          instanceconfig?.api + '/object/' + collMember.pid + '/thumbnail'
-                        "
-                        class="elevation-1 mt-2"
-                        :alt="getObjectTitle(collMember)"
-                      >
-                        <template v-slot:placeholder>
-                          <div
-                            class="fill-height ma-0"
-                            align="center"
-                            justify="center"
-                          >
-                            <v-progress-circular
-                              indeterminate
-                              color="grey-lighten-5"
-                            ></v-progress-circular>
-                          </div>
-                        </template>
-                      </p-img>
-                    </nuxt-link>
-                  </div>
+                    <p-img
+                      :src="instanceconfig?.api + '/object/' + collMember.pid + '/thumbnail'"
+                      class="elevation-2 mt-2"
+                      :alt="getObjectTitle(collMember)"
+                    >
+                      <template v-slot:placeholder>
+                        <div class="fill-height ma-0" align="center" justify="center">
+                          <v-progress-circular
+                            indeterminate
+                            color="grey-lighten-5"
+                          ></v-progress-circular>
+                        </div>
+                      </template>
+                    </p-img>
+                  </nuxt-link>
                 </v-col>
                 <v-col :cols="objectInfo.writerights === 1 ? 9 : 10">
                   <v-row no-gutters class="mb-4">
@@ -881,7 +894,7 @@
               </v-row>
               <v-divider></v-divider>
             </div>
-            <v-row no-gutters v-if="$store.state.collectionMembersTotal > collMembersPagesize">
+            <v-row no-gutters v-if="$store.state.collectionMembersTotal > collMembersPagesize" justify="start">
               <v-pagination
                 :wrapper-aria-label="$t('pagination')"
                 :page-aria-label="$t('page')"
