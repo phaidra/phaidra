@@ -17,13 +17,11 @@
         <v-data-table
           :items="languagesTable"
           :headers="languagesHeaders"
-          item-key="id"
+          item-value="id"
           :search="langsearchinput"
           :items-per-page="5"
-          :footer-props="{                
-            itemsPerPageText: $t('Rows per page'),
-            itemsPerPageAllText: $t('All')
-          }"
+          :items-per-page-text="$t('Rows per page')"
+          :items-per-page-options="languageItemsPerPageOptions"
         >
           <template v-slot:top>
             <v-text-field
@@ -70,28 +68,27 @@ export default {
         )
       }
       return tab
+    },
+    languagesHeaders () {
+      return [
+        { key: 'id', title: 'ID', align: 'start' },
+        { key: 'label', title: this.$t('Name') },
+        { key: 'actions', title: this.$t('Actions'), sortable: false }
+      ]
+    },
+    languageItemsPerPageOptions () {
+      return [
+        { value: 5, title: '5' },
+        { value: 10, title: '10' },
+        { value: 25, title: '25' },
+        { value: -1, title: this.$t('All') }
+      ]
     }
   },
   data () {
     return {
       dialog: false,
-      langsearchinput: '',
-      languagesHeaders: [
-        {
-          text: 'ID',
-          align: 'start',
-          value: 'id'
-        },
-        {
-          text: this.$t('Name'),
-          value: 'label'
-        },
-        {
-          text: this.$t('Actions'),
-          value: 'actions', 
-          sortable: false
-        }
-      ]
+      langsearchinput: ''
     }
   },
   methods: {

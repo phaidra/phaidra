@@ -3,8 +3,19 @@
     <v-card :loading="loading">
       <v-card-title class="title font-weight-light text-white">{{ $t('Select a term') }}</v-card-title>
       <v-card-text class="mt-4">
-        <v-treeview item-key="name" :items="items" hoverable>
-          <template v-slot:label="{ item }"><div @click="selectTerm(item)">{{ (item['skos:prefLabel'][$i18n.locale] || item['skos:prefLabel']['eng']) + ' - ' + item['skos:notation'][0]}}</div></template>
+        <v-treeview
+          :items="items"
+          :item-title="skosVTreeItemTitle"
+          :item-value="'@id'"
+        >
+          <template #title="{ item }">
+            <div @click="selectTerm(item)">
+              {{
+                (item['skos:prefLabel'][$i18n.locale] || item['skos:prefLabel']['eng']) +
+                  (item['skos:notation']?.[0] != null ? ' - ' + item['skos:notation'][0] : '')
+              }}
+            </div>
+          </template>
         </v-treeview>
       </v-card-text>
       <v-divider></v-divider>

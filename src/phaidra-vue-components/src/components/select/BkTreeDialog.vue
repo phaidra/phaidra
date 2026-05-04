@@ -10,9 +10,7 @@
           :load-children="loadChildren"
           item-title="name"
           item-value="uri"
-          transition
           activatable
-          hoverable
           @update:activated="selectItem($event)"
         >
         </v-treeview>

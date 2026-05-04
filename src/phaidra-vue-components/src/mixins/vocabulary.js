@@ -227,6 +227,18 @@ export const vocabulary = {
           }
         }
       }
+    },
+    /** Vuetify 3 v-treeview `item-title` (function) for SKOS JSON-LD nodes with prefLabel + @id */
+    skosVTreeItemTitle (item) {
+      const i = item?.raw !== undefined ? item.raw : item
+      if (!i) return ''
+      const pl = i['skos:prefLabel']
+      if (pl) {
+        const loc = this.$i18n.locale
+        const t = pl[loc] || pl.eng || pl.deu || Object.values(pl).find(Boolean)
+        if (t) return String(t)
+      }
+      return i['@id'] != null ? String(i['@id']) : ''
     }
   }
 }

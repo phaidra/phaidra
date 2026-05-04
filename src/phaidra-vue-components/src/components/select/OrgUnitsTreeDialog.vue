@@ -3,7 +3,16 @@
     <v-card :loading="loading">
       <v-card-title class="title font-weight-light text-white">{{ $t('Select an organizational unit') }}</v-card-title>
       <v-card-text class="mt-4">
-        <v-treeview :open="orgunits && orgunits.length > 0 ? [orgunits[0]] : []" :items="orgunits" item-children="subunits" item-key="@id" hoverable activatable return-object @update:active="selectUnit($event)"></v-treeview>
+        <v-treeview
+          v-model:opened="openedUnits"
+          :items="orgunits"
+          item-children="subunits"
+          item-title="name"
+          :item-value="'@id'"
+          activatable
+          return-object
+          @update:activated="selectUnit"
+        ></v-treeview>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
@@ -34,7 +43,8 @@ export default {
   data () {
     return {
       dialog: false,
-      loading: false
+      loading: false,
+      openedUnits: []
     }
   },
   props: {
@@ -47,11 +57,14 @@ export default {
     open: async function () {
       this.dialog = true
       this.addNames(this.orgunits)
+      const root = this.orgunits && this.orgunits[0]
+      this.openedUnits = root && root['@id'] != null ? [root['@id']] : []
     },
     addNames: function (units) {
       for (let u of units) {
         if (u['skos:prefLabel']) {
-          u['name'] = u['skos:prefLabel'][this.$i18n.locale]
+          const pl = u['skos:prefLabel']
+          u.name = pl[this.$i18n.locale] || pl.eng || pl.deu || Object.values(pl).find(Boolean) || ''
         }
         if (u['subunits']) {
           if (u.subunits.length > 0) {
@@ -60,14 +73,20 @@ export default {
         }
       }
     },
-    selectUnit: function (item) {
-      if(item.length === 0) {
+    selectUnit: function (activated) {
+      const list = Array.isArray(activated) ? activated : activated != null ? [activated] : []
+      if (!list.length) {
         return
       }
-      if (this.isParentSelectionDisabled && item[0].subunits?.length > 0) {
+      const node = list[0]
+      if (this.isParentSelectionDisabled && typeof node === 'object' && node?.subunits?.length > 0) {
         return
       }
-      this.$emit('unit-selected', item[0]['@id'])
+      const id = typeof node === 'object' && node != null ? node['@id'] : node
+      if (id == null) {
+        return
+      }
+      this.$emit('unit-selected', id)
       this.dialog = false
     }
   }
