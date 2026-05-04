@@ -1739,6 +1739,12 @@ sub _add_reverse_relations {
   my $res = {alerts => [], status => 200};
 
   my $urlget = $self->_get_solrget_url($c, $cmodel);
+
+  # If page, _get_solrget_url returns pages core, but for haspart (the book) we need the normal one
+  if ($cmodel eq 'Page') {
+    $urlget->path("/solr/" . $c->app->config->{solr}->{core} . "/select");
+  }
+
   $urlget->query(q => "*:*", fq => 'haspart:"' . $pid . '"', rows => 1000, wt => "json");
   my $r = $c->ua->get($urlget)->result;
   if ($r->is_success) {
@@ -3301,12 +3307,12 @@ sub _extact_text_from_ocr {
 
   my $alto_dom = Mojo::DOM->new();
   $alto_dom->xml(1);
-  $alto_dom->parse(decode('UTF-8', $alto));
+  $alto_dom->parse($alto);
 
   my $extracted_text = "";
 
   eval {
-    # Handle different ALTO formats
+    # Handle different OCR formats
     # 1. Standard ALTO format (http://www.loc.gov/standards/alto/)
     my @text_blocks = $alto_dom->find('TextBlock, textblock')->each;
     if (@text_blocks) {
