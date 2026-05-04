@@ -60,3 +60,8 @@ scrape_configs:
     metrics_path: '/metrics'
     static_configs:
       - targets: ["varnish-exporter:9131"]
+
+  - job_name: anubis
+    scrape_interval: 30s
+    static_configs:
+      - targets: ["anubis:9090"]
