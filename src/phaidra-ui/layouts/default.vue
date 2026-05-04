@@ -51,7 +51,7 @@
                 <transition name="fade" mode="out-in">
                   <v-row no-gutters>
                     <v-col>
-                      <NuxtPage />
+                      <slot />
                     </v-col>
                   </v-row>
                 </transition>

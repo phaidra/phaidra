@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <template v-if="notFound">
+    <template v-if="notFound || detailPageNotFound">
       <v-row justify="center" class="mt-8">
         <v-col cols="12" md="8">
           <v-alert type="error" variant="outlined" class="not-found-alert">
@@ -2435,7 +2435,7 @@
 <script>
 import { getCurrentInstance, nextTick } from 'vue'
 import { onBeforeRouteUpdate } from 'vue-router'
-import { useAsyncData, useNuxtApp, useRoute } from '#app'
+import { useAsyncData, useNuxtApp, useRoute, useState } from '#app'
 import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
@@ -2449,6 +2449,8 @@ export default {
     const route = useRoute()
     const nuxtApp = useNuxtApp()
     const instance = getCurrentInstance()
+    /** Survives SSR when `instance.proxy` is not ready yet; drives the same UI as `notFound` in data(). */
+    const detailPageNotFound = useState('detail-page-not-found', () => false)
 
     useHead(() => instance?.proxy?.detailsMetaInfo || {})
 
@@ -2488,7 +2490,32 @@ export default {
           nuxtApp.$store.commit('setObjectInfo', null)
         }
 
-        await nuxtApp.$store.dispatch('fetchObjectInfo', pid)
+        await nextTick()
+        detailPageNotFound.value = false
+        const proxyEarly = instance?.proxy
+        if (proxyEarly) {
+          proxyEarly.notFound = false
+        }
+
+        try {
+          await nuxtApp.$store.dispatch('fetchObjectInfo', pid)
+        } catch (error) {
+          const status = error?.response?.status ?? error?.statusCode ?? error?.status
+          if (Number(status) === 404) {
+            nuxtApp.$store.commit('setObjectInfo', null)
+            detailPageNotFound.value = true
+            await nextTick()
+            const proxy = instance?.proxy
+            if (proxy) {
+              proxy.notFound = true
+            }
+            if (import.meta.client) nuxtApp.$store.commit('setLoading', false)
+            return null
+          }
+          if (import.meta.client) nuxtApp.$store.commit('setLoading', false)
+          throw error
+        }
+
         const info = nuxtApp.$store.state.objectInfo
 
         if (!info) {
@@ -2560,7 +2587,7 @@ export default {
       }
     })
 
-    return {}
+    return { detailPageNotFound }
   },
   validate({ params }) {
     return /^o:\d+$/.test(params.pid);
