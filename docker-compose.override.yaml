@@ -19,6 +19,15 @@ services:
     expose:
       - 443
 
+  prometheus:
+    extends:
+      file: docker-compose.yaml
+      service: prometheus
+    build:
+      context: .
+      dockerfile: dockerfiles/prometheus-dist.dockerfile
+    pull_policy: build
+
   caddy:
     hostname: caddy
     build:
