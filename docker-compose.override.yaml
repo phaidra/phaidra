@@ -104,6 +104,7 @@ configs:
     content: |
       {
         auto_https disable_certs
+        metrics
       }
       # not sure why we have to manually redirect. maybe because of caddy?
       # $PHAIDRA_HOSTNAME:80 {
@@ -121,6 +122,10 @@ configs:
         log {
           level debug
         }
+      }
+
+      :8999 {
+        metrics
       }
 
 volumes:
