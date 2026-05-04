@@ -811,7 +811,7 @@
                   hide-details
                   :label="$t('Only latest versions')"
                   v-model="collOnlyLatestVersions"
-                  @click="refreshCollectionMembers()"
+                  @update:model-value="refreshCollectionMembers"
                 ></v-switch>
               </v-toolbar>
               <v-row justify="start" class="py-4 bg-surface">
@@ -2628,7 +2628,12 @@ export default {
           this.collMembersCurrentPage = value;
           this.$store.dispatch(
             "fetchCollectionMembers",
-            { pid: this.routepid, page: this.collMembersCurrentPage, pagesize: this.collMembersPagesize }
+            {
+              pid: this.routepid,
+              page: this.collMembersCurrentPage,
+              pagesize: this.collMembersPagesize,
+              onlylatestversion: this.collOnlyLatestVersions
+            }
           );
         }
       },
@@ -3493,11 +3498,20 @@ export default {
         }]);
       }
     },
-    async refreshCollectionMembers() {
+    async refreshCollectionMembers (onlyLatestVersion) {
+      const only =
+        typeof onlyLatestVersion === 'boolean'
+          ? onlyLatestVersion
+          : this.collOnlyLatestVersions
       console.log('fetching collection members ' + this.objectInfo.pid + ' page ' + this.collMembersCurrentPage + ' size ' + this.collMembersPagesize);
       await this.$store.dispatch(
         "fetchCollectionMembers",
-        { pid: this.objectInfo.pid, page: this.collMembersCurrentPage, pagesize: this.collMembersPagesize, onlylatestversion: this.collOnlyLatestVersions }
+        {
+          pid: this.objectInfo.pid,
+          page: this.collMembersCurrentPage,
+          pagesize: this.collMembersPagesize,
+          onlylatestversion: only
+        }
       );
     },
     scrollToCollectionMembersTop() {
@@ -3748,7 +3762,12 @@ export default {
           this.$store.commit('setAlerts', [{ msg: this.$t('Collection successfully updated'), type: 'success' }])
           await this.$store.dispatch(
             "fetchCollectionMembers",
-            { pid: this.objectInfo.pid, page: this.collMembersCurrentPage, pagesize: this.collMembersPagesize }
+            {
+              pid: this.objectInfo.pid,
+              page: this.collMembersCurrentPage,
+              pagesize: this.collMembersPagesize,
+              onlylatestversion: this.collOnlyLatestVersions
+            }
           )
           this.confirmColMemDeleteDlg = false
         } else {
