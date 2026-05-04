@@ -886,7 +886,7 @@
                 <v-col cols="1" v-if="objectInfo.writerights === 1" justify="center">
                   <v-tooltip location="bottom">
                     <template v-slot:activator="{ props: tipProps }">
-                      <v-btn icon color="btnred" class="mt-4" v-bind="tipProps" @click="collMemberToRemove = collMember.pid; confirmColMemDeleteDlg = true" :aria-label="$t('Remove from collection')"><v-icon>mdi-delete</v-icon></v-btn>
+                      <v-btn icon variant="text" color="btnred" class="mt-4" v-bind="tipProps" @click="collMemberToRemove = collMember.pid; confirmColMemDeleteDlg = true" :aria-label="$t('Remove from collection')"><v-icon>mdi-delete</v-icon></v-btn>
                     </template>
                     <span>{{ $t('Remove from collection')}}</span>
                   </v-tooltip>
@@ -1174,6 +1174,7 @@
                               class="ml-2"
                               v-if="objectInfo.cmodel === 'Collection'"
                               icon
+                              variant="text"
                               color="primary"
                               target="_blank"
                               :href="
