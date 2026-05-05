@@ -357,7 +357,7 @@ export default {
   },
   computed: {
     instanceconfig: function () {
-      return this.$root.$store.state.instanceconfig
+      return this.$store.state.instanceconfig
     },
     lang2to3map: function () {
       return Object.keys(lang3to2map).reduce((ret, key) => {
