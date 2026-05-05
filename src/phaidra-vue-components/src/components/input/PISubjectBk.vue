@@ -38,7 +38,7 @@
                   <template v-slot:message="{ key, message }">
                     <span v-html="`${message}`"></span>
                   </template>
-                  <template v-slot:append-inner>
+                  <template v-slot:append>
                     <v-icon @click="$refs.bktreedialog.open()">mdi-file-tree</v-icon>
                   </template>
                   </v-text-field>

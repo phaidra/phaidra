@@ -35,7 +35,7 @@
             <template #selection="{ internalItem }">
               <span v-html="`${getLocalizedTermLabel('thema', (internalItem.raw || internalItem)['@id']) + ' - ' + (internalItem.raw || internalItem)['skos:notation'][0]}`" />
             </template>
-            <template #append-inner>
+            <template #append>
               <v-icon @click="$refs.thematreedialog.open()">mdi-file-tree</v-icon>
             </template>
           </v-autocomplete>

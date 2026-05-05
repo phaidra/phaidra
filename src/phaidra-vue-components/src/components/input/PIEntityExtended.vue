@@ -287,7 +287,7 @@
                     <template #selection="{ internalItem }">
                       <span v-html="getLocalizedTermLabel('orgunits', (internalItem.raw || internalItem)['@id'])" />
                     </template>
-                    <template #append-inner>
+                    <template #append>
                       <v-icon v-if="enableOrgTree" @click="$refs.organizationstreedialog.open()">mdi-file-tree</v-icon>
                     </template>
                   </v-autocomplete>
@@ -435,7 +435,7 @@
                   <template #selection="{ internalItem }">
                     <span v-html="getLocalizedTermLabel('orgunits', (internalItem.raw || internalItem)['@id'])" />
                   </template>
-                  <template #append-inner>
+                  <template #append>
                     <v-icon v-if="enableAffTree" @click="$refs.affiliationstreedialog.open()">mdi-file-tree</v-icon>
                   </template>
                 </v-autocomplete>

@@ -239,6 +239,27 @@ export const vocabulary = {
         if (t) return String(t)
       }
       return i['@id'] != null ? String(i['@id']) : ''
+    },
+    /** Shared lazy-tree helpers for large vocab trees (Vuetify `load-children`). */
+    prepareLazyTreeNode (node, childrenKey = 'children', lazyKey = '__lazyChildren') {
+      if (!node || typeof node !== 'object') return
+      const originalChildren = Array.isArray(node[childrenKey]) ? node[childrenKey] : []
+      node[lazyKey] = originalChildren
+      node[childrenKey] = originalChildren.length > 0 ? [] : undefined
+    },
+    prepareLazyTree (roots, childrenKey = 'children', lazyKey = '__lazyChildren') {
+      if (!Array.isArray(roots)) return
+      for (const node of roots) {
+        this.prepareLazyTreeNode(node, childrenKey, lazyKey)
+      }
+    },
+    loadLazyTreeChildren (node, childrenKey = 'children', lazyKey = '__lazyChildren') {
+      if (!node || typeof node !== 'object') return
+      const lazyChildren = node[lazyKey]
+      if (!Array.isArray(lazyChildren) || lazyChildren.length === 0) return
+      this.prepareLazyTree(lazyChildren, childrenKey, lazyKey)
+      node[childrenKey] = lazyChildren
+      node[lazyKey] = []
     }
   }
 }

@@ -33,7 +33,7 @@
         <template #selection="{ internalItem }">
           <span v-html="getLocalizedTermLabel('orgunits', (internalItem.raw || internalItem)['@id'])" />
         </template>
-        <template #append-inner>
+        <template #append>
           <v-icon @click="$refs.orgunitstreedialog.open()">mdi-file-tree</v-icon>
         </template>
       </v-autocomplete>

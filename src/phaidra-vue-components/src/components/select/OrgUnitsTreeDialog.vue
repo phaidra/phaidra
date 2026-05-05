@@ -8,7 +8,8 @@
           :items="orgunits"
           item-children="subunits"
           item-title="name"
-          :item-value="'@id'"
+:item-value="'@id'"
+          :load-children="loadChildren"
           activatable
           return-object
           @update:activated="selectUnit"
@@ -57,6 +58,7 @@ export default {
     open: async function () {
       this.dialog = true
       this.addNames(this.orgunits)
+      this.prepareTree()
       const root = this.orgunits && this.orgunits[0]
       this.openedUnits = root && root['@id'] != null ? [root['@id']] : []
     },
@@ -66,11 +68,15 @@ export default {
           const pl = u['skos:prefLabel']
           u.name = pl[this.$i18n.locale] || pl.eng || pl.deu || Object.values(pl).find(Boolean) || ''
         }
-        if (u['subunits']) {
-          if (u.subunits.length > 0) {
-            this.addNames(u.subunits)
-          }
-        }
+      }
+    },
+    prepareTree: function () {
+      this.prepareLazyTree(this.orgunits, 'subunits')
+    },
+    loadChildren: async function (item) {
+      this.loadLazyTreeChildren(item, 'subunits')
+      if (Array.isArray(item.subunits)) {
+        this.addNames(item.subunits)
       }
     },
     selectUnit: function (activated) {

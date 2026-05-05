@@ -7,6 +7,7 @@
           :items="items"
           :item-title="skosVTreeItemTitle"
           :item-value="'@id'"
+          :load-children="loadChildren"
         >
           <template #title="{ item }">
             <div @click="selectTerm(item)">
@@ -50,11 +51,27 @@ export default {
     return {
       dialog: false,
       loading: false,
-      renderComponent: true
+      renderComponent: true,
+      preparedLocale: null,
+      preparedSource: null
     }
   },
   methods: {
+    prepareTree: function () {
+      const source = this.vocabularies['oefos']?.tree || []
+      const locale = this.$i18n.locale
+      if (this.preparedSource === source && this.preparedLocale === locale) {
+        return
+      }
+      this.prepareLazyTree(source)
+      this.preparedSource = source
+      this.preparedLocale = locale
+    },
+    loadChildren: async function (item) {
+      this.loadLazyTreeChildren(item)
+    },
     open: async function () {
+      this.prepareTree()
       this.dialog = true
     },
     selectTerm: function (term) {

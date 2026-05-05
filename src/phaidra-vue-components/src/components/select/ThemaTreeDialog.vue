@@ -7,6 +7,7 @@
           :items="items"
           :item-title="skosVTreeItemTitle"
           :item-value="'@id'"
+          :load-children="loadChildren"
         >
           <template #title="{ item }">
             <div @click="selectTerm(item)">
@@ -52,7 +53,14 @@ export default {
     }
   },
   methods: {
+    prepareTree: function () {
+      this.prepareLazyTree(this.items)
+    },
+    loadChildren: async function (item) {
+      this.loadLazyTreeChildren(item)
+    },
     open: async function () {
+      this.prepareTree()
       this.dialog = true
     },
     selectTerm: function (term) {
