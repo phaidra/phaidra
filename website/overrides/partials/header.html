@@ -20,22 +20,14 @@
   IN THE SOFTWARE.
 -->
 
-<!-- Determine classes -->
-{% set class = "md-header" %}
-{% if "navigation.tabs.sticky" in features %}
-  {% set class = class ~ " md-header--shadow md-header--lifted" %}
-{% elif "navigation.tabs" not in features %}
-  {% set class = class ~ " md-header--shadow" %}
-{% endif %}
-
 <!-- Header -->
-<header class="{{ class }}" data-md-component="header">
+<header class="md-header md-header--shadow" data-md-component="header">
   <nav
     class="md-header__inner md-grid"
     aria-label="{{ lang.t('header') }}"
   >
 
-    <!-- Link to home -->
+    <!-- Logo links to home -->
     <a
       href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}"
       title="{{ config.site_name | e }}"
@@ -45,14 +37,14 @@
     >
       {% include "partials/logo.html" %}
     </a>
-    
-    <!-- Button to open drawer -->
+
+    <!-- Hamburger (mobile only) -->
     <label class="md-header__button md-icon" for="__drawer">
       {% set icon = config.theme.icon.menu or "material/menu" %}
       {% include ".icons/" ~ icon ~ ".svg" %}
     </label>
-    
-    <!-- Header title -->
+
+    <!-- Header title / logo text -->
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
@@ -72,46 +64,49 @@
       </div>
     </div>
 
-    <!-- Color palette toggle -->
-    {% if config.theme.palette %}
-      {% if not config.theme.palette is mapping %}
-        {% include "partials/palette.html" %}
-      {% endif %}
-    {% endif %}
-
-    <!-- User preference: color palette -->
-    {% if not config.theme.palette is mapping %}
-      {% include "partials/javascripts/palette.html" %}
-    {% endif %}
-
-    <!-- Site language selector -->
-    {% if config.extra.alternate %}
-      {% include "partials/alternate.html" %}
-    {% endif %}
-
-    <!-- Button to open search modal -->
+    <!-- Search modal (rendered once) -->
     {% if "material/search" in config.plugins %}
-      <label class="md-header__button md-icon" for="__search">
-        {% set icon = config.theme.icon.search or "material/magnify" %}
-        {% include ".icons/" ~ icon ~ ".svg" %}
-      </label>
-
-      <!-- Search interface -->
       {% include "partials/search.html" %}
     {% endif %}
 
-    <!-- Repository information -->
-    {% if config.repo_url %}
-      <div class="md-header__source">
-        {% include "partials/source.html" %}
-      </div>
+    <!-- Search trigger for mobile (hidden on desktop via CSS) -->
+    {% if "material/search" in config.plugins %}
+      <label class="md-header__button md-icon phaidra-search-mobile" for="__search">
+        {% set icon = config.theme.icon.search or "material/magnify" %}
+        {% include ".icons/" ~ icon ~ ".svg" %}
+      </label>
     {% endif %}
-  </nav>
 
-  <!-- Navigation tabs (sticky) -->
-  {% if "navigation.tabs.sticky" in features %}
-    {% if "navigation.tabs" in features %}
-      {% include "partials/tabs.html" %}
-    {% endif %}
-  {% endif %}
+    <!-- Desktop navigation (hidden on mobile via CSS) -->
+    <nav class="phaidra-nav-desktop" aria-label="Main navigation">
+
+      <!-- Search trigger -->
+      {% if "material/search" in config.plugins %}
+        <label class="md-header__button md-icon" for="__search">
+          {% set icon = config.theme.icon.search or "material/magnify" %}
+          {% include ".icons/" ~ icon ~ ".svg" %}
+        </label>
+      {% endif %}
+
+      <a href="{{ 'about/' | url }}" class="phaidra-nav-link">About</a>
+      <a href="{{ 'community/overview/' | url }}" class="phaidra-nav-link">Partners</a>
+
+      <!-- Documentation dropdown -->
+      <div class="phaidra-dropdown">
+        <a href="{{ 'docs/overview/' | url }}" class="phaidra-nav-link phaidra-dropdown-toggle">
+          Documentation
+          <svg class="phaidra-chevron" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 10l5 5 5-5z"/>
+          </svg>
+        </a>
+        <ul class="phaidra-dropdown-menu" role="menu">
+          <li><a href="{{ 'docs/overview/' | url }}">Overview</a></li>
+          <li><a href="{{ 'docs/get-started/' | url }}">Setup</a></li>
+          <li><a href="{{ 'docs/architecture/' | url }}">Technical Docs</a></li>
+          <li><a href="{{ 'docs/api/' | url }}">API</a></li>
+        </ul>
+      </div>
+    </nav>
+
+  </nav>
 </header>
