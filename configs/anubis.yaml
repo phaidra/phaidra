@@ -19,5 +19,5 @@ bots:
     path_regex: .*
     action: CHALLENGE
     challenge:
-      difficulty: 4
+      difficulty: 5
       algorithm: fast
