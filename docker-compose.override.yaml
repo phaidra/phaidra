@@ -114,6 +114,13 @@ configs:
       {
         auto_https disable_certs
         metrics
+        servers {
+          timeouts {
+            read_header 5s
+            idle 1m
+          }
+        }
+
       }
       # not sure why we have to manually redirect. maybe because of caddy?
       # $PHAIDRA_HOSTNAME:80 {
