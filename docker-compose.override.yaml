@@ -34,10 +34,22 @@ services:
       context: .
       dockerfile_inline: |
         FROM caddy:builder AS builder
-        RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build xcaddy build --with github.com/shift72/caddy-geo-ip
+        RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build xcaddy build --with github.com/oltdaniel/caddy-ipinfo-free
+
+        FROM alpine AS ip_db_converter
+        RUN apk add --no-cache go
+        RUN go install github.com/ipinfo/mmdbctl@mmdbctl-1.4.10
+        ADD https://iptoasn.com/data/ip2asn-combined.tsv.gz /tmp/ip2asn-combined.tsv.gz
+        RUN gunzip /tmp/ip2asn-combined.tsv.gz
+
+        RUN /root/go/bin/mmdbctl import --range-multicol -t -f asn,country_code,as_name /tmp/ip2asn-combined.tsv /tmp/GeoLite2-Country.mmdb
 
         FROM caddy
         COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+        COPY --from=ip_db_converter /tmp/GeoLite2-Country.mmdb /srv/GeoLite2-Country.mmdb
+        COPY --from=ip_db_converter /tmp/GeoLite2-Country.mmdb /srv/ipinfo_lite.mmdb
+        COPY --from=ip_db_converter /tmp/ip2asn-combined.tsv /srv/ip2asn-combined.tsv
+    pull_policy: build
     labels:
       logging: "promtail"
       logging_jobname: "containerlogs"
@@ -51,6 +63,8 @@ services:
     environment:
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME}"
       CADDY_LOG_LEVEL: "${CADDY_LOG_LEVEL:-DEBUG}"
+      # leave for EU countries, otherwise set in .env a list of country code ie "AT DE"
+      CADDY_ALLOW_COUNTRIES: "${CADDY_ALLOW_COUNTRIES:-AT BE BG HR CY DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE}"
     volumes:
       - ./certs/httpd:/ssl:ro
     configs:
@@ -121,15 +135,29 @@ configs:
             idle 1m
           }
         }
-
+        order ipinfo_free first
+        ipinfo_free_config {
+            url https://ipinfo.io/data/ipinfo_lite.mmdb?token=ALWAYSFAIL
+            # run it as few times as possible as it will always fail
+            cron "10 10 10 10 *"
+            path /srv/
+            error_on_invalid_ip true
+        }
       }
       # not sure why we have to manually redirect. maybe because of caddy?
       # $PHAIDRA_HOSTNAME:80 {
       #   redir "https://localhost"
       # }
       $PHAIDRA_HOSTNAME {
+        ipinfo_free forwarded
+        header X-Forwarded-For 131.130.2.176
+
+        @CADDY_DENY_COUNTRIES not vars {geoip.country_code} AT
         tls /ssl/fullchain.pem /ssl/privkey.pem {
         }
+        # reverse_proxy http://botblocker:8080 {
+        # respond @CADDY_DENY_COUNTRIES 401
+
         reverse_proxy http://botblocker:8080 {
           # transport http {
           #   tls_insecure_skip_verify
@@ -139,6 +167,9 @@ configs:
         log {
           level $CADDY_LOG_LEVEL
         }
+        log_append asn "{ipinfo_free.asn}"
+        log_append country_code "{ipinfo_free.country_code}"
+        log_append as_name "{ipinfo_free.as_name}"
       }
 
       :8999 {
