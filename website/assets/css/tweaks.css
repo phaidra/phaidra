@@ -118,6 +118,24 @@
   color: white;
 }
 
+/* === Hot pink brand color === */
+
+:root {
+  --md-accent-fg-color: #EE2C52;
+  --md-accent-fg-color--transparent: rgba(238, 44, 82, 0.1);
+  --md-typeset-a-color: #EE2C52;
+}
+
+.phaidra-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #EE2C52;
+  color: white;
+  border-radius: 9999px;
+  text-decoration: none;
+}
+
 /*
   NAV Adjustments for:
 */
