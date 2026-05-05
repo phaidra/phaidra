@@ -15,11 +15,14 @@ EOF
 WORKDIR /usr/local/phaidra/phaidra-ui
 ENV HOST=0.0.0.0
 ENV NODE_OPTIONS=--openssl-legacy-provider
-ENV SENTRYCLI_SKIP_DOWNLOAD=1
 ENV PORT=3001
+ENV CHOKIDAR_USEPOLLING=true
+ENV CHOKIDAR_INTERVAL=250
+ENV VITE_USE_POLLING=true
+ENV VITE_WATCH_INTERVAL=250
 EXPOSE 3001
 RUN <<EOF
 npm i -g pm2@latest
-npm install --ignore-scripts
+npm install
 npm install /usr/local/phaidra/phaidra-vue-components
 EOF

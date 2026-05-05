@@ -6,6 +6,8 @@ import { defineNuxtConfig } from 'nuxt/config'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const hmrClientPort = Number(process.env.PHAIDRA_HOSTPORT || 8899)
+const viteUsePolling = (process.env.VITE_USE_POLLING || 'true') === 'true'
+const viteWatchInterval = Number(process.env.VITE_WATCH_INTERVAL || 250)
 const phaidraVueComponentsRoot = path.resolve(__dirname, '../phaidra-vue-components')
 const vuetifyFocusTrapShimPath = path.resolve(__dirname, 'shims/vuetify-focusTrap.js')
 const envOrigin = `${process.env.OUTSIDE_HTTP_SCHEME || 'http'}://${process.env.PHAIDRA_HOSTNAME || 'localhost'}${process.env.PHAIDRA_PORTSTUB || ':'}${process.env.PHAIDRA_HOSTPORT || '8899'}`
@@ -149,6 +151,10 @@ export default defineNuxtConfig({
     server: {
       hmr: {
         clientPort: hmrClientPort
+      },
+      watch: {
+        usePolling: viteUsePolling,
+        interval: viteWatchInterval
       },
       fs: {
         allow: [__dirname, phaidraVueComponentsRoot]
