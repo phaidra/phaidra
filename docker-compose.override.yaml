@@ -50,7 +50,7 @@ services:
     command: ["/usr/bin/caddy", "run", "--config", "/Caddyfile"]
     environment:
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME}"
-      CADDY_LOG_LEVEL: "${CADDY_LOG_LEVEL:-debug}"
+      CADDY_LOG_LEVEL: "${CADDY_LOG_LEVEL:-DEBUG}"
     volumes:
       - ./certs/httpd:/ssl:ro
     configs:
