@@ -50,6 +50,7 @@ services:
     command: ["/usr/bin/caddy", "run", "--config", "/Caddyfile"]
     environment:
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME}"
+      CADDY_LOG_LEVEL: "${CADDY_LOG_LEVEL:-debug}"
     volumes:
       - ./certs/httpd:/ssl:ro
     configs:
@@ -136,7 +137,7 @@ configs:
           header_up X-Real-Ip {http.request.remote.host}
         }
         log {
-          level debug
+          level $CADDY_LOG_LEVEL
         }
       }
 
