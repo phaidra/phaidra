@@ -4652,6 +4652,13 @@ our %tree = (
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557163"
                     },
                     { "labels" => {
+                        "de" => "Ton-Kassette",
+                        "en" => "sound cassette",
+                        "it" => "audiocassetta"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557168"
+                    },                  
+                    { "labels" => {
                         "de" => "Atlas",
                         "en" => "atlas",
                         "it" => "atlante"
@@ -5657,6 +5664,13 @@ our %tree = (
                         "it" => "negativo"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557163"
+                    },
+                    { "labels" => {
+                        "de" => "Ton-Kassette",
+                        "en" => "sound cassette",
+                        "it" => "audiocassetta"
+                      },
+                      "uri" => "http://phaidra.univie.ac.at/XML/metadata/provenience/V1.0/voc_24/1557168"
                     },
                     { "labels" => {
                         "de" => "Atlas",
