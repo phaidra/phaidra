@@ -21,7 +21,15 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   const localePath = (to) => {
     if (typeof to === 'string') return to.startsWith('/') ? to : `/${to}`
-    if (to && typeof to === 'object') return to.path || '/'
+    if (to && typeof to === 'object') {
+      const raw = to.path || '/'
+      const path = raw.startsWith('/') ? raw : `/${raw}`
+      // Return a full location when present so Vue Router keeps query/hash/params (not just path).
+      if (to.query != null || to.hash || to.params != null || to.name != null) {
+        return { ...to, path }
+      }
+      return path
+    }
     return '/'
   }
   const localeLocation = (to) => to

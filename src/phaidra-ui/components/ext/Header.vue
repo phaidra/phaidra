@@ -278,6 +278,8 @@
                         <v-list id="mobile-menu">
                           <v-list-item
                               nuxt
+                              active-class=""
+                              :active="$route.path === '/search' && !$route.query.owner"
                               :to="localePath({
                                   path: '/search',
                                   query: { reset: 1 },
@@ -297,6 +299,8 @@
                           <v-list-item
                               v-if="signedin"
                               nuxt
+                              active-class=""
+                              :active="$route.path === '/search' && (Array.isArray($route.query.owner) ? $route.query.owner[0] : $route.query.owner) === user.username"
                               :to="localePath({
                                   path: '/search',
                                   query: { reset: 1, owner: user.username },
@@ -366,8 +370,20 @@
                         tile
                         depressed
                         nuxt
-                        active-class="ph-button-bg-active"
-                        :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
+                        :active="$route.path === '/search' && !$route.query.owner"
+                        active-class=""
+                        :class="[
+                          'font-weight-regular',
+                          'text-white',
+                          isHovering
+                            ? 'bg-primary ph-button-bg-active'
+                            : (
+                                $route.path === '/search' &&
+                                !$route.query.owner
+                                  ? 'ph-button-bg-active'
+                                  : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')
+                              )
+                        ]"
                         :to="localePath({
                             path: '/search',
                             query: { reset: 1 },
@@ -401,8 +417,20 @@
                         tile
                         depressed
                         nuxt
-                        active-class="ph-button-bg-active"
-                        :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
+                        :active="$route.path === '/search' && (Array.isArray($route.query.owner) ? $route.query.owner[0] : $route.query.owner) === user.username"
+                        active-class=""
+                        :class="[
+                          'font-weight-regular',
+                          'text-white',
+                          isHovering
+                            ? 'bg-primary ph-button-bg-active'
+                            : (
+                                $route.path === '/search' &&
+                                (Array.isArray($route.query.owner) ? $route.query.owner[0] : $route.query.owner) === user.username
+                                  ? 'ph-button-bg-active'
+                                  : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')
+                              )
+                        ]"
                         :to="localePath({
                             path: '/search',
                             query: { reset: 1, owner: user.username },
