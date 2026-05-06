@@ -140,6 +140,14 @@ Additional indexes are necessary to avoid disk usage for sort in mongodb, execut
 docker exec -it phaidra-api-1 perl migrations/v3.4.0/11_add_oai_records_index_2.pl
 ```
 
+### Uwmetadata: add "sound cassette" vocabulary entry
+
+Add Uwmetadata "sound cassette" vocabulary entry, execute:
+
+```
+docker exec -it phaidra-api-1 perl migrations/v3.4.0/12_add_uwm_object_type.pl
+```
+
 # v3.3.17
 
 Here are the key highlights from the fixes and enhancements since the last release:
