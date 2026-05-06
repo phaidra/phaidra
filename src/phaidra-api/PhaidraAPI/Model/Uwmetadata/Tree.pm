@@ -4657,7 +4657,7 @@ our %tree = (
                         "it" => "audiocassetta"
                       },
                       "uri" => "http://phaidra.univie.ac.at/XML/metadata/histkult/V1.0/voc_24/1557168"
-                    },                  
+                    },
                     { "labels" => {
                         "de" => "Atlas",
                         "en" => "atlas",
