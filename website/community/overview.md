@@ -14,10 +14,12 @@ PHAIDRA is an open development project that uses Open Source technologies. The p
 Through the annual PHAIDRAcon events, our community shares ideas, help, innovation, best practice and experiences. 
 PHAIDRA is, above all, an active, open community geared to answering the needs of its users. 
 
-- [PHAIDRACon 2023 - The Vienna Sessions](https://phaidracon.univie.ac.at/) - in Vienna, 22nd and 23rd November 2023
-- [PHAIDRACon 2022 - The Vienna Sessions](https://phaidracon.univie.ac.at/phaidracon-2022/schedule/) - online 22nd to 25th November 2022, topic "Reuse of Academic Data"
-- [PHAIDRACon 2021 - The Vienna Sessions](https://phaidracon.univie.ac.at/) - online 17th to 19th November 2021
-- [PHAIDRACon 2020 - The Vienna Sessions](https://phaidracon.univie.ac.at/) The Phaidra Annual Meeting took place as a three-day open online conference from 18th November to 20th November 2020.
+- [PHAIDRAcon 2025](https://phaidracon.univie.ac.at/archive/25) - in Padua, Italy, 31st October 2025, topic "Connecting Scholar and Citizen: The Emerging Social and Cultural Role of the Repository"
+- [PHAIDRAcon 2024](https://phaidracon.univie.ac.at/archive/24) - in Vienna, 14th November 2024, topic "Building and Preserving the Value of Digital Assets"
+- [PHAIDRAcon 2023 - The Vienna Sessions](https://phaidracon.univie.ac.at/archive/phaidracon23) - in Vienna, 22nd and 23rd November 2023
+- [PHAIDRAcon 2022 - The Vienna Sessions](https://phaidracon.univie.ac.at/archive/phaidracon22) - online 22nd to 25th November 2022, topic "Reuse of Academic Data"
+- [PHAIDRAcon 2021 - The Vienna Sessions](https://phaidracon.univie.ac.at/archive/phaidracon21/agenda-and-speakers) - online 17th to 19th November 2021
+- [PHAIDRAcon 2020 - The Vienna Sessions](https://phaidracon.univie.ac.at/archive/phaidracon20) - online 18th to 20th November 2020
 - [PHAIDRA-Partners Meeting 2019](https://phaidra.univie.ac.at/o:1033298) - in Vienna, 23rd September 2019, topic: "Researchers Engagement. Use Cases of Data Management in Research."
 
 ---
