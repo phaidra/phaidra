@@ -7,7 +7,7 @@
         </div>
       </template>
     </p-img>
-    <div class="list-item-title">{{item.pid}} - {{item.cmodel}}<template v-if="'dc_title' in item"> - {{getObjectTitle(item)}}</template></div>
+    <div class="list-item-title">{{item.pid}} - {{ $t(item.cmodel) }}<template v-if="'dc_title' in item"> - {{getObjectTitle(item)}}</template></div>
   </li>
 </template>
 
@@ -38,14 +38,14 @@ export default {
   align-items: center;
   width: 100%;
   padding: 20px;
-  background-color: #fff;
+  background-color: var(--v-cardtitlebg-base);
   border-bottom: 1px solid #efefef;
   box-sizing: border-box;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  color: #333;
+  color: #fff;
   font-weight: 400;
 }
 .list-item-title {
@@ -55,5 +55,3 @@ export default {
   max-width: 120px;
 }
 </style>
-
-
