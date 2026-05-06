@@ -9,9 +9,8 @@
           <v-row no-gutters class="mt-2">
             <v-col class="text-left" cols="12" md="3" align-self="center">
               <a :href="instanceconfig.institutionurl" target="_blank" aria-label="PHAIDRA - to the homepage">
-                  <svg version="1.1" id="PHAIDRA_Logo_copy_xA0_Image_1_"
+                  <svg version="1.1" id="PHAIDRA_Logo_copy_xA0_Image_1_" :class="['logo-svg', { 'logo-svg-dark': isDarkTheme }]"
                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 348.55 83.1"
-                    :class="isDarkTheme ? 'logo-dark' : 'logo-light'"
                     style="enable-background:new 0 0 348.55 83.1; max-height: 70px;" xml:space="preserve">
                   <g>
                     <g>
@@ -730,4 +729,22 @@ export default {
 </script>  
 
 <style scoped>
+.logo-svg .st0 {
+  fill: #212121;
+}
+
+.logo-svg .st1 {
+  fill: none;
+  stroke: #212121;
+  stroke-width: 35;
+  stroke-miterlimit: 10;
+}
+
+.logo-svg.logo-svg-dark .st0 {
+  fill: #dedede;
+}
+
+.logo-svg.logo-svg-dark .st1 {
+  stroke: #dedede;
+}
 </style>
