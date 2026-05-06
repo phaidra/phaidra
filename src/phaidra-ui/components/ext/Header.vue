@@ -640,18 +640,10 @@ export default {
     darkMode() {
       const nextTheme = this.isDarkTheme ? "light" : "dark";
       const themeApi = this.$vuetify?.theme;
-      const themeName = themeApi?.global?.name;
-      if (themeName && typeof themeName === "object" && "value" in themeName) {
-        themeName.value = nextTheme;
-      } else if (typeof themeName === "string") {
-        themeApi.global.name = nextTheme;
-      } else if (themeApi) {
-        // Fallback for legacy-like shape used in some Nuxt bridges
-        themeApi.dark = nextTheme === "dark";
-      }
-
-      // Keep legacy and mixed bridge integrations in sync.
-      if (themeApi && typeof themeApi.dark === "boolean") {
+      if (themeApi?.change && typeof themeApi.change === "function") {
+        themeApi.change(nextTheme);
+      } else if (themeApi && typeof themeApi.dark === "boolean") {
+        // Fallback for legacy-like shape used in some Nuxt bridges.
         themeApi.dark = nextTheme === "dark";
       }
 
