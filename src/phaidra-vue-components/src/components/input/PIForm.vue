@@ -53,7 +53,7 @@
     <v-window v-model="activetab">
       <v-window-item value="metadata" class="pa-4" v-if="form">
 
-        <v-row v-for="(s) in this.form.sections" :key="s.id" class="ma-3">
+        <v-row v-for="(s) in form.sections" :key="s.id" class="ma-3">
 
           <v-card v-if="s.type === 'resourcelink'" width="100%" class="mb-6">
             <v-card-title class="title font-weight-light text-white">
@@ -933,7 +933,7 @@
         <p-help></p-help>
       </v-window-item>
       <v-window-item value="feedback" v-if="feedback" class="pa-4">
-        <p-feedback :firstname="feedbackUser.firstname" :lastname="feedbackUser.lastname" :email="feedbackUser.email" :context="feedbackContext"></p-feedback>
+        <p-feedback :firstname="(feedbackUser || {}).firstname" :lastname="(feedbackUser || {}).lastname" :email="(feedbackUser || {}).email" :context="feedbackContext"></p-feedback>
       </v-window-item>
       <v-window-item value="doiImport" v-if="doiImport" class="pa-4">
         <p-doi-import

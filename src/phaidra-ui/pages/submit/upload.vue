@@ -16,7 +16,7 @@
           :help="false"
           :debug="false"
           :feedback="instanceconfig.feedback"
-          :feedback-user="this.user"
+          :feedback-user="user"
           :feedback-context="'Upload'"
           :doiImport="instanceconfig.doiImport"
           :disableChecksum="instanceconfig.disableChecksum"
@@ -513,6 +513,11 @@ export default {
       }
       
     },
+  },
+  created: async function () {
+    if (!this.form || !Array.isArray(this.form.sections) || this.form.sections.length === 0) {
+      await this.createForm(this)
+    }
   },
   beforeRouteEnter: async function (to, from, next) {
     next(async function (vm) {
