@@ -15,8 +15,6 @@ theme:
   custom_dir: website/overrides
   features:
     # - navigation.instant # this messed up the live verion for David with Brave, remove to quickfix, maybe reconsider in the future
-    - navigation.tabs
-    - navigation.tabs.sticky
     - navigation.top
     - navigation.tracking
     - navigation.sections
@@ -29,7 +27,11 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 extra:
+  homepage: /
   social:
+    - icon: fontawesome/brands/discourse
+      link: https://community.phaidra.org
+      name: Community Forum
     - icon: fontawesome/brands/instagram
       link: https://www.instagram.com/phaidraorg/
       name: Follow on Instagram
@@ -43,9 +45,7 @@ extra_css:
   - assets/css/tweaks.css
 
 nav:
-  - Home: index.md
-  - About: about/index.md # talks more to the data steward or high level data manager
-  - FAIR Data: fair-data/index.md
+  - About: about/index.md
   - Documentation: # talks more to the technical people, developers, etc.
       - docs/overview.md
       - Setup:
@@ -65,7 +65,6 @@ nav:
           - docs/authentication.md
       - User Interface:
           - User Interface: docs/ui.md
-  - Media: media/index.md
   - Partners:
       - Overview: community/overview.md
       - List of Partner Institutions: community/list-of-partners.md
@@ -100,7 +99,6 @@ nav:
               - Univerzitet u Beogradu: community/univerzitet-u-beogradu.md
               - Univerzitet u Kragujevcu: community/univerzitet-u-kragujevcu.md
               - Univerzitet u Nišu: community/univerzitet-u-nisu.md
-  - Community: https://community.phaidra.org
 
 plugins:
   - search
