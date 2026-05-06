@@ -19,6 +19,9 @@
 - [Danube University Krems - University for Continuing Education](/community/university-for-continuing-education-krems/)
 - [University of Veterinary Medicine Vienna](/community/university-of-veterinary-medicine-vienna/)
 - [Vorarlberger Landesbibliothek](/community/vorarlberger-landesbibliothek/)
+- [Office of the State Government of Lower Austria](/community/office-of-the-state-government-of-lower-austria/)
+- [University of Applied Sciences Salzburg](/community/university-of-applied-sciences-salzburg/)
+- [Bertha von Suttner Private University](/community/bertha-von-suttner-private-university/)
 
 
 #### Bosnia and Herzegovina
