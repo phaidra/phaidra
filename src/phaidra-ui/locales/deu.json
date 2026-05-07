@@ -1403,5 +1403,7 @@
     "Add metadatafield": "Metadatenfeld hinzufügen",
     "Date (text/concept)": "Datum (Text/Konzept)",
     "Access restrictions for collections": "Zugriffsbeschränkungen für Sammlungen",
-    "Collections only contain metadata and metadata cannot be restricted. Access restrictions only make sense at object/file level, not at collection level.": "Sammlungen enthalten nur Metadaten und Metadaten können nicht eingeschränkt werden. Zugriffsbeschränkungen machen nur auf Objekt-/Dateiebene Sinn, nicht auf Sammlungsebene."
+    "Collections only contain metadata and metadata cannot be restricted. Access restrictions only make sense at object/file level, not at collection level.": "Sammlungen enthalten nur Metadaten und Metadaten können nicht eingeschränkt werden. Zugriffsbeschränkungen machen nur auf Objekt-/Dateiebene Sinn, nicht auf Sammlungsebene.",
+    "Metadata fields Help": "Metadatenfelder Hilfe",
+    "indicates required field": "Kennzeichnet Pflichtfeld"
   }
