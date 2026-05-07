@@ -21,6 +21,20 @@
   color: white;
 }
 
+/* Show search icon (Material hides it at desktop since search is normally inline) */
+.md-header__button[for="__search"] {
+  display: inline-flex;
+}
+
+/* Hide search form until icon is clicked */
+.md-search {
+  display: none;
+}
+
+[data-md-toggle=search]:checked ~ .md-header .md-search {
+  display: block;
+}
+
 /* Desktop nav: shown only on wide screens */
 .phaidra-nav-desktop {
   display: none;
@@ -33,9 +47,10 @@
   .phaidra-nav-desktop {
     display: flex;
   }
-  .phaidra-search-mobile {
-    display: none;
-  }
+}
+
+.md-header label[for="__search"] svg {
+  fill: white;
 }
 
 /* Nav links */
