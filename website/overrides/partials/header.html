@@ -64,29 +64,17 @@
       </div>
     </div>
 
-    <!-- Search modal (rendered once) -->
+    <!-- Search trigger + modal -->
     {% if "material/search" in config.plugins %}
-      {% include "partials/search.html" %}
-    {% endif %}
-
-    <!-- Search trigger for mobile (hidden on desktop via CSS) -->
-    {% if "material/search" in config.plugins %}
-      <label class="md-header__button md-icon phaidra-search-mobile" for="__search">
+      <label class="md-header__button md-icon" for="__search">
         {% set icon = config.theme.icon.search or "material/magnify" %}
         {% include ".icons/" ~ icon ~ ".svg" %}
       </label>
+      {% include "partials/search.html" %}
     {% endif %}
 
     <!-- Desktop navigation (hidden on mobile via CSS) -->
     <nav class="phaidra-nav-desktop" aria-label="Main navigation">
-
-      <!-- Search trigger -->
-      {% if "material/search" in config.plugins %}
-        <label class="md-header__button md-icon" for="__search">
-          {% set icon = config.theme.icon.search or "material/magnify" %}
-          {% include ".icons/" ~ icon ~ ".svg" %}
-        </label>
-      {% endif %}
 
       <a href="{{ 'about/' | url }}" class="phaidra-nav-link">About</a>
       <a href="{{ 'community/overview/' | url }}" class="phaidra-nav-link">Partners</a>
