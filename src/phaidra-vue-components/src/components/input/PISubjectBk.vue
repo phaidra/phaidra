@@ -47,17 +47,18 @@
               <v-row>
                 <v-col cols="12" md="9" v-show="showItems">
                   <v-list two-line style="max-height: 400px" class="overflow-y-auto">
-                    <v-list-item-group v-model="selected" active-class="text--primary">
-                      <template v-for="(item, index) in items" :key="item.uri">
-                        <v-list-item>
-                          <template v-slot:default>
-                            <v-list-item-title v-text="item.prefLabel ? item.prefLabel.de : item.prefLabel.en"></v-list-item-title>
-                            <v-list-item-subtitle v-for="(notation, idx) in item.notation" :key="'not'+idx" class="text--primary" v-text="notation"></v-list-item-subtitle>
-                          </template>
-                        </v-list-item>
-                        <v-divider v-if="index < items.length - 1"></v-divider>
-                      </template>
-                    </v-list-item-group>
+                    <template v-for="(item, index) in items" :key="item.uri">
+                      <v-list-item
+                        :active="selected === index"
+                        @click="selected = index"
+                      >
+                        <template v-slot:default>
+                          <v-list-item-title v-text="item.prefLabel ? item.prefLabel.de : item.prefLabel.en"></v-list-item-title>
+                          <v-list-item-subtitle v-for="(notation, idx) in item.notation" :key="'not'+idx" class="text--primary" v-text="notation"></v-list-item-subtitle>
+                        </template>
+                      </v-list-item>
+                      <v-divider v-if="index < items.length - 1"></v-divider>
+                    </template>
                   </v-list>
                 </v-col>
               </v-row>

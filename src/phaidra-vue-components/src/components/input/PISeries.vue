@@ -123,29 +123,27 @@
                   :variant="fieldVariant"
                 >
                   <template v-slot:append-inner>
-                    <v-fade-transition leave-absolute>
-                      <v-menu
-                        ref="menu1"
-                        v-model="dateMenu"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        max-width="290px"
-                        min-width="290px"
-                      >
-                        <template v-slot:activator="{ props: activatorProps }">
-                          <v-icon v-bind="activatorProps">mdi-calendar</v-icon>
-                        </template>
-                        <v-date-picker
-                          color="primary"
-                          :show-current="false"
-                          v-model="pickerModel"
-                          :first-day-of-week="1"
-                          :locale="alpha2bcp47($i18n.locale)"
-                          @update:model-value="dateMenu = false; $emit('input-issued', $event)"
-                        ></v-date-picker>
-                      </v-menu>
-                    </v-fade-transition>
+                    <v-menu
+                      ref="menu1"
+                      v-model="dateMenu"
+                      :close-on-content-click="false"
+                      transition="scale-transition"
+                      offset-y
+                      max-width="290px"
+                      min-width="290px"
+                    >
+                      <template v-slot:activator="{ props: activatorProps }">
+                        <v-icon v-bind="activatorProps">mdi-calendar</v-icon>
+                      </template>
+                      <v-date-picker
+                        color="primary"
+                        :show-current="false"
+                        v-model="pickerModel"
+                        :first-day-of-week="1"
+                        :locale="alpha2bcp47($i18n.locale)"
+                        @update:model-value="dateMenu = false; $emit('input-issued', $event)"
+                      ></v-date-picker>
+                    </v-menu>
                   </template>
                 </v-text-field>
               </template>

@@ -84,28 +84,26 @@
                       :error-messages="dateFromErrorMessages"
                     >
                       <template v-slot:append-inner>
-                        <v-fade-transition leave-absolute>
-                          <v-menu
-                            v-model="dateFromMenu"
-                            :close-on-content-click="false"
-                            transition="scale-transition"
-                            offset-y
-                            max-width="290px"
-                            min-width="290px"
-                          >
-                            <template v-slot:activator="{ props: activatorProps }">
-                              <v-icon v-bind="activatorProps">mdi-calendar</v-icon>
-                            </template>
-                            <v-date-picker
-                              color="primary"
-                              :show-current="false"
-                              v-model="pickerFromModel"
-                              :first-day-of-week="1"
-                              :locale="alpha2bcp47($i18n.locale)"
-                              @update:model-value="dateFromMenu = false; $emit('input-date-from', $event)"
-                            ></v-date-picker>
-                          </v-menu>
-                        </v-fade-transition>
+                        <v-menu
+                          v-model="dateFromMenu"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
+                          max-width="290px"
+                          min-width="290px"
+                        >
+                          <template v-slot:activator="{ props: activatorProps }">
+                            <v-icon v-bind="activatorProps">mdi-calendar</v-icon>
+                          </template>
+                          <v-date-picker
+                            color="primary"
+                            :show-current="false"
+                            v-model="pickerFromModel"
+                            :first-day-of-week="1"
+                            :locale="alpha2bcp47($i18n.locale)"
+                            @update:model-value="dateFromMenu = false; $emit('input-date-from', $event)"
+                          ></v-date-picker>
+                        </v-menu>
                       </template>
                     </v-text-field>
                   </template>
@@ -121,28 +119,26 @@
                       :error-messages="dateToErrorMessages"
                     >
                       <template v-slot:append-inner>
-                        <v-fade-transition leave-absolute>
-                          <v-menu
-                            v-model="dateToMenu"
-                            :close-on-content-click="false"
-                            transition="scale-transition"
-                            offset-y
-                            max-width="290px"
-                            min-width="290px"
-                          >
-                            <template v-slot:activator="{ props: activatorProps }">
-                              <v-icon v-bind="activatorProps">mdi-calendar</v-icon>
-                            </template>
-                            <v-date-picker
-                              color="primary"
-                              :show-current="false"
-                              v-model="pickerToModel"
-                              :first-day-of-week="1"
-                              :locale="alpha2bcp47($i18n.locale)"
-                              @update:model-value="dateToMenu = false; $emit('input-date-to', $event)"
-                            ></v-date-picker>
-                          </v-menu>
-                        </v-fade-transition>
+                        <v-menu
+                          v-model="dateToMenu"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
+                          max-width="290px"
+                          min-width="290px"
+                        >
+                          <template v-slot:activator="{ props: activatorProps }">
+                            <v-icon v-bind="activatorProps">mdi-calendar</v-icon>
+                          </template>
+                          <v-date-picker
+                            color="primary"
+                            :show-current="false"
+                            v-model="pickerToModel"
+                            :first-day-of-week="1"
+                            :locale="alpha2bcp47($i18n.locale)"
+                            @update:model-value="dateToMenu = false; $emit('input-date-to', $event)"
+                          ></v-date-picker>
+                        </v-menu>
                       </template>
                     </v-text-field>
                   </template>

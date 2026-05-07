@@ -1,9 +1,10 @@
 <template>
-  <div v-if="instanceconfig.cms_submit">
-    <runtimetemplate :template="instanceconfig.cms_submit" />
-  </div>
-  
-  <div v-else>
+  <div>
+    <div v-if="instanceconfig.cms_submit">
+      <runtimetemplate :template="instanceconfig.cms_submit" />
+    </div>
+    
+    <div v-else>
       <v-row class="my-6" justify="start">
         <div class="d-flex flex-row ml-3">
           <v-btn
@@ -193,6 +194,7 @@
           </v-col>
         </v-row>
       </template>
+    </div>
   </div>
 </template>
 

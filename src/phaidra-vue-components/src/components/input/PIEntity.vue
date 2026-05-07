@@ -297,7 +297,7 @@ export default {
   mounted: function () {
     this.$nextTick(function () {
       this.loading = !this.vocabularies[this.roleVocabulary].loaded
-      this.$store.dispatch('vocabulary/sortRoles', this.$i18n.locale)
+      this.$store.dispatch('vocabulary/sortRoles', this?.$i18n?.locale || 'eng')
       // emit input to set skos:prefLabel in parent
       if (this.role) {
         this.$emit('input', this.getTerm(this.roleVocabulary, this.role))

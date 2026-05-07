@@ -60,7 +60,7 @@
     <v-slide-y-transition hide-on-leave>
       <v-row no-gutters v-if="showValueDefinition" v-show="value && getLocalizedDefinition(vocabulary, value)" :class=" hint ? 'mt-2 mb-6' : 'mb-6'">
         <v-col cols="10">
-          <v-row class="px-4">
+          <v-row>
             <p v-html="getLocalizedDefinition(vocabulary, value)"></p>
           </v-row>
         </v-col>
@@ -69,7 +69,7 @@
     <v-slide-y-transition hide-on-leave>
       <v-row no-gutters v-show="showDisclaimer && isCCLicense" :class=" hint ? 'mt-2 mb-6' : 'mb-6'">
         <v-col cols="10">
-          <v-row class="px-4">
+          <v-row>
             <p v-html="$t('LICENSE_DISCLAIMER', { institution: $t($store.state.instanceconfig.institution) })"></p>
           </v-row>
         </v-col>
@@ -78,7 +78,7 @@
     <v-slide-y-transition hide-on-leave>
       <v-row no-gutters v-show="showDisclaimer && isMITLicense" :class=" hint ? 'mt-2 mb-6' : 'mb-6'">
         <v-col cols="10">
-          <v-row class="px-4">
+          <v-row>
             <p v-html="$t('LICENSE_DISCLAIMER_MIT', { institution: $t($store.state.instanceconfig.institution) })"></p>
           </v-row>
         </v-col>

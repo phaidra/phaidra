@@ -89,7 +89,7 @@ export default {
         this.getOrgPath(unit, this.vocabularies['orgunits'].tree, pathArr)
         let pathLabels = []
         for (let u of pathArr) {
-          pathLabels.push(u['skos:prefLabel'][this.$i18n.locale])
+          pathLabels.push(u['skos:prefLabel'][this?.$i18n?.locale || 'eng'])
         }
         this.path = pathLabels.join(' > ')
       }
@@ -132,7 +132,7 @@ export default {
   mounted: function () {
     this.$nextTick(function () {
       if (!this.vocabularies['orgunits'].loaded) {
-        this.$store.dispatch('vocabulary/loadOrgUnits', this.$i18n.locale)
+        this.$store.dispatch('vocabulary/loadOrgUnits', this?.$i18n?.locale || 'eng')
       }
       // emit input to set skos:prefLabel in parent
       if (this.value) {

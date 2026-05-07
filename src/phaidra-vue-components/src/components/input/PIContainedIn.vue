@@ -475,29 +475,27 @@
                           :error-messages="publishingDateErrorMessages"
                         >
                           <template v-slot:append-inner>
-                            <v-fade-transition leave-absolute>
-                              <v-menu
-                                ref="menu1"
-                                v-model="publisherDateMenu"
-                                :close-on-content-click="false"
-                                transition="scale-transition"
-                                offset-y
-                                max-width="290px"
-                                min-width="290px"
-                              >
-                                <template v-slot:activator="{ props: activatorProps }">
-                                  <v-icon v-bind="activatorProps">mdi-calendar</v-icon>
-                                </template>
-                                <v-date-picker
-                                  color="primary"
-                                  :show-current="false"
-                                  v-model="publisherPickerModel"
-                                  :first-day-of-week="1"
-                                  :locale="alpha2bcp47($i18n.locale)"
-                                  @update:model-value="publisherDateMenu = false; $emit('input-publishing-date', $event)"
-                                ></v-date-picker>
-                              </v-menu>
-                            </v-fade-transition>
+                            <v-menu
+                              ref="menu1"
+                              v-model="publisherDateMenu"
+                              :close-on-content-click="false"
+                              transition="scale-transition"
+                              offset-y
+                              max-width="290px"
+                              min-width="290px"
+                            >
+                              <template v-slot:activator="{ props: activatorProps }">
+                                <v-icon v-bind="activatorProps">mdi-calendar</v-icon>
+                              </template>
+                              <v-date-picker
+                                color="primary"
+                                :show-current="false"
+                                v-model="publisherPickerModel"
+                                :first-day-of-week="1"
+                                :locale="alpha2bcp47($i18n.locale)"
+                                @update:model-value="publisherDateMenu = false; $emit('input-publishing-date', $event)"
+                              ></v-date-picker>
+                            </v-menu>
                           </template>
                         </v-text-field>
                       </template>
@@ -867,7 +865,7 @@ export default {
         this.getOrgPath(unit, this.vocabularies['orgunits'].tree, path)
         let pathLabels = []
         for (let u of path) {
-          pathLabels.push(u['skos:prefLabel'][this.$i18n.locale])
+          pathLabels.push(u['skos:prefLabel'][this?.$i18n?.locale || 'eng'])
         }
         this[propName] = pathLabels.join(' > ')
       }
@@ -877,7 +875,7 @@ export default {
   mounted: function () {
     this.$nextTick(function () {
       if (!this.vocabularies['orgunits'].loaded) {
-        this.$store.dispatch('vocabulary/loadOrgUnits', this.$i18n.locale)
+        this.$store.dispatch('vocabulary/loadOrgUnits', this?.$i18n?.locale || 'eng')
       }
       if (this.publisherOrgUnit) {
         this.$emit('input-publisher-select', this.getTerm('orgunits', this.publisherOrgUnit))
