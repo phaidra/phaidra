@@ -3322,7 +3322,7 @@ export default {
           }
         })
         if (response.status === 200) {
-          this.$store.commit('setAlerts', [{ type: 'success', msg: 'File was sucessfully uploaded' }])
+          this.$store.commit('setAlerts', [{ type: 'success', msg: this.$t('File was successfully replaced') }])
           await this.$store.dispatch('fetchObjectInfo', this.objectInfo.pid)
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
