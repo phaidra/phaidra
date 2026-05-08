@@ -7,7 +7,7 @@
       <v-row>
         <v-col cols="8">
           <v-text-field
-            :value="prefLabel"
+            :model-value="prefLabel"
             :persistent-hint="true"
             :messages="messages"
             :label="$t(label)"

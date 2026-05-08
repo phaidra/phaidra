@@ -317,7 +317,7 @@
                   <v-text-field
                     v-show="identifierType === 'ids:orcid'"
                     v-mask="'####-####-####-###X'"
-                    :value="identifierText"
+                    :model-value="identifierText"
                     :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                     v-on:blur="$emit('input-identifier', $event.target.value)"
                     :placeholder="identifierTypePlaceholder"
@@ -326,7 +326,7 @@
                   ></v-text-field>
                   <v-text-field
                     v-show="identifierType !== 'ids:orcid'"
-                    :value="identifierText"
+                    :model-value="identifierText"
                     :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                     v-on:blur="$emit('input-identifier', $event.target.value)"
                     :placeholder="identifierTypePlaceholder"
@@ -366,7 +366,7 @@
                   <v-text-field
                     v-show="identifierType === 'ids:orcid'"
                     v-mask="'####-####-####-###X'"
-                    :value="identifierText"
+                    :model-value="identifierText"
                     :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                     v-on:blur="$emit('input-identifier', $event.target.value)"
                     :placeholder="identifierTypePlaceholder"
@@ -375,7 +375,7 @@
                   ></v-text-field>
                   <v-text-field
                     v-show="identifierType !== 'ids:orcid'"
-                    :value="identifierText"
+                    :model-value="identifierText"
                     :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                     v-on:blur="$emit('input-identifier', $event.target.value)"
                     :placeholder="identifierTypePlaceholder"

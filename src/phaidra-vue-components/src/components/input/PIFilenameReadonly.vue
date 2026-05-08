@@ -2,7 +2,7 @@
   <v-row v-if="!hidden">
     <v-col :cols="actions.length ? 10 : 12">
       <v-text-field
-        :value="value"
+        :model-value="value"
         :label="$t('Filename')"
         readonly
         disabled

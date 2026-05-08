@@ -24,7 +24,7 @@
           <v-row >
             <v-col cols="8">
               <v-text-field
-                :value="name"
+                :model-value="name"
                 v-on:blur="$emit('input-name',$event.target.value)"
                 :label="$t('Study plan name')"
                 :required="required"
@@ -44,7 +44,7 @@
           <v-row >
             <v-col cols="6">
               <v-text-field
-                :value="notation"
+                :model-value="notation"
                 v-on:blur="$emit('input-notation',$event.target.value)"
                 :label="$t('Study plan notation')"
                 :variant="fieldVariant"
@@ -52,7 +52,7 @@
             </v-col>
             <v-col cols="6">
               <v-text-field
-                :value="identifier"
+                :model-value="identifier"
                 v-on:blur="$emit('input-identifier',$event.target.value)"
                 :label="$t('Study plan identifier')"
                 :variant="fieldVariant"

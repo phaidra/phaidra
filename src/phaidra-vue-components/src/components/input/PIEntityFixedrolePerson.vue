@@ -7,7 +7,7 @@
         </v-col>
         <v-col :cols="4">
           <v-text-field
-            :value="firstname"
+            :model-value="firstname"
             :label="$t(firstnameLabel ? firstnameLabel : 'Firstname')"
             v-on:blur="$emit('input-firstname',$event.target.value)"
             :variant="fieldVariant"
@@ -16,7 +16,7 @@
         </v-col>
         <v-col :cols="4">
           <v-text-field
-            :value="lastname"
+            :model-value="lastname"
             :label="$t(lastnameLabel ? lastnameLabel : 'Lastname')"
             v-on:blur="$emit('input-lastname',$event.target.value)"
             :variant="fieldVariant"

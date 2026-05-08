@@ -2,7 +2,7 @@
   <v-row v-if="!hidden">
     <v-col cols="3">
       <v-text-field
-        :value="title"
+        :model-value="title"
         v-on:blur="$emit('input-title',$event.target.value)"
         :label="$t(titleLabel)"
         :variant="fieldVariant"
@@ -12,7 +12,7 @@
     </v-col>
     <v-col cols="4">
       <v-text-field
-        :value="url"
+        :model-value="url"
         v-on:blur="$emit('input-url',$event.target.value)"
         :label="$t(urlLabel)"
         :variant="fieldVariant"

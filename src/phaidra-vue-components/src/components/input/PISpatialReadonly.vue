@@ -2,7 +2,7 @@
   <v-row v-if="!hidden">
     <v-col cols="8">
       <v-text-field
-        :value="prefLabel"
+        :model-value="prefLabel"
         :persistent-hint="true"
         :messages="value"
         :label="$t(label)"
