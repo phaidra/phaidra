@@ -607,6 +607,12 @@ export default {
   white-space: pre-wrap;
 }
 
+/* Vuetify 4 compatibility: restore Vuetify 2-like col padding in this component */
+.v-row:not(.v-row--no-gutters) > .v-col,
+.v-row:not(.v-row--no-gutters) > [class*='v-col-'] {
+  padding: 12px;
+}
+
 .wiv {
   font-weight: 400;
 }

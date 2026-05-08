@@ -1,6 +1,6 @@
 <template>
 
-  <p-d-jsonld-layout v-if="jsonld" :jsonld="jsonld">
+  <p-d-jsonld-layout v-if="jsonld" :jsonld="jsonld" class="pdjsonld-grid-compat">
 
     <template v-if="pid && !predicatesToHide.includes('pid')"  v-slot:pid>
       <v-row>
@@ -658,6 +658,12 @@ export default {
   overflow-wrap: break-word;
   word-wrap: break-word; /* legacy fallback */
   hyphens: auto;
+}
+
+/* Vuetify 4 compatibility: restore Vuetify 2-like inner col padding */
+.pdjsonld-grid-compat .v-row > .v-col,
+.pdjsonld-grid-compat .v-row > [class*='v-col-'] {
+  padding: 12px;
 }
 </style>
 
