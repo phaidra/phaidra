@@ -7,7 +7,7 @@
       :placeholder="placeholder"
       :name="name"
       v-model="type"
-      @input="handleInput"
+      @update:model-value="handleInput"
       @blur="handleBlur"
       @keydown="handleKeyDown"
       @focus="handleFocus"

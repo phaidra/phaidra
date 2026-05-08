@@ -25,7 +25,7 @@
             <v-col cols="8">
               <v-text-field
                 :model-value="name"
-                v-on:blur="$emit('input-name',$event.target.value)"
+                @update:model-value="$emit('input-name', $event)"
                 :label="$t('Study plan name')"
                 :required="required"
                 :rules="required ? [ v => !!v || $t('Required')] : []"
@@ -45,7 +45,7 @@
             <v-col cols="6">
               <v-text-field
                 :model-value="notation"
-                v-on:blur="$emit('input-notation',$event.target.value)"
+                @update:model-value="$emit('input-notation', $event)"
                 :label="$t('Study plan notation')"
                 :variant="fieldVariant"
               ></v-text-field>
@@ -53,7 +53,7 @@
             <v-col cols="6">
               <v-text-field
                 :model-value="identifier"
-                v-on:blur="$emit('input-identifier',$event.target.value)"
+                @update:model-value="$emit('input-identifier', $event)"
                 :label="$t('Study plan identifier')"
                 :variant="fieldVariant"
               ></v-text-field>

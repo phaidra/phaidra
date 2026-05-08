@@ -9,7 +9,7 @@
           <v-text-field
             :model-value="firstname"
             :label="$t(firstnameLabel ? firstnameLabel : 'Firstname')"
-            v-on:blur="$emit('input-firstname',$event.target.value)"
+            @update:model-value="$emit('input-firstname', $event)"
             :variant="fieldVariant"
             :error-messages="firstnameErrorMessages"
           ></v-text-field>
@@ -18,7 +18,7 @@
           <v-text-field
             :model-value="lastname"
             :label="$t(lastnameLabel ? lastnameLabel : 'Lastname')"
-            v-on:blur="$emit('input-lastname',$event.target.value)"
+            @update:model-value="$emit('input-lastname', $event)"
             :variant="fieldVariant"
             :error-messages="lastnameErrorMessages"
           ></v-text-field>

@@ -235,8 +235,8 @@
                 >
                   <v-select
                       :items="instances"
-                      @input="switchInstance"
-                      :value="instanceconfig.baseurl"
+                      @update:model-value="switchInstance"
+                      :model-value="instanceconfig.baseurl"
                       item-text="baseurl"
                       single-line
                   ></v-select>

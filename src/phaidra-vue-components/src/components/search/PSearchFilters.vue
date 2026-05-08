@@ -111,7 +111,7 @@
               <v-row no-gutters id="accessibility-content" role="region" aria-labelledby="accessibility-control">
                 <v-autocomplete
                   :no-data-text="$t('No data available')"
-                  :value="getTerm('accessibilityControl', selectedAccessibilityControl)"
+                  :model-value="getTerm('accessibilityControl', selectedAccessibilityControl)"
                   :item-value="'@id'"
                   class="mt-4"
                   :placeholder="$t('Add accessibility control') + '...'"
@@ -120,7 +120,7 @@
                   v-model="selectedAccessibilityControl"
                   multiple
                   clearable
-                  @input="setAccessibilityControl()"
+                  @update:model-value="setAccessibilityControl()"
                   :menu-props="{maxHeight:'400'}"
                   persistent-hint
                   variant="filled"
@@ -139,7 +139,7 @@
                 </v-autocomplete>
                 <v-autocomplete
                   :no-data-text="$t('No data available')"
-                  :value="getTerm('accessibilityFeature', selectedAccessibilityFeature)"
+                  :model-value="getTerm('accessibilityFeature', selectedAccessibilityFeature)"
                   :item-value="'@id'"
                   class="mt-4"
                   :placeholder="$t('Add accessibility feature') + '...'"
@@ -148,7 +148,7 @@
                   v-model="selectedAccessibilityFeature"
                   multiple
                   clearable
-                  @input="setAccessibilityFeature()"
+                  @update:model-value="setAccessibilityFeature()"
                   :menu-props="{maxHeight:'400'}"
                   persistent-hint
                   variant="filled"
@@ -167,7 +167,7 @@
                 </v-autocomplete>
                 <v-autocomplete
                   :no-data-text="$t('No data available')"
-                  :value="getTerm('accessibilityHazard', selectedAccessibilityHazard)"
+                  :model-value="getTerm('accessibilityHazard', selectedAccessibilityHazard)"
                   :item-value="'@id'"
                   class="mt-4"
                   :placeholder="$t('Add accessibility hazard') + '...'"
@@ -176,7 +176,7 @@
                   v-model="selectedAccessibilityHazard"
                   multiple
                   clearable
-                  @input="setAccessibilityHazard()"
+                  @update:model-value="setAccessibilityHazard()"
                   :menu-props="{maxHeight:'400'}"
                   persistent-hint
                   variant="filled"
@@ -261,7 +261,7 @@
                   variant="filled"
                   single-line
                   v-model="persAuthors.values"
-                  @input="setPersAuthors()"/>
+                  @update:model-value="setPersAuthors()"/>
               </v-col>
             </v-row>
             <v-row no-gutters v-if="showAuthorFilter">
@@ -278,7 +278,7 @@
                   variant="filled"
                   single-line
                   v-model="corpAuthors.values"
-                  @input="setCorpAuthors()"/>
+                  @update:model-value="setCorpAuthors()"/>
               </v-col>
             </v-row>
           </li>
@@ -306,7 +306,7 @@
                 :hint="$t('Personal')"
                 :items="marcRolesArray"
                 v-model="selectedRole.pers"
-                @input="addRoleFilter('pers')"
+                @update:model-value="addRoleFilter('pers')"
                 :menu-props="{maxHeight:'400'}"
                 persistent-hint
                 variant="filled"
@@ -318,7 +318,7 @@
                 :hint="$t('Corporate')"
                 :items="marcRolesArray"
                 v-model="selectedRole.corp"
-                @input="addRoleFilter('corp')"
+                @update:model-value="addRoleFilter('corp')"
                 :menu-props="{maxHeight:'400'}"
                 persistent-hint
                 variant="filled"
@@ -340,7 +340,7 @@
                       single-line
                       :items="role.values"
                       v-model="role.values"
-                      @input="setRoleFilterValues(role)"
+                      @update:model-value="setRoleFilterValues(role)"
                     />
                   </v-col>
                   <v-col cols="2">

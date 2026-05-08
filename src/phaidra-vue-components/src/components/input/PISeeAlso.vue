@@ -3,7 +3,7 @@
     <v-col cols="3">
       <v-text-field
         :model-value="title"
-        v-on:blur="$emit('input-title',$event.target.value)"
+        @update:model-value="$emit('input-title', $event)"
         :label="$t(titleLabel)"
         :variant="fieldVariant"
         append-inner-icon="mdi-magnify"
@@ -13,7 +13,7 @@
     <v-col cols="4">
       <v-text-field
         :model-value="url"
-        v-on:blur="$emit('input-url',$event.target.value)"
+        @update:model-value="$emit('input-url', $event)"
         :label="$t(urlLabel)"
         :variant="fieldVariant"
       ></v-text-field>

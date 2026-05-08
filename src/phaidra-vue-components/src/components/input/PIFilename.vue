@@ -4,7 +4,7 @@
       <v-text-field
         :model-value="value"
         :label="$t('Filename')"
-        v-on:blur="$emit('input-value',$event.target.value)"
+        @update:model-value="$emit('input-value', $event)"
         :variant="fieldVariant"
       ></v-text-field>
     </v-col>
