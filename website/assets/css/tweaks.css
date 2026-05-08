@@ -26,6 +26,11 @@
   display: inline-flex;
 }
 
+/* Hide trigger icon when search is open */
+[data-md-toggle=search]:checked ~ .md-header .md-header__button[for="__search"] {
+  display: none;
+}
+
 /* Hide search form until icon is clicked */
 .md-search {
   display: none;
