@@ -611,6 +611,7 @@ export default {
 .v-row:not(.v-row--no-gutters) > .v-col,
 .v-row:not(.v-row--no-gutters) > [class*='v-col-'] {
   padding: 12px;
+  padding-top: 0;
 }
 
 .wiv {

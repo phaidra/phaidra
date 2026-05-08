@@ -664,6 +664,7 @@ export default {
 .pdjsonld-grid-compat .v-row > .v-col,
 .pdjsonld-grid-compat .v-row > [class*='v-col-'] {
   padding: 12px;
+  padding-top: 0;
 }
 </style>
 
