@@ -673,6 +673,9 @@ sub update {
         unless (defined($collectionMembers)) {
           @{$collectionMembers} = ();
         }
+        unless (defined($members)) {
+          @{$members} = ();
+        }
         if (scalar @{$collectionMembers} == 0) {
           if (scalar @{$members} > 0) {
             my $umr = $self->_update_members($c, $pid, $cmodel_res->{cmodel}, $pageUpdateUrl, $members, 'ispartof');
