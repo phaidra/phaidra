@@ -64,7 +64,7 @@ services:
       PHAIDRA_HOSTNAME: "${PHAIDRA_HOSTNAME}"
       CADDY_LOG_LEVEL: "${CADDY_LOG_LEVEL:-DEBUG}"
       # leave for EU countries, otherwise set in .env a list of country code ie "AT DE"
-      CADDY_ALLOW_COUNTRIES: "${CADDY_ALLOW_COUNTRIES:-AT BE BG HR CY DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE}"
+      CADDY_DENY_COUNTRIES: "${CADDY_DENY_COUNTRIES:-}"
     volumes:
       - ./certs/httpd:/ssl:ro
     configs:
@@ -152,17 +152,49 @@ configs:
         ipinfo_free forwarded
         header X-Forwarded-For 131.130.2.176
 
-        @CADDY_DENY_COUNTRIES not vars {geoip.country_code} AT
+        @CADDY_DENY_COUNTRIES vars {ipinfo_free.country_code} "DONT_FAIL_ON_EMPTY_VAR" $CADDY_DENY_COUNTRIES
         tls /ssl/fullchain.pem /ssl/privkey.pem {
         }
         # reverse_proxy http://botblocker:8080 {
-        # respond @CADDY_DENY_COUNTRIES 401
+        route {
+          header @CADDY_DENY_COUNTRIES  Content-Type text/html
+          respond @CADDY_DENY_COUNTRIES 401 {
+            body <<EOF
+              <html>
+                <h3> You have been blocked </h3>
+                If you believe this to be in error, contact https://rdm.univie.ac.at/de/repositorium-phaidra/support-und-training/
+                <pre>
+                Impressum
 
-        reverse_proxy http://botblocker:8080 {
-          # transport http {
-          #   tls_insecure_skip_verify
-          # }
-          header_up X-Real-Ip {http.request.remote.host}
+                Publication according to § 25 MedG - (Section 25 of Austrian Media Code) responsible for the content of this page:
+
+                University of Vienna
+                Library and archive services
+                Universitätsring 1
+                A-1010 Vienna
+                Austria
+
+                If you have technical problems, please contact the helpdesk:
+                T +43-1-4277-140 60
+                F +43-1-4277-140 60
+
+                Send an E-Mail to us:
+                eMailsupport.phaidra@univie.ac.at
+                Webhttp://www.ub.univie.ac.at/
+
+                Phaidra does not assume responsibility for linked content or external pages.
+
+                © Copyright UB
+                </pre>
+              </html>
+            EOF
+          }
+          reverse_proxy http://botblocker:8080 {
+            # transport http {
+            #   tls_insecure_skip_verify
+            # }
+            header_up X-Real-Ip {http.request.remote.host}
+          }
         }
         log {
           level $CADDY_LOG_LEVEL
