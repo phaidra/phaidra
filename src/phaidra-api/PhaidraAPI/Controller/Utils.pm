@@ -612,8 +612,8 @@ sub send_daily_report {
       eval {$db = $self->paf_mongo;};
     }
     $db ||= $self->mongo;
-    my $coll             = $db->get_collection('storage_stats');
-    my $latest_stats     = $coll->find_one({}, {sort => {timestamp_iso => -1}});
+    my $coll = $db->get_collection('storage_stats');
+    my $latest_stats = $coll->find_one({}, {}, {sort => {timestamp => -1}});
     my $imageserver_size = 0;
     if ($latest_stats && $latest_stats->{imageserver}) {
       $imageserver_size = $latest_stats->{imageserver} * 1024;    # Convert from KB to bytes
