@@ -84,51 +84,38 @@
     {% endif %}
   {% endif %}
 
-  <!-- Further information -->
-  <div class="md-footer-meta md-typeset p-8">
-    <div class="md-footer-meta__inner md-grid gap-8">
-      <a href="https://univie.ac.at/" class="w-64">
-        <img src="/assets/external/img/logos/uni-vienna-white.svg" alt="">
+  <!-- Custom footer -->
+  <div class="phaidra-footer">
+
+    <!-- Top row: logo + social icons -->
+    <div class="phaidra-footer-top">
+      <a href="https://univie.ac.at/" class="phaidra-footer-logo">
+        <img src="/assets/external/img/logos/uni-vienna-white.svg" alt="Universität Wien">
       </a>
-      <div class="flex flex-col gap-2">
-        <!-- Social links -->
+      <div class="phaidra-footer-social">
         {% for social in config.extra.social %}
-
-          <!-- Automatically set rel=me for Mastodon -->
           {% set rel = "noopener" %}
-          {% if "mastodon" in social.icon %}
-            {% set rel = rel ~ " me" %}
-          {% endif %}
-
-          <!-- Compute title and render link -->
-          {% set title = social.name %}
-          {% if not title and "//" in social.link %}
-            {% set _, url = social.link.split("//") %}
-            {% set title  = url.split("/")[0] %}
-          {% endif %}
-          <a
-            href="{{ social.link }}"
-            target="_blank" rel="{{ rel }}"
-            title="{{ title | e }}"
-            class="flex gap-2"
-          >
-            {{ title | e }}
-            <span class="shrink h-4 w-4">
-              {% include ".icons/" ~ social.icon ~ ".svg" %}
-            </span>
+          {% if "mastodon" in social.icon %}{% set rel = rel ~ " me" %}{% endif %}
+          <a href="{{ social.link }}" target="_blank" rel="{{ rel }}" title="{{ social.name }}" class="phaidra-social-btn">
+            {% include ".icons/" ~ social.icon ~ ".svg" %}
           </a>
         {% endfor %}
-        <a href="{{ 'media/' | url }}">Media</a>
-        <a href="/impressum/">Contact & Imprint</a>
-        <a href="/en/privacy-policy/">Privacy Policy</a>
-        <a href="/sitemap.xml">Sitemap</a>
-        <span class="text-xs text-gray-500 mt-6">
-          Made with 
-          <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-            Material for MkDocs
-          </a>
-        </span>
       </div>
     </div>
+
+    <!-- Divider -->
+    <div class="phaidra-footer-divider"></div>
+
+    <!-- Bottom row: copyright + links -->
+    <div class="phaidra-footer-bottom">
+      <span>© PHAIDRA 2026. All rights reserved.</span>
+      <nav class="phaidra-footer-nav">
+        <a href="/impressum/">Contact &amp; Imprint</a>
+        <a href="/en/privacy-policy/">Privacy Policy</a>
+        <a href="/sitemap.xml">Sitemap</a>
+        <a href="{{ 'media/' | url }}">Media</a>
+      </nav>
+    </div>
+
   </div>
 </footer>
