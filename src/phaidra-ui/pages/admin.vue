@@ -950,7 +950,7 @@
                         <v-row class="mt-4">
                           <v-col cols="12" md="6">
                             <v-btn
-                              color="secondary"
+                              color="primary"
                               :loading="reportSending"
                               :disabled="reportSending"
                               @click="sendReportNow"
