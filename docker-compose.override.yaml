@@ -34,7 +34,7 @@ services:
       context: .
       dockerfile_inline: |
         FROM caddy:builder AS builder
-        RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build xcaddy build --with github.com/oltdaniel/caddy-ipinfo-free
+        RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build xcaddy build --with github.com/oltdaniel/caddy-ipinfo-free --with github.com/mholt/caddy-ratelimit
 
         FROM alpine AS ip_db_converter
         RUN apk add --no-cache go
@@ -156,7 +156,16 @@ configs:
         tls /ssl/fullchain.pem /ssl/privkey.pem {
         }
         # reverse_proxy http://botblocker:8080 {
+
         route {
+          rate_limit {
+            zone asn {
+              key {ipinfo_free.asn}
+              events 10000
+              window 1h
+              log_key true
+            }
+          }
           header @CADDY_DENY_COUNTRIES  Content-Type text/html
           respond @CADDY_DENY_COUNTRIES 401 {
             body <<EOF
