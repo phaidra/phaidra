@@ -56,6 +56,12 @@ export default defineNuxtPlugin((nuxtApp) => {
       density: 'comfortable',
       variant: 'underlined'
     },
+    VSelect: {
+      density: 'comfortable'
+    },
+    VAutocomplete: {
+      density: 'comfortable'
+    },
     VToolbar: {
       density: 'compact'
     },
