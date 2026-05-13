@@ -1,7 +1,8 @@
 <template>
-  <v-row v-if="!hidden">
+  <v-row v-if="!hidden" ref="rowRef">
     <v-col cols="4" v-if="!hideRole">
         <v-autocomplete
+          :menu-props="formRowSelectMenu.menuProps"
           :no-data-text="$t('No data available')"
           :disabled="disablerole"
           @update:model-value="$emit('input-role', $event)"
@@ -146,6 +147,7 @@ import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { validationrules } from '../../mixins/validationrules'
 import SelectLanguage from '../select/SelectLanguage'
+import { createSelectMenuMaxWidthController } from '../../composables/selectMenuMaxWidth'
 
 export default {
   name: 'p-i-entity',
@@ -270,6 +272,9 @@ export default {
       default: false
     }
   },
+  created () {
+    this.formRowSelectMenu = createSelectMenuMaxWidthController()
+  },
   computed: {
     rolesArray () {
       let arr = this.vocabularies[this.roleVocabulary].terms
@@ -295,7 +300,8 @@ export default {
     }
   },
   mounted: function () {
-    this.$nextTick(function () {
+    this.$nextTick(() => {
+      this.formRowSelectMenu.observe(() => this.$refs.rowRef?.$el ?? this.$refs.rowRef)
       this.loading = !this.vocabularies[this.roleVocabulary].loaded
       this.$store.dispatch('vocabulary/sortRoles', this?.$i18n?.locale || 'eng')
       // emit input to set skos:prefLabel in parent
@@ -303,6 +309,9 @@ export default {
         this.$emit('input', this.getTerm(this.roleVocabulary, this.role))
       }
     })
+  },
+  beforeUnmount () {
+    this.formRowSelectMenu.disconnect()
   }
 }
 </script>

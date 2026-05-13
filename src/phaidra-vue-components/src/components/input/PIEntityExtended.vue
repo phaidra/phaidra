@@ -1,5 +1,5 @@
 <template>
-  <v-row v-if="!hidden">
+  <v-row v-if="!hidden" ref="rowRef">
     <v-col cols="12">
       <v-card class="mb-8" width="100%">
         <v-card-title class="title font-weight-light text-white">
@@ -54,6 +54,7 @@
             <v-row>
               <v-col cols="8" v-if="!hideRole">
                 <v-autocomplete
+                  :menu-props="formRowSelectMenu.menuProps"
                   :disabled="disablerole"
                   @update:model-value="$emit('input-role', $event)"
                   :label="$t(roleLabel ? roleLabel : 'Role')"
@@ -470,6 +471,7 @@ import { fieldproperties } from '../../mixins/fieldproperties'
 import { validationrules } from '../../mixins/validationrules'
 import OrgUnitsTreeDialog from '../select/OrgUnitsTreeDialog'
 import RorSearch from '../select/RorSearch'
+import { createSelectMenuMaxWidthController } from '../../composables/selectMenuMaxWidth'
 
 export default {
   name: 'p-i-entity-extended',
@@ -731,6 +733,9 @@ export default {
       default: true
     }
   },
+  created () {
+    this.formRowSelectMenu = createSelectMenuMaxWidthController()
+  },
   computed: {
     roleAutocompleteLines () {
       if (this.showIds && this.showDefinitions) return 'three'
@@ -833,6 +838,7 @@ export default {
   },
   mounted: async function () {
     this.$nextTick(async function () {
+      this.formRowSelectMenu.observe(() => this.$refs.rowRef?.$el ?? this.$refs.rowRef)
       await this.$store.dispatch('vocabulary/loadOrgUnits', this.$i18n.locale)
       this.loading = !this.vocabularies[this.roleVocabulary].loaded
       // emit input to set skos:prefLabel in parent
@@ -846,6 +852,9 @@ export default {
         this.handleInput(this.getTerm('orgunits', this.affiliation), 'affiliationPath', 'input-affiliation-select')
       }
     })
+  },
+  beforeUnmount () {
+    this.formRowSelectMenu.disconnect()
   }
 }
 </script>
