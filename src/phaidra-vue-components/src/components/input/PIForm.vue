@@ -773,7 +773,7 @@
                         <v-card>
                           <v-card-title class="title font-weight-light text-white"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn class="text-grey text-darken-2" color="white" target='_blank' :to="'/metadata-fields-help'"><v-icon class="mr-2" aria-hidden="true">mdi-help-circle-outline</v-icon>{{ $t('Metadata fields Help') }}</v-btn></v-card-title>
                           <v-card-text>
-                            <v-list three-line >
+                            <v-list lines="two" >
                               <v-text-field clearable :label="$t('Search...')" append-inner-icon="mdi-magnify" v-model="searchfieldsinput"></v-text-field>
                               <div v-for="field in filteredMetadatafields" :key="field.id">
                                 <v-list-item @click="addfieldselection.push(field)">
@@ -2525,9 +2525,10 @@ export default {
 </script>
 
 <style scoped>
-.v-btn {
+/* Uncommenting this cause unnecessary margin issues on the add metadata field button */
+/* .v-btn {
   margin: 0;
-}
+} */
 
 .prewrap {
   white-space: pre-wrap;
