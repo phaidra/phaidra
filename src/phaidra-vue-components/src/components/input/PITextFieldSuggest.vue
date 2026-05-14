@@ -75,6 +75,7 @@ export default {
   components: {
     SelectLanguage
   },
+  emits: ['input', 'input-language', 'add', 'remove', 'configure', 'add-clear', 'up', 'down'],
   props: {
     value: {
       type: String,

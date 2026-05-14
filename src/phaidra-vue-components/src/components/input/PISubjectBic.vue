@@ -74,6 +74,7 @@ export default {
   components: {
     BicTreeDialog
   },
+  emits: ['input', 'resolve', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   methods: {
     bicItemTitle (item) {
       if (!item || !item['@id'] || !item['skos:notation']?.length) return ''

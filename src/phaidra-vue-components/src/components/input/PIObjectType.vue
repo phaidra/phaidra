@@ -44,7 +44,7 @@ import { fieldproperties } from '../../mixins/fieldproperties'
 export default {
   name: 'p-i-object-type',
   mixins: [vocabulary, fieldproperties],
-  emits: ['input'],
+  emits: ['input', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   props: {
     label: {
       type: String,

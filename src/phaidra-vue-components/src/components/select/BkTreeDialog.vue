@@ -97,7 +97,8 @@ export default {
         let response = await this.$axios.request({
           method: 'GET',
           url: this.$store.state.appconfig.apis.dante.resolve,
-          params: params
+          params: params,
+          withCredentials: false
         })
         if (response.data) {
           for (let ob of response.data) {
@@ -128,7 +129,8 @@ export default {
         let response = await this.$axios.request({
           method: 'GET',
           url: this.$store.state.appconfig.apis.dante.resolve,
-          params: params
+          params: params,
+          withCredentials: false
         })
         this.$emit('item-selected', response.data[0])
       } catch (error) {

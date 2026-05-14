@@ -74,6 +74,7 @@ export default {
   components: {
     ThemaTreeDialog
   },
+  emits: ['input', 'resolve', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   methods: {
     handleInput: function (term) {
       if (term) {

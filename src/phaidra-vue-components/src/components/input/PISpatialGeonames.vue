@@ -114,6 +114,7 @@ const isClient = typeof window !== 'undefined'
 export default {
   name: 'p-i-spatial-geonames',
   mixins: [vocabulary, fieldproperties],
+  emits: ['input', 'input-place-type', 'resolve', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   props: {
     value: {
       type: String,

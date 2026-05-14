@@ -40,6 +40,7 @@ import { fieldproperties } from '../../mixins/fieldproperties'
 export default {
   name: 'p-i-resource-type',
   mixins: [vocabulary, fieldproperties],
+  emits: ['input', 'configure'],
   props: {
     value: {
       type: String

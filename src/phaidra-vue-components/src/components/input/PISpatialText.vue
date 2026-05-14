@@ -88,11 +88,12 @@ import { fieldproperties } from '../../mixins/fieldproperties'
 import SelectLanguage from '../select/SelectLanguage'
 
 export default {
-  name: 'p-i-text-field',
+  name: 'p-i-spatial-text',
   mixins: [vocabulary, fieldproperties],
   components: {
     SelectLanguage
   },
+  emits: ['input', 'input-place-type', 'input-language', 'add', 'remove', 'configure', 'add-clear', 'up', 'down'],
   props: {
     value: {
       type: String,

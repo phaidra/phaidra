@@ -23,6 +23,7 @@ import { fieldproperties } from '../../mixins/fieldproperties'
 export default {
   name: 'p-i-note-checkbox-with-link',
   mixins: [vocabulary, fieldproperties],
+  emits: ['input', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   props: {
     labelMessageId: {
       type: String,

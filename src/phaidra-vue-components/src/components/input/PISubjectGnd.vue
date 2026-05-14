@@ -83,6 +83,7 @@ import { fieldproperties } from '../../mixins/fieldproperties'
 export default {
   name: 'p-i-subject-gnd',
   mixins: [vocabulary, fieldproperties],
+  emits: ['input', 'resolve', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   props: {
     value: {
       type: String

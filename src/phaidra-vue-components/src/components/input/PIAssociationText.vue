@@ -94,6 +94,7 @@ export default {
   components: {
     SelectLanguage
   },
+  emits: ['input', 'input-association-type', 'input-language', 'add', 'remove', 'configure', 'add-clear', 'up', 'down'],
   props: {
     value: {
       type: String,

@@ -67,6 +67,7 @@ export default {
   components: {
     OrgUnitsTreeDialog
   },
+  emits: ['input', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   computed: {
     instanceconfig: function () {
       return this.$root.$store.state.instanceconfig

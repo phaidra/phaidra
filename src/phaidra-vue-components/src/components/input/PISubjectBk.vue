@@ -85,6 +85,7 @@ export default {
     BkTreeDialog
   },
   mixins: [vocabulary, fieldproperties],
+  emits: ['input', 'resolve', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   props: {
     value: {
       type: String,
@@ -199,7 +200,8 @@ export default {
         let response = await this.$axios.request({
           method: 'GET',
           url: this.$store.state.appconfig.apis.dante.search,
-          params: params
+          params: params,
+          withCredentials: false
         })
         this.items = response.data
         this.showItems = true
@@ -217,7 +219,8 @@ export default {
           params: {
             properties: 'notation,ancestors',
             uri: uri
-          }
+          },
+          withCredentials: false
         })
         return response.data[0]
       } catch (error) {
