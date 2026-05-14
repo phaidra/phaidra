@@ -16,7 +16,7 @@
       :variant="solo ? 'solo' : 'filled'"
       single-line
       append-inner-icon="mdi-magnify"
-      @click:append="onSelect({ term: type })"
+      @click:append-inner="onSelect({ term: type })"
       :messages="messages"
     >
     <template #append-inner>

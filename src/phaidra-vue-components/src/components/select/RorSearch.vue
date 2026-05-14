@@ -31,7 +31,7 @@
                 :messages="resolved"
                 :error-messages="errorMessages"
                 append-inner-icon="mdi-magnify"
-                @click:append="search()"
+                @click:append-inner="search()"
                 @keyup.enter="search()"
               >
               <template v-slot:message="{ key, message }">

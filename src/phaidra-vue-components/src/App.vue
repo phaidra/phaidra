@@ -64,7 +64,7 @@
                 v-model="credentials.password"
                 :label="'password'"
                 :append-inner-icon="psvis ? 'mdi-eye' : 'mdi-eye-off'"
-                @click:append="toggleVisibility"
+                @click:append-inner="toggleVisibility"
                 :type="psvis ? 'password' : 'text'"
               ></v-text-field>
             </v-col>

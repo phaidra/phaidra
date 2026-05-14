@@ -59,7 +59,7 @@
                 :hint="$t(hint)"
                 autocomplete="off"
                 append-inner-icon="mdi-magnify"
-                @click:append="search()"
+                @click:append-inner="search()"
                 @keyup.enter="search()"
               >
               <template v-slot:message="{ key, message }">
