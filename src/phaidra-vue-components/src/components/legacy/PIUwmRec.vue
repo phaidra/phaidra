@@ -532,7 +532,7 @@ export default {
         try {
           let response = await this.$axios.request({
             method: 'GET',
-            url: '/directory/get_org_units',
+            url: '/directory/org_get_units',
             params: {
               parent_id: node.ui_value.replace('http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_faculty/', ''),
               values_namespace: 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/organization/voc_department/'
