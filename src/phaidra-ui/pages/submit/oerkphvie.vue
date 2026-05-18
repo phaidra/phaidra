@@ -2,27 +2,11 @@
   <v-container fluid>
     <v-row>
       <v-col cols="12">
-        <p-i-form
-          :form="form"
-          :rights="rights"
-          :enablerights="false"
-          :enablerelationships="false"
-          :enablepreview="true"
-          :templating="false"
-          :savetemplatebtn="false"
-          :importing="false"
-          :addbutton="false"
-          :mouseoverfielddef="true"
-          :help="false"
-          :debug="false"
-          :disableChecksum="instanceconfig.disableChecksum"
-          :feedback="false"
-          v-on:load-form="form = $event"
-          v-on:load-rights="rights = $event"
-          v-on:object-created="objectCreated($event)"
-          v-on:input-rights="rights = $event"
-          :hideContainedInPages="instanceconfig.hideContainedInPages"
-        ></p-i-form>
+        <p-i-form :form="form" :rights="rights" :enablerights="false" :enablerelationships="false" :enablepreview="true"
+          :templating="false" :savetemplatebtn="false" :importing="false" :addbutton="false" :mouseoverfielddef="true"
+          :help="false" :debug="false" :disableChecksum="instanceconfig.disableChecksum" :feedback="false"
+          v-on:load-form="form = $event" v-on:load-rights="rights = $event" v-on:object-created="objectCreated($event)"
+          v-on:input-rights="rights = $event" :hideContainedInPages="instanceconfig.hideContainedInPages"></p-i-form>
       </v-col>
     </v-row>
   </v-container>
@@ -73,11 +57,11 @@ export default {
       let rt = fields.getField("resource-type-buttongroup");
       rt.vocabulary = "resourcetypenocontainer";
       rt.resourceTypes = [
-      'https://pid.phaidra.org/vocabulary/44TN-P1S0',
-      'https://pid.phaidra.org/vocabulary/8YB5-1M0J',
-      'https://pid.phaidra.org/vocabulary/B0Y6-GYT8',
-      'https://pid.phaidra.org/vocabulary/69ZZ-2KGX',
-      'https://pid.phaidra.org/vocabulary/7AVS-Y482'
+        'https://pid.phaidra.org/vocabulary/44TN-P1S0',
+        'https://pid.phaidra.org/vocabulary/8YB5-1M0J',
+        'https://pid.phaidra.org/vocabulary/B0Y6-GYT8',
+        'https://pid.phaidra.org/vocabulary/69ZZ-2KGX',
+        'https://pid.phaidra.org/vocabulary/7AVS-Y482'
       ];
       rt.value = defaultResourceType;
       self.form.sections[0].fields.push(rt);
@@ -153,7 +137,7 @@ export default {
       note.note = 'Grundsätze der Barrierearmut beachtet'
       note.labelMessageId = 'OER_ACCESSIBILITY_CHECK_LABEL'
       note.linkLabelMessageId = 'OER_ACCESSIBILITY_CHECK_LINK_LABEL'
-      note.link = 'https://phaidra.kphvie.ac.at/o:13'
+      note.link = 'https://hochschulforumdigitalisierung.de/wp-content/uploads/2023/09/HFD_AP_66_Leitfaden_Digitale_Barrierefreiheit-1.pdf'
       note.language = 'deu'
       self.form.sections[0].fields.push(note);
 
@@ -179,7 +163,7 @@ export default {
           }
         }
       }
-      
+
     },
   },
   beforeRouteEnter: async function (to, from, next) {
