@@ -1010,7 +1010,7 @@
                             </div>
                             <v-btn color="primary" small class="mt-4" @click="addQueryReport">{{ $t('Add query count report') }}</v-btn>
                           </v-col>
-                          <v-col cols="6" class="mt-6">{{ $t("Define Solr queries to count in daily reports. If 'Daily' is checked, only count objects created today.") }}</v-col>
+                          <v-col cols="6" class="mt-6">{{ $t("Define Solr queries to count in daily reports. If 'Daily' is checked, the report adds a tcreated filter for the previous completed calendar day in the server timezone.") }}</v-col>
                         </v-row>
                       </v-card-text>
                     </v-card>
