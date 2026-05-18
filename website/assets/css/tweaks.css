@@ -1,7 +1,7 @@
 /* === Dark header === */
 
 .md-header {
-  background-color: #1a1a1a;
+  background-color: #212121;
   color: white;
 }
 
@@ -181,11 +181,24 @@
 
 /* Hero text — fluid scaling */
 .phaidra-hero-title {
-  font-size: clamp(1.75rem, 5vw, 3.125rem);
+  font-size: clamp(1.75rem, 5.8vw, 4.5rem);
 }
 
 .phaidra-hero-subtitle {
-  font-size: clamp(1rem, 2.5vw, 1.75rem);
+  font-size: clamp(1rem, 2.9vw, 2.25rem);
+}
+
+@media screen and (min-width: 768px) {
+  .phaidra-hero-title,
+  .phaidra-hero-subtitle {
+    white-space: nowrap;
+  }
+}
+
+.phaidra-hero-description {
+  color: #212121;
+  font-weight: 400;
+  line-height: 1.7;
 }
 
 /* Partner logos */
