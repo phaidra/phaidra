@@ -616,6 +616,7 @@
                           <template v-else-if="f.component === 'p-project'">
                             <p-i-project
                               v-bind="f"
+                              :showHeader="s.title !== 'Project'"
                               v-on:input-name="f.name=$event"
                               v-on:input-acronym="f.acronym=$event"
                               v-on:input-name-language="setSelected(f, 'nameLanguage', $event)"
@@ -690,7 +691,13 @@
                           </template>
 
                           <template v-else-if="f.component === 'p-filename-readonly'">
-                            <p-i-filename-readonly v-bind="f" v-on:configure="editFieldProps(f)" :configurable="enablefieldconfig || f.configurable"></p-i-filename-readonly>
+                            <p-i-filename-readonly
+                              v-bind="f"
+                              v-on:add="addField(s.fields, f)"
+                              v-on:remove="removeField(s.fields, f)"
+                              v-on:configure="editFieldProps(f)"
+                              :configurable="enablefieldconfig || f.configurable"
+                            ></p-i-filename-readonly>
                           </template>
 
                           <template v-else-if="f.component === 'p-unknown'">

@@ -4,23 +4,25 @@
     <v-col cols="12">
 
       <v-card class="mb-8">
-        <v-card-title class="title font-weight-light text-white">
-            <span>{{ $t('Project') }}</span>
-            <v-spacer></v-spacer>
-            <v-menu open-on-hover bottom offset-y v-if="actions.length">
-              <template v-slot:activator="{ props: activatorProps }">
-                <v-btn v-bind="activatorProps" icon variant="text" color="white">
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
-                  <v-list-item-title>{{ action.title }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-        </v-card-title>
-        <v-divider></v-divider>
+        <template v-if="showHeader">
+          <v-card-title class="title font-weight-light text-white">
+              <span>{{ $t('Project') }}</span>
+              <v-spacer></v-spacer>
+              <v-menu open-on-hover bottom offset-y v-if="actions.length">
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-btn v-bind="activatorProps" icon variant="text" color="white">
+                    <v-icon>mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
+                    <v-list-item-title>{{ action.title }}</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+          </v-card-title>
+          <v-divider></v-divider>
+        </template>
         <v-card-text class="mt-4">
 
         <v-row>

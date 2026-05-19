@@ -4,10 +4,11 @@
       <v-col cols="12">
         <v-btn-toggle
           v-model="toggleResourcetypeModel"
-          class="pi-resource-type-toggle"
-          color="primary"
-          variant="flat"
+          
           divided
+          border
+          color="primary"
+          base-color="grey-lighten-4"
           mandatory="force"
           @update:model-value="onResourceTypeChange"
         >
@@ -110,22 +111,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-/* Flat toggle: inactive segments stay light grey like legacy; active uses theme primary (orange when configured). */
-.pi-resource-type-toggle {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.pi-resource-type-toggle :deep(.v-btn:not(.v-btn--active)) {
-  border-radius: 0;
-  background-color: #eeeeee !important;
-  color: rgba(0, 0, 0, 0.65);
-}
-
-.pi-resource-type-toggle :deep(.v-btn--active) {
-  color: rgb(var(--v-theme-on-primary)) !important;
-}
-</style>

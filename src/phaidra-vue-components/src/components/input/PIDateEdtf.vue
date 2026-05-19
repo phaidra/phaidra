@@ -42,28 +42,28 @@
           :variant="fieldVariant"
           :error-messages="valueErrorMessages"
         >
-          <template v-slot:append-inner>
-            <v-menu
-              ref="menu1"
-              v-model="dateMenu"
-              :close-on-content-click="false"
-              transition="scale-transition"
-              offset-y
-              max-width="290px"
-              min-width="290px"
-            >
-              <template v-slot:activator="{ props: activatorProps }">
-                <v-icon v-bind="activatorProps">mdi-calendar</v-icon>
-              </template>
-              <v-date-picker
-                color="primary"
-                :show-current="false"
-                v-model="pickerModel"
-                :first-day-of-week="1"
-                :locale="alpha2bcp47($i18n.locale)"
-                @update:model-value="dateMenu = false; $emit('input-date', $event)"
-              ></v-date-picker>
-            </v-menu>
+          <template v-slot:append>
+              <v-menu
+                ref="menu1"
+                v-model="dateMenu"
+                :close-on-content-click="false"
+                transition="scale-transition"
+                offset-y
+                max-width="290px"
+                min-width="290px"
+              >
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-icon v-bind="activatorProps">mdi-calendar</v-icon>
+                </template>
+                <v-date-picker
+                  color="primary"
+                  :show-current="false"
+                  v-model="pickerModel"
+                  :first-day-of-week="1"
+                  :locale="alpha2bcp47($i18n.locale)"
+                  @update:model-value="dateMenu = false; $emit('input-date', $event)"
+                ></v-date-picker>
+              </v-menu>
           </template>
         </v-text-field>
       </template>
@@ -79,7 +79,7 @@
           :variant="fieldVariant"
           :error-messages="valueErrorMessages"
         >
-          <template v-slot:append-inner>
+          <template v-slot:append>
             <v-tooltip bottom>
               <template v-slot:activator="{ props: activatorProps }">
                 <v-icon v-bind="activatorProps">mdi-help-circle-outline</v-icon>
@@ -91,7 +91,7 @@
       </template>
     </v-col>
     <v-col cols="2" v-if="actions.length">
-      <v-menu open-on-hover bottom offset-y>
+      <v-menu bottom offset-y>
         <template v-slot:activator="{ props: activatorProps }">
           <v-btn v-bind="activatorProps" icon variant="text">
             <v-icon>mdi-dots-vertical</v-icon>
