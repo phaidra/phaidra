@@ -948,6 +948,17 @@
                       <v-card-title class="title font-weight-light white--text">{{ $t("Reporting") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
+                          <v-col cols="12" md="6">
+                            <v-btn
+                              color="primary"
+                              :loading="reportSending"
+                              :disabled="reportSending"
+                              @click="sendReportNow"
+                            >{{ $t('Send report now') }}</v-btn>
+                          </v-col>
+                          <v-col cols="12" md="6" class="mt-2 mt-md-6">{{ $t('Send the daily report email immediately using the configuration already saved on the server. Save admin settings first if you changed reporting options.') }}</v-col>
+                        </v-row>
+                        <v-row class="mt-4">
                           <v-col>
                             <v-text-field
                               :label="$t('Reporting email')"
@@ -999,7 +1010,7 @@
                             </div>
                             <v-btn color="primary" small class="mt-4" @click="addQueryReport">{{ $t('Add query count report') }}</v-btn>
                           </v-col>
-                          <v-col cols="6" class="mt-6">{{ $t("Define Solr queries to count in daily reports. If 'Daily' is checked, only count objects created today.") }}</v-col>
+                          <v-col cols="6" class="mt-6">{{ $t("Define Solr queries to count in daily reports. If 'Daily' is checked, the report adds a tcreated filter for the previous completed calendar day in the server timezone.") }}</v-col>
                         </v-row>
                       </v-card-text>
                     </v-card>
@@ -1330,10 +1341,28 @@ export default {
       activetab: null,
       activetab2: null,
       activetabprivate: null,
-      configAsJSONToImport: ''
+      configAsJSONToImport: '',
+      reportSending: false
     };
   },
   methods: {
+    sendReportNow: async function () {
+      this.reportSending = true
+      try {
+        await this.$axios.request({
+          method: 'POST',
+          url: '/utils/send_daily_report',
+          headers: {
+            'X-XSRF-TOKEN': this.$store.state.user.token
+          }
+        })
+        this.$store.commit('setAlerts', [{ type: 'success', msg: this.$t('Daily report sent successfully') }])
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.reportSending = false
+      }
+    },
     importConfig: async function () {
       this.loading = true
       try {

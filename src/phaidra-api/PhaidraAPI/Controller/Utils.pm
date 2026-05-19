@@ -613,7 +613,7 @@ sub send_daily_report {
     }
     $db ||= $self->mongo;
     my $coll             = $db->get_collection('storage_stats');
-    my $latest_stats     = $coll->find_one({}, {sort => {timestamp_iso => -1}});
+    my $latest_stats     = $coll->find_one({}, {}, {sort => {timestamp => -1}});
     my $imageserver_size = 0;
     if ($latest_stats && $latest_stats->{imageserver}) {
       $imageserver_size = $latest_stats->{imageserver} * 1024;    # Convert from KB to bytes
@@ -624,14 +624,15 @@ sub send_daily_report {
   # Get query count reports if defined
   if ($privconfig->{reportingquerycountreports} && ref($privconfig->{reportingquerycountreports}) eq 'ARRAY') {
     my @query_reports;
-    my $today = strftime('%Y-%m-%d', localtime);
+    my @lt_prev           = localtime(time - 86400);
+    my $daily_created_day = sprintf('%04d-%02d-%02d', $lt_prev[5] + 1900, $lt_prev[4] + 1, $lt_prev[3]);
 
     for my $query_report (@{$privconfig->{reportingquerycountreports}}) {
       next unless $query_report->{label} && $query_report->{fq};
 
       my $fq = $query_report->{fq};
       if ($query_report->{daily}) {
-        $fq .= ' AND tcreated:[' . $today . 'T00:00:00Z TO ' . $today . 'T23:59:59Z]';
+        $fq .= ' AND tcreated:[' . $daily_created_day . 'T00:00:00Z TO ' . $daily_created_day . 'T23:59:59Z]';
       }
 
       # Execute Solr query
