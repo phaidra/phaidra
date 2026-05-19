@@ -833,7 +833,7 @@
 
         <v-row no-gutters class="mt-9 ma-3">
           <v-col cols="12">
-            <v-dialog v-if="templating || savetemplatebtn" v-model="templatedialog" width="500">
+            <v-dialog v-if="(templating || savetemplatebtn) && !hideSaveAsTemplate" v-model="templatedialog" width="500">
               <template v-slot:activator="{ props: activatorProps }">
                 <v-btn class="mr-3 float-left" v-bind="activatorProps" large raised :loading="loading" :disabled="loading" color="primary"><span v-t="'Save as new template'"></span></v-btn>
               </template>

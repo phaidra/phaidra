@@ -2,7 +2,7 @@
 
   <v-row v-if="!hidden">
     <v-col cols="12">
-      <v-card class="mb-8">
+      <v-card variant="outlined" class="mb-8">
         <v-card-title class="title font-weight-light text-white">
           <span>{{ $t(label) }}</span>
           <v-spacer></v-spacer>
@@ -194,7 +194,7 @@
           </v-row>
           <v-row v-for="(s,i) in series" :key="'series'+i">
             <v-col cols="12">
-              <v-card class="mb-8">
+              <v-card variant="outlined" class="mb-8">
                 <v-card-title class="title font-weight-light text-white">
                   <span>{{ $t(seriesLabel) }}</span>
                   <v-spacer></v-spacer>
@@ -345,7 +345,7 @@
           </v-row>
           <v-row>
             <v-col cols="12">
-              <v-card class="mb-8">
+              <v-card variant="outlined" class="mb-8">
                 <v-card-title class="title font-weight-light text-white">
                   <span>{{ $t(publisherLabel) }}</span>
                   <v-spacer></v-spacer>
