@@ -624,7 +624,7 @@ sub send_daily_report {
   # Get query count reports if defined
   if ($privconfig->{reportingquerycountreports} && ref($privconfig->{reportingquerycountreports}) eq 'ARRAY') {
     my @query_reports;
-    my @lt_prev = localtime(time - 86400);
+    my @lt_prev           = localtime(time - 86400);
     my $daily_created_day = sprintf('%04d-%02d-%02d', $lt_prev[5] + 1900, $lt_prev[4] + 1, $lt_prev[3]);
 
     for my $query_report (@{$privconfig->{reportingquerycountreports}}) {
