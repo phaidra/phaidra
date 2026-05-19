@@ -229,7 +229,7 @@ export default {
       let params = buildParams(this, ands)
       if (this.inCollection) {
         const pid = this.inCollection.replace(/[o:]/g, '')
-        params.sort = `pos_in_o_${pid} asc`
+        params.sort = `pos_in_o_${pid} asc, created asc, pid asc`
       }
       // we only need count now
       params.rows = 0
@@ -295,7 +295,7 @@ export default {
         const pid = this.inCollection.replace(/[o:]/g, '')
         const activeSortLength = this.sortdef.filter(x => x.active).length
         if(!activeSortLength){
-          params.sort = `pos_in_o_${pid} asc`
+          params.sort = `pos_in_o_${pid} asc, created asc, pid asc`
         }
       }
       if (this.extracted_text) {

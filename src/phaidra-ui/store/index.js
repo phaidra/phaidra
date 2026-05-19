@@ -799,7 +799,7 @@ export const actions = {
       fq: `owner:* AND ispartof:"${options.pid}"`,
       start: (options.page - 1) * options.pagesize,
       rows: options.pagesize,
-      sort: `pos_in_o_${id} asc`
+      sort: `pos_in_o_${id} asc, created asc, pid asc`
     }
     if (options.onlylatestversion) {
       params.q = '-hassuccessor:* AND ' + params.q

@@ -111,7 +111,7 @@ export default {
         wt: 'json',
         qf: rel + '^5',
         fl: 'pid',
-        sort: 'pos_in_' + pid.replace(':', '_') + ' asc',
+        sort: 'pos_in_' + pid.replace(':', '_') + ' asc, created asc, pid asc',
         rows: self.count
       }
 

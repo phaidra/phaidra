@@ -417,6 +417,8 @@ sub rss {
   }
 
   # Get member details from Solr
+  my $pidunderscore = $pid;
+  $pidunderscore =~ s/:/_/;
   my $members_solr_params = {
     q       => '-hassuccessor:* AND -ismemberof:["" TO *]',
     defType => 'edismax',
@@ -424,7 +426,7 @@ sub rss {
     fq      => "owner:* AND ispartof:\"$pid\"",
     start   => 0,
     rows    => 1000,
-    sort    => "pos_in_$pid asc"
+    sort    => "pos_in_$pidunderscore asc, created asc, pid asc"
   };
 
   my $members_solr_res = $self->call_solr($members_solr_params);

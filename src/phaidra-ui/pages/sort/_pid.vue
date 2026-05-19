@@ -86,7 +86,7 @@ export default {
         wt: 'json',
         qf: rel + '^5',
         fl: 'pid,cmodel,dc_title,created,dc_title_*',
-        sort: 'pos_in_' + pid.replace(':', '_') + ' asc',
+        sort: 'pos_in_' + pid.replace(':', '_') + ' asc, created asc, pid asc',
         rows: 100
       }
 

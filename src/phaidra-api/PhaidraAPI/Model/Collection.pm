@@ -272,7 +272,7 @@ sub get_oldest_member {
 
   my $res = {members => [], alerts => [], status => 200};
 
-  my $cachekey = "oldest_mem_$pid";
+  my $cachekey = "first_coll_mem_$pid";
   my $oldest_member;
   $oldest_member = $c->app->chi->get($cachekey);
 
@@ -295,8 +295,10 @@ sub get_oldest_member {
       $urlget->path("/solr/" . $c->app->config->{solr}->{core} . "/select");
     }
 
-    my $root;
-    $urlget->query(q => "*:*", fq => "ispartof:\"$pid\"", sort => 'created asc', fl => 'pid,cmodel', rows => "1", wt => "json");
+    my $pidunderscore = $pid;
+    $pidunderscore =~ s/:/_/;
+    my $sort = "pos_in_$pidunderscore asc, created asc, pid asc";
+    $urlget->query(q => "*:*", fq => "ispartof:\"$pid\"", sort => $sort, fl => 'pid,cmodel', rows => "1", wt => "json");
     my $getres = $c->ua->get($urlget)->result;
     if ($getres->is_success) {
       for my $d (@{$getres->json->{response}->{docs}}) {
