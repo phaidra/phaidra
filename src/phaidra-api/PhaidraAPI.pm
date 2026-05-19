@@ -250,6 +250,12 @@ sub startup {
       my $pid = $c->stash('pid');
       if (defined $pid && $pid =~ /^o:/) {
 
+        my $url_path = $c->req->url->path;
+        $url_path = $url_path->to_string if ref($url_path);
+        if ($url_path =~ m{/object/\Q$pid\E/index}) {
+          return $next->();
+        }
+
         my $cachekey = 'e_' . $pid;
         my $cacheval = $c->app->chi->get($cachekey);
 

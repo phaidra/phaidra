@@ -535,10 +535,10 @@ sub update {
     my $cmodel_res = $search_model->get_cmodel($c, $pid);
     $c->app->log->debug("getting cmodel[" . ($cmodel_res->{cmodel} ? $cmodel_res->{cmodel} : '') . "] took " . tv_interval($tcm) . " status[" . $cmodel_res->{status} . "]");
 
-    if ($cmodel_res->{status} eq 410) {
+    if ($cmodel_res->{status} eq 410 || $cmodel_res->{status} eq 404) {
 
-      # object was deleted
-      $c->app->log->debug("[$pid] object returns 410 Gone - deleting from index");
+      # object was deleted (410 tombstone, or 404 after purge with no tombstone)
+      $c->app->log->debug("[$pid] object returns " . $cmodel_res->{status} . " - deleting from index");
       my $post = $ua->post($self->getSolrUpdateUrl($c) => json => {delete => $pid})->result;
       if ($post->is_success) {
         $c->app->log->debug("[$pid] solr document deleted");
