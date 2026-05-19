@@ -4,7 +4,6 @@ import App from './App.vue'
 import './styles/vuetify2-compat.css'
 import router from './router'
 import store, { setStoreAxios } from './store'
-import i18n from './i18n/i18n'
 import vuetify from './plugins/vuetify'
 import { registerFormatters } from './utils/formatters'
 import { RouterLink } from 'vue-router'
@@ -22,7 +21,6 @@ setStoreAxios(axiosInstance)
 
 app.use(store)
 app.use(router)
-app.use(i18n)
 app.use(vuetify)
 app.component('RouterLink', RouterLink)
 app.provide('phaidraLink', RouterLink)

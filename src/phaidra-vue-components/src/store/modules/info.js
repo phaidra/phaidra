@@ -1,4 +1,3 @@
-import { setGlobalLocale, globalT } from '../../i18n/i18n'
 export const state = () => ({
   metadataFieldsOverview: [
     {
@@ -3044,18 +3043,10 @@ export const state = () => ({
 
 const mutations = {
   sortFieldsOverview (state, payload) {
-    const locale = typeof payload === 'string' ? payload : payload?.locale
-    const i18nInstance = typeof payload === 'object' ? payload?.i18nInstance : undefined
-
-    if (!locale) return
-    setGlobalLocale(locale)
-
+    if (!payload?.i18nInstance) return
+    payload.i18nInstance.locale = payload.locale
     for (let section of state.metadataFieldsOverview) {
-      section.fields.sort((a, b) => {
-        const aLabel = i18nInstance?.t ? i18nInstance.t(a.title) : globalT(a.title)
-        const bLabel = i18nInstance?.t ? i18nInstance.t(b.title) : globalT(b.title)
-        return aLabel.localeCompare(bLabel, locale)
-      })
+      section.fields.sort((a, b) => payload.i18nInstance.t(a.title).localeCompare(payload.i18nInstance.t(b.title), payload.locale))
     }
   },
   initFieldsOverview (state) {
