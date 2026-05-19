@@ -4170,7 +4170,7 @@ export default {
         wt: 'json',
         qf: 'ismemberof^5',
         fl: 'pid,cmodel,dc_title,created',
-        sort: 'pos_in_' + pid.replace(':', '_') + ' asc'
+        sort: 'pos_in_' + pid.replace(':', '_') + ' asc, created asc, pid asc'
       }
 
       try {
