@@ -33,7 +33,7 @@ sub org_get_parentpath {
 }
 
 sub org_get_units {
-  my $self            = shift;
+  my $self = shift;
 
   my $parent_id        = $self->param('parent_id');
   my $values_namespace = $self->param('values_namespace');
