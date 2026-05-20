@@ -530,6 +530,15 @@ export default {
       if (node.xmlname === 'faculty') {
         this.orgLoading = true
         try {
+          if (!node.ui_value) {
+            for (let ch of this.children) {
+              if (ch.xmlname === 'department') {
+                ch.ui_value = ''
+                ch.vocabularies[0].terms = []
+              }
+            }
+            return
+          }
           let response = await this.$axios.request({
             method: 'GET',
             url: '/directory/org_get_units',
@@ -541,7 +550,7 @@ export default {
           for (let ch of this.children) {
             if (ch.xmlname === 'department') {
               ch.ui_value = ''
-              ch.vocabularies[0].terms = response.data.terms
+              ch.vocabularies[0].terms = response.data.terms || []
             }
           }
         } catch (error) {
@@ -549,6 +558,7 @@ export default {
         } finally {
           this.orgLoading = false
         }
+        return
       }
       this.loadNextTermSelect(node)
     },

@@ -34,6 +34,16 @@ sub org_get_parentpath {
 
 sub org_get_units {
   my $self            = shift;
+
+  my $parent_id        = $self->param('parent_id');
+  my $values_namespace = $self->param('values_namespace');
+  if (defined($parent_id) || defined($values_namespace)) {
+    my $metadata_model = PhaidraAPI::Model::Uwmetadata->new;
+    my $terms          = $metadata_model->get_org_units_terms($self, $parent_id, $values_namespace);
+    $self->render(json => {status => 200, terms => $terms}, status => 200);
+    return;
+  }
+
   my $flat            = $self->param('flat');
   my $directory_model = PhaidraAPI::Model::Directory->new;
   my $res             = $directory_model->org_get_units($self, $flat);
