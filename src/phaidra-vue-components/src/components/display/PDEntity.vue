@@ -132,9 +132,11 @@ export default {
       if (birthDate && deathDate) {
         return `(${birthDate}-${deathDate})`
       } else if (birthDate) {
-        return `(${birthDate})`
+        return `(${birthDate}-)`
+      } else if (deathDate) {
+        return `(-${deathDate})`
       }
-      
+
       return ''
     }
   },
