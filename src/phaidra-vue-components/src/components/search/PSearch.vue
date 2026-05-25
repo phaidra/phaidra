@@ -282,8 +282,8 @@ export default {
 
       Object.assign(this, options)
 
-      if (this.instance?.search?.baseands) {
-        this['baseAnds'] = this.instance.search.baseands
+      if (this.instance?.searchbaseands) {
+        this['baseAnds'] = this.instance.searchbaseands
       }
 
       let { searchdefarr, ands } = buildSearchDef(this)
@@ -300,7 +300,7 @@ export default {
       }
       if (process.browser) {
         this.link = location.protocol + '//' + location.host + location.pathname + '?' + searchdefarr.join('&')
-        window.history.replaceState(window.history.state, this.$t('Search results'), this.link)
+        window.history.replaceState(null, this.$t('Search results'), this.link)
       }
 
       try {
