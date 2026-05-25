@@ -2723,17 +2723,14 @@ export default {
         label: "Persistent identifier",
         value: this.instanceconfig.baseurl + "/" + this.objectInfo.pid,
       });
-      const list = this.dcIdentifierList
-      if (list.length) {
-        for (let id of list) {
+      if (this.objectInfo.dc_identifier) {
+        for (let id of this.objectInfo.dc_identifier) {
           if (id === this.instanceconfig.baseurl + "/" + this.objectInfo.pid) {
             continue;
           } else {
-            const s = typeof id === 'string' ? id : String(id ?? '')
-            const c = s.indexOf(':')
-            if (c < 0) continue
-            let type = s.slice(0, c)
-            let idvalue = s.slice(c + 1)
+            let type = id.substr(0, id.indexOf(":"));
+            let idvalue = id.substr(id.indexOf(":") + 1);
+            const doiPrefix = this.instanceconfig.phaidra_doi_prefix
             switch (type) {
               case "hdl":
                 ids.persistent.push({ label: "Handle", value: 'https://hdl.handle.net/' + idvalue });
