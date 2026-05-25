@@ -3,6 +3,7 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
+import { StringDateAdapter } from 'vuetify/date/adapters/string'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig()
@@ -82,6 +83,10 @@ export default defineNuxtPlugin((nuxtApp) => {
       density: 'compact'
     }
   },
+    date: {
+      adapter: StringDateAdapter,
+    },
+
   })
 
   nuxtApp.vueApp.use(vuetify)
