@@ -83,6 +83,7 @@ import { context } from "../../mixins/context"
 import { config } from "../../mixins/config"
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
 import { mimeToCreateMethod } from 'phaidra-vue-components/src/utils/mimetypes'
+import { useGoTo } from 'vuetify'
 
 export default {
   layout: "main",
@@ -90,6 +91,8 @@ export default {
     definePageMeta({
       middleware: 'auth'
     })
+    const goTo = useGoTo()
+    return { goTo }
   },
   mixins: [context, config, vocabulary],
   data() {
@@ -215,7 +218,7 @@ export default {
       this.$store.commit('clearAlerts')
       if (!this.filefield.file) {
         this.$store.commit('setAlerts', [{ type: 'error', msg: 'Missing file' }])
-        this.$vuetify.goTo(0);
+        this.goTo(0);
         return
       }
       
@@ -246,14 +249,14 @@ export default {
           console.log(response.data)
           if (response.data.pid) {
             this.$router.push(this.localeLocation({ path: `/detail/${response.data.pid}` }));
-            this.$vuetify.goTo(0);
+            this.goTo(0);
           }
         }
       } catch (error) {
         console.log(error)
         this.$store.commit('setAlerts', [{ type: 'error', msg: error }])
       } finally {
-        this.$vuetify.goTo(0)
+        this.goTo(0)
         this.$store.commit('setLoading', false)
         this.uploadProgress = 0
       }

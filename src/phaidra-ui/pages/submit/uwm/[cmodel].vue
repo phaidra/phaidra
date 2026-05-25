@@ -60,12 +60,15 @@ import { context } from "../../../mixins/context";
 import { config } from "../../../mixins/config";
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
 import { mimeToCreateMethod } from "phaidra-vue-components/src/utils/mimetypes";
+import { useGoTo } from 'vuetify'
 
 export default {
   setup() {
     definePageMeta({
       middleware: 'auth'
     })
+    const goTo = useGoTo()
+    return { goTo }
   },
   mixins: [config, context, vocabulary],
   computed: {
@@ -106,7 +109,7 @@ export default {
         { type: "success", msg: "Object " + event + " created" },
       ]);
       this.$router.push(this.localeLocation({ path: `/detail/${event}` }));
-      this.$vuetify.goTo(0);
+      this.goTo(0);
     },
     loadUwmetadata: async function (self) {
       self.loading = true;
@@ -220,7 +223,7 @@ export default {
           console.log(error);
           this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
         } finally {
-          this.$vuetify.goTo(0);
+          this.goTo(0);
           this.loading = false;
         }
       }

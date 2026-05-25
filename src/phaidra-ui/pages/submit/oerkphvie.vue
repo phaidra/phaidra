@@ -17,6 +17,7 @@ import fields from "phaidra-vue-components/src/utils/fields"
 import { context } from "../../mixins/context"
 import { config } from "../../mixins/config"
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
+import { useGoTo } from 'vuetify'
 
 export default {
   layout: "main",
@@ -24,6 +25,8 @@ export default {
     definePageMeta({
       middleware: 'auth'
     })
+    const goTo = useGoTo()
+    return { goTo }
   },
   mixins: [context, config, vocabulary],
   data() {
@@ -35,7 +38,7 @@ export default {
   methods: {
     objectCreated: function (event) {
       this.$router.push(this.localeLocation({ path: `/detail/${event}` }));
-      this.$vuetify.goTo(0);
+      this.goTo(0);
     },
     createForm: async function (self, index) {
       self.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);

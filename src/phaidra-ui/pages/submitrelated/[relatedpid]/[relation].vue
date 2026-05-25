@@ -372,7 +372,7 @@ export default {
         }
       }
       this.$router.push(this.localeLocation({ path: `/detail/${newpid}` }));
-      this.$vuetify.goTo(0);
+      this.goTo(0);
     },
     importFromRelatedObject: async function (self) {
       self.loading = true;

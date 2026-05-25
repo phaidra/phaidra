@@ -18,12 +18,15 @@
 <script>
 import { context } from '../../../mixins/context'
 import { config } from '../../../mixins/config'
+import { useGoTo } from 'vuetify'
 
 export default {
   setup() {
     definePageMeta({
       middleware: 'auth'
     })
+    const goTo = useGoTo()
+    return { goTo }
   },
   mixins: [ context, config ],
   watch: {
@@ -54,7 +57,7 @@ export default {
     objectSaved: function (event) {
       this.$store.commit('setAlerts', [{ type: 'success', key: 'object_metadata_saved_success', params: { o: event }}])
       this.$router.push(this.localeLocation({ path: `/detail/${event}`}))
-      this.$vuetify.goTo(0)
+      this.goTo(0)
     },
     findNodeRec: function (pathToFind, currPath, children) {
       let ret = null
