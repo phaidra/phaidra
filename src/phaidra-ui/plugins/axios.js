@@ -8,7 +8,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   const instance = axios.create({
     baseURL: baseURL || undefined,
-    withCredentials: true,
     timeout: 0
   })
 
