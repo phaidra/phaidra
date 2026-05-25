@@ -117,7 +117,7 @@
                 <v-card-text class="pb-0">
 
                   <div v-for="(f) in s.fields" :key="'dv'+f.id">
-                    <v-tooltip :disabled="!mouseoverfielddef" open-delay="1700" bottom >
+                    <v-tooltip :disabled="!mouseoverfielddef" open-delay="1700" location="bottom">
                       <template v-slot:activator="{ props: activatorProps }">
                         <v-row v-bind="activatorProps" no-gutters>
                           <template v-if="f.component === 'p-text-field'">
