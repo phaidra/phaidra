@@ -58,7 +58,7 @@
                 </v-toolbar>
               </template>
               <template v-slot:item.name="{ item }">
-                <v-tooltip bottom>
+                <v-tooltip location="bottom">
                   <template v-slot:activator="{ props: activatorProps }">
                     <span v-bind="activatorProps">{{ item.name }}</span>
                   </template>
@@ -72,7 +72,7 @@
                 {{ $unixtime(item.updated) }}
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-tooltip bottom>
+                <v-tooltip location="bottom">
                   <template v-slot:activator="{ props: activatorProps }">
                     <v-btn icon class="mx-3" color="primary" @click="loadedList = item" v-bind="activatorProps" :aria-label="$t('Edit')">
                       <v-icon>mdi-pencil</v-icon>
@@ -80,7 +80,7 @@
                   </template>
                   <span>{{ $t('Edit') }}</span>
                 </v-tooltip>
-                <v-tooltip bottom>
+                <v-tooltip location="bottom">
                   <template v-slot:activator="{ props: activatorProps }">
                     <v-btn icon class="mx-3" color="btnred" @click="deleteListDialog(item)" v-bind="activatorProps" :aria-label="$t('Delete')">
                       <v-icon>mdi-delete</v-icon>
@@ -139,7 +139,7 @@
                 {{ $truncate(item.title, 100) }}
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-tooltip bottom>
+                <v-tooltip location="bottom">
                     <template v-slot:activator="{ props: activatorProps }">
                       <v-btn icon class="mx-3" color="btnred" @click="removeMember(item.pid)" v-bind="activatorProps" :aria-label="$t('Remove')">
                         <v-icon>mdi-delete</v-icon>

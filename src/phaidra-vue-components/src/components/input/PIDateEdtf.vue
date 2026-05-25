@@ -80,7 +80,7 @@
           :error-messages="valueErrorMessages"
         >
           <template v-slot:append>
-            <v-tooltip bottom>
+            <v-tooltip location="bottom">
               <template v-slot:activator="{ props: activatorProps }">
                 <v-icon v-bind="activatorProps">mdi-help-circle-outline</v-icon>
               </template>

@@ -541,7 +541,7 @@
               >
                 <v-menu offset-y>
                   <template v-slot:activator="{ props: menuProps }">
-                    <v-tooltip bottom>
+                    <v-tooltip location="bottom">
                       <template v-slot:activator="{ props: tipProps }">
                         <v-btn
                           icon
@@ -1014,7 +1014,7 @@
                             </v-dialog>
                             <br />
                             <a :href="id.value">{{ id.value }}</a>
-                            <v-tooltip bottom>
+                            <v-tooltip location="bottom">
                               <template v-slot:activator="{ props }">
                                 <v-btn
                                   :aria-label="$t('Copy to clipboard')"
@@ -1109,7 +1109,7 @@
                             <br />
                             <a v-if="id.value.startsWith('http')" :href="id.value">{{ id.value }}</a>
                             <span v-else>{{ id.value }}</span>
-                            <v-tooltip bottom>
+                            <v-tooltip location="bottom">
                               <template v-slot:activator="{ props }">
                                 <v-btn
                                   :aria-label="$t('Copy to clipboard')"

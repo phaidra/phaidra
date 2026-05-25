@@ -208,7 +208,7 @@
                   </v-list>
                 </v-menu>
 
-                  <v-tooltip v-if="!isDarkTheme" bottom>
+                  <v-tooltip v-if="!isDarkTheme" location="bottom">
                     <template v-slot:activator="{ props }">
                       <v-btn density="comfortable" v-bind="props" icon @click="darkMode" :aria-label="$t('Dark Mode On')">
                       <v-icon>mdi-moon-waxing-crescent</v-icon>
@@ -217,7 +217,7 @@
                   <span>{{ $t("Dark Mode On") }}</span>
                 </v-tooltip>
 
-                  <v-tooltip v-else bottom>
+                  <v-tooltip v-else location="bottom">
                     <template v-slot:activator="{ props }">
                       <v-btn density="comfortable" v-bind="props" icon @click="darkMode" :aria-label="$t('Dark Mode Off')">
                       <v-icon>mdi-white-balance-sunny</v-icon>

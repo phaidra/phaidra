@@ -25,7 +25,7 @@
               >
               </v-checkbox>
               <div v-if="allBooks">
-                <v-tooltip bottom class="ml-2" color="warning">
+                <v-tooltip location="bottom" class="ml-2" color="warning">
                   <template v-slot:activator="{ props }">
                     <v-icon
                       color="warning"

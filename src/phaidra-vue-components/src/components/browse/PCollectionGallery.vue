@@ -31,7 +31,7 @@
       <v-col v-if="mode === 'single'">
         <v-carousel hide-delimiters height="100%">
           <v-carousel-item v-for="(doc, i) in childrenOfActiveCollection" :key="'cha1'+i">
-             <v-tooltip bottom>
+             <v-tooltip location="bottom">
               <template v-slot:activator="{ props: activatorProps }">
                 <span v-bind="activatorProps">
                    <v-img aspect-ratio="1" :src="instanceconfig.api + '/preview/' + doc.pid" @click="showDetailDialog(doc)"></v-img>
@@ -46,7 +46,7 @@
         <v-container fluid>
           <v-row>
             <v-col class="d-flex child-flex" cols="4" v-for="(doc, i) in childrenOfActiveCollection" :key="'cha2'+i">
-              <v-tooltip bottom>
+              <v-tooltip location="bottom">
                 <template v-slot:activator="{ props: activatorProps }">
                   <span v-bind="activatorProps">
                     <v-card tile elevation="0" class="d-flex">

@@ -57,7 +57,7 @@
                 </v-toolbar>
               </template>
               <template v-slot:item.name="{ item }">
-                <v-tooltip bottom>
+                <v-tooltip location="bottom">
                   <template v-slot:activator="{ props: activatorProps }">
                     <span v-bind="activatorProps">{{ item.name }}</span>
                   </template>
@@ -71,7 +71,7 @@
                 {{ $unixtime(item.updated) }}
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-tooltip bottom>
+                <v-tooltip location="bottom">
                   <template v-slot:activator="{ props: activatorProps }">
                     <v-btn icon color="primary" @click="loadedGroup = item" v-bind="activatorProps" :aria-label="$t('Edit')">
                       <v-icon>mdi-pencil</v-icon>
@@ -79,7 +79,7 @@
                   </template>
                   <span>{{ $t('Edit')}}</span>
                 </v-tooltip>
-                <v-tooltip bottom>
+                <v-tooltip location="bottom">
                   <template v-slot:activator="{ props: activatorProps }">
                     <v-btn icon color="btnred" @click="deleteGroupDialog(item)" v-bind="activatorProps" :aria-label="$t('Delete')">
                       <v-icon>mdi-delete</v-icon>
@@ -133,7 +133,7 @@
                 [{{ item.username }}]
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-tooltip bottom>
+                <v-tooltip location="bottom">
                   <template v-slot:activator="{ props: activatorProps }">
                     <v-btn icon color="btnred" @click="removeMember(item.username)" v-bind="activatorProps" :aria-label="$t('Delete')">
                       <v-icon>mdi-delete</v-icon>

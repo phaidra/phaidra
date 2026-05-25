@@ -26,7 +26,7 @@
       </v-toolbar>
     </template>
     <template v-slot:item.name="{ item }">
-      <v-tooltip bottom>
+      <v-tooltip location="bottom">
         <template v-slot:activator="{ props: activatorProps }">
           <span v-bind="activatorProps">{{ item.name }}</span>
         </template>

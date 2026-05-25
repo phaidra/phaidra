@@ -2,7 +2,7 @@
   <v-container class="toolbar">
     <v-row>
       <v-col>
-        <v-tooltip bottom>
+        <v-tooltip location="bottom">
           <template v-slot:activator="{ props: activatorProps }">
             <v-btn icon class="toolbar-btn" @click="setSort('title asc')" :color="sortIsActive('title asc') ? 'primary' : ''" v-bind="activatorProps" :aria-label="$t('Title ascending')">
               <icon width="16px" height="16px" name="fontello-sort-name-up"></icon>
@@ -12,7 +12,7 @@
         </v-tooltip>
       </v-col>
       <v-col>
-        <v-tooltip bottom>
+        <v-tooltip location="bottom">
           <template v-slot:activator="{ props: activatorProps }">
             <v-btn icon class="toolbar-btn" @click="setSort('title desc')" :color="sortIsActive('title desc') ? 'primary' : ''" v-bind="activatorProps" :aria-label="$t('Title descending')">
               <icon width="16px" height="16px" name="fontello-sort-name-down"></icon>
@@ -22,7 +22,7 @@
         </v-tooltip>
       </v-col>
       <v-col>
-        <v-tooltip bottom>
+        <v-tooltip location="bottom">
           <template v-slot:activator="{ props: activatorProps }">
             <v-btn icon class="toolbar-btn" @click="setSort('created asc')" :color="sortIsActive('created asc') ? 'primary' : ''" v-bind="activatorProps" :aria-label="$t('Upload date ascending')">
               <icon width="16px" height="16px" name="fontello-sort-number-up"></icon>
@@ -32,7 +32,7 @@
         </v-tooltip>
       </v-col>
       <v-col>
-        <v-tooltip bottom>
+        <v-tooltip location="bottom">
           <template v-slot:activator="{ props: activatorProps }">
             <v-btn icon class="toolbar-btn" @click="setSort('created desc')" :color="sortIsActive('created desc') ? 'primary' : ''" v-bind="activatorProps" :aria-label="$t('Upload date descending')">
               <icon width="16px" height="16px" name="fontello-sort-number-down"></icon>
@@ -49,7 +49,7 @@
             </v-card-title>
             <v-card-text>
               {{ link }}
-              <v-tooltip bottom>
+              <v-tooltip location="bottom">
                 <template v-slot:activator="{ props: activatorProps }">
                   <v-btn
                     v-bind="activatorProps"
@@ -71,7 +71,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-tooltip bottom>
+        <v-tooltip location="bottom">
           <template v-slot:activator="{ props: activatorProps }">
             <v-btn icon class="toolbar-btn" @click="linkdialog=true" v-bind="activatorProps" :aria-label="$t('Link to search results')">
               <icon width="18px" height="18px" name="material-content-link"></icon>
@@ -81,7 +81,7 @@
         </v-tooltip>
       </v-col>
       <v-col v-if="signedin">
-        <v-tooltip bottom>
+        <v-tooltip location="bottom">
           <template v-slot:activator="{ props: activatorProps }">
             <v-btn icon class="toolbar-btn" v-bind="activatorProps" :color="selectioncheck ? 'primary' : ''" @click.stop="toggleSelection()" :aria-label="$t('Select results')">
               <v-icon>mdi-bookmark-plus-outline</v-icon>
@@ -91,7 +91,7 @@
         </v-tooltip>
       </v-col>
       <v-col>
-        <v-tooltip bottom>
+        <v-tooltip location="bottom">
           <template v-slot:activator="{ props: activatorProps }">
             <v-btn icon class="toolbar-btn" v-bind="activatorProps" @click="csvExport()" :aria-label="$t('Download search results as a CSV file')">
               <v-icon>mdi-download</v-icon>
