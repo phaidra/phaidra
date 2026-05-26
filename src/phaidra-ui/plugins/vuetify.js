@@ -81,6 +81,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
     VRow: {
       density: 'compact'
+    },
+    VSwitch: {
+      color: 'primary',
     }
   },
     date: {
