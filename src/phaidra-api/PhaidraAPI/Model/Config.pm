@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use v5.10;
 use utf8;
-use base qw/Mojo::Base/;
+use base       qw/Mojo::Base/;
 use Mojo::JSON qw(encode_json decode_json);
 
 sub _encode_data_ot4rt_for_storage {
