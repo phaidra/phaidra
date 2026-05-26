@@ -1,4 +1,5 @@
 import moment from 'moment'
+import { isValidDateValue } from '../utils/dateValidation'
 
 const DOI_PATTERN = '\\b10\\.(?:97[89]\\.\\d{2,8}\\/\\d{1,7}|\\d{4,9}\\/\\S+)'
 const DOI_GLOBAL_PATTERN = new RegExp(DOI_PATTERN, 'g')
@@ -108,74 +109,7 @@ export const validationrules = {
       return moment.duration(durationString).isValid()
     },
     isValidDate: function (dateString) {
-      // Check for EDTF patterns first
-      var edtfPatterns = [
-        /^(\d{4})$/,                    // Simple year (e.g. "2023")
-        /^(\d{4})~$/,                   // Approximate year (e.g. "2023~")
-        /^(\d{4})\/(\d{4})$/,          // Year range (e.g. "2020/2023")
-        /^(\d{4})-\d{2}$/,             // Year with month (e.g. "2023-02")
-        /^(\d{4})-\d{2}-\d{2}$/,       // Full date (e.g. "2023-02-03")
-        /^(\d{4})-\d{2}-\d{2}~\d{2}$/, // Approximate date (e.g. "2023-02-03~02")
-        /^(\d{4})-\d{2}~\d{2}$/,       // Approximate month (e.g. "2023-02~02")
-        /^(\d{4})~$/,                   // Approximate year (e.g. "2023~")
-        /^(\d{4})\?$/,                  // Uncertain year (e.g. "2023?")
-        /^(\d{4})-\d{2}\?$/,           // Uncertain month (e.g. "2023-02?")
-        /^(\d{4})-\d{2}-\d{2}\?$/,     // Uncertain date (e.g. "2023-02-03?")
-        /^(\d{4})%$/,                   // Uncertain and approximate year (e.g. "1984%")
-        /^(\d{4})-\d{2}%$/,            // Uncertain and approximate month (e.g. "2004-06%")
-        /^(\d{4})-\d{2}-\d{2}%$/,      // Uncertain and approximate date (e.g. "2004-06-11%")
-        /^\d{3}X$/,                     // Unspecified year digit (e.g. "156X" for 1560s)
-        /^\d{2}XX$/,                    // Two unspecified year digits (e.g. "19XX")
-        /^(\d{4})-XX$/,                 // Unspecified month (e.g. "2004-XX")
-        /^(\d{4})-\d{2}-XX$/,          // Unspecified day (e.g. "1985-04-XX")
-        /^(\d{4})-XX-XX$/              // Unspecified month and day (e.g. "1985-XX-XX")
-      ];
-
-      // Check if it matches any EDTF pattern
-      for (var i = 0; i < edtfPatterns.length; i++) {
-        if (edtfPatterns[i].test(dateString)) {
-          return true;
-        }
-      }
-
-      // If not EDTF, check for standard ISO date pattern
-      var regexDate = /^(\d{4})(-\d{1,2})?(-\d{1,2})?$/;
-
-      if (!regexDate.test(dateString)) {
-        return false;
-      }
-
-      var m = dateString.match(regexDate);
-
-      var year = parseInt(m[1], 10);
-
-      if (m[2]) {
-        var month = parseInt(m[2].substring(1), 10);
-        // Check the ranges of month
-        if (month) {
-          if (month === 0 || month > 12) {
-            return false;
-          }
-        }
-      }
-
-      if (m[3]) {
-        var day = parseInt(m[3].substring(1), 10);
-
-        if (day) {
-          var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
-
-          // Adjust for leap years
-          if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) {
-            monthLength[1] = 29;
-          }
-
-          // Check the range of the day
-          return day > 0 && day <= monthLength[month - 1];
-        }
-      }
-
-      return true;
+      return isValidDateValue(dateString)
     }
   },
   data () {
