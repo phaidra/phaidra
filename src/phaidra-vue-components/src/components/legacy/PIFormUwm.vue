@@ -249,15 +249,6 @@ export default {
       this.loading = true
       var httpFormData = new FormData()
       const metadata = this.getMetadata()
-      metadata.metadata.uwmetadata.forEach(element => {
-        if(element.xmlname === 'histkult' && element.children.length > 0) {
-          element.children.forEach(child => {
-            if(child.xmlname === 'dimensions') {
-              child.ordered = 0
-            }
-          })
-        }
-      });
       httpFormData.append('mimetype', this.mimetype)
       httpFormData.append('metadata', JSON.stringify(metadata))
       try {
