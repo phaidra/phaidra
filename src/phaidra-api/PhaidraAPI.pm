@@ -517,7 +517,6 @@ sub startup {
 
   $r->get('oai')                                    ->to('oai#handler');
   $r->post('oai')                                   ->to('oai#handler');
-  $r->post('oai/blacklist')                         ->to('oai#blacklist');
 
   $r->get('termsofuse')                             ->to('termsofuse#get');
 
@@ -603,6 +602,8 @@ sub startup {
 
     $admin->post('config/public')                                          ->to('config#post_public_config');
     $admin->post('config/private')                                         ->to('config#post_private_config');
+
+    $admin->post('oai/blacklist')                                          ->to('oai#blacklist');
 
     $admin->post('index')                                                  ->to('index#update');
     $admin->post('object/:pid/index')                                      ->to('index#update');
