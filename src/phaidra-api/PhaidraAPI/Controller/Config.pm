@@ -39,18 +39,8 @@ sub post_public_config {
     return;
   }
 
-  #$self->app->log->debug("XXXXXXXXXXXXXXX " . $self->app->dumper($public_config));
-  for my $key (keys %{$public_config}) {
-    if ($public_config->{$key}) {
-      if ($key ne '_id') {
-        $self->app->log->info("public_config $key = " . $public_config->{$key});
-        $self->mongo->get_collection('config')->update_one({config_type => 'public'}, {'$set' => {$key => $public_config->{$key}}}, {upsert => 1});
-      }
-    }
-    else {
-      $self->mongo->get_collection('config')->update_one({config_type => 'public'}, {'$unset' => {$key => ''}});
-    }
-  }
+  my $config_model = PhaidraAPI::Model::Config->new;
+  $config_model->update_public_config($self, $public_config);
 
   $self->render(json => $res, status => $res->{status});
 }
@@ -111,11 +101,8 @@ sub get_public_config {
 
   $self->app->log->debug("reading public_config");
 
-  my $model    = PhaidraAPI::Model::Config->new;
-  my $modelres = $model->get_public_config($self, $nocache);
-
-  # $self->app->log->debug("XXXXXXXXXXXXXXX " . $self->app->dumper($modelres));
-  $res->{public_config} = $modelres;
+  my $model = PhaidraAPI::Model::Config->new;
+  $res->{public_config} = $model->get_public_config_for_api($self, $nocache);
 
   $self->render(json => $res, status => $res->{status});
 }

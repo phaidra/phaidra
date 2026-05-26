@@ -2413,10 +2413,26 @@ const getters = {
       }
     }
   },
-  getObjectTypeForResourceType: (state) => (rtId, locale, overrideMapping) => {
+  getObjectTypeForResourceType: (state, getters, rootState) => (rtId, locale, overrideMapping) => {
     let arr = []
     let other = null
-    const mapping = overrideMapping && overrideMapping[rtId] ? overrideMapping[rtId] : ot4rt[rtId]
+    let mappingSource = overrideMapping
+    if (!mappingSource || !mappingSource[rtId]) {
+      let configMapping = rootState.instanceconfig && rootState.instanceconfig.data_ot4rt
+      if (typeof configMapping === 'string') {
+        try {
+          configMapping = JSON.parse(configMapping)
+        } catch (e) {
+          configMapping = null
+        }
+      }
+      if (configMapping && configMapping[rtId]) {
+        mappingSource = configMapping
+      } else {
+        mappingSource = ot4rt
+      }
+    }
+    const mapping = mappingSource[rtId]
     if (rtId !== ns + 'GXS7-ENXJ' && Array.isArray(mapping)) {
       for (let otId of mapping) {
         for (let term of state.vocabularies['objecttype'].terms) {
