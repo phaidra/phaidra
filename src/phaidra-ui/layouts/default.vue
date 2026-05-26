@@ -349,6 +349,9 @@ export default {
 .no-padding {
   padding: 0px;
 }
+.v-application a {
+    cursor: pointer;
+}
 
 .svg-icon {
   display: inline-block;
