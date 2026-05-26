@@ -18,7 +18,7 @@ sub _decode_data_ot4rt_from_storage {
   my ($value) = @_;
   return $value unless defined $value;
   return $value if ref $value eq 'HASH';
-  my $decoded = eval { decode_json($value) };
+  my $decoded = eval {decode_json($value)};
   return $@ ? undef : $decoded;
 }
 
