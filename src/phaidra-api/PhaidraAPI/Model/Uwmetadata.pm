@@ -1197,7 +1197,7 @@ sub fill_object_metadata {
         }
         if (defined($e->attr->{seq}) && $node->{ordered}) {
           $node->{data_order} = $e->attr->{seq};
-          @{$metadata_tree_parent->{children}} = sort {sort_ordered($a) <=> sort_ordered($b)} @{$metadata_tree_parent->{children}};
+          @{$metadata_tree_parent->{children}} = sort {_cmp_metadata_siblings($a, $b)} @{$metadata_tree_parent->{children}};
         }
       }
     }
@@ -1208,8 +1208,7 @@ sub fill_object_metadata {
 
 }
 
-sub sort_ordered {
-
+sub _metadata_data_order {
   my $node = shift;
 
   # upload_date, version, etc needs to be ordered by field_order, as well as contribute
@@ -1229,13 +1228,31 @@ sub sort_ordered {
   # <ns2:infoeurepoversion>1556249</ns2:infoeurepoversion>
   # </ns1:lifecycle>
 
-  if ($node->{data_order} eq '') {
-    return int($node->{field_order});
+  if (defined($node->{data_order}) && $node->{data_order} ne '') {
+    return int($node->{data_order});
   }
-  else {
-    return int($node->{field_order}) + ("0." . $node->{data_order});
+  if (exists($node->{attributes})) {
+    for my $a (@{$node->{attributes}}) {
+      if ($a->{xmlname} eq 'data_order' && defined($a->{ui_value}) && $a->{ui_value} ne '') {
+        return int($a->{ui_value});
+      }
+    }
+  }
+  return 0;
+}
+
+sub _cmp_metadata_siblings {
+  my ($a, $b) = @_;
+
+  my $c = int($a->{field_order}) <=> int($b->{field_order});
+  return $c if $c;
+
+  if (($a->{xmlname} // '') eq ($b->{xmlname} // '')) {
+    my $d = _metadata_data_order($a) <=> _metadata_data_order($b);
+    return $d if $d;
   }
 
+  return int($a->{mid} // 0) <=> int($b->{mid} // 0);
 }
 
 sub get_empty_node {
@@ -1707,6 +1724,10 @@ sub json_2_uwmetadata_rec() {
   my $children = shift;
   my $writer   = shift;
 
+  if (defined($parent) && @{$children} > 1) {
+    @{$children} = sort {_cmp_metadata_siblings($a, $b)} @{$children};
+  }
+
   foreach my $child (@{$children}) {
 
     my $children_size = defined($child->{children}) ? scalar(@{$child->{children}}) : 0;
@@ -2016,7 +2037,7 @@ sub decompress_json_rec {
         }
 
         if ($node->{ordered}) {
-          @{$decompressed_parent->{children}} = sort {sort_ordered($a) <=> sort_ordered($b)} @{$decompressed_parent->{children}};
+          @{$decompressed_parent->{children}} = sort {_cmp_metadata_siblings($a, $b)} @{$decompressed_parent->{children}};
         }
       }
 
