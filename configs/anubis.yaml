@@ -1,19 +1,54 @@
----
 metrics:
   bind: ":9090"
   network: "tcp"
 bots:
-  - name: impressum
-    path_regex: ^/(impressum|termsofuse|credits)
-    action: ALLOW
-
-  - name: univie
-    expression: 'verifyFCrDNS(remoteAddress, "univie\\.ac\\.at|obvsg\\.at|phaidra\\.org$")'
-    action: ALLOW
-
   - import: (data)/common/allow-private-addresses.yaml
   - import: (data)/common/keep-internet-working.yaml
   - import: (data)/crawlers/_allow-good.yaml
+
+  - name: cms
+    path_regex: ^/(impressum|termsofuse|credits)
+    action: ALLOW
+
+  - name: imageserver
+    path_regex: ^/api/imageserver
+    action: ALLOW
+
+  - name: preview
+    path_regex: ^/api/object/o:(\d+)/preview
+    action: ALLOW
+
+  - name: iiifmanifest
+    path_regex: ^/api/object/o:(\d+)/iiifmanifest
+    action: ALLOW
+
+  - name: tengnagel
+    expression:
+      all:
+        - '"Origin" in headers'
+        - 'headers["Origin"] == "https://tengnagel.univie.ac.at"'
+    action: ALLOW
+
+  - name: friendly
+    expression:
+      any:
+        - 'verifyFCrDNS(remoteAddress, "univie\\.ac\\.at$")'
+        - 'verifyFCrDNS(remoteAddress, "obvsg\\.at$")'
+        - 'verifyFCrDNS(remoteAddress, "phaidra\\.org$")'
+        - 'verifyFCrDNS(remoteAddress, "tib\\.eu$")'
+        - 'verifyFCrDNS(remoteAddress, "uni-leipzig\\.de$")'
+        - 'verifyFCrDNS(remoteAddress, "uni-bielefeld\\.de$")'
+        - 'verifyFCrDNS(remoteAddress, "icm\\.edu\\.pl$")'
+        - 'verifyFCrDNS(remoteAddress, "kit\\.edu$")'
+        - 'verifyFCrDNS(remoteAddress, "vbanos\\.gr$")'
+        - 'verifyFCrDNS(remoteAddress, "kpool\\.at$")'
+    action: ALLOW
+
+  - name: friendly_ips
+    remote_addresses:
+      - 193.170.196.55/24
+      - 77.237.55.253/24
+    action: ALLOW
 
   - name: catchall
     path_regex: .*
