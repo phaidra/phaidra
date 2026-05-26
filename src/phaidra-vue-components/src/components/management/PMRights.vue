@@ -257,19 +257,22 @@
           ref="dialog"
           v-model="dateDialog"
           persistent
-          width="290px"
+          max-width="328"
         >
-          <v-date-picker
-            color="primary"
-            v-model="dateModel"
-            :first-day-of-week="1"
-            :locale="alpha2bcp47($i18n.locale)"              
-            scrollable
-          >
-            <v-spacer></v-spacer>
-            <v-btn variant="outlined" @click="dateDialog = false">{{ $t('Cancel') }}</v-btn>
-            <v-btn color="primary" @click="setExpires()">OK</v-btn>
-          </v-date-picker>
+          <v-card>
+            <v-date-picker
+              color="primary"
+              v-model="dateModel"
+              :first-day-of-week="1"
+              :locale="alpha2bcp47($i18n.locale)"
+              hide-actions
+            />
+            <v-card-actions>
+              <v-spacer />
+              <v-btn variant="outlined" @click="dateDialog = false">{{ $t('Cancel') }}</v-btn>
+              <v-btn color="primary" @click="setExpires()">OK</v-btn>
+            </v-card-actions>
+          </v-card>
         </v-dialog>
         <user-search-dialog ref="userSearchdialog" @user-selected="searchUserSelected($event)"></user-search-dialog>
     </v-card-text>
@@ -456,6 +459,11 @@ export default {
     },
     openDateDialog: function (item) {
       this.dateDialogItem = item
+      if (item.expires) {
+        this.dateModel = new Date(item.expires).toISOString().substr(0, 10)
+      } else {
+        this.dateModel = new Date().toISOString().substr(0, 10)
+      }
       this.dateDialog = true
     },
     removeExpires: async function (item) {
