@@ -23,14 +23,14 @@
                 </v-col>
                 <v-col cols="4">
                   <h4>{{$t('Source from your CSV')}}</h4>
-                  <div class="caption text-grey">{{$t('every entry gets its value from its corresponding CSV row')}}</div>
+                  <div class="text-body-small text-grey">{{$t('every entry gets its value from its corresponding CSV row')}}</div>
                 </v-col>
                 <v-col cols="2" class="text-center">
                   <p>{{$t('OR')}}</p>
                 </v-col>
                 <v-col cols="4">
                   <h4>{{$t('Source a Default Value from Phaidra')}}</h4>
-                  <div class="caption text-grey">{{$t('ALL rows get the selected default value')}}</div>
+                  <div class="text-body-small text-grey">{{$t('ALL rows get the selected default value')}}</div>
                 </v-col>
               </v-row>
 

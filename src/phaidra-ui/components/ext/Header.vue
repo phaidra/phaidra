@@ -210,7 +210,7 @@
 
                   <v-tooltip v-if="!isDarkTheme" location="bottom">
                     <template v-slot:activator="{ props }">
-                      <v-btn density="comfortable" v-bind="props" icon @click="darkMode" :aria-label="$t('Dark Mode On')">
+                      <v-btn density="comfortable" v-bind="props" icon="" @click="darkMode" :aria-label="$t('Dark Mode On')">
                       <v-icon>mdi-moon-waxing-crescent</v-icon>
                     </v-btn>
                   </template>

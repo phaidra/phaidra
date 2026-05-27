@@ -98,11 +98,11 @@
                 </span>
                 <span v-if="getChildValue(entity, 'institution') && (getChildValue(entity, 'firstname') || getChildValue(entity, 'lastname'))" class="text-secondary">&nbsp;({{ getChildValue(entity, 'institution') }})</span>
                 <span v-else-if="getChildValue(entity, 'institution')">{{ getChildValue(entity, 'institution') }}</span>
-                <span v-if="getChildValue(entity, 'viaf')" class="caption text-secondary ml-1">VIAF: <a :href="'https://viaf.org/viaf/' + getChildValue(entity, 'viaf')" target="_blank">{{ getChildValue(entity, 'viaf') }}</a></span>
-                <span v-if="getChildValue(entity, 'wdq')" class="caption text-secondary ml-1">Wikidata: <a :href="'https://www.wikidata.org/wiki/' + getChildValue(entity, 'wdq')" target="_blank">{{ getChildValue(entity, 'wdq') }}</a></span>
-                <span v-if="getChildValue(entity, 'gnd')" class="caption text-secondary ml-1">GND: <a :href="'https://d-nb.info/gnd/' + getChildValue(entity, 'gnd')" target="_blank">{{ getChildValue(entity, 'gnd') }}</a></span>
-                <span v-if="getChildValue(entity, 'lcnaf')" class="caption text-secondary ml-1">LCCN: <a :href="'https://lccn.loc.gov/' + getChildValue(entity, 'lcnaf')" target="_blank">{{ getChildValue(entity, 'lcnaf') }}</a></span>
-                <span v-if="getChildValue(entity, 'isni')" class="caption text-secondary ml-1">ISNI: <a :href="'http://isni.org/isni/' + getChildValue(entity, 'isni')" target="_blank">{{ getChildValue(entity, 'isni') }}</a></span>
+                <span v-if="getChildValue(entity, 'viaf')" class="text-body-small text-secondary ml-1">VIAF: <a :href="'https://viaf.org/viaf/' + getChildValue(entity, 'viaf')" target="_blank">{{ getChildValue(entity, 'viaf') }}</a></span>
+                <span v-if="getChildValue(entity, 'wdq')" class="text-body-small text-secondary ml-1">Wikidata: <a :href="'https://www.wikidata.org/wiki/' + getChildValue(entity, 'wdq')" target="_blank">{{ getChildValue(entity, 'wdq') }}</a></span>
+                <span v-if="getChildValue(entity, 'gnd')" class="text-body-small text-secondary ml-1">GND: <a :href="'https://d-nb.info/gnd/' + getChildValue(entity, 'gnd')" target="_blank">{{ getChildValue(entity, 'gnd') }}</a></span>
+                <span v-if="getChildValue(entity, 'lcnaf')" class="text-body-small text-secondary ml-1">LCCN: <a :href="'https://lccn.loc.gov/' + getChildValue(entity, 'lcnaf')" target="_blank">{{ getChildValue(entity, 'lcnaf') }}</a></span>
+                <span v-if="getChildValue(entity, 'isni')" class="text-body-small text-secondary ml-1">ISNI: <a :href="'http://isni.org/isni/' + getChildValue(entity, 'isni')" target="_blank">{{ getChildValue(entity, 'isni') }}</a></span>
               </v-col>
             </v-row>
             <v-row v-if="getChildValue(ch, 'date')">

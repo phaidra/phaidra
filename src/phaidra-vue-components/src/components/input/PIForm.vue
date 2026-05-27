@@ -80,6 +80,7 @@
               <v-checkbox dark color="white" v-if="s.type === 'member'" v-model="previewMember" :label="$t('Container thumbnail')" :value="s.id"></v-checkbox>
               <v-spacer></v-spacer>
               <v-btn
+                theme="dark"
                 icon
                 variant="text"
                 color="white"

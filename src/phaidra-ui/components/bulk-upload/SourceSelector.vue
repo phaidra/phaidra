@@ -16,7 +16,7 @@
         label="Phaidra"
       ></v-radio>
     </v-radio-group>
-    <div v-else class="text-caption">
+    <div v-else class="text-body-small">
       {{ restrictionMessage }}
     </div>
   </div>

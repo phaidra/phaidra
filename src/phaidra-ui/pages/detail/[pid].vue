@@ -718,7 +718,7 @@
                     :predicatesToHide="['ebucore:filename', 'ebucore:hasMimeType']"
                   ></p-d-jsonld>
                 </v-card-text>
-                <v-divider light v-if="objectInfo.readrights"></v-divider>
+                <v-divider theme="light" v-if="objectInfo.readrights"></v-divider>
                 <v-card-actions class="pa-3" v-if="objectInfo.readrights">
                   <v-spacer></v-spacer>
                   <v-btn
@@ -940,7 +940,7 @@
                             v-for="(id, i) in identifiers.persistent"
                             :key="'id' + i"
                           >
-                            <span v-if="id.label" class="caption font-weight-bold">
+                            <span v-if="id.label" class="text-body-small font-weight-bold">
                               {{ $t(id.label) }}
                             </span>
                             <v-dialog
@@ -1101,10 +1101,10 @@
                             v-for="(id, i) in identifiers.other"
                             :key="'id' + i"
                           >
-                            <span v-if="id.label" class="caption font-weight-bold">
+                            <span v-if="id.label" class="text-body-small font-weight-bold">
                               {{ $t(id.label) }}
                             </span>
-                            <span v-else class="caption font-weight-bold">
+                            <span v-else class="text-body-small font-weight-bold">
                               {{ $t('Other identifier') }}
                             </span>
                             <br />
@@ -1281,7 +1281,7 @@
                     <v-card-text class="mt-4">
                       <v-row no-gutters class="pt-2" v-if="licenseUri">
                         <v-col
-                          class="caption font-weight-bold"
+                          class="text-body-small font-weight-bold"
                           cols="12"
                           >{{ $t("License") }}</v-col
                         >
@@ -1291,7 +1291,7 @@
                       </v-row>
                       <v-row no-gutters class="pt-2 mt-4" v-if="rightsStatements.length > 0">
                         <v-col
-                          class="caption font-weight-bold"
+                          class="text-body-small font-weight-bold"
                           cols="12"
                           >{{ $t("Rights statement") }}</v-col
                         >
@@ -1344,7 +1344,7 @@
                     <v-card-text class="mt-4">
                       <v-row no-gutters class="pt-2" v-if="!instanceconfig.disableUploader">
                         <v-col
-                          class="caption font-weight-bold"
+                          class="text-body-small font-weight-bold"
                           cols="3"
                           >{{ $t("UPLOADER_OBJECT_DETAILS") }}</v-col
                         >
@@ -1373,7 +1373,7 @@
                       </v-row>
                       <v-row no-gutters class="pt-2">
                         <v-col
-                          class="caption font-weight-bold"
+                          class="text-body-small font-weight-bold"
                           cols="3"
                           >{{ $t("Resource type") }}</v-col
                         >
@@ -1387,7 +1387,7 @@
                         class="pt-2"
                       >
                         <v-col
-                          class="caption font-weight-bold"
+                          class="text-body-small font-weight-bold"
                           cols="3"
                           >{{ $t("Format") }}</v-col
                         >
@@ -1408,7 +1408,7 @@
                       </v-row>
                       <v-row no-gutters class="pt-2">
                         <v-col
-                          class="caption font-weight-bold"
+                          class="text-body-small font-weight-bold"
                           cols="3"
                           >{{ $t("Created") }}</v-col
                         >
@@ -2391,7 +2391,7 @@
                   <v-row v-if="objectInfo.oc_mpid" justify="end" class="mb-2">
                     <v-col cols="12" class="pt-0">
                         <p class="text-right">
-                          <span class="caption font-weight-bold">{{ $t('Media Package Identifier') }}</span
+                          <span class="text-body-small font-weight-bold">{{ $t('Media Package Identifier') }}</span
                           ><br /><span>id={{ objectInfo.oc_mpid }}
                           <v-tooltip location="bottom">
                               <template v-slot:activator="{ props: tipProps }">
