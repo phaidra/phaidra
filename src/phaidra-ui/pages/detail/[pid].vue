@@ -1020,12 +1020,13 @@
                                   :aria-label="$t('Copy to clipboard')"
                                   v-bind="props"
                                   icon
-                                  @click="copyToClipboard(id.value)"
+                                  @click="copyWithTooltip(id.value, id.value)"
+                                  @blur="resetCopyTooltip()"
                                 >
                                   <v-icon>mdi-content-copy</v-icon>
                                 </v-btn>
                               </template>
-                              <span>{{ $t('Copy to clipboard') }}</span>
+                              <span>{{ $t(getCopyTooltipText(id.value)) }}</span>
                             </v-tooltip>
                           </p>
                         </v-col>
@@ -1115,12 +1116,13 @@
                                   :aria-label="$t('Copy to clipboard')"
                                   v-bind="props"
                                   icon
-                                  @click="copyToClipboard(id.value)"
+                                  @click="copyWithTooltip(id.value, id.value)"
+                                  @blur="resetCopyTooltip()"
                                 >
                                   <v-icon>mdi-content-copy</v-icon>
                                 </v-btn>
                               </template>
-                              <span>{{ $t('Copy to clipboard') }}</span>
+                              <span>{{ $t(getCopyTooltipText(id.value)) }}</span>
                             </v-tooltip>
                           </p>
                         </v-col>
@@ -2397,9 +2399,10 @@
                                   :aria-label="$t('Copy to clipboard')"
                                   v-bind="tipProps"
                                   icon
-                                  @click="copyToClipboard('id='+objectInfo.oc_mpid)"><v-icon>mdi-content-copy</v-icon></v-btn>
+                                  @click="copyWithTooltip('id='+objectInfo.oc_mpid, 'mpid')"
+                                  @blur="resetCopyTooltip()"><v-icon>mdi-content-copy</v-icon></v-btn>
                               </template>
-                              <span>{{ $t('Copy to clipboard') }}</span>
+                              <span>{{ $t(getCopyTooltipText('mpid')) }}</span>
                           </v-tooltip>
                           </span>
                         </p>
@@ -2456,9 +2459,10 @@ import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
 import objectMixin from 'phaidra-vue-components/src/mixins/object'
 import lang3to2map from "phaidra-vue-components/src/utils/lang3to2map";
 import Autolinker from "autolinker";
+import copyTooltip from 'phaidra-vue-components/src/mixins/copyTooltip'
 
 export default {
-  mixins: [context, config, vocabulary, objectMixin],
+  mixins: [context, config, vocabulary, objectMixin, copyTooltip],
   setup () {
     const route = useRoute()
     const nuxtApp = useNuxtApp()

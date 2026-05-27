@@ -55,13 +55,14 @@
                     v-bind="activatorProps"
                     icon
                     @click="copyToClipboard()"
+                    @blur="resetCopyTooltip()"
                     class="ml-1"
                     :aria-label="$t('Copy to clipboard')"
                   >
                     <v-icon>mdi-content-copy</v-icon>
                   </v-btn>
                 </template>
-                <span>{{ $t('Copy to clipboard') }}</span>
+                <span>{{ $t(getCopyTooltipText('search-link')) }}</span>
               </v-tooltip>
             </v-card-text>
             <v-divider></v-divider>
@@ -105,6 +106,8 @@
 </template>
 
 <script>
+import copyTooltip from '../../mixins/copyTooltip'
+
 export default {
   name: 'p-search-toolbar',
   props: {
@@ -130,6 +133,7 @@ export default {
     selectioncheck: Boolean,
     csvExport: Function
   },
+  mixins: [copyTooltip],
   computed: {
     instance: function () {
       return this.$store.state.instanceconfig
@@ -141,8 +145,8 @@ export default {
     }
   },
   methods: {
-    copyToClipboard: function () {
-      navigator.clipboard.writeText(this.link)
+    copyToClipboard () {
+      this.copyWithTooltip(this.link, 'search-link')
     }
   }
 }
