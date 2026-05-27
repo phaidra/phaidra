@@ -297,77 +297,83 @@ sub get_metadata {
   #### educational ####
 
   # ignoring object_type_id - there is nothing in UWM type that we could map...
-  my $kimHcrtType;
+  my $kimHcrtTypes = [];
   if (exists($rec->{edm_hastype_id})) {
     for my $type (@{$rec->{edm_hastype_id}}) {
       if (rindex($type, 'https://w3id.org/kim/hcrt/', 0) == 0) {
-        $kimHcrtType = $type;
+        push @{$kimHcrtTypes}, $type;
       }
     }
   }
-  unless ($kimHcrtType) {
+  unless ($kimHcrtTypes && @$kimHcrtTypes) {
     switch ($rec->{cmodel}) {
       case 'Audio' {
-        $kimHcrtType = 'https://w3id.org/kim/hcrt/audio';
+        push @{$kimHcrtTypes}, 'https://w3id.org/kim/hcrt/audio';
       }
       case 'Video' {
-        $kimHcrtType = 'https://w3id.org/kim/hcrt/video';
+        push @{$kimHcrtTypes}, 'https://w3id.org/kim/hcrt/video';
       }
       case 'Picture' {
-        $kimHcrtType = 'https://w3id.org/kim/hcrt/image';
+        push @{$kimHcrtTypes}, 'https://w3id.org/kim/hcrt/image';
       }
       case 'PDFDocument' {
-        $kimHcrtType = 'https://w3id.org/kim/hcrt/text';
+        push @{$kimHcrtTypes}, 'https://w3id.org/kim/hcrt/text';
       }
       else {
-        $kimHcrtType = 'https://w3id.org/kim/hcrt/other';
+        push @{$kimHcrtTypes}, 'https://w3id.org/kim/hcrt/other';
       }
     }
   }
 
+  my $learningresourcetypes = [];
+  for my $kimHcrtType (@$kimHcrtTypes) {
+    my $learningresourcetype = {
+      name     => 'lom:learningresourcetype',
+      children => [
+        { name     => 'lom:source',
+          children => [
+            { name       => 'lom:langstring',
+              value      => 'https://w3id.org/kim/hcrt/scheme',
+              attributes => [
+                { name  => 'xml:lang',
+                  value => 'x-none'
+                }
+              ]
+            }
+          ]
+        },
+        { name  => 'lom:id',
+          value => $kimHcrtType
+        },
+        { name     => 'lom:entry',
+          children => [
+            { name       => 'lom:langstring',
+              value      => $kimHcrtVocab->{$kimHcrtType}->{deu},
+              attributes => [
+                { name  => 'xml:lang',
+                  value => 'de'
+                }
+              ]
+            },
+            { name       => 'lom:langstring',
+              value      => $kimHcrtVocab->{$kimHcrtType}->{eng},
+              attributes => [
+                { name  => 'xml:lang',
+                  value => 'en'
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
+    push @{$learningresourcetypes}, $learningresourcetype;
+  }
+
   my $educational = {
     name     => 'lom:educational',
-    children => [
-      { name     => 'lom:learningresourcetype',
-        children => [
-          { name     => 'lom:source',
-            children => [
-              { name       => 'lom:langstring',
-                value      => 'https://w3id.org/kim/hcrt/scheme',
-                attributes => [
-                  { name  => 'xml:lang',
-                    value => 'x-none'
-                  }
-                ]
-              }
-            ]
-          },
-          { name  => 'lom:id',
-            value => $kimHcrtType
-          },
-          { name     => 'lom:entry',
-            children => [
-              { name       => 'lom:langstring',
-                value      => $kimHcrtVocab->{$kimHcrtType}->{deu},
-                attributes => [
-                  { name  => 'xml:lang',
-                    value => 'de'
-                  }
-                ]
-              },
-              { name       => 'lom:langstring',
-                value      => $kimHcrtVocab->{$kimHcrtType}->{eng},
-                attributes => [
-                  { name  => 'xml:lang',
-                    value => 'en'
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
+    children => $learningresourcetypes
   };
 
   #### rights ####
