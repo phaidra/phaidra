@@ -130,6 +130,17 @@ sub post {
   $self->render(json => {alerts => $res->{alerts}}, status => $res->{status});
 }
 
+sub _strip_ot4rt_from_form {
+  my ($form) = @_;
+  return unless ref $form eq 'HASH' && ref $form->{sections} eq 'ARRAY';
+  for my $section (@{$form->{sections}}) {
+    next unless ref $section eq 'HASH' && ref $section->{fields} eq 'ARRAY';
+    for my $field (@{$section->{fields}}) {
+      delete $field->{ot4rt} if ref $field eq 'HASH';
+    }
+  }
+}
+
 sub add_template {
   my $self = shift;
 
@@ -169,6 +180,8 @@ sub add_template {
     $self->render(json => $res, status => $res->{status});
     return;
   }
+
+  _strip_ot4rt_from_form($form);
 
   my $ug   = Data::UUID->new;
   my $btid = $ug->create();
@@ -249,6 +262,8 @@ sub edit_template {
     $self->render(json => $res, status => $res->{status});
     return;
   }
+
+  _strip_ot4rt_from_form($form);
 
   my $owner;
   if ($self->stash('remote_user')) {
