@@ -162,10 +162,10 @@ export default {
       immediate: true, // Ensure it's set on load
       handler() {
         this.relationshipsHeaders = [
-          { text: this.$t('Relation'), align: 'left', value: 'relation' },
-          { text: this.$t('Object'), align: 'left', value: 'object' },
-          { text: this.$t('Title'), align: 'left', value: 'title' },
-          { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+          { title: this.$t('Relation'), align: 'start', key: 'relation' },
+          { title: this.$t('Object'), align: 'start', key: 'object' },
+          { title: this.$t('Title'), align: 'start', key: 'title' },
+          { title: this.$t('Actions'), align: 'end', key: 'actions', sortable: false }
         ]
       }
     },

@@ -65,9 +65,9 @@ export default {
       membersLoading: false,
       membersSearch: '',
       membersHeaders: [
-        { text: 'PID', align: 'left', value: 'pid' },
-        { text: 'Title', align: 'left', value: 'title' },
-        { text: 'Actions', align: 'right', value: 'actions', sortable: false }
+        { title: 'PID', align: 'start', key: 'pid' },
+        { title: 'Title', align: 'start', key: 'title' },
+        { title: 'Actions', align: 'end', key: 'actions', sortable: false }
       ],
       token: ''
     }

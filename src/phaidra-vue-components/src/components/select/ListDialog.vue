@@ -72,10 +72,10 @@ export default {
       loading: false,
       listsSearch: '',
       listsHeaders: [
-        { text: 'Name', align: 'left', value: 'name' },
-        { text: 'Created', align: 'right', value: 'created' },
-        { text: 'Updated', align: 'right', value: 'updated' },
-        { text: 'Actions', align: 'right', value: 'actions', sortable: false }
+        { title: 'Name', align: 'start', key: 'name' },
+        { title: 'Created', align: 'end', key: 'created' },
+        { title: 'Updated', align: 'end', key: 'updated' },
+        { title: 'Actions', align: 'end', key: 'actions', sortable: false }
       ],
       lists: []
     }

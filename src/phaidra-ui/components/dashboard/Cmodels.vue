@@ -63,9 +63,9 @@ export default {
       }
       let toYear = new Date().getFullYear();
       for (let i = fromYear; i <= toYear; i++) {
-        this.cmodelHeaders.push({ text: i.toString(), value: i.toString() });
+        this.cmodelHeaders.push({ title: i.toString(), key: i.toString() });
       }
-      this.cmodelHeaders.push({ text: "Total", value: "total" });
+      this.cmodelHeaders.push({ title: "Total", key: "total" });
       const terms = this.$store.state.vocabulary?.vocabularies?.cmodels?.terms
       if (!terms?.length) {
         return

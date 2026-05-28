@@ -74,10 +74,10 @@ export default {
         itemsPerPage: 5
       },
       collectionsHeaders: [
-        { text: 'Pid', align: 'left', value: 'pid' },
-        { text: 'Title', align: 'left', value: 'title' },
-        { text: 'Created', align: 'right', value: 'created' },
-        { text: 'Actions', align: 'right', value: 'actions', sortable: false }
+        { title: 'Pid', align: 'start', key: 'pid' },
+        { title: 'Title', align: 'start', key: 'title' },
+        { title: 'Created', align: 'end', key: 'created' },
+        { title: 'Actions', align: 'end', key: 'actions', sortable: false }
       ],
       collections: [],
       totalCollections: 0

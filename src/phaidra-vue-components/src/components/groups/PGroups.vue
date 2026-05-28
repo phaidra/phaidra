@@ -277,15 +277,15 @@ export default {
         immediate: true, // Ensure it's set on load
         handler() {
           this.groupsHeaders = [
-              { text: this.$t('Name'), align: 'left', value: 'name' },
-              { text: this.$t('Created'), align: 'right', value: 'created' },
-              { text: this.$t('Modified'), align: 'right', value: 'updated' },
-              { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+              { title: this.$t('Name'), align: 'start', key: 'name' },
+              { title: this.$t('Created'), align: 'end', key: 'created' },
+              { title: this.$t('Modified'), align: 'end', key: 'updated' },
+              { title: this.$t('Actions'), align: 'end', key: 'actions', sortable: false }
             ];
           this.membersHeaders = [
-              { text: this.$t('Name'), align: 'left', value: 'name' },
-              { text: this.$t('Username'), align: 'left', value: 'username' },
-              { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+              { title: this.$t('Name'), align: 'start', key: 'name' },
+              { title: this.$t('Username'), align: 'start', key: 'username' },
+              { title: this.$t('Actions'), align: 'end', key: 'actions', sortable: false }
             ];
         }
      }

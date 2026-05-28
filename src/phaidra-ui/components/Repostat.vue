@@ -152,7 +152,7 @@ export default {
 
         const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         const valKeys = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
-        this.avgCols = monthNames.slice(0, maxMonth).map((label, idx) => ({ text: `${label} Avg`, value: valKeys[idx] }));
+        this.avgCols = monthNames.slice(0, maxMonth).map((label, idx) => ({ title: `${label} Avg`, key: valKeys[idx] }));
         this.avgHeaders = this.avgCols;
 
         if (maxMonth === 0) {
@@ -203,7 +203,7 @@ export default {
 
         const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         const valKeys = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
-        this.imgAvgCols = monthNames.slice(0, maxMonth).map((label, idx) => ({ text: `${label} Avg`, value: valKeys[idx] }));
+        this.imgAvgCols = monthNames.slice(0, maxMonth).map((label, idx) => ({ title: `${label} Avg`, key: valKeys[idx] }));
         this.imgAvgHeaders = this.imgAvgCols;
 
         if (maxMonth === 0) {

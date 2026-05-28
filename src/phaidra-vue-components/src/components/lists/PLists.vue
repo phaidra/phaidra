@@ -214,15 +214,15 @@ export default {
         immediate: true, // Ensure it's set on load
         handler() {
           this.listsHeaders = [
-            { text: this.$t('Name'), align: 'left', value: 'name' },
-            { text: this.$t('Created'), align: 'right', value: 'created' },
-            { text: this.$t('Modified'), align: 'right', value: 'updated' },
-            { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+            { title: this.$t('Name'), align: 'start', key: 'name' },
+            { title: this.$t('Created'), align: 'end', key: 'created' },
+            { title: this.$t('Modified'), align: 'end', key: 'updated' },
+            { title: this.$t('Actions'), align: 'end', key: 'actions', sortable: false }
           ];
           this.membersHeaders = [
-            { text: this.$t('PID'), align: 'left', value: 'pid' },
-            { text: this.$t('Title'), align: 'left', value: 'title' },
-            { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+            { title: this.$t('PID'), align: 'start', key: 'pid' },
+            { title: this.$t('Title'), align: 'start', key: 'title' },
+            { title: this.$t('Actions'), align: 'end', key: 'actions', sortable: false }
           ];
         }
      },

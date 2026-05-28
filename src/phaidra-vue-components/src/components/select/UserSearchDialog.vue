@@ -60,8 +60,8 @@ export default {
       loading: false,
       userSearchInp: '',
       usersHeaders: [
-        { text: 'Username', align: 'left', value: 'username' },
-        { text: 'Actions', align: 'right', value: 'actions', sortable: false }
+        { title: 'Username', align: 'start', key: 'username' },
+        { title: 'Actions', align: 'end', key: 'actions', sortable: false }
       ],
       users: []
     }
