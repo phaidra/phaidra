@@ -346,15 +346,6 @@ export default {
 </style>
 
 <style>
-.v-theme--light.v-btn.v-btn--icon {
-    color: rgba(0, 0, 0, 0.54);
-}
-.v-theme--light.v-card > .v-card-text, .v-theme--light.v-card > .v-card-subtitle {
-    color: rgba(0, 0, 0, 0.6);
-}
-.v-theme--dark.v-btn.v-btn--icon {
-    color: #FFFFFF;
-}
 .no-padding {
   padding: 0px;
 }
