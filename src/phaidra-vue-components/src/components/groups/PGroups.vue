@@ -73,7 +73,7 @@
               <template v-slot:item.actions="{ item }">
                 <v-tooltip location="bottom">
                   <template v-slot:activator="{ props: activatorProps }">
-                    <v-btn icon color="primary" @click="loadedGroup = item" v-bind="activatorProps" :aria-label="$t('Edit')">
+                    <v-btn variant="text" icon color="primary" @click="loadedGroup = item" v-bind="activatorProps" :aria-label="$t('Edit')">
                       <v-icon>mdi-pencil</v-icon>
                     </v-btn>
                   </template>
@@ -81,7 +81,7 @@
                 </v-tooltip>
                 <v-tooltip location="bottom">
                   <template v-slot:activator="{ props: activatorProps }">
-                    <v-btn icon color="btnred" @click="deleteGroupDialog(item)" v-bind="activatorProps" :aria-label="$t('Delete')">
+                    <v-btn variant="text" icon color="btnred" @click="deleteGroupDialog(item)" v-bind="activatorProps" :aria-label="$t('Delete')">
                       <v-icon>mdi-delete</v-icon>
                     </v-btn>
                   </template>

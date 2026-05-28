@@ -420,7 +420,7 @@ a {
   text-decoration: none;
 }
 
-.v-application a:not(.v-btn) {
+.v-application a:not(.v-btn):not([class*='text-']) {
   color: rgb(var(--v-theme-primary));
 }
 

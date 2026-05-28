@@ -74,7 +74,7 @@
               <template v-slot:item.actions="{ item }">
                 <v-tooltip location="bottom">
                   <template v-slot:activator="{ props: activatorProps }">
-                    <v-btn icon class="mx-3" color="primary" @click="loadedList = item" v-bind="activatorProps" :aria-label="$t('Edit')">
+                    <v-btn variant="text" icon class="mx-3" color="primary" @click="loadedList = item" v-bind="activatorProps" :aria-label="$t('Edit')">
                       <v-icon>mdi-pencil</v-icon>
                     </v-btn>
                   </template>
@@ -82,7 +82,7 @@
                 </v-tooltip>
                 <v-tooltip location="bottom">
                   <template v-slot:activator="{ props: activatorProps }">
-                    <v-btn icon class="mx-3" color="btnred" @click="deleteListDialog(item)" v-bind="activatorProps" :aria-label="$t('Delete')">
+                    <v-btn variant="text" icon class="mx-3" color="btnred" @click="deleteListDialog(item)" v-bind="activatorProps" :aria-label="$t('Delete')">
                       <v-icon>mdi-delete</v-icon>
                     </v-btn>
                   </template>

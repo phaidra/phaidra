@@ -64,7 +64,10 @@ export default defineNuxtPlugin((nuxtApp) => {
       density: 'comfortable'
     },
     VToolbar: {
-      density: 'compact'
+      density: 'compact',
+      VBtn: {
+        variant: 'elevated'
+      }
     },
     VPagination: {
       activeColor: 'primary',
