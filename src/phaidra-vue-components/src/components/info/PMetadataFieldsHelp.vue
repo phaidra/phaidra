@@ -2,20 +2,25 @@
   <v-container fluid>
     <v-row>
       <v-col cols="3">
-        <v-list>
-          <v-list-group prepend-icon="" append-icon="" v-for="(category, i) in categories" :value="category.open" :key="'cat'+i">
-            <template v-slot:activator>
-              <v-list-item-title >{{ $t(category.title) }}</v-list-item-title>
+        <v-list v-model:opened="openedCategories">
+          <v-list-group
+            v-for="(category, i) in categories"
+            :key="'cat'+i"
+            :value="'cat'+i"
+            :expand-icon="false"
+            :collapse-icon="false"
+          >
+            <template #activator="{ props }">
+              <v-list-item class="text-primary" v-bind="props" :title="$t(category.title)" />
             </template>
-            <v-list-group prepend-icon="" v-for="(field, j) in category.fields" sub-group :key="'field'+j">
-              <template v-slot:activator>
-                <v-list-item :value="field.open">
-                  <div class="v-list-item-content" @click="selectField(field)">
-                    <v-list-item-title>{{ $t(field.title) }}</v-list-item-title>
-                  </div>
-                </v-list-item>
-              </template>
-            </v-list-group>
+            <v-list-item
+              v-for="(field, j) in category.fields"
+              :key="'field'+j"
+              :title="$t(field.title)"
+              :value="field.predicate"
+              :active="selectedField && selectedField.predicate === field.predicate"
+              @click="selectField(field)"
+            />
           </v-list-group>
         </v-list>
       </v-col>
@@ -71,10 +76,14 @@ export default {
     this.selectedField = this.categories[0].fields[0]
     this.$store.commit('info/initFieldsOverview')
     this.$store.dispatch('info/sortFieldsOverview', {locale: this.$i18n.locale, i18nInstance: this.$i18n})
+    this.openedCategories = this.categories
+      .map((category, i) => (category.open ? 'cat' + i : null))
+      .filter(Boolean)
   },
   data () {
     return {
       drawer: null,
+      openedCategories: [],
       selectedField: null
     }
   }
