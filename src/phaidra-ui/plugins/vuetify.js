@@ -87,6 +87,11 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
     VSwitch: {
       color: 'primary',
+    },
+    VAlert: {
+      VBtn: {
+        variant: 'text'
+      }
     }
   },
     date: {

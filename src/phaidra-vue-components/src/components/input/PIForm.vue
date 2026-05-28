@@ -1,17 +1,16 @@
 <template>
   <div v-if="form && form.sections" >
     <v-alert
-      v-model="serverSubmitError"
+      :model-value="serverSubmitErrors.length > 0"
       closable
       type="error"
       variant="tonal"
       transition="slide-y-transition"
+      @update:model-value="onServerSubmitAlertDismiss"
     >
-      <template>
-        <ul>
-          <li v-for="(error, i) in serverSubmitErrors" :key="'sve' + i"><span>{{ $t(error) }}</span></li>
-        </ul>
-      </template>
+      <ul>
+        <li v-for="(error, i) in serverSubmitErrors" :key="'sve' + i"><span>{{ error }}</span></li>
+      </ul>
     </v-alert>
     <v-alert
       v-model="validationError"
@@ -1325,7 +1324,6 @@ export default {
       selectedFieldForEdit: null,
       fieldPropForm: [],
       initonly: false,
-      serverSubmitError: false,
       serverSubmitErrors: [],
       checksumDialog: false,
       checksumType: '',
@@ -1386,6 +1384,11 @@ export default {
       this.fieldPropForm.forEach(element => {
         this.selectedFieldForEdit[element.fieldKey] = element.fieldValue
       });
+    },
+    onServerSubmitAlertDismiss: function (visible) {
+      if (!visible) {
+        this.serverSubmitErrors = []
+      }
     },
     closeChecksumDialog: function () {
       this.checksumType = ''
@@ -1675,7 +1678,6 @@ export default {
       }
     },
     submit: async function () {
-      this.serverSubmitError = false
       this.serverSubmitErrors = []
       if (!this.skipValidation && !this.formIsValid()) {
         this.validationError = true
@@ -1758,15 +1760,15 @@ export default {
       } catch (error) {
         console.log(error)
         if (error.response && error.response.data.alerts && error.response.data.alerts.length > 0) {
-          // amore readable formatting of server errors
-          this.serverSubmitError = true
           for (let e of error.response.data.alerts) {
-            this.serverSubmitErrors.push(e.msg)
+            if (e.msg) {
+              this.serverSubmitErrors.push(e.msg)
+            }
           }
-          // remove the alerts eventually set in axios hook
           this.$store.commit('setAlerts', [])
         } else {
-          this.$store.commit('setAlerts', [{ type: 'error', msg: error }])
+          const msg = error instanceof Error ? error.toString() : String(error)
+          this.$store.commit('setAlerts', [{ type: 'error', msg }])
         }
       } finally {
         vuetifyGoTo(0)
@@ -1803,7 +1805,8 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'error', msg: error }])
+        const msg = error instanceof Error ? error.toString() : String(error)
+        this.$store.commit('setAlerts', [{ type: 'error', msg }])
       } finally {
         vuetifyGoTo(0)
         this.loading = false

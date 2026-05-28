@@ -35,14 +35,17 @@
                         :model-value="true"
                         transition="slide-y-transition"
                       >
-                        <v-row align="center">
-                          <v-col class="grow">{{ $t(alert.msg) }}</v-col>
-                          <v-col class="shrink">
-                            <v-btn icon @click="dismiss(alert)"
-                              ><v-icon>mdi-close</v-icon></v-btn
-                            >
-                          </v-col>
-                        </v-row>
+                        <div class="d-flex align-center">
+                          <span class="flex-grow-1">{{ $t(alert.msg) }}</span>
+                          <v-btn
+                            icon
+                            variant="text"
+                            class="flex-shrink-0 ms-2"
+                            @click="dismiss(alert)"
+                          >
+                            <v-icon>mdi-close</v-icon>
+                          </v-btn>
+                        </div>
                       </v-alert>
                     </v-col>
                   </v-row>
