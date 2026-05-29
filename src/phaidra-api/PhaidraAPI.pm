@@ -588,7 +588,7 @@ sub startup {
 
   $ir_admin->post('ir/adminlistdata')                                      ->to('ir#adminlistdata');
   $ir_admin->get('ir/:pid/events')                                         ->to('ir#events');
-  $ir_admin->get('ir/allowsubmit')                                         ->to('ir#allowsubmit');
+  $authenticated->get('ir/allowsubmit')                                    ->to('ir#allowsubmit');
   $ir_admin->get('ir/puresearch')                                          ->to('ir#puresearch');
   $ir_admin->get('ir/pureimport/locks')                                    ->to('ir#pureimport_getlocks');
 
