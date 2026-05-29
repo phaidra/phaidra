@@ -67,8 +67,8 @@
         </v-col>
         <bk-tree-dialog ref="bktreedialog" @item-selected="resolve($event)"></bk-tree-dialog>
       </v-row>
-      <v-row>
-        <v-divider v-if="dividerbottom" class="mt-2 mb-6"></v-divider>
+      <v-row v-if="dividerbottom">
+        <v-divider class="mt-2 mb-6"></v-divider>
       </v-row>
     </v-col>
   </v-row>

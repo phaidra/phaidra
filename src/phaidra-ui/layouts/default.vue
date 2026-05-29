@@ -657,6 +657,9 @@ address {
   padding-left: 24px;
 }
 
+.v-input--indent-details .v-input__details {
+    margin-bottom: 8px;
+}
 </style>
 
 <style scoped>

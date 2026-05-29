@@ -69,8 +69,8 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-row>
-        <v-divider v-if="dividerbottom" class="mt-2 mb-6"></v-divider>
+      <v-row v-if="dividerbottom">
+        <v-divider class="mt-2 mb-6"></v-divider>
       </v-row>
     </v-col>
   </v-row>

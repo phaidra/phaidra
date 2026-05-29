@@ -56,8 +56,8 @@
         </v-col>
         <bic-tree-dialog ref="bictreedialog" @term-selected="handleInput($event)"></bic-tree-dialog>
       </v-row>
-      <v-row>
-        <v-divider v-if="dividerbottom" class="mt-2 mb-6"></v-divider>
+      <v-row v-if="dividerbottom">
+        <v-divider class="mt-2 mb-6"></v-divider>
       </v-row>
     </v-col>
   </v-row>
