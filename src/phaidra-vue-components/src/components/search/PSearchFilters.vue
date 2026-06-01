@@ -300,41 +300,48 @@
               </v-col>
             </v-row>
             <v-row no-gutters v-if="showRoleFilter" id="role-content" role="region" aria-labelledby="role-control">
-              <v-select
-                class="mt-4"
-                :placeholder="$t('Add role') + '...'"
-                :hint="$t('Personal')"
-                :items="marcRolesArray"
-                item-title="text"
-                item-value="value"
-                v-model="selectedRole.pers"
-                @update:model-value="addRoleFilter('pers')"
-                :menu-props="{maxHeight:'400'}"
-                persistent-hint
-                variant="filled"
-                single-line
-              ></v-select>
-              <v-select
-                class="mt-4"
-                :placeholder="$t('Add role') + '...'"
-                :hint="$t('Corporate')"
-                :items="marcRolesArray"
-                item-title="text"
-                item-value="value"
-                v-model="selectedRole.corp"
-                @update:model-value="addRoleFilter('corp')"
-                :menu-props="{maxHeight:'400'}"
-                persistent-hint
-                variant="filled"
-                single-line
-              ></v-select>
-              <div v-for="(role, i) in roles" :key="i" v-if="roles.length > 0" >
-                <v-row no-gutters>
-                  <v-col cols="10">
+              <v-col cols="12">
+                <v-select
+                  class="mt-4"
+                  :placeholder="$t('Add role') + '...'"
+                  :hint="$t('Personal')"
+                  :items="marcRolesArray"
+                  item-title="text"
+                  item-value="value"
+                  v-model="selectedRole.pers"
+                  @update:model-value="addRoleFilter('pers')"
+                  :menu-props="{maxHeight:'400'}"
+                  persistent-hint
+                  variant="filled"
+                  single-line
+                ></v-select>
+              </v-col>
+              <v-col cols="12">
+                <v-select
+                  class="mt-4"
+                  :placeholder="$t('Add role') + '...'"
+                  :hint="$t('Corporate')"
+                  :items="marcRolesArray"
+                  item-title="text"
+                  item-value="value"
+                  v-model="selectedRole.corp"
+                  @update:model-value="addRoleFilter('corp')"
+                  :menu-props="{maxHeight:'400'}"
+                  persistent-hint
+                  variant="filled"
+                  single-line
+                ></v-select>
+              </v-col>
+              <v-col
+                v-for="(role, i) in roles"
+                :key="i"
+                cols="12"
+              >
+                <v-row no-gutters align="start" class="mt-4 role-filter-row">
+                  <v-col>
                     <v-combobox
                       :hint="role.type === 'pers' ? $t('Personal') : $t('Corporate')"
                       persistent-hint
-                      class="mt-4"
                       :placeholder="$t('ADD_PREFIX') + ' '  + $t(role.label) + ' ' + $t('ADD_SUFFIX') + '...'"
                       chips
                       clearable
@@ -347,11 +354,20 @@
                       @update:model-value="setRoleFilterValues(role)"
                     />
                   </v-col>
-                  <v-col cols="2">
-                    <icon name="material-navigation-close" class="text-primary" height="100%" @click="removeRoleFilter(role)"></icon>
+                  <v-col cols="auto" class="ps-1 d-flex align-center role-filter-remove-col">
+                    <v-btn
+                      icon
+                      variant="text"
+                      color="primary"
+                      class="role-filter-remove-btn"
+                      :aria-label="$t('Remove')"
+                      @click="removeRoleFilter(i)"
+                    >
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
                   </v-col>
                 </v-row>
-              </div>
+              </v-col>
             </v-row>
           </li>
         </ul>
@@ -593,10 +609,15 @@ export default {
           values: [],
           type: type
         })
+        this.selectedRole[type] = ''
+        this.search({ roles: this.roles })
       }
     },
-    removeRoleFilter: function (role) {
-      this.roles.splice(this.roles.indexOf(role), 1)
+    removeRoleFilter: function (index) {
+      if (index < 0 || index >= this.roles.length) {
+        return
+      }
+      this.roles.splice(index, 1)
       this.search({ roles: this.roles })
     },
     removeOwnerFilter: function (role) {
@@ -702,4 +723,12 @@ svg
 
 svg.text-primary
   margin-right: 4px
+
+.role-filter-row .role-filter-remove-col
+  align-self: flex-start
+  height: var(--v-input-control-height, 56px)
+  margin-top: 4px
+
+.role-filter-row .role-filter-remove-btn
+  margin: 0
 </style>
