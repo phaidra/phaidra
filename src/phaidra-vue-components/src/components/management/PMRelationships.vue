@@ -57,6 +57,9 @@
                         v-model="selectedRelationship"
                         :label="$t('Choose relationship')"
                         :items="relationshipSelect"
+                        item-title="text"
+                        item-value="value"
+                        variant="filled"
                       />
                     </v-col>
                     <v-col cols="5">

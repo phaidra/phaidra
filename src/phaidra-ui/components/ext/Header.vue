@@ -237,7 +237,8 @@
                       :items="instances"
                       @update:model-value="switchInstance"
                       :model-value="instanceconfig.baseurl"
-                      item-text="baseurl"
+                      item-title="baseurl"
+                      item-value="baseurl"
                       single-line
                   ></v-select>
                 </v-col>
