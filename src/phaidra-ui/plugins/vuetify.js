@@ -92,6 +92,11 @@ export default defineNuxtPlugin((nuxtApp) => {
       VBtn: {
         variant: 'text'
       }
+    },
+    VTable: {
+      VBtn: {
+        variant: 'text'
+      }
     }
   },
     date: {
