@@ -1,4 +1,10 @@
-const { MongoClient } = require('mongodb');
+import HandleHttpApi from "./handle.js";
+import nodeUtil from 'node:util';
+import fs from 'node:fs/promises';
+import { MongoClient } from 'mongodb';
+
+nodeUtil.inspect.defaultOptions.depth = null;
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
 
 // Service configuration
 const config = {
@@ -12,62 +18,33 @@ const config = {
   agentName: 'hdl'
 };
 
+async function loadPrivateKey() {
+  const jwkJson = await fs.readFile('admpriv.jwk', 'utf8');
+  const privateKey = JSON.parse(jwkJson);
+  return privateKey;
+}
+
 async function processJob(job) {
   try {
     console.log(`Processing job for PID: ${job.pid}`);
 
-    const handleData = {
-      handle: job.hdl,
-      values: [
-        {
-          index: 1,
-          type: "URL",
-          data: {
-            format: "string",
-            value: `${config.baseURL}/${job.pid}`
-          }
-        },
-        {
-          "index": 100,
-          "type": "HS_ADMIN",
-          "data": {
-            "format": "admin",
-            "value": {
-              "handle": `0.NA/${process.env.HANDLE_PREFIX}`,
-              "index": "300",
-              "permissions": "011111110011"
-            }
-          }
-        }
-      ]
+    const privateKey = await loadPrivateKey();
+    // Must be https
+    const serverUrl = "https://handle:8000";
+    const authInfo = {
+      adminIndex: 300,
+      adminHandle: `0.NA/${process.env.HANDLE_PREFIX}`,
+      privateKey,
+      mode: "HS_PUBKEY"
     };
-
-    const json = JSON.stringify(handleData, null, 2);
-
-    console.log(`PUT: ${json}`);
-    console.log(`URL: http://handle:8000/api/handles?overwrite=false`);
-
-    const user = `0.NA/${HANDLE_PREFIX}`;
-    const pass = process.env.HANDLE_ADMIN_PRIVKEY;
-    const base64Credentials = btoa(`${user}:${pass}`);
-  
-    const response = await fetch(`http://handle:8000/api/handles?overwrite=false`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${base64Credentials}`
-      },
-      body: json
-    });
-
-    if (!response.ok) {
-      console.error(`Error processing job ${job.pid}:`, response);
-      throw new Error(`Failed to create handle: ${response.status} ${response.statusText}`);
-    }
+    const verbose = true;
+    const handleHttpApi = new HandleHttpApi(authInfo, serverUrl, verbose);
+    const createResult = await handleHttpApi.createUrlHandle(job.hdl, `${config.baseURL}/${job.pid}`);
+    console.log(createResult);
 
     // Update job status
     await updateJobStatus(job.pid, 'finished');
-    
+
     console.log(`Successfully registered handle for ${job.pid}`);
     return true;
   } catch (error) {
@@ -84,7 +61,7 @@ async function updateJobStatus(pid, status, additionalFields = {}) {
       ...additionalFields
     }
   };
-  
+
   await jobsCollection.updateOne(
     { pid, agent: config.agentName },
     update
@@ -107,20 +84,20 @@ async function main() {
     mongoClient = await MongoClient.connect(config.mongodb.url);
     const db = mongoClient.db(config.mongodb.dbName);
     jobsCollection = db.collection(config.mongodb.collection);
-    
+
     console.log('Connected to MongoDB, watching for new jobs...');
 
     console.table(config);
-    
+
     // Main processing loop
     while (true) {
       const jobs = await getNewJobs();
-      
+
       if (jobs.length === 0) {
         await new Promise(resolve => setTimeout(resolve, config.sleepTime));
         continue;
       }
-      
+
       for (const job of jobs) {
         await processJob(job);
       }
