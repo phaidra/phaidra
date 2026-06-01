@@ -65,6 +65,7 @@ export default {
 .youarehere {
   font-weight: bold;
   font-size: 10pt;
+  margin-right: 0.25rem;
 }
 
 .text {
