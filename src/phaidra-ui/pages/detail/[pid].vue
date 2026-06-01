@@ -830,7 +830,7 @@
               </v-row>
             </div>
             <div v-for="(collMember, i) in collMembers" :key="'collMember' + i">
-              <v-row class="my-4">
+              <v-row class="my-4" density="default">
                 <v-col cols="2" class="preview-maxwidth">
                   <nuxt-link :to="`/detail/${collMember.pid}`">
                     <p-img
