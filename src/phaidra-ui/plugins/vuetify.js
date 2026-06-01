@@ -3,6 +3,7 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
+import { aliases as mdiAliases, mdi } from 'vuetify/iconsets/mdi'
 import { StringDateAdapter } from 'vuetify/date/adapters/string'
 
 export default defineNuxtPlugin((nuxtApp) => {
@@ -20,6 +21,16 @@ export default defineNuxtPlugin((nuxtApp) => {
     ssr: true,
     components,
     directives,
+    icons: {
+      defaultSet: 'mdi',
+      aliases: {
+        ...mdiAliases,
+        error: 'mdi-alert',
+      },
+      sets: {
+        mdi,
+      },
+    },
     theme: {
       defaultTheme,
       themes: {
