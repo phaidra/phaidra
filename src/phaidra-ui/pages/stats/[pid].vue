@@ -4,6 +4,7 @@
       <v-icon start>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
     </v-btn>
     <v-tabs
+      color="primary"
       v-if="downloadItems.length > 0 || detailPageItems.length > 0"
       v-model="statsTab"
     >
@@ -20,7 +21,7 @@
           :items-per-page="-1"
         >
           <template #header>
-            <v-toolbar flat class="mb-1">
+            <v-toolbar flat color="cardtitlebg" class="mb-1">
               <v-toolbar-title class="font-weight-light text-white">{{ $t("Downloads of object") }} {{ routepid }}</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-text-field
@@ -64,7 +65,7 @@
           :items-per-page="-1"
         >
           <template #header>
-            <v-toolbar flat class="mb-1">
+            <v-toolbar flat color="cardtitlebg" class="mb-1">
               <v-toolbar-title class="font-weight-light text-white">{{ $t("Views of object") }} {{ routepid }}</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-text-field
