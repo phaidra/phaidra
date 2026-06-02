@@ -62,14 +62,12 @@ export default {
         }
         this.tou = toures.data.terms;
       } catch (err) {
-        console.log("err", err);
-        let data = [
-          {
-            type: 'error',
-            msg: err
-          }
-        ]
-        this.$store.commit("setAlerts", data);
+        if (err?.response?.data?.alerts?.length > 0) {
+          this.$store.commit("setAlerts", err.response.data.alerts);
+          return;
+        }
+        const msg = err?.message || 'Error getting terms of use';
+        this.$store.commit("setAlerts", [{ type: 'error', msg }]);
       }
     }
   },
