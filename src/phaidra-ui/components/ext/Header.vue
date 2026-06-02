@@ -649,14 +649,6 @@ export default {
       }
 
       localStorage.setItem("theme", nextTheme);
-      if (this.$cookies?.set) {
-        this.$cookies.set('theme', nextTheme, {
-          path: '/',
-          maxAge: 60 * 60 * 24 * 365 // 1 year
-        });
-      } else if (process.client) {
-        document.cookie = `theme=${nextTheme}; path=/; max-age=${60 * 60 * 24 * 365}`;
-      }
     },
     logout: function () {
       console.log("local logout")
@@ -696,9 +688,7 @@ export default {
     },
     changeLocale: function (lang) {
       this.$i18n.locale = lang;
-      // this.$i18n.setLocaleCookie(lang);
       localStorage.setItem("locale", lang);
-      this.$cookies.set("locale", lang);
       this.$router.push(this.switchLocalePath(lang));
       this.$store.dispatch("vocabulary/sortRoles", this.$i18n.locale);
       this.$store.dispatch("vocabulary/sortFields", {locale: this.$i18n.locale, i18nInstance: this.$i18n});
@@ -715,7 +705,6 @@ export default {
         this.$i18n.locale = this.$config.public.defaultLocale
       }
       localStorage.setItem("locale", this.$i18n.locale);
-      this.$cookies.set("locale", this.$i18n.locale);
     }
   }
 };

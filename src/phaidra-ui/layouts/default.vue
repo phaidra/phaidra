@@ -90,12 +90,7 @@ export default {
       const store = nuxtApp.$store
       const instanceconfig = store?.state?.instanceconfig || {}
 
-      // Detect locale during SSR from cookies, similar to theme detection.
-      let currentLocale = nuxtApp.$i18n?.locale || 'eng'
-      if (import.meta.server) {
-        const ssrCookie = nuxtApp.$cookies?.get('locale')
-        if (ssrCookie) currentLocale = ssrCookie
-      }
+      const currentLocale = nuxtApp.$i18n?.locale || 'eng'
 
       const lang = currentLocale === 'deu' ? 'de' : currentLocale === 'ita' ? 'it' : 'en'
       const titlePart = nuxtApp.$i18n?.t ? nuxtApp.$i18n.t(instanceconfig.title) : (instanceconfig.title || '')
@@ -162,7 +157,7 @@ export default {
 
     let metaInfo = {
       htmlAttrs: {
-        lang: currentLocale === 'deu' ? 'de' : currentLocale === 'ita' ? 'it' : 'en'
+        lang: this.$i18n.locale === 'deu' ? 'de' : this.$i18n.locale === 'ita' ? 'it' : 'en'
       },
       title: this.documentTitle(),
       meta: [

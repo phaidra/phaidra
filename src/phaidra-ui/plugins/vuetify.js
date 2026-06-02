@@ -8,13 +8,15 @@ import { StringDateAdapter } from 'vuetify/date/adapters/string'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig()
-  const themeCookie = useCookie('theme')
 
   const primaryColor = config.public.primaryColor || '#1976D2'
   const darkPrimaryColor = config.public.darkPrimaryColor || primaryColor
   let defaultTheme = config.public.defaultTheme === 'dark' ? 'dark' : 'light'
-  if (themeCookie.value === 'dark' || themeCookie.value === 'light') {
-    defaultTheme = themeCookie.value
+  if (import.meta.client) {
+    const stored = localStorage.getItem('theme')
+    if (stored === 'dark' || stored === 'light') {
+      defaultTheme = stored
+    }
   }
 
   const vuetify = createVuetify({

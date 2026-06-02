@@ -7,10 +7,18 @@ export default defineNuxtPlugin((nuxtApp) => {
   const defaultLocale = useRuntimeConfig().public?.defaultLocale || 'eng'
   const messages = { eng, deu, ita }
 
+  let locale = defaultLocale
+  if (import.meta.client) {
+    const stored = localStorage.getItem('locale')
+    if (stored && messages[stored]) {
+      locale = stored
+    }
+  }
+
   const i18n = createI18n({
     legacy: true,
     globalInjection: true,
-    locale: defaultLocale,
+    locale,
     fallbackLocale: 'eng',
     messages,
     silentTranslationWarn: true,
