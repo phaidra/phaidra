@@ -634,6 +634,7 @@
               {{ JSON.stringify(objectInfo.metadata, null, 2) }}
             </pre> -->
             <p-d-jsonld
+              v-if="jsonLdMounted"
               :jsonld="objectInfo.metadata?.['JSON-LD']"
               :pid="objectInfo.pid"
               :bold-label-fields="['dce:title', 'role', 'edm:rights']"
@@ -712,6 +713,7 @@
               </v-row>
                 <v-card-text>
                   <p-d-jsonld
+                    v-if="jsonLdMounted"
                     :jsonld="member.metadata?.['JSON-LD']"
                     :pid="member.pid"
                     :bold-label-fields="['dce:title', 'role', 'edm:rights']"
@@ -3214,7 +3216,8 @@ export default {
       datareplaceUploadErrors: [],
       datareplaceLoading: false,
       datareplaceUploadProgress: 0,
-      notFound: false
+      notFound: false,
+      jsonLdMounted: false
     };
   },
   watch: {
@@ -3222,6 +3225,12 @@ export default {
       if (newVal) {
         this.chosenRelation = null;
       }
+    },
+    routepid () {
+      this.jsonLdMounted = false
+      this.$nextTick(() => {
+        this.jsonLdMounted = true
+      })
     }
   },
   methods: {
@@ -3787,6 +3796,7 @@ export default {
     },
   },
   mounted() {
+    this.jsonLdMounted = true
     if (this.showCollectionTree) {
       this.fetchCollectionTree(this.$route.params.pid);
       setTimeout(() => {
