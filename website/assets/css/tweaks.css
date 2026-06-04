@@ -167,7 +167,7 @@
   align-items: center;
   justify-content: center;
   background-color: #E9616F;
-  color: white;
+  color: white !important;
   border-radius: 9999px;
   text-decoration: none;
   font-size: 0.875rem;
@@ -269,6 +269,12 @@ article:last-child {
 svg {
   fill: currentColor;
 }
+
+/* Showcase article section headings — hot pink */
+/* .phaidra-showcase-heading {
+  color: #EE2C52 !important;
+  font-weight: 700;
+} */
 
 /* somehow tailwind class did not get taken, so putting it in here */
 hr {
