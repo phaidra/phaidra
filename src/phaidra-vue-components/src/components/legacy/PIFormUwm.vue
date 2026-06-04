@@ -122,6 +122,7 @@ export default {
     },
     removeField: function (node) {
       arrays.remove(this.parents[node.id].children, node)
+      this.assignIdsAndParentsRec(this.form, 'root', { id: 'root', children: this.form })
       this.$emit('load-form', this.form)
     },
     getMetadata: function () {

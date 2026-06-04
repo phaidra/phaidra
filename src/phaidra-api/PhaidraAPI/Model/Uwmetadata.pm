@@ -690,6 +690,8 @@ sub uwmetadata_2_json {
   # fix taxonpath nodes (we first needed them filled)
   $self->fix_taxonpath_nodes($c, $metadata_tree);
 
+  $self->_prune_empty_uwm_nodes($metadata_tree);
+
   return {alerts => [], uwmetadata => $metadata_tree, status => 200};
 }
 
@@ -1255,6 +1257,62 @@ sub _cmp_metadata_siblings {
   return int($a->{mid} // 0) <=> int($b->{mid} // 0);
 }
 
+sub _entity_has_data {
+  my ($node) = @_;
+
+  return 0 unless $node && ($node->{xmlname} // '') eq 'entity';
+  return 0 unless $node->{children} && ref($node->{children}) eq 'ARRAY';
+
+  for my $ch (@{$node->{children}}) {
+    next if (($ch->{xmlname} // '') eq 'type');
+    my $v = $ch->{ui_value} // '';
+    next if $v eq '';
+    return 1;
+  }
+  return 0;
+}
+
+sub _lifecycle_contribute_has_content {
+  my ($node) = @_;
+
+  return 0 unless $node && ($node->{xmlname} // '') eq 'contribute';
+  return 0 unless $node->{children} && ref($node->{children}) eq 'ARRAY';
+
+  my $has_role   = 0;
+  my $has_entity = 0;
+  for my $ch (@{$node->{children}}) {
+    if (($ch->{xmlname} // '') eq 'role' && ($ch->{ui_value} // '') ne '') {
+      $has_role = 1;
+    }
+    if (($ch->{xmlname} // '') eq 'entity' && _entity_has_data($ch)) {
+      $has_entity = 1;
+    }
+  }
+  return $has_role && $has_entity;
+}
+
+sub _prune_empty_uwm_nodes {
+  my ($self, $nodes) = @_;
+
+  return unless ref($nodes) eq 'ARRAY';
+
+  for my $node (@{$nodes}) {
+    if ($node->{children} && ref($node->{children}) eq 'ARRAY') {
+      $self->_prune_empty_uwm_nodes($node->{children});
+      if (($node->{xmlname} // '') eq 'contribute') {
+        @{$node->{children}} = grep {
+          ($_->{xmlname} // '') ne 'entity' || _entity_has_data($_)
+        } @{$node->{children}};
+      }
+      if (($node->{xmlname} // '') eq 'lifecycle') {
+        @{$node->{children}} = grep {
+          ($_->{xmlname} // '') ne 'contribute' || _lifecycle_contribute_has_content($_)
+        } @{$node->{children}};
+      }
+    }
+  }
+}
+
 sub get_empty_node {
 
   my $self                = shift;
@@ -1775,6 +1833,14 @@ sub json_2_uwmetadata_rec() {
         # if it's empty, we skip the whole taxonpath
         next;
       }
+    }
+
+    if ($child->{xmlname} eq 'entity' && !_entity_has_data($child)) {
+      next;
+    }
+
+    if ($child->{xmlname} eq 'contribute' && defined($parent) && ($parent->{xmlname} // '') eq 'lifecycle' && !_lifecycle_contribute_has_content($child)) {
+      next;
     }
 
     my %attrs;
