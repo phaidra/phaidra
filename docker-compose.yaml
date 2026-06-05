@@ -801,12 +801,14 @@ services:
   ############### hdl agent ###############
   agent-hdl:
     hostname: "agent-hdl"
-    image: phaidraorg/agent-hdl:408f2ba8
+    #image: phaidraorg/agent-hdl:408f2ba8
+    build:
+      context: .
+      dockerfile: dockerfiles/agent-hdl.dockerfile
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
       HANDLE_PREFIX: "${HANDLE_PREFIX:-}"
-      HANDLE_ADMIN_PRIVKEY: "${HANDLE_ADMIN_PRIVKEY:-}"
     depends_on:
       mongodb-phaidra:
         condition: "service_started"
@@ -814,6 +816,8 @@ services:
       mongodb-phaidra-dev:
         condition: "service_started"
         required: false
+    volumes:
+      - ./certs/handle/admpriv.jwk:/app/admpriv.jwk:ro
     profiles:
       - handle
 
@@ -1659,10 +1663,12 @@ services:
     environment:
       <<: [*api_common_env, *hosts]
       HANDLE_PUBLIC_IP: "${HANDLE_PUBLIC_IP:-}"
+      HANDLE_PREFIX: "${HANDLE_PREFIX:-}"
+      HANDLE_DESC: "${HANDLE_DESC:-PHAIDRA integrated Handle server}"
     build:
       context: .
       dockerfile: dockerfiles/handle.dockerfile
-    image: phaidraorg/handle:8cc00b0c
+    #image: phaidraorg/handle:8cc00b0c
     pull_policy: missing
     read_only: true
     ports:
@@ -1672,6 +1678,8 @@ services:
       - handle:/opt/handle-data
       - ./certs/handle/privkey.bin:/opt/handle-data/privkey.bin:ro
       - ./certs/handle/pubkey.bin:/opt/handle-data/pubkey.bin:ro
+      - ./certs/handle/adminpriv.bin:/opt/handle-data/adminpriv.bin:ro
+      - ./certs/handle/adminpub.bin:/opt/handle-data/adminpub.bin:ro
     profiles:
       - handle
 

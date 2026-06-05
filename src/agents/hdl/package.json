@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A script for processing jobs to register handle identifiers",
   "main": "index.js",
+  "type": "module",
   "dependencies": {
     "mongodb": "^6.3.0"
   }

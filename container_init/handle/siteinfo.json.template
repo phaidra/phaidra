@@ -1,13 +1,13 @@
 {
   "version": 1,
   "protocolVersion": "2.11",
-  "serialNumber": 1,
+  "serialNumber": 3,
   "primarySite": true,
   "multiPrimary": false,
   "attributes": [
     {
       "name": "desc",
-      "value": "phaidra integrated handle server"
+      "value": "${HANDLE_DESC}"
     }
   ],
   "servers": [
