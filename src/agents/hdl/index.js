@@ -72,7 +72,7 @@ async function getNewJobs() {
   return await jobsCollection.find({
     agent: config.agentName,
     status: 'new'
-  }).toArray();
+  }).limit(1000).toArray();
 }
 
 let mongoClient;
