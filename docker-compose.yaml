@@ -1674,7 +1674,6 @@ services:
     ports:
       - 2641:2641/tcp
       - 2641:2641/udp
-      - 8000:8000
     volumes:
       - handle:/opt/handle-data
       - ./certs/handle/privkey.bin:/opt/handle-data/privkey.bin:ro

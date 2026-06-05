@@ -11,7 +11,6 @@ RUN apk add --no-cache openjdk21-jre-headless gettext-envsubst &&\
     ln -sf /dev/stdout /opt/handle-data/logs/access.log &&\
     ln -sf /dev/stderr /opt/handle-data/logs/error.log &&\
     ln -sf /opt/handle-data/.handle /root/.handle
-RUN cp /opt/handle/admin.war /opt/handle-data/webapps
 
 COPY --chmod=700 ./container_init/handle/handle-entrypoint.sh /handle-entrypoint.sh
 COPY ./container_init/handle/siteinfo.json.template /siteinfo.json.template
