@@ -5,7 +5,7 @@ const getCurrentLocale = () => {
     const lsLocale = localStorage.getItem("locale")
     if (lsLocale) return lsLocale
   }
-  return "eng"
+  return process.env.PHAIDRA_DEFAULT_LANGUAGE || "eng"
 }
 
 const getSharedProps = (fieldConfig, value) => ({
