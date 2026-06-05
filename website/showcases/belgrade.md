@@ -24,7 +24,7 @@ Once tested and stable, PHAIDRA was released as its own open source project, fre
 
 ## From Local Pilot to National Standard 
 
-The University of Belgrade was introduced to PHAIDRA through their role as regional project leaders for an EU initiative entitled "New Library Services at Universities of the Western Balkans". The initiative was part of the Tempus Programme, aimed at supporting the modernisation of higher education in EU-neighbouring countries, through the transfer of knowledge and infrastructure.
+The University of Belgrade was introduced to PHAIDRA through their role as regional project leaders for an EU initiative entitled "New Library Services at Universities of the Western Balkans". The initiative was part of the [Tempus Programme](https://en.wikipedia.org/wiki/TEMPUS){target=_blank}, aimed at supporting the modernisation of higher education in EU-neighbouring countries, through the transfer of knowledge and infrastructure.
 
 As a part of this transfer, the repository was first installed at the library in Belgrade in 2011. Initially, it was little more than a working proof of concept. But when the Serbian government began looking for a software solution to preserve doctoral theses across all Serbian universities, they needed a proven system. The working installation at Belgrade University Library was an obvious contender.
 
@@ -68,7 +68,7 @@ The upgrade brought them a system that had been fundamentally enhanced. And for 
 
 ## National Adoption Through the eScience Project 
 
-Shortly after the migration, the Serbian Ministry of Science launched the eScience Project. This was a new national research hub designed to harvest, consolidate and showcase all outputs from repositories across the country's universities. For the project to work effectively and integrate with broader international academic systems, the Ministry had to enforce strict new metadata requirements on any underlying repositories connected to the new system (these were based on the Dublin Core and OAI-PMH protocols).
+Shortly after the migration, the Serbian Ministry of Science launched the eScience Project. This was a new national research hub designed to harvest, consolidate and showcase all outputs from repositories across the country's universities. For the project to work effectively and integrate with broader international academic systems, the Ministry had to enforce strict new metadata requirements on any underlying repositories connected to the new system (these were based on the [Dublin Core](https://www.dublincore.org/){target=_blank} and [OAI-PMH](https://www.openarchives.org/pmh/){target=_blank} protocols).
 
 For faculties that had chosen, purchased or developed their own repositories, this created an uncomfortable budget reality. Licensing, maintaining or purchasing the necessary support for these systems was expensive. On top of this, many of them struggled to meet the government's technical requirements without additional custom development.
 

@@ -12,7 +12,7 @@ For the Austrian Science Fund (FWF), awarding research funding carries a dual re
 
 Back in 2003, the FWF was one of the first signatories of the Berlin Declaration on Open Access. The following year, they mandated that all publicly-funded projects should publish research findings in peer-reviewed Open Access (OA) journals.
 
-"The FWF is funded by Austrian taxpayers, and they pay for both research and the publication of that research. If publishers can then demand that citizens and public institutions — including university libraries — must pay to buy these publications back, it just doesn't seem like a very fair deal for society! We are committed to maintaining the rights of our citizens, scholars, businesses and other institutions to benefit from all research that the taxpayer has funded."
+**"The FWF is funded by Austrian taxpayers, and they pay for both research and the publication of that research. If publishers can then demand that citizens and public institutions — including university libraries — must pay to buy these publications back, it just doesn't seem like a very fair deal for society! We are committed to maintaining the rights of our citizens, scholars, businesses and other institutions to benefit from all research that the taxpayer has funded."**
 
 — Doris Haslinger, program manager for Humanities and Social Sciences at the FWF.
 
@@ -32,7 +32,7 @@ Initially the FWF used incentives, offering higher funding to researchers who op
 
 Both of these early approaches relied on publishers to make the OA resources available. However, many publishers had only one or two OA books in their catalogue and, while they respected their duty to upload the OA versions to their websites, they had no incentive to promote them. As a result, valuable OA resources were being buried in the darkest, most hard-to-find corners of the publishers' websites.
 
-"OA books were being condemned to just 'exist' in a kind of Publisher Purgatory. The publishers weren't really interested in promoting OA material or in integrating with the emerging global OA platforms," Haslinger continues.
+**"OA books were being condemned to just 'exist' in a kind of Publisher Purgatory. The publishers weren't really interested in promoting OA material or in integrating with the emerging global OA platforms,"** Haslinger continues.
 
 While well-intentioned researchers were complying with OA funding requirements, the real benefits of open access to their work were still not being delivered to society. Open Access had become a tick-box exercise — books were theoretically available but practically invisible.
 
@@ -42,7 +42,7 @@ While well-intentioned researchers were complying with OA funding requirements, 
 
 With the clear shortcomings of a publisher-led, decentralised approach, the FWF decided to take a more proactive approach:
 
-"For the FWF, Open Access publishing is about more than making resources theoretically available — it's about making a genuine effort to integrate research back into the society that funds it. If we want to ensure the sustainability of publicly funded research, we have to actively demonstrate value for the taxpayer, show them what research is available and help them benefit from it," explains Haslinger.
+**"For the FWF, Open Access publishing is about more than making resources theoretically available — it's about making a genuine effort to integrate research back into the society that funds it. If we want to ensure the sustainability of publicly funded research, we have to actively demonstrate value for the taxpayer, show them what research is available and help them benefit from it,"** explains Haslinger.
 
 The FWF is not a technology provider. However, it does have a clear remit to deliver technology infrastructure where this is needed to implement its policy. The fund felt that while it could mandate that monographs must have an OA version freely available, it was not researchers' role or responsibility to ensure that open access to their work was effective.
 
@@ -70,15 +70,11 @@ PHAIDRA's ability to handle multimedia content meant the FWF could support moder
 
 ## The Integration Advantage { .phaidra-showcase-heading }
 
-The real differentiator for PHAIDRA was its ease of integration. Because PHAIDRA is open source, the team at Vienna could customize and extend it to connect with other platforms — even integrating with alternative services that the FWF was considering. This delivered a "both/and" solution rather than forcing an either/or choice.
+But the real differentiator for PHAIDRA was its ease of integration. Because PHAIDRA is open source, the team at Vienna could customize and extend it to connect with other platforms — even integrating with alternative services that the FWF was considering. This delivered a "both/and" solution rather than forcing an either/or choice.
 
-### OAPEN Integration { .phaidra-showcase-heading }
+**OAPEN Integration:** When FWF chose PHAIDRA, integration with the [OAPEN](https://www.oapen.org){target=_blank} global library of scholarly books was an essential requirement. For the support team at Vienna University, it was quick and simple to implement specific customization to make this work. PHAIDRA's open, extensible architecture made it straightforward to include the necessary metadata systems (initially BIC codes, later Thema codes) required by OAPEN to classify and harvest the books effectively.
 
-When FWF chose PHAIDRA, integration with the OAPEN global library of scholarly books was an essential requirement. For the support team at Vienna University, it was quick and simple to implement specific customization to make this work. PHAIDRA's open, extensible architecture made it straightforward to include the necessary metadata systems (initially BIC codes, later Thema codes) required by OAPEN to classify and harvest the books effectively.
-
-### OpenAIRE { .phaidra-showcase-heading }
-
-PHAIDRA's existing integration with OpenAIRE provided an additional bonus for FWF. OpenAIRE is one of the top global platforms for Open Access discovery — it is a default destination for researchers, institutions, and members of the public looking for OA materials. Integration with OpenAIRE is increasingly vital for FWF projects within the EU context, but more importantly, it ensures FWF monographs are genuinely discoverable as part of the global OA ecosystem.
+**OpenAIRE:** PHAIDRA's existing integration with OpenAIRE provided an additional bonus for FWF. OpenAIRE is one of the top global platforms for Open Access discovery — it is a default destination for researchers, institutions, and members of the public looking for OA materials. Integration with OpenAIRE is increasingly vital for FWF projects within the EU context, but more importantly, it ensures FWF monographs are genuinely discoverable as part of the global OA ecosystem.
 
 PHAIDRA's open architecture and the Vienna team's willingness to build these integrations meant the FWF could move beyond both the old publisher model (where books were isolated on individual publisher websites) and beyond a single-platform approach (which would have limited discoverability). Instead, FWF books became nodes in a connected network — findable through multiple pathways, accessible through international platforms, and properly integrated into the infrastructure where Open Access actually happens.
 

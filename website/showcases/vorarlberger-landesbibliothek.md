@@ -18,7 +18,7 @@ Beyond providing access to general literature, the library plays a crucial role 
 
 ## Going Digital with Volare and Headless PHAIDRA { .phaidra-showcase-heading }
 
-VLB was an early digital pioneer, having digitised its complete radio and TV archive back in 2008. Alongside this, it also created Volare — a digital library service for significant photo collections from the region.
+VLB was an early digital pioneer, having digitised its complete radio and TV archive back in 2008. Alongside this, it also created [Volare](https://www.re3data.org/repository/r3d100012016){target=_blank} — a digital library service for significant photo collections from the region.
 
 PHAIDRA is used as the core repository for Volare, but it is its implementation as a 'headless' system that is unique among current PHAIDRA users. VLB has developed its own user interface (UI) for Volare, which runs on its own server. Meanwhile, the underlying PHAIDRA instance is hosted by the University of Vienna. This acts purely as the repository — providing the long-term storage, API infrastructure and backups.
 
@@ -50,11 +50,11 @@ The most sensitive material is not provided online as full high-resolution image
 
 VLB follows a philosophy of "Do it once, do it right" for digitization. This means scanning the original document at the highest possible resolution, to ensure the quality and value of the new digital assets are optimized and future-proofed. However, higher resolution images are slower to render in a web browser, making them far from ideal for time-pressed researchers and casual online browsing.
 
-This is where PHAIDRA's built-in IIP image server plays an important role. This IIIF-compliant technology automatically creates "image pyramids" of different resolutions. When a user views an image in Volare, the server only transmits the necessary parts and resolution for the current view or zoom level. This enables the incredibly smooth zooming and fast loading experienced on the VLB website, even with the highest resolution images.
+This is where PHAIDRA's built-in [IIP image server](https://iipimage.sourceforge.io/documentation/server){target=_blank} plays an important role. This [IIIF-compliant](https://iiif.io/){target=_blank} technology automatically creates "image pyramids" of different resolutions. When a user views an image in Volare, the server only transmits the necessary parts and resolution for the current view or zoom level. This enables the incredibly smooth zooming and fast loading experienced on the VLB website, even with the highest resolution images.
 
 ### Crowdsourcing Metadata with Smapshot { .phaidra-showcase-heading }
 
-PHAIDRA has an open, API-driven architecture that is built to simplify integration with other repositories and third-party applications. This plays an important role for a library, and particularly for VLB's focus on delivering the value of its digital assets and collections to as broad a public as possible. One of the most innovative integrations is with Smapshot, a crowdsourcing platform developed in Switzerland.
+PHAIDRA has an open, API-driven architecture that is built to simplify integration with other repositories and third-party applications. This plays an important role for a library, and particularly for VLB's focus on delivering the value of its digital assets and collections to as broad a public as possible. One of the most innovative integrations is with [Smapshot](https://smapshot.heig-vd.ch/){target=_blank}, a crowdsourcing platform developed in Switzerland.
 
 VLB has large collections of difficult-to-catalogue images, including landscapes and oblique aerial photos. These images are provided to the Smapshot service via simple data exchange. Smapshot then pulls the images directly from PHAIDRA using the IIIF API. Members of the Smapshot community then geotag these photos, identifying where they were taken and even drawing polygons to indicate what is visible in the image.
 
@@ -64,7 +64,7 @@ This crowdsourced geodata is then returned to the Library, allowing it to automa
 
 The PHAIDRA API also enables integration with larger national and international services.
 
-Volare has been integrated with Kulturpool, a national project for Austrian digital cultural heritage. The headless architecture has allowed VLB to connect to Kulturpool with rich metadata from the Library's Alma system that includes important details specific to Austrian culture. Meanwhile, when the related images are displayed on the Kulturpool website, these can be pulled directly from PHAIDRA via the image server (IIIF) API.
+Volare has been integrated with [Kulturpool](https://kulturpool.at/){target=_blank}, a national project for Austrian digital cultural heritage. The headless architecture has allowed VLB to connect to Kulturpool with rich metadata from the Library's Alma system that includes important details specific to Austrian culture. Meanwhile, when the related images are displayed on the Kulturpool website, these can be pulled directly from PHAIDRA via the image server (IIIF) API.
 
 From this national archive, content from the Library is shared still further through Kulturpool's own integration in the EU's Europeana repository. This ensures that the VLB's work and important aspects of Vorarlberg's cultural heritage reach a global digital audience.
 
