@@ -65,6 +65,11 @@ nav:
           - docs/authentication.md
       - User Interface:
           - User Interface: docs/ui.md
+  - Showcases:
+      - Overview: showcases/index.md
+      - Belgrade University Library: showcases/belgrade.md
+      - Austrian Science Fund (FWF): showcases/fwf.md
+      - Vorarlberger Landesbibliothek: showcases/vorarlberger-landesbibliothek.md
   - Partners:
       - Overview: community/overview.md
       - List of Partner Institutions: community/list-of-partners.md
