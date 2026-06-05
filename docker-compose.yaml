@@ -801,10 +801,7 @@ services:
   ############### hdl agent ###############
   agent-hdl:
     hostname: "agent-hdl"
-    #image: phaidraorg/agent-hdl:408f2ba8
-    build:
-      context: .
-      dockerfile: dockerfiles/agent-hdl.dockerfile
+    image: phaidraorg/agent-hdl:09adccf6
     <<: [*common, *logs]
     environment:
       <<: [*api_common_env, *hosts]
@@ -1665,10 +1662,7 @@ services:
       HANDLE_PUBLIC_IP: "${HANDLE_PUBLIC_IP:-}"
       HANDLE_PREFIX: "${HANDLE_PREFIX:-}"
       HANDLE_DESC: "${HANDLE_DESC:-PHAIDRA integrated Handle server}"
-    build:
-      context: .
-      dockerfile: dockerfiles/handle.dockerfile
-    #image: phaidraorg/handle:8cc00b0c
+    image: phaidraorg/handle:09adccf6
     pull_policy: missing
     read_only: true
     ports:
