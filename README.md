@@ -310,17 +310,17 @@ and change `CA_ENDPOINT` to the endpoint of your certificate provider.
   + `OC_INGEST_URL`
 
 ## handle
-+ `--profile handle`: Start an integrated Handle sever instance.
-Handle requires configuration and registration with the global handle registry including an annual fee. See https://www.handle.net/ for more details. Make sure to check the handle technical documentation at https://www.handle.net/tech_manual/HN_Tech_Manual_9.pdf.
-Once you're assigned a prefix (eg 11353), the next steps are:
-* download the handle distribution (eg https://www.handle.net/hnr-source/handle-9.3.2-distribution.tar.gz)
++ `--profile handle`: Start an integrated Handle server instance.
+Handle requires configuration and registration with the global Handle registry including an annual fee. See https://www.handle.net/ for more details and technical documentation.
+Once you have completed the registration process and were assigned a prefix (eg 11353), the next steps are:
+* download the Handle distribution (eg https://www.handle.net/hnr-source/handle-9.3.2-distribution.tar.gz)
 * unpack and use the `hdl-setup-server` utility to create so called "site bundle"
 ```
 $ cd handle-9.3.2
 $ mkdir handle-config
 $ bin/hdl-setup-server handle-config
 ```
-* after answering all the questions, your handle config dir will contain several files:
+* after answering all the questions, your Handle config dir will contain several files:
 ```
 admpriv.bin
 admpub.bin
@@ -332,35 +332,44 @@ sitebndl.zip
 siteinfo.json
 /webapps
 ```
-* we need the admin private key also in the jwk format. There is a tool in the handle distribution to create it:
+* we need the admin private key also in the jwk format. There is a tool in the Handle distribution to create it:
 ```
 $ bin/hdl-convert-key ./admpriv.bin ./admpriv.jwk -f jwk
 ```
-
-  + `HANDLE_HOST`: When using the integrated handle server, leave this as is. When using an external handle server, you can set configure it with this variable.
-  + `HANDLE_PUBLIC_IP`: The IP under which your Phaidra (and integrated handle) instance is available.
-
+* put the admpriv.jwk, privkey.bin and pubkey.bin to the certs/handle folder
+* configure following ENVs:
+  + `HANDLE_PREFIX`:
+  + `HANDLE_PUBLIC_IP`: The IP under which your PHAIDRA (and integrated Handle) instance is available.
+  + `HANDLE_DESC`: A short description of your service/repository
+  + `HANDLE_HOST` (optional): When using the integrated Handle server, leave this as is. When using an external Handle server, you can configure it with this variable.
+* send the `sitebndl.zip` to Handle administrators or upload it via the form https://www.handle.net/prefix_request.html
+* in admin panel in PHAIDRA (private -> general -> Handle) set
+  + `Prefix`: if using the integrated Handle server, same as `HANDLE_PREFIX` env
+  + `Instance prefix`: this is used as part of the Handle format (<prefix>/<instance_prefix>.<pid>) to give the repository it's own "suffix" in case you want to use the Handle server to assign handles for other purposes (you'd need to expose port 8000 in docker compse if you want to use the Handle API externally).
+  + `Create handle job`: if on, upon object creation, phaidra-api will create a job for the agent-hdl to register Handles autmatically.
+  + `Ignore pages`: use if you don't want to assign Handles for objects of type `Page`
+* once your site bundle has been registered, you can start you PHIADRA instance with `--profile handle`
 
 # Default credentials on administration sites
-- **LDAP Account Manager** (from the Web interface: Manage Phaidra -> Manage Users):
+- **LDAP Account Manager** (from the Web interface: Manage PHAIDRA -> Manage Users):
   - user: `admin`
   - password: `adminpassword`.
   These credentials can be altered at first startup through the variables `LDAP_ADMIN_USERNAME` and `LDAP_ADMIN_PASSWORD` at first startup in your `.env` file.
-    - There are three default users built in for testing purposes (logging into Phaidra, uploading, etc): `pone`, `ptwo`, and `barchiver`.  They all share the same password `1234`.
+    - There are three default users built in for testing purposes (logging into PHAIDRA, uploading, etc): `pone`, `ptwo`, and `barchiver`.  They all share the same password `1234`.
     - These users can be accessed/altered/deleted from **LDAP Account manager**.
-- **Fedora** (from the Web interface: Manage Phaidra -> Inspect Object Repository):
+- **Fedora** (from the Web interface: Manage PHAIDRA -> Inspect Object Repository):
   - username: `fedoraAdmin`
   - password: `1234`
   - These credentials can be altered in the `.env` file through the variables `FEDORA_ADMIN_USER` and `FEDORA_ADMIN_PASS`.
-- **Grafana** (from the Web interface: Manage Phaidra -> Inspect Running Services):
+- **Grafana** (from the Web interface: Manage PHAIDRA -> Inspect Running Services):
   - username: `phaidra`
   - password: `phaidra`
   - These credentials can be altered at first startup in the `.env` file through the variables `GF_SECURITY_ADMIN_USER` and `GF_SECURITY_ADMIN_PASS`.
-- **DbGate** (from the Web interface: Manage Phaidra -> Inspect Databases)
+- **DbGate** (from the Web interface: Manage PHAIDRA -> Inspect Databases)
   - username: `phaidra`
   - password: `phaidra`
   - Here, only the password can be modified in the `.env` file through the variable `DBGATE_PASS`.  If you want to change the username as well, please change it in the `docker-compose.yaml` file in the `dbgate:` section.  The corresponding variable is called `LOGINS`. You will have to put the username into the variable in the next line `LOGIN_PASSWORD_[username]` as well, that's why we can't centrally manage this from `.env` for now.
-- **Solr** (from the Web interface: Manage Phaidra -> Inspect Search Engine)
+- **Solr** (from the Web interface: Manage PHAIDRA -> Inspect Search Engine)
   - username: `phaidra`
   - password: `phaidra`
   - These credentials can be modified in the `.env` file through the variables `SOLR_USER` and `SOLR_PASS`. You might also want to change `SOLR_SALT` to some random string for a more random encryption of the credentials within Solr.
@@ -571,14 +580,14 @@ source .env
  docker container restart $COMPOSE_PROJECT_NAME-httpd-ssl-local-1 
 ```
 
-## Phaidra Components
+## PHAIDRA Components
 
 In the folder `./src`, one will find `phaidra-api`, `phaidra-ui`, `phaidra-vue-components`, and `agents`, the core components of PHAIDRA.
 See the notes in the following subsections for provenance.
 
 ### phaidra-api
 
-The Phaidra API comes with some utilities, usually executed with `docker exec -it phaidra-api-1 utils/<utility>`.
+The PHAIDRA API comes with some utilities, usually executed with `docker exec -it phaidra-api-1 utils/<utility>`.
 
 - the utility `utils/indexObjects.pl` allows you to re-index all objects. It takes the range of creation dates from and to as parameters.
 
