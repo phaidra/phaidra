@@ -14,7 +14,6 @@ ___
 docker compose --profile demo-local up -d
 ```
 
-# Table of Contents  
 [[_TOC_]]
 
 # About this repository
