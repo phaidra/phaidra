@@ -14,6 +14,9 @@ ___
 docker compose --profile demo-local up -d
 ```
 
+# Table of Contents  
+[[_TOC_]]
+
 # About this repository
 
 This repo hosts the source code and the docker-compose startup file of the
@@ -279,13 +282,16 @@ If you want to use extrenal account binding, you have to additionally define
 and change `CA_ENDPOINT` to the endpoint of your certificate provider.
 
 # Extra profiles
+
 ## minio
-+ `minio-s3-dev`: Local Minio S3 instance. Combine with \*-s3-\* profile if you don't have an S3 instance at hand. With default S3_\* ENV variables (i.e. none set), no further configuration is required. Do not use this in production! The admin UI is available under localhost:9001 with `$S3_ACCESS_KEY` and `$S3_SECRET_KEY` as username/password. Default to `phaidra` and `phaidraphaidra`.
-## Standalone
-+ `website`: For convenient development of our website at [www.phaidra.org](https://www.phaidra.org).
++ `--profile minio-s3-dev`: Local Minio S3 instance. Combine with \*-s3-\* profile if you don't have an S3 instance at hand. With default S3_\* ENV variables (i.e. none set), no further configuration is required. Do not use this in production! The admin UI is available under localhost:9001 with `$S3_ACCESS_KEY` and `$S3_SECRET_KEY` as username/password. Default to `phaidra` and `phaidraphaidra`.
+
+## website
++ `--profile website`: For convenient development of our website at [www.phaidra.org](https://www.phaidra.org).
    This profile can be activated by running `docker compose --profile website up -d`. You will have a hot-reloading version of our website at `http://localhost:8000`, which is controlled by `mkdocs.yaml` and renders the pages under `website`.
-## Add-On
-+ `external-opencast`: can be added to any of the profiles that use local storage, if an external opencast-streaming-server is available to you. Uses a versioned image including all code. It can be started up with a command like: `docker compose --profile ssl-local --profile external-opencast up -d`. An additional container (`agent-opencast`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
+
+## external-opencast
++ `--profile external-opencast`: can be added to any of the profiles that use local storage, if an external opencast-streaming-server is available to you. Uses a versioned image including all code. It can be started up with a command like: `docker compose --profile ssl-local --profile external-opencast up -d`. An additional container (`agent-opencast`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
 
   The following variables will have to be set:
   + `OC_EXTERNAL="ACTIVATED"`
@@ -294,23 +300,43 @@ and change `CA_ENDPOINT` to the endpoint of your certificate provider.
   + `OC_EVENTS_URL`
   + `OC_INGEST_URL`
 
-+ `external-opencast-dev`: can be added to any of the dev-profiles that use local storage, if an external opencast-streaming-server is available to you. Uses bind-mounted code from the repository. It can be started up with a command like: `docker compose --profile ssl-local-dev --profile external-opencast-dev up -d`.  An additional container (`agent-opencast`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
+## external-opencast-dev
++ `--profile external-opencast-dev`: can be added to any of the dev-profiles that use local storage, if an external opencast-streaming-server is available to you. Uses bind-mounted code from the repository. It can be started up with a command like: `docker compose --profile ssl-local-dev --profile external-opencast-dev up -d`.  An additional container (`agent-opencast`) will be started up.  This container uploads videos to the external opencast instance, monitors conversion status and retrieves the resulting link.  Usage of an external opencast server is highly recommended to reduce IO stress and bandwidth usage.
     The following variables will have to be set:
   + `OC_EXTERNAL="ACTIVATED"`
   + `OC_USER`
   + `OC_PASS`
   + `OC_EVENTS_URL`
   + `OC_INGEST_URL`
+
 ## handle
-+ `handle`: Start an integrated handle instance.
-Handle requires significant configuration! Make sure to check the handle technical documentation at https://www.handle.net/tech_manual/HN_Tech_Manual_9.pdf.
-If you don't have certificates, you can create them via
++ `--profile handle`: Start an integrated Handle sever instance.
+Handle requires configuration and registration with the global handle registry including an annual fee. See https://www.handle.net/ for more details. Make sure to check the handle technical documentation at https://www.handle.net/tech_manual/HN_Tech_Manual_9.pdf.
+Once you're assigned a prefix (eg 11353), the next steps are:
+* download the handle distribution (eg https://www.handle.net/hnr-source/handle-9.3.2-distribution.tar.gz)
+* unpack and use the `hdl-setup-server` utility to create so called "site bundle"
 ```
-  openssl genrsa -out ./certs/handle/privkey.pem
-  openssl rsa -in ./certs/handle/privkey.pem -pubout -out ./certs/handle/pubkey.pem
-  docker run --entrypoint sh -v ./certs/handle/:/mnt phaidra-handle /opt/handle/bin/hdl-convert-key /mnt/pubkey.pem > ./certs/handle/pubkey.bin
-  docker run --entrypoint sh -v ./certs/handle/:/mnt phaidra-handle /opt/handle/bin/hdl-convert-key /mnt/privkey.pem > ./certs/handle/privkey.bin
+$ cd handle-9.3.2
+$ mkdir handle-config
+$ bin/hdl-setup-server handle-config
 ```
+* after answering all the questions, your handle config dir will contain several files:
+```
+admpriv.bin
+admpub.bin
+config.dct
+contactdata.dct
+privkey.bin
+pubkey.bin
+sitebndl.zip
+siteinfo.json
+/webapps
+```
+* we need the admin private key also in the jwk format. There is a tool in the handle distribution to create it:
+```
+$ bin/hdl-convert-key ./admpriv.bin ./admpriv.jwk -f jwk
+```
+
   + `HANDLE_HOST`: When using the integrated handle server, leave this as is. When using an external handle server, you can set configure it with this variable.
   + `HANDLE_PUBLIC_IP`: The IP under which your Phaidra (and integrated handle) instance is available.
 
