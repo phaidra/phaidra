@@ -424,9 +424,7 @@ over Docker restarts or whole system reboots.  These directories are the ones th
 of hardware failure.
 
 Objects loaded into PHAIDRA are automatically checksummed using the [SHA512-algorithm](https://en.wikipedia.org/wiki/SHA-2) by the underlying
-repository software [Fedora](https://fedora.lyrasis.org/). By default, PHAIDRA triggers a recalculation of the checksums on every 2nd day of the month.  Results of these scans are visible on the built-in Grafana Dashboard for early hardware failure detection.
-
-See the section [Graphical System overview](#graphical-system-overview) for how these directories are connected to the containers.
+repository software [Fedora](https://fedora.lyrasis.org/). By default, PHAIDRA triggers a recalculation of the checksums on every 2nd day of the month.
 
 # Uninstalling
 
