@@ -88,6 +88,15 @@
                   <v-row v-for="(desc, i) in doiImportData.descriptions" :key="'desc' + i">
                     <v-col md="12" cols="12">{{ desc.description }} <b v-if="desc.lang">({{ desc.lang }})</b></v-col>
                   </v-row>
+                  <v-alert
+                    v-if="doiImportData.abstractWillImport === false"
+                    dense
+                    type="warning"
+                    text
+                    class="mt-2 mb-0"
+                  >
+                    {{ $t("Abstract won't be imported, license isn't Creative Commons") }}
+                  </v-alert>
                 </v-col>
               </v-row>
               <v-row v-if="doiImportData.subtitle">
@@ -309,7 +318,7 @@
 <script>
 import { vocabulary } from '../../mixins/vocabulary'
 import fields from '../../utils/fields'
-import {constructDataCite, normalizeLicenseUrl, isCreativeCommonsLicense} from '../../utils/doiconstructor'
+import {constructDataCite, normalizeLicenseUrl, cleanCrossrefAbstract, setDoiAbstract} from '../../utils/doiconstructor'
 import { formvalidation } from '../../mixins/formvalidation'
 import lang3to2map from '../../utils/lang3to2map'
 export default {
@@ -420,7 +429,7 @@ export default {
 
       // Description / abstract
       const descHit = this.findFields(baseForm, f => f.id === 'description' || f.fieldname === 'Description' || f.component === 'p-text-field')[0]
-      if (descHit && doiImportData.descriptions && doiImportData.descriptions.length > 0) {
+      if (descHit && doiImportData.descriptions && doiImportData.descriptions.length > 0 && doiImportData.abstractWillImport !== false) {
         const f = descHit.field
         const firstDesc = doiImportData.descriptions[0]
         this.setIfEmpty(f, 'value', firstDesc.description, overwrite)
@@ -982,14 +991,15 @@ if (crossrefData['issued']['date-parts'][0]) {
                 }
               }
             }
-            if (crossrefData["abstract"] && isCreativeCommonsLicense(this?.doiImportData?.license)) {
-              this.doiImportData.descriptions.push({
-                description: crossrefData["abstract"]
-                  .replace(/<jats:p>/g, "")
-                  .replace(/<\/jats:p>/g, "")
-                  .replace(/^Abstract\.\s*/i, "")
-                  .trim()
-              })
+            if (crossrefData["abstract"]) {
+              const abstractText = cleanCrossrefAbstract(crossrefData["abstract"])
+              if (abstractText) {
+                setDoiAbstract(
+                  this.doiImportData,
+                  [{ description: abstractText }],
+                  this.doiImportData?.license
+                )
+              }
             }
             console.log('this.doiImportData', this.doiImportData);
             // return
@@ -1127,7 +1137,7 @@ if (crossrefData['issued']['date-parts'][0]) {
       self.form.sections[0].fields.push(tf);
 
       let desc = fields.getField("description");
-      if (doiImportData && doiImportData.descriptions && doiImportData.descriptions.length > 0) {
+      if (doiImportData && doiImportData.descriptions && doiImportData.descriptions.length > 0 && doiImportData.abstractWillImport !== false) {
         desc.value = doiImportData.descriptions[0].description;
         if (doiImportData.descriptions[0].lang) {
           desc.language = doiImportData.descriptions[0].lang;

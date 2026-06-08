@@ -17,6 +17,21 @@ export const isCreativeCommonsLicense = (license) => {
   return typeof license === 'string' && /creativecommons\.org\/licenses/.test(license)
 }
 
+export const cleanCrossrefAbstract = (abstract) => {
+  if (!abstract) return null
+  return abstract
+    .replace(/<jats:p>/g, '')
+    .replace(/<\/jats:p>/g, '')
+    .replace(/^Abstract\.\s*/i, '')
+    .trim()
+}
+
+export const setDoiAbstract = (doiImportData, abstractItems, license) => {
+  if (!abstractItems?.length) return
+  doiImportData.descriptions = abstractItems
+  doiImportData.abstractWillImport = isCreativeCommonsLicense(license)
+}
+
 export const constructDataCite = (dataciteData, that) => {
   let doiImportData = {
     title: '',
@@ -199,11 +214,14 @@ export const constructDataCite = (dataciteData, that) => {
       }
     }
   }
-  if (dataciteData?.data?.attributes?.descriptions?.length && isCreativeCommonsLicense(doiImportData?.license)) {
-    doiImportData.descriptions = dataciteData.data.attributes.descriptions.map(x => x.descriptionType === 'Abstract' ? {
-      ...x,
-      lang: x.lang ? x.lang.length === 3 ? x.lang : that.lang2to3map[x.lang] : null
-    } : null).filter(x => x !== null)
+  if (dataciteData?.data?.attributes?.descriptions?.length) {
+    const abstractItems = dataciteData.data.attributes.descriptions
+      .filter(x => x.descriptionType === 'Abstract' && x.description)
+      .map(x => ({
+        description: x.description,
+        lang: x.lang ? x.lang.length === 3 ? x.lang : that.lang2to3map[x.lang] : null
+      }))
+    setDoiAbstract(doiImportData, abstractItems, doiImportData?.license)
   }
   return doiImportData
 }
