@@ -4,6 +4,19 @@ const normalizeOrcid = (orcid) => {
   return orcid.replace(/^https?:\/\/(www\.)?orcid\.org\//i, '').trim()
 }
 
+export const normalizeLicenseUrl = (licUrl) => {
+  if (!licUrl) return null
+  let modifiedUrl = licUrl.replace(/^https/, 'http').replace(/\/$/, '')
+  if (modifiedUrl.endsWith('/legalcode')) {
+    modifiedUrl = modifiedUrl.slice(0, -'/legalcode'.length)
+  }
+  return modifiedUrl + '/'
+}
+
+export const isCreativeCommonsLicense = (license) => {
+  return typeof license === 'string' && /creativecommons\.org\/licenses/.test(license)
+}
+
 export const constructDataCite = (dataciteData, that) => {
   let doiImportData = {
     title: '',
@@ -153,11 +166,7 @@ export const constructDataCite = (dataciteData, that) => {
     if(licenseIndex >= 0){
       let licUrl = dataciteData.data.attributes.rightsList[licenseIndex].rightsUri
       if(licUrl){
-        const modifiedUrl = licUrl.replace(/^https/, "http");
-        // Remove the last word from the path
-        const pathArray = modifiedUrl.split("/");
-        pathArray.pop(); // Remove the last element
-        const finalUrl = pathArray.join("/") + '/';
+        const finalUrl = normalizeLicenseUrl(licUrl)
         const licTerm = that.getTerm('alllicenses', finalUrl)
         if (licTerm) {
           doiImportData.licenceLabel = licTerm && licTerm['skos:prefLabel'] && licTerm['skos:prefLabel']['eng'] ? licTerm['skos:prefLabel']['eng'] : 'N/A'
@@ -190,7 +199,7 @@ export const constructDataCite = (dataciteData, that) => {
       }
     }
   }
-  if (dataciteData?.data?.attributes?.descriptions?.length && doiImportData?.license && typeof doiImportData.license === 'string' && doiImportData.license.includes('http://creativecommons.org/licenses')) {
+  if (dataciteData?.data?.attributes?.descriptions?.length && isCreativeCommonsLicense(doiImportData?.license)) {
     doiImportData.descriptions = dataciteData.data.attributes.descriptions.map(x => x.descriptionType === 'Abstract' ? {
       ...x,
       lang: x.lang ? x.lang.length === 3 ? x.lang : that.lang2to3map[x.lang] : null

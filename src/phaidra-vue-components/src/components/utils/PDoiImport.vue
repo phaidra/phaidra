@@ -309,7 +309,7 @@
 <script>
 import { vocabulary } from '../../mixins/vocabulary'
 import fields from '../../utils/fields'
-import {constructDataCite} from '../../utils/doiconstructor'
+import {constructDataCite, normalizeLicenseUrl, isCreativeCommonsLicense} from '../../utils/doiconstructor'
 import { formvalidation } from '../../mixins/formvalidation'
 import lang3to2map from '../../utils/lang3to2map'
 export default {
@@ -974,14 +974,15 @@ if (crossrefData['issued']['date-parts'][0]) {
               if (Array.isArray(crossrefData["license"])) {
                 for (let lic of crossrefData["license"]) {
                   if (lic["URL"]) {
-                    if (this.getLocalizedTermLabel("alllicenses", lic["URL"])) {
-                      this.doiImportData.license = lic["URL"];
+                    const normalizedUrl = normalizeLicenseUrl(lic["URL"])
+                    if (this.getLocalizedTermLabel("alllicenses", normalizedUrl)) {
+                      this.doiImportData.license = normalizedUrl;
                     }
                   }
                 }
               }
             }
-            if (crossrefData["abstract"] && this?.doiImportData?.license && typeof this.doiImportData.license === 'string' && this.doiImportData.license.includes('http://creativecommons.org/licenses')) {
+            if (crossrefData["abstract"] && isCreativeCommonsLicense(this?.doiImportData?.license)) {
               this.doiImportData.descriptions.push({
                 description: crossrefData["abstract"]
                   .replace(/<jats:p>/g, "")
