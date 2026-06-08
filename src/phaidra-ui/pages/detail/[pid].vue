@@ -2462,6 +2462,7 @@ import objectMixin from 'phaidra-vue-components/src/mixins/object'
 import lang3to2map from "phaidra-vue-components/src/utils/lang3to2map";
 import Autolinker from "autolinker";
 import copyTooltip from 'phaidra-vue-components/src/mixins/copyTooltip'
+import Autolinker from 'autolinker'
 
 export default {
   mixins: [context, config, vocabulary, objectMixin, copyTooltip],
