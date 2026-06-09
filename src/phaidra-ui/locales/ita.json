@@ -1457,6 +1457,7 @@
   "<a href=\"https://creativecommons.org/licenses/\">Creative Commons licenses</a>": "<a href=\"https://creativecommons.org/licenses/\">Licenze Creative Commons</a>",
   "Access restrictions for collections": "Restrizioni di accesso per le collezioni",
   "Collections only contain metadata and metadata cannot be restricted. Access restrictions only make sense at object/file level, not at collection level.": "Le collezioni contengono solo metadati e i metadati non possono essere limitati. Le restrizioni di accesso si applicano solo a livello di oggetto/file, non a livello di collezione.",
+  "Abstract won't be imported, license isn't Creative Commons": "L'abstract non verrà importato, la licenza non è Creative Commons",
   "DOI Not Found": "DOI non trovato",
   "Unknown error": "Errore sconosciuto",
   "owner": "proprietario",
