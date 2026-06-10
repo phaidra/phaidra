@@ -1955,7 +1955,7 @@
                       <v-row
                         no-gutters
                         class="pt-2"
-                        v-if="objectInfo.cmodel === 'Picture' || objectInfo.cmodel === 'Book'"
+                        v-if="showIiifManifestLink"
                       >
                         <a
                         :href="
@@ -2663,6 +2663,22 @@ export default {
     },
     downloadable: function () {
       return this.objectInfo.datastreams && this.objectInfo.datastreams.includes("OCTETS")
+    },
+    showIiifManifestLink: function () {
+      if (!this.objectInfo || !this.objectInfo.readrights) {
+        return false;
+      }
+      if (this.objectInfo.cmodel === "Picture") {
+        return true;
+      }
+      if (this.objectInfo.cmodel === "Book") {
+        return !!(
+          this.objectInfo.dshash?.["IIIF-MANIFEST"] ||
+          (this.objectInfo.datastreams &&
+            this.objectInfo.datastreams.includes("IIIF-MANIFEST"))
+        );
+      }
+      return false;
     },
     hasLaterVersion: function () {
       if (this.$store.state.objectInfo.versions) {
