@@ -150,7 +150,6 @@ configs:
       # }
       $PHAIDRA_HOSTNAME {
         ipinfo_free forwarded
-        header X-Forwarded-For 131.130.2.176
 
         @CADDY_DENY_COUNTRIES vars {ipinfo_free.country_code} "DONT_FAIL_ON_EMPTY_VAR" $CADDY_DENY_COUNTRIES
         tls /ssl/fullchain.pem /ssl/privkey.pem {
