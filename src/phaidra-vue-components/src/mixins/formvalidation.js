@@ -35,6 +35,7 @@ export const formvalidation = {
         'https://pid.phaidra.org/vocabulary/8YB5-1M0J': [
           'audio/x-wav',
           'audio/wav',
+          'audio/vnd.wave',
           'audio/mpeg',
           'audio/flac',
           'audio/ogg'

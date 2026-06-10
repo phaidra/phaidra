@@ -4036,6 +4036,7 @@ export default {
           return 'https://pid.phaidra.org/vocabulary/44TN-P1S0'
 
         case 'audio/wav':
+        case 'audio/vnd.wave':
         case 'audio/mpeg':
         case 'audio/flac':
         case 'audio/ogg':

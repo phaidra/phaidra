@@ -2202,6 +2202,7 @@ export default {
 
         case 'audio/x-wav':
         case 'audio/wav':
+        case 'audio/vnd.wave':
         case 'audio/mpeg':
         case 'audio/flac':
         case 'audio/ogg':
