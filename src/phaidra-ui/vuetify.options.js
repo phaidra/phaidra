@@ -1,13 +1,8 @@
 export default function ({ app }) {
   let theme = app.$config.defaultTheme === 'dark' ? 'dark' : 'light';
-  if (process.server) {
-    let ssrCookie = app?.context?.ssrContext?.req?.headers?.cookie
-    let cookieTheme = ssrCookie && ssrCookie.split('; ').find(row => row.startsWith('theme='))?.split('=')[1]
-    theme = cookieTheme || theme
-  }
-  if(process.client) {
-    let cookieTheme = localStorage.getItem('theme')
-    theme = cookieTheme || theme
+  if (process.client) {
+    const storedTheme = localStorage.getItem('theme')
+    theme = storedTheme || theme
   }
   return {
     theme: {

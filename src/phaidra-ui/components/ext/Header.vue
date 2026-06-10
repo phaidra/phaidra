@@ -555,10 +555,6 @@
       darkMode() {
         this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
         localStorage.setItem("theme", this.$vuetify.theme.dark ? "dark" : "light");
-        this.$cookies.set('theme', this.$vuetify.theme.dark ? "dark" : "light", {
-          path: '/',
-          maxAge: 60 * 60 * 24 * 365 // 1 year
-        });
       },
       logout: function () {
         console.log("local logout")
@@ -589,6 +585,7 @@
         window.location.href = '/Shibboleth.sso/Logout'
       },
       useLocale: function (lang) {
+      return true;
         if (this.instanceconfig) {
           if (this.instanceconfig.languages) {
             return this.instanceconfig.languages.split(',').includes(lang);
@@ -598,26 +595,12 @@
       },
       changeLocale: function (lang) {
         this.$i18n.locale = lang;
-        // this.$i18n.setLocaleCookie(lang);
         localStorage.setItem("locale", lang);
-        this.$cookies.set("locale", lang);
         this.$router.push(this.switchLocalePath(lang));
         this.$store.dispatch("vocabulary/sortRoles", this.$i18n.locale);
         this.$store.dispatch("vocabulary/sortFields", {locale: this.$i18n.locale, i18nInstance: this.$i18n});
         this.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
         this.$store.dispatch('info/sortFieldsOverview', {locale: this.$i18n.locale, i18nInstance: this.$i18n})
-      }
-    },
-    mounted() {
-      if (localStorage.getItem("locale")) {
-        this.$i18n.locale = localStorage.getItem("locale");
-      } else {
-        console.log('default locale: ' + this.$config.defaultLocale)
-        if (this.$config.defaultLocale) {
-          this.$i18n.locale = this.$config.defaultLocale
-        }
-        localStorage.setItem("locale", this.$i18n.locale);
-        this.$cookies.set("locale", this.$i18n.locale);
       }
     }
   };
