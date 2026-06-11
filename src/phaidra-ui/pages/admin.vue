@@ -1,5 +1,5 @@
 <template>
-  <v-container class="mt-8" fluid>
+  <v-container class="mt-2" fluid>
     <h1 class="d-sr-only">{{$t('Admin')}}</h1>
     <div class="mb-4"><strong>Note:</strong> Config is cached in each worker, don't forget to restart phaidra-api to apply changes.</div>
     <v-row class="admin-root-tabs" no-gutters>
@@ -1347,7 +1347,7 @@ import { config } from "../mixins/config";
 
 export default {
   mixins: [FaviconMixin, config],
-  components: {PRepostat},
+  components: { PRepostat },
   setup() {
     definePageMeta({
       middleware: 'auth'
@@ -1363,7 +1363,7 @@ export default {
   computed: {
     configAsJSON: {
       get: function () {
-        let publicConfig = {...this.parsedPublicConfigData}
+        let publicConfig = { ...this.parsedPublicConfigData }
         delete publicConfig['_id']
         publicConfig.data_orgunits = this.data_orgunits
         publicConfig.data_vocabularies = this.data_vocabularies
@@ -1371,7 +1371,7 @@ export default {
         publicConfig.data_i18n = this.data_i18n
         publicConfig.data_affiliations = this.data_affiliations
 
-        let privateConfig = {...this.parsedPrivateConfigData}
+        let privateConfig = { ...this.parsedPrivateConfigData }
         delete privateConfig['_id']
         let config = {
           public: publicConfig,
@@ -1379,7 +1379,7 @@ export default {
         }
         return JSON.stringify(config, null, 2)
       },
-      set: function () {}
+      set: function () { }
     }
   },
   data() {
@@ -1453,7 +1453,7 @@ export default {
         })
 
         // Remove any API field from config to prevent conflicts
-        if(config.public?.api){
+        if (config.public?.api) {
           delete config.public.api
         }
         this.$store.commit('setInstanceConfig', config.public)
@@ -1480,7 +1480,7 @@ export default {
       try {
 
         // public
-        const instanceConfData = {...this.parsedPublicConfigData}
+        const instanceConfData = { ...this.parsedPublicConfigData }
 
         if (this.data_orgunits_text) {
           this.data_orgunits = JSON.parse(this.data_orgunits_text)
@@ -1517,39 +1517,39 @@ export default {
         var httpFormData = new FormData()
         httpFormData.append('public_config', JSON.stringify(instanceConfData))
         await this.$axios.request({
-            method: 'POST',
-            url: '/config/public',
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'X-XSRF-TOKEN': this.$store.state.user.token
-            },
-            data: httpFormData
-          })
-        if(instanceConfData.faviconText){
+          method: 'POST',
+          url: '/config/public',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-XSRF-TOKEN': this.$store.state.user.token
+          },
+          data: httpFormData
+        })
+        if (instanceConfData.faviconText) {
           const base64Svg = Buffer.from(instanceConfData.faviconText).toString('base64')
           this.updateFavicon(`data:image/svg+xml;base64,${base64Svg}`)
         }
 
         // Remove any API field from config to prevent conflicts
-        if(instanceConfData?.api){
+        if (instanceConfData?.api) {
           delete instanceConfData.api
         }
         this.$store.commit('setInstanceConfig', instanceConfData)
         this.mergeInfoBannerMessage(instanceConfData.infoBannerMessage)
 
         // private
-        const privateConfData = {...this.parsedPrivateConfigData}
+        const privateConfData = { ...this.parsedPrivateConfigData }
         var httpFormData = new FormData()
         httpFormData.append('private_config', JSON.stringify(privateConfData))
         await this.$axios.request({
-            method: 'POST',
-            url: '/config/private',
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'X-XSRF-TOKEN': this.$store.state.user.token
-            },
-            data: httpFormData
-          })
+          method: 'POST',
+          url: '/config/private',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-XSRF-TOKEN': this.$store.state.user.token
+          },
+          data: httpFormData
+        })
       } catch (error) {
         console.error(error)
       } finally {
@@ -1590,11 +1590,11 @@ export default {
         console.error(error)
       }
       this.selectedTemplateId = response?.data?.public_config?.defaulttemplateid
-      if(response?.data?.public_config){
-        this.parsedPublicConfigData = {...response?.data?.public_config}
-        
+      if (response?.data?.public_config) {
+        this.parsedPublicConfigData = { ...response?.data?.public_config }
+
         // Remove any API field from config to prevent conflicts
-        if(this.parsedPublicConfigData?.api){
+        if (this.parsedPublicConfigData?.api) {
           delete this.parsedPublicConfigData.api
         }
 
@@ -1617,8 +1617,8 @@ export default {
         this.data_affiliations_text = JSON.stringify(this.data_affiliations, null, 2)
         this.mergeInfoBannerMessage(response?.data?.public_config?.infoBannerMessage)
       } else {
-        if(this.$store?.state?.instanceconfig){
-          this.parsedPublicConfigData = {...this.$store.state.instanceconfig}
+        if (this.$store?.state?.instanceconfig) {
+          this.parsedPublicConfigData = { ...this.$store.state.instanceconfig }
         }
       }
 
@@ -1632,9 +1632,9 @@ export default {
       } catch (error) {
         console.error(error)
       }
-      
-      if(response?.data?.private_config){
-        this.parsedPrivateConfigData = {...response?.data?.private_config}
+
+      if (response?.data?.private_config) {
+        this.parsedPrivateConfigData = { ...response?.data?.private_config }
       }
       this.loading = false
     }
