@@ -86,7 +86,7 @@ build-ui:
           - src/phaidra-vue-components/**/*
       variables:
         IMAGE_NAME: ui
-    - if: '$CI_COMMIT_BRANCH == "nuxt-4-upgrade"'
+    - if: $CI_COMMIT_BRANCH == "nuxt-4-upgrade"
       changes:
         paths:
           - dockerfiles/ui.dockerfile

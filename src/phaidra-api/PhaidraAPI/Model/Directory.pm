@@ -745,19 +745,21 @@ sub get_name {
 
   #$c->app->log->debug("XXXXXXXXXXXX ".Dumper($entry));
 
-  foreach my $attr (@{$entry->{'asn'}->{'attributes'}}) {
-    my $attrtype = $attr->{'type'};
-    my @attvals  = @{$attr->{'vals'}};
-    foreach my $val (@attvals) {
-      if ($attrtype eq 'givenName') {
-        $fname = $val;
+  if ($entry) {
+    foreach my $attr (@{$entry->{'asn'}->{'attributes'}}) {
+      my $attrtype = $attr->{'type'};
+      my @attvals  = @{$attr->{'vals'}};
+      foreach my $val (@attvals) {
+        if ($attrtype eq 'givenName') {
+          $fname = $val;
+        }
+        if ($attrtype eq 'sn') {
+          $lname = $val;
+        }
       }
-      if ($attrtype eq 'sn') {
-        $lname = $val;
-      }
-    }
 
-    last if ($fname && $lname);
+      last if ($fname && $lname);
+    }
   }
 
   return $fname . ' ' . $lname;
@@ -774,12 +776,14 @@ sub get_email {
 
   my $entry = $self->getLDAPEntryForUser($c, $username);
 
-  foreach my $attr (@{$entry->{'asn'}->{'attributes'}}) {
-    my $attrtype = $attr->{'type'};
-    my @attvals  = @{$attr->{'vals'}};
-    foreach my $val (@attvals) {
-      if ($attrtype eq 'mail') {
-        return $val;
+  if ($entry) {
+    foreach my $attr (@{$entry->{'asn'}->{'attributes'}}) {
+      my $attrtype = $attr->{'type'};
+      my @attvals  = @{$attr->{'vals'}};
+      foreach my $val (@attvals) {
+        if ($attrtype eq 'mail') {
+          return $val;
+        }
       }
     }
   }
