@@ -111,6 +111,7 @@ import { context } from "../../mixins/context"
 import { config } from "../../mixins/config"
 import { csvParser } from "../../mixins/csvParser"
 import jsonld from "phaidra-vue-components/src/utils/json-ld"
+import { mimeToCreateMethod } from 'phaidra-vue-components/src/utils/mimetypes'
 import { fieldSettings } from '../../config/bulk-upload/field-settings'
 
 export default {
@@ -286,47 +287,7 @@ export default {
                 }
               )
 
-              // choose upload method
-              switch (file.type) {
-                case 'image/jpeg':
-                case 'image/tiff':
-                case 'image/gif':
-                case 'image/png':
-                case 'image/x-ms-bmp':
-                case 'image/bmp':
-                case 'image/jp2':
-                case 'image/jpx':
-                  createmethod = 'picture'
-                  break
-
-                case 'audio/x-wav':
-                case 'audio/wav':
-                case 'audio/vnd.wave':
-                case 'audio/mpeg':
-                case 'audio/flac':
-                case 'audio/ogg':
-                  createmethod = 'audio'
-                  break
-
-                case 'application/pdf':
-                  createmethod = 'document'
-                  break
-
-                case 'video/mpeg':
-                case 'video/avi':
-                case 'video/vnd.avi':
-                case 'video/x-msvideo':
-                case 'video/mp4':
-                case 'video/quicktime':
-                case 'video/x-matroska':
-                  createmethod = 'video'
-                  break
-
-                default:
-                  // data
-                  createmethod = 'unknown'
-                  break
-              }
+              createmethod = mimeToCreateMethod(file.type)
             } else {
               throw new Error(`File not found: ${filename}`)
             }

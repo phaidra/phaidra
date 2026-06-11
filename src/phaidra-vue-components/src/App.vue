@@ -529,6 +529,7 @@ import PCollectionGallery from '@/components/browse/PCollectionGallery'
 import { version } from '../package.json'
 import fields from '@/utils/fields'
 import jsonLd from '@/utils/json-ld'
+import { mimeToResourceType as mimeToResourceTypeFromMime } from '@/utils/mimetypes'
 
 export default {
   name: 'app',
@@ -4026,40 +4027,7 @@ export default {
       return true
     },
     getResourceTypeFromMimeType: function (mime) {
-      switch (mime) {
-        case 'image/jpeg':
-        case 'image/tiff':
-        case 'image/gif':
-        case 'image/png':
-        case 'image/x-ms-bmp':
-          // picture
-          return 'https://pid.phaidra.org/vocabulary/44TN-P1S0'
-
-        case 'audio/wav':
-        case 'audio/vnd.wave':
-        case 'audio/mpeg':
-        case 'audio/flac':
-        case 'audio/ogg':
-          // audio
-          return 'https://pid.phaidra.org/vocabulary/8YB5-1M0J'
-
-        case 'application/pdf':
-          // document
-          return 'https://pid.phaidra.org/vocabulary/69ZZ-2KGX'
-
-        case 'video/mpeg':
-        case 'video/avi':
-        case 'video/mp4':
-        case 'video/quicktime':
-        case 'video/x-matroska':
-          // video
-          return 'https://pid.phaidra.org/vocabulary/B0Y6-GYT8'
-
-        // eg application/x-iso9660-image
-        default:
-          // data
-          return 'https://pid.phaidra.org/vocabulary/7AVS-Y482'
-      }
+      return mimeToResourceTypeFromMime(mime)
     },
     handleSelect: function (val) {
       var i

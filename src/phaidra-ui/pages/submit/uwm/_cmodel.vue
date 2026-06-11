@@ -59,6 +59,7 @@ import fields from "phaidra-vue-components/src/utils/fields";
 import { context } from "../../../mixins/context";
 import { config } from "../../../mixins/config";
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
+import { mimeToCreateMethod } from "phaidra-vue-components/src/utils/mimetypes";
 
 export default {
   middleware: "auth",
@@ -79,34 +80,7 @@ export default {
       if (this.$route.params.cmodel === "resource") {
         return "resource";
       }
-      switch (this.mimetype) {
-        case "image/jpeg":
-        case "image/tiff":
-        case "image/gif":
-        case "image/png":
-        case "image/x-ms-bmp":
-          return "picture";
-
-        case "audio/wav":
-        case "audio/vnd.wave":
-        case "audio/mpeg":
-        case "audio/flac":
-        case "audio/ogg":
-          return "audio";
-
-        case "application/pdf":
-          return "document";
-
-        case "video/mpeg":
-        case "video/avi":
-        case "video/mp4":
-        case "video/quicktime":
-        case "video/x-matroska":
-          return "video";
-
-        default:
-          return "unknown";
-      }
+      return mimeToCreateMethod(this.mimetype);
     },
   },
   data() {
