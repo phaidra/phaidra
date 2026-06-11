@@ -1260,7 +1260,7 @@ sub _cmp_metadata_siblings {
 sub _entity_has_data {
   my ($node) = @_;
 
-  return 0 unless $node && ($node->{xmlname} // '') eq 'entity';
+  return 0 unless $node             && ($node->{xmlname} // '') eq 'entity';
   return 0 unless $node->{children} && ref($node->{children}) eq 'ARRAY';
 
   for my $ch (@{$node->{children}}) {
@@ -1275,7 +1275,7 @@ sub _entity_has_data {
 sub _lifecycle_contribute_has_content {
   my ($node) = @_;
 
-  return 0 unless $node && ($node->{xmlname} // '') eq 'contribute';
+  return 0 unless $node             && ($node->{xmlname} // '') eq 'contribute';
   return 0 unless $node->{children} && ref($node->{children}) eq 'ARRAY';
 
   my $has_role   = 0;
@@ -1300,14 +1300,10 @@ sub _prune_empty_uwm_nodes {
     if ($node->{children} && ref($node->{children}) eq 'ARRAY') {
       $self->_prune_empty_uwm_nodes($node->{children});
       if (($node->{xmlname} // '') eq 'contribute') {
-        @{$node->{children}} = grep {
-          ($_->{xmlname} // '') ne 'entity' || _entity_has_data($_)
-        } @{$node->{children}};
+        @{$node->{children}} = grep {($_->{xmlname} // '') ne 'entity' || _entity_has_data($_)} @{$node->{children}};
       }
       if (($node->{xmlname} // '') eq 'lifecycle') {
-        @{$node->{children}} = grep {
-          ($_->{xmlname} // '') ne 'contribute' || _lifecycle_contribute_has_content($_)
-        } @{$node->{children}};
+        @{$node->{children}} = grep {($_->{xmlname} // '') ne 'contribute' || _lifecycle_contribute_has_content($_)} @{$node->{children}};
       }
     }
   }
