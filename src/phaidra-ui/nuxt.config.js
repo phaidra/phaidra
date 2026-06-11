@@ -20,7 +20,7 @@ const fallbackInternalApiBaseURL = `http://${internalApiHost}:${internalApiPort}
 let apiBaseURL = process.env.PHAIDRA_API_BASE_URL_INTERNAL || ''
 
 if (!apiBaseURL) {
-  // PHAIDRA_API_BASE_URL can point to browser/public host (localhost:8899).
+  // PHAIDRA_API_BASE_URL can point to browser/public host (localhost:8899). 
   // For SSR inside Docker, localhost points to UI container itself, so force internal API service URL.
   if (process.env.PHAIDRA_API_BASE_URL) {
     try {
@@ -28,7 +28,7 @@ if (!apiBaseURL) {
       if (!['localhost', '127.0.0.1', '::1'].includes(parsed.hostname)) {
         apiBaseURL = process.env.PHAIDRA_API_BASE_URL
       }
-    } catch (_) {}
+    } catch (_) { }
   }
   if (!apiBaseURL) {
     apiBaseURL = fallbackInternalApiBaseURL
@@ -37,12 +37,12 @@ if (!apiBaseURL) {
 const publicBaseURL = process.env.PHAIDRA_BASE_URL || publicApiBaseURL.replace(/\/api\/?$/, '')
 
 /** Redirect Vuetify's internal focusTrap module to `shims/vuetify-focusTrap.js` (SSR-safe teardown). */
-function vuetifyFocusTrapSsrShim () {
+function vuetifyFocusTrapSsrShim() {
   const shimPath = path.resolve(__dirname, 'shims/vuetify-focusTrap.js')
   return {
     name: 'vuetify-focus-trap-ssr-shim',
     enforce: 'pre',
-    resolveId (id) {
+    resolveId(id) {
       const normalized = id.split(path.sep).join('/')
       if (normalized.includes('focusTrap')) {
         return shimPath
