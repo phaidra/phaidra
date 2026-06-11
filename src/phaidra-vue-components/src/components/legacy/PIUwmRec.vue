@@ -324,7 +324,7 @@
               <v-btn icon dark @click="$emit('add-field', ch)">
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
-              <v-btn v-if="ch.removable" icon dark @click="$emit('remove-field', ch)">
+              <v-btn v-if="canRemoveNode(ch, parent)" icon dark @click="$emit('remove-field', ch)">
                 <v-icon>mdi-minus</v-icon>
               </v-btn>
             </template>
@@ -401,6 +401,52 @@ export default {
     }
   },
   methods: {
+    entityHasData: function (entity) {
+      if (!entity || !entity.children) {
+        return false
+      }
+      for (let ch of entity.children) {
+        if (ch.xmlname !== 'type' && ch.ui_value) {
+          return true
+        }
+      }
+      return false
+    },
+    nodeDataOrder: function (node) {
+      if (node.attributes) {
+        for (let attr of node.attributes) {
+          if (attr.xmlname === 'data_order') {
+            return parseInt(attr.ui_value, 10) || 0
+          }
+        }
+      }
+      return parseInt(node.data_order, 10) || 0
+    },
+    canRemoveNode: function (ch, parent) {
+      if (ch.removable) {
+        return true
+      }
+      if (!parent || !parent.children || ch.cardinality === 1) {
+        return false
+      }
+      let siblings = parent.children.filter(c => c.xmlname === ch.xmlname)
+      if (siblings.length <= 1) {
+        return false
+      }
+      if (ch.xmlname === 'entity' && parent.xmlname === 'contribute') {
+        if (!this.entityHasData(ch)) {
+          return true
+        }
+        let filled = siblings.filter(c => this.entityHasData(c))
+        return filled.length <= 2 && this.nodeDataOrder(ch) > 0
+      }
+      if (ch.xmlname === 'contribute' && parent.xmlname === 'lifecycle') {
+        let role = ch.children && ch.children.find(c => c.xmlname === 'role')
+        let hasEntity = ch.children && ch.children.some(c => c.xmlname === 'entity' && this.entityHasData(c))
+        return !(role && role.ui_value && hasEntity)
+      }
+      return false
+    },
     _getTermChildren: async function (uri) {
       if(!uri) return;
       this.clsLoading = true
