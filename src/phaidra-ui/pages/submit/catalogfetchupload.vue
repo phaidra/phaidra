@@ -105,6 +105,7 @@
 
 <script>
 import jsonLdUtils from 'phaidra-vue-components/src/utils/json-ld'
+import { mimeToCreateMethod } from 'phaidra-vue-components/src/utils/mimetypes'
 import { context } from "../../mixins/context"
 import { config } from "../../mixins/config"
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
@@ -353,51 +354,7 @@ export default {
         f.mimetype = event.type
       }
 
-      switch (f.mimetype) {
-        case 'image/jpeg':
-        case 'image/tiff':
-        case 'image/gif':
-        case 'image/png':
-        case 'image/x-ms-bmp':
-        case 'image/bmp':
-        case 'image/jp2':
-        case 'image/jpx':
-          // picture
-          this.createmethod = 'picture'
-          this.uploadBtnLabel
-          break
-
-        case 'audio/x-wav':
-        case 'audio/wav':
-        case 'audio/vnd.wave':
-        case 'audio/mpeg':
-        case 'audio/flac':
-        case 'audio/ogg':
-          // audio
-          this.createmethod = 'audio'
-          break
-
-        case 'application/pdf':
-          // document
-          this.createmethod = 'document'
-          break
-
-        case 'video/mpeg':
-        case 'video/avi':
-        case 'video/vnd.avi':
-        case 'video/x-msvideo':
-        case 'video/mp4':
-        case 'video/quicktime':
-        case 'video/x-matroska':
-          // video
-          this.createmethod = 'video'
-          break
-
-        default:
-          // data
-          this.createmethod = 'unknown'
-          break
-      }
+      this.createmethod = mimeToCreateMethod(f.mimetype)
 
       this.mergeFormFieldsToJsonld()
     },

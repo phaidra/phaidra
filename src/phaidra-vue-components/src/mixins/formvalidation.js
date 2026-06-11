@@ -1,46 +1,12 @@
+import { allowedMimetypes } from '../utils/mimetypes'
+
 export const formvalidation = {
   data() {
     return {
       validationError: false,
       mandatoryFieldsFound: {},
       mandatoryFieldsValidated: {},
-      allowedMimetypes: {
-        // image
-        'https://pid.phaidra.org/vocabulary/44TN-P1S0': [
-          'image/jpeg',
-          'image/gif',
-          'image/tiff',
-          'image/png',
-          'image/x-ms-bmp',
-          'image/bmp',
-          'image/jp2',
-          'image/jpx'
-        ],
-        // text
-        'https://pid.phaidra.org/vocabulary/69ZZ-2KGX': [
-          'application/pdf',
-          'application/x-pdf'
-        ],
-        // video
-        'https://pid.phaidra.org/vocabulary/B0Y6-GYT8': [
-          'video/mpeg',
-          'video/avi',
-          'video/vnd.avi',
-          'video/x-msvideo',
-          'video/mp4',
-          'video/quicktime',
-          'video/x-matroska'
-        ],
-        // sound
-        'https://pid.phaidra.org/vocabulary/8YB5-1M0J': [
-          'audio/x-wav',
-          'audio/wav',
-          'audio/vnd.wave',
-          'audio/mpeg',
-          'audio/flac',
-          'audio/ogg'
-        ]
-      }
+      allowedMimetypes
     }
   },
   computed: {

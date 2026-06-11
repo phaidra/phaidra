@@ -1004,6 +1004,7 @@
 <script>
 import { vocabulary } from '../../mixins/vocabulary'
 import { formvalidation } from '../../mixins/formvalidation'
+import { mimeToResourceType as mimeToResourceTypeFromMime } from '../../utils/mimetypes'
 import arrays from '../../utils/arrays'
 import jsonLd from '../../utils/json-ld'
 import fields from '../../utils/fields'
@@ -2188,45 +2189,7 @@ export default {
       }
     },
     mimeToResourceType: function (mime) {
-      switch (mime) {
-        case 'image/jpeg':
-        case 'image/tiff':
-        case 'image/gif':
-        case 'image/png':
-        case 'image/x-ms-bmp':
-        case 'image/bmp':
-        case 'image/jp2':
-        case 'image/jpx':
-          // picture
-          return 'https://pid.phaidra.org/vocabulary/44TN-P1S0'
-
-        case 'audio/x-wav':
-        case 'audio/wav':
-        case 'audio/vnd.wave':
-        case 'audio/mpeg':
-        case 'audio/flac':
-        case 'audio/ogg':
-          // audio
-          return 'https://pid.phaidra.org/vocabulary/8YB5-1M0J'
-
-        case 'application/pdf':
-          // document
-          return 'https://pid.phaidra.org/vocabulary/69ZZ-2KGX'
-
-        case 'video/mpeg':
-        case 'video/avi':
-        case 'video/vnd.avi':
-        case 'video/x-msvideo':
-        case 'video/mp4':
-        case 'video/quicktime':
-        case 'video/x-matroska':
-          // video
-          return 'https://pid.phaidra.org/vocabulary/B0Y6-GYT8'
-
-        default:
-          // data
-          return 'https://pid.phaidra.org/vocabulary/7AVS-Y482'
-      }
+      return mimeToResourceTypeFromMime(mime)
     },
     setSelected: function (f, property, event) {
       var value = event === null || event === undefined ? '' : (typeof event === 'string') ? event : event['@id']
