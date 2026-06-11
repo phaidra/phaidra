@@ -20,7 +20,7 @@ const fallbackInternalApiBaseURL = `http://${internalApiHost}:${internalApiPort}
 let apiBaseURL = process.env.PHAIDRA_API_BASE_URL_INTERNAL || ''
 
 if (!apiBaseURL) {
-  // PHAIDRA_API_BASE_URL can point to browser/public host (localhost:8899). 
+  // PHAIDRA_API_BASE_URL can point to browser/public host (localhost:8899).
   // For SSR inside Docker, localhost points to UI container itself, so force internal API service URL.
   if (process.env.PHAIDRA_API_BASE_URL) {
     try {
