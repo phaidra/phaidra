@@ -1,6 +1,6 @@
 # phaidra-ui
 
-> User interface using phaidra-api
+> PHAIDRA user interface using phaidra-api
 
 ## Prerequisities
 
