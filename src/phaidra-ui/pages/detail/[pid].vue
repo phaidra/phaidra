@@ -3849,6 +3849,7 @@ export default {
 
 .ph-box {
   line-height: 1rem;
+  white-space: normal;
 }
 
 .iframe-container {
