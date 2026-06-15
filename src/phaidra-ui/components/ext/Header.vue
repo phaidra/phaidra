@@ -576,65 +576,19 @@ export default {
     localeLabel: function () {
       return this.$i18n.locale;
     },
-    methods: {
-      darkMode() {
-        this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-        localStorage.setItem("theme", this.$vuetify.theme.dark ? "dark" : "light");
-        this.$cookies.set('theme', this.$vuetify.theme.dark ? "dark" : "light", {
-          path: '/',
-          maxAge: 60 * 60 * 24 * 365 // 1 year
-        });
-      },
-      logout: function () {
-        console.log("local logout")
-        this.$store.dispatch("logout");
-        this.$store.commit("setLoading", false);
-        this.$router.push(this.localeLocation({ path: `/` }));
-      },
-      ssologoutlink: async function () {
-        console.log("local logout")
-        try {
-          await this.$store.dispatch("logout");
-        } catch (error) {
-          console.log(error)
-        }
-        console.log("sso logout link")
-        this.$store.commit("setLoading", false);
-        this.$refs.logoutlink.click();
-      },
-      ssologout: async function () {
-        console.log("local logout")
-        try {
-          await this.$store.dispatch("logout");
-        } catch (error) {
-          console.log(error)
-        }
-        console.log("sso logout location.href")
-        this.$store.commit("setLoading", false);
-        window.location.href = '/Shibboleth.sso/Logout'
-      },
-      useLocale: function (lang) {
-        if (this.instanceconfig) {
-          if (this.instanceconfig.languages) {
-            return this.instanceconfig.languages.split(',').includes(lang);
-          }
-        }
-        return false;
-      },
-      changeLocale: function (lang) {
-        this.$i18n.locale = lang;
-        // this.$i18n.setLocaleCookie(lang);
-        localStorage.setItem("locale", lang);
-        this.$cookies.set("locale", lang, {
-          path: '/',
-          maxAge: 60 * 60 * 24 * 365
-        });
-        this.$router.push(this.switchLocalePath(lang));
-        this.$store.dispatch("vocabulary/sortRoles", this.$i18n.locale);
-        this.$store.dispatch("vocabulary/sortFields", {locale: this.$i18n.locale, i18nInstance: this.$i18n});
-        this.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
-        this.$store.dispatch('info/sortFieldsOverview', {locale: this.$i18n.locale, i18nInstance: this.$i18n})
+    isDarkTheme: function () {
+      const globalTheme = this.$vuetify?.theme?.global;
+      const themeName = globalTheme?.name;
+      if (themeName && typeof themeName === "object" && "value" in themeName) {
+        return themeName.value === "dark";
       }
+      if (typeof themeName === "string") {
+        return themeName === "dark";
+      }
+      if (typeof this.$vuetify?.theme?.dark === "boolean") {
+        return this.$vuetify.theme.dark;
+      }
+      return globalTheme?.current?.value?.dark || false;
     }
   },
   methods: {
@@ -649,6 +603,10 @@ export default {
       }
 
       localStorage.setItem("theme", nextTheme);
+      this.$cookies.set('theme', nextTheme, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 365 // 1 year
+      });
     },
     logout: function () {
       console.log("local logout")
@@ -689,6 +647,10 @@ export default {
     changeLocale: function (lang) {
       this.$i18n.locale = lang;
       localStorage.setItem("locale", lang);
+      this.$cookies.set("locale", lang, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 365
+      });
       this.$router.push(this.switchLocalePath(lang));
       this.$store.dispatch("vocabulary/sortRoles", this.$i18n.locale);
       this.$store.dispatch("vocabulary/sortFields", {locale: this.$i18n.locale, i18nInstance: this.$i18n});

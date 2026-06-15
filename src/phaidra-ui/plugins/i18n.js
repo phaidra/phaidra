@@ -12,6 +12,8 @@ export default defineNuxtPlugin((nuxtApp) => {
     const stored = localStorage.getItem('locale')
     if (stored && messages[stored]) {
       locale = stored
+    } else {
+      localStorage.setItem('locale', defaultLocale)
     }
   }
 
