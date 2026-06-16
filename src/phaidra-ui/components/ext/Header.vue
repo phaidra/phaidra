@@ -585,7 +585,6 @@
         window.location.href = '/Shibboleth.sso/Logout'
       },
       useLocale: function (lang) {
-      return true;
         if (this.instanceconfig) {
           if (this.instanceconfig.languages) {
             return this.instanceconfig.languages.split(',').includes(lang);
