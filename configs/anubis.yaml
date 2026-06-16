@@ -29,6 +29,13 @@ bots:
         - 'headers["Origin"] == "https://tengnagel.univie.ac.at"'
     action: ALLOW
 
+  - name: uscholar
+    expression:
+      all:
+        - '"Origin" in headers'
+        - 'headers["Origin"] == "https://uscholar.univie.ac.at"'
+    action: ALLOW
+
   - name: friendly
     expression:
       any:
