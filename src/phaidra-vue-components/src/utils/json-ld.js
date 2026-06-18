@@ -1,5 +1,6 @@
 import fields from './fields'
 import vocabularystore from '../store/modules/vocabulary'
+import { isNonBlankString, trimToNull } from './stringValidation'
 
 export default {
   json2components: function (jsonld, options, vocabularies) {
@@ -1873,10 +1874,11 @@ export default {
       '@type': f.type
     }
     if (f.type === 'schema:Person') {
-      if (f.firstname) {
+      const firstname = trimToNull(f.firstname)
+      if (firstname) {
         h['schema:givenName'] = [
           {
-            '@value': f.firstname
+            '@value': firstname
           }
         ]
       }
@@ -1886,25 +1888,28 @@ export default {
       if (f.deathdate) {
         h['schema:deathDate'] = [f.deathdate]
       }
-      if (f.lastname) {
+      const lastname = trimToNull(f.lastname)
+      if (lastname) {
         h['schema:familyName'] = [
           {
-            '@value': f.lastname
+            '@value': lastname
           }
         ]
       }
-      if (f.name) {
+      const name = trimToNull(f.name)
+      if (name) {
         h['schema:name'] = [
           {
-            '@value': f.name
+            '@value': name
           }
         ]
       }
-      if (f.identifierText) {
+      const identifierText = trimToNull(f.identifierText)
+      if (identifierText) {
         h['skos:exactMatch'] = [
           {
             '@type': f.identifierType,
-            '@value': f.identifierText
+            '@value': identifierText
           }
         ]
       }
@@ -1920,17 +1925,18 @@ export default {
           a['schema:name'] = f.affiliationSelectedName
           a['skos:exactMatch'] = [ f.affiliation ]
         }
-        if (f.affiliationType === 'other') {
+        const affiliationText = trimToNull(f.affiliationText)
+        if (f.affiliationType === 'other' && affiliationText) {
           a['schema:name'] = [
             {
-              '@value': f.affiliationText
+              '@value': affiliationText
             }
           ]
         }
         if (
-          (f.affiliationType === 'select' && f.affiliationSelectedName) ||
-          (f.affiliationType === 'ror' && f.affiliationSelectedName) ||
-          (f.affiliationType === 'other' && f.affiliationText)
+          (f.affiliationType === 'select' && isNonBlankString(f.affiliationSelectedName)) ||
+          (f.affiliationType === 'ror' && isNonBlankString(f.affiliationSelectedName)) ||
+          (f.affiliationType === 'other' && affiliationText)
         ) {
           h['schema:affiliation'] = [ a ]
         }
@@ -1945,21 +1951,23 @@ export default {
           h['schema:name'] = f.organizationSelectedName
           h['skos:exactMatch'] = [ f.organization ]
         } else {
-          if (f.organizationText) {
+          const organizationText = trimToNull(f.organizationText)
+          if (organizationText) {
             h['schema:name'] = [
               {
-                '@value': f.organizationText
+                '@value': organizationText
               }
             ]
             if (f.language) {
               h['schema:name'][0]['@language'] = f.language
             }
           }
-          if (f.identifierText) {
+          const identifierText = trimToNull(f.identifierText)
+          if (identifierText) {
             if (f.identifierType) {
-              h['skos:exactMatch'] = [ { '@type': f.identifierType, '@value': f.identifierText } ]
+              h['skos:exactMatch'] = [ { '@type': f.identifierType, '@value': identifierText } ]
             } else {
-              h['skos:exactMatch'] = [ f.identifierText ]
+              h['skos:exactMatch'] = [ identifierText ]
             }
           }
         }
@@ -2146,21 +2154,23 @@ export default {
     if (f.roles) {
       if (f.roles.length > 0) {
         for (let role of f.roles) {
-          if (role.role && (role.firstname || role.lastname || role.name)) {
+          if (role.role && (trimToNull(role.firstname) || trimToNull(role.lastname) || trimToNull(role.name))) {
             let entity = {
               '@type': 'schema:Person'
             }
-            if (role.name) {
+            const name = trimToNull(role.name)
+            if (name) {
               entity['schema:name'] = [
                 {
-                  '@value': role.name
+                  '@value': name
                 }
               ]
             }
-            if (role.firstname) {
+            const firstname = trimToNull(role.firstname)
+            if (firstname) {
               entity['schema:givenName'] = [
                 {
-                  '@value': role.firstname
+                  '@value': firstname
                 }
               ]
             }
@@ -2170,10 +2180,11 @@ export default {
             if (role.deathdate) {
               entity['schema:deathDate'] = [role.deathdate]
             }
-            if (role.lastname) {
+            const lastname = trimToNull(role.lastname)
+            if (lastname) {
               entity['schema:familyName'] = [
                 {
-                  '@value': role.lastname
+                  '@value': lastname
                 }
               ]
             }
@@ -2315,28 +2326,31 @@ export default {
       }
       h['dce:title'] = [ tit ]
     }
-    if (firstname || lastname || name) {
+    const givenName = trimToNull(firstname)
+    const familyName = trimToNull(lastname)
+    const personName = trimToNull(name)
+    if (givenName || familyName || personName) {
       let r = {
         '@type': 'schema:Person'
       }
-      if (firstname) {
+      if (givenName) {
         r['schema:givenName'] = [
           {
-            '@value': firstname
+            '@value': givenName
           }
         ]
       }
-      if (lastname) {
+      if (familyName) {
         r['schema:familyName'] = [
           {
-            '@value': lastname
+            '@value': familyName
           }
         ]
       }
-      if (name) {
+      if (personName) {
         r['schema:name'] = [
           {
-            '@value': name
+            '@value': personName
           }
         ]
       }
@@ -2502,6 +2516,24 @@ export default {
       return false
     }
     return true
+  },
+  entityFieldHasContent (f) {
+    if (!isNonBlankString(f.role)) {
+      return false
+    }
+    if (f.type === 'schema:Person') {
+      return !!(trimToNull(f.firstname) ||
+        trimToNull(f.lastname) ||
+        trimToNull(f.name) ||
+        trimToNull(f.identifierText))
+    }
+    if (f.type === 'schema:Organization') {
+      if (f.organizationType === 'select' || f.organizationType === 'ror') {
+        return !!(isNonBlankString(f.organization) || isNonBlankString(f.organizationSelectedName) || trimToNull(f.identifierText))
+      }
+      return !!(trimToNull(f.organizationText) || trimToNull(f.identifierText))
+    }
+    return false
   },
   push_object (jsonld, predicate, object) {
     if (this.validate_object(object)) {
@@ -2716,7 +2748,7 @@ export default {
           break
 
         case 'role':
-          if (f.role && (f.firstname || f.lastname || f.name || f.organizationSelectedName || f.organization || f.organizationText || f.identifierText)) {
+          if (this.entityFieldHasContent(f)) {
             this.push_object(jsonld, f.role, this.get_json_role(f))
           }
           break
@@ -2787,7 +2819,7 @@ export default {
           break
 
         case 'rdau:P60227':
-          if (f.title || f.name || f.firstname || f.lastname) {
+          if (f.title || trimToNull(f.name) || trimToNull(f.firstname) || trimToNull(f.lastname)) {
             this.push_object(jsonld, f.predicate, this.get_json_adaptation(f.type, f.title, f.subtitle, f.titleLanguage, f.role, f.name, f.firstname, f.lastname))
           }
           break
