@@ -1257,6 +1257,13 @@ sub _cmp_metadata_siblings {
   return int($a->{mid} // 0) <=> int($b->{mid} // 0);
 }
 
+sub _is_non_blank_ui_value {
+  my ($value) = @_;
+  return 0 unless defined $value;
+  $value =~ s/^\s+|\s+$//g;
+  return $value ne '' ? 1 : 0;
+}
+
 sub _entity_has_data {
   my ($node) = @_;
 
@@ -1266,7 +1273,7 @@ sub _entity_has_data {
   for my $ch (@{$node->{children}}) {
     next if (($ch->{xmlname} // '') eq 'type');
     my $v = $ch->{ui_value} // '';
-    next if $v eq '';
+    next unless _is_non_blank_ui_value($v);
     return 1;
   }
   return 0;
@@ -1281,7 +1288,7 @@ sub _lifecycle_contribute_has_content {
   my $has_role   = 0;
   my $has_entity = 0;
   for my $ch (@{$node->{children}}) {
-    if (($ch->{xmlname} // '') eq 'role' && ($ch->{ui_value} // '') ne '') {
+    if (($ch->{xmlname} // '') eq 'role' && _is_non_blank_ui_value($ch->{ui_value} // '')) {
       $has_role = 1;
     }
     if (($ch->{xmlname} // '') eq 'entity' && _entity_has_data($ch)) {

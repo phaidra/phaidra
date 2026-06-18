@@ -34,6 +34,7 @@
 
 <script>
 import arrays from '../../utils/arrays'
+import { isNonBlankString } from '../../utils/stringValidation'
 import PIUwmRec from './PIUwmRec'
 
 export default {
@@ -171,7 +172,7 @@ export default {
 
       let role = this.findNodeRec('uwm_lifecycle_contribute_role', 'uwm', this.form)
       this.$set(role, 'errorMessages', [])
-      if (!role.ui_value) {
+      if (!isNonBlankString(role.ui_value)) {
         role.errorMessages.push(this.$t('Missing role'))
         this.valid = false
         this.validationErrors.push(this.$t('Missing role'))
@@ -182,7 +183,7 @@ export default {
         this.$set(firstname, 'errorMessages', [])
         this.$set(lastname, 'errorMessages', [])
         this.$set(institution, 'errorMessages', [])
-        if (!firstname.ui_value && !lastname.ui_value && !institution.ui_value) {
+        if (!isNonBlankString(firstname.ui_value) && !isNonBlankString(lastname.ui_value) && !isNonBlankString(institution.ui_value)) {
           firstname.errorMessages.push(this.$t('Missing firstname'))
           lastname.errorMessages.push(this.$t('Missing lastname'))
           institution.errorMessages.push(this.$t('Missing institution'))

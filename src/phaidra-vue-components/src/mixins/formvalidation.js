@@ -1,4 +1,5 @@
 import { allowedMimetypes } from '../utils/mimetypes'
+import { isNonBlankString } from '../utils/stringValidation'
 
 export const formvalidation = {
   data() {
@@ -20,6 +21,37 @@ export const formvalidation = {
   methods: {
     addAsterixIfNotPresent(value) {
       return value ? (value.includes('*') ? value : value + ' *') : value 
+    },
+    checkEntityField(f, { onAuthor, onAdvisor } = {}) {
+      console.log('checking p[' + f.predicate + '] c[' + f.component + '] r[' + f.role + '] fn[' + f.firstname + '] ln[' + f.lastname + '] n[' + f.name + '] org[' + f.organization + '] orgtext[' + f.organizationText + ']')
+      if (!isNonBlankString(f.role)) {
+        return
+      }
+      this.mandatoryFieldsFound['Role'] = true
+      let hasEntityContent = false
+      if (f.type === 'schema:Person') {
+        hasEntityContent = isNonBlankString(f.firstname) ||
+          isNonBlankString(f.lastname) ||
+          isNonBlankString(f.name) ||
+          isNonBlankString(f.identifierText)
+      } else if (f.type === 'schema:Organization') {
+        hasEntityContent = isNonBlankString(f.organization) ||
+          isNonBlankString(f.organizationText) ||
+          isNonBlankString(f.organizationSelectedName) ||
+          isNonBlankString(f.identifierText)
+      }
+      if (!hasEntityContent) {
+        return
+      }
+      this.mandatoryFieldsValidated['Role'] = true
+      if (f.type === 'schema:Person') {
+        if (f.role === 'role:aut' && onAuthor) {
+          onAuthor()
+        }
+        if ((f.role === 'role:advisor' || f.role === 'role:dgs') && onAdvisor) {
+          onAdvisor()
+        }
+      }
     },
     applySchemaBasedRequired() {
       const groupFirstInstanceMarked = {}
@@ -391,39 +423,7 @@ export const formvalidation = {
             }
           }
           if ((f.component === 'p-entity') || (f.component === 'p-entity-extended') || (f.component === 'p-entity-fixedrole-person')) {
-            console.log('checking p[' + f.predicate + '] c[' + f.component + '] r[' + f.role + '] fn[' + f.firstname + '] ln[' + f.lastname + '] n[' + f.name + '] org[' + f.organization + '] orgtext[' + f.organizationText + ']')
-            if (f.role.length > 0) {
-              this.mandatoryFieldsFound['Role'] = true
-            }
-            if (f.type === 'schema:Person') {
-              if (f.firstname) {
-                if (f.firstname.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-              if (f.lastname) {
-                if (f.lastname.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-              if (f.name) {
-                if (f.name.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-            }
-            if (f.type === 'schema:Organization') {
-              if (f.organization) {
-                if (f.organization.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-              if (f.organizationText) {
-                if (f.organizationText.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-            }
+            this.checkEntityField(f)
           }
           if (f.component === 'p-select') {
             if (f.predicate === 'edm:rights') {
@@ -625,39 +625,7 @@ export const formvalidation = {
             }
           }
           if ((f.component === 'p-entity') || (f.component === 'p-entity-extended') || (f.component === 'p-entity-fixedrole-person')) {
-            console.log('checking p[' + f.predicate + '] c[' + f.component + '] r[' + f.role + '] fn[' + f.firstname + '] ln[' + f.lastname + '] n[' + f.name + '] org[' + f.organization + '] orgtext[' + f.organizationText + ']')
-            if (f.role.length > 0) {
-              this.mandatoryFieldsFound['Role'] = true
-            }
-            if (f.type === 'schema:Person') {
-              if (f.firstname) {
-                if (f.firstname.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-              if (f.lastname) {
-                if (f.lastname.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-              if (f.name) {
-                if (f.name.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-            }
-            if (f.type === 'schema:Organization') {
-              if (f.organization) {
-                if (f.organization.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-              if (f.organizationText) {
-                if (f.organizationText.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-            }
+            this.checkEntityField(f)
           }
           if (f.component === 'p-select') {
             if (f.predicate === 'edm:rights') {
@@ -844,71 +812,16 @@ export const formvalidation = {
             }
           }
           if ((f.component === 'p-entity') || (f.component === 'p-entity-extended') || (f.component === 'p-entity-fixedrole-person')) {
-            console.log('checking p[' + f.predicate + '] c[' + f.component + '] r[' + f.role + '] fn[' + f.firstname + '] ln[' + f.lastname + '] n[' + f.name + '] org[' + f.organization + '] orgtext[' + f.organizationText + ']')
-            if (f.role.length > 0) {
-              this.mandatoryFieldsFound['Role'] = true
-            }
-            if (f.type === 'schema:Person') {
-              if (f.firstname) {
-                if (f.firstname.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
+            this.checkEntityField(f, {
+              onAuthor: () => {
+                hasAut = true
+                this.mandatoryFieldsValidated['Author'] = true
+              },
+              onAdvisor: () => {
+                hasAdvisor = true
+                this.mandatoryFieldsValidated['Advisor'] = true
               }
-              if (f.lastname) {
-                if (f.lastname.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-              if (f.name) {
-                if (f.name.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-            }
-            if (f.type === 'schema:Organization') {
-              if (f.organization) {
-                if (f.organization.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-              if (f.organizationText) {
-                if (f.organizationText.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-            }
-            if (f.role === 'role:aut') {
-              if (f.type === 'schema:Person') {
-                if (f.firstname.length > 0) {
-                  hasAut = true
-                  this.mandatoryFieldsValidated['Author'] = true
-                }
-                if (f.lastname.length > 0) {
-                  hasAut = true
-                  this.mandatoryFieldsValidated['Author'] = true
-                }
-                if (f.name.length > 0) {
-                  hasAut = true
-                  this.mandatoryFieldsValidated['Author'] = true
-                }
-              }
-            }
-            if (f.role === 'role:advisor' || f.role === 'role:dgs') {
-              if (f.type === 'schema:Person') {
-                if (f.firstname.length > 0) {
-                  hasAdvisor = true
-                  this.mandatoryFieldsValidated['Advisor'] = true
-                }
-                if (f.lastname.length > 0) {
-                  hasAdvisor = true
-                  this.mandatoryFieldsValidated['Advisor'] = true
-                }
-                if (f.name.length > 0) {
-                  hasAdvisor = true
-                  this.mandatoryFieldsValidated['Advisor'] = true
-                }
-              }
-            }
+            })
           }
           if (f.component === 'p-select') {
             if (f.predicate === 'edm:rights') {
@@ -1071,39 +984,7 @@ export const formvalidation = {
             }
           }
           if ((f.component === 'p-entity') || (f.component === 'p-entity-extended') || (f.component === 'p-entity-fixedrole-person')) {
-            console.log('checking p[' + f.predicate + '] c[' + f.component + '] r[' + f.role + '] fn[' + f.firstname + '] ln[' + f.lastname + '] n[' + f.name + '] org[' + f.organization + '] orgtext[' + f.organizationText + ']')
-            if (f.role.length > 0) {
-              this.mandatoryFieldsFound['Role'] = true
-            }
-            if (f.type === 'schema:Person') {
-              if (f.firstname) {
-                if (f.firstname.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-              if (f.lastname) {
-                if (f.lastname.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-              if (f.name) {
-                if (f.name.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-            }
-            if (f.type === 'schema:Organization') {
-              if (f.organization) {
-                if (f.organization.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-              if (f.organizationText) {
-                if (f.organizationText.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-            }
+            this.checkEntityField(f)
           }
           if (f.component === 'p-select') {
             if (f.predicate === 'edm:rights') {
@@ -1277,39 +1158,7 @@ export const formvalidation = {
             }
           }
           if ((f.component === 'p-entity') || (f.component === 'p-entity-extended') || (f.component === 'p-entity-fixedrole-person')) {
-            console.log('checking p[' + f.predicate + '] c[' + f.component + '] r[' + f.role + '] fn[' + f.firstname + '] ln[' + f.lastname + '] n[' + f.name + '] org[' + f.organization + '] orgtext[' + f.organizationText + ']')
-            if (f.role.length > 0) {
-              this.mandatoryFieldsFound['Role'] = true
-            }
-            if (f.type === 'schema:Person') {
-              if (f.firstname) {
-                if (f.firstname.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-              if (f.lastname) {
-                if (f.lastname.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-              if (f.name) {
-                if (f.name.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-            }
-            if (f.type === 'schema:Organization') {
-              if (f.organization) {
-                if (f.organization.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-              if (f.organizationText) {
-                if (f.organizationText.length > 0) {
-                  this.mandatoryFieldsValidated['Role'] = true
-                }
-              }
-            }
+            this.checkEntityField(f)
           }
           if (f.component === 'p-select') {
             if (f.predicate === 'edm:rights') {
