@@ -19,7 +19,7 @@ WORKDIR /usr/local/phaidra/phaidra-ui
 # Build-time env (keep devDeps available)
 ENV NUXT_TELEMETRY_DISABLED=1
 ENV NUXT_NO_SOURCEMAP=1
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+ENV NODE_OPTIONS="--max-old-space-size=8192"
 ENV HOST=0.0.0.0
 ENV PORT=3001
 
