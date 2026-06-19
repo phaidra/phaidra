@@ -10,13 +10,14 @@
           <v-main id="main-content">
             <v-row>
               <v-col cols="12" md="10" offset-md="1" class="content">
-                <client-only>
-                  <p-breadcrumbs :items="breadcrumbs"
-                    v-if="$route.path === '/' ? !instanceconfig.hideBreadcrumbsOnHomepage : true"></p-breadcrumbs>
-                </client-only>
+                <p-breadcrumbs
+                  v-if="$route.path === '/' ? !instanceconfig.hideBreadcrumbsOnHomepage : true"
+                  :items="breadcrumbs"
+                ></p-breadcrumbs>
 
-                <template v-for="(alert, i) in alerts">
-                  <v-snackbar :key="'altsnack' + i" class="font-weight-regular" top color="success"
+                <client-only>
+                <template v-for="(alert, i) in alerts" :key="'altsnack' + i">
+                  <v-snackbar class="font-weight-regular" top color="success"
                     v-if="alert.type === 'success'" v-model="showSnackbar">
                     <span v-if="alert.key && alert.params">{{ $t(alert.key, alert.params) }}</span>
                     <span v-else>{{ $t(alert.msg) }}</span>
@@ -50,14 +51,13 @@
                     </v-col>
                   </v-row>
                 </template>
+                </client-only>
 
-                <transition name="fade" mode="out-in">
-                  <v-row no-gutters>
-                    <v-col>
-                      <slot />
-                    </v-col>
-                  </v-row>
-                </transition>
+                <v-row no-gutters>
+                  <v-col>
+                    <slot />
+                  </v-col>
+                </v-row>
               </v-col>
             </v-row>
           </v-main>
@@ -67,9 +67,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <client-only>
-      <CookieBanner></CookieBanner>
-    </client-only>
+    <CookieBanner></CookieBanner>
   </v-app>
 </template>
 
