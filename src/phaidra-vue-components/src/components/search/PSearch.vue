@@ -154,7 +154,6 @@ import '@/compiled-icons/material-toggle-check-box-outline-blank'
 import { buildDateFacet, updateFacetQueries, persAuthors, corpAuthors, deactivateFacetQueries, buildAccessibilityFacet } from './facets'
 import { buildParams, buildSearchDef, sortdef } from './utils'
 import { setSearchParams } from './location'
-import { saveAs } from 'file-saver'
 import { vocabulary } from '../../mixins/vocabulary'
 import phaidraNavigation from '../../mixins/phaidraNavigation'
 
@@ -169,10 +168,10 @@ export default {
   },
   computed: {
     page: {
-      get () {
+      get() {
         return this.currentPage
       },
-      set (value) {
+      set(value) {
         const pageChanged = this.currentPage !== value
         this.currentPage = value
         this.search()
@@ -222,6 +221,7 @@ export default {
       return associationQueries
     },
     csvExport: async function () {
+      const { saveAs } = await import("file-saver");
       let { searchdefarr, ands } = buildSearchDef(this)
       let params = buildParams(this, ands)
       if (this.inCollection) {
@@ -244,7 +244,7 @@ export default {
         params.rows = response.data.response.numFound
         params.indent = 'on'
         params.wt = 'csv'
-        params.fl = ['pid', 'dc_title', 'dc_creator', 'dc_contributor', 'dc_description', 'dc_language', 'dc_subject', 'dc_subject_eng', 'dc_subject_deu', 'dc_subject_ita', 'dc_rights', 'bib_published', 'dc_identifier', 'owner', 'dc_format','edm_hastype','resourcetype','created', 'modified', 'size','is_in_container:ismemberof','is_in_collection:ispartof']
+        params.fl = ['pid', 'dc_title', 'dc_creator', 'dc_contributor', 'dc_description', 'dc_language', 'dc_subject', 'dc_subject_eng', 'dc_subject_deu', 'dc_subject_ita', 'dc_rights', 'bib_published', 'dc_identifier', 'owner', 'dc_format', 'edm_hastype', 'resourcetype', 'created', 'modified', 'size', 'is_in_container:ismemberof', 'is_in_collection:ispartof']
         params['fl.alias'] = ''
         const csvquery = qs.stringify(params, { encodeValuesOnly: true, indices: false })
         this.$axios.request('/search/select?' + csvquery, {
@@ -291,7 +291,7 @@ export default {
       if (this.inCollection) {
         const pid = this.inCollection.replace(/[o:]/g, '')
         const activeSortLength = this.sortdef.filter(x => x.active).length
-        if(!activeSortLength){
+        if (!activeSortLength) {
           params.sort = `pos_in_o_${pid} asc, created asc, pid asc`
         }
       }
@@ -343,7 +343,7 @@ export default {
         let params = buildParams(this, ands)
         params.page = 0
         params.rows = this.total
-        params.fl = [ 'pid', 'dc_title' ]
+        params.fl = ['pid', 'dc_title']
         try {
           this.$store.commit('setLoading', true)
           let response = await this.$axios.request({
@@ -449,7 +449,7 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       link: '',
       limitdialog: false,
@@ -555,7 +555,7 @@ export default {
     // This call is delayed because at this point
     // `setInstanceSolr` has not yet been executed and
     // the solr url is missing.
-    setTimeout(() => { this.search() }, 100)   
+    setTimeout(() => { this.search() }, 100)
   }
 }
 </script>
@@ -573,13 +573,14 @@ svg {
 .theme--light.v-pagination .v-pagination__item--active {
   box-shadow: none;
   -webkit-box-shadow: none;
-  }
+}
 
 .skip-link {
   position: absolute;
   left: -9999px;
   top: 10px;
 }
+
 .full-text-checkbox-wrapper {
   justify-content: flex-end;
   margin-top: -25px;

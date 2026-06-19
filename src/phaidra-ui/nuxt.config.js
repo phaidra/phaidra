@@ -134,7 +134,7 @@ export default defineNuxtConfig({
   },
 
   build: {
-    transpile: ['vuetify', 'phaidra-vue-components', 'file-saver']
+    transpile: ['vuetify', 'phaidra-vue-components']
   },
 
   vite: {
