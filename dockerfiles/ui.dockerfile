@@ -44,6 +44,7 @@ WORKDIR /app
 
 # Copy only the built output
 COPY --from=builder /usr/local/phaidra/phaidra-ui/.output ./.output
+COPY --from=builder /usr/local/phaidra/phaidra-ui/ecosystem.config.js ./ecosystem.config.js
 
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
