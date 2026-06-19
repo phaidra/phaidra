@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'nuxt',
-      cwd: '/usr/local/phaidra/phaidra-ui',
+      cwd: '/app',
       script: '.output/server/index.mjs',
       interpreter: 'node',
       exec_mode: 'cluster',
