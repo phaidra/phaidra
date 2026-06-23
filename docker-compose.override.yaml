@@ -156,11 +156,28 @@ configs:
         }
         # reverse_proxy http://botblocker:8080 {
 
+        @whitelist_zid not remote_ip 131.130.2.0/24 131.130.222.0/24 private_ranges
+        log_append remotehost "{http.request.remote.host}"
         route {
-          rate_limit {
+          rate_limit @whitelist_zid {
             zone asn {
               key {ipinfo_free.asn}
               events 10000
+              window 1h
+              log_key true
+            }
+
+            # so an individual IP can't trigger the ASN block - burst
+            zone remote_ip {
+              key {http.request.remote.host}
+              events 500
+              window 1m
+              log_key true
+            }
+            # so an individual IP can't trigger the ASN block - over time
+            zone remote_ip_long {
+              key {http.request.remote.host}
+              events 9000
               window 1h
               log_key true
             }
