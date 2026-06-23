@@ -3130,6 +3130,32 @@ export default {
           });
         }
       }
+      if (this.objectInfo) {
+        if (this.objectInfo.isinadminset) {
+          if (this.objectInfo.isinadminset.includes('phaidra:utheses.univie.ac.at')) {
+            if (this.objectInfo.metadata) {
+              if (this.objectInfo?.metadata?.["JSON-LD"]) {
+                Object.entries(this.objectInfo.metadata["JSON-LD"]).forEach(
+                  ([p, arr]) => {
+                    if (p === "rdam:P30004") {
+                      for (let o of arr) {
+                        if (o["@type"] === "ids:uri") {
+                          if (/utheses/.test(o["@value"])) {
+                            metaInfo.link.push({
+                              rel: 'canonical',
+                              href: o["@value"]
+                            });
+                          }
+                        }
+                      }
+                    }
+                  }
+                );
+              }
+            }
+          }
+        }
+      }
       metaInfo.link.push({
         rel: 'type',
         href: 'https://schema.org/CreativeWork'
