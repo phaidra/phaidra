@@ -2528,7 +2528,7 @@ export default {
               this.mimetype === "model/ply" ||
               is3DZip ||
               this.mimetype === "application/x-wacz")
-              )) &&
+          )) &&
         this.objectInfo.cmodel !== "Container" &&
         this.objectInfo.readrights &&
         !(this.objectInfo.cmodel === "Video" && this.objectInfo.isrestricted)
@@ -2565,8 +2565,8 @@ export default {
       const to = this.instanceconfig.requestdoiemail;
       const pid = this.objectInfo.pid;
       const userEmail = this.user.email || '';
-      const userName = (this.user.firstname && this.user.lastname) 
-        ? `${this.user.firstname} ${this.user.lastname}` 
+      const userName = (this.user.firstname && this.user.lastname)
+        ? `${this.user.firstname} ${this.user.lastname}`
         : (this.user.username || '');
       const objectUrl = `${this.instanceconfig.baseurl}/${pid}`;
       const subject = encodeURIComponent(`Subsequent DOI allocation: ${pid} ${userEmail}`);
@@ -2655,10 +2655,10 @@ export default {
       return this.$store.state.objectMembers;
     },
     objectMembersPage: function () {
-      if(this.objectMembers.length < this.membersPageSize) {
+      if (this.objectMembers.length < this.membersPageSize) {
         return this.objectMembers
       } else {
-        return this.objectMembers.slice((this.membersPage-1)*this.membersPageSize,((this.membersPage-1)*this.membersPageSize)+this.membersPageSize)
+        return this.objectMembers.slice((this.membersPage - 1) * this.membersPageSize, ((this.membersPage - 1) * this.membersPageSize) + this.membersPageSize)
       }
     },
     downloadable: function () {
@@ -2771,19 +2771,19 @@ export default {
     },
     rightsStatements: function () {
       const statements = [];
-      
+
       const licenseStrings = new Set();
-      
+
       licenseStrings.add("All rights reserved");
-      
+
       if (this.objectInfo && this.objectInfo["dc_rights"]) {
-        const licenseUris = this.objectInfo["dc_rights"].filter(f => 
+        const licenseUris = this.objectInfo["dc_rights"].filter(f =>
           typeof f === 'string' && f.includes("://")
         );
-        
+
         for (let uri of licenseUris) {
           licenseStrings.add(uri);
-          
+
           if (this.$store && this.$store.getters['vocabulary/getLocalizedTermLabel']) {
             const label = this.$store.getters['vocabulary/getLocalizedTermLabel']('alllicenses', uri, this.$i18n.locale);
             if (label) {
@@ -2796,7 +2796,7 @@ export default {
           }
         }
       }
-      
+
       if (this.objectInfo && this.objectInfo.metadata && this.objectInfo.metadata['JSON-LD']) {
         const jsonld = this.objectInfo.metadata['JSON-LD'];
         if (jsonld['dce:rights']) {
@@ -2813,7 +2813,7 @@ export default {
           }
         }
       }
-      
+
       if (statements.length === 0 && this.objectInfo) {
         const dcRightsFields = [];
         for (let key in this.objectInfo) {
@@ -2821,11 +2821,11 @@ export default {
             dcRightsFields.push(key);
           }
         }
-        
+
         if (this.objectInfo['dc_rights']) {
           dcRightsFields.push('dc_rights');
         }
-        
+
         for (let field of dcRightsFields) {
           if (this.objectInfo[field] && this.objectInfo[field].length > 0) {
             const beforeLength = statements.length;
@@ -2840,14 +2840,14 @@ export default {
           }
         }
       }
-      
+
       return statements;
     },
     downloadableDatastreams: function () {
       if (!this.instanceconfig.downloadabledatastreams || !this.objectInfo) {
         return [];
       }
-      
+
       const configuredDatastreams = this.instanceconfig.downloadabledatastreams
         .split(',')
         .map(ds => ds.trim())
@@ -2866,20 +2866,20 @@ export default {
       if (!this.objectInfo) {
         return [];
       }
-      
+
       const lang2to3map = Object.keys(lang3to2map).reduce((ret, key) => {
         ret[lang3to2map[key]] = key;
         return ret;
       }, {});
-      
+
       const normalizeLang = (lang) => {
         if (!lang) return '';
         lang = lang.toLowerCase();
         return lang.length === 2 ? (lang2to3map[lang] || lang) : lang;
       };
-      
+
       const titlesByLang = {};
-      
+
       // JSON-LD format
       const jsonld = this.objectInfo?.metadata?.['JSON-LD'];
       if (jsonld?.['dce:title'] && Array.isArray(jsonld['dce:title'])) {
@@ -2887,10 +2887,10 @@ export default {
           titleObj['bf:mainTitle']?.forEach(mainTitle => {
             const mainTitleValue = mainTitle['@value']?.trim();
             if (!mainTitleValue) return;
-            
+
             const lang = normalizeLang(mainTitle['@language']);
             const subtitle = titleObj['bf:subtitle']?.[0]?.['@value']?.trim() || null;
-            
+
             if (!titlesByLang[lang]) {
               titlesByLang[lang] = [];
             }
@@ -2902,7 +2902,7 @@ export default {
           });
         });
       }
-      
+
       // UWMETADATA format
       if (!Object.keys(titlesByLang).length && this.objectInfo.dshash?.['UWMETADATA']) {
         const uwmetadata = this.objectInfo.metadata?.uwmetadata;
@@ -2911,7 +2911,7 @@ export default {
           if (generalNode && Array.isArray(generalNode.children)) {
             const titles = [];
             const subtitles = [];
-            
+
             generalNode.children.forEach(child => {
               if (child.xmlname === 'title' && child.ui_value) {
                 const lang = normalizeLang(child.attributes?.[0]?.ui_value || 'eng');
@@ -2927,7 +2927,7 @@ export default {
                 });
               }
             });
-              
+
             titles.forEach((title, index) => {
               let matchingSubtitle = subtitles.find(st => st.lang === title.lang);
               if (!matchingSubtitle && subtitles[index]) {
@@ -2936,7 +2936,7 @@ export default {
               if (!matchingSubtitle && subtitles.length > 0) {
                 matchingSubtitle = subtitles[0];
               }
-              
+
               if (!titlesByLang[title.lang]) {
                 titlesByLang[title.lang] = [];
               }
@@ -2949,7 +2949,7 @@ export default {
           }
         }
       }
-      
+
       // MODS format
       if (!Object.keys(titlesByLang).length && this.objectInfo.dshash?.['MODS'] && Array.isArray(this.objectInfo.dc_title)) {
         this.objectInfo.dc_title.forEach(titleValue => {
@@ -2963,9 +2963,9 @@ export default {
               mainTitle = titleValue.trim();
               subtitle = null;
             }
-            
+
             const lang = normalizeLang(this.objectInfo.dc_language?.[0]) || 'eng';
-            
+
             if (mainTitle) {
               if (!titlesByLang[lang]) {
                 titlesByLang[lang] = [];
@@ -2979,11 +2979,11 @@ export default {
           }
         });
       }
-      
+
       if (Object.keys(titlesByLang).length === 0) {
         return [];
       }
-      
+
       const currentLang = (this.$i18n.locale || 'eng').toLowerCase();
       const currentLang2 = currentLang.substring(0, 2);
       const langPriority = [
@@ -2993,7 +2993,7 @@ export default {
         'eng',
         'en'
       ].filter(Boolean);
-      
+
       // Find first matching language
       const matchedLang = langPriority.find(lang => titlesByLang[lang]?.length > 0);
       return matchedLang ? titlesByLang[matchedLang] : Object.values(titlesByLang).flat();
@@ -3035,7 +3035,7 @@ export default {
     };
   },
   async fetch() {
-    if(!this.$route.params.pid || ! this.$route.path === '/detail') {
+    if (!this.$route.params.pid || !this.$route.path === '/detail') {
       return
     }
     await this.fetchAsyncData(this, this.$route.params.pid);
@@ -3122,6 +3122,22 @@ export default {
           });
         }
       }
+      if (this.objectInfo.isinadminset) {
+        if (this.objectInfo.isinadminset.includes('phaidra:ir.univie.ac.at')) {
+          metaInfo.link.push({
+            rel: 'canonical',
+            href: uscholarlink
+          });
+        }
+      }
+      if (this.objectInfo.isinadminset) {
+        if (this.objectInfo.isinadminset.includes('phaidra:utheses.univie.ac.at')) {
+          metaInfo.link.push({
+            rel: 'canonical',
+            href: utheseslink
+          });
+        }
+      }
       metaInfo.link.push({
         rel: 'type',
         href: 'https://schema.org/CreativeWork'
@@ -3173,9 +3189,9 @@ export default {
     if (this.objectInfo?.dshash?.['JSON-LD']) {
       metaInfo.script = []
       metaInfo.script.push(
-        { 
-          type: 'application/ld+json', 
-          content: JSON.stringify(this.fullJsonLd) 
+        {
+          type: 'application/ld+json',
+          content: JSON.stringify(this.fullJsonLd)
         }
       )
     }
@@ -3193,7 +3209,7 @@ export default {
     autolinkerCheck(val) {
       return Autolinker.link(String(val ?? ""));
     },
-    normalizeDoi (value) {
+    normalizeDoi(value) {
       if (!value) {
         return ''
       }
@@ -3253,14 +3269,14 @@ export default {
         }]);
       }
     },
-    async refreshCollectionMembers () {
+    async refreshCollectionMembers() {
       console.log('fetching collection members ' + this.objectInfo.pid + ' page ' + this.collMembersCurrentPage + ' size ' + this.collMembersPagesize);
       await this.$store.dispatch(
         "fetchCollectionMembers",
         { pid: this.objectInfo.pid, page: this.collMembersCurrentPage, pagesize: this.collMembersPagesize, onlylatestversion: this.collOnlyLatestVersions }
       );
     },
-    scrollToCollectionMembersTop () {
+    scrollToCollectionMembersTop() {
       if (!process.browser) {
         return;
       }
@@ -3440,7 +3456,7 @@ export default {
           }
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [ { msg: this.$t('DOI successfully requested'), type: 'success' } ])
+          this.$store.commit('setAlerts', [{ msg: this.$t('DOI successfully requested'), type: 'success' }])
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
             this.$store.commit('setAlerts', response.data.alerts)
@@ -3459,7 +3475,7 @@ export default {
         detail: "-",
       };
     },
-    async refreshDetailObjectInfo () {
+    async refreshDetailObjectInfo() {
       const pid = (this.objectInfo && this.objectInfo.pid) || this.$route.params.pid
       if (!pid) {
         return
@@ -3549,7 +3565,7 @@ export default {
       try {
         this.$store.commit('setLoading', true)
         var httpFormData = new FormData()
-        httpFormData.append('metadata', JSON.stringify({ metadata: { members: [ { 'pid': this.objectInfo.pid } ] } }))
+        httpFormData.append('metadata', JSON.stringify({ metadata: { members: [{ 'pid': this.objectInfo.pid }] } }))
         let response = await this.$axios.request({
           method: 'POST',
           url: '/collection/' + collection.pid + '/members/add',
@@ -3560,7 +3576,7 @@ export default {
           data: httpFormData
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfully updated'), type: 'success' } ])
+          this.$store.commit('setAlerts', [{ msg: this.$t('Collection successfully updated'), type: 'success' }])
           await this.refreshDetailObjectInfo()
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
@@ -3578,7 +3594,7 @@ export default {
       try {
         this.$store.commit('setLoading', true)
         var httpFormData = new FormData()
-        httpFormData.append('metadata', JSON.stringify({ metadata: { members: [ { 'pid': this.collMemberToRemove } ] } }))
+        httpFormData.append('metadata', JSON.stringify({ metadata: { members: [{ 'pid': this.collMemberToRemove }] } }))
         let response = await this.$axios.request({
           method: 'POST',
           url: '/collection/' + this.objectInfo.pid + '/members/remove',
@@ -3589,7 +3605,7 @@ export default {
           data: httpFormData
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfully updated'), type: 'success' } ])
+          this.$store.commit('setAlerts', [{ msg: this.$t('Collection successfully updated'), type: 'success' }])
           await this.$store.dispatch(
             "fetchCollectionMembers",
             { pid: this.objectInfo.pid, page: this.collMembersCurrentPage, pagesize: this.collMembersPagesize }
@@ -3648,9 +3664,12 @@ export default {
 
 <style scoped>
 .no-link {
-  color: inherit !important; /* Inherit text color from parent */
-  cursor: default; /* Remove pointer cursor */
-  text-decoration: none; /* Remove underline */
+  color: inherit !important;
+  /* Inherit text color from parent */
+  cursor: default;
+  /* Remove pointer cursor */
+  text-decoration: none;
+  /* Remove underline */
 }
 
 .preview-maxwidth {
@@ -3678,25 +3697,24 @@ export default {
 }
 
 .iframe-container {
-    overflow: hidden;
-    padding-top: 56.25%;
-    position: relative;
-    width: 100%;
+  overflow: hidden;
+  padding-top: 56.25%;
+  position: relative;
+  width: 100%;
 }
 
 .responsive-iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
 
 }
 
 .side-list {
   list-style-type: none;
 }
-
 </style>
