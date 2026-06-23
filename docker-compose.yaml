@@ -1668,6 +1668,32 @@ services:
         "shib-s3-dev",
       ]
 
+  varnish-exporter:
+    hostname: "varnish-exporter"
+    image: ghcr.io/otto-de/prometheus-varnish-exporter:1.8.1-varnish-8.0.0
+    command: []
+    <<: [*common, *logs]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/varnish:/var/lib/varnish:ro
+    profiles:
+      [
+        "demo-local",
+        "demo-s3",
+        "ssl-local",
+        "ssl-local-dev",
+        "ssl-s3",
+        "ssl-s3-dev",
+        "shib-local",
+        "shib-local-dev",
+        "shib-s3",
+        "shib-s3-dev",
+        "demo-local-dev",
+        "demo-s3-dev",
+      ]
+    depends_on:
+      - varnish
+
   ############### mkdocs for website generation ###############
   mkdocs:
     image: squidfunk/mkdocs-material:latest
