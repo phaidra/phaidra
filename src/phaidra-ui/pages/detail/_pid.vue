@@ -3126,15 +3126,7 @@ export default {
         if (this.objectInfo.isinadminset.includes('phaidra:ir.univie.ac.at')) {
           metaInfo.link.push({
             rel: 'canonical',
-            href: uscholarlink
-          });
-        }
-      }
-      if (this.objectInfo.isinadminset) {
-        if (this.objectInfo.isinadminset.includes('phaidra:utheses.univie.ac.at')) {
-          metaInfo.link.push({
-            rel: 'canonical',
-            href: utheseslink
+            href: 'https://' + this.instanceconfig.irbaseurl + "/" + this.objectInfo.pid
           });
         }
       }
