@@ -403,7 +403,7 @@ services:
     hostname: "ui"
     depends_on: [api]
     <<: [*common, *logs]
-    image: phaidraorg/ui:00f6f3c3
+    image: phaidraorg/ui:891b2643
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
@@ -420,7 +420,7 @@ services:
     hostname: "ui"
     depends_on: [api-s3]
     <<: [*common, *logs]
-    image: phaidraorg/ui:00f6f3c3
+    image: phaidraorg/ui:891b2643
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
       <<: [*api_common_env, *hosts]
