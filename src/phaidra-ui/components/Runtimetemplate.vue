@@ -1,4 +1,8 @@
 <script>
+import { h, defineComponent } from 'vue'
+import { compile } from '@vue/compiler-dom'
+import * as runtimeDom from '@vue/runtime-dom'
+
 const defineDescriptor = (src, dest, name) => {
     if (!dest.hasOwnProperty(name)) {
       const descriptor = Object.getOwnPropertyDescriptor(src, name);
@@ -22,6 +26,17 @@ const defineDescriptor = (src, dest, name) => {
     props.forEach(prop => defineDescriptor(obj, res, prop));
     return res;
   };
+
+  const renderCache = new Map();
+
+  function compileTemplate(template) {
+    const source = template || "<div></div>";
+    if (!renderCache.has(source)) {
+      const { code } = compile(source, { hoistStatic: true });
+      renderCache.set(source, new Function("Vue", code)(runtimeDom));
+    }
+    return renderCache.get(source);
+  }
   
 
 export default {
@@ -33,7 +48,7 @@ export default {
         default: () => ({})
       }
     },
-    render(h) {
+    render() {
       if (this.template) {
         const parent = this.parent || this.$parent
         const {
@@ -94,17 +109,17 @@ export default {
           methodsFromProps,
           this.templateProps
         ]);
-        const provide = this.$parent._provided;
+        const provide = this.$parent?._provided ?? this.$parent?.$?.provides;
   
-        const dynamic = {
-          template: this.template || "<div></div>",
+        const dynamic = defineComponent({
           props: allKeys,
           computed: passthrough.computed,
           components: passthrough.components,
-          provide: provide
-        };
+          ...(provide ? { provide } : {}),
+          render: compileTemplate(this.template)
+        });
   
-        return h(dynamic, { props: finalProps });
+        return h(dynamic, finalProps);
       }
     }
   };
