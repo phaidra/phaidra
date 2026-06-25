@@ -20,7 +20,7 @@ const normalizeModule = (mod) => {
   }
 }
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(async (nuxtApp) => {
   const rootActions = {
     ...(root.actions || {}),
     // Keep Nuxt 2 behavior: dispatch('setInstanceConfig', payload) always works.
@@ -42,6 +42,23 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
   })
 
+  store.$axios = nuxtApp.$axios
+  store.$cookies = nuxtApp.$cookies || {
+    get: () => {},
+    set: () => {},
+    remove: () => {}
+  }
+
+  if (import.meta.server) {
+    try {
+      await store.dispatch('nuxtServerInit', {
+        req: nuxtApp.ssrContext?.event?.node?.req
+      })
+    } catch (error) {
+      console.warn('nuxtServerInit failed:', error)
+    }
+  }
+
   // Explicit SSR <-> client hydration for custom Vuex store in Nuxt 4.
   if (import.meta.server) {
     nuxtApp.hooks.hook('app:rendered', () => {
@@ -53,14 +70,6 @@ export default defineNuxtPlugin((nuxtApp) => {
       ...store.state,
       ...nuxtApp.payload.vuex
     })
-  }
-
-  // Nuxt 2 injected $axios/$cookies onto the store for actions/mutations; restore for Vuex 4.
-  store.$axios = nuxtApp.$axios
-  store.$cookies = nuxtApp.$cookies || {
-    get: () => {},
-    set: () => {},
-    remove: () => {}
   }
 
   nuxtApp.vueApp.use(store)

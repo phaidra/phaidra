@@ -121,7 +121,11 @@ function getTemplateComponent(template) {
       runtimeCtx: { type: Object, required: true }
     },
     render() {
-      return renderFn(this.runtimeCtx, [])
+      const ctx = this.runtimeCtx
+      // Header CMS template does not reference signedin; track auth so nav re-renders
+      void ctx?.signedin
+      void ctx?.$store?.state?.user?.token
+      return renderFn(ctx, [])
     }
   })
 
@@ -156,6 +160,10 @@ export default {
     if (!parent) {
       return h('div')
     }
+
+    // Re-render CMS templates when auth state on the parent changes.
+    void parent.signedin
+    void parent.$store?.state?.user?.token
 
     const TemplateComponent = getTemplateComponent(this.template)
     const runtimeCtx = createRuntimeCtx(parent, this.templateProps)
