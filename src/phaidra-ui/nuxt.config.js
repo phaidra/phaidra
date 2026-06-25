@@ -146,7 +146,8 @@ export default defineNuxtConfig({
       dedupe: ['vue', 'vue-router', 'vue-i18n', 'vuetify', 'vuex']
     },
     optimizeDeps: {
-      exclude: ['phaidra-vue-components']
+      exclude: ['phaidra-vue-components'],
+      include: ['@vue/compiler-dom']
     },
     server: {
       hmr: {

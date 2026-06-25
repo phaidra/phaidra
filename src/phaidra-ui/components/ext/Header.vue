@@ -1,6 +1,6 @@
 <template>
   <div v-if="instanceconfig.cms_header">
-    <runtimetemplate :template="instanceconfig.cms_header" />
+    <runtimetemplate :template="instanceconfig.cms_header" :parent="headerContext" />
   </div>
   
   <div v-else>
@@ -573,6 +573,9 @@ import { context } from "@/mixins/context";
 export default {
   mixins: [config, context],
   computed: {
+    headerContext() {
+      return this
+    },
     localeLabel: function () {
       return this.$i18n.locale;
     },

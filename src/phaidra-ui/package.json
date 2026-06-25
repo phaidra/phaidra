@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@vue-leaflet/vue-leaflet": "^0.10.1",
+    "@vue/compiler-dom": "^3.5.30",
     "@mdi/font": "^6.5.95",
     "@nuxtjs/i18n": "^9.0.0",
     "autolinker": "^3.16.2",
