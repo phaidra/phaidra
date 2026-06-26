@@ -1430,7 +1430,7 @@ services:
       <<: [*api_common_env, *hosts]
       CATALINA_OPTS: >-
         -Dfcrepo.db.password=${MARIADB_FEDORA_PASSWORD:-phaidra}
-        -Dfcrepo.db.url=jdbc:mariadb://${MARIADB_FEDORA_HOST:-mariadb-fedora-Dev}:3306/${FEDORADB:-fedoradb}
+        -Dfcrepo.db.url=jdbc:mariadb://${MARIADB_FEDORA_HOST:-mariadb-fedora-dev}:3306/${FEDORADB:-fedoradb}
         -Dfcrepo.db.user=${MARIADB_FEDORA_USER:-phaidra}
         -Dfcrepo.metrics.enable=true
       FEDORA_ADMIN_USERNAME: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
