@@ -724,10 +724,10 @@ export const actions = {
     commit('setInstanceConfig', config)
   },
 
-  async nuxtServerInit({ commit, dispatch }, { req }) {
-    const token = this.$cookies.get('XSRF-TOKEN')
-    commit('setToken', token)
-    if (token) {
+  async nuxtServerInit({ commit, dispatch }, { token } = {}) {
+    const xsrfToken = token ?? this.$cookies?.get?.('XSRF-TOKEN')
+    commit('setToken', xsrfToken)
+    if (xsrfToken) {
       await dispatch('getLoginData')
     }
   },

@@ -21,6 +21,24 @@ const normalizeModule = (mod) => {
 }
 
 export default defineNuxtPlugin(async (nuxtApp) => {
+  const xsrfCookie = useCookie('XSRF-TOKEN')
+  const cookies = {
+    get(name) {
+      return name === 'XSRF-TOKEN' ? xsrfCookie.value : undefined
+    },
+    set(name, value) {
+      if (name === 'XSRF-TOKEN') {
+        xsrfCookie.value = value
+      }
+    },
+    remove(name) {
+      if (name === 'XSRF-TOKEN') {
+        xsrfCookie.value = null
+      }
+    }
+  }
+  nuxtApp.$cookies = cookies
+
   const rootActions = {
     ...(root.actions || {}),
     // Keep Nuxt 2 behavior: dispatch('setInstanceConfig', payload) always works.
@@ -43,16 +61,13 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   })
 
   store.$axios = nuxtApp.$axios
-  store.$cookies = nuxtApp.$cookies || {
-    get: () => {},
-    set: () => {},
-    remove: () => {}
-  }
+  store.$cookies = cookies
 
   if (import.meta.server) {
     try {
       await store.dispatch('nuxtServerInit', {
-        req: nuxtApp.ssrContext?.event?.node?.req
+        req: nuxtApp.ssrContext?.event?.node?.req,
+        token: xsrfCookie.value
       })
     } catch (error) {
       console.warn('nuxtServerInit failed:', error)
