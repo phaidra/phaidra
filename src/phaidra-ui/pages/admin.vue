@@ -1344,6 +1344,7 @@
 import FaviconMixin from '../mixins/favicon'
 import PRepostat from '../components/Repostat.vue';
 import { config } from "../mixins/config";
+import { encodeUtf8ToBase64 } from '@/utils/encode-base64'
 
 export default {
   mixins: [FaviconMixin, config],
@@ -1526,7 +1527,7 @@ export default {
           data: httpFormData
         })
         if (instanceConfData.faviconText) {
-          const base64Svg = Buffer.from(instanceConfData.faviconText).toString('base64')
+          const base64Svg = encodeUtf8ToBase64(instanceConfData.faviconText)
           this.updateFavicon(`data:image/svg+xml;base64,${base64Svg}`)
         }
 

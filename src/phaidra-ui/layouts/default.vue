@@ -77,6 +77,7 @@ import { context } from "../mixins/context";
 import FaviconMixin from '../mixins/favicon'
 import CookieBanner from '../components/CookieBanner.vue'
 import moment from "moment";
+import { encodeUtf8ToBase64 } from '@/utils/encode-base64'
 import "@/assets/css/material-icons.css";
 
 export default {
@@ -265,7 +266,7 @@ export default {
       })
     },
     setFavIconText(svgText) {
-      const base64Svg = Buffer.from(svgText).toString('base64')
+      const base64Svg = encodeUtf8ToBase64(svgText)
       this.faviconUrl = `data:image/svg+xml;base64,${base64Svg}`
     },
     mergeInfoBannerMessage(message) {
