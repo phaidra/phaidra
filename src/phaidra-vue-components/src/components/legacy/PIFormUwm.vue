@@ -9,20 +9,39 @@
         </ul>
       </v-alert>
       <v-divider></v-divider>
-      <v-tabs slider-color="primary" slider-size="20px" bg-color="grey-darken-2" vertical v-model="activetab">
-        <template v-for="(s, i) in this.form" :key="'tab-wrap'+i">
-          <v-tab class="text-white" :active-class="'primary'" v-if="(s.xmlname !== 'annotation') && (s.xmlname !== 'etheses')">
-            <span v-t="s.labels[alpha2locale]"></span>
-          </v-tab>
-        </template>
-        <template v-for="(s, i) in this.form" :key="'tabitem-wrap'+i">
-          <v-tab-item class="pa-3" v-if="(s.xmlname !== 'annotation') && (s.xmlname !== 'etheses')">
-            <template v-if="s.children">
-              <p-i-uwm-rec :disabled="disabled" :children="s.children" :parent="s" @add-field="addField($event)" @remove-field="removeField($event)"></p-i-uwm-rec>
-            </template>
-          </v-tab-item>
-        </template>
-      </v-tabs>
+      <v-row no-gutters>
+        <v-col cols="auto">
+          <v-tabs
+            v-model="activetab"
+            direction="vertical"
+            slider-color="primary"
+            bg-color="grey-darken-2"
+          >
+            <v-tab
+              v-for="s in visibleSections"
+              :key="'tab-' + s.xmlname"
+              :value="s.xmlname"
+              class="text-white"
+            >
+              <span v-t="s.labels[alpha2locale]"></span>
+            </v-tab>
+          </v-tabs>
+        </v-col>
+        <v-col>
+          <v-window v-model="activetab">
+            <v-window-item
+              v-for="s in visibleSections"
+              :key="'tabitem-' + s.xmlname"
+              :value="s.xmlname"
+              class="pa-3"
+            >
+              <template v-if="s.children">
+                <p-i-uwm-rec :disabled="disabled" :children="s.children" :parent="s" @add-field="addField($event)" @remove-field="removeField($event)"></p-i-uwm-rec>
+              </template>
+            </v-window-item>
+          </v-window>
+        </v-col>
+      </v-row>
       <v-divider v-if="targetpid"></v-divider>
       <v-card-actions v-if="targetpid">
         <v-spacer></v-spacer>
@@ -61,11 +80,18 @@ export default {
     form: {
       handler: function () {
         this.assignIdsAndParentsRec(this.form, 'root', { id: 'root', children: this.form })
+        this.initActiveTab()
       },
       deep: true
     }
   },
   computed: {
+    visibleSections: function () {
+      if (!this.form) {
+        return []
+      }
+      return this.form.filter(s => s.xmlname !== 'annotation' && s.xmlname !== 'etheses')
+    },
     alpha2locale: function () {
       switch (this.$i18n.locale) {
         case 'eng': return 'en'
@@ -93,6 +119,12 @@ export default {
     }
   },
   methods: {
+    initActiveTab: function () {
+      const sections = this.visibleSections
+      if (sections.length && !sections.some(s => s.xmlname === this.activetab)) {
+        this.activetab = sections[0].xmlname
+      }
+    },
     assignIdsAndParentsRec: function (arr, path, parent) {
       let i = 0
       for (let e of arr) {
@@ -284,6 +316,7 @@ export default {
   },
   mounted: function () {
     this.$store.dispatch('vocabulary/loadLanguages', this.$i18n.locale)
+    this.initActiveTab()
   }
 }
 </script>
@@ -291,5 +324,8 @@ export default {
 <style scoped>
 .v-tab {
   justify-content: start;
+}
+.v-tabs.v-slide-group--vertical {
+  height: 100%;
 }
 </style>

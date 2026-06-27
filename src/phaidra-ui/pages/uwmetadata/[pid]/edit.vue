@@ -7,7 +7,7 @@
       <p-i-form-uwm
         title="Metadata"
         :form="editform"
-        :targetpid="this.pid"
+        :targetpid="pid"
         v-on:object-saved="objectSaved($event)"
         v-on:load-form="editform = $event"
       ></p-i-form-uwm>
@@ -30,6 +30,11 @@ export default {
   },
   mixins: [ context, config ],
   watch: {
+    pid: function (newPid, oldPid) {
+      if (newPid && newPid !== oldPid) {
+        this.fetchForm(newPid)
+      }
+    },
     '$i18n.locale': function (newVal) {
       this.sortUwmetadata(this.uwmetadata, '', newVal)
     }
@@ -82,7 +87,7 @@ export default {
     },
     postLoadUwmetadata: function (self, uwmetadata) {
       let lic = this.findNodeRec('uwm_rights_license', 'uwm', uwmetadata)
-      if (lic.ui_value && (lic.ui_value !== 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_21/1')) {
+      if (lic && lic.ui_value && (lic.ui_value !== 'http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_21/1')) {
         lic.disabled = true
       }
       this.sortUwmetadata(uwmetadata, '', this.$i18n.locale)
@@ -94,15 +99,16 @@ export default {
         let xmlnamePath = path;
         xmlnamePath += element.xmlname + '->';
         if(this.sortXmlNamePaths.includes(xmlnamePath)) {
-          if(element.vocabularies.length > 0) {
+          if(element.vocabularies && element.vocabularies.length > 0) {
             element.vocabularies[0].terms.sort((a, b) => {
               if(locale === 'ita' && a.labels.it && b.labels.it) {
                 return a.labels.it.localeCompare(b.labels.it)
               } else if(locale === 'deu' && a.labels.de && b.labels.de) {
                 return a.labels.de.localeCompare(b.labels.de)
-              } else {
+              } else if (a.labels.en && b.labels.en) {
                 return a.labels.en.localeCompare(b.labels.en)
               }
+              return 0
             })
           }
         }
@@ -111,8 +117,15 @@ export default {
         }
       });
     },
+    fetchForm: async function (pid) {
+      this.$store.commit('setLoading', true)
+      try {
+        await this.loadUwmetadata(this, pid)
+      } finally {
+        this.$store.commit('setLoading', false)
+      }
+    },
     loadUwmetadata: async function (self, pid) {
-      self.loading = true
       try {
         let response = await self.$axios.request({
           method: 'GET',
@@ -129,28 +142,13 @@ export default {
         }
       } catch (error) {
         console.log(error)
-      } finally {
-        self.loading = false
       }
     }
   },
-  beforeRouteEnter: function (to, from, next) {
-    next(vm => {
-      vm.parentpid = from.params.pid
-      vm.$store.commit('setLoading', true)
-      vm.loadUwmetadata(vm, to.params.pid).then(() => {
-        vm.$store.commit('setLoading', false)
-        next()
-      })
-    })
-  },
-  beforeRouteUpdate: function (to, from, next) {
-    this.parentpid = from.params.pid
-    this.$store.commit('setLoading', true)
-    this.loadUwmetadata(this, to.params.pid).then(() => {
-      this.$store.commit('setLoading', false)
-      next()
-    })
+  mounted: function () {
+    if (this.pid) {
+      this.fetchForm(this.pid)
+    }
   }
 }
 </script>

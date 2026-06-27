@@ -23,42 +23,30 @@
             :loading="clsLoading"
             :disabled="disabled"
             v-model="ch.ui_value"
-            :items="ch.vocabularies[0].terms"
-            :item-value="'uri'"
+            :items="vocabularySelectItems(ch.vocabularies[0].terms)"
+            item-title="text"
+            item-value="value"
             :label="ch.labels[alpha2locale]"
             :error-messages="ch.errorMessages"
-            @change="selectHandler(ch, $event)"
+            @update:model-value="selectHandler(ch, $event)"
             variant="filled"
             clearable
-          >
-            <template v-slot:item="{ internalItem, index }">
-              <span>{{ internalItem.labels[alpha2locale] }}</span>
-            </template>
-            <template v-slot:selection="{ internalItem, index }">
-              <span>{{ internalItem.labels[alpha2locale] }}</span>
-            </template>
-          </v-select>
+          ></v-select>
         </v-col>
         <v-col v-else-if="(ch.datatype === 'Taxon') && (ch.vocabularies)" cols="12">
           <v-select
             :loading="clsLoading"
             :disabled="disabled"
             v-model="ch.ui_value"
-            :items="ch.vocabularies[0].terms"
-            :item-value="'uri'"
+            :items="vocabularySelectItems(ch.vocabularies[0].terms)"
+            item-title="text"
+            item-value="value"
             :label="ch.labels[alpha2locale]"
             :error-messages="ch.errorMessages"
-            @change="selectHandler(ch, $event)"
+            @update:model-value="selectHandler(ch, $event)"
             variant="filled"
             clearable
-          >
-            <template v-slot:item="{ internalItem, index }">
-              <span>{{ internalItem.labels[alpha2locale] }}</span>
-            </template>
-            <template v-slot:selection="{ internalItem, index }">
-              <span>{{ internalItem.labels[alpha2locale] }}</span>
-            </template>
-          </v-select>
+          ></v-select>
         </v-col>
         <template v-else>
           <v-col :cols="ch.cardinality !== 1 ? 10 : 12">
@@ -102,6 +90,8 @@
                 v-model="ch.value_lang"
                 :disabled="disabled"
                 :items="languages"
+                item-title="text"
+                item-value="value"
                 :label="$t('Language')"
                 :error-messages="ch.langErrorMessages"
                 variant="filled"
@@ -140,6 +130,8 @@
                 v-model="ch.value_lang"
                 :disabled="disabled"
                 :items="languages"
+                item-title="text"
+                item-value="value"
                 :error-messages="ch.langErrorMessages"
                 :label="$t('Language')"
                 variant="filled"
@@ -169,21 +161,15 @@
                 :loading="(ch.xmlname === 'faculty') ? orgLoading : (ch.xmlname === 'spl') ? splLoading : false"
                 v-model="ch.ui_value"
                 :disabled="disabled || (ch.disabled === true) || (ch.disabled === '1') || (ch.disabled === 1)"
-                :items="ch.vocabularies[0].terms"
-                :item-value="'uri'"
+                :items="vocabularySelectItems(ch.vocabularies[0].terms)"
+                item-title="text"
+                item-value="value"
                 :label="ch.labels[alpha2locale]"
                 :error-messages="ch.errorMessages"
-                @change="selectHandler(ch, $event)"
+                @update:model-value="selectHandler(ch, $event)"
                 variant="filled"
                 clearable
-              >
-                <template v-slot:item="{ internalItem, index }">
-                  <span>{{ internalItem.labels[alpha2locale] }}</span>
-                </template>
-                <template v-slot:selection="{ internalItem, index }">
-                  <span>{{ internalItem.labels[alpha2locale] }}</span>
-                </template>
-              </v-select>
+              ></v-select>
             </v-col>
           </v-row>
         </v-col>
@@ -208,6 +194,8 @@
                   v-model="ch.ui_value"
                   :disabled="disabled"
                   :items="languages"
+                  item-title="text"
+                  item-value="value"
                   :error-messages="ch.errorMessages"
                   :label="ch.labels[alpha2locale]"
                   variant="filled"
@@ -379,7 +367,11 @@ export default {
     },
     languages: function () {
       let arr = []
-      for (let term of this.$store.state.vocabulary.vocabularies['lang'].terms) {
+      const langTerms = this.$store.state.vocabulary.vocabularies['lang']?.terms
+      if (!langTerms) {
+        return arr
+      }
+      for (let term of langTerms) {
         if (lang3to2map[term['@id']]) {
            if (term['skos:prefLabel'][this.$i18n.locale]) {
             arr.push({
@@ -401,6 +393,45 @@ export default {
     }
   },
   methods: {
+    vocabularySelectItems: function (terms) {
+      if (!Array.isArray(terms)) {
+        return []
+      }
+      return terms.map(term => ({
+        ...term,
+        text: this.termLabel(term, terms),
+        value: term.uri
+      }))
+    },
+    termLabel: function (item, terms) {
+      let term = item?.raw ?? item
+      if (typeof term === 'string' && Array.isArray(terms)) {
+        term = terms.find(t => t.uri === term || t.value === term)
+      }
+      if (!term || !term.labels) {
+        if (typeof item === 'string') {
+          return item
+        }
+        if (typeof term === 'string') {
+          return term
+        }
+        return term?.uri || term?.value || ''
+      }
+      const labels = term.labels
+      const raw = labels[this.alpha2locale]
+        || labels[this.$i18n.locale]
+        || labels.en || labels.eng
+        || labels.de || labels.deu
+        || labels.it || labels.ita
+        || Object.values(labels).find(v => typeof v === 'string')
+      if (typeof raw === 'string') {
+        return raw
+      }
+      if (raw && typeof raw === 'object' && raw['@value']) {
+        return raw['@value']
+      }
+      return term.uri || term.value || ''
+    },
     entityHasData: function (entity) {
       if (!entity || !entity.children) {
         return false
@@ -674,6 +705,7 @@ export default {
     }
   },
   mounted: async function () {
+    console.log('PIUwmRec mounted')
     let lastClsChild
     for (let ch of this.children) {
       if (ch.datatype === 'ClassificationSource') {
