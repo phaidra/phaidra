@@ -1,8 +1,15 @@
 <template>
   <v-col>
-    <v-row v-for="(ch, i) in children" :key="ch.xmlname+i">
-      <template v-if="skip(ch) || isEmpty(ch)"></template>
-      <template v-else-if="ch.input_type === 'static'">
+    <template v-for="(ch, i) in children">
+      <p-d-uwm-rec
+        v-if="isPassthrough(ch)"
+        :key="'pt-' + ch.xmlname + i"
+        :children="ch.children"
+        :cmodel="cmodel"
+        :path="nodePath(ch)"
+      ></p-d-uwm-rec>
+      <v-row v-else-if="shouldShow(ch, i)" :key="ch.xmlname+i">
+      <template v-if="ch.input_type === 'static'">
         <v-col cols="12" md="2" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
         <v-col cols="12" md="10">{{ ch.ui_value }}</v-col>
       </template>
@@ -192,9 +199,6 @@
             </v-row>
           </v-col>
         </template>
-        <template v-else-if="hideNodeBorder(nodePath(ch))">
-          <p-d-uwm-rec v-if="ch.children" :children="ch.children" :cmodel="cmodel" :path="nodePath(ch)"></p-d-uwm-rec>
-        </template>
         <template v-else>
           <v-col>
             <v-card outlined class="mt-4" :width="'100%'">
@@ -207,7 +211,8 @@
         </template>
       </template>
       <v-alert v-else dense type="error" :value="true">Unknown field type {{ch.xmlname}} {{ch.input_type}}</v-alert>
-    </v-row>
+      </v-row>
+    </template>
   </v-col>
 </template>
 
@@ -505,27 +510,32 @@ export default {
     nodePath: function (ch) {
       return this.path ? this.path + '_' + ch.xmlname : ch.xmlname
     },
+    isPassthrough: function (node) {
+      return node.input_type === 'node'
+        && this.hideNodeBorder(this.nodePath(node))
+        && Array.isArray(node.children)
+        && !this.isEmpty(node)
+    },
+    shouldShow: function (node, index) {
+      if (this.skip(node) || this.isEmpty(node)) {
+        return false
+      }
+      if (node.xmlname === 'keyword' && index !== this.firstKeywordIndex) {
+        return false
+      }
+      if (node.xmlname === 'license' && (this.cmodel === 'Collection' || this.cmodel === 'Resource')) {
+        return false
+      }
+      return true
+    },
     isEmpty: function (node) {
-      let isEmpty = true
       if (node.ui_value) {
         return false
       }
-      if (node.hasOwnProperty('children')) {
-        if (Array.isArray(node.children)) {
-          for (let ch of node.children) {
-            if (ch.ui_value) {
-              isEmpty = false
-              break
-            } else {
-              isEmpty = this.isEmpty(ch)
-              if (!isEmpty) {
-                break;
-              }
-            }
-          }
-        }
+      if (!Array.isArray(node.children)) {
+        return true
       }
-      return isEmpty
+      return !node.children.some(ch => !this.skip(ch) && !this.isEmpty(ch))
     },
     skip: function (node) {
       if (node.hidden) {
