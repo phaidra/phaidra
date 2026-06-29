@@ -1,8 +1,15 @@
 <template>
   <v-col>
-    <v-row v-for="(ch, i) in children" :key="ch.xmlname+i">
-      <template v-if="skip(ch) || isEmpty(ch)"></template>
-      <template v-else-if="ch.input_type === 'static'">
+    <template v-for="(ch, i) in children">
+      <p-d-uwm-rec
+        v-if="isPassthrough(ch)"
+        :key="'pt-' + ch.xmlname + i"
+        :children="ch.children"
+        :cmodel="cmodel"
+        :path="nodePath(ch)"
+      ></p-d-uwm-rec>
+      <v-row v-else-if="shouldShow(ch, i)" :key="ch.xmlname+i">
+      <template v-if="ch.input_type === 'static'">
         <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
         <v-col cols="12" md="10">{{ ch.ui_value }}</v-col>
       </template>
@@ -175,12 +182,21 @@
         </template>
         <template v-else-if="ch.xmlname === 'dimensions'">
           <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
-          <v-col cols="12" md="10">
-            <template v-for="(d, i) in ch.children" :key="i+'dim-wrap'">
-              <span v-if="d.xmlname === 'resource'"><span class="text-secondary font-weight-bold">{{ $t(nodePath(ch)+'_resource') }}</span>: {{ getLabel(d) }}</span>
-              <span v-else-if="d.xmlname === 'dimension_unit'"><span class="text-secondary font-weight-bold ml-4">{{ $t(nodePath(ch)+'_dimension_unit') }}</span>: {{ getLabel(d) }}</span>
-              <span v-else><span class="text-secondary font-weight-bold ml-4">{{ $t(nodePath(ch) + '_' + d.xmlname) }}</span>: {{ d.ui_value }}</span>
-            </template>
+          <v-col cols="12" md="10" :class="$vuetify.display.mdAndUp ? 'uwm-border-left mb-4' : ''">
+            <v-row v-for="(d, i) in ch.children" :key="'dim'+i">
+              <template v-if="d.xmlname === 'resource'">
+                <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold">{{ $t(nodePath(ch)+'_resource') }}</v-col>
+                <v-col cols="12" md="10">{{ getLabel(d) }}</v-col>
+              </template>
+              <template v-else-if="d.xmlname === 'dimension_unit'">
+                <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold">{{ $t(nodePath(ch)+'_dimension_unit') }}</v-col>
+                <v-col cols="12" md="10">{{ getLabel(d) }}</v-col>
+              </template>
+              <template v-else>
+                <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold">{{ $t(nodePath(ch) + '_' + d.xmlname) }}</v-col>
+                <v-col cols="12" md="10">{{ d.ui_value }}</v-col>
+              </template>
+            </v-row>
           </v-col>
         </template>
         <template v-else>
@@ -195,7 +211,8 @@
         </template>
       </template>
       <v-alert v-else density="compact" type="error" :model-value="true">Unknown field type {{ch.xmlname}} {{ch.input_type}}</v-alert>
-    </v-row>
+      </v-row>
+    </template>
   </v-col>
 </template>
 
@@ -492,6 +509,24 @@ export default {
     },
     nodePath: function (ch) {
       return this.path ? this.path + '_' + ch.xmlname : ch.xmlname
+    },
+    isPassthrough: function (node) {
+      return node.input_type === 'node'
+        && this.hideNodeBorder(this.nodePath(node))
+        && Array.isArray(node.children)
+        && !this.isEmpty(node)
+    },
+    shouldShow: function (node, index) {
+      if (this.skip(node) || this.isEmpty(node)) {
+        return false
+      }
+      if (node.xmlname === 'keyword' && index !== this.firstKeywordIndex) {
+        return false
+      }
+      if (node.xmlname === 'license' && (this.cmodel === 'Collection' || this.cmodel === 'Resource')) {
+        return false
+      }
+      return true
     },
     isEmpty: function (node) {
       if (node.ui_value) {
