@@ -1338,7 +1338,7 @@ export default {
       this.activetab = 'metadata'
     },
     toggleSectionCollapse: function (section) {
-      this.$set(section, 'collapsed', !section.collapsed)
+      section.collapsed = !section.collapsed
     },
     initialize: function () {
       if (!this.$route.params.templateid) {

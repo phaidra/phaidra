@@ -1569,7 +1569,7 @@ export default {
     },
     addQueryReport: function () {
       if (!this.parsedPrivateConfigData.reportingquerycountreports) {
-        this.$set(this.parsedPrivateConfigData, 'reportingquerycountreports', [])
+        this.parsedPrivateConfigData.reportingquerycountreports = []
       }
       this.parsedPrivateConfigData.reportingquerycountreports.push({
         label: '',

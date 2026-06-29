@@ -402,7 +402,7 @@ export default {
     setIfEmpty: function (obj, key, value, overwrite) {
       if (value === undefined || value === null || value === '') return
       if (overwrite || obj[key] === undefined || obj[key] === null || obj[key] === '') {
-        this.$set ? this.$set(obj, key, value) : (obj[key] = value)
+        obj[key] = value
       }
     },
     getBaseForm: function () {
@@ -515,7 +515,7 @@ export default {
           this.setIfEmpty(f, 'issued', doiImportData.dateIssued, overwrite)
         } else {
           if (overwrite || f.issued) {
-            this.$set ? this.$set(f, 'issued', undefined) : (f.issued = undefined)
+            f.issued = undefined
           }
         }
       }
