@@ -1,8 +1,8 @@
 <template>
   <v-col>
-    <template v-for="(ch, i) in children" :key="ch.xmlname+i">
-      <v-row v-if="shouldRenderRow(ch, i)">
-      <template v-if="ch.input_type === 'static'">
+    <v-row v-for="(ch, i) in children" :key="ch.xmlname+i">
+      <template v-if="skip(ch) || isEmpty(ch)"></template>
+      <template v-else-if="ch.input_type === 'static'">
         <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
         <v-col cols="12" md="10">{{ ch.ui_value }}</v-col>
       </template>
@@ -195,8 +195,7 @@
         </template>
       </template>
       <v-alert v-else density="compact" type="error" :model-value="true">Unknown field type {{ch.xmlname}} {{ch.input_type}}</v-alert>
-      </v-row>
-    </template>
+    </v-row>
   </v-col>
 </template>
 
@@ -493,18 +492,6 @@ export default {
     },
     nodePath: function (ch) {
       return this.path ? this.path + '_' + ch.xmlname : ch.xmlname
-    },
-    shouldRenderRow: function (node, index) {
-      if (this.skip(node) || this.isEmpty(node)) {
-        return false
-      }
-      if (node.xmlname === 'keyword' && index !== this.firstKeywordIndex) {
-        return false
-      }
-      if (node.input_type === 'select' && node.xmlname === 'license' && (this.cmodel === 'Collection' || this.cmodel === 'Resource')) {
-        return false
-      }
-      return true
     },
     isEmpty: function (node) {
       if (node.ui_value) {
