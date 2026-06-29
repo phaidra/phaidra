@@ -168,8 +168,8 @@ export default {
       this.validationErrors = []
 
       let title = this.findNodeRec('uwm_general_title', 'uwm', this.form)
-      this.$set(title, 'errorMessages', [])
-      this.$set(title, 'langErrorMessages', [])
+      title.errorMessages = []
+      title.langErrorMessages = []
       if (!title.ui_value) {
         title.errorMessages.push(this.$t('Missing title'))
         this.valid = false
@@ -182,7 +182,7 @@ export default {
       }
 
       let lang = this.findNodeRec('uwm_general_language', 'uwm', this.form)
-      this.$set(lang, 'errorMessages', [])
+      lang.errorMessages = []
       if (!lang.ui_value) {
         lang.errorMessages.push(this.$t('Missing language'))
         this.valid = false
@@ -190,8 +190,8 @@ export default {
       }
 
       let description = this.findNodeRec('uwm_general_description', 'uwm', this.form)
-      this.$set(description, 'errorMessages', [])
-      this.$set(description, 'langErrorMessages', [])
+      description.errorMessages = []
+      description.langErrorMessages = []
       if (!description.ui_value) {
         description.errorMessages.push(this.$t('Missing description'))
         this.valid = false
@@ -204,7 +204,7 @@ export default {
       }
 
       let role = this.findNodeRec('uwm_lifecycle_contribute_role', 'uwm', this.form)
-      this.$set(role, 'errorMessages', [])
+      role.errorMessages = []
       if (!isNonBlankString(role.ui_value)) {
         role.errorMessages.push(this.$t('Missing role'))
         this.valid = false
@@ -213,9 +213,9 @@ export default {
         let firstname = this.findNodeRec('uwm_lifecycle_contribute_entity_firstname', 'uwm', this.form)
         let lastname = this.findNodeRec('uwm_lifecycle_contribute_entity_lastname', 'uwm', this.form)
         let institution = this.findNodeRec('uwm_lifecycle_contribute_entity_institution', 'uwm', this.form)
-        this.$set(firstname, 'errorMessages', [])
-        this.$set(lastname, 'errorMessages', [])
-        this.$set(institution, 'errorMessages', [])
+        firstname.errorMessages = []
+        lastname.errorMessages = []
+        institution.errorMessages = []
         if (!isNonBlankString(firstname.ui_value) && !isNonBlankString(lastname.ui_value) && !isNonBlankString(institution.ui_value)) {
           firstname.errorMessages.push(this.$t('Missing firstname'))
           lastname.errorMessages.push(this.$t('Missing lastname'))
@@ -226,7 +226,7 @@ export default {
       }
 
       let lic = this.findNodeRec('uwm_rights_license', 'uwm', this.form)
-      this.$set(lic, 'errorMessages', [])
+      lic.errorMessages = []
       if (!lic.ui_value) {
         lic.errorMessages.push(this.$t('Missing license'))
         this.valid = false
