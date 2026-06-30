@@ -878,6 +878,10 @@ export const actions = {
     } catch (error) {
       console.log('login error')
       console.log(error)
+      const alerts = error.response?.data?.alerts
+      if (alerts?.length > 0) {
+        commit('setAlerts', alerts)
+      }
     }
   },
   async logout({ commit, dispatch, state }) {

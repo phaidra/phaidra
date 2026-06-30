@@ -122,7 +122,10 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [ { type: 'error', msg: error } ])
+        const alerts = error.response?.data?.alerts
+        if (alerts?.length > 0) {
+          this.$store.commit('setAlerts', alerts)
+        }
       } finally {
         this.loading = false
       }
@@ -167,6 +170,10 @@ export default {
         }
       } catch (error) {
         console.log(error)
+        const alerts = error.response?.data?.alerts
+        if (alerts?.length > 0) {
+          this.$store.commit('setAlerts', alerts)
+        }
       } finally {
         this.loading = false
       }

@@ -36,12 +36,12 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.provide('axios', instance)
 
   const sentry = nuxtApp.$sentry
-  const store = nuxtApp.$store
 
   instance.onError((error) => {
     if (sentry?.captureException) {
       sentry.captureException(error)
     }
+    const store = nuxtApp.$store
     if (store && error?.response?.data?.alerts?.length > 0) {
       if (error.response?.status !== 403) {
         store.commit('setAlerts', error.response.data.alerts)
