@@ -669,6 +669,11 @@ address {
   padding: 0px;
 }
 
+.v-application .px-4 {
+    padding-right: 16px !important;
+    padding-left: 16px !important;
+}
+
 .no-height-inherit {
   height: unset;
 }
