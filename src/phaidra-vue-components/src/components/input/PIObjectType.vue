@@ -3,7 +3,7 @@
     <v-alert v-if="errorMessages && errorMessages.length > 0" type="error" variant="tonal" transition="slide-y-transition">
       <span v-for="(em, i) in errorMessages" :key="'em'+i">{{ em }}<br/></span>
     </v-alert>
-    <v-card outlined class="mt-4 mb-8">
+    <v-card variant="outlined" class="mt-4 mb-8">
       <v-card-title v-if="showLabel" class="title font-weight-light text-white">
         <span>{{ $t(label) }}</span>
         <v-spacer></v-spacer>

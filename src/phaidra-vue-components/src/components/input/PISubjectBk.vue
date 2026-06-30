@@ -3,7 +3,7 @@
     <v-col cols="12">
       <v-row>
         <v-col cols="12">
-          <v-card outlined class="mb-8">
+          <v-card variant="outlined" class="mb-8">
             <v-card-title class="title font-weight-light text-white">
               <span>{{ $t(label) }}</span>
               <v-spacer></v-spacer>

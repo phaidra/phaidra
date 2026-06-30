@@ -72,7 +72,7 @@
             </v-card-text>
           </v-card>
 
-          <v-card :outlined="s.outlined" :flat="(!s.title || (s.mode === 'expansion' && s.collapsed) || s.flat)" v-else-if="(s.type !== 'accessrights')" width="100%">
+          <v-card :variant="sectionCardVariant(s)" v-else-if="(s.type !== 'accessrights')" width="100%">
             <v-card-title v-if="s.title" class="title font-weight-light text-white">
               <span v-t="s.title"></span>
               <v-spacer></v-spacer>
@@ -844,7 +844,7 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn :loading="loading" :disabled="loading" outlined @click="templatedialog= false"><span v-t="'Cancel'"></span></v-btn>
+                  <v-btn :loading="loading" :disabled="loading" variant="outlined" @click="templatedialog= false"><span v-t="'Cancel'"></span></v-btn>
                   <v-btn :loading="loading" :disabled="loading" color="primary" @click="saveAsNewTemplate()"><span v-t="'Save'"></span></v-btn>
                 </v-card-actions>
               </v-card>
@@ -1332,6 +1332,15 @@ export default {
     }
   },
   methods: {
+    sectionCardVariant: function (section) {
+      if (section.outlined) {
+        return 'outlined'
+      }
+      if (!section.title || (section.mode === 'expansion' && section.collapsed) || section.flat) {
+        return 'flat'
+      }
+      return undefined
+    },
     loadFormFromDoiImport: function (form) {
       this.$emit('load-form', form)
       // Switch back to metadata tab after importing DOI data.

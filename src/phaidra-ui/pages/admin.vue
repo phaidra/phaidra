@@ -1031,7 +1031,7 @@
                           <v-col>
                             <v-card-title class="subtitle-1">{{ $t("Query count reports") }}</v-card-title>
                             <div v-for="(queryReport, index) in (parsedPrivateConfigData.reportingquerycountreports || [])" :key="index" class="mt-4">
-                              <v-card outlined class="pa-4">
+                              <v-card variant="outlined" class="pa-4">
                                 <v-row>
                                   <v-col cols="12" md="4">
                                     <v-text-field

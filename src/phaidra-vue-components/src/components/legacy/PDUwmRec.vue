@@ -120,7 +120,7 @@
         </template>
         <template v-else-if="nodePath(ch) === 'uwm_provenience_contribute'">
           <v-col>
-            <v-card outlined class="mt-4" :width="'100%'">
+            <v-card variant="outlined" class="mt-4" :width="'100%'">
               <v-card-text>
                 <div class="overline mb-4">{{ $t(nodePath(ch)) }}</div>
                 <v-row v-if="getChildLabel(ch, 'resource')">
@@ -201,7 +201,7 @@
         </template>
         <template v-else>
           <v-col>
-            <v-card outlined class="mt-4" :width="'100%'">
+            <v-card variant="outlined" class="mt-4" :width="'100%'">
               <v-card-text>
                 <div class="overline mb-4">{{ $t(nodePath(ch)) }}</div>
                 <p-d-uwm-rec v-if="ch.children" :children="ch.children" :cmodel="cmodel" :path="nodePath(ch)"></p-d-uwm-rec>
