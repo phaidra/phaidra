@@ -176,7 +176,7 @@
 
                   <v-menu offset-y>
                     <template v-slot:activator="{ props }">
-                      <v-btn density="comfortable" class="px-12" icon tile v-bind="props" aria-controls="locale-menu">                        
+                      <v-btn variant="text" density="comfortable" class="px-12" icon tile v-bind="props" aria-controls="locale-menu">                        
                       <span class="subtitle-1 text-capitalize font-weight-medium"
                         >{{ localeLabel }}</span>
                       <v-icon
@@ -210,7 +210,7 @@
 
                   <v-tooltip v-if="!isDarkTheme" location="bottom">
                     <template v-slot:activator="{ props }">
-                      <v-btn density="comfortable" v-bind="props" icon="" @click="darkMode" :aria-label="$t('Dark Mode On')">
+                      <v-btn variant="text" density="comfortable" v-bind="props" icon @click="darkMode" :aria-label="$t('Dark Mode On')">
                       <v-icon>mdi-moon-waxing-crescent</v-icon>
                     </v-btn>
                   </template>
@@ -219,7 +219,7 @@
 
                   <v-tooltip v-else location="bottom">
                     <template v-slot:activator="{ props }">
-                      <v-btn density="comfortable" v-bind="props" icon @click="darkMode" :aria-label="$t('Dark Mode Off')">
+                      <v-btn variant="text" density="comfortable" v-bind="props" icon @click="darkMode" :aria-label="$t('Dark Mode Off')">
                       <v-icon>mdi-white-balance-sunny</v-icon>
                     </v-btn>
                   </template>
