@@ -5,12 +5,16 @@
     <table border="1">
         <thead>
           <tr>
-            <th class="text-secondary font-weight-bold" v-for="(value, key) in o" v-if="value && value.length">{{$t(key)}}</th>
+            <template v-for="(value, key) in o" :key="key">
+              <th v-if="value && value.length" class="text-secondary font-weight-bold">{{ $t(key) }}</th>
+            </template>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(row, index) in new Array(maxRowLen())" :key="index">
-            <td v-for="(value, key) in o" v-if="value && value.length">{{ getValue(value, index, $i18n.locale) }}</td>
+            <template v-for="(value, key) in o" :key="key">
+              <td v-if="value && value.length">{{ getValue(value, index, $i18n.locale) }}</td>
+            </template>
           </tr>
         </tbody>
       </table>
