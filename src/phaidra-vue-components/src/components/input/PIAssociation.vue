@@ -52,7 +52,7 @@
         </v-list>
       </v-menu>
     </v-col>
-    <org-units-tree-dialog ref="orgunitstreedialog" :isParentSelectionDisabled="parentSelectionDisabled" @unit-selected="handleInput(getTerm('orgunits', $event))"></org-units-tree-dialog>
+    <org-units-tree-dialog ref="orgunitstreedialog" :isParentSelectionDisabled="parentSelectionDisabled" :selected="value" @unit-selected="handleInput(getTerm('orgunits', $event))"></org-units-tree-dialog>
   </v-row>
 </template>
 
@@ -70,7 +70,7 @@ export default {
   emits: ['input', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   computed: {
     instanceconfig: function () {
-      return this.$root.$store.state.instanceconfig
+      return this.$store.state.instanceconfig
     },
     parentSelectionDisabled: function () {
       return this.isParentSelectionDisabled || this.instanceconfig?.isParentSelectionDisabled || false

@@ -5,13 +5,13 @@
       <v-card-text class="mt-4">
         <v-treeview
           v-model:opened="openedUnits"
+          v-model:activated="activatedUnits"
           :items="orgunits"
-          item-children="subunits"
+          :item-children="orgunitChildren"
           item-title="name"
-:item-value="'@id'"
-          :load-children="loadChildren"
+          item-value="@id"
           activatable
-          return-object
+          color="primary"
           @update:activated="selectUnit"
         ></v-treeview>
       </v-card-text>
@@ -45,51 +45,49 @@ export default {
     return {
       dialog: false,
       loading: false,
-      openedUnits: []
+      openedUnits: [],
+      activatedUnits: []
     }
   },
   props: {
     isParentSelectionDisabled: {
       type: Boolean,
       default: false
+    },
+    selected: {
+      type: String,
+      default: null
     }
   },
   methods: {
+    orgunitChildren (item) {
+      const subunits = item?.subunits
+      return Array.isArray(subunits) && subunits.length > 0 ? subunits : undefined
+    },
     open: async function () {
       this.dialog = true
       this.addNames(this.orgunits)
-      this.prepareTree()
       const root = this.orgunits && this.orgunits[0]
       this.openedUnits = root && root['@id'] != null ? [root['@id']] : []
+      this.activatedUnits = this.selected ? [this.selected] : []
     },
     addNames: function (units) {
       for (let u of units) {
         if (u['skos:prefLabel']) {
-          const pl = u['skos:prefLabel']
-          u.name = pl[this.$i18n.locale] || pl.eng || pl.deu || Object.values(pl).find(Boolean) || ''
+          u['name'] = u['skos:prefLabel'][this.$i18n.locale]
+        }
+        if (u['subunits'] && u.subunits.length > 0) {
+          this.addNames(u.subunits)
         }
       }
     },
-    prepareTree: function () {
-      this.prepareLazyTree(this.orgunits, 'subunits')
-    },
-    loadChildren: async function (item) {
-      this.loadLazyTreeChildren(item, 'subunits')
-      if (Array.isArray(item.subunits)) {
-        this.addNames(item.subunits)
-      }
-    },
     selectUnit: function (activated) {
-      const list = Array.isArray(activated) ? activated : activated != null ? [activated] : []
-      if (!list.length) {
+      if (!activated?.length) {
         return
       }
-      const node = list[0]
-      if (this.isParentSelectionDisabled && typeof node === 'object' && node?.subunits?.length > 0) {
-        return
-      }
-      const id = typeof node === 'object' && node != null ? node['@id'] : node
-      if (id == null) {
+      const id = activated[0]
+      if (this.isParentSelectionDisabled && this.getTerm('orgunits', id)?.hasChildren) {
+        this.activatedUnits = this.selected ? [this.selected] : []
         return
       }
       this.$emit('unit-selected', id)
