@@ -83,7 +83,12 @@
           </v-bottom-sheet>
         </v-row>
         <v-row no-gutters>
-          <v-btn v-if="inCollection" class="mb-8" color="primary">{{ $t('Members of') }}<component class="ml-1 text-white" :is="PhaidraLink" :to="detailRouteTo(inCollection)">{{ inCollection }}</component><v-icon end @click="removeCollectionFilter()">mdi-close</v-icon></v-btn>
+          <v-btn v-if="inCollection" class="mb-8" color="primary">
+            {{ $t('Members of') }}<component class="ml-1 text-white" :is="PhaidraLink" :to="detailRouteTo(inCollection)">{{ inCollection }}</component>
+            <template #append>
+              <v-icon @click.stop="removeCollectionFilter()">mdi-close</v-icon>
+            </template>
+          </v-btn>
           <v-pagination
           :wrapper-aria-label="$t('pagination')"
           :page-aria-label="$t('page')"

@@ -49,8 +49,8 @@
           :disabled="isUploading || isUploadComplete"
           variant="text"
           :to="steps[3].route"
+          prepend-icon="mdi-arrow-left"
         >
-          <v-icon left>mdi-arrow-left</v-icon>
           {{$t('Back')}}
         </v-btn>
       </v-col>
@@ -61,6 +61,7 @@
           :loading="isUploading"
           :disabled="!isLoggedIn || isUploading || isUploadComplete"
           @click="startUpload"
+          append-icon="mdi-cloud-upload"
         >
           <template v-if="hasFailedUploads">
             {{$t('Retry Failed Uploads')}}
@@ -68,7 +69,6 @@
           <template v-else>
             {{$t('Start Upload')}}
           </template>
-          <v-icon right>mdi-cloud-upload</v-icon>
         </v-btn>
       </v-col>
     </v-row>

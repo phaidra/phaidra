@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-btn color="primary" class="my-4" :to="`/detail/${pid}`">
-      <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
+    <v-btn color="primary" class="my-4" :to="`/detail/${pid}`" prepend-icon="mdi-arrow-left">
+      {{ $t('Back to detail page') }}
     </v-btn>
     <v-row>
       <v-col v-if="signedin && pid">

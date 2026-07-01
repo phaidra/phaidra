@@ -273,7 +273,7 @@
                         <v-menu offset-y min-width="150px" :close-on-content-click="true">
                           <template v-slot:activator="{ props }">
                           <v-btn id="mobile-menu-btn" variant="text" size="x-large" aria-controls="mobile-menu" aria-label="Main navigation menu"
-                            v-bind="props" class="pa-2"><v-icon size="x-large" class="mr-2">mdi-menu</v-icon>{{ $t('Menu') }}</v-btn>
+                            v-bind="props" class="pa-2" prepend-icon="mdi-menu">{{ $t('Menu') }}</v-btn>
                         </template>
                         <v-list id="mobile-menu">
                           <v-list-item

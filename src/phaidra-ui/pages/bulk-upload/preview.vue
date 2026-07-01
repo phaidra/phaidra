@@ -73,8 +73,8 @@
           <v-btn
             variant="text"
             :to="steps[2].route"
+            prepend-icon="mdi-arrow-left"
           >
-            <v-icon start>mdi-arrow-left</v-icon>
             {{$t('Back')}}
           </v-btn>
         </v-col>
@@ -84,9 +84,9 @@
             color="primary"
             @click="proceed"
             :to="steps[4].route"
+            append-icon="mdi-arrow-right"
           >
             {{$t('Next')}}
-            <v-icon end>mdi-arrow-right</v-icon>
           </v-btn>
         </v-col>
       </v-row>

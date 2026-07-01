@@ -1,8 +1,8 @@
 <template>
   <client-only>
     <div>
-      <v-btn color="primary" class="my-4" :to="`/detail/${pid}`">
-        <v-icon left>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
+      <v-btn color="primary" class="my-4" :to="`/detail/${pid}`" prepend-icon="mdi-arrow-left">
+        {{ $t('Back to detail page') }}
       </v-btn>
       <p-i-form :form="form" :targetpid="pid" :enablerights="false" :enablerelationships="false" :templating="false" :hideContainedInPages="instanceconfig.hideContainedInPages"
         :importing="false" :addbutton="true" :help="false" :debug="false" :feedback="false"

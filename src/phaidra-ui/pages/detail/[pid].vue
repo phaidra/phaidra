@@ -623,7 +623,8 @@
                     '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
                   "
                   target="_blank"
-                  ><v-icon class="mr-2" aria-hidden="true">mdi-open-in-new</v-icon>{{ $t("Open in new window") }}</v-btn
+                  prepend-icon="mdi-open-in-new"
+                  >{{ $t("Open in new window") }}</v-btn
                 >
               </v-col>
           </v-row>
@@ -708,7 +709,7 @@
                 >
                 <v-row v-else>
                 <v-col class="text-right mr-3">
-                  <v-chip class="pointer-disabled" label theme="dark" color="btnred"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
+                  <v-chip class="pointer-disabled" label theme="dark" color="btnred" prepend-icon="mdi-lock">{{ $t('Restricted access') }}</v-chip>
                 </v-col>
               </v-row>
                 <v-card-text>
@@ -730,13 +731,13 @@
                       instanceconfig?.api + '/object/' + member.pid + '/download'
                     "
                     color="primary"
-                    ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }}</v-btn
+                    prepend-icon="mdi-download"
+                    >{{ $t("Download") }}</v-btn
                   >
                   <v-menu offset-y v-if="objectInfo.writerights === 1">
                     <template v-slot:activator="{ props: menuProps }">
-                      <v-btn class="ml-2" variant="elevated" color="primary" v-bind="menuProps"
-                        >{{ $t("Edit")
-                        }}<v-icon end>mdi-menu-down</v-icon></v-btn
+                      <v-btn class="ml-2" variant="elevated" color="primary" v-bind="menuProps" append-icon="mdi-menu-down"
+                        >{{ $t("Edit") }}</v-btn
                       >
                     </template>
                     <v-list>
@@ -793,7 +794,8 @@
                     legacyCMember.ds
                   "
                   color="primary"
-                  ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }}</v-btn
+                  prepend-icon="mdi-download"
+                  >{{ $t("Download") }}</v-btn
                 >
               </v-col>
             </v-row>
@@ -1132,7 +1134,7 @@
                     </v-card-text>
                   </v-card>
                 </li>
-                <li class="mb-6" v-if="(objectInfo.isrestricted) && (objectInfo.cmodel !== 'Collection')"><v-chip label theme="dark" color="btnred" class="pointer-disabled"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip></li>
+                <li class="mb-6" v-if="(objectInfo.isrestricted) && (objectInfo.cmodel !== 'Collection')"><v-chip label theme="dark" color="btnred" class="pointer-disabled" prepend-icon="mdi-lock">{{ $t('Restricted access') }}</v-chip></li>
                 <li class="mb-6" v-if="
                   (downloadable && objectInfo.readrights) ||
                   objectInfo.cmodel === 'Collection' ||
@@ -1155,7 +1157,8 @@
                             '/download'
                           "
                           color="primary"
-                          ><v-icon class="mr-2" aria-hidden="true">mdi-download</v-icon>{{ $t("Download") }} ({{ $filterBytes(objectInfo.size) }})</v-btn
+                          prepend-icon="mdi-download"
+                          >{{ $t("Download") }} ({{ $filterBytes(objectInfo.size) }})</v-btn
                         >
                         <v-btn
                           v-if="objectInfo.cmodel === 'Collection'"
@@ -1167,7 +1170,8 @@
                           "
                           :disabled="collMembers.length === 0"
                           color="primary"
-                          ><v-icon class="mr-2" aria-hidden="true">mdi-eye</v-icon>{{ $t("Show members") }} ({{
+                          prepend-icon="mdi-eye"
+                          >{{ $t("Show members") }} ({{
                             objectInfo.haspartsize
                           }})</v-btn
                         >
@@ -1205,7 +1209,8 @@
                           "
                           target="_blank"
                           color="primary"
-                          ><v-icon class="mr-2" aria-hidden="true">mdi-open-in-new</v-icon>{{ $t("Open link") }}</v-btn
+                          prepend-icon="mdi-open-in-new"
+                          >{{ $t("Open link") }}</v-btn
                         >
                       </v-row>
                       <v-divider

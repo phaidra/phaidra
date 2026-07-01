@@ -144,8 +144,8 @@
             large
             variant="text"
             :to="steps[1].route"
+            prepend-icon="mdi-arrow-left"
           >
-            <v-icon left>mdi-arrow-left</v-icon>
             {{$t('Back')}}
           </v-btn>
         </v-col>
@@ -156,9 +156,9 @@
             @click="proceed"
             :disabled="!allFieldsMapped"
             :to="steps[3].route"
+            append-icon="mdi-arrow-right"
           >
             {{$t('Next')}}
-            <v-icon right>mdi-arrow-right</v-icon>
           </v-btn>
         </v-col>
       </v-row>

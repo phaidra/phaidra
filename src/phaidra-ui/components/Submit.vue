@@ -10,9 +10,10 @@
           <v-btn
             color="primary"
             variant="elevated"
+            prepend-icon="mdi-plus-circle"
             @click="$router.push(localePath('/submit/upload'))"
           >
-            <v-icon class="mr-2">mdi-plus-circle</v-icon> {{ $t("Create new object") }}
+            {{ $t("Create new object") }}
           </v-btn>
           </div>
         <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
@@ -31,9 +32,10 @@
           <v-btn
             color="primary"
             variant="elevated"
+            prepend-icon="mdi-plus-circle"
             @click="$router.push(localePath('/submit/oer'))"
           >
-            <v-icon class="mr-2">mdi-plus-circle</v-icon> {{ $t("Open Educational Resources (OER) upload") }}
+            {{ $t("Open Educational Resources (OER) upload") }}
           </v-btn>
           </div>
         <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
@@ -53,9 +55,10 @@
             <v-btn
               color="primary"
               variant="elevated"
+              prepend-icon="mdi-school"
               :href="'https://uscholar.univie.ac.at/login'"
             >
-              <v-icon class="mr-2">mdi-school</v-icon> {{ $t("Upload publication (via u:scholar)") }}
+              {{ $t("Upload publication (via u:scholar)") }}
             </v-btn>
           </div>
             <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
@@ -75,9 +78,10 @@
             <v-btn
               color="primary"
               variant="elevated"
+              prepend-icon="mdi-plus-circle"
               @click="$router.push(localePath('/submit/catalogfetchupload'))"
             >
-              <v-icon class="mr-2">mdi-plus-circle</v-icon> {{ $t("Catalog-fetch upload") }}
+              {{ $t("Catalog-fetch upload") }}
             </v-btn>
             </div>
           <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
@@ -126,8 +130,7 @@
         <div class="d-flex flex-row ml-3">
           <v-dialog class="pb-4" v-model="templateDialog" width="900px">
             <template v-slot:activator="{ props: activatorProps }">
-              <v-btn v-bind="activatorProps" color="primary" variant="elevated">
-                <v-icon class="mr-2">mdi-script</v-icon>
+              <v-btn v-bind="activatorProps" color="primary" variant="elevated" prepend-icon="mdi-script">
                 {{ $t("Open template") }}
               </v-btn>
             </template>

@@ -13,7 +13,7 @@
         <template v-if="savedFileName">
           <v-card variant="outlined" class="pa-4">
             <div class="d-flex align-center">
-              <v-icon start color="primary">mdi-file-document-outline</v-icon>
+              <v-icon icon="mdi-file-document-outline" color="primary" class="me-2" />
               <span class="text-body-1">{{ savedFileName }}</span>
               <v-spacer></v-spacer>
               <v-btn
@@ -112,9 +112,9 @@
           color="primary"
           @click="$router.push('/bulk-upload/meta-data-config')"
           :disabled="!isValid"
+          append-icon="mdi-arrow-right"
         >
           {{$t('Next')}}
-          <v-icon end>mdi-arrow-right</v-icon>
         </v-btn>
       </v-col>
     </v-row>

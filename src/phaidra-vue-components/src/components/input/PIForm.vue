@@ -773,12 +773,12 @@
                     <v-col>
                       <v-dialog v-if="addbutton && (s.addbutton != false)" class="pb-4" v-model="s['adddialogue']" scrollable width="700px">
                         <template v-slot:activator="{ props: activatorProps }">
-                          <v-btn v-bind="activatorProps" color="primary" large elevation="4" class="my-4">
-                            <v-icon class="mr-4" color="white" size="24" right theme="dark">mdi-plus-circle</v-icon>{{ $t('Add metadata field') }}
+                          <v-btn v-bind="activatorProps" color="primary" large elevation="4" class="my-4" prepend-icon="mdi-plus-circle">
+                            {{ $t('Add metadata field') }}
                           </v-btn>
                         </template>
                         <v-card>
-                          <v-card-title class="title font-weight-light text-white"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn class="text-grey text-darken-2" color="white" target='_blank' :to="'/metadata-fields-help'"><v-icon class="mr-2" aria-hidden="true">mdi-help-circle-outline</v-icon>{{ $t('Metadata fields Help') }}</v-btn></v-card-title>
+                          <v-card-title class="title font-weight-light text-white"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn class="text-grey text-darken-2" color="white" target='_blank' :to="'/metadata-fields-help'" prepend-icon="mdi-help-circle-outline">{{ $t('Metadata fields Help') }}</v-btn></v-card-title>
                           <v-card-text>
                             <v-list lines="two" >
                               <v-text-field clearable :label="$t('Search...')" append-inner-icon="mdi-magnify" v-model="searchfieldsinput"></v-text-field>

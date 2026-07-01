@@ -147,16 +147,17 @@
               </v-col>
             </v-row>
             <v-row no-gutters v-if="showOwnerFilter" id="owner-content" role="region" aria-labelledby="owner-control">
-              <v-btn v-if="owner" class="mb-8 mt-4" color="primary">{{ owner }}<v-icon right
-                  @click.native="removeOwnerFilter()">mdi-close</v-icon></v-btn>
+              <v-btn v-if="owner" class="mb-8 mt-4" color="primary">
+                {{ owner }}
+                <template #append>
+                  <v-icon @click.stop="removeOwnerFilter()">mdi-close</v-icon>
+                </template>
+              </v-btn>
             </v-row>
 
             <v-row no-gutters>
-              <v-btn class="mb-4 mt-4 bg-primary" @click="$refs.userSearchdialog.open()" v-if="showOwnerFilter">
+              <v-btn class="mb-4 mt-4 bg-primary" append-icon="mdi-database-search" @click="$refs.userSearchdialog.open()" v-if="showOwnerFilter">
                 {{ $t('Username search') }}
-                <v-icon right theme="dark">
-                  mdi-database-search
-                </v-icon>
               </v-btn>
             </v-row>
           </li>

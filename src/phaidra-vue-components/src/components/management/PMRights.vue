@@ -121,14 +121,8 @@
                 <v-container fluid>
                   <v-row>
                     <v-col>
-                      <v-btn class="mb-4 mt-4 bg-primary" @click="$refs.userSearchdialog.open()">
+                      <v-btn class="mb-4 mt-4 bg-primary" append-icon="mdi-database-search" @click="$refs.userSearchdialog.open()">
                         {{ $t('Username search') }}
-                        <v-icon
-                          right
-                          theme="dark"
-                        >
-                          mdi-database-search
-                        </v-icon>
                       </v-btn>
                     </v-col>
                   </v-row>

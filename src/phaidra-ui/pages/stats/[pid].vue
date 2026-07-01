@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-btn color="primary" class="my-4" :to="`/detail/${routepid}`">
-      <v-icon start>mdi-arrow-left</v-icon>{{ $t('Back to detail page') }}
+    <v-btn color="primary" class="my-4" :to="`/detail/${routepid}`" prepend-icon="mdi-arrow-left">
+      {{ $t('Back to detail page') }}
     </v-btn>
     <v-tabs
       color="primary"
