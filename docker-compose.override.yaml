@@ -161,11 +161,9 @@ configs:
         route {
           rate_limit @whitelist_zid {
             log_key
-            zone asn {
-              key {ipinfo_free.asn}
-              events 10000
-              window 1h
-            }
+            # 1. individual IP, burst
+            # 2. individual IP, sustained
+            # 3. ASN, sustained
 
             # so an individual IP can't trigger the ASN block - burst
             zone remote_ip {
@@ -177,6 +175,11 @@ configs:
             zone remote_ip_long {
               key {http.request.remote.host}
               events 9000
+              window 1h
+            }
+            zone asn {
+              key {ipinfo_free.asn}
+              events 20000
               window 1h
             }
           }
