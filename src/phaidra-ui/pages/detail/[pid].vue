@@ -709,7 +709,7 @@
                 >
                 <v-row v-else>
                 <v-col class="text-right mr-3">
-                  <v-chip class="pointer-disabled" label theme="dark" color="btnred" prepend-icon="mdi-lock">{{ $t('Restricted access') }}</v-chip>
+                  <v-chip class="pointer-disabled" label variant="flat" color="btnred" prepend-icon="mdi-lock">{{ $t('Restricted access') }}</v-chip>
                 </v-col>
               </v-row>
                 <v-card-text>
@@ -1134,7 +1134,7 @@
                     </v-card-text>
                   </v-card>
                 </li>
-                <li class="mb-6" v-if="(objectInfo.isrestricted) && (objectInfo.cmodel !== 'Collection')"><v-chip label theme="dark" color="btnred" class="pointer-disabled" prepend-icon="mdi-lock">{{ $t('Restricted access') }}</v-chip></li>
+                <li class="mb-6" v-if="(objectInfo.isrestricted) && (objectInfo.cmodel !== 'Collection')"><v-chip label variant="flat" color="btnred" class="pointer-disabled" prepend-icon="mdi-lock">{{ $t('Restricted access') }}</v-chip></li>
                 <li class="mb-6" v-if="
                   (downloadable && objectInfo.readrights) ||
                   objectInfo.cmodel === 'Collection' ||
