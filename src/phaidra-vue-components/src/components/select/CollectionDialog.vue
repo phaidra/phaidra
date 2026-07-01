@@ -22,11 +22,13 @@
           :loading="loading"
           :loading-text="$t('Loading...')"
           :no-data-text="$t('No data available')"
-          :footer-props="{
-                itemsPerPageOptions: [5, 10, 25, 50, 100],
-                pageText: $t('Page'),
-                itemsPerPageText: $t('Rows per page')
-              }"
+          :items-per-page-options="[
+            { value: 5, title: '5' },
+            { value: 10, title: '10' },
+            { value: 25, title: '25' },
+            { value: 50, title: '50' },
+            { value: 100, title: '100' },
+          ]"
           :no-results-text="$t('There were no search results')"
         >
           <template v-slot:item.title="{ item }">

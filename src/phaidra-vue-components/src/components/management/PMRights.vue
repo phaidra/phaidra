@@ -26,12 +26,7 @@
                   :loading-text="$t('Loading...')"
                   :items-per-page="1000"
                   :no-data-text="$t('No access restrictions are defined')"
-                  :footer-props="{
-                    pageText: $t('Page'),
-                    itemsPerPageText: $t('Rows per page'),
-                    itemsPerPageAllText: $t('All')
-                  }"
-                  :no-results-text="$t('There were no search results')"
+              :no-results-text="$t('There were no search results')"
                 >
                   <template v-slot:item.description="{ item }">
                     <span :title="item.notation">{{item.notation}} {{ item.description }}</span>
@@ -228,11 +223,6 @@
                   :loading-text="$t('Loading...')"
                   :items-per-page="5"
                   :no-data-text="$t('No data available')"
-                  :footer-props="{
-                    pageText: $t('Page'),
-                    itemsPerPageText: $t('Rows per page'),
-                    itemsPerPageAllText: $t('All')
-                  }"
                   :no-results-text="$t('There were no search results')"
                 >
                   <template v-slot:item.description="{ item }">

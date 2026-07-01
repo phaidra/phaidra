@@ -14,11 +14,6 @@
               :loading="groupsLoading"
               :loading-text="$t('Loading groups...')"
               :no-data-text="$t('No data available')"
-              :footer-props="{
-                pageText: $t('Page'),
-                itemsPerPageText: $t('Rows per page'),
-                itemsPerPageAllText: $t('All')
-              }"
               :no-results-text="$t('There were no search results')"
             >
               <template v-slot:top>
@@ -107,11 +102,6 @@
               :loading="membersLoading"
               :loading-text="$t('Loading group members...')"
               :no-data-text="$t('No data available')"
-              :footer-props="{
-                pageText: $t('Page'),
-                itemsPerPageText: $t('Rows per page'),
-                itemsPerPageAllText: $t('All')
-              }"
               :no-results-text="$t('There were no search results')"
               class="mt-4"
             >
