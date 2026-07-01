@@ -260,7 +260,7 @@ export default {
         })
         let docs = response.data.response.docs
         for (let d of docs) {
-          titles[d.pid] = d['dc_title']
+          titles[d.pid] = d['dc_title'] ? d['dc_title'][0] : ''
         }
       } catch (error) {
         console.log(error)
