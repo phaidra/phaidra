@@ -609,11 +609,6 @@ address {
   border-color: rgb(var(--v-theme-cardtitlebg))!important;
 }
 
-.theme--dark .header {
-  box-shadow: 48px 0 0 0 #121212, -48px 0 0 0 #121212,
-    0 8px 40px -6px rgba(70, 70, 70, 0.4);
-  background-color: #121212;
-}
 
 .v-toolbar__items .v-btn {
   margin-left: 1px;

@@ -644,8 +644,4 @@ export default {
   border-left: 1px solid;
   border-color: rgba(255, 255, 255, 0.25);
 }
-
-.theme--dark.v-card {
-  background-color: transparent !important;
-}
 </style>

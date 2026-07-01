@@ -600,16 +600,10 @@ export default {
       const themeApi = this.$vuetify?.theme;
       if (themeApi?.change && typeof themeApi.change === "function") {
         themeApi.change(nextTheme);
-      } else if (themeApi && typeof themeApi.dark === "boolean") {
-        // Fallback for legacy-like shape used in some Nuxt bridges.
-        themeApi.dark = nextTheme === "dark";
       }
 
       localStorage.setItem("theme", nextTheme);
-      this.$cookies.set('theme', nextTheme, {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 365 // 1 year
-      });
+      document.cookie = `theme=${nextTheme}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
     },
     logout: function () {
       console.log("local logout")
@@ -650,10 +644,6 @@ export default {
     changeLocale: function (lang) {
       this.$i18n.locale = lang;
       localStorage.setItem("locale", lang);
-      this.$cookies.set("locale", lang, {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 365
-      });
       this.$router.push(this.switchLocalePath(lang));
       this.$store.dispatch("vocabulary/sortRoles", this.$i18n.locale);
       this.$store.dispatch("vocabulary/sortFields", {locale: this.$i18n.locale, i18nInstance: this.$i18n});

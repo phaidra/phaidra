@@ -6,16 +6,29 @@ import * as directives from 'vuetify/directives'
 import { aliases as mdiAliases, mdi } from 'vuetify/iconsets/mdi'
 import { StringDateAdapter } from 'vuetify/date/adapters/string'
 
+const THEME_STORAGE_KEY = 'theme'
+
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig()
 
   const primaryColor = config.public.primaryColor || '#1976D2'
   const darkPrimaryColor = config.public.darkPrimaryColor || primaryColor
-  let defaultTheme = config.public.defaultTheme === 'dark' ? 'dark' : 'light'
+  const envDefaultTheme = config.public.defaultTheme === 'dark' ? 'dark' : 'light'
+  const themeCookie = useCookie(THEME_STORAGE_KEY, {
+    default: () => envDefaultTheme,
+    maxAge: 60 * 60 * 24 * 365,
+    sameSite: 'lax',
+    path: '/'
+  })
+
+  let defaultTheme = themeCookie.value === 'dark' ? 'dark' : 'light'
   if (import.meta.client) {
-    const stored = localStorage.getItem('theme')
+    const stored = localStorage.getItem(THEME_STORAGE_KEY)
     if (stored === 'dark' || stored === 'light') {
       defaultTheme = stored
+      if (themeCookie.value !== stored) {
+        themeCookie.value = stored
+      }
     }
   }
 
