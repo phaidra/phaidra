@@ -9,6 +9,10 @@ ADD --checksum=sha256:5b46c15340d0eb8cb10d9b110b455ca4c2719b58f394f6c892b6eae887
 RUN unzip /pdfjs.zip -d /pdfjs
 ADD https://github.com/swagger-api/swagger-ui/archive/refs/tags/v5.32.4.tar.gz /swagger
 RUN tar -xzf /swagger
+ADD --checksum=sha256:1b914059963acbfd5d3d344d9bc7b6370d10bb745d61c0a0b7015d1c990fcc0d \
+    https://github.com/videojs/video.js/releases/download/v8.23.4/video-js-8.23.4.zip \
+    /video-js.zip
+RUN unzip /video-js.zip -d /video-js
 
 FROM ubuntu:jammy-20260210.1
 ENV DEBIAN_FRONTEND=noninteractive
@@ -52,6 +56,7 @@ ADD ../src/phaidra-api /usr/local/phaidra/phaidra-api
 # add files from builder
 COPY --from=builder /pdfjs /usr/local/phaidra/phaidra-api/public/pdfjs
 COPY --from=builder /swagger-ui-5.32.4/dist/* /usr/local/phaidra/phaidra-api/public/swagger-ui/
+COPY --from=builder /video-js/video.min.js /video-js/video-js.min.css /usr/local/phaidra/phaidra-api/public/video-js/
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]
