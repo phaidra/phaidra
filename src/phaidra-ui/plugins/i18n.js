@@ -28,6 +28,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   })
 
   nuxtApp.vueApp.use(i18n)
+  nuxtApp.$i18n = i18n
 
   const localePath = (to) => {
     if (typeof to === 'string') return to.startsWith('/') ? to : `/${to}`

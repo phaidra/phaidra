@@ -4,7 +4,7 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { aliases as mdiAliases, mdi } from 'vuetify/iconsets/mdi'
-import { StringDateAdapter } from 'vuetify/date/adapters/string'
+import { createVuetifyI18nOptions, syncVuetifyLocaleWithI18n } from '~/utils/vuetify-locale'
 
 const THEME_STORAGE_KEY = 'theme'
 
@@ -36,6 +36,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     ssr: true,
     components,
     directives,
+    ...createVuetifyI18nOptions(nuxtApp.$i18n),
     icons: {
       defaultSet: 'mdi',
       aliases: {
@@ -125,11 +126,9 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     }
   },
-    date: {
-      adapter: StringDateAdapter,
-    },
-
   })
 
   nuxtApp.vueApp.use(vuetify)
+  nuxtApp.$vuetify = vuetify
+  syncVuetifyLocaleWithI18n(vuetify, nuxtApp.$i18n)
 })
