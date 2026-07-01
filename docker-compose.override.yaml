@@ -160,11 +160,11 @@ configs:
         log_append remotehost "{http.request.remote.host}"
         route {
           rate_limit @whitelist_zid {
+            log_key
             zone asn {
               key {ipinfo_free.asn}
               events 10000
               window 1h
-              log_key true
             }
 
             # so an individual IP can't trigger the ASN block - burst
@@ -172,14 +172,12 @@ configs:
               key {http.request.remote.host}
               events 500
               window 1m
-              log_key true
             }
             # so an individual IP can't trigger the ASN block - over time
             zone remote_ip_long {
               key {http.request.remote.host}
               events 9000
               window 1h
-              log_key true
             }
           }
           header @CADDY_DENY_COUNTRIES  Content-Type text/html
