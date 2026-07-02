@@ -468,6 +468,25 @@
               <v-container>
                 <v-row>
                   <v-col>
+                    <v-checkbox
+                      :label="$t('Enable info banner')"
+                      v-model="parsedPublicConfigData.enableInfoBanner"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Show an informational banner at the top of the page. The message can be translated via the i18n overrides in Datastructures section.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-textarea
+                      :label="$t('Info banner message (English)')"
+                      v-model="parsedPublicConfigData.infoBannerMessage"
+                      :disabled="!parsedPublicConfigData.enableInfoBanner"
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="3" class="mt-4">{{ $t("English text for the info banner. Other languages can be added via i18n overrides in Datastructures section.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
                     <v-textarea
                       :label="$t('Header')"
                       v-model="parsedPublicConfigData.cms_header"
@@ -1346,6 +1365,11 @@ export default {
     };
   },
   methods: {
+    mergeInfoBannerMessage(message) {
+      if (message) {
+        this.$i18n.mergeLocaleMessage('eng', { 'Info banner message': message })
+      }
+    },
     sendReportNow: async function () {
       this.reportSending = true
       try {
@@ -1463,6 +1487,7 @@ export default {
           delete instanceConfData.api
         }
         this.$store.commit('setInstanceConfig', instanceConfData)
+        this.mergeInfoBannerMessage(instanceConfData.infoBannerMessage)
 
         // private
         const privateConfData = {...this.parsedPrivateConfigData}
@@ -1542,6 +1567,7 @@ export default {
 
         this.data_affiliations = response?.data?.public_config?.data_affiliations
         this.data_affiliations_text = JSON.stringify(this.data_affiliations, null, 2)
+        this.mergeInfoBannerMessage(response?.data?.public_config?.infoBannerMessage)
       } else {
         if(this.$store?.state?.instanceconfig){
           this.parsedPublicConfigData = {...this.$store.state.instanceconfig}

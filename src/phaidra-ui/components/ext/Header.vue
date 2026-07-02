@@ -1,4 +1,14 @@
 <template>
+    <div>
+      <v-row v-if="showInfoBanner" no-gutters class="mx-n4">
+          <v-col class="amber lighten-2 text-body-1 blue-grey--text text--darken-4 text-center px-4 py-2" cols="12">
+            <v-row align="center">
+              <v-col cols="12" md="10" offset-md="1">
+                <h4 class="text-h6">{{ infoBannerText }}</h4>
+              </v-col>
+            </v-row>
+          </v-col>
+      </v-row>
     <div v-if="instanceconfig.cms_header">
       <runtimetemplate :template="instanceconfig.cms_header" />
     </div>
@@ -535,6 +545,7 @@
       </v-row>
       <a ref="logoutlink" href="/Shibboleth.sso/Logout" aria-hidden="true" role="presentation" tabindex="-1"></a>
     </div>
+    </div>
   </template>
   
   <script>
@@ -549,6 +560,16 @@
       },
       isDarkTheme: function () {
         return this.$vuetify.theme.dark;
+      },
+      showInfoBanner() {
+        return this.instanceconfig?.enableInfoBanner === true && !!this.infoBannerText
+      },
+      infoBannerText() {
+        const fromI18n = this.$t('Info banner message')
+        if (fromI18n) {
+          return fromI18n
+        }
+        return this.instanceconfig?.infoBannerMessage || ''
       }
     },
     methods: {
