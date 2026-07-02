@@ -74,6 +74,8 @@ export const mutations = {
       'data_ot4rt',
       'enableCookieBanner',
       'cookiePrivacyPolicyUrl',
+      'enableInfoBanner',
+      'infoBannerMessage',
       'customJavaScript',
       'downloadabledatastreams',
       'disableChecksum',

@@ -144,6 +144,7 @@ export default {
           }
           this.$store.dispatch("setInstanceConfig", settingResponse?.data?.public_config);
           this.$store.dispatch("vocabulary/setInstanceConfig", settingResponse?.data?.public_config);
+          this.mergeInfoBannerMessage(settingResponse?.data?.public_config?.infoBannerMessage);
           if (settingResponse?.data?.public_config?.data_i18n) {
             this.i18n_override = settingResponse?.data?.public_config?.data_i18n
           }
@@ -167,13 +168,18 @@ export default {
     setFavIconText(svgText) {
       const base64Svg = Buffer.from(svgText).toString('base64')
       this.faviconUrl = `data:image/svg+xml;base64,${base64Svg}`
+    },
+    mergeInfoBannerMessage(message) {
+      if (message) {
+        this.$i18n.mergeLocaleMessage('eng', { 'Info banner message': message })
+      }
     }
   },
   mounted() {
+    this.mergeInfoBannerMessage(this.instanceconfig?.infoBannerMessage)
     Object.entries(this.i18n_override).forEach(([lang, messages]) => {
       this.$i18n.mergeLocaleMessage(lang, messages)
-    }
-    )
+    })
     if (!this.signedin) {
       let token = window.localStorage.getItem("XSRF-TOKEN")
       if (token) {

@@ -672,6 +672,11 @@
     "Picture": "Image",
     "Asset": "Data",
     "schema:availableLanguage": "Available language",
-    "rdam:P30004": "Alternative identifier"
+    "rdam:P30004": "Alternative identifier",
+    "Info banner message": "",
+    "Enable info banner": "Enable info banner",
+    "Info banner message (English)": "Info banner message (English)",
+    "Show an informational banner at the top of the page. The message can be translated via the i18n overrides in Datastructures section.": "Show an informational banner at the top of the page. The message can be translated via the i18n overrides in Datastructures section.",
+    "English text for the info banner. Other languages can be added via i18n overrides in Datastructures section.": "English text for the info banner. Other languages can be added via i18n overrides in Datastructures section."
   }
   
