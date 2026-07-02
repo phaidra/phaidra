@@ -5,20 +5,22 @@
         <div>
           <span class="text-h6">{{$t('Files')}}</span>
         </div>
-        <div class="d-flex align-center">
+        <div class="file-input-wrapper">
           <v-file-input
-            :model-value="value"
+            :model-value="modelValue"
             multiple
             chips
             show-size
             counter
             :label="$t('Select Files')"
+            :placeholder="$t('Select Files')"
             variant="outlined"
-            density="compact"
-            class="max-w-500"
+            density="comfortable"
+            class="file-input-field"
+            :hide-details="!error && !modelValue.length"
             :error-messages="error"
             @update:model-value="handleFileSelection"
-          ></v-file-input>
+          />
         </div>
       </div>
     </v-card-text>
@@ -40,11 +42,12 @@ export default {
       type: Object,
       required: true
     },
-    value: {
+    modelValue: {
       type: Array,
       default: () => []
     }
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       error: ''
@@ -54,7 +57,7 @@ export default {
     handleFileSelection(files) {
       this.error = ''
       if (!files || files.length === 0) {
-        this.$emit('input', [])
+        this.$emit('update:modelValue', [])
         return
       }
 
@@ -62,24 +65,24 @@ export default {
 
       if (!parsed || !parsed.data || parsed.data.length < 2) {
         this.error = 'Invalid CSV data'
-        this.$emit('input', [])
+        this.$emit('update:modelValue', [])
         return
       }
 
       const headers = parsed.data[0]
       const dataRows = parsed.data.slice(1)
       const filenameMapping = this.fieldMappings['Filename']
-      
+
       if (!filenameMapping || filenameMapping.source !== 'csv-column') {
         this.error = 'No filename column mapped in CSV configuration'
-        this.$emit('input', [])
+        this.$emit('update:modelValue', [])
         return
       }
 
       const filenameIndex = headers.indexOf(filenameMapping.csvValue)
       if (filenameIndex === -1) {
         this.error = 'Mapped filename column not found in CSV'
-        this.$emit('input', [])
+        this.$emit('update:modelValue', [])
         return
       }
 
@@ -89,21 +92,38 @@ export default {
           .filter(Boolean)
       )
 
-      // Check if all required files are present
       const selectedFileNames = new Set(files.map(f => f.name).filter(Boolean))
       const missingFiles = [...requiredFiles].filter(f => !selectedFileNames.has(f))
       const extraFiles = [...selectedFileNames].filter(f => !requiredFiles.has(f))
 
       if (missingFiles.length > 0) {
         this.error = `Missing required files: ${missingFiles.join(', ')}`
-        this.$emit('input', [])
+        this.$emit('update:modelValue', [])
       } else if (extraFiles.length > 0) {
         this.error = `Extra files not in CSV: ${extraFiles.join(', ')}`
-        this.$emit('input', [])
+        this.$emit('update:modelValue', [])
       } else {
-        this.$emit('input', files)
+        this.$emit('update:modelValue', files)
       }
     }
   }
 }
-</script> 
+</script>
+
+<style scoped>
+.file-input-wrapper {
+  flex: 0 0 500px;
+  min-width: 500px;
+  max-width: 500px;
+}
+
+.file-input-field {
+  width: 100%;
+}
+
+/* Keep the selection area wide enough for the placeholder when empty */
+.file-input-field :deep(.v-field__input) {
+  min-width: 0;
+  flex-wrap: wrap;
+}
+</style>
