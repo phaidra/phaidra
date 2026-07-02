@@ -77,7 +77,7 @@
               }
             ]
           },
-          "unit": "rps"
+          "unit": "s"
         },
         "overrides": []
       },
@@ -87,7 +87,7 @@
         "x": 0,
         "y": 0
       },
-      "id": 4,
+      "id": 17,
       "options": {
         "alertThreshold": true,
         "legend": {
@@ -109,13 +109,27 @@
             "type": "prometheus",
             "uid": "phaidra_prometheus"
           },
-          "expr": "rate(http_server_requests_seconds_count[1m])",
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{method=\"PUT\",uri=\"/rest/{path: .*}\"}[1m])) by (le))",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "p99",
+          "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "phaidra_prometheus"
+          },
+          "editorMode": "code",
+          "expr": "rate(http_server_requests_seconds_sum{job=\"fcrepo\",method=\"PUT\"}[1m]) / rate(http_server_requests_seconds_count{job=\"fcrepo\",method=\"PUT\"}[1m])",
+          "interval": "",
+          "legendFormat": "{{auto}}",
+          "range": true,
+          "refId": "B"
         }
       ],
-      "title": "Request Rate",
+      "title": "PUT Resource Time",
       "type": "timeseries"
     },
     {
@@ -208,9 +222,11 @@
             "type": "prometheus",
             "uid": "phaidra_prometheus"
           },
+          "editorMode": "code",
           "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{method=\"POST\",uri=\"/rest/{path: .*}\"}[1m])) by (le))",
           "interval": "",
           "legendFormat": "p99",
+          "range": true,
           "refId": "A"
         },
         {
@@ -219,14 +235,14 @@
             "uid": "phaidra_prometheus"
           },
           "editorMode": "code",
-          "expr": "rate(http_server_requests_seconds_sum{job=\"fcrepo\"}[1m]) / rate(http_server_requests_seconds_count{job=\"fcrepo\"}[1m])",
+          "expr": "rate(http_server_requests_seconds_sum{job=\"fcrepo\",method=\"POST\"}[1m]) / rate(http_server_requests_seconds_count{job=\"fcrepo\",method=\"POST\"}[1m])",
           "interval": "",
-          "legendFormat": "avg",
+          "legendFormat": "{{auto}}",
           "range": true,
           "refId": "B"
         }
       ],
-      "title": "Request Latency",
+      "title": "POST Resource Time",
       "type": "timeseries"
     },
     {
@@ -287,7 +303,7 @@
               }
             ]
           },
-          "unit": "reqps"
+          "unit": "rps"
         },
         "overrides": []
       },
@@ -297,7 +313,7 @@
         "x": 0,
         "y": 8
       },
-      "id": 8,
+      "id": 4,
       "options": {
         "alertThreshold": true,
         "legend": {
@@ -319,13 +335,13 @@
             "type": "prometheus",
             "uid": "phaidra_prometheus"
           },
-          "expr": "rate(http_server_requests_seconds_count{outcome=~\".*_ERROR\"}[1m])",
+          "expr": "rate(http_server_requests_seconds_count[1m])",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "Request Error Rate",
+      "title": "Request Rate",
       "type": "timeseries"
     },
     {
@@ -431,7 +447,7 @@
           "editorMode": "code",
           "expr": "rate(http_server_requests_seconds_sum{job=\"fcrepo\",method=\"GET\"}[1m]) / rate(http_server_requests_seconds_count{job=\"fcrepo\",method=\"GET\"}[1m])",
           "interval": "",
-          "legendFormat": "avg",
+          "legendFormat": "{{auto}}",
           "range": true,
           "refId": "B"
         }
@@ -497,7 +513,7 @@
               }
             ]
           },
-          "unit": "bytes"
+          "unit": "reqps"
         },
         "overrides": []
       },
@@ -507,7 +523,7 @@
         "x": 0,
         "y": 16
       },
-      "id": 6,
+      "id": 8,
       "options": {
         "alertThreshold": true,
         "legend": {
@@ -529,13 +545,13 @@
             "type": "prometheus",
             "uid": "phaidra_prometheus"
           },
-          "expr": "jvm_memory_used_bytes",
+          "expr": "rate(http_server_requests_seconds_count{outcome=~\".*_ERROR\"}[1m])",
           "interval": "",
-          "legendFormat": "{{id}}",
+          "legendFormat": "",
           "refId": "A"
         }
       ],
-      "title": "JVM Memory Usage",
+      "title": "Request Error Rate",
       "type": "timeseries"
     },
     {
@@ -705,7 +721,7 @@
               }
             ]
           },
-          "unit": "dtdurations"
+          "unit": "bytes"
         },
         "overrides": []
       },
@@ -715,7 +731,7 @@
         "x": 0,
         "y": 24
       },
-      "id": 14,
+      "id": 6,
       "options": {
         "alertThreshold": true,
         "legend": {
@@ -737,23 +753,13 @@
             "type": "prometheus",
             "uid": "phaidra_prometheus"
           },
-          "editorMode": "builder",
-          "expr": "jvm_gc_pause_seconds_sum{job=\"fcrepo\"}",
-          "legendFormat": "__auto",
-          "range": true,
+          "expr": "jvm_memory_used_bytes",
+          "interval": "",
+          "legendFormat": "{{id}}",
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "phaidra_prometheus"
-          },
-          "expr": "",
-          "range": true,
-          "refId": "B"
         }
       ],
-      "title": "GC Time",
+      "title": "JVM Memory Usage",
       "type": "timeseries"
     },
     {
@@ -923,7 +929,7 @@
               }
             ]
           },
-          "unit": "reqps"
+          "unit": "dtdurations"
         },
         "overrides": []
       },
@@ -933,7 +939,7 @@
         "x": 0,
         "y": 32
       },
-      "id": 16,
+      "id": 14,
       "options": {
         "alertThreshold": true,
         "legend": {
@@ -956,13 +962,22 @@
             "uid": "phaidra_prometheus"
           },
           "editorMode": "builder",
-          "expr": "jvm_gc_pause_seconds_count{job=\"fcrepo\"}",
+          "expr": "jvm_gc_pause_seconds_sum{job=\"fcrepo\"}",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "phaidra_prometheus"
+          },
+          "expr": "",
+          "range": true,
+          "refId": "B"
         }
       ],
-      "title": "GC Rate",
+      "title": "GC Time",
       "type": "timeseries"
     },
     {
@@ -1073,6 +1088,106 @@
       ],
       "title": "OCFL Object Latency",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "phaidra_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 40
+      },
+      "id": 16,
+      "options": {
+        "alertThreshold": true,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "phaidra_prometheus"
+          },
+          "editorMode": "builder",
+          "expr": "jvm_gc_pause_seconds_count{job=\"fcrepo\"}",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "GC Rate",
+      "type": "timeseries"
     }
   ],
   "preload": false,
@@ -1083,13 +1198,13 @@
     "list": []
   },
   "time": {
-    "from": "now-3h",
+    "from": "now/y",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Fedora Dashboard TEST",
+  "title": "Fedora Dashboard",
   "uid": "AEUsf4KMk",
-  "version": 8,
+  "version": 17,
   "weekStart": ""
 }
