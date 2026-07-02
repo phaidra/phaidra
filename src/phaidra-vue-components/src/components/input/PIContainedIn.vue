@@ -8,9 +8,7 @@
           <v-spacer></v-spacer>
           <v-menu open-on-hover bottom offset-y v-if="actions.length">
             <template v-slot:activator="{ props: activatorProps }">
-              <v-btn v-bind="activatorProps" icon variant="text" color="white">
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
+              <v-icon-btn v-bind="activatorProps" variant="text" color="white" icon="mdi-dots-vertical" />
             </template>
             <v-list>
               <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
@@ -113,9 +111,7 @@
                 <v-col cols="1" v-if="roleActions.length">
                   <v-menu open-on-hover bottom offset-y>
                     <template v-slot:activator="{ props: activatorProps }">
-                      <v-btn v-bind="activatorProps" icon variant="text">
-                        <v-icon>mdi-dots-vertical</v-icon>
-                      </v-btn>
+                      <v-icon-btn v-bind="activatorProps" variant="text" icon="mdi-dots-vertical" />
                     </template>
                     <v-list>
                       <v-list-item v-for="(action, i) in roleActions" :key="i" @click="$emit(action.event, role)">
@@ -198,22 +194,12 @@
                 <v-card-title class="title font-weight-light text-white">
                   <span>{{ $t(seriesLabel) }}</span>
                   <v-spacer></v-spacer>
-                  <v-btn v-if="s.multiplicable" icon variant="text" color="white" @click="$emit('add-series', s)">
-                    <v-icon>mdi-content-duplicate</v-icon>
-                  </v-btn>
-                  <v-btn v-if="s.multiplicableCleared" icon variant="text" color="white" @click="$emit('add-clear-series', s)">
-                    <v-icon>mdi-plus</v-icon>
-                  </v-btn>
-                  <v-btn v-if="s.removable" icon variant="text" color="white" @click="$emit('remove-series', s)">
-                    <v-icon>mdi-minus</v-icon>
-                  </v-btn>
+                  <v-icon-btn v-if="s.multiplicable" variant="text" color="white" @click="$emit('add-series', s)" icon="mdi-content-duplicate" />
+                  <v-icon-btn v-if="s.multiplicableCleared" variant="text" color="white" @click="$emit('add-clear-series', s)" icon="mdi-plus" />
+                  <v-icon-btn v-if="s.removable" variant="text" color="white" @click="$emit('remove-series', s)" icon="mdi-minus" />
                   <span>
-                    <v-btn theme="dark" icon v-show="collapseSeriesModel" @click="collapseSeriesModel=!collapseSeriesModel">
-                      <v-icon>mdi-chevron-up</v-icon>
-                    </v-btn>
-                    <v-btn theme="dark" icon v-show="!collapseSeriesModel" @click="collapseSeriesModel=!collapseSeriesModel">
-                      <v-icon>mdi-chevron-down</v-icon>
-                    </v-btn>
+                    <v-icon-btn theme="dark" v-show="collapseSeriesModel" @click="collapseSeriesModel=!collapseSeriesModel" icon="mdi-chevron-up" />
+                    <v-icon-btn theme="dark" v-show="!collapseSeriesModel" @click="collapseSeriesModel=!collapseSeriesModel" icon="mdi-chevron-down" />
                   </span>
                 </v-card-title>
                 <v-card-text class="mt-4" v-show="!collapseSeriesModel">
@@ -350,12 +336,8 @@
                   <span>{{ $t(publisherLabel) }}</span>
                   <v-spacer></v-spacer>
                   <span>
-                    <v-btn theme="dark" icon v-show="collapsePublisherModel" @click="collapsePublisherModel=!collapsePublisherModel">
-                      <v-icon>mdi-chevron-up</v-icon>
-                    </v-btn>
-                    <v-btn theme="dark" icon v-show="!collapsePublisherModel" @click="collapsePublisherModel=!collapsePublisherModel">
-                      <v-icon>mdi-chevron-down</v-icon>
-                    </v-btn>
+                    <v-icon-btn theme="dark" v-show="collapsePublisherModel" @click="collapsePublisherModel=!collapsePublisherModel" icon="mdi-chevron-up" />
+                    <v-icon-btn theme="dark" v-show="!collapsePublisherModel" @click="collapsePublisherModel=!collapsePublisherModel" icon="mdi-chevron-down" />
                   </span>
                 </v-card-title>
                 <v-divider></v-divider>

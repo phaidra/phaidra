@@ -7,9 +7,7 @@
           <v-spacer></v-spacer>
           <v-menu open-on-hover bottom offset-y v-if="actions.length">
             <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" icon variant="text" color="white">
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
+              <v-icon-btn v-bind="props" variant="text" color="white" icon="mdi-dots-vertical" />
             </template>
             <div>
               <v-list>

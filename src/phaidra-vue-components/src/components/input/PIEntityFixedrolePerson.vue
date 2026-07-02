@@ -24,12 +24,8 @@
           ></v-text-field>
         </v-col>
         <v-col v-if="multiplicable" :cols="2">
-          <v-btn icon @click="$emit('add', $event)">
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-          <v-btn icon @click="$emit('remove', $event)">
-            <v-icon>mdi-minus</v-icon>
-          </v-btn>  
+          <v-icon-btn @click="$emit('add', $event)" icon="mdi-plus" />
+          <v-icon-btn @click="$emit('remove', $event)" icon="mdi-minus" />  
         </v-col>
       </v-row>
     </v-col>

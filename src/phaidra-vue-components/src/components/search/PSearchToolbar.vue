@@ -4,9 +4,16 @@
       <v-col>
         <v-tooltip location="bottom">
           <template v-slot:activator="{ props: activatorProps }">
-            <v-btn icon class="toolbar-btn" @click="setSort('title asc')" :color="sortIsActive('title asc') ? 'primary' : ''" v-bind="activatorProps" :aria-label="$t('Title ascending')">
+            <v-icon-btn
+              class="toolbar-btn"
+              variant="text"
+              :color="sortIsActive('title asc') ? 'primary' : undefined"
+              @click="setSort('title asc')"
+              v-bind="activatorProps"
+              :aria-label="$t('Title ascending')"
+            >
               <icon width="16px" height="16px" name="fontello-sort-name-up"></icon>
-            </v-btn>
+            </v-icon-btn>
           </template>
           <span>{{ $t('Title ascending')}}</span>
         </v-tooltip>
@@ -14,9 +21,16 @@
       <v-col>
         <v-tooltip location="bottom">
           <template v-slot:activator="{ props: activatorProps }">
-            <v-btn icon class="toolbar-btn" @click="setSort('title desc')" :color="sortIsActive('title desc') ? 'primary' : ''" v-bind="activatorProps" :aria-label="$t('Title descending')">
+            <v-icon-btn
+              class="toolbar-btn"
+              variant="text"
+              :color="sortIsActive('title desc') ? 'primary' : undefined"
+              @click="setSort('title desc')"
+              v-bind="activatorProps"
+              :aria-label="$t('Title descending')"
+            >
               <icon width="16px" height="16px" name="fontello-sort-name-down"></icon>
-            </v-btn>
+            </v-icon-btn>
           </template>
           <span>{{ $t('Title descending')}}</span>
         </v-tooltip>
@@ -24,9 +38,16 @@
       <v-col>
         <v-tooltip location="bottom">
           <template v-slot:activator="{ props: activatorProps }">
-            <v-btn icon class="toolbar-btn" @click="setSort('created asc')" :color="sortIsActive('created asc') ? 'primary' : ''" v-bind="activatorProps" :aria-label="$t('Upload date ascending')">
+            <v-icon-btn
+              class="toolbar-btn"
+              variant="text"
+              :color="sortIsActive('created asc') ? 'primary' : undefined"
+              @click="setSort('created asc')"
+              v-bind="activatorProps"
+              :aria-label="$t('Upload date ascending')"
+            >
               <icon width="16px" height="16px" name="fontello-sort-number-up"></icon>
-            </v-btn>
+            </v-icon-btn>
           </template>
           <span>{{ $t('Upload date ascending')}}</span>
         </v-tooltip>
@@ -34,9 +55,16 @@
       <v-col>
         <v-tooltip location="bottom">
           <template v-slot:activator="{ props: activatorProps }">
-            <v-btn icon class="toolbar-btn" @click="setSort('created desc')" :color="sortIsActive('created desc') ? 'primary' : ''" v-bind="activatorProps" :aria-label="$t('Upload date descending')">
+            <v-icon-btn
+              class="toolbar-btn"
+              variant="text"
+              :color="sortIsActive('created desc') ? 'primary' : undefined"
+              @click="setSort('created desc')"
+              v-bind="activatorProps"
+              :aria-label="$t('Upload date descending')"
+            >
               <icon width="16px" height="16px" name="fontello-sort-number-down"></icon>
-            </v-btn>
+            </v-icon-btn>
           </template>
           <span>{{ $t('Upload date descending')}}</span>
         </v-tooltip>
@@ -51,16 +79,14 @@
               {{ link }}
               <v-tooltip location="bottom">
                 <template v-slot:activator="{ props: activatorProps }">
-                  <v-btn
+                  <v-icon-btn
                     v-bind="activatorProps"
-                    icon
+                    icon="mdi-content-copy"
                     @click="copyToClipboard()"
                     @blur="resetCopyTooltip()"
                     class="ml-1"
                     :aria-label="$t('Copy to clipboard')"
-                  >
-                    <v-icon>mdi-content-copy</v-icon>
-                  </v-btn>
+                  />
                 </template>
                 <span>{{ $t(getCopyTooltipText('search-link')) }}</span>
               </v-tooltip>
@@ -74,9 +100,9 @@
         </v-dialog>
         <v-tooltip location="bottom">
           <template v-slot:activator="{ props: activatorProps }">
-            <v-btn icon class="toolbar-btn" @click="linkdialog=true" v-bind="activatorProps" :aria-label="$t('Link to search results')">
+            <v-icon-btn class="toolbar-btn" @click="linkdialog=true" v-bind="activatorProps" :aria-label="$t('Link to search results')">
               <icon width="18px" height="18px" name="material-content-link"></icon>
-            </v-btn>
+            </v-icon-btn>
           </template>
           <span>{{ $t('Link to search results')}}</span>
         </v-tooltip>
@@ -84,9 +110,15 @@
       <v-col v-if="signedin">
         <v-tooltip location="bottom">
           <template v-slot:activator="{ props: activatorProps }">
-            <v-btn icon class="toolbar-btn" v-bind="activatorProps" :color="selectioncheck ? 'primary' : ''" @click.stop="toggleSelection()" :aria-label="$t('Select results')">
-              <v-icon>mdi-bookmark-plus-outline</v-icon>
-            </v-btn>
+            <v-icon-btn
+              class="toolbar-btn"
+              variant="text"
+              v-bind="activatorProps"
+              :color="selectioncheck ? 'primary' : undefined"
+              @click.stop="toggleSelection()"
+              :aria-label="$t('Select results')"
+              icon="mdi-bookmark-plus-outline"
+            />
           </template>
           <span>{{ $t('Select results')}}</span>
         </v-tooltip>
@@ -94,9 +126,7 @@
       <v-col>
         <v-tooltip location="bottom">
           <template v-slot:activator="{ props: activatorProps }">
-            <v-btn icon class="toolbar-btn" v-bind="activatorProps" @click="csvExport()" :aria-label="$t('Download search results as a CSV file')">
-              <v-icon>mdi-download</v-icon>
-            </v-btn>
+            <v-icon-btn class="toolbar-btn" v-bind="activatorProps" icon="mdi-download" @click="csvExport()" :aria-label="$t('Download search results as a CSV file')" />
           </template>
           <span>{{ $t('Download search results as a CSV file') }}</span>
         </v-tooltip>
@@ -157,17 +187,9 @@ export default {
   padding: 0px;
 }
 
-.toolbar-btn.theme--light.v-btn:focus::before {
-    opacity: 0.5;
-    outline-style: auto;
-}
-
-.v-icon:focus::before {
-  opacity: 0.7 !important;
-}
-
-.v-icon:focus::after {
-  opacity: 0.7 !important;
+.toolbar-btn.v-icon-btn:focus-visible {
+  outline-style: auto;
+  outline-offset: 2px;
 }
 
 </style>

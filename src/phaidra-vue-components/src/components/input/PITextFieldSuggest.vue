@@ -41,9 +41,7 @@
        <v-col cols="6" v-if="actions.length">
          <v-menu location="bottom end" close-on-content-click>
            <template #activator="{ props: menuActivatorProps }">
-             <v-btn icon v-bind="menuActivatorProps">
-               <v-icon>mdi-dots-vertical</v-icon>
-             </v-btn>
+             <v-icon-btn v-bind="menuActivatorProps" icon="mdi-dots-vertical" />
            </template>
            <v-list density="compact">
              <v-list-item

@@ -64,12 +64,8 @@
             </v-row>
           </v-col>
           <v-col v-if="ch.cardinality !== 1" cols="2">
-            <v-btn icon @click="$emit('add-field', ch)">
-              <v-icon>mdi-plus</v-icon>
-            </v-btn>
-            <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-              <v-icon>mdi-minus</v-icon>
-            </v-btn>
+            <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+            <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
           </v-col>
         </template>
       </template>
@@ -103,12 +99,8 @@
         <v-col v-if="ch.cardinality !== 1" cols="2">
           <v-row>
             <v-col>
-              <v-btn icon @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </v-col>
           </v-row>
         </v-col>
@@ -143,12 +135,8 @@
         <v-col v-if="ch.cardinality !== 1" cols="2">
           <v-row>
             <v-col>
-              <v-btn icon @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </v-col>
           </v-row>
         </v-col>
@@ -176,12 +164,8 @@
         <v-col v-if="(ch.cardinality !== 1) || (ch.xmlname === 'spl')" cols="2">
           <v-row>
             <v-col>
-              <v-btn icon @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </v-col>
           </v-row>
         </v-col>
@@ -208,12 +192,8 @@
         <v-col v-if="ch.cardinality !== 1" cols="2">
           <v-row>
             <v-col>
-              <v-btn icon @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </v-col>
           </v-row>
         </v-col>
@@ -237,12 +217,8 @@
         <v-col v-if="ch.cardinality !== 1" cols="2">
           <v-row>
             <v-col>
-              <v-btn icon @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </v-col>
           </v-row>
         </v-col>
@@ -265,12 +241,8 @@
         <v-col v-if="ch.cardinality !== 1" cols="2">
           <v-row>
             <v-col>
-              <v-btn icon @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </v-col>
           </v-row>
         </v-col>
@@ -293,12 +265,8 @@
         <v-col v-if="ch.cardinality !== 1" cols="2">
           <v-row>
             <v-col>
-              <v-btn icon @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </v-col>
           </v-row>
         </v-col>
@@ -309,12 +277,8 @@
             <span>{{ ch.labels[alpha2locale] }}</span>
             <v-spacer></v-spacer>
             <template v-if="ch.cardinality !== 1">
-              <v-btn icon theme="dark" variant="text" color="white" @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="canRemoveNode(ch, parent)" icon theme="dark" variant="text" color="white" @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn theme="dark" variant="text" color="white" @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="canRemoveNode(ch, parent)" theme="dark" variant="text" color="white" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </template>
           </v-card-title>
           <v-divider></v-divider>

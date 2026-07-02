@@ -45,7 +45,7 @@
     <template v-if="actions.length">
       <template v-if="addOnly">
         <v-col cols="1" class="mt-3">
-          <v-btn icon @click="$emit('add-clear', $event)"><v-icon >mdi-plus</v-icon></v-btn>
+          <v-icon-btn @click="$emit('add-clear', $event)" icon="mdi-plus" />
         </v-col>
       </template>
       <template v-else-if="removeOnly">
@@ -56,9 +56,7 @@
       <v-col cols="1" v-else-if="actions.length">
         <v-menu open-on-hover bottom offset-y>
           <template v-slot:activator="{ props: activatorProps }">
-            <v-btn v-bind="activatorProps" icon variant="text">
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
+            <v-icon-btn v-bind="activatorProps" variant="text" icon="mdi-dots-vertical" />
           </template>
           <v-list>
             <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">

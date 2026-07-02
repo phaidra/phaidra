@@ -4,12 +4,8 @@
       <v-toolbar>
         <v-toolbar-title>Toolbar</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn icon @click="mode = 'single'">
-          <v-icon>mdi-image-outline</v-icon>
-        </v-btn>
-        <v-btn icon @click="mode = 'gallery'">
-          <v-icon>mdi-grid</v-icon>
-        </v-btn>
+        <v-icon-btn @click="mode = 'single'" icon="mdi-image-outline" />
+        <v-icon-btn @click="mode = 'gallery'" icon="mdi-grid" />
       </v-toolbar>
     </v-row>
     <v-row>

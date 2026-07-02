@@ -20,36 +20,21 @@
           <template v-if="item.status === 'error'">
             <v-tooltip location="bottom">
               <template v-slot:activator="{ props: tipProps }">
-                <v-btn
-                  icon
-                  size="small"
+                <v-icon-btn size="small"
                   color="error"
                   v-bind="tipProps"
-                  @click="$emit('show-error', item)"
-                >
-                  <v-icon size="small">mdi-alert-circle</v-icon>
-                </v-btn>
+                  @click="$emit('show-error', item)" icon="mdi-alert-circle" />
               </template>
               <span>{{$t('View Error')}}</span>
             </v-tooltip>
-            <v-btn
-              icon
-              size="small"
+            <v-icon-btn size="small"
               class="ml-2"
-              @click="$emit('retry-upload', item.index)"
-            >
-              <v-icon size="small">mdi-refresh</v-icon>
-            </v-btn>
+              @click="$emit('retry-upload', item.index)" icon="mdi-refresh" />
           </template>
           <template v-else-if="item.status === 'completed'">
-            <v-btn
-              icon
-              size="small"
-              :href="getObjectUrl(item.pid)"
-              target="_blank"
-            >
-              <v-icon size="small">mdi-open-in-new</v-icon>
-            </v-btn>
+            <a :href="getObjectUrl(item.pid)" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
+              <v-icon-btn size="small" icon="mdi-open-in-new" />
+            </a>
           </template>
         </template>
       </v-data-table>

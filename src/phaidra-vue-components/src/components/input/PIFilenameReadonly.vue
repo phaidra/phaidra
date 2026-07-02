@@ -12,9 +12,7 @@
     <v-col cols="2" v-if="actions.length">
       <v-menu location="bottom end" close-on-content-click>
         <template #activator="{ props: menuActivatorProps }">
-          <v-btn icon v-bind="menuActivatorProps">
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+          <v-icon-btn v-bind="menuActivatorProps" icon="mdi-dots-vertical" />
         </template>
         <v-list density="compact">
           <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event)">

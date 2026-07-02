@@ -78,20 +78,14 @@
               <v-spacer></v-spacer>
               <v-checkbox dark color="white" v-if="s.type === 'member'" v-model="previewMember" :label="$t('Container thumbnail')" :value="s.id"></v-checkbox>
               <v-spacer></v-spacer>
-              <v-btn
-                theme="dark"
-                icon
+              <v-icon-btn theme="dark"
                 variant="text"
                 color="white"
                 @click="s.collapsed = !s.collapsed"
-              >
-                <v-icon>{{ s.collapsed ? 'mdi-chevron-down' : 'mdi-chevron-up' }}</v-icon>
-              </v-btn>
+                :icon="s.collapsed ? 'mdi-chevron-down' : 'mdi-chevron-up'" />
               <v-menu open-on-hover bottom offset-y v-if="!s.disablemenu">
                 <template v-slot:activator="{ props: activatorProps }">
-                  <v-btn v-bind="activatorProps" icon variant="text" color="white">
-                    <v-icon>mdi-dots-vertical</v-icon>
-                  </v-btn>
+                  <v-icon-btn v-bind="activatorProps" variant="text" color="white" icon="mdi-dots-vertical" />
                 </template>
                 <v-list>
                   <v-list-item v-if="s.multiplicable && (s.type === 'member') || (s.type === 'phaidra:Subject')" @click="addSection(s)">

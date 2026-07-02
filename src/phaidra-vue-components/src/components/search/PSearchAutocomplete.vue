@@ -20,14 +20,9 @@
       :messages="messages"
     >
     <template #append-inner>
-      <v-btn 
-        icon
-        :aria-label="$t('Search')"
+      <v-icon-btn :aria-label="$t('Search')"
         tabindex="-1"
-        @click="onSelect({ term: type })"
-      >
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
+        @click="onSelect({ term: type })" icon="mdi-magnify" />
     </template>
     </v-text-field>
     <div :class="`${getClassName('list')} autocomplete autocomplete-list elevation-2`" v-show="showList && suggestions && suggestions.length">

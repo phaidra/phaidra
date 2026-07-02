@@ -69,17 +69,13 @@
               <template v-slot:item.actions="{ item }">
                 <v-tooltip location="bottom">
                   <template v-slot:activator="{ props: activatorProps }">
-                    <v-btn variant="text" icon class="mx-3" color="primary" @click="loadedList = item" v-bind="activatorProps" :aria-label="$t('Edit')">
-                      <v-icon>mdi-pencil</v-icon>
-                    </v-btn>
+                    <v-icon-btn variant="text" class="mx-3" color="primary" @click="loadedList = item" v-bind="activatorProps" :aria-label="$t('Edit')" icon="mdi-pencil" />
                   </template>
                   <span>{{ $t('Edit') }}</span>
                 </v-tooltip>
                 <v-tooltip location="bottom">
                   <template v-slot:activator="{ props: activatorProps }">
-                    <v-btn variant="text" icon class="mx-3" color="btnred" @click="deleteListDialog(item)" v-bind="activatorProps" :aria-label="$t('Delete')">
-                      <v-icon>mdi-delete</v-icon>
-                    </v-btn>
+                    <v-icon-btn variant="text" class="mx-3" color="btnred" @click="deleteListDialog(item)" v-bind="activatorProps" :aria-label="$t('Delete')" icon="mdi-delete" />
                   </template>
                   <span>{{ $t('Delete') }}</span>
                 </v-tooltip>
@@ -131,9 +127,7 @@
               <template v-slot:item.actions="{ item }">
                 <v-tooltip location="bottom">
                     <template v-slot:activator="{ props: activatorProps }">
-                      <v-btn icon class="mx-3" color="btnred" @click="removeMember(item.pid)" v-bind="activatorProps" :aria-label="$t('Remove')">
-                        <v-icon>mdi-delete</v-icon>
-                      </v-btn>
+                      <v-icon-btn class="mx-3" color="btnred" @click="removeMember(item.pid)" v-bind="activatorProps" :aria-label="$t('Remove')" icon="mdi-delete" />
                     </template>
                     <span>{{ $t('Remove') }}</span>
                 </v-tooltip>                

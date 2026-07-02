@@ -14,9 +14,7 @@
               <v-row align="center">
                 <v-col class="grow">{{ alert.msg }}</v-col>
                 <v-col class="shrink">
-                  <v-btn icon @click="dismiss(alert)"
-                    ><v-icon>mdi-close</v-icon></v-btn
-                  >
+                  <v-icon-btn icon="mdi-close" @click="dismiss(alert)" />
                 </v-col>
               </v-row>
             </v-alert>

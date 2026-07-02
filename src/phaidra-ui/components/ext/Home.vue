@@ -11,14 +11,9 @@
           <v-text-field class="searchBox" v-model="q" :placeholder="$t('Search...')" autocomplete="off"
             @keyup.enter="$router.push({ name: 'search', query: { q } })" clearable hide-details variant="solo">
             <template #append-inner>
-              <v-btn
-                icon
-                :aria-label="$t('Search')"
+              <v-icon-btn :aria-label="$t('Search')"
                 tabindex="-1"
-                @click="$router.push({ name: 'search', query: { q } })"
-              >
-                <v-icon>mdi-magnify</v-icon>
-              </v-btn>
+                @click="$router.push({ name: 'search', query: { q } })" icon="mdi-magnify" />
             </template>
           </v-text-field>
         </v-row>

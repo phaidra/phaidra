@@ -890,7 +890,7 @@
                 <v-col cols="1" v-if="objectInfo.writerights === 1" justify="center">
                   <v-tooltip location="bottom">
                     <template v-slot:activator="{ props: tipProps }">
-                      <v-btn icon variant="text" color="btnred" class="mt-4" v-bind="tipProps" @click="collMemberToRemove = collMember.pid; confirmColMemDeleteDlg = true" :aria-label="$t('Remove from collection')"><v-icon>mdi-delete</v-icon></v-btn>
+                      <v-icon-btn variant="text" color="btnred" class="mt-4" v-bind="tipProps" icon="mdi-delete" @click="collMemberToRemove = collMember.pid; confirmColMemDeleteDlg = true" :aria-label="$t('Remove from collection')" />
                     </template>
                     <span>{{ $t('Remove from collection')}}</span>
                   </v-tooltip>
@@ -1020,15 +1020,13 @@
                             <a :href="id.value">{{ id.value }}</a>
                             <v-tooltip location="bottom">
                               <template v-slot:activator="{ props }">
-                                <v-btn
+                                <v-icon-btn
                                   :aria-label="$t('Copy to clipboard')"
                                   v-bind="props"
-                                  icon
+                                  icon="mdi-content-copy"
                                   @click="copyWithTooltip(id.value, id.value)"
                                   @blur="resetCopyTooltip()"
-                                >
-                                  <v-icon>mdi-content-copy</v-icon>
-                                </v-btn>
+                                />
                               </template>
                               <span>{{ $t(getCopyTooltipText(id.value)) }}</span>
                             </v-tooltip>
@@ -1116,15 +1114,13 @@
                             <span v-else>{{ id.value }}</span>
                             <v-tooltip location="bottom">
                               <template v-slot:activator="{ props }">
-                                <v-btn
+                                <v-icon-btn
                                   :aria-label="$t('Copy to clipboard')"
                                   v-bind="props"
-                                  icon
+                                  icon="mdi-content-copy"
                                   @click="copyWithTooltip(id.value, id.value)"
                                   @blur="resetCopyTooltip()"
-                                >
-                                  <v-icon>mdi-content-copy</v-icon>
-                                </v-btn>
+                                />
                               </template>
                               <span>{{ $t(getCopyTooltipText(id.value)) }}</span>
                             </v-tooltip>
@@ -2402,12 +2398,12 @@
                           ><br /><span>id={{ objectInfo.oc_mpid }}
                           <v-tooltip location="bottom">
                               <template v-slot:activator="{ props: tipProps }">
-                                <v-btn
+                                <v-icon-btn
                                   :aria-label="$t('Copy to clipboard')"
                                   v-bind="tipProps"
-                                  icon
+                                  icon="mdi-content-copy"
                                   @click="copyWithTooltip('id='+objectInfo.oc_mpid, 'mpid')"
-                                  @blur="resetCopyTooltip()"><v-icon>mdi-content-copy</v-icon></v-btn>
+                                  @blur="resetCopyTooltip()" />
                               </template>
                               <span>{{ $t(getCopyTooltipText('mpid')) }}</span>
                           </v-tooltip>

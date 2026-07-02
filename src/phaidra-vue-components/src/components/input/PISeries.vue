@@ -6,15 +6,9 @@
         <v-card-title class="title font-weight-light text-white">
           <span>{{ $t(label) }}</span>
           <v-spacer></v-spacer>
-          <v-btn v-if="multiplicable" icon variant="text" color="white" @click="$emit('add', $event)">
-            <v-icon>mdi-content-duplicate</v-icon>
-          </v-btn>
-          <v-btn v-if="multiplicableCleared" icon variant="text" color="white" @click="$emit('add-clear', $event)">
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-          <v-btn v-if="removable" icon variant="text" color="white" @click="$emit('remove', $event)">
-            <v-icon>mdi-minus</v-icon>
-          </v-btn>
+          <v-icon-btn v-if="multiplicable" variant="text" color="white" @click="$emit('add', $event)" icon="mdi-content-duplicate" />
+          <v-icon-btn v-if="multiplicableCleared" variant="text" color="white" @click="$emit('add-clear', $event)" icon="mdi-plus" />
+          <v-icon-btn v-if="removable" variant="text" color="white" @click="$emit('remove', $event)" icon="mdi-minus" />
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="mt-4">

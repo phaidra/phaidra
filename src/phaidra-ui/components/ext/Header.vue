@@ -210,18 +210,14 @@
 
                   <v-tooltip v-if="!isDarkTheme" location="bottom">
                     <template v-slot:activator="{ props }">
-                      <v-btn variant="text" density="comfortable" v-bind="props" icon @click="darkMode" :aria-label="$t('Dark Mode On')">
-                      <v-icon>mdi-moon-waxing-crescent</v-icon>
-                    </v-btn>
+                      <v-icon-btn variant="text" v-bind="props" icon="mdi-moon-waxing-crescent" @click="darkMode" :aria-label="$t('Dark Mode On')" />
                   </template>
                   <span>{{ $t("Dark Mode On") }}</span>
                 </v-tooltip>
 
                   <v-tooltip v-else location="bottom">
                     <template v-slot:activator="{ props }">
-                      <v-btn variant="text" density="comfortable" v-bind="props" icon @click="darkMode" :aria-label="$t('Dark Mode Off')">
-                      <v-icon>mdi-white-balance-sunny</v-icon>
-                    </v-btn>
+                      <v-icon-btn variant="text" v-bind="props" icon="mdi-white-balance-sunny" @click="darkMode" :aria-label="$t('Dark Mode Off')" />
                   </template>
                   <span>{{ $t("Dark Mode Off") }}</span>
                 </v-tooltip>

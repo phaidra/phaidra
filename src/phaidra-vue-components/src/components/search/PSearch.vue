@@ -61,9 +61,7 @@
               <v-card-title>
                 <h2 class="title font-weight-light text-white">{{ $t('Filters') }}</h2>
                 <v-spacer></v-spacer>
-                <v-btn icon variant="text" color="white" @click="filterdialog = !filterdialog" :aria-label="$t('Close')">
-                  <v-icon>mdi-close</v-icon>
-                </v-btn>
+                <v-icon-btn variant="text" color="white" icon="mdi-close" @click="filterdialog = !filterdialog" :aria-label="$t('Close')" />
               </v-card-title>
               <v-card-text>
                 <p-search-filters

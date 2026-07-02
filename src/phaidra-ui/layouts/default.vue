@@ -38,14 +38,9 @@
                       >
                         <div class="d-flex align-center">
                           <span class="flex-grow-1">{{ $t(alert.msg) }}</span>
-                          <v-btn
-                            icon
-                            variant="text"
+                          <v-icon-btn variant="text"
                             class="flex-shrink-0 ms-2"
-                            @click="dismiss(alert)"
-                          >
-                            <v-icon>mdi-close</v-icon>
-                          </v-btn>
+                            @click="dismiss(alert)" icon="mdi-close" />
                         </div>
                       </v-alert>
                     </v-col>

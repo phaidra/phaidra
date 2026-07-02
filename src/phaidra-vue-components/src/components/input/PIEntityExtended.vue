@@ -8,41 +8,31 @@
           <template v-if="showActions">
             <v-tooltip location="bottom">
               <template v-slot:activator="{ props: activatorProps }">
-                <v-btn v-bind="activatorProps" icon variant="text" color="white" @click="$emit('add', $event)">
-                  <v-icon>mdi-content-duplicate</v-icon>
-                </v-btn>
+                <v-icon-btn v-bind="activatorProps" variant="text" color="white" @click="$emit('add', $event)" icon="mdi-content-duplicate" />
               </template>
               <span>{{ $t('Duplicate') }}</span>
             </v-tooltip>
             <v-tooltip location="bottom">
               <template v-slot:activator="{ props: activatorProps }">
-                <v-btn v-bind="activatorProps" icon variant="text" color="white" @click="$emit('add-clear', $event)">
-                  <v-icon>mdi-plus</v-icon>
-                </v-btn>
+                <v-icon-btn v-bind="activatorProps" variant="text" color="white" @click="$emit('add-clear', $event)" icon="mdi-plus" />
               </template>
               <span>{{ $t('Add') }}</span>
             </v-tooltip>
             <v-tooltip location="bottom" v-if="removable !== false">
               <template v-slot:activator="{ props: activatorProps }">
-                <v-btn v-bind="activatorProps" icon variant="text" color="white" @click="$emit('remove', $event)">
-                  <v-icon>mdi-minus</v-icon>
-                </v-btn>
+                <v-icon-btn v-bind="activatorProps" variant="text" color="white" @click="$emit('remove', $event)" icon="mdi-minus" />
               </template>
               <span>{{ $t('Remove') }}</span>
             </v-tooltip>
             <v-tooltip location="bottom">
               <template v-slot:activator="{ props: activatorProps }">
-                <v-btn v-bind="activatorProps" icon variant="text" color="white" @click="$emit('up', $event)">
-                  <v-icon>mdi-chevron-up-circle-outline</v-icon>
-                </v-btn>
+                <v-icon-btn v-bind="activatorProps" variant="text" color="white" @click="$emit('up', $event)" icon="mdi-chevron-up-circle-outline" />
               </template>
               <span>{{ $t('Move up') }}</span>
             </v-tooltip>
             <v-tooltip location="bottom">
               <template v-slot:activator="{ props: activatorProps }">
-                <v-btn v-bind="activatorProps" icon variant="text" color="white" @click="$emit('down', $event)">
-                  <v-icon>mdi-chevron-down-circle-outline</v-icon>
-                </v-btn>
+                <v-icon-btn v-bind="activatorProps" variant="text" color="white" @click="$emit('down', $event)" icon="mdi-chevron-down-circle-outline" />
               </template>
               <span>{{ $t('Move down') }}</span>
             </v-tooltip>
