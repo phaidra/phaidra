@@ -13,6 +13,15 @@ ADD --checksum=sha256:1b914059963acbfd5d3d344d9bc7b6370d10bb745d61c0a0b7015d1c99
     https://github.com/videojs/video.js/releases/download/v8.23.4/video-js-8.23.4.zip \
     /video-js.zip
 RUN unzip /video-js.zip -d /video-js
+ADD --checksum=sha256:9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2 \
+    https://raw.githubusercontent.com/mrdoob/three.js/r128/build/three.min.js \
+    /threejs/three.min.js
+ADD --checksum=sha256:02bb4ade710f3e607329e37a21f098bc3ac70eb6e33daf8a65e79f4db785e7b2 \
+    https://raw.githubusercontent.com/mrdoob/three.js/r128/examples/js/controls/OrbitControls.js \
+    /threejs/OrbitControls.js
+ADD --checksum=sha256:5c15967ba830918a9caea6338712c994c354bccd4edc4569bde411c3ec06a3e6 \
+    https://raw.githubusercontent.com/mrdoob/three.js/r128/examples/js/loaders/GLTFLoader.js \
+    /threejs/GLTFLoader.js
 
 FROM ubuntu:jammy-20260210.1
 ENV DEBIAN_FRONTEND=noninteractive
@@ -57,6 +66,7 @@ ADD ../src/phaidra-api /usr/local/phaidra/phaidra-api
 COPY --from=builder /pdfjs /usr/local/phaidra/phaidra-api/public/pdfjs
 COPY --from=builder /swagger-ui-5.32.4/dist/* /usr/local/phaidra/phaidra-api/public/swagger-ui/
 COPY --from=builder /video-js/video.min.js /video-js/video-js.min.css /usr/local/phaidra/phaidra-api/public/video-js/
+COPY --from=builder /threejs/three.min.js /threejs/OrbitControls.js /threejs/GLTFLoader.js /usr/local/phaidra/phaidra-api/public/threejs/build/
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]
