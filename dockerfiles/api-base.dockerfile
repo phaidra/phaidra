@@ -22,6 +22,12 @@ ADD --checksum=sha256:02bb4ade710f3e607329e37a21f098bc3ac70eb6e33daf8a65e79f4db7
 ADD --checksum=sha256:5c15967ba830918a9caea6338712c994c354bccd4edc4569bde411c3ec06a3e6 \
     https://raw.githubusercontent.com/mrdoob/three.js/r128/examples/js/loaders/GLTFLoader.js \
     /threejs/GLTFLoader.js
+ADD --checksum=sha256:6893d569e972ee621faebd884a54ca77357080fcf71ce234731d271ec712f3fc \
+    https://cdn.jsdelivr.net/npm/replaywebpage@2.4.4/ui.js \
+    /replayweb/ui.js
+ADD --checksum=sha256:395b5b099c48f5e6cebdc4d64e85267e9a58e100c4cbb7869eddad62ec5ec081 \
+    https://cdn.jsdelivr.net/npm/replaywebpage@2.4.4/sw.js \
+    /replayweb/sw.js
 
 FROM ubuntu:jammy-20260210.1
 ENV DEBIAN_FRONTEND=noninteractive
@@ -67,6 +73,7 @@ COPY --from=builder /pdfjs /usr/local/phaidra/phaidra-api/public/pdfjs
 COPY --from=builder /swagger-ui-5.32.4/dist/* /usr/local/phaidra/phaidra-api/public/swagger-ui/
 COPY --from=builder /video-js/video.min.js /video-js/video-js.min.css /usr/local/phaidra/phaidra-api/public/video-js/
 COPY --from=builder /threejs/three.min.js /threejs/OrbitControls.js /threejs/GLTFLoader.js /usr/local/phaidra/phaidra-api/public/threejs/build/
+COPY --from=builder /replayweb/ui.js /replayweb/sw.js /usr/local/phaidra/phaidra-api/public/replayweb/
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]
