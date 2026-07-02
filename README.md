@@ -273,7 +273,7 @@ PHAIDRA supports ACME in the \*ssl\* and \*shib\* profiles. To enable it, the fo
 
 After starting the containers, the mod_md will fetch the certificates, but a (graceful) restart is needed for Apache to start using them. You can simply restart the httpd container using `docker restart <container_id>`
 
-If you want to use extrenal account binding, you have to additionally define
+If you want to use external account binding, you have to additionally define
 + `HTTPD_ACME_EAB_ENABLE`: Set to `true`.
 + `HTTPD_ACME_KEYID`: Key identifier.
 + `HTTPD_ACME_HMAC64`: A base64 encoded 'hmac' value.
@@ -345,9 +345,9 @@ $ bin/hdl-convert-key ./admpriv.bin ./admpriv.jwk -f jwk
 * in admin panel in PHAIDRA (private -> general -> Handle) set
   + `Prefix`: if using the integrated Handle server, same as `HANDLE_PREFIX` env
   + `Instance prefix`: this is used as part of the Handle format (<prefix>/<instance_prefix>.<pid>) to give the repository it's own "suffix" in case you want to use the Handle server to assign handles for other purposes (you'd need to expose port 8000 in docker compse if you want to use the Handle API externally).
-  + `Create handle job`: if on, upon object creation, phaidra-api will create a job for the agent-hdl to register Handles autmatically.
+  + `Create handle job`: if on, upon object creation, phaidra-api will create a job for the agent-hdl to register Handles automatically.
   + `Ignore pages`: use if you don't want to assign Handles for objects of type `Page`
-* once your site bundle has been registered, you can start you PHIADRA instance with `--profile handle`
+* once your site bundle has been registered, you can start your PHAIDRA instance with `--profile handle`
 
 # Default credentials on administration sites
 - **LDAP Account Manager** (from the Web interface: Manage PHAIDRA -> Manage Users):
@@ -463,7 +463,7 @@ docker compose --project-name eval-shib-opencast-3 --profile shib-local --profil
 ```
 
 ## Remove persisted data
-The following command will remove the volumes (aka directories under `$HOME/.local/share/docker/volumes`) associated with your PHAIDRA installation. Set the project name filter according to you needs). This command can be run from anywhere.
+The following command will remove the volumes (aka directories under `$HOME/.local/share/docker/volumes`) associated with your PHAIDRA installation. Set the project name filter according to your needs). This command can be run from anywhere.
 
 ```
 # COMMAND:
