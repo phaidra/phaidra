@@ -56,7 +56,7 @@
                   </h2>
                 </v-col>
                 <v-col cols="12" md="3" class="text-right">
-                  <v-chip class="pointer-disabled" v-if="doc.created" color="transparent">{{ $date(doc.created) }}
+                  <v-chip class="pointer-disabled" v-if="doc.created" variant="text">{{ $date(doc.created) }}
                     <v-icon v-if="doc.cmodel == 'Video'" class="mx-2" color="grey">mdi-video</v-icon>
                     <v-icon v-else-if="doc.cmodel == 'Picture'" class="mx-2" color="grey">mdi-image</v-icon>
                     <v-icon v-else-if="doc.cmodel == 'Audio'" class="mx-2" color="grey">mdi-volume-high</v-icon>
