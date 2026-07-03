@@ -37,7 +37,7 @@ export default {
   align-items: center;
   width: 100%;
   padding: 20px;
-  background-color: var(--v-cardtitlebg-base);
+  background-color: rgb(var(--v-theme-cardtitlebg));
   border-bottom: 1px solid #efefef;
   box-sizing: border-box;
   -webkit-user-select: none;
@@ -46,6 +46,11 @@ export default {
   user-select: none;
   color: #fff;
   font-weight: 400;
+  cursor: grab;
+}
+
+.list-item:active {
+  cursor: grabbing;
 }
 .list-item-title {
   padding-left: 20px;

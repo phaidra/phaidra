@@ -5,14 +5,17 @@
     <v-card-text class="mt-4" v-if="members.length > 0">
       <div>{{ $t('Here you can sort members of this object (drag & drop).') }}</div>
       <draggable
-        v-model="memberscomputed"
-        item-key="pid"
+        v-model="membersdata"
         tag="ul"
         class="sortable-list mt-4"
+        :animation="200"
+        ghost-class="sortable-ghost"
       >
-        <template #item="{ element }">
-          <PSortableSolrDoc :item="element" />
-        </template>
+        <PSortableSolrDoc
+          v-for="element in membersdata"
+          :key="element.pid"
+          :item="element"
+        />
       </draggable>
     </v-card-text>
     <v-card-actions v-if="members.length > 0">
@@ -46,20 +49,20 @@ export default {
   computed: {
     instance: function () {
       return this.$store.state.instanceconfig
-    },
-    memberscomputed: {
-      get: function () {
-        return this.membersdata
+    }
+  },
+  watch: {
+    members: {
+      handler (value) {
+        this.membersdata = Array.isArray(value) ? [...value] : []
       },
-      set: function (newValue) {
-        this.membersdata = newValue
-      }
+      immediate: true
     }
   },
   data () {
     return {
       loading: false,
-      membersdata: this.members
+      membersdata: []
     }
   },
   methods: {
@@ -114,5 +117,9 @@ export default {
   border: 1px solid #efefef;
   border-radius: 3px;
   list-style: none;
+}
+
+.sortable-ghost {
+  opacity: 0.5;
 }
 </style>
