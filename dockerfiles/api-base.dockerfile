@@ -34,6 +34,12 @@ ADD --checksum=sha256:43caefc0eb119c8152e573a028c78c8b8a0497da20055358104c273fe2
 ADD --checksum=sha256:82467ff9dff8e95451472ff5c9d6206072b575748436af88585f5d26d4bdb8ab \
     https://cdn.jsdelivr.net/npm/mirador@3.4.3/dist/mirador.min.js.map \
     /mirador/mirador.min.js.map
+ADD https://github.com/ruven/iipmooviewer/archive/86bfcc698c969ce290d7c4f5a586483458d1f752.tar.gz /iipmooviewer.tar.gz
+RUN <<EOF
+tar -xzf /iipmooviewer.tar.gz
+rm -f /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/images/newAnnotation.png \
+      /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/images/newAnnotation.svg
+EOF
 
 FROM ubuntu:jammy-20260210.1
 ENV DEBIAN_FRONTEND=noninteractive
@@ -81,6 +87,14 @@ COPY --from=builder /video-js/video.min.js /video-js/video-js.min.css /usr/local
 COPY --from=builder /threejs/three.min.js /threejs/OrbitControls.js /threejs/GLTFLoader.js /usr/local/phaidra/phaidra-api/public/threejs/build/
 COPY --from=builder /replayweb/ui.js /replayweb/sw.js /usr/local/phaidra/phaidra-api/public/replayweb/
 COPY --from=builder /mirador/mirador.min.js /mirador/mirador.min.js.map /usr/local/phaidra/phaidra-api/public/mirador/
+COPY --from=builder \
+    /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/js/iipmooviewer-2.0-min.js \
+    /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/js/mootools-core-1.6.0-compressed.js \
+    /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/css/iip.min.css \
+    /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/src/annotations.js \
+    /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/src/annotations-edit.js \
+    /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/images/ \
+    /usr/local/phaidra/phaidra-api/public/iipmooviewer/
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]
