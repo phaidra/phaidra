@@ -69,7 +69,7 @@
 
 .v-tab.title {
   font-weight: 300 !important;
-  color: rgba(0, 0, 0, 0.5) !important;
+  color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity)) !important;
   min-width: auto;
 }
 
