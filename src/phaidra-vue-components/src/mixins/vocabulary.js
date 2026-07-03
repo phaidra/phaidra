@@ -17,7 +17,9 @@ export const vocabulary = {
     },
     getTerm: function (vocabulary, value) {
       if (vocabulary && value) {
-        return this.$store.getters['vocabulary/getTerm'](vocabulary, value)
+        const id = typeof value === 'string' ? value : value['@id']
+        if (!id) return
+        return this.$store.getters['vocabulary/getTerm'](vocabulary, id)
       }
     },
     /** Plain title string for v-select/v-autocomplete item-title (Vuetify 3) */

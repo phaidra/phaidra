@@ -53,7 +53,7 @@
                   item-value="@id"
                   :item-title="roleItemTitle"
                   :custom-filter="vocabAutocompleteFilter"
-                  :model-value="getTerm(roleVocabulary, role)"
+                  :model-value="roleTerm"
                   :variant="fieldVariant"
                   :bg-color="roleBackgroundColor ? roleBackgroundColor : undefined"
                   return-object
@@ -129,22 +129,22 @@
                 <template v-if="showIdentifier && !showIdentifierType">
                   <v-col cols="12" md="4">
                     <v-text-field
-                      v-show="identifierType === 'ids:orcid'"
+                      v-show="identifierTypeId === 'ids:orcid'"
                       v-maska data-maska="####-####-####-####"
                       :model-value="identifierText"
                       :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                       @update:model-value="$emit('input-identifier', $event)"
                       :placeholder="identifierTypePlaceholder"
-                      :rules="identifierType ? [validationrules['orcid']] : [validationrules['noop']]"
+                      :rules="identifierTypeId ? [validationrules['orcid']] : [validationrules['noop']]"
                       :variant="fieldVariant"
                     ></v-text-field>
                     <v-text-field
-                      v-show="identifierType !== 'ids:orcid'"
+                      v-show="identifierTypeId !== 'ids:orcid'"
                       :model-value="identifierText"
                       :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                       @update:model-value="$emit('input-identifier', $event)"
                       :placeholder="identifierTypePlaceholder"
-                      :rules="identifierType ? [validationrules[getIdentifierRuleName(identifierType)]] : [validationrules['noop']]"
+                      :rules="identifierTypeId ? [validationrules[getIdentifierRuleName(identifierTypeId)]] : [validationrules['noop']]"
                       :variant="fieldVariant"
                     ></v-text-field>
                   </v-col>
@@ -186,7 +186,7 @@
                     item-value="@id"
                     :item-title="identifierTypeItemTitle"
                     :custom-filter="vocabAutocompleteFilter"
-                    :model-value="getTerm(identifierVocabulary, identifierType)"
+                    :model-value="identifierTypeTerm"
                     :disabled="disableIdentifierType"
                     :variant="fieldVariant"
                     return-object
@@ -206,22 +206,22 @@
                 </v-col>
                 <v-col cols="12" md="6" >
                   <v-text-field
-                    v-show="identifierType === 'ids:orcid'"
+                    v-show="identifierTypeId === 'ids:orcid'"
                     v-maska data-maska="####-####-####-####"
                     :model-value="identifierText"
                     :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                     @update:model-value="$emit('input-identifier', $event)"
                     :placeholder="identifierTypePlaceholder"
-                    :rules="identifierType ? [validationrules['orcid']] : [validationrules['noop']]"
+                    :rules="identifierTypeId ? [validationrules['orcid']] : [validationrules['noop']]"
                     :variant="fieldVariant"
                   ></v-text-field>
                   <v-text-field
-                    v-show="identifierType !== 'ids:orcid'"
+                    v-show="identifierTypeId !== 'ids:orcid'"
                     :model-value="identifierText"
                     :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                     @update:model-value="$emit('input-identifier', $event)"
                     :placeholder="identifierTypePlaceholder"
-                    :rules="identifierType ? [validationrules[getIdentifierRuleName(identifierType)]] : [validationrules['noop']]"
+                    :rules="identifierTypeId ? [validationrules[getIdentifierRuleName(identifierTypeId)]] : [validationrules['noop']]"
                     :variant="fieldVariant"
                   ></v-text-field>
                 </v-col>
@@ -306,22 +306,22 @@
               <v-row v-if="showIdentifier && !showIdentifierType">
                 <v-col cols="12" md="12">
                   <v-text-field
-                    v-show="identifierType === 'ids:orcid'"
+                    v-show="identifierTypeId === 'ids:orcid'"
                     v-mask="'####-####-####-###X'"
                     :model-value="identifierText"
                     :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                     @update:model-value="$emit('input-identifier', $event)"
                     :placeholder="identifierTypePlaceholder"
-                    :rules="identifierType ? [validationrules['orcid']] : [validationrules['noop']]"
+                    :rules="identifierTypeId ? [validationrules['orcid']] : [validationrules['noop']]"
                     variant="outlined"
                   ></v-text-field>
                   <v-text-field
-                    v-show="identifierType !== 'ids:orcid'"
+                    v-show="identifierTypeId !== 'ids:orcid'"
                     :model-value="identifierText"
                     :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                     @update:model-value="$emit('input-identifier', $event)"
                     :placeholder="identifierTypePlaceholder"
-                    :rules="identifierType ? [validationrules[getIdentifierRuleName(identifierType)]] : [validationrules['noop']]"
+                    :rules="identifierTypeId ? [validationrules[getIdentifierRuleName(identifierTypeId)]] : [validationrules['noop']]"
                     variant="outlined"
                   ></v-text-field>
                 </v-col>
@@ -333,44 +333,45 @@
                     :label="$t('Type of identifier')"
                     :no-data-text="$t('No data available')"
                     :items="vocabularies[identifierVocabulary].terms"
-                    :item-value="'@id'"
-                    :model-value="getTerm(identifierVocabulary, identifierType)"
-                    :filter="autocompleteFilter"
+                    item-value="@id"
+                    :item-title="identifierTypeItemTitle"
+                    :custom-filter="vocabAutocompleteFilter"
+                    :model-value="identifierTypeTerm"
                     :disabled="disableIdentifierType"
+                    :variant="fieldVariant"
                     return-object
                     clearable
-                    variant="outlined"
                   >
-                    <template slot="item" slot-scope="{ item }">
-                      <div class="v-list-item-content two-line">
-                        <v-list-item-title  v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
-                      </div>
+                    <template #item="{ props, internalItem }">
+                      <v-list-item v-bind="props" lines="one">
+                        <template #title>
+                          <span v-html="getLocalizedTermLabel(identifierVocabulary, internalItem.raw['@id'])" />
+                        </template>
+                      </v-list-item>
                     </template>
-                    <template slot="selection" slot-scope="{ item }">
-                      <div class="v-list-item-content">
-                        <v-list-item-title v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
-                      </div>
+                    <template #selection="{ internalItem }">
+                      <span v-html="getLocalizedTermLabel(identifierVocabulary, (internalItem.raw || internalItem)['@id'])" />
                     </template>
                   </v-autocomplete>
                 </v-col>
                 <v-col cols="12" md="6" >
                   <v-text-field
-                    v-show="identifierType === 'ids:orcid'"
+                    v-show="identifierTypeId === 'ids:orcid'"
                     v-mask="'####-####-####-###X'"
                     :model-value="identifierText"
                     :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                     @update:model-value="$emit('input-identifier', $event)"
                     :placeholder="identifierTypePlaceholder"
-                    :rules="identifierType ? [validationrules['orcid']] : [validationrules['noop']]"
+                    :rules="identifierTypeId ? [validationrules['orcid']] : [validationrules['noop']]"
                     variant="outlined"
                   ></v-text-field>
                   <v-text-field
-                    v-show="identifierType !== 'ids:orcid'"
+                    v-show="identifierTypeId !== 'ids:orcid'"
                     :model-value="identifierText"
                     :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                     @update:model-value="$emit('input-identifier', $event)"
                     :placeholder="identifierTypePlaceholder"
-                    :rules="identifierType ? [validationrules[getIdentifierRuleName(identifierType)]] : [validationrules['noop']]"
+                    :rules="identifierTypeId ? [validationrules[getIdentifierRuleName(identifierTypeId)]] : [validationrules['noop']]"
                     variant="outlined"
                   ></v-text-field>
                 </v-col>
@@ -744,9 +745,20 @@ export default {
     isMandatory: function () {
       return this.required === true
     },
+    identifierTypeId () {
+      if (!this.identifierType) return ''
+      if (typeof this.identifierType === 'string') return this.identifierType
+      return this.identifierType['@id'] || ''
+    },
+    identifierTypeTerm () {
+      return this.getTerm(this.identifierVocabulary, this.identifierTypeId || this.identifierType)
+    },
+    roleTerm () {
+      return this.getTerm(this.roleVocabulary, this.role)
+    },
     identifierTypePlaceholder: function () {
       for (let i of this.vocabularies[this.identifierVocabulary].terms) {
-        if (i['@id'] === this.identifierType) {
+        if (i['@id'] === this.identifierTypeId) {
           return i['skos:example']
         }
       }
