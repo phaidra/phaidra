@@ -31,6 +31,7 @@ import PSortableSolrDoc from '../utils/PSortableSolrDoc'
 
 export default {
   name: 'p-m-sort',
+  emits: ['order-saved'],
   components: {
     PSortableSolrDoc,
     draggable

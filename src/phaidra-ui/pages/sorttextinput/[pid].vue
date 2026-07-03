@@ -6,7 +6,7 @@
     <v-row>
       <v-col v-if="signedin">
         <template v-if="members.length > 0">
-          <p-m-sort-textinput :pid="pid" :cmodel="loadedcmodel" :members="members" @input="members = $event"
+          <p-m-sort-textinput :pid="pid" :cmodel="loadedcmodel" :members="members"
           @order-saved="orderSaved($event)"></p-m-sort-textinput>
         </template>
       </v-col>
@@ -52,8 +52,6 @@ export default {
       return self.loadMembers(self, pid, rel)
     },
     loadDoc: function (self, pid) {
-      self.members = []
-
       var params = {
         q: 'pid:"' + pid + '"',
         defType: 'edismax',
@@ -107,8 +105,6 @@ export default {
 
       await promise
 
-      self.members = []
-
       var params = {
         q: rel + ':"' + pid + '"',
         defType: 'edismax',
@@ -145,9 +141,7 @@ export default {
   },
   beforeRouteEnter: function (to, from, next) {
     next(vm => {
-      vm.loadData(vm, to.params.pid).then(() => {
-        next()
-      })
+      vm.loadData(vm, to.params.pid)
     })
   },
   beforeRouteUpdate: function (to, from, next) {

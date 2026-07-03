@@ -19,6 +19,7 @@ import { vuetifyGoTo } from '../../utils/vuetifyGoToCompat'
 
 export default {
   name: 'p-m-sort-textinput',
+  emits: ['order-saved'],
   props: {
     pid: {
       type: String
