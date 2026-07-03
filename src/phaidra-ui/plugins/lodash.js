@@ -1,3 +1,5 @@
-export default defineNuxtPlugin(() => {
-  // vue-lodash is Vue2-only; replace with direct lodash imports/composables later.
+import lodash from 'lodash'
+
+export default defineNuxtPlugin((nuxtApp) => {
+  nuxtApp.vueApp.config.globalProperties.$_ = lodash
 })

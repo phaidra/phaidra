@@ -87,15 +87,16 @@ export default {
         }
         
         this.$nextTick(() => {
-          // Only update checkboxes that aren't already set correctly
+          const next = { ...this.checkboxes }
           let hasChanges = false
-          for (let term of newVal) {
-            if (term.value && !this.checkboxes[term.value]) {
-              Vue.set(this.checkboxes, term.value, true)
+          for (const term of newVal) {
+            if (term.value && !next[term.value]) {
+              next[term.value] = true
               hasChanges = true
             }
           }
           if (hasChanges) {
+            this.checkboxes = next
             this.$emit('input', this.checkboxes)
           }
         })
