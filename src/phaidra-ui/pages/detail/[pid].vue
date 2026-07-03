@@ -524,7 +524,7 @@
               style="min-width: 0;"
             >
               <div v-for="(titleObj, idx) in displayTitles" :key="'title-' + idx" class="mb-4">
-                <h1 class="text-h4 font-weight-light mb-2">{{ titleObj.mainTitle }}</h1>
+                <h1 class="text-h4 font-weight-light mb-2 mt-0">{{ titleObj.mainTitle }}</h1>
                 <h2 v-if="titleObj.subtitle" class="text-h5 font-weight-light text-secondary">{{ titleObj.subtitle }}</h2>
               </div>
               <v-divider class="mb-2" v-if="!showPreview"></v-divider>
@@ -930,7 +930,7 @@
         <v-col cols="12" md="4">
           <v-row justify="end">
             <v-col cols="12" md="9">
-              <ul class="mb-6 pl-0 side-list">
+              <ul class="mb-6 pl-0 side-list mt-0">
                 <li class="mb-6">
                   <v-card tile>
                     <v-card-title
