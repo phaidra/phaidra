@@ -157,9 +157,12 @@ configs:
         # reverse_proxy http://botblocker:8080 {
 
         @whitelist_zid not remote_ip 131.130.2.0/24 131.130.222.0/24 private_ranges
+        # https://zid.univie.ac.at/ip-adressen
+        # IPv6 not required, as our phaidra VM don't have IPv6
+        @whitelist_univie not remote_ip 131.130.0.0/16 77.80.0.0/17 private_ranges
         log_append remotehost "{http.request.remote.host}"
         route {
-          rate_limit @whitelist_zid {
+          rate_limit @whitelist_univie {
             log_key
             # 1. individual IP, burst
             # 2. individual IP, sustained
