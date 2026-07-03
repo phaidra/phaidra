@@ -28,6 +28,12 @@ ADD --checksum=sha256:6893d569e972ee621faebd884a54ca77357080fcf71ce234731d271ec7
 ADD --checksum=sha256:395b5b099c48f5e6cebdc4d64e85267e9a58e100c4cbb7869eddad62ec5ec081 \
     https://cdn.jsdelivr.net/npm/replaywebpage@2.4.4/sw.js \
     /replayweb/sw.js
+ADD --checksum=sha256:43caefc0eb119c8152e573a028c78c8b8a0497da20055358104c273fe2b98eac \
+    https://cdn.jsdelivr.net/npm/mirador@3.4.3/dist/mirador.min.js \
+    /mirador/mirador.min.js
+ADD --checksum=sha256:82467ff9dff8e95451472ff5c9d6206072b575748436af88585f5d26d4bdb8ab \
+    https://cdn.jsdelivr.net/npm/mirador@3.4.3/dist/mirador.min.js.map \
+    /mirador/mirador.min.js.map
 
 FROM ubuntu:jammy-20260210.1
 ENV DEBIAN_FRONTEND=noninteractive
@@ -74,6 +80,7 @@ COPY --from=builder /swagger-ui-5.32.4/dist/* /usr/local/phaidra/phaidra-api/pub
 COPY --from=builder /video-js/video.min.js /video-js/video-js.min.css /usr/local/phaidra/phaidra-api/public/video-js/
 COPY --from=builder /threejs/three.min.js /threejs/OrbitControls.js /threejs/GLTFLoader.js /usr/local/phaidra/phaidra-api/public/threejs/build/
 COPY --from=builder /replayweb/ui.js /replayweb/sw.js /usr/local/phaidra/phaidra-api/public/replayweb/
+COPY --from=builder /mirador/mirador.min.js /mirador/mirador.min.js.map /usr/local/phaidra/phaidra-api/public/mirador/
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]
