@@ -511,8 +511,12 @@ address {
   background-color: #121212;
 }
 
-.header .v-toolbar__content .v-btn {
+.header .v-toolbar__content .v-btn,
+.header .v-toolbar-items .v-btn {
   margin-left: 1px;
+  box-shadow: none !important;
+  height: calc(var(--v-btn-height) - 4px) !important;
+  min-height: calc(var(--v-btn-height) - 4px) !important;
 }
 
 .header .ph-button-bg {
@@ -612,7 +616,6 @@ address {
 .ph-button-bg {
   background-color: rgb(var(--v-theme-cardtitlebg)) !important;
   border-color: rgb(var(--v-theme-cardtitlebg)) !important;
-  height: calc(var(--v-btn-height) - 4px) !important;
 }
 
 .ph-button-bg-dark {
@@ -623,7 +626,6 @@ address {
 .ph-button-bg-active {
   background-color: rgb(var(--v-theme-primary)) !important;
   border-color: rgb(var(--v-theme-primary)) !important;
-  height: calc(var(--v-btn-height) - 4px) !important;
 }
 .v-toolbar__content,
 .v-toolbar__extension {

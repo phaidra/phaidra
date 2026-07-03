@@ -364,7 +364,7 @@
                         v-bind="props"
                        
                         tile
-                        depressed
+                        variant="flat"
                         nuxt
                         :active="$route.path === '/search' && !$route.query.owner"
                         active-class=""
@@ -395,7 +395,7 @@
                         v-show="signedin"
                        
                         tile
-                        depressed
+                        variant="flat"
                         nuxt
                         active-class="ph-button-bg-active"
                         :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
@@ -411,7 +411,7 @@
                         v-show="signedin"
                        
                         tile
-                        depressed
+                        variant="flat"
                         nuxt
                         :active="$route.path === '/search' && (Array.isArray($route.query.owner) ? $route.query.owner[0] : $route.query.owner) === user.username"
                         active-class=""
@@ -442,7 +442,7 @@
                         v-show="signedin"
                        
                         tile
-                        depressed
+                        variant="flat"
                         nuxt
                         active-class="ph-button-bg-active"
                         :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
@@ -458,7 +458,7 @@
                         v-show="signedin && instanceconfig.groups"
                        
                         tile
-                        depressed
+                        variant="flat"
                         nuxt
                         active-class="ph-button-bg-active"
                         :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
@@ -474,7 +474,7 @@
                         v-show="signedin"
                        
                         tile
-                        depressed
+                        variant="flat"
                         nuxt
                         active-class="ph-button-bg-active"
                         :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
@@ -489,7 +489,7 @@
                         v-bind="props"
                        
                         tile
-                        depressed
+                        variant="flat"
                         nuxt
                         active-class="ph-button-bg-active"
                         :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
@@ -505,7 +505,7 @@
                         v-show="!signedin && appconfig.enablelogin"
                        
                         tile
-                        depressed                          
+                        variant="flat"
                         :href="localePath('/login') + '?returnto=' + encodeURIComponent($route.fullPath)"
                         :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
                         class="font-weight-regular text-white"
@@ -519,7 +519,7 @@
                         v-show="user.isadmin"
                        
                         tile
-                        depressed
+                        variant="flat"
                         nuxt
                         active-class="ph-button-bg-active"
                         :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
@@ -534,7 +534,7 @@
                         <v-btn
                          
                           tile
-                          depressed
+                          variant="flat"
                           class="font-weight-regular text-white text-none"
                           :class="['font-weight-regular', 'text-white', 'text-none', isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg']"
                           v-bind="props"
