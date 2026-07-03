@@ -818,7 +818,11 @@
                   @update:model-value="refreshCollectionMembers"
                 ></v-switch>
               </v-toolbar>
-              <v-row justify="start" class="py-4 bg-surface">
+              <v-row
+                v-if="$store.state.collectionMembersTotal > collMembersPagesize"
+                justify="start"
+                class="py-4 bg-surface"
+              >
                 <v-col cols="12" class="d-flex justify-start">
                   <v-pagination
                     :wrapper-aria-label="$t('pagination')"
