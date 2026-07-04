@@ -111,7 +111,6 @@ export default {
 <style scoped>
 .sortable-list {
   max-height: 80vh;
-  margin: 0 auto;
   padding: 0;
   overflow: auto;
   background-color: #f3f3f3;

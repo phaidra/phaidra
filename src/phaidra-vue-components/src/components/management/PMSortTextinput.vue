@@ -4,7 +4,7 @@
     <v-divider></v-divider>
     <v-card-text class="mt-4" v-if="members.length > 0">
       <div>{{ $t('Please provide the order of the members by ordering the PIDs') }}</div>
-      <v-textarea auto-grow v-model="pids" :placeholder="'o:1\no:2\no:3'"></v-textarea>
+      <v-textarea class="mt-4" auto-grow v-model="pids" :placeholder="'o:1\no:2\no:3'"></v-textarea>
     </v-card-text>
     <v-card-actions v-if="members.length > 0">
       <v-spacer></v-spacer>
