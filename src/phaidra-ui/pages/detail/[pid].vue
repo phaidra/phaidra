@@ -543,14 +543,12 @@
                   <template v-slot:activator="{ props: menuProps }">
                     <v-tooltip location="bottom">
                       <template v-slot:activator="{ props: tipProps }">
-                        <v-btn
-                          icon
+                        <v-icon-btn
                           :class="displayTitles && displayTitles.length > 0 ? 'ml-sm-1' : ''"
                           v-bind="{ ...menuProps, ...tipProps }"
                           :aria-label="$t('Add to collection') + ' / ' + $t('Add to object list')"
-                        >
-                          <v-icon>mdi-bookmark-plus-outline</v-icon>
-                        </v-btn>
+                          icon="mdi-bookmark-plus-outline"
+                        />
                       </template>
                       <span>{{ $t('Add to collection') }} / {{ $t('Add to object list') }}</span>
                     </v-tooltip>
