@@ -7,71 +7,58 @@
 </template>
 
 <script>
+import { useAsyncData, useNuxtApp, useRoute } from "#app";
 import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
 
 export default {
   mixins: [context, config],
-  validate({ params }) {
-    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(
-      params.token.toLowerCase()
-    );
-  },
-  computed: {
-    lid() {
-      return this.$route.params.lid;
-    },
-  },
-  data() {
-    return {
-      list: {},
-    };
-  },
-  methods: {
-    loadData: async function (self, token) {
-      if (token) {
-        this.$store.commit("setLoading", true);
+  setup() {
+    const route = useRoute();
+    const nuxtApp = useNuxtApp();
+
+    const { data: list } = useAsyncData(
+      "list-token",
+      async () => {
+        const token = route.params.token;
+        if (!token) return {};
         try {
-          let response = await this.$axios.request({
+          const response = await nuxtApp.$axios.request({
             method: "GET",
             url: "/list/token/" + token,
             headers: {
-              "X-XSRF-TOKEN": this.$store.state.user.token,
+              "X-XSRF-TOKEN": nuxtApp.$store.state.user.token,
             },
           });
-          this.list = response.data.list;
-          if (this.list && this.list.name) {
-            this.$store.commit("addBreadcrumb", {
-              text: this.list.name,
-              to: this.$route.path,
+          const loaded = response.data.list || {};
+          if (loaded && loaded.name) {
+            nuxtApp.$store.commit("addBreadcrumb", {
+              text: loaded.name,
+              to: route.path,
               disabled: true,
             });
           }
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit("setAlerts", response.data.alerts);
+            nuxtApp.$store.commit("setAlerts", response.data.alerts);
           }
+          return loaded;
         } catch (error) {
           console.log(error);
-        } finally {
-          this.$store.commit("setLoading", false);
+          return {};
         }
+      },
+      {
+        default: () => ({}),
+        watch: [() => route.params.token],
       }
-    },
+    );
+
+    return { list };
   },
-  serverPrefetch() {
-    return this.loadData(this, this.$route.params.token);
-  },
-  beforeRouteEnter: function (to, from, next) {
-    next((vm) => {
-      vm.loadData(vm, to.params.token).then(() => {
-        next();
-      });
-    });
-  },
-  beforeRouteUpdate: function (to, from, next) {
-    this.loadData(this, to.params.token).then(() => {
-      next();
-    });
+  validate({ params }) {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(
+      params.token.toLowerCase()
+    );
   },
 };
 </script>
