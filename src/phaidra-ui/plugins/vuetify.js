@@ -82,6 +82,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     VBtn: {
       variant: 'flat'
     },
+    VIconBtn: {
+      variant: 'text'
+    },
     VTextField: {
       density: 'comfortable',
       variant: 'underlined'

@@ -13,6 +13,11 @@ export default createVuetify({
     ...components,
   },
   directives,
+  defaults: {
+    VIconBtn: {
+      variant: 'text'
+    }
+  },
   theme: {
     defaultTheme: 'light',
     themes: {
