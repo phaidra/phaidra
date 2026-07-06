@@ -34,14 +34,18 @@
                         v-if="alert.type !== 'success' && alert.msg"
                         :type="alert.type === 'danger' ? 'error' : alert.type"
                         :model-value="true"
+                        closable
                         transition="slide-y-transition"
                       >
-                        <div class="d-flex align-center">
-                          <span class="flex-grow-1">{{ $t(alert.msg) }}</span>
-                          <v-icon-btn variant="text"
-                            class="flex-shrink-0 ms-2"
-                            @click="dismiss(alert)" icon="mdi-close" />
-                        </div>
+                        {{ $t(alert.msg) }}
+                        <template #close>
+                          <v-icon-btn
+                            variant="text"
+                            icon="mdi-close"
+                            :aria-label="$t('Close')"
+                            @click="dismiss(alert)"
+                          />
+                        </template>
                       </v-alert>
                     </v-col>
                   </v-row>
