@@ -40,6 +40,9 @@ tar -xzf /iipmooviewer.tar.gz
 rm -f /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/images/newAnnotation.png \
       /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/images/newAnnotation.svg
 EOF
+ADD --checksum=sha256:7080be17f847e0b358801c713e8db0c901ab07d7c3345098cc8b9476212dcecf \
+    https://cdn.jsdelivr.net/npm/@3dweb/360javascriptviewer@1.8.56/lib/JavascriptViewer.js \
+    /360viewer/JavascriptViewer.min.js
 
 FROM ubuntu:jammy-20260210.1
 ENV DEBIAN_FRONTEND=noninteractive
@@ -95,6 +98,7 @@ COPY --from=builder \
     /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/src/annotations-edit.js \
     /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/images/ \
     /usr/local/phaidra/phaidra-api/public/iipmooviewer/
+COPY --from=builder /360viewer/JavascriptViewer.min.js /usr/local/phaidra/phaidra-api/public/360viewer/
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]
