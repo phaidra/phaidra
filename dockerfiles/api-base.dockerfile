@@ -43,6 +43,8 @@ EOF
 ADD --checksum=sha256:7080be17f847e0b358801c713e8db0c901ab07d7c3345098cc8b9476212dcecf \
     https://cdn.jsdelivr.net/npm/@3dweb/360javascriptviewer@1.8.56/lib/JavascriptViewer.js \
     /360viewer/JavascriptViewer.min.js
+ADD https://github.com/cnr-isti-vclab/3DHOP/archive/refs/tags/4.3.tar.gz /3dhop.tar.gz
+RUN tar -xzf /3dhop.tar.gz
 
 FROM ubuntu:jammy-20260210.1
 ENV DEBIAN_FRONTEND=noninteractive
@@ -99,6 +101,9 @@ COPY --from=builder \
     /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/images/ \
     /usr/local/phaidra/phaidra-api/public/iipmooviewer/
 COPY --from=builder /360viewer/JavascriptViewer.min.js /usr/local/phaidra/phaidra-api/public/360viewer/
+COPY --from=builder /3DHOP-4.3/minimal/js /usr/local/phaidra/phaidra-api/public/3dhop/js
+COPY --from=builder /3DHOP-4.3/minimal/skins /usr/local/phaidra/phaidra-api/public/3dhop/skins
+COPY --from=builder /3DHOP-4.3/minimal/stylesheet /usr/local/phaidra/phaidra-api/public/3dhop/stylesheet
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]
