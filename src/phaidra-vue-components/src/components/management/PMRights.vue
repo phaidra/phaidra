@@ -367,8 +367,9 @@ export default {
       deep: true
     },
     userSearch: async function (val) {
-      if (val && (val.length < 2)) {
+      if (!val || val.length < 2) {
         this.userSearchItems = []
+        this.userSearchLoading = false
         return
       }
       if (this.userSearchLoading) return
@@ -390,7 +391,9 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        if (!error?.response?.data?.alerts?.length) {
+          this.$store.commit('setAlerts', [{ type: 'danger', msg: error?.message || 'An error occurred.' }])
+        }
       } finally {
         this.userSearchLoading = false
       }
