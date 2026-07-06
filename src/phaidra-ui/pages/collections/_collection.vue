@@ -7,7 +7,7 @@
         <p>{{$t('Return to')}} <NuxtLink to="/">home page</NuxtLink>.</p>
     </div>
     <div v-else>
-        Loading...
+        <p>{{$t('Loading...')}}</p>
     </div>
 </template>
 
