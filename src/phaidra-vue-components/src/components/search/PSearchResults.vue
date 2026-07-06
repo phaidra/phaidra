@@ -70,7 +70,7 @@
                 </v-col>
               </v-row>
               <v-row class="my-4 mr-2">
-                <v-col class="pa-2">
+                <v-col class="py-2">
                   <span class="text-title-small text-secondary">
                     <span v-for="(roleDoc,i) in getRoleList(doc)" :key="'pers'+i">
                       {{roleDoc}}<span v-if="(i+1) < getRoleList(doc).length">; </span>
