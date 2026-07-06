@@ -35,6 +35,7 @@
                         :type="alert.type === 'danger' ? 'error' : alert.type"
                         :model-value="true"
                         closable
+                        class="app-alert"
                         transition="slide-y-transition"
                       >
                         {{ $t(alert.msg) }}
@@ -686,5 +687,11 @@ address {
   position: absolute;
   top: -40px;
   left: 0;
+}
+
+.app-alert :deep(.v-alert__prepend),
+.app-alert :deep(.v-alert__close),
+.app-alert :deep(.v-alert__content) {
+  align-self: center;
 }
 </style>
