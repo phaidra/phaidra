@@ -85,7 +85,7 @@
                         </template>
                       </v-autocomplete>
                     </v-col>
-                    <v-col cols="1" class="pt-6">
+                    <v-col cols="1" class="pt-1">
                       <v-btn class="bg-primary" :disabled="loading" @click="addRelationship()">{{ $t('Add') }}</v-btn>
                     </v-col>
                   </v-row>
