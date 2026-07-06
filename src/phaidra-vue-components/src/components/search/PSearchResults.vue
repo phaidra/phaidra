@@ -87,12 +87,12 @@
                 </v-col>
               </v-row>
               <v-row v-if="doc.isrestricted">
-                <v-col>
+                <v-col class="py-3">
                   <v-chip class="pointer-disabled" label variant="flat" color="btnred" prepend-icon="mdi-lock">{{ $t('Restricted access') }}</v-chip>
                 </v-col>
               </v-row>
               <v-row >
-                <v-col cols="12" md="9">
+                <v-col cols="12" md="9" class="py-3">
                   <a class="font-weight-light" :href="`${instance.baseurl}/${doc.pid}`">{{ instance.baseurl }}/{{ doc.pid }}</a>
                 </v-col>
                 <v-col cols="12" md="3" class="text-right pr-5">
