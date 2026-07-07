@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-row v-if="showInfoBanner" no-gutters class="mx-n4">
-        <v-col class="amber lighten-2 text-body-1 blue-grey--text text--darken-4 text-center px-4 py-2" cols="12">
+        <v-col class="bg-amber-lighten-2 text-body-large text-blue-grey-darken-4 text-center px-4 py-2" cols="12">
           <v-row align="center">
             <v-col cols="12" md="10" offset-md="1">
-              <h4 class="text-h6">{{ infoBannerText }}</h4>
+              <h4 class="text-title-large ma-0">{{ infoBannerText }}</h4>
             </v-col>
           </v-row>
         </v-col>
