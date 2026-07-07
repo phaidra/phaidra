@@ -135,7 +135,9 @@ export default {
         if (n.input_type === 'language_select') {
           n.ui_value = this.alpha2locale
         }
-        n.value_lang = this.alpha2locale
+        if (n.input_type === 'input_text_lang' || n.input_type === 'input_textarea_lang') {
+          n.value_lang = this.alpha2locale
+        }
         if (n.children && (n.children.length > 0)) {
           this.setLanguageRec(n.children)
         }
