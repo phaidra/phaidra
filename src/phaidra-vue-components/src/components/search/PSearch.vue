@@ -80,13 +80,23 @@
             </v-card>
           </v-bottom-sheet>
         </v-row>
+        <v-row v-if="inCollection" no-gutters class="mb-4">
+          <v-col cols="12">
+            <v-btn color="primary">
+              {{ $t('Members of') }}<component class="ml-1 text-white" :is="PhaidraLink" :to="detailRouteTo(inCollection)">{{ inCollection }}</component>
+              <template #append>
+                <v-icon-btn
+                  icon="mdi-close"
+                  size="small"
+                  variant="text"
+                  :aria-label="$t('Remove collection filter')"
+                  @click.stop="removeCollectionFilter"
+                />
+              </template>
+            </v-btn>
+          </v-col>
+        </v-row>
         <v-row no-gutters>
-          <v-btn v-if="inCollection" class="mb-8" color="primary">
-            {{ $t('Members of') }}<component class="ml-1 text-white" :is="PhaidraLink" :to="detailRouteTo(inCollection)">{{ inCollection }}</component>
-            <template #append>
-              <v-icon @click.stop="removeCollectionFilter()">mdi-close</v-icon>
-            </template>
-          </v-btn>
           <v-pagination
           :wrapper-aria-label="$t('pagination')"
           :page-aria-label="$t('page')"
@@ -275,9 +285,8 @@ export default {
       // whatever properties they might need.
 
       // exclude 'collection' from above manipulation, since it's only passed as a prop
-      let { collection } = options || {}
-      if (collection) {
-        this.inCollection = collection
+      if (options && Object.prototype.hasOwnProperty.call(options, 'collection')) {
+        this.inCollection = options.collection || ''
         delete options.collection
       } else if (this.$route.query.collection) {
         this.inCollection = this.$route.query.collection
@@ -384,8 +393,7 @@ export default {
       }
     },
     removeCollectionFilter: function () {
-      this.inCollection = ''
-      this.search()
+      this.search({ collection: '' })
     },
     resetSearchParams: function () {
       this.q = ''
