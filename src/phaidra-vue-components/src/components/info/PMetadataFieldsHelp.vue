@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="pa-0">
     <v-row>
       <v-col cols="3">
         <v-list v-model:opened="openedCategories">
@@ -24,23 +24,23 @@
           </v-list-group>
         </v-list>
       </v-col>
-      <v-col cols="9">
+      <v-col cols="9" class="px-3">
         <template v-if="selectedField">
-          <div class="display-1">
+          <div class="text-display-small">
             <span class="font-weight-light mr-2">{{ $t(selectedField.title) }}</span> <v-chip class="ma-2 pointer-disabled" label >{{ selectedField.predicate }}</v-chip>
           </div>
           <div v-for="(section, i) in selectedField.sections" :key="i" :id="'sec' + i">
             <template v-if="(section.content !== '') && (section.id !== 'obligation') && !(section.id === 'vocabulary' && section.content === 'None')">
-              <div cols="12" class="font-weight-light headline mt-8 mb-4">{{ $t(section.title) }}</div>
+              <div cols="12" class="font-weight-light text-headline-medium mt-8 mb-4">{{ $t(section.title) }}</div>
               <template v-if="section.content.level1" class="mb-8">
-                <div class="font-weight-light subtitle-1 mt-6 mb-2" v-if="section.content.level2">{{ $t('Basic usage notes') }}</div>
+                <div class="font-weight-light text-title-medium mt-6 mb-2" v-if="section.content.level2">{{ $t('Basic usage notes') }}</div>
                 <div v-html="$t(section.content.level1)"></div>
                 <template v-if="section.content.level2">
-                  <div class="font-weight-light subtitle-1 mt-6 mb-2">{{ $t('Improve your metadata quality') }}</div>
+                  <div class="font-weight-light text-title-medium mt-6 mb-2">{{ $t('Improve your metadata quality') }}</div>
                   <div v-html="$t(section.content.level2)"></div>
                 </template>
                 <template v-if="section.content.level3">
-                  <div class="font-weight-light subtitle-1 mt-6 mb-2">{{ $t('Fairify your data') }}</div>
+                  <div class="font-weight-light text-title-medium mt-6 mb-2">{{ $t('Fairify your data') }}</div>
                   <div v-html="$t(section.content.level3)"></div>
                 </template>
               </template>
