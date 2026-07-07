@@ -772,7 +772,7 @@
                           </v-btn>
                         </template>
                         <v-card>
-                          <v-card-title class="title font-weight-light text-white"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn class="text-grey text-darken-2" color="white" target='_blank' :to="'/metadata-fields-help'" prepend-icon="mdi-help-circle-outline">{{ $t('Metadata fields Help') }}</v-btn></v-card-title>
+                          <v-card-title class="title font-weight-light text-white"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn color="white" target='_blank' :to="'/metadata-fields-help'" prepend-icon="mdi-help-circle-outline">{{ $t('Metadata fields Help') }}</v-btn></v-card-title>
                           <v-card-text>
                             <v-list lines="two" >
                               <v-text-field clearable :label="$t('Search...')" append-inner-icon="mdi-magnify" v-model="searchfieldsinput"></v-text-field>
