@@ -142,7 +142,7 @@
                         variant="filled"
                       ></v-select>
                     </v-col>
-                    <v-col cols="1" class="pt-6">
+                    <v-col cols="1" class="pt-1">
                       <v-btn class="bg-primary" :disabled="loading" @click="addEduPersonAffiliation()">{{ $t('Apply') }}</v-btn>
                     </v-col>
                   </v-row>
@@ -201,7 +201,7 @@
                       </v-autocomplete>
                     </v-col>
                     <org-units-tree-dialog ref="orgunitstreedialog" @unit-selected="handleInput(getTerm('orgunits', $event))"></org-units-tree-dialog>
-                    <v-col cols="1" class="pt-6">
+                    <v-col cols="1" class="pt-1">
                       <v-btn class="bg-primary" :disabled="loading" @click="addOrgUnit()">{{ $t('Apply') }}</v-btn>
                     </v-col>
                   </v-row>
