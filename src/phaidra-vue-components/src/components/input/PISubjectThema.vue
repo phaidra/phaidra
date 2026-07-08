@@ -10,7 +10,7 @@
             :rules="required ? [ v => !!v || $t('Required')] : []"
             :items="vocabularies['thema'].terms"
             item-value="@id"
-            :item-title="(item) => skosTermItemTitleWithNotation(item, 'thema')"
+            :item-title="themaItemTitle"
             :loading="loading"
             :custom-filter="vocabAutocompleteFilter"
             hide-no-data
@@ -19,7 +19,8 @@
             return-object
             clearable
             :disabled="disabled"
-            :messages="path"
+            :hint="path"
+            persistent-hint
             :error-messages="errorMessages"
           >
             <template #item="{ props, internalItem }">
@@ -74,6 +75,14 @@ export default {
   },
   emits: ['input', 'resolve', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   methods: {
+    themaItemTitle (item) {
+      const raw = item?.raw !== undefined ? item.raw : item
+      if (!raw || !raw['skos:prefLabel']) return ''
+      const pl = raw['skos:prefLabel']
+      const label = pl[this.$i18n.locale] || pl.eng || pl.deu || ''
+      const notation = raw['skos:notation']?.[0]
+      return notation != null ? `${label} - ${notation}` : label
+    },
     handleInput: function (term) {
       if (term) {
         this.path = ''
