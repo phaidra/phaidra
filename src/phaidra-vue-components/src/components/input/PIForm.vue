@@ -777,7 +777,7 @@
                             <v-list lines="two" >
                               <v-text-field clearable :label="$t('Search...')" append-inner-icon="mdi-magnify" v-model="searchfieldsinput"></v-text-field>
                               <div v-for="field in filteredMetadatafields" :key="field.id">
-                                <v-list-item @click="addfieldselection.push(field)">
+                                <v-list-item @click="addFieldToSelection(field)">
                                   <div class="v-list-item-content">
                                     <v-list-item-title>{{ $t(field.fieldname) }}</v-list-item-title>
                                     <v-list-item-subtitle>{{ $t(field.helptext ? field.helptext : field.definition) }}</v-list-item-subtitle>
@@ -792,7 +792,7 @@
                             <v-container fluid>
                               <v-row>
                                 <v-col v-if="addfieldselection.length > 0">
-                                  <span v-t="$t('Selected fields:')" class="mr-2"></span> <v-chip class="mx-1" :key="'addflds'+index" v-for="(ch, index) in addfieldselection" close @click:close="removeField(addfieldselection, ch)">{{ $t(ch.fieldname) }}</v-chip>
+                                  <span class="mr-2">{{ $t('Selected fields:') }}</span> <v-chip class="mx-1" :key="ch._chipKey" v-for="(ch, index) in addfieldselection" closable @click:close="removeFieldChip(index)">{{ $t(ch.fieldname) }}</v-chip>
                                 </v-col>
                                 <v-col v-else><span v-t="'Please select metadata fields from the list'"></span></v-col>
                               </v-row>
@@ -2508,9 +2508,14 @@ export default {
       const query = queryText.toLowerCase()
       return lab.indexOf(query) > -1
     },
-    removeFieldChip (item) {
-      const index = this.addfieldselection.indexOf(item)
-      if (index >= 0) this.addfieldselection.splice(index, 1)
+    addFieldToSelection (field) {
+      this.addfieldselection.push({
+        ...field,
+        _chipKey: `${field.id}-${Date.now()}-${Math.random()}`
+      })
+    },
+    removeFieldChip (index) {
+      this.addfieldselection.splice(index, 1)
     },
     addFields (section) {
       for (var i = 0; i < this.addfieldselection.length; i++) {
