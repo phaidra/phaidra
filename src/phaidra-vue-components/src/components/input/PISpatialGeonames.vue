@@ -29,6 +29,7 @@
                 :label="$t('Type of place')"
                 :items="vocabularies['placetype'].terms"
                 item-value="@id"
+                :item-title="(item) => skosTermItemTitle(item, 'placetype')"
                 :custom-filter="filterPlacetype"
                 :disabled="disabletype"
                 :variant="inputStyle === 'filled' ? 'filled' : (inputStyle === 'outlined' ? 'outlined' : 'underlined')"
@@ -36,13 +37,17 @@
                 clearable
               >
                 <template #item="{ props, internalItem }">
-                  <v-list-item v-bind="props">
-                    <v-list-item-title v-html="`${getLocalizedTermLabel('placetype', internalItem.raw['@id'])}`"></v-list-item-title>
-                    <v-list-item-subtitle v-if="showIds" v-html="`${internalItem.raw['@id']}`"></v-list-item-subtitle>
+                  <v-list-item v-bind="props" :lines="showIds ? 'two' : 'one'">
+                    <template #title>
+                      <span v-html="`${getLocalizedTermLabel('placetype', internalItem.raw['@id'])}`" />
+                    </template>
+                    <template v-if="showIds" #subtitle>
+                      <span v-html="internalItem.raw['@id']" />
+                    </template>
                   </v-list-item>
                 </template>
                 <template #selection="{ internalItem }">
-                  <span v-html="`${getLocalizedTermLabel('placetype', internalItem['@id'])}`"></span>
+                  <span v-html="`${getLocalizedTermLabel('placetype', (internalItem.raw || internalItem)['@id'])}`" />
                 </template>
               </v-autocomplete>
             </v-col>
