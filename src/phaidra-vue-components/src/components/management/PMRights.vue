@@ -392,7 +392,7 @@ export default {
       } catch (error) {
         console.log(error)
         if (!error?.response?.data?.alerts?.length) {
-          this.$store.commit('setAlerts', [{ type: 'danger', msg: error?.message || 'An error occurred.' }])
+          this.$store.commit('setAlerts', [{ type: 'danger', msg: error?.message || this.$t('An error occurred.') }])
         }
       } finally {
         this.userSearchLoading = false
