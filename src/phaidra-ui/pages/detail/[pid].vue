@@ -575,13 +575,9 @@
               <v-col cols="12">
                 <div class="iframe-container" v-if="objectInfo.cmodel === 'Video'">
                   <iframe
+                    :key="'preview-' + objectInfo.pid + '-' + previewTheme"
                     :title="$t('Video preview')"
-                    :src="
-                      instanceconfig?.api +
-                      '/object/' +
-                      objectInfo.pid +
-                      '/preview' + '?lang=' + $i18n.locale.substring(0, 2)
-                    "
+                    :src="getPreviewUrl(objectInfo.pid)"
                     width="100%"
                     height="100%"
                     frameborder="0"
@@ -592,13 +588,9 @@
                 </div>
                 <iframe
                 v-else
+                  :key="'preview-' + objectInfo.pid + '-' + previewTheme"
                   :title="$t('Preview')"
-                  :src="
-                    instanceconfig?.api +
-                    '/object/' +
-                    objectInfo.pid +
-                    '/preview' + '?lang=' + $i18n.locale.substring(0, 2) + `${instanceconfig.addannotation ? `&addannotation=${instanceconfig.addannotation}` : ''}`
-                  "
+                  :src="getPreviewUrl(objectInfo.pid, { addannotation: instanceconfig.addannotation })"
                   :width="objectInfo.cmodel === 'Audio' ? '100%' : objectInfo.cmodel === 'Container' ? '100%' : '100%'"
                   :height="objectInfo.cmodel === 'Audio' ? '270' : objectInfo.cmodel === 'Container' ? '300' : '500'"
                   :style="
@@ -614,12 +606,7 @@
                 variant="elevated"
                 color="primary"
                   class="mt-2 float-right"
-                  :href="
-                    instanceconfig?.api +
-                    '/object/' +
-                    objectInfo.pid +
-                    '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
-                  "
+                  :href="getPreviewUrl(objectInfo.pid)"
                   target="_blank"
                   prepend-icon="mdi-open-in-new"
                   >{{ $t("Open in new window") }}</v-btn
@@ -691,9 +678,8 @@
                 <iframe
                   :title="$t('Preview')"
                   v-if="!member.isrestricted"
-                  :src="
-                    instanceconfig?.api + '/object/' + member.pid + '/preview'  + '?lang=' + $i18n.locale.substring(0, 2)
-                  "
+                  :key="'member-preview-' + member.pid + '-' + previewTheme"
+                  :src="getPreviewUrl(member.pid)"
                   width="100%"
                   :height="member.cmodel === 'Audio' ? '60' : '500'"
                   :style="
@@ -2688,6 +2674,23 @@ export default {
         !(this.objectInfo.cmodel === "Video" && this.objectInfo.isrestricted)
       );
     },
+    isDarkTheme () {
+      const globalTheme = this.$vuetify?.theme?.global
+      const themeName = globalTheme?.name
+      if (themeName && typeof themeName === 'object' && 'value' in themeName) {
+        return themeName.value === 'dark'
+      }
+      if (typeof themeName === 'string') {
+        return themeName === 'dark'
+      }
+      if (typeof this.$vuetify?.theme?.dark === 'boolean') {
+        return this.$vuetify.theme.dark
+      }
+      return globalTheme?.current?.value?.dark || false
+    },
+    previewTheme () {
+      return this.isDarkTheme ? 'dark' : 'light'
+    },
     uscholarlink: function () {
       return ('https://' + this.instanceconfig.irbaseurl + "/" + this.objectInfo.pid);
     },
@@ -3240,6 +3243,16 @@ export default {
   methods: {
     copyToClipboard(text) {
       navigator.clipboard.writeText(text);
+    },
+    getPreviewUrl (pid, options = {}) {
+      const params = new URLSearchParams({
+        lang: this.$i18n.locale.substring(0, 2),
+        theme: this.previewTheme
+      })
+      if (options.addannotation) {
+        params.set('addannotation', options.addannotation)
+      }
+      return `${this.instanceconfig?.api}/object/${pid}/preview?${params.toString()}`
     },
     autolinkerCheck(val) {
       return Autolinker.link(String(val ?? ""));

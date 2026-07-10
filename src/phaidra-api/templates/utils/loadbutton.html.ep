@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
  <head>
+ %= include 'utils/player_theme'
  <style>
  .button {
   background-color: #404040;

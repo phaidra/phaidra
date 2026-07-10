@@ -1,0 +1,11 @@
+<style>
+  html {
+    color-scheme: <%= stash('theme') eq 'dark' ? 'dark' : 'light' %>;
+  }
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: <%= stash('theme') eq 'dark' ? '#121212' : 'transparent' %>;
+  }
+</style>

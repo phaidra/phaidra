@@ -4,6 +4,7 @@
   % if (stash('favIcon')) {
     <link rel="icon" type="image/svg+xml" href="<%= stash('favIcon') %>"/>
   % }
+  %= include 'utils/player_theme'
   <link rel="stylesheet" href="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/video-js/video-js.min.css" />
   <script src="<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/video-js/video.min.js"></script>
  </head>
