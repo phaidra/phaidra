@@ -180,6 +180,14 @@ configs:
               events 9000
               window 1h
             }
+            ## there are way too many IPs to collect metrics for. Prometheus fails at some point, and the VM runs out of memory
+            disable_metrics
+          }
+          rate_limit @whitelist_univie {
+            log_key
+            # 1. individual IP, burst
+            # 2. individual IP, sustained
+            # 3. ASN, sustained
             zone asn {
               key {ipinfo_free.asn}
               events 20000
