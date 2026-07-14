@@ -9,10 +9,12 @@ ADD --checksum=sha256:5b46c15340d0eb8cb10d9b110b455ca4c2719b58f394f6c892b6eae887
 RUN unzip /pdfjs.zip -d /pdfjs
 ADD https://github.com/swagger-api/swagger-ui/archive/refs/tags/v5.32.4.tar.gz /swagger
 RUN tar -xzf /swagger
+
 ADD --checksum=sha256:1b914059963acbfd5d3d344d9bc7b6370d10bb745d61c0a0b7015d1c990fcc0d \
     https://github.com/videojs/video.js/releases/download/v8.23.4/video-js-8.23.4.zip \
     /video-js.zip
 RUN unzip /video-js.zip -d /video-js
+
 ADD --checksum=sha256:9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2 \
     https://raw.githubusercontent.com/mrdoob/three.js/r128/build/three.min.js \
     /threejs/three.min.js
@@ -22,33 +24,43 @@ ADD --checksum=sha256:02bb4ade710f3e607329e37a21f098bc3ac70eb6e33daf8a65e79f4db7
 ADD --checksum=sha256:5c15967ba830918a9caea6338712c994c354bccd4edc4569bde411c3ec06a3e6 \
     https://raw.githubusercontent.com/mrdoob/three.js/r128/examples/js/loaders/GLTFLoader.js \
     /threejs/GLTFLoader.js
+
 ADD --checksum=sha256:6893d569e972ee621faebd884a54ca77357080fcf71ce234731d271ec712f3fc \
     https://cdn.jsdelivr.net/npm/replaywebpage@2.4.4/ui.js \
     /replayweb/ui.js
 ADD --checksum=sha256:395b5b099c48f5e6cebdc4d64e85267e9a58e100c4cbb7869eddad62ec5ec081 \
     https://cdn.jsdelivr.net/npm/replaywebpage@2.4.4/sw.js \
     /replayweb/sw.js
+
 ADD --checksum=sha256:43caefc0eb119c8152e573a028c78c8b8a0497da20055358104c273fe2b98eac \
     https://cdn.jsdelivr.net/npm/mirador@3.4.3/dist/mirador.min.js \
     /mirador/mirador.min.js
 ADD --checksum=sha256:82467ff9dff8e95451472ff5c9d6206072b575748436af88585f5d26d4bdb8ab \
     https://cdn.jsdelivr.net/npm/mirador@3.4.3/dist/mirador.min.js.map \
     /mirador/mirador.min.js.map
+
 ADD https://github.com/ruven/iipmooviewer/archive/86bfcc698c969ce290d7c4f5a586483458d1f752.tar.gz /iipmooviewer.tar.gz
 RUN <<EOF
 tar -xzf /iipmooviewer.tar.gz
 rm -f /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/images/newAnnotation.png \
       /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/images/newAnnotation.svg
 EOF
+
 ADD --checksum=sha256:7080be17f847e0b358801c713e8db0c901ab07d7c3345098cc8b9476212dcecf \
     https://cdn.jsdelivr.net/npm/@3dweb/360javascriptviewer@1.8.56/lib/JavascriptViewer.js \
     /360viewer/JavascriptViewer.min.js
+
 ADD https://github.com/cnr-isti-vclab/3DHOP/archive/refs/tags/4.3.tar.gz /3dhop.tar.gz
 RUN tar -xzf /3dhop.tar.gz
+
 ADD --checksum=sha256:bee3e9334ea86dd63e184598f31fb16750881c2da1a6f097a66e0f66a95b3d54 \
     https://github.com/googlefonts/roboto-3-classic/releases/download/v3.015/Roboto_v3.015.zip \
     /roboto.zip
 RUN unzip /roboto.zip -d /roboto
+
+ADD https://iptoasn.com/data/ip2country-v4.tsv.gz /ip2country/ip2country-v4.tsv.gz
+ADD https://iptoasn.com/data/ip2country-v6.tsv.gz /ip2country/ip2country-v6.tsv.gz
+RUN gunzip /ip2country/ip2country-v4.tsv.gz /ip2country/ip2country-v6.tsv.gz
 
 FROM ubuntu:jammy-20260210.1
 ENV DEBIAN_FRONTEND=noninteractive
@@ -111,6 +123,8 @@ COPY --from=builder /3DHOP-4.3/minimal/stylesheet /usr/local/phaidra/phaidra-api
 COPY --from=builder /roboto/web/static/Roboto-Light.ttf   /usr/local/phaidra/phaidra-api/public/fonts/roboto/roboto-300.ttf
 COPY --from=builder /roboto/web/static/Roboto-Regular.ttf /usr/local/phaidra/phaidra-api/public/fonts/roboto/roboto-400.ttf
 COPY --from=builder /roboto/web/static/Roboto-Medium.ttf  /usr/local/phaidra/phaidra-api/public/fonts/roboto/roboto-500.ttf
+COPY --from=builder /ip2country/ip2country-v4.tsv /usr/local/phaidra/phaidra-api/public/ip2country/
+COPY --from=builder /ip2country/ip2country-v6.tsv /usr/local/phaidra/phaidra-api/public/ip2country/
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]
