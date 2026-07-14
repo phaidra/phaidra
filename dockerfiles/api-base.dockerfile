@@ -45,6 +45,10 @@ ADD --checksum=sha256:7080be17f847e0b358801c713e8db0c901ab07d7c3345098cc8b947621
     /360viewer/JavascriptViewer.min.js
 ADD https://github.com/cnr-isti-vclab/3DHOP/archive/refs/tags/4.3.tar.gz /3dhop.tar.gz
 RUN tar -xzf /3dhop.tar.gz
+ADD --checksum=sha256:bee3e9334ea86dd63e184598f31fb16750881c2da1a6f097a66e0f66a95b3d54 \
+    https://github.com/googlefonts/roboto-3-classic/releases/download/v3.015/Roboto_v3.015.zip \
+    /roboto.zip
+RUN unzip /roboto.zip -d /roboto
 
 FROM ubuntu:jammy-20260210.1
 ENV DEBIAN_FRONTEND=noninteractive
@@ -104,6 +108,9 @@ COPY --from=builder /360viewer/JavascriptViewer.min.js /usr/local/phaidra/phaidr
 COPY --from=builder /3DHOP-4.3/minimal/js /usr/local/phaidra/phaidra-api/public/3dhop/js
 COPY --from=builder /3DHOP-4.3/minimal/skins /usr/local/phaidra/phaidra-api/public/3dhop/skins
 COPY --from=builder /3DHOP-4.3/minimal/stylesheet /usr/local/phaidra/phaidra-api/public/3dhop/stylesheet
+COPY --from=builder /roboto/web/static/Roboto-Light.ttf   /usr/local/phaidra/phaidra-api/public/fonts/roboto/roboto-300.ttf
+COPY --from=builder /roboto/web/static/Roboto-Regular.ttf /usr/local/phaidra/phaidra-api/public/fonts/roboto/roboto-400.ttf
+COPY --from=builder /roboto/web/static/Roboto-Medium.ttf  /usr/local/phaidra/phaidra-api/public/fonts/roboto/roboto-500.ttf
 WORKDIR /usr/local/phaidra/phaidra-api/
 EXPOSE 3000
 ENTRYPOINT ["hypnotoad", "-f", "phaidra-api.cgi"]
