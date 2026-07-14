@@ -23,5 +23,12 @@
       ],
       "datasourceTemplate": "github-tags"
     }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["github-tags"],
+      "matchPackageNames": ["googlefonts/roboto-3-classic"],
+      "versioning": "loose"
+    }
   ]
 }
