@@ -19,7 +19,8 @@
       "customType": "regex",
       "managerFilePatterns": ["/dockerfiles/api-base\\.dockerfile$/"],
       "matchStrings": [
-        "https://github\\.com/(?<depName>[^/]+/[^/]+)/(?:releases/download|archive/refs/tags)/(?<currentValue>v?\\d+(?:\\.\\d+)+)"
+        "https://github\\.com/(?<depName>[^/]+/[^/]+)/(?:releases/download|archive/refs/tags)/(?<currentValue>v?\\d+(?:\\.\\d+)+)",
+        "https://raw\\.githubusercontent\\.com/(?<depName>[^/]+/[^/]+)/(?<currentValue>r\\d+)/"
       ],
       "datasourceTemplate": "github-tags"
     }
@@ -28,6 +29,11 @@
     {
       "matchDatasources": ["github-tags"],
       "matchPackageNames": ["googlefonts/roboto-3-classic"],
+      "versioning": "loose"
+    },
+    {
+      "matchDatasources": ["github-tags"],
+      "matchPackageNames": ["mrdoob/three.js"],
       "versioning": "loose"
     }
   ]
