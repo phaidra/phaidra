@@ -441,9 +441,6 @@ sub preview {
   my $lang = $self->param('lang') || 'en';    # Default to English
   $self->languages($lang);
 
-  my $theme = $self->param('theme') || 'light';
-  $self->stash(theme => ($theme eq 'dark' ? 'dark' : 'light'));
-
   my $addannotation = $self->param('addannotation');
 
   my $pid = $self->stash('pid');

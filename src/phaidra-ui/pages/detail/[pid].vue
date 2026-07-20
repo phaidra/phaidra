@@ -583,7 +583,7 @@
                     frameborder="0"
                     scrolling="no"
                     allowfullscreen="yes"
-                    class="responsive-iframe"
+                    class="responsive-iframe preview-iframe"
                     >Content</iframe>
                 </div>
                 <iframe
@@ -598,6 +598,7 @@
                       ? 'height: 270px; width: 100%; border: 0px;'
                       : objectInfo.cmodel === 'Container' ? 'height: 300px; width: 100%; border: 0px;' : 'height: 500px; width: 100%; border: 0px;'
                   "
+                  class="preview-iframe"
                   scrolling="no"
                   frameborder="0"
                   >Content</iframe
@@ -687,6 +688,7 @@
                       ? 'height: 60px; width: 100%; border: 0px;'
                       : 'height: 500px; width: 100%; border: 0px;'
                   "
+                  class="preview-iframe"
                   scrolling="no"
                   frameborder="0"
                   >Content</iframe
@@ -2451,7 +2453,6 @@ import objectMixin from 'phaidra-vue-components/src/mixins/object'
 import lang3to2map from "phaidra-vue-components/src/utils/lang3to2map";
 import Autolinker from "autolinker";
 import copyTooltip from 'phaidra-vue-components/src/mixins/copyTooltip'
-import Autolinker from 'autolinker'
 
 export default {
   mixins: [context, config, vocabulary, objectMixin, copyTooltip],
@@ -3873,6 +3874,11 @@ export default {
   padding-top: 56.25%;
   position: relative;
   width: 100%;
+}
+
+.preview-iframe {
+  color-scheme: normal;
+  background: transparent;
 }
 
 .responsive-iframe {

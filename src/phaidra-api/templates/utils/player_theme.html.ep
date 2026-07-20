@@ -1,11 +1,13 @@
 <style>
+  /* Transparent so the parent page theme shows through the iframe.
+     color-scheme: normal avoids a forced opaque light/dark canvas mismatch. */
   html {
-    color-scheme: <%= stash('theme') eq 'dark' ? 'dark' : 'light' %>;
+    color-scheme: normal;
   }
   html,
   body {
     margin: 0;
     padding: 0;
-    background: <%= stash('theme') eq 'dark' ? '#121212' : 'transparent' %>;
+    background: transparent;
   }
 </style>
