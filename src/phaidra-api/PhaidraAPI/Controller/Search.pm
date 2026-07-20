@@ -171,16 +171,36 @@ sub search_ocr {
 
   # Step 4: Process the current page and get all its matches
   my $fedora_model  = PhaidraAPI::Model::Fedora->new;
-  my $ocr_datasteam = $fedora_model->getDatastream($self, $current_page_pid, 'ALTO');
-  if ($ocr_datasteam->{status} != 200) {
-    $self->render(json => {error => $ocr_datasteam->{alerts}->[0]->{msg}}, status => 500);
-    return;
-  }
+  my $total_hits   = 0;
+  my $start_index  = 0;
+  my $dom;
 
-  # Parse ALTO XML to extract text and coordinates
-  my $dom = Mojo::DOM->new();
-  $dom->xml(1);
-  $dom->parse(decode('UTF-8', $ocr_datasteam->{ALTO}));
+  for (my $pi = 0; $pi < @matching_page_pids; $pi++) {
+    my $count_pid = $matching_page_pids[$pi];
+    my $count_ds  = $fedora_model->getDatastream($self, $count_pid, 'ALTO');
+    if ($count_ds->{status} != 200) {
+      $self->render(json => {error => $count_ds->{alerts}->[0]->{msg}}, status => 500);
+      return;
+    }
+
+    my $count_dom = Mojo::DOM->new();
+    $count_dom->xml(1);
+    $count_dom->parse(decode('UTF-8', $count_ds->{ALTO}));
+
+    my $page_hit_count = 0;
+    for my $string_element ($count_dom->find('String')->each) {
+      my $element_text = $string_element->attr('CONTENT') || '';
+      $page_hit_count++ if $element_text =~ /\b\Q$query\E\b/i;
+    }
+
+    $total_hits += $page_hit_count;
+    if ($pi < $current_page_index) {
+      $start_index += $page_hit_count;
+    }
+    if ($pi == $current_page_index) {
+      $dom = $count_dom;
+    }
+  }
 
   # Find all matches on this page
   my @annotations   = ();
@@ -263,11 +283,11 @@ sub search_ocr {
     'hits'      => \@hits,
     'within'    => {
       '@type' => 'sc:Layer',
-      'total' => $total_matching_pages,                                              # Total number of pages with matches
+      'total' => $total_hits,                                                        # Total number of hits (annotations)
       'first' => "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=0",
       'last'  => "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=$last_page_start"
     },
-    'startIndex' => $start
+    'startIndex' => $start_index
   };
 
   # Add next/prev links for page navigation
