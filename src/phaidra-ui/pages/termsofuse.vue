@@ -45,11 +45,12 @@ export default {
     loadTermsOfUse: async function (locale = null) {
       try {
         let url = "/termsofuse";
-        const currentLocale = locale || this.$i18n.locale;
-        if (currentLocale === 'deu') {
+        const cookieLocale = locale || this.$cookies.get("locale") || this.$i18n.locale;
+        console.log("cookieLocale", cookieLocale);
+        if (cookieLocale === 'deu') {
           url = url + '?lang=de'
         }
-        if (currentLocale === 'ita') {
+        if (cookieLocale === 'ita') {
           url = url + '?lang=it'
         }
         let toures = await this.$axios.get(url);
