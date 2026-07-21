@@ -155,57 +155,44 @@ sub search_ocr {
   @matching_page_pids   = sort {$page_position_map{$a} <=> $page_position_map{$b}} grep {exists $page_position_map{$_}} @matching_page_pids;
   $total_matching_pages = scalar @matching_page_pids;
 
-  my $current_page_index = $start;
-  my $last_page_start    = $total_matching_pages - 1;
+  # Batch size: matching pages per request (ALTO scanned only for this batch)
+  my $batch_size = 5;
+  my $batch_start = $start;
+  my $last_page_start = $total_matching_pages > 0 ? ((int(($total_matching_pages - 1) / $batch_size)) * $batch_size) : 0;
 
   # Validate page index
-  if ($current_page_index >= $total_matching_pages) {
+  if ($batch_start < 0 || $batch_start >= $total_matching_pages) {
     $self->render(json => {error => "Page index out of range"}, status => 400);
     return;
   }
 
-  my $current_page_pid = $matching_page_pids[$current_page_index];
-  my $page_number      = exists $page_position_map{$current_page_pid} ? $page_position_map{$current_page_pid} + 1 : 0;
+  my $batch_end = $batch_start + $batch_size - 1;
+  if ($batch_end >= $total_matching_pages) {
+    $batch_end = $total_matching_pages - 1;
+  }
+  my $matching_pages_loaded = $batch_end + 1;
 
-  $self->app->log->debug("Processing page $current_page_index of $total_matching_pages matching pages (PID: $current_page_pid, book page: $page_number)");
+  $self->app->log->debug("Processing matching pages $batch_start..$batch_end of $total_matching_pages (batch size $batch_size)");
 
-  # Step 4: Process the current page and get all its matches
-  my $fedora_model  = PhaidraAPI::Model::Fedora->new;
-  my $total_hits   = 0;
-  my $start_index  = 0;
-  my $dom;
+  # Step 4: Process this batch of matching pages and collect all matches
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my @annotations  = ();
+  my @hits         = ();
 
-  for (my $pi = 0; $pi < @matching_page_pids; $pi++) {
-    my $count_pid = $matching_page_pids[$pi];
-    my $count_ds  = $fedora_model->getDatastream($self, $count_pid, 'ALTO');
-    if ($count_ds->{status} != 200) {
-      $self->render(json => {error => $count_ds->{alerts}->[0]->{msg}}, status => 500);
+  for (my $pi = $batch_start; $pi <= $batch_end; $pi++) {
+    my $page_pid    = $matching_page_pids[$pi];
+    my $page_number = exists $page_position_map{$page_pid} ? $page_position_map{$page_pid} + 1 : 0;
+
+    my $ocr_datasteam = $fedora_model->getDatastream($self, $page_pid, 'ALTO');
+    if ($ocr_datasteam->{status} != 200) {
+      $self->render(json => {error => $ocr_datasteam->{alerts}->[0]->{msg}}, status => 500);
       return;
     }
 
-    my $count_dom = Mojo::DOM->new();
-    $count_dom->xml(1);
-    $count_dom->parse(decode('UTF-8', $count_ds->{ALTO}));
-
-    my $page_hit_count = 0;
-    for my $string_element ($count_dom->find('String')->each) {
-      my $element_text = $string_element->attr('CONTENT') || '';
-      $page_hit_count++ if $element_text =~ /\b\Q$query\E\b/i;
-    }
-
-    $total_hits += $page_hit_count;
-    if ($pi < $current_page_index) {
-      $start_index += $page_hit_count;
-    }
-    if ($pi == $current_page_index) {
-      $dom = $count_dom;
-    }
-  }
-
-  # Find all matches on this page
-  my @annotations   = ();
-  my @hits          = ();
-  my $annotation_id = 1;
+    # Parse ALTO XML to extract text and coordinates
+    my $dom = Mojo::DOM->new();
+    $dom->xml(1);
+    $dom->parse(decode('UTF-8', $ocr_datasteam->{ALTO}));
 
   my @alto_strings = $dom->find('String')->each;
 
@@ -269,8 +256,7 @@ sub search_ocr {
         'match'       => $query
       };
       push @hits, $hit;
-
-      $annotation_id++;
+      }
     }
   }
 
@@ -283,21 +269,25 @@ sub search_ocr {
     'hits'      => \@hits,
     'within'    => {
       '@type' => 'sc:Layer',
-      'total' => $total_hits,                                                        # Total number of hits (annotations)
+      'total' => $total_matching_pages,                                                        # Total matching pages
       'first' => "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=0",
       'last'  => "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=$last_page_start"
     },
-    'startIndex' => $start_index
+    'startIndex' => $batch_start,
+    'phaidraSearch' => {
+      'matchingPagesTotal'  => $total_matching_pages,
+      'matchingPagesLoaded' => $matching_pages_loaded
+    }
   };
 
-  # Add next/prev links for page navigation
-  if ($current_page_index < $total_matching_pages - 1) {
-    my $next_start = $start + 1;
+  # Add next/prev links for batch navigation
+  if ($matching_pages_loaded < $total_matching_pages) {
+    my $next_start = $batch_start + $batch_size;
     $response_json->{'next'} = "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=$next_start";
   }
 
-  if ($current_page_index > 0) {
-    my $prev_start = $start - 1;
+  if ($batch_start > 0) {
+    my $prev_start = $batch_start - $batch_size;
     if ($prev_start < 0) {$prev_start = 0;}
     $response_json->{'prev'} = "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=$prev_start";
   }
