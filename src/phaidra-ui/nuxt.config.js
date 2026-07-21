@@ -28,6 +28,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    { src: '~/plugins/locale-persistence.js' },
     { src: '~/plugins/axios' },
     { src: '~/plugins/svg-icon' },
     { src: '~/plugins/before-each.js' },
@@ -140,7 +141,7 @@ export default {
     ],
     strategy: 'no_prefix',
     fallbackLocale: 'eng',
-    defaultLocale: 'eng',
+    defaultLocale: process.env.PHAIDRA_DEFAULT_LANGUAGE || 'eng',
     vueI18n: {
       silentTranslationWarn: true,
       silentFallbackWarn: true
