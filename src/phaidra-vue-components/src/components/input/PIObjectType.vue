@@ -4,7 +4,7 @@
       <span v-for="(em, i) in errorMessages" :key="'em'+i">{{ em }}<br/></span>
     </v-alert>
     <v-card variant="outlined" class="mt-4 mb-8">
-      <v-card-title v-if="showLabel" class="title font-weight-light text-white">
+      <v-card-title v-if="showLabel" class="text-h6 font-weight-light text-white">
         <span>{{ $t(label) }}</span>
         <v-spacer></v-spacer>
         <v-menu open-on-hover bottom offset-y v-if="actions.length">

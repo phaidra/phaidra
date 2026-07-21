@@ -1,7 +1,7 @@
 <template>
   <div v-if="form && (form.length > 0)">
     <v-card :outlined="!title">
-      <v-card-title v-if="title" class="title font-weight-light text-white">{{ $t(title) }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-card-title>
+      <v-card-title v-if="title" class="text-h6 font-weight-light text-white">{{ $t(title) }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-card-title>
       <v-alert closable :type="'error'" :model-value="!valid" transition="fade-transition">
         <span>{{ $t('Metadata validation failed') }}</span>
         <ul v-if="validationErrors.length > 0">

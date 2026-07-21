@@ -49,7 +49,7 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light text-white">{{ $t('Metadata preview') }}</v-card-title>
+          <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Metadata preview') }}</v-card-title>
           <v-card-text>
             <v-container class="mt-6">
               <p-d-mods-rec

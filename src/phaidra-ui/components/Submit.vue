@@ -99,7 +99,7 @@
       <template v-if="instanceconfig.uwmsubmit">
         <v-row class="my-6" justify="start">
           <v-col cols="12">
-            <span class="title font-weight-light text-primary">{{
+            <span class="text-h6 font-weight-light text-primary">{{
               $t("Legacy (Uwmetadata)")
             }}</span>
           </v-col>
@@ -136,7 +136,7 @@
             </template>
             <v-card>
               <v-card-title                
-                class="title font-weight-light text-white"
+                class="text-h6 font-weight-light text-white"
                 >{{ $t("Open template") }}</v-card-title
               >
               <v-card-text>
@@ -168,7 +168,7 @@
       <template v-if="false">
         <v-row class="my-6" justify="start">
           <v-col cols="12">
-            <span class="title font-weight-light text-primary">{{
+            <span class="text-h6 font-weight-light text-primary">{{
               $t("Legacy (Uwmetadata)")
             }}</span>
             <v-divider></v-divider>

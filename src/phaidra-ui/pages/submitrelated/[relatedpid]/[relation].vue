@@ -27,7 +27,7 @@
       </div>
     </v-alert>
     <v-card>
-      <v-card-title class="title font-weight-light text-white">
+      <v-card-title class="text-h6 font-weight-light text-white">
         <span class="mr-1">{{ $t("Submit of") }}</span>
         <span v-if="relation === 'references'">{{
             $t("an object referencing")

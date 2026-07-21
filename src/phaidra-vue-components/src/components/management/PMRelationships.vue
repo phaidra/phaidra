@@ -1,11 +1,11 @@
 <template>
   <v-card :flat="!title">
-    <v-card-title v-if="title" class="title font-weight-light text-white">{{ title }}</v-card-title>
+    <v-card-title v-if="title" class="text-h6 font-weight-light text-white">{{ title }}</v-card-title>
     <v-divider v-if="title"></v-divider>
     <v-card-text>
         <v-row>
           <v-col>
-            <h2 class="title font-weight-light">{{ $t('Here you can add or remove relationships to other objects inside this repository.') }}</h2>
+            <h2 class="text-h6 font-weight-light">{{ $t('Here you can add or remove relationships to other objects inside this repository.') }}</h2>
           </v-col>
         </v-row>
         <v-row>
@@ -40,7 +40,7 @@
         <v-row>
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light text-white">{{ $t('Add new relationship of object') + ' ' + pid }}</v-card-title>
+              <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Add new relationship of object') + ' ' + pid }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
                 <v-container fluid>

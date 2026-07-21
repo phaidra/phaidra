@@ -4,7 +4,7 @@
     <v-row justify="center">
       <v-col>
         <v-card tile>
-          <v-card-title class="title font-weight-light text-white">{{
+          <v-card-title class="text-h6 font-weight-light text-white">{{
             $t("Terms of use")
           }}</v-card-title>
           <v-card-text class="text-body-1 mt-4" style="white-space: pre-wrap">{{ tou }}</v-card-text>

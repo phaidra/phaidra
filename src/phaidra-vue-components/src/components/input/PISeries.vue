@@ -3,7 +3,7 @@
   <v-row v-if="!hidden">
     <v-col cols="12">
       <v-card variant="outlined" class="mb-8">
-        <v-card-title class="title font-weight-light text-white">
+        <v-card-title class="text-h6 font-weight-light text-white">
           <span>{{ $t(label) }}</span>
           <v-spacer></v-spacer>
           <v-icon-btn v-if="multiplicable" variant="text" color="white" @click="$emit('add', $event)" icon="mdi-content-duplicate" />

@@ -4,7 +4,7 @@
       {{ $t('Back to detail page') }}
     </v-btn>
     <v-card>
-      <v-card-title class="title font-weight-light text-white">{{ $t('Upload web-optimized version of') }} {{
+      <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Upload web-optimized version of') }} {{
           parentpid
       }}</v-card-title>
       <v-card-text>

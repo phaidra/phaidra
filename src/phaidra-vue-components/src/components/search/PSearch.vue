@@ -59,7 +59,7 @@
             </template>
             <v-card height="400px">
               <v-card-title>
-                <h2 class="title font-weight-light text-white">{{ $t('Filters') }}</h2>
+                <h2 class="text-h6 font-weight-light text-white">{{ $t('Filters') }}</h2>
                 <v-spacer></v-spacer>
                 <v-icon-btn variant="text" color="white" icon="mdi-close" @click="filterdialog = !filterdialog" :aria-label="$t('Close')" />
               </v-card-title>
@@ -138,7 +138,7 @@
       </v-col>
       <v-dialog v-model="limitdialog" width="500">
         <v-card>
-          <v-card-title class="title font-weight-light text-white">{{ $t('Selection limit') }}</v-card-title>
+          <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Selection limit') }}</v-card-title>
           <v-card-text class="mt-4">
             {{ $t('SELECTION_LIMIT', { limit: appconfig.search.selectionlimit }) }}
           </v-card-text>

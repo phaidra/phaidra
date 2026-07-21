@@ -1,6 +1,6 @@
 <template>
   <v-card class="mt-2 mx-auto" :elevation="0" color="transparent">
-    <div class="title font-weight-light transparent text-h6" :class="titlecolor ? ('text-' + titlecolor) : ''">{{ $t(label) }}</div>
+    <div class="font-weight-light transparent text-h6" :class="titlecolor ? ('text-' + titlecolor) : ''">{{ $t(label) }}</div>
     <v-card-text>
       <div v-for="(doc, i) in docs" :key="'doc'+i" class="pa-4">
         <v-row>

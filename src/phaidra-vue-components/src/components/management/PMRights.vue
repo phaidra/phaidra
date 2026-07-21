@@ -1,6 +1,6 @@
 <template>
   <v-card :flat="!title">
-    <v-card-title v-if="title" class="title font-weight-light text-white">{{ title }}</v-card-title>
+    <v-card-title v-if="title" class="text-h6 font-weight-light text-white">{{ title }}</v-card-title>
     <v-divider v-if="title"></v-divider>
     <v-card-text>
         <v-row v-if="isCollection">
@@ -15,7 +15,7 @@
         <v-row>
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light text-white">{{ (rightsArray.length > 0) ? $t('The following entities have access to the object') : $t('This object is worldwide accessible') }}</v-card-title>
+              <v-card-title class="text-h6 font-weight-light text-white">{{ (rightsArray.length > 0) ? $t('The following entities have access to the object') : $t('This object is worldwide accessible') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="pt-4">
                 <v-data-table
@@ -47,7 +47,7 @@
         <v-row>
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light text-white">{{ $t('Restrict access rights to the owner of the object') }}</v-card-title>
+              <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Restrict access rights to the owner of the object') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
                 <v-container fluid>
@@ -68,7 +68,7 @@
         <v-row v-if="showPersons">
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light text-white">{{ $t('Restrict access rights to particular persons') }}</v-card-title>
+              <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Restrict access rights to particular persons') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
                 <v-container fluid>
@@ -110,7 +110,7 @@
         <v-row v-if="showAccounts">
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light text-white">{{ $t('Restrict access rights to particular account') }}</v-card-title>
+              <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Restrict access rights to particular account') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
                 <v-container fluid>
@@ -129,7 +129,7 @@
         <v-row v-if="showEduPersonAffiliation">
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light text-white">{{ $t('Restrict access rights to particular eduPersonAffiliation values') }}</v-card-title>
+              <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Restrict access rights to particular eduPersonAffiliation values') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
                 <v-container fluid>
@@ -154,7 +154,7 @@
         <v-row v-if="showOrgUnits">
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light text-white">{{ $t('Restrict access rights to organisational units/subunits') }}</v-card-title>
+              <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Restrict access rights to organisational units/subunits') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
                 <v-container fluid>
@@ -213,7 +213,7 @@
         <v-row v-if="showGroups">
           <v-col cols="12">
             <v-card>
-              <v-card-title class="title font-weight-light text-white">{{ $t('Restrict access rights to particular groups') }}</v-card-title>
+              <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Restrict access rights to particular groups') }}</v-card-title>
               <v-divider></v-divider>
               <v-card-text class="mt-4">
                 <v-data-table

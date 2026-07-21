@@ -11,13 +11,7 @@
   column-gap: 8px;
 }
 
-/* ---- Legacy typography utility classes ---- */
-.title {
-  font-size: 1.25rem !important;
-  line-height: 2rem !important;
-  letter-spacing: 0.0125em !important;
-}
-
+/* ---- Legacy color utility classes ---- */
 .black--text {
   color: rgba(0, 0, 0, 0.87) !important;
 }
@@ -43,19 +37,18 @@
 }
 
 /* ---- Legacy section header look (common in this codebase) ---- */
-.v-card-title.title.font-weight-light.white--text {
-  background-color: rgb(var(--v-theme-primary));
+.v-card-title.text-h6.font-weight-light.text-white {
   min-height: 48px;
 }
 
 
-.v-tab.title {
+.v-tab.text-h6 {
   font-weight: 300 !important;
   color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity)) !important;
   min-width: auto;
 }
 
-.v-tab--selected.title {
+.v-tab--selected.text-h6 {
   color: rgb(var(--v-theme-primary)) !important;
 }
 

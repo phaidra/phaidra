@@ -37,16 +37,16 @@
       </template>
     </v-alert>
     <v-tabs v-model="activetab" align-tabs="title">
-      <v-tab value="metadata" class="title font-weight-light text-capitalize">{{ $t('Metadata') }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-tab>
-      <v-tab v-if="debug" value="jsonld" @click="metadatapreview = getMetadata()" class="title font-weight-light text-capitalize">{{ $t('JSON-LD') }}</v-tab>
-      <v-tab v-if="templating" value="templates" @click="loadTemplates()" class="title font-weight-light text-capitalize">{{ $t('Templates') }}</v-tab>
-      <v-tab v-if="importing" value="import" class="title font-weight-light text-capitalize">{{ $t('Import') }}</v-tab>
-      <v-tab v-if="enablerights" value="rights" class="title font-weight-light text-capitalize">{{ $t('Access rights') }}</v-tab>
-      <v-tab v-if="enablerelationships" value="relationships" class="title font-weight-light text-capitalize">{{ $t('Relationships') }}</v-tab>
-      <v-tab v-if="(submittype !== 'container') && enablepreview" value="preview" @click="updateJsonld()" class="title font-weight-light text-capitalize">{{ $t('Preview') }}</v-tab>
-      <v-tab v-if="help" value="help" class="title font-weight-light text-capitalize">{{ $t('Help') }}</v-tab>
-      <v-tab v-if="feedback" value="feedback" class="title font-weight-light text-capitalize">{{ $t('Feedback') }}</v-tab>
-      <v-tab v-if="doiImport" value="doiImport" class="title font-weight-light text-capitalize">{{ $t('DOI Import') }}</v-tab>
+      <v-tab value="metadata" class="text-h6 font-weight-light text-capitalize">{{ $t('Metadata') }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-tab>
+      <v-tab v-if="debug" value="jsonld" @click="metadatapreview = getMetadata()" class="text-h6 font-weight-light text-capitalize">{{ $t('JSON-LD') }}</v-tab>
+      <v-tab v-if="templating" value="templates" @click="loadTemplates()" class="text-h6 font-weight-light text-capitalize">{{ $t('Templates') }}</v-tab>
+      <v-tab v-if="importing" value="import" class="text-h6 font-weight-light text-capitalize">{{ $t('Import') }}</v-tab>
+      <v-tab v-if="enablerights" value="rights" class="text-h6 font-weight-light text-capitalize">{{ $t('Access rights') }}</v-tab>
+      <v-tab v-if="enablerelationships" value="relationships" class="text-h6 font-weight-light text-capitalize">{{ $t('Relationships') }}</v-tab>
+      <v-tab v-if="(submittype !== 'container') && enablepreview" value="preview" @click="updateJsonld()" class="text-h6 font-weight-light text-capitalize">{{ $t('Preview') }}</v-tab>
+      <v-tab v-if="help" value="help" class="text-h6 font-weight-light text-capitalize">{{ $t('Help') }}</v-tab>
+      <v-tab v-if="feedback" value="feedback" class="text-h6 font-weight-light text-capitalize">{{ $t('Feedback') }}</v-tab>
+      <v-tab v-if="doiImport" value="doiImport" class="text-h6 font-weight-light text-capitalize">{{ $t('DOI Import') }}</v-tab>
     </v-tabs>
 
     <v-window v-model="activetab">
@@ -55,7 +55,7 @@
         <v-row v-for="(s) in form.sections" :key="s.id" class="ma-3">
 
           <v-card v-if="s.type === 'resourcelink'" width="100%" class="mb-6">
-            <v-card-title class="title font-weight-light text-white">
+            <v-card-title class="text-h6 font-weight-light text-white">
               <span>{{s.title}}</span>
               <v-spacer></v-spacer>
             </v-card-title>
@@ -73,7 +73,7 @@
           </v-card>
 
           <v-card :variant="sectionCardVariant(s)" v-else-if="(s.type !== 'accessrights')" width="100%">
-            <v-card-title v-if="s.title" class="title font-weight-light text-white">
+            <v-card-title v-if="s.title" class="text-h6 font-weight-light text-white">
               <span v-t="s.title"></span>
               <v-spacer></v-spacer>
               <v-checkbox dark color="white" v-if="s.type === 'member'" v-model="previewMember" :label="$t('Container thumbnail')" :value="s.id"></v-checkbox>
@@ -772,7 +772,7 @@
                           </v-btn>
                         </template>
                         <v-card>
-                          <v-card-title class="title font-weight-light text-white"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn color="white" target='_blank' :to="'/metadata-fields-help'" prepend-icon="mdi-help-circle-outline">{{ $t('Metadata fields Help') }}</v-btn></v-card-title>
+                          <v-card-title class="text-h6 font-weight-light text-white"><span v-t="'Add metadata fields'"></span><v-spacer></v-spacer><v-btn color="white" target='_blank' :to="'/metadata-fields-help'" prepend-icon="mdi-help-circle-outline">{{ $t('Metadata fields Help') }}</v-btn></v-card-title>
                           <v-card-text>
                             <v-list lines="two" >
                               <v-text-field clearable :label="$t('Search...')" append-inner-icon="mdi-magnify" v-model="searchfieldsinput"></v-text-field>
@@ -832,7 +832,7 @@
                 <v-btn class="mr-3 float-left" v-bind="activatorProps" large raised :loading="loading" :disabled="loading" color="primary"><span v-t="'Save as new template'"></span></v-btn>
               </template>
               <v-card>
-                <v-card-title class="title font-weight-light text-white"><span v-t="'Save as new template'"></span></v-card-title>
+                <v-card-title class="text-h6 font-weight-light text-white"><span v-t="'Save as new template'"></span></v-card-title>
                 <v-card-text>
                   <v-text-field class="mt-4" hide-details single-line v-model="templatename" :label="$t('Template name')" variant="filled" ></v-text-field>
                 </v-card-text>
@@ -945,7 +945,7 @@
     </v-window>
     <v-dialog v-model="showEditFieldPopup" max-width="600px" scrollable>
       <v-card>
-        <v-card-title class="title font-weight-light text-white">
+        <v-card-title class="text-h6 font-weight-light text-white">
           {{ $t("Field Settings") }}
         </v-card-title>
         <v-card-text>
@@ -979,7 +979,7 @@
       :retain-focus="false"
     >
       <v-card>
-        <v-card-title class="title font-weight-light text-white">
+        <v-card-title class="text-h6 font-weight-light text-white">
           <span v-t="'Add file checksum'"></span>
         </v-card-title>
         <v-card-text>

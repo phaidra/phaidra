@@ -72,7 +72,7 @@
       <v-col>
         <v-dialog v-model="linkdialog" max-width="800px">
           <v-card>
-            <v-card-title class="title font-weight-light text-white mb-6">
+            <v-card-title class="text-h6 font-weight-light text-white mb-6">
               {{ $t('Link to search results') }}
             </v-card-title>
             <v-card-text>

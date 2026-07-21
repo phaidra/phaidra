@@ -1,6 +1,6 @@
 <template>
   <v-card >
-    <v-card-title class="title font-weight-light text-white">{{ $t('Object members') }}</v-card-title>
+    <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Object members') }}</v-card-title>
     <v-divider></v-divider>
     <v-card-text class="mt-4">
       <div>{{ $t('Here you can add or remove some of the members this digital object is composed of.') }}</div>

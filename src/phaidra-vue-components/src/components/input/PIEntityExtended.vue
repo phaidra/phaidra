@@ -2,7 +2,7 @@
   <v-row v-if="!hidden" ref="rowRef">
     <v-col cols="12">
       <v-card variant="outlined" class="mb-8" width="100%">
-        <v-card-title class="title font-weight-light text-white">
+        <v-card-title class="text-h6 font-weight-light text-white">
           <span>{{ $t(label) }}</span>
           <v-spacer></v-spacer>
           <template v-if="showActions">

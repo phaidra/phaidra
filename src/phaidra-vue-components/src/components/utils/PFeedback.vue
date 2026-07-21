@@ -1,6 +1,6 @@
 <template>
   <v-card class="mt-4">
-    <v-card-title class="title font-weight-light text-white">{{ $t('Feedback') }}</v-card-title>
+    <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Feedback') }}</v-card-title>
     <v-divider></v-divider>
     <v-card-text class="mt-4">
       <v-form v-if="!sent" ref="form" v-model="valid">

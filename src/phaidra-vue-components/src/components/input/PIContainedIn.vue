@@ -3,7 +3,7 @@
   <v-row v-if="!hidden">
     <v-col cols="12">
       <v-card variant="outlined" class="mb-8">
-        <v-card-title class="title font-weight-light text-white">
+        <v-card-title class="text-h6 font-weight-light text-white">
           <span>{{ $t(label) }}</span>
           <v-spacer></v-spacer>
           <v-menu open-on-hover bottom offset-y v-if="actions.length">
@@ -191,7 +191,7 @@
           <v-row v-for="(s,i) in series" :key="'series'+i">
             <v-col cols="12">
               <v-card variant="outlined" class="mb-8">
-                <v-card-title class="title font-weight-light text-white">
+                <v-card-title class="text-h6 font-weight-light text-white">
                   <span>{{ $t(seriesLabel) }}</span>
                   <v-spacer></v-spacer>
                   <v-icon-btn v-if="s.multiplicable" variant="text" color="white" @click="$emit('add-series', s)" icon="mdi-content-duplicate" />
@@ -332,7 +332,7 @@
           <v-row>
             <v-col cols="12">
               <v-card variant="outlined" class="mb-8">
-                <v-card-title class="title font-weight-light text-white">
+                <v-card-title class="text-h6 font-weight-light text-white">
                   <span>{{ $t(publisherLabel) }}</span>
                   <v-spacer></v-spacer>
                   <span>

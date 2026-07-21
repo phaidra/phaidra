@@ -1,6 +1,6 @@
 <template>
   <v-card >
-    <v-card-title class="title font-weight-light text-white">{{ $t('Delete') }}</v-card-title>
+    <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Delete') }}</v-card-title>
     <v-divider></v-divider>
     <v-card-text class="mt-4">
       <v-alert :type="'info'" :model-value="true" transition="slide-y-transition" v-if="(cmodel === 'Container') && (members.length > 0)">{{ $t('MEMBERS_DELETE_ALERT_CONTAINER', { nrmembers: members.length }) }}</v-alert>
@@ -13,7 +13,7 @@
           <v-btn theme="dark" color="btnred" v-bind="activatorProps" :disabled="(members.length > 0) || !pid || !cmodel">{{ $t('Delete') }}</v-btn>
         </template>
         <v-card>
-          <v-card-title class="title font-weight-light text-white">{{ $t('Delete') }}</v-card-title>
+          <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Delete') }}</v-card-title>
           <v-card-text class="mt-4">{{ $t('DELETE_OBJECT_CONFIRM', { pid: instance.baseurl + '/' +  pid })}}</v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
