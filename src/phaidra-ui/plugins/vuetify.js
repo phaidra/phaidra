@@ -112,7 +112,9 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     },
     VCheckbox: {
-      density: 'compact'
+      density: 'compact',
+      color: 'primary',
+      hideDetails: 'auto'
     },
     VRow: {
       density: 'compact'
