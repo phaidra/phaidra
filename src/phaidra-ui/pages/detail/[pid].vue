@@ -51,7 +51,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box text-h6 font-weight-light text-white"
+                    class="ph-box text-title-large font-weight-light text-white"
                     >{{ $t("This object is in collection") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -105,7 +105,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box text-h6 font-weight-light text-white"
+                    class="ph-box text-title-large font-weight-light text-white"
                     >{{ $t("This object is a back side of") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -160,7 +160,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box text-h6 font-weight-light text-white"
+                    class="ph-box text-title-large font-weight-light text-white"
                     >{{ $t("This object has a back side") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -214,7 +214,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box text-h6 font-weight-light text-white"
+                    class="ph-box text-title-large font-weight-light text-white"
                     >{{ $t("This object is thumbnail for") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -270,7 +270,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box text-h6 font-weight-light text-white"
+                    class="ph-box text-title-large font-weight-light text-white"
                     >{{ $t("This object has thumbnail") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -325,7 +325,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box text-h6 font-weight-light text-white"
+                    class="ph-box text-title-large font-weight-light text-white"
                     >{{ $t("This object references") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -379,7 +379,7 @@
               <v-col class="pt-0">
                 <v-card tile>
                   <v-card-title
-                    class="ph-box text-h6 font-weight-light text-white"
+                    class="ph-box text-title-large font-weight-light text-white"
                     >{{ $t("This object is referenced by") }}</v-card-title
                   >
                   <v-card-text class="mt-4">
@@ -477,7 +477,7 @@
         <v-col cols="12" md="8">
           <v-row v-if="objectInfo.cmodel === 'Page'" justify="center">
             <v-col cols="6">
-              <v-row justify="center" class="text-center text-h6 font-weight-light mt-0 mb-4">{{
+              <v-row justify="center" class="text-center text-title-large font-weight-light mt-0 mb-4">{{
                 $t("PAGE_OF_BOOK", { bookpid: objectInfo.bookpid })
               }}</v-row>
               <v-row justify="center" class="mt-4 mb-8"
@@ -847,7 +847,7 @@
                   <v-row no-gutters class="mb-4">
                     <v-col>
                       <h2
-                        class="text-h6 font-weight-light text-primary"
+                        class="text-title-large font-weight-light text-primary"
                         @click.stop
                       >
                         <nuxt-link
@@ -904,7 +904,7 @@
             </v-row>
             <v-dialog v-model="confirmColMemDeleteDlg" width="500" >
               <v-card>
-                <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Remove') }}</v-card-title>
+                <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Remove') }}</v-card-title>
                 <v-card-text class="my-4">{{ $t('REMOVE_COLLECTION_MEMBER', { oldpid: collMemberToRemove, collection: objectInfo.pid })}}</v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
@@ -924,7 +924,7 @@
                 <li class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box text-h6 font-weight-light text-white"
+                      class="ph-box text-title-large font-weight-light text-white"
                       >{{ $t('Citable links') }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -956,7 +956,7 @@
                               </template>
                               <v-card>
                                 <v-card-title
-                                  class="text-h6 font-weight-light text-white"
+                                  class="text-title-large font-weight-light text-white"
                                   >{{ $t("Cite") }}</v-card-title
                                 >
                                 <v-card-text>
@@ -1040,7 +1040,7 @@
                           </template>
                           <v-card>
                             <v-card-title
-                              class="text-h6 font-weight-light text-white"
+                              class="text-title-large font-weight-light text-white"
                               >{{ $t("Request DOI") }}</v-card-title
                             >
                             <v-card-text>
@@ -1083,7 +1083,7 @@
                 <li class="mb-6" v-if="identifiers.other.length > 0">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box text-h6 font-weight-light text-white"
+                      class="ph-box text-title-large font-weight-light text-white"
                       >{{ $t('Other links') }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1128,7 +1128,7 @@
                 ">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box text-h6 font-weight-light text-white"
+                      class="ph-box text-title-large font-weight-light text-white"
                       >{{ $t("Content") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1268,7 +1268,7 @@
                 <li class="mb-6" v-if="licenseUri || rightsStatements.length > 0">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box text-h6 font-weight-light text-white"
+                      class="ph-box text-title-large font-weight-light text-white"
                       >{{ $t("Rights") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1299,7 +1299,7 @@
                 <li class="mb-6" v-if="objectInfo.isinadminset">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box text-h6 font-weight-light text-white"
+                      class="ph-box text-title-large font-weight-light text-white"
                       >{{ $t("Managed by") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1331,7 +1331,7 @@
                 <li class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box text-h6 font-weight-light text-white"
+                      class="ph-box text-title-large font-weight-light text-white"
                       >{{ $t("Details") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1416,7 +1416,7 @@
                 <li class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box text-h6 font-weight-light text-white"
+                      class="ph-box text-title-large font-weight-light text-white"
                       >
                         {{ $t("Usage statistics") }}
                         <nuxt-link
@@ -1457,7 +1457,7 @@
                 <li v-if="objectInfo.versions && objectInfo.versions.length > 0" class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box text-h6 font-weight-light text-white"
+                      class="ph-box text-title-large font-weight-light text-white"
                       >{{ $t("Versions") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1492,7 +1492,7 @@
                 <li v-if="objectInfo.alternativeversions && objectInfo.alternativeversions.length > 0" class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box text-h6 font-weight-light text-white"
+                      class="ph-box text-title-large font-weight-light text-white"
                       >{{ $t("Alternative versions") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1539,7 +1539,7 @@
                 <li v-if="objectInfo.alternativeformats && objectInfo.alternativeformats.length > 0" class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box text-h6 font-weight-light text-white"
+                      class="ph-box text-title-large font-weight-light text-white"
                       >{{ $t("Alternative formats") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -1575,7 +1575,7 @@
                   <li v-if="objectInfo.relationships.ispartof && objectInfo.relationships.ispartof.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box text-h6 font-weight-light text-white"
+                        class="ph-box text-title-large font-weight-light text-white"
                         >{{ $t("This object is in collection") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1624,7 +1624,7 @@
                   <li v-if="objectInfo.relationships.isbacksideof && objectInfo.relationships.isbacksideof.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box text-h6 font-weight-light text-white"
+                        class="ph-box text-title-large font-weight-light text-white"
                         >{{ $t("This object is a back side of") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1674,7 +1674,7 @@
                   <li v-if="objectInfo.relationships.hasbackside && objectInfo.relationships.hasbackside.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box text-h6 font-weight-light text-white"
+                        class="ph-box text-title-large font-weight-light text-white"
                         >{{ $t("This object has a back side") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1723,7 +1723,7 @@
                   <li v-if="objectInfo.relationships.isthumbnailfor && objectInfo.relationships.isthumbnailfor.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box text-h6 font-weight-light text-white"
+                        class="ph-box text-title-large font-weight-light text-white"
                         >{{ $t("This object is thumbnail for") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1774,7 +1774,7 @@
                   <li v-if="objectInfo.relationships.hasthumbnail && objectInfo.relationships.hasthumbnail.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box text-h6 font-weight-light text-white"
+                        class="ph-box text-title-large font-weight-light text-white"
                         >{{ $t("This object has thumbnail") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1824,7 +1824,7 @@
                   <li v-if="objectInfo.relationships.references && objectInfo.relationships.references.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box text-h6 font-weight-light text-white"
+                        class="ph-box text-title-large font-weight-light text-white"
                         >{{ $t("This object references") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1873,7 +1873,7 @@
                   <li v-if="objectInfo.relationships.isreferencedby && objectInfo.relationships.isreferencedby.length > 0" class="mb-6">
                     <v-card tile>
                       <v-card-title
-                        class="ph-box text-h6 font-weight-light text-white"
+                        class="ph-box text-title-large font-weight-light text-white"
                         >{{ $t("This object is referenced by") }}</v-card-title
                       >
                       <v-card-text class="mt-4">
@@ -1925,7 +1925,7 @@
                 <li class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box text-h6 font-weight-light text-white"
+                      class="ph-box text-title-large font-weight-light text-white"
                       >{{ $t("Metadata") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -2018,7 +2018,7 @@
                 <li class="mb-6">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box text-h6 font-weight-light text-white"
+                      class="ph-box text-title-large font-weight-light text-white"
                       >{{ $t("Export formats") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -2105,7 +2105,7 @@
                 <li class="mb-6" v-if="objectInfo.writerights === 1">
                   <v-card tile>
                     <v-card-title
-                      class="ph-box text-h6 font-weight-light text-white"
+                      class="ph-box text-title-large font-weight-light text-white"
                       >{{ $t("Edit") }}</v-card-title
                     >
                     <v-card-text class="mt-4">
@@ -2157,7 +2157,7 @@
                             >
                           </template>
                           <v-card>
-                            <v-card-title class="text-h6 font-weight-light text-white">
+                            <v-card-title class="text-title-large font-weight-light text-white">
                               {{ $t("Manage members") }}
                             </v-card-title>
 
@@ -2222,7 +2222,7 @@
                           </template>
                           <v-card>
                             <v-card-title
-                              class="text-h6 font-weight-light text-white"
+                              class="text-title-large font-weight-light text-white"
                               >{{ $t("Choose relation") }}</v-card-title
                             >
                             <v-card-text>
@@ -2409,7 +2409,7 @@
       </v-row>
       <v-dialog v-model="datareplaceDialog" max-width="1200px">
       <v-card>
-        <v-card-title class="text-h6 font-weight-light text-white">
+        <v-card-title class="text-title-large font-weight-light text-white">
           {{ $t('Upload new file to') }} {{objectInfo.pid}} ({{objectInfo.cmodel}})
         </v-card-title>
         <v-divider></v-divider>

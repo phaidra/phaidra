@@ -165,7 +165,7 @@
                         </v-btn>
                       </template>
                       <v-card>
-                        <v-card-title class="text-h6 font-weight-light text-white">{{ $t("Select submit template") }}</v-card-title>
+                        <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Select submit template") }}</v-card-title>
                         <v-card-text>
                           <p-templates class="mt-4" ref="templates" :items-per-page="5" :id-only="true" :isDefaultSelect="true"
                             :selectedTemplateId="selectedTemplateId" v-on:load-template="onTemplateSelect($event)"></p-templates>
@@ -749,7 +749,7 @@
                 <v-row>
                   <v-col>
                     <v-card>
-                      <v-card-title class="text-h6 font-weight-light text-white">{{ $t("Handle") }}</v-card-title>
+                      <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Handle") }}</v-card-title>
                       <v-card-text>
                         <v-row>
                           <v-col>
@@ -796,7 +796,7 @@
                 <v-row>
                   <v-col>
                     <v-card>
-                      <v-card-title class="text-h6 font-weight-light text-white">{{ $t("SMTP") }}</v-card-title>
+                      <v-card-title class="text-title-large font-weight-light text-white">{{ $t("SMTP") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
                           <v-col>
@@ -844,7 +844,7 @@
                 <v-row>
                   <v-col>
                     <v-card>
-                      <v-card-title class="text-h6 font-weight-light text-white">{{ $t("External LDAP") }}</v-card-title>
+                      <v-card-title class="text-title-large font-weight-light text-white">{{ $t("External LDAP") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
                           <v-col>
@@ -927,7 +927,7 @@
                 <v-row>
                   <v-col>
                     <v-card>
-                      <v-card-title class="text-h6 font-weight-light text-white">{{ $t("JWT") }}</v-card-title>
+                      <v-card-title class="text-title-large font-weight-light text-white">{{ $t("JWT") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
                           <v-col>
@@ -996,7 +996,7 @@
                 <v-row>
                   <v-col>
                     <v-card>
-                      <v-card-title class="text-h6 font-weight-light text-white">{{ $t("Reporting") }}</v-card-title>
+                      <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Reporting") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
                           <v-col cols="12" md="6">
@@ -1074,7 +1074,7 @@
                 <v-row>
                   <v-col>
                     <v-card>
-                      <v-card-title class="text-h6 font-weight-light text-white">{{ $t("General") }}</v-card-title>
+                      <v-card-title class="text-title-large font-weight-light text-white">{{ $t("General") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
                           <v-col>
@@ -1093,7 +1093,7 @@
                 <v-row>
                   <v-col>
                   <v-card>
-                    <v-card-title class="text-h6 font-weight-light text-white">{{ $t("SMTP") }}</v-card-title>
+                    <v-card-title class="text-title-large font-weight-light text-white">{{ $t("SMTP") }}</v-card-title>
                     <v-card-text>
                       <v-row class="mt-4">
                         <v-col>
@@ -1142,7 +1142,7 @@
                 <v-row>
                   <v-col>
                   <v-card>
-                    <v-card-title class="text-h6 font-weight-light text-white">{{ $t("Email templates") }}</v-card-title>
+                    <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Email templates") }}</v-card-title>
                     <v-card-text>
                       <v-row>
                         <v-col>
@@ -1170,7 +1170,7 @@
                 <v-row>
                   <v-col>
                     <v-card>
-                      <v-card-title class="text-h6 font-weight-light text-white">{{ $t("Bulk upload") }}</v-card-title>
+                      <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Bulk upload") }}</v-card-title>
                       <v-card-text>
                         <v-row>
                           <v-col>
@@ -1207,7 +1207,7 @@
                 <v-row>
                   <v-col>
                   <v-card>
-                    <v-card-title class="text-h6 font-weight-light text-white">{{ $t("Pure") }}</v-card-title>
+                    <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Pure") }}</v-card-title>
                     <v-card-text>
                       <v-row class="mt-4">
                         <v-col>

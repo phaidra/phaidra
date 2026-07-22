@@ -1,7 +1,7 @@
 <template>
   <v-card class="mt-2 mx-auto" :elevation="0">
-    <div v-if="centertitle" class="font-weight-light text-h6" :class="titleClass" style="word-break: break-word;">{{ $t(label) }}</div>
-    <div v-else class="font-weight-light text-h6" :class="titleClass" style="word-break: break-word;">{{ $t(label) }}</div>
+    <div v-if="centertitle" class="font-weight-light text-title-large" :class="titleClass" style="word-break: break-word;">{{ $t(label) }}</div>
+    <div v-else class="font-weight-light text-title-large" :class="titleClass" style="word-break: break-word;">{{ $t(label) }}</div>
     <v-card-text>
         <nuxt-link :to="`/detail/${pid}`">
           <v-img max-width="200" :src="src" class="mx-auto elevation-2 mt-2" :alt="alt" :title="alt">

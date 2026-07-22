@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row no-gutters>
-      <h3 class="text-h6 font-weight-light mb-4">
+      <h3 class="text-title-large font-weight-light mb-4">
         {{ $t("Metadata-Import via DOI") }}
       </h3>
     </v-row>
@@ -57,7 +57,7 @@
       <v-col cols="12" md="7">
         <v-card>
           <v-card-title
-            class="text-h6 font-weight-light text-white"
+            class="text-title-large font-weight-light text-white"
             >{{
               $t("Following metadata were retrieved")
             }}

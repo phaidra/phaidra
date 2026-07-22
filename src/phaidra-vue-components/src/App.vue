@@ -85,7 +85,7 @@
               <v-toolbar flat>
                 <v-list>
                   <v-list-item>
-                    <v-list-item-title class="text-h6">{{
+                    <v-list-item-title class="text-title-large">{{
                       $t("Examples")
                     }}</v-list-item-title>
                   </v-list-item>

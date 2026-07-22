@@ -37,18 +37,18 @@
 }
 
 /* ---- Legacy section header look (common in this codebase) ---- */
-.v-card-title.text-h6.font-weight-light.text-white {
+.v-card-title.text-title-large.font-weight-light.text-white {
   min-height: 48px;
 }
 
 
-.v-tab.text-h6 {
+.v-tab.text-title-large {
   font-weight: 300 !important;
   color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity)) !important;
   min-width: auto;
 }
 
-.v-tab--selected.text-h6 {
+.v-tab--selected.text-title-large {
   color: rgb(var(--v-theme-primary)) !important;
 }
 

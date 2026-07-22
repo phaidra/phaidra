@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" width="700px">
     <v-card :loading="loading">
-      <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Select an organizational unit') }}</v-card-title>
+      <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Select an organizational unit') }}</v-card-title>
       <v-card-text class="mt-4">
         <v-treeview
           v-model:opened="openedUnits"

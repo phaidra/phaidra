@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-card>
-      <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Credits') }}</v-card-title>
+      <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Credits') }}</v-card-title>
       <v-card-text class="mt-8 text-body-1">
-        <h2 class="text-h6 font-weight-light mb-4">{{ $t('PHAIDRA uses the following resources') }}:</h2>
+        <h2 class="text-title-large font-weight-light mb-4">{{ $t('PHAIDRA uses the following resources') }}:</h2>
         <v-row>
           <v-col><a href="https://citation.doi.org/" target="_blank">DOI Foundation</a> - The DOI Citation Formatter | <a
             href="http://datacite.org/" target="_blank">DataCite</a>, <a href="http://crossref.org/" target="_blank">Crossref</a>, <a href="https://www.medra.org/"

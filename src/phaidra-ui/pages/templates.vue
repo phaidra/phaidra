@@ -2,7 +2,7 @@
   <div>
     <h1 class="d-sr-only">{{$t('Templates')}}</h1>
         <v-card>
-        <v-card-title class="text-h6 font-weight-light text-white">
+        <v-card-title class="text-title-large font-weight-light text-white">
             {{ $t('Manage templates') }}
           </v-card-title>
           <v-card-text>
@@ -20,7 +20,7 @@
         </v-card>
         <v-dialog v-model="validationEdit" width="500">
               <v-card>
-                <v-card-title class="text-h6 font-weight-light text-white"><span v-t="'Edit Template Validation'"></span></v-card-title>
+                <v-card-title class="text-title-large font-weight-light text-white"><span v-t="'Edit Template Validation'"></span></v-card-title>
                 <v-card-text>
                    <v-select
                     class="mt-5"

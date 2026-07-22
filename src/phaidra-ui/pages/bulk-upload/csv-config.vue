@@ -74,7 +74,7 @@
       <v-col cols="12">
         <v-card variant="outlined" class="pa-4">
           <div class="d-flex align-center mb-4">
-            <h3 class="text-h6 mb-0 mr-4">
+            <h3 class="text-title-large mb-0 mr-4">
               {{$t('CSV Columns of your file:')}}
             </h3>
           </div>
@@ -93,7 +93,7 @@
     <!-- Add confirmation dialog when resetting csv file and user already was beyond step 1 -->
     <v-dialog v-model="showConfirmDialog" max-width="500">
       <v-card>
-        <v-card-title class="text-h6 font-weight-light text-white">{{$t('Confirm New File Upload')}}</v-card-title>
+        <v-card-title class="text-title-large font-weight-light text-white">{{$t('Confirm New File Upload')}}</v-card-title>
         <v-card-text class="mt-4">
           {{$t('Loading a new file will clear all your existing progress. Are you sure you want to continue?')}}
         </v-card-text>

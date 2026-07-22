@@ -39,7 +39,7 @@
             <v-row no-gutters class="ma-4">
               <v-col v-for="wrapper in items" :key="wrapper.raw.country" cols="12" md="4">
                 <v-card>
-                  <v-card-title class="text-h6 font-weight-light text-white"><span>{{ wrapper.raw.country.toUpperCase()
+                  <v-card-title class="text-title-large font-weight-light text-white"><span>{{ wrapper.raw.country.toUpperCase()
                   }}</span><span class="ml-6">{{ wrapper.raw.total }}</span></v-card-title>
                   <v-divider></v-divider>
                   <v-list density="compact">
@@ -83,7 +83,7 @@
             <v-row no-gutters class="ma-4">
               <v-col v-for="wrapper in items" :key="wrapper.raw.country" cols="12" md="4">
                 <v-card>
-                  <v-card-title class="text-h6 font-weight-light text-white"><span>{{ wrapper.raw.country.toUpperCase()
+                  <v-card-title class="text-title-large font-weight-light text-white"><span>{{ wrapper.raw.country.toUpperCase()
                   }}</span><span class="ml-6">{{ wrapper.raw.total }}</span></v-card-title>
                   <v-divider></v-divider>
                   <v-list density="compact">

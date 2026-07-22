@@ -3,7 +3,7 @@
     <v-card-text>
       <div class="d-flex align-center justify-space-between mb-4">
         <div>
-          <span class="text-h6">{{$t('Files')}}</span>
+          <span class="text-title-large">{{$t('Files')}}</span>
         </div>
         <div class="file-input-wrapper">
           <v-file-input

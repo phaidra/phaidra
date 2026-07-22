@@ -1,6 +1,6 @@
 <template>
   <v-card class="my-8">
-    <v-card-title class="text-h6 font-weight-light text-white">{{ $t('Help') }}</v-card-title>
+    <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Help') }}</v-card-title>
     <v-card-text class="mt-4">
       <div v-if="$i18n.locale === 'deu'">
         <p><nuxt-link :to="'/metadata-fields-help'" target="_blank">Beschreibung aller vorhandenen Metadatenfelder</nuxt-link></p>

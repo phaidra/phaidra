@@ -4,7 +4,7 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <v-card-title class="text-h6 font-weight-light text-white">
+          <v-card-title class="text-title-large font-weight-light text-white">
             {{ $t('Manage object lists') }}
           </v-card-title>
           <v-card-text>
@@ -32,7 +32,7 @@
                       <v-btn color="primary" theme="dark" class="mb-2" v-bind="activatorProps">{{ $t('Create new object list') }}</v-btn>
                     </template>
                     <v-card>
-                      <v-card-title class="text-h6 font-weight-light text-white">
+                      <v-card-title class="text-title-large font-weight-light text-white">
                         {{ $t('New object list') }}
                       </v-card-title>
                       <v-card-text>
@@ -88,7 +88,7 @@
     <v-row v-if="loadedList">
       <v-col cols="12">
         <v-card>
-          <v-card-title class="text-h6 font-weight-light text-white">
+          <v-card-title class="text-title-large font-weight-light text-white">
             <span>{{ loadedList.name }}</span>
             <v-spacer></v-spacer>
             <template v-if="token && token.length > 0"><a class="pl-2 text-white" target="_blank" :href="'/list/' + token">{{ instance.baseurl + '/list/' + token }}</a></template>
@@ -139,11 +139,11 @@
     </v-row>
     <v-dialog v-model="deleteDialog" max-width="500px" v-if="listToDelete">
       <v-card>
-        <v-card-title class="text-h6 font-weight-light text-white">
+        <v-card-title class="text-title-large font-weight-light text-white">
           {{ $t('Delete object list') }}
         </v-card-title>
         <v-card-text class="mt-4">
-          <p class="text-h6 font-weight-light">{{ $t('Delete object list') + ' ' + listToDelete.name + '?' }}</p>
+          <p class="text-title-large font-weight-light">{{ $t('Delete object list') + ' ' + listToDelete.name + '?' }}</p>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>

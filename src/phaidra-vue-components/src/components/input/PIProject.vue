@@ -5,7 +5,7 @@
 
       <v-card :variant="showHeader ? 'outlined' : 'flat'" class="mb-8">
         <template v-if="showHeader">
-          <v-card-title class="text-h6 font-weight-light text-white">
+          <v-card-title class="text-title-large font-weight-light text-white">
               <span>{{ $t('Project') }}</span>
               <v-spacer></v-spacer>
               <v-menu open-on-hover bottom offset-y v-if="actions.length">

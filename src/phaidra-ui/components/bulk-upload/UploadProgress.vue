@@ -3,7 +3,7 @@
     <v-card-text>
       <div class="d-flex align-center justify-space-between mb-2">
         <div>
-          <span class="text-h6">{{$t('Upload Progress')}}</span>
+          <span class="text-title-large">{{$t('Upload Progress')}}</span>
         </div>
         <div class="d-flex align-center">
           <v-chip class="mr-2" color="success" variant="outlined">

@@ -51,7 +51,7 @@
             <v-col cols="10">
               <v-row >
                 <v-col cols="12" md="9">
-                  <h2 class="text-h6 font-weight-light text-primary" @click.stop v-if="doc.dc_title">
+                  <h2 class="text-title-large font-weight-light text-primary" @click.stop v-if="doc.dc_title">
                     <component :is="PhaidraLink" :to="detailRouteTo(doc.pid)">{{ getObjectTitle(doc) }}</component>
                   </h2>
                 </v-col>

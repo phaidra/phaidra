@@ -1,11 +1,11 @@
 <template>
   <v-card class="mt-2 mx-auto" flat color="transparent">
-    <div class="font-weight-light transparent text-h6">{{ $t('Objects uploaded last year') }}</div>
+    <div class="font-weight-light transparent text-title-large">{{ $t('Objects uploaded last year') }}</div>
     <v-card-text>
       <v-sheet class="mx-auto mt-6" color="transparent" max-width="calc(100% - 32px)">
         <v-sparkline :labels="labels" :model-value="value" color="secondary" line-width="2" padding="16"></v-sparkline>
       </v-sheet>
-      <v-row class="text-h6 font-weight-light mt-8 ml-4">
+      <v-row class="text-title-large font-weight-light mt-8 ml-4">
         <span>Total objects: {{total}}</span>
         <v-spacer></v-spacer>
         <v-icon class="mr-2">
