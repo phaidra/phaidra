@@ -203,8 +203,21 @@ sub get_metadata {
   push @{$edmProvidedCHO->{children}}, @{$titles};
 
   # dc:description
-  my $descriptions = $self->_get_dc_fields($c, \%iso6393ToBCP, $rec, 'description', 'dc:description');
-  push @{$edmProvidedCHO->{children}}, @{$descriptions};
+  if (exists($rec->{isinadminset})) {
+    for my $as (@{$rec->{isinadminset}}) {
+      if ($as eq $pubconfig->{iradminset}) {
+        push @{$edmProvidedCHO->{children}},
+          {
+          name  => 'dc:description',
+          value => "The abstract is available here: https://" . $pubconfig->{irbaseurl} . "/" . $rec->{pid}
+          };
+      }
+    }
+  }
+  else {
+    my $descriptions = $self->_get_dc_fields($c, \%iso6393ToBCP, $rec, 'description', 'dc:description');
+    push @{$edmProvidedCHO->{children}}, @{$descriptions};
+  }
 
   # dc:identifier
   push @{$edmProvidedCHO->{children}},
