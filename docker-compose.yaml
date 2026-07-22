@@ -527,7 +527,6 @@ services:
       watch:
         - path: ./src/phaidra-api
           target: /usr/local/phaidra/phaidra-api
-          ignore: public/pdfjs
           action: sync+restart
     environment:
       <<: [*api_common_env, *hosts]
@@ -548,7 +547,6 @@ services:
       watch:
         - path: ./src/phaidra-api
           target: /usr/local/phaidra/phaidra-api
-          ignore: public/pdfjs
           action: sync+restart
     environment:
       <<: [*api_common_env, *hosts, *s3]

@@ -5,5 +5,36 @@
   },
   "extends": [
     "config:recommended"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/dockerfiles/api-base\\.dockerfile$/"],
+      "matchStrings": [
+        "https://cdn\\.jsdelivr\\.net/npm/(?<depName>@?[a-z0-9._-]+(?:/[a-z0-9._-]+)?)@(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/dockerfiles/api-base\\.dockerfile$/"],
+      "matchStrings": [
+        "https://github\\.com/(?<depName>[^/]+/[^/]+)/(?:releases/download|archive/refs/tags)/(?<currentValue>v?\\d+(?:\\.\\d+)+)",
+        "https://raw\\.githubusercontent\\.com/(?<depName>[^/]+/[^/]+)/(?<currentValue>r\\d+)/"
+      ],
+      "datasourceTemplate": "github-tags"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["github-tags"],
+      "matchPackageNames": ["googlefonts/roboto-3-classic"],
+      "versioning": "loose"
+    },
+    {
+      "matchDatasources": ["github-tags"],
+      "matchPackageNames": ["mrdoob/three.js"],
+      "versioning": "loose"
+    }
   ]
 }
