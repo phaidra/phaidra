@@ -18,9 +18,6 @@ sub get_metadata {
   my %valuesCheck = map {$_ => {}} @el;
   my @metadata;
 
-  my $confmodel  = PhaidraAPI::Model::Config->new;
-  my $privconfig = $confmodel->get_private_config($c);
-
   if (exists($rec->{bib_publisher})) {
     for my $v (@{$rec->{bib_publisher}}) {
       $valuesCheck{'publisher'}{$v}->{exists} = 1;
@@ -106,9 +103,11 @@ sub get_metadata {
       }
       if ($1 eq 'description') {
         if (exists($rec->{isinadminset})) {
+          my $confmodel = PhaidraAPI::Model::Config->new;
+          my $pubconfig = $confmodel->get_public_config($c);
           for my $as (@{$rec->{isinadminset}}) {
-            if ($as eq $privconfig->{iradminset}) {
-              $field{values} = ["The abstract is available here: https://" . $privconfig->{irbaseurl} . "/" . $rec->{pid}];
+            if ($as eq $pubconfig->{iradminset}) {
+              $field{values} = ["The abstract is available here: https://" . $pubconfig->{irbaseurl} . "/" . $rec->{pid}];
             }
           }
         }

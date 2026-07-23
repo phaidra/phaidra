@@ -552,9 +552,6 @@ sub _bytes_string {
 sub get_metadata {
   my ($self, $c, $rec) = @_;
 
-  my $confmodel  = PhaidraAPI::Model::Config->new;
-  my $privconfig = $confmodel->get_private_config($c);
-
   # pretend you don't see this
   my $lang_model   = PhaidraAPI::Model::Languages->new;
   my %iso6393ToBCP = reverse %{$lang_model->get_iso639map()};
@@ -1002,9 +999,11 @@ sub get_metadata {
   my $descNodes = $self->_get_dc_fields($c, \%iso6393ToBCP, $rec, 'description', 'dc:description');
   for my $descNode (@{$descNodes}) {
     if (exists($rec->{isinadminset})) {
+      my $confmodel = PhaidraAPI::Model::Config->new;
+      my $pubconfig = $confmodel->get_public_config($c);
       for my $as (@{$rec->{isinadminset}}) {
-        if ($as eq $privconfig->{iradminset}) {
-          $descNode = {name => 'dc:description', value => "The abstract is available here: https://" . $privconfig->{irbaseurl} . "/" . $rec->{pid}};
+        if ($as eq $pubconfig->{iradminset}) {
+          $descNode = {name => 'dc:description', value => "The abstract is available here: https://" . $pubconfig->{irbaseurl} . "/" . $rec->{pid}};
         }
       }
     }

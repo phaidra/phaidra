@@ -9,6 +9,7 @@ use Mojo::JSON       qw(encode_json decode_json);
 use Mojo::ByteStream qw(b);
 use base             qw/Mojo::Base/;
 use PhaidraAPI::Model::Languages;
+use PhaidraAPI::Model::Config;
 
 my $kimHcrtVocab = {
   'https://w3id.org/kim/hcrt/application'        => {'eng' => 'Software Application', 'deu' => 'Softwareanwendung'},
@@ -200,8 +201,23 @@ sub get_metadata {
   push @{$general->{children}}, @{$titles};
 
   # description
-  my $descriptions = $self->_get_dc_fields($c, \%iso6393ToBCP, $rec, 'description', 'lom:description');
-  push @{$general->{children}}, @{$descriptions};
+  if (exists($rec->{isinadminset})) {
+    my $model     = PhaidraAPI::Model::Config->new;
+    my $pubconfig = $model->get_public_config($c);
+    for my $as (@{$rec->{isinadminset}}) {
+      if ($as eq $pubconfig->{iradminset}) {
+        push @{$general->{children}},
+          {
+          name  => 'lom:description',
+          value => "The abstract is available here: https://" . $pubconfig->{irbaseurl} . "/" . $rec->{pid}
+          };
+      }
+    }
+  }
+  else {
+    my $descriptions = $self->_get_dc_fields($c, \%iso6393ToBCP, $rec, 'description', 'lom:description');
+    push @{$general->{children}}, @{$descriptions};
+  }
 
   # language
   if (exists($rec->{dc_language})) {
