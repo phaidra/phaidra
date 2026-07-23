@@ -89,7 +89,15 @@ export default {
     }
   },
   metaInfo() {
-    const currentLocale = this.$i18n.locale;
+    // Detect locale during SSR from cookies, similar to theme detection
+    let currentLocale = this.$i18n.locale;
+    if (process.server) {
+      // During SSR, try to get locale from cookies
+      const ssrCookie = this.$cookies?.get('locale');
+      if (ssrCookie) {
+        currentLocale = ssrCookie;
+      }
+    }
 
     let metaInfo = {
       htmlAttrs: {
