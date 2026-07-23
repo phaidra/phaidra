@@ -23,7 +23,7 @@
           <v-row>
             <v-col cols="2" v-show="!hideType">
               <v-radio-group v-model="typeModel" class="mt-0" @change="$emit('change-type', $event)">
-                <v-radio color="primary" :label="$t(instanceconfig.institution)" :value="'select'"></v-radio>
+                <v-radio color="primary" :label="$t('Organizational unit')" :value="'select'"></v-radio>
                 <v-radio color="primary" :label="'ROR'" :value="'ror'"></v-radio>
                 <v-radio color="primary" :label="$t('PUBLISHER_VERLAG')" :value="'other'"></v-radio>
               </v-radio-group>
@@ -306,9 +306,6 @@ export default {
     }
   },
   computed: {
-    instanceconfig: function () {
-      return this.$root.$store.state.instanceconfig
-    },
     appconfig: function () {
       return this.$root.$store.state.appconfig
     }

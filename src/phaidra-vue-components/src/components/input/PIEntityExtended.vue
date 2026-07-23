@@ -240,7 +240,7 @@
               <v-row>
                 <v-col cols="2">
                   <v-radio-group v-model="organizationRadio" class="mt-0" @change="$emit('change-organization-type', $event)">
-                    <v-radio color="primary" :label="$t(instanceconfig.institution)" :value="'select'"></v-radio>
+                    <v-radio color="primary" :label="$t('Organizational unit')" :value="'select'"></v-radio>
                     <v-radio color="primary" :label="'ROR'" :value="'ror'"></v-radio>
                     <v-radio color="primary" :label="$t('OTHER_FEMININE')" :value="'other'"></v-radio>
                   </v-radio-group>
@@ -384,7 +384,7 @@
             <v-row v-if="(typeModel === 'schema:Person') && showAffiliation">
               <v-col cols="2">
                 <v-radio-group v-model="affiliationRadio" class="mt-0" @change="$emit('change-affiliation-type', $event)">
-                  <v-radio color="primary" :label="$t(instanceconfig.institution)" :value="'select'"></v-radio>
+                  <v-radio color="primary" :label="$t('Organizational unit')" :value="'select'"></v-radio>
                   <v-radio color="primary" :label="'ROR'" :value="'ror'"></v-radio>
                   <v-radio color="primary" :label="$t('OTHER_FEMININE')" :value="'other'"></v-radio>
                 </v-radio-group>
@@ -691,9 +691,6 @@ export default {
     }
   },
   computed: {
-    instanceconfig: function () {
-      return this.$root.$store.state.instanceconfig
-    },
     appconfig: function () {
       return this.$root.$store.state.appconfig
     },
