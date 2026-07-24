@@ -156,8 +156,8 @@ sub search_ocr {
   $total_matching_pages = scalar @matching_page_pids;
 
   # Batch size: matching pages per request (ALTO scanned only for this batch)
-  my $batch_size = 5;
-  my $batch_start = $start;
+  my $batch_size      = 5;
+  my $batch_start     = $start;
   my $last_page_start = $total_matching_pages > 0 ? ((int(($total_matching_pages - 1) / $batch_size)) * $batch_size) : 0;
 
   # Validate page index
@@ -194,68 +194,68 @@ sub search_ocr {
     $dom->xml(1);
     $dom->parse(decode('UTF-8', $ocr_datasteam->{ALTO}));
 
-  my @alto_strings = $dom->find('String')->each;
+    my @alto_strings = $dom->find('String')->each;
 
-  # Find matches and get context from surrounding String elements
-  for (my $i = 0; $i < @alto_strings; $i++) {
-    my $string_element = $alto_strings[$i];
-    my $element_text   = $string_element->attr('CONTENT') || '';
+    # Find matches and get context from surrounding String elements
+    for (my $i = 0; $i < @alto_strings; $i++) {
+      my $string_element = $alto_strings[$i];
+      my $element_text   = $string_element->attr('CONTENT') || '';
 
-    # Whole-word, case-insensitive match within the token (handles trailing punctuation like "time.")
-    if ($element_text =~ /\b\Q$query\E\b/i) {
+      # Whole-word, case-insensitive match within the token (handles trailing punctuation like "time.")
+      if ($element_text =~ /\b\Q$query\E\b/i) {
 
-      # Get coordinates for this match
-      my $hpos   = $string_element->attr('HPOS')   || 0;
-      my $vpos   = $string_element->attr('VPOS')   || 0;
-      my $width  = $string_element->attr('WIDTH')  || 0;
-      my $height = $string_element->attr('HEIGHT') || 0;
+        # Get coordinates for this match
+        my $hpos   = $string_element->attr('HPOS')   || 0;
+        my $vpos   = $string_element->attr('VPOS')   || 0;
+        my $width  = $string_element->attr('WIDTH')  || 0;
+        my $height = $string_element->attr('HEIGHT') || 0;
 
-      # Build context from surrounding String elements
-      my $before_text = '';
-      my $after_text  = '';
+        # Build context from surrounding String elements
+        my $before_text = '';
+        my $after_text  = '';
 
-      # Get 3 String elements before (if available)
-      for (my $j = $i - 3; $j < $i && $j >= 0; $j++) {
-        my $before_element = $alto_strings[$j];
-        my $before_content = $before_element->attr('CONTENT') || '';
-        $before_text .= $before_content . ' ';
-      }
+        # Get 3 String elements before (if available)
+        for (my $j = $i - 3; $j < $i && $j >= 0; $j++) {
+          my $before_element = $alto_strings[$j];
+          my $before_content = $before_element->attr('CONTENT') || '';
+          $before_text .= $before_content . ' ';
+        }
 
-      # Get 3 String elements after (if available)
-      for (my $j = $i + 1; $j <= $i + 3 && $j < @alto_strings; $j++) {
-        my $after_element = $alto_strings[$j];
-        my $after_content = $after_element->attr('CONTENT') || '';
-        $after_text .= $after_content . ' ';
-      }
+        # Get 3 String elements after (if available)
+        for (my $j = $i + 1; $j <= $i + 3 && $j < @alto_strings; $j++) {
+          my $after_element = $alto_strings[$j];
+          my $after_content = $after_element->attr('CONTENT') || '';
+          $after_text .= $after_content . ' ';
+        }
 
-      # Clean up whitespace
-      $before_text =~ s/\s+/ /g;
-      $after_text  =~ s/\s+/ /g;
-      $before_text =~ s/^\s+|\s+$//g;
-      $after_text  =~ s/^\s+|\s+$//g;
+        # Clean up whitespace
+        $before_text =~ s/\s+/ /g;
+        $after_text  =~ s/\s+/ /g;
+        $before_text =~ s/^\s+|\s+$//g;
+        $after_text  =~ s/^\s+|\s+$//g;
 
-      # Create annotation for this match (IIIF Search API 1.0 format)
-      my $annotation = {
-        '@id'        => "$apiBaseUrlPath/iiif/$pid/canvas/$page_number/text/at/" . ($hpos || 0) . "," . ($vpos || 0) . "," . ($width || 0) . "," . ($height || 0),
-        '@type'      => 'oa:Annotation',
-        'motivation' => 'sc:painting',
-        'resource'   => {
-          '@type' => 'cnt:ContentAsText',
-          'chars' => $element_text
-        },
-        'on' => "$apiBaseUrlPath/iiif/$pid/canvas/$page_number#xywh=" . ($hpos || 0) . "," . ($vpos || 0) . "," . ($width || 0) . "," . ($height || 0)
-      };
-      push @annotations, $annotation;
+        # Create annotation for this match (IIIF Search API 1.0 format)
+        my $annotation = {
+          '@id'        => "$apiBaseUrlPath/iiif/$pid/canvas/$page_number/text/at/" . ($hpos || 0) . "," . ($vpos || 0) . "," . ($width || 0) . "," . ($height || 0),
+          '@type'      => 'oa:Annotation',
+          'motivation' => 'sc:painting',
+          'resource'   => {
+            '@type' => 'cnt:ContentAsText',
+            'chars' => $element_text
+          },
+          'on' => "$apiBaseUrlPath/iiif/$pid/canvas/$page_number#xywh=" . ($hpos || 0) . "," . ($vpos || 0) . "," . ($width || 0) . "," . ($height || 0)
+        };
+        push @annotations, $annotation;
 
-      # Create hit for this match
-      my $hit = {
-        '@type'       => 'search:Hit',
-        'annotations' => ["$apiBaseUrlPath/iiif/$pid/canvas/$page_number/text/at/" . ($hpos || 0) . "," . ($vpos || 0) . "," . ($width || 0) . "," . ($height || 0)],
-        'before'      => $before_text,
-        'after'       => $after_text,
-        'match'       => $query
-      };
-      push @hits, $hit;
+        # Create hit for this match
+        my $hit = {
+          '@type'       => 'search:Hit',
+          'annotations' => ["$apiBaseUrlPath/iiif/$pid/canvas/$page_number/text/at/" . ($hpos || 0) . "," . ($vpos || 0) . "," . ($width || 0) . "," . ($height || 0)],
+          'before'      => $before_text,
+          'after'       => $after_text,
+          'match'       => $query
+        };
+        push @hits, $hit;
       }
     }
   }
@@ -269,11 +269,11 @@ sub search_ocr {
     'hits'      => \@hits,
     'within'    => {
       '@type' => 'sc:Layer',
-      'total' => $total_matching_pages,                                                        # Total matching pages
+      'total' => $total_matching_pages,                                              # Total matching pages
       'first' => "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=0",
       'last'  => "$apiBaseUrlPath/search/$pid/ocr?q=$query&start=$last_page_start"
     },
-    'startIndex' => $batch_start,
+    'startIndex'    => $batch_start,
     'phaidraSearch' => {
       'matchingPagesTotal'  => $total_matching_pages,
       'matchingPagesLoaded' => $matching_pages_loaded
