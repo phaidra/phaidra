@@ -14,6 +14,31 @@
     <div id="mirador" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;"></div>
     <script type='text/javascript' src="https://<%= $baseurl %>/<%= $basepath %>/mirador/mirador.min.js"></script>
     <script type="text/javascript">
+     var phaidraSearchProgress = { loaded: 0, total: 0 };
+     var phaidraPagesLoadedLabels = {
+       en: 'PAGES LOADED',
+       de: 'SEITEN GELADEN',
+       it: 'PAGINE CARICATE'
+     };
+     var phaidraPagesLoadedSuffix = phaidraPagesLoadedLabels['<%= $lang %>'] || phaidraPagesLoadedLabels.en;
+
+     function phaidraUpdateSearchProgressLabel() {
+       if (!phaidraSearchProgress.total) return;
+       var inner = phaidraSearchProgress.loaded + '/' + phaidraSearchProgress.total + ' ' + phaidraPagesLoadedSuffix;
+       var buttons = document.querySelectorAll('#mirador button');
+       for (var i = 0; i < buttons.length; i++) {
+         var btn = buttons[i];
+         var raw = (btn.textContent || '').replace(/\s+/g, ' ').trim();
+         if (!/^More results|^Mehr Treffer|^Più risultati/i.test(raw)) continue;
+         if (raw.indexOf(inner) !== -1) continue;
+         var title = raw.match(/^More results|^Mehr Treffer|^Più risultati/i)[0];
+         while (btn.firstChild) btn.removeChild(btn.firstChild);
+         btn.appendChild(document.createTextNode(title));
+         btn.appendChild(document.createElement('br'));
+         btn.appendChild(document.createTextNode('(' + inner + ')'));
+       }
+     }
+
      var miradorInstance = Mirador.viewer({
        id: 'mirador',
        windows: [{
@@ -21,17 +46,25 @@
          canvasId: 'https://<%= $baseurl %>/<%= $basepath %>/iiif/<%= $pid %>/canvas/<%= $page %>'
        }],
        translations: {
-        en: {
-          searchResultsRemaining: ''
-        },
-        de : {
-          searchResultsRemaining: ''
-        },
-        it : {
-          searchResultsRemaining: ''
-        }
+        en: { searchResultsRemaining: '' },
+        de: { searchResultsRemaining: '' },
+        it: { searchResultsRemaining: '' }
       },
        language: '<%= $lang %>',
+       requests: {
+         postprocessors: [
+           function (url, action) {
+             var json = action && (action.searchJson || action.json);
+             var ps = json && json.phaidraSearch;
+             if (url && String(url).indexOf('/ocr') !== -1 && ps && ps.matchingPagesTotal) {
+               phaidraSearchProgress.loaded = ps.matchingPagesLoaded || 0;
+               phaidraSearchProgress.total = ps.matchingPagesTotal;
+               setTimeout(phaidraUpdateSearchProgressLabel, 0);
+             }
+             return action;
+           }
+         ]
+       },
        window: {
         allowClose: false,
         allowMaximize: false,
@@ -54,6 +87,12 @@
         enabled: false
        }
      });
+
+     // React re-renders the button; keep the page-progress label applied
+     if (window.MutationObserver) {
+       new MutationObserver(phaidraUpdateSearchProgressLabel)
+         .observe(document.getElementById('mirador'), { childList: true, subtree: true });
+     }
     </script>
   </body>
 </html>
