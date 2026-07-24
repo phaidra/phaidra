@@ -204,7 +204,7 @@ export const state = () => ({
       id: 'a11y'
     },
     {
-      label: 'Date',
+      label: 'Upload date',
       field: 'tcreated',
       id: 'created'
     }
