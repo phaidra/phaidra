@@ -5,12 +5,26 @@ import dynamic;
 # Using dynamic backends - see https://github.com/nigoroll/libvmod-dynamic for docs
 backend default none;
 sub vcl_init {
-    new dynamicdirector = dynamic.director(port = 3000, first_byte_timeout = 300s, ttl = 30s);
+  new dynamicdirector = dynamic.director(
+    port = 3000,
+    first_byte_timeout = 300s,
+    ttl = 30s
+  );
+  # Use different timeouts for api uploads
+  new api_upload = dynamic.director(
+    port = 3000,
+    connect_timeout = 30s,
+    first_byte_timeout = 1h,
+    between_bytes_timeout = 5m,
+    ttl = 30s
+  );
 }
 
 sub vcl_recv {
   # Route by path
-  if (req.url ~ "^/api/") {
+  if (req.url ~ "^/api/" && req.method ~ "^(POST|PUT|PATCH)$") {
+    set req.backend_hint = api_upload.backend("api");
+  } else if (req.url ~ "^/api/") {
     set req.backend_hint = dynamicdirector.backend("api");
   } else {
     set req.backend_hint = dynamicdirector.backend("ui", port = 3001);
@@ -76,7 +90,9 @@ sub vcl_recv {
 
 sub vcl_backend_fetch {
   # Strip /api from the path before sending to the API backend
-  if (bereq.backend == dynamicdirector.backend("api") && bereq.url ~ "^/api/") {
+  if ((bereq.backend == dynamicdirector.backend("api")
+       || bereq.backend == api_upload.backend("api"))
+      && bereq.url ~ "^/api/") {
     set bereq.url = regsub(bereq.url, "^/api", "");
   }
 }
