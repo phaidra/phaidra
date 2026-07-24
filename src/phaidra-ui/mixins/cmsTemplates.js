@@ -20,5 +20,3 @@ export const cmsTemplates = {
     await this.fetchCmsTemplates(this);
   }
 }
-
-

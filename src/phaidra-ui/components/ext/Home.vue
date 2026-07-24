@@ -119,7 +119,6 @@
 
 <script>
 import { config } from "@/mixins/config";
-import { cmsTemplates } from "@/mixins/cmsTemplates";
 import '@/compiled-icons/univie-kartenkontakte'
 import '@/compiled-icons/univie-facebook'
 import '@/compiled-icons/univie-youtube'
@@ -135,7 +134,7 @@ export default {
   components: {
     VueHorizontal
   },
-  mixins: [config, cmsTemplates],
+  mixins: [config],
   data() {
     return {
       q: '',
