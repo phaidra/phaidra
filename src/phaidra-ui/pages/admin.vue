@@ -954,6 +954,17 @@
                 </v-row>
                 <v-row>
                   <v-col>
+                    <v-select
+                      :label="$t('API log level')"
+                      :items="logLevelOptions"
+                      v-model="parsedPrivateConfigData.loglevel"
+                      clearable
+                    ></v-select>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("Minimum log level for phaidra-api. Default is debug if unset. Restart phaidra-api after saving to apply.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
                     <v-text-field
                       :label="$t('Username scope to trim')"
                       v-model="parsedPublicConfigData.userscopetotrim"
@@ -1361,7 +1372,8 @@ export default {
       activetab2: null,
       activetabprivate: null,
       configAsJSONToImport: '',
-      reportSending: false
+      reportSending: false,
+      logLevelOptions: ['trace', 'debug', 'info', 'warn', 'error', 'fatal']
     };
   },
   methods: {

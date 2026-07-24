@@ -1488,5 +1488,7 @@
   "Metadata fields Help": "Guida ai campi dei metadati",
   "indicates required field": "indica un campo obbligatorio",
   "File was successfully replaced": "Il file è stato sostituito",
-  "Upload date": "Data di archiviazione"
+  "Upload date": "Data di archiviazione",
+  "API log level": "Livello di log dell'API",
+  "Minimum log level for phaidra-api. Default is debug if unset. Restart phaidra-api after saving to apply.": "Livello di log minimo per phaidra-api. Il valore predefinito è debug se non impostato. Riavviare phaidra-api dopo il salvataggio per applicare la modifica."
 }
