@@ -116,4 +116,19 @@ sub chart {
   }
 }
 
+# Get an array of stats for each objects the current user owns
+sub myobjects {
+  my $self = shift;
+
+  my $currentuser = $self->stash->{basic_auth_credentials}->{username};
+  if ($self->stash->{remote_user}) {
+    $currentuser = $self->stash->{remote_user};
+  }
+
+  my $stats_model = PhaidraAPI::Model::Stats->new;
+  my $res         = $stats_model->userobjects($self, $currentuser);
+
+  $self->render(json => $res, status => $res->{status});
+}
+
 1;
