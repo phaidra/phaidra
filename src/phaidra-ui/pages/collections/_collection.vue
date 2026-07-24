@@ -13,10 +13,11 @@
 
 <script>
 import { config } from '../../mixins/config';
+import { cmsTemplates } from "@/mixins/cmsTemplates";
 
 export default {
     name: 'Collection',
-    mixins: [config],
+    mixins: [config, cmsTemplates],
     data() {
         return {
             activetab: null, // Added for Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
