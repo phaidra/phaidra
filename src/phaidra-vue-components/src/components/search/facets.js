@@ -6,7 +6,7 @@ export function buildDateFacet () {
   let startYear = 2008
   let currYear = new Date().getFullYear()
   let yearsFacet = {
-    label: 'Date',
+    label: 'Upload date',
     field: 'tcreated',
     id: 'created',
     show: false,
