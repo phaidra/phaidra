@@ -11,6 +11,32 @@
   </head>
   <body>
     <h1>Phaidra Daily Report - [% date %]</h1>
+
+    [% IF query_reports && query_reports.size > 0 %]
+    <div class="section">
+      <h2>Query Count Reports</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Label</th>
+            <th>Query</th>
+            <th>Count</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          [% FOREACH report IN query_reports %]
+          <tr>
+            <td>[% report.label %]</td>
+            <td>[% report.fq %]</td>
+            <td>[% report.numFound %]</td>
+            <td>[% IF report.daily %]Daily[% ELSE %]Total[% END %]</td>
+          </tr>
+          [% END %]
+        </tbody>
+      </table>
+    </div>
+    [% END %]
     
     [% IF storage_info %]
     <div class="section">
@@ -45,32 +71,6 @@
       <h3>Imageserver Storage</h3>
       [% imageserver_total_gb = imageserver_total / 1024 / 1024 / 1024 %]
       <p><strong>Total Storage:</strong> [% imageserver_total %] bytes ([% imageserver_total_gb | format('%.2f') %] GB)</p>
-    </div>
-    [% END %]
-    
-    [% IF query_reports && query_reports.size > 0 %]
-    <div class="section">
-      <h2>Query Count Reports</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Label</th>
-            <th>Query</th>
-            <th>Count</th>
-            <th>Type</th>
-          </tr>
-        </thead>
-        <tbody>
-          [% FOREACH report IN query_reports %]
-          <tr>
-            <td>[% report.label %]</td>
-            <td>[% report.fq %]</td>
-            <td>[% report.numFound %]</td>
-            <td>[% IF report.daily %]Daily[% ELSE %]Total[% END %]</td>
-          </tr>
-          [% END %]
-        </tbody>
-      </table>
     </div>
     [% END %]
   </body>
