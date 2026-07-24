@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use v5.10;
 use XML::LibXML;
+use PhaidraAPI::Model::Search;
 use base qw/Mojo::Base/;
 
 sub stats_general {
@@ -160,7 +161,6 @@ sub stats {
   my $siteid = shift;
   my $output = shift;
 
-  my $fr      = undef;
   my $pid_num = parse_pid_num($pid);
 
   my $dbh = $c->app->db_metadata->dbh;
@@ -232,6 +232,59 @@ sub stats {
     }
   }
 
+}
+
+sub userobjects {
+  my $self        = shift;
+  my $c           = shift;
+  my $currentuser = shift;
+
+  my $res = {stats => {}, alerts => [], status => 200};
+
+  my $dbh = $c->app->db_metadata->dbh;
+
+  my $search_model = PhaidraAPI::Model::Search->new;
+  my $sr           = $search_model->get_pids($c, "owner:$currentuser");
+  if ($sr->{status} ne 200) {
+    return $sr;
+  }
+
+  my @pid_nums;
+  for my $pid (@{$sr->{pids}}) {
+    my $pid_num = parse_pid_num($pid);
+    push @pid_nums, $pid_num if $pid_num;
+  }
+
+  return $res unless @pid_nums;
+
+  my $chunk_size = 500;
+  while (@pid_nums) {
+    my @chunk        = splice(@pid_nums, 0, $chunk_size);
+    my $placeholders = join(',', ('?') x @chunk);
+    my $sql          = "SELECT pid_num, info, download FROM usage_statistics WHERE pid_num IN ($placeholders)";
+    my $sth          = $dbh->prepare($sql) or do {
+      $c->app->log->error($dbh->errstr);
+      push @{$res->{alerts}}, {type => 'error', msg => 'Unable to prepare stats query'};
+      $res->{status} = 500;
+      return $res;
+    };
+
+    $sth->execute(@chunk) or do {
+      $c->app->log->error($dbh->errstr);
+      push @{$res->{alerts}}, {type => 'error', msg => 'Unable to execute stats query'};
+      $res->{status} = 500;
+      return $res;
+    };
+
+    while (my $row = $sth->fetchrow_hashref) {
+      my $pid_num  = $row->{pid_num};
+      my $info     = $row->{info}     // 0;
+      my $download = $row->{download} // 0;
+      $res->{stats}{"o:$pid_num"} = {i => $info + 0, d => $download + 0};
+    }
+  }
+
+  return $res;
 }
 
 1;

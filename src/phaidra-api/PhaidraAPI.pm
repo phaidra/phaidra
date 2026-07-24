@@ -395,6 +395,18 @@ sub startup {
   my $r = $self->routes;
   $r->namespaces(['PhaidraAPI::Controller']);
 
+  my $ext_creds = $r->under('/')->to('authentication#extract_credentials');
+
+  my $optionally_authenticated = $ext_creds->under('/')->to('authentication#authenticate_if_username');
+  my $authenticated            = $ext_creds->under('/')->to('authentication#authenticate');
+  my $admin                    = $ext_creds->under('/')->to('authentication#authenticate_admin');
+  my $ir_admin                 = $ext_creds->under('/')->to('authentication#authenticate_ir_admin');
+
+  my $reader = $optionally_authenticated->under('/')->to('authorization#authorize', op => 'r');
+  my $writer = $authenticated->under('/')->to('authorization#authorize', op => 'w');
+
+  $self->plugin('Prometheus' => {'route' => $admin});
+
   #<<< perltidy ignore
   $r->get('')                                       ->to('authentication#signin_shib');
   $r->get('openapi')                                ->to('utils#openapi');
@@ -503,6 +515,7 @@ sub startup {
 
   $r->get('object/:pid/id')                         ->to('search#id');
 
+  $authenticated->get('stats/myobjects')            ->to('stats#myobjects');
   $r->get('stats/aggregates')                       ->to('stats#aggregates');
   $r->get('stats/disciplines')                      ->to('stats#disciplines');
   $r->get('stats/:pid')                             ->to('stats#stats');
@@ -527,18 +540,6 @@ sub startup {
   $r->get('cms/template/:templateName')             ->to('cms#get_template');
 
   $r->get('/jwks')                                  ->to('utils#jwks');
-
-  my $ext_creds       = $r->under('/')->to('authentication#extract_credentials');
-
-  my $optionally_authenticated  = $ext_creds->under('/')->to('authentication#authenticate_if_username');
-  my $authenticated   = $ext_creds->under('/')->to('authentication#authenticate');
-  my $admin           = $ext_creds->under('/')->to('authentication#authenticate_admin');
-  my $ir_admin        = $ext_creds->under('/')->to('authentication#authenticate_ir_admin');
-
-  my $reader          = $optionally_authenticated->under('/')->to('authorization#authorize', op => 'r');
-  my $writer          = $authenticated->under('/')->to('authorization#authorize', op => 'w');
-
-  $self->plugin('Prometheus' => { 'route' => $admin });
 
   $authenticated->get('directory/user/data')                                    ->to('directory#get_user_data');
 
