@@ -227,7 +227,7 @@ sub map_mods_2_datacite {
   my $classifications = $ext->_get_mods_classifications($c, $dom);
   push @{$data{subjects}}, @$classifications;
   my $relids  = $self->_get_relsext_identifiers($c, $pid);
-  my $relids2 = $ext->_get_mods_element_values($c, $dom, 'mods > identifier');
+  my $relids2 = $ext->_get_mods_identifiers($c, $dom);
 
   for my $ri (@{$relids2}) {
     push @$relids, $ri;

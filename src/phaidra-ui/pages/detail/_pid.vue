@@ -2623,14 +2623,10 @@ export default {
                 ids.other.push({ label: "URI", value: idvalue });
                 break;
               case "acnumber":
-                ids.other.push({ label: "AC", value: 'https://permalink.obvsg.at/' + idvalue });
+                ids.other.push({ label: "AC number", value: 'https://permalink.obvsg.at/' + idvalue });
                 break;
               default:
-                if (idvalue.substr(0, 2) === 'AC') {
-                  ids.other.push({ label: "AC", value: 'https://permalink.obvsg.at/' + idvalue });
-                } else {
-                  ids.other.push({ value: idvalue, label: type });
-                }
+                ids.other.push({ value: idvalue, label: type });
                 break;
             }
           }
