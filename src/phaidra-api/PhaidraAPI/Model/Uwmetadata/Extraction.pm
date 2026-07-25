@@ -178,7 +178,6 @@ sub _get_uwm_identifiers {
         $reslabel = 'doi:';
       }
       elsif ($res eq '1552151') {
-        # AC-Number / AC-Nummer
         $reslabel = 'acnumber:';
       }
       elsif ($res eq '1552103') {
