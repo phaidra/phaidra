@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid class="pa-0">
     <h1 class="d-sr-only">{{$t('Repository statistics')}}</h1>
     <PRepostat></PRepostat>
   </v-container>

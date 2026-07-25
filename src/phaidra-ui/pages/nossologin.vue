@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    <v-row v-show="showtou" justify="center">
+  <v-container fluid class="pa-0">
+    <v-row v-show="showtou" no-gutters>
       <v-col>
         <v-card tile>
           <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Terms of use') }}</v-card-title>

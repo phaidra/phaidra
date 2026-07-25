@@ -1,7 +1,7 @@
 <template>
-  <v-container>
+  <v-container fluid class="pa-0">
     <h1 class="d-sr-only">{{$t('Terms of use')}}</h1>
-    <v-row justify="center">
+    <v-row no-gutters>
       <v-col>
         <v-card tile>
           <v-card-title class="text-title-large font-weight-light text-white">{{

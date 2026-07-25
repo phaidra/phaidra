@@ -1,7 +1,7 @@
 <template>
-  <v-container>
+  <v-container fluid class="pa-0">
     <h1 class="d-sr-only">{{$t('Login')}}</h1>
-    <v-row v-show="showtou" justify="center">
+    <v-row v-show="showtou" no-gutters>
       <v-col>
         <v-card tile>
           <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Terms of use') }}</v-card-title>
