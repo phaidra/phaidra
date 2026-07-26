@@ -177,6 +177,9 @@ sub _get_uwm_identifiers {
       if ($res eq '1552099') {
         $reslabel = 'doi:';
       }
+      elsif ($res eq '1552151') {
+        $reslabel = 'acnumber:';
+      }
       elsif ($res eq '1552103') {
 
         # $reslabel = 'urn:'; urn already includes this

@@ -59,7 +59,7 @@ sub map_mods_2_dc_hash {
   $dc{subject} = $ext->_get_mods_subjects($c, $dom);
   my $classifications = $ext->_get_mods_classifications($c, $dom);
   push @{$dc{subject}}, @$classifications;
-  $dc{identifier} = $ext->_get_mods_element_values($c, $dom, 'mods > identifier');
+  $dc{identifier} = $ext->_get_mods_identifiers($c, $dom);
   $dc{relation}   = $ext->_get_mods_relations($c, $dom);
   my $editions = $ext->_get_mods_element_values($c, $dom, 'mods > originInfo > edition');
   push @{$dc{relation}}, @$editions;

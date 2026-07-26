@@ -2629,7 +2629,7 @@ sub _add_uwm_index {
         if ($dbf->{xmlname} eq 'alephurl') {
           $dbf->{ui_value} =~ m/(AC\d+)/;
           if ($1) {
-            push @{$index->{"dc_identifier"}}, $1;
+            push @{$index->{"dc_identifier"}}, "acnumber:" . $1;
           }
         }
       }

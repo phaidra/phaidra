@@ -328,5 +328,34 @@ sub _get_mods_element_values {
   return \@vals;
 }
 
+sub _get_mods_identifiers {
+
+  my ($self, $c, $dom) = @_;
+
+  my @vals;
+  for my $e ($dom->find('mods > identifier')->each) {
+    my $content = $e->content;
+    next unless defined($content) && $content ne '';
+
+    my $value = $content;
+    my $type  = $e->attr('type');
+    if (defined($type) && $type ne '') {
+      my $type_lc = lc($type);
+      if ($type_lc eq 'ac-number' || $type_lc eq 'acnumber') {
+        $value =~ s/^acnumber://i;
+        $value = 'acnumber:' . $value;
+      }
+    }
+
+    my %v = (value => $value);
+    if ($e->attr('lang')) {
+      $v{lang} = $e->attr('lang');
+    }
+    push @vals, \%v;
+  }
+
+  return \@vals;
+}
+
 1;
 __END__
