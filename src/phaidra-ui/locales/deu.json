@@ -1408,5 +1408,7 @@
     "Collections only contain metadata and metadata cannot be restricted. Access restrictions only make sense at object/file level, not at collection level.": "Sammlungen enthalten nur Metadaten und Metadaten können nicht eingeschränkt werden. Zugriffsbeschränkungen machen nur auf Objekt-/Dateiebene Sinn, nicht auf Sammlungsebene.",
     "Metadata fields Help": "Metadatenfelder Hilfe",
     "indicates required field": "Kennzeichnet Pflichtfeld",
-    "Upload date": "Upload Datum"
+    "Upload date": "Upload Datum",
+    "API log level": "API-Log-Level",
+    "Minimum log level for phaidra-api. Default is debug if unset. Restart phaidra-api after saving to apply.": "Minimales Log-Level für phaidra-api. Standard ist debug, wenn nicht gesetzt. Nach dem Speichern phaidra-api neu starten, damit die Änderung wirksam wird."
   }

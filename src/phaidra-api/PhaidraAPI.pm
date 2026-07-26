@@ -174,6 +174,22 @@ sub startup {
     }
   );
 
+  # Override log level
+  my $privconfig = eval {$self->mongo->get_collection('config')->find_one({config_type => 'private'})};
+  if ($@) {
+    $self->log->warn("Could not read private config for log level: $@");
+  }
+  elsif ($privconfig && $privconfig->{loglevel}) {
+    my %valid_levels = map {$_ => 1} qw(trace debug info warn error fatal);
+    if ($valid_levels{$privconfig->{loglevel}}) {
+      $self->log->level($privconfig->{loglevel});
+      $self->log->info("Log level set from private config: " . $privconfig->{loglevel});
+    }
+    else {
+      $self->log->warn("Invalid loglevel in private config: " . $privconfig->{loglevel});
+    }
+  }
+
   if (exists($config->{paf_mongodb})) {
     $self->helper(
       paf_mongo => sub {
