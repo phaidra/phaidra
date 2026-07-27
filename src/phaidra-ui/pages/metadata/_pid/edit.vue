@@ -46,7 +46,7 @@ export default {
       let firstObjectTypeFound = false;
       for (let s of form.sections) {
         for (let f of s.fields) {
-          if(f.component === 'p-association' || f.predicate === "rdax:P00009" || f.predicate === "role") {
+          if(f.component === 'p-association' || f.predicate === "rdax:P00009" || f.predicate === "role" || f.component === 'p-bf-publication' || f.component === 'p-contained-in') {
             f.isParentSelectionDisabled = this.instanceconfig.isParentSelectionDisabled || false
           }
           if (f.predicate === "edm:rights") {

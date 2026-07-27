@@ -646,6 +646,7 @@ export default {
           self.form.sections[5].fields.push(fields.getField("issue"));
           self.form.sections[5].fields.push(fields.getField("series"));
           let publ = fields.getField("bf-publication")
+          publ.isParentSelectionDisabled = this.instanceconfig.isParentSelectionDisabled
           self.form.sections[5].fields.push(publ);
 
         }
