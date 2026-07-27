@@ -2858,21 +2858,16 @@ export default {
         return false;
       });
     },
+    lang2to3map: function () {
+      return Object.keys(lang3to2map).reduce((ret, key) => {
+        ret[lang3to2map[key]] = key;
+        return ret;
+      }, {});
+    },
     displayTitles: function () {
       if (!this.objectInfo) {
         return [];
       }
-
-      const lang2to3map = Object.keys(lang3to2map).reduce((ret, key) => {
-        ret[lang3to2map[key]] = key;
-        return ret;
-      }, {});
-
-      const normalizeLang = (lang) => {
-        if (!lang) return '';
-        lang = lang.toLowerCase();
-        return lang.length === 2 ? (lang2to3map[lang] || lang) : lang;
-      };
 
       const titlesByLang = {};
 
@@ -2884,7 +2879,7 @@ export default {
             const mainTitleValue = mainTitle['@value']?.trim();
             if (!mainTitleValue) return;
 
-            const lang = normalizeLang(mainTitle['@language']);
+            const lang = this.normalizeLang(mainTitle['@language']);
             const subtitle = titleObj['bf:subtitle']?.[0]?.['@value']?.trim() || null;
 
             if (!titlesByLang[lang]) {
@@ -2910,13 +2905,13 @@ export default {
 
             generalNode.children.forEach(child => {
               if (child.xmlname === 'title' && child.ui_value) {
-                const lang = normalizeLang(child.attributes?.[0]?.ui_value || 'eng');
+                const lang = this.normalizeLang(child.attributes?.[0]?.ui_value || 'eng');
                 titles.push({
                   value: child.ui_value.trim(),
                   lang: lang
                 });
               } else if (child.xmlname === 'subtitle' && child.ui_value) {
-                const lang = normalizeLang(child.attributes?.[0]?.ui_value || 'eng');
+                const lang = this.normalizeLang(child.attributes?.[0]?.ui_value || 'eng');
                 subtitles.push({
                   value: child.ui_value.trim(),
                   lang: lang
@@ -2960,7 +2955,7 @@ export default {
               subtitle = null;
             }
 
-            const lang = normalizeLang(this.objectInfo.dc_language?.[0]) || 'eng';
+            const lang = this.normalizeLang(this.objectInfo.dc_language?.[0]) || 'eng';
 
             if (mainTitle) {
               if (!titlesByLang[lang]) {
@@ -2976,23 +2971,67 @@ export default {
         });
       }
 
-      if (Object.keys(titlesByLang).length === 0) {
-        return [];
+      return this.pickByUiLanguage(titlesByLang) || [];
+    },
+    seoDescription: function () {
+      if (!this.objectInfo) {
+        return '';
       }
 
-      const currentLang = (this.$i18n.locale || 'eng').toLowerCase();
-      const currentLang2 = currentLang.substring(0, 2);
-      const langPriority = [
-        currentLang,
-        currentLang2,
-        lang2to3map[currentLang2],
-        'eng',
-        'en'
-      ].filter(Boolean);
+      const descriptionsByLang = {};
 
-      // Find first matching language
-      const matchedLang = langPriority.find(lang => titlesByLang[lang]?.length > 0);
-      return matchedLang ? titlesByLang[matchedLang] : Object.values(titlesByLang).flat();
+      const addDescription = (value, lang) => {
+        const text = String(value ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+        if (!text) return;
+        const normalizedLang = this.normalizeLang(lang);
+        if (!descriptionsByLang[normalizedLang]) {
+          descriptionsByLang[normalizedLang] = [];
+        }
+        if (!descriptionsByLang[normalizedLang].includes(text)) {
+          descriptionsByLang[normalizedLang].push(text);
+        }
+      };
+
+      // JSON-LD Description field (bf:Note only — not Abstract/Summary)
+      const jsonld = this.objectInfo?.metadata?.['JSON-LD'];
+      if (jsonld?.['bf:note'] && Array.isArray(jsonld['bf:note'])) {
+        jsonld['bf:note'].forEach(note => {
+          if (note?.['@type'] !== 'bf:Note') return;
+          note['skos:prefLabel']?.forEach(label => {
+            addDescription(label['@value'], label['@language']);
+          });
+        });
+      }
+
+      // UWMETADATA format
+      if (!Object.keys(descriptionsByLang).length && this.objectInfo.dshash?.['UWMETADATA']) {
+        const uwmetadata = this.objectInfo.metadata?.uwmetadata;
+        if (Array.isArray(uwmetadata)) {
+          const generalNode = uwmetadata.find(node => node.xmlname === 'general');
+          if (generalNode && Array.isArray(generalNode.children)) {
+            generalNode.children.forEach(child => {
+              if (child.xmlname === 'description' && child.ui_value) {
+                addDescription(child.ui_value, child.attributes?.[0]?.ui_value || 'eng');
+              }
+            });
+          }
+        }
+      }
+
+      // Indexed DC description fields (covers MODS and fallbacks)
+      if (!Object.keys(descriptionsByLang).length) {
+        Object.keys(this.objectInfo).forEach(key => {
+          if (!key.startsWith('dc_description_') || !Array.isArray(this.objectInfo[key])) return;
+          const lang = key.slice('dc_description_'.length);
+          this.objectInfo[key].forEach(value => addDescription(value, lang));
+        });
+        if (!Object.keys(descriptionsByLang).length && Array.isArray(this.objectInfo.dc_description)) {
+          this.objectInfo.dc_description.forEach(value => addDescription(value, ''));
+        }
+      }
+
+      const descriptions = this.pickByUiLanguage(descriptionsByLang);
+      return descriptions?.[0] || '';
     },
   },
   data() {
@@ -3042,6 +3081,7 @@ export default {
         "/object/" +
         this.objectInfo.pid +
         "/thumbnail";
+      const seoDescription = this.seoDescription;
       metaInfo.meta = [
         {
           hid: "og:title",
@@ -3079,6 +3119,20 @@ export default {
           content: thumbnail,
         },
       ];
+      if (seoDescription) {
+        metaInfo.meta.push(
+          {
+            hid: "description",
+            name: "description",
+            content: seoDescription,
+          },
+          {
+            hid: "og:description",
+            property: "og:description",
+            content: seoDescription,
+          }
+        );
+      }
       if (this.objectInfo.metatags) {
         metaInfo.title =
           this.objectInfo.metatags.citation_title +
@@ -3222,6 +3276,27 @@ export default {
   methods: {
     autolinkerCheck(val) {
       return Autolinker.link(String(val ?? ""));
+    },
+    normalizeLang(lang) {
+      if (!lang) return '';
+      lang = String(lang).toLowerCase();
+      return lang.length === 2 ? (this.lang2to3map[lang] || lang) : lang;
+    },
+    pickByUiLanguage(byLang) {
+      if (!byLang || !Object.keys(byLang).length) {
+        return null;
+      }
+      const currentLang = (this.$i18n.locale || 'eng').toLowerCase();
+      const currentLang2 = currentLang.substring(0, 2);
+      const langPriority = [
+        currentLang,
+        currentLang2,
+        this.lang2to3map[currentLang2],
+        'eng',
+        'en'
+      ].filter(Boolean);
+      const matchedLang = langPriority.find(lang => byLang[lang]?.length > 0);
+      return matchedLang ? byLang[matchedLang] : Object.values(byLang).flat();
     },
     normalizeDoi(value) {
       if (!value) {
