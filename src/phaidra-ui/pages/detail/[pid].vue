@@ -653,7 +653,7 @@
               <v-row
                 v-if="objectInfo.members.length > membersPageSize"
                 justify="start"
-                class="py-4 bg-surface"
+                class="py-4"
               >
                 <v-col cols="12" class="d-flex justify-start">
                   <v-pagination
@@ -807,7 +807,7 @@
               <v-row
                 v-if="$store.state.collectionMembersTotal > collMembersPagesize"
                 justify="start"
-                class="py-4 bg-surface"
+                class="py-4"
               >
                 <v-col cols="12" class="d-flex justify-start">
                   <v-pagination
