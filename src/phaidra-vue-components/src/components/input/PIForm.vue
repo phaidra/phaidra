@@ -1401,12 +1401,36 @@ export default {
     updateJsonld: function () {
       this.jsonld = jsonLd.form2json(this.form)
     },
+    normalizeContributionIdentifier: function (identifierType, identifierText) {
+      if (typeof identifierText !== 'string' || !identifierType) return identifierText
+      const value = identifierText.trim()
+      if (!/^https?:\/\//i.test(value)) return value
+
+      const withoutQuery = value.split('?')[0].split('#')[0]
+      const parts = withoutQuery.split('/').filter(Boolean)
+      if (parts.length === 0) return value
+
+      const last = parts[parts.length - 1]
+      return identifierType === 'ids:viaf' ? last : last.toUpperCase()
+    },
+    normalizePersistentIdentifiersInForm: function (form) {
+      for (let s of form.sections) {
+        if (!s.fields) continue
+        for (let f of s.fields) {
+          if (f.identifierType && typeof f.identifierText === 'string') {
+            f.identifierText = this.normalizeContributionIdentifier(f.identifierType, f.identifierText)
+          }
+        }
+      }
+      return form
+    },
     getMetadata: function () {
+      const normalizedForm = this.normalizePersistentIdentifiersInForm(JSON.parse(JSON.stringify(this.form)))
       let jsonlds
       if (!this.targetpid && (this.submittype === 'container')) {
-        jsonlds = jsonLd.containerForm2json(this.form)
+        jsonlds = jsonLd.containerForm2json(normalizedForm)
       } else {
-        jsonlds = jsonLd.form2json(this.form)
+        jsonlds = jsonLd.form2json(normalizedForm)
       }
       let md = { metadata: { 'json-ld': jsonlds } }
       let colorder = []
