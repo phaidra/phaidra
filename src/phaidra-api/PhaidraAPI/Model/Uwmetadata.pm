@@ -1343,8 +1343,9 @@ sub get_empty_node {
 
         # yes, create a new one
         my $new_node = dclone($metadata_nodes_hash->{$xmlns . '/' . $xmlname});
+        $new_node->{field_order} = $n->{field_order};
         if ($new_node->{ordered}) {
-          $new_node->{data_order} = int($n->{data_order}) + 1;
+          $new_node->{data_order} = int($n->{data_order} // 0) + 1;
         }
 
         # and add it to the structure
