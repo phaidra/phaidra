@@ -443,8 +443,8 @@
         </v-card-text>
       </v-card>
     </v-col>
-    <org-units-tree-dialog :isParentSelectionDisabled="isParentSelectionDisabled" ref="organizationstreedialog" @unit-selected="handleInput(getTerm('orgunits', $event), 'organizationPath', 'input-organization-select')"></org-units-tree-dialog>
-    <org-units-tree-dialog :isParentSelectionDisabled="isParentSelectionDisabled" ref="affiliationstreedialog" @unit-selected="handleInput(getTerm('orgunits', $event), 'affiliationPath', 'input-affiliation-select')"></org-units-tree-dialog>
+    <org-units-tree-dialog :isParentSelectionDisabled="parentSelectionDisabled" ref="organizationstreedialog" @unit-selected="handleInput(getTerm('orgunits', $event), 'organizationPath', 'input-organization-select')"></org-units-tree-dialog>
+    <org-units-tree-dialog :isParentSelectionDisabled="parentSelectionDisabled" ref="affiliationstreedialog" @unit-selected="handleInput(getTerm('orgunits', $event), 'affiliationPath', 'input-affiliation-select')"></org-units-tree-dialog>
   </v-row>
 </template>
 
@@ -694,6 +694,12 @@ export default {
     appconfig: function () {
       return this.$root.$store.state.appconfig
     },
+    instanceconfig: function () {
+      return this.$root.$store.state.instanceconfig
+    },
+    parentSelectionDisabled: function () {
+      return this.isParentSelectionDisabled || this.instanceconfig?.isParentSelectionDisabled || false
+    },
     isMandatory: function () {
       return this.required === true
     },
@@ -707,7 +713,7 @@ export default {
     },
     orgunits: function () {
       let units = this.vocabularies['orgunits'].terms
-      if (this.isParentSelectionDisabled) {
+      if (this.parentSelectionDisabled) {
         units = units.filter(element => !element.hasChildren)
       }
       let groups = []

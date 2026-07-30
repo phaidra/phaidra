@@ -2481,7 +2481,7 @@ export default {
         const baseId = this.addfieldselection[i].id
         let f = fields.getField(baseId)
         f.removable = true
-        if (f.component === 'p-association' || f.predicate === 'rdax:P00009') {
+        if (f.component === 'p-association' || f.predicate === 'rdax:P00009' || f.component === 'p-bf-publication' || f.component === 'p-contained-in') {
           f.isParentSelectionDisabled = this.instanceconfig.isParentSelectionDisabled || false
         }
         this.setDefaultLanguageForAddedField(baseId, f)

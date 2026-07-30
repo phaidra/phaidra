@@ -445,9 +445,12 @@ export default {
         self.form.sections[5].fields.push(fields.getField("page-start"));
         self.form.sections[5].fields.push(fields.getField("page-end"));
         let publ = fields.getField("bf-publication")
+        publ.isParentSelectionDisabled = this.instanceconfig.isParentSelectionDisabled;
         self.form.sections[5].fields.push(publ);
         self.form.sections[5].fields.push(fields.getField("series"));
-        self.form.sections[5].fields.push(fields.getField("contained-in"));        
+        let containedIn = fields.getField("contained-in");
+        containedIn.isParentSelectionDisabled = this.instanceconfig.isParentSelectionDisabled;
+        self.form.sections[5].fields.push(containedIn);        
 
         let ac1 = fields.getField("accessibility-control")
         ac1.multiplicable = true

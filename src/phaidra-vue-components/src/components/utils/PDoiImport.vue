@@ -1327,6 +1327,7 @@ if (crossrefData['issued']['date-parts'][0]) {
 
       // Publication/Publisher
       let publ = fields.getField("bf-publication");
+      publ.isParentSelectionDisabled = self.instanceconfig?.isParentSelectionDisabled;
       if (doiImportData && doiImportData.publisher) {
         publ.publisherName = doiImportData.publisher;
       }

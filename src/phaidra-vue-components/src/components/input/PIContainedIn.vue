@@ -386,7 +386,7 @@
                         <v-autocomplete
                           :value="getTerm('orgunits', publisherOrgUnit)"
                           v-on:input="handleInput($event, 'organizationPath', 'input-publisher-select')"
-                          :items="vocabularies['orgunits'].terms"
+                          :items="orgunits"
                           :item-value="'@id'"
                           :loading="loading"
                           :filter="autocompleteFilter"
@@ -525,7 +525,7 @@
                         ></v-text-field>
                       </template>
                     </v-col>
-                    <org-units-tree-dialog ref="organizationstreedialog" @unit-selected="handleInput(getTerm('orgunits', $event), 'organizationPath', 'input-publisher-select')"></org-units-tree-dialog>
+                    <org-units-tree-dialog :isParentSelectionDisabled="parentSelectionDisabled" ref="organizationstreedialog" @unit-selected="handleInput(getTerm('orgunits', $event), 'organizationPath', 'input-publisher-select')"></org-units-tree-dialog>
                   </v-row>
                 </v-card-text>
               </v-card>
@@ -754,11 +754,21 @@ export default {
     enableOrgTree: {
       type: Boolean,
       default: true
+    },
+    isParentSelectionDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     appconfig: function () {
       return this.$root.$store.state.appconfig
+    },
+    instanceconfig: function () {
+      return this.$root.$store.state.instanceconfig
+    },
+    parentSelectionDisabled: function () {
+      return this.isParentSelectionDisabled || this.instanceconfig?.isParentSelectionDisabled || false
     },
     roleActions: function () {
       var arr = []
@@ -773,6 +783,13 @@ export default {
         return this.vocabularies[this.identifierVocabulary].terms.filter(term => term['@id'] !== 'ids:isbn')
       }
       return []
+    },
+    orgunits: function () {
+      let units = this.vocabularies['orgunits'].terms
+      if (this.parentSelectionDisabled) {
+        units = units.filter(element => !element.hasChildren)
+      }
+      return units
     }
   },
   watch: {
