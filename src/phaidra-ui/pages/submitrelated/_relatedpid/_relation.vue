@@ -583,10 +583,13 @@ export default {
           kw.multilingual = false;
           self.form.sections[0].fields.push(kw);
 
-          let role = fields.getField("role");
+          let role = this.instanceconfig.extendedContribution
+            ? fields.getField("role-extended")
+            : fields.getField("role");
           role.ordergroup = "role";
           role.roleVocabulary = "submitrolepredicate";
           role.identifierType = "ids:orcid";
+          role.showDefinitions = true;
           role.showIdentifier = true;
           role.isParentSelectionDisabled = this.instanceconfig.isParentSelectionDisabled;
           self.form.sections[0].fields.push(role);

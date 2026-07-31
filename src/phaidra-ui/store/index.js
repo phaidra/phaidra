@@ -82,7 +82,8 @@ export const mutations = {
       'searchbaseands',
       'irbaseurl',
       'phaidra_doi_prefix',
-      'hideContainedInPages'
+      'hideContainedInPages',
+      'extendedContribution'
     ]
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
