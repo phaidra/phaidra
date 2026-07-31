@@ -13,6 +13,6 @@ In accordance with the University open access policy, most of the digitised mate
 
 Email: <phaidra@unive.it>
 
-[Local PHAIDRA Repository](https://phaidra.cab.unipd.it/) (Cooperation with Padua)
+[Local PHAIDRA Repository](https://phaidra.unipd.it/) (Cooperation with Padua)
 
 ![](/assets/external/img/banners/ca-foscari-venedig.jpg){.mt-8 .w-2/3 .md:w-1/2}
