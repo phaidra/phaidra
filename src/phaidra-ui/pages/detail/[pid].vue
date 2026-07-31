@@ -1419,7 +1419,7 @@
                       class="ph-box text-title-large font-weight-light text-white"
                       >
                         {{ $t("Usage statistics") }}
-                        <nuxt-link
+                        <!-- <nuxt-link
                           class="text-white"
                           :to="localePath(`/stats/${objectInfo.pid}`)"
                           :aria-label="$t('Show details')"
@@ -1436,7 +1436,7 @@
                             </template>
                             <span>{{ $t('Show details') }}</span>
                           </v-tooltip>
-                        </nuxt-link>
+                        </nuxt-link> -->
                       </v-card-title>
                       <v-card-text class="mt-4">
                         <v-row>
