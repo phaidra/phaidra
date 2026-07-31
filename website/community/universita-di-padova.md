@@ -8,7 +8,8 @@ To safeguard, promote and share this heritage in the digital age, the University
 
 ## Partnerships
 
-Since April 2010, the University of Padua and the University of Vienna have begun a partnership for the use and future development of PHAIDRA. Since 2014, the Ca' Foscari and IUAV Universities, in Venice, have been publishing their digital collections on PHAIDRA. In subsequent years, other institutions and associations have also chosen to use PHAIDRA for their digital collections, signing specific agreements with the University Library Centre of the University of Padua.
+Since April 2010, the University of Padua and the University of Vienna have begun a partnership for the use and future development of PHAIDRA. Since 2014, the Ca' Foscari and IUAV Universities, in Venice, have been publishing their digital collections on PHAIDRA.  
+In subsequent years, other institutions and associations have also chosen to use PHAIDRA for their digital collections, signing specific agreements with the University Library Centre of the University of Padua.
 
 #### Contact 
 
