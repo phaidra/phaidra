@@ -34,7 +34,7 @@
 #### Italy
 
 - [Università Ca‘ Foscari](/community/universita-ca-foscari-venezia/)
-- [Università Iuav di Venezia](https://www.iuav.it/homepage/index.htm)
+- [Università Iuav di Venezia](https://www.iuav.it/)
 - [Università di Padova](/community/universita-di-padova/)
 
 
