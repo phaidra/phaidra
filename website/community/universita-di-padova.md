@@ -1,17 +1,32 @@
+<style>
+  .logo-img {
+    margin-bottom: 2rem;
+  }
+  
+  @media (min-width: 768px) {
+    .logo-img {
+      margin-bottom: 32rem;
+    }
+  }
+</style>
+
 # Università di Padova
 
-![](/assets/external/img/logos/unipa.svg){.w-1/2 .float-none .md:w-1/3 .md:float-right .md:ml-4 .md:mb-96}
+![](/assets/external/img/logos/unipa.svg){.w-1/2 .float-none .md:w-1/3 .md:float-right .md:ml-4 .logo-img}
 
-In the course of its 800-year history, the University of Padova has enriched its heritage with a number of historical buildings, scientific instruments, natural science and medicine collections, iconographic materials, archaeological finds, paintings, manuscripts and books. The Phaidra - Digital collections website of the University Library System of Padova shows part of this cultural heritage - coming from archives, museums and libraries - allowing the vast public to enjoy rare or valuable documents, of substantial historical, artistic, cultural, academic interest, otherwise not easily accessible. The most interesting and the recently published amongst the collections are presented in Home page. The full list can be found at Featured collections page.
+Over its 800-year history, the University of Padua has built a rich and diverse cultural heritage, including historical buildings, scientific instruments, natural history and medical collections, iconographic materials, archaeological finds, paintings, manuscripts, and rare books, preserved across its libraries, archives, museums, centres, and departments.
+
+To safeguard, promote and share this heritage in the digital age, the University of Padua uses PHAIDRA. Drawing on digital cultural assets from across the University's disciplines and from partner institutions, PHAIDRA – University of Padua provides open access to digital objects and collections for scholars and the general public alike, supporting research and teaching, strengthening the University's public engagement, and fostering the wider dissemination of knowledge.
 
 ## Partnerships
 
-Some digital collections are also accessible via Europeana, the vast European digital library. Since April 2010, the University of Padova and the University of Vienna have begun a partnership for the use and future development of PHAIDRA. Since 2014, the Universities Ca' Foscari and IUAV, in Venice, publish their digital collections on PHAIDRA.
+Since April 2010, the University of Padua and the University of Vienna have begun a partnership for the use and future development of PHAIDRA. Since 2014, the Ca' Foscari and IUAV Universities, in Venice, have been publishing their digital collections on PHAIDRA.  
+In subsequent years, other institutions and associations have also chosen to use PHAIDRA for their digital collections, signing specific agreements with the University Library Centre of the University of Padua.
 
 #### Contact 
 
-Email: <phaidra@cab.unipd.it>
+[https://phaidra.unipd.it/contact](https://phaidra.unipd.it/contact)
 
-[Local PHAIDRA Repository](https://phaidra.cab.unipd.it/) (Cooperation with Venice) 
+[Local PHAIDRA Repository](https://phaidra.unipd.it/) (Cooperation with Venice)
 
 ![](/assets/external/img/banners/bibliothek-padua.jpg){.mt-8 .w-2/3 .md:w-1/2}
