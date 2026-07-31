@@ -47,7 +47,7 @@ export default {
   },
   metaInfo() {
     let metaInfo = {
-      title: this.$t('Upload') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+      title: this.documentTitle(this.$t('Upload')),
     };
     return metaInfo;
   },

@@ -12,7 +12,7 @@
     mixins: [config],
     metaInfo() {
       let metaInfo = {
-        title: this.$t('Code of Ethics') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+        title: this.documentTitle(this.$t('Code of Ethics')),
       };
       return metaInfo;
     },

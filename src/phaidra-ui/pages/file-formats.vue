@@ -12,7 +12,7 @@
       mixins: [config],
       metaInfo() {
         let metaInfo = {
-          title: this.$t('File Formats') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+          title: this.documentTitle(this.$t('File Formats')),
         };
         return metaInfo;
       },

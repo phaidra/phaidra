@@ -21,7 +21,7 @@ export default {
   mixins: [config],
   metaInfo() {
     let metaInfo = {
-      title: this.$t('Terms of use') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+      title: this.documentTitle(this.$t('Terms of use')),
     };
     return metaInfo;
   },

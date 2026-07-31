@@ -34,7 +34,7 @@ export default {
     },
     metaInfo() {
         let metaInfo = {
-        title: this.templateTitle[this.$i18n.locale] + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+        title: this.documentTitle(this.templateTitle[this.$i18n.locale]),
         };
         return metaInfo;
     },

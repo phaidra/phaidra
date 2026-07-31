@@ -49,7 +49,7 @@ export default {
   middleware: "auth",
   metaInfo() {
     let metaInfo = {
-      title: this.$t('Manage templates') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+      title: this.documentTitle(this.$t('Manage templates')),
     };
     return metaInfo;
   },

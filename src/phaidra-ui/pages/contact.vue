@@ -12,7 +12,7 @@ export default {
   mixins: [config],
   metaInfo() {
     let metaInfo = {
-      title: this.$t('Contact') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+      title: this.documentTitle(this.$t('Contact')),
     };
     return metaInfo;
   },

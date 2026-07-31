@@ -103,7 +103,7 @@ export default {
       htmlAttrs: {
         lang: currentLocale === 'deu' ? 'de' : currentLocale === 'ita' ? 'it' : 'en'
       },
-      title: this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+      title: this.documentTitle(),
       meta: [
         { charset: 'utf-8' },
         { name: 'Generator', content: 'PHAIDRA' },

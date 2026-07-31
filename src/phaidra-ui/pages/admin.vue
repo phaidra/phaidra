@@ -1332,7 +1332,7 @@ export default {
   middleware: "auth",
   metaInfo() {
     let metaInfo = {
-      title: this.$t('Admin') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+      title: this.documentTitle(this.$t('Admin')),
     };
     return metaInfo;
   },
