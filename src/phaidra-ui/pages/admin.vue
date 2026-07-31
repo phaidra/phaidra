@@ -391,6 +391,17 @@
                 <v-row>
                   <v-col>
                     <v-checkbox
+                      :label="$t('Extended Contribution by default')"
+                      v-model="parsedPublicConfigData.extendedContribution"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">
+                    {{ $t("If enabled, the default submit form shows the extended Contribution section instead of the simple role fields.") }}
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-checkbox
                       :label="$t('Enable Add Annotation')"
                       v-model="parsedPublicConfigData.addannotation"
                     ></v-checkbox>
