@@ -10,7 +10,7 @@ export default {
   mixins: [config],
   metaInfo() {
     let metaInfo = {
-      title: this.$t('Submit') + ' - ' + this.$t(this.instanceconfig.title) + ' - ' + this.$t(this.instanceconfig.institution),
+      title: this.documentTitle(this.$t('Submit')),
     };
     return metaInfo;
   },
