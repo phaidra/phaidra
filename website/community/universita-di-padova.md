@@ -1,6 +1,18 @@
+<style>
+  .logo-img {
+    margin-bottom: 2rem;
+  }
+  
+  @media (min-width: 768px) {
+    .logo-img {
+      margin-bottom: 32rem;
+    }
+  }
+</style>
+
 # Università di Padova
 
-![](/assets/external/img/logos/unipa.svg){.w-1/2 .float-none .md:w-1/3 .md:float-right .md:ml-4 .md:mb-96}
+![](/assets/external/img/logos/unipa.svg){.w-1/2 .float-none .md:w-1/3 .md:float-right .md:ml-4 .logo-img}
 
 Over its 800-year history, the University of Padua has built a rich and diverse cultural heritage, including historical buildings, scientific instruments, natural history and medical collections, iconographic materials, archaeological finds, paintings, manuscripts, and rare books, preserved across its libraries, archives, museums, centres, and departments.
 
