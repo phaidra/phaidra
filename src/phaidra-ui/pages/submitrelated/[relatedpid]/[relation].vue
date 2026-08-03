@@ -110,12 +110,15 @@ import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
 import { formvalidation } from "phaidra-vue-components/src/mixins/formvalidation"
 import { context } from "../../../mixins/context"
 import { config } from "../../../mixins/config"
+import { useGoTo } from 'vuetify'
 
 export default {
   setup() {
     definePageMeta({
       middleware: 'auth'
     })
+    const goTo = useGoTo()
+    return { goTo }
   },
   mixins: [context, config, vocabulary, formvalidation],
   computed: {
