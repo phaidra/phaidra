@@ -67,7 +67,7 @@
                       v-model="parsedPublicConfigData.institution"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6" class="mt-6">{{ $t('Used eg. in breadcrumbs.') }}</v-col>
+                  <v-col cols="6" class="mt-6">{{ $t('Used eg. in HTML document titles and breadcrumbs. To only display the repository name in the HTML document title, set this to the same value as Name of the repository.') }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
