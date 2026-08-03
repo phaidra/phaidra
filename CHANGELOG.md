@@ -1,5 +1,9 @@
 # Head
 
+# v3.3.17
+
+This release is the last release with Nuxt 2 framework in phaidra-ui.
+
 ## Upgrade
 
 ### Renaming volumes
