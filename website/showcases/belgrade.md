@@ -1,4 +1,4 @@
-# Belgrade Showcase 
+# Belgrade Showcase { .phaidra-section-heading }
 
 *How the University of Belgrade Library Built a National Legacy on Open Source.*
 

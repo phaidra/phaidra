@@ -28,3 +28,12 @@ When the FWF pioneered Open Access for monographs, digitally published books wer
 
 The Vorarlberger State Library took a unique headless approach to PHAIDRA, building its own Volare frontend while using PHAIDRA purely as a backend repository — enabling custom access controls, IIIF image delivery, crowdsourced metadata via Smapshot, and integration with Kulturpool and Europeana.
 
+
+---
+
+## [Vienna University of Applied Arts](vienna-university-of-applied-arts.md)
+
+**Capturing the Essence of the Image: An Existential Problem for Art Institutions**
+
+To put art, the image and the needs of the artist at the centre of its academic IT systems, the Angewandte built a decoupled architecture — Portfolio, Showroom and IMAGE for fluid curation and presentation, with PHAIDRA as the stable, permanent engine linking it all to the global academic ecosystem.
+
