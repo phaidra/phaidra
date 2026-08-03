@@ -1343,7 +1343,7 @@
 <script>
 import FaviconMixin from '../mixins/favicon'
 import PRepostat from '../components/Repostat.vue';
-import { config } from "../mixins/config";
+import { config, useDocumentTitle } from "../mixins/config";
 import { encodeUtf8ToBase64 } from '@/utils/encode-base64'
 
 export default {
@@ -1354,10 +1354,11 @@ export default {
       middleware: 'auth'
     })
     const nuxtApp = useNuxtApp()
+    const documentTitle = useDocumentTitle()
     useHead(() => {
       const t = nuxtApp.$i18n?.t || ((v) => v)
       return {
-        title: this.documentTitle(t('Admin'))
+        title: documentTitle(t('Admin'))
       }
     })
   },

@@ -32,7 +32,7 @@
 import arrays from "phaidra-vue-components/src/utils/arrays"
 import fields from "phaidra-vue-components/src/utils/fields"
 import { context } from "../../mixins/context"
-import { config } from "../../mixins/config"
+import { config, useDocumentTitle } from "../../mixins/config"
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
 import { useGoTo } from 'vuetify'
 
@@ -44,10 +44,11 @@ export default {
       middleware: 'auth'
     })
     const nuxtApp = useNuxtApp()
+    const documentTitle = useDocumentTitle()
     useHead(() => {
       const t = nuxtApp.$i18n?.t || ((v) => v)
       return {
-        title: this.documentTitle(t('Upload'))
+        title: documentTitle(t('Upload'))
       }
     })
     const goTo = useGoTo()
@@ -58,15 +59,6 @@ export default {
       form: { sections: [] },
       rights: {},
     };
-  },
-  setup() {
-    const nuxtApp = useNuxtApp()
-    useHead(() => {
-      const t = nuxtApp.$i18n?.t || ((v) => v)
-      return {
-        title: this.documentTitle(t('Upload'))
-      }
-    })
   },
   methods: {
     addRemovedFieldsCol: function (rt) {

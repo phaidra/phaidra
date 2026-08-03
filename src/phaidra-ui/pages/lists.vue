@@ -4,7 +4,7 @@
 </client-only>
 </template>
 <script>
-import { config } from "../mixins/config";
+import { config, useDocumentTitle } from "../mixins/config";
 export default {
   mixins: [config],
   setup() {
@@ -12,10 +12,11 @@ export default {
       middleware: 'auth'
     })
     const nuxtApp = useNuxtApp()
+    const documentTitle = useDocumentTitle()
     useHead(() => {
       const t = nuxtApp.$i18n?.t || ((v) => v)
       return {
-        title: this.documentTitle(t('Manage object lists'))
+        title: documentTitle(t('Manage object lists'))
       }
     })
   }

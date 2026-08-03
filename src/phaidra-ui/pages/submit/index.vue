@@ -2,7 +2,7 @@
 <Submit></Submit>
 </template>
 <script>
-import { config } from "../../mixins/config";
+import { config, useDocumentTitle } from "../../mixins/config";
 import Submit from "../../components/Submit.vue";
 
 export default {
@@ -12,10 +12,11 @@ export default {
       middleware: 'auth'
     })
     const nuxtApp = useNuxtApp()
+    const documentTitle = useDocumentTitle()
     useHead(() => {
       const t = nuxtApp.$i18n?.t || ((v) => v)
       return {
-        title: this.documentTitle(t('Submit'))
+        title: documentTitle(t('Submit'))
       }
     })
   }

@@ -42,7 +42,7 @@
 
 <script>
 import { context } from "../mixins/context";
-import { config } from "../mixins/config";
+import { config, useDocumentTitle } from "../mixins/config";
 
 export default {
   mixins: [context, config],
@@ -51,10 +51,11 @@ export default {
       middleware: 'auth'
     })
     const nuxtApp = useNuxtApp()
+    const documentTitle = useDocumentTitle()
     useHead(() => {
       const t = nuxtApp.$i18n?.t || ((v) => v)
       return {
-        title: this.documentTitle(t('Manage templates'))
+        title: documentTitle(t('Manage templates'))
       }
     })
   },
