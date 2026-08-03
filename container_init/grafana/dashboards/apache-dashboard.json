@@ -551,7 +551,7 @@
             "type": "prometheus",
             "uid": "phaidra_prometheus"
           },
-          "expr": "rate(apache_scoreboard{instance=~\"$host:$port\"}[5m])",
+          "expr": "apache_scoreboard{instance=~\"$host:$port\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{ state }}",
@@ -650,7 +650,7 @@
             "type": "prometheus",
             "uid": "phaidra_prometheus"
           },
-          "expr": "rate(apache_workers{instance=~\"$host:$port\"}[5m])",
+          "expr": "apache_workers{instance=~\"$host:$port\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{ state }}",
@@ -749,7 +749,7 @@
             "type": "prometheus",
             "uid": "phaidra_prometheus"
           },
-          "expr": "rate(apache_cpuload{instance=~\"$host:$port\"}[5m])",
+          "expr": "apache_cpuload{instance=~\"$host:$port\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "Load",
