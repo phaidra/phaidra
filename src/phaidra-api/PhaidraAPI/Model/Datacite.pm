@@ -127,7 +127,7 @@ sub map_uwmetadata_2_datacite {
 
   # $c->app->log->debug("112 UWM ext=".Dumper($ext));
 
-  my %doc_uwns = {};
+  my %doc_uwns = ();
 
   # FIXME GEO datastream to DCMI BOX
 
