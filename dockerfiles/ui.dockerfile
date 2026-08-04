@@ -4,11 +4,6 @@ FROM node:22-bookworm-slim AS builder
 # Enable pnpm via corepack
 RUN corepack enable && corepack prepare pnpm@9 --activate
 
-# System deps
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends git ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
-
 # App sources
 RUN mkdir -p /usr/local/phaidra
 ADD ./../src/phaidra-ui /usr/local/phaidra/phaidra-ui
@@ -32,10 +27,6 @@ RUN pnpm build
 
 # ---------- Runtime stage ----------
 FROM node:22-bookworm-slim
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
 
 # PM2
 RUN npm i -g pm2@latest
