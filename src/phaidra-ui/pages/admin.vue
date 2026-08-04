@@ -1,46 +1,53 @@
 <template>
-  <v-container class="mt-8" fluid>
+  <v-container class="mt-2" fluid>
     <h1 class="d-sr-only">{{$t('Admin')}}</h1>
     <div class="mb-4"><strong>Note:</strong> Config is cached in each worker, don't forget to restart phaidra-api to apply changes.</div>
-    <v-tabs slider-color="primary" background-color="grey darken-2" vertical v-model="activetab">
-      <v-tab class="white--text" :active-class="'primary'" >
-        <span>{{ $t('Public') }}</span>
-      </v-tab>
-      <v-tab class="white--text" :active-class="'primary'" >
-        <span>{{ $t('Private') }}</span>
-      </v-tab>
-      <v-tab class="white--text" :active-class="'primary'" >
-        <span>{{ $t('Import/Export') }}</span>
-      </v-tab>
-      <v-tab class="white--text" :active-class="'primary'" >
-        <span>{{ $t('Manage Phaidra') }}</span>
-      </v-tab>
-      <v-tab class="white--text" :active-class="'primary'" >
-        <span>{{ $t('Statistics') }}</span>
-      </v-tab>
-
-      <v-tab-item>
-        <v-card tile>
-        
-          <v-tabs slider-color="primary" background-color="grey darken-1" vertical v-model="activetab2">
-
-            <v-tab class="white--text" :active-class="'primary'" >
-              <span>{{ $t('General') }}</span>
-            </v-tab>
-            <v-tab class="white--text" :active-class="'primary'">
-              <span>{{ $t('Functionality') }}</span>
-            </v-tab>
-            <v-tab class="white--text" :active-class="'primary'">
-              <span>{{ $t('CMS') }}</span>
-            </v-tab>
-            <v-tab class="white--text" :active-class="'primary'">
-              <span>{{ $t('Datastructures') }}</span>
-            </v-tab>
-            <v-tab class="white--text" :active-class="'primary'">
-              <span>{{ $t('IR') }}</span>
-            </v-tab>
-
-            <v-tab-item class="pa-8">
+    <v-row class="admin-root-tabs" no-gutters>
+      <v-col cols="auto">
+        <v-tabs
+          inset
+          inset-padding="0"
+          inset-radius="0"
+          v-model="activetab"
+          direction="vertical"
+          slider-color="primary"
+          bg-color="grey-darken-2"
+          class="admin-root-tabs__rail"
+        >
+          <v-tab value="public" class="text-white"><span>{{ $t('Public') }}</span></v-tab>
+          <v-tab value="private" class="text-white"><span>{{ $t('Private') }}</span></v-tab>
+          <v-tab value="impexp" class="text-white"><span>{{ $t('Import/Export') }}</span></v-tab>
+          <v-tab value="manage" class="text-white"><span>{{ $t('Manage Phaidra') }}</span></v-tab>
+          <v-tab value="stats" class="text-white"><span>{{ $t('Statistics') }}</span></v-tab>
+        </v-tabs>
+      </v-col>
+      <v-col>
+        <v-window v-model="activetab">
+          <v-window-item value="public">
+            <v-card tile>
+              <v-row no-gutters>
+                <v-col cols="auto">
+                  <v-tabs
+                    border-radius="0"
+                    inset
+                    inset-padding="0"
+                    inset-radius="0"
+                    v-model="activetab2"
+                    direction="vertical"
+                    slider-color="primary"
+                    bg-color="grey-darken-1"
+                    class="admin-nested-tabs__rail text-white"
+                  >
+                    <v-tab value="pub-general"><span>{{ $t('General') }}</span></v-tab>
+                    <v-tab value="pub-functionality"><span>{{ $t('Functionality') }}</span></v-tab>
+                    <v-tab value="pub-cms"><span>{{ $t('CMS') }}</span></v-tab>
+                    <v-tab value="pub-data"><span>{{ $t('Datastructures') }}</span></v-tab>
+                    <v-tab value="pub-ir"><span>{{ $t('IR') }}</span></v-tab>
+                  </v-tabs>
+                </v-col>
+                <v-col>
+                  <v-window v-model="activetab2">
+                    <v-window-item value="pub-general" class="pa-8">
               <v-container>
                 <v-row>
                   <v-col>
@@ -144,27 +151,27 @@
                   <v-col cols="6" class="mt-4">{{ $t('Indicate to visiting web crawlers and other web robots which portions of the website they are allowed to visit.') }}</v-col>
                 </v-row>
               </v-container>
-            </v-tab-item>
+                    </v-window-item>
 
-            <v-tab-item class="pa-8">
+                    <v-window-item value="pub-functionality" class="pa-8">
               <v-container>
                 <v-row justify="start">
                   <v-col>
                     <v-dialog class="pb-4" v-model="templateDialog" width="700px">
-                      <template v-slot:activator="{ on }">
-                        <v-btn v-on="on" large color="primary">
-                          <v-icon dark class="mr-4">mdi-script</v-icon>
+                      <template v-slot:activator="{ props: activatorProps }">
+                        <v-btn v-bind="activatorProps" color="primary">
+                          <v-icon theme="dark" class="mr-4">mdi-script</v-icon>
                           {{ $t("Select submit template") }}
                         </v-btn>
                       </template>
                       <v-card>
-                        <v-card-title dark class="title font-weight-light white--text">{{ $t("Select submit template") }}</v-card-title>
+                        <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Select submit template") }}</v-card-title>
                         <v-card-text>
                           <p-templates class="mt-4" ref="templates" :items-per-page="5" :id-only="true" :isDefaultSelect="true"
                             :selectedTemplateId="selectedTemplateId" v-on:load-template="onTemplateSelect($event)"></p-templates>
                         </v-card-text>
                         <v-card-actions>
-                          <v-spacer></v-spacer><v-btn outlined @click="templateDialog = false">{{ $t("Cancel") }}</v-btn>
+                          <v-spacer></v-spacer><v-btn variant="outlined" @click="templateDialog = false">{{ $t("Cancel") }}</v-btn>
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
@@ -473,9 +480,9 @@
                   <v-col cols="6" class="mt-4">{{ $t("URL to your Privacy Policy page. Will be displayed as a link in the cookie banner.") }}</v-col>
                 </v-row>
               </v-container>
-            </v-tab-item>
+                    </v-window-item>
 
-            <v-tab-item class="pa-8">
+                    <v-window-item value="pub-cms" class="pa-8">
               <v-container>
                 <v-row>
                   <v-col>
@@ -596,9 +603,8 @@
                   <v-col cols="3" class="mt-4">{{ $t("Custom CSS to add to header") }}</v-col>
                 </v-row>
               </v-container>
-            </v-tab-item>
-
-            <v-tab-item class="pa-8">
+                    </v-window-item>
+                    <v-window-item value="pub-data" class="pa-8">
               <v-container>
                 <v-row>
                   <v-col>
@@ -655,9 +661,8 @@
                   <v-col cols="3" class="mt-4">{{ $t("Affiliations to use for defining access restrictions") }}</v-col>
                 </v-row>
               </v-container>
-            </v-tab-item>
-
-            <v-tab-item class="pa-8">
+                    </v-window-item>
+                    <v-window-item value="pub-ir" class="pa-8">
               <v-container>
                 <v-row>
                   <v-col>
@@ -696,27 +701,32 @@
                   <v-col cols="6" class="mt-6">{{ $t("The admin of IR and owner of accepted objects.") }}</v-col>
                 </v-row>
               </v-container>
-            </v-tab-item>
-          </v-tabs>
-        </v-card>
-      </v-tab-item>
+                    </v-window-item>
+                  </v-window>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-window-item>
 
-      <v-tab-item>
-        <v-card tile>
-
-          <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-1" vertical v-model="activetabprivate">
-
-            <v-tab class="white--text" :active-class="'primary'" >
-              <span>{{ $t('General') }}</span>
-            </v-tab>
-            <v-tab class="white--text" :active-class="'primary'">
-              <span>{{ $t('Functionality') }}</span>
-            </v-tab>
-            <v-tab class="white--text" :active-class="'primary'">
-              <span>{{ $t('IR') }}</span>
-            </v-tab>
-
-            <v-tab-item class="pa-8">
+          <v-window-item value="private">
+            <v-card tile>
+              <v-row no-gutters>
+                <v-col cols="auto">
+                  <v-tabs
+                    v-model="activetabprivate"
+                    direction="vertical"
+                    slider-color="primary"
+                    bg-color="grey-darken-1"
+                    class="admin-nested-tabs__rail text-white"
+                  >
+                    <v-tab value="priv-general"><span>{{ $t('General') }}</span></v-tab>
+                    <v-tab value="priv-functionality"><span>{{ $t('Functionality') }}</span></v-tab>
+                    <v-tab value="priv-ir"><span>{{ $t('IR') }}</span></v-tab>
+                  </v-tabs>
+                </v-col>
+                <v-col>
+                  <v-window v-model="activetabprivate">
+                    <v-window-item value="priv-general" class="pa-8">
               <v-container>
                 <v-row>
                   <v-col>
@@ -739,7 +749,7 @@
                 <v-row>
                   <v-col>
                     <v-card>
-                      <v-card-title class="title font-weight-light white--text">{{ $t("Handle") }}</v-card-title>
+                      <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Handle") }}</v-card-title>
                       <v-card-text>
                         <v-row>
                           <v-col>
@@ -786,7 +796,7 @@
                 <v-row>
                   <v-col>
                     <v-card>
-                      <v-card-title class="title font-weight-light white--text">{{ $t("SMTP") }}</v-card-title>
+                      <v-card-title class="text-title-large font-weight-light text-white">{{ $t("SMTP") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
                           <v-col>
@@ -834,7 +844,7 @@
                 <v-row>
                   <v-col>
                     <v-card>
-                      <v-card-title class="title font-weight-light white--text">{{ $t("External LDAP") }}</v-card-title>
+                      <v-card-title class="text-title-large font-weight-light text-white">{{ $t("External LDAP") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
                           <v-col>
@@ -917,7 +927,7 @@
                 <v-row>
                   <v-col>
                     <v-card>
-                      <v-card-title class="title font-weight-light white--text">{{ $t("JWT") }}</v-card-title>
+                      <v-card-title class="text-title-large font-weight-light text-white">{{ $t("JWT") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
                           <v-col>
@@ -942,8 +952,8 @@
                   </v-col>
                 </v-row>
               </v-container>
-            </v-tab-item>
-            <v-tab-item class="pa-8">
+                    </v-window-item>
+                    <v-window-item value="priv-functionality" class="pa-8">
               <v-container>
                 <v-row>
                   <v-col>
@@ -986,7 +996,7 @@
                 <v-row>
                   <v-col>
                     <v-card>
-                      <v-card-title class="title font-weight-light white--text">{{ $t("Reporting") }}</v-card-title>
+                      <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Reporting") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
                           <v-col cols="12" md="6">
@@ -1021,7 +1031,7 @@
                           <v-col>
                             <v-card-title class="subtitle-1">{{ $t("Query count reports") }}</v-card-title>
                             <div v-for="(queryReport, index) in (parsedPrivateConfigData.reportingquerycountreports || [])" :key="index" class="mt-4">
-                              <v-card outlined class="pa-4">
+                              <v-card variant="outlined" class="pa-4">
                                 <v-row>
                                   <v-col cols="12" md="4">
                                     <v-text-field
@@ -1058,13 +1068,13 @@
                   </v-col>
                 </v-row>
               </v-container>
-            </v-tab-item>
-            <v-tab-item class="pa-8">
+                    </v-window-item>
+                    <v-window-item value="priv-ir" class="pa-8">
               <v-container>
                 <v-row>
                   <v-col>
                     <v-card>
-                      <v-card-title class="title font-weight-light white--text">{{ $t("General") }}</v-card-title>
+                      <v-card-title class="text-title-large font-weight-light text-white">{{ $t("General") }}</v-card-title>
                       <v-card-text>
                         <v-row class="mt-4">
                           <v-col>
@@ -1083,7 +1093,7 @@
                 <v-row>
                   <v-col>
                   <v-card>
-                    <v-card-title class="title font-weight-light white--text">{{ $t("SMTP") }}</v-card-title>
+                    <v-card-title class="text-title-large font-weight-light text-white">{{ $t("SMTP") }}</v-card-title>
                     <v-card-text>
                       <v-row class="mt-4">
                         <v-col>
@@ -1132,7 +1142,7 @@
                 <v-row>
                   <v-col>
                   <v-card>
-                    <v-card-title class="title font-weight-light white--text">{{ $t("Email templates") }}</v-card-title>
+                    <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Email templates") }}</v-card-title>
                     <v-card-text>
                       <v-row>
                         <v-col>
@@ -1160,7 +1170,7 @@
                 <v-row>
                   <v-col>
                     <v-card>
-                      <v-card-title class="title font-weight-light white--text">{{ $t("Bulk upload") }}</v-card-title>
+                      <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Bulk upload") }}</v-card-title>
                       <v-card-text>
                         <v-row>
                           <v-col>
@@ -1197,7 +1207,7 @@
                 <v-row>
                   <v-col>
                   <v-card>
-                    <v-card-title class="title font-weight-light white--text">{{ $t("Pure") }}</v-card-title>
+                    <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Pure") }}</v-card-title>
                     <v-card-text>
                       <v-row class="mt-4">
                         <v-col>
@@ -1222,25 +1232,31 @@
                   </v-col>
                 </v-row>
               </v-container>
-            </v-tab-item>
+                    </v-window-item>
+                  </v-window>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-window-item>
 
-          </v-tabs>
-        </v-card>
-      </v-tab-item>
-
-      <v-tab-item>
-        <v-card tile>
-          
-          <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-1" vertical v-model="activetabimpexp">
-
-            <v-tab class="white--text" :active-class="'primary'">
-              <span>{{ $t('Export') }}</span>
-            </v-tab>
-            <v-tab class="white--text" :active-class="'primary'">
-              <span>{{ $t('Import') }}</span>
-            </v-tab>
-
-            <v-tab-item class="pa-8">
+          <v-window-item value="impexp">
+            <v-card tile>
+              <v-row no-gutters>
+                <v-col cols="auto">
+                  <v-tabs
+                    v-model="activetabimpexp"
+                    direction="vertical"
+                    slider-color="primary"
+                    bg-color="grey-darken-1"
+                    class="admin-nested-tabs__rail text-white"
+                  >
+                    <v-tab value="impexp-export"><span>{{ $t('Export') }}</span></v-tab>
+                    <v-tab value="impexp-import"><span>{{ $t('Import') }}</span></v-tab>
+                  </v-tabs>
+                </v-col>
+                <v-col>
+                  <v-window v-model="activetabimpexp">
+                    <v-window-item value="impexp-export" class="pa-8">
               <v-container>
                 <v-row>
                   <v-col>
@@ -1252,9 +1268,9 @@
                   <v-col cols="3" class="mt-6">{{ $t("This is the whole config. You can copy it to back it up or to use the Import tab to import it on another 'instance'. Don't forget to adapt API base URL.") }}</v-col>
                 </v-row>
               </v-container>
-            </v-tab-item>
+                    </v-window-item>
 
-            <v-tab-item class="pa-8">
+                    <v-window-item value="impexp-import" class="pa-8">
               <v-container>
                 <v-row>
                   <v-col>
@@ -1271,51 +1287,54 @@
                     </v-row>
                     <v-row>
                       <v-col>
-                        <v-btn raised color="primary" @click="importConfig()">{{ $t("Import") }}</v-btn>
+                        <v-btn color="primary" variant="elevated" @click="importConfig()">Import</v-btn>
                       </v-col>
                     </v-row>
                   </v-col>
                 </v-row>
               </v-container>
-            </v-tab-item>
-
-          </v-tabs>
-        </v-card>
-      </v-tab-item>
-      <v-tab-item>
-        <v-container>
-          <v-row>
-            <v-col>
-              <v-row class="pl-2 mb-6 mt-4">
-                <ul>
-                  <li><a href="/lam/">Local LDAP</a></li>
-                  <li><a href="/dbgate/">DbGate</a></li>
-                  <li><a href="/fcrepo/rest/">Fedora</a></li>
-                  <li><a href="/solr/">Solr</a></li>
-                  <li><a href="/grafana/">Grafana</a></li>
-                  <li><a href="/api/openapi">API documentation</a></li>
-                  <li><a href="https://phaidra.org/docs/overview/">Documentation</a></li>
-                </ul>
+                    </v-window-item>
+                  </v-window>
+                </v-col>
               </v-row>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-tab-item>
-      <v-tab-item>
-        <v-container>
-          <v-row>
-            <v-col>
-              <v-row class="pl-2 mb-6 mt-4">
-                <PRepostat></PRepostat>
+            </v-card>
+          </v-window-item>
+          <v-window-item value="manage">
+            <v-container>
+              <v-row>
+                <v-col>
+                  <v-row class="pl-2 mb-6 mt-4">
+                    <ul>
+                      <li><a href="/lam/">Local LDAP</a></li>
+                      <li><a href="/dbgate/">DbGate</a></li>
+                      <li><a href="/fcrepo/rest/">Fedora</a></li>
+                      <li><a href="/solr/">Solr</a></li>
+                      <li><a href="/grafana/">Grafana</a></li>
+                      <li><a href="/api/openapi">API documentation</a></li>
+                      <li><a href="https://phaidra.org/docs/overview/">Documentation</a></li>
+                    </ul>
+                  </v-row>
+                </v-col>
               </v-row>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-tab-item>
-    </v-tabs>
+            </v-container>
+          </v-window-item>
+          <v-window-item value="stats">
+            <v-container>
+              <v-row>
+                <v-col>
+                  <v-row class="pl-2 mb-6 mt-4">
+                    <PRepostat></PRepostat>
+                  </v-row>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-window-item>
+        </v-window>
+      </v-col>
+    </v-row>
     <v-row class="my-2">
       <v-col>
-        <v-btn large raised color="primary" class="float-right" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
+        <v-btn color="primary" variant="elevated" class="float-right" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -1324,22 +1343,29 @@
 <script>
 import FaviconMixin from '../mixins/favicon'
 import PRepostat from '../components/Repostat.vue';
-import { config } from "../mixins/config";
+import { config, useDocumentTitle } from "../mixins/config";
+import { encodeUtf8ToBase64 } from '@/utils/encode-base64'
 
 export default {
   mixins: [FaviconMixin, config],
-  components: {PRepostat},
-  middleware: "auth",
-  metaInfo() {
-    let metaInfo = {
-      title: this.documentTitle(this.$t('Admin')),
-    };
-    return metaInfo;
+  components: { PRepostat },
+  setup() {
+    definePageMeta({
+      middleware: 'auth'
+    })
+    const nuxtApp = useNuxtApp()
+    const documentTitle = useDocumentTitle()
+    useHead(() => {
+      const t = nuxtApp.$i18n?.t || ((v) => v)
+      return {
+        title: documentTitle(t('Admin'))
+      }
+    })
   },
   computed: {
     configAsJSON: {
       get: function () {
-        let publicConfig = {...this.parsedPublicConfigData}
+        let publicConfig = { ...this.parsedPublicConfigData }
         delete publicConfig['_id']
         publicConfig.data_orgunits = this.data_orgunits
         publicConfig.data_vocabularies = this.data_vocabularies
@@ -1347,7 +1373,7 @@ export default {
         publicConfig.data_i18n = this.data_i18n
         publicConfig.data_affiliations = this.data_affiliations
 
-        let privateConfig = {...this.parsedPrivateConfigData}
+        let privateConfig = { ...this.parsedPrivateConfigData }
         delete privateConfig['_id']
         let config = {
           public: publicConfig,
@@ -1355,7 +1381,7 @@ export default {
         }
         return JSON.stringify(config, null, 2)
       },
-      set: function () {}
+      set: function () { }
     }
   },
   data() {
@@ -1378,10 +1404,11 @@ export default {
       data_affiliations: [],
       data_affiliations_text: '',
       loading: false,
-      activetabimpexp: null,
-      activetab: null,
-      activetab2: null,
-      activetabprivate: null,
+      /** Vuetify 3: tab models are string values matching v-tab value="" (not v-tab-item). */
+      activetabimpexp: 'impexp-export',
+      activetab: 'public',
+      activetab2: 'pub-general',
+      activetabprivate: 'priv-general',
       configAsJSONToImport: '',
       reportSending: false,
       logLevelOptions: ['trace', 'debug', 'info', 'warn', 'error', 'fatal']
@@ -1428,7 +1455,7 @@ export default {
         })
 
         // Remove any API field from config to prevent conflicts
-        if(config.public?.api){
+        if (config.public?.api) {
           delete config.public.api
         }
         this.$store.commit('setInstanceConfig', config.public)
@@ -1455,7 +1482,7 @@ export default {
       try {
 
         // public
-        const instanceConfData = {...this.parsedPublicConfigData}
+        const instanceConfData = { ...this.parsedPublicConfigData }
 
         if (this.data_orgunits_text) {
           this.data_orgunits = JSON.parse(this.data_orgunits_text)
@@ -1492,39 +1519,39 @@ export default {
         var httpFormData = new FormData()
         httpFormData.append('public_config', JSON.stringify(instanceConfData))
         await this.$axios.request({
-            method: 'POST',
-            url: '/config/public',
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'X-XSRF-TOKEN': this.$store.state.user.token
-            },
-            data: httpFormData
-          })
-        if(instanceConfData.faviconText){
-          const base64Svg = Buffer.from(instanceConfData.faviconText).toString('base64')
+          method: 'POST',
+          url: '/config/public',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-XSRF-TOKEN': this.$store.state.user.token
+          },
+          data: httpFormData
+        })
+        if (instanceConfData.faviconText) {
+          const base64Svg = encodeUtf8ToBase64(instanceConfData.faviconText)
           this.updateFavicon(`data:image/svg+xml;base64,${base64Svg}`)
         }
 
         // Remove any API field from config to prevent conflicts
-        if(instanceConfData?.api){
+        if (instanceConfData?.api) {
           delete instanceConfData.api
         }
         this.$store.commit('setInstanceConfig', instanceConfData)
         this.mergeInfoBannerMessage(instanceConfData.infoBannerMessage)
 
         // private
-        const privateConfData = {...this.parsedPrivateConfigData}
+        const privateConfData = { ...this.parsedPrivateConfigData }
         var httpFormData = new FormData()
         httpFormData.append('private_config', JSON.stringify(privateConfData))
         await this.$axios.request({
-            method: 'POST',
-            url: '/config/private',
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'X-XSRF-TOKEN': this.$store.state.user.token
-            },
-            data: httpFormData
-          })
+          method: 'POST',
+          url: '/config/private',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-XSRF-TOKEN': this.$store.state.user.token
+          },
+          data: httpFormData
+        })
       } catch (error) {
         console.error(error)
       } finally {
@@ -1543,7 +1570,7 @@ export default {
     },
     addQueryReport: function () {
       if (!this.parsedPrivateConfigData.reportingquerycountreports) {
-        this.$set(this.parsedPrivateConfigData, 'reportingquerycountreports', [])
+        this.parsedPrivateConfigData.reportingquerycountreports = []
       }
       this.parsedPrivateConfigData.reportingquerycountreports.push({
         label: '',
@@ -1565,11 +1592,11 @@ export default {
         console.error(error)
       }
       this.selectedTemplateId = response?.data?.public_config?.defaulttemplateid
-      if(response?.data?.public_config){
-        this.parsedPublicConfigData = {...response?.data?.public_config}
-        
+      if (response?.data?.public_config) {
+        this.parsedPublicConfigData = { ...response?.data?.public_config }
+
         // Remove any API field from config to prevent conflicts
-        if(this.parsedPublicConfigData?.api){
+        if (this.parsedPublicConfigData?.api) {
           delete this.parsedPublicConfigData.api
         }
 
@@ -1592,8 +1619,8 @@ export default {
         this.data_affiliations_text = JSON.stringify(this.data_affiliations, null, 2)
         this.mergeInfoBannerMessage(response?.data?.public_config?.infoBannerMessage)
       } else {
-        if(this.$store?.state?.instanceconfig){
-          this.parsedPublicConfigData = {...this.$store.state.instanceconfig}
+        if (this.$store?.state?.instanceconfig) {
+          this.parsedPublicConfigData = { ...this.$store.state.instanceconfig }
         }
       }
 
@@ -1607,9 +1634,9 @@ export default {
       } catch (error) {
         console.error(error)
       }
-      
-      if(response?.data?.private_config){
-        this.parsedPrivateConfigData = {...response?.data?.private_config}
+
+      if (response?.data?.private_config) {
+        this.parsedPrivateConfigData = { ...response?.data?.private_config }
       }
       this.loading = false
     }

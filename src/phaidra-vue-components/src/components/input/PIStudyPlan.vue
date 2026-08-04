@@ -2,15 +2,13 @@
   <v-row v-if="!hidden">
     <v-col cols="12">
 
-      <v-card outlined class="mb-8">
-        <v-card-title class="title font-weight-light white--text">
+      <v-card variant="outlined" class="mb-8">
+        <v-card-title class="text-title-large font-weight-light text-white">
             <span>{{ $t('Study plan') }}</span>
             <v-spacer></v-spacer>
-            <v-menu bottom offset-y v-if="actions.length">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn v-on="on" v-bind="attrs" icon dark>
-                  <v-icon dark>mdi-dots-vertical</v-icon>
-                </v-btn>
+            <v-menu open-on-hover bottom offset-y v-if="actions.length">
+              <template v-slot:activator="{ props: activatorProps }">
+                <v-icon-btn v-bind="activatorProps" variant="text" color="white" icon="mdi-dots-vertical" />
               </template>
               <v-list>
                 <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
@@ -24,17 +22,16 @@
           <v-row >
             <v-col cols="8">
               <v-text-field
-                :value="name"
-                v-on:blur="$emit('input-name',$event.target.value)"
+                :model-value="name"
+                @update:model-value="$emit('input-name', $event)"
                 :label="$t('Study plan name')"
                 :required="required"
                 :rules="required ? [ v => !!v || $t('Required')] : []"
-                :filled="inputStyle==='filled'"
-                :outlined="inputStyle==='outlined'"
+                :variant="fieldVariant"
               ></v-text-field>
             </v-col>
             <v-col cols="4" v-if="multilingual">
-              <v-btn text @click="$refs.langdialog.open()">
+              <v-btn variant="text" @click="$refs.langdialog.open()">
                 <span>
                   ({{ nameLanguage ? nameLanguage : '--' }})
                 </span>
@@ -45,20 +42,18 @@
           <v-row >
             <v-col cols="6">
               <v-text-field
-                :value="notation"
-                v-on:blur="$emit('input-notation',$event.target.value)"
+                :model-value="notation"
+                @update:model-value="$emit('input-notation', $event)"
                 :label="$t('Study plan notation')"
-                :filled="inputStyle==='filled'"
-                :outlined="inputStyle==='outlined'"
+                :variant="fieldVariant"
               ></v-text-field>
             </v-col>
             <v-col cols="6">
               <v-text-field
-                :value="identifier"
-                v-on:blur="$emit('input-identifier',$event.target.value)"
+                :model-value="identifier"
+                @update:model-value="$emit('input-identifier', $event)"
                 :label="$t('Study plan identifier')"
-                :filled="inputStyle==='filled'"
-                :outlined="inputStyle==='outlined'"
+                :variant="fieldVariant"
               ></v-text-field>
             </v-col>
         </v-row>

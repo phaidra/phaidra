@@ -1,26 +1,25 @@
 <template>
   <v-dialog v-model="dialog" width="700px">
     <v-card :loading="loading">
-      <v-card-title class="title font-weight-light white--text">{{ $t('Select a term') }}</v-card-title>
+      <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Select a term') }}</v-card-title>
       <v-card-text class="mt-4">
         <v-treeview
-          :active.sync="active"
+          v-model:activated="active"
+          v-model:opened="opened"
           :items="items"
           :load-children="loadChildren"
-          :open.sync="opened"
-          item-key="uri"
-          transition
+          item-title="name"
+          item-value="uri"
           activatable
-          hoverable
-          @update:active="selectItem($event)
-          ">
+          @update:activated="selectItem($event)"
+        >
         </v-treeview>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
         <v-container fluid>
           <v-row justify="end" class="px-4">
-            <v-btn outlined @click="dialog = false">{{ $t('Cancel') }}</v-btn>
+            <v-btn variant="outlined" @click="dialog = false">{{ $t('Cancel') }}</v-btn>
           </v-row>
         </v-container>
       </v-card-actions>
@@ -98,7 +97,8 @@ export default {
         let response = await this.$axios.request({
           method: 'GET',
           url: this.$store.state.appconfig.apis.dante.resolve,
-          params: params
+          params: params,
+          withCredentials: false
         })
         if (response.data) {
           for (let ob of response.data) {
@@ -129,7 +129,8 @@ export default {
         let response = await this.$axios.request({
           method: 'GET',
           url: this.$store.state.appconfig.apis.dante.resolve,
-          params: params
+          params: params,
+          withCredentials: false
         })
         this.$emit('item-selected', response.data[0])
       } catch (error) {

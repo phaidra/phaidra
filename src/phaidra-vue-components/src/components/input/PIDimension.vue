@@ -2,42 +2,44 @@
   <v-row v-if="!hidden">
     <v-col cols="2">
       <v-text-field
-        :value="value"
-        v-on:blur="$emit('input-value',$event.target.value)"
+        :model-value="value"
+        @update:model-value="$emit('input-value', $event)"
         :label="$t(label)"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
     <v-col cols="2">
       <v-select
-        @input="$emit('input-unit', $event)"
+        :model-value="getTerm(vocabulary, unit)"
+        @update:model-value="$emit('input-unit', $event)"
         :label="$t('Unit')"
         :items="vocabularies[vocabulary].terms"
-        :item-value="'@id'"
-        :value="getTerm(vocabulary, unit)"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        item-value="@id"
+        :item-title="(item) => skosTermItemTitle(item, vocabulary)"
+        :custom-filter="vocabAutocompleteFilter"
+        :variant="fieldVariant"
+        return-object
+        clearable
       >
-        <template slot="item" slot-scope="{ item }">
-          <v-list-item-content two-line>
-            <v-list-item-title  v-html="`${getLocalizedTermLabel(vocabulary, item['@id'])}`"></v-list-item-title>
-            <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-          </v-list-item-content>
+        <template #item="{ props, internalItem }">
+          <v-list-item v-bind="props" :lines="showIds ? 'two' : 'one'">
+            <template #title>
+              <span v-html="getLocalizedTermLabel(vocabulary, internalItem.raw['@id'])" />
+            </template>
+            <template v-if="showIds" #subtitle>
+              <span v-html="internalItem.raw['@id']" />
+            </template>
+          </v-list-item>
         </template>
-        <template slot="selection" slot-scope="{ item }">
-          <v-list-item-content>
-            <v-list-item-title v-html="`${getLocalizedTermLabel(vocabulary, item['@id'])}`"></v-list-item-title>
-          </v-list-item-content>
+        <template #selection="{ internalItem }">
+          <span v-html="getLocalizedTermLabel(vocabulary, (internalItem.raw || internalItem)['@id'])" />
         </template>
       </v-select>
     </v-col>
     <v-col cols="1" v-if="actions.length">
-      <v-menu bottom offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn v-on="on" v-bind="attrs" icon>
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+      <v-menu open-on-hover bottom offset-y>
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-icon-btn v-bind="activatorProps" variant="text" icon="mdi-dots-vertical" />
         </template>
         <v-list>
           <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">

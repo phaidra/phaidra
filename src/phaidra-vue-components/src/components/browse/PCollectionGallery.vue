@@ -4,12 +4,8 @@
       <v-toolbar>
         <v-toolbar-title>Toolbar</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn icon @click="mode = 'single'">
-          <v-icon>mdi-image-outline</v-icon>
-        </v-btn>
-        <v-btn icon @click="mode = 'gallery'">
-          <v-icon>mdi-grid</v-icon>
-        </v-btn>
+        <v-icon-btn @click="mode = 'single'" icon="mdi-image-outline" />
+        <v-icon-btn @click="mode = 'gallery'" icon="mdi-grid" />
       </v-toolbar>
     </v-row>
     <v-row>
@@ -17,9 +13,11 @@
         <v-treeview
           :items="collections"
           :load-children="getChildCollections"
-          :active.sync="active"
-          :open.sync="open"
-          @update:active="getChildren"
+          v-model:activated="active"
+          v-model:opened="open"
+          item-title="name"
+          item-value="id"
+          @update:activated="getChildren"
           activatable
           transition
           color="primary"
@@ -29,9 +27,9 @@
       <v-col v-if="mode === 'single'">
         <v-carousel hide-delimiters height="100%">
           <v-carousel-item v-for="(doc, i) in childrenOfActiveCollection" :key="'cha1'+i">
-             <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <span v-on="on" v-bind="attrs">
+             <v-tooltip location="bottom">
+              <template v-slot:activator="{ props: activatorProps }">
+                <span v-bind="activatorProps">
                    <v-img aspect-ratio="1" :src="instanceconfig.api + '/preview/' + doc.pid" @click="showDetailDialog(doc)"></v-img>
                 </span>
               </template>
@@ -44,15 +42,15 @@
         <v-container fluid>
           <v-row>
             <v-col class="d-flex child-flex" cols="4" v-for="(doc, i) in childrenOfActiveCollection" :key="'cha2'+i">
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <span v-on="on" v-bind="attrs">
+              <v-tooltip location="bottom">
+                <template v-slot:activator="{ props: activatorProps }">
+                  <span v-bind="activatorProps">
                     <v-card tile elevation="0" class="d-flex">
-                      <v-img class="grey lighten-2" aspect-ratio="1" :src="instanceconfig.api + '/preview/' + doc.pid"
+                      <v-img class="bg-grey-lighten-2" aspect-ratio="1" :src="instanceconfig.api + '/preview/' + doc.pid"
                         @click="showDetailDialog(doc)">
                         <template v-slot:placeholder>
                           <v-row class="fill-height ma-0" align="center" justify="center">
-                            <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                            <v-progress-circular indeterminate color="grey-lighten-5"></v-progress-circular>
                           </v-row>
                         </template>
                       </v-img>
@@ -68,7 +66,7 @@
     </v-row>
     <v-dialog v-model="detailDialog" max-width="500px" v-if="detailToShow">
       <v-card>
-        <v-card-title class="title font-weight-light white--text">
+        <v-card-title class="text-title-large font-weight-light text-white">
           {{ getObjectTitle(detailToShow) }}
         </v-card-title>
         <v-card-text>
@@ -76,7 +74,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn dark @click="detailDialog = false" color="grey">Abbrechen</v-btn>
+          <v-btn theme="dark" @click="detailDialog = false" color="grey">Abbrechen</v-btn>
           <v-btn @click="openDetails()" color="primary">Details</v-btn>
         </v-card-actions>
       </v-card>
@@ -87,7 +85,7 @@
 
 <script>
 import qs from 'qs'
-import objectMixin from 'phaidra-vue-components/src/mixins/object'
+import objectMixin from '../../mixins/object'
 
 export default {
   name: 'p-collection-gallery',
@@ -100,7 +98,7 @@ export default {
   },
   computed: {
     instanceconfig: function () {
-      return this.$root.$store.state.instanceconfig
+      return this.$store.state.instanceconfig
     }
   },
   data () {

@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
  <head>
+ %= include 'utils/player_theme'
  <style>
  .button {
+  /* Neutral colours that read on both light and dark parent backgrounds */
   background-color: #404040;
   border: none;
   border-radius: 4px;
-  color: white;
+  color: #ffffff;
   padding: 16px 32px;
   margin-top: 16px;
   text-align: center;

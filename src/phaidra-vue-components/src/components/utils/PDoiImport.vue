@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row no-gutters>
-      <h3 class="title font-weight-light mb-4">
+      <h3 class="text-title-large font-weight-light mb-4">
         {{ $t("Metadata-Import via DOI") }}
       </h3>
     </v-row>
@@ -27,7 +27,7 @@
       <v-col cols="4">
         <v-text-field
           :error-messages="doiImportErrors"
-          filled
+          variant="filled"
           v-model="doiImportInput"
           label="DOI"
           :placeholder="$t('please enter')"
@@ -46,7 +46,7 @@
           :loading="loading"
           :disabled="loading"
           class="mx-2"
-          dark
+          theme="dark"
           color="btnred"
           @click="resetDOIImport()"
           >{{ $t("Reset") }}</v-btn
@@ -57,7 +57,7 @@
       <v-col cols="12" md="7">
         <v-card>
           <v-card-title
-            class="title font-weight-light white--text"
+            class="text-title-large font-weight-light text-white"
             >{{
               $t("Following metadata were retrieved")
             }}
@@ -357,7 +357,7 @@ export default {
   },
   computed: {
     instanceconfig: function () {
-      return this.$root.$store.state.instanceconfig
+      return this.$store.state.instanceconfig
     },
     lang2to3map: function () {
       return Object.keys(lang3to2map).reduce((ret, key) => {
@@ -402,7 +402,7 @@ export default {
     setIfEmpty: function (obj, key, value, overwrite) {
       if (value === undefined || value === null || value === '') return
       if (overwrite || obj[key] === undefined || obj[key] === null || obj[key] === '') {
-        this.$set ? this.$set(obj, key, value) : (obj[key] = value)
+        obj[key] = value
       }
     },
     getBaseForm: function () {
@@ -515,7 +515,7 @@ export default {
           this.setIfEmpty(f, 'issued', doiImportData.dateIssued, overwrite)
         } else {
           if (overwrite || f.issued) {
-            this.$set ? this.$set(f, 'issued', undefined) : (f.issued = undefined)
+            f.issued = undefined
           }
         }
       }
@@ -662,6 +662,7 @@ export default {
       this.doiDuplicate = null;
       this.doiImportData = null;
       this.metaProviderName = ''
+      // External DOI APIs (Crossref/DataCite) reject credentialed browser requests for wildcard CORS.
       if (this.doiImportInput) {
         try {
           let doiAgency = null

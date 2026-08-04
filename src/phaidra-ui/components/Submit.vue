@@ -1,17 +1,19 @@
 <template>
-  <div v-if="instanceconfig.cms_submit">
-    <runtimetemplate :template="instanceconfig.cms_submit" />
-  </div>
-  
-  <div v-else>
+  <div>
+    <div v-if="instanceconfig.cms_submit">
+      <runtimetemplate :template="instanceconfig.cms_submit" />
+    </div>
+    
+    <div v-else>
       <v-row class="my-6" justify="start">
         <div class="d-flex flex-row ml-3">
           <v-btn
-            large
-            class="primary"
+            color="primary"
+            variant="elevated"
+            prepend-icon="mdi-plus-circle"
             @click="$router.push(localePath('/submit/upload'))"
           >
-            <v-icon dark class="mr-2">mdi-plus-circle</v-icon> {{ $t("Create new object") }}
+            {{ $t("Create new object") }}
           </v-btn>
           </div>
         <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
@@ -28,12 +30,12 @@
       <v-row class="my-6" justify="start">
         <div class="d-flex flex-row ml-3">
           <v-btn
-            large
-            color="#94c154"
-            class="primary"
+            color="primary"
+            variant="elevated"
+            prepend-icon="mdi-plus-circle"
             @click="$router.push(localePath('/submit/oer'))"
           >
-            <v-icon dark class="mr-2">mdi-plus-circle</v-icon> {{ $t("Open Educational Resources (OER) upload") }}
+            {{ $t("Open Educational Resources (OER) upload") }}
           </v-btn>
           </div>
         <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
@@ -51,11 +53,12 @@
         <v-row class="my-6" justify="start">
           <div class="d-flex flex-row ml-3">
             <v-btn
-              large
-              class="primary"
-              :href="'https://' + instanceconfig.irbaseurl + '/login'"
+              color="primary"
+              variant="elevated"
+              prepend-icon="mdi-school"
+              :href="'https://uscholar.univie.ac.at/login'"
             >
-              <v-icon dark class="mr-2">mdi-school</v-icon> {{ $t("Upload publication (via u:scholar)") }}
+              {{ $t("Upload publication (via u:scholar)") }}
             </v-btn>
           </div>
             <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
@@ -73,11 +76,12 @@
         <v-row class="my-6" justify="start">
           <div class="d-flex flex-row ml-3">
             <v-btn
-              large
-              class="primary"
+              color="primary"
+              variant="elevated"
+              prepend-icon="mdi-plus-circle"
               @click="$router.push(localePath('/submit/catalogfetchupload'))"
             >
-              <v-icon dark class="mr-2">mdi-plus-circle</v-icon> {{ $t("Catalog-fetch upload") }}
+              {{ $t("Catalog-fetch upload") }}
             </v-btn>
             </div>
           <div class="d-flex flex-row pt-3 ml-3 ml-md-6">
@@ -95,7 +99,7 @@
       <template v-if="instanceconfig.uwmsubmit">
         <v-row class="my-6" justify="start">
           <v-col cols="12">
-            <span class="title font-weight-light primary--text">{{
+            <span class="text-title-large font-weight-light text-primary">{{
               $t("Legacy (Uwmetadata)")
             }}</span>
           </v-col>
@@ -104,16 +108,16 @@
           <v-col cols="12">
             <v-btn
               large
-              dark
-              color="grey white--text mr-8"
+              theme="dark"
+              color="grey text-white mr-8"
               :to="localePath({ path: '/submit/uwm/asset'})"
             >
               {{ $t("File") }}
             </v-btn>
             <v-btn
               large
-              dark
-              color="grey white--text mr-8"
+              theme="dark"
+              color="grey text-white mr-8"
               :to="localePath({ path: '/submit/uwm/collection'})"
             >
               {{ $t("Collection") }}
@@ -125,15 +129,14 @@
       <v-row class="my-6" justify="start">
         <div class="d-flex flex-row ml-3">
           <v-dialog class="pb-4" v-model="templateDialog" width="900px">
-            <template v-slot:activator="{ on }">
-              <v-btn v-on="on" large color="primary">
-                <v-icon dark class="mr-2">mdi-script</v-icon>
+            <template v-slot:activator="{ props: activatorProps }">
+              <v-btn v-bind="activatorProps" color="primary" variant="elevated" prepend-icon="mdi-script">
                 {{ $t("Open template") }}
               </v-btn>
             </template>
             <v-card>
               <v-card-title                
-                class="title font-weight-light white--text"
+                class="text-title-large font-weight-light text-white"
                 >{{ $t("Open template") }}</v-card-title
               >
               <v-card-text>
@@ -147,7 +150,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer
-                ><v-btn outlined @click="templateDialog = false">{{ $t("Cancel") }}</v-btn>
+                ><v-btn variant="outlined" @click="templateDialog = false">{{ $t("Cancel") }}</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -165,7 +168,7 @@
       <template v-if="false">
         <v-row class="my-6" justify="start">
           <v-col cols="12">
-            <span class="title font-weight-light primary--text">{{
+            <span class="text-title-large font-weight-light text-primary">{{
               $t("Legacy (Uwmetadata)")
             }}</span>
             <v-divider></v-divider>
@@ -175,16 +178,16 @@
           <v-col cols="12">
             <v-btn
               large
-              dark
-              color="grey white--text mr-8"
+              theme="dark"
+              color="grey text-white mr-8"
               @click="$router.push(localePath({ path: '/submit/uwm/asset' }))"
             >
               {{ $t("File") }}
             </v-btn>
             <v-btn
               large
-              dark
-              color="grey white--text mr-8"
+              theme="dark"
+              color="grey text-white mr-8"
               @click="
                 $router.push(localePath({ path: '/submit/uwm/collection' }))
               "
@@ -194,21 +197,28 @@
           </v-col>
         </v-row>
       </template>
+    </div>
   </div>
 </template>
 
 <script>
 import { context } from "../mixins/context";
-import { config } from "../mixins/config";
+import { config, useDocumentTitle } from "../mixins/config";
 
 export default {
-  middleware: "auth",
   mixins: [context,config],
-  metaInfo() {
-    let metaInfo = {
-      title: this.documentTitle(this.$t('Upload')),
-    };
-    return metaInfo;
+  setup() {
+    definePageMeta({
+      middleware: 'auth'
+    })
+    const nuxtApp = useNuxtApp()
+    const documentTitle = useDocumentTitle()
+    useHead(() => {
+      const t = nuxtApp.$i18n?.t || ((v) => v)
+      return {
+        title: documentTitle(t('Upload'))
+      }
+    })
   },
   watch: {
     templateDialog(opened) {

@@ -1,4 +1,4 @@
-FROM node:20.0-bullseye-slim
+FROM node:22-bookworm-slim
 RUN <<EOF
 apt-get update
 apt-get install git ca-certificates -y
@@ -16,6 +16,10 @@ WORKDIR /usr/local/phaidra/phaidra-ui
 ENV HOST=0.0.0.0
 ENV NODE_OPTIONS=--openssl-legacy-provider
 ENV PORT=3001
+ENV CHOKIDAR_USEPOLLING=true
+ENV CHOKIDAR_INTERVAL=250
+ENV VITE_USE_POLLING=true
+ENV VITE_WATCH_INTERVAL=250
 EXPOSE 3001
 RUN <<EOF
 npm i -g pm2@latest

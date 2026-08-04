@@ -1,0 +1,3899 @@
+<template>
+  <v-container fluid>
+    <template v-if="notFound || detailPageNotFound">
+      <v-row justify="center" class="mt-8">
+        <v-col cols="12" md="8">
+          <v-alert type="error" variant="outlined" class="not-found-alert">
+            {{ $t('This page does not exist or the object cannot be found.') }}
+            <p class="mt-4">{{$t('We apologise for the inconvenience, the page you are trying to access does not exist at this address.')}}</p>
+            <p v-if="instanceconfig.email">{{$t('If you are sure you entered the correct address but still get an error, please contact')}} <a :href="'mailto:' + instanceconfig.email">{{ instanceconfig.email }}</a>.</p>
+          </v-alert>
+        </v-col>
+      </v-row>
+    </template>
+    <template v-else-if="objectInfo">
+      <collection-dialog
+        ref="addcollectiondialog"
+        @collection-selected="addToCollection($event)"
+      ></collection-dialog>
+      <collection-dialog
+        ref="removecollectiondialog"
+        @collection-selected="removeObjectFromCollection($event)"
+      ></collection-dialog>
+      <list-dialog
+        ref="addlistdialog"
+        @list-selected="addObjectToList($event)"
+      ></list-dialog>
+      <list-dialog
+        ref="removelistdialog"
+        @list-selected="removeObjectFromList($event)"
+      ></list-dialog>
+      <v-row
+        v-if="objectInfo.tombstone"
+        justify="center"
+      >
+        <v-col cols="6">
+          <v-row justify="center" class="mt-4">
+            <v-alert type="info" density="compact" variant="outlined" color="secondary">
+              <div>
+                {{
+                  $t("This object has been deleted.")
+                }}
+              </div>
+            </v-alert>
+          </v-row>
+          <v-row justify="center" class="my-4">{{ objectInfo.tombstone }}</v-row>
+          <template v-if="objectInfo.relationships">
+            <v-row
+              v-if="objectInfo.relationships.ispartof && objectInfo.relationships.ispartof.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box text-title-large font-weight-light text-white"
+                    >{{ $t("This object is in collection") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships.ispartof" :key="'ispartof' + i"
+                    >
+                      <v-row v-if="rel" align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                            <p-img
+                              :src="instanceconfig?.api +
+                                '/object/' +
+                                rel.pid +
+                                '/thumbnail'
+                              "
+                              class="elevation-1 my-4"
+                              :alt="getObjectTitle(rel)"
+                            ></p-img>
+                          </nuxt-link>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ getObjectTitle(rel) }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'ispartofd' + i"
+                        v-if="
+                          i + 1 < objectInfo.relationships.ispartof.length
+                        "
+                        class="my-4"
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="objectInfo.relationships.isbacksideof && objectInfo.relationships.isbacksideof.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box text-title-large font-weight-light text-white"
+                    >{{ $t("This object is a back side of") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships
+                        .isbacksideof" :key="'isbacksideof' + i"
+                    >
+                      <v-row align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                            <p-img
+                              :src="instanceconfig?.api +
+                                '/object/' +
+                                rel.pid +
+                                '/thumbnail'
+                              "
+                              class="elevation-1 my-4"
+                              :alt="getObjectTitle(rel)"
+                            ></p-img>
+                          </nuxt-link>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ getObjectTitle(rel) }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'isbacksideofd' + i"
+                        v-if="
+                          i + 1 < objectInfo.relationships.isbacksideof.length
+                        "
+                        class="my-4"
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="objectInfo.relationships.hasbackside && objectInfo.relationships.hasbackside.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box text-title-large font-weight-light text-white"
+                    >{{ $t("This object has a back side") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships.hasbackside" :key="'hasbackside' + i"
+                    >
+                      <v-row align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                            <p-img
+                              :src="instanceconfig?.api +
+                                '/object/' +
+                                rel.pid +
+                                '/thumbnail'
+                              "
+                              class="elevation-1 my-4"
+                              :alt="getObjectTitle(rel)"
+                            ></p-img>
+                          </nuxt-link>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ getObjectTitle(rel) }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'hasbacksided' + i"
+                        v-if="
+                          i + 1 < objectInfo.relationships.hasbackside.length
+                        "
+                        class="my-4"
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="objectInfo.relationships.isthumbnailfor && objectInfo.relationships.isthumbnailfor.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box text-title-large font-weight-light text-white"
+                    >{{ $t("This object is thumbnail for") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships
+                        .isthumbnailfor" :key="'isthumbnailfor' + i"
+                    >
+                      <v-row align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                            <p-img
+                              :src="instanceconfig?.api +
+                                '/object/' +
+                                rel.pid +
+                                '/thumbnail'
+                              "
+                              class="elevation-1 my-4"
+                              :alt="getObjectTitle(rel)"
+                            ></p-img>
+                          </nuxt-link>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ getObjectTitle(rel) }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'isthumbnailford' + i"
+                        v-if="
+                          i + 1 <
+                          objectInfo.relationships.isthumbnailfor.length
+                        "
+                        class="my-4"
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="objectInfo.relationships.hasthumbnail && objectInfo.relationships.hasthumbnail.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box text-title-large font-weight-light text-white"
+                    >{{ $t("This object has thumbnail") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships
+                        .hasthumbnail" :key="'hasthumbnail' + i"
+                    >
+                      <v-row align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                            <p-img
+                              :src="instanceconfig?.api +
+                                '/object/' +
+                                rel.pid +
+                                '/thumbnail'
+                              "
+                              class="elevation-1 my-4"
+                              :alt="getObjectTitle(rel)"
+                            ></p-img>
+                          </nuxt-link>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ getObjectTitle(rel) }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'hasthumbnaild' + i"
+                        v-if="
+                          i + 1 < objectInfo.relationships.hasthumbnail.length
+                        "
+                        class="my-4"
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="objectInfo.relationships.references && objectInfo.relationships.references.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box text-title-large font-weight-light text-white"
+                    >{{ $t("This object references") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships.references" :key="'references' + i"
+                    >
+                      <v-row align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                            <p-img
+                              :src="instanceconfig?.api +
+                                '/object/' +
+                                rel.pid +
+                                '/thumbnail'
+                              "
+                              class="elevation-1 my-4"
+                              :alt="getObjectTitle(rel)"
+                            ></p-img>
+                          </nuxt-link>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ getObjectTitle(rel) }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'referencesd' + i"
+                        v-if="
+                          i + 1 < objectInfo.relationships.references.length
+                        "
+                        class="my-4"
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="objectInfo.relationships.isreferencedby && objectInfo.relationships.isreferencedby.length > 0"
+              class="my-6"
+            >
+              <v-col class="pt-0">
+                <v-card tile>
+                  <v-card-title
+                    class="ph-box text-title-large font-weight-light text-white"
+                    >{{ $t("This object is referenced by") }}</v-card-title
+                  >
+                  <v-card-text class="mt-4">
+                    <div
+                      v-for="(rel, i) in objectInfo.relationships
+                        .isreferencedby" :key="'isreferencedby' + i"
+                    >
+                      <v-row align="center">
+                        <v-col cols="12" md="5" class="preview-maxwidth">
+                          <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                            <p-img
+                              :src="instanceconfig?.api +
+                                '/object/' +
+                                rel.pid +
+                                '/thumbnail'
+                              "
+                              class="elevation-1 my-4"
+                              :alt="getObjectTitle(rel)"
+                            ></p-img>
+                          </nuxt-link>
+                        </v-col>
+                        <v-col cols="12" md="7">
+                          <nuxt-link
+                            v-if="rel['dc_title']"
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ getObjectTitle(rel) }}</nuxt-link
+                          >
+                          <nuxt-link
+                            v-else
+                            :to="localePath(`/detail/${rel.pid}`)"
+                            >{{ rel.pid }}</nuxt-link
+                          >
+                        </v-col>
+                      </v-row>
+                      <v-divider
+                        :key="'isreferencedbyd' + i"
+                        v-if="
+                          i + 1 <
+                          objectInfo.relationships.isreferencedby.length
+                        "
+                        class="my-4"
+                      ></v-divider>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </template>
+        </v-col>
+      </v-row>
+      <v-row
+        v-else-if="objectInfo.ismemberof && objectInfo.ismemberof.length > 0"
+        justify="center"
+      >
+        <template v-if="objectInfo.ismemberof.length === 1">
+          <v-col cols="6">
+            <v-row justify="center" class="mt-5">{{
+              $t("MEMBER_OF_CONTAINER", {
+                containerpid: objectInfo.ismemberof[0],
+              })
+            }}</v-row>
+            <v-row justify="center" class="mt-4"
+              ><v-btn
+                variant="elevated"
+                color="primary"
+                :to="
+                  localePath({ path: `/detail/${objectInfo.ismemberof[0]}` })
+                "
+                >{{ $t("Go to container") }}</v-btn
+              ></v-row
+            >
+          </v-col>
+        </template>
+        <template v-else>
+          <v-col cols="6">
+            <v-row justify="center" class="mt-5">{{
+              $t(
+                "This object is a member of multiple containers. Please choose a container to view:"
+              )
+            }}</v-row>
+            <v-row justify="center" class="mt-4"
+              ><v-btn
+                v-for="(contpid, i) in objectInfo.ismemberof"
+                :key="'contbtn' + i"
+                variant="elevated"
+                color="primary"
+                :to="localePath({ path: `/detail/${contpid}` })"
+                >{{ $t("Go to container") }}&nbsp;{{ contpid }}</v-btn
+              ></v-row
+            >
+          </v-col>
+        </template>
+      </v-row>
+      <v-row class="text-break" v-else>
+        <v-col cols="12" md="8">
+          <v-row v-if="objectInfo.cmodel === 'Page'" justify="center">
+            <v-col cols="6">
+              <v-row justify="center" class="text-center text-title-large font-weight-light mt-0 mb-4">{{
+                $t("PAGE_OF_BOOK", { bookpid: objectInfo.bookpid })
+              }}</v-row>
+              <v-row justify="center" class="mt-4 mb-8"
+                ><v-btn
+                  variant="elevated"
+                  color="primary"
+                  :to="localePath({ path: `/detail/${objectInfo.bookpid}` })"
+                  >{{ $t("Go to book") }}</v-btn
+                ></v-row
+              >
+            </v-col>
+          </v-row>
+          <v-row v-if="hasLaterVersion" justify="center">
+            <v-col cols="12" md="6">
+              <v-alert type="info" density="compact" variant="outlined" color="secondary" class="mt-0 mb-4">
+                <div>
+                  {{
+                    $t("There is a more recent version of this object available")
+                  }}
+                </div>
+              </v-alert>
+              <v-row justify="center" v-if="latestVersion" class="mt-4 mb-8">
+                <v-btn
+                  variant="elevated"
+                  color="primary"
+                  :to="localePath({ path: `/detail/${latestVersion.pid}` })"
+                  >{{ $t("Go to latest version") }}</v-btn
+                >
+              </v-row>
+            </v-col>
+          </v-row>
+          <v-row
+            v-if="(displayTitles && displayTitles.length > 0) || (signedin && showAddToCollectionAction)"
+            align="start"
+            no-gutters
+            :justify="(displayTitles && displayTitles.length > 0) ? 'start' : 'end'"
+            :class="{ 'mb-2': !displayTitles || !displayTitles.length }"
+          >
+            <v-col
+              v-if="displayTitles && displayTitles.length > 0"
+              cols="12"
+              sm
+              class="pr-sm-2"
+              style="min-width: 0;"
+            >
+              <div v-for="(titleObj, idx) in displayTitles" :key="'title-' + idx" class="mb-4">
+                <h1 class="text-h4 font-weight-light mb-2 mt-0">{{ titleObj.mainTitle }}</h1>
+                <h2 v-if="titleObj.subtitle" class="text-h5 font-weight-light text-secondary">{{ titleObj.subtitle }}</h2>
+              </div>
+              <v-divider class="mb-2" v-if="!showPreview"></v-divider>
+            </v-col>
+            <v-col
+              v-if="signedin && showAddToCollectionAction"
+              cols="12"
+              sm="auto"
+              class="flex-shrink-0 align-self-start pt-1"
+            >
+              <div
+                class="d-flex"
+                :class="displayTitles && displayTitles.length > 0 ? 'justify-end justify-sm-start' : 'justify-end'"
+              >
+                <v-menu offset-y>
+                  <template v-slot:activator="{ props: menuProps }">
+                    <v-tooltip location="bottom">
+                      <template v-slot:activator="{ props: tipProps }">
+                        <v-icon-btn
+                          :class="displayTitles && displayTitles.length > 0 ? 'ml-sm-1' : ''"
+                          v-bind="{ ...menuProps, ...tipProps }"
+                          :aria-label="$t('Add to collection') + ' / ' + $t('Add to object list')"
+                          icon="mdi-bookmark-plus-outline"
+                        />
+                      </template>
+                      <span>{{ $t('Add to collection') }} / {{ $t('Add to object list') }}</span>
+                    </v-tooltip>
+                  </template>
+                  <v-list>
+                    <v-list-item @click="$refs.addlistdialog.open()">
+                      <v-list-item-title>{{ $t('Add to object list') }} ...</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="$refs.removelistdialog.open()">
+                      <v-list-item-title>{{ $t('Remove from object list') }} ...</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="$refs.addcollectiondialog.open()">
+                      <v-list-item-title>{{ $t('Add to collection') }} ...</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="$refs.removecollectiondialog.open()">
+                      <v-list-item-title>{{ $t('Remove from collection') }} ...</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </div>
+            </v-col>
+          </v-row>
+          <v-row justify="center" v-if="showPreview">
+              <v-col cols="12">
+                <div class="iframe-container" v-if="objectInfo.cmodel === 'Video'">
+                  <iframe
+                    :key="'preview-' + objectInfo.pid + '-' + previewTheme"
+                    :title="$t('Video preview')"
+                    :src="getPreviewUrl(objectInfo.pid)"
+                    width="100%"
+                    height="100%"
+                    frameborder="0"
+                    scrolling="no"
+                    allowfullscreen="yes"
+                    class="responsive-iframe preview-iframe"
+                    >Content</iframe>
+                </div>
+                <iframe
+                v-else
+                  :key="'preview-' + objectInfo.pid + '-' + previewTheme"
+                  :title="$t('Preview')"
+                  :src="getPreviewUrl(objectInfo.pid, { addannotation: instanceconfig.addannotation })"
+                  :width="objectInfo.cmodel === 'Audio' ? '100%' : objectInfo.cmodel === 'Container' ? '100%' : '100%'"
+                  :height="objectInfo.cmodel === 'Audio' ? '270' : objectInfo.cmodel === 'Container' ? '300' : '500'"
+                  :style="
+                    objectInfo.cmodel === 'Audio'
+                      ? 'height: 270px; width: 100%; border: 0px;'
+                      : objectInfo.cmodel === 'Container' ? 'height: 300px; width: 100%; border: 0px;' : 'height: 500px; width: 100%; border: 0px;'
+                  "
+                  class="preview-iframe"
+                  scrolling="no"
+                  frameborder="0"
+                  >Content</iframe
+                >
+                <v-btn
+                variant="elevated"
+                color="primary"
+                  class="mt-2 float-right"
+                  :href="getPreviewUrl(objectInfo.pid)"
+                  target="_blank"
+                  prepend-icon="mdi-open-in-new"
+                  >{{ $t("Open in new window") }}</v-btn
+                >
+              </v-col>
+          </v-row>
+
+          <v-divider class="mt-12 mb-10" v-if="showPreview"></v-divider>
+          <v-row justify="center" v-if="objectInfo.dshash['JSON-LD']">
+            <!-- <pre>
+              {{ JSON.stringify(objectInfo.metadata, null, 2) }}
+            </pre> -->
+            <p-d-jsonld
+              v-if="jsonLdMounted"
+              :jsonld="objectInfo.metadata?.['JSON-LD']"
+              :pid="objectInfo.pid"
+              :bold-label-fields="['dce:title', 'role', 'edm:rights']"
+              :predicatesToHide="['ebucore:filename', 'ebucore:hasMimeType']"
+            ></p-d-jsonld>
+          </v-row>
+
+          <v-row v-else-if="objectInfo.dshash?.['UWMETADATA']">
+            <p-d-uwm-rec
+              :children="objectInfo.metadata?.['uwmetadata']"
+              :cmodel="objectInfo.cmodel"
+            ></p-d-uwm-rec>
+          </v-row>
+
+          <v-row v-else-if="objectInfo.dshash?.['MODS']">
+            <p-d-mods-rec
+              :children="objectInfo.metadata?.['mods']"
+            ></p-d-mods-rec>
+          </v-row>
+
+          <template v-if="(objectInfo.cmodel === 'Container') && !objectInfo.datastreams.includes('CONTAINERINFO')">
+            <div class="my-10">
+              <v-toolbar color="cardtitlebg" elevation="1">
+                <v-toolbar-title>
+                  {{ $t("Members") }} ({{ objectInfo.members.length }})
+                </v-toolbar-title>
+                <v-spacer></v-spacer>
+              </v-toolbar>
+              <v-row
+                v-if="objectInfo.members.length > membersPageSize"
+                justify="start"
+                class="py-4"
+              >
+                <v-col cols="12" class="d-flex justify-start">
+                  <v-pagination
+                    :wrapper-aria-label="$t('pagination')"
+                    :page-aria-label="$t('page')"
+                    :previous-aria-label="$t('previous')"
+                    :next-aria-label="$t('next')"
+                    :current-page-aria-label="$t('currentPage')"
+                    v-model="membersPage"
+                    :length="Math.ceil(objectInfo.members.length / membersPageSize)"
+                  ></v-pagination>
+                </v-col>
+              </v-row>
+            </div>
+            <v-row v-if="objectMembers">
+            <v-col>
+              <v-card
+                class="mb-3 pt-4"
+                width="100%"
+                v-for="member in objectMembersPage"
+                :key="'member_' + member.pid"
+              >
+                <iframe
+                  :title="$t('Preview')"
+                  v-if="!member.isrestricted"
+                  :key="'member-preview-' + member.pid + '-' + previewTheme"
+                  :src="getPreviewUrl(member.pid)"
+                  width="100%"
+                  :height="member.cmodel === 'Audio' ? '60' : '500'"
+                  :style="
+                    member.cmodel === 'Audio'
+                      ? 'height: 60px; width: 100%; border: 0px;'
+                      : 'height: 500px; width: 100%; border: 0px;'
+                  "
+                  class="preview-iframe"
+                  scrolling="no"
+                  frameborder="0"
+                  >Content</iframe
+                >
+                <v-row v-else>
+                <v-col class="text-right mr-3">
+                  <v-chip class="pointer-disabled" label variant="flat" color="btnred" prepend-icon="mdi-lock">{{ $t('Restricted access') }}</v-chip>
+                </v-col>
+              </v-row>
+                <v-card-text>
+                  <p-d-jsonld
+                    v-if="jsonLdMounted"
+                    :jsonld="member.metadata?.['JSON-LD']"
+                    :pid="member.pid"
+                    :bold-label-fields="['dce:title', 'role', 'edm:rights']"
+                    :predicatesToHide="['ebucore:filename', 'ebucore:hasMimeType']"
+                  ></p-d-jsonld>
+                </v-card-text>
+                <v-divider theme="light" v-if="objectInfo.readrights"></v-divider>
+                <v-card-actions class="pa-3" v-if="objectInfo.readrights">
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    class="ml-2"
+                    variant="elevated"
+                    :href="
+                      instanceconfig?.api + '/object/' + member.pid + '/download'
+                    "
+                    color="primary"
+                    prepend-icon="mdi-download"
+                    >{{ $t("Download") }}</v-btn
+                  >
+                  <v-menu offset-y v-if="objectInfo.writerights === 1">
+                    <template v-slot:activator="{ props: menuProps }">
+                      <v-btn class="ml-2" variant="elevated" color="primary" v-bind="menuProps" append-icon="mdi-menu-down"
+                        >{{ $t("Edit") }}</v-btn
+                      >
+                    </template>
+                    <v-list>
+                      <v-list-item
+                        :to="localePath(`/metadata/${member.pid}/edit`)"
+                      >
+                        <v-list-item-title>{{
+                          $t("Edit metadata")
+                        }}</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item :to="localePath(`/rights/${member.pid}`)">
+                        <v-list-item-title>{{
+                          $t("Access rights")
+                        }}</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item
+                        :to="localePath(`/relationships/${member.pid}`)"
+                      >
+                        <v-list-item-title>{{
+                          $t("Relationships")
+                        }}</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item v-if="(instanceconfig.showdeletebutton === 1) || (instanceconfig.showdeletebutton === true)" :to="localePath(`/delete/${member.pid}`)">
+                        <v-list-item-title>{{
+                          $t("Delete")
+                        }}</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                </v-card-actions>
+              </v-card>
+            </v-col>
+            </v-row>
+          </template>
+          <template v-if="objectInfo.readrights && (objectInfo.cmodel === 'Container') && objectInfo.datastreams.includes('CONTAINERINFO')">
+            <v-toolbar color="cardtitlebg" class="my-10" elevation="1">
+              <v-toolbar-title>
+                {{ $t("Members") }} ({{ objectInfo.legacy_container_members.length }})
+              </v-toolbar-title>
+            </v-toolbar>
+            <div v-for="(legacyCMember, i) in objectInfo.legacy_container_members">
+            <v-row class="ml-4 pa-2" :key="'legacyCMember' + i">
+              <v-col cols="10" class="pt-5">
+                {{legacyCMember.filename}}
+              </v-col>
+              <v-col cols="2">
+                <v-btn
+                  v-if="objectInfo.readrights"
+                  :href="
+                    instanceconfig?.api +
+                    '/object/' +
+                    objectInfo.pid +
+                    '/comp/' +
+                    legacyCMember.ds
+                  "
+                  color="primary"
+                  prepend-icon="mdi-download"
+                  >{{ $t("Download") }}</v-btn
+                >
+              </v-col>
+            </v-row>
+            <v-divider></v-divider>
+          </div>
+          </template>
+          <template v-if="objectInfo.cmodel === 'Collection' && collMembers.length">
+            <div class="my-10">
+              <v-toolbar color="cardtitlebg" elevation="1" density="default">
+                <v-toolbar-title>
+                  {{ $t("Members") }} ({{ $store.state.collectionMembersTotal /* leave it like this, computed property wasn't working on first access */ }})
+                </v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-switch
+                  class="mx-2"
+                  theme="dark"
+                  hide-details
+                  :label="$t('Only latest versions')"
+                  v-model="collOnlyLatestVersions"
+                  @update:model-value="refreshCollectionMembers"
+                ></v-switch>
+              </v-toolbar>
+              <v-row
+                v-if="$store.state.collectionMembersTotal > collMembersPagesize"
+                justify="start"
+                class="py-4"
+              >
+                <v-col cols="12" class="d-flex justify-start">
+                  <v-pagination
+                    :wrapper-aria-label="$t('pagination')"
+                    :page-aria-label="$t('page')"
+                    :previous-aria-label="$t('previous')"
+                    :next-aria-label="$t('next')"
+                    :current-page-aria-label="$t('currentPage')"
+                    v-bind:length="collMembersTotalPages"
+                    total-visible="10"
+                    v-model="collMembersPage"
+                  ></v-pagination>
+                </v-col>
+              </v-row>
+            </div>
+            <div v-for="(collMember, i) in collMembers" :key="'collMember' + i">
+              <v-row class="my-4" density="default">
+                <v-col cols="2" class="preview-maxwidth">
+                  <nuxt-link :to="`/detail/${collMember.pid}`">
+                    <p-img
+                      :src="instanceconfig?.api + '/object/' + collMember.pid + '/thumbnail'"
+                      class="elevation-2 mt-2"
+                      :alt="getObjectTitle(collMember)"
+                    >
+                      <template v-slot:placeholder>
+                        <div class="fill-height ma-0" align="center" justify="center">
+                          <v-progress-circular
+                            indeterminate
+                            color="grey-lighten-5"
+                          ></v-progress-circular>
+                        </div>
+                      </template>
+                    </p-img>
+                  </nuxt-link>
+                </v-col>
+                <v-col :cols="objectInfo.writerights === 1 ? 9 : 10">
+                  <v-row no-gutters class="mb-4">
+                    <v-col>
+                      <h2
+                        class="text-title-large font-weight-light text-primary"
+                        @click.stop
+                      >
+                        <nuxt-link
+                          :to="`/detail/${collMember.pid}`"
+                          >{{ getObjectTitle(collMember) }}</nuxt-link
+                        >
+                      </h2>
+                      <p>{{ collMember.pid }}</p>
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      sm="auto"
+                      class="pl-sm-4 text-sm-right"
+                    >
+                      <span v-if="collMember.created">{{
+                        $filterDate(collMember.created)
+                      }}</span>
+                      <v-icon v-if="collMember.cmodel == 'Video'" class="mx-2" color="grey">mdi-video</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Picture'" class="mx-2" color="grey">mdi-image</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Audio'" class="mx-2" color="grey">mdi-volume-high</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'PDFDocument'" class="mx-2" color="grey">mdi-file-document</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Asset'" class="mx-2" color="grey">mdi-file</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Resource'" class="mx-2" color="grey">mdi-link</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Collection'" class="mx-2" color="grey">mdi-folder-open</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Container'" class="mx-2" color="grey">mdi-folder</v-icon>
+                      <v-icon v-else-if="collMember.cmodel == 'Book'" class="mx-2" color="grey">mdi-book-open-variant</v-icon>
+                    </v-col>
+                  </v-row>
+                </v-col>
+                <v-col cols="1" v-if="objectInfo.writerights === 1" justify="center">
+                  <v-tooltip location="bottom">
+                    <template v-slot:activator="{ props: tipProps }">
+                      <v-icon-btn variant="text" color="btnred" class="mt-4" v-bind="tipProps" icon="mdi-delete" @click="collMemberToRemove = collMember.pid; confirmColMemDeleteDlg = true" :aria-label="$t('Remove from collection')" />
+                    </template>
+                    <span>{{ $t('Remove from collection')}}</span>
+                  </v-tooltip>
+                </v-col>
+              </v-row>
+              <v-divider></v-divider>
+            </div>
+            <v-row no-gutters v-if="$store.state.collectionMembersTotal > collMembersPagesize" justify="start">
+              <v-pagination
+                :wrapper-aria-label="$t('pagination')"
+                :page-aria-label="$t('page')"
+                :previous-aria-label="$t('previous')"
+                :next-aria-label="$t('next')"
+                :current-page-aria-label="$t('currentPage')" 
+                v-bind:length="collMembersTotalPages"
+                total-visible="10"
+                v-model="collMembersPage"
+                class="mt-4 mb-4"
+                @input="scrollToCollectionMembersTop"
+              ></v-pagination>
+            </v-row>
+            <v-dialog v-model="confirmColMemDeleteDlg" width="500" >
+              <v-card>
+                <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Remove') }}</v-card-title>
+                <v-card-text class="my-4">{{ $t('REMOVE_COLLECTION_MEMBER', { oldpid: collMemberToRemove, collection: objectInfo.pid })}}</v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn variant="outlined" :disabled="$store.state.loading" @click="collMemberToRemove = null; confirmColMemDeleteDlg = false">{{ $t('Cancel') }}</v-btn>
+                  <v-btn color="btnred" class="text-white" :loading="$store.state.loading" :disabled="$store.state.loading" @click="removeFromCollection()">{{ $t('Remove') }}</v-btn>                  
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </template>
+        </v-col>
+
+        <v-col cols="12" md="4">
+          <v-row justify="end">
+            <v-col cols="12" md="9">
+              <ul class="mb-6 pl-0 side-list mt-0">
+                <li class="mb-6">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box text-title-large font-weight-light text-white"
+                      >{{ $t('Citable links') }}</v-card-title
+                    >
+                    <v-card-text class="mt-4">
+                      <v-row no-gutters class="pt-2" justify="start">
+                       <v-col cols="12" class="pt-0">
+                          <p
+                            v-for="(id, i) in identifiers.persistent"
+                            :key="'id' + i"
+                          >
+                            <span v-if="id.label" class="text-body-small font-weight-bold">
+                              {{ $t(id.label) }}
+                            </span>
+                            <v-dialog
+                              @update:model-value="v => v && loadCitationStyles()"
+                              v-if="id.label === 'DOI'"
+                              class="pb-4"
+                              v-model="doiCiteDialog"
+                              width="800px"
+                            >
+                              <template v-slot:activator="{ props: activatorProps }">
+                                <v-btn
+                                  v-bind="activatorProps"
+                                  variant="flat"
+                                  size="x-small"
+                                  color="primary"
+                                  class="mr-2"
+                                  >{{ $t("Cite") }}</v-btn
+                                >
+                              </template>
+                              <v-card>
+                                <v-card-title
+                                  class="text-title-large font-weight-light text-white"
+                                  >{{ $t("Cite") }}</v-card-title
+                                >
+                                <v-card-text>
+                                  <v-container>
+                                    <v-row class="mt-4" align="center" justify="center">
+                                      <v-btn
+                                        color="primary"
+                                        class="mx-3"
+                                        @click="getBibTex()"
+                                        >{{ $t("Get BibTex") }}</v-btn
+                                      >
+                                      <span>{{ $t("or") }}</span>
+                                      <v-btn
+                                        color="primary"
+                                        class="mx-3"
+                                        @click="getCitation()"
+                                        >{{ $t("Get citation") }}</v-btn
+                                      >
+                                      <v-autocomplete
+                                        :no-data-text="$t('No data available')"
+                                        :loading="citationStylesLoading"
+                                        v-model="citationStyle"
+                                        :items="citationStyles"
+                                        :label="$t('Style')"
+                                      ></v-autocomplete>
+                                    </v-row>
+                                    <v-row align="center" justify="center">
+                                      <v-textarea
+                                        hide-details
+                                        height="300px"
+                                        readonly
+                                        variant="filled"
+                                        v-model="citeResult"
+                                      ></v-textarea>
+                                    </v-row>
+                                  </v-container>
+                                </v-card-text>
+                                <v-divider></v-divider>
+                                <v-card-actions>
+                                  <v-spacer></v-spacer>
+                                  <v-btn
+                                    variant="outlined"
+                                    :loading="doiCiteLoading"
+                                    @click="doiCiteDialog = false"
+                                    >{{ $t("Close") }}</v-btn
+                                  >
+                                </v-card-actions>
+                              </v-card>
+                            </v-dialog>
+                            <br />
+                            <a :href="id.value">{{ id.value }}</a>
+                            <v-tooltip location="bottom">
+                              <template v-slot:activator="{ props }">
+                                <v-icon-btn
+                                  :aria-label="$t('Copy to clipboard')"
+                                  v-bind="props"
+                                  icon="mdi-content-copy"
+                                  @click="copyWithTooltip(id.value, id.value)"
+                                  @blur="resetCopyTooltip()"
+                                />
+                              </template>
+                              <span>{{ $t(getCopyTooltipText(id.value)) }}</span>
+                            </v-tooltip>
+                          </p>
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters justify="end" v-if="(objectInfo.writerights === 1) && !doi && instanceconfig.requestdoiemail && (instanceconfig.requestdoiemail !== '')">
+                        <v-btn 
+                          v-if="instanceconfig.requestdoiusemailto"
+                          color="primary"
+                          :href="doiRequestMailtoLink"
+                        >{{ $t('Request DOI') }}</v-btn>
+                        <v-dialog
+                          v-else
+                          class="pb-4"
+                          v-model="doiRequestDialog"
+                          width="800px"
+                        >
+                          <template v-slot:activator="{ props: activatorProps }">
+                            <v-btn v-bind="activatorProps" color="primary" @click="doiRequestDialog = true" :loading="doiRequestLoading">{{  $t('Request DOI') }}</v-btn>
+                          </template>
+                          <v-card>
+                            <v-card-title
+                              class="text-title-large font-weight-light text-white"
+                              >{{ $t("Request DOI") }}</v-card-title
+                            >
+                            <v-card-text>
+                              <v-container>
+                                <v-row class="mt-4">
+                                  <v-col cols="12">
+                                  {{ $t('Do you want to request a DOI for this object?') }}
+                                  </v-col>
+                                </v-row>
+                                <v-row align="center" justify="center">
+                                  <v-col cols="12">
+                                    <strong>{{ $t('Note') }}</strong>: {{ $t('After the request, please wait for the DOI support to contact you via email.') }}
+                                  </v-col>
+                                </v-row>
+                              </v-container>
+                            </v-card-text>
+                            <v-divider></v-divider>
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn
+                                variant="outlined"
+                                :loading="doiRequestLoading"
+                                @click="doiRequestDialog = false"
+                                >{{ $t("Cancel") }}</v-btn
+                              >                              
+                              <v-btn
+                                color="primary"
+                                :loading="doiRequestLoading"
+                                @click="requestDOI()"
+                                >{{ $t("Request DOI") }}</v-btn
+                              >
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                        
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </li>
+                <li class="mb-6" v-if="identifiers.other.length > 0">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box text-title-large font-weight-light text-white"
+                      >{{ $t('Other links') }}</v-card-title
+                    >
+                    <v-card-text class="mt-4">
+                      <v-row no-gutters class="pt-2" justify="start">
+                       <v-col cols="12" class="pt-0">
+                          <p
+                            v-for="(id, i) in identifiers.other"
+                            :key="'id' + i"
+                          >
+                            <span v-if="id.label" class="text-body-small font-weight-bold">
+                              {{ $t(id.label) }}
+                            </span>
+                            <span v-else class="text-body-small font-weight-bold">
+                              {{ $t('Other identifier') }}
+                            </span>
+                            <br />
+                            <a v-if="id.value.startsWith('http')" :href="id.value">{{ id.value }}</a>
+                            <span v-else>{{ id.value }}</span>
+                            <v-tooltip location="bottom">
+                              <template v-slot:activator="{ props }">
+                                <v-icon-btn
+                                  :aria-label="$t('Copy to clipboard')"
+                                  v-bind="props"
+                                  icon="mdi-content-copy"
+                                  @click="copyWithTooltip(id.value, id.value)"
+                                  @blur="resetCopyTooltip()"
+                                />
+                              </template>
+                              <span>{{ $t(getCopyTooltipText(id.value)) }}</span>
+                            </v-tooltip>
+                          </p>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </li>
+                <li class="mb-6" v-if="(objectInfo.isrestricted) && (objectInfo.cmodel !== 'Collection')"><v-chip label variant="flat" color="btnred" class="pointer-disabled" prepend-icon="mdi-lock">{{ $t('Restricted access') }}</v-chip></li>
+                <li class="mb-6" v-if="
+                  (downloadable && objectInfo.readrights) ||
+                  objectInfo.cmodel === 'Collection' ||
+                  objectInfo.cmodel === 'Resource'
+                ">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box text-title-large font-weight-light text-white"
+                      >{{ $t("Content") }}</v-card-title
+                    >
+                    <v-card-text class="mt-4">
+                      <v-row no-gutters class="pt-2" justify="start">
+                        <v-btn
+                          class="mr-2 mb-2"
+                          v-if="downloadable && objectInfo.readrights"
+                          :href="
+                            instanceconfig?.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/download'
+                          "
+                          color="primary"
+                          prepend-icon="mdi-download"
+                          >{{ $t("Download") }} ({{ $filterBytes(objectInfo.size) }})</v-btn
+                        >
+                        <v-btn
+                          v-if="objectInfo.cmodel === 'Collection'"
+                          :to="
+                            localePath({
+                              path: '/search',
+                              query: { collection: objectInfo.pid, reset: 1 },
+                            })
+                          "
+                          :disabled="collMembers.length === 0"
+                          color="primary"
+                          prepend-icon="mdi-eye"
+                          >{{ $t("Show members") }} ({{
+                            objectInfo.haspartsize
+                          }})</v-btn
+                        >
+                        <v-tooltip location="bottom">
+                          <template v-slot:activator="{ props: tipProps }">
+                            <v-btn
+                              v-bind="tipProps"
+                              class="ml-2"
+                              v-if="objectInfo.cmodel === 'Collection'"
+                              icon
+                              variant="text"
+                              color="primary"
+                              target="_blank"
+                              :href="
+                                instanceconfig?.api +
+                                '/collection/' +
+                                objectInfo.pid +
+                                '/rss'
+                              "
+                              :aria-label="$t('Show RSS Feed')"
+                            >
+                            <v-icon>mdi-rss</v-icon>
+                          </v-btn>
+                          </template>
+                          <span>{{ $t('Show RSS Feed') }}</span>
+                        </v-tooltip>
+                        
+                        <v-btn
+                          v-if="objectInfo.cmodel === 'Resource'"
+                          :href="
+                            instanceconfig?.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/resourcelink/redirect'
+                          "
+                          target="_blank"
+                          color="primary"
+                          prepend-icon="mdi-open-in-new"
+                          >{{ $t("Open link") }}</v-btn
+                        >
+                      </v-row>
+                      <v-divider
+                        class="my-4"
+                        v-if="
+                          (downloadable &&
+                            objectInfo.readrights &&
+                            objectInfo.cmodel === 'Picture') ||
+                          (downloadable &&
+                            objectInfo.readrights &&
+                            objectInfo.dshash?.['WEBVERSION'])
+                        "
+                      ></v-divider>
+                      <template
+                        v-if="
+                          downloadable &&
+                          objectInfo.readrights &&
+                          objectInfo.cmodel === 'Picture'
+                        "
+                      >
+                        <v-row no-gutters class="pt-2">
+                          <a
+                            target="_blank"
+                            :href="
+                              instanceconfig?.api +
+                              '/imageserver/?IIIF=' +
+                              objectInfo.pid +
+                              '.tif/full/pct:50/0/default.jpg'
+                            "
+                            >{{ $t("View scaled to 50%") }}</a
+                          >
+                        </v-row>
+                        <v-row no-gutters class="pt-2">
+                          <a
+                            target="_blank"
+                            :href="
+                              instanceconfig?.api +
+                              '/imageserver/?IIIF=' +
+                              objectInfo.pid +
+                              '.tif/full/pct:25/0/default.jpg'
+                            "
+                            >{{ $t("View scaled to 25%") }}</a
+                          >
+                        </v-row>
+                      </template>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                        v-if="
+                          downloadable &&
+                          objectInfo.readrights &&
+                          objectInfo.dshash?.['WEBVERSION']
+                        "
+                      >
+                        <a
+                          :href="
+                            instanceconfig?.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/download?trywebversion=1'
+                          "
+                          >{{ $t("Download web-optimized version") }}</a
+                        >
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </li>
+
+                <li class="mb-6" v-if="licenseUri || rightsStatements.length > 0">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box text-title-large font-weight-light text-white"
+                      >{{ $t("Rights") }}</v-card-title
+                    >
+                    <v-card-text class="mt-4">
+                      <v-row no-gutters class="pt-2" v-if="licenseUri">
+                        <v-col
+                          class="text-body-small font-weight-bold"
+                          cols="12"
+                          >{{ $t("License") }}</v-col
+                        >
+                        <v-col cols="12" class="mt-2">
+                          <a :href="licenseUri" target="_blank">{{ getLicenseLabel(licenseUri) }}</a>
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters class="pt-2 mt-4" v-if="rightsStatements.length > 0">
+                        <v-col
+                          class="text-body-small font-weight-bold"
+                          cols="12"
+                          >{{ $t("Rights statement") }}</v-col
+                        >
+                        <v-col cols="12" class="mt-2" v-for="(stmt, i) in rightsStatements" :key="'rights-' + i">
+                          <span v-html="autolinkerCheck(stmt)"></span>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </li>
+
+                <li class="mb-6" v-if="objectInfo.isinadminset">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box text-title-large font-weight-light text-white"
+                      >{{ $t("Managed by") }}</v-card-title
+                    >
+                    <v-card-text class="mt-4">
+                      <v-row
+                        v-for="(adminset, i) in objectInfo.isinadminset"
+                        no-gutters
+                        class="pt-2"
+                        :key="'adminset' + i"
+                      >
+                        <a
+                          class="font-weight-regular"
+                          v-if="adminset === 'phaidra:ir.univie.ac.at'"
+                          :href="uscholarlink"
+                          target="_blank"
+                          >u:scholar</a
+                        >
+                        <a
+                          v-else-if="adminset === 'phaidra:utheses.univie.ac.at'"
+                          :href="utheseslink"
+                          target="_blank"
+                          >u:theses</a
+                        >
+                        <span v-else>{{ adminset }}</span>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </li>
+
+                <li class="mb-6">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box text-title-large font-weight-light text-white"
+                      >{{ $t("Details") }}</v-card-title
+                    >
+                    <v-card-text class="mt-4">
+                      <v-row no-gutters class="pt-2" v-if="!instanceconfig.disableUploader">
+                        <v-col
+                          class="text-body-small font-weight-bold"
+                          cols="3"
+                          >{{ $t("UPLOADER_OBJECT_DETAILS") }}</v-col
+                        >
+                        <v-col
+                          cols="8"
+                          offset="1"
+                          v-if="objectInfo.owner.firstname"
+                        >
+                        <a :href="ownerEmail ? 'mailto:' + ownerEmail : null" :class="{ 'no-link': !ownerEmail }">
+                          {{ objectInfo.owner.firstname }} {{ objectInfo.owner.lastname }}
+                        </a>
+
+                        </v-col>
+                        <v-col v-else-if="objectInfo.owner.displayname" cols="8" offset="1">
+                          <v-row>
+                              <v-col>
+                                <a :href="ownerEmail ? 'mailto:' + ownerEmail : null" :class="{ 'no-link': !ownerEmail }"
+                                  >{{ objectInfo.owner.displayname }}</a
+                                >
+                              </v-col>
+                          </v-row>
+                        </v-col>
+                        <v-col v-else cols="8"  offset="1"><a :href="ownerEmail ? 'mailto:' + ownerEmail : null" :class="{ 'no-link': !ownerEmail }"
+                            >{{ objectInfo.owner.username }}</a
+                          ></v-col>
+                      </v-row>
+                      <v-row no-gutters class="pt-2">
+                        <v-col
+                          class="text-body-small font-weight-bold"
+                          cols="3"
+                          >{{ $t("Resource type") }}</v-col
+                        >
+                        <v-col cols="8" offset="1">{{
+                          $t(objectInfo.cmodel)
+                        }}</v-col>
+                      </v-row>
+                      <v-row
+                        v-if="objectInfo.dc_format"
+                        no-gutters
+                        class="pt-2"
+                      >
+                        <v-col
+                          class="text-body-small font-weight-bold"
+                          cols="3"
+                          >{{ $t("Format") }}</v-col
+                        >
+                        <v-col cols="8" offset="1">
+                          <template v-if="objectInfo.dc_format && objectInfo.dc_format.length > 1">
+                            <v-row>
+                              <v-col
+                                v-for="(v, i) in objectInfo.dc_format"
+                                :key="i"
+                                >{{ v }}</v-col
+                              >
+                            </v-row>
+                          </template>
+                          <template v-else>{{
+                            objectInfo.dc_format[0]
+                          }}</template>
+                        </v-col>
+                      </v-row>
+                      <v-row no-gutters class="pt-2">
+                        <v-col
+                          class="text-body-small font-weight-bold"
+                          cols="3"
+                          >{{ $t("Created") }}</v-col
+                        >
+                        <v-col cols="8" offset="1">{{
+                          $filterDateTimeUtc(objectInfo.created)
+                        }} UTC</v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </li>
+
+                <li class="mb-6">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box text-title-large font-weight-light text-white"
+                      >
+                        {{ $t("Usage statistics") }}
+                        <!-- <nuxt-link
+                          class="text-white"
+                          :to="localePath(`/stats/${objectInfo.pid}`)"
+                          :aria-label="$t('Show details')"
+                          v-if="(stats.detail > 0) || (stats.download > 0)"
+                        >
+                          <v-tooltip location="bottom">
+                            <template v-slot:activator="{ props: tipProps }">
+                              <v-icon
+                                  class="text-white ml-2"
+                                  v-bind="tipProps"
+                              >
+                                mdi-information-outline
+                              </v-icon>
+                            </template>
+                            <span>{{ $t('Show details') }}</span>
+                          </v-tooltip>
+                        </nuxt-link> -->
+                      </v-card-title>
+                      <v-card-text class="mt-4">
+                        <v-row>
+                          <v-col>
+                            <v-icon>mdi-eye-outline</v-icon
+                            ><span class="ml-2">{{ stats.detail || '-' }}</span>
+                          </v-col>
+                          <v-col v-if="downloadable">
+                            <v-icon>mdi-download</v-icon
+                            ><span class="ml-2">{{ stats.download || '-' }}</span>
+                          </v-col>
+                          <v-spacer></v-spacer>
+                        </v-row>
+                      </v-card-text>
+                  </v-card>
+                </li>
+
+                <li v-if="objectInfo.versions && objectInfo.versions.length > 0" class="mb-6">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box text-title-large font-weight-light text-white"
+                      >{{ $t("Versions") }}</v-card-title
+                    >
+                    <v-card-text class="mt-4">
+                      <div v-for="(rel, i) in objectInfo.versions" :key="'version' + i">
+                        <v-row>
+                          <v-col cols="12" md="5">{{
+                            $filterDate(rel.created)
+                          }}</v-col>
+                          <v-col cols="12" md="7">
+                            <nuxt-link
+                              v-if="rel['dc_title']"
+                              :to="localePath(`/detail/${rel.pid}`)"
+                              >{{ getObjectTitle(rel) }}</nuxt-link
+                            >
+                            <nuxt-link
+                              v-else
+                              :to="localePath(`/detail/${rel.pid}`)"
+                              >{{ rel.pid }}</nuxt-link
+                            >
+                          </v-col>
+                        </v-row>
+                        <v-divider
+                          v-if="i + 1 < objectInfo.versions.length"
+                          :key="'versiond' + i"
+                          class="my-4"
+                        ></v-divider>
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                </li>
+
+                <li v-if="objectInfo.alternativeversions && objectInfo.alternativeversions.length > 0" class="mb-6">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box text-title-large font-weight-light text-white"
+                      >{{ $t("Alternative versions") }}</v-card-title
+                    >
+                    <v-card-text class="mt-4">
+                      <div
+                        v-for="(rel, i) in objectInfo.alternativeversions" :key="'version' + i"
+                      >
+                        <v-row align="center">
+                          <v-col cols="12" md="5" class="preview-maxwidth">
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                  :src="instanceconfig?.api +
+                                    '/object/' +
+                                    rel.pid +
+                                    '/thumbnail'
+                                  "
+                                  class="elevation-1 my-4"
+                                  :alt="getObjectTitle(rel)"
+                                ></p-img>
+                              </nuxt-link>
+                          </v-col>
+                          <v-col cols="12" md="7">
+                            <nuxt-link
+                              v-if="rel['dc_title']"
+                              :to="localePath(`/detail/${rel.pid}`)"
+                              >{{ getObjectTitle(rel) }}</nuxt-link
+                            >
+                            <nuxt-link
+                              v-else
+                              :to="localePath(`/detail/${rel.pid}`)"
+                              >{{ rel.pid }}</nuxt-link
+                            >
+                          </v-col>
+                        </v-row>
+                        <v-divider
+                          v-if="i + 1 < objectInfo.alternativeversions.length"
+                          :key="'altversiond' + i"
+                          class="my-4"
+                        ></v-divider>
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                </li>
+
+                <li v-if="objectInfo.alternativeformats && objectInfo.alternativeformats.length > 0" class="mb-6">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box text-title-large font-weight-light text-white"
+                      >{{ $t("Alternative formats") }}</v-card-title
+                    >
+                    <v-card-text class="mt-4">
+                      <div
+                        v-for="(rel, i) in objectInfo.alternativeformats" :key="'format' + i"
+                      >
+                        <v-row>
+                          <v-col cols="12" md="5"><template v-if="rel.dc_format">{{ rel.dc_format[0] }}</template></v-col>
+                          <v-col cols="12" md="7">
+                            <nuxt-link
+                              v-if="rel['dc_title']"
+                              :to="localePath(`/detail/${rel.pid}`)"
+                              >{{ getObjectTitle(rel) }}</nuxt-link
+                            >
+                            <nuxt-link
+                              v-else
+                              :to="localePath(`/detail/${rel.pid}`)"
+                              >{{ rel.pid }}</nuxt-link
+                            >
+                          </v-col>
+                        </v-row>
+                        <v-divider
+                          v-if="i + 1 < objectInfo.alternativeformats.length"
+                          :key="'altformatsd' + i"
+                          class="my-4"
+                        ></v-divider>
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                </li>
+
+                <template v-if="objectInfo.relationships">
+                  <li v-if="objectInfo.relationships.ispartof && objectInfo.relationships.ispartof.length > 0" class="mb-6">
+                    <v-card tile>
+                      <v-card-title
+                        class="ph-box text-title-large font-weight-light text-white"
+                        >{{ $t("This object is in collection") }}</v-card-title
+                      >
+                      <v-card-text class="mt-4">
+                        <div
+                          v-for="(rel, i) in objectInfo.relationships.ispartof" :key="'ispartof' + i"
+                        >
+                          <v-row align="center">
+                            <v-col cols="12" md="5" class="preview-maxwidth">
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                  :src="instanceconfig?.api +
+                                    '/object/' +
+                                    rel.pid +
+                                    '/thumbnail'
+                                  "
+                                  class="elevation-1 my-4"
+                                  :alt="getObjectTitle(rel)"
+                                ></p-img>
+                              </nuxt-link>
+                            </v-col>
+                            <v-col cols="12" md="7">
+                              <nuxt-link
+                                v-if="rel['dc_title']"
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ getObjectTitle(rel) }}</nuxt-link
+                              >
+                              <nuxt-link
+                                v-else
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ rel.pid }}</nuxt-link
+                              >
+                            </v-col>
+                          </v-row>
+                          <v-divider
+                            :key="'ispartofd' + i"
+                            v-if="
+                              i + 1 < objectInfo.relationships.ispartof.length
+                            "
+                            class="my-4"
+                          ></v-divider>
+                        </div>
+                      </v-card-text>
+                    </v-card>
+                  </li>
+
+                  <li v-if="objectInfo.relationships.isbacksideof && objectInfo.relationships.isbacksideof.length > 0" class="mb-6">
+                    <v-card tile>
+                      <v-card-title
+                        class="ph-box text-title-large font-weight-light text-white"
+                        >{{ $t("This object is a back side of") }}</v-card-title
+                      >
+                      <v-card-text class="mt-4">
+                        <div
+                          v-for="(rel, i) in objectInfo.relationships
+                            .isbacksideof" :key="'isbacksideof' + i"
+                        >
+                          <v-row align="center">
+                            <v-col cols="12" md="5" class="preview-maxwidth">
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                  :src="instanceconfig?.api +
+                                    '/object/' +
+                                    rel.pid +
+                                    '/thumbnail'
+                                  "
+                                  class="elevation-1 my-4"
+                                  :alt="getObjectTitle(rel)"
+                                ></p-img>
+                              </nuxt-link>
+                            </v-col>
+                            <v-col cols="12" md="7">
+                              <nuxt-link
+                                v-if="rel['dc_title']"
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ getObjectTitle(rel) }}</nuxt-link
+                              >
+                              <nuxt-link
+                                v-else
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ rel.pid }}</nuxt-link
+                              >
+                            </v-col>
+                          </v-row>
+                          <v-divider
+                            :key="'isbacksideofd' + i"
+                            v-if="
+                              i + 1 < objectInfo.relationships.isbacksideof.length
+                            "
+                            class="my-4"
+                          ></v-divider>
+                        </div>
+                      </v-card-text>
+                    </v-card>
+                  </li>
+
+                  <li v-if="objectInfo.relationships.hasbackside && objectInfo.relationships.hasbackside.length > 0" class="mb-6">
+                    <v-card tile>
+                      <v-card-title
+                        class="ph-box text-title-large font-weight-light text-white"
+                        >{{ $t("This object has a back side") }}</v-card-title
+                      >
+                      <v-card-text class="mt-4">
+                        <div
+                          v-for="(rel, i) in objectInfo.relationships.hasbackside" :key="'hasbackside' + i"
+                        >
+                          <v-row align="center">
+                            <v-col cols="12" md="5" class="preview-maxwidth">
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                  :src="instanceconfig?.api +
+                                    '/object/' +
+                                    rel.pid +
+                                    '/thumbnail'
+                                  "
+                                  class="elevation-1 my-4"
+                                  :alt="getObjectTitle(rel)"
+                                ></p-img>
+                              </nuxt-link>
+                            </v-col>
+                            <v-col cols="12" md="7">
+                              <nuxt-link
+                                v-if="rel['dc_title']"
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ getObjectTitle(rel) }}</nuxt-link
+                              >
+                              <nuxt-link
+                                v-else
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ rel.pid }}</nuxt-link
+                              >
+                            </v-col>
+                          </v-row>
+                          <v-divider
+                            :key="'hasbacksided' + i"
+                            v-if="
+                              i + 1 < objectInfo.relationships.hasbackside.length
+                            "
+                            class="my-4"
+                          ></v-divider>
+                        </div>
+                      </v-card-text>
+                    </v-card>
+                  </li>
+
+                  <li v-if="objectInfo.relationships.isthumbnailfor && objectInfo.relationships.isthumbnailfor.length > 0" class="mb-6">
+                    <v-card tile>
+                      <v-card-title
+                        class="ph-box text-title-large font-weight-light text-white"
+                        >{{ $t("This object is thumbnail for") }}</v-card-title
+                      >
+                      <v-card-text class="mt-4">
+                        <div
+                          v-for="(rel, i) in objectInfo.relationships
+                            .isthumbnailfor" :key="'isthumbnailfor' + i"
+                        >
+                          <v-row align="center">
+                            <v-col cols="12" md="5" class="preview-maxwidth">
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                  :src="instanceconfig?.api +
+                                    '/object/' +
+                                    rel.pid +
+                                    '/thumbnail'
+                                  "
+                                  class="elevation-1 my-4"
+                                  :alt="getObjectTitle(rel)"
+                                ></p-img>
+                              </nuxt-link>
+                            </v-col>
+                            <v-col cols="12" md="7">
+                              <nuxt-link
+                                v-if="rel['dc_title']"
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ getObjectTitle(rel) }}</nuxt-link
+                              >
+                              <nuxt-link
+                                v-else
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ rel.pid }}</nuxt-link
+                              >
+                            </v-col>
+                          </v-row>
+                          <v-divider
+                            :key="'isthumbnailford' + i"
+                            v-if="
+                              i + 1 <
+                              objectInfo.relationships.isthumbnailfor.length
+                            "
+                            class="my-4"
+                          ></v-divider>
+                        </div>
+                      </v-card-text>
+                    </v-card>
+                  </li>
+
+                  <li v-if="objectInfo.relationships.hasthumbnail && objectInfo.relationships.hasthumbnail.length > 0" class="mb-6">
+                    <v-card tile>
+                      <v-card-title
+                        class="ph-box text-title-large font-weight-light text-white"
+                        >{{ $t("This object has thumbnail") }}</v-card-title
+                      >
+                      <v-card-text class="mt-4">
+                        <div
+                          v-for="(rel, i) in objectInfo.relationships
+                            .hasthumbnail" :key="'hasthumbnail' + i"
+                        >
+                          <v-row align="center">
+                            <v-col cols="12" md="5" class="preview-maxwidth">
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                  :src="instanceconfig?.api +
+                                    '/object/' +
+                                    rel.pid +
+                                    '/thumbnail'
+                                  "
+                                  class="elevation-1 my-4"
+                                  :alt="getObjectTitle(rel)"
+                                ></p-img>
+                              </nuxt-link>
+                            </v-col>
+                            <v-col cols="12" md="7">
+                              <nuxt-link
+                                v-if="rel['dc_title']"
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ getObjectTitle(rel) }}</nuxt-link
+                              >
+                              <nuxt-link
+                                v-else
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ rel.pid }}</nuxt-link
+                              >
+                            </v-col>
+                          </v-row>
+                          <v-divider
+                            :key="'hasthumbnaild' + i"
+                            v-if="
+                              i + 1 < objectInfo.relationships.hasthumbnail.length
+                            "
+                            class="my-4"
+                          ></v-divider>
+                        </div>
+                      </v-card-text>
+                    </v-card>
+                  </li>
+
+                  <li v-if="objectInfo.relationships.references && objectInfo.relationships.references.length > 0" class="mb-6">
+                    <v-card tile>
+                      <v-card-title
+                        class="ph-box text-title-large font-weight-light text-white"
+                        >{{ $t("This object references") }}</v-card-title
+                      >
+                      <v-card-text class="mt-4">
+                        <div
+                          v-for="(rel, i) in objectInfo.relationships.references" :key="'references' + i"
+                        >
+                          <v-row align="center">
+                            <v-col cols="12" md="5" class="preview-maxwidth">
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                :src="instanceconfig?.api +
+                                  '/object/' +
+                                  rel.pid +
+                                  '/thumbnail'
+                                "
+                                class="elevation-1 my-4"
+                                :alt="getObjectTitle(rel)"
+                              ></p-img>
+                              </nuxt-link>
+                            </v-col>
+                            <v-col cols="12" md="7">
+                              <nuxt-link
+                                v-if="rel['dc_title']"
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ getObjectTitle(rel) }}</nuxt-link
+                              >
+                              <nuxt-link
+                                v-else
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ rel.pid }}</nuxt-link
+                              >
+                            </v-col>
+                          </v-row>
+                          <v-divider
+                            :key="'referencesd' + i"
+                            v-if="
+                              i + 1 < objectInfo.relationships.references.length
+                            "
+                            class="my-4"
+                          ></v-divider>
+                        </div>
+                      </v-card-text>
+                    </v-card>
+                  </li>
+
+                  <li v-if="objectInfo.relationships.isreferencedby && objectInfo.relationships.isreferencedby.length > 0" class="mb-6">
+                    <v-card tile>
+                      <v-card-title
+                        class="ph-box text-title-large font-weight-light text-white"
+                        >{{ $t("This object is referenced by") }}</v-card-title
+                      >
+                      <v-card-text class="mt-4">
+                        <div
+                          v-for="(rel, i) in objectInfo.relationships
+                            .isreferencedby" :key="'isreferencedby' + i"
+                        >
+                          <v-row align="center">
+                            <v-col cols="12" md="5" class="preview-maxwidth">
+                              <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
+                                <p-img
+                                  :src="instanceconfig?.api +
+                                    '/object/' +
+                                    rel.pid +
+                                    '/thumbnail'
+                                  "
+                                  class="elevation-1 my-4"
+                                  :alt="getObjectTitle(rel)"
+                                ></p-img>
+                              </nuxt-link>
+                            </v-col>
+                            <v-col cols="12" md="7">
+                              <nuxt-link
+                                v-if="rel['dc_title']"
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ getObjectTitle(rel) }}</nuxt-link
+                              >
+                              <nuxt-link
+                                v-else
+                                :to="localePath(`/detail/${rel.pid}`)"
+                                >{{ rel.pid }}</nuxt-link
+                              >
+                            </v-col>
+                          </v-row>
+                          <v-divider
+                            :key="'isreferencedbyd' + i"
+                            v-if="
+                              i + 1 <
+                              objectInfo.relationships.isreferencedby.length
+                            "
+                            class="my-4"
+                          ></v-divider>
+                        </div>
+                      </v-card-text>
+                    </v-card>
+                  </li>
+                </template>
+
+                <li class="mb-6">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box text-title-large font-weight-light text-white"
+                      >{{ $t("Metadata") }}</v-card-title
+                    >
+                    <v-card-text class="mt-4">
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                        v-if="objectInfo.dshash?.['JSON-LD']"
+                      >
+                        <a
+                        :href="
+                            instanceconfig?.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/json-ld'
+                          "
+                          target="_blank"
+                          >{{ $t("JSON-LD") }}</a
+                        >
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                        v-if="showIiifManifestLink"
+                      >
+                        <a
+                        :href="
+                            instanceconfig?.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/iiifmanifest'
+                          "
+                          target="_blank"
+                          >{{ $t("IIIF-MANIFEST") }}</a
+                        >
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                        v-if="objectInfo.dshash?.['UWMETADATA']"
+                      >
+                        <a
+                          :href="
+                            instanceconfig?.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/uwmetadata?format=xml'
+                          "
+                          target="_blank"
+                          >{{ $t("Metadata XML") }}</a
+                        >
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                        v-if="objectInfo.dshash?.['MODS']"
+                      >
+                        <a
+                          :href="
+                            instanceconfig?.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/mods?format=xml'
+                          "
+                          target="_blank"
+                          >{{ $t("Metadata XML") }}</a
+                        >
+                      </v-row>
+                      <v-row
+                        v-for="(dsid, index) in downloadableDatastreams"
+                        :key="'ds-' + index"
+                        no-gutters
+                        class="pt-2"
+                      >
+                        <a
+                          :href="
+                            instanceconfig?.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/datastream/' +
+                            dsid
+                          "
+                          target="_blank"
+                          >{{ $t(dsid) }}</a
+                        >
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </li>
+
+                <li class="mb-6">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box text-title-large font-weight-light text-white"
+                      >{{ $t("Export formats") }}</v-card-title
+                    >
+                    <v-card-text class="mt-4">
+                      <v-row no-gutters class="pt-2">
+                        <a
+                          :href="
+                            instanceconfig?.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/index/dc'
+                          "
+                          target="_blank"
+                          >{{ $t("Dublin Core") }}</a
+                        >
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                      >
+                        <a
+                          class="mb-1"
+                          :href="
+                            instanceconfig?.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/datacite?format=xml'
+                          "
+                          target="_blank"
+                          >{{ $t("DataCite") }}</a
+                        >
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                      >
+                        <a
+                          class="mb-1"
+                          :href="
+                            instanceconfig?.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/lom'
+                          "
+                          target="_blank"
+                          >{{ $t("LOM") }}</a
+                        >
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                      >
+                        <a
+                          class="mb-1"
+                          :href="
+                            instanceconfig?.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/edm'
+                          "
+                          target="_blank"
+                          >{{ $t("EDM") }}</a
+                        >
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                      >
+                        <a
+                          class="mb-1"
+                          :href="
+                            instanceconfig?.api +
+                            '/object/' +
+                            objectInfo.pid +
+                            '/openaire'
+                          "
+                          target="_blank"
+                          >{{ $t("OpenAIRE") }}</a
+                        >
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </li>
+
+                <li class="mb-6" v-if="objectInfo.writerights === 1">
+                  <v-card tile>
+                    <v-card-title
+                      class="ph-box text-title-large font-weight-light text-white"
+                      >{{ $t("Edit") }}</v-card-title
+                    >
+                    <v-card-text class="mt-4">
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                        v-if="objectInfo.dshash?.['JSON-LD']"
+                      >
+                        <nuxt-link
+                          :to="localePath(`/metadata/${objectInfo.pid}/edit`)"
+                          >{{ $t("Edit metadata") }}</nuxt-link
+                        >
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                        v-if="objectInfo.dshash?.['UWMETADATA']"
+                      >
+                        <nuxt-link
+                          :to="localePath(`/uwmetadata/${objectInfo.pid}/edit`)"
+                          >{{ $t("Edit metadata") }}</nuxt-link
+                        >
+                      </v-row>
+
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                      >
+                        <a
+                            class="mb-1"
+                            @click="$refs.addcollectiondialog.open()"
+                        >{{ $t("Add to collection") }}</a>
+                      </v-row>
+
+                      <v-row
+                        v-if="objectInfo.cmodel === 'Collection'"
+                        no-gutters
+                        class="pt-2"
+                      >
+                        <v-dialog
+                          v-model="collectionHelpDialog"
+                          width="800"
+                        >
+                          <template v-slot:activator="{ props: activatorProps }">
+                            <a
+                              class="mb-1"
+                              v-bind="activatorProps"
+                              >{{ $t("Manage members") }}</a
+                            >
+                          </template>
+                          <v-card>
+                            <v-card-title class="text-title-large font-weight-light text-white">
+                              {{ $t("Manage members") }}
+                            </v-card-title>
+
+                            <v-card-text class="mt-4">
+                              {{$t('ADD_COLLECTION_MEMBERS_HELP')}}
+                            </v-card-text>
+
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn
+                                variant="outlined"
+                                @click="collectionHelpDialog = false"
+                              >
+                                {{ $t("Close") }}
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                        v-if="
+                          ((objectInfo.cmodel === 'Container') && (objectInfo.members.length <= 500 )) ||
+                          ((objectInfo.cmodel === 'Collection') && ($store.state.collectionMembersTotal >= 1 && $store.state.collectionMembersTotal <= 500))
+                        "
+                      >
+                        <nuxt-link
+                          class="mb-1"
+                          :to="localePath(`/sort/${objectInfo.pid}`)"
+                          >{{ $t("Sort members (drag & drop)") }}</nuxt-link
+                        >
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                        v-if="
+                          objectInfo.cmodel === 'Container' ||
+                          ((objectInfo.cmodel === 'Collection') && ($store.state.collectionMembersTotal >= 1))
+                        "
+                      >
+                        <nuxt-link
+                          class="mb-1"
+                          :to="localePath(`/sorttextinput/${objectInfo.pid}`)"
+                          >{{ $t("Sort members (text input)") }}</nuxt-link
+                        >
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                        v-if="objectInfo.cmodel !== 'Page'"
+                      >
+                        <v-dialog
+                          class="pb-4"
+                          v-model="relationDialog"
+                          width="800px"
+                        >
+                          <template v-slot:activator="{ props: activatorProps }">
+                            <a v-bind="activatorProps" class="mb-1">{{
+                              $t("Upload related object")
+                            }}</a>
+                          </template>
+                          <v-card>
+                            <v-card-title
+                              class="text-title-large font-weight-light text-white"
+                              >{{ $t("Choose relation") }}</v-card-title
+                            >
+                            <v-card-text>
+                              <v-container>
+                                <v-row align="center" justify="center">
+                                  <v-col cols="12" md="4">
+                                    <span>{{ $t("RELATION_SUBMITTED") }}</span>
+                                  </v-col>
+                                  <v-col cols="12" md="4">
+                                    <v-radio-group v-model="chosenRelation">
+                                      <template
+                                        v-for="(r, i) in vocabularies[
+                                          'relations'
+                                        ].terms"
+                                      >
+                                        <v-radio
+                                          v-if="
+                                            r['@id'] ===
+                                            'http://phaidra.univie.ac.at/XML/V1.0/relations#hasSuccessor'
+                                          "
+                                          :key="'relv' + i"
+                                          :label="$t('Is new version of')"
+                                          :value="
+                                            r['skos:notation'][0].toLowerCase()
+                                          "
+                                        ></v-radio>
+                                        <template
+                                          v-else-if="
+                                            r['@id'] ===
+                                            'info:fedora/fedora-system:def/relations-external#hasCollectionMember'
+                                          "
+                                        >
+                                          <v-radio
+                                            v-if="
+                                              objectInfo.cmodel === 'Collection'
+                                            "
+                                            :key="'relm' + i"
+                                            :label="
+                                              $t('Is member of collection')
+                                            "
+                                            :value="
+                                              r[
+                                                'skos:notation'
+                                              ][0].toLowerCase()
+                                            "
+                                          ></v-radio>
+                                        </template>
+                                        <template
+                                          v-else-if="
+                                            r['@id'] ===
+                                            'http://pcdm.org/models#hasMember'
+                                          "
+                                        >
+                                          <v-radio
+                                            v-if="
+                                              objectInfo.cmodel === 'Container'
+                                            "
+                                            :key="'relcm' + i"
+                                            :label="
+                                              $t('Is member of container')
+                                            "
+                                            :value="
+                                              r[
+                                                'skos:notation'
+                                              ][0].toLowerCase()
+                                            "
+                                          ></v-radio>
+                                        </template>
+                                        <v-radio
+                                          v-else-if="r['@id'] !==
+                                            'http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#hasTrack'"
+                                          :key="'rele' + i"
+                                          :label="
+                                            getLocalizedTermLabel(
+                                              'relations',
+                                              r['@id']
+                                            )
+                                          "
+                                          :value="
+                                            r['skos:notation'][0].toLowerCase()
+                                          "
+                                        ></v-radio>
+                                      </template>
+                                    </v-radio-group>
+                                  </v-col>
+                                  <v-col cols="12" md="4">
+                                    <span
+                                      >{{ objectInfo.pid }} ({{
+                                        $t("this object")
+                                      }})</span
+                                    >
+                                  </v-col>
+                                </v-row>
+                              </v-container>
+                            </v-card-text>
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn variant="outlined" @click="relationDialog = false">{{
+                                $t("Cancel")
+                              }}</v-btn>
+                              <v-btn
+                                class="bg-primary"
+                                :disabled="!chosenRelation"
+                                @click="
+                                  $router.push(
+                                    localeLocation(
+                                      `/submitrelated/${objectInfo.pid}/${chosenRelation}`
+                                    )
+                                  )
+                                "
+                                >{{ $t("Continue") }}</v-btn
+                              >
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                      </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                        v-if="
+                          objectInfo.cmodel !== 'Container' &&
+                          objectInfo.cmodel !== 'Collection' &&
+                          objectInfo.cmodel !== 'Book' &&
+                          objectInfo.cmodel !== 'Page'
+                        "
+                      >
+                        <nuxt-link
+                          class="mb-1"
+                          :to="localePath(`/rights/${objectInfo.pid}`)"
+                          >{{ $t("Access rights") }}</nuxt-link
+                        >
+                      </v-row>
+                      <v-row no-gutters class="pt-2">
+                        <nuxt-link
+                          class="mb-1"
+                          :to="localePath(`/relationships/${objectInfo.pid}`)"
+                          >{{ $t("Relationships") }}</nuxt-link
+                        >
+                      </v-row>
+                      <v-row v-if="(instanceconfig.showdeletebutton === 1) || (instanceconfig.showdeletebutton === true) || (user.isadmin)" no-gutters class="pt-2">
+                        <nuxt-link
+                          class="mb-1"
+                          :to="localePath(`/delete/${objectInfo.pid}`)"
+                          >{{ $t("Delete") }}</nuxt-link
+                        >
+                      </v-row>
+                      <v-row v-if="user.isadmin && objectInfo.cmodel !== 'Collection' && objectInfo.cmodel !== 'Container'" no-gutters class="pt-2">
+                        <a
+                          class="mb-1"
+                          @click="datareplaceDialog = true"
+                          >{{ $t("Replace data") }}</a
+                        >
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </li>
+
+                <li class="mb-2">
+                  <v-row v-if="objectInfo.oc_mpid" justify="end" class="mb-2">
+                    <v-col cols="12" class="pt-0">
+                        <p class="text-right">
+                          <span class="text-body-small font-weight-bold">{{ $t('Media Package Identifier') }}</span
+                          ><br /><span>id={{ objectInfo.oc_mpid }}
+                          <v-tooltip location="bottom">
+                              <template v-slot:activator="{ props: tipProps }">
+                                <v-icon-btn
+                                  :aria-label="$t('Copy to clipboard')"
+                                  v-bind="tipProps"
+                                  icon="mdi-content-copy"
+                                  @click="copyWithTooltip('id='+objectInfo.oc_mpid, 'mpid')"
+                                  @blur="resetCopyTooltip()" />
+                              </template>
+                              <span>{{ $t(getCopyTooltipText('mpid')) }}</span>
+                          </v-tooltip>
+                          </span>
+                        </p>
+                    </v-col>
+                  </v-row>
+                </li>
+              </ul>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+      <v-dialog v-model="datareplaceDialog" max-width="1200px">
+      <v-card>
+        <v-card-title class="text-title-large font-weight-light text-white">
+          {{ $t('Upload new file to') }} {{objectInfo.pid}} ({{objectInfo.cmodel}})
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text class="mt-4">
+          <v-container @drop.prevent="addDropFile" @dragover.prevent>
+            <v-file-input v-model="datareplaceFile" :error-messages="datareplaceUploadErrors" :disabled="datareplaceLoading"></v-file-input>
+          </v-container>
+          <v-row v-if="datareplaceUploadProgress" class="mt-4">
+            <v-col cols="12">
+              <v-row no-gutters>
+                <v-progress-linear :indeterminate="datareplaceUploadProgress === 100" v-model="datareplaceUploadProgress" color="primary"></v-progress-linear>
+              </v-row>
+              <v-row no-gutters class="text-primary mt-1">
+                <span v-if="datareplaceUploadProgress < 100">{{ $t('Uploading...') + ' ' + Math.ceil(datareplaceUploadProgress) }}%</span>
+                <span v-else>{{ $t('Processing...') }}</span>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn variant="outlined" @click.stop="datareplaceDialog=false">{{ $t("Cancel") }}</v-btn>
+          <v-btn color="primary" @click="datareplaceUpload()">{{ $t("Upload File") }}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    </template>
+  </v-container>
+</template>
+
+
+<script>
+import { getCurrentInstance, nextTick } from 'vue'
+import { onBeforeRouteUpdate } from 'vue-router'
+import { useAsyncData, useNuxtApp, useRoute, useState } from '#app'
+import { context } from "../../mixins/context";
+import { config } from "../../mixins/config";
+import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary";
+import objectMixin from 'phaidra-vue-components/src/mixins/object'
+import lang3to2map from "phaidra-vue-components/src/utils/lang3to2map";
+import Autolinker from "autolinker";
+import copyTooltip from 'phaidra-vue-components/src/mixins/copyTooltip'
+
+export default {
+  mixins: [context, config, vocabulary, objectMixin, copyTooltip],
+  setup () {
+    const route = useRoute()
+    const nuxtApp = useNuxtApp()
+    const instance = getCurrentInstance()
+    /** Survives SSR when `instance.proxy` is not ready yet; drives the same UI as `notFound` in data(). */
+    const detailPageNotFound = useState('detail-page-not-found', () => false)
+
+    useHead(() => instance?.proxy?.detailsMetaInfo || {})
+
+    /**
+     * Load via Vuex/axios (works SSR + client). Do not depend on `instance.proxy` for the fetch:
+     * during setup/hydration `proxy` is often still null, which previously aborted the handler and left the page empty.
+     */
+    useAsyncData(
+      'detail-object',
+      async () => {
+        const pid = route.params.pid
+        if (!pid || !/^o:\d+$/.test(String(pid))) return null
+
+        // Detail is public and does not always run auth middleware.
+        // Rehydrate token here so permission-sensitive fields (writerights, menus) are fetched as authenticated user on reload.
+        if (!nuxtApp.$store.state?.user?.token) {
+          let token = useCookie('XSRF-TOKEN').value
+          if (!token && import.meta.client) {
+            try {
+              token = localStorage.getItem('XSRF-TOKEN')
+            } catch (_) {}
+          }
+          if (token) {
+            nuxtApp.$store.commit('setToken', token)
+            if (!nuxtApp.$store.state?.user?.username) {
+              try {
+                await nuxtApp.$store.dispatch('getLoginData')
+              } catch (_) {}
+            }
+          }
+        }
+
+        if (import.meta.client && !nuxtApp.isHydrating) {
+          await nextTick()
+          instance?.proxy?.clearDetailAuxiliaryState?.()
+          nuxtApp.$store.commit('setLoading', true)
+          nuxtApp.$store.commit('setObjectInfo', null)
+        }
+
+        await nextTick()
+        detailPageNotFound.value = false
+        const proxyEarly = instance?.proxy
+        if (proxyEarly) {
+          proxyEarly.notFound = false
+        }
+
+        try {
+          await nuxtApp.$store.dispatch('fetchObjectInfo', pid)
+        } catch (error) {
+          const status = error?.response?.status ?? error?.statusCode ?? error?.status
+          if (Number(status) === 404) {
+            nuxtApp.$store.commit('setObjectInfo', null)
+            detailPageNotFound.value = true
+            await nextTick()
+            const proxy = instance?.proxy
+            if (proxy) {
+              proxy.notFound = true
+            }
+            if (import.meta.client) nuxtApp.$store.commit('setLoading', false)
+            return null
+          }
+          if (import.meta.client) nuxtApp.$store.commit('setLoading', false)
+          throw error
+        }
+
+        const info = nuxtApp.$store.state.objectInfo
+
+        if (!info) {
+          if (import.meta.client) nuxtApp.$store.commit('setLoading', false)
+          return null
+        }
+
+        if (info.cmodel === 'Container') {
+          await nuxtApp.$store.dispatch('fetchObjectMembers', info)
+        }
+        if (info.cmodel === 'Collection') {
+          await nextTick()
+          const proxy = instance?.proxy
+          await nuxtApp.$store.dispatch('fetchCollectionMembers', {
+            pid,
+            page: proxy?.collMembersCurrentPage ?? 1,
+            pagesize: proxy?.collMembersPagesize ?? 10,
+            onlylatestversion: proxy?.collOnlyLatestVersions ?? true
+          })
+        }
+
+        await nextTick()
+        let proxy = instance?.proxy
+        if (proxy) {
+          proxy.postMetadataLoad(proxy)
+        }
+
+        if (info?.dshash?.['JSON-LD']) {
+          try {
+            const response = await nuxtApp.$axios.get('/object/' + pid + '/json-ld')
+            await nextTick()
+            proxy = instance?.proxy
+            if (proxy) proxy.fullJsonLd = response.data
+          } catch (e) {
+            console.log(e)
+          }
+        }
+
+        await nextTick()
+        proxy = instance?.proxy
+        if (proxy && typeof proxy.syncDetailMetaFromObject === 'function') {
+          proxy.syncDetailMetaFromObject()
+        }
+
+        if (import.meta.client && route.params.pid === pid) {
+          await nextTick()
+          proxy = instance?.proxy
+          try {
+            if (proxy) await proxy.fetchChecksums(proxy, pid)
+          } catch (_) {}
+          proxy?.fetchUsageStats(proxy, pid)
+          nuxtApp.$store.commit('setLoading', false)
+        }
+
+        return true
+      },
+      { watch: [() => route.params.pid] }
+    )
+
+    onBeforeRouteUpdate((to) => {
+      if (!import.meta.client) return
+      const proxy = instance?.proxy
+      if (!proxy) return
+      if (!to.params.pid || !/^o:\d+$/.test(String(to.params.pid))) return
+      if (!proxy.objectInfo || proxy.objectInfo.pid !== to.params.pid) {
+        proxy.clearDetailAuxiliaryState()
+        proxy.$store.commit('setLoading', true)
+        proxy.$store.commit('setObjectInfo', null)
+      }
+    })
+
+    return { detailPageNotFound }
+  },
+  validate({ params }) {
+    return /^o:\d+$/.test(params.pid);
+  },
+  computed: {
+    ownerEmail: function () {
+      return this.instanceconfig.owneremailoverride ? this.instanceconfig.owneremailoverride : this.objectInfo.owner.email
+    },
+    showAddToCollectionAction: function () {
+      return !!(this.objectInfo && !this.objectInfo.tombstone)
+    },
+    detailBookmarkMembers: function () {
+      if (!this.objectInfo) {
+        return []
+      }
+      const title = this.objectInfo.sort_dc_title ? String(this.objectInfo.sort_dc_title) : ''
+      return [{ pid: this.objectInfo.pid, title }]
+    },
+    collMembersPage: {
+      get() {
+        return this.collMembersCurrentPage;
+      },
+      set(value) {
+        if (this.collMembersCurrentPage != value) {
+          this.collMembersCurrentPage = value;
+          this.$store.dispatch(
+            "fetchCollectionMembers",
+            {
+              pid: this.routepid,
+              page: this.collMembersCurrentPage,
+              pagesize: this.collMembersPagesize,
+              onlylatestversion: this.collOnlyLatestVersions
+            }
+          );
+        }
+      },
+    },
+    collMembersTotalPages: function () {
+      return Math.ceil(this.$store.state.collectionMembersTotal / this.collMembersPagesize);
+    },
+    is3DModelType: function () {
+      if (!this.objectInfo || !this.objectInfo.edm_hastype) {
+        return false;
+      }
+      const types = this.objectInfo.edm_hastype;
+      if (Array.isArray(types)) {
+        return types.some(
+          (t) =>
+            typeof t === "string" &&
+            t.includes("3D model")
+        );
+      }
+      if (typeof types === "string") {
+        return types.includes("3D model");
+      }
+      return false;
+    },
+    showPreview: function () {
+      const is3DZip = this.mimetype === "application/zip" && this.is3DModelType;
+      return (
+        this.objectInfo.cmodel !== "Resource" &&
+        this.objectInfo.cmodel !== "Collection" &&
+        (this.objectInfo.cmodel !== "Asset" ||
+          (this.objectInfo.cmodel === "Asset" &&
+            (this.mimetype === "model/nxz" ||
+              this.mimetype === "model/obj" ||
+              this.mimetype === "model/glb" ||
+              this.mimetype === "model/ply" ||
+              is3DZip ||
+              this.mimetype === "application/x-wacz")
+          )) &&
+        this.objectInfo.cmodel !== "Container" &&
+        this.objectInfo.readrights &&
+        !(this.objectInfo.cmodel === "Video" && this.objectInfo.isrestricted)
+      );
+    },
+    isDarkTheme () {
+      const globalTheme = this.$vuetify?.theme?.global
+      const themeName = globalTheme?.name
+      if (themeName && typeof themeName === 'object' && 'value' in themeName) {
+        return themeName.value === 'dark'
+      }
+      if (typeof themeName === 'string') {
+        return themeName === 'dark'
+      }
+      if (typeof this.$vuetify?.theme?.dark === 'boolean') {
+        return this.$vuetify.theme.dark
+      }
+      return globalTheme?.current?.value?.dark || false
+    },
+    previewTheme () {
+      return this.isDarkTheme ? 'dark' : 'light'
+    },
+    uscholarlink: function () {
+      return ('https://' + this.instanceconfig.irbaseurl + "/" + this.objectInfo.pid);
+    },
+    doi: function () {
+      const list = this.dcIdentifierList
+      if (!list.length) return null
+      for (let id of list) {
+        const s = typeof id === 'string' ? id : String(id ?? '')
+        const c = s.indexOf(':')
+        if (c < 0) continue
+        const type = s.slice(0, c)
+        const idvalue = s.slice(c + 1)
+        if (type === 'doi') return idvalue
+      }
+      return null
+    },
+    /** API may omit `dc_identifier`, or send one string instead of an array. */
+    dcIdentifierList () {
+      if (!this.objectInfo) return []
+      const raw = this.objectInfo.dc_identifier
+      if (raw == null) return []
+      return Array.isArray(raw) ? raw : [raw]
+    },
+    doiRequestMailtoLink: function () {
+      if (!this.instanceconfig.requestdoiemail || !this.user || !this.objectInfo) {
+        return '';
+      }
+      const to = this.instanceconfig.requestdoiemail;
+      const pid = this.objectInfo.pid;
+      const userEmail = this.user.email || '';
+      const userName = (this.user.firstname && this.user.lastname)
+        ? `${this.user.firstname} ${this.user.lastname}`
+        : (this.user.username || '');
+      const objectUrl = `${this.instanceconfig.baseurl}/${pid}`;
+      const subject = encodeURIComponent(`Subsequent DOI allocation: ${pid} ${userEmail}`);
+      const body = encodeURIComponent(`Name: ${userName}\nEmail sender: ${userEmail}\nURL of the object: ${objectUrl}`);
+      return `mailto:${to}?subject=${subject}&body=${body}`;
+    },
+    identifiers: function () {
+      let ids = { persistent: [], other: [] };
+      if (!this.objectInfo) return ids
+      ids.persistent.push({
+        label: "Persistent identifier",
+        value: this.instanceconfig.baseurl + "/" + this.objectInfo.pid,
+      });
+      if (this.objectInfo.dc_identifier) {
+        for (let id of this.objectInfo.dc_identifier) {
+          if (id === this.instanceconfig.baseurl + "/" + this.objectInfo.pid) {
+            continue;
+          } else {
+            let type = id.substr(0, id.indexOf(":"));
+            let idvalue = id.substr(id.indexOf(":") + 1);
+            const doiPrefix = this.instanceconfig.phaidra_doi_prefix
+            switch (type) {
+              case "hdl":
+                ids.persistent.push({ label: "Handle", value: 'https://hdl.handle.net/' + idvalue });
+                break;
+              case "doi":
+                const normalizedDoi = this.normalizeDoi(idvalue)
+                let doiUrl = normalizedDoi
+                if (!(doiUrl.includes('https:') || doiUrl.includes('http:'))) {
+                  doiUrl = 'https://doi.org/' + normalizedDoi
+                }
+                if (doiPrefix && normalizedDoi.startsWith(doiPrefix + '/')) {
+                  ids.persistent.push({ label: "DOI", value: doiUrl });
+                } else {
+                  ids.other.push({ label: "DOI", value: doiUrl });
+                }
+                break;
+              case "urn":
+                ids.persistent.push({ label: "URN", value: 'https://nbn-resolving.org/' + idvalue });
+                break;
+              case "issn":
+                ids.persistent.push({ label: "ISSN", value: 'http://issn.org/resource/ISSN/' + idvalue });
+                break;
+              case "isbn":
+              case "ISBN":
+                ids.other.push({ label: "ISBN", value: idvalue });
+                break;
+              case "HTTP/WWW":
+                ids.other.push({ label: "URL", value: idvalue });
+                break;
+              case "PrintISSN":
+                ids.other.push({ label: "PrintISSN", value: idvalue });
+                break;
+              case "uri":
+                ids.other.push({ label: "URI", value: idvalue });
+                break;
+              case "acnumber":
+                ids.other.push({ label: "AC number", value: 'https://permalink.obvsg.at/' + idvalue });
+                break;
+              default:
+                ids.other.push({ value: idvalue, label: type });
+                break;
+            }
+          }
+        }
+      }
+      return ids;
+    },
+    routepid: function () {
+      return this.$route.params.pid;
+    },
+    objectInfo: function () {
+      return this.$store.state.objectInfo;
+    },
+    collMembers: function () {
+      return this.$store.state.collectionMembers;
+    },
+    collMembersTotal: function () {
+      // this somehow does not work on first page access
+      return this.$store.state.collectionMembersTotal;
+    },
+    objectMembers: function () {
+      return this.$store.state.objectMembers;
+    },
+    objectMembersPage: function () {
+      if (this.objectMembers.length < this.membersPageSize) {
+        return this.objectMembers
+      } else {
+        return this.objectMembers.slice((this.membersPage - 1) * this.membersPageSize, ((this.membersPage - 1) * this.membersPageSize) + this.membersPageSize)
+      }
+    },
+    downloadable: function () {
+      return this.objectInfo.datastreams && this.objectInfo.datastreams.includes("OCTETS")
+    },
+    showIiifManifestLink: function () {
+      if (!this.objectInfo || !this.objectInfo.readrights) {
+        return false;
+      }
+      if (this.objectInfo.cmodel === "Picture") {
+        return true;
+      }
+      if (this.objectInfo.cmodel === "Book") {
+        return !!(
+          this.objectInfo.dshash?.["IIIF-MANIFEST"] ||
+          (this.objectInfo.datastreams &&
+            this.objectInfo.datastreams.includes("IIIF-MANIFEST"))
+        );
+      }
+      return false;
+    },
+    hasLaterVersion: function () {
+      if (this.$store.state.objectInfo.versions) {
+        if (Array.isArray(this.$store.state.objectInfo.versions)) {
+          for (let v of this.$store.state.objectInfo.versions) {
+            if (v.created > this.$store.state.objectInfo.created) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    },
+    latestVersion: function () {
+      let latestVersion = null;
+      let latestDate = this.$store.state.objectInfo.created;
+      if (this.$store.state.objectInfo.versions) {
+        if (Array.isArray(this.$store.state.objectInfo.versions)) {
+          for (let v of this.$store.state.objectInfo.versions) {
+            let currentCreated = v.created;
+            if (currentCreated > latestDate) {
+              latestDate = currentCreated;
+              latestVersion = v;
+            }
+          }
+        }
+      }
+      return latestVersion;
+    },
+    citationLocale: function () {
+      switch (this.$i18n.locale) {
+        case "eng":
+          return "en-GB";
+        case "deu":
+          return "de-AT";
+        case "ita":
+          return "it-IT";
+        default:
+          return "en-GB";
+      }
+    },
+    mimetype: function () {
+      if (this.objectInfo["dc_format"]) {
+        for (let f of this.objectInfo["dc_format"]) {
+          if (f.includes("/")) {
+            return f;
+          }
+        }
+      }
+      return "";
+    },
+    license: function () {
+      if (this.objectInfo["dc_rights"]) {
+        for (let f of this.objectInfo["dc_rights"]) {
+          if (f.includes("http")) {
+            return f;
+          }
+        }
+      }
+      return "";
+    },
+    licenseUri: function () {
+      if (this.objectInfo && this.objectInfo.metadata && this.objectInfo.metadata['JSON-LD']) {
+        const jsonld = this.objectInfo.metadata['JSON-LD'];
+        if (jsonld['edm:rights'] && jsonld['edm:rights'].length > 0) {
+          return jsonld['edm:rights'][0];
+        }
+      }
+      if (this.objectInfo["dc_rights"]) {
+        for (let f of this.objectInfo["dc_rights"]) {
+          if (f.includes("http")) {
+            return f;
+          }
+          if (f === "All rights reserved") {
+            return "http://rightsstatements.org/vocab/InC/1.0/";
+          }
+        }
+      }
+      if (this.objectInfo["dc_license"]) {
+        for (let f of this.objectInfo["dc_license"]) {
+          if (f.includes("http")) {
+            return f;
+          }
+          if (f === "All rights reserved") {
+            return "http://rightsstatements.org/vocab/InC/1.0/";
+          }
+        }
+      }
+      return "";
+    },
+    rightsStatements: function () {
+      const statements = [];
+
+      const licenseStrings = new Set();
+
+      licenseStrings.add("All rights reserved");
+
+      if (this.objectInfo && this.objectInfo["dc_rights"]) {
+        const licenseUris = this.objectInfo["dc_rights"].filter(f =>
+          typeof f === 'string' && f.includes("://")
+        );
+
+        for (let uri of licenseUris) {
+          licenseStrings.add(uri);
+
+          if (this.$store && this.$store.getters['vocabulary/getLocalizedTermLabel']) {
+            const label = this.$store.getters['vocabulary/getLocalizedTermLabel']('alllicenses', uri, this.$i18n.locale);
+            if (label) {
+              licenseStrings.add(label);
+            }
+            const enLabel = this.$store.getters['vocabulary/getLocalizedTermLabel']('alllicenses', uri, 'eng');
+            if (enLabel) {
+              licenseStrings.add(enLabel);
+            }
+          }
+        }
+      }
+
+      if (this.objectInfo && this.objectInfo.metadata && this.objectInfo.metadata['JSON-LD']) {
+        const jsonld = this.objectInfo.metadata['JSON-LD'];
+        if (jsonld['dce:rights']) {
+          for (let right of jsonld['dce:rights']) {
+            let value = '';
+            if (typeof right === 'object' && right['@value']) {
+              value = right['@value'];
+            } else if (typeof right === 'string' && !right.startsWith('http')) {
+              value = right;
+            }
+            if (value && !licenseStrings.has(value)) {
+              statements.push(value);
+            }
+          }
+        }
+      }
+
+      if (statements.length === 0 && this.objectInfo) {
+        const dcRightsFields = [];
+        for (let key in this.objectInfo) {
+          if (key.match(/^dc_rights_[a-z]{3}$/)) {
+            dcRightsFields.push(key);
+          }
+        }
+
+        if (this.objectInfo['dc_rights']) {
+          dcRightsFields.push('dc_rights');
+        }
+
+        for (let field of dcRightsFields) {
+          if (this.objectInfo[field] && this.objectInfo[field].length > 0) {
+            const beforeLength = statements.length;
+            for (let f of this.objectInfo[field]) {
+              if (!licenseStrings.has(f)) {
+                statements.push(f);
+              }
+            }
+            if (statements.length > beforeLength) {
+              break;
+            }
+          }
+        }
+      }
+
+      return statements;
+    },
+    downloadableDatastreams: function () {
+      if (!this.instanceconfig.downloadabledatastreams || !this.objectInfo) {
+        return [];
+      }
+
+      const configuredDatastreams = this.instanceconfig.downloadabledatastreams
+        .split(',')
+        .map(ds => ds.trim())
+        .filter(ds => ds.length > 0);
+      return configuredDatastreams.filter(dsid => {
+        if (this.objectInfo.dshash && this.objectInfo.dshash[dsid]) {
+          return true;
+        }
+        if (this.objectInfo.datastreams && this.objectInfo.datastreams.includes(dsid)) {
+          return true;
+        }
+        return false;
+      });
+    },
+    lang2to3map: function () {
+      return Object.keys(lang3to2map).reduce((ret, key) => {
+        ret[lang3to2map[key]] = key;
+        return ret;
+      }, {});
+    },
+    displayTitles: function () {
+      if (!this.objectInfo) {
+        return [];
+      }
+
+      const titlesByLang = {};
+
+      // JSON-LD format
+      const jsonld = this.objectInfo?.metadata?.['JSON-LD'];
+      if (jsonld?.['dce:title'] && Array.isArray(jsonld['dce:title'])) {
+        jsonld['dce:title'].forEach(titleObj => {
+          titleObj['bf:mainTitle']?.forEach(mainTitle => {
+            const mainTitleValue = mainTitle['@value']?.trim();
+            if (!mainTitleValue) return;
+
+            const lang = this.normalizeLang(mainTitle['@language']);
+            const subtitle = titleObj['bf:subtitle']?.[0]?.['@value']?.trim() || null;
+
+            if (!titlesByLang[lang]) {
+              titlesByLang[lang] = [];
+            }
+            titlesByLang[lang].push({
+              mainTitle: mainTitleValue,
+              subtitle: subtitle,
+              lang: lang
+            });
+          });
+        });
+      }
+
+      // UWMETADATA format
+      if (!Object.keys(titlesByLang).length && this.objectInfo.dshash?.['UWMETADATA']) {
+        const uwmetadata = this.objectInfo.metadata?.uwmetadata;
+        if (Array.isArray(uwmetadata)) {
+          const generalNode = uwmetadata.find(node => node.xmlname === 'general');
+          if (generalNode && Array.isArray(generalNode.children)) {
+            const titles = [];
+            const subtitles = [];
+
+            generalNode.children.forEach(child => {
+              if (child.xmlname === 'title' && child.ui_value) {
+                const lang = this.normalizeLang(child.attributes?.[0]?.ui_value || 'eng');
+                titles.push({
+                  value: child.ui_value.trim(),
+                  lang: lang
+                });
+              } else if (child.xmlname === 'subtitle' && child.ui_value) {
+                const lang = this.normalizeLang(child.attributes?.[0]?.ui_value || 'eng');
+                subtitles.push({
+                  value: child.ui_value.trim(),
+                  lang: lang
+                });
+              }
+            });
+
+            titles.forEach((title, index) => {
+              let matchingSubtitle = subtitles.find(st => st.lang === title.lang);
+              if (!matchingSubtitle && subtitles[index]) {
+                matchingSubtitle = subtitles[index];
+              }
+              if (!matchingSubtitle && subtitles.length > 0) {
+                matchingSubtitle = subtitles[0];
+              }
+
+              if (!titlesByLang[title.lang]) {
+                titlesByLang[title.lang] = [];
+              }
+              titlesByLang[title.lang].push({
+                mainTitle: title.value,
+                subtitle: matchingSubtitle ? matchingSubtitle.value : null,
+                lang: title.lang
+              });
+            });
+          }
+        }
+      }
+
+      // MODS format
+      if (!Object.keys(titlesByLang).length && this.objectInfo.dshash?.['MODS'] && Array.isArray(this.objectInfo.dc_title)) {
+        this.objectInfo.dc_title.forEach(titleValue => {
+          if (titleValue && typeof titleValue === 'string' && titleValue.trim()) {
+            const colonIndex = titleValue.indexOf(': ');
+            let mainTitle, subtitle;
+            if (colonIndex > 0) {
+              mainTitle = titleValue.substring(0, colonIndex).trim();
+              subtitle = titleValue.substring(colonIndex + 2).trim() || null;
+            } else {
+              mainTitle = titleValue.trim();
+              subtitle = null;
+            }
+
+            const lang = this.normalizeLang(this.objectInfo.dc_language?.[0]) || 'eng';
+
+            if (mainTitle) {
+              if (!titlesByLang[lang]) {
+                titlesByLang[lang] = [];
+              }
+              titlesByLang[lang].push({
+                mainTitle: mainTitle,
+                subtitle: subtitle,
+                lang: lang
+              });
+            }
+          }
+        });
+      }
+
+      return this.pickByUiLanguage(titlesByLang) || [];
+    },
+    seoDescription: function () {
+      if (!this.objectInfo) {
+        return '';
+      }
+
+      const descriptionsByLang = {};
+
+      const addDescription = (value, lang) => {
+        const text = String(value ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+        if (!text) return;
+        const normalizedLang = this.normalizeLang(lang);
+        if (!descriptionsByLang[normalizedLang]) {
+          descriptionsByLang[normalizedLang] = [];
+        }
+        if (!descriptionsByLang[normalizedLang].includes(text)) {
+          descriptionsByLang[normalizedLang].push(text);
+        }
+      };
+
+      // JSON-LD Description field (bf:Note only — not Abstract/Summary)
+      const jsonld = this.objectInfo?.metadata?.['JSON-LD'];
+      if (jsonld?.['bf:note'] && Array.isArray(jsonld['bf:note'])) {
+        jsonld['bf:note'].forEach(note => {
+          if (note?.['@type'] !== 'bf:Note') return;
+          note['skos:prefLabel']?.forEach(label => {
+            addDescription(label['@value'], label['@language']);
+          });
+        });
+      }
+
+      // UWMETADATA format
+      if (!Object.keys(descriptionsByLang).length && this.objectInfo.dshash?.['UWMETADATA']) {
+        const uwmetadata = this.objectInfo.metadata?.uwmetadata;
+        if (Array.isArray(uwmetadata)) {
+          const generalNode = uwmetadata.find(node => node.xmlname === 'general');
+          if (generalNode && Array.isArray(generalNode.children)) {
+            generalNode.children.forEach(child => {
+              if (child.xmlname === 'description' && child.ui_value) {
+                addDescription(child.ui_value, child.attributes?.[0]?.ui_value || 'eng');
+              }
+            });
+          }
+        }
+      }
+
+      // Indexed DC description fields (covers MODS and fallbacks)
+      if (!Object.keys(descriptionsByLang).length) {
+        Object.keys(this.objectInfo).forEach(key => {
+          if (!key.startsWith('dc_description_') || !Array.isArray(this.objectInfo[key])) return;
+          const lang = key.slice('dc_description_'.length);
+          this.objectInfo[key].forEach(value => addDescription(value, lang));
+        });
+        if (!Object.keys(descriptionsByLang).length && Array.isArray(this.objectInfo.dc_description)) {
+          this.objectInfo.dc_description.forEach(value => addDescription(value, ''));
+        }
+      }
+
+      const descriptions = this.pickByUiLanguage(descriptionsByLang);
+      return descriptions?.[0] || '';
+    },
+  },
+  data() {
+    return {
+      relationDialog: false,
+      doiRequestDialog: false,
+      doiRequestLoading: false,
+      doiCiteDialog: false,
+      doiCiteLoading: false,
+      citeResult: "",
+      citationStyle: "apa",
+      citationStyles: [],
+      citationStylesLoading: false,
+      chosenRelation: null,
+      utheseslink: "",
+      stats: {
+        download: "-",
+        detail: "-",
+      },
+      fullJsonLd: "",
+      membersPage: 1,
+      membersPageSize: 10,
+      detailsMetaInfo: null,
+      collectionHelpDialog: false,
+      collMembersCurrentPage: 1,
+      collMembersPagesize: 10,
+      confirmColMemDeleteDlg: false,
+      collMemberToRemove: null,
+      collOnlyLatestVersions: true,
+      datareplaceDialog: false,
+      datareplaceFile: null,
+      datareplaceUploadErrors: [],
+      datareplaceLoading: false,
+      datareplaceUploadProgress: 0,
+      notFound: false,
+      jsonLdMounted: false
+    };
+  },
+  watch: {
+    relationDialog(newVal) {
+      if (newVal) {
+        this.chosenRelation = null;
+      }
+    },
+    routepid () {
+      this.jsonLdMounted = false
+      this.$nextTick(() => {
+        this.jsonLdMounted = true
+      })
+    }
+  },
+  methods: {
+    copyToClipboard(text) {
+      navigator.clipboard.writeText(text);
+    },
+    getPreviewUrl (pid, options = {}) {
+      const params = new URLSearchParams({
+        lang: this.$i18n.locale.substring(0, 2),
+        theme: this.previewTheme
+      })
+      if (options.addannotation) {
+        params.set('addannotation', options.addannotation)
+      }
+      return `${this.instanceconfig?.api}/object/${pid}/preview?${params.toString()}`
+    },
+    autolinkerCheck(val) {
+      return Autolinker.link(String(val ?? ""));
+    },
+    normalizeLang(lang) {
+      if (!lang) return '';
+      lang = String(lang).toLowerCase();
+      return lang.length === 2 ? (this.lang2to3map[lang] || lang) : lang;
+    },
+    pickByUiLanguage(byLang) {
+      if (!byLang || !Object.keys(byLang).length) {
+        return null;
+      }
+      const currentLang = (this.$i18n.locale || 'eng').toLowerCase();
+      const currentLang2 = currentLang.substring(0, 2);
+      const langPriority = [
+        currentLang,
+        currentLang2,
+        this.lang2to3map[currentLang2],
+        'eng',
+        'en'
+      ].filter(Boolean);
+      const matchedLang = langPriority.find(lang => byLang[lang]?.length > 0);
+      return matchedLang ? byLang[matchedLang] : Object.values(byLang).flat();
+    },
+    normalizeDoi(value) {
+      if (!value) {
+        return ''
+      }
+      return value.replace(/^https?:\/\/(dx\.)?doi\.org\//i, '').trim()
+    },
+    async loadDetailPage () {
+      if (!this.$route.params.pid) return
+      await this.fetchAsyncData(this, this.$route.params.pid)
+      this.syncDetailMetaFromObject()
+    },
+    /** Head/meta + signposting; safe to call after store `objectInfo` is set. */
+    syncDetailMetaFromObject () {
+      let metaInfo = {}
+      if (this.objectInfo) {
+      let thumbnail =
+        this.instanceconfig?.api +
+        "/object/" +
+        this.objectInfo.pid +
+        "/thumbnail";
+      const seoDescription = this.seoDescription;
+      metaInfo.meta = [
+        {
+          name: "og:title",
+          content: this.objectInfo.sort_dc_title,
+        },
+        {
+          name: "og:image",
+          content: thumbnail,
+        },
+        {
+          name: "og:image:width",
+          content: "1200",
+        },
+        {
+          name: "og:image:height",
+          content: "630",
+        },
+        {
+          name: "twitter:title",
+          content: this.objectInfo.sort_dc_title,
+        },
+        {
+          name: "twitter:card",
+          content: "summary_large_image",
+        },
+        {
+          name: "twitter:image",
+          content: thumbnail,
+        },
+      ];
+      if (seoDescription) {
+        metaInfo.meta.push(
+          {
+            hid: "description",
+            name: "description",
+            content: seoDescription,
+          },
+          {
+            hid: "og:description",
+            property: "og:description",
+            content: seoDescription,
+          }
+        );
+      }
+      if (this.objectInfo.metatags) {
+        metaInfo.title =
+          this.objectInfo.metatags.citation_title +
+          " (" +
+          this.instanceconfig.title +
+          " - " +
+          this.objectInfo.pid +
+          ")";
+        Object.entries(this.objectInfo.metatags).forEach(([name, value]) => {
+          if (Array.isArray(value)) {
+            for (let v of value) {
+              metaInfo.meta.push({
+                name: name,
+                content: v,
+              });
+            }
+          } else {
+            metaInfo.meta.push({
+              name: name,
+              content: value,
+            });
+          }
+        });
+      }
+
+      // signposting
+      metaInfo.link = []
+      metaInfo.link.push({
+        rel: 'cite-as',
+        href: this.instanceconfig.baseurl + "/" + this.objectInfo.pid
+      });
+      if (this.objectInfo.isinadminset && this.objectInfo.edm_hastype_id) {
+        if ((this.objectInfo.isinadminset.includes('phaidra:ir.univie.ac.at')) && (this.objectInfo.edm_hastype_id.includes('https://pid.phaidra.org/vocabulary/VKA6-9XTY'))) {
+          metaInfo.link.push({
+            rel: 'type',
+            href: 'https://schema.org/ScholarlyArticle'
+          });
+        }
+      }
+      if (this.objectInfo.isinadminset) {
+        if (this.objectInfo.isinadminset.includes('phaidra:ir.univie.ac.at')) {
+          metaInfo.link.push({
+            rel: 'canonical',
+            href: 'https://' + this.instanceconfig.irbaseurl + "/" + this.objectInfo.pid
+          });
+        }
+      }
+      if (this.objectInfo) {
+        if (this.objectInfo.isinadminset) {
+          if (this.objectInfo.isinadminset.includes('phaidra:utheses.univie.ac.at')) {
+            if (this.objectInfo.metadata) {
+              if (this.objectInfo?.metadata?.["JSON-LD"]) {
+                Object.entries(this.objectInfo.metadata["JSON-LD"]).forEach(
+                  ([p, arr]) => {
+                    if (p === "rdam:P30004") {
+                      for (let o of arr) {
+                        if (o["@type"] === "ids:uri") {
+                          if (/utheses/.test(o["@value"])) {
+                            metaInfo.link.push({
+                              rel: 'canonical',
+                              href: o["@value"]
+                            });
+                          }
+                        }
+                      }
+                    }
+                  }
+                );
+              }
+            }
+          }
+        }
+      }
+      metaInfo.link.push({
+        rel: 'type',
+        href: 'https://schema.org/CreativeWork'
+      });
+      metaInfo.link.push({
+        rel: 'type',
+        href: 'https://schema.org/AboutPage'
+      });
+      metaInfo.link.push({
+        rel: 'license',
+        href: this.license
+      });
+      metaInfo.link.push({
+        rel: 'describedby',
+        type: 'application/xml',
+        href: this.instanceconfig?.api + '/object/' + this.objectInfo.pid + '/index/dc'
+      });
+      metaInfo.link.push({
+        rel: 'describedby',
+        type: 'application/vnd.datacite.datacite+xml',
+        href: this.instanceconfig?.api + '/object/' + this.objectInfo.pid + '/datacite?format=xml'
+      });
+      if (this.objectInfo?.dshash?.['JSON-LD']) {
+        metaInfo.link.push({
+          rel: 'describedby',
+          type: 'application/ld+json',
+          href: this.instanceconfig?.api + '/object/' + this.objectInfo.pid + '/json-ld'
+        });
+      }
+      if (this.downloadable) {
+        metaInfo.link.push({
+          rel: 'item',
+          type: this.mimetype,
+          href: this.instanceconfig?.api + '/object/' + this.objectInfo.pid + '/download'
+        });
+      }
+      if (this.objectInfo.id_bib_roles_pers_aut) {
+        for (let aid of this.objectInfo.id_bib_roles_pers_aut) {
+          if (aid.startsWith('orcid:')) {
+            metaInfo.link.push({
+              rel: 'author',
+              href: 'https://orcid.org/' + aid.replace('orcid:', '')
+            });
+          }
+        }
+      }
+    }
+
+      if (this.objectInfo?.dshash?.['JSON-LD']) {
+      metaInfo.script = []
+      metaInfo.script.push(
+        {
+          type: 'application/ld+json',
+          content: JSON.stringify(this.fullJsonLd)
+        }
+      )
+    }
+
+      this.detailsMetaInfo = metaInfo
+    },
+    getLicenseLabel(uri) {
+      if (this.$store && this.$store.getters['vocabulary/getLocalizedTermLabel']) {
+        const label = this.$store.getters['vocabulary/getLocalizedTermLabel']('alllicenses', uri, this.$i18n.locale);
+        return label || uri;
+      }
+      return uri;
+    },
+    async fetchAsyncData(self, pid) {
+      try {
+        console.log('fetching object info ' + pid);
+        await self.$store.dispatch("fetchObjectInfo", pid);
+        self.postMetadataLoad(self);
+        if (self.$store.state.objectInfo.cmodel === "Container") {
+          console.log('fetching container members ' + pid);
+          await self.$store.dispatch(
+            "fetchObjectMembers",
+            self.$store.state.objectInfo
+          );
+        }
+        if (self.$store.state.objectInfo.cmodel === "Collection") {
+          console.log('fetching collection members ' + pid + ' page ' + self.collMembersCurrentPage + ' size ' + self.collMembersPagesize);
+          await self.$store.dispatch(
+            "fetchCollectionMembers",
+            { pid: pid, page: self.collMembersCurrentPage, pagesize: self.collMembersPagesize, onlylatestversion: self.collOnlyLatestVersions }
+          );
+        }
+
+        if (self.objectInfo?.dshash?.['JSON-LD']) {
+          try {
+            const response = await self.$axios.get("/object/" + pid + "/json-ld");
+            if (response.data) {
+              self.fullJsonLd = response.data;
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      } catch (error) {
+        console.log('Error fetching object info:', error);
+        if (error.response?.status === 404) {
+          self.notFound = true;
+          self.$store.commit('setObjectInfo', null);
+          return;
+        }
+        self.$store.commit('setAlerts', [{
+          type: 'error',
+          msg: self.$t('An error occurred.'),
+        }]);
+      }
+    },
+    async refreshCollectionMembers (onlyLatestVersion) {
+      const only =
+        typeof onlyLatestVersion === 'boolean'
+          ? onlyLatestVersion
+          : this.collOnlyLatestVersions
+      console.log('fetching collection members ' + this.objectInfo.pid + ' page ' + this.collMembersCurrentPage + ' size ' + this.collMembersPagesize);
+      await this.$store.dispatch(
+        "fetchCollectionMembers",
+        {
+          pid: this.objectInfo.pid,
+          page: this.collMembersCurrentPage,
+          pagesize: this.collMembersPagesize,
+          onlylatestversion: only
+        }
+      );
+    },
+    scrollToCollectionMembersTop() {
+      if (!process.browser) {
+        return;
+      }
+      const ref = this.$refs.collectionMembersTop;
+      const el = ref && (ref.$el || ref);
+      if (!el || !el.getBoundingClientRect) {
+        return;
+      }
+      const rect = el.getBoundingClientRect();
+      const offset = rect.top + window.pageYOffset;
+      window.scrollTo({
+        top: offset,
+        behavior: "smooth",
+      });
+    },
+    async fetchUsageStats(self, pid) {
+      console.log("fetchUsageStats");
+      self.stats.download = null;
+      self.stats.detail = null;
+      try {
+        let response = await self.$axios.get(
+          "/stats/" + pid
+        );
+        if (response.data.stats) {
+          self.stats.download = response.data.stats.downloads;
+          self.stats.detail = response.data.stats.detail_page;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    postMetadataLoad: function (self) {
+      if (self.objectInfo) {
+        if (self.objectInfo.metadata) {
+          if (self.objectInfo?.metadata?.["JSON-LD"]) {
+            Object.entries(self.objectInfo.metadata["JSON-LD"]).forEach(
+              ([p, arr]) => {
+                if (p === "rdam:P30004") {
+                  for (let o of arr) {
+                    if (o["@type"] === "ids:uri") {
+                      if (/utheses/.test(o["@value"])) {
+                        self.utheseslink = o["@value"];
+                      }
+                    }
+                  }
+                }
+              }
+            );
+          }
+        }
+      }
+    },
+    openDatareplace: function () {
+      this.datareplaceDialog = true
+    },
+    datareplaceUpload: async function () {
+      if (!this.datareplaceFile) {
+        this.datareplaceUploadErrors.push(this.$t('Missing file'))
+        return
+      }
+      this.datareplaceLoading = true
+      this.datareplaceUploadProgress = 0
+      this.datareplaceUploadErrors = []
+      try {
+        var httpFormData = new FormData()
+        httpFormData.append('file', this.datareplaceFile)
+        let self = this
+        let response = await this.$axios.post('/object/' + this.objectInfo.pid + '/data', httpFormData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-XSRF-TOKEN': this.$store.state.user.token
+          },
+          onUploadProgress: function (progressEvent) {
+            self.datareplaceUploadProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          }
+        })
+        if (response.status === 200) {
+          this.$store.commit('setAlerts', [{ type: 'success', msg: this.$t('File was successfully replaced') }])
+          await this.$store.dispatch('fetchObjectInfo', this.objectInfo.pid)
+        } else {
+          if (response.data.alerts && response.data.alerts.length > 0) {
+            this.$store.commit('setAlerts', response.data.alerts)
+          }
+        }
+      } catch (error) {
+        console.log(error)
+        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+      } finally {
+        this.datareplaceDialog = false
+        this.datareplaceLoading = false
+        this.datareplaceUploadProgress = 0
+      }
+    },
+    loadCitationStyles: async function () {
+      this.citationStylesLoading = true;
+      try {
+        let response = await this.$axios.request({
+          method: "GET",
+          url: this.appconfig.apis.doi.citationstyles,
+        });
+        if (response.status !== 200) {
+          if (response.data.alerts && response.data.alerts.length > 0) {
+            this.$store.commit("setAlerts", response.data.alerts);
+          }
+        } else {
+          this.citationStyles = response.data;
+        }
+      } catch (error) {
+        console.log(error);
+        this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
+      } finally {
+        this.citationStylesLoading = false;
+      }
+    },
+    getBibTex: async function () {
+      this.doiCiteLoading = true;
+      try {
+        let response = await this.$axios.request({
+          method: "GET",
+          url: "https://" + this.appconfig.apis.doi.baseurl + "/" + this.doi,
+          headers: {
+            Accept: "application/x-bibtex",
+          },
+        });
+        if (response.status !== 200) {
+          if (response.data.alerts && response.data.alerts.length > 0) {
+            this.$store.commit("setAlerts", response.data.alerts);
+          }
+        } else {
+          this.citeResult = response.data;
+        }
+      } catch (error) {
+        console.log(error);
+        this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
+      } finally {
+        this.doiCiteLoading = false;
+      }
+    },
+    getCitation: async function () {
+      this.doiCiteLoading = true;
+      try {
+        let response = await this.$axios.request({
+          method: "GET",
+          url: "https://" + this.appconfig.apis.doi.baseurl + "/" + this.doi,
+          headers: {
+            Accept:
+              "text/x-bibliography; style=" +
+              this.citationStyle +
+              "; locale=" +
+              this.citationLocale,
+          },
+        });
+        if (response.status !== 200) {
+          if (response.data.alerts && response.data.alerts.length > 0) {
+            this.$store.commit("setAlerts", response.data.alerts);
+          }
+        } else {
+          this.citeResult = response.data;
+        }
+      } catch (error) {
+        console.log(error);
+        this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
+      } finally {
+        this.doiCiteLoading = false;
+      }
+    },
+    requestDOI: async function (self) {
+      try {
+        this.doiRequestDialog = false;
+        this.doiRequestLoading = true;
+        let response = await this.$axios.request({
+          method: 'POST',
+          url: '/utils/' + this.objectInfo.pid + '/requestdoi',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            "X-XSRF-TOKEN": this.user.token,
+          }
+        })
+        if (response.data.status === 200) {
+          this.$store.commit('setAlerts', [{ msg: this.$t('DOI successfully requested'), type: 'success' }])
+        } else {
+          if (response.data.alerts && response.data.alerts.length > 0) {
+            this.$store.commit('setAlerts', response.data.alerts)
+          }
+        }
+      } catch (error) {
+        console.log(error)
+        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+      } finally {
+        this.doiRequestLoading = false
+      }
+    },
+    /** Resets client-only bits when switching objects (avoid name `resetData` / legacy router `next(vm)` quirks). */
+    clearDetailAuxiliaryState: function () {
+      this.stats = {
+        download: '-',
+        detail: '-'
+      }
+      this.checksums = []
+    },
+    addToCollection: async function (collection) {
+      try {
+        this.$store.commit('setLoading', true)
+        var httpFormData = new FormData()
+        httpFormData.append('metadata', JSON.stringify({ metadata: { members: [{ 'pid': this.objectInfo.pid }] } }))
+        let response = await this.$axios.request({
+          method: 'POST',
+          url: '/collection/' + collection.pid + '/members/add',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            "X-XSRF-TOKEN": this.user.token,
+          },
+          data: httpFormData
+        })
+        if (response.data.status === 200) {
+          this.$store.commit('setAlerts', [{ msg: this.$t('Collection successfully updated'), type: 'success' }])
+          await this.refreshDetailObjectInfo()
+        } else {
+          if (response.data.alerts && response.data.alerts.length > 0) {
+            this.$store.commit('setAlerts', response.data.alerts)
+          }
+        }
+      } catch (error) {
+        console.log(error)
+        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+      } finally {
+        this.$store.commit('setLoading', false)
+      }
+    },
+    removeFromCollection: async function () {
+      try {
+        this.$store.commit('setLoading', true)
+        var httpFormData = new FormData()
+        httpFormData.append('metadata', JSON.stringify({ metadata: { members: [{ 'pid': this.collMemberToRemove }] } }))
+        let response = await this.$axios.request({
+          method: 'POST',
+          url: '/collection/' + this.objectInfo.pid + '/members/remove',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'X-XSRF-TOKEN': this.$store.state.user.token
+          },
+          data: httpFormData
+        })
+        if (response.data.status === 200) {
+          this.$store.commit('setAlerts', [{ msg: this.$t('Collection successfully updated'), type: 'success' }])
+          await this.$store.dispatch(
+            "fetchCollectionMembers",
+            {
+              pid: this.objectInfo.pid,
+              page: this.collMembersCurrentPage,
+              pagesize: this.collMembersPagesize,
+              onlylatestversion: this.collOnlyLatestVersions
+            }
+          )
+          this.confirmColMemDeleteDlg = false
+        } else {
+          if (response.data.alerts && response.data.alerts.length > 0) {
+            this.$store.commit('setAlerts', response.data.alerts)
+          }
+        }
+      } catch (error) {
+        console.log(error)
+        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+      } finally {
+        this.collMemberToRemove = null
+        this.$store.commit('setLoading', false)
+      }
+    },
+  },
+  mounted() {
+    this.jsonLdMounted = true
+    if (this.showCollectionTree) {
+      this.fetchCollectionTree(this.$route.params.pid);
+      setTimeout(() => {
+        this.windowWidth =
+          document.getElementById("d3-graph-container").offsetWidth;
+      }, 2000);
+    }
+  },
+};
+</script>
+
+<style scoped>
+.not-found-alert ::v-deep .v-alert__content {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.theme--dark .not-found-alert ::v-deep .v-alert__content {
+  color: rgba(255, 255, 255, 1);
+}
+
+.no-link {
+  color: inherit !important;
+  /* Inherit text color from parent */
+  cursor: default;
+  /* Remove pointer cursor */
+  text-decoration: none;
+  /* Remove underline */
+}
+
+.preview-maxwidth {
+  max-width: 120px;
+}
+
+.v-container {
+  padding: 0px;
+}
+
+.col-border {
+  display: block;
+  border: solid;
+  border-width: 0 0 0 thin;
+  border-color: rgba(0, 0, 0, 0.12);
+  padding-top: 0px;
+}
+
+.showmembers {
+  text-decoration: underline;
+}
+
+.ph-box {
+  line-height: 1rem;
+  white-space: normal;
+}
+
+.iframe-container {
+  overflow: hidden;
+  padding-top: 56.25%;
+  position: relative;
+  width: 100%;
+}
+
+.preview-iframe {
+  color-scheme: normal;
+  background: transparent;
+}
+
+.responsive-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+
+}
+
+.side-list {
+  padding-left: 0;
+  list-style-type: none;
+}
+</style>

@@ -7,8 +7,7 @@
         type="number"
         :label="$t('Duration')"
         :suffix="$t('hours')"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
     <v-col cols="3" v-if="!hideMinutes">
@@ -18,8 +17,7 @@
         type="number"
         :label="$t('Duration')"
         :suffix="$t('minutes')"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
     <v-col cols="3" v-if="!hideSeconds">
@@ -29,16 +27,13 @@
         type="number"
         :label="$t('Duration')"
         :suffix="$t('seconds')"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
     <v-col cols="1" v-if="actions.length">
-      <v-menu bottom offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn v-on="on" v-bind="attrs" icon>
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+      <v-menu open-on-hover bottom offset-y>
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-icon-btn v-bind="activatorProps" variant="text" icon="mdi-dots-vertical" />
         </template>
         <v-list>
           <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
@@ -56,6 +51,7 @@ import { fieldproperties } from '../../mixins/fieldproperties'
 export default {
   name: 'p-i-duration',
   mixins: [fieldproperties],
+  emits: ['input', 'add', 'remove', 'configure', 'add-clear', 'up', 'down'],
   props: {
     value: {
       type: String

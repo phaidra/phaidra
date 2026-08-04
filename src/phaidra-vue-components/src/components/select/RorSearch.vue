@@ -1,15 +1,13 @@
 <template>
   <v-row v-if="!hidden">
     <v-col cols="12">
-      <v-card outlined class="mb-8">
-        <v-card-title class="title font-weight-light white--text">
+      <v-card variant="outlined" class="mb-8">
+        <v-card-title class="text-title-large font-weight-light text-white">
           <span>{{ $t(label) }}</span>
           <v-spacer></v-spacer>
-          <v-menu bottom offset-y v-if="actions.length">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn v-on="on" v-bind="attrs" icon dark>
-                <v-icon dark>mdi-dots-vertical</v-icon>
-              </v-btn>
+          <v-menu open-on-hover bottom offset-y v-if="actions.length">
+            <template v-slot:activator="{ props }">
+              <v-icon-btn v-bind="props" variant="text" color="white" icon="mdi-dots-vertical" />
             </template>
             <v-list>
               <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
@@ -26,13 +24,12 @@
                 v-model="q"
                 :loading="loading"
                 :label="$t(label)"
-                :filled="inputStyle==='filled'"
-                :outlined="inputStyle==='outlined'"
+                :variant="fieldVariant"
                 clearable
                 :messages="resolved"
                 :error-messages="errorMessages"
-                append-icon="mdi-magnify"
-                @click:append="search()"
+                append-inner-icon="mdi-magnify"
+                @click:append-inner="search()"
                 @keyup.enter="search()"
               >
               <template v-slot:message="{ key, message }">
@@ -42,20 +39,16 @@
             </v-col>
           </v-row>
           <v-row v-if="showItems">
-            <v-data-table
+            <v-data-table-server
+              v-model:options="options"
               :headers="headers"
               :items="items"
-              :options.sync="options"
-              :server-items-length="total"
+              :items-length="total"
               :loading="loading"
-              @click:row="select"
               :no-data-text="$t('No data available')"
-              :footer-props="{
-                pageText: $t('Page'),
-                itemsPerPageText: $t('Rows per page'),
-                itemsPerPageAllText: $t('All')
-              }"
-              :no-results-text="$t('There were no search results')"
+              :page-text="$t('Page')"
+              :items-per-page-text="$t('Rows per page')"
+              :row-props="({ item }) => ({ style: 'cursor: pointer', onClick: () => select(item) })"
             >
             <template v-slot:item.acronyms="{ item }">
               <template v-if="item.acronyms && item.acronyms.length">
@@ -84,7 +77,7 @@
                 {{ item.locations[0].geonames_details.country_name }}
               </template>
             </template>
-            </v-data-table>
+            </v-data-table-server>
           </v-row>
         </v-card-text>
       </v-card>
@@ -147,17 +140,18 @@ export default {
       selected: null,
       resolved: '',
       options: {
-        page: 1
+        page: 1,
+        itemsPerPage: 10
       },
       total: 0,
       headers: [
-        { text: 'ID', value: 'id' },
-        { text: 'Name', value: 'name' },
-        { text: 'Acronyms', value: 'acronyms' },
-        { text: 'Aliases', value: 'aliases' },
-        { text: 'Types', value: 'types' },
-        { text: 'City', value: 'addresses' },
-        { text: 'Country', value: 'country' }
+        { title: 'ID', key: 'id' },
+        { title: 'Name', key: 'name' },
+        { title: 'Acronyms', key: 'acronyms' },
+        { title: 'Aliases', key: 'aliases' },
+        { title: 'Types', key: 'types' },
+        { title: 'City', key: 'addresses' },
+        { title: 'Country', key: 'country' }
       ]
     }
   },

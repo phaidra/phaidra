@@ -1,404 +1,395 @@
 <template>
 
-  <p-d-jsonld-layout v-if="jsonld" :jsonld="jsonld">
+  <p-d-jsonld-layout v-if="jsonld" :jsonld="jsonld" class="pdjsonld-grid-compat">
 
-    <template v-if="pid && !predicatesToHide.includes('pid')" slot="pid">
+    <template v-if="pid && !predicatesToHide.includes('pid')"  v-slot:pid>
       <v-row>
-        <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t('Persistent identifier') }}</v-col>
+        <v-col :md="labelColMd" cols="12" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t('Persistent identifier') }}</v-col>
         <v-col :md="valueColMd" cols="12"><a :href="`${instance.baseurl}/${pid}`">{{ instance.baseurl }}/{{ pid }}</a></v-col>
       </v-row>
     </template>
 
-    <template v-for="(role, i) of roles" slot="role">
-      <template v-if="!predicatesToHide.includes(role.p)">
-        <p-d-entity :role="role.p" :entity="e" :hideLabel="j !== 0" v-for="(e, j) in getEntities(role.p, role.o)" :key="componentid+'entity'+role.p+i+j" v-bind.sync="displayProperties"></p-d-entity>
-        <v-row v-if="entitiesLimited[role.p] && !showAllEntities[role.p]" :key="componentid+'entitymore'+role.p">
-          <v-col :md="valueColMd" :offset-md="labelColMd">
-            <span class="mx-2 primary--text" @click="setShowAllEntities(role.p)">... {{ $t('show all') }}</span>
-          </v-col>
-        </v-row>
+    <template v-slot:role>
+      <template v-for="(role, i) of roles" :key="componentid+'role'+i">
+        <template v-if="!predicatesToHide.includes(role.p)">
+          <p-d-entity :role="role.p" :entity="e" :hideLabel="j !== 0" v-for="(e, j) in getEntities(role.p, role.o)" :key="componentid+'entity'+role.p+i+j" v-bind="displayProperties"></p-d-entity>
+          <v-row v-if="entitiesLimited[role.p] && !showAllEntities[role.p]" :key="componentid+'entitymore'+role.p">
+            <v-col :md="valueColMd" :offset-md="labelColMd">
+              <span class="mx-2 text-primary" @click="setShowAllEntities(role.p)">... {{ $t('show all') }}</span>
+            </v-col>
+          </v-row>
+        </template>
       </template>
     </template>
 
-    <template v-if="!predicatesToHide.includes('dce:subject')" slot="dce:subject">
-      <p-d-keyword :p="'dce:subject'" :language="language === 'xxx' ? null : language" :keywords="keywords" v-for="(keywords, language) in langKeywords" :key="componentid+'kw'+language" v-bind.sync="displayProperties"></p-d-keyword>
+    <template v-if="!predicatesToHide.includes('dce:subject')"  v-slot:["dce:subject"]>
+      <p-d-keyword :p="'dce:subject'" :language="language === 'xxx' ? null : language" :keywords="keywords" v-for="(keywords, language) in langKeywords" :key="componentid+'kw'+language" v-bind="displayProperties"></p-d-keyword>
     </template>
 
-    <template slot="overallAccessibility" v-if="overallAccessibility">
-        <p-d-accessibility :p="'overallAccessibility'" :o="overallAccessibility" v-bind.sync="displayProperties"></p-d-accessibility>
+    <template  v-slot:overallAccessibility v-if="overallAccessibility">
+        <p-d-accessibility :p="'overallAccessibility'" :o="overallAccessibility" v-bind="displayProperties"></p-d-accessibility>
     </template>
-    <template v-for="(o, p) in jsonld">
+    <template v-if="jsonld && jsonld['dcterms:subject']" v-slot:["dcterms:subject"]>
+      <template v-for="(subject, j) in jsonld['dcterms:subject']" :key="componentid+'subj'+j">
+        <p-d-skos-preflabel v-if="subject['@type']!=='phaidra:Subject'" :p="'dcterms:subject'" :o="subject" v-bind="displayProperties"></p-d-skos-preflabel>
+      </template>
+    </template>
 
-      <template v-if="!predicatesToHide.includes(p)">
+    <template v-slot:["phaidra:Subject"]>
+      <template v-if="jsonld && jsonld['dcterms:subject']">
+        <template v-for="(subject, j) in jsonld['dcterms:subject']" :key="componentid+'subjph'+j">
+          <v-card variant="outlined" class="mt-4" v-if="subject['@type']==='phaidra:Subject'">
+            <v-card-text>
+              <div class="overline mb-4">{{ $t('SUBJECT_SECTION') }}</div>
+              <p-d-jsonld :jsonld="subject" v-bind="displayProperties"></p-d-jsonld>
+            </v-card-text>
+          </v-card>
+        </template>
+      </template>
+    </template>
 
-        <template v-if="p.startsWith('role:')"></template>
-        <template v-else-if="p==='dcterms:type'" slot="dcterms:type"></template>
-
-        <template v-else-if="p==='rdam:P30004'" slot="rdam:P30004">
-          <p-d-identifier :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'hasid'+j" v-bind.sync="displayProperties"></p-d-identifier>
+    <template v-for="entry in jsonldSlotEntries" :key="String(entry.p) + '-' + componentid" #[entry.slotKey]>
+        <template v-if="entry.p==='rdam:P30004'">
+          <p-d-identifier :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'hasid'+j" v-bind="displayProperties"></p-d-identifier>
         </template>
 
-        <template v-else-if="p==='edm:hasType'" slot="edm:hasType">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'objtyp'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='edm:hasType'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'objtyp'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='schema:genre'" slot="schema:genre">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'genre'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='schema:genre'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'genre'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='schema:accessMode'" slot="schema:accessMode">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'accessMode'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='schema:accessMode'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'accessMode'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
         
-        <template v-else-if="p==='schema:accessibilityFeature'" slot="schema:accessibilityFeature">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'accessibilityFeature'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='schema:accessibilityFeature'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'accessibilityFeature'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='schema:accessibilityControl'" slot="schema:accessibilityControl">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'accessibilityControl'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='schema:accessibilityControl'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'accessibilityControl'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='schema:accessibilityHazard'" slot="schema:accessibilityHazard">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'accessibilityHazard'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='schema:accessibilityHazard'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'accessibilityHazard'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='oaire:version'" slot="oaire:version">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'oairev'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='oaire:version'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'oairev'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='dcterms:accessRights'" slot="dcterms:accessRights">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'dtar'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='dcterms:accessRights'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'dtar'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='rdau:P60059'" slot="rdau:P60059">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'P60059'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='rdau:P60059'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'P60059'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='dce:title'" slot="dce:title">
-          <p-d-title :o="t" v-for="(t, j) in o" :key="componentid+'title'+j" v-bind.sync="displayProperties"></p-d-title>
+        <template v-else-if="entry.p==='dce:title'">
+          <p-d-title :o="t" v-for="(t, j) in entry.o" :key="componentid+'title'+j" v-bind="displayProperties"></p-d-title>
         </template>
 
-        <template v-else-if="p==='bf:note'" slot="bf:note">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'text'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='bf:note'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'text'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='bf:tableOfContents'" slot="bf:tableOfContents">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'toc'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='bf:tableOfContents'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'toc'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='dcterms:language'" slot="dcterms:language">
-          <template  v-for="(item, j) in o">
-            <p-d-skos-preflabel v-if="(typeof item === 'object') && (item !== null) && item.hasOwnProperty('skos:exactMatch')" :p="p" :o="item" :key="componentid+'lan-skos'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
-            <p-d-labeled-value v-else :p="p" :o="item" :key="componentid+'lan-lbl'+j" v-bind.sync="displayProperties"></p-d-labeled-value>
+        <template v-else-if="entry.p==='dcterms:language'">
+          <template v-for="(item, j) in entry.o" :key="componentid+'lan'+j">
+            <p-d-skos-preflabel v-if="(typeof item === 'object') && (item !== null) && item.hasOwnProperty('skos:exactMatch')" :p="entry.p" :o="item" v-bind="displayProperties"></p-d-skos-preflabel>
+            <p-d-labeled-value v-else :p="entry.p" :o="item" v-bind="displayProperties"></p-d-labeled-value>
           </template>
         </template>
 
-        <template v-else-if="p==='schema:subtitleLanguage'" slot="schema:subtitleLanguage">
-          <template  v-for="(item, j) in o">
-            <p-d-skos-preflabel v-if="(typeof item === 'object') && (item !== null) && item.hasOwnProperty('skos:exactMatch')" :p="p" :o="item" :key="componentid+'sublan-skos'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
-            <p-d-labeled-value v-else :p="p" :o="item" :key="componentid+'sublan-lbl'+j" v-bind.sync="displayProperties"></p-d-labeled-value>
+        <template v-else-if="entry.p==='schema:subtitleLanguage'">
+          <template v-for="(item, j) in entry.o" :key="componentid+'sublan'+j">
+            <p-d-skos-preflabel v-if="(typeof item === 'object') && (item !== null) && item.hasOwnProperty('skos:exactMatch')" :p="entry.p" :o="item" v-bind="displayProperties"></p-d-skos-preflabel>
+            <p-d-labeled-value v-else :p="entry.p" :o="item" v-bind="displayProperties"></p-d-labeled-value>
           </template>
         </template>
 
-        <template v-else-if="p==='schema:availableLanguage'" slot="schema:availableLanguage">
-          <template  v-for="(item, j) in o">
-            <p-d-skos-preflabel v-if="(typeof item === 'object') && (item !== null) && item.hasOwnProperty('skos:exactMatch')" :p="p" :o="item" :key="componentid+'availan-skos'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
-            <p-d-labeled-value v-else :p="p" :o="item" :key="componentid+'availan-lbl'+j" v-bind.sync="displayProperties"></p-d-labeled-value>
+        <template v-else-if="entry.p==='schema:availableLanguage'">
+          <template v-for="(item, j) in entry.o" :key="componentid+'availan'+j">
+            <p-d-skos-preflabel v-if="(typeof item === 'object') && (item !== null) && item.hasOwnProperty('skos:exactMatch')" :p="entry.p" :o="item" v-bind="displayProperties"></p-d-skos-preflabel>
+            <p-d-labeled-value v-else :p="entry.p" :o="item" v-bind="displayProperties"></p-d-labeled-value>
           </template>
         </template>
 
-        <template v-else-if="p==='dcterms:date'" slot="dcterms:date">
-          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'date'+j" v-bind.sync="displayProperties"></p-d-date>
+        <template v-else-if="entry.p==='dcterms:date'">
+          <p-d-date :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'date'+j" v-bind="displayProperties"></p-d-date>
         </template>
 
-        <template v-else-if="p==='dcterms:created'" slot="dcterms:created">
-          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'created'+j" v-bind.sync="displayProperties"></p-d-date>
+        <template v-else-if="entry.p==='dcterms:created'">
+          <p-d-date :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'created'+j" v-bind="displayProperties"></p-d-date>
         </template>
 
-        <template v-else-if="p==='dcterms:modified'" slot="dcterms:modified">
-          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'modified'+j" v-bind.sync="displayProperties"></p-d-date>
+        <template v-else-if="entry.p==='dcterms:modified'">
+          <p-d-date :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'modified'+j" v-bind="displayProperties"></p-d-date>
         </template>
 
-        <template v-else-if="p==='dcterms:available'" slot="dcterms:available">
-          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'available'+j" v-bind.sync="displayProperties"></p-d-date>
+        <template v-else-if="entry.p==='dcterms:available'">
+          <p-d-date :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'available'+j" v-bind="displayProperties"></p-d-date>
         </template>
 
-        <template v-else-if="p==='dcterms:issued'" slot="dcterms:issued">
-          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'issued'+j" v-bind.sync="displayProperties"></p-d-date>
+        <template v-else-if="entry.p==='dcterms:issued'">
+          <p-d-date :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'issued'+j" v-bind="displayProperties"></p-d-date>
         </template>
 
-        <template v-else-if="p==='dcterms:valid'" slot="dcterms:valid">
-          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'valid'+j" v-bind.sync="displayProperties"></p-d-date>
+        <template v-else-if="entry.p==='dcterms:valid'">
+          <p-d-date :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'valid'+j" v-bind="displayProperties"></p-d-date>
         </template>
 
-        <template v-else-if="p==='dcterms:dateAccepted'" slot="dcterms:dateAccepted">
-          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'dateAccepted'+j" v-bind.sync="displayProperties"></p-d-date>
+        <template v-else-if="entry.p==='dcterms:dateAccepted'">
+          <p-d-date :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'dateAccepted'+j" v-bind="displayProperties"></p-d-date>
         </template>
 
-        <template v-else-if="p==='dcterms:dateCopyrighted'" slot="dcterms:dateCopyrighted">
-          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'dateCopyrighted'+j" v-bind.sync="displayProperties"></p-d-date>
+        <template v-else-if="entry.p==='dcterms:dateCopyrighted'">
+          <p-d-date :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'dateCopyrighted'+j" v-bind="displayProperties"></p-d-date>
         </template>
 
-        <template v-else-if="p==='dcterms:dateSubmitted'" slot="dcterms:dateSubmitted">
-          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'dateSubmitted'+j" v-bind.sync="displayProperties"></p-d-date>
+        <template v-else-if="entry.p==='dcterms:dateSubmitted'">
+          <p-d-date :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'dateSubmitted'+j" v-bind="displayProperties"></p-d-date>
         </template>
 
-        <template v-else-if="p==='rdau:P60071'" slot="rdau:P60071">
-          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'dateOfProduction'+j" v-bind.sync="displayProperties"></p-d-date>
+        <template v-else-if="entry.p==='rdau:P60071'">
+          <p-d-date :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'dateOfProduction'+j" v-bind="displayProperties"></p-d-date>
         </template>
 
-        <template v-else-if="p==='phaidra:dateAccessioned'" slot="phaidra:dateAccessioned">
-          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'phaidra:dateAccessioned'+j" v-bind.sync="displayProperties"></p-d-date>
+        <template v-else-if="entry.p==='phaidra:dateAccessioned'">
+          <p-d-date :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'phaidra:dateAccessioned'+j" v-bind="displayProperties"></p-d-date>
         </template>
 
-        <template v-else-if="p==='phaidra:dateApprobation'" slot="phaidra:dateApprobation">
-          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'phaidra:dateApprobation'+j" v-bind.sync="displayProperties"></p-d-date>
+        <template v-else-if="entry.p==='phaidra:dateApprobation'">
+          <p-d-date :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'phaidra:dateApprobation'+j" v-bind="displayProperties"></p-d-date>
         </template>
 
-        <template v-else-if="p==='dcterms:temporal'" slot="dcterms:temporal">
-          <p-d-date :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'temporal'+j" v-bind.sync="displayProperties"></p-d-date>
+        <template v-else-if="entry.p==='dcterms:temporal'">
+          <p-d-date :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'temporal'+j" v-bind="displayProperties"></p-d-date>
         </template>
 
-        <template v-else-if="p==='rdau:P60193'" slot="rdau:P60193">
-          <p-d-series :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'series'+j" v-bind.sync="displayProperties"></p-d-series>
+        <template v-else-if="entry.p==='rdau:P60193'">
+          <p-d-series :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'series'+j" v-bind="displayProperties"></p-d-series>
         </template>
 
-        <template v-else-if="p==='rdau:P60101'" slot="rdau:P60101">
-          <p-d-contained-in :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'contained-in'+j" v-bind.sync="displayProperties"></p-d-contained-in>
+        <template v-else-if="entry.p==='rdau:P60101'">
+          <p-d-contained-in :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'contained-in'+j" v-bind="displayProperties"></p-d-contained-in>
         </template>
 
-        <template v-else-if="p==='bf:provisionActivity'" slot="bf:provisionActivity">
-          <p-d-bf-publication :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'bfpubl'+j" v-bind.sync="displayProperties"></p-d-bf-publication>
+        <template v-else-if="entry.p==='bf:provisionActivity'">
+          <p-d-bf-publication :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'bfpubl'+j" v-bind="displayProperties"></p-d-bf-publication>
         </template>
 
-        <template v-else-if="p==='cito:cites'" slot="cito:cites">
-          <p-d-citation :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'cites'+j" v-bind.sync="displayProperties"></p-d-citation>
+        <template v-else-if="entry.p==='cito:cites'">
+          <p-d-citation :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'cites'+j" v-bind="displayProperties"></p-d-citation>
         </template>
 
-        <template v-else-if="p==='cito:citesAsDataSource'" slot="cito:citesAsDataSource">
-          <p-d-citation :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'citesAsDataSource'+j" v-bind.sync="displayProperties"></p-d-citation>
+        <template v-else-if="entry.p==='cito:citesAsDataSource'">
+          <p-d-citation :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'citesAsDataSource'+j" v-bind="displayProperties"></p-d-citation>
         </template>
 
-        <template v-else-if="p==='cito:isCitedBy'" slot="cito:isCitedBy">
-          <p-d-citation :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'citedby'+j" v-bind.sync="displayProperties"></p-d-citation>
+        <template v-else-if="entry.p==='cito:isCitedBy'">
+          <p-d-citation :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'citedby'+j" v-bind="displayProperties"></p-d-citation>
         </template>
 
-        <template v-else-if="p==='rdau:P60227'" slot="rdau:P60227">
-          <p-d-adaptation :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'adaptation'+j" v-bind.sync="displayProperties"></p-d-adaptation>
+        <template v-else-if="entry.p==='rdau:P60227'">
+          <p-d-adaptation :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'adaptation'+j" v-bind="displayProperties"></p-d-adaptation>
         </template>
 
-        <template v-else-if="p==='bf:instanceOf'" slot="bf:instanceOf">
-          <p-d-instance-of :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'instanceof'+j" v-bind.sync="displayProperties"></p-d-instance-of>
+        <template v-else-if="entry.p==='bf:instanceOf'">
+          <p-d-instance-of :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'instanceof'+j" v-bind="displayProperties"></p-d-instance-of>
         </template>
 
-        <template v-else-if="p==='frapo:isOutputOf'" slot="frapo:isOutputOf">
-          <template v-for="(item, j) in o">
-            <template v-if="item['@type']==='aiiso:Programme'">
-              <p-d-study-plan :p="p" :o="item" :key="componentid+'study-plan'+j" v-bind.sync="displayProperties"></p-d-study-plan>
-            </template>
+        <template v-else-if="entry.p==='frapo:isOutputOf'">
+          <template v-for="(item, j) in entry.o" :key="componentid+'study-plan'+j">
+            <p-d-study-plan v-if="item['@type']==='aiiso:Programme'" :p="entry.p" :o="item" v-bind="displayProperties"></p-d-study-plan>
           </template>
-          <template v-for="(item, j) in projectIds">
-            <template v-if="item && item['@type']==='foaf:Project'">
-              <p-d-project :p="p" :o="item" :hideLabel="j !== 0" :key="componentid+'project'+j" v-bind.sync="displayProperties"></p-d-project>
-            </template>
-            </template>
+          <template v-for="(item, j) in projectIds" :key="componentid+'proj-wrap'+j">
+            <p-d-project v-if="item && item['@type']==='foaf:Project'" :p="entry.p" :o="item" :hideLabel="j !== 0" v-bind="displayProperties"></p-d-project>
+          </template>
             <v-row v-if="!shownAllProjectIds">
                 <v-col cols="6" offset="3">
-                      <span @click="showAllProjectIds()" class="mx-1 primary--text">... {{ $t('show all') }}</span>
+                      <span @click="showAllProjectIds()" class="mx-1 text-primary">... {{ $t('show all') }}</span>
                 </v-col>
             </v-row>
         </template>
 
-        <template v-else-if="p==='frapo:hasFundingAgency'" slot="frapo:hasFundingAgency">
-          <p-d-funder :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'funder'+j" v-bind.sync="displayProperties"></p-d-funder>
+        <template v-else-if="entry.p==='frapo:hasFundingAgency'">
+          <p-d-funder :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'funder'+j" v-bind="displayProperties"></p-d-funder>
         </template>
 
-        <template v-else-if="p==='ebucore:hasRelatedEvent'" slot="ebucore:hasRelatedEvent">
-          <p-d-event :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'event'+j" v-bind.sync="displayProperties"></p-d-event>
+        <template v-else-if="entry.p==='ebucore:hasRelatedEvent'">
+          <p-d-event :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'event'+j" v-bind="displayProperties"></p-d-event>
         </template>
 
-        <template v-else-if="p==='rdax:P00009'" slot="rdax:P00009">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'association'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='rdax:P00009'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'association'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='bf:physicalLocation'" slot="bf:physicalLocation">
-          <p-d-lang-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'physloc'+j" v-bind.sync="displayProperties"></p-d-lang-value>
+        <template v-else-if="entry.p==='bf:physicalLocation'">
+          <p-d-lang-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'physloc'+j" v-bind="displayProperties"></p-d-lang-value>
         </template>
 
-        <template v-else-if="p==='rdau:P60550'" slot="rdau:P60550">
-          <p-d-lang-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'extent'+j" v-bind.sync="displayProperties"></p-d-lang-value>
+        <template v-else-if="entry.p==='rdau:P60550'">
+          <p-d-lang-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'extent'+j" v-bind="displayProperties"></p-d-lang-value>
         </template>
 
-        <template v-else-if="p==='bf:shelfMark'" slot="bf:shelfMark">
-          <p-d-lang-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'callnr'+j" v-bind.sync="displayProperties"></p-d-lang-value>
+        <template v-else-if="entry.p==='bf:shelfMark'">
+          <p-d-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'callnr'+j" v-bind="displayProperties"></p-d-value>
         </template>
 
-        <template v-else-if="p==='dcterms:provenance'" slot="dcterms:provenance">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'prov'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='dcterms:provenance'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'prov'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='dcterms:spatial'" slot="dcterms:spatial">
-          <p-d-georeference :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'spatial'+j" v-bind.sync="displayProperties" ></p-d-georeference>
+        <template v-else-if="entry.p==='dcterms:spatial'">
+          <p-d-georeference :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'spatial'+j" v-bind="displayProperties" ></p-d-georeference>
         </template>
 
-        <template v-else-if="p==='vra:placeOfCreation'" slot="vra:placeOfCreation">
-          <p-d-georeference :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'placeOfCreation'+j" v-bind.sync="displayProperties"></p-d-georeference>
+        <template v-else-if="entry.p==='vra:placeOfCreation'">
+          <p-d-georeference :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'placeOfCreation'+j" v-bind="displayProperties"></p-d-georeference>
         </template>
 
-        <template v-else-if="p==='vra:placeOfRepository'" slot="vra:placeOfRepository">
-          <p-d-georeference :p="p" :o="item" v-for="(item, j) in o" :key="'placeOfRepository'+j" v-bind.sync="displayProperties"></p-d-georeference>
+        <template v-else-if="entry.p==='vra:placeOfRepository'">
+          <p-d-georeference :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="'placeOfRepository'+j" v-bind="displayProperties"></p-d-georeference>
         </template>
 
-        <template v-else-if="p==='vra:placeOfSite'" slot="vra:placeOfSite">
-          <p-d-georeference :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'placeOfSite'+j" v-bind.sync="displayProperties"></p-d-georeference>
+        <template v-else-if="entry.p==='vra:placeOfSite'">
+          <p-d-georeference :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'placeOfSite'+j" v-bind="displayProperties"></p-d-georeference>
         </template>
 
-        <template v-else-if="p==='ebucore:filename'" slot="ebucore:filename">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'filename'+j" v-bind.sync="displayProperties"></p-d-value>
+        <template v-else-if="entry.p==='ebucore:filename'">
+          <p-d-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'filename'+j" v-bind="displayProperties"></p-d-value>
         </template>
 
-        <template v-else-if="p==='ebucore:hasMimeType'" slot="ebucore:hasMimeType">
-          <p-d-labeled-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'mime'+j" v-bind.sync="displayProperties"></p-d-labeled-value>
+        <template v-else-if="entry.p==='ebucore:hasMimeType'">
+          <p-d-labeled-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'mime'+j" v-bind="displayProperties"></p-d-labeled-value>
         </template>
 
-        <template v-else-if="p==='opaque:cco_accessionNumber'" slot="opaque:cco_accessionNumber">
-          <p-d-lang-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'accnr'+j" v-bind.sync="displayProperties"></p-d-lang-value>
+        <template v-else-if="entry.p==='opaque:cco_accessionNumber'">
+          <p-d-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'accnr'+j" v-bind="displayProperties"></p-d-value>
         </template>
 
-        <template v-else-if="p==='vra:hasInscription'" slot="vra:hasInscription">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'inscr'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='vra:hasInscription'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'inscr'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='vra:material'" slot="vra:material">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'material'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='vra:material'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'material'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='vra:hasTechnique'" slot="vra:hasTechnique">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'techn'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='vra:hasTechnique'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'techn'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='dce:format'" slot="dce:format">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'format'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='dce:format'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'format'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='rdau:P60048'" slot="rdau:P60048">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'carriertype'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='rdau:P60048'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'carriertype'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='phaidra:levelOfDescription'" slot="phaidra:levelOfDescription">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'lvlofdesc'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='phaidra:levelOfDescription'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'lvlofdesc'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='rdau:P60059'" slot="rdau:P60059">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'regenc'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='rdau:P60059'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'regenc'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='schema:width'" slot="schema:width">
-          <p-d-dimension :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'width'+j" v-bind.sync="displayProperties"></p-d-dimension>
+        <template v-else-if="entry.p==='schema:width'">
+          <p-d-dimension :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'width'+j" v-bind="displayProperties"></p-d-dimension>
         </template>
 
-        <template v-else-if="p==='schema:height'" slot="schema:height">
-          <p-d-dimension :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'height'+j" v-bind.sync="displayProperties"></p-d-dimension>
+        <template v-else-if="entry.p==='schema:height'">
+          <p-d-dimension :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'height'+j" v-bind="displayProperties"></p-d-dimension>
         </template>
 
-        <template v-else-if="p==='schema:depth'" slot="schema:depth">
-          <p-d-dimension :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'depth'+j" v-bind.sync="displayProperties"></p-d-dimension>
+        <template v-else-if="entry.p==='schema:depth'">
+          <p-d-dimension :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'depth'+j" v-bind="displayProperties"></p-d-dimension>
         </template>
 
-        <template v-else-if="p==='vra:diameter'" slot="vra:diameter">
-          <p-d-dimension :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'diameter'+j" v-bind.sync="displayProperties"></p-d-dimension>
+        <template v-else-if="entry.p==='vra:diameter'">
+          <p-d-dimension :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'diameter'+j" v-bind="displayProperties"></p-d-dimension>
         </template>
 
-        <template v-else-if="p==='schema:weight'" slot="schema:weight">
-          <p-d-dimension :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'weight'+j" v-bind.sync="displayProperties"></p-d-dimension>
+        <template v-else-if="entry.p==='schema:weight'">
+          <p-d-dimension :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'weight'+j" v-bind="displayProperties"></p-d-dimension>
         </template>
 
-        <template v-else-if="p==='schema:duration'" slot="schema:duration">
-          <p-d-duration :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'duration'+j" v-bind.sync="displayProperties"></p-d-duration>
+        <template v-else-if="entry.p==='schema:duration'">
+          <p-d-duration :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'duration'+j" v-bind="displayProperties"></p-d-duration>
         </template>
 
-        <template v-else-if="p==='schema:numberOfPages'" slot="schema:numberOfPages">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'numberOfPages'+j" v-bind.sync="displayProperties"></p-d-value>
+        <template v-else-if="entry.p==='schema:numberOfPages'">
+          <p-d-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'numberOfPages'+j" v-bind="displayProperties"></p-d-value>
         </template>
 
-        <template v-else-if="p==='bibo:issue'" slot="bibo:issue">
-          <p-d-lang-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'issue'+j" v-bind.sync="displayProperties"></p-d-lang-value>
+        <template v-else-if="entry.p==='bibo:issue'">
+          <p-d-lang-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'issue'+j" v-bind="displayProperties"></p-d-lang-value>
         </template>
 
-        <template v-else-if="p==='bibo:volume'" slot="bibo:volume">
-          <p-d-lang-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'volume'+j" v-bind.sync="displayProperties"></p-d-lang-value>
+        <template v-else-if="entry.p==='bibo:volume'">
+          <p-d-lang-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'volume'+j" v-bind="displayProperties"></p-d-lang-value>
         </template>
 
-        <template v-else-if="p==='bf:soundCharacteristic'" slot="bf:soundCharacteristic">
-          <p-d-lang-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'soundCharacteristic'+j" v-bind.sync="displayProperties"></p-d-lang-value>
+        <template v-else-if="entry.p==='bf:soundCharacteristic'">
+          <p-d-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'soundCharacteristic'+j" v-bind="displayProperties"></p-d-value>
         </template>
 
-        <template v-else-if="p==='schema:pageStart'" slot="schema:pageStart">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'pageStart'+j" v-bind.sync="displayProperties"></p-d-value>
+        <template v-else-if="entry.p==='schema:pageStart'">
+          <p-d-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'pageStart'+j" v-bind="displayProperties"></p-d-value>
         </template>
 
-        <template v-else-if="p==='schema:pageEnd'" slot="schema:pageEnd">
-          <p-d-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'pageEnd'+j" v-bind.sync="displayProperties"></p-d-value>
+        <template v-else-if="entry.p==='schema:pageEnd'">
+          <p-d-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'pageEnd'+j" v-bind="displayProperties"></p-d-value>
         </template>
 
-        <template v-else-if="p==='bf:supplementaryContent'" slot="bf:supplementaryContent">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'supplementaryContent'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='bf:supplementaryContent'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'supplementaryContent'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='dcterms:audience'" slot="dcterms:audience">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'audience'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='dcterms:audience'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'audience'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='bf:awards'" slot="bf:awards">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'awards'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='bf:awards'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'awards'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='bf:scale'" slot="bf:scale">
-          <p-d-skos-preflabel :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'scale'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
+        <template v-else-if="entry.p==='bf:scale'">
+          <p-d-skos-preflabel :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'scale'+j" v-bind="displayProperties"></p-d-skos-preflabel>
         </template>
 
-        <template v-else-if="p==='rdfs:seeAlso'" slot="rdfs:seeAlso">
-          <p-d-see-also :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'seealso'+j" v-bind.sync="displayProperties"></p-d-see-also>
+        <template v-else-if="entry.p==='rdfs:seeAlso'">
+          <p-d-see-also :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'seealso'+j" v-bind="displayProperties"></p-d-see-also>
         </template>
 
-        <template v-else-if="p==='edm:rights'" slot="edm:rights">
-          <p-d-license :p="p" :o="item" :copyrightLink="copyrightLink" v-for="(item, j) in o" :key="componentid+'license'+j" v-bind.sync="displayProperties"></p-d-license>
+        <template v-else-if="entry.p==='edm:rights'">
+          <p-d-license :p="entry.p" :o="item" :copyrightLink="copyrightLink" v-for="(item, j) in entry.o" :key="componentid+'license'+j" v-bind="displayProperties"></p-d-license>
         </template>
 
-        <template v-else-if="p==='dce:rights'" slot="dce:rights">
-          <p-d-lang-value :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'rights'+j" v-bind.sync="displayProperties"></p-d-lang-value>
+        <template v-else-if="entry.p==='dce:rights'">
+          <p-d-lang-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'rights'+j" v-bind="displayProperties"></p-d-lang-value>
         </template>
 
-        <template v-else-if="p==='dcterms:subject'">
-
-          <template v-for="(subject, j) in o">
-            <v-card outlined class="mt-4" v-if="subject['@type']==='phaidra:Subject'" slot="phaidra:Subject" :key="componentid+'psubject'+j">
-              <v-card-text>
-                <div class="overline mb-4">{{ $t('SUBJECT_SECTION') }}</div>
-                <p-d-jsonld :jsonld="subject" v-bind.sync="displayProperties"></p-d-jsonld>
-              </v-card-text>
-            </v-card>
-            <p-d-skos-preflabel v-else slot="dcterms:subject" :p="p" :o="subject" :key="componentid+'subject'+j" v-bind.sync="displayProperties"></p-d-skos-preflabel>
-          </template>
-
+        <template v-else-if="entry.p==='phaidra:systemTag'">
+          <p-d-value v-if="showSystemFields" :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'systemTag'+j" v-bind="displayProperties"></p-d-value>
         </template>
 
-        <template v-else-if="p==='@type'"></template>
-
-        <template v-else-if="p==='dce:subject'"></template>
-
-        <template v-else-if="p==='phaidra:systemTag'" slot="phaidra:systemTag">
-          <p-d-value v-if="showSystemFields" :p="p" :o="item" v-for="(item, j) in o" :key="componentid+'systemTag'+j" v-bind.sync="displayProperties"></p-d-value>
-        </template>
-
-        <template v-else slot="unknown-predicate">
-          <v-container class="my-4" :key="p">
-            <v-alert :type="'error'" :value="true" transition="fade-transition">Unknown predicate <b>{{p}}</b></v-alert>
-            <p-d-unknown :jsonld="o" :label="p" v-bind.sync="displayProperties"></p-d-unknown>
+        <template v-else>
+          <v-container class="my-4" :key="entry.p">
+            <v-alert :type="'error'" :model-value="true" transition="fade-transition">Unknown predicate <b>{{ entry.p }}</b></v-alert>
+            <p-d-unknown :jsonld="entry.o" :label="entry.p" v-bind="displayProperties"></p-d-unknown>
           </v-container>
         </template>
-
-      </template>
 
     </template>
   </p-d-jsonld-layout>
@@ -407,7 +398,6 @@
 
 <script>
 import order from '../../utils/order'
-import Vue from 'vue'
 import PDAccessibility from './PDAccessibility'
 import PDLicense from './PDLicense'
 import PDTitle from './PDTitle'
@@ -437,6 +427,27 @@ import PDSeeAlso from './PDSeeAlso'
 import PDUnknown from './PDUnknown'
 import { vocabulary } from '../../mixins/vocabulary'
 import { displayproperties } from '../../mixins/displayproperties'
+
+/** Predicates with dedicated render branches (others map to unknown-predicate slot). */
+const PD_JSONLD_KNOWN_PREDICATES = new Set([
+  'rdam:P30004', 'edm:hasType', 'schema:genre', 'schema:accessMode', 'schema:accessibilityFeature',
+  'schema:accessibilityControl', 'schema:accessibilityHazard', 'oaire:version', 'dcterms:accessRights',
+  'rdau:P60059', 'dce:title', 'bf:note', 'bf:tableOfContents', 'dcterms:language', 'schema:subtitleLanguage',
+  'dcterms:date', 'dcterms:created', 'dcterms:modified', 'dcterms:available', 'dcterms:issued',
+  'dcterms:valid', 'dcterms:dateAccepted', 'dcterms:dateCopyrighted', 'dcterms:dateSubmitted',
+  'rdau:P60071', 'phaidra:dateAccessioned', 'phaidra:dateApprobation', 'dcterms:temporal',
+  'rdau:P60193', 'rdau:P60101', 'bf:provisionActivity', 'cito:cites', 'cito:citesAsDataSource',
+  'cito:isCitedBy', 'rdau:P60227', 'bf:instanceOf', 'frapo:isOutputOf', 'frapo:hasFundingAgency',
+  'ebucore:hasRelatedEvent', 'rdax:P00009', 'bf:physicalLocation', 'rdau:P60550', 'bf:shelfMark',
+  'dcterms:provenance', 'dcterms:spatial', 'vra:placeOfCreation', 'vra:placeOfRepository',
+  'vra:placeOfSite', 'ebucore:filename', 'ebucore:hasMimeType', 'opaque:cco_accessionNumber',
+  'vra:hasInscription', 'vra:material', 'vra:hasTechnique', 'dce:format', 'rdau:P60048',
+  'phaidra:levelOfDescription', 'schema:width', 'schema:height', 'schema:depth', 'vra:diameter',
+  'schema:weight', 'schema:duration', 'schema:numberOfPages', 'bibo:issue', 'bibo:volume',
+  'bf:soundCharacteristic', 'schema:pageStart', 'schema:pageEnd', 'bf:supplementaryContent',
+  'dcterms:audience', 'bf:awards', 'bf:scale', 'rdfs:seeAlso', 'edm:rights', 'dce:rights',
+  'phaidra:systemTag'
+])
 
 export default {
   name: 'p-d-jsonld',
@@ -494,7 +505,7 @@ export default {
   },
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return this.$store?.state?.instanceconfig ?? { api: '', baseurl: '', solr: '' }
     },
     componentid: function () {
       return Math.floor(Math.random() * 10000000)
@@ -542,6 +553,19 @@ export default {
         return a.ord - b.ord
       })
       return roles
+    },
+    jsonldSlotEntries () {
+      if (!this.jsonld) return []
+      const entries = []
+      for (const [p, o] of Object.entries(this.jsonld)) {
+        if (this.predicatesToHide.includes(p)) continue
+        if (p.startsWith('role:')) continue
+        if (p === 'dcterms:subject') continue
+        if (p === '@type' || p === 'dce:subject' || p === 'dcterms:type') continue
+        const slotKey = PD_JSONLD_KNOWN_PREDICATES.has(p) ? p : 'unknown-predicate'
+        entries.push({ p, o, slotKey })
+      }
+      return entries
     }
   },
   data () {
@@ -609,19 +633,18 @@ export default {
       return entities
     },
     setShowAllEntities: function (p) {
-      Vue.set(this.showAllEntities, p, true)
+      this.showAllEntities[p] = true
     }
   },
   mounted: function () {
     this.$store.dispatch('vocabulary/loadLanguages', this.$i18n.locale)
     this.getProjectIds()
-    if (this.jsonld) {
+    if (!this.jsonld) return
     this.overallAccessibility = {
       control: this.jsonld['schema:accessibilityControl'] || [],
       feature: this.jsonld['schema:accessibilityFeature'] || [],
       hazard: this.jsonld['schema:accessibilityHazard'] || [],
-      mode: this.jsonld['schema:accessMode'] || [],
-      }
+      mode: this.jsonld['schema:accessMode'] || []
     }
   }
 }
@@ -635,6 +658,13 @@ export default {
   overflow-wrap: break-word;
   word-wrap: break-word; /* legacy fallback */
   hyphens: auto;
+}
+
+/* Vuetify 4 compatibility: restore Vuetify 2-like inner col padding */
+.pdjsonld-grid-compat .v-row > .v-col,
+.pdjsonld-grid-compat .v-row > [class*='v-col-'] {
+  padding: 12px;
+  padding-top: 0;
 }
 </style>
 

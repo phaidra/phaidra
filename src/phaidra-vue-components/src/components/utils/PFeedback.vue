@@ -1,6 +1,6 @@
 <template>
   <v-card class="mt-4">
-    <v-card-title class="title font-weight-light white--text">{{ $t('Feedback') }}</v-card-title>
+    <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Feedback') }}</v-card-title>
     <v-divider></v-divider>
     <v-card-text class="mt-4">
       <v-form v-if="!sent" ref="form" v-model="valid">
@@ -12,7 +12,7 @@
                 :rules="nameRules"
                 :label="$t('Firstname')"
                 required
-                filled
+                variant="filled"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="4">
@@ -21,7 +21,7 @@
                 :rules="nameRules"
                 :label="$t('Lastname')"
                 required
-                filled
+                variant="filled"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="4">
@@ -30,7 +30,7 @@
                 :rules="emailRules"
                 :label="$t('E-mail')"
                 required
-                filled
+                variant="filled"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -41,7 +41,7 @@
                 :rules="feedbackRules"
                 :label="$t('Feedback')"
                 required
-                filled
+                variant="filled"
               ></v-textarea>
             </v-col>
           </v-row>
@@ -51,7 +51,7 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn v-if="!sent" class="primary" :loading="loading" :disabled="loading" @click="send()">{{ $t('Send') }}</v-btn>
+      <v-btn v-if="!sent" class="bg-primary" :loading="loading" :disabled="loading" @click="send()">{{ $t('Send') }}</v-btn>
       <v-btn v-if="sent" :loading="loading" :disabled="loading" @click="newFeedback()">{{ $t('New feedback') }}</v-btn>
     </v-card-actions>
   </v-card>

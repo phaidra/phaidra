@@ -119,6 +119,22 @@ x-custom:
       - source: shibboleth_config
         target: /shib-init/shibboleth2.xml
 
+  ui_theme_env: &ui_theme_env
+    PHAIDRA_DEFAULT_THEME: "${PHAIDRA_DEFAULT_THEME:-light}"
+    PHAIDRA_DARK_PRIMARY_COLOR: "${PHAIDRA_DARK_PRIMARY_COLOR:-#da3000}"
+    PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#da3000}"
+    PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
+    # Nuxt production images bake nuxt.config.js at build time; override runtimeConfig from env at container start.
+    NUXT_PUBLIC_DEFAULT_THEME: "${PHAIDRA_DEFAULT_THEME:-light}"
+    NUXT_PUBLIC_DARK_PRIMARY_COLOR: "${PHAIDRA_DARK_PRIMARY_COLOR:-#da3000}"
+    NUXT_PUBLIC_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#da3000}"
+    NUXT_PUBLIC_DEFAULT_LOCALE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
+    NUXT_PUBLIC_API_BASE_URL: "${PHAIDRA_API_BASE_URL:-${OUTSIDE_HTTP_SCHEME:-http}://${PHAIDRA_HOSTNAME:-localhost}${PHAIDRA_PORTSTUB-:}${PHAIDRA_HOSTPORT-8899}/api}"
+    NUXT_PUBLIC_AXIOS_BROWSER_BASE_URL: "${PHAIDRA_API_BASE_URL:-${OUTSIDE_HTTP_SCHEME:-http}://${PHAIDRA_HOSTNAME:-localhost}${PHAIDRA_PORTSTUB-:}${PHAIDRA_HOSTPORT-8899}/api}"
+    NUXT_PUBLIC_BASE_URL: "${PHAIDRA_BASE_URL:-${OUTSIDE_HTTP_SCHEME:-http}://${PHAIDRA_HOSTNAME:-localhost}${PHAIDRA_PORTSTUB-:}${PHAIDRA_HOSTPORT-8899}}"
+    NUXT_PUBLIC_COOKIE_DOMAIN: "${COOKIE_DOMAIN:-${PHAIDRA_HOSTNAME:-localhost}}"
+    NUXT_API_BASE_URL: "${PHAIDRA_API_BASE_URL_INTERNAL:-http://${PHAIDRA_API_HOST:-api}:3000}"
+
   hosts: &hosts
     ADMIN_IP_LIST: "${ADMIN_IP_LIST:-10.0.2.2}"
     PHAIDRA_API_HOST: "${PHAIDRA_API_HOST:-api}"
@@ -406,12 +422,8 @@ services:
     image: phaidraorg/ui:51a97049
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
-      <<: [*api_common_env, *hosts]
+      <<: [*api_common_env, *hosts, *ui_theme_env]
       OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
-      PHAIDRA_DEFAULT_THEME: "${PHAIDRA_DEFAULT_THEME:-light}"
-      PHAIDRA_DARK_PRIMARY_COLOR: "${PHAIDRA_DARK_PRIMARY_COLOR:-#da3000}"
-      PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#da3000}"
-      PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
       LEGACY_OPEN_REDIRECT: "${LEGACY_OPEN_REDIRECT:-false}"
       IR_BASE_URL: "${IR_BASE_URL:-}"
     profiles: ["demo-local", "ssl-local", "shib-local"]
@@ -423,12 +435,8 @@ services:
     image: phaidraorg/ui:51a97049
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
-      <<: [*api_common_env, *hosts]
+      <<: [*api_common_env, *hosts, *ui_theme_env]
       OUTSIDE_HTTP_SCHEME: "${OUTSIDE_HTTP_SCHEME:-http}"
-      PHAIDRA_DEFAULT_THEME: "${PHAIDRA_DEFAULT_THEME:-light}"
-      PHAIDRA_DARK_PRIMARY_COLOR: "${PHAIDRA_DARK_PRIMARY_COLOR:-#da3000}"
-      PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#da3000}"
-      PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
       LEGACY_OPEN_REDIRECT: "${LEGACY_OPEN_REDIRECT:-false}"
       IR_BASE_URL: "${IR_BASE_URL:-}"
     profiles: ["demo-s3", "ssl-s3", "shib-s3"]
@@ -441,11 +449,7 @@ services:
       dockerfile: dockerfiles/ui-dev.dockerfile
     command: "npm run dev"
     environment:
-      <<: [*api_common_env, *hosts]
-      PHAIDRA_DEFAULT_THEME: "${PHAIDRA_DEFAULT_THEME:-light}"
-      PHAIDRA_DARK_PRIMARY_COLOR: "${PHAIDRA_DARK_PRIMARY_COLOR:-#da3000}"
-      PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#da3000}"
-      PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
+      <<: [*api_common_env, *hosts, *ui_theme_env]
       LEGACY_OPEN_REDIRECT: "${LEGACY_OPEN_REDIRECT:-false}"
       IR_BASE_URL: "${IR_BASE_URL:-}"
     profiles: ["demo-local-dev", "ssl-local-dev", "shib-local-dev"]
@@ -472,11 +476,7 @@ services:
       dockerfile: dockerfiles/ui.dockerfile
     command: ["pm2-runtime", "start", "ecosystem.config.js"]
     environment:
-      <<: [*api_common_env, *hosts]
-      PHAIDRA_DEFAULT_THEME: "${PHAIDRA_DEFAULT_THEME:-light}"
-      PHAIDRA_DARK_PRIMARY_COLOR: "${PHAIDRA_DARK_PRIMARY_COLOR:-#da3000}"
-      PHAIDRA_PRIMARY_COLOR: "${PHAIDRA_PRIMARY_COLOR:-#da3000}"
-      PHAIDRA_DEFAULT_LANGUAGE: "${PHAIDRA_DEFAULT_LANGUAGE:-eng}"
+      <<: [*api_common_env, *hosts, *ui_theme_env]
       LEGACY_OPEN_REDIRECT: "${LEGACY_OPEN_REDIRECT:-false}"
       IR_BASE_URL: "${IR_BASE_URL:-}"
     profiles: ["demo-s3-dev", "ssl-s3-dev", "shib-s3-dev"]

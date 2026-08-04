@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import qs from 'qs'
 import config from '../config/phaidra-ui'
 
@@ -28,12 +27,14 @@ export const mutations = {
     }
 
     let configurable = [
-      'title',
-      'institution',
-      'institutionurl',
-      'address',
-      'phone',
-      'email',
+      'baseurl',
+      'api',
+      'title', 
+      'institution', 
+      'institutionurl', 
+      'address', 
+      'phone', 
+      'email', 
       'oaidataprovider',
       'googlesiteverificationcode',
       'languages',
@@ -87,15 +88,18 @@ export const mutations = {
     ]
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
-        Vue.set(state.instanceconfig, p, instanceconfig[p])
+        state.instanceconfig[p] = instanceconfig[p]
       }
     }
   },
   setInstanceConfigBaseUrl(state, baseurl) {
-    Vue.set(state.instanceconfig, 'baseurl', baseurl)
+    state.instanceconfig.baseurl = baseurl
   },
   setInstanceConfigApiBaseUrl(state, api) {
-    Vue.set(state.instanceconfig, 'api', api)
+    state.instanceconfig.api = api
+  },
+  setInstanceConfigCookieDomain(state, cookieDomain) {
+    state.instanceconfig.cookiedomain = cookieDomain
   },
   updateBreadcrumbs(state, transition) {
     state.breadcrumbs = [
@@ -104,10 +108,10 @@ export const mutations = {
         to: transition.localePath('/')
       }
     ]
-    if (!state.instanceconfig.hideInstitutionName && !process.server) {
+    if (!state.instanceconfig.hideInstitutionName) {
       state.breadcrumbs.unshift(
         {
-          text: this.$i18n.t(state.instanceconfig.institution),
+          text: state.instanceconfig.institution || '',
           external: true,
           to: state.instanceconfig.institutionurl
         }
@@ -652,10 +656,10 @@ export const mutations = {
     state.user = data
   },
   setUsername(state, username) {
-    Vue.set(state.user, 'username', username)
+    state.user.username = username
   },
   setToken(state, token) {
-    Vue.set(state.user, 'token', token)
+    state.user.token = token
     if (process.browser) {
       window.localStorage.setItem("XSRF-TOKEN", token)
     }
@@ -720,10 +724,10 @@ export const actions = {
     commit('setInstanceConfig', config)
   },
 
-  async nuxtServerInit({ commit, dispatch }, { req }) {
-    const token = this.$cookies.get('XSRF-TOKEN')
-    commit('setToken', token)
-    if (token) {
+  async nuxtServerInit({ commit, dispatch }, { token } = {}) {
+    const xsrfToken = token ?? this.$cookies?.get?.('XSRF-TOKEN')
+    commit('setToken', xsrfToken)
+    if (xsrfToken) {
       await dispatch('getLoginData')
     }
   },
@@ -817,9 +821,15 @@ export const actions = {
           'content-type': 'application/x-www-form-urlencoded'
         }
       })
-      console.log('setCollectionMembersTotal:' + response.data.response.numFound)
-      commit('setCollectionMembers', response.data.response.docs)
-      commit('setCollectionMembersTotal', response.data.response.numFound)
+      const solr = response.data?.response
+      if (!solr?.docs) {
+        commit('setCollectionMembers', [])
+        commit('setCollectionMembersTotal', 0)
+        return
+      }
+      console.log('setCollectionMembersTotal:' + solr.numFound)
+      commit('setCollectionMembers', solr.docs)
+      commit('setCollectionMembersTotal', solr.numFound)
     } catch (error) {
       commit('setAlerts', [{ type: 'error', msg: error }])
     } finally {
@@ -868,6 +878,10 @@ export const actions = {
     } catch (error) {
       console.log('login error')
       console.log(error)
+      const alerts = error.response?.data?.alerts
+      if (alerts?.length > 0) {
+        commit('setAlerts', alerts)
+      }
     }
   },
   async logout({ commit, dispatch, state }) {

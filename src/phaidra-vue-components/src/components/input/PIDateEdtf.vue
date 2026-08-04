@@ -3,46 +3,46 @@
     <v-col cols="5" v-if="!hideType">
       <v-autocomplete
         :no-data-text="$t('No data available')"
-        v-on:input="$emit('input-date-type', $event)"
+        @update:model-value="$emit('input-date-type', $event)"
         :label="$t('Type of date')"
         :items="vocabularies['datepredicate'].terms"
-        :item-value="'@id'"
-        :value="getTerm('datepredicate', type)"
-        :filter="autocompleteFilter"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        item-value="@id"
+        :item-title="(item) => skosTermItemTitle(item, 'datepredicate')"
+        :model-value="getTerm('datepredicate', type)"
+        :custom-filter="vocabAutocompleteFilter"
+        :variant="fieldVariant"
         return-object
         clearable
         :error-messages="typeErrorMessages"
       >
-        <template slot="item" slot-scope="{ item }">
-          <v-list-item-content two-line>
-            <v-list-item-title  v-html="`${getLocalizedTermLabel('datepredicate', item['@id'])}`"></v-list-item-title>
-            <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-          </v-list-item-content>
+        <template #item="{ props, internalItem }">
+          <v-list-item v-bind="props" :lines="showIds ? 'two' : 'one'">
+            <template #title>
+              <span v-html="getLocalizedTermLabel('datepredicate', internalItem.raw['@id'])" />
+            </template>
+            <template v-if="showIds" #subtitle>
+              <span v-html="internalItem.raw['@id']" />
+            </template>
+          </v-list-item>
         </template>
-        <template slot="selection" slot-scope="{ item }">
-          <v-list-item-content>
-            <v-list-item-title v-html="`${getLocalizedTermLabel('datepredicate', item['@id'])}`"></v-list-item-title>
-          </v-list-item-content>
+        <template #selection="{ internalItem }">
+          <span v-html="getLocalizedTermLabel('datepredicate', (internalItem.raw || internalItem)['@id'])" />
         </template>
       </v-autocomplete>
     </v-col>
     <v-col :cols="hideType ? (actions.length ? 10 : 12) : (actions.length ? 5 : 7)">
       <template v-if="picker">
         <v-text-field
-          :value="value"
-          v-on:blur="$emit('input-date',$event.target.value)"
+          :model-value="value"
+          @update:model-value="$emit('input-date', $event)"
           :label="$t(dateLabel ? dateLabel : 'Date')"
-          :background-color="backgroundColor ? backgroundColor : undefined"
+          :bg-color="backgroundColor ? backgroundColor : undefined"
           :required="required"
           :rules="[validationrules.date]"
-          :filled="inputStyle==='filled'"
-          :outlined="inputStyle==='outlined'"
+          :variant="fieldVariant"
           :error-messages="valueErrorMessages"
         >
           <template v-slot:append>
-            <v-fade-transition leave-absolute>
               <v-menu
                 ref="menu1"
                 v-model="dateMenu"
@@ -52,40 +52,37 @@
                 max-width="290px"
                 min-width="290px"
               >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-icon v-on="on" v-bind="attrs">mdi-calendar</v-icon>
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-icon v-bind="activatorProps">mdi-calendar</v-icon>
                 </template>
                 <v-date-picker
                   color="primary"
-                  :value="value"
                   :show-current="false"
                   v-model="pickerModel"
                   :first-day-of-week="1"
                   :locale="alpha2bcp47($i18n.locale)"
-                  v-on:input="dateMenu = false; $emit('input-date', $event)"
+                  @update:model-value="dateMenu = false; $emit('input-date', $event)"
                 ></v-date-picker>
               </v-menu>
-            </v-fade-transition>
           </template>
         </v-text-field>
       </template>
       <template v-else>
         <v-text-field
-          :value="value"
-          v-on:blur="$emit('input-date',$event.target.value)"
-          :background-color="backgroundColor ? backgroundColor : undefined"
+          :model-value="value"
+          @update:model-value="$emit('input-date', $event)"
+          :bg-color="backgroundColor ? backgroundColor : undefined"
           :label="$t(dateLabel ? dateLabel : 'Date')"
           :required="required"
           :hint="$t(dateFormatHint)"
           :rules="[validationrules.date]"
-          :filled="inputStyle==='filled'"
-          :outlined="inputStyle==='outlined'"
+          :variant="fieldVariant"
           :error-messages="valueErrorMessages"
         >
-          <template v-slot:append-outer>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-icon v-on="on">mdi-help-circle-outline</v-icon>
+          <template v-slot:append>
+            <v-tooltip location="bottom">
+              <template v-slot:activator="{ props: activatorProps }">
+                <v-icon v-bind="activatorProps">mdi-help-circle-outline</v-icon>
               </template>
               <span>{{ $t('EDTF Examples: 1984? (uncertain 1984), 1964/2008 (range), 2001-21 (Spring 2001), 156X (1560s), 2004-06~ (approximate June 2004), 1984-03-12% (uncertain and approximate date in 1984)') }}</span>
             </v-tooltip>
@@ -95,10 +92,8 @@
     </v-col>
     <v-col cols="2" v-if="actions.length">
       <v-menu bottom offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn v-on="on" v-bind="attrs" icon>
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-icon-btn v-bind="activatorProps" variant="text" icon="mdi-dots-vertical" />
         </template>
         <v-list>
           <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">

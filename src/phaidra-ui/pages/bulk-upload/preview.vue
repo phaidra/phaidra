@@ -7,264 +7,214 @@
       </v-col>
     </v-row>
 
-    <template>
       <v-row v-if="isInitialized">
         <v-col>
-          <v-card outlined>
+          <v-card variant="outlined">
             <v-card-text class="table-container">
-              <v-simple-table fixed-header>
-                <template v-slot:default>
-                  <thead>
-                    <tr>
-                      <template v-for="field in allFields">
-                        <template v-if="isMultiField(field)">
-                          <PreviewTableHeader
-                            v-for="(subFieldConfig, subField) in getSubFields(field)"
-                            :key="field + '-' + subField"
-                            :field="$t(field)"
-                            :sub-field="subField"
-                            :is-required="subFieldConfig.required"
-                            :is-mapped="!!getSourceInfo(field, subField)"
-                            :source-info="getSourceInfo(field, subField)"
-                          />
-                        </template>
+              <v-table fixed-header>
+                <thead>
+                  <tr>
+                    <template v-for="field in allFields" :key="field">
+                      <template v-if="isMultiField(field)">
                         <PreviewTableHeader
-                          v-else
-                          :key="field"
+                          v-for="(subFieldConfig, subField) in getSubFields(field)"
+                          :key="field + '-' + subField"
                           :field="$t(field)"
-                          :is-required="fieldSettings[field].required"
-                          :is-mapped="!!getAllFieldMappings[field]"
-                          :source-info="getSourceInfo(field)"
+                          :sub-field="subField"
+                          :is-required="subFieldConfig.required"
+                          :is-mapped="!!getSourceInfo(field, subField)"
+                          :source-info="getSourceInfo(field, subField)"
                         />
                       </template>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(row, index) in previewData" :key="index">
-                      <template v-for="field in allFields">
-                        <template v-if="isMultiField(field)">
-                          <PreviewTableCell
-                            v-for="(subFieldConfig, subField) in getSubFields(field)"
-                            :key="field + '-' + subField"
-                            :field="field"
-                            :sub-field="subField"
-                            :row-data="row"
-                            :is-mapped="!!getSourceInfo(field, subField)"
-                          />
-                        </template>
+                      <PreviewTableHeader
+                        v-else
+                        :key="field"
+                        :field="$t(field)"
+                        :is-required="fieldSettings[field].required"
+                        :is-mapped="!!fieldMappings[field]"
+                        :source-info="getSourceInfo(field)"
+                      />
+                    </template>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(row, index) in previewData" :key="index">
+                    <template v-for="field in allFields" :key="field">
+                      <template v-if="isMultiField(field)">
                         <PreviewTableCell
-                          v-else
-                          :key="field"
+                          v-for="(subFieldConfig, subField) in getSubFields(field)"
+                          :key="field + '-' + subField"
                           :field="field"
+                          :sub-field="subField"
                           :row-data="row"
-                          :is-mapped="!!getAllFieldMappings[field]"
+                          :is-mapped="!!getSourceInfo(field, subField)"
                         />
                       </template>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
+                      <PreviewTableCell
+                        v-else
+                        :key="field"
+                        :field="field"
+                        :row-data="row"
+                        :is-mapped="!!fieldMappings[field]"
+                      />
+                    </template>
+                  </tr>
+                </tbody>
+              </v-table>
             </v-card-text>
           </v-card>
         </v-col>
       </v-row>
 
-      <!-- Navigation -->
-      <v-row justify="space-between" class="mt-4" v-if="isInitialized || isError">
-        <v-col cols="auto">
-          <v-btn
-            large
-            text
-            :to="steps[2].route"
-          >
-            <v-icon left>mdi-arrow-left</v-icon>
-            {{$t('Back')}}
-          </v-btn>
-        </v-col>
-        <v-col cols="auto">
-          <v-btn
-            large
-            :disabled="isError"
-            color="primary"
-            @click="proceed"
-            :to="steps[4].route"
-          >
-            {{$t('Next')}}
-            <v-icon right>mdi-arrow-right</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
-    </template>
+    <v-row v-if="isInitialized || isError" justify="space-between" class="mt-4">
+      <v-col cols="auto">
+        <v-btn variant="text" :to="steps[2].route" prepend-icon="mdi-arrow-left">
+          {{ $t('Back') }}
+        </v-btn>
+      </v-col>
+      <v-col cols="auto">
+        <v-btn
+          :disabled="isError"
+          color="primary"
+          :to="steps[4].route"
+          append-icon="mdi-arrow-right"
+          @click="proceed"
+        >
+          {{ $t('Next') }}
+        </v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
-<script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
+<script setup>
+import { computed, onMounted, ref, watch } from 'vue'
+import { useNuxtApp } from '#app'
 import BulkUploadSteps from '../../components/BulkUploadSteps.vue'
 import PreviewTableHeader from '../../components/bulk-upload/PreviewTableHeader.vue'
 import PreviewTableCell from '../../components/bulk-upload/PreviewTableCell.vue'
 import { fieldSettings } from '../../config/bulk-upload/field-settings'
-import { csvParser } from '../../mixins/csvParser'
+import { parseCsv } from '../../mixins/csvParser'
 
-export default {
-  name: 'Preview',
-  
-  components: {
-    BulkUploadSteps,
-    PreviewTableHeader,
-    PreviewTableCell
-  },
+definePageMeta({
+  middleware: 'bulk-upload'
+})
 
-  mixins: [csvParser],
-  middleware: 'bulk-upload',
+const { $store: store, $i18n: i18n, $router: router } = useNuxtApp()
 
-  data() {
-    return {
-      fieldSettings,
-      previewData: [],
-      isInitialized: false,
-      isError: false
-    }
-  },
+const previewData = ref([])
+const isInitialized = ref(false)
+const isError = ref(false)
 
-  computed: {
-    ...mapState('bulk-upload', ['steps', 'csvContent']),
-    ...mapGetters('bulk-upload', ['getAllFieldMappings', 'allFields', 'getColumnHeaders'])
-  },
+const steps = computed(() => store.state['bulk-upload']?.steps ?? {})
+const csvContent = computed(() => store.state['bulk-upload']?.csvContent ?? null)
+const fieldMappings = computed(() => store.getters['bulk-upload/getAllFieldMappings'])
+const allFields = computed(() => store.getters['bulk-upload/allFields'])
 
-  watch: {
-    '$i18n.locale': {
-      handler: async function() {
-        await this.processPreviewData()
+onMounted(async () => {
+  if (store.$initBulkUpload) {
+    await store.$initBulkUpload()
+  }
+  try {
+    processPreviewData()
+    isInitialized.value = true
+  } catch (error) {
+    console.error('[bulk-upload preview] Failed to process preview data:', error)
+    isError.value = true
+  }
+})
+
+watch(() => i18n.locale, () => {
+  if (csvContent.value) processPreviewData()
+})
+
+function isMultiField(field) {
+  return fieldSettings[field]?.fieldType === 'multi-field'
+}
+
+function getSubFields(field) {
+  const fields = fieldSettings[field]?.multiFieldConfig?.fields || {}
+  return Object.fromEntries(
+    Object.entries(fields).filter(([_, config]) => !config.hideInPreview)
+  )
+}
+
+function processPreviewData() {
+  const _locale = i18n.locale
+
+  if (!csvContent.value) return
+
+  const parsed = parseCsv(csvContent.value)
+  if (!parsed?.data || parsed.data.length < 2) return
+
+  const headers = parsed.data[0]
+  const dataRows = parsed.data.slice(1)
+
+  previewData.value = dataRows.map(values => {
+    const rowData = {}
+
+    allFields.value.forEach(field => {
+      const mapping = fieldMappings.value[field]
+      if (!mapping) {
+        rowData[field] = ''
+        return
       }
-    }
-  },
 
-  async created() {
-    // Wait for store initialization on client side
-    if (process.client && this.$store.$initBulkUpload) {
-      await this.$store.$initBulkUpload()
-    }
-    try {
-      await this.processPreviewData()
-      this.isInitialized = true
-    } catch (error) {
-      this.isError = true
-    }
-  },
-
-  methods: {
-    ...mapMutations('bulk-upload', ['completeStep', 'setCurrentStep']),
-
-    isMultiField(field) {
-      return fieldSettings[field]?.fieldType === 'multi-field'
-    },
-
-    getSubFields(field) {
-      const fields = fieldSettings[field]?.multiFieldConfig?.fields || {}
-      return Object.fromEntries(
-        Object.entries(fields).filter(([_, config]) => !config.hideInPreview)
-      )
-    },
-
-    async processPreviewData() {
-      if (!this.csvContent) return
-
-      const parsed = this.parseCsvContent(this.csvContent)
-
-      if (!parsed || !parsed.data || parsed.data.length < 2) return
-
-      const headers = parsed.data[0]
-      const dataRows = parsed.data.slice(1)
-      
-
-      const previewRows = dataRows.map(values => {
-        const rowData = {}
-        
-        this.allFields.forEach(field => {
-          const mapping = this.getAllFieldMappings[field]
-          if (!mapping) {
-            rowData[field] = ''
-            return
-          }
-
-          if (this.isMultiField(field)) {
-            rowData[field] = {}
-            Object.keys(this.getSubFields(field)).forEach(subField => {
-              const subFieldConfig = fieldSettings[field].multiFieldConfig.fields[subField]
-              if (mapping.source === 'phaidra-field') {
-                rowData[field][subField] = subFieldConfig.phaidraDisplayValue(mapping.subFields[subField]?.phaidraValue)
-              } else if (mapping.source === 'csv-column') {
-                const columnName = mapping.subFields[subField]?.csvValue
-                const value = values[headers.indexOf(columnName)]
-                rowData[field][subField] = subFieldConfig.csvDisplayValue?.(value, mapping.subFields, values, headers) || value
-              }
-            })
-          } else {
-            if (mapping.source === 'phaidra-field') {
-              rowData[field] = fieldSettings[field].phaidraDisplayValue(mapping.phaidraValue)
-            } else if (mapping.source === 'csv-column') {
-              rowData[field] = fieldSettings[field].csvDisplayValue(values[headers.indexOf(mapping.csvValue)])
-            }
+      if (isMultiField(field)) {
+        rowData[field] = {}
+        Object.keys(getSubFields(field)).forEach(subField => {
+          const subFieldConfig = fieldSettings[field].multiFieldConfig.fields[subField]
+          if (mapping.source === 'phaidra-field') {
+            rowData[field][subField] = subFieldConfig.phaidraDisplayValue(mapping.subFields[subField]?.phaidraValue)
+          } else if (mapping.source === 'csv-column') {
+            const columnName = mapping.subFields[subField]?.csvValue
+            const value = values[headers.indexOf(columnName)]
+            rowData[field][subField] = subFieldConfig.csvDisplayValue?.(value, mapping.subFields, values, headers) || value
           }
         })
-        
-        return rowData
-      })
-
-      this.previewData = previewRows
-    },
-
-    getSourceInfo(field, subField = null) {
-      const fieldMapping = this.getAllFieldMappings[field]
-      if (!fieldMapping) return null
-
-      const mapping = subField ? fieldMapping.subFields?.[subField] : fieldMapping
-
-      // csv source by default is simply the selected column
-      // 
-      // BUT:
-      // for the role#identifier and role#identifierType fields
-      // the source is inferred from either the CSV field ORCID or GND (these can only be selected via CSV)
-      // 
-      // so if the user selects ORDIC/GND and a column from their CSV, we need to infer:
-      // identifierType = ORCID / GND
-      // identifier = column value
-      // 
-      // all other fields simply grab the mapping.csvValue as the csvSource
-
-      let csvSource = null
-      const orcidSubField = fieldMapping.subFields?.['ORCID']
-      const gndSubField = fieldMapping.subFields?.['GND']
-
-      if (subField === 'Identifier') {
-        if (orcidSubField?.csvValue) {
-          csvSource = orcidSubField.csvValue
-        }
-        else if (gndSubField?.csvValue) {
-          csvSource = gndSubField.csvValue
-        }
-      } else if (subField === 'Identifier Type') {
-        csvSource = orcidSubField?.csvValue || gndSubField?.csvValue ? "selection" : null
-      } else {
-        csvSource = mapping.csvValue
+      } else if (mapping.source === 'phaidra-field') {
+        rowData[field] = fieldSettings[field].phaidraDisplayValue(mapping.phaidraValue)
+      } else if (mapping.source === 'csv-column') {
+        rowData[field] = fieldSettings[field].csvDisplayValue(values[headers.indexOf(mapping.csvValue)])
       }
+    })
 
-      if (csvSource && subField !== 'Identifier Type') {
-        csvSource = `column "${csvSource}"`
-      }
+    return rowData
+  })
+}
 
-      return fieldMapping.source === 'csv-column'
-        ? csvSource ? `Sourced from CSV ${csvSource}` : null
-        : mapping?.phaidraValue ? 'Default value sourced from Phaidra' : null
-    },
+function getSourceInfo(field, subField = null) {
+  const fieldMapping = fieldMappings.value[field]
+  if (!fieldMapping) return null
 
-    proceed() {
-      this.completeStep(3)
-      this.setCurrentStep(4)
-      this.$router.push(this.steps[4].route)
-    }
+  const mapping = subField ? fieldMapping.subFields?.[subField] : fieldMapping
+
+  let csvSource = null
+  const orcidSubField = fieldMapping.subFields?.['ORCID']
+  const gndSubField = fieldMapping.subFields?.['GND']
+
+  if (subField === 'Identifier') {
+    if (orcidSubField?.csvValue) csvSource = orcidSubField.csvValue
+    else if (gndSubField?.csvValue) csvSource = gndSubField.csvValue
+  } else if (subField === 'Identifier Type') {
+    csvSource = orcidSubField?.csvValue || gndSubField?.csvValue ? 'selection' : null
+  } else {
+    csvSource = mapping.csvValue
   }
+
+  if (csvSource && subField !== 'Identifier Type') {
+    csvSource = `column "${csvSource}"`
+  }
+
+  return fieldMapping.source === 'csv-column'
+    ? csvSource ? `Sourced from CSV ${csvSource}` : null
+    : mapping?.phaidraValue ? 'Default value sourced from Phaidra' : null
+}
+
+function proceed() {
+  store.commit('bulk-upload/completeStep', 3)
+  store.commit('bulk-upload/setCurrentStep', 4)
+  router.push(steps.value[4].route)
 }
 </script>
 

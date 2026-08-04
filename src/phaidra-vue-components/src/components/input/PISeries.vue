@@ -2,28 +2,13 @@
 
   <v-row v-if="!hidden">
     <v-col cols="12">
-      <v-card outlined class="mb-8">
-        <v-card-title class="title font-weight-light white--text">
+      <v-card variant="outlined" class="mb-8">
+        <v-card-title class="text-title-large font-weight-light text-white">
           <span>{{ $t(label) }}</span>
           <v-spacer></v-spacer>
-          <v-menu v-if="multiplicable || multiplicableCleared || removable" bottom offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn v-on="on" v-bind="attrs" icon dark>
-                <v-icon dark>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item v-if="multiplicable" @click="$emit('add', $event)">
-                <v-list-item-title><span v-t="'Duplicate'"></span></v-list-item-title>
-              </v-list-item>
-              <v-list-item v-if="multiplicableCleared" @click="$emit('add-clear', $event)">
-                <v-list-item-title><span v-t="'Add'"></span></v-list-item-title>
-              </v-list-item>
-              <v-list-item v-if="removable" @click="$emit('remove', $event)">
-                <v-list-item-title><span v-t="'Remove'"></span></v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
+          <v-icon-btn v-if="multiplicable" variant="text" color="white" @click="$emit('add', $event)" icon="mdi-content-duplicate" />
+          <v-icon-btn v-if="multiplicableCleared" variant="text" color="white" @click="$emit('add-clear', $event)" icon="mdi-plus" />
+          <v-icon-btn v-if="removable" variant="text" color="white" @click="$emit('remove', $event)" icon="mdi-minus" />
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="mt-4">
@@ -32,50 +17,51 @@
               v-model="journalSearchModel"
               :items="journalSearchItems"
               :loading="journalSearchLoading"
-              :search-input.sync="journalSearchQuery"
+              v-model:search="journalSearchQuery"
               :error-messages="journalSearchErrors"
-              v-on:input="$emit('input-select-journal', $event)"
-              cache-items
+              @update:model-value="$emit('input-select-journal', $event)"
               hide-no-data
               hide-selected
               return-object
-              item-text="title"
+              item-title="title"
               item-value="issn"
               :placeholder="$t('please enter exact journal title or ISSN')"
-              :filled="inputStyle==='filled'"
-              :outlined="inputStyle==='outlined'"
+              :variant="fieldVariant"
               clearable
-              append-icon="mdi-magnify"
+              append-inner-icon="mdi-magnify"
             >
-              <template slot="item" slot-scope="{ item }">
-                <v-list-item-content>
-                  <v-list-item-title>{{ item.title }}</v-list-item-title>
-                  <v-list-item-subtitle v-if="item.issn">{{ $t('ISSN') + ': ' + item.issn }}</v-list-item-subtitle>
-                  <v-list-item-subtitle v-if="item.romeopub">{{ $t('PUBLISHER_VERLAG') + ': ' + item.romeopub }}</v-list-item-subtitle>
-                </v-list-item-content>
+              <template #item="{ props, internalItem }">
+                <v-list-item
+                  v-bind="props"
+                  :lines="(internalItem.raw.issn || internalItem.raw.romeopub) ? 'two' : 'one'"
+                >
+                  <template #title>{{ internalItem.raw.title }}</template>
+                  <template v-if="internalItem.raw.issn || internalItem.raw.romeopub" #subtitle>
+                    <template v-if="internalItem.raw.issn">{{ $t('ISSN') + ': ' + internalItem.raw.issn }}</template>
+                    <template v-if="internalItem.raw.issn && internalItem.raw.romeopub"> · </template>
+                    <template v-if="internalItem.raw.romeopub">{{ $t('PUBLISHER_VERLAG') + ': ' + internalItem.raw.romeopub }}</template>
+                  </template>
+                </v-list-item>
               </template>
-              <template slot="selection" slot-scope="{ item }">
-                <v-list-item-content>
-                  <v-list-item-title>{{ item.title }}</v-list-item-title>
-                </v-list-item-content>
+              <template #selection="{ internalItem }">
+                {{ (internalItem.raw || internalItem).title }}
               </template>
             </v-combobox>
           </v-row>
           <v-row >
             <v-col cols="12" :md="multilingual ? 10 : 12">
               <v-text-field
-                :value="title"
+                :model-value="title"
                 :label="$t('Title')"
-                v-on:blur="$emit('input-title',$event.target.value)"
-                :filled="inputStyle==='filled'"
-                :outlined="inputStyle==='outlined'"
-                :background-color="titleBackgroundColor ? titleBackgroundColor : undefined"
+                @update:model-value="$emit('input-title', $event)"
+                :variant="fieldVariant"
+                :bg-color="titleBackgroundColor ? titleBackgroundColor : undefined"
                 :error-messages="titleErrorMessages"
               >
               </v-text-field>
             </v-col>
             <v-col cols="12" md="2" v-if="multilingual">
-              <v-btn text @click="$refs.langdialog.open()">
+              <v-btn variant="text" @click="$refs.langdialog.open()">
                 <span>
                   ({{ titleLanguage ? titleLanguage : '--' }})
                 </span>
@@ -89,15 +75,14 @@
 
             <v-col cols="12" :md="multilingual ? ((hideIssue && hideIssued)? 10 : 4) : ((hideIssue && hideIssued)? 12 : 4)" v-if="!hideVolume">
               <v-text-field
-                :value="volume"
+                :model-value="volume"
                 :label="$t('Volume')"
-                v-on:blur="$emit('input-volume',$event.target.value)"
-                :filled="inputStyle==='filled'"
-                :outlined="inputStyle==='outlined'"
+                @update:model-value="$emit('input-volume', $event)"
+                :variant="fieldVariant"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="2" v-if="!hideVolume && multilingual">
-              <v-btn text @click="$refs.volumelangdialog.open()">
+              <v-btn variant="text" @click="$refs.volumelangdialog.open()">
                 <span>
                   ({{ volumeLanguage ? volumeLanguage : '--' }})
                 </span>
@@ -107,15 +92,14 @@
 
             <v-col cols="12" :md="multilingual ? ((hideVolume && hideIssued)? 10 : 4) : ((hideVolume && hideIssued)? 12 : 4)" v-if="!hideIssue">
               <v-text-field
-                :value="issue"
+                :model-value="issue"
                 :label="$t('Issue')"
-                v-on:blur="$emit('input-issue',$event.target.value)"
-                :filled="inputStyle==='filled'"
-                :outlined="inputStyle==='outlined'"
+                @update:model-value="$emit('input-issue', $event)"
+                :variant="fieldVariant"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="2" v-if="!hideIssue && multilingual">
-              <v-btn text @click="$refs.issuelangdialog.open()">
+              <v-btn variant="text" @click="$refs.issuelangdialog.open()">
                 <span>
                   ({{ issueLanguage ? issueLanguage : '--' }})
                 </span>
@@ -126,50 +110,45 @@
             <v-col cols="12" :md="(hideVolume && hideIssue)? 12 : 4" v-if="!hideIssued">
               <template v-if="issuedDatePicker">
                 <v-text-field
-                  :value="issued"
-                  v-on:blur="$emit('input-issued',$event.target.value)"
+                  :model-value="issued"
+                  @update:model-value="$emit('input-issued', $event)"
                   :label="$t(issuedDateLabel ? issuedDateLabel : 'Issued')"
                   :rules="[validationrules.date]"
-                  :filled="inputStyle==='filled'"
-                  :outlined="inputStyle==='outlined'"
+                  :variant="fieldVariant"
                 >
-                  <template v-slot:append>
-                    <v-fade-transition leave-absolute>
-                      <v-menu
-                        ref="menu1"
-                        v-model="dateMenu"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        max-width="290px"
-                        min-width="290px"
-                      >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-icon v-on="on" v-bind="attrs">mdi-calendar</v-icon>
-                        </template>
-                        <v-date-picker
-                          color="primary"
-                          :value="issued"
-                          :show-current="false"
-                          v-model="pickerModel"
-                          :first-day-of-week="1"
-                          :locale="alpha2bcp47($i18n.locale)"
-                          v-on:input="dateMenu = false; $emit('input-issued', $event)"
-                        ></v-date-picker>
-                      </v-menu>
-                    </v-fade-transition>
+                  <template v-slot:append-inner>
+                    <v-menu
+                      ref="menu1"
+                      v-model="dateMenu"
+                      :close-on-content-click="false"
+                      transition="scale-transition"
+                      offset-y
+                      max-width="290px"
+                      min-width="290px"
+                    >
+                      <template v-slot:activator="{ props: activatorProps }">
+                        <v-icon v-bind="activatorProps">mdi-calendar</v-icon>
+                      </template>
+                      <v-date-picker
+                        color="primary"
+                        :show-current="false"
+                        v-model="pickerModel"
+                        :first-day-of-week="1"
+                        :locale="alpha2bcp47($i18n.locale)"
+                        @update:model-value="dateMenu = false; $emit('input-issued', $event)"
+                      ></v-date-picker>
+                    </v-menu>
                   </template>
                 </v-text-field>
               </template>
               <template v-else>
                 <v-text-field
-                  :value="issued"
-                  v-on:blur="$emit('input-issued',$event.target.value)"
+                  :model-value="issued"
+                  @update:model-value="$emit('input-issued', $event)"
                   :label="$t(issuedDateLabel ? issuedDateLabel : 'Issued')"
                   :hint="$t(dateFormatHint)"
                   :rules="[validationrules.date]"
-                  :filled="inputStyle==='filled'"
-                  :outlined="inputStyle==='outlined'"
+                  :variant="fieldVariant"
                 ></v-text-field>
               </template>
             </v-col>
@@ -179,20 +158,18 @@
           <v-row v-if="!hidePages">
             <v-col cols="12" md="6">
               <v-text-field
-                :value="pageStart"
+                :model-value="pageStart"
                 :label="$t(pageStartLabel)"
-                v-on:blur="$emit('input-page-start',$event.target.value)"
-                :filled="inputStyle==='filled'"
-                :outlined="inputStyle==='outlined'"
+                @update:model-value="$emit('input-page-start', $event)"
+                :variant="fieldVariant"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="6">
               <v-text-field
-                :value="pageEnd"
+                :model-value="pageEnd"
                 :label="$t(pageEndLabel)"
-                v-on:blur="$emit('input-page-end',$event.target.value)"
-                :filled="inputStyle==='filled'"
-                :outlined="inputStyle==='outlined'"
+                @update:model-value="$emit('input-page-end', $event)"
+                :variant="fieldVariant"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -201,11 +178,10 @@
 
             <v-col cols="12" v-if="!hideIssn">
               <v-text-field
-                :value="issn"
+                :model-value="issn"
                 :label="$t('ISSN')"
-                v-on:blur="$emit('input-issn',$event.target.value)"
-                :filled="inputStyle==='filled'"
-                :outlined="inputStyle==='outlined'"
+                @update:model-value="$emit('input-issn', $event)"
+                :variant="fieldVariant"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -213,37 +189,36 @@
             <v-col :cols="6" v-if="!hideIdentifierType && !hideIdentifier">
               <v-autocomplete
                 :no-data-text="$t('No data available')"
-                v-on:input="$emit('input-identifier-type', $event)"
+                @update:model-value="$emit('input-identifier-type', $event)"
                 :label="$t('Type of identifier')"
                 :items="vocabularies[identifierVocabulary].terms"
-                :item-value="'@id'"
-                :value="getTerm(identifierVocabulary, identifierType)"
-                :filter="autocompleteFilter"
-                :filled="inputStyle==='filled'"
-                :outlined="inputStyle==='outlined'"
+                item-value="@id"
+                :item-title="(item) => skosTermItemTitle(item, identifierVocabulary)"
+                :model-value="getTerm(identifierVocabulary, identifierType)"
+                :custom-filter="vocabAutocompleteFilter"
+                :variant="fieldVariant"
                 return-object
                 clearable
               >
-                <template slot="item" slot-scope="{ item }">
-                  <v-list-item-content two-line>
-                    <v-list-item-title  v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
-                  </v-list-item-content>
+                <template #item="{ props, internalItem }">
+                  <v-list-item v-bind="props" lines="one">
+                    <template #title>
+                      <span v-html="`${getLocalizedTermLabel(identifierVocabulary, internalItem.raw['@id'])}`" />
+                    </template>
+                  </v-list-item>
                 </template>
-                <template slot="selection" slot-scope="{ item }">
-                  <v-list-item-content>
-                    <v-list-item-title v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
-                  </v-list-item-content>
+                <template #selection="{ internalItem }">
+                  <span v-html="`${getLocalizedTermLabel(identifierVocabulary, (internalItem.raw || internalItem)['@id'])}`" />
                 </template>
               </v-autocomplete>
             </v-col>
 
             <v-col :cols="!hideIdentifierType ? 6 : 12" v-if="!hideIdentifier">
               <v-text-field
-                :value="identifier"
+                :model-value="identifier"
                 :label="$t('Identifier')"
-                v-on:blur="$emit('input-identifier',$event.target.value)"
-                :filled="inputStyle==='filled'"
-                :outlined="inputStyle==='outlined'"
+                @update:model-value="$emit('input-identifier', $event)"
+                :variant="fieldVariant"
               ></v-text-field>
             </v-col>
 
@@ -262,7 +237,6 @@ import { validationrules } from '../../mixins/validationrules'
 import SelectLanguage from '../select/SelectLanguage'
 import xmlUtils from '../../utils/xml'
 import qs from 'qs'
-var iconv = require('iconv-lite')
 
 export default {
   name: 'p-i-series',
@@ -372,7 +346,7 @@ export default {
   },
   computed: {
     appconfig: function () {
-      return this.$root.$store.state.appconfig
+      return this.$store.state.appconfig
     }
   },
   watch: {
@@ -429,7 +403,8 @@ export default {
             url: this.appconfig.apis.sherparomeo.url + '?' + query,
             responseType: 'arraybuffer'
           })
-          let utfxml = iconv.decode(Buffer.from(response.data), 'ISO-8859-1')
+          const bytes = response.data instanceof ArrayBuffer ? new Uint8Array(response.data) : new Uint8Array(response.data);
+          const utfxml = new TextDecoder('iso-8859-1').decode(bytes)
           let dp = new window.DOMParser()
           let obj = xmlUtils.xmlToJson(dp.parseFromString(utfxml, 'text/xml'))
           for (let j of obj.romeoapi[1].journals.journal) {

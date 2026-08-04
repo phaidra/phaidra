@@ -1,4 +1,7 @@
+import '../styles/vuetify2-compat.css'
+import { registerFormatters } from '../utils/formatters.js'
 import PImg from './utils/PImg'
+import Icon from './utils/Icon.vue'
 import PDDimension from './display/PDDimension.vue'
 import PDIdentifier from './display/PDIdentifier.vue'
 import PDDuration from './display/PDDuration.vue'
@@ -92,8 +95,10 @@ import PExpandText from './utils/PExpandText'
 import PMetadataFieldsHelp from './info/PMetadataFieldsHelp'
 import PHelp from './info/PHelp'
 import CollectionDialog from './select/CollectionDialog'
+import ListDialog from './select/ListDialog'
 
 const Components = {
+  icon: Icon,
   PImg,
   PDDuration,
   PDDimension,
@@ -135,6 +140,7 @@ const Components = {
   PIForm,
   PIFunder,
   PIAssociation,
+  PIAssociationText,
   PISeries,
   PIContainedIn,
   PIBfPublication,
@@ -186,13 +192,18 @@ const Components = {
   PHelp,
   PMetadataFieldsHelp,
   PExpandText,
-  CollectionDialog
+  CollectionDialog,
+  ListDialog
 }
 
+export { default as phaidraNavigationMixin } from '../mixins/phaidraNavigation.js'
+export { registerFormatters } from '../utils/formatters.js'
+
 export default {
-  install (Vue) {
-    Object.keys(Components).forEach(name => {
-      Vue.component(name, Components[name])
+  install (app) {
+    registerFormatters(app)
+    Object.keys(Components).forEach((name) => {
+      app.component(name, Components[name])
     })
   },
   ...Components

@@ -4,8 +4,7 @@
       :headers="cmodelHeaders"
       :items="cmodelItems"
       :items-per-page="1000"
-      :sort-by="'total'"
-      :sort-desc="true"
+      :sort-by="[{ key: 'total', order: 'desc' }]"
       hide-default-footer
       class="elevation-1 my-8"
       :no-data-text="$t('No data available')"
@@ -64,10 +63,14 @@ export default {
       }
       let toYear = new Date().getFullYear();
       for (let i = fromYear; i <= toYear; i++) {
-        this.cmodelHeaders.push({ text: i.toString(), value: i.toString() });
+        this.cmodelHeaders.push({ title: i.toString(), key: i.toString() });
       }
-      this.cmodelHeaders.push({ text: "Total", value: "total" });
-      for (let term of this.$store.state.vocabulary.vocabularies["cmodels"].terms) {
+      this.cmodelHeaders.push({ title: "Total", key: "total" });
+      const terms = this.$store.state.vocabulary?.vocabularies?.cmodels?.terms
+      if (!terms?.length) {
+        return
+      }
+      for (let term of terms) {
         let params = {
           q: "*:*",
           fq: 'cmodel:"' + term["@id"] + '"',

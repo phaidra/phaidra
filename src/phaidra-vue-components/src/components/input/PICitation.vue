@@ -3,46 +3,47 @@
     <v-col cols="2">
       <v-autocomplete
         :no-data-text="$t('No data available')"
-        v-on:input="$emit('input-citation-type', $event)"
+        @update:model-value="$emit('input-citation-type', $event)"
         :label="$t('Citation type')"
         :items="vocabularies['citationpredicate'].terms"
-        :item-value="'@id'"
-        :value="getTerm('citationpredicate', type)"
-        :filter="autocompleteFilter"
+        item-value="@id"
+        :item-title="(item) => skosTermItemTitle(item, 'citationpredicate')"
+        :model-value="getTerm('citationpredicate', type)"
+        :custom-filter="vocabAutocompleteFilter"
         :disabled="disabletype"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
         return-object
         clearable
       >
-        <template slot="item" slot-scope="{ item }">
-          <v-list-item-content two-line>
-            <v-list-item-title  v-html="`${getLocalizedTermLabel('citationpredicate', item['@id'])}`"></v-list-item-title>
-            <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-          </v-list-item-content>
+        <template #item="{ props, internalItem }">
+          <v-list-item v-bind="props" :lines="showIds ? 'two' : 'one'">
+            <template #title>
+              <span v-html="getLocalizedTermLabel('citationpredicate', internalItem.raw['@id'])" />
+            </template>
+            <template v-if="showIds" #subtitle>
+              <span v-html="internalItem.raw['@id']" />
+            </template>
+          </v-list-item>
         </template>
-        <template slot="selection" slot-scope="{ item }">
-          <v-list-item-content>
-            <v-list-item-title v-html="`${getLocalizedTermLabel('citationpredicate', item['@id'])}`"></v-list-item-title>
-          </v-list-item-content>
+        <template #selection="{ internalItem }">
+          <span v-html="getLocalizedTermLabel('citationpredicate', (internalItem.raw || internalItem)['@id'])" />
         </template>
       </v-autocomplete>
     </v-col>
     <v-col cols="4">
       <v-text-field
-        :value="citation"
-        v-on:input="$emit('input-citation', $event)"
+        :model-value="citation"
+        @update:model-value="$emit('input-citation', $event)"
         :label="$t(citationLabel)"
         :required="required"
         :rules="required ? [ v => !!v || $t('Required')] : []"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"      
-        append-outer-icon="mdi-magnify"
-        @click:append-outer="$refs.yarmselect.open()"
+        :variant="fieldVariant"
+        append-inner-icon="mdi-magnify"
+        @click:append-inner="$refs.yarmselect.open()"
       ></v-text-field>
     </v-col>
     <v-col cols="2">
-      <v-btn text @click="$refs.langdialog.open()">
+      <v-btn variant="text" @click="$refs.langdialog.open()">
         <span>
           ({{ citationLanguage ? citationLanguage : '--' }})
         </span>
@@ -51,21 +52,18 @@
     </v-col>
     <v-col cols="3">
       <v-text-field
-        :value="identifier"
-        v-on:input="$emit('input-identifier', $event)"
+        :model-value="identifier"
+        @update:model-value="$emit('input-identifier', $event)"
         :label="$t(identifierLabel)"
         :required="required"
         :rules="required ? [ v => !!v || $t('Required')] : []"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
     <v-col cols="1" v-if="actions.length">
-      <v-menu bottom offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn v-on="on" v-bind="attrs" icon>
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+      <v-menu open-on-hover bottom offset-y>
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-icon-btn v-bind="activatorProps" variant="text" icon="mdi-dots-vertical" />
         </template>
         <v-list>
           <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">

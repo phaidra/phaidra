@@ -4,19 +4,18 @@
       <v-col :cols="(actions.length ? 10 : 12)">
         <!---->
         <v-autocomplete
-          :value="getTerm(vocabulary, value)"
-          :background-color="backgroundColor ? backgroundColor : undefined"
-          v-on:input="$emit('input', $event)"
+          :model-value="getTerm(vocabulary, value)"
+          :bg-color="backgroundColor ? backgroundColor : undefined"
+          @update:model-value="$emit('input', $event)"
           :rules="required ? [ v => !!v || $t('Required')] : []"
           :items="loadedTerms"
-          :item-value="'@id'"
+          item-value="@id"
+          :item-title="selectItemTitle"
+          :custom-filter="vocabAutocompleteFilter"
           :loading="loading"
-          :filter="autocompleteFilter"
           hide-no-data
-          :height="7"
           :label="$t(label)"
-          :filled="inputStyle==='filled'"
-          :outlined="inputStyle==='outlined'"
+          :variant="fieldVariant"
           return-object
           clearable
           :readonly="readonly"
@@ -25,26 +24,28 @@
           :persistent-hint="hint ? true : false"
           :error-messages="errorMessages"
         >
-          <!-- the attr binds the 'disabled' property of the vocabulary term (if defined) to the item component -->
-          <template slot="item" slot-scope="{ attr, item }">
-            <v-list-item-content two-line>
-              <v-list-item-title  v-html="`${getLocalizedTermLabel(vocabulary, item['@id'])}`"></v-list-item-title>
-              <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-            </v-list-item-content>
+          <template #item="{ props, internalItem }">
+            <v-list-item
+              v-bind="props"
+              :lines="showIds ? 'two' : 'one'"
+            >
+              <template #title>
+                <span v-html="getLocalizedTermLabel(vocabulary, internalItem.raw['@id'])" />
+              </template>
+              <template v-if="showIds" #subtitle>
+                <span v-html="internalItem.raw['@id']" />
+              </template>
+            </v-list-item>
           </template>
-          <template slot="selection" slot-scope="{ item }">
-            <v-list-item-content>
-              <v-list-item-title v-html="`${getLocalizedTermLabel(vocabulary, item['@id'])}`"></v-list-item-title>
-            </v-list-item-content>
+          <template #selection="{ internalItem }">
+            <span v-html="getLocalizedTermLabel(vocabulary, (internalItem.raw || internalItem)['@id'])" />
           </template>
         </v-autocomplete>
       </v-col>
       <v-col cols="2" v-if="actions.length">
-        <v-menu bottom offset-y>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn v-on="on" v-bind="attrs" icon>
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
+        <v-menu open-on-hover bottom offset-y>
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-icon-btn v-bind="activatorProps" variant="text" icon="mdi-dots-vertical" />
           </template>
           <v-list>
             <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
@@ -57,7 +58,7 @@
     <v-slide-y-transition hide-on-leave>
       <v-row no-gutters v-if="showValueDefinition" v-show="value && getLocalizedDefinition(vocabulary, value)" :class=" hint ? 'mt-2 mb-6' : 'mb-6'">
         <v-col cols="10">
-          <v-row class="px-4">
+          <v-row>
             <p v-html="getLocalizedDefinition(vocabulary, value)"></p>
           </v-row>
         </v-col>
@@ -66,7 +67,7 @@
     <v-slide-y-transition hide-on-leave>
       <v-row no-gutters v-show="showDisclaimer && isCCLicense" :class=" hint ? 'mt-2 mb-6' : 'mb-6'">
         <v-col cols="10">
-          <v-row class="px-4">
+          <v-row>
             <p v-html="$t('LICENSE_DISCLAIMER', { institution: $t($store.state.instanceconfig.institution) })"></p>
           </v-row>
         </v-col>
@@ -75,7 +76,7 @@
     <v-slide-y-transition hide-on-leave>
       <v-row no-gutters v-show="showDisclaimer && isMITLicense" :class=" hint ? 'mt-2 mb-6' : 'mb-6'">
         <v-col cols="10">
-          <v-row class="px-4">
+          <v-row>
             <p v-html="$t('LICENSE_DISCLAIMER_MIT', { institution: $t($store.state.instanceconfig.institution) })"></p>
           </v-row>
         </v-col>
@@ -91,6 +92,7 @@ import { fieldproperties } from '../../mixins/fieldproperties'
 export default {
   name: 'p-i-select',
   mixins: [vocabulary, fieldproperties],
+  emits: ['input', 'add', 'remove', 'configure', 'add-clear', 'up', 'down'],
   props: {
     value: {
       type: String
@@ -153,11 +155,17 @@ export default {
       terms: []
     }
   },
+  methods: {
+    selectItemTitle (item) {
+      if (!item || !item['@id']) return ''
+      return this.getLocalizedTermLabel(this.vocabulary, item['@id'])
+    }
+  },
   mounted: function () {
     this.$nextTick(async function () {
       if (this.vocabulary) {
-        if (this.vocabularies[vocabulary]) {
-          if (this.vocabularies[vocabulary].loaded) {
+        if (this.vocabularies[this.vocabulary]) {
+          if (this.vocabularies[this.vocabulary].loaded) {
             // emit input to set skos:prefLabel in parent
             if (this.value) {
               for (let term of this.vocabularies[this.vocabulary].terms) {

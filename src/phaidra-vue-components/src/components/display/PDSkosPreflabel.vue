@@ -1,8 +1,9 @@
 <template>
   <span>
-    <v-row v-for="(l, i) in o['skos:prefLabel']" v-if="l['@language'] === displaylang" :key="'prl'+i">
-      <v-col :md="labelColMd" cols="12" v-if="p==='bf:note'" class="pdlabel secondary--text font-weight-bold text-md-right" >{{ $t(o['@type']) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
-      <v-col :md="labelColMd" cols="12" v-else class="pdlabel secondary--text font-weight-bold text-md-right">{{ $t(p) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
+    <template v-for="(l, i) in (o['skos:prefLabel'] || [])" :key="'prl' + i">
+    <v-row v-if="l && l['@language'] === displaylang">
+      <v-col :md="labelColMd" cols="12" v-if="p==='bf:note'" class="pdlabel text-secondary font-weight-bold text-md-right" >{{ $t(o['@type']) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
+      <v-col :md="labelColMd" cols="12" v-else class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(p) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
       <v-col :md="valueColMd" cols="12" v-if="o['skos:exactMatch']">
         <span v-if="o['skos:exactMatch'][0].startsWith('oefos2012:')">ÖFOS 2012 -- {{ o['skos:notation'][0] }} -- {{ l['@value'] }}</span>
         <span v-else-if="o['skos:exactMatch'][0].startsWith('thema:')">{{ $t('Thema Subject Codes') }} -- {{ o['skos:notation'][0] }} -- {{ l['@value'] }}</span>
@@ -13,6 +14,7 @@
       <!--<v-col :md="valueColMd" cols="12" v-else-if="usedMarkdown" class="valuefield" v-html="$md.disable(['image','emphasis']).render(l['@value'])"></v-col>-->
       <v-col class="valuefield" :md="valueColMd" cols="12" v-else ><span v-html="autolinkerCheck(l['@value'])"></span></v-col>
     </v-row>
+    </template>
   </span>
 </template>
 
@@ -58,7 +60,8 @@ export default {
       let engLang
       let deuLang
       let anyLang
-      for (let label of this.o['skos:prefLabel']) {
+      for (let label of (this.o['skos:prefLabel'] || [])) {
+        if (!label) continue
         anyLang = label['@language']
         if (label['@language'] === this.$i18n.locale) {
           lang = this.$i18n.locale

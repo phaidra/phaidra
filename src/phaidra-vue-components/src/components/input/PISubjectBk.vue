@@ -3,15 +3,13 @@
     <v-col cols="12">
       <v-row>
         <v-col cols="12">
-          <v-card outlined class="mb-8">
-            <v-card-title class="title font-weight-light white--text">
+          <v-card variant="outlined" class="mb-8">
+            <v-card-title class="text-title-large font-weight-light text-white">
               <span>{{ $t(label) }}</span>
               <v-spacer></v-spacer>
-              <v-menu bottom offset-y v-if="actions.length">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn v-on="on" v-bind="attrs" icon dark>
-                    <v-icon dark>mdi-dots-vertical</v-icon>
-                  </v-btn>
+              <v-menu open-on-hover bottom offset-y v-if="actions.length">
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-icon-btn v-bind="activatorProps" variant="text" color="white" icon="mdi-dots-vertical" />
                 </template>
                 <v-list>
                   <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
@@ -28,18 +26,17 @@
                     v-model="q"
                     :loading="loading"
                     :label="$t(searchlabel)"
-                    :filled="inputStyle==='filled'"
-                    :outlined="inputStyle==='outlined'"
+                    :variant="fieldVariant"
                     clearable
                     :messages="resolved"
-                    append-icon="mdi-magnify"
-                    @click:append="search()"
+                    append-inner-icon="mdi-magnify"
+                    @click:append-inner="search()"
                     @keyup.enter="search()"
                   >
                   <template v-slot:message="{ key, message }">
                     <span v-html="`${message}`"></span>
                   </template>
-                  <template v-slot:append-outer>
+                  <template v-slot:append>
                     <v-icon @click="$refs.bktreedialog.open()">mdi-file-tree</v-icon>
                   </template>
                   </v-text-field>
@@ -48,19 +45,18 @@
               <v-row>
                 <v-col cols="12" md="9" v-show="showItems">
                   <v-list two-line style="max-height: 400px" class="overflow-y-auto">
-                    <v-list-item-group v-model="selected" active-class="text--primary">
-                      <template v-for="(item, index) in items">
-                        <v-list-item :key="item.uri">
-                          <template v-slot:default="{ active }">
-                            <v-list-item-content>
-                              <v-list-item-title v-text="item.prefLabel ? item.prefLabel.de : item.prefLabel.en"></v-list-item-title>
-                              <v-list-item-subtitle v-for="(notation, idx) in item.notation" :key="'not'+idx" class="text--primary" v-text="notation"></v-list-item-subtitle>
-                            </v-list-item-content>
-                          </template>
-                        </v-list-item>
-                        <v-divider v-if="index < items.length - 1" :key="index"></v-divider>
-                      </template>
-                    </v-list-item-group>
+                    <template v-for="(item, index) in items" :key="item.uri">
+                      <v-list-item
+                        :active="selected === index"
+                        @click="selected = index"
+                      >
+                        <template v-slot:default>
+                          <v-list-item-title v-text="item.prefLabel ? item.prefLabel.de : item.prefLabel.en"></v-list-item-title>
+                          <v-list-item-subtitle v-for="(notation, idx) in item.notation" :key="'not'+idx" class="text--primary" v-text="notation"></v-list-item-subtitle>
+                        </template>
+                      </v-list-item>
+                      <v-divider v-if="index < items.length - 1"></v-divider>
+                    </template>
                   </v-list>
                 </v-col>
               </v-row>
@@ -69,8 +65,8 @@
         </v-col>
         <bk-tree-dialog ref="bktreedialog" @item-selected="resolve($event)"></bk-tree-dialog>
       </v-row>
-      <v-row>
-        <v-divider v-if="dividerbottom" class="mt-2 mb-6"></v-divider>
+      <v-row v-if="dividerbottom">
+        <v-divider class="mt-2 mb-6"></v-divider>
       </v-row>
     </v-col>
   </v-row>
@@ -87,6 +83,7 @@ export default {
     BkTreeDialog
   },
   mixins: [vocabulary, fieldproperties],
+  emits: ['input', 'resolve', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   props: {
     value: {
       type: String,
@@ -201,7 +198,8 @@ export default {
         let response = await this.$axios.request({
           method: 'GET',
           url: this.$store.state.appconfig.apis.dante.search,
-          params: params
+          params: params,
+          withCredentials: false
         })
         this.items = response.data
         this.showItems = true
@@ -219,7 +217,8 @@ export default {
           params: {
             properties: 'notation,ancestors',
             uri: uri
-          }
+          },
+          withCredentials: false
         })
         return response.data[0]
       } catch (error) {

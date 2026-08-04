@@ -1,7 +1,6 @@
 <template>
   <v-app>
-    <style v-if="cmsCss" id="instance-cms-css" v-html="cmsCss"></style>
-    <v-container class="px-4 px-md-0" fluid v-if="!loading">
+    <v-container class="px-4 px-md-0" fluid>
       <v-row no-gutters>
         <v-col>
           <header>
@@ -11,44 +10,54 @@
           <v-main id="main-content">
             <v-row>
               <v-col cols="12" md="10" offset-md="1" class="content">
-                <client-only>
-                  <p-breadcrumbs :items="breadcrumbs"
-                    v-if="$route.path === '/' ? !instanceconfig.hideBreadcrumbsOnHomepage : true"></p-breadcrumbs>
-                </client-only>
+                <p-breadcrumbs
+                  v-if="$route.path === '/' ? !instanceconfig.hideBreadcrumbsOnHomepage : true"
+                  :items="breadcrumbs"
+                ></p-breadcrumbs>
 
-                <template v-for="(alert, i) in alerts">
-                  <v-snackbar :key="'altsnack' + i" class="font-weight-regular" top color="success"
+                <client-only>
+                <template v-for="(alert, i) in alerts" :key="'altsnack' + i">
+                  <v-snackbar class="font-weight-regular" top color="success"
                     v-if="alert.type === 'success'" v-model="showSnackbar">
                     <span v-if="alert.key && alert.params">{{ $t(alert.key, alert.params) }}</span>
                     <span v-else>{{ $t(alert.msg) }}</span>
-                    <v-btn dark text @click.native="dismiss(alert)">OK</v-btn>
+                    <template #actions>
+                      <v-btn variant="text" @click="dismiss(alert)">OK</v-btn>
+                    </template>
                   </v-snackbar>
                 </template>
 
                 <template v-if="showAlerts">
                   <v-row justify="center" v-for="(alert, i) in alerts" :key="'alert' + i">
                     <v-col cols="12">
-                      <v-alert v-if="alert.type !== 'success' && alert.msg"
-                        :type="alert.type === 'danger' ? 'error' : alert.type" :value="true"
-                        transition="slide-y-transition">
-                        <v-row align="center">
-                          <v-col class="grow">{{ $t(alert.msg) }}</v-col>
-                          <v-col class="shrink">
-                            <v-btn icon @click.native="dismiss(alert)"><v-icon>mdi-close</v-icon></v-btn>
-                          </v-col>
-                        </v-row>
+                      <v-alert
+                        v-if="alert.type !== 'success' && alert.msg"
+                        :type="alert.type === 'danger' ? 'error' : alert.type"
+                        :model-value="true"
+                        closable
+                        class="app-alert"
+                        transition="slide-y-transition"
+                      >
+                        {{ $t(alert.msg) }}
+                        <template #close>
+                          <v-icon-btn
+                            variant="text"
+                            icon="mdi-close"
+                            :aria-label="$t('Close')"
+                            @click="dismiss(alert)"
+                          />
+                        </template>
                       </v-alert>
                     </v-col>
                   </v-row>
                 </template>
+                </client-only>
 
-                <transition name="fade" mode="out-in">
-                  <v-row no-gutters>
-                    <v-col>
-                      <Nuxt />
-                    </v-col>
-                  </v-row>
-                </transition>
+                <v-row no-gutters>
+                  <v-col>
+                    <slot />
+                  </v-col>
+                </v-row>
               </v-col>
             </v-row>
           </v-main>
@@ -58,32 +67,78 @@
         </v-col>
       </v-row>
     </v-container>
-    <client-only>
-      <CookieBanner></CookieBanner>
-    </client-only>
+    <CookieBanner></CookieBanner>
   </v-app>
 </template>
 
 <script>
-import "@/compiled-icons/material-social-person";
-import "@/compiled-icons/univie-right";
-import "@/compiled-icons/univie-sprache";
 import { config } from "../mixins/config";
 import { context } from "../mixins/context";
 import FaviconMixin from '../mixins/favicon'
 import CookieBanner from '../components/CookieBanner.vue'
-import Vue from "vue";
 import moment from "moment";
+import { encodeUtf8ToBase64 } from '@/utils/encode-base64'
 import "@/assets/css/material-icons.css";
 
 export default {
+  setup() {
+    const nuxtApp = useNuxtApp()
+    const runtime = useRuntimeConfig()
+
+    useHead(() => {
+      const store = nuxtApp.$store
+      const instanceconfig = store?.state?.instanceconfig || {}
+
+      const currentLocale = nuxtApp.$i18n?.locale || 'eng'
+
+      const lang = currentLocale === 'deu' ? 'de' : currentLocale === 'ita' ? 'it' : 'en'
+      const titlePart = nuxtApp.$i18n?.t ? nuxtApp.$i18n.t(instanceconfig.title) : (instanceconfig.title || '')
+      const institutionPart = nuxtApp.$i18n?.t ? nuxtApp.$i18n.t(instanceconfig.institution) : (instanceconfig.institution || '')
+      const title = `${titlePart} - ${institutionPart}`.trim()
+
+      const dark = nuxtApp.$vuetify?.theme?.global?.current?.value?.dark
+      const themeColor = dark ? runtime.public.darkPrimaryColor : runtime.public.primaryColor
+
+      const meta = [
+        { charset: 'utf-8' },
+        { name: 'Generator', content: 'PHAIDRA' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'theme-color', content: themeColor }
+      ]
+
+      if (instanceconfig.googlesiteverificationcode) {
+        meta.push({
+          name: 'google-site-verification',
+          content: instanceconfig.googlesiteverificationcode
+        })
+      }
+
+      const script = []
+      if (instanceconfig.customJavaScript && instanceconfig.customJavaScript.trim()) {
+        let scriptContent = instanceconfig.customJavaScript.trim()
+        scriptContent = scriptContent.replace(/<script[^>]*>/gi, '').replace(/<\/script>/gi, '')
+        script.push({
+          type: 'text/javascript',
+          children: scriptContent
+        })
+      }
+
+      return {
+        htmlAttrs: { lang },
+        title,
+        meta,
+        script
+      }
+    })
+  },
   components: {
     CookieBanner
   },
   mixins: [config, context, FaviconMixin],
   data() {
     return {
-      loading: true,
+      loading: false,
+      hasLoadedInstanceConfig: false,
       i18n_override: {},
       faviconUrl: ``
     }
@@ -101,14 +156,14 @@ export default {
 
     let metaInfo = {
       htmlAttrs: {
-        lang: currentLocale === 'deu' ? 'de' : currentLocale === 'ita' ? 'it' : 'en'
+        lang: this.$i18n.locale === 'deu' ? 'de' : this.$i18n.locale === 'ita' ? 'it' : 'en'
       },
       title: this.documentTitle(),
       meta: [
         { charset: 'utf-8' },
         { name: 'Generator', content: 'PHAIDRA' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'theme-color', content: this.$vuetify.theme.dark ? this.$config.darkPrimaryColor : this.$config.primaryColor }
+        { name: 'theme-color', content: this.$vuetify?.theme?.global?.current?.value?.dark ? this.$config?.public?.darkPrimaryColor : this.$config?.public?.primaryColor }
       ],
       script: []
     };
@@ -145,36 +200,73 @@ export default {
     loadInstanceConfigToStore: async function () {
       this.loading = true
       try {
+        this.$store.commit("setInstanceConfigCookieDomain", this.$config?.public?.cookieDomain);
         let settingResponse = await this.$axios.get("/config/public");
-        if (settingResponse?.data?.public_config) {
-          if (settingResponse?.data?.public_config?.faviconText) {
-            this.setFavIconText(settingResponse?.data?.public_config?.faviconText)
+        const publicConfig = settingResponse?.data?.public_config
+        if (publicConfig) {
+          if (publicConfig?.faviconText) {
+            this.setFavIconText(publicConfig.faviconText)
           }
-          this.$store.dispatch("setInstanceConfig", settingResponse?.data?.public_config);
-          this.$store.dispatch("vocabulary/setInstanceConfig", settingResponse?.data?.public_config);
-          this.mergeInfoBannerMessage(settingResponse?.data?.public_config?.infoBannerMessage);
-          if (settingResponse?.data?.public_config?.data_i18n) {
-            this.i18n_override = settingResponse?.data?.public_config?.data_i18n
+          await this.$store.dispatch("setInstanceConfig", publicConfig);
+          this.$store.dispatch("vocabulary/setInstanceConfig", publicConfig);
+          this.mergeInfoBannerMessage(publicConfig?.infoBannerMessage)
+          if (publicConfig?.data_i18n) {
+            this.i18n_override = publicConfig.data_i18n
           }
-          if (settingResponse?.data?.public_config?.data_facetqueries) {
-            if (settingResponse?.data?.public_config?.data_facetqueries) {
-              if (settingResponse?.data?.public_config?.data_facetqueries.length > 0) {
-                this.$store.commit("search/setFacetQueries", settingResponse?.data?.public_config?.data_facetqueries)
-              }
-            }
+          if (publicConfig?.data_facetqueries?.length > 0) {
+            this.$store.commit("search/setFacetQueries", publicConfig.data_facetqueries)
           }
+
+          // Do not overwrite API-provided values with undefined runtime config.
+          if (publicConfig.baseurl) {
+            this.$store.commit("setInstanceConfigBaseUrl", publicConfig.baseurl);
+          } else if (this.$config?.public?.baseURL) {
+            this.$store.commit("setInstanceConfigBaseUrl", this.$config?.public?.baseURL);
+          }
+          if (publicConfig.api) {
+            this.$store.commit("setInstanceConfigApiBaseUrl", publicConfig.api);
+          } else if (this.$config?.public?.apiBaseURL) {
+            this.$store.commit("setInstanceConfigApiBaseUrl", this.$config?.public?.apiBaseURL);
+          }
+          this.refreshBreadcrumbs()
+          this.hasLoadedInstanceConfig = true
         }
-        this.$store.commit("setInstanceConfigBaseUrl", this.$config.baseURL);
-        this.$store.commit("setInstanceConfigApiBaseUrl", this.$config.apiBaseURL);
       } catch (error) {
-        console.error(error)
+        const status = error?.response?.status
+        if (status === 404) {
+          // API can be temporarily unavailable during local dev startup.
+          // Keep defaults and avoid noisy stack traces in terminal logs.
+          console.warn('Could not load /config/public (404), using defaults for now.')
+        } else {
+          console.warn('Could not load /config/public:', error?.message || error)
+        }
       } finally {
         this.loading = false;
       }
       return true
     },
+    applyRuntimeOverrides() {
+      if (process.client && this.instanceconfig.cms_css && this.instanceconfig.cms_css !== '') {
+        const style = document.createElement('style');
+        style.type = 'text/css';
+        style.innerHTML = this.instanceconfig.cms_css;
+        document.head.appendChild(style);
+      }
+
+      Object.entries(this.i18n_override).forEach(([lang, messages]) => {
+        this.$i18n.mergeLocaleMessage(lang, messages)
+      })
+    },
+    refreshBreadcrumbs() {
+      const localePath = this.$localePath || ((path) => path)
+      this.$store.commit('updateBreadcrumbs', {
+        to: this.$route,
+        from: this.$route,
+        localePath
+      })
+    },
     setFavIconText(svgText) {
-      const base64Svg = Buffer.from(svgText).toString('base64')
+      const base64Svg = encodeUtf8ToBase64(svgText)
       this.faviconUrl = `data:image/svg+xml;base64,${base64Svg}`
     },
     mergeInfoBannerMessage(message) {
@@ -183,11 +275,23 @@ export default {
       }
     }
   },
-  mounted() {
-    this.mergeInfoBannerMessage(this.instanceconfig?.infoBannerMessage)
+  async serverPrefetch() {
+    if (!this.hasLoadedInstanceConfig) {
+      await this.loadInstanceConfigToStore()
+    }
+
     Object.entries(this.i18n_override).forEach(([lang, messages]) => {
       this.$i18n.mergeLocaleMessage(lang, messages)
-    })
+    }
+    )
+    this.applyRuntimeOverrides()
+  },
+  async mounted() {
+    if (!this.hasLoadedInstanceConfig) {
+      await this.loadInstanceConfigToStore()
+    }
+    this.mergeInfoBannerMessage(this.instanceconfig?.infoBannerMessage)
+    this.applyRuntimeOverrides()
     if (!this.signedin) {
       let token = window.localStorage.getItem("XSRF-TOKEN")
       if (token) {
@@ -195,9 +299,6 @@ export default {
         this.$store.dispatch('getLoginData')
       }
     }
-  },
-  async fetch() {
-    await this.loadInstanceConfigToStore()
   },
   computed: {
     cmsCss() {
@@ -234,68 +335,6 @@ export default {
     alerts() {
       return this.$store.state.alerts;
     },
-  },
-  created: function () {
-    Vue.filter("datetime", function (value) {
-      if (value) {
-        return moment(String(value)).format("DD.MM.YYYY hh:mm:ss");
-      }
-    });
-    Vue.filter('datetimeutc', function (value) {
-      if (value) {
-        return moment.utc(String(value)).format('DD.MM.YYYY HH:mm:ss')
-      }
-    })
-    Vue.filter("date", function (value) {
-      if (value) {
-        return moment(String(value)).format("DD.MM.YYYY");
-      }
-    });
-    Vue.filter("unixtime", function (value) {
-      if (value) {
-        return moment.unix(String(value)).format("DD.MM.YYYY hh:mm:ss");
-      }
-    });
-
-    Vue.filter("bytes", function (bytes, precision) {
-      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return "-";
-      if (typeof precision === "undefined") precision = 1;
-      var units = ["bytes", "kB", "MB", "GB", "TB", "PB"];
-      var number = Math.floor(Math.log(bytes) / Math.log(1024));
-      return (
-        (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +
-        " " +
-        units[number]
-      );
-    });
-
-    Vue.filter("gigabytes", function (bytes, precision) {
-      if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return "-";
-      if (typeof precision === "undefined") precision = 1;
-      const n = parseFloat(bytes);
-      if (isNaN(n) || !isFinite(n)) return "-";
-      return (n / Math.pow(1024, 3)).toFixed(precision) + " GB";
-    });
-
-    Vue.filter("truncate", function (text, length, clamp) {
-      clamp = clamp || "...";
-      length = length || 30;
-
-      if (text.length <= length) return text;
-
-      var tcText = text.slice(0, length - clamp.length);
-      var last = tcText.length - 1;
-
-      while (last > 0 && tcText[last] !== " " && tcText[last] !== clamp[0])
-        last -= 1;
-
-      // Fix for case when text does not have any space
-      last = last || length - clamp.length;
-
-      tcText = tcText.slice(0, last);
-
-      return tcText + clamp;
-    });
   }
 };
 </script>
@@ -306,6 +345,9 @@ export default {
 <style>
 .no-padding {
   padding: 0px;
+}
+.v-application a {
+    cursor: pointer;
 }
 
 .svg-icon {
@@ -375,6 +417,10 @@ a {
   text-decoration: none;
 }
 
+.v-application a:not(.v-btn):not([class*='text-']) {
+  color: rgb(var(--v-theme-primary));
+}
+
 .logo {
   height: auto;
   width: auto;
@@ -390,9 +436,9 @@ address {
   vertical-align: top;
 }
 
-.theme--light.v-card>.v-card__title,
-.theme--dark.v-card>.v-card__title {
-  background-color: var(--v-cardtitlebg-base);
+.v-theme--light .v-card > .v-card-title,
+.v-theme--dark .v-card > .v-card-title {
+  background-color: rgb(var(--v-theme-cardtitlebg));
 }
 
 .lang-icon {
@@ -448,13 +494,13 @@ address {
 
 
 .header .ph-button:focus {
-  background-color: var(--v-primary-base) !important;
-  border-color: var(--v-primary-base) !important;
+  background-color: rgb(var(--v-theme-primary)) !important;
+  border-color: rgb(var(--v-theme-primary)) !important;
 }
 
 .header .ph-button {
-  background-color: var(--v-cardtitlebg-base) !important;
-  border-color: var(--v-cardtitlebg-base) !important;
+  background-color: rgb(var(--v-theme-cardtitlebg)) !important;
+  border-color: rgb(var(--v-theme-cardtitlebg)) !important;
 }
 
 .header {
@@ -464,19 +510,23 @@ address {
   z-index: 1;
 }
 
-.theme--dark .header {
+.v-theme--dark .header {
   box-shadow: 48px 0 0 0 #121212, -48px 0 0 0 #121212,
     0 8px 40px -6px rgba(70, 70, 70, 0.4);
   background-color: #121212;
 }
 
-.header .v-toolbar__items .v-btn {
+.header .v-toolbar__content .v-btn,
+.header .v-toolbar-items .v-btn {
   margin-left: 1px;
+  box-shadow: none !important;
+  height: calc(var(--v-btn-height) - 4px) !important;
+  min-height: calc(var(--v-btn-height) - 4px) !important;
 }
 
 .header .ph-button-bg {
-  background-color: var(--v-cardtitlebg-base) !important;
-  border-color: var(--v-cardtitlebg-base) !important;
+  background-color: rgb(var(--v-theme-cardtitlebg)) !important;
+  border-color: rgb(var(--v-theme-cardtitlebg)) !important;
 }
 
 .header .ph-button-bg-dark {
@@ -484,9 +534,11 @@ address {
   border-color: #272727;
 }
 
-.header .ph-button-bg-active {
-  background-color: var(--v-primary-base) !important;
-  border-color: var(--v-primary-base) !important;
+/* Active route buttons are marked with v-btn--active; force nav active color over base bg classes */
+.header .ph-button-bg-active,
+.header .v-btn.v-btn--active {
+  background-color: rgb(var(--v-theme-primary)) !important;
+  border-color: rgb(var(--v-theme-primary)) !important;
 }
 
 #quicklinks-button {
@@ -505,7 +557,7 @@ address {
 .fade-leave-active {
   transition: opacity 0.1s;
 }
-
+.fade-enter-from,
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
@@ -520,19 +572,18 @@ address {
   border-color: rgba(0, 0, 0, 0.12);
 }
 
-.theme--dark .border-left {
+.v-theme--dark .border-left {
   border-left: 1px solid;
   border-color: rgba(255, 255, 255, 0.25);
 }
 
-#app .v-btn {
+.v-application .v-btn {
   text-transform: none;
 }
-
-#app .v-tabs__div {
+/*.v-application .v-tab {
   text-transform: none;
   font-weight: 300;
-}
+}*/
 
 .univie-grey {
   color: #7b7b7b;
@@ -543,7 +594,7 @@ address {
   border-color: rgba(0, 0, 0, 0.12);
 }
 
-.theme--dark .jsonld-border-left {
+.v-theme--dark .jsonld-border-left {
   border-left: 1px solid;
   border-color: rgba(255, 255, 255, 0.25);
 }
@@ -553,28 +604,23 @@ address {
 }
 
 .ph-button:focus {
-  background-color: var(--v-primary-base) !important;
-  border-color: var(--v-primary-base) !important;
+  background-color: rgb(var(--v-theme-primary)) !important;
+  border-color: rgb(var(--v-theme-primary)) !important;
 }
 
 .ph-button {
-  background-color: var(--v-cardtitlebg-base) !important;
-  border-color: var(--v-cardtitlebg-base) !important;
+  background-color: rgb(var(--v-theme-cardtitlebg))!important;
+  border-color: rgb(var(--v-theme-cardtitlebg))!important;
 }
 
-.theme--dark .header {
-  box-shadow: 48px 0 0 0 #121212, -48px 0 0 0 #121212,
-    0 8px 40px -6px rgba(70, 70, 70, 0.4);
-  background-color: #121212;
-}
 
 .v-toolbar__items .v-btn {
   margin-left: 1px;
 }
 
 .ph-button-bg {
-  background-color: var(--v-cardtitlebg-base) !important;
-  border-color: var(--v-cardtitlebg-base) !important;
+  background-color: rgb(var(--v-theme-cardtitlebg)) !important;
+  border-color: rgb(var(--v-theme-cardtitlebg)) !important;
 }
 
 .ph-button-bg-dark {
@@ -583,8 +629,31 @@ address {
 }
 
 .ph-button-bg-active {
-  background-color: var(--v-primary-base) !important;
-  border-color: var(--v-primary-base) !important;
+  background-color: rgb(var(--v-theme-primary)) !important;
+  border-color: rgb(var(--v-theme-primary)) !important;
+}
+.v-toolbar__content,
+.v-toolbar__extension {
+  padding: 0px 16px;
+}
+/* .v-theme--light.v-btn.v-btn--icon {
+    color: rgba(0, 0, 0, 0.54);
+} */
+
+/* .v-theme--light .v-card > .v-card-text,
+.v-theme--light .v-card > .v-card-subtitle {
+  color: rgba(0, 0, 0, 0.6);
+} */
+.v-application ul, .v-application ol {
+  padding-left: 24px;
+}
+
+.v-input--indent-details .v-input__details {
+    margin-bottom: 8px;
+}
+h1, h2, h3, h4, h5, h6 {
+  padding: 0;
+  margin: 0;
 }
 </style>
 
@@ -597,8 +666,13 @@ address {
   min-height: 800px;
 }
 
-.container {
+.v-container {
   padding: 0px;
+}
+
+.v-application .px-4 {
+    padding-right: 16px !important;
+    padding-left: 16px !important;
 }
 
 .no-height-inherit {
@@ -617,5 +691,11 @@ address {
   position: absolute;
   top: -40px;
   left: 0;
+}
+
+.app-alert :deep(.v-alert__prepend),
+.app-alert :deep(.v-alert__close),
+.app-alert :deep(.v-alert__content) {
+  align-self: center;
 }
 </style>

@@ -1,16 +1,20 @@
 <template>
  <v-row v-if="maxRowLen()">
-  <v-col :md="labelColMd" cols="12" class="pdlabel secondary--text font-weight-bold text-md-right">{{$t('Accessibility')}}</v-col>
+  <v-col :md="labelColMd" cols="12" class="pdlabel text-secondary font-weight-bold text-md-right">{{$t('Accessibility')}}</v-col>
   <v-col class="valuefield" :md="valueColMd" cols="12">
     <table border="1">
         <thead>
           <tr>
-            <th class="secondary--text font-weight-bold" v-for="(value, key) in o" v-if="value && value.length">{{$t(key)}}</th>
+            <template v-for="(value, key) in o" :key="key">
+              <th v-if="value && value.length" class="text-secondary font-weight-bold">{{ $t(key) }}</th>
+            </template>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(row, index) in new Array(maxRowLen())" :key="index">
-            <td v-for="(value, key) in o" v-if="value && value.length">{{ getValue(value, index, $i18n.locale) }}</td>
+            <template v-for="(value, key) in o" :key="key">
+              <td v-if="value && value.length">{{ getValue(value, index, $i18n.locale) }}</td>
+            </template>
           </tr>
         </tbody>
       </table>

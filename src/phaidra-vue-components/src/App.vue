@@ -6,17 +6,15 @@
           <v-col cols="10">
             <v-alert
               prominent
-              dense
+              density="compact"
               :type="alert.type === 'danger' ? 'error' : alert.type"
-              :value="true"
+              :model-value="true"
               transition="slide-y-transition"
             >
               <v-row align="center">
                 <v-col class="grow">{{ alert.msg }}</v-col>
                 <v-col class="shrink">
-                  <v-btn icon @click.native="dismiss(alert)"
-                    ><v-icon>mdi-close</v-icon></v-btn
-                  >
+                  <v-icon-btn icon="mdi-close" @click="dismiss(alert)" />
                 </v-col>
               </v-row>
             </v-alert>
@@ -43,10 +41,10 @@
             <v-col cols="4" class="body-2">{{ token }}</v-col>
             <v-col cols="1">
               <v-btn
-                dark
+                theme="dark"
                 raised
                 single-line
-                color="grey darken-3"
+                color="grey-darken-3"
                 @click="logout()"
                 >Logout</v-btn
               >
@@ -63,17 +61,17 @@
               <v-text-field
                 v-model="credentials.password"
                 :label="'password'"
-                :append-icon="psvis ? 'mdi-eye' : 'mdi-eye-off'"
-                @click:append="toggleVisibility"
+                :append-inner-icon="psvis ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append-inner="toggleVisibility"
                 :type="psvis ? 'password' : 'text'"
               ></v-text-field>
             </v-col>
             <v-col cols="1">
               <v-btn
-                dark
+                theme="dark"
                 raised
                 single-line
-                color="grey darken-3"
+                color="grey-darken-3"
                 @click="login()"
                 >Login</v-btn
               >
@@ -87,120 +85,59 @@
               <v-toolbar flat>
                 <v-list>
                   <v-list-item>
-                    <v-list-item-title class="title">{{
+                    <v-list-item-title class="text-title-large">{{
                       $t("Examples")
                     }}</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-toolbar>
               <v-divider></v-divider>
-              <v-list>
-                <v-item-group
-                  v-model="window"
-                  class="shrink mr-4"
-                  mandatory
-                  tag="v-flex"
-                >
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Display")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Edit")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Submit")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Search")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Manage")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Browse")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Uwm editor")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Uwm display")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                  <v-item>
-                    <div slot-scope="{ active, toggle }">
-                      <v-list-item @click="toggle">
-                        <v-list-item-content>
-                          <v-list-item-title>{{
-                            $t("Mods display")
-                          }}</v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-item>
-                </v-item-group>
+              <v-list class="shrink mr-4" nav density="compact">
+                <v-list-item
+                  :active="window === 0"
+                  :title="$t('Display')"
+                  @click="window = 0"
+                />
+                <v-list-item
+                  :active="window === 1"
+                  :title="$t('Edit')"
+                  @click="window = 1"
+                />
+                <v-list-item
+                  :active="window === 2"
+                  :title="$t('Submit')"
+                  @click="window = 2"
+                />
+                <v-list-item
+                  :active="window === 3"
+                  :title="$t('Search')"
+                  @click="window = 3"
+                />
+                <v-list-item
+                  :active="window === 4"
+                  :title="$t('Manage')"
+                  @click="window = 4"
+                />
+                <v-list-item
+                  :active="window === 5"
+                  :title="$t('Browse')"
+                  @click="window = 5"
+                />
+                <v-list-item
+                  :active="window === 6"
+                  :title="$t('Uwm editor')"
+                  @click="window = 6"
+                />
+                <v-list-item
+                  :active="window === 7"
+                  :title="$t('Uwm display')"
+                  @click="window = 7"
+                />
+                <v-list-item
+                  :active="window === 8"
+                  :title="$t('Mods display')"
+                  @click="window = 8"
+                />
               </v-list>
             </v-navigation-drawer>
           </v-col>
@@ -209,12 +146,12 @@
             <v-window v-model="window">
               <v-window-item>
                 <v-card>
-                  <v-toolbar dark color="grey">
+                  <v-toolbar theme="dark" color="grey">
                     <v-toolbar-title>{{ $t("Display") }}</v-toolbar-title>
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       v-model="pid"
@@ -225,7 +162,7 @@
                       raised
                       single-line
                       class="float-right"
-                      color="grey darken-3"
+                      color="grey-darken-3"
                       @click="loadDisplay()"
                       >Load</v-btn
                     >
@@ -243,12 +180,12 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar dark color="grey">
+                  <v-toolbar theme="dark" color="grey">
                     <v-toolbar-title>{{ $t("Edit") }}</v-toolbar-title>
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       v-model="pid"
@@ -259,7 +196,7 @@
                       raised
                       single-line
                       class="float-right"
-                      color="grey darken-3"
+                      color="grey-darken-3"
                       @click="loadEdit()"
                       >Load</v-btn
                     >
@@ -277,7 +214,7 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar class="grey" dark>
+                  <v-toolbar class="bg-grey" theme="dark">
                     <v-toolbar-title>{{ $t("Submit") }}</v-toolbar-title>
                     <v-select
                       class="mx-4"
@@ -285,7 +222,7 @@
                       v-model="contentmodel"
                       label="Object type"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       v-on:change="resetForm($event)"
@@ -312,12 +249,12 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar dark color="grey">
+                  <v-toolbar theme="dark" color="grey">
                     <v-toolbar-title>{{ $t("Search") }}</v-toolbar-title>
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       :placeholder="'Collection, e.g. ' + sampleCollection"
@@ -332,12 +269,12 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar class="grey" dark>
+                  <v-toolbar class="bg-grey" theme="dark">
                     <v-toolbar-title>{{ $t("Manage") }}</v-toolbar-title>
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       :placeholder="'o:123456789'"
@@ -348,7 +285,7 @@
                       raised
                       single-line
                       class="float-right"
-                      color="grey darken-3"
+                      color="grey-darken-3"
                       @click="loadManagement(pid)"
                       >Load</v-btn
                     >
@@ -376,14 +313,14 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar class="grey" dark>
+                  <v-toolbar class="bg-grey" theme="dark">
                     <v-toolbar-title>{{
                       $t("Collection gallery")
                     }}</v-toolbar-title>
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       :placeholder="'Collection, e.g. ' + sampleCollection"
@@ -400,14 +337,14 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar class="grey" dark>
+                  <v-toolbar class="bg-grey" theme="dark">
                     <v-toolbar-title>{{
                       $t("Uwmetadata Editor")
                     }}</v-toolbar-title>
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       :placeholder="'o:123456789'"
@@ -418,7 +355,7 @@
                       raised
                       single-line
                       class="float-right"
-                      color="grey darken-3"
+                      color="grey-darken-3"
                       @click="loadUwmetadataEdit()"
                       >Load</v-btn
                     >
@@ -435,14 +372,14 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar class="grey" dark>
+                  <v-toolbar class="bg-grey" theme="dark">
                     <v-toolbar-title>{{
                       $t("Uwmetadata Display")
                     }}</v-toolbar-title>
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       :placeholder="'o:123456789'"
@@ -453,7 +390,7 @@
                       raised
                       single-line
                       class="float-right"
-                      color="grey darken-3"
+                      color="grey-darken-3"
                       @click="loadUwmetadataDisplay()"
                       >Load</v-btn
                     >
@@ -465,12 +402,12 @@
               </v-window-item>
               <v-window-item>
                 <v-card>
-                  <v-toolbar class="grey" dark>
+                  <v-toolbar class="bg-grey" theme="dark">
                     <v-toolbar-title>{{ $t("Mods Display") }}</v-toolbar-title>
                     <v-text-field
                       class="mx-4"
                       flat
-                      solo
+                      variant="solo"
                       hide-details
                       single-line
                       :placeholder="'o:123456789'"
@@ -481,7 +418,7 @@
                       raised
                       single-line
                       class="float-right"
-                      color="grey darken-3"
+                      color="grey-darken-3"
                       @click="loadModsDisplay()"
                       >Load</v-btn
                     >

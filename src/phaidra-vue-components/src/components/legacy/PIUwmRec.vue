@@ -10,7 +10,7 @@
                 v-model="ch.ui_value"
                 :label="ch.labels[alpha2locale]"
                 :readonly="true"
-                filled
+                variant="filled"
                 :disabled="disabled"
               ></v-text-field>
             </v-col>
@@ -23,42 +23,30 @@
             :loading="clsLoading"
             :disabled="disabled"
             v-model="ch.ui_value"
-            :items="ch.vocabularies[0].terms"
-            :item-value="'uri'"
+            :items="vocabularySelectItems(ch.vocabularies[0].terms)"
+            item-title="text"
+            item-value="value"
             :label="ch.labels[alpha2locale]"
             :error-messages="ch.errorMessages"
-            @change="selectHandler(ch, $event)"
-            filled
+            @update:model-value="selectHandler(ch, $event)"
+            variant="filled"
             clearable
-          >
-            <template v-slot:item="{ item, index }">
-              <span>{{ item.labels[alpha2locale] }}</span>
-            </template>
-            <template v-slot:selection="{ item, index }">
-              <span>{{ item.labels[alpha2locale] }}</span>
-            </template>
-          </v-select>
+          ></v-select>
         </v-col>
         <v-col v-else-if="(ch.datatype === 'Taxon') && (ch.vocabularies)" cols="12">
           <v-select
             :loading="clsLoading"
             :disabled="disabled"
             v-model="ch.ui_value"
-            :items="ch.vocabularies[0].terms"
-            :item-value="'uri'"
+            :items="vocabularySelectItems(ch.vocabularies[0].terms)"
+            item-title="text"
+            item-value="value"
             :label="ch.labels[alpha2locale]"
             :error-messages="ch.errorMessages"
-            @change="selectHandler(ch, $event)"
-            filled
+            @update:model-value="selectHandler(ch, $event)"
+            variant="filled"
             clearable
-          >
-            <template v-slot:item="{ item, index }">
-              <span>{{ item.labels[alpha2locale] }}</span>
-            </template>
-            <template v-slot:selection="{ item, index }">
-              <span>{{ item.labels[alpha2locale] }}</span>
-            </template>
-          </v-select>
+          ></v-select>
         </v-col>
         <template v-else>
           <v-col :cols="ch.cardinality !== 1 ? 10 : 12">
@@ -69,19 +57,15 @@
                   :disabled="disabled"
                   :label="ch.labels[alpha2locale]"
                   :error-messages="ch.errorMessages"
-                  filled
+                  variant="filled"
                   :readonly="readOnly(ch)"
                 ></v-text-field>
               </v-col>
             </v-row>
           </v-col>
           <v-col v-if="ch.cardinality !== 1" cols="2">
-            <v-btn icon @click="$emit('add-field', ch)">
-              <v-icon>mdi-plus</v-icon>
-            </v-btn>
-            <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-              <v-icon>mdi-minus</v-icon>
-            </v-btn>
+            <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+            <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
           </v-col>
         </template>
       </template>
@@ -94,7 +78,7 @@
                 :disabled="disabled"
                 :label="ch.labels[alpha2locale]"
                 :error-messages="ch.errorMessages"
-                filled
+                variant="filled"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="2">
@@ -102,9 +86,11 @@
                 v-model="ch.value_lang"
                 :disabled="disabled"
                 :items="languages"
+                item-title="text"
+                item-value="value"
                 :label="$t('Language')"
                 :error-messages="ch.langErrorMessages"
-                filled
+                variant="filled"
                 clearable
               ></v-select>
             </v-col>
@@ -113,12 +99,8 @@
         <v-col v-if="ch.cardinality !== 1" cols="2">
           <v-row>
             <v-col>
-              <v-btn icon @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </v-col>
           </v-row>
         </v-col>
@@ -131,8 +113,8 @@
                 v-model="ch.ui_value"
                 :disabled="disabled"
                 :label="ch.labels[alpha2locale]"
+                variant="filled"
                 :error-messages="ch.errorMessages"
-                filled
               ></v-textarea>
             </v-col>
             <v-col cols="12" md="2">
@@ -140,9 +122,11 @@
                 v-model="ch.value_lang"
                 :disabled="disabled"
                 :items="languages"
+                item-title="text"
+                item-value="value"
                 :error-messages="ch.langErrorMessages"
                 :label="$t('Language')"
-                filled
+                variant="filled"
                 clearable
               ></v-select>
             </v-col>
@@ -151,12 +135,8 @@
         <v-col v-if="ch.cardinality !== 1" cols="2">
           <v-row>
             <v-col>
-              <v-btn icon @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </v-col>
           </v-row>
         </v-col>
@@ -169,33 +149,23 @@
                 :loading="(ch.xmlname === 'faculty') ? orgLoading : (ch.xmlname === 'spl') ? splLoading : false"
                 v-model="ch.ui_value"
                 :disabled="disabled || (ch.disabled === true) || (ch.disabled === '1') || (ch.disabled === 1)"
-                :items="ch.vocabularies[0].terms"
-                :item-value="'uri'"
+                :items="vocabularySelectItems(ch.vocabularies[0].terms)"
+                item-title="text"
+                item-value="value"
                 :label="ch.labels[alpha2locale]"
                 :error-messages="ch.errorMessages"
-                @change="selectHandler(ch, $event)"
-                filled
+                @update:model-value="selectHandler(ch, $event)"
+                variant="filled"
                 clearable
-              >
-                <template v-slot:item="{ item, index }">
-                  <span>{{ item.labels[alpha2locale] }}</span>
-                </template>
-                <template v-slot:selection="{ item, index }">
-                  <span>{{ item.labels[alpha2locale] }}</span>
-                </template>
-              </v-select>
+              ></v-select>
             </v-col>
           </v-row>
         </v-col>
         <v-col v-if="(ch.cardinality !== 1) || (ch.xmlname === 'spl')" cols="2">
           <v-row>
             <v-col>
-              <v-btn icon @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </v-col>
           </v-row>
         </v-col>
@@ -208,9 +178,11 @@
                   v-model="ch.ui_value"
                   :disabled="disabled"
                   :items="languages"
+                  item-title="text"
+                  item-value="value"
                   :error-messages="ch.errorMessages"
                   :label="ch.labels[alpha2locale]"
-                  filled
+                  variant="filled"
                   clearable
                 >
                 </v-select>
@@ -220,12 +192,8 @@
         <v-col v-if="ch.cardinality !== 1" cols="2">
           <v-row>
             <v-col>
-              <v-btn icon @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </v-col>
           </v-row>
         </v-col>
@@ -240,8 +208,8 @@
                 :label="ch.labels[alpha2locale]"
                 :error-messages="ch.errorMessages"
                 :hint="$t('Format YYYY-MM-DD')"
+                variant="filled"
                 :rules="[validationrules.date]"
-                filled
               ></v-text-field>
             </v-col>
           </v-row>
@@ -249,12 +217,8 @@
         <v-col v-if="ch.cardinality !== 1" cols="2">
           <v-row>
             <v-col>
-              <v-btn icon @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </v-col>
           </v-row>
         </v-col>
@@ -277,12 +241,8 @@
         <v-col v-if="ch.cardinality !== 1" cols="2">
           <v-row>
             <v-col>
-              <v-btn icon @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </v-col>
           </v-row>
         </v-col>
@@ -305,28 +265,20 @@
         <v-col v-if="ch.cardinality !== 1" cols="2">
           <v-row>
             <v-col>
-              <v-btn icon @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="ch.removable" icon @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="ch.removable" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </v-col>
           </v-row>
         </v-col>
       </template>
       <template v-else-if="ch.input_type === 'node'">
         <v-card class="ma-3" :width="'100%'">
-          <v-card-title class="font-weight-light white--text">
+          <v-card-title class="font-weight-light text-white">
             <span>{{ ch.labels[alpha2locale] }}</span>
             <v-spacer></v-spacer>
             <template v-if="ch.cardinality !== 1">
-              <v-btn icon dark @click="$emit('add-field', ch)">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn v-if="canRemoveNode(ch, parent)" icon dark @click="$emit('remove-field', ch)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
+              <v-icon-btn theme="dark" variant="text" color="white" @click="$emit('add-field', ch)" icon="mdi-plus" />
+              <v-icon-btn v-if="canRemoveNode(ch, parent)" theme="dark" variant="text" color="white" @click="$emit('remove-field', ch)" icon="mdi-minus" />
             </template>
           </v-card-title>
           <v-divider></v-divider>
@@ -337,7 +289,7 @@
           </v-card-text>
         </v-card>
       </template>
-      <v-alert v-else dense type="error" :value="true">Unknown field type {{ch.xmlname}} {{ch.input_type}}</v-alert>
+      <v-alert v-else density="compact" type="error" :model-value="true">Unknown field type {{ch.xmlname}} {{ch.input_type}}</v-alert>
     </v-row>
   </v-container>
 </template>
@@ -379,7 +331,11 @@ export default {
     },
     languages: function () {
       let arr = []
-      for (let term of this.$store.state.vocabulary.vocabularies['lang'].terms) {
+      const langTerms = this.$store.state.vocabulary.vocabularies['lang']?.terms
+      if (!langTerms) {
+        return arr
+      }
+      for (let term of langTerms) {
         if (lang3to2map[term['@id']]) {
            if (term['skos:prefLabel'][this.$i18n.locale]) {
             arr.push({
@@ -401,6 +357,45 @@ export default {
     }
   },
   methods: {
+    vocabularySelectItems: function (terms) {
+      if (!Array.isArray(terms)) {
+        return []
+      }
+      return terms.map(term => ({
+        ...term,
+        text: this.termLabel(term, terms),
+        value: term.uri
+      }))
+    },
+    termLabel: function (item, terms) {
+      let term = item?.raw ?? item
+      if (typeof term === 'string' && Array.isArray(terms)) {
+        term = terms.find(t => t.uri === term || t.value === term)
+      }
+      if (!term || !term.labels) {
+        if (typeof item === 'string') {
+          return item
+        }
+        if (typeof term === 'string') {
+          return term
+        }
+        return term?.uri || term?.value || ''
+      }
+      const labels = term.labels
+      const raw = labels[this.alpha2locale]
+        || labels[this.$i18n.locale]
+        || labels.en || labels.eng
+        || labels.de || labels.deu
+        || labels.it || labels.ita
+        || Object.values(labels).find(v => typeof v === 'string')
+      if (typeof raw === 'string') {
+        return raw
+      }
+      if (raw && typeof raw === 'object' && raw['@value']) {
+        return raw['@value']
+      }
+      return term.uri || term.value || ''
+    },
     entityHasData: function (entity) {
       if (!entity || !entity.children) {
         return false
@@ -674,6 +669,7 @@ export default {
     }
   },
   mounted: async function () {
+    console.log('PIUwmRec mounted')
     let lastClsChild
     for (let ch of this.children) {
       if (ch.datatype === 'ClassificationSource') {

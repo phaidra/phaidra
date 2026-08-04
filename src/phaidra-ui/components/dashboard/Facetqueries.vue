@@ -3,7 +3,7 @@
     <v-card-text>
       <ul class="main-ul">
         <li v-for="(q, i) in facet.queries" :key="i">
-          <a :href="'/search?fq='+facet.id+'_'+q.id"><span class="facet-label primary--text">{{ $t(q.label) }}</span><span class="facet-count grey--text" v-if="facet_queries[q.query] > 0">({{ facet_queries[q.query] }})</span></a>
+          <a :href="'/search?fq='+facet.id+'_'+q.id"><span class="facet-label text-primary">{{ $t(q.label) }}</span><span class="facet-count text-grey" v-if="facet_queries[q.query] > 0">({{ facet_queries[q.query] }})</span></a>
         </li>
       </ul>
     </v-card-text>

@@ -2,21 +2,18 @@
   <v-row v-if="!hidden">
     <v-col cols="8">
       <v-text-field
-        :value="prefLabel"
+        :model-value="prefLabel"
         :persistent-hint="true"
         :messages="value"
         :label="$t(label)"
         readonly
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
     <v-col cols="1" v-if="actions.length">
-      <v-menu bottom offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn v-on="on" v-bind="attrs" icon>
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+      <v-menu open-on-hover bottom offset-y>
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-icon-btn v-bind="activatorProps" variant="text" icon="mdi-dots-vertical" />
         </template>
         <v-list>
           <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">

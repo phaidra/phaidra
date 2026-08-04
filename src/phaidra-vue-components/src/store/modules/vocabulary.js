@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import languages from '../../utils/lang'
 import lang3to2map from '../../utils/lang3to2map'
 import orgunits from '../../utils/orgunits'
@@ -2197,7 +2196,7 @@ const mutations = {
   setInstanceConfig(state, instanceconfig) {
     if (instanceconfig.hasOwnProperty('data_vocabularies')) {
       for (let vocid of Object.keys(instanceconfig.data_vocabularies)) {
-        Vue.set(state.vocabularies, vocid, instanceconfig.data_vocabularies[vocid])
+        state.vocabularies[vocid] = instanceconfig.data_vocabularies[vocid]
         state.vocabularies[vocid].loaded = true
       }
     }
@@ -2229,10 +2228,10 @@ const mutations = {
         terms.push(term)
       }
     }
-    Vue.set(state.vocabularies, id, {
+    state.vocabularies[id] = {
       terms: terms,
       loaded: true
-    })
+    }
   }
 }
 

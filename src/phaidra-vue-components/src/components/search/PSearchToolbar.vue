@@ -2,41 +2,69 @@
   <v-container class="toolbar">
     <v-row>
       <v-col>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon class="toolbar-btn" @click="setSort('title asc')" :color="sortIsActive('title asc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Title ascending')">
+        <v-tooltip location="bottom">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-icon-btn
+              class="toolbar-btn"
+              variant="text"
+              :color="sortIsActive('title asc') ? 'primary' : undefined"
+              @click="setSort('title asc')"
+              v-bind="activatorProps"
+              :aria-label="$t('Title ascending')"
+            >
               <icon width="16px" height="16px" name="fontello-sort-name-up"></icon>
-            </v-btn>
+            </v-icon-btn>
           </template>
           <span>{{ $t('Title ascending')}}</span>
         </v-tooltip>
       </v-col>
       <v-col>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon class="toolbar-btn" @click="setSort('title desc')" :color="sortIsActive('title desc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Title descending')">
+        <v-tooltip location="bottom">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-icon-btn
+              class="toolbar-btn"
+              variant="text"
+              :color="sortIsActive('title desc') ? 'primary' : undefined"
+              @click="setSort('title desc')"
+              v-bind="activatorProps"
+              :aria-label="$t('Title descending')"
+            >
               <icon width="16px" height="16px" name="fontello-sort-name-down"></icon>
-            </v-btn>
+            </v-icon-btn>
           </template>
           <span>{{ $t('Title descending')}}</span>
         </v-tooltip>
       </v-col>
       <v-col>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon class="toolbar-btn" @click="setSort('created asc')" :color="sortIsActive('created asc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Upload date ascending')">
+        <v-tooltip location="bottom">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-icon-btn
+              class="toolbar-btn"
+              variant="text"
+              :color="sortIsActive('created asc') ? 'primary' : undefined"
+              @click="setSort('created asc')"
+              v-bind="activatorProps"
+              :aria-label="$t('Upload date ascending')"
+            >
               <icon width="16px" height="16px" name="fontello-sort-number-up"></icon>
-            </v-btn>
+            </v-icon-btn>
           </template>
           <span>{{ $t('Upload date ascending')}}</span>
         </v-tooltip>
       </v-col>
       <v-col>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon class="toolbar-btn" @click="setSort('created desc')" :color="sortIsActive('created desc') ? 'primary' : ''" v-on="on" v-bind="attrs" :aria-label="$t('Upload date descending')">
+        <v-tooltip location="bottom">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-icon-btn
+              class="toolbar-btn"
+              variant="text"
+              :color="sortIsActive('created desc') ? 'primary' : undefined"
+              @click="setSort('created desc')"
+              v-bind="activatorProps"
+              :aria-label="$t('Upload date descending')"
+            >
               <icon width="16px" height="16px" name="fontello-sort-number-down"></icon>
-            </v-btn>
+            </v-icon-btn>
           </template>
           <span>{{ $t('Upload date descending')}}</span>
         </v-tooltip>
@@ -44,59 +72,61 @@
       <v-col>
         <v-dialog v-model="linkdialog" max-width="800px">
           <v-card>
-            <v-card-title class="title font-weight-light white--text mb-6">
+            <v-card-title class="text-title-large font-weight-light text-white mb-6">
               {{ $t('Link to search results') }}
             </v-card-title>
             <v-card-text>
               {{ link }}
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    v-on="on"
-                    v-bind="attrs"
-                    icon
+              <v-tooltip location="bottom">
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-icon-btn
+                    v-bind="activatorProps"
+                    icon="mdi-content-copy"
                     @click="copyToClipboard()"
+                    @blur="resetCopyTooltip()"
                     class="ml-1"
                     :aria-label="$t('Copy to clipboard')"
-                  >
-                    <v-icon>mdi-content-copy</v-icon>
-                  </v-btn>
+                  />
                 </template>
-                <span>{{ $t('Copy to clipboard') }}</span>
+                <span>{{ $t(getCopyTooltipText('search-link')) }}</span>
               </v-tooltip>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn outlined @click.stop="linkdialog=false">{{ $t("Close") }}</v-btn>
+              <v-btn variant="outlined" @click.stop="linkdialog=false">{{ $t("Close") }}</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon class="toolbar-btn" @click="linkdialog=true" v-on="on" v-bind="attrs" :aria-label="$t('Link to search results')">
+        <v-tooltip location="bottom">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-icon-btn class="toolbar-btn" @click="linkdialog=true" v-bind="activatorProps" :aria-label="$t('Link to search results')">
               <icon width="18px" height="18px" name="material-content-link"></icon>
-            </v-btn>
+            </v-icon-btn>
           </template>
           <span>{{ $t('Link to search results')}}</span>
         </v-tooltip>
       </v-col>
       <v-col v-if="signedin">
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon class="toolbar-btn" v-on="on" v-bind="attrs" :color="selectioncheck ? 'primary' : ''" @click.stop="toggleSelection()" :aria-label="$t('Select results')">
-              <v-icon>mdi-bookmark-plus-outline</v-icon>
-            </v-btn>
+        <v-tooltip location="bottom">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-icon-btn
+              class="toolbar-btn"
+              variant="text"
+              v-bind="activatorProps"
+              :color="selectioncheck ? 'primary' : undefined"
+              @click.stop="toggleSelection()"
+              :aria-label="$t('Select results')"
+              icon="mdi-bookmark-plus-outline"
+            />
           </template>
           <span>{{ $t('Select results')}}</span>
         </v-tooltip>
       </v-col>
       <v-col>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon class="toolbar-btn" v-on="on" v-bind="attrs" @click.native="csvExport()" :aria-label="$t('Download search results as a CSV file')">
-              <v-icon>mdi-download</v-icon>
-            </v-btn>
+        <v-tooltip location="bottom">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-icon-btn class="toolbar-btn" v-bind="activatorProps" icon="mdi-download" @click="csvExport()" :aria-label="$t('Download search results as a CSV file')" />
           </template>
           <span>{{ $t('Download search results as a CSV file') }}</span>
         </v-tooltip>
@@ -106,6 +136,8 @@
 </template>
 
 <script>
+import copyTooltip from '../../mixins/copyTooltip'
+
 export default {
   name: 'p-search-toolbar',
   props: {
@@ -131,9 +163,10 @@ export default {
     selectioncheck: Boolean,
     csvExport: Function
   },
+  mixins: [copyTooltip],
   computed: {
     instance: function () {
-      return this.$root.$store.state.instanceconfig
+      return this.$store.state.instanceconfig
     }
   },
   data () {
@@ -142,29 +175,21 @@ export default {
     }
   },
   methods: {
-    copyToClipboard: function () {
-      navigator.clipboard.writeText(this.link)
+    copyToClipboard () {
+      this.copyWithTooltip(this.link, 'search-link')
     }
   }
 }
 </script>
 
 <style scoped>
-.container .toolbar {
+.v-container .toolbar {
   padding: 0px;
 }
 
-.toolbar-btn.theme--light.v-btn:focus::before {
-    opacity: 0.5;
-    outline-style: auto;
-}
-
-.v-icon:focus::before {
-  opacity: 0.7 !important;
-}
-
-.v-icon:focus::after {
-  opacity: 0.7 !important;
+.toolbar-btn.v-icon-btn:focus-visible {
+  outline-style: auto;
+  outline-offset: 2px;
 }
 
 </style>

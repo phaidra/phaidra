@@ -3,15 +3,13 @@
     <h1 class="text-h4 mb-6">{{$t('Bulk Upload')}}</h1>
     <v-stepper v-model="currentStepModel" class="steps-container">
       <v-stepper-header>
-        <template v-for="(step, index) in steps">
-          <v-stepper-step
-            :key="`step-${index}`"
+        <template v-for="(step, index) in steps" :key="`step-${index}`">
+          <v-stepper-item
+            :value="index + 1"
             :complete="$store.state['bulk-upload'].currentStep > index + 1"
-            :step="index + 1"
             :rules="[() => true]"
-          >
-            {{ step.label }}
-          </v-stepper-step>
+            :title="step.label"
+          />
 
           <v-divider
             v-if="index < steps.length - 1"

@@ -10,7 +10,7 @@
         <template v-slot:item.status="{ item }">
           <v-chip
             :color="getStatusColor(item.status)"
-            small
+            size="small"
           >
             {{ $t(item.status) }}
           </v-chip>
@@ -18,39 +18,23 @@
 
         <template v-slot:item.actions="{ item }">
           <template v-if="item.status === 'error'">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  small
+            <v-tooltip location="bottom">
+              <template v-slot:activator="{ props: tipProps }">
+                <v-icon-btn size="small"
                   color="error"
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="$emit('show-error', item)"
-                >
-                  <v-icon small>mdi-alert-circle</v-icon>
-                </v-btn>
+                  v-bind="tipProps"
+                  @click="$emit('show-error', item)" icon="mdi-alert-circle" />
               </template>
               <span>{{$t('View Error')}}</span>
             </v-tooltip>
-            <v-btn
-              icon
-              small
+            <v-icon-btn size="small"
               class="ml-2"
-              @click="$emit('retry-upload', item.index)"
-            >
-              <v-icon small>mdi-refresh</v-icon>
-            </v-btn>
+              @click="$emit('retry-upload', item.index)" icon="mdi-refresh" />
           </template>
           <template v-else-if="item.status === 'completed'">
-            <v-btn
-              icon
-              small
-              :href="getObjectUrl(item.pid)"
-              target="_blank"
-            >
-              <v-icon small>mdi-open-in-new</v-icon>
-            </v-btn>
+            <a :href="getObjectUrl(item.pid)" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
+              <v-icon-btn size="small" icon="mdi-open-in-new" />
+            </a>
           </template>
         </template>
       </v-data-table>
@@ -70,11 +54,11 @@ export default {
   data() {
     return {
       headers: [
-        { text: this.$t('Row'), value: 'index' },
-        { text: this.$t('Title'), value: 'title' },
-        { text: this.$t('Filename'), value: 'filename' },
-        { text: this.$t('Status'), value: 'status' },
-        { text: this.$t('Actions'), value: 'actions', sortable: false }
+        { title: this.$t('Row'), key: 'index' },
+        { title: this.$t('Title'), key: 'title' },
+        { title: this.$t('Filename'), key: 'filename' },
+        { title: this.$t('Status'), key: 'status' },
+        { title: this.$t('Actions'), key: 'actions', sortable: false }
       ]
     }
   },

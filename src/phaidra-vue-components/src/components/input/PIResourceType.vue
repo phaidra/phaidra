@@ -3,11 +3,14 @@
     <v-row>
       <v-col cols="12">
         <v-btn-toggle
-          background-color='white-text'
-          active-class='primary white--text'
           v-model="toggleResourcetypeModel"
-          mandatory
-          @change="$emit('input', getTerm('resourcetype', resourceTypes[$event]))"
+          
+          divided
+          border
+          color="primary"
+          base-color="grey-lighten-4"
+          mandatory="force"
+          @update:model-value="onResourceTypeChange"
         >
           <v-btn v-show="resourceTypes.includes('https://pid.phaidra.org/vocabulary/44TN-P1S0')"><v-icon :color="value === 'https://pid.phaidra.org/vocabulary/44TN-P1S0' ? 'white' : 'grey'">mdi-image</v-icon><span class="ml-2">{{ $t('Picture') }}</span></v-btn>
           <v-btn v-show="resourceTypes.includes('https://pid.phaidra.org/vocabulary/8YB5-1M0J')"><v-icon :color="value === 'https://pid.phaidra.org/vocabulary/8YB5-1M0J' ? 'white' : 'grey'">mdi-volume-high</v-icon><span class="ml-2">{{ $t('Audio') }}</span></v-btn>
@@ -24,7 +27,7 @@
       <span v-else-if="formats.supported && formats.supported.length > 0">{{ $t('Other supported formats') }}: <span v-for="(f, i) in formats.supported" :key="'fs' + i"><a v-if="f.url" :href="f.url" target="_blank">{{f.label}}</a><span v-else>{{f.label}}</span><span v-if="i < (formats.supported.length - 1)">, </span></span></span>
       <template v-else-if="formats.info">
       <v-col cols="10" class="pa-0">
-        <v-alert dense outlined type="info" color="secondary" icon="mdi-information-outline">{{ $t(formats.info) }}</v-alert>
+        <v-alert density="compact" variant="outlined" type="info" color="secondary" icon="mdi-information-outline">{{ $t(formats.info) }}</v-alert>
     </v-col>
       </template>
     </v-row>
@@ -38,6 +41,7 @@ import { fieldproperties } from '../../mixins/fieldproperties'
 export default {
   name: 'p-i-resource-type',
   mixins: [vocabulary, fieldproperties],
+  emits: ['input', 'configure'],
   props: {
     value: {
       type: String
@@ -99,6 +103,11 @@ export default {
         }
       }
     })
+  },
+  methods: {
+    onResourceTypeChange (index) {
+      this.$emit('input', this.getTerm('resourcetype', this.resourceTypes[index]))
+    }
   }
 }
 </script>

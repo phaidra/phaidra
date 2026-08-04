@@ -13,6 +13,7 @@ import { fieldproperties } from '../../mixins/fieldproperties'
 export default {
   name: 'p-i-note-checkbox',
   mixins: [vocabulary, fieldproperties],
+  emits: ['input', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   props: {
     note: {
       type: String,

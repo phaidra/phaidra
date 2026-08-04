@@ -1,17 +1,15 @@
 <template>
   <div v-if="!hidden">
-    <v-alert :value="errorMessages.length > 0" dismissible type="error" transition="slide-y-transition">
+    <v-alert v-if="errorMessages && errorMessages.length > 0" type="error" variant="tonal" transition="slide-y-transition">
       <span v-for="(em, i) in errorMessages" :key="'em'+i">{{ em }}<br/></span>
     </v-alert>
-    <v-card outlined class="mt-4 mb-8">
-      <v-card-title v-if="showLabel" class="title font-weight-light white--text">
+    <v-card variant="outlined" class="mt-4 mb-8">
+      <v-card-title v-if="showLabel" class="text-title-large font-weight-light text-white">
         <span>{{ $t(label) }}</span>
         <v-spacer></v-spacer>
-        <v-menu v-if="actions.length" bottom offset-y>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn v-on="on" v-bind="attrs" icon dark>
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
+        <v-menu open-on-hover bottom offset-y v-if="actions.length">
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-icon-btn v-bind="activatorProps" variant="text" color="white" icon="mdi-dots-vertical" />
           </template>
           <v-list>
             <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
@@ -23,7 +21,12 @@
       <v-card-text class="mt-4">
         <v-row no-gutters>
           <v-col cols="12" :md="terms.length <= 6 ? 12 : 6" v-for="(term, i) in terms" :key="'ot'+i">
-            <v-checkbox class="mt-0 check" v-model="checkboxes[term['@id']]" @click.capture="$emit('input', checkboxes)" :label="getLocalizedTermLabel(vocabulary, term['@id'])" :key="'chot'+i"></v-checkbox>
+            <v-checkbox
+              class="mt-0 check"
+              v-model="checkboxes[term['@id']]"
+              :label="getLocalizedTermLabel(vocabulary, term['@id'])"
+              :key="'chot'+i"
+            ></v-checkbox>
             <v-spacer></v-spacer>
           </v-col>
         </v-row>
@@ -33,13 +36,13 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 
 export default {
   name: 'p-i-object-type',
   mixins: [vocabulary, fieldproperties],
+  emits: ['input', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   props: {
     label: {
       type: String,
@@ -67,7 +70,13 @@ export default {
     }
   },
   watch: {
-    resourceType (val) {
+    checkboxes: {
+      deep: true,
+      handler (val) {
+        this.$emit('input', val)
+      }
+    },
+    resourceType () {
       this.checkboxes = {}
       this.$emit('input', this.checkboxes)
     },
@@ -78,15 +87,16 @@ export default {
         }
         
         this.$nextTick(() => {
-          // Only update checkboxes that aren't already set correctly
+          const next = { ...this.checkboxes }
           let hasChanges = false
-          for (let term of newVal) {
-            if (term.value && !this.checkboxes[term.value]) {
-              Vue.set(this.checkboxes, term.value, true)
+          for (const term of newVal) {
+            if (term.value && !next[term.value]) {
+              next[term.value] = true
               hasChanges = true
             }
           }
           if (hasChanges) {
+            this.checkboxes = next
             this.$emit('input', this.checkboxes)
           }
         })
@@ -110,19 +120,16 @@ export default {
     }
   },
   mounted: function () {
-    if(this.resourceType) {
+    if (this.resourceType) {
       this.$store.getters['vocabulary/getObjectTypeForResourceType'](this.resourceType, this.$i18n.locale)
     }
-    this.$nextTick(function () {
-      // emit input to set skos:prefLabel in parent
-      if (this.selectedTerms) {
-        for (let term of this.selectedTerms) {
-          if (term.value) {
-            Vue.set(this.checkboxes, term.value, true)
-            this.$emit('input', this.checkboxes)
-          }
-        }
+    this.$nextTick(() => {
+      if (!this.selectedTerms || !this.selectedTerms.length) return
+      const next = { ...this.checkboxes }
+      for (const t of this.selectedTerms) {
+        if (t.value) next[t.value] = true
       }
+      this.checkboxes = next
     })
   }
 }

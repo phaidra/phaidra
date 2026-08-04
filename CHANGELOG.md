@@ -1,5 +1,7 @@
 # Head
 
+phaidra-ui was migrated to Nuxt 4.
+
 # v3.3.17
 
 This release is the last release with Nuxt 2 framework in phaidra-ui.

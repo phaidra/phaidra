@@ -8,17 +8,12 @@
     <v-row class="mx-4 mt-10">
       <v-col cols="12" md="10" offset-md="1">
         <v-row>
-          <v-text-field class="searchBox" v-model="q" :placeholder="$t('Search...')" autocomplete="off" append-icon="mdi-magnify"
-            v-on:keyup.enter="$router.push({ name: 'search', query: { q } })" clearable solo hide-details>
-            <template #append>
-              <v-btn
-                icon
-                :aria-label="$t('Search')"
+          <v-text-field class="searchBox" v-model="q" :placeholder="$t('Search...')" autocomplete="off"
+            @keyup.enter="$router.push({ name: 'search', query: { q } })" clearable hide-details variant="solo">
+            <template #append-inner>
+              <v-icon-btn :aria-label="$t('Search')"
                 tabindex="-1"
-                @click="$router.push({ name: 'search', query: { q } })"
-              >
-                <v-icon>mdi-magnify</v-icon>
-              </v-btn>
+                @click="$router.push({ name: 'search', query: { q } })" icon="mdi-magnify" />
             </template>
           </v-text-field>
         </v-row>
@@ -34,7 +29,7 @@
 
       <v-col cols="12" lg="10">
         <v-row>
-          <h2 class="md-headline title font-weight-light pa-2">{{ "Dashboard" }}</h2>
+          <h2 class="md-headline text-title-large font-weight-light pa-2">{{ "Dashboard" }}</h2>
         </v-row>
 
         <v-row class="mt-6">
@@ -52,7 +47,7 @@
         <v-row class="px-2">
           <v-col cols="12">
             <v-row>
-              <h2 class="md-headline title font-weight-light pa-2 mb-3">{{ "Manage Phaidra" }}</h2>
+              <h2 class="md-headline text-title-large font-weight-light pa-2 mb-3">{{ "Manage Phaidra" }}</h2>
             </v-row>
             <v-row class="pl-2 mb-6 mt-4">
               <ul>
@@ -67,7 +62,7 @@
             </v-row>
             <v-divider class="my-4"></v-divider>
             <v-row>
-              <h2 class="md-headline title font-weight-light pa-2 mb-3">
+              <h2 class="md-headline text-title-large font-weight-light pa-2 mb-3">
                 <icon width="27px" height="27px" name="univie-kartenkontakte" class="mr-2"></icon>{{  $t("Contact") }}
               </h2>
             </v-row>
@@ -126,14 +121,10 @@ import '@/compiled-icons/univie-twitter'
 import '@/compiled-icons/univie-instagram'
 import '@/compiled-icons/univie-flickr'
 import '@/compiled-icons/linkedin'
-import VueHorizontal from 'vue-horizontal'
 import qs from "qs";
 
 export default {
   name: 'home',
-  components: {
-    VueHorizontal
-  },
   mixins: [config],
   data() {
     return {

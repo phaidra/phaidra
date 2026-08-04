@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app>
+    <v-app-bar>
       <!-- Your app bar content -->
     </v-app-bar>
 
@@ -9,7 +9,7 @@
         <div class="bulk-upload-layout">
           <BulkUploadSteps />
           <div class="content">
-            <Nuxt />
+            <slot />
           </div>
         </div>
       </v-container>

@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light white--text">
+          <v-card-title class="text-title-large font-weight-light text-white">
             {{ $t('Manage user groups') }}
           </v-card-title>
           <v-card-text>
@@ -14,29 +14,24 @@
               :loading="groupsLoading"
               :loading-text="$t('Loading groups...')"
               :no-data-text="$t('No data available')"
-              :footer-props="{
-                pageText: $t('Page'),
-                itemsPerPageText: $t('Rows per page'),
-                itemsPerPageAllText: $t('All')
-              }"
               :no-results-text="$t('There were no search results')"
             >
               <template v-slot:top>
                 <v-toolbar flat color="transparent" class="my-4">
                   <v-text-field
                     v-model="groupsSearch"
-                    append-icon="mdi-magnify"
+                    append-inner-icon="mdi-magnify"
                     :label="$t('Search...')"
                     single-line
                     hide-details
                   ></v-text-field>
                   <v-spacer></v-spacer>
                   <v-dialog v-model="createDialog" max-width="500px">
-                    <template v-slot:activator="{ on }">
-                      <v-btn color="primary" dark class="mb-2" v-on="on">{{ $t('Create new group') }}</v-btn>
+                    <template v-slot:activator="{ props: activatorProps }">
+                      <v-btn color="primary" theme="dark" class="mb-2" v-bind="activatorProps">{{ $t('Create new group') }}</v-btn>
                     </template>
                     <v-card>
-                      <v-card-title class="title font-weight-light white--text">
+                      <v-card-title class="text-title-large font-weight-light text-white">
                         {{ $t('New group') }}
                       </v-card-title>
                       <v-card-text class="my-4">
@@ -49,7 +44,7 @@
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn outlined @click="createDialog = false">{{ $t('Cancel') }}</v-btn>
+                        <v-btn variant="outlined" @click="createDialog = false">{{ $t('Cancel') }}</v-btn>
                         <v-btn @click="createGroup()" color="primary">{{ $t('Create') }}</v-btn>
                       </v-card-actions>
                     </v-card>
@@ -57,33 +52,29 @@
                 </v-toolbar>
               </template>
               <template v-slot:item.name="{ item }">
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <span v-on="on" v-bind="attrs">{{ item.name }}</span>
+                <v-tooltip location="bottom">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <span v-bind="activatorProps">{{ item.name }}</span>
                   </template>
                   <span>{{ item.groupid }}</span>
                 </v-tooltip>
               </template>
               <template v-slot:item.created="{ item }">
-                {{ item.created | unixtime }}
+                {{ $unixtime(item.created) }}
               </template>
               <template v-slot:item.updated="{ item }">
-                {{ item.updated | unixtime }}
+                {{ $unixtime(item.updated) }}
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon color="primary" @click="loadedGroup = item" v-on="on" v-bind="attrs" :aria-label="$t('Edit')">
-                      <v-icon>mdi-pencil</v-icon>
-                    </v-btn>
+                <v-tooltip location="bottom">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-icon-btn variant="text" color="primary" @click="loadedGroup = item" v-bind="activatorProps" :aria-label="$t('Edit')" icon="mdi-pencil" />
                   </template>
                   <span>{{ $t('Edit')}}</span>
                 </v-tooltip>
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon color="btnred" @click="deleteGroupDialog(item)" v-on="on" v-bind="attrs" :aria-label="$t('Delete')">
-                      <v-icon>mdi-delete</v-icon>
-                    </v-btn>
+                <v-tooltip location="bottom">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-icon-btn variant="text" color="btnred" @click="deleteGroupDialog(item)" v-bind="activatorProps" :aria-label="$t('Delete')" icon="mdi-delete" />
                   </template>
                   <span>{{ $t('Delete')}}</span>
                 </v-tooltip>
@@ -96,7 +87,7 @@
     <v-row v-if="loadedGroup">
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light white--text">
+          <v-card-title class="text-title-large font-weight-light text-white">
             {{ loadedGroup.name }}
           </v-card-title>
           <v-card-text>
@@ -107,11 +98,6 @@
               :loading="membersLoading"
               :loading-text="$t('Loading group members...')"
               :no-data-text="$t('No data available')"
-              :footer-props="{
-                pageText: $t('Page'),
-                itemsPerPageText: $t('Rows per page'),
-                itemsPerPageAllText: $t('All')
-              }"
               :no-results-text="$t('There were no search results')"
               class="mt-4"
             >
@@ -119,7 +105,7 @@
                 <v-toolbar flat>
                   <v-text-field
                     v-model="membersSearch"
-                    append-icon="mdi-magnify"
+                    append-inner-icon="mdi-magnify"
                     :label="$t('Search...')"
                     single-line
                     hide-details
@@ -133,11 +119,9 @@
                 [{{ item.username }}]
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon color="btnred" @click="removeMember(item.username)" v-on="on" v-bind="attrs" :aria-label="$t('Delete')">
-                      <v-icon>mdi-delete</v-icon>
-                    </v-btn>
+                <v-tooltip location="bottom">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-icon-btn color="btnred" @click="removeMember(item.username)" v-bind="activatorProps" :aria-label="$t('Delete')" icon="mdi-delete" />
                   </template>
                   <span>{{ $t('Delete')}}</span>
                 </v-tooltip>                
@@ -148,7 +132,7 @@
                 {{ $t('Username search') }}
                 <v-icon
                   right
-                  dark
+                  theme="dark"
                 >
                   mdi-database-search
                 </v-icon>
@@ -161,16 +145,16 @@
     </v-row>
     <v-dialog v-model="deleteDialog" max-width="500px" v-if="groupToDelete">
       <v-card>
-        <v-card-title class="title font-weight-light white--text">
+        <v-card-title class="text-title-large font-weight-light text-white">
           {{ $t('Delete group') }}
         </v-card-title>
         <v-card-text class="my-4">
-          <p class="title font-weight-light">{{ $t('Delete group') + ' ' + groupToDelete.name + '?' }}</p>
+          <p class="text-title-large font-weight-light">{{ $t('Delete group') + ' ' + groupToDelete.name + '?' }}</p>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn outlined @click="deleteDialog = false">{{ $t('Cancel') }}</v-btn>
-          <v-btn dark @click="deleteGroup()" color="btnred">{{ $t('Delete') }}</v-btn>
+          <v-btn variant="outlined" @click="deleteDialog = false">{{ $t('Cancel') }}</v-btn>
+          <v-btn theme="dark" @click="deleteGroup()" color="btnred">{{ $t('Delete') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -277,15 +261,15 @@ export default {
         immediate: true, // Ensure it's set on load
         handler() {
           this.groupsHeaders = [
-              { text: this.$t('Name'), align: 'left', value: 'name' },
-              { text: this.$t('Created'), align: 'right', value: 'created' },
-              { text: this.$t('Modified'), align: 'right', value: 'updated' },
-              { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+              { title: this.$t('Name'), align: 'start', key: 'name' },
+              { title: this.$t('Created'), align: 'end', key: 'created' },
+              { title: this.$t('Modified'), align: 'end', key: 'updated' },
+              { title: this.$t('Actions'), align: 'end', key: 'actions', sortable: false }
             ];
           this.membersHeaders = [
-              { text: this.$t('Name'), align: 'left', value: 'name' },
-              { text: this.$t('Username'), align: 'left', value: 'username' },
-              { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+              { title: this.$t('Name'), align: 'start', key: 'name' },
+              { title: this.$t('Username'), align: 'start', key: 'username' },
+              { title: this.$t('Actions'), align: 'end', key: 'actions', sortable: false }
             ];
         }
      }

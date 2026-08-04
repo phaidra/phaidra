@@ -1345,7 +1345,7 @@
   "Selected": "Selezionato",
   "Show RSS Feed": "Ottieni Feed RSS",
   "This object has been deleted.": "Questo oggetto è stato eliminato.",
-  "Error: Request failed with status code 500" : "Il server ha riscontrato un errore interno.",
+  "AxiosError: Request failed with status code 500" : "Il server ha riscontrato un errore interno.",
   "Relationship successfully added": "Relazione aggiunta.",
   "Relationship successfully removed": "Relazione rimossa.",
   "Share link successfully created": "Link pubblico creato.",

@@ -7,15 +7,21 @@
 </client-only>
 </template>
 <script>
-import { config } from "../mixins/config";
+import { config, useDocumentTitle } from "../mixins/config";
 export default {
-  middleware: "auth",
   mixins: [config],
-  metaInfo() {
-    let metaInfo = {
-      title: this.documentTitle(this.$t('Groups')),
-    };
-    return metaInfo;
+  setup() {
+    definePageMeta({
+      middleware: 'auth'
+    })
+    const nuxtApp = useNuxtApp()
+    const documentTitle = useDocumentTitle()
+    useHead(() => {
+      const t = nuxtApp.$i18n?.t || ((v) => v)
+      return {
+        title: documentTitle(t('Groups'))
+      }
+    })
   }
 }
 </script>

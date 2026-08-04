@@ -3,15 +3,14 @@
   <v-row v-if="!hidden">
     <v-col cols="4">
       <v-text-field
-        :value="name"
+        :model-value="name"
         :label="$t('Funder name')"
-        v-on:blur="$emit('input-name',$event.target.value)"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        @update:model-value="$emit('input-name', $event)"
+        :variant="fieldVariant"
       ></v-text-field>
     </v-col>
     <v-col cols="2">
-      <v-btn text @click="$refs.langdialog.open()">
+      <v-btn variant="text" @click="$refs.langdialog.open()">
         <span>
           ({{ nameLanguage ? nameLanguage : '--' }})
         </span>
@@ -23,46 +22,43 @@
         <v-col :cols="6" v-if="!hideIdentifierType && !hideIdentifier">
           <v-autocomplete
             :no-data-text="$t('No data available')"
-            v-on:input="$emit('input-identifier-type', $event)"
+            @update:model-value="$emit('input-identifier-type', $event)"
             :label="$t('Type of funder identifier')"
             :items="vocabularies[identifierVocabulary].terms"
-            :item-value="'@id'"
-            :value="getTerm(identifierVocabulary, identifierType)"
-            :filter="autocompleteFilter"
-            :filled="inputStyle==='filled'"
-            :outlined="inputStyle==='outlined'"
+            item-value="@id"
+            :item-title="(item) => skosTermItemTitle(item, identifierVocabulary)"
+            :model-value="getTerm(identifierVocabulary, identifierType)"
+            :custom-filter="vocabAutocompleteFilter"
+            :variant="fieldVariant"
             return-object
             clearable
           >
-            <template slot="item" slot-scope="{ item }">
-              <v-list-item-content two-line>
-                <v-list-item-title  v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
-              </v-list-item-content>
+            <template #item="{ props, internalItem }">
+              <v-list-item v-bind="props" lines="one">
+                <template #title>
+                  <span v-html="getLocalizedTermLabel(identifierVocabulary, internalItem.raw['@id'])" />
+                </template>
+              </v-list-item>
             </template>
-            <template slot="selection" slot-scope="{ item }">
-              <v-list-item-content>
-                <v-list-item-title v-html="`${getLocalizedTermLabel(identifierVocabulary, item['@id'])}`"></v-list-item-title>
-              </v-list-item-content>
+            <template #selection="{ internalItem }">
+              <span v-html="getLocalizedTermLabel(identifierVocabulary, (internalItem.raw || internalItem)['@id'])" />
             </template>
           </v-autocomplete>
         </v-col>
         <v-col :cols="!hideIdentifierType ? 6 : 12" v-if="!hideIdentifier">
           <v-text-field
-            :value="identifier"
+            :model-value="identifier"
             :label="$t('Funder identifier')"
-            v-on:blur="$emit('input-identifier',$event.target.value)"
-            :filled="inputStyle==='filled'"
-            :outlined="inputStyle==='outlined'"
+            @update:model-value="$emit('input-identifier', $event)"
+            :variant="fieldVariant"
           ></v-text-field>
         </v-col>
       </v-row>
     </v-col>
     <v-col cols="1" v-if="actions.length">
-      <v-menu bottom offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn v-on="on" v-bind="attrs" icon>
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+      <v-menu open-on-hover bottom offset-y>
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-icon-btn v-bind="activatorProps" variant="text" icon="mdi-dots-vertical" />
         </template>
         <v-list>
           <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">

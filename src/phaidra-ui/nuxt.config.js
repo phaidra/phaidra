@@ -1,129 +1,114 @@
-const path = require('path')
+import crypto from 'crypto'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import { defineNuxtConfig } from 'nuxt/config'
 
-export default {
-  rootDir: process.cwd(),
-  buildDir: process.cwd() + '/.nuxt/',
-  // render: { csp: true },
-  // Global page headers: https://go.nuxtjs.dev/config-head
-  // head: {
-  //   title: 'phaidra-ui-nuxt',
-  //   htmlAttrs: {
-  //     lang: 'en'
-  //   },
-  //   meta: [
-  //     { charset: 'utf-8' },
-  //     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-  //     { name: 'theme-color', content: config.instances[config.defaultinstance]['primary'] },
-  //     { hid: 'description', name: 'description', content: '' }
-  //   ],
-  //   link: [
-  //     { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-  //   ]
-  // },
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const hmrClientPort = Number(process.env.PHAIDRA_HOSTPORT || 8899)
+const viteUsePolling = (process.env.VITE_USE_POLLING || 'true') === 'true'
+const viteWatchInterval = Number(process.env.VITE_WATCH_INTERVAL || 250)
+const phaidraVueComponentsRoot = path.resolve(__dirname, '../phaidra-vue-components')
+const vuetifyFocusTrapShimPath = path.resolve(__dirname, 'shims/vuetify-focusTrap.js')
+const envOrigin = `${process.env.OUTSIDE_HTTP_SCHEME || 'http'}://${process.env.PHAIDRA_HOSTNAME || 'localhost'}${process.env.PHAIDRA_PORTSTUB || ':'}${process.env.PHAIDRA_HOSTPORT || '8899'}`
+const publicApiBaseURL = process.env.PHAIDRA_API_BASE_URL || `${envOrigin}/api`
+const internalApiHost = process.env.PHAIDRA_API_INTERNAL_HOST || process.env.PHAIDRA_API_HOST || 'api'
+const internalApiPort = process.env.PHAIDRA_API_INTERNAL_PORT || process.env.PHAIDRA_API_PORT || '3000'
+// Internal API service URL used by SSR inside Docker network.
+// Keep it without "/api" because the api container serves routes at root (e.g. /object/:pid/info).
+const fallbackInternalApiBaseURL = `http://${internalApiHost}:${internalApiPort}`
+let apiBaseURL = process.env.PHAIDRA_API_BASE_URL_INTERNAL || ''
 
-  // Global CSS: https://go.nuxtjs.dev/config-css
-  // css: [
-  //   '~/assets/css/d3NetworkCustom.css'
-  // ],
+if (!apiBaseURL) {
+  // PHAIDRA_API_BASE_URL can point to browser/public host (localhost:8899).
+  // For SSR inside Docker, localhost points to UI container itself, so force internal API service URL.
+  if (process.env.PHAIDRA_API_BASE_URL) {
+    try {
+      const parsed = new URL(process.env.PHAIDRA_API_BASE_URL)
+      if (!['localhost', '127.0.0.1', '::1'].includes(parsed.hostname)) {
+        apiBaseURL = process.env.PHAIDRA_API_BASE_URL
+      }
+    } catch (_) { }
+  }
+  if (!apiBaseURL) {
+    apiBaseURL = fallbackInternalApiBaseURL
+  }
+}
+const publicBaseURL = process.env.PHAIDRA_BASE_URL || publicApiBaseURL.replace(/\/api\/?$/, '')
 
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
+/** Redirect Vuetify's internal focusTrap module to `shims/vuetify-focusTrap.js` (SSR-safe teardown). */
+function vuetifyFocusTrapSsrShim() {
+  const shimPath = path.resolve(__dirname, 'shims/vuetify-focusTrap.js')
+  return {
+    name: 'vuetify-focus-trap-ssr-shim',
+    enforce: 'pre',
+    resolveId(id) {
+      const normalized = id.split(path.sep).join('/')
+      if (normalized.includes('focusTrap')) {
+        return shimPath
+      }
+      return undefined
+    }
+  }
+}
+
+export default defineNuxtConfig({
+  // Keep Nuxt 3 folder layout while running on Nuxt 4.
+  srcDir: '.',
+  dir: {
+    app: 'app',
+    public: 'static'
+  },
+  alias: {
+    'vuetify/lib/composables/focusTrap': vuetifyFocusTrapShimPath,
+    'vuetify/lib/composables/focusTrap.js': vuetifyFocusTrapShimPath
+  },
+
+  runtimeConfig: {
+    apiBaseURL,
+    public: {
+      primaryColor: process.env.PHAIDRA_PRIMARY_COLOR,
+      defaultTheme: process.env.PHAIDRA_DEFAULT_THEME,
+      darkPrimaryColor: process.env.PHAIDRA_DARK_PRIMARY_COLOR,
+      baseURL: publicBaseURL,
+      apiBaseURL: publicApiBaseURL,
+      axios: {
+        browserBaseURL: publicApiBaseURL
+      },
+      defaultLocale: process.env.PHAIDRA_DEFAULT_LANGUAGE || 'eng',
+      cookieDomain: process.env.COOKIE_DOMAIN || process.env.PHAIDRA_HOSTNAME
+    }
+  },
+
   plugins: [
-    { src: '~/plugins/locale-persistence.js' },
     { src: '~/plugins/axios' },
+    { src: '~/plugins/vuex-store.js' },
+    { src: '~/plugins/moment-formatters.js' },
+    { src: '~/plugins/i18n.js' },
+    { src: '~/plugins/locale-persistence.js' },
     { src: '~/plugins/svg-icon' },
     { src: '~/plugins/before-each.js' },
     { src: '~/plugins/after-each.js' },
-    { src: '~/plugins/vue-meta.js' },
     { src: '~/plugins/lodash.js' },
-    { src: '~/plugins/vuetify.js', mode: 'client' },
+    { src: '~/plugins/vuetify.js' },
     { src: '~/plugins/phaidra-vue-components' },
-    { src: '~/plugins/bulk-upload-persistence.js', mode: 'client' },
+    { src: '~/plugins/bulk-upload-persistence.client.js' },
     { src: '~/plugins/vuetify-runtime-components.js' }
   ],
 
-  // Auto import components: https://go.nuxtjs.dev/config-components
   components: [
-    { path: '~/custom-components', level: 0 },
-    { path: '~/components', level: 1 },
+    { path: '~/components', level: 1 }
   ],
 
-  middleware: ['auth'],
+  modules: [],
 
-  serverMiddleware: ['~/server-middleware/redirect'],
-
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: [
-    // https://go.nuxtjs.dev/vuetify
-    '@nuxtjs/vuetify'
-  ],
-
-  // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
-    'nuxt-i18n',
-    '@nuxtjs/axios',
-    '@nuxt/http',
-    ['cookie-universal-nuxt', { alias: 'cookies' }],
-    '@nuxtjs/sentry',
-    'nuxt-helmet',
-    '@nuxtjs/markdownit'
-  ],
-
-  helmet: {
-    referrerPolicy: { policy: 'strict-origin' }
-  },
-
-  markdownit: {
-    preset: 'default',
-    linkify: true,
-    breaks: true,
-    runtime: true
-  },
-  axios: {
-    baseURL: 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000', // Used as fallback if no runtime config is provided
-  },
-  publicRuntimeConfig: {
-    primaryColor: process.env.PHAIDRA_PRIMARY_COLOR,
-    defaultTheme: process.env.PHAIDRA_DEFAULT_THEME,
-    darkPrimaryColor: process.env.PHAIDRA_DARK_PRIMARY_COLOR,
-    baseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT,
-    apiBaseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT + '/api',
-    axios: {
-      browserBaseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT + '/api'
-    },
-    defaultLocale: process.env.PHAIDRA_DEFAULT_LANGUAGE
-  },
-  // axios: {
-  //     baseURL: 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000', // Used as fallback if no runtime config is provided
-  // },
-  // publicRuntimeConfig: {
-  //   primaryColor: process.env.PHAIDRA_PRIMARY_COLOR,
-  //   baseURL: process.env.OUTSIDE_HTTP_SCHEME + '://' + process.env.PHAIDRA_HOSTNAME + process.env.PHAIDRA_PORTSTUB + process.env.PHAIDRA_HOSTPORT,
-  //   apiBaseURL: 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000',
-  //   axios: {
-  //     browserBaseURL: 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000'
-  //   },
-  //   defaultLocale: process.env.PHAIDRA_DEFAULT_LANGUAGE
-  // },
-  vuetify: {
-    customVariables: ['~/assets/variables.scss'], // Only works if treeshake is enabled
-    treeShake: true, // If enabled, Vuetify components used in runtime templates need to be imported in the plugins/vuetify-runtime-components.js file
-    optionsPath: './vuetify.options.js'
-  },
-  privateRuntimeConfig: {
-    axios: {
-      baseURL: 'http://' + process.env.PHAIDRA_API_HOST_INTERNAL + ':3000'
-    }
-  },
-  // sentry: {
-  //   dsn: config?.global?.monitor?.sentry?.dsn
-  // },
   i18n: {
     langDir: 'locales/',
     locales: [
       {
         name: 'English',
         code: 'eng',
-        iso: 'en', // keep 2-letters, used for browser language detection
+        iso: 'en',
         file: 'eng.json'
       },
       {
@@ -141,7 +126,7 @@ export default {
     ],
     strategy: 'no_prefix',
     fallbackLocale: 'eng',
-    defaultLocale: process.env.PHAIDRA_DEFAULT_LANGUAGE || 'eng',
+    defaultLocale: 'eng',
     vueI18n: {
       silentTranslationWarn: true,
       silentFallbackWarn: true
@@ -149,42 +134,52 @@ export default {
     detectBrowserLanguage: false
   },
 
-  alias: {
-    vue: path.resolve(path.join(__dirname, 'node_modules', 'vue')),
-    vuetify: path.resolve(path.join(__dirname, 'node_modules', 'vuetify'))
+  build: {
+    transpile: ['vuetify', 'phaidra-vue-components']
   },
 
-  // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
-    extend(config, { isDev, isClient }) {
-      config.node = {
-        fs: 'empty'
-      }
-      config.resolve.alias.vue = "vue/dist/vue.esm.js"
-      config.module.rules.push(
-        {
-          test: /\.mjs$/,
-          include: /node_modules/,
-          type: "javascript/auto"
-        }
-      )
+  vite: {
+    plugins: [vuetifyFocusTrapSsrShim()],
+    resolve: {
+      alias: {
+        'phaidra-vue-components': phaidraVueComponentsRoot
+      },
+      dedupe: ['vue', 'vue-router', 'vue-i18n', 'vuetify', 'vuex']
     },
-    transpile: ['phaidra-vue-components', 'vuetify/lib']
-  }
-}
+    optimizeDeps: {
+      exclude: ['phaidra-vue-components'],
+      include: ['@vue/compiler-dom']
+    },
+    server: {
+      hmr: {
+        clientPort: hmrClientPort
+      },
+      watch: {
+        usePolling: viteUsePolling,
+        interval: viteWatchInterval
+      },
+      fs: {
+        allow: [__dirname, phaidraVueComponentsRoot]
+      }
+    },
+    ssr: {
+      noExternal: ['vuetify', 'phaidra-vue-components']
+    }
+  },
 
-const crypto = require('crypto');
+  compatibilityDate: '2026-03-24'
+})
 
 /**
  * The MD4 algorithm is not available anymore in Node.js 17+ (because of library SSL 3).
  * In that case, silently replace MD4 by the MD5 algorithm.
  */
 try {
-  crypto.createHash('md4');
+  crypto.createHash('md4')
 } catch (e) {
-  console.warn('Crypto "MD4" is not supported anymore by this Node.js version');
-  const origCreateHash = crypto.createHash;
+  console.warn('Crypto "MD4" is not supported anymore by this Node.js version')
+  const origCreateHash = crypto.createHash
   crypto.createHash = (alg, opts) => {
-    return origCreateHash(alg === 'md4' ? 'md5' : alg, opts);
-  };
+    return origCreateHash(alg === 'md4' ? 'md5' : alg, opts)
+  }
 }

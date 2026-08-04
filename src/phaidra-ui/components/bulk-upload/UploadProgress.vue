@@ -3,22 +3,22 @@
     <v-card-text>
       <div class="d-flex align-center justify-space-between mb-2">
         <div>
-          <span class="text-h6">{{$t('Upload Progress')}}</span>
+          <span class="text-title-large">{{$t('Upload Progress')}}</span>
         </div>
         <div class="d-flex align-center">
-          <v-chip class="mr-2" color="success" outlined>
+          <v-chip class="mr-2" color="success" variant="outlined">
             {{ progress.completed }} {{$t('Completed')}}
           </v-chip>
-          <v-chip class="mr-2" color="error" outlined>
+          <v-chip class="mr-2" color="error" variant="outlined">
             {{ progress.failed }} {{$t('Failed')}}
           </v-chip>
-          <v-chip color="info" outlined>
+          <v-chip color="info" variant="outlined">
             {{ progress.total - progress.completed }} {{$t('Remaining')}}
           </v-chip>
         </div>
       </div>
       <v-progress-linear
-        :value="(progress.completed) / Math.max(1, progress.total) * 100"
+        :model-value="(progress.completed) / Math.max(1, progress.total) * 100"
         height="20"
         color="primary"
         striped

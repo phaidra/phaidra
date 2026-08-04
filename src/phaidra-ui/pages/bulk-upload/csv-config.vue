@@ -11,13 +11,13 @@
     <v-row class="mt-4">
       <v-col cols="12" md="6">
         <template v-if="savedFileName">
-          <v-card outlined class="pa-4">
+          <v-card variant="outlined" class="pa-4">
             <div class="d-flex align-center">
-              <v-icon left color="primary">mdi-file-document-outline</v-icon>
+              <v-icon icon="mdi-file-document-outline" color="primary" class="me-2" />
               <span class="text-body-1">{{ savedFileName }}</span>
               <v-spacer></v-spacer>
               <v-btn
-                text
+                variant="text"
                 color="primary"
                 @click="showFileInput = true"
               >
@@ -34,15 +34,16 @@
                   v-model="csvFile"
                   accept=".csv"
                   :label="$t('Select New CSV File')"
-                  outlined
+                  variant="outlined"
+                  density="comfortable"
                   class="mt-4 flex-grow-1"
-                  @change="handleFileUpload"
+                  @update:model-value="handleFileUpload"
                   :error-messages="errorMessage"
                   persistent-hint
                   :clearable="false"
                 ></v-file-input>
                 <v-btn
-                  text
+                  variant="text"
                   color="grey"
                   class="mt-4 ml-2"
                   @click="showFileInput = false"
@@ -58,8 +59,9 @@
           v-model="csvFile"
           accept=".csv"
           :label="$t('Select CSV File')"
-          outlined
-          @change="handleFileUpload"
+          variant="outlined"
+          density="comfortable"
+          @update:model-value="handleFileUpload"
           :error-messages="errorMessage"
           persistent-hint
           :clearable="false"
@@ -70,9 +72,9 @@
     <!-- Preview Section -->
     <v-row v-if="getColumnHeaders.length">
       <v-col cols="12">
-        <v-card outlined class="pa-4">
+        <v-card variant="outlined" class="pa-4">
           <div class="d-flex align-center mb-4">
-            <h3 class="text-h6 mb-0 mr-4">
+            <h3 class="text-title-large mb-0 mr-4">
               {{$t('CSV Columns of your file:')}}
             </h3>
           </div>
@@ -80,7 +82,7 @@
             v-for="column in getColumnHeaders"
             :key="column"
             class="mr-2 mb-2"
-            outlined
+            variant="outlined"
           >
             {{ column }}
           </v-chip>
@@ -91,12 +93,12 @@
     <!-- Add confirmation dialog when resetting csv file and user already was beyond step 1 -->
     <v-dialog v-model="showConfirmDialog" max-width="500">
       <v-card>
-        <v-card-title class="text-h6 font-weight-light white--text">{{$t('Confirm New File Upload')}}</v-card-title>
+        <v-card-title class="text-title-large font-weight-light text-white">{{$t('Confirm New File Upload')}}</v-card-title>
         <v-card-text class="mt-4">
           {{$t('Loading a new file will clear all your existing progress. Are you sure you want to continue?')}}
         </v-card-text>
         <v-card-actions>
-          <v-btn outlined @click="cancelNewFile">{{$t('Cancel')}}</v-btn>
+          <v-btn variant="outlined" @click="cancelNewFile">{{$t('Cancel')}}</v-btn>
           <v-spacer></v-spacer>
           <v-btn color="error" @click="confirmNewFile">{{$t('Confirm Progress Deletion')}}</v-btn>
         </v-card-actions>
@@ -107,13 +109,12 @@
     <v-row justify="end" class="mt-4">
       <v-col cols="auto">
         <v-btn
-          large
           color="primary"
           @click="$router.push('/bulk-upload/meta-data-config')"
           :disabled="!isValid"
+          append-icon="mdi-arrow-right"
         >
           {{$t('Next')}}
-          <v-icon right>mdi-arrow-right</v-icon>
         </v-btn>
       </v-col>
     </v-row>
@@ -127,11 +128,15 @@ import { csvParser } from '../../mixins/csvParser'
 
 export default {
   name: 'CsvConfig',
+  setup () {
+    definePageMeta({
+      middleware: 'bulk-upload'
+    })
+  },
   components: {
     BulkUploadSteps
   },
   mixins: [csvParser],
-  middleware: 'bulk-upload',
 
   data() {
     return {
@@ -193,29 +198,15 @@ export default {
     cancelNewFile() {
       this.showConfirmDialog = false
       this.pendingFile = null
-
       this.fileInputKey++
-
-      if (this.$refs.fileInput) {
-        // temporarily remove the change listener, since with the listener, setting file to null (see below)
-        // would completely remove the initial file and its data too
-        const originalChangeListener = this.$refs.fileInput.$listeners.change
-        this.$refs.fileInput.$off('change')
-        
-        // reset the file input using the native input element, this way a user can re-select the same file and get prompted again
-        const nativeInput = this.$refs.fileInput.$el.querySelector('input[type="file"]')
+      this.$nextTick(() => {
+        const comp = this.$refs.fileInput
+        const root = comp && (comp.$el || comp)
+        const nativeInput = root && root.querySelector && root.querySelector('input[type="file"]')
         if (nativeInput) {
           nativeInput.value = ''
         }
-
-        // set file selection to null
-        this.$refs.fileInput.internalValue = null
-        
-        // restore the change listener
-        this.$nextTick(() => {
-          this.$refs.fileInput.$on('change', originalChangeListener)
-        })
-      }
+      })
     },
 
     async confirmNewFile() {

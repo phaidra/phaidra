@@ -5,15 +5,19 @@
   </div>
 </template>
 <script>
-import { config } from "../mixins/config";
+import { config, useDocumentTitle } from "../mixins/config";
 
 export default {
   mixins: [config],
-  metaInfo() {
-    let metaInfo = {
-      title: this.documentTitle(this.$t('Help')),
-    };
-    return metaInfo;
-  },
+  setup() {
+    const nuxtApp = useNuxtApp()
+    const documentTitle = useDocumentTitle()
+    useHead(() => {
+      const t = nuxtApp.$i18n?.t || ((v) => v)
+      return {
+        title: documentTitle(t('Help'))
+      }
+    })
+  }
 }
 </script>

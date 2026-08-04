@@ -2,15 +2,13 @@
 
   <v-row v-if="!hidden">
     <v-col cols="12">
-      <v-card outlined class="mb-8">
-        <v-card-title class="title font-weight-light white--text">
+      <v-card variant="outlined" class="mb-8">
+        <v-card-title class="text-title-large font-weight-light text-white">
             <span>{{ $t(label) }}</span>
             <v-spacer></v-spacer>
-            <v-menu bottom offset-y v-if="actions.length">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn v-on="on" v-bind="attrs" icon dark>
-                  <v-icon dark>mdi-dots-vertical</v-icon>
-                </v-btn>
+            <v-menu open-on-hover bottom offset-y v-if="actions.length">
+              <template v-slot:activator="{ props: activatorProps }">
+                <v-icon-btn v-bind="activatorProps" variant="text" color="white" icon="mdi-dots-vertical" />
               </template>
               <v-list>
                 <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
@@ -26,24 +24,22 @@
               <v-row >
                 <v-col cols="5">
                   <v-text-field
-                    :value="title"
+                    :model-value="title"
                     :label="$t('Title')"
-                    v-on:blur="$emit('input-title',$event.target.value)"
-                    :filled="inputStyle==='filled'"
-                    :outlined="inputStyle==='outlined'"
+                    @update:model-value="$emit('input-title', $event)"
+                    :variant="fieldVariant"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="5">
                   <v-text-field
-                    :value="subtitle"
+                    :model-value="subtitle"
                     :label="$t('Subtitle')"
-                    v-on:blur="$emit('input-subtitle',$event.target.value)"
-                    :filled="inputStyle==='filled'"
-                    :outlined="inputStyle==='outlined'"
+                    @update:model-value="$emit('input-subtitle', $event)"
+                    :variant="fieldVariant"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="2">
-                  <v-btn text @click="$refs.langdialog.open()">
+                  <v-btn variant="text" @click="$refs.langdialog.open()">
                     <span>
                       ({{ titleLanguage ? titleLanguage : '--'}})
                     </span>
@@ -56,58 +52,57 @@
                   <v-autocomplete
                     :no-data-text="$t('No data available')"
                     :disabled="disablerole"
-                    v-on:input="$emit('input-role', $event)"
+                    @update:model-value="$emit('input-role', $event)"
                     :label="$t('Role')"
                     :items="vocabularies['authoronlyrolepredicate'].terms"
-                    :value="getTerm('authoronlyrolepredicate', role)"
-                    :filter="autocompleteFilter"
-                    :filled="inputStyle==='filled'"
-                    :outlined="inputStyle==='outlined'"
+                    :model-value="getTerm('authoronlyrolepredicate', role)"
+                    :item-title="adaptationRoleItemTitle"
+                    :custom-filter="vocabAutocompleteFilter"
+                    :variant="fieldVariant"
                     return-object
                     clearable
-                    :item-value="'@id'"
+                    item-value="@id"
                   >
-                    <template slot="item" slot-scope="{ item }">
-                      <v-list-item-content two-line>
-                        <v-list-item-title  v-html="`${getLocalizedTermLabel('rolepredicate', item['@id'])}`"></v-list-item-title>
-                        <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-                      </v-list-item-content>
+                    <template #item="{ props, internalItem }">
+                      <v-list-item v-bind="props" :lines="showIds ? 'two' : 'one'">
+                        <template #title>
+                          <span v-html="`${getLocalizedTermLabel('rolepredicate', internalItem.raw['@id'])}`" />
+                        </template>
+                        <template v-if="showIds" #subtitle>
+                          <span v-html="internalItem.raw['@id']" />
+                        </template>
+                      </v-list-item>
                     </template>
-                    <template slot="selection" slot-scope="{ item }">
-                      <v-list-item-content>
-                        <v-list-item-title v-html="`${getLocalizedTermLabel('rolepredicate', item['@id'])}`"></v-list-item-title>
-                      </v-list-item-content>
+                    <template #selection="{ internalItem }">
+                      <span v-html="`${getLocalizedTermLabel('rolepredicate', (internalItem.raw || internalItem)['@id'])}`" />
                     </template>
                   </v-autocomplete>
                 </v-col>
                 <template v-if="showname">
                   <v-col cols="4" >
                     <v-text-field
-                      :value="name"
+                      :model-value="name"
                       :label="$t('Name')"
-                      v-on:blur="$emit('input-name',$event.target.value)"
-                      :filled="inputStyle==='filled'"
-                      :outlined="inputStyle==='outlined'"
+                      @update:model-value="$emit('input-name', $event)"
+                      :variant="fieldVariant"
                     ></v-text-field>
                   </v-col>
                 </template>
                 <template v-else>
                   <v-col cols="4">
                     <v-text-field
-                      :value="firstname"
+                      :model-value="firstname"
                       :label="$t('Firstname')"
-                      v-on:blur="$emit('input-firstname',$event.target.value)"
-                      :filled="inputStyle==='filled'"
-                      :outlined="inputStyle==='outlined'"
+                      @update:model-value="$emit('input-firstname', $event)"
+                      :variant="fieldVariant"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="4">
                     <v-text-field
-                      :value="lastname"
+                      :model-value="lastname"
                       :label="$t('Lastname')"
-                      v-on:blur="$emit('input-lastname',$event.target.value)"
-                      :filled="inputStyle==='filled'"
-                      :outlined="inputStyle==='outlined'"
+                      @update:model-value="$emit('input-lastname', $event)"
+                      :variant="fieldVariant"
                     ></v-text-field>
                   </v-col>
                 </template>
@@ -170,6 +165,14 @@ export default {
     showIds: {
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    adaptationRoleItemTitle (item) {
+      const raw = item?.raw !== undefined ? item.raw : item
+      if (!raw || !raw['@id']) return ''
+      const s = this.getLocalizedTermLabel('rolepredicate', raw['@id'])
+      return typeof s === 'string' ? s.replace(/<[^>]+>/g, '') : String(s || '')
     }
   }
 }

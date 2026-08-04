@@ -20,18 +20,17 @@
                 @change="search"
                 :label="$t('Full-text Search')"
                 hide-details
-                dense
+                density="compact"
                 class="mt-0"
               >
               </v-checkbox>
               <div v-if="allBooks">
-                <v-tooltip bottom class="ml-2" color="warning">
-                  <template v-slot:activator="{ on, attrs }">
+                <v-tooltip location="bottom" class="ml-2" color="warning">
+                  <template v-slot:activator="{ props }">
                     <v-icon
                       color="warning"
-                      dark
-                      v-bind="attrs"
-                      v-on="on"
+                      theme="dark"
+                      v-bind="props"
                     >
                       mdi-alert
                     </v-icon>
@@ -41,7 +40,6 @@
               </div>
              </div>
           </v-col>
-          <v-spacer></v-spacer>
           <v-col  md="6" cols="12">
             <p-search-toolbar
               :setSort="setSort"
@@ -56,16 +54,14 @@
         </v-row>
         <v-row class="hidden-md-and-up">
           <v-bottom-sheet v-model="filterdialog" scrollable>
-            <template v-slot:activator="{ on }">
-              <v-btn class="ml-4 mb-6" color="primary" v-on="on">{{ $t('Filters') }}</v-btn>
+            <template v-slot:activator="{ props }">
+              <v-btn class="ml-4 mb-6" color="primary" v-bind="props">{{ $t('Filters') }}</v-btn>
             </template>
             <v-card height="400px">
               <v-card-title>
-                <h2 class="title font-weight-light white--text">{{ $t('Filters') }}</h2>
+                <h2 class="text-title-large font-weight-light text-white">{{ $t('Filters') }}</h2>
                 <v-spacer></v-spacer>
-                <v-btn icon dark @click="filterdialog = !filterdialog" :aria-label="$t('Close')">
-                  <v-icon>mdi-close</v-icon>
-                </v-btn>
+                <v-icon-btn variant="text" color="white" icon="mdi-close" @click="filterdialog = !filterdialog" :aria-label="$t('Close')" />
               </v-card-title>
               <v-card-text>
                 <p-search-filters
@@ -84,8 +80,21 @@
             </v-card>
           </v-bottom-sheet>
         </v-row>
-        <v-row no-gutters v-if="inCollection">
-          <v-btn class="mb-8" color="primary">{{ $t('Members of') }}<nuxt-link class="ml-1 white--text" :to="localePath(`/detail/${inCollection}`)">{{ inCollection }}</nuxt-link><v-icon right @click.native="removeCollectionFilter()">mdi-close</v-icon></v-btn>
+        <v-row v-if="inCollection" no-gutters class="mb-4">
+          <v-col cols="12">
+            <v-btn color="primary">
+              {{ $t('Members of') }}<component class="ml-1 text-white" :is="PhaidraLink" :to="detailRouteTo(inCollection)">{{ inCollection }}</component>
+              <template #append>
+                <v-icon-btn
+                  icon="mdi-close"
+                  size="small"
+                  variant="text"
+                  :aria-label="$t('Remove collection filter')"
+                  @click.stop="removeCollectionFilter"
+                />
+              </template>
+            </v-btn>
+          </v-col>
         </v-row>
         <v-row no-gutters>
           <v-pagination
@@ -129,13 +138,13 @@
       </v-col>
       <v-dialog v-model="limitdialog" width="500">
         <v-card>
-          <v-card-title class="title font-weight-light white--text">{{ $t('Selection limit') }}</v-card-title>
+          <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Selection limit') }}</v-card-title>
           <v-card-text class="mt-4">
             {{ $t('SELECTION_LIMIT', { limit: appconfig.search.selectionlimit }) }}
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn outlined @click="limitdialog = false">{{ $t("Close") }}</v-btn>
+            <v-btn variant="outlined" @click="limitdialog = false">{{ $t("Close") }}</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -158,24 +167,24 @@ import '@/compiled-icons/material-toggle-check-box-outline-blank'
 import { buildDateFacet, updateFacetQueries, persAuthors, corpAuthors, deactivateFacetQueries, buildAccessibilityFacet } from './facets'
 import { buildParams, buildSearchDef, sortdef } from './utils'
 import { setSearchParams } from './location'
-import { saveAs } from 'file-saver'
 import { vocabulary } from '../../mixins/vocabulary'
+import phaidraNavigation from '../../mixins/phaidraNavigation'
 
 export default {
   name: 'p-search',
+  mixins: [phaidraNavigation, vocabulary],
   components: {
     PSearchAutocomplete,
     PSearchResults,
     PSearchFilters,
     PSearchToolbar
   },
-  mixins: [vocabulary],
   computed: {
     page: {
-      get () {
+      get() {
         return this.currentPage
       },
-      set (value) {
+      set(value) {
         const pageChanged = this.currentPage !== value
         this.currentPage = value
         this.search()
@@ -188,10 +197,10 @@ export default {
       return Math.ceil(this.total / this.pagesize)
     },
     instance: function () {
-      return this.$root.$store.state.instanceconfig
+      return this.$store?.state?.instanceconfig ?? {}
     },
     appconfig: function () {
-      return this.$root.$store.state.appconfig
+      return this.$store?.state?.appconfig ?? {}
     }
   },
   props: {
@@ -225,6 +234,7 @@ export default {
       return associationQueries
     },
     csvExport: async function () {
+      const { saveAs } = await import("file-saver");
       let { searchdefarr, ands } = buildSearchDef(this)
       let params = buildParams(this, ands)
       if (this.inCollection) {
@@ -247,7 +257,7 @@ export default {
         params.rows = response.data.response.numFound
         params.indent = 'on'
         params.wt = 'csv'
-        params.fl = ['pid', 'dc_title', 'dc_creator', 'dc_contributor', 'dc_description', 'dc_language', 'dc_subject', 'dc_subject_eng', 'dc_subject_deu', 'dc_subject_ita', 'dc_rights', 'bib_published', 'dc_identifier', 'owner', 'dc_format','edm_hastype','resourcetype','created', 'modified', 'size','is_in_container:ismemberof','is_in_collection:ispartof']
+        params.fl = ['pid', 'dc_title', 'dc_creator', 'dc_contributor', 'dc_description', 'dc_language', 'dc_subject', 'dc_subject_eng', 'dc_subject_deu', 'dc_subject_ita', 'dc_rights', 'bib_published', 'dc_identifier', 'owner', 'dc_format', 'edm_hastype', 'resourcetype', 'created', 'modified', 'size', 'is_in_container:ismemberof', 'is_in_collection:ispartof']
         params['fl.alias'] = ''
         const csvquery = qs.stringify(params, { encodeValuesOnly: true, indices: false })
         this.$axios.request('/search/select?' + csvquery, {
@@ -275,9 +285,8 @@ export default {
       // whatever properties they might need.
 
       // exclude 'collection' from above manipulation, since it's only passed as a prop
-      let { collection } = options || {}
-      if (collection) {
-        this.inCollection = collection
+      if (options && Object.prototype.hasOwnProperty.call(options, 'collection')) {
+        this.inCollection = options.collection || ''
         delete options.collection
       } else if (this.$route.query.collection) {
         this.inCollection = this.$route.query.collection
@@ -285,7 +294,7 @@ export default {
 
       Object.assign(this, options)
 
-      if (this.instance.searchbaseands) {
+      if (this.instance?.searchbaseands) {
         this['baseAnds'] = this.instance.searchbaseands
       }
 
@@ -294,7 +303,7 @@ export default {
       if (this.inCollection) {
         const pid = this.inCollection.replace(/[o:]/g, '')
         const activeSortLength = this.sortdef.filter(x => x.active).length
-        if(!activeSortLength){
+        if (!activeSortLength) {
           params.sort = `pos_in_o_${pid} asc, created asc, pid asc`
         }
       }
@@ -346,7 +355,7 @@ export default {
         let params = buildParams(this, ands)
         params.page = 0
         params.rows = this.total
-        params.fl = [ 'pid', 'dc_title' ]
+        params.fl = ['pid', 'dc_title']
         try {
           this.$store.commit('setLoading', true)
           let response = await this.$axios.request({
@@ -384,8 +393,7 @@ export default {
       }
     },
     removeCollectionFilter: function () {
-      this.inCollection = ''
-      this.search()
+      this.search({ collection: '' })
     },
     resetSearchParams: function () {
       this.q = ''
@@ -452,7 +460,7 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       link: '',
       limitdialog: false,
@@ -558,14 +566,15 @@ export default {
     // This call is delayed because at this point
     // `setInstanceSolr` has not yet been executed and
     // the solr url is missing.
-    setTimeout(() => { this.search() }, 100)   
+    setTimeout(() => { this.search() }, 100)
   }
 }
 </script>
 
 <style scoped>
 .divider {
-  border-color: #bdbdbd;
+  opacity: 1 !important;
+  border-color: #bdbdbd !important;
 }
 
 svg {
@@ -575,15 +584,16 @@ svg {
 .theme--light.v-pagination .v-pagination__item--active {
   box-shadow: none;
   -webkit-box-shadow: none;
-  }
+}
 
 .skip-link {
   position: absolute;
   left: -9999px;
   top: 10px;
 }
+
 .full-text-checkbox-wrapper {
   justify-content: flex-end;
-  margin-top: -30px;
+  margin-top: -25px;
 }
 </style>

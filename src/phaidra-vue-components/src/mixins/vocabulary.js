@@ -17,8 +17,35 @@ export const vocabulary = {
     },
     getTerm: function (vocabulary, value) {
       if (vocabulary && value) {
-        return this.$store.getters['vocabulary/getTerm'](vocabulary, value)
+        const id = typeof value === 'string' ? value : value['@id']
+        if (!id) return
+        return this.$store.getters['vocabulary/getTerm'](vocabulary, id)
       }
+    },
+    /** Plain title string for v-select/v-autocomplete item-title (Vuetify 3) */
+    skosTermItemTitle (item, voc) {
+      const raw = item?.raw !== undefined ? item.raw : item
+      if (!raw || !raw['@id'] || !voc) return ''
+      const s = this.getLocalizedTermLabel(voc, raw['@id'])
+      return typeof s === 'string' ? s.replace(/<[^>]+>/g, '') : String(s || '')
+    },
+    /** SKOS label plus notation (Thema, OEFOS, BIC-style lists) */
+    skosTermItemTitleWithNotation (item, voc) {
+      const base = this.skosTermItemTitle(item, voc)
+      const raw = item?.raw !== undefined ? item.raw : item
+      if (!raw || !raw['@id']) return base
+      const not = raw['skos:notation'] && raw['skos:notation'][0]
+      return not ? `${base} - ${not}` : base
+    },
+    /** orgunits list rows (flat or grouped with divider/header) */
+    orgunitItemTitle (item) {
+      const raw = item?.raw !== undefined ? item.raw : item
+      if (!raw) return ''
+      if (raw.header != null && !raw['@id']) return String(raw.header)
+      if (raw.divider) return ''
+      if (!raw['@id']) return ''
+      const s = this.getLocalizedTermLabel('orgunits', raw['@id'])
+      return typeof s === 'string' ? s.replace(/<[^>]+>/g, '') : String(s || '')
     },
     getTermProperty: function (vocabulary, id, property) {
       if (vocabulary && id && property) {
@@ -40,6 +67,27 @@ export const vocabulary = {
       const lab = item['skos:prefLabel'][this.$i18n.locale] ? item['skos:prefLabel'][this.$i18n.locale].toLowerCase() : item['skos:prefLabel']['eng'].toLowerCase()
       const query = queryText.toLowerCase()
       return lab.indexOf(query) > -1
+    },
+    /** Vuetify 3 v-autocomplete customFilter: return match index or -1 */
+    vocabAutocompleteFilter (_value, query, item) {
+      const raw = item?.raw ?? item
+      if (!raw || !raw['@id']) return -1
+      return this.autocompleteFilter(raw, String(query ?? '')) ? 0 : -1
+    },
+    vocabAutocompleteFilterWithNotation (_value, query, item) {
+      const raw = item?.raw ?? item
+      if (!raw || !raw['@id']) return -1
+      return this.autocompleteFilterWithNotation(raw, String(query ?? '')) ? 0 : -1
+    },
+    /** For grouped orgunits lists: { divider }, { header } rows + SKOS terms */
+    orgunitsAutocompleteFilter (_value, query, item) {
+      const raw = item?.raw ?? item
+      if (!raw) return -1
+      if (raw.divider || (raw.header != null && !raw['@id'])) {
+        return String(query ?? '').length ? -1 : 0
+      }
+      if (!raw['@id']) return -1
+      return this.autocompleteFilterInfix(raw, String(query ?? '')) ? 0 : -1
     },
     getLocalizedValue: function (values) {
       for (let v of values) {
@@ -181,6 +229,39 @@ export const vocabulary = {
           }
         }
       }
+    },
+    /** Vuetify 3 v-treeview `item-title` (function) for SKOS JSON-LD nodes with prefLabel + @id */
+    skosVTreeItemTitle (item) {
+      const i = item?.raw !== undefined ? item.raw : item
+      if (!i) return ''
+      const pl = i['skos:prefLabel']
+      if (pl) {
+        const loc = this.$i18n.locale
+        const t = pl[loc] || pl.eng || pl.deu || Object.values(pl).find(Boolean)
+        if (t) return String(t)
+      }
+      return i['@id'] != null ? String(i['@id']) : ''
+    },
+    /** Shared lazy-tree helpers for large vocab trees (Vuetify `load-children`). */
+    prepareLazyTreeNode (node, childrenKey = 'children', lazyKey = '__lazyChildren') {
+      if (!node || typeof node !== 'object') return
+      const originalChildren = Array.isArray(node[childrenKey]) ? node[childrenKey] : []
+      node[lazyKey] = originalChildren
+      node[childrenKey] = originalChildren.length > 0 ? [] : undefined
+    },
+    prepareLazyTree (roots, childrenKey = 'children', lazyKey = '__lazyChildren') {
+      if (!Array.isArray(roots)) return
+      for (const node of roots) {
+        this.prepareLazyTreeNode(node, childrenKey, lazyKey)
+      }
+    },
+    loadLazyTreeChildren (node, childrenKey = 'children', lazyKey = '__lazyChildren') {
+      if (!node || typeof node !== 'object') return
+      const lazyChildren = node[lazyKey]
+      if (!Array.isArray(lazyChildren) || lazyChildren.length === 0) return
+      this.prepareLazyTree(lazyChildren, childrenKey, lazyKey)
+      node[childrenKey] = lazyChildren
+      node[lazyKey] = []
     }
   }
 }

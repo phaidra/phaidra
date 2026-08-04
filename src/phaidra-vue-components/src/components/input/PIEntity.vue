@@ -1,31 +1,36 @@
 <template>
-  <v-row v-if="!hidden">
+  <v-row v-if="!hidden" ref="rowRef">
     <v-col cols="4" v-if="!hideRole">
         <v-autocomplete
+          :menu-props="formRowSelectMenu.menuProps"
           :no-data-text="$t('No data available')"
           :disabled="disablerole"
-          v-on:input="$emit('input-role', $event)"
+          @update:model-value="$emit('input-role', $event)"
           :label="$t(roleLabel ? roleLabel : 'Role')"
           :items="rolesArray"
-          :item-value="'@id'"
-          :value="getTerm(roleVocabulary, role)"
-          :filter="autocompleteFilter"
-          :filled="inputStyle==='filled'"
-          :outlined="inputStyle==='outlined'"
+          item-value="@id"
+          :item-title="roleItemTitle"
+          :model-value="getTerm(roleVocabulary, role)"
+          :variant="fieldVariant"
           return-object
           clearable
           :error-messages="roleErrorMessages"
         >
-        <template slot="item" slot-scope="{ item }">
-          <v-list-item-content two-line>
-            <v-list-item-title  v-html="`${getLocalizedTermLabel(roleVocabulary, item['@id'])}`"></v-list-item-title>
-            <v-list-item-subtitle class="role-definition" v-if="showDefinitions" v-html="`${getLocalizedDefinition(roleVocabulary, item['@id'])}`"></v-list-item-subtitle>
-          </v-list-item-content>
+        <template #item="{ props, internalItem }">
+          <v-list-item
+            v-bind="props"
+            :lines="showDefinitions ? 'two' : 'one'"
+          >
+            <template #title>
+              <span v-html="getLocalizedTermLabel(roleVocabulary, internalItem.raw['@id'])"></span>
+            </template>
+            <template v-if="showDefinitions" #subtitle>
+              <span class="role-definition" v-html="getLocalizedDefinition(roleVocabulary, internalItem.raw['@id'])"></span>
+            </template>
+          </v-list-item>
         </template>
-        <template slot="selection" slot-scope="{ item }">
-          <v-list-item-content>
-            <v-list-item-title v-html="`${getLocalizedTermLabel(roleVocabulary, item['@id'])}`"></v-list-item-title>
-          </v-list-item-content>
+        <template #selection="{ internalItem }">
+          <span v-html="getLocalizedTermLabel(roleVocabulary, (internalItem.raw || internalItem)['@id'])"></span>
         </template>
       </v-autocomplete>
     </v-col>
@@ -33,11 +38,10 @@
       <template v-if="showname">
         <v-col cols="6" >
           <v-text-field
-            :value="name"
+            :model-value="name"
+            @update:model-value="$emit('input-name', $event)"
             :label="$t(nameLabel ? nameLabel : 'Name')"
-            v-on:blur="$emit('input-name',$event.target.value)"
-            :filled="inputStyle==='filled'"
-            :outlined="inputStyle==='outlined'"
+            :variant="fieldVariant"
             :error-messages="nameErrorMessages"
           ></v-text-field>
         </v-col>
@@ -45,45 +49,41 @@
       <template v-else>
         <v-col :cols="showIdentifier ? '2' : '3'">
           <v-text-field
-            :value="firstname"
+            :model-value="firstname"
+            @update:model-value="$emit('input-firstname', $event)"
             :label="$t(firstnameLabel ? firstnameLabel : 'Firstname')"
-            v-on:blur="$emit('input-firstname',$event.target.value)"
-            :filled="inputStyle==='filled'"
-            :outlined="inputStyle==='outlined'"
+            :variant="fieldVariant"
             :error-messages="firstnameErrorMessages"
           ></v-text-field>
         </v-col>
         <v-col :cols="showIdentifier ? '2' : '3'">
           <v-text-field
-            :value="lastname"
+            :model-value="lastname"
+            @update:model-value="$emit('input-lastname', $event)"
             :label="$t(lastnameLabel ? lastnameLabel : 'Lastname')"
-            v-on:blur="$emit('input-lastname',$event.target.value)"
-            :filled="inputStyle==='filled'"
-            :outlined="inputStyle==='outlined'"
+            :variant="fieldVariant"
             :error-messages="lastnameErrorMessages"
           ></v-text-field>
         </v-col>
         <v-col v-if="showIdentifier" :cols="showIdentifier ? '2' : '3'">
           <v-text-field
               v-show="identifierType === 'ids:orcid'"
-              v-mask="'####-####-####-###X'"
-              :value="identifierText"
+              v-maska data-maska="####-####-####-####"
+              :model-value="identifierText"
+              @update:model-value="$emit('input-identifier', $event)"
               :label="identifierLabel ? identifierLabel : $t('ORCID')"
-              v-on:blur="$emit('input-identifier', $event.target.value)"
               :placeholder="identifierTypePlaceholder"
               :rules="identifierType ? [validationrules['orcid']] : [validationrules['noop']]"
-              :filled="inputStyle==='filled'"
-              :outlined="inputStyle==='outlined'"
+              :variant="fieldVariant"
             ></v-text-field>
             <v-text-field
               v-show="identifierType !== 'ids:orcid'"
-              :value="identifierText"
+              :model-value="identifierText"
+              @update:model-value="$emit('input-identifier', $event)"
               :label="identifierLabel ? identifierLabel : $t('Identifier')"
-              v-on:blur="$emit('input-identifier', $event.target.value)"
               :placeholder="identifierTypePlaceholder"
               :rules="identifierType ? [validationrules[getIdentifierRuleName(identifierType)]] : [validationrules['noop']]"
-              :filled="inputStyle==='filled'"
-              :outlined="inputStyle==='outlined'"
+              :variant="fieldVariant"
             ></v-text-field>
         </v-col>
       </template>
@@ -97,40 +97,42 @@
         )"
       v-if="type === 'schema:Organization'">
       <v-text-field
-        :value="organizationText"
+        :model-value="organizationText"
+        @update:model-value="$emit('input-organization', $event)"
         :label="$t( organizationLabel ? organizationLabel : 'Organization' )"
-        v-on:blur="$emit('input-organization',$event.target.value)"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
         :error-messages="organizationErrorMessages"
       ></v-text-field>
     </v-col>
     <v-col cols="12" md="2" v-if="(type === 'schema:Organization' && multilingual) || actions.length">
       <v-row>
         <v-col v-if="type === 'schema:Organization' && multilingual" cols="6">
-          <v-btn text @click="$refs.langdialog.open()">
+          <v-btn variant="text" @click="$refs.langdialog.open()">
             <span>
               ({{ language ? language : '--' }})
             </span>
           </v-btn>
         </v-col>
         <v-col cols="6" v-if="actions.length">
-          <v-btn icon @click="showMenu">
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+          <v-menu location="bottom end" close-on-content-click>
+            <template #activator="{ props: menuActivatorProps }">
+              <v-icon-btn v-bind="menuActivatorProps" icon="mdi-dots-vertical" />
+            </template>
+            <v-list density="compact">
+              <v-list-item
+                v-for="(action, i) in actions"
+                :key="i"
+                @click="$emit(action.event, $event)"
+              >
+                <v-list-item-title>{{ action.title }}</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="$emit('extend', $event)">
+                <v-list-item-title>{{ $t('Extend') }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </v-col>
       </v-row>
-
-      <v-menu :position-x="menux" :position-y="menuy" absolute offset-y v-model="showMenuModel" v-if="actions.length">
-        <v-list>
-          <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
-            <v-list-item-title>{{ action.title }}</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="$emit('extend', $event)">
-            <v-list-item-title>{{ $t('Extend') }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
 
       <select-language v-if="type === 'schema:Organization' && multilingual" ref="langdialog" :showReset="allowLanguageCancel && language ? true : false" @language-selected="$emit('input-language', $event)"></select-language>
     </v-col>
@@ -138,11 +140,12 @@
 </template>
 
 <script>
-import { mask } from 'vue-the-mask'
+import { vMaska } from 'maska/vue'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { validationrules } from '../../mixins/validationrules'
 import SelectLanguage from '../select/SelectLanguage'
+import { createSelectMenuMaxWidthController } from '../../composables/selectMenuMaxWidth'
 
 export default {
   name: 'p-i-entity',
@@ -151,8 +154,23 @@ export default {
     SelectLanguage
   },
   directives: {
-    mask
+    maska: vMaska
   },
+  emits: [
+    'input',
+    'input-role',
+    'input-firstname',
+    'input-lastname',
+    'input-name',
+    'input-identifier',
+    'input-organization',
+    'add',
+    'remove',
+    'configure',
+    'up',
+    'down',
+    'extend'
+  ],
   props: {
     firstname: {
       type: String
@@ -252,6 +270,9 @@ export default {
       default: false
     }
   },
+  created () {
+    this.formRowSelectMenu = createSelectMenuMaxWidthController()
+  },
   computed: {
     rolesArray () {
       let arr = this.vocabularies[this.roleVocabulary].terms
@@ -270,15 +291,25 @@ export default {
       return ''
     }
   },
+  methods: {
+    roleItemTitle (item) {
+      if (!item || !item['@id']) return ''
+      return this.getLocalizedTermLabel(this.roleVocabulary, item['@id'])
+    }
+  },
   mounted: function () {
-    this.$nextTick(function () {
+    this.$nextTick(() => {
+      this.formRowSelectMenu.observe(() => this.$refs.rowRef?.$el ?? this.$refs.rowRef)
       this.loading = !this.vocabularies[this.roleVocabulary].loaded
-      this.$store.dispatch('vocabulary/sortRoles', this.$i18n.locale)
+      this.$store.dispatch('vocabulary/sortRoles', this?.$i18n?.locale || 'eng')
       // emit input to set skos:prefLabel in parent
       if (this.role) {
         this.$emit('input', this.getTerm(this.roleVocabulary, this.role))
       }
     })
+  },
+  beforeUnmount () {
+    this.formRowSelectMenu.disconnect()
   }
 }
 </script>

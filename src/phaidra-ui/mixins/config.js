@@ -1,28 +1,49 @@
+export function buildDocumentTitle (pageTitle, instanceconfig = {}, t = (v) => v) {
+  const title = instanceconfig.title ? t(instanceconfig.title) : ''
+  const institution = instanceconfig.institution
+    ? t(instanceconfig.institution)
+    : ''
+  const suffix = (!institution || institution === title)
+    ? title
+    : `${title} - ${institution}`
+
+  if (pageTitle) {
+    return suffix ? `${pageTitle} - ${suffix}` : pageTitle
+  }
+  return suffix
+}
+
+/** Composition-API helper for useHead() — mixin methods are not available via `this` in setup(). */
+export function useDocumentTitle () {
+  const nuxtApp = useNuxtApp()
+
+  return (pageTitle) => {
+    const instanceconfig = nuxtApp.$store?.state?.instanceconfig || {}
+    const t = nuxtApp.$i18n?.global?.t
+      || nuxtApp.$i18n?.t
+      || ((v) => v)
+    return buildDocumentTitle(pageTitle, instanceconfig, t)
+  }
+}
+
 export const config = {
   computed: {
     appconfig () {
-      return this.$store.state.config.global
+      return this.$store?.state?.config?.global || {}
     },
     instanceconfig () {
-      return this.$store.state.instanceconfig
+      return this.$store?.state?.instanceconfig || {}
+    },
+    apiBaseUrl () {
+      return this.instanceconfig?.api || this.$config?.apiBaseURL || this.$config?.public?.apiBaseURL || ''
     },
     documentTitleSuffix () {
-      const title = this.$t(this.instanceconfig.title)
-      const institution = this.instanceconfig.institution
-        ? this.$t(this.instanceconfig.institution)
-        : ''
-      if (!institution || institution === title) {
-        return title
-      }
-      return title + ' - ' + institution
+      return buildDocumentTitle(null, this.instanceconfig, (key) => this.$t(key))
     }
   },
   methods: {
     documentTitle (pageTitle) {
-      if (pageTitle) {
-        return pageTitle + ' - ' + this.documentTitleSuffix
-      }
-      return this.documentTitleSuffix
+      return buildDocumentTitle(pageTitle, this.instanceconfig, (key) => this.$t(key))
     }
   }
 }

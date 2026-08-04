@@ -7,31 +7,25 @@
         </v-col>
         <v-col :cols="4">
           <v-text-field
-            :value="firstname"
+            :model-value="firstname"
             :label="$t(firstnameLabel ? firstnameLabel : 'Firstname')"
-            v-on:blur="$emit('input-firstname',$event.target.value)"
-            :filled="inputStyle==='filled'"
-            :outlined="inputStyle==='outlined'"
+            @update:model-value="$emit('input-firstname', $event)"
+            :variant="fieldVariant"
             :error-messages="firstnameErrorMessages"
           ></v-text-field>
         </v-col>
         <v-col :cols="4">
           <v-text-field
-            :value="lastname"
+            :model-value="lastname"
             :label="$t(lastnameLabel ? lastnameLabel : 'Lastname')"
-            v-on:blur="$emit('input-lastname',$event.target.value)"
-            :filled="inputStyle==='filled'"
-            :outlined="inputStyle==='outlined'"
+            @update:model-value="$emit('input-lastname', $event)"
+            :variant="fieldVariant"
             :error-messages="lastnameErrorMessages"
           ></v-text-field>
         </v-col>
         <v-col v-if="multiplicable" :cols="2">
-          <v-btn icon @click="$emit('add', $event)">
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-          <v-btn icon @click="$emit('remove', $event)">
-            <v-icon>mdi-minus</v-icon>
-          </v-btn>  
+          <v-icon-btn @click="$emit('add', $event)" icon="mdi-plus" />
+          <v-icon-btn @click="$emit('remove', $event)" icon="mdi-minus" />  
         </v-col>
       </v-row>
     </v-col>
@@ -39,7 +33,6 @@
 </template>
 
 <script>
-import { mask } from 'vue-the-mask'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { validationrules } from '../../mixins/validationrules'
@@ -47,9 +40,6 @@ import { validationrules } from '../../mixins/validationrules'
 export default {
   name: 'p-i-entity-fixedrole-person',
   mixins: [vocabulary, fieldproperties, validationrules],
-  directives: {
-    mask
-  },
   props: {
     firstname: {
       type: String

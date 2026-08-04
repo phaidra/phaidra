@@ -3042,11 +3042,11 @@ export const state = () => ({
 })
 
 const mutations = {
-  sortFieldsOverview (state, {locale, i18nInstance}) {
-    if (!i18nInstance) return
-    i18nInstance.locale = locale
+  sortFieldsOverview (state, payload) {
+    if (!payload?.i18nInstance) return
+    payload.i18nInstance.locale = payload.locale
     for (let section of state.metadataFieldsOverview) {
-      section.fields.sort((a, b) => i18nInstance.t(a.title).localeCompare(i18nInstance.t(b.title), locale))
+      section.fields.sort((a, b) => payload.i18nInstance.t(a.title).localeCompare(payload.i18nInstance.t(b.title), payload.locale))
     }
   },
   initFieldsOverview (state) {

@@ -36,14 +36,10 @@ export const fieldproperties = {
       default: false
     }
   },
-  data () {
-    return {
-      showMenuModel: false,
-      menux: 0,
-      menuy: 0
-    }
-  },
   computed: {
+    fieldVariant () {
+      return this.inputStyle === 'filled' ? 'filled' : (this.inputStyle === 'outlined' ? 'outlined' : 'underlined')
+    },
     actions: function () {
       var arr = []
       if (this.configurable) {
@@ -71,17 +67,6 @@ export const fieldproperties = {
         }
       }
       return arr
-    }
-  },
-  methods: {
-    showMenu (e) {
-      e.preventDefault()
-      this.showMenuModel = false
-      this.menux = e.clientX
-      this.menuy = e.clientY
-      this.$nextTick(() => {
-        this.showMenuModel = true
-      })
     }
   }
 }

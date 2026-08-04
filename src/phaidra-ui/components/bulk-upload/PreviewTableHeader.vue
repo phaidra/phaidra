@@ -2,14 +2,13 @@
   <th class="text-left">
     <div class="d-flex align-center">
       {{ displayText }}
-      <v-tooltip bottom dark>
-        <template v-slot:activator="{ on, attrs }">
-          <v-icon 
-            x-small 
+      <v-tooltip location="bottom">
+        <template v-slot:activator="{ props: tipProps }">
+          <v-icon
+            size="x-small"
             class="ml-1"
-            :class="{ 'grey--text': !isMapped }"
-            v-bind="attrs"
-            v-on="on"
+            :class="{ 'text-medium-emphasis': !isMapped }"
+            v-bind="tipProps"
           >
             mdi-information
           </v-icon>

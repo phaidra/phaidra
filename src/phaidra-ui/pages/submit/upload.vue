@@ -16,7 +16,7 @@
           :help="false"
           :debug="false"
           :feedback="instanceconfig.feedback"
-          :feedback-user="this.user"
+          :feedback-user="user"
           :feedback-context="'Upload'"
           :doiImport="instanceconfig.doiImport"
           :disableChecksum="instanceconfig.disableChecksum"
@@ -36,18 +36,27 @@
 import arrays from "phaidra-vue-components/src/utils/arrays"
 import fields from "phaidra-vue-components/src/utils/fields"
 import { context } from "../../mixins/context"
-import { config } from "../../mixins/config"
+import { config, useDocumentTitle } from "../../mixins/config"
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
+import { useGoTo } from 'vuetify'
 
 export default {
   layout: "main",
-  middleware: "auth",
   mixins: [context, config, vocabulary],
-  metaInfo() {
-    let metaInfo = {
-      title: this.documentTitle(this.$t('Upload')),
-    };
-    return metaInfo;
+  setup() {
+    definePageMeta({
+      middleware: 'auth'
+    })
+    const nuxtApp = useNuxtApp()
+    const documentTitle = useDocumentTitle()
+    useHead(() => {
+      const t = nuxtApp.$i18n?.t || ((v) => v)
+      return {
+        title: documentTitle(t('Upload'))
+      }
+    })
+    const goTo = useGoTo()
+    return { goTo }
   },
   data() {
     return {
@@ -255,7 +264,7 @@ export default {
     },
     objectCreated: function (event) {
       this.$router.push(this.localeLocation({ path: `/detail/${event}` }));
-      this.$vuetify.goTo(0);
+      this.goTo(0);
     },
     createForm: async function (self, index) {
       self.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
@@ -508,6 +517,11 @@ export default {
       }
       
     },
+  },
+  created: async function () {
+    if (!this.form || !Array.isArray(this.form.sections) || this.form.sections.length === 0) {
+      await this.createForm(this)
+    }
   },
   beforeRouteEnter: async function (to, from, next) {
     next(async function (vm) {

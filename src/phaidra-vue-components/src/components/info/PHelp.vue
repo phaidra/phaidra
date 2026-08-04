@@ -1,6 +1,6 @@
 <template>
-  <v-card>
-    <v-card-title class="title font-weight-light white--text">{{ $t('Help') }}</v-card-title>
+  <v-card class="my-8">
+    <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Help') }}</v-card-title>
     <v-card-text class="mt-4">
       <div v-if="$i18n.locale === 'deu'">
         <p><nuxt-link :to="'/metadata-fields-help'" target="_blank">Beschreibung aller vorhandenen Metadatenfelder</nuxt-link></p>
@@ -13,8 +13,11 @@
 </template>
 
 <script>
+import phaidraNavigation from '../../mixins/phaidraNavigation'
+
 export default {
   name: 'p-help',
+  mixins: [phaidraNavigation],
   props: {
     url: {
       type: String
@@ -22,7 +25,7 @@ export default {
   },
   computed: {
     instanceconfig: function () {
-      return this.$root.$store.state.instanceconfig
+      return this.$store.state.instanceconfig
     }
   },
   data() {

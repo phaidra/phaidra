@@ -1,7 +1,7 @@
 <template>
   <v-card class="mt-2 mx-auto" :elevation="0">
-    <div v-if="centertitle" class="font-weight-light text-h6" :class="titleClass" style="word-break: break-word;">{{ $t(label) }}</div>
-    <div v-else class="font-weight-light text-h6" :class="titleClass" style="word-break: break-word;">{{ $t(label) }}</div>
+    <div v-if="centertitle" class="font-weight-light text-title-large" :class="titleClass" style="word-break: break-word;">{{ $t(label) }}</div>
+    <div v-else class="font-weight-light text-title-large" :class="titleClass" style="word-break: break-word;">{{ $t(label) }}</div>
     <v-card-text :class="textcenter ? 'text-center justify-center' : ''">
       <div>
         <nuxt-link :to="{ path: '/search?q='+fq }">{{ $t(linklabel)  }} ({{ total }})</nuxt-link>
@@ -48,7 +48,7 @@ export default {
     titleClass: function () {
       let c = ''
       if (this.titlecolor) {
-        c += this.titlecolor + '--text'
+        c += 'text-' + this.titlecolor
       }
       if (this.textcenter) {
         c += ' text-center justify-center'

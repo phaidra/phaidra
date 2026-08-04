@@ -7,28 +7,22 @@
       :placeholder="placeholder"
       :name="name"
       v-model="type"
-      @input="handleInput"
+      @update:model-value="handleInput"
       @blur="handleBlur"
       @keydown="handleKeyDown"
       @focus="handleFocus"
       autocomplete="off"
       clearable
-      :filled="!solo"
+      :variant="solo ? 'solo' : 'filled'"
       single-line
-      :solo="solo"
-      append-icon="mdi-magnify"
-      @click:append="onSelect({ term: type })"
+      append-inner-icon="mdi-magnify"
+      @click:append-inner="onSelect({ term: type })"
       :messages="messages"
     >
-    <template #append>
-      <v-btn 
-        icon
-        :aria-label="$t('Search')"
+    <template #append-inner>
+      <v-icon-btn :aria-label="$t('Search')"
         tabindex="-1"
-        @click="onSelect({ term: type })"
-      >
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
+        @click="onSelect({ term: type })" icon="mdi-magnify" />
     </template>
     </v-text-field>
     <div :class="`${getClassName('list')} autocomplete autocomplete-list elevation-2`" v-show="showList && suggestions && suggestions.length">
@@ -204,7 +198,7 @@ export default {
     // },
 
     activeClass (i) {
-      const focusClass = i === this.focusList ? 'grey lighten-4' : ''
+      const focusClass = i === this.focusList ? 'grey-lighten-4' : ''
       return `${focusClass}`
     },
 
@@ -285,11 +279,11 @@ export default {
   margin-top: 2px;
 }
 
-.v-text-field >>> .v-input__append-inner .v-icon:focus::before {
+.v-text-field :deep(.v-input__append-inner .v-icon:focus::before) {
   opacity: 0.5 !important;
 }
 
-.v-text-field >>> .v-input__append-inner .v-icon:focus::after {
+.v-text-field :deep(.v-input__append-inner .v-icon:focus::after) {
   opacity: 0.5 !important;
   outline-style: auto;
 }

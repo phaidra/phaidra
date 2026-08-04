@@ -47,10 +47,10 @@
         <v-btn
           large
           :disabled="isUploading || isUploadComplete"
-          text
+          variant="text"
           :to="steps[3].route"
+          prepend-icon="mdi-arrow-left"
         >
-          <v-icon left>mdi-arrow-left</v-icon>
           {{$t('Back')}}
         </v-btn>
       </v-col>
@@ -61,6 +61,7 @@
           :loading="isUploading"
           :disabled="!isLoggedIn || isUploading || isUploadComplete"
           @click="startUpload"
+          append-icon="mdi-cloud-upload"
         >
           <template v-if="hasFailedUploads">
             {{$t('Retry Failed Uploads')}}
@@ -68,7 +69,6 @@
           <template v-else>
             {{$t('Start Upload')}}
           </template>
-          <v-icon right>mdi-cloud-upload</v-icon>
         </v-btn>
       </v-col>
     </v-row>
@@ -79,7 +79,7 @@
       max-width="500"
     >
       <v-card>
-        <v-card-title class="text-h6 font-weight-light white--text">{{$t('Upload Error')}}</v-card-title>
+        <v-card-title class="text-title-large font-weight-light text-white">{{$t('Upload Error')}}</v-card-title>
         <v-card-text class="mt-4">
           <p class="mb-2"><strong>Row:</strong> {{ errorDialog.row }}</p>
           <p class="mb-0"><strong>Error:</strong> {{ errorDialog.error }}</p>
@@ -88,7 +88,7 @@
           <v-spacer></v-spacer>
           <v-btn
             color="primary"
-            text
+            variant="text"
             @click="errorDialog.show = false"
           >
             {{$t('Close')}}
@@ -116,6 +116,11 @@ import { fieldSettings } from '../../config/bulk-upload/field-settings'
 
 export default {
   name: 'Upload',
+  setup () {
+    definePageMeta({
+      middleware: 'bulk-upload'
+    })
+  },
   components: {
     BulkUploadSteps,
     LoginOverlay,
@@ -125,7 +130,6 @@ export default {
     FileSelection
   },
   mixins: [context, config, csvParser],
-  middleware: 'bulk-upload',
 
   data() {
     return {

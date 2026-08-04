@@ -1,30 +1,38 @@
-const COOKIE_OPTS = {
-  path: '/',
-  maxAge: 60 * 60 * 24 * 365 // 1 year
-}
+import { LOCALE_KEY, PREFERENCE_MAX_AGE, syncLocalStorage } from '~/utils/preference-storage'
 
-export default ({ app, $cookies }) => {
-  const defaultLocale = app.$config.defaultLocale || 'eng'
-  const availableLocales = (app.i18n.locales || []).map(l =>
-    typeof l === 'string' ? l : l.code
-  )
+const FALLBACK_LOCALES = ['eng', 'deu', 'ita']
+
+export default defineNuxtPlugin((nuxtApp) => {
+  const config = useRuntimeConfig()
+  const defaultLocale = config.public?.defaultLocale || 'eng'
+  const i18n = nuxtApp.$i18n
+  const availableLocales = i18n?.global?.availableLocales?.length
+    ? i18n.global.availableLocales
+    : FALLBACK_LOCALES
+
+  const localeCookie = useCookie(LOCALE_KEY, {
+    default: () => defaultLocale,
+    maxAge: PREFERENCE_MAX_AGE,
+    sameSite: 'lax',
+    path: '/'
+  })
 
   const resolveLocale = (candidate) => {
     if (candidate && availableLocales.includes(candidate)) {
       return candidate
     }
-    return defaultLocale
+    return availableLocales.includes(defaultLocale) ? defaultLocale : 'eng'
   }
 
-  if (process.server) {
-    app.i18n.locale = resolveLocale($cookies?.get('locale'))
-    return
+  const locale = resolveLocale(localeCookie.value)
+
+  if (localeCookie.value !== locale) {
+    localeCookie.value = locale
   }
 
-  const locale = resolveLocale(
-    localStorage.getItem('locale') || $cookies?.get('locale')
-  )
-  app.i18n.locale = locale
-  localStorage.setItem('locale', locale)
-  $cookies.set('locale', locale, COOKIE_OPTS)
-}
+  if (i18n?.global && i18n.global.locale !== locale) {
+    i18n.global.locale = locale
+  }
+
+  syncLocalStorage(LOCALE_KEY, locale)
+})

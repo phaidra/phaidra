@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="dialog" width="700px">
     <v-card>
-      <v-card-title class="title font-weight-light white--text">{{ $t('Select a collection') }}</v-card-title>
+      <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Select a collection') }}</v-card-title>
       <v-card-text class="mt-4">
         <v-text-field
           v-model="collectionsSearch"
-          append-icon="mdi-magnify"
+          append-inner-icon="mdi-magnify"
           :label="$t('Search...')"
           single-line
           hide-details
@@ -22,21 +22,23 @@
           :loading="loading"
           :loading-text="$t('Loading...')"
           :no-data-text="$t('No data available')"
-          :footer-props="{
-                itemsPerPageOptions: [5, 10, 25, 50, 100],
-                pageText: $t('Page'),
-                itemsPerPageText: $t('Rows per page')
-              }"
+          :items-per-page-options="[
+            { value: 5, title: '5' },
+            { value: 10, title: '10' },
+            { value: 25, title: '25' },
+            { value: 50, title: '50' },
+            { value: 100, title: '100' },
+          ]"
           :no-results-text="$t('There were no search results')"
         >
           <template v-slot:item.title="{ item }">
-            <span>{{ getObjectTitle(item) | truncate(50) }}</span>
+            <span>{{ $truncate(getObjectTitle(item), 50) }}</span>
           </template>
           <template v-slot:item.created="{ item }">
-            {{ item.created | date }}
+            {{ $date(item.created) }}
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-btn text color="primary" @click="selectCollection(item)">{{ $t('Select') }}</v-btn>
+            <v-btn variant="text" color="primary" @click="selectCollection(item)">{{ $t('Select') }}</v-btn>
           </template>
         </v-data-table>
       </v-card-text>
@@ -44,7 +46,7 @@
       <v-card-actions>
         <v-container fluid>
           <v-row justify="end" class="px-4">
-            <v-btn outlined @click="dialog = false">{{ $t('Cancel') }}</v-btn>
+            <v-btn variant="outlined" @click="dialog = false">{{ $t('Cancel') }}</v-btn>
           </v-row>
         </v-container>
       </v-card-actions>
@@ -74,10 +76,10 @@ export default {
         itemsPerPage: 5
       },
       collectionsHeaders: [
-        { text: 'Pid', align: 'left', value: 'pid' },
-        { text: 'Title', align: 'left', value: 'title' },
-        { text: 'Created', align: 'right', value: 'created' },
-        { text: 'Actions', align: 'right', value: 'actions', sortable: false }
+        { title: 'Pid', align: 'start', key: 'pid' },
+        { title: 'Title', align: 'start', key: 'title' },
+        { title: 'Created', align: 'end', key: 'created' },
+        { title: 'Actions', align: 'end', key: 'actions', sortable: false }
       ],
       collections: [],
       totalCollections: 0

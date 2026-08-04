@@ -3,7 +3,7 @@
     <p-img :src="instance.api + '/object/' + item.pid + '/thumbnail'" class="elevation-1 mt-2 preview-maxwidth" :alt="item.dc_title ? item.dc_title[0] : item.pid">
       <template v-slot:placeholder>
         <div class="fill-height ma-0" align="center" justify="center" >
-          <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+          <v-progress-circular indeterminate color="grey-lighten-4"></v-progress-circular>
         </div>
       </template>
     </p-img>
@@ -12,11 +12,10 @@
 </template>
 
 <script>
-import { ElementMixin } from 'vue-slicksort'
-import objectMixin from 'phaidra-vue-components/src/mixins/object'
+import objectMixin from '../../mixins/object'
 export default {
   name: 'p-sortable-solr-doc',
-  mixins: [ElementMixin, objectMixin],
+  mixins: [objectMixin],
   props: {
     item: Object
   },
@@ -38,7 +37,7 @@ export default {
   align-items: center;
   width: 100%;
   padding: 20px;
-  background-color: var(--v-cardtitlebg-base);
+  background-color: rgb(var(--v-theme-cardtitlebg));
   border-bottom: 1px solid #efefef;
   box-sizing: border-box;
   -webkit-user-select: none;
@@ -47,6 +46,11 @@ export default {
   user-select: none;
   color: #fff;
   font-weight: 400;
+  cursor: grab;
+}
+
+.list-item:active {
+  cursor: grabbing;
 }
 .list-item-title {
   padding-left: 20px;

@@ -32,24 +32,33 @@
 import arrays from "phaidra-vue-components/src/utils/arrays"
 import fields from "phaidra-vue-components/src/utils/fields"
 import { context } from "../../mixins/context"
-import { config } from "../../mixins/config"
+import { config, useDocumentTitle } from "../../mixins/config"
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
+import { useGoTo } from 'vuetify'
 
 export default {
   layout: "main",
-  middleware: "auth",
   mixins: [context, config, vocabulary],
+  setup() {
+    definePageMeta({
+      middleware: 'auth'
+    })
+    const nuxtApp = useNuxtApp()
+    const documentTitle = useDocumentTitle()
+    useHead(() => {
+      const t = nuxtApp.$i18n?.t || ((v) => v)
+      return {
+        title: documentTitle(t('Upload'))
+      }
+    })
+    const goTo = useGoTo()
+    return { goTo }
+  },
   data() {
     return {
       form: { sections: [] },
       rights: {},
     };
-  },
-  metaInfo() {
-    let metaInfo = {
-      title: this.documentTitle(this.$t('Upload')),
-    };
-    return metaInfo;
   },
   methods: {
     addRemovedFieldsCol: function (rt) {
@@ -205,7 +214,7 @@ export default {
     },
     objectCreated: function (event) {
       this.$router.push(this.localeLocation({ path: `/detail/${event}` }));
-      this.$vuetify.goTo(0);
+      this.goTo(0);
     },
     createForm: async function (self, index) {
       self.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);

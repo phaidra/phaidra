@@ -2,190 +2,136 @@
   <v-container fluid>
     <v-row v-if="filtersActive">
       <v-col cols="12">
-        <v-btn class="my-1" color="primary" @click.native="resetFilters()">{{ $t('Remove filters') }}</v-btn>
+        <v-btn class="my-1" color="primary" @click="resetFilters()">{{ $t('Remove filters') }}</v-btn>
       </v-col>
     </v-row>
     <v-row>
       <v-col cols="12">
         <ul class="main-ul searchFilters">
           <li v-for="(f, i) in facetQueries" :key="i">
-            <v-checkbox
-              v-model="f.show"
-              @change="showFacet(f)"
-              :label="$t(f.label ? f.label.toString() : '')"
-              class="facet-label primary--text"
-              hide-details
-              dense
-              :aria-expanded="f.show"
-              :aria-controls="'facet-content-' + i"
-              :id="'facet-control-' + i"
-            ></v-checkbox>
-            <ul v-if="f.show && f.id !== 'a11y'" :id="'facet-content-' + i" role="region" :aria-labelledby="'facet-control-' + i">
+            <v-checkbox v-model="f.show" @change="showFacet(f)" :label="$t(f.label ? f.label.toString() : '')"
+              class="facet-label" color="primary" hide-details density="compact" :aria-expanded="f.show"
+              :aria-controls="'facet-content-' + i" :id="'facet-control-' + i"></v-checkbox>
+            <ul v-if="f.show && f.id !== 'a11y'" :id="'facet-content-' + i" role="region"
+              :aria-labelledby="'facet-control-' + i">
               <template v-if="f.exclusive">
-                  <v-radio-group
-                    hide-details
-                    v-model="f.selectedRadioValue"
-                    class="facet-radio-group mt-0"
-                  >
-                    <v-radio
-                      @change="handleRadioChange(q, f)"
-                      v-for="(q, j) in f.queries" :key="i+j"
-                      :value="q.id"
-                      :label="$t(q.label ? q.label.toString() : '')"
-                      class="facet-label primary--text"
-                      
-                      :aria-expanded="q.active && q.childFacet"
-                      :aria-controls="q.childFacet ? 'facet-subcontent-' + i + '-' + j : null"
-                      :id="'facet-subcontrol-' + i + '-' + j"
-                    >
-                      <template v-slot:label>
-                        <span class="facet-label primary--text">{{ $t(q.label ? q.label.toString() : '') }}</span>
-                        <span class="facet-count secondary--text font-weight-medium" v-if="q.count > 0">({{q.count}})</span>
-                      </template>
-                    </v-radio>
-                  </v-radio-group>
-                </template>
+                <v-radio-group hide-details v-model="f.selectedRadioValue" class="facet-radio-group mt-0">
+                  <v-radio @change="handleRadioChange(q, f)" v-for="(q, j) in f.queries" :key="i+j" :value="q.id"
+                    :label="$t(q.label ? q.label.toString() : '')" class="facet-label" color="primary"
+                    :aria-expanded="q.active && q.childFacet"
+                    :aria-controls="q.childFacet ? 'facet-subcontent-' + i + '-' + j : null"
+                    :id="'facet-subcontrol-' + i + '-' + j">
+                    <template v-slot:label>
+                      <span class="facet-label text-primary">{{ $t(q.label ? q.label.toString() : '') }}</span>
+                      <span class="facet-count text-secondary font-weight-medium"
+                        v-if="q.count > 0">({{q.count}})</span>
+                    </template>
+                  </v-radio>
+                </v-radio-group>
+              </template>
               <li v-for="(q, j) in f.queries" :key="i+j" v-else>
-                <v-checkbox
-                  v-model="q.active"
-                  @change="toggleFacet(q,f)"
-                  :label="$t(q.label ? q.label.toString() : '')"
-                  class="facet-label primary--text"
-                  hide-details
-                  dense
+                <v-checkbox v-model="q.active" @change="toggleFacet(q,f)" :label="$t(q.label ? q.label.toString() : '')"
+                  class="facet-label" color="primary" hide-details density="compact"
                   :aria-expanded="q.active && q.childFacet"
                   :aria-controls="q.childFacet ? 'facet-subcontent-' + i + '-' + j : null"
-                  :id="'facet-subcontrol-' + i + '-' + j"
-                >
+                  :id="'facet-subcontrol-' + i + '-' + j">
                   <template v-slot:label>
-                    <span class="facet-label primary--text">{{ $t(q.label ? q.label.toString() : '') }}</span>
-                    <span class="facet-count secondary--text font-weight-medium" v-if="q.count > 0">({{q.count}})</span>
+                    <span class="facet-label text-primary">{{ $t(q.label ? q.label.toString() : '') }}</span>
+                    <span class="facet-count text-secondary font-weight-medium" v-if="q.count > 0">({{q.count}})</span>
                   </template>
                 </v-checkbox>
-                <ul v-if="q.active && q.childFacet" :id="'facet-subcontent-' + i + '-' + j" role="region" :aria-labelledby="'facet-subcontrol-' + i + '-' + j">
+                <ul v-if="q.active && q.childFacet" :id="'facet-subcontent-' + i + '-' + j" role="region"
+                  :aria-labelledby="'facet-subcontrol-' + i + '-' + j">
                   <li v-for="(q1, k) in q.childFacet.queries" :key="i+j+k">
-                      <v-checkbox
-                        v-model="q1.active"
-                        @change="toggleFacet(q1,q.childFacet)"
-                        :label="$t(q1.label ? q1.label.toString() : '')"
-                        class="facet-label primary--text"
-                        hide-details
-                        dense
-                        :aria-expanded="q1.active && q1.childFacet"
-                        :aria-controls="q1.childFacet ? 'facet-subsubcontent-' + i + '-' + j + '-' + k : null"
-                        :id="'facet-subsubcontrol-' + i + '-' + j + '-' + k"
-                      >
-                        <template v-slot:label>
-                          <span class="facet-label primary--text">{{ $t(q1.label ? q1.label.toString() : '') }}</span>
-                          <span class="facet-count secondary--text font-weight-medium" v-if="q1.count > 0">({{q1.count}})</span>
-                        </template>
-                      </v-checkbox>
-                    <ul v-if="q1.active && q1.childFacet" :id="'facet-subsubcontent-' + i + '-' + j + '-' + k" role="region" :aria-labelledby="'facet-subsubcontrol-' + i + '-' + j + '-' + k">
+                    <v-checkbox v-model="q1.active" @change="toggleFacet(q1,q.childFacet)"
+                      :label="$t(q1.label ? q1.label.toString() : '')" class="facet-label" color="primary" hide-details
+                      density="compact" :aria-expanded="q1.active && q1.childFacet"
+                      :aria-controls="q1.childFacet ? 'facet-subsubcontent-' + i + '-' + j + '-' + k : null"
+                      :id="'facet-subsubcontrol-' + i + '-' + j + '-' + k">
+                      <template v-slot:label>
+                        <span class="facet-label text-primary">{{ $t(q1.label ? q1.label.toString() : '') }}</span>
+                        <span class="facet-count text-secondary font-weight-medium"
+                          v-if="q1.count > 0">({{q1.count}})</span>
+                      </template>
+                    </v-checkbox>
+                    <ul v-if="q1.active && q1.childFacet" :id="'facet-subsubcontent-' + i + '-' + j + '-' + k"
+                      role="region" :aria-labelledby="'facet-subsubcontrol-' + i + '-' + j + '-' + k">
                       <li v-for="(q2, l) in q1.childFacet.queries" :key="i+j+k+l">
-                          <v-checkbox
-                            v-model="q2.active"
-                            @change="toggleFacet(q2,q1.childFacet)"
-                            :label="$t(q2.label ? q2.label.toString() : '')"
-                            class="facet-label primary--text"
-                            hide-details
-                            dense
-                            :id="'facet-item-' + i + '-' + j + '-' + k + '-' + l"
-                          >
-                            <template v-slot:label>
-                              <span class="facet-label primary--text">{{ $t(q2.label ? q2.label.toString() : '') }}</span>
-                              <span class="facet-count secondary--text font-weight-medium" v-if="q2.count>0">({{q2.count}})</span>
-                            </template>
-                          </v-checkbox>
+                        <v-checkbox v-model="q2.active" @change="toggleFacet(q2,q1.childFacet)"
+                          :label="$t(q2.label ? q2.label.toString() : '')" class="facet-label" color="primary"
+                          hide-details density="compact" :id="'facet-item-' + i + '-' + j + '-' + k + '-' + l">
+                          <template v-slot:label>
+                            <span class="facet-label text-primary">{{ $t(q2.label ? q2.label.toString() : '') }}</span>
+                            <span class="facet-count text-secondary font-weight-medium"
+                              v-if="q2.count>0">({{q2.count}})</span>
+                          </template>
+                        </v-checkbox>
                       </li>
                     </ul>
                   </li>
                 </ul>
               </li>
             </ul>
-            <ul v-if="f.show && f.id === 'a11y'" :id="'facet-content-' + i" role="region" :aria-labelledby="'facet-control-' + i">
+            <ul v-if="f.show && f.id === 'a11y'" :id="'facet-content-' + i" role="region"
+              :aria-labelledby="'facet-control-' + i">
               <v-row no-gutters id="accessibility-content" role="region" aria-labelledby="accessibility-control">
-                <v-autocomplete
-                  :no-data-text="$t('No data available')"
-                  :value="getTerm('accessibilityControl', selectedAccessibilityControl)"
-                  :item-value="'@id'"
-                  class="mt-4"
-                  :placeholder="$t('Add accessibility control') + '...'"
-                  :hint="$t('Accessibility control')"
-                  :items="loadedAccessibilityTerms('accessibilityControl')"
-                  v-model="selectedAccessibilityControl"
-                  multiple
-                  clearable
-                  @input="setAccessibilityControl()"
-                  :menu-props="{maxHeight:'400'}"
-                  persistent-hint
-                  filled
-                  single-line
-                >
+                <v-autocomplete :no-data-text="$t('No data available')"
+                  :model-value="getTerm('accessibilityControl', selectedAccessibilityControl)" :item-value="'@id'"
+                  class="mt-4" :placeholder="$t('Add accessibility control') + '...'"
+                  :hint="$t('Accessibility control')" :items="loadedAccessibilityTerms('accessibilityControl')"
+                  v-model="selectedAccessibilityControl" multiple clearable
+                  @update:model-value="setAccessibilityControl()" :menu-props="{maxHeight:'400'}" persistent-hint
+                  variant="filled" single-line>
                   <template slot="item" slot-scope="{ attr, item }">
-                    <v-list-item-content two-line>
-                      <v-list-item-title  v-html="`${getLocalizedTermLabel('accessibilityControl', item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
+                    <div class="v-list-item-content two-line">
+                      <v-list-item-title
+                        v-html="`${getLocalizedTermLabel('accessibilityControl', item['@id'])}`"></v-list-item-title>
+                    </div>
                   </template>
                   <template slot="selection" slot-scope="{ item }">
-                    <v-list-item-content>
-                      <v-list-item-title v-html="`${getLocalizedTermLabel('accessibilityControl', item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
+                    <div class="v-list-item-content">
+                      <v-list-item-title
+                        v-html="`${getLocalizedTermLabel('accessibilityControl', item['@id'])}`"></v-list-item-title>
+                    </div>
                   </template>
                 </v-autocomplete>
-                <v-autocomplete
-                  :no-data-text="$t('No data available')"
-                  :value="getTerm('accessibilityFeature', selectedAccessibilityFeature)"
-                  :item-value="'@id'"
-                  class="mt-4"
-                  :placeholder="$t('Add accessibility feature') + '...'"
-                  :hint="$t('Accessibility feature')"
-                  :items="loadedAccessibilityTerms('accessibilityFeature')"
-                  v-model="selectedAccessibilityFeature"
-                  multiple
-                  clearable
-                  @input="setAccessibilityFeature()"
-                  :menu-props="{maxHeight:'400'}"
-                  persistent-hint
-                  filled
-                  single-line
-                >
+                <v-autocomplete :no-data-text="$t('No data available')"
+                  :model-value="getTerm('accessibilityFeature', selectedAccessibilityFeature)" :item-value="'@id'"
+                  class="mt-4" :placeholder="$t('Add accessibility feature') + '...'"
+                  :hint="$t('Accessibility feature')" :items="loadedAccessibilityTerms('accessibilityFeature')"
+                  v-model="selectedAccessibilityFeature" multiple clearable
+                  @update:model-value="setAccessibilityFeature()" :menu-props="{maxHeight:'400'}" persistent-hint
+                  variant="filled" single-line>
                   <template slot="item" slot-scope="{ attr, item }">
-                    <v-list-item-content two-line>
-                      <v-list-item-title  v-html="`${getLocalizedTermLabel('accessibilityFeature', item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
+                    <div class="v-list-item-content two-line">
+                      <v-list-item-title
+                        v-html="`${getLocalizedTermLabel('accessibilityFeature', item['@id'])}`"></v-list-item-title>
+                    </div>
                   </template>
                   <template slot="selection" slot-scope="{ item }">
-                    <v-list-item-content>
-                      <v-list-item-title v-html="`${getLocalizedTermLabel('accessibilityFeature', item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
+                    <div class="v-list-item-content">
+                      <v-list-item-title
+                        v-html="`${getLocalizedTermLabel('accessibilityFeature', item['@id'])}`"></v-list-item-title>
+                    </div>
                   </template>
                 </v-autocomplete>
-                <v-autocomplete
-                  :no-data-text="$t('No data available')"
-                  :value="getTerm('accessibilityHazard', selectedAccessibilityHazard)"
-                  :item-value="'@id'"
-                  class="mt-4"
-                  :placeholder="$t('Add accessibility hazard') + '...'"
-                  :hint="$t('Accessibility hazard')"
-                  :items="loadedAccessibilityTerms('accessibilityHazard')"
-                  v-model="selectedAccessibilityHazard"
-                  multiple
-                  clearable
-                  @input="setAccessibilityHazard()"
-                  :menu-props="{maxHeight:'400'}"
-                  persistent-hint
-                  filled
-                  single-line
-                >
+                <v-autocomplete :no-data-text="$t('No data available')"
+                  :model-value="getTerm('accessibilityHazard', selectedAccessibilityHazard)" :item-value="'@id'"
+                  class="mt-4" :placeholder="$t('Add accessibility hazard') + '...'" :hint="$t('Accessibility hazard')"
+                  :items="loadedAccessibilityTerms('accessibilityHazard')" v-model="selectedAccessibilityHazard"
+                  multiple clearable @update:model-value="setAccessibilityHazard()" :menu-props="{maxHeight:'400'}"
+                  persistent-hint variant="filled" single-line>
                   <template slot="item" slot-scope="{ attr, item }">
-                    <v-list-item-content two-line>
-                      <v-list-item-title  v-html="`${getLocalizedTermLabel('accessibilityHazard', item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
+                    <div class="v-list-item-content two-line">
+                      <v-list-item-title
+                        v-html="`${getLocalizedTermLabel('accessibilityHazard', item['@id'])}`"></v-list-item-title>
+                    </div>
                   </template>
                   <template slot="selection" slot-scope="{ item }">
-                    <v-list-item-content>
-                      <v-list-item-title v-html="`${getLocalizedTermLabel('accessibilityHazard', item['@id'])}`"></v-list-item-title>
-                    </v-list-item-content>
+                    <div class="v-list-item-content">
+                      <v-list-item-title
+                        v-html="`${getLocalizedTermLabel('accessibilityHazard', item['@id'])}`"></v-list-item-title>
+                    </div>
                   </template>
                 </v-autocomplete>
               </v-row>
@@ -195,151 +141,50 @@
           <li v-if="$store.state.user.token">
             <v-row no-gutters>
               <v-col>
-                <v-checkbox
-                  v-model="showOwnerFilter"
-                  @change="toggleOwnerFilter()"
-                  :label="$t('Owner')"
-                  class="facet-label primary--text"
-                  hide-details
-                  dense
-                  :aria-expanded="showOwnerFilter"
-                  :aria-controls="'owner-content'"
-                  id="owner-control"
-                ></v-checkbox>
+                <v-checkbox v-model="showOwnerFilter" @change="toggleOwnerFilter()" :label="$t('Owner')"
+                  class="facet-label" color="primary" hide-details density="compact" :aria-expanded="showOwnerFilter"
+                  :aria-controls="'owner-content'" id="owner-control"></v-checkbox>
               </v-col>
             </v-row>
             <v-row no-gutters v-if="showOwnerFilter" id="owner-content" role="region" aria-labelledby="owner-control">
-            <v-btn v-if="owner" class="mb-8 mt-4" color="primary">{{ owner }}<v-icon right @click.native="removeOwnerFilter()">mdi-close</v-icon></v-btn>
+              <v-btn v-if="owner" class="mb-8 mt-4" color="primary">
+                {{ owner }}
+                <template #append>
+                  <v-icon @click.stop="removeOwnerFilter()">mdi-close</v-icon>
+                </template>
+              </v-btn>
             </v-row>
-            
+
             <v-row no-gutters>
-              <v-btn class="mb-4 mt-4 primary" @click="$refs.userSearchdialog.open()" v-if="showOwnerFilter">
+              <v-btn class="mb-4 mt-4 bg-primary" append-icon="mdi-database-search" @click="$refs.userSearchdialog.open()" v-if="showOwnerFilter">
                 {{ $t('Username search') }}
-                <v-icon
-                  right
-                  dark
-                >
-                  mdi-database-search
-                </v-icon>
               </v-btn>
             </v-row>
           </li>
           <li>
             <v-row no-gutters>
               <v-col>
-                <v-checkbox
-                  v-model="showAuthorFilter"
-                  @change="toggleAuthorFilter()"
-                  :label="$t('Authors')"
-                  class="facet-label primary--text"
-                  hide-details
-                  dense
-                  :aria-expanded="showAuthorFilter"
-                  :aria-controls="'author-content'"
-                  id="author-control"
-                ></v-checkbox>
+                <v-checkbox v-model="showAuthorFilter" @change="toggleAuthorFilter()" :label="$t('Authors')"
+                  class="facet-label" color="primary" hide-details density="compact" :aria-expanded="showAuthorFilter"
+                  :aria-controls="'author-content'" id="author-control"></v-checkbox>
               </v-col>
             </v-row>
-            <v-row no-gutters v-if="showAuthorFilter" id="author-content" role="region" aria-labelledby="author-control">
+            <v-row no-gutters v-if="showAuthorFilter" id="author-content" role="region"
+              aria-labelledby="author-control">
               <v-col cols="12">
-                <v-combobox
-                  class="mt-4"
+                <v-combobox class="mt-4"
                   :placeholder="$t('ADD_PREFIX') + ' '  + $t('Author') + ' ' + $t('ADD_SUFFIX') + '...'"
-                  :hint="$t('Personal')"
-                  persistent-hint
-                  chips
-                  clearable
-                  deletable-chips
-                  multiple
-                  filled
-                  single-line
-                  v-model="persAuthors.values"
-                  @input="setPersAuthors()"/>
+                  :hint="$t('Personal')" persistent-hint chips clearable deletable-chips multiple variant="filled"
+                  single-line v-model="persAuthors.values" @update:model-value="setPersAuthors()" />
               </v-col>
             </v-row>
             <v-row no-gutters v-if="showAuthorFilter">
               <v-col cols="12">
-                <v-combobox
-                  class="mt-4"
+                <v-combobox class="mt-4"
                   :placeholder="$t('ADD_PREFIX') + ' '  + $t('Author') + ' ' + $t('ADD_SUFFIX') + '...'"
-                  :hint="$t('Corporate')"
-                  persistent-hint
-                  chips
-                  clearable
-                  deletable-chips
-                  multiple
-                  filled
-                  single-line
-                  v-model="corpAuthors.values"
-                  @input="setCorpAuthors()"/>
+                  :hint="$t('Corporate')" persistent-hint chips clearable deletable-chips multiple variant="filled"
+                  single-line v-model="corpAuthors.values" @update:model-value="setCorpAuthors()" />
               </v-col>
-            </v-row>
-          </li>
-          <li>
-            <v-row no-gutters>
-              <v-col>
-                <v-checkbox
-                  v-model="showRoleFilter"
-                  @change="toggleRoleFilter()"
-                  :label="$t('Roles')"
-                  class="facet-label primary--text"
-                  hide-details
-                  dense
-                  :aria-expanded="showRoleFilter"
-                  :aria-controls="'role-content'"
-                  id="role-control"
-                ></v-checkbox>
-              </v-col>
-            </v-row>
-            <v-row no-gutters v-if="showRoleFilter" id="role-content" role="region" aria-labelledby="role-control">
-              <v-select
-                class="mt-4"
-                :placeholder="$t('Add role') + '...'"
-                :hint="$t('Personal')"
-                :items="marcRolesArray"
-                v-model="selectedRole.pers"
-                @input="addRoleFilter('pers')"
-                :menu-props="{maxHeight:'400'}"
-                persistent-hint
-                filled
-                single-line
-              ></v-select>
-              <v-select
-                class="mt-4"
-                :placeholder="$t('Add role') + '...'"
-                :hint="$t('Corporate')"
-                :items="marcRolesArray"
-                v-model="selectedRole.corp"
-                @input="addRoleFilter('corp')"
-                :menu-props="{maxHeight:'400'}"
-                persistent-hint
-                filled
-                single-line
-              ></v-select>
-              <div v-for="(role, i) in roles" :key="i" v-if="roles.length > 0" >
-                <v-row no-gutters>
-                  <v-col cols="10">
-                    <v-combobox
-                      :hint="role.type === 'pers' ? $t('Personal') : $t('Corporate')"
-                      persistent-hint
-                      class="mt-4"
-                      :placeholder="$t('ADD_PREFIX') + ' '  + $t(role.label) + ' ' + $t('ADD_SUFFIX') + '...'"
-                      chips
-                      clearable
-                      deletable-chips
-                      multiple
-                      filled
-                      single-line
-                      :items="role.values"
-                      v-model="role.values"
-                      @input="setRoleFilterValues(role)"
-                    />
-                  </v-col>
-                  <v-col cols="2">
-                    <icon name="material-navigation-close" class="primary--text" height="100%" @click.native="removeRoleFilter(role)"></icon>
-                  </v-col>
-                </v-row>
-              </div>
             </v-row>
           </li>
         </ul>
@@ -350,12 +195,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import '@/compiled-icons/univie-stop2'
-import '@/compiled-icons/univie-checkbox-unchecked'
-import '@/compiled-icons/material-action-account-balance'
-import '@/compiled-icons/material-social-person'
-import '@/compiled-icons/material-navigation-close'
 import { marcRoles } from './filters'
 import { toggleFacet, showFacet } from './facets'
 import UserSearchDialog from '../select/UserSearchDialog'
@@ -409,7 +248,7 @@ export default {
     instance: function () {
       return this.$store.state.instanceconfig
     },
-    filtersActive () {
+    filtersActive() {
       for (let fq of this.facetQueries) {
         if (fq.resetable) {
           for (let q of fq.queries) {
@@ -420,28 +259,14 @@ export default {
         }
       }
       if (this.selectedAccessibilityControl.length > 0 ||
-          this.selectedAccessibilityFeature.length > 0 ||
-          this.selectedAccessibilityHazard.length > 0) {
+        this.selectedAccessibilityFeature.length > 0 ||
+        this.selectedAccessibilityHazard.length > 0) {
         return true
       }
       return false
-    },
-    marcRolesArray () {
-      this.$store.dispatch('vocabulary/sortRoles', this.$i18n.locale)
-      let arr = []
-      let roles = this.$store.state.vocabulary.vocabularies.rolepredicate['terms']
-      let lang = this.$i18n.locale
-      for (let role of roles) {
-        arr.push({ value: role['@id'].replace('role:', ''), text: role['skos:prefLabel'][lang] })
-      }
-      let otherRole = arr.find(elem => elem.value === 'oth')
-      let filteredRoles = arr.filter(elem => elem.value !== 'oth')
-      arr = filteredRoles
-      arr.unshift(otherRole)
-      return arr
     }
   },
-  data () {
+  data() {
     return {
       showOwnerFilter: false,
       showAuthorFilter: false,
@@ -513,10 +338,10 @@ export default {
         this.selectedAccessibilityControl = []
         this.selectedAccessibilityFeature = []
         this.selectedAccessibilityHazard = []
-        this.search({ 
-          accessibilityControl: [], 
-          accessibilityFeature: [], 
-          accessibilityHazard: [] 
+        this.search({
+          accessibilityControl: [],
+          accessibilityFeature: [],
+          accessibilityHazard: []
         })
       }
     },
@@ -528,8 +353,8 @@ export default {
       this.init = true
     },
     showFacet: function (f) {
-      if(f.id === 'association') {
-        if(f.show){
+      if (f.id === 'association') {
+        if (f.show) {
           f.queries[0].active = true
           f.queries[0].show = true
         } else {
@@ -537,15 +362,15 @@ export default {
           f.queries[0].show = false
         }
         this.toggleFacet(f.queries[0], f)
-      } else if(f.id === 'a11y') {
+      } else if (f.id === 'a11y') {
         if (!f.show) {
           this.selectedAccessibilityControl = []
           this.selectedAccessibilityFeature = []
           this.selectedAccessibilityHazard = []
-          this.search({ 
-            accessibilityControl: [], 
-            accessibilityFeature: [], 
-            accessibilityHazard: [] 
+          this.search({
+            accessibilityControl: [],
+            accessibilityFeature: [],
+            accessibilityHazard: []
           })
         }
         showFacet(f)
@@ -573,37 +398,9 @@ export default {
         this.search({ persAuthors: this.persAuthors, corpAuthors: this.corpAuthors })
       }
     },
-    toggleRoleFilter: function () {
-      if (!this.showRoleFilter) {
-        this.roles = []
-      }
-      this.search({ roles: this.roles })
-    },
-    addRoleFilter: function (type) {
-      if (this.selectedRole[type]) {
-        this.roles.push({
-          field: 'bib_roles_' + type + '_' + this.selectedRole[type],
-          label: this.$t(this.marcRoles[this.selectedRole[type]]),
-          values: [],
-          type: type
-        })
-      }
-    },
-    removeRoleFilter: function (role) {
-      this.roles.splice(this.roles.indexOf(role), 1)
-      this.search({ roles: this.roles })
-    },
     removeOwnerFilter: function (role) {
       this.owner = ''
       this.search({ owner: this.owner })
-    },
-    setRoleFilterValues: function (role) {
-      this.roles[this.roles.indexOf(role)].values = role.values
-      this.search({ roles: this.roles })
-    },
-    removeRoleFilterValue: function (role, value) {
-      this.roles[this.roles.indexOf(role)].values.splice(this.roles[this.roles.indexOf(role)].values.indexOf(value), 1)
-      this.search({ roles: this.roles })
     },
     setPersAuthors: function () {
       this.search({ persAuthors: this.persAuthors })
@@ -624,12 +421,12 @@ export default {
       for (const fq of this.facetQueries) {
         if (fq.resetable) {
           for (const q of fq.queries) {
-            if(q.active) {
-              Vue.set(q, 'active', false)              
+            if (q.active) {
+              q.active = false
             }
           }
           if (fq.exclusive) {
-            Vue.set(fq, 'selectedRadioValue', null)
+            fq.selectedRadioValue = null
           }
         }
       }
@@ -638,9 +435,9 @@ export default {
       this.selectedAccessibilityFeature = []
       this.selectedAccessibilityHazard = []
       this.showAccessibilityFilter = false
-      
-      this.search({ 
-        page: 1, 
+
+      this.search({
+        page: 1,
         facetQueries: this.facetQueries,
         accessibilityControl: [],
         accessibilityFeature: [],
@@ -655,13 +452,10 @@ export default {
       this.toggleFacet(q, f);
     }
   },
-  mounted () {
-    if (this.$router.currentRoute.query.collection) {
+  mounted() {
+    if (this.$route.query?.collection) {
       this.resetFilters()
     }
-    // for (let role in this.marcRoles) {
-    //   this.marcRolesArray.push({ value: role, text: this.$t(this.marcRoles[role]) })
-    // }
     this.persAuthors = this.persAuthorsProp
     this.corpAuthors = this.corpAuthorsProp
     this.selectedAccessibilityControl = this.accessibilityControlProp
@@ -672,16 +466,20 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.container
+.v-container
   padding-top: 1em
   padding-left: 0
 
-ul
+.main-ul.searchFilters,
+.main-ul.searchFilters ul
   list-style: none
   padding-left: 1em
 
 .facet-label
   cursor: pointer
+
+:deep(.searchFilters .v-selection-control--dirty .v-icon)
+  color: unquote('rgb(var(--v-theme-primary))') !important
 
 .facet-count
   margin-left: 5px
@@ -690,6 +488,14 @@ svg
   margin-bottom: 3px
   cursor: pointer
 
-svg.primary--text
+svg.text-primary
   margin-right: 4px
+
+.role-filter-row .role-filter-remove-col
+  align-self: flex-start
+  height: var(--v-input-control-height, 56px)
+  margin-top: 4px
+
+.role-filter-row .role-filter-remove-btn
+  margin: 0
 </style>

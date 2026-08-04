@@ -3,7 +3,7 @@
     <v-col cols="12">
       <v-checkbox class="mt-0 check" v-model="checkbox" @click.capture="$emit('input', note)">
         <template v-slot:label>
-          <i18n :path="labelMessageId" tag="span" class="black--text">
+          <i18n :path="labelMessageId" tag="span" class="text-black">
             <a
               @click.stop
               :href="link"
@@ -23,6 +23,7 @@ import { fieldproperties } from '../../mixins/fieldproperties'
 export default {
   name: 'p-i-note-checkbox-with-link',
   mixins: [vocabulary, fieldproperties],
+  emits: ['input', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   props: {
     labelMessageId: {
       type: String,

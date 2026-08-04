@@ -4,46 +4,46 @@
       <v-row>
         <v-col cols="10">
           <v-autocomplete
-            :value="getTerm('oefos', value)"
+            :model-value="getTerm('oefos', value)"
             :required="required"
-            v-on:input="handleInput($event)"
+            @update:model-value="handleInput($event)"
             :rules="required ? [ v => !!v || $t('Required')] : []"
             :items="vocabularies['oefos'].terms"
-            :item-value="'@id'"
+            item-value="@id"
+            :item-title="(item) => skosTermItemTitleWithNotation(item, 'oefos')"
             :loading="loading"
-            :filter="autocompleteFilter"
+            :custom-filter="vocabAutocompleteFilter"
             hide-no-data
             :label="$t(label)"
-            :filled="inputStyle==='filled'"
-            :outlined="inputStyle==='outlined'"
+            :variant="fieldVariant"
             return-object
             clearable
             :disabled="disabled"
             :messages="path"
             :error-messages="errorMessages"
           >
-            <template slot="item" slot-scope="{ item }">
-              <v-list-item-content two-line>
-                <v-list-item-title  v-html="`${getLocalizedTermLabel('oefos', item['@id']) + ' - ' + item['skos:notation'][0]}`"></v-list-item-title>
-                <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-              </v-list-item-content>
+            <template #item="{ props, internalItem }">
+              <v-list-item v-bind="props" :lines="showIds ? 'two' : 'one'">
+                <template #title>
+                  <span v-html="`${getLocalizedTermLabel('oefos', internalItem.raw['@id']) + ' - ' + internalItem.raw['skos:notation'][0]}`" />
+                </template>
+                <template v-if="showIds" #subtitle>
+                  <span v-html="internalItem.raw['@id']" />
+                </template>
+              </v-list-item>
             </template>
-            <template slot="selection" slot-scope="{ item }">
-              <v-list-item-content>
-                <v-list-item-title v-html="`${getLocalizedTermLabel('oefos', item['@id']) + ' - ' + item['skos:notation'][0]}`"></v-list-item-title>
-              </v-list-item-content>
+            <template #selection="{ internalItem }">
+              <span v-html="`${getLocalizedTermLabel('oefos', (internalItem.raw || internalItem)['@id']) + ' - ' + (internalItem.raw || internalItem)['skos:notation'][0]}`" />
             </template>
-            <template v-slot:append-outer>
+            <template #append>
               <v-icon @click="$refs.oefostreedialog.open()">mdi-file-tree</v-icon>
             </template>
           </v-autocomplete>
         </v-col>
         <v-col cols="1" v-if="actions.length">
-          <v-menu bottom offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn v-on="on" v-bind="attrs" icon>
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
+          <v-menu open-on-hover bottom offset-y>
+            <template v-slot:activator="{ props: activatorProps }">
+              <v-icon-btn v-bind="activatorProps" variant="text" icon="mdi-dots-vertical" />
             </template>
             <v-list>
               <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
@@ -54,8 +54,8 @@
         </v-col>
         <oefos-tree-dialog ref="oefostreedialog" @term-selected="handleInput($event)"></oefos-tree-dialog>
       </v-row>
-      <v-row>
-        <v-divider v-if="dividerbottom" class="mt-2 mb-6"></v-divider>
+      <v-row v-if="dividerbottom">
+        <v-divider class="mt-2 mb-6"></v-divider>
       </v-row>
     </v-col>
   </v-row>
@@ -72,6 +72,7 @@ export default {
   components: {
     OefosTreeDialog
   },
+  emits: ['input', 'resolve', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   methods: {
     handleInput: function (term) {
       if (term) {
@@ -135,7 +136,7 @@ export default {
   mounted: function () {
     this.$nextTick(async function () {
       if (!this.vocabularies['oefos'].loaded) {
-        await this.$store.dispatch('vocabulary/loadOefos', this.$i18n.locale)
+        await this.$store.dispatch('vocabulary/loadOefos', this?.$i18n?.locale || 'eng')
       }
       // emit input to set skos:prefLabel in parent
       if (this.value) {

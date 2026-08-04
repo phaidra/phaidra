@@ -1,0 +1,62 @@
+/*
+ * Global Vuetify 2 -> Vuetify 3 visual compatibility layer.
+ * Keep this focused on legacy utility classes and shared component chrome.
+ */
+
+/* Vuetify 3 sets .v-card-title { display: block }, which breaks v-spacer (flex-grow). */
+.v-card-title {
+  display: flex !important;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: 8px;
+}
+
+/* ---- Legacy color utility classes ---- */
+.black--text {
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+
+.grey--text {
+  color: #9e9e9e !important;
+}
+
+.grey--text.text--darken-1 {
+  color: #757575 !important;
+}
+
+.grey--text.text--darken-2 {
+  color: #616161 !important;
+}
+
+.grey--text.text--darken-3 {
+  color: #424242 !important;
+}
+
+.grey--text.text--darken-4 {
+  color: #212121 !important;
+}
+
+/* ---- Legacy section header look (common in this codebase) ---- */
+.v-card-title.text-title-large.font-weight-light.text-white {
+  min-height: 48px;
+}
+
+
+.v-tab.text-title-large {
+  font-weight: 300 !important;
+  color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity)) !important;
+  min-width: auto;
+}
+
+.v-tab--selected.text-title-large {
+  color: rgb(var(--v-theme-primary)) !important;
+}
+
+.v-tabs .v-tabs-slider {
+  background-color: rgb(var(--v-theme-primary)) !important;
+  height: 2px;
+}
+
+.v-pagination__list {
+  padding-left: 0 !important;
+}

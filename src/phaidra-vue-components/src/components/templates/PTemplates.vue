@@ -1,6 +1,7 @@
 <template>
 
   <v-data-table
+    v-model:sort-by="tableSortBy"
     :headers="headers"
     :search="templateSearch"
     :items="templates"
@@ -8,18 +9,16 @@
     :items-per-page="itemsPerPage"
     :class="{'elevation-1': type !== 'navtemplate'}"
     :no-data-text="$t('No data available')"
-    :footer-props="{
-      pageText: $t('Page'),
-      itemsPerPageText: $t('Rows per page'),
-      itemsPerPageAllText: $t('All')
-    }"
+    :page-text="$t('Page')"
+    :items-per-page-text="$t('Rows per page')"
+    :items-per-page-options="itemsPerPageOptions"
     :no-results-text="$t('There were no search results')"
   >
     <template v-slot:top>
       <v-toolbar flat color="transparent">
         <v-text-field
           v-model="templateSearch"
-          append-icon="mdi-magnify"
+          append-inner-icon="mdi-magnify"
           :label="$t('Search...')"
           single-line
           hide-details
@@ -27,9 +26,9 @@
       </v-toolbar>
     </template>
     <template v-slot:item.name="{ item }">
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <span v-on="on" v-bind="attrs">{{ item.name }}</span>
+      <v-tooltip location="bottom">
+        <template v-slot:activator="{ props: activatorProps }">
+          <span v-bind="activatorProps">{{ item.name }}</span>
         </template>
         <span>{{ item.tid }}</span>
       </v-tooltip>
@@ -48,20 +47,20 @@
       {{ item.validationfnc || '' }}
     </template>
     <template v-slot:item.created="{ item }">
-      {{ item.created | unixtime }}
+      {{ $unixtime(item.created) }}
     </template>
     <template v-slot:item.load="{ item }">
-      <v-btn text color="primary" @click="editValidation(item)" v-if="type === 'navtemplate' && $store.state.user.isadmin">
+      <v-btn variant="text" color="primary" @click="editValidation(item)" v-if="type === 'navtemplate' && $store.state.user.isadmin">
         <span>{{ $t('Edit Validation') }}</span>
       </v-btn>
-      <v-btn text color="primary" @click="loadTemplate('')" v-if="isDefaultSelect && item.tid === selectedTemplateId">
+      <v-btn variant="text" color="primary" @click="loadTemplate('')" v-if="isDefaultSelect && item.tid === selectedTemplateId">
         <span v-if="isDefaultSelect">{{ $t('Remove') }}</span>
       </v-btn>
-      <v-btn text color="primary" @click="loadTemplate(item.tid)" v-else>
+      <v-btn variant="text" color="primary" @click="loadTemplate(item.tid)" v-else>
         <span v-if="isDefaultSelect">{{ $t('Select') }}</span>
         <span v-else-if="item.tid !== selectedTemplateId">{{ $t('Load') }}</span>
       </v-btn>
-      <v-btn v-if="!isDefaultSelect" text color="btnred" @click="deleteTemplate(item.tid)">{{ $t('Delete') }}</v-btn>
+      <v-btn v-if="!isDefaultSelect" variant="text" color="btnred" @click="deleteTemplate(item.tid)">{{ $t('Delete') }}</v-btn>
     </template>
   </v-data-table>
 
@@ -98,6 +97,8 @@ export default {
   },
   data () {
     return {
+      /** Vuetify 3 data table requires sort-by to stay an array (see sortBy.value.find in headers). */
+      tableSortBy: [],
       headers: [],
       templates: [],
       deletetempconfirm: false,
@@ -105,21 +106,33 @@ export default {
       templateSearch: '',
     }
   },
+  computed: {
+    itemsPerPageOptions () {
+      return [
+        { value: 5, title: '5' },
+        { value: 10, title: '10' },
+        { value: 25, title: '25' },
+        { value: 50, title: '50' },
+        { value: 100, title: '100' },
+        { value: -1, title: this.$t('All') }
+      ]
+    }
+  },
   watch: {
      '$i18n.locale': {
         immediate: true, // Ensure it's set on load
         handler() {
           this.headers = [
-            { text: this.$t('Name'), align: 'left', value: 'name' },
-            { text: this.$t('Created'), align: 'right', value: 'created' },
+            { title: this.$t('Name'), align: 'start', key: 'name' },
+            { title: this.$t('Created'), align: 'end', key: 'created' },
           ];
           if(this.type === 'navtemplate' && this.$store.state.user.isadmin) {
-            this.headers.unshift({ text: this.$t('Public'), align: 'left', value: 'public' })
+            this.headers.unshift({ title: this.$t('Public'), align: 'start', key: 'public' })
           }
           if(this.$store.state.user.isadmin) {
-            this.headers.push({ text: this.$t('Validation'), align: 'left', value: 'validationfnc' })
+            this.headers.push({ title: this.$t('Validation'), align: 'start', key: 'validationfnc' })
           }
-          this.headers.push({ text: this.$t('Actions'), align: 'right', value: 'load', sortable: false })
+          this.headers.push({ title: this.$t('Actions'), align: 'end', key: 'load', sortable: false })
         }
      }
   },

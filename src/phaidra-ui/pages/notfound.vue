@@ -1,5 +1,5 @@
 <template>
-  <h2 class="title font-weight-light primary--text">
+  <h2 class="text-title-large font-weight-light text-primary">
     Not found
   </h2>
 </template>

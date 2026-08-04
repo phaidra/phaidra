@@ -6,8 +6,8 @@
         <span class="mt-2"><a @click="selectPage()">{{ $t('Select this page') }}</a><span class="mx-2">/</span><a @click="unselectPage()">{{ $t('Unselect this page') }}</a><span class="mx-2">/</span><a @click="selectAllResults()">{{ $t('Select all results') }}</a><span class="mx-2">/</span><a @click="selection = []">{{ $t('Clear selection') }}</a></span>
         <v-spacer></v-spacer>
         <v-menu offset-y>
-          <template v-slot:activator="{ on: menu, attrs }">
-            <v-btn v-on="{ ...menu }" v-bind="attrs" text outlined color="primary" class="mx-4" :disabled="!selection.length">{{ $t('Selected results') }} ({{ selection.length }})</v-btn>
+          <template v-slot:activator="{ props: menuProps }">
+            <v-btn v-bind="menuProps" variant="outlined" color="primary" class="mx-4" :disabled="!selection.length">{{ $t('Selected results') }} ({{ selection.length }})</v-btn>
           </template>
           <v-list>
             <v-list-item @click="$refs.addlistdialog.open()">
@@ -28,35 +28,35 @@
     </v-slide-y-transition>
     <v-divider v-if="selectioncheck" class="mb-4"></v-divider>
     <div v-for="(doc, i) in this.docs" :key="'doc'+i">
-      <v-row>
+      <v-row no-gutters>
         <v-slide-x-transition hide-on-leave>
-          <v-col cols="1" v-if="selectioncheck" align-self="center">
-            <v-checkbox color="primary" @change="selectDoc($event, doc)" :value="selectionIncludes(doc)"></v-checkbox>
+          <v-col cols="1" v-if="selectioncheck" class="d-flex align-center">
+            <v-checkbox color="primary" @update:model-value="selectDoc($event, doc)" :model-value="selectionIncludes(doc)"></v-checkbox>
+            <v-divider vertical class="align-self-stretch mx-2"></v-divider>
           </v-col>
         </v-slide-x-transition>
-        <v-divider inset vertical v-if="selectioncheck"></v-divider>
         <v-col :cols="selectioncheck ? 11 : 12">
           <v-row :key="'prev'+doc.pid">
             <v-col cols="2" >
-              <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">
+              <component :is="PhaidraLink" :to="detailRouteTo(doc.pid)">
                 <p-img :src="instance.api + '/object/' + doc.pid + '/thumbnail'" class="preview-maxwidth elevation-1 mt-2" :alt="doc.dc_title ? doc.dc_title[0] : doc.pid">
                   <template v-slot:placeholder>
                     <div class="fill-height ma-0" align="center" justify="center" >
-                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                      <v-progress-circular indeterminate color="grey-lighten-5"></v-progress-circular>
                     </div>
                   </template>
                 </p-img>
-              </nuxt-link>
+              </component>
             </v-col>
             <v-col cols="10">
               <v-row >
                 <v-col cols="12" md="9">
-                  <h2 class="title font-weight-light primary--text" @click.stop v-if="doc.dc_title">
-                    <nuxt-link :to="{ path: `detail/${doc.pid}`, params: { pid: doc.pid } }">{{ getObjectTitle(doc) }}</nuxt-link>
+                  <h2 class="text-title-large font-weight-light text-primary" @click.stop v-if="doc.dc_title">
+                    <component :is="PhaidraLink" :to="detailRouteTo(doc.pid)">{{ getObjectTitle(doc) }}</component>
                   </h2>
                 </v-col>
                 <v-col cols="12" md="3" class="text-right">
-                  <v-chip class="pointer-disabled" v-if="doc.created" color="transparent">{{ doc.created | date }}
+                  <v-chip class="pointer-disabled" v-if="doc.created" variant="text">{{ $date(doc.created) }}
                     <v-icon v-if="doc.cmodel == 'Video'" class="mx-2" color="grey">mdi-video</v-icon>
                     <v-icon v-else-if="doc.cmodel == 'Picture'" class="mx-2" color="grey">mdi-image</v-icon>
                     <v-icon v-else-if="doc.cmodel == 'Audio'" class="mx-2" color="grey">mdi-volume-high</v-icon>
@@ -70,8 +70,8 @@
                 </v-col>
               </v-row>
               <v-row class="my-4 mr-2">
-                <v-col>
-                  <span class="text-subtitle-2 secondary--text">
+                <v-col class="py-2">
+                  <span class="text-title-small text-secondary">
                     <span v-for="(roleDoc,i) in getRoleList(doc)" :key="'pers'+i">
                       {{roleDoc}}<span v-if="(i+1) < getRoleList(doc).length">; </span>
                     </span>
@@ -87,12 +87,12 @@
                 </v-col>
               </v-row>
               <v-row v-if="doc.isrestricted">
-                <v-col>
-                  <v-chip class="pointer-disabled" label dark color="btnred"><v-icon small left>mdi-lock</v-icon>{{ $t('Restricted access') }}</v-chip>
+                <v-col class="py-3">
+                  <v-chip class="pointer-disabled" label variant="flat" color="btnred" prepend-icon="mdi-lock">{{ $t('Restricted access') }}</v-chip>
                 </v-col>
               </v-row>
               <v-row >
-                <v-col cols="12" md="9">
+                <v-col cols="12" md="9" class="py-3">
                   <a class="font-weight-light" :href="`${instance.baseurl}/${doc.pid}`">{{ instance.baseurl }}/{{ doc.pid }}</a>
                 </v-col>
                 <v-col cols="12" md="3" class="text-right pr-5">
@@ -123,6 +123,7 @@ import PExpandText from '../utils/PExpandText'
 import ListDialog from '../select/ListDialog'
 import CollectionDialog from '../select/CollectionDialog'
 import objectMixin from '../../mixins/object'
+import phaidraNavigation from '../../mixins/phaidraNavigation'
 
 export default {
   name: 'p-search-results',
@@ -133,7 +134,7 @@ export default {
     CollectionDialog,
     ListDialog
   },
-  mixins: [objectMixin],
+  mixins: [objectMixin, phaidraNavigation],
   props: {
     getallresults: {
       type: Function,

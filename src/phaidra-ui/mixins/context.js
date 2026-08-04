@@ -6,10 +6,10 @@ export const context = {
   },
   computed: {
     signedin () {
-      return this.$store.state.user.token ? 1 : 0
+      return this.$store?.state?.user?.token ? 1 : 0
     },
     user () {
-      return this.$store.state.user
+      return this.$store?.state?.user || {}
     }
   }
 }

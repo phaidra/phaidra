@@ -4,7 +4,7 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light white--text">
+          <v-card-title class="text-title-large font-weight-light text-white">
             {{ $t('Manage object lists') }}
           </v-card-title>
           <v-card-text>
@@ -15,29 +15,24 @@
               :loading="listsLoading"
               :loading-text="$t('Loading object lists...')"
               :no-data-text="$t('No data available')"
-              :footer-props="{
-                pageText: $t('Page'),
-                itemsPerPageText: $t('Rows per page'),
-                itemsPerPageAllText: $t('All')
-              }"
               :no-results-text="$t('There were no search results')"
             >
               <template v-slot:top>
                 <v-toolbar flat color="transparent" class="my-4">
                   <v-text-field
                     v-model="listsSearch"
-                    append-icon="mdi-magnify"
+                    append-inner-icon="mdi-magnify"
                     :label="$t('Search...')"
                     single-line
                     hide-details
                   ></v-text-field>
                   <v-spacer></v-spacer>
                   <v-dialog v-model="createDialog" max-width="500px">
-                    <template v-slot:activator="{ on }">
-                      <v-btn color="primary" dark class="mb-2" v-on="on">{{ $t('Create new object list') }}</v-btn>
+                    <template v-slot:activator="{ props: activatorProps }">
+                      <v-btn color="primary" theme="dark" class="mb-2" v-bind="activatorProps">{{ $t('Create new object list') }}</v-btn>
                     </template>
                     <v-card>
-                      <v-card-title class="title font-weight-light white--text">
+                      <v-card-title class="text-title-large font-weight-light text-white">
                         {{ $t('New object list') }}
                       </v-card-title>
                       <v-card-text>
@@ -50,7 +45,7 @@
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn outlined @click="createDialog = false">{{ $t('Cancel') }}</v-btn>
+                        <v-btn variant="outlined" @click="createDialog = false">{{ $t('Cancel') }}</v-btn>
                         <v-btn @click="createList()" color="primary">{{ $t('Create') }}</v-btn>
                       </v-card-actions>
                     </v-card>
@@ -58,33 +53,29 @@
                 </v-toolbar>
               </template>
               <template v-slot:item.name="{ item }">
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <span v-on="on" v-bind="attrs">{{ item.name }}</span>
+                <v-tooltip location="bottom">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <span v-bind="activatorProps">{{ item.name }}</span>
                   </template>
                   <span>{{ item.listid }}</span>
                 </v-tooltip>
               </template>
               <template v-slot:item.created="{ item }">
-                {{ item.created | unixtime }}
+                {{ $unixtime(item.created) }}
               </template>
               <template v-slot:item.updated="{ item }">
-                {{ item.updated | unixtime }}
+                {{ $unixtime(item.updated) }}
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon class="mx-3" color="primary" @click="loadedList = item" v-on="on" v-bind="attrs" :aria-label="$t('Edit')">
-                      <v-icon>mdi-pencil</v-icon>
-                    </v-btn>
+                <v-tooltip location="bottom">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-icon-btn variant="text" class="mx-3" color="primary" @click="loadedList = item" v-bind="activatorProps" :aria-label="$t('Edit')" icon="mdi-pencil" />
                   </template>
                   <span>{{ $t('Edit') }}</span>
                 </v-tooltip>
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon class="mx-3" color="btnred" @click="deleteListDialog(item)" v-on="on" v-bind="attrs" :aria-label="$t('Delete')">
-                      <v-icon>mdi-delete</v-icon>
-                    </v-btn>
+                <v-tooltip location="bottom">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-icon-btn variant="text" class="mx-3" color="btnred" @click="deleteListDialog(item)" v-bind="activatorProps" :aria-label="$t('Delete')" icon="mdi-delete" />
                   </template>
                   <span>{{ $t('Delete') }}</span>
                 </v-tooltip>
@@ -97,10 +88,10 @@
     <v-row v-if="loadedList">
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light white--text">
+          <v-card-title class="text-title-large font-weight-light text-white">
             <span>{{ loadedList.name }}</span>
             <v-spacer></v-spacer>
-            <template v-if="token && token.length > 0"><a class="pl-2 white--text" target="_blank" :href="'/list/' + token">{{ instance.baseurl + '/list/' + token }}</a></template>
+            <template v-if="token && token.length > 0"><a class="pl-2 text-white" target="_blank" :href="'/list/' + token">{{ instance.baseurl + '/list/' + token }}</a></template>
           </v-card-title>
           <v-card-text>
             <v-data-table
@@ -110,11 +101,6 @@
               :loading="membersLoading"
               :loading-text="$t('Loading object list members...')"
               :no-data-text="$t('No data available')"
-              :footer-props="{
-                pageText: $t('Page'),
-                itemsPerPageText: $t('Rows per page'),
-                itemsPerPageAllText: $t('All')
-              }"
               :no-results-text="$t('There were no search results')"
             >
               <template v-slot:top>
@@ -122,28 +108,26 @@
                   <v-spacer></v-spacer>
                   <!-- <v-text-field
                     v-model="membersSearch"
-                    append-icon="mdi-magnify"
+                    append-inner-icon="mdi-magnify"
                     :label="$t('Search...')"
                     single-line
                     hide-details
                   ></v-text-field> -->
                   <v-btn v-if="token && token.length > 0" color="btnred" dark class="mb-2 ml-2"  @click="deleteToken(loadedList.listid)">{{ $t('Remove public link') }}</v-btn>
-                  <v-btn v-else color="primary" dark class="mb-2 ml-2"  @click="createToken(loadedList.listid)">{{ $t('Create public link') }}</v-btn>
+                  <v-btn v-else color="primary" theme="dark" class="mb-2 ml-2"  @click="createToken(loadedList.listid)">{{ $t('Create public link') }}</v-btn>
                   <v-btn v-if="members.length > 0" color="primary" dark class="mb-2 ml-2"  @click="$refs.collectiondialog.open()">{{ $t('Add objects to collection') }}</v-btn>
                 </v-toolbar>
               </template>
               <template v-slot:item.pid="{ item }">
-                <nuxt-link :to="{ path: `detail/${item.pid}`, params: { pid: item.pid } }">{{ item.pid }}</nuxt-link>
+                <component :is="PhaidraLink" :to="detailRouteTo(item.pid)">{{ item.pid }}</component>
               </template>
               <template v-slot:item.title="{ item }">
-                {{ item.title | truncate(100) }}
+                {{ $truncate(item.title, 100) }}
               </template>
               <template v-slot:item.actions="{ item }">
-                <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn icon class="mx-3" color="btnred" @click="removeMember(item.pid)" v-on="on" v-bind="attrs" :aria-label="$t('Remove')">
-                        <v-icon>mdi-delete</v-icon>
-                      </v-btn>
+                <v-tooltip location="bottom">
+                    <template v-slot:activator="{ props: activatorProps }">
+                      <v-icon-btn class="mx-3" color="btnred" @click="removeMember(item.pid)" v-bind="activatorProps" :aria-label="$t('Remove')" icon="mdi-delete" />
                     </template>
                     <span>{{ $t('Remove') }}</span>
                 </v-tooltip>                
@@ -155,16 +139,16 @@
     </v-row>
     <v-dialog v-model="deleteDialog" max-width="500px" v-if="listToDelete">
       <v-card>
-        <v-card-title class="title font-weight-light white--text">
+        <v-card-title class="text-title-large font-weight-light text-white">
           {{ $t('Delete object list') }}
         </v-card-title>
         <v-card-text class="mt-4">
-          <p class="title font-weight-light">{{ $t('Delete object list') + ' ' + listToDelete.name + '?' }}</p>
+          <p class="text-title-large font-weight-light">{{ $t('Delete object list') + ' ' + listToDelete.name + '?' }}</p>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn outlined @click="deleteDialog = false">{{ $t('Cancel') }}</v-btn>
-          <v-btn dark @click="deleteList()" color="btnred">{{ $t('Delete') }}</v-btn>
+          <v-btn variant="outlined" @click="deleteDialog = false">{{ $t('Cancel') }}</v-btn>
+          <v-btn theme="dark" @click="deleteList()" color="btnred">{{ $t('Delete') }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -174,9 +158,11 @@
 
 <script>
 import CollectionDialog from '../select/CollectionDialog'
+import phaidraNavigation from '../../mixins/phaidraNavigation'
 
 export default {
   name: 'p-lists',
+  mixins: [phaidraNavigation],
   components: {
     CollectionDialog
   },
@@ -212,15 +198,15 @@ export default {
         immediate: true, // Ensure it's set on load
         handler() {
           this.listsHeaders = [
-            { text: this.$t('Name'), align: 'left', value: 'name' },
-            { text: this.$t('Created'), align: 'right', value: 'created' },
-            { text: this.$t('Modified'), align: 'right', value: 'updated' },
-            { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+            { title: this.$t('Name'), align: 'start', key: 'name' },
+            { title: this.$t('Created'), align: 'end', key: 'created' },
+            { title: this.$t('Modified'), align: 'end', key: 'updated' },
+            { title: this.$t('Actions'), align: 'end', key: 'actions', sortable: false }
           ];
           this.membersHeaders = [
-            { text: this.$t('PID'), align: 'left', value: 'pid' },
-            { text: this.$t('Title'), align: 'left', value: 'title' },
-            { text: this.$t('Actions'), align: 'right', value: 'actions', sortable: false }
+            { title: this.$t('PID'), align: 'start', key: 'pid' },
+            { title: this.$t('Title'), align: 'start', key: 'title' },
+            { title: this.$t('Actions'), align: 'end', key: 'actions', sortable: false }
           ];
         }
      },

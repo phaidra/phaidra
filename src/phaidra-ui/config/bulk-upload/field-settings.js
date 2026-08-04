@@ -14,7 +14,7 @@ const getSharedProps = (fieldConfig, value) => ({
   field: fieldConfig,
   multilingual: false,
   outlined: true,
-  dense: true,
+  density: 'compact',
   'hide-details': true
 })
 

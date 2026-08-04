@@ -6,59 +6,61 @@
   >
     <v-col :cols="!showMimetype ? (actions.length ? 10 : 12) : (actions.length ? 6 : 8)">
       <v-file-input
-        :value="value"
+        v-model="value"
         :error-messages="fileErrorMessages"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
-        :background-color="backgroundColor ? backgroundColor : undefined"
+        :variant="fieldVariant"
+        :bg-color="backgroundColor ? backgroundColor : undefined"
         show-size
         :hint="$t('You can use drag & drop')"
         persistent-hint
-        @change="fileInput($event)"
+        @update:model-value="onFileModelUpdate"
         :label="$t(label)"
-        :prepend-icon="''"
-        :append-icon="'mdi-paperclip'"
+        prepend-icon=""
+        append-inner-icon="mdi-paperclip"
         :disabled="disabled"
         :class="fileInputClass"
       ></v-file-input>
     </v-col>
     <v-col v-if="showMimetype" cols="4">
       <v-autocomplete
-        :value="getTerm('mimetypes', mimetype)"
-        v-on:input="$emit('input-mimetype', $event)"
-        :background-color="backgroundColor ? backgroundColor : undefined"
+        :model-value="getTerm('mimetypes', mimetype)"
+        @update:model-value="$emit('input-mimetype', $event)"
+        :bg-color="backgroundColor ? backgroundColor : undefined"
         :items="vocabularies['mimetypes'].terms"
-        :item-value="'@id'"
+        item-value="@id"
+        :item-title="mimeItemTitle"
+        :custom-filter="vocabAutocompleteFilter"
         :loading="loading"
-        :filter="autocompleteFilter"
         hide-no-data
         :label="$t(mimeLabel)"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
         return-object
         clearable
         :disabled="disabled"
         :error-messages="mimetypeErrorMessages"
       >
-        <template slot="item" slot-scope="{ item }">
-          <v-list-item-content two-line>
-            <v-list-item-title  v-html="`${getLocalizedTermLabel('mimetypes', item['@id'])}`"></v-list-item-title>
-            <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-          </v-list-item-content>
+        <template #item="{ props, internalItem }">
+          <v-list-item
+            v-bind="props"
+            :lines="showIds ? 'two' : 'one'"
+          >
+            <template #title>
+              <span v-html="getLocalizedTermLabel('mimetypes', internalItem.raw['@id'])" />
+            </template>
+            <template v-if="showIds" #subtitle>
+              <span v-html="internalItem.raw['@id']" />
+            </template>
+          </v-list-item>
         </template>
-        <template slot="selection" slot-scope="{ item }">
-          <v-list-item-content>
-            <v-list-item-title v-html="`${getLocalizedTermLabel('mimetypes', item['@id'])}`"></v-list-item-title>
-          </v-list-item-content>
+        <template #selection="{ internalItem }">
+          <span v-html="getLocalizedTermLabel('mimetypes', (internalItem.raw || internalItem)['@id'])" />
         </template>
       </v-autocomplete>
     </v-col>
     <v-col cols="1" v-if="actions.length">
-      <v-menu bottom offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn v-on="on" v-bind="attrs" icon>
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+      <v-menu open-on-hover bottom offset-y>
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-icon-btn v-bind="activatorProps" variant="text" icon="mdi-dots-vertical" />
         </template>
         <v-list>
           <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
@@ -73,7 +75,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="dialog = false" >Ok</v-btn>
+          <v-btn color="primary" variant="text" @click="dialog = false" >Ok</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -87,6 +89,7 @@ import { fieldproperties } from '../../mixins/fieldproperties'
 export default {
   name: 'p-i-file',
   mixins: [vocabulary, fieldproperties],
+  emits: ['input-file', 'input-mimetype', 'add', 'remove', 'configure'],
   props: {
     label: {
       type: String,
@@ -137,33 +140,39 @@ export default {
     }
   },
   methods: {
+    mimeItemTitle (item) {
+      if (!item || !item['@id']) return ''
+      return this.getLocalizedTermLabel('mimetypes', item['@id'])
+    },
     addDropFile (e) {
       if (e.dataTransfer.files.length > 1) {
         this.dialog = true
         return
       }
-      this.value = e.dataTransfer.files[0]
-      this.fileInput(e.dataTransfer.files[0])
+      const file = e.dataTransfer.files[0]
+      this.value = file
+      this.emitFileSelection(file)
     },
-    fileInput (file) {
-      if (file) {
-        this.$emit('input-file', file)
-        if (this.autoMimetype || file.name.endsWith('.glb')) {
-          if (file.name) {
-            let ext = file.name.split('.').pop()
-            let mimetypeFound = false
-            for (let mt of this.vocabularies['mimetypes'].terms) {
-              for (let notation of mt['skos:notation']) {
-                if (ext === notation) {
-                  this.$emit('input-mimetype', mt)
-                  mimetypeFound = true
-                  break
-                }
-              }
-              if (mimetypeFound) break
-            }
-            if (!mimetypeFound) {
-              this.$emit('input-mimetype', { '@id': 'application/octet-stream' })
+    onFileModelUpdate (val) {
+      this.value = val
+      const file = Array.isArray(val) ? val[0] : val
+      this.emitFileSelection(file || null)
+    },
+    emitFileSelection (file) {
+      if (!file) {
+        this.$emit('input-file', null)
+        return
+      }
+      if (!(file instanceof File)) {
+        return
+      }
+      this.$emit('input-file', file)
+      if ((this.autoMimetype || file.name.endsWith('.glb')) && file.name) {
+        const ext = file.name.split('.').pop()
+        for (const mt of this.vocabularies['mimetypes'].terms) {
+          for (const notation of mt['skos:notation']) {
+            if (ext === notation) {
+              this.$emit('input-mimetype', mt)
             }
           }
         }

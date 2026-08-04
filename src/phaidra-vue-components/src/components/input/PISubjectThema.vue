@@ -4,46 +4,47 @@
       <v-row>
         <v-col cols="10">
           <v-autocomplete
-            :value="getTerm('thema', value)"
+            :model-value="getTerm('thema', value)"
             :required="required"
-            v-on:input="handleInput($event)"
+            @update:model-value="handleInput($event)"
             :rules="required ? [ v => !!v || $t('Required')] : []"
             :items="vocabularies['thema'].terms"
-            :item-value="'@id'"
+            item-value="@id"
+            :item-title="themaItemTitle"
             :loading="loading"
-            :filter="autocompleteFilter"
+            :custom-filter="vocabAutocompleteFilter"
             hide-no-data
             :label="$t(label)"
-            :filled="inputStyle==='filled'"
-            :outlined="inputStyle==='outlined'"
+            :variant="fieldVariant"
             return-object
             clearable
             :disabled="disabled"
-            :messages="path"
+            :hint="path"
+            persistent-hint
             :error-messages="errorMessages"
           >
-            <template slot="item" slot-scope="{ item }">
-              <v-list-item-content two-line>
-                <v-list-item-title  v-html="`${getLocalizedTermLabel('thema', item['@id']) + ' - ' + item['skos:notation'][0]}`"></v-list-item-title>
-                <v-list-item-subtitle v-if="showIds" v-html="`${item['@id']}`"></v-list-item-subtitle>
-              </v-list-item-content>
+            <template #item="{ props, internalItem }">
+              <v-list-item v-bind="props" :lines="showIds ? 'two' : 'one'">
+                <template #title>
+                  <span v-html="`${getLocalizedTermLabel('thema', internalItem.raw['@id']) + ' - ' + internalItem.raw['skos:notation'][0]}`" />
+                </template>
+                <template v-if="showIds" #subtitle>
+                  <span v-html="internalItem.raw['@id']" />
+                </template>
+              </v-list-item>
             </template>
-            <template slot="selection" slot-scope="{ item }">
-              <v-list-item-content>
-                <v-list-item-title v-html="`${getLocalizedTermLabel('thema', item['@id']) + ' - ' + item['skos:notation'][0]}`"></v-list-item-title>
-              </v-list-item-content>
+            <template #selection="{ internalItem }">
+              <span v-html="`${getLocalizedTermLabel('thema', (internalItem.raw || internalItem)['@id']) + ' - ' + (internalItem.raw || internalItem)['skos:notation'][0]}`" />
             </template>
-            <template v-slot:append-outer>
+            <template #append>
               <v-icon @click="$refs.thematreedialog.open()">mdi-file-tree</v-icon>
             </template>
           </v-autocomplete>
         </v-col>
         <v-col cols="1" v-if="actions.length">
-          <v-menu bottom offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn v-on="on" v-bind="attrs" icon>
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
+          <v-menu open-on-hover bottom offset-y>
+            <template v-slot:activator="{ props: activatorProps }">
+              <v-icon-btn v-bind="activatorProps" variant="text" icon="mdi-dots-vertical" />
             </template>
             <v-list>
               <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
@@ -54,8 +55,8 @@
         </v-col>
         <thema-tree-dialog ref="thematreedialog" @term-selected="handleInput($event)"></thema-tree-dialog>
       </v-row>
-      <v-row>
-        <v-divider v-if="dividerbottom" class="mt-2 mb-6"></v-divider>
+      <v-row v-if="dividerbottom">
+        <v-divider class="mt-2 mb-6"></v-divider>
       </v-row>
     </v-col>
   </v-row>
@@ -72,7 +73,16 @@ export default {
   components: {
     ThemaTreeDialog
   },
+  emits: ['input', 'resolve', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   methods: {
+    themaItemTitle (item) {
+      const raw = item?.raw !== undefined ? item.raw : item
+      if (!raw || !raw['skos:prefLabel']) return ''
+      const pl = raw['skos:prefLabel']
+      const label = pl[this.$i18n.locale] || pl.eng || pl.deu || ''
+      const notation = raw['skos:notation']?.[0]
+      return notation != null ? `${label} - ${notation}` : label
+    },
     handleInput: function (term) {
       if (term) {
         this.path = ''

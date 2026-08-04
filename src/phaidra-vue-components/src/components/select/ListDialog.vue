@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="dialog" width="700px">
     <v-card>
-      <v-card-title class="title font-weight-light white--text">{{ $t('Select a list') }}</v-card-title>
+      <v-card-title class="text-title-large font-weight-light text-white">{{ $t('Select a list') }}</v-card-title>
       <v-card-text class="mt-4">
         <!-- <v-text-field
           v-model="listsSearch"
-          append-icon="mdi-magnify"
+          append-inner-icon="mdi-magnify"
           :label="$t('Search...')"
           single-line
           hide-details
@@ -20,29 +20,24 @@
           :loading-text="$t('Loading...')"
           :items-per-page="5"
           :no-data-text="$t('No data available')"
-          :footer-props="{
-                pageText: $t('Page'),
-                itemsPerPageText: $t('Rows per page'),
-                itemsPerPageAllText: $t('All')
-              }"
           :no-results-text="$t('There were no search results')"
         >
           <template v-slot:item.name="{ item }">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <span v-on="on" v-bind="attrs">{{ item.name | truncate(50) }}</span>
+            <v-tooltip location="bottom">
+              <template v-slot:activator="{ props: activatorProps }">
+                <span v-bind="activatorProps">{{ $truncate(item.name, 50) }}</span>
               </template>
               <span>{{ item.listid }}</span>
             </v-tooltip>
           </template>
           <template v-slot:item.created="{ item }">
-            {{ item.created | unixtime }}
+            {{ $unixtime(item.created) }}
           </template>
           <template v-slot:item.updated="{ item }">
-            {{ item.updated | unixtime }}
+            {{ $unixtime(item.updated) }}
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-btn text color="primary" @click="selectList(item)">{{ $t('Select') }}</v-btn>
+            <v-btn variant="text" color="primary" @click="selectList(item)">{{ $t('Select') }}</v-btn>
           </template>
         </v-data-table>
       </v-card-text>
@@ -50,7 +45,7 @@
       <v-card-actions>
         <v-container fluid>
           <v-row justify="end" class="px-4">
-            <v-btn outlined @click="dialog = false">{{ $t('Cancel') }}</v-btn>
+            <v-btn variant="outlined" @click="dialog = false">{{ $t('Cancel') }}</v-btn>
           </v-row>
         </v-container>
       </v-card-actions>
@@ -72,10 +67,10 @@ export default {
       loading: false,
       listsSearch: '',
       listsHeaders: [
-        { text: 'Name', align: 'left', value: 'name' },
-        { text: 'Created', align: 'right', value: 'created' },
-        { text: 'Updated', align: 'right', value: 'updated' },
-        { text: 'Actions', align: 'right', value: 'actions', sortable: false }
+        { title: 'Name', align: 'start', key: 'name' },
+        { title: 'Created', align: 'end', key: 'created' },
+        { title: 'Updated', align: 'end', key: 'updated' },
+        { title: 'Actions', align: 'end', key: 'actions', sortable: false }
       ],
       lists: []
     }

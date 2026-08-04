@@ -107,7 +107,7 @@
     <!-- error message -->
     <slot name="unknown-predicate"></slot>
 
-    <v-card outlined class="mt-4" v-if="jsonld.hasOwnProperty('cito:cites') || jsonld.hasOwnProperty('cito:citesAsDataSource') || jsonld.hasOwnProperty('cito:isCitedBy') || jsonld.hasOwnProperty('rdfs:seeAlso')">
+    <v-card variant="outlined" class="mt-4" v-if="jsonld.hasOwnProperty('cito:cites') || jsonld.hasOwnProperty('cito:citesAsDataSource') || jsonld.hasOwnProperty('cito:isCitedBy') || jsonld.hasOwnProperty('rdfs:seeAlso')">
       <v-card-text>
         <div class="overline mb-4">{{ $t('Bibliography') }}</div>
         <slot name="cito:cites"></slot>

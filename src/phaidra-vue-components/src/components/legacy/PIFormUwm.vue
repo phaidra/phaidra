@@ -1,28 +1,47 @@
 <template>
   <div v-if="form && (form.length > 0)">
     <v-card :outlined="!title">
-      <v-card-title v-if="title" class="title font-weight-light white--text">{{ $t(title) }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-card-title>
-      <v-alert dismissible :type="'error'" :value="!valid" transition="fade-transition">
+      <v-card-title v-if="title" class="text-title-large font-weight-light text-white">{{ $t(title) }}<template v-if="targetpid">&nbsp;-&nbsp;<span class="text-lowercase">{{ targetpid }}</span></template></v-card-title>
+      <v-alert closable :type="'error'" :model-value="!valid" transition="fade-transition">
         <span>{{ $t('Metadata validation failed') }}</span>
         <ul v-if="validationErrors.length > 0">
           <li v-for="(e, i) in this.validationErrors" :key="'valEre'+i">{{ e }}</li>
         </ul>
       </v-alert>
       <v-divider></v-divider>
-      <v-tabs slider-color="primary" slider-size="20px" background-color="grey darken-2" vertical v-model="activetab">
-        <template v-for="(s, i) in this.form">
-          <v-tab class="white--text" :active-class="'primary'" v-if="(s.xmlname !== 'annotation') && (s.xmlname !== 'etheses')" :key="'tab'+i">
-            <span v-t="s.labels[alpha2locale]"></span>
-          </v-tab>
-        </template>
-        <template v-for="(s, i) in this.form">
-          <v-tab-item class="pa-3" v-if="(s.xmlname !== 'annotation') && (s.xmlname !== 'etheses')" :key="'tabitem'+i">
-            <template v-if="s.children">
-              <p-i-uwm-rec :disabled="disabled" :children="s.children" :parent="s" @add-field="addField($event)" @remove-field="removeField($event)"></p-i-uwm-rec>
-            </template>
-          </v-tab-item>
-        </template>
-      </v-tabs>
+      <v-row no-gutters>
+        <v-col cols="auto">
+          <v-tabs
+            v-model="activetab"
+            direction="vertical"
+            slider-color="primary"
+            bg-color="grey-darken-2"
+          >
+            <v-tab
+              v-for="s in visibleSections"
+              :key="'tab-' + s.xmlname"
+              :value="s.xmlname"
+              class="text-white"
+            >
+              <span v-t="s.labels[alpha2locale]"></span>
+            </v-tab>
+          </v-tabs>
+        </v-col>
+        <v-col>
+          <v-window v-model="activetab">
+            <v-window-item
+              v-for="s in visibleSections"
+              :key="'tabitem-' + s.xmlname"
+              :value="s.xmlname"
+              class="pa-3"
+            >
+              <template v-if="s.children">
+                <p-i-uwm-rec :disabled="disabled" :children="s.children" :parent="s" @add-field="addField($event)" @remove-field="removeField($event)"></p-i-uwm-rec>
+              </template>
+            </v-window-item>
+          </v-window>
+        </v-col>
+      </v-row>
       <v-divider v-if="targetpid"></v-divider>
       <v-card-actions v-if="targetpid">
         <v-spacer></v-spacer>
@@ -35,6 +54,7 @@
 <script>
 import arrays from '../../utils/arrays'
 import { isNonBlankString } from '../../utils/stringValidation'
+import { vuetifyGoTo } from '../../utils/vuetifyGoToCompat'
 import PIUwmRec from './PIUwmRec'
 
 export default {
@@ -60,11 +80,18 @@ export default {
     form: {
       handler: function () {
         this.assignIdsAndParentsRec(this.form, 'root', { id: 'root', children: this.form })
+        this.initActiveTab()
       },
       deep: true
     }
   },
   computed: {
+    visibleSections: function () {
+      if (!this.form) {
+        return []
+      }
+      return this.form.filter(s => s.xmlname !== 'annotation' && s.xmlname !== 'etheses')
+    },
     alpha2locale: function () {
       switch (this.$i18n.locale) {
         case 'eng': return 'en'
@@ -81,7 +108,7 @@ export default {
       loading: false,
       fab: false,
       addfieldselection: [],
-      templatedialog: '',
+      templatedialog: false,
       templatename: '',
       previewMember: '',
       searchfieldsinput: '',
@@ -92,6 +119,12 @@ export default {
     }
   },
   methods: {
+    initActiveTab: function () {
+      const sections = this.visibleSections
+      if (sections.length && !sections.some(s => s.xmlname === this.activetab)) {
+        this.activetab = sections[0].xmlname
+      }
+    },
     assignIdsAndParentsRec: function (arr, path, parent) {
       let i = 0
       for (let e of arr) {
@@ -135,8 +168,8 @@ export default {
       this.validationErrors = []
 
       let title = this.findNodeRec('uwm_general_title', 'uwm', this.form)
-      this.$set(title, 'errorMessages', [])
-      this.$set(title, 'langErrorMessages', [])
+      title.errorMessages = []
+      title.langErrorMessages = []
       if (!title.ui_value) {
         title.errorMessages.push(this.$t('Missing title'))
         this.valid = false
@@ -149,7 +182,7 @@ export default {
       }
 
       let lang = this.findNodeRec('uwm_general_language', 'uwm', this.form)
-      this.$set(lang, 'errorMessages', [])
+      lang.errorMessages = []
       if (!lang.ui_value) {
         lang.errorMessages.push(this.$t('Missing language'))
         this.valid = false
@@ -157,8 +190,8 @@ export default {
       }
 
       let description = this.findNodeRec('uwm_general_description', 'uwm', this.form)
-      this.$set(description, 'errorMessages', [])
-      this.$set(description, 'langErrorMessages', [])
+      description.errorMessages = []
+      description.langErrorMessages = []
       if (!description.ui_value) {
         description.errorMessages.push(this.$t('Missing description'))
         this.valid = false
@@ -171,7 +204,7 @@ export default {
       }
 
       let role = this.findNodeRec('uwm_lifecycle_contribute_role', 'uwm', this.form)
-      this.$set(role, 'errorMessages', [])
+      role.errorMessages = []
       if (!isNonBlankString(role.ui_value)) {
         role.errorMessages.push(this.$t('Missing role'))
         this.valid = false
@@ -180,9 +213,9 @@ export default {
         let firstname = this.findNodeRec('uwm_lifecycle_contribute_entity_firstname', 'uwm', this.form)
         let lastname = this.findNodeRec('uwm_lifecycle_contribute_entity_lastname', 'uwm', this.form)
         let institution = this.findNodeRec('uwm_lifecycle_contribute_entity_institution', 'uwm', this.form)
-        this.$set(firstname, 'errorMessages', [])
-        this.$set(lastname, 'errorMessages', [])
-        this.$set(institution, 'errorMessages', [])
+        firstname.errorMessages = []
+        lastname.errorMessages = []
+        institution.errorMessages = []
         if (!isNonBlankString(firstname.ui_value) && !isNonBlankString(lastname.ui_value) && !isNonBlankString(institution.ui_value)) {
           firstname.errorMessages.push(this.$t('Missing firstname'))
           lastname.errorMessages.push(this.$t('Missing lastname'))
@@ -193,7 +226,7 @@ export default {
       }
 
       let lic = this.findNodeRec('uwm_rights_license', 'uwm', this.form)
-      this.$set(lic, 'errorMessages', [])
+      lic.errorMessages = []
       if (!lic.ui_value) {
         lic.errorMessages.push(this.$t('Missing license'))
         this.valid = false
@@ -276,13 +309,14 @@ export default {
         console.log(error)
         this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
       } finally {
-        this.$vuetify.goTo(0)
+        vuetifyGoTo(0)
         this.loading = false
       }
     }
   },
   mounted: function () {
     this.$store.dispatch('vocabulary/loadLanguages', this.$i18n.locale)
+    this.initActiveTab()
   }
 }
 </script>
@@ -290,5 +324,8 @@ export default {
 <style scoped>
 .v-tab {
   justify-content: start;
+}
+.v-tabs.v-slide-group--vertical {
+  height: 100%;
 }
 </style>

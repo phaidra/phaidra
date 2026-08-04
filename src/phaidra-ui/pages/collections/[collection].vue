@@ -1,0 +1,90 @@
+<template>
+    <div v-if="loaded && collectionTemplate" style="width:100%;">
+        <runtimetemplate :template="collectionTemplate" />
+    </div>
+    <div v-else-if="loaded">
+        <h2 class="font-weight-light">{{$t('This collection template does not exist...')}}</h2>
+        <p>{{$t('Return to')}} <NuxtLink to="/">home page</NuxtLink>.</p>
+    </div>
+    <div v-else>
+        <p>{{$t('Loading...')}}</p>
+    </div>
+</template>
+
+<script>
+import { config, useDocumentTitle } from '../../mixins/config';
+import { cmsTemplates } from "@/mixins/cmsTemplates";
+
+export default {
+    name: 'Collection',
+    mixins: [config, cmsTemplates],
+    data() {
+        return {
+            activetab: null, // Added for Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
+            toggle: false,  // Added for Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
+            templateName: null,
+            collectionTemplate: null,
+            loaded: false,
+            templateTitle: {
+                eng: 'Collection',
+                deu: 'Sammlung',
+                ita: 'Collezione'
+            }
+        }
+    },
+    setup() {
+        const nuxtApp = useNuxtApp()
+        const documentTitle = useDocumentTitle()
+        useHead(() => {
+            const t = nuxtApp.$i18n?.t || ((v) => v)
+            return {
+                title: documentTitle(t('Collection'))
+            }
+        })
+    },
+    created() {
+        this.templateName = this.$route.params.collection
+        this.getCollection()
+    },
+    watch: {
+        '$i18n.locale'() {
+            this.updateBreadcrumbTitle()
+        }
+    },
+    methods: {
+        updateBreadcrumbTitle() {
+            const title = this.templateTitle[this.$i18n.locale] || this.templateTitle.eng || 'Collection'
+            this.$store.commit('updateCollectionBreadcrumb', title)
+        },
+        getCollection() {
+            try {
+                this.$axios.get(`/cms/template/${this.templateName || 'index'}`).then(response => {
+                    this.collectionTemplate = response?.data?.template?.templateContent
+                    if(response?.data?.template?.templateTitle) {
+                        this.templateTitle = response?.data?.template?.templateTitle
+                    }
+                    const title = this.templateTitle[this.$i18n.locale] || this.templateTitle.eng || 'Collection'
+                    let indexCollectionObject = {
+                        text: 'Collections',
+                        to: '/collections'
+                    }
+                    if(response?.data?.template?.templateName !== 'index') {
+                        this.$store.commit('addBreadcrumb', indexCollectionObject)
+                        this.$store.commit('addBreadcrumb', {
+                            text: title,
+                            to: this.$route.name,
+                            disabled: true
+                        })
+                    } else {
+                        indexCollectionObject.disabled = true
+                        this.$store.commit('addBreadcrumb', indexCollectionObject)
+                    }
+                    this.loaded = true
+                })
+            } catch (error) {
+                this.loaded = true
+            }
+        }
+    }
+}
+</script>

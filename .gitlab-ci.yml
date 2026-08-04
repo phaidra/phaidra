@@ -66,6 +66,8 @@ build-api-dist:
 
 build-ui:
   stage: build-common
+  variables:
+    IMAGE_NAME: ui
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -75,8 +77,8 @@ build-ui:
     docker buildx build -f dockerfiles/ui.dockerfile
     --builder=container
     --platform=linux/amd64
-    -t $CI_REGISTRY_USER/ui:latest
-    -t $CI_REGISTRY_USER/ui:$CI_COMMIT_SHORT_SHA --push .
+    -t $CI_REGISTRY_USER/$IMAGE_NAME:latest
+    -t $CI_REGISTRY_USER/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA --push .
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null
       changes:

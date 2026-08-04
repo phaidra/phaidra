@@ -3,7 +3,7 @@
     <v-row no-gutters v-if="list">
       <v-col cols="12">
         <v-card>
-          <v-card-title class="title font-weight-light white--text">
+          <v-card-title class="text-title-large font-weight-light text-white">
             {{ list.name }}
           </v-card-title>
           <v-card-text>
@@ -15,18 +15,13 @@
               :loading="membersLoading"
               :loading-text="$t('Loading object list members...')"
               :no-data-text="$t('No data available')"
-              :footer-props="{
-                pageText: $t('Page'),
-                itemsPerPageText: $t('Rows per page'),
-                itemsPerPageAllText: $t('All')
-              }"
               :no-results-text="$t('There were no search results')"
             >
               <template v-slot:top>
                 <!-- <v-toolbar flat>
                   <v-text-field
                     v-model="membersSearch"
-                    append-icon="mdi-magnify"
+                    append-inner-icon="mdi-magnify"
                     :label="$t('Search...')"
                     single-line
                     hide-details
@@ -37,7 +32,7 @@
                 <a :href="`${instance.baseurl}/${item.pid}`">{{ item.pid }}</a>
               </template>
               <template v-slot:item.title="{ item }">
-                {{ item.title | truncate(100) }}
+                {{ $truncate(item.title, 100) }}
               </template>
             </v-data-table>
           </v-card-text>
@@ -65,9 +60,9 @@ export default {
       membersLoading: false,
       membersSearch: '',
       membersHeaders: [
-        { text: 'PID', align: 'left', value: 'pid' },
-        { text: 'Title', align: 'left', value: 'title' },
-        { text: 'Actions', align: 'right', value: 'actions', sortable: false }
+        { title: 'PID', align: 'start', key: 'pid' },
+        { title: 'Title', align: 'start', key: 'title' },
+        { title: 'Actions', align: 'end', key: 'actions', sortable: false }
       ],
       token: ''
     }

@@ -3,32 +3,28 @@
     <v-col cols="8">
       <v-combobox
         v-model="model"
-        v-on:input="$emit('input', xmlUtils.htmlToPlaintext($event))"
-        v-on:change="$emit('input', xmlUtils.htmlToPlaintext($event))"
+        @update:model-value="(v) => $emit('input', xmlUtils.htmlToPlaintext(v == null ? '' : String(v)))"
         :items="items"
         :loading="loading"
-        :search-input.sync="search"
+        v-model:search="search"
         :required="required"
         :rules="required ? [ v => !!v || $t('Required')] : []"
         cache-items
         hide-no-data
         hide-selected
-        item-text="text"
-        item-value="value"
         :label="$t(label)"
-        :filled="inputStyle==='filled'"
-        :outlined="inputStyle==='outlined'"
+        :variant="fieldVariant"
         clearable
       >
-        <template slot="item" slot-scope="{ item }">
-          <v-list-item-content two-line>
-            <v-list-item-title inset v-html="item"></v-list-item-title>
-          </v-list-item-content>
+        <template #item="{ props, internalItem }">
+          <v-list-item v-bind="props" lines="one">
+            <template #title>
+              <span v-html="internalItem.raw" />
+            </template>
+          </v-list-item>
         </template>
-        <template slot="selection" slot-scope="{ item }">
-          <v-list-item-content>
-            <v-list-item-title inset>{{ xmlUtils.htmlToPlaintext(item) }}</v-list-item-title>
-          </v-list-item-content>
+        <template #selection="{ internalItem }">
+          {{ xmlUtils.htmlToPlaintext(internalItem.raw) }}
         </template>
       </v-combobox>
     </v-col>
@@ -36,26 +32,29 @@
      
      <v-row>
        <v-col v-if="multilingual" cols="6">
-         <v-btn text @click="$refs.langdialog.open()">
+         <v-btn variant="text" @click="$refs.langdialog.open()">
            <span>
              ({{ language ? language : '--' }})
            </span>
          </v-btn>
        </v-col>
        <v-col cols="6" v-if="actions.length">
-         <v-btn icon @click="showMenu">
-           <v-icon>mdi-dots-vertical</v-icon>
-         </v-btn>
+         <v-menu location="bottom end" close-on-content-click>
+           <template #activator="{ props: menuActivatorProps }">
+             <v-icon-btn v-bind="menuActivatorProps" icon="mdi-dots-vertical" />
+           </template>
+           <v-list density="compact">
+             <v-list-item
+               v-for="(action, i) in actions"
+               :key="i"
+               @click="$emit(action.event, $event)"
+             >
+               <v-list-item-title>{{ action.title }}</v-list-item-title>
+             </v-list-item>
+           </v-list>
+         </v-menu>
        </v-col>
      </v-row>
-       
-     <v-menu :position-x="menux" :position-y="menuy" absolute offset-y v-model="showMenuModel">
-       <v-list>
-         <v-list-item v-for="(action, i) in actions" :key="i" @click="$emit(action.event, $event)">
-           <v-list-item-title>{{ action.title }}</v-list-item-title>
-         </v-list-item>
-       </v-list>
-     </v-menu>
 
      <select-language ref="langdialog" @language-selected="$emit('input-language', $event)"></select-language>
 
@@ -74,6 +73,7 @@ export default {
   components: {
     SelectLanguage
   },
+  emits: ['input', 'input-language', 'add', 'remove', 'configure', 'add-clear', 'up', 'down'],
   props: {
     value: {
       type: String,

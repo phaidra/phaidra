@@ -1,91 +1,101 @@
 {
   "name": "phaidra-vue-components",
   "version": "0.10.0",
+  "type": "module",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "build-bundle": "vue-cli-service build --target lib --name phaidra-vue-components ./src/components/index.js",
-    "svg": "vsvg -s ./src/svg-icons -t ./src/compiled-icons"
+    "dev": "vite",
+    "build": "vite build",
+    "build-bundle": "BUILD_LIB=1 vite build",
+    "preview": "vite preview",
+    "lint": "eslint \"src/**/*.{js,vue}\"",
+    "svg": "echo \"svgicon generation removed; update src/compiled-icons manually\""
   },
-  "main": "./dist/phaidra-vue-components.common.js",
+  "main": "./dist/phaidra-vue-components.cjs.js",
+  "module": "./dist/phaidra-vue-components.esm.js",
+  "exports": {
+    ".": {
+      "import": "./dist/phaidra-vue-components.esm.js",
+      "require": "./dist/phaidra-vue-components.cjs.js"
+    },
+    "./*": "./*"
+  },
   "files": [
     "dist/*",
     "src/*",
-    "public/*",
     "*.json",
-    "*.js"
+    "*.js",
+    "index.html",
+    "vite.config.js",
+    "NUXT.md"
   ],
   "dependencies": {
+    "@vue-leaflet/vue-leaflet": "^0.10.1",
     "autolinker": "^3.14.3",
-    "axios": "^0.21.2",
+    "axios": "^1.0.0",
     "base-64": "^0.1.0",
     "file-saver": "^2.0.5",
-    "leaflet-geosearch": "^3.0.6",
+    "iconv-lite": "^0.7.2",
+    "leaflet": "^1.9.4",
+    "leaflet-geosearch": "^4.0.0",
+    "maska": "^3.0.4",
     "moment": "^2.29.4",
     "ms": "^2.1.3",
-    "vue": "^2.6.12",
-    "vue-i18n": "^8.18.2",
-    "vue-json-pretty": "^1.6.3",
-    "vue-router": "^3.1.3",
-    "vue-slicksort": "^1.1.3",
-    "vue-the-mask": "^0.11.1",
-    "vue2-leaflet": "^2.6.0",
-    "vue2-leaflet-geosearch": "^1.0.6",
-    "vuetify": "^2.7.1",
-    "vuex": "^3.4.0"
+    "qs": "^6.13.1",
+    "vue": "^3.5.30",
+    "vue-draggable-next": "^2.2.1",
+    "vue-json-pretty": "^2.4.0",
+    "vue-router": "^4.6.4",
+    "vuetify": "^4.1.0",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-optional-chaining": "^7.16.7",
-    "@vue/cli-plugin-babel": "^3.12.1",
-    "@vue/cli-plugin-eslint": "^3.12.1",
-    "@vue/cli-service": "^3.12.1",
-    "@vue/eslint-config-standard": "^4.0.0",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.2.3",
-    "eslint-plugin-vuetify": "^1.0.0-beta.7",
-    "sass": "^1.26.10",
-    "sass-loader": "^7.3.1",
-    "stylus": "^0.54.8",
-    "stylus-loader": "^3.0.2",
-    "vue-cli-plugin-vuetify": "^0.6.3",
-    "vue-svgicon": "^3.2.8",
-    "vue-template-compiler": "^2.6.12",
-    "vuetify-loader": "^1.6.0"
+    "@mdi/font": "^7.4.47",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "eslint": "^8.57.1",
+    "eslint-plugin-vue": "^9.32.0",
+    "sass": "^1.83.4",
+    "stylus": "^0.64.0",
+    "vite": "^5.4.11",
+    "vite-plugin-vuetify": "^2.0.4"
+  },
+  "peerDependencies": {
+    "axios": "^1.0.0",
+    "vue": "^3.5.30",
+    "vue-i18n": "^10.0.8",
+    "vue-router": "^4.6.4",
+    "vuetify": "^4.1.0",
+    "vuex": "^4.1.0"
+  },
+  "peerDependenciesMeta": {
+    "axios": {
+      "optional": true
+    }
   },
   "eslintConfig": {
     "root": true,
     "env": {
-      "node": true
+      "node": true,
+      "vue/setup-compiler-macros": true
     },
     "extends": [
-      "plugin:vue/essential",
-      "standard"
-    ],
-    "plugins": [
-      "vuetify"
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
     ],
     "rules": {
       "no-console": "off",
-      "vue/no-use-v-if-with-v-for": 0,
-      "vuetify/no-deprecated-classes": "error",
-      "vuetify/grid-unknown-attributes": "error",
-      "vuetify/no-legacy-grid": "error"
+      "vue/multi-word-component-names": "off",
+      "vue/no-v-model-argument": "off",
+      "vue/no-use-v-if-with-v-for": "off"
     },
     "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
+      "ecmaVersion": 2022,
+      "sourceType": "module"
     }
   },
   "browserslist": [
     "> 1%",
     "last 2 versions",
-    "not ie <= 8"
+    "not dead"
   ],
   "license": "Apache-2.0",
   "repository": {

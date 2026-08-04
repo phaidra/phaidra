@@ -2,7 +2,7 @@
     <v-row justify="center">
         <v-col>
         <v-card tile>
-            <v-card-title class="title font-weight-light white--text">{{
+            <v-card-title class="text-title-large font-weight-light text-white">{{
             $t("Repository statistics")
             }}</v-card-title>
             <v-card-text>
@@ -18,7 +18,7 @@
                 hide-default-footer
             >
                 <template v-for="col in avgCols" v-slot:[`item.${col.value}`]="{ item }">
-                    <span v-if="item[col.value]">{{ item[col.value] | gigabytes }}</span>
+                    <span v-if="item[col.value]">{{ $filterGigabytes(item[col.value]) }}</span>
                     <span v-else>-</span>
                 </template>
             </v-data-table>
@@ -35,7 +35,7 @@
                 hide-default-footer
             >
                 <template v-for="col in imgAvgCols" v-slot:[`item.${col.value}`]="{ item }">
-                    <span v-if="item[col.value]">{{ item[col.value] | gigabytes }}</span>
+                    <span v-if="item[col.value]">{{ $filterGigabytes(item[col.value]) }}</span>
                     <span v-else>-</span>
                 </template>
             </v-data-table>
@@ -43,8 +43,7 @@
                 :headers="typeHeaders"
                 :items="typeItems"
                 :items-per-page="1000"
-                :sort-by="'total'"
-                :sort-desc="true"
+                :sort-by="sortByTotalDesc"
                 hide-default-footer
                 class="elevation-1 my-8"
                 :no-data-text="$t('No data available')"
@@ -53,8 +52,7 @@
                 :headers="newTypeHeaders"
                 :items="newTypeItems"
                 :items-per-page="1000"
-                :sort-by="'total'"
-                :sort-desc="true"
+                :sort-by="sortByTotalDesc"
                 hide-default-footer
                 class="elevation-1 my-8"
                 :no-data-text="$t('No data available')"
@@ -63,8 +61,7 @@
                 :headers="cmodelHeaders"
                 :items="cmodelItems"
                 :items-per-page="1000"
-                :sort-by="'total'"
-                :sort-desc="true"
+                :sort-by="sortByTotalDesc"
                 hide-default-footer
                 class="elevation-1 my-8"
                 :no-data-text="$t('No data available')"
@@ -73,8 +70,7 @@
                 :headers="cmodelStorageHeaders"
                 :items="cmodelStorageItems"
                 :items-per-page="1000"
-                :sort-by="'total'"
-                :sort-desc="true"
+                :sort-by="sortByTotalDesc"
                 hide-default-footer
                 class="elevation-1 my-8"
                 :no-data-text="$t('No data available')"
@@ -96,6 +92,10 @@ export default {
   name: 'PRepostat',
   mixins: [context, config, vocabulary, repostatMixin],
   computed: {
+    /** Vuetify 3: sort-by must be an array of { key, order }, not a string (Vuetify 2). */
+    sortByTotalDesc () {
+      return [{ key: 'total', order: 'desc' }]
+    },
     routepid: function () {
       return this.$store.state.route.params.pid;
     },
@@ -152,7 +152,7 @@ export default {
 
         const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         const valKeys = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
-        this.avgCols = monthNames.slice(0, maxMonth).map((label, idx) => ({ text: `${label} Avg`, value: valKeys[idx] }));
+        this.avgCols = monthNames.slice(0, maxMonth).map((label, idx) => ({ title: `${label} Avg`, key: valKeys[idx] }));
         this.avgHeaders = this.avgCols;
 
         if (maxMonth === 0) {
@@ -203,7 +203,7 @@ export default {
 
         const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         const valKeys = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
-        this.imgAvgCols = monthNames.slice(0, maxMonth).map((label, idx) => ({ text: `${label} Avg`, value: valKeys[idx] }));
+        this.imgAvgCols = monthNames.slice(0, maxMonth).map((label, idx) => ({ title: `${label} Avg`, key: valKeys[idx] }));
         this.imgAvgHeaders = this.imgAvgCols;
 
         if (maxMonth === 0) {

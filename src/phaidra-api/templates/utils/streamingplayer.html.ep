@@ -1,5 +1,6 @@
 <html>
   <head>
+    %= include 'utils/player_theme'
     <link href="//<%= $server %>/video-js/video-js.min.css" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="//<%= $server %>/video-js/video.min.js"></script>
 		<script type="text/javascript" src="//<%= $server %>/videojs-contrib-hls/videojs-contrib-hls.min.js"></script>
