@@ -6,8 +6,7 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { aliases as mdiAliases, mdi } from 'vuetify/iconsets/mdi'
 import { createVuetifyI18nOptions, syncVuetifyLocaleWithI18n } from '~/utils/vuetify-locale'
-
-const THEME_STORAGE_KEY = 'theme'
+import { THEME_KEY, PREFERENCE_MAX_AGE, normalizeTheme, syncLocalStorage } from '~/utils/preference-storage'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig()
@@ -15,23 +14,18 @@ export default defineNuxtPlugin((nuxtApp) => {
   const primaryColor = config.public.primaryColor || '#1976D2'
   const darkPrimaryColor = config.public.darkPrimaryColor || primaryColor
   const envDefaultTheme = config.public.defaultTheme === 'dark' ? 'dark' : 'light'
-  const themeCookie = useCookie(THEME_STORAGE_KEY, {
+  const themeCookie = useCookie(THEME_KEY, {
     default: () => envDefaultTheme,
-    maxAge: 60 * 60 * 24 * 365,
+    maxAge: PREFERENCE_MAX_AGE,
     sameSite: 'lax',
     path: '/'
   })
 
-  let defaultTheme = themeCookie.value === 'dark' ? 'dark' : 'light'
-  if (import.meta.client) {
-    const stored = localStorage.getItem(THEME_STORAGE_KEY)
-    if (stored === 'dark' || stored === 'light') {
-      defaultTheme = stored
-      if (themeCookie.value !== stored) {
-        themeCookie.value = stored
-      }
-    }
+  const defaultTheme = normalizeTheme(themeCookie.value, envDefaultTheme)
+  if (themeCookie.value !== defaultTheme) {
+    themeCookie.value = defaultTheme
   }
+  syncLocalStorage(THEME_KEY, defaultTheme)
 
   const vuetify = createVuetify({
     ssr: true,

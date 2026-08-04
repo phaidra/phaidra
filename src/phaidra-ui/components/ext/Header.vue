@@ -576,6 +576,7 @@
 <script>
 import { config } from "@/mixins/config";
 import { context } from "@/mixins/context";
+import { THEME_KEY, LOCALE_KEY, persistPreference } from "~/utils/preference-storage";
 
 export default {
   mixins: [config, context],
@@ -619,8 +620,7 @@ export default {
         themeApi.change(nextTheme);
       }
 
-      localStorage.setItem("theme", nextTheme);
-      document.cookie = `theme=${nextTheme}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`;
+      persistPreference(THEME_KEY, nextTheme);
     },
     logout: function () {
       console.log("local logout")
@@ -660,23 +660,12 @@ export default {
     },
     changeLocale: function (lang) {
       this.$i18n.locale = lang;
-      localStorage.setItem("locale", lang);
+      persistPreference(LOCALE_KEY, lang);
       this.$router.push(this.switchLocalePath(lang));
       this.$store.dispatch("vocabulary/sortRoles", this.$i18n.locale);
       this.$store.dispatch("vocabulary/sortFields", {locale: this.$i18n.locale, i18nInstance: this.$i18n});
       this.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
       this.$store.dispatch('info/sortFieldsOverview', {locale: this.$i18n.locale, i18nInstance: this.$i18n})
-    }
-  },
-  mounted() {
-    if (localStorage.getItem("locale")) {
-      this.$i18n.locale = localStorage.getItem("locale");
-    } else {
-      console.log('default locale: ' + this.$config.public.defaultLocale)
-      if (this.$config.public.defaultLocale) {
-        this.$i18n.locale = this.$config.public.defaultLocale
-      }
-      localStorage.setItem("locale", this.$i18n.locale);
     }
   }
 };

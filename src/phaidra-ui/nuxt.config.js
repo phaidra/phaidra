@@ -85,6 +85,7 @@ export default defineNuxtConfig({
     { src: '~/plugins/vuex-store.js' },
     { src: '~/plugins/moment-formatters.js' },
     { src: '~/plugins/i18n.js' },
+    { src: '~/plugins/locale-persistence.js' },
     { src: '~/plugins/svg-icon' },
     { src: '~/plugins/before-each.js' },
     { src: '~/plugins/after-each.js' },

@@ -2,20 +2,28 @@ import { createI18n } from 'vue-i18n'
 import eng from '~/locales/eng.json'
 import deu from '~/locales/deu.json'
 import ita from '~/locales/ita.json'
+import { LOCALE_KEY, PREFERENCE_MAX_AGE, syncLocalStorage } from '~/utils/preference-storage'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const defaultLocale = useRuntimeConfig().public?.defaultLocale || 'eng'
   const messages = { eng, deu, ita }
+  const availableLocales = Object.keys(messages)
 
-  let locale = defaultLocale
-  if (import.meta.client) {
-    const stored = localStorage.getItem('locale')
-    if (stored && messages[stored]) {
-      locale = stored
-    } else {
-      localStorage.setItem('locale', defaultLocale)
-    }
+  const localeCookie = useCookie(LOCALE_KEY, {
+    default: () => defaultLocale,
+    maxAge: PREFERENCE_MAX_AGE,
+    sameSite: 'lax',
+    path: '/'
+  })
+
+  let locale = localeCookie.value
+  if (!availableLocales.includes(locale)) {
+    locale = availableLocales.includes(defaultLocale) ? defaultLocale : 'eng'
   }
+  if (localeCookie.value !== locale) {
+    localeCookie.value = locale
+  }
+  syncLocalStorage(LOCALE_KEY, locale)
 
   const i18n = createI18n({
     legacy: true,
@@ -60,4 +68,3 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.provide('localeLocation', localeLocation)
   nuxtApp.provide('switchLocalePath', switchLocalePath)
 })
-
