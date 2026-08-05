@@ -1499,8 +1499,10 @@ export default {
         }
         instanceConfData['data_ot4rt'] = this.data_ot4rt
 
-        if (this.data_i18n_text) {
+        if (this.data_i18n_text && this.data_i18n_text.trim()) {
           this.data_i18n = JSON.parse(this.data_i18n_text)
+        } else {
+          this.data_i18n = {}
         }
         instanceConfData['data_i18n'] = this.data_i18n
 
