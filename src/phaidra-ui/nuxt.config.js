@@ -148,7 +148,24 @@ export default defineNuxtConfig({
     },
     optimizeDeps: {
       exclude: ['phaidra-vue-components'],
-      include: ['@vue/compiler-dom']
+      include: [
+        '@vue/compiler-dom',
+        '@vue/devtools-core',
+        '@vue/devtools-kit',
+        'axios',
+        'moment',
+        'vuex',
+        'vue-i18n',
+        'lodash',
+        'qs',
+        'papaparse',
+        'autolinker',
+        'maska/vue',
+        'leaflet',
+        '@vue-leaflet/vue-leaflet',
+        'file-saver',
+        'vue-draggable-next'
+      ]
     },
     server: {
       hmr: {
@@ -177,7 +194,6 @@ export default defineNuxtConfig({
 try {
   crypto.createHash('md4')
 } catch (e) {
-  console.warn('Crypto "MD4" is not supported anymore by this Node.js version')
   const origCreateHash = crypto.createHash
   crypto.createHash = (alg, opts) => {
     return origCreateHash(alg === 'md4' ? 'md5' : alg, opts)
