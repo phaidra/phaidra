@@ -77,6 +77,7 @@ export const mutations = {
       'cookiePrivacyPolicyUrl',
       'enableInfoBanner',
       'infoBannerMessage',
+      'data_i18n',
       'customJavaScript',
       'downloadabledatastreams',
       'disableChecksum',

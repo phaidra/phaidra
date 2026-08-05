@@ -78,6 +78,7 @@ import FaviconMixin from '../mixins/favicon'
 import CookieBanner from '../components/CookieBanner.vue'
 import moment from "moment";
 import { encodeUtf8ToBase64 } from '@/utils/encode-base64'
+import { applyI18nOverrides, applyInfoBannerMessage } from '@/utils/i18n-overrides'
 import "@/assets/css/material-icons.css";
 
 export default {
@@ -139,7 +140,6 @@ export default {
     return {
       loading: false,
       hasLoadedInstanceConfig: false,
-      i18n_override: {},
       faviconUrl: ``
     }
   },
@@ -207,12 +207,11 @@ export default {
           if (publicConfig?.faviconText) {
             this.setFavIconText(publicConfig.faviconText)
           }
-          await this.$store.dispatch("setInstanceConfig", publicConfig);
+          const dataI18n = publicConfig?.data_i18n && typeof publicConfig.data_i18n === 'object'
+            ? publicConfig.data_i18n
+            : {}
+          await this.$store.dispatch("setInstanceConfig", { ...publicConfig, data_i18n: dataI18n });
           this.$store.dispatch("vocabulary/setInstanceConfig", publicConfig);
-          this.mergeInfoBannerMessage(publicConfig?.infoBannerMessage)
-          if (publicConfig?.data_i18n) {
-            this.i18n_override = publicConfig.data_i18n
-          }
           if (publicConfig?.data_facetqueries?.length > 0) {
             this.$store.commit("search/setFacetQueries", publicConfig.data_facetqueries)
           }
@@ -246,16 +245,15 @@ export default {
       return true
     },
     applyRuntimeOverrides() {
-      if (process.client && this.instanceconfig.cms_css && this.instanceconfig.cms_css !== '') {
+      if (import.meta.client && this.instanceconfig.cms_css && this.instanceconfig.cms_css !== '') {
         const style = document.createElement('style');
         style.type = 'text/css';
         style.innerHTML = this.instanceconfig.cms_css;
         document.head.appendChild(style);
       }
 
-      Object.entries(this.i18n_override).forEach(([lang, messages]) => {
-        this.$i18n.mergeLocaleMessage(lang, messages)
-      })
+      applyI18nOverrides(this.$i18n, this.$store.state.instanceconfig?.data_i18n)
+      applyInfoBannerMessage(this.$i18n, this.instanceconfig?.infoBannerMessage)
     },
     refreshBreadcrumbs() {
       const localePath = this.$localePath || ((path) => path)
@@ -268,29 +266,18 @@ export default {
     setFavIconText(svgText) {
       const base64Svg = encodeUtf8ToBase64(svgText)
       this.faviconUrl = `data:image/svg+xml;base64,${base64Svg}`
-    },
-    mergeInfoBannerMessage(message) {
-      if (message) {
-        this.$i18n.mergeLocaleMessage('eng', { 'Info banner message': message })
-      }
     }
   },
   async serverPrefetch() {
     if (!this.hasLoadedInstanceConfig) {
       await this.loadInstanceConfigToStore()
     }
-
-    Object.entries(this.i18n_override).forEach(([lang, messages]) => {
-      this.$i18n.mergeLocaleMessage(lang, messages)
-    }
-    )
     this.applyRuntimeOverrides()
   },
   async mounted() {
     if (!this.hasLoadedInstanceConfig) {
       await this.loadInstanceConfigToStore()
     }
-    this.mergeInfoBannerMessage(this.instanceconfig?.infoBannerMessage)
     this.applyRuntimeOverrides()
     if (!this.signedin) {
       let token = window.localStorage.getItem("XSRF-TOKEN")

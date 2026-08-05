@@ -1,12 +1,10 @@
 import { createI18n } from 'vue-i18n'
-import eng from '~/locales/eng.json'
-import deu from '~/locales/deu.json'
-import ita from '~/locales/ita.json'
 import { LOCALE_KEY, PREFERENCE_MAX_AGE, syncLocalStorage } from '~/utils/preference-storage'
+import { cloneLocaleMessages, applyI18nOverrides, applyInfoBannerMessage } from '~/utils/i18n-overrides'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const defaultLocale = useRuntimeConfig().public?.defaultLocale || 'eng'
-  const messages = { eng, deu, ita }
+  const messages = cloneLocaleMessages()
   const availableLocales = Object.keys(messages)
 
   const localeCookie = useCookie(LOCALE_KEY, {
@@ -37,6 +35,12 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   nuxtApp.vueApp.use(i18n)
   nuxtApp.$i18n = i18n
+
+  const instanceconfig = nuxtApp.$store?.state?.instanceconfig
+  if (instanceconfig) {
+    applyI18nOverrides(i18n, instanceconfig.data_i18n)
+    applyInfoBannerMessage(i18n, instanceconfig.infoBannerMessage)
+  }
 
   const localePath = (to) => {
     if (typeof to === 'string') return to.startsWith('/') ? to : `/${to}`
