@@ -241,7 +241,7 @@
         </template>
 
         <template v-else-if="entry.p==='bf:shelfMark'">
-          <p-d-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'callnr'+j" v-bind="displayProperties"></p-d-value>
+          <p-d-lang-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'callnr'+j" v-bind="displayProperties"></p-d-lang-value>
         </template>
 
         <template v-else-if="entry.p==='dcterms:provenance'">
@@ -273,7 +273,7 @@
         </template>
 
         <template v-else-if="entry.p==='opaque:cco_accessionNumber'">
-          <p-d-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'accnr'+j" v-bind="displayProperties"></p-d-value>
+          <p-d-lang-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'accnr'+j" v-bind="displayProperties"></p-d-lang-value>
         </template>
 
         <template v-else-if="entry.p==='vra:hasInscription'">
