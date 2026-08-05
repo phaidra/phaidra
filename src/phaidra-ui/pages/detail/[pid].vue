@@ -58,7 +58,7 @@
                     <div
                       v-for="(rel, i) in objectInfo.relationships.ispartof" :key="'ispartof' + i"
                     >
-                      <v-row v-if="rel" align="center">
+                      <v-row v-if="rel" align="center" density="default">
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
@@ -113,7 +113,7 @@
                       v-for="(rel, i) in objectInfo.relationships
                         .isbacksideof" :key="'isbacksideof' + i"
                     >
-                      <v-row align="center">
+                      <v-row align="center" density="default">
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
@@ -167,7 +167,7 @@
                     <div
                       v-for="(rel, i) in objectInfo.relationships.hasbackside" :key="'hasbackside' + i"
                     >
-                      <v-row align="center">
+                      <v-row align="center" density="default">
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
@@ -222,7 +222,7 @@
                       v-for="(rel, i) in objectInfo.relationships
                         .isthumbnailfor" :key="'isthumbnailfor' + i"
                     >
-                      <v-row align="center">
+                      <v-row align="center" density="default">
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
@@ -278,7 +278,7 @@
                       v-for="(rel, i) in objectInfo.relationships
                         .hasthumbnail" :key="'hasthumbnail' + i"
                     >
-                      <v-row align="center">
+                      <v-row align="center" density="default">
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
@@ -332,7 +332,7 @@
                     <div
                       v-for="(rel, i) in objectInfo.relationships.references" :key="'references' + i"
                     >
-                      <v-row align="center">
+                      <v-row align="center" density="default">
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
@@ -387,7 +387,7 @@
                       v-for="(rel, i) in objectInfo.relationships
                         .isreferencedby" :key="'isreferencedby' + i"
                     >
-                      <v-row align="center">
+                      <v-row align="center" density="default">
                         <v-col cols="12" md="5" class="preview-maxwidth">
                           <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                             <p-img
@@ -1499,7 +1499,7 @@
                       <div
                         v-for="(rel, i) in objectInfo.alternativeversions" :key="'version' + i"
                       >
-                        <v-row align="center">
+                        <v-row align="center" density="default">
                           <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
@@ -1582,7 +1582,7 @@
                         <div
                           v-for="(rel, i) in objectInfo.relationships.ispartof" :key="'ispartof' + i"
                         >
-                          <v-row align="center">
+                          <v-row align="center" density="default">
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
@@ -1632,7 +1632,7 @@
                           v-for="(rel, i) in objectInfo.relationships
                             .isbacksideof" :key="'isbacksideof' + i"
                         >
-                          <v-row align="center">
+                          <v-row align="center" density="default">
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
@@ -1681,7 +1681,7 @@
                         <div
                           v-for="(rel, i) in objectInfo.relationships.hasbackside" :key="'hasbackside' + i"
                         >
-                          <v-row align="center">
+                          <v-row align="center" density="default">
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
@@ -1731,7 +1731,7 @@
                           v-for="(rel, i) in objectInfo.relationships
                             .isthumbnailfor" :key="'isthumbnailfor' + i"
                         >
-                          <v-row align="center">
+                          <v-row align="center" density="default">
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
@@ -1782,7 +1782,7 @@
                           v-for="(rel, i) in objectInfo.relationships
                             .hasthumbnail" :key="'hasthumbnail' + i"
                         >
-                          <v-row align="center">
+                          <v-row align="center" density="default">
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
@@ -1831,7 +1831,7 @@
                         <div
                           v-for="(rel, i) in objectInfo.relationships.references" :key="'references' + i"
                         >
-                          <v-row align="center">
+                          <v-row align="center" density="default">
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
@@ -1881,7 +1881,7 @@
                           v-for="(rel, i) in objectInfo.relationships
                             .isreferencedby" :key="'isreferencedby' + i"
                         >
-                          <v-row align="center">
+                          <v-row align="center" density="default">
                             <v-col cols="12" md="5" class="preview-maxwidth">
                               <nuxt-link :to="localePath(`/detail/${rel.pid}`)">
                                 <p-img
