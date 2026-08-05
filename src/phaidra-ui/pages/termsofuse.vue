@@ -36,11 +36,11 @@ export default {
     };
   },
   watch: {
-     '$i18n.locale': {
-        handler() {
-          this.loadTermsOfUse(this.$i18n.locale);
-        }
-     }
+    '$i18n.locale': {
+      handler() {
+        this.loadTermsOfUse(this.$i18n.locale);
+      }
+    }
   },
   created: async function () {
     this.loadTermsOfUse();
@@ -49,7 +49,7 @@ export default {
     loadTermsOfUse: async function (locale = null) {
       try {
         let url = "/termsofuse";
-        const cookieLocale = locale || this.$cookies.get("locale") || this.$i18n.locale;
+        const cookieLocale = locale || this.$cookies?.get("locale") || this.$i18n.locale;
         console.log("cookieLocale", cookieLocale);
         if (cookieLocale === 'deu') {
           url = url + '?lang=de'
