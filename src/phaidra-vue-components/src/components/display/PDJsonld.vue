@@ -40,7 +40,7 @@
         <template v-for="(subject, j) in jsonld['dcterms:subject']" :key="componentid+'subjph'+j">
           <v-card variant="outlined" class="mt-4" v-if="subject['@type']==='phaidra:Subject'">
             <v-card-text>
-              <div class="overline mb-4">{{ $t('SUBJECT_SECTION') }}</div>
+              <div class="text-label-medium text-uppercase mb-4">{{ $t('SUBJECT_SECTION') }}</div>
               <p-d-jsonld :jsonld="subject" v-bind="displayProperties"></p-d-jsonld>
             </v-card-text>
           </v-card>

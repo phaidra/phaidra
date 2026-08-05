@@ -109,7 +109,7 @@
 
     <v-card variant="outlined" class="mt-4" v-if="jsonld.hasOwnProperty('cito:cites') || jsonld.hasOwnProperty('cito:citesAsDataSource') || jsonld.hasOwnProperty('cito:isCitedBy') || jsonld.hasOwnProperty('rdfs:seeAlso')">
       <v-card-text>
-        <div class="overline mb-4">{{ $t('Bibliography') }}</div>
+        <div class="text-label-medium text-uppercase mb-4">{{ $t('Bibliography') }}</div>
         <slot name="cito:cites"></slot>
         <slot name="cito:citesAsDataSource"></slot>
         <slot name="cito:isCitedBy"></slot>

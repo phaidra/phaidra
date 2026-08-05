@@ -122,7 +122,7 @@
           <v-col>
             <v-card variant="outlined" class="mt-4" :width="'100%'">
               <v-card-text>
-                <div class="overline mb-4">{{ $t(nodePath(ch)) }}</div>
+                <div class="text-label-medium text-uppercase mb-4">{{ $t(nodePath(ch)) }}</div>
                 <v-row v-if="getChildLabel(ch, 'resource')">
                   <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t('uwm_provenience_contribute_resource') }}</v-col>
                   <v-col cols="12" md="10">{{ getChildLabel(ch, 'resource') }}</v-col>
@@ -203,7 +203,7 @@
           <v-col>
             <v-card variant="outlined" class="mt-4" :width="'100%'">
               <v-card-text>
-                <div class="overline mb-4">{{ $t(nodePath(ch)) }}</div>
+                <div class="text-label-medium text-uppercase mb-4">{{ $t(nodePath(ch)) }}</div>
                 <p-d-uwm-rec v-if="ch.children" :children="ch.children" :cmodel="cmodel" :path="nodePath(ch)"></p-d-uwm-rec>
               </v-card-text>
             </v-card>

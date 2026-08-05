@@ -41,7 +41,7 @@
         <template v-if="(ch.xmlname === 'recordInfo') || (ch.xmlname === 'relatedItem')">
           <v-card variant="outlined" class="ma-3" :width="'100%'">
             <v-card-text>
-              <div class="overline mb-4">{{ $t(getNodeLabel(ch)) }}</div>
+              <div class="text-label-medium text-uppercase mb-4">{{ $t(getNodeLabel(ch)) }}</div>
               <v-container class="py-0">
                 <p-d-mods-rec v-if="ch.children" :children="ch.children" :path="nodePath(ch)"></p-d-mods-rec>
               </v-container>
