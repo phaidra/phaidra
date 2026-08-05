@@ -45,6 +45,8 @@ build-api-base:
 
 build-api-dist:
   stage: build-dist
+  variables:
+    IMAGE_NAME: api
   before_script:
     - mkdir -p $HOME/.docker
     - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
@@ -63,6 +65,14 @@ build-api-dist:
           - dockerfiles/api-base.dockerfile
           - dockerfiles/api-dist.dockerfile
           - src/phaidra-api/**/*
+    - if: $CI_COMMIT_BRANCH == "v3.4.0"
+      changes:
+        paths:
+          - dockerfiles/api-base.dockerfile
+          - dockerfiles/api-dist.dockerfile
+          - src/phaidra-api/**/*
+      variables:
+        IMAGE_NAME: api-nuxt2
 
 build-ui:
   stage: build-common
