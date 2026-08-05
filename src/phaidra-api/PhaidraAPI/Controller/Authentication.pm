@@ -194,11 +194,6 @@ sub authenticate_ir_admin {
 
   my $self = shift;
 
-  if ($self->stash->{remote_user}) {
-    $self->app->log->info("Remote user " . $self->stash->{remote_user});
-    return 1;
-  }
-
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
 
