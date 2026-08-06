@@ -594,7 +594,9 @@ export default {
             ? fields.getField("role-extended")
             : fields.getField("role");
           role.ordergroup = "role";
-          role.roleVocabulary = "submitrolepredicate";
+          role.roleVocabulary = this.instanceconfig.extendedContribution
+            ? "rolepredicate"
+            : "submitrolepredicate";
           role.identifierType = "ids:orcid";
           role.showDefinitions = true;
           role.showIdentifier = true;
