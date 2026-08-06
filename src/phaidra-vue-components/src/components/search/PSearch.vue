@@ -14,7 +14,7 @@
               :messages="[ total + ' ' + $t('objects') ]"
             ></p-search-autocomplete>
              <a href="#filters" class="skip-link d-sr-only-focusable">{{ $t('Go to Search Filters') }}</a>
-             <div class="d-flex full-text-checkbox-wrapper">
+             <div class="d-flex align-center full-text-checkbox-wrapper">
                <v-checkbox
                 v-model="extracted_text"
                 @change="search"
@@ -24,8 +24,8 @@
                 class="mt-0"
               >
               </v-checkbox>
-              <div v-if="allBooks">
-                <v-tooltip location="bottom" class="ml-2" color="warning">
+              <div v-if="allBooks" class="d-flex align-center ml-1">
+                <v-tooltip location="bottom" color="warning">
                   <template v-slot:activator="{ props }">
                     <v-icon
                       color="warning"
