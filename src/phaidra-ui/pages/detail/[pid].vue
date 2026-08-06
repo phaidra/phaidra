@@ -2444,7 +2444,6 @@
 
 <script>
 import { getCurrentInstance, nextTick } from 'vue'
-import { onBeforeRouteUpdate } from 'vue-router'
 import { useAsyncData, useNuxtApp, useRoute, useState } from '#app'
 import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
@@ -2468,9 +2467,12 @@ export default {
     /**
      * Load via Vuex/axios (works SSR + client). Do not depend on `instance.proxy` for the fetch:
      * during setup/hydration `proxy` is often still null, which previously aborted the handler and left the page empty.
+     *
+     * Key includes pid so same-page client navigations re-run this handler. getCachedData is hydration-only
+     * because the real state lives in Vuex (return value is just a sentinel) — client cache would skip side effects.
      */
     useAsyncData(
-      'detail-object',
+      () => `detail-object-${route.params.pid}`,
       async () => {
         const pid = route.params.pid
         if (!pid || !/^o:\d+$/.test(String(pid))) return null
@@ -2583,20 +2585,14 @@ export default {
 
         return true
       },
-      { watch: [() => route.params.pid] }
-    )
-
-    onBeforeRouteUpdate((to) => {
-      if (!import.meta.client) return
-      const proxy = instance?.proxy
-      if (!proxy) return
-      if (!to.params.pid || !/^o:\d+$/.test(String(to.params.pid))) return
-      if (!proxy.objectInfo || proxy.objectInfo.pid !== to.params.pid) {
-        proxy.clearDetailAuxiliaryState()
-        proxy.$store.commit('setLoading', true)
-        proxy.$store.commit('setObjectInfo', null)
+      {
+        getCachedData (key, nuxtApp) {
+          if (nuxtApp.isHydrating) {
+            return nuxtApp.payload.data[key]
+          }
+        }
       }
-    })
+    )
 
     return { detailPageNotFound }
   },
