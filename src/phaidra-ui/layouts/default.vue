@@ -67,7 +67,9 @@
         </v-col>
       </v-row>
     </v-container>
-    <CookieBanner></CookieBanner>
+    <ClientOnly>
+      <CookieBanner />
+    </ClientOnly>
   </v-app>
 </template>
 
