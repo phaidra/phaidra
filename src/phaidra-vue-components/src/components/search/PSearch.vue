@@ -312,7 +312,7 @@ export default {
       }
       if (process.browser) {
         this.link = location.protocol + '//' + location.host + location.pathname + '?' + searchdefarr.join('&')
-        window.history.replaceState(null, this.$t('Search results'), this.link)
+        window.history.replaceState(window.history.state, '', this.link)
       }
 
       try {
