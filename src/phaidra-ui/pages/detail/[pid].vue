@@ -950,7 +950,7 @@
                                   variant="flat"
                                   size="x-small"
                                   color="primary"
-                                  class="mr-2"
+                                  class="ml-2 mr-2"
                                   >{{ $t("Cite") }}</v-btn
                                 >
                               </template>
