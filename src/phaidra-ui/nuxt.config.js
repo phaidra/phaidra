@@ -92,8 +92,7 @@ export default defineNuxtConfig({
     { src: '~/plugins/lodash.js' },
     { src: '~/plugins/vuetify.js' },
     { src: '~/plugins/phaidra-vue-components' },
-    { src: '~/plugins/bulk-upload-persistence.client.js' },
-    { src: '~/plugins/vuetify-runtime-components.js' }
+    { src: '~/plugins/bulk-upload-persistence.client.js' }
   ],
 
   components: [

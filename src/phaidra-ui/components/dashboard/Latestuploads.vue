@@ -39,7 +39,7 @@
         <v-divider :key="'div'+doc.pid" class="mt-4 mb-2 mr-2"></v-divider>
       </div>
       <div>
-        <nuxt-link :to="{ path: '/search?q='+fq }">{{ $t(linklabel) }} ({{ total }})</nuxt-link>
+        <nuxt-link :to="{ path: '/search', query: { fq: fq } }">{{ $t(linklabel) }} ({{ total }})</nuxt-link>
       </div>
     </v-card-text>
   </v-card>

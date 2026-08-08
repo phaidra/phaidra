@@ -4,7 +4,7 @@
     <div v-else class="font-weight-light text-title-large" :class="titleClass" style="word-break: break-word;">{{ $t(label) }}</div>
     <v-card-text :class="textcenter ? 'text-center justify-center' : ''">
       <div>
-        <nuxt-link :to="{ path: '/search?q='+fq }">{{ $t(linklabel)  }} ({{ total }})</nuxt-link>
+        <nuxt-link :to="{ path: '/search', query: { collection: collection } }">{{ $t(linklabel)  }} ({{ total }})</nuxt-link>
       </div>
     </v-card-text>
   </v-card>
@@ -20,7 +20,7 @@ export default {
   props: {
     label: String,
     text: String,
-    fq: String,
+    collection: String,
     titlecolor: {
       type: String,
       default: 'primary'
@@ -39,7 +39,7 @@ export default {
     }
   },
   computed: {
-    pid:  function () {
+    pid: function () {
       if (this.doc) {
         return this.doc.pid
       }
@@ -70,8 +70,8 @@ export default {
         defType: "edismax",
         wt: "json",
       };
-      if (self.fq) {
-        params.fq = self.fq
+      if (self.collection) {
+        params.fq = `ispartof:"${this.collection}"`
       }
       let query = qs.stringify(params, {
         encodeValuesOnly: true,

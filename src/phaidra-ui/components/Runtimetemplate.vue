@@ -4,16 +4,13 @@ import { compile, NodeTypes } from '@vue/compiler-dom'
 import * as runtimeDom from '@vue/runtime-dom'
 import { cmsRuntimeComponents } from '../utils/cms-runtime-components'
 import { ClientOnly, NuxtLink } from '#components'
-import Icon from './Icon.vue'
+import { cmsLocalComponents } from '../utils/cms-local-components'
 
 const CMS_COMPONENTS = {
   ...cmsRuntimeComponents,
+  ...cmsLocalComponents,
   NuxtLink,
-  'nuxt-link': NuxtLink,
-  ClientOnly,
-  'client-only': ClientOnly,
-  Icon,
-  icon: Icon
+  ClientOnly
 }
 
 const COMPILE_OPTIONS = {
