@@ -381,7 +381,9 @@
         </template>
 
         <template v-else-if="entry.p==='phaidra:systemTag'">
-          <p-d-value v-if="showSystemFields" :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'systemTag'+j" v-bind="displayProperties"></p-d-value>
+          <template v-if="showSystemFields">
+            <p-d-value :p="entry.p" :o="item" v-for="(item, j) in entry.o" :key="componentid+'systemTag'+j" v-bind="displayProperties"></p-d-value>
+          </template>
         </template>
 
         <template v-else>

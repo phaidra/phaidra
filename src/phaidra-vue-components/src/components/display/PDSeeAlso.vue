@@ -1,11 +1,13 @@
 <template>
   <span>
-    <v-row v-for="(l, i) in o['skos:prefLabel']" v-if="o['skos:prefLabel'] && l['@language'] === displaylang" :key="'prl'+i">
-      <v-col :md="labelColMd" cols="12" v-if="p==='bf:note'" class="pdlabel text-secondary font-weight-bold text-md-right" >{{ $t(o['@type']) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
-      <v-col :md="labelColMd" cols="12" v-else class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(p) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
-      <v-col :md="valueColMd" cols="12" v-if="o['schema:url']"><a class="valuefield" :href="o['schema:url'][0]" target="_blank">{{ l['@value'] || o['schema:url'][0] }}</a></v-col>
-      <v-col class="valuefield" :md="valueColMd" cols="12" v-else>{{ l['@value'] }}</v-col>
-    </v-row>
+    <template v-for="(l, i) in (o['skos:prefLabel'] || [])" :key="'prl'+i">
+      <v-row v-if="l && l['@language'] === displaylang">
+        <v-col :md="labelColMd" cols="12" v-if="p==='bf:note'" class="pdlabel text-secondary font-weight-bold text-md-right" >{{ $t(o['@type']) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
+        <v-col :md="labelColMd" cols="12" v-else class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(p) }}<template v-if="showLang && l['@language']"> ({{ l['@language'] }})</template></v-col>
+        <v-col :md="valueColMd" cols="12" v-if="o['schema:url']"><a class="valuefield" :href="o['schema:url'][0]" target="_blank">{{ l['@value'] || o['schema:url'][0] }}</a></v-col>
+        <v-col class="valuefield" :md="valueColMd" cols="12" v-else>{{ l['@value'] }}</v-col>
+      </v-row>
+    </template>
     <v-row v-if="!o['skos:prefLabel'] && o['schema:url']" :key="'url-only'">
       <v-col :md="labelColMd" cols="12" v-if="p==='bf:note'" class="pdlabel text-secondary font-weight-bold text-md-right" >{{ $t(o['@type']) }}</v-col>
       <v-col :md="labelColMd" cols="12" v-else class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(p) }}</v-col>
@@ -37,6 +39,7 @@ export default {
       let lang
       let somelang
       for (let label of this.o['skos:prefLabel']) {
+        if (!label) continue
         somelang = label['@language']
         if (label['@language'] === this.$i18n.locale) {
           lang = this.$i18n.locale
