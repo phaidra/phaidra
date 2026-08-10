@@ -125,12 +125,17 @@ export default {
           children: scriptContent
         })
       }
+      const cmsCss = (instanceconfig.cms_css || '').trim()
+      const style = cmsCss
+        ? [{ id: 'instance-cms-css', children: cmsCss }]
+        : []
 
       return {
         htmlAttrs: { lang },
         title,
         meta,
-        script
+        script,
+        style
       }
     })
   },
@@ -247,13 +252,6 @@ export default {
       return true
     },
     applyRuntimeOverrides() {
-      if (import.meta.client && this.instanceconfig.cms_css && this.instanceconfig.cms_css !== '') {
-        const style = document.createElement('style');
-        style.type = 'text/css';
-        style.innerHTML = this.instanceconfig.cms_css;
-        document.head.appendChild(style);
-      }
-
       applyI18nOverrides(this.$i18n, this.$store.state.instanceconfig?.data_i18n)
       applyInfoBannerMessage(this.$i18n, this.instanceconfig?.infoBannerMessage)
     },
@@ -290,9 +288,6 @@ export default {
     }
   },
   computed: {
-    cmsCss() {
-      return this.instanceconfig?.cms_css?.trim() || ''
-    },
     prettyInstanceconfig: function () {
       return JSON.stringify(this.instanceconfig, null, 2)
     },
