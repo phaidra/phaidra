@@ -27,7 +27,8 @@
                 <v-col md="10" cols="12">
                   <v-row v-for="(n, ri) in obj" :key="'adpname' + ri">
                     <template v-for="(gn, gni) in n['schema:givenName']" :key="'adgn-'+ri+'-'+gni" class="valuefield">{{ gn['@value'] }}</template>
-                    <template v-for="(fn, fni) in n['schema:familyName']" :key="'adfn-'+ri+'-'+fni" class="valuefield"> {{ fn['@value'] }}</template>
+                    <template v-if="n['schema:givenName']?.length && n['schema:familyName']?.length">{{ ' ' }}</template>
+                    <template v-for="(fn, fni) in n['schema:familyName']" :key="'adfn-'+ri+'-'+fni" class="valuefield">{{ fn['@value'] }}</template>
                     <template v-for="(nm, nmi) in n['schema:name']" :key="'adnm-'+ri+'-'+nmi" class="valuefield"> {{ nm['@value'] }}</template>
                     <template v-if="n['schema:affiliation']" class="text-secondary">
                       <template v-for="(af, afi) in n['schema:affiliation']" :key="'adaff-'+ri+'-'+afi">

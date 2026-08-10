@@ -6,19 +6,19 @@
         <template v-if="entity['skos:exactMatch']">
           <template v-if="entity['skos:exactMatch'].length === 1">
             <a class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }" :href="getIDResolverURL(entity['skos:exactMatch'][0])" target="_blank">
-              <icon width="16px" height="16px" class="mr-1 mb-1" v-if="entity['skos:exactMatch'][0]['@type'] === 'ids:orcid'" name="orcid"></icon><template v-for="(gn, gni) in entity['schema:givenName']" :key="'gn-'+gni" class="valuefield">{{ gn['@value'] }}</template><template v-for="(fn, fni) in entity['schema:familyName']" :key="'fn-'+fni" class="valuefield"> {{ fn['@value'] }}</template><template v-for="(n, ni) in entity['schema:name']" :key="'nm-'+ni" class="valuefield">{{ n['@value'] }}</template>
+              <icon width="16px" height="16px" class="mr-1 mb-1" v-if="entity['skos:exactMatch'][0]['@type'] === 'ids:orcid'" name="orcid"></icon><template v-for="(gn, gni) in entity['schema:givenName']" :key="'gn-'+gni" class="valuefield">{{ gn['@value'] }}</template><template v-if="entity['schema:givenName']?.length && entity['schema:familyName']?.length">{{ ' ' }}</template><template v-for="(fn, fni) in entity['schema:familyName']" :key="'fn-'+fni" class="valuefield">{{ fn['@value'] }}</template><template v-for="(n, ni) in entity['schema:name']" :key="'nm-'+ni" class="valuefield">{{ n['@value'] }}</template>
             </a>
 <template class="valuefield">{{ formatBirthDeathDate() }}</template>
           </template>
           <template v-else-if="entity['skos:exactMatch'].length > 1">
             <a class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }" :href="getIDResolverURL(entity['skos:exactMatch'][0])" target="_blank">
-              <template v-for="(gn, gni) in entity['schema:givenName']" :key="'gn2-'+gni" class="valuefield">{{ gn['@value'] }}</template><template v-for="(fn, fni) in entity['schema:familyName']" :key="'fn2-'+fni" class="valuefield"> {{ fn['@value'] }}</template><template v-for="(n, ni) in entity['schema:name']" :key="'nm2-'+ni" class="valuefield">{{ n['@value'] }}</template>
+              <template v-for="(gn, gni) in entity['schema:givenName']" :key="'gn2-'+gni" class="valuefield">{{ gn['@value'] }}</template><template v-if="entity['schema:givenName']?.length && entity['schema:familyName']?.length">{{ ' ' }}</template><template v-for="(fn, fni) in entity['schema:familyName']" :key="'fn2-'+fni" class="valuefield">{{ fn['@value'] }}</template><template v-for="(n, ni) in entity['schema:name']" :key="'nm2-'+ni" class="valuefield">{{ n['@value'] }}</template>
             </a>
             <template class="valuefield">{{ formatBirthDeathDate() }}</template>
           </template>
         </template>
         <template v-else>
-          <template v-for="(gn, gni) in entity['schema:givenName']" :key="'gn3-'+gni"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }">{{ gn['@value'] }}</span></template><template v-for="(fn, fni) in entity['schema:familyName']" :key="'fn3-'+fni"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }"> {{ fn['@value'] }}</span></template><template v-for="(n, ni) in entity['schema:name']" :key="'nm3-'+ni"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }">{{ n['@value'] }}</span></template>
+          <template v-for="(gn, gni) in entity['schema:givenName']" :key="'gn3-'+gni"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }">{{ gn['@value'] }}</span></template><template v-if="entity['schema:givenName']?.length && entity['schema:familyName']?.length">{{ ' ' }}</template><template v-for="(fn, fni) in entity['schema:familyName']" :key="'fn3-'+fni"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }">{{ fn['@value'] }}</span></template><template v-for="(n, ni) in entity['schema:name']" :key="'nm3-'+ni"><span class="valuefield" :class="{ 'font-weight-regular': boldLabelFields.includes('role') }">{{ n['@value'] }}</span></template>
           <template class="valuefield">{{ formatBirthDeathDate() }}</template>
         </template>
         <template v-if="entity['schema:affiliation']" class="text-secondary">
