@@ -1934,8 +1934,8 @@ export default {
           ]
         }
         if (
-          (f.affiliationType === 'select' && isNonBlankString(f.affiliationSelectedName)) ||
-          (f.affiliationType === 'ror' && isNonBlankString(f.affiliationSelectedName)) ||
+          (f.affiliationType === 'select' && isNonBlankString(f.affiliation)) ||
+          (f.affiliationType === 'ror' && isNonBlankString(f.affiliation)) ||
           (f.affiliationType === 'other' && affiliationText)
         ) {
           h['schema:affiliation'] = [ a ]
