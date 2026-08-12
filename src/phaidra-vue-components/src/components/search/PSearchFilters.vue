@@ -172,17 +172,19 @@
             <v-row no-gutters v-if="showAuthorFilter" id="author-content" role="region"
               aria-labelledby="author-control">
               <v-col cols="12">
-                <v-combobox class="mt-4"
+                <v-combobox id="pers-authors" class="mt-4"
+                  :label="$t('Personal')"
                   :placeholder="$t('ADD_PREFIX') + ' '  + $t('Author') + ' ' + $t('ADD_SUFFIX') + '...'"
-                  :hint="$t('Personal')" persistent-hint chips clearable deletable-chips multiple variant="filled"
+                  :hint="$t('Personal')" persistent-hint chips clearable closable-chips multiple variant="filled"
                   single-line v-model="persAuthors.values" @update:model-value="setPersAuthors()" />
               </v-col>
             </v-row>
             <v-row no-gutters v-if="showAuthorFilter">
               <v-col cols="12">
-                <v-combobox class="mt-4"
+                <v-combobox id="corp-authors" class="mt-4"
+                  :label="$t('Corporate')"
                   :placeholder="$t('ADD_PREFIX') + ' '  + $t('Author') + ' ' + $t('ADD_SUFFIX') + '...'"
-                  :hint="$t('Corporate')" persistent-hint chips clearable deletable-chips multiple variant="filled"
+                  :hint="$t('Corporate')" persistent-hint chips clearable closable-chips multiple variant="filled"
                   single-line v-model="corpAuthors.values" @update:model-value="setCorpAuthors()" />
               </v-col>
             </v-row>
