@@ -447,7 +447,7 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/ui-dev.dockerfile
-    command: "npm run dev"
+    command: "pnpm run dev"
     environment:
       <<: [*api_common_env, *hosts, *ui_theme_env]
       LEGACY_OPEN_REDIRECT: "${LEGACY_OPEN_REDIRECT:-false}"
@@ -467,6 +467,8 @@ services:
             - node_modules/
         - action: rebuild
           path: ./src/phaidra-ui/package.json
+        - action: rebuild
+          path: ./src/phaidra-ui/pnpm-lock.yaml
 
   ui-s3-dev:
     hostname: "ui"
