@@ -467,6 +467,8 @@ services:
             - node_modules/
         - action: rebuild
           path: ./src/phaidra-ui/package.json
+        - action: rebuild
+          path: ./src/phaidra-ui/pnpm-lock.yaml
 
   ui-s3-dev:
     hostname: "ui"

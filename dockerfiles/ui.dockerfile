@@ -19,7 +19,7 @@ ENV HOST=0.0.0.0
 ENV PORT=3001
 
 # Install deps (includes devDependencies such as sass-embedded)
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 # Build Nuxt
 RUN pnpm build

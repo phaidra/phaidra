@@ -13,7 +13,7 @@ ADD ./../src/phaidra-ui /usr/local/phaidra/phaidra-ui
 ADD ./../src/phaidra-vue-components /usr/local/phaidra/phaidra-vue-components
 WORKDIR /usr/local/phaidra/phaidra-vue-components
 RUN <<EOF
-pnpm install
+pnpm install --frozen-lockfile
 EOF
 WORKDIR /usr/local/phaidra/phaidra-ui
 ENV HOST=0.0.0.0
@@ -26,6 +26,6 @@ ENV VITE_WATCH_INTERVAL=250
 EXPOSE 3001
 RUN <<EOF
 npm i -g pm2@latest
-pnpm install
+pnpm install --frozen-lockfile
 pnpm add /usr/local/phaidra/phaidra-vue-components
 EOF
