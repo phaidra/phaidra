@@ -42,7 +42,8 @@ our $namespaces = {
   cito         => {label => "CiTO, the Citation Typing Ontology",                             IRI => "http://purl.org/spar/cito/"},
   arm          => {label => "Art and Rare Materials Core Ontology",                           IRI => "https://ld4p.github.io/arm/core/ontology/0.1/"},
   rdam         => {label => "RDA Manifestation",                                              IRI => "http://rdaregistry.info/Elements/m/"},
-  rdax         => {label => "RDA Entity",                                                     IRI => "http://rdaregistry.info/Elements/x/"}
+  rdax         => {label => "RDA Entity",                                                     IRI => "http://rdaregistry.info/Elements/x/"},
+  vra          => {label => "VRA Core",                                                       IRI => "http://purl.org/vra/"}
 };
 
 our %cm2rt = (
