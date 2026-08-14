@@ -30,7 +30,12 @@ sub get {
     my $object_model = PhaidraAPI::Model::Object->new;
 
     # return XML directly
-    $object_model->proxy_datastream($self, $pid, 'UWMETADATA', undef, undef, 1);
+    my $res = $object_model->get_datastream($self, $pid, 'UWMETADATA', undef, undef, 1);
+    if ($res->{status} ne 200) {
+      $self->render(json => {alerts => $res->{alerts}}, status => $res->{status});
+      return;
+    }
+    $self->render(text => $res->{UWMETADATA}, format => 'xml', status => 200);
     return;
   }
 
