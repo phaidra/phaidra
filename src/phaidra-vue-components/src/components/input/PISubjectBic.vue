@@ -116,7 +116,9 @@ export default {
           'skos:notation': term['skos:notation']
         })
       } else {
+        this.path = ''
         this.$emit('input', null)
+        this.$emit('resolve', null)
       }
     }
   },

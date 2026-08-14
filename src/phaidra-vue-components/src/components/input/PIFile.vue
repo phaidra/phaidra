@@ -11,6 +11,7 @@
         :variant="fieldVariant"
         :bg-color="backgroundColor ? backgroundColor : undefined"
         show-size
+        clearable
         :hint="$t('You can use drag & drop')"
         persistent-hint
         @update:model-value="onFileModelUpdate"
