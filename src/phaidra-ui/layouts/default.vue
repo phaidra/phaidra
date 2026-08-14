@@ -198,6 +198,11 @@ export default {
   watch: {
     faviconUrl(val) {
       this.updateFavicon(val)
+    },
+    '$route.path'(to, from) {
+      if (to !== from) {
+        this.$store.commit('clearAlerts')
+      }
     }
   },
   methods: {
