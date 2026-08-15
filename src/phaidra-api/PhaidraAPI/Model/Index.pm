@@ -1388,7 +1388,7 @@ sub _get {
 
   if (exists($datastreams{'JSON-LD'})) {
     my $jsonld_model = PhaidraAPI::Model::Jsonld->new;
-    my $r_jsonld     = $jsonld_model->get_object_jsonld_parsed($c, $pid, $c->app->config->{phaidra}->{intcallusername}, $c->app->config->{phaidra}->{intcallpassword});
+    my $r_jsonld     = $jsonld_model->get_object_jsonld_parsed($c, $pid, $c->app->config->{fedora}->{adminuser}, $c->app->config->{fedora}->{adminpass});
 
     if ($r_jsonld->{status} ne 200) {
       push @{$res->{alerts}}, {type => 'error', msg => "Error getting JSON-LD for $pid"};

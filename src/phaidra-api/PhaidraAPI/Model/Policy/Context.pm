@@ -117,9 +117,6 @@ sub _build_subject {
     }
   }
 
-  my $intcall = $c->app->config->{phaidra}->{intcallusername} // '';
-  my $is_internal = ($username && $intcall && $username eq $intcall) ? true : false;
-
   return {
     username         => $username // '',
     authenticated    => $username ? true : false,
@@ -132,7 +129,6 @@ sub _build_subject {
     project_groups   => \@project_groups,
     remote_address   => $remote_address // '',
     ip               => $remote_address // '',
-    is_internal_call => $is_internal,
   };
 }
 
@@ -144,6 +140,11 @@ sub _compute_roles {
 
   if ($username eq ($c->app->config->{phaidra}->{adminusername} // '')) {
     push @roles, 'admin';
+  }
+
+  # Fedora admin gets elevated privileges for repository service operations
+  if ($username eq ($c->app->config->{fedora}->{adminuser} // '')) {
+    push @roles, 'admin' unless grep { $_ eq 'admin' } @roles;
   }
 
   if ($userdata->{isadmin}) {
@@ -201,8 +202,8 @@ sub _build_resource {
         my $rights_model = PhaidraAPI::Model::Rights->new;
         my $rightsres = $rights_model->get_object_rights_json(
           $c, $pid,
-          $c->app->config->{phaidra}->{intcallusername},
-          $c->app->config->{phaidra}->{intcallpassword}
+          $c->app->config->{fedora}->{adminuser},
+          $c->app->config->{fedora}->{adminpass}
         );
         if ($rightsres->{status} eq 200) {
           $cache->{rights} = $rightsres->{rights};

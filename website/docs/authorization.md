@@ -15,6 +15,7 @@ The API assembles a JSON **input document** (subject, resource, action, environm
 | Role / rule | Effect |
 |-------------|--------|
 | Admin / superuser | Full read/write on all objects |
+| Fedora admin (`FEDORA_ADMIN_USER`) | Same as admin when authenticating (service operations) |
 | Owner | Full read/write on owned objects |
 | Virtual group owner (`group:<gid>`) | Members of project group have owner rights |
 | Anonymous | Read active objects without RIGHTS restrictions |

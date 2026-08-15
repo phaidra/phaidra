@@ -11,7 +11,3 @@ grant if {
 grant if {
 	helpers.is_superuser
 }
-
-grant if {
-	helpers.is_internal_call
-}

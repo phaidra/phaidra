@@ -177,7 +177,7 @@ sub check_rights_legacy {
   # if the object has non-empty RIGHTS, it's restricted.
   # Only users/groups/orgunits in the list are allowed to READ
   my $rights_model = PhaidraAPI::Model::Rights->new;
-  my $rightsres    = $rights_model->get_object_rights_json($c, $pid, $c->app->config->{phaidra}->{intcallusername}, $c->app->config->{phaidra}->{intcallpassword});
+  my $rightsres    = $rights_model->get_object_rights_json($c, $pid, $c->app->config->{fedora}->{adminuser}, $c->app->config->{fedora}->{adminpass});
   if ($rightsres->{status} ne 200) {
     if ($rightsres->{status} eq 404) {
       $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] GRANTED: no rights datastream");

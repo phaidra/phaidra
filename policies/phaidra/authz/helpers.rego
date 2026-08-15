@@ -35,10 +35,6 @@ is_superuser if {
 	"superuser" in input.subject.roles
 }
 
-is_internal_call if {
-	input.subject.is_internal_call == true
-}
-
 has_role(role) if {
 	role in input.subject.roles
 }

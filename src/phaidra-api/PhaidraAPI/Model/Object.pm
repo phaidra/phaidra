@@ -771,7 +771,7 @@ sub create_simple {
   if (exists($metadata->{metadata}->{'ownerid'})) {
     $c->app->log->info("Changing ownerid to " . $metadata->{metadata}->{'ownerid'});
     my $authorized = 0;
-    if ( ($username eq $c->app->config->{phaidra}->{intcallusername})
+    if ( ($username eq $c->app->config->{fedora}->{adminuser})
       || ($username eq $c->app->config->{phaidra}->{adminusername}))
     {
       $authorized = 1;
@@ -1047,7 +1047,7 @@ sub create_container {
   if (exists($metadata->{metadata}->{'ownerid'})) {
     $c->app->log->debug("Changing ownerid to " . $metadata->{metadata}->{'ownerid'});
     my $authorized = 0;
-    if ( ($username eq $c->app->config->{phaidra}->{intcallusername})
+    if ( ($username eq $c->app->config->{fedora}->{adminuser})
       || ($username eq $c->app->config->{phaidra}->{adminusername}))
     {
       $authorized = 1;
@@ -1341,7 +1341,7 @@ sub save_metadata {
 }
 
 sub get_datastream {
-  my ($self, $c, $pid, $dsid, $username, $password, $intcallauth) = @_;
+  my ($self, $c, $pid, $dsid, $username, $password) = @_;
 
   my $res = {alerts => [], status => 200};
 
@@ -1350,7 +1350,7 @@ sub get_datastream {
 }
 
 sub proxy_datastream {
-  my ($self, $c, $pid, $dsid, $username, $password, $intcallauth) = @_;
+  my ($self, $c, $pid, $dsid, $username, $password) = @_;
 
   my $res = {alerts => [], status => 200};
 

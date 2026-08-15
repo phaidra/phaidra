@@ -50,10 +50,6 @@ can_change_owner if {
 }
 
 can_change_owner if {
-	helpers.is_internal_call
-}
-
-can_change_owner if {
 	some user in input.config.canmodifyownerid
 	user == input.subject.username
 }

@@ -96,7 +96,7 @@ sub create {
   if (exists($metadata->{'ownerid'})) {
     $c->app->log->debug("Changing ownerid to " . $metadata->{'ownerid'});
     my $authorized = 0;
-    if ( ($username eq $c->app->config->{phaidra}->{intcallusername})
+    if ( ($username eq $c->app->config->{fedora}->{adminuser})
       || ($username eq $c->app->config->{phaidra}->{adminusername}))
     {
       $authorized = 1;

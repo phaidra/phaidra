@@ -15,7 +15,6 @@ test_admin_grants_rw if {
 			"org_units_l2": [],
 			"ldap_groups": [],
 			"project_groups": [],
-			"is_internal_call": false,
 		},
 		"resource": {
 			"type": "object",
@@ -45,7 +44,6 @@ test_owner_grants_rw if {
 			"org_units_l2": [],
 			"ldap_groups": [],
 			"project_groups": [],
-			"is_internal_call": false,
 		},
 		"resource": {
 			"type": "object",
@@ -74,7 +72,6 @@ test_virtual_group_owner if {
 			"org_units_l2": [],
 			"ldap_groups": [],
 			"project_groups": ["3111"],
-			"is_internal_call": false,
 		},
 		"resource": {
 			"type": "object",
@@ -103,7 +100,6 @@ test_anonymous_write_denied if {
 			"org_units_l2": [],
 			"ldap_groups": [],
 			"project_groups": [],
-			"is_internal_call": false,
 		},
 		"resource": {
 			"type": "object",
@@ -132,7 +128,6 @@ test_public_read_active_object if {
 			"org_units_l2": [],
 			"ldap_groups": [],
 			"project_groups": [],
-			"is_internal_call": false,
 		},
 		"resource": {
 			"type": "object",
@@ -161,7 +156,6 @@ test_inactive_denied_for_reader if {
 			"org_units_l2": [],
 			"ldap_groups": [],
 			"project_groups": [],
-			"is_internal_call": false,
 		},
 		"resource": {
 			"type": "object",
@@ -190,7 +184,6 @@ test_rights_username_match if {
 			"org_units_l2": [],
 			"ldap_groups": [],
 			"project_groups": [],
-			"is_internal_call": false,
 		},
 		"resource": {
 			"type": "object",
@@ -219,7 +212,6 @@ test_deprecated_rights_denied if {
 			"org_units_l2": [],
 			"ldap_groups": [],
 			"project_groups": [],
-			"is_internal_call": false,
 		},
 		"resource": {
 			"type": "object",
@@ -248,7 +240,6 @@ test_create_allowed_for_uploader if {
 			"org_units_l2": [],
 			"ldap_groups": [],
 			"project_groups": [],
-			"is_internal_call": false,
 		},
 		"resource": {
 			"type": "object",

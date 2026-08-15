@@ -23,7 +23,7 @@ sub get {
 
   my $object_model = PhaidraAPI::Model::Object->new;
 
-  # do not use admin/intcall credentials here!
+  # do not use admin credentials here!
   $object_model->proxy_datastream($self, $pid, 'JSON-LD-PRIVATE', $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
   return;
 }
