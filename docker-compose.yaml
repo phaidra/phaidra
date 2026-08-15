@@ -107,6 +107,14 @@ x-custom:
     MARIADB_FEDORA_USER: "${MARIADB_FEDORA_USER:-phaidra}"
     MARIADB_FEDORA_PASSWORD: "${MARIADB_FEDORA_PASSWORD:-phaidra}"
     PHAIDRA_API_WORKER: "${PHAIDRA_API_WORKER:-16}"
+    OPA_ENABLED: "${OPA_ENABLED:-false}"
+    OPA_URL: "${OPA_URL:-http://opa:8181}"
+    OPA_POLICY_PATH: "${OPA_POLICY_PATH:-/v1/data/phaidra/authz/allow}"
+    OPA_FAIL_MODE: "${OPA_FAIL_MODE:-legacy}"
+    OPA_DUAL_RUN: "${OPA_DUAL_RUN:-false}"
+    OPA_INSTITUTION: "${OPA_INSTITUTION:-default}"
+    OPA_POLICY_VERSION: "${OPA_POLICY_VERSION:-}"
+    OPA_AUDIT_STORE_DENIALS: "${OPA_AUDIT_STORE_DENIALS:-false}"
 
   configs: &configs
     configs:
@@ -483,10 +491,48 @@ services:
       IR_BASE_URL: "${IR_BASE_URL:-}"
     profiles: ["demo-s3-dev", "ssl-s3-dev", "shib-s3-dev"]
 
+  ############### opa ###############
+  opa:
+    hostname: "opa"
+    image: openpolicyagent/opa:latest
+    <<: [*common, *logs]
+    command:
+      [
+        "run",
+        "--server",
+        "--addr",
+        ":8181",
+        "--config-file",
+        "/policies/opa-config.yaml",
+        "/policies",
+      ]
+    volumes:
+      - ./policies:/policies:ro
+    healthcheck:
+      test: ["CMD", "/opa", "eval", "true"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    profiles:
+      [
+        "demo-local",
+        "demo-s3",
+        "ssl-local",
+        "ssl-s3",
+        "shib-local",
+        "shib-s3",
+        "demo-local-dev",
+        "demo-s3-dev",
+        "ssl-local-dev",
+        "ssl-s3-dev",
+        "shib-local-dev",
+        "shib-s3-dev",
+      ]
+
   ############### api ###############
   api-s3:
     hostname: "api"
-    depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3]
+    depends_on: [mariadb-phaidra, mongodb-phaidra, fedora-s3, opa]
     image: phaidraorg/api-dist:d4d3dfb1
     <<: [*common, *logs]
     volumes:
@@ -500,7 +546,7 @@ services:
 
   api:
     hostname: "api"
-    depends_on: [mariadb-phaidra, mongodb-phaidra, fedora]
+    depends_on: [mariadb-phaidra, mongodb-phaidra, fedora, opa]
     image: phaidraorg/api-dist:d4d3dfb1
     <<: [*common, *logs]
     volumes:
@@ -517,6 +563,7 @@ services:
 
   api-local-dev:
     hostname: "api"
+    depends_on: [opa]
     image: phaidraorg/api-base:latest
     pull_policy: always
     <<: [*common, *logs]
@@ -532,6 +579,8 @@ services:
           action: sync+restart
     environment:
       <<: [*api_common_env, *hosts]
+      OPA_ENABLED: "${OPA_ENABLED:-true}"
+      OPA_DUAL_RUN: "${OPA_DUAL_RUN:-true}"
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
       IMAGESERVER_ROOT_PATH: "/mnt/derivates-images"
       SHIB_MAIL: "${SHIB_MAIL:-}"
@@ -539,6 +588,7 @@ services:
 
   api-s3-dev:
     hostname: "api"
+    depends_on: [opa]
     image: phaidraorg/api-base:latest
     pull_policy: always
     <<: [*common, *logs]
@@ -552,6 +602,8 @@ services:
           action: sync+restart
     environment:
       <<: [*api_common_env, *hosts, *s3]
+      OPA_ENABLED: "${OPA_ENABLED:-true}"
+      OPA_DUAL_RUN: "${OPA_DUAL_RUN:-true}"
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-}"
       IMAGESERVER_ROOT_PATH: "s3-cache/derivates-images"
       SHIB_MAIL: "${SHIB_MAIL:-mail}"

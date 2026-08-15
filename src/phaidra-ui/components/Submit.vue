@@ -72,7 +72,7 @@
         </v-row>
         <v-divider class="my-2"></v-divider>
       </template>
-      <template v-if="user.cataloguploader">
+      <template v-if="user.authzForms && user.authzForms.catalogfetchupload">
         <v-row class="my-6" justify="start">
           <div class="d-flex flex-row ml-3">
             <v-btn
@@ -123,6 +123,21 @@
               {{ $t("Collection") }}
             </v-btn>
           </v-col>
+        </v-row>
+        <v-divider class="my-2"></v-divider>
+      </template>
+      <template v-if="user.authzForms && user.authzForms.bulkupload">
+        <v-row class="my-6" justify="start">
+          <div class="d-flex flex-row ml-3">
+            <v-btn
+              color="primary"
+              variant="elevated"
+              prepend-icon="mdi-upload-multiple"
+              @click="$router.push(localePath('/bulk-upload'))"
+            >
+              {{ $t("Bulk upload") }}
+            </v-btn>
+          </div>
         </v-row>
         <v-divider class="my-2"></v-divider>
       </template>

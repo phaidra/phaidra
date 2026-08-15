@@ -1,0 +1,76 @@
+{
+  "institution": "default",
+  "admin_username": "",
+  "shib_superuser_affiliation": "",
+  "roles": {
+    "writer": {
+      "all_authenticated": true,
+      "usernames": [],
+      "affiliations": [],
+      "ldap_groups": []
+    },
+    "uploader": {
+      "all_authenticated": true,
+      "usernames": [],
+      "affiliations": [],
+      "ldap_groups": []
+    },
+    "approver": {
+      "usernames": [],
+      "affiliations": [],
+      "ldap_groups": []
+    },
+    "librarian": {
+      "usernames": [],
+      "affiliations": [],
+      "ldap_groups": []
+    },
+    "power_user": {
+      "usernames": [],
+      "affiliations": [],
+      "ldap_groups": []
+    }
+  },
+  "spaces": {
+    "default": {
+      "curated_submit": false,
+      "direct_upload_roles": ["uploader", "approver", "writer"]
+    },
+    "oer": {
+      "curated_submit": true,
+      "direct_upload_roles": ["approver"]
+    },
+    "ir": {
+      "curated_submit": true,
+      "direct_upload_roles": ["approver"]
+    }
+  },
+  "submit_forms": {
+    "catalogfetchupload": {
+      "roles": ["librarian", "admin"]
+    },
+    "bulkupload": {
+      "roles": ["power_user", "admin"]
+    }
+  },
+  "restrictions": {
+    "max_expiry_days": 365,
+    "allowed_roles": ["owner", "admin", "superuser"],
+    "forbidden_without_expiry": false
+  },
+  "metadata": {
+    "object_type": {
+      "thesis": {
+        "roles": ["librarian", "admin"]
+      }
+    }
+  },
+  "delete": {
+    "self_delete_roles": ["owner", "admin", "superuser"],
+    "require_enabledelete": true
+  },
+  "project_groups": {
+    "enabled": true,
+    "owner_prefix": "group:"
+  }
+}

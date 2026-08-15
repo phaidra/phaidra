@@ -656,6 +656,14 @@ export const mutations = {
     }
     state.user = data
   },
+  setAuthzCapabilities(state, { capabilities, forms }) {
+    state.user = {
+      ...state.user,
+      authzCapabilities: capabilities,
+      authzForms: forms,
+      cataloguploader: forms.catalogfetchupload === true
+    }
+  },
   setUsername(state, username) {
     state.user.username = username
   },
@@ -849,6 +857,7 @@ export const actions = {
         commit('setAlerts', response.data.alerts)
       }
       commit('setLoginData', response.data.user_data)
+      dispatch('getAuthzCapabilities')
     } catch (error) {
       console.log('getLoginData error')
       console.log(error)
@@ -856,6 +865,28 @@ export const actions = {
         commit('setAlerts', [{ type: 'success', msg: 'You have been logged out' }])
         commit('clearStore')
       }
+    }
+  },
+  async getAuthzCapabilities({ commit, state }) {
+    if (!state.user.token) {
+      return
+    }
+    try {
+      const response = await this.$axios.get('/authz/capabilities', {
+        headers: {
+          'X-XSRF-TOKEN': state.user.token
+        }
+      })
+      if (response.data.alerts && response.data.alerts.length > 0) {
+        commit('setAlerts', response.data.alerts)
+      }
+      commit('setAuthzCapabilities', {
+        capabilities: response.data.capabilities || [],
+        forms: response.data.forms || {}
+      })
+    } catch (error) {
+      console.log('getAuthzCapabilities error')
+      console.log(error)
     }
   },
   async login({ commit, dispatch, state }, credentials) {

@@ -8,6 +8,9 @@ use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Rights;
 use PhaidraAPI::Model::Fedora;
 use PhaidraAPI::Model::Directory;
+use PhaidraAPI::Model::Policy::Context;
+use PhaidraAPI::Model::Policy::Opa;
+use PhaidraAPI::Model::Policy::Audit;
 
 my %private_datastreams = (
   'RIGHTS'          => 1,
@@ -21,6 +24,38 @@ sub is_private_ds {
 }
 
 sub check_rights {
+  my ($self, $c, $pid, $op, $opts) = @_;
+  $opts //= {};
+
+  my $context_model = PhaidraAPI::Model::Policy::Context->new;
+  my $input = $context_model->build_object($c, $pid, $op, $opts);
+
+  my $opa_model = PhaidraAPI::Model::Policy::Opa->new;
+  my $decision = $opa_model->evaluate($c, $input);
+
+  my $audit_model = PhaidraAPI::Model::Policy::Audit->new;
+  $audit_model->log($c, $input, $decision);
+
+  return $opa_model->to_legacy_response($decision);
+}
+
+sub check_action {
+  my ($self, $c, $action_id, $opts) = @_;
+  $opts //= {};
+
+  my $context_model = PhaidraAPI::Model::Policy::Context->new;
+  my $input = $context_model->build_action_only($c, $action_id, $opts);
+
+  my $opa_model = PhaidraAPI::Model::Policy::Opa->new;
+  my $decision = $opa_model->evaluate($c, $input);
+
+  my $audit_model = PhaidraAPI::Model::Policy::Audit->new;
+  $audit_model->log($c, $input, $decision);
+
+  return $decision;
+}
+
+sub check_rights_legacy {
   no warnings 'uninitialized';
   my ($self, $c, $pid, $op) = @_;
 
@@ -101,6 +136,18 @@ sub check_rights {
   my $owner = $fres->{owner};
   my $state = $fres->{state};
 
+  # virtual group owner
+  my $group_prefix = 'group:';
+  if ($owner && index($owner, $group_prefix) == 0) {
+    my $gid = substr($owner, length($group_prefix));
+    if ($directory_model->is_group_member($c, $gid, $currentuser)) {
+      $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] GRANTED: virtual group owner[$gid]");
+      $res->{rights} = 'rw';
+      $res->{status} = 200;
+      return $res;
+    }
+  }
+
   # user can do anything on owned object
   if ($currentuser eq $owner) {
     $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] GRANTED: owner");
@@ -145,12 +192,6 @@ sub check_rights {
     return $res;
   }
   my $rights = $rightsres->{rights};
-
-  # see PhaidraAPI::Model::Rights
-  # 'username'   => 1,
-  # 'department' => 1,
-  # 'faculty'    => 1,
-  # 'gruppe'     => 1,
 
   my $rightsAreEmpty = 1;
 
@@ -257,11 +298,6 @@ sub check_rights {
     }
   }
 
-  # these are no more supported
-  # but that does not mean the object should be open
-  # 'spl'        => 1,
-  # 'kennzahl'   => 1,
-  # 'perfunk'    => 1
   if (exists($rights->{'spl'}) or exists($rights->{'kennzahl'}) or exists($rights->{'perfunk'})) {
     $rightsAreEmpty = 0;
     $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] DENIED: deprecated definition");

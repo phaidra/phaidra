@@ -420,6 +420,7 @@ sub startup {
 
   my $reader = $optionally_authenticated->under('/')->to('authorization#authorize', op => 'r');
   my $writer = $authenticated->under('/')->to('authorization#authorize', op => 'w');
+  my $uploader = $authenticated->under('/')->to('authorization#authorize_uploader');
 
   $self->plugin('Prometheus' => {'route' => $admin});
 
@@ -508,13 +509,13 @@ sub startup {
   $r->get('collection/:pid/descendants')            ->to('collection#descendants');
   $r->get('collection/:pid/rss')                    ->to('collection#rss');
 
-  $r->get('object/:pid/uwmetadata')                 ->to('uwmetadata#get');
-  $r->get('object/:pid/mods')                       ->to('mods#get');
-  $r->get('object/:pid/jsonld')                     ->to('jsonld#get');
-  $r->get('object/:pid/json-ld')                    ->to('jsonld#get', header => '1');
-  $r->get('object/:pid/geo')                        ->to('geo#get');
+  $reader->get('object/:pid/uwmetadata')                 ->to('uwmetadata#get');
+  $reader->get('object/:pid/mods')                       ->to('mods#get');
+  $reader->get('object/:pid/jsonld')                     ->to('jsonld#get');
+  $reader->get('object/:pid/json-ld')                    ->to('jsonld#get', header => '1');
+  $reader->get('object/:pid/geo')                        ->to('geo#get');
   $r->get('object/:pid/members/order')              ->to('membersorder#get');
-  $r->get('object/:pid/annotations')                ->to('annotations#get');
+  $reader->get('object/:pid/annotations')                ->to('annotations#get');
   $r->get('object/:pid/dc')                         ->to('dc#get');
   $r->get('object/:pid/index')                      ->to('index#get');
   $r->get('object/:pid/index/dc')                   ->to('dc#get');
@@ -571,6 +572,8 @@ sub startup {
   $authenticated->get('jsonld/template/:tid')                                   ->to('jsonld#get_template');
 
   $authenticated->get('authz/check/:pid/:op')                                   ->to('authorization#check_rights');
+  $authenticated->post('authz/check')                                          ->to('authorization#check_batch');
+  $authenticated->get('authz/capabilities')                                    ->to('authorization#capabilities');
 
   $reader->get('streaming/:pid')                                           ->to('object#preview');
   $reader->get('streaming/:pid/key')                                       ->to('streaming#key');
@@ -633,6 +636,7 @@ sub startup {
     $admin->post('streaming/:pid/process')                                 ->to('streaming#process');
 
     $writer->post('object/:pid/updateiiifmanifest')                        ->to('iiifmanifest#update_manifest_metadata');
+    $writer->post('object/:pid/approve')                                    ->to('object#approve');
     $writer->post('object/:pid/modify')                                    ->to('object#modify');
     $writer->post('object/:pid/delete')                                    ->to('object#delete');
     $writer->post('object/:pid/uwmetadata')                                ->to('uwmetadata#post');
@@ -655,17 +659,17 @@ sub startup {
     $admin->post('objects/:currentowner/modify')                           ->to('object#modify_bulk');
     $admin->post('objects/:currentowner/delete')                           ->to('object#delete_bulk');
 
-    $authenticated->post('picture/create')                                      ->to('object#create_simple', cmodel => 'cmodel:Picture');
-    $authenticated->post('document/create')                                     ->to('object#create_simple', cmodel => 'cmodel:PDFDocument');
-    $authenticated->post('video/create')                                        ->to('object#create_simple', cmodel => 'cmodel:Video');
-    $authenticated->post('audio/create')                                        ->to('object#create_simple', cmodel => 'cmodel:Audio');
-    $authenticated->post('unknown/create')                                      ->to('object#create_simple', cmodel => 'cmodel:Asset');
-    $authenticated->post('resource/create')                                     ->to('object#create_simple', cmodel => 'cmodel:Resource');
-    $authenticated->post('page/create')                                         ->to('object#create_simple', cmodel => 'cmodel:Page');
-    $authenticated->post('object/create')                                       ->to('object#create_empty');
-    $authenticated->post('object/create/:cmodel')                               ->to('object#create');
-    $authenticated->post('container/create')                                    ->to('object#create_container');
-    $authenticated->post('collection/create')                                   ->to('collection#create');
+    $uploader->post('picture/create')                                      ->to('object#create_simple', cmodel => 'cmodel:Picture');
+    $uploader->post('document/create')                                     ->to('object#create_simple', cmodel => 'cmodel:PDFDocument');
+    $uploader->post('video/create')                                        ->to('object#create_simple', cmodel => 'cmodel:Video');
+    $uploader->post('audio/create')                                        ->to('object#create_simple', cmodel => 'cmodel:Audio');
+    $uploader->post('unknown/create')                                      ->to('object#create_simple', cmodel => 'cmodel:Asset');
+    $uploader->post('resource/create')                                     ->to('object#create_simple', cmodel => 'cmodel:Resource');
+    $uploader->post('page/create')                                         ->to('object#create_simple', cmodel => 'cmodel:Page');
+    $uploader->post('object/create')                                       ->to('object#create_empty');
+    $uploader->post('object/create/:cmodel')                               ->to('object#create');
+    $uploader->post('container/create')                                    ->to('object#create_container');
+    $uploader->post('collection/create')                                   ->to('collection#create');
 
     $writer->post('container/:pid/members/order')                          ->to('membersorder#post');
     $writer->post('container/:pid/members/:itempid/order/:position')       ->to('membersorder#order_object_member');

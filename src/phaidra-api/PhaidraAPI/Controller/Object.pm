@@ -1008,6 +1008,25 @@ sub preview {
   $self->reply->exception("pid[$pid] internal error");
 }
 
+sub approve {
+  my $self = shift;
+
+  unless (defined($self->stash('pid'))) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
+    return;
+  }
+
+  my $object_model = PhaidraAPI::Model::Object->new;
+  my $r = $object_model->approve(
+    $self,
+    $self->stash('pid'),
+    $self->stash->{basic_auth_credentials}->{username},
+    $self->stash->{basic_auth_credentials}->{password}
+  );
+
+  $self->render(json => $r, status => $r->{status});
+}
+
 sub delete {
   my $self = shift;
 

@@ -500,19 +500,42 @@ sub modify {
   return $res;
 }
 
+sub _resolve_owner_id {
+  my ($self, $c, $username, $metadata) = @_;
+
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+
+  if ($metadata && ref($metadata) eq 'HASH') {
+    my $project_group = $metadata->{project_group} // $metadata->{'project-group'};
+    if ($project_group) {
+      if ($directory_model->is_group_member($c, $project_group, $username)) {
+        return "group:$project_group";
+      }
+      return undef;
+    }
+
+    if (exists($metadata->{ownerid})) {
+      return $metadata->{ownerid};
+    }
+  }
+
+  return $username;
+}
+
 sub create {
   my $self         = shift;
   my $c            = shift;
   my $contentmodel = shift;
   my $username     = shift;
   my $password     = shift;
+  my $owner        = shift;
 
   my $res = {alerts => [], status => 200};
 
   $c->app->log->debug("Creating empty object");
 
   # create empty object
-  my $r = $self->create_empty($c, $username, $password);
+  my $r = $self->create_empty($c, $username, $password, $owner);
   push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
 
   $res->{status} = $r->{status};
@@ -623,6 +646,14 @@ sub create_simple {
 
   my $pid = '';
   my $r;
+
+  my $resolved_owner = $self->_resolve_owner_id($c, $username, $metadata->{metadata});
+  if (defined($metadata->{metadata}) && ($metadata->{metadata}->{project_group} || $metadata->{metadata}->{'project-group'}) && !defined($resolved_owner)) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Not a member of the selected project group'};
+    $res->{status} = 403;
+    return $res;
+  }
+
   unless (exists($metadata->{'target-pid'})) {
 
     # use transactions only for object creation
@@ -635,7 +666,7 @@ sub create_simple {
     }
 
     # create object
-    $r = $self->create($c, $cmodel, $username, $password);
+    $r = $self->create($c, $cmodel, $username, $password, $resolved_owner);
     if ($r->{status} ne 200) {
       $res->{status} = 500;
       unshift @{$res->{alerts}}, @{$r->{alerts}};
@@ -717,18 +748,24 @@ sub create_simple {
     return $res;
   }
 
-  # activate
-  $r = $self->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
-  if ($r->{status} ne 200) {
-    $res->{status} = $r->{status};
-    foreach my $a (@{$r->{alerts}}) {
-      unshift @{$res->{alerts}}, $a;
-    }
-    unshift @{$res->{alerts}}, {type => 'error', msg => 'Error activating object'};
-    return $res;
+  # activate (unless curated submit requires approval)
+  my $initial_state = $c->stash->{curated_initial_state} // 'Inactive';
+  if ($initial_state eq 'PendingApproval') {
+    $c->app->log->info("Object created pid[$pid] awaiting approval");
   }
   else {
-    $c->app->log->info("Object successfully created pid[$pid] cmodel[$cmodel] took[" . tv_interval($t0) . "]");
+    $r = $self->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
+    if ($r->{status} ne 200) {
+      $res->{status} = $r->{status};
+      foreach my $a (@{$r->{alerts}}) {
+        unshift @{$res->{alerts}}, $a;
+      }
+      unshift @{$res->{alerts}}, {type => 'error', msg => 'Error activating object'};
+      return $res;
+    }
+    else {
+      $c->app->log->info("Object successfully created pid[$pid] cmodel[$cmodel] took[" . tv_interval($t0) . "]");
+    }
   }
 
   if (exists($metadata->{metadata}->{'ownerid'})) {
@@ -738,6 +775,11 @@ sub create_simple {
       || ($username eq $c->app->config->{phaidra}->{adminusername}))
     {
       $authorized = 1;
+    }
+    elsif ($resolved_owner && index($resolved_owner, 'group:') == 0) {
+      my $directory_model = PhaidraAPI::Model::Directory->new;
+      my $gid = substr($resolved_owner, 6);
+      $authorized = 1 if $directory_model->is_group_member($c, $gid, $username);
     }
     else {
       if ($c->app->config->{authorization}) {
@@ -1463,11 +1505,32 @@ sub create_empty {
   my $c        = shift;
   my $username = shift;
   my $password = shift;
+  my $owner    = shift;
 
   my $res = {alerts => [], status => 200};
 
   my $fedora_model = PhaidraAPI::Model::Fedora->new;
-  return $fedora_model->createEmpty($c, $username);
+  return $fedora_model->createEmpty($c, $username, $owner);
+}
+
+sub approve {
+  my $self     = shift;
+  my $c        = shift;
+  my $pid      = shift;
+  my $username = shift;
+  my $password = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  my $authz_model = PhaidraAPI::Model::Authorization->new;
+  my $authz_res = $authz_model->check_rights($c, $pid, 'w', {action_id => 'approve'});
+  unless ($authz_res->{status} == 200) {
+    $res->{status} = 403;
+    push @{$res->{alerts}}, {type => 'error', msg => 'Forbidden'};
+    return $res;
+  }
+
+  return $self->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
 }
 
 sub add_relationship {

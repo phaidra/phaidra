@@ -1,0 +1,279 @@
+package PhaidraAPI::Model::Policy::Context;
+
+use strict;
+use warnings;
+use v5.10;
+use base qw/Mojo::Base/;
+use PhaidraAPI::Model::Directory;
+use PhaidraAPI::Model::Fedora;
+use PhaidraAPI::Model::Rights;
+use Mojo::JSON qw(true false);
+use POSIX qw(strftime);
+
+sub build_object {
+  my ($self, $c, $pid, $op, $opts) = @_;
+  $opts //= {};
+
+  my $remote_address = $self->_remote_address($c);
+  my $subject = $self->_build_subject($c, $remote_address);
+  my $resource = $self->_build_resource($c, $pid, $opts);
+  my $action = $self->_build_action($c, $op, $opts);
+  my $config = $self->_build_config($c);
+
+  return {
+    subject     => $subject,
+    resource    => $resource,
+    action      => $action,
+    environment => {
+      timestamp       => strftime('%Y-%m-%dT%H:%M:%SZ', gmtime()),
+      institution     => $c->app->config->{opa}->{institution} // 'default',
+      remote_address  => $remote_address,
+    },
+    config => $config,
+  };
+}
+
+sub build_action_only {
+  my ($self, $c, $action_id, $opts) = @_;
+  $opts //= {};
+
+  my $remote_address = $self->_remote_address($c);
+  my $subject = $self->_build_subject($c, $remote_address);
+  my $action = {
+    id        => $action_id,
+    operation => $opts->{operation} // 'r',
+    endpoint  => $opts->{endpoint}  // '',
+  };
+
+  my $resource = {
+    type  => $opts->{resource_type} // 'object',
+    space => $opts->{space}         // 'default',
+  };
+
+  if ($opts->{metadata}) {
+    $resource->{metadata} = $opts->{metadata};
+  }
+
+  return {
+    subject     => $subject,
+    resource    => $resource,
+    action      => $action,
+    environment => {
+      timestamp       => strftime('%Y-%m-%dT%H:%M:%SZ', gmtime()),
+      institution     => $c->app->config->{opa}->{institution} // 'default',
+      remote_address  => $remote_address,
+    },
+    config => $self->_build_config($c),
+  };
+}
+
+sub _remote_address {
+  my ($self, $c) = @_;
+
+  return $c->tx->remote_address // '';
+}
+
+sub _current_username {
+  my ($self, $c) = @_;
+
+  my $username = $c->stash->{basic_auth_credentials}->{username};
+  if ($c->stash->{remote_user}) {
+    $username = $c->stash->{remote_user};
+  }
+
+  return $username;
+}
+
+sub _build_subject {
+  my ($self, $c, $remote_address) = @_;
+
+  my $username = $self->_current_username($c);
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+
+  my $userdata = {};
+  if ($username) {
+    $userdata = $directory_model->get_user_data($c, $username) // {};
+  }
+
+  my @roles = $self->_compute_roles($c, $username, $userdata);
+
+  my @project_groups = ();
+  if ($userdata->{groups}) {
+    for my $g (@{$userdata->{groups}}) {
+      push @project_groups, $g->{groupid} if $g->{groupid};
+    }
+  }
+
+  my $auth_method = 'anonymous';
+  if ($username) {
+    if ($c->stash->{remote_user}) {
+      $auth_method = 'shib';
+    }
+    elsif ($c->stash->{mojox_session}) {
+      $auth_method = 'token';
+    }
+    else {
+      $auth_method = 'basic';
+    }
+  }
+
+  my $intcall = $c->app->config->{phaidra}->{intcallusername} // '';
+  my $is_internal = ($username && $intcall && $username eq $intcall) ? true : false;
+
+  return {
+    username         => $username // '',
+    authenticated    => $username ? true : false,
+    auth_method      => $auth_method,
+    roles            => \@roles,
+    affiliations     => $userdata->{affiliation}    // [],
+    org_units_l1     => $userdata->{org_units_l1}   // [],
+    org_units_l2     => $userdata->{org_units_l2}   // [],
+    ldap_groups      => $userdata->{ldapgroups}     // [],
+    project_groups   => \@project_groups,
+    remote_address   => $remote_address // '',
+    ip               => $remote_address // '',
+    is_internal_call => $is_internal,
+  };
+}
+
+sub _compute_roles {
+  my ($self, $c, $username, $userdata) = @_;
+  my @roles = ();
+
+  return @roles unless $username;
+
+  if ($username eq ($c->app->config->{phaidra}->{adminusername} // '')) {
+    push @roles, 'admin';
+  }
+
+  if ($userdata->{isadmin}) {
+    push @roles, 'admin' unless grep { $_ eq 'admin' } @roles;
+  }
+
+  if ($userdata->{superuserforallusers}) {
+    push @roles, 'superuser';
+  }
+
+  if ($userdata->{ldapgroups}) {
+    for my $ldapgroup (@{$userdata->{ldapgroups}}) {
+      if ($ldapgroup eq 'phaidradmins') {
+        push @roles, 'superuser' unless grep { $_ eq 'superuser' } @roles;
+      }
+    }
+  }
+
+  if (exists($ENV{'SHIB_SUPERUSER_AFFILIATION'}) && $userdata->{affiliation}) {
+    for my $aff (@{$userdata->{affiliation}}) {
+      if ($aff eq $ENV{'SHIB_SUPERUSER_AFFILIATION'}) {
+        push @roles, 'superuser' unless grep { $_ eq 'superuser' } @roles;
+      }
+    }
+  }
+
+  push @roles, 'writer';
+  push @roles, 'uploader';
+
+  return @roles;
+}
+
+sub _build_resource {
+  my ($self, $c, $pid, $opts) = @_;
+
+  my $resource = {
+    type  => $opts->{resource_type} // 'object',
+    pid   => $pid // '',
+    dsid  => $opts->{dsid} // '',
+    space => $opts->{space} // 'default',
+    rights => {},
+  };
+
+  if ($pid) {
+    unless ($c->stash->{policy_object_cache}) {
+      $c->stash->{policy_object_cache} = {};
+    }
+
+    unless ($c->stash->{policy_object_cache}->{$pid}) {
+      my $fedora_model = PhaidraAPI::Model::Fedora->new;
+      my $fres = $fedora_model->getObjectProperties($c, $pid);
+      my $cache = {fedora => $fres, rights => {}};
+
+      if ($fres->{status} eq 200) {
+        my $rights_model = PhaidraAPI::Model::Rights->new;
+        my $rightsres = $rights_model->get_object_rights_json(
+          $c, $pid,
+          $c->app->config->{phaidra}->{intcallusername},
+          $c->app->config->{phaidra}->{intcallpassword}
+        );
+        if ($rightsres->{status} eq 200) {
+          $cache->{rights} = $rightsres->{rights};
+        }
+      }
+
+      $c->stash->{policy_object_cache}->{$pid} = $cache;
+    }
+
+    my $cached = $c->stash->{policy_object_cache}->{$pid};
+    if ($cached->{fedora}->{status} eq 200) {
+      $resource->{owner} = $cached->{fedora}->{owner} // '';
+      $resource->{state} = $cached->{fedora}->{state} // '';
+    }
+    $resource->{rights} = $cached->{rights} // {};
+  }
+
+  if ($opts->{metadata}) {
+    $resource->{metadata} = $opts->{metadata};
+  }
+
+  return $resource;
+}
+
+sub _build_action {
+  my ($self, $c, $op, $opts) = @_;
+
+  my $action_id = $opts->{action_id};
+  unless ($action_id) {
+    if ($op eq 'r' || $op eq 'ro') {
+      $action_id = 'read';
+    }
+    elsif ($op eq 'w' || $op eq 'rw') {
+      $action_id = 'write';
+    }
+    else {
+      $action_id = $op;
+    }
+  }
+
+  my $controller = $opts->{controller};
+  my $endpoint_action = $opts->{endpoint_action};
+  my $endpoint = '';
+  if ($controller && $endpoint_action) {
+    $endpoint = "$controller#$endpoint_action";
+  }
+
+  return {
+    id        => $action_id,
+    operation => $op,
+    endpoint  => $endpoint,
+  };
+}
+
+sub _build_config {
+  my ($self, $c) = @_;
+
+  my $confmodel  = PhaidraAPI::Model::Config->new;
+  my $privconfig = $confmodel->get_private_config($c) // {};
+
+  my @canmodifyownerid = ();
+  if ($c->app->config->{authorization} && $c->app->config->{authorization}->{canmodifyownerid}) {
+    @canmodifyownerid = @{$c->app->config->{authorization}->{canmodifyownerid}};
+  }
+
+  return {
+    admin_username   => $c->app->config->{phaidra}->{adminusername} // '',
+    enabledelete     => $privconfig->{enabledelete} ? true : false,
+    canmodifyownerid => \@canmodifyownerid,
+    readonly         => ($c->app->config->{readonly} // 0) ? true : false,
+  };
+}
+
+1;

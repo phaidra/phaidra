@@ -1140,5 +1140,43 @@ sub add_group_member {
   return;
 }
 
+sub get_group {
+  my ($self, $c, $gid) = @_;
+
+  my $groups = $self->_get_groups_col($c);
+  return $groups->find_one({"groupid" => $gid});
+}
+
+sub is_group_member {
+  my ($self, $c, $gid, $username) = @_;
+
+  return 0 unless ($gid && $username);
+
+  my $groups = $self->_get_groups_col($c);
+
+  my $owned = $groups->find_one({"groupid" => $gid, "owner" => $username});
+  return 1 if $owned;
+
+  my $member = $groups->find_one({"groupid" => $gid, "members" => $username});
+  return $member ? 1 : 0;
+}
+
+sub resolve_owner_label {
+  my ($self, $c, $ownerid) = @_;
+
+  return '' unless $ownerid;
+
+  if ($ownerid =~ /^group:(.+)$/) {
+    my $gid = $1;
+    my $g = $self->get_group($c, $gid);
+    if ($g && $g->{name}) {
+      return $g->{name};
+    }
+    return $ownerid;
+  }
+
+  return $self->get_name($c, $ownerid);
+}
+
 1;
 __END__

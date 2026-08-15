@@ -1,0 +1,26 @@
+{
+  "institution": "univie",
+  "admin_username": "",
+  "roles": {
+    "writer": {
+      "all_authenticated": false,
+      "affiliations": ["staff", "faculty"],
+      "ldap_groups": ["phaidra-writers"]
+    },
+    "uploader": {
+      "all_authenticated": false,
+      "affiliations": ["staff", "faculty", "student"]
+    },
+    "librarian": {
+      "ldap_groups": ["phaidra-librarians"]
+    }
+  },
+  "submit_forms": {
+    "catalogfetchupload": {
+      "roles": ["librarian", "admin"]
+    },
+    "bulkupload": {
+      "roles": ["power_user", "admin"]
+    }
+  }
+}

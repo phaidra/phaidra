@@ -1,0 +1,8 @@
+# OPA server configuration for PHAIDRA
+# See: https://www.openpolicyagent.org/docs/latest/configuration/#decision-logs
+
+decision_logs:
+  console: true
+
+status:
+  console: true
