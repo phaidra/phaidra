@@ -11,13 +11,13 @@ use Mojo::JSON qw(true false);
 use POSIX qw(strftime);
 
 sub build_object {
-  my ($self, $c, $pid, $op, $opts) = @_;
+  my ($self, $c, $pid, $action_id, $opts) = @_;
   $opts //= {};
 
   my $remote_address = $self->_remote_address($c);
   my $subject = $self->_build_subject($c, $remote_address);
   my $resource = $self->_build_resource($c, $pid, $opts);
-  my $action = $self->_build_action($c, $op, $opts);
+  my $action = $self->_build_action($c, $action_id, $opts);
   my $config = $self->_build_config($c);
 
   return {
@@ -39,11 +39,7 @@ sub build_action_only {
 
   my $remote_address = $self->_remote_address($c);
   my $subject = $self->_build_subject($c, $remote_address);
-  my $action = {
-    id        => $action_id,
-    operation => $opts->{operation} // 'r',
-    endpoint  => $opts->{endpoint}  // '',
-  };
+  my $action = $self->_build_action($c, $action_id, $opts);
 
   my $resource = {
     type  => $opts->{resource_type} // 'object',
@@ -174,6 +170,16 @@ sub _compute_roles {
   push @roles, 'writer';
   push @roles, 'uploader';
 
+  # Institutional repository admin account (public config iraccount)
+  eval {
+    require PhaidraAPI::Model::Config;
+    my $confmodel = PhaidraAPI::Model::Config->new;
+    my $pubconfig = $confmodel->get_public_config($c);
+    if ($pubconfig->{iraccount} && $username eq $pubconfig->{iraccount}) {
+      push @roles, 'ir_admin';
+    }
+  };
+
   return @roles;
 }
 
@@ -229,32 +235,18 @@ sub _build_resource {
 }
 
 sub _build_action {
-  my ($self, $c, $op, $opts) = @_;
-
-  my $action_id = $opts->{action_id};
-  unless ($action_id) {
-    if ($op eq 'r' || $op eq 'ro') {
-      $action_id = 'read';
-    }
-    elsif ($op eq 'w' || $op eq 'rw') {
-      $action_id = 'write';
-    }
-    else {
-      $action_id = $op;
-    }
-  }
+  my ($self, $c, $action_id, $opts) = @_;
 
   my $controller = $opts->{controller};
   my $endpoint_action = $opts->{endpoint_action};
-  my $endpoint = '';
-  if ($controller && $endpoint_action) {
+  my $endpoint = $opts->{endpoint} // '';
+  if (!$endpoint && $controller && $endpoint_action) {
     $endpoint = "$controller#$endpoint_action";
   }
 
   return {
-    id        => $action_id,
-    operation => $op,
-    endpoint  => $endpoint,
+    id       => $action_id,
+    endpoint => $endpoint,
   };
 }
 

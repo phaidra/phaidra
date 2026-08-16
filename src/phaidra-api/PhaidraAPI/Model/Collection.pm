@@ -205,7 +205,7 @@ sub get_members {
         # FIXME user membersorder model
 
         my $object_model = PhaidraAPI::Model::Object->new;
-        my $ores         = $object_model->get_datastream($c, $pid, 'COLLECTIONORDER', undef, undef, 1);
+        my $ores         = $object_model->get_datastream($c, $pid, 'COLLECTIONORDER');
         if ($ores->{status} ne 200) {
           $c->app->log->error("Cannot get COLLECTIONORDER for pid: $pid and username: " . $c->stash->{basic_auth_credentials}->{username});
         }

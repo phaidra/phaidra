@@ -12,23 +12,14 @@ use PhaidraAPI::Model::Policy::Context;
 use PhaidraAPI::Model::Policy::Opa;
 use PhaidraAPI::Model::Policy::Audit;
 
-my %private_datastreams = (
-  'RIGHTS'          => 1,
-  'JSON-LD-PRIVATE' => 1
-);
-
-sub is_private_ds {
-  my ($self, $c, $dsid) = @_;
-
-  return $private_datastreams{$dsid};
-}
-
 sub check_rights {
-  my ($self, $c, $pid, $op, $opts) = @_;
+  my ($self, $c, $pid, $action_id, $opts) = @_;
   $opts //= {};
 
+  $action_id = $self->_normalize_action_id($action_id, $opts);
+
   my $context_model = PhaidraAPI::Model::Policy::Context->new;
-  my $input = $context_model->build_object($c, $pid, $op, $opts);
+  my $input = $context_model->build_object($c, $pid, $action_id, $opts);
 
   my $opa_model = PhaidraAPI::Model::Policy::Opa->new;
   my $decision = $opa_model->evaluate($c, $input);
@@ -37,6 +28,25 @@ sub check_rights {
   $audit_model->log($c, $input, $decision);
 
   return $opa_model->to_legacy_response($decision);
+}
+
+# Map legacy r/ro/w/rw (and optional opts.action_id) to canonical action ids.
+sub _normalize_action_id {
+  my ($self, $action_id, $opts) = @_;
+
+  if ($opts->{action_id}) {
+    return $opts->{action_id};
+  }
+
+  my %legacy = (
+    r  => 'read',
+    ro => 'read',
+    w  => 'write',
+    rw => 'write',
+  );
+
+  return $legacy{$action_id} if exists $legacy{$action_id // ''};
+  return $action_id // 'read';
 }
 
 sub check_action {

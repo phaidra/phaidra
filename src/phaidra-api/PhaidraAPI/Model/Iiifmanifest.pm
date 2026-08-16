@@ -420,7 +420,7 @@ sub update_manifest_metadata {
   else {
     # Update existing manifest metadata for single canvas objects
     my $object_model = PhaidraAPI::Model::Object->new;
-    $r = $object_model->get_datastream($c, $pid, 'IIIF-MANIFEST', $c->stash->{basic_auth_credentials}->{username}, $c->stash->{basic_auth_credentials}->{password});
+    $r = $object_model->get_datastream($c, $pid, 'IIIF-MANIFEST');
     if ($r->{status} ne 200) {
       return $r;
     }
@@ -462,7 +462,7 @@ sub get_updated_manifest {
   }
   else {
     my $object_model = PhaidraAPI::Model::Object->new;
-    $r = $object_model->get_datastream($c, $pid, 'IIIF-MANIFEST', $c->stash->{basic_auth_credentials}->{username}, $c->stash->{basic_auth_credentials}->{password});
+    $r = $object_model->get_datastream($c, $pid, 'IIIF-MANIFEST');
     if ($r->{status} ne 200) {
       return $r;
     }

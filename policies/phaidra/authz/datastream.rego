@@ -8,6 +8,8 @@ private_datastreams := {"RIGHTS", "JSON-LD-PRIVATE"}
 
 restricted_content_datastreams := {"OCTETS", "FULLTEXT", "WEBVERSION"}
 
+default is_private := false
+
 is_private if {
 	input.resource.dsid in private_datastreams
 }

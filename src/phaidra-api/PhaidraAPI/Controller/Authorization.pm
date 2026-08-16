@@ -9,136 +9,122 @@ use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Authorization;
 use PhaidraAPI::Model::Policy::Opa;
 
+# Actions that require a Fedora object pid and check_rights.
+my %OBJECT_ACTIONS = map { $_ => 1 } qw(
+  read
+  write
+  delete
+  restrict
+  change_owner
+  approve
+  metadata_field
+);
+
 sub authorize {
   my $self = shift;
 
   my $res = {alerts => [], status => 500};
 
-  my $op = $self->stash('op');
-  unless ($op eq 'r' or $op eq 'w') {
-    $self->app->log->error("Authz op[$op] failed - unknown op");
-    $res->{alerts} = [{type => 'error', msg => 'unknown op'}];
-    $res->{status} = 400;
+  # Route flag: skip OPA (e.g. token-validated proxy).
+  if ($self->_route_attr('authz_skip')) {
+    $self->app->log->debug('Authz skipped (authz_skip)');
+    return 1;
+  }
+
+  my $action_id = $self->_route_attr('action_id');
+  unless (defined $action_id && $action_id ne '') {
+    $self->app->log->error('Authz failed - route missing action_id');
+    $res->{alerts} = [{type => 'error', msg => 'misconfigured route (action_id)'}];
+    $res->{status} = 500;
     $self->render(json => $res, status => $res->{status});
     return 0;
   }
 
-  my $controller = $self->match->stack->[3]{controller};
-  my $action     = $self->match->stack->[3]{action};
-  my $pid        = $self->match->stack->[3]{pid};
+  my $pid  = $self->param('pid')  // $self->_route_attr('pid');
+  my $dsid = $self->param('dsid') // $self->_route_attr('dsid') // '';
 
-  if ($action eq 'imageserverproxy') {
-    $self->app->log->debug("Authz controller[$controller] action[$action] op[$op]");
-    return 1;
-  }
-  else {
-    $self->app->log->debug("Authz controller[$controller] action[$action] pid[$pid] op[$op]");
+  $self->app->log->debug(
+    "Authz action_id[$action_id] pid[" . ($pid // '') . "] dsid[$dsid]"
+  );
+
+  my $authz_model = PhaidraAPI::Model::Authorization->new;
+
+  # Non-object actions (create, settings, admin/IR, …): OPA check_action only.
+  # Admin/IR routes may include :pid in the URL but are not Fedora object ACL checks.
+  unless ($OBJECT_ACTIONS{$action_id}) {
+    my $space = $self->param('space') // $self->stash('space') // 'default';
+    my $resource_type = 'account';
+    $resource_type = 'object' if $action_id eq 'create';
+    $resource_type = 'admin'  if $action_id =~ /^(admin_|ir_admin_)/;
+
+    my $decision = $authz_model->check_action(
+      $self, $action_id,
+      {
+        space         => $space,
+        resource_type => $resource_type,
+      }
+    );
+
+    if ($decision->{allow}) {
+      if ($action_id eq 'create') {
+        $self->stash(curated_initial_state => $decision->{initial_state} // 'Inactive');
+      }
+      return 1;
+    }
+
+    $res->{alerts} = [{type => 'error', msg => 'Forbidden'}];
+    $res->{status} = 403;
+    $self->render(json => $res, status => $res->{status});
+    return 0;
   }
 
   my $pidNamespace = $self->app->config->{fedora}->{pidnamespace};
-  unless ($pid =~ m/^$pidNamespace:\d+$/) {
-    $self->app->log->error("Authz controller[$controller] action[$action] pid[$pid] op[$op] failed - wrong pid");
+  unless (defined $pid && $pid =~ m/^$pidNamespace:\d+$/) {
+    $self->app->log->error("Authz action_id[$action_id] pid[" . ($pid // '') . "] failed - wrong pid");
     $res->{alerts} = [{type => 'error', msg => 'wrong pid'}];
     $res->{status} = 400;
     $self->render(json => $res, status => $res->{status});
     return 0;
   }
 
-  my $authz_model = PhaidraAPI::Model::Authorization->new;
+  my $opts = {dsid => $dsid};
 
-  my $action_id = ($op eq 'w') ? 'write' : 'read';
-  if (($controller eq 'object') && ($action eq 'delete')) {
-    $action_id = 'delete';
-  }
-  elsif (($controller eq 'object') && ($action eq 'approve')) {
-    $action_id = 'approve';
-  }
-  elsif (($controller eq 'object') && ($action eq 'rights') && ($op eq 'w')) {
-    $action_id = 'restrict';
-  }
-
-  my $opts = {
-    controller      => $controller,
-    endpoint_action => $action,
-    action_id       => $action_id,
-    dsid            => $self->param('dsid') // '',
-  };
-
-  $res = $authz_model->check_rights($self, $pid, $op, $opts);
+  $res = $authz_model->check_rights($self, $pid, $action_id, $opts);
   if ($res->{status} == 200) {
     return 1;
   }
-  else {
-    if ($action eq 'thumbnail' && $res->{status} == 403) {
-      $self->res->headers->add('Pragma-Directive' => 'no-cache');
-      $self->res->headers->add('Cache-Directive'  => 'no-cache');
-      $self->res->headers->add('Cache-Control'    => 'no-cache');
-      $self->res->headers->add('Pragma'           => 'no-cache');
-      $self->res->headers->add('Expires'          => 0);
-      $self->reply->static('images/locked.png');
-      return 0;
-    }
-    else {
-      $self->render(json => $res, status => $res->{status});
-      return 0;
-    }
-  }
-}
 
-sub authorize_uploader {
-  my $self = shift;
-
-  my $res = {alerts => [], status => 500};
-
-  my $space = $self->param('space') // $self->stash('space') // 'default';
-
-  my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my $decision = $authz_model->check_action($self, 'create', {
-    operation     => 'w',
-    space         => $space,
-    resource_type => 'object',
-  });
-
-  if ($decision->{allow}) {
-    $self->stash(curated_initial_state => $decision->{initial_state} // 'Inactive');
-    return 1;
+  my $deny_static = $self->_route_attr('authz_deny_static');
+  if ($deny_static && $res->{status} == 403) {
+    $self->res->headers->add('Pragma-Directive' => 'no-cache');
+    $self->res->headers->add('Cache-Directive'  => 'no-cache');
+    $self->res->headers->add('Cache-Control'    => 'no-cache');
+    $self->res->headers->add('Pragma'           => 'no-cache');
+    $self->res->headers->add('Expires'          => 0);
+    $self->reply->static($deny_static);
+    return 0;
   }
 
-  $res->{alerts} = [{type => 'error', msg => 'Forbidden'}];
-  $res->{status} = 403;
   $self->render(json => $res, status => $res->{status});
   return 0;
 }
 
-sub check_rights {
+# Route defaults / captures: stash first, then any match-stack frame (no fixed index).
+sub _route_attr {
+  my ($self, $key) = @_;
 
-  my $self = shift;
+  my $from_stash = $self->stash($key);
+  return $from_stash if defined $from_stash && $from_stash ne '';
 
-  my $res = {alerts => [], status => 500};
-
-  my $pid          = $self->stash('pid');
-  my $pidNamespace = $self->app->config->{fedora}->{pidnamespace};
-  unless ($pid =~ m/^$pidNamespace:\d+$/) {
-    $self->app->log->error("Authz pid[$pid] failed - wrong pid");
-    $res->{status} = 500;
-    return $res;
+  # Mojolicious timing quirk: the stash value might not be available yet, because we are in a bridge.
+  my $stack = $self->match->stack // [];
+  for my $i (reverse 0 .. $#$stack) {
+    my $frame = $stack->[$i];
+    next unless exists $frame->{$key};
+    my $val = $frame->{$key};
+    return $val if defined $val && $val ne '';
   }
-  my $op = $self->stash('op');
-  unless ($op eq 'r' or $op eq 'ro' or $op eq 'w' or $op eq 'rw') {
-    $self->app->log->error("Authz op[$op] pid[$pid] failed - unknown op");
-    $res->{status} = 500;
-    return $res;
-  }
-
-  my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my $opts = {
-    dsid      => $self->param('dsid') // '',
-    action_id => $self->param('action') // undef,
-    space     => $self->param('space') // 'default',
-  };
-  $res = $authz_model->check_rights($self, $pid, $op, $opts);
-
-  $self->render(json => {status => $res->{status}, alerts => $res->{alerts}}, status => $res->{status});
+  return;
 }
 
 sub check_batch {
@@ -165,11 +151,10 @@ sub check_batch {
       my $legacy = $authz_model->check_rights(
         $self,
         $check->{pid},
-        $check->{operation} // 'r',
+        $action_id,
         {
-          action_id => $action_id,
-          dsid      => $check->{dsid} // '',
-          space     => $check->{space} // 'default',
+          dsid  => $check->{dsid} // '',
+          space => $check->{space} // 'default',
         }
       );
       push @results, {
@@ -180,7 +165,6 @@ sub check_batch {
     }
     else {
       my $decision = $authz_model->check_action($self, $action_id, {
-        operation     => $check->{operation} // 'r',
         space         => $check->{space} // 'default',
         resource_type => $check->{resource_type} // 'submit_form',
         metadata      => $check->{metadata},
@@ -207,15 +191,13 @@ sub capabilities {
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
   my $decision = $authz_model->check_action($self, 'capabilities', {
-    operation => 'r',
-    space     => $space,
+    space => $space,
   });
 
   $res->{capabilities} = $decision->{capabilities} // [];
 
   my $forms_decision = $authz_model->check_action($self, 'check_forms', {
-    operation => 'r',
-    space     => $space,
+    space => $space,
   });
   $res->{forms} = $forms_decision->{forms} // {};
 

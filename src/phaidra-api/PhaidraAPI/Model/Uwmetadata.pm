@@ -997,7 +997,7 @@ sub get_object_metadata {
 
   my $object_model = PhaidraAPI::Model::Object->new;
 
-  my $res = $object_model->get_datastream($c, $pid, 'UWMETADATA', $username, $password, 1);
+  my $res = $object_model->get_datastream($c, $pid, 'UWMETADATA');
 
   if ($res->{status} ne 200) {
     return $res;

@@ -27,7 +27,7 @@ sub process {
   }
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my $res         = $authz_model->check_rights($self, $pid, 'rw');
+  my $res         = $authz_model->check_rights($self, $pid, 'write');
   unless ($res->{status} eq '200') {
     $self->render(json => $res->{json}, status => $res->{status});
     return;
@@ -132,7 +132,7 @@ sub status {
   my $pid = $self->stash('pid');
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my $res         = $authz_model->check_rights($self, $pid, 'ro');
+  my $res         = $authz_model->check_rights($self, $pid, 'read');
   unless ($res->{status} eq '200') {
     $self->render(json => $res->{json}, status => $res->{status});
     return;

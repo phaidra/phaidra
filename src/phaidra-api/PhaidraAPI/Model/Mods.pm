@@ -677,7 +677,7 @@ sub get_object_mods_json {
   my ($self, $c, $pid, $mode, $username, $password) = @_;
 
   my $object_model = PhaidraAPI::Model::Object->new;
-  my $res          = $object_model->get_datastream($c, $pid, 'MODS', $username, $password, 1);
+  my $res          = $object_model->get_datastream($c, $pid, 'MODS');
   if ($res->{status} ne 200) {
     return $res;
   }

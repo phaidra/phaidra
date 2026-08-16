@@ -10,11 +10,24 @@ PHAIDRA uses [Open Policy Agent (OPA)](https://www.openpolicyagent.org/) for aut
 
 The API assembles a JSON **input document** (subject, resource, action, environment, config) and POSTs it to OPA at `/v1/data/phaidra/authz/allow`.
 
+Routing uses authz bridges that share one `authorization#authorize` entrypoint:
+
+| Bridge | Authn | Use |
+|--------|-------|-----|
+| `$authz_optional` | Optional | Object/datastream reads (anonymous allowed when policy permits) |
+| `$authz` | Required | Object writes/creates, account/API actions, site-admin and IR-admin actions |
+| `$authenticated` | Required | Authn only — `/authz/capabilities` and `/authz/check` |
+
+The bridge requires each protected route to declare an **`action_id`**. Object actions (`read`, `write`, `delete`, …) need a Fedora `pid`. Account actions (`settings_read`, `group_write`, `list_read`, …) are evaluated without an object; default policy allows any authenticated user (parity with the former `$authenticated`-only routes). Site-admin actions (`admin_*`) require the configured PHAIDRA admin username; IR-admin actions (`ir_admin_*`) require the `ir_admin` role (public config `iraccount`). Tighten those rules later via Rego/data bundles. Role names are not encoded in the router.
+
+`GET /object/{pid}/datastream/{dsid}` is the unified datastream read: optional credentials, `dsid` in the path. Policy marks some dsids as private (`RIGHTS`, `JSON-LD-PRIVATE`); anonymous requests are denied for those, while owners/admins (with credentials) are allowed.
+
 ## Default behaviour (parity with legacy)
 
 | Role / rule | Effect |
 |-------------|--------|
-| Admin / superuser | Full read/write on all objects |
+| Admin / superuser | Full read/write on all objects; site-admin actions (`admin_*`) require configured admin username |
+| IR admin (`iraccount`) | IR workflow actions (`ir_admin_*`) |
 | Fedora admin (`FEDORA_ADMIN_USER`) | Same as admin when authenticating (service operations) |
 | Owner | Full read/write on owned objects |
 | Anonymous | Read active objects without RIGHTS restrictions |
@@ -36,9 +49,10 @@ Institution admins tune behaviour via data bundles in `policies/data/<institutio
 
 | Endpoint | Description |
 |----------|-------------|
-| `GET /authz/check/:pid/:op` | Check rights on object (optional `?dsid=&action=&space=`) |
-| `POST /authz/check` | Batch authorization checks |
+| `POST /authz/check` | Batch authorization checks (`action` ids, optional `pid`) |
 | `GET /authz/capabilities` | Capabilities and submit-form visibility for current user |
+
+Authorization input uses a single **`action.id`** (`read`, `write`, `create`, `delete`, `approve`, `restrict`, …). Policies derive read vs write from that id; there is no separate `operation` field.
 
 ## Configuration
 

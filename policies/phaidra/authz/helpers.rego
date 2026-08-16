@@ -5,11 +5,19 @@ import rego.v1
 cfg := data.phaidra.config
 
 is_write_op if {
-	input.action.operation in {"w", "rw"}
+	input.action.id in {
+		"write",
+		"create",
+		"delete",
+		"approve",
+		"restrict",
+		"change_owner",
+		"metadata_field",
+	}
 }
 
 is_read_op if {
-	input.action.operation in {"r", "ro"}
+	input.action.id == "read"
 }
 
 action_id := input.action.id

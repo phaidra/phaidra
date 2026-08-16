@@ -20,7 +20,7 @@ sub get_object_jsonldprivate_parsed {
   my $object_model = PhaidraAPI::Model::Object->new;
 
   # do not use admin credentials here!
-  my $r = $object_model->get_datastream($c, $pid, 'JSON-LD-PRIVATE', $username, $password);
+  my $r = $object_model->get_datastream($c, $pid, 'JSON-LD-PRIVATE');
 
   if ($r->{status} ne 200) {
     return $r;

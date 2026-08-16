@@ -148,7 +148,7 @@ sub check_pid_rights {
     $c->app->log->debug("[cache miss] $cachekey");
 
     my $authz = PhaidraAPI::Model::Authorization->new;
-    my $rres  = $authz->check_rights($c, $pid, 'r');
+    my $rres  = $authz->check_rights($c, $pid, 'read');
     $status_cacheval = $rres->{status};
 
     $c->app->chi->set($cachekey, $status_cacheval, '1 day');

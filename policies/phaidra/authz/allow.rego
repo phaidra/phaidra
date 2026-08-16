@@ -10,6 +10,8 @@ import data.phaidra.authz.datastream
 import data.phaidra.authz.upload
 import data.phaidra.authz.restrict
 import data.phaidra.authz.space
+import data.phaidra.authz.account
+import data.phaidra.authz.siteadmin
 import data.phaidra.authz.helpers
 
 default allow := {
@@ -73,6 +75,42 @@ allow := decision if {
 		"reason": "uploader",
 		"rights": "rw",
 		"initial_state": upload.curated_state,
+		"obligations": {"audit": true},
+	}
+}
+
+allow := decision if {
+	not deny.explicit
+	account.can
+	decision := {
+		"allow": true,
+		"effect": "allow",
+		"reason": "authenticated",
+		"rights": "",
+		"obligations": {"audit": true},
+	}
+}
+
+allow := decision if {
+	not deny.explicit
+	siteadmin.can_admin
+	decision := {
+		"allow": true,
+		"effect": "allow",
+		"reason": "site_admin",
+		"rights": "rw",
+		"obligations": {"audit": true},
+	}
+}
+
+allow := decision if {
+	not deny.explicit
+	siteadmin.can_ir_admin
+	decision := {
+		"allow": true,
+		"effect": "allow",
+		"reason": "ir_admin",
+		"rights": "rw",
 		"obligations": {"audit": true},
 	}
 }
@@ -145,6 +183,7 @@ allow := decision if {
 
 allow := decision if {
 	not deny.explicit
+	is_object_action
 	admin.grant
 	decision := {
 		"allow": true,
@@ -157,6 +196,7 @@ allow := decision if {
 
 allow := decision if {
 	not deny.explicit
+	is_object_action
 	objectauthz.grant_rw
 	helpers.is_owner
 	decision := {
@@ -216,7 +256,7 @@ allow := decision if {
 	not admin.grant
 	not objectauthz.grant_rw
 	helpers.is_read_op
-	input.action.id == "read"
+	not datastream.is_private
 	rights.deny_read
 	not objectauthz.deny_inactive_read
 	decision := {
@@ -247,7 +287,7 @@ allow := decision if {
 	not admin.grant
 	not objectauthz.grant_rw
 	helpers.is_read_op
-	input.action.id == "read"
+	not datastream.is_private
 	rights.grant_read
 	not objectauthz.deny_inactive_read
 	read_reason != ""

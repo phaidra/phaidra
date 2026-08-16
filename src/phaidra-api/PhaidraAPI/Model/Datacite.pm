@@ -64,7 +64,7 @@ sub get {
 
   if ($r->{dshash}->{'MODS'}) {
 
-    my $r1 = $object_model->get_datastream($c, $pid, 'MODS', $username, $password, 1);
+    my $r1 = $object_model->get_datastream($c, $pid, 'MODS');
     if ($r1->{status} ne 200) {
       return $r1;
     }
@@ -76,7 +76,7 @@ sub get {
 
   if ($r->{dshash}->{'UWMETADATA'}) {
 
-    my $r1 = $object_model->get_datastream($c, $pid, 'UWMETADATA', $username, $password, 1);
+    my $r1 = $object_model->get_datastream($c, $pid, 'UWMETADATA');
     if ($r1->{status} ne 200) {
       return $r1;
     }
