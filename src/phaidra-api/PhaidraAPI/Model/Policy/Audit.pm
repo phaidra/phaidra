@@ -16,7 +16,7 @@ sub log {
   }
 
   my $obligations = $decision->{obligations} // {};
-  # Rego can set obligations.audit=false for noisy paths (capabilities, form checks)
+  # Rego can set obligations.audit=false to skip PEP audit for selected paths
   if (ref($obligations) eq 'HASH' && exists($obligations->{audit}) && !$obligations->{audit}) {
     $c->app->log->debug(
       'authz=1 skipped (obligations.audit=false) action['
@@ -48,6 +48,13 @@ sub log {
     policy_version => $c->app->config->{opa}->{policy_version} // '',
     duration_ms    => $decision->{duration_ms} // 0,
   };
+
+  if (exists $decision->{capabilities}) {
+    $entry->{capabilities} = $decision->{capabilities};
+  }
+  if (exists $decision->{forms}) {
+    $entry->{forms} = $decision->{forms};
+  }
 
   # Structured JSON in phaidra-api logs (grep authz=1)
   $c->app->log->info('authz=1 ' . encode_json($entry));

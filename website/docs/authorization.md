@@ -80,7 +80,7 @@ Notes:
 
 - Look in the **API** container. OPA decision logs are separate (see below).
 - API log level must be `info` or lower (private Mongo config `loglevel`). If set to `warn`/`error`, `authz=1` lines are hidden.
-- `/authz/capabilities` and form checks set `obligations.audit=false` and intentionally skip PEP audit (they only emit a debug line).
+- Capability and form-check decisions from `/authz/capabilities` are audited (`capabilities` / `forms` included in the JSON).
 - Dist API images must include `PhaidraAPI/Model/Policy/Audit.pm` (use a remounted/dev API or rebuild dist).
 
 OPA decision logging is enabled via [`policies/opa-config.yaml`](../../policies/opa-config.yaml) (`decision_logs.console: true`). Those appear in the **opa** container:

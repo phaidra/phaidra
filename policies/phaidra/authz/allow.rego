@@ -46,7 +46,7 @@ allow := decision if {
 		"reason": "capabilities",
 		"rights": "",
 		"capabilities": data.phaidra.authz.ui.capabilities,
-		"obligations": {"audit": false},
+		"obligations": {"audit": true},
 	}
 }
 
@@ -61,7 +61,7 @@ allow := decision if {
 		"forms": {form: data.phaidra.authz.ui.form_allowed(form) |
 			some form in object.keys(data.phaidra.config.submit_forms)
 		},
-		"obligations": {"audit": false},
+		"obligations": {"audit": true},
 	}
 }
 
