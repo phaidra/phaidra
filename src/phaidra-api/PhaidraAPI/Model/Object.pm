@@ -500,42 +500,19 @@ sub modify {
   return $res;
 }
 
-sub _resolve_owner_id {
-  my ($self, $c, $username, $metadata) = @_;
-
-  my $directory_model = PhaidraAPI::Model::Directory->new;
-
-  if ($metadata && ref($metadata) eq 'HASH') {
-    my $project_group = $metadata->{project_group} // $metadata->{'project-group'};
-    if ($project_group) {
-      if ($directory_model->is_group_member($c, $project_group, $username)) {
-        return "group:$project_group";
-      }
-      return undef;
-    }
-
-    if (exists($metadata->{ownerid})) {
-      return $metadata->{ownerid};
-    }
-  }
-
-  return $username;
-}
-
 sub create {
   my $self         = shift;
   my $c            = shift;
   my $contentmodel = shift;
   my $username     = shift;
   my $password     = shift;
-  my $owner        = shift;
 
   my $res = {alerts => [], status => 200};
 
   $c->app->log->debug("Creating empty object");
 
   # create empty object
-  my $r = $self->create_empty($c, $username, $password, $owner);
+  my $r = $self->create_empty($c, $username, $password);
   push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
 
   $res->{status} = $r->{status};
@@ -646,14 +623,6 @@ sub create_simple {
 
   my $pid = '';
   my $r;
-
-  my $resolved_owner = $self->_resolve_owner_id($c, $username, $metadata->{metadata});
-  if (defined($metadata->{metadata}) && ($metadata->{metadata}->{project_group} || $metadata->{metadata}->{'project-group'}) && !defined($resolved_owner)) {
-    unshift @{$res->{alerts}}, {type => 'error', msg => 'Not a member of the selected project group'};
-    $res->{status} = 403;
-    return $res;
-  }
-
   unless (exists($metadata->{'target-pid'})) {
 
     # use transactions only for object creation
@@ -666,7 +635,7 @@ sub create_simple {
     }
 
     # create object
-    $r = $self->create($c, $cmodel, $username, $password, $resolved_owner);
+    $r = $self->create($c, $cmodel, $username, $password);
     if ($r->{status} ne 200) {
       $res->{status} = 500;
       unshift @{$res->{alerts}}, @{$r->{alerts}};
@@ -775,11 +744,6 @@ sub create_simple {
       || ($username eq $c->app->config->{phaidra}->{adminusername}))
     {
       $authorized = 1;
-    }
-    elsif ($resolved_owner && index($resolved_owner, 'group:') == 0) {
-      my $directory_model = PhaidraAPI::Model::Directory->new;
-      my $gid = substr($resolved_owner, 6);
-      $authorized = 1 if $directory_model->is_group_member($c, $gid, $username);
     }
     else {
       if ($c->app->config->{authorization}) {
@@ -1505,12 +1469,11 @@ sub create_empty {
   my $c        = shift;
   my $username = shift;
   my $password = shift;
-  my $owner    = shift;
 
   my $res = {alerts => [], status => 200};
 
   my $fedora_model = PhaidraAPI::Model::Fedora->new;
-  return $fedora_model->createEmpty($c, $username, $owner);
+  return $fedora_model->createEmpty($c, $username);
 }
 
 sub approve {

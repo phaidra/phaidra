@@ -71,32 +71,6 @@ is_owner if {
 	input.resource.owner == input.subject.username
 }
 
-group_owner_id := gid if {
-	startswith(input.resource.owner, cfg.project_groups.owner_prefix)
-	gid := trim_prefix(input.resource.owner, cfg.project_groups.owner_prefix)
-}
-
-is_virtual_group_owner if {
-	cfg.project_groups.enabled == true
-	gid := group_owner_id
-	gid in input.subject.project_groups
-}
-
-is_virtual_group_owner if {
-	not cfg.project_groups
-	startswith(input.resource.owner, "group:")
-	gid := trim_prefix(input.resource.owner, "group:")
-	gid in input.subject.project_groups
-}
-
-is_owner_or_group_owner if {
-	is_owner
-}
-
-is_owner_or_group_owner if {
-	is_virtual_group_owner
-}
-
 rights_value(rule) := value if {
 	is_string(rule)
 	value := rule

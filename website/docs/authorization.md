@@ -17,7 +17,6 @@ The API assembles a JSON **input document** (subject, resource, action, environm
 | Admin / superuser | Full read/write on all objects |
 | Fedora admin (`FEDORA_ADMIN_USER`) | Same as admin when authenticating (service operations) |
 | Owner | Full read/write on owned objects |
-| Virtual group owner (`group:<gid>`) | Members of project group have owner rights |
 | Anonymous | Read active objects without RIGHTS restrictions |
 | RIGHTS datastream | Restricts read on content datastreams |
 | Inactive objects | Visible only to owner, admin, superuser |
@@ -27,7 +26,6 @@ The API assembles a JSON **input document** (subject, resource, action, environm
 Institution admins tune behaviour via data bundles in `policies/data/<institution>/config.json` without editing Rego:
 
 - **Writer / uploader roles** — gate API write and upload endpoints
-- **Project groups** — virtual ownership (`group:<groupid>`)
 - **Privileged submit forms** — catalog-fetch upload, bulk upload
 - **Curated submit** — uploads stay inactive until approver activates (`POST object/:pid/approve`)
 - **Restricted rights management** — who may set access restrictions and max expiry

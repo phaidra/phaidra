@@ -61,34 +61,6 @@ test_owner_grants_rw if {
 	decision.reason == "owner"
 }
 
-test_virtual_group_owner if {
-	decision := authz.allow with input as {
-		"subject": {
-			"username": "bob",
-			"authenticated": true,
-			"roles": ["writer"],
-			"affiliations": [],
-			"org_units_l1": [],
-			"org_units_l2": [],
-			"ldap_groups": [],
-			"project_groups": ["3111"],
-		},
-		"resource": {
-			"type": "object",
-			"pid": "o:3",
-			"owner": "group:3111",
-			"state": "Active",
-			"space": "default",
-			"rights": {},
-		},
-		"action": {"id": "write", "operation": "w"},
-		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
-	}
-	decision.allow == true
-	decision.reason == "virtual_owner_group"
-}
-
 test_anonymous_write_denied if {
 	decision := authz.allow with input as {
 		"subject": {

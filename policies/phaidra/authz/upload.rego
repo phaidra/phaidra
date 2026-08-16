@@ -29,13 +29,13 @@ can_delete if {
 }
 
 can_delete if {
-	helpers.is_owner_or_group_owner
+	helpers.is_owner
 	"owner" in helpers.cfg.delete.self_delete_roles
 	not helpers.cfg.delete.require_enabledelete
 }
 
 can_delete if {
-	helpers.is_owner_or_group_owner
+	helpers.is_owner
 	"owner" in helpers.cfg.delete.self_delete_roles
 	input.config.enabledelete == true
 }

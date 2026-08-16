@@ -711,11 +711,9 @@ sub wrapAtomic {
 }
 
 sub createEmpty {
-  my ($self, $c, $username, $owner) = @_;
+  my ($self, $c, $username) = @_;
 
   my $res = {alerts => [], status => 200};
-
-  $owner = $username unless (defined($owner) && $owner ne '');
 
   my $mint = $self->mintPid($c);
   if ($mint->{status} != 200) {
@@ -727,7 +725,7 @@ sub createEmpty {
     \@prefix fedora3: <info:fedora/fedora-system:def/model#>.
     <>
     fedora3:state \"Inactive";
-    fedora3:ownerId \"$owner\".
+    fedora3:ownerId \"$username\".
   |;
 
   my $url = $c->app->fedoraurl->path($pid);

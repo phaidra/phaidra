@@ -68,9 +68,5 @@
   "delete": {
     "self_delete_roles": ["owner", "admin", "superuser"],
     "require_enabledelete": true
-  },
-  "project_groups": {
-    "enabled": true,
-    "owner_prefix": "group:"
   }
 }

@@ -5,7 +5,7 @@ import rego.v1
 import data.phaidra.authz.helpers
 
 grant_rw if {
-	helpers.is_owner_or_group_owner
+	helpers.is_owner
 }
 
 inactive_visible if {
@@ -13,7 +13,7 @@ inactive_visible if {
 }
 
 inactive_visible if {
-	helpers.is_owner_or_group_owner
+	helpers.is_owner
 }
 
 inactive_visible if {

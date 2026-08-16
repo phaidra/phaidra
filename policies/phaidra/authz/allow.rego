@@ -158,23 +158,14 @@ allow := decision if {
 allow := decision if {
 	not deny.explicit
 	objectauthz.grant_rw
-	grant_reason != ""
+	helpers.is_owner
 	decision := {
 		"allow": true,
 		"effect": "allow",
-		"reason": grant_reason,
+		"reason": "owner",
 		"rights": "rw",
 		"obligations": {"audit": true},
 	}
-}
-
-grant_reason := "virtual_owner_group" if {
-	helpers.is_virtual_group_owner
-}
-
-grant_reason := "owner" if {
-	helpers.is_owner
-	not helpers.is_virtual_group_owner
 }
 
 allow := decision if {

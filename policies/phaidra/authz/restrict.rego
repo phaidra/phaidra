@@ -9,7 +9,7 @@ can_modify_restrictions if {
 }
 
 can_modify_restrictions if {
-	helpers.is_owner_or_group_owner
+	helpers.is_owner
 	some role in helpers.cfg.restrictions.allowed_roles
 	role == "owner"
 }

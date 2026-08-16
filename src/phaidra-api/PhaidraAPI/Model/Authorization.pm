@@ -136,18 +136,6 @@ sub check_rights_legacy {
   my $owner = $fres->{owner};
   my $state = $fres->{state};
 
-  # virtual group owner
-  my $group_prefix = 'group:';
-  if ($owner && index($owner, $group_prefix) == 0) {
-    my $gid = substr($owner, length($group_prefix));
-    if ($directory_model->is_group_member($c, $gid, $currentuser)) {
-      $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] GRANTED: virtual group owner[$gid]");
-      $res->{rights} = 'rw';
-      $res->{status} = 200;
-      return $res;
-    }
-  }
-
   # user can do anything on owned object
   if ($currentuser eq $owner) {
     $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] GRANTED: owner");
