@@ -89,8 +89,6 @@ OPA decision logging is enabled via [`policies/opa-config.yaml`](../../policies/
 docker compose logs -f opa
 ```
 
-Denials can optionally be stored in MongoDB collection `authz_audit` when `OPA_AUDIT_STORE_DENIALS=true`.
-
 ## Policy development
 
 See [policies/README.md](../../policies/README.md) for Rego layout and testing.

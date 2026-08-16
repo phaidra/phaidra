@@ -114,7 +114,6 @@ x-custom:
     OPA_DUAL_RUN: "${OPA_DUAL_RUN:-false}"
     OPA_INSTITUTION: "${OPA_INSTITUTION:-default}"
     OPA_POLICY_VERSION: "${OPA_POLICY_VERSION:-}"
-    OPA_AUDIT_STORE_DENIALS: "${OPA_AUDIT_STORE_DENIALS:-false}"
 
   configs: &configs
     configs:

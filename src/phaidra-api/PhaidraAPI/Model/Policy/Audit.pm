@@ -49,30 +49,10 @@ sub log {
     duration_ms    => $decision->{duration_ms} // 0,
   };
 
-  # Always use info so it shows under default production log level
+  # Structured JSON in phaidra-api logs (grep authz=1)
   $c->app->log->info('authz=1 ' . encode_json($entry));
 
-  if ($audit_cfg->{store_denials} && !$decision->{allow}) {
-    $self->_store_denial($c, $entry);
-  }
-
   return $decision_id;
-}
-
-sub _store_denial {
-  my ($self, $c, $entry) = @_;
-
-  eval {
-    my $db = $c->app->mongo;
-    return unless $db;
-
-    my $col = $db->get_collection('authz_audit');
-    $entry->{timestamp} = time;
-    $col->insert_one($entry);
-  };
-  if ($@) {
-    $c->app->log->error("Failed to store authz audit entry: $@");
-  }
 }
 
 1;
