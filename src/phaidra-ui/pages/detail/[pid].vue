@@ -3263,17 +3263,46 @@ export default {
       if (!byLang || !Object.keys(byLang).length) {
         return null;
       }
-      const currentLang = (this.$i18n.locale || 'eng').toLowerCase();
-      const currentLang2 = currentLang.substring(0, 2);
+
+      let defaultLocale = 'eng';
+      try {
+        defaultLocale = useRuntimeConfig()?.public?.defaultLocale || 'eng';
+      } catch (_) { /* non-Nuxt context */ }
+
+      const localeVariants = (locale) => {
+        if (!locale) return [];
+        const lang = String(locale).toLowerCase();
+        const lang2 = lang.substring(0, 2);
+        return [lang, lang2, this.lang2to3map[lang2]].filter(Boolean);
+      };
+
+      const seen = new Set();
       const langPriority = [
-        currentLang,
-        currentLang2,
-        this.lang2to3map[currentLang2],
-        'eng',
-        'en'
-      ].filter(Boolean);
-      const matchedLang = langPriority.find(lang => byLang[lang]?.length > 0);
-      return matchedLang ? byLang[matchedLang] : Object.values(byLang).flat();
+        ...localeVariants(this.$i18n?.locale),
+        ...localeVariants(defaultLocale)
+      ].filter((lang) => {
+        if (seen.has(lang)) return false;
+        seen.add(lang);
+        return true;
+      });
+
+      const matchedLang = langPriority.find((lang) => byLang[lang]?.length > 0);
+      if (matchedLang) {
+        return [byLang[matchedLang][0]];
+      }
+
+      const sortKey = (value) => {
+        if (value == null) return '';
+        if (typeof value === 'string') return value;
+        if (typeof value === 'object' && value.mainTitle != null) return String(value.mainTitle);
+        return String(value);
+      };
+      const all = Object.values(byLang).flat().filter((v) => v != null && sortKey(v) !== '');
+      if (!all.length) {
+        return null;
+      }
+      const sorted = [...all].sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+      return [sorted[0]];
     },
     normalizeDoi(value) {
       if (!value) {
