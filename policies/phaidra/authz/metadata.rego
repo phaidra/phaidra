@@ -4,14 +4,28 @@ import rego.v1
 
 import data.phaidra.authz.helpers
 
-# Institution-optional rules in data.phaidra.config.metadata_policies.
-# Empty / omitted ⇒ no extra submit or edit constraints.
+# Curation on create:
+# - Uncurated submit requires the uploader role (or admin).
+# - Instance-wide on  = nobody is granted uploader (default_role unset).
+# - Instance-wide off = default_role=uploader, empty metadata_policies.
+# - Conditional       = default_role=uploader + metadata_policies (queue on introducing).
+#
+# Metadata policies fire on *introducing* a match (proposed matches, existing does not).
+# Repeating already-stored values (full JSON-LD POST that only changes title) is not a match.
 enabled_policies contains p if {
 	some p in object.get(helpers.cfg, "metadata_policies", [])
 	not p.enabled == false
 }
 
-values_for(field) := object.get(input.resource.metadata, field, [])
+proposed := object.get(input.resource, "metadata", {})
+
+existing := object.get(input.resource, "existing_metadata", {})
+
+is_active if {
+	input.resource.state == "Active"
+}
+
+values_for(md, field) := object.get(md, field, [])
 
 ids_match(clause, value) if {
 	ids := object.get(clause, "ids", [])
@@ -32,22 +46,22 @@ prefix_match(clause, value) if {
 	startswith(value, prefix)
 }
 
-clause_matches(clause) if {
-	some v in values_for(clause.field)
+clause_matches(md, clause) if {
+	some v in values_for(md, clause.field)
 	ids_match(clause, v)
 	prefix_match(clause, v)
 }
 
-all_clauses_match(p) if {
+all_clauses_match(md, p) if {
 	clauses := object.get(object.get(p, "match", {}), "all", [])
 	count(clauses) > 0
 	every clause in clauses {
-		clause_matches(clause)
+		clause_matches(md, clause)
 	}
 }
 
-policy_matches(p) if {
-	all_clauses_match(p)
+policy_matches(md, p) if {
+	all_clauses_match(md, p)
 }
 
 exempt(p) if {
@@ -60,20 +74,43 @@ exempt(p) if {
 	data.phaidra.authz.admin.grant
 }
 
-matched_policy_ids contains p.id if {
+# Proposed payload newly satisfies a policy that the stored object did not.
+introducing_ids contains p.id if {
 	some p in enabled_policies
-	policy_matches(p)
+	policy_matches(proposed, p)
+	not policy_matches(existing, p)
 	not exempt(p)
+}
+
+can_uncurated_submit if {
+	helpers.role_granted("uploader")
+}
+
+can_uncurated_submit if {
+	data.phaidra.authz.admin.grant
+}
+
+# No uploader role ⇒ every create is curated (instance-wide on).
+needs_approval if {
+	input.action.id == "create"
+	not can_uncurated_submit
 }
 
 needs_approval if {
 	input.action.id == "create"
-	count(matched_policy_ids) > 0
+	count(introducing_ids) > 0
+}
+
+needs_approval if {
+	input.action.id == "write"
+	not is_active
+	count(introducing_ids) > 0
 }
 
 deny_write if {
 	input.action.id == "write"
-	count(matched_policy_ids) > 0
+	is_active
+	count(introducing_ids) > 0
 }
 
-matched_reason := concat(",", sort(matched_policy_ids))
+matched_reason := concat(",", sort(introducing_ids))

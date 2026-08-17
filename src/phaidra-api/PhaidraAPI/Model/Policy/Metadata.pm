@@ -20,6 +20,18 @@ sub from_request {
   return $self->normalize_jsonld($jsonld);
 }
 
+sub from_object {
+  my ($self, $c, $pid) = @_;
+  return unless $pid;
+
+  require PhaidraAPI::Model::Jsonld;
+  my $jsonld_model = PhaidraAPI::Model::Jsonld->new;
+  my $r = $jsonld_model->get_object_jsonld_parsed($c, $pid);
+  return unless $r && ($r->{status} // 0) eq 200;
+
+  return $self->normalize_jsonld($r->{'JSON-LD'});
+}
+
 sub normalize_jsonld {
   my ($self, $jsonld) = @_;
   $jsonld //= {};

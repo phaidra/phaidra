@@ -215,6 +215,53 @@ test_create_allowed_for_uploader if {
 	}
 	decision.allow == true
 	decision.reason == "uploader"
+	decision.initial_state == "Inactive"
+}
+
+test_create_queued_without_uploader if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "alice",
+			"authenticated": true,
+			"roles": ["writer"],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {
+			"type": "object",
+		},
+		"action": {"id": "create"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+	}
+	decision.allow == true
+	decision.initial_state == "PendingApproval"
+}
+
+test_admin_create_not_queued if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "phaidraAdmin",
+			"authenticated": true,
+			"roles": ["admin", "writer"],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {
+			"type": "object",
+		},
+		"action": {"id": "create"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+	}
+	decision.allow == true
+	decision.initial_state == "Inactive"
 }
 
 test_private_ds_denied_anonymous if {
@@ -414,6 +461,7 @@ test_oer_write_denied if {
 			"state": "Active",
 			"rights": {},
 			"metadata": oer_md,
+			"existing_metadata": {"object_type": [], "license": []},
 		},
 		"action": {"id": "write"},
 		"environment": {"institution": "default"},
@@ -422,5 +470,35 @@ test_oer_write_denied if {
 		with data.phaidra.config.metadata_policies as oer_policies
 	decision.allow == false
 	decision.reason == "deny_metadata_policy:oer"
+}
+
+test_oer_write_allowed_when_already_oer if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "alice",
+			"authenticated": true,
+			"roles": ["writer"],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {
+			"type": "object",
+			"pid": "o:9",
+			"owner": "alice",
+			"state": "Active",
+			"rights": {},
+			"metadata": oer_md,
+			"existing_metadata": oer_md,
+		},
+		"action": {"id": "write"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+	}
+		with data.phaidra.config.metadata_policies as oer_policies
+	decision.allow == true
+	decision.reason == "owner"
 }
 

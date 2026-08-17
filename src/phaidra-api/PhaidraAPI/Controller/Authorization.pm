@@ -91,7 +91,11 @@ sub authorize {
   if ($action_id eq 'write') {
     my $meta_model = PhaidraAPI::Model::Policy::Metadata->new;
     my $normalized = $meta_model->from_request($self);
-    $opts->{metadata} = $normalized if $normalized;
+    if ($normalized) {
+      $opts->{metadata} = $normalized;
+      my $existing = $meta_model->from_object($self, $pid);
+      $opts->{existing_metadata} = $existing if $existing;
+    }
   }
 
   $res = $authz_model->check_rights($self, $pid, $action_id, $opts);

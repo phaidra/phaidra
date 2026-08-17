@@ -10,7 +10,7 @@
       "ldap_groups": []
     },
     "uploader": {
-      "all_authenticated": true,
+      "all_authenticated": false,
       "usernames": [],
       "affiliations": [],
       "ldap_groups": []

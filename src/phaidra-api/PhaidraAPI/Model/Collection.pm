@@ -49,10 +49,16 @@ sub create {
 
   $c->app->log->debug("Activating object");
 
-  # activate
-  my $res_act = $object_model->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
-  if ($res_act->{status} eq 200) {
-    $c->app->log->info("Object successfully created pid[$pid] cmodel[cmodel:Collection]");
+  # activate (unless curated submit requires approval)
+  my $initial_state = $c->stash->{curated_initial_state} // 'Inactive';
+  if ($initial_state eq 'PendingApproval') {
+    $c->app->log->info("Object created pid[$pid] awaiting approval");
+  }
+  else {
+    my $res_act = $object_model->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
+    if ($res_act->{status} eq 200) {
+      $c->app->log->info("Object successfully created pid[$pid] cmodel[cmodel:Collection]");
+    }
   }
 
   $c->app->log->debug("Adding members");

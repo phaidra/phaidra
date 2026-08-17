@@ -167,7 +167,13 @@ sub _compute_roles {
   }
 
   push @roles, 'writer';
-  push @roles, 'uploader';
+
+  # Uncurated submit: Directory/env default_role (later also per-user assignments).
+  # Read from live config, not cached userdata, so clearing default_role takes effect immediately.
+  my $default_role = $c->app->config->{phaidra}->{default_role} // '';
+  if ($default_role ne '') {
+    push @roles, $default_role unless grep { $_ eq $default_role } @roles;
+  }
 
   # Institutional repository admin account (public config iraccount)
   eval {
@@ -227,6 +233,9 @@ sub _build_resource {
 
   if ($opts->{metadata}) {
     $resource->{metadata} = $opts->{metadata};
+  }
+  if ($opts->{existing_metadata}) {
+    $resource->{existing_metadata} = $opts->{existing_metadata};
   }
 
   return $resource;

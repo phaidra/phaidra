@@ -38,22 +38,40 @@ The bridge requires each protected route to declare an **`action_id`**. Object a
 
 Institution admins tune behaviour via data bundles in `policies/data/<institution>/config.json` without editing Rego:
 
-- **Writer / uploader roles** — gate API write and upload endpoints
+- **Writer / uploader roles** — `writer` is granted to every authenticated user (create/edit still allowed). `uploader` is the **uncurated submit** privilege
+- **Default role** — `PHAIDRA_DEFAULT_ROLE` (Directory fills it for every user). Default `uploader` = curation off
 - **Privileged submit forms** — catalog-fetch upload, bulk upload
 - **Metadata policies** (optional) — match JSON-LD on create/edit; default bundle has none enabled
 - **Restricted rights management** — who may set access restrictions and max expiry
 - **Per-user delete** — replaces repo-wide `enabledelete` when configured
 
+### Curated submit
+
+Create is always allowed for `writer`. Whether the object is activated depends on the `uploader` role and metadata policies:
+
+| Setup | Effect |
+|-------|--------|
+| `PHAIDRA_DEFAULT_ROLE=uploader`, empty `metadata_policies` | **Curation off** (default). Every user can submit uncurated. |
+| `PHAIDRA_DEFAULT_ROLE=uploader` + metadata policies | **Conditional.** Introducing a policy match queues the upload (`PendingApproval`); otherwise it activates. |
+| `PHAIDRA_DEFAULT_ROLE` unset or empty | **Curation on.** Nobody gets `uploader`; every create stays pending. Site admin still skips the queue. |
+
+OPA does not auto-grant `uploader` (`all_authenticated` is false). The API/Directory puts `default_role` on the subject; later user management can assign `uploader` per user the same way. Users without `uploader` can still edit (they have `writer`); they cannot skip curation on create.
+
+Activation of queued objects is `POST /object/{pid}/approve` (`approver` or admin).
+
 ### Optional metadata policies
 
-The PEP flattens submitted JSON-LD (`edm:hasType`, `edm:rights`) into `resource.metadata` and evaluates `metadata_policies` from the data bundle. **Default is an empty list** (no extra constraints).
+The PEP flattens submitted JSON-LD (`edm:hasType`, `edm:rights`) into `resource.metadata` and, on edit, the stored JSON-LD into `resource.existing_metadata`. It evaluates `metadata_policies` from the data bundle. **Default is an empty list** (no extra constraints).
 
-When a policy matches and the user is not in `exempt_roles`:
+A policy applies only when the **proposed** payload newly matches (`introducing`): stored metadata did not already match. A full JSON-LD POST that only changes title (and still carries the same object type / licence) is not introducing.
 
-| Action | Effect |
-|--------|--------|
-| `create` (submit) | Allow, keep object pending approval (`PendingApproval`) |
-| `write` (edit) | Deny (no edit-time approval workflow) |
+When a policy is introduced and the user is not in `exempt_roles`:
+
+| Action / object state | Effect |
+|-----------------------|--------|
+| `create`, or `write` on Inactive | Allow; keep pending approval (do not activate) |
+| `write` on Active | Deny — cannot change *to* those values |
+| `write` on Active when values were already set | Allow |
 
 Example (copy into an institution `config.json`; leave `enabled` out or `true` to turn on):
 
@@ -120,6 +138,7 @@ Environment variables (see `PhaidraAPI.conf`):
 | `OPA_FAIL_MODE` | `legacy` | `legacy` or `closed` on OPA errors |
 | `OPA_DUAL_RUN` | `false` | Log mismatches vs legacy Perl logic |
 | `OPA_INSTITUTION` | `default` | Institution id for data bundle |
+| `PHAIDRA_DEFAULT_ROLE` | `uploader` | Directory role for every user. `uploader` = uncurated submit; empty = instance-wide curation |
 
 ## Audit
 

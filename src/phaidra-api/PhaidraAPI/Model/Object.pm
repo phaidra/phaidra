@@ -993,19 +993,25 @@ sub create_container {
     }
   }
 
-  # activate
-  $r = $self->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
-  if ($r->{status} ne 200) {
-    $c->app->log->error("Error activating pid[$pid]");
-    $res->{status} = $r->{status};
-    foreach my $a (@{$r->{alerts}}) {
-      unshift @{$res->{alerts}}, $a;
-    }
-    unshift @{$res->{alerts}}, {type => 'error', msg => 'Error activating object'};
-    return $res;
+  # activate (unless curated submit requires approval)
+  my $initial_state = $c->stash->{curated_initial_state} // 'Inactive';
+  if ($initial_state eq 'PendingApproval') {
+    $c->app->log->info("Object created pid[$pid] awaiting approval");
   }
   else {
-    $c->app->log->info("Object successfully created pid[$pid] cmodel[cmodel:Container]");
+    $r = $self->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
+    if ($r->{status} ne 200) {
+      $c->app->log->error("Error activating pid[$pid]");
+      $res->{status} = $r->{status};
+      foreach my $a (@{$r->{alerts}}) {
+        unshift @{$res->{alerts}}, $a;
+      }
+      unshift @{$res->{alerts}}, {type => 'error', msg => 'Error activating object'};
+      return $res;
+    }
+    else {
+      $c->app->log->info("Object successfully created pid[$pid] cmodel[cmodel:Container]");
+    }
   }
 
   if (exists($metadata->{metadata}->{'ownerid'})) {
