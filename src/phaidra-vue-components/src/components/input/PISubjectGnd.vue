@@ -125,6 +125,18 @@ export default {
     },
     selected (item) {
       (item !== null) && this.resolve(item)
+    },
+    q (val) {
+      if ((val === null || val === '') && this.value) {
+        this.preflabel = []
+        this.rdfslabel = []
+        this.resolved = ''
+        this.selected = null
+        this.items = []
+        this.showItems = false
+        this.$emit('input', null)
+        this.$emit('resolve', null)
+      }
     }
   },
   mounted() {
@@ -176,7 +188,11 @@ export default {
         this.q = item.preferredName
         this.showItems = false
       } else {
+        this.preflabel = []
+        this.rdfslabel = []
+        this.resolved = ''
         this.$emit('input', null)
+        this.$emit('resolve', null)
       }
     },
     search: async function () {

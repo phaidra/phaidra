@@ -2265,15 +2265,22 @@ export default {
       this.$forceUpdate()
     },
     updateSubject: function (f, event) {
-      f['skos:prefLabel'] = event['skos:prefLabel']
-      if (f['skos:prefLabel']) {
-        if (f['skos:prefLabel'].length > 0) {
-          // needed to init the search input if loading from template
-          // will be synced with component's initquery prop
-          f.initquery = f['skos:prefLabel'][0]['@value']
+      if (!event) {
+        f.value = ''
+        f['skos:prefLabel'] = []
+        f['rdfs:label'] = []
+        f.initquery = ''
+      } else {
+        f['skos:prefLabel'] = event['skos:prefLabel']
+        if (f['skos:prefLabel']) {
+          if (f['skos:prefLabel'].length > 0) {
+            // needed to init the search input if loading from template
+            // will be synced with component's initquery prop
+            f.initquery = f['skos:prefLabel'][0]['@value']
+          }
         }
+        f['rdfs:label'] = event['rdfs:label']
       }
-      f['rdfs:label'] = event['rdfs:label']
       this.$emit('form-input-' + f.component, f)
     },
     updateVocSubject: function (f, event) {
@@ -2311,16 +2318,24 @@ export default {
       this.$emit('form-input-' + f.component, f)
     },
     updatePlace: function (f, event) {
-      f['skos:prefLabel'] = event['skos:prefLabel']
-      if (f['skos:prefLabel']) {
-        if (f['skos:prefLabel'].length > 0) {
-          // needed to init the search input if loading from template
-          // will be synced with component's initquery prop
-          f.initquery = f['skos:prefLabel'][0]['@value']
+      if (!event) {
+        f.value = ''
+        f['skos:prefLabel'] = []
+        f['rdfs:label'] = []
+        f.coordinates = []
+        f.initquery = ''
+      } else {
+        f['skos:prefLabel'] = event['skos:prefLabel']
+        if (f['skos:prefLabel']) {
+          if (f['skos:prefLabel'].length > 0) {
+            // needed to init the search input if loading from template
+            // will be synced with component's initquery prop
+            f.initquery = f['skos:prefLabel'][0]['@value']
+          }
         }
+        f['rdfs:label'] = event['rdfs:label']
+        f.coordinates = event.coordinates
       }
-      f['rdfs:label'] = event['rdfs:label']
-      f.coordinates = event.coordinates
       this.$emit('form-input-' + f.component, f)
     },
     handleObjectTypeCheckboxesInput: function (f, event) {
@@ -2416,16 +2431,14 @@ export default {
       this.$emit('form-input-' + f.component, f)
     },
     roleInput: function (f, event) {
-      if (event) {
-        f.role = event['@id']
-        this.$emit('form-input-' + f.component, f)
-      }
+      f.role = event && event['@id'] != null ? event['@id'] : ''
+      this.$emit('form-input-' + f.component, f)
     },
     containedInRoleInput: function (f, event) {
       for (let r of f.roles) {
         if (r.id === event.role.id) {
           if (event.hasOwnProperty('roleTerm')) {
-            r.role = event.roleTerm['@id']
+            r.role = event.roleTerm && event.roleTerm['@id'] != null ? event.roleTerm['@id'] : ''
           }
           if (event.hasOwnProperty('name')) {
             r.name = event.name
@@ -2479,6 +2492,7 @@ export default {
       if (!event || !(event instanceof File)) {
         f.value = ''
         f.file = null
+        f.mimetype = ''
         this.$emit('form-input-' + f.component, f)
         return
       }

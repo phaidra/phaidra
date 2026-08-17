@@ -96,7 +96,9 @@ export default {
         this.$emit('input', term['@id'])
         this.$emit('resolve', { '@id': term['@id'], 'skos:prefLabel': term['skos:prefLabel'], 'rdfs:label': { 'deu': 'ÖFOS 2012 -- ' + pathLabelsDeu.join(' -- '), 'eng': 'ÖFOS 2012 -- ' + pathLabelsEng.join(' -- ') }, 'skos:notation': term['skos:notation'] })
       } else {
+        this.path = ''
         this.$emit('input', null)
+        this.$emit('resolve', null)
       }
     }
   },

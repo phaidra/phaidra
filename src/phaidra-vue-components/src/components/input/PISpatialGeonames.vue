@@ -163,6 +163,21 @@ export default {
     },
     selected (val) {
       (val !== null) && this.resolve(val)
+    },
+    q (val) {
+      if ((val === null || val === '') && this.value) {
+        this.preflabel = []
+        this.rdfslabel = []
+        this.resolved = ''
+        this.coordinates = []
+        this.selected = null
+        this.items = []
+        this.showItems = false
+        this.showMap = false
+        this.locationMarker = null
+        this.$emit('input', null)
+        this.$emit('resolve', null)
+      }
     }
   },
   computed: {

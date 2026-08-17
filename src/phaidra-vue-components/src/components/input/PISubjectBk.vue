@@ -131,6 +131,13 @@ export default {
           this.initializeFromValue()
         }
       }
+    },
+    q (val) {
+      if ((val === null || val === '') && this.value) {
+        this.clearState()
+        this.$emit('input', null)
+        this.$emit('resolve', null)
+      }
     }
   },
   data () {
@@ -182,6 +189,7 @@ export default {
       } else {
         this.clearState()
         this.$emit('input', null)
+        this.$emit('resolve', null)
       }
     },
     search: async function () {
