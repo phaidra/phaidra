@@ -1,23 +1,25 @@
+import { useRootStore } from '~/stores/root'
+
 export default defineNuxtPlugin((nuxtApp) => {
   const router = nuxtApp.$router
   const axios = nuxtApp.$axios
-  const store = nuxtApp.$store
 
-  if (!router || !axios || !store) return
+  if (!router || !axios) return
 
   router.beforeEach(async () => {
-    if (store.state?.user?.token) {
+    const store = useRootStore(nuxtApp.$pinia)
+    if (store.user?.token) {
       try {
         await axios.request({
           method: 'GET',
           url: '/keepalive',
           headers: {
-            'X-XSRF-TOKEN': store.state.user.token,
+            'X-XSRF-TOKEN': store.user.token,
           },
         })
       } catch (error) {
         console.log('failed keepalive, logging out ' + error)
-        await store.dispatch('logout')
+        await store.logout()
       }
     }
   })

@@ -99,6 +99,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import jsonLdUtils from 'phaidra-vue-components/src/utils/json-ld'
 import { mimeToCreateMethod } from 'phaidra-vue-components/src/utils/mimetypes'
 import { context } from "../../mixins/context"
@@ -255,7 +256,7 @@ export default {
     },
     fetchMetadata: async function () {
 
-      this.$store.commit('setLoading', true)
+      useRootStore().setLoading(true)
       try {
         let response = await this.$axios.request({
           method: 'GET',
@@ -272,25 +273,25 @@ export default {
       } catch (error) {
         console.log(error)
       } finally {
-        this.$store.commit('setLoading', false)
+        useRootStore().setLoading(false)
       }
     },
     upload: async function () {
 
-      this.$store.commit('clearAlerts')
+      useRootStore().clearAlerts()
       if (this.licensefield.value === '') {
-        this.$store.commit('setAlerts', [{ type: 'error', msg: 'Missing license' }])
+        useRootStore().setAlerts([{ type: 'error', msg: 'Missing license' }])
         return
       }
 
       if (!this.acnumber) {
-        this.$store.commit('setAlerts', [{ type: 'error', msg: 'Missing AC number' }])
+        useRootStore().setAlerts([{ type: 'error', msg: 'Missing AC number' }])
         return
       }
 
-      this.$store.commit('clearAlerts')
+      useRootStore().clearAlerts()
       if (!this.filefield.file) {
-        this.$store.commit('setAlerts', [{ type: 'error', msg: 'Missing file' }])
+        useRootStore().setAlerts([{ type: 'error', msg: 'Missing file' }])
         this.goTo(0);
         return
       }
@@ -301,14 +302,14 @@ export default {
       httpFormData.append('metadata', JSON.stringify({ 'metadata': { 'json-ld': this.jsonld } }))
       
       let self = this
-      this.$store.commit('setLoading', true)
+      useRootStore().setLoading(true)
       try {
         let response = await this.$axios.request({
           method: 'POST',
           url: '/' + this.createmethod + '/create',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData,
           onUploadProgress: function (progressEvent) {
@@ -316,7 +317,7 @@ export default {
           }
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         if (response.data.status === 200) {
           console.log(response.data)
@@ -327,10 +328,10 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'error', msg: error }])
+        useRootStore().setAlerts([{ type: 'error', msg: error }])
       } finally {
         this.goTo(0)
-        this.$store.commit('setLoading', false)
+        useRootStore().setLoading(false)
         this.uploadProgress = 0
       }
     },

@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { useVocabularyStore } from '../../stores/vocabulary'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { validationrules } from '../../mixins/validationrules'
@@ -73,7 +74,7 @@ export default {
   mounted: function () {
     this.$nextTick(function () {
       this.loading = !this.vocabularies[this.roleVocabulary].loaded
-      this.$store.dispatch('vocabulary/sortRoles', this.$i18n.locale)
+      useVocabularyStore().sortRoles(this.$i18n.locale)
       // emit input to set skos:prefLabel in parent
       if (this.role) {
         this.$emit('input', this.getTerm(this.roleVocabulary, this.role))

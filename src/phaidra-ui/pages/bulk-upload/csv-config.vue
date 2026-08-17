@@ -122,7 +122,8 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from 'vuex'
+import { useBulkUploadStore } from '~/stores/bulk-upload'
+import { mapActions, mapState } from 'pinia'
 import BulkUploadSteps from '../../components/BulkUploadSteps.vue'
 import { csvParser } from '../../mixins/csvParser'
 
@@ -149,8 +150,8 @@ export default {
   },
 
   computed: {
-    ...mapState('bulk-upload', ['columns', 'fileName', 'maxStepReached']),
-    ...mapGetters('bulk-upload', ['getColumnHeaders']),
+    ...mapState(useBulkUploadStore, ['columns', 'fileName', 'maxStepReached']),
+    ...mapState(useBulkUploadStore, ['getColumnHeaders']),
 
     isValid() {
       return this.getColumnHeaders.length > 0
@@ -172,7 +173,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations('bulk-upload', [
+    ...mapActions(useBulkUploadStore, [
       'setCsvContent',
       'setFileName',
       'completeStep',

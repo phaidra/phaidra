@@ -88,6 +88,7 @@
 </template>
 
 <script setup>
+import { useBulkUploadStore } from '~/stores/bulk-upload'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useNuxtApp } from '#app'
 import BulkUploadSteps from '../../components/BulkUploadSteps.vue'
@@ -100,20 +101,20 @@ definePageMeta({
   middleware: 'bulk-upload'
 })
 
-const { $store: store, $i18n: i18n, $router: router } = useNuxtApp()
+const { $i18n: i18n, $router: router, $initBulkUpload } = useNuxtApp()
 
 const previewData = ref([])
 const isInitialized = ref(false)
 const isError = ref(false)
 
-const steps = computed(() => store.state['bulk-upload']?.steps ?? {})
-const csvContent = computed(() => store.state['bulk-upload']?.csvContent ?? null)
-const fieldMappings = computed(() => store.getters['bulk-upload/getAllFieldMappings'])
-const allFields = computed(() => store.getters['bulk-upload/allFields'])
+const steps = computed(() => useBulkUploadStore()?.steps ?? {})
+const csvContent = computed(() => useBulkUploadStore()?.csvContent ?? null)
+const fieldMappings = computed(() => useBulkUploadStore().getAllFieldMappings)
+const allFields = computed(() => useBulkUploadStore().allFields)
 
 onMounted(async () => {
-  if (store.$initBulkUpload) {
-    await store.$initBulkUpload()
+  if ($initBulkUpload) {
+    await $initBulkUpload()
   }
   try {
     processPreviewData()
@@ -212,8 +213,8 @@ function getSourceInfo(field, subField = null) {
 }
 
 function proceed() {
-  store.commit('bulk-upload/completeStep', 3)
-  store.commit('bulk-upload/setCurrentStep', 4)
+  useBulkUploadStore().completeStep(3)
+  useBulkUploadStore().setCurrentStep(4)
   router.push(steps.value[4].route)
 }
 </script>

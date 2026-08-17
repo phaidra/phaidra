@@ -230,6 +230,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import { vocabulary } from '../../mixins/vocabulary'
 import datepickerproperties from '../../mixins/datepickerproperties'
 import { fieldproperties } from '../../mixins/fieldproperties'
@@ -346,7 +347,7 @@ export default {
   },
   computed: {
     appconfig: function () {
-      return this.$store.state.appconfig
+      return useRootStore().appconfig
     }
   },
   watch: {

@@ -48,13 +48,14 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import qs from 'qs'
 
 export default {
   name: 'object-from-search',
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   props: {
@@ -123,7 +124,7 @@ export default {
         fq: []
       }
       if (this.ownerFilter) {
-        params.fq.push('owner:' + this.$store.state.user.username)
+        params.fq.push('owner:' + useRootStore().user.username)
       }
       if (this.jsonldOnly) {
         params.fq.push('datastreams:"JSON-LD"')
@@ -135,14 +136,14 @@ export default {
           data: qs.stringify(params, { arrayFormat: 'repeat' }),
           headers: {
             'content-type': 'application/x-www-form-urlencoded',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         this.objects = response.data.response.docs
         this.totalObjects = response.data.response.numFound
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.loading = false
       }

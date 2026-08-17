@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
+import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
 import qs from "qs";
 import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
@@ -22,7 +24,7 @@ export default {
   mixins: [context, config, vocabulary],
   computed: {
     routepid: function () {
-      return this.$store.state.route.params.pid;
+      return this.$route.params.pid;
     },
     currentYear: function () {
       return new Date().getFullYear();
@@ -55,7 +57,7 @@ export default {
         this.cmodelHeaders.push({ title: i.toString(), key: i.toString() });
       }
       this.cmodelHeaders.push({ title: "Total", key: "total" });
-      const terms = this.$store.state.vocabulary?.vocabularies?.cmodels?.terms
+      const terms = useVocabularyStore()?.vocabularies?.cmodels?.terms
       if (!terms?.length) {
         return
       }
@@ -107,15 +109,15 @@ export default {
   },
   beforeRouteEnter: async function (to, from, next) {
     next(async function (vm) {
-      vm.$store.commit("setLoading", true);
+      vm.useRootStore().setLoading(true);
       await vm.fetchStats(vm);
-      vm.$store.commit("setLoading", false);
+      vm.useRootStore().setLoading(false);
     });
   },
   beforeRouteUpdate: async function (to, from, next) {
-    this.$store.commit("setLoading", true);
+    useRootStore().setLoading(true);
     await this.fetchStats(this);
-    this.$store.commit("setLoading", false);
+    useRootStore().setLoading(false);
     next();
   },
   async mounted() {

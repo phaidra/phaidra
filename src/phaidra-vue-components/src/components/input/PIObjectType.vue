@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import { useVocabularyStore } from '../../stores/vocabulary'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 
@@ -109,7 +110,7 @@ export default {
       if (this.vocabulary === 'uniakobjecttypetheses' || this.vocabulary === 'oerobjecttype') {
         return this.vocabularies[this.vocabulary].terms
       } else {
-        return this.resourceType ? this.$store.getters['vocabulary/getObjectTypeForResourceType'](this.resourceType, this.$i18n.locale, this.ot4rt) : this.vocabularies[this.vocabulary].terms
+        return this.resourceType ? useVocabularyStore().getObjectTypeForResourceType(this.resourceType, this.$i18n.locale, this.ot4rt) : this.vocabularies[this.vocabulary].terms
       }
     }
   },
@@ -121,7 +122,7 @@ export default {
   },
   mounted: function () {
     if (this.resourceType) {
-      this.$store.getters['vocabulary/getObjectTypeForResourceType'](this.resourceType, this.$i18n.locale)
+      useVocabularyStore().getObjectTypeForResourceType(this.resourceType, this.$i18n.locale)
     }
     this.$nextTick(() => {
       if (!this.selectedTerms || !this.selectedTerms.length) return

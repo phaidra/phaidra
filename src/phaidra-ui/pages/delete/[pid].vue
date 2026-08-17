@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import qs from 'qs'
 import { context } from '../../mixins/context'
 import { config } from '../../mixins/config'
@@ -58,7 +59,7 @@ export default {
       var url = '/search/select?' + query
       
       try {
-        this.$store.commit('setLoading', true)
+        useRootStore().setLoading(true)
         let response = await this.$axios.request({
           method: "GET",
           url: url,
@@ -71,9 +72,9 @@ export default {
         }
       } catch (error) {
         console.log(error);
-        this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
+        useRootStore().setAlerts([{ type: "error", msg: error }]);
       } finally {
-        this.$store.commit('setLoading', false)
+        useRootStore().setLoading(false)
       }
 
     },
@@ -93,7 +94,7 @@ export default {
       var url = '/search/select?' + query
 
       try {
-        this.$store.commit('setLoading', true)
+        useRootStore().setLoading(true)
         let response = await this.$axios.request({
           method: "GET",
           url: url,
@@ -106,14 +107,14 @@ export default {
         }
       } catch (error) {
         console.log(error);
-        this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
+        useRootStore().setAlerts([{ type: "error", msg: error }]);
       } finally {
-        this.$store.commit('setLoading', false)
+        useRootStore().setLoading(false)
       }
 
     },
     objectDeleted: function (event) {
-      this.$store.commit('setAlerts', [{ type: 'success', key: 'object_deleted_success', params: { o: this.pid }}])
+      useRootStore().setAlerts([{ type: 'success', key: 'object_deleted_success', params: { o: this.pid }}])
       if (this.pid === this.parentpid) {
         this.$router.push(this.localeLocation({ path: '/search' }))
       } else {

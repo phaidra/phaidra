@@ -792,7 +792,7 @@
             <div class="my-10">
               <v-toolbar color="cardtitlebg" elevation="1" density="default">
                 <v-toolbar-title>
-                  {{ $t("Members") }} ({{ $store.state.collectionMembersTotal /* leave it like this, computed property wasn't working on first access */ }})
+                  {{ $t("Members") }} ({{ useRootStore().collectionMembersTotal /* leave it like this, computed property wasn't working on first access */ }})
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-switch
@@ -805,7 +805,7 @@
                 ></v-switch>
               </v-toolbar>
               <v-row
-                v-if="$store.state.collectionMembersTotal > collMembersPagesize"
+                v-if="useRootStore().collectionMembersTotal > collMembersPagesize"
                 justify="start"
                 class="py-4"
               >
@@ -888,7 +888,7 @@
               </v-row>
               <v-divider></v-divider>
             </div>
-            <v-row no-gutters v-if="$store.state.collectionMembersTotal > collMembersPagesize" justify="start">
+            <v-row no-gutters v-if="useRootStore().collectionMembersTotal > collMembersPagesize" justify="start">
               <v-pagination
                 :wrapper-aria-label="$t('pagination')"
                 :page-aria-label="$t('page')"
@@ -909,8 +909,8 @@
                 <v-divider></v-divider>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn variant="outlined" :disabled="$store.state.loading" @click="collMemberToRemove = null; confirmColMemDeleteDlg = false">{{ $t('Cancel') }}</v-btn>
-                  <v-btn color="btnred" class="text-white" :loading="$store.state.loading" :disabled="$store.state.loading" @click="removeFromCollection()">{{ $t('Remove') }}</v-btn>                  
+                  <v-btn variant="outlined" :disabled="useRootStore().loading" @click="collMemberToRemove = null; confirmColMemDeleteDlg = false">{{ $t('Cancel') }}</v-btn>
+                  <v-btn color="btnred" class="text-white" :loading="useRootStore().loading" :disabled="useRootStore().loading" @click="removeFromCollection()">{{ $t('Remove') }}</v-btn>                  
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -2182,7 +2182,7 @@
                         class="pt-2"
                         v-if="
                           ((objectInfo.cmodel === 'Container') && (objectInfo.members.length <= 500 )) ||
-                          ((objectInfo.cmodel === 'Collection') && ($store.state.collectionMembersTotal >= 1 && $store.state.collectionMembersTotal <= 500))
+                          ((objectInfo.cmodel === 'Collection') && (useRootStore().collectionMembersTotal >= 1 && useRootStore().collectionMembersTotal <= 500))
                         "
                       >
                         <nuxt-link
@@ -2196,7 +2196,7 @@
                         class="pt-2"
                         v-if="
                           objectInfo.cmodel === 'Container' ||
-                          ((objectInfo.cmodel === 'Collection') && ($store.state.collectionMembersTotal >= 1))
+                          ((objectInfo.cmodel === 'Collection') && (useRootStore().collectionMembersTotal >= 1))
                         "
                       >
                         <nuxt-link
@@ -2443,6 +2443,8 @@
 
 
 <script>
+import { useRootStore } from '~/stores/root'
+import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
 import { getCurrentInstance, nextTick } from 'vue'
 import { useAsyncData, useNuxtApp, useRoute, useState } from '#app'
 import { context } from "../../mixins/context";
@@ -2479,7 +2481,7 @@ export default {
 
         // Detail is public and does not always run auth middleware.
         // Rehydrate token here so permission-sensitive fields (writerights, menus) are fetched as authenticated user on reload.
-        if (!nuxtApp.$store.state?.user?.token) {
+        if (!useRootStore().user?.token) {
           let token = useCookie('XSRF-TOKEN').value
           if (!token && import.meta.client) {
             try {
@@ -2487,10 +2489,10 @@ export default {
             } catch (_) {}
           }
           if (token) {
-            nuxtApp.$store.commit('setToken', token)
-            if (!nuxtApp.$store.state?.user?.username) {
+            useRootStore().setToken(token)
+            if (!useRootStore().user?.username) {
               try {
-                await nuxtApp.$store.dispatch('getLoginData')
+                await useRootStore().getLoginData()
               } catch (_) {}
             }
           }
@@ -2499,8 +2501,8 @@ export default {
         if (import.meta.client && !nuxtApp.isHydrating) {
           await nextTick()
           instance?.proxy?.clearDetailAuxiliaryState?.()
-          nuxtApp.$store.commit('setLoading', true)
-          nuxtApp.$store.commit('setObjectInfo', null)
+          useRootStore().setLoading(true)
+          useRootStore().setObjectInfo(null)
         }
 
         await nextTick()
@@ -2511,38 +2513,38 @@ export default {
         }
 
         try {
-          await nuxtApp.$store.dispatch('fetchObjectInfo', pid)
+          await useRootStore().fetchObjectInfo(pid)
         } catch (error) {
           const status = error?.response?.status ?? error?.statusCode ?? error?.status
           if (Number(status) === 404) {
-            nuxtApp.$store.commit('setObjectInfo', null)
+            useRootStore().setObjectInfo(null)
             detailPageNotFound.value = true
             await nextTick()
             const proxy = instance?.proxy
             if (proxy) {
               proxy.notFound = true
             }
-            if (import.meta.client) nuxtApp.$store.commit('setLoading', false)
+            if (import.meta.client) useRootStore().setLoading(false)
             return null
           }
-          if (import.meta.client) nuxtApp.$store.commit('setLoading', false)
+          if (import.meta.client) useRootStore().setLoading(false)
           throw error
         }
 
-        const info = nuxtApp.$store.state.objectInfo
+        const info = useRootStore().objectInfo
 
         if (!info) {
-          if (import.meta.client) nuxtApp.$store.commit('setLoading', false)
+          if (import.meta.client) useRootStore().setLoading(false)
           return null
         }
 
         if (info.cmodel === 'Container') {
-          await nuxtApp.$store.dispatch('fetchObjectMembers', info)
+          await useRootStore().fetchObjectMembers(info)
         }
         if (info.cmodel === 'Collection') {
           await nextTick()
           const proxy = instance?.proxy
-          await nuxtApp.$store.dispatch('fetchCollectionMembers', {
+          await useRootStore().fetchCollectionMembers({
             pid,
             page: proxy?.collMembersCurrentPage ?? 1,
             pagesize: proxy?.collMembersPagesize ?? 10,
@@ -2580,7 +2582,7 @@ export default {
             if (proxy) await proxy.fetchChecksums(proxy, pid)
           } catch (_) {}
           proxy?.fetchUsageStats(proxy, pid)
-          nuxtApp.$store.commit('setLoading', false)
+          useRootStore().setLoading(false)
         }
 
         return true
@@ -2620,20 +2622,17 @@ export default {
       set(value) {
         if (this.collMembersCurrentPage != value) {
           this.collMembersCurrentPage = value;
-          this.$store.dispatch(
-            "fetchCollectionMembers",
-            {
+          useRootStore().fetchCollectionMembers({
               pid: this.routepid,
               page: this.collMembersCurrentPage,
               pagesize: this.collMembersPagesize,
               onlylatestversion: this.collOnlyLatestVersions
-            }
-          );
+            });
         }
       },
     },
     collMembersTotalPages: function () {
-      return Math.ceil(this.$store.state.collectionMembersTotal / this.collMembersPagesize);
+      return Math.ceil(useRootStore().collectionMembersTotal / this.collMembersPagesize);
     },
     is3DModelType: function () {
       if (!this.objectInfo || !this.objectInfo.edm_hastype) {
@@ -2792,17 +2791,17 @@ export default {
       return this.$route.params.pid;
     },
     objectInfo: function () {
-      return this.$store.state.objectInfo;
+      return useRootStore().objectInfo;
     },
     collMembers: function () {
-      return this.$store.state.collectionMembers;
+      return useRootStore().collectionMembers;
     },
     collMembersTotal: function () {
       // this somehow does not work on first page access
-      return this.$store.state.collectionMembersTotal;
+      return useRootStore().collectionMembersTotal;
     },
     objectMembers: function () {
-      return this.$store.state.objectMembers;
+      return useRootStore().objectMembers;
     },
     objectMembersPage: function () {
       if (this.objectMembers.length < this.membersPageSize) {
@@ -2831,10 +2830,10 @@ export default {
       return false;
     },
     hasLaterVersion: function () {
-      if (this.$store.state.objectInfo.versions) {
-        if (Array.isArray(this.$store.state.objectInfo.versions)) {
-          for (let v of this.$store.state.objectInfo.versions) {
-            if (v.created > this.$store.state.objectInfo.created) {
+      if (useRootStore().objectInfo.versions) {
+        if (Array.isArray(useRootStore().objectInfo.versions)) {
+          for (let v of useRootStore().objectInfo.versions) {
+            if (v.created > useRootStore().objectInfo.created) {
               return true;
             }
           }
@@ -2844,10 +2843,10 @@ export default {
     },
     latestVersion: function () {
       let latestVersion = null;
-      let latestDate = this.$store.state.objectInfo.created;
-      if (this.$store.state.objectInfo.versions) {
-        if (Array.isArray(this.$store.state.objectInfo.versions)) {
-          for (let v of this.$store.state.objectInfo.versions) {
+      let latestDate = useRootStore().objectInfo.created;
+      if (useRootStore().objectInfo.versions) {
+        if (Array.isArray(useRootStore().objectInfo.versions)) {
+          for (let v of useRootStore().objectInfo.versions) {
             let currentCreated = v.created;
             if (currentCreated > latestDate) {
               latestDate = currentCreated;
@@ -2934,12 +2933,12 @@ export default {
         for (let uri of licenseUris) {
           licenseStrings.add(uri);
 
-          if (this.$store && this.$store.getters['vocabulary/getLocalizedTermLabel']) {
-            const label = this.$store.getters['vocabulary/getLocalizedTermLabel']('alllicenses', uri, this.$i18n.locale);
+          if (useVocabularyStore().getLocalizedTermLabel) {
+            const label = useVocabularyStore().getLocalizedTermLabel('alllicenses', uri, this.$i18n.locale);
             if (label) {
               licenseStrings.add(label);
             }
-            const enLabel = this.$store.getters['vocabulary/getLocalizedTermLabel']('alllicenses', uri, 'eng');
+            const enLabel = useVocabularyStore().getLocalizedTermLabel('alllicenses', uri, 'eng');
             if (enLabel) {
               licenseStrings.add(enLabel);
             }
@@ -3503,8 +3502,8 @@ export default {
       this.detailsMetaInfo = metaInfo
     },
     getLicenseLabel(uri) {
-      if (this.$store && this.$store.getters['vocabulary/getLocalizedTermLabel']) {
-        const label = this.$store.getters['vocabulary/getLocalizedTermLabel']('alllicenses', uri, this.$i18n.locale);
+      if (useVocabularyStore().getLocalizedTermLabel) {
+        const label = useVocabularyStore().getLocalizedTermLabel('alllicenses', uri, this.$i18n.locale);
         return label || uri;
       }
       return uri;
@@ -3512,21 +3511,16 @@ export default {
     async fetchAsyncData(self, pid) {
       try {
         console.log('fetching object info ' + pid);
-        await self.$store.dispatch("fetchObjectInfo", pid);
+        await useRootStore().fetchObjectInfo(pid);
         self.postMetadataLoad(self);
-        if (self.$store.state.objectInfo.cmodel === "Container") {
+        if (useRootStore().objectInfo.cmodel === "Container") {
           console.log('fetching container members ' + pid);
-          await self.$store.dispatch(
-            "fetchObjectMembers",
-            self.$store.state.objectInfo
+          await useRootStore().fetchObjectMembers(useRootStore().objectInfo
           );
         }
-        if (self.$store.state.objectInfo.cmodel === "Collection") {
+        if (useRootStore().objectInfo.cmodel === "Collection") {
           console.log('fetching collection members ' + pid + ' page ' + self.collMembersCurrentPage + ' size ' + self.collMembersPagesize);
-          await self.$store.dispatch(
-            "fetchCollectionMembers",
-            { pid: pid, page: self.collMembersCurrentPage, pagesize: self.collMembersPagesize, onlylatestversion: self.collOnlyLatestVersions }
-          );
+          await useRootStore().fetchCollectionMembers({ pid: pid, page: self.collMembersCurrentPage, pagesize: self.collMembersPagesize, onlylatestversion: self.collOnlyLatestVersions });
         }
 
         if (self.objectInfo?.dshash?.['JSON-LD']) {
@@ -3543,10 +3537,10 @@ export default {
         console.log('Error fetching object info:', error);
         if (error.response?.status === 404) {
           self.notFound = true;
-          self.$store.commit('setObjectInfo', null);
+          useRootStore().setObjectInfo(null);
           return;
         }
-        self.$store.commit('setAlerts', [{
+        useRootStore().setAlerts([{
           type: 'error',
           msg: self.$t('An error occurred.'),
         }]);
@@ -3558,15 +3552,12 @@ export default {
           ? onlyLatestVersion
           : this.collOnlyLatestVersions
       console.log('fetching collection members ' + this.objectInfo.pid + ' page ' + this.collMembersCurrentPage + ' size ' + this.collMembersPagesize);
-      await this.$store.dispatch(
-        "fetchCollectionMembers",
-        {
+      await useRootStore().fetchCollectionMembers({
           pid: this.objectInfo.pid,
           page: this.collMembersCurrentPage,
           pagesize: this.collMembersPagesize,
           onlylatestversion: only
-        }
-      );
+        });
     },
     scrollToCollectionMembersTop() {
       if (!process.browser) {
@@ -3639,23 +3630,23 @@ export default {
         let response = await this.$axios.post('/object/' + this.objectInfo.pid + '/data', httpFormData, {
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           onUploadProgress: function (progressEvent) {
             self.datareplaceUploadProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
           }
         })
         if (response.status === 200) {
-          this.$store.commit('setAlerts', [{ type: 'success', msg: this.$t('File was successfully replaced') }])
-          await this.$store.dispatch('fetchObjectInfo', this.objectInfo.pid)
+          useRootStore().setAlerts([{ type: 'success', msg: this.$t('File was successfully replaced') }])
+          await useRootStore().fetchObjectInfo(this.objectInfo.pid)
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.datareplaceDialog = false
         this.datareplaceLoading = false
@@ -3671,14 +3662,14 @@ export default {
         });
         if (response.status !== 200) {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit("setAlerts", response.data.alerts);
+            useRootStore().setAlerts(response.data.alerts);
           }
         } else {
           this.citationStyles = response.data;
         }
       } catch (error) {
         console.log(error);
-        this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
+        useRootStore().setAlerts([{ type: "error", msg: error }]);
       } finally {
         this.citationStylesLoading = false;
       }
@@ -3695,14 +3686,14 @@ export default {
         });
         if (response.status !== 200) {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit("setAlerts", response.data.alerts);
+            useRootStore().setAlerts(response.data.alerts);
           }
         } else {
           this.citeResult = response.data;
         }
       } catch (error) {
         console.log(error);
-        this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
+        useRootStore().setAlerts([{ type: "error", msg: error }]);
       } finally {
         this.doiCiteLoading = false;
       }
@@ -3723,14 +3714,14 @@ export default {
         });
         if (response.status !== 200) {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit("setAlerts", response.data.alerts);
+            useRootStore().setAlerts(response.data.alerts);
           }
         } else {
           this.citeResult = response.data;
         }
       } catch (error) {
         console.log(error);
-        this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
+        useRootStore().setAlerts([{ type: "error", msg: error }]);
       } finally {
         this.doiCiteLoading = false;
       }
@@ -3748,15 +3739,15 @@ export default {
           }
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [{ msg: this.$t('DOI successfully requested'), type: 'success' }])
+          useRootStore().setAlerts([{ msg: this.$t('DOI successfully requested'), type: 'success' }])
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.doiRequestLoading = false
       }
@@ -3771,7 +3762,7 @@ export default {
     },
     addToCollection: async function (collection) {
       try {
-        this.$store.commit('setLoading', true)
+        useRootStore().setLoading(true)
         var httpFormData = new FormData()
         httpFormData.append('metadata', JSON.stringify({ metadata: { members: [{ 'pid': this.objectInfo.pid }] } }))
         let response = await this.$axios.request({
@@ -3784,23 +3775,23 @@ export default {
           data: httpFormData
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [{ msg: this.$t('Collection successfully updated'), type: 'success' }])
+          useRootStore().setAlerts([{ msg: this.$t('Collection successfully updated'), type: 'success' }])
           await this.refreshDetailObjectInfo()
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
-        this.$store.commit('setLoading', false)
+        useRootStore().setLoading(false)
       }
     },
     removeFromCollection: async function () {
       try {
-        this.$store.commit('setLoading', true)
+        useRootStore().setLoading(true)
         var httpFormData = new FormData()
         httpFormData.append('metadata', JSON.stringify({ metadata: { members: [{ 'pid': this.collMemberToRemove }] } }))
         let response = await this.$axios.request({
@@ -3808,33 +3799,30 @@ export default {
           url: '/collection/' + this.objectInfo.pid + '/members/remove',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [{ msg: this.$t('Collection successfully updated'), type: 'success' }])
-          await this.$store.dispatch(
-            "fetchCollectionMembers",
-            {
+          useRootStore().setAlerts([{ msg: this.$t('Collection successfully updated'), type: 'success' }])
+          await useRootStore().fetchCollectionMembers({
               pid: this.objectInfo.pid,
               page: this.collMembersCurrentPage,
               pagesize: this.collMembersPagesize,
               onlylatestversion: this.collOnlyLatestVersions
-            }
-          )
+            })
           this.confirmColMemDeleteDlg = false
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.collMemberToRemove = null
-        this.$store.commit('setLoading', false)
+        useRootStore().setLoading(false)
       }
     },
   },

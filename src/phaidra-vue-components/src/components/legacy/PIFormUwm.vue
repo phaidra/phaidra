@@ -52,6 +52,8 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
+import { useVocabularyStore } from '../../stores/vocabulary'
 import arrays from '../../utils/arrays'
 import { isNonBlankString } from '../../utils/stringValidation'
 import { vuetifyGoTo } from '../../utils/vuetifyGoToCompat'
@@ -292,7 +294,7 @@ export default {
           url: '/object/' + this.targetpid + '/metadata',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
@@ -300,14 +302,14 @@ export default {
           if (response.data.status === 401) {
             response.data.alerts.push({ type: 'danger', msg: 'Please log in' })
           }
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         if (response.data.status === 200) {
           this.$emit('object-saved', this.targetpid)
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         vuetifyGoTo(0)
         this.loading = false
@@ -315,7 +317,7 @@ export default {
     }
   },
   mounted: function () {
-    this.$store.dispatch('vocabulary/loadLanguages', this.$i18n.locale)
+    useVocabularyStore().loadLanguages(this.$i18n.locale)
     this.initActiveTab()
   }
 }

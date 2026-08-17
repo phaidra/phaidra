@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import { useVocabularyStore } from '../../stores/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { vocabulary } from '../../mixins/vocabulary'
 import ThemaTreeDialog from '../select/ThemaTreeDialog'
@@ -147,7 +148,7 @@ export default {
   mounted: function () {
     this.$nextTick(function () {
       if (!this.vocabularies['thema'].loaded) {
-        this.$store.dispatch('vocabulary/loadThema', this.$i18n.locale)
+        useVocabularyStore().loadThema(this.$i18n.locale)
       }
       // emit input to set skos:prefLabel in parent
       if (this.value) {

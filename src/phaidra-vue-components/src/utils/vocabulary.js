@@ -1,8 +1,10 @@
-import vocstore from '../store/modules/vocabulary'
+import { state } from '../stores/vocabulary'
+
+const initialVocabularies = state().vocabularies
 
 export default {
   setFieldValue (field, vocabulary, id) {
-    for (let term of vocstore.state.vocabularies[vocabulary].terms) {
+    for (let term of initialVocabularies[vocabulary].terms) {
       if (term['@id'] === id) {
         field.value = id
         field['skos:prefLabel'] = []

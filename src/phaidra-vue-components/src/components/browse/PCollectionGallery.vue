@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import qs from 'qs'
 import objectMixin from '../../mixins/object'
 
@@ -98,7 +99,7 @@ export default {
   },
   computed: {
     instanceconfig: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   data () {
@@ -134,7 +135,7 @@ export default {
         }
         let response = await this.$axios.request({
           method: 'POST',
-          url: this.$store.state.instanceconfig.solr + '/select',
+          url: useRootStore().instanceconfig.solr + '/select',
           data: qs.stringify(params, { arrayFormat: 'repeat' }),
           headers: {
             'content-type': 'application/x-www-form-urlencoded'
@@ -156,7 +157,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       }
     },
     getChildren: async function (arr) {
@@ -173,7 +174,7 @@ export default {
         }
         let response = await this.$axios.request({
           method: 'POST',
-          url: this.$store.state.instanceconfig.solr + '/select',
+          url: useRootStore().instanceconfig.solr + '/select',
           data: qs.stringify(params, { arrayFormat: 'repeat' }),
           headers: {
             'content-type': 'application/x-www-form-urlencoded'
@@ -190,7 +191,7 @@ export default {
 
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       }
     },
     showDetailDialog: async function (doc) {
@@ -199,7 +200,7 @@ export default {
         this.detailDialog = true
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       }
     },
     openDetails: async function () {
@@ -207,7 +208,7 @@ export default {
         alert('open details for: ' + this.detailToShow.dc_title[0])
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       }
     }
   }

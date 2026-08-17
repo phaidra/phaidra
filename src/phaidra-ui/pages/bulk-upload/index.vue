@@ -9,7 +9,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { useBulkUploadStore } from '~/stores/bulk-upload'
+import { mapState } from 'pinia'
 import BulkUploadSteps from '../../components/BulkUploadSteps.vue'
 
 export default {
@@ -25,7 +26,7 @@ export default {
   },
 
   computed: {
-    ...mapState('bulk-upload', ['currentStep', 'steps'])
+    ...mapState(useBulkUploadStore, ['currentStep', 'steps'])
   },
 
   mounted() {

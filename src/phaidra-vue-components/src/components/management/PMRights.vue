@@ -54,7 +54,7 @@
                   <v-row>
                     <v-col cols="12" v-if="doc" >
                       <v-btn class="bg-primary" :disabled="loading || userSearchLoading" @click="addOwner()">
-                        <div v-if="doc.owner == $store.state.user.username">{{ $t('Restrict access to me') }}</div>
+                        <div v-if="doc.owner == useRootStore().user.username">{{ $t('Restrict access to me') }}</div>
                         <div v-else-if="doc.owner">{{ $t('Restrict access to owner') }} ({{ doc.owner }})</div>
                         <div v-else>{{ $t('Restrict access to me') }}</div>
                       </v-btn>
@@ -264,6 +264,8 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
+import { useVocabularyStore } from '../../stores/vocabulary'
 import qs from 'qs'
 import arrays from '../../utils/arrays'
 import datepickerproperties from '../../mixins/datepickerproperties'
@@ -316,7 +318,7 @@ export default {
   },
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   data () {
@@ -377,7 +379,7 @@ export default {
       try {
         let response = await this.$axios.get('/directory/user/search', {
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           params: {
             q: val
@@ -385,14 +387,14 @@ export default {
         })
         if (response.data) {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
           this.userSearchItems = response.data.accounts ? response.data.accounts : []
         }
       } catch (error) {
         console.log(error)
         if (!error?.response?.data?.alerts?.length) {
-          this.$store.commit('setAlerts', [{ type: 'danger', msg: error?.message || this.$t('An error occurred.') }])
+          useRootStore().setAlerts([{ type: 'danger', msg: error?.message || this.$t('An error occurred.') }])
         }
       } finally {
         this.userSearchLoading = false
@@ -408,7 +410,7 @@ export default {
       try {
         let response = await this.$axios.get('/directory/user/search', {
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           params: {
             q: val,
@@ -417,13 +419,13 @@ export default {
         })
         if (response.data) {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
           this.userSearchExactItems = response.data.accounts ? response.data.accounts : []
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.userSearchExactLoading = false
       }
@@ -471,7 +473,7 @@ export default {
         this.rightsArray.push({ type: 'username', notation: this.doc.owner, description: this.doc.owner + ' (owner of ' + this.pid + ')', expires : null })
         this.saveRights()
       } else {
-        this.rightsArray.push({ type: 'username', notation: this.$store.state.user.username, description: this.$store.state.user.username + ' (uploader)', expires: null })
+        this.rightsArray.push({ type: 'username', notation: useRootStore().user.username, description: useRootStore().user.username + ' (uploader)', expires: null })
         this.saveRights()
       }
     },
@@ -533,16 +535,16 @@ export default {
       try {
         let response = await this.$axios.get('/directory/user/' + username + '/name', {
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         return response.data.name
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.loading = false
       }
@@ -552,16 +554,16 @@ export default {
       try {
         let response = await this.$axios.get('/group/' + groupid, {
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         return response.data.group.name
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.loading = false
       }
@@ -590,20 +592,20 @@ export default {
             url: '/object/' + this.pid + '/rights',
             data: httpFormData,
             headers: {
-              'X-XSRF-TOKEN': this.$store.state.user.token,
+              'X-XSRF-TOKEN': useRootStore().user.token,
               'Content-Type': 'multipart/form-data'
             }
           })
           if (response.status === 200) {
-            this.$store.commit('setAlerts', [{ type: 'success', key: 'object_rights_saved_success', params: { o: this.pid }}])
+            useRootStore().setAlerts([{ type: 'success', key: 'object_rights_saved_success', params: { o: this.pid }}])
           } else {
             if (response.data.alerts && response.data.alerts.length > 0) {
-              this.$store.commit('setAlerts', response.data.alerts)
+              useRootStore().setAlerts(response.data.alerts)
             }
           }
         } catch (error) {
           console.log(error)
-          this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+          useRootStore().setAlerts([{ type: 'danger', msg: error }])
         } finally {
           this.$emit('load-rights')
           this.loading = false
@@ -661,7 +663,7 @@ export default {
           if (notation === 'A-1') {
             name = this.$t('Whole University')
           } else {
-            name = this.$store.getters['vocabulary/getLocalizedTermLabelByNotation']('orgunits', notation, this.$i18n.locale)
+            name = useVocabularyStore().getLocalizedTermLabelByNotation('orgunits', notation, this.$i18n.locale)
             if (!name) {
               name = notation
             }
@@ -683,7 +685,7 @@ export default {
           if (notation === 'A-1') {
             name = this.$t('Whole University')
           } else {
-            name = this.$store.getters['vocabulary/getLocalizedTermLabelByNotation']('orgunits', notation, this.$i18n.locale)
+            name = useVocabularyStore().getLocalizedTermLabelByNotation('orgunits', notation, this.$i18n.locale)
             if (!name) {
               name = notation
             }
@@ -714,19 +716,19 @@ export default {
           method: 'GET',
           url: '/groups',
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         if (response.status === 200) {
           this.groups = response.data.groups
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.groupsLoading = false
       }
@@ -743,7 +745,7 @@ export default {
       var url = '/search/select?' + query
       
       try {
-        this.$store.commit('setLoading', true)
+        useRootStore().setLoading(true)
         let response = await this.$axios.request({
           method: "GET",
           url: url,
@@ -754,9 +756,9 @@ export default {
         }
       } catch (error) {
         console.log(error);
-        this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
+        useRootStore().setAlerts([{ type: "error", msg: error }]);
       } finally {
-        this.$store.commit('setLoading', false)
+        useRootStore().setLoading(false)
       }
     }
   },
@@ -764,7 +766,7 @@ export default {
     await this.loadDoc()
     this.$nextTick(async function () {
       if (!this.vocabularies['orgunits'].loaded) {
-        this.$store.dispatch('vocabulary/loadOrgUnits', this.$i18n.locale)
+        useVocabularyStore().loadOrgUnits(this.$i18n.locale)
       }
       this.loadGroups()
       this.rightsjson = this.rights

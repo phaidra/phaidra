@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 export default {
   name: 'p-feedback',
   props: {
@@ -113,7 +114,7 @@ export default {
             url: '/feedback',
             data: httpFormData,
             headers: {
-              'X-XSRF-TOKEN': this.$store.state.user.token,
+              'X-XSRF-TOKEN': useRootStore().user.token,
               'Content-Type': 'multipart/form-data'
             }
           })
@@ -121,12 +122,12 @@ export default {
             this.sent = true
           } else {
             if (response.data.alerts && response.data.alerts.length > 0) {
-              this.$store.commit('setAlerts', response.data.alerts)
+              useRootStore().setAlerts(response.data.alerts)
             }
           }
         } catch (error) {
           console.log(error)
-          this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+          useRootStore().setAlerts([{ type: 'danger', msg: error }])
         } finally {
           this.loading = false
         }

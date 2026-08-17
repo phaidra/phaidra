@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import qs from 'qs'
 import { context } from '../../mixins/context'
 import { config } from '../../mixins/config'
@@ -136,7 +137,7 @@ export default {
       return promise
     },
     orderSaved: function (event) {
-      this.$store.commit('setAlerts', [{ type: 'success', key: 'order_saved_for_object', params: { o: event }}])
+      useRootStore().setAlerts([{ type: 'success', key: 'order_saved_for_object', params: { o: event }}])
     }
   },
   beforeRouteEnter: function (to, from, next) {

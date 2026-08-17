@@ -68,7 +68,7 @@
       <v-row no-gutters v-show="showDisclaimer && isCCLicense" :class=" hint ? 'mt-2 mb-6' : 'mb-6'">
         <v-col cols="10">
           <v-row>
-            <p v-html="$t('LICENSE_DISCLAIMER', { institution: $t($store.state.instanceconfig.institution) })"></p>
+            <p v-html="$t('LICENSE_DISCLAIMER', { institution: $t(useRootStore().instanceconfig.institution) })"></p>
           </v-row>
         </v-col>
       </v-row>
@@ -77,7 +77,7 @@
       <v-row no-gutters v-show="showDisclaimer && isMITLicense" :class=" hint ? 'mt-2 mb-6' : 'mb-6'">
         <v-col cols="10">
           <v-row>
-            <p v-html="$t('LICENSE_DISCLAIMER_MIT', { institution: $t($store.state.instanceconfig.institution) })"></p>
+            <p v-html="$t('LICENSE_DISCLAIMER_MIT', { institution: $t(useRootStore().instanceconfig.institution) })"></p>
           </v-row>
         </v-col>
       </v-row>
@@ -86,6 +86,8 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
+import { useVocabularyStore } from '../../stores/vocabulary'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 
@@ -176,7 +178,7 @@ export default {
             }
           }
         } else {
-          await this.$store.dispatch('vocabulary/loadVocabulary', this.vocabulary)
+          await useVocabularyStore().loadVocabulary(this.vocabulary)
           // emit input to set skos:prefLabel in parent
           if (this.value) {
             for (let term of this.vocabularies[this.vocabulary].terms) {

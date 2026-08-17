@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import { context } from '../mixins/context'
 import { config } from '../mixins/config'
 
@@ -50,13 +51,13 @@ export default {
       }
       let toures = await this.$axios.get(url);
       if (toures.data.alerts && toures.data.alerts.length > 0) {
-        this.$store.commit("setAlerts", toures.data.alerts);
+        useRootStore().setAlerts(toures.data.alerts);
       }
       this.tou = toures.data.terms;
       this.touVersion = toures.data.version;
     } catch (err) {
       console.log("err", err);
-      this.$store.commit("setAlerts", [
+      useRootStore().setAlerts([
         {
           type: 'error',
           msg: err

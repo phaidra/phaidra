@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import jsonLd from "phaidra-vue-components/src/utils/json-ld"
 import { context } from "../../../mixins/context"
 import { config } from "../../../mixins/config"
@@ -42,10 +43,10 @@ export default {
   },
   methods: {
     objectSaved: async function (pid) {
-      this.$store.commit('setAlerts', [{ type: 'success', key: 'object_metadata_saved_success', params: { o: pid }}])
+      useRootStore().setAlerts([{ type: 'success', key: 'object_metadata_saved_success', params: { o: pid }}])
       // to save unnecessary loadings, fetchObjectInfo is skipped in Detail.vue if we return to the same pid
       // but it must be done after metadata edit, so re-load it here
-      await this.$store.dispatch("fetchObjectInfo", pid);
+      await useRootStore().fetchObjectInfo(pid);
       this.$router.push(this.localeLocation({ path: `/detail/${pid}` }));
       this.goTo(0);
     },
@@ -98,7 +99,7 @@ export default {
           },
         });
         if (response.data.alerts && response.data.alerts.length > 0) {
-          self.$store.commit("setAlerts", response.data.alerts);
+          useRootStore().setAlerts(response.data.alerts);
         }
         if (response.data.metadata["JSON-LD"]) {
           self.postMetadataLoad(
@@ -118,19 +119,19 @@ export default {
   },
   beforeRouteEnter: function (to, from, next) {
     next((vm) => {
-      vm.$store.commit("setLoading", true);
+      vm.useRootStore().setLoading(true);
       vm.parentpid = from.params.pid;
       vm.loadJsonld(vm, to.params.pid).then(() => {
-        vm.$store.commit("setLoading", false);
+        vm.useRootStore().setLoading(false);
         next();
       });
     });
   },
   beforeRouteUpdate: function (to, from, next) {
     this.parentpid = from.params.pid;
-    this.$store.commit("setLoading", true);
+    useRootStore().setLoading(true);
     this.loadJsonld(this, to.params.pid).then(() => {
-      this.$store.commit("setLoading", false);
+      useRootStore().setLoading(false);
       next();
     });
   },

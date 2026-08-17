@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import { vocabulary } from '../../mixins/vocabulary'
 
 export default {
@@ -39,7 +40,7 @@ export default {
   mixins: [ vocabulary ],
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     },
     items: function () {
       return this.vocabularies['thema']['tree']

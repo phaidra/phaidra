@@ -1,15 +1,16 @@
+import { useRootStore } from '~/stores/root'
+
 export default defineNuxtPlugin((nuxtApp) => {
   const router = nuxtApp.$router
-  const store = nuxtApp.$store
 
-  if (!router || !store) return
+  if (!router) return
 
   router.afterEach((to, from) => {
-    if (process.client && to.path !== '/login') {
+    if (import.meta.client && to.path !== '/login') {
       localStorage.setItem('redirect', to.fullPath)
     }
 
     const localePath = nuxtApp.$localePath || ((path) => path)
-    store.commit('updateBreadcrumbs', { to, from, localePath })
+    useRootStore(nuxtApp.$pinia).updateBreadcrumbs({ to, from, localePath })
   })
 })

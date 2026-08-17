@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const buildLib = process.env.BUILD_LIB === '1'
 
-const external = ['vue', 'vue-router', 'vuex', 'vuetify', 'vue-i18n', 'axios']
+const external = ['vue', 'vue-router', 'pinia', 'vuetify', 'vue-i18n', 'axios']
 
 export default defineConfig({
   plugins: [
@@ -40,7 +40,7 @@ export default defineConfig({
             globals: {
               vue: 'Vue',
               'vue-router': 'VueRouter',
-              vuex: 'Vuex',
+              pinia: 'Pinia',
               vuetify: 'Vuetify',
               'vue-i18n': 'VueI18n',
               axios: 'axios'

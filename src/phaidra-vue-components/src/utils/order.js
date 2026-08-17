@@ -1,4 +1,4 @@
-import { state } from '../store/modules/vocabulary'
+import { state } from '../stores/vocabulary'
 
 var roles = {
   'role:aut': 1,

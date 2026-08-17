@@ -103,6 +103,8 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
+import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
 import fields from "phaidra-vue-components/src/utils/fields"
 import arrays from "phaidra-vue-components/src/utils/arrays"
 import jsonLd from "phaidra-vue-components/src/utils/json-ld"
@@ -129,7 +131,7 @@ export default {
       return this.$route.params.relation;
     },
     objectInfo: function () {
-      return this.$store.state.objectInfo;
+      return useRootStore().objectInfo;
     },
   },
   data() {
@@ -314,7 +316,7 @@ export default {
         };
         let addMembers = { metadata: { members: [{ pid: newpid }] } };
         for (let col of this.objectInfo.relationships.ispartof) {
-          if (col.owner === this.$store.state.user.username) {
+          if (col.owner === useRootStore().user.username) {
             this.transferMembershipAction = this.$t(
               "REMOVE_COLLECTION_MEMBER",
               { oldpid: this.relatedpid, collection: col.pid }
@@ -330,18 +332,18 @@ export default {
                   "/members/remove",
                 headers: {
                   "Content-Type": "multipart/form-data",
-                  "X-XSRF-TOKEN": this.$store.state.user.token,
+                  "X-XSRF-TOKEN": useRootStore().user.token,
                 },
                 data: httpFormData,
               });
               if (response.status !== 200) {
                 if (response.data.alerts && response.data.alerts.length > 0) {
-                  this.$store.commit("setAlerts", response.data.alerts);
+                  useRootStore().setAlerts(response.data.alerts);
                 }
               }
             } catch (error) {
               console.log(error);
-              this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
+              useRootStore().setAlerts([{ type: "error", msg: error }]);
             }
             this.transferMembershipAction = this.$t("ADD_COLLECTION_MEMBER", {
               newpid: newpid,
@@ -358,18 +360,18 @@ export default {
                   "/members/add",
                 headers: {
                   "Content-Type": "multipart/form-data",
-                  "X-XSRF-TOKEN": this.$store.state.user.token,
+                  "X-XSRF-TOKEN": useRootStore().user.token,
                 },
                 data: httpFormData,
               });
               if (response.status !== 200) {
                 if (response.data.alerts && response.data.alerts.length > 0) {
-                  this.$store.commit("setAlerts", response.data.alerts);
+                  useRootStore().setAlerts(response.data.alerts);
                 }
               }
             } catch (error) {
               console.log(error);
-              this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
+              useRootStore().setAlerts([{ type: "error", msg: error }]);
             }
           }
         }
@@ -418,7 +420,7 @@ export default {
           return true;
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            self.$store.commit("setAlerts", response.data.alerts);
+            useRootStore().setAlerts(response.data.alerts);
           }
           return false;
         }
@@ -429,7 +431,7 @@ export default {
       }
     },
     createForm: async function (self) {
-      self.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
+      useVocabularyStore().sortObjectTypes(this.$i18n.locale);
       self.transferMembership = false;
       self.transferringMembership = false;
       self.transferMembershipAction = "";
@@ -475,11 +477,11 @@ export default {
               method: 'GET',
               url: '/jsonld/template/' + settres?.data?.settings?.defaultTemplateId,
               headers: {
-                'X-XSRF-TOKEN': self.$store.state.user.token
+                'X-XSRF-TOKEN': useRootStore().user.token
               }
             })
             if (tmpres.data.alerts && tmpres.data.alerts.length > 0) {
-              self.$store.commit('setAlerts', tmpres.data.alerts)
+              useRootStore().setAlerts(tmpres.data.alerts)
             }
             self.form = tmpres.data.template.form
             // if (tmpres.data.template.hasOwnProperty('skipValidation')) {
@@ -487,7 +489,7 @@ export default {
             // }
           } catch (error) {
             console.log(error)
-            self.$store.commit('setAlerts', [{ type: 'error', msg: error }])
+            useRootStore().setAlerts([{ type: 'error', msg: error }])
           } finally {
             self.loading = false
           }
@@ -694,21 +696,21 @@ export default {
   },
   beforeRouteEnter: async function (to, from, next) {
     next(async function (vm) {
-      vm.$store.commit("setLoading", true);
+      vm.useRootStore().setLoading(true);
       await vm.createForm(vm);
       if (vm.relation === "hassuccessor") {
-        await vm.$store.dispatch("fetchObjectInfo", vm.relatedpid);
+        await vm.useRootStore().fetchObjectInfo(vm.relatedpid);
       }
-      vm.$store.commit("setLoading", false);
+      vm.useRootStore().setLoading(false);
     });
   },
   beforeRouteUpdate: async function (to, from, next) {
-    this.$store.commit("setLoading", true);
+    useRootStore().setLoading(true);
     await this.createForm(this);
     if (this.relation === "hassuccessor") {
-      await this.$store.dispatch("fetchObjectInfo", this.relatedpid);
+      await useRootStore().fetchObjectInfo(this.relatedpid);
     }
-    this.$store.commit("setLoading", false);
+    useRootStore().setLoading(false);
   },
   mounted() {
     console.log(

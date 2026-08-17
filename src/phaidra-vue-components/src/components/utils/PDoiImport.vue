@@ -316,6 +316,8 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
+import { useVocabularyStore } from '../../stores/vocabulary'
 import { vocabulary } from '../../mixins/vocabulary'
 import fields from '../../utils/fields'
 import {constructDataCite, normalizeLicenseUrl, cleanCrossrefAbstract, setDoiAbstract} from '../../utils/doiconstructor'
@@ -357,7 +359,7 @@ export default {
   },
   computed: {
     instanceconfig: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     },
     lang2to3map: function () {
       return Object.keys(lang3to2map).reduce((ret, key) => {
@@ -1031,7 +1033,7 @@ if (crossrefData['issued']['date-parts'][0]) {
       }
     },
     resetForm: async function (self, doiImportData) {
-      self.$store.dispatch("vocabulary/sortObjectTypes", self.$i18n.locale);
+      useVocabularyStore().sortObjectTypes(self.$i18n.locale);
 
       self.validationError = false;
       self.mandatoryFieldsFound = {};

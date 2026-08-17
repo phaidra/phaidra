@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
+import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
 import arrays from "phaidra-vue-components/src/utils/arrays"
 import fields from "phaidra-vue-components/src/utils/fields"
 import { context } from "../../mixins/context"
@@ -267,7 +269,7 @@ export default {
       this.goTo(0);
     },
     createForm: async function (self, index) {
-      self.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
+      useVocabularyStore().sortObjectTypes(this.$i18n.locale);
 
       // mixin
       self.validationError = false;
@@ -280,11 +282,11 @@ export default {
             method: 'GET',
             url: '/jsonld/template/' + this.instanceconfig.defaulttemplateid,
             headers: {
-              'X-XSRF-TOKEN': self.$store.state.user.token
+              'X-XSRF-TOKEN': useRootStore().user.token
             }
           })
           if (tmpres.data.alerts && tmpres.data.alerts.length > 0) {
-            self.$store.commit('setAlerts', tmpres.data.alerts)
+            useRootStore().setAlerts(tmpres.data.alerts)
           }
           self.form = tmpres.data.template.form
           // if (tmpres.data.template.hasOwnProperty('skipValidation')) {
@@ -292,7 +294,7 @@ export default {
           // }
         } catch (error) {
           console.log(error)
-          self.$store.commit('setAlerts', [{ type: 'error', msg: error }])
+          useRootStore().setAlerts([{ type: 'error', msg: error }])
         } finally {
           self.loading = false
         }

@@ -140,6 +140,7 @@
 </template>
 
 <script>
+import { useVocabularyStore } from '../../stores/vocabulary'
 import { vMaska } from 'maska/vue'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
@@ -301,7 +302,7 @@ export default {
     this.$nextTick(() => {
       this.formRowSelectMenu.observe(() => this.$refs.rowRef?.$el ?? this.$refs.rowRef)
       this.loading = !this.vocabularies[this.roleVocabulary].loaded
-      this.$store.dispatch('vocabulary/sortRoles', this?.$i18n?.locale || 'eng')
+      useVocabularyStore().sortRoles(this?.$i18n?.locale || 'eng')
       // emit input to set skos:prefLabel in parent
       if (this.role) {
         this.$emit('input', this.getTerm(this.roleVocabulary, this.role))

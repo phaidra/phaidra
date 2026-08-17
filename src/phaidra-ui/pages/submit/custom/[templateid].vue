@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import arrays from "phaidra-vue-components/src/utils/arrays"
 import fields from "phaidra-vue-components/src/utils/fields"
 import { context } from "../../../mixins/context"
@@ -221,7 +222,7 @@ export default {
           }
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          self.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         self.form = response.data.template.form
         if (self.user.username !== response.data.template.owner) {
@@ -247,7 +248,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        self.$store.commit('setAlerts', [{ type: 'error', msg: error }])
+        useRootStore().setAlerts([{ type: 'error', msg: error }])
       } finally {
         self.loading = false
       }

@@ -74,6 +74,9 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
+import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
+import { useSearchStore } from 'phaidra-vue-components/src/stores/search'
 import { config } from "../mixins/config";
 import { context } from "../mixins/context";
 import FaviconMixin from '../mixins/favicon'
@@ -89,8 +92,7 @@ export default {
     const runtime = useRuntimeConfig()
 
     useHead(() => {
-      const store = nuxtApp.$store
-      const instanceconfig = store?.state?.instanceconfig || {}
+      const instanceconfig = useRootStore(nuxtApp.$pinia)?.instanceconfig || {}
 
       const currentLocale = nuxtApp.$i18n?.locale || 'eng'
 
@@ -207,12 +209,12 @@ export default {
   },
   methods: {
     dismiss: function (alert) {
-      this.$store.commit("clearAlert", alert);
+      useRootStore().clearAlert(alert);
     },
     loadInstanceConfigToStore: async function () {
       this.loading = true
       try {
-        this.$store.commit("setInstanceConfigCookieDomain", this.$config?.public?.cookieDomain);
+        useRootStore().setInstanceConfigCookieDomain(this.$config?.public?.cookieDomain);
         let settingResponse = await this.$axios.get("/config/public");
         const publicConfig = settingResponse?.data?.public_config
         if (publicConfig) {
@@ -222,22 +224,22 @@ export default {
           const dataI18n = publicConfig?.data_i18n && typeof publicConfig.data_i18n === 'object'
             ? publicConfig.data_i18n
             : {}
-          await this.$store.dispatch("setInstanceConfig", { ...publicConfig, data_i18n: dataI18n });
-          this.$store.dispatch("vocabulary/setInstanceConfig", publicConfig);
+          await useRootStore().setInstanceConfig({ ...publicConfig, data_i18n: dataI18n });
+          useVocabularyStore().setInstanceConfig(publicConfig);
           if (publicConfig?.data_facetqueries?.length > 0) {
-            this.$store.commit("search/setFacetQueries", publicConfig.data_facetqueries)
+            useSearchStore().setFacetQueries(publicConfig.data_facetqueries)
           }
 
           // Do not overwrite API-provided values with undefined runtime config.
           if (publicConfig.baseurl) {
-            this.$store.commit("setInstanceConfigBaseUrl", publicConfig.baseurl);
+            useRootStore().setInstanceConfigBaseUrl(publicConfig.baseurl);
           } else if (this.$config?.public?.baseURL) {
-            this.$store.commit("setInstanceConfigBaseUrl", this.$config?.public?.baseURL);
+            useRootStore().setInstanceConfigBaseUrl(this.$config?.public?.baseURL);
           }
           if (publicConfig.api) {
-            this.$store.commit("setInstanceConfigApiBaseUrl", publicConfig.api);
+            useRootStore().setInstanceConfigApiBaseUrl(publicConfig.api);
           } else if (this.$config?.public?.apiBaseURL) {
-            this.$store.commit("setInstanceConfigApiBaseUrl", this.$config?.public?.apiBaseURL);
+            useRootStore().setInstanceConfigApiBaseUrl(this.$config?.public?.apiBaseURL);
           }
           this.refreshBreadcrumbs()
           this.hasLoadedInstanceConfig = true
@@ -257,12 +259,12 @@ export default {
       return true
     },
     applyRuntimeOverrides() {
-      applyI18nOverrides(this.$i18n, this.$store.state.instanceconfig?.data_i18n)
+      applyI18nOverrides(this.$i18n, useRootStore().instanceconfig?.data_i18n)
       applyInfoBannerMessage(this.$i18n, this.instanceconfig?.infoBannerMessage)
     },
     refreshBreadcrumbs() {
       const localePath = this.$localePath || ((path) => path)
-      this.$store.commit('updateBreadcrumbs', {
+      useRootStore().updateBreadcrumbs({
         to: this.$route,
         from: this.$route,
         localePath
@@ -287,8 +289,8 @@ export default {
     if (!this.signedin) {
       let token = window.localStorage.getItem("XSRF-TOKEN")
       if (token) {
-        this.$store.commit('setToken', token)
-        this.$store.dispatch('getLoginData')
+        useRootStore().setToken(token)
+        useRootStore().getLoginData()
       }
     }
   },
@@ -297,9 +299,9 @@ export default {
       return JSON.stringify(this.instanceconfig, null, 2)
     },
     showAlerts: function () {
-      if (this.$store.state.alerts.length > 0) {
+      if (useRootStore().alerts.length > 0) {
         let onlySuccess = true;
-        for (let a of this.$store.state.alerts) {
+        for (let a of useRootStore().alerts) {
           if (a.type !== "success") {
             onlySuccess = false;
           }
@@ -310,19 +312,19 @@ export default {
     },
     showSnackbar: {
       get: function () {
-        return this.$store.state.snackbar;
+        return useRootStore().snackbar;
       },
       set: function (newValue) {
         if (!newValue) {
-          this.$store.commit("hideSnackbar");
+          useRootStore().hideSnackbar();
         }
       },
     },
     breadcrumbs() {
-      return this.$store.state.breadcrumbs;
+      return useRootStore().breadcrumbs;
     },
     alerts() {
-      return this.$store.state.alerts;
+      return useRootStore().alerts;
     },
   }
 };

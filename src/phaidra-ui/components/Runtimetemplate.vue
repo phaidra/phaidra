@@ -1,4 +1,5 @@
 <script>
+import { useRootStore } from '~/stores/root'
 import { h, defineComponent, getCurrentInstance } from 'vue'
 import { compile, NodeTypes } from '@vue/compiler-dom'
 import * as runtimeDom from '@vue/runtime-dom'
@@ -121,7 +122,7 @@ function getTemplateComponent(template) {
       const ctx = this.runtimeCtx
       // Header CMS template does not reference signedin; track auth so nav re-renders
       void ctx?.signedin
-      void ctx?.$store?.state?.user?.token
+      void ctx?.useRootStore()?.user?.token
       return renderFn(ctx, [])
     }
   })
@@ -160,7 +161,7 @@ export default {
 
     // Re-render CMS templates when auth state on the parent changes.
     void parent.signedin
-    void parent.$store?.state?.user?.token
+    void parent.useRootStore()?.user?.token
 
     const TemplateComponent = getTemplateComponent(this.template)
     const runtimeCtx = createRuntimeCtx(parent, this.templateProps)

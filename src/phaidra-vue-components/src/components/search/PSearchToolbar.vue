@@ -136,6 +136,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import copyTooltip from '../../mixins/copyTooltip'
 
 export default {
@@ -166,7 +167,7 @@ export default {
   mixins: [copyTooltip],
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   data () {

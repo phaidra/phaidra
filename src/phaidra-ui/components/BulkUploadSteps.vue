@@ -6,7 +6,7 @@
         <template v-for="(step, index) in steps" :key="`step-${index}`">
           <v-stepper-item
             :value="index + 1"
-            :complete="$store.state['bulk-upload'].currentStep > index + 1"
+            :complete="currentStepModel > index + 1"
             :rules="[() => true]"
             :title="step.label"
           />
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { useBulkUploadStore } from '~/stores/bulk-upload'
 export default {
   name: 'BulkUploadSteps',
   data() {
@@ -32,10 +33,10 @@ export default {
   computed: {
     currentStepModel: {
       get() {
-        return this.$store.state['bulk-upload'].currentStep
+        return useBulkUploadStore().currentStep
       },
       set(value) {
-        this.$store.commit('bulk-upload/setCurrentStep', value)
+        useBulkUploadStore().setCurrentStep(value)
       }
     }
   },
@@ -43,8 +44,8 @@ export default {
     '$route': {
       immediate: true,
       handler(newRoute) {
-        const currentStep = this.$store.getters['bulk-upload/getCurrentStepFromRoute'](newRoute.path)
-        this.$store.commit('bulk-upload/setCurrentStep', currentStep)
+        const currentStep = useBulkUploadStore().getCurrentStepFromRoute(newRoute.path)
+        useBulkUploadStore().setCurrentStep(currentStep)
       }
     },
     '$i18n.locale': {

@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import { useAsyncData, useNuxtApp, useRoute } from "#app";
 import { context } from "../../mixins/context";
 import { config } from "../../mixins/config";
@@ -27,19 +28,19 @@ export default {
             method: "GET",
             url: "/list/token/" + token,
             headers: {
-              "X-XSRF-TOKEN": nuxtApp.$store.state.user.token,
+              "X-XSRF-TOKEN": useRootStore().user.token,
             },
           });
           const loaded = response.data.list || {};
           if (loaded && loaded.name) {
-            nuxtApp.$store.commit("addBreadcrumb", {
+            useRootStore().addBreadcrumb({
               text: loaded.name,
               to: route.path,
               disabled: true,
             });
           }
           if (response.data.alerts && response.data.alerts.length > 0) {
-            nuxtApp.$store.commit("setAlerts", response.data.alerts);
+            useRootStore().setAlerts(response.data.alerts);
           }
           return loaded;
         } catch (error) {

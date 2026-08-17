@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import { config, useDocumentTitle } from "../mixins/config";
 
 export default {
@@ -59,16 +60,16 @@ export default {
         }
         let toures = await this.$axios.get(url);
         if (toures.data.alerts && toures.data.alerts.length > 0) {
-          this.$store.commit("setAlerts", toures.data.alerts);
+          useRootStore().setAlerts(toures.data.alerts);
         }
         this.tou = toures.data.terms;
       } catch (err) {
         if (err?.response?.data?.alerts?.length > 0) {
-          this.$store.commit("setAlerts", err.response.data.alerts);
+          useRootStore().setAlerts(err.response.data.alerts);
           return;
         }
         const msg = err?.message || 'Error getting terms of use';
-        this.$store.commit("setAlerts", [{ type: 'error', msg }]);
+        useRootStore().setAlerts([{ type: 'error', msg }]);
       }
     }
   },

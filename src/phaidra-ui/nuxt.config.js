@@ -82,7 +82,7 @@ export default defineNuxtConfig({
 
   plugins: [
     { src: '~/plugins/axios' },
-    { src: '~/plugins/vuex-store.js' },
+    { src: '~/plugins/pinia-setup.js' },
     { src: '~/plugins/moment-formatters.js' },
     { src: '~/plugins/i18n.js' },
     { src: '~/plugins/locale-persistence.js' },
@@ -99,7 +99,7 @@ export default defineNuxtConfig({
     { path: '~/components', level: 1 }
   ],
 
-  modules: [],
+  modules: ['@pinia/nuxt'],
 
   i18n: {
     langDir: 'locales/',
@@ -143,7 +143,7 @@ export default defineNuxtConfig({
       alias: {
         'phaidra-vue-components': phaidraVueComponentsRoot
       },
-      dedupe: ['vue', 'vue-router', 'vue-i18n', 'vuetify', 'vuex']
+      dedupe: ['vue', 'vue-router', 'vue-i18n', 'vuetify', 'pinia']
     },
     optimizeDeps: {
       exclude: ['phaidra-vue-components'],
@@ -153,7 +153,7 @@ export default defineNuxtConfig({
         '@vue/devtools-kit',
         'axios',
         'moment',
-        'vuex',
+        'pinia',
         'vue-i18n',
         'lodash',
         'qs',

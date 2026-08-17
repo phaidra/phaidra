@@ -1,4 +1,5 @@
 import qs from "qs";
+import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
 
 export default {
     data() {
@@ -84,7 +85,7 @@ export default {
             this.newTypeHeaders.push({ title: "Total", key: "total" });
             this.cmodelHeaders.push({ title: "Total", key: "total" });
             this.cmodelStorageHeaders.push({ title: "Total", key: "total" });
-            for (let term of this.$store.state.vocabulary.vocabularies["objecttypeuwm"].terms) {
+            for (let term of useVocabularyStore().vocabularies["objecttypeuwm"].terms) {
                 let params = {
                     q: "*:*",
                     fq: 'object_type_id:"' + term["@id"] + '"',
@@ -129,7 +130,7 @@ export default {
                     console.log(error);
                 }
             }
-            for (let term of this.$store.state.vocabulary.vocabularies["objecttype"].terms) {
+            for (let term of useVocabularyStore().vocabularies["objecttype"].terms) {
                 let params = {
                     q: "*:*",
                     fq: 'object_type_id:"' + term["@id"] + '"',
@@ -173,7 +174,7 @@ export default {
                     console.log(error);
                 }
             }
-            for (let term of this.$store.state.vocabulary.vocabularies["cmodels"].terms) {
+            for (let term of useVocabularyStore().vocabularies["cmodels"].terms) {
                 let params = {
                     q: "*:*",
                     fq: 'cmodel:"' + term["@id"] + '"',
@@ -215,7 +216,7 @@ export default {
                 }
             }
 
-            for (let term of this.$store.state.vocabulary.vocabularies["cmodels"].terms) {
+            for (let term of useVocabularyStore().vocabularies["cmodels"].terms) {
                 let cmodel = term["@id"]
 
                 let stats = {

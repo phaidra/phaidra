@@ -1,5 +1,5 @@
 import fields from './fields'
-import vocabularystore from '../store/modules/vocabulary'
+import { state as vocabularyState } from '../stores/vocabulary'
 import { isNonBlankString, trimToNull } from './stringValidation'
 
 export default {
@@ -983,7 +983,7 @@ export default {
                       // the vocabularies might habe been updated dynamically from config
                       if (!vocabularies) {
                         // if not passed, use the static one imported from vocabulary store js file
-                        vocabularies = vocabularystore.state.vocabularies
+                        vocabularies = vocabularyState().vocabularies
                       }
                       if (vocabularies) {
                         // if the identifier comes from a $store vocabulary, create selectbox

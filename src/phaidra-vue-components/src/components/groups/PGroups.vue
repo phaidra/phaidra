@@ -163,6 +163,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import UserSearchDialog from '../select/UserSearchDialog'
 
 export default {
@@ -172,7 +173,7 @@ export default {
   },
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   watch: {
@@ -185,14 +186,14 @@ export default {
               method: 'GET',
               url: '/group/' + this.loadedGroup.groupid,
               headers: {
-                'X-XSRF-TOKEN': this.$store.state.user.token
+                'X-XSRF-TOKEN': useRootStore().user.token
               }
             })
             if (response.status === 200) {
               this.members = response.data.group.members
             } else {
               if (response.data.alerts && response.data.alerts.length > 0) {
-                this.$store.commit('setAlerts', response.data.alerts)
+                useRootStore().setAlerts(response.data.alerts)
               }
             }
           } catch (error) {
@@ -215,19 +216,19 @@ export default {
       try {
         let response = await this.$axios.get('/directory/user/search', {
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           params: {
             q: val
           }
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         this.userSearchItems = response.data.accounts ? response.data.accounts : []
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.userSearchLoading = false
       }
@@ -296,28 +297,28 @@ export default {
           url: '/group/add',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
         this.newGroupName = ''
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         response = await this.$axios.request({
           method: 'GET',
           url: '/groups',
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         this.groups = response.data.groups
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.groupsLoading = false
       }
@@ -330,23 +331,23 @@ export default {
           method: 'POST',
           url: '/group/' + this.groupToDelete.groupid + '/remove',
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         response = await this.$axios.request({
           method: 'GET',
           url: '/groups',
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         this.groups = response.data.groups
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.groupsLoading = false
         this.groupToDelete = null
@@ -362,27 +363,27 @@ export default {
           url: '/group/' + this.loadedGroup.groupid + '/members/remove',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         response = await this.$axios.request({
           method: 'GET',
           url: '/group/' + this.loadedGroup.groupid,
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         this.members = response.data.group.members
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.membersLoading = false
       }
@@ -397,27 +398,27 @@ export default {
           url: '/group/' + this.loadedGroup.groupid + '/members/add',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         response = await this.$axios.request({
           method: 'GET',
           url: '/group/' + this.loadedGroup.groupid,
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         this.members = response.data.group.members
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.membersLoading = false
       }
@@ -429,16 +430,16 @@ export default {
           method: 'GET',
           url: '/groups',
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         this.groups = response.data.groups
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.groupsLoading = false
       }
@@ -457,16 +458,16 @@ export default {
           method: 'GET',
           url: '/groups',
           headers: {
-            'X-XSRF-TOKEN': vm.$store.state.user.token
+            'X-XSRF-TOKEN': vm.useRootStore().user.token
           }
         })
         vm.groups = response.data.groups
         if (response.data.alerts && response.data.alerts.length > 0) {
-          vm.$store.commit('setAlerts', response.data.alerts)
+          vm.useRootStore().setAlerts(response.data.alerts)
         }
       } catch (error) {
         console.log(error)
-        vm.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        vm.useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         vm.groupsLoading = false
       }

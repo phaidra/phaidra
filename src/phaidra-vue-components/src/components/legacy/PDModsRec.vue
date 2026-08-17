@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import { useVocabularyStore } from '../../stores/vocabulary'
 import { validationrules } from '../../mixins/validationrules'
 import { vocabulary } from '../../mixins/vocabulary'
 
@@ -244,7 +245,7 @@ export default {
     }
   },
   mounted: async function () {
-    await this.$store.dispatch('vocabulary/loadLanguages', this.$i18n.locale)
+    await useVocabularyStore().loadLanguages(this.$i18n.locale)
   }
 }
 </script>

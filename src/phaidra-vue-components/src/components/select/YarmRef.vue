@@ -74,6 +74,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 export default {
   name: 'yarm-ref',
   data() {
@@ -120,7 +121,7 @@ export default {
       try {
         let response = await this.$axios.request({
           method: 'GET',
-          url: `https://${this.$store.state.appconfig.apis.yarm.baseurl}/api/search?search[0][field]=title&search[0][criterium]=like&search[0][term]=${this.searchInput}&offset=${0}&limit=${itemsPerPage}&pagination=${true}&page=${page}`,
+          url: `https://${useRootStore().appconfig.apis.yarm.baseurl}/api/search?search[0][field]=title&search[0][criterium]=like&search[0][term]=${this.searchInput}&offset=${0}&limit=${itemsPerPage}&pagination=${true}&page=${page}`,
           headers: {
             'Authorization': `Bearer ${this.yarmToken}`
           }
@@ -148,7 +149,7 @@ export default {
         let citationText = ''
         let response = await this.$axios.request({
           method: 'GET',
-          url: `https://${this.$store.state.appconfig.apis.yarm.baseurl}/api/buildCustomExport?export_as=json&field=id&criterium=equal&search=${item.id}&style=mla`,
+          url: `https://${useRootStore().appconfig.apis.yarm.baseurl}/api/buildCustomExport?export_as=json&field=id&criterium=equal&search=${item.id}&style=mla`,
           headers: {
             'Authorization': `Bearer ${this.yarmToken}`
           }
@@ -158,7 +159,7 @@ export default {
         }
 
         this.$emit('input-citation', citationText)
-        this.$emit('input-identifier', `https://${this.$store.state.appconfig.apis.yarm.baseurl}/yarm/refs/${item.id}`)
+        this.$emit('input-identifier', `https://${useRootStore().appconfig.apis.yarm.baseurl}/yarm/refs/${item.id}`)
       } catch (error) {
         console.error(error)
       } finally {
@@ -184,7 +185,7 @@ export default {
         let basicToken = btoa(this.yarmEmail + ":" + this.yarmPassword)
         let response = await this.$axios.request({
           method: 'post',
-          url: `https://${this.$store.state.appconfig.apis.yarm.baseurl}/api/createToken`,
+          url: `https://${useRootStore().appconfig.apis.yarm.baseurl}/api/createToken`,
           headers: {
             'Authorization': `Basic ${basicToken}`
           }

@@ -1,9 +1,13 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import axios from 'axios'
 import App from './App.vue'
 import './styles/vuetify2-compat.css'
 import router from './router'
-import store, { setStoreAxios } from './store'
+import { useRootStore } from './stores/root'
+import { useVocabularyStore } from './stores/vocabulary'
+import { useSearchStore } from './stores/search'
+import { useInfoStore } from './stores/info'
 import vuetify from './plugins/vuetify'
 import { registerFormatters } from './utils/formatters'
 import { RouterLink } from 'vue-router'
@@ -17,9 +21,19 @@ const axiosInstance = axios.create({
 })
 
 app.config.globalProperties.$axios = axiosInstance
-setStoreAxios(axiosInstance)
 
-app.use(store)
+const pinia = createPinia()
+pinia.use(({ store }) => {
+  store.$axios = axiosInstance
+})
+app.use(pinia)
+
+// Register stores
+useRootStore(pinia)
+useVocabularyStore(pinia)
+useSearchStore(pinia)
+useInfoStore(pinia)
+
 app.use(router)
 app.use(vuetify)
 app.component('RouterLink', RouterLink)

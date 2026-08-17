@@ -73,6 +73,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import BkTreeDialog from '../select/BkTreeDialog'
@@ -198,14 +199,14 @@ export default {
       this.selected = null
       var params = {
         voc: 'bk',
-        limit: this.$store.state.appconfig.apis.dante.limit,
+        limit: useRootStore().appconfig.apis.dante.limit,
         properties: 'notation,ancestors',
         query: this.q + '*'
       }
       try {
         let response = await this.$axios.request({
           method: 'GET',
-          url: this.$store.state.appconfig.apis.dante.search,
+          url: useRootStore().appconfig.apis.dante.search,
           params: params,
           withCredentials: false
         })
@@ -221,7 +222,7 @@ export default {
       try {
         let response = await this.$axios.request({
           method: 'GET',
-          url: this.$store.state.appconfig.apis.dante.resolve,
+          url: useRootStore().appconfig.apis.dante.resolve,
           params: {
             properties: 'notation,ancestors',
             uri: uri

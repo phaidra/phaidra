@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 
@@ -66,7 +67,7 @@ export default {
   },
   computed: {
     instanceconfig() {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     },
     formats: function () {
       return this.vocabularies['formatsInfo'].terms[this.resourceTypes[this.toggleResourcetypeModel]]

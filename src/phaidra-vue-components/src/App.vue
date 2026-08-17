@@ -451,6 +451,8 @@
 </template>
 
 <script>
+import { useRootStore } from './stores/root'
+import { useVocabularyStore } from './stores/vocabulary'
 import qs from 'qs'
 import PIForm from '@/components/input/PIForm'
 import PDJsonld from '@/components/display/PDJsonld'
@@ -488,16 +490,16 @@ export default {
       return 'cmodel' in this.piddoc ? this.piddoc.cmodel : 'unknown'
     },
     token: function () {
-      return this.$store.state.user.token
+      return useRootStore().user.token
     },
     alerts: function () {
-      return this.$store.state.alerts
+      return useRootStore().alerts
     },
     vocabularies: function () {
-      return this.$store.state.vocabulary.vocabularies
+      return useVocabularyStore().vocabularies
     },
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   data () {
@@ -4111,7 +4113,7 @@ export default {
           }
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         if (response.data.metadata['uwmetadata']) {
           return response.data.metadata['uwmetadata']
@@ -4137,7 +4139,7 @@ export default {
           }
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         if (response.data.metadata['JSON-LD']) {
           return response.data.metadata['JSON-LD']
@@ -4172,29 +4174,29 @@ export default {
       this.collection = this.sampleCollection
     },
     login: function () {
-      this.$store.commit('setInstanceApi', this.apibaseurl)
-      this.$store.commit('setInstanceSolr', this.solrbaseurl)
-      this.$store.commit('setInstancePhaidra', this.phaidrabaseurl)
-      this.$store.dispatch('login', this.credentials)
+      useRootStore().setInstanceApi(this.apibaseurl)
+      useRootStore().setInstanceSolr(this.solrbaseurl)
+      useRootStore().setInstancePhaidra(this.phaidrabaseurl)
+      useRootStore().login(this.credentials)
     },
     logout: function () {
-      this.$store.dispatch('logout')
+      useRootStore().logout()
     },
     objectCreated: function (event) {
-      this.$store.commit('setAlerts', [
+      useRootStore().setAlerts([
         { type: 'success', msg: 'Object ' + event + ' created' }
       ])
     },
     objectSaved: function (event) {
-      this.$store.commit('setAlerts', [
+      useRootStore().setAlerts([
         { type: 'success', msg: 'Metadata for object ' + event + ' saved' }
       ])
     },
     orderSaved: function (event) {
-      this.$store.commit('setAlerts', [{ type: 'success', key: 'order_saved_for_object', params: { o: event }}])
+      useRootStore().setAlerts([{ type: 'success', key: 'order_saved_for_object', params: { o: event }}])
     },
     objectDeleted: function () {
-      this.$store.commit('setAlerts', [
+      useRootStore().setAlerts([
         { type: 'success', msg: 'Object was successfully deleted.' }
       ])
     },
@@ -4202,7 +4204,7 @@ export default {
       this.psvis = !this.psvis
     },
     dismiss: function (alert) {
-      this.$store.commit('clearAlert', alert)
+      useRootStore().clearAlert(alert)
     },
     resetForm: function (cm) {
       if (cm === 'https://pid.phaidra.org/vocabulary/8MY0-BQDQ') {
@@ -4410,25 +4412,25 @@ export default {
     }
   },
   created: function () {
-    this.$store.commit('setInstanceApi', this.apibaseurl)
-    this.$store.commit('setInstanceSolr', this.solrbaseurl)
-    this.$store.commit('setInstancePhaidra', this.phaidrabaseurl)
-    this.$store.commit('setSuggester', {
+    useRootStore().setInstanceApi(this.apibaseurl)
+    useRootStore().setInstanceSolr(this.solrbaseurl)
+    useRootStore().setInstancePhaidra(this.phaidrabaseurl)
+    useRootStore().setSuggester({
       suggester: 'gnd',
       url: 'https://ws.gbv.de/suggest/gnd/'
     })
-    this.$store.commit('setSuggester', {
+    useRootStore().setSuggester({
       suggester: 'geonames',
       url: 'https://ws.gbv.de/suggest/geonames/'
     })
-    this.$store.commit('initStore')
+    useRootStore().initStore()
   },
   mounted: function () {
     var token = this.getCookie('X-XSRF-TOKEN')
     if (token) {
-      this.$store.commit('setToken', token)
-      if (!this.$store.state.user.username) {
-        this.$store.dispatch('getLoginData')
+      useRootStore().setToken(token)
+      if (!useRootStore().user.username) {
+        useRootStore().getLoginData()
       }
     }
 

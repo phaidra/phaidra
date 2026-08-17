@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 export default {
   name: 'CookieBanner',
   data() {
@@ -54,7 +55,7 @@ export default {
   },
   computed: {
     instanceconfig() {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     },
     isCookieBannerEnabled() {
       return this.instanceconfig?.enableCookieBanner === true

@@ -1,3 +1,5 @@
+import { defineStore } from 'pinia'
+
 export const state = () => ({
   facetQueries: [
     {
@@ -209,15 +211,13 @@ export const state = () => ({
   ]
 })
 
-const mutations = {
-  setFacetQueries (state, facetQueries) {
-    // console.log('setting facet queries')
-    // console.log(facetQueries)
-    state.facetQueries = facetQueries
-  }
-}
-
-export default {
+export const useSearchStore = defineStore('search', {
   state,
-  mutations
-}
+  actions: {
+    setFacetQueries (facetQueries) {
+      this.facetQueries = facetQueries
+    }
+  }
+})
+
+export default useSearchStore

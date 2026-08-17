@@ -99,6 +99,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import { vocabulary } from '../../mixins/vocabulary'
 import qs from 'qs'
 
@@ -119,7 +120,7 @@ export default {
   },
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     },
     relationshipSelect: function () {
       let arr = []
@@ -222,7 +223,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.objectSearchLoading = false
       }
@@ -262,7 +263,7 @@ export default {
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       }
       return titles
     },
@@ -279,20 +280,20 @@ export default {
               url: '/object/' + this.pid + '/relationship/add',
               headers: {
                 'Content-Type': 'multipart/form-data',
-                'X-XSRF-TOKEN': this.$store.state.user.token
+                'X-XSRF-TOKEN': useRootStore().user.token
               },
               data: httpFormData
             })
             if (response.status === 200) {
-              this.$store.commit('setAlerts', [{ type: 'success', msg: 'Relationship successfully added' }])
+              useRootStore().setAlerts([{ type: 'success', msg: 'Relationship successfully added' }])
             } else {
               if (response.data.alerts && response.data.alerts.length > 0) {
-                this.$store.commit('setAlerts', response.data.alerts)
+                useRootStore().setAlerts(response.data.alerts)
               }
             }
           } catch (error) {
             console.log(error)
-            this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+            useRootStore().setAlerts([{ type: 'danger', msg: error }])
           } finally {
             this.loading = false
             this.$emit('load-relationships')
@@ -314,20 +315,20 @@ export default {
             url: '/object/' + this.pid + '/relationship/remove',
             headers: {
               'Content-Type': 'multipart/form-data',
-              'X-XSRF-TOKEN': this.$store.state.user.token
+              'X-XSRF-TOKEN': useRootStore().user.token
             },
             data: httpFormData
           })
           if (response.status === 200) {
-            this.$store.commit('setAlerts', [{ type: 'success', msg: 'Relationship successfully removed' }])
+            useRootStore().setAlerts([{ type: 'success', msg: 'Relationship successfully removed' }])
           } else {
             if (response.data.alerts && response.data.alerts.length > 0) {
-              this.$store.commit('setAlerts', response.data.alerts)
+              useRootStore().setAlerts(response.data.alerts)
             }
           }
         } catch (error) {
           console.log(error)
-          this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+          useRootStore().setAlerts([{ type: 'danger', msg: error }])
         } finally {
           this.loading = false
           this.$emit('load-relationships')
