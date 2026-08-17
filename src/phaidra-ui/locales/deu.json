@@ -812,7 +812,7 @@
     "rdau:P60101_rdau:P60193": "Reihe",
     "rdau:P60101_bf:provisionActivity": "Veröffentlichung",
     "frapo:isOutputOf": "Projekt",
-    "rdax:P00009": "Zuordnung",
+    "rdax:P00009": "Organisationseinheit",
     "rdfs:seeAlso": "Siehe auch",
     "dce:subject": "Stichwort",
     "dcterms:subject": "Schlagwort",
