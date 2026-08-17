@@ -12,7 +12,6 @@ is_write_op if {
 		"approve",
 		"restrict",
 		"change_owner",
-		"metadata_field",
 	}
 }
 
@@ -100,8 +99,3 @@ rights_rule_active(rule) if {
 	not rights_expired(rule)
 }
 
-space_cfg := cfg.spaces[input.resource.space]
-
-space_cfg := cfg.spaces.default if {
-	not cfg.spaces[input.resource.space]
-}

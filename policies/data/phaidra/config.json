@@ -31,20 +31,6 @@
       "ldap_groups": []
     }
   },
-  "spaces": {
-    "default": {
-      "curated_submit": false,
-      "direct_upload_roles": ["uploader", "approver", "writer"]
-    },
-    "oer": {
-      "curated_submit": true,
-      "direct_upload_roles": ["approver"]
-    },
-    "ir": {
-      "curated_submit": true,
-      "direct_upload_roles": ["approver"]
-    }
-  },
   "submit_forms": {
     "catalogfetchupload": {
       "roles": ["librarian", "admin"]
@@ -58,15 +44,9 @@
     "allowed_roles": ["owner", "admin", "superuser"],
     "forbidden_without_expiry": false
   },
-  "metadata": {
-    "object_type": {
-      "thesis": {
-        "roles": ["librarian", "admin"]
-      }
-    }
-  },
   "delete": {
     "self_delete_roles": ["owner", "admin", "superuser"],
     "require_enabledelete": true
-  }
+  },
+  "metadata_policies": []
 }

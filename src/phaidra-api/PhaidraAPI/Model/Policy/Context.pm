@@ -42,8 +42,7 @@ sub build_action_only {
   my $action = $self->_build_action($c, $action_id, $opts);
 
   my $resource = {
-    type  => $opts->{resource_type} // 'object',
-    space => $opts->{space}         // 'default',
+    type => $opts->{resource_type} // 'object',
   };
 
   if ($opts->{metadata}) {
@@ -187,10 +186,9 @@ sub _build_resource {
   my ($self, $c, $pid, $opts) = @_;
 
   my $resource = {
-    type  => $opts->{resource_type} // 'object',
-    pid   => $pid // '',
-    dsid  => $opts->{dsid} // '',
-    space => $opts->{space} // 'default',
+    type   => $opts->{resource_type} // 'object',
+    pid    => $pid // '',
+    dsid   => $opts->{dsid} // '',
     rights => {},
   };
 

@@ -40,10 +40,65 @@ Institution admins tune behaviour via data bundles in `policies/data/<institutio
 
 - **Writer / uploader roles** — gate API write and upload endpoints
 - **Privileged submit forms** — catalog-fetch upload, bulk upload
-- **Curated submit** — uploads stay inactive until approver activates (`POST object/:pid/approve`)
+- **Metadata policies** (optional) — match JSON-LD on create/edit; default bundle has none enabled
 - **Restricted rights management** — who may set access restrictions and max expiry
-- **Metadata restrictions** — e.g. thesis object type for librarians only
 - **Per-user delete** — replaces repo-wide `enabledelete` when configured
+
+### Optional metadata policies
+
+The PEP flattens submitted JSON-LD (`edm:hasType`, `edm:rights`) into `resource.metadata` and evaluates `metadata_policies` from the data bundle. **Default is an empty list** (no extra constraints).
+
+When a policy matches and the user is not in `exempt_roles`:
+
+| Action | Effect |
+|--------|--------|
+| `create` (submit) | Allow, keep object pending approval (`PendingApproval`) |
+| `write` (edit) | Deny (no edit-time approval workflow) |
+
+Example (copy into an institution `config.json`; leave `enabled` out or `true` to turn on):
+
+```json
+"metadata_policies": [
+  {
+    "id": "thesis",
+    "exempt_roles": ["librarian", "admin"],
+    "match": {
+      "all": [
+        {
+          "field": "object_type",
+          "ids": [
+            "https://pid.phaidra.org/vocabulary/62DN-RZ7V",
+            "https://pid.phaidra.org/vocabulary/Z3K6-SWVD",
+            "https://pid.phaidra.org/vocabulary/P2YP-BMND",
+            "https://pid.phaidra.org/vocabulary/1PHE-7VMS"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "oer",
+    "exempt_roles": ["approver", "admin"],
+    "match": {
+      "all": [
+        { "field": "object_type", "ids": ["https://pid.phaidra.org/vocabulary/YA8R-1M0D"] },
+        { "field": "object_type", "prefix": "https://w3id.org/kim/hcrt" },
+        {
+          "field": "license",
+          "ids": [
+            "http://creativecommons.org/licenses/by/4.0/",
+            "http://creativecommons.org/licenses/by-sa/4.0/",
+            "http://creativecommons.org/licenses/by-nc/4.0/",
+            "http://creativecommons.org/licenses/by-nc-sa/4.0/"
+          ]
+        }
+      ]
+    }
+  }
+]
+```
+
+`match.all` clauses are ANDed. A clause matches if some value in that field is in `ids` and/or has `prefix`. Roles listed in `exempt_roles` skip the policy (librarian can submit/edit thesis without queue/deny).
 
 ## API endpoints
 

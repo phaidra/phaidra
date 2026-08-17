@@ -3,6 +3,7 @@ package phaidra.authz.deny
 import rego.v1
 
 import data.phaidra.authz.helpers
+import data.phaidra.authz.metadata
 
 explicit_reason := reason if {
 	helpers.is_write_op
@@ -27,4 +28,10 @@ explicit_reason := reason if {
 
 explicit if {
 	explicit_reason != ""
+}
+
+explicit_reason := reason if {
+	helpers.authenticated
+	metadata.deny_write
+	reason := sprintf("deny_metadata_policy:%s", [metadata.matched_reason])
 }

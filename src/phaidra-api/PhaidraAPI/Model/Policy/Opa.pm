@@ -188,7 +188,11 @@ sub to_legacy_response {
   }
 
   $res->{status} = 403;
-  $res->{alerts} = [{type => 'error', msg => 'Forbidden'}];
+  my $msg = 'Forbidden';
+  if (($decision->{reason} // '') =~ /^deny_metadata_policy:/) {
+    $msg = $decision->{reason};
+  }
+  $res->{alerts} = [{type => 'error', msg => $msg}];
   return $res;
 }
 

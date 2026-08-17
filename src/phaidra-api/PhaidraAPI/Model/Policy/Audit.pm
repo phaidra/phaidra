@@ -55,6 +55,12 @@ sub log {
   if (exists $decision->{forms}) {
     $entry->{forms} = $decision->{forms};
   }
+  if (exists $decision->{initial_state}) {
+    $entry->{initial_state} = $decision->{initial_state};
+  }
+  if (exists $decision->{matched_policy} && $decision->{matched_policy} ne '') {
+    $entry->{matched_policy} = $decision->{matched_policy};
+  }
 
   # Structured JSON in phaidra-api logs (grep authz=1)
   $c->app->log->info('authz=1 ' . encode_json($entry));

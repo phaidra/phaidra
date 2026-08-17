@@ -54,28 +54,6 @@ can_change_owner if {
 	user == input.subject.username
 }
 
-curated_state := "PendingApproval" if {
-	helpers.space_cfg.curated_submit == true
-	not direct_upload_allowed
-}
-
-curated_state := "Inactive" if {
-	not helpers.space_cfg.curated_submit
-}
-
-curated_state := "Inactive" if {
-	direct_upload_allowed
-}
-
-direct_upload_allowed if {
-	some role in helpers.space_cfg.direct_upload_roles
-	helpers.role_granted(role)
-}
-
-direct_upload_allowed if {
-	data.phaidra.authz.admin.grant
-}
-
 can_approve if {
 	helpers.role_granted("approver")
 }

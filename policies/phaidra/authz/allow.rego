@@ -9,7 +9,7 @@ import data.phaidra.authz.rights
 import data.phaidra.authz.datastream
 import data.phaidra.authz.upload
 import data.phaidra.authz.restrict
-import data.phaidra.authz.space
+import data.phaidra.authz.metadata
 import data.phaidra.authz.account
 import data.phaidra.authz.siteadmin
 import data.phaidra.authz.helpers
@@ -23,7 +23,7 @@ default allow := {
 }
 
 is_object_action if {
-	input.action.id in {"read", "write", "delete", "restrict", "change_owner", "approve", "metadata_field"}
+	input.action.id in {"read", "write", "delete", "restrict", "change_owner", "approve"}
 }
 
 allow := decision if {
@@ -74,7 +74,8 @@ allow := decision if {
 		"effect": "allow",
 		"reason": "uploader",
 		"rights": "rw",
-		"initial_state": upload.curated_state,
+		"initial_state": create_initial_state,
+		"matched_policy": metadata.matched_reason,
 		"obligations": {"audit": true},
 	}
 }
@@ -164,19 +165,6 @@ allow := decision if {
 		"effect": "allow",
 		"reason": "restrict_allowed",
 		"rights": "rw",
-		"obligations": {"audit": true},
-	}
-}
-
-allow := decision if {
-	not deny.explicit
-	input.action.id == "metadata_field"
-	space.metadata_field_allowed(input.resource.metadata.field, input.resource.metadata.value)
-	decision := {
-		"allow": true,
-		"effect": "allow",
-		"reason": "metadata_field_allowed",
-		"rights": "w",
 		"obligations": {"audit": true},
 	}
 }
@@ -312,4 +300,12 @@ read_reason := "no_rules_defined" if {
 
 read_reason := "no_rights_datastream" if {
 	not rights.rights_defined
+}
+
+create_initial_state := "PendingApproval" if {
+	metadata.needs_approval
+}
+
+create_initial_state := "Inactive" if {
+	not metadata.needs_approval
 }

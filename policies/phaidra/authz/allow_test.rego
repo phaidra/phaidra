@@ -21,7 +21,6 @@ test_admin_grants_rw if {
 			"pid": "o:1",
 			"owner": "other",
 			"state": "Active",
-			"space": "default",
 			"rights": {},
 		},
 		"action": {"id": "read"},
@@ -50,7 +49,6 @@ test_owner_grants_rw if {
 			"pid": "o:2",
 			"owner": "alice",
 			"state": "Active",
-			"space": "default",
 			"rights": {},
 		},
 		"action": {"id": "write"},
@@ -78,7 +76,6 @@ test_anonymous_write_denied if {
 			"pid": "o:4",
 			"owner": "alice",
 			"state": "Active",
-			"space": "default",
 			"rights": {},
 		},
 		"action": {"id": "write"},
@@ -106,7 +103,6 @@ test_public_read_active_object if {
 			"pid": "o:5",
 			"owner": "alice",
 			"state": "Active",
-			"space": "default",
 			"rights": {},
 		},
 		"action": {"id": "read"},
@@ -134,7 +130,6 @@ test_inactive_denied_for_reader if {
 			"pid": "o:6",
 			"owner": "alice",
 			"state": "Inactive",
-			"space": "default",
 			"rights": {},
 		},
 		"action": {"id": "read"},
@@ -162,7 +157,6 @@ test_rights_username_match if {
 			"pid": "o:7",
 			"owner": "alice",
 			"state": "Active",
-			"space": "default",
 			"rights": {"username": ["carol"]},
 		},
 		"action": {"id": "read"},
@@ -190,7 +184,6 @@ test_deprecated_rights_denied if {
 			"pid": "o:8",
 			"owner": "alice",
 			"state": "Active",
-			"space": "default",
 			"rights": {"spl": ["x"]},
 		},
 		"action": {"id": "read"},
@@ -215,7 +208,6 @@ test_create_allowed_for_uploader if {
 		},
 		"resource": {
 			"type": "object",
-			"space": "default",
 		},
 		"action": {"id": "create"},
 		"environment": {"institution": "default"},
@@ -242,7 +234,6 @@ test_private_ds_denied_anonymous if {
 			"pid": "o:10",
 			"owner": "alice",
 			"state": "Active",
-			"space": "default",
 			"dsid": "RIGHTS",
 			"rights": {},
 		},
@@ -271,7 +262,6 @@ test_private_ds_allowed_for_owner if {
 			"pid": "o:10",
 			"owner": "alice",
 			"state": "Active",
-			"space": "default",
 			"dsid": "JSON-LD-PRIVATE",
 			"rights": {},
 		},
@@ -295,7 +285,7 @@ test_site_admin_config_read if {
 			"ldap_groups": [],
 			"project_groups": [],
 		},
-		"resource": {"type": "admin", "space": "default"},
+		"resource": {"type": "admin"},
 		"action": {"id": "admin_config_private_read"},
 		"environment": {"institution": "default"},
 		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
@@ -316,7 +306,7 @@ test_site_admin_denied_for_non_admin if {
 			"ldap_groups": [],
 			"project_groups": [],
 		},
-		"resource": {"type": "admin", "space": "default"},
+		"resource": {"type": "admin"},
 		"action": {"id": "admin_index"},
 		"environment": {"institution": "default"},
 		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
@@ -336,7 +326,7 @@ test_ir_admin_accept if {
 			"ldap_groups": [],
 			"project_groups": [],
 		},
-		"resource": {"type": "admin", "space": "default"},
+		"resource": {"type": "admin"},
 		"action": {"id": "ir_admin_accept"},
 		"environment": {"institution": "default"},
 		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
@@ -357,10 +347,80 @@ test_ir_admin_denied_without_role if {
 			"ldap_groups": [],
 			"project_groups": [],
 		},
-		"resource": {"type": "admin", "space": "default"},
+		"resource": {"type": "admin"},
 		"action": {"id": "ir_admin_accept"},
 		"environment": {"institution": "default"},
 		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
 	}
 	decision.allow == false
 }
+
+oer_policies := [{
+	"id": "oer",
+	"exempt_roles": ["approver", "admin"],
+	"match": {"all": [
+		{"field": "object_type", "ids": ["https://pid.phaidra.org/vocabulary/YA8R-1M0D"]},
+		{"field": "object_type", "prefix": "https://w3id.org/kim/hcrt"},
+		{"field": "license", "ids": ["http://creativecommons.org/licenses/by/4.0/"]},
+	]},
+}]
+
+oer_md := {
+	"object_type": [
+		"https://pid.phaidra.org/vocabulary/YA8R-1M0D",
+		"https://w3id.org/kim/hcrt/text",
+	],
+	"license": ["http://creativecommons.org/licenses/by/4.0/"],
+}
+
+test_oer_create_pending_approval if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "alice",
+			"authenticated": true,
+			"roles": ["uploader", "writer"],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {"type": "object", "metadata": oer_md},
+		"action": {"id": "create"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+	}
+		with data.phaidra.config.metadata_policies as oer_policies
+	decision.allow == true
+	decision.initial_state == "PendingApproval"
+}
+
+test_oer_write_denied if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "alice",
+			"authenticated": true,
+			"roles": ["writer"],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {
+			"type": "object",
+			"pid": "o:9",
+			"owner": "alice",
+			"state": "Active",
+			"rights": {},
+			"metadata": oer_md,
+		},
+		"action": {"id": "write"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+	}
+		with data.phaidra.config.metadata_policies as oer_policies
+	decision.allow == false
+	decision.reason == "deny_metadata_policy:oer"
+}
+
