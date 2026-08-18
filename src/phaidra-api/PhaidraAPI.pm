@@ -76,6 +76,16 @@ sub startup {
   my $config = $self->plugin('Config' => {file => 'PhaidraAPI.conf'});
   $self->config($config);
 
+  $self->log->info(sprintf(
+    'OPA config enabled[%s] url[%s] path[%s] fail_mode[%s] dual_run[%s] institution[%s]',
+    ($config->{opa}->{enabled} ? 'true' : 'false'),
+    $config->{opa}->{url} // '',
+    $config->{opa}->{policy_path} // '',
+    $config->{opa}->{fail_mode} // '',
+    ($config->{opa}->{dual_run} ? 'true' : 'false'),
+    $config->{opa}->{institution} // '',
+  ));
+
   $self->mode($config->{mode});
   $self->secrets([$config->{secret}]);
   push @{$self->static->paths} => 'public';

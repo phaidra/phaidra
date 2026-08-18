@@ -8,8 +8,6 @@ use Mojo::UserAgent;
 use Mojo::JSON qw(decode_json encode_json true false);
 use Time::HiRes qw(gettimeofday tv_interval);
 
-has 'ua' => sub { Mojo::UserAgent->new->connect_timeout(2)->request_timeout(5) };
-
 sub enabled {
   my ($self, $c) = @_;
   return $c->app->config->{opa}->{enabled} ? 1 : 0;
@@ -28,14 +26,15 @@ sub evaluate {
   my $policy_path = $c->app->config->{opa}->{policy_path} // '/v1/data/phaidra/authz/allow';
 
   my $url = $opa_url . $policy_path;
-  my $tx = $self->ua->post($url => json => {input => $input})->result;
-
-  unless ($tx->is_success) {
-    $c->app->log->error('OPA request failed: ' . ($tx->message // 'unknown error'));
+  my $tx = $c->app->ua->post($url => json => {input => $input});
+  if (my $err = $tx->error) {
+    my $detail = $err->{message} // 'unknown error';
+    $detail .= " code[$err->{code}]" if defined $err->{code};
+    $c->app->log->error("OPA request failed: $detail url[$url]");
     return $self->_handle_failure($c, $input, $t0, 'opa_error');
   }
 
-  my $body = $tx->json;
+  my $body = $tx->res->json // {};
   my $decision = $body->{result} // {};
 
   $decision->{duration_ms} = int(tv_interval($t0) * 1000);

@@ -32,6 +32,35 @@ test_admin_grants_rw if {
 	decision.reason == "admin"
 }
 
+# Admin who also owns the object must not produce two complete `allow` outputs.
+test_admin_owner_read_no_conflict if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "phaidraAdmin",
+			"authenticated": true,
+			"roles": ["admin", "writer", "uploader", "ir_admin"],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {
+			"type": "object",
+			"pid": "o:48",
+			"owner": "phaidraAdmin",
+			"state": "Active",
+			"rights": {},
+		},
+		"action": {"id": "read"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": ["username1"]},
+	}
+	decision.allow == true
+	decision.reason == "admin"
+	decision.rights == "rw"
+}
+
 test_owner_grants_rw if {
 	decision := authz.allow with input as {
 		"subject": {

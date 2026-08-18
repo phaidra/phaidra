@@ -118,6 +118,7 @@ allow := decision if {
 
 allow := decision if {
 	not deny.explicit
+	not admin.grant
 	input.action.id == "delete"
 	upload.can_delete
 	objectauthz.grant_rw
@@ -132,6 +133,7 @@ allow := decision if {
 
 allow := decision if {
 	not deny.explicit
+	not admin.grant
 	input.action.id == "change_owner"
 	upload.can_change_owner
 	decision := {
@@ -145,6 +147,7 @@ allow := decision if {
 
 allow := decision if {
 	not deny.explicit
+	not admin.grant
 	input.action.id == "approve"
 	upload.can_approve
 	decision := {
@@ -158,6 +161,7 @@ allow := decision if {
 
 allow := decision if {
 	not deny.explicit
+	not admin.grant
 	input.action.id == "restrict"
 	restrict.can_modify_restrictions
 	decision := {
@@ -185,6 +189,7 @@ allow := decision if {
 allow := decision if {
 	not deny.explicit
 	is_object_action
+	not admin.grant
 	objectauthz.grant_rw
 	helpers.is_owner
 	decision := {

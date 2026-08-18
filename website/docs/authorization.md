@@ -135,6 +135,7 @@ Environment variables (see `PhaidraAPI.conf`):
 |----------|---------|-------------|
 | `OPA_ENABLED` | `false` | Enable OPA authorization |
 | `OPA_URL` | `http://opa:8181` | OPA server URL |
+| `OPA_POLICY_PATH` | `/v1/data/phaidra/authz/allow` | OPA decision document path |
 | `OPA_FAIL_MODE` | `legacy` | `legacy` or `closed` on OPA errors |
 | `OPA_DUAL_RUN` | `false` | Log mismatches vs legacy Perl logic |
 | `OPA_INSTITUTION` | `default` | Institution id for data bundle |

@@ -45,7 +45,6 @@ sub log {
     dsid           => $input->{resource}->{dsid} // '',
     action         => $input->{action}->{id} // '',
     source         => $decision->{source} // 'opa',
-    policy_version => $c->app->config->{opa}->{policy_version} // '',
     duration_ms    => $decision->{duration_ms} // 0,
   };
 

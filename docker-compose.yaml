@@ -114,7 +114,6 @@ x-custom:
     OPA_FAIL_MODE: "${OPA_FAIL_MODE:-legacy}"
     OPA_DUAL_RUN: "${OPA_DUAL_RUN:-false}"
     OPA_INSTITUTION: "${OPA_INSTITUTION:-default}"
-    OPA_POLICY_VERSION: "${OPA_POLICY_VERSION:-}"
 
   configs: &configs
     configs:
@@ -500,6 +499,7 @@ services:
       [
         "run",
         "--server",
+        "--watch",
         "--addr",
         ":8181",
         "--config-file",
@@ -579,8 +579,6 @@ services:
           action: sync+restart
     environment:
       <<: [*api_common_env, *hosts]
-      OPA_ENABLED: "${OPA_ENABLED:-true}"
-      OPA_DUAL_RUN: "${OPA_DUAL_RUN:-true}"
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
       IMAGESERVER_ROOT_PATH: "/mnt/derivates-images"
       SHIB_MAIL: "${SHIB_MAIL:-}"
@@ -602,8 +600,6 @@ services:
           action: sync+restart
     environment:
       <<: [*api_common_env, *hosts, *s3]
-      OPA_ENABLED: "${OPA_ENABLED:-true}"
-      OPA_DUAL_RUN: "${OPA_DUAL_RUN:-true}"
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-}"
       IMAGESERVER_ROOT_PATH: "s3-cache/derivates-images"
       SHIB_MAIL: "${SHIB_MAIL:-mail}"
