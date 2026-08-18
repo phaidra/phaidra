@@ -18,6 +18,12 @@ sub check_rights {
 
   $action_id = $self->_normalize_action_id($action_id, $opts);
 
+  my $cache_key = $self->_decision_cache_key('object', $pid, $action_id, $opts);
+  if (my $cached = $self->_stash_cache_get($c, $cache_key)) {
+    $c->app->log->debug("Authz cache hit action_id[$action_id] pid[$pid]");
+    return $cached;
+  }
+
   my $context_model = PhaidraAPI::Model::Policy::Context->new;
   my $input = $context_model->build_object($c, $pid, $action_id, $opts);
 
@@ -27,7 +33,9 @@ sub check_rights {
   my $audit_model = PhaidraAPI::Model::Policy::Audit->new;
   $audit_model->log($c, $input, $decision);
 
-  return $opa_model->to_legacy_response($decision);
+  my $legacy = $opa_model->to_legacy_response($decision);
+  $self->_stash_cache_set($c, $cache_key, $legacy);
+  return $legacy;
 }
 
 # Map legacy r/ro/w/rw (and optional opts.action_id) to canonical action ids.
@@ -53,6 +61,12 @@ sub check_action {
   my ($self, $c, $action_id, $opts) = @_;
   $opts //= {};
 
+  my $cache_key = $self->_decision_cache_key('action', '', $action_id, $opts);
+  if (my $cached = $self->_stash_cache_get($c, $cache_key)) {
+    $c->app->log->debug("Authz cache hit action_id[$action_id]");
+    return $cached;
+  }
+
   my $context_model = PhaidraAPI::Model::Policy::Context->new;
   my $input = $context_model->build_action_only($c, $action_id, $opts);
 
@@ -62,7 +76,30 @@ sub check_action {
   my $audit_model = PhaidraAPI::Model::Policy::Audit->new;
   $audit_model->log($c, $input, $decision);
 
+  $self->_stash_cache_set($c, $cache_key, $decision);
   return $decision;
+}
+
+# Request-scoped: bridge + controller often check the same pid/action twice.
+sub _decision_cache_key {
+  my ($self, $kind, $pid, $action_id, $opts) = @_;
+  $opts //= {};
+  my $dsid = $opts->{dsid} // '';
+  my $meta = ($opts->{metadata} || $opts->{existing_metadata}) ? 'meta' : '';
+  return join('|', "authz_$kind", $pid // '', $action_id // '', $dsid, $meta);
+}
+
+sub _stash_cache_get {
+  my ($self, $c, $key) = @_;
+  my $cache = $c->stash->{authz_decision_cache} // {};
+  return $cache->{$key};
+}
+
+sub _stash_cache_set {
+  my ($self, $c, $key, $value) = @_;
+  $c->stash->{authz_decision_cache} //= {};
+  $c->stash->{authz_decision_cache}->{$key} = $value;
+  return $value;
 }
 
 sub check_rights_legacy {
