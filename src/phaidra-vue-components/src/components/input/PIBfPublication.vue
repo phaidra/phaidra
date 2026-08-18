@@ -20,7 +20,7 @@
         <v-card-text class="mt-4">
           <v-row>
             <v-col cols="2" v-show="!hideType">
-              <v-radio-group v-model="typeModel" class="mt-0" @change="$emit('change-type', $event)">
+              <v-radio-group v-model="typeModel" class="mt-0" @update:model-value="$emit('change-type', $event)">
                 <v-radio color="primary" :label="$t('Organizational unit')" :value="'select'"></v-radio>
                 <v-radio color="primary" :label="'ROR'" :value="'ror'"></v-radio>
                 <v-radio color="primary" :label="$t('PUBLISHER_VERLAG')" :value="'other'"></v-radio>
@@ -73,7 +73,7 @@
                 </v-autocomplete>
               </v-col>
             </template>
-            <template v-if="typeModel === 'ror'">
+            <template v-else-if="typeModel === 'ror'">
               <v-col cols="12" md="10">
                 <ror-search v-on:resolve="$emit('input-publisher-ror',$event)" :value="publisherRor" :text="publisherRorName" :errorMessages="publisherRorNameErrorMessages"></ror-search>
               </v-col>
@@ -418,9 +418,9 @@ export default {
     }
   },
   mounted: function () {
-    this.$nextTick(function () {
+    this.$nextTick(async function () {
       if (!this.vocabularies['orgunits'].loaded) {
-        this.$store.dispatch('vocabulary/loadOrgUnits', this?.$i18n?.locale || 'eng')
+        await this.$store.dispatch('vocabulary/loadOrgUnits', this?.$i18n?.locale || 'eng')
       }
       if (this.publisherOrgUnit) {
         this.$emit('input-publisher-select', this.getTerm('orgunits', this.publisherOrgUnit))
