@@ -130,6 +130,15 @@ sub authenticate {
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
 
+  unless (defined($username) && $username ne '' && defined($password)) {
+    my $t = $self->tx->req->headers->header($self->app->config->{authentication}->{token_header});
+    my $errmsg = $t ? 'session invalid or expired' : 'no credentials found';
+    $self->app->log->info("Not authenticated: $errmsg");
+    $self->res->headers->www_authenticate('Basic');
+    $self->render(json => {status => 401, alerts => [{type => 'error', msg => $errmsg}]}, status => 401);
+    return 0;
+  }
+
   $self->app->log->info("Authenticating user $username");
 
   my $directory_model = PhaidraAPI::Model::Directory->new;

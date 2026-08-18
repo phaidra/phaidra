@@ -571,6 +571,11 @@ sub _authenticate() {
 
   # Determine if we have a usable username for rate limiting
   my $has_username = defined($username) && length($username);
+  unless ($has_username) {
+    my $res = {alerts => [{type => 'error', msg => 'no credentials found'}], status => 401};
+    $c->stash({phaidra_auth_result => $res});
+    return undef;
+  }
 
   # Get client IP address for rate limiting
   my $client_ip = $c->tx->remote_address;
@@ -686,6 +691,14 @@ sub authenticate() {
   my $password = shift;
 
   my $res = {alerts => [], status => 500};
+
+  unless (defined($username) && $username ne '') {
+    $res->{status} = 401;
+    $res->{alerts} = [{type => 'error', msg => 'no credentials found'}];
+    $c->stash({phaidra_auth_result => $res});
+    return undef;
+  }
+
   for my $u (@{$c->app->config->{fedora}->{fedoraadmins}}) {
     if (($u->{username} eq $username) && ($u->{password} eq $password)) {
       $c->app->log->debug("auth: admin login");
