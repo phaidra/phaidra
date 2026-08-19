@@ -8,18 +8,7 @@
       hide-default-footer
       class="elevation-1 my-8"
       :no-data-text="$t('No data available')"
-      hide-default-header
-    >
-    <template v-slot:header="{ props: { headers } }">
-      <thead>
-        <tr>
-          <th v-for="h in headers">
-            <span>{{h.text}}</span>
-          </th>
-        </tr>
-      </thead>
-  </template>
-  </v-data-table>
+    ></v-data-table>
   </div>
 </template>
 
@@ -43,10 +32,10 @@ export default {
     return {
       cmodelHeaders: [
         {
-          text: "Content models",
+          title: "Content models",
           align: "start",
           sortable: false,
-          value: "cmodel",
+          key: "cmodel",
         },
       ],
       cmodelItems: [],
