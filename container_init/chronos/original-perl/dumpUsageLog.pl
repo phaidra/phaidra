@@ -57,7 +57,7 @@ if (-f $dump_path_gz) {
 my $dsn = "dbi:mysql:${db_name}:".$ENV{MARIADB_PHAIDRA_HOST};
 my $username = $ENV{MARIADB_PHAIDRA_USER};
 my $password = $ENV{MARIADB_PHAIDRA_PASSWORD};
-my $dbh = DBI->connect($dsn, $username, $password, { RaiseError => 1, AutoCommit => 0 })
+my $dbh = DBI->connect($dsn, $username, $password, { RaiseError => 1, AutoCommit => 1 })
     or die $DBI::errstr;
 
 # Count how many records will be dumped
@@ -115,7 +115,7 @@ print "Dump file size: $file_size_mb MB\n";
 print "Deleting dumped records from $table_name...\n";
 
 # Reconnect to database for deletion
-$dbh = DBI->connect($dsn, $username, $password, { RaiseError => 1, AutoCommit => 0 })
+$dbh = DBI->connect($dsn, $username, $password, { RaiseError => 1, AutoCommit => 1 })
     or die $DBI::errstr;
 
 eval {
