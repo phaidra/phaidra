@@ -12,12 +12,12 @@
           class="mb-4"
           @keyup.enter="loadCollections"
         ></v-text-field>
-        <v-data-table
+        <v-data-table-server
           hide-default-header
           :headers="collectionsHeaders"
           :items="collections"
           :options="options"
-          :server-items-length="totalCollections"
+          :items-length="totalCollections"
           @update:options="onOptionsUpdate"
           :loading="loading"
           :loading-text="$t('Loading...')"
@@ -40,7 +40,7 @@
           <template v-slot:item.actions="{ item }">
             <v-btn variant="text" color="primary" @click="selectCollection(item)">{{ $t('Select') }}</v-btn>
           </template>
-        </v-data-table>
+        </v-data-table-server>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
