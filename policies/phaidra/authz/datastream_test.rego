@@ -19,3 +19,26 @@ test_octets_not_private if {
 test_empty_dsid_not_private if {
 	not datastream.is_private with input as {"resource": {"dsid": ""}}
 }
+
+test_jsonld_endpoint_is_public_metadata if {
+	datastream.metadata_public with input as {
+		"resource": {"dsid": ""},
+		"action": {"id": "read", "endpoint": "jsonld#get"},
+	}
+}
+
+test_preview_is_rights_gated if {
+	datastream.rights_gated with input as {
+		"resource": {"dsid": ""},
+		"action": {"id": "read", "endpoint": "object#preview"},
+		"subject": {"authenticated": false, "roles": []},
+	}
+}
+
+test_jsonld_not_rights_gated if {
+	not datastream.rights_gated with input as {
+		"resource": {"dsid": ""},
+		"action": {"id": "read", "endpoint": "jsonld#get"},
+		"subject": {"authenticated": false, "roles": []},
+	}
+}

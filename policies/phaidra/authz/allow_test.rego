@@ -88,6 +88,86 @@ test_owner_grants_rw if {
 	decision.reason == "owner"
 }
 
+test_owner_delete_denied_without_enabledelete if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "alice",
+			"authenticated": true,
+			"roles": ["writer"],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {
+			"type": "object",
+			"pid": "o:2",
+			"owner": "alice",
+			"state": "Active",
+			"rights": {},
+		},
+		"action": {"id": "delete"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+	}
+	decision.allow == false
+}
+
+test_owner_delete_allowed_with_enabledelete if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "alice",
+			"authenticated": true,
+			"roles": ["writer"],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {
+			"type": "object",
+			"pid": "o:2",
+			"owner": "alice",
+			"state": "Active",
+			"rights": {},
+		},
+		"action": {"id": "delete"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": true, "canmodifyownerid": []},
+	}
+	decision.allow == true
+	decision.reason == "delete_allowed"
+}
+
+test_admin_delete_always_allowed if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "phaidraAdmin",
+			"authenticated": true,
+			"roles": ["admin"],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {
+			"type": "object",
+			"pid": "o:2",
+			"owner": "alice",
+			"state": "Active",
+			"rights": {},
+		},
+		"action": {"id": "delete"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+	}
+	decision.allow == true
+	decision.reason == "admin"
+}
+
 test_anonymous_write_denied if {
 	decision := authz.allow with input as {
 		"subject": {
@@ -188,12 +268,66 @@ test_rights_username_match if {
 			"state": "Active",
 			"rights": {"username": ["carol"]},
 		},
-		"action": {"id": "read"},
+		"action": {"id": "read", "endpoint": "octets#get"},
 		"environment": {"institution": "default"},
 		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
 	}
 	decision.allow == true
 	decision.reason == "rights_match"
+}
+
+test_rights_deny_content_for_non_listed if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "eve",
+			"authenticated": true,
+			"roles": ["writer"],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {
+			"type": "object",
+			"pid": "o:7",
+			"owner": "alice",
+			"state": "Active",
+			"rights": {"username": ["carol"]},
+		},
+		"action": {"id": "read", "endpoint": "object#preview"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+	}
+	decision.allow == false
+	decision.reason == "deny_no_matching_rule"
+}
+
+test_jsonld_public_despite_rights if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "eve",
+			"authenticated": true,
+			"roles": ["writer"],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {
+			"type": "object",
+			"pid": "o:7",
+			"owner": "alice",
+			"state": "Active",
+			"rights": {"username": ["carol"]},
+		},
+		"action": {"id": "read", "endpoint": "jsonld#get"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+	}
+	decision.allow == true
+	decision.reason == "public_metadata"
 }
 
 test_deprecated_rights_denied if {

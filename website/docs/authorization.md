@@ -30,20 +30,21 @@ The bridge requires each protected route to declare an **`action_id`**. Object a
 | IR admin (`iraccount`) | IR workflow actions (`ir_admin_*`) |
 | Fedora admin (`FEDORA_ADMIN_USER`) | Same as admin when authenticating (service operations) |
 | Owner | Full read/write on owned objects |
-| Anonymous | Read active objects without RIGHTS restrictions |
-| RIGHTS datastream | Restricts read on content datastreams |
+| Anonymous | Read active objects without RIGHTS restrictions; public metadata (JSON-LD, …) always readable when Active |
+| RIGHTS datastream | Restricts **content** reads (octets, preview, download, thumbnail) — not public metadata |
+| Private datastreams | `RIGHTS`, `JSON-LD-PRIVATE` — owner/admin only |
 | Inactive objects | Visible only to owner, admin, superuser |
 
 ## New capabilities (institution-configurable)
 
-Institution admins tune behaviour via data bundles in `policies/data/<institution>/config.json` without editing Rego:
+Institution admins tune behaviour via data bundles in `policies/<institution>/config/data.json` (default: `phaidra/config/data.json`) without editing Rego:
 
 - **Writer / uploader roles** — `writer` is granted to every authenticated user (create/edit still allowed). `uploader` is the **uncurated submit** privilege
 - **Default role** — `PHAIDRA_DEFAULT_ROLE` (Directory fills it for every user). Default `uploader` = curation off
 - **Privileged submit forms** — catalog-fetch upload, bulk upload
 - **Metadata policies** (optional) — match JSON-LD on create/edit; default bundle has none enabled
 - **Restricted rights management** — who may set access restrictions and max expiry
-- **Per-user delete** — replaces repo-wide `enabledelete` when configured
+- **Per-user delete** — owner/superuser self-delete only when private config `enabledelete` is on (default off); site admin may always delete
 
 ### Curated submit
 

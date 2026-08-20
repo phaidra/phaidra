@@ -27,10 +27,12 @@ authenticated if {
 }
 
 is_admin if {
+	input.config.admin_username != ""
 	input.subject.username == input.config.admin_username
 }
 
 is_admin if {
+	cfg.admin_username != ""
 	input.subject.username == cfg.admin_username
 }
 

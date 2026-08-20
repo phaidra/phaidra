@@ -5,8 +5,8 @@ Rego policies for PHAIDRA authorization decisions. Evaluated by Open Policy Agen
 ## Layout
 
 - `phaidra/authz/*.rego` — core policy packages (Git-managed)
-- `data/phaidra/config.json` — default institution data bundle
-- `data/<institution>/` — institution-specific overrides (optional)
+- `phaidra/config/data.json` — default institution data bundle (`data.phaidra.config`)
+- `univie/config/data.json` — institution-specific example override
 
 ## Local testing
 

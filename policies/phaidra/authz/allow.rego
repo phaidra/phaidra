@@ -186,9 +186,11 @@ allow := decision if {
 	}
 }
 
+# Owner rw for object ops except delete (delete needs enabledelete / can_delete).
 allow := decision if {
 	not deny.explicit
 	is_object_action
+	input.action.id != "delete"
 	not admin.grant
 	objectauthz.grant_rw
 	helpers.is_owner
@@ -250,6 +252,7 @@ allow := decision if {
 	not objectauthz.grant_rw
 	helpers.is_read_op
 	not datastream.is_private
+	datastream.rights_gated
 	rights.deny_read
 	not objectauthz.deny_inactive_read
 	decision := {
@@ -275,12 +278,32 @@ allow := decision if {
 	}
 }
 
+# Public metadata (JSON-LD, MODS, …): Active objects are readable regardless of RIGHTS.
 allow := decision if {
 	not deny.explicit
 	not admin.grant
 	not objectauthz.grant_rw
 	helpers.is_read_op
 	not datastream.is_private
+	datastream.metadata_public
+	not objectauthz.deny_inactive_read
+	not datastream.deny_inactive_metadata
+	decision := {
+		"allow": true,
+		"effect": "allow",
+		"reason": "public_metadata",
+		"rights": "ro",
+		"obligations": {"audit": true},
+	}
+}
+
+allow := decision if {
+	not deny.explicit
+	not admin.grant
+	not objectauthz.grant_rw
+	helpers.is_read_op
+	not datastream.is_private
+	datastream.rights_gated
 	rights.grant_read
 	not objectauthz.deny_inactive_read
 	read_reason != ""

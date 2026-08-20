@@ -37,3 +37,7 @@ static/*
 
 pfsa/*
 !pfsa/index.html
+
+# Institution-specific OPA policies stay local; only policies/phaidra/ ships with the repo
+policies/*/
+!policies/phaidra/

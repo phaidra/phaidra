@@ -28,6 +28,7 @@ can_delete if {
 	data.phaidra.authz.admin.grant
 }
 
+# Owner self-delete only when private config enabledelete is on (or require_enabledelete is off).
 can_delete if {
 	helpers.is_owner
 	"owner" in helpers.cfg.delete.self_delete_roles
@@ -40,9 +41,17 @@ can_delete if {
 	input.config.enabledelete == true
 }
 
+# Superuser self-delete follows the same enabledelete gate (admin.grant still bypasses).
 can_delete if {
 	helpers.has_role("superuser")
 	"superuser" in helpers.cfg.delete.self_delete_roles
+	not helpers.cfg.delete.require_enabledelete
+}
+
+can_delete if {
+	helpers.has_role("superuser")
+	"superuser" in helpers.cfg.delete.self_delete_roles
+	input.config.enabledelete == true
 }
 
 can_change_owner if {

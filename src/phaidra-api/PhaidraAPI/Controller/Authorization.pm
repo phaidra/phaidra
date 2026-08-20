@@ -25,12 +25,6 @@ sub authorize {
 
   my $res = {alerts => [], status => 500};
 
-  # Route flag: skip OPA (e.g. token-validated proxy).
-  if ($self->_route_attr('authz_skip')) {
-    $self->app->log->debug('Authz skipped (authz_skip)');
-    return 1;
-  }
-
   my $action_id = $self->_route_attr('action_id');
   unless (defined $action_id && $action_id ne '') {
     $self->app->log->error('Authz failed - route missing action_id');
@@ -88,6 +82,9 @@ sub authorize {
   }
 
   my $opts = {dsid => $dsid};
+  my $endpoint = $self->_route_endpoint;
+  $opts->{endpoint} = $endpoint if $endpoint ne '';
+
   if ($action_id eq 'write') {
     my $meta_model = PhaidraAPI::Model::Policy::Metadata->new;
     my $normalized = $meta_model->from_request($self);
@@ -134,6 +131,16 @@ sub _route_attr {
     return $val if defined $val && $val ne '';
   }
   return;
+}
+
+# Destination controller#action for OPA (content vs public-metadata rights gating).
+sub _route_endpoint {
+  my ($self) = @_;
+
+  my $controller = $self->_route_attr('controller');
+  my $action     = $self->_route_attr('action');
+  return '' unless defined $controller && $controller ne '' && defined $action && $action ne '';
+  return "$controller#$action";
 }
 
 sub check_batch {
