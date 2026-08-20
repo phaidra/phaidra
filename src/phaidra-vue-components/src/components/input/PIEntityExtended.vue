@@ -84,7 +84,7 @@
                 </v-autocomplete>
               </v-col>
               <v-col v-if="enableTypeSelect" cols="2">
-                <v-radio-group v-model="typeModel" class="mt-0" @change="$emit('change-type', $event)">
+                <v-radio-group v-model="typeModel" class="mt-0" @update:model-value="$emit('change-type', $event)">
                   <v-radio color="primary" :label="$t('Personal')" :value="'schema:Person'"></v-radio>
                   <v-radio color="primary" :label="$t('Corporate')" :value="'schema:Organization'"></v-radio>
                 </v-radio-group>
@@ -230,7 +230,7 @@
             <template v-if="typeModel === 'schema:Organization'">
               <v-row>
                 <v-col cols="2">
-                  <v-radio-group v-model="organizationRadio" class="mt-0" @change="$emit('change-organization-type', $event)">
+                  <v-radio-group v-model="organizationRadio" class="mt-0" @update:model-value="$emit('change-organization-type', $event)">
                     <v-radio color="primary" :label="$t('Organizational unit')" :value="'select'"></v-radio>
                     <v-radio color="primary" :label="'ROR'" :value="'ror'"></v-radio>
                     <v-radio color="primary" :label="$t('OTHER_FEMININE')" :value="'other'"></v-radio>
@@ -379,7 +379,7 @@
             </template>
             <v-row v-if="(typeModel === 'schema:Person') && showAffiliation">
               <v-col cols="2">
-                <v-radio-group v-model="affiliationRadio" class="mt-0" @change="$emit('change-affiliation-type', $event)">
+                <v-radio-group v-model="affiliationRadio" class="mt-0" @update:model-value="$emit('change-affiliation-type', $event)">
                   <v-radio color="primary" :label="$t('Organizational unit')" :value="'select'"></v-radio>
                   <v-radio color="primary" :label="'ROR'" :value="'ror'"></v-radio>
                   <v-radio color="primary" :label="$t('OTHER_FEMININE')" :value="'other'"></v-radio>
