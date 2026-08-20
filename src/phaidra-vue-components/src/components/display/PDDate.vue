@@ -4,12 +4,12 @@
     <v-col :md="valueColMd" cols="12" v-if="isEdmTimeSpan">
       <template v-for="(l, i) in o['skos:prefLabel']" :key="'prl'+i">
         <a
-          v-if="o['skos:exactMatch']"
+          v-if="l['@language'] === displaylang && o['skos:exactMatch']"
           class="valuefield"
           :href="getIDResolverURL(o['skos:exactMatch'][0])"
           target="_blank"
         >{{ l['@value'] }}</a>
-        <span v-else>{{ l['@value'] }}</span>
+        <span v-else-if="l['@language'] === displaylang">{{ l['@value'] }}</span>
       </template>
     </v-col>
     <v-col v-else :md="valueColMd" cols="12">{{ checkAndUpdateField(o) }}</v-col>
