@@ -17,8 +17,8 @@
                 disable-sort
                 hide-default-footer
             >
-                <template v-for="col in avgCols" v-slot:[`item.${col.value}`]="{ item }">
-                    <span v-if="item[col.value]">{{ $filterGigabytes(item[col.value]) }}</span>
+                <template v-for="col in avgCols" v-slot:[`item.${col.key}`]="{ item }">
+                    <span v-if="item[col.key]">{{ $filterGigabytes(item[col.key]) }}</span>
                     <span v-else>-</span>
                 </template>
             </v-data-table>
@@ -34,8 +34,8 @@
                 disable-sort
                 hide-default-footer
             >
-                <template v-for="col in imgAvgCols" v-slot:[`item.${col.value}`]="{ item }">
-                    <span v-if="item[col.value]">{{ $filterGigabytes(item[col.value]) }}</span>
+                <template v-for="col in imgAvgCols" v-slot:[`item.${col.key}`]="{ item }">
+                    <span v-if="item[col.key]">{{ $filterGigabytes(item[col.key]) }}</span>
                     <span v-else>-</span>
                 </template>
             </v-data-table>
