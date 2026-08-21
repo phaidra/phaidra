@@ -131,7 +131,7 @@ sub authenticate {
   my $password = $self->stash->{basic_auth_credentials}->{password};
 
   unless (defined($username) && $username ne '' && defined($password)) {
-    my $t = $self->tx->req->headers->header($self->app->config->{authentication}->{token_header});
+    my $t      = $self->tx->req->headers->header($self->app->config->{authentication}->{token_header});
     my $errmsg = $t ? 'session invalid or expired' : 'no credentials found';
     $self->app->log->info("Not authenticated: $errmsg");
     $self->res->headers->www_authenticate('Basic');

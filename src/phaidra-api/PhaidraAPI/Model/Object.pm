@@ -1490,7 +1490,7 @@ sub approve {
   my $res = {alerts => [], status => 200};
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my $authz_res = $authz_model->check_rights($c, $pid, 'approve');
+  my $authz_res   = $authz_model->check_rights($c, $pid, 'approve');
   unless ($authz_res->{status} == 200) {
     $res->{status} = 403;
     push @{$res->{alerts}}, {type => 'error', msg => 'Forbidden'};

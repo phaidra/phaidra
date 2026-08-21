@@ -11,7 +11,7 @@ use PhaidraAPI::Model::Policy::Opa;
 use PhaidraAPI::Model::Policy::Metadata;
 
 # Actions that require a Fedora object pid and check_rights.
-my %OBJECT_ACTIONS = map { $_ => 1 } qw(
+my %OBJECT_ACTIONS = map {$_ => 1} qw(
   read
   write
   delete
@@ -37,9 +37,7 @@ sub authorize {
   my $pid  = $self->param('pid')  // $self->_route_attr('pid');
   my $dsid = $self->param('dsid') // $self->_route_attr('dsid') // '';
 
-  $self->app->log->debug(
-    "Authz action_id[$action_id] pid[" . ($pid // '') . "] dsid[$dsid]"
-  );
+  $self->app->log->debug("Authz action_id[$action_id] pid[" . ($pid // '') . "] dsid[$dsid]");
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
 
@@ -81,7 +79,7 @@ sub authorize {
     return 0;
   }
 
-  my $opts = {dsid => $dsid};
+  my $opts     = {dsid => $dsid};
   my $endpoint = $self->_route_endpoint;
   $opts->{endpoint} = $endpoint if $endpoint ne '';
 
@@ -158,8 +156,8 @@ sub check_batch {
 
   my $res = {alerts => [], status => 200};
 
-  my $payload = $self->req->json // {};
-  my $checks = $payload->{checks} // [];
+  my $payload = $self->req->json   // {};
+  my $checks  = $payload->{checks} // [];
 
   unless (ref($checks) eq 'ARRAY') {
     $res->{status} = 400;
@@ -169,36 +167,34 @@ sub check_batch {
   }
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my @results = ();
+  my @results     = ();
 
   for my $check (@{$checks}) {
     my $action_id = $check->{action} // 'read';
     if ($check->{pid}) {
-      my $legacy = $authz_model->check_rights(
-        $self,
-        $check->{pid},
-        $action_id,
+      my $legacy = $authz_model->check_rights($self, $check->{pid}, $action_id, {dsid => $check->{dsid} // '',});
+      push @results,
         {
-          dsid => $check->{dsid} // '',
-        }
-      );
-      push @results, {
         pid    => $check->{pid},
         action => $action_id,
         allow  => ($legacy->{status} == 200) ? \1 : \0,
-      };
+        };
     }
     else {
-      my $decision = $authz_model->check_action($self, $action_id, {
-        resource_type => $check->{resource_type} // 'submit_form',
-        metadata      => $check->{metadata},
-      });
-      push @results, {
+      my $decision = $authz_model->check_action(
+        $self,
+        $action_id,
+        { resource_type => $check->{resource_type} // 'submit_form',
+          metadata      => $check->{metadata},
+        }
+      );
+      push @results,
+        {
         action => $action_id,
         form   => $check->{form},
         allow  => $decision->{allow} ? \1 : \0,
         reason => $decision->{reason},
-      };
+        };
     }
   }
 
@@ -212,7 +208,7 @@ sub capabilities {
   my $res = {alerts => [], status => 200};
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my $decision = $authz_model->check_action($self, 'capabilities', {});
+  my $decision    = $authz_model->check_action($self, 'capabilities', {});
 
   $res->{capabilities} = $decision->{capabilities} // [];
 

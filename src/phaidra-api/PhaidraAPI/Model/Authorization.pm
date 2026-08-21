@@ -17,7 +17,7 @@ sub check_rights {
   $opts //= {};
 
   $action_id = $self->_normalize_action_id($action_id, $opts);
-  $opts = $self->_enrich_endpoint_opts($c, $opts);
+  $opts      = $self->_enrich_endpoint_opts($c, $opts);
 
   my $cache_key = $self->_decision_cache_key('object', $pid, $action_id, $opts);
   if (my $cached = $self->_stash_cache_get($c, $cache_key)) {
@@ -26,10 +26,10 @@ sub check_rights {
   }
 
   my $context_model = PhaidraAPI::Model::Policy::Context->new;
-  my $input = $context_model->build_object($c, $pid, $action_id, $opts);
+  my $input         = $context_model->build_object($c, $pid, $action_id, $opts);
 
   my $opa_model = PhaidraAPI::Model::Policy::Opa->new;
-  my $decision = $opa_model->evaluate($c, $input);
+  my $decision  = $opa_model->evaluate($c, $input);
 
   my $audit_model = PhaidraAPI::Model::Policy::Audit->new;
   $audit_model->log($c, $input, $decision);
@@ -69,10 +69,10 @@ sub check_action {
   }
 
   my $context_model = PhaidraAPI::Model::Policy::Context->new;
-  my $input = $context_model->build_action_only($c, $action_id, $opts);
+  my $input         = $context_model->build_action_only($c, $action_id, $opts);
 
   my $opa_model = PhaidraAPI::Model::Policy::Opa->new;
-  my $decision = $opa_model->evaluate($c, $input);
+  my $decision  = $opa_model->evaluate($c, $input);
 
   my $audit_model = PhaidraAPI::Model::Policy::Audit->new;
   $audit_model->log($c, $input, $decision);
@@ -100,7 +100,7 @@ sub _enrich_endpoint_opts {
 sub _decision_cache_key {
   my ($self, $kind, $pid, $action_id, $opts) = @_;
   $opts //= {};
-  my $dsid     = $opts->{dsid} // '';
+  my $dsid     = $opts->{dsid}     // '';
   my $endpoint = $opts->{endpoint} // '';
   my $meta     = ($opts->{metadata} || $opts->{existing_metadata}) ? 'meta' : '';
   return join('|', "authz_$kind", $pid // '', $action_id // '', $dsid, $endpoint, $meta);

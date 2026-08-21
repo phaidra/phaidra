@@ -3,8 +3,8 @@ package PhaidraAPI::Model::Policy::Metadata;
 use strict;
 use warnings;
 use v5.10;
-use base qw/Mojo::Base/;
-use Mojo::JSON qw(decode_json);
+use base             qw/Mojo::Base/;
+use Mojo::JSON       qw(decode_json);
 use Mojo::ByteStream qw(b);
 
 # Flatten request JSON-LD into fields Rego can match (object_type, license).
@@ -26,7 +26,7 @@ sub from_object {
 
   require PhaidraAPI::Model::Jsonld;
   my $jsonld_model = PhaidraAPI::Model::Jsonld->new;
-  my $r = $jsonld_model->get_object_jsonld_parsed($c, $pid);
+  my $r            = $jsonld_model->get_object_jsonld_parsed($c, $pid);
   return unless $r && ($r->{status} // 0) eq 200;
 
   return $self->normalize_jsonld($r->{'JSON-LD'});
@@ -51,13 +51,13 @@ sub _request_envelope {
       $metadata = $metadata->asset->slurp;
     }
     if (!ref $metadata) {
-      eval { $metadata = decode_json(b($metadata)->encode('UTF-8')) };
+      eval {$metadata = decode_json(b($metadata)->encode('UTF-8'))};
       return if $@;
     }
     return $metadata if ref $metadata eq 'HASH';
   }
 
-  my $json = eval { $c->req->json };
+  my $json = eval {$c->req->json};
   return $json if ref $json eq 'HASH';
   return;
 }
@@ -65,8 +65,8 @@ sub _request_envelope {
 sub _extract_jsonld {
   my ($self, $envelope) = @_;
 
-  return $envelope->{'json-ld'}  if ref $envelope->{'json-ld'} eq 'HASH';
-  return $envelope->{'JSON-LD'}  if ref $envelope->{'JSON-LD'} eq 'HASH';
+  return $envelope->{'json-ld'} if ref $envelope->{'json-ld'} eq 'HASH';
+  return $envelope->{'JSON-LD'} if ref $envelope->{'JSON-LD'} eq 'HASH';
 
   my $inner = $envelope->{metadata};
   if (ref $inner eq 'HASH') {
@@ -90,7 +90,7 @@ sub _concept_ids {
     push @ids, $self->_as_list($node->{'skos:exactMatch'});
     push @ids, $node->{'@id'} if $node->{'@id'};
   }
-  return [ grep { defined && $_ ne '' } @ids ];
+  return [grep {defined && $_ ne ''} @ids];
 }
 
 sub _literals {
@@ -106,7 +106,7 @@ sub _literals {
     push @vals, $node->{'@id'}    if $node->{'@id'};
     push @vals, $self->_as_list($node->{'skos:exactMatch'});
   }
-  return [ grep { defined && $_ ne '' } @vals ];
+  return [grep {defined && $_ ne ''} @vals];
 }
 
 sub _as_list {

@@ -5,7 +5,7 @@ use warnings;
 use v5.10;
 use base qw/Mojo::Base/;
 use Mojo::UserAgent;
-use Mojo::JSON qw(decode_json encode_json true false);
+use Mojo::JSON  qw(decode_json encode_json true false);
 use Time::HiRes qw(gettimeofday tv_interval);
 
 sub enabled {
@@ -22,11 +22,11 @@ sub evaluate {
     return $self->_legacy_fallback($c, $input, $t0, 'opa_disabled');
   }
 
-  my $opa_url = $c->app->config->{opa}->{url} // 'http://opa:8181';
+  my $opa_url     = $c->app->config->{opa}->{url}         // 'http://opa:8181';
   my $policy_path = $c->app->config->{opa}->{policy_path} // '/v1/data/phaidra/authz/allow';
 
   my $url = $opa_url . $policy_path;
-  my $tx = $c->app->ua->post($url => json => {input => $input});
+  my $tx  = $c->app->ua->post($url => json => {input => $input});
   if (my $err = $tx->error) {
     my $detail = $err->{message} // 'unknown error';
     $detail .= " code[$err->{code}]" if defined $err->{code};
@@ -34,11 +34,11 @@ sub evaluate {
     return $self->_handle_failure($c, $input, $t0, 'opa_error');
   }
 
-  my $body = $tx->res->json // {};
+  my $body     = $tx->res->json  // {};
   my $decision = $body->{result} // {};
 
   $decision->{duration_ms} = int(tv_interval($t0) * 1000);
-  $decision->{source} = 'opa';
+  $decision->{source}      = 'opa';
 
   if ($c->app->config->{opa}->{dual_run}) {
     $self->_dual_run_compare($c, $input, $decision);
@@ -78,11 +78,11 @@ sub _legacy_fallback {
   require PhaidraAPI::Model::Authorization;
   my $authz_model = PhaidraAPI::Model::Authorization->new;
 
-  my $op = $self->_legacy_op_for_action($input->{action}->{id});
+  my $op     = $self->_legacy_op_for_action($input->{action}->{id});
   my $legacy = $authz_model->check_rights_legacy($c, $pid, $op);
 
   my $decision = $self->_legacy_to_decision($legacy);
-  $decision->{source} = $reason;
+  $decision->{source}      = $reason;
   $decision->{duration_ms} = int(tv_interval($t0) * 1000);
 
   return $decision;
@@ -91,10 +91,10 @@ sub _legacy_fallback {
 sub _legacy_action_fallback {
   my ($self, $c, $input, $t0, $reason) = @_;
 
-  my $action_id = $input->{action}->{id} // '';
-  my $username = $input->{subject}->{username} // '';
+  my $action_id = $input->{action}->{id}        // '';
+  my $username  = $input->{subject}->{username} // '';
 
-  my %account_actions = map { $_ => 1 } qw(
+  my %account_actions = map {$_ => 1} qw(
     settings_read settings_write
     group_read group_write
     list_read list_write
@@ -106,7 +106,7 @@ sub _legacy_action_fallback {
     feedback request_doi
   );
 
-  my %admin_actions = map { $_ => 1 } qw(
+  my %admin_actions = map {$_ => 1} qw(
     admin_storage_usage admin_storage_avg_year admin_imageserver_storage_avg_year
     admin_send_daily_report
     admin_config_private_read admin_config_public_write admin_config_private_write
@@ -117,7 +117,7 @@ sub _legacy_action_fallback {
     admin_ir_embargocheck
   );
 
-  my %ir_admin_actions = map { $_ => 1 } qw(
+  my %ir_admin_actions = map {$_ => 1} qw(
     ir_admin_listdata ir_admin_events ir_admin_puresearch ir_admin_pureimport_locks
     ir_admin_accept ir_admin_reject ir_admin_approve
     ir_admin_pureimport_lock ir_admin_pureimport_unlock ir_admin_pureimport_reject
@@ -142,11 +142,11 @@ sub _legacy_action_fallback {
   }
   elsif ($ir_admin_actions{$action_id}) {
     my @roles = @{$input->{subject}->{roles} // []};
-    $allow = (grep { $_ eq 'ir_admin' } @roles) ? 1 : 0;
+    $allow = (grep {$_ eq 'ir_admin'} @roles) ? 1 : 0;
   }
 
   return {
-    allow       => $allow ? true : false,
+    allow       => $allow ? true    : false,
     effect      => $allow ? 'allow' : 'deny',
     reason      => 'legacy_action',
     rights      => $allow ? 'rw' : '',
@@ -204,18 +204,15 @@ sub _dual_run_compare {
   my $pid = $input->{resource}->{pid};
   return unless $pid;
 
-  my $op = $self->_legacy_op_for_action($input->{action}->{id});
-  my $legacy = $authz_model->check_rights_legacy($c, $pid, $op);
+  my $op              = $self->_legacy_op_for_action($input->{action}->{id});
+  my $legacy          = $authz_model->check_rights_legacy($c, $pid, $op);
   my $legacy_decision = $self->_legacy_to_decision($legacy);
 
-  my $opa_allow = $opa_decision->{allow} ? 1 : 0;
+  my $opa_allow    = $opa_decision->{allow}    ? 1 : 0;
   my $legacy_allow = $legacy_decision->{allow} ? 1 : 0;
 
   if ($opa_allow != $legacy_allow) {
-    $c->app->log->warn(
-      "OPA dual-run mismatch pid[$pid] op[$op] opa[$opa_allow] legacy[$legacy_allow] "
-        . "opa_reason[$opa_decision->{reason}] legacy_reason[$legacy_decision->{reason}]"
-    );
+    $c->app->log->warn("OPA dual-run mismatch pid[$pid] op[$op] opa[$opa_allow] legacy[$legacy_allow] " . "opa_reason[$opa_decision->{reason}] legacy_reason[$legacy_decision->{reason}]");
   }
 }
 
