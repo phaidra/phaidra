@@ -134,13 +134,23 @@ sub _route_attr {
 }
 
 # Destination controller#action for OPA (content vs public-metadata rights gating).
+# During an under() bridge, stash controller/action are still the bridge
+# (authorization#authorize) — read the destination frame from the match stack.
 sub _route_endpoint {
   my ($self) = @_;
 
-  my $controller = $self->_route_attr('controller');
-  my $action     = $self->_route_attr('action');
-  return '' unless defined $controller && $controller ne '' && defined $action && $action ne '';
-  return "$controller#$action";
+  my $stack = $self->match->stack // [];
+  for my $i (reverse 0 .. $#$stack) {
+    my $frame = $stack->[$i];
+    next unless defined $frame->{action_id} && $frame->{action_id} ne '';
+    my $controller = $frame->{controller} // '';
+    my $action     = $frame->{action}     // '';
+    next if $controller eq '' || $action eq '';
+    next if $controller eq 'authorization';
+    return lc("$controller#$action");
+  }
+
+  return '';
 }
 
 sub check_batch {

@@ -186,11 +186,11 @@ allow := decision if {
 	}
 }
 
-# Owner rw for object ops except delete (delete needs enabledelete / can_delete).
+# Owner rw for read/write. delete / restrict / change_owner / approve have dedicated rules
+# (overlapping complete rules cause OPA eval_conflict → fail-closed deny).
 allow := decision if {
 	not deny.explicit
-	is_object_action
-	input.action.id != "delete"
+	input.action.id in {"read", "write"}
 	not admin.grant
 	objectauthz.grant_rw
 	helpers.is_owner
