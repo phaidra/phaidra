@@ -76,15 +76,17 @@ sub startup {
   my $config = $self->plugin('Config' => {file => 'PhaidraAPI.conf'});
   $self->config($config);
 
-  $self->log->info(sprintf(
-    'OPA config enabled[%s] url[%s] path[%s] fail_mode[%s] dual_run[%s] institution[%s]',
-    ($config->{opa}->{enabled} ? 'true' : 'false'),
-    $config->{opa}->{url} // '',
-    $config->{opa}->{policy_path} // '',
-    $config->{opa}->{fail_mode} // '',
-    ($config->{opa}->{dual_run} ? 'true' : 'false'),
-    $config->{opa}->{institution} // '',
-  ));
+  $self->log->info(
+    sprintf(
+      'OPA config enabled[%s] url[%s] path[%s] fail_mode[%s] dual_run[%s] institution[%s]',
+      ($config->{opa}->{enabled} ? 'true' : 'false'),
+      $config->{opa}->{url}         // '',
+      $config->{opa}->{policy_path} // '',
+      $config->{opa}->{fail_mode}   // '',
+      ($config->{opa}->{dual_run} ? 'true' : 'false'),
+      $config->{opa}->{institution} // '',
+    )
+  );
 
   $self->mode($config->{mode});
   $self->secrets([$config->{secret}]);
@@ -426,11 +428,13 @@ sub startup {
 
   # Does not force authentication.
   my $optionally_authenticated = $ext_creds->under('/')->to('authentication#authenticate_if_username');
+
   # Does not force authentication. Includes authorization.
   my $authz_optional = $optionally_authenticated->under('/')->to('authorization#authorize');
 
   # Only authentication (kept for /authz/capabilities and /authz/check).
-  my $authenticated            = $ext_creds->under('/')->to('authentication#authenticate');
+  my $authenticated = $ext_creds->under('/')->to('authentication#authenticate');
+
   # Only for authenticated users. Includes authorization.
   my $authz = $authenticated->under('/')->to('authorization#authorize');
 
