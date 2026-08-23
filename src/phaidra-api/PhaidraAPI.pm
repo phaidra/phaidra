@@ -429,8 +429,8 @@ sub startup {
   # Does not force authentication.
   my $optionally_authenticated = $ext_creds->under('/')->to('authentication#authenticate_if_username');
 
-  # Does not force authentication. Includes authorization.
-  my $authz_optional = $optionally_authenticated->under('/')->to('authorization#authorize');
+  # Authn optional (anonymous allowed). Authorization always runs.
+  my $authz_authnoptional = $optionally_authenticated->under('/')->to('authorization#authorize');
 
   # Only authentication (kept for /authz/capabilities and /authz/check).
   my $authenticated = $ext_creds->under('/')->to('authentication#authenticate');
@@ -585,11 +585,11 @@ sub startup {
   $authenticated->post('authz/check')                                      ->to('authorization#check_batch');
   $authenticated->get('authz/capabilities')                                ->to('authorization#capabilities');
 
-  $authz_optional->get('streaming/:pid')                                   ->to('object#preview', action_id => 'read');
-  $authz_optional->get('streaming/:pid/key')                               ->to('streaming#key', action_id => 'read');
+  $authz_authnoptional->get('streaming/:pid')                                   ->to('object#preview', action_id => 'read');
+  $authz_authnoptional->get('streaming/:pid/key')                               ->to('streaming#key', action_id => 'read');
 
   $optionally_authenticated->get('imageserver')                            ->to('imageserver#imageserverproxy');
-  $authz_optional->get('imageserver/:pid/status')                          ->to('imageserver#status', action_id => 'read');
+  $authz_authnoptional->get('imageserver/:pid/status')                          ->to('imageserver#status', action_id => 'read');
 
   # Only authn, authz happens in controller because metadata might be partially restricted (JSON-LD-PRIVATE)
   $optionally_authenticated->get('object/:pid/metadata')                   ->to('object#get_metadata');
@@ -597,29 +597,30 @@ sub startup {
   $optionally_authenticated->get('object/:pid/info')                       ->to('object#info');
 
   # This might need authorization if the object is inactive.
-  $authz_optional->get('object/:pid/uwmetadata')                           ->to('uwmetadata#get', action_id => 'read');
-  $authz_optional->get('object/:pid/mods')                                 ->to('mods#get', action_id => 'read');
-  $authz_optional->get('object/:pid/jsonld')                               ->to('jsonld#get', action_id => 'read');
-  $authz_optional->get('object/:pid/json-ld')                              ->to('jsonld#get', header => '1', action_id => 'read');
-  $authz_optional->get('object/:pid/geo')                                  ->to('geo#get', action_id => 'read');
-  $authz_optional->get('object/:pid/annotations')                          ->to('annotations#get', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/uwmetadata')                           ->to('uwmetadata#get', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/mods')                                 ->to('mods#get', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/jsonld')                               ->to('jsonld#get', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/json-ld')                              ->to('jsonld#get', header => '1', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/geo')                                  ->to('geo#get', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/annotations')                          ->to('annotations#get', action_id => 'read');
 
   # This might need authorization if the object is restricted.
-  $authz_optional->get('object/:pid/fulltext')                             ->to('fulltext#get', action_id => 'read');
-  $authz_optional->get('object/:pid/thumbnail')                            ->to('object#thumbnail', action_id => 'read', authz_deny_static => 'images/locked.png');
-  $authz_optional->get('object/:pid/preview')                              ->to('object#preview', action_id => 'read');
-  $authz_optional->get('object/:pid/3d_resource')                          ->to('threed#get_resource', action_id => 'read');
-  $authz_optional->get('object/:pid/360_frame')                            ->to('viewer360#get_frame', action_id => 'read');
-  $authz_optional->get('object/:pid/360_frames/*filename')                 ->to('viewer360#get_frame_by_name', action_id => 'read');
-  $authz_optional->get('object/:pid/octets')                               ->to('octets#proxy', action_id => 'read');
-  $authz_optional->get('object/:pid/download')                             ->to('octets#download', action_id => 'read');
-  $authz_optional->get('object/:pid/get')                                  ->to('octets#get', action_id => 'read');
-  $authz_optional->get('object/:pid/comp/:ds')                             ->to('object#get_legacy_container_member', action_id => 'read');
-  $authz_optional->get('object/:pid/datastream/:dsid')                     ->to('object#get_datastream', action_id => 'read');
-  $authz_optional->get('object/:pid/resourcelink/get')                     ->to('object#get_resourcelink', action_id => 'read');
-  $authz_optional->get('object/:pid/resourcelink/redirect')                ->to('object#redirect_resourcelink', action_id => 'read');
-  $authz_optional->get('object/:pid/jsonldprivate')                        ->to('jsonldprivate#get', dsid => 'JSON-LD-PRIVATE', action_id => 'read');
-  $authz_optional->get('object/:pid/rights')                               ->to('rights#get', dsid => 'RIGHTS', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/fulltext')                             ->to('fulltext#get', action_id => 'read');
+  # authz_deny_static: on authz 403 return this image (HTTP 200) so <img> tags still render a lock icon.
+  $authz_authnoptional->get('object/:pid/thumbnail')                            ->to('object#thumbnail', action_id => 'read', authz_deny_static => 'images/locked.png');
+  $authz_authnoptional->get('object/:pid/preview')                              ->to('object#preview', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/3d_resource')                          ->to('threed#get_resource', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/360_frame')                            ->to('viewer360#get_frame', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/360_frames/*filename')                 ->to('viewer360#get_frame_by_name', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/octets')                               ->to('octets#proxy', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/download')                             ->to('octets#download', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/get')                                  ->to('octets#get', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/comp/:ds')                             ->to('object#get_legacy_container_member', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/datastream/:dsid')                     ->to('object#get_datastream', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/resourcelink/get')                     ->to('object#get_resourcelink', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/resourcelink/redirect')                ->to('object#redirect_resourcelink', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/jsonldprivate')                        ->to('jsonldprivate#get', dsid => 'JSON-LD-PRIVATE', action_id => 'read');
+  $authz_authnoptional->get('object/:pid/rights')                               ->to('rights#get', dsid => 'RIGHTS', action_id => 'read');
 
   $authz->get('termsofuse/getagreed')                                      ->to('termsofuse#getagreed', action_id => 'termsofuse_read');
   $authz->get('users/search')                                              ->to('utils#search_users', action_id => 'users_search');

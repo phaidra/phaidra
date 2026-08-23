@@ -14,7 +14,7 @@ Routing uses authz bridges that share one `authorization#authorize` entrypoint:
 
 | Bridge | Authn | Use |
 |--------|-------|-----|
-| `$authz_optional` | Optional | Object/datastream reads (anonymous allowed when policy permits) |
+| `$authz_authnoptional` | Authn optional | Object/datastream reads (anonymous allowed when policy permits) |
 | `$authz` | Required | Object writes/creates, account/API actions, site-admin and IR-admin actions |
 | `$authenticated` | Required | Authn only — `/authz/capabilities` and `/authz/check` |
 

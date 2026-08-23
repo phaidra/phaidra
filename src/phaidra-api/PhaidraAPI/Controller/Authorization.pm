@@ -98,6 +98,7 @@ sub authorize {
     return 1;
   }
 
+  # Optional route attr: on 403, serve a static file instead of JSON (e.g. thumbnail → locked.png).
   my $deny_static = $self->_route_attr('authz_deny_static');
   if ($deny_static && $res->{status} == 403) {
     $self->res->headers->add('Pragma-Directive' => 'no-cache');
