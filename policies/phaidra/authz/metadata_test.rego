@@ -176,3 +176,17 @@ test_admin_create_uncurated_without_uploader if {
 test_thesis_matches_object_type if {
 	metadata.policy_matches({"object_type": ["https://pid.phaidra.org/vocabulary/62DN-RZ7V"]}, thesis_policy)
 }
+
+test_empty_ids_clause_matches_nothing if {
+	not metadata.clause_matches({"object_type": ["https://pid.phaidra.org/vocabulary/47QB-8QF1"]}, {
+		"field": "object_type",
+		"ids": [],
+	})
+}
+
+test_prefix_only_clause_without_ids if {
+	metadata.clause_matches({"object_type": ["https://w3id.org/kim/hcrt/text"]}, {
+		"field": "object_type",
+		"prefix": "https://w3id.org/kim/hcrt",
+	})
+}

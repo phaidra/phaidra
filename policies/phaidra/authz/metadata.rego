@@ -27,13 +27,15 @@ is_active if {
 
 values_for(md, field) := object.get(md, field, [])
 
+# Missing ids key: prefix-only clause (no id filter). Explicit ids (including []) use list match.
 ids_match(clause, value) if {
-	ids := object.get(clause, "ids", [])
-	count(ids) == 0
+	object.get(clause, "ids", null) == null
 }
 
 ids_match(clause, value) if {
-	value in object.get(clause, "ids", [])
+	ids := clause.ids
+	count(ids) > 0
+	value in ids
 }
 
 prefix_match(clause, value) if {
