@@ -22,13 +22,3 @@ docker run --rm -v "$PWD/policies:/policies" openpolicyagent/opa:latest test -v 
 docker compose up -d opa
 docker compose logs -f opa
 ```
-
-## Kubernetes
-
-Create or update the policies ConfigMap from this directory:
-
-```bash
-kubectl create configmap opa-policies-configmap \
-  --from-file=policies/ \
-  --dry-run=client -o yaml | kubectl apply -f -
-```
