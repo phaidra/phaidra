@@ -572,6 +572,7 @@ services:
       - derivates-3d:/mnt/derivates-3d:ro
       - derivates-images:/mnt/derivates-images:ro
       - derivates-expanded:/mnt/derivates-expanded:ro
+      - ./src/phaidra-api:/usr/local/phaidra/phaidra-api
     develop:
       watch:
         - path: ./src/phaidra-api
@@ -593,6 +594,7 @@ services:
     volumes:
       - s3-cache:/s3-cache
       - ./container_init/api/api-entrypoint.bash:/mnt/api-entrypoint.bash:ro
+      - ./src/phaidra-api:/usr/local/phaidra/phaidra-api
     develop:
       watch:
         - path: ./src/phaidra-api

@@ -163,7 +163,7 @@ sub _compute_roles {
       }
     }
   }
-  
+
   # Uncurated submit: Directory/env default_role (later also per-user assignments).
   # Read from live config, not cached userdata, so clearing default_role takes effect immediately.
   my $default_role = $c->app->config->{phaidra}->{default_role} // '';
