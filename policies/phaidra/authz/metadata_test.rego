@@ -128,6 +128,24 @@ test_disabled_policy_ignored if {
 		with data.phaidra.config.metadata_policies as [object.union(oer_policy, {"enabled": false})]
 }
 
+test_null_enabled_policy_ignored if {
+	not metadata.needs_approval with input as {
+		"subject": {"username": "alice", "authenticated": true, "roles": ["uploader"]},
+		"resource": {"type": "object", "metadata": oer_metadata},
+		"action": {"id": "create"},
+	}
+		with data.phaidra.config.metadata_policies as [object.union(oer_policy, {"enabled": null})]
+}
+
+test_string_false_enabled_policy_ignored if {
+	not metadata.needs_approval with input as {
+		"subject": {"username": "alice", "authenticated": true, "roles": ["uploader"]},
+		"resource": {"type": "object", "metadata": oer_metadata},
+		"action": {"id": "create"},
+	}
+		with data.phaidra.config.metadata_policies as [object.union(oer_policy, {"enabled": "false"})]
+}
+
 test_empty_policies_noop if {
 	not metadata.needs_approval with input as {
 		"subject": {"username": "alice", "authenticated": true, "roles": ["uploader"]},

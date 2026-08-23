@@ -14,7 +14,7 @@ import data.phaidra.authz.helpers
 # Repeating already-stored values (full JSON-LD POST that only changes title) is not a match.
 enabled_policies contains p if {
 	some p in object.get(helpers.cfg, "metadata_policies", [])
-	not p.enabled == false
+	object.get(p, "enabled", true) == true
 }
 
 proposed := object.get(input.resource, "metadata", {})
