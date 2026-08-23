@@ -39,8 +39,8 @@ The bridge requires each protected route to declare an **`action_id`**. Object a
 
 Institution admins tune behaviour via data bundles in `policies/<institution>/config/data.json` (default: `phaidra/config/data.json`) without editing Rego:
 
-- **Writer / uploader roles** — `writer` is granted to every authenticated user (create/edit still allowed). `uploader` is the **uncurated submit** privilege
-- **Default role** — `PHAIDRA_DEFAULT_ROLE` (Directory fills it for every user). Default `uploader` = curation off
+- **Writer / uploader roles** — `writer` (who may create) is decided by OPA from `cfg.roles.writer` (`all_authenticated`, affiliations, ldap groups, usernames). Default `phaidra` bundle sets `all_authenticated: true` (legacy parity: any authenticated user may create). Institutions may restrict it (e.g. univie uses staff/faculty + `phaidra-writers`). `uploader` is the **uncurated submit** privilege
+- **Default role** — `PHAIDRA_DEFAULT_ROLE` (PEP puts it on the subject). Default `uploader` = curation off
 - **Privileged submit forms** — catalog-fetch upload, bulk upload
 - **Metadata policies** (optional) — match JSON-LD on create/edit; default bundle has none enabled
 - **Restricted rights management** — who may set access restrictions and max expiry
@@ -48,7 +48,7 @@ Institution admins tune behaviour via data bundles in `policies/<institution>/co
 
 ### Curated submit
 
-Create is always allowed for `writer`. Whether the object is activated depends on the `uploader` role and metadata policies:
+Create is allowed when `role_granted("writer")` or `role_granted("uploader")` (or admin). Whether the object is activated depends on the `uploader` role and metadata policies:
 
 | Setup | Effect |
 |-------|--------|
@@ -56,7 +56,7 @@ Create is always allowed for `writer`. Whether the object is activated depends o
 | `PHAIDRA_DEFAULT_ROLE=uploader` + metadata policies | **Conditional.** Introducing a policy match queues the upload (`PendingApproval`); otherwise it activates. |
 | `PHAIDRA_DEFAULT_ROLE` unset or empty | **Curation on.** Nobody gets `uploader`; every create stays pending. Site admin still skips the queue. |
 
-OPA does not auto-grant `uploader` (`all_authenticated` is false). The API/Directory puts `default_role` on the subject; later user management can assign `uploader` per user the same way. Users without `uploader` can still edit (they have `writer`); they cannot skip curation on create.
+OPA does not auto-grant `uploader` (`all_authenticated` is false). The API puts `default_role` on the subject; later user management can assign `uploader` per user the same way. Users without `uploader` can still create when they have `writer` (via config); they cannot skip curation on create. Object **edit** remains owner/admin (not a global writer privilege).
 
 Activation of queued objects is `POST /object/{pid}/approve` (`approver` or admin).
 
