@@ -19,16 +19,3 @@ can_modify_restrictions if {
 	some role in helpers.cfg.restrictions.allowed_roles
 	role == "superuser"
 }
-
-restriction_valid(proposed) if {
-	not helpers.cfg.restrictions.forbidden_without_expiry
-}
-
-restriction_valid(proposed) if {
-	helpers.cfg.restrictions.forbidden_without_expiry
-	proposed.has_expiry == true
-}
-
-restriction_valid(proposed) if {
-	proposed.max_days <= helpers.cfg.restrictions.max_expiry_days
-}

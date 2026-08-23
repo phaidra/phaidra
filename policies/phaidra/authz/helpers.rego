@@ -19,8 +19,6 @@ is_read_op if {
 	input.action.id == "read"
 }
 
-action_id := input.action.id
-
 authenticated if {
 	input.subject.authenticated == true
 	input.subject.username != ""
