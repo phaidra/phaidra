@@ -16,14 +16,6 @@ can_create if {
 	helpers.role_granted("writer")
 }
 
-requires_writer_role if {
-	helpers.is_write_op
-	input.action.id != "delete"
-	not data.phaidra.authz.admin.grant
-	not data.phaidra.authz.object.grant_rw
-	not helpers.role_granted("writer")
-}
-
 can_delete if {
 	data.phaidra.authz.admin.grant
 }
