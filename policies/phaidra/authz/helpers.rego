@@ -46,8 +46,11 @@ has_role(role) if {
 	role in input.subject.roles
 }
 
+# PEP may assign role names on the subject; only honor them when defined in cfg.roles.
 role_granted(role) if {
 	role in input.subject.roles
+	role_cfg := cfg.roles[role]
+	role_cfg
 }
 
 role_granted(role) if {
