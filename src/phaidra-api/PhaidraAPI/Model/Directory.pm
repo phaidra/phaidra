@@ -738,31 +738,11 @@ sub get_name {
     return $username;
   }
 
-  my $entry = $self->getLDAPEntryForUser($c, $username);
+  my $user_data = $self->get_user_data($c, $username);
+  my $fname     = $user_data->{firstname};
+  my $lname     = $user_data->{lastname};
 
-  my $fname;
-  my $lname;
-
-  #$c->app->log->debug("XXXXXXXXXXXX ".Dumper($entry));
-
-  if ($entry) {
-    foreach my $attr (@{$entry->{'asn'}->{'attributes'}}) {
-      my $attrtype = $attr->{'type'};
-      my @attvals  = @{$attr->{'vals'}};
-      foreach my $val (@attvals) {
-        if ($attrtype eq 'givenName') {
-          $fname = $val;
-        }
-        if ($attrtype eq 'sn') {
-          $lname = $val;
-        }
-      }
-
-      last if ($fname && $lname);
-    }
-  }
-
-  return $fname . ' ' . $lname;
+  return join(' ', grep {defined $_ && $_ ne ''} ($fname, $lname));
 }
 
 sub get_email {
@@ -774,19 +754,8 @@ sub get_email {
     return 'admin.phaidra@univie.ac.at';
   }
 
-  my $entry = $self->getLDAPEntryForUser($c, $username);
-
-  if ($entry) {
-    foreach my $attr (@{$entry->{'asn'}->{'attributes'}}) {
-      my $attrtype = $attr->{'type'};
-      my @attvals  = @{$attr->{'vals'}};
-      foreach my $val (@attvals) {
-        if ($attrtype eq 'mail') {
-          return $val;
-        }
-      }
-    }
-  }
+  my $user_data = $self->get_user_data($c, $username);
+  return $user_data->{email};
 }
 
 sub create_scim_jwt {
