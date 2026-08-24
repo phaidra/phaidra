@@ -84,7 +84,7 @@
                 </v-autocomplete>
               </v-col>
               <v-col v-if="enableTypeSelect" cols="2">
-                <v-radio-group v-model="typeModel" class="mt-0" @update:model-value="$emit('change-type', $event)">
+                <v-radio-group v-model="typeModel" class="mt-0" @update:model-value="$emit('change-type', typeModel)">
                   <v-radio color="primary" :label="$t('Personal')" :value="'schema:Person'"></v-radio>
                   <v-radio color="primary" :label="$t('Corporate')" :value="'schema:Organization'"></v-radio>
                 </v-radio-group>
@@ -466,7 +466,7 @@ import { createSelectMenuMaxWidthController } from '../../composables/selectMenu
 
 export default {
   name: 'p-i-entity-extended',
-  mixins: [ vocabulary, fieldproperties, validationrules ],
+  mixins: [vocabulary, fieldproperties, validationrules],
   components: {
     OrgUnitsTreeDialog,
     RorSearch
@@ -724,11 +724,11 @@ export default {
       default: true
     }
   },
-  created () {
+  created() {
     this.formRowSelectMenu = createSelectMenuMaxWidthController()
   },
   computed: {
-    roleAutocompleteLines () {
+    roleAutocompleteLines() {
       if (this.showIds && this.showDefinitions) return 'three'
       if (this.showIds || this.showDefinitions) return 'two'
       return 'one'
@@ -745,15 +745,15 @@ export default {
     isMandatory: function () {
       return this.required === true
     },
-    identifierTypeId () {
+    identifierTypeId() {
       if (!this.identifierType) return ''
       if (typeof this.identifierType === 'string') return this.identifierType
       return this.identifierType['@id'] || ''
     },
-    identifierTypeTerm () {
+    identifierTypeTerm() {
       return this.getTerm(this.identifierVocabulary, this.identifierTypeId || this.identifierType)
     },
-    roleTerm () {
+    roleTerm() {
       return this.getTerm(this.roleVocabulary, this.role)
     },
     identifierTypePlaceholder: function () {
@@ -795,7 +795,7 @@ export default {
       return groupedUnits.length === 0 ? units : groupedUnits
     }
   },
-  data () {
+  data() {
     return {
       loading: false,
       disabled: false,
@@ -807,13 +807,13 @@ export default {
     }
   },
   methods: {
-    roleItemTitle (item) {
+    roleItemTitle(item) {
       const raw = item?.raw !== undefined ? item.raw : item
       if (!raw || !raw['@id']) return ''
       const s = this.getLocalizedTermLabel(this.roleVocabulary, raw['@id'])
       return typeof s === 'string' ? s.replace(/<[^>]+>/g, '') : String(s || '')
     },
-    identifierTypeItemTitle (item) {
+    identifierTypeItemTitle(item) {
       const raw = item?.raw !== undefined ? item.raw : item
       if (!raw || !raw['@id']) return ''
       const s = this.getLocalizedTermLabel(this.identifierVocabulary, raw['@id'])
@@ -856,7 +856,7 @@ export default {
       }
     })
   },
-  beforeUnmount () {
+  beforeUnmount() {
     this.formRowSelectMenu.disconnect()
   }
 }
@@ -866,6 +866,7 @@ export default {
 .v-btn {
   margin: 0;
 }
+
 .role-definition {
   white-space: unset;
 }
