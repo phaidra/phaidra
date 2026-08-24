@@ -72,6 +72,7 @@
         </v-row>
         <v-divider class="my-2"></v-divider>
       </template>
+      <!-- TODO: Uncomment this when setting the capabilities will be possible in user management
       <template v-if="user.authzForms && user.authzForms.catalogfetchupload">
         <v-row class="my-6" justify="start">
           <div class="d-flex flex-row ml-3">
@@ -95,7 +96,7 @@
           </div>
         </v-row>
         <v-divider class="my-2"></v-divider>
-      </template>
+      </template> -->
       <template v-if="instanceconfig.uwmsubmit">
         <v-row class="my-6" justify="start">
           <v-col cols="12">
@@ -126,6 +127,8 @@
         </v-row>
         <v-divider class="my-2"></v-divider>
       </template>
+      <!-- 
+      // TODO: Uncomment this when setting the capabilities will be possible in user management
       <template v-if="user.authzForms && user.authzForms.bulkupload">
         <v-row class="my-6" justify="start">
           <div class="d-flex flex-row ml-3">
@@ -140,7 +143,7 @@
           </div>
         </v-row>
         <v-divider class="my-2"></v-divider>
-      </template>
+      </template> -->
       <v-row class="my-6" justify="start">
         <div class="d-flex flex-row ml-3">
           <v-dialog class="pb-4" v-model="templateDialog" width="900px">
