@@ -44,7 +44,7 @@ sub get_resource {
 
   # Check authorization
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my $authzres    = $authz_model->check_rights($self, $pid, 'ro');
+  my $authzres    = $authz_model->check_rights($self, $pid, 'read');
   if ($authzres->{status} != 200) {
     $self->render(json => $authzres, status => $authzres->{status});
     return;

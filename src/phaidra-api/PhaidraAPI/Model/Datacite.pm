@@ -64,7 +64,7 @@ sub get {
 
   if ($r->{dshash}->{'MODS'}) {
 
-    my $r1 = $object_model->get_datastream($c, $pid, 'MODS', $username, $password, 1);
+    my $r1 = $object_model->get_datastream($c, $pid, 'MODS');
     if ($r1->{status} ne 200) {
       return $r1;
     }
@@ -76,7 +76,7 @@ sub get {
 
   if ($r->{dshash}->{'UWMETADATA'}) {
 
-    my $r1 = $object_model->get_datastream($c, $pid, 'UWMETADATA', $username, $password, 1);
+    my $r1 = $object_model->get_datastream($c, $pid, 'UWMETADATA');
     if ($r1->{status} ne 200) {
       return $r1;
     }
@@ -89,7 +89,7 @@ sub get {
   if ($r->{dshash}->{'JSON-LD'}) {
 
     my $jsonld_model = PhaidraAPI::Model::Jsonld->new;
-    my $r_jsonld     = $jsonld_model->get_object_jsonld_parsed($c, $pid, $c->app->config->{phaidra}->{intcallusername}, $c->app->config->{phaidra}->{intcallpassword});
+    my $r_jsonld     = $jsonld_model->get_object_jsonld_parsed($c, $pid, $c->app->config->{fedora}->{adminuser}, $c->app->config->{fedora}->{adminpass});
     if ($r_jsonld->{status} ne 200) {
       return $r_jsonld;
     }

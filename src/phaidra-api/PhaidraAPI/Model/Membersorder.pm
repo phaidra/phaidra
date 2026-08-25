@@ -56,7 +56,7 @@ sub get_object_collectionorder_json {
   my ($self, $c, $pid, $username, $password) = @_;
 
   my $object_model = PhaidraAPI::Model::Object->new;
-  my $res          = $object_model->get_datastream($c, $pid, 'COLLECTIONORDER', $username, $password, 1);
+  my $res          = $object_model->get_datastream($c, $pid, 'COLLECTIONORDER');
   if ($res->{status} ne 200) {
     return $res;
   }

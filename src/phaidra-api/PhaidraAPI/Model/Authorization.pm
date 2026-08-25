@@ -8,19 +8,118 @@ use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Rights;
 use PhaidraAPI::Model::Fedora;
 use PhaidraAPI::Model::Directory;
-
-my %private_datastreams = (
-  'RIGHTS'          => 1,
-  'JSON-LD-PRIVATE' => 1
-);
-
-sub is_private_ds {
-  my ($self, $c, $dsid) = @_;
-
-  return $private_datastreams{$dsid};
-}
+use PhaidraAPI::Model::Policy::Context;
+use PhaidraAPI::Model::Policy::Opa;
+use PhaidraAPI::Model::Policy::Audit;
 
 sub check_rights {
+  my ($self, $c, $pid, $action_id, $opts) = @_;
+  $opts //= {};
+
+  $action_id = $self->_normalize_action_id($action_id, $opts);
+  $opts      = $self->_enrich_endpoint_opts($c, $opts);
+
+  my $cache_key = $self->_decision_cache_key('object', $pid, $action_id, $opts);
+  if (my $cached = $self->_stash_cache_get($c, $cache_key)) {
+    $c->app->log->debug("Authz cache hit action_id[$action_id] pid[$pid]");
+    return $cached;
+  }
+
+  my $context_model = PhaidraAPI::Model::Policy::Context->new;
+  my $input         = $context_model->build_object($c, $pid, $action_id, $opts);
+
+  my $opa_model = PhaidraAPI::Model::Policy::Opa->new;
+  my $decision  = $opa_model->evaluate($c, $input);
+
+  my $audit_model = PhaidraAPI::Model::Policy::Audit->new;
+  $audit_model->log($c, $input, $decision);
+
+  my $legacy = $opa_model->to_legacy_response($decision);
+  $self->_stash_cache_set($c, $cache_key, $legacy);
+  return $legacy;
+}
+
+# Map legacy r/ro/w/rw (and optional opts.action_id) to canonical action ids.
+sub _normalize_action_id {
+  my ($self, $action_id, $opts) = @_;
+
+  if ($opts->{action_id}) {
+    return $opts->{action_id};
+  }
+
+  my %legacy = (
+    r  => 'read',
+    ro => 'read',
+    w  => 'write',
+    rw => 'write',
+  );
+
+  return $legacy{$action_id} if exists $legacy{$action_id // ''};
+  return $action_id // 'read';
+}
+
+sub check_action {
+  my ($self, $c, $action_id, $opts) = @_;
+  $opts //= {};
+
+  my $cache_key = $self->_decision_cache_key('action', '', $action_id, $opts);
+  if (my $cached = $self->_stash_cache_get($c, $cache_key)) {
+    $c->app->log->debug("Authz cache hit action_id[$action_id]");
+    return $cached;
+  }
+
+  my $context_model = PhaidraAPI::Model::Policy::Context->new;
+  my $input         = $context_model->build_action_only($c, $action_id, $opts);
+
+  my $opa_model = PhaidraAPI::Model::Policy::Opa->new;
+  my $decision  = $opa_model->evaluate($c, $input);
+
+  my $audit_model = PhaidraAPI::Model::Policy::Audit->new;
+  $audit_model->log($c, $input, $decision);
+
+  $self->_stash_cache_set($c, $cache_key, $decision);
+  return $decision;
+}
+
+# Prefer explicit endpoint; else Mojolicious controller#action from stash.
+sub _enrich_endpoint_opts {
+  my ($self, $c, $opts) = @_;
+  $opts //= {};
+  return $opts if defined $opts->{endpoint} && $opts->{endpoint} ne '';
+  return $opts unless ref($c) && $c->can('stash');
+
+  my $controller = $c->stash('controller');
+  my $action     = $c->stash('action');
+  if (defined $controller && $controller ne '' && defined $action && $action ne '') {
+    $opts->{endpoint} = "$controller#$action";
+  }
+  return $opts;
+}
+
+# Request-scoped: bridge + controller often check the same pid/action twice.
+sub _decision_cache_key {
+  my ($self, $kind, $pid, $action_id, $opts) = @_;
+  $opts //= {};
+  my $dsid     = $opts->{dsid}     // '';
+  my $endpoint = $opts->{endpoint} // '';
+  my $meta     = ($opts->{metadata} || $opts->{existing_metadata}) ? 'meta' : '';
+  return join('|', "authz_$kind", $pid // '', $action_id // '', $dsid, $endpoint, $meta);
+}
+
+sub _stash_cache_get {
+  my ($self, $c, $key) = @_;
+  my $cache = $c->stash->{authz_decision_cache} // {};
+  return $cache->{$key};
+}
+
+sub _stash_cache_set {
+  my ($self, $c, $key, $value) = @_;
+  $c->stash->{authz_decision_cache} //= {};
+  $c->stash->{authz_decision_cache}->{$key} = $value;
+  return $value;
+}
+
+sub check_rights_legacy {
   no warnings 'uninitialized';
   my ($self, $c, $pid, $op) = @_;
 
@@ -130,7 +229,7 @@ sub check_rights {
   # if the object has non-empty RIGHTS, it's restricted.
   # Only users/groups/orgunits in the list are allowed to READ
   my $rights_model = PhaidraAPI::Model::Rights->new;
-  my $rightsres    = $rights_model->get_object_rights_json($c, $pid, $c->app->config->{phaidra}->{intcallusername}, $c->app->config->{phaidra}->{intcallpassword});
+  my $rightsres    = $rights_model->get_object_rights_json($c, $pid, $c->app->config->{fedora}->{adminuser}, $c->app->config->{fedora}->{adminpass});
   if ($rightsres->{status} ne 200) {
     if ($rightsres->{status} eq 404) {
       $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] GRANTED: no rights datastream");
@@ -145,12 +244,6 @@ sub check_rights {
     return $res;
   }
   my $rights = $rightsres->{rights};
-
-  # see PhaidraAPI::Model::Rights
-  # 'username'   => 1,
-  # 'department' => 1,
-  # 'faculty'    => 1,
-  # 'gruppe'     => 1,
 
   my $rightsAreEmpty = 1;
 
@@ -257,11 +350,6 @@ sub check_rights {
     }
   }
 
-  # these are no more supported
-  # but that does not mean the object should be open
-  # 'spl'        => 1,
-  # 'kennzahl'   => 1,
-  # 'perfunk'    => 1
   if (exists($rights->{'spl'}) or exists($rights->{'kennzahl'}) or exists($rights->{'perfunk'})) {
     $rightsAreEmpty = 0;
     $c->app->log->info("Authz op[$op] pid[$pid] currentuser[$currentuser] DENIED: deprecated definition");

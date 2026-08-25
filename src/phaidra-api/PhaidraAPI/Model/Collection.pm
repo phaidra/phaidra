@@ -49,10 +49,16 @@ sub create {
 
   $c->app->log->debug("Activating object");
 
-  # activate
-  my $res_act = $object_model->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
-  if ($res_act->{status} eq 200) {
-    $c->app->log->info("Object successfully created pid[$pid] cmodel[cmodel:Collection]");
+  # activate (unless curated submit requires approval)
+  my $initial_state = $c->stash->{curated_initial_state} // 'Inactive';
+  if ($initial_state eq 'PendingApproval') {
+    $c->app->log->info("Object created pid[$pid] awaiting approval");
+  }
+  else {
+    my $res_act = $object_model->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
+    if ($res_act->{status} eq 200) {
+      $c->app->log->info("Object successfully created pid[$pid] cmodel[cmodel:Collection]");
+    }
   }
 
   $c->app->log->debug("Adding members");
@@ -96,7 +102,7 @@ sub create {
   if (exists($metadata->{'ownerid'})) {
     $c->app->log->debug("Changing ownerid to " . $metadata->{'ownerid'});
     my $authorized = 0;
-    if ( ($username eq $c->app->config->{phaidra}->{intcallusername})
+    if ( ($username eq $c->app->config->{fedora}->{adminuser})
       || ($username eq $c->app->config->{phaidra}->{adminusername}))
     {
       $authorized = 1;
@@ -205,7 +211,7 @@ sub get_members {
         # FIXME user membersorder model
 
         my $object_model = PhaidraAPI::Model::Object->new;
-        my $ores         = $object_model->get_datastream($c, $pid, 'COLLECTIONORDER', undef, undef, 1);
+        my $ores         = $object_model->get_datastream($c, $pid, 'COLLECTIONORDER');
         if ($ores->{status} ne 200) {
           $c->app->log->error("Cannot get COLLECTIONORDER for pid: $pid and username: " . $c->stash->{basic_auth_credentials}->{username});
         }

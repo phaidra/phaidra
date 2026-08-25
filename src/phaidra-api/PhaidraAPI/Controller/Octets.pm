@@ -24,8 +24,18 @@ sub proxy {
   $object_model->proxy_datastream($self, $pid, 'OCTETS', $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
 }
 
+sub download {
+  my $self = shift;
+  return $self->_serve('download');
+}
+
 sub get {
   my $self = shift;
+  return $self->_serve('get');
+}
+
+sub _serve {
+  my ($self, $track_action) = @_;
 
   my $res = {alerts => [], status => 200};
 
@@ -34,14 +44,9 @@ sub get {
     $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
     return;
   }
-  my $operation = $self->stash('operation');
-  unless (defined($operation)) {
-    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined operation'}]}, status => 400);
-    return;
-  }
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my $authzres    = $authz_model->check_rights($self, $pid, 'ro');
+  my $authzres    = $authz_model->check_rights($self, $pid, 'read');
   if ($authzres->{status} != 200) {
     $res->{status} = $authzres->{status};
     push @{$res->{alerts}}, @{$authzres->{alerts}} if scalar @{$authzres->{alerts}} > 0;
@@ -106,9 +111,9 @@ sub get {
 
   $filename = utf8::is_utf8($filename) ? encode('UTF-8', $filename) : $filename;
 
-  $self->app->log->debug("operation[$operation] trywebversion[" . ($trywebversion ? $trywebversion : 'undef') . "] pid[$pid] path[$path] mimetype[$mimetype] filename[$filename] size[$size]");
+  $self->app->log->debug("action[$track_action] trywebversion[" . ($trywebversion ? $trywebversion : 'undef') . "] pid[$pid] path[$path] mimetype[$mimetype] filename[$filename] size[$size]");
 
-  if ($operation eq 'download') {
+  if ($track_action eq 'download') {
     $self->res->headers->content_disposition("attachment;filename=\"$filename\"");
   }
   else {
@@ -146,7 +151,7 @@ sub get {
   }
 
   my $u_model = PhaidraAPI::Model::Util->new;
-  $u_model->track_action($self, $pid, $operation);
+  $u_model->track_action($self, $pid, $track_action);
 
   $self->res->content->asset($asset);
   $self->rendered($res->{status});

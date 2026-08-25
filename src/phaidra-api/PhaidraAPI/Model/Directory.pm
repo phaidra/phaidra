@@ -571,6 +571,11 @@ sub _authenticate() {
 
   # Determine if we have a usable username for rate limiting
   my $has_username = defined($username) && length($username);
+  unless ($has_username) {
+    my $res = {alerts => [{type => 'error', msg => 'no credentials found'}], status => 401};
+    $c->stash({phaidra_auth_result => $res});
+    return undef;
+  }
 
   # Get client IP address for rate limiting
   my $client_ip = $c->tx->remote_address;
@@ -686,6 +691,14 @@ sub authenticate() {
   my $password = shift;
 
   my $res = {alerts => [], status => 500};
+
+  unless (defined($username) && $username ne '') {
+    $res->{status} = 401;
+    $res->{alerts} = [{type => 'error', msg => 'no credentials found'}];
+    $c->stash({phaidra_auth_result => $res});
+    return undef;
+  }
+
   for my $u (@{$c->app->config->{fedora}->{fedoraadmins}}) {
     if (($u->{username} eq $username) && ($u->{password} eq $password)) {
       $c->app->log->debug("auth: admin login");
@@ -803,7 +816,13 @@ sub get_user_data {
   return {} unless (defined($username));
 
   if ($username eq $c->app->config->{phaidra}->{adminusername}) {
-    return {username => $c->app->config->{phaidra}->{adminusername}, firstname => 'PHAIDRA', lastname => 'Admin', isadmin => 1};
+    return {
+      username  => $c->app->config->{phaidra}->{adminusername},
+      firstname => 'PHAIDRA',
+      lastname  => 'Admin',
+      isadmin   => 1,
+      roles     => $self->_instance_roles($c),
+    };
   }
 
   my $cachekey = "get_user_data_$username";
@@ -825,6 +844,9 @@ sub get_user_data {
     $c->app->chi->set($cachekey, $cacheval, '2 hours');
     $cacheval = $c->app->chi->get($cachekey);
   }
+
+  # default_role is instance config, not LDAP — apply after cache so env changes take effect.
+  $cacheval->{roles} = $self->_instance_roles($c) if $cacheval;
 
   return $cacheval;
 }
@@ -961,6 +983,17 @@ sub _get_user_data {
   $c->app->log->info("get_user_data: " . $c->app->dumper($res));
 
   return $res;
+}
+
+# Instance-wide role from env/config (PHAIDRA_DEFAULT_ROLE). Later: user management.
+sub _instance_roles {
+  my ($self, $c) = @_;
+  my @roles;
+  my $default_role = $c->app->config->{phaidra}->{default_role} // '';
+  if ($default_role ne '') {
+    push @roles, $default_role;
+  }
+  return \@roles;
 }
 
 sub is_superuser {

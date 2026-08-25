@@ -14,6 +14,16 @@ export default defineNuxtRouteMiddleware(async (to) => {
     await store.$initBulkUpload()
   }
 
+  // TODO: Uncomment this when setting the capabilities will be possible in user management
+  // if (!store.state?.user?.authzForms && store.dispatch) {
+  //   await store.dispatch('getAuthzCapabilities')
+  // }
+
+  // const forms = store.state?.user?.authzForms || {}
+  // if (forms.bulkupload === false) {
+  //   return navigateTo('/')
+  // }
+
   const getCurrentStep = store.getters['bulk-upload/getCurrentStepFromRoute']
   const canAccessStep = store.getters['bulk-upload/canAccessStep']
   if (typeof getCurrentStep !== 'function' || typeof canAccessStep !== 'function') return

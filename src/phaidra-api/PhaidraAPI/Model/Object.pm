@@ -243,11 +243,11 @@ sub info {
   $info->{writerights} = 0;
 
   my $authz = PhaidraAPI::Model::Authorization->new;
-  my $wr    = $authz->check_rights($c, $pid, 'w');
+  my $wr    = $authz->check_rights($c, $pid, 'write');
   if ($wr->{status} == 200) {
     $info->{writerights} = 1;
   }
-  my $rr = $authz->check_rights($c, $pid, 'r');
+  my $rr = $authz->check_rights($c, $pid, 'read');
   if ($rr->{status} == 200) {
     $info->{readrights} = 1;
   }
@@ -717,24 +717,30 @@ sub create_simple {
     return $res;
   }
 
-  # activate
-  $r = $self->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
-  if ($r->{status} ne 200) {
-    $res->{status} = $r->{status};
-    foreach my $a (@{$r->{alerts}}) {
-      unshift @{$res->{alerts}}, $a;
-    }
-    unshift @{$res->{alerts}}, {type => 'error', msg => 'Error activating object'};
-    return $res;
+  # activate (unless curated submit requires approval)
+  my $initial_state = $c->stash->{curated_initial_state} // 'Inactive';
+  if ($initial_state eq 'PendingApproval') {
+    $c->app->log->info("Object created pid[$pid] awaiting approval");
   }
   else {
-    $c->app->log->info("Object successfully created pid[$pid] cmodel[$cmodel] took[" . tv_interval($t0) . "]");
+    $r = $self->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
+    if ($r->{status} ne 200) {
+      $res->{status} = $r->{status};
+      foreach my $a (@{$r->{alerts}}) {
+        unshift @{$res->{alerts}}, $a;
+      }
+      unshift @{$res->{alerts}}, {type => 'error', msg => 'Error activating object'};
+      return $res;
+    }
+    else {
+      $c->app->log->info("Object successfully created pid[$pid] cmodel[$cmodel] took[" . tv_interval($t0) . "]");
+    }
   }
 
   if (exists($metadata->{metadata}->{'ownerid'})) {
     $c->app->log->info("Changing ownerid to " . $metadata->{metadata}->{'ownerid'});
     my $authorized = 0;
-    if ( ($username eq $c->app->config->{phaidra}->{intcallusername})
+    if ( ($username eq $c->app->config->{fedora}->{adminuser})
       || ($username eq $c->app->config->{phaidra}->{adminusername}))
     {
       $authorized = 1;
@@ -987,25 +993,31 @@ sub create_container {
     }
   }
 
-  # activate
-  $r = $self->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
-  if ($r->{status} ne 200) {
-    $c->app->log->error("Error activating pid[$pid]");
-    $res->{status} = $r->{status};
-    foreach my $a (@{$r->{alerts}}) {
-      unshift @{$res->{alerts}}, $a;
-    }
-    unshift @{$res->{alerts}}, {type => 'error', msg => 'Error activating object'};
-    return $res;
+  # activate (unless curated submit requires approval)
+  my $initial_state = $c->stash->{curated_initial_state} // 'Inactive';
+  if ($initial_state eq 'PendingApproval') {
+    $c->app->log->info("Object created pid[$pid] awaiting approval");
   }
   else {
-    $c->app->log->info("Object successfully created pid[$pid] cmodel[cmodel:Container]");
+    $r = $self->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
+    if ($r->{status} ne 200) {
+      $c->app->log->error("Error activating pid[$pid]");
+      $res->{status} = $r->{status};
+      foreach my $a (@{$r->{alerts}}) {
+        unshift @{$res->{alerts}}, $a;
+      }
+      unshift @{$res->{alerts}}, {type => 'error', msg => 'Error activating object'};
+      return $res;
+    }
+    else {
+      $c->app->log->info("Object successfully created pid[$pid] cmodel[cmodel:Container]");
+    }
   }
 
   if (exists($metadata->{metadata}->{'ownerid'})) {
     $c->app->log->debug("Changing ownerid to " . $metadata->{metadata}->{'ownerid'});
     my $authorized = 0;
-    if ( ($username eq $c->app->config->{phaidra}->{intcallusername})
+    if ( ($username eq $c->app->config->{fedora}->{adminuser})
       || ($username eq $c->app->config->{phaidra}->{adminusername}))
     {
       $authorized = 1;
@@ -1299,16 +1311,14 @@ sub save_metadata {
 }
 
 sub get_datastream {
-  my ($self, $c, $pid, $dsid, $username, $password, $intcallauth) = @_;
-
-  my $res = {alerts => [], status => 200};
+  my ($self, $c, $pid, $dsid) = @_;
 
   my $fedora_model = PhaidraAPI::Model::Fedora->new;
   return $fedora_model->getDatastream($c, $pid, $dsid);
 }
 
 sub proxy_datastream {
-  my ($self, $c, $pid, $dsid, $username, $password, $intcallauth) = @_;
+  my ($self, $c, $pid, $dsid, $username, $password) = @_;
 
   my $res = {alerts => [], status => 200};
 
@@ -1468,6 +1478,26 @@ sub create_empty {
 
   my $fedora_model = PhaidraAPI::Model::Fedora->new;
   return $fedora_model->createEmpty($c, $username);
+}
+
+sub approve {
+  my $self     = shift;
+  my $c        = shift;
+  my $pid      = shift;
+  my $username = shift;
+  my $password = shift;
+
+  my $res = {alerts => [], status => 200};
+
+  my $authz_model = PhaidraAPI::Model::Authorization->new;
+  my $authz_res   = $authz_model->check_rights($c, $pid, 'approve');
+  unless ($authz_res->{status} == 200) {
+    $res->{status} = 403;
+    push @{$res->{alerts}}, {type => 'error', msg => 'Forbidden'};
+    return $res;
+  }
+
+  return $self->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
 }
 
 sub add_relationship {

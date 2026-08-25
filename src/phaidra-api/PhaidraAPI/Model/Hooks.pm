@@ -550,7 +550,7 @@ sub _create_handle {
     );
 
     my $object_model = PhaidraAPI::Model::Object->new;
-    my $idres        = $object_model->add_relationship($c, $pid, 'http://purl.org/dc/terms/identifier', "hdl:$hdl", $c->app->config->{phaidra}->{intcallusername}, $c->app->config->{phaidra}->{intcallpassword});
+    my $idres        = $object_model->add_relationship($c, $pid, 'http://purl.org/dc/terms/identifier', "hdl:$hdl", $c->app->config->{fedora}->{adminuser}, $c->app->config->{fedora}->{adminpass});
     if ($idres->{status} eq 200) {
       $c->app->log->info("_create_handle: added handle relationship hdl[$hdl]");
     }

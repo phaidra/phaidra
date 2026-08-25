@@ -1,0 +1,52 @@
+{
+  "institution": "default",
+  "admin_username": "",
+  "shib_superuser_affiliation": "",
+  "roles": {
+    "writer": {
+      "all_authenticated": true,
+      "usernames": [],
+      "affiliations": [],
+      "ldap_groups": []
+    },
+    "uploader": {
+      "all_authenticated": false,
+      "usernames": [],
+      "affiliations": [],
+      "ldap_groups": []
+    },
+    "approver": {
+      "usernames": [],
+      "affiliations": [],
+      "ldap_groups": []
+    },
+    "librarian": {
+      "usernames": [],
+      "affiliations": [],
+      "ldap_groups": []
+    },
+    "power_user": {
+      "usernames": [],
+      "affiliations": [],
+      "ldap_groups": []
+    }
+  },
+  "submit_forms": {
+    "catalogfetchupload": {
+      "roles": ["librarian", "admin"]
+    },
+    "bulkupload": {
+      "roles": ["power_user", "admin"]
+    }
+  },
+  "restrictions": {
+    "max_expiry_days": 365,
+    "allowed_roles": ["owner", "admin", "superuser"],
+    "forbidden_without_expiry": false
+  },
+  "delete": {
+    "self_delete_roles": ["owner", "admin", "superuser"],
+    "require_enabledelete": true
+  },
+  "metadata_policies": []
+}

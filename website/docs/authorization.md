@@ -1,26 +1,166 @@
-# Authorization
+# OPA Authorization
 
-Following rules apply when authorizing an operation on a digital object:
+PHAIDRA uses [Open Policy Agent (OPA)](https://www.openpolicyagent.org/) for authorization decisions. Authentication (who you are) remains in the API; authorization (what you may do) is evaluated by OPA policies.
 
-* Any authenticated user can upload objects.
+## Architecture
 
-* The account which uploaded the object is declared as the **owner** of the object. What this means in the legal sense is typically explained in terms of use which vary from institution to institution, here we will only consider what it means in terms of repository authorisation mechanisms.
+- **PEP** (Policy Enforcement Point): `phaidra-api` Mojolicious bridges and controllers
+- **PDP** (Policy Decision Point): OPA service
+- **PAP** (Policy Administration Point): Git-managed Rego + institution data bundles
 
-* Part of the authentication process is usually fetching various attributes of the users. What attributes are fetched depends on the authentication mechanism which was integrated, but typically, these attributes are relevant for authorization: 
-    * username
-    * admin role
-    * superuser role
-    * groups
-    * affiliations
+The API assembles a JSON **input document** (subject, resource, action, environment, config) and POSTs it to OPA at `/v1/data/phaidra/authz/allow`.
 
-* Only **admin**, **superuser** or the **owner** of the object can edit objects metadata and access restrictions, change it's relationships, or delete the object.
+Routing uses authz bridges that share one `authorization#authorize` entrypoint:
 
-* All **active** objects are visible to everybody. If access restrictions are defined, datastreams like OCTETS, FULLTEXT and WEBVERSION or any custom datastreams are only accessible for users defined in the restrictions (using usernames, groups or affiliations). However, basic object properties, relationships and metadata datastreams (JSON-LD, UWMETADATA, MODS, ANNOTATIONS, etc) are still visible for everyone.
+| Bridge | Authn | Use |
+|--------|-------|-----|
+| `$authz_authnoptional` | Authn optional | Object/datastream reads (anonymous allowed when policy permits) |
+| `$authz` | Required | Object writes/creates, account/API actions, site-admin and IR-admin actions |
+| `$authenticated` | Required | Authn only — `/authz/capabilities` and `/authz/check` |
 
-* **Inactive** objects are only accessible/visible for **admin**, **superuser** or for the **owner**.
+The bridge requires each protected route to declare an **`action_id`**. Object actions (`read`, `write`, `delete`, …) need a Fedora `pid`. Account actions (`settings_read`, `group_write`, `list_read`, …) are evaluated without an object; default policy allows any authenticated user (parity with the former `$authenticated`-only routes). Site-admin actions (`admin_*`) require the configured PHAIDRA admin username; IR-admin actions (`ir_admin_*`) require the user to match public config **`iraccount`** (a dedicated username, not a role from `cfg.roles`).
 
-* Only **admin** and accounts defined in configuration are allowed to change the ownership of an object.
+`GET /object/{pid}/datastream/{dsid}` is the unified datastream read: optional credentials, `dsid` in the path. Policy marks some dsids as private (`RIGHTS`, `JSON-LD-PRIVATE`); anonymous requests are denied for those, while owners/admins (with credentials) are allowed. However, content datastreams are usually queried via /get or /download, whereas metadata via /metadata (JSON formatted).
 
-## Future work
+## Default behaviour
 
-It is planned to develop the possibility to restrict upload only to users with specific attributes.
+| Role / rule | Effect |
+|-------------|--------|
+| Admin / superuser | Full read/write on all objects; site-admin actions (`admin_*`) require configured admin username |
+| IR admin (`iraccount` username) | IR workflow actions (`ir_admin_*`) |
+| Owner | Full read/write on owned objects |
+| Anonymous | Read active objects without RIGHTS restrictions; public metadata (JSON-LD, …) always readable when Active |
+| RIGHTS datastream | Restricts **content** reads (octets, preview, download, thumbnail) — not public metadata |
+| Private datastreams | `RIGHTS`, `JSON-LD-PRIVATE` — owner/admin only |
+| Inactive objects | Visible only to owner, admin, superuser |
+| Delete | owner/superuser self-delete only when private config `enabledelete` is on (default off); site admin may always delete |
+
+## Further capabilities (require customized configuration)
+
+Institution admins tune behaviour via data bundles in `policies/<institution>/config/data.json` (default: `phaidra/config/data.json`) without editing Rego:
+
+- **Writer / uploader roles** — `writer` (who may create) is decided by OPA from `cfg.roles.writer` (`all_authenticated`, affiliations, ldap groups, usernames). Default `phaidra` bundle sets `all_authenticated: true` (any authenticated user may create objects). Institutions may restrict it. `uploader` is the **uncurated submit** privilege
+- **Default role** — `PHAIDRA_DEFAULT_ROLE` (PEP puts it on the subject). Default `uploader` = curation off
+- **Privileged submit forms** — catalog-fetch upload, bulk upload
+- **Metadata policies** (optional) — match JSON-LD on create/edit; default bundle has none enabled
+- **Restricted rights management** — who may set access restrictions and max expiry
+
+### Curated submit (UI part not yet implemented)
+
+Create is allowed when `role_granted("writer")` or `role_granted("uploader")` (or admin). Whether the object is activated depends on the `uploader` role and metadata policies:
+
+| Setup | Effect |
+|-------|--------|
+| `PHAIDRA_DEFAULT_ROLE=uploader`, empty `metadata_policies` | **Curation off** (default). Every user can submit uncurated. |
+| `PHAIDRA_DEFAULT_ROLE=uploader` + metadata policies | **Conditional.** Introducing a policy match queues the upload (`PendingApproval`); otherwise it activates. |
+| `PHAIDRA_DEFAULT_ROLE` unset or empty | **Curation on.** Nobody gets `uploader`; every create stays pending. Site admin still skips the queue. |
+
+OPA does not auto-grant `uploader` (`all_authenticated` is false). The API puts `default_role` on the subject; later user management can assign `uploader` per user the same way. Users without `uploader` can still create when they have `writer` (via config); they cannot skip curation on create. Object **edit** remains owner/admin (not a global writer privilege).
+
+Activation of queued objects is `POST /object/{pid}/approve` (`approver` or admin).
+
+### Optional metadata policies
+
+The PEP flattens submitted JSON-LD (`edm:hasType`, `edm:rights`) into `resource.metadata` and, on edit, the stored JSON-LD into `resource.existing_metadata`. It evaluates `metadata_policies` from the data bundle. **Default is an empty list** (no extra constraints).
+
+A policy applies only when the **proposed** payload newly matches (`introducing`): stored metadata did not already match. A full JSON-LD POST that only changes title (and still carries the same object type / licence) is not introducing.
+
+When a policy is introduced and the user is not in `exempt_roles`:
+
+| Action / object state | Effect |
+|-----------------------|--------|
+| `create`, or `write` on Inactive | Allow; keep pending approval (do not activate) |
+| `write` on Active | Deny — cannot change *to* those values |
+| `write` on Active when values were already set | Allow |
+
+Example (copy into an institution `config.json`; leave `enabled` out or `true` to turn on):
+
+```json
+"metadata_policies": [
+  {
+    "id": "thesis",
+    "exempt_roles": ["librarian", "admin"],
+    "match": {
+      "all": [
+        {
+          "field": "object_type",
+          "ids": [
+            "https://pid.phaidra.org/vocabulary/62DN-RZ7V",
+            "https://pid.phaidra.org/vocabulary/Z3K6-SWVD",
+            "https://pid.phaidra.org/vocabulary/P2YP-BMND",
+            "https://pid.phaidra.org/vocabulary/1PHE-7VMS"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "oer",
+    "exempt_roles": ["approver", "admin"],
+    "match": {
+      "all": [
+        { "field": "object_type", "ids": ["https://pid.phaidra.org/vocabulary/YA8R-1M0D"] },
+        { "field": "object_type", "prefix": "https://w3id.org/kim/hcrt" },
+        {
+          "field": "license",
+          "ids": [
+            "http://creativecommons.org/licenses/by/4.0/",
+            "http://creativecommons.org/licenses/by-sa/4.0/",
+            "http://creativecommons.org/licenses/by-nc/4.0/",
+            "http://creativecommons.org/licenses/by-nc-sa/4.0/"
+          ]
+        }
+      ]
+    }
+  }
+]
+```
+
+`match.all` clauses are ANDed. A clause matches if some value in that field is in `ids` and/or has `prefix`. Roles listed in `exempt_roles` skip the policy (librarian can submit/edit thesis without queue/deny).
+
+## API endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `POST /authz/check` | Batch authorization checks (`action` ids, optional `pid`) |
+| `GET /authz/capabilities` | Capabilities and submit-form visibility for current user |
+
+Authorization input uses a single **`action.id`** (`read`, `write`, `create`, `delete`, `approve`, `restrict`, …). Policies derive read vs write from that id.
+
+## Configuration
+
+Environment variables (see `PhaidraAPI.conf`):
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `OPA_ENABLED` | `false` | Enable OPA authorization |
+| `OPA_URL` | `http://opa:8181` | OPA server URL |
+| `OPA_POLICY_PATH` | `/v1/data/phaidra/authz/allow` | OPA decision document path |
+| `OPA_FAIL_MODE` | `legacy` | `legacy` or `closed` on OPA errors |
+| `OPA_DUAL_RUN` | `false` | Log mismatches vs legacy Perl logic |
+| `OPA_INSTITUTION` | `default` | Institution id for data bundle |
+| `PHAIDRA_DEFAULT_ROLE` | `uploader` | Directory role for every user. `uploader` = uncurated submit; empty = instance-wide curation |
+
+## Audit
+
+Authorization decisions are logged as structured JSON with prefix `authz=1` in **phaidra-api** logs (not OPA logs):
+
+```bash
+docker compose logs -f api | grep 'authz=1'
+# or for local-dev:
+docker compose logs -f api-local-dev | grep 'authz=1'
+```
+
+Notes:
+
+- API log level must be `info` or lower (admin config `loglevel`). If set to `warn`/`error`, `authz=1` lines are hidden.
+
+OPA decision logging is enabled via [`policies/opa-config.yaml`](../../policies/opa-config.yaml) (`decision_logs.console: true`). Those appear in the **opa** container:
+
+```bash
+docker compose logs -f opa
+```
+
+## Policy development
+
+See [policies/README.md](../../policies/README.md) for Rego layout and testing.

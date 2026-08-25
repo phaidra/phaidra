@@ -1108,7 +1108,7 @@
                                         "properties": {
                                             "annotations": {
                                                 "type": "string",
-                                                "example": "<mods:mods xmlns:mods=\"http://www.loc.gov/mods/v3\"><mods:identifier type=\"ac-number\">AC04090285</mods:identifier><mods:language><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:language><mods:name authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" type=\"personal\" valueURI=\"http://d-nb.info/gnd/121309096\"><mods:namePart type=\"given\">Gustav</mods:namePart><mods:namePart type=\"family\">Freytag</mods:namePart><mods:role><mods:roleTerm authority=\"marcrelator\" type=\"code\">edt</mods:roleTerm></mods:role></mods:name><mods:titleInfo><mods:title>Karte der Dachstein-Gruppe</mods:title><mods:subTitle>für Touristen</mods:subTitle></mods:titleInfo><mods:relatedItem type=\"series\"><mods:titleInfo><mods:title>Touristenkarten</mods:title></mods:titleInfo></mods:relatedItem><mods:classification authority=\"bkl\" authorityURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/\" valueURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/cls_10/1065197\">Deutschland, Österreich, Schweiz &lt;Geographie&gt;</mods:classification><mods:subject><mods:geographic authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" valueURI=\"http://d-nb.info/gnd/4010858-2\">Dachstein</mods:geographic><mods:topic authority=\"gnd\">Karte</mods:topic></mods:subject><mods:originInfo><mods:dateIssued encoding=\"w3cdtf\" keyDate=\"yes\">1931</mods:dateIssued><mods:place><mods:placeTerm type=\"text\">Wien</mods:placeTerm></mods:place><mods:publisher>G. Freytag &amp; Berndt</mods:publisher></mods:originInfo><mods:physicalDescription><mods:extent>1 Kt.</mods:extent><mods:form>mehrfarb.</mods:form><mods:extent>58 x 55 cm</mods:extent></mods:physicalDescription><mods:recordInfo><mods:recordContentSource>Universitätsbibliothek Wien</mods:recordContentSource><mods:recordOrigin>Maschinell erzeugt</mods:recordOrigin><mods:languageOfCataloging><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:languageOfCataloging><mods:descriptionStandard>rakwb</mods:descriptionStandard></mods:recordInfo><mods:note type=\"statement of responsibility\">Bestand der Kartensammlung der Fachbereichsbibliothek Geographie und Regionalforschung, Universität Wien</mods:note><mods:accessCondition type=\"use and reproduction\">http://creativecommons.org/publicdomain/mark/1.0/</mods:accessCondition></mods:mods>"
+                                                "example": "<mods:mods xmlns:mods=\"http://www.loc.gov/mods/v3\"><mods:identifier type=\"ac-number\">AC04090285</mods:identifier><mods:language><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:language><mods:name authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" type=\"personal\" valueURI=\"http://d-nb.info/gnd/121309096\"><mods:namePart type=\"given\">Gustav</mods:namePart><mods:namePart type=\"family\">Freytag</mods:namePart><mods:role><mods:roleTerm authority=\"marcrelator\" type=\"code\">edt</mods:roleTerm></mods:role></mods:name><mods:titleInfo><mods:title>Karte der Dachstein-Gruppe</mods:title><mods:subTitle>f\u00fcr Touristen</mods:subTitle></mods:titleInfo><mods:relatedItem type=\"series\"><mods:titleInfo><mods:title>Touristenkarten</mods:title></mods:titleInfo></mods:relatedItem><mods:classification authority=\"bkl\" authorityURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/\" valueURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/cls_10/1065197\">Deutschland, \u00d6sterreich, Schweiz &lt;Geographie&gt;</mods:classification><mods:subject><mods:geographic authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" valueURI=\"http://d-nb.info/gnd/4010858-2\">Dachstein</mods:geographic><mods:topic authority=\"gnd\">Karte</mods:topic></mods:subject><mods:originInfo><mods:dateIssued encoding=\"w3cdtf\" keyDate=\"yes\">1931</mods:dateIssued><mods:place><mods:placeTerm type=\"text\">Wien</mods:placeTerm></mods:place><mods:publisher>G. Freytag &amp; Berndt</mods:publisher></mods:originInfo><mods:physicalDescription><mods:extent>1 Kt.</mods:extent><mods:form>mehrfarb.</mods:form><mods:extent>58 x 55 cm</mods:extent></mods:physicalDescription><mods:recordInfo><mods:recordContentSource>Universit\u00e4tsbibliothek Wien</mods:recordContentSource><mods:recordOrigin>Maschinell erzeugt</mods:recordOrigin><mods:languageOfCataloging><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:languageOfCataloging><mods:descriptionStandard>rakwb</mods:descriptionStandard></mods:recordInfo><mods:note type=\"statement of responsibility\">Bestand der Kartensammlung der Fachbereichsbibliothek Geographie und Regionalforschung, Universit\u00e4t Wien</mods:note><mods:accessCondition type=\"use and reproduction\">http://creativecommons.org/publicdomain/mark/1.0/</mods:accessCondition></mods:mods>"
                                             }
                                         }
                                     }
@@ -1184,7 +1184,7 @@
                                         "properties": {
                                             "annotations": {
                                                 "type": "string",
-                                                "example": "<mods:mods xmlns:mods=\"http://www.loc.gov/mods/v3\"><mods:identifier type=\"ac-number\">AC04090285</mods:identifier><mods:language><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:language><mods:name authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" type=\"personal\" valueURI=\"http://d-nb.info/gnd/121309096\"><mods:namePart type=\"given\">Gustav</mods:namePart><mods:namePart type=\"family\">Freytag</mods:namePart><mods:role><mods:roleTerm authority=\"marcrelator\" type=\"code\">edt</mods:roleTerm></mods:role></mods:name><mods:titleInfo><mods:title>Karte der Dachstein-Gruppe</mods:title><mods:subTitle>für Touristen</mods:subTitle></mods:titleInfo><mods:relatedItem type=\"series\"><mods:titleInfo><mods:title>Touristenkarten</mods:title></mods:titleInfo></mods:relatedItem><mods:classification authority=\"bkl\" authorityURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/\" valueURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/cls_10/1065197\">Deutschland, Österreich, Schweiz &lt;Geographie&gt;</mods:classification><mods:subject><mods:geographic authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" valueURI=\"http://d-nb.info/gnd/4010858-2\">Dachstein</mods:geographic><mods:topic authority=\"gnd\">Karte</mods:topic></mods:subject><mods:originInfo><mods:dateIssued encoding=\"w3cdtf\" keyDate=\"yes\">1931</mods:dateIssued><mods:place><mods:placeTerm type=\"text\">Wien</mods:placeTerm></mods:place><mods:publisher>G. Freytag &amp; Berndt</mods:publisher></mods:originInfo><mods:physicalDescription><mods:extent>1 Kt.</mods:extent><mods:form>mehrfarb.</mods:form><mods:extent>58 x 55 cm</mods:extent></mods:physicalDescription><mods:recordInfo><mods:recordContentSource>Universitätsbibliothek Wien</mods:recordContentSource><mods:recordOrigin>Maschinell erzeugt</mods:recordOrigin><mods:languageOfCataloging><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:languageOfCataloging><mods:descriptionStandard>rakwb</mods:descriptionStandard></mods:recordInfo><mods:note type=\"statement of responsibility\">Bestand der Kartensammlung der Fachbereichsbibliothek Geographie und Regionalforschung, Universität Wien</mods:note><mods:accessCondition type=\"use and reproduction\">http://creativecommons.org/publicdomain/mark/1.0/</mods:accessCondition></mods:mods>"
+                                                "example": "<mods:mods xmlns:mods=\"http://www.loc.gov/mods/v3\"><mods:identifier type=\"ac-number\">AC04090285</mods:identifier><mods:language><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:language><mods:name authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" type=\"personal\" valueURI=\"http://d-nb.info/gnd/121309096\"><mods:namePart type=\"given\">Gustav</mods:namePart><mods:namePart type=\"family\">Freytag</mods:namePart><mods:role><mods:roleTerm authority=\"marcrelator\" type=\"code\">edt</mods:roleTerm></mods:role></mods:name><mods:titleInfo><mods:title>Karte der Dachstein-Gruppe</mods:title><mods:subTitle>f\u00fcr Touristen</mods:subTitle></mods:titleInfo><mods:relatedItem type=\"series\"><mods:titleInfo><mods:title>Touristenkarten</mods:title></mods:titleInfo></mods:relatedItem><mods:classification authority=\"bkl\" authorityURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/\" valueURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/cls_10/1065197\">Deutschland, \u00d6sterreich, Schweiz &lt;Geographie&gt;</mods:classification><mods:subject><mods:geographic authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" valueURI=\"http://d-nb.info/gnd/4010858-2\">Dachstein</mods:geographic><mods:topic authority=\"gnd\">Karte</mods:topic></mods:subject><mods:originInfo><mods:dateIssued encoding=\"w3cdtf\" keyDate=\"yes\">1931</mods:dateIssued><mods:place><mods:placeTerm type=\"text\">Wien</mods:placeTerm></mods:place><mods:publisher>G. Freytag &amp; Berndt</mods:publisher></mods:originInfo><mods:physicalDescription><mods:extent>1 Kt.</mods:extent><mods:form>mehrfarb.</mods:form><mods:extent>58 x 55 cm</mods:extent></mods:physicalDescription><mods:recordInfo><mods:recordContentSource>Universit\u00e4tsbibliothek Wien</mods:recordContentSource><mods:recordOrigin>Maschinell erzeugt</mods:recordOrigin><mods:languageOfCataloging><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:languageOfCataloging><mods:descriptionStandard>rakwb</mods:descriptionStandard></mods:recordInfo><mods:note type=\"statement of responsibility\">Bestand der Kartensammlung der Fachbereichsbibliothek Geographie und Regionalforschung, Universit\u00e4t Wien</mods:note><mods:accessCondition type=\"use and reproduction\">http://creativecommons.org/publicdomain/mark/1.0/</mods:accessCondition></mods:mods>"
                                             }
                                         }
                                     }
@@ -6920,104 +6920,6 @@
                 }
             }
         },
-        "/authz/check/{pid}/{op}": {
-            "get": {
-                "summary": "Checks rights",
-                "description": "Checks if the authenticated user has appropriate rights for an operation on the object (readable/writable). Can also be checked for unauthenticated user.",
-                "tags": [
-                    "object-advanced"
-                ],
-                "security": [
-                    {
-                        "basicAuth": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "pid",
-                        "schema": {
-                            "type": "string",
-                            "required": false
-                        },
-                        "description": "pid - object id"
-                    },
-                    {
-                        "in": "path",
-                        "name": "op",
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "ro",
-                                "rw"
-                            ],
-                            "required": true
-                        },
-                        "description": "rights for operation"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "readable/writable, depending on parameter 'op'. This method can be used to check if an object is readable/writable. The authentication is optional, as you might want to know if an object is readable for an unauthenticated user. An object is never writable for an unauthenticated user, so checking 'rw' only makes sense with authentication. Typically, an object is only writable for its owner.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "alerts": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "msg": {
-                                                        "type": "string"
-                                                    },
-                                                    "type": {
-                                                        "type": "string"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "status": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "not op",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "alerts": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "msg": {
-                                                        "type": "string"
-                                                    },
-                                                    "type": {
-                                                        "type": "string"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "status": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/streaming/{pid}/key": {
             "get": {
                 "summary": "Get streaming key",
@@ -9902,7 +9804,7 @@
                                     },
                                     {
                                         "xmlns": "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0",
-                                        "ui_value": "Cooperative decision rules have so far been shown experimentally mainly in mammal species that have variable and complex social networks. However, these traits should not necessarily be restricted to mammals. Therefore, we tested cooperative problem solving in ravens. We showed that, without training, nine ravens spontaneously cooperated in a loose-string task. Corroborating findings in several species, ravensâ�� cooperative success increased with increasing inter-individual tolerance levels. Importantly, we found this in both a forced dyadic setting, and in a group setting where individuals had an open choice to cooperate with whomever. The ravens, moreover, also paid attention to the resulting reward distribution and ceased cooperation when being cheated upon. Nevertheless, the ravens did not seem to pay attention to the behavior of their partners while cooperating, and future research should reveal whether this is task specific or a general pattern. Given their natural propensity to cooperate and the results we present here, we consider ravens as an interesting model species to study the evolution of, and the mechanisms underlying cooperation.",
+                                        "ui_value": "Cooperative decision rules have so far been shown experimentally mainly in mammal species that have variable and complex social networks. However, these traits should not necessarily be restricted to mammals. Therefore, we tested cooperative problem solving in ravens. We showed that, without training, nine ravens spontaneously cooperated in a loose-string task. Corroborating findings in several species, ravens\u00e2\ufffd\ufffd cooperative success increased with increasing inter-individual tolerance levels. Importantly, we found this in both a forced dyadic setting, and in a group setting where individuals had an open choice to cooperate with whomever. The ravens, moreover, also paid attention to the resulting reward distribution and ceased cooperation when being cheated upon. Nevertheless, the ravens did not seem to pay attention to the behavior of their partners while cooperating, and future research should reveal whether this is task specific or a general pattern. Given their natural propensity to cooperate and the results we present here, we consider ravens as an interesting model species to study the evolution of, and the mechanisms underlying cooperation.",
                                         "xmlname": "description",
                                         "input_type": "input_text",
                                         "attributes": [

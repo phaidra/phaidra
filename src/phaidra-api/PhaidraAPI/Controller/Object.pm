@@ -155,7 +155,7 @@ sub _proxy_thumbnail {
   my $jobstatus = 'finished';    #$self->imageserver_job_status($pid);
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my $res         = $authz_model->check_rights($self, $pid, 'ro');
+  my $res         = $authz_model->check_rights($self, $pid, 'read');
   unless ($res->{status} eq '200') {
     $self->setNoCacheHeaders();
     $self->reply->static('images/locked.png');
@@ -268,7 +268,7 @@ sub thumbnail {
   }
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my $res         = $authz_model->check_rights($self, $pid, 'ro');
+  my $res         = $authz_model->check_rights($self, $pid, 'read');
   unless ($res->{status} eq '200') {
     $self->setNoCacheHeaders();
     $self->reply->static('images/locked.png');
@@ -448,7 +448,7 @@ sub preview {
   my $force = $self->param('force');
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my $resro       = $authz_model->check_rights($self, $pid, 'ro');
+  my $resro       = $authz_model->check_rights($self, $pid, 'read');
   unless ($resro->{status} eq '200') {
     $self->setNoCacheHeaders();
     $self->reply->static('images/locked.png');
@@ -618,7 +618,7 @@ sub preview {
         if ($resro->{status} eq '200') {
           $self->stash(rights => 'ro');
         }
-        my $resrw = $authz_model->check_rights($self, $pid, 'rw');
+        my $resrw = $authz_model->check_rights($self, $pid, 'write');
         if ($resrw->{status} eq '200') {
           $self->stash(rights => 'rw');
         }
@@ -1006,6 +1006,20 @@ sub preview {
     }
   }
   $self->reply->exception("pid[$pid] internal error");
+}
+
+sub approve {
+  my $self = shift;
+
+  unless (defined($self->stash('pid'))) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
+    return;
+  }
+
+  my $object_model = PhaidraAPI::Model::Object->new;
+  my $r            = $object_model->approve($self, $self->stash('pid'), $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
+
+  $self->render(json => $r, status => $r->{status});
 }
 
 sub delete {
@@ -1455,19 +1469,22 @@ sub purge_relationship {
 
 }
 
-sub add_or_remove_identifier {
-
+sub add_identifier {
   my $self = shift;
+  return $self->_add_or_remove_identifier('add');
+}
+
+sub remove_identifier {
+  my $self = shift;
+  return $self->_add_or_remove_identifier('remove');
+}
+
+sub _add_or_remove_identifier {
+  my ($self, $mode) = @_;
 
   my $pid = $self->stash('pid');
   unless (defined($pid)) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
-    return;
-  }
-
-  my $operation = $self->stash('operation');
-  unless ($operation) {
-    $self->render(json => {alerts => [{type => 'error', msg => 'Unknown operation'}]}, status => 400);
     return;
   }
 
@@ -1490,16 +1507,15 @@ sub add_or_remove_identifier {
   my $object_model = PhaidraAPI::Model::Object->new;
   my $r;
   for my $id (@ids) {
-    if ($operation eq 'add') {
+    if ($mode eq 'add') {
       $r = $object_model->add_relationship($self, $pid, 'http://purl.org/dc/terms/identifier', $id, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
     }
-    elsif ($operation eq 'remove') {
+    else {
       $r = $object_model->purge_relationship($self, $pid, 'http://purl.org/dc/terms/identifier', $id, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
     }
   }
 
   $self->render(json => $r, status => $r->{status});
-
 }
 
 sub add_octets {
@@ -1604,8 +1620,7 @@ sub add_or_modify_datastream {
   $self->render(json => $r, status => $r->{status});
 }
 
-sub get_public_datastream {
-
+sub get_datastream {
   my $self = shift;
 
   unless (defined($self->stash('pid'))) {
@@ -1618,15 +1633,9 @@ sub get_public_datastream {
     return;
   }
 
-  my $dsid        = $self->stash('dsid');
-  my $authz_model = PhaidraAPI::Model::Authorization->new;
-  if ($authz_model->is_private_ds($self, $dsid)) {
-    $self->render(json => {alerts => [{type => 'error', msg => 'Datastream ' . $dsid . ' is not public.'}]}, status => 400);
-    return;
-  }
-
+  # Authz already ran in the bridge (optional credentials + OPA on pid/dsid).
   my $object_model = PhaidraAPI::Model::Object->new;
-  $object_model->proxy_datastream($self, $self->stash('pid'), $dsid, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
+  $object_model->proxy_datastream($self, $self->stash('pid'), $self->stash('dsid'));
 }
 
 sub get_metadata {
@@ -1654,7 +1663,7 @@ sub get_metadata {
 
   my $writerights = 0;
   my $authz       = PhaidraAPI::Model::Authorization->new;
-  my $wr          = $authz->check_rights($self, $pid, 'w');
+  my $wr          = $authz->check_rights($self, $pid, 'write');
   if ($wr->{status} == 200) {
     $writerights = 1;
   }
@@ -1849,7 +1858,7 @@ sub get_legacy_container_member {
   }
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my $authzres    = $authz_model->check_rights($self, $pid, 'ro');
+  my $authzres    = $authz_model->check_rights($self, $pid, 'read');
   if ($authzres->{status} != 200) {
     $res->{status} = $authzres->{status};
     push @{$res->{alerts}}, @{$authzres->{alerts}} if scalar @{$authzres->{alerts}} > 0;
@@ -1887,18 +1896,23 @@ sub get_legacy_container_member {
   $self->rendered($res->{status});
 }
 
-sub resourcelink {
+sub get_resourcelink {
   my $self = shift;
+  return $self->_resourcelink('get');
+}
+
+sub redirect_resourcelink {
+  my $self = shift;
+  return $self->_resourcelink('redirect');
+}
+
+sub _resourcelink {
+  my ($self, $mode) = @_;
 
   my $res = {alerts => [], status => 200};
   my $pid = $self->stash('pid');
   unless (defined($pid)) {
     $self->render(json => {alerts => [{type => 'error', msg => 'Undefined pid'}]}, status => 400);
-    return;
-  }
-  my $operation = $self->stash('operation');
-  unless (defined($operation)) {
-    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined operation'}]}, status => 400);
     return;
   }
 
@@ -1917,7 +1931,7 @@ sub resourcelink {
   }
 
   my $authz_model = PhaidraAPI::Model::Authorization->new;
-  my $authzres    = $authz_model->check_rights($self, $pid, 'r');
+  my $authzres    = $authz_model->check_rights($self, $pid, 'read');
   if ($authzres->{status} != 200) {
     $res->{status} = $authzres->{status};
     push @{$res->{alerts}}, @{$authzres->{alerts}} if scalar @{$authzres->{alerts}} > 0;
@@ -1926,28 +1940,21 @@ sub resourcelink {
   }
 
   my $object_model = PhaidraAPI::Model::Object->new;
-  my $resgetds     = $object_model->get_datastream($self, $pid, 'LINK', $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
+  my $resgetds     = $object_model->get_datastream($self, $pid, 'LINK');
   if (($resgetds->{status} ne 200) || (!$resgetds->{LINK})) {
     $self->render(json => $resgetds, status => $resgetds->{status});
     return;
   }
 
-  if ($operation eq 'get') {
+  if ($mode eq 'get') {
     $res->{resourcelink} = $resgetds->{LINK};
     $self->render(json => $res, status => $res->{status});
     return;
   }
 
-  if ($operation eq 'redirect') {
-    $self->app->log->debug("redirecting to " . $resgetds->{LINK});
-    $self->redirect_to($resgetds->{LINK});
-    return;
-  }
-
-  $self->app->log->error("pid[$pid] resourcelink, unknown operation: $operation");
-  $self->render(json => {alerts => [{type => 'error', msg => "pid[$pid] resourcelink, unknown operation: $operation"}]}, status => 400);
+  $self->app->log->debug("redirecting to " . $resgetds->{LINK});
+  $self->redirect_to($resgetds->{LINK});
   return;
-
 }
 
 sub _proxy_tx {

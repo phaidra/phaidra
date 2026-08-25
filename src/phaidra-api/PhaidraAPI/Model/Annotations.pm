@@ -100,7 +100,7 @@ sub get_object_annotations_json {
   my ($self, $c, $pid, $username, $password) = @_;
 
   my $object_model = PhaidraAPI::Model::Object->new;
-  my $res          = $object_model->get_datastream($c, $pid, 'ANNOTATIONS', $username, $password, 1);
+  my $res          = $object_model->get_datastream($c, $pid, 'ANNOTATIONS');
   if ($res->{status} ne 200) {
     return $res;
   }
