@@ -46,8 +46,10 @@ is_site_admin if {
 	input.config.admin_username != ""
 }
 
+# Match legacy authenticate_ir_admin: public config iraccount username.
 is_ir_admin if {
-	"ir_admin" in input.subject.roles
+	input.config.iraccount != ""
+	input.subject.username == input.config.iraccount
 }
 
 can_admin if {

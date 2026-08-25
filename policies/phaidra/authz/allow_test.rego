@@ -529,7 +529,7 @@ test_ir_admin_accept if {
 		"subject": {
 			"username": "iruser",
 			"authenticated": true,
-			"roles": ["ir_admin", "writer", "uploader"],
+			"roles": ["writer", "uploader"],
 			"affiliations": [],
 			"org_units_l1": [],
 			"org_units_l2": [],
@@ -539,13 +539,13 @@ test_ir_admin_accept if {
 		"resource": {"type": "admin"},
 		"action": {"id": "ir_admin_accept"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "iraccount": "iruser", "enabledelete": false, "canmodifyownerid": []},
 	}
 	decision.allow == true
 	decision.reason == "ir_admin"
 }
 
-test_ir_admin_denied_without_role if {
+test_ir_admin_denied_without_iraccount if {
 	decision := authz.allow with input as {
 		"subject": {
 			"username": "alice",
@@ -560,7 +560,7 @@ test_ir_admin_denied_without_role if {
 		"resource": {"type": "admin"},
 		"action": {"id": "ir_admin_accept"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "iraccount": "iruser", "enabledelete": false, "canmodifyownerid": []},
 	}
 	decision.allow == false
 }

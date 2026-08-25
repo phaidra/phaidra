@@ -18,35 +18,34 @@ Routing uses authz bridges that share one `authorization#authorize` entrypoint:
 | `$authz` | Required | Object writes/creates, account/API actions, site-admin and IR-admin actions |
 | `$authenticated` | Required | Authn only — `/authz/capabilities` and `/authz/check` |
 
-The bridge requires each protected route to declare an **`action_id`**. Object actions (`read`, `write`, `delete`, …) need a Fedora `pid`. Account actions (`settings_read`, `group_write`, `list_read`, …) are evaluated without an object; default policy allows any authenticated user (parity with the former `$authenticated`-only routes). Site-admin actions (`admin_*`) require the configured PHAIDRA admin username; IR-admin actions (`ir_admin_*`) require the `ir_admin` role (public config `iraccount`).
+The bridge requires each protected route to declare an **`action_id`**. Object actions (`read`, `write`, `delete`, …) need a Fedora `pid`. Account actions (`settings_read`, `group_write`, `list_read`, …) are evaluated without an object; default policy allows any authenticated user (parity with the former `$authenticated`-only routes). Site-admin actions (`admin_*`) require the configured PHAIDRA admin username; IR-admin actions (`ir_admin_*`) require the user to match public config **`iraccount`** (a dedicated username, not a role from `cfg.roles`).
 
-`GET /object/{pid}/datastream/{dsid}` is the unified datastream read: optional credentials, `dsid` in the path. Policy marks some dsids as private (`RIGHTS`, `JSON-LD-PRIVATE`); anonymous requests are denied for those, while owners/admins (with credentials) are allowed.
+`GET /object/{pid}/datastream/{dsid}` is the unified datastream read: optional credentials, `dsid` in the path. Policy marks some dsids as private (`RIGHTS`, `JSON-LD-PRIVATE`); anonymous requests are denied for those, while owners/admins (with credentials) are allowed. However, content datastreams are usually queried via /get or /download, whereas metadata via /metadata (JSON formatted).
 
-## Default behaviour (parity with legacy)
+## Default behaviour
 
 | Role / rule | Effect |
 |-------------|--------|
 | Admin / superuser | Full read/write on all objects; site-admin actions (`admin_*`) require configured admin username |
-| IR admin (`iraccount`) | IR workflow actions (`ir_admin_*`) |
-| Fedora admin (`FEDORA_ADMIN_USER`) | Same as admin when authenticating (service operations) |
+| IR admin (`iraccount` username) | IR workflow actions (`ir_admin_*`) |
 | Owner | Full read/write on owned objects |
 | Anonymous | Read active objects without RIGHTS restrictions; public metadata (JSON-LD, …) always readable when Active |
 | RIGHTS datastream | Restricts **content** reads (octets, preview, download, thumbnail) — not public metadata |
 | Private datastreams | `RIGHTS`, `JSON-LD-PRIVATE` — owner/admin only |
 | Inactive objects | Visible only to owner, admin, superuser |
+| Delete | owner/superuser self-delete only when private config `enabledelete` is on (default off); site admin may always delete |
 
-## New capabilities (institution-configurable)
+## Further capabilities (require customized configuration)
 
 Institution admins tune behaviour via data bundles in `policies/<institution>/config/data.json` (default: `phaidra/config/data.json`) without editing Rego:
 
-- **Writer / uploader roles** — `writer` (who may create) is decided by OPA from `cfg.roles.writer` (`all_authenticated`, affiliations, ldap groups, usernames). Default `phaidra` bundle sets `all_authenticated: true` (legacy parity: any authenticated user may create). Institutions may restrict it (e.g. univie uses staff/faculty + `phaidra-writers`). `uploader` is the **uncurated submit** privilege
+- **Writer / uploader roles** — `writer` (who may create) is decided by OPA from `cfg.roles.writer` (`all_authenticated`, affiliations, ldap groups, usernames). Default `phaidra` bundle sets `all_authenticated: true` (any authenticated user may create objects). Institutions may restrict it. `uploader` is the **uncurated submit** privilege
 - **Default role** — `PHAIDRA_DEFAULT_ROLE` (PEP puts it on the subject). Default `uploader` = curation off
 - **Privileged submit forms** — catalog-fetch upload, bulk upload
 - **Metadata policies** (optional) — match JSON-LD on create/edit; default bundle has none enabled
 - **Restricted rights management** — who may set access restrictions and max expiry
-- **Per-user delete** — owner/superuser self-delete only when private config `enabledelete` is on (default off); site admin may always delete
 
-### Curated submit
+### Curated submit (UI part not yet implemented)
 
 Create is allowed when `role_granted("writer")` or `role_granted("uploader")` (or admin). Whether the object is activated depends on the `uploader` role and metadata policies:
 
@@ -126,7 +125,7 @@ Example (copy into an institution `config.json`; leave `enabled` out or `true` t
 | `POST /authz/check` | Batch authorization checks (`action` ids, optional `pid`) |
 | `GET /authz/capabilities` | Capabilities and submit-form visibility for current user |
 
-Authorization input uses a single **`action.id`** (`read`, `write`, `create`, `delete`, `approve`, `restrict`, …). Policies derive read vs write from that id; there is no separate `operation` field.
+Authorization input uses a single **`action.id`** (`read`, `write`, `create`, `delete`, `approve`, `restrict`, …). Policies derive read vs write from that id.
 
 ## Configuration
 
@@ -154,10 +153,7 @@ docker compose logs -f api-local-dev | grep 'authz=1'
 
 Notes:
 
-- Look in the **API** container. OPA decision logs are separate (see below).
-- API log level must be `info` or lower (private Mongo config `loglevel`). If set to `warn`/`error`, `authz=1` lines are hidden.
-- Capability and form-check decisions from `/authz/capabilities` are audited (`capabilities` / `forms` included in the JSON).
-- Dist API images must include `PhaidraAPI/Model/Policy/Audit.pm` (use a remounted/dev API or rebuild dist).
+- API log level must be `info` or lower (admin config `loglevel`). If set to `warn`/`error`, `authz=1` lines are hidden.
 
 OPA decision logging is enabled via [`policies/opa-config.yaml`](../../policies/opa-config.yaml) (`decision_logs.console: true`). Those appear in the **opa** container:
 

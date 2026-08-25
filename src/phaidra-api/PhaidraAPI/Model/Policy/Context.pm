@@ -171,7 +171,7 @@ sub _compute_roles {
     push @roles, $default_role unless grep {$_ eq $default_role} @roles;
   }
 
-  # Institutional repository admin account (public config iraccount)
+  # Institutional repository admin: public config iraccount (username match, not cfg.roles).
   eval {
     require PhaidraAPI::Model::Config;
     my $confmodel = PhaidraAPI::Model::Config->new;
@@ -254,6 +254,7 @@ sub _build_config {
 
   my $confmodel  = PhaidraAPI::Model::Config->new;
   my $privconfig = $confmodel->get_private_config($c) // {};
+  my $pubconfig  = $confmodel->get_public_config($c)  // {};
 
   my @canmodifyownerid = ();
   if ($c->app->config->{authorization} && $c->app->config->{authorization}->{canmodifyownerid}) {
@@ -262,6 +263,7 @@ sub _build_config {
 
   return {
     admin_username   => $c->app->config->{phaidra}->{adminusername} // '',
+    iraccount        => $pubconfig->{iraccount}                     // '',
     enabledelete     => $privconfig->{enabledelete} ? true : false,
     canmodifyownerid => \@canmodifyownerid,
     readonly         => ($c->app->config->{readonly} // 0) ? true : false,

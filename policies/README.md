@@ -37,7 +37,7 @@ Built by `PhaidraAPI::Model::Policy::Context`:
 
 | Field | Source |
 |-------|--------|
-| `subject` | Username, roles (admin, superuser, default_role, ir_admin), affiliations, LDAP groups, … |
+| `subject` | Username, roles (admin, superuser, default_role), affiliations, LDAP groups, … |
 | `resource` | Fedora pid, state, owner, RIGHTS ACL, dsid, flattened metadata (on create/write) |
 | `action` | `action_id`, optional `endpoint` |
 | `environment` | Timestamp, institution id, remote address |
@@ -54,7 +54,7 @@ flowchart TD
   Start["input + default_deny"] --> Explicit["deny.explicit\n(anonymous write, deprecated RIGHTS)"]
   Explicit --> Meta["metadata.deny_write\n(on Active + introducing policy)"]
   Meta --> Cap["capabilities / check_forms / create / account"]
-  Cap --> Admin["admin.grant / siteadmin / ir_admin"]
+  Cap --> Admin["admin.grant / siteadmin / iraccount username"]
   Admin --> Special["delete / approve / restrict / change_owner"]
   Special --> Owner["owner read/write\n(grant_rw)"]
   Owner --> Private["deny private dsid\n(RIGHTS, JSON-LD-PRIVATE)"]
