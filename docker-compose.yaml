@@ -493,7 +493,7 @@ services:
   ############### opa ###############
   opa:
     hostname: "opa"
-    image: openpolicyagent/opa:latest
+    image: openpolicyagent/opa:1.19.1
     <<: [*common, *logs]
     command:
       [
