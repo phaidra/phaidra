@@ -108,10 +108,10 @@ x-custom:
     MARIADB_FEDORA_PASSWORD: "${MARIADB_FEDORA_PASSWORD:-phaidra}"
     PHAIDRA_API_WORKER: "${PHAIDRA_API_WORKER:-16}"
     PHAIDRA_DEFAULT_ROLE: "${PHAIDRA_DEFAULT_ROLE-uploader}"
-    OPA_ENABLED: "${OPA_ENABLED:-false}"
+    OPA_ENABLED: "${OPA_ENABLED:-true}"
     OPA_URL: "${OPA_URL:-http://opa:8181}"
     OPA_POLICY_PATH: "${OPA_POLICY_PATH:-/v1/data/phaidra/authz/allow}"
-    OPA_FAIL_MODE: "${OPA_FAIL_MODE:-legacy}"
+    OPA_FAIL_MODE: "${OPA_FAIL_MODE:-closed}"
     OPA_DUAL_RUN: "${OPA_DUAL_RUN:-false}"
     OPA_INSTITUTION: "${OPA_INSTITUTION:-default}"
 
