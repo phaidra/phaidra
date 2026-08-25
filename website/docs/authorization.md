@@ -18,7 +18,7 @@ Routing uses authz bridges that share one `authorization#authorize` entrypoint:
 | `$authz` | Required | Object writes/creates, account/API actions, site-admin and IR-admin actions |
 | `$authenticated` | Required | Authn only — `/authz/capabilities` and `/authz/check` |
 
-The bridge requires each protected route to declare an **`action_id`**. Object actions (`read`, `write`, `delete`, …) need a Fedora `pid`. Account actions (`settings_read`, `group_write`, `list_read`, …) are evaluated without an object; default policy allows any authenticated user (parity with the former `$authenticated`-only routes). Site-admin actions (`admin_*`) require the configured PHAIDRA admin username; IR-admin actions (`ir_admin_*`) require the `ir_admin` role (public config `iraccount`). Tighten those rules later via Rego/data bundles. Role names are not encoded in the router.
+The bridge requires each protected route to declare an **`action_id`**. Object actions (`read`, `write`, `delete`, …) need a Fedora `pid`. Account actions (`settings_read`, `group_write`, `list_read`, …) are evaluated without an object; default policy allows any authenticated user (parity with the former `$authenticated`-only routes). Site-admin actions (`admin_*`) require the configured PHAIDRA admin username; IR-admin actions (`ir_admin_*`) require the `ir_admin` role (public config `iraccount`).
 
 `GET /object/{pid}/datastream/{dsid}` is the unified datastream read: optional credentials, `dsid` in the path. Policy marks some dsids as private (`RIGHTS`, `JSON-LD-PRIVATE`); anonymous requests are denied for those, while owners/admins (with credentials) are allowed.
 
