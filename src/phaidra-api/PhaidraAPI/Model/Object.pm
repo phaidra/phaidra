@@ -242,6 +242,7 @@ sub info {
   $info->{readrights}  = 0;
   $info->{writerights} = 0;
 
+  # Generic object ACL (empty endpoint by default in check_rights).
   my $authz = PhaidraAPI::Model::Authorization->new;
   my $wr    = $authz->check_rights($c, $pid, 'write');
   if ($wr->{status} == 200) {

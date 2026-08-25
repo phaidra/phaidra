@@ -222,6 +222,36 @@ test_public_read_active_object if {
 	decision.rights == "ro"
 }
 
+# /info used to inherit action.endpoint=object#info from stash → default_deny.
+# Capability probes must use empty endpoint (generic rights_gated ACL).
+test_info_endpoint_alone_is_not_rights_gated if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "",
+			"authenticated": false,
+			"roles": [],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {
+			"type": "object",
+			"pid": "o:5",
+			"owner": "alice",
+			"state": "Active",
+			"rights": {},
+			"dsid": "",
+		},
+		"action": {"id": "read", "endpoint": "object#info"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+	}
+	decision.allow == false
+	decision.reason == "default_deny"
+}
+
 test_inactive_denied_for_reader if {
 	decision := authz.allow with input as {
 		"subject": {

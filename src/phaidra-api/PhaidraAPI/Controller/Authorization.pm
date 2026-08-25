@@ -173,7 +173,7 @@ sub check_batch {
   for my $check (@{$checks}) {
     my $action_id = $check->{action} // 'read';
     if ($check->{pid}) {
-      my $legacy = $authz_model->check_rights($self, $check->{pid}, $action_id, {dsid => $check->{dsid} // '',});
+      my $legacy = $authz_model->check_rights($self, $check->{pid}, $action_id, {dsid => $check->{dsid} // '', endpoint => $check->{endpoint} // '',});
       push @results,
         {
         pid    => $check->{pid},

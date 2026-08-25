@@ -17,7 +17,6 @@ sub check_rights {
   $opts //= {};
 
   $action_id = $self->_normalize_action_id($action_id, $opts);
-  $opts      = $self->_enrich_endpoint_opts($c, $opts);
 
   my $cache_key = $self->_decision_cache_key('object', $pid, $action_id, $opts);
   if (my $cached = $self->_stash_cache_get($c, $cache_key)) {
@@ -79,21 +78,6 @@ sub check_action {
 
   $self->_stash_cache_set($c, $cache_key, $decision);
   return $decision;
-}
-
-# Prefer explicit endpoint; else Mojolicious controller#action from stash.
-sub _enrich_endpoint_opts {
-  my ($self, $c, $opts) = @_;
-  $opts //= {};
-  return $opts if defined $opts->{endpoint} && $opts->{endpoint} ne '';
-  return $opts unless ref($c) && $c->can('stash');
-
-  my $controller = $c->stash('controller');
-  my $action     = $c->stash('action');
-  if (defined $controller && $controller ne '' && defined $action && $action ne '') {
-    $opts->{endpoint} = "$controller#$action";
-  }
-  return $opts;
 }
 
 # Request-scoped: bridge + controller often check the same pid/action twice.
