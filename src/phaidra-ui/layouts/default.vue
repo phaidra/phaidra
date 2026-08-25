@@ -203,7 +203,7 @@ export default {
     },
     '$route.path'(to, from) {
       if (to !== from) {
-        this.$store.commit('clearAlerts')
+        useRootStore().clearAlerts()
       }
     }
   },
