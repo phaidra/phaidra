@@ -1832,6 +1832,7 @@ These fields are meant to support system logic and are not relevant to the user.
 | Academic Institution Internal Structure Ontology | aiiso | http://purl.org/vocab/aiiso/schema# |
 | CiTO, the Citation Typing Ontology | cito | http://purl.org/spar/cito/ |
 | Art and Rare Materials Core Ontology | arm | https://ld4p.github.io/arm/core/ontology/0.1/ |
+| VRA Core | vra | http://purl.org/vra/ |
 
 # Resources
 * [Samvera MODS to RDF Working Group: MODS to RDF Mapping Recommendations](https://goo.gl/SGCfev)
