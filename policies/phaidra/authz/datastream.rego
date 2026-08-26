@@ -35,6 +35,7 @@ content_endpoints := {
 	"viewer360#get_frame",
 	"viewer360#get_frame_by_name",
 	"imageserver#status",
+	"imageserver#imageserverproxy",
 }
 
 metadata_endpoints := {

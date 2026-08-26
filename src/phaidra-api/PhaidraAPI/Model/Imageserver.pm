@@ -8,6 +8,7 @@ use base        qw/Mojo::Base/;
 use Mojo::Util  qw(decode encode url_escape url_unescape);
 use Digest::SHA qw(hmac_sha1_hex);
 use PhaidraAPI::Model::Object;
+use PhaidraAPI::Model::Authorization;
 
 sub get_url {
 
@@ -40,23 +41,27 @@ sub get_url {
     return $res;
   }
 
-  my $root = $c->app->config->{imageserver}->{image_server_root};
+  my $root = $c->app->config->{imageserver}->{image_server_root} // '';
 
-  # if this is a request using the image path
-  if ($p =~ m/^\/?\Q$root/i) {
+  # Normalize leading slashes so //mnt/... still matches /mnt/...
+  my $p_norm = $p;
+  $p_norm =~ s{^/+}{/};
+
+  # if this is a request using the image path (hashed file under image_server_root)
+  if ($root ne '' && $p_norm =~ m/^\Q$root\E/i) {
     if ($rightscheck) {
 
       # find the corresponding pid and check rights
-      if ($p =~ m/.+\/([0-9A-F]{40})\.tif(.+)?$/i) {
-        my $idhash   = $1;
+      if ($p_norm =~ m{./([0-9A-Fa-f]{40})\.tif}i) {
+        my $idhash   = lc($1);
         my $cachekey = "idhash2pid_" . $idhash;
         my $pid      = $c->app->chi->get($cachekey);
         unless ($pid) {
           $c->app->log->debug("[cache miss] $cachekey");
 
-          my $res = $c->paf_mongo->get_collection('jobs')->find_one({idhash => $idhash}, {}, {"sort" => {"created" => -1}});
-          if ($res->{pid}) {
-            $pid = $res->{pid};
+          my $job = $c->paf_mongo->get_collection('jobs')->find_one({idhash => $idhash}, {}, {"sort" => {"created" => -1}});
+          if ($job->{pid}) {
+            $pid = $job->{pid};
             $c->app->chi->set($cachekey, $pid, '1 day');
           }
         }
@@ -74,13 +79,17 @@ sub get_url {
           }
         }
         else {
-          $c->render(json => {alerts => [{type => 'info', msg => "Could not find PID for idhash[$idhash]"}]}, status => 400);
-          return;
+          $c->app->log->info("imageserver::get_url idhash[$idhash] no pid mapping");
+          unshift @{$res->{alerts}}, {type => 'error', msg => "Could not find PID for idhash[$idhash]"};
+          $res->{status} = 400;
+          return $res;
         }
       }
       else {
-        $c->render(json => {alerts => [{type => 'info', msg => "Seems like a request using image path but can't match the idhash"}]}, status => 400);
-        return;
+        $c->app->log->info("imageserver::get_url path request but no idhash match p[$p]");
+        unshift @{$res->{alerts}}, {type => 'error', msg => "Seems like a request using image path but can't match the idhash"};
+        $res->{status} = 400;
+        return $res;
       }
     }
   }
@@ -92,6 +101,11 @@ sub get_url {
     my $ds  = $2;
 
     if ($rightscheck) {
+      unless ($pid) {
+        unshift @{$res->{alerts}}, {type => 'error', msg => 'Cannot parse pid from IIIF path'};
+        $res->{status} = 400;
+        return $res;
+      }
       my $check_pid_rights = $self->check_pid_rights($c, $pid);
       unless ($check_pid_rights eq 200) {
         $c->app->log->info("imageserver::get_url username[" . (defined($c->stash->{basic_auth_credentials}->{username}) ? $c->stash->{basic_auth_credentials}->{username} : '') . "] pid[$pid] forbidden");
@@ -141,6 +155,8 @@ sub get_url {
 sub check_pid_rights {
   my ($self, $c, $pid) = @_;
 
+  # Cross-request cache for IIIF tile bursts (many requests within seconds).
+  # Short TTL so RIGHTS changes apply within minutes, not a day.
   my $usrnm           = $c->stash->{basic_auth_credentials}->{username} ? $c->stash->{basic_auth_credentials}->{username} : '';
   my $cachekey        = "img_rights_" . $usrnm . "_$pid";
   my $status_cacheval = $c->app->chi->get($cachekey);
@@ -148,10 +164,10 @@ sub check_pid_rights {
     $c->app->log->debug("[cache miss] $cachekey");
 
     my $authz = PhaidraAPI::Model::Authorization->new;
-    my $rres  = $authz->check_rights($c, $pid, 'read');
+    my $rres  = $authz->check_rights($c, $pid, 'read', {endpoint => 'imageserver#imageserverproxy'});
     $status_cacheval = $rres->{status};
 
-    $c->app->chi->set($cachekey, $status_cacheval, '1 day');
+    $c->app->chi->set($cachekey, $status_cacheval, '5 minutes');
   }
   else {
     $c->app->log->debug("[cache hit] $cachekey");
