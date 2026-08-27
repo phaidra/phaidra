@@ -152,6 +152,9 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
+import { useVocabularyStore } from '../../stores/vocabulary'
+import { useSearchStore } from '../../stores/search'
 import qs from 'qs'
 import PSearchAutocomplete from './PSearchAutocomplete'
 import PSearchResults from './PSearchResults'
@@ -197,10 +200,10 @@ export default {
       return Math.ceil(this.total / this.pagesize)
     },
     instance: function () {
-      return this.$store?.state?.instanceconfig ?? {}
+      return useRootStore()?.instanceconfig ?? {}
     },
     appconfig: function () {
-      return this.$store?.state?.appconfig ?? {}
+      return useRootStore()?.appconfig ?? {}
     }
   },
   props: {
@@ -245,7 +248,7 @@ export default {
       params.rows = 0
 
       try {
-        this.$store.commit('setLoading', true)
+        useRootStore().setLoading(true)
         let response = await this.$axios.request({
           method: 'POST',
           url: '/search/select',
@@ -273,9 +276,9 @@ export default {
           })
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
-        this.$store.commit('setLoading', false)
+        useRootStore().setLoading(false)
       }
     },
     search: async function (options) {
@@ -316,7 +319,7 @@ export default {
       }
 
       try {
-        this.$store.commit('setLoading', true)
+        useRootStore().setLoading(true)
         let response = await this.$axios.request({
           method: 'POST',
           url: '/search/select',
@@ -325,7 +328,7 @@ export default {
             'content-type': 'application/x-www-form-urlencoded'
           }
         })
-        this.$store.commit('setLoading', false)
+        useRootStore().setLoading(false)
         this.allBooks = response.headers['x-query-scope'] ? true : false
         this.docs = response.data.response.docs
         this.total = response.data.response.numFound
@@ -335,9 +338,9 @@ export default {
           this.$forceUpdate()
         })
       } catch (error) {
-        this.$store.commit('setLoading', false)
+        useRootStore().setLoading(false)
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       }
     },
     handleSelect: function ({ term, payload }) {
@@ -357,7 +360,7 @@ export default {
         params.rows = this.total
         params.fl = ['pid', 'dc_title']
         try {
-          this.$store.commit('setLoading', true)
+          useRootStore().setLoading(true)
           let response = await this.$axios.request({
             method: 'POST',
             url: '/search/select',
@@ -366,12 +369,12 @@ export default {
               'content-type': 'application/x-www-form-urlencoded'
             }
           })
-          this.$store.commit('setLoading', false)
+          useRootStore().setLoading(false)
           return response.data.response.docs
         } catch (error) {
           console.log(error)
-          this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
-          this.$store.commit('setLoading', false)
+          useRootStore().setAlerts([{ type: 'danger', msg: error }])
+          useRootStore().setLoading(false)
         }
       }
     },
@@ -539,12 +542,12 @@ export default {
   mounted: async function () {
     if (!this.vocabularies['orgunits'].loaded) {
       try {
-        await this.$store.dispatch('vocabulary/loadOrgUnits', this.$i18n.locale)
+        await useVocabularyStore().loadOrgUnits(this.$i18n.locale)
       } catch (e) {
         console.log('Failed to load org units', e)
       }
     }
-    this.facetQueries = JSON.parse(JSON.stringify(this.$store.state.search.facetQueries));
+    this.facetQueries = JSON.parse(JSON.stringify(useSearchStore().facetQueries));
     this.facetQueries = this.facetQueries.map(element => {
       if (element.id === 'created') {
         // Build date facet if configured in admin panel

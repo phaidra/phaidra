@@ -1,15 +1,18 @@
+import { useBulkUploadStore } from '~/stores/bulk-upload'
+
 let initializePromise = null
 
 export default defineNuxtPlugin((nuxtApp) => {
-  const store = nuxtApp.$store
-  if (!process.client || !store) return
+  if (!import.meta.client) return
+
+  const bulk = useBulkUploadStore(nuxtApp.$pinia)
 
   const initialize = async () => {
     try {
       const savedState = localStorage.getItem('bulkUploadState')
       if (savedState) {
         const parsedState = JSON.parse(savedState)
-        store.commit('bulk-upload/initializeState', parsedState)
+        bulk.initializeState(parsedState)
       }
     } catch (error) {
       console.error('Error initializing bulk upload state:', error)
@@ -17,11 +20,9 @@ export default defineNuxtPlugin((nuxtApp) => {
   }
 
   initializePromise = initialize()
-  store.$initBulkUpload = () => initializePromise
+  nuxtApp.provide('initBulkUpload', () => initializePromise)
 
-  store.subscribe((mutation, state) => {
-    if (mutation.type.startsWith('bulk-upload/')) {
-      localStorage.setItem('bulkUploadState', JSON.stringify(state['bulk-upload']))
-    }
+  bulk.$subscribe((_mutation, state) => {
+    localStorage.setItem('bulkUploadState', JSON.stringify(state))
   })
 })

@@ -21,6 +21,7 @@
 </template>
 
 <script setup>
+import { useRootStore } from '~/stores/root'
 const props = defineProps({
   error: {
     type: Object,
@@ -29,7 +30,7 @@ const props = defineProps({
 })
 
 const nuxtApp = useNuxtApp()
-const instanceconfig = computed(() => nuxtApp.$store?.state?.instanceconfig ?? {})
+const instanceconfig = computed(() => useRootStore()?.instanceconfig ?? {})
 
 const is404 = computed(() => {
   const code = props.error?.statusCode ?? props.error?.status

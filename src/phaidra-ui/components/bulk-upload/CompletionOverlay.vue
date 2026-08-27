@@ -26,15 +26,16 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { useBulkUploadStore } from '~/stores/bulk-upload'
+import { mapActions, mapState } from 'pinia'
 
 export default {
   name: 'CompletionOverlay',
   computed: {
-    ...mapGetters('bulk-upload', ['isUploadComplete']),
+    ...mapState(useBulkUploadStore, ['isUploadComplete']),
   },
   methods: {
-    ...mapMutations('bulk-upload', ['hardResetState']),
+    ...mapActions(useBulkUploadStore, ['hardResetState']),
     async startNewBulkUpload() {
       try {
         // Reset all bulk upload data including localStorage

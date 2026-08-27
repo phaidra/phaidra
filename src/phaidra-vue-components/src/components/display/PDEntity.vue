@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import { useVocabularyStore } from '../../stores/vocabulary'
 import '@/compiled-icons/orcid'
 import { vocabulary } from '../../mixins/vocabulary'
 import { displayproperties } from '../../mixins/displayproperties'
@@ -88,7 +89,7 @@ export default {
               for (let id of af['skos:exactMatch']) {
                 if (id.startsWith('https://pid.phaidra.org/univie-org')) {
                   let affiliationPath = []
-                  if (this.$store.state.vocabulary) { // does not work in old phaidra
+                  if (useVocabularyStore()) { // does not work in old phaidra
                     this.getOrgPath(this.getTerm('orgunits', id), this.vocabularies['orgunits'].tree, affiliationPath)
                   }
                   let pathLabels = []
@@ -118,7 +119,7 @@ export default {
   },
   methods: {
     getLocalizedTermLabel: function (role) {
-      return this.$store.getters['vocabulary/getLocalizedTermLabel']('rolepredicate', role, this.$i18n.locale)
+      return useVocabularyStore().getLocalizedTermLabel('rolepredicate', role, this.$i18n.locale)
     },
     formatBirthDeathDate: function () {
       if (this.entity['@type'] !== 'schema:Person') {
@@ -144,7 +145,7 @@ export default {
   },
   mounted: function () {
     this.$nextTick(function () {
-      this.$store.dispatch('vocabulary/loadOrgUnits', this.$i18n.locale)
+      useVocabularyStore().loadOrgUnits(this.$i18n.locale)
     })
   }
 }

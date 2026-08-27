@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import objectMixin from 'phaidra-vue-components/src/mixins/object'
 import qs from 'qs'
 
@@ -63,7 +64,7 @@ export default {
   mixins: [objectMixin],
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   data () {
@@ -102,7 +103,7 @@ export default {
         start: (this.options.page - 1) * this.options.itemsPerPage,
         rows: this.options.itemsPerPage,
         sort: 'created desc',
-        fq: 'resourcetype:collection AND owner:' + this.$store.state.user.username
+        fq: 'resourcetype:collection AND owner:' + useRootStore().user.username
       }
       try {
         let response = await this.$axios.request({
@@ -118,7 +119,7 @@ export default {
         this.totalCollections = response.data.response.numFound
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.loading = false
       }

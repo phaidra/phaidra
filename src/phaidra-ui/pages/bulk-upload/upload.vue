@@ -100,7 +100,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { useBulkUploadStore } from '~/stores/bulk-upload'
+import { mapActions, mapState } from 'pinia'
 import BulkUploadSteps from '../../components/BulkUploadSteps.vue'
 import LoginOverlay from '../../components/bulk-upload/LoginOverlay.vue'
 import CompletionOverlay from '../../components/bulk-upload/CompletionOverlay.vue'
@@ -146,8 +147,8 @@ export default {
   },
 
   computed: {
-    ...mapState('bulk-upload', ['steps', 'csvContent', 'fieldMappings']),
-    ...mapGetters('bulk-upload', ['getUploadState', 'getUploadProgress', 'isUploadComplete']),
+    ...mapState(useBulkUploadStore, ['steps', 'csvContent', 'fieldMappings']),
+    ...mapState(useBulkUploadStore, ['getUploadState', 'getUploadProgress', 'isUploadComplete']),
 
     hasFailedUploads() {
       return this.getUploadProgress.failed > 0
@@ -198,7 +199,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations('bulk-upload', [
+    ...mapActions(useBulkUploadStore, [
       'setUploadState',
       'setUploadProgress',
       'clearUploadState',

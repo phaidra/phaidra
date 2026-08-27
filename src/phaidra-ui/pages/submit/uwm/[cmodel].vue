@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import fields from "phaidra-vue-components/src/utils/fields";
 import { context } from "../../../mixins/context";
 import { config } from "../../../mixins/config";
@@ -105,7 +106,7 @@ export default {
   },
   methods: {
     objectSaved: function (event) {
-      this.$store.commit("setAlerts", [
+      useRootStore().setAlerts([
         { type: "success", msg: "Object " + event + " created" },
       ]);
       this.$router.push(this.localeLocation({ path: `/detail/${event}` }));
@@ -125,7 +126,7 @@ export default {
           },
         });
         if (response.data.alerts && response.data.alerts.length > 0) {
-          self.$store.commit("setAlerts", response.data.alerts);
+          useRootStore().setAlerts(response.data.alerts);
         }
         if (response.data.tree) {
           self.form = response.data.tree;
@@ -216,12 +217,12 @@ export default {
                   msg: "Please log in",
                 });
               }
-              this.$store.commit("setAlerts", response.data.alerts);
+              useRootStore().setAlerts(response.data.alerts);
             }
           }
         } catch (error) {
           console.log(error);
-          this.$store.commit("setAlerts", [{ type: "error", msg: error }]);
+          useRootStore().setAlerts([{ type: "error", msg: error }]);
         } finally {
           this.goTo(0);
           this.loading = false;
@@ -231,17 +232,16 @@ export default {
   },
   beforeRouteEnter: function (to, from, next) {
     next((vm) => {
-      vm.$store.commit("setLoading", true);
+      useRootStore().setLoading(true);
       vm.loadUwmetadata(vm).then(() => {
-        vm.$store.commit("setLoading", false);
-        next();
+        useRootStore().setLoading(false);
       });
     });
   },
   beforeRouteUpdate: function (to, from, next) {
-    this.$store.commit("setLoading", true);
+    useRootStore().setLoading(true);
     this.loadUwmetadata(this).then(() => {
-      this.$store.commit("setLoading", false);
+      useRootStore().setLoading(false);
       next();
     });
   },

@@ -505,6 +505,8 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
+import { useVocabularyStore } from '../../stores/vocabulary'
 import datepickerproperties from '../../mixins/datepickerproperties'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { vocabulary } from '../../mixins/vocabulary'
@@ -728,10 +730,10 @@ export default {
   },
   computed: {
     appconfig: function () {
-      return this.$store.state.appconfig
+      return useRootStore().appconfig
     },
     instanceconfig: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     },
     parentSelectionDisabled: function () {
       return this.isParentSelectionDisabled || this.instanceconfig?.isParentSelectionDisabled || false
@@ -857,7 +859,7 @@ export default {
   mounted: function () {
     this.$nextTick(function () {
       if (!this.vocabularies['orgunits'].loaded) {
-        this.$store.dispatch('vocabulary/loadOrgUnits', this?.$i18n?.locale || 'eng')
+        useVocabularyStore().loadOrgUnits(this?.$i18n?.locale || 'eng')
       }
       if (this.publisherOrgUnit) {
         this.$emit('input-publisher-select', this.getTerm('orgunits', this.publisherOrgUnit))

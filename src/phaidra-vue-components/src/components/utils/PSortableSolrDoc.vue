@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import objectMixin from '../../mixins/object'
 export default {
   name: 'p-sortable-solr-doc',
@@ -21,7 +22,7 @@ export default {
   },
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   }
 }

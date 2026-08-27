@@ -54,11 +54,12 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 export default {
   name: 'list-dialog',
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   data () {
@@ -84,13 +85,13 @@ export default {
           method: 'GET',
           url: '/lists',
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         this.lists = response.data.lists
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.loading = false
       }

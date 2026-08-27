@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
 import arrays from "phaidra-vue-components/src/utils/arrays"
 import fields from "phaidra-vue-components/src/utils/fields"
 import { context } from "../../mixins/context"
@@ -217,7 +218,7 @@ export default {
       this.goTo(0);
     },
     createForm: async function (self, index) {
-      self.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
+      useVocabularyStore().sortObjectTypes(this.$i18n.locale);
 
       // mixin
       self.validationError = false;

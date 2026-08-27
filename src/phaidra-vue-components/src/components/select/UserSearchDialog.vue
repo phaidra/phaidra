@@ -40,13 +40,14 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import qs from 'qs'
 
 export default {
   name: 'user-search-dialog',
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   data () {
@@ -79,14 +80,14 @@ export default {
           method: 'get',
           url: `/users/search?q=${this.userSearchInp}`,
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         console.log('user response', response)
         this.users = response.data.users
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.loading = false
       }

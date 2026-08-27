@@ -399,6 +399,8 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
+import { useVocabularyStore } from '../../stores/vocabulary'
 import order from '../../utils/order'
 import PDAccessibility from './PDAccessibility'
 import PDLicense from './PDLicense'
@@ -507,7 +509,7 @@ export default {
   },
   computed: {
     instance: function () {
-      return this.$store?.state?.instanceconfig ?? { api: '', baseurl: '', solr: '' }
+      return useRootStore()?.instanceconfig ?? { api: '', baseurl: '', solr: '' }
     },
     componentid: function () {
       return Math.floor(Math.random() * 10000000)
@@ -639,7 +641,7 @@ export default {
     }
   },
   mounted: function () {
-    this.$store.dispatch('vocabulary/loadLanguages', this.$i18n.locale)
+    useVocabularyStore().loadLanguages(this.$i18n.locale)
     this.getProjectIds()
     if (!this.jsonld) return
     this.overallAccessibility = {

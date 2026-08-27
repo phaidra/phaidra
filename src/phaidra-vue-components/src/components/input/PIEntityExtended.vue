@@ -307,7 +307,7 @@
                 <v-col cols="12" md="12">
                   <v-text-field
                     v-show="identifierTypeId === 'ids:orcid'"
-                    v-mask="'####-####-####-###X'"
+                    v-maska data-maska="####-####-####-####"
                     :model-value="identifierText"
                     :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                     @update:model-value="$emit('input-identifier', $event)"
@@ -357,7 +357,7 @@
                 <v-col cols="12" md="6" >
                   <v-text-field
                     v-show="identifierTypeId === 'ids:orcid'"
-                    v-mask="'####-####-####-###X'"
+                    v-maska data-maska="####-####-####-####"
                     :model-value="identifierText"
                     :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                     @update:model-value="$emit('input-identifier', $event)"
@@ -456,6 +456,8 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
+import { useVocabularyStore } from '../../stores/vocabulary'
 import { vMaska } from 'maska/vue'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
@@ -734,10 +736,10 @@ export default {
       return 'one'
     },
     instanceconfig: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     },
     appconfig: function () {
-      return this.$store.state.appconfig
+      return useRootStore().appconfig
     },
     parentSelectionDisabled: function () {
       return this.isParentSelectionDisabled || this.instanceconfig?.isParentSelectionDisabled || false
@@ -841,9 +843,9 @@ export default {
   mounted: async function () {
     this.$nextTick(async function () {
       this.formRowSelectMenu.observe(() => this.$refs.rowRef?.$el ?? this.$refs.rowRef)
-      await this.$store.dispatch('vocabulary/loadOrgUnits', this.$i18n.locale)
+      await useVocabularyStore().loadOrgUnits(this.$i18n.locale)
       this.loading = !this.vocabularies[this.roleVocabulary].loaded
-      this.$store.dispatch('vocabulary/sortRoles', this?.$i18n?.locale || 'eng')
+      useVocabularyStore().sortRoles(this?.$i18n?.locale || 'eng')
       // emit input to set skos:prefLabel in parent
       if (this.role) {
         this.$emit('input', this.getTerm(this.roleVocabulary, this.role))

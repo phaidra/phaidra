@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import phaidraNavigation from '../../mixins/phaidraNavigation'
 
 export default {
@@ -25,7 +26,7 @@ export default {
   },
   computed: {
     instanceconfig: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   data() {

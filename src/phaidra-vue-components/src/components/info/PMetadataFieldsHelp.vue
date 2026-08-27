@@ -56,26 +56,27 @@
 </template>
 
 <script>
+import { useInfoStore } from '../../stores/info'
 import { vuetifyGoTo } from '../../utils/vuetifyGoToCompat'
 
 export default {
   name: 'p-metadata-fields-help',
   computed: {
     categories: function () {
-      return this.$store.state.info.metadataFieldsOverview
+      return useInfoStore().metadataFieldsOverview
     }
   },
   methods: {
     selectField: function (field) {
-      this.$store.commit('info/switchFieldsOverview', field.id)
+      useInfoStore().switchFieldsOverview(field.id)
       this.selectedField = field
       vuetifyGoTo(1)
     }
   },
   mounted: function () {
     this.selectedField = this.categories[0].fields[0]
-    this.$store.commit('info/initFieldsOverview')
-    this.$store.dispatch('info/sortFieldsOverview', {locale: this.$i18n.locale, i18nInstance: this.$i18n})
+    useInfoStore().initFieldsOverview()
+    useInfoStore().sortFieldsOverview({locale: this.$i18n.locale, i18nInstance: this.$i18n})
     this.openedCategories = this.categories
       .map((category, i) => (category.open ? 'cat' + i : null))
       .filter(Boolean)

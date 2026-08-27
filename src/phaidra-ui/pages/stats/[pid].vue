@@ -105,6 +105,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import { context } from '../../mixins/context'
 import { config } from '../../mixins/config'
 
@@ -177,15 +178,15 @@ export default {
   },
   beforeRouteEnter: async function (to, from, next) {
     next(async function (vm) {
-      vm.$store.commit('setLoading', true)
+      useRootStore().setLoading(true)
       await vm.fetchStats(vm, to.params.pid)
-      vm.$store.commit('setLoading', false)
+      useRootStore().setLoading(false)
     })
   },
   beforeRouteUpdate: async function (to, from, next) {
-    this.$store.commit('setLoading', true)
+    useRootStore().setLoading(true)
     await this.fetchStats(this, to.params.pid)
-    this.$store.commit('setLoading', false)
+    useRootStore().setLoading(false)
     next()
   }
 }

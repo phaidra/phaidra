@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import SelectLanguage from '../select/SelectLanguage'
@@ -68,7 +69,7 @@ export default {
   },
   computed: {
     instanceconfig: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   props: {

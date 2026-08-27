@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import { vuetifyGoTo } from '../../utils/vuetifyGoToCompat'
 
 export default {
@@ -45,7 +46,7 @@ export default {
   },
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   data () {
@@ -62,14 +63,14 @@ export default {
           method: 'POST',
           url: '/object/' + pid + '/delete',
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         if (response.data.status === 200) {
           this.$emit('object-deleted', this.pid)
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
         }
 
@@ -77,7 +78,7 @@ export default {
         vuetifyGoTo(0)
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: 'Error deleting object: ' + error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: 'Error deleting object: ' + error }])
       } finally {
         this.loading = false
         this.dialog = false

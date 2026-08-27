@@ -1,4 +1,5 @@
 import PBreadcrumbs from '@/components/PBreadcrumbs'
+import { useRootStore } from '~/stores/root'
 
 export const context = {
   components: {
@@ -6,10 +7,10 @@ export const context = {
   },
   computed: {
     signedin () {
-      return this.$store?.state?.user?.token ? 1 : 0
+      return useRootStore().user?.token ? 1 : 0
     },
     user () {
-      return this.$store?.state?.user || {}
+      return useRootStore().user || {}
     }
   }
 }

@@ -167,7 +167,9 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { useBulkUploadStore } from '~/stores/bulk-upload'
+import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
+import { mapActions, mapState } from 'pinia'
 import BulkUploadSteps from '../../components/BulkUploadSteps.vue'
 
 import { fieldSettings } from '../../config/bulk-upload/field-settings'
@@ -194,8 +196,8 @@ export default {
   },
 
   computed: {
-    ...mapState('bulk-upload', ['steps']),
-    ...mapGetters('bulk-upload', ['getFieldMapping', 'getAllFieldMappings', 'requiredFields', 'singleFields', 'multiFields', 'allFields', 'getColumnHeaders']),
+    ...mapState(useBulkUploadStore, ['steps']),
+    ...mapState(useBulkUploadStore, ['getFieldMapping', 'getAllFieldMappings', 'requiredFields', 'singleFields', 'multiFields', 'allFields', 'getColumnHeaders']),
 
     allFieldsMapped() {
       return this.requiredFields.every(field => this.fieldIsMapped(field))
@@ -238,7 +240,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations('bulk-upload', ['setFieldMapping', 'setCurrentStep', 'completeStep']),
+    ...mapActions(useBulkUploadStore, ['setFieldMapping', 'setCurrentStep', 'completeStep']),
 
     updateSource(field, source) {
       // Add flash animation to specific row for dev purposes
@@ -302,8 +304,8 @@ export default {
 
   async created() {
     // Wait for store initialization on client side
-    if (process.client && this.$store.$initBulkUpload) {
-      await this.$store.$initBulkUpload()
+    if (import.meta.client && this.$initBulkUpload) {
+      await this.$initBulkUpload()
     }
 
     this.singleFields.forEach(field => {
@@ -347,7 +349,7 @@ export default {
   },
 
   mounted: function () {
-    this.$store.dispatch('vocabulary/loadLanguages', this.$i18n.locale)
+    useVocabularyStore().loadLanguages(this.$i18n.locale)
   }
 }
 </script>

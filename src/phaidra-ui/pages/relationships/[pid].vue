@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import { context } from '../../mixins/context'
 import { config } from '../../mixins/config'
 
@@ -46,19 +47,19 @@ export default {
           method: 'GET',
           url: '/object/' + self.pid + '/relationships',
           headers: {
-            'X-XSRF-TOKEN': self.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         if (response.status === 200) {
           this.relationships = response.data.relationships
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            self.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
         }
       } catch (error) {
         console.log(error)
-        self.$store.commit('setAlerts', [{ type: 'error', msg: error }])
+        useRootStore().setAlerts([{ type: 'error', msg: error }])
       } finally {
         self.loading = false
       }

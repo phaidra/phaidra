@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import { config, useDocumentTitle } from '../../mixins/config';
 import { cmsTemplates } from "@/mixins/cmsTemplates";
 
@@ -54,7 +55,7 @@ export default {
     methods: {
         updateBreadcrumbTitle() {
             const title = this.templateTitle[this.$i18n.locale] || this.templateTitle.eng || 'Collection'
-            this.$store.commit('updateCollectionBreadcrumb', title)
+            useRootStore().updateCollectionBreadcrumb(title)
         },
         getCollection() {
             try {
@@ -69,15 +70,15 @@ export default {
                         to: '/collections'
                     }
                     if(response?.data?.template?.templateName !== 'index') {
-                        this.$store.commit('addBreadcrumb', indexCollectionObject)
-                        this.$store.commit('addBreadcrumb', {
+                        useRootStore().addBreadcrumb(indexCollectionObject)
+                        useRootStore().addBreadcrumb({
                             text: title,
                             to: this.$route.name,
                             disabled: true
                         })
                     } else {
                         indexCollectionObject.disabled = true
-                        this.$store.commit('addBreadcrumb', indexCollectionObject)
+                        useRootStore().addBreadcrumb(indexCollectionObject)
                     }
                     this.loaded = true
                 })

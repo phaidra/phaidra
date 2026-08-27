@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import { context } from "../mixins/context";
 import { config, useDocumentTitle } from "../mixins/config";
 
@@ -71,7 +72,7 @@ export default {
           data: httpFormData,
           url: `/jsonld/template/admin/${value.tid}/edit`,
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         return response

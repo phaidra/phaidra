@@ -82,6 +82,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 
 import repostatMixin from '../mixins/repostatMixin';
 import { context } from "../mixins/context";
@@ -97,7 +98,7 @@ export default {
       return [{ key: 'total', order: 'desc' }]
     },
     routepid: function () {
-      return this.$store.state.route.params.pid;
+      return this.$route.params.pid;
     },
     currentYear: function () {
       return new Date().getFullYear();
@@ -131,7 +132,7 @@ export default {
         try {
           response = await this.$axios.get(`/utils/fedora_storage_avg_year?year=${this.selectedYear}`, {
             headers: {
-              "X-XSRF-TOKEN": this.$store.state.user.token,
+              "X-XSRF-TOKEN": useRootStore().user.token,
             },
           });
         } catch (error) {
@@ -183,7 +184,7 @@ export default {
         try {
           response = await this.$axios.get(`/utils/imageserver_storage_avg_year?year=${this.selectedYearImg}`, {
             headers: {
-              "X-XSRF-TOKEN": this.$store.state.user.token,
+              "X-XSRF-TOKEN": useRootStore().user.token,
             },
           });
         } catch (error) {

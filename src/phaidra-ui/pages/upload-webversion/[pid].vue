@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import { context } from '../../mixins/context'
 import { config } from '../../mixins/config'
 
@@ -77,21 +78,21 @@ export default {
           url: '/object/' + this.parentpid + '/datastream/WEBVERSION',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
         if (response.status === 200) {
-          this.$store.commit('setAlerts', [{ type: 'success', msg: 'Web-optimized version successfully uploaded' }])
+          useRootStore().setAlerts([{ type: 'success', msg: 'Web-optimized version successfully uploaded' }])
           this.$router.push(this.localeLocation({ path: `/detail/${this.parentpid}` }))
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'error', msg: error }])
+        useRootStore().setAlerts([{ type: 'error', msg: error }])
       } finally {
         this.loading = false
       }

@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import { useVocabularyStore } from '../../stores/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { vocabulary } from '../../mixins/vocabulary'
 import BicTreeDialog from '../select/BicTreeDialog'
@@ -158,7 +159,7 @@ export default {
   mounted: function () {
     this.$nextTick(function () {
       if (!this.vocabularies['bic'].loaded) {
-        this.$store.dispatch('vocabulary/loadBic', this.$i18n.locale)
+        useVocabularyStore().loadBic(this.$i18n.locale)
       }
       // emit input to set skos:prefLabel in parent
       if (this.value) {

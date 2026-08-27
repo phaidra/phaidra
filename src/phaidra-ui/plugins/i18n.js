@@ -1,6 +1,7 @@
 import { createI18n } from 'vue-i18n'
 import { LOCALE_KEY, PREFERENCE_MAX_AGE, syncLocalStorage } from '~/utils/preference-storage'
 import { cloneLocaleMessages, applyI18nOverrides, applyInfoBannerMessage } from '~/utils/i18n-overrides'
+import { useRootStore } from '~/stores/root'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const defaultLocale = useRuntimeConfig().public?.defaultLocale || 'eng'
@@ -36,7 +37,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(i18n)
   nuxtApp.$i18n = i18n
 
-  const instanceconfig = nuxtApp.$store?.state?.instanceconfig
+  const instanceconfig = nuxtApp.$pinia ? useRootStore(nuxtApp.$pinia).instanceconfig : null
   if (instanceconfig) {
     applyI18nOverrides(i18n, instanceconfig.data_i18n)
     applyInfoBannerMessage(i18n, instanceconfig.infoBannerMessage)

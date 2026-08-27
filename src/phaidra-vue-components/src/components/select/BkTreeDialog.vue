@@ -28,12 +28,13 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 
 export default {
   name: 'bk-tree-dialog',
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   data () {
@@ -96,7 +97,7 @@ export default {
       try {
         let response = await this.$axios.request({
           method: 'GET',
-          url: this.$store.state.appconfig.apis.dante.resolve,
+          url: useRootStore().appconfig.apis.dante.resolve,
           params: params,
           withCredentials: false
         })
@@ -128,7 +129,7 @@ export default {
       try {
         let response = await this.$axios.request({
           method: 'GET',
-          url: this.$store.state.appconfig.apis.dante.resolve,
+          url: useRootStore().appconfig.apis.dante.resolve,
           params: params,
           withCredentials: false
         })

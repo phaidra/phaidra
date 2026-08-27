@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import SelectLanguage from '../select/SelectLanguage'
@@ -146,7 +147,7 @@ export default {
       try {
         let response = await this.$axios.request({
           method: 'GET',
-          url: this.$store.state.instanceconfig.solr + '/suggest',
+          url: useRootStore().instanceconfig.solr + '/suggest',
           params: params
         })
         this.items = []

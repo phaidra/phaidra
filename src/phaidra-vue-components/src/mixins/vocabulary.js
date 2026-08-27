@@ -1,25 +1,27 @@
+import { useVocabularyStore } from '../stores/vocabulary'
+
 export const vocabulary = {
   computed: {
     vocabularies: function () {
-      return this.$store.state.vocabulary.vocabularies
+      return useVocabularyStore().vocabularies
     }
   },
   methods: {
     getLocalizedTermLabel: function (vocabulary, value) {
       if (vocabulary && value) {
-        return this.$store.getters['vocabulary/getLocalizedTermLabel'](vocabulary, value, this.$i18n.locale)
+        return useVocabularyStore().getLocalizedTermLabel(vocabulary, value, this.$i18n.locale)
       }
     },
     getLocalizedTermLabelByNotation: function (vocabulary, notation) {
       if (vocabulary && notation) {
-        return this.$store.getters['vocabulary/getLocalizedTermLabelByNotation'](vocabulary, notation, this.$i18n.locale)
+        return useVocabularyStore().getLocalizedTermLabelByNotation(vocabulary, notation, this.$i18n.locale)
       }
     },
     getTerm: function (vocabulary, value) {
       if (vocabulary && value) {
         const id = typeof value === 'string' ? value : value['@id']
         if (!id) return
-        return this.$store.getters['vocabulary/getTerm'](vocabulary, id)
+        return useVocabularyStore().getTerm(vocabulary, id)
       }
     },
     /** Plain title string for v-select/v-autocomplete item-title (Vuetify 3) */
@@ -49,7 +51,7 @@ export const vocabulary = {
     },
     getTermProperty: function (vocabulary, id, property) {
       if (vocabulary && id && property) {
-        return this.$store.getters['vocabulary/getTermProperty'](vocabulary, id, property)
+        return useVocabularyStore().getTermProperty(vocabulary, id, property)
       }
     },
     autocompleteFilter: function (item, queryText) {
@@ -106,7 +108,7 @@ export const vocabulary = {
     },
     getLocalizedDefinition: function (vocabulary, value) {
       if (vocabulary && value) {
-        let item = this.$store.getters['vocabulary/getTerm'](vocabulary, value)
+        let item = useVocabularyStore().getTerm(vocabulary, value)
         if (item['skos:definition']) {
           return item['skos:definition'][this.$i18n.locale] ? item['skos:definition'][this.$i18n.locale] : item['skos:definition']['eng']
         } else {

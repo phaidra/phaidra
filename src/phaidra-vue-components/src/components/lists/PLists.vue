@@ -157,6 +157,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import CollectionDialog from '../select/CollectionDialog'
 import phaidraNavigation from '../../mixins/phaidraNavigation'
 
@@ -168,7 +169,7 @@ export default {
   },
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   data () {
@@ -227,13 +228,13 @@ export default {
           method: 'GET',
           url: '/list/' + this.loadedList.listid,
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         this.members = response.data.list.members
         this.token = response.data.list.token
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
       } catch (error) {
         console.log(error)
@@ -249,17 +250,17 @@ export default {
           url: '/list/' + lid + '/token/create',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
-        this.$store.commit('setAlerts', [ { msg: this.$t('Share link successfully created'), type: 'success' } ])
+        useRootStore().setAlerts([ { msg: this.$t('Share link successfully created'), type: 'success' } ])
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         this.refreshLoadedList()
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.loading = false
       }
@@ -272,17 +273,17 @@ export default {
           url: '/list/' + lid + '/token/delete',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
-        this.$store.commit('setAlerts', [ { msg: this.$t('Share link successfully deleted'), type: 'success' } ])
+        useRootStore().setAlerts([ { msg: this.$t('Share link successfully deleted'), type: 'success' } ])
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         this.refreshLoadedList()
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.loading = false
       }
@@ -296,18 +297,18 @@ export default {
           url: '/collection/' + collection.pid + '/members/add',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
-        this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfully updated'), type: 'success' } ])
+        useRootStore().setAlerts([ { msg: this.$t('Collection successfully updated'), type: 'success' } ])
         this.$router.push({ path: `detail/${collection.pid}` })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.loading = false
       }
@@ -331,18 +332,18 @@ export default {
           url: '/list/add',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
         this.newListName = ''
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         this.getLists()
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.listsLoading = false
       }
@@ -355,16 +356,16 @@ export default {
           method: 'POST',
           url: '/list/' + this.listToDelete.listid + '/remove',
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         this.getLists()
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.listsLoading = false
         this.listToDelete = null
@@ -380,17 +381,17 @@ export default {
           url: '/list/' + this.loadedList.listid + '/members/remove',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         this.refreshLoadedList()
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.membersLoading = false
       }
@@ -402,16 +403,16 @@ export default {
           method: 'GET',
           url: '/lists',
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         this.lists = response.data.lists
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.listsLoading = false
       }

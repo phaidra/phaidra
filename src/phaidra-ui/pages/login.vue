@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import { context } from '../mixins/context'
 import { config, useDocumentTitle } from '../mixins/config'
 
@@ -113,11 +114,11 @@ export default {
           }
         )
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         this.touAgreed = true
         // Proceed with login after agreeing to terms
-        await this.$store.dispatch('login', this.credentials)
+        await useRootStore().login(this.credentials)
         if (this.signedin) {
           this.$router.push(this.localeLocation({path: localStorage.getItem('redirect') || '/'}))
         }
@@ -125,7 +126,7 @@ export default {
         console.log(error)
         const alerts = error.response?.data?.alerts
         if (alerts?.length > 0) {
-          this.$store.commit('setAlerts', alerts)
+          useRootStore().setAlerts(alerts)
         }
       } finally {
         this.loading = false
@@ -141,7 +142,7 @@ export default {
       }
       let toures = await this.$axios.get(url)
       if (toures.data.alerts && toures.data.alerts.length > 0) {
-        this.$store.commit('setAlerts', toures.data.alerts)
+        useRootStore().setAlerts(toures.data.alerts)
       }
       this.tou = toures.data.terms
       this.touVersion = toures.data.version
@@ -157,14 +158,14 @@ export default {
           }
         )
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         if (!response.data.agreed) {
           await this.getTermsOfUse()
           this.showtou = true
           return
         } else {
-          await this.$store.dispatch('login', this.credentials)
+          await useRootStore().login(this.credentials)
           if (this.signedin) {
             this.$router.push(this.localeLocation({path: localStorage.getItem('redirect') || '/'}))
           }
@@ -173,7 +174,7 @@ export default {
         console.log(error)
         const alerts = error.response?.data?.alerts
         if (alerts?.length > 0) {
-          this.$store.commit('setAlerts', alerts)
+          useRootStore().setAlerts(alerts)
         }
       } finally {
         this.loading = false

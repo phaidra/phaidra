@@ -1341,6 +1341,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import FaviconMixin from '../mixins/favicon'
 import PRepostat from '../components/Repostat.vue';
 import { config, useDocumentTitle } from "../mixins/config";
@@ -1427,10 +1428,10 @@ export default {
           method: 'POST',
           url: '/utils/send_daily_report',
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
-        this.$store.commit('setAlerts', [{ type: 'success', msg: this.$t('Daily report sent successfully') }])
+        useRootStore().setAlerts([{ type: 'success', msg: this.$t('Daily report sent successfully') }])
       } catch (error) {
         console.error(error)
       } finally {
@@ -1449,7 +1450,7 @@ export default {
           url: '/config/public',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
@@ -1458,7 +1459,7 @@ export default {
         if (config.public?.api) {
           delete config.public.api
         }
-        this.$store.commit('setInstanceConfig', config.public)
+        useRootStore().setInstanceConfig(config.public)
 
         var httpFormData = new FormData()
         httpFormData.append('private_config', JSON.stringify(config.private))
@@ -1467,7 +1468,7 @@ export default {
           url: '/config/private',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
@@ -1525,7 +1526,7 @@ export default {
           url: '/config/public',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
@@ -1538,7 +1539,7 @@ export default {
         if (instanceConfData?.api) {
           delete instanceConfData.api
         }
-        this.$store.commit('setInstanceConfig', instanceConfData)
+        useRootStore().setInstanceConfig(instanceConfData)
         this.mergeInfoBannerMessage(instanceConfData.infoBannerMessage)
 
         // private
@@ -1550,7 +1551,7 @@ export default {
           url: '/config/private',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
@@ -1621,8 +1622,8 @@ export default {
         this.data_affiliations_text = JSON.stringify(this.data_affiliations, null, 2)
         this.mergeInfoBannerMessage(response?.data?.public_config?.infoBannerMessage)
       } else {
-        if (this.$store?.state?.instanceconfig) {
-          this.parsedPublicConfigData = { ...this.$store.state.instanceconfig }
+        if (useRootStore()?.instanceconfig) {
+          this.parsedPublicConfigData = { ...useRootStore().instanceconfig }
         }
       }
 
@@ -1630,7 +1631,7 @@ export default {
       try {
         response = await this.$axios.get("/config/private?nocache=1", {
           headers: {
-            "X-XSRF-TOKEN": this.$store.state.user.token,
+            "X-XSRF-TOKEN": useRootStore().user.token,
           },
         });
       } catch (error) {

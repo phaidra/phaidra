@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import VueJsonPretty from "vue-json-pretty";
 import "vue-json-pretty/lib/styles.css";
 import configjs from "../../../config/phaidra-ui";
@@ -29,7 +30,7 @@ export default {
       return this.$route.params.pid;
     },
     objectInfo: function () {
-      return this.$store.state.objectInfo;
+      return useRootStore().objectInfo;
     },
   },
   data() {
@@ -39,7 +40,7 @@ export default {
   },
   methods: {
     async fetchAsyncData(self, pid) {
-      await self.$store.dispatch("fetchObjectInfo", pid);
+      await useRootStore().fetchObjectInfo(pid);
     },
   },
   serverPrefetch() {

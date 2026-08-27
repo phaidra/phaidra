@@ -1,9 +1,11 @@
+import { useRootStore } from '~/stores/root'
+
 export default defineNuxtRouteMiddleware(async (to) => {
-  const store = useNuxtApp().$store
-  if (!store) return
+  const { $pinia } = useNuxtApp()
+  const store = useRootStore($pinia)
 
   // Keep old behavior, but restore persisted token on hard refresh.
-  if (!store.state?.user?.token) {
+  if (!store.user?.token) {
     let token = useCookie('XSRF-TOKEN').value
     if (!token && import.meta.client) {
       try {
@@ -11,19 +13,19 @@ export default defineNuxtRouteMiddleware(async (to) => {
       } catch (_) {}
     }
     if (token) {
-      store.commit('setToken', token)
+      store.setToken(token)
     }
   }
 
   // Rehydrate full user profile (isadmin, firstname, lastname, ...)
   // so header/admin menu is correct after hard refresh.
-  if (store.state?.user?.token && !store.state?.user?.username) {
+  if (store.user?.token && !store.user?.username) {
     try {
-      await store.dispatch('getLoginData')
+      await store.getLoginData()
     } catch (_) {}
   }
 
-  if (!store.state?.user?.token) {
+  if (!store.user?.token) {
     if (import.meta.client) {
       try {
         localStorage.setItem('redirect', to.fullPath)

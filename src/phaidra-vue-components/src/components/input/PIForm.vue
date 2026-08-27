@@ -846,7 +846,7 @@
             <v-btn v-if="templating && $route.params.templateid" class="mr-3 float-left" large raised :loading="loading" :disabled="loading" color="primary" @click="saveTemplate()"><span v-t="'Save template'"></span></v-btn>
             <div class="d-flex flex-wrap justify-end align-center ga-2">
               <v-switch
-                v-if="$store.state.user.isadmin"
+                v-if="useRootStore().user.isadmin"
                 v-model="skipValidation"
                 density="compact"
                 :hide-details="true"
@@ -1034,6 +1034,8 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
+import { useVocabularyStore } from '../../stores/vocabulary'
 import { vocabulary } from '../../mixins/vocabulary'
 import { formvalidation } from '../../mixins/formvalidation'
 import { mimeToResourceType as mimeToResourceTypeFromMime } from '../../utils/mimetypes'
@@ -1289,13 +1291,13 @@ export default {
     },
     filteredMetadatafields () {
       if (this.searchfieldsinput) {
-        return this.$store.state.vocabulary.fields.filter(f => this.enableLicenseAdd || f.id !== "license").filter(f => (this.$t(f.fieldname).toLowerCase().includes(this.searchfieldsinput.toLowerCase()) || (this.$t(f.definition).toLowerCase().includes(this.searchfieldsinput.toLowerCase()))))
+        return useVocabularyStore().fields.filter(f => this.enableLicenseAdd || f.id !== "license").filter(f => (this.$t(f.fieldname).toLowerCase().includes(this.searchfieldsinput.toLowerCase()) || (this.$t(f.definition).toLowerCase().includes(this.searchfieldsinput.toLowerCase()))))
       } else {
-        return this.$store.state.vocabulary.fields.filter(f => this.enableLicenseAdd || f.id !== "license")
+        return useVocabularyStore().fields.filter(f => this.enableLicenseAdd || f.id !== "license")
       }
     },
     instanceconfig: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   data () {
@@ -1599,16 +1601,16 @@ export default {
           url: '/jsonld/template/add',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'error', msg: error }])
+        useRootStore().setAlerts([{ type: 'error', msg: error }])
       } finally {
         this.loading = false
         this.templatedialog = false
@@ -1626,18 +1628,18 @@ export default {
           url: '/jsonld/template/' + this.$route.params.templateid + '/edit',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         } else {
-          this.$store.commit('setAlerts', [{ type: 'success', msg: this.$t('Template saved') }])
+          useRootStore().setAlerts([{ type: 'success', msg: this.$t('Template saved') }])
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'error', msg: error }])
+        useRootStore().setAlerts([{ type: 'error', msg: error }])
       } finally {
         this.loading = false
         this.templatedialog = false
@@ -1745,7 +1747,7 @@ export default {
           url: '/' + this.submittype + '/create',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData,
           onUploadProgress: function (progressEvent) {
@@ -1753,7 +1755,7 @@ export default {
           }
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         if (response.data.status === 200) {
           if (response.data.pid) {
@@ -1768,10 +1770,10 @@ export default {
               this.serverSubmitErrors.push(e.msg)
             }
           }
-          this.$store.commit('setAlerts', [])
+          useRootStore().setAlerts([])
         } else {
           const msg = error instanceof Error ? error.toString() : String(error)
-          this.$store.commit('setAlerts', [{ type: 'error', msg }])
+          useRootStore().setAlerts([{ type: 'error', msg }])
         }
       } finally {
         vuetifyGoTo(0)
@@ -1793,7 +1795,7 @@ export default {
           url: '/object/' + this.targetpid + '/metadata',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
@@ -1801,7 +1803,7 @@ export default {
           if (response.data.status === 401) {
             response.data.alerts.push({ type: 'error', msg: 'Please log in' })
           }
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         if (response.data.status === 200) {
           this.$emit('object-saved', this.targetpid)
@@ -1809,7 +1811,7 @@ export default {
       } catch (error) {
         console.log(error)
         const msg = error instanceof Error ? error.toString() : String(error)
-        this.$store.commit('setAlerts', [{ type: 'error', msg }])
+        useRootStore().setAlerts([{ type: 'error', msg }])
       } finally {
         vuetifyGoTo(0)
         this.loading = false
@@ -2347,7 +2349,7 @@ export default {
       if (event && Object.keys(event).length > 0) {
         Object.entries(event).forEach(([otkey, ot]) => {
           if (ot) {
-            let term = this.$store.getters['vocabulary/getTerm'](voc, otkey)
+            let term = useVocabularyStore().getTerm(voc, otkey)
             if (!term) return
             let field = {
               value: term['@id']
@@ -2363,7 +2365,7 @@ export default {
           }
         })
       } else if (f.initialSelectedTermId) {
-        const term = this.$store.getters['vocabulary/getTerm'](voc, f.initialSelectedTermId)
+        const term = useVocabularyStore().getTerm(voc, f.initialSelectedTermId)
         if (term) {
           const field = { value: term['@id'] }
           if (term['skos:prefLabel']) {
@@ -2551,9 +2553,9 @@ export default {
     }
   },
   mounted: function () {
-    this.$store.dispatch('vocabulary/loadLanguages', this.$i18n.locale)
-    this.$store.dispatch('vocabulary/sortFields', {locale: this.$i18n.locale, i18nInstance: this.$i18n})
-    this.$store.dispatch('vocabulary/sortRoles', this.$i18n.locale)
+    useVocabularyStore().loadLanguages(this.$i18n.locale)
+    useVocabularyStore().sortFields({locale: this.$i18n.locale, i18nInstance: this.$i18n})
+    useVocabularyStore().sortRoles(this.$i18n.locale)
   }
 }
 </script>

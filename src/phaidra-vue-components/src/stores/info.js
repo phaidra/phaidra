@@ -1,3 +1,5 @@
+import { defineStore } from 'pinia'
+
 export const state = () => ({
   metadataFieldsOverview: [
     {
@@ -3041,40 +3043,33 @@ export const state = () => ({
   ]
 })
 
-const mutations = {
-  sortFieldsOverview (state, payload) {
-    if (!payload?.i18nInstance) return
-    payload.i18nInstance.locale = payload.locale
-    for (let section of state.metadataFieldsOverview) {
-      section.fields.sort((a, b) => payload.i18nInstance.t(a.title).localeCompare(payload.i18nInstance.t(b.title), payload.locale))
-    }
-  },
-  initFieldsOverview (state) {
-    state.metadataFieldsOverview[0].fields[0].open = true
-  },
-  switchFieldsOverview (state, id) {
-    for (let cat of state.metadataFieldsOverview) {
-      for (let f of cat.fields) {
-        if (f.id === id) {
-          f.open = true
-        } else {
-          f.open = false
+export const useInfoStore = defineStore('info', {
+  state,
+  actions: {
+    sortFieldsOverview (payload) {
+      // Handle both old format (just locale) and new format ({locale, i18nInstance})
+      const params = typeof payload === 'string' ? { locale: payload } : payload
+      if (!params?.i18nInstance) return
+      params.i18nInstance.locale = params.locale
+      for (let section of this.metadataFieldsOverview) {
+        section.fields.sort((a, b) => params.i18nInstance.t(a.title).localeCompare(params.i18nInstance.t(b.title), params.locale))
+      }
+    },
+    initFieldsOverview () {
+      this.metadataFieldsOverview[0].fields[0].open = true
+    },
+    switchFieldsOverview (id) {
+      for (let cat of this.metadataFieldsOverview) {
+        for (let f of cat.fields) {
+          if (f.id === id) {
+            f.open = true
+          } else {
+            f.open = false
+          }
         }
       }
     }
   }
-}
+})
 
-const actions = {
-  sortFieldsOverview ({ commit, state }, payload) {
-    // Handle both old format (just locale) and new format ({locale, i18nInstance})
-    const params = typeof payload === 'string' ? { locale: payload } : payload
-    commit('sortFieldsOverview', params)
-  }
-}
-
-export default {
-  state,
-  mutations,
-  actions
-}
+export default useInfoStore

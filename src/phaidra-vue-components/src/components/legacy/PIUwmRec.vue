@@ -295,6 +295,7 @@
 </template>
 
 <script>
+import { useVocabularyStore } from '../../stores/vocabulary'
 import qs from 'qs'
 import PIDuration from '../input/PIDuration'
 import lang3to2map from '../../utils/lang3to2map'
@@ -331,7 +332,7 @@ export default {
     },
     languages: function () {
       let arr = []
-      const langTerms = this.$store.state.vocabulary.vocabularies['lang']?.terms
+      const langTerms = useVocabularyStore().vocabularies['lang']?.terms
       if (!langTerms) {
         return arr
       }

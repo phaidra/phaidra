@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import { useVocabularyStore } from '../../stores/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { vocabulary } from '../../mixins/vocabulary'
 import OefosTreeDialog from '../select/OefosTreeDialog'
@@ -138,7 +139,7 @@ export default {
   mounted: function () {
     this.$nextTick(async function () {
       if (!this.vocabularies['oefos'].loaded) {
-        await this.$store.dispatch('vocabulary/loadOefos', this?.$i18n?.locale || 'eng')
+        await useVocabularyStore().loadOefos(this?.$i18n?.locale || 'eng')
       }
       // emit input to set skos:prefLabel in parent
       if (this.value) {

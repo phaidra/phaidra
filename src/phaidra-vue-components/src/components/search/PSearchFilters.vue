@@ -138,7 +138,7 @@
             </ul>
 
           </li>
-          <li v-if="$store.state.user.token">
+          <li v-if="useRootStore().user.token">
             <v-row no-gutters>
               <v-col>
                 <v-checkbox v-model="showOwnerFilter" @change="toggleOwnerFilter()" :label="$t('Owner')"
@@ -197,6 +197,8 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
+import { useVocabularyStore } from '../../stores/vocabulary'
 import { marcRoles } from './filters'
 import { toggleFacet, showFacet } from './facets'
 import UserSearchDialog from '../select/UserSearchDialog'
@@ -248,7 +250,7 @@ export default {
   },
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     },
     filtersActive() {
       for (let fq of this.facetQueries) {
@@ -330,8 +332,8 @@ export default {
   },
   methods: {
     loadedAccessibilityTerms: function (vocabulary) {
-      if (this.$store.state.vocabulary.vocabularies[vocabulary]) {
-        return this.$store.state.vocabulary.vocabularies[vocabulary].loaded ? this.$store.state.vocabulary.vocabularies[vocabulary].terms : []
+      if (useVocabularyStore().vocabularies[vocabulary]) {
+        return useVocabularyStore().vocabularies[vocabulary].loaded ? useVocabularyStore().vocabularies[vocabulary].terms : []
       }
       return []
     },

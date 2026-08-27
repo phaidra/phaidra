@@ -40,7 +40,7 @@
       {{ $t('Selected') }}
       </v-chip>
     </template>    
-    <template v-if="type === 'navtemplate' && $store.state.user.isadmin" v-slot:item.public="{ item }">
+    <template v-if="type === 'navtemplate' && useRootStore().user.isadmin" v-slot:item.public="{ item }">
       <v-checkbox v-model="item.public" @change="onPublicValChange(item)"></v-checkbox>
     </template>
     <template v-if="type === 'navtemplate'" v-slot:item.validationfnc="{ item }">
@@ -50,7 +50,7 @@
       {{ $unixtime(item.created) }}
     </template>
     <template v-slot:item.load="{ item }">
-      <v-btn variant="text" color="primary" @click="editValidation(item)" v-if="type === 'navtemplate' && $store.state.user.isadmin">
+      <v-btn variant="text" color="primary" @click="editValidation(item)" v-if="type === 'navtemplate' && useRootStore().user.isadmin">
         <span>{{ $t('Edit Validation') }}</span>
       </v-btn>
       <v-btn variant="text" color="primary" @click="loadTemplate('')" v-if="isDefaultSelect && item.tid === selectedTemplateId">
@@ -67,6 +67,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 
 export default {
   name: 'p-templates',
@@ -126,10 +127,10 @@ export default {
             { title: this.$t('Name'), align: 'start', key: 'name' },
             { title: this.$t('Created'), align: 'end', key: 'created' },
           ];
-          if(this.type === 'navtemplate' && this.$store.state.user.isadmin) {
+          if(this.type === 'navtemplate' && useRootStore().user.isadmin) {
             this.headers.unshift({ title: this.$t('Public'), align: 'start', key: 'public' })
           }
-          if(this.$store.state.user.isadmin) {
+          if(useRootStore().user.isadmin) {
             this.headers.push({ title: this.$t('Validation'), align: 'start', key: 'validationfnc' })
           }
           this.headers.push({ title: this.$t('Actions'), align: 'end', key: 'load', sortable: false })
@@ -154,16 +155,16 @@ export default {
           method: 'GET',
           url: '/jsonld/template/' + tid,
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         this.$emit('load-template', response.data.template)
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.loading = false
       }
@@ -174,19 +175,19 @@ export default {
         try {
           let response = await this.$axios.request({
             method: 'POST',
-            url: '/jsonld/template/' + (this.$store.state.user.isadmin ? 'admin/' : '')  + tid + '/remove',
+            url: '/jsonld/template/' + (useRootStore().user.isadmin ? 'admin/' : '')  + tid + '/remove',
             headers: {
-              'X-XSRF-TOKEN': this.$store.state.user.token
+              'X-XSRF-TOKEN': useRootStore().user.token
             }
           })
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
           this.deletetempconfirm = false
           this.loadTemplates()
         } catch (error) {
           console.log(error)
-          this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+          useRootStore().setAlerts([{ type: 'danger', msg: error }])
         } finally {
           this.loading = false
         }
@@ -197,26 +198,26 @@ export default {
       try {
         let response = await this.$axios.request({
           method: 'GET',
-          url: '/jsonld/templates' + (this.$store.state.user.isadmin ? '/admin' : '')  + ((this.tag && this.tag.length > 1) ? '?tag=' + this.tag : ''),
+          url: '/jsonld/templates' + (useRootStore().user.isadmin ? '/admin' : '')  + ((this.tag && this.tag.length > 1) ? '?tag=' + this.tag : ''),
           headers: {
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         this.templates = response.data.templates
         this.loading = false
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.loading = false
       }
     }
   },
   mounted: function () {
-    if (this.$store.state.user.token) {
+    if (useRootStore().user.token) {
       this.loadTemplates()
     }
   }

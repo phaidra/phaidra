@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import { context } from '../mixins/context'
 import { config } from '../mixins/config'
 
@@ -93,12 +94,12 @@ export default {
             }
           )
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
           this.touAgreed = true
         } catch (error) {
           console.log(error)
-          this.$store.commit('setAlerts', [ { type: 'error', msg: error } ])
+          useRootStore().setAlerts([ { type: 'error', msg: error } ])
         } finally {
           this.loading = false
         }
@@ -115,19 +116,19 @@ export default {
           }
         )
         if (response.data.alerts && response.data.alerts.length > 0) {
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         if (!response.data.agreed) {
           let toures = await this.$axios.get('/termsofuse')
           if (toures.data.alerts && toures.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', toures.data.alerts)
+            useRootStore().setAlerts(toures.data.alerts)
           }
           this.tou = toures.data.terms
           this.touVersion = toures.data.version
           this.showtou = true
           return
         } else {
-          await this.$store.dispatch('login', this.credentials)
+          await useRootStore().login(this.credentials)
           if (this.signedin) {
             this.$router.push(this.localeLocation({path: '/'}))
           }

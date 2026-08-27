@@ -574,6 +574,9 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
+import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
+import { useInfoStore } from 'phaidra-vue-components/src/stores/info'
 import { config } from "@/mixins/config";
 import { context } from "@/mixins/context";
 import { THEME_KEY, LOCALE_KEY, persistPreference } from "~/utils/preference-storage";
@@ -624,30 +627,30 @@ export default {
     },
     logout: function () {
       console.log("local logout")
-      this.$store.dispatch("logout");
-      this.$store.commit("setLoading", false);
+      useRootStore().logout();
+      useRootStore().setLoading(false);
       this.$router.push(this.localeLocation({ path: `/` }));
     },
     ssologoutlink: async function () {
       console.log("local logout")
       try {
-        await this.$store.dispatch("logout");
+        await useRootStore().logout();
       } catch (error) {
         console.log(error)
       }
       console.log("sso logout link")
-      this.$store.commit("setLoading", false);
+      useRootStore().setLoading(false);
       this.$refs.logoutlink.click();
     },
     ssologout: async function () {
       console.log("local logout")
       try {
-        await this.$store.dispatch("logout");
+        await useRootStore().logout();
       } catch (error) {
         console.log(error)
       }
       console.log("sso logout location.href")
-      this.$store.commit("setLoading", false);
+      useRootStore().setLoading(false);
       window.location.href = '/Shibboleth.sso/Logout'
     },
     useLocale: function (lang) {
@@ -662,10 +665,10 @@ export default {
       this.$i18n.locale = lang;
       persistPreference(LOCALE_KEY, lang);
       this.$router.push(this.switchLocalePath(lang));
-      this.$store.dispatch("vocabulary/sortRoles", this.$i18n.locale);
-      this.$store.dispatch("vocabulary/sortFields", {locale: this.$i18n.locale, i18nInstance: this.$i18n});
-      this.$store.dispatch("vocabulary/sortObjectTypes", this.$i18n.locale);
-      this.$store.dispatch('info/sortFieldsOverview', {locale: this.$i18n.locale, i18nInstance: this.$i18n})
+      useVocabularyStore().sortRoles(this.$i18n.locale);
+      useVocabularyStore().sortFields({locale: this.$i18n.locale, i18nInstance: this.$i18n});
+      useVocabularyStore().sortObjectTypes(this.$i18n.locale);
+      useInfoStore().sortFieldsOverview({locale: this.$i18n.locale, i18nInstance: this.$i18n})
     }
   }
 };

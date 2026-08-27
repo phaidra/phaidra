@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { useRootStore } from '~/stores/root'
 import { context } from '../../../mixins/context'
 import { config } from '../../../mixins/config'
 import { useGoTo } from 'vuetify'
@@ -60,7 +61,7 @@ export default {
   },
   methods: {
     objectSaved: function (event) {
-      this.$store.commit('setAlerts', [{ type: 'success', key: 'object_metadata_saved_success', params: { o: event }}])
+      useRootStore().setAlerts([{ type: 'success', key: 'object_metadata_saved_success', params: { o: event }}])
       this.$router.push(this.localeLocation({ path: `/detail/${event}`}))
       this.goTo(0)
     },
@@ -118,11 +119,11 @@ export default {
       });
     },
     fetchForm: async function (pid) {
-      this.$store.commit('setLoading', true)
+      useRootStore().setLoading(true)
       try {
         await this.loadUwmetadata(this, pid)
       } finally {
-        this.$store.commit('setLoading', false)
+        useRootStore().setLoading(false)
       }
     },
     loadUwmetadata: async function (self, pid) {
@@ -135,7 +136,7 @@ export default {
           }
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
-          self.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         if (response.data.metadata['uwmetadata']) {
           this.postLoadUwmetadata(self, response.data.metadata['uwmetadata'])

@@ -1,8 +1,12 @@
-export default defineNuxtRouteMiddleware(async (to) => {
-  const { $store: store } = useNuxtApp()
-  if (!store) return
+import { useRootStore } from '~/stores/root'
+import { useBulkUploadStore } from '~/stores/bulk-upload'
 
-  if (!store.state?.user?.token) {
+export default defineNuxtRouteMiddleware(async (to) => {
+  const { $pinia, $initBulkUpload } = useNuxtApp()
+  const root = useRootStore($pinia)
+  const bulk = useBulkUploadStore($pinia)
+
+  if (!root.user?.token) {
     if (import.meta.client) {
       localStorage.setItem('redirect', to.fullPath)
     }
@@ -10,29 +14,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   // Wait for store initialization on client side
-  if (import.meta.client && store.$initBulkUpload) {
-    await store.$initBulkUpload()
+  if (import.meta.client && $initBulkUpload) {
+    await $initBulkUpload()
   }
 
-  // TODO: Uncomment this when setting the capabilities will be possible in user management
-  // if (!store.state?.user?.authzForms && store.dispatch) {
-  //   await store.dispatch('getAuthzCapabilities')
-  // }
-
-  // const forms = store.state?.user?.authzForms || {}
-  // if (forms.bulkupload === false) {
-  //   return navigateTo('/')
-  // }
-
-  const getCurrentStep = store.getters['bulk-upload/getCurrentStepFromRoute']
-  const canAccessStep = store.getters['bulk-upload/canAccessStep']
-  if (typeof getCurrentStep !== 'function' || typeof canAccessStep !== 'function') return
-
-  const currentStep = getCurrentStep(to.path)
-  if (!canAccessStep(currentStep)) {
-    // If user can't access this step, redirect to the last allowed step.
-    const maxStep = store.state['bulk-upload']?.maxStepReached
-    const allowedRoute = store.state['bulk-upload']?.steps?.[maxStep]?.route
+  const currentStep = bulk.getCurrentStepFromRoute(to.path)
+  if (!bulk.canAccessStep(currentStep)) {
+    const allowedRoute = bulk.steps?.[bulk.maxStepReached]?.route
     if (allowedRoute) {
       return navigateTo(allowedRoute)
     }

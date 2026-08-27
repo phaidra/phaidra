@@ -1,10 +1,12 @@
-import languages from '../../utils/lang'
-import lang3to2map from '../../utils/lang3to2map'
-import orgunits from '../../utils/orgunits'
-import fieldsLib from '../../utils/fields'
-import oefos from '../../utils/oefos'
-import thema from '../../utils/thema'
-import bic from '../../utils/bic'
+import { defineStore } from 'pinia'
+import { useHostRootStore } from './host-root.js'
+import languages from '../utils/lang'
+import lang3to2map from '../utils/lang3to2map'
+import orgunits from '../utils/orgunits'
+import fieldsLib from '../utils/fields'
+import oefos from '../utils/oefos'
+import thema from '../utils/thema'
+import bic from '../utils/bic'
 
 const lang2to3map = Object.keys(lang3to2map).reduce((ret, key) => {
   ret[lang3to2map[key]] = key
@@ -2049,415 +2051,398 @@ export const state = () => ({
   fields: fieldsLib.getEditableFields()
 })
 
-const mutations = {
-  sortOrgUnits(state, locale) {
-    if (state.vocabularies['orgunits'].sorted !== locale) {
-      if (state.vocabularies['orgunits']['terms']) {
-        if (state.vocabularies['orgunits']['terms'][0]) {
-          if (state.vocabularies['orgunits']['terms'][0]['phaidra:unitOrdinal']) {
-            if (state.vocabularies['orgunits']['terms'][0]['phaidra:groupOrdinal']) {
-              // if there are groups, sort groups first, then units within groups...
-              let groups = []
-              for (let u of state.vocabularies['orgunits']['terms']) {
-                if (u['phaidra:orgGroupOrdinal']) {
-                  if (!Array.isArray(groups[u['phaidra:orgGroupOrdinal']])) {
-                    groups[u['phaidra:orgGroupOrdinal']] = []
-                  }
-                  groups[u['phaidra:orgGroupOrdinal']].push(u)
-                }
-              }
-              let groupedUnits = []
-              for (let g of groups) {
-                if (g) {
-                  g.sort(function (a, b) {
-                    return a['phaidra:unitOrdinal'] - b['phaidra:unitOrdinal']
-                  })
-                  groupedUnits.push(g)
-                }
-              }
-              state.vocabularies['orgunits']['terms'] = groupedUnits
-            } else {
-              // ... otherwise sort units only
-              state.vocabularies['orgunits']['terms'].sort(function (a, b) {
-                return a['phaidra:unitOrdinal'] - b['phaidra:unitOrdinal']
-              })
-            }
-          } else {
-            state.vocabularies['orgunits']['terms'].sort(function (a, b) {
-              if ((a['skos:prefLabel'][locale]) && (b['skos:prefLabel'][locale])) {
-                return a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale)
-              }
-              return 0
-            })
-          }
-        }
-      }
-      orgunits.sortOrgUnitsTree(state.vocabularies['orgunits']['tree'], locale)
-      state.vocabularies['orgunits'].sorted = locale
-    }
-  },
-  setOrgUnits(state, data) {
-    if (state.vocabularies['orgunits']['loaded'] === false) {
-      state.vocabularies['orgunits']['tree'] = data.tree
-      state.vocabularies['orgunits']['terms'] = data.terms
-      state.vocabularies['orgunits']['treeUnsorted'] = data.treeUnsorted
-      state.vocabularies['orgunits']['loaded'] = true
-    }
-  },
-  sortRoles(state, locale) {
-    state.vocabularies['rolepredicate']['terms'].sort(function (a, b) {
-      return a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale)
-    })
-    state.vocabularies['submitrolepredicate']['terms'].sort(function (a, b) {
-      return a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale)
-    })
-  },
-  sortObjectTypes(state, locale) {
-    state.vocabularies['objecttype']['terms'].sort(function (a, b) {
-      return a['skos:prefLabel'][locale] ? a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale) : 1
-    })
-  },
-  sortOERObjectTypes(state, locale) {
-    state.vocabularies['oerobjecttype']['terms'].sort(function (a, b) {
-      return a['skos:prefLabel'][locale] ? a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale) : 1
-    })
-  },
-  setOefos(state, data) {
-    if (state.vocabularies['oefos']['loaded'] === false) {
-      state.vocabularies['oefos']['tree'] = data.tree
-      state.vocabularies['oefos']['terms'] = data.terms
-      state.vocabularies['oefos']['loaded'] = true
-    }
-  },
-  sortOefos(state, locale) {
-    if (state.vocabularies['oefos'].sorted !== locale) {
-      if (state.vocabularies['oefos']['terms']) {
-        if (state.vocabularies['oefos']['terms'][0]) {
-          state.vocabularies['oefos']['terms'].sort(function (a, b) {
-            const aLabel = a['skos:prefLabel'][locale] || ''
-            const bLabel = b['skos:prefLabel'][locale] || ''
-            return aLabel.localeCompare(bLabel, locale)
-          })
-        }
-      }
-      if (state.vocabularies['oefos']['tree']) {
-        oefos.sortOefosTree(state.vocabularies['oefos']['tree'], locale)
-      }
-      state.vocabularies['oefos'].sorted = locale
-    }
-  },
-  setThema(state, data) {
-    if (state.vocabularies['thema']['loaded'] === false) {
-      state.vocabularies['thema']['tree'] = data.tree
-      state.vocabularies['thema']['terms'] = data.terms
-      state.vocabularies['thema']['loaded'] = true
-    }
-  },
-  setBic(state, data) {
-    if (state.vocabularies['bic']['loaded'] === false) {
-      state.vocabularies['bic']['tree'] = data.tree
-      state.vocabularies['bic']['terms'] = data.terms
-      state.vocabularies['bic']['loaded'] = true
-    }
-  },
-  sortFields(state, {locale, i18nInstance}) {
-    if (!i18nInstance) return
-    i18nInstance.locale = locale
-    if (state.fields) {
-      state.fields.sort(function (a, b) {
-        return i18nInstance.t(a.fieldname).localeCompare(i18nInstance.t(b.fieldname), locale)
-      })
-    }
-  },
-  setLangTerms(state, data) {
-    if (state.vocabularies['lang']['loaded'] === false) {
-      state.vocabularies['lang']['terms'] = data
-      state.vocabularies['lang']['loaded'] = true
-    }
-  },
-  disableVocabularyTerms(state, vocandterms) {
-    if (state.vocabularies[vocandterms.vocabulary]) {
-      for (let t of state.vocabularies[vocandterms.vocabulary].terms) {
-        for (let termid of vocandterms.termids) {
-          if (t['@id'] === termid) {
-            t.disabled = true
-          }
-        }
-      }
-    }
-  },
-  enableAllVocabularyTerms(state, vocabulary) {
-    if (state.vocabularies[vocabulary]) {
-      for (let t of state.vocabularies[vocabulary].terms) {
-        t.disabled = false
-      }
-    }
-  },
-  setInstanceConfig(state, instanceconfig) {
-    if (instanceconfig.hasOwnProperty('data_vocabularies')) {
-      for (let vocid of Object.keys(instanceconfig.data_vocabularies)) {
-        state.vocabularies[vocid] = instanceconfig.data_vocabularies[vocid]
-        state.vocabularies[vocid].loaded = true
-      }
-    }
-  },
-  loadVocabulary(state, payload) {
-    let id = payload.id
-    let data = payload.data
-
-    let terms = []
-
-    for (let lab of data.results.bindings) {
-      // TODO: remove replace once pid. is exported to triplestore instead of vocab.
-      let id = lab.id.value.replace('vocab.phaidra.org', 'pid.phaidra.org')
-      let lang = lang2to3map[lab.label['xml:lang']]
-      let found = false
-      for (let term of terms) {
-        if (term['@id'] === id) {
-          term['skos:prefLabel'][lang] = lab.label.value
-          found = true
-          break
-        }
-      }
-      if (!found) {
-        let term = {
-          '@id': id,
-          'skos:prefLabel': {}
-        }
-        term['skos:prefLabel'][lang] = lab.label.value
-        terms.push(term)
-      }
-    }
-    state.vocabularies[id] = {
-      terms: terms,
-      loaded: true
-    }
-  }
-}
-
-const actions = {
-  setInstanceConfig({ commit }, config) {
-    commit('setInstanceConfig', config)
-  },
-  sortFields({ commit }, {locale, i18nInstance}) {
-    commit('sortFields', {locale, i18nInstance})
-  },
-  sortRoles({ commit }, locale) {
-    commit('sortRoles', locale)
-  },
-  sortObjectTypes({ commit }, locale) {
-    commit('sortObjectTypes', locale)
-    commit('sortOERObjectTypes', locale)
-  },
-  loadLanguages({ commit, state }, locale) {
-    if (state.vocabularies['lang']['terms'].length < 1) {
-      let langterms = languages.get_lang()
-      langterms.sort((a, b) => a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale))
-      commit('setLangTerms', langterms)
-    }
-  },
-  async loadOrgUnits({ commit, rootState, state }, locale) {
-    if (state.vocabularies['orgunits']['loaded'] === false) {
-      try {
-        let response = await this.$axios.request({
-          method: 'GET',
-          url: '/directory/org_get_units'
-        })
-        if (response.data.alerts && response.data.alerts.length > 0) {
-          commit('setAlerts', response.data.alerts, { root: true })
-        }
-        let terms = []
-        orgunits.getOrgUnitsTerms(terms, response.data.units, null)
-        commit('setOrgUnits', { tree: response.data.units, terms: terms, treeUnsorted: response.data.units ? JSON.parse(JSON.stringify(response.data.units)) : [], locale: locale })
-        commit('sortOrgUnits', locale)
-      } catch (error) {
-        console.log(error)
-        commit('setAlerts', [{ type: 'danger', msg: 'Failed to fetch org units: ' + error }], { root: true })
-      }
-    } else {
-      if (state.vocabularies['orgunits']['locale'] !== locale) {
-        commit('sortOrgUnits', locale)
-      }
-    }
-  },
-  async loadOefos({ commit, rootState, state }, locale) {
-    if (state.vocabularies['oefos']['loaded'] === false) {
-      try {
-        let response = await this.$axios.request({
-          method: 'GET',
-          url: '/vocabulary?uri=oefos2012'
-        })
-        if (response.data.alerts && response.data.alerts.length > 0) {
-          commit('setAlerts', response.data.alerts)
-        }
-        let terms = []
-        oefos.getOefosTerms(terms, response.data.vocabulary, null)
-        commit('setOefos', { tree: response.data.vocabulary, terms: terms, locale: locale })
-        commit('sortOefos', locale)
-      } catch (error) {
-        console.log(error)
-        commit('setAlerts', [{ type: 'danger', msg: 'Failed to fetch oefos: ' + error }], { root: true })
-      }
-    } else {
-      if (state.vocabularies['oefos']['locale'] !== locale) {
-        commit('sortOefos', locale)
-      }
-    }
-  },
-  async loadThema({ commit, rootState, state }, locale) {
-    if (state.vocabularies['thema']['loaded'] === false) {
-      try {
-        let response = await this.$axios.request({
-          method: 'GET',
-          url: '/vocabulary?uri=thema'
-        })
-        if (response.data.alerts && response.data.alerts.length > 0) {
-          commit('setAlerts', response.data.alerts)
-        }
-        let terms = []
-        thema.getThemaTerms(terms, response.data.vocabulary, null)
-        commit('setThema', { tree: response.data.vocabulary, terms: terms, locale: locale })
-        // console.log(terms)
-      } catch (error) {
-        console.log(error)
-        commit('setAlerts', [{ type: 'danger', msg: 'Failed to fetch thema: ' + error }])
-      }
-    }
-  },
-  async loadBic({ commit, rootState, state }, locale) {
-    if (state.vocabularies['bic']['loaded'] === false) {
-      try {
-        let response = await this.$axios.request({
-          method: 'GET',
-          url: '/vocabulary?uri=bic'
-        })
-        if (response.data.alerts && response.data.alerts.length > 0) {
-          commit('setAlerts', response.data.alerts)
-        }
-        let terms = []
-        bic.getBicTerms(terms, response.data.vocabulary, null)
-        commit('setBic', { tree: response.data.vocabulary, terms: terms, locale: locale })
-        // console.log(terms)
-      } catch (error) {
-        console.log(error)
-        commit('setAlerts', [{ type: 'danger', msg: 'Failed to fetch BIC: ' + error }])
-      }
-    }
-  },
-  async loadVocabulary({ commit, state, rootState }, vocabId) {
-    if (state.vocabularies[vocabId]) {
-      if (state.vocabularies[vocabId].loaded) {
-        return
-      }
-    }
-    try {
-      var raw = 'PREFIX v: <' + rootState.appconfig.apis.vocserver.ns + '> PREFIX : <' + rootState.appconfig.apis.vocserver.ns + 'schema#> PREFIX skos: <http://www.w3.org/2004/02/skos/core#> SELECT ?id ?label ?exp WHERE { graph ?g { ?id v:memberOf  v:' + vocabId + ' . ?id skos:prefLabel ?label . OPTIONAL { ?id :expires ?exp . } } }'
-      let response = await this.$axios.request({
-        method: 'POST',
-        url: rootState.appconfig.apis.vocserver.url + rootState.appconfig.apis.vocserver.dataset + '/query',
-        headers: { 'Content-Type': 'application/sparql-query' },
-        data: raw
-      })
-      if (response.data && response.data.results && response.data.results.bindings) {
-        commit('loadVocabulary', { id: vocabId, data: response.data })
-      } else {
-        console.log('Failed to fetch vocabulary ' + vocabId)
-        commit('setAlerts', [{ type: 'danger', msg: 'Failed to fetch vocabulary ' + vocabId }])
-      }
-    } catch (error) {
-      console.log(error)
-      commit('setAlerts', [{ type: 'danger', msg: 'Failed to fetch vocabulary ' + vocabId + ': ' + error }])
-    }
-  }
-}
-
-const getters = {
-  getLocalizedTermLabel: (state) => (voc, id, lang) => {
-    let terms = state.vocabularies[voc].terms
-    for (let i = 0; i < terms.length; i++) {
-      if (terms[i]['@id'] === id) {
-        return terms[i]['skos:prefLabel'][lang] ? terms[i]['skos:prefLabel'][lang] : terms[i]['skos:prefLabel']['eng'] ? terms[i]['skos:prefLabel']['eng'] : terms[i]['skos:prefLabel']['deu']
-      }
-    }
-  },
-  getLocalizedTermLabelByNotation: (state) => (voc, notation, lang) => {
-    let terms = state.vocabularies[voc].terms
-    for (let i = 0; i < terms.length; i++) {
-      if (Array.isArray(terms[i]['skos:notation'])) {
-        for (let n of terms[i]['skos:notation']) {
-          if (n === notation) {
-            return terms[i]['skos:prefLabel'][lang] ? terms[i]['skos:prefLabel'][lang] : terms[i]['skos:prefLabel']['eng'] ? terms[i]['skos:prefLabel']['eng'] : terms[i]['skos:prefLabel']['deu']
-          }
-        }
-      } else {
-        if (terms[i]['skos:notation'] === notation) {
+export const useVocabularyStore = defineStore('vocabulary', {
+  state,
+  getters: {
+    getLocalizedTermLabel: (state) => (voc, id, lang) => {
+      let terms = state.vocabularies[voc].terms
+      for (let i = 0; i < terms.length; i++) {
+        if (terms[i]['@id'] === id) {
           return terms[i]['skos:prefLabel'][lang] ? terms[i]['skos:prefLabel'][lang] : terms[i]['skos:prefLabel']['eng'] ? terms[i]['skos:prefLabel']['eng'] : terms[i]['skos:prefLabel']['deu']
         }
       }
-    }
-  },
-  getTerm: (state) => (voc, id) => {
-    let terms = state.vocabularies[voc].terms
-    for (let i = 0; i < terms.length; i++) {
-      if (terms[i]['@id'] === id) {
-        return terms[i]
-      }
-    }
-  },
-  getTermProperty: (state) => (voc, id, prop) => {
-    let terms = state.vocabularies[voc].terms
-    for (let i = 0; i < terms.length; i++) {
-      if (terms[i]['@id'] === id) {
-        return terms[i][prop]
-      }
-    }
-  },
-  getObjectTypeForResourceType: (state, getters, rootState) => (rtId, locale, overrideMapping) => {
-    let arr = []
-    let other = null
-    let mappingSource = overrideMapping
-    if (!mappingSource || !mappingSource[rtId]) {
-      let configMapping = rootState.instanceconfig && rootState.instanceconfig.data_ot4rt
-      if (typeof configMapping === 'string') {
-        try {
-          configMapping = JSON.parse(configMapping)
-        } catch (e) {
-          configMapping = null
+    },
+    getLocalizedTermLabelByNotation: (state) => (voc, notation, lang) => {
+      let terms = state.vocabularies[voc].terms
+      for (let i = 0; i < terms.length; i++) {
+        if (Array.isArray(terms[i]['skos:notation'])) {
+          for (let n of terms[i]['skos:notation']) {
+            if (n === notation) {
+              return terms[i]['skos:prefLabel'][lang] ? terms[i]['skos:prefLabel'][lang] : terms[i]['skos:prefLabel']['eng'] ? terms[i]['skos:prefLabel']['eng'] : terms[i]['skos:prefLabel']['deu']
+            }
+          }
+        } else {
+          if (terms[i]['skos:notation'] === notation) {
+            return terms[i]['skos:prefLabel'][lang] ? terms[i]['skos:prefLabel'][lang] : terms[i]['skos:prefLabel']['eng'] ? terms[i]['skos:prefLabel']['eng'] : terms[i]['skos:prefLabel']['deu']
+          }
         }
       }
-      if (configMapping && configMapping[rtId]) {
-        mappingSource = configMapping
-      } else {
-        mappingSource = ot4rt
+    },
+    getTerm: (state) => (voc, id) => {
+      let terms = state.vocabularies[voc].terms
+      for (let i = 0; i < terms.length; i++) {
+        if (terms[i]['@id'] === id) {
+          return terms[i]
+        }
       }
-    }
-    const mapping = mappingSource[rtId]
-    if (rtId !== ns + 'GXS7-ENXJ' && Array.isArray(mapping)) {
-      for (let otId of mapping) {
-        for (let term of state.vocabularies['objecttype'].terms) {
-          if (term['@id'] === otId) {
-            if (term['@id'] === ns + 'PYRE-RAWJ') {
-              other = term
-            } else {
-              arr.push(term)
+    },
+    getTermProperty: (state) => (voc, id, prop) => {
+      let terms = state.vocabularies[voc].terms
+      for (let i = 0; i < terms.length; i++) {
+        if (terms[i]['@id'] === id) {
+          return terms[i][prop]
+        }
+      }
+    },
+    getObjectTypeForResourceType: (state) => (rtId, locale, overrideMapping) => {
+      const rootState = useHostRootStore()
+      let arr = []
+      let other = null
+      let mappingSource = overrideMapping
+      if (!mappingSource || !mappingSource[rtId]) {
+        let configMapping = rootState.instanceconfig && rootState.instanceconfig.data_ot4rt
+        if (typeof configMapping === 'string') {
+          try {
+            configMapping = JSON.parse(configMapping)
+          } catch (e) {
+            configMapping = null
+          }
+        }
+        if (configMapping && configMapping[rtId]) {
+          mappingSource = configMapping
+        } else {
+          mappingSource = ot4rt
+        }
+      }
+      const mapping = mappingSource[rtId]
+      if (rtId !== ns + 'GXS7-ENXJ' && Array.isArray(mapping)) {
+        for (let otId of mapping) {
+          for (let term of state.vocabularies['objecttype'].terms) {
+            if (term['@id'] === otId) {
+              if (term['@id'] === ns + 'PYRE-RAWJ') {
+                other = term
+              } else {
+                arr.push(term)
+              }
             }
           }
         }
       }
+      arr.sort(function (a, b) {
+        return a['skos:prefLabel'][locale] ? a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale) : 1
+      })
+      if (other) {
+        arr.push(other)
+      }
+      return arr
     }
-    arr.sort(function (a, b) {
-      return a['skos:prefLabel'][locale] ? a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale) : 1
-    })
-    if (other) {
-      arr.push(other)
+  },
+  actions: {
+    sortOrgUnits(locale) {
+      if (this.vocabularies['orgunits'].sorted !== locale) {
+        if (this.vocabularies['orgunits']['terms']) {
+          if (this.vocabularies['orgunits']['terms'][0]) {
+            if (this.vocabularies['orgunits']['terms'][0]['phaidra:unitOrdinal']) {
+              if (this.vocabularies['orgunits']['terms'][0]['phaidra:groupOrdinal']) {
+                let groups = []
+                for (let u of this.vocabularies['orgunits']['terms']) {
+                  if (u['phaidra:orgGroupOrdinal']) {
+                    if (!Array.isArray(groups[u['phaidra:orgGroupOrdinal']])) {
+                      groups[u['phaidra:orgGroupOrdinal']] = []
+                    }
+                    groups[u['phaidra:orgGroupOrdinal']].push(u)
+                  }
+                }
+                let groupedUnits = []
+                for (let g of groups) {
+                  if (g) {
+                    g.sort(function (a, b) {
+                      return a['phaidra:unitOrdinal'] - b['phaidra:unitOrdinal']
+                    })
+                    groupedUnits.push(g)
+                  }
+                }
+                this.vocabularies['orgunits']['terms'] = groupedUnits
+              } else {
+                this.vocabularies['orgunits']['terms'].sort(function (a, b) {
+                  return a['phaidra:unitOrdinal'] - b['phaidra:unitOrdinal']
+                })
+              }
+            } else {
+              this.vocabularies['orgunits']['terms'].sort(function (a, b) {
+                if ((a['skos:prefLabel'][locale]) && (b['skos:prefLabel'][locale])) {
+                  return a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale)
+                }
+                return 0
+              })
+            }
+          }
+        }
+        orgunits.sortOrgUnitsTree(this.vocabularies['orgunits']['tree'], locale)
+        this.vocabularies['orgunits'].sorted = locale
+      }
+    },
+    setOrgUnits(data) {
+      if (this.vocabularies['orgunits']['loaded'] === false) {
+        this.vocabularies['orgunits']['tree'] = data.tree
+        this.vocabularies['orgunits']['terms'] = data.terms
+        this.vocabularies['orgunits']['treeUnsorted'] = data.treeUnsorted
+        this.vocabularies['orgunits']['loaded'] = true
+      }
+    },
+    sortRoles(locale) {
+      this.vocabularies['rolepredicate']['terms'].sort(function (a, b) {
+        return a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale)
+      })
+      this.vocabularies['submitrolepredicate']['terms'].sort(function (a, b) {
+        return a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale)
+      })
+    },
+    sortObjectTypes(locale) {
+      this.vocabularies['objecttype']['terms'].sort(function (a, b) {
+        return a['skos:prefLabel'][locale] ? a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale) : 1
+      })
+      this.vocabularies['oerobjecttype']['terms'].sort(function (a, b) {
+        return a['skos:prefLabel'][locale] ? a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale) : 1
+      })
+    },
+    sortOERObjectTypes(locale) {
+      this.vocabularies['oerobjecttype']['terms'].sort(function (a, b) {
+        return a['skos:prefLabel'][locale] ? a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale) : 1
+      })
+    },
+    setOefos(data) {
+      if (this.vocabularies['oefos']['loaded'] === false) {
+        this.vocabularies['oefos']['tree'] = data.tree
+        this.vocabularies['oefos']['terms'] = data.terms
+        this.vocabularies['oefos']['loaded'] = true
+      }
+    },
+    sortOefos(locale) {
+      if (this.vocabularies['oefos'].sorted !== locale) {
+        if (this.vocabularies['oefos']['terms']) {
+          if (this.vocabularies['oefos']['terms'][0]) {
+            this.vocabularies['oefos']['terms'].sort(function (a, b) {
+              const aLabel = a['skos:prefLabel'][locale] || ''
+              const bLabel = b['skos:prefLabel'][locale] || ''
+              return aLabel.localeCompare(bLabel, locale)
+            })
+          }
+        }
+        if (this.vocabularies['oefos']['tree']) {
+          oefos.sortOefosTree(this.vocabularies['oefos']['tree'], locale)
+        }
+        this.vocabularies['oefos'].sorted = locale
+      }
+    },
+    setThema(data) {
+      if (this.vocabularies['thema']['loaded'] === false) {
+        this.vocabularies['thema']['tree'] = data.tree
+        this.vocabularies['thema']['terms'] = data.terms
+        this.vocabularies['thema']['loaded'] = true
+      }
+    },
+    setBic(data) {
+      if (this.vocabularies['bic']['loaded'] === false) {
+        this.vocabularies['bic']['tree'] = data.tree
+        this.vocabularies['bic']['terms'] = data.terms
+        this.vocabularies['bic']['loaded'] = true
+      }
+    },
+    sortFields({locale, i18nInstance}) {
+      if (!i18nInstance) return
+      i18nInstance.locale = locale
+      if (this.fields) {
+        this.fields.sort(function (a, b) {
+          return i18nInstance.t(a.fieldname).localeCompare(i18nInstance.t(b.fieldname), locale)
+        })
+      }
+    },
+    setLangTerms(data) {
+      if (this.vocabularies['lang']['loaded'] === false) {
+        this.vocabularies['lang']['terms'] = data
+        this.vocabularies['lang']['loaded'] = true
+      }
+    },
+    disableVocabularyTerms(vocandterms) {
+      if (this.vocabularies[vocandterms.vocabulary]) {
+        for (let t of this.vocabularies[vocandterms.vocabulary].terms) {
+          for (let termid of vocandterms.termids) {
+            if (t['@id'] === termid) {
+              t.disabled = true
+            }
+          }
+        }
+      }
+    },
+    enableAllVocabularyTerms(vocabulary) {
+      if (this.vocabularies[vocabulary]) {
+        for (let t of this.vocabularies[vocabulary].terms) {
+          t.disabled = false
+        }
+      }
+    },
+    setInstanceConfig(instanceconfig) {
+      if (instanceconfig.hasOwnProperty('data_vocabularies')) {
+        for (let vocid of Object.keys(instanceconfig.data_vocabularies)) {
+          this.vocabularies[vocid] = instanceconfig.data_vocabularies[vocid]
+          this.vocabularies[vocid].loaded = true
+        }
+      }
+    },
+    _applyLoadedVocabulary(payload) {
+      let id = payload.id
+      let data = payload.data
+      let terms = []
+      for (let lab of data.results.bindings) {
+        let id = lab.id.value.replace('vocab.phaidra.org', 'pid.phaidra.org')
+        let lang = lang2to3map[lab.label['xml:lang']]
+        let found = false
+        for (let term of terms) {
+          if (term['@id'] === id) {
+            term['skos:prefLabel'][lang] = lab.label.value
+            found = true
+            break
+          }
+        }
+        if (!found) {
+          let term = {
+            '@id': id,
+            'skos:prefLabel': {}
+          }
+          term['skos:prefLabel'][lang] = lab.label.value
+          terms.push(term)
+        }
+      }
+      this.vocabularies[id] = {
+        terms: terms,
+        loaded: true
+      }
+    },
+    loadLanguages(locale) {
+      if (this.vocabularies['lang']['terms'].length < 1) {
+        let langterms = languages.get_lang()
+        langterms.sort((a, b) => a['skos:prefLabel'][locale].localeCompare(b['skos:prefLabel'][locale], locale))
+        this.setLangTerms(langterms)
+      }
+    },
+    async loadOrgUnits(locale) {
+      const root = useHostRootStore()
+      if (this.vocabularies['orgunits']['loaded'] === false) {
+        try {
+          let response = await this.$axios.request({
+            method: 'GET',
+            url: '/directory/org_get_units'
+          })
+          if (response.data.alerts && response.data.alerts.length > 0) {
+            root.setAlerts(response.data.alerts)
+          }
+          let terms = []
+          orgunits.getOrgUnitsTerms(terms, response.data.units, null)
+          this.setOrgUnits({ tree: response.data.units, terms: terms, treeUnsorted: response.data.units ? JSON.parse(JSON.stringify(response.data.units)) : [], locale: locale })
+          this.sortOrgUnits(locale)
+        } catch (error) {
+          console.log(error)
+          root.setAlerts([{ type: 'danger', msg: 'Failed to fetch org units: ' + error }])
+        }
+      } else {
+        if (this.vocabularies['orgunits']['locale'] !== locale) {
+          this.sortOrgUnits(locale)
+        }
+      }
+    },
+    async loadOefos(locale) {
+      const root = useHostRootStore()
+      if (this.vocabularies['oefos']['loaded'] === false) {
+        try {
+          let response = await this.$axios.request({
+            method: 'GET',
+            url: '/vocabulary?uri=oefos2012'
+          })
+          if (response.data.alerts && response.data.alerts.length > 0) {
+            root.setAlerts(response.data.alerts)
+          }
+          let terms = []
+          oefos.getOefosTerms(terms, response.data.vocabulary, null)
+          this.setOefos({ tree: response.data.vocabulary, terms: terms, locale: locale })
+          this.sortOefos(locale)
+        } catch (error) {
+          console.log(error)
+          root.setAlerts([{ type: 'danger', msg: 'Failed to fetch oefos: ' + error }])
+        }
+      } else {
+        if (this.vocabularies['oefos']['locale'] !== locale) {
+          this.sortOefos(locale)
+        }
+      }
+    },
+    async loadThema(locale) {
+      const root = useHostRootStore()
+      if (this.vocabularies['thema']['loaded'] === false) {
+        try {
+          let response = await this.$axios.request({
+            method: 'GET',
+            url: '/vocabulary?uri=thema'
+          })
+          if (response.data.alerts && response.data.alerts.length > 0) {
+            root.setAlerts(response.data.alerts)
+          }
+          let terms = []
+          thema.getThemaTerms(terms, response.data.vocabulary, null)
+          this.setThema({ tree: response.data.vocabulary, terms: terms, locale: locale })
+        } catch (error) {
+          console.log(error)
+          root.setAlerts([{ type: 'danger', msg: 'Failed to fetch thema: ' + error }])
+        }
+      }
+    },
+    async loadBic(locale) {
+      const root = useHostRootStore()
+      if (this.vocabularies['bic']['loaded'] === false) {
+        try {
+          let response = await this.$axios.request({
+            method: 'GET',
+            url: '/vocabulary?uri=bic'
+          })
+          if (response.data.alerts && response.data.alerts.length > 0) {
+            root.setAlerts(response.data.alerts)
+          }
+          let terms = []
+          bic.getBicTerms(terms, response.data.vocabulary, null)
+          this.setBic({ tree: response.data.vocabulary, terms: terms, locale: locale })
+        } catch (error) {
+          console.log(error)
+          root.setAlerts([{ type: 'danger', msg: 'Failed to fetch BIC: ' + error }])
+        }
+      }
+    },
+    async loadVocabulary(vocabId) {
+      const root = useHostRootStore()
+      if (this.vocabularies[vocabId]) {
+        if (this.vocabularies[vocabId].loaded) {
+          return
+        }
+      }
+      try {
+        var raw = 'PREFIX v: <' + root.appconfig.apis.vocserver.ns + '> PREFIX : <' + root.appconfig.apis.vocserver.ns + 'schema#> PREFIX skos: <http://www.w3.org/2004/02/skos/core#> SELECT ?id ?label ?exp WHERE { graph ?g { ?id v:memberOf  v:' + vocabId + ' . ?id skos:prefLabel ?label . OPTIONAL { ?id :expires ?exp . } } }'
+        let response = await this.$axios.request({
+          method: 'POST',
+          url: root.appconfig.apis.vocserver.url + root.appconfig.apis.vocserver.dataset + '/query',
+          headers: { 'Content-Type': 'application/sparql-query' },
+          data: raw
+        })
+        if (response.data && response.data.results && response.data.results.bindings) {
+          this._applyLoadedVocabulary({ id: vocabId, data: response.data })
+        } else {
+          console.log('Failed to fetch vocabulary ' + vocabId)
+          root.setAlerts([{ type: 'danger', msg: 'Failed to fetch vocabulary ' + vocabId }])
+        }
+      } catch (error) {
+        console.log(error)
+        root.setAlerts([{ type: 'danger', msg: 'Failed to fetch vocabulary ' + vocabId + ': ' + error }])
+      }
     }
-    return arr
   }
-}
+})
 
-export default {
-  state,
-  mutations,
-  actions,
-  getters
-}
+export default useVocabularyStore

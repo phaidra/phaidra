@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import { VueDraggableNext as draggable } from 'vue-draggable-next'
 import PSortableSolrDoc from '../utils/PSortableSolrDoc'
 
@@ -49,7 +50,7 @@ export default {
   },
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   watch: {
@@ -83,7 +84,7 @@ export default {
           url: '/' + this.cmodel.toLowerCase() + '/' + this.pid + '/members/order',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
@@ -91,14 +92,14 @@ export default {
           if (response.data.status === 401) {
             response.data.alerts.push({ type: 'danger', msg: 'Please log in' })
           }
-          this.$store.commit('setAlerts', response.data.alerts)
+          useRootStore().setAlerts(response.data.alerts)
         }
         if (response.data.status === 200) {
           this.$emit('order-saved', this.pid)
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
         this.loading = false
         window.scrollTo({ top: 0, behavior: 'smooth' })

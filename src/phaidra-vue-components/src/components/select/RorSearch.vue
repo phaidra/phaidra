@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 
@@ -184,7 +185,7 @@ export default {
       try {
         let response = await this.$axios.request({
           method: 'GET',
-          url: 'https://' + this.$store.state.appconfig.apis.ror.baseurl + '/organizations',
+          url: 'https://' + useRootStore().appconfig.apis.ror.baseurl + '/organizations',
           params: params
         })
         this.items = response.data.items.map(item => {

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useRootStore } from '~/stores/root'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const runtime = useRuntimeConfig()
@@ -41,10 +42,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     if (sentry?.captureException) {
       sentry.captureException(error)
     }
-    const store = nuxtApp.$store
-    if (store && error?.response?.data?.alerts?.length > 0) {
-      if (error.response?.status !== 403) {
-        store.commit('setAlerts', error.response.data.alerts)
+    if (error?.response?.data?.alerts?.length > 0) {
+      if (error.response?.status !== 403 && nuxtApp.$pinia) {
+        useRootStore(nuxtApp.$pinia).setAlerts(error.response.data.alerts)
       }
     }
   })

@@ -117,6 +117,7 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import PDLicense from '../display/PDLicense'
 import PImg from '../utils/PImg'
 import PExpandText from '../utils/PExpandText'
@@ -148,7 +149,7 @@ export default {
   },
   computed: {
     instance: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     }
   },
   data () {
@@ -197,7 +198,7 @@ export default {
     },
     addToCollection: async function (collection) {
       try {
-        this.$store.commit('setLoading', true)
+        useRootStore().setLoading(true)
         var httpFormData = new FormData()
         httpFormData.append('metadata', JSON.stringify({ metadata: { members: this.selection } }))
         let response = await this.$axios.request({
@@ -205,28 +206,28 @@ export default {
           url: '/collection/' + collection.pid + '/members/add',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfully updated'), type: 'success' } ])
+          useRootStore().setAlerts([ { msg: this.$t('Collection successfully updated'), type: 'success' } ])
           this.$router.push({ path: `detail/${collection.pid}`, params: { pid: collection.pid } })
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
-        this.$store.commit('setLoading', false)
+        useRootStore().setLoading(false)
       }
     },
     removeFromCollection: async function (collection) {
       try {
-        this.$store.commit('setLoading', true)
+        useRootStore().setLoading(true)
         var httpFormData = new FormData()
         httpFormData.append('metadata', JSON.stringify({ metadata: { members: this.selection } }))
         let response = await this.$axios.request({
@@ -234,28 +235,28 @@ export default {
           url: '/collection/' + collection.pid + '/members/remove',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [ { msg: this.$t('Collection successfully updated'), type: 'success' } ])
+          useRootStore().setAlerts([ { msg: this.$t('Collection successfully updated'), type: 'success' } ])
           this.$router.push({ path: `detail/${collection.pid}`, params: { pid: collection.pid } })
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
-        this.$store.commit('setLoading', false)
+        useRootStore().setLoading(false)
       }
     },
     addToList: async function (list) {
       try {
-        this.$store.commit('setLoading', true)
+        useRootStore().setLoading(true)
         var httpFormData = new FormData()
         httpFormData.append('members', JSON.stringify({ members: this.selection }))
         let response = await this.$axios.request({
@@ -263,27 +264,27 @@ export default {
           url: '/list/' + list.listid + '/members/add',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [ { msg: this.$t('Object list successfully updated'), type: 'success' } ])
+          useRootStore().setAlerts([ { msg: this.$t('Object list successfully updated'), type: 'success' } ])
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
-        this.$store.commit('setLoading', false)
+        useRootStore().setLoading(false)
       }
     },
     removeFromList: async function (list) {
       try {
-        this.$store.commit('setLoading', true)
+        useRootStore().setLoading(true)
         var httpFormData = new FormData()
         httpFormData.append('members', JSON.stringify({ members: this.selection }))
         let response = await this.$axios.request({
@@ -291,22 +292,22 @@ export default {
           url: '/list/' + list.listid + '/members/remove',
           headers: {
             'Content-Type': 'multipart/form-data',
-            'X-XSRF-TOKEN': this.$store.state.user.token
+            'X-XSRF-TOKEN': useRootStore().user.token
           },
           data: httpFormData
         })
         if (response.data.status === 200) {
-          this.$store.commit('setAlerts', [ { msg: this.$t('Object list successfully updated'), type: 'success' } ])
+          useRootStore().setAlerts([ { msg: this.$t('Object list successfully updated'), type: 'success' } ])
         } else {
           if (response.data.alerts && response.data.alerts.length > 0) {
-            this.$store.commit('setAlerts', response.data.alerts)
+            useRootStore().setAlerts(response.data.alerts)
           }
         }
       } catch (error) {
         console.log(error)
-        this.$store.commit('setAlerts', [{ type: 'danger', msg: error }])
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
       } finally {
-        this.$store.commit('setLoading', false)
+        useRootStore().setLoading(false)
       }
     },
     selectDoc: function (value, doc) {

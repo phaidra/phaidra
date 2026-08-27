@@ -217,6 +217,7 @@
 </template>
 
 <script>
+import { useVocabularyStore } from '../../stores/vocabulary'
 import Autolinker from 'autolinker'
 import '@/compiled-icons/orcid'
 import uwmlangs from '../../utils/uwmlangs'
@@ -251,7 +252,7 @@ export default {
     },
     languages: function () {
       let arr = []
-      for (let term of this.$store.state.vocabulary.vocabularies['lang'].terms) {
+      for (let term of useVocabularyStore().vocabularies['lang'].terms) {
         if (lang3to2map[term['@id']]) {
           arr.push({
             text: term['skos:prefLabel'][this.$i18n.locale],
@@ -313,7 +314,7 @@ export default {
 
       if (uiValue.startsWith('http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_21/')) {
         const licenseId = uiValue.replace('http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/voc_21/', '')
-        const vocab = this.$store.state.vocabulary.vocabularies['alllicenses']
+        const vocab = useVocabularyStore().vocabularies['alllicenses']
         if (vocab && vocab.terms) {
           for (let term of vocab.terms) {
             if (term['skos:notation']) {
@@ -335,7 +336,7 @@ export default {
       }
 
       const licenseId = uiValue
-      const vocab = this.$store.state.vocabulary.vocabularies['alllicenses']
+      const vocab = useVocabularyStore().vocabularies['alllicenses']
       if (vocab && vocab.terms) {
         for (let term of vocab.terms) {
           if (term['skos:notation']) {

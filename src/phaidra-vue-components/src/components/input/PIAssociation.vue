@@ -55,6 +55,8 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
+import { useVocabularyStore } from '../../stores/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import { vocabulary } from '../../mixins/vocabulary'
 import OrgUnitsTreeDialog from '../select/OrgUnitsTreeDialog'
@@ -68,7 +70,7 @@ export default {
   emits: ['input', 'configure', 'add', 'remove', 'add-clear', 'up', 'down'],
   computed: {
     instanceconfig: function () {
-      return this.$store.state.instanceconfig
+      return useRootStore().instanceconfig
     },
     parentSelectionDisabled: function () {
       return this.isParentSelectionDisabled || this.instanceconfig?.isParentSelectionDisabled || false
@@ -131,7 +133,7 @@ export default {
   mounted: function () {
     this.$nextTick(function () {
       if (!this.vocabularies['orgunits'].loaded) {
-        this.$store.dispatch('vocabulary/loadOrgUnits', this?.$i18n?.locale || 'eng')
+        useVocabularyStore().loadOrgUnits(this?.$i18n?.locale || 'eng')
       }
       // emit input to set skos:prefLabel in parent
       if (this.value) {
