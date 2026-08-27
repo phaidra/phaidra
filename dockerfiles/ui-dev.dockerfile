@@ -5,7 +5,10 @@ apt-get install git ca-certificates -y
 apt-get clean
 EOF
 
-RUN corepack enable && corepack prepare pnpm@9 --activate
+# node >25 does NOT ship with corepack
+RUN npm install -g corepack
+# Since v11, minimumReleaseAge has a default value of 1440: https://pnpm.io/settings/dependency-resolution#minimumreleaseage
+RUN corepack enable && corepack prepare pnpm@11 --activate
 
 ARG CACHEBUST=1
 RUN mkdir -p /usr/local/phaidra

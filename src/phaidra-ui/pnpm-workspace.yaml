@@ -1,5 +1,11 @@
+packages:
+  - '.'
+
 allowBuilds:
   '@parcel/watcher': true
   core-js: true
   esbuild: true
 ci: true
+
+overrides:
+  totalist: ^3.0.1
