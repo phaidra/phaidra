@@ -76,62 +76,65 @@
               :aria-labelledby="'facet-control-' + i">
               <v-row no-gutters id="accessibility-content" role="region" aria-labelledby="accessibility-control">
                 <v-autocomplete :no-data-text="$t('No data available')"
-                  :model-value="getTerm('accessibilityControl', selectedAccessibilityControl)" :item-value="'@id'"
+                  item-value="@id"
+                  :item-title="(item) => skosTermItemTitle(item, 'accessibilityControl')"
+                  :custom-filter="vocabAutocompleteFilter"
                   class="mt-4" :placeholder="$t('Add accessibility control') + '...'"
                   :hint="$t('Accessibility control')" :items="loadedAccessibilityTerms('accessibilityControl')"
-                  v-model="selectedAccessibilityControl" multiple clearable
+                  v-model="selectedAccessibilityControl" multiple clearable chips closable-chips
                   @update:model-value="setAccessibilityControl()" :menu-props="{maxHeight:'400'}" persistent-hint
                   variant="filled" single-line>
-                  <template slot="item" slot-scope="{ attr, item }">
-                    <div class="v-list-item-content two-line">
-                      <v-list-item-title
-                        v-html="`${getLocalizedTermLabel('accessibilityControl', item['@id'])}`"></v-list-item-title>
-                    </div>
+                  <template #item="{ props, internalItem }">
+                    <v-list-item v-bind="props">
+                      <template #title>
+                        <span v-html="getLocalizedTermLabel('accessibilityControl', internalItem.raw['@id'])" />
+                      </template>
+                    </v-list-item>
                   </template>
-                  <template slot="selection" slot-scope="{ item }">
-                    <div class="v-list-item-content">
-                      <v-list-item-title
-                        v-html="`${getLocalizedTermLabel('accessibilityControl', item['@id'])}`"></v-list-item-title>
-                    </div>
+                  <template #chip="{ props, item }">
+                    <v-chip v-bind="props"
+                      :text="skosTermItemTitle(item, 'accessibilityControl')" />
                   </template>
                 </v-autocomplete>
                 <v-autocomplete :no-data-text="$t('No data available')"
-                  :model-value="getTerm('accessibilityFeature', selectedAccessibilityFeature)" :item-value="'@id'"
+                  item-value="@id"
+                  :item-title="(item) => skosTermItemTitle(item, 'accessibilityFeature')"
+                  :custom-filter="vocabAutocompleteFilter"
                   class="mt-4" :placeholder="$t('Add accessibility feature') + '...'"
                   :hint="$t('Accessibility feature')" :items="loadedAccessibilityTerms('accessibilityFeature')"
-                  v-model="selectedAccessibilityFeature" multiple clearable
+                  v-model="selectedAccessibilityFeature" multiple clearable chips closable-chips
                   @update:model-value="setAccessibilityFeature()" :menu-props="{maxHeight:'400'}" persistent-hint
                   variant="filled" single-line>
-                  <template slot="item" slot-scope="{ attr, item }">
-                    <div class="v-list-item-content two-line">
-                      <v-list-item-title
-                        v-html="`${getLocalizedTermLabel('accessibilityFeature', item['@id'])}`"></v-list-item-title>
-                    </div>
+                  <template #item="{ props, internalItem }">
+                    <v-list-item v-bind="props">
+                      <template #title>
+                        <span v-html="getLocalizedTermLabel('accessibilityFeature', internalItem.raw['@id'])" />
+                      </template>
+                    </v-list-item>
                   </template>
-                  <template slot="selection" slot-scope="{ item }">
-                    <div class="v-list-item-content">
-                      <v-list-item-title
-                        v-html="`${getLocalizedTermLabel('accessibilityFeature', item['@id'])}`"></v-list-item-title>
-                    </div>
+                  <template #chip="{ props, item }">
+                    <v-chip v-bind="props"
+                      :text="skosTermItemTitle(item, 'accessibilityFeature')" />
                   </template>
                 </v-autocomplete>
                 <v-autocomplete :no-data-text="$t('No data available')"
-                  :model-value="getTerm('accessibilityHazard', selectedAccessibilityHazard)" :item-value="'@id'"
+                  item-value="@id"
+                  :item-title="(item) => skosTermItemTitle(item, 'accessibilityHazard')"
+                  :custom-filter="vocabAutocompleteFilter"
                   class="mt-4" :placeholder="$t('Add accessibility hazard') + '...'" :hint="$t('Accessibility hazard')"
                   :items="loadedAccessibilityTerms('accessibilityHazard')" v-model="selectedAccessibilityHazard"
-                  multiple clearable @update:model-value="setAccessibilityHazard()" :menu-props="{maxHeight:'400'}"
-                  persistent-hint variant="filled" single-line>
-                  <template slot="item" slot-scope="{ attr, item }">
-                    <div class="v-list-item-content two-line">
-                      <v-list-item-title
-                        v-html="`${getLocalizedTermLabel('accessibilityHazard', item['@id'])}`"></v-list-item-title>
-                    </div>
+                  multiple clearable chips closable-chips @update:model-value="setAccessibilityHazard()"
+                  :menu-props="{maxHeight:'400'}" persistent-hint variant="filled" single-line>
+                  <template #item="{ props, internalItem }">
+                    <v-list-item v-bind="props">
+                      <template #title>
+                        <span v-html="getLocalizedTermLabel('accessibilityHazard', internalItem.raw['@id'])" />
+                      </template>
+                    </v-list-item>
                   </template>
-                  <template slot="selection" slot-scope="{ item }">
-                    <div class="v-list-item-content">
-                      <v-list-item-title
-                        v-html="`${getLocalizedTermLabel('accessibilityHazard', item['@id'])}`"></v-list-item-title>
-                    </div>
+                  <template #chip="{ props, item }">
+                    <v-chip v-bind="props"
+                      :text="skosTermItemTitle(item, 'accessibilityHazard')" />
                   </template>
                 </v-autocomplete>
               </v-row>
