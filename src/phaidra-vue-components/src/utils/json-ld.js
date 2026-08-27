@@ -634,13 +634,20 @@ export default {
                   f.predicate = key
                   f.type = obj['@type']
                   f.label = key
-                  components.push(f)
                   if (f.value.startsWith('http://www.geonames.org') || f.value.startsWith('https://www.geonames.org')) {
+                    let geonamesValue = f.value
                     f = fields.getField(fieldidprefix + '-geonames')
+                    f.value = geonamesValue
+                    f['skos:prefLabel'] = obj['skos:prefLabel']
+                    f['rdfs:label'] = obj['rdfs:label']
+                    f.coordinates = obj['schema:geo']
                     f.predicate = key
                     f.type = obj['@type']
-                    components.push(f)
+                    if (obj['skos:prefLabel'] && obj['skos:prefLabel'].length > 0) {
+                      f.initquery = obj['skos:prefLabel'][0]['@value']
+                    }
                   }
+                  components.push(f)
                 }
               }
               break
