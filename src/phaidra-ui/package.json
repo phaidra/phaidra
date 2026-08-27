@@ -43,11 +43,6 @@
     "pinia": "^3.0.3",
     "@pinia/nuxt": "^0.11.2"
   },
-  "pnpm": {
-    "overrides": {
-      "totalist": "^3.0.1"
-    }
-  },
   "devDependencies": {
     "@babel/eslint-parser": "^7.16.3",
     "@nuxtjs/eslint-config": "^8.0.0",
@@ -56,5 +51,5 @@
     "sass": "^1.26.10",
     "stylus": "^0.54.8"
   },
-  "packageManager": "pnpm@9.15.9+sha512.68046141893c66fad01c079231128e9afb89ef87e2691d69e4d40eee228988295fd4682181bae55b58418c3a253bde65a505ec7c5f9403ece5cc3cd37dcf2531"
+  "packageManager": "pnpm@11.24.0+sha512.bd27e345e976dcb0be0b7a1228217b049a817e21b1f355c90dbe7dc46671895a8bc1e6d06c24554505ea93ea0b45f489a27ec1bfbc8de6a9659fca0f16fa0000"
 }
