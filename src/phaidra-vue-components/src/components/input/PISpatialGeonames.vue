@@ -248,17 +248,27 @@ export default {
             this.resolved = '<a href="' + uri + '" target="_blank">' + this.rdfslabel[i]['@value'] + '</a>'
           }
           if (response.data[uri]['schema:GeoCoordinates']) {
+            const lat = response.data[uri]['schema:GeoCoordinates']['schema:latitude']
+            const lng = response.data[uri]['schema:GeoCoordinates']['schema:longitude']
             this.coordinates = [
               {
                 '@type': 'schema:GeoCoordinates',
                 'schema:latitude': [
-                  response.data[uri]['schema:GeoCoordinates']['schema:latitude']
+                  lat
                 ],
                 'schema:longitude': [
-                  response.data[uri]['schema:GeoCoordinates']['schema:longitude']
+                  lng
                 ]
               }
             ]
+            if (!this.locationMarker && lat != null && lng != null) {
+              this.locationMarker = [lat, lng]
+              this.center = this.locationMarker
+              this.showMap = true
+              this.$nextTick(() => {
+                this.$refs.map?.leafletObject?.invalidateSize()
+              })
+            }
           }
           this.$emit('resolve', { 'skos:prefLabel': this.preflabel, 'rdfs:label': this.rdfslabel, coordinates: this.coordinates })
         } catch (error) {
