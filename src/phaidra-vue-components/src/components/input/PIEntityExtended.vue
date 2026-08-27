@@ -307,7 +307,7 @@
                 <v-col cols="12" md="12">
                   <v-text-field
                     v-show="identifierTypeId === 'ids:orcid'"
-                    v-mask="'####-####-####-###X'"
+                    v-maska data-maska="####-####-####-####"
                     :model-value="identifierText"
                     :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                     @update:model-value="$emit('input-identifier', $event)"
@@ -357,7 +357,7 @@
                 <v-col cols="12" md="6" >
                   <v-text-field
                     v-show="identifierTypeId === 'ids:orcid'"
-                    v-mask="'####-####-####-###X'"
+                    v-maska data-maska="####-####-####-####"
                     :model-value="identifierText"
                     :label="identifierLabel ? $t(identifierLabel) : $t('Identifier')"
                     @update:model-value="$emit('input-identifier', $event)"
