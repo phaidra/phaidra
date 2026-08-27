@@ -4543,6 +4543,33 @@ export default {
           'ita': 'Kissi meridionale'
         }
       }
+      ,{
+        '@id': 'dga',
+        'skos:prefLabel': {
+          'eng': 'Southern Dagaare | Dagaare',
+          'deu': 'Dagaare',
+          'fra': 'dagaare du Sud | dagaare',
+          'ita': 'Dagaare meridionale | Dagaare'
+        }
+      }
+      ,{
+        '@id': 'dag',
+        'skos:prefLabel': {
+          'eng': 'Dagbani',
+          'deu': 'Dagbani',
+          'fra': 'dagbani',
+          'ita': 'Dagbani'
+        }
+      }
+      ,{
+        '@id': 'kus',
+        'skos:prefLabel': {
+          'eng': 'Kusaal',
+          'deu': 'Kusaal',
+          'fra': 'kusaal',
+          'ita': 'Kusaal'
+        }
+      }
     ]
   }
 }
