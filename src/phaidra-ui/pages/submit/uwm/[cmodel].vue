@@ -232,10 +232,9 @@ export default {
   },
   beforeRouteEnter: function (to, from, next) {
     next((vm) => {
-      vm.useRootStore().setLoading(true);
+      useRootStore().setLoading(true);
       vm.loadUwmetadata(vm).then(() => {
-        vm.useRootStore().setLoading(false);
-        next();
+        useRootStore().setLoading(false);
       });
     });
   },

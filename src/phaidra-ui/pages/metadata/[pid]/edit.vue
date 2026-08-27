@@ -119,11 +119,10 @@ export default {
   },
   beforeRouteEnter: function (to, from, next) {
     next((vm) => {
-      vm.useRootStore().setLoading(true);
+      useRootStore().setLoading(true);
       vm.parentpid = from.params.pid;
       vm.loadJsonld(vm, to.params.pid).then(() => {
-        vm.useRootStore().setLoading(false);
-        next();
+        useRootStore().setLoading(false);
       });
     });
   },

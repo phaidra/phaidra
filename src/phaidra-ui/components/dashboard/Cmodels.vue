@@ -109,9 +109,9 @@ export default {
   },
   beforeRouteEnter: async function (to, from, next) {
     next(async function (vm) {
-      vm.useRootStore().setLoading(true);
+      useRootStore().setLoading(true);
       await vm.fetchStats(vm);
-      vm.useRootStore().setLoading(false);
+      useRootStore().setLoading(false);
     });
   },
   beforeRouteUpdate: async function (to, from, next) {
