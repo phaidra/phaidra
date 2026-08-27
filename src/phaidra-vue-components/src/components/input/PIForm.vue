@@ -2127,11 +2127,15 @@ export default {
     affiliationRorInput: function (f, event) {
       f.affiliation = ''
       f.affiliationSelectedName = []
+      f.affiliationRorName = ''
       if (event) {
         for (const id of event['skos:exactMatch']) {
           f.affiliation = id
         }
         f.affiliationSelectedName = event['schema:name']
+        if (event['schema:name'] && event['schema:name'].length > 0) {
+          f.affiliationRorName = event['schema:name'][0]['@value']
+        }
       }
     },
     affiliationTypeChange: function (f, event) {
@@ -2159,11 +2163,15 @@ export default {
     publisherRorInput: function (f, event) {
       f.publisherRor = ''
       f.publisherSelectedName = []
+      f.publisherRorName = ''
       if (event) {
         for (const id of event['skos:exactMatch']) {
           f.publisherRor = id
         }
         f.publisherSelectedName = event['schema:name']
+        if (event['schema:name'] && event['schema:name'].length > 0) {
+          f.publisherRorName = event['schema:name'][0]['@value']
+        }
       }
     },
     publisherSuggestInput: function (f, event) {
@@ -2185,11 +2193,15 @@ export default {
     organizationRorInput: function (f, event) {
       f.organization = ''
       f.organizationSelectedName = []
+      f.organizationRorName = ''
       if (event) {
         for (const id of event['skos:exactMatch']) {
           f.organization = id
         }
         f.organizationSelectedName = event['schema:name']
+        if (event['schema:name'] && event['schema:name'].length > 0) {
+          f.organizationRorName = event['schema:name'][0]['@value']
+        }
       }
     },
     handleEntityTypeChange: function (f, event) {
