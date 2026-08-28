@@ -269,6 +269,9 @@ export default {
       }
     },
     search: async function () {
+      if (!this.q || !String(this.q).trim()) {
+        return
+      }
       this.loading = true
       this.items = []
       this.selected = null
