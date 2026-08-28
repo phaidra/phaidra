@@ -578,7 +578,6 @@ services:
         - path: ./src/phaidra-api
           target: /usr/local/phaidra/phaidra-api
           action: sync+restart
-          initial_sync: true
     environment:
       <<: [*api_common_env, *hosts]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-/mnt/fedora/data/ocfl-root}"
@@ -601,7 +600,6 @@ services:
         - path: ./src/phaidra-api
           target: /usr/local/phaidra/phaidra-api
           action: sync+restart
-          initial_sync: true
     environment:
       <<: [*api_common_env, *hosts, *s3]
       FEDORA_OCFL_ROOT: "${FEDORA_OCFL_ROOT:-}"
