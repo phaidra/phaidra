@@ -568,7 +568,6 @@
           </v-row>
         </v-col>
     </v-row>
-    <a ref="logoutlink" href="/Shibboleth.sso/Logout" aria-hidden="true" role="presentation" tabindex="-1"></a>
   </div>
   </div>
 </template>
@@ -630,17 +629,6 @@ export default {
       useRootStore().logout();
       useRootStore().setLoading(false);
       this.$router.push(this.localeLocation({ path: `/` }));
-    },
-    ssologoutlink: async function () {
-      console.log("local logout")
-      try {
-        await useRootStore().logout();
-      } catch (error) {
-        console.log(error)
-      }
-      console.log("sso logout link")
-      useRootStore().setLoading(false);
-      this.$refs.logoutlink.click();
     },
     ssologout: async function () {
       console.log("local logout")
