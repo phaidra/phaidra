@@ -30,6 +30,7 @@
                 :error-messages="errorMessages"
                 append-inner-icon="mdi-magnify"
                 @click:append-inner="search()"
+                @click:clear="clear()"
                 @keyup.enter="search()"
               >
               <template v-slot:message="{ key, message }">
@@ -157,6 +158,16 @@ export default {
     }
   },
   methods: {
+    clear: function () {
+      this.q = null
+      this.selected = null
+      this.resolved = ''
+      this.showItems = false
+      this.items = []
+      this.total = 0
+      this.$emit('input', null)
+      this.$emit('resolve', null)
+    },
     resolve: async function (item) {
       if (item) {
         this.$emit('input', item.id)
