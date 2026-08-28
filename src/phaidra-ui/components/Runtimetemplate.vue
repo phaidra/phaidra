@@ -63,6 +63,45 @@ function patchSlotDefaults(source) {
     .replace(/\bv-bind="props"/g, 'v-bind="cmsBind(props)"')
 }
 
+function preprocessTemplate(source) {
+  const styles = []
+  const cleaned = (source || '<div></div>')
+    .replace(/<style\b[^>]*>([\s\S]*?)<\/style>/gi, (_, css) => {
+      const trimmed = css.trim()
+      if (trimmed) {
+        styles.push(trimmed)
+      }
+      return ''
+    })
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+
+  return { cleaned, styles }
+}
+
+function injectTemplateStyles(styles, cacheKey) {
+  if (!import.meta.client || !styles.length) {
+    return
+  }
+  const id = `cms-template-styles-${cacheKey}`
+  if (document.getElementById(id)) {
+    return
+  }
+  const el = document.createElement('style')
+  el.id = id
+  el.textContent = styles.join('\n')
+  document.head.appendChild(el)
+}
+
+function templateCacheKey(source, styles) {
+  let hash = 0
+  const input = source + styles.join('\0')
+  for (let i = 0; i < input.length; i++) {
+    hash = ((hash << 5) - hash) + input.charCodeAt(i)
+    hash |= 0
+  }
+  return Math.abs(hash).toString(36)
+}
+
 function resolveCmsComponent(name) {
   if (typeof name !== 'string') {
     return name
@@ -106,9 +145,11 @@ function createRuntimeCtx(parent, templateProps) {
 }
 
 function getTemplateComponent(template) {
-  const source = patchSlotDefaults(template)
-  if (componentCache.has(source)) {
-    return componentCache.get(source)
+  const { cleaned, styles } = preprocessTemplate(template)
+  const source = patchSlotDefaults(cleaned)
+  const cacheKey = templateCacheKey(source, styles)
+  if (componentCache.has(cacheKey)) {
+    return componentCache.get(cacheKey)
   }
 
   const renderFn = compileRenderFn(source)
@@ -118,16 +159,19 @@ function getTemplateComponent(template) {
     props: {
       runtimeCtx: { type: Object, required: true }
     },
+    mounted() {
+      injectTemplateStyles(styles, cacheKey)
+    },
     render() {
       const ctx = this.runtimeCtx
       // Header CMS template does not reference signedin; track auth so nav re-renders
       void ctx?.signedin
-      void ctx?.useRootStore()?.user?.token
+      void useRootStore().user?.token
       return renderFn(ctx, [])
     }
   })
 
-  componentCache.set(source, component)
+  componentCache.set(cacheKey, component)
   return component
 }
 
@@ -161,7 +205,7 @@ export default {
 
     // Re-render CMS templates when auth state on the parent changes.
     void parent.signedin
-    void parent.useRootStore()?.user?.token
+    void useRootStore().user?.token
 
     const TemplateComponent = getTemplateComponent(this.template)
     const runtimeCtx = createRuntimeCtx(parent, this.templateProps)
