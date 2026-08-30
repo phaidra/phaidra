@@ -316,6 +316,14 @@
                               }}</v-list-item-title></v-list-item
                           >
                           <v-list-item
+                              v-if="signedin && showInactiveObjectsNav"
+                              nuxt
+                              :to="localePath('/inactive-objects')"
+                              ><v-list-item-title>{{
+                              $t(inactiveObjectsNavLabel)
+                              }}</v-list-item-title></v-list-item
+                          >
+                          <v-list-item
                               v-if="signedin"
                               nuxt
                               :to="localePath('/lists')"
@@ -444,6 +452,22 @@
                         class="font-weight-regular text-white"
                       >                    
                         {{ $t("My objects") }}
+                      </v-btn>
+                    </v-hover>
+                    <v-hover v-slot:default="{ isHovering, props }">
+                      <v-btn
+                        v-bind="props"
+                        v-show="signedin && showInactiveObjectsNav"
+                       
+                        tile
+                        variant="flat"
+                        nuxt
+                        active-class="ph-button-bg-active"
+                        :class="['font-weight-regular', 'text-white', isHovering ? 'bg-primary ph-button-bg-active' : (isDarkTheme ? 'ph-button-bg-dark' : 'ph-button-bg')]"
+                        :to="localePath('/inactive-objects')"
+                        class="font-weight-regular text-white"
+                      >                    
+                        {{ $t(inactiveObjectsNavLabel) }}
                       </v-btn>
                     </v-hover>
                     <v-hover v-slot:default="{ isHovering, props }">

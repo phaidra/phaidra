@@ -9,6 +9,7 @@ use PhaidraAPI::Model::Fedora;
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Membersorder;
 use PhaidraAPI::Model::Config;
+use PhaidraAPI::Model::InactiveObjects;
 
 sub create {
 
@@ -53,6 +54,12 @@ sub create {
   my $initial_state = $c->stash->{curated_initial_state} // 'Inactive';
   if ($initial_state eq 'PendingApproval') {
     $c->app->log->info("Object created pid[$pid] awaiting approval");
+    my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
+    my $ir             = $inactive_model->register_from_pid($c, $pid, 'curated_submit', 'approval');
+    if ($ir->{status} ne 200) {
+      $c->app->log->error("pid[$pid] failed to register inactive object for approval: " . $c->app->dumper($ir));
+      push @{$res->{alerts}}, @{$ir->{alerts}} if scalar @{$ir->{alerts}} > 0;
+    }
   }
   else {
     my $res_act = $object_model->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);

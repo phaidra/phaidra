@@ -23,6 +23,7 @@ use PhaidraAPI::Model::Stats;
 use PhaidraAPI::Model::Fedora;
 use PhaidraAPI::Model::Config;
 use PhaidraAPI::Model::Directory;
+use PhaidraAPI::Model::InactiveObjects;
 use IO::Scalar;
 use File::MimeInfo;
 use File::MimeInfo::Magic;
@@ -722,6 +723,12 @@ sub create_simple {
   my $initial_state = $c->stash->{curated_initial_state} // 'Inactive';
   if ($initial_state eq 'PendingApproval') {
     $c->app->log->info("Object created pid[$pid] awaiting approval");
+    my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
+    my $ir             = $inactive_model->register_from_pid($c, $pid, 'curated_submit', 'approval');
+    if ($ir->{status} ne 200) {
+      $c->app->log->error("pid[$pid] failed to register inactive object for approval: " . $c->app->dumper($ir));
+      push @{$res->{alerts}}, @{$ir->{alerts}} if scalar @{$ir->{alerts}} > 0;
+    }
   }
   else {
     $r = $self->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
@@ -998,6 +1005,12 @@ sub create_container {
   my $initial_state = $c->stash->{curated_initial_state} // 'Inactive';
   if ($initial_state eq 'PendingApproval') {
     $c->app->log->info("Object created pid[$pid] awaiting approval");
+    my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
+    my $ir             = $inactive_model->register_from_pid($c, $pid, 'curated_submit', 'approval');
+    if ($ir->{status} ne 200) {
+      $c->app->log->error("pid[$pid] failed to register inactive object for approval: " . $c->app->dumper($ir));
+      push @{$res->{alerts}}, @{$ir->{alerts}} if scalar @{$ir->{alerts}} > 0;
+    }
   }
   else {
     $r = $self->modify($c, $pid, 'A', undef, undef, undef, undef, $username, $password);
@@ -1211,6 +1224,10 @@ sub save_metadata {
         $res->{status} = $r->{status};
         push @{$res->{alerts}}, @{$r->{alerts}} if scalar @{$r->{alerts}} > 0;
         unshift @{$res->{alerts}}, {type => 'error', msg => 'Error saving json-ld'};
+      }
+      else {
+        my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
+        $inactive_model->refresh_title($c, $pid);
       }
       $found     = 1;
       $found_bib = 1;

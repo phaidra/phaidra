@@ -279,6 +279,60 @@ test_inactive_denied_for_reader if {
 	decision.reason == "deny_inactive_object"
 }
 
+test_approver_can_write_inactive if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "bob",
+			"authenticated": true,
+			"roles": ["approver", "writer"],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {
+			"type": "object",
+			"pid": "o:6",
+			"owner": "alice",
+			"state": "Inactive",
+			"rights": {},
+		},
+		"action": {"id": "write"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+	}
+	decision.allow == true
+	decision.reason == "staff_inactive_write"
+}
+
+test_approver_cannot_write_active if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "bob",
+			"authenticated": true,
+			"roles": ["approver", "writer"],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {
+			"type": "object",
+			"pid": "o:6",
+			"owner": "alice",
+			"state": "Active",
+			"rights": {},
+		},
+		"action": {"id": "write"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+	}
+	decision.allow == false
+	decision.reason == "deny_no_write_permission"
+}
+
 test_rights_username_match if {
 	decision := authz.allow with input as {
 		"subject": {

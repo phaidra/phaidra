@@ -50,3 +50,8 @@ capabilities contains cap if {
 	helpers.is_admin
 	cap := "admin"
 }
+
+capabilities contains cap if {
+	data.phaidra.authz.inactive.can_manage
+	cap := "inactive_objects_manage"
+}

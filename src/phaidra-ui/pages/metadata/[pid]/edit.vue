@@ -1,8 +1,8 @@
 <template>
   <client-only>
     <div>
-      <v-btn color="primary" class="my-4" :to="`/detail/${pid}`" prepend-icon="mdi-arrow-left">
-        {{ $t('Back to detail page') }}
+      <v-btn color="primary" class="my-4" :to="backTo" prepend-icon="mdi-arrow-left">
+        {{ $t(backLabel) }}
       </v-btn>
       <p-i-form :form="form" :targetpid="pid" :enablerights="false" :enablerelationships="false" :templating="false" :hideContainedInPages="instanceconfig.hideContainedInPages"
         :importing="false" :addbutton="true" :help="false" :debug="false" :feedback="false"
@@ -40,13 +40,35 @@ export default {
     pid: function () {
       return this.$route.params.pid;
     },
+    // Inactive objects are not in Solr; detail/info endpoints fail after save.
+    returnToInactive() {
+      return this.$route.query.from === 'inactive-objects'
+    },
+    backTo() {
+      return this.returnToInactive
+        ? this.localePath('/inactive-objects')
+        : this.localePath(`/detail/${this.pid}`)
+    },
+    backLabel() {
+      return this.returnToInactive ? 'Back to inactive objects' : 'Back to detail page'
+    },
   },
   methods: {
     objectSaved: async function (pid) {
       useRootStore().setAlerts([{ type: 'success', key: 'object_metadata_saved_success', params: { o: pid }}])
+      if (this.returnToInactive) {
+        this.$router.push(this.localeLocation({ path: '/inactive-objects' }));
+        this.goTo(0);
+        return
+      }
       // to save unnecessary loadings, fetchObjectInfo is skipped in Detail.vue if we return to the same pid
       // but it must be done after metadata edit, so re-load it here
-      await useRootStore().fetchObjectInfo(pid);
+      try {
+        await useRootStore().fetchObjectInfo(pid);
+      } catch (error) {
+        // Inactive / not indexed: still leave the editor
+        console.log('fetchObjectInfo after metadata save failed', error)
+      }
       this.$router.push(this.localeLocation({ path: `/detail/${pid}` }));
       this.goTo(0);
     },

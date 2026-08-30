@@ -579,6 +579,8 @@ sub startup {
   $authz->get('lists')                                                     ->to('lists#get_lists', action_id => 'list_read');
   $authz->get('list/:lid')                                                 ->to('lists#get_list', action_id => 'list_read');
 
+  $authz->get('inactive-objects')                                          ->to('inactive_objects#list', action_id => 'inactive_objects_read');
+
   $authz->get('jsonld/templates')                                          ->to('jsonld#get_users_templates', action_id => 'template_read');
   $authz->get('jsonld/template/:tid')                                      ->to('jsonld#get_template', action_id => 'template_read');
 
@@ -711,6 +713,11 @@ sub startup {
     $authz->post('list/:lid/remove')                                       ->to('lists#remove_list', action_id => 'list_write');
     $authz->post('list/:lid/members/add')                                  ->to('lists#add_members', action_id => 'list_write');
     $authz->post('list/:lid/members/remove')                               ->to('lists#remove_members', action_id => 'list_write');
+
+    $authz->post('inactive-objects/:pid/register')                         ->to('inactive_objects#register', action_id => 'inactive_objects_manage');
+    $authz->post('inactive-objects/:pid/activate')                         ->to('inactive_objects#activate', action_id => 'inactive_objects_manage');
+    $authz->post('inactive-objects/:pid/remove')                           ->to('inactive_objects#remove', action_id => 'inactive_objects_manage');
+    $authz->post('inactive-objects/:pid/delete')                           ->to('inactive_objects#delete', action_id => 'inactive_objects_manage');
 
     $authz->post('jsonld/template/add')                                    ->to('jsonld#add_template', action_id => 'template_write');
     $authz->post('jsonld/template/:tid/remove')                            ->to('jsonld#remove_template', action_id => 'template_write');
