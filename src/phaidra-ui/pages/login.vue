@@ -103,6 +103,24 @@ export default {
     }
   },
   methods: {
+    getReturnPath () {
+      const returnto = this.$route.query.returnto
+      if (typeof returnto === 'string' && returnto.startsWith('/')) {
+        return returnto
+      }
+      try {
+        const stored = localStorage.getItem('redirect')
+        if (stored && stored.startsWith('/')) {
+          return stored
+        }
+      } catch (_) {}
+      return '/'
+    },
+    clearReturnPath () {
+      try {
+        localStorage.removeItem('redirect')
+      } catch (_) {}
+    },
     async agree () {
       this.loading = true
       try {
@@ -120,7 +138,8 @@ export default {
         // Proceed with login after agreeing to terms
         await useRootStore().login(this.credentials)
         if (this.signedin) {
-          this.$router.push(this.localeLocation({path: localStorage.getItem('redirect') || '/'}))
+          this.$router.push(this.localeLocation({ path: this.getReturnPath() }))
+          this.clearReturnPath()
         }
       } catch (error) {
         console.log(error)
@@ -167,7 +186,8 @@ export default {
         } else {
           await useRootStore().login(this.credentials)
           if (this.signedin) {
-            this.$router.push(this.localeLocation({path: localStorage.getItem('redirect') || '/'}))
+            this.$router.push(this.localeLocation({ path: this.getReturnPath() }))
+            this.clearReturnPath()
           }
         }
       } catch (error) {
@@ -184,9 +204,23 @@ export default {
       this.passVisibility = !this.passVisibility
     }
   },
+  created () {
+    const returnto = this.$route.query.returnto
+    if (typeof returnto === 'string' && returnto.startsWith('/')) {
+      try {
+        localStorage.setItem('redirect', returnto)
+      } catch (_) {}
+    }
+  },
   beforeRouteEnter: async function (to, from, next) {
     next(async function (vm) {
       vm.showtou = false
+      const returnto = to.query.returnto
+      if (typeof returnto === 'string' && returnto.startsWith('/')) {
+        try {
+          localStorage.setItem('redirect', returnto)
+        } catch (_) {}
+      }
     })
   },
   beforeRouteUpdate: async function (to, from, next) {

@@ -37,10 +37,26 @@ export default {
       window.location.href = '/'
     },
     async login () {
-      window.location.href = '/login?consentversion=' + this.touVersion
+      let returnto = this.$route.query.returnto
+      if (typeof returnto !== 'string' || !returnto.startsWith('/')) {
+        try {
+          returnto = localStorage.getItem('redirect')
+        } catch (_) {}
+      }
+      let url = '/login?consentversion=' + this.touVersion
+      if (typeof returnto === 'string' && returnto.startsWith('/')) {
+        url += '&returnto=' + encodeURIComponent(returnto)
+      }
+      window.location.href = url
     }
   },
   created: async function () {
+    const returnto = this.$route.query.returnto
+    if (typeof returnto === 'string' && returnto.startsWith('/')) {
+      try {
+        localStorage.setItem('redirect', returnto)
+      } catch (_) {}
+    }
     try {
       let url = "/termsofuse";
       if (this.$i18n.locale === 'deu') {

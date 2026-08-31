@@ -32,6 +32,47 @@ sub create_streaming_job {
   return $res;
 }
 
+sub create_agent_job {
+  my ($self, $c, $pid, $cmodel, $job) = @_;
+
+  my $res = {alerts => [], status => 200};
+  return $res unless $job && $job->{agent};
+  return $res unless $job->{agent} =~ /\A[A-Za-z][A-Za-z0-9_-]*\z/;
+
+  my $doc = {
+    pid     => $pid,
+    cmodel  => $cmodel,
+    agent   => $job->{agent},
+    status  => 'new',
+    created => time,
+  };
+  for my $key (keys %{$job}) {
+    next if $key eq 'agent';
+    next unless $key =~ /\A[A-Za-z][A-Za-z0-9_]*\z/;
+    my $val = $job->{$key};
+    next unless defined $val;
+    if (!ref($val)) {
+      $val =~ s/<[^>]*>//g;
+      $val =~ s/\0//g;
+      $val =~ s/javascript://gi;
+    }
+    $doc->{$key} = $val;
+  }
+
+  $c->app->log->info("Creating agent job pid[$pid] cm[$cmodel] agent[$doc->{agent}]");
+  $c->paf_mongo->get_collection('jobs')->insert_one($doc);
+  return $res;
+}
+
+sub create_opencast_upload_job {
+  my ($self, $c, $pid, $cmodel, $oc_mpid) = @_;
+
+  return $self->create_agent_job($c, $pid, $cmodel, {
+    agent   => 'opencast_upload',
+    oc_mpid => $oc_mpid,
+  });
+}
+
 sub get_job {
   my ($self, $c, $pid) = @_;
 

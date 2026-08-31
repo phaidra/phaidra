@@ -702,9 +702,16 @@ sub create_simple {
     }
   }
   else {
-    my $aor = $self->add_octets($c, $pid, $upload, $mimetype, $checksumtype, $checksum, $username, $password, 0, $cmodel);
-    if ($aor->{status} ne 200) {
-      return $aor;
+    my $metadata_only = 0;
+    if (exists($metadata->{metadata}->{metadata_only}) && $metadata->{metadata}->{metadata_only}) {
+      $metadata_only = 1;
+    }
+
+    unless ($metadata_only) {
+      my $aor = $self->add_octets($c, $pid, $upload, $mimetype, $checksumtype, $checksum, $username, $password, 0, $cmodel);
+      if ($aor->{status} ne 200) {
+        return $aor;
+      }
     }
   }
 
@@ -719,9 +726,13 @@ sub create_simple {
     return $res;
   }
 
-  # activate (unless curated submit requires approval)
+  # activate (unless curated submit requires approval or metadata-only submit)
   my $initial_state = $c->stash->{curated_initial_state} // 'Inactive';
-  if ($initial_state eq 'PendingApproval') {
+  my $metadata_only_activate = exists($metadata->{metadata}->{metadata_only}) && $metadata->{metadata}->{metadata_only} ? 1 : 0;
+  if ($metadata_only_activate) {
+    $c->app->log->info("Object created pid[$pid] metadata-only, staying Inactive");
+  }
+  elsif ($initial_state eq 'PendingApproval') {
     $c->app->log->info("Object created pid[$pid] awaiting approval");
     my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
     my $ir             = $inactive_model->register_from_pid($c, $pid, 'curated_submit', 'approval');
@@ -742,6 +753,14 @@ sub create_simple {
     }
     else {
       $c->app->log->info("Object successfully created pid[$pid] cmodel[$cmodel] took[" . tv_interval($t0) . "]");
+    }
+  }
+
+  if (exists($metadata->{metadata}->{jobs}) && ref($metadata->{metadata}->{jobs}) eq 'ARRAY') {
+    my $strm_model = PhaidraAPI::Model::Streaming->new;
+    for my $job (@{$metadata->{metadata}->{jobs}}) {
+      next unless ref($job) eq 'HASH';
+      $strm_model->create_agent_job($c, $pid, $cmodel, $job);
     }
   }
 

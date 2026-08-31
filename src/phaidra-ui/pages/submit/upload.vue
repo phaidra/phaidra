@@ -20,6 +20,8 @@
           :feedback-context="'Upload'"
           :doiImport="instanceconfig.doiImport"
           :disableChecksum="instanceconfig.disableChecksum"
+          :metadata-only="metadataOnlyMode"
+          :external-jobs="submitJobs"
           v-on:load-form="form = $event"
           v-on:load-rights="rights = $event"
           v-on:object-created="objectCreated($event)"
@@ -40,11 +42,12 @@ import fields from "phaidra-vue-components/src/utils/fields"
 import { context } from "../../mixins/context"
 import { config, useDocumentTitle } from "../../mixins/config"
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
+import { submitDeepLink } from "../../mixins/submitDeepLink"
 import { useGoTo } from 'vuetify'
 
 export default {
   layout: "main",
-  mixins: [context, config, vocabulary],
+  mixins: [context, config, vocabulary, submitDeepLink],
   setup() {
     definePageMeta({
       middleware: 'auth'
@@ -276,28 +279,10 @@ export default {
       self.mandatoryFieldsFound = {};
       self.mandatoryFieldsFilled = {};
 
-      if (this.instanceconfig.defaulttemplateid) {
-        try {
-          let tmpres = await self.$axios.request({
-            method: 'GET',
-            url: '/jsonld/template/' + this.instanceconfig.defaulttemplateid,
-            headers: {
-              'X-XSRF-TOKEN': useRootStore().user.token
-            }
-          })
-          if (tmpres.data.alerts && tmpres.data.alerts.length > 0) {
-            useRootStore().setAlerts(tmpres.data.alerts)
-          }
-          self.form = tmpres.data.template.form
-          // if (tmpres.data.template.hasOwnProperty('skipValidation')) {
-          //   self.skipValidation = tmpres.data.template.skipValidation
-          // }
-        } catch (error) {
-          console.log(error)
-          useRootStore().setAlerts([{ type: 'error', msg: error }])
-        } finally {
-          self.loading = false
-        }
+      if (this.submitTemplateId) {
+        await this.loadSubmitTemplate(self, this.submitTemplateId)
+      } else if (this.instanceconfig.defaulttemplateid) {
+        await this.loadSubmitTemplate(self, this.instanceconfig.defaulttemplateid)
       } else {
 
         self.form = {
@@ -520,6 +505,7 @@ export default {
         }
       }
       
+      this.applyDeepLinkPrefill()
     },
   },
   created: async function () {

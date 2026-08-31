@@ -721,7 +721,7 @@
                             ></p-i-spatial-readonly>
                           </template>
 
-                          <template v-else-if="f.component === 'p-file'">
+                          <template v-else-if="f.component === 'p-file' && !metadataOnly">
                             <p-i-file
                               v-bind="f"
                               v-on:input-file="setFilename(f, $event)"
@@ -1261,6 +1261,14 @@ export default {
     hideContainedInPages: {
       type: Boolean,
       default: false
+    },
+    metadataOnly: {
+      type: Boolean,
+      default: false
+    },
+    externalJobs: {
+      type: Array,
+      default: () => []
     }
   },
   watch: {
@@ -1558,6 +1566,12 @@ export default {
         if (Object.keys(this.rights).length > 0) {
           md['metadata']['rights'] = this.rights
         }
+      }
+      if (this.metadataOnly) {
+        md['metadata']['metadata_only'] = true
+      }
+      if (this.externalJobs && this.externalJobs.length > 0) {
+        md['metadata']['jobs'] = this.externalJobs
       }
       return md
     },

@@ -65,6 +65,7 @@ nav:
           - docs/authentication.md
       - User Interface:
           - User Interface: docs/ui.md
+          - Submit deep links: docs/submit-deep-links.md
   - Showcases:
       - Overview: showcases/index.md
       - Belgrade University Library: showcases/belgrade.md

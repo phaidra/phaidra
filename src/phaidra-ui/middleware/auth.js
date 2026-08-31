@@ -31,6 +31,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
         localStorage.setItem('redirect', to.fullPath)
       } catch (_) {}
     }
-    return navigateTo('/login')
+    return navigateTo('/login?returnto=' + encodeURIComponent(to.fullPath))
   }
 })
