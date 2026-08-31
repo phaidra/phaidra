@@ -52,7 +52,7 @@ sub add_missing {
   my ($url, $label) = @_;
   print "[$label] Ensuring dynamic metadata copyFields -> _text_ at $url...\n";
 
-  my $cf               = list_copyfields($url);
+  my $cf = list_copyfields($url);
   my %existing_to_text = map {($_->{source} // '') => 1}
     grep {($_->{dest} // '') eq '_text_' && defined $_->{source}} @$cf;
 

@@ -127,8 +127,8 @@ sub activate {
     return;
   }
 
-  my $username   = $self->stash->{basic_auth_credentials}->{username};
-  my $password   = $self->stash->{basic_auth_credentials}->{password};
+  my $username = $self->stash->{basic_auth_credentials}->{username};
+  my $password = $self->stash->{basic_auth_credentials}->{password};
   my ($can_manage, $is_admin) = $self->_staff_flags;
 
   my $model = PhaidraAPI::Model::InactiveObjects->new;
@@ -187,8 +187,8 @@ sub delete {
     return;
   }
 
-  my $username   = $self->stash->{basic_auth_credentials}->{username};
-  my $password   = $self->stash->{basic_auth_credentials}->{password};
+  my $username = $self->stash->{basic_auth_credentials}->{username};
+  my $password = $self->stash->{basic_auth_credentials}->{password};
   my ($can_manage, $is_admin) = $self->_staff_flags;
 
   my $model = PhaidraAPI::Model::InactiveObjects->new;
