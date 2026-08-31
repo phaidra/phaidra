@@ -21,8 +21,7 @@ export const useRootStore = defineStore('root', {
     isInactiveObjectsAdmin: false,
     groups: [],
     breadcrumbs: [],
-    loading: false,
-    chartsUrl: []
+    loading: false
   }),
   actions: {
 
@@ -732,13 +731,6 @@ export const useRootStore = defineStore('root', {
       window.localStorage.removeItem("XSRF-TOKEN")
     }
   },
-  setCharts(url) {
-    this.chartsUrl.push(url)
-  },
-  clearCharts() {
-    this.chartsUrl = []
-  }
-,
 
   async nuxtServerInit({ token } = {}) {
     const xsrfToken = token ?? this.$cookies?.get?.('XSRF-TOKEN')
