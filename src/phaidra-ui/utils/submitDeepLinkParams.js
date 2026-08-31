@@ -30,7 +30,7 @@ export function sanitizeDeepLinkText (value, { maxLength = MAX_TEXT_LENGTH } = {
   return s
 }
 
-function queryScalar (query, key) {
+export function queryScalar (query, key) {
   const raw = query[key]
   if (raw === undefined || raw === null || raw === '') {
     return ''
