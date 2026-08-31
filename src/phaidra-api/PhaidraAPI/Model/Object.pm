@@ -727,7 +727,7 @@ sub create_simple {
   }
 
   # activate (unless curated submit requires approval or metadata-only submit)
-  my $initial_state = $c->stash->{curated_initial_state} // 'Inactive';
+  my $initial_state          = $c->stash->{curated_initial_state} // 'Inactive';
   my $metadata_only_activate = exists($metadata->{metadata}->{metadata_only}) && $metadata->{metadata}->{metadata_only} ? 1 : 0;
   if ($metadata_only_activate) {
     $c->app->log->info("Object created pid[$pid] metadata-only, staying Inactive");

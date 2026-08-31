@@ -5,7 +5,7 @@ use warnings;
 use v5.10;
 use Mojo::ByteStream qw(b);
 use Mojo::URL;
-use Scalar::Util     qw(looks_like_number);
+use Scalar::Util qw(looks_like_number);
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Termsofuse;

@@ -67,10 +67,12 @@ sub create_agent_job {
 sub create_opencast_upload_job {
   my ($self, $c, $pid, $cmodel, $oc_mpid) = @_;
 
-  return $self->create_agent_job($c, $pid, $cmodel, {
-    agent   => 'opencast_upload',
-    oc_mpid => $oc_mpid,
-  });
+  return $self->create_agent_job(
+    $c, $pid, $cmodel,
+    { agent   => 'opencast_upload',
+      oc_mpid => $oc_mpid,
+    }
+  );
 }
 
 sub get_job {
