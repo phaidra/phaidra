@@ -195,7 +195,7 @@ sub add_missing_copyfields {
   if ($tx->result->is_success && ($tx->result->json->{responseHeader}{status} // 1) == 0) {
     print "✓ Successfully added missing copyFields to _text_\n\n";
     print "Verifying...\n";
-    my $cf2 = list_copyfields($url);
+    my $cf2           = list_copyfields($url);
     my %post_existing = map {($_->{source} // '') => 1}
       grep {($_->{dest} // '') eq '_text_' && defined $_->{source}} @$cf2;
     my @still_missing = grep {!$post_existing{$_}} @missing;
