@@ -16,6 +16,9 @@ export const useRootStore = defineStore('root', {
     user: {
       token: null
     },
+    hasInactiveObjects: false,
+    canManageInactiveObjects: false,
+    isInactiveObjectsAdmin: false,
     groups: [],
     breadcrumbs: [],
     loading: false,
@@ -220,11 +223,20 @@ export const useRootStore = defineStore('root', {
         }
       )
     }
-    if (transition.to.path.includes('lists')) {
+    if (transition.to.path.includes('/lists')) {
       this.breadcrumbs.push(
         {
           text: 'Object lists',
           to: { name: transition.to.path, params: { token: transition.to.params.token } },
+          disabled: true
+        }
+      )
+    }
+    if (transition.to.path.includes('/inactive-objects')) {
+      this.breadcrumbs.push(
+        {
+          text: (this.user?.isadmin || this.canManageInactiveObjects) ? 'Inactive objects' : 'My inactive objects',
+          to: transition.to.path,
           disabled: true
         }
       )
@@ -688,6 +700,9 @@ export const useRootStore = defineStore('root', {
   },
   clearUser() {
     this.user = {}
+    this.hasInactiveObjects = false
+    this.canManageInactiveObjects = false
+    this.isInactiveObjectsAdmin = false
     let cookieOptions = {
       path: '/',
       secure: true,
@@ -703,6 +718,9 @@ export const useRootStore = defineStore('root', {
     this.objectMembers = []
     this.collectionMembers = []
     this.user = {}
+    this.hasInactiveObjects = false
+    this.canManageInactiveObjects = false
+    this.isInactiveObjectsAdmin = false
     this.groups = []
     let cookieOptions = {
       path: '/',
@@ -846,6 +864,7 @@ export const useRootStore = defineStore('root', {
         this.setAlerts(response.data.alerts)
       }
       this.setLoginData(response.data.user_data)
+      await this.fetchHasInactiveObjects()
     } catch (error) {
       console.log('getLoginData error')
       console.log(error)
@@ -853,6 +872,33 @@ export const useRootStore = defineStore('root', {
         this.setAlerts([{ type: 'success', msg: 'You have been logged out' }])
         this.clearStore()
       }
+    }
+  },
+  async fetchHasInactiveObjects() {
+    if (!this.user?.token) {
+      this.hasInactiveObjects = false
+      this.canManageInactiveObjects = false
+      this.isInactiveObjectsAdmin = false
+      return
+    }
+    try {
+      const response = await this.$axios.get('/inactive-objects', {
+        params: { page: 1, limit: 1 },
+        headers: {
+          'X-XSRF-TOKEN': this.user.token
+        }
+      })
+      this.canManageInactiveObjects = !!response.data.can_manage
+      this.isInactiveObjectsAdmin = !!response.data.is_admin
+      const total = Number(response.data.total)
+      this.hasInactiveObjects = Number.isFinite(total)
+        ? total > 0
+        : (Array.isArray(response.data.objects) && response.data.objects.length > 0)
+    } catch (error) {
+      console.log('fetchHasInactiveObjects error', error)
+      this.hasInactiveObjects = false
+      this.canManageInactiveObjects = false
+      this.isInactiveObjectsAdmin = false
     }
   },
   async login(credentials) {

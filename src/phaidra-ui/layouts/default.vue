@@ -408,7 +408,8 @@ a {
   text-decoration: none;
 }
 
-.v-application a:not(.v-btn):not([class*='text-']) {
+.v-application a:not(.v-btn):not([class*='text-']),
+.v-overlay-container a:not(.v-btn):not([class*='text-']) {
   color: rgb(var(--v-theme-primary));
 }
 

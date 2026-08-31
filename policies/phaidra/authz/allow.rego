@@ -11,6 +11,7 @@ import data.phaidra.authz.upload
 import data.phaidra.authz.restrict
 import data.phaidra.authz.metadata
 import data.phaidra.authz.account
+import data.phaidra.authz.inactive
 import data.phaidra.authz.siteadmin
 import data.phaidra.authz.helpers
 
@@ -88,6 +89,19 @@ allow := decision if {
 		"effect": "allow",
 		"reason": "authenticated",
 		"rights": "",
+		"obligations": {"audit": true},
+	}
+}
+
+allow := decision if {
+	not deny.explicit
+	input.action.id == "inactive_objects_manage"
+	inactive.can_manage
+	decision := {
+		"allow": true,
+		"effect": "allow",
+		"reason": "inactive_objects_manage",
+		"rights": "rw",
 		"obligations": {"audit": true},
 	}
 }
@@ -198,6 +212,22 @@ allow := decision if {
 		"allow": true,
 		"effect": "allow",
 		"reason": "owner",
+		"rights": "rw",
+		"obligations": {"audit": true},
+	}
+}
+
+# Approver write on inactive / pending (grant_rw without ownership).
+allow := decision if {
+	not deny.explicit
+	not admin.grant
+	input.action.id == "write"
+	objectauthz.grant_rw
+	not helpers.is_owner
+	decision := {
+		"allow": true,
+		"effect": "allow",
+		"reason": "staff_inactive_write",
 		"rights": "rw",
 		"obligations": {"audit": true},
 	}

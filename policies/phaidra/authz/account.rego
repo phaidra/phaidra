@@ -25,6 +25,7 @@ account_actions := {
 	"ir_notifications",
 	"feedback",
 	"request_doi",
+	"inactive_objects_read",
 }
 
 is_account_action if {

@@ -11,6 +11,23 @@ export const context = {
     },
     user () {
       return useRootStore().user || {}
+    },
+    hasInactiveObjects () {
+      return !!useRootStore().hasInactiveObjects
+    },
+    canManageInactiveObjects () {
+      return !!useRootStore().canManageInactiveObjects
+    },
+    isInactiveObjectsAdmin () {
+      return !!(this.user.isadmin || useRootStore().isInactiveObjectsAdmin)
+    },
+    showInactiveObjectsNav () {
+      // Admin always: the list starts empty and is the only place to register.
+      // Curators and owners only when they have rows (approval / own inactive).
+      return this.isInactiveObjectsAdmin || this.hasInactiveObjects
+    },
+    inactiveObjectsNavLabel () {
+      return (this.isInactiveObjectsAdmin || this.canManageInactiveObjects) ? 'Inactive objects' : 'My inactive objects'
     }
   }
 }

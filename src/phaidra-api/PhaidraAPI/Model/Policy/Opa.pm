@@ -104,6 +104,7 @@ sub _legacy_action_fallback {
     users_search
     ir_allowsubmit ir_submit ir_notifications
     feedback request_doi
+    inactive_objects_read
   );
 
   my %admin_actions = map {$_ => 1} qw(
@@ -132,6 +133,12 @@ sub _legacy_action_fallback {
   }
   elsif ($action_id eq 'approve') {
     $allow = 0;
+  }
+  elsif ($action_id eq 'inactive_objects_manage') {
+    my $adminuser = $c->app->config->{phaidra}->{adminusername} // '';
+    my @roles     = @{$input->{subject}->{roles} // []};
+    $allow = ($adminuser ne '' && $username eq $adminuser) ? 1 : 0;
+    $allow = 1 if grep {$_ eq 'admin' || $_ eq 'approver'} @roles;
   }
   elsif ($account_actions{$action_id}) {
     $allow = $username ? 1 : 0;
