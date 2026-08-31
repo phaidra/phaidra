@@ -123,7 +123,7 @@ sub get_user_data {
 
   my $directory_model = PhaidraAPI::Model::Directory->new;
   my $user_data       = $directory_model->get_user_data($self, $username);
-  if ($self->stash('remote_user') eq $username) {
+  if ($self->stash('remote_user') && $self->stash('remote_user') eq $username) {
 
     # in case there is no user data api, use the attrs we saved on shib login
     my $sessionData = $self->load_cred;
