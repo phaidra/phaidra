@@ -66,18 +66,6 @@ submitmode=metadata_only
 
 Jobs are independent: use `submitmode=metadata_only` without `job`, or combine both as needed.
 
-### Input sanitization
-
-Deep-link values are treated as plain text. Before prefill (and when creating jobs server-side):
-
-- HTML tags are stripped
-- Field names must match `[a-zA-Z][a-zA-Z0-9_]*`
-- Agent names must match `[a-zA-Z][a-zA-Z0-9_-]*`
-- Obvious script payloads (`javascript:`, etc.) are removed
-- Length is capped (10 000 characters per value)
-
-Invalid bundle segments or field names are skipped silently.
-
 ## Plain query parameters
 
 | Parameter | Required | Description |
