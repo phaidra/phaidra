@@ -9,16 +9,6 @@ import {
 
 export const submitDeepLink = {
   computed: {
-    submitTemplateId () {
-      const q = this.$route.query
-      if (q.template) {
-        return q.template
-      }
-      if (this.$route.params?.templateid) {
-        return this.$route.params.templateid
-      }
-      return null
-    },
     metadataOnlyMode () {
       return isMetadataOnlySubmitMode(this.$route.query)
     },

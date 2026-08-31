@@ -279,9 +279,7 @@ export default {
       self.mandatoryFieldsFound = {};
       self.mandatoryFieldsFilled = {};
 
-      if (this.submitTemplateId) {
-        await this.loadSubmitTemplate(self, this.submitTemplateId)
-      } else if (this.instanceconfig.defaulttemplateid) {
+      if (this.instanceconfig.defaulttemplateid) {
         await this.loadSubmitTemplate(self, this.instanceconfig.defaulttemplateid)
       } else {
 

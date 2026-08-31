@@ -17,6 +17,8 @@
           :debug="false"
           :feedback="false"
           :disableChecksum="instanceconfig.disableChecksum"
+          :metadata-only="metadataOnlyMode"
+          :external-jobs="submitJobs"
           v-on:load-form="form = $event"
           v-on:load-rights="rights = $event"
           v-on:object-created="objectCreated($event)"
@@ -35,11 +37,12 @@ import fields from "phaidra-vue-components/src/utils/fields"
 import { context } from "../../mixins/context"
 import { config, useDocumentTitle } from "../../mixins/config"
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
+import { submitDeepLink } from "../../mixins/submitDeepLink"
 import { useGoTo } from 'vuetify'
 
 export default {
   layout: "main",
-  mixins: [context, config, vocabulary],
+  mixins: [context, config, vocabulary, submitDeepLink],
   setup() {
     definePageMeta({
       middleware: 'auth'
@@ -318,7 +321,8 @@ export default {
           }
         }
       }
-      
+
+      this.applyDeepLinkPrefill()
     },
   },
   beforeRouteEnter: async function (to, from, next) {

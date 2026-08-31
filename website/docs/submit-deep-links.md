@@ -8,9 +8,10 @@ The user must be logged in. If not, they are redirected to login and returned to
 
 | URL | Use case |
 |-----|----------|
+| `/submit/opencast` | OpenCast / u:stream choice page (usual object vs OER); forwards deep-link params |
 | `/submit/upload` | Default upload form |
-| `/submit/upload?template={id}` | Upload form based on a saved template |
-| `/submit/custom/{id}` | Same as above, template id in the path |
+| `/submit/oer` | Open Educational Resource (OER) upload form |
+| `/submit/custom/{id}` | Upload form based on a saved template |
 
 ## Encoded bundles (`job` and `role`)
 
@@ -70,12 +71,9 @@ Jobs are independent: use `submitmode=metadata_only` without `job`, or combine b
 
 | Parameter | Required | Description |
 |-----------|----------|-------------|
-| `template` | no | UUID of a saved upload template |
 | `title` | no | Prefills the title field |
 | `language` | no | Prefills language of object (e.g. `eng`, `deu`) |
 | `dateCreated` | no | Prefills a creation date (`dcterms:created`, EDTF) |
-
-Templates can include an **Alert** field (`p-alert` component) for informational banners.
 
 ## Example URLs
 
@@ -85,18 +83,26 @@ Contributor with first and last name:
 /submit/upload?role=role_spk__firstname_John__lastname_Doe&title=My%20Lecture
 ```
 
-OpenCast archiving (template + metadata-only + one job):
+OpenCast archiving (choice page):
 
 ```
-/submit/upload?template=2A177BD4-A5BE-11EF-8DEA-A7715D1595E0&submitmode=metadata_only&job=agent_opencast__oc%5Fmpid_efe7b339-1234-5678-9abc-def012345678&title=My%20Lecture&language=eng&role=role_spk__firstname_Jane__lastname_Doe&dateCreated=2024-01-15
+/submit/opencast?submitmode=metadata_only&job=agent_opencast__oc%5Fmpid_efe7b339-1234-5678-9abc-def012345678&title=My%20Lecture&language=eng&role=role_spk__firstname_Jane__lastname_Doe&dateCreated=2024-01-15
 ```
 
-## Creating an integration template
+### OpenCast choice page
 
-1. Open **Submit → Create new object** and configure fields for the integration.
-2. Add an **Alert** field at the top with instructions for users.
-3. Save as template and note the template id.
-4. Use that id in the `template` query parameter.
+The choice page uses the `auth` middleware and preserves query parameters through login (`returnto`).
+
+Text on the page can be customized per instance via **i18n overrides** in the Datastructures admin section (e.g. replace “OpenCast” with a local product name like “u:stream”):
+
+```json
+{
+  "deu": {
+    "OpenCast submit title": "Archivierung aus u:stream",
+    "OpenCast submit access rights notice": "Zugriffsrechte aus u:stream werden nicht nach PHAIDRA übernommen. …"
+  }
+}
+```
 
 ## Authentication return URL
 
