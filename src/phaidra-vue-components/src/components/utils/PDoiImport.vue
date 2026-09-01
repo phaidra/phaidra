@@ -598,7 +598,7 @@ export default {
           newRole.component = 'p-entity-extended'
           newRole.group = 'role'
           newRole.role = 'role:aut'
-          newRole.roleVocabulary = newRole.roleVocabulary || 'submitrolepredicate'
+          newRole.roleVocabulary = 'rolepredicate'
           newRole.identifierType = newRole.identifierType || 'ids:orcid'
           newRole.identifierLabel = newRole.identifierLabel || 'ORCID'
           newRole.showIdentifier = true
@@ -1167,7 +1167,7 @@ if (crossrefData['issued']['date-parts'][0]) {
         for (let author of doiImportData.authors) {
           let role = fields.getField("role-extended");
           role.ordergroup = "role";
-          role.roleVocabulary = "submitrolepredicate";
+          role.roleVocabulary = "rolepredicate";
           role.identifierType = "ids:orcid";
           role.identifierLabel = "ORCID";
           role.showIdentifier = true;
@@ -1197,7 +1197,7 @@ if (crossrefData['issued']['date-parts'][0]) {
       } else {
         let role = fields.getField("role-extended");
         role.ordergroup = "role";
-        role.roleVocabulary = "submitrolepredicate";
+        role.roleVocabulary = "rolepredicate";
         role.identifierType = "ids:orcid";
         role.identifierLabel = "ORCID";
         role.showIdentifier = true;
