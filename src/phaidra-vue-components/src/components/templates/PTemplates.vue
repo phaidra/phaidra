@@ -1,5 +1,5 @@
 <template>
-
+  <div>
   <v-data-table
     v-model:sort-by="tableSortBy"
     :headers="headers"
@@ -60,10 +60,25 @@
         <span v-if="isDefaultSelect">{{ $t('Select') }}</span>
         <span v-else-if="item.tid !== selectedTemplateId">{{ $t('Load') }}</span>
       </v-btn>
-      <v-btn v-if="!isDefaultSelect" variant="text" color="btnred" @click="deleteTemplate(item.tid)">{{ $t('Delete') }}</v-btn>
+      <v-btn v-if="!isDefaultSelect" variant="text" color="btnred" @click="deleteTemplateDialog(item)">{{ $t('Delete') }}</v-btn>
     </template>
   </v-data-table>
-
+  <v-dialog v-model="deleteDialog" max-width="500px" v-if="templateToDelete">
+    <v-card>
+      <v-card-title class="text-title-large font-weight-light text-white">
+        {{ $t('Delete template') }}
+      </v-card-title>
+      <v-card-text class="mt-4">
+        <p class="text-title-large font-weight-light">{{ $t('Delete template') + ' ' + templateToDelete.name + '?' }}</p>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn variant="outlined" @click="deleteDialog = false">{{ $t('Cancel') }}</v-btn>
+        <v-btn theme="dark" @click="deleteTemplate()" color="btnred">{{ $t('Delete') }}</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -102,7 +117,8 @@ export default {
       tableSortBy: [],
       headers: [],
       templates: [],
-      deletetempconfirm: false,
+      deleteDialog: false,
+      templateToDelete: null,
       loading: false,
       templateSearch: '',
     }
@@ -169,28 +185,31 @@ export default {
         this.loading = false
       }
     },
-    deleteTemplate: async function (tid) {
-      if (confirm(this.$t('Are you sure you want to delete this template?'))) {
-        this.loading = true
-        try {
-          let response = await this.$axios.request({
-            method: 'POST',
-            url: '/jsonld/template/' + (useRootStore().user.isadmin ? 'admin/' : '')  + tid + '/remove',
-            headers: {
-              'X-XSRF-TOKEN': useRootStore().user.token
-            }
-          })
-          if (response.data.alerts && response.data.alerts.length > 0) {
-            useRootStore().setAlerts(response.data.alerts)
+    deleteTemplateDialog: function (template) {
+      this.templateToDelete = template
+      this.deleteDialog = true
+    },
+    deleteTemplate: async function () {
+      this.deleteDialog = false
+      this.loading = true
+      try {
+        let response = await this.$axios.request({
+          method: 'POST',
+          url: '/jsonld/template/' + (useRootStore().user.isadmin ? 'admin/' : '')  + this.templateToDelete.tid + '/remove',
+          headers: {
+            'X-XSRF-TOKEN': useRootStore().user.token
           }
-          this.deletetempconfirm = false
-          this.loadTemplates()
-        } catch (error) {
-          console.log(error)
-          useRootStore().setAlerts([{ type: 'danger', msg: error }])
-        } finally {
-          this.loading = false
+        })
+        if (response.data.alerts && response.data.alerts.length > 0) {
+          useRootStore().setAlerts(response.data.alerts)
         }
+        this.loadTemplates()
+      } catch (error) {
+        console.log(error)
+        useRootStore().setAlerts([{ type: 'danger', msg: error }])
+      } finally {
+        this.loading = false
+        this.templateToDelete = null
       }
     },
     loadTemplates: async function () {
