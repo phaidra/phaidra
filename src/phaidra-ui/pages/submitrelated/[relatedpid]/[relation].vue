@@ -74,6 +74,7 @@
         :feedback-context="'Related object submit'" 
         :mouseoverfielddef="true"
         :forcePreview="instanceconfig.forcePreview"
+        :doiImport="instanceconfig.doiImport"
         :disableChecksum="instanceconfig.disableChecksum"
         :hideContainedInPages="instanceconfig.hideContainedInPages"
         v-on:load-form="form = $event" 
@@ -553,6 +554,16 @@ export default {
                 id: 6,
                 fields: [],
               },
+              {
+                title: "Accessibility",
+                mode: "expansion",
+                addbutton: false,
+                disablemenu: true,
+                collapsed: true,
+                outlined: true,
+                id: 7,
+                fields: [],
+              },
             ],
           };
 
@@ -661,16 +672,45 @@ export default {
           self.form.sections[5].fields.push(published)
           self.form.sections[5].fields.push(fields.getField("volume"));
           self.form.sections[5].fields.push(fields.getField("issue"));
-          self.form.sections[5].fields.push(fields.getField("series"));
+          self.form.sections[5].fields.push(fields.getField("page-start"));
+          self.form.sections[5].fields.push(fields.getField("page-end"));
           let publ = fields.getField("bf-publication")
           publ.isParentSelectionDisabled = this.instanceconfig.isParentSelectionDisabled
           self.form.sections[5].fields.push(publ);
+          self.form.sections[5].fields.push(fields.getField("series"));
+          let containedIn = fields.getField("contained-in");
+          containedIn.isParentSelectionDisabled = this.instanceconfig.isParentSelectionDisabled;
+          self.form.sections[5].fields.push(containedIn);
+
+          let ac1 = fields.getField("accessibility-control")
+          ac1.multiplicable = true
+          ac1.showValueDefinition = true;
+          self.form.sections[6].fields.push(ac1);
+          let ac2 = fields.getField("access-mode")
+          ac2.multiplicable = true
+          ac2.showValueDefinition = true;
+          self.form.sections[6].fields.push(ac2);
+          let ac3 = fields.getField("accessibility-hazard")
+          ac3.multiplicable = true
+          ac3.showValueDefinition = true;
+          self.form.sections[6].fields.push(ac3);
+          let ac4 = fields.getField("accessibility-feature")
+          ac4.multiplicable = true
+          ac4.showValueDefinition = true;
+          self.form.sections[6].fields.push(ac4);
 
         }
 
         for (let s of self.form.sections) {
           for (let f of s.fields) {
             f.configurable = false
+            if (f.predicate === 'schema:pageStart' || f.predicate === 'schema:pageEnd') {
+              f.multilingual = false
+              f.language = ''
+              f.allowLanguageCancel = false
+            } else {
+              f.multilingual = true
+            }
             for (let prop of Object.keys(f)) {
               switch (prop) {
                 case "language":
@@ -678,6 +718,18 @@ export default {
                   break;
                 case "nameLanguage":
                   f.nameLanguage = self.$i18n.locale;
+                  break;
+                case "funderNameLanguage":
+                  f.funderNameLanguage = self.$i18n.locale;
+                  break;
+                case "descriptionLanguage":
+                  f.descriptionLanguage = self.$i18n.locale;
+                  break;
+                case "titleLanguage":
+                  f.titleLanguage = self.$i18n.locale;
+                  break;
+                case "citationLanguage":
+                  f.citationLanguage = self.$i18n.locale;
                   break;
               }
             }
