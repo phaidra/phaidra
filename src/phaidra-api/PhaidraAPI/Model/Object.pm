@@ -727,7 +727,7 @@ sub create_simple {
   }
 
   # activate (unless curated submit requires approval or deferred upload)
-  my $initial_state     = $c->stash->{curated_initial_state} // 'Inactive';
+  my $initial_state          = $c->stash->{curated_initial_state} // 'Inactive';
   my $deferred_upload_submit = exists($metadata->{metadata}->{deferred_upload}) && $metadata->{metadata}->{deferred_upload} ? 1 : 0;
   if ($deferred_upload_submit) {
     $c->app->log->info("Object created pid[$pid] deferred upload, staying Inactive");

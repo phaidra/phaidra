@@ -37,7 +37,7 @@ sub list {
   }
   if (defined $opts->{owner_or_approval} && $opts->{owner_or_approval} ne '') {
     push @where, '(status = ? OR owner = ?)';
-    push @bind,  'approval', $opts->{owner_or_approval};
+    push @bind, 'approval', $opts->{owner_or_approval};
   }
   if (defined $opts->{status} && $opts->{status} ne '') {
     push @where, 'status = ?';
