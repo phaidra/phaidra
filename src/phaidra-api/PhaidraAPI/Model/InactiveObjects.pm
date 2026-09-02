@@ -160,8 +160,8 @@ sub register_from_pid {
     return $res;
   }
 
-  $source = 'manual'            unless defined $source && $source ne '';
-  $status = 'Awaiting upload'   unless defined $status && $status ne '';
+  $source = 'manual'          unless defined $source && $source ne '';
+  $status = 'Awaiting upload' unless defined $status && $status ne '';
 
   my $fedora_model = PhaidraAPI::Model::Fedora->new;
   my $props        = $fedora_model->getObjectProperties($c, $pid);

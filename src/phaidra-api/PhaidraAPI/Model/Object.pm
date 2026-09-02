@@ -759,7 +759,8 @@ sub create_simple {
     $c->app->log->info("Object created pid[$pid] deferred upload, staying Inactive");
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
     $fedora_model->commitTransaction($c);
-    my $has_upload_jobs = exists($metadata->{metadata}->{jobs})
+    my $has_upload_jobs
+      = exists($metadata->{metadata}->{jobs})
       && ref($metadata->{metadata}->{jobs}) eq 'ARRAY'
       && scalar(@{$metadata->{metadata}->{jobs}}) > 0;
     my $initial_status = $has_upload_jobs ? 'Creating upload job...' : 'Awaiting upload';
