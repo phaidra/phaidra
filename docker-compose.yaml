@@ -1629,6 +1629,9 @@ services:
       - /sys:/sys:ro
       - /etc/machine-id:/etc/machine-id:ro
       - ${HOST_DOCKER_SOCKET:-/run/user/1000/docker.sock}:/var/run/docker.sock:ro
+    command:
+      - '--housekeeping_interval=10s'
+      - '--docker_only=true'
     profiles:
       [
         "demo-local",
