@@ -34,7 +34,7 @@ services:
       context: .
       dockerfile_inline: |
         FROM caddy:builder AS builder
-        RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build xcaddy build --with github.com/oltdaniel/caddy-ipinfo-free --with github.com/mholt/caddy-ratelimit@5625512f24f6f59d6f64fb3aafe5eecff0b286db
+        RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build xcaddy build master --with github.com/oltdaniel/caddy-ipinfo-free --with github.com/mholt/caddy-ratelimit@5625512f24f6f59d6f64fb3aafe5eecff0b286db
 
         FROM alpine AS ip_db_converter
         RUN apk add --no-cache go
@@ -133,6 +133,8 @@ configs:
           timeouts {
             read_header 5s
             idle 1m
+            read_body_idle 1s 10000
+            write_idle 1s 10000
           }
         }
         order ipinfo_free first
