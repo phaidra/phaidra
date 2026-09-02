@@ -590,6 +590,30 @@ sub get_mimetype() {
   return $mimetype;
 }
 
+sub _is_truthy {
+  my ($val) = @_;
+  return 0 unless defined $val;
+  return 0 if !ref($val) && ($val eq '' || $val eq '0' || lc($val) eq 'false' || lc($val) eq 'no');
+  return $val ? 1 : 0;
+}
+
+sub _deferred_upload_requested {
+  my ($self, $c, $metadata) = @_;
+  return 0 unless $metadata && ref($metadata) eq 'HASH';
+
+  if ($c) {
+    my $param = $c->param('deferred_upload');
+    return 1 if defined $param && _is_truthy($param);
+  }
+
+  my $inner = $metadata->{metadata};
+  return 0 unless $inner && ref($inner) eq 'HASH';
+
+  return 1 if exists $inner->{deferred_upload} && _is_truthy($inner->{deferred_upload});
+
+  return 0;
+}
+
 sub create_simple {
 
   my $self         = shift;
@@ -702,12 +726,14 @@ sub create_simple {
     }
   }
   else {
-    my $deferred_upload = 0;
-    if (exists($metadata->{metadata}->{deferred_upload}) && $metadata->{metadata}->{deferred_upload}) {
-      $deferred_upload = 1;
-    }
+    my $deferred_upload = $self->_deferred_upload_requested($c, $metadata);
 
     unless ($deferred_upload) {
+      unless ($upload) {
+        unshift @{$res->{alerts}}, {type => 'error', msg => 'No file provided'};
+        $res->{status} = 400;
+        return $res;
+      }
       my $aor = $self->add_octets($c, $pid, $upload, $mimetype, $checksumtype, $checksum, $username, $password, 0, $cmodel);
       if ($aor->{status} ne 200) {
         return $aor;
@@ -728,7 +754,7 @@ sub create_simple {
 
   # activate (unless curated submit requires approval or deferred upload)
   my $initial_state          = $c->stash->{curated_initial_state} // 'Inactive';
-  my $deferred_upload_submit = exists($metadata->{metadata}->{deferred_upload}) && $metadata->{metadata}->{deferred_upload} ? 1 : 0;
+  my $deferred_upload_submit = $self->_deferred_upload_requested($c, $metadata);
   if ($deferred_upload_submit) {
     $c->app->log->info("Object created pid[$pid] deferred upload, staying Inactive");
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
@@ -1115,6 +1141,12 @@ sub add_octets {
   }
 
   my $res = {alerts => [], status => 200};
+
+  unless ($upload) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'No file provided'};
+    $res->{status} = 400;
+    return $res;
+  }
 
   my $size = $upload->size;
   my $name = $upload->filename;

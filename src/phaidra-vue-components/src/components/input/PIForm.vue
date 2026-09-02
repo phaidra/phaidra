@@ -859,7 +859,7 @@
                 <v-btn v-else-if="forcePreview" large raised :loading="loading" :disabled="loading" color="primary" @click="showForcePreview()"><span v-t="'Preview'"></span></v-btn>
                 <template v-else>
                   <v-btn
-                    v-if="!hideUploadButton && !disableChecksum && !hideAddFileChecksum && submittype !== 'collection' && submittype !== 'resource'"
+                    v-if="!hideUploadButton && !disableChecksum && !hideAddFileChecksum && !deferredUpload && submittype !== 'collection' && submittype !== 'resource'"
                     large
                     raised
                     :loading="loading"
@@ -917,7 +917,7 @@
         <p-d-jsonld :jsonld="jsonld"></p-d-jsonld>
         <div class="d-flex justify-end ga-2">
           <v-btn
-            v-if="!hideUploadButton && !disableChecksum && !hideAddFileChecksum && submittype !== 'collection' && submittype !== 'resource'"
+            v-if="!hideUploadButton && !disableChecksum && !hideAddFileChecksum && !deferredUpload && submittype !== 'collection' && submittype !== 'resource'"
             large
             raised
             :loading="loading"
@@ -971,7 +971,7 @@
       </v-card>
     </v-dialog>
 
-    <template v-if="!hideAddFileChecksum">
+    <template v-if="!hideAddFileChecksum && !deferredUpload">
     <v-dialog
       v-model="checksumDialog"
       max-width="500px"
@@ -1746,6 +1746,9 @@ export default {
       }
 
       httpFormData.append('metadata', JSON.stringify(this.getMetadata()))
+      if (this.deferredUpload) {
+        httpFormData.append('deferred_upload', '1')
+      }
       if (mime) {
         httpFormData.append('mimetype', mime)
       }

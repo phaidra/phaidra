@@ -1311,6 +1311,11 @@ sub create_simple {
     return;
   }
 
+  if ($self->param('deferred_upload')) {
+    $metadata->{metadata} = {} unless ref($metadata->{metadata}) eq 'HASH';
+    $metadata->{metadata}->{deferred_upload} = \1;
+  }
+
   my $mimetype = $self->param('mimetype');
   my $upload   = $self->req->upload('file');
 

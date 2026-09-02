@@ -100,7 +100,7 @@ export default {
           }
         }
       }
-      if (!hasfile) {
+      if (!hasfile && !this.deferredUploadMode) {
         let file = fields.getField("file");
         file.fileInputClass = "mb-2";
         file.showMimetype = false;
@@ -267,6 +267,9 @@ export default {
           this.markOefosMandatory()
           break;
       }
+      if (this.deferredUploadMode) {
+        this.removeFileFields()
+      }
     },
     objectCreated: function (event) {
       this.redirectAfterObjectCreated(event)
@@ -361,11 +364,13 @@ export default {
         self.setResourceTypeFieldValue(rt, defaultResourceType);
         self.form.sections[0].fields.push(rt);
 
-        let file = fields.getField("file");
-        file.fileInputClass = "mb-2";
-        file.showMimetype = false;
-        file.backgroundColor = '#0063a620';
-        self.form.sections[0].fields.push(file);
+        if (!self.deferredUploadMode) {
+          let file = fields.getField("file");
+          file.fileInputClass = "mb-2";
+          file.showMimetype = false;
+          file.backgroundColor = '#0063a620';
+          self.form.sections[0].fields.push(file);
+        }
 
         let ot = fields.getField("object-type-checkboxes");
         ot.resourceType = defaultResourceType;

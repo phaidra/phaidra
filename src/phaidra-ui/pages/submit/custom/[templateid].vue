@@ -79,7 +79,7 @@ export default {
           }
         }
       }
-      if (!hasfile) {
+      if (!hasfile && !this.deferredUploadMode) {
         let file = fields.getField("file");
         file.fileInputClass = "mb-2";
         file.showMimetype = false;
@@ -204,6 +204,9 @@ export default {
           }
           this.markOefosMandatory()
           break;
+      }
+      if (this.deferredUploadMode) {
+        this.removeFileFields()
       }
     },
     dontValidate: function () {
