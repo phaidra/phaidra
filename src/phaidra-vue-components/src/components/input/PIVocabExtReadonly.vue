@@ -54,12 +54,20 @@ export default {
     },
     prefLabel: function () {
       if (this['skos:prefLabel']) {
+        let engLabel
+        let deuLabel
         for (let lab of this['skos:prefLabel']) {
           if (lab['@language'] === this.$i18n.locale) {
             return lab['@value']
           }
+          if (lab['@language'] === 'eng') {
+            engLabel = lab['@value']
+          }
+          if (lab['@language'] === 'deu') {
+            deuLabel = lab['@value']
+          }
         }
-        return this['skos:prefLabel'][0]['@value']
+        return engLabel || deuLabel || this['skos:prefLabel'][0]['@value']
       }
       return ''
     },
