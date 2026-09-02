@@ -721,7 +721,7 @@
                             ></p-i-spatial-readonly>
                           </template>
 
-                          <template v-else-if="f.component === 'p-file' && !metadataOnly">
+                          <template v-else-if="f.component === 'p-file' && !deferredUpload">
                             <p-i-file
                               v-bind="f"
                               v-on:input-file="setFilename(f, $event)"
@@ -1262,7 +1262,7 @@ export default {
       type: Boolean,
       default: false
     },
-    metadataOnly: {
+    deferredUpload: {
       type: Boolean,
       default: false
     },
@@ -1567,8 +1567,8 @@ export default {
           md['metadata']['rights'] = this.rights
         }
       }
-      if (this.metadataOnly) {
-        md['metadata']['metadata_only'] = true
+      if (this.deferredUpload) {
+        md['metadata']['deferred_upload'] = true
       }
       if (this.externalJobs && this.externalJobs.length > 0) {
         md['metadata']['jobs'] = this.externalJobs

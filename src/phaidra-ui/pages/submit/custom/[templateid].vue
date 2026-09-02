@@ -11,7 +11,7 @@
         :addbutton="true" 
         :templating="templating"
         :disableChecksum="instanceconfig.disableChecksum"
-        :metadata-only="metadataOnlyMode"
+        :deferred-upload="deferredUploadMode"
         :external-jobs="submitJobs"
         :validationfnc="validationfnc ? validationfnc : null" 
         :enablepreview="true"
@@ -210,8 +210,7 @@ export default {
       return true;
     },
     objectCreated: function (event) {
-      this.$router.push(this.localeLocation({ path: `/detail/${event}` }));
-      this.goTo(0);
+      this.redirectAfterObjectCreated(event)
     },
     loadTemplate: async function (self) {
       self.loading = true

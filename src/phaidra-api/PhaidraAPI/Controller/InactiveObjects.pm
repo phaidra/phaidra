@@ -76,7 +76,8 @@ sub list {
     order => $self->param('order'),
   };
   if (!$is_admin && $can_manage) {
-    $opts->{status} = 'approval';
+    # Curators see the approval queue, plus their own inactive deferred-upload rows.
+    $opts->{owner_or_approval} = $owner;
   }
   elsif (!$is_admin) {
     $opts->{owner} = $owner;

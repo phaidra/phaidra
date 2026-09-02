@@ -54,6 +54,7 @@ sub create {
   my $initial_state = $c->stash->{curated_initial_state} // 'Inactive';
   if ($initial_state eq 'PendingApproval') {
     $c->app->log->info("Object created pid[$pid] awaiting approval");
+    $fedora_model->commitTransaction($c);
     my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
     my $ir             = $inactive_model->register_from_pid($c, $pid, 'curated_submit', 'approval');
     if ($ir->{status} ne 200) {

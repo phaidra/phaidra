@@ -702,12 +702,12 @@ sub create_simple {
     }
   }
   else {
-    my $metadata_only = 0;
-    if (exists($metadata->{metadata}->{metadata_only}) && $metadata->{metadata}->{metadata_only}) {
-      $metadata_only = 1;
+    my $deferred_upload = 0;
+    if (exists($metadata->{metadata}->{deferred_upload}) && $metadata->{metadata}->{deferred_upload}) {
+      $deferred_upload = 1;
     }
 
-    unless ($metadata_only) {
+    unless ($deferred_upload) {
       my $aor = $self->add_octets($c, $pid, $upload, $mimetype, $checksumtype, $checksum, $username, $password, 0, $cmodel);
       if ($aor->{status} ne 200) {
         return $aor;
@@ -726,14 +726,24 @@ sub create_simple {
     return $res;
   }
 
-  # activate (unless curated submit requires approval or metadata-only submit)
-  my $initial_state          = $c->stash->{curated_initial_state} // 'Inactive';
-  my $metadata_only_activate = exists($metadata->{metadata}->{metadata_only}) && $metadata->{metadata}->{metadata_only} ? 1 : 0;
-  if ($metadata_only_activate) {
-    $c->app->log->info("Object created pid[$pid] metadata-only, staying Inactive");
+  # activate (unless curated submit requires approval or deferred upload)
+  my $initial_state     = $c->stash->{curated_initial_state} // 'Inactive';
+  my $deferred_upload_submit = exists($metadata->{metadata}->{deferred_upload}) && $metadata->{metadata}->{deferred_upload} ? 1 : 0;
+  if ($deferred_upload_submit) {
+    $c->app->log->info("Object created pid[$pid] deferred upload, staying Inactive");
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    $fedora_model->commitTransaction($c);
+    my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
+    my $ir             = $inactive_model->register_from_pid($c, $pid, 'deferred_upload', 'inactive');
+    if ($ir->{status} ne 200) {
+      $c->app->log->error("pid[$pid] failed to register inactive object for deferred upload: " . $c->app->dumper($ir));
+      push @{$res->{alerts}}, @{$ir->{alerts}} if scalar @{$ir->{alerts}} > 0;
+    }
   }
   elsif ($initial_state eq 'PendingApproval') {
     $c->app->log->info("Object created pid[$pid] awaiting approval");
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    $fedora_model->commitTransaction($c);
     my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
     my $ir             = $inactive_model->register_from_pid($c, $pid, 'curated_submit', 'approval');
     if ($ir->{status} ne 200) {
@@ -1320,6 +1330,9 @@ sub save_metadata {
       $found = 1;
 
       # noop - this is handled later because it's the last step (after activating object)
+    }
+    elsif (lc($f) eq "deferred_upload" || lc($f) eq "jobs") {
+      $found = 1;
     }
     elsif (lc($f) eq "resourcelink") {
       $found = 1;

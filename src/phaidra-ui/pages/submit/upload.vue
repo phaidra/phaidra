@@ -20,7 +20,7 @@
           :feedback-context="'Upload'"
           :doiImport="instanceconfig.doiImport"
           :disableChecksum="instanceconfig.disableChecksum"
-          :metadata-only="metadataOnlyMode"
+          :deferred-upload="deferredUploadMode"
           :external-jobs="submitJobs"
           v-on:load-form="form = $event"
           v-on:load-rights="rights = $event"
@@ -43,6 +43,7 @@ import { context } from "../../mixins/context"
 import { config, useDocumentTitle } from "../../mixins/config"
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
 import { submitDeepLink } from "../../mixins/submitDeepLink"
+import { resolveInitialResourceType, parseResourceTypeFromQuery } from "../../utils/submitDeepLinkParams"
 import { useGoTo } from 'vuetify'
 
 export default {
@@ -268,8 +269,7 @@ export default {
       }
     },
     objectCreated: function (event) {
-      this.$router.push(this.localeLocation({ path: `/detail/${event}` }));
-      this.goTo(0);
+      this.redirectAfterObjectCreated(event)
     },
     createForm: async function (self, index) {
       useVocabularyStore().sortObjectTypes(this.$i18n.locale);
@@ -354,11 +354,11 @@ export default {
           ],
         };
 
-        let defaultResourceType = "https://pid.phaidra.org/vocabulary/44TN-P1S0";
+        let defaultResourceType = resolveInitialResourceType(self.$route.query);
 
         let rt = fields.getField("resource-type-buttongroup");
         rt.vocabulary = "resourcetypenocontainer";
-        rt.value = defaultResourceType;
+        self.setResourceTypeFieldValue(rt, defaultResourceType);
         self.form.sections[0].fields.push(rt);
 
         let file = fields.getField("file");
@@ -466,6 +466,12 @@ export default {
         ac4.multiplicable = true
         ac4.showValueDefinition = true;
         self.form.sections[6].fields.push(ac4);
+      }
+
+      if (parseResourceTypeFromQuery(self.$route.query)) {
+        self.handleInputResourceType(
+          resolveInitialResourceType(self.$route.query)
+        )
       }
 
       for (let s of self.form.sections) {

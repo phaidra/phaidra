@@ -2,15 +2,16 @@ import { useRootStore } from '~/stores/root'
 import fields from 'phaidra-vue-components/src/utils/fields'
 import {
   buildSubmitJobsFromQuery,
-  isMetadataOnlySubmitMode,
+  isDeferredUploadSubmitMode,
+  parseResourceTypeFromQuery,
   parseRoleQueryParams,
   queryScalar
 } from '../utils/submitDeepLinkParams'
 
 export const submitDeepLink = {
   computed: {
-    metadataOnlyMode () {
-      return isMetadataOnlySubmitMode(this.$route.query)
+    deferredUploadMode () {
+      return isDeferredUploadSubmitMode(this.$route.query)
     },
     submitJobs () {
       return buildSubmitJobsFromQuery(this.$route.query)
@@ -50,11 +51,76 @@ export const submitDeepLink = {
         }
       }
     },
+    setResourceTypeFieldValue (field, resourceTypeId) {
+      field.value = resourceTypeId
+      if (typeof this.getTerm !== 'function') {
+        return
+      }
+      const term = this.getTerm('resourcetype', resourceTypeId) ||
+        this.getTerm('resourcetypenocontainer', resourceTypeId)
+      if (!term?.['skos:prefLabel']) {
+        return
+      }
+      field['skos:prefLabel'] = []
+      Object.entries(term['skos:prefLabel']).forEach(([key, value]) => {
+        field['skos:prefLabel'].push({ '@value': value, '@language': key })
+      })
+    },
+    applyResourceTypePrefill () {
+      const resourceTypeId = parseResourceTypeFromQuery(this.$route.query)
+      if (!resourceTypeId) {
+        return
+      }
+      for (let s of this.form.sections) {
+        if (!s.fields) continue
+        for (let f of s.fields) {
+          if (f.component === 'p-resource-type-buttongroup') {
+            this.setResourceTypeFieldValue(f, resourceTypeId)
+          }
+          if (f.component === 'p-object-type-checkboxes') {
+            f.resourceType = resourceTypeId
+          }
+        }
+      }
+      if (typeof this.handleInputResourceType === 'function') {
+        this.handleInputResourceType(resourceTypeId)
+      }
+    },
+    insertOrUpdateDateCreated (dateCreated) {
+      const mainSection = this.form.sections[0]
+      if (!mainSection?.fields) {
+        return
+      }
+      for (let f of mainSection.fields) {
+        if (f.component === 'p-date-edtf' && f.type === 'dcterms:created') {
+          f.value = dateCreated
+          return
+        }
+      }
+      let licenseIdx = -1
+      for (let i = 0; i < mainSection.fields.length; i++) {
+        const f = mainSection.fields[i]
+        if (f.predicate === 'edm:rights' || f.id === 'license') {
+          licenseIdx = i
+          break
+        }
+      }
+      const created = fields.getField('date-edtf')
+      created.value = dateCreated
+      created.type = 'dcterms:created'
+      if (licenseIdx >= 0) {
+        mainSection.fields.splice(licenseIdx, 0, created)
+      } else {
+        mainSection.fields.push(created)
+      }
+    },
     applyDeepLinkPrefill () {
       const q = this.$route.query
       const title = queryScalar(q, 'title')
       const language = queryScalar(q, 'language')
-      const dateCreated = queryScalar(q, 'dateCreated')
+      const dateCreated = queryScalar(q, 'datecreated')
+
+      this.applyResourceTypePrefill()
 
       for (let s of this.form.sections) {
         if (!s.fields) continue
@@ -71,31 +137,21 @@ export const submitDeepLink = {
       this.applyRolePrefill(parseRoleQueryParams(q))
 
       if (dateCreated) {
-        let hasDate = false
-        for (let s of this.form.sections) {
-          if (!s.fields) continue
-          for (let f of s.fields) {
-            if (f.component === 'p-date-edtf' && f.type === 'dcterms:created') {
-              f.value = dateCreated
-              hasDate = true
-              break
-            }
-          }
-        }
-        if (!hasDate) {
-          for (let s of this.form.sections) {
-            if (!s.fields) continue
-            let created = fields.getField('date-edtf')
-            created.value = dateCreated
-            created.type = 'dcterms:created'
-            s.fields.unshift(created)
-            break
-          }
-        }
+        this.insertOrUpdateDateCreated(dateCreated)
       }
 
-      if (this.metadataOnlyMode) {
+      if (this.deferredUploadMode) {
         this.removeFileFields()
+      }
+    },
+    redirectAfterObjectCreated (pid) {
+      if (this.deferredUploadMode) {
+        this.$router.push(this.localeLocation({ path: '/inactive-objects' }))
+      } else {
+        this.$router.push(this.localeLocation({ path: `/detail/${pid}` }))
+      }
+      if (typeof this.goTo === 'function') {
+        this.goTo(0)
       }
     },
     loadSubmitTemplate: async function (self, templateId, { editableTemplate = false } = {}) {

@@ -46,6 +46,10 @@ sub create_agent_job {
     status  => 'new',
     created => time,
   };
+  if ($job->{ocmpid} && !$job->{oc_mpid}) {
+    $job->{oc_mpid} = $job->{ocmpid};
+    delete $job->{ocmpid};
+  }
   for my $key (keys %{$job}) {
     next if $key eq 'agent';
     next unless $key =~ /\A[A-Za-z][A-Za-z0-9_]*\z/;

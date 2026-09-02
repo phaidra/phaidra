@@ -31,7 +31,7 @@ Examples:
 | Segment (logical) | In URL |
 |-------------------|--------|
 | `agent` = `opencast` | `agent_opencast` |
-| `oc_mpid` = `{uuid}` | `oc%5Fmpid_{uuid}` |
+| `ocmpid` = `{uuid}` | `ocmpid_{uuid}` |
 | `role` = `spk` | `role_spk` |
 | `firstname` = `Jane` | `firstname_Jane` |
 
@@ -40,7 +40,7 @@ Examples:
 **Each `job` query parameter creates one separate job document** after submit.
 
 ```
-job=agent_opencast__oc%5Fmpid_efe7b339-1234-5678-9abc-def012345678
+job=agent_opencast__ocmpid_efe7b339-1234-5678-9abc-def012345678
 ```
 
 Repeat `job` to enqueue multiple jobs for the same object.
@@ -55,17 +55,17 @@ role=role_spk__firstname_Jane__lastname_Doe
 
 Repeat `role` for multiple contributors.
 
-### `submitmode` — metadata-only submit
+### `submitmode` — deferred upload
 
 | Value | Behaviour |
 |-------|-----------|
-| `metadata_only` | No file upload; object stays **Inactive** |
+| `deferred_upload` | No file upload; object stays **Inactive** until bitstream data arrive (e.g. via background job) |
 
 ```
-submitmode=metadata_only
+submitmode=deferred_upload
 ```
 
-Jobs are independent: use `submitmode=metadata_only` without `job`, or combine both as needed.
+Jobs are independent: use `submitmode=deferred_upload` without `job`, or combine both as needed.
 
 ## Plain query parameters
 
@@ -73,7 +73,10 @@ Jobs are independent: use `submitmode=metadata_only` without `job`, or combine b
 |-----------|----------|-------------|
 | `title` | no | Prefills the title field |
 | `language` | no | Prefills language of object (e.g. `eng`, `deu`) |
-| `dateCreated` | no | Prefills a creation date (`dcterms:created`, EDTF) |
+| `datecreated` | no | Prefills a creation date (`dcterms:created`, EDTF); shown in the main form section just before **License** |
+| `rt` | no | Resource type vocabulary URL (e.g. `https://pid.phaidra.org/vocabulary/B0Y6-GYT8` for video; URL-encode in query strings) |
+
+The OpenCast choice page adds `rt` for video automatically when forwarding to `/submit/upload` or `/submit/oer` (unless `rt` is already set).
 
 ## Example URLs
 
@@ -86,12 +89,16 @@ Contributor with first and last name:
 OpenCast archiving (choice page):
 
 ```
-/submit/opencast?submitmode=metadata_only&job=agent_opencast__oc%5Fmpid_efe7b339-1234-5678-9abc-def012345678&title=My%20Lecture&language=eng&role=role_spk__firstname_Jane__lastname_Doe&dateCreated=2024-01-15
+/submit/opencast?submitmode=deferred_upload&job=agent_opencast__ocmpid_efe7b339-1234-5678-9abc-def012345678&title=My%20Lecture&language=eng&role=role_spk__firstname_Jane__lastname_Doe&datecreated=2024-01-15&rt=https%3A%2F%2Fpid.phaidra.org%2Fvocabulary%2FB0Y6-GYT8
 ```
 
 ### OpenCast choice page
 
 The choice page uses the `auth` middleware and preserves query parameters through login (`returnto`).
+
+Between the access-rights notice and the upload options, the page shows a **prefilled metadata** summary parsed from the query string: media package ID (`ocmpid` from `job` bundles), title, language, creation date, and contributors.
+
+After a deferred-upload submit the object is registered in **My inactive objects** and the user is redirected there (not to the detail page).
 
 Text on the page can be customized per instance via **i18n overrides** in the Datastructures admin section (e.g. replace “OpenCast” with a local product name like “u:stream”):
 

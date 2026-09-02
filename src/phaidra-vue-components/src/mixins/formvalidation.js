@@ -453,7 +453,7 @@ export const formvalidation = {
             }
           }
           if (f.component === 'p-file') {
-            if (this.metadataOnly) {
+            if (this.deferredUpload) {
               continue
             }
             f.fileErrorMessages = []
@@ -652,7 +652,7 @@ export const formvalidation = {
             }
           }
           if (f.component === 'p-file') {
-            if (this.metadataOnly) {
+            if (this.deferredUpload) {
               continue
             }
             f.fileErrorMessages = []
@@ -840,7 +840,7 @@ export const formvalidation = {
             }
           }
           if (f.component === 'p-file') {
-            if (this.metadataOnly) {
+            if (this.deferredUpload) {
               continue
             }
             f.fileErrorMessages = []
@@ -1006,7 +1006,7 @@ export const formvalidation = {
             }
           }
           if (f.component === 'p-file') {
-            if (this.metadataOnly) {
+            if (this.deferredUpload) {
               continue
             }
             f.fileErrorMessages = []
@@ -1117,7 +1117,7 @@ export const formvalidation = {
         this.mandatoryFieldsFound['File'] = true
         this.mandatoryFieldsValidated['File'] = true
       }
-      if (this.metadataOnly) {
+      if (this.deferredUpload) {
         this.mandatoryFieldsFound['File'] = true
         this.mandatoryFieldsValidated['File'] = true
       }
@@ -1187,7 +1187,7 @@ export const formvalidation = {
             }
           }
           if (f.component === 'p-file') {
-            if (this.metadataOnly) {
+            if (this.deferredUpload) {
               continue
             }
             f.fileErrorMessages = []

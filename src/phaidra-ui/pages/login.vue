@@ -66,6 +66,7 @@
 import { useRootStore } from '~/stores/root'
 import { context } from '../mixins/context'
 import { config, useDocumentTitle } from '../mixins/config'
+import { getReturnLocation as buildReturnLocation } from '../utils/returnPath'
 
 export default {
   mixins: [ context, config ],
@@ -103,18 +104,8 @@ export default {
     }
   },
   methods: {
-    getReturnPath () {
-      const returnto = this.$route.query.returnto
-      if (typeof returnto === 'string' && returnto.startsWith('/')) {
-        return returnto
-      }
-      try {
-        const stored = localStorage.getItem('redirect')
-        if (stored && stored.startsWith('/')) {
-          return stored
-        }
-      } catch (_) {}
-      return '/'
+    getReturnLocation () {
+      return buildReturnLocation(this.$route.query)
     },
     clearReturnPath () {
       try {
@@ -138,7 +129,7 @@ export default {
         // Proceed with login after agreeing to terms
         await useRootStore().login(this.credentials)
         if (this.signedin) {
-          this.$router.push(this.localeLocation({ path: this.getReturnPath() }))
+          this.$router.push(this.localeLocation(this.getReturnLocation()))
           this.clearReturnPath()
         }
       } catch (error) {
@@ -186,7 +177,7 @@ export default {
         } else {
           await useRootStore().login(this.credentials)
           if (this.signedin) {
-            this.$router.push(this.localeLocation({ path: this.getReturnPath() }))
+            this.$router.push(this.localeLocation(this.getReturnLocation()))
             this.clearReturnPath()
           }
         }
