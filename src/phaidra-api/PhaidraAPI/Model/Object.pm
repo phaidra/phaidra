@@ -759,8 +759,12 @@ sub create_simple {
     $c->app->log->info("Object created pid[$pid] deferred upload, staying Inactive");
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
     $fedora_model->commitTransaction($c);
+    my $has_upload_jobs = exists($metadata->{metadata}->{jobs})
+      && ref($metadata->{metadata}->{jobs}) eq 'ARRAY'
+      && scalar(@{$metadata->{metadata}->{jobs}}) > 0;
+    my $initial_status = $has_upload_jobs ? 'Creating upload job...' : 'Awaiting upload';
     my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
-    my $ir             = $inactive_model->register_from_pid($c, $pid, 'deferred_upload', 'inactive');
+    my $ir             = $inactive_model->register_from_pid($c, $pid, 'deferred_upload', $initial_status);
     if ($ir->{status} ne 200) {
       $c->app->log->error("pid[$pid] failed to register inactive object for deferred upload: " . $c->app->dumper($ir));
       push @{$res->{alerts}}, @{$ir->{alerts}} if scalar @{$ir->{alerts}} > 0;
@@ -771,7 +775,7 @@ sub create_simple {
     my $fedora_model = PhaidraAPI::Model::Fedora->new;
     $fedora_model->commitTransaction($c);
     my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
-    my $ir             = $inactive_model->register_from_pid($c, $pid, 'curated_submit', 'approval');
+    my $ir             = $inactive_model->register_from_pid($c, $pid, 'curated_submit', 'Pending approval');
     if ($ir->{status} ne 200) {
       $c->app->log->error("pid[$pid] failed to register inactive object for approval: " . $c->app->dumper($ir));
       push @{$res->{alerts}}, @{$ir->{alerts}} if scalar @{$ir->{alerts}} > 0;
@@ -792,11 +796,29 @@ sub create_simple {
     }
   }
 
+  my $upload_jobs_ok   = 0;
+  my $upload_jobs_fail = 0;
   if (exists($metadata->{metadata}->{jobs}) && ref($metadata->{metadata}->{jobs}) eq 'ARRAY') {
     my $strm_model = PhaidraAPI::Model::Streaming->new;
     for my $job (@{$metadata->{metadata}->{jobs}}) {
       next unless ref($job) eq 'HASH';
-      $strm_model->create_agent_job($c, $pid, $cmodel, $job);
+      my $jr = $strm_model->create_agent_job($c, $pid, $cmodel, $job);
+      if ($jr->{status} ne 200) {
+        $upload_jobs_fail++;
+      }
+      else {
+        $upload_jobs_ok++;
+      }
+    }
+  }
+
+  if ($deferred_upload_submit) {
+    my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
+    if ($upload_jobs_fail > 0) {
+      $inactive_model->update_status($c, $pid, 'Error creating upload job');
+    }
+    elsif ($upload_jobs_ok > 0) {
+      $inactive_model->update_status($c, $pid, 'Upload job created');
     }
   }
 
@@ -1061,7 +1083,7 @@ sub create_container {
   if ($initial_state eq 'PendingApproval') {
     $c->app->log->info("Object created pid[$pid] awaiting approval");
     my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
-    my $ir             = $inactive_model->register_from_pid($c, $pid, 'curated_submit', 'approval');
+    my $ir             = $inactive_model->register_from_pid($c, $pid, 'curated_submit', 'Pending approval');
     if ($ir->{status} ne 200) {
       $c->app->log->error("pid[$pid] failed to register inactive object for approval: " . $c->app->dumper($ir));
       push @{$res->{alerts}}, @{$ir->{alerts}} if scalar @{$ir->{alerts}} > 0;

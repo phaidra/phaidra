@@ -64,7 +64,16 @@ sub create_agent_job {
   }
 
   $c->app->log->info("Creating agent job pid[$pid] cm[$cmodel] agent[$doc->{agent}]");
-  $c->paf_mongo->get_collection('jobs')->insert_one($doc);
+  eval {
+    $c->paf_mongo->get_collection('jobs')->insert_one($doc);
+    1;
+  } or do {
+    my $err = $@ // 'unknown error';
+    $c->app->log->error("pid[$pid] failed to create agent job agent[$doc->{agent}]: $err");
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Error creating upload job'};
+    $res->{status} = 500;
+    return $res;
+  };
   return $res;
 }
 

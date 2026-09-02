@@ -98,7 +98,7 @@ The choice page uses the `auth` middleware and preserves query parameters throug
 
 Between the access-rights notice and the upload options, the page shows a **prefilled metadata** summary parsed from the query string: media package ID (`ocmpid` from `job` bundles), title, language, creation date, and contributors.
 
-After a deferred-upload submit the object is registered in **My inactive objects** and the user is redirected there (not to the detail page).
+After a deferred-upload submit the object is registered in **My inactive objects** and the user is redirected there (not to the detail page). The **Status** column shows a short message (e.g. *Upload job created* or *Error creating upload job*). Background agents can update it later via `POST /inactive-objects/{pid}/status` with body `{"status":"…"}` (requires `inactive_objects_manage`).
 
 Text on the page can be customized per instance via **i18n overrides** in the Datastructures admin section (e.g. replace “OpenCast” with a local product name like “u:stream”):
 

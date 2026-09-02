@@ -36,8 +36,8 @@ sub list {
     push @bind,  $opts->{owner};
   }
   if (defined $opts->{owner_or_approval} && $opts->{owner_or_approval} ne '') {
-    push @where, '(status = ? OR owner = ?)';
-    push @bind, 'approval', $opts->{owner_or_approval};
+    push @where, '(source = ? OR owner = ?)';
+    push @bind, 'curated_submit', $opts->{owner_or_approval};
   }
   if (defined $opts->{status} && $opts->{status} ne '') {
     push @where, 'status = ?';
@@ -160,8 +160,8 @@ sub register_from_pid {
     return $res;
   }
 
-  $source = 'manual'   unless defined $source && $source ne '';
-  $status = 'inactive' unless defined $status && $status ne '';
+  $source = 'manual'            unless defined $source && $source ne '';
+  $status = 'Awaiting upload'   unless defined $status && $status ne '';
 
   my $fedora_model = PhaidraAPI::Model::Fedora->new;
   my $props        = $fedora_model->getObjectProperties($c, $pid);
@@ -226,6 +226,54 @@ sub register_from_pid {
   };
   $c->app->log->info("Registered inactive object pid[$pid] owner[$owner] source[$source]");
 
+  return $res;
+}
+
+sub update_status {
+  my ($self, $c, $pid, $status) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  unless ($pid && $pid =~ m/^o:\d+$/) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Invalid pid'};
+    $res->{status} = 400;
+    return $res;
+  }
+
+  unless (defined $status && $status ne '') {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'No status provided'};
+    $res->{status} = 400;
+    return $res;
+  }
+
+  $status =~ s/^\s+|\s+$//g;
+  if (length($status) > 64) {
+    $status = substr($status, 0, 64);
+  }
+
+  my $exists = $self->get_by_pid($c, $pid);
+  unless ($exists->{status} eq 200) {
+    return $exists;
+  }
+
+  my $ss  = q{UPDATE inactive_objects SET status = ?, updated = CURRENT_TIMESTAMP WHERE pid = ?};
+  my $sth = $c->app->db_metadata->dbh->prepare($ss);
+  unless ($sth) {
+    $c->app->log->error($c->app->db_metadata->dbh->errstr);
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Database error'};
+    $res->{status} = 500;
+    return $res;
+  }
+  unless ($sth->execute($status, $pid)) {
+    $c->app->log->error($c->app->db_metadata->dbh->errstr);
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Database error'};
+    $res->{status} = 500;
+    return $res;
+  }
+  $sth->finish();
+
+  $res->{object} = {%{$exists->{object}}, status => $status};
+  $c->app->log->info("Updated inactive object pid[$pid] status[$status]");
   return $res;
 }
 
