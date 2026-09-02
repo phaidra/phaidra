@@ -162,8 +162,16 @@ configs:
         # https://zid.univie.ac.at/ip-adressen
         # IPv6 not required, as our phaidra VM don't have IPv6
         @whitelist_univie not remote_ip 131.130.0.0/16 77.80.0.0/17 private_ranges
+        @openshift_prod remote_ip 131.130.9.128/26
         log_append remotehost "{http.request.remote.host}"
         route {
+          rate_limit @openshift_prod {
+            log_key
+            zone openshift_prod {
+              events 3000
+              window 1h
+            }
+          }
           rate_limit @whitelist_univie {
             log_key
             # 1. individual IP, burst
