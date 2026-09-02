@@ -320,6 +320,11 @@
   "Register inactive object": "Registra oggetto inattivo",
   "Register an existing Inactive object so its owner can see it under My inactive objects. Reads owner, cmodel and title from Fedora / JSON-LD.": "Registra un oggetto Inactive esistente così che il proprietario lo veda in I miei oggetti inattivi. Legge proprietario, cmodel e titolo da Fedora / JSON-LD.",
   "Inactive object registered": "Oggetto inattivo registrato",
+  "Awaiting upload": "Caricamento in attesa",
+  "Creating upload job...": "Creazione del job di caricamento…",
+  "Upload job created": "Job di caricamento creato",
+  "Error creating upload job": "Errore nella creazione del job di caricamento",
+  "Pending approval": "Approvazione in sospeso",
   "Register": "Registra",
   "My groups": "I miei gruppi",
   "Templates": "Modelli",
@@ -1513,5 +1518,15 @@
   "Upload date": "Data di archiviazione",
   "API log level": "Livello di log dell'API",
   "Minimum log level for phaidra-api. Default is debug if unset. Restart phaidra-api after saving to apply.": "Livello di log minimo per phaidra-api. Il valore predefinito è debug se non impostato. Riavviare phaidra-api dopo il salvataggio per applicare la modifica.",
-  "show all": "Mostra tutti"
+  "show all": "Mostra tutti",
+  "OpenCast submit title": "Archiviazione da OpenCast",
+  "Important notice": "Avviso importante",
+  "OpenCast submit metadata summary": "Metadati precompilati",
+  "OpenCast submit mpid": "ID pacchetto multimediale",
+  "OpenCast submit contributor": "Collaboratore",
+  "OpenCast submit access rights notice": "I diritti di accesso configurati in OpenCast non vengono trasferiti in PHAIDRA. Se necessario, impostare di nuovo i diritti di accesso nel modulo di caricamento.",
+  "OpenCast submit as usual object": "Carica come oggetto standard",
+  "OpenCast submit as usual object help": "Oggetto PHAIDRA standard per ricerca, didattica o uso generale.",
+  "OpenCast submit as OER": "Carica come Open Educational Resource (OER)",
+  "OpenCast submit as OER help": "Materiale didattico con licenza aperta e metadati OER."
 }

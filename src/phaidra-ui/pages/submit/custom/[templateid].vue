@@ -11,6 +11,8 @@
         :addbutton="true" 
         :templating="templating"
         :disableChecksum="instanceconfig.disableChecksum"
+        :deferred-upload="deferredUploadMode"
+        :external-jobs="submitJobs"
         :validationfnc="validationfnc ? validationfnc : null" 
         :enablepreview="true"
         :forcePreview="instanceconfig.forcePreview"
@@ -25,12 +27,12 @@
 </template>
 
 <script>
-import { useRootStore } from '~/stores/root'
 import arrays from "phaidra-vue-components/src/utils/arrays"
 import fields from "phaidra-vue-components/src/utils/fields"
 import { context } from "../../../mixins/context"
 import { config } from "../../../mixins/config"
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
+import { submitDeepLink } from "../../../mixins/submitDeepLink"
 import { useGoTo } from 'vuetify'
 
 export default {
@@ -42,7 +44,7 @@ export default {
     const goTo = useGoTo()
     return { goTo }
   },
-  mixins: [context, config, vocabulary],
+  mixins: [context, config, vocabulary, submitDeepLink],
   data() {
     return {
       form: {},
@@ -77,7 +79,7 @@ export default {
           }
         }
       }
-      if (!hasfile) {
+      if (!hasfile && !this.deferredUploadMode) {
         let file = fields.getField("file");
         file.fileInputClass = "mb-2";
         file.showMimetype = false;
@@ -203,55 +205,21 @@ export default {
           this.markOefosMandatory()
           break;
       }
+      if (this.deferredUploadMode) {
+        this.removeFileFields()
+      }
     },
     dontValidate: function () {
       return true;
     },
     objectCreated: function (event) {
-      this.$router.push(this.localeLocation({ path: `/detail/${event}` }));
-      this.goTo(0);
+      this.redirectAfterObjectCreated(event)
     },
     loadTemplate: async function (self) {
       self.loading = true
-      try {
-        let response = await self.$axios.request({
-          method: 'GET',
-          url: '/jsonld/template/' + self.$route.params.templateid,
-          headers: {
-            'X-XSRF-TOKEN': self.user.token
-          }
-        })
-        if (response.data.alerts && response.data.alerts.length > 0) {
-          useRootStore().setAlerts(response.data.alerts)
-        }
-        self.form = response.data.template.form
-        if (self.user.username !== response.data.template.owner) {
-          self.templating = false
-        }
-        for (let s of self.form.sections) {
-          for (let f of s.fields) {
-            if (f.id && typeof f.id === 'string' && f.id.includes('mime-type_')) {
-              f.value = ''
-            }
-            f.removable = true
-            f.configurable = true
-          }
-        }
-        if (response.data.template.rights) {
-          self.rights = response.data.template.rights
-        }
-        if (response.data.template.hasOwnProperty('skipValidation')) {
-          self.skipValidation = response.data.template.skipValidation
-        }
-        if (response.data.template.hasOwnProperty('validationfnc')) {
-          self.validationfnc = response.data.template.validationfnc
-        }
-      } catch (error) {
-        console.log(error)
-        useRootStore().setAlerts([{ type: 'error', msg: error }])
-      } finally {
-        self.loading = false
-      }
+      await this.loadSubmitTemplate(self, self.$route.params.templateid, { editableTemplate: true })
+      this.applyDeepLinkPrefill()
+      self.loading = false
     }
   },
   beforeRouteEnter: function (to, from, next) {

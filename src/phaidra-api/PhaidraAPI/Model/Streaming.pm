@@ -32,6 +32,62 @@ sub create_streaming_job {
   return $res;
 }
 
+sub create_agent_job {
+  my ($self, $c, $pid, $cmodel, $job) = @_;
+
+  my $res = {alerts => [], status => 200};
+  return $res unless $job && $job->{agent};
+  return $res unless $job->{agent} =~ /\A[A-Za-z][A-Za-z0-9_-]*\z/;
+
+  my $doc = {
+    pid     => $pid,
+    cmodel  => $cmodel,
+    agent   => $job->{agent},
+    status  => 'new',
+    created => time,
+  };
+  if ($job->{ocmpid} && !$job->{oc_mpid}) {
+    $job->{oc_mpid} = $job->{ocmpid};
+    delete $job->{ocmpid};
+  }
+  for my $key (keys %{$job}) {
+    next if $key eq 'agent';
+    next unless $key =~ /\A[A-Za-z][A-Za-z0-9_]*\z/;
+    my $val = $job->{$key};
+    next unless defined $val;
+    if (!ref($val)) {
+      $val =~ s/<[^>]*>//g;
+      $val =~ s/\0//g;
+      $val =~ s/javascript://gi;
+    }
+    $doc->{$key} = $val;
+  }
+
+  $c->app->log->info("Creating agent job pid[$pid] cm[$cmodel] agent[$doc->{agent}]");
+  eval {
+    $c->paf_mongo->get_collection('jobs')->insert_one($doc);
+    1;
+  } or do {
+    my $err = $@ // 'unknown error';
+    $c->app->log->error("pid[$pid] failed to create agent job agent[$doc->{agent}]: $err");
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Error creating upload job'};
+    $res->{status} = 500;
+    return $res;
+  };
+  return $res;
+}
+
+sub create_opencast_upload_job {
+  my ($self, $c, $pid, $cmodel, $oc_mpid) = @_;
+
+  return $self->create_agent_job(
+    $c, $pid, $cmodel,
+    { agent   => 'opencast_upload',
+      oc_mpid => $oc_mpid,
+    }
+  );
+}
+
 sub get_job {
   my ($self, $c, $pid) = @_;
 

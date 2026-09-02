@@ -95,6 +95,9 @@
               <template v-slot:item.updated="{ item }">
                 {{ formatDate(item.updated) }}
               </template>
+              <template v-slot:item.status="{ item }">
+                {{ item.status ? $t(item.status) : '—' }}
+              </template>
               <template v-slot:item.actions="{ item }">
                 <v-tooltip location="bottom">
                   <template v-slot:activator="{ props: activatorProps }">
@@ -263,7 +266,7 @@ export default {
       registerDialog: false,
       registerPid: '',
       registerSource: 'manual',
-      registerStatus: 'inactive',
+      registerStatus: 'Awaiting upload',
       registerLoading: false,
       previewDialog: false,
       previewItem: null,
@@ -407,7 +410,7 @@ export default {
         this.registerDialog = false
         this.registerPid = ''
         this.registerSource = 'manual'
-        this.registerStatus = 'inactive'
+        this.registerStatus = 'Awaiting upload'
         await this.loadObjects()
       } catch (error) {
         console.error(error)

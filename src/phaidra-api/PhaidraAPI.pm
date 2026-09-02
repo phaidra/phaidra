@@ -715,6 +715,7 @@ sub startup {
     $authz->post('list/:lid/members/remove')                               ->to('lists#remove_members', action_id => 'list_write');
 
     $authz->post('inactive-objects/:pid/register')                         ->to('inactive_objects#register', action_id => 'inactive_objects_manage');
+    $authz->post('inactive-objects/:pid/status')                           ->to('inactive_objects#set_status', action_id => 'inactive_objects_manage');
     $authz->post('inactive-objects/:pid/activate')                         ->to('inactive_objects#activate', action_id => 'inactive_objects_manage');
     $authz->post('inactive-objects/:pid/remove')                           ->to('inactive_objects#remove', action_id => 'inactive_objects_manage');
     $authz->post('inactive-objects/:pid/delete')                           ->to('inactive_objects#delete', action_id => 'inactive_objects_manage');

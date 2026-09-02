@@ -45,7 +45,7 @@ sub _is_admin {
   return $is_admin;
 }
 
-# Curators may only act on status=approval rows; admins on any.
+# Curators may only act on curated_submit rows; admins on any.
 sub _assert_staff_row {
   my ($self, $row, $can_manage, $is_admin) = @_;
 
@@ -53,8 +53,8 @@ sub _assert_staff_row {
     $self->render(json => {alerts => [{type => 'error', msg => 'Forbidden'}], status => 403}, status => 403);
     return 0;
   }
-  my $row_status = $row->{status} // '';
-  unless ($is_admin || $row_status eq 'approval') {
+  my $row_source = $row->{source} // '';
+  unless ($is_admin || $row_source eq 'curated_submit') {
     $self->render(json => {alerts => [{type => 'error', msg => 'Forbidden'}], status => 403}, status => 403);
     return 0;
   }
@@ -76,7 +76,9 @@ sub list {
     order => $self->param('order'),
   };
   if (!$is_admin && $can_manage) {
-    $opts->{status} = 'approval';
+
+    # Curators see the approval queue, plus their own inactive deferred-upload rows.
+    $opts->{owner_or_approval} = $owner;
   }
   elsif (!$is_admin) {
     $opts->{owner} = $owner;
@@ -109,12 +111,51 @@ sub register {
   my $status   = $self->param('status');
   my $is_admin = $self->_is_admin;
   unless ($is_admin) {
-    $status = 'approval';
+    $source = 'curated_submit' unless defined $source && $source ne '';
+    $status = 'Pending approval';
   }
 
   my $model = PhaidraAPI::Model::InactiveObjects->new;
   my $res   = $model->register_from_pid($self, $pid, $source, $status);
 
+  $self->render(json => $res, status => $res->{status});
+}
+
+sub set_status {
+  my $self = shift;
+
+  my $pid = $self->stash('pid');
+  unless ($pid && $pid =~ m/^o:\d+$/) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Invalid pid'}], status => 400}, status => 400);
+    return;
+  }
+
+  my $status = $self->param('status');
+  unless (defined $status && $status ne '') {
+    my $payload = $self->req->json;
+    if ($payload && ref($payload) eq 'HASH' && defined $payload->{status}) {
+      $status = $payload->{status};
+    }
+  }
+  unless (defined $status && $status ne '') {
+    $self->render(json => {alerts => [{type => 'error', msg => 'No status provided'}], status => 400}, status => 400);
+    return;
+  }
+
+  my ($can_manage, $is_admin) = $self->_staff_flags;
+  my $model = PhaidraAPI::Model::InactiveObjects->new;
+  my $row   = $model->get_by_pid($self, $pid);
+  if ($row->{status} ne 200) {
+    $self->render(json => $row, status => $row->{status});
+    return;
+  }
+
+  unless ($can_manage || $is_admin) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Forbidden'}], status => 403}, status => 403);
+    return;
+  }
+
+  my $res = $model->update_status($self, $pid, $status);
   $self->render(json => $res, status => $res->{status});
 }
 

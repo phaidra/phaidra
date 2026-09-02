@@ -590,6 +590,30 @@ sub get_mimetype() {
   return $mimetype;
 }
 
+sub _is_truthy {
+  my ($val) = @_;
+  return 0 unless defined $val;
+  return 0 if !ref($val) && ($val eq '' || $val eq '0' || lc($val) eq 'false' || lc($val) eq 'no');
+  return $val ? 1 : 0;
+}
+
+sub _deferred_upload_requested {
+  my ($self, $c, $metadata) = @_;
+  return 0 unless $metadata && ref($metadata) eq 'HASH';
+
+  if ($c) {
+    my $param = $c->param('deferred_upload');
+    return 1 if defined $param && _is_truthy($param);
+  }
+
+  my $inner = $metadata->{metadata};
+  return 0 unless $inner && ref($inner) eq 'HASH';
+
+  return 1 if exists $inner->{deferred_upload} && _is_truthy($inner->{deferred_upload});
+
+  return 0;
+}
+
 sub create_simple {
 
   my $self         = shift;
@@ -702,9 +726,18 @@ sub create_simple {
     }
   }
   else {
-    my $aor = $self->add_octets($c, $pid, $upload, $mimetype, $checksumtype, $checksum, $username, $password, 0, $cmodel);
-    if ($aor->{status} ne 200) {
-      return $aor;
+    my $deferred_upload = $self->_deferred_upload_requested($c, $metadata);
+
+    unless ($deferred_upload) {
+      unless ($upload) {
+        unshift @{$res->{alerts}}, {type => 'error', msg => 'No file provided'};
+        $res->{status} = 400;
+        return $res;
+      }
+      my $aor = $self->add_octets($c, $pid, $upload, $mimetype, $checksumtype, $checksum, $username, $password, 0, $cmodel);
+      if ($aor->{status} ne 200) {
+        return $aor;
+      }
     }
   }
 
@@ -719,12 +752,31 @@ sub create_simple {
     return $res;
   }
 
-  # activate (unless curated submit requires approval)
-  my $initial_state = $c->stash->{curated_initial_state} // 'Inactive';
-  if ($initial_state eq 'PendingApproval') {
-    $c->app->log->info("Object created pid[$pid] awaiting approval");
+  # activate (unless curated submit requires approval or deferred upload)
+  my $initial_state          = $c->stash->{curated_initial_state} // 'Inactive';
+  my $deferred_upload_submit = $self->_deferred_upload_requested($c, $metadata);
+  if ($deferred_upload_submit) {
+    $c->app->log->info("Object created pid[$pid] deferred upload, staying Inactive");
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    $fedora_model->commitTransaction($c);
+    my $has_upload_jobs
+      = exists($metadata->{metadata}->{jobs})
+      && ref($metadata->{metadata}->{jobs}) eq 'ARRAY'
+      && scalar(@{$metadata->{metadata}->{jobs}}) > 0;
+    my $initial_status = $has_upload_jobs ? 'Creating upload job...' : 'Awaiting upload';
     my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
-    my $ir             = $inactive_model->register_from_pid($c, $pid, 'curated_submit', 'approval');
+    my $ir             = $inactive_model->register_from_pid($c, $pid, 'deferred_upload', $initial_status);
+    if ($ir->{status} ne 200) {
+      $c->app->log->error("pid[$pid] failed to register inactive object for deferred upload: " . $c->app->dumper($ir));
+      push @{$res->{alerts}}, @{$ir->{alerts}} if scalar @{$ir->{alerts}} > 0;
+    }
+  }
+  elsif ($initial_state eq 'PendingApproval') {
+    $c->app->log->info("Object created pid[$pid] awaiting approval");
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    $fedora_model->commitTransaction($c);
+    my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
+    my $ir             = $inactive_model->register_from_pid($c, $pid, 'curated_submit', 'Pending approval');
     if ($ir->{status} ne 200) {
       $c->app->log->error("pid[$pid] failed to register inactive object for approval: " . $c->app->dumper($ir));
       push @{$res->{alerts}}, @{$ir->{alerts}} if scalar @{$ir->{alerts}} > 0;
@@ -742,6 +794,32 @@ sub create_simple {
     }
     else {
       $c->app->log->info("Object successfully created pid[$pid] cmodel[$cmodel] took[" . tv_interval($t0) . "]");
+    }
+  }
+
+  my $upload_jobs_ok   = 0;
+  my $upload_jobs_fail = 0;
+  if (exists($metadata->{metadata}->{jobs}) && ref($metadata->{metadata}->{jobs}) eq 'ARRAY') {
+    my $strm_model = PhaidraAPI::Model::Streaming->new;
+    for my $job (@{$metadata->{metadata}->{jobs}}) {
+      next unless ref($job) eq 'HASH';
+      my $jr = $strm_model->create_agent_job($c, $pid, $cmodel, $job);
+      if ($jr->{status} ne 200) {
+        $upload_jobs_fail++;
+      }
+      else {
+        $upload_jobs_ok++;
+      }
+    }
+  }
+
+  if ($deferred_upload_submit) {
+    my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
+    if ($upload_jobs_fail > 0) {
+      $inactive_model->update_status($c, $pid, 'Error creating upload job');
+    }
+    elsif ($upload_jobs_ok > 0) {
+      $inactive_model->update_status($c, $pid, 'Upload job created');
     }
   }
 
@@ -1006,7 +1084,7 @@ sub create_container {
   if ($initial_state eq 'PendingApproval') {
     $c->app->log->info("Object created pid[$pid] awaiting approval");
     my $inactive_model = PhaidraAPI::Model::InactiveObjects->new;
-    my $ir             = $inactive_model->register_from_pid($c, $pid, 'curated_submit', 'approval');
+    my $ir             = $inactive_model->register_from_pid($c, $pid, 'curated_submit', 'Pending approval');
     if ($ir->{status} ne 200) {
       $c->app->log->error("pid[$pid] failed to register inactive object for approval: " . $c->app->dumper($ir));
       push @{$res->{alerts}}, @{$ir->{alerts}} if scalar @{$ir->{alerts}} > 0;
@@ -1086,6 +1164,12 @@ sub add_octets {
   }
 
   my $res = {alerts => [], status => 200};
+
+  unless ($upload) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'No file provided'};
+    $res->{status} = 400;
+    return $res;
+  }
 
   my $size = $upload->size;
   my $name = $upload->filename;
@@ -1301,6 +1385,9 @@ sub save_metadata {
       $found = 1;
 
       # noop - this is handled later because it's the last step (after activating object)
+    }
+    elsif (lc($f) eq "deferred_upload" || lc($f) eq "jobs") {
+      $found = 1;
     }
     elsif (lc($f) eq "resourcelink") {
       $found = 1;

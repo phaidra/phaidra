@@ -17,6 +17,8 @@
           :debug="false"
           :feedback="false"
           :disableChecksum="instanceconfig.disableChecksum"
+          :deferred-upload="deferredUploadMode"
+          :external-jobs="submitJobs"
           v-on:load-form="form = $event"
           v-on:load-rights="rights = $event"
           v-on:object-created="objectCreated($event)"
@@ -35,11 +37,13 @@ import fields from "phaidra-vue-components/src/utils/fields"
 import { context } from "../../mixins/context"
 import { config, useDocumentTitle } from "../../mixins/config"
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
+import { submitDeepLink } from "../../mixins/submitDeepLink"
+import { resolveInitialResourceType, parseResourceTypeFromQuery } from "../../utils/submitDeepLinkParams"
 import { useGoTo } from 'vuetify'
 
 export default {
   layout: "main",
-  mixins: [context, config, vocabulary],
+  mixins: [context, config, vocabulary, submitDeepLink],
   setup() {
     definePageMeta({
       middleware: 'auth'
@@ -86,7 +90,7 @@ export default {
           }
         }
       }
-      if (!hasfile) {
+      if (!hasfile && !this.deferredUploadMode) {
         let file = fields.getField("file");
         file.fileInputClass = "mb-2";
         file.showMimetype = false;
@@ -212,10 +216,12 @@ export default {
           this.markOefosMandatory()
           break;
       }
+      if (this.deferredUploadMode) {
+        this.removeFileFields()
+      }
     },
     objectCreated: function (event) {
-      this.$router.push(this.localeLocation({ path: `/detail/${event}` }));
-      this.goTo(0);
+      this.redirectAfterObjectCreated(event)
     },
     createForm: async function (self, index) {
       useVocabularyStore().sortObjectTypes(this.$i18n.locale);
@@ -236,11 +242,11 @@ export default {
         ],
       };
 
-      let defaultResourceType = "https://pid.phaidra.org/vocabulary/44TN-P1S0";
+      let defaultResourceType = resolveInitialResourceType(self.$route.query);
 
       let rt = fields.getField("resource-type-buttongroup");
       rt.vocabulary = "resourcetypenocontainer";
-      rt.value = defaultResourceType;
+      self.setResourceTypeFieldValue(rt, defaultResourceType);
       self.form.sections[0].fields.push(rt);
 
       let otoer = fields.getField("object-type");
@@ -254,11 +260,13 @@ export default {
       ot.vocabulary = 'oerobjecttype'
       self.form.sections[0].fields.push(ot);
 
-      let file = fields.getField("file");
-      file.fileInputClass = "mb-2";
-      file.showMimetype = false;
-      file.backgroundColor = '#0063a620';
-      self.form.sections[0].fields.push(file);
+      if (!self.deferredUploadMode) {
+        let file = fields.getField("file");
+        file.fileInputClass = "mb-2";
+        file.showMimetype = false;
+        file.backgroundColor = '#0063a620';
+        self.form.sections[0].fields.push(file);
+      }
 
       self.form.sections[0].fields.push(fields.getField("title"));
 
@@ -318,7 +326,12 @@ export default {
           }
         }
       }
-      
+
+      if (parseResourceTypeFromQuery(self.$route.query)) {
+        self.handleInputResourceType(defaultResourceType)
+      }
+
+      this.applyDeepLinkPrefill()
     },
   },
   beforeRouteEnter: async function (to, from, next) {

@@ -453,6 +453,9 @@ export const formvalidation = {
             }
           }
           if (f.component === 'p-file') {
+            if (this.deferredUpload) {
+              continue
+            }
             f.fileErrorMessages = []
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] mimetype[' + f.mimetype + '] file[' + f.file + ']')
             console.log(f.file)
@@ -649,6 +652,9 @@ export const formvalidation = {
             }
           }
           if (f.component === 'p-file') {
+            if (this.deferredUpload) {
+              continue
+            }
             f.fileErrorMessages = []
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] mimetype[' + f.mimetype + '] file[' + f.file + ']')
             console.log(f.file)
@@ -834,6 +840,9 @@ export const formvalidation = {
             }
           }
           if (f.component === 'p-file') {
+            if (this.deferredUpload) {
+              continue
+            }
             f.fileErrorMessages = []
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] mimetype[' + f.mimetype + '] file[' + f.file + ']')
             console.log(f.file)
@@ -997,6 +1006,9 @@ export const formvalidation = {
             }
           }
           if (f.component === 'p-file') {
+            if (this.deferredUpload) {
+              continue
+            }
             f.fileErrorMessages = []
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] mimetype[' + f.mimetype + '] file[' + f.file + ']')
             console.log(f.file)
@@ -1105,6 +1117,10 @@ export const formvalidation = {
         this.mandatoryFieldsFound['File'] = true
         this.mandatoryFieldsValidated['File'] = true
       }
+      if (this.deferredUpload) {
+        this.mandatoryFieldsFound['File'] = true
+        this.mandatoryFieldsValidated['File'] = true
+      }
       for (const s of this.form.sections) {
         if (s.type === 'resourcelink') {
           this.mandatoryFieldsFound['File'] = true
@@ -1171,6 +1187,9 @@ export const formvalidation = {
             }
           }
           if (f.component === 'p-file') {
+            if (this.deferredUpload) {
+              continue
+            }
             f.fileErrorMessages = []
             console.log('checking p[' + f.predicate + '] c[' + f.component + '] mimetype[' + f.mimetype + '] file[' + f.file + ']')
             console.log(f.file)

@@ -308,6 +308,11 @@
     "Register inactive object": "Inaktives Objekt registrieren",
     "Register an existing Inactive object so its owner can see it under My inactive objects. Reads owner, cmodel and title from Fedora / JSON-LD.": "Registriert ein bestehendes inaktives Objekt, damit die Eigentümer*in es unter Meine inaktiven Objekte sieht. Liest Eigentümer*in, cmodel und Titel aus Fedora / JSON-LD.",
     "Inactive object registered": "Inaktives Objekt registriert",
+    "Awaiting upload": "Upload ausstehend",
+    "Creating upload job...": "Upload-Job wird erstellt …",
+    "Upload job created": "Upload-Job erstellt",
+    "Error creating upload job": "Fehler beim Erstellen des Upload-Jobs",
+    "Pending approval": "Freigabe ausstehend",
     "Register": "Registrieren",
     "My groups": "Meine Gruppen",
     "Templates": "Vorlagen",
@@ -1431,5 +1436,15 @@
     "indicates required field": "Kennzeichnet Pflichtfeld",
     "Upload date": "Upload Datum",
     "API log level": "API-Log-Level",
-    "Minimum log level for phaidra-api. Default is debug if unset. Restart phaidra-api after saving to apply.": "Minimales Log-Level für phaidra-api. Standard ist debug, wenn nicht gesetzt. Nach dem Speichern phaidra-api neu starten, damit die Änderung wirksam wird."
+    "Minimum log level for phaidra-api. Default is debug if unset. Restart phaidra-api after saving to apply.": "Minimales Log-Level für phaidra-api. Standard ist debug, wenn nicht gesetzt. Nach dem Speichern phaidra-api neu starten, damit die Änderung wirksam wird.",
+    "OpenCast submit title": "Archivierung aus OpenCast",
+    "Important notice": "Wichtiger Hinweis",
+    "OpenCast submit metadata summary": "Vorausgefüllte Metadaten",
+    "OpenCast submit mpid": "Medienpaket-ID",
+    "OpenCast submit contributor": "Mitwirkende*r",
+    "OpenCast submit access rights notice": "Zugriffsrechte aus OpenCast werden nicht nach PHAIDRA übernommen. Bitte Zugriffsrechte im Upload-Formular bei Bedarf erneut setzen.",
+    "OpenCast submit as usual object": "Als übliches Objekt hochladen",
+    "OpenCast submit as usual object help": "Standard-PHAIDRA-Objekt für Forschung, Lehre oder allgemeine Nutzung.",
+    "OpenCast submit as OER": "Als Open Educational Resource (OER) hochladen",
+    "OpenCast submit as OER help": "Offen lizenziertes Lehr- und Lernmaterial mit OER-Metadaten und Lizenz."
   }

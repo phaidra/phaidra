@@ -4,7 +4,8 @@ use strict;
 use warnings;
 use v5.10;
 use Mojo::ByteStream qw(b);
-use Scalar::Util     qw(looks_like_number);
+use Mojo::URL;
+use Scalar::Util qw(looks_like_number);
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Termsofuse;
@@ -407,8 +408,12 @@ sub signin_shib {
     my $termsofuse_model = PhaidraAPI::Model::Termsofuse->new;
     my $termsres         = $termsofuse_model->getagreed($self, $username);
     unless ($termsres->{agreed}) {
-      $self->app->log->debug("redirecting to " . $self->app->config->{authentication}->{shibboleth}->{frontendconsenturl});
-      $self->redirect_to($self->app->config->{authentication}->{shibboleth}->{frontendconsenturl});
+      my $consent_url = Mojo::URL->new($self->app->config->{authentication}->{shibboleth}->{frontendconsenturl});
+      my $returnto    = $self->param('returnto') // '';
+      $returnto = '' unless $returnto =~ m{\A/};
+      $consent_url->query->param(returnto => $returnto) if $returnto;
+      $self->app->log->debug("redirecting to " . $consent_url);
+      $self->redirect_to($consent_url);
       return;
     }
 

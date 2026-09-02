@@ -20,6 +20,8 @@
           :feedback-context="'Upload'"
           :doiImport="instanceconfig.doiImport"
           :disableChecksum="instanceconfig.disableChecksum"
+          :deferred-upload="deferredUploadMode"
+          :external-jobs="submitJobs"
           v-on:load-form="form = $event"
           v-on:load-rights="rights = $event"
           v-on:object-created="objectCreated($event)"
@@ -40,11 +42,13 @@ import fields from "phaidra-vue-components/src/utils/fields"
 import { context } from "../../mixins/context"
 import { config, useDocumentTitle } from "../../mixins/config"
 import { vocabulary } from "phaidra-vue-components/src/mixins/vocabulary"
+import { submitDeepLink } from "../../mixins/submitDeepLink"
+import { resolveInitialResourceType, parseResourceTypeFromQuery } from "../../utils/submitDeepLinkParams"
 import { useGoTo } from 'vuetify'
 
 export default {
   layout: "main",
-  mixins: [context, config, vocabulary],
+  mixins: [context, config, vocabulary, submitDeepLink],
   setup() {
     definePageMeta({
       middleware: 'auth'
@@ -96,7 +100,7 @@ export default {
           }
         }
       }
-      if (!hasfile) {
+      if (!hasfile && !this.deferredUploadMode) {
         let file = fields.getField("file");
         file.fileInputClass = "mb-2";
         file.showMimetype = false;
@@ -263,10 +267,12 @@ export default {
           this.markOefosMandatory()
           break;
       }
+      if (this.deferredUploadMode) {
+        this.removeFileFields()
+      }
     },
     objectCreated: function (event) {
-      this.$router.push(this.localeLocation({ path: `/detail/${event}` }));
-      this.goTo(0);
+      this.redirectAfterObjectCreated(event)
     },
     createForm: async function (self, index) {
       useVocabularyStore().sortObjectTypes(this.$i18n.locale);
@@ -277,27 +283,7 @@ export default {
       self.mandatoryFieldsFilled = {};
 
       if (this.instanceconfig.defaulttemplateid) {
-        try {
-          let tmpres = await self.$axios.request({
-            method: 'GET',
-            url: '/jsonld/template/' + this.instanceconfig.defaulttemplateid,
-            headers: {
-              'X-XSRF-TOKEN': useRootStore().user.token
-            }
-          })
-          if (tmpres.data.alerts && tmpres.data.alerts.length > 0) {
-            useRootStore().setAlerts(tmpres.data.alerts)
-          }
-          self.form = tmpres.data.template.form
-          // if (tmpres.data.template.hasOwnProperty('skipValidation')) {
-          //   self.skipValidation = tmpres.data.template.skipValidation
-          // }
-        } catch (error) {
-          console.log(error)
-          useRootStore().setAlerts([{ type: 'error', msg: error }])
-        } finally {
-          self.loading = false
-        }
+        await this.loadSubmitTemplate(self, this.instanceconfig.defaulttemplateid)
       } else {
 
         self.form = {
@@ -371,18 +357,20 @@ export default {
           ],
         };
 
-        let defaultResourceType = "https://pid.phaidra.org/vocabulary/44TN-P1S0";
+        let defaultResourceType = resolveInitialResourceType(self.$route.query);
 
         let rt = fields.getField("resource-type-buttongroup");
         rt.vocabulary = "resourcetypenocontainer";
-        rt.value = defaultResourceType;
+        self.setResourceTypeFieldValue(rt, defaultResourceType);
         self.form.sections[0].fields.push(rt);
 
-        let file = fields.getField("file");
-        file.fileInputClass = "mb-2";
-        file.showMimetype = false;
-        file.backgroundColor = '#0063a620';
-        self.form.sections[0].fields.push(file);
+        if (!self.deferredUploadMode) {
+          let file = fields.getField("file");
+          file.fileInputClass = "mb-2";
+          file.showMimetype = false;
+          file.backgroundColor = '#0063a620';
+          self.form.sections[0].fields.push(file);
+        }
 
         let ot = fields.getField("object-type-checkboxes");
         ot.resourceType = defaultResourceType;
@@ -485,6 +473,12 @@ export default {
         self.form.sections[6].fields.push(ac4);
       }
 
+      if (parseResourceTypeFromQuery(self.$route.query)) {
+        self.handleInputResourceType(
+          resolveInitialResourceType(self.$route.query)
+        )
+      }
+
       for (let s of self.form.sections) {
         for (let f of s.fields) {
           f.configurable = false
@@ -520,6 +514,7 @@ export default {
         }
       }
       
+      this.applyDeepLinkPrefill()
     },
   },
   created: async function () {
