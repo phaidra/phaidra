@@ -1,10 +1,9 @@
-import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 import '~/assets/css/vuetify-overrides.css'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-import { aliases as mdiAliases, mdi } from 'vuetify/iconsets/mdi'
+import { aliases as mdiAliases, mdi } from '~/icons/mdi-svg'
 import { createVuetifyI18nOptions, syncVuetifyLocaleWithI18n } from '~/utils/vuetify-locale'
 import { THEME_KEY, PREFERENCE_MAX_AGE, normalizeTheme, syncLocalStorage } from '~/utils/preference-storage'
 
@@ -38,7 +37,6 @@ export default defineNuxtPlugin((nuxtApp) => {
       defaultSet: 'mdi',
       aliases: {
         ...mdiAliases,
-        error: 'mdi-alert',
       },
       sets: {
         mdi,

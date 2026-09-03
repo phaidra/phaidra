@@ -148,6 +148,7 @@ export default defineNuxtConfig({
     optimizeDeps: {
       exclude: ['phaidra-vue-components'],
       include: [
+        '@mdi/js',
         '@vue/compiler-dom',
         '@vue/devtools-core',
         '@vue/devtools-kit',
