@@ -1744,7 +1744,7 @@
             "anyOf" : [
               {
                 "required": [
-                  "dce:prefLabel"
+                  "skos:prefLabel"
                 ]
               },
               {
@@ -1776,17 +1776,8 @@
                 "$ref": "#/$defs/skos-exact-match"
               }
             },
-            "anyOf" : [
-              {
-                "required": [
-                  "dce:prefLabel"
-                ]
-              },
-              {
-                "required": [
-                  "dce:title"
-                ]
-              }
+            "required": [
+              "dce:title"
             ]
           }
         },
