@@ -222,12 +222,8 @@ sub get_metadata {
   # dc:identifier
   push @{$edmProvidedCHO->{children}},
     {
-    name       => 'dc:identifier',
-    attributes => [
-      { name  => 'rdf:resource',
-        value => $pidUri,
-      }
-    ]
+    name  => 'dc:identifier',
+    value => $pidUri
     };
 
   # dc:language
