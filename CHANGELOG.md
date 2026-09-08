@@ -2,7 +2,17 @@
 
 phaidra-ui was migrated to Nuxt 4.
 
-# v3.3.17
+## Upgrade
+
+### Adding inactive_objects table
+
+This table enables tracking registered objects in state Inactive so they can be shown to the users, curators, etc.
+
+```
+./scripts/migrations/v3.5.0/01_add_inactive_objects.pl
+```
+
+# v3.4.0
 
 This release is the last release with Nuxt 2 framework in phaidra-ui.
 
