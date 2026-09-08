@@ -6,7 +6,7 @@ export const useRootStore = defineStore('root', {
   state: () => ({
     config,
     appconfig: config.global,
-    instanceconfig: config.instances[config.defaultinstance],
+    instanceconfig: { ...config.instances[config.defaultinstance] },
     snackbar: false,
     alerts: [],
     objectInfo: null,
@@ -97,6 +97,8 @@ export const useRootStore = defineStore('root', {
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {
         this.instanceconfig[p] = instanceconfig[p]
+      } else if (p.startsWith('cms_')) {
+        this.instanceconfig[p] = ''
       }
     }
   },
