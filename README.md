@@ -64,19 +64,6 @@ You can set `COMPOSE_PROJECT_NAME="PROJECT_NAME_OF_YOUR_LIKING"` in your `.env` 
 + `shib-local`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses only local storage. Uses an external shibboleth-idp for authentication.
 + `shib-s3`: for broadcasting/production use, serving PHAIDRA on `https://$YOURDOMAIN`. Uses an S3-bucket for the object repository and images converted to the format supported by IIPImage. Uses an external shibboleth-idp for authentication.
 
-## Profiles bindmounting the repository's code
-
-+ `demo-local-dev`: see above.
-+ `demo-s3-dev`: see above.
-+ `ssl-local-dev`: see above.
-+ `ssl-s3-dev`: see above.
-+ `shib-local-dev`: see above.
-+ `shib-s3-dev`: see above.
-
-Additionally to the bind-mounted code, the ui components phaidra-ui and phaidra-vue-components directories will be watched, and the Nuxt app will be started in hotreload. Changes to the source code should then be recompiled and applied on save. To start the container in watch mode, you can use the --watch parameter.
-
-Note: Running the Nuxt application in hotreload requires a lot of memory and can occasionally lead to a crash when it reaches the heap limit.
-
 # Run it
 All default values assume that you are running Docker rootless as the first non-root user with uid 1000 on your Linux computer. This is what we strongly recommend. However, if this does not match your reality, please check the following options:
 ## Linux user on Docker rootless, but not uid 1000
@@ -376,6 +363,58 @@ $ bin/hdl-convert-key ./admpriv.bin ./admpriv.jwk -f jwk
   - username: `phaidraAdmin`
   - password: `12345`
   - These credentials can be modified in the `.env` file through the variables `PHAIDRA_ADMIN_USER` and `PHAIDRA_ADMIN_PASSWORD`. You might also want to change `PHAIDRA_ENCRYPTION_KEY` and `PHAIDRA_SECRET` to enhance privacy.
+
+## Development
+
+The `*-dev` profiles use development images and the source code in this
+repository. Available profiles are:
+
++ `demo-local-dev`: local object storage, served at `http://localhost:8899`.
++ `demo-s3-dev`: S3 object storage, served at `http://localhost:8899`.
++ `ssl-local-dev`: local object storage, served at `https://$YOURDOMAIN`.
++ `ssl-s3-dev`: S3 object storage, served at `https://$YOURDOMAIN`.
++ `shib-local-dev`: local object storage with Shibboleth authentication.
++ `shib-s3-dev`: S3 object storage with Shibboleth authentication.
+
+### Start development
+
+Start a profile with Compose watch enabled:
+
+```
+docker compose --profile demo-local-dev up --watch
+```
+
+Replace `demo-local-dev` with another development profile as needed. Compose
+watch applies changes as follows:
+
++ `src/phaidra-api` is synchronized into the API container and restarts the
+  API after a change.
++ `src/phaidra-ui` and `src/phaidra-vue-components` are synchronized into the
+  UI container and used by Nuxt hot reload.
++ Development agent sources are bind-mounted where configured in
+  `docker-compose.yaml`.
+
+The watch process stays in the foreground. To run the services detached, use
+two terminals instead:
+
+```
+# Terminal 1
+docker compose --profile demo-local-dev up -d
+
+# Terminal 2
+docker compose --profile demo-local-dev watch
+```
+
+Do not add a bind mount for `src/phaidra-api` at
+`/usr/local/phaidra/phaidra-api`. It overlaps the Compose watch target and
+causes Compose to disable the API watch action. Without watch enabled, the API
+continues to run the version baked into `phaidraorg/api-base:latest`.
+
+If you're using a different perltidy version than CI, it can throw linting error.
+You can use `./scripts/lint-phaidra-api.sh --fix` to lint the code with the same image as CI.
+See the parameters in the script to change to image version if needed.
+
+
 # Monitoring PHAIDRA
 
 ___
