@@ -292,6 +292,7 @@ sub _notify_owner_activated {
     my $err = "pid[$pid] owner notification failed: $@";
     $self->app->log->error($err);
     unshift @{$res->{alerts}}, {type => 'error', msg => $err};
+
     # Keep status 200 — activation already succeeded.
     return $res;
   }
