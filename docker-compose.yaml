@@ -705,6 +705,9 @@ services:
       M_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
       M_PASS: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
       M_AGENT_DB: "${MONGO_AGENT_DB:-paf_mongodb}"
+      PHAIDRA_API_URL: "${PHAIDRA_API_URL_INTERNAL:-http://api:3000}"
+      PHAIDRA_API_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
+      PHAIDRA_API_PASS: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
     profiles: ["external-opencast"]
 
   agent-opencast-dev:
@@ -728,6 +731,9 @@ services:
       M_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
       M_PASS: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
       M_AGENT_DB: "${MONGO_AGENT_DB:-paf_mongodb}"
+      PHAIDRA_API_URL: "${PHAIDRA_API_URL_INTERNAL:-http://api:3000}"
+      PHAIDRA_API_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
+      PHAIDRA_API_PASS: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
     profiles: ["external-opencast-dev"]
 
   ############### obj2gltf agent ###############
