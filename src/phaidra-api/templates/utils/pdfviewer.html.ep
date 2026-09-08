@@ -1211,9 +1211,16 @@ See https://github.com/adobe-type-tools/cmap-resources
     <script type="module">
       import { PDFViewerApplication } from '<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/pdfjs/web/viewer.mjs';
       const URL = "<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/object/<%= $pid %>/get";
+      const WEB_BASE_URL = "<%= $scheme %>://<%= $baseurl %>/<%= $basepath %>/pdfjs/web";
 
       PDFViewerApplication.initializedPromise.then(() => {
-        window.PDFViewerApplicationOptions.set('defaultUrl', URL);
+        window.PDFViewerApplicationOptions.setAll({
+          "defaultUrl": URL,
+          "cMapUrl": `${WEB_BASE_URL}/cmaps/`,
+          "iccUrl": `${WEB_BASE_URL}/iccs/`,
+          "standardFontDataUrl": `${WEB_BASE_URL}/standard_fonts/`,
+          "wasmUrl": `${WEB_BASE_URL}/wasm/`,
+        });
         PDFViewerApplication.open({"url": URL});
       });
     </script>
