@@ -170,9 +170,6 @@ services:
     <<: [*common, *logs]
     image: varnish:8
     hostname: varnish
-    ipc: shareable
-    # tmpfs:
-    #   - /var/lib/varnish/varnishd:exec
     volumes:
       - varnish-lib:/var/lib/varnish
     configs:
@@ -1674,12 +1671,6 @@ services:
   varnish-exporter:
     hostname: "varnish-exporter"
     image: ghcr.io/otto-de/prometheus-varnish-exporter:1.8.1-varnish-8.0.0
-    ports:
-      - "9131:9131"
-    # Removing user, ipc, pid because it scrape metrics without them. Ports are needed to scrape the metrics, it does not work if I remove that
-    # user: "varnish"
-    # ipc: "service:varnish"
-    # pid: "service:varnish"
     volumes:
       - varnish-lib:/var/lib/varnish
     <<: [*common, *logs]
