@@ -39,7 +39,8 @@ sub get {
     for my $pred (keys %{$jsonld}) {
       if ($pred =~ m/^role:(\w+)$/) {
         my $role_name = $1;
-        $jsonld->{'@context'}->{'role'}->{'@context'}->{$role_name} = {
+        $jsonld->{'@context'}->{'role'} = 'http://id.loc.gov/vocabulary/relators/';
+        $jsonld->{'@context'}->{"role:$role_name"} = {
           '@id'        => "http://id.loc.gov/vocabulary/relators/$role_name",
           '@container' => '@list'
         };
