@@ -35,19 +35,16 @@ function claim_job {
 }
 
 function set_job_status {
-    local pid="$1"
+    local job_id="$1"
     local status="$2"
     local msg="${3:-}"
-    # Escape for JS string literals (pid is o:digits; msg is short ascii).
-    msg=${msg//\'/}
-    msg=${msg//$'\n'/ }
     mongosh_eval "
         const update = { status: '$status', finished: Math.floor(Date.now() / 1000) };
         if ('$msg' !== '') { update.error = '$msg'; }
         db.jobs.findOneAndUpdate(
-            { pid: '$pid', agent: 'opencastfetch' },
+            { _id: ObjectId('$job_id'), agent: 'opencastfetch' },
             { \$set: update },
-            { sort: { created: -1 } }
+            { }
         );
     " >/dev/null
 }
@@ -134,8 +131,9 @@ function activate_object {
 
 function process_job {
     local job_json="$1"
-    local pid oc_mpid workfile media_json track uri mimetype flavor filename ext
+    local job_id pid oc_mpid workfile media_json track uri mimetype flavor filename ext
 
+    job_id=$(jq -r '._id.$oid // ._id' <<<"$job_json")
     pid=$(jq -r '.pid' <<<"$job_json")
     oc_mpid=$(jq -r '.oc_mpid' <<<"$job_json")
 
@@ -143,13 +141,13 @@ function process_job {
 
     if [[ -z "$pid" || -z "$oc_mpid" || "$pid" == "null" || "$oc_mpid" == "null" ]]; then
         printf "%s -- missing pid/oc_mpid, marking failed\n" "$pid"
-        [[ -n "$pid" && "$pid" != "null" ]] && set_job_status "$pid" "failed" "missing pid or oc_mpid"
+        [[ -n "$job_id" && "$job_id" != "null" ]] && set_job_status "$job_id" "failed" "missing pid or oc_mpid"
         return
     fi
 
     if [[ -z "$PHAIDRA_API_PASS" ]]; then
         printf "%s -- PHAIDRA_API_PASS not set\n" "$pid"
-        set_job_status "$pid" "failed" "PHAIDRA_API_PASS not set"
+        set_job_status "$job_id" "failed" "PHAIDRA_API_PASS not set"
         set_inactive_status "$pid" "Error: agent not configured"
         return
     fi
@@ -161,7 +159,7 @@ function process_job {
         -H 'Accept: application/json' \
         "$OC_EVENTS_URL/$oc_mpid/media") || {
         printf "%s -- failed to list OC media\n" "$pid"
-        set_job_status "$pid" "failed" "failed to list OC media"
+        set_job_status "$job_id" "failed" "failed to list OC media"
         set_inactive_status "$pid" "Error downloading from OpenCast"
         return
     }
@@ -169,7 +167,7 @@ function process_job {
     track=$(pick_media_track "$media_json")
     if [[ -z "$track" || "$track" == "null" ]]; then
         printf "%s -- no suitable media track\n" "$pid"
-        set_job_status "$pid" "failed" "no suitable media track"
+        set_job_status "$job_id" "failed" "no suitable media track"
         set_inactive_status "$pid" "Error: no media in OpenCast"
         return
     fi
@@ -188,7 +186,7 @@ function process_job {
     printf "%s -- downloading flavor=%s\n" "$pid" "$flavor"
     if ! download_track "$uri" "$workfile"; then
         printf "%s -- download failed\n" "$pid"
-        set_job_status "$pid" "failed" "download failed"
+        set_job_status "$job_id" "failed" "download failed"
         set_inactive_status "$pid" "Error downloading from OpenCast"
         rm -f "$workfile"
         return
@@ -196,7 +194,7 @@ function process_job {
 
     if [[ ! -s "$workfile" ]]; then
         printf "%s -- downloaded file empty\n" "$pid"
-        set_job_status "$pid" "failed" "empty download"
+        set_job_status "$job_id" "failed" "empty download"
         set_inactive_status "$pid" "Error downloading from OpenCast"
         rm -f "$workfile"
         return
@@ -206,7 +204,7 @@ function process_job {
     printf "%s -- uploading OCTETS (%s)\n" "$pid" "$mimetype"
     if ! upload_octets "$pid" "$workfile" "$mimetype"; then
         printf "%s -- OCTETS upload failed\n" "$pid"
-        set_job_status "$pid" "failed" "OCTETS upload failed"
+        set_job_status "$job_id" "failed" "OCTETS upload failed"
         set_inactive_status "$pid" "Error uploading to PHAIDRA"
         rm -f "$workfile"
         return
@@ -216,13 +214,13 @@ function process_job {
     printf "%s -- activating\n" "$pid"
     if ! activate_object "$pid"; then
         printf "%s -- activate failed\n" "$pid"
-        set_job_status "$pid" "failed" "activate failed"
+        set_job_status "$job_id" "failed" "activate failed"
         set_inactive_status "$pid" "Error activating object"
         rm -f "$workfile"
         return
     fi
 
-    set_job_status "$pid" "finished"
+    set_job_status "$job_id" "finished"
     printf "%s -- opencastfetch finished\n" "$pid"
     rm -f "$workfile"
 }

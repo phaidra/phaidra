@@ -310,8 +310,7 @@ sub modify_hook {
         }
       }
       if ($res_cmodel->{cmodel} eq 'Video') {
-        my $strm_model = PhaidraAPI::Model::Streaming->new;
-        my $vsr        = $strm_model->create_streaming_job($c, $pid, $res_cmodel->{cmodel});
+        my $vsr = $self->_create_streaming_job_if_not_exists($c, $pid, $res_cmodel->{cmodel});
         push @{$res->{alerts}}, @{$vsr->{alerts}} if scalar @{$vsr->{alerts}} > 0;
       }
       if ($res_cmodel->{cmodel} eq 'Asset') {
@@ -405,6 +404,16 @@ sub _create_streaming_job_if_not_exists {
   my ($self, $c, $pid, $cmodel) = @_;
 
   my $res = {alerts => [], status => 200};
+
+  my $fedora_model = PhaidraAPI::Model::Fedora->new;
+  my $fres         = $fedora_model->getObjectProperties($c, $pid);
+  if ($fres->{status} ne 200) {
+    return $fres;
+  }
+  if ($fres->{state} ne 'Active') {
+    $c->app->log->info("Not creating streaming job pid[$pid]: object is in state $fres->{state}");
+    return $res;
+  }
 
   my $strm_model = PhaidraAPI::Model::Streaming->new;
   my $find       = $c->paf_mongo->get_collection('jobs')->find_one({pid => $pid, agent => 'opencast'});
