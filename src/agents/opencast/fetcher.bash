@@ -28,7 +28,7 @@ function claim_job {
         const doc = db.jobs.findOneAndUpdate(
             { agent: "opencastfetch", status: "new", oc_mpid: { $exists: true, $ne: "" } },
             { $set: { status: "in_progress", started: Math.floor(Date.now() / 1000) } },
-            { sort: { created: 1 }, returnDocument: "after" }
+            { sort: { created: -1 }, returnDocument: "after" }
         );
         if (doc) { print(JSON.stringify(doc)); }
     '
