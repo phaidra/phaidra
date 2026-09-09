@@ -197,6 +197,10 @@ export default {
       return false
     },
     addToCollection: async function (collection) {
+      if (this.selection.some(s => s.pid === collection.pid)) {
+        useRootStore().setAlerts([{ type: 'error', msg: 'A collection cannot be added inside itself.' }])
+        return
+      }
       try {
         useRootStore().setLoading(true)
         var httpFormData = new FormData()

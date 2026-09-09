@@ -3772,6 +3772,10 @@ export default {
       this.checksums = []
     },
     addToCollection: async function (collection) {
+      if (collection.pid === this.objectInfo.pid) {
+        useRootStore().setAlerts([{ type: 'error', msg: 'A collection cannot be added inside itself.' }])
+        return
+      }
       try {
         useRootStore().setLoading(true)
         var httpFormData = new FormData()

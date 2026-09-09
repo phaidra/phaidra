@@ -289,6 +289,10 @@ export default {
       }
     },
     addToCollection: async function (collection) {
+      if (this.members.some(m => m.pid === collection.pid)) {
+        useRootStore().setAlerts([{ type: 'error', msg: 'A collection cannot be added inside itself.' }])
+        return
+      }
       try {
         var httpFormData = new FormData()
         httpFormData.append('metadata', JSON.stringify({ metadata: { members: this.members } }))

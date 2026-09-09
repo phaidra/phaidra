@@ -1237,6 +1237,7 @@
     "MEMBER_OF_CONTAINER": "Dieses Objekt ist Mitglied im Container {containerpid}",
     "REMOVE_COLLECTION_MEMBER": "Objekt {oldpid} aus Collection {collection} entfernen.",
     "ADD_COLLECTION_MEMBER": "Objekt {newpid} zur Collection {collection} hinzufügen.",
+    "A collection cannot be added inside itself.": "Eine Collection kann nicht in sich selbst eingefügt werden.",
     "WEBVERSIONSUBMIT": "Ich bestätige, dass für die als \"Webversion\" hochgeladene Datei dieselben Rechte gelten, die für das Objekt {pid} gelten.",
     "RELATION_SUBMITTED": "Das hochgeladene Objekt",
     "Usage notes": "Hinweise zur Verwendung",
