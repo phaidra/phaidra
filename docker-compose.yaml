@@ -576,6 +576,7 @@ services:
       watch:
         - path: ./src/phaidra-api
           target: /usr/local/phaidra/phaidra-api
+          initial_sync: true
           action: sync+restart
     environment:
       <<: [*api_common_env, *hosts]
@@ -597,6 +598,7 @@ services:
       watch:
         - path: ./src/phaidra-api
           target: /usr/local/phaidra/phaidra-api
+          initial_sync: true
           action: sync+restart
     environment:
       <<: [*api_common_env, *hosts, *s3]
@@ -694,7 +696,7 @@ services:
       - agent-opencast-work:/opt/agent-opencast
       - agent-opencast-mongosh:/root/.mongodb
       - fedora:/mnt/fedora:ro
-    depends_on: [mongodb-phaidra]
+    depends_on: [mongodb-phaidra, api]
     environment:
       <<: [*api_common_env, *hosts]
       OC_EVENTS_URL: "${OC_EVENTS_URL:-}"
@@ -712,7 +714,7 @@ services:
 
   agent-opencast-dev:
     hostname: "opencast"
-    image: phaidraorg/opencast-base:latest
+    image: phaidraorg/agent-opencast-base:latest
     pull_policy: always
     <<: [*common, *logs]
     volumes:
