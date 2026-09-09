@@ -1772,7 +1772,7 @@ volumes:
   agent-opencast-mongosh:
   agent-opencast-work:
   handle:
-  varnish-lib: 
+  varnish-lib:
 
 configs:
   httpd_custom_config:
