@@ -676,9 +676,9 @@
                 v-for="member in objectMembersPage"
                 :key="'member_' + member.pid"
               >
+                <template v-if="!member.isrestricted">
                 <iframe
                   :title="$t('Preview')"
-                  v-if="!member.isrestricted"
                   :key="'member-preview-' + member.pid + '-' + previewTheme"
                   :src="getPreviewUrl(member.pid)"
                   width="100%"
@@ -693,6 +693,17 @@
                   frameborder="0"
                   >Content</iframe
                 >
+                <div class="d-flex justify-end mt-2 mb-2 px-3">
+                  <v-btn
+                    variant="elevated"
+                    color="primary"
+                    :href="getPreviewUrl(member.pid)"
+                    target="_blank"
+                    prepend-icon="mdi-open-in-new"
+                    >{{ $t("Open in new window") }}</v-btn
+                  >
+                </div>
+                </template>
                 <v-row v-else>
                 <v-col class="text-right mr-3">
                   <v-chip class="pointer-disabled" label variant="flat" color="btnred" prepend-icon="mdi-lock">{{ $t('Restricted access') }}</v-chip>
