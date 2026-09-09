@@ -10,4 +10,4 @@ sed -i "s|\${PHAIDRA_ADMIN_USER}|${PHAIDRA_ADMIN_USER}|g" /tmp/prometheus.yml
 sed -i "s|\${PHAIDRA_ADMIN_PASSWORD}|${PHAIDRA_ADMIN_PASSWORD}|g" /tmp/prometheus.yml
 
 # Start Prometheus
-exec /bin/prometheus --config.file=/tmp/prometheus.yml "$@"
+exec /bin/prometheus --storage.tsdb.retention.time="$PROMETHEUS_RETENTION" --config.file=/tmp/prometheus.yml "$@"
