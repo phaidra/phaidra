@@ -1249,7 +1249,7 @@ services:
       GF_SECURITY_ADMIN_PASSWORD: "${GF_SECURITY_ADMIN_PASSWORD:-phaidra}"
       GF_SERVER_ROOT_URL: "%(protocol)s://%(domain)s:%(http_port)s/grafana"
       GF_SERVER_SERVE_FROM_SUB_PATH: "true"
-      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/mnt/grafana/dashboards/phaidra_default.json"
+      GF_USERS_HOME_PAGE: "/dashboards/f/presets/presets"
       LOKI_HOST: "loki"
       PROMETHEUS_HOST: "prometheus"
     depends_on: [loki]
@@ -1271,7 +1271,7 @@ services:
       GF_SECURITY_ADMIN_PASSWORD: "${GF_SECURITY_ADMIN_PASSWORD:-phaidra}"
       GF_SERVER_ROOT_URL: "%(protocol)s://%(domain)s:%(http_port)s/grafana"
       GF_SERVER_SERVE_FROM_SUB_PATH: "true"
-      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: "/mnt/grafana/dashboards/phaidra_default.json"
+      GF_USERS_HOME_PAGE: "/dashboards/f/presets/presets"
       LOKI_HOST: "loki-dev"
       PROMETHEUS_HOST: "prometheus-dev"
     depends_on: [loki-dev]
