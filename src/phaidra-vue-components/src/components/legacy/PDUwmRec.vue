@@ -459,7 +459,7 @@ export default {
         for (let ch of id.children) {
           if (ch.xmlname === xmlname) {
             if (ch.labels) {
-              lastLabel = ch.labels[this.alpha2locale]
+              lastLabel = ch.labels[this.alpha2locale] || ch.labels.en
             }
           }
         }
