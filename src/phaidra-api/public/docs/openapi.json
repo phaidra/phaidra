@@ -108,8 +108,8 @@
                                     "mimetype": {
                                         "type": "string",
                                         "example": "application/json",
-                                        "description": "mimetype is optional: if not provided, heuristics is used on server side",
-                                        "required": false
+                                        "description": "mimetype is required",
+                                        "required": true
                                     },
                                     "metadata": {
                                         "type": "object",
@@ -202,8 +202,8 @@
                                     "mimetype": {
                                         "type": "string",
                                         "example": "application/json",
-                                        "description": "mimetype is optional: if not provided, heuristics is used on server side",
-                                        "required": false
+                                        "description": "mimetype is required",
+                                        "required": true
                                     },
                                     "metadata": {
                                         "type": "object",
@@ -296,8 +296,8 @@
                                     "mimetype": {
                                         "type": "string",
                                         "example": "application/json",
-                                        "description": "mimetype is optional: if not provided, heuristics is used on server side",
-                                        "required": false
+                                        "description": "mimetype is required",
+                                        "required": true
                                     },
                                     "metadata": {
                                         "type": "object",
@@ -390,8 +390,8 @@
                                     "mimetype": {
                                         "type": "string",
                                         "example": "application/json",
-                                        "description": "mimetype is optional: if not provided, heuristics is used on server side",
-                                        "required": false
+                                        "description": "mimetype is required",
+                                        "required": true
                                     },
                                     "metadata": {
                                         "type": "object",
@@ -484,8 +484,8 @@
                                     "mimetype": {
                                         "type": "string",
                                         "example": "application/json",
-                                        "description": "mimetype is optional: if not provided, heuristics is used on server side",
-                                        "required": false
+                                        "description": "mimetype is required",
+                                        "required": true
                                     },
                                     "metadata": {
                                         "type": "object",
@@ -8842,7 +8842,7 @@
                         "name": "mimetype",
                         "schema": {
                             "type": "string",
-                            "required": false
+                            "required": true
                         },
                         "description": "object mimetype"
                     }
@@ -9050,8 +9050,8 @@
                                     "mimetype": {
                                         "type": "string",
                                         "example": "application/json",
-                                        "description": "mimetype is optional: if not provided, heuristics is used on server side",
-                                        "required": false
+                                        "description": "mimetype is required",
+                                        "required": true
                                     },
                                     "metadata": {
                                         "type": "object",
