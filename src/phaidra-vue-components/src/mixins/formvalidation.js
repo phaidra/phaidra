@@ -25,10 +25,7 @@ export const formvalidation = {
     },
     checkEntityField(f, { onAuthor, onAdvisor } = {}) {
       console.log('checking p[' + f.predicate + '] c[' + f.component + '] r[' + f.role + '] fn[' + f.firstname + '] ln[' + f.lastname + '] n[' + f.name + '] org[' + f.organization + '] orgtext[' + f.organizationText + ']')
-      if (!isNonBlankString(f.role)) {
-        return
-      }
-      this.mandatoryFieldsFound['Role'] = true
+      this.mandatoryFieldsFound['Role (Contribution)'] = true
       let hasEntityContent = false
       if (f.type === 'schema:Person') {
         hasEntityContent = isNonBlankString(f.firstname) ||
@@ -41,10 +38,10 @@ export const formvalidation = {
           isNonBlankString(f.organizationSelectedName) ||
           isNonBlankString(f.identifierText)
       }
-      if (!hasEntityContent) {
+      if (!isNonBlankString(f.role) || !hasEntityContent) {
         return
       }
-      this.mandatoryFieldsValidated['Role'] = true
+      this.mandatoryFieldsValidated['Role (Contribution)'] = true
       if (f.type === 'schema:Person') {
         if (f.role === 'role:aut' && onAuthor) {
           onAuthor()
@@ -303,7 +300,7 @@ export const formvalidation = {
         'Title': false,
         'Description': false,
         'Keyword': false,
-        'Role': false,
+        'Role (Contribution)': false,
         'License': false,
         'Resource type': false,
         'Object type': false,
@@ -317,7 +314,7 @@ export const formvalidation = {
         'Title': false,
         'Description': false,
         'Keyword': false,
-        'Role': false,
+        'Role (Contribution)': false,
         'License': false,
         'Association': false,
         'OEFOS Classification': false,
@@ -510,7 +507,7 @@ export const formvalidation = {
         'Title': false,
         'Description': false,
         'Keyword': false,
-        'Role': false,
+        'Role (Contribution)': false,
         'License': false,
         'Resource type': false,
         'Object type': false,
@@ -523,7 +520,7 @@ export const formvalidation = {
         'Title': false,
         'Description': false,
         'Keyword': false,
-        'Role': false,
+        'Role (Contribution)': false,
         'License': false,
         'OEFOS Classification': false,
         'File': false
@@ -727,7 +724,7 @@ export const formvalidation = {
       this.mandatoryFieldsFound = {
         'Title': false,
         'Description': false,
-        'Role': false,
+        'Role (Contribution)': false,
         'License': false,
         'Resource type': false,
         'Object type': false,
@@ -738,7 +735,7 @@ export const formvalidation = {
         'Object type': false,
         'Title': false,
         'Description': false,
-        'Role': false,
+        'Role (Contribution)': false,
         'Author': false,
         'Advisor': false,
         'License': false,
@@ -902,7 +899,7 @@ export const formvalidation = {
       this.mandatoryFieldsFound = {
         'Title': false,
         'Description': false,
-        'Role': false,
+        'Role (Contribution)': false,
         'License': false,
         'Resource type': false,
         'Object type': false,
@@ -913,7 +910,7 @@ export const formvalidation = {
         'Object type': false,
         'Title': false,
         'Description': false,
-        'Role': false,
+        'Role (Contribution)': false,
         'License': false,
         'File': false
       }
@@ -1064,7 +1061,7 @@ export const formvalidation = {
         'Title': false,
         'Description': false,
         'Keyword': false,
-        'Role': false,
+        'Role (Contribution)': false,
         'License': false,
         'Resource type': false,
         'Object type': false,
@@ -1076,7 +1073,7 @@ export const formvalidation = {
         'Title': false,
         'Description': false,
         'Keyword': false,
-        'Role': false,
+        'Role (Contribution)': false,
         'License': false,
         'File': false
       }
