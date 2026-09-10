@@ -1,0 +1,11 @@
+<html>
+  <body>
+    <p>Your archived object is ready.</p>
+    <p>Ihr archiviertes Objekt ist bereit.</p>
+    <p>
+      <strong>PID:</strong> [% pid %]<br/>
+      <strong>Title:</strong> [% title %]<br/>
+      <a href="[% detail_url %]">[% detail_url %]</a>
+    </p>
+  </body>
+</html>

@@ -77,12 +77,12 @@ sub create_agent_job {
   return $res;
 }
 
-sub create_opencast_upload_job {
+sub create_opencastfetch_job {
   my ($self, $c, $pid, $cmodel, $oc_mpid) = @_;
 
   return $self->create_agent_job(
     $c, $pid, $cmodel,
-    { agent   => 'opencast_upload',
+    { agent   => 'opencastfetch',
       oc_mpid => $oc_mpid,
     }
   );

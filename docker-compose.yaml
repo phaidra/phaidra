@@ -576,6 +576,7 @@ services:
       watch:
         - path: ./src/phaidra-api
           target: /usr/local/phaidra/phaidra-api
+          initial_sync: true
           action: sync+restart
     environment:
       <<: [*api_common_env, *hosts]
@@ -597,6 +598,7 @@ services:
       watch:
         - path: ./src/phaidra-api
           target: /usr/local/phaidra/phaidra-api
+          initial_sync: true
           action: sync+restart
     environment:
       <<: [*api_common_env, *hosts, *s3]
@@ -694,7 +696,7 @@ services:
       - agent-opencast-work:/opt/agent-opencast
       - agent-opencast-mongosh:/root/.mongodb
       - fedora:/mnt/fedora:ro
-    depends_on: [mongodb-phaidra]
+    depends_on: [mongodb-phaidra, api]
     environment:
       <<: [*api_common_env, *hosts]
       OC_EVENTS_URL: "${OC_EVENTS_URL:-}"
@@ -705,11 +707,14 @@ services:
       M_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
       M_PASS: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
       M_AGENT_DB: "${MONGO_AGENT_DB:-paf_mongodb}"
+      PHAIDRA_API_URL: "${PHAIDRA_API_URL_INTERNAL:-http://api:3000}"
+      PHAIDRA_API_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
+      PHAIDRA_API_PASS: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
     profiles: ["external-opencast"]
 
   agent-opencast-dev:
     hostname: "opencast"
-    image: phaidraorg/opencast-base:latest
+    image: phaidraorg/agent-opencast-base:latest
     pull_policy: always
     <<: [*common, *logs]
     volumes:
@@ -728,6 +733,9 @@ services:
       M_USER: "${MONGODB_PHAIDRA_USER:-phaidra}"
       M_PASS: "${MONGODB_PHAIDRA_PASSWORD:-phaidra}"
       M_AGENT_DB: "${MONGO_AGENT_DB:-paf_mongodb}"
+      PHAIDRA_API_URL: "${PHAIDRA_API_URL_INTERNAL:-http://api:3000}"
+      PHAIDRA_API_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
+      PHAIDRA_API_PASS: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
     profiles: ["external-opencast-dev"]
 
   ############### obj2gltf agent ###############

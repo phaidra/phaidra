@@ -30,7 +30,7 @@ Examples:
 
 | Segment (logical) | In URL |
 |-------------------|--------|
-| `agent` = `opencast` | `agent_opencast` |
+| `agent` = `opencastfetch` | `agent_opencastfetch` |
 | `ocmpid` = `{uuid}` | `ocmpid_{uuid}` |
 | `role` = `spk` | `role_spk` |
 | `firstname` = `Jane` | `firstname_Jane` |
@@ -39,12 +39,15 @@ Examples:
 
 **Each `job` query parameter creates one separate job document** after submit.
 
+Agent names must not contain `_` (that character separates field from value in a segment). Use `opencastfetch` (not `opencast_upload`).
+
 ```
-job=agent_opencast__ocmpid_efe7b339-1234-5678-9abc-def012345678
+job=agent_opencastfetch__ocmpid_efe7b339-1234-5678-9abc-def012345678
 ```
 
 Repeat `job` to enqueue multiple jobs for the same object.
 
+The OpenCast archive agent (`fetcher.bash`) polls MongoDB for `agent: opencastfetch`, `status: new`, downloads media from OpenCast via `GET {OC_EVENTS_URL}/{oc_mpid}/media`, uploads OCTETS with `POST /object/{pid}/data`, then activates with `POST /inactive-objects/{pid}/activate?notify=1` (removes the inactive row and emails the owner).
 ### `role` — contributor prefill
 
 One bundle per contributor. Must include `role_{code}` (e.g. `role_spk` → `role:spk` in metadata). Further segments are entity fields.
@@ -89,7 +92,7 @@ Contributor with first and last name:
 OpenCast archiving (choice page):
 
 ```
-/submit/opencast?submitmode=deferred_upload&job=agent_opencast__ocmpid_efe7b339-1234-5678-9abc-def012345678&title=My%20Lecture&language=eng&role=role_spk__firstname_Jane__lastname_Doe&datecreated=2024-01-15&rt=https%3A%2F%2Fpid.phaidra.org%2Fvocabulary%2FB0Y6-GYT8
+/submit/opencast?submitmode=deferred_upload&job=agent_opencastfetch__ocmpid_efe7b339-1234-5678-9abc-def012345678&title=My%20Lecture&language=eng&role=role_spk__firstname_Jane__lastname_Doe&datecreated=2024-01-15&rt=https%3A%2F%2Fpid.phaidra.org%2Fvocabulary%2FB0Y6-GYT8
 ```
 
 ### OpenCast choice page
@@ -98,7 +101,7 @@ The choice page uses the `auth` middleware and preserves query parameters throug
 
 Between the access-rights notice and the upload options, the page shows a **prefilled metadata** summary parsed from the query string: media package ID (`ocmpid` from `job` bundles), title, language, creation date, and contributors.
 
-After a deferred-upload submit the object is registered in **My inactive objects** and the user is redirected there (not to the detail page). The **Status** column shows a short message (e.g. *Upload job created* or *Error creating upload job*). Background agents can update it later via `POST /inactive-objects/{pid}/status` with body `{"status":"…"}` (requires `inactive_objects_manage`).
+After a deferred-upload submit the object is registered in **My inactive objects** and the user is redirected there (not to the detail page). The **Status** column shows a short message (e.g. *Upload job created*, *Downloading from OpenCast…*, *Error uploading to PHAIDRA*). The OpenCast upload agent updates status as it runs; after successful activate the row is removed and the owner is emailed (`notify=1`). Staff/agents can also set status via `POST /inactive-objects/{pid}/status` with body `{"status":"…"}` (requires `inactive_objects_manage`).
 
 Text on the page can be customized per instance via **i18n overrides** in the Datastructures admin section (e.g. replace “OpenCast” with a local product name like “u:stream”):
 

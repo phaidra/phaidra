@@ -3,10 +3,13 @@ package PhaidraAPI::Controller::InactiveObjects;
 use strict;
 use warnings;
 use v5.10;
+use MIME::Lite::TT::HTML;
 use Mojo::JSON qw(true false);
 use PhaidraAPI::Model::InactiveObjects;
 use PhaidraAPI::Model::Authorization;
 use PhaidraAPI::Model::Object;
+use PhaidraAPI::Model::Directory;
+use PhaidraAPI::Model::Config;
 use base 'Mojolicious::Controller';
 
 # Single capabilities check: can_manage (admin/approver) and is_admin.
@@ -171,6 +174,8 @@ sub activate {
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
   my ($can_manage, $is_admin) = $self->_staff_flags;
+  my $notify = $self->param('notify');
+  $notify = 1 if defined $notify && ($notify eq '1' || lc($notify) eq 'true' || lc($notify) eq 'yes');
 
   my $model = PhaidraAPI::Model::InactiveObjects->new;
   my $row   = $model->get_by_pid($self, $pid);
@@ -179,6 +184,10 @@ sub activate {
     return;
   }
   return unless $self->_assert_staff_row($row->{object}, $can_manage, $is_admin);
+
+  my $owner  = $row->{object}->{owner};
+  my $title  = $row->{object}->{title};
+  my $source = $row->{object}->{source} // '';
 
   my $object_model = PhaidraAPI::Model::Object->new;
   my $mod          = $object_model->approve($self, $pid, $username, $password);
@@ -193,7 +202,103 @@ sub activate {
     return;
   }
 
-  $self->render(json => {alerts => [], status => 200, pid => $pid}, status => 200);
+  my $res = {alerts => [], status => 200, pid => $pid};
+  if ($notify) {
+    my $nr = $self->_notify_owner_activated($pid, $owner, $title, $source);
+    if ($nr->{status} ne 200) {
+      push @{$res->{alerts}}, @{$nr->{alerts}} if @{$nr->{alerts}};
+    }
+  }
+
+  $self->render(json => $res, status => $res->{status});
+}
+
+sub _notify_owner_activated {
+  my ($self, $pid, $owner, $title, $source) = @_;
+
+  my $res = {alerts => [], status => 200};
+
+  unless ($owner) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => "Cannot notify: no owner for pid[$pid]"};
+    $res->{status} = 400;
+    return $res;
+  }
+
+  my $confmodel  = PhaidraAPI::Model::Config->new;
+  my $pubconfig  = $confmodel->get_public_config($self);
+  my $privconfig = $confmodel->get_private_config($self);
+
+  unless ($privconfig->{smtpserver} && $privconfig->{smtpport}) {
+    $self->app->log->warn("inactive activate notify pid[$pid]: SMTP not configured, skipping email");
+    unshift @{$res->{alerts}}, {type => 'info', msg => 'SMTP not configured, notification skipped'};
+    return $res;
+  }
+
+  my $directory_model = PhaidraAPI::Model::Directory->new;
+  my $email           = $directory_model->get_email($self, $owner);
+  unless ($email) {
+    $self->app->log->warn("inactive activate notify pid[$pid]: no email for owner[$owner]");
+    unshift @{$res->{alerts}}, {type => 'warning', msg => "No email for owner[$owner]"};
+    return $res;
+  }
+
+  my $baseurl = $pubconfig->{baseurl} // $self->app->config->{phaidra}->{baseurl} // '';
+  my $detail  = $baseurl ? "https://$baseurl/detail/$pid" : $pid;
+  $title = $title // $pid;
+
+  my $from = $pubconfig->{email} // $privconfig->{reportingemail} // '';
+  $from = substr($from, 0, index($from, ',')) if $from && index($from, ',') != -1;
+  unless ($from) {
+    $self->app->log->warn("inactive activate notify pid[$pid]: no from address configured");
+    unshift @{$res->{alerts}}, {type => 'info', msg => 'No from address configured, notification skipped'};
+    return $res;
+  }
+
+  my %emaildata = (
+    pid        => $pid,
+    title      => $title,
+    detail_url => $detail,
+    owner      => $owner,
+    source     => $source,
+  );
+
+  my %options;
+  for my $p (@{$self->app->renderer->paths}) {
+    $options{INCLUDE_PATH} = $p;
+  }
+
+  my $subject = "PHAIDRA archive ready / Archivierung abgeschlossen ($pid)";
+
+  eval {
+    my $msg = MIME::Lite::TT::HTML->new(
+      From        => $from,
+      To          => $email,
+      Subject     => $subject,
+      Charset     => 'utf8',
+      Encoding    => 'quoted-printable',
+      Template    => {html => 'email/inactive_activated.html.tt', text => 'email/inactive_activated.txt.tt'},
+      TmplParams  => \%emaildata,
+      TmplOptions => \%options
+    );
+    $msg->send(
+      'smtp',
+      $privconfig->{smtpserver} . ':' . $privconfig->{smtpport},
+      AuthUser => $privconfig->{smtpuser},
+      AuthPass => $privconfig->{smtppassword},
+      SSL      => ($privconfig->{smtpport} eq '465' || $privconfig->{smtpport} eq '587') ? 1 : 0
+    );
+  };
+  if ($@) {
+    my $err = "pid[$pid] owner notification failed: $@";
+    $self->app->log->error($err);
+    unshift @{$res->{alerts}}, {type => 'error', msg => $err};
+
+    # Keep status 200 — activation already succeeded.
+    return $res;
+  }
+
+  $self->app->log->info("pid[$pid] notified owner[$owner] source[$source] at $email");
+  return $res;
 }
 
 sub remove {
