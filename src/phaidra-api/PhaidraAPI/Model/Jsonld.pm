@@ -30,7 +30,7 @@ our $namespaces = {
   pcdm         => {label => "Portland Common Data Model",                                     IRI => "http://pcdm.org/models#"},
   rdau         => {label => "RDA Unconstrained",                                              IRI => "http://rdaregistry.info/Elements/u/"},
   rdf          => {label => "The RDF Concepts Vocabulary (RDF)",                              IRI => "http://www.w3.org/1999/02/22-rdf-syntax-ns#"},
-  rdfs         => {label => "RDF Schema 1.1",                                                 IRI => "https://www.w3.org/TR/rdf-schema/"},
+  rdfs         => {label => "RDF Schema 1.1",                                                 IRI => "http://www.w3.org/2000/01/rdf-schema#"},
   relators     => {label => "MARC Code List for Relators",                                    IRI => "http://id.loc.gov/vocabulary/relators"},
   schema       => {label => "Schema.org",                                                     IRI => "http://schema.org/"},
   skos         => {label => "SKOS Simple Knowledge Organization System",                      IRI => "http://www.w3.org/2004/02/skos/core#"},

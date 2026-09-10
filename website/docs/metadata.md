@@ -1821,7 +1821,7 @@ These fields are meant to support system logic and are not relevant to the user.
 | Portland Common Data Model | pcdm |	http://pcdm.org/models# |
 | RDA Unconstrained | rdau | http://rdaregistry.info/Elements/u/ |
 | The RDF Concepts Vocabulary (RDF) | rdf | http://www.w3.org/1999/02/22-rdf-syntax-ns# |
-| RDF Schema 1.1 | rdfs | https://www.w3.org/TR/rdf-schema/ |
+| RDF Schema 1.1 | rdfs | http://www.w3.org/2000/01/rdf-schema# |
 | MARC Code List for Relators | relators | http://id.loc.gov/vocabulary/relators |
 | Schema.org | schema |	http://schema.org/ |
 | SKOS Simple Knowledge Organization System | skos | http://www.w3.org/2004/02/skos/core# |
