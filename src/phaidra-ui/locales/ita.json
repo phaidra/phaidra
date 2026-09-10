@@ -1536,5 +1536,14 @@
   "OpenCast submit as usual object": "Carica come oggetto standard",
   "OpenCast submit as usual object help": "Oggetto PHAIDRA standard per ricerca, didattica o uso generale.",
   "OpenCast submit as OER": "Carica come Open Educational Resource (OER)",
-  "OpenCast submit as OER help": "Materiale didattico con licenza aperta e metadati OER."
+  "OpenCast submit as OER help": "Materiale didattico con licenza aperta e metadati OER.",
+  "Enable info banner": "Attiva banner informativo",
+  "Info banner message (English)": "Messaggio del banner informativo (inglese)",
+  "Show an informational banner at the top of the page. The message can be translated via the i18n overrides in Datastructures section.": "Mostra un banner informativo in cima alla pagina. Il messaggio può essere tradotto tramite le sovrascritture i18n nella sezione Datastructures.",
+  "English text for the info banner. Other languages can be added via i18n overrides in Datastructures section.": "Testo inglese del banner informativo. Altre lingue possono essere aggiunte tramite le sovrascritture i18n nella sezione Datastructures.",
+  "Info banner start date": "Data di inizio del banner informativo",
+  "Info banner end date": "Data di fine del banner informativo",
+  "From 00:00 on this date": "Dalle 00:00 di questa data",
+  "Until 23:59 on this date": "Fino alle 23:59 di questa data",
+  "Optional. When set, the banner is shown from 00:00 on the start date through 23:59 on the end date. Leave empty to show the banner whenever it is enabled.": "Facoltativo. Se impostate, il banner è visibile dalle 00:00 della data di inizio alle 23:59 della data di fine. Lasciare vuoto per mostrare il banner ogni volta che è abilitato."
 }

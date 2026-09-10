@@ -1453,5 +1453,14 @@
     "OpenCast submit as usual object": "Als übliches Objekt hochladen",
     "OpenCast submit as usual object help": "Standard-PHAIDRA-Objekt für Forschung, Lehre oder allgemeine Nutzung.",
     "OpenCast submit as OER": "Als Open Educational Resource (OER) hochladen",
-    "OpenCast submit as OER help": "Offen lizenziertes Lehr- und Lernmaterial mit OER-Metadaten und Lizenz."
+    "OpenCast submit as OER help": "Offen lizenziertes Lehr- und Lernmaterial mit OER-Metadaten und Lizenz.",
+    "Enable info banner": "Info-Banner aktivieren",
+    "Info banner message (English)": "Info-Banner-Text (Englisch)",
+    "Show an informational banner at the top of the page. The message can be translated via the i18n overrides in Datastructures section.": "Zeigt ein Infobanner oben auf der Seite an. Der Text kann über i18n-Überschreibungen im Bereich Datastructures übersetzt werden.",
+    "English text for the info banner. Other languages can be added via i18n overrides in Datastructures section.": "Englischer Text für das Infobanner. Weitere Sprachen können über i18n-Überschreibungen im Bereich Datastructures hinzugefügt werden.",
+    "Info banner start date": "Info-Banner Startdatum",
+    "Info banner end date": "Info-Banner Enddatum",
+    "From 00:00 on this date": "Ab 00:00 Uhr an diesem Tag",
+    "Until 23:59 on this date": "Bis 23:59 Uhr an diesem Tag",
+    "Optional. When set, the banner is shown from 00:00 on the start date through 23:59 on the end date. Leave empty to show the banner whenever it is enabled.": "Optional. Wenn gesetzt, wird das Banner von 00:00 Uhr am Startdatum bis 23:59 Uhr am Enddatum angezeigt. Leer lassen, um das Banner anzuzeigen, sobald es aktiviert ist."
   }

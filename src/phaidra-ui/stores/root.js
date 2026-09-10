@@ -82,6 +82,8 @@ export const useRootStore = defineStore('root', {
       'cookiePrivacyPolicyUrl',
       'enableInfoBanner',
       'infoBannerMessage',
+      'infoBannerStartDate',
+      'infoBannerEndDate',
       'data_i18n',
       'customJavaScript',
       'downloadabledatastreams',

@@ -505,6 +505,33 @@
                 </v-row>
                 <v-row>
                   <v-col>
+                    <v-text-field
+                      type="date"
+                      :label="$t('Info banner start date')"
+                      v-model="parsedPublicConfigData.infoBannerStartDate"
+                      :disabled="!parsedPublicConfigData.enableInfoBanner"
+                      :max="parsedPublicConfigData.infoBannerEndDate || undefined"
+                      :hint="$t('From 00:00 on this date')"
+                      persistent-hint
+                      clearable
+                    ></v-text-field>
+                  </v-col>
+                  <v-col>
+                    <v-text-field
+                      type="date"
+                      :label="$t('Info banner end date')"
+                      v-model="parsedPublicConfigData.infoBannerEndDate"
+                      :disabled="!parsedPublicConfigData.enableInfoBanner"
+                      :min="parsedPublicConfigData.infoBannerStartDate || undefined"
+                      :hint="$t('Until 23:59 on this date')"
+                      persistent-hint
+                      clearable
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="3" class="mt-4">{{ $t("Optional. When set, the banner is shown from 00:00 on the start date through 23:59 on the end date. Leave empty to show the banner whenever it is enabled.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
                     <v-textarea
                       :label="$t('Header')"
                       v-model="parsedPublicConfigData.cms_header"
