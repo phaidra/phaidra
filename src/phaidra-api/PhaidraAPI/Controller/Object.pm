@@ -1319,6 +1319,13 @@ sub create_simple {
   my $mimetype = $self->param('mimetype');
   my $upload   = $self->req->upload('file');
 
+  if ($upload) {
+    unless (defined($mimetype)) {
+      $self->render(json => {alerts => [{type => 'error', msg => 'Undefined mimetype'}]}, status => 400);
+      return;
+    }
+  }
+
   my $checksumtype = $self->param('checksumtype');
   my $checksum     = $self->param('checksum');
 
@@ -1555,14 +1562,12 @@ sub add_octets {
     return;
   }
 
-  my $mimetype;
-  if (defined($self->param('mimetype'))) {
-    $mimetype = $self->param('mimetype');
+  unless (defined($self->param('mimetype'))) {
+    $self->render(json => {alerts => [{type => 'error', msg => 'Undefined mimetype'}]}, status => 400);
+    return;
   }
-  else {
-    $mimetype = $object_model->get_mimetype($self, $upload->asset);
-    unshift @{$res->{alerts}}, {type => 'info', msg => "Undefined mimetype, using magic: $mimetype"};
-  }
+
+  my $mimetype = $self->param('mimetype');
 
   my $pid          = $self->stash('pid');
   my $checksumtype = $self->param('checksumtype');
