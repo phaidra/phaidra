@@ -147,6 +147,13 @@ sub add_collection_members {
     return;
   }
 
+  foreach my $member (@{$members}) {
+    if (defined($member->{pid}) && $member->{pid} eq $pid) {
+      $self->render(json => {alerts => [{type => 'error', msg => 'A collection cannot be added inside itself.'}]}, status => 400);
+      return;
+    }
+  }
+
   # add members
   my @relationships;
   foreach my $member (@{$members}) {

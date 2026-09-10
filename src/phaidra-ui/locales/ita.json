@@ -1235,6 +1235,7 @@
   "MEMBER_OF_CONTAINER": "Questo oggetto è membro del contenitore {containerpid}",
   "REMOVE_COLLECTION_MEMBER": "Rimuovere l'oggetto {oldpid} dalla collezione {collection}? L'oggetto non verrà eliminato.",
   "ADD_COLLECTION_MEMBER": "Aggiungi l'oggetto {newpid} alla collezione {collection}.",
+  "A collection cannot be added inside itself.": "Una collezione non può essere aggiunta a se stessa.",
   "WEBVERSIONSUBMIT": "Confermo che al file caricato come \"Versione Web\" si applicano gli stessi diritti dell'oggetto {pid}.",
   "RELATION_SUBMITTED": "L'oggetto",
   "Usage notes": "Istruzioni per l'uso",
