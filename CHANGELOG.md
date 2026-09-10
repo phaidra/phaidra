@@ -9,7 +9,7 @@ phaidra-ui was migrated to Nuxt 4.
 This table enables tracking registered objects in state Inactive so they can be shown to the users, curators, etc.
 
 ```
-./scripts/migrations/v3.5.0/01_add_inactive_objects.pl
+docker exec -it phaidra-api-1 perl migrations/v3.5.0/01_add_inactive_objects.pl
 ```
 
 # v3.4.0
