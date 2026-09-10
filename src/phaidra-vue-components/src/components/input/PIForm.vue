@@ -1920,10 +1920,13 @@ export default {
       var newField = arrays.duplicate(arr, f)
       if (newField) {
         newField.id = (new Date()).getTime()
-        newField.firstname = ''
-        newField.lastname = ''
-        newField.identifierText = ''
         newField.removable = true
+        if (newField.affiliationType === 'select' && newField.affiliation && String(newField.affiliation).startsWith('https://ror.org/')) {
+          newField.affiliationType = 'ror'
+        }
+        if (newField.organizationType === 'select' && newField.organization && String(newField.organization).startsWith('https://ror.org/')) {
+          newField.organizationType = 'ror'
+        }
         this.clearSubjectFields(newField)
         this.preserveSchemaMetadata(f, newField)
         this.applyRequiredLogicToDuplicate(newField)
@@ -2158,8 +2161,10 @@ export default {
     affiliationTypeChange: function (f, event) {
       switch (event) {
         case 'select':
-        case 'ror':
           f.affiliationType = 'select'
+          break
+        case 'ror':
+          f.affiliationType = 'ror'
           break
         case 'other':
           f.affiliationType = 'other'
@@ -2242,8 +2247,10 @@ export default {
     organizationTypeChange: function (f, event) {
       switch (event) {
         case 'select':
-        case 'ror':
           f.organizationType = 'select'
+          break
+        case 'ror':
+          f.organizationType = 'ror'
           break
         case 'other':
           f.organizationType = 'other'
