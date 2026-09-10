@@ -170,8 +170,8 @@ services:
     <<: [*common, *logs]
     image: varnish:8
     hostname: varnish
-    tmpfs:
-      - /var/lib/varnish/varnishd:exec
+    volumes:
+      - varnish-lib:/var/lib/varnish
     configs:
       - source: varnish_config
         target: /etc/varnish/default.vcl
@@ -1427,7 +1427,7 @@ services:
       <<: [*api_common_env, *hosts]
       CATALINA_OPTS: >-
         -Dfcrepo.db.password=${MARIADB_FEDORA_PASSWORD:-phaidra}
-        -Dfcrepo.db.url=jdbc:mariadb://${MARIADB_FEDORA_HOST:-mariadb-fedora-Dev}:3306/${FEDORADB:-fedoradb}
+        -Dfcrepo.db.url=jdbc:mariadb://${MARIADB_FEDORA_HOST:-mariadb-fedora-dev}:3306/${FEDORADB:-fedoradb}
         -Dfcrepo.db.user=${MARIADB_FEDORA_USER:-phaidra}
         -Dfcrepo.metrics.enable=true
       FEDORA_ADMIN_USERNAME: "${FEDORA_ADMIN_USER:-fedoraAdmin}"
@@ -1668,6 +1668,28 @@ services:
         "shib-s3-dev",
       ]
 
+  varnish-exporter:
+    hostname: "varnish-exporter"
+    image: ghcr.io/otto-de/prometheus-varnish-exporter:1.8.1-varnish-8.0.0
+    volumes:
+      - varnish-lib:/var/lib/varnish
+    <<: [*common, *logs]
+    profiles:
+      [
+        "demo-local",
+        "demo-s3",
+        "ssl-local",
+        "ssl-s3",
+        "shib-local",
+        "shib-s3",
+        "demo-local-dev",
+        "demo-s3-dev",
+        "ssl-local-dev",
+        "ssl-s3-dev",
+        "shib-local-dev",
+        "shib-s3-dev",
+      ]
+
   ############### mkdocs for website generation ###############
   mkdocs:
     image: squidfunk/mkdocs-material:latest
@@ -1750,6 +1772,7 @@ volumes:
   agent-opencast-mongosh:
   agent-opencast-work:
   handle:
+  varnish-lib:
 
 configs:
   httpd_custom_config:

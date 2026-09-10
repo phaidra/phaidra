@@ -39,7 +39,7 @@ scrape_configs:
 
   - job_name: 'fcrepo'
     scrape_interval: 30s
-    metrics_path: '/fcrepo/prometheus'
+    metrics_path: '/fcrepo/rest/prometheus'
     static_configs:
     - targets: ['fedora:8080']
     basic_auth:
@@ -54,3 +54,9 @@ scrape_configs:
     basic_auth:
       username: ${PHAIDRA_ADMIN_USER}
       password: ${PHAIDRA_ADMIN_PASSWORD}
+
+  - job_name: varnish
+    scrape_interval: 30s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ["varnish-exporter:9131"]
