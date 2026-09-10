@@ -628,7 +628,23 @@ export default {
       return globalTheme?.current?.value?.dark || false;
     },
     showInfoBanner() {
-        return this.instanceconfig?.enableInfoBanner === true && !!this.infoBannerText
+        if (this.instanceconfig?.enableInfoBanner !== true || !this.infoBannerText) {
+          return false
+        }
+        const start = this.instanceconfig.infoBannerStartDate
+        const end = this.instanceconfig.infoBannerEndDate
+        if (!start && !end) {
+          return true
+        }
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        if (start && today < new Date(start + 'T00:00:00')) {
+          return false
+        }
+        if (end && today > new Date(end + 'T00:00:00')) {
+          return false
+        }
+        return true
     },
     infoBannerText() {
       const fromI18n = this.$t('Info banner message')
