@@ -299,9 +299,17 @@ sub startup {
           return;
         }
 
-        if ($res->{status} && ($res->{status} == 200 || $res->{status} == 410)) {
+        if ($res->{status} && $res->{status} == 200) {
           $c->app->chi->set($cachekey, 1, '1 day');
           return $next->();
+        }
+
+        if ($res->{status} && $res->{status} == 410) {
+          if ($url_path =~ m{/object/\Q$pid\E/info}) {
+            return $next->();
+          }
+          $c->render(json => {alerts => [{type => 'error', msg => 'Gone'}], status => 410}, status => 410);
+          return;
         }
       }
 
