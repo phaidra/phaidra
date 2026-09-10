@@ -798,30 +798,8 @@ sub preview {
         $self->render(template => 'utils/replayweb', format => 'html');
         return;
       }
-      if (($index_mime eq 'model/ply') || ($index_mime eq 'model/nxz')) {
-        $self->stash(baseurl       => $self->config->{baseurl});
-        $self->stash(scheme        => $self->config->{scheme});
-        $self->stash(basepath      => $self->config->{basepath});
-        $self->stash(trywebversion => $trywebversion);
-        $self->stash(pid           => $pid);
-        $self->stash(mType         => 'ply')   if $index_mime eq 'model/ply';
-        $self->stash(mType         => 'nexus') if $index_mime eq 'model/nxz';
-
-        if ($showloadbutton) {
-          $self->render(template => 'utils/loadbutton', format => 'html');
-          return;
-        }
-
-        my $u_model = PhaidraAPI::Model::Util->new;
-        $u_model->track_action($self, $pid, 'preview');
-
-        $self->render(template => 'utils/3dviewer', format => 'html');
-        return;
-      }
-      else {
-        $self->reply->static('images/asset.png');
-        return;
-      }
+      $self->reply->static('images/asset.png');
+      return;
     }
     case 'Video' {
       if (defined $self->config->{external_services}->{opencast}->{mode}

@@ -50,9 +50,6 @@ ADD --checksum=sha256:7080be17f847e0b358801c713e8db0c901ab07d7c3345098cc8b947621
     https://cdn.jsdelivr.net/npm/@3dweb/360javascriptviewer@1.8.56/lib/JavascriptViewer.js \
     /360viewer/JavascriptViewer.min.js
 
-ADD https://github.com/cnr-isti-vclab/3DHOP/archive/refs/tags/4.3.tar.gz /3dhop.tar.gz
-RUN tar -xzf /3dhop.tar.gz
-
 ADD --checksum=sha256:bee3e9334ea86dd63e184598f31fb16750881c2da1a6f097a66e0f66a95b3d54 \
     https://github.com/googlefonts/roboto-3-classic/releases/download/v3.015/Roboto_v3.015.zip \
     /roboto.zip
@@ -117,9 +114,6 @@ COPY --from=builder \
     /iipmooviewer-86bfcc698c969ce290d7c4f5a586483458d1f752/images/ \
     /usr/local/phaidra/phaidra-api/public/iipmooviewer/
 COPY --from=builder /360viewer/JavascriptViewer.min.js /usr/local/phaidra/phaidra-api/public/360viewer/
-COPY --from=builder /3DHOP-4.3/minimal/js /usr/local/phaidra/phaidra-api/public/3dhop/js
-COPY --from=builder /3DHOP-4.3/minimal/skins /usr/local/phaidra/phaidra-api/public/3dhop/skins
-COPY --from=builder /3DHOP-4.3/minimal/stylesheet /usr/local/phaidra/phaidra-api/public/3dhop/stylesheet
 COPY --from=builder /roboto/web/static/Roboto-Light.ttf   /usr/local/phaidra/phaidra-api/public/fonts/roboto/roboto-300.ttf
 COPY --from=builder /roboto/web/static/Roboto-Regular.ttf /usr/local/phaidra/phaidra-api/public/fonts/roboto/roboto-400.ttf
 COPY --from=builder /roboto/web/static/Roboto-Medium.ttf  /usr/local/phaidra/phaidra-api/public/fonts/roboto/roboto-500.ttf
