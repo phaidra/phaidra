@@ -1171,6 +1171,12 @@ sub add_octets {
     return $res;
   }
 
+  unless (defined($mimetype)) {
+    unshift @{$res->{alerts}}, {type => 'error', msg => 'Undefined mimetype'};
+    $res->{status} = 400;
+    return $res;
+  }
+
   my $size = $upload->size;
   my $name = $upload->filename;
 
@@ -1181,13 +1187,7 @@ sub add_octets {
   $c->app->log->debug($logmsg);
 
   my $fedora_model = PhaidraAPI::Model::Fedora->new;
-  if (defined($mimetype)) {
-    $c->app->log->info("Provided mimetype $mimetype");
-  }
-  else {
-    $mimetype = $self->get_mimetype($c, $upload->asset);
-    $c->app->log->info("Undefined mimetype, using magic: $mimetype");
-  }
+  $c->app->log->info("Provided mimetype $mimetype");
   my $addres = $fedora_model->addOrModifyDatastream($c, $pid, 'OCTETS', undef, undef, $upload, $mimetype, $checksumtype, $checksum);
   if ($addres->{status} != 200) {
     return $addres;
