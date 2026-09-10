@@ -30,6 +30,10 @@
           <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
           <v-col cols="12" md="10">{{ $bytes(ch.ui_value) }}</v-col>
         </template>
+        <template v-else-if="ch.datatype === 'Duration'">
+          <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
+          <v-col cols="12" md="10">{{ formatDuration(ch.ui_value) }}</v-col>
+        </template>
         <template v-else-if="ch.datatype === 'Taxon'">
           <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(nodePath(ch)) }}</v-col>
           <v-col cols="12" md="10">{{ ch.ui_value }}</v-col>
@@ -294,6 +298,15 @@ export default {
   methods: {
     dateModifierFn: function (v) {
       return PDateModifier.dateModifierFn(v, this)
+    },
+    formatDuration: function (value) {
+      let m = String(value || '').match(/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/)
+      if (!m) return value
+      let parts = []
+      if (parseInt(m[1], 10)) parts.push(m[1] + 'h')
+      if (parseInt(m[2], 10)) parts.push(m[2] + 'm')
+      if (parseInt(m[3], 10)) parts.push(m[3] + 's')
+      return parts.length ? parts.join(' - ') : value
     },
     link: function (v) {
       if (typeof v === 'string') {
