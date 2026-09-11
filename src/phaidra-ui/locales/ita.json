@@ -1581,5 +1581,16 @@
   "Password reset email subject": "Oggetto dell’e-mail di reimpostazione password",
   "Password reset email HTML template": "Modello HTML dell’e-mail di reimpostazione password",
   "Password reset email text template": "Modello testuale dell’e-mail di reimpostazione password",
-  "Template Toolkit variables: [% reset_url %], [% username %], [% expires_minutes %]": "Variabili Template Toolkit: [% reset_url %], [% username %], [% expires_minutes %]"
+  "Template Toolkit variables: [% reset_url %], [% username %], [% expires_minutes %]": "Variabili Template Toolkit: [% reset_url %], [% username %], [% expires_minutes %]",
+  "meta_description_home": "PHAIDRA è una piattaforma per l'archiviazione a lungo termine di oggetti e collezioni digitali.",
+  "meta_description_search": "Cerca oggetti e collezioni nel repository digitale.",
+  "meta_description_impressum": "Note legali e informazioni istituzionali di questo repository.",
+  "meta_description_contact": "Informazioni di contatto e supporto per questo repository.",
+  "meta_description_code_of_ethics": "Codice etico del repository digitale.",
+  "meta_description_editorial_policies": "Politiche editoriali per i contenuti del repository digitale.",
+  "meta_description_file_formats": "Formati di file supportati nel repository digitale.",
+  "meta_description_help": "Guida e documentazione per l'uso del repository digitale.",
+  "meta_description_credits": "Crediti e ringraziamenti per il repository digitale.",
+  "meta_description_terms_of_use": "Condizioni d'uso del repository digitale.",
+  "meta_description_metadata_fields": "Panoramica dei campi di metadati utilizzati nel repository digitale."
 }

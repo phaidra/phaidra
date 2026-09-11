@@ -1491,5 +1491,16 @@
     "Password reset email subject": "Betreff der Passwort-E-Mail",
     "Password reset email HTML template": "HTML-Vorlage der Passwort-E-Mail",
     "Password reset email text template": "Textvorlage der Passwort-E-Mail",
-    "Template Toolkit variables: [% reset_url %], [% username %], [% expires_minutes %]": "Template-Toolkit-Variablen: [% reset_url %], [% username %], [% expires_minutes %]"
-}
+    "Template Toolkit variables: [% reset_url %], [% username %], [% expires_minutes %]": "Template-Toolkit-Variablen: [% reset_url %], [% username %], [% expires_minutes %]",
+    "meta_description_home": "PHAIDRA ist ein Repositorium zur dauerhaften Sicherung von digitalen Beständen.",
+    "meta_description_search": "Durchsuchen Sie Objekte und Collections im digitalen Repositorium.",
+    "meta_description_impressum": "Impressum und rechtliche Hinweise zu diesem Repositorium.",
+    "meta_description_contact": "Kontaktinformationen und Support für dieses Repositorium.",
+    "meta_description_code_of_ethics": "Ethikrichtlinien für das digitale Repositorium.",
+    "meta_description_editorial_policies": "Redaktionelle Richtlinien für Inhalte im digitalen Repositorium.",
+    "meta_description_file_formats": "Unterstützte Dateiformate im digitalen Repositorium.",
+    "meta_description_help": "Hilfe und Dokumentation zur Nutzung des digitalen Repositoriums.",
+    "meta_description_credits": "Credits und Danksagungen für das digitale Repositorium.",
+    "meta_description_terms_of_use": "Nutzungsbedingungen für das digitale Repositorium.",
+    "meta_description_metadata_fields": "Übersicht der Metadatenfelder im digitalen Repositorium."
+  }

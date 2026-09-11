@@ -6,5 +6,11 @@
 </template>
 
 <script>
-export default {};
+import { useTranslatedPageHead } from '../mixins/config'
+
+export default {
+  setup() {
+    useTranslatedPageHead(null, 'meta_description_home')
+  }
+}
 </script>

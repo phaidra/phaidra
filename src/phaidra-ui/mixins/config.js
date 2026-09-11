@@ -29,6 +29,24 @@ export function useDocumentTitle () {
   }
 }
 
+export function useTranslatedPageHead (titleKey, descriptionKey) {
+  const nuxtApp = useNuxtApp()
+  const documentTitle = useDocumentTitle()
+
+  useHead(() => {
+    const t = nuxtApp.$i18n?.global?.t
+      || nuxtApp.$i18n?.t
+      || ((v) => v)
+    const pageTitle = titleKey ? t(titleKey) : null
+    return {
+      title: documentTitle(pageTitle),
+      meta: [
+        { name: 'description', content: t(descriptionKey) }
+      ]
+    }
+  })
+}
+
 export const config = {
   computed: {
     appconfig () {

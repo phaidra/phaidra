@@ -726,6 +726,17 @@
     "OpenCast submit as usual object": "Upload as usual object",
     "OpenCast submit as usual object help": "Standard PHAIDRA object for research, teaching, or general use.",
     "OpenCast submit as OER": "Upload as Open Educational Resource (OER)",
-    "OpenCast submit as OER help": "Openly licensed teaching and learning material with OER metadata and licensing."
+    "OpenCast submit as OER help": "Openly licensed teaching and learning material with OER metadata and licensing.",
+    "meta_description_home": "Phaidra is a repository for the permanent secure storage of digital assets.",
+    "meta_description_search": "Search objects and collections in the digital repository.",
+    "meta_description_impressum": "Legal notice and imprint information for this repository.",
+    "meta_description_contact": "Contact information and support for this repository.",
+    "meta_description_code_of_ethics": "Code of ethics for the digital repository.",
+    "meta_description_editorial_policies": "Editorial policies for content in the digital repository.",
+    "meta_description_file_formats": "Supported file formats in the digital repository.",
+    "meta_description_help": "Help and documentation for using the digital repository.",
+    "meta_description_credits": "Credits and acknowledgements for the digital repository.",
+    "meta_description_terms_of_use": "Terms of use for the digital repository.",
+    "meta_description_metadata_fields": "Overview of metadata fields used in the digital repository."
   }
   

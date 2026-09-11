@@ -38,8 +38,12 @@ export default {
         const documentTitle = useDocumentTitle()
         useHead(() => {
             const t = nuxtApp.$i18n?.t || ((v) => v)
+            const pageTitle = t('Collection')
             return {
-                title: documentTitle(t('Collection'))
+                title: documentTitle(pageTitle),
+                meta: [
+                    { name: 'description', content: pageTitle }
+                ]
             }
         })
     },
