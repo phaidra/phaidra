@@ -79,6 +79,7 @@ export const useRootStore = defineStore('root', {
       'hideBreadcrumbsOnHomepage',
       'data_ot4rt',
       'enableCookieBanner',
+      'cookieBannerMessage',
       'cookiePrivacyPolicyUrl',
       'enableInfoBanner',
       'infoBannerMessage',
