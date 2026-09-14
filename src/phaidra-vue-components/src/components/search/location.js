@@ -40,25 +40,28 @@ export function setSearchParams (self, { q, page, pagesize, sortdef, owner, coll
       let queryId = fqa[1]
       for (let j = 0; j < self.facetQueries.length; j++) {
         if (self.facetQueries[j].id === facetId) {
-          self.facetQueries[j].show = 1
+          self.facetQueries[j].show = true
           for (let k = 0; k < self.facetQueries[j].queries.length; k++) {
             if (self.facetQueries[j].queries[k].id === queryId) {
-              self.facetQueries[j].queries[k].active = 1
+              self.facetQueries[j].queries[k].active = true
+              if (self.facetQueries[j].exclusive) {
+                self.facetQueries[j].selectedRadioValue = queryId
+              }
             }
             if (self.facetQueries[j].queries[k].childFacet) {
               let lvl1 = self.facetQueries[j].queries[k].childFacet
               for (let l = 0; l < lvl1.queries.length; l++) {
                 if (lvl1.queries[l].id === queryId) {
-                  lvl1.queries[l].active = 1
-                  self.facetQueries[j].queries[k].active = 1
+                  lvl1.queries[l].active = true
+                  self.facetQueries[j].queries[k].active = true
                 }
                 if (lvl1.queries[l].childFacet) {
                   let lvl2 = lvl1.queries[l].childFacet
                   for (let m = 0; m < lvl2.queries.length; m++) {
                     if (lvl2.queries[m].id === queryId) {
-                      lvl2.queries[m].active = 1
-                      lvl1.queries[l].active = 1
-                      self.facetQueries[j].queries[k].active = 1
+                      lvl2.queries[m].active = true
+                      lvl1.queries[l].active = true
+                      self.facetQueries[j].queries[k].active = true
                     }
                   }
                 }
