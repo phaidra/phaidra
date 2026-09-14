@@ -225,10 +225,13 @@ sub stats {
     if (defined($detail_page) || defined($download)) {
       return {downloads => $download, detail_page => $detail_page, alerts => [], status => 200};
     }
-    else {
-      my $msg = "No data has been fetched. DB msg:" . $c->app->db_metadata->dbh->errstr;
+    elsif ($dbh->errstr) {
+      my $msg = "No data has been fetched. DB msg:" . $dbh->errstr;
       $c->app->log->warn($msg);
       return {alerts => [{type => 'info', msg => $msg}], status => 200};
+    }
+    else {
+      return {downloads => $download, detail_page => $detail_page, alerts => [], status => 200};
     }
   }
 
