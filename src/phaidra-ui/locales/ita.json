@@ -820,7 +820,7 @@
   "Note": "Osservazioni",
   "Call number": "Segnatura",
   "Keyword": "Parole chiave",
-  "Keywords *": "Parole chiave * (conferma ogni parola chiave premendo Invio)",
+  "Keywords *": "Parole chiave *",
   "Filename": "Nome del file",
   "Place": "Luogo",
   "Place (native name)": "Luogo (nome originario)",
@@ -1592,5 +1592,9 @@
   "meta_description_help": "Guida e documentazione per l'uso del repository digitale.",
   "meta_description_credits": "Crediti e ringraziamenti per il repository digitale.",
   "meta_description_terms_of_use": "Condizioni d'uso del repository digitale.",
-  "meta_description_metadata_fields": "Panoramica dei campi di metadati utilizzati nel repository digitale."
+  "meta_description_metadata_fields": "Panoramica dei campi di metadati utilizzati nel repository digitale.",
+  "Confirm each keyword with enter, max {max} characters": "conferma ogni parola chiave premendo Invio, max {max} caratteri",
+  "Each keyword must be at most {max} characters.": "Ogni parola chiave può contenere al massimo {max} caratteri.",
+  "Keyword max length": "Lunghezza massima delle parole chiave",
+  "Maximum number of characters allowed for each keyword. Default is 50.": "Numero massimo di caratteri consentiti per ciascuna parola chiave. Il valore predefinito è 50."
 }

@@ -737,6 +737,8 @@
     "meta_description_help": "Help and documentation for using the digital repository.",
     "meta_description_credits": "Credits and acknowledgements for the digital repository.",
     "meta_description_terms_of_use": "Terms of use for the digital repository.",
-    "meta_description_metadata_fields": "Overview of metadata fields used in the digital repository."
+    "meta_description_metadata_fields": "Overview of metadata fields used in the digital repository.",
+    "Confirm each keyword with enter, max {max} characters": "Confirm each keyword with enter, max {max} characters",
+    "Each keyword must be at most {max} characters.": "Each keyword must be at most {max} characters."
   }
   

@@ -1,6 +1,7 @@
 import { allowedMimetypes } from '../utils/mimetypes'
 import { isNonBlankString } from '../utils/stringValidation'
 import { vuetifyGoTo } from '../utils/vuetifyGoToCompat'
+import { resolveKeywordMaxLength } from '../utils/keywordMaxLength'
 
 export const formvalidation = {
   data() {
@@ -22,6 +23,15 @@ export const formvalidation = {
   methods: {
     addAsterixIfNotPresent(value) {
       return value ? (value.includes('*') ? value : value + ' *') : value 
+    },
+    validateKeywordField(f) {
+      f.errorMessages = []
+      const max = resolveKeywordMaxLength(this.instanceconfig)
+      const values = Array.isArray(f.value) ? f.value : []
+      if (values.some(v => String(v ?? '').length > max)) {
+        f.errorMessages.push(this.$t('Each keyword must be at most {max} characters.', { max }))
+        this.validationError = true
+      }
     },
     checkEntityField(f, { onAuthor, onAdvisor } = {}) {
       console.log('checking p[' + f.predicate + '] c[' + f.component + '] r[' + f.role + '] fn[' + f.firstname + '] ln[' + f.lastname + '] n[' + f.name + '] org[' + f.organization + '] orgtext[' + f.organizationText + ']')
@@ -419,6 +429,7 @@ export const formvalidation = {
             if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Keyword'] = true
             }
+            this.validateKeywordField(f)
           }
           if ((f.component === 'p-entity') || (f.component === 'p-entity-extended') || (f.component === 'p-entity-fixedrole-person')) {
             this.checkEntityField(f)
@@ -624,6 +635,7 @@ export const formvalidation = {
             if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Keyword'] = true
             }
+            this.validateKeywordField(f)
           }
           if ((f.component === 'p-entity') || (f.component === 'p-entity-extended') || (f.component === 'p-entity-fixedrole-person')) {
             this.checkEntityField(f)
@@ -815,6 +827,9 @@ export const formvalidation = {
               this.mandatoryFieldsValidated['Description'] = true
             }
           }
+          if (f.component === 'p-keyword') {
+            this.validateKeywordField(f)
+          }
           if ((f.component === 'p-entity') || (f.component === 'p-entity-extended') || (f.component === 'p-entity-fixedrole-person')) {
             this.checkEntityField(f, {
               onAuthor: () => {
@@ -989,6 +1004,9 @@ export const formvalidation = {
             if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Description'] = true
             }
+          }
+          if (f.component === 'p-keyword') {
+            this.validateKeywordField(f)
           }
           if ((f.component === 'p-entity') || (f.component === 'p-entity-extended') || (f.component === 'p-entity-fixedrole-person')) {
             this.checkEntityField(f)
@@ -1170,6 +1188,7 @@ export const formvalidation = {
             if (f.value?.length > 0) {
               this.mandatoryFieldsValidated['Keyword'] = true
             }
+            this.validateKeywordField(f)
           }
           if ((f.component === 'p-entity') || (f.component === 'p-entity-extended') || (f.component === 'p-entity-fixedrole-person')) {
             this.checkEntityField(f)

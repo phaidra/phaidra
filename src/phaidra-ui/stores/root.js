@@ -93,7 +93,8 @@ export const useRootStore = defineStore('root', {
       'irbaseurl',
       'phaidra_doi_prefix',
       'hideContainedInPages',
-      'extendedContribution'
+      'extendedContribution',
+      'keywordMaxLength'
     ]
     for (const p of configurable) {
       if (instanceconfig.hasOwnProperty(p)) {

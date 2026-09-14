@@ -54,7 +54,11 @@
           <template v-for="(keywords, language) in langKeywords" :key="'kwblk-' + language">
             <v-col cols="12" md="2" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(nodePath(ch)) }} <template v-if="language"> ({{language}})</template></v-col>
             <v-col cols="12" md="10" class="valuefield" ref="autolink">
-                <v-chip v-for="(kw, kwi) in keywords" :key="'kw' + language + kwi" class="mr-2 mb-2 pointer-disabled">{{kw}}</v-chip>
+                <v-chip
+                  v-for="(kw, kwi) in keywords"
+                  :key="'kw' + language + kwi"
+                  class="keyword-chip mr-2 mb-2 pointer-disabled"
+                >{{kw}}</v-chip>
             </v-col>
           </template>
         </template>
@@ -657,5 +661,20 @@ export default {
 .theme--dark .uwm-border-left {
   border-left: 1px solid;
   border-color: rgba(255, 255, 255, 0.25);
+}
+
+.keyword-chip {
+  height: auto !important;
+  min-height: 32px;
+  max-width: 100%;
+  border-radius: 16px !important;
+}
+
+.keyword-chip :deep(.v-chip__content) {
+  display: block;
+  height: auto;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 </style>
