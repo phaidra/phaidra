@@ -5,7 +5,7 @@ use warnings;
 use v5.10;
 use Mojo::ByteStream qw(b);
 use Mojo::URL;
-use POSIX qw(strftime);
+use POSIX        qw(strftime);
 use Scalar::Util qw(looks_like_number);
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Object;
@@ -119,12 +119,12 @@ sub cors_preflight {
   # not just for preflight
   $self->render(text => '', status => 200);
 }
- 
+
 sub _authenticate_remote_user {
-  my $self = shift;
-  my $username = $self->stash->{remote_user};
+  my $self      = shift;
+  my $username  = $self->stash->{remote_user};
   my $directory = PhaidraAPI::Model::Directory->new;
-  my $local = $directory->_db_user($self, $username);
+  my $local     = $directory->_db_user($self, $username);
   if (!$local) {
     $self->app->log->info("Authentication accepted: remote user[$username] has no local account override");
     return 1;
@@ -140,7 +140,7 @@ sub _authenticate_remote_user {
     return 1;
   }
   $self->render(
-    json => {status => 401, alerts => [{type => 'error', msg => 'account is blocked or expired'}]},
+    json   => {status => 401, alerts => [{type => 'error', msg => 'account is blocked or expired'}]},
     status => 401
   );
   return 0;
@@ -442,33 +442,29 @@ sub signin_shib {
       $self->redirect_to($consent_url);
       return;
     }
+
     # Only provision after affiliation authorization and ToU consent.
-    my $directory_model = PhaidraAPI::Model::Directory->new;
-    my $directory_data = $directory_model->get_external_user_data($self, $username) || {};
-    my $save_remote_user_personal_attributes =
-      !exists($privconfig->{saveremoteuserpersonalattributes})
+    my $directory_model                      = PhaidraAPI::Model::Directory->new;
+    my $directory_data                       = $directory_model->get_external_user_data($self, $username) || {};
+    my $save_remote_user_personal_attributes = !exists($privconfig->{saveremoteuserpersonalattributes})
       || $privconfig->{saveremoteuserpersonalattributes};
     my %seen_org_units;
-    my @org_unit_notations = grep {
-      defined && length && !$seen_org_units{$_}++
-    } (@{$directory_data->{org_units_l1} || []}, @{$directory_data->{org_units_l2} || []});
-    my $org_unit_ids = $directory_model->org_unit_ids_for_notations(
-      $self, \@org_unit_notations
-    );
+    my @org_unit_notations = grep {defined && length && !$seen_org_units{$_}++} (@{$directory_data->{org_units_l1} || []}, @{$directory_data->{org_units_l2} || []});
+    my $org_unit_ids       = $directory_model->org_unit_ids_for_notations($self, \@org_unit_notations);
     my $provisioned;
     eval {
       require PhaidraAPI::Model::Users;
       my $provision_data = {
         username => $username,
-        roles => [$self->app->config->{phaidra}->{default_role} // '']
+        roles    => [$self->app->config->{phaidra}->{default_role} // '']
       };
       if ($save_remote_user_personal_attributes) {
-        $provision_data->{email} = $email;
-        $provision_data->{firstname} = $firstname;
-        $provision_data->{lastname} = $lastname;
+        $provision_data->{email}       = $email;
+        $provision_data->{firstname}   = $firstname;
+        $provision_data->{lastname}    = $lastname;
         $provision_data->{displayname} = join(' ', grep {defined && length} ($firstname, $lastname));
         $provision_data->{affiliation} = [grep {length} split(';', $affiliation || '')];
-        $provision_data->{org_units} = $org_unit_ids;
+        $provision_data->{org_units}   = $org_unit_ids;
       }
       $provisioned = PhaidraAPI::Model::Users->new->upsert_shib($self, $provision_data);
     };
@@ -484,13 +480,13 @@ sub signin_shib {
 
     my $userData = $directory_model->get_user_data($self, $username);
     if (!$save_remote_user_personal_attributes) {
-      $userData->{firstname} = $firstname;
-      $userData->{lastname}  = $lastname;
-      $userData->{email}     = $email;
-      $userData->{affiliation} = [grep {length} split(';', $affiliation || '')];
+      $userData->{firstname}    = $firstname;
+      $userData->{lastname}     = $lastname;
+      $userData->{email}        = $email;
+      $userData->{affiliation}  = [grep {length} split(';', $affiliation || '')];
       $userData->{org_units_l1} = $directory_data->{org_units_l1} || [];
       $userData->{org_units_l2} = $directory_data->{org_units_l2} || [];
-      $userData->{displayname} = join(' ', grep {defined && length} ($firstname, $lastname));
+      $userData->{displayname}  = join(' ', grep {defined && length} ($firstname, $lastname));
     }
     my $org_units_l1;
     my $org_units_l2;

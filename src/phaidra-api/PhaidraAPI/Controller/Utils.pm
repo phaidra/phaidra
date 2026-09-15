@@ -245,12 +245,12 @@ sub request_doi {
   }
   eval {
     my $msg = MIME::Lite::TT::HTML->new(
-      From        => $userdata->{email},
-      To          => $to,
-      Subject     => $privconfig->{doirequestemailsubject} || 'Subsequent DOI allocation: ' . $pid . ' ' . $userdata->{email},
-      Charset     => 'utf8',
-      Encoding    => 'quoted-printable',
-      Template    => {
+      From     => $userdata->{email},
+      To       => $to,
+      Subject  => $privconfig->{doirequestemailsubject} || 'Subsequent DOI allocation: ' . $pid . ' ' . $userdata->{email},
+      Charset  => 'utf8',
+      Encoding => 'quoted-printable',
+      Template => {
         html => $privconfig->{doirequestemailhtml} || 'doirequest.html.tt',
         text => $privconfig->{doirequestemailtext} || 'doirequest.txt.tt'
       },
@@ -307,7 +307,7 @@ sub search_users {
   unless ($sth && $sth->execute(($like) x 4)) {
     $self->app->log->error('Database user search failed: ' . $dbh->errstr);
     return $self->render(
-      json => {status => 500, alerts => ['Database user search failed'], users => []},
+      json   => {status => 500, alerts => ['Database user search failed'], users => []},
       status => 500
     );
   }
@@ -678,12 +678,12 @@ sub send_daily_report {
   $options{INCLUDE_PATH} = $self->config->{home} . '/templates/email';
   eval {
     my $msg = MIME::Lite::TT::HTML->new(
-      From        => $pubconfig->{email} || $privconfig->{reportingemail},
-      To          => $privconfig->{reportingemail},
-      Subject     => $privconfig->{reportingemailsubject} || 'Phaidra Daily Report - ' . $emaildata{date},
-      Charset     => 'utf8',
-      Encoding    => 'quoted-printable',
-      Template    => {
+      From     => $pubconfig->{email} || $privconfig->{reportingemail},
+      To       => $privconfig->{reportingemail},
+      Subject  => $privconfig->{reportingemailsubject} || 'Phaidra Daily Report - ' . $emaildata{date},
+      Charset  => 'utf8',
+      Encoding => 'quoted-printable',
+      Template => {
         html => $privconfig->{reportingemailhtml} || 'reporting.html.tt',
         text => $privconfig->{reportingemailtext} || 'reporting.txt.tt'
       },

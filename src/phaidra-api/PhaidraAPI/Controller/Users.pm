@@ -137,7 +137,7 @@ sub _send_reset_email {
     reset_url       => $url->to_string,
     username        => $username,
     expires_minutes => int($ttl / 60),
-  ); 
+  );
   my $subject_template = _template($self, $private, 'passwordresetemailsubject', 'password-reset-subject.txt');
   my $text_template    = _template($self, $private, 'passwordresetemailtext',    'password-reset.txt.tt');
   my $html_template    = _template($self, $private, 'passwordresetemailhtml',    'password-reset.html.tt');
@@ -192,8 +192,8 @@ sub request_reset {
 }
 
 sub confirm_reset {
-  my $self    = shift;
-  my $data    = $self->req->json || {};
+  my $self           = shift;
+  my $data           = $self->req->json || {};
   my $password_error = _model()->password_error($self, $data->{password});
   return _error($self, 400, $password_error) if $password_error;
   my $success = _model()->confirm_reset($self, $data->{token} // '', $data->{password});

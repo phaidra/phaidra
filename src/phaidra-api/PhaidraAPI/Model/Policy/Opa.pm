@@ -129,11 +129,12 @@ sub _legacy_action_fallback {
   if ($action_id eq 'create') {
     $allow = $username ? 1 : 0;
     if ($allow) {
-      my @roles = @{$input->{subject}->{roles} // []};
+      my @roles     = @{$input->{subject}->{roles} // []};
       my $adminuser = $c->app->config->{phaidra}->{adminusername} // '';
-      my $is_admin = ($adminuser ne '' && $username eq $adminuser)
+      my $is_admin  = ($adminuser ne '' && $username eq $adminuser)
         || grep {$_ eq 'admin'} @roles;
-      $initial_state = (grep {$_ eq 'uploader'} @roles || $is_admin)
+      $initial_state
+        = (grep {$_ eq 'uploader'} @roles || $is_admin)
         ? 'Inactive'
         : 'PendingApproval';
     }
@@ -155,7 +156,7 @@ sub _legacy_action_fallback {
   }
   elsif ($admin_actions{$action_id}) {
     my $adminuser = $c->app->config->{phaidra}->{adminusername} // '';
-    my @roles = @{$input->{subject}->{roles} // []};
+    my @roles     = @{$input->{subject}->{roles} // []};
     $allow = ($adminuser ne '' && $username eq $adminuser) ? 1 : 0;
     $allow = 1 if grep {$_ eq 'admin'} @roles;
   }

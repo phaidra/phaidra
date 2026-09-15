@@ -749,8 +749,8 @@ sub authenticate() {
       my $reason = ($local->{status} // '') ne 'active' ? 'local account is blocked' : 'local account is expired';
       $c->app->log->warn("Authentication rejected: local user[$username] $reason");
       $res->{auth_reason} = $reason;
-      $res->{status} = 401;
-      $res->{alerts} = [{type => 'error', msg => 'invalid credentials'}];
+      $res->{status}      = 401;
+      $res->{alerts}      = [{type => 'error', msg => 'invalid credentials'}];
       $c->stash({phaidra_auth_result => $res});
       return undef;
     }
@@ -760,8 +760,8 @@ sub authenticate() {
     {
       $c->app->log->warn("Authentication rejected: local user[$username] has no password or the password is invalid");
       $res->{auth_reason} = 'invalid local password';
-      $res->{status} = 401;
-      $res->{alerts} = [{type => 'error', msg => 'invalid credentials'}];
+      $res->{status}      = 401;
+      $res->{alerts}      = [{type => 'error', msg => 'invalid credentials'}];
       $c->stash({phaidra_auth_result => $res});
       return undef;
     }
@@ -816,7 +816,8 @@ sub authenticate() {
   my $confcol       = $self->_get_config_col($c);
   my $privateConfig = $confcol->find_one({"config_type" => "private"});
   if ($privateConfig && $privateConfig->{ldapextenable}) {
-    return $self->_authenticate($c, $privateConfig->{ldapexthost}, $privateConfig->{ldapextport}, 1, $privateConfig->{ldapextusersearchfilter}, $privateConfig->{ldapextprincipal}, $privateConfig->{ldapextprincipalpassword}, $privateConfig->{ldapextusersearchbases}, $username, $password, 'external LDAP');
+    return $self->_authenticate($c, $privateConfig->{ldapexthost}, $privateConfig->{ldapextport}, 1, $privateConfig->{ldapextusersearchfilter}, $privateConfig->{ldapextprincipal}, $privateConfig->{ldapextprincipalpassword}, $privateConfig->{ldapextusersearchbases}, $username, $password,
+      'external LDAP');
   }
 }
 
