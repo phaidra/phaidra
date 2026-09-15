@@ -15,6 +15,12 @@
   </div>
 </template>
 
+<script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+</script>
+
 <script>
 import { useRootStore } from '~/stores/root'
 import qs from 'qs'
@@ -22,11 +28,6 @@ import { context } from '../../mixins/context'
 import { config } from '../../mixins/config'
 
 export default {
-  setup() {
-    definePageMeta({
-      middleware: 'auth'
-    })
-  },
   mixins: [context, config],
   computed: {
     loadedcmodel: function () {

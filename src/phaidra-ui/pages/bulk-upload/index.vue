@@ -8,6 +8,12 @@
   </div>
 </template>
 
+<script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+</script>
+
 <script>
 import { useBulkUploadStore } from '~/stores/bulk-upload'
 import { mapState } from 'pinia'
@@ -15,11 +21,6 @@ import BulkUploadSteps from '../../components/BulkUploadSteps.vue'
 
 export default {
   name: 'BulkUploadIndex',
-  setup() {
-    definePageMeta({
-      middleware: 'auth'
-    })
-  },
 
   components: {
     BulkUploadSteps

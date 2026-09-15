@@ -99,6 +99,12 @@
   </v-container>
 </template>
 
+<script setup>
+definePageMeta({
+  middleware: 'bulk-upload'
+})
+</script>
+
 <script>
 import { useBulkUploadStore } from '~/stores/bulk-upload'
 import { mapActions, mapState } from 'pinia'
@@ -117,11 +123,6 @@ import { fieldSettings } from '../../config/bulk-upload/field-settings'
 
 export default {
   name: 'Upload',
-  setup () {
-    definePageMeta({
-      middleware: 'bulk-upload'
-    })
-  },
   components: {
     BulkUploadSteps,
     LoginOverlay,

@@ -1438,6 +1438,12 @@
   </v-container>
 </template>
 
+<script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+</script>
+
 <script>
 import { useRootStore } from '~/stores/root'
 import FaviconMixin from '../mixins/favicon'
@@ -1450,9 +1456,6 @@ export default {
   mixins: [FaviconMixin, config],
   components: { PRepostat, AdminUsers },
   setup() {
-    definePageMeta({
-      middleware: ['auth', 'admin']
-    })
     const nuxtApp = useNuxtApp()
     const documentTitle = useDocumentTitle()
     useHead(() => {
