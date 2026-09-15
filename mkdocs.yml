@@ -7,6 +7,9 @@ theme:
   name: material
   palette:
     primary: white
+  font:
+    text: Roboto
+    code: Roboto Mono
   logo: assets/media/PHAIDRA/logo/icon-only/PHAIDRA-icon-black.svg
   logo_text: assets/media/PHAIDRA/logo/text-only/PHAIDRA-logo-text-black.svg
   favicon: assets/media/PHAIDRA/logo/icon-only/PHAIDRA-icon-black.svg
