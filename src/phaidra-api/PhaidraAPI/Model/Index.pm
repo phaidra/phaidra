@@ -1247,12 +1247,9 @@ sub _get {
     if ($modifiedDateOverwriteDatastreams{$dsid}) {
 
       # if metadata was modified later, we want that date in 'modified' date
-      my $propresDs = $fedora_model->_getObjectProperties($c, "$pid/$dsid/fcr:metadata");
-      if ($propresDs->{status} == 200) {
-        my $dsModified = $fedora_model->getFirstJsonldValue($c, $propresDs->{props}, 'http://fedora.info/definitions/v4/repository#lastModified');
-        if ($dsModified gt $index{modified}) {
-          $index{modified} = $dsModified;
-        }
+      my $dsAttrs = $fedora_model->getDatastreamAttributes($c, $pid, $dsid);
+      if ($dsAttrs->{status} == 200 && $dsAttrs->{modified} && ($dsAttrs->{modified} gt $index{modified})) {
+        $index{modified} = $dsAttrs->{modified};
       }
     }
     if ($indexed_datastreams{$dsid}) {
