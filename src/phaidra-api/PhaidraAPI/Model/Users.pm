@@ -299,6 +299,7 @@ sub create_reset {
   );
   $sth->execute($identifier, $allow_passwordless ? 1 : 0);
   my $user = $sth->fetchrow_hashref;
+
   unless ($user) {
     $sth = $dbh->prepare(
       qq{
