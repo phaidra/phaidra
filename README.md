@@ -916,6 +916,7 @@ rootlesskit --net=lxc-user-nic bash
 # USE WITH DOCKER
 ## IP propagation
 ## set in .config/docker/daemon.json: "userland-proxy": false
+cat .config/docker/daemon.json | jq '. + {"userland-proxy": false}' > .config/docker/daemon.json.tmp && mv .config/docker/daemon.json.tmp .config/docker/daemon.json
 
 echo "Environment="DOCKERD_ROOTLESS_ROOTLESSKIT_NET=lxc-user-nic"" > .config/systemd/user/docker.service.d/override.conf
 docker compose down # use the correct parameters for your environment, especially `--project-name`
