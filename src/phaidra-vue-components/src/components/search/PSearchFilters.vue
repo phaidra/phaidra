@@ -257,7 +257,7 @@ export default {
     },
     filtersActive() {
       for (let fq of this.facetQueries) {
-        if (fq.resetable) {
+        if (fq.resetable !== false && fq.queries) {
           for (let q of fq.queries) {
             if (q.active) {
               return true
@@ -265,7 +265,10 @@ export default {
           }
         }
       }
-      if (this.selectedAccessibilityControl.length > 0 ||
+      if (this.owner ||
+        (this.persAuthors.values && this.persAuthors.values.length > 0) ||
+        (this.corpAuthors.values && this.corpAuthors.values.length > 0) ||
+        this.selectedAccessibilityControl.length > 0 ||
         this.selectedAccessibilityFeature.length > 0 ||
         this.selectedAccessibilityHazard.length > 0) {
         return true
@@ -426,7 +429,7 @@ export default {
     },
     resetFilters: function () {
       for (const fq of this.facetQueries) {
-        if (fq.resetable) {
+        if (fq.resetable !== false && fq.queries) {
           for (const q of fq.queries) {
             if (q.active) {
               q.active = false
@@ -437,6 +440,11 @@ export default {
           }
         }
       }
+      this.owner = ''
+      this.showOwnerFilter = false
+      this.persAuthors.values = []
+      this.corpAuthors.values = []
+      this.showAuthorFilter = false
       // Reset accessibility filters
       this.selectedAccessibilityControl = []
       this.selectedAccessibilityFeature = []
@@ -446,6 +454,9 @@ export default {
       this.search({
         page: 1,
         facetQueries: this.facetQueries,
+        owner: '',
+        persAuthors: this.persAuthors,
+        corpAuthors: this.corpAuthors,
         accessibilityControl: [],
         accessibilityFeature: [],
         accessibilityHazard: []
