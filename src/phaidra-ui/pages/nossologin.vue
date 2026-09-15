@@ -47,6 +47,7 @@
             </v-card-text>
             <v-divider class="mt-5"></v-divider>
             <v-card-actions>
+              <v-btn variant="text" to="/forgot-password">{{ $t('Forgot your password?') }}</v-btn>
               <v-spacer></v-spacer>
               <v-btn @click="login" :disabled="loading" :loading="loading" color="primary" variant="elevated">{{ $t('Login') }}</v-btn>
             </v-card-actions>

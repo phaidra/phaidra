@@ -247,10 +247,13 @@ sub request_doi {
     my $msg = MIME::Lite::TT::HTML->new(
       From        => $userdata->{email},
       To          => $to,
-      Subject     => 'Subsequent DOI allocation: ' . $pid . ' ' . $userdata->{email},
+      Subject     => $privconfig->{doirequestemailsubject} || 'Subsequent DOI allocation: ' . $pid . ' ' . $userdata->{email},
       Charset     => 'utf8',
       Encoding    => 'quoted-printable',
-      Template    => {html => 'email/doirequest.html.tt', text => 'email/doirequest.txt.tt'},
+      Template    => {
+        html => $privconfig->{doirequestemailhtml} || 'doirequest.html.tt',
+        text => $privconfig->{doirequestemailtext} || 'doirequest.txt.tt'
+      },
       TmplParams  => \%emaildata,
       TmplOptions => \%options
     );
@@ -281,34 +284,35 @@ sub search_users {
     return $self->render(json => $res, status => 400);
   }
 
+  my $search = $username;
+  $search =~ s/([!%_])/!$1/g;
+  my $like = "%$search%";
+
   my $dbh = $self->app->db_user->dbh;
-
-  # Secure query to get all fields for matching users
-  my $ss  = "SELECT DISTINCT(username) FROM user_terms WHERE username LIKE ?";
-  my $sth = $dbh->prepare($ss);
-
-  unless ($sth) {
-    $self->app->log->error("Database prepare error: " . $dbh->errstr);
-    $res->{status} = 500;
-    push @{$res->{alerts}}, "Database error: " . $dbh->errstr;
-    return $self->render(json => $res, status => 500);
+  my $sth = $dbh->prepare(
+    q{
+      SELECT username, firstname, lastname, email
+        FROM users
+       WHERE (
+              username LIKE ? ESCAPE '!'
+           OR COALESCE(firstname, '') LIKE ? ESCAPE '!'
+           OR COALESCE(lastname, '') LIKE ? ESCAPE '!'
+           OR COALESCE(email, '') LIKE ? ESCAPE '!'
+       )
+         AND password_hash IS NOT NULL
+       ORDER BY username
+       LIMIT 50
+    }
+  );
+  unless ($sth && $sth->execute(($like) x 4)) {
+    $self->app->log->error('Database user search failed: ' . $dbh->errstr);
+    return $self->render(
+      json => {status => 500, alerts => ['Database user search failed'], users => []},
+      status => 500
+    );
   }
-
-  # Use a wildcard search to match usernames
-  unless ($sth->execute("%$username%")) {
-    $self->app->log->error("Database execution error: " . $dbh->errstr);
-    $res->{status} = 500;
-    push @{$res->{alerts}}, "Database execution error: " . $dbh->errstr;
-    return $self->render(json => $res, status => 500);
-  }
-
-  # Fetch all rows and store them in an array of hashes
-  my $users = $sth->fetchall_arrayref({});
+  $res->{users} = $sth->fetchall_arrayref({});
   $sth->finish();
-
-  if (@$users) {
-    $res->{users} = $users;
-  }
 
   return $self->render(json => $res, status => $res->{status});
 }
@@ -671,15 +675,18 @@ sub send_daily_report {
   }
 
   my %options;
-  $options{INCLUDE_PATH} = $self->config->{home} . '/templates/reporting';
+  $options{INCLUDE_PATH} = $self->config->{home} . '/templates/email';
   eval {
     my $msg = MIME::Lite::TT::HTML->new(
       From        => $pubconfig->{email} || $privconfig->{reportingemail},
       To          => $privconfig->{reportingemail},
-      Subject     => 'Phaidra Daily Report - ' . $emaildata{date},
+      Subject     => $privconfig->{reportingemailsubject} || 'Phaidra Daily Report - ' . $emaildata{date},
       Charset     => 'utf8',
       Encoding    => 'quoted-printable',
-      Template    => {html => 'email.html.tt', text => 'email.txt.tt'},
+      Template    => {
+        html => $privconfig->{reportingemailhtml} || 'reporting.html.tt',
+        text => $privconfig->{reportingemailtext} || 'reporting.txt.tt'
+      },
       TmplParams  => \%emaildata,
       TmplOptions => \%options
     );

@@ -1,7 +1,7 @@
 package PhaidraAPI::Model::Directory;
 
 use utf8;
-use Encode;
+use Encode qw(decode encode_utf8);
 use strict;
 use warnings;
 use Data::Dumper;
@@ -14,6 +14,9 @@ use Net::LDAP::Util qw(ldap_error_text);
 use YAML::Syck;
 use Mojo::JSON qw(encode_json decode_json);
 use Mojo::JWT;
+use Digest::SHA   qw(sha256_hex);
+use Crypt::Bcrypt qw(bcrypt_check_prehashed);
+use POSIX         qw(strftime);
 use PhaidraAPI::Model::Ratelimit;
 use base qw/Mojo::Base/;
 
@@ -122,6 +125,35 @@ sub _find_org_unit_rec_for_notation {
     }
   }
   return $unit;
+}
+
+sub _org_unit_path_for_id {
+  my ($self, $orgunits, $id) = @_;
+  for my $unit (@{$orgunits || []}) {
+    my $unit_notation = $unit->{'skos:notation'};
+    return [$unit_notation] if ($unit->{'@id'} // '') eq $id;
+    my $path = $self->_org_unit_path_for_id($unit->{subunits}, $id);
+    return [grep {defined && length} ($unit_notation, @{$path})] if $path;
+  }
+  return;
+}
+
+sub org_unit_ids_for_notations {
+  my ($self, $c, $notations) = @_;
+  my $orgunits = $self->_get_org_units($c);
+  my (%seen, @ids);
+  for my $notation (@{$notations || []}) {
+    my $unit = $self->_find_org_unit_rec_for_notation($c, $orgunits, $notation);
+    my $id   = $unit ? $unit->{'@id'} : undef;
+    push @ids, $id if defined($id) && length($id) && !$seen{$id}++;
+  }
+  return \@ids;
+}
+
+sub invalid_org_unit_ids {
+  my ($self, $c, $ids) = @_;
+  my $orgunits = $self->_get_org_units($c);
+  return [grep {!$self->_find_org_unit_rec($c, $orgunits, $_)} @{$ids || []}];
 }
 
 sub org_get_unit {
@@ -568,6 +600,7 @@ sub _authenticate() {
   my $usersearchbases = shift;
   my $username        = shift;
   my $password        = shift;
+  my $auth_source     = shift // 'remote LDAP';
 
   # Determine if we have a usable username for rate limiting
   my $has_username = defined($username) && length($username);
@@ -604,7 +637,7 @@ sub _authenticate() {
     }
   }
 
-  $c->app->log->debug("auth: ldap login");
+  $c->app->log->debug("auth: attempting $auth_source authentication for user[$username]");
   my $res = {alerts => [], status => 500};
 
   my $ldap;
@@ -615,6 +648,8 @@ sub _authenticate() {
     $ldap = Net::LDAP->new($LDAP_SERVER, port => $LDAP_PORT);
   }
   unless (defined($ldap)) {
+    $c->app->log->error("Authentication failed: $auth_source unavailable for user[$username]");
+    $res->{auth_reason} = "$auth_source unavailable";
     unshift @{$res->{alerts}}, {type => 'error', msg => $!};
     $c->stash({phaidra_auth_result => $res});
     return undef;
@@ -642,7 +677,8 @@ sub _authenticate() {
   }
 
   unless ($dn) {
-    $c->app->log->debug("auth: dn not found");
+    $c->app->log->warn("Authentication failed: user[$username] not found in $auth_source");
+    $res->{auth_reason} = 'user not found in directory';
     if ($has_username) {
       $rate_limit_model->record_failed_attempt($c, $identifier);
     }
@@ -666,6 +702,8 @@ sub _authenticate() {
       $rate_limit_model->record_failed_attempt($c, $identifier);
     }
 
+    $c->app->log->warn("Authentication failed: $auth_source rejected credentials for user[$username]");
+    $res->{auth_reason} = 'directory rejected credentials';
     unshift @{$res->{alerts}}, {type => 'error', msg => $ldapMsg->error};
     $res->{status} = 401;
     $c->stash({phaidra_auth_result => $res});
@@ -677,6 +715,7 @@ sub _authenticate() {
       $rate_limit_model->record_successful_attempt($c, $identifier);
     }
 
+    $c->app->log->info("Authentication accepted: remote user[$username] via $auth_source");
     $res->{status} = 200;
     $c->stash({phaidra_auth_result => $res});
     return $username;
@@ -693,16 +732,51 @@ sub authenticate() {
   my $res = {alerts => [], status => 500};
 
   unless (defined($username) && $username ne '') {
+    $c->app->log->warn('Authentication rejected: no username supplied');
     $res->{status} = 401;
     $res->{alerts} = [{type => 'error', msg => 'no credentials found'}];
     $c->stash({phaidra_auth_result => $res});
     return undef;
   }
 
+  # A local account is authoritative.  In particular, do not silently fall
+  # back to LDAP for blocked, expired, or passwordless local accounts.
+  my $local = $self->_db_user($c, $username);
+  if ($local) {
+    if ( ($local->{status} // '') ne 'active'
+      || ($local->{expires_at} && $local->{expires_at} lt strftime('%Y-%m-%d %H:%M:%S', localtime)))
+    {
+      my $reason = ($local->{status} // '') ne 'active' ? 'local account is blocked' : 'local account is expired';
+      $c->app->log->warn("Authentication rejected: local user[$username] $reason");
+      $res->{auth_reason} = $reason;
+      $res->{status} = 401;
+      $res->{alerts} = [{type => 'error', msg => 'invalid credentials'}];
+      $c->stash({phaidra_auth_result => $res});
+      return undef;
+    }
+    unless (defined($local->{password_hash})
+      && $local->{password_hash} ne ''
+      && _verify_bcrypt($password, $local->{password_hash}))
+    {
+      $c->app->log->warn("Authentication rejected: local user[$username] has no password or the password is invalid");
+      $res->{auth_reason} = 'invalid local password';
+      $res->{status} = 401;
+      $res->{alerts} = [{type => 'error', msg => 'invalid credentials'}];
+      $c->stash({phaidra_auth_result => $res});
+      return undef;
+    }
+    $c->app->db_user->dbh->do('UPDATE users SET last_login=CURRENT_TIMESTAMP WHERE id=?', undef, $local->{id});
+    $res->{status} = 200;
+    $c->app->log->info("Authentication accepted: local user[$username] via database");
+    $c->stash({phaidra_auth_result => $res});
+    return $username;
+  }
+
   for my $u (@{$c->app->config->{fedora}->{fedoraadmins}}) {
     if (($u->{username} eq $username) && ($u->{password} eq $password)) {
       $c->app->log->debug("auth: admin login");
       $res->{status} = 200;
+      $c->app->log->info("Authentication accepted: local user[$username] via Fedora admin configuration");
       $c->stash({phaidra_auth_result => $res});
       return $username;
     }
@@ -711,6 +785,7 @@ sub authenticate() {
     if (($u->{username} eq $username) && ($u->{password} eq $password)) {
       $c->app->log->debug("auth: yaml login");
       $res->{status} = 200;
+      $c->app->log->info("Authentication accepted: local user[$username] via YAML configuration");
       $c->stash({phaidra_auth_result => $res});
       return $username;
     }
@@ -720,6 +795,7 @@ sub authenticate() {
     # this account is (should be) local to fedora so we cannot authenticate it against LDAP
     $c->app->log->debug("auth: phaidraadmin login");
     $res->{status} = 200;
+    $c->app->log->info("Authentication accepted: local user[$username] via Phaidra admin configuration");
     $c->stash({phaidra_auth_result => $res});
     return $username;
   }
@@ -733,14 +809,14 @@ sub authenticate() {
     $c->app->config->{authentication}->{ldap}->{securityprincipal},
     $c->app->config->{authentication}->{ldap}->{securitycredentials},
     $c->app->config->{authentication}->{ldap}->{usersearchbases},
-    $username, $password
+    $username, $password, 'local LDAP'
   );
   return $localAuthRes if $localAuthRes;
 
   my $confcol       = $self->_get_config_col($c);
   my $privateConfig = $confcol->find_one({"config_type" => "private"});
-  if ($privateConfig->{ldapextenable}) {
-    return $self->_authenticate($c, $privateConfig->{ldapexthost}, $privateConfig->{ldapextport}, 1, $privateConfig->{ldapextusersearchfilter}, $privateConfig->{ldapextprincipal}, $privateConfig->{ldapextprincipalpassword}, $privateConfig->{ldapextusersearchbases}, $username, $password);
+  if ($privateConfig && $privateConfig->{ldapextenable}) {
+    return $self->_authenticate($c, $privateConfig->{ldapexthost}, $privateConfig->{ldapextport}, 1, $privateConfig->{ldapextusersearchfilter}, $privateConfig->{ldapextprincipal}, $privateConfig->{ldapextprincipalpassword}, $privateConfig->{ldapextusersearchbases}, $username, $password, 'external LDAP');
   }
 }
 
@@ -846,17 +922,30 @@ sub get_user_data {
   }
 
   # default_role is instance config, not LDAP — apply after cache so env changes take effect.
-  $cacheval->{roles} = $self->_instance_roles($c) if $cacheval;
+  if ($cacheval) {
+    my @roles = @{$cacheval->{roles} || []};
+    for my $role (@{$self->_instance_roles($c)}) {
+      push @roles, $role unless grep {$_ eq $role} @roles;
+    }
+    $cacheval->{roles} = \@roles;
+  }
 
   return $cacheval;
 }
 
-sub _get_user_data {
-  my $self     = shift;
-  my $c        = shift;
-  my $username = shift;
+sub get_external_user_data {
+  my ($self, $c, $username) = @_;
+  return $self->_get_user_data($c, $username, 1);
+}
 
-  my $entry = $self->getLDAPEntryForUser($c, $username);
+sub _get_user_data {
+  my $self          = shift;
+  my $c             = shift;
+  my $username      = shift;
+  my $external_only = shift;
+
+  my $db_user = $external_only ? undef : $self->_db_user($c, $username);
+  my $entry   = $db_user       ? undef : $self->getLDAPEntryForUser($c, $username);
 
   # $c->log->debug("get_user_data ldap data: ".$c->app->dumper($entry));
 
@@ -867,6 +956,7 @@ sub _get_user_data {
   my @orgul1;
   my @orgul2;
   my $description;
+  my $ldapgroups = [];
 
   if ($entry) {
     if (exists($entry->{'asn'})) {
@@ -904,9 +994,12 @@ sub _get_user_data {
     }
   }
 
-  my $confcol       = $self->_get_config_col($c);
-  my $privateConfig = $confcol->find_one({"config_type" => "private"});
-  if ($privateConfig->{scimendpoint}) {
+  my $privateConfig;
+  unless ($db_user) {
+    my $confcol = $self->_get_config_col($c);
+    $privateConfig = $confcol->find_one({"config_type" => "private"});
+  }
+  if ($privateConfig && $privateConfig->{scimendpoint}) {
     my $jwt      = $self->create_scim_jwt($c);
     my $url      = $privateConfig->{scimendpoint} . '/Users/' . $username;
     my $response = $c->app->ua->get($url => {Authorization => "Bearer $jwt"})->result;
@@ -956,9 +1049,9 @@ sub _get_user_data {
     }
   }
 
-  my $ldapgroups = $self->getUsersLDAPGroups($c, $username);
+  $ldapgroups = $self->getUsersLDAPGroups($c, $username) unless $db_user;
 
-  if ($c->stash('remote_user') && $c->stash('remote_user') eq $username) {
+  if (!$db_user && $c->stash('remote_user') && $c->stash('remote_user') eq $username) {
 
     # in case there is no user data api, use the attrs we saved on shib login, if it's equal to the requested user param
     my $sessionData = $c->load_cred;
@@ -979,21 +1072,93 @@ sub _get_user_data {
   my $groups = $self->get_member_groups($c, $username);
 
   my $res = {username => $username, firstname => $fname, lastname => $lname, ldapgroups => $ldapgroups, groups => $groups, email => $email, affiliation => \@affiliation, org_units_l1 => \@orgul1, org_units_l2 => \@orgul2, displayname => $description};
+  if ($db_user) {
+    $res->{firstname}   = $db_user->{firstname}   if defined $db_user->{firstname};
+    $res->{lastname}    = $db_user->{lastname}    if defined $db_user->{lastname};
+    $res->{email}       = $db_user->{email}       if defined $db_user->{email};
+    $res->{displayname} = $db_user->{displayname} if defined $db_user->{displayname};
+    $res->{blocked}     = (($db_user->{status} // '') ne 'active') ? 1 : 0;
+    $res->{expires_at}  = $db_user->{expires_at};
+    my $dbh = $c->app->db_user->dbh;
+    my $sth = $dbh->prepare('SELECT affiliation FROM affiliations WHERE user_id=?');
+    $sth->execute($db_user->{id});
+    @affiliation = ();
+
+    while (my $row = $sth->fetchrow_hashref) {
+      push @affiliation, $row->{affiliation};
+    }
+    $res->{affiliation} = \@affiliation;
+
+    my $roles_sth = $dbh->prepare('SELECT role FROM user_roles WHERE user_id=? ORDER BY role');
+    $roles_sth->execute($db_user->{id});
+    my @roles;
+    while (my $row = $roles_sth->fetchrow_hashref) {
+      push @roles, $row->{role};
+    }
+    $res->{roles} = \@roles;
+
+    my $org_units_sth = $dbh->prepare('SELECT org_unit_id FROM user_org_units WHERE user_id=?');
+    $org_units_sth->execute($db_user->{id});
+    my $configured_org_units = $self->_get_org_units($c);
+    @orgul1 = ();
+    @orgul2 = ();
+    my (%seen_l1, %seen_l2);
+    while (my $org_unit = $org_units_sth->fetchrow_hashref) {
+      my $path = $self->_org_unit_path_for_id($configured_org_units, $org_unit->{org_unit_id});
+      next unless $path;
+      my $top_level = shift @{$path};
+      push @orgul1, $top_level unless $seen_l1{$top_level}++;
+      for my $subunit (@{$path}) {
+        push @orgul2, $subunit unless $seen_l2{$subunit}++;
+      }
+    }
+    $res->{org_units_l1} = \@orgul1;
+    $res->{org_units_l2} = \@orgul2;
+    $res->{ldapgroups}   = [];
+    $res->{isadmin}      = 1 if grep {$_ eq 'admin'} @{$res->{roles} || []};
+  }
 
   $c->app->log->info("get_user_data: " . $c->app->dumper($res));
 
   return $res;
 }
 
-# Instance-wide role from env/config (PHAIDRA_DEFAULT_ROLE). Later: user management.
+# Instance-wide role from env/config (PHAIDRA_DEFAULT_ROLE).
 sub _instance_roles {
   my ($self, $c) = @_;
   my @roles;
   my $default_role = $c->app->config->{phaidra}->{default_role} // '';
   if ($default_role ne '') {
+    $c->app->log->debug("adding default role: $default_role");
     push @roles, $default_role;
   }
+  else {
+    $c->app->log->debug("no defualt role configured");
+  }
   return \@roles;
+}
+
+sub _db_user {
+  my ($self, $c, $username) = @_;
+  return unless defined $username && $username ne '';
+  my $sth = $c->app->db_user->dbh->prepare('SELECT id,username,email,firstname,lastname,displayname,password_hash,status,expires_at FROM users WHERE username=?');
+  $sth->execute($username);
+  return $sth->fetchrow_hashref;
+}
+
+sub remote_account_allowed {
+  my ($self, $c, $username) = @_;
+  my $user = $self->_db_user($c, $username);
+  return 1 unless $user;
+  return 0 if ($user->{status} // '') ne 'active';
+  return 0 if $user->{expires_at} && $user->{expires_at} lt strftime('%Y-%m-%d %H:%M:%S', localtime);
+  return 1;
+}
+
+sub _verify_bcrypt {
+  my ($password, $hash) = @_;
+  return 0 unless defined($password) && defined($hash);
+  return eval {bcrypt_check_prehashed(encode_utf8($password), $hash)} ? 1 : 0;
 }
 
 sub is_superuser {
@@ -1036,77 +1201,46 @@ sub _get_config_col() {
   return $db->get_collection('config');
 }
 
-sub _connect_mongodb_group_manager() {
-  my $self = shift;
-  my $c    = shift;
-
-  my $client = MongoDB::MongoClient->new(
-    host     => $c->app->config->{mongodb_group_manager}->{host},
-    port     => $c->app->config->{mongodb_group_manager}->{port},
-    username => $c->app->config->{mongodb_group_manager}->{username},
-    password => $c->app->config->{mongodb_group_manager}->{password},
-    db_name  => $c->app->config->{mongodb_group_manager}->{db_name}
-  );
-
-  return $client;
-}
-
-sub _get_groups_col() {
-  my $self = shift;
-  my $c    = shift;
-
-  my $client = $self->_connect_mongodb_group_manager($c);
-  my $db     = $client->get_database($c->app->config->{mongodb_group_manager}->{database});
-  return $db->get_collection($c->app->config->{mongodb_group_manager}->{collection});
-}
-
 sub get_users_groups {
   my ($self, $c, $owner) = @_;
-
-  my $groups = $self->_get_groups_col($c);
-
-  my $users_groups = $groups->find({"owner" => $owner});
-  my @grps         = ();
-  if ($users_groups) {
-    while (my $doc = $users_groups->next) {
-      push @grps, {groupid => $doc->{groupid}, name => $doc->{name}, created => $doc->{created}, updated => $doc->{updated}};
-    }
-  }
-
-  return \@grps;
+  my $sth = $c->app->db_user->dbh->prepare('SELECT groupid,name,created,updated FROM `groups` WHERE owner=? ORDER BY name');
+  $sth->execute($owner);
+  return $sth->fetchall_arrayref({});
 }
 
 sub get_member_groups {
-  my ($self, $c, $owner) = @_;
-
-  my $groups = $self->_get_groups_col($c);
-
-  my $members_groups = $groups->find({"members" => $owner});
-  my @grps           = ();
-  if ($members_groups) {
-    while (my $doc = $members_groups->next) {
-      push @grps, {groupid => $doc->{groupid}, name => $doc->{name}, created => $doc->{created}, updated => $doc->{updated}};
-    }
+  my ($self, $c, $username) = @_;
+  my $sth = $c->app->db_user->dbh->prepare(
+    q{
+    SELECT g.groupid,g.name,g.created,g.updated FROM `groups` g
+      JOIN `group_members` m ON m.groupid=g.groupid
+     WHERE m.username=? ORDER BY g.name
   }
-
-  return \@grps;
+  );
+  $sth->execute($username);
+  return $sth->fetchall_arrayref({});
 }
 
 sub get_group {
   my ($self, $c, $gid, $owner) = @_;
+  my $dbh = $c->app->db_user->dbh;
+  my $sth = $dbh->prepare('SELECT groupid,name,owner,created,updated FROM `groups` WHERE groupid=? AND owner=?');
+  $sth->execute($gid, $owner);
+  my $group = $sth->fetchrow_hashref;
+  return unless $group;
+  my $members_sth = $dbh->prepare('SELECT username FROM `group_members` WHERE groupid=? ORDER BY username');
+  $members_sth->execute($gid);
+  my @members;
 
-  my $groups = $self->_get_groups_col($c);
-
-  my $g = $groups->find_one({"groupid" => $gid, "owner" => $owner});
-
-  my @members = ();
-  for my $m (@{$g->{members}}) {
-    push(@members, {username => $m, name => $self->_get_group_member_name($c, $m)});
+  while (my $member = $members_sth->fetchrow_hashref) {
+    push @members,
+      {
+      username => $member->{username},
+      name     => $self->_get_group_member_name($c, $member->{username})
+      };
   }
-
-  $g->{members} = \@members;
-
-  return $g;
+  $group->{members} = \@members;
+  return $group;
 }
 
 sub _get_group_member_name {
@@ -1117,59 +1251,59 @@ sub _get_group_member_name {
 
 sub create_group {
   my ($self, $c, $groupname, $owner) = @_;
-
-  my $groups = $self->_get_groups_col($c);
-
-  my $ug      = Data::UUID->new;
-  my $bgid    = $ug->create();
-  my $gid     = $ug->to_string($bgid);
-  my @members = ();
-  $groups->insert_one(
-    { "groupid" => $gid,
-      "owner"   => $owner,
-      "name"    => $groupname,
-      "members" => \@members,
-      "created" => time,
-      "updated" => time
-    }
-  );
-
+  my $ug  = Data::UUID->new;
+  my $gid = $ug->to_string($ug->create());
+  $c->app->db_user->dbh->do('INSERT INTO `groups`(groupid,owner,name) VALUES(?,?,?)', undef, $gid, $owner, $groupname);
   return $gid;
 }
 
 sub delete_group {
   my ($self, $c, $gid, $owner) = @_;
-
-  my $groups = $self->_get_groups_col($c);
-  my $g      = $groups->delete_one({"groupid" => $gid, "owner" => $owner});
-
+  $c->app->db_user->dbh->do('DELETE FROM `groups` WHERE groupid=? AND owner=?', undef, $gid, $owner);
   return;
 }
 
 sub remove_group_member {
   my ($self, $c, $gid, $uid, $owner) = @_;
-
-  my $groups = $self->_get_groups_col($c);
-  $groups->update_one({"groupid" => $gid, "owner" => $owner}, {'$pull' => {'members' => $uid}, '$set' => {"updated" => time}});
-
+  my $dbh = $c->app->db_user->dbh;
+  $dbh->begin_work;
+  eval {
+    $dbh->do(
+      q{
+      DELETE FROM `group_members` WHERE groupid=? AND username=?
+        AND EXISTS (SELECT 1 FROM `groups` WHERE groupid=? AND owner=?)
+    }, undef, $gid, $uid, $gid, $owner
+    );
+    $dbh->do('UPDATE `groups` SET updated=CURRENT_TIMESTAMP WHERE groupid=? AND owner=?', undef, $gid, $owner);
+    $dbh->commit;
+  };
+  if ($@) {
+    my $error = $@;
+    eval {$dbh->rollback};
+    die $error;
+  }
   return;
 }
 
 sub add_group_member {
   my ($self, $c, $gid, $uid, $owner) = @_;
-
-  my $groups = $self->_get_groups_col($c);
-
-  # check if not already there
-  my $g = $groups->find_one({"groupid" => $gid, "owner" => $owner});
-
-  my @members = ();
-  for my $m (@{$g->{members}}) {
-    return if $m eq $uid;
+  my $dbh = $c->app->db_user->dbh;
+  $dbh->begin_work;
+  eval {
+    $dbh->do(
+      q{
+      INSERT IGNORE INTO `group_members`(groupid,username)
+      SELECT ?,? FROM `groups` WHERE groupid=? AND owner=?
+    }, undef, $gid, $uid, $gid, $owner
+    );
+    $dbh->do('UPDATE `groups` SET updated=CURRENT_TIMESTAMP WHERE groupid=? AND owner=?', undef, $gid, $owner);
+    $dbh->commit;
+  };
+  if ($@) {
+    my $error = $@;
+    eval {$dbh->rollback};
+    die $error;
   }
-
-  $groups->update_one({"groupid" => $gid, "owner" => $owner}, {'$push' => {'members' => $uid}, '$set' => {"updated" => time}});
-
   return;
 }
 

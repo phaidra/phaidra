@@ -24,7 +24,7 @@ export const context = {
     showInactiveObjectsNav () {
       // Admin always: the list starts empty and is the only place to register.
       // Curators and owners only when they have rows (approval / own inactive).
-      return this.isInactiveObjectsAdmin || this.hasInactiveObjects
+      return this.isInactiveObjectsAdmin || this.canManageInactiveObjects || this.hasInactiveObjects
     },
     inactiveObjectsNavLabel () {
       return (this.isInactiveObjectsAdmin || this.canManageInactiveObjects) ? 'Inactive objects' : 'My inactive objects'

@@ -22,6 +22,9 @@
           :no-data-text="$t('No data available')"
           :no-results-text="$t('There were no search results')"
         >
+          <template v-slot:item.name="{ item }">
+            {{ [item.firstname, item.lastname].filter(Boolean).join(' ') }}
+          </template>
           <template v-slot:item.actions="{ item }">
             <v-btn variant="text" color="primary" @click="selectUser(item)">{{ $t('Select') }}</v-btn>
           </template>
@@ -57,6 +60,8 @@ export default {
       userSearchInp: '',
       usersHeaders: [
         { title: 'Username', align: 'start', key: 'username' },
+        { title: 'Name', align: 'start', key: 'name', sortable: false },
+        { title: 'Email', align: 'start', key: 'email' },
         { title: 'Actions', align: 'end', key: 'actions', sortable: false }
       ],
       users: []

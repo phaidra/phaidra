@@ -5,6 +5,7 @@ use warnings;
 use v5.10;
 use Mojo::ByteStream qw(b);
 use Mojo::URL;
+use POSIX qw(strftime);
 use Scalar::Util qw(looks_like_number);
 use base 'Mojolicious::Controller';
 use PhaidraAPI::Model::Object;
@@ -118,14 +119,39 @@ sub cors_preflight {
   # not just for preflight
   $self->render(text => '', status => 200);
 }
+ 
+sub _authenticate_remote_user {
+  my $self = shift;
+  my $username = $self->stash->{remote_user};
+  my $directory = PhaidraAPI::Model::Directory->new;
+  my $local = $directory->_db_user($self, $username);
+  if (!$local) {
+    $self->app->log->info("Authentication accepted: remote user[$username] has no local account override");
+    return 1;
+  }
+  if (($local->{status} // '') ne 'active') {
+    $self->app->log->warn("Authentication rejected: remote user[$username] local account is blocked");
+  }
+  elsif ($local->{expires_at} && $local->{expires_at} lt strftime('%Y-%m-%d %H:%M:%S', localtime)) {
+    $self->app->log->warn("Authentication rejected: remote user[$username] local account is expired");
+  }
+  else {
+    $self->app->log->info("Authentication accepted: remote user[$username]");
+    return 1;
+  }
+  $self->render(
+    json => {status => 401, alerts => [{type => 'error', msg => 'account is blocked or expired'}]},
+    status => 401
+  );
+  return 0;
+}
 
 sub authenticate {
 
   my $self = shift;
 
   if ($self->stash->{remote_user}) {
-    $self->app->log->info("Remote user " . $self->stash->{remote_user});
-    return 1;
+    return _authenticate_remote_user($self);
   }
 
   my $username = $self->stash->{basic_auth_credentials}->{username};
@@ -140,17 +166,17 @@ sub authenticate {
     return 0;
   }
 
-  $self->app->log->info("Authenticating user $username");
+  $self->app->log->info("Authenticating user[$username] via local credentials");
 
   my $directory_model = PhaidraAPI::Model::Directory->new;
   $directory_model->authenticate($self, $username, $password);
   my $res = $self->stash('phaidra_auth_result');
   unless (($res->{status} eq 200)) {
-    $self->app->log->info("User $username not authenticated");
+    $self->app->log->warn("User[$username] not authenticated: " . ($res->{auth_reason} // 'authentication failed'));
     $self->render(json => {status => $res->{status}, alerts => $res->{alerts}}, status => $res->{status});
     return 0;
   }
-  $self->app->log->info("User $username successfully authenticated");
+  $self->app->log->info("User[$username] successfully authenticated");
   return 1;
 }
 
@@ -159,8 +185,7 @@ sub authenticate_if_username {
   my $self = shift;
 
   if ($self->stash->{remote_user}) {
-    $self->app->log->info("Remote user " . $self->stash->{remote_user});
-    return 1;
+    return _authenticate_remote_user($self);
   }
 
   my $username = $self->stash->{basic_auth_credentials}->{username};
@@ -321,7 +346,7 @@ sub signin_shib {
 
   # new
   my $confmodel  = PhaidraAPI::Model::Config->new;
-  my $privconfig = $confmodel->get_private_config($self);
+  my $privconfig = $confmodel->get_private_config($self) || {};
   if (exists($privconfig->{userscopetotrim})) {
     if ($privconfig->{userscopetotrim}) {
       my $userscopetotrim = $privconfig->{userscopetotrim};
@@ -408,6 +433,7 @@ sub signin_shib {
     my $termsofuse_model = PhaidraAPI::Model::Termsofuse->new;
     my $termsres         = $termsofuse_model->getagreed($self, $username);
     unless ($termsres->{agreed}) {
+      $self->app->log->info("Authentication pending: remote user[$username] must agree to the terms of use");
       my $consent_url = Mojo::URL->new($self->app->config->{authentication}->{shibboleth}->{frontendconsenturl});
       my $returnto    = $self->param('returnto') // '';
       $returnto = '' unless $returnto =~ m{\A/};
@@ -416,12 +442,56 @@ sub signin_shib {
       $self->redirect_to($consent_url);
       return;
     }
+    # Only provision after affiliation authorization and ToU consent.
+    my $directory_model = PhaidraAPI::Model::Directory->new;
+    my $directory_data = $directory_model->get_external_user_data($self, $username) || {};
+    my $save_remote_user_personal_attributes =
+      !exists($privconfig->{saveremoteuserpersonalattributes})
+      || $privconfig->{saveremoteuserpersonalattributes};
+    my %seen_org_units;
+    my @org_unit_notations = grep {
+      defined && length && !$seen_org_units{$_}++
+    } (@{$directory_data->{org_units_l1} || []}, @{$directory_data->{org_units_l2} || []});
+    my $org_unit_ids = $directory_model->org_unit_ids_for_notations(
+      $self, \@org_unit_notations
+    );
+    my $provisioned;
+    eval {
+      require PhaidraAPI::Model::Users;
+      my $provision_data = {
+        username => $username,
+        roles => [$self->app->config->{phaidra}->{default_role} // '']
+      };
+      if ($save_remote_user_personal_attributes) {
+        $provision_data->{email} = $email;
+        $provision_data->{firstname} = $firstname;
+        $provision_data->{lastname} = $lastname;
+        $provision_data->{displayname} = join(' ', grep {defined && length} ($firstname, $lastname));
+        $provision_data->{affiliation} = [grep {length} split(';', $affiliation || '')];
+        $provision_data->{org_units} = $org_unit_ids;
+      }
+      $provisioned = PhaidraAPI::Model::Users->new->upsert_shib($self, $provision_data);
+    };
+    if ($@ || !$provisioned) {
+      $self->app->log->error("Shibboleth user provisioning failed for $username: " . ($@ || 'account blocked or expired'));
+      $self->render(json => {status => 403, alerts => [{type => 'error', msg => 'account is blocked or expired'}]}, status => 403);
+      return;
+    }
+    $self->app->chi->remove("get_user_data_$username");
 
     # init session, save credentials
     $self->app->log->debug("remote user authorized: username[$username] affiliation[$affiliation], getting user data...");
 
-    my $directory_model = PhaidraAPI::Model::Directory->new;
-    my $userData        = $directory_model->get_user_data($self, $username);
+    my $userData = $directory_model->get_user_data($self, $username);
+    if (!$save_remote_user_personal_attributes) {
+      $userData->{firstname} = $firstname;
+      $userData->{lastname}  = $lastname;
+      $userData->{email}     = $email;
+      $userData->{affiliation} = [grep {length} split(';', $affiliation || '')];
+      $userData->{org_units_l1} = $directory_data->{org_units_l1} || [];
+      $userData->{org_units_l2} = $directory_data->{org_units_l2} || [];
+      $userData->{displayname} = join(' ', grep {defined && length} ($firstname, $lastname));
+    }
     my $org_units_l1;
     my $org_units_l2;
     my $localgroups;
@@ -438,23 +508,8 @@ sub signin_shib {
         $org_units_l2 = join(',', @{$org2});
       }
     }
-    if ($self->app->config->{mongodb_group_manager}) {
-      my @memberGroupsArr;
-      my $groupsClient = MongoDB::MongoClient->new(
-        host     => $self->app->config->{mongodb_group_manager}->{host},
-        port     => $self->app->config->{mongodb_group_manager}->{port},
-        username => $self->app->config->{mongodb_group_manager}->{username},
-        password => $self->app->config->{mongodb_group_manager}->{password}
-      );
-      my $groupsDb     = $groupsClient->get_database($self->app->config->{mongodb_group_manager}->{database});
-      my $memberGroups = $groupsDb->get_collection('usergroups')->find({"members" => $username});
-      while (my $doc = $memberGroups->next) {
-        push @memberGroupsArr, $doc->{groupid};
-      }
-      if (scalar @memberGroupsArr > 0) {
-        $localgroups = join(',', @memberGroupsArr);
-      }
-    }
+    my @member_group_ids = map {$_->{groupid}} @{$userData->{groups} || []};
+    $localgroups = join(',', @member_group_ids) if @member_group_ids;
     unless ($firstname) {
       $firstname = $userData->{firstname};
     }
@@ -467,6 +522,7 @@ sub signin_shib {
     }
 
     $self->save_cred(undef, undef, $username, $firstname, $lastname, $email, $affiliation, $org_units_l1, $org_units_l2, $localgroups, $displayname);
+    $self->app->log->info("Authentication accepted: remote user[$username] via Shibboleth");
     $self->app->log->debug("saving session: username[$username], firstname[$firstname], lastname[$lastname], displayname[$displayname], email[$email], affiliation[$affiliation], org_units_l1[$org_units_l1], org_units_l2[$org_units_l2], localgroups[$localgroups]");
     my $session = $self->stash('mojox-session');
 
@@ -478,6 +534,15 @@ sub signin_shib {
     $cookie->path('/');
     $self->tx->res->cookies($cookie);
 
+  }
+
+  unless ($username && $authorized) {
+    if (!$username) {
+      $self->app->log->warn('Authentication rejected: remote Shibboleth identity did not provide a username');
+    }
+    else {
+      $self->app->log->warn("Authentication rejected: remote user[$username] lacks a required affiliation");
+    }
   }
 
   my $redirecturl = $self->app->config->{authentication}->{shibboleth}->{frontendloginurl};

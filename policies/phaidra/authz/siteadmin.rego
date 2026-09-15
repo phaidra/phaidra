@@ -24,6 +24,8 @@ admin_actions := {
 	"admin_templates_read",
 	"admin_templates_write",
 	"admin_ir_embargocheck",
+	"admin_users_read",
+	"admin_users_write",
 }
 
 # Former $ir_admin bridge endpoints.
@@ -44,6 +46,10 @@ ir_admin_actions := {
 is_site_admin if {
 	input.subject.username == input.config.admin_username
 	input.config.admin_username != ""
+}
+
+is_site_admin if {
+	"admin" in input.subject.roles
 }
 
 # Match legacy authenticate_ir_admin: public config iraccount username.

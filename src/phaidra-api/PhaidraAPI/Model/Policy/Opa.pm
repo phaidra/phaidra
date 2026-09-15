@@ -114,7 +114,7 @@ sub _legacy_action_fallback {
     admin_oai_blacklist admin_index admin_object_index
     admin_imageserver_process admin_tikaserver_process admin_streaming_process
     admin_objects_modify_bulk admin_objects_delete_bulk
-    admin_templates_read admin_templates_write
+    admin_templates_read admin_templates_write admin_users_read admin_users_write
     admin_ir_embargocheck
   );
 
@@ -125,8 +125,18 @@ sub _legacy_action_fallback {
   );
 
   my $allow = 0;
+  my $initial_state;
   if ($action_id eq 'create') {
     $allow = $username ? 1 : 0;
+    if ($allow) {
+      my @roles = @{$input->{subject}->{roles} // []};
+      my $adminuser = $c->app->config->{phaidra}->{adminusername} // '';
+      my $is_admin = ($adminuser ne '' && $username eq $adminuser)
+        || grep {$_ eq 'admin'} @roles;
+      $initial_state = (grep {$_ eq 'uploader'} @roles || $is_admin)
+        ? 'Inactive'
+        : 'PendingApproval';
+    }
   }
   elsif ($action_id eq 'capabilities' || $action_id eq 'check_forms') {
     $allow = 1;
@@ -145,14 +155,16 @@ sub _legacy_action_fallback {
   }
   elsif ($admin_actions{$action_id}) {
     my $adminuser = $c->app->config->{phaidra}->{adminusername} // '';
+    my @roles = @{$input->{subject}->{roles} // []};
     $allow = ($adminuser ne '' && $username eq $adminuser) ? 1 : 0;
+    $allow = 1 if grep {$_ eq 'admin'} @roles;
   }
   elsif ($ir_admin_actions{$action_id}) {
     my @roles = @{$input->{subject}->{roles} // []};
     $allow = (grep {$_ eq 'ir_admin'} @roles) ? 1 : 0;
   }
 
-  return {
+  my $decision = {
     allow       => $allow ? true    : false,
     effect      => $allow ? 'allow' : 'deny',
     reason      => 'legacy_action',
@@ -160,6 +172,8 @@ sub _legacy_action_fallback {
     source      => $reason,
     duration_ms => int(tv_interval($t0) * 1000),
   };
+  $decision->{initial_state} = $initial_state if defined $initial_state;
+  return $decision;
 }
 
 sub _legacy_to_decision {

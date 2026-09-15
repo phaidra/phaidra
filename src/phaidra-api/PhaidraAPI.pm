@@ -572,6 +572,8 @@ sub startup {
   $r->get('list/token/:token')                      ->to('lists#get_token_list');
 
   $r->get('config/public')                          ->to('config#get_public_config');
+  $r->post('password-reset/request')                 ->to('users#request_reset');
+  $r->post('password-reset/confirm')                 ->to('users#confirm_reset');
   $r->get('cms/template/all')                       ->to('cms#get_all_templates');
   $r->get('cms/template/:templateName')             ->to('cms#get_template');
 
@@ -580,6 +582,13 @@ sub startup {
   $authz->get('directory/user/data')                                       ->to('directory#get_user_data', action_id => 'directory_self');
 
   $authz->get('settings')                                                  ->to('settings#get_settings', action_id => 'settings_read');
+  $authz->get('admin/users')                                                ->to('users#list', action_id => 'admin_users_read');
+  $authz->get('admin/users/roles')                                            ->to('users#roles', action_id => 'admin_users_read');
+  $authz->get('admin/users/:username')                                       ->to('users#get', action_id => 'admin_users_read');
+  $authz->post('admin/users')                                                ->to('users#save', action_id => 'admin_users_write');
+  $authz->post('admin/users/:username')                                      ->to('users#save', action_id => 'admin_users_write');
+  $authz->post('admin/users/:username/delete')                               ->to('users#delete', action_id => 'admin_users_write');
+  $authz->post('admin/users/:username/password-reset')                       ->to('users#send_reset', action_id => 'admin_users_write');
 
   $authz->get('groups')                                                    ->to('groups#get_users_groups', action_id => 'group_read');
   $authz->get('group/:gid')                                                ->to('groups#get_group', action_id => 'group_read');
