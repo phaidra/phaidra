@@ -308,13 +308,15 @@ export const useRootStore = defineStore('root', {
           }
         )
       }
-      this.breadcrumbs.push(
-        {
-          text: 'Detail ' + transition.to.params.pid,
-          to: { name: transition.to.path, params: { pid: transition.to.params.pid } },
-          disabled: true
-        }
-      )
+      if (transition.to.params.pid) {
+        this.breadcrumbs.push(
+          {
+            text: 'Detail ' + transition.to.params.pid,
+            to: { name: transition.to.path, params: { pid: transition.to.params.pid } },
+            disabled: true
+          }
+        )
+      }
     }
     if (transition.to.path.includes('/metadata') && !transition.to.path.includes('edit') && !transition.to.path.includes('help')) {
       if (transition.from.path.includes('detail')) {
