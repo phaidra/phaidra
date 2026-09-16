@@ -116,7 +116,7 @@ export default {
     objectDeleted: function (event) {
       useRootStore().setAlerts([{ type: 'success', key: 'object_deleted_success', params: { o: this.pid }}])
       if (this.pid === this.parentpid) {
-        this.$router.push(this.localeLocation({ path: '/search' }))
+        this.$router.push(this.localeLocation({ path: `/detail/${this.pid}` }))
       } else {
         this.$router.push(this.localeLocation({ path: `/detail/${this.parentpid}` }))
       }
