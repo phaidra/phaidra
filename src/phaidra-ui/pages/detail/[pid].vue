@@ -1412,6 +1412,20 @@
                           $filterDateTimeUtc(objectInfo.created)
                         }} UTC</v-col>
                       </v-row>
+                      <v-row
+                        no-gutters
+                        class="pt-2"
+                        v-if="objectInfo.modified"
+                      >
+                        <v-col
+                          class="text-body-small font-weight-bold"
+                          cols="3"
+                          >{{ $t("Last modified") }}</v-col
+                        >
+                        <v-col cols="8" offset="1">{{
+                          $filterDateTimeUtc(objectInfo.modified)
+                        }} UTC</v-col>
+                      </v-row>
                     </v-card-text>
                   </v-card>
                 </li>
