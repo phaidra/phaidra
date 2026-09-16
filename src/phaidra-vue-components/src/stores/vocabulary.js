@@ -770,7 +770,6 @@ const vocabularies = {
       { '@id': 'text/plain', 'skos:notation': ['txt'], 'skos:prefLabel': { 'eng': '.txt' } },
       { '@id': 'text/html', 'skos:notation': ['htm', 'html', 'shtml'], 'skos:prefLabel': { 'eng': 'HTML' } },
       { '@id': 'model/ply', 'skos:notation': ['ply'], 'skos:prefLabel': { 'eng': 'PLY' } },
-      { '@id': 'model/nxz', 'skos:notation': ['nxz'], 'skos:prefLabel': { 'eng': 'NXZ' } },
       { '@id': 'application/epub+zip', 'skos:notation': ['.epub'], 'skos:prefLabel': { 'eng': 'EPUB' } },
       { '@id': 'application/msword', 'skos:notation': ['doc'], 'skos:prefLabel': { 'eng': '.doc' } },
       { '@id': 'application/vnd.ms-excel', 'skos:notation': ['xls'], 'skos:prefLabel': { 'eng': '.xls' } },

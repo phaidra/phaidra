@@ -55,7 +55,7 @@ sub vcl_recv {
   # API rules
   if (req.backend_hint == dynamicdirector.backend("api")) {
     # Whitelisted API static directories (client-facing, with /api)
-    if (req.url ~ "^/api/(?:3dhop|docs|iipmooviewer|images|ip2country|json-schema|languages|licenses|mirador|mods|pdfjs|replayweb|swagger-ui|threejs|video-js|vocabulary|xsd)(?:/|$)"
+    if (req.url ~ "^/api/(?:docs|iipmooviewer|images|ip2country|json-schema|languages|licenses|mirador|mods|pdfjs|replayweb|swagger-ui|threejs|video-js|vocabulary|xsd)(?:/|$)"
         || req.url ~ "^/api/object/o:[0-9]+/thumbnail"
         || req.url ~ "^/api/oai($|\\?)"
         || req.url ~ "^/api/directory/org_get_units($|\\?)") {
@@ -122,7 +122,7 @@ sub vcl_backend_response {
     # After vcl_backend_fetch, bereq.url no longer has /api
 
     # If not a whitelisted cacheable API resource → stream/pass (uncacheable)
-    if (bereq.url !~ "^/(?:3dhop|docs|iipmooviewer|images|ip2country|json-schema|languages|licenses|mirador|mods|pdfjs|replayweb|swagger-ui|threejs|video-js|vocabulary|xsd)(?:/|$)"
+    if (bereq.url !~ "^/(?:docs|iipmooviewer|images|ip2country|json-schema|languages|licenses|mirador|mods|pdfjs|replayweb|swagger-ui|threejs|video-js|vocabulary|xsd)(?:/|$)"
      && bereq.url !~ "^/object/o:[0-9]+/thumbnail"
      && bereq.url !~ "^/oai($|\\?)"
      && bereq.url !~ "^/directory/org_get_units($|\\?)") {
@@ -147,7 +147,7 @@ sub vcl_backend_response {
     }
 
     # Static API directories and cacheable endpoints: safe to strip accidental cookies
-    if (bereq.url ~ "^/(?:3dhop|docs|iipmooviewer|images|ip2country|json-schema|languages|licenses|mirador|mods|pdfjs|replayweb|swagger-ui|threejs|video-js|vocabulary|xsd)(?:/|$)"
+    if (bereq.url ~ "^/(?:docs|iipmooviewer|images|ip2country|json-schema|languages|licenses|mirador|mods|pdfjs|replayweb|swagger-ui|threejs|video-js|vocabulary|xsd)(?:/|$)"
         || bereq.url ~ "^/directory/org_get_units($|\\?)") {
       unset beresp.http.Set-Cookie;
     } else {

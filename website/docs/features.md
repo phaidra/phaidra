@@ -62,6 +62,4 @@ PHAIDRA objects can be access in multiple ways:
 
 - PDF documents are displayed on detail page using [PDF.js](https://mozilla.github.io/pdf.js/) viewer.
 
-- For 3D objects, [3DHOP](https://3dhop.net/) viewer was integrated
-
 - Websites ([WACSZ](https://en.wikipedia.org/wiki/WACZ)) can be displayed via [replay.web](https://replayweb.page/) viewer.

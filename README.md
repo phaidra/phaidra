@@ -634,7 +634,6 @@ The PHAIDRA API comes with some utilities, usually executed with `docker exec -i
 [PHAIDRA](https://phaidra.org/) is based on the shoulders of the following great pieces of software (in alphabetical order):
 
 -   [360 Javascript Viewer](https://www.360-javascriptviewer.com/)
--   [3DHOP](https://3dhop.net/)
 -   [Apache HTTP server](https://httpd.apache.org/)
 -   [Apache Solr](https://solr.apache.org/)
 -   [Apache Tika](https://tika.apache.org/)
