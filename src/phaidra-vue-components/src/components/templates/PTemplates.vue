@@ -60,7 +60,7 @@
         <span v-if="isDefaultSelect">{{ $t('Select') }}</span>
         <span v-else-if="item.tid !== selectedTemplateId">{{ $t('Load') }}</span>
       </v-btn>
-      <v-btn v-if="!isDefaultSelect" variant="text" color="btnred" @click="deleteTemplateDialog(item)">{{ $t('Delete') }}</v-btn>
+      <v-btn v-if="type === 'navtemplate'" variant="text" color="btnred" @click="deleteTemplateDialog(item)">{{ $t('Delete') }}</v-btn>
     </template>
   </v-data-table>
   <v-dialog v-model="deleteDialog" max-width="500px" v-if="templateToDelete">
