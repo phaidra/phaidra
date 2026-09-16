@@ -32,3 +32,25 @@ Styling for showcase phaidra partners
   --tw-scale-x: .95;
   --tw-scale-y: .95;
 }
+
+/* Soundcloud/Spotify icons — same hover interaction as the partner logos above:
+   colorize (brand color instead of grayscale removal, since these are flat
+   currentColor icons) plus a slight scale-down. */
+#epistemicast-social a:hover {
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: .95;
+  --tw-scale-y: .95;
+  transform: translateX(var(--tw-translate-x)) translateY(var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+#epistemicast-social a[href*="soundcloud.com"]:hover {
+  color: #FF5500;
+}
+
+#epistemicast-social a[href*="open.spotify.com"]:hover {
+  color: #1DB954;
+}
