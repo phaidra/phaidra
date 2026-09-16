@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col :md="labelColMd" cols="12" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(p) }}</v-col>
+    <v-col :md="labelColMd" cols="12" class="pdlabel text-secondary font-weight-bold text-md-right">{{ $t(p) }}<template v-if="showLang && isEdmTimeSpan && displaylang"> ({{ displaylang }})</template></v-col>
     <v-col :md="valueColMd" cols="12" v-if="isEdmTimeSpan">
       <template v-for="(l, i) in o['skos:prefLabel']" :key="'prl'+i">
         <a
