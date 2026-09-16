@@ -893,3 +893,34 @@ systemctl --user restart docker
    systemctl --user restart docker.service
    ```
 
+### Use the LXC driver as an alternative to slirp4netns
+
+In medium/high load environments, slirp4netns can use about 100% CPU because it is a user space single thread utility. To balance security and performance, lxc networking via a setuid executable is an alternative to slirp4netns. The LXC utility sets up a kernel network, providing full networking performance. To implement it, follow the above “set up rootlesskit” guide, replacing the slirp4netns parts with the lxc ones. To support IP propagation, Docker version > 29.5 should be used. Note: if you’re moving from slirp4netns to lxc, to avoid stuck containers, please down the composer and stop the docker service before
+
+```
+# INSTALLATION
+sudo apt install lxc --no-install-recommends --no-install-suggests
+
+# this needs to be the user who's using docker
+echo "$USER veth lxcbr0 100" | sudo tee /etc/lxc/lxc-usernet
+
+# otherwise rootlesskit fails with "error: could not exchange DHCP with eth0: timed out while listening for replies"
+# TODO: figure out what exactly the implications of this FW rule are
+sudo ufw allow in on lxcbr0 comment "required for lxc-user-nic"
+sudo ufw route allow in on lxcbr0 from any to any comment "required for lxc-user-nic"
+
+# it lxc-user-nic works, this command should drop you into a root shell in a namespace
+# if not, this hangs forever. `killall -9 rootlesskit` from a different shell to stop
+rootlesskit --net=lxc-user-nic bash
+
+# USE WITH DOCKER
+## IP propagation
+## set in .config/docker/daemon.json: "userland-proxy": false
+cat .config/docker/daemon.json | jq '. + {"userland-proxy": false}' > .config/docker/daemon.json.tmp && mv .config/docker/daemon.json.tmp .config/docker/daemon.json
+
+echo "Environment="DOCKERD_ROOTLESS_ROOTLESSKIT_NET=lxc-user-nic"" > .config/systemd/user/docker.service.d/override.conf
+docker compose down # use the correct parameters for your environment, especially `--project-name`
+systemctl --user stop docker
+systemctl --user daemon-reload # please check the exit code to check if all is ok
+systemctl --user start docker
+```
