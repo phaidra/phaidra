@@ -1321,6 +1321,8 @@ sub create_simple {
 
   if ($upload) {
     unless (defined($mimetype)) {
+      my $username = $self->stash->{basic_auth_credentials}->{username} // $self->stash('remote_user') // 'unknown';
+      $self->app->log->warn("Object creation rejected: missing mimetype for user[$username] cmodel[" . ($self->stash('cmodel') // 'unknown') . "]");
       $self->render(json => {alerts => [{type => 'error', msg => 'Undefined mimetype'}]}, status => 400);
       return;
     }
