@@ -503,6 +503,7 @@
     "object_deleted_success": "Object {o} was successfully deleted.",
     "object_metadata_saved_success": "Metadata for object {o} saved",
     "object_rights_saved_success": "Rights for object {o} saved",
+    "template_created_success": "Template {name} created",
 
     "mode": "Mode",
     "control": "Control",

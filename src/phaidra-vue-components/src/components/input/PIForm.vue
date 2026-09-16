@@ -1621,6 +1621,12 @@ export default {
         })
         if (response.data.alerts && response.data.alerts.length > 0) {
           useRootStore().setAlerts(response.data.alerts)
+        } else {
+          useRootStore().setAlerts([{
+            type: 'success',
+            key: 'template_created_success',
+            params: { name: this.templatename }
+          }])
         }
       } catch (error) {
         console.log(error)
