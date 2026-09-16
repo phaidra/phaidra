@@ -558,6 +558,17 @@ export default {
       })
       return roles
     },
+    overallAccessibility () {
+      if (!this.jsonld) return null
+      const control = this.jsonld['schema:accessibilityControl'] || []
+      const feature = this.jsonld['schema:accessibilityFeature'] || []
+      const hazard = this.jsonld['schema:accessibilityHazard'] || []
+      const mode = this.jsonld['schema:accessMode'] || []
+      if (!control.length && !feature.length && !hazard.length && !mode.length) {
+        return null
+      }
+      return { control, feature, hazard, mode }
+    },
     jsonldSlotEntries () {
       if (!this.jsonld) return []
       const entries = []
@@ -578,8 +589,7 @@ export default {
       showAllEntities: {},
       entitiesLimited: {},
       projectIds: [],
-      shownAllProjectIds: true,
-      overallAccessibility: null,
+      shownAllProjectIds: true
     }
   },
   methods: {
@@ -643,13 +653,6 @@ export default {
   mounted: function () {
     useVocabularyStore().loadLanguages(this.$i18n.locale)
     this.getProjectIds()
-    if (!this.jsonld) return
-    this.overallAccessibility = {
-      control: this.jsonld['schema:accessibilityControl'] || [],
-      feature: this.jsonld['schema:accessibilityFeature'] || [],
-      hazard: this.jsonld['schema:accessibilityHazard'] || [],
-      mode: this.jsonld['schema:accessMode'] || []
-    }
   }
 }
 </script>
