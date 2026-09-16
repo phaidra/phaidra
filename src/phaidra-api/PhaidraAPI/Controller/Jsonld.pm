@@ -26,7 +26,8 @@ sub get {
   my $jsonld_model = PhaidraAPI::Model::Jsonld->new;
   my $res          = $jsonld_model->get_object_jsonld_parsed($self, $pid);
   if ($res->{status} ne 200) {
-    return $res;
+    $self->render(json => {alerts => $res->{alerts}}, status => $res->{status});
+    return;
   }
   my $jsonld = $res->{'JSON-LD'};
   if ($header) {
