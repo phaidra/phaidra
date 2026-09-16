@@ -9451,7 +9451,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object"
+                                "$ref": "#/components/schemas/PasswordResetRequest"
                             }
                         }
                     }
@@ -9460,7 +9460,8 @@
                     "200": {
                         "description": "Successful response"
                     }
-                }
+                },
+                "description": "Requests a reset only for an active, unexpired local account. The response is identical whether or not a unique matching account exists."
             }
         },
         "/password-reset/confirm": {
@@ -9474,7 +9475,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object"
+                                "$ref": "#/components/schemas/PasswordResetConfirmation"
                             }
                         }
                     }
@@ -9502,9 +9503,27 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful response"
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ManagedUserListResponse"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filter by username or email address."
+                    }
+                ]
             },
             "post": {
                 "summary": "Create a database user",
@@ -9521,14 +9540,21 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object"
+                                "$ref": "#/components/schemas/ManagedUser"
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                        "description": "Successful response"
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ManagedUserResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Invalid request"
@@ -9549,7 +9575,25 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful response"
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer"
+                                        },
+                                        "roles": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -9577,7 +9621,14 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful response"
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ManagedUserResponse"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "User not found"
@@ -9599,17 +9650,27 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object"
+                                "$ref": "#/components/schemas/ManagedUserUpdate"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Successful response"
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ManagedUserResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Invalid request"
+                    },
+                    "404": {
+                        "description": "User not found"
                     }
                 }
             }
@@ -9673,7 +9734,8 @@
                     "400": {
                         "description": "Invalid request"
                     }
-                }
+                },
+                "description": "Sends a reset link for the selected active user, including a passwordless user created by an administrator."
             }
         }
     },
@@ -13777,6 +13839,241 @@
                     },
                     "password_set": {
                         "type": "boolean"
+                    }
+                }
+            },
+            "PasswordResetRequest": {
+                "type": "object",
+                "required": [
+                    "identifier"
+                ],
+                "properties": {
+                    "identifier": {
+                        "type": "string",
+                        "description": "Username or email address of a local account."
+                    }
+                }
+            },
+            "PasswordResetConfirmation": {
+                "type": "object",
+                "required": [
+                    "token",
+                    "password"
+                ],
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "description": "Single-use password reset token."
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "minLength": 12,
+                        "description": "Must contain at least three of lowercase, uppercase, numeric, and special-character types."
+                    }
+                }
+            },
+            "ManagedUser": {
+                "type": "object",
+                "required": [
+                    "username"
+                ],
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9_.@-]{1,128}$",
+                        "description": "Immutable user identifier."
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "firstname": {
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "type": "string"
+                    },
+                    "displayname": {
+                        "type": "string"
+                    },
+                    "affiliation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "org_units": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Organization-unit identifiers from the configured vocabulary."
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Roles defined by the OPA policy data."
+                    },
+                    "active": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "minLength": 12,
+                        "writeOnly": true,
+                        "description": "Optional local password; it must contain at least three character types."
+                    },
+                    "password_set": {
+                        "type": "boolean",
+                        "readOnly": true,
+                        "description": "Whether the user can authenticate with a local password."
+                    },
+                    "last_login_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true,
+                        "readOnly": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                }
+            },
+            "ManagedUserResponse": {
+                "type": "object",
+                "required": [
+                    "status",
+                    "user"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "integer"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/ManagedUser"
+                    }
+                }
+            },
+            "ManagedUserListResponse": {
+                "type": "object",
+                "required": [
+                    "status",
+                    "users",
+                    "roles"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "integer"
+                    },
+                    "users": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ManagedUser"
+                        }
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "ManagedUserUpdate": {
+                "type": "object",
+                "description": "Fields to update. The username is taken from the path and cannot be changed.",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9_.@-]{1,128}$",
+                        "description": "Immutable user identifier."
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "firstname": {
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "type": "string"
+                    },
+                    "displayname": {
+                        "type": "string"
+                    },
+                    "affiliation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "org_units": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Organization-unit identifiers from the configured vocabulary."
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Roles defined by the OPA policy data."
+                    },
+                    "active": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "minLength": 12,
+                        "writeOnly": true,
+                        "description": "Optional local password; it must contain at least three character types."
+                    },
+                    "password_set": {
+                        "type": "boolean",
+                        "readOnly": true,
+                        "description": "Whether the user can authenticate with a local password."
+                    },
+                    "last_login_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true,
+                        "readOnly": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
                     }
                 }
             }
