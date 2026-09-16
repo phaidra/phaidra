@@ -462,7 +462,7 @@ sub get_doc_from_core {
 
   if ($getres->is_success) {
     if ($getres->json->{response}->{numFound} eq 0) {
-      my $err = "[$pid] object not found in index";
+      my $err = "[$pid] object not found in index core[$core]";
       $c->app->log->error($err);
       unshift @{$res->{alerts}}, {type => 'error', msg => $err};
       $res->{status} = 404;
