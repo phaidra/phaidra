@@ -1262,6 +1262,7 @@
     "Thema Subject Codes": "Thema Klassifizierung",
     "Members": "Mitglieder",
     "Template saved": "Vorlage gespeichert",
+    "template_created_success": "Vorlage {name} erstellt",
     "Select": "Auswählen",
     "Configure": "Konfigurieren",
     "Some required fields are not complete": "Manche Pflichtfelder sind nicht vollständig",

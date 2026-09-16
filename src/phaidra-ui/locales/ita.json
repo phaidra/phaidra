@@ -1261,6 +1261,7 @@
   "Thema Subject Codes": "Classificazione Thema",
   "Members": "Oggetti",
   "Template saved": "Modello salvato",
+  "template_created_success": "Modello {name} creato",
   "Configure": "Configura",
   "Details": "Dettagli",
   "Some required fields are not complete": "Alcuni campi obbligatori non sono completi",
