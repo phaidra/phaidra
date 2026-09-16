@@ -1736,6 +1736,7 @@ export default {
         case 'note-checkbox':
         case 'note-checkbox-with-link':
         case 'mime-type':
+        case 'bic-subject':
           break
         default:
           fieldsNew.push(f)
@@ -1759,6 +1760,7 @@ export default {
         case 'note-checkbox':
         case 'note-checkbox-with-link':
         case 'mime-type':
+        case 'bic-subject':
           break
         default:
           var field = JSON.parse(JSON.stringify(editable[i]))
