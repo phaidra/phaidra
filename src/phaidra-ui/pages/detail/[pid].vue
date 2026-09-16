@@ -1475,8 +1475,8 @@
                       <div v-for="(rel, i) in objectInfo.versions" :key="'version' + i">
                         <v-row>
                           <v-col cols="12" md="5">{{
-                            $filterDate(rel.created)
-                          }}</v-col>
+                            $filterDateTimeUtc(rel.created)
+                          }} UTC</v-col>
                           <v-col cols="12" md="7">
                             <nuxt-link
                               v-if="rel['dc_title']"
