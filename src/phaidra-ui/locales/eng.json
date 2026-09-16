@@ -225,7 +225,7 @@
     "dcterms:type": "Resource type",
     "edm:hasType": "Type",
     "bf:physicalLocation": "Physical location",
-    "bf:shelfMark": "Call number",
+    "bf:shelfMark": "Shelf mark",
     "edm:rights": "License",
     "dce:rights": "Rights statement",
     "oaire:version": "Version type",

@@ -915,7 +915,7 @@ const fields = [
     predicate: 'bf:shelfMark',
     component: 'p-text-field',
     multiplicable: true,
-    label: 'Call number',
+    label: 'Shelf mark',
     value: '',
     definition: 'Piece/item identifier, such as a call or other type of number.',
     allowLanguageCancel: true,
