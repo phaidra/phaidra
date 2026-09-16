@@ -491,6 +491,16 @@
                 </v-row>
                 <v-row>
                   <v-col>
+                    <v-textarea
+                      :label="$t('Cookie banner message')"
+                      v-model="parsedPublicConfigData.cookieBannerMessage"
+                      :disabled="!parsedPublicConfigData.enableCookieBanner"
+                    ></v-textarea>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">{{ $t("Custom cookie banner text. Leave empty to use the default message. Other languages can be added via i18n overrides using this text as the key.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
                     <v-text-field
                       :label="$t('Privacy Policy URL')"
                       v-model="parsedPublicConfigData.cookiePrivacyPolicyUrl"

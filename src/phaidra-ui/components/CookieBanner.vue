@@ -15,7 +15,7 @@
             <v-row align="center" no-gutters class="flex-nowrap">
               <v-col class="cookie-banner-text-col">
                 <p class="cookie-message text-body-2 mb-0 mt-0">
-                  {{ $t('This website uses cookies to improve the services and experience of users. If you decide to continue browsing, we consider that you accept their use. You can delete and block all cookies from this website, but some parts of the website may not work. By clicking on "OK", you consent to the use of cookies.') }}
+                  {{ cookieBannerText }}
                   <a 
                     v-if="privacyPolicyUrl" 
                     :href="privacyPolicyUrl" 
@@ -62,6 +62,12 @@ export default {
     },
     privacyPolicyUrl() {
       return this.instanceconfig?.cookiePrivacyPolicyUrl
+    },
+    cookieBannerText() {
+      if (this.instanceconfig?.cookieBannerMessage) {
+        return this.$t(this.instanceconfig.cookieBannerMessage)
+      }
+      return this.$t('This website uses cookies to improve the services and experience of users. If you decide to continue browsing, we consider that you accept their use. You can delete and block all cookies from this website, but some parts of the website may not work. By clicking on "OK", you consent to the use of cookies.')
     }
   },
   methods: {
