@@ -765,10 +765,14 @@ export const useRootStore = defineStore('root', {
       }
       this.setObjectInfo(response.data.info)
     } catch (error) {
-      if (error.response?.status === 410) {
+      const status = error.response?.status
+      if (status === 410) {
         console.log('deleted object data')
         console.log(error.response.data.info)
         this.setObjectInfo(error.response.data.info)
+      } else if (status === 404) {
+        console.log('fetchObjectInfo 404')
+        throw error
       } else {
         console.log('fetchObjectInfo error')
         console.log(error)
