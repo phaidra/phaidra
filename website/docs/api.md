@@ -22,11 +22,11 @@ Here is an example for creating a picture. If you want to create another object 
 | ----- | ----- |
 | file | [upload file via "multipart/form-data"] |
 | metadata | See JSON-LD example |
-| mimetype | optional: if not provided, heuristics is used on server side |
+| mimetype | required |
 
 Request example:
 ```bash
-curl -X POST -u pone:1234 -F "file=@dashboard.png" -F metadata=@metadata.json http://localhost:8899/api/picture/create
+curl -X POST -u pone:1234 -F "file=@dashboard.png" -F "mimetype=image/png" -F metadata=@metadata.json http://localhost:8899/api/picture/create
 ```
 
 Response example:
