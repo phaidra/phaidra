@@ -7,7 +7,6 @@ Label | Query | Count | Type
 [% FOREACH report IN query_reports %]
 [% report.label %] | [% report.fq %] | [% report.numFound %] | [% IF report.daily %]Daily[% ELSE %]Total[% END %]
 [% END %]
-
 [% END %]
 [% IF storage_info %]
 Storage Information
@@ -25,5 +24,4 @@ Month | MIME Type | Total Bytes | File Count
 Imageserver Storage
 [% imageserver_total_gb = imageserver_total / 1024 / 1024 / 1024 %]
 Total Storage: [% imageserver_total %] bytes ([% imageserver_total_gb | format('%.2f') %] GB)
-
 [% END %]

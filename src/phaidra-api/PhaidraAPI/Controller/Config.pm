@@ -78,7 +78,7 @@ sub post_private_config {
 
   # $self->app->log->debug("XXXXXXXXXXXXXXX " . $self->app->dumper($private_config));
   for my $key (keys %{$private_config}) {
-    if ($private_config->{$key}) {
+    if ($private_config->{$key} || $key eq 'saveremoteuserpersonalattributes') {
       if ($key ne '_id') {
         $self->app->log->info("private_config $key = " . $private_config->{$key});
         $self->mongo->get_collection('config')->update_one({config_type => 'private'}, {'$set' => {$key => $private_config->{$key}}}, {upsert => 1});
@@ -89,6 +89,7 @@ sub post_private_config {
     }
   }
 
+  $self->app->chi->remove('private_config');
   $self->render(json => $res, status => $res->{status});
 }
 

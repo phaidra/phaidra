@@ -2,49 +2,68 @@
   <v-container class="mt-2" fluid>
     <h1 class="d-sr-only">{{$t('Admin')}}</h1>
     <div class="mb-4"><strong>Note:</strong> Config is cached in each worker, don't forget to restart phaidra-api to apply changes.</div>
-    <v-row class="admin-root-tabs" no-gutters>
-      <v-col cols="auto">
-        <v-tabs
-          inset
-          inset-padding="0"
-          inset-radius="0"
-          v-model="activetab"
-          direction="vertical"
-          slider-color="primary"
-          bg-color="grey-darken-2"
-          class="admin-root-tabs__rail"
-        >
-          <v-tab value="public" class="text-white"><span>{{ $t('Public') }}</span></v-tab>
-          <v-tab value="private" class="text-white"><span>{{ $t('Private') }}</span></v-tab>
-          <v-tab value="impexp" class="text-white"><span>{{ $t('Import/Export') }}</span></v-tab>
-          <v-tab value="manage" class="text-white"><span>{{ $t('Manage Phaidra') }}</span></v-tab>
-          <v-tab value="stats" class="text-white"><span>{{ $t('Statistics') }}</span></v-tab>
-        </v-tabs>
-      </v-col>
-      <v-col>
+    <v-layout class="admin-layout">
+      <v-navigation-drawer permanent width="280" class="admin-navigation">
+        <v-list v-model:opened="openAdminNavigation" open-strategy="multiple" nav density="compact">
+          <v-list-group value="config">
+            <template #activator="{ props }">
+              <v-list-item v-bind="props" :title="$t('Config')" />
+            </template>
+            <v-list-group value="config-public">
+              <template #activator="{ props }">
+                <v-list-item v-bind="props" :title="$t('Public')" />
+              </template>
+              <v-list-item
+                v-for="item in publicNavigationItems"
+                :key="item.value"
+                :title="$t(item.title)"
+                :active="activetab === 'config' && activeConfigSection === 'public' && activetab2 === item.value"
+                color="primary"
+                @click="selectConfigSection('public', 'activetab2', item.value)"
+              />
+            </v-list-group>
+            <v-list-group value="config-private">
+              <template #activator="{ props }">
+                <v-list-item v-bind="props" :title="$t('Private')" />
+              </template>
+              <v-list-item
+                v-for="item in privateNavigationItems"
+                :key="item.value"
+                :title="$t(item.title)"
+                :active="activetab === 'config' && activeConfigSection === 'private' && activetabprivate === item.value"
+                color="primary"
+                @click="selectConfigSection('private', 'activetabprivate', item.value)"
+              />
+            </v-list-group>
+            <v-list-group value="config-impexp">
+              <template #activator="{ props }">
+                <v-list-item v-bind="props" :title="$t('Import/Export')" />
+              </template>
+              <v-list-item
+                v-for="item in importExportNavigationItems"
+                :key="item.value"
+                :title="$t(item.title)"
+                :active="activetab === 'config' && activeConfigSection === 'impexp' && activetabimpexp === item.value"
+                color="primary"
+                @click="selectConfigSection('impexp', 'activetabimpexp', item.value)"
+              />
+            </v-list-group>
+          </v-list-group>
+          <v-list-item :title="$t('Users')" :active="activetab === 'users'" color="primary" @click="activetab = 'users'" />
+          <v-list-item :title="$t('Manage Phaidra')" :active="activetab === 'manage'" color="primary" @click="activetab = 'manage'" />
+          <v-list-item :title="$t('Statistics')" :active="activetab === 'stats'" color="primary" @click="activetab = 'stats'" />
+        </v-list>
+      </v-navigation-drawer>
+      <v-main class="admin-content">
         <v-window v-model="activetab">
+          <v-window-item value="config">
+            <v-card tile>
+              <v-row no-gutters>
+                <v-col>
+                  <v-window v-model="activeConfigSection">
           <v-window-item value="public">
             <v-card tile>
               <v-row no-gutters>
-                <v-col cols="auto">
-                  <v-tabs
-                    border-radius="0"
-                    inset
-                    inset-padding="0"
-                    inset-radius="0"
-                    v-model="activetab2"
-                    direction="vertical"
-                    slider-color="primary"
-                    bg-color="grey-darken-1"
-                    class="admin-nested-tabs__rail text-white"
-                  >
-                    <v-tab value="pub-general"><span>{{ $t('General') }}</span></v-tab>
-                    <v-tab value="pub-functionality"><span>{{ $t('Functionality') }}</span></v-tab>
-                    <v-tab value="pub-cms"><span>{{ $t('CMS') }}</span></v-tab>
-                    <v-tab value="pub-data"><span>{{ $t('Datastructures') }}</span></v-tab>
-                    <v-tab value="pub-ir"><span>{{ $t('IR') }}</span></v-tab>
-                  </v-tabs>
-                </v-col>
                 <v-col>
                   <v-window v-model="activetab2">
                     <v-window-item value="pub-general" class="pa-8">
@@ -738,19 +757,6 @@
           <v-window-item value="private">
             <v-card tile>
               <v-row no-gutters>
-                <v-col cols="auto">
-                  <v-tabs
-                    v-model="activetabprivate"
-                    direction="vertical"
-                    slider-color="primary"
-                    bg-color="grey-darken-1"
-                    class="admin-nested-tabs__rail text-white"
-                  >
-                    <v-tab value="priv-general"><span>{{ $t('General') }}</span></v-tab>
-                    <v-tab value="priv-functionality"><span>{{ $t('Functionality') }}</span></v-tab>
-                    <v-tab value="priv-ir"><span>{{ $t('IR') }}</span></v-tab>
-                  </v-tabs>
-                </v-col>
                 <v-col>
                   <v-window v-model="activetabprivate">
                     <v-window-item value="priv-general" class="pa-8">
@@ -1002,6 +1008,15 @@
                 </v-row>
                 <v-row>
                   <v-col>
+                    <v-checkbox
+                      :label="$t('Save remote user personal attributes')"
+                      v-model="parsedPrivateConfigData.saveremoteuserpersonalattributes"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col cols="6" class="mt-6">{{ $t("Save name, email, affiliation, and organization-unit attributes received from remote identity providers in the local users database.") }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
                     <v-select
                       :label="$t('API log level')"
                       :items="logLevelOptions"
@@ -1096,6 +1111,56 @@
                 </v-row>
               </v-container>
                     </v-window-item>
+                    <v-window-item value="priv-email" class="pa-8">
+                      <v-container>
+                        <v-card class="mb-6 email-template-card">
+                          <v-card-title class="text-title-large font-weight-light text-white email-template-card__title">{{ $t('Password reset email') }}</v-card-title>
+                          <v-card-text>
+                            <v-text-field :label="$t('Subject template')" v-model="parsedPrivateConfigData.passwordresetemailsubject" />
+                            <v-textarea :label="$t('HTML template')" v-model="parsedPrivateConfigData.passwordresetemailhtml" rows="8" />
+                            <v-textarea :label="$t('Text template')" v-model="parsedPrivateConfigData.passwordresetemailtext" rows="6" />
+                            <div>{{ $t('Template Toolkit variables: [% reset_url %], [% username %], [% expires_minutes %]') }}</div>
+                          </v-card-text>
+                        </v-card>
+                        <v-card class="mb-6 email-template-card">
+                          <v-card-title class="text-title-large font-weight-light text-white email-template-card__title">{{ $t('Activation email') }}</v-card-title>
+                          <v-card-text>
+                            <v-text-field :label="$t('Subject template')" v-model="parsedPrivateConfigData.inactiveactivatedemailsubject" />
+                            <v-textarea :label="$t('HTML template')" v-model="parsedPrivateConfigData.inactiveactivatedemailhtml" rows="8" />
+                            <v-textarea :label="$t('Text template')" v-model="parsedPrivateConfigData.inactiveactivatedemailtext" rows="6" />
+                            <div>{{ $t('Template Toolkit variables: [% pid %], [% title %], [% detail_url %], [% owner %], [% source %]') }}</div>
+                          </v-card-text>
+                        </v-card>
+                        <v-card class="mb-6 email-template-card">
+                          <v-card-title class="text-title-large font-weight-light text-white email-template-card__title">{{ $t('DOI request email') }}</v-card-title>
+                          <v-card-text>
+                            <v-text-field :label="$t('Subject template')" v-model="parsedPrivateConfigData.doirequestemailsubject" />
+                            <v-textarea :label="$t('HTML template')" v-model="parsedPrivateConfigData.doirequestemailhtml" rows="8" />
+                            <v-textarea :label="$t('Text template')" v-model="parsedPrivateConfigData.doirequestemailtext" rows="6" />
+                            <div>{{ $t('Template Toolkit variables: [% name %], [% pid %], [% email %], [% baseurl %]') }}</div>
+                          </v-card-text>
+                        </v-card>
+                        <v-card class="mb-6 email-template-card">
+                          <v-card-title class="text-title-large font-weight-light text-white email-template-card__title">{{ $t('Reporting email') }}</v-card-title>
+                          <v-card-text>
+                            <v-text-field :label="$t('Subject template')" v-model="parsedPrivateConfigData.reportingemailsubject" />
+                            <v-textarea :label="$t('HTML template')" v-model="parsedPrivateConfigData.reportingemailhtml" rows="8" />
+                            <v-textarea :label="$t('Text template')" v-model="parsedPrivateConfigData.reportingemailtext" rows="6" />
+                            <div>{{ $t('Template Toolkit variables include date, query_reports, and storage information.') }}</div>
+                          </v-card-text>
+                        </v-card>
+                        <v-card class="email-template-card">
+                          <v-card-title class="text-title-large font-weight-light text-white email-template-card__title">{{ $t('Feedback email') }}</v-card-title>
+                          <v-card-text>
+                            <v-text-field :label="$t('Subject template')" v-model="parsedPrivateConfigData.feedbackemailsubject" />
+                            <v-textarea :label="$t('HTML template')" v-model="parsedPrivateConfigData.feedbackemailhtml" rows="8" />
+                            <v-textarea :label="$t('Text template')" v-model="parsedPrivateConfigData.feedbackemailtext" rows="6" />
+                            <div>{{ $t('Template Toolkit variables: [% context %], [% firstname %], [% lastname %], [% email %], [% message %], [% user %]') }}</div>
+                          </v-card-text>
+                        </v-card>
+                      </v-container>
+                    </v-window-item>
+
                     <v-window-item value="priv-ir" class="pa-8">
               <v-container>
                 <v-row>
@@ -1269,18 +1334,6 @@
           <v-window-item value="impexp">
             <v-card tile>
               <v-row no-gutters>
-                <v-col cols="auto">
-                  <v-tabs
-                    v-model="activetabimpexp"
-                    direction="vertical"
-                    slider-color="primary"
-                    bg-color="grey-darken-1"
-                    class="admin-nested-tabs__rail text-white"
-                  >
-                    <v-tab value="impexp-export"><span>{{ $t('Export') }}</span></v-tab>
-                    <v-tab value="impexp-import"><span>{{ $t('Import') }}</span></v-tab>
-                  </v-tabs>
-                </v-col>
                 <v-col>
                   <v-window v-model="activetabimpexp">
                     <v-window-item value="impexp-export" class="pa-8">
@@ -1326,6 +1379,14 @@
               </v-row>
             </v-card>
           </v-window-item>
+                  </v-window>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-window-item>
+          <v-window-item value="users" class="pa-4">
+            <AdminUsers />
+          </v-window-item>
           <v-window-item value="manage">
             <v-container>
               <v-row>
@@ -1357,9 +1418,9 @@
             </v-container>
           </v-window-item>
         </v-window>
-      </v-col>
-    </v-row>
-    <v-row class="my-2">
+      </v-main>
+    </v-layout>
+    <v-row v-if="activetab === 'config'" class="my-2">
       <v-col>
         <v-btn color="primary" variant="elevated" class="float-right" :loading="loading" @click="save()">{{ $t('Save') }}</v-btn>
       </v-col>
@@ -1371,15 +1432,16 @@
 import { useRootStore } from '~/stores/root'
 import FaviconMixin from '../mixins/favicon'
 import PRepostat from '../components/Repostat.vue';
+import AdminUsers from '../components/admin/AdminUsers.vue';
 import { config, useDocumentTitle } from "../mixins/config";
 import { encodeUtf8ToBase64 } from '@/utils/encode-base64'
 
 export default {
   mixins: [FaviconMixin, config],
-  components: { PRepostat },
+  components: { PRepostat, AdminUsers },
   setup() {
     definePageMeta({
-      middleware: 'auth'
+      middleware: ['auth', 'admin']
     })
     const nuxtApp = useNuxtApp()
     const documentTitle = useDocumentTitle()
@@ -1432,9 +1494,28 @@ export default {
       data_affiliations: [],
       data_affiliations_text: '',
       loading: false,
-      /** Vuetify 3: tab models are string values matching v-tab value="" (not v-tab-item). */
+      /** Vuetify 3: tab models are string values matching v-window-item values. */
+      openAdminNavigation: ['config', 'config-public', 'config-private', 'config-impexp'],
+      publicNavigationItems: [
+        { title: 'General', value: 'pub-general' },
+        { title: 'Functionality', value: 'pub-functionality' },
+        { title: 'CMS', value: 'pub-cms' },
+        { title: 'Datastructures', value: 'pub-data' },
+        { title: 'IR', value: 'pub-ir' }
+      ],
+      privateNavigationItems: [
+        { title: 'General', value: 'priv-general' },
+        { title: 'Functionality', value: 'priv-functionality' },
+        { title: 'Email templates', value: 'priv-email' },
+        { title: 'IR', value: 'priv-ir' }
+      ],
+      importExportNavigationItems: [
+        { title: 'Export', value: 'impexp-export' },
+        { title: 'Import', value: 'impexp-import' }
+      ],
       activetabimpexp: 'impexp-export',
-      activetab: 'public',
+      activetab: 'config',
+      activeConfigSection: 'public',
       activetab2: 'pub-general',
       activetabprivate: 'priv-general',
       configAsJSONToImport: '',
@@ -1443,6 +1524,11 @@ export default {
     };
   },
   methods: {
+    selectConfigSection(section, model, value) {
+      this.activetab = 'config'
+      this.activeConfigSection = section
+      this[model] = value
+    },
     mergeInfoBannerMessage(message) {
       if (message) {
         this.$i18n.mergeLocaleMessage('eng', { 'Info banner message': message })
@@ -1668,6 +1754,9 @@ export default {
       if (response?.data?.private_config) {
         this.parsedPrivateConfigData = { ...response?.data?.private_config }
       }
+      if (!Object.prototype.hasOwnProperty.call(this.parsedPrivateConfigData, 'saveremoteuserpersonalattributes')) {
+        this.parsedPrivateConfigData.saveremoteuserpersonalattributes = true
+      }
       this.loading = false
     }
   },
@@ -1676,3 +1765,17 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+:deep(.v-card-title + .v-card-text) {
+  padding-top: 24px;
+}
+
+.email-template-card__title {
+  background-color: rgb(var(--v-theme-primary));
+}
+
+.admin-layout {
+  min-height: max(800px, calc(100vh - 96px));
+}
+</style>

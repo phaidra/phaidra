@@ -88,6 +88,9 @@ test_owner_grants_rw if {
 	decision.reason == "owner"
 }
 
+
+
+
 test_owner_delete_denied_without_enabledelete if {
 	decision := authz.allow with input as {
 		"subject": {
@@ -539,6 +542,34 @@ test_private_ds_denied_anonymous if {
 	decision.reason == "deny_private_datastream"
 }
 
+test_private_ds_denied_inactive_without_conflict if {
+	decision := authz.allow with input as {
+		"subject": {
+			"username": "",
+			"authenticated": false,
+			"roles": [],
+			"affiliations": [],
+			"org_units_l1": [],
+			"org_units_l2": [],
+			"ldap_groups": [],
+			"project_groups": [],
+		},
+		"resource": {
+			"type": "object",
+			"pid": "o:11",
+			"owner": "alice",
+			"state": "Inactive",
+			"dsid": "RIGHTS",
+			"rights": {},
+		},
+		"action": {"id": "read", "endpoint": "object#get_datastream"},
+		"environment": {"institution": "default"},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+	}
+	decision.allow == false
+	decision.reason == "deny_inactive_object"
+}
+
 test_private_ds_allowed_for_owner if {
 	decision := authz.allow with input as {
 		"subject": {
@@ -748,4 +779,3 @@ test_oer_write_allowed_when_already_oer if {
 	decision.allow == true
 	decision.reason == "owner"
 }
-

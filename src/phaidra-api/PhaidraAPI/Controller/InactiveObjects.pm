@@ -174,9 +174,6 @@ sub activate {
   my $username = $self->stash->{basic_auth_credentials}->{username};
   my $password = $self->stash->{basic_auth_credentials}->{password};
   my ($can_manage, $is_admin) = $self->_staff_flags;
-  my $notify = $self->param('notify');
-  $notify = 1 if defined $notify && ($notify eq '1' || lc($notify) eq 'true' || lc($notify) eq 'yes');
-
   my $model = PhaidraAPI::Model::InactiveObjects->new;
   my $row   = $model->get_by_pid($self, $pid);
   if ($row->{status} ne 200) {
@@ -203,11 +200,9 @@ sub activate {
   }
 
   my $res = {alerts => [], status => 200, pid => $pid};
-  if ($notify) {
-    my $nr = $self->_notify_owner_activated($pid, $owner, $title, $source);
-    if ($nr->{status} ne 200) {
-      push @{$res->{alerts}}, @{$nr->{alerts}} if @{$nr->{alerts}};
-    }
+  my $nr  = $self->_notify_owner_activated($pid, $owner, $title, $source);
+  if ($nr->{status} ne 200) {
+    push @{$res->{alerts}}, @{$nr->{alerts}} if @{$nr->{alerts}};
   }
 
   $self->render(json => $res, status => $res->{status});
@@ -246,7 +241,7 @@ sub _notify_owner_activated {
   my $detail  = $baseurl ? "https://$baseurl/detail/$pid" : $pid;
   $title = $title // $pid;
 
-  my $from = $pubconfig->{email} // $privconfig->{reportingemail} // '';
+  my $from = $pubconfig->{email};
   $from = substr($from, 0, index($from, ',')) if $from && index($from, ',') != -1;
   unless ($from) {
     $self->app->log->warn("inactive activate notify pid[$pid]: no from address configured");
@@ -267,16 +262,19 @@ sub _notify_owner_activated {
     $options{INCLUDE_PATH} = $p;
   }
 
-  my $subject = "PHAIDRA archive ready / Archivierung abgeschlossen ($pid)";
+  my $subject = $privconfig->{inactiveactivatedemailsubject} || "PHAIDRA archive ready / Archivierung abgeschlossen ($pid)";
 
   eval {
     my $msg = MIME::Lite::TT::HTML->new(
-      From        => $from,
-      To          => $email,
-      Subject     => $subject,
-      Charset     => 'utf8',
-      Encoding    => 'quoted-printable',
-      Template    => {html => 'email/inactive_activated.html.tt', text => 'email/inactive_activated.txt.tt'},
+      From     => $from,
+      To       => $email,
+      Subject  => $subject,
+      Charset  => 'utf8',
+      Encoding => 'quoted-printable',
+      Template => {
+        html => $privconfig->{inactiveactivatedemailhtml} || 'inactive_activated.html.tt',
+        text => $privconfig->{inactiveactivatedemailtext} || 'inactive_activated.txt.tt'
+      },
       TmplParams  => \%emaildata,
       TmplOptions => \%options
     );

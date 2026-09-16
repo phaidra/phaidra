@@ -143,6 +143,11 @@ sub _compute_roles {
   if ($userdata->{isadmin}) {
     push @roles, 'admin' unless grep {$_ eq 'admin'} @roles;
   }
+  if ($userdata->{roles}) {
+    for my $role (@{$userdata->{roles}}) {
+      push @roles, $role if defined($role) && $role ne '' && !grep {$_ eq $role} @roles;
+    }
+  }
 
   if ($userdata->{superuserforallusers}) {
     push @roles, 'superuser';

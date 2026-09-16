@@ -144,8 +144,23 @@ export const submitDeepLink = {
         this.removeFileFields()
       }
     },
-    redirectAfterObjectCreated (pid) {
-      if (this.deferredUploadMode) {
+    async redirectAfterObjectCreated (pid) {
+      let inactive = this.deferredUploadMode
+      if (!inactive && pid) {
+        try {
+          const response = await this.$axios.get('/inactive-objects', {
+            params: { q: pid, limit: 1 },
+            headers: {
+              'X-XSRF-TOKEN': useRootStore().user.token
+            }
+          })
+          inactive = response.data?.objects?.some((object) => object.pid === pid) === true
+        } catch (error) {
+          // A failed status lookup should not prevent the normal detail redirect.
+          console.warn('Could not determine created object status', error)
+        }
+      }
+      if (inactive) {
         this.$router.push(this.localeLocation({ path: '/inactive-objects' }))
       } else {
         this.$router.push(this.localeLocation({ path: `/detail/${pid}` }))

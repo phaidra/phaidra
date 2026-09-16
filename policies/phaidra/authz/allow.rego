@@ -238,6 +238,7 @@ allow := decision if {
 	not admin.grant
 	not objectauthz.grant_rw
 	datastream.deny_private_read
+	not objectauthz.deny_inactive_read
 	decision := {
 		"allow": false,
 		"effect": "deny",
@@ -299,6 +300,7 @@ allow := decision if {
 	not admin.grant
 	not objectauthz.grant_rw
 	objectauthz.deny_inactive_read
+	not datastream.deny_inactive_metadata
 	decision := {
 		"allow": false,
 		"effect": "deny",

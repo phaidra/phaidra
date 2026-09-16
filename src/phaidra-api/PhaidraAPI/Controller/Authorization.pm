@@ -59,7 +59,10 @@ sub authorize {
 
     if ($decision->{allow}) {
       if ($action_id eq 'create') {
-        $self->stash(curated_initial_state => $decision->{initial_state} // 'Inactive');
+
+        # Do not activate a create unless authorization explicitly grants
+        # the uncurated uploader path.
+        $self->stash(curated_initial_state => $decision->{initial_state} // 'PendingApproval');
       }
       return 1;
     }

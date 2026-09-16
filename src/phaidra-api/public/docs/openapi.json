@@ -75,6 +75,10 @@
         {
             "name": "misc",
             "description": ""
+        },
+        {
+            "name": "users",
+            "description": "Local and federated user administration"
         }
     ],
     "paths": {
@@ -1108,7 +1112,7 @@
                                         "properties": {
                                             "annotations": {
                                                 "type": "string",
-                                                "example": "<mods:mods xmlns:mods=\"http://www.loc.gov/mods/v3\"><mods:identifier type=\"ac-number\">AC04090285</mods:identifier><mods:language><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:language><mods:name authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" type=\"personal\" valueURI=\"http://d-nb.info/gnd/121309096\"><mods:namePart type=\"given\">Gustav</mods:namePart><mods:namePart type=\"family\">Freytag</mods:namePart><mods:role><mods:roleTerm authority=\"marcrelator\" type=\"code\">edt</mods:roleTerm></mods:role></mods:name><mods:titleInfo><mods:title>Karte der Dachstein-Gruppe</mods:title><mods:subTitle>f\u00fcr Touristen</mods:subTitle></mods:titleInfo><mods:relatedItem type=\"series\"><mods:titleInfo><mods:title>Touristenkarten</mods:title></mods:titleInfo></mods:relatedItem><mods:classification authority=\"bkl\" authorityURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/\" valueURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/cls_10/1065197\">Deutschland, \u00d6sterreich, Schweiz &lt;Geographie&gt;</mods:classification><mods:subject><mods:geographic authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" valueURI=\"http://d-nb.info/gnd/4010858-2\">Dachstein</mods:geographic><mods:topic authority=\"gnd\">Karte</mods:topic></mods:subject><mods:originInfo><mods:dateIssued encoding=\"w3cdtf\" keyDate=\"yes\">1931</mods:dateIssued><mods:place><mods:placeTerm type=\"text\">Wien</mods:placeTerm></mods:place><mods:publisher>G. Freytag &amp; Berndt</mods:publisher></mods:originInfo><mods:physicalDescription><mods:extent>1 Kt.</mods:extent><mods:form>mehrfarb.</mods:form><mods:extent>58 x 55 cm</mods:extent></mods:physicalDescription><mods:recordInfo><mods:recordContentSource>Universit\u00e4tsbibliothek Wien</mods:recordContentSource><mods:recordOrigin>Maschinell erzeugt</mods:recordOrigin><mods:languageOfCataloging><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:languageOfCataloging><mods:descriptionStandard>rakwb</mods:descriptionStandard></mods:recordInfo><mods:note type=\"statement of responsibility\">Bestand der Kartensammlung der Fachbereichsbibliothek Geographie und Regionalforschung, Universit\u00e4t Wien</mods:note><mods:accessCondition type=\"use and reproduction\">http://creativecommons.org/publicdomain/mark/1.0/</mods:accessCondition></mods:mods>"
+                                                "example": "<mods:mods xmlns:mods=\"http://www.loc.gov/mods/v3\"><mods:identifier type=\"ac-number\">AC04090285</mods:identifier><mods:language><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:language><mods:name authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" type=\"personal\" valueURI=\"http://d-nb.info/gnd/121309096\"><mods:namePart type=\"given\">Gustav</mods:namePart><mods:namePart type=\"family\">Freytag</mods:namePart><mods:role><mods:roleTerm authority=\"marcrelator\" type=\"code\">edt</mods:roleTerm></mods:role></mods:name><mods:titleInfo><mods:title>Karte der Dachstein-Gruppe</mods:title><mods:subTitle>für Touristen</mods:subTitle></mods:titleInfo><mods:relatedItem type=\"series\"><mods:titleInfo><mods:title>Touristenkarten</mods:title></mods:titleInfo></mods:relatedItem><mods:classification authority=\"bkl\" authorityURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/\" valueURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/cls_10/1065197\">Deutschland, Österreich, Schweiz &lt;Geographie&gt;</mods:classification><mods:subject><mods:geographic authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" valueURI=\"http://d-nb.info/gnd/4010858-2\">Dachstein</mods:geographic><mods:topic authority=\"gnd\">Karte</mods:topic></mods:subject><mods:originInfo><mods:dateIssued encoding=\"w3cdtf\" keyDate=\"yes\">1931</mods:dateIssued><mods:place><mods:placeTerm type=\"text\">Wien</mods:placeTerm></mods:place><mods:publisher>G. Freytag &amp; Berndt</mods:publisher></mods:originInfo><mods:physicalDescription><mods:extent>1 Kt.</mods:extent><mods:form>mehrfarb.</mods:form><mods:extent>58 x 55 cm</mods:extent></mods:physicalDescription><mods:recordInfo><mods:recordContentSource>Universitätsbibliothek Wien</mods:recordContentSource><mods:recordOrigin>Maschinell erzeugt</mods:recordOrigin><mods:languageOfCataloging><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:languageOfCataloging><mods:descriptionStandard>rakwb</mods:descriptionStandard></mods:recordInfo><mods:note type=\"statement of responsibility\">Bestand der Kartensammlung der Fachbereichsbibliothek Geographie und Regionalforschung, Universität Wien</mods:note><mods:accessCondition type=\"use and reproduction\">http://creativecommons.org/publicdomain/mark/1.0/</mods:accessCondition></mods:mods>"
                                             }
                                         }
                                     }
@@ -1184,7 +1188,7 @@
                                         "properties": {
                                             "annotations": {
                                                 "type": "string",
-                                                "example": "<mods:mods xmlns:mods=\"http://www.loc.gov/mods/v3\"><mods:identifier type=\"ac-number\">AC04090285</mods:identifier><mods:language><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:language><mods:name authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" type=\"personal\" valueURI=\"http://d-nb.info/gnd/121309096\"><mods:namePart type=\"given\">Gustav</mods:namePart><mods:namePart type=\"family\">Freytag</mods:namePart><mods:role><mods:roleTerm authority=\"marcrelator\" type=\"code\">edt</mods:roleTerm></mods:role></mods:name><mods:titleInfo><mods:title>Karte der Dachstein-Gruppe</mods:title><mods:subTitle>f\u00fcr Touristen</mods:subTitle></mods:titleInfo><mods:relatedItem type=\"series\"><mods:titleInfo><mods:title>Touristenkarten</mods:title></mods:titleInfo></mods:relatedItem><mods:classification authority=\"bkl\" authorityURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/\" valueURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/cls_10/1065197\">Deutschland, \u00d6sterreich, Schweiz &lt;Geographie&gt;</mods:classification><mods:subject><mods:geographic authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" valueURI=\"http://d-nb.info/gnd/4010858-2\">Dachstein</mods:geographic><mods:topic authority=\"gnd\">Karte</mods:topic></mods:subject><mods:originInfo><mods:dateIssued encoding=\"w3cdtf\" keyDate=\"yes\">1931</mods:dateIssued><mods:place><mods:placeTerm type=\"text\">Wien</mods:placeTerm></mods:place><mods:publisher>G. Freytag &amp; Berndt</mods:publisher></mods:originInfo><mods:physicalDescription><mods:extent>1 Kt.</mods:extent><mods:form>mehrfarb.</mods:form><mods:extent>58 x 55 cm</mods:extent></mods:physicalDescription><mods:recordInfo><mods:recordContentSource>Universit\u00e4tsbibliothek Wien</mods:recordContentSource><mods:recordOrigin>Maschinell erzeugt</mods:recordOrigin><mods:languageOfCataloging><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:languageOfCataloging><mods:descriptionStandard>rakwb</mods:descriptionStandard></mods:recordInfo><mods:note type=\"statement of responsibility\">Bestand der Kartensammlung der Fachbereichsbibliothek Geographie und Regionalforschung, Universit\u00e4t Wien</mods:note><mods:accessCondition type=\"use and reproduction\">http://creativecommons.org/publicdomain/mark/1.0/</mods:accessCondition></mods:mods>"
+                                                "example": "<mods:mods xmlns:mods=\"http://www.loc.gov/mods/v3\"><mods:identifier type=\"ac-number\">AC04090285</mods:identifier><mods:language><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:language><mods:name authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" type=\"personal\" valueURI=\"http://d-nb.info/gnd/121309096\"><mods:namePart type=\"given\">Gustav</mods:namePart><mods:namePart type=\"family\">Freytag</mods:namePart><mods:role><mods:roleTerm authority=\"marcrelator\" type=\"code\">edt</mods:roleTerm></mods:role></mods:name><mods:titleInfo><mods:title>Karte der Dachstein-Gruppe</mods:title><mods:subTitle>für Touristen</mods:subTitle></mods:titleInfo><mods:relatedItem type=\"series\"><mods:titleInfo><mods:title>Touristenkarten</mods:title></mods:titleInfo></mods:relatedItem><mods:classification authority=\"bkl\" authorityURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/\" valueURI=\"http://phaidra.univie.ac.at/XML/metadata/lom/V1.0/classification/cls_10/1065197\">Deutschland, Österreich, Schweiz &lt;Geographie&gt;</mods:classification><mods:subject><mods:geographic authority=\"gnd\" authorityURI=\"http://d-nb.info/gnd/\" valueURI=\"http://d-nb.info/gnd/4010858-2\">Dachstein</mods:geographic><mods:topic authority=\"gnd\">Karte</mods:topic></mods:subject><mods:originInfo><mods:dateIssued encoding=\"w3cdtf\" keyDate=\"yes\">1931</mods:dateIssued><mods:place><mods:placeTerm type=\"text\">Wien</mods:placeTerm></mods:place><mods:publisher>G. Freytag &amp; Berndt</mods:publisher></mods:originInfo><mods:physicalDescription><mods:extent>1 Kt.</mods:extent><mods:form>mehrfarb.</mods:form><mods:extent>58 x 55 cm</mods:extent></mods:physicalDescription><mods:recordInfo><mods:recordContentSource>Universitätsbibliothek Wien</mods:recordContentSource><mods:recordOrigin>Maschinell erzeugt</mods:recordOrigin><mods:languageOfCataloging><mods:languageTerm authority=\"iso639-2b\" type=\"code\">ger</mods:languageTerm></mods:languageOfCataloging><mods:descriptionStandard>rakwb</mods:descriptionStandard></mods:recordInfo><mods:note type=\"statement of responsibility\">Bestand der Kartensammlung der Fachbereichsbibliothek Geographie und Regionalforschung, Universität Wien</mods:note><mods:accessCondition type=\"use and reproduction\">http://creativecommons.org/publicdomain/mark/1.0/</mods:accessCondition></mods:mods>"
                                             }
                                         }
                                     }
@@ -9435,6 +9439,242 @@
                     }
                 }
             }
+        },
+        "/password-reset/request": {
+            "post": {
+                "summary": "Request a password reset email",
+                "tags": [
+                    "users"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/password-reset/confirm": {
+            "post": {
+                "summary": "Set a password using a reset token",
+                "tags": [
+                    "users"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/admin/users": {
+            "get": {
+                "summary": "List database users",
+                "tags": [
+                    "users"
+                ],
+                "security": [
+                    {
+                        "tokenAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a database user",
+                "tags": [
+                    "users"
+                ],
+                "security": [
+                    {
+                        "tokenAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/admin/users/roles": {
+            "get": {
+                "summary": "List configured roles",
+                "tags": [
+                    "users"
+                ],
+                "security": [
+                    {
+                        "tokenAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        },
+        "/admin/users/{username}": {
+            "parameters": [
+                {
+                    "name": "username",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "summary": "Get a database user",
+                "tags": [
+                    "users"
+                ],
+                "security": [
+                    {
+                        "tokenAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Update a database user",
+                "tags": [
+                    "users"
+                ],
+                "security": [
+                    {
+                        "tokenAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/admin/users/{username}/delete": {
+            "parameters": [
+                {
+                    "name": "username",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "post": {
+                "summary": "Delete a database user",
+                "tags": [
+                    "users"
+                ],
+                "security": [
+                    {
+                        "tokenAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/admin/users/{username}/password-reset": {
+            "parameters": [
+                {
+                    "name": "username",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "post": {
+                "summary": "Send a password reset email",
+                "tags": [
+                    "users"
+                ],
+                "security": [
+                    {
+                        "tokenAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -9804,7 +10044,7 @@
                                     },
                                     {
                                         "xmlns": "http://phaidra.univie.ac.at/XML/metadata/lom/V1.0",
-                                        "ui_value": "Cooperative decision rules have so far been shown experimentally mainly in mammal species that have variable and complex social networks. However, these traits should not necessarily be restricted to mammals. Therefore, we tested cooperative problem solving in ravens. We showed that, without training, nine ravens spontaneously cooperated in a loose-string task. Corroborating findings in several species, ravens\u00e2\ufffd\ufffd cooperative success increased with increasing inter-individual tolerance levels. Importantly, we found this in both a forced dyadic setting, and in a group setting where individuals had an open choice to cooperate with whomever. The ravens, moreover, also paid attention to the resulting reward distribution and ceased cooperation when being cheated upon. Nevertheless, the ravens did not seem to pay attention to the behavior of their partners while cooperating, and future research should reveal whether this is task specific or a general pattern. Given their natural propensity to cooperate and the results we present here, we consider ravens as an interesting model species to study the evolution of, and the mechanisms underlying cooperation.",
+                                        "ui_value": "Cooperative decision rules have so far been shown experimentally mainly in mammal species that have variable and complex social networks. However, these traits should not necessarily be restricted to mammals. Therefore, we tested cooperative problem solving in ravens. We showed that, without training, nine ravens spontaneously cooperated in a loose-string task. Corroborating findings in several species, ravensâ�� cooperative success increased with increasing inter-individual tolerance levels. Importantly, we found this in both a forced dyadic setting, and in a group setting where individuals had an open choice to cooperate with whomever. The ravens, moreover, also paid attention to the resulting reward distribution and ceased cooperation when being cheated upon. Nevertheless, the ravens did not seem to pay attention to the behavior of their partners while cooperating, and future research should reveal whether this is task specific or a general pattern. Given their natural propensity to cooperate and the results we present here, we consider ravens as an interesting model species to study the evolution of, and the mechanisms underlying cooperation.",
                                         "xmlname": "description",
                                         "input_type": "input_text",
                                         "attributes": [
@@ -13474,6 +13714,69 @@
                     "start": {
                         "id": "https://sandbox.phaidra.org/api/iiif/o:***/canvas/1",
                         "type": "Canvas"
+                    }
+                }
+            },
+            "DatabaseUser": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "maxLength": 128
+                    },
+                    "firstname": {
+                        "type": "string",
+                        "maxLength": 128,
+                        "nullable": true
+                    },
+                    "lastname": {
+                        "type": "string",
+                        "maxLength": 128,
+                        "nullable": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 254,
+                        "nullable": true
+                    },
+                    "affiliation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "maxLength": 64
+                        }
+                    },
+                    "org_units": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uri",
+                            "maxLength": 64
+                        }
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "maxLength": 64
+                        }
+                    },
+                    "active": {
+                        "type": "boolean"
+                    },
+                    "expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "last_login_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "password_set": {
+                        "type": "boolean"
                     }
                 }
             }

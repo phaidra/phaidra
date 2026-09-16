@@ -88,7 +88,7 @@ RUN <<EOF
 cpanm -n Mojolicious::Plugin::Database Mojolicious::Plugin::Session \
       Mojolicious::Plugin::Log::Any Mojolicious::Plugin::CHI \
       Mojolicious::Plugin::Prometheus \
-      IO::Scalar Crypt::Rijndael MIME::Base64 File::MimeInfo::Magic \
+      IO::Scalar Crypt::Bcrypt Crypt::Rijndael MIME::Base64 File::MimeInfo::Magic \
       XML::SAX XML::Parser::PerlSAX File::Find::utf8  MIME::Lite::TT::HTML Storable UNIVERSAL::require Mojo::IOLoop::Delay
 EOF
 # see https://github.com/tyldum/mojolicious-plugin-prometheus/pull/27

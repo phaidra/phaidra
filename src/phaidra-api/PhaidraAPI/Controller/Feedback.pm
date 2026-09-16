@@ -34,15 +34,18 @@ sub feedback {
   $emaildata{user}      = $user;
 
   my %options;
-  $options{INCLUDE_PATH} = $self->config->{home} . '/templates/feedback';
+  $options{INCLUDE_PATH} = $self->config->{home} . '/templates/email';
   eval {
     my $msg = MIME::Lite::TT::HTML->new(
-      From        => $pubconfig->{email},
-      To          => $pubconfig->{email},
-      Subject     => 'Phaidra feedback',
-      Charset     => 'iso-8859-15',
-      Encoding    => 'quoted-printable',
-      Template    => {html => 'email.html.tt', text => 'email.txt.tt'},
+      From     => $pubconfig->{email},
+      To       => $pubconfig->{email},
+      Subject  => $privconfig->{feedbackemailsubject} || 'Phaidra feedback',
+      Charset  => 'iso-8859-15',
+      Encoding => 'quoted-printable',
+      Template => {
+        html => $privconfig->{feedbackemailhtml} || 'feedback.html.tt',
+        text => $privconfig->{feedbackemailtext} || 'feedback.txt.tt'
+      },
       TmplParams  => \%emaildata,
       TmplOptions => \%options
     );
