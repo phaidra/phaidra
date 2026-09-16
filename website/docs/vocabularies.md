@@ -1,6 +1,6 @@
 # Vocabularies
 
-Most of the vocabularies which are frequently used are listed in [phaidra-ui store](https://github.com/phaidra/phaidra/blob/main/src/phaidra-vue-components/src/store/modules/vocabulary.js).
+Most of the vocabularies which are frequently used are listed in [phaidra-ui store](https://github.com/phaidra/phaidra/blob/main/src/phaidra-vue-components/src/stores/vocabulary.js).
 
 There you can find the list of object types, roles, licenses, etc.
 
