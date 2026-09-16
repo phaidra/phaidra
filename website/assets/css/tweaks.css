@@ -1,3 +1,12 @@
+/* === Font ===
+   Tailwind's preflight (loaded after Material's stylesheet) sets its own
+   body { font-family: system-ui, ... } rule, which otherwise wins the
+   cascade and pushes real text to the OS system font instead of Roboto. */
+
+body {
+  font-family: var(--md-text-font-family);
+}
+
 /* === Dark header === */
 
 .md-header {
