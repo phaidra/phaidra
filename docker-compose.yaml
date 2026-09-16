@@ -1309,6 +1309,7 @@ services:
       FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
       PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
       PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
+      PROMETHEUS_RETENTION: "${PROMETHEUS_RETENTION:-90d}"
     entrypoint: ["/mnt/startup/prometheus-entrypoint.sh"]
     profiles:
       ["demo-local", "demo-s3", "ssl-local", "ssl-s3", "shib-local", "shib-s3"]
@@ -1328,6 +1329,7 @@ services:
       FEDORA_ADMIN_PASS: "${FEDORA_ADMIN_PASS:-1234}"
       PHAIDRA_ADMIN_USER: "${PHAIDRA_ADMIN_USER:-phaidraAdmin}"
       PHAIDRA_ADMIN_PASSWORD: "${PHAIDRA_ADMIN_PASSWORD:-12345}"
+      PROMETHEUS_RETENTION: "${PROMETHEUS_RETENTION:-90d}"
     entrypoint: ["/mnt/startup/prometheus-entrypoint.sh"]
     profiles:
       [
