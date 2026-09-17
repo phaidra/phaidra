@@ -933,7 +933,7 @@
                     <v-card-text class="mt-4">
                       <v-row no-gutters class="pt-2" justify="start">
                        <v-col cols="12" class="pt-0">
-                          <p
+                          <div
                             v-for="(id, i) in identifiers.persistent"
                             :key="'id' + i"
                           >
@@ -1023,7 +1023,7 @@
                               </template>
                               <span>{{ $t(getCopyTooltipText(id.value)) }}</span>
                             </v-tooltip>
-                          </p>
+                          </div>
                         </v-col>
                       </v-row>
                       <v-row no-gutters justify="end" v-if="(objectInfo.writerights === 1) && !doi && instanceconfig.requestdoiemail && (instanceconfig.requestdoiemail !== '')">
@@ -1092,7 +1092,7 @@
                     <v-card-text class="mt-4">
                       <v-row no-gutters class="pt-2" justify="start">
                        <v-col cols="12" class="pt-0">
-                          <p
+                          <div
                             v-for="(id, i) in identifiers.other"
                             :key="'id' + i"
                           >
@@ -1117,7 +1117,7 @@
                               </template>
                               <span>{{ $t(getCopyTooltipText(id.value)) }}</span>
                             </v-tooltip>
-                          </p>
+                          </div>
                         </v-col>
                       </v-row>
                     </v-card-text>
