@@ -12,6 +12,7 @@ my $logconf = q(log4perl.category.Migration=INFO,Screen
  log4perl.appender.Screen.layout.ConversionPattern=%d %m%n);
 Log::Log4perl::init(\$logconf);
 my $log  = Log::Log4perl::get_logger('Migration');
+$log->info('started migration to v3.5.0 users/groups');
 my $cntr = DBIx::Connector->new('dbi:mysql:phaidradb:' . ($ENV{MARIADB_PHAIDRA_HOST} // ''), $ENV{MARIADB_PHAIDRA_USER}, $ENV{MARIADB_PHAIDRA_PASSWORD}, {mysql_auto_reconnect => 1, mysql_multi_statements => 1, mysql_enable_utf8 => 1});
 $cntr->mode('ping');
 my $dbh = $cntr->dbh;
