@@ -6,19 +6,12 @@
 </template>
   
   <script>
-  import { config, useDocumentTitle } from "../mixins/config";
+  import { config, useTranslatedPageHead } from "../mixins/config";
   
   export default {
     mixins: [config],
     setup() {
-      const nuxtApp = useNuxtApp()
-    const documentTitle = useDocumentTitle()
-      useHead(() => {
-        const t = nuxtApp.$i18n?.t || ((v) => v)
-        return {
-          title: documentTitle(t('Code of Ethics'))
-        }
-      })
+      useTranslatedPageHead('Code of Ethics', 'meta_description_code_of_ethics')
     }
   }
   </script>

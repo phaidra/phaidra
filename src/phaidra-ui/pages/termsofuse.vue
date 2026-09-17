@@ -16,19 +16,12 @@
 
 <script>
 import { useRootStore } from '~/stores/root'
-import { config, useDocumentTitle } from "../mixins/config";
+import { config, useTranslatedPageHead } from "../mixins/config";
 
 export default {
   mixins: [config],
   setup() {
-    const nuxtApp = useNuxtApp()
-    const documentTitle = useDocumentTitle()
-    useHead(() => {
-      const t = nuxtApp.$i18n?.t || ((v) => v)
-      return {
-        title: documentTitle(t('Terms of use'))
-      }
-    })
+    useTranslatedPageHead('Terms of use', 'meta_description_terms_of_use')
   },
   data() {
     return {
