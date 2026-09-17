@@ -527,6 +527,9 @@
 
                     <v-window-item value="pub-cms" class="pa-8">
               <v-container>
+                <v-alert type="warning" variant="tonal" density="compact" class="mb-4">
+                  {{ $t('Avoid the template tag in CMS content because it is not supported by runtime compilation.') }}
+                </v-alert>
                 <v-row>
                   <v-col>
                     <v-checkbox
@@ -580,7 +583,6 @@
                       v-model="parsedPublicConfigData.cms_header"
                     ></v-textarea>
                   </v-col>
-                  <v-col cols="3" class="mt-4">{{ $t("Header component. Enclose template in a div.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
@@ -589,7 +591,6 @@
                       v-model="parsedPublicConfigData.cms_footer"
                     ></v-textarea>
                   </v-col>
-                  <v-col cols="3" class="mt-4">{{ $t("Footer component. Enclose template in a div.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
@@ -598,7 +599,6 @@
                       v-model="parsedPublicConfigData.cms_home"
                     ></v-textarea>
                   </v-col>
-                  <v-col cols="3" class="mt-4">{{ $t("Homepage component. Enclose template in a div.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
@@ -607,7 +607,6 @@
                       v-model="parsedPublicConfigData.cms_impressum"
                     ></v-textarea>
                   </v-col>
-                  <v-col cols="3" class="mt-4">{{ $t("Impressum component. Enclose template in a div.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
@@ -616,7 +615,6 @@
                       v-model="parsedPublicConfigData.cms_contact"
                     ></v-textarea>
                   </v-col>
-                  <v-col cols="3" class="mt-4">{{ $t("Contact component. Enclose template in a div.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
@@ -625,7 +623,6 @@
                       v-model="parsedPublicConfigData.cms_code_of_ethics"
                     ></v-textarea>
                   </v-col>
-                  <v-col cols="3" class="mt-4">{{ $t("Code of Ethics component. Enclose template in a div.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
@@ -634,7 +631,6 @@
                       v-model="parsedPublicConfigData.cms_editorial_policies"
                     ></v-textarea>
                   </v-col>
-                  <v-col cols="3" class="mt-4">{{ $t("Editorial Policies component. Enclose template in a div.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
@@ -643,7 +639,6 @@
                       v-model="parsedPublicConfigData.cms_file_formats"
                     ></v-textarea>
                   </v-col>
-                  <v-col cols="3" class="mt-4">{{ $t("File Formats component. Enclose template in a div.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
@@ -652,7 +647,6 @@
                       v-model="parsedPublicConfigData.cms_submit"
                     ></v-textarea>
                   </v-col>
-                  <v-col cols="3" class="mt-4">{{ $t("Submit landing page component. Enclose template in a div.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
@@ -661,7 +655,6 @@
                       v-model="parsedPublicConfigData.cms_help"
                     ></v-textarea>
                   </v-col>
-                  <v-col cols="3" class="mt-4">{{ $t("Help page component. Enclose template in a div.") }}</v-col>
                 </v-row>
                 <v-row>
                   <v-col>
