@@ -28,6 +28,7 @@ our $namespaces = {
   foaf         => {label => "FOAF (Friend of a Friend)",                                      IRI => "http://xmlns.com/foaf/0.1/"},
   opaque       => {label => "OpaqueNamespace",                                                IRI => "http://opaquenamespace.org/"},
   oaire        => {label => "OpenAIRE Guidelines Application Profile",                        IRI => "http://namespace.openaire.eu/schema/oaire/"},
+  oefos2012    => {label => "ÖFOS 2012",                                                      IRI => "https://vocabs.acdh.oeaw.ac.at/oefosdisciplines/"},
   pcdm         => {label => "Portland Common Data Model",                                     IRI => "http://pcdm.org/models#"},
   rdau         => {label => "RDA Unconstrained",                                              IRI => "http://rdaregistry.info/Elements/u/"},
   rdf          => {label => "The RDF Concepts Vocabulary (RDF)",                              IRI => "http://www.w3.org/1999/02/22-rdf-syntax-ns#"},
