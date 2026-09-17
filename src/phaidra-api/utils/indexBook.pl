@@ -8,7 +8,7 @@ use Mojo::URL;
 use Mojo::UserAgent;
 use Mojo::JSON qw(decode_json encode_json);
 
-# Usage: docker exec -it phaidra-api-1 perl /usr/local/phaidra/phaidra-api/utils/deleteBook.pl pid
+# Usage: docker exec -it phaidra-api-1 perl /usr/local/phaidra/phaidra-api/utils/indexBook.pl\
 
 $ENV{MOJO_INACTIVITY_TIMEOUT} = 36000;
 
@@ -40,15 +40,15 @@ $api->host($ENV{PHAIDRA_API_HOST});
 $api->port(3000);
 $api->userinfo($ENV{PHAIDRA_ADMIN_USER} . ':' . $ENV{PHAIDRA_ADMIN_PASSWORD});
 
-sub deleteObject {
+sub indexObject {
   my ($pid) = @_;
 
-  my $url    = $api->clone->path("/object/$pid/delete");
+  my $url    = $api->clone->path("/object/$pid/index");
   my $apires = $ua->post($url)->result;
   if ($apires->code != 200) {
     if (exists($apires->json->{alerts})) {
       for my $a (@{$apires->json->{alerts}}) {
-        $log->error("pid[$pid] delete result code[" . $apires->code . "]:" . $a->{msg});
+        $log->error("pid[$pid] index result code[" . $apires->code . "]:" . $a->{msg});
         return 0;
       }
     }
@@ -73,7 +73,7 @@ sub getPages {
   if ($apires->code != 200) {
     if (exists($apires->json->{alerts})) {
       for my $a (@{$apires->json->{alerts}}) {
-        $log->error("pid[$bookpid] delete result code[" . $apires->code . "]:" . $a->{msg});
+        $log->error("pid[$bookpid] index result code[" . $apires->code . "]:" . $a->{msg});
         return 0;
       }
     }
@@ -90,17 +90,17 @@ my $i   = 0;
 my $cnt = scalar @{$pages};
 for my $pagedoc (@{$pages}) {
   $i++;
-  $log->info("[$i/$cnt] deleting page " . $pagedoc->{pid});
-  unless (deleteObject($pagedoc->{pid})) {
-    $log->info("error deleting page " . $pagedoc->{pid});
+  $log->info("[$i/$cnt] indexing page " . $pagedoc->{pid});
+  unless (indexObject($pagedoc->{pid})) {
+    $log->info("error indexing page " . $pagedoc->{pid});
     die();
   }
   sleep(1);
 }
 
-$log->info("deleting book " . $bookpid);
-unless (deleteObject($bookpid)) {
-  $log->info("error deleting book " . $bookpid);
+$log->info("indexing book " . $bookpid);
+unless (indexObject($bookpid)) {
+  $log->info("error indexing book " . $bookpid);
   die();
 }
 
