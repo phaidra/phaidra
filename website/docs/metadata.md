@@ -1818,6 +1818,7 @@ These fields are meant to support system logic and are not relevant to the user.
 | Europeana Data Model | edm | http://www.europeana.eu/schemas/edm/ |
 | FOAF (Friend of a Friend) | foaf | http://xmlns.com/foaf/0.1/ |
 | OpaqueNamespace  | opaque | http://opaquenamespace.org/ [might change]  |
+| OpenAIRE Guidelines Application Profile | oaire | http://namespace.openaire.eu/schema/oaire/ |
 | Portland Common Data Model | pcdm |	http://pcdm.org/models# |
 | RDA Unconstrained | rdau | http://rdaregistry.info/Elements/u/ |
 | The RDF Concepts Vocabulary (RDF) | rdf | http://www.w3.org/1999/02/22-rdf-syntax-ns# |
