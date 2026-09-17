@@ -124,6 +124,12 @@
   </div>
 </template>
 
+<script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+</script>
+
 <script>
 import { context } from '../../mixins/context'
 import { useDocumentTitle } from '../../mixins/config'
@@ -139,9 +145,6 @@ export default {
   layout: 'main',
   mixins: [context, vocabulary],
   setup () {
-    definePageMeta({
-      middleware: 'auth'
-    })
     const nuxtApp = useNuxtApp()
     const documentTitle = useDocumentTitle()
     useHead(() => {

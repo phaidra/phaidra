@@ -34,6 +34,12 @@
   </v-container>
 </template>
 
+<script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+</script>
+
 <script>
 import { useRootStore } from '~/stores/root'
 import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
@@ -50,9 +56,6 @@ export default {
   layout: "main",
   mixins: [context, config, vocabulary, submitDeepLink],
   setup() {
-    definePageMeta({
-      middleware: 'auth'
-    })
     const nuxtApp = useNuxtApp()
     const documentTitle = useDocumentTitle()
     useHead(() => {

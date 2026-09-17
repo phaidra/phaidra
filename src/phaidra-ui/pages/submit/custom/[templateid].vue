@@ -26,6 +26,12 @@
   </v-container>
 </template>
 
+<script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+</script>
+
 <script>
 import arrays from "phaidra-vue-components/src/utils/arrays"
 import fields from "phaidra-vue-components/src/utils/fields"
@@ -38,9 +44,6 @@ import { useGoTo } from 'vuetify'
 export default {
   name: 'submit-custom',
   setup() {
-    definePageMeta({
-      middleware: 'auth'
-    })
     const goTo = useGoTo()
     return { goTo }
   },

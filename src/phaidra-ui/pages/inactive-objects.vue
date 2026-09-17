@@ -229,6 +229,12 @@
   </v-container>
 </template>
 
+<script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+</script>
+
 <script>
 import { useRootStore } from '~/stores/root'
 import { context } from '../mixins/context'
@@ -237,9 +243,6 @@ import { config, useDocumentTitle } from '../mixins/config'
 export default {
   mixins: [context, config],
   setup() {
-    definePageMeta({
-      middleware: 'auth'
-    })
     const nuxtApp = useNuxtApp()
     const documentTitle = useDocumentTitle()
     useHead(() => {

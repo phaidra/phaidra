@@ -30,6 +30,12 @@
   </v-container>
 </template>
 
+<script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+</script>
+
 <script>
 import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
 import arrays from "phaidra-vue-components/src/utils/arrays"
@@ -45,9 +51,6 @@ export default {
   layout: "main",
   mixins: [context, config, vocabulary, submitDeepLink],
   setup() {
-    definePageMeta({
-      middleware: 'auth'
-    })
     const nuxtApp = useNuxtApp()
     const documentTitle = useDocumentTitle()
     useHead(() => {

@@ -103,6 +103,12 @@
   </v-col>
 </template>
 
+<script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+</script>
+
 <script>
 import { useRootStore } from '~/stores/root'
 import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
@@ -117,9 +123,6 @@ import { useGoTo } from 'vuetify'
 
 export default {
   setup() {
-    definePageMeta({
-      middleware: 'auth'
-    })
     const goTo = useGoTo()
     return { goTo }
   },

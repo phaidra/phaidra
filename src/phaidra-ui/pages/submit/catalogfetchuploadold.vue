@@ -78,6 +78,12 @@
   </v-container>
 </template>
 
+<script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+</script>
+
 <script>
 import { useRootStore } from '~/stores/root'
 import { context } from "../../mixins/context"
@@ -89,9 +95,6 @@ import { useGoTo } from 'vuetify'
 export default {
   layout: "main",
   setup() {
-    definePageMeta({
-      middleware: 'auth'
-    })
     const goTo = useGoTo()
     return { goTo }
   },

@@ -121,6 +121,12 @@
   </v-container>
 </template>
 
+<script setup>
+definePageMeta({
+  middleware: 'bulk-upload'
+})
+</script>
+
 <script>
 import { useBulkUploadStore } from '~/stores/bulk-upload'
 import { mapActions, mapState } from 'pinia'
@@ -129,11 +135,6 @@ import { csvParser } from '../../mixins/csvParser'
 
 export default {
   name: 'CsvConfig',
-  setup () {
-    definePageMeta({
-      middleware: 'bulk-upload'
-    })
-  },
   components: {
     BulkUploadSteps
   },
