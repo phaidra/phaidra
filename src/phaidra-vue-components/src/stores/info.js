@@ -2730,7 +2730,7 @@ export const state = () => ({
           ]
         },
         {
-          title: 'Format',
+          title: 'Encoding format (audio/video)',
           predicate: 'dce:format',
           open: false,
           sections: [
