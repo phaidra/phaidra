@@ -1058,16 +1058,16 @@ const fields = [
   },
   {
     id: 'dce-format-vocab',
-    fieldname: 'Format',
+    fieldname: 'Encoding format (audio/video)',
     predicate: 'dce:format',
     component: 'p-select',
     vocabulary: 'dceformat',
     multiplicable: true,
-    label: 'Format',
+    label: 'Encoding format (audio/video)',
     value: '',
     'skos:prefLabel': [],
     errorMessages: [],
-    definition: 'The file format, physical medium, or dimensions of the resource.'
+    definition: 'The file format or technical specification relating to the encoding of the resource.'
   },
   {
     id: 'supplementary-content',

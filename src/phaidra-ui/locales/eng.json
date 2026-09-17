@@ -298,7 +298,7 @@
     "schema:accessibilityFeature": "Accessibility feature",
     "dcterms:temporal": "Temporal coverage",
     "vra:hasTechnique": "Technique",
-    "dce:format": "Format",
+    "dce:format": "Encoding format (audio/video)",
     "rdau:P60048": "Carrier type",
     "vra:material": "Material",
     "vra:hasInscription": "Inscription",

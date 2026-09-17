@@ -68,7 +68,7 @@ Many fields are using controlled vocabularies. Most of the controlled vocabulari
 | [Scale](#scale) | bf:scale |  |
 | [Available language](#available-language) | schema:availableLanguage |  |
 | [Subtitle language](#subtitle-language) | schema:subtitleLanguage |  |
-| [Format](#format) | dce:format |  |
+| [Encoding format (audio/video)](#encoding-format-audiovideo) | dce:format |  |
 | [Carrier type](#carrier-type) | rdau:P60048 | |
 | [Duration](#duration) | schema:duration |  |
 | [File name](#file-name) | ebucore:filename |  |
@@ -1686,7 +1686,7 @@ A language someone may use with or at the item, service or place.
   ]
 ```
 
-### Format
+### Encoding format (audio/video)
 
 #### Description
 
