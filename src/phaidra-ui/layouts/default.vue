@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-container class="px-4 px-md-0" fluid>
+    <v-container class="pa-0 px-4 px-md-0" fluid>
       <v-row no-gutters>
         <v-col>
           <header>
@@ -656,15 +656,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .content {
   min-height: 800px;
-}
-
-.v-container {
-  padding: 0px;
-}
-
-.v-application .px-4 {
-    padding-right: 16px !important;
-    padding-left: 16px !important;
 }
 
 .no-height-inherit {
