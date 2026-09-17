@@ -6,7 +6,6 @@ use Data::Dumper;
 use Log::Log4perl;
 use DBIx::Connector;
 
-
 $ENV{MOJO_INACTIVITY_TIMEOUT} = 36000;
 
 my $logconf = q(
