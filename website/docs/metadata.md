@@ -1814,21 +1814,20 @@ These fields are meant to support system logic and are not relevant to the user.
 | Dublin Core Metadata Element Set, Version 1.1 | dce |	http://purl.org/dc/elements/1.1/ |
 | DCMI Metadata Terms | dcterms | http://purl.org/dc/terms/ |
 | DCMI Type Vocabulary | dcmitype | http://dublincore.org/documents/2000/07/11/dcmi-type-vocabulary/# |
-| EBUCore | ebucore | https://www.ebu.ch/metadata/ontologies/ebucore/ebucore# |
+| EBUCore - the Dublin Core for media | ebucore | http://www.ebu.ch/metadata/ontologies/ebucore/ebucore# |
 | Europeana Data Model | edm | http://www.europeana.eu/schemas/edm/ |
-| FOAF (Friend of a Friend) | foaf | http://xmlns.com/foaf/spec/# |
+| FOAF (Friend of a Friend) | foaf | http://xmlns.com/foaf/0.1/ |
 | OpaqueNamespace  | opaque | http://opaquenamespace.org/ [might change]  |
 | Portland Common Data Model | pcdm |	http://pcdm.org/models# |
 | RDA Unconstrained | rdau | http://rdaregistry.info/Elements/u/ |
 | The RDF Concepts Vocabulary (RDF) | rdf | http://www.w3.org/1999/02/22-rdf-syntax-ns# |
 | RDF Schema 1.1 | rdfs | http://www.w3.org/2000/01/rdf-schema# |
-| MARC Code List for Relators | relators | http://id.loc.gov/vocabulary/relators |
+| MARC Code List for Relators | relators | http://id.loc.gov/vocabulary/relators/ |
 | Schema.org | schema |	http://schema.org/ |
 | SKOS Simple Knowledge Organization System | skos | http://www.w3.org/2004/02/skos/core# |
-| SKOS Simple Knowledge Organization System eXtension for Labels | skosxl | http://www.w3.org/2008/05/skos-xl |
-| Standard Identifiers Scheme | identifiers | http://id.loc.gov/vocabulary/identifiers |
-| The Funding, Research Administration and Projects Ontology | frapo | http://purl.org/cerif/frapo |
-| EBUCore - the Dublin Core for media | ebucore | http://www.ebu.ch/metadata/ontologies/ebucore/ebucore |
+| SKOS Simple Knowledge Organization System eXtension for Labels | skosxl | http://www.w3.org/2008/05/skos-xl# |
+| Standard Identifiers Scheme | identifiers | http://id.loc.gov/vocabulary/identifiers/ |
+| The Funding, Research Administration and Projects Ontology | frap | http://purl.org/cerif/frapo/ |
 | Academic Institution Internal Structure Ontology | aiiso | http://purl.org/vocab/aiiso/schema# |
 | CiTO, the Citation Typing Ontology | cito | http://purl.org/spar/cito/ |
 | Art and Rare Materials Core Ontology | arm | https://ld4p.github.io/arm/core/ontology/0.1/ |
