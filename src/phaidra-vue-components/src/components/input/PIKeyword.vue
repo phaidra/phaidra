@@ -3,6 +3,8 @@
     <v-col cols="12" :md="multilingual ? (actions.length ? 8 : 10) : (actions.length ? 10 : 12)">
       <v-combobox
         v-model="model"
+        v-model:search="search"
+        @keydown.enter.capture="onKeywordEnter"
         @update:model-value="onInput"
         :items="items"
         :loading="loading"
@@ -11,14 +13,14 @@
         hide-no-data
         item-title="term"
         item-value="payload"
-        :label="$t(label)"
+        :label="composedLabel"
         multiple
         :disabled="disabled"
         clearable
         chips
         closable-chips
         :variant="fieldVariant"
-        :error-messages="errorMessages"
+        :error-messages="combinedErrorMessages"
         :hint="$t(hint)"
       >
         <template #item="{ props, internalItem }">
@@ -68,10 +70,12 @@
 </template>
 
 <script>
+import { useHostRootStore as useRootStore } from '../../stores/host-root'
 import { vocabulary } from '../../mixins/vocabulary'
 import { fieldproperties } from '../../mixins/fieldproperties'
 import xmlUtils from '../../utils/xml'
 import arrayUtils from '../../utils/arrays'
+import { resolveKeywordMaxLength } from '../../utils/keywordMaxLength'
 import SelectLanguage from '../select/SelectLanguage'
 
 export default {
@@ -123,7 +127,19 @@ export default {
       items: [],
       loading: false,
       model: this.value,
-      search: null
+      search: null,
+      lengthErrorMessages: []
+    }
+  },
+  computed: {
+    keywordMaxLength () {
+      return resolveKeywordMaxLength(useRootStore().instanceconfig)
+    },
+    composedLabel () {
+      return this.$t(this.label) + ' (' + this.$t('Confirm each keyword with enter, max {max} characters', { max: this.keywordMaxLength }) + ')'
+    },
+    combinedErrorMessages () {
+      return [...(this.errorMessages || []), ...this.lengthErrorMessages]
     }
   },
   watch: {
@@ -135,6 +151,12 @@ export default {
     }
   },
   methods: {
+    onKeywordEnter (e) {
+      if (String(this.search || '').length <= this.keywordMaxLength) return
+      e.preventDefault()
+      e.stopPropagation()
+      this.lengthErrorMessages = [this.$t('Each keyword must be at most {max} characters.', { max: this.keywordMaxLength })]
+    },
     onInput (value) {
       let arr = []
       for (let v of value) {
@@ -154,6 +176,7 @@ export default {
         }
         arr.push(v)
       }
+      this.lengthErrorMessages = []
       this.$emit('input', arr)
     },
     resolveChipValue (chipItem) {

@@ -1502,5 +1502,9 @@
     "meta_description_help": "Hilfe und Dokumentation zur Nutzung des digitalen Repositoriums.",
     "meta_description_credits": "Credits und Danksagungen für das digitale Repositorium.",
     "meta_description_terms_of_use": "Nutzungsbedingungen für das digitale Repositorium.",
-    "meta_description_metadata_fields": "Übersicht der Metadatenfelder im digitalen Repositorium."
+    "meta_description_metadata_fields": "Übersicht der Metadatenfelder im digitalen Repositorium.",
+    "Confirm each keyword with enter, max {max} characters": "Jedes Stichwort mit Enter bestätigen, max. {max} Zeichen",
+    "Each keyword must be at most {max} characters.": "Jedes Stichwort darf höchstens {max} Zeichen lang sein.",
+    "Keyword max length": "Maximale Stichwortlänge",
+    "Maximum number of characters allowed for each keyword. Default is 50.": "Maximale Zeichenanzahl pro Stichwort. Standard ist 50."
   }

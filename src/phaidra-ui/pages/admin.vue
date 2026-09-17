@@ -427,6 +427,20 @@
                 </v-row>
                 <v-row>
                   <v-col>
+                    <v-text-field
+                      :label="$t('Keyword max length')"
+                      v-model="parsedPublicConfigData.keywordMaxLength"
+                      type="number"
+                      min="1"
+                      hide-details
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="mt-4">
+                    {{ $t("Maximum number of characters allowed for each keyword. Default is 50.") }}
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
                     <v-checkbox
                       :label="$t('Enable Add Annotation')"
                       v-model="parsedPublicConfigData.addannotation"
