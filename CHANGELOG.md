@@ -20,6 +20,14 @@ Database-backed users and groups require the following migration:
 docker exec -it phaidra-api-1 perl migrations/v3.5.0/02_add_users_groups.pl
 ```
 
+### Adding missing PACS term labels
+
+Adds missing Physics and Astronomy Classification Scheme (PACS) term labels to `vocabulary_entry`.
+
+```
+docker exec -it phaidra-api-1 perl migrations/v3.5.0/03_add_pacs_term_labels.pl
+```
+
 # v3.4.0
 
 This release is the last release with Nuxt 2 framework in phaidra-ui.
