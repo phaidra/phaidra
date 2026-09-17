@@ -59,16 +59,8 @@ sub indexObject {
 sub getPages {
   my ($bookpid) = @_;
 
-  my $params = {
-    core => 'phaidra_pages',
-    q    => '*:*',
-    rows => 99999,
-    fq   => 'ispartof:"' . $bookpid . '"'
-  };
-
-  my $url = $api->clone->path('search/select')->query($params);
-
-  my $apires = $ua->post($url)->result;
+  my $url    = $api->clone->path("/object/$bookpid/relationships");
+  my $apires = $ua->get($url)->result;
 
   if ($apires->code != 200) {
     if (exists($apires->json->{alerts})) {
@@ -79,7 +71,11 @@ sub getPages {
     }
   }
 
-  return $apires->json->{response}->{docs};
+  my $members = $apires->json->{relationships}->{hasmember} || [];
+  $members = [$members] unless ref($members) eq 'ARRAY';
+
+  my @pagepids = map {s{^info:fedora/}{}r} @{$members};
+  return [sort {(substr($a, 2)) <=> (substr($b, 2))} @pagepids];
 }
 
 $log->info("get pages of $bookpid");
@@ -88,11 +84,11 @@ my $pages = getPages($bookpid);
 
 my $i   = 0;
 my $cnt = scalar @{$pages};
-for my $pagedoc (@{$pages}) {
+for my $pagepid (@{$pages}) {
   $i++;
-  $log->info("[$i/$cnt] indexing page " . $pagedoc->{pid});
-  unless (indexObject($pagedoc->{pid})) {
-    $log->info("error indexing page " . $pagedoc->{pid});
+  $log->info("[$i/$cnt] indexing page " . $pagepid);
+  unless (indexObject($pagepid)) {
+    $log->info("error indexing page " . $pagepid);
     die();
   }
   sleep(1);
@@ -107,5 +103,3 @@ unless (indexObject($bookpid)) {
 $log->info("done");
 
 __END__
-
-
