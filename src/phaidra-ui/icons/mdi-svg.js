@@ -2,6 +2,7 @@ import { defineComponent, h } from 'vue'
 import { aliases as mdiSvgAliases, mdi as mdiSvg } from 'vuetify/iconsets/mdi-svg'
 import {
   mdiAccount,
+  mdiAccountGroup, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   mdiAccountLock,
   mdiAlert,
   mdiAlertCircle,
@@ -9,13 +10,18 @@ import {
   mdiArrowLeft,
   mdiArrowRight,
   mdiBookOpenVariant,
+  mdiBookmarkOutline, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   mdiBookmarkPlusOutline,
   mdiCalendar,
   mdiCheckCircle,
   mdiChevronDown,
   mdiChevronDownCircleOutline,
+  mdiChevronRight, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   mdiChevronUp,
   mdiChevronUpCircleOutline,
+  mdiCircleDouble, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE  
+  mdiCircleHalfFull, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
+  mdiCircleMedium, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   mdiClock,
   mdiClose,
   mdiCloudUpload,
@@ -25,6 +31,7 @@ import {
   mdiDelete,
   mdiDotsVertical,
   mdiDownload,
+  mdiEmailOutline, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   mdiEmailSync,
   mdiEye,
   mdiEyeOff,
@@ -32,9 +39,11 @@ import {
   mdiFile,
   mdiFileDocument,
   mdiFileDocumentOutline,
+  mdiFileImagePlusOutline, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   mdiFileTree,
   mdiFlagVariant,
   mdiFolder,
+  mdiFolderImage, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   mdiFolderOpen,
   mdiGrid,
   mdiHelpCircleOutline,
@@ -44,6 +53,7 @@ import {
   mdiInformationOutline,
   mdiLink,
   mdiLock,
+  mdiLogoutVariant, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   mdiMagnify,
   mdiMapMarker,
   mdiMenu,
@@ -55,11 +65,14 @@ import {
   mdiPencil,
   mdiPlaylistRemove,
   mdiPlus,
+  mdiPlusBoxMultiple, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   mdiPlusCircle,
   mdiRefresh,
   mdiRss,
   mdiSchool,
   mdiScript,
+  mdiShieldAccount, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
+  mdiTextBoxOutline, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   mdiTranslate,
   mdiUploadMultiple,
   mdiVideo,
@@ -69,6 +82,7 @@ import {
 
 const mdiIconPaths = {
   'mdi-account': mdiAccount,
+  'mdi-account-group': mdiAccountGroup, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   'mdi-account-lock': mdiAccountLock,
   'mdi-alert': mdiAlert,
   'mdi-alert-circle': mdiAlertCircle,
@@ -76,13 +90,18 @@ const mdiIconPaths = {
   'mdi-arrow-left': mdiArrowLeft,
   'mdi-arrow-right': mdiArrowRight,
   'mdi-book-open-variant': mdiBookOpenVariant,
+  'mdi-bookmark-outline': mdiBookmarkOutline, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   'mdi-bookmark-plus-outline': mdiBookmarkPlusOutline,
   'mdi-calendar': mdiCalendar,
   'mdi-check-circle': mdiCheckCircle,
   'mdi-chevron-down': mdiChevronDown,
   'mdi-chevron-down-circle-outline': mdiChevronDownCircleOutline,
+  'mdi-chevron-right': mdiChevronRight, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   'mdi-chevron-up': mdiChevronUp,
   'mdi-chevron-up-circle-outline': mdiChevronUpCircleOutline,
+  'mdi-circle-double': mdiCircleDouble, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
+  'mdi-circle-half-full': mdiCircleHalfFull, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
+  'mdi-circle-medium': mdiCircleMedium, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   'mdi-clock': mdiClock,
   'mdi-close': mdiClose,
   'mdi-cloud-upload': mdiCloudUpload,
@@ -93,15 +112,18 @@ const mdiIconPaths = {
   'mdi-dots-vertical': mdiDotsVertical,
   'mdi-download': mdiDownload,
   'mdi-email-sync': mdiEmailSync,
+  'mdi-email-outline': mdiEmailOutline, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   'mdi-eye': mdiEye,
   'mdi-eye-off': mdiEyeOff,
   'mdi-eye-outline': mdiEyeOutline,
   'mdi-file': mdiFile,
   'mdi-file-document': mdiFileDocument,
   'mdi-file-document-outline': mdiFileDocumentOutline,
+  'mdi-file-image-plus-outline': mdiFileImagePlusOutline, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   'mdi-file-tree': mdiFileTree,
   'mdi-flag-variant': mdiFlagVariant,
   'mdi-folder': mdiFolder,
+  'mdi-folder-image': mdiFolderImage, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   'mdi-folder-open': mdiFolderOpen,
   'mdi-grid': mdiGrid,
   'mdi-help-circle-outline': mdiHelpCircleOutline,
@@ -111,6 +133,7 @@ const mdiIconPaths = {
   'mdi-information-outline': mdiInformationOutline,
   'mdi-link': mdiLink,
   'mdi-lock': mdiLock,
+  'mdi-logout-variant': mdiLogoutVariant, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   'mdi-magnify': mdiMagnify,
   'mdi-map-marker': mdiMapMarker,
   'mdi-menu': mdiMenu,
@@ -122,11 +145,14 @@ const mdiIconPaths = {
   'mdi-pencil': mdiPencil,
   'mdi-playlist-remove': mdiPlaylistRemove,
   'mdi-plus': mdiPlus,
+  'mdi-plus-box-multiple': mdiPlusBoxMultiple, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   'mdi-plus-circle': mdiPlusCircle,
   'mdi-refresh': mdiRefresh,
   'mdi-rss': mdiRss,
   'mdi-school': mdiSchool,
   'mdi-script': mdiScript,
+  'mdi-shield-account': mdiShieldAccount, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
+  'mdi-text-box-outline': mdiTextBoxOutline, // Used by Phaidra Unipd (Padova) - PLEASE DO NOT REMOVE
   'mdi-translate': mdiTranslate,
   'mdi-upload-multiple': mdiUploadMultiple,
   'mdi-video': mdiVideo,
