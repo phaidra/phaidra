@@ -1,5 +1,5 @@
 <template>
-  <v-container class="mt-2" fluid>
+  <v-container class="pa-0 mt-2" fluid>
     <h1 class="d-sr-only">{{$t('Admin')}}</h1>
     <div class="mb-4"><strong>Note:</strong> Config is cached in each worker, don't forget to restart phaidra-api to apply changes.</div>
     <v-layout class="admin-layout">

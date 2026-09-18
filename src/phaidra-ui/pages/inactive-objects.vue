@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="pa-0">
     <h1 class="d-sr-only">{{ pageTitle }}</h1>
     <v-row>
       <v-col cols="12">
