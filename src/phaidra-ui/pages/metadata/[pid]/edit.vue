@@ -19,6 +19,7 @@ definePageMeta({
 </script>
 
 <script>
+import { getCurrentInstance } from 'vue'
 import { useRootStore } from '~/stores/root'
 import jsonLd from "phaidra-vue-components/src/utils/json-ld"
 import { context } from "../../../mixins/context"
@@ -142,22 +143,21 @@ export default {
       return jsonLd.json2form(jsonld, null, this.vocabularies);
     },
   },
-  beforeRouteEnter: function (to, from, next) {
-    next((vm) => {
-      useRootStore().setLoading(true);
-      vm.parentpid = from.params.pid;
-      vm.loadJsonld(vm, to.params.pid).then(() => {
-        useRootStore().setLoading(false);
-      });
-    });
+  created: async function () {
+    useRootStore().setLoading(true)
+    try {
+      await this.loadJsonld(this, this.pid)
+    } finally {
+      useRootStore().setLoading(false)
+    }
   },
   beforeRouteUpdate: function (to, from, next) {
-    this.parentpid = from.params.pid;
-    useRootStore().setLoading(true);
-    this.loadJsonld(this, to.params.pid).then(() => {
-      useRootStore().setLoading(false);
-      next();
-    });
+    const self = getCurrentInstance()?.proxy
+    useRootStore().setLoading(true)
+    self.loadJsonld(self, to.params.pid).then(() => {
+      useRootStore().setLoading(false)
+      next()
+    })
   },
 };
 </script>

@@ -37,6 +37,7 @@ definePageMeta({
 </script>
 
 <script>
+import { getCurrentInstance } from 'vue'
 import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
 import arrays from "phaidra-vue-components/src/utils/arrays"
 import fields from "phaidra-vue-components/src/utils/fields"
@@ -337,14 +338,13 @@ export default {
       this.applyDeepLinkPrefill()
     },
   },
-  beforeRouteEnter: async function (to, from, next) {
-    next(async function (vm) {
-      await vm.createForm(vm);
-    });
+  created: async function () {
+    await this.createForm(this)
   },
   beforeRouteUpdate: async function (to, from, next) {
-    await this.createForm(this);
-    next();
+    const self = getCurrentInstance()?.proxy
+    await self.createForm(self)
+    next()
   },
 };
 </script>

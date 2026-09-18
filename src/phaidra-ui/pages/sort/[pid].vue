@@ -22,6 +22,7 @@ definePageMeta({
 </script>
 
 <script>
+import { getCurrentInstance } from 'vue'
 import { useRootStore } from '~/stores/root'
 import qs from 'qs'
 import { context } from '../../mixins/context'
@@ -116,13 +117,12 @@ export default {
       useRootStore().setAlerts([{ type: 'success', key: 'order_saved_for_object', params: { o: event }}])
     }
   },
-  beforeRouteEnter: function (to, from, next) {
-    next(vm => {
-      vm.loadData(vm, to.params.pid)
-    })
+  created: function () {
+    this.loadData(this, this.pid)
   },
   beforeRouteUpdate: function (to, from, next) {
-    this.loadData(this, to.params.pid).then(() => {
+    const self = getCurrentInstance()?.proxy
+    self.loadData(self, to.params.pid).then(() => {
       next()
     })
   }

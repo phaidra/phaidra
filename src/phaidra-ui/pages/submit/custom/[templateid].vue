@@ -33,6 +33,7 @@ definePageMeta({
 </script>
 
 <script>
+import { getCurrentInstance } from 'vue'
 import arrays from "phaidra-vue-components/src/utils/arrays"
 import fields from "phaidra-vue-components/src/utils/fields"
 import { context } from "../../../mixins/context"
@@ -225,17 +226,12 @@ export default {
       self.loading = false
     }
   },
-  beforeRouteEnter: function (to, from, next) {
-    next(vm => {
-      vm.templateid = to.params.templateid
-      vm.loadTemplate(vm).then(() => {
-        next()
-      })
-    })
+  created: async function () {
+    await this.loadTemplate(this)
   },
   beforeRouteUpdate: function (to, from, next) {
-    this.templateid = to.params.templateid
-    this.loadTemplate(this).then(() => {
+    const self = getCurrentInstance()?.proxy
+    self.loadTemplate(self).then(() => {
       next()
     })
   }
