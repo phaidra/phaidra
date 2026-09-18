@@ -90,6 +90,7 @@ sub _getRecordUpdate {
     }
     unless ($recUpdate->{deleted}) {
       $log->warn("WARNING: pid[$pid] NOT flagging as deleted, object missing in index but not deleted. /state result code[".$apires->code."]");
+      return;
     }
   }
 
@@ -197,7 +198,7 @@ sub updateRecords {
         $log->debug("doc pid[$r->{pid}] not found in solr batch, deleted?");
         my $recUpdate = _getRecordUpdate($ua, $urlsolr, $urlapi, $r->{pid}, undef);
         if ($recUpdate) {
-          my $mdbres = $recordsColl->replace_one({ pid => $r->{pid} }, $recUpdate );
+          my $mdbres = $recordsColl->update_one({ pid => $r->{pid} }, { '$set' => $recUpdate });
           $log->debug("updated pid[$r->{pid}] matched[".$mdbres->matched_count."]");
           $updated++;
         }
