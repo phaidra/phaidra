@@ -565,10 +565,10 @@
           </v-row>
           <v-row justify="center" v-if="showPreview">
               <v-col cols="12">
-                <div class="iframe-container" v-if="objectInfo.cmodel === 'Video' || objectInfo.cmodel === 'Audio'">
+                <div class="iframe-container" v-if="objectInfo.cmodel === 'Video'">
                   <iframe
                     :key="'preview-' + objectInfo.pid + '-' + previewTheme"
-                    :title="$t('Preview')"
+                    :title="$t('Video preview')"
                     :src="getPreviewUrl(objectInfo.pid)"
                     width="100%"
                     height="100%"
@@ -583,10 +583,12 @@
                   :key="'preview-' + objectInfo.pid + '-' + previewTheme"
                   :title="$t('Preview')"
                   :src="getPreviewUrl(objectInfo.pid, { addannotation: instanceconfig.addannotation })"
-                  width="100%"
-                  :height="objectInfo.cmodel === 'Container' ? '300' : '500'"
+                  :width="objectInfo.cmodel === 'Audio' ? '100%' : objectInfo.cmodel === 'Container' ? '100%' : '100%'"
+                  :height="objectInfo.cmodel === 'Audio' ? '270' : objectInfo.cmodel === 'Container' ? '300' : '500'"
                   :style="
-                    objectInfo.cmodel === 'Container' ? 'height: 300px; width: 100%; border: 0px;' : 'height: 500px; width: 100%; border: 0px;'
+                    objectInfo.cmodel === 'Audio'
+                      ? 'height: 270px; width: 100%; border: 0px;'
+                      : objectInfo.cmodel === 'Container' ? 'height: 300px; width: 100%; border: 0px;' : 'height: 500px; width: 100%; border: 0px;'
                   "
                   class="preview-iframe"
                   scrolling="no"
@@ -667,27 +669,17 @@
                 :key="'member_' + member.pid"
               >
                 <template v-if="!member.isrestricted">
-                <div class="iframe-container" v-if="member.cmodel === 'Video' || member.cmodel === 'Audio'">
-                  <iframe
-                    :title="$t('Preview')"
-                    :key="'member-preview-' + member.pid + '-' + previewTheme"
-                    :src="getPreviewUrl(member.pid)"
-                    width="100%"
-                    height="100%"
-                    frameborder="0"
-                    scrolling="no"
-                    allowfullscreen="yes"
-                    class="responsive-iframe preview-iframe"
-                    >Content</iframe>
-                </div>
                 <iframe
-                  v-else
                   :title="$t('Preview')"
                   :key="'member-preview-' + member.pid + '-' + previewTheme"
                   :src="getPreviewUrl(member.pid)"
                   width="100%"
-                  height="500"
-                  style="height: 500px; width: 100%; border: 0px;"
+                  :height="member.cmodel === 'Audio' ? '60' : '500'"
+                  :style="
+                    member.cmodel === 'Audio'
+                      ? 'height: 60px; width: 100%; border: 0px;'
+                      : 'height: 500px; width: 100%; border: 0px;'
+                  "
                   class="preview-iframe"
                   scrolling="no"
                   frameborder="0"

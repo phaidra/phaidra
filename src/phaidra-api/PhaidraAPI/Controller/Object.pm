@@ -937,13 +937,16 @@ sub preview {
         return;
       }
 
-      # Reuse videoplayer; thumbnail endpoint falls back to images/audio.png
-      $self->stash(audio_poster_mode => 1);
+      my $thumbPid = $self->get_is_thumbnail_for($pid);
+
+      if ($thumbPid) {
+        $self->stash(thumbpid => $pid);
+      }
 
       my $u_model = PhaidraAPI::Model::Util->new;
       $u_model->track_action($self, $pid, 'preview');
 
-      $self->render(template => 'utils/videoplayer', format => 'html');
+      $self->render(template => 'utils/audioplayer', format => 'html');
       return;
     }
     else {
