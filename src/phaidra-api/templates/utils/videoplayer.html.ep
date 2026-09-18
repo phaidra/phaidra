@@ -18,7 +18,8 @@
       fluid: true,
       responsive: true,
       controls: true,
-      preload: 'metadata'
+      preload: 'metadata'<% if (stash('audio_only_mode')) { %>,
+      audioOnlyMode: true<% } %>
     });
   </script>
  </body>
