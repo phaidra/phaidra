@@ -79,34 +79,17 @@ sub _getRecordUpdate {
     }
   } else {
     $log->info("doc pid[$pid] not found in solr, checking phaidra-api");
-    my $apires = $ua->get($urlapi."/object/".$pid."/state?foxml=1")->result;
-    if ($apires->code == 404) {
-      if (exists($apires->json->{alerts})) {
-        for my $a (@{$apires->json->{alerts}}) {
-          if ($a->{msg} eq 'Not Found') {
-            $log->info("pid[$pid] get state result code[".$apires->code."], fedora msg eq 'Not Found', object seems purged, flagging as deleted");
-            $recUpdate->{deleted} = 1;
-            $deleted++;
-          }
-        }
-      }
-    } else {
-      if ($apires->code == 301) {
-        if (exists($apires->json->{state})) {
-          if ($apires->json->{state} eq 'Deleted') {
-            $log->info("pid[$pid] get state result code[".$apires->code."] and state eq 'Deleted', flagging as deleted");
-            $recUpdate->{deleted} = 1;
-            $deleted++;
-          }
-        }
+    my $apires = $ua->get($urlapi."/object/".$pid."/state")->result;
+    if ($apires->code == 410) {
+      # let's check for tombstone to be sure
+      if (exists($apires->json->{tombstone})) {
+        $log->info("pid[$pid] get state result code[".$apires->code."], found tombstone, flagging as deleted");
+        $recUpdate->{deleted} = 1;
+        $deleted++;
       }
     }
     unless ($recUpdate->{deleted}) {
-      if (exists($apires->json->{alerts})) {
-        $log->info("pid[$pid] NOT flagging as deleted, get state result code[".$apires->code."] alerts:\n".Dumper($apires->json->{alerts}));
-      } else {
-        $log->info("pid[$pid] NOT flagging as deleted, get state result code[".$apires->code."]");
-      }
+      $log->warn("WARNING: pid[$pid] NOT flagging as deleted, object missing in index but not deleted. /state result code[".$apires->code."]");
     }
   }
 
