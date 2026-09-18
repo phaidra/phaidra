@@ -54,6 +54,15 @@
         </v-col>
         <bic-tree-dialog ref="bictreedialog" @term-selected="handleInput($event)"></bic-tree-dialog>
       </v-row>
+      <v-alert
+        class="mt-2"
+        density="compact"
+        variant="outlined"
+        color="error"
+        :icon="false"
+      >
+        <span class="font-italic">{{ $t('Subject (BIC) is obsolete and superseded by Subject (Thema) metadata field. Please consider replacing this field with a corresponding Thema subject category heading.') }}</span>
+      </v-alert>
       <v-row v-if="dividerbottom">
         <v-divider class="mt-2 mb-6"></v-divider>
       </v-row>

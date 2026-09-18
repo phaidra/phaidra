@@ -1321,6 +1321,7 @@
   "System tag": "Tag di sistema",
   "Subject (Thema)": "Soggetto (Thema)",
   "Subject (BIC)": "Soggetto (BIC)",
+  "Subject (BIC) is obsolete and superseded by Subject (Thema) metadata field. Please consider replacing this field with a corresponding Thema subject category heading.": "Soggetto (BIC) è obsoleto ed è stato sostituito dal campo metadati Soggetto (Thema). Si consiglia di sostituire questo campo con una corrispondente categoria Thema.",
   "Study plan.": "Piano di studi.",
   "Study plan (select)": "Piano di studi (Vocabolario)",
   "Study plan controlled vocabulary.": "Piano di studi – Vocabolario controllato.",
