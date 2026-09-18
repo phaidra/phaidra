@@ -19,6 +19,7 @@ definePageMeta({
 </script>
 
 <script>
+import { getCurrentInstance } from 'vue'
 import { useRootStore } from '~/stores/root'
 import qs from 'qs'
 import { context } from '../../mixins/context'
@@ -124,16 +125,17 @@ export default {
     }
   },
   beforeRouteEnter: function (to, from, next) {
-    next(vm => {
-      vm.parentpid = from.params.pid
-      vm.loadData(vm, to.params.pid).then(() => {
-        next()
-      })
-    })
+    to.meta.deleteFromPid = from.params.pid
+    next()
+  },
+  created: function () {
+    this.parentpid = this.$route.meta.deleteFromPid
+    this.loadData(this, this.pid)
   },
   beforeRouteUpdate: function (to, from, next) {
-    this.parentpid = from.params.pid
-    this.loadData(this, to.params.pid).then(() => {
+    const self = getCurrentInstance()?.proxy
+    self.parentpid = from.params.pid
+    self.loadData(self, to.params.pid).then(() => {
       next()
     })
   }

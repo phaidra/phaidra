@@ -110,6 +110,7 @@ definePageMeta({
 </script>
 
 <script>
+import { getCurrentInstance } from 'vue'
 import { useRootStore } from '~/stores/root'
 import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
 import fields from "phaidra-vue-components/src/utils/fields"
@@ -749,23 +750,29 @@ export default {
       }
     },
   },
-  beforeRouteEnter: async function (to, from, next) {
-    next(async function (vm) {
-      useRootStore().setLoading(true);
-      await vm.createForm(vm);
-      if (vm.relation === "hassuccessor") {
-        await useRootStore().fetchObjectInfo(vm.relatedpid);
+  created: async function () {
+    useRootStore().setLoading(true)
+    try {
+      await this.createForm(this)
+      if (this.relation === "hassuccessor") {
+        await useRootStore().fetchObjectInfo(this.relatedpid)
       }
-      useRootStore().setLoading(false);
-    });
+    } finally {
+      useRootStore().setLoading(false)
+    }
   },
   beforeRouteUpdate: async function (to, from, next) {
-    useRootStore().setLoading(true);
-    await this.createForm(this);
-    if (this.relation === "hassuccessor") {
-      await useRootStore().fetchObjectInfo(this.relatedpid);
+    const self = getCurrentInstance()?.proxy
+    useRootStore().setLoading(true)
+    try {
+      await self.createForm(self)
+      if (self.relation === "hassuccessor") {
+        await useRootStore().fetchObjectInfo(self.relatedpid)
+      }
+    } finally {
+      useRootStore().setLoading(false)
+      next()
     }
-    useRootStore().setLoading(false);
   },
   mounted() {
     console.log(

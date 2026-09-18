@@ -41,6 +41,7 @@ definePageMeta({
 </script>
 
 <script>
+import { getCurrentInstance } from 'vue'
 import { useRootStore } from '~/stores/root'
 import { useVocabularyStore } from 'phaidra-vue-components/src/stores/vocabulary'
 import arrays from "phaidra-vue-components/src/utils/arrays"
@@ -525,14 +526,10 @@ export default {
       await this.createForm(this)
     }
   },
-  beforeRouteEnter: async function (to, from, next) {
-    next(async function (vm) {
-      await vm.createForm(vm);
-    });
-  },
   beforeRouteUpdate: async function (to, from, next) {
-    await this.createForm(this);
-    next();
+    const self = getCurrentInstance()?.proxy
+    await self.createForm(self)
+    next()
   },
 };
 </script>

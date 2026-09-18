@@ -61,6 +61,7 @@ definePageMeta({
 </script>
 
 <script>
+import { getCurrentInstance } from 'vue'
 import { useRootStore } from '~/stores/root'
 import fields from "phaidra-vue-components/src/utils/fields";
 import { context } from "../../../mixins/context";
@@ -233,20 +234,21 @@ export default {
       }
     },
   },
-  beforeRouteEnter: function (to, from, next) {
-    next((vm) => {
-      useRootStore().setLoading(true);
-      vm.loadUwmetadata(vm).then(() => {
-        useRootStore().setLoading(false);
-      });
-    });
+  created: async function () {
+    useRootStore().setLoading(true)
+    try {
+      await this.loadUwmetadata(this)
+    } finally {
+      useRootStore().setLoading(false)
+    }
   },
   beforeRouteUpdate: function (to, from, next) {
-    useRootStore().setLoading(true);
-    this.loadUwmetadata(this).then(() => {
-      useRootStore().setLoading(false);
-      next();
-    });
+    const self = getCurrentInstance()?.proxy
+    useRootStore().setLoading(true)
+    self.loadUwmetadata(self).then(() => {
+      useRootStore().setLoading(false)
+      next()
+    })
   },
 };
 </script>

@@ -26,6 +26,7 @@ definePageMeta({
 </script>
 
 <script>
+import { getCurrentInstance } from 'vue'
 import { useRootStore } from '~/stores/root'
 import { context } from '../../mixins/context'
 import { config } from '../../mixins/config'
@@ -72,13 +73,12 @@ export default {
       }
     }
   },
-  beforeRouteEnter: async function (to, from, next) {
-    next(async function (vm) {
-      await vm.loadRights(vm)
-    })
+  created: async function () {
+    await this.loadRights(this)
   },
   beforeRouteUpdate: async function (to, from, next) {
-    await this.loadRights(this)
+    const self = getCurrentInstance()?.proxy
+    await self.loadRights(self)
     next()
   }
 }
