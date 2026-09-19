@@ -4,13 +4,12 @@ use strict;
 use warnings;
 use Digest::SHA qw(sha256_hex);
 use MIME::Lite::TT::HTML;
-use Mojo::File qw(path);
 use Mojo::URL;
 use PhaidraAPI::Model::Config;
 use PhaidraAPI::Model::Directory;
+use PhaidraAPI::Model::EmailTemplate;
 use PhaidraAPI::Model::Ratelimit;
 use PhaidraAPI::Model::Users;
-use Template;
 use base 'Mojolicious::Controller';
 
 sub _model {
@@ -105,21 +104,6 @@ sub delete {
   return $self->render(json => {status => 200});
 }
 
-sub _template {
-  my ($self, $private, $key, $filename) = @_;
-  return $private->{$key} if defined($private->{$key}) && length($private->{$key});
-  return path($self->app->home, 'templates', 'email', $filename)->slurp;
-}
-
-sub _render_template {
-  my ($template, $variables) = @_;
-  my $tt     = Template->new;
-  my $output = '';
-  $tt->process(\$template, $variables, \$output)
-    or die 'processing password reset email template failed: ' . $tt->error;
-  return $output;
-}
-
 sub _send_reset_email {
   my ($self, $identifier, $allow_passwordless) = @_;
   my ($token, $email, $username, $ttl) = _model()->create_reset($self, $identifier, $allow_passwordless);
@@ -127,9 +111,7 @@ sub _send_reset_email {
 
   my $confmodel = PhaidraAPI::Model::Config->new;
   my $public    = $confmodel->get_public_config($self);
-  my $private   = $confmodel->get_private_config($self);
-
-  my $private = PhaidraAPI::Model::Config->new->get_private_config($self) || {};
+  my $private   = $confmodel->get_private_config($self) || {};
   die 'SMTP is not configured' unless $private->{smtpserver} && $private->{smtpport};
   my $url = Mojo::URL->new($self->app->config->{scheme} . '://' . $self->app->config->{baseurl} . '/password-reset');
   $url->query(token => $token);
@@ -138,10 +120,17 @@ sub _send_reset_email {
     username        => $username,
     expires_minutes => int($ttl / 60),
   );
-  my $subject_template = _template($self, $private, 'passwordresetemailsubject', 'password-reset-subject.txt');
-  my $text_template    = _template($self, $private, 'passwordresetemailtext',    'password-reset.txt.tt');
-  my $html_template    = _template($self, $private, 'passwordresetemailhtml',    'password-reset.html.tt');
-  my $subject          = _render_template($subject_template, \%variables);
+  my $email_model = PhaidraAPI::Model::EmailTemplate->new;
+  my $tpl         = $email_model->resolve(
+    $self, $private,
+    'passwordresetemail',
+    $email_model->language_from_request($self),
+    { subject => 'password-reset-subject.txt',
+      html    => 'password-reset.html.tt',
+      text    => 'password-reset.txt.tt',
+    }
+  );
+  my $subject = $email_model->render($tpl->{subject}, \%variables);
 
   my $message = MIME::Lite::TT::HTML->new(
     To         => $email,
@@ -149,7 +138,7 @@ sub _send_reset_email {
     Subject    => $subject,
     Charset    => 'utf8',
     Encoding   => 'quoted-printable',
-    Template   => {html => \$html_template, text => \$text_template},
+    Template   => {html => \$tpl->{html}, text => \$tpl->{text}},
     TmplParams => \%variables
   );
   $message->send(

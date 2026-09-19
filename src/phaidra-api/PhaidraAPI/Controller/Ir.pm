@@ -17,6 +17,7 @@ use PhaidraAPI::Model::Index;
 use PhaidraAPI::Model::Config;
 use PhaidraAPI::Model::Jsonld;
 use PhaidraAPI::Model::Directory;
+use PhaidraAPI::Model::EmailTemplate;
 use Time::HiRes qw/tv_interval gettimeofday/;
 use Storable    qw(dclone);
 use POSIX       qw/strftime/;
@@ -382,19 +383,24 @@ sub approve {
   $emaildata{pid}     = $pid;
   $emaildata{baseurl} = $pubconfig->{irbaseurl};
 
-  my $subject = $pubconfig->{irname} . " - Redaktionelle Bearbeitung abgeschlossen / Submission process completed";
+  my $email_model = PhaidraAPI::Model::EmailTemplate->new;
+  my $lang        = $email_model->language_from_request($self);
+  my $tpl         = $email_model->resolve($self, $privconfig, 'irmdcheckemail', $lang, {});
+  my $subject
+    = length($tpl->{subject})
+    ? $email_model->render($tpl->{subject}, \%emaildata)
+    : ($pubconfig->{irname} . " - Redaktionelle Bearbeitung abgeschlossen / Submission process completed");
+  my $output = '';
+  eval {$output = $email_model->render($tpl->{html}, \%emaildata);};
+
+  if ($@) {
+    $self->app->log->error("send mdcheck email pid[$pid]: $@");
+    push @{$res->{alerts}}, {type => 'error', msg => "error sending metadata check email for pid[$pid]: $@"};
+  }
 
   my $supportEmail = $privconfig->{iremail};
   my $from         = $supportEmail;
   $from = substr($supportEmail, 0, index($supportEmail, ',')) if index($supportEmail, ',') != -1;
-
-  my $template_string = $privconfig->{irmdcheckemail};
-  my $tt              = Template->new();
-  my $output;
-  unless ($tt->process(\$template_string, \%emaildata, \$output)) {
-    $self->app->log->error("send mdcheck email pid[$pid]: " . $tt->error());
-    push @{$res->{alerts}}, {type => 'error', msg => "error sending metadata check email for pid[$pid]: " . $tt->error()};
-  }
 
   eval {
     my $msg = MIME::Lite->new(
@@ -1071,13 +1077,17 @@ sub sendEmbargoendEmail {
   $emaildata{pid}     = $pid;
   $emaildata{baseurl} = $pubconfig->{irbaseurl};
 
-  my $subject = $pubconfig->{irname} . " - Embargofrist abgelaufen / Embargo period expired";
+  my $email_model = PhaidraAPI::Model::EmailTemplate->new;
+  my $tpl         = $email_model->resolve($self, $privconfig, 'irembargoendemail', 'eng', {});
+  my $subject
+    = length($tpl->{subject})
+    ? $email_model->render($tpl->{subject}, \%emaildata)
+    : ($pubconfig->{irname} . " - Embargofrist abgelaufen / Embargo period expired");
+  my $output = '';
+  eval {$output = $email_model->render($tpl->{html}, \%emaildata);};
 
-  my $template_string = $privconfig->{irembargoendemail};
-  my $tt              = Template->new();
-  my $output;
-  unless ($tt->process(\$template_string, \%emaildata, \$output)) {
-    $self->app->log->error("send embargo email pid[$pid]: " . $tt->error());
+  if ($@) {
+    $self->app->log->error("send embargo email pid[$pid]: $@");
   }
 
   my $supportEmail = $privconfig->{iremail};
