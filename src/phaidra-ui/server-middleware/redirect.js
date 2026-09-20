@@ -63,19 +63,20 @@ export default async (req, res, next) => {
         url: apiBaseURL + '/object/o:' + match[1] + '/info',
       })
       const versionsData = response.data.info.versions
+      let pid = 'o:' + match[1]
       if (versionsData.length) {
         const latestVersionIndex = versionsData.reduce((maxIdx, item, index, arr) =>
           new Date(item.created) > new Date(arr[maxIdx].created) ? index : maxIdx, 0
         );
         if (new Date(response.data.info.created) < new Date(versionsData[latestVersionIndex].created)) {
-          await redirectEvaluator(versionsData[latestVersionIndex]['pid'])
-          return
+          pid = versionsData[latestVersionIndex]['pid']
         }
       }
-      next()
+      await redirectEvaluator(pid)
+      return
     } catch (error) {
       console.log('error', error)
-      next()
+      return next()
     }
   }
 
