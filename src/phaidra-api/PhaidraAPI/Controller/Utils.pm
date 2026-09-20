@@ -14,6 +14,7 @@ use PhaidraAPI::Model::Search;
 use PhaidraAPI::Model::Util;
 use PhaidraAPI::Model::Config;
 use PhaidraAPI::Model::Directory;
+use PhaidraAPI::Model::EmailTemplate;
 use MIME::Lite::TT::HTML;
 
 sub fedora_storage_usage {
@@ -239,23 +240,29 @@ sub request_doi {
   $emaildata{email}   = $userdata->{email};
   $emaildata{baseurl} = $self->config->{phaidra}->{baseurl};
   $self->app->log->debug("Sending DOI request email pid[$pid] currentuser[$currentuser] name[" . $userdata->{firstname} . " " . $userdata->{lastname} . "] from[" . $userdata->{email} . "] to[$to]");
-  my %options;
-  for my $p (@{$self->app->renderer->paths}) {
-    $options{INCLUDE_PATH} = $p;
-  }
+  my $email_model = PhaidraAPI::Model::EmailTemplate->new;
+  my $tpl         = $email_model->resolve(
+    $self,
+    $privconfig,
+    'doirequestemail',
+    $email_model->language_from_request($self),
+    { html => 'doirequest.html.tt',
+      text => 'doirequest.txt.tt',
+    }
+  );
+  my $subject
+    = length($tpl->{subject})
+    ? $email_model->render($tpl->{subject}, \%emaildata)
+    : ('Subsequent DOI allocation: ' . $pid . ' ' . $userdata->{email});
   eval {
     my $msg = MIME::Lite::TT::HTML->new(
-      From     => $userdata->{email},
-      To       => $to,
-      Subject  => $privconfig->{doirequestemailsubject} || 'Subsequent DOI allocation: ' . $pid . ' ' . $userdata->{email},
-      Charset  => 'utf8',
-      Encoding => 'quoted-printable',
-      Template => {
-        html => $privconfig->{doirequestemailhtml} || 'doirequest.html.tt',
-        text => $privconfig->{doirequestemailtext} || 'doirequest.txt.tt'
-      },
-      TmplParams  => \%emaildata,
-      TmplOptions => \%options
+      From       => $userdata->{email},
+      To         => $to,
+      Subject    => $subject,
+      Charset    => 'utf8',
+      Encoding   => 'quoted-printable',
+      Template   => {html => \$tpl->{html}, text => \$tpl->{text}},
+      TmplParams => \%emaildata
     );
     $msg->send('smtp', $privconfig->{smtpserver} . ':' . $privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => ($privconfig->{smtpport} eq '465' || $privconfig->{smtpport} eq '587') ? 1 : 0);
   };
@@ -674,21 +681,29 @@ sub send_daily_report {
     $emaildata{query_reports} = \@query_reports;
   }
 
-  my %options;
-  $options{INCLUDE_PATH} = $self->config->{home} . '/templates/email';
+  my $email_model = PhaidraAPI::Model::EmailTemplate->new;
+  my $tpl         = $email_model->resolve(
+    $self,
+    $privconfig,
+    'reportingemailtemplates',
+    'eng',
+    { html => 'reporting.html.tt',
+      text => 'reporting.txt.tt',
+    }
+  );
+  my $subject
+    = length($tpl->{subject})
+    ? $email_model->render($tpl->{subject}, \%emaildata)
+    : ('Phaidra Daily Report - ' . $emaildata{date});
   eval {
     my $msg = MIME::Lite::TT::HTML->new(
-      From     => $pubconfig->{email} || $privconfig->{reportingemail},
-      To       => $privconfig->{reportingemail},
-      Subject  => $privconfig->{reportingemailsubject} || 'Phaidra Daily Report - ' . $emaildata{date},
-      Charset  => 'utf8',
-      Encoding => 'quoted-printable',
-      Template => {
-        html => $privconfig->{reportingemailhtml} || 'reporting.html.tt',
-        text => $privconfig->{reportingemailtext} || 'reporting.txt.tt'
-      },
-      TmplParams  => \%emaildata,
-      TmplOptions => \%options
+      From       => $pubconfig->{email} || $privconfig->{reportingemail},
+      To         => $privconfig->{reportingemail},
+      Subject    => $subject,
+      Charset    => 'utf8',
+      Encoding   => 'quoted-printable',
+      Template   => {html => \$tpl->{html}, text => \$tpl->{text}},
+      TmplParams => \%emaildata
     );
     $msg->send('smtp', $privconfig->{smtpserver} . ':' . $privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => ($privconfig->{smtpport} eq '465' || $privconfig->{smtpport} eq '587') ? 1 : 0);
     $self->app->log->info("Daily report sent successfully to " . $privconfig->{reportingemail});

@@ -5,7 +5,9 @@ use warnings;
 use v5.10;
 use MIME::Lite;
 use MIME::Lite::TT::HTML;
+use PhaidraAPI::Model::Config;
 use PhaidraAPI::Model::Directory;
+use PhaidraAPI::Model::EmailTemplate;
 use base 'Mojolicious::Controller';
 
 sub feedback {
@@ -33,21 +35,26 @@ sub feedback {
   $emaildata{message}   = $message;
   $emaildata{user}      = $user;
 
-  my %options;
-  $options{INCLUDE_PATH} = $self->config->{home} . '/templates/email';
+  my $email_model = PhaidraAPI::Model::EmailTemplate->new;
+  my $tpl         = $email_model->resolve(
+    $self,
+    $privconfig,
+    'feedbackemail',
+    $email_model->language_from_request($self),
+    { html => 'feedback.html.tt',
+      text => 'feedback.txt.tt',
+    }
+  );
+  my $subject = length($tpl->{subject}) ? $email_model->render($tpl->{subject}, \%emaildata) : 'Phaidra feedback';
   eval {
     my $msg = MIME::Lite::TT::HTML->new(
-      From     => $pubconfig->{email},
-      To       => $pubconfig->{email},
-      Subject  => $privconfig->{feedbackemailsubject} || 'Phaidra feedback',
-      Charset  => 'iso-8859-15',
-      Encoding => 'quoted-printable',
-      Template => {
-        html => $privconfig->{feedbackemailhtml} || 'feedback.html.tt',
-        text => $privconfig->{feedbackemailtext} || 'feedback.txt.tt'
-      },
-      TmplParams  => \%emaildata,
-      TmplOptions => \%options
+      From       => $pubconfig->{email},
+      To         => $pubconfig->{email},
+      Subject    => $subject,
+      Charset    => 'iso-8859-15',
+      Encoding   => 'quoted-printable',
+      Template   => {html => \$tpl->{html}, text => \$tpl->{text}},
+      TmplParams => \%emaildata
     );
     $msg->send('smtp', $privconfig->{smtpserver} . ':' . $privconfig->{smtpport}, AuthUser => $privconfig->{smtpuser}, AuthPass => $privconfig->{smtppassword}, SSL => ($privconfig->{smtpport} eq '465' || $privconfig->{smtpport} eq '587') ? 1 : 0);
   };

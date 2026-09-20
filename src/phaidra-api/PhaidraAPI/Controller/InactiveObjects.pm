@@ -10,6 +10,7 @@ use PhaidraAPI::Model::Authorization;
 use PhaidraAPI::Model::Object;
 use PhaidraAPI::Model::Directory;
 use PhaidraAPI::Model::Config;
+use PhaidraAPI::Model::EmailTemplate;
 use base 'Mojolicious::Controller';
 
 # Single capabilities check: can_manage (admin/approver) and is_admin.
@@ -257,26 +258,30 @@ sub _notify_owner_activated {
     source     => $source,
   );
 
-  my %options;
-  for my $p (@{$self->app->renderer->paths}) {
-    $options{INCLUDE_PATH} = $p;
-  }
-
-  my $subject = $privconfig->{inactiveactivatedemailsubject} || "PHAIDRA archive ready / Archivierung abgeschlossen ($pid)";
+  my $email_model = PhaidraAPI::Model::EmailTemplate->new;
+  my $tpl         = $email_model->resolve(
+    $self,
+    $privconfig,
+    'inactiveactivatedemail',
+    $email_model->language_from_request($self),
+    { html => 'inactive_activated.html.tt',
+      text => 'inactive_activated.txt.tt',
+    }
+  );
+  my $subject
+    = length($tpl->{subject})
+    ? $email_model->render($tpl->{subject}, \%emaildata)
+    : "PHAIDRA archive ready / Archivierung abgeschlossen ($pid)";
 
   eval {
     my $msg = MIME::Lite::TT::HTML->new(
-      From     => $from,
-      To       => $email,
-      Subject  => $subject,
-      Charset  => 'utf8',
-      Encoding => 'quoted-printable',
-      Template => {
-        html => $privconfig->{inactiveactivatedemailhtml} || 'inactive_activated.html.tt',
-        text => $privconfig->{inactiveactivatedemailtext} || 'inactive_activated.txt.tt'
-      },
-      TmplParams  => \%emaildata,
-      TmplOptions => \%options
+      From       => $from,
+      To         => $email,
+      Subject    => $subject,
+      Charset    => 'utf8',
+      Encoding   => 'quoted-printable',
+      Template   => {html => \$tpl->{html}, text => \$tpl->{text}},
+      TmplParams => \%emaildata
     );
     $msg->send(
       'smtp',

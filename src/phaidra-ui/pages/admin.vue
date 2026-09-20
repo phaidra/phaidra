@@ -1130,49 +1130,46 @@
                     </v-window-item>
                     <v-window-item value="priv-email" class="pa-8">
                       <v-container>
-                        <v-card class="mb-6 email-template-card">
-                          <v-card-title class="text-title-large font-weight-light text-white email-template-card__title">{{ $t('Password reset email') }}</v-card-title>
+                        <v-card
+                          v-for="emailTemplate in emailTemplateDefinitions"
+                          :key="emailTemplate.key"
+                          class="mb-6 email-template-card"
+                        >
+                          <v-card-title class="text-title-large font-weight-light text-white email-template-card__title">{{ $t(emailTemplate.title) }}</v-card-title>
                           <v-card-text>
-                            <v-text-field :label="$t('Subject template')" v-model="parsedPrivateConfigData.passwordresetemailsubject" />
-                            <v-textarea :label="$t('HTML template')" v-model="parsedPrivateConfigData.passwordresetemailhtml" rows="8" />
-                            <v-textarea :label="$t('Text template')" v-model="parsedPrivateConfigData.passwordresetemailtext" rows="6" />
-                            <div>{{ $t('Template Toolkit variables: [% reset_url %], [% username %], [% expires_minutes %]') }}</div>
-                          </v-card-text>
-                        </v-card>
-                        <v-card class="mb-6 email-template-card">
-                          <v-card-title class="text-title-large font-weight-light text-white email-template-card__title">{{ $t('Activation email') }}</v-card-title>
-                          <v-card-text>
-                            <v-text-field :label="$t('Subject template')" v-model="parsedPrivateConfigData.inactiveactivatedemailsubject" />
-                            <v-textarea :label="$t('HTML template')" v-model="parsedPrivateConfigData.inactiveactivatedemailhtml" rows="8" />
-                            <v-textarea :label="$t('Text template')" v-model="parsedPrivateConfigData.inactiveactivatedemailtext" rows="6" />
-                            <div>{{ $t('Template Toolkit variables: [% pid %], [% title %], [% detail_url %], [% owner %], [% source %]') }}</div>
-                          </v-card-text>
-                        </v-card>
-                        <v-card class="mb-6 email-template-card">
-                          <v-card-title class="text-title-large font-weight-light text-white email-template-card__title">{{ $t('DOI request email') }}</v-card-title>
-                          <v-card-text>
-                            <v-text-field :label="$t('Subject template')" v-model="parsedPrivateConfigData.doirequestemailsubject" />
-                            <v-textarea :label="$t('HTML template')" v-model="parsedPrivateConfigData.doirequestemailhtml" rows="8" />
-                            <v-textarea :label="$t('Text template')" v-model="parsedPrivateConfigData.doirequestemailtext" rows="6" />
-                            <div>{{ $t('Template Toolkit variables: [% name %], [% pid %], [% email %], [% baseurl %]') }}</div>
-                          </v-card-text>
-                        </v-card>
-                        <v-card class="mb-6 email-template-card">
-                          <v-card-title class="text-title-large font-weight-light text-white email-template-card__title">{{ $t('Reporting email') }}</v-card-title>
-                          <v-card-text>
-                            <v-text-field :label="$t('Subject template')" v-model="parsedPrivateConfigData.reportingemailsubject" />
-                            <v-textarea :label="$t('HTML template')" v-model="parsedPrivateConfigData.reportingemailhtml" rows="8" />
-                            <v-textarea :label="$t('Text template')" v-model="parsedPrivateConfigData.reportingemailtext" rows="6" />
-                            <div>{{ $t('Template Toolkit variables include date, query_reports, and storage information.') }}</div>
-                          </v-card-text>
-                        </v-card>
-                        <v-card class="email-template-card">
-                          <v-card-title class="text-title-large font-weight-light text-white email-template-card__title">{{ $t('Feedback email') }}</v-card-title>
-                          <v-card-text>
-                            <v-text-field :label="$t('Subject template')" v-model="parsedPrivateConfigData.feedbackemailsubject" />
-                            <v-textarea :label="$t('HTML template')" v-model="parsedPrivateConfigData.feedbackemailhtml" rows="8" />
-                            <v-textarea :label="$t('Text template')" v-model="parsedPrivateConfigData.feedbackemailtext" rows="6" />
-                            <div>{{ $t('Template Toolkit variables: [% context %], [% firstname %], [% lastname %], [% email %], [% message %], [% user %]') }}</div>
+                            <div
+                              v-for="(entry, index) in (parsedPrivateConfigData[emailTemplate.key] || [])"
+                              :key="emailTemplate.key + '-' + index"
+                              class="mb-6"
+                            >
+                              <v-row>
+                                <v-col cols="12" md="4">
+                                  <v-text-field
+                                    :label="$t('Language')"
+                                    v-model="entry.language"
+                                    hint="eng, deu, ita, ..."
+                                    persistent-hint
+                                  />
+                                </v-col>
+                                <v-col cols="12" md="8" class="d-flex align-center justify-end">
+                                  <v-btn color="error" variant="text" @click="removeEmailTemplateEntry(emailTemplate.key, index)">{{ $t('Remove') }}</v-btn>
+                                </v-col>
+                              </v-row>
+                              <v-text-field
+                                v-if="emailTemplate.hasSubject"
+                                :label="$t('Subject template')"
+                                v-model="entry.subject"
+                              />
+                              <v-textarea :label="$t('HTML template')" v-model="entry.html" rows="8" />
+                              <v-textarea
+                                v-if="emailTemplate.hasText"
+                                :label="$t('Text template')"
+                                v-model="entry.text"
+                                rows="6"
+                              />
+                            </div>
+                            <v-btn color="primary" size="small" class="mb-4" @click="addEmailTemplateEntry(emailTemplate.key)">{{ $t('Add language') }}</v-btn>
+                            <div>{{ $t(emailTemplate.hint) }}</div>
                           </v-card-text>
                         </v-card>
                       </v-container>
@@ -1242,34 +1239,6 @@
                           ></v-text-field>
                         </v-col>
                         <v-col cols="6" class="mt-6">{{ $t("Used when institutional repository sends emails.") }}</v-col>
-                      </v-row>
-                    </v-card-text>
-                  </v-card>
-                  </v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col>
-                  <v-card>
-                    <v-card-title class="text-title-large font-weight-light text-white">{{ $t("Email templates") }}</v-card-title>
-                    <v-card-text>
-                      <v-row>
-                        <v-col>
-                          <v-textarea
-                            :label="$t('Metadata check email template')"
-                            v-model="parsedPrivateConfigData.irmdcheckemail"
-                          ></v-textarea>
-                        </v-col>
-                        <v-col cols="6" class="mt-4">{{ $t("Template Toolkit template for the metadata check email.") }}</v-col>
-                      </v-row>
-                      <v-row>
-                        <v-col>
-                          <v-textarea
-                            :label="$t('Embargo end email template')"
-                            v-model="parsedPrivateConfigData.irembargoendemail"
-                          ></v-textarea>
-                        </v-col>
-                        <v-col cols="6" class="mt-6">{{ $t("Template Toolkit template for the embargo end email.") }}</v-col>
                       </v-row>
                     </v-card-text>
                   </v-card>
@@ -1540,10 +1509,107 @@ export default {
       activetabprivate: 'priv-general',
       configAsJSONToImport: '',
       reportSending: false,
-      logLevelOptions: ['trace', 'debug', 'info', 'warn', 'error', 'fatal']
+      logLevelOptions: ['trace', 'debug', 'info', 'warn', 'error', 'fatal'],
+      emailTemplateDefinitions: [
+        {
+          key: 'passwordresetemail',
+          title: 'Password reset email',
+          hint: 'Template Toolkit variables: [% reset_url %], [% username %], [% expires_minutes %]',
+          hasSubject: true,
+          hasText: true,
+          legacy: { subject: 'passwordresetemailsubject', html: 'passwordresetemailhtml', text: 'passwordresetemailtext' }
+        },
+        {
+          key: 'inactiveactivatedemail',
+          title: 'Activation email',
+          hint: 'Template Toolkit variables: [% pid %], [% title %], [% detail_url %], [% owner %], [% source %]',
+          hasSubject: true,
+          hasText: true,
+          legacy: { subject: 'inactiveactivatedemailsubject', html: 'inactiveactivatedemailhtml', text: 'inactiveactivatedemailtext' }
+        },
+        {
+          key: 'doirequestemail',
+          title: 'DOI request email',
+          hint: 'Template Toolkit variables: [% name %], [% pid %], [% email %], [% baseurl %]',
+          hasSubject: true,
+          hasText: true,
+          legacy: { subject: 'doirequestemailsubject', html: 'doirequestemailhtml', text: 'doirequestemailtext' }
+        },
+        {
+          key: 'reportingemailtemplates',
+          title: 'Reporting email',
+          hint: 'Template Toolkit variables include date, query_reports, and storage information.',
+          hasSubject: true,
+          hasText: true,
+          legacy: { subject: 'reportingemailsubject', html: 'reportingemailhtml', text: 'reportingemailtext' }
+        },
+        {
+          key: 'feedbackemail',
+          title: 'Feedback email',
+          hint: 'Template Toolkit variables: [% context %], [% firstname %], [% lastname %], [% email %], [% message %], [% user %]',
+          hasSubject: true,
+          hasText: true,
+          legacy: { subject: 'feedbackemailsubject', html: 'feedbackemailhtml', text: 'feedbackemailtext' }
+        },
+        {
+          key: 'irmdcheckemail',
+          title: 'Metadata check email',
+          hint: 'Template Toolkit variables: [% pid %], [% baseurl %]',
+          hasSubject: true,
+          hasText: false,
+          legacy: null
+        },
+        {
+          key: 'irembargoendemail',
+          title: 'Embargo end email',
+          hint: 'Template Toolkit variables: [% pid %], [% baseurl %]',
+          hasSubject: true,
+          hasText: false,
+          legacy: null
+        }
+      ]
     };
   },
   methods: {
+    addEmailTemplateEntry(key) {
+      if (!Array.isArray(this.parsedPrivateConfigData[key])) {
+        this.parsedPrivateConfigData[key] = []
+      }
+      this.parsedPrivateConfigData[key].push({ language: 'eng', subject: '', html: '', text: '' })
+    },
+    removeEmailTemplateEntry(key, index) {
+      if (!Array.isArray(this.parsedPrivateConfigData[key])) return
+      this.parsedPrivateConfigData[key].splice(index, 1)
+    },
+    normalizeEmailTemplates() {
+      for (const def of this.emailTemplateDefinitions) {
+        const current = this.parsedPrivateConfigData[def.key]
+        if (Array.isArray(current)) {
+          this.parsedPrivateConfigData[def.key] = current.map((entry) => ({
+            language: entry?.language || 'eng',
+            subject: entry?.subject || '',
+            html: entry?.html || '',
+            text: entry?.text || ''
+          }))
+        } else if (typeof current === 'string' && current.length) {
+          this.parsedPrivateConfigData[def.key] = [{ language: 'eng', subject: '', html: current, text: '' }]
+        } else if (def.legacy) {
+          const subject = this.parsedPrivateConfigData[def.legacy.subject] || ''
+          const html = this.parsedPrivateConfigData[def.legacy.html] || ''
+          const text = this.parsedPrivateConfigData[def.legacy.text] || ''
+          this.parsedPrivateConfigData[def.key] = (subject || html || text)
+            ? [{ language: 'eng', subject, html, text }]
+            : []
+        } else {
+          this.parsedPrivateConfigData[def.key] = []
+        }
+        if (def.legacy) {
+          this.parsedPrivateConfigData[def.legacy.subject] = ''
+          this.parsedPrivateConfigData[def.legacy.html] = ''
+          this.parsedPrivateConfigData[def.legacy.text] = ''
+        }
+      }
+    },
     selectConfigSection(section, model, value) {
       this.activetab = 'config'
       this.activeConfigSection = section
@@ -1777,6 +1843,7 @@ export default {
       if (!Object.prototype.hasOwnProperty.call(this.parsedPrivateConfigData, 'saveremoteuserpersonalattributes')) {
         this.parsedPrivateConfigData.saveremoteuserpersonalattributes = true
       }
+      this.normalizeEmailTemplates()
       this.loading = false
     }
   },
