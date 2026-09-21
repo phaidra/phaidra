@@ -236,7 +236,10 @@ sub get_metadata {
   }
 
   # edm:type
-  if ($rec->{cmodel} eq 'Picture') {
+  # If it's Container, it has picture members and will get a manifest containing them
+  # so it needs to be edm:type: IMAGE
+  # (nothing else in Container would work in europeana anyway)
+  if (($rec->{cmodel} eq 'Picture') || ($rec->{cmodel} eq 'Container')) {
     push @{$edmProvidedCHO->{children}},
       {
       name  => 'edm:type',
