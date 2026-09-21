@@ -22,7 +22,7 @@ sub get_metadata {
   my $apiBaseUrlPath  = $c->app->config->{baseurl} . ($c->app->config->{basepath} ? '/' . $c->app->config->{basepath} : '');
   my $getUrl          = "https://$apiBaseUrlPath/object/$pid/get";
   my $previewUrl      = "https://$apiBaseUrlPath/object/$pid/preview";
-  my $thumbnailUrl    = "https://$apiBaseUrlPath/object/$pid/thumbnail";
+  my $thumbnailUrl    = "https://$apiBaseUrlPath/object/$pid/thumbnail?w=600";
   my $iiifUri         = "https://$apiBaseUrlPath/imageserver?IIIF=$pid.tif/info.json";
   my $iiifManifestUri = "https://$apiBaseUrlPath/object/$pid/iiifmanifest";
 
