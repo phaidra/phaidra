@@ -937,16 +937,12 @@ sub preview {
         return;
       }
 
-      my $thumbPid = $self->get_is_thumbnail_for($pid);
-
-      if ($thumbPid) {
-        $self->stash(thumbpid => $pid);
-      }
+      $self->stash(audio_only_mode => 1);
 
       my $u_model = PhaidraAPI::Model::Util->new;
       $u_model->track_action($self, $pid, 'preview');
 
-      $self->render(template => 'utils/audioplayer', format => 'html');
+      $self->render(template => 'utils/videoplayer', format => 'html');
       return;
     }
     else {
