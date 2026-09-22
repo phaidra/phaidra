@@ -629,10 +629,10 @@ sub update {
 
         }
       }
-      elsif (($getStatus eq 301) || ($getStatus eq 302)) {
+      elsif (($getStatus eq 410) || ($getStatus eq 403)) {
 
-        # 301 - object is in state Deleted
-        # 302 - object is in state Inactive
+        # 410 - object is in state Deleted
+        # 403 - object is in state Inactive
         if (exists($c->app->config->{solr})) {
           my $post = $ua->post($updateurl => json => {delete => $pid})->result;
           if ($post->is_success) {
@@ -652,7 +652,7 @@ sub update {
 
         # if this collection is Inactive or Deleted, set collectionMembers to 0
         # so that the ispartof is removed from members
-        if (($getStatus eq 301) || ($getStatus eq 302)) {
+        if (($getStatus eq 410) || ($getStatus eq 403)) {
           @{$collectionMembers} = ();
         }
         unless (defined($collectionMembers)) {
@@ -667,7 +667,7 @@ sub update {
 
       if ($cmodel_res->{cmodel} eq 'Book') {
         my $pageUpdateUrl = $self->getSolrUpdateUrl($c, $cmodel_res->{cmodel}, 'phaidra_pages');
-        if (($getStatus eq 301) || ($getStatus eq 302)) {
+        if (($getStatus eq 410) || ($getStatus eq 403)) {
           @{$collectionMembers} = ();
         }
         unless (defined($collectionMembers)) {
@@ -698,7 +698,7 @@ sub update {
 
         # if this container is Inactive or Deleted, set members to 0
         # so that the ismemberof is removed from members
-        if (($getStatus eq 301) || ($getStatus eq 302)) {
+        if (($getStatus eq 410) || ($getStatus eq 403)) {
           @{$collectionMembers} = ();
         }
         unless (defined($members)) {
@@ -716,7 +716,7 @@ sub update {
 
         # if this container or collection is Inactive or Deleted, set membersorder to 0
         # so that the pos_in_<pid> is removed from members
-        if (($getStatus eq 301) || ($getStatus eq 302)) {
+        if (($getStatus eq 410) || ($getStatus eq 403)) {
           @{$collectionMembers} = ();
         }
         unless (defined($membersorder)) {
@@ -1171,10 +1171,10 @@ sub _get {
     $c->app->log->warn($errmsg);
     push @{$res->{alerts}}, {type => 'error', msg => $errmsg};
     if ($state eq 'Deleted') {
-      $res->{status} = 301;
+      $res->{status} = 410;
     }
     if ($state eq 'Inactive') {
-      $res->{status} = 302;
+      $res->{status} = 403;
     }
     return $res;
   }
