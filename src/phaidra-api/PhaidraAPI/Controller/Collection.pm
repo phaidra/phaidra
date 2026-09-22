@@ -200,6 +200,33 @@ sub add_collection_members {
       $self->render(json => $res, status => $res->{status});
     }
   }
+  else {
+    my $fedora_model = PhaidraAPI::Model::Fedora->new;
+    my $r2           = $fedora_model->getDatastreamsHash($self, $pid);
+    if ($r2->{status} eq 200 && exists($r2->{dshash}->{'COLLECTIONORDER'})) {
+      my $membersorder_model = PhaidraAPI::Model::Membersorder->new;
+      my $or                 = $membersorder_model->get_object_collectionorder_json($self, $pid, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password});
+      if ($or->{status} eq 200) {
+        my @order = @{$or->{members}};
+        my %seen  = map {$_->{pid} => 1} @order;
+        my $max   = 0;
+        for my $m (@order) {
+          $max = $m->{pos} if defined($m->{pos}) && $m->{pos} > $max;
+        }
+        for my $m (@{$members}) {
+          next if $seen{$m->{pid}};
+          $max++;
+          push @order, {pid => $m->{pid}, pos => $max};
+        }
+        my $r3 = $membersorder_model->save_to_object($self, $pid, \@order, $self->stash->{basic_auth_credentials}->{username}, $self->stash->{basic_auth_credentials}->{password}, 0);
+        push @{$res->{alerts}}, @{$r3->{alerts}} if scalar @{$r3->{alerts}} > 0;
+        $res->{status} = $r3->{status};
+        if ($r3->{status} ne 200) {
+          $self->render(json => $res, status => $res->{status});
+        }
+      }
+    }
+  }
 
   $self->render(json => $res, status => $res->{status});
 }
