@@ -1263,6 +1263,7 @@
     "Other links": "weitere Links",
     "Only latest versions": "Nur letzte Versionen",
     "Thema Subject Codes": "Thema Klassifizierung",
+    "Subject (BIC) is obsolete and superseded by Subject (Thema) metadata field. Please consider replacing this field with a corresponding Thema subject category heading.": "Schlagwort (BIC) ist veraltet und wurde durch das Metadatenfeld Schlagwort (Thema) ersetzt. Bitte erwägen Sie, dieses Feld durch eine entsprechende Thema-Sachgruppe zu ersetzen.",
     "Members": "Mitglieder",
     "Template saved": "Vorlage gespeichert",
     "template_created_success": "Vorlage {name} erstellt",
