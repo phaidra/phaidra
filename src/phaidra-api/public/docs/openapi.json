@@ -4716,7 +4716,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "state of object, Active/Inactive/Deleted",
+                        "description": "Object is Active",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -4741,6 +4741,46 @@
                                         },
                                         "status": {
                                             "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Object is Inactive",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "state": {
+                                            "type": "string",
+                                            "example": "Inactive"
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "example": 403
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "410": {
+                        "description": "Object is Deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "state": {
+                                            "type": "string",
+                                            "example": "Deleted"
+                                        },
+                                        "status": {
+                                            "type": "number",
+                                            "example": 410
                                         }
                                     }
                                 }

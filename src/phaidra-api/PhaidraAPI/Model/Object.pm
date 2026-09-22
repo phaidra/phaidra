@@ -557,10 +557,10 @@ sub get_state {
 
   $res->{state} = $state;
   if ($state eq 'Deleted') {
-    $res->{status} = 301;
+    $res->{status} = 410;
   }
   if ($state eq 'Inactive') {
-    $res->{status} = 302;
+    $res->{status} = 403;
   }
   return $res;
 }
