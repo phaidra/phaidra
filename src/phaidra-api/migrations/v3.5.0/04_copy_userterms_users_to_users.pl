@@ -13,19 +13,15 @@ Log::Log4perl::init(\$logconf);
 my $log = Log::Log4perl::get_logger('Migration');
 $log->info('started migration to v3.5.0 user terms users');
 
-my $cntr = DBIx::Connector->new(
-  'dbi:mysql:phaidradb:' . ($ENV{MARIADB_PHAIDRA_HOST} // ''),
-  $ENV{MARIADB_PHAIDRA_USER},
-  $ENV{MARIADB_PHAIDRA_PASSWORD},
-  {mysql_auto_reconnect => 1, mysql_multi_statements => 1, mysql_enable_utf8 => 1}
-);
+my $cntr = DBIx::Connector->new('dbi:mysql:phaidradb:' . ($ENV{MARIADB_PHAIDRA_HOST} // ''), $ENV{MARIADB_PHAIDRA_USER}, $ENV{MARIADB_PHAIDRA_PASSWORD}, {mysql_auto_reconnect => 1, mysql_multi_statements => 1, mysql_enable_utf8 => 1});
 $cntr->mode('ping');
 my $dbh = $cntr->dbh;
 
 $dbh->begin_work;
 eval {
   # Retain the candidate list so existing accounts do not receive a new role.
-  $dbh->do(q{
+  $dbh->do(
+    q{
     CREATE TEMPORARY TABLE migration_user_terms_users AS
     SELECT DISTINCT ut.username
       FROM user_terms ut
@@ -33,21 +29,26 @@ eval {
      WHERE ut.username IS NOT NULL
        AND ut.username <> ''
        AND users.id IS NULL
-  });
+  }
+  );
 
-  $dbh->do(q{
+  $dbh->do(
+    q{
     INSERT IGNORE INTO users (username, status)
     SELECT username, 'active'
       FROM migration_user_terms_users
-  });
+  }
+  );
   my $created = $dbh->rows;
 
-  $dbh->do(q{
+  $dbh->do(
+    q{
     INSERT IGNORE INTO user_roles (user_id, role)
     SELECT users.id, 'uploader'
       FROM users
       JOIN migration_user_terms_users ON migration_user_terms_users.username = users.username
-  });
+  }
+  );
   my $roles = $dbh->rows;
 
   $dbh->do('DROP TEMPORARY TABLE migration_user_terms_users');
