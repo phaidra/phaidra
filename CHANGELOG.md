@@ -20,6 +20,14 @@ Database-backed users and groups require the following migration:
 docker exec -it phaidra-api-1 perl migrations/v3.5.0/02_add_users_groups.pl
 ```
 
+### Copying users with accepted terms of use
+
+Copies usernames in `user_terms` that do not already have a database account into active users and assigns the `uploader` role.
+
+```
+docker exec -it phaidra-api-1 perl migrations/v3.5.0/04_copy_userterms_users_to_users.pl
+```
+
 ### Adding missing PACS term labels
 
 Adds missing Physics and Astronomy Classification Scheme (PACS) term labels to `vocabulary_entry`.

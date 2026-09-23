@@ -58,9 +58,10 @@ Database-backed users and groups require the v3.5.0 migration:
 
 ```bash
 docker exec -it phaidra-api-1 perl migrations/v3.5.0/02_add_users_groups.pl
+docker exec -it phaidra-api-1 perl migrations/v3.5.0/04_copy_userterms_users_to_users.pl
 ```
 
-The migration creates the user, affiliation, organization-unit, role, password-reset, group, and group-membership tables. It is additive and designed to be rerun safely.
+The first migration creates the user, affiliation, organization-unit, role, password-reset, group, and group-membership tables. The second adds active `uploader` accounts for usernames that have accepted the terms of use and do not already have a database account. Both migrations are additive and can be rerun safely.
 
 ## API
 
