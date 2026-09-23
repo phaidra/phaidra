@@ -459,12 +459,23 @@ sub signin_shib {
         roles    => [$self->app->config->{phaidra}->{default_role} // '']
       };
       if ($save_remote_user_personal_attributes) {
-        $provision_data->{email}       = $email;
-        $provision_data->{firstname}   = $firstname;
-        $provision_data->{lastname}    = $lastname;
-        $provision_data->{displayname} = join(' ', grep {defined && length} ($firstname, $lastname));
-        $provision_data->{affiliation} = [grep {length} split(';', $affiliation || '')];
-        $provision_data->{org_units}   = $org_unit_ids;
+        my $remote_firstname = length($firstname // '') ? $firstname : $directory_data->{firstname};
+        my $remote_lastname  = length($lastname // '')  ? $lastname  : $directory_data->{lastname};
+        my $remote_email     = length($email // '')     ? $email     : $directory_data->{email};
+        my $remote_displayname = join(' ', grep {defined && length} ($remote_firstname, $remote_lastname));
+        $remote_displayname ||= $directory_data->{displayname};
+        my $remote_affiliations = length($affiliation // '')
+          ? [grep {length} split(';', $affiliation)]
+          : $directory_data->{affiliation};
+
+        # Shibboleth attributes are not always supplied when a directory source has them.
+        # Do not replace saved attributes when neither source provides a value.
+        $provision_data->{email}       = $remote_email       if defined($remote_email) && length($remote_email);
+        $provision_data->{firstname}   = $remote_firstname   if defined($remote_firstname) && length($remote_firstname);
+        $provision_data->{lastname}    = $remote_lastname    if defined($remote_lastname) && length($remote_lastname);
+        $provision_data->{displayname} = $remote_displayname if defined($remote_displayname) && length($remote_displayname);
+        $provision_data->{affiliation} = $remote_affiliations if ref($remote_affiliations) eq 'ARRAY' && @{$remote_affiliations};
+        $provision_data->{org_units}   = $org_unit_ids if @org_unit_notations;
       }
       $provisioned = PhaidraAPI::Model::Users->new->upsert_shib($self, $provision_data);
     };
