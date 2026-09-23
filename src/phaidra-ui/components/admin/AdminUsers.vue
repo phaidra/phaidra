@@ -18,6 +18,7 @@
         :items="users"
         :search="search"
         :loading="loading"
+        :sort-by="[{ key: 'last_login_at', order: 'desc' }]"
         item-value="username"
       >
         <template #item.name="{ item }">
