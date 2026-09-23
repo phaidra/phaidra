@@ -446,8 +446,7 @@ sub signin_shib {
     # Only provision after affiliation authorization and ToU consent.
     my $directory_model                      = PhaidraAPI::Model::Directory->new;
     my $directory_data                       = $directory_model->get_external_user_data($self, $username) || {};
-    my $save_remote_user_personal_attributes = !exists($privconfig->{saveremoteuserpersonalattributes})
-      || $privconfig->{saveremoteuserpersonalattributes};
+    my $save_remote_user_personal_attributes = $privconfig->{saveremoteuserpersonalattributes};
     my %seen_org_units;
     my @org_unit_notations = grep {defined && length && !$seen_org_units{$_}++} (@{$directory_data->{org_units_l1} || []}, @{$directory_data->{org_units_l2} || []});
     my $org_unit_ids       = $directory_model->org_unit_ids_for_notations($self, \@org_unit_notations);

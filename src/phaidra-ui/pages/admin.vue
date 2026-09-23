@@ -1840,9 +1840,7 @@ export default {
       if (response?.data?.private_config) {
         this.parsedPrivateConfigData = { ...response?.data?.private_config }
       }
-      if (!Object.prototype.hasOwnProperty.call(this.parsedPrivateConfigData, 'saveremoteuserpersonalattributes')) {
-        this.parsedPrivateConfigData.saveremoteuserpersonalattributes = true
-      }
+
       this.normalizeEmailTemplates()
       this.loading = false
     }
