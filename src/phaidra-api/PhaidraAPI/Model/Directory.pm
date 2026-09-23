@@ -739,8 +739,8 @@ sub authenticate() {
     return undef;
   }
 
-  # A local account is authoritative.  In particular, do not silently fall
-  # back to LDAP for blocked, expired, or passwordless local accounts.
+  # Blocked or expired database accounts override remote authentication. A
+  # passwordless account is remote, so continue with directory authentication.
   my $local = $self->_db_user($c, $username);
   if ($local) {
     if ( ($local->{status} // '') ne 'active'
@@ -754,22 +754,21 @@ sub authenticate() {
       $c->stash({phaidra_auth_result => $res});
       return undef;
     }
-    unless (defined($local->{password_hash})
-      && $local->{password_hash} ne ''
-      && _verify_bcrypt($password, $local->{password_hash}))
-    {
-      $c->app->log->warn("Authentication rejected: local user[$username] has no password or the password is invalid");
-      $res->{auth_reason} = 'invalid local password';
-      $res->{status}      = 401;
-      $res->{alerts}      = [{type => 'error', msg => 'invalid credentials'}];
+    if (defined($local->{password_hash}) && $local->{password_hash} ne '') {
+      unless (_verify_bcrypt($password, $local->{password_hash})) {
+        $c->app->log->warn("Authentication rejected: local user[$username] has an invalid password");
+        $res->{auth_reason} = 'invalid local password';
+        $res->{status}      = 401;
+        $res->{alerts}      = [{type => 'error', msg => 'invalid credentials'}];
+        $c->stash({phaidra_auth_result => $res});
+        return undef;
+      }
+      $c->app->db_user->dbh->do('UPDATE users SET last_login=CURRENT_TIMESTAMP WHERE id=?', undef, $local->{id});
+      $res->{status} = 200;
+      $c->app->log->info("Authentication accepted: local user[$username] via database");
       $c->stash({phaidra_auth_result => $res});
-      return undef;
+      return $username;
     }
-    $c->app->db_user->dbh->do('UPDATE users SET last_login=CURRENT_TIMESTAMP WHERE id=?', undef, $local->{id});
-    $res->{status} = 200;
-    $c->app->log->info("Authentication accepted: local user[$username] via database");
-    $c->stash({phaidra_auth_result => $res});
-    return $username;
   }
 
   for my $u (@{$c->app->config->{fedora}->{fedoraadmins}}) {
