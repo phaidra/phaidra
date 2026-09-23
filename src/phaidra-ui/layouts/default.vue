@@ -569,9 +569,6 @@ address {
   border-color: rgba(255, 255, 255, 0.25);
 }
 
-.v-application .v-btn {
-  text-transform: none;
-}
 /*.v-application .v-tab {
   text-transform: none;
   font-weight: 300;
