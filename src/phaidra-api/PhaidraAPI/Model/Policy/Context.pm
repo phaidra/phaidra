@@ -261,17 +261,11 @@ sub _build_config {
   my $privconfig = $confmodel->get_private_config($c) // {};
   my $pubconfig  = $confmodel->get_public_config($c)  // {};
 
-  my @canmodifyownerid = ();
-  if ($c->app->config->{authorization} && $c->app->config->{authorization}->{canmodifyownerid}) {
-    @canmodifyownerid = @{$c->app->config->{authorization}->{canmodifyownerid}};
-  }
-
   return {
-    admin_username   => $c->app->config->{phaidra}->{adminusername} // '',
-    iraccount        => $pubconfig->{iraccount}                     // '',
-    enabledelete     => $privconfig->{enabledelete} ? true : false,
-    canmodifyownerid => \@canmodifyownerid,
-    readonly         => ($c->app->config->{readonly} // 0) ? true : false,
+    admin_username => $c->app->config->{phaidra}->{adminusername} // '',
+    iraccount      => $pubconfig->{iraccount}                     // '',
+    enabledelete   => $privconfig->{enabledelete} ? true : false,
+    readonly       => ($c->app->config->{readonly} // 0) ? true : false,
   };
 }
 

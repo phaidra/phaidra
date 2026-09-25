@@ -109,24 +109,7 @@ sub create {
 
   if (exists($metadata->{'ownerid'})) {
     $c->app->log->debug("Changing ownerid to " . $metadata->{'ownerid'});
-    my $authorized = 0;
-    if ( ($username eq $c->app->config->{fedora}->{adminuser})
-      || ($username eq $c->app->config->{phaidra}->{adminusername}))
-    {
-      $authorized = 1;
-    }
-    else {
-      if ($c->app->config->{authorization}) {
-        if ($c->app->config->{authorization}->{canmodifyownerid}) {
-          for my $user (@{$c->app->config->{authorization}->{canmodifyownerid}}) {
-            if ($user eq $username) {
-              $authorized = 1;
-              last;
-            }
-          }
-        }
-      }
-    }
+    my $authorized = $object_model->can_change_owner($c);
     if ($authorized) {
       my $r = $object_model->modify($c, $pid, undef, undef, $metadata->{'ownerid'}, undef, undef, $username, $password, 1);
       if ($r->{status} ne 200) {

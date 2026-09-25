@@ -25,7 +25,7 @@ test_admin_grants_rw if {
 		},
 		"action": {"id": "read"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == true
 	decision.rights == "rw"
@@ -54,7 +54,7 @@ test_admin_owner_read_no_conflict if {
 		},
 		"action": {"id": "read"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": ["username1"]},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == true
 	decision.reason == "admin"
@@ -82,7 +82,7 @@ test_owner_grants_rw if {
 		},
 		"action": {"id": "write"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == true
 	decision.reason == "owner"
@@ -112,7 +112,7 @@ test_owner_delete_denied_without_enabledelete if {
 		},
 		"action": {"id": "delete"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == false
 }
@@ -138,7 +138,7 @@ test_owner_delete_allowed_with_enabledelete if {
 		},
 		"action": {"id": "delete"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": true, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": true},
 	}
 	decision.allow == true
 	decision.reason == "delete_allowed"
@@ -165,7 +165,7 @@ test_admin_delete_always_allowed if {
 		},
 		"action": {"id": "delete"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == true
 	decision.reason == "admin"
@@ -192,7 +192,7 @@ test_anonymous_write_denied if {
 		},
 		"action": {"id": "write"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == false
 	decision.reason == "deny_anonymous_write"
@@ -219,7 +219,7 @@ test_public_read_active_object if {
 		},
 		"action": {"id": "read"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == true
 	decision.rights == "ro"
@@ -249,7 +249,7 @@ test_info_endpoint_alone_is_not_rights_gated if {
 		},
 		"action": {"id": "read", "endpoint": "object#info"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == false
 	decision.reason == "default_deny"
@@ -276,7 +276,7 @@ test_inactive_denied_for_reader if {
 		},
 		"action": {"id": "read"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == false
 	decision.reason == "deny_inactive_object"
@@ -303,7 +303,7 @@ test_approver_can_write_inactive if {
 		},
 		"action": {"id": "write"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == true
 	decision.reason == "staff_inactive_write"
@@ -330,7 +330,7 @@ test_approver_cannot_write_active if {
 		},
 		"action": {"id": "write"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == false
 	decision.reason == "deny_no_write_permission"
@@ -357,7 +357,7 @@ test_rights_username_match if {
 		},
 		"action": {"id": "read", "endpoint": "octets#get"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == true
 	decision.reason == "rights_match"
@@ -384,7 +384,7 @@ test_rights_deny_content_for_non_listed if {
 		},
 		"action": {"id": "read", "endpoint": "object#preview"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == false
 	decision.reason == "deny_no_matching_rule"
@@ -411,7 +411,7 @@ test_jsonld_public_despite_rights if {
 		},
 		"action": {"id": "read", "endpoint": "jsonld#get"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == true
 	decision.reason == "public_metadata"
@@ -438,7 +438,7 @@ test_deprecated_rights_denied if {
 		},
 		"action": {"id": "read"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == false
 	decision.reason == "deny_deprecated_rights_spl"
@@ -461,7 +461,7 @@ test_create_allowed_for_uploader if {
 		},
 		"action": {"id": "create"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == true
 	decision.reason == "uploader"
@@ -485,7 +485,7 @@ test_create_queued_without_uploader if {
 		},
 		"action": {"id": "create"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == true
 	decision.initial_state == "PendingApproval"
@@ -508,7 +508,7 @@ test_admin_create_not_queued if {
 		},
 		"action": {"id": "create"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == true
 	decision.initial_state == "Inactive"
@@ -536,7 +536,7 @@ test_private_ds_denied_anonymous if {
 		},
 		"action": {"id": "read"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == false
 	decision.reason == "deny_private_datastream"
@@ -564,7 +564,7 @@ test_private_ds_denied_inactive_without_conflict if {
 		},
 		"action": {"id": "read", "endpoint": "object#get_datastream"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == false
 	decision.reason == "deny_inactive_object"
@@ -592,7 +592,7 @@ test_private_ds_allowed_for_owner if {
 		},
 		"action": {"id": "read"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == true
 	decision.reason == "owner"
@@ -613,7 +613,7 @@ test_site_admin_config_read if {
 		"resource": {"type": "admin"},
 		"action": {"id": "admin_config_private_read"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == true
 	decision.reason == "site_admin"
@@ -634,7 +634,7 @@ test_site_admin_denied_for_non_admin if {
 		"resource": {"type": "admin"},
 		"action": {"id": "admin_index"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == false
 }
@@ -654,7 +654,7 @@ test_ir_admin_accept if {
 		"resource": {"type": "admin"},
 		"action": {"id": "ir_admin_accept"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "iraccount": "iruser", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "iraccount": "iruser", "enabledelete": false},
 	}
 	decision.allow == true
 	decision.reason == "ir_admin"
@@ -675,7 +675,7 @@ test_ir_admin_denied_without_iraccount if {
 		"resource": {"type": "admin"},
 		"action": {"id": "ir_admin_accept"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "iraccount": "iruser", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "iraccount": "iruser", "enabledelete": false},
 	}
 	decision.allow == false
 }
@@ -713,7 +713,7 @@ test_oer_create_pending_approval if {
 		"resource": {"type": "object", "metadata": oer_md},
 		"action": {"id": "create"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 		with data.phaidra.config.metadata_policies as oer_policies
 	decision.allow == true
@@ -743,7 +743,7 @@ test_oer_write_denied if {
 		},
 		"action": {"id": "write"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 		with data.phaidra.config.metadata_policies as oer_policies
 	decision.allow == false
@@ -773,7 +773,7 @@ test_oer_write_allowed_when_already_oer if {
 		},
 		"action": {"id": "write"},
 		"environment": {"institution": "default"},
-		"config": {"admin_username": "phaidraAdmin", "enabledelete": false, "canmodifyownerid": []},
+		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 		with data.phaidra.config.metadata_policies as oer_policies
 	decision.allow == true

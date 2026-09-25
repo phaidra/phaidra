@@ -41,7 +41,7 @@ Built by `PhaidraAPI::Model::Policy::Context`:
 | `resource` | Fedora pid, state, owner, RIGHTS ACL, dsid, flattened metadata (on create/write) |
 | `action` | `action_id`, optional `endpoint` |
 | `environment` | Timestamp, institution id, remote address |
-| `config` | Runtime flags (`enabledelete`, `canmodifyownerid`, admin username) |
+| `config` | Runtime flags (`enabledelete`, admin username) |
 
 Roles like `writer` and `uploader` are **not** hard-coded in the PEP (except elevated roles such as admin/superuser). OPA grants them from `data.phaidra.config.roles` via `helpers.role_granted`.
 
@@ -111,7 +111,7 @@ Tune behaviour in `<institution>/config/data.json` without editing Rego. Loaded 
 
 | Config key | Purpose |
 |------------|---------|
-| `roles` | Who gets `writer`, `uploader`, `approver`, … (`all_authenticated`, usernames, affiliations, ldap_groups) |
+| `roles` | Who gets `writer`, `uploader`, `approver`, `canmodifyownerid`, … (`all_authenticated`, usernames, affiliations, ldap_groups) |
 | `submit_forms` | Which roles may use privileged upload forms |
 | `metadata_policies` | Optional curation rules on create/edit (match JSON-LD fields) |
 | `restrictions` | Who may set RIGHTS restrictions, max expiry |

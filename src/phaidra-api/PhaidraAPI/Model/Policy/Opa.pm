@@ -75,6 +75,19 @@ sub _legacy_fallback {
     return $self->_legacy_action_fallback($c, $input, $t0, $reason);
   }
 
+  if (($input->{action}->{id} // '') eq 'change_owner') {
+    my @roles = @{$input->{subject}->{roles} // []};
+    my $allow = grep {$_ eq 'admin' || $_ eq 'canmodifyownerid'} @roles;
+    return {
+      allow       => $allow ? true : false,
+      effect      => $allow ? 'allow' : 'deny',
+      reason      => $allow ? 'change_owner' : 'default_deny',
+      rights      => $allow ? 'rw' : '',
+      source      => $reason,
+      duration_ms => int(tv_interval($t0) * 1000),
+    };
+  }
+
   require PhaidraAPI::Model::Authorization;
   my $authz_model = PhaidraAPI::Model::Authorization->new;
 
@@ -144,6 +157,10 @@ sub _legacy_action_fallback {
   }
   elsif ($action_id eq 'approve') {
     $allow = 0;
+  }
+  elsif ($action_id eq 'change_owner') {
+    my @roles = @{$input->{subject}->{roles} // []};
+    $allow = grep {$_ eq 'admin' || $_ eq 'canmodifyownerid'} @roles;
   }
   elsif ($action_id eq 'inactive_objects_manage') {
     my $adminuser = $c->app->config->{phaidra}->{adminusername} // '';

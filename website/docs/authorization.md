@@ -34,6 +34,7 @@ The bridge requires each protected route to declare an **`action_id`**. Object a
 | Private datastreams | `RIGHTS`, `JSON-LD-PRIVATE` — owner/admin only |
 | Inactive objects | Visible only to owner, admin, superuser |
 | Delete | owner/superuser self-delete only when private config `enabledelete` is on (default off); site admin may always delete |
+| Change owner | `canmodifyownerid` role or site admin |
 
 ## Further capabilities (require customized configuration)
 

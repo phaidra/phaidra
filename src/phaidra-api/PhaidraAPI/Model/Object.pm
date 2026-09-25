@@ -542,6 +542,15 @@ sub create {
   return $res;
 }
 
+sub can_change_owner {
+  my ($self, $c) = @_;
+
+  require PhaidraAPI::Model::Authorization;
+  my $authz_model = PhaidraAPI::Model::Authorization->new;
+  my $decision = $authz_model->check_action($c, 'change_owner', {resource_type => 'object'});
+  return $decision->{allow} ? 1 : 0;
+}
+
 sub get_state {
   my ($self, $c, $pid) = @_;
 
@@ -825,24 +834,7 @@ sub create_simple {
 
   if (exists($metadata->{metadata}->{'ownerid'})) {
     $c->app->log->info("Changing ownerid to " . $metadata->{metadata}->{'ownerid'});
-    my $authorized = 0;
-    if ( ($username eq $c->app->config->{fedora}->{adminuser})
-      || ($username eq $c->app->config->{phaidra}->{adminusername}))
-    {
-      $authorized = 1;
-    }
-    else {
-      if ($c->app->config->{authorization}) {
-        if ($c->app->config->{authorization}->{canmodifyownerid}) {
-          for my $user (@{$c->app->config->{authorization}->{canmodifyownerid}}) {
-            if ($user eq $username) {
-              $authorized = 1;
-              last;
-            }
-          }
-        }
-      }
-    }
+    my $authorized = $self->can_change_owner($c);
     if ($authorized) {
       my $r = $self->modify($c, $pid, undef, undef, $metadata->{metadata}->{'ownerid'}, undef, undef, $username, $password, 1);
       if ($r->{status} ne 200) {
@@ -1108,24 +1100,7 @@ sub create_container {
 
   if (exists($metadata->{metadata}->{'ownerid'})) {
     $c->app->log->debug("Changing ownerid to " . $metadata->{metadata}->{'ownerid'});
-    my $authorized = 0;
-    if ( ($username eq $c->app->config->{fedora}->{adminuser})
-      || ($username eq $c->app->config->{phaidra}->{adminusername}))
-    {
-      $authorized = 1;
-    }
-    else {
-      if ($c->app->config->{authorization}) {
-        if ($c->app->config->{authorization}->{canmodifyownerid}) {
-          for my $user (@{$c->app->config->{authorization}->{canmodifyownerid}}) {
-            if ($user eq $username) {
-              $authorized = 1;
-              last;
-            }
-          }
-        }
-      }
-    }
+    my $authorized = $self->can_change_owner($c);
     if ($authorized) {
       my $r = $self->modify($c, $pid, undef, undef, $metadata->{metadata}->{'ownerid'}, undef, undef, $username, $password, 1);
       if ($r->{status} ne 200) {

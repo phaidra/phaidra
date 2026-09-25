@@ -51,8 +51,7 @@ can_change_owner if {
 }
 
 can_change_owner if {
-	some user in input.config.canmodifyownerid
-	user == input.subject.username
+	helpers.role_granted("canmodifyownerid")
 }
 
 can_approve if {

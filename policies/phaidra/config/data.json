@@ -29,6 +29,11 @@
       "usernames": [],
       "affiliations": [],
       "ldap_groups": []
+    },
+    "canmodifyownerid": {
+      "usernames": [],
+      "affiliations": [],
+      "ldap_groups": []
     }
   },
   "submit_forms": {

@@ -1,44 +1,55 @@
-package phaidra.authz.account_test
+package phaidra.authz_test
 
 import rego.v1
 
 import data.phaidra.authz
 
-test_settings_read_allowed_authenticated if {
+test_change_owner_role_grants if {
 	decision := authz.allow with input as {
 		"subject": {
-			"username": "alice",
+			"username": "owner-manager",
 			"authenticated": true,
-			"roles": [],
+			"roles": ["canmodifyownerid"],
 			"affiliations": [],
 			"org_units_l1": [],
 			"org_units_l2": [],
 			"ldap_groups": [],
 			"project_groups": [],
 		},
-		"resource": {"type": "account"},
-		"action": {"id": "settings_read"},
+		"resource": {
+			"type": "object",
+			"pid": "o:1",
+			"owner": "other-user",
+			"state": "Active",
+			"rights": {},
+		},
+		"action": {"id": "change_owner"},
 		"environment": {"institution": "default"},
 		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
 	decision.allow == true
-	decision.reason == "authenticated"
 }
 
-test_group_write_denied_anonymous if {
+test_change_owner_role_required if {
 	decision := authz.allow with input as {
 		"subject": {
-			"username": "",
-			"authenticated": false,
-			"roles": [],
+			"username": "writer",
+			"authenticated": true,
+			"roles": ["writer"],
 			"affiliations": [],
 			"org_units_l1": [],
 			"org_units_l2": [],
 			"ldap_groups": [],
 			"project_groups": [],
 		},
-		"resource": {"type": "account"},
-		"action": {"id": "group_write"},
+		"resource": {
+			"type": "object",
+			"pid": "o:1",
+			"owner": "writer",
+			"state": "Active",
+			"rights": {},
+		},
+		"action": {"id": "change_owner"},
 		"environment": {"institution": "default"},
 		"config": {"admin_username": "phaidraAdmin", "enabledelete": false},
 	}
