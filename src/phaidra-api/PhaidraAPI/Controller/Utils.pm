@@ -306,7 +306,6 @@ sub search_users {
            OR COALESCE(lastname, '') LIKE ? ESCAPE '!'
            OR COALESCE(email, '') LIKE ? ESCAPE '!'
        )
-         AND password_hash IS NOT NULL
        ORDER BY username
        LIMIT 50
     }
